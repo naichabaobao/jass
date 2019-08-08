@@ -1,0 +1,29 @@
+{
+    "comments": {
+        "lineComment": "//"
+    },
+    // symbols used as brackets
+    "brackets": [
+        ["[", "]"],
+        ["(", ")"]
+    ],
+    // symbols that are auto closed when typing
+    "autoClosingPairs": [
+        ["function", "endfunction"],
+        ["loop", "endloop"],
+        ["loop", "endloop"],
+        ["if", "endif"],
+        ["globals", "endglobals"],
+        ["[", "]"],
+        ["(", ")"],
+        { "open": "'", "close": "'", "notIn": ["string", "comment"] },
+        { "open": "\"", "close": "\"", "notIn": ["string"] },
+    ],
+    // symbols that that can be used to surround a selection
+    "surroundingPairs": [
+        ["[", "]"],
+        ["(", ")"],
+        ["\"", "\""],
+        ["'", "'"]
+    ]
+}
