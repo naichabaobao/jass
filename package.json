@@ -19,13 +19,20 @@
           "jass2"
         ],
         "extensions": [
-          ".j"
+          ".j", ".ai"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
+    "commands": [
+			{
+				"command": "extension.helloWorld",
+				"title": "Hello World"
+			}
+		],
     "grammars": [
       {
+        "scopeName": "jass",
         "language": "jass",
         "path": "./syntaxes/jass.tmLanguage.json"
       }
@@ -33,7 +40,7 @@
     "snippets": [
       {
         "language": "jass",
-        "path": "./snippets.json"
+        "path": "./snippets/snippets.json"
       }
     ],
     "themes": [
@@ -48,5 +55,23 @@
     "type": "git",
     "url": "https://gitee.com/naichabaobao/jass.git"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md"
+  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
+  "activationEvents": [
+		"onLanguage:jass"
+	],
+  "main": "./extension.js",
+	"scripts": {
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.6",
+		"@types/node": "^10.12.21",
+		"@types/vscode": "^1.36.0",
+		"eslint": "^5.13.0",
+		"glob": "^7.1.4",
+		"mocha": "^6.1.4",
+		"typescript": "^3.3.1",
+		"vscode-test": "^1.0.2"
+	}
 }

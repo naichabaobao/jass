@@ -44,3 +44,7 @@ function
 endfunction
 
 // aaa
+
+returns
+
+"asdasdasd"  "function endfunction"

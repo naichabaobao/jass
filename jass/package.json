@@ -1,0 +1,13 @@
+{
+	"name": "jass",
+	"displayName": "jass",
+	"description": "jass",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.37.0"
+	},
+	"categories": [
+		"Other"
+	],
+	
+}

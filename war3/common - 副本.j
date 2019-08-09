@@ -274,7 +274,6 @@ globals
 //===================================================
 // Map Setup Constants    
 //===================================================
-
     constant racepreference     RACE_PREF_HUMAN                     = ConvertRacePref(1)
     constant racepreference     RACE_PREF_ORC                       = ConvertRacePref(2)
     constant racepreference     RACE_PREF_NIGHTELF                  = ConvertRacePref(4)

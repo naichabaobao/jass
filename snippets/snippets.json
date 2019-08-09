@@ -1,1 +1,46 @@
-{}
+{
+  "loop": {
+    "prefix": "loop",
+    "body": [
+      "loop",
+      "exitwhen condition",
+      "endloop"
+    ],
+    "description": "loop模板自動完成"
+  },
+  "if-endif": {
+    "prefix": "if",
+    "body": [
+      "if condition when",
+      "endif"
+    ],
+    "description": "簡單if"
+  },
+  "if-elseif-else": {
+    "prefix": "if",
+    "body": [
+      "if condition when",
+      "elseif condition when",
+      "else",
+      "endif"
+    ],
+    "description": "全if"
+  },
+  "function-template": {
+    "prefix": "fun",
+    "body": [
+      "function name takes type arg1, type arg2 returns type",
+      "// TODO",
+      "endfunction"
+    ],
+    "description": "方法模板"
+  },
+  "globals-template": {
+    "prefix": "glo",
+    "body": [
+      "globals",
+      "endglobals"
+    ],
+    "description": "全局模板"
+  }
+}
