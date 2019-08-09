@@ -1,19 +1,46 @@
-function 函数名 takes 传入参数 returns 返回参数
-  // 代码块
-  Bj
-endfunction
+function
+if 
+endfuntion
+globals
+{}
+[]
+()
+// loop endfuntion
+123
 
-if 条件 then
-  // 若条件成立，则将运行的代码块
-endif
+""
+''
+
+function
+
+endfuntion
 
 loop
-  exitwhen 条件
-  // 代码块
+
+endloop
+endloop
+
+endloop
+
+endloop
+
+endloop
+
+endfunction
+
+
+endfunction
+
 endloop
 
 if
+
 endif
 
 function
+
+function
+
 endfunction
+
+// aaa

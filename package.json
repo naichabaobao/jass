@@ -27,7 +27,6 @@
     "grammars": [
       {
         "language": "jass",
-        "scopeName": "jass",
         "path": "./syntaxes/jass.tmLanguage.json"
       }
     ],
