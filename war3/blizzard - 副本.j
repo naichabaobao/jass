@@ -666,7 +666,6 @@ function RMinBJ takes real a, real b returns real
         return b
     endif
 endfunction
-
 //===========================================================================
 function RMaxBJ takes real a, real b returns real
     if (a < b) then
@@ -675,7 +674,6 @@ function RMaxBJ takes real a, real b returns real
         return a
     endif
 endfunction
-
 //===========================================================================
 function RAbsBJ takes real a returns real
     if (a >= 0) then
