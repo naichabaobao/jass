@@ -2,6 +2,7 @@
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
 //
+
 type agent			    extends     handle  // all reference counted objects
 type event              extends     agent  // a reference to an event registration
 type player             extends     agent  // a single player reference
@@ -159,7 +160,6 @@ globals
 // Game Constants    
 //===================================================
 
-    // pfff
     constant boolean            FALSE                           = false
     constant boolean            TRUE                            = true
     constant integer            JASS_MAX_ARRAY_SIZE             = 8192

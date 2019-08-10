@@ -1,4 +1,5 @@
 {
+  
     "comments": {
         "lineComment": "//"
     },
@@ -6,17 +7,26 @@
     "brackets": [
         ["[", "]"],
         ["(", ")"],
-        ["function", "endfunction"]
+        ["if", "endif"],
+        ["loop", "endloop"],
+        ["function", "endfunction"],
+        ["globals", "endglobals"]
     ],
     // symbols that are auto closed when typing
     "autoClosingPairs": [
         ["[", "]"],
-        ["(", ")"],
-        { "open": "\"", "close": "\""}
+        ["(", ")"]
     ],
     // symbols that that can be used to surround a selection
     "surroundingPairs": [
         ["[", "]"],
         ["(", ")"]
-    ]
+    ],
+    "folding": {
+      "offSide": true,
+      "markers": {
+        "start": "\\s(globals|function|if|loop)\\s",
+        "end": "\\s(endglobals|endfunction|endif|endloop)\\s"
+      }
+    }
 }

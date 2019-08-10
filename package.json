@@ -2,10 +2,10 @@
   "name": "jass",
   "displayName": "jass",
   "description": "jass",
-  "publisher": "jass-hoo",
+  "publisher": "hoo",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.36.0"
+    "vscode": "^1.37.0"
   },
   "categories": [
     "Programming Languages", "Themes", "Snippets", "Formatters"
@@ -21,33 +21,27 @@
         "extensions": [
           ".j", ".ai"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./src/settings/language-configuration.json"
       }
     ],
-    "commands": [
-			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
-			}
-		],
     "grammars": [
       {
         "scopeName": "jass",
         "language": "jass",
-        "path": "./syntaxes/jass.tmLanguage.json"
+        "path": "./src/settings/jass.tmLanguage.json"
       }
     ],
     "snippets": [
       {
         "language": "jass",
-        "path": "./snippets/snippets.json"
+        "path": "./src/settings/snippets.json"
       }
     ],
     "themes": [
       {
           "label": "jass",
           "uiTheme": "vs",
-          "path": "./themes/jass-color-theme.json"
+          "path": "./src/settings/jass-color-theme.json"
       }
   ]
   },
@@ -57,9 +51,9 @@
   },
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
-		"onLanguage:jass"
+    "onLanguage:jass"
 	],
-  "main": "./extension.js",
+  "main": "./src/js/extension.js",
 	"scripts": {
 		"test": "node ./test/runTest.js"
 	},

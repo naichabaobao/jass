@@ -7,7 +7,9 @@ globals
     //-----------------------------------------------------------------------
     // Constants
     //
+// ===
 
+// ===
     // Misc constants
     constant real      bj_PI                            = 3.14159
     constant real      bj_E                             = 2.71828

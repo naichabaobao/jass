@@ -48,3 +48,7 @@ endfunction
 returns
 
 "asdasdasd"  "function endfunction"
+
+globals
+
+endglobals

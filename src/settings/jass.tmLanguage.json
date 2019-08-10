@@ -1,0 +1,142 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "jass",
+  "name": "jass",
+  "patterns": [
+    {
+      "include": "#jass-comment"
+    },{
+      "include": "#jass-string"
+    },{
+      "include": "#jass-class"
+    },{
+      "include": "#jass-control"
+    },{
+      "include": "#jass-symbol-compare"
+    },{
+      "include": "#jass-symbol-operation"
+    },{
+      "include": "#jass-symbol-relation"
+    },{
+      "include": "#jass-symbol-assig"
+    },{
+      "include": "#jass-symbol-array"
+    },{
+      "include": "#jass-symbol"
+    },{
+      "include": "#jass-globals"
+    },{
+      "include": "#jass-function"
+    },{
+      "include": "#jass-bedeck"
+    },{
+      "include": "#jass-modifier"
+    },{
+      "include": "#jass-grammar"
+    },{
+      "include": "#jass-class-base"
+    },{
+      "include": "#jass-array"
+    },{
+      "include": "#jass-boolean"
+    },{
+      "include": "#jass-null"
+    },{
+      "include": "#jass-nothing"
+    },{
+      "include": "#identifier"
+    },{
+      "include": "#number"
+    }
+  ],
+  "repository": {
+    "jass-comment": {
+      "name": "jass.comment",
+      "match": "//.*\\n"
+    },
+    "jass-string": {
+      "name": "jass.string",
+      "match": "\".*\""
+    },
+    "jass-class": {
+      "name": "jass.class",
+      "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable)\\b"
+    },
+    "jass-control": {
+      "name": "jass.control",
+      "match": "\\b(if|else|elseif|endif|then|loop|endloop|exitwhen|return)\\b"
+    },
+    "jass-symbol-compare": {
+      "name": "jass.symbol.compare",
+      "match": ">|<|>=|<=|==|!="
+    },
+    "jass-symbol-operation": {
+      "name": "jass.symbol.operation",
+      "match": "\\+|-|\\*|/|%"
+    },
+    "jass-symbol-relation": {
+      "name": "jass.symbol.relation",
+      "match": "\\b(and|or|not)\\b"
+    },
+    "jass-symbol-assig": {
+      "name": "jass.symbol.assig",
+      "match": "="
+    },
+    "jass-symbol-array": {
+      "name": "jass.symbol.array",
+      "match": "\\[|\\]"
+    },
+    "jass-symbol": {
+      "name": "jass.symbol",
+      "match": "\\(|\\)|,"
+    },
+    "jass-globals": {
+      "name": "jass.globals",
+      "match": "\\b(globals|endglobals)\\b"
+    }, 
+    "jass-function": {
+      "name": "jass.function",
+      "match": "\\b(function|endfunction)\\b"
+    }, 
+    "jass-bedeck": {
+      "name": "jass.bedeck",
+      "match": "\\b(constant|native|local|type)\\b"
+    }, 
+    "jass-modifier": {
+      "name": "jass.modifier",
+      "match": "\\b(set|call)\\b"
+    }, 
+    "jass-grammar": {
+      "name": "jass.grammar",
+      "match": "\\b(takes|returns|extends)\\b"
+    },
+    "jass-class-base": {
+      "name": "jass.class.base",
+      "match": "\\b(integer|real|boolean|string|handle|code)\\b"
+    },
+    "jass-array": {
+      "name": "jass.array",
+      "match": "\\barray\\b"
+    },
+    "jass-boolean": {
+      "name": "jass.boolean",
+      "match": "\\b(true|false)\\b"
+    },
+    "jass-null": {
+      "name": "jass.null",
+      "match": "\\b(null)\\b"
+    },
+    "jass-nothing": {
+      "name": "jass.nothing",
+      "match": "\\b(nothing)\\b"
+    },
+    "identifier": {
+      "name": "identifier",
+      "match": ""
+    },
+    "number": {
+      "name": "number",
+      "match": "\\d+|\\d\\.\\d+"
+    }
+  }
+}

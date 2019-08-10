@@ -20,14 +20,9 @@ class JassCompletionItemProvider {
 
   blizzardVariables = ["bj_PI", "bj_E", "bj_CELLWIDTH", "bj_CLIFFHEIGHT", "bj_UNIT_FACING", "bj_RADTODEG", "bj_DEGTORAD", "bj_TEXT_DELAY_QUEST", "bj_TEXT_DELAY_QUESTUPDATE", "bj_TEXT_DELAY_QUESTDONE", "bj_TEXT_DELAY_QUESTFAILED", "bj_TEXT_DELAY_QUESTREQUIREMENT", "bj_TEXT_DELAY_MISSIONFAILED", "bj_TEXT_DELAY_ALWAYSHINT", "bj_TEXT_DELAY_HINT", "bj_TEXT_DELAY_SECRET", "bj_TEXT_DELAY_UNITACQUIRED", "bj_TEXT_DELAY_UNITAVAILABLE", "bj_TEXT_DELAY_ITEMACQUIRED", "bj_TEXT_DELAY_WARNING", "bj_QUEUE_DELAY_QUEST", "bj_QUEUE_DELAY_HINT", "bj_QUEUE_DELAY_SECRET", "bj_HANDICAP_EASY", "bj_GAME_STARTED_THRESHOLD", "bj_WAIT_FOR_COND_MIN_INTERVAL", "bj_POLLED_WAIT_INTERVAL", "bj_POLLED_WAIT_SKIP_THRESHOLD", "bj_MAX_INVENTORY", "bj_MAX_PLAYERS", "bj_PLAYER_NEUTRAL_VICTIM", "bj_PLAYER_NEUTRAL_EXTRA", "bj_MAX_PLAYER_SLOTS", "bj_MAX_SKELETONS", "bj_MAX_STOCK_ITEM_SLOTS", "bj_MAX_STOCK_UNIT_SLOTS", "bj_MAX_ITEM_LEVEL", "bj_TOD_DAWN", "bj_TOD_DUSK", "bj_MELEE_STARTING_TOD", "bj_MELEE_STARTING_GOLD_V0", "bj_MELEE_STARTING_GOLD_V1", "bj_MELEE_STARTING_LUMBER_V0", "bj_MELEE_STARTING_LUMBER_V1", "bj_MELEE_STARTING_HERO_TOKENS", "bj_MELEE_HERO_LIMIT", "bj_MELEE_HERO_TYPE_LIMIT", "bj_MELEE_MINE_SEARCH_RADIUS", "bj_MELEE_CLEAR_UNITS_RADIUS", "bj_MELEE_CRIPPLE_TIMEOUT", "bj_MELEE_CRIPPLE_MSG_DURATION", "bj_MELEE_MAX_TWINKED_HEROES_V0", "bj_MELEE_MAX_TWINKED_HEROES_V1", "bj_CREEP_ITEM_DELAY", "bj_STOCK_RESTOCK_INITIAL_DELAY", "bj_STOCK_RESTOCK_INTERVAL", "bj_STOCK_MAX_ITERATIONS", "bj_MAX_DEST_IN_REGION_EVENTS", "bj_CAMERA_MIN_FARZ", "bj_CAMERA_DEFAULT_DISTANCE", "bj_CAMERA_DEFAULT_FARZ", "bj_CAMERA_DEFAULT_AOA", "bj_CAMERA_DEFAULT_FOV", "bj_CAMERA_DEFAULT_ROLL", "bj_CAMERA_DEFAULT_ROTATION", "bj_RESCUE_PING_TIME", "bj_NOTHING_SOUND_DURATION", "bj_TRANSMISSION_PING_TIME", "bj_TRANSMISSION_IND_RED", "bj_TRANSMISSION_IND_BLUE", "bj_TRANSMISSION_IND_GREEN", "bj_TRANSMISSION_IND_ALPHA", "bj_TRANSMISSION_PORT_HANGTIME", "bj_CINEMODE_INTERFACEFADE", "bj_CINEMODE_GAMESPEED", "bj_CINEMODE_VOLUME_UNITMOVEMENT", "bj_CINEMODE_VOLUME_UNITSOUNDS", "bj_CINEMODE_VOLUME_COMBAT", "bj_CINEMODE_VOLUME_SPELLS", "bj_CINEMODE_VOLUME_UI", "bj_CINEMODE_VOLUME_MUSIC", "bj_CINEMODE_VOLUME_AMBIENTSOUNDS", "bj_CINEMODE_VOLUME_FIRE", "bj_SPEECH_VOLUME_UNITMOVEMENT", "bj_SPEECH_VOLUME_UNITSOUNDS", "bj_SPEECH_VOLUME_COMBAT", "bj_SPEECH_VOLUME_SPELLS", "bj_SPEECH_VOLUME_UI", "bj_SPEECH_VOLUME_MUSIC", "bj_SPEECH_VOLUME_AMBIENTSOUNDS", "bj_SPEECH_VOLUME_FIRE", "bj_SMARTPAN_TRESHOLD_PAN", "bj_SMARTPAN_TRESHOLD_SNAP", "bj_MAX_QUEUED_TRIGGERS", "bj_QUEUED_TRIGGER_TIMEOUT", "bj_CAMPAIGN_INDEX_T", "bj_CAMPAIGN_INDEX_H", "bj_CAMPAIGN_INDEX_U", "bj_CAMPAIGN_INDEX_O", "bj_CAMPAIGN_INDEX_N", "bj_CAMPAIGN_INDEX_XN", "bj_CAMPAIGN_INDEX_XH", "bj_CAMPAIGN_INDEX_XU", "bj_CAMPAIGN_INDEX_XO", "bj_CAMPAIGN_OFFSET_T", "bj_CAMPAIGN_OFFSET_H", "bj_CAMPAIGN_OFFSET_U", "bj_CAMPAIGN_OFFSET_O", "bj_CAMPAIGN_OFFSET_N", "bj_CAMPAIGN_OFFSET_XN", "bj_CAMPAIGN_OFFSET_XH", "bj_CAMPAIGN_OFFSET_XU", "bj_CAMPAIGN_OFFSET_XO", "bj_MISSION_INDEX_T00", "bj_MISSION_INDEX_T01", "bj_MISSION_INDEX_H00", "bj_MISSION_INDEX_H01", "bj_MISSION_INDEX_H02", "bj_MISSION_INDEX_H03", "bj_MISSION_INDEX_H04", "bj_MISSION_INDEX_H05", "bj_MISSION_INDEX_H06", "bj_MISSION_INDEX_H07", "bj_MISSION_INDEX_H08", "bj_MISSION_INDEX_H09", "bj_MISSION_INDEX_H10", "bj_MISSION_INDEX_H11", "bj_MISSION_INDEX_U00", "bj_MISSION_INDEX_U01", "bj_MISSION_INDEX_U02", "bj_MISSION_INDEX_U03", "bj_MISSION_INDEX_U05", "bj_MISSION_INDEX_U07", "bj_MISSION_INDEX_U08", "bj_MISSION_INDEX_U09", "bj_MISSION_INDEX_U10", "bj_MISSION_INDEX_U11", "bj_MISSION_INDEX_O00", "bj_MISSION_INDEX_O01", "bj_MISSION_INDEX_O02", "bj_MISSION_INDEX_O03", "bj_MISSION_INDEX_O04", "bj_MISSION_INDEX_O05", "bj_MISSION_INDEX_O06", "bj_MISSION_INDEX_O07", "bj_MISSION_INDEX_O08", "bj_MISSION_INDEX_O09", "bj_MISSION_INDEX_O10", "bj_MISSION_INDEX_N00", "bj_MISSION_INDEX_N01", "bj_MISSION_INDEX_N02", "bj_MISSION_INDEX_N03", "bj_MISSION_INDEX_N04", "bj_MISSION_INDEX_N05", "bj_MISSION_INDEX_N06", "bj_MISSION_INDEX_N07", "bj_MISSION_INDEX_N08", "bj_MISSION_INDEX_N09", "bj_MISSION_INDEX_XN00", "bj_MISSION_INDEX_XN01", "bj_MISSION_INDEX_XN02", "bj_MISSION_INDEX_XN03", "bj_MISSION_INDEX_XN04", "bj_MISSION_INDEX_XN05", "bj_MISSION_INDEX_XN06", "bj_MISSION_INDEX_XN07", "bj_MISSION_INDEX_XN08", "bj_MISSION_INDEX_XN09", "bj_MISSION_INDEX_XN10", "bj_MISSION_INDEX_XH00", "bj_MISSION_INDEX_XH01", "bj_MISSION_INDEX_XH02", "bj_MISSION_INDEX_XH03", "bj_MISSION_INDEX_XH04", "bj_MISSION_INDEX_XH05", "bj_MISSION_INDEX_XH06", "bj_MISSION_INDEX_XH07", "bj_MISSION_INDEX_XH08", "bj_MISSION_INDEX_XH09", "bj_MISSION_INDEX_XU00", "bj_MISSION_INDEX_XU01", "bj_MISSION_INDEX_XU02", "bj_MISSION_INDEX_XU03", "bj_MISSION_INDEX_XU04", "bj_MISSION_INDEX_XU05", "bj_MISSION_INDEX_XU06", "bj_MISSION_INDEX_XU07", "bj_MISSION_INDEX_XU08", "bj_MISSION_INDEX_XU09", "bj_MISSION_INDEX_XU10", "bj_MISSION_INDEX_XU11", "bj_MISSION_INDEX_XU12", "bj_MISSION_INDEX_XU13", "bj_MISSION_INDEX_XO00", "bj_CINEMATICINDEX_TOP", "bj_CINEMATICINDEX_HOP", "bj_CINEMATICINDEX_HED", "bj_CINEMATICINDEX_OOP", "bj_CINEMATICINDEX_OED", "bj_CINEMATICINDEX_UOP", "bj_CINEMATICINDEX_UED", "bj_CINEMATICINDEX_NOP", "bj_CINEMATICINDEX_NED", "bj_CINEMATICINDEX_XOP", "bj_CINEMATICINDEX_XED", "bj_ALLIANCE_UNALLIED", "bj_ALLIANCE_UNALLIED_VISION", "bj_ALLIANCE_ALLIED", "bj_ALLIANCE_ALLIED_VISION", "bj_ALLIANCE_ALLIED_UNITS", "bj_ALLIANCE_ALLIED_ADVUNITS", "bj_ALLIANCE_NEUTRAL", "bj_ALLIANCE_NEUTRAL_VISION", "bj_KEYEVENTTYPE_DEPRESS", "bj_KEYEVENTTYPE_RELEASE", "bj_KEYEVENTKEY_LEFT", "bj_KEYEVENTKEY_RIGHT", "bj_KEYEVENTKEY_DOWN", "bj_KEYEVENTKEY_UP", "bj_TIMETYPE_ADD", "bj_TIMETYPE_SET", "bj_TIMETYPE_SUB", "bj_CAMERABOUNDS_ADJUST_ADD", "bj_CAMERABOUNDS_ADJUST_SUB", "bj_QUESTTYPE_REQ_DISCOVERED", "bj_QUESTTYPE_REQ_UNDISCOVERED", "bj_QUESTTYPE_OPT_DISCOVERED", "bj_QUESTTYPE_OPT_UNDISCOVERED", "bj_QUESTMESSAGE_DISCOVERED", "bj_QUESTMESSAGE_UPDATED", "bj_QUESTMESSAGE_COMPLETED", "bj_QUESTMESSAGE_FAILED", "bj_QUESTMESSAGE_REQUIREMENT", "bj_QUESTMESSAGE_MISSIONFAILED", "bj_QUESTMESSAGE_ALWAYSHINT", "bj_QUESTMESSAGE_HINT", "bj_QUESTMESSAGE_SECRET", "bj_QUESTMESSAGE_UNITACQUIRED", "bj_QUESTMESSAGE_UNITAVAILABLE", "bj_QUESTMESSAGE_ITEMACQUIRED", "bj_QUESTMESSAGE_WARNING", "bj_SORTTYPE_SORTBYVALUE", "bj_SORTTYPE_SORTBYPLAYER", "bj_SORTTYPE_SORTBYLABEL", "bj_CINEFADETYPE_FADEIN", "bj_CINEFADETYPE_FADEOUT", "bj_CINEFADETYPE_FADEOUTIN", "bj_REMOVEBUFFS_POSITIVE", "bj_REMOVEBUFFS_NEGATIVE", "bj_REMOVEBUFFS_ALL", "bj_REMOVEBUFFS_NONTLIFE", "bj_BUFF_POLARITY_POSITIVE", "bj_BUFF_POLARITY_NEGATIVE", "bj_BUFF_POLARITY_EITHER", "bj_BUFF_RESIST_MAGIC", "bj_BUFF_RESIST_PHYSICAL", "bj_BUFF_RESIST_EITHER", "bj_BUFF_RESIST_BOTH", "bj_HEROSTAT_STR", "bj_HEROSTAT_AGI", "bj_HEROSTAT_INT", "bj_MODIFYMETHOD_ADD", "bj_MODIFYMETHOD_SUB", "bj_MODIFYMETHOD_SET", "bj_UNIT_STATE_METHOD_ABSOLUTE", "bj_UNIT_STATE_METHOD_RELATIVE", "bj_UNIT_STATE_METHOD_DEFAULTS", "bj_UNIT_STATE_METHOD_MAXIMUM", "bj_GATEOPERATION_CLOSE", "bj_GATEOPERATION_OPEN", "bj_GATEOPERATION_DESTROY", "bj_GAMECACHE_BOOLEAN", "bj_GAMECACHE_INTEGER", "bj_GAMECACHE_REAL", "bj_GAMECACHE_UNIT", "bj_GAMECACHE_STRING", "bj_HASHTABLE_BOOLEAN", "bj_HASHTABLE_INTEGER", "bj_HASHTABLE_REAL", "bj_HASHTABLE_STRING", "bj_HASHTABLE_HANDLE", "bj_ITEM_STATUS_HIDDEN", "bj_ITEM_STATUS_OWNED", "bj_ITEM_STATUS_INVULNERABLE", "bj_ITEM_STATUS_POWERUP", "bj_ITEM_STATUS_SELLABLE", "bj_ITEM_STATUS_PAWNABLE", "bj_ITEMCODE_STATUS_POWERUP", "bj_ITEMCODE_STATUS_SELLABLE", "bj_ITEMCODE_STATUS_PAWNABLE", "bj_MINIMAPPINGSTYLE_SIMPLE", "bj_MINIMAPPINGSTYLE_FLASHY", "bj_MINIMAPPINGSTYLE_ATTACK", "bj_CORPSE_MAX_DEATH_TIME", "bj_CORPSETYPE_FLESH", "bj_CORPSETYPE_BONE", "bj_ELEVATOR_BLOCKER_CODE", "bj_ELEVATOR_CODE01", "bj_ELEVATOR_CODE02", "bj_ELEVATOR_WALL_TYPE_ALL", "bj_ELEVATOR_WALL_TYPE_EAST", "bj_ELEVATOR_WALL_TYPE_NORTH", "bj_ELEVATOR_WALL_TYPE_SOUTH", "bj_ELEVATOR_WALL_TYPE_WEST", "bj_FORCE_ALL_PLAYERS", "bj_MELEE_MAX_TWINKED_HEROES", "bj_mapInitialPlayableArea", "bj_mapInitialCameraBounds", "bj_forLoopAIndex", "bj_forLoopBIndex", "bj_forLoopAIndexEnd", "bj_forLoopBIndexEnd", "bj_slotControlReady", "bj_gameStartedTimer", "bj_gameStarted", "bj_volumeGroupsTimer", "bj_isSinglePlayer", "bj_dncSoundsDay", "bj_dncSoundsNight", "bj_dayAmbientSound", "bj_nightAmbientSound", "bj_dncSoundsDawn", "bj_dncSoundsDusk", "bj_dawnSound", "bj_duskSound", "bj_useDawnDuskSounds", "bj_dncIsDaytime", "bj_rescueSound", "bj_questDiscoveredSound", "bj_questUpdatedSound", "bj_questCompletedSound", "bj_questFailedSound", "bj_questHintSound", "bj_questSecretSound", "bj_questItemAcquiredSound", "bj_questWarningSound", "bj_victoryDialogSound", "bj_defeatDialogSound", "bj_stockItemPurchased", "bj_stockUpdateTimer", "bj_stockPickedItemLevel", "bj_meleeVisibilityTrained", "bj_meleeVisibilityIsDay", "bj_meleeGrantHeroItems", "bj_meleeNearestMineToLoc", "bj_meleeNearestMine", "bj_meleeNearestMineDist", "bj_meleeGameOver", "bj_finishSoonAllExposed", "bj_finishSoonTimerDialog", "bj_rescueUnitBehavior", "bj_rescueChangeColorUnit", "bj_rescueChangeColorBldg", "bj_cineSceneEndingTimer", "bj_cineSceneLastSound", "bj_cineSceneBeingSkipped", "bj_cineModePriorSpeed", "bj_cineModePriorFogSetting", "bj_cineModePriorMaskSetting", "bj_cineModeAlreadyIn", "bj_cineModePriorDawnDusk", "bj_cineModeSavedSeed", "bj_cineFadeFinishTimer", "bj_cineFadeContinueTimer", "bj_cineFadeContinueRed", "bj_cineFadeContinueGreen", "bj_cineFadeContinueBlue", "bj_cineFadeContinueTrans", "bj_cineFadeContinueDuration", "bj_cineFadeContinueTex", "bj_queuedExecTotal", "bj_queuedExecTimeoutTimer", "bj_queuedExecTimeout", "bj_destInRegionDiesCount", "bj_destInRegionDiesTrig", "bj_groupCountUnits", "bj_forceCountPlayers", "bj_groupEnumTypeId", "bj_groupEnumOwningPlayer", "bj_groupAddGroupDest", "bj_groupRemoveGroupDest", "bj_groupRandomConsidered", "bj_groupRandomCurrentPick", "bj_groupLastCreatedDest", "bj_randomSubGroupGroup", "bj_randomSubGroupWant", "bj_randomSubGroupTotal", "bj_randomSubGroupChance", "bj_destRandomConsidered", "bj_destRandomCurrentPick", "bj_elevatorWallBlocker", "bj_elevatorNeighbor", "bj_itemRandomConsidered", "bj_itemRandomCurrentPick", "bj_forceRandomConsidered", "bj_forceRandomCurrentPick", "bj_makeUnitRescuableUnit", "bj_makeUnitRescuableFlag", "bj_pauseAllUnitsFlag", "bj_enumDestructableCenter", "bj_enumDestructableRadius", "bj_setPlayerTargetColor", "bj_isUnitGroupDeadResult", "bj_isUnitGroupEmptyResult", "bj_isUnitGroupInRectResult", "bj_isUnitGroupInRectRect", "bj_changeLevelShowScores", "bj_changeLevelMapName", "bj_suspendDecayFleshGroup", "bj_suspendDecayBoneGroup", "bj_delayedSuspendDecayTimer", "bj_delayedSuspendDecayTrig", "bj_livingPlayerUnitsTypeId", "bj_lastDyingWidget", "bj_randDistCount", "bj_lastCreatedUnit", "bj_lastCreatedItem", "bj_lastRemovedItem", "bj_lastHauntedGoldMine", "bj_lastCreatedDestructable", "bj_lastCreatedGroup", "bj_lastCreatedFogModifier", "bj_lastCreatedEffect", "bj_lastCreatedWeatherEffect", "bj_lastCreatedTerrainDeformation", "bj_lastCreatedQuest", "bj_lastCreatedQuestItem", "bj_lastCreatedDefeatCondition", "bj_lastStartedTimer", "bj_lastCreatedTimerDialog", "bj_lastCreatedLeaderboard", "bj_lastCreatedMultiboard", "bj_lastPlayedSound", "bj_lastPlayedMusic", "bj_lastTransmissionDuration", "bj_lastCreatedGameCache", "bj_lastCreatedHashtable", "bj_lastLoadedUnit", "bj_lastCreatedButton", "bj_lastReplacedUnit", "bj_lastCreatedTextTag", "bj_lastCreatedLightning", "bj_lastCreatedImage", "bj_lastCreatedUbersplat", "filterIssueHauntOrderAtLocBJ", "filterEnumDestructablesInCircleBJ", "filterGetUnitsInRectOfPlayer", "filterGetUnitsOfTypeIdAll", "filterGetUnitsOfPlayerAndTypeId", "filterMeleeTrainedUnitIsHeroBJ", "filterLivingPlayerUnitsOfTypeId", "bj_wantDestroyGroup"]
 
-
-
   provideCompletionItems(document, position, token, context) {
-    vscode.window.showInformationMessage('123');
 
-    // var t = new vscode.CompletionItem("AI_DI", vscode.CompletionItemKind.Constant)
-    // t.insertText = "AI_DI我喺家貓hoo"
-
+    // 添加提示字符
     return this.baseType.map(x => {
       return new vscode.CompletionItem(x, vscode.CompletionItemKind.Keyword);
     }).concat(this.keywords.map(x => {
@@ -45,11 +40,8 @@ class JassCompletionItemProvider {
     }))
       .concat(this.blizzardVariables.map(x => {
         return new vscode.CompletionItem(x, vscode.CompletionItemKind.Variable);
-      })).concat(["AIDI"].map(x => {
-        let tt = new vscode.CompletionItem(x, vscode.CompletionItemKind.Variable)
-        // tt.insertText = "AI_DI我喺家貓hoo"
-        return tt;
       }))
+
   }
 
   resolveCompletionItem(item, token) {
@@ -57,18 +49,45 @@ class JassCompletionItemProvider {
   }
 }
 
+/*
+var updateDiags = (document, collection) => {
+  let diagnostics = [];
+  diagnostics.push(new vscode.Diagnostic(
+    new vscode.Range(1, 1, 10, 10), "測試錯誤", vscode.DiagnosticSeverity.Error))
+  diag_coll.set(vscode.Uri.parse(document.Uri), diagnostics);
+}
+*/
+/**
+ * jass語法檢測
+ */
+// const diag_coll = vscode.languages.createDiagnosticCollection('jass');
+
 function activate(context) {
 
-  console.log('Congratulations, your extension "jass" is now active!');
+  /*
+    console.log('Congratulations, your extension "jass" is now active!');
+  
+    vscode.window.showInformationMessage('Hello World!');
+  
+    vscode.languages.registerCompletionItemProvider("jass", new JassCompletionItemProvider(),
+      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+      "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+      "_",
+      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+  */
+  // 語法檢測
+  /*
+  let diag = vscode.languages.createDiagnosticCollection('jass');
 
-  vscode.window.showInformationMessage('Hello World!');
+  let diagnostics = [];
+  diagnostics.push(new vscode.Diagnostic(
+    new vscode.Range(1, 1, 10, 10), "測試錯誤", vscode.DiagnosticSeverity.Error))
+  diag.set(vscode.window.activeTextEditor.document.uri, diagnostics);
 
-  vscode.languages.registerCompletionItemProvider("jass", new JassCompletionItemProvider(),
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-    "_",
-    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
+  vscode.workspace.onDidOpenTextDocument(e => {
 
+  })
+*/
 }
 exports.activate = activate;
 

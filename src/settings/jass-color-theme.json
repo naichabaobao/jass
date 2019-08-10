@@ -1,0 +1,145 @@
+{
+  "name": "jass",
+	"type": "light",
+	"colors": {
+  },
+	"tokenColors": [
+    {
+      "name": "jass-comment",
+      "scope": "jass.comment",
+      "settings": {
+        "foreground": "#979494"
+      }
+    },
+    {
+      "name": "jass-string",
+      "scope": "jass.string",
+      "settings": {
+        "foreground": "#2cdd61"
+      }
+    },
+    {
+      "name": "jass-class",
+      "scope": "jass.class",
+      "settings": {
+        "foreground": "#eb31e2"
+      }
+    },
+    {
+      "name": "jass-control",
+      "scope": "jass.control",
+      "settings": {
+        "foreground": "#eb5f5f"
+      }
+    },
+    {
+      "name": "jass-symbol-compare",
+      "scope": "jass.symbol.compare",
+      "settings": {
+        "foreground": "#43d3e6",
+      }
+    },{
+      "name": "jass-symbol-operation",
+      "scope": "jass.symbol.operation",
+      "settings": {
+        "foreground": "#d4ffa2",
+      }
+    },{
+      "name": "jass-symbol-relation",
+      "scope": "jass.symbol.relation",
+      "settings": {
+        "foreground": "#4f44ec",
+      }
+    },{
+      "name": "jass-symbol-assig",
+      "scope": "jass.symbol.assig",
+      "settings": {
+        "foreground": "#d8ee14",
+      }
+    },{
+      "name": "jass-symbol-array",
+      "scope": "jass.symbol.array",
+      "settings": {
+        "foreground": "#00befd",
+      }
+    },{
+      "name": "jass-symbol",
+      "scope": "jass.symbol",
+      "settings": {
+        "foreground": "#a200ff",
+      }
+    },{
+      "name": "jass-globals",
+      "scope": "jass.globals",
+      "settings": {
+        "foreground": "#ffe600",
+      }
+    },{
+      "name": "jass-function",
+      "scope": "jass.function",
+      "settings": {
+        "foreground": "#ff0263",
+      }
+    },{
+      "name": "jass-bedeck",
+      "scope": "jass.bedeck",
+      "settings": {
+        "foreground": "#ff9900",
+      }
+    },{
+      "name": "jass-modifier",
+      "scope": "jass.modifier",
+      "settings": {
+        "foreground": "#008cff",
+      }
+    },{
+      "name": "jass-grammar",
+      "scope": "jass.grammar",
+      "settings": {
+        "foreground": "#ffbb00",
+      }
+    },{
+      "name": "jass-class-base",
+      "scope": "jass.class.base",
+      "settings": {
+        "foreground": "#ff0000",
+      }
+    },{
+      "name": "jass-array",
+      "scope": "jass.array",
+      "settings": {
+        "foreground": "#00befd",
+      }
+    },{
+      "name": "jass-boolean",
+      "scope": "jass.boolean",
+      "settings": {
+        "foreground": "#e24f8c",
+      }
+    },{
+      "name": "jass-null",
+      "scope": "jass.null",
+      "settings": {
+        "foreground": "#904bff",
+      }
+    },{
+      "name": "jass-nothing",
+      "scope": "jass.nothing",
+      "settings": {
+        "foreground": "#f3bbfa",
+      }
+    },{
+      "name": "identifier",
+      "scope": "identifier",
+      "settings": {
+        "foreground": "#9c563a",
+      }
+    },{
+      "name": "number",
+      "scope": "number",
+      "settings": {
+        "foreground": "#5eb64c",
+      }
+    }
+	]
+}
