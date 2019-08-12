@@ -88,7 +88,7 @@
     },
     "jass-symbol": {
       "name": "jass.symbol",
-      "match": "\\(|\\)|,"
+      "match": "\\(|\\)|,|'"
     },
     "jass-globals": {
       "name": "jass.globals",
@@ -136,7 +136,7 @@
     },
     "number": {
       "name": "number",
-      "match": "-?\\d+|(-?\\d+)(\\.\\d+)?"
+      "match": "-?\\d+|(-?\\d+)(\\.\\d+)?|'[a-zA-Z]{4,4}'"
     }
   }
 }

@@ -1,0 +1,1 @@
+code類型,用於方法調用,作爲參數傳遞時需使用function修飾,如：![alt](https://gitee.com/naichabaobao/jass/raw/master/src/static/image/code-function.png)

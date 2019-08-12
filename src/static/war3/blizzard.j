@@ -9,9 +9,9 @@ globals
     //
 
     // Misc constants
-    constant real      bj_PI                            = 3.14159
-    constant real      bj_E                             = 2.71828
-    constant real      bj_CELLWIDTH                     = 128.0
+    constant real      bj_PI                            = 3.14159 + 0
+    constant real      bj_E                             = 2.71828 - 0
+    constant real      bj_CELLWIDTH                     = 128.0 * 1
     constant real      bj_CLIFFHEIGHT                   = 128.0
     constant real      bj_UNIT_FACING                   = 270.0
     constant real      bj_RADTODEG                      = 180.0/bj_PI
