@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 
 class JassCompletionItemProvider {
@@ -63,6 +61,13 @@ var updateDiags = (document, collection) => {
 // const diag_coll = vscode.languages.createDiagnosticCollection('jass');
 
 function activate(context) {
+
+  console.log('Congratulations, your extension "jass" is now active!');
+  vscode.window.showInformationMessage('Hello World!');
+
+  context.subscriptions.push(vscode.commands.registerCommand('extension.sayHello', function () {
+    vscode.window.showInformationMessage('Hello jass!');
+  }));
 
   /*
     console.log('Congratulations, your extension "jass" is now active!');

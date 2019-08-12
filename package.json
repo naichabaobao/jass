@@ -8,7 +8,10 @@
     "vscode": "^1.37.0"
   },
   "categories": [
-    "Programming Languages", "Themes", "Snippets", "Formatters"
+    "Programming Languages",
+    "Themes",
+    "Snippets",
+    "Formatters"
   ],
   "contributes": {
     "languages": [
@@ -19,14 +22,15 @@
           "jass2"
         ],
         "extensions": [
-          ".j", ".ai"
+          ".j",
+          ".ai"
         ],
         "configuration": "./src/settings/language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "scopeName": "jass",
+        "scopeName": "source.jass",
         "language": "jass",
         "path": "./src/settings/jass.tmLanguage.json"
       }
@@ -39,11 +43,17 @@
     ],
     "themes": [
       {
-          "label": "jass",
-          "uiTheme": "vs",
-          "path": "./src/settings/jass-color-theme.json"
+        "label": "jass",
+        "uiTheme": "vs",
+        "path": "./src/settings/jass-color-theme.json"
       }
-  ]
+    ],
+    "commands": [
+      {
+        "command": "extension.sayHello",
+        "title": "Hello World"
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -51,21 +61,22 @@
   },
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
-    "onLanguage:jass"
-	],
-  "main": "./src/js/extension.js",
-	"scripts": {
-		"test": "node ./test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.36.0",
-		"eslint": "^5.13.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
-		"vscode-test": "^1.0.2"
-	}
+    "onLanguage:jass",
+    "onCommand:extension.sayHello"
+  ],
+  "main": "./src/js/extension1",
+  "scripts": {
+    "test": "node ./src/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/vscode": "^1.36.0",
+    "eslint": "^5.13.0",
+    "glob": "^7.1.4",
+    "mocha": "^6.1.4",
+    "typescript": "^3.3.1",
+    "vscode-test": "^1.0.2"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "scopeName": "jass",
+  "scopeName": "source.jass",
   "name": "jass",
   "patterns": [
     {
@@ -136,7 +136,7 @@
     },
     "number": {
       "name": "number",
-      "match": "\\d+|\\d\\.\\d+"
+      "match": "-?\\d+|(-?\\d+)(\\.\\d+)?"
     }
   }
 }
