@@ -546,6 +546,10 @@ globals
     trigger            bj_queuedExecTimeout        = null
 
     // Helper vars (for Filter and Enum funcs)
+    // @doument""
+    // @insert""
+    // @tooltip""
+    // @title""
     integer            bj_destInRegionDiesCount    = 0
     trigger            bj_destInRegionDiesTrig     = null
     integer            bj_groupCountUnits          = 0
@@ -646,6 +650,11 @@ endglobals
 //***************************************************************************
 
 //===========================================================================
+// @title("BJDebugMsg")
+// @document("function BJDebugMsg takes string msg returns nothing\n打印debug信息")
+// @tooltip("function BJDebugMsg takes string msg returns nothing\n打印debug信息")
+// @insert("BJDebugMsg(msg)")
+// @param("")
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop

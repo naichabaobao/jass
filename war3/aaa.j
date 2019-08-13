@@ -9,7 +9,14 @@ constant boolean LIBRARY_YDWEPlaySoundNull=true
 constant boolean LIBRARY_YDWEPolledWaitNull=true
 constant boolean LIBRARY_YDWETriggerRegisterEnterRectSimpleNull=true
 region yd_NullTempRegion
+
+
+// @doumentation ( "a ") 
+
+
 integer udg_Chances=0
+
+
 integer udg_killsred=0
 integer udg_killsblue=0
 integer udg_killsteal=0
@@ -25,7 +32,7 @@ timer udg_Counter=null
 timerdialog udg_TIMERWINDOW=null
 integer udg_random=0
 location udg_posCastingUnit=null
-integer udg_NB_CAST_TOWER=0 a
+integer udg_NB_CAST_TOWER=0
 integer array udg_TAB_RANDOM
 rect gg_rct_1_Pink_Spawn=null
 rect gg_rct_1a=null
@@ -698,7 +705,7 @@ endfunction
 function Trig_Quit_GreyActions takes nothing returns nothing
 call LeaderboardSetPlayerItemLabelBJ(Player(8),udg_LEADERBOARD,"离开游戏")
 endfunction
-function InitTrig_Quit_Grey takes nothing returns nothing
+function  InitTrig_Quit_Grey  takes  nothing  returns  nothing
 set gg_trg_Quit_Grey=CreateTrigger()
 call TriggerRegisterPlayerEventLeave(gg_trg_Quit_Grey,Player(8))
 call TriggerAddAction(gg_trg_Quit_Grey,function Trig_Quit_GreyActions)
@@ -1536,10 +1543,17 @@ endfunction
 function Trig_Path_9aConditions takes nothing returns boolean
 return((GetOwningPlayer(GetEnteringUnit())==Player(11)))
 endfunction
+ // @doumentation( " aa " ) 
+ 
+ 
+  // @doumentation( " aa " )
+                    
+  
+   // @doumentation( " aa " ) 
 function Trig_Path_9aActions takes nothing returns nothing
 call IssuePointOrderLoc(GetEnteringUnit(),"move",GetRectCenter(gg_rct_bottomrightgo))
 endfunction
-function InitTrig_Path_9a takes nothing returns nothing
+constant function InitTrig_Path_9a takes nothing returns nothing
 set gg_trg_Path_9a=CreateTrigger()
 call YDWETriggerRegisterEnterRectSimpleNull(gg_trg_Path_9a,gg_rct_9a)
 call TriggerAddCondition(gg_trg_Path_9a,Condition(function Trig_Path_9aConditions))
@@ -1617,7 +1631,7 @@ call YDWETriggerRegisterEnterRectSimpleNull(gg_trg_Path_leftgo3,gg_rct_leftgo4)
 call TriggerAddCondition(gg_trg_Path_leftgo3,Condition(function Trig_Path_leftgo3Conditions))
 call TriggerAddAction(gg_trg_Path_leftgo3,function Trig_Path_leftgo3Actions)
 endfunction
-function Trig_Path_rightgoConditions takes nothing returns boolean
+constant function Trig_Path_rightgoConditions takes nothing returns boolean
 return((GetOwningPlayer(GetEnteringUnit())==Player(11)))
 endfunction
 function Trig_Path_rightgoActions takes nothing returns nothing
@@ -2196,6 +2210,8 @@ call TriggerExecute(gg_trg_Waves4)
 call DisableTrigger(GetTriggeringTrigger())
 call ForForce(GetPlayersAll(),function Trig_Wavstart4Func007002)
 endfunction
+
+ // @doumentation( " aa " ) // @doumentation( " aa " ) // @doumentation( " aa " ) 
 function InitTrig_Wavstart4 takes nothing returns nothing
 set gg_trg_Wavstart4=CreateTrigger()
 call DisableTrigger(gg_trg_Wavstart4)

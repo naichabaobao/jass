@@ -1,7 +1,7 @@
 // @ts-nocheck
 const fs = require('fs');
 const vscode = require('vscode')
-
+const description = require('./description')
 var functions = []
 var constants = []
 /**
@@ -41,47 +41,65 @@ const parseJassFile = (path, callback = null) => {
           returnType: returnType,
           // 插入文本
           insertText: `${functionName}(${args ? args.map(s => s.name).join(",") : ''})`,
-          // 提示標題
-          detail: x,
+          // 提示標題 
+          detail: functionName,
           // 提示内容
-          documentation: description.description[functionName] ? description[functionName] : ""
+          documentation: `function ${functionName} takes ${args ? args.map(s => s.type + ' ' + s.name).join(", ") : 'nothing'} returns ${returnType ? returnType : 'nothing'}\n${description.description[functionName] ? description.description[functionName] : ''}`
         };
       })
-      // 分析全局常量
-      var globals = data.match(/globals[\s\S]+endglobals/g)
-      if (globals) {
 
-        globals.map(globalString => {
-          var globalContents = globalString.match(/(constant\s+|\s+)[a-z]+\s+\w+\s*=\s*([\w'\(\)\+\-\*\/\.\t ]+)/g)
-          // [string] => [{name...}]
-          if (globalContents) {
-            globalContents.map(x => {
-              // 獲取是否常量
-              var isConst = new RegExp(/constant\s/).test(x)
-              // 獲取標識符
-              var names = x.match(/(?<=[a-z]+\s+)\w+(?=\s+=)/)
-              var name = names && names.length > 0 ? names.pop() : null
-              // 獲取class
-              var clas = x.match(/(?<=\s+)[a-z]+(?=\s+\w+\s*=)/)
-              var cla = clas && clas.length > 0 ? clas.pop() : null
-              return {
-                original: x,
-                name: name,
-                kind: isConst ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable,
-                type: cla,
-                // 插入文本
-                insertText: name,
-                // 提示標題
-                detail: name,
-                // 提示内容
-                documentation: description.description[name] ? description[name] : ""
-              }
-            })
+      globalstiring = data.match(/globals[\s\S]+endglobals/g).map(x => x).join(" ")
+
+      constants = globalstiring.match(/(constant\s+|\s+)[a-z]+\s+\w+\s*=\s*([\w'\(\)\+\-\*\/\.\t ]+)|[a-z]+\s+array\s+\w+/g).map(x => {
+        // 是否数组
+        var isArray = new RegExp(/\barray\s/).test(x)
+        if (isArray) {
+          // 獲取標識符
+          var names = x.match(/(?<=array+\s+)\w+/)
+          var name = names && names.length > 0 ? names.pop() : null
+          // 獲取class
+          var clas = x.match(/[a-z]+(?=\s+array)/)
+          var cla = clas && clas.length > 0 ? clas.pop() : null
+
+          return {
+            original: x,
+            name: name,
+            kind: vscode.CompletionItemKind.Variable,
+            type: cla,
+            isArray: true,
+            // 插入文本
+            insertText: name,
+            // 提示標題
+            detail: name,
+            // 提示内容
+            documentation: `${cla} ${isArray ? 'array ' : ' '}${name}\n${description.description[name] ? description.description[name] : ''}`
           }
-        })
+        } else {
+          // 獲取是否常量
+          var isConst = new RegExp(/\bconstant\s/).test(x)
+          // 獲取標識符
+          var names = x.match(/(?<=[a-z]+\s+)\w+(?=\s+=)/)
+          var name = names && names.length > 0 ? names.pop() : null
+          // 獲取class
+          var clas = x.match(/(?<=\s+)[a-z]+(?=\s+\w+\s*=)/)
+          var cla = clas && clas.length > 0 ? clas.pop() : null
+          return {
+            original: x,
+            name: name,
+            kind: isConst ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable,
+            type: cla,
+            isArray: false,
+            // 插入文本
+            insertText: name,
+            // 提示標題
+            detail: name,
+            // 提示内容
+            documentation: `${isConst ? 'constant ' : ''}${cla} ${name}\n${description.description[name] ? description.description[name] : ''}`
+          }
+        }
+      })
 
 
-      }
       if (callback) {
         console.log(constants)
         callback(functions, constants);
@@ -90,7 +108,7 @@ const parseJassFile = (path, callback = null) => {
   });
 }
 
-const description = require('./description')
+
 
 module.exports = {
   parseJassFile

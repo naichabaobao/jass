@@ -54,7 +54,7 @@
       "name": "jass-symbol-assig",
       "scope": "jass.symbol.assig",
       "settings": {
-        "foreground": "#d8ee14",
+        "foreground": "#1e94f5",
       }
     },{
       "name": "jass-symbol-array",
