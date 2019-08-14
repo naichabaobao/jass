@@ -1164,7 +1164,7 @@ constant native GetKillingUnit takes nothing returns unit
 constant native GetDecayingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELECTED
-//constant native GetSelectedUnit takes nothing returns unit
+constant native GetSelectedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
 constant native GetConstructingStructure takes nothing returns unit
@@ -1269,7 +1269,7 @@ constant native GetEventPlayerChatString takes nothing returns string
 constant native GetEventPlayerChatStringMatched takes nothing returns string
 
 native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
-
+//native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
 //============================================================================
 // Trigger Unit Based Event API
 //============================================================================
@@ -1521,7 +1521,7 @@ native          SelectUnit          takes unit whichUnit, boolean flag returns n
 
 native          GetUnitPointValue       takes unit whichUnit returns integer
 native          GetUnitPointValueByType takes integer unitType returns integer
-//native        SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
+// native        SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
 native          UnitAddItem             takes unit whichUnit, item whichItem returns boolean
 native          UnitAddItemById         takes unit whichUnit, integer itemId returns item

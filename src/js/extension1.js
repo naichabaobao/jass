@@ -14,11 +14,12 @@ const language = "jass"
  */
 var diagnosticCollection = null
 
+var common_j = ""
+var blizzard_j = ""
+var common_ai = ""
+var DzAPI = ""
+
 // const Class = { agent, event, player, widget, unit, destructable, item, ability, buff, force, group, trigger, triggercondition, triggeraction, timer, location, region, rect, boolexpr, sound, conditionfunc, filterfunc, unitpool, itempool, race, alliancetype, racepreference, gamestate, igamestate, fgamestate, playerstate, playerscore, playergameresult, unitstate, aidifficulty, eventid, gameevent, playerevent, playerunitevent, unitevent, limitop, widgetevent, dialogevent, unittype, gamespeed, gamedifficulty, gametype, mapflag, mapvisibility, mapsetting, mapdensity, mapcontrol, playerslotstate, volumegroup, camerafield, camerasetup, playercolor, placement, startlocprio, raritycontrol, blendmode, texmapflags, effect, effecttype, weathereffect, terraindeformation, fogstate, fogmodifier, dialog, button, quest, questitem, defeatcondition, timerdialog, leaderboard, multiboard, multiboarditem, trackable, gamecache, version, itemtype, texttag, attacktype, damagetype, weapontype, soundtype, lightning, pathingtype, image, ubersplat, hashtable }
-
-const Class = {
-
-}
 
 var Function = {
   // 原樣
@@ -30,7 +31,7 @@ var Function = {
   // 參數
   args: Array,
   // 返回值
-  returnType: Class,
+  returnType: String,
   // 插入文本
   insertText: String,
   // 提示標題 
@@ -45,17 +46,20 @@ var Value = {
   // 類型
   kind: vscode.CompletionItemKind.Variable,
   // class
-  type: Class,
+  type: String,
   // 名稱
   name: String,
 }
+
+var functions = []
+var values = []
 
 /**
  * 读取jass文件返回文件内容
  * @param {String} jFile 
  */
 const readFileSync = function (jFile) {
-  return fs.readFileSync(jFile, "utf-8");
+  return fs.readFileSync(path.join(__dirname, jFile), "utf-8");
 }
 
 /**
@@ -72,14 +76,15 @@ const triggreCharacters = [
   "_",
   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
+const functionOnly = /^[\t ]*((constant\s+)?native|function)\s+[a-zA-Z]\w*\s+takes\s+(nothing|([a-zA-Z]+\s+[a-zA-Z]\w*\s*,\s*)*[a-zA-Z]+\s+[a-zA-Z]\w*)\s+returns\s+(nothing|[a-zA-Z]+)/g
 /**
  * 获取native方法 用户定义方法 同时获取@documentation("")注解
  */
-const functionRegExp = new RegExp(/(\/\/[\t ]*@doumentation[\t ]*\([\t ]*".*"[\t ]*\)[\t ]*[\s\n]+)*^[\t ]*((constant\s+)?native|function)\s+[a-zA-Z]\w*\s+takes\s+(nothing|([a-zA-Z]+\s+[a-zA-Z]\w*\s*,\s*)*[a-zA-Z]+\s+[a-zA-Z]\w*)\s+returns\s+(nothing|[a-zA-Z]+)/g)
+const functionRegExp = /(\/\/[\t ]*@doumentation[\t ]*\([\t ]*".*"[\t ]*\)[\t ]*[\s\n]+)*^[\t ]*((constant\s+)?native|function)\s+[a-zA-Z]\w*\s+takes\s+(nothing|([a-zA-Z]+\s+[a-zA-Z]\w*\s*,\s*)*[a-zA-Z]+\s+[a-zA-Z]\w*)\s+returns\s+(nothing|[a-zA-Z]+)/g
 /**
  * 获取globals内部所有成员
  */
-const globalsRegExp = new RegExp(/(?<=globals[\s\S]+)(\/\/@doumentation[\t ]*\([\t ]*".*"[\t ]*\)[\t ]*[\t\n ]+)*^[\t ]*(constant[\t ]+[a-zA-Z]+[\t ]+\w*|[a-zA-Z]+[\t ]+array[\t ]+[a-zA-Z]\w+|[a-zA-Z]+[\t ]+[a-zA-Z]\w*)(?=[\s\S]+endglobals)/g)
+const globalsRegExp = /(?<=globals[\s\S]+)(\/\/@doumentation[\t ]*\([\t ]*".*"[\t ]*\)[\t ]*[\t\n ]+)*^[\t ]*(constant[\t ]+[a-zA-Z]+[\t ]+\w*|[a-zA-Z]+[\t ]+array[\t ]+[a-zA-Z]\w+|[a-zA-Z]+[\t ]+[a-zA-Z]\w*)(?=[\s\S]+endglobals)/g
 /**
  * 解析jass内容，返回CompletionItem数组
  * @param {string} content jass文本
@@ -89,10 +94,12 @@ const parseJass = function (content) {
    * 1，找到所有全局值
    * 2，找到所有方法
    */
-  if (!content || typeof content == 'string') {
+  if (!content || typeof content != 'string') {
     return null
   }
-  new String().match(functionRegExp).map(functionString => {
+
+  console.log(functionRegExp.exec(content))
+  return content.match(functionRegExp).map(functionString => {
     var functionName = new String().match(/(?<=(native|function)[\t ]+)[a-zA-Z]\w*(?=[\t ]+takes)/).shift()
     var functionDocumentations = functionString.match(/(?<=@doumentation[\t ]*\([\t ]*").*(?="[\t ]*\))/).map(x => x)
     var functionOriginal = functionString.match(/((constant\s+)?native|function)\s+[a-zA-Z]\w*\s+takes\s+(nothing|([a-zA-Z]+\s+[a-zA-Z]\w*\s*,\s*)*[a-zA-Z]+\s+[a-zA-Z]\w*)\s+returns\s+(nothing|[a-zA-Z]+)/).shift()
@@ -107,6 +114,10 @@ const parseJass = function (content) {
         }
       }
     })
+    console.log(functionName)
+    console.log(functionDocumentations)
+    console.log(functionOriginal)
+    console.log(functionInsertString)
     var comp = new vscode.CompletionItem(functionName, vscode.CompletionItemKind.Function);
     comp.detail = functionName
     var documentationMarkdownString = new vscode.MarkdownString()
@@ -118,7 +129,7 @@ const parseJass = function (content) {
   })
 }
 
-const completionItemProvider = {
+var completionItemProvider = {
   provideCompletionItems(document, position, token, context) {
     /**
      * 1，读取文件(common.j,blizzard.j,common.ai,DzAPI.j) 默认读取/src/static/war3/下所有.j,.ai文件
@@ -126,24 +137,19 @@ const completionItemProvider = {
      * 3，获取document文本
      * 4，解析document文本获取需要字段
      */
+    console.log("start load j file")
     let filePaths = readdirSync("../../src/static/war3")
-    var items = []
-    filePaths.forEach(filePath => {
-      var jassContent = readFileSync(filePath)
-      items.concat(parseJass(jassContent))
-    })
-    return items
+    var jassContentString = filePaths.map(filename => {
+      var jassContent = readFileSync("../../src/static/war3/" + filename)
+      console.log(jassContent)
+      return jassContent
+    }).join("\n")
+    return parseJass(jassContentString)
   },
   resolveCompletionItem(item, token) {
     return item
   }
 }
-
-const registerCompletionItemProvider = function () {
-  vscode.languages.registerCompletionItemProvider(language, completionItemProvider, ...triggreCharacters)
-}
-
-
 
 const checkJass = function (content) {
 
@@ -208,24 +214,50 @@ var registerCompletionItemProvider1 = (functions, values) => {
     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 }
 
+const init = function (context) {
+  let filePaths = readdirSync("../../src/static/war3")
+  filePaths.forEach(filename => {
+    var jassContent = readFileSync("../../src/static/war3/" + filename)
+    console.log(jassContent.length)
+    console.log(functionRegExp.test(jassContent))
+  })
+  var jassContent = readFileSync("../../src/static/war3/" + "DzAPI.j")
+  console.log(functionRegExp.flags)
+  console.log(new RegExp("^\s*(function|native).*", "gm").compile().exec(jassContent))
+}
+
+
+const initFile = function (context) {
+  common_j = readFileSync("../../src/static/war3/" + "common.j")
+  blizzard_j = readFileSync("../../src/static/war3/" + "blizzard.j")
+  common_ai = readFileSync("../../src/static/war3/" + "common.ai")
+  DzAPI = readFileSync("../../src/static/war3/" + "DzAPI.j")
+}
+
+var funcObj = require("./functions")
+
 function activate(context) {
-
-  // 讀取當前文件
   vscode.window.showInformationMessage('Hello World!');
-  registerCompletionItemProvider()
-  /*
-  jassParser.parseJassFile(path.join(__dirname, '../static/war3/blizzard.j'), (functions, values) => {
-    updateFuncs(functions)
-    updateVals(values)
-    registerCompletionItemProvider(functions, values)
-  })
 
-  jassParser.parseJassFile(path.join(__dirname, '../static/war3/common.j'), (functions, values) => {
-    updateFuncs(functions)
-    updateVals(values)
-    registerCompletionItemProvider(functions, values)
-  })
-*/
+  vscode.languages.registerCompletionItemProvider(language, {
+    provideCompletionItems(document, position, token, context) {
+      return funcObj.map(x => {
+        let item = new vscode.CompletionItem(x.name, vscode.CompletionItemKind.Function)
+        item.detail = x.name
+        item.documentation = new vscode.MarkdownString()
+          .appendCodeblock("file:" + document.fileName + "\n")
+          .appendCodeblock(x.original)
+          .appendCodeblock("\n")
+          .appendCodeblock(x.documentation)
+        item.insertText = x.insertText
+        return
+      })
+    },
+    resolveCompletionItem(item, token) {
+      return item
+    }
+  }, ...triggreCharacters)
+
   vscode.languages.registerHoverProvider(language, {
     provideHover(document, position, token) {
       console.log(document.getText(document.getWordRangeAtPosition(position)))

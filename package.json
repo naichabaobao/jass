@@ -53,7 +53,8 @@
         "command": "extension.sayHello",
         "title": "Hello World"
       }
-    ]
+    ],
+    "documentFormattingProvider" : "true"
   },
   "repository": {
     "type": "git",
@@ -64,7 +65,7 @@
     "onLanguage:jass",
     "onCommand:extension.sayHello"
   ],
-  "main": "./src/js/extension1",
+  "main": "./src/js/extension2",
   "scripts": {
     "test": "node ./src/test/runTest.js"
   },

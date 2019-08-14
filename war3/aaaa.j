@@ -1,3 +1,1 @@
-function
-
-endfunction
+function YDWEGetPlayersByMapControlNull takes mapcontrol whichControl returns force

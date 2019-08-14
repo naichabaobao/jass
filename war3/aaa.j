@@ -1,3 +1,5 @@
+
+constant boolean LIBRARY_YDWEGetPlayersByMapControlNull=true
 globals
 constant boolean LIBRARY_YDWEGetPlayersByMapControlNull=true
 force yd_NullTempForce
@@ -292,6 +294,9 @@ trigger gg_trg_Waves35=null
 trigger gg_trg_Wavstart36=null
 trigger gg_trg_Waves36=null
 trigger gg_trg_Winstart=null
+
+@docmentation(""aaa
+)
 unit gg_unit_nzlc_0000=null
 endglobals
 function YDWEGetPlayersByMapControlNull takes mapcontrol whichControl returns force
