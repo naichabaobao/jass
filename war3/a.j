@@ -24,4 +24,4 @@ function Trig_Path_9_Teal_SpawnConditions takes nothing returns boolean
 
 return((GetOwningPlayer(GetEnteringUnit()) = =Player(11)))
 
-endfunction
+e ,ea
