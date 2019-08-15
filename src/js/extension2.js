@@ -67,32 +67,14 @@ const creatTextEdit = function (sCol, Spos, eCol, ePos, con) {
   return new vscode.TextEdit(new vscode.Range(new vscode.Position(sCol, Spos), new vscode.Position(eCol, ePos)), con)
 }
 
-/**
- * 获取字符最后的空白
- * @param {string} string 
- */
-const getEndSpaces = (string) => {
-  let str = ""
-  for (let i = string.length; i > 0; i--) {
-    let code = string.charAt(i - 1)
-    if (/\s/.test(code)) {
-      str += code
-    } else {
-      break;
-    }
-  }
-  return str
-}
-
 const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(document, options, token) {
     let documentContent = document.getText()
     let edits = []
-
-    const editor = vscode.TextEdit;
+    let edit = vscode.TextEdit
 
     let chars = documentContent.split("")
-    let line = 1
+    let line = 0
     let colume = 0
     let commiting = false
     let stringing = false
@@ -126,132 +108,34 @@ const documentFormattingEditProvider = {
 
       if (/,/.test(x)) {
         if (space.length > 0) {
-          let endstr = getEndSpaces(pstr)
-          console.log("s=======================================")
-          console.error(space.length)
-          console.log(line)
-          console.log(colume - space.length)
-          console.log(colume)
-          console.log("e=======================================")
-          let range = new vscode.Range(new vscode.Position(line, 1), new vscode.Position(line, 2))
-          edits.push(new vscode.TextEdit(range, ""))
+          let range = new vscode.Range(line, colume - 1 - space.length, line, colume - 1)
+          edits.push(edit.delete(range))
         }
+        let postSpace = ""
+        for (let index = 0; index < nstr.length; index++) {
+          if (/\t /.test(nstr.charAt(index))) {
+            postSpace += nstr.charAt(index)
+          } else {
+            break;
+          }
+        }
+        console.log(postSpace)
+        console.log(postSpace.length)
+        let range = new vscode.Range(line, colume, line, colume + postSpace.length)
+        edits.push(edit.replace(range, " "))
       }
 
 
 
-      if (/ /.test(x)) {
+      if (/\t /.test(x)) {
         space += x
       } else {
         space = ""
       }
       colume++
     }
+    console.log(edits)
     return edits
-    /*---------------------------------
-    let lines = new RegExp(/.+/g).exec(documentContent)
-    for (let index = 0; index < lines.length; index++) {
-      let element = lines[index]
-      let colume = index + 1
-      let commiting = false
-      let stringing = false
-      let chars = element.split("")
-      for (let i = 0; i < chars.length; i++) {
-        let x = chars[i]
-        let str = element.substring(0, i)
-        let next = element.substring(i + 1, element.length)
-        console.log(str)
-        console.log(x)
-        console.log(next)
-        if (stringing == false && x == "/" && str.endsWith("/")) {
-          commiting = true
-        }
-        if (commiting) {
-          str += x
-          continue;
-        }
-        if (stringing == false && x == "\"") {
-          stringing = true
-        } else if (stringing && x == "\"" && !str.endsWith("\\")) {
-          stringing = false
-        }
-        if (stringing) {
-          str += x
-          continue;
-        }
-
-      }
-    }
-    ---------------------------------*/
-
-
-
-    // docmentLines.forEach(lineContent => {
-    //   isComment = false
-    //   isString = false
-    //   isCode = false // 魔兽代为代号 'a00p'
-    //   isSpace = false
-
-    //   if (lineContent.trim() == "") {
-    //     // edits.push(vscode.TextEdit.delete(new vscode.Range(new vscode.Position(colume, position), new vscode.Position(colume, lineContent.length))))
-    //   } else {
-    //     if (new RegExp(/".*"/, "g").test(lineContent) || new RegExp(/\/\/.*/, "g").test(lineContent)) {
-
-    //     } else {
-    //       let res = lineContent
-    //         .replace(/\s*function\s+/, "function ")
-    //         .replace(/\(\s+\(/, "((")
-    //         .replace(/\s*\+\s*/, " + ")
-    //         .replace(/\s*-\s*/, " - ")
-    //         .replace(/\s*\*\s*/, " * ")
-    //         .replace(/\s*\/\s*/, " / ")
-    //         .replace(/\s*(?!<==|<|!|>)=(?!==|<|!|>)\s*/, " = ")
-    //         .replace(/\s*==\s*/, " == ")
-    //         .replace(/\s*!=\s*/, " != ")
-    //         .replace(/\s*!\s*(?!==)/, " !")
-    //         .replace(/\s*<=\s*/, " <= ")
-    //         .replace(/\s*>=\s*/, " >= ")
-    //       let range = new vscode.Range(new vscode.Position(colume, position), new vscode.Position(colume, lineContent.length))
-    //       let edit = vscode.TextEdit.replace(range, res)
-    //       console.log(/\n/.test(res))
-    //       edits.push(edit)
-    //     }
-    //   }
-    //   colume++;
-    // })
-    // return edits
-
-    /*
-        let contents = documentContent.match(/\w+|\\"|[\+\-\*%=!\(\)\[\]",<>]{1}|-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)|-?[1-9]\d*|'[a-zA-Z]{4}'|\/\/|\n|\s+|.+/g).map(x => x)
-        new Array().
-          for(let i = 0; i < contents.length; i++) {
-          let element = contents[i]
-          if (isComment && !element.test(/\n/)) {
-            continue;
-          } else if (isString && !element.test(/"/)) {
-            continue;
-          } else {
-            if (i == 0) {
-    
-            } else if (i > 0) {
-              if (element.test(/takes/) && contents[i - 1].test(/[\t ]{2,}/)) {
-                edits.push(creatTextEdit(colume, position - contents[i - 1].length, colume, position, " "))
-              } else if (element.test(/returns/) && contents[i - 1].test(/[\t ]{2,}/)) {
-                if (contents[i - 1].test(/[\t ]+/)) {
-                  edits.push(creatTextEdit(colume, position - contents[i - 1].length, colume, position, " "))
-                }
-              } else if (element.test(/endfunction/)) {
-                if (contents[i - 1].test(/[\t ]+/)) {
-                  edits.push(creatTextEdit(colume, position - contents[i - 1].length, colume, position, ""))
-                } else if (contents[i - 1].test(/[^\n]/)) {
-                  edits.push(creatTextEdit(colume, position, colume, position, ""))
-                }
-              }
-            }
-          }
-        }
-        return [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 1)), "")]
-        */
   }
 }
 
