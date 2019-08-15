@@ -79,6 +79,8 @@ const documentFormattingEditProvider = {
     let position = 0
     let indent = 0
     let edits = []
+    new String().match("")
+
     docmentLines.forEach(lineContent => {
       isComment = false
       isString = false
