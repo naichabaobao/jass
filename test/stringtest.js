@@ -1,4 +1,4 @@
 
 new String("aaaccb").valueOf
 
-console.log("ab\tc".charAt(2) == " ")
+console.log([1, 2, 3][-4])

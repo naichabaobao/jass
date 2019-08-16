@@ -403,7 +403,7 @@ globals
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 
     // Corpse creation settings
-    constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
+    constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00 .7 .8 8. a8 8 -12
 
     // Corpse creation styles
     constant integer   bj_CORPSETYPE_FLESH         = 0

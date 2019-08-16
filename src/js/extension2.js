@@ -67,74 +67,131 @@ const creatTextEdit = function (sCol, Spos, eCol, ePos, con) {
   return new vscode.TextEdit(new vscode.Range(new vscode.Position(sCol, Spos), new vscode.Position(eCol, ePos)), con)
 }
 
+/**
+ * 分成空白，换行，关键字，类，数字，代码，符号，字符串，单行注释，标识符
+ * @param {String} string 
+ */
+const participle = function (string) {
+  let words = []
+  if (!string) {
+    return words
+  }
+  // 数字 字母 空白串 换行符 其它 => 数字 字母 空白串 换行符 字符串 注释串 char 其它
+
+  let untreatedWords = string.match(/\d+|[a-zA-Z]+|[\t ]+|\n|./g).map(x => x)
+  let commiting = false
+  let stringing = false
+  let collectString = ""
+  for (let i = 0; i < untreatedWords.length; i++) {
+    let untreatedWord = untreatedWords[i];
+    if (commiting == false && stringing == false && /\//.test(untreatedWord) && /\//.test(untreatedWords[i + 1])) {
+      commiting = true
+    }
+    if (/\n/.test(untreatedWord)) {
+      commiting = false
+      stringing = false
+    }
+    if (commiting == false && stringing == false && /"/.test(untreatedWord)) {
+      stringing = true
+    } else if (commiting == false && stringing && /"/.test(untreatedWord) && !/\\/.test(untreatedWords[i - 1])) {
+      stringing = false
+    }
+    if (commiting || stringing) {
+      collectString += untreatedWord
+    } else if (collectString.length > 0) {
+      if (/\n/.test(untreatedWord)) {
+        words.push(collectString)
+        words.push(untreatedWord)
+      } else {
+        collectString += untreatedWord
+        words.push(collectString)
+      }
+      collectString = ""
+    } else {
+      words.push(untreatedWord)
+    }
+  }
+  return words
+}
+
+const isSpace = function (string) {
+  return /[\t ]+/.test(string)
+}
+
+const isNewLine = function (string) {
+  return string == "\n"
+}
+
+const creatSpace = function (count = 1) {
+  let space = ""
+  for (let i = 0; i < count; i++) {
+    space += " "
+  }
+  return space
+}
+
 const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(document, options, token) {
     let documentContent = document.getText()
     let edits = []
     let edit = vscode.TextEdit
-
-    let chars = documentContent.split("")
     let line = 0
     let colume = 0
-    let commiting = false
-    let stringing = false
-    let space = ""
-    for (let i = 0; i < chars.length; i++) {
-      let x = chars[i]
-      let pstr = documentContent.substring(0, i)
-      let nstr = documentContent.substring(i + 1, documentContent.length)
-      if (stringing == false && x == "/" && pstr.endsWith("/")) {
-        commiting = true
-      }
-      if (x == "\n") {
-        commiting = false
-        stringing = false
-        line++
-        colume = 0
-      }
-      if (commiting) {
-        colume++
-        continue;
-      }
-      if (stringing == false && x == "\"") {
-        stringing = true
-      } else if (stringing && x == "\"" && !pstr.endsWith("\\")) {
-        stringing = false
-      }
-      if (stringing) {
-        colume++
-        continue;
-      }
 
-      if (/,/.test(x)) {
-        if (space.length > 0) {
-          let range = new vscode.Range(line, colume - 1 - space.length, line, colume - 1)
-          edits.push(edit.delete(range))
-        }
-        let postSpace = ""
-        for (let index = 0; index < nstr.length; index++) {
-          if (/\t /.test(nstr.charAt(index))) {
-            postSpace += nstr.charAt(index)
-          } else {
-            break;
+    let words = participle(documentContent)
+    let ident = 0
+    let tabSize = options.tabSize | 2
+    for (let i = 0; i < words.length; i++) {
+      let word = words[i];
+      let p1 = words[i - 1]
+      let p2 = words[i - 2]
+      let n1 = words[i + 1]
+      let n2 = words[i + 2]
+      let length = word.length
+      if (word == "globals" || word == "endglobals" || word == "endfunction" || word == "native") {
+        if (!isNewLine(p1)) {
+          if (isNewLine(p2)) {
+            // \n\s+globals => \n+globals
+            if (isSpace(p1)) {
+              let range = new vscode.Range(line, colume - p1.length, line, colume)
+              edits.push(edit.delete(range))
+              console.log(colume)
+            }
           }
         }
-        console.log(postSpace)
-        console.log(postSpace.length)
-        let range = new vscode.Range(line, colume, line, colume + postSpace.length)
-        edits.push(edit.replace(range, " "))
+        if (!isNewLine(n1)) {
+          if (isNewLine(n2) && isSpace(n1)) {
+            let range = new vscode.Range(line, colume + length, line, colume + length + n1.length)
+            edits.push(edit.delete(range))
+          }
+        }
       }
 
-
-
-      if (/\t /.test(x)) {
-        space += x
-      } else {
-        space = ""
+      if (word == "returns" || word == "then" || word == "loop") {
+        ident++;
       }
-      colume++
+      if (word == "endif" || word == "endloop" || word == "endfunction") {
+        ident--;
+      }
+      if (word == "exitwhen" || word == "if" || word == "loop" || word == "endif" || word == "endloop") {
+        if (isSpace(p1)) {
+          if (p1.length != ident * tabSize) {
+            let range = new vscode.Range(line, colume - p1.length, line, colume)
+            edits.push(edit.replace(range, creatSpace(ident * tabSize)))
+          }
+          if (!isNewLine(p2)) {
+            edits.push(edit.insert(new vscode.Position(line, colume - p1.length), "\n"))
+          }
+        } else if (isNewLine(p1)) {
+          edits.push(edit.insert(new vscode.Position(line, colume), creatSpace(ident * tabSize)))
+        }
+      }
+      colume += length
+      if (word == "\n") {
+        line++;
+        colume = 0
+      }
     }
-    console.log(edits)
     return edits
   }
 }
@@ -151,6 +208,8 @@ function activate(context) {
   vscode.languages.registerOnTypeFormattingEditProvider(language, typeFormattingProvider, "", ...[","])
 
   vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider)
+
+
 
   // 错误提示
   if (diagnosticCollection == null)
