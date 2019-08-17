@@ -7,3 +7,5 @@ return((GetOwningPlayer(GetEnteringUnit()) = =Player(11)))
 "aaaaaaaaaaaaaaaaaaaaaa DzExecuteFunc(funcName)
 "AnyPlayerAttack()"
     globals
+
+      

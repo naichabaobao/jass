@@ -1,8 +1,5 @@
 {
   "name": "jass",
-	"type": "light",
-	"colors": {
-  },
 	"tokenColors": [
     {
       "name": "jass-comment",

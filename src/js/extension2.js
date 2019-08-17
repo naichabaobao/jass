@@ -115,7 +115,7 @@ const participle = function (string) {
 }
 
 const isSpace = function (string) {
-  return /[\t ]+/.test(string)
+  return /^[\t ]+$/.test(string)
 }
 
 const isNewLine = function (string) {
@@ -129,6 +129,105 @@ const creatSpace = function (count = 1) {
   }
   return space
 }
+
+const types = [
+  "integer",
+  "real",
+  "string",
+  "boolean",
+  "code",
+  "handle",
+  "agent",
+  "event",
+  "player",
+  "widget",
+  "unit",
+  "destructable",
+  "item",
+  "ability",
+  "buff",
+  "force",
+  "group",
+  "trigger",
+  "triggercondition",
+  "triggeraction",
+  "timer",
+  "location",
+  "region",
+  "rect",
+  "boolexpr",
+  "sound",
+  "conditionfunc",
+  "filterfunc",
+  "unitpool",
+  "itempool",
+  "race",
+  "alliancetype",
+  "racepreference",
+  "gamestate",
+  "igamestate",
+  "fgamestate",
+  "playerstate",
+  "playerscore",
+  "playergameresult",
+  "unitstate",
+  "aidifficulty",
+  "eventid",
+  "gameevent",
+  "playerevent",
+  "playerunitevent",
+  "unitevent",
+  "limitop",
+  "widgetevent",
+  "dialogevent",
+  "unittype",
+  "gamespeed",
+  "gamedifficulty",
+  "gametype",
+  "mapflag",
+  "mapvisibility",
+  "mapsetting",
+  "mapdensity",
+  "mapcontrol",
+  "playerslotstate",
+  "volumegroup",
+  "camerafield",
+  "camerasetup",
+  "playercolor",
+  "placement",
+  "startlocprio",
+  "raritycontrol",
+  "blendmode",
+  "texmapflags",
+  "effect",
+  "effecttype",
+  "weathereffect",
+  "terraindeformation",
+  "fogstate",
+  "fogmodifier",
+  "dialog",
+  "button",
+  "quest",
+  "questitem",
+  "defeatcondition",
+  "timerdialog",
+  "leaderboard",
+  "multiboard",
+  "multiboarditem",
+  "trackable",
+  "gamecache",
+  "version",
+  "itemtype",
+  "texttag",
+  "attacktype",
+  "damagetype",
+  "weapontype",
+  "soundtype",
+  "lightning",
+  "pathingtype",
+  "image",
+  "ubersplat",
+  "hashtable"]
 
 const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(document, options, token) {
@@ -148,6 +247,121 @@ const documentFormattingEditProvider = {
       let n1 = words[i + 1]
       let n2 = words[i + 2]
       let length = word.length
+      // 右边只能有一个空格
+      if (word == "function" ||
+        word == "takes" ||
+        word == "returns" ||
+        word == "native" ||
+        word == "constant" ||
+        word == "return" ||
+        word == "if" ||
+        word == "elseif" ||
+        word == "exitwhen" ||
+        word == "local" ||
+        word == "call" ||
+        word == "set" ||
+        word == "type" ||
+        word == "extends" ||
+        word == "not" ||
+        word == "and" ||
+        word == "or" ||
+        word == "," ||
+        (word == "=" && n1 != "=") ||
+        (word == ">" && n1 != "=") ||
+        (word == "<" && n1 != "=") ||
+        word == "+" ||
+        (word == "-" && isSpace(n1)) ||
+        word == "*" ||
+        word == "/" ||
+        word == "%" ||
+        word == "mod") {
+        if (isSpace(n1)) {
+          if (n1.length != 1) {
+            let range = new vscode.Range(line, colume + length, line, colume + length + n1.length)
+            edits.push(edit.replace(range, " "))
+          }
+        } else {
+          edits.push(edit.insert(new vscode.Position(line, colume + length), " "))
+        }
+      }
+      // 左边只能有一个空格
+      if (word == "or" ||
+        word == "and" ||
+        word == "not" ||
+        (word == "=" && p1 != "=" && p1 != "!" && p1 != "<" && p1 != ">") ||
+        (word == "!" && n1 == "=") ||
+        word == ">" ||
+        word == "<" ||
+        word == "extends" ||
+        word == "takes" ||
+        word == "returns" ||
+        word == "then" ||
+        word == "+" ||
+        (word == "-" && isSpace(n1)) ||
+        word == "*" ||
+        word == "/" ||
+        word == "%" ||
+        word == "mod") {
+        if (isSpace(p1)) {
+          if (p1.length != 1) {
+            let range = new vscode.Range(line, colume - p1.length, line, colume)
+            edits.push(edit.replace(range, " "))
+          }
+        } else {
+          edits.push(edit.insert(new vscode.Position(line, colume), " "))
+        }
+      }
+      // 右边不能是空格
+      if (word == "then" ||
+        word == "else" ||
+        word == "return" ||
+        word == "endfunction" ||
+        word == "endloop" ||
+        word == "returns" ||
+        word == "globals" ||
+        word == "endglobals" ||
+        word == "(" ||
+        word == "[") {
+        if (isSpace(n1)) {
+          let range = new vscode.Range(line, colume + length, line, colume + length + n1.length)
+          edits.push(edit.delete(range))
+        }
+      }
+      // 左边不能是空格
+      if (word == "globals" ||
+        word == "endglobals" ||
+        word == "function" ||
+        word == "endfunction" ||
+        word == ")" ||
+        word == "]" ||
+        word == "type") {
+        if (isSpace(p1)) {
+          let range = new vscode.Range(line, colume - p1.length, line, colume)
+          edits.push(edit.delete(range))
+        }
+      }
+      // 右边必须是换行
+      if (word == "globals" ||
+        word == "endglobals" ||
+        word == "endfunction") {
+        if (!isNewLine(n1)) {
+          if (isSpace(n1) && !isNewLine(n2)) {
+            edits.push(edit.insert(new vscode.Position(line, colume + length), "\n"))
+          }
+        }
+      }
+      // 左边必须是换行
+      if (word == "globals" ||
+        word == "endglobals" ||
+        word == "endfunction") {
+        if (!isNewLine(p1)) {
+          if (isSpace(p1) && !isNewLine(p2)) {
+            edits.push(edit.insert(new vscode.Position(line, colume), "\n"))
+          }
+        }
+      }
+      // 
+      /*
       if (word == "globals" || word == "endglobals" || word == "endfunction" || word == "native") {
         if (!isNewLine(p1)) {
           if (isNewLine(p2)) {
@@ -185,7 +399,7 @@ const documentFormattingEditProvider = {
         } else if (isNewLine(p1)) {
           edits.push(edit.insert(new vscode.Position(line, colume), creatSpace(ident * tabSize)))
         }
-      }
+      }*/
       colume += length
       if (word == "\n") {
         line++;
