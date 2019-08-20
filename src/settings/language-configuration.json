@@ -7,7 +7,7 @@
     "brackets": [
         ["[", "]"],
         ["(", ")"],
-        ["if", "endif"],
+        ["then", "endif"],
         ["loop", "endloop"],
         ["function", "endfunction"],
         ["globals", "endglobals"]
@@ -21,12 +21,5 @@
     "surroundingPairs": [
         ["[", "]"],
         ["(", ")"]
-    ],
-    "folding": {
-      "offSide": true,
-      "markers": {
-        "start": "\\s(globals|function|if|loop)\\s",
-        "end": "\\s(endglobals|endfunction|endif|endloop)\\s"
-      }
-    }
+    ]
 }

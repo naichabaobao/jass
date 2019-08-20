@@ -50,21 +50,17 @@ const hoverProvider = {
 
 const colorProvider = {
   provideDocumentColors(document, token) {
-
-  }/*ProviderResult<ColorInformation[]>*/,
+    return [new vscode.ColorInformation(new vscode.Range(0, 0, 1, 20), new vscode.Color(0, 255, 255, 1))]
+  },
   provideColorPresentations(color, context, token) {
-
-  }/*ProviderResult<ColorPresentation[]>*/
+    return []
+  }
 }
 
 const typeFormattingProvider = {
   provideOnTypeFormattingEdits(document, position, ch, options, token) {
     return [new vscode.TextEdit(new vscode.Range(new position(0, 0), new position(0, 20)), "一段中文咯")]
   }
-}
-
-const creatTextEdit = function (sCol, Spos, eCol, ePos, con) {
-  return new vscode.TextEdit(new vscode.Range(new vscode.Position(sCol, Spos), new vscode.Position(eCol, ePos)), con)
 }
 
 /**
@@ -76,7 +72,7 @@ const participle = function (string) {
   if (!string) {
     return words
   }
-  // 数字 字母 空白串 换行符 其它 => 数字 字母 空白串 换行符 字符串 注释串 char 其它
+  // 数字 字母 空白串 换行符 其它 => 数字 字母 空白串 换行符 字符串 注释串 其它
 
   let untreatedWords = string.match(/\d+|[a-zA-Z]+|[\t ]+|\n|./g).map(x => x)
   let commiting = false
@@ -237,9 +233,11 @@ const documentFormattingEditProvider = {
     let line = 0
     let colume = 0
 
-    let words = participle(documentContent)
     let ident = 0
     let tabSize = options.tabSize | 2
+
+    let words = participle(documentContent)
+
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
       let p1 = words[i - 1]
@@ -312,14 +310,7 @@ const documentFormattingEditProvider = {
         }
       }
       // 右边不能是空格
-      if (word == "then" ||
-        word == "else" ||
-        word == "return" ||
-        word == "endfunction" ||
-        word == "endloop" ||
-        word == "returns" ||
-        word == "globals" ||
-        word == "endglobals" ||
+      if (
         word == "(" ||
         word == "[") {
         if (isSpace(n1)) {
@@ -328,22 +319,21 @@ const documentFormattingEditProvider = {
         }
       }
       // 左边不能是空格
-      if (word == "globals" ||
-        word == "endglobals" ||
-        word == "function" ||
-        word == "endfunction" ||
+      if (
         word == ")" ||
-        word == "]" ||
-        word == "type") {
+        word == "]") {
         if (isSpace(p1)) {
           let range = new vscode.Range(line, colume - p1.length, line, colume)
           edits.push(edit.delete(range))
         }
       }
       // 右边必须是换行
+      /*
       if (word == "globals" ||
         word == "endglobals" ||
-        word == "endfunction") {
+        word == "endfunction" ||
+        word == "then" ||
+        word == "loop") {
         if (!isNewLine(n1)) {
           if (isSpace(n1) && !isNewLine(n2)) {
             edits.push(edit.insert(new vscode.Position(line, colume + length), "\n"))
@@ -359,46 +349,6 @@ const documentFormattingEditProvider = {
             edits.push(edit.insert(new vscode.Position(line, colume), "\n"))
           }
         }
-      }
-      // 
-      /*
-      if (word == "globals" || word == "endglobals" || word == "endfunction" || word == "native") {
-        if (!isNewLine(p1)) {
-          if (isNewLine(p2)) {
-            // \n\s+globals => \n+globals
-            if (isSpace(p1)) {
-              let range = new vscode.Range(line, colume - p1.length, line, colume)
-              edits.push(edit.delete(range))
-              console.log(colume)
-            }
-          }
-        }
-        if (!isNewLine(n1)) {
-          if (isNewLine(n2) && isSpace(n1)) {
-            let range = new vscode.Range(line, colume + length, line, colume + length + n1.length)
-            edits.push(edit.delete(range))
-          }
-        }
-      }
-
-      if (word == "returns" || word == "then" || word == "loop") {
-        ident++;
-      }
-      if (word == "endif" || word == "endloop" || word == "endfunction") {
-        ident--;
-      }
-      if (word == "exitwhen" || word == "if" || word == "loop" || word == "endif" || word == "endloop") {
-        if (isSpace(p1)) {
-          if (p1.length != ident * tabSize) {
-            let range = new vscode.Range(line, colume - p1.length, line, colume)
-            edits.push(edit.replace(range, creatSpace(ident * tabSize)))
-          }
-          if (!isNewLine(p2)) {
-            edits.push(edit.insert(new vscode.Position(line, colume - p1.length), "\n"))
-          }
-        } else if (isNewLine(p1)) {
-          edits.push(edit.insert(new vscode.Position(line, colume), creatSpace(ident * tabSize)))
-        }
       }*/
       colume += length
       if (word == "\n") {
@@ -410,6 +360,29 @@ const documentFormattingEditProvider = {
   }
 }
 
+const didSaveTextDocumentHandle = function (document) {
+
+}
+
+const hightLightProvider = function (document, position, token) {
+  let words = participle(document.getText())
+  let highlights = []
+  let line = 0
+  let colume = 0
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    if (types.includes(word)) {
+      highlights.push(new vscode.DocumentHighlight(new vscode.Range(line, colume, line, 0)))
+    }
+    colume += word.length
+    if (word == "\n") {
+      line++;
+      position = 0;
+    }
+  }
+
+}
+
 function activate(context) {
   vscode.window.showInformationMessage('好烦啊!');
 
@@ -417,13 +390,23 @@ function activate(context) {
 
   vscode.languages.registerHoverProvider(language, hoverProvider);
 
-  // vscode.languages.registerColorProvider(language,colorProvider)
+  vscode.languages.registerColorProvider(language, colorProvider)
 
-  vscode.languages.registerOnTypeFormattingEditProvider(language, typeFormattingProvider, "", ...[","])
+  // vscode.languages.registerOnTypeFormattingEditProvider(language, typeFormattingProvider, "(", ...[","])
 
   vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider)
 
+  // vscode.languages.registerDocumentHighlightProvider(language)
 
+  // 跳到定义
+  // vscode.languages.registerTypeDefinitionProvider
+
+  // 查看当前被使用的其它地方
+  // vscode.languages.register
+
+  vscode.languages.registerDocumentSymbolProvider
+
+  vscode.languages.registerSignatureHelpProvider
 
   // 错误提示
   if (diagnosticCollection == null)

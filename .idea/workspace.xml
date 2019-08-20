@@ -2,25 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8123712-4c64-4e54-85a0-88229e19e6a7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jass.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/functions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/api1.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/api2.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/functions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/functions1.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/tip.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/extension1.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/extension1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/json/jass.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/json/jass.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/extension2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/extension2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/settings/jass.tmLanguage.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings/jass.tmLanguage.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/settings/language-configuration.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings/language-configuration.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/war3/aaa.j" beforeDir="false" afterPath="$PROJECT_DIR$/war3/aaa.j" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/war3/aaaa.j" beforeDir="false" afterPath="$PROJECT_DIR$/war3/aaaa.j" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/war3/common.j" beforeDir="false" afterPath="$PROJECT_DIR$/war3/common.j" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -35,9 +20,10 @@
     <session id="-1273253019">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -58,7 +44,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/functions1.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -114,11 +100,6 @@
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/debug-auto-launch/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/debug-server-ready/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/docker/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/node_modules/@emmetio/extract-abbreviation/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/node_modules/jsonc-parser/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/node_modules/vscode-emmet-helper/node_modules/vscode-languageserver-types/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/node_modules/vscode-emmet-helper/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/node_modules/vscode-languageserver-types/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/emmet/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/extension-editing/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/fsharp/package.json" />
@@ -148,36 +129,6 @@
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/markdown-language-features/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/merge-conflict/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/@types/source-map/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/async-limiter/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/balanced-match/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/brace-expansion/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/color-convert/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/color-name/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/color-string/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/color/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/concat-map/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/fs.realpath/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/inflight/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/inherits/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/is-arrayish/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/minimatch/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/mkdirp/node_modules/minimist/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/mkdirp/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/noice-json-rpc/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/once/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/path-is-absolute/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/simple-swizzle/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-chrome-debug-core/node_modules/glob/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-chrome-debug-core/node_modules/source-map/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-chrome-debug-core/node_modules/vscode-debugadapter/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-chrome-debug-core/node_modules/vscode-debugprotocol/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-chrome-debug-core/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-debugadapter/node_modules/vscode-debugprotocol/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-debugadapter/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/vscode-nls/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/wrappy/package.json" />
-      <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/node_modules/ws/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.node-debug2/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/ms-vscode.references-view/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/node_modules/typescript/package.json" />
@@ -215,226 +166,6 @@
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/xml/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/extensions/yaml/package.json" />
       <path value="$PROJECT_DIR$/.vscode-test/vscode-1.37.0/resources/app/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@babel/code-frame/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@babel/highlight/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/events/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/glob/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/minimatch/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/mocha/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/node/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/@types/vscode/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/acorn-jsx/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/acorn/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/agent-base/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ajv/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ansi-colors/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ansi-escapes/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ansi-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ansi-styles/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/argparse/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/astral-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/balanced-match/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/brace-expansion/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/browser-stdout/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/callsites/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/camelcase/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/chalk/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/chardet/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/cli-cursor/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/cli-width/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/cliui/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/code-point-at/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/color-convert/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/color-name/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/concat-map/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/cross-spawn/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/debug/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/decamelize/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/deep-is/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/define-properties/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/diff/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/doctrine/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/emoji-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/end-of-stream/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/es-abstract/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/es-to-primitive/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/es6-promise/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/es6-promisify/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/escape-string-regexp/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/eslint-scope/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/eslint-utils/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/eslint-visitor-keys/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/eslint/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/espree/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/esprima/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/esquery/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/esrecurse/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/estraverse/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/esutils/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/execa/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/external-editor/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/fast-deep-equal/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/fast-json-stable-stringify/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/fast-levenshtein/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/figures/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/file-entry-cache/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/find-up/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/flat-cache/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/flat/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/flatted/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/fs.realpath/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/function-bind/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/functional-red-black-tree/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/get-caller-file/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/get-stream/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/glob/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/globals/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/growl/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/has-flag/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/has-symbols/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/has/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/he/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/http-proxy-agent/node_modules/debug/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/http-proxy-agent/node_modules/ms/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/http-proxy-agent/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/https-proxy-agent/node_modules/debug/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/https-proxy-agent/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/iconv-lite/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ignore/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/import-fresh/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/imurmurhash/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/inflight/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/inherits/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/inquirer/node_modules/ansi-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/inquirer/node_modules/strip-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/inquirer/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/invert-kv/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-buffer/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-callable/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-date-object/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-fullwidth-code-point/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-promise/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-stream/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/is-symbol/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/isexe/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/js-tokens/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/js-yaml/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/json-schema-traverse/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/json-stable-stringify-without-jsonify/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/lcid/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/levn/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/locate-path/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/lodash/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/log-symbols/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/map-age-cleaner/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mem/node_modules/mimic-fn/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mem/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mimic-fn/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/minimatch/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/minimist/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mkdirp/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mocha/node_modules/debug/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mocha/node_modules/glob/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mocha/node_modules/ms/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mocha/node_modules/supports-color/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mocha/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/ms/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/mute-stream/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/natural-compare/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/nice-try/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/node-environment-flags/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/npm-run-path/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/number-is-nan/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/object-keys/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/object.assign/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/object.getownpropertydescriptors/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/once/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/onetime/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/optionator/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/os-locale/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/os-tmpdir/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-defer/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-finally/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-is-promise/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-limit/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-locate/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/p-try/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/parent-module/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/path-exists/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/path-is-absolute/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/path-is-inside/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/path-key/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/prelude-ls/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/progress/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/pump/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/punycode/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/regexpp/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/require-directory/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/require-main-filename/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/resolve-from/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/restore-cursor/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rimraf/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/run-async/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/ajax/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/internal-compatibility/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/operators/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/ajax/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/fetch/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/internal-compatibility/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/operators/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/testing/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/src/webSocket/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/testing/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/rxjs/webSocket/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/safer-buffer/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/semver/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/set-blocking/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/shebang-command/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/shebang-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/signal-exit/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/slice-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/sprintf-js/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/string-width/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/strip-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/strip-eof/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/strip-json-comments/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/supports-color/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/table/node_modules/ansi-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/table/node_modules/string-width/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/table/node_modules/strip-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/table/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/text-table/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/through/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/tmp/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/tslib/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/type-check/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/typescript/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/uri-js/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/vscode-test/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/which-module/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/which/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wide-align/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wordwrap/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrap-ansi/node_modules/ansi-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrap-ansi/node_modules/is-fullwidth-code-point/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrap-ansi/node_modules/string-width/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrap-ansi/node_modules/strip-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrap-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/wrappy/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/write/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/y18n/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-parser/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-unparser/node_modules/get-caller-file/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-unparser/node_modules/require-main-filename/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-unparser/node_modules/yargs-parser/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-unparser/node_modules/yargs/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs-unparser/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs/node_modules/ansi-regex/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs/node_modules/string-width/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs/node_modules/strip-ansi/package.json" />
-      <path value="$PROJECT_DIR$/jass/node_modules/yargs/package.json" />
       <path value="$PROJECT_DIR$/jass/package.json" />
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
@@ -477,7 +208,7 @@
     <property name="node.js.selected.package.eslint" value="E:\jass\node_modules\eslint" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.folding" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.JavaScript" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -502,23 +233,20 @@
       <option name="presentableId" value="Default" />
       <updated>1565718552588</updated>
       <workItem from="1565718553690" duration="1204000" />
+      <workItem from="1566302491099" duration="346000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1204000" />
+    <option name="totallyTimeSpent" value="1550000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
     <layout>
-      <window_info id="npm" side_tool="true" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2496474" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -526,6 +254,10 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />

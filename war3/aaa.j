@@ -5589,6 +5589,7 @@ call SetStartLocPrioCount(8,1)
 call SetStartLocPrio(8,0,6,MAP_LOC_PRIO_HIGH)
 endfunction
 function main takes nothing returns nothing
+"AbilityId(abilityIdString)"
 local weathereffect we
 call SetCameraBounds(-6144.+GetCameraMargin(CAMERA_MARGIN_LEFT),-6144.+GetCameraMargin(CAMERA_MARGIN_BOTTOM),6144.-GetCameraMargin(CAMERA_MARGIN_RIGHT),6144.-GetCameraMargin(CAMERA_MARGIN_TOP),-6144.+GetCameraMargin(CAMERA_MARGIN_LEFT),6144.-GetCameraMargin(CAMERA_MARGIN_TOP),6144.-GetCameraMargin(CAMERA_MARGIN_RIGHT),-6144.+GetCameraMargin(CAMERA_MARGIN_BOTTOM))
 call SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl","Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
