@@ -44,7 +44,6 @@
     "themes": [
       {
         "label": "jass",
-        "uiTheme": "vs",
         "path": "./src/settings/jass-color-theme.json"
       }
     ],

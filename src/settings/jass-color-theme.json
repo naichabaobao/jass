@@ -3,139 +3,79 @@
 	"tokenColors": [
     {
       "name": "jass-comment",
-      "scope": "jass.comment",
+      "scope": "comment",
       "settings": {
-        "foreground": "#979494"
+        "foreground": "#808080"
       }
     },
     {
       "name": "jass-string",
-      "scope": "jass.string",
+      "scope": "string",
       "settings": {
-        "foreground": "#2cdd61"
+        "foreground": "#008000"
       }
     },
     {
-      "name": "jass-class",
-      "scope": "jass.class",
+      "name": "jass-support-function",
+      "scope": "support.function",
       "settings": {
-        "foreground": "#eb31e2"
+        "foreground": "#808008"
       }
     },
     {
-      "name": "jass-control",
-      "scope": "jass.control",
+      "name": "jass-variable",
+      "scope": "variable",
       "settings": {
-        "foreground": "#eb5f5f"
+        "foreground": "#a52a2a"
       }
     },
     {
-      "name": "jass-symbol-compare",
-      "scope": "jass.symbol.compare",
+      "name": "jass-constant",
+      "scope": "constant",
       "settings": {
-        "foreground": "#43d3e6",
+        "foreground": "#ffd700",
       }
     },{
-      "name": "jass-symbol-operation",
-      "scope": "jass.symbol.operation",
+      "name": "jass-keyword-other",
+      "scope": "keyword.other",
       "settings": {
-        "foreground": "#d4ffa2",
+        "foreground": "#ffff00",
       }
     },{
-      "name": "jass-symbol-relation",
-      "scope": "jass.symbol.relation",
+      "name": "jass-keyword",
+      "scope": "keyword",
       "settings": {
-        "foreground": "#4f44ec",
+        "foreground": "#ff1493",
       }
     },{
-      "name": "jass-symbol-assig",
-      "scope": "jass.symbol.assig",
+      "name": "jass-keyword-operator",
+      "scope": "keyword.operator",
       "settings": {
-        "foreground": "#1e94f5",
+        "foreground": "#ff8c00",
       }
     },{
-      "name": "jass-symbol-array",
-      "scope": "jass.symbol.array",
+      "name": "jass-keyword-control",
+      "scope": "keyword.control",
       "settings": {
-        "foreground": "#00befd",
+        "foreground": "#00bfff",
       }
     },{
-      "name": "jass-symbol",
-      "scope": "jass.symbol",
+      "name": "jass-support-type",
+      "scope": "support.type",
       "settings": {
-        "foreground": "#a200ff",
+        "foreground": "#8a2be3",
       }
     },{
-      "name": "jass-globals",
-      "scope": "jass.globals",
+      "name": "jass-support-class",
+      "scope": "support.class",
       "settings": {
-        "foreground": "#ffe600",
+        "foreground": "#ffd700",
       }
     },{
-      "name": "jass-function",
-      "scope": "jass.function",
-      "settings": {
-        "foreground": "#ff0263",
-      }
-    },{
-      "name": "jass-bedeck",
-      "scope": "jass.bedeck",
-      "settings": {
-        "foreground": "#ff9900",
-      }
-    },{
-      "name": "jass-modifier",
-      "scope": "jass.modifier",
-      "settings": {
-        "foreground": "#008cff",
-      }
-    },{
-      "name": "jass-grammar",
-      "scope": "jass.grammar",
-      "settings": {
-        "foreground": "#ffbb00",
-      }
-    },{
-      "name": "jass-class-base",
-      "scope": "jass.class.base",
-      "settings": {
-        "foreground": "#ff0000",
-      }
-    },{
-      "name": "jass-array",
-      "scope": "jass.array",
-      "settings": {
-        "foreground": "#00befd",
-      }
-    },{
-      "name": "jass-boolean",
-      "scope": "jass.boolean",
-      "settings": {
-        "foreground": "#e24f8c",
-      }
-    },{
-      "name": "jass-null",
-      "scope": "jass.null",
-      "settings": {
-        "foreground": "#904bff",
-      }
-    },{
-      "name": "jass-nothing",
-      "scope": "jass.nothing",
-      "settings": {
-        "foreground": "#f3bbfa",
-      }
-    },{
-      "name": "identifier",
-      "scope": "identifier",
-      "settings": {
-        "foreground": "#9c563a",
-      }
-    },{
-      "name": "number",
+      "name": "jass-number",
       "scope": "number",
       "settings": {
-        "foreground": "#5eb64c",
+        "foreground": "#3dec5a",
       }
     }
 	]

@@ -396,6 +396,8 @@ function activate(context) {
 
   vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider)
 
+
+  vscode.CompletionItemKind
   // vscode.languages.registerDocumentHighlightProvider(language)
 
   // 跳到定义

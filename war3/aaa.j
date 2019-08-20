@@ -840,6 +840,7 @@ call YDWETriggerRegisterEnterRectSimpleNull(gg_trg_END,gg_rct_END)
 call TriggerAddCondition(gg_trg_END,Condition(function Trig_ENDConditions))
 call TriggerAddAction(gg_trg_END,function Trig_ENDActions)
 endfunction
+
 function Trig_WAVESCOUNTActions takes nothing returns nothing
 call StartTimerBJ(udg_Counter,false,60.)
 call CreateTimerDialogBJ(udg_Counter,"游戏开始>>>")
@@ -889,6 +890,7 @@ endfunction
 function Trig_Kick_02Actions takes nothing returns nothing
 call CustomDefeatBJ(Player(7),"你被踢出游戏")
 endfunction
+// 想知道点解
 function InitTrig_Kick_02 takes nothing returns nothing
 set gg_trg_Kick_02=CreateTrigger()
 call TriggerRegisterPlayerChatEvent(gg_trg_Kick_02,Player(0),"--kick 8",true)

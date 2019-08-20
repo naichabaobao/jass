@@ -8,135 +8,73 @@
     },{
       "include": "#jass-string"
     },{
-      "include": "#jass-class"
+      "include": "#jass-support-function"
     },{
-      "include": "#jass-control"
+      "include": "#jass-variable"
     },{
-      "include": "#jass-symbol-compare"
+      "include": "#jass-constant"
     },{
-      "include": "#jass-symbol-operation"
+      "include": "#jass-keyword-other"
     },{
-      "include": "#jass-symbol-relation"
+      "include": "#jass-keyword"
     },{
-      "include": "#jass-symbol-assig"
+      "include": "#jass-keyword-operator"
     },{
-      "include": "#jass-symbol-array"
+      "include": "#jass-keyword-control"
     },{
-      "include": "#jass-symbol"
+      "include": "#jass-support-type"
     },{
-      "include": "#jass-globals"
+      "include": "#jass-support-class"
     },{
-      "include": "#jass-function"
-    },{
-      "include": "#jass-bedeck"
-    },{
-      "include": "#jass-modifier"
-    },{
-      "include": "#jass-grammar"
-    },{
-      "include": "#jass-class-base"
-    },{
-      "include": "#jass-array"
-    },{
-      "include": "#jass-boolean"
-    },{
-      "include": "#jass-null"
-    },{
-      "include": "#jass-nothing"
-    },{
-      "include": "#identifier"
-    },{
-      "include": "#number"
+      "include": "#jass-number"
     }
   ],
   "repository": {
     "jass-comment": {
-      "name": "jass.comment",
+      "name": "comment",
       "match": "//.*\\n"
     },
     "jass-string": {
-      "name": "jass.string",
+      "name": "string",
       "match": "\"((\\\\\")|.)*?\""
     },
-    "jass-class": {
-      "name": "jass.class",
-      "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable)\\b"
+    
+    "jass-variable": {
+      "name":"variable"
     },
-    "jass-control": {
-      "name": "jass.control",
+    "jass-constant": {
+      "name":"constant"
+    },
+    "jass-keyword-other": {
+      "name": "keyword.other",
+      "match": "\\bjass\\b"
+    },
+    "jass-keyword": {
+      "name": "keyword",
+      "match": "\\b(and|or|not|globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array|true|false|null|nothing)\\b"
+    },
+    "jass-keyword-operator": {
+      "name": "keyword.operator",
+      "match": ">|<|=|!|\\+|-|\\*|/|%|\\[|\\]|\\(|\\)|,|\\bmod\\b"
+    },
+    "jass-keyword-control": {
+      "name": "keyword.control",
       "match": "\\b(if|else|elseif|endif|then|loop|endloop|exitwhen|return)\\b"
     },
-    "jass-symbol-compare": {
-      "name": "jass.symbol.compare",
-      "match": ">|<|>=|<=|==|!="
-    },
-    "jass-symbol-operation": {
-      "name": "jass.symbol.operation",
-      "match": "\\+|-|\\*|/|%"
-    },
-    "jass-symbol-relation": {
-      "name": "jass.symbol.relation",
-      "match": "\\b(and|or|not)\\b"
-    },
-    "jass-symbol-assig": {
-      "name": "jass.symbol.assig",
-      "match": "="
-    },
-    "jass-symbol-array": {
-      "name": "jass.symbol.array",
-      "match": "\\[|\\]"
-    },
-    "jass-symbol": {
-      "name": "jass.symbol",
-      "match": "\\(|\\)|,"
-    },
-    "jass-globals": {
-      "name": "jass.globals",
-      "match": "\\b(globals|endglobals)\\b"
-    }, 
-    "jass-function": {
-      "name": "jass.function",
-      "match": "\\b(function|endfunction)\\b"
-    }, 
-    "jass-bedeck": {
-      "name": "jass.bedeck",
-      "match": "\\b(constant|native|local|type)\\b"
-    }, 
-    "jass-modifier": {
-      "name": "jass.modifier",
-      "match": "\\b(set|call)\\b"
-    }, 
-    "jass-grammar": {
-      "name": "jass.grammar",
-      "match": "\\b(takes|returns|extends)\\b"
-    },
-    "jass-class-base": {
-      "name": "jass.class.base",
+    "jass-support-type": {
+      "name": "support.type",
       "match": "\\b(integer|real|boolean|string|handle|code)\\b"
     },
-    "jass-array": {
-      "name": "jass.array",
-      "match": "\\barray\\b"
+    "jass-support-class": {
+      "name": "support.class",
+      "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable)\\b"
     },
-    "jass-boolean": {
-      "name": "jass.boolean",
-      "match": "\\b(true|false)\\b"
-    },
-    "jass-null": {
-      "name": "jass.null",
-      "match": "\\b(null)\\b"
-    },
-    "jass-nothing": {
-      "name": "jass.nothing",
-      "match": "\\b(nothing)\\b"
-    },
-    "identifier": {
-      "name": "identifier",
-      "match": ""
-    },
-    "number": {
+    "jass-number": {
       "name": "number",
       "match": "'[a-zA-Z]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|\\b\\d\\b"
+    },
+    "jass-support-function": {
+      "name": "support.function"
     }
   }
 }
