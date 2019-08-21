@@ -1,22 +1,27 @@
 const fs = require("fs")
 const path = require("path")
 
-let functions = {
-  "ConvertRace": {
-    "fileName": "",
-    "original": "constant native ConvertRace takes integer i returns race",
-    "name": "ConvertRace",
-    "isConstant": true,
-    "isNative": true,
-    "args": [
-      { "type": "integer", "name": "i", "documentation": "" }
-    ],
-    "returnType": "race",
-    "insertText": "ConvertRace(i)",
-    "documentation": ""
-  }
+let functions = Object
+let values = Object
+
+/**
+ * 用于判断当前编辑文件是不是ai如果是ai只返回common.j同埋common.ai两个文件
+ * 否者返回lib目录下所有.j文件
+ */
+let ai = false
+
+/**
+ * 设置ai
+ * @param {boolean} isAi 
+ */
+const setAi = (isAi) => {
+  ai = isAi
 }
 
+/**
+ * 
+ * @param {string} filePath 
+ */
 const readJFile = (filePath) => {
   try {
     return fs.readFileSync(filePath, {
@@ -55,7 +60,7 @@ const parseJFunctionStrings = (content) => {
  * @param {array} functionStrings j方法字符串數組
  * @param {string} fileName j文件名稱
  */
-const parseJFunctionStrings2FunctionObject = (functionStrings, fileName = "") => {
+const parseJFunctions = (functionStrings, fileName = "") => {
   if (functionStrings && Array.isArray(functionStrings)) {
     functionStrings.forEach(x => {
       let original = x
@@ -84,15 +89,211 @@ const parseJFunctionStrings2FunctionObject = (functionStrings, fileName = "") =>
         returnType: returnType,
         insertText: insertText
       }
-      console.log(functions[functionName])
     })
   }
 }
 
-let paths = fs.readdirSync(path.join(__dirname, "../static/library"), "utf8")
+/**
+ * 解析出globals--endblobals内容
+ * @param {string} content j文件内容
+ */
+const parseJGlobalsBlockString = (content) => {
+  try {
+    if (content && typeof content == "string") {
+      // 獲取globals塊 同時去掉所有注釋
+      return content.match(/globals[\s\S]+?endglobals/m).shift().replace(/\/\/.+/g, "")
+    }
+    return null
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
 
-parseJFunctionStrings2FunctionObject(parseJFunctionStrings(readJFile(path.join(__dirname, "../static/library/japi/YDWEJapiOther.j"))))
+const types = [
+  "integer",
+  "real",
+  "string",
+  "boolean",
+  "code",
+  "handle",
+  "agent",
+  "event",
+  "player",
+  "widget",
+  "unit",
+  "destructable",
+  "item",
+  "ability",
+  "buff",
+  "force",
+  "group",
+  "trigger",
+  "triggercondition",
+  "triggeraction",
+  "timer",
+  "location",
+  "region",
+  "rect",
+  "boolexpr",
+  "sound",
+  "conditionfunc",
+  "filterfunc",
+  "unitpool",
+  "itempool",
+  "race",
+  "alliancetype",
+  "racepreference",
+  "gamestate",
+  "igamestate",
+  "fgamestate",
+  "playerstate",
+  "playerscore",
+  "playergameresult",
+  "unitstate",
+  "aidifficulty",
+  "eventid",
+  "gameevent",
+  "playerevent",
+  "playerunitevent",
+  "unitevent",
+  "limitop",
+  "widgetevent",
+  "dialogevent",
+  "unittype",
+  "gamespeed",
+  "gamedifficulty",
+  "gametype",
+  "mapflag",
+  "mapvisibility",
+  "mapsetting",
+  "mapdensity",
+  "mapcontrol",
+  "playerslotstate",
+  "volumegroup",
+  "camerafield",
+  "camerasetup",
+  "playercolor",
+  "placement",
+  "startlocprio",
+  "raritycontrol",
+  "blendmode",
+  "texmapflags",
+  "effect",
+  "effecttype",
+  "weathereffect",
+  "terraindeformation",
+  "fogstate",
+  "fogmodifier",
+  "dialog",
+  "button",
+  "quest",
+  "questitem",
+  "defeatcondition",
+  "timerdialog",
+  "leaderboard",
+  "multiboard",
+  "multiboarditem",
+  "trackable",
+  "gamecache",
+  "version",
+  "itemtype",
+  "texttag",
+  "attacktype",
+  "damagetype",
+  "weapontype",
+  "soundtype",
+  "lightning",
+  "pathingtype",
+  "image",
+  "ubersplat",
+  "hashtable"]
+
+let typesString = `(${types.join("|")})`
+
+/**
+ * 從globals塊内容中解析出全局定義(無視vjass語法中 private)
+ * @param {string} content 
+ */
+const parseJValueStrings = (content) => {
+  try {
+    if (content && typeof content == "string") {
+      // 正則拼裝 用於獲取全局量
+
+      let constantReg = `constant\\s+${typesString}\\s+\\w+\\s*=.+`
+      let varibleReg = `${typesString}\\s+\\w+\\s*=.+`
+      let varibleArrayReg = `${typesString}\\s+array\\s+\\w+`
+      let reg = `(${constantReg})|(${varibleReg})|(${varibleArrayReg})`
+      return content.match(new RegExp(reg, "g")).map(x => x.trim())
+    }
+    return null
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
+/**
+ * 傳入全局量字符串數組 分別解析后保存在values中
+ * @param {array} valueStrings 
+ */
+const parseJValues = (valueStrings, fileName = "") => {
+  try {
+    if (valueStrings && Array.isArray(valueStrings)) {
+      valueStrings.forEach(valueString => {
+        let original = valueString
+        let isContent = valueString.includes("constant")
+        let isArray = valueString.includes("array")
+        let type = types.filter(x => valueString.includes(x)).shift()
+        let name = valueString.replace(new RegExp(`${typesString}|(constant)|(array)|(=.+)|\\s+`, "g"), "")
+        fileName ? fileName : ""
+        values[name] = { original, fileName, name, isContent, isArray, type }
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const dirRoot = "../static/library"
+
+/**
+ * 读取目录下所有j文件
+ * @param {string} abdir 
+ */
+const readJFiles = (abdir) => {
+  let files = fs.readdirSync(path.join(__dirname, abdir), "utf8")
+  let jFiles = new Array()
+  files.forEach(x => {
+    let filePath = path.join(__dirname, path.join(abdir, x))
+    let file = fs.lstatSync(filePath)
+    if (file.isDirectory()) {
+      jFiles.concat(readJFiles(abdir + "/" + x))
+    } else if (file.isFile()) {
+      if (ai) {
+        if (x == "common.j" || x == "common.ai") {
+          jFiles.push(filePath)
+        }
+      } else {
+        if (x.endsWith(".j")) {
+          jFiles.push(filePath)
+        }
+      }
+    }
+  })
+  return jFiles
+}
+
+// 读取库文件初始化
+readJFiles(dirRoot).forEach(x => {
+  let content = readJFile(x)
+  if (content) {
+    parseJFunctions(parseJFunctionStrings(content), path.parse(x).base)
+    let globalsContent = parseJGlobalsBlockString(content)
+    parseJValues(parseJValueStrings(globalsContent), path.parse(x).base)
+  }
+})
 
 module.exports = {
-
+  functions, values, parseJFunctions, parseJValues, setAi
 }
