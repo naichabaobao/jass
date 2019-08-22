@@ -184,6 +184,7 @@ library DzAPI
         set whichPlayer=null
         return value
     endfunction
+
     function DzAPI_Map_StoreBoolean takes player whichPlayer, string key, boolean value returns nothing
         set key="B"+key
         if(value)then
@@ -193,7 +194,9 @@ library DzAPI
         endif
         set key=null
         set whichPlayer=null
+        
     endfunction
+
     function DzAPI_Map_GetStoredBoolean takes player whichPlayer, string key returns boolean
         local boolean value
         set key="B"+key

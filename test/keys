@@ -1,0 +1,1157 @@
+ Convert Race
+ Convert Alliance
+ Convert Race Pref
+ Convert I Game State
+ Convert F Game State
+ Convert Player State
+ Convert Player Score
+ Convert Player Game Result
+ Convert Unit State
+ Convert A I Difficulty
+ Convert Game Event
+ Convert Player Event
+ Convert Player Unit Event
+ Convert Widget Event
+ Convert Dialog Event
+ Convert Unit Event
+ Convert Limit Op
+ Convert Unit
+ Convert Game Speed
+ Convert Placement
+ Convert Start Loc Prio
+ Convert Game Difficulty
+ Convert Game
+ Convert Map Flag
+ Convert Map Visibility
+ Convert Map Setting
+ Convert Map Density
+ Convert Map Control
+ Convert Player Color
+ Convert Player Slot State
+ Convert Volume Group
+ Convert Camera Field
+ Convert Blend Mode
+ Convert Rarity Control
+ Convert Tex Map Flags
+ Convert Fog State
+ Convert Effect
+ Convert Version
+ Convert Item
+ Convert Attack
+ Convert Damage
+ Convert Weapon
+ Convert Sound
+ Convert Pathing
+ Order Id
+ Order Id2 String
+ Unit Id
+ Unit Id2 String
+ Ability Id
+ Ability Id2 String
+ Get Object Name
+ Deg2 Rad
+ Rad2 Deg
+ Sin
+ Cos
+ Tan
+ Asin
+ Acos
+ Atan
+ Atan2
+ Square Root
+ Pow
+ I2 R
+ R2 I
+ I2 S
+ R2 S
+ R2 S W
+ S2 I
+ S2 R
+ Get Handle Id
+ Sub String
+ String Length
+ String Case
+ String Hash
+ Get Localized String
+ Get Localized Hotkey
+ Set Map Name
+ Set Map Description
+ Set Teams
+ Set Players
+ Define Start Location
+ Define Start Location Loc
+ Set Start Loc Prio Count
+ Set Start Loc Prio
+ Get Start Loc Prio Slot
+ Get Start Loc Prio
+ Set Game
+ Set Map Flag
+ Set Game Placement
+ Set Game Speed
+ Set Game Difficulty
+ Set Resource Density
+ Set Creature Density
+ Get Teams
+ Get Players
+ Is Game
+ Get Game
+ Is Map Flag Set
+ Get Game Placement
+ Get Game Speed
+ Get Game Difficulty
+ Get Resource Density
+ Get Creature Density
+ Get Start Location X
+ Get Start Location Y
+ Get Start Location Loc
+ Set Player Team
+ Set Player Start Location
+ Force Player Start Location
+ Set Player Color
+ Set Player Alliance
+ Set Player Tax Rate
+ Set Player Race Preference
+ Set Player Race Selectable
+ Set Player Controller
+ Set Player Name
+ Set Player On Score Screen
+ Get Player Team
+ Get Player Start Location
+ Get Player Color
+ Get Player Selectable
+ Get Player Controller
+ Get Player Slot State
+ Get Player Tax Rate
+ Is Player Race Pref Set
+ Get Player Name
+ Create Timer
+ Destroy Timer
+ Timer Start
+ Timer Get Elapsed
+ Timer Get Remaining
+ Timer Get Timeout
+ Pause Timer
+ Resume Timer
+ Get Expired Timer
+ Create Group
+ Destroy Group
+ Group Add Unit
+ Group Remove Unit
+ Group Clear
+ Group Enum Units Of
+ Group Enum Units Of Player
+ Group Enum Units In Rect
+ Group Enum Units In Rect Counted
+ Group Enum Units In Range
+ Group Enum Units In Range Of Loc
+ Group Enum Units In Range Counted
+ Group Enum Units In Range Of Loc Counted
+ Group Enum Units Selected
+ Group Immediate Order
+ Group Immediate Order By Id
+ Group Point Order
+ Group Point Order Loc
+ Group Point Order By Id
+ Group Point Order By Id Loc
+ Group Target Order
+ Group Target Order By Id
+ For Group
+ First Of Group
+ Create Force
+ Destroy Force
+ Force Add Player
+ Force Remove Player
+ Force Clear
+ Force Enum Players
+ Force Enum Players Counted
+ Force Enum Allies
+ Force Enum Enemies
+ For Force
+ Rect
+ Rect From Loc
+ Remove Rect
+ Set Rect
+ Set Rect From Loc
+ Move Rect To
+ Move Rect To Loc
+ Get Rect Center X
+ Get Rect Center Y
+ Get Rect Min X
+ Get Rect Min Y
+ Get Rect Max X
+ Get Rect Max Y
+ Create Region
+ Remove Region
+ Region Add Rect
+ Region Clear Rect
+ Region Add Cell
+ Region Add Cell At Loc
+ Region Clear Cell
+ Region Clear Cell At Loc
+ Location
+ Remove Location
+ Move Location
+ Get Location X
+ Get Location Y
+ Get Location Z
+ Is Unit In Region
+ Is Point In Region
+ Is Location In Region
+ Get World Bounds
+ Create Trigger
+ Destroy Trigger
+ Reset Trigger
+ Enable Trigger
+ Disable Trigger
+ Is Trigger Enabled
+ Trigger Wait On Sleeps
+ Is Trigger Wait On Sleeps
+ Get Filter Unit
+ Get Enum Unit
+ Get Filter Destructable
+ Get Enum Destructable
+ Get Filter Item
+ Get Enum Item
+ Get Filter Player
+ Get Enum Player
+ Get Triggering Trigger
+ Get Trigger Event Id
+ Get Trigger Eval Count
+ Get Trigger Exec Count
+ Execute Func
+ And
+ Or
+ Not
+ Condition
+ Destroy Condition
+ Filter
+ Destroy Filter
+ Destroy Bool Expr
+ Trigger Register Variable Event
+ Trigger Register Timer Event
+ Trigger Register Timer Expire Event
+ Trigger Register Game State Event
+ Trigger Register Dialog Event
+ Trigger Register Dialog Button Event
+ Get Event Game State
+ Trigger Register Game Event
+ Get Winning Player
+ Trigger Register Enter Region
+ Get Triggering Region
+ Get Entering Unit
+ Trigger Register Leave Region
+ Get Leaving Unit
+ Trigger Register Trackable Hit Event
+ Trigger Register Trackable Track Event
+ Get Triggering Trackable
+ Get Clicked Button
+ Get Clicked Dialog
+ Get Tournament Finish Soon Time Remaining
+ Get Tournament Finish Now Rule
+ Get Tournament Finish Now Player
+ Get Tournament Score
+ Get Save Basic Filename
+ Trigger Register Player Event
+ Get Trigger Player
+ Trigger Register Player Unit Event
+ Get Leveling Unit
+ Get Learning Unit
+ Get Learned Skill
+ Get Learned Skill Level
+ Get Revivable Unit
+ Get Reviving Unit
+ Get Attacker
+ Get Rescuer
+ Get Dying Unit
+ Get Killing Unit
+ Get Decaying Unit
+ Get Constructing Structure
+ Get Cancelled Structure
+ Get Constructed Structure
+ Get Researching Unit
+ Get Researched
+ Get Trained Unit
+ Get Detected Unit
+ Get Summoning Unit
+ Get Summoned Unit
+ Get Transport Unit
+ Get Loaded Unit
+ Get Selling Unit
+ Get Sold Unit
+ Get Buying Unit
+ Get Sold Item
+ Get Changing Unit
+ Get Changing Unit Prev Owner
+ Get Manipulating Unit
+ Get Manipulated Item
+ Get Ordered Unit
+ Get Issued Order Id
+ Get Order Point X
+ Get Order Point Y
+ Get Order Point Loc
+ Get Order Target
+ Get Order Target Destructable
+ Get Order Target Item
+ Get Order Target Unit
+ Get Spell Ability Unit
+ Get Spell Ability Id
+ Get Spell Ability
+ Get Spell Target Loc
+ Get Spell Target X
+ Get Spell Target Y
+ Get Spell Target Destructable
+ Get Spell Target Item
+ Get Spell Target Unit
+ Trigger Register Player Alliance Change
+ Trigger Register Player State Event
+ Get Event Player State
+ Trigger Register Player Chat Event
+ Get Event Player Chat String
+ Get Event Player Chat String Matched
+ Trigger Register Death Event
+ Get Trigger Unit
+ Trigger Register Unit State Event
+ Get Event Unit State
+ Trigger Register Unit Event
+ Get Event Damage
+ Get Event Damage Source
+ Get Event Detecting Player
+ Trigger Register Filter Unit Event
+ Get Event Target Unit
+ Trigger Register Unit In Range
+ Trigger Add Condition
+ Trigger Remove Condition
+ Trigger Clear Conditions
+ Trigger Add Action
+ Trigger Remove Action
+ Trigger Clear Actions
+ Trigger Sleep Action
+ Trigger Wait For Sound
+ Trigger Evaluate
+ Trigger Execute
+ Trigger Execute Wait
+ Trigger Sync Start
+ Trigger Sync Ready
+ Get Widget Life
+ Set Widget Life
+ Get Widget X
+ Get Widget Y
+ Get Trigger Widget
+ Create Destructable
+ Create Destructable Z
+ Create Dead Destructable
+ Create Dead Destructable Z
+ Remove Destructable
+ Kill Destructable
+ Set Destructable Invulnerable
+ Is Destructable Invulnerable
+ Enum Destructables In Rect
+ Get Destructable
+ Get Destructable X
+ Get Destructable Y
+ Set Destructable Life
+ Get Destructable Life
+ Set Destructable Max Life
+ Get Destructable Max Life
+ Destructable Restore Life
+ Queue Destructable Animation
+ Set Destructable Animation
+ Set Destructable Animation Speed
+ Show Destructable
+ Get Destructable Occluder Height
+ Set Destructable Occluder Height
+ Get Destructable Name
+ Get Trigger Destructable
+ Create Item
+ Remove Item
+ Get Item Player
+ Get Item
+ Get Item X
+ Get Item Y
+ Set Item Position
+ Set Item Drop On Death
+ Set Item Droppable
+ Set Item Pawnable
+ Set Item Player
+ Set Item Invulnerable
+ Is Item Invulnerable
+ Set Item Visible
+ Is Item Visible
+ Is Item Owned
+ Is Item Powerup
+ Is Item Sellable
+ Is Item Pawnable
+ Is Item Id Powerup
+ Is Item Id Sellable
+ Is Item Id Pawnable
+ Enum Items In Rect
+ Get Item Level
+ Set Item Drop I D
+ Get Item Name
+ Get Item Charges
+ Set Item Charges
+ Get Item User Data
+ Set Item User Data
+ Create Unit
+ Create Unit By Name
+ Create Unit At Loc
+ Create Unit At Loc By Name
+ Create Corpse
+ Kill Unit
+ Remove Unit
+ Show Unit
+ Set Unit State
+ Set Unit X
+ Set Unit Y
+ Set Unit Position
+ Set Unit Position Loc
+ Set Unit Facing
+ Set Unit Facing Timed
+ Set Unit Move Speed
+ Set Unit Fly Height
+ Set Unit Turn Speed
+ Set Unit Prop Window
+ Set Unit Acquire Range
+ Set Unit Creep Guard
+ Get Unit Acquire Range
+ Get Unit Turn Speed
+ Get Unit Prop Window
+ Get Unit Fly Height
+ Get Unit Default Acquire Range
+ Get Unit Default Turn Speed
+ Get Unit Default Prop Window
+ Get Unit Default Fly Height
+ Set Unit Owner
+ Set Unit Color
+ Set Unit Scale
+ Set Unit Time Scale
+ Set Unit Blend Time
+ Set Unit Vertex Color
+ Queue Unit Animation
+ Set Unit Animation
+ Set Unit Animation By Index
+ Set Unit Animation With Rarity
+ Add Unit Animation Properties
+ Set Unit Look At
+ Reset Unit Look At
+ Set Unit Rescuable
+ Set Unit Rescue Range
+ Set Hero Str
+ Set Hero Agi
+ Set Hero Int
+ Get Hero Str
+ Get Hero Agi
+ Get Hero Int
+ Unit Strip Hero Level
+ Get Hero X P
+ Set Hero X P
+ Get Hero Skill Points
+ Unit Modify Skill Points
+ Add Hero X P
+ Set Hero Level
+ Get Hero Level
+ Get Unit Level
+ Get Hero Proper Name
+ Suspend Hero X P
+ Is Suspended X P
+ Select Hero Skill
+ Get Unit Ability Level
+ Dec Unit Ability Level
+ Inc Unit Ability Level
+ Set Unit Ability Level
+ Revive Hero
+ Revive Hero Loc
+ Set Unit Exploded
+ Set Unit Invulnerable
+ Pause Unit
+ Is Unit Paused
+ Set Unit Pathing
+ Clear Selection
+ Select Unit
+ Get Unit Point Value
+ Get Unit Point Value By
+ Unit Add Item
+ Unit Add Item By Id
+ Unit Add Item To Slot By Id
+ Unit Remove Item
+ Unit Remove Item From Slot
+ Unit Has Item
+ Unit Item In Slot
+ Unit Inventory Size
+ Unit Drop Item Point
+ Unit Drop Item Slot
+ Unit Drop Item Target
+ Unit Use Item
+ Unit Use Item Point
+ Unit Use Item Target
+ Get Unit X
+ Get Unit Y
+ Get Unit Loc
+ Get Unit Facing
+ Get Unit Move Speed
+ Get Unit Default Move Speed
+ Get Unit State
+ Get Owning Player
+ Get Unit
+ Get Unit Race
+ Get Unit Name
+ Get Unit Food Used
+ Get Unit Food Made
+ Get Food Made
+ Get Food Used
+ Set Unit Use Food
+ Get Unit Rally Point
+ Get Unit Rally Unit
+ Get Unit Rally Destructable
+ Is Unit In Group
+ Is Unit In Force
+ Is Unit Owned By Player
+ Is Unit Ally
+ Is Unit Enemy
+ Is Unit Visible
+ Is Unit Detected
+ Is Unit Invisible
+ Is Unit Fogged
+ Is Unit Masked
+ Is Unit Selected
+ Is Unit Race
+ Is Unit
+ Is Unit In Range
+ Is Unit In Range X Y
+ Is Unit In Range Loc
+ Is Unit Hidden
+ Is Unit Illusion
+ Is Unit In Transport
+ Is Unit Loaded
+ Is Hero Unit Id
+ Is Unit Id
+ Unit Share Vision
+ Unit Suspend Decay
+ Unit Add
+ Unit Remove
+ Unit Add Ability
+ Unit Remove Ability
+ Unit Make Abili
+ Unit Remove Buffs
+ Unit Remove Buffs Ex
+ Unit Has Buffs Ex
+ Unit Count Buffs Ex
+ Unit Add Sleep
+ Unit Can Sleep
+ Unit Add Sleep Perm
+ Unit Can Sleep Perm
+ Unit Is Sleeping
+ Unit Wake Up
+ Unit Apply Timed Life
+ Unit Ignore Alarm
+ Unit Ignore Alarm Toggled
+ Unit Reset Cooldown
+ Unit Set Construction Progress
+ Unit Set Upgrade Progress
+ Unit Pause Timed Life
+ Unit Set Uses Alt Icon
+ Unit Damage Point
+ Unit Damage Target
+ Issue Immediate Order
+ Issue Immediate Order By Id
+ Issue Point Order
+ Issue Point Order Loc
+ Issue Point Order By Id
+ Issue Point Order By Id Loc
+ Issue Target Order
+ Issue Target Order By Id
+ Issue Instant Point Order
+ Issue Instant Point Order By Id
+ Issue Instant Target Order
+ Issue Instant Target Order By Id
+ Issue Build Order
+ Issue Build Order By Id
+ Issue Neutral Immediate Order
+ Issue Neutral Immediate Order By Id
+ Issue Neutral Point Order
+ Issue Neutral Point Order By Id
+ Issue Neutral Target Order
+ Issue Neutral Target Order By Id
+ Get Unit Current Order
+ Set Resource Amount
+ Add Resource Amount
+ Get Resource Amount
+ Waygate Get Destination X
+ Waygate Get Destination Y
+ Waygate Set Destination
+ Waygate Activate
+ Waygate Is Active
+ Add Item To All Stock
+ Add Item To Stock
+ Add Unit To All Stock
+ Add Unit To Stock
+ Remove Item From All Stock
+ Remove Item From Stock
+ Remove Unit From All Stock
+ Remove Unit From Stock
+ Set All Item
+ Set All Unit
+ Set Item
+ Set Unit
+ Get Unit User Data
+ Set Unit User Data
+ Player
+ Get Local Player
+ Is Player Ally
+ Is Player Enemy
+ Is Player In Force
+ Is Player Observer
+ Is Visible To Player
+ Is Location Visible To Player
+ Is Fogged To Player
+ Is Location Fogged To Player
+ Is Masked To Player
+ Is Location Masked To Player
+ Get Player Race
+ Get Player Id
+ Get Player Unit Count
+ Get Player
+ Get Player Structure Count
+ Get Player State
+ Get Player Score
+ Get Player Alliance
+ Get Player Handicap
+ Get Player Handicap X P
+ Set Player Handicap
+ Set Player Handicap X P
+ Set Player Tech Max Allowed
+ Get Player Tech Max Allowed
+ Add Player Tech Researched
+ Set Player Tech Researched
+ Get Player Tech Researched
+ Get Player Tech Count
+ Set Player Units Owner
+ Cripple Player
+ Set Player Ability Available
+ Set Player State
+ Remove Player
+ Cache Player Hero Data
+ Set Fog State Rect
+ Set Fog State Radius
+ Set Fog State Radius Loc
+ Fog Mask Enable
+ Is Fog Mask Enabled
+ Fog Enable
+ Is Fog Enabled
+ Create Fog Modifier Rect
+ Create Fog Modifier Radius
+ Create Fog Modifier Radius Loc
+ Destroy Fog Modifier
+ Fog Modifier Start
+ Fog Modifier Stop
+ Version Get
+ Version Compatible
+ Version Supported
+ End Game
+ Change Level
+ Restart Game
+ Reload Game
+ Set Campaign Menu Race
+ Set Campaign Menu Race Ex
+ Force Campaign Select Screen
+ Load Game
+ Save Game
+ Rename Save Directory
+ Remove Save Directory
+ Copy Save Game
+ Save Game Exists
+ Sync Selections
+ Set Float Game State
+ Get Float Game State
+ Set Integer Game State
+ Get Integer Game State
+ Set Tutorial Cleared
+ Set Mission Available
+ Set Campaign Available
+ Set Op Cinematic Available
+ Set Ed Cinematic Available
+ Get Default Difficulty
+ Set Default Difficulty
+ Set Custom Campaign Button Visible
+ Get Custom Campaign Button Visible
+ Do Not Save Replay
+ Dialog Create
+ Dialog Destroy
+ Dialog Clear
+ Dialog Set Message
+ Dialog Add Button
+ Dialog Add Quit Button
+ Dialog Display
+ Reload Game Caches From Disk
+ Init Game Cache
+ Save Game Cache
+ Store Integer
+ Store Real
+ Store Boolean
+ Store Unit
+ Store String
+ Sync Stored Integer
+ Sync Stored Real
+ Sync Stored Boolean
+ Sync Stored Unit
+ Sync Stored String
+ Have Stored Integer
+ Have Stored Real
+ Have Stored Boolean
+ Have Stored Unit
+ Have Stored String
+ Flush Game Cache
+ Flush Stored Mission
+ Flush Stored Integer
+ Flush Stored Real
+ Flush Stored Boolean
+ Flush Stored Unit
+ Flush Stored String
+ Get Stored Integer
+ Get Stored Real
+ Get Stored Boolean
+ Get Stored String
+ Restore Unit
+ Init Hashtable
+ Save Integer
+ Save Real
+ Save Boolean
+ Save Str
+ Save Player Handle
+ Save Widget Handle
+ Save Destructable Handle
+ Save Item Handle
+ Save Unit Handle
+ Save Ability Handle
+ Save Timer Handle
+ Save Trigger Handle
+ Save Trigger Condition Handle
+ Save Trigger Action Handle
+ Save Trigger Event Handle
+ Save Force Handle
+ Save Group Handle
+ Save Location Handle
+ Save Rect Handle
+ Save Boolean Expr Handle
+ Save Sound Handle
+ Save Effect Handle
+ Save Unit Pool Handle
+ Save Item Pool Handle
+ Save Quest Handle
+ Save Quest Item Handle
+ Save Defeat Condition Handle
+ Save Timer Dialog Handle
+ Save Leaderboard Handle
+ Save Multiboard Handle
+ Save Multiboard Item Handle
+ Save Trackable Handle
+ Save Dialog Handle
+ Save Button Handle
+ Save Text Tag Handle
+ Save Lightning Handle
+ Save Image Handle
+ Save Ubersplat Handle
+ Save Region Handle
+ Save Fog State Handle
+ Save Fog Modifier Handle
+ Save Agent Handle
+ Save Hashtable Handle
+ Load Integer
+ Load Real
+ Load Boolean
+ Load Str
+ Load Player Handle
+ Load Widget Handle
+ Load Destructable Handle
+ Load Item Handle
+ Load Unit Handle
+ Load Ability Handle
+ Load Timer Handle
+ Load Trigger Handle
+ Load Trigger Condition Handle
+ Load Trigger Action Handle
+ Load Trigger Event Handle
+ Load Force Handle
+ Load Group Handle
+ Load Location Handle
+ Load Rect Handle
+ Load Boolean Expr Handle
+ Load Sound Handle
+ Load Effect Handle
+ Load Unit Pool Handle
+ Load Item Pool Handle
+ Load Quest Handle
+ Load Quest Item Handle
+ Load Defeat Condition Handle
+ Load Timer Dialog Handle
+ Load Leaderboard Handle
+ Load Multiboard Handle
+ Load Multiboard Item Handle
+ Load Trackable Handle
+ Load Dialog Handle
+ Load Button Handle
+ Load Text Tag Handle
+ Load Lightning Handle
+ Load Image Handle
+ Load Ubersplat Handle
+ Load Region Handle
+ Load Fog State Handle
+ Load Fog Modifier Handle
+ Load Hashtable Handle
+ Have Saved Integer
+ Have Saved Real
+ Have Saved Boolean
+ Have Saved String
+ Have Saved Handle
+ Remove Saved Integer
+ Remove Saved Real
+ Remove Saved Boolean
+ Remove Saved String
+ Remove Saved Handle
+ Flush Parent Hashtable
+ Flush Child Hashtable
+ Get Random Int
+ Get Random Real
+ Create Unit Pool
+ Destroy Unit Pool
+ Unit Pool Add Unit
+ Unit Pool Remove Unit
+ Place Random Unit
+ Create Item Pool
+ Destroy Item Pool
+ Item Pool Add Item
+ Item Pool Remove Item
+ Place Random Item
+ Choose Random Creep
+ Choose Random N P Building
+ Choose Random Item
+ Choose Random Item Ex
+ Set Random Seed
+ Set Terrain Fog
+ Reset Terrain Fog
+ Set Unit Fog
+ Set Terrain Fog Ex
+ Display Text To Player
+ Display Timed Text To Player
+ Display Timed Text From Player
+ Clear Text Messages
+ Set Day Night Models
+ Set Sky Model
+ Enable User Control
+ Enable User U I
+ Suspend Time Of Day
+ Set Time Of Day Scale
+ Get Time Of Day Scale
+ Show Interface
+ Pause Game
+ Unit Add Indicator
+ Add Indicator
+ Ping Minimap
+ Ping Minimap Ex
+ Enable Occlusion
+ Set Intro Shot Text
+ Set Intro Shot Model
+ Enable World Fog Boundary
+ Play Model Cinematic
+ Play Cinematic
+ Force U I Key
+ Force U I Cancel
+ Display Load Dialog
+ Set Alt Minimap Icon
+ Disable Restart Mission
+ Create Text Tag
+ Destroy Text Tag
+ Set Text Tag Text
+ Set Text Tag Pos
+ Set Text Tag Pos Unit
+ Set Text Tag Color
+ Set Text Tag Velocity
+ Set Text Tag Visibility
+ Set Text Tag Suspended
+ Set Text Tag Permanent
+ Set Text Tag Age
+ Set Text Tag Lifespan
+ Set Text Tag Fadepoint
+ Set Reserved Local Hero Buttons
+ Get Ally Color Filter State
+ Set Ally Color Filter State
+ Get Creep Camp Filter State
+ Set Creep Camp Filter State
+ Enable Minimap Filter Buttons
+ Enable Drag Select
+ Enable Pre Select
+ Enable Select
+ Create Trackable
+ Create Quest
+ Destroy Quest
+ Quest Set Title
+ Quest Set Description
+ Quest Set Icon Path
+ Quest Set Required
+ Quest Set Completed
+ Quest Set Discovered
+ Quest Set Failed
+ Quest Set Enabled
+ Is Quest Required
+ Is Quest Completed
+ Is Quest Discovered
+ Is Quest Failed
+ Is Quest Enabled
+ Quest Create Item
+ Quest Item Set Description
+ Quest Item Set Completed
+ Is Quest Item Completed
+ Create Defeat Condition
+ Destroy Defeat Condition
+ Defeat Condition Set Description
+ Flash Quest Dialog Button
+ Force Quest Dialog Update
+ Create Timer Dialog
+ Destroy Timer Dialog
+ Timer Dialog Set Title
+ Timer Dialog Set Title Color
+ Timer Dialog Set Time Color
+ Timer Dialog Set Speed
+ Timer Dialog Display
+ Is Timer Dialog Displayed
+ Timer Dialog Set Real Time Remaining
+ Create Leaderboard
+ Destroy Leaderboard
+ Leaderboard Display
+ Is Leaderboard Displayed
+ Leaderboard Get Item Count
+ Leaderboard Set Size By Item Count
+ Leaderboard Add Item
+ Leaderboard Remove Item
+ Leaderboard Remove Player Item
+ Leaderboard Clear
+ Leaderboard Sort Items By Value
+ Leaderboard Sort Items By Player
+ Leaderboard Sort Items By Label
+ Leaderboard Has Player Item
+ Leaderboard Get Player Index
+ Leaderboard Set Label
+ Leaderboard Get Label Text
+ Player Set Leaderboard
+ Player Get Leaderboard
+ Leaderboard Set Label Color
+ Leaderboard Set Value Color
+ Leaderboard Set Style
+ Leaderboard Set Item Value
+ Leaderboard Set Item Label
+ Leaderboard Set Item Style
+ Leaderboard Set Item Label Color
+ Leaderboard Set Item Value Color
+ Create Multiboard
+ Destroy Multiboard
+ Multiboard Display
+ Is Multiboard Displayed
+ Multiboard Minimize
+ Is Multiboard Minimized
+ Multiboard Clear
+ Multiboard Set Title Text
+ Multiboard Get Title Text
+ Multiboard Set Title Text Color
+ Multiboard Get Row Count
+ Multiboard Get Column Count
+ Multiboard Set Column Count
+ Multiboard Set Row Count
+ Multiboard Set Items Style
+ Multiboard Set Items Value
+ Multiboard Set Items Value Color
+ Multiboard Set Items Width
+ Multiboard Set Items Icon
+ Multiboard Get Item
+ Multiboard Release Item
+ Multiboard Set Item Style
+ Multiboard Set Item Value
+ Multiboard Set Item Value Color
+ Multiboard Set Item Width
+ Multiboard Set Item Icon
+ Multiboard Suppress Display
+ Set Camera Position
+ Set Camera Quick Position
+ Set Camera Bounds
+ Stop Camera
+ Reset To Game Camera
+ Pan Camera To
+ Pan Camera To Timed
+ Pan Camera To With Z
+ Pan Camera To Timed With Z
+ Set Cinematic Camera
+ Set Camera Rotate Mode
+ Set Camera Field
+ Adjust Camera Field
+ Set Camera Target Controller
+ Set Camera Orient Controller
+ Create Camera Setup
+ Camera Setup Set Field
+ Camera Setup Get Field
+ Camera Setup Set Dest Position
+ Camera Setup Get Dest Position Loc
+ Camera Setup Get Dest Position X
+ Camera Setup Get Dest Position Y
+ Camera Setup Apply
+ Camera Setup Apply With Z
+ Camera Setup Apply Force Duration
+ Camera Setup Apply Force Duration With Z
+ Camera Set Target Noise
+ Camera Set Source Noise
+ Camera Set Target Noise Ex
+ Camera Set Source Noise Ex
+ Camera Set Smoothing Factor
+ Set Cine Filter Texture
+ Set Cine Filter Blend Mode
+ Set Cine Filter Tex Map Flags
+ Set Cine Filter Start U V
+ Set Cine Filter End U V
+ Set Cine Filter Start Color
+ Set Cine Filter End Color
+ Set Cine Filter Duration
+ Display Cine Filter
+ Is Cine Filter Displayed
+ Set Cinematic Scene
+ End Cinematic Scene
+ Force Cinematic Subtitles
+ Get Camera Margin
+ Get Camera Bound Min X
+ Get Camera Bound Min Y
+ Get Camera Bound Max X
+ Get Camera Bound Max Y
+ Get Camera Field
+ Get Camera Target Position X
+ Get Camera Target Position Y
+ Get Camera Target Position Z
+ Get Camera Target Position Loc
+ Get Camera Eye Position X
+ Get Camera Eye Position Y
+ Get Camera Eye Position Z
+ Get Camera Eye Position Loc
+ New Sound Environment
+ Create Sound
+ Create Sound Filename With Label
+ Create Sound From Label
+ Create M I D I Sound
+ Set Sound Params From Label
+ Set Sound Distance Cutoff
+ Set Sound Channel
+ Set Sound Volume
+ Set Sound Pitch
+ Set Sound Play Position
+ Set Sound Distances
+ Set Sound Cone Angles
+ Set Sound Cone Orientation
+ Set Sound Position
+ Set Sound Velocity
+ Attach Sound To Unit
+ Start Sound
+ Stop Sound
+ Kill Sound When Done
+ Set Map Music
+ Clear Map Music
+ Play Music
+ Play Music Ex
+ Stop Music
+ Resume Music
+ Play Thematic Music
+ Play Thematic Music Ex
+ End Thematic Music
+ Set Music Volume
+ Set Music Play Position
+ Set Thematic Music Play Position
+ Set Sound Duration
+ Get Sound Duration
+ Get Sound File Duration
+ Volume Group Set Volume
+ Volume Group Reset
+ Get Sound Is Playing
+ Get Sound Is Loading
+ Register Stacked Sound
+ Unregister Stacked Sound
+ Add Weather Effect
+ Remove Weather Effect
+ Enable Weather Effect
+ Terrain Deform Crater
+ Terrain Deform Ripple
+ Terrain Deform Wave
+ Terrain Deform Random
+ Terrain Deform Stop
+ Terrain Deform Stop All
+ Add Special Effect
+ Add Special Effect Loc
+ Add Special Effect Target
+ Destroy Effect
+ Add Spell Effect
+ Add Spell Effect Loc
+ Add Spell Effect By Id
+ Add Spell Effect By Id Loc
+ Add Spell Effect Target
+ Add Spell Effect Target By Id
+ Add Lightning
+ Add Lightning Ex
+ Destroy Lightning
+ Move Lightning
+ Move Lightning Ex
+ Get Lightning Color A
+ Get Lightning Color R
+ Get Lightning Color G
+ Get Lightning Color B
+ Set Lightning Color
+ Get Ability Effect
+ Get Ability Effect By Id
+ Get Ability Sound
+ Get Ability Sound By Id
+ Get Terrain Cliff Level
+ Set Water Base Color
+ Set Water Deforms
+ Get Terrain
+ Get Terrain Variance
+ Set Terrain
+ Is Terrain Pathable
+ Set Terrain Pathable
+ Create Image
+ Destroy Image
+ Show Image
+ Set Image Constant Height
+ Set Image Position
+ Set Image Color
+ Set Image Render
+ Set Image Render Always
+ Set Image Above Water
+ Set Image
+ Create Ubersplat
+ Destroy Ubersplat
+ Reset Ubersplat
+ Finish Ubersplat
+ Show Ubersplat
+ Set Ubersplat Render
+ Set Ubersplat Render Always
+ Set Blight
+ Set Blight Rect
+ Set Blight Point
+ Set Blight Loc
+ Create Blighted Goldmine
+ Is Point Blighted
+ Set Doodad Animation
+ Set Doodad Animation Rect
+ Start Melee A I
+ Start Campaign A I
+ Command A I
+ Pause Comp A I
+ Get A I Difficulty
+ Remove Guard Position
+ Recycle Guard Position
+ Remove All Guard Positions
+ Cheat
+ Is No Victory Cheat
+ Is No Defeat Cheat
+ Preload
+ Preload End
+ Preload Start
+ Preload Refresh
+ Preload End Ex
+ Preload Gen Clear
+ Preload Gen Start
+ Preload Gen End
+ Preloader
+

@@ -1,6 +1,5 @@
 const vscode = require('vscode');
-
-var funcObj = require("./functions")
+var jassParse = require("./jass")
 /**
  * 语言名称
  */
@@ -20,13 +19,27 @@ const triggreCharacters = [
 const completionProvider = {
   provideCompletionItems(document, position, token, context) {
     let items = []
-    for (const key in funcObj) {
-      let item = new vscode.CompletionItem(funcObj[key].name, vscode.CompletionItemKind.Function)
-      item.detail = funcObj[key].name
+    console.log(jassParse.functions.length)
+    console.log(jassParse.values.length)
+    for (const key in jassParse.functions) {
+      let item = new vscode.CompletionItem(jassParse.functions[key].name, vscode.CompletionItemKind.Function)
+      item.detail = jassParse.functions[key].name + "(" + jassParse.functions[key].fileName + ")"
       item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(funcObj[key].documentation)
-        .appendCodeblock(funcObj[key].original)
-      item.insertText = funcObj[key].insertText
+        .appendCodeblock(jassParse.functions[key].documentation)
+        .appendCodeblock(jassParse.functions[key].original)
+      item.insertText = jassParse.functions[key].insertText
+      items.push(item)
+    }
+    for (const key in jassParse.values) {
+      let item = new vscode.CompletionItem(jassParse.values[key].name,
+        jassParse.values[key].isContent ?
+          vscode.CompletionItemKind.Constant :
+          vscode.CompletionItemKind.Variable)
+      item.detail = jassParse.values[key].name + "(" + jassParse.values[key].fileName + ")"
+      item.documentation = new vscode.MarkdownString()
+        .appendCodeblock(jassParse.values[key].documentation)
+        .appendCodeblock(jassParse.values[key].original)
+      item.insertText = jassParse.values[key].insertText
       items.push(item)
     }
     return items
@@ -39,11 +52,14 @@ const completionProvider = {
 const hoverProvider = {
   provideHover(document, position, token) {
     var keyword = document.getText(document.getWordRangeAtPosition(position))
+    console.log(jassParse.functions[keyword])
     var tooltips = new vscode.MarkdownString()
-    if (Object.keys(funcObj).includes(keyword)) {
-      tooltips.appendCodeblock(funcObj[keyword].documentation)
-      tooltips.appendCodeblock(funcObj[keyword].original)
-    }
+    tooltips.appendCodeblock(jassParse.functions[keyword].documentation)
+    tooltips.appendCodeblock(jassParse.functions[keyword].original)
+    tooltips.appendCodeblock(jassParse.functions[keyword].fileName)
+    tooltips.appendCodeblock(jassParse.values[keyword].documentation)
+    tooltips.appendCodeblock(jassParse.values[keyword].original)
+    tooltips.appendCodeblock(jassParse.values[keyword].fileName)
     return new vscode.Hover(tooltips)
   }
 }
@@ -384,7 +400,7 @@ const hightLightProvider = function (document, position, token) {
 }
 
 function activate(context) {
-  vscode.window.showInformationMessage('好烦啊!');
+  vscode.window.showInformationMessage('hello jass');
 
   vscode.languages.registerCompletionItemProvider(language, completionProvider, ...triggreCharacters)
 

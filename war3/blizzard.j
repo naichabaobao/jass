@@ -7859,7 +7859,7 @@ function SetBlightRectBJ takesboolean addBlight, player whichPlayer, rect r retu
 endfunction
 
 //===========================================================================
-function SetBlightRadiusLocBJ takesboolean addBlight, player whichPlayer, location loc, real radius returnsnothing
+function SetBlightRadiusLocBJ takesboolean addBlight, player whichPlayer, location loc, real radius returns nothing
     call SetBlightLoc(whichPlayer, loc, radius, addBlight)
 endfunction
 

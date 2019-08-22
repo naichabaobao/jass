@@ -1,8 +1,8 @@
 const fs = require("fs")
 const path = require("path")
 
-let functions = Object
-let values = Object
+let functions = {}
+let values = {}
 
 /**
  * 用于判断当前编辑文件是不是ai如果是ai只返回common.j同埋common.ai两个文件
@@ -24,10 +24,7 @@ const setAi = (isAi) => {
  */
 const readJFile = (filePath) => {
   try {
-    return fs.readFileSync(filePath, {
-      encoding: "utf8",
-      flag: "r"
-    })
+    return fs.readFileSync(filePath, "utf8")
   }
   catch (error) {
     console.error(error)
@@ -44,13 +41,15 @@ const parseJFunctionStrings = (content) => {
     if (content) {
       // 去除注释
       let uncommentContent = content.replace(/\/\/.*/g, "")
-      let funcRegExp = new RegExp(/((constant\s+)?native\s+\w+\s+takes\s+[\w\s,]+?\s+returns\s+\w+)|(function\s+\w+\s+takes\s+[\w\s,]+\s+returns\s+\w+)/, "g")
+      let funcRegExp = new RegExp(/function[\s\S\n]+?endfunction|(constant\s+)?native.+?returns\s+\w+/, "gm")
       // 揾到native 或者 function 方法字符串数组并返回
-      return funcRegExp.exec(uncommentContent).filter(x => x).map(x => x)
+      let v = funcRegExp.exec(uncommentContent)
+      if (v)
+        return v.filter(x => x).map(x => x)
     }
     return null
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return null
   }
 }
@@ -101,7 +100,9 @@ const parseJGlobalsBlockString = (content) => {
   try {
     if (content && typeof content == "string") {
       // 獲取globals塊 同時去掉所有注釋
-      return content.match(/globals[\s\S]+?endglobals/m).shift().replace(/\/\/.+/g, "")
+      let g = content.match(/globals[\s\S]+?endglobals/m)
+      if (g)
+        return g.shift().replace(/\/\/.+/g, "")
     }
     return null
   } catch (error) {
@@ -217,14 +218,15 @@ let typesString = `(${types.join("|")})`
  */
 const parseJValueStrings = (content) => {
   try {
-    if (content && typeof content == "string") {
+    if (content && typeof content == "string" && content.includes("globals")) {
       // 正則拼裝 用於獲取全局量
-
       let constantReg = `constant\\s+${typesString}\\s+\\w+\\s*=.+`
       let varibleReg = `${typesString}\\s+\\w+\\s*=.+`
       let varibleArrayReg = `${typesString}\\s+array\\s+\\w+`
       let reg = `(${constantReg})|(${varibleReg})|(${varibleArrayReg})`
-      return content.match(new RegExp(reg, "g")).map(x => x.trim())
+      let v = content.match(new RegExp(reg, "g"))
+      if (v)
+        return v.map(x => x.trim())
     }
     return null
   } catch (error) {
@@ -241,6 +243,7 @@ const parseJValues = (valueStrings, fileName = "") => {
   try {
     if (valueStrings && Array.isArray(valueStrings)) {
       valueStrings.forEach(valueString => {
+
         let original = valueString
         let isContent = valueString.includes("constant")
         let isArray = valueString.includes("array")
@@ -295,8 +298,14 @@ readJFiles(dirRoot).forEach(x => {
 })
 
 // 匹配文档
-
-
+const commonDcumentations = require("../static/documentation/common")
+for (const key in commonDcumentations) {
+  if (functions[key]) {
+    functions[key].documentation = commonDcumentations[key]
+  }
+}
+console.log(Object.keys(functions).length)
+console.log(Object.keys(values).length)
 module.exports = {
-  functions, values, parseJFunctions, parseJValues, setAi
+  functions, values, setAi
 }
