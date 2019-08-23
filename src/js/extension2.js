@@ -1,5 +1,7 @@
 const vscode = require('vscode');
-var jassParse = require("./jass")
+const j = require("../static/j.json")
+const jg = require("../static/jg.json")
+const rgbHex = require('rgb-hex');
 /**
  * 语言名称
  */
@@ -19,28 +21,48 @@ const triggreCharacters = [
 const completionProvider = {
   provideCompletionItems(document, position, token, context) {
     let items = []
-    console.log(jassParse.functions.length)
-    console.log(jassParse.values.length)
-    for (const key in jassParse.functions) {
-      let item = new vscode.CompletionItem(jassParse.functions[key].name, vscode.CompletionItemKind.Function)
-      item.detail = jassParse.functions[key].name + "(" + jassParse.functions[key].fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(jassParse.functions[key].documentation)
-        .appendCodeblock(jassParse.functions[key].original)
-      item.insertText = jassParse.functions[key].insertText
-      items.push(item)
-    }
-    for (const key in jassParse.values) {
-      let item = new vscode.CompletionItem(jassParse.values[key].name,
-        jassParse.values[key].isContent ?
-          vscode.CompletionItemKind.Constant :
-          vscode.CompletionItemKind.Variable)
-      item.detail = jassParse.values[key].name + "(" + jassParse.values[key].fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(jassParse.values[key].documentation)
-        .appendCodeblock(jassParse.values[key].original)
-      item.insertText = jassParse.values[key].insertText
-      items.push(item)
+    if (document.fileName.endsWith(".j")) {
+      items = Object.keys(j).filter(x => j[x].fileName.endsWith(".j")).map(x => {
+        let api = j[x]
+        let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
+        item.detail = api.name + "(" + api.fileName + ")"
+        item.documentation = new vscode.MarkdownString()
+          .appendCodeblock(api.documentations)
+          .appendCodeblock(api.original)
+        item.insertText = api.insertText
+        return item
+      }).concat(Object.keys(jg).filter(x => jg[x].fileName.endsWith(".j")).map(x => {
+        let api = jg[x]
+        let item = new vscode.CompletionItem(api.name,
+          api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
+        item.detail = api.name + "(" + api.fileName + ")"
+        item.documentation = new vscode.MarkdownString()
+          .appendCodeblock(api.documentations)
+          .appendCodeblock(api.original)
+        item.insertText = api.name
+        return item
+      }))
+    } else if (document.fileName.endsWith(".ai")) {
+      items = Object.keys(j).filter(x => j[x].fileName == "common.j" || j[x].fileName == "common.ai").map(x => {
+        let api = j[x]
+        let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
+        item.detail = api.name + "(" + api.fileName + ")"
+        item.documentation = new vscode.MarkdownString()
+          .appendCodeblock(api.documentations)
+          .appendCodeblock(api.original)
+        item.insertText = api.insertText
+        return item
+      }).concat(Object.keys(jg).filter(x => jg[x].fileName == "common.j" || jg[x].fileName == "common.ai").map(x => {
+        let api = jg[x]
+        let item = new vscode.CompletionItem(api.name,
+          api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
+        item.detail = api.name + "(" + api.fileName + ")"
+        item.documentation = new vscode.MarkdownString()
+          .appendCodeblock(api.documentations)
+          .appendCodeblock(api.original)
+        item.insertText = api.name
+        return item
+      }))
     }
     return items
   },
@@ -52,30 +74,76 @@ const completionProvider = {
 const hoverProvider = {
   provideHover(document, position, token) {
     var keyword = document.getText(document.getWordRangeAtPosition(position))
-    console.log(jassParse.functions[keyword])
     var tooltips = new vscode.MarkdownString()
-    tooltips.appendCodeblock(jassParse.functions[keyword].documentation)
-    tooltips.appendCodeblock(jassParse.functions[keyword].original)
-    tooltips.appendCodeblock(jassParse.functions[keyword].fileName)
-    tooltips.appendCodeblock(jassParse.values[keyword].documentation)
-    tooltips.appendCodeblock(jassParse.values[keyword].original)
-    tooltips.appendCodeblock(jassParse.values[keyword].fileName)
+    if (j[keyword]) {
+      tooltips.appendCodeblock(j[keyword].documentations)
+        .appendCodeblock(j[keyword].original)
+        .appendText(j[keyword].fileName)
+    }
+    if (jg[keyword]) {
+      tooltips.appendCodeblock(jg[keyword].documentations)
+        .appendCodeblock(jg[keyword].original)
+        .appendText(jg[keyword].fileName)
+    }
     return new vscode.Hover(tooltips)
   }
 }
 
 const colorProvider = {
   provideDocumentColors(document, token) {
-    return [new vscode.ColorInformation(new vscode.Range(0, 0, 1, 20), new vscode.Color(0, 255, 255, 1))]
+    let lineCount = document.lineCount
+    let colors = []
+    let colorReg = new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
+    for (let i = 0; i < lineCount; i++) {
+      let lineText = document.lineAt(i).text
+      let colotSet = lineText.match(colorReg)
+      let posstion = 0
+      if (colotSet) {
+        colotSet.forEach(x => {
+          posstion = lineText.indexOf(x, posstion)
+          let range = new vscode.Range(i, posstion, i, posstion + x.length)
+          let a = Number.parseInt("0x" + lineText.substr(posstion + 2, 2)) / 255
+          let r = Number.parseInt("0x" + lineText.substr(posstion + 4, 2)) / 255
+          let g = Number.parseInt("0x" + lineText.substr(posstion + 6, 2)) / 255
+          let b = Number.parseInt("0x" + lineText.substr(posstion + 8, 2)) / 255
+          colors.push(new vscode.ColorInformation(range, new vscode.Color(r, g, b, a)))
+          posstion += x.length
+        })
+      }
+    }
+    return colors
+  },
+  convertInt2Hex(int) {
+    return Math.ceil(int * 255).toString(16).padStart(2, "0")
+  },
+  color2JColorCode(color) {
+    if (color instanceof vscode.Color) {
+      let r = color.red
+      let g = color.green
+      let b = color.blue
+      let a = color.alpha
+      let colorCodeString = this.convertInt2Hex(a) + this.convertInt2Hex(r) + this.convertInt2Hex(g) + this.convertInt2Hex(b)
+      return colorCodeString
+    }
+    return "00000000"
   },
   provideColorPresentations(color, context, token) {
-    return []
-  }
-}
-
-const typeFormattingProvider = {
-  provideOnTypeFormattingEdits(document, position, ch, options, token) {
-    return [new vscode.TextEdit(new vscode.Range(new position(0, 0), new position(0, 20)), "一段中文咯")]
+    // provideColorPresentations(color: Color, context: { document: TextDocument, range: Range }, token: CancellationToken): ProviderResult<ColorPresentation[]>;
+    let colorPresentations = []
+    let r = color.red
+    let g = color.green
+    let b = color.blue
+    let a = color.alpha
+    let document = context.document
+    let range = context.range
+    let documentText = document.getText(range)
+    return [new vscode.ColorPresentation(`${
+      documentText.substr(0, 2)
+      }${
+      this.color2JColorCode(new vscode.Color(r, g, b, a))
+      }${
+      documentText.substring(10)
+      }`)]
   }
 }
 
@@ -380,27 +448,7 @@ const didSaveTextDocumentHandle = function (document) {
 
 }
 
-const hightLightProvider = function (document, position, token) {
-  let words = participle(document.getText())
-  let highlights = []
-  let line = 0
-  let colume = 0
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
-    if (types.includes(word)) {
-      highlights.push(new vscode.DocumentHighlight(new vscode.Range(line, colume, line, 0)))
-    }
-    colume += word.length
-    if (word == "\n") {
-      line++;
-      position = 0;
-    }
-  }
-
-}
-
 function activate(context) {
-  vscode.window.showInformationMessage('hello jass');
 
   vscode.languages.registerCompletionItemProvider(language, completionProvider, ...triggreCharacters)
 
@@ -408,40 +456,18 @@ function activate(context) {
 
   vscode.languages.registerColorProvider(language, colorProvider)
 
-  // vscode.languages.registerOnTypeFormattingEditProvider(language, typeFormattingProvider, "(", ...[","])
-
   vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider)
-
-
-  vscode.CompletionItemKind
-  // vscode.languages.registerDocumentHighlightProvider(language)
-
-  // 跳到定义
-  // vscode.languages.registerTypeDefinitionProvider
-
-  // 查看当前被使用的其它地方
-  // vscode.languages.register
-
-  vscode.languages.registerDocumentSymbolProvider
-
-  vscode.languages.registerSignatureHelpProvider
 
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
   vscode.workspace.onDidSaveTextDocument(textDocment => {
-    console.log(textDocment.getText())
-    var documentContent = textDocment.getText()
-    documentContent.match(/a/g)
-    var diagnostic = new vscode.Diagnostic(new vscode.Range(new vscode.Position(1, 1), new vscode.Position(1, 6)), "哈哈哈", vscode.DiagnosticSeverity.Error)
-    diagnosticCollection.set(textDocment.uri, [diagnostic])
+    // console.log(textDocment.getText())
+    // var documentContent = textDocment.getText()
+    // documentContent.match(/a/g)
+    // var diagnostic = new vscode.Diagnostic(new vscode.Range(new vscode.Position(1, 1), new vscode.Position(1, 6)), "哈哈哈", vscode.DiagnosticSeverity.Error)
+    // diagnosticCollection.set(textDocment.uri, [diagnostic])
   })
-
-  context.subscriptions.push(vscode.commands.registerCommand('extension.sayHello', function () {
-    vscode.window.showInformationMessage('Hello jass!');
-  }));
-
-
 
 }
 exports.activate = activate;

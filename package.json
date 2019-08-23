@@ -53,7 +53,7 @@
         "title": "Hello World"
       }
     ],
-    "documentFormattingProvider" : "true"
+    "documentFormattingProvider": "true"
   },
   "repository": {
     "type": "git",
@@ -78,5 +78,8 @@
     "mocha": "^6.1.4",
     "typescript": "^3.3.1",
     "vscode-test": "^1.0.2"
+  },
+  "dependencies": {
+    "rgb-hex": "^3.0.0"
   }
 }

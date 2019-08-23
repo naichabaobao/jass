@@ -304,8 +304,6 @@ for (const key in commonDcumentations) {
     functions[key].documentation = commonDcumentations[key]
   }
 }
-console.log(Object.keys(functions).length)
-console.log(Object.keys(values).length)
 module.exports = {
   functions, values, setAi
 }
