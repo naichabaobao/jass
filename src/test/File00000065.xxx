@@ -1,0 +1,378 @@
+STRING 1
+{
+Player 1
+}
+STRING 3
+{
+|cff20c000 TD 箭塔强化循环版II
+}
+STRING 4
+{
+1-8人
+}
+STRING 6
+{
+承思
+}
+STRING 7
+{
+Player 2
+}
+STRING 8
+{
+Player 3
+}
+STRING 9
+{
+Player 4
+}
+STRING 14
+{
+Player 9
+}
+STRING 15
+{
+Defenders
+}
+STRING 16
+{
+Attackers
+}
+STRING 37
+{
+|cffFF0000Z|r|cffffffffwuckeL|r |cffC0C0C0TD
+}
+STRING 40
+{
+恭喜！你获胜了！
+}
+STRING 41
+{
+你失败了！ 
+}
+STRING 42
+{
+Defeat!
+}
+STRING 73
+{
+NineVoltDevil presents
+}
+STRING 74
+{
+Zwuckel TD 箭塔强化循环II
+}
+STRING 75
+{
+   |cffff0303★|cff20c000-共40波当怪物总数超过600则判定失败！
+   |cffff0303★|cff20c000-升级到城堡农民可以强化获得更快的伐木速度。
+   |cffff0303★|cff20c000-最先完成最终科技的前三名获得资源奖励！
+   |cffff0303★|cff20c000-完成最终科技的速度越快奖励越高
+   |cffff0303★|cff20c000-精灵TD玩家交流群：87687371
+                             |cffffcc00 2011年5月23日
+                             |cffffcc00                 -承思
+
+                         
+}
+STRING 366
+{
+Player 5
+}
+STRING 367
+{
+Player 6
+}
+STRING 368
+{
+Player 7
+}
+STRING 369
+{
+Player 8
+}
+STRING 543
+{
+Difficulty Voting
+}
+STRING 544
+{
+|cff00FF00|Creeps have -5% HP
+}
+STRING 545
+{
+|cffFFFF00|Creeps have normal HP
+}
+STRING 546
+{
+|cffFF0000|Creeps have +5% HP
+}
+STRING 547
+{
+Creep Info
+}
+STRING 548
+{
+- Creeps are completely rebalanced. No too easy levels in between now, and overall, it got harder.
+- Still every 5th level is harder and has more creeps.
+- Still level 36+ get very hard. Last level is 40.
+
+To see how much HP the current level has (CreepInfo), type
+-ci
+If you want to get this information each level, use
+-on / -off
+
+Area 51? The Scientist there is trying to find out how much EHP a creep of the current round has.
+What is EHP? It means "Effective Hit Points". A creep with 100 HP and 50% damage reduction has 150 EHP.
+}
+STRING 549
+{
+How to play
+}
+STRING 550
+{
+1) Be sure to use your Goldmine.
+2) Upgrade. Don't mass.
+3) Watch the armor types and Tower descriptions.
+4) Think a bit.
+5) Lean back and enjoy.
+
+Remember it's a team game which cant be won alone. Sometimes it's better to give gold to another player instead of enforcing a lane that would never leak anyways.
+
+If you won the map, feel free to send the replay to Spziokles@gmx.li
+}
+STRING 551
+{
+Leavers
+}
+STRING 552
+{
+- You can't leave your designated spot, which would have caused big problems with leavers.
+- To avoid that, the appropriate spawn gets reduced a bit if a player defending those creeps leaves the game.
+- His Castle, Gold Mine and stuff gets wasted, his towers are sold and the money shared to those who defend at his lane(s). Seems more fair than a lucky 2nd Gold Mine and so on.
+
+- Side-note: Due to the dynamic Spawn trigger, it's now possible to play the map solo or with just a few friends.
+}
+STRING 553
+{
+Ultimates & Chaos Ranger
+}
+STRING 554
+{
+- Tooltips of Chaos Ranger enhanced to clearify the question what towers to max out to get the specific Ultimate to upgrade the Chaos Ranger.
+- Chaos Ranger rebalanced
+- Upgrade Bugs of the Rangers of red and yellow removed.
+
+- Beetle + Element --> Death Tower (Magic damage, for blue and orange)
+- Beetle + Treant --> Decay Tower (Normal damage, for teal and pink)
+- Beetle + Wolfy --> Hell Tower (Piercing damage, for purple and green)
+- Element + Treant --> Evil Tower (Siege damage, for red and yellow)
+
+New:
+- Element + Wolfy --> Speed Aura
+- Treant + Wolfy --> Damage Aura
+}
+STRING 555
+{
+Credits
+}
+STRING 556
+{
+- All Credits to Zwuckel, who created this map!
+- Modified by CS_Fan, this version is based on his version 11.5.
+- Further modified by Gruufhai, who's a noob at coding and got great help from Xoc.NineVoltDevil Added Backward Spawns..
+}
+STRING 557
+{
+To be continued...
+}
+STRING 558
+{
+- Please report bugs. You can email them to Spziokles@gmx.li (be sure to place some good keywords in your topic or it will be trashed), or try to catch Gruufhai on Northrend.
+- As I'm no native english speaker/writer, I'll also be glad to get corrections of my grammar and stuff.
+- The Map is still under construction (May 2006). Which means, don't expect it do be complete, and it also means it's still a good time to send in ideas, critics, wishes or nice chick picks.
+}
+STRING 559
+{
+Damage and Armor types
+}
+STRING 560
+{
+- Damage / Armor table rewritten! Forget all you know about Zwuckel TD Towers and read the tooltips!
+- Each tower is useful now, because now there is always exactly one tower that defends against a certain creep armor.
+}
+STRING 564
+{
+Check out the Quests! Even for experienced Zwuckel players, 'cause it's a very new version!
+}
+STRING 566
+{
+Use your Goldmine!
+}
+STRING 608
+{
+read tower tooltips
+}
+STRING 609
+{
+read tower tooltips
+}
+STRING 610
+{
+read tower tooltips
+}
+STRING 611
+{
+read tower tooltips
+}
+STRING 612
+{
+read tower tooltips
+}
+STRING 613
+{
+read tower tooltips
+}
+STRING 614
+{
+read tower tooltips
+}
+STRING 615
+{
+read tower tooltips
+}
+STRING 616
+{
+read tower tooltips
+}
+STRING 617
+{
+read tower tooltips
+}
+STRING 618
+{
+read tower tooltips
+}
+STRING 619
+{
+read tower tooltips
+}
+STRING 620
+{
+read tower tooltips
+}
+STRING 621
+{
+read tower tooltips
+}
+STRING 622
+{
+read tower tooltips
+}
+STRING 623
+{
+read tower tooltips
+}
+STRING 624
+{
+read tower tooltips
+}
+STRING 625
+{
+read tower tooltips
+}
+STRING 626
+{
+read tower tooltips
+}
+STRING 627
+{
+read tower tooltips
+}
+STRING 628
+{
+read tower tooltips
+}
+STRING 629
+{
+read tower tooltips
+}
+STRING 630
+{
+read tower tooltips
+}
+STRING 631
+{
+read tower tooltips
+}
+STRING 632
+{
+read tower tooltips
+}
+STRING 633
+{
+read tower tooltips
+}
+STRING 634
+{
+read tower tooltips
+}
+STRING 635
+{
+read tower tooltips
+}
+STRING 636
+{
+read tower tooltips
+}
+STRING 637
+{
+read tower tooltips
+}
+STRING 638
+{
+read tower tooltips
+}
+STRING 685
+{
+ja
+}
+STRING 695
+{
+Creep Info ON
+}
+STRING 697
+{
+Creep Info OFF
+}
+STRING 698
+{
+Area 51
+}
+STRING 921
+{
+Player 10
+}
+STRING 923
+{
+怪物数量
+}
+STRING 926
+{
+|cffff0303危险！怪物数量已经超过500
+}
+STRING 928
+{
+|cffff0303危险！怪物数量已经超过500
+}
+STRING 929
+{
+|cffff0303危险！怪物数量已经超过500
+}
+STRING 931
+{
+|cffff0303危险！怪物数量已经超过500
+}
+STRING 932
+{
+|cffff0303危险！怪物数量已经超过500
+}
