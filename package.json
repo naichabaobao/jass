@@ -2,7 +2,7 @@
   "name": "jass",
   "displayName": "jass",
   "description": "jass",
-  "publisher": "hoo",
+  "publisher": "jass",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.37.0"
@@ -47,12 +47,6 @@
         "path": "./src/settings/jass-color-theme.json"
       }
     ],
-    "commands": [
-      {
-        "command": "extension.sayHello",
-        "title": "Hello World"
-      }
-    ],
     "documentFormattingProvider": "true"
   },
   "repository": {
@@ -61,10 +55,9 @@
   },
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
-    "onLanguage:jass",
-    "onCommand:extension.sayHello"
+    "onLanguage:jass"
   ],
-  "main": "./src/js/extension2",
+  "main": "./src/js/extension",
   "scripts": {
     "test": "node ./src/test/runTest.js"
   },
@@ -78,8 +71,5 @@
     "mocha": "^6.1.4",
     "typescript": "^3.3.1",
     "vscode-test": "^1.0.2"
-  },
-  "dependencies": {
-    "rgb-hex": "^3.0.0"
   }
 }
