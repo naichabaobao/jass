@@ -1,0 +1,6 @@
+"themes": [
+      {
+        "label": "jass",
+        "path": "./src/settings/jass-color-theme.json"
+      }
+    ],

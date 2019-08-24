@@ -1,9 +1,0 @@
-[ANha]
-Name=采集
-EditorSuffix=(金矿和木材)
-Tip=采集(|cffffcc00G|r)
-Ubertip="从金矿处采集黄金资源，从树木上砍伐木材资源。"
-Untip=返送资源(|cffffcc00E|r)
-Unubertip="将采集到的资源返送到最近的潮汐神庙。"
-Hotkey=G
-Unhotkey=E

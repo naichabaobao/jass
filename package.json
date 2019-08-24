@@ -3,13 +3,12 @@
   "displayName": "jass",
   "description": "jass",
   "publisher": "jass",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.37.0"
   },
   "categories": [
     "Programming Languages",
-    "Themes",
     "Snippets",
     "Formatters"
   ],
@@ -42,12 +41,7 @@
         "path": "./src/settings/snippets.json"
       }
     ],
-    "themes": [
-      {
-        "label": "jass",
-        "path": "./src/settings/jass-color-theme.json"
-      }
-    ],
+    
     "documentFormattingProvider": "true"
   },
   "repository": {
