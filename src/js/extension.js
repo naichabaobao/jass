@@ -6,6 +6,9 @@ const jg = require("./jg")
 const keyword = require("./keyword")
 const type = require("./type")
 const colorProvider = require("./colorProvider")
+const codeItemProvider = require("./codeItemProvider")
+const triggreCharacters = require("./triggreCharacters")
+const functionItemProvider = require("./functionItemProvider")
 /**
  * 语言名称
  */
@@ -14,13 +17,10 @@ const language = "jass"
  * 错误集合
  */
 var diagnosticCollection = null
-const triggreCharacters = [
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-  "_",
-  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 const completionProvider = {
+  // 不能用时刻 字符串中 注释中 代号中 颜色编码中
   provideCompletionItems(document, position, token, context) {
+
     let items = []
     // 添加关键字
     for (const key in keyword) {
@@ -103,63 +103,7 @@ const hoverProvider = {
     return new vscode.Hover(tooltips)
   }
 }
-const colorProvider1 = {
-  provideDocumentColors(document, token) {
-    let lineCount = document.lineCount
-    let colors = []
-    let colorReg = new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
-    for (let i = 0; i < lineCount; i++) {
-      let lineText = document.lineAt(i).text
-      let colotSet = lineText.match(colorReg)
-      let posstion = 0
-      if (colotSet) {
-        colotSet.forEach(x => {
-          posstion = lineText.indexOf(x, posstion)
-          let range = new vscode.Range(i, posstion, i, posstion + x.length)
-          let a = Number.parseInt("0x" + lineText.substr(posstion + 2, 2)) / 255
-          let r = Number.parseInt("0x" + lineText.substr(posstion + 4, 2)) / 255
-          let g = Number.parseInt("0x" + lineText.substr(posstion + 6, 2)) / 255
-          let b = Number.parseInt("0x" + lineText.substr(posstion + 8, 2)) / 255
-          colors.push(new vscode.ColorInformation(range, new vscode.Color(r, g, b, a)))
-          posstion += x.length
-        })
-      }
-    }
-    return colors
-  },
-  convertInt2Hex(int) {
-    return Math.ceil(int * 255).toString(16).padStart(2, "0")
-  },
-  color2JColorCode(color) {
-    if (color instanceof vscode.Color) {
-      let r = color.red
-      let g = color.green
-      let b = color.blue
-      let a = color.alpha
-      let colorCodeString = this.convertInt2Hex(a) + this.convertInt2Hex(r) + this.convertInt2Hex(g) + this.convertInt2Hex(b)
-      return colorCodeString
-    }
-    return "00000000"
-  },
-  provideColorPresentations(color, context, token) {
-    // provideColorPresentations(color: Color, context: { document: TextDocument, range: Range }, token: CancellationToken): ProviderResult<ColorPresentation[]>;
-    let colorPresentations = []
-    let r = color.red
-    let g = color.green
-    let b = color.blue
-    let a = color.alpha
-    let document = context.document
-    let range = context.range
-    let documentText = document.getText(range)
-    return [new vscode.ColorPresentation(`${
-      documentText.substr(0, 2)
-      }${
-      this.color2JColorCode(new vscode.Color(r, g, b, a))
-      }${
-      documentText.substring(10)
-      }`)]
-  }
-}
+
 /**
  * 分成空白，换行，关键字，类，数字，代码，符号，字符串，单行注释，标识符
  * @param {String} string
@@ -353,24 +297,11 @@ const documentFormattingEditProvider = {
 const didSaveTextDocumentHandle = function (document) {
 }
 function activate(context) {
-  vscode.languages.registerCompletionItemProvider(language, completionProvider, ...triggreCharacters)
-  vscode.languages.registerCompletionItemProvider(language, {
-    provideCompletionItems(document, position, token, context) {
-      let items = []
-      let item = new vscode.CompletionItem("aaaa", vscode.CompletionItemKind.Unit)
-      item.insertText = "'aaaa'"
-      item.detail = "圣骑"
-      item.documentation = "一个小矮人"
-      items.push(item)
-      return items
-    },
-    resolveCompletionItem(item, token) {
-      return item
-    }
-  }, "'")
+  vscode.languages.registerCompletionItemProvider(language, functionItemProvider, ...triggreCharacters.w);
+  vscode.languages.registerCompletionItemProvider(language, codeItemProvider, ...triggreCharacters.c);
   vscode.languages.registerHoverProvider(language, hoverProvider);
-  vscode.languages.registerColorProvider(language, colorProvider)
-  vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider)
+  vscode.languages.registerColorProvider(language, colorProvider);
+  vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider);
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
