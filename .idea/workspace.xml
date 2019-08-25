@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8123712-4c64-4e54-85a0-88229e19e6a7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/js/extension2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/extension2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/settings/jass.tmLanguage.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings/jass.tmLanguage.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/settings/language-configuration.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings/language-configuration.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/war3/aaa.j" beforeDir="false" afterPath="$PROJECT_DIR$/war3/aaa.j" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/extension.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/extension.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,15 +17,16 @@
     <session id="-1273253019">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="1" />
+          <entry key="ESLintLanguageService" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -41,15 +39,42 @@
           <entry key="JavaScript" value="1" />
         </counts>
       </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="js" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JavaScript" value="1" />
+        </counts>
+      </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/functions1.js">
+        <entry file="file://$PROJECT_DIR$/src/js/extension.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="45795" column="37" selection-start-line="45795" selection-start-column="3" selection-end-line="45795" selection-end-column="37" />
+            <state relative-caret-position="301">
+              <caret line="64225" column="21" lean-forward="true" selection-start-line="64225" selection-start-column="21" selection-end-line="64225" selection-end-column="21" />
+              <folding>
+                <element signature="e#1859123#1859138#0" expanded="true" />
+                <element signature="e#1859163#1859178#0" expanded="true" />
+                <element signature="e#1859797#1860179#0" expanded="true" />
+                <element signature="e#1860256#1860699#0" expanded="true" />
+                <element signature="e#1860865#1861247#0" expanded="true" />
+                <element signature="e#1861356#1861799#0" expanded="true" />
+                <element signature="e#1862869#1863450#0" expanded="true" />
+                <element signature="e#1864608#1864680#0" expanded="true" />
+                <element signature="e#1864718#1865964#0" expanded="true" />
+                <element signature="e#1865999#1866035#0" expanded="true" />
+                <element signature="e#1866072#1866099#0" expanded="true" />
+                <element signature="e#1866140#1866232#0" expanded="true" />
+                <element signature="e#1871611#1871614#0" expanded="true" />
+                <element signature="n#!!block;n#activate#0" expanded="true" />
+                <element signature="e#1872163#1872488#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -69,6 +94,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/test/functions1.js" />
+        <option value="$PROJECT_DIR$/src/js/extension.js" />
       </list>
     </option>
   </component>
@@ -181,6 +207,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -191,13 +218,18 @@
             <path>
               <item name="jass" type="b2602c69:ProjectViewProjectNode" />
               <item name="jass" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jass" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jass" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -234,11 +266,12 @@
       <updated>1565718552588</updated>
       <workItem from="1565718553690" duration="1204000" />
       <workItem from="1566302491099" duration="346000" />
+      <workItem from="1566642696965" duration="216000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1550000" />
+    <option name="totallyTimeSpent" value="1766000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
@@ -275,8 +308,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/functions1.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
+        <state relative-caret-position="732720">
           <caret line="45795" column="37" selection-start-line="45795" selection-start-column="3" selection-end-line="45795" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/extension.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="64225" column="21" lean-forward="true" selection-start-line="64225" selection-start-column="21" selection-end-line="64225" selection-end-column="21" />
+          <folding>
+            <element signature="e#1859123#1859138#0" expanded="true" />
+            <element signature="e#1859163#1859178#0" expanded="true" />
+            <element signature="e#1859797#1860179#0" expanded="true" />
+            <element signature="e#1860256#1860699#0" expanded="true" />
+            <element signature="e#1860865#1861247#0" expanded="true" />
+            <element signature="e#1861356#1861799#0" expanded="true" />
+            <element signature="e#1862869#1863450#0" expanded="true" />
+            <element signature="e#1864608#1864680#0" expanded="true" />
+            <element signature="e#1864718#1865964#0" expanded="true" />
+            <element signature="e#1865999#1866035#0" expanded="true" />
+            <element signature="e#1866072#1866099#0" expanded="true" />
+            <element signature="e#1866140#1866232#0" expanded="true" />
+            <element signature="e#1871611#1871614#0" expanded="true" />
+            <element signature="n#!!block;n#activate#0" expanded="true" />
+            <element signature="e#1872163#1872488#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

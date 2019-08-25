@@ -71,7 +71,7 @@
     },
     "jass-number": {
       "name": "constant.numeric",
-      "match": "'[a-zA-Z]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|\\b\\d+\\b"
+      "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|\\b\\d+\\b"
     },
     "jass-support-function": {
       "name": "support.function"
