@@ -5,6 +5,7 @@ const j = require("./j")
 const jg = require("./jg")
 const keyword = require("./keyword")
 const type = require("./type")
+const colorProvider = require("./colorProvider")
 /**
  * 语言名称
  */
@@ -23,19 +24,16 @@ const completionProvider = {
     let items = []
     // 添加关键字
     for (const key in keyword) {
-      console.log(key)
       let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Keyword)
       item.detail = key
-      item.documentation = new vscode.MarkdownString().appendCodeblock(keyword[key])
+      item.documentation = new vscode.MarkdownString(keyword[key])
       items.push(item)
     }
     // 添加内置类
     for (const key in type) {
-      console.log(key)
       let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Class)
       item.detail = key
-      console.log(type[key])
-      item.documentation = new vscode.MarkdownString().appendCodeblock(type[key])
+      item.documentation = new vscode.MarkdownString(type[key])
       items.push(item)
     }
     if (document.fileName.endsWith(".j")) {
@@ -105,7 +103,7 @@ const hoverProvider = {
     return new vscode.Hover(tooltips)
   }
 }
-const colorProvider = {
+const colorProvider1 = {
   provideDocumentColors(document, token) {
     let lineCount = document.lineCount
     let colors = []
