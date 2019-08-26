@@ -6,6 +6,21 @@
     ],
 
     aaaaaaaaaaaaa,dd   //         " //aaaaaaaaaaaaa  "
-
+    // 
+vscode.languages.registerSignatureHelpProvider(language, {
+    /**
+     * 
+     * @param {vscode.TextDocument} document 
+     * @param {vscode.Position} position 
+     * @param {vscode.CancellationToken} token 
+     * @param {vscode.SignatureHelpContext} context 
+     * @returns {vscode.ProviderResult<vscode.SignatureHelp>}
+     */
+    provideSignatureHelp(document, position, token, context) {
+      let sh = new vscode.SignatureHelp()
+      sh.signatures = [new vscode.SignatureInformation("degrees", "hahahahaha")]
+      return sh
+    }
+  }, "(", '  ,')
 
     

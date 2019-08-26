@@ -2,20 +2,26 @@
 const vscode = require("vscode")
 
 /**
- * 检查position是否在单行注释中
+ * 判断是否在注释中
  * @param {vscode.TextDocument} document 
  * @param {vscode.Position} position 
  * @returns {boolean}
  */
 const cheakInComment = (document, position) => {
-  let line = document.lineAt(position.line)
-  let text = line.text
-  let commentStartIndex = text.indexOf("//")
-  if (commentStartIndex != -1) {
-    return false
-  } else {
-    return position.character > commentStartIndex
+  let textLine = document.lineAt(position)
+  let text = textLine.text
+  let stringing = false
+  for (let i = 0; i < text.length; i++) {
+    let char = text.charAt(i)
+    if (stringing == false && char == "/" && text.charAt(i - 1) == "/") {
+      return position.character > i
+    } else if (stringing == false && char == "\"") {
+      stringing = true
+    } else if (stringing == true && char == "\"" && text.charAt(i - 1) != "\\") {
+      stringing = false
+    }
   }
+  return false
 }
 
 /**
@@ -25,19 +31,20 @@ const cheakInComment = (document, position) => {
  * @returns {boolean}
  */
 const cheakInString = (document, position) => {
-  let line = document.lineAt(position.line)
-  // 去除转义字符串
-  let text = line.text.replace(/\\\\"/g, "??")
-
+  let textLine = document.lineAt(position)
+  let text = textLine.text
   let stringing = false
-  for (let stringStartIndex = 0; (stringStartIndex = text.indexOf("\"", stringStartIndex)) != -1; stringStartIndex++) {
-    stringing = !stringing
-    if (stringing) {
-      if (position.character < stringStartIndex) {
-        return false
-      }
-    } else {
-      if (position.character < stringStartIndex) {
+  let p = 0
+  for (let i = 0; i < text.length; i++) {
+    let char = text.charAt(i)
+    if (stringing == false && char == "/" && text.charAt(i - 1) == "/") {
+      return position.character > i ? false : true
+    } else if (stringing == false && char == "\"") {
+      stringing = true
+      p = i
+    } else if (stringing == true && char == "\"" && text.charAt(i - 1) != "\\") {
+      stringing = false
+      if (position.character > p && position.character <= i) {
         return true
       }
     }
@@ -52,11 +59,20 @@ const cheakInString = (document, position) => {
  * @returns {boolean}
  */
 const cheakInCode = (document, position) => {
-  let text = document.lineAt(position).text
-  for (let i = 0; i < 5; i++) {
-    let char = text.charAt(position.character - i)
-    if (char == "'") {
-      return true
+  let textLine = document.lineAt(position)
+  let text = textLine.text
+  let coding = false
+  let p = 0
+  for (let i = 0; i < text.length; i++) {
+    let char = text.charAt(i)
+    if (coding == false && char == "'") {
+      coding = true
+      p = i
+    } else if (coding && char == "'") {
+      coding = false
+      if (position.character > p && position.character <= i) {
+        return true
+      }
     }
   }
   return false

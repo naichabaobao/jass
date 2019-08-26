@@ -3,7 +3,6 @@ const vscode = require('vscode');
 // const jg = require("../static/jg.json")
 const j = require("./j")
 const jg = require("./jg")
-const keyword = require("./keyword")
 const type = require("./type")
 const colorProvider = require("./colorProvider")
 const codeItemProvider = require("./codeItemProvider")
@@ -17,75 +16,7 @@ const language = "jass"
  * 错误集合
  */
 var diagnosticCollection = null
-const completionProvider = {
-  // 不能用时刻 字符串中 注释中 代号中 颜色编码中
-  provideCompletionItems(document, position, token, context) {
 
-    let items = []
-    // 添加关键字
-    for (const key in keyword) {
-      let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Keyword)
-      item.detail = key
-      item.documentation = new vscode.MarkdownString(keyword[key])
-      items.push(item)
-    }
-    // 添加内置类
-    for (const key in type) {
-      let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Class)
-      item.detail = key
-      item.documentation = new vscode.MarkdownString(type[key])
-      items.push(item)
-    }
-    if (document.fileName.endsWith(".j")) {
-      // 添加方法 全局
-      items = Object.keys(j).filter(x => j[x].fileName.endsWith(".j")).map(x => {
-        let api = j[x]
-        let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
-        item.detail = api.name + "(" + api.fileName + ")"
-        item.documentation = new vscode.MarkdownString()
-          .appendCodeblock(api.documentation)
-          .appendCodeblock(api.original)
-        item.insertText = api.insertText
-        return item
-      }).concat(Object.keys(jg).filter(x => jg[x].fileName.endsWith(".j")).map(x => {
-        let api = jg[x]
-        let item = new vscode.CompletionItem(api.name,
-          api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
-        item.detail = api.name + "(" + api.fileName + ")"
-        item.documentation = new vscode.MarkdownString()
-          .appendCodeblock(api.documentation)
-          .appendCodeblock(api.original)
-        item.insertText = api.name
-        return item
-      }))
-    } else if (document.fileName.endsWith(".ai")) {
-      items = Object.keys(j).filter(x => j[x].fileName == "common.j" || j[x].fileName == "common.ai").map(x => {
-        let api = j[x]
-        let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
-        item.detail = api.name + "(" + api.fileName + ")"
-        item.documentation = new vscode.MarkdownString()
-          .appendCodeblock(api.documentation)
-          .appendCodeblock(api.original)
-        item.insertText = api.insertText
-        return item
-      }).concat(Object.keys(jg).filter(x => jg[x].fileName == "common.j" || jg[x].fileName == "common.ai").map(x => {
-        let api = jg[x]
-        let item = new vscode.CompletionItem(api.name,
-          api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
-        item.detail = api.name + "(" + api.fileName + ")"
-        item.documentation = new vscode.MarkdownString()
-          .appendCodeblock(api.documentation)
-          .appendCodeblock(api.original)
-        item.insertText = api.name
-        return item
-      }))
-    }
-    return items
-  },
-  resolveCompletionItem(item, token) {
-    return item
-  }
-}
 const hoverProvider = {
   provideHover(document, position, token) {
     var keyword = document.getText(document.getWordRangeAtPosition(position))
@@ -302,6 +233,8 @@ function activate(context) {
   vscode.languages.registerHoverProvider(language, hoverProvider);
   vscode.languages.registerColorProvider(language, colorProvider);
   vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider);
+
+
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
@@ -312,10 +245,6 @@ function activate(context) {
     // var diagnostic = new vscode.Diagnostic(new vscode.Range(new vscode.Position(1, 1), new vscode.Position(1, 6)), "哈哈哈", vscode.DiagnosticSeverity.Error)
     // diagnosticCollection.set(textDocment.uri, [diagnostic])
   })
-  // vscode.SignatureHelp
-  // vscode.DocumentHighlight
-  // vscode.DocumentHighlightProvider
-  vscode.window.showInformationMessage("hello jass")
 }
 exports.activate = activate;
 function deactivate() { }
