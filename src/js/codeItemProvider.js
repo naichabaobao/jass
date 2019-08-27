@@ -3,6 +3,7 @@
  */
 const vscode = require("vscode")
 const itemTool = require("./itemTool")
+const code = require("./code")
 
 /**
  * 
@@ -14,15 +15,18 @@ const itemTool = require("./itemTool")
  */
 const provideCompletionItems = (document, position, token, context) => {
   let inCode = itemTool.cheakInCode(document, position)
-  if (inCode == false) {
-    return []
-  }
   let items = []
-  let item = new vscode.CompletionItem("aaaa", vscode.CompletionItemKind.Unit)
-  item.insertText = "'aaaa'"
-  item.detail = "圣骑"
-  item.documentation = "一个小矮人"
-  items.push(item)
+  if (inCode == false) {
+    return items
+  }
+  let codeObj = code.code
+  for (let key in codeObj) {
+    let cObj = codeObj[key]
+    let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Unit)
+    item.detail = cObj.name + "(" + cObj.code + ")"
+    item.documentation = new vscode.MarkdownString(cObj.tip).appendMarkdown(cObj.type)
+    items.push(item)
+  }
   return items
 }
 
