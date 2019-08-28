@@ -5,6 +5,7 @@ const codeItemProvider = require("./codeItemProvider")
 const triggreCharacters = require("./triggreCharacters")
 const functionItemProvider = require("./functionItemProvider")
 const hoverProvider = require("./hoverProvider")
+const documentForrmatProvider = require("./documentForrmatProvider")
 /**
  * 语言名称
  */
@@ -211,7 +212,7 @@ function activate(context) {
   vscode.languages.registerCompletionItemProvider(language, codeItemProvider, ...triggreCharacters.c);
   vscode.languages.registerHoverProvider(language, hoverProvider);
   vscode.languages.registerColorProvider(language, colorProvider);
-  vscode.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider);
+  vscode.languages.registerDocumentFormattingEditProvider(language, documentForrmatProvider);
 
 
   // 错误提示
