@@ -1,376 +1,108 @@
+/**
+ * 种类
+ */
+const Kind = {
+  Unit: 0x00,
+  Item: 0x10,
+  Destructible: 0x20,
+  Ornament: 0x30,
+  Ability: 0x40,
+  Buff: 0x50,
+  Technology: 0x60,
+}
 
+/**
+ * 转换kind为可读字符串
+ * @param {number} kind 
+ * @returns {string}
+ */
+const kindToString = (kind) => {
+  switch (kind) {
+    case Kind.Unit:
+      return "单位";
+    case Kind.Item:
+      return "物品";
+    case Kind.Destructible:
+      return "可破坏物";
+    case Kind.Ornament:
+      return "地形";
+    case Kind.Ability:
+      return "技能";
+    case Kind.Buff:
+      return "状态效果";
+    case Kind.Technology:
+      return "科技树";
+    default:
+      return "";
+  }
+}
+
+/**
+ * 种族
+ */
+const Race = {
+  Human: 0x00,
+  Orc: 0x10,
+  NightElf: 0x20,
+  Undead: 0x30,
+  Naga: 0x40,
+  NeutralHostile: 0x50,
+  NeutralPassive: 0x60,
+}
+
+/**
+ * 转换race为可读字符串
+ * @param {number} race 
+ * @returns {string}
+ */
+const raceToString = (race) => {
+  switch (race) {
+    case Race.Human:
+      return "人族";
+    case Race.Orc:
+      return "兽族";
+    case Race.NightElf:
+      return "暗夜精灵";
+    case Race.Undead:
+      return "不死族";
+    case Race.Naga:
+      return "娜伽";
+    case Race.NeutralHostile:
+      return "中立被动";
+    case Race.NeutralPassive:
+      return "中立敌对";
+    default:
+      return "";
+  }
+}
+
+/**
+ * 类型
+ */
 const Type = {
-  /**
-   * 单位
-   */
-  Unit: {
-    /**
-     * 人族
-     */
-    Human: {
-      /**
-       * 标准
-       */
-      Standard: {
-        /**
-         * 单位
-         */
-        Unit: 0x00,
-        /**
-         * 建筑
-         */
-        Building: 0x01,
-        /**
-         * 英雄
-         */
-        Hero: 0x02,
-        /**
-         * 特殊
-         */
-        Special: 0x03
-      },
-      /**
-       * 战役
-       */
-      Campaign: {
-        /**
-         * 单位
-         */
-        Unit: 0x04,
-        /**
-         * 建筑
-         */
-        Building: 0x05,
-        /**
-         * 英雄
-         */
-        Hero: 0x06,
-        /**
-         * 特殊
-         */
-        Special: 0x07
-      }
-    },
-    /**
-     * 兽族
-     */
-    Orc: {
-      /**
-      * 标准
-      */
-      Standard: {
-        /**
-         * 单位
-         */
-        Unit: 0x08,
-        /**
-         * 建筑
-         */
-        Building: 0x09,
-        /**
-         * 英雄
-         */
-        Hero: 0x0a,
-        /**
-         * 特殊
-         */
-        Special: 0x0b
-      },
-      /**
-      * 战役
-      */
-      Campaign: {
-        /**
-         * 单位
-         */
-        Unit: 0x0c,
-        /**
-         * 建筑
-         */
-        Building: 0x0d,
-        /**
-         * 英雄
-         */
-        Hero: 0x0e,
-        /**
-         * 特殊
-         */
-        Special: 0x0f
-      }
-    },
-    /**
-     * 暗夜精灵
-     */
-    NightElf: {
-      /**
-       * 标准
-       */
-      Standard: {
-        /**
-         * 单位
-         */
-        Unit: 0x10,
-        /**
-         * 建筑
-         */
-        Building: 0x11,
-        /**
-         * 英雄
-         */
-        Hero: 0x12,
-        /**
-         * 特殊
-         */
-        Special: 0x13
-      },
-      /**
-       * 战役
-       */
-      Campaign: {
-        /**
-         * 单位
-         */
-        Unit: 0x14,
-        /**
-         * 建筑
-         */
-        Building: 0x15,
-        /**
-         * 英雄
-         */
-        Hero: 0x16,
-        /**
-         * 特殊
-         */
-        Special: 0x17
-      }
-    },
-    /**
-     * 不死族
-     */
-    Undead: {
-      /**
-       * 标准
-       */
-      Standard: {
-        Unit: 0x18,
-        Building: 0x19,
-        Hero: 0x1a,
-        Special: 0x1b
-      },
-      /**
-       * 战役
-       */
-      Campaign: {
-        Unit: 0x1c,
-        Building: 0x1d,
-        Hero: 0x1e,
-        Special: 0x1f
-      }
-    },
-    /**
-     * 娜伽
-     */
-    Naga: {
-      /**
-       * 战役
-       */
-      Campaign: {
-        Unit: 0x24,
-        Building: 0x25,
-        Hero: 0x26,
-        Special: 0x27
-      }
-    },
-    /**
-     * 中立敌对
-     */
-    NeutralHostile: {
-      /**
-       * 标准
-       */
-      Standard: {
-        Unit: 0x28,
-        Building: 0x29,
-        Hero: 0x2a,
-        Special: 0x2b
-      },
-      /**
-       * 战役
-       */
-      Campaign: {
-        Unit: 0x2c,
-        Building: 0x2d,
-        Hero: 0x2e,
-        Special: 0x2f
-      }
-    },
-    /**
-     * 中立被动
-     */
-    NeutralPassive: {
-      /**
-       * 标准
-       */
-      Standard: {
-        Unit: 0x30,
-        Building: 0x31,
-        Hero: 0x32,
-        Special: 0x33
-      },
-      /**
-       * 战役
-       */
-      Campaign: {
-        Unit: 0x34,
-        Building: 0x35,
-        Hero: 0x36,
-        Special: 0x37
-      }
-    },
-  },
-  /**
-   * 物品
-   */
-  Item: {
-    /**
-     * 永久的
-     */
-    Perpetual: 0x38,
-    /**
-     * 可充的
-     */
-    Rechargeable: 0x39,
-    /**
-     * 力量提升
-     */
-    Powerlifting: 0x3a,
-    /**
-     * 人造的
-     */
-    Artificial: 0x3b,
-    /**
-     * 可购买的
-     */
-    Purchasable: 0x3c,
-    /**
-     * 战役
-     */
-    Campaign: 0x3d,
-    /**
-     * 混杂
-     */
-    Jumbly: 0x3e
-  },
-  /**
-   * 可破坏物
-   */
-  Destructible: {
-    /**
-     * 树木或可破坏物
-     */
-    TreesOrDestructible: 0x3f,
-    /**
-     * 路径阻断器
-     */
-    PathBreaker: 0x40,
-    /**
-     * 桥或斜坡
-     */
-    BridgeOrSlope: 0x41
-  },
-  /**
-   * 地形装饰物
-   */
-  Ornament: {
-    /**
-     * 环境
-     */
-    Environment: 0x42,
-    /**
-     * 建筑
-     */
-    Architecture: 0x43,
-    /**
-     * 电影
-     */
-    Film: 0x44,
-    /**
-     * 悬崖或地形
-     */
-    CliffOrTerrain: 0x45,
-    /**
-     * 道具
-     */
-    Props: 0x46,
-    /**
-     * 水
-     */
-    Water: 0x47
-  },
-  /**
-   * 技能
-   */
-  Ability: {
-    Human: {
-      Unit: 0x48,
-      Hero: 0x49
-    },
-    Orc: {
-      Unit: 0x4a,
-      Hero: 0x4b
-    },
-    NightElf: {
-      Unit: 0x4c,
-      Hero: 0x4d
-    },
-    Undead: {
-      Unit: 0x4e,
-      Hero: 0x4f
-    },
-    NeutralPassive: {
-      Unit: 0x50
-    },
-    Special: {
-      Unit: 0x52,
-      Hero: 0x53,
-      Item: 0x54
-    }
-  },
-  /**
-   * 状态效果
-   */
-  Buff: {
-    Human: {
-      Magic: 0x55,
-      Area: 0x56
-    },
-    Orc: {
-      Magic: 0x57,
-      Area: 0x58
-    },
-    NightElf: {
-      Magic: 0x59,
-      Area: 0x60
-    },
-    Undead: {
-      Magic: 0x61,
-      Area: 0x62
-    },
-    Special: {
-      Magic: 0x63,
-      Area: 0x64
-    },
-  },
-  /**
-   * 科技
-   */
-  Technology: {
-    Human: 0x65,
-    Orc: 0x66,
-    NightElf: 0x67,
-    Undead: 0x68,
-    Special: 0x69
+  Unit: 0x00,
+  Architecture: 0x10,
+  Hero: 0x20,
+  Special: 0x30
+}
+
+/**
+ * 转换type为可读字符串
+ * @param {number} type 
+ * @returns {string}
+ */
+const typeToString = (type) => {
+  switch (type) {
+    case Type.Unit:
+      return "单位";
+    case Type.Architecture:
+      return "建筑";
+    case Type.Hero:
+      return "英雄";
+    case Type.Special:
+      return "特殊";
+    default:
+      return "";
   }
 }
 
@@ -378,579 +110,1089 @@ const unitHuman = {
   "hpea": {
     code: "hpea",
     name: "农民",
-    tip: "人族的基本工作单位，能采集金矿和木材还能建造和修理建筑物。紧急情况之下还可以变成民兵。|n|n|cffffcc00能攻击地面单位和树木。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "人族的基本工作单位，能采集金矿和木材还能建造和修理建筑物。紧急情况之下还可以变成民兵。能攻击地面单位和树木。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hfoo": {
     code: "hfoo",
     name: "步兵",
-    tip: "步兵能学习到防御模式技能。|n|n|cffffcc00能攻击地面单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "步兵能学习到防御模式技能。能攻击地面单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hkni": {
     code: "hkni",
     name: "骑士",
-    tip: "强大的地面单位，能学到训兽术。|n|n|cffffcc00能攻击地面单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "强大的地面单位，能学到训兽术。能攻击地面单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hrif": {
     code: "hrif",
     name: "矮人火炮手",
-    tip: "非常适合于对付敌人的空中单位，还能获得长管火枪的升级。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "非常适合于对付敌人的空中单位，还能获得长管火枪的升级。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hmtm": {
     code: "hmtm",
     name: "迫击炮小队",
-    tip: "远距离攻城单位，对付建筑物特别地有效，但是速度很慢很容易遭受敌人的近身攻击。还能获得照明弹和碎片攻击技能。|n|n|cffffcc00能攻击地面单位和树木。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "远距离攻城单位，对付建筑物特别地有效，但是速度很慢很容易遭受敌人的近身攻击。还能获得照明弹和碎片攻击技能。能攻击地面单位和树木。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hgyr": {
     code: "hgyr",
     name: "飞行机器",
-    tip: "快速移动的飞行机器，能出色地完成侦察任务也能有效地抵抗敌人的空中单位，能获得飞行机器炸弹和高射炮火的升级。|n能看见隐形单位。|n|n|cffffcc00能攻击空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "快速移动的飞行机器，能出色地完成侦察任务也能有效地抵抗敌人的空中单位，能获得飞行机器炸弹和高射炮火的升级。能看见隐形单位。能攻击空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hgry": {
     code: "hgry",
     name: "狮鹫骑士",
-    tip: "威力巨大的飞行单位，狮鹫上面骑乘着一个矮人族的锤手。能学到风暴战锤技能。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "威力巨大的飞行单位，狮鹫上面骑乘着一个矮人族的锤手。能学到风暴战锤技能。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hmpr": {
     code: "hmpr",
     name: "牧师",
-    tip: "一开始就拥有强大的医疗能力，随后还能学习到驱逐魔法和心灵之火这两项技能。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "一开始就拥有强大的医疗能力，随后还能学习到驱逐魔法和心灵之火这两项技能。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hsor": {
     code: "hsor",
     name: "女巫",
-    tip: "一开始能施放减慢敌人移动和进攻速度的减速魔法，随后还能学习到隐形术和变形术。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "一开始能施放减慢敌人移动和进攻速度的减速魔法，随后还能学习到隐形术和变形术。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hmtt": {
     code: "hmtt",
     name: "蒸汽机车",
-    tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。升级之后可以拥有弹幕攻击能力。|n|n|cffffcc00能攻击建筑物。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。升级之后可以拥有弹幕攻击能力。能攻击建筑物。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hspt": {
     code: "hspt",
     name: "魔法破坏者",
-    tip: "精灵族的英勇战士，被训练来消灭法师。初始技能为魔法盗取，可以操纵魔法效果为你所用，还有魔法免疫和反馈技能，也可以学会控制魔法。|n|n|cffffcc00能攻击地面单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "精灵族的英勇战士，被训练来消灭法师。初始技能为魔法盗取，可以操纵魔法效果为你所用，还有魔法免疫和反馈技能，也可以学会控制魔法。能攻击地面单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "hdhw": {
     code: "hdhw",
     name: "龙鹰骑士",
-    tip: "动作敏捷的飞行单位，骑乘一位精灵族战士。拥有空中锁镣技能，可以暂时禁锢和残废敌空中单位。可以学习到训兽术和乌云技能。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Unit
+    tip: "动作敏捷的飞行单位，骑乘一位精灵族战士。拥有空中锁镣技能，可以暂时禁锢和残废敌空中单位。可以学习到训兽术和乌云技能。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Unit
   },
   "htow": {
     code: "htow",
     name: "城镇大厅",
     tip: "基本建筑物，用来训练农民和存贮搜集到的资源，在升级到了主城和城堡之后能让玩家建造许多新的建筑物和单位。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hkee": {
     code: "hkee",
     name: "主城",
     tip: "升级到主城之后能使玩家建造许多新的建筑物和单位。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hcas": {
     code: "hcas",
     name: "城堡",
     tip: "升级到城堡之后能使玩家建造许多新的建筑物和单位。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hhou": {
     code: "hhou",
     name: "农场",
     tip: "提供人口，增加可造单位数量的最大值。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "halt": {
     code: "halt",
     name: "国王祭坛",
     tip: "召唤新的英雄或者复活死去的英雄。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hbar": {
     code: "hbar",
     name: "兵营",
-    tip: "最基本的产兵建筑物。能训练出人族的步兵，矮人火枪手和骑士。|n步兵的防御模式，矮人火枪手的长管火枪以及训兽术也都是在这里进行研究的。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "最基本的产兵建筑物。能训练出人族的步兵，矮人火枪手和骑士。步兵的防御模式，矮人火枪手的长管火枪以及训兽术也都是在这里进行研究的。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hlum": {
     code: "hlum",
     name: "伐木场",
-    tip: "能储存采集到的木材。|n还包括对伐木效率和石工技术的研究。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "能储存采集到的木材。还包括对伐木效率和石工技术的研究。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hbla": {
     code: "hbla",
     name: "铁匠铺",
     tip: "能对护甲，武器和火药进行升级。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "harm": {
     code: "harm",
     name: "车间",
-    tip: "能生产出蒸汽机车、迫击炮小队和飞行机器。|n并且包括对照明弹、碎片攻击、弹幕攻击、飞行机器炸弹和高射炮火的升级。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "能生产出蒸汽机车、迫击炮小队和飞行机器。并且包括对照明弹、碎片攻击、弹幕攻击、飞行机器炸弹和高射炮火的升级。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hars": {
     code: "hars",
     name: "神秘圣地",
-    tip: "能训练出牧师，女巫，魔法破坏者。|n还包括对牧师，女巫的魔法技能升级，控制魔法的技能升级。使得人族的防御塔具有探测隐形单位能力的魔法岗哨也是在这里进行研究的。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "能训练出牧师，女巫，魔法破坏者。还包括对牧师，女巫的魔法技能升级，控制魔法的技能升级。使得人族的防御塔具有探测隐形单位能力的魔法岗哨也是在这里进行研究的。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hgra": {
     code: "hgra",
     name: "狮鹫笼",
-    tip: "能训练出狮鹫骑士和龙鹰骑士。|n还包括对风暴战锤和乌云技能的研究。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "能训练出狮鹫骑士和龙鹰骑士。还包括对风暴战锤和乌云技能的研究。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hwtw": {
     code: "hwtw",
     name: "哨塔",
     tip: "基本的侦察型建筑物，能升级到炮塔或者防御塔，还能学习到魔法岗哨技能。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hgtw": {
     code: "hgtw",
     name: "防御塔",
-    tip: "基本的防守型建筑物，能学习到魔法岗哨技能。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Building
+    tip: "基本的防守型建筑物，能学习到魔法岗哨技能。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hctw": {
     code: "hctw",
     name: "炮塔",
-    tip: "重型的防御性建筑物，对付成群结队的敌人尤为有效。还能学到魔法岗哨技能。|n|n|cffffcc00能攻击地面单位和树木。|r",
-    type: Type.Unit.Human.Standard.Building
+    tip: "重型的防御性建筑物，对付成群结队的敌人尤为有效。还能学到魔法岗哨技能。能攻击地面单位和树木。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hatw": {
     code: "hatw",
     name: "神秘之塔",
-    tip: "魔法防御塔。对于敌人的英雄和魔法施放者特别有效。有魔法回应技能，使它的攻击能够破坏魔法值，破坏的量与攻击的伤害相同。可以学习魔法哨兵技能。|n|n|cffffcc00攻击地面和空中单位。",
-    type: Type.Unit.Human.Standard.Building
+    tip: "魔法防御塔。对于敌人的英雄和魔法施放者特别有效。有魔法回应技能，使它的攻击能够破坏魔法值，破坏的量与攻击的伤害相同。可以学习魔法哨兵技能。攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "hvlt": {
     code: "hvlt",
     name: "神秘藏宝室",
     tip: "建造一个出售物品的商店。可供购买的物品的种类取决于你的城镇大厅的升级情况(城镇大厅，主城或者城堡)以及你所拥有的建筑物种类。",
-    type: Type.Unit.Human.Standard.Building
+    kind: Kind.Unit, race: Race.Human, type: Type.Architecture
   },
   "Hpal": {
     code: "Hpal",
     name: "圣骑士",
-    tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光，神圣护甲，专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r",
-    type: Type.Unit.Human.Standard.Hero
+    tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光，神圣护甲，专注光环和复活这四项技能。能攻击地面单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Hero
   },
   "Hamg": {
     code: "Hamg",
     name: "大魔法师",
-    tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪，召唤水元素，辉煌光环和群体传送魔法。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Hero
+    tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪，召唤水元素，辉煌光环和群体传送魔法。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Hero
   },
   "Hmkg": {
     code: "Hmkg",
     name: "山丘之王",
-    tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。|n|n|cffffcc00能攻击地面单位。|r",
-    type: Type.Unit.Human.Standard.Hero
+    tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。能攻击地面单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Hero
   },
   "Hblm": {
     code: "Hblm",
     name: "血魔法师",
-    tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。|n|n|cffffcc00能攻击地面和空中单位。|r",
-    type: Type.Unit.Human.Standard.Hero
+    tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。能攻击地面和空中单位。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Hero
   },
   "hpxe": {
     code: "hpxe",
     name: "凤凰蛋",
     tip: "",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hrtt": {
     code: "hrtt",
     name: "蒸汽机车",
-    tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。拥有弹幕攻击技能从而可以对敌人的空中单位进行攻击。|n|n|cffffcc00能攻击建筑物。|r",
-    type: Type.Unit.Human.Standard.Special
+    tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。拥有弹幕攻击技能从而可以对敌人的空中单位进行攻击。能攻击建筑物。",
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hmil": {
     code: "hmil",
     name: "民兵",
     tip: "农民相应战斗号召跑到最近的一个城镇大厅转变成民兵。",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hwat": {
     code: "hwat",
     name: "水元素",
     tip: "等级一",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hwt2": {
     code: "hwt2",
     name: "水元素",
     tip: "等级二",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hwt3": {
     code: "hwt3",
     name: "水元素",
     tip: "等级三",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
   "hphx": {
     code: "hphx",
     name: "火凤凰",
     tip: "",
-    type: Type.Unit.Human.Standard.Special
+    kind: Kind.Unit, race: Race.Human, type: Type.Special
   },
-  "hrdh": { code: "hrdh", name: "背负背包的马", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "hbew": { code: "hbew", name: "车", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nhew": { code: "nhew", name: "工人(血精灵)", tip: "基本的工人单位。能建造建筑物和进行修理。", type: Type.Unit.Human.Campaign.Unit },
-  "njks": { code: "njks", name: "监狱小卒", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "hhal": { code: "hhal", name: "(无人之马", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nbee": { code: "nbee", name: "血精灵工程师", tip: "极度聪慧的血精灵在发明新的技术和打造强大的防御塔方面极为擅长。|n|n|cffffcc00攻击地面单位和树木。|r", type: Type.Unit.Human.Campaign.Unit },
-  "nbel": { code: "nbel", name: "血精灵中尉", tip: "来自于强大的卡尔省血精灵军队的中尉。破坏魔法施放单位的专家。|n|n|cffffcc00攻击地面单位|r", type: Type.Unit.Human.Campaign.Unit },
-  "hhes": { code: "hhes", name: "剑士", tip: "多才多艺的步兵战士。能学习到防御技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "heth": { code: "heth", name: "船长", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "hbot": { code: "hbot", name: "人族运输船", tip: "大型的海上船只，能携带单位。", type: Type.Unit.Human.Campaign.Unit },
-  "hdes": { code: "hdes", name: "人族护卫舰", tip: "多功能的攻击舰。擅长于攻击空中单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "hbsh": { code: "hbsh", name: "人族战舰", tip: "强大的舰船，能够有效地攻击地面建筑物。|n|n|cffffcc00能攻击地面单位。", type: Type.Unit.Human.Campaign.Unit },
-  "nemi": { code: "nemi", name: "使者", tip: "基本的远程攻击单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "nhef": { code: "nhef", name: "高等精灵(女性)", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nhem": { code: "nhem", name: "高等精灵(男性)", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nhea": { code: "nhea", name: "弓箭手", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nmed": { code: "nmed", name: "麦迪文", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nser": { code: "nser", name: "西里诺克斯", tip: "", type: Type.Unit.Human.Campaign.Unit },
-  "nchp": { code: "nchp", name: "牧师", tip: "支持性的魔法单位。能施放医疗，驱逐魔法和心灵之火技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "nhym": { code: "nhym", name: "术士", tip: "多才多艺的魔法单位。能施放减速，冲击波和变形魔法。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "nws1": { code: "nws1", name: "龙鹰", tip: "重型的远程攻击单位，能诱捕敌方单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Unit },
-  "nitb": { code: "nitb", name: "冰之宝盒", tip: "里面有着宝藏。", type: Type.Unit.Human.Campaign.Building },
-  "nmgy": { code: "nmgy", name: "魔法宝箱", tip: "在每个盒子里面都藏着一个秘密。", type: Type.Unit.Human.Campaign.Building },
-  "hshy": { code: "hshy", name: "人族船坞", tip: "船只建造工厂。这里能建造出人族的运输船，护卫舰和战舰。", type: Type.Unit.Human.Campaign.Building },
-  "haro": { code: "haro", name: "神秘了望台", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nfrt": { code: "nfrt", name: "水果店", tip: "你一生中所见过的最不可思议的水果店。", type: Type.Unit.Human.Campaign.Building },
-  "ndt1": { code: "ndt1", name: "冰霜之塔", tip: "射出冰片进行攻击，擅长于减慢敌人的速度，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "ndt2": { code: "ndt2", name: "高级水霜之塔", tip: "加快发射冰片的速度，擅长于减慢敌人的速度，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "nft2": { code: "nft2", name: "高级火焰之塔", tip: "增加喷射火焰的攻击力，擅长于毁灭靠近的敌人，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "nbt2": { code: "nbt2", name: "高级巨石之塔", tip: "增加石头的攻击力，擅长于对付地面单位，对魔法免疫。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "net2": { code: "net2", name: "高级能里之塔", tip: "增加能量之箭的攻击力，擅长于对付敌人的空中单位，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "ntx2": { code: "ntx2", name: "高级死亡之塔", tip: "射出致命的能量箭，擅长于实施大规模的伤害，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "nft1": { code: "nft1", name: "火焰之塔", tip: "能射出灼热的火焰。擅长于毁灭靠近的敌人。对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "nbt1": { code: "nbt1", name: "巨石之塔", tip: "投掷出能造成溅射伤害的巨石，擅长于对付地面单位，对魔法免疫。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "net1": { code: "net1", name: "能量之塔", tip: "射出能量之箭，擅长于对付敌人的空中单位，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "ntt1": { code: "ntt1", name: "死亡之塔", tip: "射出致命的能量箭，擅长于实施大规模的伤害，对魔法免疫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "ngwr": { code: "ngwr", name: "谷仓", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "negm": { code: "negm", name: "天怒之塔", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nezf": { code: "nezf", name: "地怒之塔", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "negt": { code: "negt", name: "高等精灵防御塔", tip: "主要的防御性建筑。 |n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Building },
-  "ndgt": { code: "ndgt", name: "达拉然守卫塔", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nheb": { code: "nheb", name: "高等精灵兵营", tip: "主要部队生产建筑。 训练高等精灵剑士和高等精灵弓箭手和龙鹰。|n 同时包括对于高等精灵剑士防御技能的升级。", type: Type.Unit.Human.Campaign.Building },
-  "nefm": { code: "nefm", name: "高等精灵农场", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef0": { code: "nef0", name: "高等精灵农场1", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef1": { code: "nef1", name: "高等精灵农场2", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef2": { code: "nef2", name: "高等精灵农场3", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef3": { code: "nef3", name: "高等精灵农场4", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef4": { code: "nef4", name: "高等精灵农场5", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef5": { code: "nef5", name: "高等精灵农场6", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef6": { code: "nef6", name: "高等精灵农场7", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "nef7": { code: "nef7", name: "高等精灵农场8", tip: "", type: Type.Unit.Human.Campaign.Building },
-  "Hart": { code: "Hart", name: "阿尔塞斯", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Harf": { code: "Harf", name: "阿尔塞斯(挥舞着霜之哀伤宝剑)", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hgam": { code: "Hgam", name: "安东尼达斯", tip: "一位神秘的英雄，擅长于远程攻击。能学习到暴风雪、召唤水元素、辉煌光环、和群体传送技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hant": { code: "Hant", name: "安东尼达斯", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hdgo": { code: "Hdgo", name: "达贡兽族屠杀者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hpb2": { code: "Hpb2", name: "格雷戈里爵士", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hhkl": { code: "Hhkl", name: "哈拉生命使者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hapm": { code: "Hapm", name: "海军上将普洛德摩尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hjai": { code: "Hjai", name: "吉安娜", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hlgr": { code: "Hlgr", name: "加理瑟斯", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hkal": { code: "Hkal", name: "卡尔", tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。|n|n|cffffcc00攻击地面和空中单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hmgd": { code: "Hmgd", name: "马格罗斯守御者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hmbr": { code: "Hmbr", name: "穆拉丁", tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hpb1": { code: "Hpb1", name: "尼科拉斯大人", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Huth": { code: "Huth", name: "乌瑟尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Human.Campaign.Hero },
-  "Hvwd": { code: "Hvwd", name: "追风之西尔瓦娜斯", tip: "", type: Type.Unit.Human.Campaign.Hero },
-  "hprt": { code: "hprt", name: "传送门", tip: "打开传送门。", type: Type.Unit.Human.Campaign.Building },
-  "nmdm": { code: "nmdm", name: "麦迪文(血乌鸦形态)", tip: "", type: Type.Unit.Human.Campaign.Building },
+  "hrdh": { code: "hrdh", name: "背负背包的马", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hbew": { code: "hbew", name: "车", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nhew": { code: "nhew", name: "工人(血精灵)", tip: "基本的工人单位。能建造建筑物和进行修理。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "njks": { code: "njks", name: "监狱小卒", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hhal": { code: "hhal", name: "(无人之马", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nbee": { code: "nbee", name: "血精灵工程师", tip: "极度聪慧的血精灵在发明新的技术和打造强大的防御塔方面极为擅长。攻击地面单位和树木。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nbel": { code: "nbel", name: "血精灵中尉", tip: "来自于强大的卡尔省血精灵军队的中尉。破坏魔法施放单位的专家。攻击地面单位", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hhes": { code: "hhes", name: "剑士", tip: "多才多艺的步兵战士。能学习到防御技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "heth": { code: "heth", name: "船长", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hbot": { code: "hbot", name: "人族运输船", tip: "大型的海上船只，能携带单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hdes": { code: "hdes", name: "人族护卫舰", tip: "多功能的攻击舰。擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "hbsh": { code: "hbsh", name: "人族战舰", tip: "强大的舰船，能够有效地攻击地面建筑物。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nemi": { code: "nemi", name: "使者", tip: "基本的远程攻击单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nhef": { code: "nhef", name: "高等精灵(女性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nhem": { code: "nhem", name: "高等精灵(男性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nhea": { code: "nhea", name: "弓箭手", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nmed": { code: "nmed", name: "麦迪文", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nser": { code: "nser", name: "西里诺克斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nchp": { code: "nchp", name: "牧师", tip: "支持性的魔法单位。能施放医疗，驱逐魔法和心灵之火技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nhym": { code: "nhym", name: "术士", tip: "多才多艺的魔法单位。能施放减速，冲击波和变形魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nws1": { code: "nws1", name: "龙鹰", tip: "重型的远程攻击单位，能诱捕敌方单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+  "nitb": { code: "nitb", name: "冰之宝盒", tip: "里面有着宝藏。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nmgy": { code: "nmgy", name: "魔法宝箱", tip: "在每个盒子里面都藏着一个秘密。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "hshy": { code: "hshy", name: "人族船坞", tip: "船只建造工厂。这里能建造出人族的运输船，护卫舰和战舰。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "haro": { code: "haro", name: "神秘了望台", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nfrt": { code: "nfrt", name: "水果店", tip: "你一生中所见过的最不可思议的水果店。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ndt1": { code: "ndt1", name: "冰霜之塔", tip: "射出冰片进行攻击，擅长于减慢敌人的速度，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ndt2": { code: "ndt2", name: "高级水霜之塔", tip: "加快发射冰片的速度，擅长于减慢敌人的速度，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nft2": { code: "nft2", name: "高级火焰之塔", tip: "增加喷射火焰的攻击力，擅长于毁灭靠近的敌人，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nbt2": { code: "nbt2", name: "高级巨石之塔", tip: "增加石头的攻击力，擅长于对付地面单位，对魔法免疫。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "net2": { code: "net2", name: "高级能里之塔", tip: "增加能量之箭的攻击力，擅长于对付敌人的空中单位，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ntx2": { code: "ntx2", name: "高级死亡之塔", tip: "射出致命的能量箭，擅长于实施大规模的伤害，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nft1": { code: "nft1", name: "火焰之塔", tip: "能射出灼热的火焰。擅长于毁灭靠近的敌人。对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nbt1": { code: "nbt1", name: "巨石之塔", tip: "投掷出能造成溅射伤害的巨石，擅长于对付地面单位，对魔法免疫。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "net1": { code: "net1", name: "能量之塔", tip: "射出能量之箭，擅长于对付敌人的空中单位，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ntt1": { code: "ntt1", name: "死亡之塔", tip: "射出致命的能量箭，擅长于实施大规模的伤害，对魔法免疫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ngwr": { code: "ngwr", name: "谷仓", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "negm": { code: "negm", name: "天怒之塔", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nezf": { code: "nezf", name: "地怒之塔", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "negt": { code: "negt", name: "高等精灵防御塔", tip: "主要的防御性建筑。 能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "ndgt": { code: "ndgt", name: "达拉然守卫塔", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nheb": { code: "nheb", name: "高等精灵兵营", tip: "主要部队生产建筑。 训练高等精灵剑士和高等精灵弓箭手和龙鹰。 同时包括对于高等精灵剑士防御技能的升级。", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nefm": { code: "nefm", name: "高等精灵农场", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef0": { code: "nef0", name: "高等精灵农场1", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef1": { code: "nef1", name: "高等精灵农场2", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef2": { code: "nef2", name: "高等精灵农场3", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef3": { code: "nef3", name: "高等精灵农场4", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef4": { code: "nef4", name: "高等精灵农场5", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef5": { code: "nef5", name: "高等精灵农场6", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef6": { code: "nef6", name: "高等精灵农场7", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "nef7": { code: "nef7", name: "高等精灵农场8", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Architecture },
+  "Hart": { code: "Hart", name: "阿尔塞斯", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Harf": { code: "Harf", name: "阿尔塞斯(挥舞着霜之哀伤宝剑)", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hgam": { code: "Hgam", name: "安东尼达斯", tip: "一位神秘的英雄，擅长于远程攻击。能学习到暴风雪、召唤水元素、辉煌光环、和群体传送技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hant": { code: "Hant", name: "安东尼达斯", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hdgo": { code: "Hdgo", name: "达贡兽族屠杀者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hpb2": { code: "Hpb2", name: "格雷戈里爵士", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hhkl": { code: "Hhkl", name: "哈拉生命使者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hapm": { code: "Hapm", name: "海军上将普洛德摩尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hjai": { code: "Hjai", name: "吉安娜", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hlgr": { code: "Hlgr", name: "加理瑟斯", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hkal": { code: "Hkal", name: "卡尔", tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hmgd": { code: "Hmgd", name: "马格罗斯守御者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hmbr": { code: "Hmbr", name: "穆拉丁", tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hpb1": { code: "Hpb1", name: "尼科拉斯大人", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Huth": { code: "Huth", name: "乌瑟尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "Hvwd": { code: "Hvwd", name: "追风之西尔瓦娜斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+  "hprt": { code: "hprt", name: "传送门", tip: "打开传送门。", kind: Kind.Unit, race: Race.Human, type: Type.Special },
+  "nmdm": { code: "nmdm", name: "麦迪文(血乌鸦形态)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Special },
 }
+
 const unitOrc = {
-  "opeo": { code: "opeo", name: "苦工", tip: "兽族的基本工人单位。能采集黄金和木材。还能建造建筑物和进行修理。在钻入地洞以后还能对来犯的敌人进行反击。|n|n|cffffcc00能攻击地面单位和树木。|r", type: Type.Unit.Orc.Standard.Unit },
-  "ogru": { code: "ogru", name: "兽族步兵", tip: "基本的兽族地面单位。能得到狂暴力量的升级。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "orai": { code: "orai", name: "掠夺者", tip: "一种机动性很强的狼骑士。对付建筑物特别的有效，能学习到诱捕技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "otau": { code: "otau", name: "牛头人", tip: "大型的单位，能学习到粉碎技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "ohun": { code: "ohun", name: "巨魔猎头者", tip: "能有效对空的单位。能学习到巨魔再生和狂暴愤怒技能。|n|n|cffffcc00能攻击地面和空中单位。|r ", type: Type.Unit.Orc.Standard.Unit },
-  "ocat": { code: "ocat", name: "粉碎者", tip: "远程攻城武器。对建筑很有效，但缓慢而昂贵。可以学会燃烧之油技能。|n|n|cffffcc00攻击地面单位和树木。|r", type: Type.Unit.Orc.Standard.Unit },
-  "okod": { code: "okod", name: "科多兽", tip: "笨重的战争野兽，上面骑着一个兽族鼓手。能学到战鼓和吞噬技能。战鼓能提高周围单位的攻击力，它本身也能进行升级。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "owyv": { code: "owyv", name: "风骑士", tip: "一种高度机动的飞行单位。特别擅长于侦察。能获得浸毒武器的升级。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "otbr": { code: "otbr", name: "巨魔蝙蝠骑士", tip: "轻型的飞行单位，有着出色的感官。擅长于摧毁敌人的建筑物，具有不稳定化合物技能，使得巨魔蝙蝠骑士能利用爆炸来伤害周围的空中单位。还能学习到液体炸弹和巨魔再生技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "odoc": { code: "odoc", name: "巨魔巫医", tip: "魔法单位，一开始能施放岗哨魔法，从而能侦察到一定的区域。随后这种单位还能学习到静止陷阱和治疗守卫。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "oshm": { code: "oshm", name: "萨满祭司", tip: "魔法单位。一开始能施放净化技能，从而能固定住敌人和驱逐其身上的魔法效果。随后还能学习到闪电护盾和嗜血术。|n|n|cffffcc00能攻击地面单位和空中单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "ospw": { code: "ospw", name: "灵魂行者", tip: "诡秘的牛头人法师。具有虚无形态技能，从而能让其对物理攻击免疫。还具有灵魂锁链技能，从而能对敌人进行连锁伤害。同时也能学习到消魔和先祖幽灵技能。|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Standard.Unit },
-  "ogre": { code: "ogre", name: "大厅", tip: "兽族的基本建筑物。能训练出苦工，在升级到了要塞和堡垒之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ostr": { code: "ostr", name: "要塞", tip: "在升级到要塞以后能使玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ofrt": { code: "ofrt", name: "堡垒", tip: "升级到了堡垒之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "oalt": { code: "oalt", name: "风暴祭坛", tip: "能召唤新的英雄和复活阵亡的英雄。", type: Type.Unit.Orc.Campaign.Building },
-  "obar": { code: "obar", name: "兵营", tip: "主要部队生产建筑。训练步兵，猎头者和粉碎者。|n同时包括狂暴力量，狂暴愤怒，巨魔再生和燃烧汽油的升级。", type: Type.Unit.Orc.Campaign.Building },
-  "ofor": { code: "ofor", name: "战争磨坊", tip: "能存储采集到的木材。|n这里还包括对兽族各种单位的攻防升级，尖刺障碍和加强型防御也是在这里进行研究的。", type: Type.Unit.Orc.Campaign.Building },
-  "otto": { code: "otto", name: "牛头人图腾", tip: "能训练出牛头人来。|n还包括对粉碎技能的研究。", type: Type.Unit.Orc.Campaign.Building },
-  "osld": { code: "osld", name: "灵魂归宿", tip: "能生产出兽族的魔法单位：萨满祭司，巨魔巫医和灵魂行者。|n这里也可以进行对萨满祭司，巨魔巫医和灵魂行者的各种魔法升级。", type: Type.Unit.Orc.Campaign.Building },
-  "obea": { code: "obea", name: "兽栏", tip: "能训练出掠夺者，科多兽，风骑士和巨魔蝙蝠骑士。|n这里还包括诱捕，浸毒武器，战鼓和液体炸弹的升级。", type: Type.Unit.Orc.Campaign.Building },
-  "otrb": { code: "otrb", name: "兽族地洞", tip: "能提供人口，从而增加可造单位数量的最大值。苦工在进入其中以后还能对来犯的敌人进行反击。能进行加强型防御升级。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Building },
-  "owtw": { code: "owtw", name: "了望塔", tip: "防御性建筑，能得到到加强型防御升级。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Building },
-  "ovln": { code: "ovln", name: "巫毒商店", tip: "建造出一个能出售物品的商店。可以购买的物品种类取决于你的大厅升级情况(大厅, 要塞, 堡垒)和你所拥有的建筑物种类。", type: Type.Unit.Orc.Campaign.Building },
-  "Obla": { code: "Obla", name: "剑圣", tip: "一种较为灵活的英雄，特别擅长于一对一。能学习到镜像，疾步风，致命一击和剑刃风暴这四种技能。|n|n|cffffcc00能攻击地面单位。", type: Type.Unit.Orc.Campaign.Hero },
-  "Ofar": { code: "Ofar", name: "先知", tip: "一种神秘的英雄，特别擅长于远程攻击和侦察。能学习到闪电链，透视，野兽幽魂和地震这四种技能。|n|n|cffffcc00能攻击地面单位和空中单位。", type: Type.Unit.Orc.Campaign.Hero },
-  "Otch": { code: "Otch", name: "牛头人酋长", tip: "一种战士型英雄，特别擅长于近战和吸收伤害。能学习到震荡波，战争践踏，耐久光环和重生这四种技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Oshd": { code: "Oshd", name: "暗影猎手", tip: "灵巧型的英雄，擅长于医疗和巫毒魔法。能学习到医疗波，妖术，毒蛇守卫和巫毒技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "oeye": { code: "oeye", name: "岗哨守卫", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "nwad": { code: "nwad", name: "观察守卫", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "otot": { code: "otot", name: "静止陷阱", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osw1": { code: "osw1", name: "幽魂之狼(等级1)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osw2": { code: "osw2", name: "恐惧之狼(等级2)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osw3": { code: "osw3", name: "阴影之狼(等级3)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "ohwd": { code: "ohwd", name: "治疗守卫", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osp1": { code: "osp1", name: "毒蛇守卫(等级1)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osp2": { code: "osp2", name: "毒蛇守卫(等级2)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osp3": { code: "osp3", name: "毒蛇守卫(等级3)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "osp4": { code: "osp4", name: "毒蛇守卫(等级4)", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "ospm": { code: "ospm", name: "灵魂行者(虚无状态)", tip: "诡秘的牛头人法师。具有虚无形态技能，从而能让其对物理攻击免疫。还具有灵魂锁链技能，从而能对敌人进行连锁伤害。同时也能学习到消魔和先祖幽灵技能。|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Special },
-  "otbk": { code: "otbk", name: "巨竟狂暴战士", tip: "能有效对空的投矛战士，拥有狂暴愤怒技能，从而增加了攻击力但是也会因此而受到额外的伤害。能学习巨魔再生技能。|n|n|cffffcc00能攻击地面和空中单位。|r ", type: Type.Unit.Orc.Campaign.Special },
+  "opeo": { code: "opeo", name: "苦工", tip: "兽族的基本工人单位。能采集黄金和木材。还能建造建筑物和进行修理。在钻入地洞以后还能对来犯的敌人进行反击。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "ogru": { code: "ogru", name: "兽族步兵", tip: "基本的兽族地面单位。能得到狂暴力量的升级。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "orai": { code: "orai", name: "掠夺者", tip: "一种机动性很强的狼骑士。对付建筑物特别的有效，能学习到诱捕技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "otau": { code: "otau", name: "牛头人", tip: "大型的单位，能学习到粉碎技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "ohun": { code: "ohun", name: "巨魔猎头者", tip: "能有效对空的单位。能学习到巨魔再生和狂暴愤怒技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "ocat": { code: "ocat", name: "粉碎者", tip: "远程攻城武器。对建筑很有效，但缓慢而昂贵。可以学会燃烧之油技能。攻击地面单位和树木。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "okod": { code: "okod", name: "科多兽", tip: "笨重的战争野兽，上面骑着一个兽族鼓手。能学到战鼓和吞噬技能。战鼓能提高周围单位的攻击力，它本身也能进行升级。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "owyv": { code: "owyv", name: "风骑士", tip: "一种高度机动的飞行单位。特别擅长于侦察。能获得浸毒武器的升级。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "otbr": { code: "otbr", name: "巨魔蝙蝠骑士", tip: "轻型的飞行单位，有着出色的感官。擅长于摧毁敌人的建筑物，具有不稳定化合物技能，使得巨魔蝙蝠骑士能利用爆炸来伤害周围的空中单位。还能学习到液体炸弹和巨魔再生技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "odoc": { code: "odoc", name: "巨魔巫医", tip: "魔法单位，一开始能施放岗哨魔法，从而能侦察到一定的区域。随后这种单位还能学习到静止陷阱和治疗守卫。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "oshm": { code: "oshm", name: "萨满祭司", tip: "魔法单位。一开始能施放净化技能，从而能固定住敌人和驱逐其身上的魔法效果。随后还能学习到闪电护盾和嗜血术。能攻击地面单位和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "ospw": { code: "ospw", name: "灵魂行者", tip: "诡秘的牛头人法师。具有虚无形态技能，从而能让其对物理攻击免疫。还具有灵魂锁链技能，从而能对敌人进行连锁伤害。同时也能学习到消魔和先祖幽灵技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  "ogre": { code: "ogre", name: "大厅", tip: "兽族的基本建筑物。能训练出苦工，在升级到了要塞和堡垒之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ostr": { code: "ostr", name: "要塞", tip: "在升级到要塞以后能使玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ofrt": { code: "ofrt", name: "堡垒", tip: "升级到了堡垒之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "oalt": { code: "oalt", name: "风暴祭坛", tip: "能召唤新的英雄和复活阵亡的英雄。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "obar": { code: "obar", name: "兵营", tip: "主要部队生产建筑。训练步兵，猎头者和粉碎者。同时包括狂暴力量，狂暴愤怒，巨魔再生和燃烧汽油的升级。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ofor": { code: "ofor", name: "战争磨坊", tip: "能存储采集到的木材。这里还包括对兽族各种单位的攻防升级，尖刺障碍和加强型防御也是在这里进行研究的。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "otto": { code: "otto", name: "牛头人图腾", tip: "能训练出牛头人来。还包括对粉碎技能的研究。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "osld": { code: "osld", name: "灵魂归宿", tip: "能生产出兽族的魔法单位：萨满祭司，巨魔巫医和灵魂行者。这里也可以进行对萨满祭司，巨魔巫医和灵魂行者的各种魔法升级。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "obea": { code: "obea", name: "兽栏", tip: "能训练出掠夺者，科多兽，风骑士和巨魔蝙蝠骑士。这里还包括诱捕，浸毒武器，战鼓和液体炸弹的升级。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "otrb": { code: "otrb", name: "兽族地洞", tip: "能提供人口，从而增加可造单位数量的最大值。苦工在进入其中以后还能对来犯的敌人进行反击。能进行加强型防御升级。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "owtw": { code: "owtw", name: "了望塔", tip: "防御性建筑，能得到到加强型防御升级。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ovln": { code: "ovln", name: "巫毒商店", tip: "建造出一个能出售物品的商店。可以购买的物品种类取决于你的大厅升级情况(大厅, 要塞, 堡垒)和你所拥有的建筑物种类。", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "Obla": { code: "Obla", name: "剑圣", tip: "一种较为灵活的英雄，特别擅长于一对一。能学习到镜像，疾步风，致命一击和剑刃风暴这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Ofar": { code: "Ofar", name: "先知", tip: "一种神秘的英雄，特别擅长于远程攻击和侦察。能学习到闪电链，透视，野兽幽魂和地震这四种技能。能攻击地面单位和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Otch": { code: "Otch", name: "牛头人酋长", tip: "一种战士型英雄，特别擅长于近战和吸收伤害。能学习到震荡波，战争践踏，耐久光环和重生这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Oshd": { code: "Oshd", name: "暗影猎手", tip: "灵巧型的英雄，擅长于医疗和巫毒魔法。能学习到医疗波，妖术，毒蛇守卫和巫毒技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "oeye": { code: "oeye", name: "岗哨守卫", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "nwad": { code: "nwad", name: "观察守卫", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "otot": { code: "otot", name: "静止陷阱", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osw1": { code: "osw1", name: "幽魂之狼(等级1)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osw2": { code: "osw2", name: "恐惧之狼(等级2)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osw3": { code: "osw3", name: "阴影之狼(等级3)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "ohwd": { code: "ohwd", name: "治疗守卫", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osp1": { code: "osp1", name: "毒蛇守卫(等级1)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osp2": { code: "osp2", name: "毒蛇守卫(等级2)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osp3": { code: "osp3", name: "毒蛇守卫(等级3)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "osp4": { code: "osp4", name: "毒蛇守卫(等级4)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "ospm": { code: "ospm", name: "灵魂行者(虚无状态)", tip: "诡秘的牛头人法师。具有虚无形态技能，从而能让其对物理攻击免疫。还具有灵魂锁链技能，从而能对敌人进行连锁伤害。同时也能学习到消魔和先祖幽灵技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "otbk": { code: "otbk", name: "巨竟狂暴战士", tip: "能有效对空的投矛战士，拥有狂暴愤怒技能，从而增加了攻击力但是也会因此而受到额外的伤害。能学习巨魔再生技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
 
-  nspe: { code: "nspe", name: "支柱", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  oose: { code: "oose", name: "科多兽(怀需要分配驾驭者", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  owar: { code: "owar", name: "兽族战争首领", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  ogrk: { code: "ogrk", name: "加嗦克", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  oswy: { code: "oswy", name: "灵魂飞龙", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  ownr: { code: "ownr", name: "双足飞龙(不需要分驾驭者", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  odkt: { code: "odkt", name: "德拉克苏尔", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  obot: { code: "obot", name: "兽族运输船", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  odes: { code: "odes", name: "兽族护卫舰", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  ojgn: { code: "ojgn", name: "兽族魔力战舰", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  nw2w: { code: "nw2w", name: "兽族巫师", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  nchw: { code: "nchw", name: "邪恶的巫师", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  nchg: { code: "nchg", name: "邪恶的兽族步兵", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  nchr: { code: "nchr", name: "邪恶的掠夺者", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  nckb: { code: "nckb", name: "邪恶的科多兽", tip: "", type: Type.Unit.Orc.Campaign.Unit },
-  ncpn: { code: "ncpn", name: "邪恶的苦工", tip: "", type: Type.Unit.Orc.Campaign.Unit },
+  nspe: { code: "nspe", name: "支柱", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  oose: { code: "oose", name: "科多兽(怀需要分配驾驭者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  owar: { code: "owar", name: "兽族战争首领", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  ogrk: { code: "ogrk", name: "加嗦克", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  oswy: { code: "oswy", name: "灵魂飞龙", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  ownr: { code: "ownr", name: "双足飞龙(不需要分驾驭者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  odkt: { code: "odkt", name: "德拉克苏尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  obot: { code: "obot", name: "兽族运输船", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  odes: { code: "odes", name: "兽族护卫舰", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  ojgn: { code: "ojgn", name: "兽族魔力战舰", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  nw2w: { code: "nw2w", name: "兽族巫师", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  nchw: { code: "nchw", name: "邪恶的巫师", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  nchg: { code: "nchg", name: "邪恶的兽族步兵", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  nchr: { code: "nchr", name: "邪恶的掠夺者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  nckb: { code: "nckb", name: "邪恶的科多兽", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+  ncpn: { code: "ncpn", name: "邪恶的苦工", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
 
-  "npgr": { code: "npgr", name: "能里产生器", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "oshy": { code: "oshy", name: "兽族船坞", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nwc1": { code: "nwc1", name: "双足飞龙牢笼(1", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nwc2": { code: "nwc2", name: "双足飞龙牢笼(2", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "npgf": { code: "npgf", name: "猪圈农场", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "ndrb": { code: "ndrb", name: "龙之栖木", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nbfl": { code: "nbfl", name: "血浴之泉", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "ndfl": { code: "ndfl", name: "被污染的生命之泉", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "ocbw": { code: "ocbw", name: "邪恶兽族地洞(混乱的", tip: "", type: Type.Unit.Orc.Campaign.Building },
+  "npgr": { code: "npgr", name: "能里产生器", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "oshy": { code: "oshy", name: "兽族船坞", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "nwc1": { code: "nwc1", name: "双足飞龙牢笼(1", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "nwc2": { code: "nwc2", name: "双足飞龙牢笼(2", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "npgf": { code: "npgf", name: "猪圈农场", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ndrb": { code: "ndrb", name: "龙之栖木", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "nbfl": { code: "nbfl", name: "血浴之泉", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ndfl": { code: "ndfl", name: "被污染的生命之泉", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+  "ocbw": { code: "ocbw", name: "邪恶兽族地洞(混乱的", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
 
-  "Nsjs": { code: "Nsjs", name: "陈-风暴烈酒", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Odrt": { code: "Odrt", name: "德雷克萨尔", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Ogrh": { code: "Ogrh", name: "格罗姆地狱咆哮", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Opgh": { code: "Opgh", name: "格罗姆一地狱咆哮(恶魔附体)", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Ogld": { code: "Ogld", name: "古尔丹", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Ocbh": { code: "Ocbh", name: "卡林-血蹄", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Ocb2": { code: "Ocb2", name: "卡林血蹄(资料片", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Orex": { code: "Orex", name: "雷克萨", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Orkn": { code: "Orkn", name: "洛克汗", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Othr": { code: "Othr", name: "萨尔", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Osam": { code: "Osam", name: "萨穆罗", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Nbbc": { code: "Nbbc", name: "黑岩氏族的剑圣", tip: "", type: Type.Unit.Orc.Campaign.Hero },
+  "Nsjs": { code: "Nsjs", name: "陈-风暴烈酒", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Odrt": { code: "Odrt", name: "德雷克萨尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Ogrh": { code: "Ogrh", name: "格罗姆地狱咆哮", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Opgh": { code: "Opgh", name: "格罗姆一地狱咆哮(恶魔附体)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Ogld": { code: "Ogld", name: "古尔丹", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Ocbh": { code: "Ocbh", name: "卡林-血蹄", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Ocb2": { code: "Ocb2", name: "卡林血蹄(资料片", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Orex": { code: "Orex", name: "雷克萨", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Orkn": { code: "Orkn", name: "洛克汗", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Othr": { code: "Othr", name: "萨尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Osam": { code: "Osam", name: "萨穆罗", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Nbbc": { code: "Nbbc", name: "黑岩氏族的剑圣", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
 
-  "omtg": { code: "omtg", name: "马索格", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "ovlj": { code: "ovlj", name: "沃尔京", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "onzg": { code: "onzg", name: "那滋盖尔", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "negz": { code: "negz", name: "工程师加磁劳", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "nmsh": { code: "nmsh", name: "米纱", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "Otcc": { code: "Otcc", name: "卡林-血蹄(过场动画", tip: "", type: Type.Unit.Orc.Campaign.Special },
-  "ngbl": { code: "ngbl", name: "地精爆破T", tip: "", type: Type.Unit.Orc.Campaign.Special },
+  "omtg": { code: "omtg", name: "马索格", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "ovlj": { code: "ovlj", name: "沃尔京", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "onzg": { code: "onzg", name: "那滋盖尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "negz": { code: "negz", name: "工程师加磁劳", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "nmsh": { code: "nmsh", name: "米纱", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "Otcc": { code: "Otcc", name: "卡林-血蹄(过场动画", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+  "ngbl": { code: "ngbl", name: "地精爆破T", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
 
 }
 
 const unitNightElf = {
-  "ewsp": { code: "ewsp", name: "小精灵", tip: "暗夜精灵族基本的工人单位。能采集金矿和木材。还能建造精灵族的建筑物并进行修理更新。|n能自我爆炸从而伤害到周围被召唤出来的单位并吸收一定范围内所有单位的魔法值。", type: Type.Unit.NightElf.Standard.Unit },
-  "earc": { code: "earc", name: "弓箭手", tip: "基本的远程攻击单位。拥有艾鲁尼之优雅技能。能学习到射击术，硬弓和驯服角鹰兽这三项技能。|n|n|cffffcc00能攻击地面和空中单位。|r ", type: Type.Unit.NightElf.Standard.Unit },
-  "esen": { code: "esen", name: "女猎手", tip: "灵活的远程攻击单位，能学习到哨兵和月刃技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "edry": { code: "edry", name: "树妖", tip: "她的毒性攻击能减慢敌人的速度并慢慢地消耗敌人的生命值。她还具有驱魔技能和魔法免疫技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "ebal": { code: "ebal", name: "投刃车", tip: "远距离的攻城武器。对付建筑物特别地有效。还能得到穿刺剑刃的升级。从而能攻击树木。|n|n|cffffcc00能攻击地面单位和树木。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "ehip": { code: "ehip", name: "角鹰兽", tip: "近战型飞行单位。能学习到驯服角鹰兽技能。|n|n|cffffcc00能攻击空中单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "ehpr": { code: "ehpr", name: "角鹰兽骑士", tip: "弓箭手骑乘在了角鹰兽上面就成为了角鹰兽骑士。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "echm": { code: "echm", name: "奇美拉", tip: "双头飞龙。能学到腐蚀喷吐技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "edot": { code: "edot", name: "猛禽德鲁伊(暗夜精灵形态)", tip: "灵活的魔法单位。一开始就能施放精灵之火，从而能降低某个单位的护甲并让其不能隐形。随后还能学习到风暴之鸦，飓风和猛禽之痕技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "edoc": { code: "edoc", name: "利爪德鲁伊(暗夜精灵族形态)", tip: "近战型的魔法施放单位。一开始能施放咆哮技能，从而增加攻击力。随后还能学习到生命恢复，变熊和利爪之痕技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "emtg": { code: "emtg", name: "山岭巨人", tip: "大型的近战单位，善于吸收敌人的进攻。具有嘲讽和拔树技能。也能学习到硬化皮肤和抗性皮肤这两个技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Unit },
-  "efdr": { code: "efdr", name: "精灵龙", tip: "小型的飞行单位，擅长伤害敌人的魔法单位。具有变相移动，魔力之焰和魔法免疫技能。|n|n|Cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Unit },
+  "ewsp": { code: "ewsp", name: "小精灵", tip: "暗夜精灵族基本的工人单位。能采集金矿和木材。还能建造精灵族的建筑物并进行修理更新。能自我爆炸从而伤害到周围被召唤出来的单位并吸收一定范围内所有单位的魔法值。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "earc": { code: "earc", name: "弓箭手", tip: "基本的远程攻击单位。拥有艾鲁尼之优雅技能。能学习到射击术，硬弓和驯服角鹰兽这三项技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "esen": { code: "esen", name: "女猎手", tip: "灵活的远程攻击单位，能学习到哨兵和月刃技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "edry": { code: "edry", name: "树妖", tip: "她的毒性攻击能减慢敌人的速度并慢慢地消耗敌人的生命值。她还具有驱魔技能和魔法免疫技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "ebal": { code: "ebal", name: "投刃车", tip: "远距离的攻城武器。对付建筑物特别地有效。还能得到穿刺剑刃的升级。从而能攻击树木。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "ehip": { code: "ehip", name: "角鹰兽", tip: "近战型飞行单位。能学习到驯服角鹰兽技能。能攻击空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "ehpr": { code: "ehpr", name: "角鹰兽骑士", tip: "弓箭手骑乘在了角鹰兽上面就成为了角鹰兽骑士。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "echm": { code: "echm", name: "奇美拉", tip: "双头飞龙。能学到腐蚀喷吐技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "edot": { code: "edot", name: "猛禽德鲁伊(暗夜精灵形态)", tip: "灵活的魔法单位。一开始就能施放精灵之火，从而能降低某个单位的护甲并让其不能隐形。随后还能学习到风暴之鸦，飓风和猛禽之痕技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "edoc": { code: "edoc", name: "利爪德鲁伊(暗夜精灵族形态)", tip: "近战型的魔法施放单位。一开始能施放咆哮技能，从而增加攻击力。随后还能学习到生命恢复，变熊和利爪之痕技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "emtg": { code: "emtg", name: "山岭巨人", tip: "大型的近战单位，善于吸收敌人的进攻。具有嘲讽和拔树技能。也能学习到硬化皮肤和抗性皮肤这两个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "efdr": { code: "efdr", name: "精灵龙", tip: "小型的飞行单位，擅长伤害敌人的魔法单位。具有变相移动，魔力之焰和魔法免疫技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
 
-  "etol": { code: "etol", name: "生命之树", tip: "暗夜精灵族的基本建筑物。能训练小精灵和缠绕金矿。在升级到了远古之树和永恒之树之后能让玩家建造许多新的建筑物和单位。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "etoa": { code: "etoa", name: "远古之树", tip: "升级到了远古之树之后能让玩家建造许多新的建筑物和单位。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "etoe": { code: "etoe", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "emow": { code: "emow", name: "月亮井", tip: "提供人口，从而增加可造单位数量的最大值。还能补充暗夜精灵族单位的魔法值和生命值。在夜间它也能自我恢复魔法能量。还能得到月井之春技能的升级。", type: Type.Unit.NightElf.Standard.Building },
-  "eete": { code: "eete", name: "长者祭坛", tip: "能召唤新的英雄和复活阵亡的英雄。", type: Type.Unit.NightElf.Standard.Building },
-  "eaom": { code: "eaom", name: "战争古树", tip: "能生产出：弓箭手，女猎手和投刃车。|n还包括对弓箭手，女猎手和投刃车的各类升级。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "eaoe": { code: "eaoe", name: "知识古树", tip: "能生产出暗夜精灵族的地面魔法单位：利爪德鲁伊，山岭巨人和树妖。|n还包括对利爪德鲁伊，驱魔技能，利爪之痕，硬化皮肤和抗性皮肤的升级。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "eaow": { code: "eaow", name: "风之古树", tip: "能生产出：角鹰兽，猛禽德鲁伊和精灵龙。|n还包括对角鹰兽和猛禽德鲁伊的各类升级。比如猛禽之痕和训练角鹰兽。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "edob": { code: "edob", name: "猎手大厅", tip: "能对所有单位的攻防进行升级，还包括对夜视能力的升级。", type: Type.Unit.NightElf.Standard.Building },
-  "etrp": { code: "etrp", name: "远古守护者", tip: "防御性古树。在扎根以后，会向空中投掷大量的石块以对来犯的敌人进行反击。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Building },
-  "edos": { code: "edos", name: "奇美拉栖木", tip: "能训练出奇美拉怪兽。|n还包括对腐蚀喷吐的研究。", type: Type.Unit.NightElf.Standard.Building },
-  "egol": { code: "egol", name: "被缠绕的金矿", tip: "冒出一些根须缠绕在金矿上，使得小精灵能采集资源。", type: Type.Unit.NightElf.Standard.Building },
-  "eden": { code: "eden", name: "奇迹古树", tip: "建造一个可以出售物品的商店。物品的类型取决于你的生命之树的升级情况(生命之树,远古之树,永恒之树)以及你当前所拥有的建筑物种类。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Building },
+  "etol": { code: "etol", name: "生命之树", tip: "暗夜精灵族的基本建筑物。能训练小精灵和缠绕金矿。在升级到了远古之树和永恒之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "etoa": { code: "etoa", name: "远古之树", tip: "升级到了远古之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "etoe": { code: "etoe", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "emow": { code: "emow", name: "月亮井", tip: "提供人口，从而增加可造单位数量的最大值。还能补充暗夜精灵族单位的魔法值和生命值。在夜间它也能自我恢复魔法能量。还能得到月井之春技能的升级。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "eete": { code: "eete", name: "长者祭坛", tip: "能召唤新的英雄和复活阵亡的英雄。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "eaom": { code: "eaom", name: "战争古树", tip: "能生产出：弓箭手，女猎手和投刃车。还包括对弓箭手，女猎手和投刃车的各类升级。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "eaoe": { code: "eaoe", name: "知识古树", tip: "能生产出暗夜精灵族的地面魔法单位：利爪德鲁伊，山岭巨人和树妖。还包括对利爪德鲁伊，驱魔技能，利爪之痕，硬化皮肤和抗性皮肤的升级。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "eaow": { code: "eaow", name: "风之古树", tip: "能生产出：角鹰兽，猛禽德鲁伊和精灵龙。还包括对角鹰兽和猛禽德鲁伊的各类升级。比如猛禽之痕和训练角鹰兽。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "edob": { code: "edob", name: "猎手大厅", tip: "能对所有单位的攻防进行升级，还包括对夜视能力的升级。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "etrp": { code: "etrp", name: "远古守护者", tip: "防御性古树。在扎根以后，会向空中投掷大量的石块以对来犯的敌人进行反击。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "edos": { code: "edos", name: "奇美拉栖木", tip: "能训练出奇美拉怪兽。还包括对腐蚀喷吐的研究。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "egol": { code: "egol", name: "被缠绕的金矿", tip: "冒出一些根须缠绕在金矿上，使得小精灵能采集资源。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "eden": { code: "eden", name: "奇迹古树", tip: "建造一个可以出售物品的商店。物品的类型取决于你的生命之树的升级情况(生命之树,远古之树,永恒之树)以及你当前所拥有的建筑物种类。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
 
-  "Ekee": { code: "Ekee", name: "从林守护者", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须，自然之力，荆刺光环和宁静这四项技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Hero },
-  "Emoo": { code: "Emoo", name: "月之女祭司", tip: "战士型英雄，擅长于远程攻击。能学习到侦察，灼热之箭，强击光环和群星坠落这四项技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Hero },
-  "Edem": { code: "Edem", name: "恶魔猎手", tip: "一种灵活的英雄，能学习到献祭，闪避法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Hero },
-  "Ewar": { code: "Ewar", name: "守望者", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁, 刀阵旋风, 暗影突袭和复仇之魂这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Hero },
+  "Ekee": { code: "Ekee", name: "从林守护者", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须，自然之力，荆刺光环和宁静这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Emoo": { code: "Emoo", name: "月之女祭司", tip: "战士型英雄，擅长于远程攻击。能学习到侦察，灼热之箭，强击光环和群星坠落这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Edem": { code: "Edem", name: "恶魔猎手", tip: "一种灵活的英雄，能学习到献祭，闪避法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Ewar": { code: "Ewar", name: "守望者", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁, 刀阵旋风, 暗影突袭和复仇之魂这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
 
-  "now1": { code: "now1", name: "猫头鹰侦察者(等级1)", tip: "", type: Type.Unit.NightElf.Standard.Special },
-  "now2": { code: "now2", name: "猫头鹰侦察者(等级2)", tip: "", type: Type.Unit.NightElf.Standard.Special },
-  "now3": { code: "now3", name: "猫头鹰侦察者(等级3)", tip: "", type: Type.Unit.NightElf.Standard.Special },
-  "Edmm": { code: "Edmm", name: "恶魔猎手(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭，闪避法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Special },
-  "edtm": { code: "edtm", name: "猛禽德鲁伊(风暴之鸦形态)", tip: "灵活的魔法单位。一开始就能施放精灵之火，从而能降低某个单位的护甲并让其不能隐形。随后还能学习到风暴之鸦，飓风和猛禽之痕技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Standard.Special },
-  "edcm": { code: "edcm", name: "利爪德鲁伊(变能)", tip: "近战型的魔法施放单位。一开始能施放咆哮技能，从而增加攻击力。随后还能学习到生命恢复，变熊和利爪之痕技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.NightElf.Standard.Special },
-  "efon": { code: "efon", name: "树人", tip: "", type: Type.Unit.NightElf.Standard.Special },
-  "espv": { code: "espv", name: "复仇天神", tip: "", type: Type.Unit.NightElf.Standard.Special },
-  "even": { code: "even", name: "复仇之魂", tip: "", type: Type.Unit.NightElf.Standard.Special },
+  "now1": { code: "now1", name: "猫头鹰侦察者(等级1)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "now2": { code: "now2", name: "猫头鹰侦察者(等级2)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "now3": { code: "now3", name: "猫头鹰侦察者(等级3)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "Edmm": { code: "Edmm", name: "恶魔猎手(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭，闪避法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "edtm": { code: "edtm", name: "猛禽德鲁伊(风暴之鸦形态)", tip: "灵活的魔法单位。一开始就能施放精灵之火，从而能降低某个单位的护甲并让其不能隐形。随后还能学习到风暴之鸦，飓风和猛禽之痕技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "edcm": { code: "edcm", name: "利爪德鲁伊(变能)", tip: "近战型的魔法施放单位。一开始能施放咆哮技能，从而增加攻击力。随后还能学习到生命恢复，变熊和利爪之痕技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "efon": { code: "efon", name: "树人", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "espv": { code: "espv", name: "复仇天神", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "even": { code: "even", name: "复仇之魂", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
 
-  "enec": { code: "enec", name: "暗夜精灵信使", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "eilw": { code: "eilw", name: "囚车", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "nwat": { code: "nwat", name: "岗哨", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "ensh": { code: "ensh", name: "娜萨", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "nssh": { code: "nssh", name: "守望者", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "eshd": { code: "eshd", name: "塞恩德里斯", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
-  "etrs": { code: "etrs", name: "暗夜精灵族运输船", tip: "能够运送单位的运输船。", type: Type.Unit.NightElf.Campaign.Unit },
-  "edes": { code: "edes", name: "暗夜精灵族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.NightElf.Campaign.Unit },
-  "ebsh": { code: "ebsh", name: "暗夜精灵族战舰", tip: "强大的攻城舰船，能够很好地攻击地面建筑物和敌人的船只。|n|n|cffffcc00攻击地面单位。|r", type: Type.Unit.NightElf.Campaign.Unit },
-  "nthr": { code: "nthr", name: "萨里法斯", tip: "", type: Type.Unit.NightElf.Campaign.Unit },
+  "enec": { code: "enec", name: "暗夜精灵信使", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "eilw": { code: "eilw", name: "囚车", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "nwat": { code: "nwat", name: "岗哨", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "ensh": { code: "ensh", name: "娜萨", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "nssh": { code: "nssh", name: "守望者", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "eshd": { code: "eshd", name: "塞恩德里斯", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "etrs": { code: "etrs", name: "暗夜精灵族运输船", tip: "能够运送单位的运输船。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "edes": { code: "edes", name: "暗夜精灵族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "ebsh": { code: "ebsh", name: "暗夜精灵族战舰", tip: "强大的攻城舰船，能够很好地攻击地面建筑物和敌人的船只。攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+  "nthr": { code: "nthr", name: "萨里法斯", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
 
-  "eshy": { code: "eshy", name: "暗夜精灵族船坞", tip: "船只建造工厂。能建造出暗夜精灵族的运输船，护卫舰和战舰。", type: Type.Unit.Orc.Campaign.Building },
-  "nvr1": { code: "nvr1", name: "暗夜精灵族渔村(被毁坏的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nvr0": { code: "nvr0", name: "暗夜精灵族渔村(被毁坏的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nvr2": { code: "nvr2", name: "暗夜精灵族渔村(被毁坏的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfv4": { code: "nfv4", name: "暗夜精灵族渔村(顶层有装饰的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfv1": { code: "nfv1", name: "暗夜精灵族渔村(顶层有装饰的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfv3": { code: "nfv3", name: "暗夜精灵族渔村(双层的) ", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfv0": { code: "nfv0", name: "暗夜精灵族渔村(双层的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfv2": { code: "nfv2", name: "暗夜精灵族渔村(单层的)", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "ngob": { code: "ngob", name: "魔法宝石塔", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nbwd": { code: "nbwd", name: "兽穴", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nctl": { code: "nctl", name: "生命之树", tip: "暗夜精灵族的基本建筑物。能训练小精灵和缠绕金矿。在升级到了远古之树和永恒之树之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ncta": { code: "ncta", name: "远古之树", tip: "升级到了远古之树之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ncte": { code: "ncte", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ncap": { code: "ncap", name: "远古守护者", tip: "防御性的古树。当扎根于地面的时候，能投掷出巨大的石块对敌人造成伤害。|n能攻击地面和空中单位。", type: Type.Unit.Orc.Campaign.Building },
-  "ncaw": { code: "ncaw", name: "战争古树", tip: "主要的产兵建筑。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Building },
-  "nhcn": { code: "nhcn", name: "伴神赛纳留斯之角", tip: "", type: Type.Unit.Orc.Campaign.Building },
-  "nfnp": { code: "nfnp", name: "威力之泉", tip: "", type: Type.Unit.Orc.Campaign.Building },
+  "eshy": { code: "eshy", name: "暗夜精灵族船坞", tip: "船只建造工厂。能建造出暗夜精灵族的运输船，护卫舰和战舰。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nvr1": { code: "nvr1", name: "暗夜精灵族渔村(被毁坏的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nvr0": { code: "nvr0", name: "暗夜精灵族渔村(被毁坏的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nvr2": { code: "nvr2", name: "暗夜精灵族渔村(被毁坏的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfv4": { code: "nfv4", name: "暗夜精灵族渔村(顶层有装饰的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfv1": { code: "nfv1", name: "暗夜精灵族渔村(顶层有装饰的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfv3": { code: "nfv3", name: "暗夜精灵族渔村(双层的) ", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfv0": { code: "nfv0", name: "暗夜精灵族渔村(双层的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfv2": { code: "nfv2", name: "暗夜精灵族渔村(单层的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "ngob": { code: "ngob", name: "魔法宝石塔", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nbwd": { code: "nbwd", name: "兽穴", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nctl": { code: "nctl", name: "生命之树", tip: "暗夜精灵族的基本建筑物。能训练小精灵和缠绕金矿。在升级到了远古之树和永恒之树之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "ncta": { code: "ncta", name: "远古之树", tip: "升级到了远古之树之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "ncte": { code: "ncte", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "ncap": { code: "ncap", name: "远古守护者", tip: "防御性的古树。当扎根于地面的时候，能投掷出巨大的石块对敌人造成伤害。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "ncaw": { code: "ncaw", name: "战争古树", tip: "主要的产兵建筑。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nhcn": { code: "nhcn", name: "伴神赛纳留斯之角", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+  "nfnp": { code: "nfnp", name: "威力之泉", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
 
-  "Efur": { code: "Efur", name: "法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。|n|n|cffffcc00攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Emfr": { code: "Emfr", name: "玛尔法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。|n|n|cffffcc00攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Emns": { code: "Emns", name: "玛尔法里奥(没有鹿角)", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。|n|n|cffffcc00攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Ewrd": { code: "Ewrd", name: "玛维", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁、刀阵旋风、暗影突袭和复仇之魂这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Ecen": { code: "Ecen", name: "赛纳留斯", tip: "", type: Type.Unit.Orc.Campaign.Hero },
-  "Etyr": { code: "Etyr", name: "泰兰德", tip: "战士型英雄，擅长于远程攻击。能学习到侦察、灼热之箭、强击光环和群星坠落这四项技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Ekgg": { code: "Ekgg", name: "幽灵", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。|n|n|cffffcc00攻击地面和空中单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Eill": { code: "Eill", name: "尤迪安", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Hero },
-  "Eevi": { code: "Eevi", name: "尤迪安(邪恶的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Hero },
+  "Efur": { code: "Efur", name: "法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Emfr": { code: "Emfr", name: "玛尔法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Emns": { code: "Emns", name: "玛尔法里奥(没有鹿角)", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Ewrd": { code: "Ewrd", name: "玛维", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁、刀阵旋风、暗影突袭和复仇之魂这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Ecen": { code: "Ecen", name: "赛纳留斯", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+  "Etyr": { code: "Etyr", name: "泰兰德", tip: "战士型英雄，擅长于远程攻击。能学习到侦察、灼热之箭、强击光环和群星坠落这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Ekgg": { code: "Ekgg", name: "幽灵", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Eill": { code: "Eill", name: "尤迪安", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+  "Eevi": { code: "Eevi", name: "尤迪安(邪恶的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
 
-  "Eevm": { code: "Eevm", name: "尤迪安(Morphed)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Special },
-  "Eilm": { code: "Eilm", name: "尤迪安(被变了形的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Special },
-  "Eidm": { code: "Eidm", name: "尤迪安(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Orc.Campaign.Special },
+  "Eevm": { code: "Eevm", name: "尤迪安(Morphed)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "Eilm": { code: "Eilm", name: "尤迪安(被变了形的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+  "Eidm": { code: "Eidm", name: "尤迪安(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
 }
 
 const unitUndead = {
-  "uaco": { code: "uaco", name: "侍僧", tip: "不死族的基本工人单位。能召唤建筑物，采集金矿和进行修复工作。在牺牲深渊里牺牲以后侍僧还可以变为阴影。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "ushd": { code: "ushd", name: "阴影", tip: "一个永远隐形的灵魂，能看见其他隐形单位，但是不能进攻。", type: Type.Unit.Undead.Standard.Unit },
-  "ugho": { code: "ugho", name: "食尸鬼", tip: "基本的地面单位，也能采集木材。能学习到吞食尸体和食尸鬼狂热技能。|n|n|cffffcc00能攻击地面单位和树木。|r", type: Type.Unit.Undead.Standard.Unit },
-  "uabo": { code: "uabo", name: "憎恶", tip: "重型的近战单位。能学习到疾病云雾和吞食尸体技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "umtw": { code: "umtw", name: "绞肉车", tip: "能存放尸体，也是一种远程的攻城武器。对付建筑物特别地有效，但是自己本身也移动缓慢而容易遭受攻击。还能学习到疾病云雾技能。|n|n|cffffcc00能攻击地面单位和树木。|r", type: Type.Unit.Undead.Standard.Unit },
-  "ucry": { code: "ucry", name: "穴居恶魔", tip: "远程攻击单位。能学习到蛛网和钻地技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "ugar": { code: "ugar", name: "石像鬼", tip: "飞行单位。能学习到石像形态技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "uban": { code: "uban", name: "女妖", tip: "魔法单位，一开始能施放诅咒技能，从而让敌人有一定的概率击空。随后还能学习到反魔法外壳和占据魔法。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "unec": { code: "unec", name: "不死族巫师", tip: "一种魔法单位。一开始能施放复活死尸技能。随后还能学习到邪恶狂热和残废技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "uobs": { code: "uobs", name: "十胜石雕像", tip: "一种坚固的雕像，能帮助你恢复自己部队的生命值和魔法值。具有灵魂触摸，枯萎精髓技能，还可以学习到破坏者形态技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Unit },
-  "ufro": { code: "ufro", name: "冰霜巨龙", tip: "重型的飞行单位，能学习到冰冻喷吐技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Unit },
+  "uaco": { code: "uaco", name: "侍僧", tip: "不死族的基本工人单位。能召唤建筑物，采集金矿和进行修复工作。在牺牲深渊里牺牲以后侍僧还可以变为阴影。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ushd": { code: "ushd", name: "阴影", tip: "一个永远隐形的灵魂，能看见其他隐形单位，但是不能进攻。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ugho": { code: "ugho", name: "食尸鬼", tip: "基本的地面单位，也能采集木材。能学习到吞食尸体和食尸鬼狂热技能。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uabo": { code: "uabo", name: "憎恶", tip: "重型的近战单位。能学习到疾病云雾和吞食尸体技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "umtw": { code: "umtw", name: "绞肉车", tip: "能存放尸体，也是一种远程的攻城武器。对付建筑物特别地有效，但是自己本身也移动缓慢而容易遭受攻击。还能学习到疾病云雾技能。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ucry": { code: "ucry", name: "穴居恶魔", tip: "远程攻击单位。能学习到蛛网和钻地技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ugar": { code: "ugar", name: "石像鬼", tip: "飞行单位。能学习到石像形态技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uban": { code: "uban", name: "女妖", tip: "魔法单位，一开始能施放诅咒技能，从而让敌人有一定的概率击空。随后还能学习到反魔法外壳和占据魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "unec": { code: "unec", name: "不死族巫师", tip: "一种魔法单位。一开始能施放复活死尸技能。随后还能学习到邪恶狂热和残废技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uobs": { code: "uobs", name: "十胜石雕像", tip: "一种坚固的雕像，能帮助你恢复自己部队的生命值和魔法值。具有灵魂触摸，枯萎精髓技能，还可以学习到破坏者形态技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ufro": { code: "ufro", name: "冰霜巨龙", tip: "重型的飞行单位，能学习到冰冻喷吐技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
 
-  "unpl": { code: "unpl", name: "大墓地", tip: "不死族的基本建筑物。能训练出侍僧和存贮采集到木材资源。在升级到了亡者大厅和黑色城堡之后能让玩家建造许多新的建筑物和单位。", type: Type.Unit.Undead.Standard.Building },
-  "unp1": { code: "unp1", name: "亡者大厅", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Building },
-  "unp2": { code: "unp2", name: "黑色城堡", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Building },
-  "uzig": { code: "uzig", name: "通灵塔", tip: "能提供人口，从而增加可造单位数量的最大值。在经过升级以后能变成一个可以攻击地面单位和空中单位的建筑物。", type: Type.Unit.Undead.Standard.Building },
-  "uzg1": { code: "uzg1", name: "幽魂之塔", tip: "防御性建筑物。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Building },
-  "uzg2": { code: "uzg2", name: "蛛网怪塔", tip: "升级到防御建筑，造成冰冻伤害，减慢敌人单位速度。|n|n|cffffcc00攻击地面和空中单位|r", type: Type.Unit.Undead.Standard.Building },
-  "uaod": { code: "uaod", name: "黑暗禁坛", tip: "能召唤新的英雄和复活阵亡的英雄。", type: Type.Unit.Undead.Standard.Building },
-  "usep": { code: "usep", name: "地穴", tip: "主要的产兵建筑物，能训练出食尸鬼，穴居恶魔和石像鬼。还包括对食尸鬼狂热，吞食尸体，石像形态，蛛网和钻地的研究。", type: Type.Unit.Undead.Standard.Building },
-  "usap": { code: "usap", name: "牺牲深渊", tip: "能将侍僧转化成阴影。阴影是一种能看见敌方隐形单位的隐形单位。自己本身也不能攻击敌人。", type: Type.Unit.Undead.Standard.Building },
-  "ugrv": { code: "ugrv", name: "坟场", tip: "能对不死族单位的攻防进行升级。也能产生尸体和存放收集到木材资源。", type: Type.Unit.Undead.Standard.Building },
-  "uslh": { code: "uslh", name: "屠宰场", tip: "能生产出憎恶、绞肉车和十胜石雕像。还包括对疾病云雾，破坏者形态的研究。", type: Type.Unit.Undead.Standard.Building },
-  "utod": { code: "utod", name: "诅咒神庙", tip: "能训练出不死族巫师和女妖。|n还包括对不死族巫师和女妖的升级，骨质增强术和骷髅法术也是在这里研究的。", type: Type.Unit.Undead.Standard.Building },
-  "ubon": { code: "ubon", name: "埋骨地", tip: "能生产出霜冻巨龙。还包括对冰冻喷吐的研究。", type: Type.Unit.Undead.Standard.Building },
-  "ugol": { code: "ugol", name: "闹鬼金矿", tip: "在金矿被闹鬼了之后侍僧才可以从中采集黄金资源。", type: Type.Unit.Undead.Standard.Building },
-  "utom": { code: "utom", name: "古墓废墟", tip: "建造出一个能出售物品的商店。商店内的物品种类取决于你的大墓地的升级情况(大墓地, 亡者大厅, 黑色城堡)以及你所拥有的建筑物种类。", type: Type.Unit.Undead.Standard.Building },
+  "unpl": { code: "unpl", name: "大墓地", tip: "不死族的基本建筑物。能训练出侍僧和存贮采集到木材资源。在升级到了亡者大厅和黑色城堡之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "unp1": { code: "unp1", name: "亡者大厅", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "unp2": { code: "unp2", name: "黑色城堡", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "uzig": { code: "uzig", name: "通灵塔", tip: "能提供人口，从而增加可造单位数量的最大值。在经过升级以后能变成一个可以攻击地面单位和空中单位的建筑物。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "uzg1": { code: "uzg1", name: "幽魂之塔", tip: "防御性建筑物。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "uzg2": { code: "uzg2", name: "蛛网怪塔", tip: "升级到防御建筑，造成冰冻伤害，减慢敌人单位速度。攻击地面和空中单位", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "uaod": { code: "uaod", name: "黑暗禁坛", tip: "能召唤新的英雄和复活阵亡的英雄。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "usep": { code: "usep", name: "地穴", tip: "主要的产兵建筑物，能训练出食尸鬼，穴居恶魔和石像鬼。还包括对食尸鬼狂热，吞食尸体，石像形态，蛛网和钻地的研究。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "usap": { code: "usap", name: "牺牲深渊", tip: "能将侍僧转化成阴影。阴影是一种能看见敌方隐形单位的隐形单位。自己本身也不能攻击敌人。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ugrv": { code: "ugrv", name: "坟场", tip: "能对不死族单位的攻防进行升级。也能产生尸体和存放收集到木材资源。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "uslh": { code: "uslh", name: "屠宰场", tip: "能生产出憎恶、绞肉车和十胜石雕像。还包括对疾病云雾，破坏者形态的研究。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "utod": { code: "utod", name: "诅咒神庙", tip: "能训练出不死族巫师和女妖。还包括对不死族巫师和女妖的升级，骨质增强术和骷髅法术也是在这里研究的。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ubon": { code: "ubon", name: "埋骨地", tip: "能生产出霜冻巨龙。还包括对冰冻喷吐的研究。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ugol": { code: "ugol", name: "闹鬼金矿", tip: "在金矿被闹鬼了之后侍僧才可以从中采集黄金资源。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "utom": { code: "utom", name: "古墓废墟", tip: "建造出一个能出售物品的商店。商店内的物品种类取决于你的大墓地的升级情况(大墓地, 亡者大厅, 黑色城堡)以及你所拥有的建筑物种类。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
 
-  "Udea": { code: "Udea", name: "死亡骑士", tip: "是人族圣骑士的邪恶对手。能学习到死亡缠绕，死亡契约，邪恶光环和操纵死尸这四种技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Hero },
-  "Ulic": { code: "Ulic", name: "巫妖", tip: "一种神秘的英雄，能学习到霜冻护甲，霜冻新星，黑暗仪式和死亡凋零技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Hero },
-  "Udre": { code: "Udre", name: "恐惧魔王", tip: "一种狡猾的英雄，能学习到腐臭蜂群，睡眠，吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Hero },
-  "Ucrl": { code: "Ucrl", name: "地穴领主", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺，尖刺外壳, 腐尸甲虫和蝗虫群这四个技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Hero },
+  "Udea": { code: "Udea", name: "死亡骑士", tip: "是人族圣骑士的邪恶对手。能学习到死亡缠绕，死亡契约，邪恶光环和操纵死尸这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Ulic": { code: "Ulic", name: "巫妖", tip: "一种神秘的英雄，能学习到霜冻护甲，霜冻新星，黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Udre": { code: "Udre", name: "恐惧魔王", tip: "一种狡猾的英雄，能学习到腐臭蜂群，睡眠，吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Ucrl": { code: "Ucrl", name: "地穴领主", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺，尖刺外壳, 腐尸甲虫和蝗虫群这四个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
 
-  "uloc": { code: "uloc", name: "蝗虫", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "uplg": { code: "uplg", name: "疾病云雾", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "ucrm": { code: "ucrm", name: "钻入地下的穴居恶魔", tip: "远程攻击单位。能学习到蛛网和钻地技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Standard.Special },
-  "ugrm": { code: "ugrm", name: "石像形态下的石像鬼", tip: "飞行单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Special },
-  "uske": { code: "uske", name: "骷髅战士", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "uskm": { code: "uskm", name: "骷髅魔法师", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "ubsp": { code: "ubsp", name: "破坏者", tip: "巨大飞行单位，必须吞噬魔法才能保持其自己的魔法能量。特别擅长于伤害敌人的魔法单位和聚集在一起的敌军。具有魔法免疫，吞噬魔法，吸收魔法和毁灭之球技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Standard.Special },
-  "ucs1": { code: "ucs1", name: "腐尸甲虫(等级1)", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "ucs2": { code: "ucs2", name: "腐尸甲虫(等级2)", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "ucsB": { code: "ucsB", name: "钻入地下的腐尸甲虫(等级2)", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "ucs3": { code: "ucs3", name: "腐尸甲虫(等级3)", tip: "", type: Type.Unit.Undead.Standard.Special },
-  "UcsC": { code: "UcsC", name: "钻入地下的腐户甲虫(等级3)", tip: "", type: Type.Unit.Undead.Standard.Special },
+  "uloc": { code: "uloc", name: "蝗虫", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "uplg": { code: "uplg", name: "疾病云雾", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ucrm": { code: "ucrm", name: "钻入地下的穴居恶魔", tip: "远程攻击单位。能学习到蛛网和钻地技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ugrm": { code: "ugrm", name: "石像形态下的石像鬼", tip: "飞行单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "uske": { code: "uske", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "uskm": { code: "uskm", name: "骷髅魔法师", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ubsp": { code: "ubsp", name: "破坏者", tip: "巨大飞行单位，必须吞噬魔法才能保持其自己的魔法能量。特别擅长于伤害敌人的魔法单位和聚集在一起的敌军。具有魔法免疫，吞噬魔法，吸收魔法和毁灭之球技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ucs1": { code: "ucs1", name: "腐尸甲虫(等级1)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ucs2": { code: "ucs2", name: "腐尸甲虫(等级2)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ucsB": { code: "ucsB", name: "钻入地下的腐尸甲虫(等级2)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "ucs3": { code: "ucs3", name: "腐尸甲虫(等级3)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "UcsC": { code: "UcsC", name: "钻入地下的腐户甲虫(等级3)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
 
-  "uarb": { code: "uarb", name: "飞艇", tip: "一种大批量的运输机。", type: Type.Unit.Undead.Campaign.Unit },
-  "uktn": { code: "uktn", name: "克尔苏加德(不死族巫师)", tip: "", type: Type.Unit.Undead.Campaign.Unit },
-  "uktg": { code: "uktg", name: "克尔苏加德(幽灵)", tip: "", type: Type.Unit.Undead.Campaign.Unit },
-  "uswb": { code: "uswb", name: "追风之西尔瓦娜斯(女妖)", tip: "", type: Type.Unit.Undead.Campaign.Unit },
-  "ubdd": { code: "ubdd", name: "萨皮洛恩(不死族的)", tip: "", type: Type.Unit.Undead.Campaign.Unit },
-  "ubdr": { code: "ubdr", name: "萨皮洛恩(活着的)", tip: "", type: Type.Unit.Undead.Campaign.Unit },
-  "ubot": { code: "ubot", name: "不死族运输船", tip: "能够运送单位的运输船。", type: Type.Unit.Undead.Campaign.Unit },
-  "udes": { code: "udes", name: "不死族族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Campaign.Unit },
-  "uubs": { code: "uubs", name: "不死族战舰", tip: "强大的攻城舰船能够很好地攻击地面建筑物和敌人的船只。|n|n|cffffcc00攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Unit },
-  "uzom": { code: "uzom", name: "僵尸", tip: "轻型的近战单位。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Unit },
+  "uarb": { code: "uarb", name: "飞艇", tip: "一种大批量的运输机。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uktn": { code: "uktn", name: "克尔苏加德(不死族巫师)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uktg": { code: "uktg", name: "克尔苏加德(幽灵)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uswb": { code: "uswb", name: "追风之西尔瓦娜斯(女妖)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ubdd": { code: "ubdd", name: "萨皮洛恩(不死族的)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ubdr": { code: "ubdr", name: "萨皮洛恩(活着的)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "ubot": { code: "ubot", name: "不死族运输船", tip: "能够运送单位的运输船。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "udes": { code: "udes", name: "不死族族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uubs": { code: "uubs", name: "不死族战舰", tip: "强大的攻城舰船能够很好地攻击地面建筑物和敌人的船只。攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+  "uzom": { code: "uzom", name: "僵尸", tip: "轻型的近战单位。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
 
-  "ushp": { code: "ushp", name: "不死族船坞", tip: "造船工厂，能制造出不死族的运输船，护卫舰和战舰。", type: Type.Unit.Undead.Campaign.Building },
-  "ushr": { code: "ushr", name: "神殿", tip: "", type: Type.Unit.Undead.Campaign.Building },
-  "udmg": { code: "udmg", name: "恶魔之门", tip: "", type: Type.Unit.Undead.Campaign.Building },
-  "ugni": { code: "ugni", name: "腐烂谷仓", tip: "里面都是糜烂的谷物。", type: Type.Unit.Undead.Campaign.Building },
-  "ufrm": { code: "ufrm", name: "霜之哀伤底座", tip: "", type: Type.Unit.Undead.Campaign.Building },
-  "ubsm": { code: "ubsm", name: "召唤底座之书", tip: "", type: Type.Unit.Undead.Campaign.Building },
+  "ushp": { code: "ushp", name: "不死族船坞", tip: "造船工厂，能制造出不死族的运输船，护卫舰和战舰。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ushr": { code: "ushr", name: "神殿", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "udmg": { code: "udmg", name: "恶魔之门", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ugni": { code: "ugni", name: "腐烂谷仓", tip: "里面都是糜烂的谷物。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ufrm": { code: "ufrm", name: "霜之哀伤底座", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
+  "ubsm": { code: "ubsm", name: "召唤底座之书", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
 
-  "Uear": { code: "Uear", name: "阿尔塞斯(邪恶的)", tip: "战士型英雄，是人族圣骑士的邪恶对手。能学习到死亡缠绕、死亡契约、邪恶光环和操纵死尸这四种技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Uanb": { code: "Uanb", name: "阿诺拉克", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺、尖刺外壳、腐尸甲虫和蝗虫群这四个技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Ubal": { code: "Ubal", name: "巴那泽尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Uvng": { code: "Uvng", name: "戴尔维恩格尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Udth": { code: "Udth", name: "德赛洛克", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Uvar": { code: "Uvar", name: "法理玛瑟斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Uktl": { code: "Uktl", name: "克尔苏加德(巫妖)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Umal": { code: "Umal", name: "麦尔盖尼斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Utic": { code: "Utic", name: "提克迪奥斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Usyl": { code: "Usyl", name: "西尔瓦娜斯", tip: "灵巧型的英雄，擅长于与对手周旋。能学习到沉默魔法、黑暗之箭、生命汲取和符咒这四项技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Campaign.Hero },
-  "Uman": { code: "Uman", name: "玛诺洛斯", tip: "", type: Type.Unit.Undead.Campaign.Hero },
-  "Uwar": { code: "Uwar", name: "阿克蒙德", tip: "", type: Type.Unit.Undead.Campaign.Hero },
-  "Upld": { code: "Upld", name: "阿哥勒尔", tip: "", type: Type.Unit.Undead.Campaign.Hero },
-  "Uklj": { code: "Uklj", name: "基尔加丹", tip: "", type: Type.Unit.Undead.Campaign.Hero },
-  "Umag": { code: "Umag", name: "麦哥瑟里登", tip: "战士型英雄，善于恐吓敌人。能学习火焰雨、恐怖嚎叫、分裂攻击和魔鬼缠身。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Hero },
+  "Uear": { code: "Uear", name: "阿尔塞斯(邪恶的)", tip: "战士型英雄，是人族圣骑士的邪恶对手。能学习到死亡缠绕、死亡契约、邪恶光环和操纵死尸这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uanb": { code: "Uanb", name: "阿诺拉克", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺、尖刺外壳、腐尸甲虫和蝗虫群这四个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Ubal": { code: "Ubal", name: "巴那泽尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uvng": { code: "Uvng", name: "戴尔维恩格尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Udth": { code: "Udth", name: "德赛洛克", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uvar": { code: "Uvar", name: "法理玛瑟斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uktl": { code: "Uktl", name: "克尔苏加德(巫妖)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Umal": { code: "Umal", name: "麦尔盖尼斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Utic": { code: "Utic", name: "提克迪奥斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Usyl": { code: "Usyl", name: "西尔瓦娜斯", tip: "灵巧型的英雄，擅长于与对手周旋。能学习到沉默魔法、黑暗之箭、生命汲取和符咒这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uman": { code: "Uman", name: "玛诺洛斯", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uwar": { code: "Uwar", name: "阿克蒙德", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Upld": { code: "Upld", name: "阿哥勒尔", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Uklj": { code: "Uklj", name: "基尔加丹", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+  "Umag": { code: "Umag", name: "麦哥瑟里登", tip: "战士型英雄，善于恐吓敌人。能学习火焰雨、恐怖嚎叫、分裂攻击和魔鬼缠身。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
 
-  "nzlc": { code: "nzlc", name: "巫妖王(过场动画战役单位)", tip: "这就是巫妖王，事实的确是如此的，难道你不相信我么？", type: Type.Unit.Undead.Campaign.Special },
-  "uabc": { code: "uabc", name: "憎恶(过场动画)", tip: "重型近战单位。可以学习疾病云雾技能。|n|n|cffffcc00能攻击地面单位。|r", type: Type.Unit.Undead.Campaign.Special },
-  "Uclc": { code: "Uclc", name: "克尔苏加德(巫妖，过场动画)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。|n|n|cffffcc00能攻击地面和空中单位。|r", type: Type.Unit.Undead.Campaign.Special },
-  "Nkjx": { code: "Nkjx", name: "基尔加丹(过场动画)", tip: "", type: Type.Unit.Undead.Campaign.Special },
+  "nzlc": { code: "nzlc", name: "巫妖王(过场动画战役单位)", tip: "这就是巫妖王，事实的确是如此的，难道你不相信我么？", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "uabc": { code: "uabc", name: "憎恶(过场动画)", tip: "重型近战单位。可以学习疾病云雾技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "Uclc": { code: "Uclc", name: "克尔苏加德(巫妖，过场动画)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
+  "Nkjx": { code: "Nkjx", name: "基尔加丹(过场动画)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
 }
 
-// "": { code: "", name: "", tip: "", type: Type.Unit.Undead },
+const unitNaga = {
+  "nmpe": { code: "nmpe", name: "穆格尔奴隶", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nwgs": { code: "nwgs", name: "飞蛇", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nnmg": { code: "nnmg", name: "穆格尔掠夺者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nnsw": { code: "nnsw", name: "娜迦海妖", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nsnp": { code: "nsnp", name: "飞龙", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nmyr": { code: "nmyr", name: "娜迦暴徒", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nnrg": { code: "nnrg", name: "娜迦皇家卫兵", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
+  "nhyc": { code: "nhyc", name: "龙龟", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
 
-const code = { ...unitHuman, ...unitOrc, ...unitNightElf, ...unitUndead }
+  "nnsa": { code: "nnsa", name: "艾萨拉女王神殿", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+  "nnsg": { code: "nnsg", name: "产卵之地", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+  "nntt": { code: "nntt", name: "朝汐神庙", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+  "nnfm": { code: "nnfm", name: "珊瑚礁", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+  "nnad": { code: "nnad", name: "深渊祭坛", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+  "nntg": { code: "nntg", name: "守护者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
+
+  "Hvsh": { code: "Hvsh", name: "法斯琪", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Hero },
+
+  "nnsu": { code: "nnsu", name: "召唤者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
+  "nsbs": { code: "nsbs", name: "潜水的飞龙", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
+  "nmys": { code: "nmys", name: "潜水的娜迦暴徒", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
+  "nnrs": { code: "nnrs", name: "潜水的娜迦皇家卫兵", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
+}
+
+const unitNeutralHostile = {
+  "ndrj": { code: "ndrj", name: "达拉然之孤胆怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndmu": { code: "ndmu", name: "达拉然之变种怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "njg1": { code: "njg1", name: "丛林漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nskg": { code: "nskg", name: "巨型骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "njga": { code: "njga", name: "丛林漫步者长老", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "njgb": { code: "njgb", name: "怒之丛林漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nanb": { code: "nanb", name: "阿卡那瑟德刺人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nanm": { code: "nanm", name: "阿卡那瑟德刺人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nanc": { code: "nanc", name: "水晶阿卡那瑟德", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nanw": { code: "nanw", name: "阿卡那瑟德战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nane": { code: "nane", name: "阿卡那瑟德掘地者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nano": { code: "nano", name: "阿卡那瑟德领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nabn": { code: "nabn", name: "强盗", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbrg": { code: "nbrg", name: "土匪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrog": { code: "nrog", name: "流氓", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nass": { code: "nass", name: "刺客", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nenf": { code: "nenf", name: "强制者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbld": { code: "nbld", name: "强盗领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbdm": { code: "nbdm", name: "龙卵盗贼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbda": { code: "nbda", name: "龙卵学徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbdw": { code: "nbdw", name: "龙卵战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbds": { code: "nbds", name: "龙之男巫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbdo": { code: "nbdo", name: "龙卵领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncea": { code: "ncea", name: "半人马弓箭手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncer": { code: "ncer", name: "半人马苦工", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncim": { code: "ncim", name: "半人马刺客", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncen": { code: "ncen", name: "半人马先行者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncks": { code: "ncks", name: "半人马巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ncnk": { code: "ncnk", name: "半人马可汗", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nscb": { code: "nscb", name: "蜘蛛螃蟹", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsc2": { code: "nsc2", name: "蜘蛛螃蟹肢体斯裂者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsc3": { code: "nsc3", name: "蜘蛛螃蟹巨兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndtr": { code: "ndtr", name: "黑暗巨魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndtp": { code: "ndtp", name: "黑魔影仔牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndtt": { code: "ndtt", name: "黑魔猎手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndth": { code: "ndth", name: "黑魔高级牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndtb": { code: "ndtb", name: "黑魔狂战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndtw": { code: "ndtw", name: "黑魔首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrf": { code: "ndrf", name: "达拉内尔守卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrp": { code: "ndrp", name: "达拉内尔护卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrm": { code: "ndrm", name: "达拉内尔信徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrw": { code: "ndrw", name: "达拉内尔哨兵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrh": { code: "ndrh", name: "达拉内尔先驱", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrd": { code: "ndrd", name: "达拉内尔暗黑屠杀者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrs": { code: "ndrs", name: "达拉内尔先知", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrdk": { code: "nrdk", name: "红幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrdr": { code: "nrdr", name: "红蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrwm": { code: "nrwm", name: "红龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbdr": { code: "nbdr", name: "红幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbdk": { code: "nbdk", name: "黑蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbwm": { code: "nbwm", name: "黑龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbzw": { code: "nbzw", name: "青幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbzk": { code: "nbzk", name: "青蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbzd": { code: "nbzd", name: "青龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngrw": { code: "ngrw", name: "绿幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngdk": { code: "ngdk", name: "绿蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngrd": { code: "ngrd", name: "绿龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nadw": { code: "nadw", name: "蓝幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nadk": { code: "nadk", name: "蓝蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nadr": { code: "nadr", name: "蓝龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnht": { code: "nnht", name: "耐瑟幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nndk": { code: "nndk", name: "耐瑟蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nndr": { code: "nndr", name: "耐瑟龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrel": { code: "nrel", name: "暗礁元素", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nele": { code: "nele", name: "狂怒元素", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsel": { code: "nsel", name: "海元素", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nelb": { code: "nelb", name: "狂暴元素", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nenc": { code: "nenc", name: "堕落树人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nenp": { code: "nenp", name: "毒性树人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nepl": { code: "nepl", name: "灾祸树人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ners": { code: "ners", name: "埃瑞达男巫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nerd": { code: "nerd", name: "埃瑞达信魔者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nerw": { code: "nerw", name: "埃瑞达法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfor": { code: "nfor", name: "无名骗士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfot": { code: "nfot", name: "无名恐怖者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfod": { code: "nfod", name: "无名死灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfgu": { code: "nfgu", name: "狂暴守卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfgb": { code: "nfgb", name: "血恶魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfov": { code: "nfov", name: "领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "npfl": { code: "npfl", name: "狂暴野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfel": { code: "nfel", name: "邪恶漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "npfm": { code: "npfm", name: "狂暴洗劫者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nftr": { code: "nftr", name: "森林巨魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfsp": { code: "nfsp", name: "树魔影子牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nftt": { code: "nftt", name: "树魔猎手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfsh": { code: "nfsh", name: "树魔高级牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nftb": { code: "nftb", name: "树魔狂战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nftk": { code: "nftk", name: "树魔首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfrl": { code: "nfrl", name: "熊怪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfrs": { code: "nfrs", name: "熊怪萨满", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfrp": { code: "nfrp", name: "熊猫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfrb": { code: "nfrb", name: "熊怪追踪者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfre": { code: "nfre", name: "熊怪萨满长者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfrg": { code: "nfrg", name: "熊怪战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfra": { code: "nfra", name: "熊怪乌萨战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngh1": { code: "ngh1", name: "幽灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngh2": { code: "ngh2", name: "幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsgn": { code: "nsgn", name: "海巨人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsgh": { code: "nsgh", name: "深海巨猎人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsgb": { code: "nsgb", name: "深海巨兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nspb": { code: "nspb", name: "黑蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nspg": { code: "nspg", name: "森林蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nspr": { code: "nspr", name: "蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nssp": { code: "nssp", name: "毒液蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsgt": { code: "nsgt", name: "巨型蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsbm": { code: "nsbm", name: "血浴之母", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngna": { code: "ngna", name: "豺狼偷猎者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngns": { code: "ngns", name: "豺狼刺客", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngno": { code: "ngno", name: "豺狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngnw": { code: "ngnw", name: "豺狼守望者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngnb": { code: "ngnb", name: "豺狼野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngnv": { code: "ngnv", name: "豺狼首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngrk": { code: "ngrk", name: "泥潭傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ngst": { code: "ngst", name: "岩石傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nggr": { code: "nggr", name: "花岗岩愧倡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "narg": { code: "narg", name: "傀偶战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwrg": { code: "nwrg", name: "战争傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsgg": { code: "nsgg", name: "攻城傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhar": { code: "nhar", name: "女妖侦察者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhrr": { code: "nhrr", name: "鹰身女妖流氓", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhrw": { code: "nhrw", name: "女妖风暴巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhrh": { code: "nhrh", name: "女妖风暴巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhrq": { code: "nhrq", name: "女妖女皇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhfp": { code: "nhfp", name: "堕落牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhdc": { code: "nhdc", name: "欺骗者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhhr": { code: "nhhr", name: "异教徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhyh": { code: "nhyh", name: "小九头怪蛇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nhyd": { code: "nhyd", name: "九头怪蛇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nehy": { code: "nehy", name: "九头怪蛇长者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nahy": { code: "nahy", name: "远古九头怪蛇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nitp": { code: "nitp", name: "水魔牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nitr": { code: "nitr", name: "冰之巨魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nitt": { code: "nitt", name: "冰魔猎手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nith": { code: "nith", name: "冰魔高级牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nits": { code: "nits", name: "水魔狂战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nitw": { code: "nitw", name: "冰魔首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ninc": { code: "ninc", name: "地狱火机关人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ninm": { code: "ninm", name: "地狱火机械人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nina": { code: "nina", name: "地狱战舰", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nkob": { code: "nkob", name: "狗头人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nkot": { code: "nkot", name: "地穴狗头人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nkog": { code: "nkog", name: "狗头人占卜者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nkol": { code: "nkol", name: "狗头人首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nltl": { code: "nltl", name: "闪电蜥蜴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nthl": { code: "nthl", name: "雷霆蜥蜴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nstw": { code: "nstw", name: "风暴巨龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlpr": { code: "nlpr", name: "巨虾", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nltc": { code: "nltc", name: "马库拉朝汐召唤者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlpd": { code: "nlpd", name: "马库拉池人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlsn": { code: "nlsn", name: "马库拉甲鱼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlds": { code: "nlds", name: "马库拉先知", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlkl": { code: "nlkl", name: "马库拉朝汐领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwiz": { code: "nwiz", name: "巫师学徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwzr": { code: "nwzr", name: "流氓巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwzg": { code: "nwzg", name: "巫师变节者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwzd": { code: "nwzd", name: "黑暗巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmgw": { code: "nmgw", name: "玛格娜托战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmgr": { code: "nmgr", name: "玛格娜托撕裂者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmgd": { code: "nmgd", name: "玛格娜托破坏者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmam": { code: "nmam", name: "猛犸", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmit": { code: "nmit", name: "冰牙猛犸", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmdr": { code: "nmdr", name: "恐怖猛犸", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmcf": { code: "nmcf", name: "穆格尔岩人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmbg": { code: "nmbg", name: "穆格尔血女巫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmtw": { code: "nmtw", name: "穆格尔潮汐战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmsn": { code: "nmsn", name: "穆格尔猎人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmrv": { code: "nmrv", name: "穆格尔掠夺者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmsc": { code: "nmsc", name: "穆格尔影子法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmrl": { code: "nmrl", name: "两栖追随者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmpg": { code: "nmpg", name: "两栖苦难者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmrr": { code: "nmrr", name: "两栖人猎手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmfs": { code: "nmfs", name: "两栖食肉者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmrm": { code: "nmrm", name: "两栖夜行者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nmmu": { code: "nmmu", name: "变异两栖人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nspd": { code: "nspd", name: "小蜘蛛", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnwa": { code: "nnwa", name: "蛛网怪战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnwl": { code: "nnwl", name: "蛛网怪织网者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnws": { code: "nnws", name: "蛛网怪首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnwr": { code: "nnwr", name: "蛛网怪预言者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nnwq": { code: "nnwq", name: "蛛网怪女皇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nogr": { code: "nogr", name: "食人鬼战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nomg": { code: "nomg", name: "食人鬼意法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nogm": { code: "nogm", name: "食人鬼拳手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nogl": { code: "nogl", name: "食人鬼首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nowb": { code: "nowb", name: "迅猛野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nowe": { code: "nowe", name: "暴怒野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nowk": { code: "nowk", name: "狂性野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nplb": { code: "nplb", name: "北极熊", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "bplg": { code: "bplg", name: "巨型北极熊", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "bfpl": { code: "bfpl", name: "北极熊怪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfps": { code: "nfps", name: "北极熊怪萨满", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfpt": { code: "nfpt", name: "北极熊怪追踪者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfpc": { code: "nfpc", name: "北极熊怪战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfpe": { code: "nfpe", name: "北极熊怪萨满长者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfpu": { code: "nfpu", name: "北极熊怪乌萨战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrzt": { code: "nrzt", name: "豪猪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrzs": { code: "nrzs", name: "尖毛兽侦察兵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nqbh": { code: "nqbh", name: "豪猪猎手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrzb": { code: "nrzb", name: "尖毛兽野蛮人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrzm": { code: "nrzm", name: "尖毛兽医生", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrzg": { code: "nrzg", name: "尖毛兽酋长", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrv": { code: "ntrv", name: "潮汐幽灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrvf": { code: "nrvf", name: "火焰幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrvs": { code: "nrvs", name: "霜冻幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsrv": { code: "nsrv", name: "海之幽灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrvl": { code: "nrvl", name: "闪电幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrvi": { code: "nrvi", name: "冰之幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrv": { code: "ndrv", name: "深渊幽灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nrvd": { code: "nrvd", name: "死亡幽魂", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nlrv": { code: "nlrv", name: "深渊领主幽灵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nslh": { code: "nslh", name: "小蜥蜴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nslr": { code: "nslr", name: "蜥蜴怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nslv": { code: "nslv", name: "大型蜥蜴怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsll": { code: "nsll", name: "蜥蜴领主", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsqt": { code: "nsqt", name: "野人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsqe": { code: "nsqe", name: "野人长者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsqo": { code: "nsqo", name: "野人神使", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsqa": { code: "nsqa", name: "古代野人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsty": { code: "nsty", name: "赛特斯", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsat": { code: "nsat", name: "赛特斯之魔法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsts": { code: "nsts", name: "赛特斯之黑暗舞者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nstl": { code: "nstl", name: "赛特斯之灵魂盗贼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsth": { code: "nsth", name: "赛特斯之地狱使者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsko": { code: "nsko", name: "兽族骷髅", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsog": { code: "nsog", name: "兽族步兵骷髅", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsoc": { code: "nsoc", name: "兽族战士骷髅", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nslm": { code: "nslm", name: "淤泥战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nslf": { code: "nslf", name: "淤泥投手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsln": { code: "nsln", name: "淤泥怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsra": { code: "nsra", name: "风暴斯裂者学徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsrh": { code: "nsrh", name: "风暴撕裂者隐士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsrn": { code: "nsrn", name: "风暴斯裂者术士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nsrw": { code: "nsrw", name: "风暴撕裂者巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndqn": { code: "ndqn", name: "女妖精", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndqv": { code: "ndqv", name: "恶男", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndqt": { code: "ndqt", name: "恶妇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndqp": { code: "ndqp", name: "痛苦少女", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndqs": { code: "ndqs", name: "苦难女王", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrh": { code: "ntrh", name: "小海龟", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrs": { code: "ntrs", name: "海龟", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrt": { code: "ntrt", name: "大海龟", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrg": { code: "ntrg", name: "大海龟", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntrd": { code: "ntrd", name: "龙龟", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntkf": { code: "ntkf", name: "图斯尔格斗者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntka": { code: "ntka", name: "图斯卡尔枪兵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntkh": { code: "ntkh", name: "图斯卡尔巫师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntkt": { code: "ntkt", name: "图斯卡尔猎人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntkw": { code: "ntkw", name: "图斯尔战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntks": { code: "ntks", name: "图斯卡尔男巫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ntkc": { code: "ntkc", name: "图斯尔酋长", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nubk": { code: "nubk", name: "无敌黑暗猎人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nubr": { code: "nubr", name: "无敌狂暴者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nubw": { code: "nubw", name: "无敌黑暗舞者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nvdl": { code: "nvdl", name: "小型虚无行者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nvdw": { code: "nvdw", name: "虚无行者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nvdg": { code: "nvdg", name: "巨大虚无行者长老", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nvde": { code: "nvde", name: "虚无行者长老", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwen": { code: "nwen", name: "雪怪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwnr": { code: "nwnr", name: "雪怪长者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwns": { code: "nwns", name: "雪怪萨满祭司", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwna": { code: "nwna", name: "远古雪怪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwlt": { code: "nwlt", name: "大灰狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwwf": { code: "nwwf", name: "霜冻之狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwlg": { code: "nwlg", name: "巨狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwwg": { code: "nwwg", name: "巨型霜冻之狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwwd": { code: "nwwd", name: "恐怖霜冻之狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nwld": { code: "nwld", name: "恐怖之狼", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nska": { code: "nska", name: "骷髅弓箭手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nskf": { code: "nskf", name: "火焰弓箭手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nskm": { code: "nskm", name: "骷髅射手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ninf": { code: "ninf", name: "地狱火", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nbal": { code: "nbal", name: "毁灭守卫(标准)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+
+  "nfgo": { code: "nfgo", name: "遗忘者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Architecture },
+
+  "nspp": { code: "nspp", name: "灵魂之猪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nlps": { code: "nlps", name: "召唤出来的巨虾", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "ncfs": { code: "ncfs", name: "水奴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "ntws": { code: "ntws", name: "水奴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nsns": { code: "nsns", name: "水奴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nsca": { code: "nsca", name: "骷髅弓箭手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nba2": { code: "nba2", name: "毁灭守卫(召唤的)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+
+  "nglm": { code: "nglm", name: "地精地雷", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nfgl": { code: "nfgl", name: "灵肉傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrl": { code: "ndrl", name: "达拉内尔工人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrn": { code: "ndrn", name: "达拉内尔辩护者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndrt": { code: "ndrt", name: "达拉内尔漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nogo": { code: "nogo", name: "石槌食人魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "nogn": { code: "nogn", name: "石槌法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "noga": { code: "noga", name: "石槌酋长", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+  "ndsa": { code: "ndsa", name: "火断蜴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+
+  "nsw1": { code: "nsw1", name: "小型灵兽(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nsw2": { code: "nsw2", name: "灵兽(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+  "nsw3": { code: "nsw3", name: "大型灵兽(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
+}
+
+const unitNeutralPassive = {
+  "nske": { code: "nske", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nsea": { code: "nsea", name: "海豹", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nrac": { code: "nrac", name: "浣熊", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nrat": { code: "nrat", name: "老鼠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nshe": { code: "nshe", name: "绵羊", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "ncrb": { code: "ncrb", name: "螃蟹", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nhmc": { code: "nhmc", name: "螃蟹隐士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "npng": { code: "npng", name: "企鹅", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nfro": { code: "nfro", name: "青蛙", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "ndwm": { code: "ndwm", name: "沙丘之虫", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvul": { code: "nvul", name: "秃鹰", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "necr": { code: "necr", name: "兔子", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nech": { code: "nech", name: "小鸡", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nskk": { code: "nskk", name: "小蜥蜴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nalb": { code: "nalb", name: "信天翁", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nder": { code: "nder", name: "雄鹿", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nsno": { code: "nsno", name: "雪鹰", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "ndog": { code: "ndog", name: "野狗", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nfbr": { code: "nfbr", name: "野猪", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "npig": { code: "npig", name: "野猪", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+
+  "ngol": { code: "ngol", name: "金矿", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ngme": { code: "ngme", name: "地精商店", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nfoh": { code: "nfoh", name: "生命之泉", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmoo": { code: "nmoo", name: "魔法之泉", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ngad": { code: "ngad", name: "地精实验室", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nwgt": { code: "nwgt", name: "传送门", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndrk": { code: "ndrk", name: "黑龙巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndrr": { code: "ndrr", name: "红龙巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndru": { code: "ndru", name: "蓝龙巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndrg": { code: "ndrg", name: "绿龙巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndro": { code: "ndro", name: "耐瑟龙栖木", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndrz": { code: "ndrz", name: "青龙巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmer": { code: "nmer", name: "雇佣兵营地(洛丹伦的夏天)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr2": { code: "nmr2", name: "雇佣兵营地(洛丹伦的秋天)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr3": { code: "nmr3", name: "雇佣兵营地(洛丹伦的冬日)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr4": { code: "nmr4", name: "雇佣兵营地(荒地)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr5": { code: "nmr5", name: "雇佣兵营地(白杨谷)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr6": { code: "nmr6", name: "雇佣兵营地(费尔伍德)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr7": { code: "nmr7", name: "雇佣兵营地(诺森德)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr8": { code: "nmr8", name: "雇佣兵营地(城邦)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr9": { code: "nmr9", name: "雇佣兵营地(达拉然)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmr0": { code: "nmr0", name: "雇佣兵营地(村庄)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmra": { code: "nmra", name: "雇佣兵营地(地牢)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmrb": { code: "nmrb", name: "雇佣兵营地(地下)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ntav": { code: "ntav", name: "小酒馆", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ntak": { code: "ntak", name: "市场", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmrc": { code: "nmrc", name: "雇佣兵营地(下沉的废墟)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmrd": { code: "nmrd", name: "雇佣兵营地(寒冰皇冠水川)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nshp": { code: "nshp", name: "地精船坞", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nmre": { code: "nmre", name: "雇佣兵营地(边缘之地)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+
+
+  "Nbrn": { code: "Nbrn", name: "黑暗游侠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Nfir": { code: "Nfir", name: "伙焰巨魔", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Nplh": { code: "Nplh", name: "深渊魔王", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Npbm": { code: "Npbm", name: "熊猫酒仙", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Nbst": { code: "Nbst", name: "驯兽师", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Nalc": { code: "Nalc", name: "炼金术士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Nngs": { code: "Nngs", name: "娜迦女海巫", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+  "Ntin": { code: "Ntin", name: "修补匠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+
+  "nlur": { code: "nlur", name: "怪兽诱捕守卫", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nsce": { code: "nsce", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ntor": { code: "ntor", name: "龙卷风", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "Nalm": { code: "Nalm", name: "炼金术士(Morph level 1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "Nal2": { code: "Nal2", name: "炼金术士(Morph level 2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "Nal3": { code: "Nal3", name: "炼金术士(Morph level 3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nsha": { code: "nsha", name: "绵羊(两栖的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nshw": { code: "nshw", name: "绵羊(水生的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npnw": { code: "npnw", name: "企鹅(水生的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nshf": { code: "nshf", name: "乳羊", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nbnb": { code: "nbnb", name: "钻地的阿卡那瑟德刺人", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngzc": { code: "ngzc", name: "米纱(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngz1": { code: "ngz1", name: "熊(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngzd": { code: "ngzd", name: "米纱(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngz2": { code: "ngz2", name: "恕熊(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngz3": { code: "ngz3", name: "灵魂之熊(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngza": { code: "ngza", name: "米纱(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngz4": { code: "ngz4", name: "米纱(等级4)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nbot": { code: "nbot", name: "运输船", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ncg1": { code: "ncg1", name: "人工地精", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ncgb": { code: "ncgb", name: "人工地精", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ncg2": { code: "ncg2", name: "人工地精", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ncg3": { code: "ncg3", name: "人工地精", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfac": { code: "nfac", name: "口袋工厂(Level 1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfa1": { code: "nfa1", name: "口袋工厂(Level 2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfa2": { code: "nfa2", name: "口袋工厂(Level 3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nwe1": { code: "nwe1", name: "战鹰(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nwe2": { code: "nwe2", name: "雷霆战鹰(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nwe3": { code: "nwe3", name: "影子战鹰(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfgt": { code: "nfgt", name: "触须", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nzep": { code: "nzep", name: "地精飞艇", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngsp": { code: "ngsp", name: "地精工兵", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngir": { code: "ngir", name: "地精斯裂者", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nlv1": { code: "nlv1", name: "炎魔(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nlv2": { code: "nlv2", name: "炎魔(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nlv3": { code: "nlv3", name: "炎魔(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ncnt": { code: "ncnt", name: "半人马帐篷", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nct1": { code: "nct1", name: "半人马帐篷(2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nct2": { code: "nct2", name: "半人马帐篷(3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nth0": { code: "nth0", name: "水之巨魔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nth1": { code: "nth1", name: "水之巨魔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngnh": { code: "ngnh", name: "豺狼人小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngt2": { code: "ngt2", name: "豺狼人小屋2", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndch": { code: "ndch", name: "达拉内尔酋长之屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndh1": { code: "ndh1", name: "达拉内尔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndh0": { code: "ndh0", name: "达拉内尔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nmh0": { code: "nmh0", name: "两栖鱼人小屋0", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nmh1": { code: "nmh1", name: "两栖鱼人小屋1", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nmg0": { code: "nmg0", name: "穆格尔小屋0", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nmg1": { code: "nmg1", name: "穆格尔小屋1", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ntnt": { code: "ntnt", name: "牛头人帐篷", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ntt2": { code: "ntt2", name: "牛头人帐篷", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ngns": { code: "ngns", name: "女妖巢穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfh1": { code: "nfh1", name: "森林巨魔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfh0": { code: "nfh0", name: "森林巨魔小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nnzg": { code: "nnzg", name: "通灵塔", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfr1": { code: "nfr1", name: "熊怪小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nfr2": { code: "nfr2", name: "熊怪小屋", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nten": { code: "nten", name: "帐篷", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ntn2": { code: "ntn2", name: "帐篷2", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn3": { code: "npn3", name: "大地", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn2": { code: "npn2", name: "风暴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn1": { code: "npn1", name: "火焰", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn6": { code: "npn6", name: "地之熊猫战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn5": { code: "npn5", name: "风之能猫战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "npn4": { code: "npn4", name: "火之熊猫战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nqb1": { code: "nqb1", name: "豪猪(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nqb2": { code: "nqb2", name: "必恶豪猪(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nqb3": { code: "nqb3", name: "(影子豪猪(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "nqb4": { code: "nqb4", name: "狂暴豪猪(等级4)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndr1": { code: "ndr1", name: "小黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndr2": { code: "ndr2", name: "黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndr3": { code: "ndr3", name: "大黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "Nrob": { code: "Nrob", name: "修补匠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+
+  "ncat": { code: "ncat", name: "达拉内尔粉碎者", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvl2": { code: "nvl2", name: "村民(男性2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvi1": { code: "nvi1", name: "村民(男性)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvlw": { code: "nvlw", name: "村民(女性)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvlk": { code: "nvlk", name: "小孩", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "nvk2": { code: "nvk2", name: "小孩(2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "zcso": { code: "zcso", name: "空间邪恶兽族", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "zhyd": { code: "zhyd", name: "刺蛇", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "zmar": { code: "zmar", name: "马里恩", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "zjug": { code: "zjug", name: "兽族魔力战舰(过场动画)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+  "zzrg": { code: "zzrg", name: "小狗", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+
+  "nzin": { code: "nzin", name: "地区显示(自定义战役)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nbse": { code: "nbse", name: "复活石(面向东南的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nbsw": { code: "nbsw", name: "复活石(面向西南的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "nico": { code: "nico", name: "寒水王座方尖塔", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndke": { code: "ndke", name: "异次元大门(面向最南方)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ndkw": { code: "ndkw", name: "异次元大门(面向最南方)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb0": { code: "ncb0", name: "城市建筑物0", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb1": { code: "ncb1", name: "城市建筑物1", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb2": { code: "ncb2", name: "城市建筑物2", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb3": { code: "ncb3", name: "城市建筑物3", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb4": { code: "ncb4", name: "城市建筑物4", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb5": { code: "ncb5", name: "城市建筑物5", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb6": { code: "ncb6", name: "城市建筑物6", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb7": { code: "ncb7", name: "城市建筑物7", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb8": { code: "ncb8", name: "城市建筑物8", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncb9": { code: "ncb9", name: "城市建筑物9", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncba": { code: "ncba", name: "城市建筑物10", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncbb": { code: "ncbb", name: "城市建筑物11", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncbc": { code: "ncbc", name: "城市建筑物12", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncbd": { code: "ncbd", name: "城市建筑物13", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncbe": { code: "ncbe", name: "城市建筑物14", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncbf": { code: "ncbf", name: "城市建筑物15", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncmw": { code: "ncmw", name: "月高井", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncop": { code: "ncop", name: "能里圈", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncp2": { code: "ncp2", name: "能里圈(中型)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+  "ncp3": { code: "ncp3", name: "能里圈(大型的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+
+
+  "Naka": { code: "Naka", name: "阿卡玛", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
+
+  "nbsp": { code: "nbsp", name: "船只", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndh3": { code: "ndh3", name: "达拉内尔兵营", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndh2": { code: "ndh2", name: "达拉内尔港口", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+  "ndh4": { code: "ndh4", name: "先知洞穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+
+}
+
+const code = { ...unitHuman, ...unitOrc, ...unitNightElf, ...unitUndead, ...unitNaga, ...unitNeutralHostile, ...unitNeutralPassive }
 
 module.exports = {
-  code, Type
+  code, Kind, Race, Type, kindToString, raceToString, typeToString
 }

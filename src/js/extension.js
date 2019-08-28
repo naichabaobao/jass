@@ -1,13 +1,10 @@
 const vscode = require('vscode');
-// const j = require("../static/j.json")
-// const jg = require("../static/jg.json")
-const j = require("./j")
-const jg = require("./jg")
 const type = require("./type")
 const colorProvider = require("./colorProvider")
 const codeItemProvider = require("./codeItemProvider")
 const triggreCharacters = require("./triggreCharacters")
 const functionItemProvider = require("./functionItemProvider")
+const hoverProvider = require("./hoverProvider")
 /**
  * 语言名称
  */
@@ -16,24 +13,6 @@ const language = "jass"
  * 错误集合
  */
 var diagnosticCollection = null
-
-const hoverProvider = {
-  provideHover(document, position, token) {
-    var keyword = document.getText(document.getWordRangeAtPosition(position))
-    var tooltips = new vscode.MarkdownString()
-    if (j[keyword]) {
-      tooltips.appendCodeblock(j[keyword].documentation)
-        .appendCodeblock(j[keyword].original)
-        .appendText(j[keyword].fileName)
-    }
-    if (jg[keyword]) {
-      tooltips.appendCodeblock(jg[keyword].documentation)
-        .appendCodeblock(jg[keyword].original)
-        .appendText(jg[keyword].fileName)
-    }
-    return new vscode.Hover(tooltips)
-  }
-}
 
 /**
  * 分成空白，换行，关键字，类，数字，代码，符号，字符串，单行注释，标识符
@@ -93,7 +72,7 @@ const creatSpace = function (count = 1) {
   }
   return space
 }
-const types = Object.keys(type)
+
 const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(document, options, token) {
     let documentContent = document.getText()

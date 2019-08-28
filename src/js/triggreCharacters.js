@@ -17,7 +17,7 @@ const w = [...d, "_", ...l, ...u]
 /**
  * [a-Z\d']
  */
-const c = [...d, "'", ...l, ...u]
+const c = [...d, ...l, ...u]
 
 module.exports = {
   d, l, u, w, c
