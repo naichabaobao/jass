@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8123712-4c64-4e54-85a0-88229e19e6a7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/js/extension.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/extension.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jass-0.0.3.vsix" beforeDir="false" afterPath="$PROJECT_DIR$/jass-0.0.3.vsix" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,16 +18,16 @@
     <session id="-1273253019">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="2" />
+          <entry key="ESLintLanguageService" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -56,24 +57,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/extension.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="64225" column="21" lean-forward="true" selection-start-line="64225" selection-start-column="21" selection-end-line="64225" selection-end-column="21" />
+            <state relative-caret-position="208">
+              <caret line="17" column="3" lean-forward="true" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
               <folding>
-                <element signature="e#1859123#1859138#0" expanded="true" />
-                <element signature="e#1859163#1859178#0" expanded="true" />
-                <element signature="e#1859797#1860179#0" expanded="true" />
-                <element signature="e#1860256#1860699#0" expanded="true" />
-                <element signature="e#1860865#1861247#0" expanded="true" />
-                <element signature="e#1861356#1861799#0" expanded="true" />
-                <element signature="e#1862869#1863450#0" expanded="true" />
-                <element signature="e#1864608#1864680#0" expanded="true" />
-                <element signature="e#1864718#1865964#0" expanded="true" />
-                <element signature="e#1865999#1866035#0" expanded="true" />
-                <element signature="e#1866072#1866099#0" expanded="true" />
-                <element signature="e#1866140#1866232#0" expanded="true" />
-                <element signature="e#1871611#1871614#0" expanded="true" />
                 <element signature="n#!!block;n#activate#0" expanded="true" />
-                <element signature="e#1872163#1872488#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -240,7 +227,7 @@
     <property name="node.js.selected.package.eslint" value="E:\jass\node_modules\eslint" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -267,11 +254,12 @@
       <workItem from="1565718553690" duration="1204000" />
       <workItem from="1566302491099" duration="346000" />
       <workItem from="1566642696965" duration="216000" />
+      <workItem from="1567011572535" duration="802000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1766000" />
+    <option name="totallyTimeSpent" value="2568000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
@@ -303,39 +291,32 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/functions.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/functions1.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="732720">
-          <caret line="45795" column="37" selection-start-line="45795" selection-start-column="3" selection-end-line="45795" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test/functions.js" />
+    <entry file="file://$PROJECT_DIR$/test/functions1.js" />
     <entry file="file://$PROJECT_DIR$/src/js/extension.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="64225" column="21" lean-forward="true" selection-start-line="64225" selection-start-column="21" selection-end-line="64225" selection-end-column="21" />
+        <state relative-caret-position="208">
+          <caret line="17" column="3" lean-forward="true" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
           <folding>
-            <element signature="e#1859123#1859138#0" expanded="true" />
-            <element signature="e#1859163#1859178#0" expanded="true" />
-            <element signature="e#1859797#1860179#0" expanded="true" />
-            <element signature="e#1860256#1860699#0" expanded="true" />
-            <element signature="e#1860865#1861247#0" expanded="true" />
-            <element signature="e#1861356#1861799#0" expanded="true" />
-            <element signature="e#1862869#1863450#0" expanded="true" />
-            <element signature="e#1864608#1864680#0" expanded="true" />
-            <element signature="e#1864718#1865964#0" expanded="true" />
-            <element signature="e#1865999#1866035#0" expanded="true" />
-            <element signature="e#1866072#1866099#0" expanded="true" />
-            <element signature="e#1866140#1866232#0" expanded="true" />
-            <element signature="e#1871611#1871614#0" expanded="true" />
             <element signature="n#!!block;n#activate#0" expanded="true" />
-            <element signature="e#1872163#1872488#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

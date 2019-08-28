@@ -1,7 +1,8 @@
 {
   "name": "jass",
   "displayName": "jass",
-  "description": "jass",
+  "description": "目标是扩展成为主流的jassIDE。\nQQ群：137199441，提出你宝贵的建议。",
+  "icon": "src/resources/image/logo.png",
   "publisher": "jass",
   "version": "0.0.3",
   "engines": {
@@ -13,6 +14,25 @@
     "Formatters"
   ],
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "TypeScript configuration",
+      "properties": {
+        "typescript.useCodeSnippetsOnMethodSuggest": {
+          "type": "boolean",
+          "default": false,
+          "description": "Complete functions with their parameter signature."
+        },
+        "typescript.tsdk": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Specifies the folder path containing the tsserver and lib*.d.ts files to use."
+        }
+      }
+    },
     "languages": [
       {
         "id": "jass",
@@ -41,7 +61,6 @@
         "path": "./src/settings/snippets.json"
       }
     ],
-    
     "documentFormattingProvider": "true"
   },
   "repository": {
