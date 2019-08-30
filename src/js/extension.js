@@ -214,7 +214,6 @@ function activate(context) {
   vscode.languages.registerColorProvider(language, colorProvider);
   vscode.languages.registerDocumentFormattingEditProvider(language, documentForrmatProvider);
 
-
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);

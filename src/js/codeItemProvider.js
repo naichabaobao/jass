@@ -29,6 +29,8 @@ const provideCompletionItems = (document, position, token, context) => {
             return vscode.CompletionItemKind.Unit
           case code.Kind.Ability:
             return vscode.CompletionItemKind.Event
+          case code.Kind.Item:
+            return vscode.CompletionItemKind.Property
         }
       })())
       item.detail = cObj.name + "(" + key + ")"
