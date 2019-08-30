@@ -14,7 +14,7 @@ const code = require("./code")
  * @returns {vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>}
  */
 const provideCompletionItems = (document, position, token, context) => {
-  itemTool.findCommentRanges(document).forEach(x => {
+  itemTool.findCodeRanges(document).forEach(x => {
     console.log(document.getText(x))
   })
 

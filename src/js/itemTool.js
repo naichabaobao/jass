@@ -13,8 +13,21 @@ const cheakInComment = (document, position) => {
   let stringing = false
   for (let i = 0; i < text.length; i++) {
     let char = text.charAt(i)
-    if (stringing == false && char == "/" && text.charAt(i - 1) == "/") {
-      return position.character > i
+    if (char == "/" && text.charAt(i - 1) == "/") {
+      // 对后续判断是否被字符串包含
+      let hasColon = false
+      if (stringing) {
+        for (let k = i; k < text.length; k++) {
+          if (text[k] == "\"" && text[k - 1] != "\\") {
+            hasColon = true
+          }
+        }
+      }
+      if (hasColon) {
+        continue;
+      } else {
+        return position.character > i
+      }
     } else if (stringing == false && char == "\"") {
       stringing = true
     } else if (stringing == true && char == "\"" && text.charAt(i - 1) != "\\") {
@@ -80,6 +93,37 @@ const cheakInCode = (document, position) => {
 
 /**
  * 
+ * @description 从文档中找到相应行号的单行注释范围数组
+ * @param {vscode.TextLine} textLine
+ * @returns {Array<vscode.Range>}
+ */
+const findStringRangesByLine = (textLine) => {
+
+  let ranges = []
+  if (!textLine || textLine.isEmptyOrWhitespace) {
+    return ranges
+  }
+
+  let text = textLine.text
+  let stringing = false
+  let start
+  for (let s = 0; s < text.length; s++) {
+    let char = text.charAt(s)
+    if (stringing == false && char == "/" && text.charAt(s - 1) == "/") {
+      break;
+    } else if (stringing == false && char == "\"") {
+      start = new vscode.Position(textLine.lineNumber, s)
+      stringing = true
+    } else if (stringing == true && char == "\"" && text.charAt(s - 1) != "\\") {
+      ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, s + char.length)))
+      stringing = false
+    }
+  }
+  return ranges
+}
+
+/**
+ * 
  * @description 从文档中找到所有字符串的范围数组
  * @param {vscode.TextDocument} document
  * @returns {Array<vscode.Range>}
@@ -90,24 +134,49 @@ const findStringRanges = (document) => {
     return ranges
   }
   for (let i = 0; i < document.lineCount; i++) {
-    let textLine = document.lineAt(i)
-    let text = textLine.text
-    let stringing = false
-    let start
-    for (let s = 0; s < text.length; s++) {
-      let char = text.charAt(s)
-      if (stringing == false && char == "/" && text.charAt(s - 1) == "/") {
-        break;
-      } else if (stringing == false && char == "\"") {
-        start = new vscode.Position(textLine.lineNumber, s)
-        stringing = true
-      } else if (stringing == true && char == "\"" && text.charAt(s - 1) != "\\") {
-        ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, s + char.length)))
-        stringing = false
+    ranges.push(...findStringRangesByLine(document.lineAt(i)))
+  }
+  console.log(ranges.length)
+  return ranges
+}
+
+/**
+ * 
+ * @description 从文档中找到相应行号的单行注释范围数组
+ * @param {vscode.TextLine} textLine
+ * @returns {Array<vscode.Range>}
+ */
+const findCommentRangesByLine = (textLine) => {
+  let ranges = []
+  if (!textLine || textLine.isEmptyOrWhitespace) {
+    return ranges
+  }
+  let text = textLine.text
+  let stringing = false
+  for (let s = 0; s < text.length; s++) {
+    let char = text.charAt(s)
+    if (char == "/" && text.charAt(s + 1) == "/") {
+      // 对后续判断是否被字符串包含
+      let hasColon = false
+      if (stringing) {
+        for (let k = s; k < text.length; k++) {
+          if (text[k] == "\"" && text[k - 1] != "\\") {
+            hasColon = true
+          }
+        }
       }
+      if (hasColon) {
+        continue;
+      } else {
+        ranges.push(new vscode.Range(new vscode.Position(textLine.lineNumber, s), textLine.rangeIncludingLineBreak.end))
+        break;
+      }
+    } else if (stringing == false && char == "\"") {
+      stringing = true
+    } else if (stringing == true && char == "\"" && text.charAt(s - 1) != "\\") {
+      stringing = false
     }
   }
-
   return ranges
 }
 
@@ -123,21 +192,46 @@ const findCommentRanges = (document) => {
     return ranges
   }
   for (let i = 0; i < document.lineCount; i++) {
-    let textLine = document.lineAt(i)
-    let text = textLine.text
-    let stringing = false
-    for (let s = 0; s < text.length; s++) {
-      if (textLine.isEmptyOrWhitespace) {
-        break;
-      }
-      let char = text.charAt(s)
-      if (stringing == false && char == "/" && text.charAt(s + 1) == "/") {
-        ranges.push(new vscode.Range(new vscode.Position(textLine.lineNumber, s), textLine.rangeIncludingLineBreak.end))
-        break;
-      } else if (stringing == false && char == "\"") {
-        stringing = true
-      } else if (stringing == true && char == "\"" && text.charAt(s - 1) != "\\") {
-        stringing = false
+    ranges.push(...findCommentRangesByLine(document.lineAt(i)))
+  }
+  return ranges
+}
+
+/**
+ * 
+ * @description 从文档行中找到所有当行代号的范围数组
+ * @param {vscode.TextLine} textLine
+ * @returns {Array<vscode.Range>}
+ */
+const findCodeRangesByLine = (textLine) => {
+  let ranges = []
+  if (!textLine || textLine.isEmptyOrWhitespace) {
+    return ranges
+  }
+  let text = textLine.text
+  let coding = false
+  let start
+  for (let s = 0; s < text.length; s++) {
+    let char = text.charAt(s)
+    if (char == "'") {
+      let comments = findCommentRangesByLine(textLine)
+      let strings = findStringRangesByLine(textLine)
+      let pos = new vscode.Position(textLine.lineNumber, s)
+      if (coding) {
+        // bingo
+        // 若不在字符串中亦不在注释中就push
+        let range = new vscode.Range(start, pos)
+        ranges.push(range)
+      } else {
+        // 若不在字符串中亦不在注释中就
+        if (strings.findIndex(x => {
+          return x.contains(pos)
+        }) == -1 && comments.findIndex(x => {
+          return x.contains(pos)
+        }) == -1) {
+          coding = true
+          start = pos
+        }
       }
     }
   }
@@ -156,27 +250,18 @@ const findCodeRanges = (document) => {
     return ranges
   }
   for (let i = 0; i < document.lineCount; i++) {
-    let textLine = document.lineAt(i)
-    let text = textLine.text
-    let stringing = false
-    for (let s = 0; s < text.length; s++) {
-      if (textLine.isEmptyOrWhitespace) {
-        break;
-      }
-      let char = text.charAt(s)
-      if (stringing == false && char == "/" && text.charAt(s + 1) == "/") {
-        ranges.push(new vscode.Range(new vscode.Position(textLine.lineNumber, s), textLine.rangeIncludingLineBreak.end))
-        break;
-      } else if (stringing == false && char == "\"") {
-        stringing = true
-      } else if (stringing == true && char == "\"" && text.charAt(s - 1) != "\\") {
-        stringing = false
-      }
-    }
+    ranges.concat(findCodeRangesByLine(document.lineAt(i)))
   }
   return ranges
 }
 
 module.exports = {
-  cheakInComment, cheakInString, cheakInCode, findStringRanges, findCommentRanges
+  cheakInComment,
+  cheakInString,
+  cheakInCode,
+  findStringRanges,
+  findCommentRanges,
+  findCommentRangesByLine,
+  findCodeRangesByLine,
+  findCodeRanges
 }
