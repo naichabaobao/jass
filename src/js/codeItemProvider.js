@@ -23,7 +23,14 @@ const provideCompletionItems = (document, position, token, context) => {
     let codeObj = code.code
     for (let key in codeObj) {
       let cObj = codeObj[key]
-      let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Unit)
+      let item = new vscode.CompletionItem(key, (() => {
+        switch (cObj.kind) {
+          case code.Kind.Unit:
+            return vscode.CompletionItemKind.Unit
+          case code.Kind.Ability:
+            return vscode.CompletionItemKind.Event
+        }
+      })())
       item.detail = cObj.name + "(" + key + ")"
       item.documentation = `${code.kindToString(cObj.kind)} -> ${code.raceToString(cObj.race)} -> ${code.typeToString(cObj.type)}\n${cObj.tip}`
       items.push(item)

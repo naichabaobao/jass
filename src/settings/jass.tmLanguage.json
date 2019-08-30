@@ -5,28 +5,39 @@
   "patterns": [
     {
       "include": "#jass-comment"
-    },{
+    },
+    {
       "include": "#jass-string"
-    },{
+    },
+    {
       "include": "#jass-support-function"
-    },{
-      "include": "#jass-variable"
-    },{
-      "include": "#jass-constant"
-    },{
-      "include": "#jass-keyword-other"
-    },{
+    },
+    {
       "include": "#jass-keyword"
-    },{
+    },
+    {
+      "include": "#jass-const"
+    },
+    {
       "include": "#jass-keyword-operator"
-    },{
+    },
+    {
       "include": "#jass-keyword-control"
-    },{
+    },
+    {
       "include": "#jass-support-type"
-    },{
+    },
+    {
       "include": "#jass-support-class"
-    },{
+    },
+    {
       "include": "#jass-number"
+    },
+    {
+      "include": "#vjass-keyword"
+    },
+    {
+      "include": "#vjass-macro"
     }
   ],
   "repository": {
@@ -35,23 +46,16 @@
       "match": "//.*\\n"
     },
     "jass-string": {
-      "name": "string",
+      "name": "string.quoted.double",
       "match": "\"((\\\\\")|.)*?\""
-    },
-    
-    "jass-variable": {
-      "name":"variable"
-    },
-    "jass-constant": {
-      "name":"constant"
-    },
-    "jass-keyword-other": {
-      "name": "keyword.other",
-      "match": "\\bjass\\b"
     },
     "jass-keyword": {
       "name": "keyword",
-      "match": "\\b(and|or|not|globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array|true|false|null|nothing)\\b"
+      "match": "\\b(and|or|not|globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array)\\b"
+    },
+    "jass-const": {
+      "name": "string.regexp",
+      "match": "\\b(true|false|null|nothing)\\b"
     },
     "jass-keyword-operator": {
       "name": "keyword.operator",
@@ -70,11 +74,19 @@
       "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable)\\b"
     },
     "jass-number": {
-      "name": "constant.numeric",
-      "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|\\b\\d+\\b"
+      "name": "variable",
+      "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x\\d+|\\b\\d+\\b"
     },
     "jass-support-function": {
       "name": "support.function"
+    },
+    "vjass-keyword": {
+      "name": "invalid",
+      "match": "\\b(library|initializer|needs|requires|optional|endlibrary|scope|endscope|private|public|static|execute|evaluate|create|interface|endinterface|extends|struct|endstruct|method|endmethod|this|defaults|delegate|operator|module|endmodule|implement|hook)\\b|:"
+    },
+    "vjass-macro": {
+      "name": "constant.numeric",
+      "match": "#define|#ifndef|#endif|#ifdef|#include|\\$\\w+?\\$"
     }
   }
 }

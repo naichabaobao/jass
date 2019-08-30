@@ -4,6 +4,7 @@
  * 有时间需从新写
  */
 const vscode = require("vscode")
+const itemTool = require("./itemTool")
 
 const participle = function (string) {
   let words = []
@@ -69,7 +70,6 @@ const provideDocumentFormattingEdits = (document, options, token) => {
   //
   let words = participle(documentContent)
 
-
   // 2019年8月28日修改，添加缩进功能
   let lineCount = document.lineCount
   for (let i = 0; i < lineCount; i++) {
@@ -109,10 +109,11 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
     } else {
       edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
-
     }
+
+    // 2019年8月29日，添加内容格式化
+
   }
-  console.log(edits.slice(1000))
   return edits
 }
 module.exports = { provideDocumentFormattingEdits }
