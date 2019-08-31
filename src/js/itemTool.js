@@ -275,30 +275,62 @@ const findGlobals = (document) => {
  * @param {vscode.TextLine} textLine
  * @returns {Array<vscode.Range>}
  */
-const findDividedSymbolsByLine = (textLine) => {
+const findSpacesByLine = (textLine) => {
+  let ranges = []
+  if (!textLine) {
+    return ranges
+  }
+  let reg = new RegExp(/\s+/)
+  ranges.push(...findRanges(textLine, reg))
+  return ranges
+}
+
+/**
+ * @description 从行中获取所有单词
+ * @param {vscode.TextLine} textLine
+ * @returns {Array<vscode.Range>}
+ */
+const findWordsByLine = (textLine) => {
   let ranges = []
   if (!textLine) {
     return ranges
   }
   let text = textLine.text
-  let spacing = false
-  let start
-  for (let i = 0; i < text.length; i++) {
-    let char = text.charAt(i)
-    if (new RegExp(/[\t ]/).test(char)) {
+  let wordRegExp = new RegExp(/[a-zA-Z]\w*/) // 匹配标识符正则
+  ranges.push(...findRanges(textLine, wordRegExp))
+  return ranges
+}
 
-      if (!spacing) {
-        start = new vscode.Position(textLine.lineNumber, i)
-        spacing = true
-      }
-      if (!new RegExp(/[\t ]/).test(text.charAt(i + 1))) {
-
-        ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, i + 1)))
-        spacing = false
-      }
+/**
+ * @description 找到行中对应的正则
+ * @param {vscode.TextLine} textLine
+ * @param {RegExp} regExp
+ * @returns {Array<vscode.Range>}
+ */
+const findRanges = (textLine, regExp) => {
+  let ranges = []
+  if (!textLine || !regExp) {
+    return ranges
+  }
+  let text = textLine.text
+  for (let i = 0; i < text.length;) {
+    if (regExp.test(text.substring(i))) {
+      let word = regExp.exec(text.substring(i)).shift()
+      let index = text.indexOf(word, i)
+      let range = new vscode.Range(textLine.lineNumber, index, textLine.lineNumber, index + word.length)
+      ranges.push(range)
+      i = index + word.length
+    } else {
+      // 若当前行后面不存在标识符 直接跳出循环
+      break;
     }
   }
-  return ranges
+  return ranges.filter(x => {
+    // 确保找的内容不在字符串或注释中
+    return findStringRangesByLine(textLine).findIndex(s => {
+      return s.contains(x)
+    }) == -1
+  })
 }
 
 module.exports = {
@@ -311,5 +343,7 @@ module.exports = {
   findCodeRangesByLine,
   findCodeRanges,
   findGlobals,
-  findDividedSymbolsByLine
+  findSpacesByLine,
+  findWordsByLine,
+  findRanges
 }

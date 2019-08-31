@@ -67,15 +67,20 @@ const provideDocumentFormattingEdits = (document, options, token) => {
   // 
   let ident = 0
   let tabSize = options.tabSize | 2
+
   // 格式化globals块
   itemTool.findGlobals(document).forEach(x => {
     let content = document.getText(x)
     for (let i = x.start.line; i < x.end.line; i++) {
       let textLine = document.lineAt(i)
       if (textLine.isEmptyOrWhitespace) {
-        edits.push(vscode.TextEdit.delete(textLine.range))
-      } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "constant".length)) == "constant") {
-
+        continue;
+      } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
+        continue;
+      } else {
+        itemTool.findRanges(textLine, new RegExp(/constant\s{2,}/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        })
       }
     }
   })

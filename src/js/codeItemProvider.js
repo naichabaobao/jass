@@ -14,18 +14,6 @@ const code = require("./code")
  * @returns {vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>}
  */
 const provideCompletionItems = (document, position, token, context) => {
-
-  itemTool.findGlobals(document).forEach(x => {
-    console.log(document.getText(x))
-    for (let i = x.start.line; i < x.end.line; i++) {
-      itemTool.findDividedSymbolsByLine(document.lineAt(i)).forEach(x => {
-        console.log(document.getText(x).length)
-      })
-    }
-
-
-  })
-
   let incode = itemTool.cheakInCode(document, position)
   let items = []
   if (incode) {
