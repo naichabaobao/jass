@@ -247,13 +247,58 @@ const findCodeRanges = (document) => {
 }
 
 /**
- * 
  * @description 从文档中找到所有globals块
  * @param {vscode.TextDocument} document
  * @returns {Array<vscode.Range>}
  */
 const findGlobals = (document) => {
+  let ranges = []
+  if (!document) {
+    return ranges
+  }
+  let start
+  for (let i = 0; i < document.lineCount; i++) {
+    let textLine = document.lineAt(i)
+    let charIndex = textLine.firstNonWhitespaceCharacterIndex
+    let charPosition = new vscode.Position(textLine.lineNumber, charIndex)
+    if (document.getText(new vscode.Range(charPosition, new vscode.Position(textLine.lineNumber, charIndex + "globals".length))) == "globals") {
+      start = charPosition
+    } else if (document.getText(new vscode.Range(charPosition, new vscode.Position(textLine.lineNumber, charIndex + "endglobals".length))) == "endglobals") {
+      ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, charIndex + "endglobals".length)))
+    }
+  }
+  return ranges
+}
 
+/**
+ * @description 从行中获取所有空白段范围数组
+ * @param {vscode.TextLine} textLine
+ * @returns {Array<vscode.Range>}
+ */
+const findDividedSymbolsByLine = (textLine) => {
+  let ranges = []
+  if (!textLine) {
+    return ranges
+  }
+  let text = textLine.text
+  let spacing = false
+  let start
+  for (let i = 0; i < text.length; i++) {
+    let char = text.charAt(i)
+    if (new RegExp(/[\t ]/).test(char)) {
+
+      if (!spacing) {
+        start = new vscode.Position(textLine.lineNumber, i)
+        spacing = true
+      }
+      if (!new RegExp(/[\t ]/).test(text.charAt(i + 1))) {
+
+        ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, i + 1)))
+        spacing = false
+      }
+    }
+  }
+  return ranges
 }
 
 module.exports = {
@@ -264,5 +309,7 @@ module.exports = {
   findCommentRanges,
   findCommentRangesByLine,
   findCodeRangesByLine,
-  findCodeRanges
+  findCodeRanges,
+  findGlobals,
+  findDividedSymbolsByLine
 }
