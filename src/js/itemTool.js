@@ -73,22 +73,11 @@ const cheakInString = (document, position) => {
  */
 const cheakInCode = (document, position) => {
   let textLine = document.lineAt(position)
-  let text = textLine.text
-  let coding = false
-  let p = 0
-  for (let i = 0; i < text.length; i++) {
-    let char = text.charAt(i)
-    if (coding == false && char == "'") {
-      coding = true
-      p = i
-    } else if (coding && char == "'") {
-      coding = false
-      if (position.character > p && position.character <= i) {
-        return true
-      }
-    }
-  }
-  return false
+
+  let codeRanges = findCodeRangesByLine(textLine)
+  return codeRanges.findIndex(x => {
+    return x.contains(position) && !x.start.isEqual(position)
+  }) > -1
 }
 
 /**
@@ -197,6 +186,7 @@ const findCommentRanges = (document) => {
   return ranges
 }
 
+
 /**
  * 
  * @description 从文档行中找到所有当行代号的范围数组
@@ -220,8 +210,9 @@ const findCodeRangesByLine = (textLine) => {
       if (coding) {
         // bingo
         // 若不在字符串中亦不在注释中就push
-        let range = new vscode.Range(start, pos)
+        let range = new vscode.Range(start, new vscode.Position(textLine.lineNumber, s + 1))
         ranges.push(range)
+        coding = false
       } else {
         // 若不在字符串中亦不在注释中就
         if (strings.findIndex(x => {
@@ -250,7 +241,7 @@ const findCodeRanges = (document) => {
     return ranges
   }
   for (let i = 0; i < document.lineCount; i++) {
-    ranges.concat(findCodeRangesByLine(document.lineAt(i)))
+    ranges.push(...findCodeRangesByLine(document.lineAt(i)))
   }
   return ranges
 }

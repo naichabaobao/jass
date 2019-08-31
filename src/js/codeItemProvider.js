@@ -14,9 +14,6 @@ const code = require("./code")
  * @returns {vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>}
  */
 const provideCompletionItems = (document, position, token, context) => {
-  itemTool.findCodeRanges(document).forEach(x => {
-    console.log(document.getText(x))
-  })
 
   let incode = itemTool.cheakInCode(document, position)
   let items = []
