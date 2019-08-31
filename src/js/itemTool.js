@@ -246,6 +246,16 @@ const findCodeRanges = (document) => {
   return ranges
 }
 
+/**
+ * 
+ * @description 从文档中找到所有globals块
+ * @param {vscode.TextDocument} document
+ * @returns {Array<vscode.Range>}
+ */
+const findGlobals = (document) => {
+
+}
+
 module.exports = {
   cheakInComment,
   cheakInString,

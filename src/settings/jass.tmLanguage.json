@@ -77,7 +77,7 @@
     },
     "jass-function": {
       "name": "support.function",
-      "match": "(?<=native)\\s+\\w+\\s+(?=takes)|(?<=function)\\s+\\w+\\s+(?=takes)|(?<=call)\\s+\\w+\\s*(?=\\()|\\w+\\s*(?=\\()|(?<=function)\\s+\\w+"
+      "match": "(?<=native)\\s+\\w+\\s+(?=takes)|(?<=function)\\s+\\w+\\s+(?=takes)|(?<=call)\\s+\\w+\\s*(?=\\()|\\w+(?<!if)\\s*(?=\\()|(?<=function)\\s+\\w+"
     },
     "jass-keyword": {
       "name": "keyword",
