@@ -78,8 +78,26 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
         continue;
       } else {
-        itemTool.findRanges(textLine, new RegExp(/constant\s{2,}/)).forEach(s => {
+        // 单词与单词间
+        itemTool.findRanges(textLine, new RegExp(/([a-zA-Z]\w*\s{2,}[a-zA-z]\w*|if\s*\(|\)\s*then)/)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        })
+        // 符号左右边
+        itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|or|and)\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
+        })
+
+        // 符号右边
+        itemTool.findRanges(textLine, new RegExp(/\s*(,|not)\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
+        })
+        // 符号左边
+        // itemTool.findRanges(textLine, new RegExp(/\s*!\s*/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()}`))
+        // })
+        //|(?<!if\s*)\(|\)(?!\s*then) 
+        itemTool.findRanges(textLine, new RegExp(/\s*(\)|\.)\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
         })
       }
     }
