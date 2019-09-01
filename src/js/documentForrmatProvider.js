@@ -67,73 +67,104 @@ const provideDocumentFormattingEdits = (document, options, token) => {
   // 
   let ident = 0
   let tabSize = options.tabSize | 2
+  let lineCount = document.lineCount
+  //格式化
+  for (let i = 0; i < lineCount; i++) {
+    let textLine = document.lineAt(i)
+    if (textLine.isEmptyOrWhitespace) {
+      continue;
+    } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
+      continue;
+    } else {
+      try {
+        // 单词与单词间
+        itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[a-zA-z]\w*)/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        })
+        // 单词与运算符之间
+        itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        })
+        // 单词与运算符之间
+        itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
+        })
+        // 单词与运算符之间
+        itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|(?<!if\s*)\(|\)|\[|\])/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        })
 
-  // 格式化globals块
-  itemTool.findGlobals(document).forEach(x => {
-    for (let i = x.start.line; i < x.end.line; i++) {
-      let textLine = document.lineAt(i)
-      if (textLine.isEmptyOrWhitespace) {
+        // 运算符与单词之间
+        itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        })
+        // 运算符与单词之间
+        itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,]\s{2,}\w+/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        })
+        // 运算符与单词之间
+        itemTool.findRanges(textLine, new RegExp(/(\(|\[|!)\s+\w+/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        })
+        // if与(之间
+        itemTool.findRanges(textLine, new RegExp(/if\(/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.end.character - 1), " "))
+        })
+        itemTool.findRanges(textLine, new RegExp(/if\s{2,}\(/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        })
+        // )与then之间
+        itemTool.findRanges(textLine, new RegExp(/\)then/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        })
+        itemTool.findRanges(textLine, new RegExp(/\)\s{2,}then/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        })
+        // 符号与)之间
+        itemTool.findRanges(textLine, new RegExp(/(\(|"|')\s+\)/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        })
+        // (与符号之间
+        itemTool.findRanges(textLine, new RegExp(/\(\s+(!|"|')/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        })
+        // 运算符与符号之间
+        itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,](-|"|')/)).forEach(s => {
+          console.log(document.getText(s))
+          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        })
         continue;
-      } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
-        continue;
-      } else {
-        try {
-          // 单词与单词间
-          itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[a-zA-z]\w*)/)).forEach(s => {
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-          })
-          // 单词与运算符之间
-          itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-          })
-          // 单词与运算符之间
-          itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
-          })
-          // 单词与运算符之间
-          itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|\(|\)|\[|\])/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-          })
-
-          // 运算符与单词之间
-          itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
-          })
-          // 运算符与单词之间
-          itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>]\s{2,}\w+/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-          })
-          // 运算符与单词之间
-          itemTool.findRanges(textLine, new RegExp(/(\(|\[)\s+\w+/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-          })
-          continue;
-          // 符号左右边
-          itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
-            edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
-          })
-          // 符号右边
-          itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
-            edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
-          })
-          itemTool.findRanges(textLine, new RegExp(/\s*\(\s*/)).forEach(s => {
-            edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()}`))
-          })
-        } catch (err) {
-          console.log(err)
-        }
+        // 符号左右边
+        itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
+        })
+        // 符号右边
+        itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
+        })
+        itemTool.findRanges(textLine, new RegExp(/\s*\(\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()}`))
+        })
+      } catch (err) {
+        console.log(err)
       }
     }
-  })
+  }
 
   // 2019年8月28日修改，添加缩进功能
-  let lineCount = document.lineCount
+
   for (let i = 0; i < lineCount; i++) {
     let textLine = document.lineAt(i)
     let fci = textLine.firstNonWhitespaceCharacterIndex
