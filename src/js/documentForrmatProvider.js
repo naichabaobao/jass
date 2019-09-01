@@ -70,7 +70,6 @@ const provideDocumentFormattingEdits = (document, options, token) => {
 
   // 格式化globals块
   itemTool.findGlobals(document).forEach(x => {
-    let content = document.getText(x)
     for (let i = x.start.line; i < x.end.line; i++) {
       let textLine = document.lineAt(i)
       if (textLine.isEmptyOrWhitespace) {
@@ -78,27 +77,40 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
         continue;
       } else {
-        // 单词与单词间
-        itemTool.findRanges(textLine, new RegExp(/([a-zA-Z]\w*\s{2,}[a-zA-z]\w*|if\s*\(|\)\s*then)/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-        })
-        // 符号左右边
-        itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|or|and)\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
-        })
-
-        // 符号右边
-        itemTool.findRanges(textLine, new RegExp(/\s*(,|not)\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
-        })
+        try {
+          // 单词与单词间
+          itemTool.findRanges(textLine, new RegExp(/([a-zA-Z]\w*\s{2,}[a-zA-z]\w*)/)).forEach(s => {
+            console.log(document.getText(s))
+            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+          })
+          // 符号左右边
+          itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
+            console.log(document.getText(s))
+            edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
+          })
+          // 符号右边
+          itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
+            console.log(document.getText(s))
+            edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
+          })
+          itemTool.findRanges(textLine, new RegExp(/(?<!if)\s*\(\s*/)).forEach(s => {
+            console.log(document.getText(s))
+            edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
+          })
+        } catch (err) {
+          console.error(err)
+        }
+        // itemTool.findRanges(textLine, new RegExp(/([a-z-A-Z]\w*\s+\())/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, "")))
+        // })
         // 符号左边
         // itemTool.findRanges(textLine, new RegExp(/\s*!\s*/)).forEach(s => {
         //   edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()}`))
         // })
         //|(?<!if\s*)\(|\)(?!\s*then) 
-        itemTool.findRanges(textLine, new RegExp(/\s*(\)|\.)\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
-        })
+        // itemTool.findRanges(textLine, new RegExp(/\s*(\)|\.)\s*/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
+        // })
       }
     }
   })
