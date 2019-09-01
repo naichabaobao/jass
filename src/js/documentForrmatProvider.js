@@ -89,9 +89,9 @@ const provideDocumentFormattingEdits = (document, options, token) => {
         itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
         })
-        itemTool.findRanges(textLine, new RegExp(/(\s+\()|(\(\s+)|(\s+\))|(\)\s+)/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
-        })
+        // itemTool.findRanges(textLine, new RegExp(/(\s+\()|(\(\s+)|(\s+\))|(\)\s+)/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
+        // })
       }
     }
   })
