@@ -77,29 +77,21 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       } else if (document.getText(new vscode.Range(textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex, textLine.lineNumber, textLine.firstNonWhitespaceCharacterIndex + "//".length)) == "//") {
         continue;
       } else {
-        try {
-          // 单词与单词间
-          itemTool.findRanges(textLine, new RegExp(/([a-zA-Z]\w*\s{2,}[a-zA-z]\w*)/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-          })
-          // 符号左右边
-          itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
-          })
-          // 符号右边
-          itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
-          })
-          itemTool.findRanges(textLine, new RegExp(/(?<!if)\s*\(\s*/)).forEach(s => {
-            console.log(document.getText(s))
-            edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
-          })
-        } catch (err) {
-          console.error(err)
-        }
+        // 单词与单词间
+        itemTool.findRanges(textLine, new RegExp(/([a-zA-Z]\w*\s{2,}[a-zA-z]\w*)/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        })
+        // 符号左右边
+        itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
+        })
+        // 符号右边
+        itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
+        })
+        itemTool.findRanges(textLine, new RegExp(/(\s+\()|(\(\s+)|(\s+\))|(\)\s+)/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
+        })
         // itemTool.findRanges(textLine, new RegExp(/([a-z-A-Z]\w*\s+\())/)).forEach(s => {
         //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, "")))
         // })

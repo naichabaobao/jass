@@ -271,6 +271,30 @@ const findGlobals = (document) => {
 }
 
 /**
+ * @description 从文档中找到所有globals块
+ * @param {vscode.TextDocument} document
+ * @returns {Array<vscode.Range>}
+ */
+const findFunctions = (document) => {
+  let ranges = []
+  if (!document) {
+    return ranges
+  }
+  let start
+  for (let i = 0; i < document.lineCount; i++) {
+    let textLine = document.lineAt(i)
+    let charIndex = textLine.firstNonWhitespaceCharacterIndex
+    let charPosition = new vscode.Position(textLine.lineNumber, charIndex)
+    if (document.getText(new vscode.Range(charPosition, new vscode.Position(textLine.lineNumber, charIndex + "function".length))) == "function") {
+      start = charPosition
+    } else if (document.getText(new vscode.Range(charPosition, new vscode.Position(textLine.lineNumber, charIndex + "endfunction".length))) == "endfunction") {
+      ranges.push(new vscode.Range(start, new vscode.Position(textLine.lineNumber, charIndex + "endfunction".length)))
+    }
+  }
+  return ranges
+}
+
+/**
  * @description 从行中获取所有空白段范围数组
  * @param {vscode.TextLine} textLine
  * @returns {Array<vscode.Range>}
@@ -343,6 +367,7 @@ module.exports = {
   findCodeRangesByLine,
   findCodeRanges,
   findGlobals,
+  findFunctions,
   findSpacesByLine,
   findWordsByLine,
   findRanges
