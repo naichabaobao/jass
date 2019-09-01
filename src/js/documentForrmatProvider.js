@@ -92,17 +92,6 @@ const provideDocumentFormattingEdits = (document, options, token) => {
         itemTool.findRanges(textLine, new RegExp(/(\s+\()|(\(\s+)|(\s+\))|(\)\s+)/)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
         })
-        // itemTool.findRanges(textLine, new RegExp(/([a-z-A-Z]\w*\s+\())/)).forEach(s => {
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, "")))
-        // })
-        // 符号左边
-        // itemTool.findRanges(textLine, new RegExp(/\s*!\s*/)).forEach(s => {
-        //   edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()}`))
-        // })
-        //|(?<!if\s*)\(|\)(?!\s*then) 
-        // itemTool.findRanges(textLine, new RegExp(/\s*(\)|\.)\s*/)).forEach(s => {
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).trim()))
-        // })
       }
     }
   })
