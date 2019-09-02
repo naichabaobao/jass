@@ -83,79 +83,64 @@ const provideDocumentFormattingEdits = (document, options, token) => {
         })
         // 单词与运算符之间
         itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
         })
         // 单词与运算符之间
         itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
         })
         // 单词与运算符之间
         itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|(?<!if\s*)\(|\)|\[|\])/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
         })
 
         // 运算符与单词之间
         itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
         })
         // 运算符与单词之间
         itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,]\s{2,}\w+/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
         })
         // 运算符与单词之间
         itemTool.findRanges(textLine, new RegExp(/(\(|\[|!)\s+\w+/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
         })
         // if与(之间
         itemTool.findRanges(textLine, new RegExp(/if\(/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.end.character - 1), " "))
         })
         itemTool.findRanges(textLine, new RegExp(/if\s{2,}\(/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
         })
         // )与then之间
         itemTool.findRanges(textLine, new RegExp(/\)then/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
         })
         itemTool.findRanges(textLine, new RegExp(/\)\s{2,}then/)).forEach(s => {
-          console.log(document.getText(s))
+
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
         })
-        // 符号与)之间
-        itemTool.findRanges(textLine, new RegExp(/(\(|"|')\s+\)/)).forEach(s => {
-          console.log(document.getText(s))
+        // 符号与符号之间 ()  (!  ("  ('  (-  ((  (. !( )) )] ), [( ]) ], ') ', ") ", .) ., != >= <= ==  
+        itemTool.findRanges(textLine, new RegExp(/\(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|!\s+\(|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+,|!\s+=|>\s+=|<\s+=|=\s+=/)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
         })
-        // (与符号之间
-        itemTool.findRanges(textLine, new RegExp(/\(\s+(!|"|')/)).forEach(s => {
-          console.log(document.getText(s))
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-        })
-        // 运算符与符号之间
-        itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,](-|"|')/)).forEach(s => {
-          console.log(document.getText(s))
+        // +. +- +" +' +( -. -- -' -( *. *- *' *( /- /. /' /( %- %. %' %( =. =- =' =" =( =! >- >. >( >' <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= ]+ ]- ]* ]/ ]% ]> ]< ]! ]= .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,!
+        itemTool.findRanges(textLine, new RegExp(/\+\.|\+\-|\+"|\+'|\+\(|\-\.|\-\-|\-'|\-\(|\*\.|\*\-|\*'|\*\(|\/\.|\/\-|\/'|\/\(|%\.|%\-|%'|%\(|=\.|=\-|='|="|=\(|=!|>\-|>\.|>\(|>'|<\-|<\.|<\(|<'|'\+|'\-|'\*|'\/|'%|'=|'>|'<|'!|"\+|"=|"!|\)\+|\)\-|\)\*|\)\/|\)%|\)>|\)<|\)!|\)=|]\+|]\-|]\*|]\/|]%|]>|]<|]!|]=|\.\+|\.\-|\.\*|\.\/|\.%|\.>|\.<|\.!|\.=|,\-|,\.|,'|,"|,\(|,!/)).forEach(s => {
           edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
         })
-        continue;
-        // 符号左右边
-        itemTool.findRanges(textLine, new RegExp(/\s*((!=)|(==)|(>=)|(<=)|\+|\*|\/|%|=|<|>|((?<!-\s*)-(?!\d|\.))|\bor\b|\band\b)\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, ` ${document.getText(s).trim()} `))
-        })
-        // 符号右边
-        itemTool.findRanges(textLine, new RegExp(/\s*,\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()} `))
-        })
-        itemTool.findRanges(textLine, new RegExp(/\s*\(\s*/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, `${document.getText(s).trim()}`))
+        // +. +- +" +' +( -. -- -' -( *. *- *' *( /- /. /' /( %- %. %' %( =. =- =' =" =( =! >- >. >( >' <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= ]+ ]- ]* ]/ ]% ]> ]< ]! ]= .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,!
+        itemTool.findRanges(textLine, new RegExp(/\+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|\*\s{2,}'|\*\s{2,}\(|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!/)).forEach(s => {
+          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
         })
       } catch (err) {
         console.log(err)
