@@ -6,6 +6,10 @@
 const vscode = require("vscode")
 const itemTool = require("./itemTool")
 
+/**
+ * @deprecated
+ * @param {string} string 
+ */
 const participle = function (string) {
   let words = []
   if (!string) {
@@ -47,6 +51,10 @@ const participle = function (string) {
   }
   return words
 }
+/**
+ * @deprecated
+ * @param {string} string 
+ */
 const isSpace = function (string) {
   return /^[\t ]+$/.test(string)
 }
@@ -59,12 +67,7 @@ const isSpace = function (string) {
   * @returns {vscode.ProviderResult<vscode.TextEdit[]>}
   */
 const provideDocumentFormattingEdits = (document, options, token) => {
-  let documentContent = document.getText()
   let edits = []
-  let edit = vscode.TextEdit
-  let line = 0
-  let colume = 0
-  // 
   let ident = 0
   let tabSize = options.tabSize | 2
   let lineCount = document.lineCount
@@ -77,79 +80,79 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       continue;
     } else {
       try {
-        // 单词与单词间
-        itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[a-zA-z]\w*)/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-        })
-        // 单词与运算符之间
-        itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
+        // // 单词与单词间
+        // itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[a-zA-z]\w*)/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        // })
+        // // 单词与运算符之间
+        // itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
 
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-        })
-        // 单词与运算符之间
-        itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
+        // })
+        // // 单词与运算符之间
+        // itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
 
-          edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
-        })
-        // 单词与运算符之间
-        itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|(?<!if\s*)\(|\)|\[|\])/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
+        // })
+        // // 单词与运算符之间
+        // itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|(?<!if\s*)\(|\)|\[|\])/)).forEach(s => {
 
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        // })
+
+        // // 运算符与单词之间
+        // itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        // })
+        // // 运算符与单词之间
+        // itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,]\s{2,}\w+/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        // })
+        // // 运算符与单词之间
+        // itemTool.findRanges(textLine, new RegExp(/(\(|\[|!)\s+\w+/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        // })
+        // // if与(之间
+        // itemTool.findRanges(textLine, new RegExp(/if\(/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.end.character - 1), " "))
+        // })
+        // itemTool.findRanges(textLine, new RegExp(/if\s{2,}\(/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        // })
+        // // )与then之间
+        // itemTool.findRanges(textLine, new RegExp(/\)then/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        // })
+        // itemTool.findRanges(textLine, new RegExp(/\)\s{2,}then/)).forEach(s => {
+
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        // })
+        // ()  (!  ("  ('  (-  ((  (. (w !( !w )) )] ), [( [w ]) ], ') ', ") ", .) ., .w != !w >= <= == -w w( w) w[ w] w, w.
+        itemTool.findRanges(textLine, new RegExp(/\(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|\(\s+\w|!\s+\(|!\s+\w|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|(\[\s+\w)|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+\w|\.\s+,|!\s+=|!\s+\w|>\s+=|<\s+=|=\s+=|(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w|\w\s+\(|\w\s+\)|\w\s+\[|\w(?<!if)\s+\]|\w\s+,|\w\s+\./)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
         })
-
-        // 运算符与单词之间
-        itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
-
+        // +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /* %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' <w '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w<
+        itemTool.findRanges(textLine, new RegExp(/\+\.|\+\-|\+"|\+'|\+\(|\+\w|\-\.|\-\-|\-'|\-\(|(?<=(\w|\.|\)|\]|')\s*)\-\w|\*\.|\*\-|\*'|\*\(|\*\w|\/\.|\/\-|\/'|\/\(|\/\w|%\.|%\-|%'|%\(|%\w|=\.|=\-|='|="|=\(|=!|=\w|>\-|>\.|>\(|>'|>\w|<\-|<\.|<\(|<'|<\w|'\+|'\-|'\*|'\/|'%|'=|'>|'<|'!|"\+|"=|"!|\)\+|\)\-|\)\*|\)\/|\)%|\)>|\)<|\)!|\)=|\)\w|]\+|]\-|]\*|]\/|]%|]>|]<|]!|]=|]\w|\.\+|\.\-|\.\*|\.\/|\.%|\.>|\.<|\.!|\.=|,\-|,\.|,'|,"|,\(|,!|,\w|\w\+|\w\-|\w\*|\w\/|\w%|\w!|\w=|\w>|\w</)).forEach(s => {
           edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
         })
-        // 运算符与单词之间
-        itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,]\s{2,}\w+/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        })
-        // 运算符与单词之间
-        itemTool.findRanges(textLine, new RegExp(/(\(|\[|!)\s+\w+/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-        })
-        // if与(之间
-        itemTool.findRanges(textLine, new RegExp(/if\(/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.end.character - 1), " "))
-        })
-        itemTool.findRanges(textLine, new RegExp(/if\s{2,}\(/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        })
-        // )与then之间
-        itemTool.findRanges(textLine, new RegExp(/\)then/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
-        })
-        itemTool.findRanges(textLine, new RegExp(/\)\s{2,}then/)).forEach(s => {
-
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        })
-        // 符号与符号之间 ()  (!  ("  ('  (-  ((  (. !( )) )] ), [( ]) ], ') ', ") ", .) ., != >= <= ==  
-        itemTool.findRanges(textLine, new RegExp(/\(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|!\s+\(|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+,|!\s+=|>\s+=|<\s+=|=\s+=/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-        })
-        // +. +- +" +' +( -. -- -' -( *. *- *' *( /- /. /' /( %- %. %' %( =. =- =' =" =( =! >- >. >( >' <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= ]+ ]- ]* ]/ ]% ]> ]< ]! ]= .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,!
-        itemTool.findRanges(textLine, new RegExp(/\+\.|\+\-|\+"|\+'|\+\(|\-\.|\-\-|\-'|\-\(|\*\.|\*\-|\*'|\*\(|\/\.|\/\-|\/'|\/\(|%\.|%\-|%'|%\(|=\.|=\-|='|="|=\(|=!|>\-|>\.|>\(|>'|<\-|<\.|<\(|<'|'\+|'\-|'\*|'\/|'%|'=|'>|'<|'!|"\+|"=|"!|\)\+|\)\-|\)\*|\)\/|\)%|\)>|\)<|\)!|\)=|]\+|]\-|]\*|]\/|]%|]>|]<|]!|]=|\.\+|\.\-|\.\*|\.\/|\.%|\.>|\.<|\.!|\.=|,\-|,\.|,'|,"|,\(|,!/)).forEach(s => {
-          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
-        })
-        // +. +- +" +' +( -. -- -' -( *. *- *' *( /- /. /' /( %- %. %' %( =. =- =' =" =( =! >- >. >( >' <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= ]+ ]- ]* ]/ ]% ]> ]< ]! ]= .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,!
-        itemTool.findRanges(textLine, new RegExp(/\+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|\*\s{2,}'|\*\s{2,}\(|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!/)).forEach(s => {
+        // +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /w %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w< ww
+        itemTool.findRanges(textLine, new RegExp(/\+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\+\s{2,}\w|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|(?<=(\w|\.|\)|\]|')\s*)\-\s{2,}\w|\*\s{2,}'|\*\s{2,}\(|\*\s{2,}\w|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|\/\s{2,}\w|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|%\s{2,}\w|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|=\s{2,}\w|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|>\s{2,}\w|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|<\s{2,}\w|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|\)\s{2,}\w|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|]\s{2,}\w|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!|,\s{2,}\w|\w\s{2,}\+|\w\s{2,}\-|\w\s{2,}\*|\w\s{2,}\/|\w\s{2,}%|\w\s{2,}!|\w\s{2,}=|\w\s{2,}>|\w\s{2,}<|\w\s{2,}\w/)).forEach(s => {
           edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
         })
       } catch (err) {
         console.log(err)
+
       }
     }
   }
 
   // 2019年8月28日修改，添加缩进功能
-
   for (let i = 0; i < lineCount; i++) {
     let textLine = document.lineAt(i)
     let fci = textLine.firstNonWhitespaceCharacterIndex
