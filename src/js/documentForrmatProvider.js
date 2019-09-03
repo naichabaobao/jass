@@ -6,58 +6,15 @@
 const vscode = require("vscode")
 const itemTool = require("./itemTool")
 
-/**
- * @deprecated
- * @param {string} string 
- */
-const participle = function (string) {
-  let words = []
-  if (!string) {
-    return words
-  }
-  // 数字 字母 空白串 换行符 其它 => 数字 字母 空白串 换行符 字符串 注释串 其它
-  let untreatedWords = string.match(/\d+|[a-zA-Z]+|[\t ]+|\n|./g).map(x => x)
-  let commiting = false
-  let stringing = false
-  let collectString = ""
-  for (let i = 0; i < untreatedWords.length; i++) {
-    let untreatedWord = untreatedWords[i];
-    if (commiting == false && stringing == false && /\//.test(untreatedWord) && /\//.test(untreatedWords[i + 1])) {
-      commiting = true
-    }
-    if (/\n/.test(untreatedWord)) {
-      commiting = false
-      stringing = false
-    }
-    if (commiting == false && stringing == false && /"/.test(untreatedWord)) {
-      stringing = true
-    } else if (commiting == false && stringing && /"/.test(untreatedWord) && !/\\/.test(untreatedWords[i - 1])) {
-      stringing = false
-    }
-    if (commiting || stringing) {
-      collectString += untreatedWord
-    } else if (collectString.length > 0) {
-      if (/\n/.test(untreatedWord)) {
-        words.push(collectString)
-        words.push(untreatedWord)
-      } else {
-        collectString += untreatedWord
-        words.push(collectString)
-      }
-      collectString = ""
-    } else {
-      words.push(untreatedWord)
-    }
-  }
-  return words
-}
-/**
- * @deprecated
- * @param {string} string 
- */
-const isSpace = function (string) {
-  return /^[\t ]+$/.test(string)
-}
+// ()  (!  ("  ('  (-  ((  (. (w !( !w )) )] ), [( [w ]) ], ') ', ") ", .) ., .w != !w >= <= == -w w( w) w[ w] w, w.
+// \(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|\(\s+\w|!\s+\(|!\s+\w|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|(\[\s+\w)|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+\w|\.\s+,|!\s+=|!\s+\w|>\s+=|<\s+=|=\s+=|(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w|\w\s+\(|\w\s+\)|\w\s+\[|\w(?<!if)\s+\]|\w\s+,|\w\s+\.
+const insertSpaceRegExp = [new RegExp(/\(\s+\)/), new RegExp(/\(\s+!/), new RegExp(/\(\s+"/), new RegExp(/\(\s+'/), new RegExp(/\(\s+\-/), new RegExp(/\(\s+\(/), new RegExp(/\(\s+\./), new RegExp(/\(\s+\w/), new RegExp(/!\s+\(/), new RegExp(/!\s+\w/), new RegExp(/\)\s+\)/), new RegExp(/\)\s+,/), new RegExp(/\)\s+\]/), new RegExp(/\[\s+\(/), new RegExp(/(\[\s+\w)/), new RegExp(/\]\s+\)/), new RegExp(/\]\s+,/), new RegExp(/'\s+\)/), new RegExp(/'\s+,/), new RegExp(/"\s+\)/), new RegExp(/"\s+,/), new RegExp(/\.\s+\)/), new RegExp(/\.\s+\w/), new RegExp(/\.\s+,/), new RegExp(/!\s+=/), new RegExp(/!\s+\w/), new RegExp(/>\s+=/), new RegExp(/<\s+=/), new RegExp(/=\s+=/), new RegExp(/(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w/), new RegExp(/\w\s+\(/), new RegExp(/\w\s+\)/), new RegExp(/\w\s+\[/), new RegExp(/\w(?<!if)\s+\]/), new RegExp(/\w\s+,/), new RegExp(/\w\s+\./)]
+// +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /* %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' <w '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w<
+// \(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|\(\s+\w|!\s+\(|!\s+\w|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|(\[\s+\w)|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+\w|\.\s+,|!\s+=|!\s+\w|>\s+=|<\s+=|=\s+=|(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w|\w\s+\(|\w\s+\)|\w\s+\[|\w(?<!if)\s+\]|\w\s+,|\w\s+\.
+const deleteSpaceeRegExp = [new RegExp(/\(\s+\)/), new RegExp(/\(\s+!/), new RegExp(/\(\s+"/), new RegExp(/\(\s+'/), new RegExp(/\(\s+\-/), new RegExp(/\(\s+\(/), new RegExp(/\(\s+\./), new RegExp(/\(\s+\w/), new RegExp(/!\s+\(/), new RegExp(/!\s+\w/), new RegExp(/\)\s+\)/), new RegExp(/\)\s+,/), new RegExp(/\)\s+\]/), new RegExp(/\[\s+\(/), new RegExp(/(\[\s+\w)/), new RegExp(/\]\s+\)/), new RegExp(/\]\s+,/), new RegExp(/'\s+\)/), new RegExp(/'\s+,/), new RegExp(/"\s+\)/), new RegExp(/"\s+,/), new RegExp(/\.\s+\)/), new RegExp(/\.\s+\w/), new RegExp(/\.\s+,/), new RegExp(/!\s+=/), new RegExp(/!\s+\w/), new RegExp(/>\s+=/), new RegExp(/<\s+=/), new RegExp(/=\s+=/), new RegExp(/(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w/), new RegExp(/\w\s+\(/), new RegExp(/\w\s+\)/), new RegExp(/\w\s+\[/), new RegExp(/\w(?<!if)\s+\]/), new RegExp(/\w\s+,/), new RegExp(/\w\s+\./)]
+// +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /w %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w< ww
+// \+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\+\s{2,}\w|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|(?<=(\w|\.|\)|\]|')\s*)\-\s{2,}\w|\*\s{2,}'|\*\s{2,}\(|\*\s{2,}\w|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|\/\s{2,}\w|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|%\s{2,}\w|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|=\s{2,}\w|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|>\s{2,}\w|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|<\s{2,}\w|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|\)\s{2,}\w|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|]\s{2,}\w|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!|,\s{2,}\w|\w\s{2,}\+|\w\s{2,}\-|\w\s{2,}\*|\w\s{2,}\/|\w\s{2,}%|\w\s{2,}!|\w\s{2,}=|\w\s{2,}>|\w\s{2,}<|\w\s{2,}\w
+const toSignSpaceRegExp = [new RegExp(/\+\s{2,}\./), new RegExp(/\+\s{2,}\-/), new RegExp(/\+\s{2,}"/), new RegExp(/\+\s{2,}'/), new RegExp(/\+\s{2,}\(/), new RegExp(/\+\s{2,}\w/), new RegExp(/\-\s{2,}\./), new RegExp(/\-\s{2,}\-/), new RegExp(/\-\s{2,}'/), new RegExp(/\-\s{2,}\(/), new RegExp(/\*\s{2,}\./), new RegExp(/\*\s{2,}\-/), new RegExp(/(?<=(\w|\.|\)|\]|')\s*)\-\s{2,}\w/), new RegExp(/\*\s{2,}'/), new RegExp(/\*\s{2,}\(/), new RegExp(/\*\s{2,}\w/), new RegExp(/\/\s{2,}\./), new RegExp(/\/\s{2,}\-/), new RegExp(/\/\s{2,}'/), new RegExp(/\/\s{2,}\(/), new RegExp(/\/\s{2,}\w/), new RegExp(/%\s{2,}\./), new RegExp(/%\s{2,}\-/), new RegExp(/%\s{2,}'/), new RegExp(/%\s{2,}\(/), new RegExp(/%\s{2,}\w/), new RegExp(/=\s{2,}\./), new RegExp(/=\s{2,}\-/), new RegExp(/=\s{2,}'/), new RegExp(/=\s{2,}"/), new RegExp(/=\s{2,}\(/), new RegExp(/=\s{2,}!/), new RegExp(/=\s{2,}\w/), new RegExp(/>\s{2,}\-/), new RegExp(/>\s{2,}\./), new RegExp(/>\s{2,}\(/), new RegExp(/>\s{2,}'/), new RegExp(/>\s{2,}\w/), new RegExp(/<\s{2,}\-/), new RegExp(/<\s{2,}\./), new RegExp(/<\s{2,}\(/), new RegExp(/<\s{2,}'/), new RegExp(/<\s{2,}\w/), new RegExp(/'\s{2,}\+/), new RegExp(/'\s{2,}\-/), new RegExp(/'\s{2,}\*/), new RegExp(/'\s{2,}\//), new RegExp(/'\s{2,}%/), new RegExp(/'\s{2,}=/), new RegExp(/'\s{2,}>/), new RegExp(/'\s{2,}</), new RegExp(/'\s{2,}!/), new RegExp(/"\s{2,}\+/), new RegExp(/"\s{2,}=/), new RegExp(/"\s{2,}!/), new RegExp(/\)\s{2,}\+/), new RegExp(/\)\s{2,}\-/), new RegExp(/\)\s{2,}\*/), new RegExp(/\)\s{2,}\//), new RegExp(/\)\s{2,}%/), new RegExp(/\)\s{2,}>/), new RegExp(/\)\s{2,}</), new RegExp(/\)\s{2,}!/), new RegExp(/\)\s{2,}=/), new RegExp(/\)\s{2,}\w/), new RegExp(/]\s{2,}\+/), new RegExp(/]\s{2,}\-/), new RegExp(/]\s{2,}\*/), new RegExp(/]\s{2,}\//), new RegExp(/]\s{2,}%/), new RegExp(/]\s{2,}>/), new RegExp(/]\s{2,}</), new RegExp(/]\s{2,}!/), new RegExp(/]\s{2,}=/), new RegExp(/]\s{2,}\w/), new RegExp(/\.\s{2,}\+/), new RegExp(/\.\s{2,}\-/), new RegExp(/\.\s{2,}\*/), new RegExp(/\.\s{2,}\//), new RegExp(/\.\s{2,}%/), new RegExp(/\.\s{2,}>/), new RegExp(/\.\s{2,}</), new RegExp(/\.\s{2,}!/), new RegExp(/\.\s{2,}=/), new RegExp(/,\s{2,}\-/), new RegExp(/,\s{2,}\./), new RegExp(/,\s{2,}'/), new RegExp(/,\s{2,}"/), new RegExp(/,\s{2,}\(/), new RegExp(/,\s{2,}!/), new RegExp(/,\s{2,}\w/), new RegExp(/\w\s{2,}\+/), new RegExp(/\w\s{2,}\-/), new RegExp(/\w\s{2,}\*/), new RegExp(/\w\s{2,}\//), new RegExp(/\w\s{2,}%/), new RegExp(/\w\s{2,}!/), new RegExp(/\w\s{2,}=/), new RegExp(/\w\s{2,}>/), new RegExp(/\w\s{2,}</), new RegExp(/\w\s{2,}\w/)]
 
 /**
   * 
@@ -80,71 +37,33 @@ const provideDocumentFormattingEdits = (document, options, token) => {
       continue;
     } else {
       try {
-        // // 单词与单词间
-        // itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[a-zA-z]\w*)/)).forEach(s => {
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-        // })
-        // // 单词与运算符之间
-        // itemTool.findRanges(textLine, new RegExp(/(\w+\s{2,}[\+\-\*\/%!=<>])/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/g, " ")))
-        // })
-        // // 单词与运算符之间
-        // itemTool.findRanges(textLine, new RegExp(/(\w+[\+\-\*\/%!=<>])/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.insert(s.end.with(textLine.lineNumber, s.end.character - 1), " "))
-        // })
-        // // 单词与运算符之间
-        // itemTool.findRanges(textLine, new RegExp(/\w+\s+(,|(?<!if\s*)\(|\)|\[|\])/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-        // })
-
-        // // 运算符与单词之间
-        // itemTool.findRanges(textLine, new RegExp(/[\+\*\/%=<>,]\w+/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
-        // })
-        // // 运算符与单词之间
-        // itemTool.findRanges(textLine, new RegExp(/[\+\-\*\/%=<>,]\s{2,}\w+/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        // })
-        // // 运算符与单词之间
-        // itemTool.findRanges(textLine, new RegExp(/(\(|\[|!)\s+\w+/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
-        // })
-        // // if与(之间
-        // itemTool.findRanges(textLine, new RegExp(/if\(/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.end.character - 1), " "))
-        // })
-        // itemTool.findRanges(textLine, new RegExp(/if\s{2,}\(/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        // })
-        // // )与then之间
-        // itemTool.findRanges(textLine, new RegExp(/\)then/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
-        // })
-        // itemTool.findRanges(textLine, new RegExp(/\)\s{2,}then/)).forEach(s => {
-
-        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
-        // })
         // ()  (!  ("  ('  (-  ((  (. (w !( !w )) )] ), [( [w ]) ], ') ', ") ", .) ., .w != !w >= <= == -w w( w) w[ w] w, w.
-        itemTool.findRanges(textLine, new RegExp(/\(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|\(\s+\w|!\s+\(|!\s+\w|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|(\[\s+\w)|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+\w|\.\s+,|!\s+=|!\s+\w|>\s+=|<\s+=|=\s+=|(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w|\w\s+\(|\w\s+\)|\w\s+\[|\w(?<!if)\s+\]|\w\s+,|\w\s+\./)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        insertSpaceRegExp.forEach(reg => {
+          itemTool.findRanges(textLine, reg).forEach(s => {
+            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+          })
         })
+        // itemTool.findRanges(textLine, new RegExp(/\(\s+\)|\(\s+!|\(\s+"|\(\s+'|\(\s+\-|\(\s+\(|\(\s+\.|\(\s+\w|!\s+\(|!\s+\w|\)\s+\)|\)\s+,|\)\s+\]|\[\s+\(|(\[\s+\w)|\]\s+\)|\]\s+,|'\s+\)|'\s+,|"\s+\)|"\s+,|\.\s+\)|\.\s+\w|\.\s+,|!\s+=|!\s+\w|>\s+=|<\s+=|=\s+=|(?<=(\+|\-|\*|\/|%|>|<|=|,|\(|\[)\s*)\-\s+\w|\w\s+\(|\w\s+\)|\w\s+\[|\w(?<!if)\s+\]|\w\s+,|\w\s+\./)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, "")))
+        // })
         // +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /* %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' <w '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w<
-        itemTool.findRanges(textLine, new RegExp(/\+\.|\+\-|\+"|\+'|\+\(|\+\w|\-\.|\-\-|\-'|\-\(|(?<=(\w|\.|\)|\]|')\s*)\-\w|\*\.|\*\-|\*'|\*\(|\*\w|\/\.|\/\-|\/'|\/\(|\/\w|%\.|%\-|%'|%\(|%\w|=\.|=\-|='|="|=\(|=!|=\w|>\-|>\.|>\(|>'|>\w|<\-|<\.|<\(|<'|<\w|'\+|'\-|'\*|'\/|'%|'=|'>|'<|'!|"\+|"=|"!|\)\+|\)\-|\)\*|\)\/|\)%|\)>|\)<|\)!|\)=|\)\w|]\+|]\-|]\*|]\/|]%|]>|]<|]!|]=|]\w|\.\+|\.\-|\.\*|\.\/|\.%|\.>|\.<|\.!|\.=|,\-|,\.|,'|,"|,\(|,!|,\w|\w\+|\w\-|\w\*|\w\/|\w%|\w!|\w=|\w>|\w</)).forEach(s => {
-          edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        deleteSpaceeRegExp.forEach(reg => {
+          itemTool.findRanges(textLine, reg).forEach(s => {
+            edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+          })
         })
+        // itemTool.findRanges(textLine, new RegExp(/\+\.|\+\-|\+"|\+'|\+\(|\+\w|\-\.|\-\-|\-'|\-\(|(?<=(\w|\.|\)|\]|')\s*)\-\w|\*\.|\*\-|\*'|\*\(|\*\w|\/\.|\/\-|\/'|\/\(|\/\w|%\.|%\-|%'|%\(|%\w|=\.|=\-|='|="|=\(|=!|=\w|>\-|>\.|>\(|>'|>\w|<\-|<\.|<\(|<'|<\w|'\+|'\-|'\*|'\/|'%|'=|'>|'<|'!|"\+|"=|"!|\)\+|\)\-|\)\*|\)\/|\)%|\)>|\)<|\)!|\)=|\)\w|]\+|]\-|]\*|]\/|]%|]>|]<|]!|]=|]\w|\.\+|\.\-|\.\*|\.\/|\.%|\.>|\.<|\.!|\.=|,\-|,\.|,'|,"|,\(|,!|,\w|\w\+|\w\-|\w\*|\w\/|\w%|\w!|\w=|\w>|\w</)).forEach(s => {
+        //   edits.push(vscode.TextEdit.insert(new vscode.Position(textLine.lineNumber, s.start.character + 1), " "))
+        // })
         // +. +- +" +' +( +w -. -- -' -( -w *. *- *' *( *w /- /. /' /( /w %- %. %' %( %w =. =- =' =" =( =! =w >- >. >( >' >w <- <. <( <' '+ '- '* '/ '% '= '> '< '! "+ "= "! )+ )- )* )/ )% )> )< )! )= )w ]+ ]- ]* ]/ ]% ]> ]< ]! ]= ]w .+ .- .* ./ .% .> .< .= .! ,- ,. ,' ," ,( ,! ,w w+ w- w* w/ w% w! w= w> w< ww
-        itemTool.findRanges(textLine, new RegExp(/\+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\+\s{2,}\w|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|(?<=(\w|\.|\)|\]|')\s*)\-\s{2,}\w|\*\s{2,}'|\*\s{2,}\(|\*\s{2,}\w|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|\/\s{2,}\w|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|%\s{2,}\w|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|=\s{2,}\w|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|>\s{2,}\w|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|<\s{2,}\w|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|\)\s{2,}\w|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|]\s{2,}\w|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!|,\s{2,}\w|\w\s{2,}\+|\w\s{2,}\-|\w\s{2,}\*|\w\s{2,}\/|\w\s{2,}%|\w\s{2,}!|\w\s{2,}=|\w\s{2,}>|\w\s{2,}<|\w\s{2,}\w/)).forEach(s => {
-          edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        toSignSpaceRegExp.forEach(reg => {
+          itemTool.findRanges(textLine, reg).forEach(s => {
+            edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+          })
         })
+        // itemTool.findRanges(textLine, new RegExp(/\+\s{2,}\.|\+\s{2,}\-|\+\s{2,}"|\+\s{2,}'|\+\s{2,}\(|\+\s{2,}\w|\-\s{2,}\.|\-\s{2,}\-|\-\s{2,}'|\-\s{2,}\(|\*\s{2,}\.|\*\s{2,}\-|(?<=(\w|\.|\)|\]|')\s*)\-\s{2,}\w|\*\s{2,}'|\*\s{2,}\(|\*\s{2,}\w|\/\s{2,}\.|\/\s{2,}\-|\/\s{2,}'|\/\s{2,}\(|\/\s{2,}\w|%\s{2,}\.|%\s{2,}\-|%\s{2,}'|%\s{2,}\(|%\s{2,}\w|=\s{2,}\.|=\s{2,}\-|=\s{2,}'|=\s{2,}"|=\s{2,}\(|=\s{2,}!|=\s{2,}\w|>\s{2,}\-|>\s{2,}\.|>\s{2,}\(|>\s{2,}'|>\s{2,}\w|<\s{2,}\-|<\s{2,}\.|<\s{2,}\(|<\s{2,}'|<\s{2,}\w|'\s{2,}\+|'\s{2,}\-|'\s{2,}\*|'\s{2,}\/|'\s{2,}%|'\s{2,}=|'\s{2,}>|'\s{2,}<|'\s{2,}!|"\s{2,}\+|"\s{2,}=|"\s{2,}!|\)\s{2,}\+|\)\s{2,}\-|\)\s{2,}\*|\)\s{2,}\/|\)\s{2,}%|\)\s{2,}>|\)\s{2,}<|\)\s{2,}!|\)\s{2,}=|\)\s{2,}\w|]\s{2,}\+|]\s{2,}\-|]\s{2,}\*|]\s{2,}\/|]\s{2,}%|]\s{2,}>|]\s{2,}<|]\s{2,}!|]\s{2,}=|]\s{2,}\w|\.\s{2,}\+|\.\s{2,}\-|\.\s{2,}\*|\.\s{2,}\/|\.\s{2,}%|\.\s{2,}>|\.\s{2,}<|\.\s{2,}!|\.\s{2,}=|,\s{2,}\-|,\s{2,}\.|,\s{2,}'|,\s{2,}"|,\s{2,}\(|,\s{2,}!|,\s{2,}\w|\w\s{2,}\+|\w\s{2,}\-|\w\s{2,}\*|\w\s{2,}\/|\w\s{2,}%|\w\s{2,}!|\w\s{2,}=|\w\s{2,}>|\w\s{2,}<|\w\s{2,}\w/)).forEach(s => {
+        //   edits.push(vscode.TextEdit.replace(s, document.getText(s).replace(/\s+/, " ")))
+        // })
       } catch (err) {
         console.log(err)
 
