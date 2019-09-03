@@ -295,37 +295,6 @@ const findFunctions = (document) => {
 }
 
 /**
- * @description 从行中获取所有空白段范围数组
- * @param {vscode.TextLine} textLine
- * @returns {Array<vscode.Range>}
- */
-const findSpacesByLine = (textLine) => {
-  let ranges = []
-  if (!textLine) {
-    return ranges
-  }
-  let reg = new RegExp(/\s+/)
-  ranges.push(...findRanges(textLine, reg))
-  return ranges
-}
-
-/**
- * @description 从行中获取所有单词
- * @param {vscode.TextLine} textLine
- * @returns {Array<vscode.Range>}
- */
-const findWordsByLine = (textLine) => {
-  let ranges = []
-  if (!textLine) {
-    return ranges
-  }
-  let text = textLine.text
-  let wordRegExp = new RegExp(/[a-zA-Z]\w*/) // 匹配标识符正则
-  ranges.push(...findRanges(textLine, wordRegExp))
-  return ranges
-}
-
-/**
  * @description 找到行中对应的正则
  * @param {vscode.TextLine} textLine
  * @param {RegExp} regExp
@@ -357,6 +326,20 @@ const findRanges = (textLine, regExp) => {
   })
 }
 
+const PositionType = {
+  Globals: 0x01,
+  Function: 0x02,
+  Undefine: 0x03,
+  Comment: 0x10,
+  String: 0x20,
+  Code: 0x30,
+  Keyword: 0x40,
+  Name: 0x41,
+  Type: 0x42,
+  Call: 0x43,
+
+}
+
 module.exports = {
   cheakInComment,
   cheakInString,
@@ -368,7 +351,5 @@ module.exports = {
   findCodeRanges,
   findGlobals,
   findFunctions,
-  findSpacesByLine,
-  findWordsByLine,
   findRanges
 }
