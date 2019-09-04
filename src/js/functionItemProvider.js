@@ -27,6 +27,40 @@ const cantHint = (document, position) => {
   return
 }
 
+/**
+ * @description 是否可以提示
+ * @param {vscode.TextDocument} document 
+ * @param {vscode.Position} position 
+ * @returns
+ */
+const getPre = (document, position) => {
+  // let range = document.getWordRangeAtPosition(position)
+  // console.log(document.getText(range))
+  // conment string code type後
+  // let show = itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) || itemTool.cheakInCode(document, position) || (function () {
+  //   // 是否在類型後面
+  //   let types = Object.keys(type)
+  //   types.map(t => {
+  //     return new RegExp(`(?<=${t}\s+)`)
+  //   })
+  //   return false
+  // })()
+  // return
+  let items = []
+  let startRanges = itemTool.findRanges(document.lineAt(position.line), new RegExp(/^\s*\w+/))
+  for (let i = 0; i < startRanges.length; i++) {
+
+    if (startRanges[i].contains(position)) {
+      console.log(startRanges[i])
+      // native constant local set call return if elseif else endif function endfunction globals endglobals loop endloop exitwhen type 基本數據類型 類
+      const is = ["native", "constant", "local", "set", "call", "return", "if", "elseif", "else", "endif", "function", "endfunction", "globals", "endglobals", "loop", "endloop", "exitwhen", "type"]
+      const clazzs = Object.keys(type)
+      items.push(is.map(s => new vscode.CompletionItem(s, vscode.CompletionItemKind.Keyword)).push(...clazzs.map(s => new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))))
+    }
+  }
+  return items
+}
+
 
 /**
  * 
@@ -49,8 +83,10 @@ const provideCompletionItems = (document, position, token, context) => {
     itemTool.cheakInCode(document, position)) {
     return items
   }
+  console.log(getPre(document, position))
+  items.push(getPre(document, position))
 
-
+  /*
   // 添加关键字
   for (const key in keyword) {
     let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Keyword)
@@ -108,7 +144,7 @@ const provideCompletionItems = (document, position, token, context) => {
       item.insertText = api.name
       return item
     }))
-  }
+  }*/
   return items
 }
 
