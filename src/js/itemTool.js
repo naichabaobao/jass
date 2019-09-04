@@ -326,18 +326,47 @@ const findRanges = (textLine, regExp) => {
   })
 }
 
+/**
+ * 用于描述当前position位置
+ */
 const PositionType = {
-  Globals: 0x01,
-  Function: 0x02,
+  /**
+   * 文档空白位置
+   */
+  Default: 0x01,
+  Globals: 0x02,
+  Function: 0x03,
+  Comment: 0x04,
+  String: 0x05,
+  Code: 0x06,
+
+  /**
+   * constant local set call
+   */
+  Modify: 0x10,
   Undefine: 0x03,
-  Comment: 0x10,
-  String: 0x20,
-  Code: 0x30,
+
+
   Keyword: 0x40,
   Name: 0x41,
   Type: 0x42,
   Call: 0x43,
+}
 
+const PositionScope = {
+  PositionType,
+  scope: Number,
+
+}
+
+/**
+ * 
+ * @param {vscode.TextDocument} document 
+ * @param {vscode.Position} position 
+ * @returns {Array<PositionType>}
+ */
+const positionType = (document, position) => {
+  let positionTypes = []
 }
 
 module.exports = {

@@ -9,6 +9,26 @@ const keyword = require("./keyword")
 const itemTool = require("./itemTool")
 
 /**
+ * @description 是否可以提示
+ * @param {vscode.TextDocument} document 
+ * @param {vscode.Position} position 
+ * @returns {boolean}
+ */
+const cantHint = (document, position) => {
+  // conment string code type後
+  let show = itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) || itemTool.cheakInCode(document, position) || (function () {
+    // 是否在類型後面
+    let types = Object.keys(type)
+    types.map(t => {
+      return new RegExp(`(?<=${t}\s+)`)
+    })
+    return false
+  })()
+  return
+}
+
+
+/**
  * 
  * tips 0.0.3 当前能避免在字符串 注释 代号中弹出提示
  * @param {vscode.TextDocument} document 
@@ -18,11 +38,9 @@ const itemTool = require("./itemTool")
  * @returns {vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>}
  */
 const provideCompletionItems = (document, position, token, context) => {
-  // if + integer real string
-  // if - * / integer real
-  // if = any
-  // if == != integer real string boolean
-  // if >= <= integer real
+  /**
+   * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
+   */
 
 
 
@@ -31,6 +49,8 @@ const provideCompletionItems = (document, position, token, context) => {
     itemTool.cheakInCode(document, position)) {
     return items
   }
+
+
   // 添加关键字
   for (const key in keyword) {
     let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Keyword)

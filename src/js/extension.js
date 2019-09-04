@@ -44,20 +44,20 @@ function activate(context) {
     // diagnosticCollection.set(textDocment.uri, [diagnostic])
   })
 
-  const panel = vscode.window.createWebviewPanel(
-    'catCoding',
-    'Cat Coding',
-    vscode.ViewColumn.One,
-    {
-      enableScripts: true
-    }
-  );
-  vscode.ViewColumn
-  // 设置HTML内容
-  let template = vscode.Uri.file(path.join(context.extensionPath, 'src/resources/template', 'index.html'));
-  let html = template.with({ scheme: 'file' });
+  // const panel = vscode.window.createWebviewPanel(
+  //   'catCoding',
+  //   'Cat Coding',
+  //   vscode.ViewColumn.One,
+  //   {
+  //     enableScripts: true
+  //   }
+  // );
 
-  panel.webview.html = fs.readFileSync(html.fsPath).toString()
+  // // 设置HTML内容
+  // let template = vscode.Uri.file(path.join(context.extensionPath, 'src/resources/template', 'index.html'));
+  // let html = template.with({ scheme: 'file' });
+
+  // panel.webview.html = fs.readFileSync(html.fsPath).toString()
 }
 
 exports.activate = activate;
