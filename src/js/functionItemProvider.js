@@ -28,36 +28,61 @@ const cantHint = (document, position) => {
 }
 
 /**
+ * 類型
+ */
+const clazzs = Object.keys(type)
+
+/**
  * @description 是否可以提示
  * @param {vscode.TextDocument} document 
  * @param {vscode.Position} position 
  * @returns
  */
 const getPre = (document, position) => {
-  // let range = document.getWordRangeAtPosition(position)
-  // console.log(document.getText(range))
-  // conment string code type後
-  // let show = itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) || itemTool.cheakInCode(document, position) || (function () {
-  //   // 是否在類型後面
-  //   let types = Object.keys(type)
-  //   types.map(t => {
-  //     return new RegExp(`(?<=${t}\s+)`)
-  //   })
-  //   return false
-  // })()
-  // return
-  let items = []
-  let startRanges = itemTool.findRanges(document.lineAt(position.line), new RegExp(/^\s*\w+/))
-  for (let i = 0; i < startRanges.length; i++) {
 
-    if (startRanges[i].contains(position)) {
-      console.log(startRanges[i])
-      // native constant local set call return if elseif else endif function endfunction globals endglobals loop endloop exitwhen type 基本數據類型 類
-      const is = ["native", "constant", "local", "set", "call", "return", "if", "elseif", "else", "endif", "function", "endfunction", "globals", "endglobals", "loop", "endloop", "exitwhen", "type"]
-      const clazzs = Object.keys(type)
-      items.push(is.map(s => new vscode.CompletionItem(s, vscode.CompletionItemKind.Keyword)).push(...clazzs.map(s => new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))))
-    }
+  let items = []
+  let textLine = document.lineAt(position.line)
+  // 開始位置提示
+  let startRanges = itemTool.findRanges(textLine, new RegExp(/^\s*\w+/))
+  if (startRanges && startRanges.length > 0 && startRanges[0].contains(position)) {
+    const is = ["native", "constant", "local", "set", "call", "return", "if", "elseif", "else", "endif", "function", "endfunction", "globals", "endglobals", "loop", "endloop", "exitwhen", "type"]
+
+    is.forEach(s => {
+      items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Keyword))
+    })
+    clazzs.forEach(s => {
+      items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
+    })
   }
+
+  // native後面可能出現
+  let nativeRanges = itemTool.findRanges(textLine, new RegExp(/(?<=native\s+)\w+/))
+  if (nativeRanges && nativeRanges.length > 0 && nativeRanges.findIndex(s => s.contains(position)) > -1) {
+    items.push(new vscode.CompletionItem("constant", vscode.CompletionItemKind.Class))
+  }
+  clazzs.forEach(s => {
+    itemTool.findRanges(textLine, new RegExp(``))
+  })
+
+
+  // let startRanges = itemTool.findRanges(document.lineAt(position.line), new RegExp(/^\s*\w+/))
+
+  // for (let i = 0; i < startRanges.length; i++) {
+
+  //   if (startRanges[i].contains(position)) {
+  //     console.log(document.getText(startRanges[i]))
+  //     // native constant local set call return if elseif else endif function endfunction globals endglobals loop endloop exitwhen type 基本數據類型 類
+  //     const is = ["native", "constant", "local", "set", "call", "return", "if", "elseif", "else", "endif", "function", "endfunction", "globals", "endglobals", "loop", "endloop", "exitwhen", "type"]
+  //     const clazzs = Object.keys(type)
+  //     is.forEach(s => {
+  //       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Keyword))
+  //     })
+  //     clazzs.forEach(s => {
+  //       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
+  //     })
+  //   }
+  // }
+
   return items
 }
 
@@ -84,7 +109,9 @@ const provideCompletionItems = (document, position, token, context) => {
     return items
   }
   console.log(getPre(document, position))
-  items.push(getPre(document, position))
+  getPre(document, position).forEach(s => {
+    items.push(s)
+  })
 
   /*
   // 添加关键字
