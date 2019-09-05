@@ -55,15 +55,48 @@ const getPre = (document, position) => {
     })
   }
 
-  // native後面可能出現
-  let nativeRanges = itemTool.findRanges(textLine, new RegExp(/(?<=native\s+)\w+/))
+  // constant後面 native 或者 類型
+  let nativeRanges = itemTool.findRanges(textLine, new RegExp(/(?<=constant\s+)\w+/))
   if (nativeRanges && nativeRanges.length > 0 && nativeRanges.findIndex(s => s.contains(position)) > -1) {
-    items.push(new vscode.CompletionItem("constant", vscode.CompletionItemKind.Class))
+    items.push(new vscode.CompletionItem("native", vscode.CompletionItemKind.Class))
+    clazzs.forEach(s => {
+      items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
+    })
   }
-  clazzs.forEach(s => {
-    itemTool.findRanges(textLine, new RegExp(``))
-  })
 
+  // constant後面 native 或者 類型
+  let localRanges = itemTool.findRanges(textLine, new RegExp(/(?<=local\s+)\w+/))
+  if (localRanges && localRanges.length > 0 && localRanges.findIndex(s => s.contains(position)) > -1) {
+    clazzs.forEach(s => {
+      items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
+    })
+  }
+
+  // set
+  let setRanges = itemTool.findRanges(textLine, new RegExp(/(?<=set\s+)\w+/))
+  if (setRanges && setRanges.length > 0 && setRanges.findIndex(s => s.contains(position)) > -1) {
+    Object.keys(jg).filter(s => !jg[s].isConstant).forEach(s => {
+      let variable = jg[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Variable)
+      item.detail = `${variable.name} (${variable.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(variable.documentation).appendCodeblock(variable.original)
+      item.insertText = variable.name
+      items.push(item)
+    })
+  }
+
+  // call
+  let callRanges = itemTool.findRanges(textLine, new RegExp(/(?<=call\s+)\w+/))
+  if (callRanges && callRanges.length > 0 && callRanges.findIndex(s => s.contains(position)) > -1) {
+    Object.keys(j).forEach(s => {
+      let fn = j[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Variable)
+      item.detail = `${fn.name} (${fn.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
+      item.insertText = fn.insertText
+      items.push(item)
+    })
+  }
 
   // let startRanges = itemTool.findRanges(document.lineAt(position.line), new RegExp(/^\s*\w+/))
 
@@ -108,7 +141,6 @@ const provideCompletionItems = (document, position, token, context) => {
     itemTool.cheakInCode(document, position)) {
     return items
   }
-  console.log(getPre(document, position))
   getPre(document, position).forEach(s => {
     items.push(s)
   })
