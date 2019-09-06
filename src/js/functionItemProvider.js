@@ -46,13 +46,13 @@ const getPre = (document, position) => {
   let startRanges = itemTool.findRanges(textLine, new RegExp(/^\s*\w+/))
   if (startRanges && startRanges.length > 0 && startRanges[0].contains(position)) {
     const is = ["native", "constant", "local", "set", "call", "return", "if", "elseif", "else", "endif", "function", "endfunction", "globals", "endglobals", "loop", "endloop", "exitwhen", "type"]
-
     is.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Keyword))
     })
     clazzs.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
     })
+    return items
   }
 
   // constant後面 native 或者 類型
@@ -62,6 +62,7 @@ const getPre = (document, position) => {
     clazzs.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
     })
+    return items
   }
 
   // constant後面 native 或者 類型
@@ -70,6 +71,7 @@ const getPre = (document, position) => {
     clazzs.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
     })
+    return items
   }
 
   // set
@@ -83,6 +85,7 @@ const getPre = (document, position) => {
       item.insertText = variable.name
       items.push(item)
     })
+    return items
   }
 
   // call
@@ -90,12 +93,119 @@ const getPre = (document, position) => {
   if (callRanges && callRanges.length > 0 && callRanges.findIndex(s => s.contains(position)) > -1) {
     Object.keys(j).forEach(s => {
       let fn = j[s]
-      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Variable)
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Function)
       item.detail = `${fn.name} (${fn.fileName})`
       item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
       item.insertText = fn.insertText
       items.push(item)
     })
+    return items
+  }
+
+  // type name = \w
+  let stateRanges = itemTool.findRanges(textLine, new RegExp(`(?<=(${clazzs.join("|")})\\s+\\w+\\s*=\\s*)\\w+`))
+  let stateTypeRanges = itemTool.findRanges(textLine, new RegExp(`(${clazzs.join("|")})(?=\\s+\\w+\\s*=\\s*\\w+)`))
+  let stateIndex = 0
+  if (stateRanges && stateRanges.length > 0 && (stateIndex = stateRanges.findIndex(s => s.contains(position))) > -1) {
+    let type = document.getText(stateTypeRanges[stateIndex])
+    // 返回類型需一致
+    Object.keys(j).filter(s => j[s].returnType == type).forEach(s => {
+      let fn = j[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Function)
+      item.detail = `${fn.name} (${fn.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
+      item.insertText = fn.insertText
+      items.push(item)
+    })
+    Object.keys(jg).filter(s => jg[s].type == type).forEach(s => {
+      let value = jg[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind[value.isConstant ? "Constant" : "Variable"])
+      item.detail = `${value.name} (${value.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(value.documentation).appendCodeblock(value.original)
+      item.insertText = value.insertText
+      items.push(item)
+    })
+    return items
+  }
+
+  // + \w
+  let pushRanges = itemTool.findRanges(textLine, new RegExp(/(?<=\+\s*)\w+/))
+  if (pushRanges && pushRanges.length > 0 && pushRanges.findIndex(s => s.contains(position)) > -1) {
+    // 返回類型需一致
+    Object.keys(j).filter(s => {
+      let returnType = j[s].returnType
+      return returnType == "integer" || returnType == "real" || returnType == "string"
+    }).forEach(s => {
+      let fn = j[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Function)
+      item.detail = `${fn.name} (${fn.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
+      item.insertText = fn.insertText
+      items.push(item)
+    })
+    Object.keys(jg).filter(s => {
+      let type = jg[s].type
+      return type == "integer" || type == "real" || type == "string"
+    }).forEach(s => {
+      let value = jg[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind[value.isConstant ? "Constant" : "Variable"])
+      item.detail = `${value.name} (${value.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(value.documentation).appendCodeblock(value.original)
+      item.insertText = value.insertText
+      items.push(item)
+    })
+    return items
+  }
+
+  // *-/ \w
+  let msdRanges = itemTool.findRanges(textLine, new RegExp(/(?<=(\*|\-|\/)\s*)\w+/))
+  if (msdRanges && msdRanges.length > 0 && msdRanges.findIndex(s => s.contains(position)) > -1) {
+    // 返回類型需一致
+    Object.keys(j).filter(s => {
+      let returnType = j[s].returnType
+      return returnType == "integer" || returnType == "real"
+    }).forEach(s => {
+      let fn = j[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Function)
+      item.detail = `${fn.name} (${fn.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
+      item.insertText = fn.insertText
+      items.push(item)
+    })
+    Object.keys(jg).filter(s => {
+      let type = jg[s].type
+      return type == "integer" || type == "real"
+    }).forEach(s => {
+      let value = jg[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind[value.isConstant ? "Constant" : "Variable"])
+      item.detail = `${value.name} (${value.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(value.documentation).appendCodeblock(value.original)
+      item.insertText = value.insertText
+      items.push(item)
+    })
+    return items
+  }
+
+  if (itemTool.findGlobals(document).findIndex(s => s.contains(position)) > -1 ||
+    itemTool.findFunctions(document).findIndex(s => s.contains(position)) > -1) {
+    // 返回類型需一致
+    Object.keys(j).forEach(s => {
+      let fn = j[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Function)
+      item.detail = `${fn.name} (${fn.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(fn.documentation).appendCodeblock(fn.original)
+      item.insertText = fn.insertText
+      items.push(item)
+    })
+    Object.keys(jg).forEach(s => {
+      let value = jg[s]
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind[value.isConstant ? "Constant" : "Variable"])
+      item.detail = `${value.name} (${value.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(value.documentation).appendCodeblock(value.original)
+      item.insertText = value.insertText
+      items.push(item)
+    })
+    return items
   }
 
   // let startRanges = itemTool.findRanges(document.lineAt(position.line), new RegExp(/^\s*\w+/))
