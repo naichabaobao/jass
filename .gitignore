@@ -1,8 +1,8 @@
-node_modules
-jass
-assets
-.idea
-.vacode
-.vscode-test
+/node_modules
+/jass
+/assets
+/.idea
+/.vacode
+/.vscode-test
 *.vsix
 jass.conf
