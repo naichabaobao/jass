@@ -1,21 +1,15 @@
-/**
-    用於表示w3m文件中char[4]
-*/
 
-
-
-
-impl Char4 {
-    pub fn new(zero: char, one: char, two: char, there: char) -> Char4 {
-        return Char4 { zero, one, two, there };
+impl i84 {
+    pub fn new(zero: i8, one: i8, two: i8, there: i8) -> i84 {
+        return i84 { zero, one, two, there };
     }
 }
 
+///用於描述i8[4]
 #[derive(Debug)]
-pub struct Char4 {
-    zero: char,
-    one: char,
-    two: char,
-    there: char,
+pub struct i84 {
+    zero: i8,
+    one: i8,
+    two: i8,
+    there: i8,
 }
-

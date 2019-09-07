@@ -22,9 +22,14 @@ int：最大数量的玩家
 
 
 use super::char4::Char4;
+use super::map_flag::MapFlag;
 
 #[derive(Debug)]
 pub struct W3MHeader {
     pub id: Char4,
     pub placeholder: i32,
+    pub map_name: String,
+    ///
+    pub map_flag: MapFlag,
+
 }
