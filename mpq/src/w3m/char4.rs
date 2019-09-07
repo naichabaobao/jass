@@ -4,11 +4,14 @@
 
 
 
-pub trait Char4Interface {
-    fn new(zero: char, one: char, two: char, there: char) -> Char4;
+
+impl Char4 {
+    pub fn new(zero: char, one: char, two: char, there: char) -> Char4 {
+        return Char4 { zero, one, two, there };
+    }
 }
 
-#[derive("debug")]
+#[derive(Debug)]
 pub struct Char4 {
     zero: char,
     one: char,
@@ -16,8 +19,3 @@ pub struct Char4 {
     there: char,
 }
 
-impl Char4Interface for Char4 {
-    fn new(zero: char, one: char, two: char, there: char) -> Char4 {
-        return Char4 { zero: zero, one: one, two: two, there: there };
-    }
-}

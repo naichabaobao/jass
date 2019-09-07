@@ -20,10 +20,11 @@ int：最大数量的玩家
 后跟00字节，直到填充了标题的512字节。
 */
 
-mod char4;
-use char4::Char4;
 
+use super::char4::Char4;
+
+#[derive(Debug)]
 pub struct W3MHeader {
-    id: Char4,
-    placeholder: i32,
+    pub id: Char4,
+    pub placeholder: i32,
 }
