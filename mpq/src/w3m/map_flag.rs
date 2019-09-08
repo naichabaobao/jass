@@ -1,3 +1,4 @@
+
 pub enum MapFlag {
 /// 0x0001：1 =在预览屏幕中隐藏小地图
  HideMinimap=0x0001,

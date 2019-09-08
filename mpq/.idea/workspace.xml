@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5bac00c9-9cbe-4c4d-9269-f22a00a65084" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/w3m/char4.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/w3m/char4.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/w3m/char4.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/w3m/map_flag.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/w3m/map_flag.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/w3m/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/w3m/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/w3m/w3m_header.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/w3m/w3m_header.rs" afterDir="false" />
     </list>
@@ -19,33 +21,33 @@
         <counts>
           <entry key="project.closed" value="3" />
           <entry key="project.open.time.0" value="2" />
-          <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.open.time.5" value="2" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="lock" value="5" />
-          <entry key="rs" value="15" />
-          <entry key="toml" value="2" />
+          <entry key="rs" value="20" />
+          <entry key="toml" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Rust" value="15" />
-          <entry key="TOML" value="7" />
+          <entry key="Rust" value="20" />
+          <entry key="TOML" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="lock" value="30" />
-          <entry key="rs" value="868" />
+          <entry key="rs" value="2482" />
           <entry key="toml" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Rust" value="868" />
+          <entry key="Rust" value="2482" />
           <entry key="TOML" value="37" />
         </counts>
       </usages-collector>
@@ -56,26 +58,30 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="475">
+              <caret line="25" column="36" selection-start-line="25" selection-start-column="36" selection-end-line="25" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/w3m/char4.rs">
+        <entry file="file://$PROJECT_DIR$/Cargo.toml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+            <state relative-caret-position="76">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/w3m/w3m_header.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
+            <state relative-caret-position="344">
+              <caret line="28" column="3" lean-forward="true" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
+              <folding>
+                <element signature="e#504#505#0" expanded="true" />
+                <element signature="e#521#522#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -83,9 +89,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/w3m/map_flag.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="35" lean-forward="true" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+            <state relative-caret-position="133">
+              <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/w3m/cryption.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/hash/mod.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3876" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/hash/sip.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-741" />
           </provider>
         </entry>
       </file>
@@ -112,6 +141,7 @@
       <find>i32</find>
       <find>char</find>
       <find>pub</find>
+      <find>as u8</find>
     </findStrings>
     <replaceStrings>
       <replace>char</replace>
@@ -136,10 +166,11 @@
         <option value="$PROJECT_DIR$/Cargo.lock" />
         <option value="$PROJECT_DIR$/Cargo.toml" />
         <option value="$PROJECT_DIR$/src/w3m/char4.rs" />
-        <option value="$PROJECT_DIR$/src/main.rs" />
-        <option value="$PROJECT_DIR$/src/w3m/map_flag.rs" />
         <option value="$PROJECT_DIR$/src/w3m/mod.rs" />
         <option value="$PROJECT_DIR$/src/w3m/w3m_header.rs" />
+        <option value="$PROJECT_DIR$/src/w3m/map_flag.rs" />
+        <option value="$PROJECT_DIR$/src/main.rs" />
+        <option value="$PROJECT_DIR$/src/w3m/cryption.rs" />
       </list>
     </option>
   </component>
@@ -167,7 +198,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -190,10 +220,11 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1567849518402" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1567930170854" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -245,8 +276,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25716332" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.260745" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -255,12 +287,12 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32712767" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32712767" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49928367" weight="0.32756326" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49928367" weight="0.32712767" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5007163" side_tool="true" weight="0.32756326" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -299,13 +331,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Cargo.toml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/char/methods.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-183">
@@ -313,18 +338,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.rs">
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/char/convert.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
+        <state relative-caret-position="-3135" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/hash/mod.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3876" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/w3m/char4.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+        <state relative-caret-position="171">
+          <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/hash/sip.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-741" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/w3m/mod.rs">
@@ -334,17 +367,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/w3m/map_flag.rs">
+    <entry file="file://$PROJECT_DIR$/Cargo.toml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="35" lean-forward="true" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+        <state relative-caret-position="76">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/w3m/w3m_header.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
+        <state relative-caret-position="344">
+          <caret line="28" column="3" lean-forward="true" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
+          <folding>
+            <element signature="e#504#505#0" expanded="true" />
+            <element signature="e#521#522#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/w3m/map_flag.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="25" column="36" selection-start-line="25" selection-start-column="36" selection-end-line="25" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/w3m/cryption.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
         </state>
       </provider>
     </entry>

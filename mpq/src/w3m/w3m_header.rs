@@ -1,3 +1,4 @@
+//!
 /**
 char [4]：文件ID（应为“HM3W”）
 int：未知
@@ -20,16 +21,12 @@ int：最大数量的玩家
 后跟00字节，直到填充了标题的512字节。
 */
 
-
-use super::char4::Char4;
-use super::map_flag::MapFlag;
-
-#[derive(Debug)]
-pub struct W3MHeader {
-    pub id: Char4,
-    pub placeholder: i32,
-    pub map_name: String,
-    ///
-    pub map_flag: MapFlag,
-
+//
+//#[derive(Debug)]
+//pub struct W3MHeader {
+//    pub placeholder: i32,
+//    pub map_name: String,
+//}
+pub fn he() {
+    println!("he");
 }
