@@ -1,9 +1,10 @@
 node_modules
-/jass
+jass
 /assets
 /.idea
 /.vacode
 /.vscode-test
-/mpq/target/*
+/mpq/target
+/mpq/target/.idea
 *.vsix
 jass.conf

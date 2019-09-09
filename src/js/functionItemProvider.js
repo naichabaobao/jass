@@ -32,6 +32,101 @@ const cantHint = (document, position) => {
  */
 const clazzs = Object.keys(type)
 
+const types = ["boolean", "integer", "real", "string", "code", "handle"]
+
+const clsss = [
+  "agent",
+  "event",
+  "player",
+  "widget",
+  "unit",
+  "destructable",
+  "item",
+  "ability",
+  "buff",
+  "force",
+  "group",
+  "trigger",
+  "triggercondition",
+  "triggeraction",
+  "timer",
+  "location",
+  "region",
+  "rect",
+  "boolexpr",
+  "sound",
+  "conditionfunc",
+  "filterfunc",
+  "unitpool",
+  "itempool",
+  "race",
+  "alliancetype",
+  "racepreference",
+  "gamestate",
+  "igamestate",
+  "fgamestate",
+  "playerstate",
+  "playerscore",
+  "playergameresult",
+  "unitstate",
+  "aidifficulty",
+  "eventid",
+  "gameevent",
+  "playerevent",
+  "playerunitevent",
+  "unitevent",
+  "limitop",
+  "widgetevent",
+  "dialogevent",
+  "unittype",
+  "gamespeed",
+  "gamedifficulty",
+  "gametype",
+  "mapflag",
+  "mapvisibility",
+  "mapsetting",
+  "mapdensity",
+  "mapcontrol",
+  "playerslotstate",
+  "volumegroup",
+  "camerafield",
+  "camerasetup",
+  "playercolor",
+  "placement",
+  "startlocprio",
+  "raritycontrol",
+  "blendmode",
+  "texmapflags",
+  "effect",
+  "effecttype",
+  "weathereffect",
+  "terraindeformation",
+  "fogstate",
+  "fogmodifier",
+  "dialog",
+  "button",
+  "quest",
+  "questitem",
+  "defeatcondition",
+  "timerdialog",
+  "leaderboard",
+  "multiboard",
+  "multiboarditem",
+  "trackable",
+  "gamecache",
+  "version",
+  "itemtype",
+  "texttag",
+  "attacktype",
+  "damagetype",
+  "weapontype",
+  "soundtype",
+  "lightning",
+  "pathingtype",
+  "image",
+  "ubersplat",
+  "hashtable"]
+
 /**
  * @description 是否可以提示
  * @param {vscode.TextDocument} document 
@@ -65,9 +160,10 @@ const getPre = (document, position) => {
     return items
   }
 
-  // constant後面 native 或者 類型
+  // local後面 類型
   let localRanges = itemTool.findRanges(textLine, new RegExp(/(?<=local\s+)\w+/))
   if (localRanges && localRanges.length > 0 && localRanges.findIndex(s => s.contains(position)) > -1) {
+    console.log("local")
     clazzs.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
     })
@@ -103,8 +199,8 @@ const getPre = (document, position) => {
   }
 
   // type name = \w
-  let stateRanges = itemTool.findRanges(textLine, new RegExp(`(?<=(${clazzs.join("|")})\\s+\\w+\\s*=\\s*)\\w+`))
-  let stateTypeRanges = itemTool.findRanges(textLine, new RegExp(`(${clazzs.join("|")})(?=\\s+\\w+\\s*=\\s*\\w+)`))
+  let stateRanges = itemTool.findRanges(textLine, new RegExp(`(?<=(${clsss.join("|")})\\s+\\w+\\s*=\\s*)\\w+`))
+  let stateTypeRanges = itemTool.findRanges(textLine, new RegExp(`(${clsss.join("|")})(?=\\s+\\w+\\s*=\\s*\\w+)`))
   let stateIndex = 0
   if (stateRanges && stateRanges.length > 0 && (stateIndex = stateRanges.findIndex(s => s.contains(position))) > -1) {
     let type = document.getText(stateTypeRanges[stateIndex])
@@ -125,6 +221,7 @@ const getPre = (document, position) => {
       item.insertText = value.insertText
       items.push(item)
     })
+    items.push(new vscode.CompletionItem("null", vscode.CompletionItemKind.Keyword))
     return items
   }
 
@@ -183,6 +280,21 @@ const getPre = (document, position) => {
       item.insertText = value.insertText
       items.push(item)
     })
+    return items
+  }
+
+  // function_name(args)
+  // a(b(), c)
+  let takesRanges = itemTool.findRanges(textLine, new RegExp(`(?<=(takes|returns)\\s+)\\w+`))
+  if (takesRanges && takesRanges.length > 0 && takesRanges.findIndex(s => s.contains(position)) > -1) {
+    types.concat(clsss).forEach(s => {
+      let item = new vscode.CompletionItem(s, vscode.CompletionItemKind.Class)
+      item.detail = s
+      item.documentation = type[s]
+      item.insertText = s
+      items.push(item)
+    })
+    items.push(new vscode.CompletionItem("nothing", vscode.CompletionItemKind.Keyword))
     return items
   }
 

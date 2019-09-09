@@ -1,10 +1,10 @@
 {
   "name": "jass",
-  "displayName": "jass",
+  "displayName": "jass-ide",
   "description": "目标是扩展成为主流的jassIDE。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/logo.png",
   "publisher": "jass",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "engines": {
     "vscode": "^1.37.0"
   },

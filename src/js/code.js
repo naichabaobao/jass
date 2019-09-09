@@ -2334,6 +2334,50 @@ const item = {
   "srbd": { code: "", name: "灼热之刀", tip: "增加英雄<AIfw,DataA1>点的火焰攻击力。英雄的攻击也带有溅射效果，能对目标周围的单位同时造成伤害。同时英雄有<AIcs,DataA1>%的概率能对目标造成<AIcs,DataB1>倍于普通攻击的伤害。", kind: Kind.Item, race: Race.Special, type: Type.Item },
 }
 
+const buffHuman = {
+  "BHbd": { code: "", name: "暴风雪", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHbz": { code: "", name: "暴风雪(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHab": { code: "", name: "辉煌光环", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "Bdtm": { code: "", name: "汲取魔法值(目标)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdcm": { code: "", name: "汲取魔法值(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdtl": { code: "", name: "汲取生命值(目标)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdcl": { code: "", name: "汲取生命值(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdtb": { code: "", name: "汲职生命值和魔法值(目标)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdcb": { code: "", name: "汲取生命值和魔法值(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "BHtc": { code: "", name: "雷霆一击", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHfs": { code: "", name: "烈焰风暴", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHbn": { code: "", name: "驱散", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHds": { code: "", name: "神圣护甲", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHwe": { code: "", name: "冰元素", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "BHav": { code: "", name: "天神下凡", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "Bdbm": { code: "", name: "吸取魔法", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdbl": { code: "", name: "吸取生命", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bdbb": { code: "", name: "吸取生命值和魔法值", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "BHad": { code: "", name: "专注光环", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "Bply": { code: "", name: "变形术", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bpxf": { code: "", name: "凤凰火焰", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bphx": { code: "", name: "火凤凰", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bslo": { code: "", name: "减速", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bmlt": { code: "", name: "空中锁镣", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bmlc": { code: "", name: "空中锁镣(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bcmg": { code: "", name: "控制魔法", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bmil": { code: "", name: "民兵", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bclf": { code: "", name: "乌云技能", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Binf": { code: "", name: "心灵之火", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bhea": { code: "", name: "医疗", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Bivs": { code: "", name: "隐形(额外的)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Binv": { code: "", name: "隐形术", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+
+  "XHbz": { code: "", name: "暴风雪(效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "XHfs": { code: "", name: "烈焰风暴(效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
+  "Xfhl": { code: "", name: "建筑物伤害-人族大", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Xfhs": { code: "", name: "健筑物伤害-人族小", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Xfhm": { code: "", name: "建筑物伤害-人族中", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Xclf": { code: "", name: "乌云 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+  "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+}
+
+
 const code = {
   ...unitHuman,
   ...unitOrc,
@@ -2349,8 +2393,10 @@ const code = {
   ...abilityNeutralHostile,
   ...abilityNeutralPassive,
   ...abilityItem,
-  ...item
+  ...item,
+  ...buffHuman
 }
+
 
 module.exports = {
   code, Kind, Race, Type, kindToString, raceToString, typeToString

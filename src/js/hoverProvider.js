@@ -82,7 +82,9 @@ const hoverProvider = {
         } else if (code.startsWith("I")) { // I:物品
           tooltips.appendText("物品")
         } else if (code.startsWith("B")) { // B:可破坏物
-          tooltips.appendText("可破坏物")
+          // 暫時顯示魔法效果
+          // tooltips.appendText("可破坏物")
+          tooltips.appendText("魔法效果")
         } else if (code.startsWith("D")) { // D:地形
           tooltips.appendText("地形/装饰物")
         } else if (code.startsWith("A")) { // A:技能
