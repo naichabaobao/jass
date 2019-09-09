@@ -5,6 +5,6 @@ jass
 /.vacode
 /.vscode-test
 /mpq/target
-/mpq/target/.idea
+/mpq/.idea
 *.vsix
 jass.conf
