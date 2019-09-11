@@ -9,16 +9,24 @@
 <body>
   <div>test</div>
   <script id="vue"></script>
+  <script id="vuex"></script>
+  <script id="angular"></script>
   <script>
     window.vscode = acquireVsCodeApi();
-    window.addEventListener("message", async (event) => {
-      console.log(event)
-      window["extensionPath"] = event.data["extension-path"]
-      document.querySelector("#vue").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/vue.min.js`;
-      document.querySelector("#vue").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/vuex.min.js`;
-      document.querySelector("#vue").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/angular.min.js`;
-    });
+    async function init() {
+      window.addEventListener("message", await new Promise(resolve => {
+        (event) => {
+          window["extensionPath"] = event.data["extension-path"]
+          document.querySelector("#vue").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/vue.min.js`;
+          document.querySelector("#vuex").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/vuex.min.js`;
+          document.querySelector("#angular").src = `vscode-resource:${window.extensionPath}/src/resources/w3m-viewer/js/angular.min.js`;
+          resolve();
+        }
+      }));
+    }
+    init();
     /*document.body.write(`<script type="text/javascript" src="vscode-resource:${window.extensionPath}/src/resource/w3m-viewer/js/vue-min.js">*/
   </script>
 </body>
+
 </html>
