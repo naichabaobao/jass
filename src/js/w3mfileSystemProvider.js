@@ -140,4 +140,114 @@ const W3mfileSystemProvider = {
   copy(source, destination, options) { },
 }
 
+context.subscriptions.push(vscode.workspace.registerFileSystemProvider("", {
+  onDidChangeFile: (event) => {
+    console.log("w3m read")
+    return null
+  },
+  watch: (uri, options) => {
+    console.log("watch")
+    return null;
+  },
+  /**
+   * @param {vscode.Uri} uri The uri of the file to retrieve metadata about.
+   * @return {vscode.FileStat} The file metadata about the file.
+   * @throws {vscode.Thenable<vscode.FileStat>} [`FileNotFound`](#FileSystemError.FileNotFound) when `uri` doesn't exist.
+   */
+  stat(uri) {
+    console.log("stat")
+    let stat = fs.statSync(path.resolve(uri.toString()))
+    return {
+      type: stat.isFile ? vscode.FileType.File : stat.isDirectory ? vscode.FileType.Directory : vscode.FileType.Unknown,
+      ctime: stat.ctime.getTime(),
+      mtime: stat.mtime.getTime(),
+      size: stat.size
+    }
+  },
+  /**
+   * @param {vscode.Uri} uri The uri of the folder.
+   * @return {[string, vscode.FileType][]} An array of name/type-tuples or a thenable that resolves to such.
+   * @throws {vscode.Thenable<vscode.FileStat>} [`FileNotFound`](#FileSystemError.FileNotFound) when `uri` doesn't exist.
+   */
+  readDirectory(uri) {
+    console.log("readDirectory")
+    return []
+  },
+  /**
+   * Create a new directory (Note, that new files are created via `write`-calls).
+   *
+   * @param {vscode.Uri} uri The uri of the new folder.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when the parent of `uri` doesn't exist, e.g. no mkdirp-logic required.
+   * @throws {vscode.Thenable<void>} [`FileExists`](#FileSystemError.FileExists) when `uri` already exists.
+   * @throws {vscode.Thenable<void>} [`NoPermissions`](#FileSystemError.NoPermissions) when permissions aren't sufficient.
+   */
+  createDirectory(uri) {
+    console.log("this.createDirectory")
+
+  },
+
+  /**
+   * Read the entire contents of a file.
+   *
+   * @param {vscode.Uri} uri The uri of the file.
+   * @return {Uint8Array} An array of bytes or a thenable that resolves to such.
+   * @throws {Thenable<Uint8Array>} [`FileNotFound`](#FileSystemError.FileNotFound) when `uri` doesn't exist.
+   */
+  readFile(uri) {
+    console.log("read")
+    return fs.readFileSync(uri.toString());
+  },
+
+  /**
+   * Write data to a file, replacing its entire contents.
+   *
+   * @param {vscode.Uri} uri The uri of the file.
+   * @param {Uint8Array} content The new content of the file.
+   * @param {{ create: boolean, overwrite: boolean }} options Defines if missing files should or must be created.
+   * @throws [`FileNotFound`](#FileSystemError.FileNotFound) when `uri` doesn't exist and `create` is not set.
+   * @throws [`FileNotFound`](#FileSystemError.FileNotFound) when the parent of `uri` doesn't exist and `create` is set, e.g. no mkdirp-logic required.
+   * @throws {vscode.Thenable<void>} [`FileExists`](#FileSystemError.FileExists) when `uri` already exists, `create` is set but `overwrite` is not set.
+   * @throws {vscode.Thenable<void>} [`NoPermissions`](#FileSystemError.NoPermissions) when permissions aren't sufficient.
+   */
+  writeFile(uri, content, options) {
+    console.log("write")
+  },
+
+  /**
+   * @param {vscode.Uri} uri The resource that is to be deleted.
+   * @param {{ recursive: boolean }} options Defines if deletion of folders is recursive.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when `uri` doesn't exist.
+   * @throws {vscode.Thenable<void>} [`NoPermissions`](#FileSystemError.NoPermissions) when permissions aren't sufficient.
+   */
+  delete(uri, options) {
+    console.log("delete")
+  },
+
+  /**
+   * @param {vscode.Uri} oldUri The existing file.
+   * @param {vscode.Uri} newUri The new location.
+   * @param {{ overwrite: boolean }} options Defines if existing files should be overwritten.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when `oldUri` doesn't exist.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when parent of `newUri` doesn't exist, e.g. no mkdirp-logic required.
+   * @throws [`FileExists`](#FileSystemError.FileExists) when `newUri` exists and when the `overwrite` option is not `true`.
+   * @throws [`NoPermissions`](#FileSystemError.NoPermissions) when permissions aren't sufficient.
+   */
+  rename(oldUri, newUri, options) {
+    console.log("rename")
+  },
+
+  /**
+   * @param {vscode.Uri} source The existing file.
+   * @param {vscode.Uri} destination The destination location.
+   * @param {{ overwrite: boolean }} options Defines if existing files should be overwritten.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when `source` doesn't exist.
+   * @throws {vscode.Thenable<void>} [`FileNotFound`](#FileSystemError.FileNotFound) when parent of `destination` doesn't exist, e.g. no mkdirp-logic required.
+   * @throws [`FileExists`](#FileSystemError.FileExists) when `destination` exists and when the `overwrite` option is not `true`.
+   * @throws [`NoPermissions`](#FileSystemError.NoPermissions) when permissions aren't sufficient.
+   */
+  copy(source, destination, options) {
+    console.log("copy")
+  },
+}, { isCaseSensitive: false, isReadonly: false }));
+
 export default W3mfileSystemProvider;

@@ -32,6 +32,15 @@
           ".ai"
         ],
         "configuration": "./src/settings/language-configuration.json"
+      },{
+        "id": "w3m",
+        "aliases": [
+          "w3m",
+          "mpq"
+        ],
+        "extensions": [
+          ".w3m"
+        ]
       }
     ],
     "grammars": [
@@ -56,7 +65,7 @@
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
     "onLanguage:jass",
-    "onFileSystem:file"
+    "onLanguage:w3m"
   ],
   "main": "./src/js/extension",
   "scripts": {

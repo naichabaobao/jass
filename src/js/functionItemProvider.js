@@ -360,7 +360,7 @@ const provideCompletionItems = (document, position, token, context) => {
 
   let items = []
   if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
-    itemTool.cheakInCode(document, position)) {
+    itemTool.cheakInCode(document, position) || document.fileName.endsWith(".w3m")) {
     return items
   }
   getPre(document, position).forEach(s => {
