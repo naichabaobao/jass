@@ -17,9 +17,7 @@
     "configuration": {
       "type": "object",
       "title": "Jass configuration",
-      "properties": {
-        
-      }
+      "properties": {}
     },
     "languages": [
       {
@@ -57,7 +55,8 @@
   },
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
-    "onLanguage:jass"
+    "onLanguage:jass",
+    "onFileSystem:file"
   ],
   "main": "./src/js/extension",
   "scripts": {
@@ -73,5 +72,8 @@
     "mocha": "^6.1.4",
     "typescript": "^3.3.1",
     "vscode-test": "^1.0.2"
+  },
+  "dependencies": {
+    "typescript": "^3.6.3"
   }
 }
