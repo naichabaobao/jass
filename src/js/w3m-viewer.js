@@ -10,18 +10,20 @@ const fileType = "war3map";
  * @param {vscode.TextDocument} document 
  */
 const w3mView = (context, document) => {
-  const panel = vscode.window.createWebviewPanel(fileType, document.fileName, vscode.ViewColumn.One,
+  const panel = vscode.window.createWebviewPanel(fileType, document ? document.fileName : "", vscode.ViewColumn.One,
     {
       enableScripts: true,
       localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, '/src'))]
     }
   );
+  /*
   vscode.workspace[document.uri.toString()] = panel
+  
   vscode.workspace.onDidCloseTextDocument(document => {
     if (document.fileName && document.fileName.endsWith(".w3m")) {
       vscode.workspace[document.uri.toString()].dispose()
     }
-  })
+  })*/
   // 设置HTML内容
   console.log(path.join(context.extensionPath, 'src/resources/build', 'index.html'))
   let template = vscode.Uri.file(path.join(context.extensionPath, 'src/resources/w3m-viewer', 'index.html'));

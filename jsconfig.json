@@ -1,14 +1,17 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es6",
-    "checkJs": true,  /* Typecheck .js files. */
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": true,
+    "jsx": "react",
     "resolveJsonModule": true,
-		"lib": [
-			"es6"
-		]
-	},
-	"exclude": [
-		"node_modules"
-	]
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "outDir": "./src/resources/w3m-viewer/js/"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
