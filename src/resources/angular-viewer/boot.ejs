@@ -10,14 +10,13 @@
 </script>
 
 <body>
-  <script type="text/ng-template" id="home.html">
-      <h1> {{hello}} Home </h1>
-  </script>
+  <script type="text/ng-template" id="home"><% include ./template/home.html %></script>
   <div ng-app="boot" >
     <div ng-controller="appController">
         {{hello}}
     </div>
-      <a href="/">/////</a>
+    <a href="/">/////</a>
+    <hello></hello>
   </div>
   <script><% include ./js/angular.min.js %></script>
   <!-- <script><% include ./js/angular-route.min.js %></script> -->
