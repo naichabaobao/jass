@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<script>
+  window.vscode = acquireVsCodeApi();
+</script>
+
+<body>
+  <script type="text/ng-template" id="home.html">
+      <h1> {{hello}} Home </h1>
+  </script>
+  <div ng-app="boot" >
+    <div ng-controller="appController">
+        {{hello}}
+    </div>
+      <a href="/">/////</a>
+  </div>
+  <script><% include ./js/angular.min.js %></script>
+  <!-- <script><% include ./js/angular-route.min.js %></script> -->
+  <script><% include ./boot.js %></script>
+</body>
+
+</html>

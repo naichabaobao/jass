@@ -1,6 +1,7 @@
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
+const ejs = require("ejs");
 
 
 
@@ -25,13 +26,24 @@ const w3mView = (context, document) => {
     }
   })*/
   // 设置HTML内容
-  console.log(path.join(context.extensionPath, 'src/resources/build', 'index.html'))
-  let template = vscode.Uri.file(path.join(context.extensionPath, 'src/resources/w3m-viewer', 'index.html'));
-  let html = template.with({ scheme: "vscode-resource" })
-  panel.webview.html = fs.readFileSync(html.fsPath).toString()
+  ejs.renderFile(path.join(context.extensionPath, 'src/resources/angular-viewer', 'boot.ejs'), {
+    "angularPath": path.join(context.extensionPath, 'src/resources/angular-viewer/js', 'angular.js'),
+    "bootPath": path.join(context.extensionPath, 'src/resources/angular-viewer', 'boot.js'),
+  }, function (err, data) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(data);
+      panel.webview.html = data;
 
-  // 關閉文檔
-  panel.webview.postMessage({ "extension-path": context.extensionPath });
+    }
+  });
+  // let template = vscode.Uri.file(path.join(context.extensionPath, 'src/resources/angular-viewer', 'boot.ejs'));
+  // let html = template.with({ scheme: "vscode-resource" })
+  // panel.webview.html = fs.readFileSync(html.fsPath).toString()
+
+  // // 關閉文檔
+  // panel.webview.postMessage({ "extension-path": context.extensionPath });
 }
 
 const destroy = () => {
