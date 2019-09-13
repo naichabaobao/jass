@@ -1,0 +1,17 @@
+<script type="text/ng-template" id="home">
+  <div></div>
+</script>
+
+<script>
+app.directive("home", function () {
+  return {
+    restrict: "E",
+    template: document.querySelector("#home").innerHTML,
+    controller: function ($scope, $attrs) {
+    }
+  }
+})
+</script>
+
+<style>
+</style>

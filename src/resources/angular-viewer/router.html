@@ -1,6 +1,7 @@
 <script type="text/ng-template" id="router">
   <div>
     <blp ng-if="path == ''"></blp>
+    <home ng-if="path == 'home'"></home>
   </div>
 </script>
 
@@ -9,7 +10,7 @@
   app.directive("routerView", function () {
     return {
       restrict: "E",
-      require: "blp",
+      require: ["home", "blp", ],
       template: document.querySelector("#router").innerHTML,
       controller: function ($scope, $attrs, path) {
         console.log(path);
