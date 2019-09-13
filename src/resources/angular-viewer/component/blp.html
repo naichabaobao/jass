@@ -7,8 +7,9 @@ app.directive("blp", function () {
   return {
     restrict: "E",
     template: document.querySelector("#blp").innerHTML,
-    controller: function ($scope) {
-      console.log($scope.initdata);
+    controller: function ($scope, $attrs) {
+      console.log($element);
+      console.log($attrs);
       $scope.testdata = "測試";
     }
   }
@@ -16,5 +17,4 @@ app.directive("blp", function () {
 </script>
 
 <style>
-
 </style>

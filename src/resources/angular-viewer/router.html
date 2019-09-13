@@ -1,0 +1,23 @@
+<script type="text/ng-template" id="router">
+  <div>
+    <blp ng-if="path == ''"></blp>
+  </div>
+</script>
+
+<script>
+  app.value("path", "");
+  app.directive("routerView", function () {
+    return {
+      restrict: "E",
+      require: "blp",
+      template: document.querySelector("#router").innerHTML,
+      controller: function ($scope, $attrs, path) {
+        console.log(path);
+        $scope.path = path;
+      }
+    }
+  });
+</script>
+
+<style>
+</style>

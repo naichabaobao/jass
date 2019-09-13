@@ -12,13 +12,14 @@
 
 <body>
   <div ng-app="boot" >
-    <blp style="background-color: aquamarine;" ng-init="src='recai'"></blp>
+    <router-view></router-view>
   </div>
   <script>
     <% include ./js/angular.min.js %>
     <% include ./boot.js %>
   </script>
   <% include ./component/blp.html %>
+  <% include ./router.html %>
 </body>
 
 </html>
