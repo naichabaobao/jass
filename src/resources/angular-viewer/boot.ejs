@@ -7,20 +7,18 @@
 </head>
 <script>
   window.vscode = acquireVsCodeApi();
+  console.log(vscode)
 </script>
 
 <body>
-  <script type="text/ng-template" id="home"><% include ./template/home.html %></script>
   <div ng-app="boot" >
-    <div ng-controller="appController">
-        {{hello}}
-    </div>
-    <a href="/">/////</a>
-    <hello></hello>
+    <blp style="background-color: aquamarine;" ng-init="src='recai'"></blp>
   </div>
-  <script><% include ./js/angular.min.js %></script>
-  <!-- <script><% include ./js/angular-route.min.js %></script> -->
-  <script><% include ./boot.js %></script>
+  <script>
+    <% include ./js/angular.min.js %>
+    <% include ./boot.js %>
+  </script>
+  <% include ./component/blp.html %>
 </body>
 
 </html>
