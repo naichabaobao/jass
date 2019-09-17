@@ -37,12 +37,8 @@ function activate(context) {
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
-  w3mViewer(context, null);
-  vscode.workspace.onDidOpenTextDocument(document => {
-    if (document.fileName && document.fileName.endsWith(".w3m")) {
-      w3mViewer(context, document);
-    }
-  })
+
+  vscode.workspace.onDidChangeTextDocument
 
 }
 
