@@ -7,21 +7,18 @@ const triggreCharacters = require("./triggreCharacters")
 const functionItemProvider = require("./functionItemProvider")
 const hoverProvider = require("./hoverProvider")
 const documentForrmatProvider = require("./documentForrmatProvider")
-const w3mViewer = require("./w3m-viewer")
 
-const fs = require("fs")
-const path = require("path")
+require("./jass")
 
 /**
  * 语言名称
  */
 const language = "jass"
+
 /**
  * 错误集合
  */
 var diagnosticCollection = null
-
-const didSaveTextDocumentHandle = function (document) { }
 
 /**
  * 
@@ -37,8 +34,6 @@ function activate(context) {
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
-
-  vscode.workspace.onDidChangeTextDocument
 
 }
 
