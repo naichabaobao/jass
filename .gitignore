@@ -5,4 +5,5 @@ jass/
 src/test/
 
 *.vsix
+jass.conf
 vsc-extension-quickstart.md
