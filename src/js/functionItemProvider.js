@@ -8,6 +8,8 @@ const type = require("./type")
 const keyword = require("./keyword")
 const itemTool = require("./itemTool")
 
+const { parse } = require("./jass");
+
 /**
  * @description 是否可以提示
  * @param {vscode.TextDocument} document 
@@ -355,17 +357,35 @@ const provideCompletionItems = (document, position, token, context) => {
   /**
    * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
    */
-
-
-
+  try {
+    let map = parse(document);
+    let globals = map.get("globals");
+    for (const key in globals) {
+      if (globals.hasOwnProperty(key)) {
+        const element = globals[key];
+        console.log(element)
+      }
+    }
+    let functions = map.get("functions")
+    for (const key in functions) {
+      if (functions.hasOwnProperty(key)) {
+        const element = functions[key];
+        console.log(element)
+      }
+    }
+  } catch (err) {
+    console.error(err)
+  }
   let items = []
   if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
-    itemTool.cheakInCode(document, position) || document.fileName.endsWith(".w3m")) {
+    itemTool.cheakInCode(document, position)) {
     return items
   }
   getPre(document, position).forEach(s => {
     items.push(s)
   })
+
+
 
   /*
   // 添加关键字

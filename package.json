@@ -1,8 +1,8 @@
 {
   "name": "jass",
   "displayName": "jass",
-  "description": "目标是扩展成为主流的jassIDE。\nQQ群：137199441，提出你宝贵的建议。",
-  "icon": "src/resources/image/logo.png",
+  "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
+  "icon": "src/resources/image/jass.png",
   "publisher": "jass",
   "version": "0.0.11",
   "engines": {
@@ -19,6 +19,13 @@
       "title": "Jass configuration",
       "properties": {}
     },
+    "iconThemes": [
+      {
+        "id": "jass",
+        "label": "jass",
+        "path": "./src/settings/jass-icon-theme.json"
+      }
+    ],
     "languages": [
       {
         "id": "jass",
@@ -32,15 +39,6 @@
           ".ai"
         ],
         "configuration": "./src/settings/language-configuration.json"
-      },{
-        "id": "w3m",
-        "aliases": [
-          "w3m",
-          "mpq"
-        ],
-        "extensions": [
-          ".w3m"
-        ]
       }
     ],
     "grammars": [
@@ -64,8 +62,7 @@
   },
   "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
-    "onLanguage:jass",
-    "onLanguage:w3m"
+    "onLanguage:jass"
   ],
   "main": "./src/js/extension",
   "scripts": {
@@ -81,8 +78,5 @@
     "mocha": "^6.1.4",
     "typescript": "^3.3.1",
     "vscode-test": "^1.0.2"
-  },
-  "dependencies": {
-    "typescript": "^3.6.3"
   }
 }

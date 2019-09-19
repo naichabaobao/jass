@@ -34,7 +34,7 @@ function activate(context) {
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
-
+  context.globalState
 }
 
 exports.activate = activate;

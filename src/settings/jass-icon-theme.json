@@ -1,0 +1,10 @@
+{
+  "iconDefinitions": {
+    "_j_png": {
+      "iconPath": "../resources/image/jass.png"
+    }
+  },
+  "fileExtensions": {
+    "j": "_j_png"
+  }
+}
