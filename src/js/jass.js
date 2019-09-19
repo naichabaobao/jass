@@ -316,19 +316,19 @@ const findLocal = (textLine) => {
  * @param {vscode.TextDocument} document 
  */
 const parse = (document) => {
-  const rootMap = new Map();
-  rootMap.set("globals", new Map())
-  rootMap.set("types", new Map())
-  rootMap.set("natives", new Map())
-  rootMap.set("functions", new Map())
+  const root = {
+    globals: {},
+    types: {},
+    natives: {},
+    functions: {}
+  };
   let globals = findBlock(document, GlobalsBlock[0], GlobalsBlock[1]);
   for (let i = 0; i < globals.length; i++) {
     for (let o = globals[i].start.line; o < globals[i].end.line; o++) {
       let line = document.lineAt(o);
       let value = findValue(line);
-      console.log(value)
       if (value) {
-        rootMap.get("globals").set(value.name, value);
+        root.globals[value.name] = value;
       }
     }
   }
@@ -346,9 +346,9 @@ const parse = (document) => {
         }
       }
     }
-    rootMap.get("functions").set(func.name, func);
+    root.functions[func.name] = func;
   }
-  return rootMap;
+  return root;
 }
 
 module.exports = {

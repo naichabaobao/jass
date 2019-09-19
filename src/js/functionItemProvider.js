@@ -357,25 +357,7 @@ const provideCompletionItems = (document, position, token, context) => {
   /**
    * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
    */
-  try {
-    let map = parse(document);
-    let globals = map.get("globals");
-    for (const key in globals) {
-      if (globals.hasOwnProperty(key)) {
-        const element = globals[key];
-        console.log(element)
-      }
-    }
-    let functions = map.get("functions")
-    for (const key in functions) {
-      if (functions.hasOwnProperty(key)) {
-        const element = functions[key];
-        console.log(element)
-      }
-    }
-  } catch (err) {
-    console.error(err)
-  }
+
   let items = []
   if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
     itemTool.cheakInCode(document, position)) {
@@ -385,6 +367,22 @@ const provideCompletionItems = (document, position, token, context) => {
     items.push(s)
   })
 
+  // 當前文件方法
+  let currentDocument = parse(document);
+  for (const key in currentDocument.functions) {
+    const func = currentDocument.functions[key];
+    let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+    item.detail = `${func.name} (${document.fileName})`
+    items.push(item);
+  }
+  // 當前文件全局變量
+  for (const key in currentDocument.globals) {
+    const globalsValue = currentDocument.globals[key];
+    let type = globalsValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+    let item = new vscode.CompletionItem(globalsValue.name, type);
+    item.detail = `${globalsValue.name} (${document.fileName})`
+    items.push(item);
+  }
 
 
   /*
