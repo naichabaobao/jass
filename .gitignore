@@ -1,4 +1,8 @@
-node_modules
-jass
-assets
+.vscode/
+assets/
+node_modules/
+jass/
+src/test/
+
 *.vsix
+vsc-extension-quickstart.md
