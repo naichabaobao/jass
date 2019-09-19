@@ -8,8 +8,6 @@ const functionItemProvider = require("./functionItemProvider")
 const hoverProvider = require("./hoverProvider")
 const documentForrmatProvider = require("./documentForrmatProvider")
 
-require("./jass")
-
 /**
  * 语言名称
  */
@@ -34,7 +32,6 @@ function activate(context) {
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
-  context.globalState
 }
 
 exports.activate = activate;
