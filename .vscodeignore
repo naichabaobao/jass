@@ -1,5 +1,3 @@
-.vscode/**
-.vscode-test/**
-.gitignore
-mpq/**
+jass/
+*.vsix
 vsc-extension-quickstart.md

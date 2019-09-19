@@ -273,7 +273,7 @@ const findFunction = (textLine) => {
   let argsStringResult = textLine.text.match(/(?<=takes\s+).+?(?=\s+returns)/);
   let argsString = argsStringResult ? argsStringResult.shift() : null;
   let argsArray = argsString ? argsString.split(",") : [];
-  let args = argsString == "nothing" ? null : argsArray.map(s => {
+  let args = argsString == "nothing" ? [] : argsArray.map(s => {
     let ptypeResult = s.match(Type.join("|"))
     let ptype = ptypeResult ? ptypeResult.shift() : null;
     let pnameResult = s.match(`(?<=${ptype}\\s+)[a-z]\\w*`);

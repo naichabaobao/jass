@@ -319,6 +319,26 @@ const getPre = (document, position) => {
       item.insertText = value.insertText
       items.push(item)
     })
+
+    // 當前文件方法
+    let currentDocument = parse(document);
+    for (const key in currentDocument.functions) {
+      const func = currentDocument.functions[key];
+      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+      item.detail = `${func.name} (${document.fileName})`
+      item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
+      console.log(item)
+      items.push(item);
+    }
+    // 當前文件全局變量
+    for (const key in currentDocument.globals) {
+      const globalsValue = currentDocument.globals[key];
+      let type = globalsValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+      let item = new vscode.CompletionItem(globalsValue.name, type);
+      item.detail = `${globalsValue.name} (${document.fileName})`
+      items.push(item);
+    }
+
     return items
   }
 
@@ -367,22 +387,7 @@ const provideCompletionItems = (document, position, token, context) => {
     items.push(s)
   })
 
-  // 當前文件方法
-  let currentDocument = parse(document);
-  for (const key in currentDocument.functions) {
-    const func = currentDocument.functions[key];
-    let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-    item.detail = `${func.name} (${document.fileName})`
-    items.push(item);
-  }
-  // 當前文件全局變量
-  for (const key in currentDocument.globals) {
-    const globalsValue = currentDocument.globals[key];
-    let type = globalsValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-    let item = new vscode.CompletionItem(globalsValue.name, type);
-    item.detail = `${globalsValue.name} (${document.fileName})`
-    items.push(item);
-  }
+
 
 
   /*
