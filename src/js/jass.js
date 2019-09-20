@@ -179,6 +179,16 @@ class Value {
 
     return new Value(name, type, isConstant, isArray);
   }
+
+  /**
+   * 
+   * @param {string} text 
+   */
+  static parseValues(text) {
+    if (!text) return null;
+    let lines = text.split(/\n/);
+    return lines.map(s => Value.parse(s)).filter(s => !s)
+  }
 }
 
 /**
@@ -219,6 +229,29 @@ class Parameter {
 }
 
 /**
+ * jass全局塊
+ */
+class Globals {
+  /**
+   * 
+   * @param {Values[]} values 
+   */
+  constructor(values) {
+    this.values = values;
+  }
+
+  /**
+   * 
+   * @param {string} text globals塊文本 
+   * @returns {Value[]}
+   */
+  static parse(text) {
+    if (!text || !text.trimLeft().startsWith("globals")) return [];
+    return text.split.map(s => Value.parse(s));
+  }
+}
+
+/**
  * jass方法
  */
 class Func {
@@ -246,9 +279,10 @@ class Func {
    * @param {string} text 
    */
   static parse(text) {
-    if (!text || !text.trim().startsWith("function")) return null;
+    if (!text) return null;
+
     // 獲取方法名稱
-    let nameResult = text.match(/(?<=function\s+)[a-zA-Z]\w+/);
+    let nameResult = text.match(/(?<=$\s*function\s+)[a-zA-Z]\w+/);
     let name = nameResult ? nameResult.shift() : null;
     if (!name) return null;
     // 獲取方法參數 若空串或nothing 設置為空數組而不是null
@@ -273,6 +307,23 @@ class Jass {
     this.functions = functions;
     this.types = types;
     this.native = native;
+  }
+  /**
+   * 
+   * @param {string} text 
+   */
+  static parse(text) {
+    if (!text) return null;
+    // 找到各個塊 再進行解析
+    // globals
+    let globalsResult = text.match(/(?<=$\s*globals)[\s\S]+?(?=$\s*endglobals)/gm);
+    // [Globals,Globals]
+    let globals = globalsResult ? globalsResult.map(s => Globals.parse(s)) : [];
+    // functions
+    let functionsResult = text.match(/(?<=$\s*function)[\s\S]+?(?=$\s*endfunction)/gm);
+    // [Func,Func]
+    let functions = functionsResult ? functionsResult.map(s => Func.parse(s)) : [];
+    // type
   }
 }
 
