@@ -132,6 +132,9 @@ const Type = [
   "hashtable"
 ];
 
+/**
+ * 變量常量
+ */
 class Value {
   /**
    * 
@@ -146,8 +149,41 @@ class Value {
     this.isArray = isArray;
     this.type = type;
   }
+
+  /**
+   * 變量解析
+   * 格式為 標識符 = 值,如 name = "聖騎士"
+   * 修飾符可用constant local 或 無
+   * canstant修飾時不能是數組，因爲jass不支持數組列表初始化
+   * @requires 依賴Type
+   * @param {string} text 
+   * @returns {Value} 若解析失敗為null
+   */
+  static parse(text) {
+    let content = text.trim();
+    if (!text || content.length == 0) return null;
+
+    let isConstant = content.startsWith("constant");
+
+    // 類聲明形式 constant class,local class,class
+    let typeResult = s.match(`$(?<=constant|local\\s+)(${Type.join("|")})|$(${Type.join("|")})`);
+    let type = typeResult ? typeResult.shift() : null;
+    if (!type) return null;
+
+    let isArray = new RegExp(`${type}\\s+array`).test(content);
+
+    // 標識符形式 class name, class array name
+    let nameResult = content.match(`(?<=(${Type.join("|")})(\\s+array)?\\s+)[a-zA-Z]\\w*`);
+    let name = nameResult.shift();
+    if (!name) return null;
+
+    return new Value(name, type, isConstant, isArray);
+  }
 }
 
+/**
+ * jass參數
+ */
 class Parameter {
   /**
    * 
@@ -158,16 +194,41 @@ class Parameter {
     this.name = name;
     this.type = type;
   }
+
+  /**
+   * @description 解析參數 用逗號分割 
+   * @requires {Type} 當前方法依賴Type 為硬編碼 後續應該從common中解析出類
+   * @param {string} text 
+   * @returns {Parameter[]} 返回Parameter數組 若無參數則返回空數組 而不是null; 某一個參數解析失敗為null， 如 [null,{type：integer，name：num}]
+   */
+  static parse(text) {
+    if (!text || text.trim().length == 0 || text.trim() == "nothing") return [];
+    let argsArray = text.split(",");
+    let args = argsArray.map(s => {
+      // 無法接受只有類而沒有類名 亦不能接受只有類名而無類 如 takes integer , u1 returns
+      let ptypeResult = s.match(Type.join("|"));
+      let ptype = ptypeResult ? ptypeResult.shift() : null;
+      if (!ptype) return null;
+      let pnameResult = s.match(`(?<=${ptype}\\s+)[a-z]\\w*`);
+      let pname = pnameResult.shift();
+      if (!pname) return null;
+      return new Parameter(pname, ptype);
+    });
+    return args;
+  }
 }
 
+/**
+ * jass方法
+ */
 class Func {
   /**
    * 
    * @param {string} name 
-   * @param {string} returnType 
    * @param  {Parameter[]} args 
+   * @param {string} returnType 
    */
-  constructor(name, returnType = null, args = null) {
+  constructor(name, args = null, returnType = null) {
     this.name = name;
     this.returnType = returnType;
     this.parameters = args;
@@ -180,8 +241,39 @@ class Func {
     this.locals = [];
   }
 
+  /**
+   * 
+   * @param {string} text 
+   */
+  static parse(text) {
+    if (!text || !text.trim().startsWith("function")) return null;
+    // 獲取方法名稱
+    let nameResult = text.match(/(?<=function\s+)[a-zA-Z]\w+/);
+    let name = nameResult ? nameResult.shift() : null;
+    if (!name) return null;
+    // 獲取方法參數 若空串或nothing 設置為空數組而不是null
+    let argsStringResult = text.match(/(?<=takes\s+).+?(?=\s+returns)/);
+    let argsString = argsStringResult ? argsStringResult.shift() : null;
+    let args = Parameter.parse(argsString);
+    // 獲取方法返回值 空串或nothing 設置為null
+    let returnTypeResult = text.match(/(?<=returns\s+)[a-z]+/);
+    let returnType = returnTypeResult ? returnTypeResult.shift() : null;
+    returnType = returnType == "nothing" ? null : returnType;
+    return new Func(name, args, returnType);
+  }
 
+}
 
+/**
+ * jass
+ */
+class Jass {
+  constructor(globals, functions, types, native) {
+    this.globals = globals;
+    this.functions = functions;
+    this.types = types;
+    this.native = native;
+  }
 }
 
 /**
