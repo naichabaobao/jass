@@ -6,7 +6,7 @@ const j = require("./j")
 const jg = require("./jg")
 const type = require("./type")
 const keyword = require("./keyword")
-const itemTool = require("./itemTool")
+const itemTool = require("./item-tool")
 
 const { parse } = require("./jass");
 
@@ -128,6 +128,20 @@ const clsss = [
   "image",
   "ubersplat",
   "hashtable"]
+
+/**
+ * 判斷當前位置前一個單詞
+ * @param {vscode.TextDocument} document 
+ * @param {vscode.Position} position 
+ * @param {string} word 
+ * @returns {boolean}
+ */
+const matchPreviousWord = (document, position, word) => {
+  if (!document || !position || !word) return false;
+  if (word.length == 0) return true;
+  let regexp = new RegExp(`(?<=${word.trim()}\\s+\\w*)${document.getText(new vscode.Range(position, position.with(position.line, position.character + 1)))}`)
+  return false
+}
 
 /**
  * @description 是否可以提示

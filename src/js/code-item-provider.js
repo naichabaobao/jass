@@ -2,7 +2,7 @@
  * 代号提供
  */
 const vscode = require("vscode")
-const itemTool = require("./itemTool")
+const itemTool = require("./item-tool")
 const code = require("./code")
 
 /**

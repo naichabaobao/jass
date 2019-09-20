@@ -2,7 +2,7 @@ const vscode = require("vscode")
 const j = require("./j")
 const jg = require("./jg")
 const code = require("./code")
-const itemTool = require("./itemTool")
+const itemTool = require("./item-tool")
 
 
 const hoverProvider = {
@@ -96,8 +96,6 @@ const hoverProvider = {
         }
       })
     }
-
-
     return new vscode.Hover(tooltips)
   }
 }

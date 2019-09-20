@@ -1,12 +1,12 @@
 const vscode = require('vscode');
 
 const type = require("./type")
-const colorProvider = require("./colorProvider")
-const codeItemProvider = require("./codeItemProvider")
-const triggreCharacters = require("./triggreCharacters")
-const functionItemProvider = require("./functionItemProvider")
-const hoverProvider = require("./hoverProvider")
-const documentForrmatProvider = require("./documentForrmatProvider")
+const colorProvider = require("./color-provider")
+const codeItemProvider = require("./code-item-provider")
+const triggreCharacters = require("./triggre-characters")
+const functionItemProvider = require("./function-item-provider")
+const hoverProvider = require("./hover-provider")
+const documentForrmatProvider = require("./document-forrmat-provider")
 
 /**
  * 语言名称
