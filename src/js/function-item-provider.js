@@ -8,7 +8,7 @@ const type = require("./type")
 const keyword = require("./keyword")
 const itemTool = require("./item-tool")
 
-const { parse } = require("./jass");
+const { parseFunctions, parseGlobals } = require("./jass");
 
 /**
  * @description 是否可以提示
@@ -360,6 +360,17 @@ const getPre = (document, position) => {
   return items
 }
 
+/**
+ * @param {vscode.TextDocument} document
+ * @param {vscode.Position} postion 
+ */
+const position2Index = (document, postion) => {
+  let index = 0;
+  for (let i = 0; i < document.lineCount; i++) {
+    let textLine = document.lineAt(i);
+    index += textLine.character;
+  }
+}
 
 /**
  * 
@@ -385,6 +396,27 @@ const provideCompletionItems = (document, position, token, context) => {
   })
 
   try {
+    let funcs = parseFunctions(document.getText());
+    funcs.forEach(func => {
+      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+      item.detail = `${func.name} (${document.fileName})`
+      item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
+      items.push(item);
+    })
+
+    let globals = parseGlobals(document.getText())
+    globals.forEach(global => {
+      global.forEach(v => {
+        const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+        let item = new vscode.CompletionItem(v.name, type);
+        item.detail = `${v.name} (${document.fileName})`
+        items.push(item);
+      })
+    })
+  } catch (err) { console.log(err) }
+
+  /*
+  try {
     // 當前文件方法
     let currentDocument = parse(document);
     for (const key in currentDocument.functions) {
@@ -404,7 +436,7 @@ const provideCompletionItems = (document, position, token, context) => {
       items.push(item);
     }
   } catch (err) { console.error(err) }
-
+*/
 
   /*
   // 添加关键字

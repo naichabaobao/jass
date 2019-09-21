@@ -6,27 +6,6 @@ let vscode = require('vscode');
  * 
  */
 
-
-
-const GlobalsValue = new Map();
-const GlobalsEvents = [];
-
-/**
- * 
- * @param {function} eventFunc 
- */
-const addEventListener = (eventFunc) => {
-  if (typeof eventFunc == 'function') {
-    GlobalsEvents.push(eventFunc)
-  }
-}
-const doGlobalsEvents = (event = null) => {
-  for (let i = 0; i < GlobalsEvents.length; i++) {
-    const evnetFunction = GlobalsEvents[i];
-    evnetFunction(event);
-  }
-};
-
 const GlobalsBlock = ["globals", "endglobals"];
 const FunctionBlock = ["function", "endfunction"];
 const Constant = "constant";
@@ -191,42 +170,7 @@ class Value {
   }
 }
 
-/**
- * jass參數
- */
-class Parameter {
-  /**
-   * 
-   * @param {string} name 
-   * @param {string} type 
-   */
-  constructor(name, type) {
-    this.name = name;
-    this.type = type;
-  }
 
-  /**
-   * @description 解析參數 用逗號分割 
-   * @requires {Type} 當前方法依賴Type 為硬編碼 後續應該從common中解析出類
-   * @param {string} text 
-   * @returns {Parameter[]} 返回Parameter數組 若無參數則返回空數組 而不是null; 某一個參數解析失敗為null， 如 [null,{type：integer，name：num}]
-   */
-  static parse(text) {
-    if (!text || text.trim().length == 0 || text.trim() == "nothing") return [];
-    let argsArray = text.split(",");
-    let args = argsArray.map(s => {
-      // 無法接受只有類而沒有類名 亦不能接受只有類名而無類 如 takes integer , u1 returns
-      let ptypeResult = s.match(Type.join("|"));
-      let ptype = ptypeResult ? ptypeResult.shift() : null;
-      if (!ptype) return null;
-      let pnameResult = s.match(`(?<=${ptype}\\s+)[a-z]\\w*`);
-      let pname = pnameResult.shift();
-      if (!pname) return null;
-      return new Parameter(pname, ptype);
-    });
-    return args;
-  }
-}
 
 /**
  * jass全局塊
@@ -249,6 +193,31 @@ class Globals {
     if (!text || !text.trimLeft().startsWith("globals")) return [];
     return text.split.map(s => Value.parse(s));
   }
+
+  /**
+   * 
+   * @param {string} text globals塊文本 
+   * @returns {Globals[]}
+   */
+  static parseGlobals(text) {
+
+  }
+}
+
+/**
+ * jass參數
+ */
+class Parameter {
+  /**
+   * 
+   * @param {string} name 
+   * @param {string} type 
+   */
+  constructor(name, type) {
+    this.name = name;
+    this.type = type;
+  }
+
 }
 
 /**
@@ -261,17 +230,17 @@ class Func {
    * @param  {Parameter[]} args 
    * @param {string} returnType 
    */
-  constructor(name, args = null, returnType = null) {
+  constructor(name, args = null, returnType = null, isConstant = false, isNative = false, locals = []) {
     this.name = name;
     this.returnType = returnType;
     this.parameters = args;
-    this.isConstant = false;
-    this.isNative = false;
+    this.isConstant = isConstant;
+    this.isNative = isNative;
 
     /**
      * 方法内部變量
      */
-    this.locals = [];
+    this.locals = locals;
   }
 
   /**
@@ -282,7 +251,7 @@ class Func {
     if (!text) return null;
 
     // 獲取方法名稱
-    let nameResult = text.match(/(?<=$\s*function\s+)[a-zA-Z]\w+/);
+    let nameResult = text.match(/(?<=^\s*function\s+)[a-zA-Z]\w+/);
     let name = nameResult ? nameResult.shift() : null;
     if (!name) return null;
     // 獲取方法參數 若空串或nothing 設置為空數組而不是null
@@ -295,6 +264,20 @@ class Func {
     returnType = returnType == "nothing" ? null : returnType;
     return new Func(name, args, returnType);
   }
+
+}
+
+class Funcs {
+  /**
+   * 通過j文件内容構建方法樹，[Func,Func]
+   * @param {string} content 
+   */
+  constructor(content) {
+
+    this.functions = this.parse(content);
+
+  }
+
 
 }
 
@@ -494,6 +477,98 @@ const parse = (document) => {
   return root;
 }
 
+//=============================================前面的棄用 除了 Type
+
+const parseGlobals = (content) => {
+  if (!content) return [];
+
+  // 找到所有function塊
+  let globalsResult = content.match(/globals[\s\S]+?endglobals/gm);
+  if (!globalsResult) return [];
+  let globals = globalsResult.map(text => {
+
+    return text.split("\n").map(s => {
+      if (!s || s.trim() == "") return null;
+
+      let isConstant = /^\s*constant/.test(s);
+
+      // 類聲明形式 constant class,local class,class
+      let typeResult = s.match(`(?<=^\\s*constant\\s+)(${Type.join("|")})|(?<=^\\s*)(${Type.join("|")})`);
+      let type = typeResult ? typeResult.shift() : null;
+      if (!type) return null;
+
+      let isArray = new RegExp(`${type}\\s+array`).test(content);
+
+      // 標識符形式 class name, class array name
+      let nameResult = content.match(isArray ? `(?<=${type}\\s+array\\s+)[a-zA-Z]\\w*` : `(?<=${type}\\s+)[a-zA-Z]\\w*`);
+      let name = nameResult.shift();
+      if (!name) return null;
+
+      return { name, type, isConstant, isArray };
+    }).filter(s => s);
+  });
+  return globals;
+}
+
+/**
+  * 解析所有方法
+  * @param {strig} content
+  */
+const parseFunctions = (content) => {
+  if (!content) return [];
+  // 找到所有function塊
+  let functionsResult = content.match(/function[\s\S]+?endfunction/gm);
+  if (!functionsResult) return [];
+  let functions = functionsResult.map(text => {
+    // 獲取方法名稱
+    const nameResult = text.match(/(?<=^\s*function\s+)[a-zA-Z]\w+/);
+    let name = nameResult ? nameResult.shift() : null;
+    if (!name) return null;
+
+    // 獲取方法參數 若空串或nothing 設置為空數組而不是null
+    let argsStringResult = text.match(/(?<=takes\s+).+?(?=\s+returns)/);
+    let argsString = argsStringResult ? argsStringResult.shift() : "nothing";
+    let args = argsString == "nothing" ? [] : argsString.split(",").map(s => {
+      // 無法接受只有類而沒有類名 亦不能接受只有類名而無類 如 takes integer , u1 returns
+      let ptypeResult = s.match(Type.join("|"));
+      if (!ptypeResult) return null;
+      let ptype = ptypeResult ? ptypeResult.shift() : null;
+      if (!ptype) return null;
+      let pnameResult = s.match(`(?<=${ptype}\\s+)[a-z]\\w*`);
+      if (!pnameResult) return null;
+      let pname = pnameResult.shift();
+      if (!pname) return null;
+      return { name: pname, type: ptype };
+    }).filter(s => s)
+
+    // 獲取方法返回值 空串或nothing 設置為null
+    let returnTypeResult = text.match(/(?<=returns\s+)[a-z]+/);
+    let returnType = returnTypeResult ? returnTypeResult.shift() : "nothing";
+    returnType = returnType == "nothing" ? null : returnType;
+
+    // 獲取方法内部local變量
+    let locals = text.split("\n").filter(s => /^\s*local/.test(s)).map(s => {
+      // 類聲明形式 local class
+      let typeResult = s.match(`(?<=^\\s*local\\s+)(${Type.join("|")})`);
+      if (!typeResult) return null;
+      let type = typeResult ? typeResult.shift() : null;
+      if (!type) return null;
+
+      let isArray = new RegExp(`${type}\\s+array`).test(s);
+      // 標識符形式 class name, class array name
+      let nameResult = s.match(isArray ? `(?<=${type}\\s+array\\s+)[a-zA-Z]\\w*` : `(?<=${type}\\s+)[a-zA-Z]\\w*`);
+      if (!nameResult) return null;
+      let name = nameResult.shift();
+      if (!name) return null;
+
+      return { name, type, isArray };
+    }).filter(s => s);
+
+    return { name, parameters: args, returnType, locals };
+  });
+  return functions;
+}
+
 module.exports = {
-  parse
+  parseFunctions, parseGlobals
 }
