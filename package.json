@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/jass.png",
   "publisher": "jass",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "engines": {
     "vscode": "^1.37.0"
   },
@@ -70,8 +70,5 @@
     "glob": "^7.1.4",
     "mocha": "^6.1.4",
     "vscode-test": "^1.0.2"
-  },
-  "dependencies": {
-    "typescript": "^3.6.3"
   }
 }

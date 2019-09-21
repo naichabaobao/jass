@@ -10,7 +10,7 @@
       "include": "#jass-string"
     },
     {
-      "include": "#jass-function"
+      "include": "#jass-entity-name-function"
     },
     {
       "include": "#jass-keyword"
@@ -23,9 +23,6 @@
     },
     {
       "include": "#support.variable"
-    },
-    {
-      "include": "#"
     },
     {
       "include": "#jass-keyword-control"
@@ -75,8 +72,8 @@
       "name": "string.quoted.double",
       "match": "\"((\\\\\")|.)*?\""
     },
-    "jass-function": {
-      "name": "support.function",
+    "jass-entity-name-function": {
+      "name": "entity.name.function",
       "match": "(?<=native)\\s+\\w+\\s+(?=takes)|(?<=function)\\s+\\w+\\s+(?=takes)|(?<=call)\\s+\\w+\\s*(?=\\()|\\w+(?<!if|elseif|or|and|not|exitwhen|return)\\s*(?=\\()|(?<=function)\\s+\\w+"
     },
     "jass-keyword": {
@@ -106,7 +103,7 @@
     },
     "jass-number": {
       "name": "constant.numeric",
-      "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x\\d+|\\b\\d+\\b"
+      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x\\d+|\\b\\d+\\b"
     },
     "jass-variable": {
       "name": "support.variable",

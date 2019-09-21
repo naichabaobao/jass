@@ -8,7 +8,7 @@ const type = require("./type")
 const keyword = require("./keyword")
 const itemTool = require("./item-tool")
 
-const { parseFunctions, parseGlobals } = require("./jass");
+const { parseFunctions, parseGlobals, parseImport } = require("./jass");
 
 /**
  * @description 是否可以提示
@@ -413,90 +413,10 @@ const provideCompletionItems = (document, position, token, context) => {
         items.push(item);
       })
     })
+
+    parseImport(document)
   } catch (err) { console.log(err) }
 
-  /*
-  try {
-    // 當前文件方法
-    let currentDocument = parse(document);
-    for (const key in currentDocument.functions) {
-      const func = currentDocument.functions[key];
-      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-      item.detail = `${func.name} (${document.fileName})`
-      item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
-      console.log(item)
-      items.push(item);
-    }
-    // 當前文件全局變量
-    for (const key in currentDocument.globals) {
-      const globalsValue = currentDocument.globals[key];
-      let type = globalsValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-      let item = new vscode.CompletionItem(globalsValue.name, type);
-      item.detail = `${globalsValue.name} (${document.fileName})`
-      items.push(item);
-    }
-  } catch (err) { console.error(err) }
-*/
-
-  /*
-  // 添加关键字
-  for (const key in keyword) {
-    let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Keyword)
-    item.detail = key
-    item.documentation = new vscode.MarkdownString(keyword[key])
-    items.push(item)
-  }
-  // 添加内置类
-  for (const key in type) {
-    let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Class)
-    item.detail = key
-    item.documentation = new vscode.MarkdownString(type[key])
-    items.push(item)
-  }
-  if (document.fileName.endsWith(".j")) {
-    // 添加方法 全局
-    items = Object.keys(j).filter(x => j[x].fileName.endsWith(".j")).map(x => {
-      let api = j[x]
-      let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
-      item.detail = api.name + "(" + api.fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(api.documentation)
-        .appendCodeblock(api.original)
-      item.insertText = api.insertText
-      return item
-    }).concat(Object.keys(jg).filter(x => jg[x].fileName.endsWith(".j")).map(x => {
-      let api = jg[x]
-      let item = new vscode.CompletionItem(api.name,
-        api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
-      item.detail = api.name + "(" + api.fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(api.documentation)
-        .appendCodeblock(api.original)
-      item.insertText = api.name
-      return item
-    }))
-  } else if (document.fileName.endsWith(".ai")) {
-    items = Object.keys(j).filter(x => j[x].fileName == "common.j" || j[x].fileName == "common.ai").map(x => {
-      let api = j[x]
-      let item = new vscode.CompletionItem(api.name, vscode.CompletionItemKind.Function)
-      item.detail = api.name + "(" + api.fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(api.documentation)
-        .appendCodeblock(api.original)
-      item.insertText = api.insertText
-      return item
-    }).concat(Object.keys(jg).filter(x => jg[x].fileName == "common.j" || jg[x].fileName == "common.ai").map(x => {
-      let api = jg[x]
-      let item = new vscode.CompletionItem(api.name,
-        api.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable)
-      item.detail = api.name + "(" + api.fileName + ")"
-      item.documentation = new vscode.MarkdownString()
-        .appendCodeblock(api.documentation)
-        .appendCodeblock(api.original)
-      item.insertText = api.name
-      return item
-    }))
-  }*/
   return items
 }
 

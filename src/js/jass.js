@@ -479,6 +479,33 @@ const parse = (document) => {
 
 //=============================================前面的棄用 除了 Type
 
+const fs = require("fs");
+const path = require("path");
+
+/**
+ * 
+ * @param {vscode.TextDocument} document 
+ */
+const parseImport = (document) => {
+  if (!document) return null;
+  // 匹配非中文路徑
+  const importRegExp = /^\s*\/\/!\s+import\s+"[^\u4e00-\u9fa5]+?"/gm;
+  let importResult = importRegExp.exec(document.getText());
+  importResult ? importResult.map(importPath => {
+    let pathResult = importPath.match(/(?<=")[^\u4e00-\u9fa5]+?(?=")/);
+    if (!pathResult) return null;
+    let jpath = pathResult.shift();
+    let jabsPath = jpath.startsWith("/") || /^[a-zA-Z]:\//.test(jpath) ? jpath : path.resolve(path.parse(document.fileName).dir, jpath);
+    console.log(jabsPath)
+    console.log(document.fileName)
+    console.log(jabsPath.length)
+    console.log(document.fileName.length)
+    console.log(document.fileName.length == jabsPath.length)
+    console.log(fs.readFileSync(jabsPath.replace(/\\/g, "\\\\")).toString())
+    return { path: jabsPath };
+  }).filter(s => s) : [];
+}
+
 const parseGlobals = (content) => {
   if (!content) return [];
 
@@ -570,5 +597,5 @@ const parseFunctions = (content) => {
 }
 
 module.exports = {
-  parseFunctions, parseGlobals
+  parseFunctions, parseGlobals, parseImport
 }
