@@ -1,8 +1,4 @@
-/*
-本翻译借用WorldEdit v1.2.3里面的内容。
-by:十月
-*/ 
-module.exports ={
+module.exports = {
 	"YDWEBlightGoldMineForPlayerNull": {
 		"original": "function YDWEBlightGoldMineForPlayerNull takes unit goldMine, player whichPlayer returns unit",
 		"fileName": "BlightGoldMineForPlayer.j",
@@ -15552,7 +15548,7 @@ module.exports ={
 			"name": "r"
 		}],
 		"insertText": "DzSetMemory(frame, r)",
-		"documentation": ""
+		"documentation": "设置内存数值"
 	},
 	"DzSetUnitID": {
 		"original": "\tnative DzSetUnitID takes unit whichUnit, integer id returns nothing",
@@ -15568,7 +15564,7 @@ module.exports ={
 			"name": "id"
 		}],
 		"insertText": "DzSetUnitID(whichUnit, id)",
-		"documentation": ""
+		"documentation": "替换单位类型 [BZAPI]"
 	},
 	"DzSetUnitModel": {
 		"original": "\tnative DzSetUnitModel takes unit whichUnit, string path returns nothing",
@@ -15584,7 +15580,7 @@ module.exports ={
 			"name": "path"
 		}],
 		"insertText": "DzSetUnitModel(whichUnit, path)",
-		"documentation": ""
+		"documentation": "替换单位模型 [BZAPI]"
 	},
 	"DzSetWar3MapMap": {
 		"original": "\tnative DzSetWar3MapMap takes string map returns nothing",
@@ -15597,7 +15593,7 @@ module.exports ={
 			"name": "map"
 		}],
 		"insertText": "DzSetWar3MapMap(map)",
-		"documentation": ""
+		"documentation": "原生 - 设置小地图背景贴图"
 	},
 	"DzTriggerRegisterSyncData": {
 		"original": "\tnative DzTriggerRegisterSyncData takes trigger trig, string prefix, boolean server returns nothing",
@@ -16092,7 +16088,7 @@ module.exports ={
 			"name": "sync"
 		}],
 		"insertText": "DzFrameSetScriptByCode(frame, eventId, funcHandle, sync)",
-		"documentation": ""
+		"documentation": "注册UI事件回调(func handle)"
 	},
 	"DzGetTriggerUIEventPlayer": {
 		"original": "\tnative DzGetTriggerUIEventPlayer takes nothing returns player",
@@ -16672,7 +16668,7 @@ module.exports ={
 			"name": "priority"
 		}],
 		"insertText": "DzFrameSetPriority(frame, priority)",
-		"documentation": ""
+		"documentation": "设置优先级 [NEW]"
 	},
 	"DzFrameSetParent": {
 		"original": "\tnative DzFrameSetParent takes integer frame, integer parent returns nothing",
@@ -16688,7 +16684,7 @@ module.exports ={
 			"name": "parent"
 		}],
 		"insertText": "DzFrameSetParent(frame, parent)",
-		"documentation": ""
+		"documentation": "设置父窗口 [NEW]"
 	},
 	"DzFrameSetFont": {
 		"original": "\tnative DzFrameSetFont takes integer frame, string fileName, real height, integer flag returns nothing",
@@ -16710,7 +16706,7 @@ module.exports ={
 			"name": "flag"
 		}],
 		"insertText": "DzFrameSetFont(frame, fileName, height, flag)",
-		"documentation": ""
+		"documentation": "设置字体 [NEW]"
 	},
 	"DzFrameGetHeight": {
 		"original": "\tnative DzFrameGetHeight takes integer frame returns real",
@@ -16724,7 +16720,7 @@ module.exports ={
 		}],
 		"returnType": "real",
 		"insertText": "DzFrameGetHeight(frame)",
-		"documentation": ""
+		"documentation": "获取 Frame 的 高度 [NEW]"
 	},
 	"DzFrameSetTextAlignment": {
 		"original": "\tnative DzFrameSetTextAlignment takes integer frame, integer align returns nothing",
@@ -16740,7 +16736,7 @@ module.exports ={
 			"name": "align"
 		}],
 		"insertText": "DzFrameSetTextAlignment(frame, align)",
-		"documentation": ""
+		"documentation": "设置对齐方式 [NEW]"
 	},
 	"DzFrameGetParent": {
 		"original": "\tnative DzFrameGetParent takes integer frame returns integer",
@@ -16754,7 +16750,7 @@ module.exports ={
 		}],
 		"returnType": "integer",
 		"insertText": "DzFrameGetParent(frame)",
-		"documentation": ""
+		"documentation": "获取 Frame 的 Parent [NEW]"
 	},
 	"YDWEChangeElevatorWallBlockerNull": {
 		"original": "function YDWEChangeElevatorWallBlockerNull takes real x, real y, real facing, boolean open returns nothing",
