@@ -485,24 +485,28 @@ const path = require("path");
 /**
  * 
  * @param {vscode.TextDocument} document 
+ * @returns {{path:string,content:string}[]}
  */
 const parseImport = (document) => {
   if (!document) return null;
   // 匹配非中文路徑
   const importRegExp = /^\s*\/\/!\s+import\s+"[^\u4e00-\u9fa5]+?"/gm;
   let importResult = importRegExp.exec(document.getText());
-  importResult ? importResult.map(importPath => {
+  return importResult ? importResult.map(importPath => {
     let pathResult = importPath.match(/(?<=")[^\u4e00-\u9fa5]+?(?=")/);
     if (!pathResult) return null;
     let jpath = pathResult.shift();
-    let jabsPath = jpath.startsWith("/") || /^[a-zA-Z]:\//.test(jpath) ? jpath : path.resolve(path.parse(document.fileName).dir, jpath);
-    console.log(jabsPath)
-    console.log(document.fileName)
-    console.log(jabsPath.length)
-    console.log(document.fileName.length)
-    console.log(document.fileName.length == jabsPath.length)
-    console.log(fs.readFileSync(jabsPath.replace(/\\/g, "\\\\")).toString())
-    return { path: jabsPath };
+
+    let jabsPath = path.isAbsolute(jpath) ? jpath : path.resolve(path.dirname(document.fileName), jpath);
+    // console.log(jabsPath)
+    // console.log(document.fileName)
+    // console.log(jabsPath.trim().length)
+    // console.log(document.fileName.length)
+    // console.log(document.fileName == jabsPath)
+    // console.log(fs.existsSync(jabsPath))
+    if (!fs.existsSync(jabsPath)) return null;
+    let content = fs.readFileSync(jabsPath).toString();
+    return { path: jabsPath, content };
   }).filter(s => s) : [];
 }
 
@@ -592,7 +596,7 @@ const parseFunctions = (content) => {
     }).filter(s => s);
 
     return { name, parameters: args, returnType, locals };
-  });
+  }).filter(s => s);
   return functions;
 }
 

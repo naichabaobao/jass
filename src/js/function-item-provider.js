@@ -414,7 +414,16 @@ const provideCompletionItems = (document, position, token, context) => {
       })
     })
 
-    parseImport(document)
+    parseImport(document).forEach(v => {
+      console.log(v)
+      let funcs = parseFunctions(v.content);
+      funcs.forEach(func => {
+        let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+        item.detail = `${func.name} (${v.path})`;
+        item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
+        items.push(item);
+      })
+    })
   } catch (err) { console.log(err) }
 
   return items
