@@ -8,6 +8,8 @@ const functionItemProvider = require("./function-item-provider")
 const hoverProvider = require("./hover-provider")
 const documentForrmatProvider = require("./document-forrmat-provider")
 
+require("./ast");
+
 /**
  * 语言名称
  */

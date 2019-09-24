@@ -4108,7 +4108,7 @@ module.exports =
     },
     "DzAPI_Map_MissionComplete": {
       "documentation": "用作完成某个任务，发奖励",
-      "original": "function DzAPI_Map_MissionComplete takes player whichPlayer, string key, string value returns nothing\n",
+      "original": "function DzAPI_Map_MissionComplete takes player whichPlayer, string key, string value returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_MissionComplete",
       "isConstant": false,
@@ -4128,7 +4128,7 @@ module.exports =
     },
     "DzAPI_Map_GetActivityData": {
       "documentation": "提供给地图的接口，用作取服务器上的活动数据",
-      "original": "function DzAPI_Map_GetActivityData takes nothing returns string\n",
+      "original": "function DzAPI_Map_GetActivityData takes nothing returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetActivityData",
       "isConstant": false,
@@ -4139,7 +4139,7 @@ module.exports =
     },
     "DzAPI_Map_GetMapLevel": {
       "documentation": "提供给地图的接口，用与取地图等级",
-      "original": "function DzAPI_Map_GetMapLevel takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetMapLevel takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetMapLevel",
       "isConstant": false,
@@ -4153,7 +4153,7 @@ module.exports =
     },
     "DzAPI_Map_SaveServerValue": {
       "documentation": "保存服务器存档",
-      "original": "function DzAPI_Map_SaveServerValue takes player whichPlayer, string key, string value returns boolean\n",
+      "original": "function DzAPI_Map_SaveServerValue takes player whichPlayer, string key, string value returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_SaveServerValue",
       "isConstant": false,
@@ -4173,7 +4173,7 @@ module.exports =
     },
     "DzAPI_Map_GetServerValue": {
       "documentation": "读取服务器存档",
-      "original": "function DzAPI_Map_GetServerValue takes player whichPlayer, string key returns string\n",
+      "original": "function DzAPI_Map_GetServerValue takes player whichPlayer, string key returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetServerValue",
       "isConstant": false,
@@ -4190,7 +4190,7 @@ module.exports =
     },
     "DzAPI_Map_GetServerValueErrorCode": {
       "documentation": "读取加载服务器存档时的错误码",
-      "original": "function DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetServerValueErrorCode",
       "isConstant": false,
@@ -4204,7 +4204,7 @@ module.exports =
     },
     "DzAPI_Map_Stat_SetStat": {
       "documentation": "统计-提交地图数据",
-      "original": "function DzAPI_Map_Stat_SetStat takes player whichPlayer, string key, string value returns nothing\n",
+      "original": "function DzAPI_Map_Stat_SetStat takes player whichPlayer, string key, string value returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_Stat_SetStat",
       "isConstant": false,
@@ -4224,7 +4224,7 @@ module.exports =
     },
     "DzAPI_Map_Ladder_SetStat": {
       "documentation": "天梯-统计数据",
-      "original": "function DzAPI_Map_Ladder_SetStat takes player whichPlayer, string key, string value returns nothing\n",
+      "original": "function DzAPI_Map_Ladder_SetStat takes player whichPlayer, string key, string value returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_Ladder_SetStat",
       "isConstant": false,
@@ -4244,7 +4244,7 @@ module.exports =
     },
     "DzAPI_Map_Ladder_SetPlayerStat": {
       "documentation": "天梯-统计数据",
-      "original": "function DzAPI_Map_Ladder_SetPlayerStat takes player whichPlayer, string key, string value returns nothing\n",
+      "original": "function DzAPI_Map_Ladder_SetPlayerStat takes player whichPlayer, string key, string value returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_Ladder_SetPlayerStat",
       "isConstant": false,
@@ -4264,7 +4264,7 @@ module.exports =
     },
     "DzAPI_Map_IsRPGLobby": {
       "documentation": "检查是否大厅地图",
-      "original": "function DzAPI_Map_IsRPGLobby takes nothing returns boolean\n",
+      "original": "function DzAPI_Map_IsRPGLobby takes nothing returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsRPGLobby",
       "isConstant": false,
@@ -4275,7 +4275,7 @@ module.exports =
     },
     "DzAPI_Map_GetGameStartTime": {
       "documentation": "取游戏开始时间",
-      "original": "function DzAPI_Map_GetGameStartTime takes nothing returns integer\n",
+      "original": "function DzAPI_Map_GetGameStartTime takes nothing returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetGameStartTime",
       "isConstant": false,
@@ -4286,7 +4286,7 @@ module.exports =
     },
     "DzAPI_Map_IsRPGLadder": {
       "documentation": "判断当前是否rpg天梯",
-      "original": "function DzAPI_Map_IsRPGLadder takes nothing returns boolean\n",
+      "original": "function DzAPI_Map_IsRPGLadder takes nothing returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsRPGLadder",
       "isConstant": false,
@@ -4297,7 +4297,7 @@ module.exports =
     },
     "DzAPI_Map_GetMatchType": {
       "documentation": "获取匹配类型",
-      "original": "function DzAPI_Map_GetMatchType takes nothing returns integer\n",
+      "original": "function DzAPI_Map_GetMatchType takes nothing returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetMatchType",
       "isConstant": false,
@@ -4308,7 +4308,7 @@ module.exports =
     },
     "DzAPI_Map_GetLadderLevel": {
       "documentation": "提供给地图的接口，用与取天梯等级",
-      "original": "function DzAPI_Map_GetLadderLevel takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetLadderLevel takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetLadderLevel",
       "isConstant": false,
@@ -4322,7 +4322,7 @@ module.exports =
     },
     "DzAPI_Map_IsRedVIP": {
       "documentation": "提供给地图的接口，用与判断是否红V",
-      "original": "function DzAPI_Map_IsRedVIP takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsRedVIP takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsRedVIP",
       "isConstant": false,
@@ -4336,7 +4336,7 @@ module.exports =
     },
     "DzAPI_Map_IsBlueVIP": {
       "documentation": "提供给地图的接口，用与判断是否蓝V",
-      "original": "function DzAPI_Map_IsBlueVIP takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsBlueVIP takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsBlueVIP",
       "isConstant": false,
@@ -4350,7 +4350,7 @@ module.exports =
     },
     "DzAPI_Map_GetLadderRank": {
       "documentation": "提供给地图的接口，用与取天梯排名",
-      "original": "function DzAPI_Map_GetLadderRank takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetLadderRank takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetLadderRank",
       "isConstant": false,
@@ -4364,7 +4364,7 @@ module.exports =
     },
     "DzAPI_Map_GetMapLevelRank": {
       "documentation": "提供给地图的接口，用与取地图等级排名",
-      "original": "function DzAPI_Map_GetMapLevelRank takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetMapLevelRank takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetMapLevelRank",
       "isConstant": false,
@@ -4378,7 +4378,7 @@ module.exports =
     },
     "DzAPI_Map_GetGuildName": {
       "documentation": "获取公会名称",
-      "original": "function DzAPI_Map_GetGuildName takes player whichPlayer returns string\n",
+      "original": "function DzAPI_Map_GetGuildName takes player whichPlayer returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetGuildName",
       "isConstant": false,
@@ -4392,7 +4392,7 @@ module.exports =
     },
     "DzAPI_Map_GetGuildRole": {
       "documentation": "获取公会职责 Member=10 Admin=20 Leader=30",
-      "original": "function DzAPI_Map_GetGuildRole takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetGuildRole takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetGuildRole",
       "isConstant": false,
@@ -4406,7 +4406,7 @@ module.exports =
     },
     "DzAPI_Map_GetMapConfig": {
       "documentation": "获取地图配置",
-      "original": "function DzAPI_Map_GetMapConfig takes string key returns string\n",
+      "original": "function DzAPI_Map_GetMapConfig takes string key returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetMapConfig",
       "isConstant": false,
@@ -4420,7 +4420,7 @@ module.exports =
     },
     "DzAPI_Map_HasMallItem": {
       "documentation": "判断是否拥有商品",
-      "original": "function DzAPI_Map_HasMallItem takes player whichPlayer, string key returns boolean\n",
+      "original": "function DzAPI_Map_HasMallItem takes player whichPlayer, string key returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_HasMallItem",
       "isConstant": false,
@@ -4437,7 +4437,7 @@ module.exports =
     },
     "DzAPI_Map_ChangeStoreItemCount": {
       "documentation": "修改游戏内商店物品数量",
-      "original": "function DzAPI_Map_ChangeStoreItemCount takes integer team, string itemId, integer count returns nothing\n",
+      "original": "function DzAPI_Map_ChangeStoreItemCount takes integer team, string itemId, integer count returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_ChangeStoreItemCount",
       "isConstant": false,
@@ -4457,7 +4457,7 @@ module.exports =
     },
     "DzAPI_Map_ChangeStoreItemCoolDown": {
       "documentation": "修改游戏内商店物品CD",
-      "original": "function DzAPI_Map_ChangeStoreItemCoolDown takes integer team, string itemId, integer seconds returns nothing\n",
+      "original": "function DzAPI_Map_ChangeStoreItemCoolDown takes integer team, string itemId, integer seconds returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_ChangeStoreItemCoolDown",
       "isConstant": false,
@@ -4477,7 +4477,7 @@ module.exports =
     },
     "DzAPI_Map_ToggleStore": {
       "documentation": "开启/关闭内置商店",
-      "original": "function DzAPI_Map_ToggleStore takes player whichPlayer, boolean show returns nothing\n",
+      "original": "function DzAPI_Map_ToggleStore takes player whichPlayer, boolean show returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_ToggleStore",
       "isConstant": false,
@@ -4494,7 +4494,7 @@ module.exports =
     },
     "DzAPI_Map_GetServerArchiveEquip": {
       "documentation": "读取服务器装备数据",
-      "original": "function DzAPI_Map_GetServerArchiveEquip takes player whichPlayer, string key returns integer\n",
+      "original": "function DzAPI_Map_GetServerArchiveEquip takes player whichPlayer, string key returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetServerArchiveEquip",
       "isConstant": false,
@@ -4511,7 +4511,7 @@ module.exports =
     },
     "DzAPI_Map_GetServerArchiveDrop": {
       "documentation": "读取服务器掉落数据",
-      "original": "function DzAPI_Map_GetServerArchiveDrop takes player whichPlayer, string key returns string\n",
+      "original": "function DzAPI_Map_GetServerArchiveDrop takes player whichPlayer, string key returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetServerArchiveDrop",
       "isConstant": false,
@@ -4528,7 +4528,7 @@ module.exports =
     },
     "DzAPI_Map_OrpgTrigger": {
       "documentation": "触发boss击杀",
-      "original": "function DzAPI_Map_OrpgTrigger takes player whichPlayer, string key returns nothing\n",
+      "original": "function DzAPI_Map_OrpgTrigger takes player whichPlayer, string key returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_OrpgTrigger",
       "isConstant": false,
@@ -4545,7 +4545,7 @@ module.exports =
     },
     "DzAPI_Map_GetUserID": {
       "documentation": "获取玩家ID",
-      "original": "function DzAPI_Map_GetUserID takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetUserID takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetUserID",
       "isConstant": false,
@@ -4559,7 +4559,7 @@ module.exports =
     },
     "DzAPI_Map_GetPlatformVIP": {
       "documentation": "获取平台vip",
-      "original": "function DzAPI_Map_GetPlatformVIP takes player whichPlayer returns integer\n",
+      "original": "function DzAPI_Map_GetPlatformVIP takes player whichPlayer returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetPlatformVIP",
       "isConstant": false,
@@ -4573,7 +4573,7 @@ module.exports =
     },
     "DzAPI_Map_SavePublicArchive": {
       "documentation": "保存服务器存档组",
-      "original": "function DzAPI_Map_SavePublicArchive takes player whichPlayer, string key, string value returns boolean\n",
+      "original": "function DzAPI_Map_SavePublicArchive takes player whichPlayer, string key, string value returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_SavePublicArchive",
       "isConstant": false,
@@ -4593,7 +4593,7 @@ module.exports =
     },
     "DzAPI_Map_GetPublicArchive": {
       "documentation": "读取服务器存档组",
-      "original": "function DzAPI_Map_GetPublicArchive takes player whichPlayer, string key returns string\n",
+      "original": "function DzAPI_Map_GetPublicArchive takes player whichPlayer, string key returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetPublicArchive",
       "isConstant": false,
@@ -4610,7 +4610,7 @@ module.exports =
     },
     "DzAPI_Map_UseConsumablesItem": {
       "documentation": "使用消耗类商品",
-      "original": "function DzAPI_Map_UseConsumablesItem takes player whichPlayer, string key returns nothing\n",
+      "original": "function DzAPI_Map_UseConsumablesItem takes player whichPlayer, string key returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_UseConsumablesItem",
       "isConstant": false,
@@ -4627,7 +4627,7 @@ module.exports =
     },
     "DzAPI_Map_Statistics": {
       "documentation": "杭研DA统计",
-      "original": "function DzAPI_Map_Statistics takes player whichPlayer, string category, string label returns nothing\n",
+      "original": "function DzAPI_Map_Statistics takes player whichPlayer, string category, string label returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_Statistics",
       "isConstant": false,
@@ -4647,7 +4647,7 @@ module.exports =
     },
     "DzAPI_Map_SystemArchive": {
       "documentation": "系统存档",
-      "original": "function DzAPI_Map_SystemArchive takes player whichPlayer, string key returns string\n",
+      "original": "function DzAPI_Map_SystemArchive takes player whichPlayer, string key returns string",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_SystemArchive",
       "isConstant": false,
@@ -4664,7 +4664,7 @@ module.exports =
     },
     "DzAPI_Map_GlobalArchive": {
       "documentation": "读取公共存档",
-      "original": "function DzAPI_Map_GlobalArchive takes string key returns nothing\n",
+      "original": "function DzAPI_Map_GlobalArchive takes string key returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GlobalArchive",
       "isConstant": false,
@@ -4678,7 +4678,7 @@ module.exports =
     },
     "DzAPI_Map_SaveGlobalArchive": {
       "documentation": "保存公共存档",
-      "original": "function DzAPI_Map_SaveGlobalArchive takes player whichPlayer, string key, string value returns boolean\n",
+      "original": "function DzAPI_Map_SaveGlobalArchive takes player whichPlayer, string key, string value returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_SaveGlobalArchive",
       "isConstant": false,
@@ -4698,7 +4698,7 @@ module.exports =
     },
     "DzAPI_Map_ServerArchive": {
       "documentation": "读取服务器存档（区分大小写）",
-      "original": "function DzAPI_Map_ServerArchive takes player whichPlayer, string key returns nothing\n",
+      "original": "function DzAPI_Map_ServerArchive takes player whichPlayer, string key returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_ServerArchive",
       "isConstant": false,
@@ -4715,7 +4715,7 @@ module.exports =
     },
     "DzAPI_Map_SaveServerArchive": {
       "documentation": "保存服务器存档（区分大小写）",
-      "original": "function DzAPI_Map_SaveServerArchive takes player whichPlayer, string key, string value returns nothing\n",
+      "original": "function DzAPI_Map_SaveServerArchive takes player whichPlayer, string key, string value returns nothing",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_SaveServerArchive",
       "isConstant": false,
@@ -4735,7 +4735,7 @@ module.exports =
     },
     "DzAPI_Map_IsRPGQuickMatch": {
       "documentation": "RPG快速匹配",
-      "original": "function DzAPI_Map_IsRPGQuickMatch takes nothing returns boolean\n",
+      "original": "function DzAPI_Map_IsRPGQuickMatch takes nothing returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsRPGQuickMatch",
       "isConstant": false,
@@ -4746,7 +4746,7 @@ module.exports =
     },
     "DzAPI_Map_GetMallItemCount": {
       "documentation": "获取商城道具数量",
-      "original": "function DzAPI_Map_GetMallItemCount takes player whichPlayer, string key returns integer\n",
+      "original": "function DzAPI_Map_GetMallItemCount takes player whichPlayer, string key returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_GetMallItemCount",
       "isConstant": false,
@@ -4763,7 +4763,7 @@ module.exports =
     },
     "DzAPI_Map_ConsumeMallItem": {
       "documentation": "使用商城道具",
-      "original": "function DzAPI_Map_ConsumeMallItem takes player whichPlayer, string key, integer count returns boolean\n",
+      "original": "function DzAPI_Map_ConsumeMallItem takes player whichPlayer, string key, integer count returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_ConsumeMallItem",
       "isConstant": false,
@@ -4783,7 +4783,7 @@ module.exports =
     },
     "DzAPI_Map_EnablePlatformSettings": {
       "documentation": "启用平台功能 option = 1 锁定镜头距离，option = 2 显示血、蓝条",
-      "original": "function DzAPI_Map_EnablePlatformSettings takes player whichPlayer, integer option, boolean enable returns boolean\n",
+      "original": "function DzAPI_Map_EnablePlatformSettings takes player whichPlayer, integer option, boolean enable returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_EnablePlatformSettings",
       "isConstant": false,
@@ -4803,7 +4803,7 @@ module.exports =
     },
     "DzAPI_Map_IsBuyReforged": {
       "documentation": "是否购买了重制版",
-      "original": "function DzAPI_Map_IsBuyReforged takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsBuyReforged takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsBuyReforged",
       "isConstant": false,
@@ -4817,7 +4817,7 @@ module.exports =
     },
     "DzAPI_Map_PlayedGames": {
       "documentation": "游戏局数",
-      "original": "function DzAPI_Map_PlayedGames takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_PlayedGames takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_PlayedGames",
       "isConstant": false,
@@ -4831,7 +4831,7 @@ module.exports =
     },
     "DzAPI_Map_CommentCount": {
       "documentation": "玩家的评论次数",
-      "original": "function DzAPI_Map_CommentCount takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_CommentCount takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_CommentCount",
       "isConstant": false,
@@ -4845,7 +4845,7 @@ module.exports =
     },
     "DzAPI_Map_FriendCount": {
       "documentation": "玩家的好友数量",
-      "original": "function DzAPI_Map_FriendCount takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_FriendCount takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_FriendCount",
       "isConstant": false,
@@ -4859,7 +4859,7 @@ module.exports =
     },
     "DzAPI_Map_IsConnoisseur": {
       "documentation": "是否鉴赏家",
-      "original": "function DzAPI_Map_IsConnoisseur takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsConnoisseur takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsConnoisseur",
       "isConstant": false,
@@ -4873,7 +4873,7 @@ module.exports =
     },
     "DzAPI_Map_IsBattleNetAccount": {
       "documentation": "是否战网账号",
-      "original": "function DzAPI_Map_IsBattleNetAccount takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsBattleNetAccount takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsBattleNetAccount",
       "isConstant": false,
@@ -4887,7 +4887,7 @@ module.exports =
     },
     "DzAPI_Map_IsAuthor": {
       "documentation": "是否本图作者",
-      "original": "function DzAPI_Map_IsAuthor takes player whichPlayer returns boolean\n",
+      "original": "function DzAPI_Map_IsAuthor takes player whichPlayer returns boolean",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_IsAuthor",
       "isConstant": false,
@@ -4901,7 +4901,7 @@ module.exports =
     },
     "DzAPI_Map_CommentTotalCount": {
       "documentation": "自定义排行榜",
-      "original": "function DzAPI_Map_CommentTotalCount takes player whichPlayer, integer id returns integer\n",
+      "original": "function DzAPI_Map_CommentTotalCount takes player whichPlayer, integer id returns integer",
       "filename": "BZapi.txt",
       "name": "DzAPI_Map_CommentTotalCount",
       "isConstant": false,

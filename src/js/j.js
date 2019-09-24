@@ -2,7 +2,7 @@
 本翻译借用WorldEdit v1.2.3内置翻译。
 by:十月
 */
-module.exports ={
+module.exports = {
   "YDWEBlightGoldMineForPlayerNull": {
     "original": "function YDWEBlightGoldMineForPlayerNull takes unit goldMine, player whichPlayer returns unit",
     "fileName": "BlightGoldMineForPlayer.j",
@@ -28917,7 +28917,7 @@ module.exports ={
     ],
     "returnType": "boolean",
     "insertText": "TriggerEvaluate(whichTrigger)",
-    "documentation": "触发器有条件"
+    "documentation": "触发器条件成立"
   },
   "TriggerExecute": {
     "original": "native TriggerExecute       takes trigger whichTrigger returns nothing",
