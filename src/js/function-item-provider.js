@@ -8,6 +8,8 @@ const type = require("./type")
 const keyword = require("./keyword")
 const itemTool = require("./item-tool")
 
+const j2 = require("./j2");
+
 const { parseFunctions, parseGlobals, parseImport } = require("./jass");
 
 /**
@@ -179,7 +181,6 @@ const getPre = (document, position) => {
   // local後面 類型
   let localRanges = itemTool.findRanges(textLine, new RegExp(/(?<=local\s+)\w+/))
   if (localRanges && localRanges.length > 0 && localRanges.findIndex(s => s.contains(position)) > -1) {
-    console.log("local")
     clazzs.forEach(s => {
       items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Class))
     })
@@ -425,6 +426,17 @@ const provideCompletionItems = (document, position, token, context) => {
       })
     })
   } catch (err) { console.log(err) }
+
+  for (const key in j2) {
+    if (j2.hasOwnProperty(key)) {
+      const func = j2[key];
+      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+      item.detail = `${func.name} (${func.fileName})`
+      item.documentation = new vscode.MarkdownString().appendText(func.documentation).appendCodeblock(func.original)
+      item.insertText = func.insertText
+      items.push(item)
+    }
+  }
 
   return items
 }

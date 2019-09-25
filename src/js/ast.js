@@ -1,158 +1,46 @@
-/**
- * 語法樹
- */
-const vscode = require("vscode");
-const characters = require("./triggre-characters");
-const { ParamenterType } = require("./support-type")
 
-class {
-  constructor(document) {
-    this.NodeType = {
-      Comment,
-      Macro, // 宏
-      Type,
-      Globals,
-      Function, // 包含native方法
+const vscode = require("vscode");
+const { StatementType } = require("./support-type");
+const { parseImport } = require("./jass")
+const { findFunctions } = require("./item-tool")
+
+vscode.languages.registerDefinitionProvider("jass", {
+  provideDefinition(document, position, cancel) {
+    let key = document.getText(document.getWordRangeAtPosition(position))
+    console.log(key)
+    // local -> functions -> globals -> import
+    let defiines = [];
+    let start = 0; // 方法開始行
+    for (let i = 0; i < document.lineCount; i++) {
+      let text = document.lineAt(i).text
+      if ((/^\s*function/.test(text) || /^\s*constant/.test(text) || /^\s*native/.test(text) || new RegExp(`^\\s*${StatementType.join("|")}`).test(text)) && text.includes(key)) {
+        defiines.push(new vscode.Location(document.uri, new vscode.Position(i, text.indexOf(key))));
+      }
     }
-    this.nodes = []
-  }
-  parse(content) {
-    if (!content || content.trim() == "") return [];
-    let lines = this.toLine(content)
-    let functing = false; // 記錄是否開始function block
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (/^\s*function/.test(line.content)) {
-        if (functing) {
-          this.nodes.push(this.parseFunctionHeade(line));
-        } else {
-          functing = true;
+
+    findFunctions(document).forEach(r => {
+      if (r.contains(position)) {
+        for (let o = r.start.line; o < r.end.line; o++) {
+          let lineText = document.lineAt(o).text;
+          if (/^\s*local/.test(lineText) && lineText.includes(key)) {
+            defiines.push(new vscode.Location(document.uri, new vscode.Position(o, lineText.indexOf(key))));
+          }
         }
       }
-    }
-  }
-  /**
-   * @param {string} content 
-   */
-  toLine(content) {
-    if (!content || content.trim() == "") return [];
-    let contents = content.split("\n");
-    return contents.map((item, index) => {
-      let tlContent = item.trimLeft();
-      return {
-        content: item,
-        line: index + 1,
-        isEmpty: tlContent == "",
-        firstCharacterIndex: item.length - tlContent.length - 1,
-        /**
-         * 
-         * @param {string} str 
-         */
-        startWith(str) {
-          if (this.firstCharacterIndex < 0) return false;
-          if (str.trimLeft().length == 0) return true;
-          return item.substr(this.firstCharacterIndex).startsWith(str)
-        },
+    });
+
+    let imports = parseImport(document);
+    imports.forEach(s => {
+      let lines = s.content.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        console.log(line)
+        if ((/^\s*function/.test(line) || /^\s*constant/.test(line) || /^\s*native/.test(line) || new RegExp(`^\\s*${StatementType.join("|")}`).test(line)) && line.includes(key)) {
+          defiines.push(new vscode.Location(vscode.Uri.file(s.path), new vscode.Position(i, line.indexOf(key))));
+        }
       }
-    })
-  }
-
-
-  /**
-   * 解析方法信息
-   * @param {{content:string,line:number,isEmpty:boolean,firstCharacterIndex:number,startWith:function}} line 
-   * @returns {{ line: number, name: string, nameRange: { start: number, end: number }, parameters: {type:string,name:string}[], returnType:  string}}
-   */
-  parseFunctionHeade(line) {
-    if (!line || line.isEmpty) return null;
-
-    let isConstant = /^\s*constant/.test(line.content)
-    let isNative = /^\s*(native|constant\s+native)/.test(line.content)
-
-    // 獲取方法名稱
-    const nameResult = line.content.match(/(?<=^\s*(function|native|constant\s+native)\s+)[a-zA-Z]\w+/);
-    let name = nameResult ? nameResult.shift() : null;
-    if (!name);
-
-    // 獲取方法參數 若空串或nothing 設置為空數組而不是null
-    let argsStringResult = text.match(/(?<=takes\s+).+?(?=\s+returns)/);
-    let argsString = argsStringResult ? argsStringResult.shift() : "nothing";
-    let args = argsString == "nothing" ? [] : argsString.split(",").map(s => {
-      // 無法接受只有類而沒有類名 亦不能接受只有類名而無類 如 takes integer , u1 returns
-      let ptypeResult = s.match(ParamenterType.join("|"));
-      if (!ptypeResult) return null;
-      let ptype = ptypeResult ? ptypeResult.shift() : null;
-      if (!ptype) return null;
-      let pnameResult = s.match(`(?<=${ptype}\\s+)[a-z]\\w*`);
-      if (!pnameResult) return null;
-      let pname = pnameResult.shift();
-      if (!pname) return null;
-      return { name: pname, type: ptype };
-    }).filter(s => s)
-
-    // 獲取方法返回值 空串或nothing 設置為null
-    let returnTypeResult = text.match(/(?<=returns\s+)[a-z]+/);
-    let returnType = returnTypeResult ? returnTypeResult.shift() : "nothing";
-    returnType = returnType == "nothing" ? null : returnType;
-
-    return {
-      line: line.line,
-      closeLine: line.line,
-      name: name,
-      nameRange: {
-        start: line.content.indexOf(name),
-        end: this.start + name.length
-      },
-      isConstant,
-      isNative,
-      parameters: args,
-      returnType: returnType,
-    }
-  }
-
-
-
-}
-
-var jass = {
-  NodeType = {
-    Comment,
-    Macro, // 宏
-    Type,
-    Globals,
-    Function, // 包含native方法
-  },
-
-
-  /**
-   * jass文檔節點抽象表示
-   */
-  nodes: []
-
-}
-
-
-console.log(jass)
-console.log(Object.defineProperty)
-
-/*
-Object.defineProperty(jass, "document", {
-  set(value) {
-    // 比對
-    console.log(jass)
-    console.log(value)
-    jass.document = value;
+    });
+    return defiines;
   }
 })
-*/
-jass.document = "666"
-
-vscode.languages.registerCompletionItemProvider("jass", {
-  provideCompletionItems(document, position, token, context) {
-    document.lineAt()
-  },
-  resolveCompletionItem(item, token) {
-    return item;
-  }
-}, characters.l, characters.u)
 

@@ -5,10 +5,9 @@ const BaseType = [
   "boolean",
   "handle",];
 
-const ParamenterType = [...BaseType, "code", ...Type];
+
 
 const Type = [
-
   "agent",
   "event",
   "player",
@@ -101,7 +100,9 @@ const Type = [
   "ubersplat",
   "hashtable"
 ];
+const ParamenterType = [...BaseType, "code", ...Type];
+const StatementType = [...BaseType, ...Type];
 
 module.exports = {
-  BaseType, ParamenterType, Type
+  BaseType, ParamenterType, Type, StatementType
 }
