@@ -8,7 +8,7 @@ const functionItemProvider = require("./function-item-provider")
 const hoverProvider = require("./hover-provider")
 const documentForrmatProvider = require("./document-forrmat-provider")
 
-// require("./base");
+require("./base");
 
 require("./definition-provider");
 require("./import-path-completion-provider");
