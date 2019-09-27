@@ -7,6 +7,9 @@
       "include": "#vjass-import"
     },
     {
+      "include": "#jass-block-comment"
+    },
+    {
       "include": "#jass-comment"
     },
     {
@@ -72,6 +75,11 @@
     "vjass-import": {
       "name": "keyword",
       "match": "^\\s*//!\\s+import\\s+\"[^\\u4e00-\\u9fa5]+?\""
+    },
+    "jass-block-comment": {
+      "name":"comment.block",
+      "begin": "/\\*",
+      "end": "\\*/"
     },
     "jass-comment": {
       "name": "comment.line.double-slash",

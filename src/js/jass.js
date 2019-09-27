@@ -578,6 +578,7 @@ const parseFunctions = (content) => {
     returnType = returnType == "nothing" ? null : returnType;
 
     // 獲取方法内部local變量
+    /*
     let locals = text.split("\n").filter(s => /^\s*local/.test(s)).map(s => {
       // 類聲明形式 local class
       let typeResult = s.match(`(?<=^\\s*local\\s+)(${Type.join("|")})`);
@@ -594,8 +595,8 @@ const parseFunctions = (content) => {
 
       return { name, type, isArray };
     }).filter(s => s);
-
-    return { name, parameters: args, returnType, locals };
+  */
+    return { name, parameters: args, returnType };
   }).filter(s => s);
   return functions;
 }
