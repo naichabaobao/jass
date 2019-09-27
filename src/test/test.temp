@@ -289,3 +289,8 @@ vscode.languages.registerCompletionItemProvider("jass", {
   }
 }, characters.l, characters.u)
     
+
+// type
+|(?<=type)\\s+[a-zA-Z]+|(?<=extends)\\s+[a-zA-Z]+|(?<=returns)\\s+[a-zA-Z]+|(?<=local)\\s+[a-zA-Z]+|(?<=constant)\\s+[a-zA-Z]+|(?<=takes)\\s+[a-zA-Z]+|(?<=,)\\s*[a-zA-Z]+\\s*(?=[a-zA-Z])
+
+NewType
