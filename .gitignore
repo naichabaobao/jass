@@ -1,7 +1,6 @@
 .vscode/
 assets/
 node_modules/
-jass/
 src/test/
 
 *.vsix

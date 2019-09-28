@@ -11,7 +11,7 @@ const itemTool = require("./item-tool")
 const j2 = require("./j2");
 
 const { parseFunctions, parseGlobals, parseImport } = require("./jass");
-const defaults = require("./jass/default");
+const { functions, globals } = require("./jass/default");
 const triggreCharacters = require("./triggre-characters");
 
 /**
@@ -345,7 +345,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
     //   items.push(s)
     // })
     try {
-      defaults.forEach(s => {
+      functions.forEach(s => {
         // {
         //     original: string;
         //     name: string;
@@ -362,30 +362,18 @@ vscode.languages.registerCompletionItemProvider("jass", {
           item.insertText = `${x.name}(${x.parameters.map(p => p.name).join(", ")})`;
           items.push(item);
         });
-        console.log(typeof s.globals)
-        s.globals.forEach(global => {
-          global.forEach(v => {
-            const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-            let item = new vscode.CompletionItem(v.name, type);
-            item.detail = `${v.name} (${s.fileName})`
+      });
+      globals.forEach(s => {
+        s.globals.forEach(gs => {
+          gs.forEach(g => {
+            const type = g.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+            let item = new vscode.CompletionItem(g.name, type);
+            item.detail = `${g.name} (${s.fileName})`;
+            item.documentation = new vscode.MarkdownString("極少").appendCodeblock(g.original);
             items.push(item);
-          })
-        })
-        // s.globals.forEach(g => {
-        //   // { name, type, isConstant, isArray }
-
-        //   g.forEach(x => {
-        //     // console.log(x)
-        //     let kind = x.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-        //     let item = new vscode.CompletionItem(x.name, kind);
-        //     item.detail = `${x.name}${x.isArray ? "[]" : ""} (${s.fileName})`;
-        //     item.documentation = new vscode.MarkdownString("極少").appendCodeblock(x.original);
-        //     item.insertText = x.name;
-        //     console.log(item)
-        //     items.push(item);
-        //   });
-        // })
-      })
+          });
+        });
+      });
     } catch (err) { console.log(err) }
     try {
       let funcs = parseFunctions(document.getText());

@@ -1,6 +1,7 @@
 .vscode/
 jass/
 node_modules/
+src/test/
 
 *.vsix
 vsc-extension-quickstart.md

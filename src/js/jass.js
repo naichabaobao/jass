@@ -48,7 +48,6 @@ const parseGlobals = (content) => {
 
     return text.split("\n").map(s => {
       if (!s || s.trim() == "") return null;
-      console.log(s)
       let isConstant = /^\s*constant/.test(s);
 
       // 類聲明形式 constant class,local class,class
@@ -56,14 +55,14 @@ const parseGlobals = (content) => {
       let type = typeResult ? typeResult.shift() : null;
       if (!type) return null;
 
-      let isArray = new RegExp(`${type}\\s+array`).test(content);
+      let isArray = new RegExp(`${type}\\s+array`).test(s);
 
       // 標識符形式 class name, class array name
-      let nameResult = content.match(isArray ? `(?<=${type}\\s+array\\s+)[a-zA-Z]\\w*` : `(?<=${type}\\s+)[a-zA-Z]\\w*`);
-      let name = nameResult.shift();
+      let nameResult = s.match(isArray ? `(?<=${type}\\s+array\\s+)[a-zA-Z]\\w*` : `(?<=${type}\\s+)[a-zA-Z]\\w*`);
+      let name = nameResult ? nameResult.shift() : null;
       if (!name) return null;
-
-      return { original: s, name, type, isConstant, isArray };
+      console.log({ original: s, name, type, isConstant, isArray })
+      return { original: s.replace(/\s+/g, " "), name, type, isConstant, isArray };
     }).filter(s => s);
   });
   return globals;
@@ -125,7 +124,7 @@ const parseFunctions = (content) => {
       return { name, type, isArray };
     }).filter(s => s);
   */
-    return { original: text, name, parameters: args, returnType };
+    return { original: text.replace(/\s+/g, " "), name, parameters: args, returnType };
   }).filter(s => s);
   return functions;
 }
