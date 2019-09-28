@@ -111,18 +111,18 @@ const provideDocumentFormattingEdits = (document, options, token) => {
     }
     else if ("elseif" == document.getText(new vscode.Range(textLine.lineNumber, fci, textLine.lineNumber, fci + "elseif".length)) ||
       "else" == document.getText(new vscode.Range(textLine.lineNumber, fci, textLine.lineNumber, fci + "else".length))) {
-      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident - 1, "\t")))
+      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart((ident - 1) * tabSize, "\t")))
     } else if ("endif" == document.getText(new vscode.Range(textLine.lineNumber, fci, textLine.lineNumber, fci + "endif".length))) {
       ident -= 1
-      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
+      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident * tabSize, "\t")))
     } else if ("loop" == document.getText(new vscode.Range(textLine.lineNumber, fci, textLine.lineNumber, fci + "loop".length))) {
-      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
+      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident * tabSize, "\t")))
       ident += 1
     } else if ("endloop" == document.getText(new vscode.Range(textLine.lineNumber, fci, textLine.lineNumber, fci + "endloop".length))) {
       ident -= 1
-      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
+      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident * tabSize, "\t")))
     } else {
-      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident, "\t")))
+      edits.push(vscode.TextEdit.replace(new vscode.Range(textLine.lineNumber, 0, textLine.lineNumber, fci), "".padStart(ident * tabSize, "\t")))
     }
 
     // 2019年8月29日，添加内容格式化

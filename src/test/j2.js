@@ -6,7 +6,7 @@ module.exports =
     "BlzGetTriggerPlayerMouseX": {
       "documentation": "触发鼠标位置X",
       "original": "native BlzGetTriggerPlayerMouseX takes nothing returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerMouseX",
       "isConstant": false,
       "isNative": true,
@@ -17,7 +17,7 @@ module.exports =
     "BlzGetTriggerPlayerMouseY": {
       "documentation": "触发鼠标位置Y",
       "original": "native BlzGetTriggerPlayerMouseY takes nothing returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerMouseY",
       "isConstant": false,
       "isNative": true,
@@ -28,7 +28,7 @@ module.exports =
     "BlzGetTriggerPlayerMousePosition": {
       "documentation": "触发鼠标位置",
       "original": "native BlzGetTriggerPlayerMousePosition takes nothing returns location",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerMousePosition",
       "isConstant": false,
       "isNative": true,
@@ -39,7 +39,7 @@ module.exports =
     "BlzGetTriggerPlayerMouseButton": {
       "documentation": "触发鼠标按键",
       "original": "native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerMouseButton",
       "isConstant": false,
       "isNative": true,
@@ -50,7 +50,7 @@ module.exports =
     "BlzSetAbilityTooltip": {
       "documentation": "设置技能提示信息",
       "original": "native BlzSetAbilityTooltip takes integer abilCode,string tooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityTooltip",
       "isConstant": false,
       "isNative": true,
@@ -70,7 +70,7 @@ module.exports =
     "BlzSetAbilityActivatedTooltip": {
       "documentation": "设置技能提示信息（自动施法启用）",
       "original": "native BlzSetAbilityActivatedTooltip takes integer abilCode,string tooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityActivatedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -90,7 +90,7 @@ module.exports =
     "BlzSetAbilityExtendedTooltip": {
       "documentation": "设置技能扩展提示信息",
       "original": "native BlzSetAbilityExtendedTooltip takes integer abilCode,string extendedTooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -110,7 +110,7 @@ module.exports =
     "BlzSetAbilityActivatedExtendedTooltip": {
       "documentation": "设置技能扩展提示信息（自动施法启用）",
       "original": "native BlzSetAbilityActivatedExtendedTooltip takes integer abilCode,string extendedTooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityActivatedExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -130,7 +130,7 @@ module.exports =
     "BlzSetAbilityResearchTooltip": {
       "documentation": "设置提示信息（学习）",
       "original": "native BlzSetAbilityResearchTooltip takes integer abilCode,string researchTooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityResearchTooltip",
       "isConstant": false,
       "isNative": true,
@@ -150,7 +150,7 @@ module.exports =
     "BlzSetAbilityResearchExtendedTooltip": {
       "documentation": "设置扩展提示信息（学习）",
       "original": "native BlzSetAbilityResearchExtendedTooltip takes integer abilCode,string researchExtendedTooltip,integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityResearchExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -170,7 +170,7 @@ module.exports =
     "BlzGetAbilityTooltip": {
       "documentation": "技能提示信息",
       "original": "native BlzGetAbilityTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityTooltip",
       "isConstant": false,
       "isNative": true,
@@ -187,7 +187,7 @@ module.exports =
     "BlzGetAbilityActivatedTooltip": {
       "documentation": "技能提示信息（自动施法启用）",
       "original": "native BlzGetAbilityActivatedTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityActivatedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -204,7 +204,7 @@ module.exports =
     "BlzGetAbilityExtendedTooltip": {
       "documentation": "技能扩展提示信息",
       "original": "native BlzGetAbilityExtendedTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -221,7 +221,7 @@ module.exports =
     "BlzGetAbilityActivatedExtendedTooltip": {
       "documentation": "技能扩展提示信息（自动施法启用）",
       "original": "native BlzGetAbilityActivatedExtendedTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityActivatedExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -238,7 +238,7 @@ module.exports =
     "BlzGetAbilityResearchTooltip": {
       "documentation": "技能提示信息（学习）",
       "original": "native BlzGetAbilityResearchTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityResearchTooltip",
       "isConstant": false,
       "isNative": true,
@@ -255,7 +255,7 @@ module.exports =
     "BlzGetAbilityResearchExtendedTooltip": {
       "documentation": "技能扩展提示信息（学习）",
       "original": "native BlzGetAbilityResearchExtendedTooltip takes integer abilCode,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityResearchExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -272,7 +272,7 @@ module.exports =
     "BlzSetAbilityIcon": {
       "documentation": "设置技能图标",
       "original": "native BlzSetAbilityIcon takes integer abilCode,string iconPath returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityIcon",
       "isConstant": false,
       "isNative": true,
@@ -289,7 +289,7 @@ module.exports =
     "BlzGetAbilityIcon": {
       "documentation": "技能图标",
       "original": "native BlzGetAbilityIcon takes integer abilCode returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityIcon",
       "isConstant": false,
       "isNative": true,
@@ -303,7 +303,7 @@ module.exports =
     "BlzSetAbilityActivatedIcon": {
       "documentation": "设置技能图标（自动施法启用）",
       "original": "native BlzSetAbilityActivatedIcon takes integer abilCode,string iconPath returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityActivatedIcon",
       "isConstant": false,
       "isNative": true,
@@ -320,7 +320,7 @@ module.exports =
     "BlzGetAbilityActivatedIcon": {
       "documentation": "技能图标（自动施法启用）",
       "original": "native BlzGetAbilityActivatedIcon takes integer abilCode returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityActivatedIcon",
       "isConstant": false,
       "isNative": true,
@@ -334,7 +334,7 @@ module.exports =
     "BlzGetAbilityPosX": {
       "documentation": "技能位置 - X",
       "original": "native BlzGetAbilityPosX takes integer abilCode returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityPosX",
       "isConstant": false,
       "isNative": true,
@@ -348,7 +348,7 @@ module.exports =
     "BlzGetAbilityPosY": {
       "documentation": "技能位置 - Y",
       "original": "native BlzGetAbilityPosY takes integer abilCode returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityPosY",
       "isConstant": false,
       "isNative": true,
@@ -362,7 +362,7 @@ module.exports =
     "BlzSetAbilityPosX": {
       "documentation": "设置技能位置X",
       "original": "native BlzSetAbilityPosX takes integer abilCode,integer x returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityPosX",
       "isConstant": false,
       "isNative": true,
@@ -379,7 +379,7 @@ module.exports =
     "BlzSetAbilityPosY": {
       "documentation": "设置技能位置Y",
       "original": "native BlzSetAbilityPosY takes integer abilCode,integer y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityPosY",
       "isConstant": false,
       "isNative": true,
@@ -396,7 +396,7 @@ module.exports =
     "BlzGetAbilityActivatedPosX": {
       "documentation": "技能位置 - X (自动施法)",
       "original": "native BlzGetAbilityActivatedPosX takes integer abilCode returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityActivatedPosX",
       "isConstant": false,
       "isNative": true,
@@ -410,7 +410,7 @@ module.exports =
     "BlzGetAbilityActivatedPosY": {
       "documentation": "技能位置 - Y (自动施法)",
       "original": "native BlzGetAbilityActivatedPosY takes integer abilCode returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityActivatedPosY",
       "isConstant": false,
       "isNative": true,
@@ -424,7 +424,7 @@ module.exports =
     "BlzSetAbilityActivatedPosX": {
       "documentation": "设置技能位置X（自动施法启用）",
       "original": "native BlzSetAbilityActivatedPosX takes integer abilCode,integer x returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityActivatedPosX",
       "isConstant": false,
       "isNative": true,
@@ -441,7 +441,7 @@ module.exports =
     "BlzSetAbilityActivatedPosY": {
       "documentation": "设置技能位置Y（自动施法启用）",
       "original": "native BlzSetAbilityActivatedPosY takes integer abilCode,integer y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityActivatedPosY",
       "isConstant": false,
       "isNative": true,
@@ -458,7 +458,7 @@ module.exports =
     "BlzGetUnitMaxHP": {
       "documentation": "获取单位最大生命值",
       "original": "native BlzGetUnitMaxHP takes unit whichUnit returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitMaxHP",
       "isConstant": false,
       "isNative": true,
@@ -472,7 +472,7 @@ module.exports =
     "BlzSetUnitMaxHP": {
       "documentation": "设置最大生命值",
       "original": "native BlzSetUnitMaxHP takes unit whichUnit,integer hp returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitMaxHP",
       "isConstant": false,
       "isNative": true,
@@ -489,7 +489,7 @@ module.exports =
     "BlzGetUnitMaxMana": {
       "documentation": "获取单位最大魔法值",
       "original": "native BlzGetUnitMaxMana takes unit whichUnit returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitMaxMana",
       "isConstant": false,
       "isNative": true,
@@ -503,7 +503,7 @@ module.exports =
     "BlzSetUnitMaxMana": {
       "documentation": "设置最大法力值",
       "original": "native BlzSetUnitMaxMana takes unit whichUnit,integer mana returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitMaxMana",
       "isConstant": false,
       "isNative": true,
@@ -520,7 +520,7 @@ module.exports =
     "BlzSetItemName": {
       "documentation": "设置物品名字",
       "original": "native BlzSetItemName takes item whichItem,string name returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemName",
       "isConstant": false,
       "isNative": true,
@@ -537,7 +537,7 @@ module.exports =
     "BlzSetItemDescription": {
       "documentation": "设置物品介绍",
       "original": "native BlzSetItemDescription takes item whichItem,string description returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemDescription",
       "isConstant": false,
       "isNative": true,
@@ -554,7 +554,7 @@ module.exports =
     "BlzGetItemDescription": {
       "documentation": "物品介绍",
       "original": "native BlzGetItemDescription takes item whichItem returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemDescription",
       "isConstant": false,
       "isNative": true,
@@ -568,7 +568,7 @@ module.exports =
     "BlzSetItemTooltip": {
       "documentation": "设置物品提示",
       "original": "native BlzSetItemTooltip takes item whichItem,string tooltip returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemTooltip",
       "isConstant": false,
       "isNative": true,
@@ -585,7 +585,7 @@ module.exports =
     "BlzGetItemTooltip": {
       "documentation": "物品提示信息",
       "original": "native BlzGetItemTooltip takes item whichItem returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemTooltip",
       "isConstant": false,
       "isNative": true,
@@ -599,7 +599,7 @@ module.exports =
     "BlzSetItemExtendedTooltip": {
       "documentation": "设置物品扩展提示",
       "original": "native BlzSetItemExtendedTooltip takes item whichItem,string extendedTooltip returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -616,7 +616,7 @@ module.exports =
     "BlzGetItemExtendedTooltip": {
       "documentation": "物品扩展提示信息",
       "original": "native BlzGetItemExtendedTooltip takes item whichItem returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemExtendedTooltip",
       "isConstant": false,
       "isNative": true,
@@ -630,7 +630,7 @@ module.exports =
     "BlzSetItemIconPath": {
       "documentation": "设置物品图标路径",
       "original": "native BlzSetItemIconPath takes item whichItem,string iconPath returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemIconPath",
       "isConstant": false,
       "isNative": true,
@@ -647,7 +647,7 @@ module.exports =
     "BlzGetItemIconPath": {
       "documentation": "物品图标",
       "original": "native BlzGetItemIconPath takes item whichItem returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemIconPath",
       "isConstant": false,
       "isNative": true,
@@ -661,7 +661,7 @@ module.exports =
     "BlzSetUnitName": {
       "documentation": "设置单位名字",
       "original": "native BlzSetUnitName takes unit whichUnit,string name returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitName",
       "isConstant": false,
       "isNative": true,
@@ -678,7 +678,7 @@ module.exports =
     "BlzSetHeroProperName": {
       "documentation": "设置英雄称谓",
       "original": "native BlzSetHeroProperName takes unit whichUnit,string heroProperName returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetHeroProperName",
       "isConstant": false,
       "isNative": true,
@@ -695,7 +695,7 @@ module.exports =
     "BlzGetUnitBaseDamage": {
       "documentation": "获取单位基础伤害",
       "original": "native BlzGetUnitBaseDamage takes unit whichUnit,integer weaponIndex returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitBaseDamage",
       "isConstant": false,
       "isNative": true,
@@ -712,7 +712,7 @@ module.exports =
     "BlzSetUnitBaseDamage": {
       "documentation": "设置基础伤害",
       "original": "native BlzSetUnitBaseDamage takes unit whichUnit,integer baseDamage,integer weaponIndex returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitBaseDamage",
       "isConstant": false,
       "isNative": true,
@@ -732,7 +732,7 @@ module.exports =
     "BlzGetUnitDiceNumber": {
       "documentation": "获取单位骰子数量",
       "original": "native BlzGetUnitDiceNumber takes unit whichUnit,integer weaponIndex returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitDiceNumber",
       "isConstant": false,
       "isNative": true,
@@ -749,7 +749,7 @@ module.exports =
     "BlzSetUnitDiceNumber": {
       "documentation": "设置单位骰子数",
       "original": "native BlzSetUnitDiceNumber takes unit whichUnit,integer diceNumber,integer weaponIndex returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitDiceNumber",
       "isConstant": false,
       "isNative": true,
@@ -769,7 +769,7 @@ module.exports =
     "BlzGetUnitDiceSides": {
       "documentation": "获取单位骰子面数",
       "original": "native BlzGetUnitDiceSides takes unit whichUnit,integer weaponIndex returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitDiceSides",
       "isConstant": false,
       "isNative": true,
@@ -786,7 +786,7 @@ module.exports =
     "BlzSetUnitDiceSides": {
       "documentation": "设置骰子面数",
       "original": "native BlzSetUnitDiceSides takes unit whichUnit,integer diceSides,integer weaponIndex returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitDiceSides",
       "isConstant": false,
       "isNative": true,
@@ -806,7 +806,7 @@ module.exports =
     "BlzGetUnitAttackCooldown": {
       "documentation": "攻击间隔",
       "original": "native BlzGetUnitAttackCooldown takes unit whichUnit,integer weaponIndex returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAttackCooldown",
       "isConstant": false,
       "isNative": true,
@@ -823,7 +823,7 @@ module.exports =
     "BlzSetUnitAttackCooldown": {
       "documentation": "设置攻击间隔",
       "original": "native BlzSetUnitAttackCooldown takes unit whichUnit,real cooldown,integer weaponIndex returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitAttackCooldown",
       "isConstant": false,
       "isNative": true,
@@ -843,7 +843,7 @@ module.exports =
     "BlzSetSpecialEffectColorByPlayer": {
       "documentation": "按玩家设置特效颜色",
       "original": "native BlzSetSpecialEffectColorByPlayer takes effect whichEffect,player whichPlayer returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectColorByPlayer",
       "isConstant": false,
       "isNative": true,
@@ -860,7 +860,7 @@ module.exports =
     "BlzSetSpecialEffectColor": {
       "documentation": "设置特效颜色",
       "original": "native BlzSetSpecialEffectColor takes effect whichEffect,integer r,integer g,integer b returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectColor",
       "isConstant": false,
       "isNative": true,
@@ -883,7 +883,7 @@ module.exports =
     "BlzSetSpecialEffectAlpha": {
       "documentation": "设置特效透明度",
       "original": "native BlzSetSpecialEffectAlpha takes effect whichEffect,integer alpha returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectAlpha",
       "isConstant": false,
       "isNative": true,
@@ -900,7 +900,7 @@ module.exports =
     "BlzSetSpecialEffectScale": {
       "documentation": "设置特效缩放",
       "original": "native BlzSetSpecialEffectScale takes effect whichEffect,real scale returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectScale",
       "isConstant": false,
       "isNative": true,
@@ -917,7 +917,7 @@ module.exports =
     "BlzSetSpecialEffectPosition": {
       "documentation": "设置特效坐标",
       "original": "native BlzSetSpecialEffectPosition takes effect whichEffect,real x,real y,real z returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectPosition",
       "isConstant": false,
       "isNative": true,
@@ -940,7 +940,7 @@ module.exports =
     "BlzSetSpecialEffectHeight": {
       "documentation": "设置特效高度",
       "original": "native BlzSetSpecialEffectHeight takes effect whichEffect,real height returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectHeight",
       "isConstant": false,
       "isNative": true,
@@ -957,7 +957,7 @@ module.exports =
     "BlzSetSpecialEffectTimeScale": {
       "documentation": "设置特效时间比例",
       "original": "native BlzSetSpecialEffectTimeScale takes effect whichEffect,real timeScale returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectTimeScale",
       "isConstant": false,
       "isNative": true,
@@ -974,7 +974,7 @@ module.exports =
     "BlzSetSpecialEffectTime": {
       "documentation": "设置特效时间",
       "original": "native BlzSetSpecialEffectTime takes effect whichEffect,real time returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectTime",
       "isConstant": false,
       "isNative": true,
@@ -991,7 +991,7 @@ module.exports =
     "BlzSetSpecialEffectOrientation": {
       "documentation": "设置特效朝向",
       "original": "native BlzSetSpecialEffectOrientation takes effect whichEffect,real yaw,real pitch,real roll returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectOrientation",
       "isConstant": false,
       "isNative": true,
@@ -1014,7 +1014,7 @@ module.exports =
     "BlzSetSpecialEffectYaw": {
       "documentation": "设置特效横摇",
       "original": "native BlzSetSpecialEffectYaw takes effect whichEffect,real yaw returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectYaw",
       "isConstant": false,
       "isNative": true,
@@ -1031,7 +1031,7 @@ module.exports =
     "BlzSetSpecialEffectPitch": {
       "documentation": "设置特效纵摇",
       "original": "native BlzSetSpecialEffectPitch takes effect whichEffect,real pitch returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectPitch",
       "isConstant": false,
       "isNative": true,
@@ -1048,7 +1048,7 @@ module.exports =
     "BlzSetSpecialEffectRoll": {
       "documentation": "设置特效滚摇",
       "original": "native BlzSetSpecialEffectRoll takes effect whichEffect,real roll returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectRoll",
       "isConstant": false,
       "isNative": true,
@@ -1065,7 +1065,7 @@ module.exports =
     "BlzSetSpecialEffectX": {
       "documentation": "设置特效X坐标",
       "original": "native BlzSetSpecialEffectX takes effect whichEffect,real x returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectX",
       "isConstant": false,
       "isNative": true,
@@ -1082,7 +1082,7 @@ module.exports =
     "BlzSetSpecialEffectY": {
       "documentation": "设置特效Y坐标",
       "original": "native BlzSetSpecialEffectY takes effect whichEffect,real y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectY",
       "isConstant": false,
       "isNative": true,
@@ -1099,7 +1099,7 @@ module.exports =
     "BlzSetSpecialEffectZ": {
       "documentation": "设置特效Z坐标",
       "original": "native BlzSetSpecialEffectZ takes effect whichEffect,real z returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectZ",
       "isConstant": false,
       "isNative": true,
@@ -1116,7 +1116,7 @@ module.exports =
     "BlzSetSpecialEffectPositionLoc": {
       "documentation": "设置特效点",
       "original": "native BlzSetSpecialEffectPositionLoc takes effect whichEffect,location loc returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectPositionLoc",
       "isConstant": false,
       "isNative": true,
@@ -1133,7 +1133,7 @@ module.exports =
     "BlzGetLocalSpecialEffectX": {
       "documentation": "特效位置 - X",
       "original": "native BlzGetLocalSpecialEffectX takes effect whichEffect returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalSpecialEffectX",
       "isConstant": false,
       "isNative": true,
@@ -1147,7 +1147,7 @@ module.exports =
     "BlzGetLocalSpecialEffectY": {
       "documentation": "特效位置 - Y",
       "original": "native BlzGetLocalSpecialEffectY takes effect whichEffect returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalSpecialEffectY",
       "isConstant": false,
       "isNative": true,
@@ -1161,7 +1161,7 @@ module.exports =
     "BlzGetLocalSpecialEffectZ": {
       "documentation": "特效位置 - Z",
       "original": "native BlzGetLocalSpecialEffectZ takes effect whichEffect returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalSpecialEffectZ",
       "isConstant": false,
       "isNative": true,
@@ -1175,7 +1175,7 @@ module.exports =
     "BlzSpecialEffectClearSubAnimations": {
       "documentation": "清除特效子动画",
       "original": "native BlzSpecialEffectClearSubAnimations takes effect whichEffect returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSpecialEffectClearSubAnimations",
       "isConstant": false,
       "isNative": true,
@@ -1189,7 +1189,7 @@ module.exports =
     "BlzSpecialEffectRemoveSubAnimation": {
       "documentation": "移除特效子动画",
       "original": "native BlzSpecialEffectRemoveSubAnimation takes effect whichEffect,subanimtype whichSubAnim returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSpecialEffectRemoveSubAnimation",
       "isConstant": false,
       "isNative": true,
@@ -1206,7 +1206,7 @@ module.exports =
     "BlzSpecialEffectAddSubAnimation": {
       "documentation": "添加特效子动画",
       "original": "native BlzSpecialEffectAddSubAnimation takes effect whichEffect,subanimtype whichSubAnim returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSpecialEffectAddSubAnimation",
       "isConstant": false,
       "isNative": true,
@@ -1223,7 +1223,7 @@ module.exports =
     "BlzPlaySpecialEffect": {
       "documentation": "播放特效动画",
       "original": "native BlzPlaySpecialEffect takes effect whichEffect,animtype whichAnim returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzPlaySpecialEffect",
       "isConstant": false,
       "isNative": true,
@@ -1240,7 +1240,7 @@ module.exports =
     "BlzPlaySpecialEffectWithTimeScale": {
       "documentation": "播放特效动画持续时间",
       "original": "native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect,animtype whichAnim,real timeScale returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzPlaySpecialEffectWithTimeScale",
       "isConstant": false,
       "isNative": true,
@@ -1260,7 +1260,7 @@ module.exports =
     "BlzGetAnimName": {
       "documentation": "获取动画名",
       "original": "native BlzGetAnimName takes animtype whichAnim returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAnimName",
       "isConstant": false,
       "isNative": true,
@@ -1274,7 +1274,7 @@ module.exports =
     "BlzGetUnitArmor": {
       "documentation": "获取护甲",
       "original": "native BlzGetUnitArmor takes unit whichUnit returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitArmor",
       "isConstant": false,
       "isNative": true,
@@ -1288,7 +1288,7 @@ module.exports =
     "BlzSetUnitArmor": {
       "documentation": "设置护甲",
       "original": "native BlzSetUnitArmor takes unit whichUnit,real armorAmount returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitArmor",
       "isConstant": false,
       "isNative": true,
@@ -1305,7 +1305,7 @@ module.exports =
     "BlzUnitHideAbility": {
       "documentation": "隐藏技能",
       "original": "native BlzUnitHideAbility takes unit whichUnit,integer abilId,boolean flag returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzUnitHideAbility",
       "isConstant": false,
       "isNative": true,
@@ -1325,7 +1325,7 @@ module.exports =
     "BlzUnitDisableAbility": {
       "documentation": "禁用技能",
       "original": "native BlzUnitDisableAbility takes unit whichUnit,integer abilId,boolean flag,boolean hideUI returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzUnitDisableAbility",
       "isConstant": false,
       "isNative": true,
@@ -1348,7 +1348,7 @@ module.exports =
     "BlzUnitCancelTimedLife": {
       "documentation": "取消限时生命",
       "original": "native BlzUnitCancelTimedLife takes unit whichUnit returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzUnitCancelTimedLife",
       "isConstant": false,
       "isNative": true,
@@ -1362,7 +1362,7 @@ module.exports =
     "BlzIsUnitSelectable": {
       "documentation": "单位能被选择",
       "original": "native BlzIsUnitSelectable takes unit whichUnit returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsUnitSelectable",
       "isConstant": false,
       "isNative": true,
@@ -1376,7 +1376,7 @@ module.exports =
     "BlzIsUnitInvulnerable": {
       "documentation": "单位是无敌的",
       "original": "native BlzIsUnitInvulnerable takes unit whichUnit returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsUnitInvulnerable",
       "isConstant": false,
       "isNative": true,
@@ -1390,7 +1390,7 @@ module.exports =
     "BlzUnitInterruptAttack": {
       "documentation": "打断攻击",
       "original": "native BlzUnitInterruptAttack takes unit whichUnit returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzUnitInterruptAttack",
       "isConstant": false,
       "isNative": true,
@@ -1404,7 +1404,7 @@ module.exports =
     "BlzGetUnitCollisionSize": {
       "documentation": "碰撞体积",
       "original": "native BlzGetUnitCollisionSize takes unit whichUnit returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitCollisionSize",
       "isConstant": false,
       "isNative": true,
@@ -1418,7 +1418,7 @@ module.exports =
     "BlzGetAbilityManaCost": {
       "documentation": "技能魔法消耗",
       "original": "native BlzGetAbilityManaCost takes integer abilId,integer level returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityManaCost",
       "isConstant": false,
       "isNative": true,
@@ -1435,7 +1435,7 @@ module.exports =
     "BlzGetAbilityCooldown": {
       "documentation": "技能冷却时间",
       "original": "native BlzGetAbilityCooldown takes integer abilId,integer level returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityCooldown",
       "isConstant": false,
       "isNative": true,
@@ -1452,7 +1452,7 @@ module.exports =
     "BlzSetUnitAbilityCooldown": {
       "documentation": "设置技能冷却时间",
       "original": "native BlzSetUnitAbilityCooldown takes unit whichUnit,integer abilId,integer level,real cooldown returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitAbilityCooldown",
       "isConstant": false,
       "isNative": true,
@@ -1475,7 +1475,7 @@ module.exports =
     "BlzGetUnitAbilityCooldown": {
       "documentation": "单位的技能冷却时间",
       "original": "native BlzGetUnitAbilityCooldown takes unit whichUnit,integer abilId,integer level returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAbilityCooldown",
       "isConstant": false,
       "isNative": true,
@@ -1495,7 +1495,7 @@ module.exports =
     "BlzGetUnitAbilityCooldownRemaining": {
       "documentation": "单位技能的剩余冷却时间",
       "original": "native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit,integer abilId returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAbilityCooldownRemaining",
       "isConstant": false,
       "isNative": true,
@@ -1512,7 +1512,7 @@ module.exports =
     "BlzEndUnitAbilityCooldown": {
       "documentation": "重设技能冷却",
       "original": "native BlzEndUnitAbilityCooldown takes unit whichUnit,integer abilCode returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzEndUnitAbilityCooldown",
       "isConstant": false,
       "isNative": true,
@@ -1529,7 +1529,7 @@ module.exports =
     "BlzGetUnitAbilityManaCost": {
       "documentation": "单位技能魔法消耗",
       "original": "native BlzGetUnitAbilityManaCost takes unit whichUnit,integer abilId,integer level returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAbilityManaCost",
       "isConstant": false,
       "isNative": true,
@@ -1549,7 +1549,7 @@ module.exports =
     "BlzSetUnitAbilityManaCost": {
       "documentation": "设置单位技能法力消耗",
       "original": "native BlzSetUnitAbilityManaCost takes unit whichUnit,integer abilId,integer level,integer manaCost returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitAbilityManaCost",
       "isConstant": false,
       "isNative": true,
@@ -1572,7 +1572,7 @@ module.exports =
     "BlzGetLocalUnitZ": {
       "documentation": "获取本地单位Z坐标",
       "original": "native BlzGetLocalUnitZ takes unit whichUnit returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalUnitZ",
       "isConstant": false,
       "isNative": true,
@@ -1586,7 +1586,7 @@ module.exports =
     "BlzDecPlayerTechResearched": {
       "documentation": "降低玩家科技",
       "original": "native BlzDecPlayerTechResearched takes player whichPlayer,integer techid,integer levels returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzDecPlayerTechResearched",
       "isConstant": false,
       "isNative": true,
@@ -1606,7 +1606,7 @@ module.exports =
     "BlzSetEventDamage": {
       "documentation": "设置单位伤害事件的伤害",
       "original": "native BlzSetEventDamage takes real damage returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetEventDamage",
       "isConstant": false,
       "isNative": true,
@@ -1620,7 +1620,7 @@ module.exports =
     "BlzGetEventDamageTarget": {
       "documentation": "获取事件伤害目标",
       "original": "native BlzGetEventDamageTarget takes nothing returns unit",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetEventDamageTarget",
       "isConstant": false,
       "isNative": true,
@@ -1631,7 +1631,7 @@ module.exports =
     "BlzGetEventAttackType": {
       "documentation": "获取事件攻击类型",
       "original": "native BlzGetEventAttackType takes nothing returns attacktype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetEventAttackType",
       "isConstant": false,
       "isNative": true,
@@ -1642,7 +1642,7 @@ module.exports =
     "BlzGetEventDamageType": {
       "documentation": "获取事件伤害类型",
       "original": "native BlzGetEventDamageType takes nothing returns damagetype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetEventDamageType",
       "isConstant": false,
       "isNative": true,
@@ -1653,7 +1653,7 @@ module.exports =
     "BlzGetEventWeaponType": {
       "documentation": "获取时间武器类型",
       "original": "native BlzGetEventWeaponType takes nothing returns weapontype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetEventWeaponType",
       "isConstant": false,
       "isNative": true,
@@ -1664,7 +1664,7 @@ module.exports =
     "BlzSetEventAttackType": {
       "documentation": "设置事件攻击类型",
       "original": "native BlzSetEventAttackType takes attacktype attackType returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetEventAttackType",
       "isConstant": false,
       "isNative": true,
@@ -1678,7 +1678,7 @@ module.exports =
     "BlzSetEventDamageType": {
       "documentation": "设置事件伤害类型",
       "original": "native BlzSetEventDamageType takes damagetype damageType returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetEventDamageType",
       "isConstant": false,
       "isNative": true,
@@ -1692,7 +1692,7 @@ module.exports =
     "BlzSetEventWeaponType": {
       "documentation": "设置事件武器类型",
       "original": "native BlzSetEventWeaponType takes weapontype weaponType returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetEventWeaponType",
       "isConstant": false,
       "isNative": true,
@@ -1706,7 +1706,7 @@ module.exports =
     "BlzGetUnitZ": {
       "documentation": "获取单位Z坐标",
       "original": "native BlzGetUnitZ takes unit whichUnit returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitZ",
       "isConstant": false,
       "isNative": true,
@@ -1720,7 +1720,7 @@ module.exports =
     "BlzEnableSelections": {
       "documentation": "启用选择",
       "original": "native BlzEnableSelections takes boolean enableSelection,boolean enableSelectionCircle returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzEnableSelections",
       "isConstant": false,
       "isNative": true,
@@ -1737,7 +1737,7 @@ module.exports =
     "BlzIsSelectionEnabled": {
       "documentation": "选择被允许",
       "original": "native BlzIsSelectionEnabled takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsSelectionEnabled",
       "isConstant": false,
       "isNative": true,
@@ -1748,7 +1748,7 @@ module.exports =
     "BlzIsSelectionCircleEnabled": {
       "documentation": "选择框被启用",
       "original": "native BlzIsSelectionCircleEnabled takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsSelectionCircleEnabled",
       "isConstant": false,
       "isNative": true,
@@ -1759,7 +1759,7 @@ module.exports =
     "BlzCameraSetupApplyForceDurationSmooth": {
       "documentation": "设置镜头平滑持续时间",
       "original": "native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup,boolean doPan,real forcedDuration,real easeInDuration,real easeOutDuration,real smoothFactor returns",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzCameraSetupApplyForceDurationSmooth",
       "isConstant": false,
       "isNative": true,
@@ -1785,7 +1785,7 @@ module.exports =
     "BlzEnableTargetIndicator": {
       "documentation": "启用目标提示器",
       "original": "native BlzEnableTargetIndicator takes boolean enable returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzEnableTargetIndicator",
       "isConstant": false,
       "isNative": true,
@@ -1799,7 +1799,7 @@ module.exports =
     "BlzIsTargetIndicatorEnabled": {
       "documentation": "闪动指示器被启用",
       "original": "native BlzIsTargetIndicatorEnabled takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsTargetIndicatorEnabled",
       "isConstant": false,
       "isNative": true,
@@ -1810,7 +1810,7 @@ module.exports =
     "BlzBitOr": {
       "documentation": "按位或",
       "original": "native BlzBitOr takes integer x,integer y returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzBitOr",
       "isConstant": false,
       "isNative": true,
@@ -1827,7 +1827,7 @@ module.exports =
     "BlzBitAnd": {
       "documentation": "按位与",
       "original": "native BlzBitAnd takes integer x,integer y returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzBitAnd",
       "isConstant": false,
       "isNative": true,
@@ -1844,7 +1844,7 @@ module.exports =
     "BlzBitXor": {
       "documentation": "按位异或",
       "original": "native BlzBitXor takes integer x,integer y returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzBitXor",
       "isConstant": false,
       "isNative": true,
@@ -1861,7 +1861,7 @@ module.exports =
     "BlzGetAbilityBooleanField": {
       "documentation": "技能布尔类型域",
       "original": "native BlzGetAbilityBooleanField takes ability whichAbility,abilitybooleanfield whichField returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -1878,7 +1878,7 @@ module.exports =
     "BlzGetAbilityIntegerField": {
       "documentation": "技能的整数类型域",
       "original": "native BlzGetAbilityIntegerField takes ability whichAbility,abilityintegerfield whichField returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityIntegerField",
       "isConstant": false,
       "isNative": true,
@@ -1895,7 +1895,7 @@ module.exports =
     "BlzGetAbilityRealField": {
       "documentation": "技能的实数类型域",
       "original": "native BlzGetAbilityRealField takes ability whichAbility,abilityrealfield whichField returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityRealField",
       "isConstant": false,
       "isNative": true,
@@ -1912,7 +1912,7 @@ module.exports =
     "BlzGetAbilityStringField": {
       "documentation": "技能字符串字段",
       "original": "native BlzGetAbilityStringField takes ability whichAbility,abilitystringfield whichField returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityStringField",
       "isConstant": false,
       "isNative": true,
@@ -1929,7 +1929,7 @@ module.exports =
     "BlzGetAbilityBooleanLevelField": {
       "documentation": "技能随等级改变的布尔类型域",
       "original": "native BlzGetAbilityBooleanLevelField takes ability whichAbility,abilitybooleanlevelfield whichField,integer level returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityBooleanLevelField",
       "isConstant": false,
       "isNative": true,
@@ -1949,7 +1949,7 @@ module.exports =
     "BlzGetAbilityIntegerLevelField": {
       "documentation": "技能随等级改变的整数类型域",
       "original": "native BlzGetAbilityIntegerLevelField takes ability whichAbility,abilityintegerlevelfield whichField,integer level returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityIntegerLevelField",
       "isConstant": false,
       "isNative": true,
@@ -1969,7 +1969,7 @@ module.exports =
     "BlzGetAbilityRealLevelField": {
       "documentation": "技能随等级改变的实数类型域",
       "original": "native BlzGetAbilityRealLevelField takes ability whichAbility,abilityreallevelfield whichField,integer level returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityRealLevelField",
       "isConstant": false,
       "isNative": true,
@@ -1989,7 +1989,7 @@ module.exports =
     "BlzGetAbilityStringLevelField": {
       "documentation": "技能字符串等级字段",
       "original": "native BlzGetAbilityStringLevelField takes ability whichAbility,abilitystringlevelfield whichField,integer level returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityStringLevelField",
       "isConstant": false,
       "isNative": true,
@@ -2009,7 +2009,7 @@ module.exports =
     "BlzGetAbilityBooleanLevelArrayField": {
       "documentation": "技能随等级改变的布尔类型域",
       "original": "native BlzGetAbilityBooleanLevelArrayField takes ability whichAbility,abilitybooleanlevelarrayfield whichField,integer level,integer index returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityBooleanLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2032,7 +2032,7 @@ module.exports =
     "BlzGetAbilityIntegerLevelArrayField": {
       "documentation": "技能随等级改变的整数类型域",
       "original": "native BlzGetAbilityIntegerLevelArrayField takes ability whichAbility,abilityintegerlevelarrayfield whichField,integer level,integer index returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityIntegerLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2055,7 +2055,7 @@ module.exports =
     "BlzGetAbilityRealLevelArrayField": {
       "documentation": "技能随等级改变的实数类型域",
       "original": "native BlzGetAbilityRealLevelArrayField takes ability whichAbility,abilityreallevelarrayfield whichField,integer level,integer index returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityRealLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2078,7 +2078,7 @@ module.exports =
     "BlzGetAbilityStringLevelArrayField": {
       "documentation": "技能字符串等级数组字段",
       "original": "native BlzGetAbilityStringLevelArrayField takes ability whichAbility,abilitystringlevelarrayfield whichField,integer level,integer index returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetAbilityStringLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2101,7 +2101,7 @@ module.exports =
     "BlzSetAbilityBooleanField": {
       "documentation": "改变技能的布尔类型域",
       "original": "native BlzSetAbilityBooleanField takes ability whichAbility,abilitybooleanfield whichField,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -2121,7 +2121,7 @@ module.exports =
     "BlzSetAbilityIntegerField": {
       "documentation": "改变技能的整数类型域",
       "original": "native BlzSetAbilityIntegerField takes ability whichAbility,abilityintegerfield whichField,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityIntegerField",
       "isConstant": false,
       "isNative": true,
@@ -2141,7 +2141,7 @@ module.exports =
     "BlzSetAbilityRealField": {
       "documentation": "改变技能的实数类型域",
       "original": "native BlzSetAbilityRealField takes ability whichAbility,abilityrealfield whichField,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityRealField",
       "isConstant": false,
       "isNative": true,
@@ -2161,7 +2161,7 @@ module.exports =
     "BlzSetAbilityStringField": {
       "documentation": "改变技能的字符串类型域",
       "original": "native BlzSetAbilityStringField takes ability whichAbility,abilitystringfield whichField,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityStringField",
       "isConstant": false,
       "isNative": true,
@@ -2181,7 +2181,7 @@ module.exports =
     "BlzSetAbilityBooleanLevelField": {
       "documentation": "改变技能的随等级改变的布尔类型域",
       "original": "native BlzSetAbilityBooleanLevelField takes ability whichAbility,abilitybooleanlevelfield whichField,integer level,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityBooleanLevelField",
       "isConstant": false,
       "isNative": true,
@@ -2204,7 +2204,7 @@ module.exports =
     "BlzSetAbilityIntegerLevelField": {
       "documentation": "改变技能随等级改变的整数类型域",
       "original": "native BlzSetAbilityIntegerLevelField takes ability whichAbility,abilityintegerlevelfield whichField,integer level,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityIntegerLevelField",
       "isConstant": false,
       "isNative": true,
@@ -2227,7 +2227,7 @@ module.exports =
     "BlzSetAbilityRealLevelField": {
       "documentation": "改变技能随等级改变的实数类型域",
       "original": "native BlzSetAbilityRealLevelField takes ability whichAbility,abilityreallevelfield whichField,integer level,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityRealLevelField",
       "isConstant": false,
       "isNative": true,
@@ -2250,7 +2250,7 @@ module.exports =
     "BlzSetAbilityStringLevelField": {
       "documentation": "改变技能随等级改变的字符串类型域",
       "original": "native BlzSetAbilityStringLevelField takes ability whichAbility,abilitystringlevelfield whichField,integer level,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityStringLevelField",
       "isConstant": false,
       "isNative": true,
@@ -2273,7 +2273,7 @@ module.exports =
     "BlzSetAbilityBooleanLevelArrayField": {
       "documentation": "改变技能随等级改变的布尔数组类型域",
       "original": "native BlzSetAbilityBooleanLevelArrayField takes ability whichAbility,abilitybooleanlevelarrayfield whichField,integer level,integer index,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityBooleanLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2299,7 +2299,7 @@ module.exports =
     "BlzSetAbilityIntegerLevelArrayField": {
       "documentation": "改变技能随等级改变的整数数组类型域",
       "original": "native BlzSetAbilityIntegerLevelArrayField takes ability whichAbility,abilityintegerlevelarrayfield whichField,integer level,integer index,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityIntegerLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2325,7 +2325,7 @@ module.exports =
     "BlzSetAbilityRealLevelArrayField": {
       "documentation": "改变技能随等级改变的实数数组类型域",
       "original": "native BlzSetAbilityRealLevelArrayField takes ability whichAbility,abilityreallevelarrayfield whichField,integer level,integer index,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityRealLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2351,7 +2351,7 @@ module.exports =
     "BlzSetAbilityStringLevelArrayField": {
       "documentation": "改变技能随等级改变的字符串数组类型域",
       "original": "native BlzSetAbilityStringLevelArrayField takes ability whichAbility,abilitystringlevelarrayfield whichField,integer level,integer index,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetAbilityStringLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2377,7 +2377,7 @@ module.exports =
     "BlzAddAbilityBooleanLevelArrayField": {
       "documentation": "技能随等级改变的布尔类型域 - 添加值",
       "original": "native BlzAddAbilityBooleanLevelArrayField takes ability whichAbility,abilitybooleanlevelarrayfield whichField,integer level,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzAddAbilityBooleanLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2400,7 +2400,7 @@ module.exports =
     "BlzAddAbilityIntegerLevelArrayField": {
       "documentation": "技能随等级改变的整数类型域 - 添加值",
       "original": "native BlzAddAbilityIntegerLevelArrayField takes ability whichAbility,abilityintegerlevelarrayfield whichField,integer level,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzAddAbilityIntegerLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2423,7 +2423,7 @@ module.exports =
     "BlzAddAbilityRealLevelArrayField": {
       "documentation": "技能随等级改变的实数类型域 - 添加值",
       "original": "native BlzAddAbilityRealLevelArrayField takes ability whichAbility,abilityreallevelarrayfield whichField,integer level,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzAddAbilityRealLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2446,7 +2446,7 @@ module.exports =
     "BlzAddAbilityStringLevelArrayField": {
       "documentation": "技能随等级改变的字符串类型域 - 添加值",
       "original": "native BlzAddAbilityStringLevelArrayField takes ability whichAbility,abilitystringlevelarrayfield whichField,integer level,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzAddAbilityStringLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2469,7 +2469,7 @@ module.exports =
     "BlzRemoveAbilityBooleanLevelArrayField": {
       "documentation": "技能随等级改变的布尔类型域 - 移除值",
       "original": "native BlzRemoveAbilityBooleanLevelArrayField takes ability whichAbility,abilitybooleanlevelarrayfield whichField,integer level,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzRemoveAbilityBooleanLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2492,7 +2492,7 @@ module.exports =
     "BlzRemoveAbilityIntegerLevelArrayField": {
       "documentation": "技能随等级改变的整数类型域 - 移除值",
       "original": "native BlzRemoveAbilityIntegerLevelArrayField takes ability whichAbility,abilityintegerlevelarrayfield whichField,integer level,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzRemoveAbilityIntegerLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2515,7 +2515,7 @@ module.exports =
     "BlzRemoveAbilityRealLevelArrayField": {
       "documentation": "技能随等级改变的实数类型域 - 移除值",
       "original": "native BlzRemoveAbilityRealLevelArrayField takes ability whichAbility,abilityreallevelarrayfield whichField,integer level,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzRemoveAbilityRealLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2538,7 +2538,7 @@ module.exports =
     "BlzRemoveAbilityStringLevelArrayField": {
       "documentation": "技能随等级改变的字符串类型域 - 移除值",
       "original": "native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility,abilitystringlevelarrayfield whichField,integer level,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzRemoveAbilityStringLevelArrayField",
       "isConstant": false,
       "isNative": true,
@@ -2561,7 +2561,7 @@ module.exports =
     "BlzGetItemAbilityByIndex": {
       "documentation": "按索引获取物品技能",
       "original": "native BlzGetItemAbilityByIndex takes item whichItem,integer index returns ability",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemAbilityByIndex",
       "isConstant": false,
       "isNative": true,
@@ -2578,7 +2578,7 @@ module.exports =
     "BlzGetItemAbility": {
       "documentation": "获取物品技能",
       "original": "native BlzGetItemAbility takes item whichItem,integer abilCode returns ability",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemAbility",
       "isConstant": false,
       "isNative": true,
@@ -2595,7 +2595,7 @@ module.exports =
     "BlzItemAddAbility": {
       "documentation": "物品添加技能",
       "original": "native BlzItemAddAbility takes item whichItem,integer abilCode returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzItemAddAbility",
       "isConstant": false,
       "isNative": true,
@@ -2612,7 +2612,7 @@ module.exports =
     "BlzGetItemBooleanField": {
       "documentation": "物品的布尔类型域",
       "original": "native BlzGetItemBooleanField takes item whichItem,itembooleanfield whichField returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -2629,7 +2629,7 @@ module.exports =
     "BlzGetItemIntegerField": {
       "documentation": "获取物品的整数类型域",
       "original": "native BlzGetItemIntegerField takes item whichItem,itemintegerfield whichField returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemIntegerField",
       "isConstant": false,
       "isNative": true,
@@ -2646,7 +2646,7 @@ module.exports =
     "BlzGetItemRealField": {
       "documentation": "物品的实数类型域",
       "original": "native BlzGetItemRealField takes item whichItem,itemrealfield whichField returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemRealField",
       "isConstant": false,
       "isNative": true,
@@ -2663,7 +2663,7 @@ module.exports =
     "BlzGetItemStringField": {
       "documentation": "获取物品字符串字段",
       "original": "native BlzGetItemStringField takes item whichItem,itemstringfield whichField returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetItemStringField",
       "isConstant": false,
       "isNative": true,
@@ -2680,7 +2680,7 @@ module.exports =
     "BlzSetItemBooleanField": {
       "documentation": "改变物品的布尔类型域",
       "original": "native BlzSetItemBooleanField takes item whichItem,itembooleanfield whichField,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -2700,7 +2700,7 @@ module.exports =
     "BlzSetItemIntegerField": {
       "documentation": "改变物品的整数类型域",
       "original": "native BlzSetItemIntegerField takes item whichItem,itemintegerfield whichField,integer value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemIntegerField",
       "isConstant": false,
       "isNative": true,
@@ -2720,7 +2720,7 @@ module.exports =
     "BlzSetItemRealField": {
       "documentation": "改变物品的实数类型域",
       "original": "native BlzSetItemRealField takes item whichItem,itemrealfield whichField,real value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemRealField",
       "isConstant": false,
       "isNative": true,
@@ -2740,7 +2740,7 @@ module.exports =
     "BlzSetItemStringField": {
       "documentation": "改变物品的字符串类型域",
       "original": "native BlzSetItemStringField takes item whichItem,itemstringfield whichField,string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetItemStringField",
       "isConstant": false,
       "isNative": true,
@@ -2760,7 +2760,7 @@ module.exports =
     "BlzItemRemoveAbility": {
       "documentation": "物品移除技能",
       "original": "native BlzItemRemoveAbility takes item whichItem,integer abilCode returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzItemRemoveAbility",
       "isConstant": false,
       "isNative": true,
@@ -2777,7 +2777,7 @@ module.exports =
     "BlzGetUnitBooleanField": {
       "documentation": "单位布尔类型域",
       "original": "native BlzGetUnitBooleanField takes unit whichUnit,unitbooleanfield whichField returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -2794,7 +2794,7 @@ module.exports =
     "BlzGetUnitIntegerField": {
       "documentation": "获取单位整数类型域",
       "original": "native BlzGetUnitIntegerField takes unit whichUnit,unitintegerfield whichField returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitIntegerField",
       "isConstant": false,
       "isNative": true,
@@ -2811,7 +2811,7 @@ module.exports =
     "BlzGetUnitRealField": {
       "documentation": "Get Unit 实数类型域",
       "original": "native BlzGetUnitRealField takes unit whichUnit,unitrealfield whichField returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitRealField",
       "isConstant": false,
       "isNative": true,
@@ -2828,7 +2828,7 @@ module.exports =
     "BlzGetUnitStringField": {
       "documentation": "获取单位字符串字段",
       "original": "native BlzGetUnitStringField takes unit whichUnit,unitstringfield whichField returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitStringField",
       "isConstant": false,
       "isNative": true,
@@ -2845,7 +2845,7 @@ module.exports =
     "BlzSetUnitBooleanField": {
       "documentation": "改变单位的布尔类型域",
       "original": "native BlzSetUnitBooleanField takes unit whichUnit,unitbooleanfield whichField,boolean value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetUnitBooleanField",
       "isConstant": false,
       "isNative": true,
@@ -2865,7 +2865,7 @@ module.exports =
     "BlzGetOriginFrame": {
       "documentation": "获取原生UI",
       "original": "native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetOriginFrame",
       "isConstant": false,
       "isNative": true,
@@ -2882,7 +2882,7 @@ module.exports =
     "BlzEnableUIAutoPosition": {
       "documentation": "UI自动设置位置",
       "original": "native BlzEnableUIAutoPosition takes boolean enable returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzEnableUIAutoPosition",
       "isConstant": false,
       "isNative": true,
@@ -2896,7 +2896,7 @@ module.exports =
     "BlzHideOriginFrames": {
       "documentation": "隐藏原生界面",
       "original": "native BlzHideOriginFrames takes boolean enable returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzHideOriginFrames",
       "isConstant": false,
       "isNative": true,
@@ -2910,7 +2910,7 @@ module.exports =
     "BlzConvertColor": {
       "documentation": "转换颜色",
       "original": "native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzConvertColor",
       "isConstant": false,
       "isNative": true,
@@ -2933,7 +2933,7 @@ module.exports =
     "BlzLoadTOCFile": {
       "documentation": "导入toc文件",
       "original": "native BlzLoadTOCFile takes string TOCFile returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzLoadTOCFile",
       "isConstant": false,
       "isNative": true,
@@ -2947,7 +2947,7 @@ module.exports =
     "BlzCreateFrame": {
       "documentation": "创建Frame",
       "original": "native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzCreateFrame",
       "isConstant": false,
       "isNative": true,
@@ -2970,7 +2970,7 @@ module.exports =
     "BlzCreateSimpleFrame": {
       "documentation": "创建SimpleFrame",
       "original": "native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzCreateSimpleFrame",
       "isConstant": false,
       "isNative": true,
@@ -2990,7 +2990,7 @@ module.exports =
     "BlzCreateFrameByType": {
       "documentation": "创建指定类型名的Frame",
       "original": "native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzCreateFrameByType",
       "isConstant": false,
       "isNative": true,
@@ -3016,7 +3016,7 @@ module.exports =
     "BlzDestroyFrame": {
       "documentation": "删除Frame",
       "original": "native BlzDestroyFrame takes framehandle frame returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzDestroyFrame",
       "isConstant": false,
       "isNative": true,
@@ -3030,7 +3030,7 @@ module.exports =
     "BlzFrameSetPoint": {
       "documentation": "设置Frame的相对位置",
       "original": "native BlzFrameSetPoint takes framehandle frame, framepointtype point, framehandle relative, framepointtype relativePoint, real x, real y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetPoint",
       "isConstant": false,
       "isNative": true,
@@ -3059,7 +3059,7 @@ module.exports =
     "BlzFrameSetAbsPoint": {
       "documentation": "设置Frame的绝对位置",
       "original": "native BlzFrameSetAbsPoint takes framehandle frame, framepointtype point, real x, real y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetAbsPoint",
       "isConstant": false,
       "isNative": true,
@@ -3082,7 +3082,7 @@ module.exports =
     "BlzFrameClearAllPoints": {
       "documentation": "清空Frame锚点",
       "original": "native BlzFrameClearAllPoints takes framehandle frame returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameClearAllPoints",
       "isConstant": false,
       "isNative": true,
@@ -3096,7 +3096,7 @@ module.exports =
     "BlzFrameSetAllPoints": {
       "documentation": "设置所有锚点到目标frame上",
       "original": "native BlzFrameSetAllPoints takes framehandle frame, framehandle relative returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetAllPoints",
       "isConstant": false,
       "isNative": true,
@@ -3113,7 +3113,7 @@ module.exports =
     "BlzFrameSetVisible": {
       "documentation": "设置Frame可见",
       "original": "native BlzFrameSetVisible takes framehandle frame, boolean visible returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetVisible",
       "isConstant": false,
       "isNative": true,
@@ -3130,7 +3130,7 @@ module.exports =
     "BlzFrameIsVisible": {
       "documentation": "Frame是否可见",
       "original": "native BlzFrameIsVisible takes framehandle frame returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameIsVisible",
       "isConstant": false,
       "isNative": true,
@@ -3144,7 +3144,7 @@ module.exports =
     "BlzGetFrameByName": {
       "documentation": "查找frame",
       "original": "native BlzGetFrameByName takes string name, integer createContext returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetFrameByName",
       "isConstant": false,
       "isNative": true,
@@ -3161,7 +3161,7 @@ module.exports =
     "BlzFrameGetName": {
       "documentation": "获取Frame的名字",
       "original": "native BlzFrameGetName takes framehandle frame returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetName",
       "isConstant": false,
       "isNative": true,
@@ -3175,7 +3175,7 @@ module.exports =
     "BlzFrameClick": {
       "documentation": "点击Frame",
       "original": "native BlzFrameClick takes framehandle frame returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameClick",
       "isConstant": false,
       "isNative": true,
@@ -3189,7 +3189,7 @@ module.exports =
     "BlzFrameSetText": {
       "documentation": "设置Frame文本",
       "original": "native BlzFrameSetText takes framehandle frame, string text returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetText",
       "isConstant": false,
       "isNative": true,
@@ -3206,7 +3206,7 @@ module.exports =
     "BlzFrameGetText": {
       "documentation": "获取Frame文本",
       "original": "native BlzFrameGetText takes framehandle frame returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetText",
       "isConstant": false,
       "isNative": true,
@@ -3220,7 +3220,7 @@ module.exports =
     "BlzFrameAddText": {
       "documentation": "Frame添加文本",
       "original": "native BlzFrameAddText takes framehandle frame, string text returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameAddText",
       "isConstant": false,
       "isNative": true,
@@ -3237,7 +3237,7 @@ module.exports =
     "BlzFrameSetTextSizeLimit": {
       "documentation": "设置Frame字数限制",
       "original": "native BlzFrameSetTextSizeLimit takes framehandle frame, integer size returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetTextSizeLimit",
       "isConstant": false,
       "isNative": true,
@@ -3254,7 +3254,7 @@ module.exports =
     "BlzFrameGetTextSizeLimit": {
       "documentation": "获取Frame字数限制",
       "original": "native BlzFrameGetTextSizeLimit takes framehandle frame returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetTextSizeLimit",
       "isConstant": false,
       "isNative": true,
@@ -3268,7 +3268,7 @@ module.exports =
     "BlzFrameSetTextColor": {
       "documentation": "设置Frame文本颜色",
       "original": "native BlzFrameSetTextColor takes framehandle frame, integer color returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetTextColor",
       "isConstant": false,
       "isNative": true,
@@ -3285,7 +3285,7 @@ module.exports =
     "BlzFrameSetFocus": {
       "documentation": "设置Frame焦点",
       "original": "native BlzFrameSetFocus takes framehandle frame, boolean flag returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetFocus",
       "isConstant": false,
       "isNative": true,
@@ -3302,7 +3302,7 @@ module.exports =
     "BlzFrameSetModel": {
       "documentation": "设置Frame模型",
       "original": "native BlzFrameSetModel takes framehandle frame, string modelFile, integer cameraIndex returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetModel",
       "isConstant": false,
       "isNative": true,
@@ -3322,7 +3322,7 @@ module.exports =
     "BlzFrameSetEnable": {
       "documentation": "启用/禁用Frame",
       "original": "native BlzFrameSetEnable takes framehandle frame, boolean enabled returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetEnable",
       "isConstant": false,
       "isNative": true,
@@ -3339,7 +3339,7 @@ module.exports =
     "BlzFrameGetEnable": {
       "documentation": "获取Frame是启/禁用状态",
       "original": "native BlzFrameGetEnable takes framehandle frame returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetEnable",
       "isConstant": false,
       "isNative": true,
@@ -3353,7 +3353,7 @@ module.exports =
     "BlzFrameSetAlpha": {
       "documentation": "设置Frame透明度",
       "original": "native BlzFrameSetAlpha takes framehandle frame, integer alpha returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetAlpha",
       "isConstant": false,
       "isNative": true,
@@ -3370,7 +3370,7 @@ module.exports =
     "BlzFrameGetAlpha": {
       "documentation": "获取Frame透明度",
       "original": "native BlzFrameGetAlpha takes framehandle frame returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetAlpha",
       "isConstant": false,
       "isNative": true,
@@ -3384,7 +3384,7 @@ module.exports =
     "BlzFrameSetSpriteAnimate": {
       "documentation": "设置Frame动画",
       "original": "native BlzFrameSetSpriteAnimate takes framehandle frame, integer primaryProp, integer flags returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetSpriteAnimate",
       "isConstant": false,
       "isNative": true,
@@ -3404,7 +3404,7 @@ module.exports =
     "BlzFrameSetTexture": {
       "documentation": "设置Frame图片",
       "original": "native BlzFrameSetTexture takes framehandle frame, string texFile, integer flag, boolean blend returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetTexture",
       "isConstant": false,
       "isNative": true,
@@ -3427,7 +3427,7 @@ module.exports =
     "BlzFrameSetScale": {
       "documentation": "缩放Frame",
       "original": "native BlzFrameSetScale takes framehandle frame, real scale returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetScale",
       "isConstant": false,
       "isNative": true,
@@ -3444,7 +3444,7 @@ module.exports =
     "BlzFrameSetTooltip": {
       "documentation": "设置Frame提示",
       "original": "native BlzFrameSetTooltip takes framehandle frame, framehandle tooltip returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetTooltip",
       "isConstant": false,
       "isNative": true,
@@ -3461,7 +3461,7 @@ module.exports =
     "BlzFrameCageMouse": {
       "documentation": "锁定鼠标",
       "original": "native BlzFrameCageMouse takes framehandle frame, boolean enable returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameCageMouse",
       "isConstant": false,
       "isNative": true,
@@ -3478,7 +3478,7 @@ module.exports =
     "BlzFrameSetValue": {
       "documentation": "设置当前值",
       "original": "native BlzFrameSetValue takes framehandle frame, real value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetValue",
       "isConstant": false,
       "isNative": true,
@@ -3495,7 +3495,7 @@ module.exports =
     "BlzFrameGetValue": {
       "documentation": "获取当前值",
       "original": "native BlzFrameGetValue takes framehandle frame returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetValue",
       "isConstant": false,
       "isNative": true,
@@ -3509,7 +3509,7 @@ module.exports =
     "BlzFrameSetMinMaxValue": {
       "documentation": "设置最大最小值",
       "original": "native BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetMinMaxValue",
       "isConstant": false,
       "isNative": true,
@@ -3529,7 +3529,7 @@ module.exports =
     "BlzFrameSetStepSize": {
       "documentation": "设置Step值",
       "original": "native BlzFrameSetStepSize takes framehandle frame, real stepSize returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetStepSize",
       "isConstant": false,
       "isNative": true,
@@ -3546,7 +3546,7 @@ module.exports =
     "BlzFrameSetSize": {
       "documentation": "设置Frame大小",
       "original": "native BlzFrameSetSize takes framehandle frame, real width, real height returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetSize",
       "isConstant": false,
       "isNative": true,
@@ -3566,7 +3566,7 @@ module.exports =
     "BlzFrameSetVertexColor": {
       "documentation": "设置Frame颜色",
       "original": "native BlzFrameSetVertexColor takes framehandle frame, integer color returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetVertexColor",
       "isConstant": false,
       "isNative": true,
@@ -3583,7 +3583,7 @@ module.exports =
     "BlzFrameSetLevel": {
       "documentation": "设置Frame优先级",
       "original": "native BlzFrameSetLevel takes framehandle frame, integer level returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetLevel",
       "isConstant": false,
       "isNative": true,
@@ -3600,7 +3600,7 @@ module.exports =
     "BlzFrameSetParent": {
       "documentation": "设置父Frame",
       "original": "native BlzFrameSetParent takes framehandle frame, framehandle parent returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetParent",
       "isConstant": false,
       "isNative": true,
@@ -3617,7 +3617,7 @@ module.exports =
     "BlzFrameGetParent": {
       "documentation": "获取父Frame",
       "original": "native BlzFrameGetParent takes framehandle frame returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetParent",
       "isConstant": false,
       "isNative": true,
@@ -3631,7 +3631,7 @@ module.exports =
     "BlzFrameGetHeight": {
       "documentation": "获取Frame高度",
       "original": "native BlzFrameGetHeight takes framehandle frame returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetHeight",
       "isConstant": false,
       "isNative": true,
@@ -3645,7 +3645,7 @@ module.exports =
     "BlzFrameGetWidth": {
       "documentation": "获取Frame宽度",
       "original": "native BlzFrameGetWidth takes framehandle frame returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameGetWidth",
       "isConstant": false,
       "isNative": true,
@@ -3659,7 +3659,7 @@ module.exports =
     "BlzFrameSetFont": {
       "documentation": "设置字体",
       "original": "native BlzFrameSetFont takes framehandle frame, string fileName, real height, integer flags returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetFont",
       "isConstant": false,
       "isNative": true,
@@ -3682,7 +3682,7 @@ module.exports =
     "BlzFrameSetTextAlignment": {
       "documentation": "设置字体对齐方式",
       "original": "native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, textaligntype horz returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzFrameSetTextAlignment",
       "isConstant": false,
       "isNative": true,
@@ -3702,7 +3702,7 @@ module.exports =
     "BlzTriggerRegisterFrameEvent": {
       "documentation": "注册Frame事件",
       "original": "native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzTriggerRegisterFrameEvent",
       "isConstant": false,
       "isNative": true,
@@ -3722,7 +3722,7 @@ module.exports =
     "BlzGetTriggerFrame": {
       "documentation": "获取触发的Frame",
       "original": "native BlzGetTriggerFrame takes nothing returns framehandle",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerFrame",
       "isConstant": false,
       "isNative": true,
@@ -3733,7 +3733,7 @@ module.exports =
     "BlzGetTriggerFrameEvent": {
       "documentation": "获取触发的事件类型",
       "original": "native BlzGetTriggerFrameEvent takes nothing returns frameeventtype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerFrameEvent",
       "isConstant": false,
       "isNative": true,
@@ -3744,7 +3744,7 @@ module.exports =
     "BlzGetTriggerFrameValue": {
       "documentation": "获取触发的Frame值",
       "original": "native BlzGetTriggerFrameValue takes nothing returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerFrameValue",
       "isConstant": false,
       "isNative": true,
@@ -3755,7 +3755,7 @@ module.exports =
     "BlzGetTriggerFrameText": {
       "documentation": "获取触发的Frame文本",
       "original": "native BlzGetTriggerFrameText takes nothing returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerFrameText",
       "isConstant": false,
       "isNative": true,
@@ -3766,7 +3766,7 @@ module.exports =
     "BlzTriggerRegisterPlayerSyncEvent": {
       "documentation": "注册玩家同步事件",
       "original": "native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzTriggerRegisterPlayerSyncEvent",
       "isConstant": false,
       "isNative": true,
@@ -3789,7 +3789,7 @@ module.exports =
     "BlzSendSyncData": {
       "documentation": "同步数据",
       "original": "native BlzSendSyncData takes string prefix, string data returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSendSyncData",
       "isConstant": false,
       "isNative": true,
@@ -3806,7 +3806,7 @@ module.exports =
     "BlzGetTriggerSyncPrefix": {
       "documentation": "获取同步的前缀",
       "original": "native BlzGetTriggerSyncPrefix takes nothing returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerSyncPrefix",
       "isConstant": false,
       "isNative": true,
@@ -3817,7 +3817,7 @@ module.exports =
     "BlzGetTriggerSyncData": {
       "documentation": "获取同步的数据",
       "original": "native BlzGetTriggerSyncData takes nothing returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerSyncData",
       "isConstant": false,
       "isNative": true,
@@ -3828,7 +3828,7 @@ module.exports =
     "BlzTriggerRegisterPlayerKeyEvent": {
       "documentation": "注册玩家键盘事件",
       "original": "native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzTriggerRegisterPlayerKeyEvent",
       "isConstant": false,
       "isNative": true,
@@ -3854,7 +3854,7 @@ module.exports =
     "BlzGetTriggerPlayerKey": {
       "documentation": "获取触发的按键",
       "original": "native BlzGetTriggerPlayerKey takes nothing returns oskeytype",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerKey",
       "isConstant": false,
       "isNative": true,
@@ -3865,7 +3865,7 @@ module.exports =
     "BlzGetTriggerPlayerMetaKey": {
       "documentation": "获取触发的特殊按键",
       "original": "native BlzGetTriggerPlayerMetaKey takes nothing returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerMetaKey",
       "isConstant": false,
       "isNative": true,
@@ -3876,7 +3876,7 @@ module.exports =
     "BlzGetTriggerPlayerIsKeyDown": {
       "documentation": "获取触发的按键被按下",
       "original": "native BlzGetTriggerPlayerIsKeyDown takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetTriggerPlayerIsKeyDown",
       "isConstant": false,
       "isNative": true,
@@ -3887,7 +3887,7 @@ module.exports =
     "BlzEnableCursor": {
       "documentation": "光标",
       "original": "native BlzEnableCursor takes boolean enable returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzEnableCursor",
       "isConstant": false,
       "isNative": true,
@@ -3901,7 +3901,7 @@ module.exports =
     "BlzSetMousePos": {
       "documentation": "设置鼠标位置",
       "original": "native BlzSetMousePos takes integer x, integer y returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetMousePos",
       "isConstant": false,
       "isNative": true,
@@ -3918,7 +3918,7 @@ module.exports =
     "BlzGetLocalClientWidth": {
       "documentation": "获取本地客户端宽度",
       "original": "native BlzGetLocalClientWidth takes nothing returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalClientWidth",
       "isConstant": false,
       "isNative": true,
@@ -3929,7 +3929,7 @@ module.exports =
     "BlzGetLocalClientHeight": {
       "documentation": "获取本地客户端高度",
       "original": "native BlzGetLocalClientHeight takes nothing returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocalClientHeight",
       "isConstant": false,
       "isNative": true,
@@ -3940,7 +3940,7 @@ module.exports =
     "BlzIsLocalClientActive": {
       "documentation": "获取本地客户端是否激活",
       "original": "native BlzIsLocalClientActive takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzIsLocalClientActive",
       "isConstant": false,
       "isNative": true,
@@ -3951,7 +3951,7 @@ module.exports =
     "BlzGetMouseFocusUnit": {
       "documentation": "获取鼠标锁定的单位",
       "original": "native BlzGetMouseFocusUnit takes nothing returns unit",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetMouseFocusUnit",
       "isConstant": false,
       "isNative": true,
@@ -3962,7 +3962,7 @@ module.exports =
     "BlzChangeMinimapTerrainTex": {
       "documentation": "设置小地图图标",
       "original": "native BlzChangeMinimapTerrainTex takes string texFile returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzChangeMinimapTerrainTex",
       "isConstant": false,
       "isNative": true,
@@ -3976,7 +3976,7 @@ module.exports =
     "BlzGetLocale": {
       "documentation": "获取语言",
       "original": "native BlzGetLocale takes nothing returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetLocale",
       "isConstant": false,
       "isNative": true,
@@ -3987,7 +3987,7 @@ module.exports =
     "BlzGetSpecialEffectScale": {
       "documentation": "获取特效大小",
       "original": "native BlzGetSpecialEffectScale takes effect whichEffect returns real",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetSpecialEffectScale",
       "isConstant": false,
       "isNative": true,
@@ -4001,7 +4001,7 @@ module.exports =
     "BlzSetSpecialEffectMatrixScale": {
       "documentation": "设置特效位置",
       "original": "native BlzSetSpecialEffectMatrixScale takes effect whichEffect, real x, real y, real z returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzSetSpecialEffectMatrixScale",
       "isConstant": false,
       "isNative": true,
@@ -4024,7 +4024,7 @@ module.exports =
     "BlzResetSpecialEffectMatrix": {
       "documentation": "重置特效动画",
       "original": "native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzResetSpecialEffectMatrix",
       "isConstant": false,
       "isNative": true,
@@ -4038,7 +4038,7 @@ module.exports =
     "BlzGetUnitAbility": {
       "documentation": "获取单位技能",
       "original": "native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAbility",
       "isConstant": false,
       "isNative": true,
@@ -4055,7 +4055,7 @@ module.exports =
     "BlzGetUnitAbilityByIndex": {
       "documentation": "获取单位第N个技能",
       "original": "native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzGetUnitAbilityByIndex",
       "isConstant": false,
       "isNative": true,
@@ -4072,7 +4072,7 @@ module.exports =
     "BlzDisplayChatMessage": {
       "documentation": "模拟玩家聊天",
       "original": "native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzDisplayChatMessage",
       "isConstant": false,
       "isNative": true,
@@ -4092,7 +4092,7 @@ module.exports =
     "BlzPauseUnitEx": {
       "documentation": "暂停单位",
       "original": "native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "BlzPauseUnitEx",
       "isConstant": false,
       "isNative": true,
@@ -4109,7 +4109,7 @@ module.exports =
     "DzAPI_Map_MissionComplete": {
       "documentation": "用作完成某个任务，发奖励",
       "original": "function DzAPI_Map_MissionComplete takes player whichPlayer, string key, string value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_MissionComplete",
       "isConstant": false,
       "isNative": false,
@@ -4129,7 +4129,7 @@ module.exports =
     "DzAPI_Map_GetActivityData": {
       "documentation": "提供给地图的接口，用作取服务器上的活动数据",
       "original": "function DzAPI_Map_GetActivityData takes nothing returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetActivityData",
       "isConstant": false,
       "isNative": false,
@@ -4140,7 +4140,7 @@ module.exports =
     "DzAPI_Map_GetMapLevel": {
       "documentation": "提供给地图的接口，用与取地图等级",
       "original": "function DzAPI_Map_GetMapLevel takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetMapLevel",
       "isConstant": false,
       "isNative": false,
@@ -4154,7 +4154,7 @@ module.exports =
     "DzAPI_Map_SaveServerValue": {
       "documentation": "保存服务器存档",
       "original": "function DzAPI_Map_SaveServerValue takes player whichPlayer, string key, string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_SaveServerValue",
       "isConstant": false,
       "isNative": false,
@@ -4174,7 +4174,7 @@ module.exports =
     "DzAPI_Map_GetServerValue": {
       "documentation": "读取服务器存档",
       "original": "function DzAPI_Map_GetServerValue takes player whichPlayer, string key returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetServerValue",
       "isConstant": false,
       "isNative": false,
@@ -4191,7 +4191,7 @@ module.exports =
     "DzAPI_Map_GetServerValueErrorCode": {
       "documentation": "读取加载服务器存档时的错误码",
       "original": "function DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetServerValueErrorCode",
       "isConstant": false,
       "isNative": false,
@@ -4205,7 +4205,7 @@ module.exports =
     "DzAPI_Map_Stat_SetStat": {
       "documentation": "统计-提交地图数据",
       "original": "function DzAPI_Map_Stat_SetStat takes player whichPlayer, string key, string value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_Stat_SetStat",
       "isConstant": false,
       "isNative": false,
@@ -4225,7 +4225,7 @@ module.exports =
     "DzAPI_Map_Ladder_SetStat": {
       "documentation": "天梯-统计数据",
       "original": "function DzAPI_Map_Ladder_SetStat takes player whichPlayer, string key, string value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_Ladder_SetStat",
       "isConstant": false,
       "isNative": false,
@@ -4245,7 +4245,7 @@ module.exports =
     "DzAPI_Map_Ladder_SetPlayerStat": {
       "documentation": "天梯-统计数据",
       "original": "function DzAPI_Map_Ladder_SetPlayerStat takes player whichPlayer, string key, string value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_Ladder_SetPlayerStat",
       "isConstant": false,
       "isNative": false,
@@ -4265,7 +4265,7 @@ module.exports =
     "DzAPI_Map_IsRPGLobby": {
       "documentation": "检查是否大厅地图",
       "original": "function DzAPI_Map_IsRPGLobby takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsRPGLobby",
       "isConstant": false,
       "isNative": false,
@@ -4276,7 +4276,7 @@ module.exports =
     "DzAPI_Map_GetGameStartTime": {
       "documentation": "取游戏开始时间",
       "original": "function DzAPI_Map_GetGameStartTime takes nothing returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetGameStartTime",
       "isConstant": false,
       "isNative": false,
@@ -4287,7 +4287,7 @@ module.exports =
     "DzAPI_Map_IsRPGLadder": {
       "documentation": "判断当前是否rpg天梯",
       "original": "function DzAPI_Map_IsRPGLadder takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsRPGLadder",
       "isConstant": false,
       "isNative": false,
@@ -4298,7 +4298,7 @@ module.exports =
     "DzAPI_Map_GetMatchType": {
       "documentation": "获取匹配类型",
       "original": "function DzAPI_Map_GetMatchType takes nothing returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetMatchType",
       "isConstant": false,
       "isNative": false,
@@ -4309,7 +4309,7 @@ module.exports =
     "DzAPI_Map_GetLadderLevel": {
       "documentation": "提供给地图的接口，用与取天梯等级",
       "original": "function DzAPI_Map_GetLadderLevel takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetLadderLevel",
       "isConstant": false,
       "isNative": false,
@@ -4323,7 +4323,7 @@ module.exports =
     "DzAPI_Map_IsRedVIP": {
       "documentation": "提供给地图的接口，用与判断是否红V",
       "original": "function DzAPI_Map_IsRedVIP takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsRedVIP",
       "isConstant": false,
       "isNative": false,
@@ -4337,7 +4337,7 @@ module.exports =
     "DzAPI_Map_IsBlueVIP": {
       "documentation": "提供给地图的接口，用与判断是否蓝V",
       "original": "function DzAPI_Map_IsBlueVIP takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsBlueVIP",
       "isConstant": false,
       "isNative": false,
@@ -4351,7 +4351,7 @@ module.exports =
     "DzAPI_Map_GetLadderRank": {
       "documentation": "提供给地图的接口，用与取天梯排名",
       "original": "function DzAPI_Map_GetLadderRank takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetLadderRank",
       "isConstant": false,
       "isNative": false,
@@ -4365,7 +4365,7 @@ module.exports =
     "DzAPI_Map_GetMapLevelRank": {
       "documentation": "提供给地图的接口，用与取地图等级排名",
       "original": "function DzAPI_Map_GetMapLevelRank takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetMapLevelRank",
       "isConstant": false,
       "isNative": false,
@@ -4379,7 +4379,7 @@ module.exports =
     "DzAPI_Map_GetGuildName": {
       "documentation": "获取公会名称",
       "original": "function DzAPI_Map_GetGuildName takes player whichPlayer returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetGuildName",
       "isConstant": false,
       "isNative": false,
@@ -4393,7 +4393,7 @@ module.exports =
     "DzAPI_Map_GetGuildRole": {
       "documentation": "获取公会职责 Member=10 Admin=20 Leader=30",
       "original": "function DzAPI_Map_GetGuildRole takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetGuildRole",
       "isConstant": false,
       "isNative": false,
@@ -4407,7 +4407,7 @@ module.exports =
     "DzAPI_Map_GetMapConfig": {
       "documentation": "获取地图配置",
       "original": "function DzAPI_Map_GetMapConfig takes string key returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetMapConfig",
       "isConstant": false,
       "isNative": false,
@@ -4421,7 +4421,7 @@ module.exports =
     "DzAPI_Map_HasMallItem": {
       "documentation": "判断是否拥有商品",
       "original": "function DzAPI_Map_HasMallItem takes player whichPlayer, string key returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_HasMallItem",
       "isConstant": false,
       "isNative": false,
@@ -4438,7 +4438,7 @@ module.exports =
     "DzAPI_Map_ChangeStoreItemCount": {
       "documentation": "修改游戏内商店物品数量",
       "original": "function DzAPI_Map_ChangeStoreItemCount takes integer team, string itemId, integer count returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_ChangeStoreItemCount",
       "isConstant": false,
       "isNative": false,
@@ -4458,7 +4458,7 @@ module.exports =
     "DzAPI_Map_ChangeStoreItemCoolDown": {
       "documentation": "修改游戏内商店物品CD",
       "original": "function DzAPI_Map_ChangeStoreItemCoolDown takes integer team, string itemId, integer seconds returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_ChangeStoreItemCoolDown",
       "isConstant": false,
       "isNative": false,
@@ -4478,7 +4478,7 @@ module.exports =
     "DzAPI_Map_ToggleStore": {
       "documentation": "开启/关闭内置商店",
       "original": "function DzAPI_Map_ToggleStore takes player whichPlayer, boolean show returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_ToggleStore",
       "isConstant": false,
       "isNative": false,
@@ -4495,7 +4495,7 @@ module.exports =
     "DzAPI_Map_GetServerArchiveEquip": {
       "documentation": "读取服务器装备数据",
       "original": "function DzAPI_Map_GetServerArchiveEquip takes player whichPlayer, string key returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetServerArchiveEquip",
       "isConstant": false,
       "isNative": false,
@@ -4512,7 +4512,7 @@ module.exports =
     "DzAPI_Map_GetServerArchiveDrop": {
       "documentation": "读取服务器掉落数据",
       "original": "function DzAPI_Map_GetServerArchiveDrop takes player whichPlayer, string key returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetServerArchiveDrop",
       "isConstant": false,
       "isNative": false,
@@ -4529,7 +4529,7 @@ module.exports =
     "DzAPI_Map_OrpgTrigger": {
       "documentation": "触发boss击杀",
       "original": "function DzAPI_Map_OrpgTrigger takes player whichPlayer, string key returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_OrpgTrigger",
       "isConstant": false,
       "isNative": false,
@@ -4546,7 +4546,7 @@ module.exports =
     "DzAPI_Map_GetUserID": {
       "documentation": "获取玩家ID",
       "original": "function DzAPI_Map_GetUserID takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetUserID",
       "isConstant": false,
       "isNative": false,
@@ -4560,7 +4560,7 @@ module.exports =
     "DzAPI_Map_GetPlatformVIP": {
       "documentation": "获取平台vip",
       "original": "function DzAPI_Map_GetPlatformVIP takes player whichPlayer returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetPlatformVIP",
       "isConstant": false,
       "isNative": false,
@@ -4574,7 +4574,7 @@ module.exports =
     "DzAPI_Map_SavePublicArchive": {
       "documentation": "保存服务器存档组",
       "original": "function DzAPI_Map_SavePublicArchive takes player whichPlayer, string key, string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_SavePublicArchive",
       "isConstant": false,
       "isNative": false,
@@ -4594,7 +4594,7 @@ module.exports =
     "DzAPI_Map_GetPublicArchive": {
       "documentation": "读取服务器存档组",
       "original": "function DzAPI_Map_GetPublicArchive takes player whichPlayer, string key returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetPublicArchive",
       "isConstant": false,
       "isNative": false,
@@ -4611,7 +4611,7 @@ module.exports =
     "DzAPI_Map_UseConsumablesItem": {
       "documentation": "使用消耗类商品",
       "original": "function DzAPI_Map_UseConsumablesItem takes player whichPlayer, string key returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_UseConsumablesItem",
       "isConstant": false,
       "isNative": false,
@@ -4628,7 +4628,7 @@ module.exports =
     "DzAPI_Map_Statistics": {
       "documentation": "杭研DA统计",
       "original": "function DzAPI_Map_Statistics takes player whichPlayer, string category, string label returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_Statistics",
       "isConstant": false,
       "isNative": false,
@@ -4648,7 +4648,7 @@ module.exports =
     "DzAPI_Map_SystemArchive": {
       "documentation": "系统存档",
       "original": "function DzAPI_Map_SystemArchive takes player whichPlayer, string key returns string",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_SystemArchive",
       "isConstant": false,
       "isNative": false,
@@ -4665,7 +4665,7 @@ module.exports =
     "DzAPI_Map_GlobalArchive": {
       "documentation": "读取公共存档",
       "original": "function DzAPI_Map_GlobalArchive takes string key returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GlobalArchive",
       "isConstant": false,
       "isNative": false,
@@ -4679,7 +4679,7 @@ module.exports =
     "DzAPI_Map_SaveGlobalArchive": {
       "documentation": "保存公共存档",
       "original": "function DzAPI_Map_SaveGlobalArchive takes player whichPlayer, string key, string value returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_SaveGlobalArchive",
       "isConstant": false,
       "isNative": false,
@@ -4699,7 +4699,7 @@ module.exports =
     "DzAPI_Map_ServerArchive": {
       "documentation": "读取服务器存档（区分大小写）",
       "original": "function DzAPI_Map_ServerArchive takes player whichPlayer, string key returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_ServerArchive",
       "isConstant": false,
       "isNative": false,
@@ -4716,7 +4716,7 @@ module.exports =
     "DzAPI_Map_SaveServerArchive": {
       "documentation": "保存服务器存档（区分大小写）",
       "original": "function DzAPI_Map_SaveServerArchive takes player whichPlayer, string key, string value returns nothing",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_SaveServerArchive",
       "isConstant": false,
       "isNative": false,
@@ -4736,7 +4736,7 @@ module.exports =
     "DzAPI_Map_IsRPGQuickMatch": {
       "documentation": "RPG快速匹配",
       "original": "function DzAPI_Map_IsRPGQuickMatch takes nothing returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsRPGQuickMatch",
       "isConstant": false,
       "isNative": false,
@@ -4747,7 +4747,7 @@ module.exports =
     "DzAPI_Map_GetMallItemCount": {
       "documentation": "获取商城道具数量",
       "original": "function DzAPI_Map_GetMallItemCount takes player whichPlayer, string key returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_GetMallItemCount",
       "isConstant": false,
       "isNative": false,
@@ -4764,7 +4764,7 @@ module.exports =
     "DzAPI_Map_ConsumeMallItem": {
       "documentation": "使用商城道具",
       "original": "function DzAPI_Map_ConsumeMallItem takes player whichPlayer, string key, integer count returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_ConsumeMallItem",
       "isConstant": false,
       "isNative": false,
@@ -4784,7 +4784,7 @@ module.exports =
     "DzAPI_Map_EnablePlatformSettings": {
       "documentation": "启用平台功能 option = 1 锁定镜头距离，option = 2 显示血、蓝条",
       "original": "function DzAPI_Map_EnablePlatformSettings takes player whichPlayer, integer option, boolean enable returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_EnablePlatformSettings",
       "isConstant": false,
       "isNative": false,
@@ -4804,7 +4804,7 @@ module.exports =
     "DzAPI_Map_IsBuyReforged": {
       "documentation": "是否购买了重制版",
       "original": "function DzAPI_Map_IsBuyReforged takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsBuyReforged",
       "isConstant": false,
       "isNative": false,
@@ -4818,7 +4818,7 @@ module.exports =
     "DzAPI_Map_PlayedGames": {
       "documentation": "游戏局数",
       "original": "function DzAPI_Map_PlayedGames takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_PlayedGames",
       "isConstant": false,
       "isNative": false,
@@ -4832,7 +4832,7 @@ module.exports =
     "DzAPI_Map_CommentCount": {
       "documentation": "玩家的评论次数",
       "original": "function DzAPI_Map_CommentCount takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_CommentCount",
       "isConstant": false,
       "isNative": false,
@@ -4846,7 +4846,7 @@ module.exports =
     "DzAPI_Map_FriendCount": {
       "documentation": "玩家的好友数量",
       "original": "function DzAPI_Map_FriendCount takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_FriendCount",
       "isConstant": false,
       "isNative": false,
@@ -4860,7 +4860,7 @@ module.exports =
     "DzAPI_Map_IsConnoisseur": {
       "documentation": "是否鉴赏家",
       "original": "function DzAPI_Map_IsConnoisseur takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsConnoisseur",
       "isConstant": false,
       "isNative": false,
@@ -4874,7 +4874,7 @@ module.exports =
     "DzAPI_Map_IsBattleNetAccount": {
       "documentation": "是否战网账号",
       "original": "function DzAPI_Map_IsBattleNetAccount takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsBattleNetAccount",
       "isConstant": false,
       "isNative": false,
@@ -4888,7 +4888,7 @@ module.exports =
     "DzAPI_Map_IsAuthor": {
       "documentation": "是否本图作者",
       "original": "function DzAPI_Map_IsAuthor takes player whichPlayer returns boolean",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_IsAuthor",
       "isConstant": false,
       "isNative": false,
@@ -4902,7 +4902,7 @@ module.exports =
     "DzAPI_Map_CommentTotalCount": {
       "documentation": "自定义排行榜",
       "original": "function DzAPI_Map_CommentTotalCount takes player whichPlayer, integer id returns integer",
-      "filename": "BZapi.txt",
+      "fileName": "common.j",
       "name": "DzAPI_Map_CommentTotalCount",
       "isConstant": false,
       "isNative": false,

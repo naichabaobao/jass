@@ -1,33 +1,63 @@
-const vscode = require("vscode")
-const j = require("./j")
-const jg = require("./jg")
+const vscode = require("vscode");
+// const j = require("./j")
+// const jg = require("./jg")
 const code = require("./code")
 const itemTool = require("./item-tool")
 
+const { functions, globals } = require("./jass/default");
+const Desc = require("./jass/desc");
+const DescGlobal = require("./jass/desc-globals");
 
-const hoverProvider = {
-  /**
- * @param {vscode.TextDocument} document
- * @param {vscode.Position} position
- * @param {vscode.CancellationToken} token
- * @returns {vscode.ProviderResult<vscode.Hover>}
- */
+let mss = {};
+try {
+  functions.forEach(jFile => {
+    jFile.functions.forEach(func => {
+      let ms = new vscode.MarkdownString(`${func.name} (${jFile.fileName})\n`)
+        .appendText(Desc[jFile.fileName] && Desc[jFile.fileName][func.name] ? Desc[jFile.fileName][func.name] : "")
+        .appendCodeblock(func.original);
+      mss[func.name] = ms;
+
+    });
+  });
+  globals.forEach(gFile => {
+    gFile.globals.forEach(gs => {
+      gs.forEach(v => {
+        let ms = new vscode.MarkdownString(`${v.name} (${gFile.fileName})\n`)
+          .appendText(DescGlobal[gFile.fileName] && DescGlobal[gFile.fileName][v.name] ? DescGlobal[gFile.fileName][v.name] : "")
+          .appendCodeblock(v.original);
+        mss[v.name] = ms;
+      });
+    });
+  });
+} catch (err) {
+  console.log(err)
+}
+
+
+vscode.languages.registerHoverProvider("jass", {
   provideHover(document, position, token) {
-    var keyword = document.getText(document.getWordRangeAtPosition(position))
-    var tooltips = new vscode.MarkdownString()
-    if (j[keyword]) {
-      tooltips.appendCodeblock(j[keyword].documentation)
-        .appendCodeblock(j[keyword].original)
-        .appendText(j[keyword].fileName)
+    let keyword = document.getText(document.getWordRangeAtPosition(position))
+
+    // let func = functions.functions.find(s => s.name == keyword);
+
+    // if (func) {
+    //   tooltips.appendText(Desc[keyword])
+    //     .appendCodeblock(func.original)
+    //     .appendText(functions.fileName)
+    // }
+    // if (jg[keyword]) {
+    //   tooltips.appendCodeblock(jg[keyword].documentation)
+    //     .appendCodeblock(jg[keyword].original)
+    //     .appendText(jg[keyword].fileName)
+    // }
+    let hs = [];
+    if (Object.keys(mss).includes(keyword)) {
+      hs.push(mss[keyword]);
     }
-    if (jg[keyword]) {
-      tooltips.appendCodeblock(jg[keyword].documentation)
-        .appendCodeblock(jg[keyword].original)
-        .appendText(jg[keyword].fileName)
-    }
+
     if (code.code[keyword]) {
       let cObj = code.code[keyword]
-      tooltips.appendText(`${
+      let tooltips = new vscode.MarkdownString().appendText(`${
         cObj.name
         }\n\n${
         code.kindToString(cObj.kind)
@@ -37,8 +67,10 @@ const hoverProvider = {
         code.typeToString(cObj.type)
         }\n\n${
         cObj.tip
-        }`)
+        }`);
+      hs.push(tooltips);
     } else {
+      let tooltips = new vscode.MarkdownString();
       let codeRanges = itemTool.findCodeRangesByLine(document.lineAt(position.line))
       codeRanges.filter(x => {
         return x.contains(position)
@@ -94,10 +126,9 @@ const hoverProvider = {
         } else if (code.startsWith("R")) { // R:科技
           tooltips.appendText("科技")
         }
-      })
+      });
+      hs.push(tooltips);
     }
-    return new vscode.Hover(tooltips)
+    return new vscode.Hover(hs);
   }
-}
-
-module.exports = hoverProvider
+});

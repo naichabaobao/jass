@@ -1,13 +1,15 @@
 const vscode = require('vscode');
 
-const type = require("./type")
+// const type = require("./type")
 const colorProvider = require("./color-provider")
 const codeItemProvider = require("./code-item-provider")
 const triggreCharacters = require("./triggre-characters")
-const hoverProvider = require("./hover-provider")
 const documentForrmatProvider = require("./document-forrmat-provider")
+require("./keyword-item-provider");
+require("./type-item-provider");
+require("./default-item-provider");
+require("./hover-provider");
 
-require("./function-item-provider");
 
 require("./definition-provider");
 require("./import-path-completion-provider");
@@ -29,7 +31,6 @@ var diagnosticCollection = null
 function activate(context) {
 
   vscode.languages.registerCompletionItemProvider(language, codeItemProvider, ...triggreCharacters.c);
-  vscode.languages.registerHoverProvider(language, hoverProvider);
   vscode.languages.registerColorProvider(language, colorProvider);
   vscode.languages.registerDocumentFormattingEditProvider(language, documentForrmatProvider);
 

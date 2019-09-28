@@ -61,7 +61,6 @@ const parseGlobals = (content) => {
       let nameResult = s.match(isArray ? `(?<=${type}\\s+array\\s+)[a-zA-Z]\\w*` : `(?<=${type}\\s+)[a-zA-Z]\\w*`);
       let name = nameResult ? nameResult.shift() : null;
       if (!name) return null;
-      console.log({ original: s, name, type, isConstant, isArray })
       return { original: s.replace(/\s+/g, " "), name, type, isConstant, isArray };
     }).filter(s => s);
   });
