@@ -4,11 +4,10 @@ const type = require("./type")
 const colorProvider = require("./color-provider")
 const codeItemProvider = require("./code-item-provider")
 const triggreCharacters = require("./triggre-characters")
-const functionItemProvider = require("./function-item-provider")
 const hoverProvider = require("./hover-provider")
 const documentForrmatProvider = require("./document-forrmat-provider")
 
-require("./jass/default");
+require("./function-item-provider");
 
 require("./definition-provider");
 require("./import-path-completion-provider");
@@ -28,7 +27,7 @@ var diagnosticCollection = null
  * @param {vscode.ExtensionContext} context 
  */
 function activate(context) {
-  vscode.languages.registerCompletionItemProvider(language, functionItemProvider, ...triggreCharacters.w);
+
   vscode.languages.registerCompletionItemProvider(language, codeItemProvider, ...triggreCharacters.c);
   vscode.languages.registerHoverProvider(language, hoverProvider);
   vscode.languages.registerColorProvider(language, colorProvider);

@@ -33,17 +33,22 @@ const parseImport = (document) => {
   }).filter(s => s) : [];
 }
 
+/**
+ * 
+ * @param {string} content 
+ */
 const parseGlobals = (content) => {
   if (!content) return [];
 
   // 找到所有function塊
   let globalsResult = content.match(/globals[\s\S]+?endglobals/gm);
   if (!globalsResult) return [];
+
   let globals = globalsResult.map(text => {
 
     return text.split("\n").map(s => {
       if (!s || s.trim() == "") return null;
-
+      console.log(s)
       let isConstant = /^\s*constant/.test(s);
 
       // 類聲明形式 constant class,local class,class
@@ -58,7 +63,7 @@ const parseGlobals = (content) => {
       let name = nameResult.shift();
       if (!name) return null;
 
-      return { name, type, isConstant, isArray };
+      return { original: s, name, type, isConstant, isArray };
     }).filter(s => s);
   });
   return globals;

@@ -11,25 +11,8 @@ const itemTool = require("./item-tool")
 const j2 = require("./j2");
 
 const { parseFunctions, parseGlobals, parseImport } = require("./jass");
-
-/**
- * @description 是否可以提示
- * @param {vscode.TextDocument} document 
- * @param {vscode.Position} position 
- * @returns {boolean}
- */
-const cantHint = (document, position) => {
-  // conment string code type後
-  let show = itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) || itemTool.cheakInCode(document, position) || (function () {
-    // 是否在類型後面
-    let types = Object.keys(type)
-    types.map(t => {
-      return new RegExp(`(?<=${t}\s+)`)
-    })
-    return false
-  })()
-  return
-}
+const defaults = require("./jass/default");
+const triggreCharacters = require("./triggre-characters");
 
 /**
  * 類型
@@ -130,20 +113,6 @@ const clsss = [
   "image",
   "ubersplat",
   "hashtable"]
-
-/**
- * 判斷當前位置前一個單詞
- * @param {vscode.TextDocument} document 
- * @param {vscode.Position} position 
- * @param {string} word 
- * @returns {boolean}
- */
-const matchPreviousWord = (document, position, word) => {
-  if (!document || !position || !word) return false;
-  if (word.length == 0) return true;
-  let regexp = new RegExp(`(?<=${word.trim()}\\s+\\w*)${document.getText(new vscode.Range(position, position.with(position.line, position.character + 1)))}`)
-  return false
-}
 
 /**
  * @description 是否可以提示
@@ -361,96 +330,109 @@ const getPre = (document, position) => {
   return items
 }
 
-/**
- * @param {vscode.TextDocument} document
- * @param {vscode.Position} postion 
- */
-const position2Index = (document, postion) => {
-  let index = 0;
-  for (let i = 0; i < document.lineCount; i++) {
-    let textLine = document.lineAt(i);
-    index += textLine.character;
-  }
-}
+vscode.languages.registerCompletionItemProvider("jass", {
+  provideCompletionItems(document, position, token, context) {
+    /**
+     * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
+     */
 
-/**
- * 
- * tips 0.0.3 当前能避免在字符串 注释 代号中弹出提示
- * @param {vscode.TextDocument} document 
- * @param {vscode.Position} position 
- * @param {vscode.CancellationToken} token 
- * @param {vscode.CompletionContext} context 
- * @returns {vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>}
- */
-const provideCompletionItems = (document, position, token, context) => {
-  /**
-   * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
-   */
+    let items = []
+    if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
+      itemTool.cheakInCode(document, position)) {
+      return items
+    }
+    // getPre(document, position).forEach(s => {
+    //   items.push(s)
+    // })
+    try {
+      defaults.forEach(s => {
+        // {
+        //     original: string;
+        //     name: string;
+        //     parameters: {
+        //         name: string;
+        //         type: string;
+        //     }[];
+        //     returnType: string;
+        // }
+        s.functions.forEach(x => {
+          let item = new vscode.CompletionItem(x.name, vscode.CompletionItemKind.Function);
+          item.detail = `${x.name} (${s.fileName})`;
+          item.documentation = new vscode.MarkdownString("極少").appendCodeblock(x.original);
+          item.insertText = `${x.name}(${x.parameters.map(p => p.name).join(", ")})`;
+          items.push(item);
+        });
+        console.log(typeof s.globals)
+        s.globals.forEach(global => {
+          global.forEach(v => {
+            const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+            let item = new vscode.CompletionItem(v.name, type);
+            item.detail = `${v.name} (${s.fileName})`
+            items.push(item);
+          })
+        })
+        // s.globals.forEach(g => {
+        //   // { name, type, isConstant, isArray }
 
-  let items = []
-  if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
-    itemTool.cheakInCode(document, position)) {
-    return items
-  }
-  getPre(document, position).forEach(s => {
-    items.push(s)
-  })
-
-  try {
-    let funcs = parseFunctions(document.getText());
-    funcs.forEach(func => {
-      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-      item.detail = `${func.name} (${document.fileName})`
-      item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
-      items.push(item);
-    })
-
-    let globals = parseGlobals(document.getText())
-    globals.forEach(global => {
-      global.forEach(v => {
-        const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-        let item = new vscode.CompletionItem(v.name, type);
-        item.detail = `${v.name} (${document.fileName})`
-        items.push(item);
+        //   g.forEach(x => {
+        //     // console.log(x)
+        //     let kind = x.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+        //     let item = new vscode.CompletionItem(x.name, kind);
+        //     item.detail = `${x.name}${x.isArray ? "[]" : ""} (${s.fileName})`;
+        //     item.documentation = new vscode.MarkdownString("極少").appendCodeblock(x.original);
+        //     item.insertText = x.name;
+        //     console.log(item)
+        //     items.push(item);
+        //   });
+        // })
       })
-    })
-
-    parseImport(document).forEach(v => {
-      console.log(v)
-      let funcs = parseFunctions(v.content);
+    } catch (err) { console.log(err) }
+    try {
+      let funcs = parseFunctions(document.getText());
       funcs.forEach(func => {
         let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-        item.detail = `${func.name} (${v.path})`;
-        item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
+        item.detail = `${func.name} (${document.fileName})`
+        item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
         items.push(item);
       })
-    })
-  } catch (err) { console.log(err) }
 
-  for (const key in j2) {
-    if (j2.hasOwnProperty(key)) {
-      const func = j2[key];
-      let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-      item.detail = `${func.name} (${func.fileName})`
-      item.documentation = new vscode.MarkdownString().appendText(func.documentation).appendCodeblock(func.original)
-      item.insertText = func.insertText
-      items.push(item)
+      let globals = parseGlobals(document.getText())
+      globals.forEach(global => {
+        global.forEach(v => {
+          const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+          let item = new vscode.CompletionItem(v.name, type);
+          item.detail = `${v.name} (${document.fileName})`
+          items.push(item);
+        })
+      })
+
+      parseImport(document).forEach(v => {
+        let funcs = parseFunctions(v.content);
+        funcs.forEach(func => {
+          let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+          item.detail = `${func.name} (${v.path})`;
+          item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
+          items.push(item);
+        })
+      })
+    } catch (err) { console.log(err) }
+
+    for (const key in j2) {
+      if (j2.hasOwnProperty(key)) {
+        const func = j2[key];
+        let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+        item.detail = `${func.name} (${func.fileName})`
+        item.documentation = new vscode.MarkdownString().appendText(func.documentation).appendCodeblock(func.original)
+        item.insertText = func.insertText
+        items.push(item)
+      }
     }
+
+    return items
+  },
+  resolveCompletionItem(item, token) {
+    return item
   }
+}, ...triggreCharacters.w);
 
-  return items
-}
 
-/**
- * 
- * @param {vscode.CompletionItem} item 
- * @param {vscode.CancellationToken} token 
- * @returns {vscode.ProviderResult<vscode.CompletionItem>}
- */
-const resolveCompletionItem = (item, token) => {
-  return item
-}
-
-module.exports = {
-  provideCompletionItems, resolveCompletionItem
-}
