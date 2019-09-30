@@ -8,6 +8,7 @@ const documentForrmatProvider = require("./document-forrmat-provider")
 require("./keyword-item-provider");
 require("./type-item-provider");
 require("./default-item-provider");
+require("./provider/lib-complation-provider")
 require("./hover-provider");
 
 
@@ -37,6 +38,7 @@ function activate(context) {
   // 错误提示
   if (diagnosticCollection == null)
     diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
+
 }
 
 exports.activate = activate;

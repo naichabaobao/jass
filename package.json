@@ -4,7 +4,10 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/jass.png",
   "publisher": "jass",
-  "version": "0.0.16",
+  "version": "0.0.17",
+  "keywords": [
+    "jass", "warcraft"
+  ],
   "engines": {
     "vscode": "^1.37.0"
   },
@@ -16,8 +19,17 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Jass configuration",
-      "properties": {}
+      "title": "Jass",
+      "properties": {
+        "includes": {
+          "type":"array",
+          "description": "包含路徑",
+          "items": {
+            "type": "string",
+            "description": "依賴文檔絕對路徑"
+          }
+        }
+      }
     },
     "languages": [
       {
@@ -50,9 +62,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/naichabaobao/jass.git"
+    "url": "https://github.com/fnfufnfu/jass"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
+  "homepage": "https://github.com/fnfufnfu/jass",
   "activationEvents": [
     "onLanguage:jass"
   ],
