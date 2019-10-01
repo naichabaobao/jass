@@ -6,11 +6,7 @@
     // symbols used as brackets
     "brackets": [
         ["[", "]"],
-        ["(", ")"],
-        ["then", "endif"],
-        ["loop", "endloop"],
-        ["function", "endfunction"],
-        ["globals", "endglobals"]
+        ["(", ")"]
     ],
     // symbols that are auto closed when typing
     "autoClosingPairs": [

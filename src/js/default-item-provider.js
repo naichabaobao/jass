@@ -16,10 +16,6 @@ const Desc = require("./jass/desc");
 const DescGlobals = require("./jass/desc-globals");
 const triggreCharacters = require("./triggre-characters");
 
-
-
-
-
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
     /**
@@ -35,17 +31,8 @@ vscode.languages.registerCompletionItemProvider("jass", {
     // 初始
     try {
       functions.forEach(s => {
-        // {
-        //     original: string;
-        //     name: string;
-        //     parameters: {
-        //         name: string;
-        //         type: string;
-        //     }[];
-        //     returnType: string;
-        // }
         s.functions.forEach(x => {
-          let item = new vscode.CompletionItem(x.name, vscode.CompletionItemKind.Function);
+          let item = new vscode.CompletionItem(`${x.name}(${x.parameters.map(p => p.type).join(",")})->${x.returnType ? x.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
           item.detail = `${x.name} (${s.fileName})`;
           item.documentation = new vscode.MarkdownString(Desc && Desc[s.fileName] && Desc[s.fileName][x.name] ? Desc[s.fileName][x.name] : "").appendCodeblock(x.original);
           item.insertText = `${x.name}(${x.parameters.map(p => p.name).join(", ")})`;
@@ -56,33 +43,36 @@ vscode.languages.registerCompletionItemProvider("jass", {
         s.globals.forEach(gs => {
           gs.forEach(g => {
             const type = g.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-            let item = new vscode.CompletionItem(g.name, type);
+            let item = new vscode.CompletionItem(`${g.name}->${g.type}${g.isArray ? "[]" : ""}`, type);
             item.detail = `${g.name} (${s.fileName})`;
             item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[s.fileName] && DescGlobals[s.fileName][g.name] ? DescGlobals[s.fileName][g.name] : "").appendCodeblock(g.original);
+            item.insertText = g.name;
             items.push(item);
           });
         });
       });
     } catch (err) { console.log(err) }
     // 當前文件 和 import
+    /*
     try {
       let funcs = parseFunctions(document.getText());
       funcs.forEach(func => {
-        let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+        let item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(p => p.type).join(",")})${func.returnType ? "->" + func.returnType : "nothing"}`, vscode.CompletionItemKind.Function)
         item.detail = `${func.name} (${document.fileName})`
         item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`
         items.push(item);
-      })
+      });
 
       let globals = parseGlobals(document.getText())
       globals.forEach(global => {
         global.forEach(v => {
           const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-          let item = new vscode.CompletionItem(v.name, type);
+          let item = new vscode.CompletionItem(`${v.name}->${v.type}${v.isArray ? "[]" : ""}`, type);
           item.detail = `${v.name} (${document.fileName})`
+          item.insertText = v.name;
           items.push(item);
-        })
-      })
+        });
+      });
 
       parseImport(document).forEach(v => {
         let funcs = parseFunctions(v.content);
@@ -92,19 +82,32 @@ vscode.languages.registerCompletionItemProvider("jass", {
           item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
           items.push(item);
         })
-      })
+      });
     } catch (err) { console.log(err) }
+*/
 
-    // for (const key in j2) {
-    //   if (j2.hasOwnProperty(key)) {
-    //     const func = j2[key];
-    //     let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-    //     item.detail = `${func.name} (${func.fileName})`
-    //     item.documentation = new vscode.MarkdownString().appendText(func.documentation).appendCodeblock(func.original)
-    //     item.insertText = func.insertText
-    //     items.push(item)
-    //   }
-    // }
+    // 当前文件全局变量
+    let glos = parseGlobals(document.getText())
+    glos.forEach(global => {
+      global.forEach(v => {
+        const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+        let item = new vscode.CompletionItem(`${v.name}->${v.type}${v.isArray ? "[]" : ""}`, type);
+        item.detail = `${v.name} (${document.fileName})`
+        item.insertText = v.name;
+        items.push(item);
+      });
+    });
+
+    // 暂时性保留 下个版本删除
+    parseImport(document).forEach(v => {
+      let funcs = parseFunctions(v.content);
+      funcs.forEach(func => {
+        let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
+        item.detail = `${func.name} (${v.path})`;
+        item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
+        items.push(item);
+      })
+    });
 
     return items
   },

@@ -1,5 +1,8 @@
 const vscode = require("vscode");
 
+/**
+ * @deprecated 下个版本删除
+ */
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
     let items = [];

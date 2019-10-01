@@ -1,6 +1,5 @@
 const vscode = require("vscode");
-// const j = require("./j")
-// const jg = require("./jg")
+
 const code = require("./code")
 const itemTool = require("./item-tool")
 

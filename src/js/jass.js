@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 /**
- * 
+ * @deprecated
  * @param {vscode.TextDocument} document 
  * @returns {{path:string,content:string}[]}
  */

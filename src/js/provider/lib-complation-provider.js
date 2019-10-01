@@ -5,43 +5,39 @@
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
-//  vscode.languages.registerCompletionItemProvider("jass", {
-//    provideCompletionItems(document, position, token, context){
+const { parseFunctions } = require("../jass");
+const triggreCharacters = require("../triggre-characters");
 
-//    },
-//    resolveCompletionItem(item,token){
+let currentFile = null;
+let functions = [];
 
-//    }
-//  });
+vscode.languages.registerCompletionItemProvider("jass", {
+  provideCompletionItems(document, position, token, context) {
+    if (document.uri.fsPath != currentFile) {
+      let stet = path.parse(document.uri.fsPath);
+      let files = fs.readdirSync(stet.dir).filter(f => path.parse(f).ext == ".j" || path.parse(f).ext == ".ai");
 
-const Includes = "includes";
-
-let functions = []; // {name: string,paramater: {type:string,name:string}[]}
-
-const getLib = () => {
-  console.log(vscode.workspace.getConfiguration())
-  let includes = vscode.workspace.getConfiguration().get(Includes, []);
-  if (includes) {
-    console.log(includes)
-    includes.forEach(x => { // x=用戶傳遞的絕對路徑
-      if (path.isAbsolute(x) && fs.existsSync(x)) {
-        let isDir = fs.lstatSync(x).isDirectory();
-        if (isDir) {
-
-        } else {
-
-        }
-      }
-    })
+      let tempFuncs = [];
+      files.forEach(f => {
+        let content = fs.readFileSync(path.join(stet.dir, f)).toString("utf8");
+        let funcs = parseFunctions(content);
+        tempFuncs.push(...funcs.map(x => {
+          let item = new vscode.CompletionItem(`${x.name}(${x.parameters.map(s => s.type).join(",")})->${x.returnType ? + x.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
+          item.detail = `${x.name} (${f})`;
+          item.documentation = new vscode.MarkdownString("").appendCodeblock(x.original);
+          item.insertText = `${x.name}(${x.parameters.map(s => s.name).join(", ")})`;
+          return item;
+        }));
+      });
+      functions = tempFuncs;
+      currentFile = document.uri.fsPath;
+    }
+    return functions;
+  },
+  resolveCompletionItem(item, token) {
+    return item;
   }
-}
-
-vscode.workspace.onDidChangeConfiguration(event => {
-  console.log(vscode.workspace.getConfiguration())
-});
-
-getLib();
-
+}, ...triggreCharacters.l, ...triggreCharacters.u);
 
 
 
