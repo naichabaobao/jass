@@ -22,7 +22,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
         let content = fs.readFileSync(path.join(stet.dir, f)).toString("utf8");
         let funcs = parseFunctions(content);
         tempFuncs.push(...funcs.map(x => {
-          let item = new vscode.CompletionItem(`${x.name}(${x.parameters.map(s => s.type).join(",")})->${x.returnType ? + x.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
+          let item = new vscode.CompletionItem(`${x.name}(${x.parameters.map(s => s.type).join(",")})->${x.returnType ? x.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
           item.detail = `${x.name} (${f})`;
           item.documentation = new vscode.MarkdownString("").appendCodeblock(x.original);
           item.insertText = `${x.name}(${x.parameters.map(s => s.name).join(", ")})`;

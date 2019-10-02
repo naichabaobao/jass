@@ -13,17 +13,12 @@ require("./hover-provider");
 
 
 require("./definition-provider");
-require("./import-path-completion-provider");
+require("./provider/import-path-completion-provider");
 
 /**
  * 语言名称
  */
 const language = "jass"
-
-/**
- * 错误集合
- */
-var diagnosticCollection = null
 
 /**
  * 
@@ -34,10 +29,6 @@ function activate(context) {
   vscode.languages.registerCompletionItemProvider(language, codeItemProvider, ...triggreCharacters.c);
   vscode.languages.registerColorProvider(language, colorProvider);
   vscode.languages.registerDocumentFormattingEditProvider(language, documentForrmatProvider);
-
-  // 错误提示
-  if (diagnosticCollection == null)
-    diagnosticCollection = vscode.languages.createDiagnosticCollection(language);
 
 }
 
