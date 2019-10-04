@@ -10,7 +10,7 @@ const itemTool = require("./item-tool")
 
 // const j2 = require("./j2");
 
-const { parseFunctions, parseGlobals, parseImport } = require("./jass");
+const { parseGlobals } = require("./jass");
 const { functions, globals } = require("./jass/default");
 const Desc = require("./jass/desc");
 const DescGlobals = require("./jass/desc-globals");
@@ -98,7 +98,8 @@ vscode.languages.registerCompletionItemProvider("jass", {
       });
     });
 
-    // 暂时性保留 下个版本删除
+    // 删除
+    /*
     parseImport(document).forEach(v => {
       let funcs = parseFunctions(v.content);
       funcs.forEach(func => {
@@ -108,7 +109,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
         items.push(item);
       })
     });
-
+    */
     return items
   },
   resolveCompletionItem(item, token) {

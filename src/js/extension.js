@@ -13,7 +13,7 @@ require("./hover-provider");
 
 
 require("./definition-provider");
-require("./provider/import-path-completion-provider");
+require("./provider/diagnostic-provider");
 
 /**
  * 语言名称

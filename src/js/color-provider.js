@@ -21,7 +21,8 @@ const color2JColorCode = (color) => {
 const provideDocumentColors = (document, token) => {
   let lineCount = document.lineCount
   let colors = []
-  let colorReg = new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
+  // new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
+  let colorReg = new RegExp(/\|[cC][\da-fA-F]{8}/, "g")
   for (let i = 0; i < lineCount; i++) {
     let lineText = document.lineAt(i).text
     let colotSet = lineText.match(colorReg)

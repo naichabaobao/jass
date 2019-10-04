@@ -1,3 +1,5 @@
+// 廢棄
+
 const vscode = require("vscode");
 let createDiagnosticCollection = vscode.languages.createDiagnosticCollection("jass");
 

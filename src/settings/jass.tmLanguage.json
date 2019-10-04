@@ -4,16 +4,10 @@
   "name": "jass",
   "patterns": [
     {
-      "include": "#vjass-import"
-    },
-    {
       "include": "#jass-block-comment"
     },
     {
       "include": "#jass-comment"
-    },
-    {
-      "include": "#jass-comment-macro"
     },
     {
       "include": "#jass-string"
@@ -25,6 +19,9 @@
       "include": "#jass-keyword"
     },
     {
+      "include": "#vjass-keyword"
+    },
+    {
       "include": "#jass-const"
     },
     {
@@ -32,9 +29,6 @@
     },
     {
       "include": "#support.variable"
-    },
-    {
-      "include": "#jass-keyword-control"
     },
     {
       "include": "#jass-keyword-control"
@@ -60,9 +54,7 @@
     {
       "include": "#vjass-other"
     },
-    {
-      "include": "#vjass-keyword"
-    },
+    
     {
       "include": "#vjass-this"
     },
@@ -74,10 +66,6 @@
     }
   ],
   "repository": {
-    "vjass-import": {
-      "name": "keyword",
-      "match": "^\\s*//!\\s+import\\s+\"[^\\u4e00-\\u9fa5]+?\""
-    },
     "jass-block-comment": {
       "name": "comment.block",
       "begin": "/\\*",
@@ -85,12 +73,8 @@
     },
     "jass-comment": {
       "name": "comment.line.double-slash",
-      "begin": "//(?!!)",
+      "begin": "//",
       "end": "\\n"
-    },
-    "jass-comment-macro": {
-      "name": "comment.line.double-dash",
-      "match": "//!"
     },
     "jass-string": {
       "name": "string.quoted.double",
@@ -137,7 +121,7 @@
       "match": "[a-zA-Z]\\w*"
     },
     "vjass-keyword": {
-      "name": "keyword.other",
+      "name": "keyword",
       "match": "\\b(library|initializer|needs|requires|optional|endlibrary|scope|endscope|private|public|static|execute|evaluate|create|destroy|interface|endinterface|extends|struct|endstruct|method|endmethod|this|defaults|delegate|operator|module|endmodule|implement|hook|stub|debug|import)\\b"
     },
     "vjass-this": {

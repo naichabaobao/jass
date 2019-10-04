@@ -297,15 +297,6 @@ function DzAPI_Map_Ladder_SubmitPlayerExtraExp takes player whichPlayer, integer
 	call DzAPI_Map_Ladder_SetStat(whichPlayer,"ExtraExp",I2S(value))
 endfunction
 
-
-
-
-
-
-
-
-
-
 endlibrary
 
 #endif

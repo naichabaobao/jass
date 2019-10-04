@@ -7,12 +7,17 @@ const fs = require("fs");
 const path = require("path");
 const { parseFunctions } = require("../jass");
 const triggreCharacters = require("../triggre-characters");
+const itemTool = require("../item-tool")
 
 let currentFile = null;
 let functions = [];
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
+    if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
+      itemTool.cheakInCode(document, position)) {
+      return [];
+    }
     if (document.uri.fsPath != currentFile) {
       let stet = path.parse(document.uri.fsPath);
       let files = fs.readdirSync(stet.dir).filter(f => path.parse(f).ext == ".j" || path.parse(f).ext == ".ai");

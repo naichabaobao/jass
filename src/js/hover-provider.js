@@ -37,18 +37,6 @@ vscode.languages.registerHoverProvider("jass", {
   provideHover(document, position, token) {
     let keyword = document.getText(document.getWordRangeAtPosition(position))
 
-    // let func = functions.functions.find(s => s.name == keyword);
-
-    // if (func) {
-    //   tooltips.appendText(Desc[keyword])
-    //     .appendCodeblock(func.original)
-    //     .appendText(functions.fileName)
-    // }
-    // if (jg[keyword]) {
-    //   tooltips.appendCodeblock(jg[keyword].documentation)
-    //     .appendCodeblock(jg[keyword].original)
-    //     .appendText(jg[keyword].fileName)
-    // }
     let hs = [];
     if (Object.keys(mss).includes(keyword)) {
       hs.push(mss[keyword]);
