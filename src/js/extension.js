@@ -12,8 +12,11 @@ require("./provider/lib-complation-provider")
 require("./hover-provider");
 
 
-require("./definition-provider");
+require("./provider/definition-provider");
 require("./provider/diagnostic-provider");
+
+// require("./welcome-view");
+require("./provider/type-hover-provider");
 
 /**
  * 语言名称

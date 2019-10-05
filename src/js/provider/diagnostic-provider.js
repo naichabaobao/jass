@@ -11,9 +11,18 @@ const command = `${path.resolve(__dirname, "../../resources/pjass.exe")} ${path.
 // c:\Users\Administrator\Desktop\test.j:14: Not enough arguments passed to function
 const errorRegExp = /(?<uri>.+?):(?<line>\d+):(?<message>.+)/;
 
+vscode.workspace.onDidChangeConfiguration(e => {
+  console.log(e)
+  if (vscode.workspace.getConfiguration("jass").pjass.enable == false) {
+    createDiagnosticCollection.clear();
+  }
+});
+
 vscode.workspace.onDidSaveTextDocument(document => {
+
   let ext = path.parse(document.fileName).ext;
-  if ((ext != ".j" && ext != ".ai") || !vscode.workspace.getConfiguration("jass").pjass.enable) return;
+  if (!vscode.workspace.getConfiguration("jass").pjass.enable) return;
+  if (ext != ".j" && ext != ".ai") return;
   try {
     exec(command + document.uri.fsPath, (error, stdout, stderr) => {
       if (error && stdout && stdout.trimLeft() != "") {

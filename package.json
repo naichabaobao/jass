@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/jass.png",
   "publisher": "jass",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "keywords": [
     "jass",
     "warcraft"
@@ -12,6 +12,7 @@
   "engines": {
     "vscode": "^1.37.0"
   },
+  "markdown": "github",
   "categories": [
     "Programming Languages",
     "Snippets",
