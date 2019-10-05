@@ -138,7 +138,7 @@
     },
     "vjass-macro": {
       "name": "comment.line.number-sign",
-      "match": "#define|#ifndef|#endif|#ifdef|#include"
+      "match": "#if|#define|#ifndef|#endif|#ifdef|#include"
     }
   }
 }

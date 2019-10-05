@@ -12,7 +12,7 @@ vscode.languages.registerDefinitionProvider("jass", {
     let key = document.getText(document.getWordRangeAtPosition(position))
     // local -> functions -> globals -> import
     let defiines = [];
-    console.log(key)
+    // console.log(key)
     /*
     let start = 0; // 方法開始行
     for (let i = 0; i < document.lineCount; i++) {
