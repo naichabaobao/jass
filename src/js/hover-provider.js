@@ -32,7 +32,6 @@ try {
   console.log(err)
 }
 
-
 vscode.languages.registerHoverProvider("jass", {
   provideHover(document, position, token) {
     let keyword = document.getText(document.getWordRangeAtPosition(position))

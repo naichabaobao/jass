@@ -43,7 +43,6 @@ vscode.languages.registerDefinitionProvider("jass", {
       if (!TextLine.isEmptyOrWhitespace) {
         const text = TextLine.text;
         const subtext = text.substring(TextLine.firstNonWhitespaceCharacterIndex);
-        console.log(subtext)
         if (inLocal && subtext.startsWith("local")) {
           let keyIndex = text.indexOf(key);
           if (keyIndex > TextLine.firstNonWhitespaceCharacterIndex) defiines.push(new vscode.Location(document.uri, new vscode.Range(i, keyIndex, i, keyIndex + key.length)));

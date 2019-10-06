@@ -2,5 +2,6 @@
 jass/
 node_modules/
 src/test/
+src/resources/image/type-icon
 *.vsix
 vsc-extension-quickstart.md

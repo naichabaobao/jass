@@ -11,7 +11,6 @@ const defaultPath = "https://gitee.com/naichabaobao/jass/raw/master/src/resource
 
 Object.keys(typeDesc).forEach(ts => {
   typeDesc[ts].icon = `${defaultPath}${ts}.png`;
-  console.log(typeDesc[ts].icon);
 });
 
 module.exports = typeDesc;

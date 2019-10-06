@@ -31,6 +31,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
           item.detail = `${x.name} (${f})`;
           item.documentation = new vscode.MarkdownString("").appendCodeblock(x.original);
           item.insertText = `${x.name}(${x.parameters.map(s => s.name).join(", ")})`;
+          item.filterText = x.name;
           return item;
         }));
       });
