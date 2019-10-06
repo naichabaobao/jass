@@ -9,7 +9,7 @@ const { functions, globals } = require("./jass/default");
 const Desc = require("./jass/desc");
 const DescGlobals = require("./jass/desc-globals");
 const triggreCharacters = require("./triggre-characters");
-const { StatementType } = require("./support-type")
+const { StatementType, ParamenterType } = require("./support-type")
 
 let defaultItems = [];
 // 初始
@@ -65,23 +65,43 @@ vscode.languages.registerCompletionItemProvider("jass", {
     });
 
     // 当前文件局部变量
-    for (let i = position.line - 1; i >= 0; i--) { // 从当前行开始向前遍历 直到遇到第一个function或文件头
-      const TextLine = document.lineAt(i);
-
-      if (TextLine.isEmptyOrWhitespace) {
-        continue;
-      } else {
-        if (TextLine.text.trimLeft().startsWith("function")) {
-          break;
-        } else if (TextLine.text.trimLeft().startsWith("local")) {
-          TextLine.text.replace(new RegExp(`local\\s+(?<type>${StatementType.join("|")})\\s+((?<arr>array)\\s+)?(?<name>[a-zA-Z]\\w*)`), (...args) => {
-            let local = [...args].pop();
-            let item = new vscode.CompletionItem(`${local.name}->${local.type}${local.arr ? "[]" : ""}`, vscode.CompletionItemKind.Variable);
-            item.detail = `${local.name} (${document.fileName})`;
-            item.insertText = local.name;
-            item.filterText = local.name;
-            items.push(item);
-          })
+    if (!document.lineAt(position.line).text.trimLeft().startsWith("function")) { // 保证当前行不为function
+      for (let i = position.line - 1; i >= 0; i--) { // 从当前行开始向前遍历 直到遇到第一个function或文件头
+        const TextLine = document.lineAt(i);
+        if (TextLine.isEmptyOrWhitespace) {
+          continue;
+        } else {
+          let trimLeftText = TextLine.text.trimLeft();
+          if (trimLeftText.startsWith("function")) {
+            // 获取参数
+            try {
+              TextLine.text.replace(new RegExp(`(${ParamenterType.join("|")})\\s+([a-zA-Z]\\w*)`, "g"), (...args) => {
+                let param = [...args];
+                let item = new vscode.CompletionItem(`${param[2]}->${param[1]}`, vscode.CompletionItemKind.TypeParameter);
+                item.detail = `${param[2]} (${document.fileName})`;
+                item.documentation = new vscode.MarkdownString().appendCodeblock(param[0]);
+                item.insertText = param[2];
+                item.filterText = param[2];
+                items.push(item);
+              });
+            } catch (err) {
+              console.log(err)
+            }
+            break;
+          } else if (trimLeftText.startsWith("endfunction")) {
+            break;
+          } else if (trimLeftText.startsWith("local")) {
+            TextLine.text.replace(new RegExp(`local\\s+(?<type>${StatementType.join("|")})\\s+((?<arr>array)\\s+)?(?<name>[a-zA-Z]\\w*)`), (...args) => {
+              let groups = [...args];
+              let local = groups.pop();
+              let item = new vscode.CompletionItem(`${local.name}->${local.type}${local.arr ? "[]" : ""}`, vscode.CompletionItemKind.Variable);
+              item.detail = `${local.name} (${document.fileName})`;
+              item.documentation = new vscode.MarkdownString().appendCodeblock(groups.shift());
+              item.insertText = local.name;
+              item.filterText = local.name;
+              items.push(item);
+            })
+          }
         }
       }
     }
