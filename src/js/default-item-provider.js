@@ -64,6 +64,23 @@ vscode.languages.registerCompletionItemProvider("jass", {
       });
     });
 
+    let inGlobal = false;
+    for (let i = 0; i < position.line; i++) {
+      const TextLine = document.lineAt(i);
+      if (!TextLine.isEmptyOrWhitespace) {
+        const trimLeftText = TextLine.text.trimLeft();
+        if (trimLeftText.startsWith("globals")) {
+          inGlobal = true;
+        } else if (trimLeftText.startsWith("endglobals")) {
+          inGlobal = false;
+        } else if (inGlobal) {
+          trimLeftText.replace(new RegExp(`(?:(?<isConstant>constant)\\s+)?(?<type>${StatementType.join("|")})\\s+(?<name>[a-zA-Z]\\w*)`), (args) => {
+            console.log(args);
+          });
+        }
+      }
+    }
+
     // 当前文件局部变量
     if (!document.lineAt(position.line).text.trimLeft().startsWith("function")) { // 保证当前行不为function
       for (let i = position.line - 1; i >= 0; i--) { // 从当前行开始向前遍历 直到遇到第一个function或文件头
