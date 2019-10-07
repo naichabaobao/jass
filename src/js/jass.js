@@ -34,7 +34,7 @@ const parseImport = (document) => {
 }
 
 /**
- * 
+ * @deprecated 將在後續廢棄這方法 采用内部實現形式
  * @param {string} content 
  */
 const parseGlobals = (content) => {
