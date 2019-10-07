@@ -1,10 +1,12 @@
-/**
+/*
  * 方法提供
+  2019年10月7日 修改global塊識別
  */
+
 const vscode = require("vscode")
 const itemTool = require("./item-tool")
 
-const { parseGlobals } = require("./jass");
+// const { parseGlobals } = require("./jass");
 const { functions, globals } = require("./jass/default");
 const Desc = require("./jass/desc");
 const DescGlobals = require("./jass/desc-globals");
@@ -44,6 +46,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
      */
 
     let items = []
+    if (document.lineAt(position.line).text.trimLeft().startsWith("function")) return items;
     if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
       itemTool.cheakInCode(document, position)) {
       return items
@@ -52,6 +55,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
     items.push(...defaultItems);
 
     // 当前文件全局变量
+    /*
     let glos = parseGlobals(document.getText())
     glos.forEach(global => {
       global.forEach(v => {
@@ -63,7 +67,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
         items.push(item);
       });
     });
-
+*/
     let inGlobal = false;
     for (let i = 0; i < position.line; i++) {
       const TextLine = document.lineAt(i);
@@ -74,8 +78,15 @@ vscode.languages.registerCompletionItemProvider("jass", {
         } else if (trimLeftText.startsWith("endglobals")) {
           inGlobal = false;
         } else if (inGlobal) {
-          trimLeftText.replace(new RegExp(`(?:(?<isConstant>constant)\\s+)?(?<type>${StatementType.join("|")})\\s+(?<name>[a-zA-Z]\\w*)`), (args) => {
-            console.log(args);
+          trimLeftText.replace(new RegExp(`(?:(?<isConstant>constant)\\s+)?(?<type>${StatementType.join("|")})(?:\\s+(?<isArray>array))?\\s+(?<name>[a-zA-Z]\\w*)`), (...args) => {
+            const groups = [...args];
+            const value = groups.pop();
+            const type = value.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+            let item = new vscode.CompletionItem(`${value.name}->${value.type}${value.isArray ? "[]" : ""}`, type);
+            item.detail = `${value.name} (${document.fileName})`
+            item.insertText = value.name;
+            item.filterText = value.name;
+            items.push(item);
           });
         }
       }

@@ -5,7 +5,7 @@ const colorProvider = require("./color-provider")
 const codeItemProvider = require("./code-item-provider")
 const triggreCharacters = require("./triggre-characters")
 const documentForrmatProvider = require("./document-forrmat-provider")
-require("./keyword-item-provider");
+require("./provider/keyword-item-provider");
 require("./type-item-provider");
 require("./default-item-provider");
 require("./provider/lib-complation-provider")
