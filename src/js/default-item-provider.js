@@ -4,6 +4,8 @@
  */
 
 const vscode = require("vscode")
+const fs = require("fs");
+const path = require("path");
 const itemTool = require("./item-tool")
 
 // const { parseGlobals } = require("./jass");
@@ -25,19 +27,52 @@ functions.forEach(s => {
     defaultItems.push(item);
   });
 });
-globals.forEach(s => {
-  s.globals.forEach(gs => {
-    gs.forEach(g => {
-      const type = g.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-      let item = new vscode.CompletionItem(`${g.name}->${g.type}${g.isArray ? "[]" : ""}`, type);
-      item.detail = `${g.name} (${s.fileName})`;
-      item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[s.fileName] && DescGlobals[s.fileName][g.name] ? DescGlobals[s.fileName][g.name] : "").appendCodeblock(g.original);
-      item.insertText = g.name;
-      item.filterText = g.name;
-      defaultItems.push(item);
-    });
+
+// 讀取三個主要文件global
+const initFiles = ["common.j", "blizzard.j", "common.ai"]
+initFiles.forEach(fileName => {
+  fs.readFile(path.resolve(__dirname, `../resources/jass/${fileName}`), (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      const content = data.toString("utf-8");
+      const lines = content.split("\n");
+      let inGlobal = false;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const tlLine = line.trimLeft();
+        if (line.startsWith("globals")) inGlobal = true;
+        else if (line.startsWith("endglobals")) inGlobal = false;
+        else if (inGlobal) {
+          tlLine.replace(new RegExp(`(?:(?<isConstant>constant)\\s+)?(?<type>${StatementType.join("|")})\\s+(?:(?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`), (...args) => {
+            const groups = [...args];
+            const group = groups.pop();
+            const type = group.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+            let item = new vscode.CompletionItem(`${group.name}->${group.type}${group.isArray ? "[]" : ""}`, type);
+            item.detail = `${group.name} (${fileName})`;
+            item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[fileName] && DescGlobals[fileName][group.name] ? DescGlobals[fileName][group.name] : "").appendCodeblock(groups.shift().replace(/\s+/g, " "));
+            item.insertText = group.name;
+            item.filterText = group.name;
+            defaultItems.push(item);
+          });
+        }
+      }
+    }
   });
 });
+// globals.forEach(s => {
+//   s.globals.forEach(gs => {
+//     gs.forEach(g => {
+//       const type = g.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
+//       let item = new vscode.CompletionItem(`${g.name}->${g.type}${g.isArray ? "[]" : ""}`, type);
+//       item.detail = `${g.name} (${s.fileName})`;
+//       item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[s.fileName] && DescGlobals[s.fileName][g.name] ? DescGlobals[s.fileName][g.name] : "").appendCodeblock(g.original);
+//       item.insertText = g.name;
+//       item.filterText = g.name;
+//       defaultItems.push(item);
+//     });
+//   });
+// });
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
