@@ -6,6 +6,7 @@ const itemTool = require("./item-tool")
 const { functions, globals } = require("./jass/default");
 const Desc = require("./jass/desc");
 const DescGlobal = require("./jass/desc-globals");
+const { StatementType, ParamenterType } = require("./support-type")
 
 let mss = {};
 try {
@@ -114,6 +115,27 @@ vscode.languages.registerHoverProvider("jass", {
         }
       });
       hs.push(tooltips);
+    }
+
+    for (let i = position.line; i >= 0; i--) { // 从当前行开始向前遍历 直到遇到第一个function或文件头
+      const TextLine = document.lineAt(i);
+      if (TextLine.isEmptyOrWhitespace) {
+        continue;
+      } else {
+        // local -> param -> global -> function
+        // let inLocal = true;
+        const TextLine = document.lineAt(i);
+        const text = TextLine.text;
+        const reg = new RegExp(`local\\s+(?:${StatementType.join("|")})(?:\\s+array)?\\s+${keyword}`);
+        text.replace(reg, (...args) => {
+          const groups = [...args];
+          console.log(groups)
+          hs.push(new vscode.MarkdownString().appendCodeblock(groups[0]));
+        });
+        // 偷懶
+        if (text.trimLeft().startsWith("function")) break;
+        if (text.trimLeft().startsWith("endfunction")) break;
+      }
     }
     return new vscode.Hover(hs);
   }
