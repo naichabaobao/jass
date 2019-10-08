@@ -63,7 +63,7 @@
     "type": "git",
     "url": "https://github.com/fnfufnfu/jass"
   },
-  "homepage": "https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=1562542073#127236515130",
+  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/READMD.md",
   "activationEvents": [
     "onLanguage:jass"
   ],
