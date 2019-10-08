@@ -129,7 +129,6 @@ vscode.languages.registerHoverProvider("jass", {
         const reg = new RegExp(`local\\s+(?:${StatementType.join("|")})(?:\\s+array)?\\s+${keyword}`);
         text.replace(reg, (...args) => {
           const groups = [...args];
-          console.log(groups)
           hs.push(new vscode.MarkdownString().appendCodeblock(groups[0]));
         });
         // 偷懶

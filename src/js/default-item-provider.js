@@ -9,14 +9,17 @@ const path = require("path");
 const itemTool = require("./item-tool")
 
 // const { parseGlobals } = require("./jass");
-const { functions, globals } = require("./jass/default");
-const Desc = require("./jass/desc");
-const DescGlobals = require("./jass/desc-globals");
+// const { functions, globals } = require("./jass/default");
+
+
 const triggreCharacters = require("./triggre-characters");
 const { StatementType, ParamenterType } = require("./support-type")
 
-let defaultItems = [];
+// let defaultItems = [];
 // 初始
+
+/** 
+ * @deprecated
 functions.forEach(s => {
   s.functions.forEach(x => {
     let item = new vscode.CompletionItem(`${x.name}(${x.parameters.map(p => p.type).join(",")})->${x.returnType ? x.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
@@ -27,59 +30,45 @@ functions.forEach(s => {
     defaultItems.push(item);
   });
 });
-
-// 讀取三個主要文件global
-const initFiles = ["common.j", "blizzard.j", "common.ai"]
-initFiles.forEach(fileName => {
-  fs.readFile(path.resolve(__dirname, `../resources/jass/${fileName}`), (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      const content = data.toString("utf-8");
-      const lines = content.split("\n");
-      let inGlobal = false;
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const tlLine = line.trimLeft();
-        if (line.startsWith("globals")) inGlobal = true;
-        else if (line.startsWith("endglobals")) inGlobal = false;
-        else if (inGlobal) {
-          tlLine.replace(new RegExp(`(?:(?<isConstant>constant)\\s+)?(?<type>${StatementType.join("|")})\\s+(?:(?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`), (...args) => {
-            const groups = [...args];
-            const group = groups.pop();
-            const type = group.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-            let item = new vscode.CompletionItem(`${group.name}->${group.type}${group.isArray ? "[]" : ""}`, type);
-            item.detail = `${group.name} (${fileName})`;
-            item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[fileName] && DescGlobals[fileName][group.name] ? DescGlobals[fileName][group.name] : "").appendCodeblock(groups.shift().replace(/\s+/g, " "));
-            item.insertText = group.name;
-            item.filterText = group.name;
-            defaultItems.push(item);
-          });
-        }
-      }
+*/
+// 初始當前目錄下其他文件
+let currentFile = null;
+let syncItems = [];
+/**
+ * 
+ * @param {string} funcString 
+ */
+const parseFunction = (funcString) => {
+  let func = {
+    name: null,
+    parameters: [],
+    returnType: null,
+  };
+  funcString.replace(new RegExp(`function\\s+([a-zA-Z]\\w*)`), (result, ...args) => {
+    func.name = args.shift();
+    return "";
+  }).replace(new RegExp(`returns\\s+(${StatementType.join("|")})`), (...args) => {
+    func.returnType = args[1];
+    return "";
+  }).replace(new RegExp(`takes\\s+((?:${ParamenterType.join("|")})\\s+[a-zA-Z]\\w*(?:\\s*\\,\\s*(?:${ParamenterType.join("|")})\\s+[a-zA-Z]\\w*)*)`), (...args) => {
+    let params = args[1].split(new RegExp(/\s*,\s*/, "g"));
+    for (let i = 0; i < params.length; i++) {
+      const param = params[i];
+      param.replace(new RegExp(`(?<type>${ParamenterType.join("|")})\\s+(?<name>[a-zA-Z]\\w*)`), (...as) => {
+        const group = [...as].pop()
+        func.parameters.push({
+          type: group.type,
+          name: group.name
+        })
+      });
     }
+    return "";
   });
-});
-// globals.forEach(s => {
-//   s.globals.forEach(gs => {
-//     gs.forEach(g => {
-//       const type = g.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-//       let item = new vscode.CompletionItem(`${g.name}->${g.type}${g.isArray ? "[]" : ""}`, type);
-//       item.detail = `${g.name} (${s.fileName})`;
-//       item.documentation = new vscode.MarkdownString(DescGlobals && DescGlobals[s.fileName] && DescGlobals[s.fileName][g.name] ? DescGlobals[s.fileName][g.name] : "").appendCodeblock(g.original);
-//       item.insertText = g.name;
-//       item.filterText = g.name;
-//       defaultItems.push(item);
-//     });
-//   });
-// });
+  return func.name ? func : null;
+}
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
-    /**
-     * 字符串 注释 代号 set后 type后 function定义后 takes后 returns后 constant后 array后 native
-     */
-
     let items = []
     if (document.lineAt(position.line).text.trimLeft().startsWith("function")) return items;
     if (itemTool.cheakInComment(document, position) || itemTool.cheakInString(document, position) ||
@@ -87,22 +76,50 @@ vscode.languages.registerCompletionItemProvider("jass", {
       return items
     }
 
-    items.push(...defaultItems);
-
-    // 当前文件全局变量
-    /*
-    let glos = parseGlobals(document.getText())
-    glos.forEach(global => {
-      global.forEach(v => {
-        const type = v.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-        let item = new vscode.CompletionItem(`${v.name}->${v.type}${v.isArray ? "[]" : ""}`, type);
-        item.detail = `${v.name} (${document.fileName})`
-        item.insertText = v.name;
-        item.filterText = v.name;
-        items.push(item);
+    // 同級目錄下所有function
+    if (document.uri.fsPath != currentFile) {
+      syncItems = [];
+      let stet = path.parse(document.uri.fsPath);
+      fs.readdir(stet.dir, "utf8", (err, fileNames) => {
+        if (err) return;
+        fileNames.filter(fileName => (path.parse(fileName).ext == ".j" || path.parse(fileName).ext == ".ai") && path.parse(fileName).name != stet.name).forEach(fileName => {
+          fs.readFile(path.join(stet.dir, fileName), (error, data) => {
+            if (error) return;
+            const content = data.toString();
+            const lines = content.split("\n");
+            for (let i = 0; i < lines.length; i++) {
+              const line = lines[i];
+              const func = parseFunction(line);
+              if (func) {
+                let item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(p => p.type).join(",")})->${func.returnType ? func.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
+                item.detail = `${func.name} (${fileName})`;
+                item.documentation = new vscode.MarkdownString().appendCodeblock(`function ${func.name} takes ${func.parameters.length == 0 ? "nothing" : func.parameters.map(value => value.type + " " + value.name).join(", ")} returns ${func.returnType ? func.returnType : "nothing"}`);
+                item.insertText = `${func.name}(${func.parameters.map(p => p.name).join(", ")})`;
+                item.filterText = func.name;
+                syncItems.push(item);
+              }
+            }
+          });
+        });
       });
-    });
-*/
+      currentFile = document.uri.fsPath;
+    }
+    items.push(...syncItems);
+
+    // 當前文件function
+    for (let i = position.line; i >= 0; i--) {
+      let func = parseFunction(document.lineAt(i).text);
+      if (func) {
+        let item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(p => p.type).join(",")})->${func.returnType ? func.returnType : "nothing"}`, vscode.CompletionItemKind.Function);
+        item.detail = `${func.name} ("当前文件")`;
+        item.documentation = new vscode.MarkdownString().appendCodeblock(`function ${func.name} takes ${func.parameters.length == 0 ? "nothing" : func.parameters.map(value => value.type + " " + value.name).join(", ")} returns ${func.returnType ? func.returnType : "nothing"}`);
+        item.insertText = `${func.name}(${func.parameters.map(p => p.name).join(", ")})`;
+        item.filterText = func.name;
+        items.push(item);
+      }
+    }
+
+    // 當前文件globals
     let inGlobal = false;
     for (let i = 0; i < position.line; i++) {
       const TextLine = document.lineAt(i);
@@ -166,18 +183,6 @@ vscode.languages.registerCompletionItemProvider("jass", {
         }
       }
     }
-    // 删除
-    /*
-    parseImport(document).forEach(v => {
-      let funcs = parseFunctions(v.content);
-      funcs.forEach(func => {
-        let item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function)
-        item.detail = `${func.name} (${v.path})`;
-        item.insertText = `${func.name}(${func.parameters.length > 0 ? func.parameters.map(s => s.name).join(", ") : ""})`;
-        items.push(item);
-      })
-    });
-    */
     return items
   },
   resolveCompletionItem(item, token) {
