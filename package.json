@@ -63,7 +63,7 @@
     "type": "git",
     "url": "https://github.com/fnfufnfu/jass"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/READMD.md",
+  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
     "onLanguage:jass"
   ],

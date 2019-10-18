@@ -5,7 +5,7 @@
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
-const { parseFunctions } = require("../jass");
+// const { parseFunctions } = require("../jass");
 const triggreCharacters = require("../triggre-characters");
 const { StatementType, ParamenterType } = require("../support-type");
 const itemTool = require("../item-tool")

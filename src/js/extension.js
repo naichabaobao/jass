@@ -15,8 +15,10 @@ require("./hover-provider");
 require("./provider/definition-provider");
 require("./provider/diagnostic-provider");
 
-// require("./welcome-view");
 require("./provider/type-hover-provider");
+// require("./welcome-view");
+
+require("./provider/main-provider");
 
 /**
  * 语言名称
