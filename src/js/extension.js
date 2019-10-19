@@ -6,9 +6,9 @@ const codeItemProvider = require("./code-item-provider")
 const triggreCharacters = require("./triggre-characters")
 const documentForrmatProvider = require("./document-forrmat-provider")
 require("./provider/keyword-item-provider");
-require("./type-item-provider");
+// require("./type-item-provider");
 require("./default-item-provider");
-require("./provider/lib-complation-provider")
+// require("./provider/lib-complation-provider")
 require("./hover-provider");
 
 
