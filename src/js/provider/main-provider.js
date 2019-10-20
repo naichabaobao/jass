@@ -186,15 +186,18 @@ const TypeItems = Types.map(type => {
 console.log(TypeItems)
 
 const GlobalItems = Globals.map(globalValue => {
-  const item = new vscode.CompletionItem(globalValue.name, globalValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-  item.detail = `${globalValue.name} (${path.parse(globalValue.fileName).base})`; 
+  const item = new vscode.CompletionItem(`${globalValue.name}->${globalValue.type}`, globalValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+  item.filterText = globalValue.name;
+  item.detail = `${globalValue.name} (${path.parse(globalValue.fileName).base})`;
   item.documentation = new vscode.MarkdownString().appendCodeblock(globalValue.original);
   return item;
 });
 
 const FuncItems = Funcs.map(func => {
-  const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-  item.detail = `${func.name} (${path.parse(func.fileName).base})`; 
+  const item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(param => param.type).join(",")})->${func.returnType}`, vscode.CompletionItemKind.Function);
+  item.insertText = func.name;
+  item.filterText = func.name;
+  item.detail = `${func.name} (${path.parse(func.fileName).base})`;
   item.documentation = new vscode.MarkdownString().appendCodeblock(func.original);
   return item;
 });
@@ -220,7 +223,7 @@ const canCompletion = (document, position) => {
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
-    if (canCompletion(document, position)) return [...TypeItems,...GlobalItems, ...FuncItems];
+    if (canCompletion(document, position)) return [...TypeItems, ...GlobalItems, ...FuncItems];
     return [];
   },
   resolveCompletionItem(item, token) {
@@ -238,10 +241,37 @@ vscode.languages.registerCompletionItemProvider("jass", {
 }, "|");
 
 vscode.languages.registerSignatureHelpProvider("jass", {
-  provideSignatureHelp(document, position, token, context){
+  provideSignatureHelp(document, position, token, context) {
     // BlzChangeMinimapTerrainTex
+    /**
+     * 0=初始
+     * 1=字母
+     */
     const SignatureHelp = new vscode.SignatureHelp();
-    SignatureHelp.signatures.push(new vscode.SignatureInformation("BlzChangeMinimapTerrainTex", "6666"))
-    return SignatureHelp;
+    const lineText = document.lineAt(position.line);
+    if (context.triggerCharacter == "(") {
+      let funcNames = [];
+      for (let i = position.character - 1; i >= 0; i--) {
+        const char = lineText.text.charAt(i);
+        if (funcNames.length == 0 && /\s/.test(char)) {
+          continue;
+        } else if (/\w/.test(char)) {
+          funcNames.push(char);
+          // 向前預測
+          if (!/\w/.test(lineText.text.charAt(i - 1)) || (i - 1) < 0) {
+            console.log(funcNames.reverse().join(""))
+            const func = Funcs.find(func => func.name == funcNames.reverse().join(""));
+            if (func) {
+              const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.parameters.map(param => param.type + " " + param.name).join(", ")})->${func.returnType}`, new vscode.MarkdownString().appendCodeblock(func.original));
+              SignatureInformation.parameters = func.parameters.map(param => new vscode.SignatureInformation(param.name));
+              SignatureHelp.signatures.push(SignatureInformation);
+              return SignatureHelp;
+            }
+          }
+        }
+      }
+    } else if (context.triggerCharacter == ",") {
+    }
+    return null;
   }
-},"(")
+}, "(", ",")
