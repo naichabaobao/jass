@@ -110,7 +110,7 @@
     },
     "jass-number": {
       "name": "constant.numeric",
-      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x\\d+|\\b\\d+\\b|\\$[a-fA-F0-9]+"
+      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+"
     },
     "jass-variable": {
       "name": "support.variable",

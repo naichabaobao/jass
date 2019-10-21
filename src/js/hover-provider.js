@@ -37,10 +37,12 @@ vscode.languages.registerHoverProvider("jass", {
   provideHover(document, position, token) {
     let keyword = document.getText(document.getWordRangeAtPosition(position))
 
+    /*
     let hs = [];
     if (Object.keys(mss).includes(keyword)) {
       hs.push(mss[keyword]);
     }
+    */
 
     if (code.code[keyword]) {
       let cObj = code.code[keyword]

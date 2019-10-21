@@ -14,23 +14,35 @@ native GetAiPlayer          takes nothing                               returns 
 native GetHeroId            takes nothing                               returns integer
 native GetHeroLevelAI       takes nothing                               returns integer
 
+// 对应类型的单位数
 native GetUnitCount         takes integer unitid                        returns integer
 native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
 native GetUnitCountDone     takes integer unitid                        returns integer
+// 对应类型的单位数 - 按基地
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
 native GetUnitGoldCost      takes integer unitid                        returns integer
 native GetUnitWoodCost      takes integer unitid                        returns integer
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
+// 拥有的金矿数
 native GetMinesOwned        takes nothing                               returns integer
+// 拥有的金矿金钱数量
+// 当前金钱数
 native GetGoldOwned         takes nothing                               returns integer
+// 有金矿的基地
 native TownWithMine         takes nothing                               returns integer
+// 基地有金矿
 native TownHasMine          takes integer townid                        returns boolean
+// 基地有主城镇
 native TownHasHall          takes integer townid                        returns boolean
 
+// 当前升级的等级
 native GetUpgradeLevel      takes integer id                            returns integer
+// 升级金钱消耗
 native GetUpgradeGoldCost   takes integer id                            returns integer
+// 升级木材消耗
 native GetUpgradeWoodCost   takes integer id                            returns integer
+// 下一个扩张基地
 native GetNextExpansion     takes nothing                               returns integer
 native GetMegaTarget        takes nothing                               returns unit
 native GetBuilding          takes player p                              returns unit
@@ -89,6 +101,7 @@ native AttackMoveXY         takes integer x, integer y                  returns 
 native LoadZepWave          takes integer x, integer y                  returns nothing
 native SuicidePlayer        takes player id, boolean check_full         returns boolean
 native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
+// 进攻统帅在战斗
 native CaptainInCombat      takes boolean attack_captain                returns boolean
 native IsTowered            takes unit target                           returns boolean
 
@@ -111,15 +124,24 @@ native CaptainAttack        takes real x, real y                        returns 
 native CaptainVsUnits       takes player id                             returns nothing
 native CaptainVsPlayer      takes player id                             returns nothing
 native CaptainGoHome        takes nothing                               returns nothing
+// 进攻统帅在家
 native CaptainIsHome        takes nothing                               returns boolean
+// 进攻组队完整
 native CaptainIsFull        takes nothing                               returns boolean
+// 进攻组队为空
 native CaptainIsEmpty       takes nothing                               returns boolean
+// 进攻组队规模
 native CaptainGroupSize     takes nothing                               returns integer
 native CaptainReadiness     takes nothing                               returns integer
+// 进攻统帅在撤退
 native CaptainRetreating    takes nothing                               returns boolean
+// 进攻组队健康程度
 native CaptainReadinessHP   takes nothing                               returns integer
+// 进攻组队魔法程度
 native CaptainReadinessMa   takes nothing                               returns integer
+// 进攻统帅到达目标
 native CaptainAtGoal        takes nothing                               returns boolean
+// 地图上还有野外生物
 native CreepsOnMap          takes nothing                               returns boolean
 native SuicideUnit          takes integer count, integer unitid         returns nothing
 native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
@@ -128,14 +150,17 @@ native Sleep                takes real seconds                          returns 
 native UnitAlive            takes unit id                               returns boolean
 native UnitInvis            takes unit id                               returns boolean
 native IgnoredUnits         takes integer unitid                        returns integer
+// 基地被攻击
 native TownThreatened       takes nothing                               returns boolean
 native DisablePathing       takes nothing                               returns nothing
 native SetAmphibious        takes nothing                               returns nothing
 
+// 等待中指令数
 native CommandsWaiting      takes nothing                               returns integer
 native GetLastCommand       takes nothing                               returns integer
 native GetLastData          takes nothing                               returns integer
 native PopLastCommand       takes nothing                               returns nothing
+// 对战难度
 native MeleeDifficulty      takes nothing                               returns integer
 
 //============================================================================
@@ -923,6 +948,7 @@ function GetGold takes nothing returns integer
 endfunction
 
 //============================================================================
+// 当前木材数
 function GetWood takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_LUMBER)
 endfunction
@@ -2272,6 +2298,7 @@ function GetZeppelin takes nothing returns nothing
 endfunction
 
 //============================================================================
+// 当前AI玩家的人口使用量
 function FoodUsed takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_USED)
 endfunction

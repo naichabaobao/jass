@@ -48,6 +48,8 @@ class Func {
     this.range = null;
     this.nameRange = null;
     this.returnTypeRange = null;
+
+    this.description = "";
   }
 }
 
@@ -83,7 +85,7 @@ CommonJContent.split("\n").forEach((value, index) => {
     Types.push(type);
   }
 });
-console.log(Types)
+// console.log(Types)
 const StatementTypeRegExpString = ["integer", "real", "string", "boolean", "handle", ...Types.map(type => type.type)].join("|");
 
 // 2,找到全局變量
@@ -130,7 +132,7 @@ const KeywordArray = "array";
     }
   });
 });
-console.log(Globals.slice(0, 20))
+// console.log(Globals.slice(0, 20))
 
 // 3,找到方法
 const Funcs = [];
@@ -143,7 +145,7 @@ const FuncRegExp = new RegExp(`^\\s*(function|(constant\\s+)?native)\\s+(?<name>
 // const ArgsRegExp = new RegExp()
 [CommonJFilePath, CommonAiFilePath, BlizzardJFilePath, DzApiFilePath].forEach((filePath) => {
   const FileContent = fs.readFileSync(filePath).toString("utf8");
-  FileContent.split("\n").forEach((line, lineIndex) => {
+  FileContent.split("\n").forEach((line, lineIndex, allLines) => {
     if (FuncRegExp.test(line)) {
       const FuncContent = FuncRegExp.exec(line);
       const result = FuncContent.shift();
@@ -168,12 +170,17 @@ const FuncRegExp = new RegExp(`^\\s*(function|(constant\\s+)?native)\\s+(?<name>
       func.range = new vscode.Range(lineIndex, result.length - result.trimLeft().length, lineIndex, result.length);
       func.nameRange = new vscode.Range(lineIndex, result.indexOf(name), lineIndex, result.indexOf(name) + name.length);
       if (returnType) func.returnTypeRange = new vscode.Range(lineIndex, result.length - returnType.length, lineIndex, result.length);
+      const DescriptionRegExp = new RegExp(/\/\/\s*(?<description>.+)/);
+      if (DescriptionRegExp.test(allLines[lineIndex - 1])) {
+        const preLineContent = DescriptionRegExp.exec(allLines[lineIndex - 1]);
+        func.description = preLineContent.groups.description;
+      }
       Funcs.push(func);
     }
   });
 });
 
-console.log(Funcs.slice(0, 20));
+// console.log(Funcs.slice(0, 20));
 
 // 處理為提示
 const TypeItems = Types.map(type => {
@@ -183,7 +190,7 @@ const TypeItems = Types.map(type => {
   return item;
 });
 
-console.log(TypeItems)
+// console.log(TypeItems)
 
 const GlobalItems = Globals.map(globalValue => {
   const item = new vscode.CompletionItem(`${globalValue.name}->${globalValue.type}`, globalValue.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
@@ -198,7 +205,7 @@ const FuncItems = Funcs.map(func => {
   item.insertText = func.name;
   item.filterText = func.name;
   item.detail = `${func.name} (${path.parse(func.fileName).base})`;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(func.original);
+  item.documentation = new vscode.MarkdownString(func.description).appendCodeblock(func.original);
   return item;
 });
 
@@ -233,45 +240,92 @@ vscode.languages.registerCompletionItemProvider("jass", {
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
+    const textLine = document.lineAt(position.line);
+    const typeNames = [];
+    
+    for (let i = position.character - 1; i >= 0; i--) {
+      const char = textLine.text.charAt(i);
+      const pchar = textLine.text.charAt(i - 1);
+      
+      if (/\w/.test(char)) {
+        typeNames.push(char);
+        if (typeNames.length > 0 && (/\W/.test(pchar) || i == 0)) {
+          const typeName = typeNames.reverse().join("");
+          if (Types.findIndex(type => type.name == typeName)) { // 確認匹配的類已被定義
+            return Funcs.filter(func => func.returnType == typeName).map(func => {
+              const item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(param => param.type).join(",")})->${func.returnType}`, vscode.CompletionItemKind.Function);
+              item.insertText = func.name;
+              item.filterText = func.name;
+              item.detail = `${func.name} (${path.parse(func.fileName).base})`;
+              item.documentation = new vscode.MarkdownString(func.description).appendCodeblock(func.original);
+              item.additionalTextEdits = [vscode.TextEdit.delete(new vscode.Range(position.line, position.character - typeName.length - 1, position.line, position.character))]
+              return item;
+            });
+          }
+        }
+      }
+    }
     return [];
   },
   resolveCompletionItem(item, token) {
     return item;
   }
-}, "|");
+}, ".");
 
 vscode.languages.registerSignatureHelpProvider("jass", {
   provideSignatureHelp(document, position, token, context) {
-    // BlzChangeMinimapTerrainTex
-    /**
-     * 0=初始
-     * 1=字母
-     */
-    const SignatureHelp = new vscode.SignatureHelp();
     const lineText = document.lineAt(position.line);
-    if (context.triggerCharacter == "(") {
-      let funcNames = [];
-      for (let i = position.character - 1; i >= 0; i--) {
-        const char = lineText.text.charAt(i);
+    let funcNames = [];
+    let field = 1;
+    let activeParameter = 0;
+    let inString = false;
+    for (let i = position.character - 1; i >= 0; i--) {
+      const char = lineText.text.charAt(i);
+      if (field > 0) {
+        if (!inString && char == '"') {
+          inString = true;
+        } else if (inString && char == '"' && lineText.text.charAt(i - 1) != '\\') {
+          inString = false;
+        } else if (!inString && char == '(') {
+          field--;
+        } else if (!inString && char == ')') {
+          field++;
+        } else if (!inString && char == ',') {
+          activeParameter++;
+        }
+      } else if (field == 0) {
         if (funcNames.length == 0 && /\s/.test(char)) {
           continue;
         } else if (/\w/.test(char)) {
           funcNames.push(char);
           // 向前預測
-          if (!/\w/.test(lineText.text.charAt(i - 1)) || (i - 1) < 0) {
-            console.log(funcNames.reverse().join(""))
-            const func = Funcs.find(func => func.name == funcNames.reverse().join(""));
+          if (funcNames.length > 0(/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
+            const funcName = funcNames.reverse().join("");
+            const func = Funcs.find(func => func.name == funcName);
             if (func) {
+              const SignatureHelp = new vscode.SignatureHelp();
               const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.parameters.map(param => param.type + " " + param.name).join(", ")})->${func.returnType}`, new vscode.MarkdownString().appendCodeblock(func.original));
               SignatureInformation.parameters = func.parameters.map(param => new vscode.SignatureInformation(param.name));
+              SignatureHelp.activeParameter = activeParameter;
               SignatureHelp.signatures.push(SignatureInformation);
               return SignatureHelp;
             }
           }
         }
       }
-    } else if (context.triggerCharacter == ",") {
     }
     return null;
   }
-}, "(", ",")
+}, "(", ",");
+
+vscode.languages.registerHoverProvider("jass", {
+  provideHover(document, position, token) {
+    const keyword = document.getText(document.getWordRangeAtPosition(position));
+
+    const func = Funcs.find(fun => fun.name == keyword);
+    if (func) {
+      const hover = new vscode.MarkdownString(`${func.name} (${func.name})`).appendText(`\n${func.description}`).appendCodeblock(func.original)
+      return new vscode.Hover(hover);
+    }
+  }
+});
