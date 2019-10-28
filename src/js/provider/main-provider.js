@@ -135,7 +135,7 @@ const KeywordArray = "array";
 // console.log(Globals.slice(0, 20))
 
 // 3,找到方法
-const Funcs = [];
+let funcs;
 const DzApiFileName = "DzAPI.j";
 /**
  * dzApi文件路徑
@@ -143,42 +143,70 @@ const DzApiFileName = "DzAPI.j";
 const DzApiFilePath = path.resolve(__dirname, "../../resources/jass/", DzApiFileName);
 const FuncRegExp = new RegExp(`^\\s*(function|(constant\\s+)?native)\\s+(?<name>[a-zA-Z]\\w*)(\\s+takes\\s+(nothing|(?<parameters>((${StatementTypeRegExpString + "|code"})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${StatementTypeRegExpString + "|code"})\\s+[a-zA-Z]\\w*)*))))?(\\s+returns\\s+(nothing|(?<returnType>${StatementTypeRegExpString})))?`);
 // const ArgsRegExp = new RegExp()
-[CommonJFilePath, CommonAiFilePath, BlizzardJFilePath, DzApiFilePath].forEach((filePath) => {
-  const FileContent = fs.readFileSync(filePath).toString("utf8");
-  FileContent.split("\n").forEach((line, lineIndex, allLines) => {
-    if (FuncRegExp.test(line)) {
-      const FuncContent = FuncRegExp.exec(line);
-      const result = FuncContent.shift();
-      const groups = FuncContent.groups;
-      const func = new Func();
-      const name = groups.name;
-      const parameterStrings = groups.parameters;
-      const parameters = parameterStrings ? parameterStrings.split(/\s*,\s*/).map((parameterString) => {
-        const paramArr = parameterString.split(/\s+/);
-        const parameter = new Parameter(paramArr[0], paramArr[1]);
-        parameter.range = new vscode.Range(lineIndex, result.indexOf(parameterString), lineIndex, result.indexOf(parameterString) + parameterString.length);
-        parameter.typeRange = new vscode.Range(lineIndex, result.indexOf(parameterString), lineIndex, result.indexOf(parameterString) + paramArr[0].length);
-        parameter.nameRange = new vscode.Range(lineIndex, result.indexOf(parameterString) + parameterString.length - paramArr[1].length, lineIndex, result.indexOf(parameterString) + parameterString.length);
-        return parameter;
-      }) : [];
-      const returnType = groups.returnType ? groups.returnType : null;
-      func.original = result.trimLeft().replace(/\s{2,}/g, " ");
-      func.name = name;
-      func.parameters = parameters;
-      func.returnType = returnType;
-      func.fileName = filePath;
-      func.range = new vscode.Range(lineIndex, result.length - result.trimLeft().length, lineIndex, result.length);
-      func.nameRange = new vscode.Range(lineIndex, result.indexOf(name), lineIndex, result.indexOf(name) + name.length);
-      if (returnType) func.returnTypeRange = new vscode.Range(lineIndex, result.length - returnType.length, lineIndex, result.length);
-      const DescriptionRegExp = new RegExp(/\/\/\s*(?<description>.+)/);
-      if (DescriptionRegExp.test(allLines[lineIndex - 1])) {
-        const preLineContent = DescriptionRegExp.exec(allLines[lineIndex - 1]);
-        func.description = preLineContent.groups.description;
+
+// 添加用戶指定路勁所有j
+let customFiles;
+let includes; // 此處要排序，後面要轉換爲字符串比對
+const resolveCustomFiles =  function () {
+  includes = vscode.workspace.getConfiguration().jass.includes.sort();
+  customFiles = [];
+  includes.forEach(dirPath => {
+    const availableDirPath = dirPath.replace(/\u202a/,""); // 去除控制字符
+    if(fs.existsSync(availableDirPath)){
+      const stat = fs.statSync(availableDirPath);
+      if(stat.isDirectory){
+        customFiles.push(...fs.readdirSync(availableDirPath).map(fileName => path.resolve(availableDirPath, fileName)).filter(filePath => path.parse(filePath).ext == ".j" && fs.statSync(filePath).isFile()));
       }
-      Funcs.push(func);
     }
   });
-});
+}
+resolveCustomFiles();
+// console.log(customFiles);
+
+const resolveFuncs = function (paths) {
+  funcs = [];
+  paths.forEach((filePath) => {
+    if(fs.existsSync(filePath) && fs.statSync(filePath).isFile()){
+      const FileContent = fs.readFileSync(filePath).toString("utf8");
+    FileContent.split("\n").forEach((line, lineIndex, allLines) => {
+      if (FuncRegExp.test(line)) {
+        const FuncContent = FuncRegExp.exec(line);
+        const result = FuncContent.shift();
+        const groups = FuncContent.groups;
+        const func = new Func();
+        const name = groups.name;
+        const parameterStrings = groups.parameters;
+        const parameters = parameterStrings ? parameterStrings.split(/\s*,\s*/).map((parameterString) => {
+          const paramArr = parameterString.split(/\s+/);
+          const parameter = new Parameter(paramArr[0], paramArr[1]);
+          parameter.range = new vscode.Range(lineIndex, result.indexOf(parameterString), lineIndex, result.indexOf(parameterString) + parameterString.length);
+          parameter.typeRange = new vscode.Range(lineIndex, result.indexOf(parameterString), lineIndex, result.indexOf(parameterString) + paramArr[0].length);
+          parameter.nameRange = new vscode.Range(lineIndex, result.indexOf(parameterString) + parameterString.length - paramArr[1].length, lineIndex, result.indexOf(parameterString) + parameterString.length);
+          return parameter;
+        }) : [];
+        const returnType = groups.returnType ? groups.returnType : null;
+        func.original = result.trimLeft().replace(/\s{2,}/g, " ");
+        func.name = name;
+        func.parameters = parameters;
+        func.returnType = returnType;
+        func.fileName = filePath;
+        func.range = new vscode.Range(lineIndex, result.length - result.trimLeft().length, lineIndex, result.length);
+        func.nameRange = new vscode.Range(lineIndex, result.indexOf(name), lineIndex, result.indexOf(name) + name.length);
+        if (returnType) func.returnTypeRange = new vscode.Range(lineIndex, result.length - returnType.length, lineIndex, result.length);
+        const DescriptionRegExp = new RegExp(/\/\/\s*(?<description>.+)/);
+        if (DescriptionRegExp.test(allLines[lineIndex - 1])) {
+          const preLineContent = DescriptionRegExp.exec(allLines[lineIndex - 1]);
+          func.description = preLineContent.groups.description;
+        }
+        funcs.push(func);
+      }
+    });
+    }
+  });
+}
+resolveFuncs([CommonJFilePath, CommonAiFilePath, BlizzardJFilePath, DzApiFilePath, ...customFiles]);
+
+
 
 // console.log(Funcs.slice(0, 20));
 
@@ -200,14 +228,29 @@ const GlobalItems = Globals.map(globalValue => {
   return item;
 });
 
-const FuncItems = Funcs.map(func => {
-  const item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(param => param.type).join(",")})->${func.returnType}`, vscode.CompletionItemKind.Function);
-  item.insertText = func.name;
-  item.filterText = func.name;
-  item.detail = `${func.name} (${path.parse(func.fileName).base})`;
-  item.documentation = new vscode.MarkdownString(func.description).appendCodeblock(func.original);
-  return item;
-});
+let funcItems;
+const resolveFuncItems = function () {
+  funcItems = funcs.map(func => {
+    const item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(param => param.type).join(",")})->${func.returnType}`, vscode.CompletionItemKind.Function);
+    item.insertText = func.name;
+    item.filterText = func.name;
+    item.detail = `${func.name} (${path.parse(func.fileName).base})`;
+    item.documentation = new vscode.MarkdownString(func.description).appendCodeblock(func.original);
+    return item;
+  });
+}
+resolveFuncItems();
+
+// 儅配置項includes變化時
+vscode.workspace.onDidChangeConfiguration(e => {
+  console.log(e)
+  let currentIncludes = vscode.workspace.getConfiguration().jass.includes;
+  if(includes.toString() != currentIncludes.sort().toString()){
+    resolveCustomFiles();
+    resolveFuncs([CommonJFilePath, CommonAiFilePath, BlizzardJFilePath, DzApiFilePath, ...customFiles]);
+    resolveFuncItems();
+  }
+})
 
 /**
  * @param {vscode.TextDocument} document 
@@ -230,7 +273,7 @@ const canCompletion = (document, position) => {
 
 vscode.languages.registerCompletionItemProvider("jass", {
   provideCompletionItems(document, position, token, context) {
-    if (canCompletion(document, position)) return [...TypeItems, ...GlobalItems, ...FuncItems];
+    if (canCompletion(document, position)) return [...TypeItems, ...GlobalItems, ...funcItems];
     return [];
   },
   resolveCompletionItem(item, token) {
@@ -252,7 +295,7 @@ vscode.languages.registerCompletionItemProvider("jass", {
         if (typeNames.length > 0 && (/\W/.test(pchar) || i == 0)) {
           const typeName = typeNames.reverse().join("");
           if (Types.findIndex(type => type.name == typeName)) { // 確認匹配的類已被定義
-            return Funcs.filter(func => func.returnType == typeName).map(func => {
+            return funcs.filter(func => func.returnType == typeName).map(func => {
               const item = new vscode.CompletionItem(`${func.name}(${func.parameters.map(param => param.type).join(",")})->${func.returnType}`, vscode.CompletionItemKind.Function);
               item.insertText = func.name;
               item.filterText = func.name;
@@ -299,9 +342,9 @@ vscode.languages.registerSignatureHelpProvider("jass", {
         } else if (/\w/.test(char)) {
           funcNames.push(char);
           // 向前預測
-          if (funcNames.length > 0(/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
+          if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
             const funcName = funcNames.reverse().join("");
-            const func = Funcs.find(func => func.name == funcName);
+            const func = funcs.find(func => func.name == funcName);
             if (func) {
               const SignatureHelp = new vscode.SignatureHelp();
               const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.parameters.map(param => param.type + " " + param.name).join(", ")})->${func.returnType}`, new vscode.MarkdownString().appendCodeblock(func.original));
@@ -322,7 +365,7 @@ vscode.languages.registerHoverProvider("jass", {
   provideHover(document, position, token) {
     const keyword = document.getText(document.getWordRangeAtPosition(position));
 
-    const func = Funcs.find(fun => fun.name == keyword);
+    const func = funcs.find(fun => fun.name == keyword);
     if (func) {
       const hover = new vscode.MarkdownString(`${func.name} (${func.name})`).appendText(`\n${func.description}`).appendCodeblock(func.original)
       return new vscode.Hover(hover);

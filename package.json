@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/jass.png",
   "publisher": "jass",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "keywords": [
     "jass",
     "warcraft"
@@ -25,8 +25,15 @@
       "properties": {
         "jass.pjass.enable": {
           "type": "boolean",
-          "default": "true",
+          "default": "false",
           "description": "是否開啓語法檢測"
+        },
+        "jass.includes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
         }
       }
     },
@@ -63,7 +70,7 @@
     "type": "git",
     "url": "https://github.com/fnfufnfu/jass"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
+  "homepage": "https://raw.githubusercontent.com/fnfufnfu/jass/master/README.md",
   "activationEvents": [
     "onLanguage:jass"
   ],
