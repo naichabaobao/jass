@@ -1,0 +1,54 @@
+{
+  "global": {
+    "prefix": "globals",
+    "body": "globals\n\t${0:}\nendglobals"
+  },
+  "if": {
+    "prefix": "if",
+    "body": "if ${1:condition} then\n\t${0:// TODO}\nendif",
+    "description": "if",
+    "scope": "source.jass"
+  },
+  "ifelse": {
+    "prefix": "ifelse",
+    "body": "if ${1:condition} then\n\t${2:// TODO}\nelse\n\t${0:// TODO}\nendif",
+    "description": "ifelse",
+    "scope": "source.jass"
+  },
+  "elseif": {
+    "prefix": "elif",
+    "body": "elseif ${1:condition} then\n\t${0:// TODO}\n",
+    "description": "elseif",
+    "scope": "source.jass"
+  },
+  "function": {
+    "prefix": "function",
+    "body": "function ${1:function_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:// TODO}\nendfunction",
+    "description": "function",
+    "scope": "source.jass"
+  },
+  "loop": {
+    "prefix": "loop",
+    "body": "loop\n\texitwhen ${1:condition}\n\t${0:// TODO}\nendloop",
+    "description": "loop循环",
+    "scope": "source.jass"
+  },
+  "cd": {
+    "prefix": "cd",
+    "body": "call BJDebugMsg(\"\")",
+    "description": "调用debug打印信息",
+    "scope": "source.jass"
+  },
+  "main": {
+    "prefix": "main",
+    "body": "function main takes nothing returns nothing\n\t${0:// TODO}\nendfunction",
+    "description": "main",
+    "scope": "source.jass"
+  },
+  "config": {
+    "prefix": "config",
+    "body": "function config takes nothing returns nothing\n\t${0:// TODO}\nendfunction",
+    "description": "config",
+    "scope": "source.jass"
+  }
+}
