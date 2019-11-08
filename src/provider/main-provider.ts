@@ -12,8 +12,21 @@ class Comment {
   public contentRange: vscode.Range | null = null;
 }
 
-class Global {
+enum Modifier {
+  Private = "private",
+  Public = "public",
+  Common = "common"
+}
 
+class Global {
+  public modifier:Modifier = Modifier.Common;
+  public isConstant:boolean = false;
+  public isArray:boolean = false;
+  public type:string|null = null;
+  public name:string|null = null;
+  public range:vscode.Range|null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
 }
 
 class Param {
@@ -21,12 +34,12 @@ class Param {
 }
 
 class Func {
-  public origin:string | null = null;
-  public name:string |null= null;
-  public takes:Param[] = new Array<Param>();
-  public returnType:string |null=null;
-  public range:vscode.Range | null = null;
-  public nameRange:vscode.Range | null = null; 
+  public origin: string | null = null;
+  public name: string | null = null;
+  public takes: Param[] = new Array<Param>();
+  public returnType: string | null = null;
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
 }
 
 class Import {
@@ -34,12 +47,12 @@ class Import {
 }
 
 class TextMacro {
-  public origin:string | null = null;
-  public name:string | null = null;
-  public takes:string[] = [];
-  public content:string | null = null;
-  public range:vscode.Range |null = null;
-  public nameRange:vscode.Range |null = null;
+  public origin: string | null = null;
+  public name: string | null = null;
+  public takes: string[] = [];
+  public content: string | null = null;
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
 }
 
 class Library {
@@ -47,14 +60,14 @@ class Library {
 }
 
 class Scope {
-  public origin:string | null = null;
-  public name:string|null = null;
-  public scopes:Scope[] = new Array<Scope>();
-  public initializer:string |null= null;
+  public origin: string | null = null;
+  public name: string | null = null;
+  public scopes: Scope[] = new Array<Scope>();
+  public initializer: string | null = null;
   public globals: Global[] = new Array<Global>();
-  public functions:Func[] = [];
-  public range:vscode.Range | null = null;
-  public nameRange:vscode.Range |null = null;
+  public functions: Func[] = [];
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
 }
 
 class Struct {
@@ -156,13 +169,13 @@ class Jass {
       let libraryBlocks = []; // 库内容
       let libraryStartLine = 0; // 库开始行
       let inStruct = false;
-      let structBlocks:string[] = [];
+      let structBlocks: string[] = [];
       let structStartLine = 0;
       let inFunction = false;
-      let functionBlocks:string[] = [];
+      let functionBlocks: string[] = [];
       let functionStartLine: number = 0;
       let inGlobals = false;
-      let globalBlocks:string[] = [];
+      let globalBlocks: string[] = [];
       let globalStartLine = 0;
       for (let i = 0; i < lineTexts.length; i++) {
         const lineText = lineTexts[i];
@@ -178,7 +191,7 @@ class Jass {
             textMacroBlocks = [];
             inTextMacro = false;
           }
-        } else{
+        } else {
           if (!inLibrary && /^\s*scope/.test(lineText)) {
             inScope = true;
             inScopeField++;
@@ -263,7 +276,7 @@ class Jass {
               inGlobals = false;
             }
           }
-          if (/^\s*type/. test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
+          if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
             blocks.push({ type: "array_object", content: [lineText], startLine: i, endLine: i });
           }
           if (/^\s*function\s+interface/.test(lineText)) {
@@ -275,13 +288,13 @@ class Jass {
           if (/^\s*\/\//.test(lineText)) {
             blocks.push({ type: "comment", content: [lineText], startLine: i, endLine: i });
           }
-          if(/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)){
+          if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
             blocks.push({ type: "native", content: [lineText], startLine: i, endLine: i });
           }
-          if(/^\s*type/.test(lineText)){
+          if (/^\s*type/.test(lineText)) {
             blocks.push({ type: "type", content: [lineText], startLine: i, endLine: i });
           }
-        } 
+        }
       }
       return blocks;
     }
@@ -291,68 +304,81 @@ class Jass {
       const jass = new Jass;
       for (let i = 0; i < blockTexts.length; i++) {
         const contentBlock = blockTexts[i];
-        if(contentBlock.type == "textmacro"){ // //! textmacro textmacro_name [takes takes_name1,takes_name2]
+        if (contentBlock.type == "textmacro") { // //! textmacro textmacro_name [takes takes_name1,takes_name2]
           const textMacro = new TextMacro();
           textMacro.origin = contentBlock.content.join("");
           textMacro.range = new vscode.Range(contentBlock.startLine, 0, contentBlock.endLine, contentBlock.content[contentBlock.content.length - 1].length);
           const nameRegExp = /textmacro\s+(?<name>[a-zA-Z]\w*)/;
-          if(nameRegExp.test(contentBlock.content[0])){
+          if (nameRegExp.test(contentBlock.content[0])) {
             const result = nameRegExp.exec(contentBlock.content[0]);
-            if(result){
+            if (result) {
               const groups = result.groups;
-              if(groups){
+              if (groups) {
                 textMacro.name = groups.name;
                 const nameIndex = contentBlock.content[0].indexOf(textMacro.name);
-                textMacro.nameRange = new vscode.Range(contentBlock.startLine, nameIndex,contentBlock.startLine, nameIndex + textMacro.name.length);
+                textMacro.nameRange = new vscode.Range(contentBlock.startLine, nameIndex, contentBlock.startLine, nameIndex + textMacro.name.length);
               }
             }
           }
-          if(!textMacro.name) continue; // 保证宏已被命名
+          if (!textMacro.name) continue; // 保证宏已被命名
           const takesRegExp = /takes\s+(?<takesContent>[a-zA-Z]\w*(?:\s*,\s*[a-zA-Z]\w*)*)/;
-          if(takesRegExp.test(contentBlock.content[0])){
+          if (takesRegExp.test(contentBlock.content[0])) {
             const result = nameRegExp.exec(contentBlock.content[0]);
-            if(result){
+            if (result) {
               const groups = result.groups;
-              if(groups){
+              if (groups) {
                 textMacro.takes = groups.takesContent.split(/\s*,\s*/);
               }
             }
           }
           jass.textMacros.push(textMacro);
-        }else if(contentBlock.type == "scope"){
+        } else if (contentBlock.type == "scope") {
           const scope = new Scope();
           const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)/;
-          if(nameRegExp.test(contentBlock.content[0])){
+          if (nameRegExp.test(contentBlock.content[0])) {
             const result = nameRegExp.exec(contentBlock.content[0]);
-            if(result){
+            if (result) {
               const groups = result.groups;
-              if(groups){
+              if (groups) {
                 scope.name = groups.name;
                 const nameIndex = contentBlock.content[0].indexOf(scope.name);
-                scope.nameRange = new vscode.Range(contentBlock.startLine, nameIndex,contentBlock.startLine, nameIndex + scope.name.length);
+                scope.nameRange = new vscode.Range(contentBlock.startLine, nameIndex, contentBlock.startLine, nameIndex + scope.name.length);
               }
             }
           }
-          if(!scope.name) continue; // scope未命名时放弃解析
+          if (!scope.name) continue; // scope未命名时放弃解析
           const initRegExp = /initializer\s+(?<initializer>[a-zA-Z]\w*)/;
-          if(initRegExp.test(contentBlock.content[0])){
+          if (initRegExp.test(contentBlock.content[0])) {
             const result = nameRegExp.exec(contentBlock.content[0]);
-            if(result){
+            if (result) {
               const groups = result.groups;
-              if(groups){
+              if (groups) {
                 scope.initializer = groups.initializer;
               }
             }
           }
           let inGlobals = false;
-          for(let i = 0; i < contentBlock.content.length; i++){
-            if(/^\s*globals/){
+          for (let i = 0; i < contentBlock.content.length; i++) {
+            if (/^\s*globals/) {
               inGlobals = true;
             }
-            if(inGlobals){
+            if (inGlobals) {
               const globalRegExp = /^s*(?<modifier>private|public)\s+(?<isConstant>constant\s+)?(?<type>[a-zA-Z]+)\s+(?<isArray>array\s+)?(?<name>[a-zA-Z]\w*)/;
-              if(globalRegExp.test(contentBlock.content[i])){
-                
+              if (globalRegExp.test(contentBlock.content[i])) {i
+                const result = globalRegExp.exec(contentBlock.content[i]);
+                if (result) {
+                  const groups = result.groups;
+                  if (groups) {
+                    const global = new Global();
+                    if(groups.modifier == "public"){
+                      global.modifier =  Modifier.Public;
+                    }else if(groups.modifier == "private"){
+                      global.modifier =  Modifier.Private;
+                    }
+                    
+                    scope.globals.push(global);
+                  }
+                }
               }
             }
           }
@@ -476,10 +502,10 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    try{
-    const jass = Jass.parseContent2(document.getText());
-    console.log(jass)
-  }catch(err){console.log(err)}
+    try {
+      const jass = Jass.parseContent2(document.getText());
+      console.log(jass)
+    } catch (err) { console.log(err) }
     return [];
   }
 }
