@@ -16,8 +16,17 @@ class Global {
 
 }
 
-class Func {
+class Param {
 
+}
+
+class Func {
+  public origin:string | null = null;
+  public name:string |null= null;
+  public takes:Param[] = new Array<Param>();
+  public returnType:string |null=null;
+  public range:vscode.Range | null = null;
+  public nameRange:vscode.Range | null = null; 
 }
 
 class Import {
@@ -38,7 +47,14 @@ class Library {
 }
 
 class Scope {
-
+  public origin:string | null = null;
+  public name:string|null = null;
+  public scopes:Scope[] = new Array<Scope>();
+  public initializer:string |null= null;
+  public globals: Global[] = new Array<Global>();
+  public functions:Func[] = [];
+  public range:vscode.Range | null = null;
+  public nameRange:vscode.Range |null = null;
 }
 
 class Struct {
@@ -126,124 +142,146 @@ class Jass {
     const linesParse = () => {
       const starstWith = (text: string, match: string): boolean => text.trimLeft().startsWith(match);
       const blocks = [];
-      let startLine = 0;
-      let blockContent = [];
-      let inTextMacro = false;
+      let inTextMacro = false;  // 记录是否进入文本宏
+      let textMacroBlocks = []; // 文本宏内容
+      let textMacroStartLine = 0; // 文本宏开始行
       let inInterface = false;
-      let inScope = false;
-      let inScopeField = 0;
-      let inLibrary = false;
+      let interfaceBlocks = [];
+      let interfaceStartLine = 0;
+      let inScope = false;  // 是否进入域
+      let scopeBlocks = []; // 域内容
+      let scopeStartLine = 0; // 域开始行
+      let inScopeField = 0; // 域深度
+      let inLibrary = false;  // 是否进入库
+      let libraryBlocks = []; // 库内容
+      let libraryStartLine = 0; // 库开始行
       let inStruct = false;
+      let structBlocks:string[] = [];
+      let structStartLine = 0;
       let inFunction = false;
+      let functionBlocks:string[] = [];
+      let functionStartLine: number = 0;
       let inGlobals = false;
+      let globalBlocks:string[] = [];
+      let globalStartLine = 0;
       for (let i = 0; i < lineTexts.length; i++) {
         const lineText = lineTexts[i];
+        if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
+          inTextMacro = true;
+          textMacroStartLine = i;
+          textMacroBlocks = [];
+        }
         if (inTextMacro) {
-            blockContent.push(lineText);
+          textMacroBlocks.push(lineText);
           if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
-            blocks.push({ type: "textmacro", content: blockContent, startLine, endLine: i });
-            blockContent = [];
+            blocks.push({ type: "textmacro", content: textMacroBlocks, startLine: textMacroStartLine, endLine: i });
+            textMacroBlocks = [];
             inTextMacro = false;
           }
-        } else if (inScope) {
-          blockContent.push(lineText);
-          if (/^\s*scope/.test(lineText)) {
-            inScopeField++;
-          } else if (/^\s*endscope/.test(lineText)) {
-            inScopeField--;
-            if (inScopeField == 0) {
-              blocks.push({ type: "scope", content: blockContent, startLine, endLine: i });
-              blockContent = [];
-              inScope = false;
-            }
-          }
-        } else if (inLibrary) {
-          blockContent.push(lineText);
-          if (/^\s*endlibrary/.test(lineText)) {
-            blocks.push({ type: "library", content: blockContent, startLine, endLine: i });
-            blockContent = [];
-            inLibrary = false;
-          }
-        } else if (inInterface) {
-          blockContent.push(lineText);
-          if (/^\s*endinterface/.test(lineText)) {
-            blocks.push({ type: "interface", content: blockContent, startLine, endLine: i });
-            blockContent = [];
-            inInterface = false;
-          }
-        }else if (inStruct) {
-          blockContent.push(lineText);
-          if (/^\s*endstruct/.test(lineText)) {
-            blocks.push({ type: "struct", content: blockContent, startLine, endLine: i });
-            blockContent = [];
-            inStruct = false;
-          }
-        } else if (inFunction) {
-          blockContent.push(lineText);
-          if (/^\s*endfunction/.test(lineText)) {
-            blocks.push({ type: "function", content: blockContent, startLine, endLine: i });
-            blockContent = [];
-            inFunction = false;
-          }
-        }else if (inGlobals) {
-          blockContent.push(lineText);
-          if (/^\s*endglobals/.test(lineText)) {
-            blocks.push({ type: "globals", content: blockContent, startLine, endLine: i });
-            blockContent = [];
-            inGlobals = false;
-          }
-        } else {
-          if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
-            inTextMacro = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          } else if (/^\s*scope/.test(lineText)) {
+        } else{
+          if (!inLibrary && /^\s*scope/.test(lineText)) {
             inScope = true;
             inScopeField++;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          } else if (/^\s*library/.test(lineText)) {
-            inLibrary = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          } else if (/^\s*interface/.test(lineText)) {
-            inInterface = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
+            scopeStartLine = i;
+            scopeBlocks = [];
           }
-          else if (/^\s*struct/.test(lineText)) {
+          if (inScope) {
+            scopeBlocks.push(lineText);
+            if (/^\s*scope/.test(lineText)) {
+              inScopeField++;
+            } else if (/^\s*endscope/.test(lineText)) {
+              inScopeField--;
+              if (inScopeField == 0) {
+                blocks.push({ type: "scope", content: scopeBlocks, startLine: scopeStartLine, endLine: i });
+                scopeBlocks = [];
+                inScope = false;
+              }
+            }
+          }
+          if (/^\s*library/.test(lineText)) {
+            inLibrary = true;
+            libraryStartLine = i;
+            libraryBlocks = [];
+          }
+          if (inLibrary) {
+            libraryBlocks.push(lineText);
+            if (/^\s*endlibrary/.test(lineText)) {
+              blocks.push({ type: "library", content: libraryBlocks, startLine: libraryStartLine, endLine: i });
+              libraryBlocks = [];
+              inLibrary = false;
+            }
+          }
+          if (/^\s*interface/.test(lineText)) {
+            inInterface = true;
+            interfaceStartLine = i;
+            interfaceBlocks = [];
+          }
+          if (inInterface) {
+            interfaceBlocks.push(lineText);
+            if (/^\s*endinterface/.test(lineText)) {
+              blocks.push({ type: "interface", content: interfaceBlocks, startLine: interfaceStartLine, endLine: i });
+              interfaceBlocks = [];
+              inInterface = false;
+            }
+          }
+          if (/^\s*struct/.test(lineText)) {
             inStruct = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          }else if (/^\s*function(?!\s+interface)/.test(lineText)) {
+            structStartLine = i;
+            structBlocks = [];
+          }
+          if (inStruct) {
+            structBlocks.push(lineText);
+            if (/^\s*endstruct/.test(lineText)) {
+              blocks.push({ type: "struct", content: structBlocks, startLine: structStartLine, endLine: i });
+              structBlocks = [];
+              inStruct = false;
+            }
+          }
+          if (/^\s*function(?!\s+interface)/.test(lineText)) {
             inFunction = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          }else if (/^\s*globals/.test(lineText)) {
+            functionStartLine = i;
+            functionBlocks = [];
+          }
+          if (inFunction) {
+            functionBlocks.push(lineText);
+            if (/^\s*endfunction/.test(lineText)) {
+              blocks.push({ type: "function", content: functionBlocks, startLine: functionStartLine, endLine: i });
+              functionBlocks = [];
+              inFunction = false;
+            }
+          }
+          if (/^\s*globals/.test(lineText)) {
             inGlobals = true;
-            startLine = i;
-            blockContent = [];
-            blockContent.push(lineText);
-          }else if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
+            globalStartLine = i;
+            globalBlocks = [];
+          }
+          if (inGlobals) {
+            globalBlocks.push(lineText);
+            if (/^\s*endglobals/.test(lineText)) {
+              blocks.push({ type: "globals", content: globalBlocks, startLine: globalStartLine, endLine: i });
+              globalBlocks = [];
+              inGlobals = false;
+            }
+          }
+          if (/^\s*type/. test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
             blocks.push({ type: "array_object", content: [lineText], startLine: i, endLine: i });
-          }else if (/^\s*function\s+interface/.test(lineText)) {
+          }
+          if (/^\s*function\s+interface/.test(lineText)) {
             blocks.push({ type: "function_object", content: [lineText], startLine: i, endLine: i });
-          }else if (/^\s*\/\/!\s+import/.test(lineText)) {
+          }
+          if (/^\s*\/\/!\s+import/.test(lineText)) {
             blocks.push({ type: "import", content: [lineText], startLine: i, endLine: i });
-          }else if (/^\s*\/\//.test(lineText)) {
+          }
+          if (/^\s*\/\//.test(lineText)) {
             blocks.push({ type: "comment", content: [lineText], startLine: i, endLine: i });
-          }else if(/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)){
+          }
+          if(/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)){
             blocks.push({ type: "native", content: [lineText], startLine: i, endLine: i });
-          }else if(/^\s*type/.test(lineText)){
+          }
+          if(/^\s*type/.test(lineText)){
             blocks.push({ type: "type", content: [lineText], startLine: i, endLine: i });
           }
-        }
+        } 
       }
       return blocks;
     }
@@ -281,6 +319,43 @@ class Jass {
             }
           }
           jass.textMacros.push(textMacro);
+        }else if(contentBlock.type == "scope"){
+          const scope = new Scope();
+          const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)/;
+          if(nameRegExp.test(contentBlock.content[0])){
+            const result = nameRegExp.exec(contentBlock.content[0]);
+            if(result){
+              const groups = result.groups;
+              if(groups){
+                scope.name = groups.name;
+                const nameIndex = contentBlock.content[0].indexOf(scope.name);
+                scope.nameRange = new vscode.Range(contentBlock.startLine, nameIndex,contentBlock.startLine, nameIndex + scope.name.length);
+              }
+            }
+          }
+          if(!scope.name) continue; // scope未命名时放弃解析
+          const initRegExp = /initializer\s+(?<initializer>[a-zA-Z]\w*)/;
+          if(initRegExp.test(contentBlock.content[0])){
+            const result = nameRegExp.exec(contentBlock.content[0]);
+            if(result){
+              const groups = result.groups;
+              if(groups){
+                scope.initializer = groups.initializer;
+              }
+            }
+          }
+          let inGlobals = false;
+          for(let i = 0; i < contentBlock.content.length; i++){
+            if(/^\s*globals/){
+              inGlobals = true;
+            }
+            if(inGlobals){
+              const globalRegExp = /^s*(?<modifier>private|public)\s+(?<isConstant>constant\s+)?(?<type>[a-zA-Z]+)\s+(?<isArray>array\s+)?(?<name>[a-zA-Z]\w*)/;
+              if(globalRegExp.test(contentBlock.content[i])){
+                
+              }
+            }
+          }
         }
       }
       return jass;
