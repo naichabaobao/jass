@@ -80,13 +80,14 @@ class Global {
               global.name = groups.name;
               global.range = new vscode.Range(startLine + i, line.indexOf(global.modifier), startLine + i, line.length);
               global.nameRange = new vscode.Range(startLine + i, line.indexOf(global.name), startLine + i, line.indexOf(global.name) + global.name.length);
-              global.origin = ``; // 待实现
+              global.origin = `${global.modifier ? global.modifier + " " : ""}${global.isConstant ? "constant " : ""}${global.type} ${global.isArray ? "array " : ""}${global.name}`;
               globals.push(global);
             }
           }
         }
       }
     }
+    return globals;
   }
 }
 
@@ -206,47 +207,73 @@ class Scope {
   public nameRange: vscode.Range | null = null;
 
   static parse(content: string, startLine = 0) {
+
+    let inTextMacro = false;
+    let inLibrary = false;
+    let scopeField = 0;
+    let inGlobals = false;
+    let inFunction = false;
+
+    let scopeContent:string = ""; // 当进入scope时赋值
+    let scopeStartLine = 0;
+
+
+    let innerScopeContent:string = "";
+    let globalContent:string = "";
+    let functionContent:string = "";
+
     const scopes = new Array<Scope>();
-    const scope = new Scope();
+
+    
     const lines = JassUtils.content2Lines(content);
     let inScope = false;
-    let inScopeField = 0;
+    
     let scopeBlocks: string[] = [];
-    let scopeInnerBlocks: string[] = [];
-    let scopeStartLine = startLine;
+    let scopeInnerBlocks: string[] = []
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (/^\s*scope/.test(line)) {
-        inScope = true;
-        inScopeField++;
-        if (!inScope) {
-          scopeStartLine = startLine + i;
-          scopeBlocks = [];
-        }
-      }
-      if (/^\s*endscope/.test(line)) {
-        inScopeField--;
-        if (inScopeField == 0) {
-          // 分析scope
 
-          scopes
-          scopeBlocks = [];
-          inScope = false;
-        } else if (inScopeField == 1) {
-          const ss = Scope.parse(scopeInnerBlocks.join(""));
-          if (ss && ss[0]) {
-            scopes.push(ss[0]);
-          }
-          scopeInnerBlocks = [];
+      if (/^\s*\/\/!\s+textmacro/.test(line)) {
+        inTextMacro = true;
+      }
+      if (/^\s*\/\/!\s+endtextmacro/.test(line)) {
+        inTextMacro = false;
+      }
+      
+      if (inTextMacro == false && /^\s*library/.test(line)) {
+        inLibrary = true;
+      }
+      if (inTextMacro == false && /^\s*endlibrary/.test(line)) {
+        inLibrary = false;
+      }
+
+      if (inTextMacro == false && inLibrary == false && /^\s*scope/.test(line)) {
+        scopeField++;
+        if(scopeField == 1){
+          scopeContent = line;
+          scopeStartLine = i;
+          // 解析scope
+          const scope = new Scope();
         }
       }
-      if (inScope) {
-        if (inScopeField == 1) {
-          scopeBlocks.push(line);
-        } else if (inScopeField > 1) {
-          scopeBlocks.push("\n"); // 忽略内部scope内容
-          scopeInnerBlocks.push(line);
+      if (inTextMacro == false && inLibrary == false && /^\s*endscope/.test(line)) {
+        scopeField--;
+        if(scopeField == 0){
+          
         }
+      }
+
+      if (textMacroField ==0 && /^\s*global/.test(line)) {
+        globalField++;
+        globalContent = "";
+      }
+      if(globalField > 0 && scopeField == 1){
+        globalContent+=line;
+      }else {
+        globalContent+="\n";
+      }
+      if (textMacroField ==0 && /^\s*endglobal/.test(line)) {
+        globalField--; 
       }
     }
     return scopes;
@@ -516,10 +543,12 @@ class Jass {
           }
           jass.textMacros.push(textMacro);
         } else if (contentBlock.type == "scope") {
-
+          
           const parseScope = (cc: { type: string, content: string[], startLine: number, endLine: number }) => {
             // 获取scope内部scope
             const scope = new Scope();
+            scope.globals.push(...Global.parse(contentBlock.content.join(""), contentBlock.startLine));
+            scope.functions.push(...Func.parse(blockTexts[i].content.join("")))
             let inScope = false;
             let inScopeField = 0;
             let scopeStartLine = 0;
@@ -579,45 +608,21 @@ class Jass {
                 } else if (/^\s*endglobals/.test(element)) {
                   inGlobal = false;
                 } else if (inGlobal) {
-                  const globalRegExp = /^\s*(?<modifier>private|public)\s+(?<isConstant>constant\s+)?(?<type>[a-zA-Z]+)\s+(?<isArray>array\s+)?(?<name>[a-zA-Z]\w*)/;
-                  if (globalRegExp.test(element)) {
-                    const result = globalRegExp.exec(element);
-                    if (result) {
-                      const groups = result.groups;
-                      if (groups) {
-                        const global = new Global();
-                        if (groups.modifier == "public") {
-                          global.modifier = Modifier.Public;
-                        } else if (groups.modifier == "private") {
-                          global.modifier = Modifier.Private;
-                        }
-                        if (groups.isConstant) {
-                          global.isConstant = true;
-                        }
-                        global.type = groups.type
-                        if (groups.isArray) {
-                          global.isArray = true;
-                        }
-                        global.name = groups.name;
-                        global.range = new vscode.Range(cc.startLine + c, element.indexOf(global.modifier), cc.startLine + c, element.length);
-                        global.nameRange = new vscode.Range(cc.startLine + c, element.indexOf(global.name), cc.startLine + c, element.indexOf(global.name) + global.name.length);
-                        global.origin = result[0];
-                        scope.globals.push(global);
-                      }
-                    }
-                  }
+                  
                 } else {
-                  console.log(Func.parse(blockTexts[i].content.join("")))
+                  console.log()
                 }
               }
             }
             scope.origin = `scope ${scope.name}${scope.initializer ? " initializer " + scope.initializer : ""}\n${scope.globals.length > 0 ? "globals\n" + scope.globals.map(g => g.origin).join("\n") + "\nendglobals\n" : ""}${scope.functions.map(f => f.origin).join("\n")}\nendscope`;
             return scope;
           }
-          let scope = parseScope(contentBlock);
-          if (scope) {
-            jass.scopes.push(scope);
-          }
+          // let scope = parseScope(contentBlock);
+          // if (scope) {
+          //   jass.scopes.push(scope);
+          // }
+          console.log(contentBlock.content.join(""))
+          jass.scopes.push(...Scope.parse(contentBlock.content.join(""),contentBlock.startLine));
         }
       }
       return jass;
@@ -625,7 +630,6 @@ class Jass {
     const letter = (char: string): boolean => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"].includes(char);
     const w = (char: string): boolean => letter(char) || "_" == char;
     const W = (char: string): boolean => !w(char);
-    console.log(blockParse())
     return blockParse();
   }
 
@@ -741,7 +745,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     try {
       const jass = Jass.parseContent2(document.getText());
-      console.log(jass)
+      console.log(jass);
     } catch (err) { console.log(err) }
     return [];
   }
