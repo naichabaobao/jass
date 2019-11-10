@@ -254,12 +254,14 @@ class Scope {
           scopeStartLine = i;
           // 解析scope
           const scope = new Scope();
+           
+          scopes.push(scope);
         }
       }
       if (inTextMacro == false && inLibrary == false && /^\s*endscope/.test(line)) {
         scopeField--;
         if(scopeField == 0){
-          
+          // 设置范围
         }
       }
 
