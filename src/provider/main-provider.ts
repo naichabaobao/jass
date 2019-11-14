@@ -193,7 +193,16 @@ class TextMacro {
 }
 
 class Library {
-
+  public origin: string | null = null;
+  public name: string | null = null;
+  public scopes: Scope[] = new Array<Scope>();
+  public initializer: string | null = null;
+  public needs: string[] = new Array<string>();
+  public globals: Global[] = new Array<Global>();
+  public functions: Func[] = [];
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange: vscode.Range | null = null;
 }
 
 class Scope {
@@ -203,7 +212,8 @@ class Scope {
   public initializer: string | null = null;
   public globals: Global[] = new Array<Global>();
   public functions: Func[] = [];
-  public range: vscode.Range | null = null;
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
 
   static parse(content: string, startLine = 0) {
@@ -354,6 +364,10 @@ class Jass {
     const linesParse = () => {
       const jass = new Jass();
 
+      const last = function <T>(s: T[]): T | null {
+        return s.length > 0 ? s[s.length - 1] : null;
+      }
+
       let inTextMacro = false;  // 记录是否进入文本宏
       let textMacroBlocks = []; // 文本宏内容
       let textMacroStartLine = 0; // 文本宏开始行
@@ -392,41 +406,51 @@ class Jass {
           inTextMacro = false;
         } else if (inTextMacro) {
           jass.textMacros[jass.textMacros.length - 1].content += lineText;
-          textMacroBlocks.push(lineText);
+        } else if (/^\s*library/.test(lineText)) {
+          inLibrary = true;
+          const library = new Library();
 
-        } else
-          if (!inLibrary && /^\s*scope/.test(lineText)) {
-            inScope = true;
-            inScopeField++;
-            if (!inScope) {
-              scopeStartLine = i;
-              scopeBlocks = [];
+          jass.librarys.push(library);
+        } else if (/^\s*endlibrary/.test(lineText)) {
+          inLibrary = false;
+        } else if (inLibrary) {
+          libraryBlocks.push(lineText);
+        } else if (/^\s*scope/.test(lineText)) {
+          inScopeField++;
+          const lastScopes = (ss:Scope[]):Scope[] => {
+            const s = last(ss);
+            if(s){
+              return lastScopes(s.scopes);
+            }else {
+              return ss;
             }
           }
+          if (inLibrary) {
+            const lib = last(jass.librarys);
+            if(lib){
+              const scopes = lastScopes(lib.scopes);
+
+              scopes.push();
+            }
+          } else {
+            const lib = last(jass.scopes);
+            if(lib){
+              const scopes = lastScopes(lib.scopes);
+
+              scopes.push();
+            }
+          }
+        } else if (/^\s*endscope/.test(lineText)) {
+          inScopeField--;
+          if (inScopeField == 0) {
+            inScope = false;
+          }
+        }
         if (inScope) {
           scopeBlocks.push(lineText);
-          if (/^\s*endscope/.test(lineText)) {
-            inScopeField--;
-            if (inScopeField == 0) {
-              blocks.push({ type: "scope", content: scopeBlocks, startLine: scopeStartLine, endLine: i });
-              scopeBlocks = [];
-              inScope = false;
-            }
-          }
+
         }
-        if (/^\s*library/.test(lineText)) {
-          inLibrary = true;
-          libraryStartLine = i;
-          libraryBlocks = [];
-        }
-        if (inLibrary) {
-          libraryBlocks.push(lineText);
-          if (/^\s*endlibrary/.test(lineText)) {
-            blocks.push({ type: "library", content: libraryBlocks, startLine: libraryStartLine, endLine: i });
-            libraryBlocks = [];
-            inLibrary = false;
-          }
-        }
+
         if (/^\s*interface/.test(lineText)) {
           inInterface = true;
           interfaceStartLine = i;
