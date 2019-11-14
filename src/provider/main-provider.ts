@@ -390,6 +390,18 @@ class Jass {
       let inGlobals = false;
       let globalBlocks: string[] = [];
       let globalStartLine = 0;
+
+      const findScopes = (scopes:Scope[],deep:number):Scope[] => {
+        if(deep > 1){
+          for (let d = 1 ; d < deep; d++) {
+            
+            
+          }
+        }else {
+          return scopes;
+        }
+      }
+
       for (let i = 0; i < lineTexts.length; i++) {
         const lineText = lineTexts[i];
         if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
