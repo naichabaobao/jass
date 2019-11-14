@@ -214,20 +214,20 @@ class Scope {
     let inGlobals = false;
     let inFunction = false;
 
-    let scopeContent:string = ""; // 当进入scope时赋值
+    let scopeContent: string = ""; // 当进入scope时赋值
     let scopeStartLine = 0;
 
 
-    let innerScopeContent:string = "";
-    let globalContent:string = "";
-    let functionContent:string = "";
+    let innerScopeContent: string = "";
+    let globalContent: string = "";
+    let functionContent: string = "";
 
     const scopes = new Array<Scope>();
 
-    
+
     const lines = JassUtils.content2Lines(content);
     let inScope = false;
-    
+
     let scopeBlocks: string[] = [];
     let scopeInnerBlocks: string[] = []
     for (let i = 0; i < lines.length; i++) {
@@ -239,7 +239,7 @@ class Scope {
       if (/^\s*\/\/!\s+endtextmacro/.test(line)) {
         inTextMacro = false;
       }
-      
+
       if (inTextMacro == false && /^\s*library/.test(line)) {
         inLibrary = true;
       }
@@ -249,33 +249,20 @@ class Scope {
 
       if (inTextMacro == false && inLibrary == false && /^\s*scope/.test(line)) {
         scopeField++;
-        if(scopeField == 1){
+        if (scopeField == 1) {
           scopeContent = line;
           scopeStartLine = i;
           // 解析scope
           const scope = new Scope();
-           
+
           scopes.push(scope);
         }
       }
       if (inTextMacro == false && inLibrary == false && /^\s*endscope/.test(line)) {
         scopeField--;
-        if(scopeField == 0){
+        if (scopeField == 0) {
           // 设置范围
         }
-      }
-
-      if (textMacroField ==0 && /^\s*global/.test(line)) {
-        globalField++;
-        globalContent = "";
-      }
-      if(globalField > 0 && scopeField == 1){
-        globalContent+=line;
-      }else {
-        globalContent+="\n";
-      }
-      if (textMacroField ==0 && /^\s*endglobal/.test(line)) {
-        globalField--; 
       }
     }
     return scopes;
@@ -353,7 +340,7 @@ class Jass {
       lines.push(col);
       return lines;
     }
-    const lineTexts = content2Lines();
+    const lineTexts = JassUtils.content2Lines(content);
     /**
      * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
      * text macro {all}
@@ -365,8 +352,8 @@ class Jass {
      * text macro -> //! text macro name takes 
      */
     const linesParse = () => {
-      const starstWith = (text: string, match: string): boolean => text.trimLeft().startsWith(match);
-      const blocks = [];
+      const jass = new Jass();
+
       let inTextMacro = false;  // 记录是否进入文本宏
       let textMacroBlocks = []; // 文本宏内容
       let textMacroStartLine = 0; // 文本宏开始行
@@ -389,6 +376,133 @@ class Jass {
       let inGlobals = false;
       let globalBlocks: string[] = [];
       let globalStartLine = 0;
+      for (let i = 0; i < lineTexts.length; i++) {
+        const lineText = lineTexts[i];
+        if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
+          inTextMacro = true;
+          const textMacro = new TextMacro();
+          textMacro.name = "";
+          textMacro.takes = [];
+          textMacro.content = "";
+          textMacro.range = null;
+          textMacro.nameRange = null;
+          textMacro.origin = "";
+          jass.textMacros.push(textMacro);
+        } else if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
+          inTextMacro = false;
+        } else if (inTextMacro) {
+          jass.textMacros[jass.textMacros.length - 1].content += lineText;
+          textMacroBlocks.push(lineText);
+
+        } else
+          if (!inLibrary && /^\s*scope/.test(lineText)) {
+            inScope = true;
+            inScopeField++;
+            if (!inScope) {
+              scopeStartLine = i;
+              scopeBlocks = [];
+            }
+          }
+        if (inScope) {
+          scopeBlocks.push(lineText);
+          if (/^\s*endscope/.test(lineText)) {
+            inScopeField--;
+            if (inScopeField == 0) {
+              blocks.push({ type: "scope", content: scopeBlocks, startLine: scopeStartLine, endLine: i });
+              scopeBlocks = [];
+              inScope = false;
+            }
+          }
+        }
+        if (/^\s*library/.test(lineText)) {
+          inLibrary = true;
+          libraryStartLine = i;
+          libraryBlocks = [];
+        }
+        if (inLibrary) {
+          libraryBlocks.push(lineText);
+          if (/^\s*endlibrary/.test(lineText)) {
+            blocks.push({ type: "library", content: libraryBlocks, startLine: libraryStartLine, endLine: i });
+            libraryBlocks = [];
+            inLibrary = false;
+          }
+        }
+        if (/^\s*interface/.test(lineText)) {
+          inInterface = true;
+          interfaceStartLine = i;
+          interfaceBlocks = [];
+        }
+        if (inInterface) {
+          interfaceBlocks.push(lineText);
+          if (/^\s*endinterface/.test(lineText)) {
+            blocks.push({ type: "interface", content: interfaceBlocks, startLine: interfaceStartLine, endLine: i });
+            interfaceBlocks = [];
+            inInterface = false;
+          }
+        }
+        if (/^\s*struct/.test(lineText)) {
+          inStruct = true;
+          structStartLine = i;
+          structBlocks = [];
+        }
+        if (inStruct) {
+          structBlocks.push(lineText);
+          if (/^\s*endstruct/.test(lineText)) {
+            blocks.push({ type: "struct", content: structBlocks, startLine: structStartLine, endLine: i });
+            structBlocks = [];
+            inStruct = false;
+          }
+        }
+        if (!inScope && !inLibrary && /^\s*function(?!\s+interface)/.test(lineText)) {
+          inFunction = true;
+          functionStartLine = i;
+          functionBlocks = [];
+        }
+        if (inFunction) {
+          functionBlocks.push(lineText);
+          if (/^\s*endfunction/.test(lineText)) {
+            blocks.push({ type: "function", content: functionBlocks, startLine: functionStartLine, endLine: i });
+            functionBlocks = [];
+            inFunction = false;
+          }
+        }
+        if (/^\s*globals/.test(lineText)) {
+          inGlobals = true;
+          globalStartLine = i;
+          globalBlocks = [];
+        }
+        if (inGlobals) {
+          globalBlocks.push(lineText);
+          if (/^\s*endglobals/.test(lineText)) {
+            blocks.push({ type: "globals", content: globalBlocks, startLine: globalStartLine, endLine: i });
+            globalBlocks = [];
+            inGlobals = false;
+          }
+        }
+        if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
+          blocks.push({ type: "array_object", content: [lineText], startLine: i, endLine: i });
+        }
+        if (/^\s*function\s+interface/.test(lineText)) {
+          blocks.push({ type: "function_object", content: [lineText], startLine: i, endLine: i });
+        }
+        if (/^\s*\/\/!\s+import/.test(lineText)) {
+          blocks.push({ type: "import", content: [lineText], startLine: i, endLine: i });
+        }
+        if (/^\s*\/\//.test(lineText)) {
+          blocks.push({ type: "comment", content: [lineText], startLine: i, endLine: i });
+        }
+        if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
+          blocks.push({ type: "native", content: [lineText], startLine: i, endLine: i });
+        }
+        if (/^\s*type/.test(lineText)) {
+          blocks.push({ type: "type", content: [lineText], startLine: i, endLine: i });
+        }
+
+      }
+
+      const starstWith = (text: string, match: string): boolean => text.trimLeft().startsWith(match);
+      const blocks = [];
+
       for (let i = 0; i < lineTexts.length; i++) {
         const lineText = lineTexts[i];
         if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
@@ -545,7 +659,7 @@ class Jass {
           }
           jass.textMacros.push(textMacro);
         } else if (contentBlock.type == "scope") {
-          
+
           const parseScope = (cc: { type: string, content: string[], startLine: number, endLine: number }) => {
             // 获取scope内部scope
             const scope = new Scope();
@@ -610,7 +724,7 @@ class Jass {
                 } else if (/^\s*endglobals/.test(element)) {
                   inGlobal = false;
                 } else if (inGlobal) {
-                  
+
                 } else {
                   console.log()
                 }
@@ -624,7 +738,7 @@ class Jass {
           //   jass.scopes.push(scope);
           // }
           console.log(contentBlock.content.join(""))
-          jass.scopes.push(...Scope.parse(contentBlock.content.join(""),contentBlock.startLine));
+          jass.scopes.push(...Scope.parse(contentBlock.content.join(""), contentBlock.startLine));
         }
       }
       return jass;
