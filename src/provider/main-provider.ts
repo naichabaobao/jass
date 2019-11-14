@@ -391,13 +391,14 @@ class Jass {
       let globalBlocks: string[] = [];
       let globalStartLine = 0;
 
-      const findScopes = (scopes:Scope[],deep:number):Scope[] => {
-        if(deep > 1){
-          for (let d = 1 ; d < deep; d++) {
-            
-            
+      const findScopes = (scopes: Scope[], deep: number): Scope[] => {
+        if (deep > 1) {
+          let s = scopes;
+          for (let d = 1; d < deep; d++) {
+            s = s[s.length - 1].scopes;
           }
-        }else {
+          return s;
+        } else {
           return scopes;
         }
       }
@@ -429,40 +430,55 @@ class Jass {
           libraryBlocks.push(lineText);
         } else if (/^\s*scope/.test(lineText)) {
           inScopeField++;
-          const lastScopes = (ss:Scope[]):Scope[] => {
-            const s = last(ss);
-            if(s){
-              return lastScopes(s.scopes);
-            }else {
-              return ss;
+          /**
+           * 解析scope头部
+           */
+          const parseScopeHead = (): Scope => {
+            // 分析首行
+            const scope = new Scope();
+            const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)/;
+            if (nameRegExp.test(lineText)) {
+              const result = nameRegExp.exec(lineText);
+              if (result) {
+                const groups = result.groups;
+                if (groups) {
+                  scope.name = groups.name;
+                  scope.start = new vscode.Position(i, lineText.indexOf("scope"));
+                  const nameIndex = lineText.indexOf(scope.name);
+                  scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
+                }
+              }
             }
+            if (!scope.name) return scope; // scope未命名时返回空scope
+            const initRegExp = /initializer\s+(?<initializer>[a-zA-Z]\w*)/;
+            if (initRegExp.test(lineText)) {
+              const result = initRegExp.exec(lineText);
+              if (result && result.groups) {
+                if (result.groups.initializer) {
+                  scope.initializer = result.groups.initializer;
+                }
+              }
+            }
+            return scope;
           }
-          if (inLibrary) {
-            const lib = last(jass.librarys);
-            if(lib){
-              const scopes = lastScopes(lib.scopes);
-
-              scopes.push();
-            }
-          } else {
-            const lib = last(jass.scopes);
-            if(lib){
-              const scopes = lastScopes(lib.scopes);
-
-              scopes.push();
-            }
-          }
+          const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
+          scopes.push(parseScopeHead());
         } else if (/^\s*endscope/.test(lineText)) {
-          inScopeField--;
-          if (inScopeField == 0) {
-            inScope = false;
+          const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
+          const scope = scopes[scopes.length - 1];
+          const EndscopeKeyword = "endscope";
+          scope.end = new vscode.Position(i, lineText.indexOf(EndscopeKeyword) + EndscopeKeyword.length);
+          scope.origin = `scope ${scope.name ? scope.name : ""}${scope.initializer ? " initializer " + scope.initializer : ""}\n
+            globals\n
+            ${scope.globals.map(global => global.origin).join("\n")}
+            endglobals\n
+            ${scope.functions.map(func => func.origin).join("\n")}
+            ${scope.scopes.map(scp => scp.origin).join("\n")}
+          endscope`;
+          if (inScopeField > 0) {
+            inScopeField--;
           }
         }
-        if (inScope) {
-          scopeBlocks.push(lineText);
-
-        }
-
         if (/^\s*interface/.test(lineText)) {
           inInterface = true;
           interfaceStartLine = i;
