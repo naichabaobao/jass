@@ -481,73 +481,39 @@ class Jass {
         }
         if (/^\s*interface/.test(lineText)) {
           inInterface = true;
-          interfaceStartLine = i;
-          interfaceBlocks = [];
         }
         if (inInterface) {
-          interfaceBlocks.push(lineText);
-          if (/^\s*endinterface/.test(lineText)) {
-            blocks.push({ type: "interface", content: interfaceBlocks, startLine: interfaceStartLine, endLine: i });
-            interfaceBlocks = [];
-            inInterface = false;
-          }
+          inInterface = false;
         }
         if (/^\s*struct/.test(lineText)) {
           inStruct = true;
-          structStartLine = i;
-          structBlocks = [];
         }
-        if (inStruct) {
-          structBlocks.push(lineText);
-          if (/^\s*endstruct/.test(lineText)) {
-            blocks.push({ type: "struct", content: structBlocks, startLine: structStartLine, endLine: i });
-            structBlocks = [];
-            inStruct = false;
-          }
+        if (/^\s*endstruct/.test(lineText)) {
+          inStruct = false;
         }
-        if (!inScope && !inLibrary && /^\s*function(?!\s+interface)/.test(lineText)) {
+        if (/^\s*function(?!\s+interface)/.test(lineText)) {
           inFunction = true;
-          functionStartLine = i;
-          functionBlocks = [];
         }
-        if (inFunction) {
-          functionBlocks.push(lineText);
-          if (/^\s*endfunction/.test(lineText)) {
-            blocks.push({ type: "function", content: functionBlocks, startLine: functionStartLine, endLine: i });
-            functionBlocks = [];
-            inFunction = false;
-          }
+        if (/^\s*endfunction/.test(lineText)) {
+          inFunction = false;
         }
         if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
-          globalStartLine = i;
-          globalBlocks = [];
         }
-        if (inGlobals) {
-          globalBlocks.push(lineText);
-          if (/^\s*endglobals/.test(lineText)) {
-            blocks.push({ type: "globals", content: globalBlocks, startLine: globalStartLine, endLine: i });
-            globalBlocks = [];
-            inGlobals = false;
-          }
+        if (/^\s*endglobals/.test(lineText)) {
+          inGlobals = false;
         }
         if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
-          blocks.push({ type: "array_object", content: [lineText], startLine: i, endLine: i });
         }
         if (/^\s*function\s+interface/.test(lineText)) {
-          blocks.push({ type: "function_object", content: [lineText], startLine: i, endLine: i });
         }
         if (/^\s*\/\/!\s+import/.test(lineText)) {
-          blocks.push({ type: "import", content: [lineText], startLine: i, endLine: i });
         }
         if (/^\s*\/\//.test(lineText)) {
-          blocks.push({ type: "comment", content: [lineText], startLine: i, endLine: i });
         }
         if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
-          blocks.push({ type: "native", content: [lineText], startLine: i, endLine: i });
         }
         if (/^\s*type/.test(lineText)) {
-          blocks.push({ type: "type", content: [lineText], startLine: i, endLine: i });
         }
 
       }
