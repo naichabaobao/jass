@@ -29,10 +29,25 @@ class Comment {
   public contentRange: vscode.Range | null = null;
 }
 
-enum Modifier {
+enum Modifier{
   Private = "private",
   Public = "public",
   Common = "common"
+}
+
+enum MemberModifier {
+  Private = "private",
+  Public = "public",
+  Static = "static"
+}
+
+class Member {
+  public modifier: MemberModifier = MemberModifier.Private;
+  public type:string|null = null;
+  public name:string|null = null;
+  public range:vscode.Range|null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
 }
 
 class Global {
@@ -280,11 +295,30 @@ class Scope {
 }
 
 class Struct {
+  public name:string|null = null;
+  public takes:Param[] = new Array<Param>();
+  public returnType:string|null = null;
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
+}
 
+class Method {
+  public name:string|null = null;
+  public takes:Param[] = new Array<Param>();
+  public returnType:string|null = null;
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
 }
 
 class Interface {
-
+  public modifier: MemberModifier = MemberModifier.Private;
+  public name:string|null = null;
+  public members:Member[] = new Array<Member>();
+  public methods:Method[] = new Array<Method>();
 }
 
 class ArrayType {
@@ -478,44 +512,33 @@ class Jass {
           if (inScopeField > 0) {
             inScopeField--;
           }
-        }
-        if (/^\s*interface/.test(lineText)) {
+        }else if (/^\s*interface/.test(lineText)) {
+          const inter = new Interface();
+          inter
           inInterface = true;
-        }
-        if (inInterface) {
+        }else if (inInterface) {
           inInterface = false;
-        }
-        if (/^\s*struct/.test(lineText)) {
+        }else if (/^\s*struct/.test(lineText)) {
           inStruct = true;
-        }
-        if (/^\s*endstruct/.test(lineText)) {
+        }else if (/^\s*endstruct/.test(lineText)) {
           inStruct = false;
-        }
-        if (/^\s*function(?!\s+interface)/.test(lineText)) {
+        }else if (/^\s*function(?!\s+interface)/.test(lineText)) {
           inFunction = true;
-        }
-        if (/^\s*endfunction/.test(lineText)) {
+        } else if (/^\s*endfunction/.test(lineText)) {
           inFunction = false;
-        }
-        if (/^\s*globals/.test(lineText)) {
+        }else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
-        }
-        if (/^\s*endglobals/.test(lineText)) {
+        } else if (/^\s*endglobals/.test(lineText)) {
           inGlobals = false;
-        }
-        if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
-        }
-        if (/^\s*function\s+interface/.test(lineText)) {
-        }
-        if (/^\s*\/\/!\s+import/.test(lineText)) {
-        }
-        if (/^\s*\/\//.test(lineText)) {
+        } else if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
+        } else if (/^\s*function\s+interface/.test(lineText)) {
+        } else if (/^\s*\/\/!\s+import/.test(lineText)) {
+        } else if (/^\s*\/\//.test(lineText)) {
         }
         if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
         }
         if (/^\s*type/.test(lineText)) {
         }
-
       }
 
       const starstWith = (text: string, match: string): boolean => text.trimLeft().startsWith(match);
