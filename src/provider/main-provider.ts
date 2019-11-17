@@ -41,15 +41,6 @@ enum MemberModifier {
   Static = "static"
 }
 
-class Member {
-  public modifier: MemberModifier = MemberModifier.Private;
-  public type:string|null = null;
-  public name:string|null = null;
-  public range:vscode.Range|null = null;
-  public nameRange:vscode.Range|null = null;
-  public origin:string|null = null;
-}
-
 class Global {
   public modifier: Modifier = Modifier.Common;
   public isConstant: boolean = false;
@@ -294,12 +285,11 @@ class Scope {
   }
 }
 
-class Struct {
+class Member {
+  public modifier: MemberModifier = MemberModifier.Private;
+  public type:string|null = null;
   public name:string|null = null;
-  public takes:Param[] = new Array<Param>();
-  public returnType:string|null = null;
-  public start: vscode.Position | null = null;
-  public end: vscode.Position | null = null;
+  public range:vscode.Range|null = null;
   public nameRange:vscode.Range|null = null;
   public origin:string|null = null;
 }
@@ -314,11 +304,24 @@ class Method {
   public origin:string|null = null;
 }
 
+class Struct {
+  public name:string|null = null;
+  public takes:Param[] = new Array<Param>();
+  public returnType:string|null = null;
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
+}
+
 class Interface {
-  public modifier: MemberModifier = MemberModifier.Private;
   public name:string|null = null;
   public members:Member[] = new Array<Member>();
   public methods:Method[] = new Array<Method>();
+  public start:vscode.Position|null = null;
+  public end:vscode.Position|null = null;
+  public nameRange:vscode.Range|null = null;
+  public origin:string|null = null;
 }
 
 class ArrayType {
@@ -514,7 +517,15 @@ class Jass {
           }
         }else if (/^\s*interface/.test(lineText)) {
           const inter = new Interface();
-          inter
+          const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z]+)\b/);
+          if(nameRegExp.test(lineText)){
+            const result = nameRegExp.exec(lineText);
+            if(result && result.groups){
+              inter.name = result.groups.name;
+              inter.nameRange = new vscode.Range(i, lineText.indexOf(inter.name), i , lineText.indexOf(inter.name) + inter.name.length);
+            }
+          }
+          inter.start = new vscode.Position(i, lineText.indexOf("interface"));
           inInterface = true;
         }else if (inInterface) {
           inInterface = false;
