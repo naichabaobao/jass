@@ -306,10 +306,11 @@ class Method {
 
 class Struct {
   public name:string|null = null;
-  public takes:Param[] = new Array<Param>();
-  public returnType:string|null = null;
-  public start: vscode.Position | null = null;
-  public end: vscode.Position | null = null;
+  public extends:string|null = null;
+  public members:Member[] = new Array<Member>();
+  public methods:Method[] = new Array<Method>();
+  public start:vscode.Position|null = null;
+  public end:vscode.Position|null = null;
   public nameRange:vscode.Range|null = null;
   public origin:string|null = null;
 }
@@ -517,10 +518,10 @@ class Jass {
           }
         }else if (/^\s*interface/.test(lineText)) {
           const inter = new Interface();
-          const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z]+)\b/);
+          const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
           if(nameRegExp.test(lineText)){
             const result = nameRegExp.exec(lineText);
-            if(result && result.groups){
+            if(result && result.groups && result.groups.name){
               inter.name = result.groups.name;
               inter.nameRange = new vscode.Range(i, lineText.indexOf(inter.name), i , lineText.indexOf(inter.name) + inter.name.length);
             }
@@ -528,10 +529,40 @@ class Jass {
           inter.start = new vscode.Position(i, lineText.indexOf("interface"));
           inInterface = true;
         }else if (inInterface) {
+          const inter = jass.interfaces[jass.interfaces.length - 1];
+          inter.end = new vscode.Position(i, lineText.indexOf("endinterface"));
+          inter.origin = `interface\n
+
+          endinterface`;
           inInterface = false;
         }else if (/^\s*struct/.test(lineText)) {
+          const struct = new Struct();
+          const nameRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
+          if(nameRegExp.test(lineText)){
+            const result  = nameRegExp.exec(lineText);
+            if(result && result.groups && result.groups.name){
+              struct.name = result.groups.name;
+              struct.start = new vscode.Position(i, lineText.indexOf(struct.name));
+              struct.nameRange = new vscode.Range(i, lineText.indexOf(struct.name), i ,lineText.indexOf(struct.name) + struct.name.length);
+            }
+          }
+          const extendsRegExp = new RegExp(/extends\s+(?<extends>[a-zA-Z][a-zA-Z\d]*)/);
+          if(extendsRegExp.test(lineText)){
+            const result = extendsRegExp.exec(lineText);
+            if(result && result.groups && result.groups.extends){
+              struct.extends = result.groups.extends;
+            }
+          }
+          struct.start = new vscode.Position(i, lineText.indexOf("struct"));
           inStruct = true;
         }else if (/^\s*endstruct/.test(lineText)) {
+          if(inStruct){
+            const struct = jass.structs[jass.structs.length - 1];
+            struct.end = new vscode.Position(i, lineText.indexOf("endstruct"));
+            struct.origin = `struct\n
+              
+            endstruct`;
+          }
           inStruct = false;
         }else if (/^\s*function(?!\s+interface)/.test(lineText)) {
           inFunction = true;
