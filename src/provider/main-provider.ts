@@ -457,7 +457,7 @@ class Jass {
           inTextMacro = false;
         } else if (inTextMacro) {
           jass.textMacros[jass.textMacros.length - 1].content += lineText;
-        } else if (/^\s*library/.test(lineText)) {
+        } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
           inLibrary = true;
           const library = new Library();
 
@@ -564,7 +564,42 @@ class Jass {
             endstruct`;
           }
           inStruct = false;
-        }else if (/^\s*function(?!\s+interface)/.test(lineText)) {
+        }else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
+          const func = new Func();
+          
+          const hasMod = lineText.includes("private") || lineText.includes("public");
+          if(lineText.includes("private")){
+            func.modifier = Modifier.Private;
+          }else if(lineText.includes("public")){
+            func.modifier = Modifier.Public;
+          }else{
+            func.modifier = Modifier.Common;
+          }
+          const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
+          if(nameRegExp.test(lineText)){
+            const result = nameRegExp.exec(lineText);
+            if(result && result.groups && result.groups.name){
+              func.name = result.groups.name;
+            }
+          }
+          if(!/takes\s+nothing/.test(lineText)){
+            const takesRegExp = new RegExp(/takes\s+(?<takes>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
+            const takesString = lineText.substring(0, lineText.includes("returns") ? lineText.indexOf("returns") : lineText.length);
+            if(takesRegExp.test(takesString)){
+
+            }
+          }
+          if(hasMod){ // 有修饰符时
+            if(inLibrary){
+              if(inScopeField>0){
+
+              }else {
+
+              }
+            }else if(inScopeField>0){
+              
+            }
+          }
           inFunction = true;
         } else if (/^\s*endfunction/.test(lineText)) {
           inFunction = false;
