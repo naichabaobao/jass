@@ -108,81 +108,9 @@ class Func {
   public name: string | null = null;
   public takes: Param[] = new Array<Param>();
   public returnType: string | null = null;
-  public range: vscode.Range | null = null;
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
-
-  static parse(content: string, startLine: number = 0) {
-    const funcs = new Array<Func>();
-    const lines = JassUtils.content2Lines(content);
-    let inFunction = false;
-    let functionBlocks = [];
-    let functionStartLine = startLine;
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (/^\s*((private|public)\s+)?function/.test(line)) {
-        // 解析方法
-        inFunction = true;
-        functionBlocks = [];
-        functionStartLine = startLine + i;
-      }
-      if (inFunction) {
-        functionBlocks.push(line);
-      }
-      if (/^\s*endfunction/.test(line)) {
-        const functionHead = functionBlocks[0];
-        const func = new Func();
-        if (functionHead.includes("public")) {
-          func.modifier = Modifier.Public;
-        } else if (functionHead.includes("private")) {
-          func.modifier = Modifier.Private;
-        }
-        const functionNameRegExp = /function\s+(?<name>[a-zA-Z]\w*)/;
-        const nameResult = functionNameRegExp.exec(functionHead);
-        if (nameResult && nameResult.groups && nameResult.groups.name) {
-          func.name = nameResult.groups.name;
-        }
-        if (!func.name) continue;
-        if (functionHead.includes("takes")) {
-          if (/takes\s+nothing/.test(functionHead)) {
-            func.takes = [];
-          } else {
-            // 截获参数字符串
-            const takesContent = functionHead.substring(functionHead.indexOf("takes") + "takes".length, functionHead.includes("returns") ? functionHead.indexOf("returns") : undefined).trim();
-            if (takesContent && takesContent.length > 0) {
-              const takeContents: string[] = takesContent.split(/\s*,\s*/);
-              const takes = takeContents.map(tc => {
-                const tns = tc.split(/\s+/);
-                const param = new Param();
-                param.type = tns[0];
-                param.name = tns[1];
-                return param;
-              }).filter(param => param.type && param.name); // filter保证类型和名称必须同时存在
-              func.takes = takes;
-            }
-          }
-        }
-        if (functionHead.includes("returns")) {
-          if (/returns\s+nothing/.test(functionHead)) {
-            func.returnType = null;
-          } else {
-            const returnTypeRegExp = /returns\s+(?<returnType>[a-zA-Z]+)/;
-            if (returnTypeRegExp.test(functionHead)) {
-              const returnTypeResult = returnTypeRegExp.exec(functionHead);
-              if (returnTypeResult && returnTypeResult.groups && returnTypeResult.groups.returnType) {
-                func.returnType = returnTypeResult.groups.returnType;
-              }
-            }
-          }
-        }
-        func.origin = `${func.modifier} function ${func.name} takes ${func.takes.length > 0 ? func.takes.map(take => take.type + " " + take.name).join(", ") : "nothing"} returns ${func.returnType ? func.returnType : "nothing"}\nendfunction`;
-        func.range = new vscode.Range(functionStartLine, functionHead.indexOf(func.modifier), functionStartLine + functionBlocks.length - 1, functionBlocks[functionBlocks.length - 1].length);
-        func.nameRange = new vscode.Range(functionStartLine, functionHead.indexOf(func.name), functionStartLine, functionHead.indexOf(func.name) + func.name.length);
-        funcs.push(func);
-        inFunction = false;
-      }
-    }
-    return funcs;
-  }
 }
 
 class Import {
@@ -374,20 +302,6 @@ class Jass {
   }
 
   static parseContent2(content: string): Jass {
-    const content2Lines = () => {
-      let lines: string[] = [];
-      let col: string = "";
-      for (let i = 0; i < content.length; i++) {
-        const c: string = content.charAt(i);
-        col += c;
-        if (c == "\n") {
-          lines.push(col);
-          col = "";
-        }
-      }
-      lines.push(col);
-      return lines;
-    }
     const lineTexts = JassUtils.content2Lines(content);
     /**
      * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
@@ -401,10 +315,6 @@ class Jass {
      */
     const linesParse = () => {
       const jass = new Jass();
-
-      const last = function <T>(s: T[]): T | null {
-        return s.length > 0 ? s[s.length - 1] : null;
-      }
 
       let inTextMacro = false;  // 记录是否进入文本宏
       let textMacroBlocks = []; // 文本宏内容
@@ -528,12 +438,16 @@ class Jass {
           }
           inter.start = new vscode.Position(i, lineText.indexOf("interface"));
           inInterface = true;
-        }else if (inInterface) {
+        }else if (/^\s*endinterface/.test(lineText)) {
           const inter = jass.interfaces[jass.interfaces.length - 1];
-          inter.end = new vscode.Position(i, lineText.indexOf("endinterface"));
-          inter.origin = `interface\n
-
-          endinterface`;
+          if(inter){
+            if(lineText.includes("endinterface")){
+              inter.end = new vscode.Position(i, lineText.indexOf("endinterface"));
+            }
+            inter.origin = `interface\n
+  
+            endinterface`;
+          }
           inInterface = false;
         }else if (/^\s*struct/.test(lineText)) {
           const struct = new Struct();
@@ -554,9 +468,11 @@ class Jass {
             }
           }
           struct.start = new vscode.Position(i, lineText.indexOf("struct"));
+          jass.structs.push(struct);
           inStruct = true;
         }else if (/^\s*endstruct/.test(lineText)) {
           if(inStruct){
+            console.log(jass.structs)
             const struct = jass.structs[jass.structs.length - 1];
             struct.end = new vscode.Position(i, lineText.indexOf("endstruct"));
             struct.origin = `struct\n
@@ -566,8 +482,6 @@ class Jass {
           inStruct = false;
         }else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
           const func = new Func();
-          
-          const hasMod = lineText.includes("private") || lineText.includes("public");
           if(lineText.includes("private")){
             func.modifier = Modifier.Private;
           }else if(lineText.includes("public")){
@@ -580,24 +494,47 @@ class Jass {
             const result = nameRegExp.exec(lineText);
             if(result && result.groups && result.groups.name){
               func.name = result.groups.name;
+              func.nameRange = new vscode.Range(i, lineText.indexOf(func.name),i, lineText.indexOf(func.name) + func.name.length);
             }
           }
           if(!/takes\s+nothing/.test(lineText)){
-            const takesRegExp = new RegExp(/takes\s+(?<takes>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
-            const takesString = lineText.substring(0, lineText.includes("returns") ? lineText.indexOf("returns") : lineText.length);
+            const takesRegExp = new RegExp(/takes\s+(?<takeString>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
+            const takesString = lineText.includes("returns") ? lineText.substring(0, lineText.indexOf("returns")) : lineText;
             if(takesRegExp.test(takesString)){
-
+              const result = takesRegExp.exec(takesString);
+              if(result && result.groups && result.groups.takeString){
+                const takeString = result.groups.takeString;
+                const takesStrings = takeString.split(/\s*,\s*/);
+                const takes = takesStrings.map(t => {
+                  const takeTypeName = t.trim().split(/\s+/);
+                  const param = new Param();
+                  param.type = takeTypeName[0];
+                  param.name = takeTypeName[1];
+                  return param;
+                });
+                func.takes = takes;
+              }
             }
           }
-          if(hasMod){ // 有修饰符时
+          const returnsRegexp = new RegExp(/returns\s+(?<returnsType>[a-zA-Z]+)/);
+          if(returnsRegexp.test(lineText)){
+            const result = returnsRegexp.exec(lineText);
+            if(result && result.groups && result.groups.returnType){
+              func.returnType = result.groups.returnType;
+            }
+          }
+          func.start = new vscode.Position(i, lineText.includes("private") ? lineText.indexOf("private") : lineText.includes("public") ? lineText.indexOf("public") : lineText.includes("function") ? lineText.indexOf("function") : 0);
+          if(func.modifier == Modifier.Private || func.modifier == Modifier.Public){ // 有修饰符时
             if(inLibrary){
               if(inScopeField>0){
-
+                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes,inScopeField);
+                scopes[scopes.length - 1].functions.push(func);
               }else {
-
+                jass.librarys[jass.librarys.length - 1].functions.push(func);
               }
             }else if(inScopeField>0){
-              
+              const scopes = findScopes(jass.scopes,inScopeField);
+                scopes[scopes.length - 1].functions.push(func);
             }
           }
           inFunction = true;
@@ -740,131 +677,12 @@ class Jass {
           }
         }
       }
-      return blocks;
-    }
-    const blockTexts = linesParse();
-    const blockParse = () => {
-      const jass = new Jass;
-      for (let i = 0; i < blockTexts.length; i++) {
-        const contentBlock = blockTexts[i];
-
-        if (contentBlock.type == "textmacro") { // //! textmacro textmacro_name [takes takes_name1,takes_name2]
-          const textMacro = new TextMacro();
-          textMacro.origin = contentBlock.content.join("");
-          textMacro.range = new vscode.Range(contentBlock.startLine, 0, contentBlock.endLine, contentBlock.content[contentBlock.content.length - 1].length);
-          const nameRegExp = /textmacro\s+(?<name>[a-zA-Z]\w*)/;
-          if (nameRegExp.test(contentBlock.content[0])) {
-            const result = nameRegExp.exec(contentBlock.content[0]);
-            if (result) {
-              const groups = result.groups;
-              if (groups) {
-                textMacro.name = groups.name;
-                const nameIndex = contentBlock.content[0].indexOf(textMacro.name);
-                textMacro.nameRange = new vscode.Range(contentBlock.startLine, nameIndex, contentBlock.startLine, nameIndex + textMacro.name.length);
-              }
-            }
-          }
-          if (!textMacro.name) continue; // 保证宏已被命名
-          const takesRegExp = /takes\s+(?<takesContent>[a-zA-Z]\w*(?:\s*,\s*[a-zA-Z]\w*)*)/;
-          if (takesRegExp.test(contentBlock.content[0])) {
-            const result = nameRegExp.exec(contentBlock.content[0]);
-            if (result) {
-              const groups = result.groups;
-              if (groups) {
-                textMacro.takes = groups.takesContent.split(/\s*,\s*/);
-              }
-            }
-          }
-          jass.textMacros.push(textMacro);
-        } else if (contentBlock.type == "scope") {
-
-          const parseScope = (cc: { type: string, content: string[], startLine: number, endLine: number }) => {
-            // 获取scope内部scope
-            const scope = new Scope();
-            scope.globals.push(...Global.parse(contentBlock.content.join(""), contentBlock.startLine));
-            scope.functions.push(...Func.parse(blockTexts[i].content.join("")))
-            let inScope = false;
-            let inScopeField = 0;
-            let scopeStartLine = 0;
-            let scopeBlocks: string[] = [];
-            let inGlobal = false;
-            let inFunction = false;
-            let functionStartLine = 0;
-            let functionBlocks: string[] = [];
-            // 分析首行
-            const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)/;
-            if (nameRegExp.test(cc.content[0])) {
-              const result = nameRegExp.exec(cc.content[0]);
-              if (result) {
-                const groups = result.groups;
-                if (groups) {
-                  scope.name = groups.name;
-                  const nameIndex = cc.content[0].indexOf(scope.name);
-                  scope.nameRange = new vscode.Range(cc.startLine, nameIndex, cc.startLine, nameIndex + scope.name.length);
-                }
-              }
-            }
-            if (!scope.name) return null; // scope未命名时放弃解析
-            const initRegExp = /initializer\s+(?<initializer>[a-zA-Z]\w*)/;
-            if (initRegExp.test(cc.content[0])) {
-              const result = initRegExp.exec(cc.content[0]);
-              if (result && result.groups) {
-                if (result.groups.initializer) {
-                  scope.initializer = result.groups.initializer;
-                }
-              }
-            }
-            // 分析scope内容
-            for (let c = 1; c < content.length - 1; c++) {
-              const element = cc.content[c];
-              if (/^\s*scope/.test(element)) {
-                inScope = true;
-                inScopeField++;
-                scopeStartLine = cc.startLine + c;
-                scopeBlocks = [];
-              }
-              if (inScope) {
-                scopeBlocks.push(element);
-                if (/^\s*endscope/.test(element)) {
-                  inScopeField--;
-                  if (inScopeField == 0) {
-                    const sco = parseScope({ type: "scope", content: scopeBlocks, startLine: scopeStartLine, endLine: cc.startLine + c });
-                    if (sco) {
-                      scope.scopes.push(sco);
-                    }
-                    scopeBlocks = [];
-                    inScope = false;
-                  }
-                }
-              } else {
-                if (/^\s*globals/.test(element)) {
-                  inGlobal = true;
-                } else if (/^\s*endglobals/.test(element)) {
-                  inGlobal = false;
-                } else if (inGlobal) {
-
-                } else {
-                  console.log()
-                }
-              }
-            }
-            scope.origin = `scope ${scope.name}${scope.initializer ? " initializer " + scope.initializer : ""}\n${scope.globals.length > 0 ? "globals\n" + scope.globals.map(g => g.origin).join("\n") + "\nendglobals\n" : ""}${scope.functions.map(f => f.origin).join("\n")}\nendscope`;
-            return scope;
-          }
-          // let scope = parseScope(contentBlock);
-          // if (scope) {
-          //   jass.scopes.push(scope);
-          // }
-          console.log(contentBlock.content.join(""))
-          jass.scopes.push(...Scope.parse(contentBlock.content.join(""), contentBlock.startLine));
-        }
-      }
       return jass;
     }
     const letter = (char: string): boolean => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"].includes(char);
     const w = (char: string): boolean => letter(char) || "_" == char;
     const W = (char: string): boolean => !w(char);
-    return blockParse();
+    return linesParse();
   }
 
   static parseContent1(content: string): Jass {
