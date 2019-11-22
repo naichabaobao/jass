@@ -536,9 +536,29 @@ class Jass {
               const scopes = findScopes(jass.scopes,inScopeField);
                 scopes[scopes.length - 1].functions.push(func);
             }
+          }else {
+            if(inLibrary){
+              const lib = jass.librarys[jass.librarys.length - 1];
+              if(lib.initializer == func.name){
+                lib.functions.push(func);
+              }else {
+                jass.funcs.push(func);
+              }
+            } else{
+              jass.funcs.push(func);
+            }
           }
           inFunction = true;
         } else if (/^\s*endfunction/.test(lineText)) {
+          if(inFunction){
+            if(inLibrary){
+
+            }else if(inScopeField > 0){
+
+            }else{
+              
+            }
+          }
           inFunction = false;
         }else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
