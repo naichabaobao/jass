@@ -551,15 +551,23 @@ class Jass {
           inFunction = true;
         } else if (/^\s*endfunction/.test(lineText)) {
           if(inFunction){
+            const end = new vscode.Position(i, lineText.indexOf("endfunction") + "endfunction".length);
             if(inLibrary){
-
+              if(inScopeField > 0){
+                const lib = jass.librarys[jass.librarys.length - 1];
+                const scopes = findScopes(lib.scopes, inScopeField);
+                scopes[scopes.length - 1].end = end;
+              }else{
+                jass.librarys[jass.librarys.length - 1].end = end;
+              }
             }else if(inScopeField > 0){
-
+              const scopes = findScopes(jass.scopes, inScopeField);
+              scopes[scopes.length - 1].end = end;
             }else{
-              
+              jass.funcs[jass.funcs.length - 1].end = end;
             }
+            inFunction = false;
           }
-          inFunction = false;
         }else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
         } else if (/^\s*endglobals/.test(lineText)) {
