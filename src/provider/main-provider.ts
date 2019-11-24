@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 // const vscode = require("vscode");
-const fs = require("fs");
-const path = require("path");
+// const fs = require("fs");
+// const path = require("path");
 
 const language = "jass";
 
@@ -591,9 +591,9 @@ class Jass {
                   local.nameRange = new vscode.Range(i, lineText.indexOf(local.name), i, lineText.indexOf(local.name) + local.name.length);
                 }
                 if (result.groups.hasArray) {
-                  local.isArray = true;
+                  local.isArray = true; 
                 }
-              }
+              } 
             }
             local.range = new vscode.Range(i, lineText.indexOf("local"), i, lineText.length);
           }
@@ -601,7 +601,8 @@ class Jass {
           inGlobals = true;
         } else if (/^\s*endglobals/.test(lineText)) {
           inGlobals = false;
-        } else if ((/^\s*private/.test(lineText) || /^\s*public/.test(lineText) || /^\s*constant/.test(lineText) || /^\s*[a-zA-Z]+/.test(lineText)) && inGlobals) {
+        } else if ((/^\s*private/.test(lineText) || /^\s*public/.test(lineText) || /^\s*constant/.test(lineText)) && inGlobals) {
+          console.log("global")
           const global = new Global();
           if (lineText.includes("constant")) {
             global.isConstant = true;
@@ -659,6 +660,27 @@ class Jass {
               }
             }
           }
+          if(global.modifier == Modifier.Common){
+            jass.globals.push(global);
+          }else {
+            if(inLibrary){
+              if(inScopeField > 0){
+                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+                const scope = scopes[scopes.length - 1];
+                if(scope){
+                  scope.globals.push(global);
+                }
+              }else{
+                jass.librarys[jass.librarys.length - 1].globals.push(global);
+              }
+            }else if(inScopeField > 0){
+              const scopes = findScopes(jass.scopes, inScopeField);
+              const scope = scopes[scopes.length - 1];
+              if(scope){
+                scope.globals.push(global);
+              }
+            }
+          }
         } else if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
         } else if (/^\s*function\s+interface/.test(lineText)) {
         } else if (/^\s*\/\/!\s+import/.test(lineText)) {
@@ -667,129 +689,6 @@ class Jass {
         if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
         }
         if (/^\s*type/.test(lineText)) {
-        }
-      }
-
-      const starstWith = (text: string, match: string): boolean => text.trimLeft().startsWith(match);
-      const blocks = [];
-
-      for (let i = 0; i < lineTexts.length; i++) {
-        const lineText = lineTexts[i];
-        if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
-          inTextMacro = true;
-          textMacroStartLine = i;
-          textMacroBlocks = [];
-        }
-        if (inTextMacro) {
-          textMacroBlocks.push(lineText);
-          if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
-            blocks.push({ type: "textmacro", content: textMacroBlocks, startLine: textMacroStartLine, endLine: i });
-            textMacroBlocks = [];
-            inTextMacro = false;
-          }
-        } else {
-          if (!inLibrary && /^\s*scope/.test(lineText)) {
-            inScope = true;
-            inScopeField++;
-            if (!inScope) {
-              scopeStartLine = i;
-              scopeBlocks = [];
-            }
-          }
-          if (inScope) {
-            scopeBlocks.push(lineText);
-            if (/^\s*endscope/.test(lineText)) {
-              inScopeField--;
-              if (inScopeField == 0) {
-                blocks.push({ type: "scope", content: scopeBlocks, startLine: scopeStartLine, endLine: i });
-                scopeBlocks = [];
-                inScope = false;
-              }
-            }
-          }
-          if (/^\s*library/.test(lineText)) {
-            inLibrary = true;
-            libraryStartLine = i;
-            libraryBlocks = [];
-          }
-          if (inLibrary) {
-            libraryBlocks.push(lineText);
-            if (/^\s*endlibrary/.test(lineText)) {
-              blocks.push({ type: "library", content: libraryBlocks, startLine: libraryStartLine, endLine: i });
-              libraryBlocks = [];
-              inLibrary = false;
-            }
-          }
-          if (/^\s*interface/.test(lineText)) {
-            inInterface = true;
-            interfaceStartLine = i;
-            interfaceBlocks = [];
-          }
-          if (inInterface) {
-            interfaceBlocks.push(lineText);
-            if (/^\s*endinterface/.test(lineText)) {
-              blocks.push({ type: "interface", content: interfaceBlocks, startLine: interfaceStartLine, endLine: i });
-              interfaceBlocks = [];
-              inInterface = false;
-            }
-          }
-          if (/^\s*struct/.test(lineText)) {
-            inStruct = true;
-            structStartLine = i;
-            structBlocks = [];
-          }
-          if (inStruct) {
-            structBlocks.push(lineText);
-            if (/^\s*endstruct/.test(lineText)) {
-              blocks.push({ type: "struct", content: structBlocks, startLine: structStartLine, endLine: i });
-              structBlocks = [];
-              inStruct = false;
-            }
-          }
-          if (!inScope && !inLibrary && /^\s*function(?!\s+interface)/.test(lineText)) {
-            inFunction = true;
-            functionStartLine = i;
-            functionBlocks = [];
-          }
-          if (inFunction) {
-            functionBlocks.push(lineText);
-            if (/^\s*endfunction/.test(lineText)) {
-              blocks.push({ type: "function", content: functionBlocks, startLine: functionStartLine, endLine: i });
-              functionBlocks = [];
-              inFunction = false;
-            }
-          }
-          if (/^\s*globals/.test(lineText)) {
-            inGlobals = true;
-            globalStartLine = i;
-            globalBlocks = [];
-          }
-          if (inGlobals) {
-            globalBlocks.push(lineText);
-            if (/^\s*endglobals/.test(lineText)) {
-              blocks.push({ type: "globals", content: globalBlocks, startLine: globalStartLine, endLine: i });
-              globalBlocks = [];
-              inGlobals = false;
-            }
-          }
-          if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
-            blocks.push({ type: "array_object", content: [lineText], startLine: i, endLine: i });
-          }
-          if (/^\s*function\s+interface/.test(lineText)) {
-            blocks.push({ type: "function_object", content: [lineText], startLine: i, endLine: i });
-          }
-          if (/^\s*\/\/!\s+import/.test(lineText)) {
-            blocks.push({ type: "import", content: [lineText], startLine: i, endLine: i });
-          }
-          if (/^\s*\/\//.test(lineText)) {
-            blocks.push({ type: "comment", content: [lineText], startLine: i, endLine: i });
-          }
-          if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
-            blocks.push({ type: "native", content: [lineText], startLine: i, endLine: i });
-          }
-          if (/^\s*type/.test(lineText)) {
-            blocks.push({ type: "type", content: [lineText], startLine: i, endLine: i });
-          }
         }
       }
       return jass;

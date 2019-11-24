@@ -1,33 +1,33 @@
 {
-	"name": "jass",
-	"displayName": "jass",
-	"description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
+  "name": "jass",
+  "displayName": "jass",
+  "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "家貓hoo",
-	"icon": "./src/resources/static/jass.png",
-	"version": "0.0.29",
-	"keywords": [
+  "icon": "./src/resources/static/jass.png",
+  "version": "0.0.29",
+  "keywords": [
     "jass",
     "warcraft"
   ],
   "engines": {
     "vscode": "^1.37.0"
   },
-	"markdown": "github",
+  "markdown": "github",
   "categories": [
     "Programming Languages",
     "Snippets",
     "Formatters"
-	],
-	"repository": {
+  ],
+  "repository": {
     "type": "git",
-    "url": "https://github.com/fnfufnfu/jass"
+    "url": "git+https://github.com/fnfufnfu/jass.git"
   },
   "homepage": "https://raw.githubusercontent.com/fnfufnfu/jass/master/README.md",
   "activationEvents": [
     "onLanguage:jass"
   ],
-	"main": "./out/extension.js",
-	"contributes": {
+  "main": "./out/extension.js",
+  "contributes": {
     "configuration": {
       "type": "object",
       "title": "Jass",
@@ -43,12 +43,12 @@
             "type": "string"
           },
           "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
-				},
-				"jass.vjass.support.enable": {
-					"type": "boolean",
+        },
+        "jass.vjass.support.enable": {
+          "type": "boolean",
           "default": true,
           "description": "是否开启对vjass语法支持,开启后插件会识别lib，scope，struct，interface，文本宏等"
-				}
+        }
       }
     },
     "languages": [
@@ -80,22 +80,26 @@
     ],
     "documentFormattingProvider": "true"
   },
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.7",
-		"@types/node": "^12.11.7",
-		"@types/vscode": "^1.40.0",
-		"glob": "^7.1.5",
-		"mocha": "^6.2.2",
-		"typescript": "^3.6.4",
-		"tslint": "^5.20.0",
-		"vscode-test": "^1.2.2"
-	}
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.40.0",
+    "typescript": "^3.6.4",
+    "tslint": "^5.20.0",
+    "vscode-test": "^1.2.2"
+  },
+  "bugs": {
+    "url": "https://github.com/fnfufnfu/jass/issues"
+  },
+  "dependencies": {},
+  "author": "家猫hoo",
+  "license": "ISC"
 }
