@@ -29,7 +29,7 @@ class Comment {
   public contentRange: vscode.Range | null = null;
 }
 
-enum Modifier{
+enum Modifier {
   Private = "private",
   Public = "public",
   Common = "common"
@@ -110,6 +110,14 @@ class Func {
   public returnType: string | null = null;
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
+  public nameRange: vscode.Range | null = null;
+}
+
+class Local {
+  public type: string | null = null;
+  public name: string | null = null;
+  public isArray: boolean = false;
+  public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
 }
 
@@ -215,42 +223,42 @@ class Scope {
 
 class Member {
   public modifier: MemberModifier = MemberModifier.Private;
-  public type:string|null = null;
-  public name:string|null = null;
-  public range:vscode.Range|null = null;
-  public nameRange:vscode.Range|null = null;
-  public origin:string|null = null;
+  public type: string | null = null;
+  public name: string | null = null;
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
+  public origin: string | null = null;
 }
 
 class Method {
-  public name:string|null = null;
-  public takes:Param[] = new Array<Param>();
-  public returnType:string|null = null;
+  public name: string | null = null;
+  public takes: Param[] = new Array<Param>();
+  public returnType: string | null = null;
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
-  public nameRange:vscode.Range|null = null;
-  public origin:string|null = null;
+  public nameRange: vscode.Range | null = null;
+  public origin: string | null = null;
 }
 
 class Struct {
-  public name:string|null = null;
-  public extends:string|null = null;
-  public members:Member[] = new Array<Member>();
-  public methods:Method[] = new Array<Method>();
-  public start:vscode.Position|null = null;
-  public end:vscode.Position|null = null;
-  public nameRange:vscode.Range|null = null;
-  public origin:string|null = null;
+  public name: string | null = null;
+  public extends: string | null = null;
+  public members: Member[] = new Array<Member>();
+  public methods: Method[] = new Array<Method>();
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange: vscode.Range | null = null;
+  public origin: string | null = null;
 }
 
 class Interface {
-  public name:string|null = null;
-  public members:Member[] = new Array<Member>();
-  public methods:Method[] = new Array<Method>();
-  public start:vscode.Position|null = null;
-  public end:vscode.Position|null = null;
-  public nameRange:vscode.Range|null = null;
-  public origin:string|null = null;
+  public name: string | null = null;
+  public members: Member[] = new Array<Member>();
+  public methods: Method[] = new Array<Method>();
+  public start: vscode.Position | null = null;
+  public end: vscode.Position | null = null;
+  public nameRange: vscode.Range | null = null;
+  public origin: string | null = null;
 }
 
 class ArrayType {
@@ -426,22 +434,22 @@ class Jass {
           if (inScopeField > 0) {
             inScopeField--;
           }
-        }else if (/^\s*interface/.test(lineText)) {
+        } else if (/^\s*interface/.test(lineText)) {
           const inter = new Interface();
           const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
-          if(nameRegExp.test(lineText)){
+          if (nameRegExp.test(lineText)) {
             const result = nameRegExp.exec(lineText);
-            if(result && result.groups && result.groups.name){
+            if (result && result.groups && result.groups.name) {
               inter.name = result.groups.name;
-              inter.nameRange = new vscode.Range(i, lineText.indexOf(inter.name), i , lineText.indexOf(inter.name) + inter.name.length);
+              inter.nameRange = new vscode.Range(i, lineText.indexOf(inter.name), i, lineText.indexOf(inter.name) + inter.name.length);
             }
           }
           inter.start = new vscode.Position(i, lineText.indexOf("interface"));
           inInterface = true;
-        }else if (/^\s*endinterface/.test(lineText)) {
+        } else if (/^\s*endinterface/.test(lineText)) {
           const inter = jass.interfaces[jass.interfaces.length - 1];
-          if(inter){
-            if(lineText.includes("endinterface")){
+          if (inter) {
+            if (lineText.includes("endinterface")) {
               inter.end = new vscode.Position(i, lineText.indexOf("endinterface"));
             }
             inter.origin = `interface\n
@@ -449,29 +457,29 @@ class Jass {
             endinterface`;
           }
           inInterface = false;
-        }else if (/^\s*struct/.test(lineText)) {
+        } else if (/^\s*struct/.test(lineText)) {
           const struct = new Struct();
           const nameRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
-          if(nameRegExp.test(lineText)){
-            const result  = nameRegExp.exec(lineText);
-            if(result && result.groups && result.groups.name){
+          if (nameRegExp.test(lineText)) {
+            const result = nameRegExp.exec(lineText);
+            if (result && result.groups && result.groups.name) {
               struct.name = result.groups.name;
               struct.start = new vscode.Position(i, lineText.indexOf(struct.name));
-              struct.nameRange = new vscode.Range(i, lineText.indexOf(struct.name), i ,lineText.indexOf(struct.name) + struct.name.length);
+              struct.nameRange = new vscode.Range(i, lineText.indexOf(struct.name), i, lineText.indexOf(struct.name) + struct.name.length);
             }
           }
           const extendsRegExp = new RegExp(/extends\s+(?<extends>[a-zA-Z][a-zA-Z\d]*)/);
-          if(extendsRegExp.test(lineText)){
+          if (extendsRegExp.test(lineText)) {
             const result = extendsRegExp.exec(lineText);
-            if(result && result.groups && result.groups.extends){
+            if (result && result.groups && result.groups.extends) {
               struct.extends = result.groups.extends;
             }
           }
           struct.start = new vscode.Position(i, lineText.indexOf("struct"));
           jass.structs.push(struct);
           inStruct = true;
-        }else if (/^\s*endstruct/.test(lineText)) {
-          if(inStruct){
+        } else if (/^\s*endstruct/.test(lineText)) {
+          if (inStruct) {
             console.log(jass.structs)
             const struct = jass.structs[jass.structs.length - 1];
             struct.end = new vscode.Position(i, lineText.indexOf("endstruct"));
@@ -480,29 +488,29 @@ class Jass {
             endstruct`;
           }
           inStruct = false;
-        }else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
+        } else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
           const func = new Func();
-          if(lineText.includes("private")){
+          if (lineText.includes("private")) {
             func.modifier = Modifier.Private;
-          }else if(lineText.includes("public")){
+          } else if (lineText.includes("public")) {
             func.modifier = Modifier.Public;
-          }else{
+          } else {
             func.modifier = Modifier.Common;
           }
           const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
-          if(nameRegExp.test(lineText)){
+          if (nameRegExp.test(lineText)) {
             const result = nameRegExp.exec(lineText);
-            if(result && result.groups && result.groups.name){
+            if (result && result.groups && result.groups.name) {
               func.name = result.groups.name;
-              func.nameRange = new vscode.Range(i, lineText.indexOf(func.name),i, lineText.indexOf(func.name) + func.name.length);
+              func.nameRange = new vscode.Range(i, lineText.indexOf(func.name), i, lineText.indexOf(func.name) + func.name.length);
             }
           }
-          if(!/takes\s+nothing/.test(lineText)){
+          if (!/takes\s+nothing/.test(lineText)) {
             const takesRegExp = new RegExp(/takes\s+(?<takeString>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
             const takesString = lineText.includes("returns") ? lineText.substring(0, lineText.indexOf("returns")) : lineText;
-            if(takesRegExp.test(takesString)){
+            if (takesRegExp.test(takesString)) {
               const result = takesRegExp.exec(takesString);
-              if(result && result.groups && result.groups.takeString){
+              if (result && result.groups && result.groups.takeString) {
                 const takeString = result.groups.takeString;
                 const takesStrings = takeString.split(/\s*,\s*/);
                 const takes = takesStrings.map(t => {
@@ -517,61 +525,140 @@ class Jass {
             }
           }
           const returnsRegexp = new RegExp(/returns\s+(?<returnsType>[a-zA-Z]+)/);
-          if(returnsRegexp.test(lineText)){
+          if (returnsRegexp.test(lineText)) {
             const result = returnsRegexp.exec(lineText);
-            if(result && result.groups && result.groups.returnType){
+            if (result && result.groups && result.groups.returnType) {
               func.returnType = result.groups.returnType;
             }
           }
           func.start = new vscode.Position(i, lineText.includes("private") ? lineText.indexOf("private") : lineText.includes("public") ? lineText.indexOf("public") : lineText.includes("function") ? lineText.indexOf("function") : 0);
-          if(func.modifier == Modifier.Private || func.modifier == Modifier.Public){ // 有修饰符时
-            if(inLibrary){
-              if(inScopeField>0){
-                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes,inScopeField);
+          if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
+            if (inLibrary) {
+              if (inScopeField > 0) {
+                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
                 scopes[scopes.length - 1].functions.push(func);
-              }else {
+              } else {
                 jass.librarys[jass.librarys.length - 1].functions.push(func);
               }
-            }else if(inScopeField>0){
-              const scopes = findScopes(jass.scopes,inScopeField);
-                scopes[scopes.length - 1].functions.push(func);
+            } else if (inScopeField > 0) {
+              const scopes = findScopes(jass.scopes, inScopeField);
+              scopes[scopes.length - 1].functions.push(func);
             }
-          }else {
-            if(inLibrary){
+          } else {
+            if (inLibrary) {
               const lib = jass.librarys[jass.librarys.length - 1];
-              if(lib.initializer == func.name){
+              if (lib.initializer == func.name) {
                 lib.functions.push(func);
-              }else {
+              } else {
                 jass.funcs.push(func);
               }
-            } else{
+            } else {
               jass.funcs.push(func);
             }
           }
           inFunction = true;
         } else if (/^\s*endfunction/.test(lineText)) {
-          if(inFunction){
+          if (inFunction) {
             const end = new vscode.Position(i, lineText.indexOf("endfunction") + "endfunction".length);
-            if(inLibrary){
-              if(inScopeField > 0){
+            if (inLibrary) {
+              if (inScopeField > 0) {
                 const lib = jass.librarys[jass.librarys.length - 1];
                 const scopes = findScopes(lib.scopes, inScopeField);
                 scopes[scopes.length - 1].end = end;
-              }else{
+              } else {
                 jass.librarys[jass.librarys.length - 1].end = end;
               }
-            }else if(inScopeField > 0){
+            } else if (inScopeField > 0) {
               const scopes = findScopes(jass.scopes, inScopeField);
               scopes[scopes.length - 1].end = end;
-            }else{
+            } else {
               jass.funcs[jass.funcs.length - 1].end = end;
             }
             inFunction = false;
           }
-        }else if (/^\s*globals/.test(lineText)) {
+        } else if (/^\s*local/.test(lineText)) {
+          if (inFunction) {
+            const local = new Local();
+            const functionRegExp = new RegExp(/local\s+(?<type>[a-zA-Z]+)(\s+(?<hasArray>array))?\s+(?<name>[a-zA-Z]\w*)/);
+            if (functionRegExp.test(lineText)) {
+              const result = functionRegExp.exec(lineText);
+              if (result && result.groups) {
+                if (result.groups.type) {
+                  local.type = result.groups.type;
+                }
+                if (result.groups.name) {
+                  local.name = result.groups.name;
+                  local.nameRange = new vscode.Range(i, lineText.indexOf(local.name), i, lineText.indexOf(local.name) + local.name.length);
+                }
+                if (result.groups.hasArray) {
+                  local.isArray = true;
+                }
+              }
+            }
+            local.range = new vscode.Range(i, lineText.indexOf("local"), i, lineText.length);
+          }
+        } else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
         } else if (/^\s*endglobals/.test(lineText)) {
           inGlobals = false;
+        } else if ((/^\s*private/.test(lineText) || /^\s*public/.test(lineText) || /^\s*constant/.test(lineText) || /^\s*[a-zA-Z]+/.test(lineText)) && inGlobals) {
+          const global = new Global();
+          if (lineText.includes("constant")) {
+            global.isConstant = true;
+            const typeRegExp = new RegExp(/constant\s+(?<type>[a-zA-Z]+)/);
+            if (typeRegExp.test(lineText)) {
+              const result = typeRegExp.exec(lineText);
+              if (result && result.groups && result.groups.type) {
+                global.type = result.groups.type;
+              }
+            }
+          }
+          if (lineText.includes("public")) {
+            global.modifier = Modifier.Public;
+            if (!global.isConstant) {
+              const typeRegExp = new RegExp(/public\s+(?<type>[a-zA-Z]+)/);
+              if (typeRegExp.test(lineText)) {
+                const result = typeRegExp.exec(lineText);
+                if (result && result.groups && result.groups.type) {
+                  global.type = result.groups.type;
+                }
+              }
+            }
+          }
+          if (lineText.includes("private")) {
+            global.modifier = Modifier.Private;
+            if (!global.isConstant) {
+              const typeRegExp = new RegExp(/private\s+(?<type>[a-zA-Z]+)/);
+              if (typeRegExp.test(lineText)) {
+                const result = typeRegExp.exec(lineText);
+                if (result && result.groups && result.groups.type) {
+                  global.type = result.groups.type;
+                }
+              }
+            }
+          }
+          if (lineText.includes("array")) {
+            global.isArray = true;
+          }
+          if(global.modifier == Modifier.Common && !global.isConstant){
+            // 若果无修饰符,默认会把第一个单词当成type
+            const typeRegExp = new RegExp(/(?<type>[a-zA-Z]+)/);
+            if (typeRegExp.test(lineText)) {
+              const result = typeRegExp.exec(lineText);
+              if (result && result.groups && result.groups.type) {
+                global.type = result.groups.type;
+              }
+            }
+          }
+          if(global.type){
+            const nameRegExp = global.isArray ? new RegExp(`${global.type}\\s+array\\s+(?<name>[a-zA-Z]\\w*)`) : new RegExp(`${global.type}\\s+(?<name>[a-zA-Z]\\w*)`);
+            if (nameRegExp.test(lineText)) {
+              const result = nameRegExp.exec(lineText);
+              if (result && result.groups && result.groups.name) {
+                global.type = result.groups.name;
+              }
+            }
+          }
         } else if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
         } else if (/^\s*function\s+interface/.test(lineText)) {
         } else if (/^\s*\/\/!\s+import/.test(lineText)) {
