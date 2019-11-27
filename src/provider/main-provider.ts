@@ -600,84 +600,53 @@ class Jass {
         } else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
         } else if (/^\s*endglobals/.test(lineText)) {
-          inGlobals = false;
-        } else if ((/^\s*private/.test(lineText) || /^\s*public/.test(lineText) || /^\s*constant/.test(lineText)) && inGlobals) {
-          console.log("global")
-          const global = new Global();
-          if (lineText.includes("constant")) {
-            global.isConstant = true;
-            const typeRegExp = new RegExp(/constant\s+(?<type>[a-zA-Z]+)/);
-            if (typeRegExp.test(lineText)) {
-              const result = typeRegExp.exec(lineText);
-              if (result && result.groups && result.groups.type) {
-                global.type = result.groups.type;
-              }
-            }
-          }
-          if (lineText.includes("public")) {
-            global.modifier = Modifier.Public;
-            if (!global.isConstant) {
-              const typeRegExp = new RegExp(/public\s+(?<type>[a-zA-Z]+)/);
-              if (typeRegExp.test(lineText)) {
-                const result = typeRegExp.exec(lineText);
-                if (result && result.groups && result.groups.type) {
-                  global.type = result.groups.type;
+          inGlobals = false;  
+        } else if (inGlobals) { // 在global块时会无视其他语法行
+          const globalRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isConstant>constant)\s+)?(?<type>[a-zA-Z]+)\s+((?<isArray>array)\s+)?(?<name>[a-zA-Z]\w*)(?=\s*=|\s*\n|\s*\/\/)/);  // 必须保证name后面为=号或者换行或者单行注释
+          console.log(globalRegExp.test(lineText))
+          if(globalRegExp.test(lineText)){
+            const global = new Global();
+            const result = globalRegExp.exec(lineText);
+            if(result && result.groups){
+              if(result.groups.modifier){
+                if(result.groups.modifier == Modifier.Private){
+                  global.modifier = Modifier.Private;
+                }else if(result.groups.modifier == Modifier.Public){
+                  global.modifier = Modifier.Public;
                 }
               }
-            }
-          }
-          if (lineText.includes("private")) {
-            global.modifier = Modifier.Private;
-            if (!global.isConstant) {
-              const typeRegExp = new RegExp(/private\s+(?<type>[a-zA-Z]+)/);
-              if (typeRegExp.test(lineText)) {
-                const result = typeRegExp.exec(lineText);
-                if (result && result.groups && result.groups.type) {
-                  global.type = result.groups.type;
-                }
+              if(result.groups.isConstant){
+                global.isConstant = true;
               }
-            }
-          }
-          if (lineText.includes("array")) {
-            global.isArray = true;
-          }
-          if(global.modifier == Modifier.Common && !global.isConstant){
-            // 若果无修饰符,默认会把第一个单词当成type
-            const typeRegExp = new RegExp(/(?<type>[a-zA-Z]+)/);
-            if (typeRegExp.test(lineText)) {
-              const result = typeRegExp.exec(lineText);
-              if (result && result.groups && result.groups.type) {
+              if(result.groups.type){
                 global.type = result.groups.type;
               }
-            }
-          }
-          if(global.type){
-            const nameRegExp = global.isArray ? new RegExp(`${global.type}\\s+array\\s+(?<name>[a-zA-Z]\\w*)`) : new RegExp(`${global.type}\\s+(?<name>[a-zA-Z]\\w*)`);
-            if (nameRegExp.test(lineText)) {
-              const result = nameRegExp.exec(lineText);
-              if (result && result.groups && result.groups.name) {
-                global.type = result.groups.name;
+              if(result.groups.isArray){
+                global.isArray = true;
+              }
+              if(result.groups.name){
+                global.name = result.groups.name;
               }
             }
-          }
-          if(global.modifier == Modifier.Common){
-            jass.globals.push(global);
-          }else {
-            if(inLibrary){
-              if(inScopeField > 0){
-                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+            if(global.modifier == Modifier.Common){
+              jass.globals.push(global);
+            }else {
+              if(inLibrary){
+                if(inScopeField > 0){
+                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+                  const scope = scopes[scopes.length - 1];
+                  if(scope){
+                    scope.globals.push(global);
+                  }
+                }else{
+                  jass.librarys[jass.librarys.length - 1].globals.push(global);
+                }
+              }else if(inScopeField > 0){
+                const scopes = findScopes(jass.scopes, inScopeField);
                 const scope = scopes[scopes.length - 1];
                 if(scope){
                   scope.globals.push(global);
                 }
-              }else{
-                jass.librarys[jass.librarys.length - 1].globals.push(global);
-              }
-            }else if(inScopeField > 0){
-              const scopes = findScopes(jass.scopes, inScopeField);
-              const scope = scopes[scopes.length - 1];
-              if(scope){
-                scope.globals.push(global);
               }
             }
           }
