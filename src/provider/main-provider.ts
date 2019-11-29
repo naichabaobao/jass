@@ -35,6 +35,22 @@ enum Modifier {
   Common = "common"
 }
 
+/**
+ * 解析出修饰符
+ * @param content 
+ */
+const modifierParse = (content: string): Modifier => {
+  if (content) {
+    if (/\bprivate\b/.test(content)) {
+      return Modifier.Private;
+    } else if (/\bpublic\b/.test(content)) {
+      return Modifier.Public;
+    }
+    return Modifier.Common;
+  }
+  return Modifier.Common;
+}
+
 enum MemberModifier {
   Private = "private",
   Public = "public"
@@ -152,7 +168,26 @@ class Func {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
 
-  public locals:Local[] = new Array<Local>();
+  public locals: Local[] = new Array<Local>();
+
+  static parse(content: string): Func | null {
+    let func = null;
+    if (/\bfunction\b/.test(content)) {
+      func = new Func();
+      func.modifier = modifierParse(content);
+      // 解析方法名称
+      const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
+      if (nameRegExp.test(content)) {
+        const result = nameRegExp.exec(content);
+        if (result && result.groups && result.groups.name) {
+          func.name = result.groups.name;
+        }
+      }
+      func.takes = Param.parseTakes(content);
+      func.returnType = resolveReturnsType(content);
+    }
+    return func;
+  }
 }
 
 class Local {
@@ -668,74 +703,39 @@ class Jass {
             }
           }
         } else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
-          const func = new Func();
-          if (lineText.includes("private")) {
-            func.modifier = Modifier.Private;
-          } else if (lineText.includes("public")) {
-            func.modifier = Modifier.Public;
-          } else {
-            func.modifier = Modifier.Common;
-          }
-          const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
-          if (nameRegExp.test(lineText)) {
-            const result = nameRegExp.exec(lineText);
-            if (result && result.groups && result.groups.name) {
-              func.name = result.groups.name;
-              func.nameRange = new vscode.Range(i, lineText.indexOf(func.name), i, lineText.indexOf(func.name) + func.name.length);
+          const func = Func.parse(lineText);
+          if (func) {
+            if (func.name) {
+              const nameIndex = lineText.indexOf(func.name);
+              func.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + func.name.length);
             }
-          }
-          if (!/takes\s+nothing/.test(lineText)) {
-            const takesRegExp = new RegExp(/takes\s+(?<takeString>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
-            const takesString = lineText.includes("returns") ? lineText.substring(0, lineText.indexOf("returns")) : lineText;
-            if (takesRegExp.test(takesString)) {
-              const result = takesRegExp.exec(takesString);
-              if (result && result.groups && result.groups.takeString) {
-                const takeString = result.groups.takeString;
-                const takesStrings = takeString.split(/\s*,\s*/);
-                const takes = takesStrings.map(t => {
-                  const takeTypeName = t.trim().split(/\s+/);
-                  const param = new Param();
-                  param.type = takeTypeName[0];
-                  param.name = takeTypeName[1];
-                  return param;
-                });
-                func.takes = takes;
-              }
-            }
-          }
-          const returnsRegexp = new RegExp(/returns\s+(?<returnsType>[a-zA-Z]+)/);
-          if (returnsRegexp.test(lineText)) {
-            const result = returnsRegexp.exec(lineText);
-            if (result && result.groups && result.groups.returnType) {
-              func.returnType = result.groups.returnType;
-            }
-          }
-          func.start = new vscode.Position(i, getStartIndex());
-          if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
-            if (inLibrary) {
-              if (inScopeField > 0) {
-                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+            func.start = new vscode.Position(i, getStartIndex());
+            if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
+              if (inLibrary) {
+                if (inScopeField > 0) {
+                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+                  scopes[scopes.length - 1].functions.push(func);
+                } else {
+                  jass.librarys[jass.librarys.length - 1].functions.push(func);
+                }
+              } else if (inScopeField > 0) {
+                const scopes = findScopes(jass.scopes, inScopeField);
                 scopes[scopes.length - 1].functions.push(func);
-              } else {
-                jass.librarys[jass.librarys.length - 1].functions.push(func);
               }
-            } else if (inScopeField > 0) {
-              const scopes = findScopes(jass.scopes, inScopeField);
-              scopes[scopes.length - 1].functions.push(func);
-            }
-          } else {
-            if (inLibrary) {
-              const lib = jass.librarys[jass.librarys.length - 1];
-              if (lib.initializer == func.name) {
-                lib.functions.push(func);
+            } else {
+              if (inLibrary) {
+                const lib = jass.librarys[jass.librarys.length - 1];
+                if (lib.initializer == func.name) {
+                  lib.functions.push(func);
+                } else {
+                  jass.funcs.push(func);
+                }
               } else {
                 jass.funcs.push(func);
               }
-            } else {
-              jass.funcs.push(func);
             }
+            lastFunction = func;
           }
-          lastFunction = func;
           inFunction = true;
         } else if (/^\s*endfunction/.test(lineText)) {
           if (inFunction) {
@@ -757,29 +757,29 @@ class Jass {
             inFunction = false;
           }
         } else if (inFunction) {
-            const functionRegExp = new RegExp(/local\s+(?<type>[a-zA-Z]+)(\s+(?<hasArray>array))?\s+(?<name>[a-zA-Z]\w*)/);
-            if (functionRegExp.test(lineText)) {
-              console.log("infunction")
-              const local = new Local();
-              const result = functionRegExp.exec(lineText);
-              if (result && result.groups) {
-                if (result.groups.type) {
-                  local.type = result.groups.type;
-                }
-                if (result.groups.name) {
-                  local.name = result.groups.name;
-                  local.nameRange = new vscode.Range(i, lineText.indexOf(local.name), i, lineText.indexOf(local.name) + local.name.length);
-                }
-                if (result.groups.hasArray) {
-                  local.isArray = true;
-                }
+          const functionRegExp = new RegExp(/local\s+(?<type>[a-zA-Z]+)(\s+(?<hasArray>array))?\s+(?<name>[a-zA-Z]\w*)/);
+          if (functionRegExp.test(lineText)) {
+            console.log("infunction")
+            const local = new Local();
+            const result = functionRegExp.exec(lineText);
+            if (result && result.groups) {
+              if (result.groups.type) {
+                local.type = result.groups.type;
               }
-              local.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-              
-              if(lastFunction){ //  进入方法行时定义
-                lastFunction.locals.push(local);
+              if (result.groups.name) {
+                local.name = result.groups.name;
+                local.nameRange = new vscode.Range(i, lineText.indexOf(local.name), i, lineText.indexOf(local.name) + local.name.length);
+              }
+              if (result.groups.hasArray) {
+                local.isArray = true;
               }
             }
+            local.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
+
+            if (lastFunction) { //  进入方法行时定义
+              lastFunction.locals.push(local);
+            }
+          }
         } else if (/^\s*globals/.test(lineText)) {
           inGlobals = true;
         } else if (/^\s*endglobals/.test(lineText)) {
