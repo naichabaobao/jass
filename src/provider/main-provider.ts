@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 // const vscode = require("vscode");
-// const fs = require("fs");
-// const path = require("path");
 
 const language = "jass";
 
@@ -21,16 +21,11 @@ class JassUtils {
     return lines;
   }
 
-}
-
-class Type {
-
-
   /**
-   * 去除单行注释和字符串,不包括单行
-   * @param content 
-   */
-  private removeStringAndBlockComment(content: string): string {
+     * 去除单行注释和字符串,不包括单行
+     * @param content 
+     */
+  static removeStringAndBlockComment(content: string): string {
     let inString = false;
     let inLineComment = false;
     let inBlockComment = false;
@@ -64,29 +59,130 @@ class Type {
     return t;
   }
 
-  private removeTextMacro(content: string): string {
-    const str = this.removeStringAndBlockComment(content);
-    console.log(str)
-    str.replace(new RegExp(/\/\/!\s+textmacro[\s\S]+?\/\/!\s+endtextmacro/, "g"), (a, ...args) => {
-      console.log(a);
-      console.log(args)
-      return "";
-    });
+  /**
+   * 去除文本宏，同时去除多行注释和字符串
+   * @param content 
+   */
+  static removeTextMacro(content: string): string {
+    const lines = JassUtils.content2Lines(JassUtils.removeStringAndBlockComment(content));
+    let inTextMacro = false;
+    let str = "";
+    const pushNewLine = () => str += "\n";
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (/\/\/!\s+textmacro/.test(line)) {
+        inTextMacro = true;
+        pushNewLine();
+      } else if (/\/\/!\s+endtextmacro/.test(line)) {
+        inTextMacro = false;
+        pushNewLine();
+      } else if (inTextMacro) {
+        pushNewLine();
+      } else {
+        str += line;
+      }
+    }
     return str;
-  }
-
-  static resolveTypes(content: string): void {
-    new Type().removeTextMacro(content);
   }
 
 }
 
-Type.resolveTypes(`
-//! textmacro
-diaonila
-//! endtextmacro
+class Type {
+  public name: string | null = null;
+  public extends: string | null = null; //  可以为数组对象，目前不进行进一步解析，以string形式保存
+  public isArrayObject: boolean = false;
+  public size: number = 0; // isArrayObject为true时才有效
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
 
-`)
+  public constructor(name: string, extend?: string) {
+    this.name = name;
+    if (extend) this.extends = extend;
+  }
+
+  public origin(): string {
+    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
+  }
+
+  static commonJFilePath = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
+
+  /**
+   * 记录当前所有类型
+   */
+  static Types: Type[] = new Array<Type>();
+
+  /**
+   * 返回基本类型和已经识别的类型
+   * @param isTake 是否需要code类型
+   */
+  static types(isTake: boolean = false): Type[] {
+    if (isTake) return [...Type.TakeBaseTypes, ...Type.Types];
+    else return [...Type.StatementBaseTypes, ...Type.Types];
+  }
+
+  static resolveTypes(content: string): void {
+    const types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
+    const jassContent = JassUtils.removeTextMacro(content);
+    const lines = JassUtils.content2Lines(jassContent);
+    // for内部每解析一个类型都会更新Types
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (/^\s*type\s+[a-zA-Z]+/.test(line)) {
+        const typeRegExp = /\barray\b/.test(line) ? new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${types2RegExpString([Type.Handle, ...Type.Types].filter(value => !value.isArrayObject))}))?`) : new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${types2RegExpString(Type.types())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
+        console.log(typeRegExp.source)
+        if (typeRegExp.test(line)) {
+          let type = null;
+          const result = typeRegExp.exec(line);
+          if (result) {
+            if (result.groups) {
+              if (result.groups.name) {
+                type = new Type(result.groups.name);
+              }
+              if (type) {
+                if (result.groups.extends) {
+                  type.extends = result.groups.extends;
+                }
+                if (result.groups.arrayObject) {
+                  type.isArrayObject = true;
+                }
+                if (result.groups.size) {
+                  const size = Number.parseInt(result.groups.size);
+                  if (!Number.isNaN(size) && size > 0) type.size = size;
+                }
+              }
+            }
+          }
+          if (type) {
+            let anyMatch = false; // 是否存在能匹配的类型
+            for (let index = 0; index < Type.Types.length; index++) {
+              const t = Type.Types[index];
+              if (t.name == type.name) {
+                Type.Types.splice(index, 1, type);
+                anyMatch = true;
+              }
+            }
+            if (!anyMatch) {
+              Type.Types.push(type);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  static Boolean = new Type("boolean");
+  static Integer = new Type("integer");
+  static Real = new Type("real");
+  static String = new Type("string");
+  static Code = new Type("code");
+  static Handle = new Type("handle");
+
+  static StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
+  static TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
+
+}
+Type.resolveTypes(fs.readFileSync(Type.commonJFilePath).toString("utf8"))
+console.log(Type.Types);
 
 class Comment {
   public original: string = "";
