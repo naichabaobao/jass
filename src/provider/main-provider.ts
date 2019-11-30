@@ -39,7 +39,7 @@ enum Modifier {
  * 解析出修饰符
  * @param content 
  */
-const modifierParse = (content: string): Modifier => {
+const resolveModifier = (content: string): Modifier => {
   if (content) {
     if (/\bprivate\b/.test(content)) {
       return Modifier.Private;
@@ -174,7 +174,7 @@ class Func {
     let func = null;
     if (/\bfunction\b/.test(content)) {
       func = new Func();
-      func.modifier = modifierParse(content);
+      func.modifier = resolveModifier(content);
       // 解析方法名称
       const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
       if (nameRegExp.test(content)) {
@@ -471,7 +471,8 @@ class Jass {
 
   }
 
-  static parseContent2(content: string): Jass {
+  static parseContent(content: string): Jass {
+    if (!content) return new Jass;
     const lineTexts = JassUtils.content2Lines(content);
     /**
      * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
@@ -545,6 +546,62 @@ class Jass {
           inTextMacro = false;
         } else if (inTextMacro) {
           jass.textMacros[jass.textMacros.length - 1].content += lineText;
+        } else if (/^\s*\/\/!\s+import/.test(lineText)) {
+        } else if (/^\s*\/\//.test(lineText)) {
+        } else if (/^\s*globals/.test(lineText)) {
+          inGlobals = true;
+        } else if (/^\s*endglobals/.test(lineText)) {
+          inGlobals = false;
+        } else if (inGlobals) { // 在global块时会无视其他语法行
+          const globalRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isConstant>constant)\s+)?(?<type>[a-zA-Z]+)\s+((?<isArray>array)\s+)?(?<name>[a-zA-Z]\w*)(?=\s*=|\s*\n|\s*\/\/)/);  // 必须保证name后面为=号或者换行或者单行注释
+          if (globalRegExp.test(lineText)) {
+            const global = new Global();
+            const result = globalRegExp.exec(lineText);
+            if (result && result.groups) {
+              if (result.groups.modifier) {
+                if (result.groups.modifier == Modifier.Private) {
+                  global.modifier = Modifier.Private;
+                } else if (result.groups.modifier == Modifier.Public) {
+                  global.modifier = Modifier.Public;
+                }
+              }
+              if (result.groups.isConstant) {
+                global.isConstant = true;
+              }
+              if (result.groups.type) {
+                global.type = result.groups.type;
+              }
+              if (result.groups.isArray) {
+                global.isArray = true;
+              }
+              if (result.groups.name) {
+                global.name = result.groups.name;
+              }
+            }
+            if (global.modifier == Modifier.Common) {
+              jass.globals.push(global);
+            } else {
+              if (inLibrary) {
+                if (inScopeField > 0) {
+                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+                  const scope = scopes[scopes.length - 1];
+                  if (scope) {
+                    scope.globals.push(global);
+                  }
+                } else {
+                  jass.librarys[jass.librarys.length - 1].globals.push(global);
+                }
+              } else if (inScopeField > 0) {
+                const scopes = findScopes(jass.scopes, inScopeField);
+                const scope = scopes[scopes.length - 1];
+                if (scope) {
+                  scope.globals.push(global);
+                }
+              }
+            }
+          }
+        } else if (/^\s*type/.test(lineText)) {
+        } else if (/^\s*function\s+interface/.test(lineText)) {
         } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
           inLibrary = true;
           const library = new Library();
@@ -552,8 +609,6 @@ class Jass {
           jass.librarys.push(library);
         } else if (/^\s*endlibrary/.test(lineText)) {
           inLibrary = false;
-        } else if (inLibrary) {
-          libraryBlocks.push(lineText);
         } else if (/^\s*scope/.test(lineText)) {
           inScopeField++;
           /**
@@ -759,7 +814,6 @@ class Jass {
         } else if (inFunction) {
           const functionRegExp = new RegExp(/local\s+(?<type>[a-zA-Z]+)(\s+(?<hasArray>array))?\s+(?<name>[a-zA-Z]\w*)/);
           if (functionRegExp.test(lineText)) {
-            console.log("infunction")
             const local = new Local();
             const result = functionRegExp.exec(lineText);
             if (result && result.groups) {
@@ -780,73 +834,13 @@ class Jass {
               lastFunction.locals.push(local);
             }
           }
-        } else if (/^\s*globals/.test(lineText)) {
-          inGlobals = true;
-        } else if (/^\s*endglobals/.test(lineText)) {
-          inGlobals = false;
-        } else if (inGlobals) { // 在global块时会无视其他语法行
-          const globalRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isConstant>constant)\s+)?(?<type>[a-zA-Z]+)\s+((?<isArray>array)\s+)?(?<name>[a-zA-Z]\w*)(?=\s*=|\s*\n|\s*\/\/)/);  // 必须保证name后面为=号或者换行或者单行注释
-          if (globalRegExp.test(lineText)) {
-            const global = new Global();
-            const result = globalRegExp.exec(lineText);
-            if (result && result.groups) {
-              if (result.groups.modifier) {
-                if (result.groups.modifier == Modifier.Private) {
-                  global.modifier = Modifier.Private;
-                } else if (result.groups.modifier == Modifier.Public) {
-                  global.modifier = Modifier.Public;
-                }
-              }
-              if (result.groups.isConstant) {
-                global.isConstant = true;
-              }
-              if (result.groups.type) {
-                global.type = result.groups.type;
-              }
-              if (result.groups.isArray) {
-                global.isArray = true;
-              }
-              if (result.groups.name) {
-                global.name = result.groups.name;
-              }
-            }
-            if (global.modifier == Modifier.Common) {
-              jass.globals.push(global);
-            } else {
-              if (inLibrary) {
-                if (inScopeField > 0) {
-                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
-                  const scope = scopes[scopes.length - 1];
-                  if (scope) {
-                    scope.globals.push(global);
-                  }
-                } else {
-                  jass.librarys[jass.librarys.length - 1].globals.push(global);
-                }
-              } else if (inScopeField > 0) {
-                const scopes = findScopes(jass.scopes, inScopeField);
-                const scope = scopes[scopes.length - 1];
-                if (scope) {
-                  scope.globals.push(global);
-                }
-              }
-            }
-          }
-        } else if (/^\s*type/.test(lineText) && lineText.includes("extends") && lineText.includes("array")) {
-        } else if (/^\s*function\s+interface/.test(lineText)) {
-        } else if (/^\s*\/\/!\s+import/.test(lineText)) {
-        } else if (/^\s*\/\//.test(lineText)) {
-        }
+        } 
         if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
         }
-        if (/^\s*type/.test(lineText)) {
-        }
+        
       }
       return jass;
     }
-    const letter = (char: string): boolean => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"].includes(char);
-    const w = (char: string): boolean => letter(char) || "_" == char;
-    const W = (char: string): boolean => !w(char);
     return linesParse();
   }
 
@@ -960,7 +954,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     try {
-      const jass = Jass.parseContent2(document.getText());
+      const jass = Jass.parseContent(document.getText());
       console.log(jass);
     } catch (err) { console.error(err) }
     return [];
