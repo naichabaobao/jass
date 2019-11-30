@@ -20,7 +20,73 @@ class JassUtils {
     lines.push(col);
     return lines;
   }
+
 }
+
+class Type {
+
+
+  /**
+   * 去除单行注释和字符串,不包括单行
+   * @param content 
+   */
+  private removeStringAndBlockComment(content: string): string {
+    let inString = false;
+    let inLineComment = false;
+    let inBlockComment = false;
+    let t = "";
+    for (let i = 0; i < content.length; i++) {
+      const c: string = content.charAt(i);
+      const next = () => content.charAt(i + 1);
+      const pre = () => content.charAt(i - 1);
+      const pre2 = () => content.charAt(i - 2);
+      if (c == "/" && next() == "/" && !inString && !inBlockComment) {
+        inLineComment = true;
+      } else if (c == "/" && next() == "*" && !inString && !inLineComment) {
+        inBlockComment = true;
+      } else if (c == '"' && !inLineComment && !inBlockComment && !inString) {
+        inString = true;
+      } else if (c == '"' && inString && pre() != "\\") {
+        inString = false;
+      } else if (c == "\n") {
+        if (inString) inString = false;
+        if (inLineComment) inLineComment = false;
+      } else if (pre() == "/" && pre2() == "*" && inBlockComment) {
+        inBlockComment = false;
+      }
+      if (inString) t += " ";
+      else if (inBlockComment) {
+        if (c == "\n") t += c;
+        else t += " ";
+      }
+      else t += c;
+    }
+    return t;
+  }
+
+  private removeTextMacro(content: string): string {
+    const str = this.removeStringAndBlockComment(content);
+    console.log(str)
+    str.replace(new RegExp(/\/\/!\s+textmacro[\s\S]+?\/\/!\s+endtextmacro/, "g"), (a, ...args) => {
+      console.log(a);
+      console.log(args)
+      return "";
+    });
+    return str;
+  }
+
+  static resolveTypes(content: string): void {
+    new Type().removeTextMacro(content);
+  }
+
+}
+
+Type.resolveTypes(`
+//! textmacro
+diaonila
+//! endtextmacro
+
+`)
 
 class Comment {
   public original: string = "";
@@ -834,10 +900,10 @@ class Jass {
               lastFunction.locals.push(local);
             }
           }
-        } 
+        }
         if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
         }
-        
+
       }
       return jass;
     }
