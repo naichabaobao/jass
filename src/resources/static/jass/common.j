@@ -1,19 +1,31 @@
 //============================================================================
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
-//
+// 中介(代理)
 type agent			    extends     handle  // all reference counted objects
+// 事件
 type event              extends     agent  // a reference to an event registration
+// 玩家
 type player             extends     agent  // a single player reference
+// 组件
 type widget             extends     agent  // an interactive game object with life
+// 单位
 type unit               extends     widget  // a single unit reference
+// 可破坏物
 type destructable       extends     widget
+// 物品
 type item               extends     widget
+// 技能
 type ability            extends     agent
+// 魔法效果
 type buff               extends     ability
+// 势力
 type force              extends     agent
+// 单位组
 type group              extends     agent
+// 触发器
 type trigger            extends     agent
+// 触发器条件
 type triggercondition   extends     agent
 type triggeraction      extends     handle
 type timer              extends     agent
@@ -652,8 +664,9 @@ globals
     constant gameevent EVENT_GAME_BUILD_SUBMENU                 = ConvertGameEvent(10)
 
     //===================================================
-    // For use with TriggerRegisterPlayerEvent
-    //===================================================
+
+
+    //     For use with TriggerRegisterPlayerEvent
     constant playerevent EVENT_PLAYER_STATE_LIMIT               = ConvertPlayerEvent(11)
     constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED          = ConvertPlayerEvent(12)
 

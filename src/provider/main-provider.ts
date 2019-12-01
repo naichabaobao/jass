@@ -85,7 +85,50 @@ class JassUtils {
     return str;
   }
 
+  static isKeyword(keyword: string): boolean {
+    const keywords = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "integer", "real", "boolean", "string", "handle", "code"];
+    return keywords.includes(keyword);
+  }
+
+
+
 }
+
+class CommonJ {
+  private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
+  private commonJContent: string | null = null;
+
+  private static commonJ: CommonJ | null = null;
+
+  private constructor() {
+    this.init();
+  }
+
+  /**
+   * 初始化時，讀取common.j内容
+   */
+  private init() {
+    if (fs.existsSync(this.commonJFilePath)) {
+      this.commonJContent = fs.readFileSync(this.commonJFilePath).toString("utf8")
+    }
+    if (this.commonJContent) {
+      Type.resolveTypes(this.commonJContent, true);
+    }
+  }
+
+  public setCommonJFilePath(filePath: string): void {
+    this.commonJFilePath = filePath;
+    this.init();
+  }
+
+  public getCommonJFilePath = () => this.commonJFilePath;
+
+  static build() {
+    if (!this.commonJ) this.commonJ = new CommonJ;
+    return this.commonJ;
+  }
+}
+
 
 class Type {
   public name: string | null = null;
@@ -94,22 +137,24 @@ class Type {
   public size: number = 0; // isArrayObject为true时才有效
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
 
-  public constructor(name: string, extend?: string) {
+  public constructor(name: string, extend?: string, description?: string) {
     this.name = name;
     if (extend) this.extends = extend;
+    if (description) this.description = description;
   }
 
   public origin(): string {
     return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
   }
 
-  static commonJFilePath = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
+
 
   /**
    * 记录当前所有类型
    */
-  static Types: Type[] = new Array<Type>();
+  private static Types: Type[] = new Array<Type>();
 
   /**
    * 返回基本类型和已经识别的类型
@@ -120,16 +165,44 @@ class Type {
     else return [...Type.StatementBaseTypes, ...Type.Types];
   }
 
-  static resolveTypes(content: string): void {
-    const types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
+  /**
+   * 往Types中添加type,存在则替换
+   * @param type 
+   */
+  private static push(type: Type): void {
+    if (type) {
+      let anyMatch = false; // 是否存在能匹配的类型
+      for (let index = 0; index < Type.Types.length; index++) {
+        const t = Type.Types[index];
+        if (t.name == type.name) {
+          Type.Types.splice(index, 1, type);
+          anyMatch = true;
+        }
+      }
+      if (!anyMatch) {
+        Type.Types.push(type);
+      }
+    }
+  }
+
+  /**
+   * 返回 a|b|c 这种字符串
+   */
+  public static types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
+
+  /**
+   * 解析type或数组对象
+   * @param content 
+   * @param isCommonJ true 只解析jass类型，false 只解析数组对象
+   */
+  static resolveTypes(content: string, isCommonJ: boolean = false): void {
     const jassContent = JassUtils.removeTextMacro(content);
     const lines = JassUtils.content2Lines(jassContent);
     // for内部每解析一个类型都会更新Types
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (/^\s*type\s+[a-zA-Z]+/.test(line)) {
-        const typeRegExp = /\barray\b/.test(line) ? new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${types2RegExpString([Type.Handle, ...Type.Types].filter(value => !value.isArrayObject))}))?`) : new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${types2RegExpString(Type.types())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
-        console.log(typeRegExp.source)
+        const typeRegExp = isCommonJ ? new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${this.types2RegExpString([Type.Handle, ...Type.Types].filter(value => !value.isArrayObject))}))?`) : new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.types())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
         if (typeRegExp.test(line)) {
           let type = null;
           const result = typeRegExp.exec(line);
@@ -152,37 +225,25 @@ class Type {
               }
             }
           }
-          if (type) {
-            let anyMatch = false; // 是否存在能匹配的类型
-            for (let index = 0; index < Type.Types.length; index++) {
-              const t = Type.Types[index];
-              if (t.name == type.name) {
-                Type.Types.splice(index, 1, type);
-                anyMatch = true;
-              }
-            }
-            if (!anyMatch) {
-              Type.Types.push(type);
-            }
-          }
+          if (type) this.push(type);
         }
       }
     }
   }
 
-  static Boolean = new Type("boolean");
-  static Integer = new Type("integer");
-  static Real = new Type("real");
-  static String = new Type("string");
-  static Code = new Type("code");
-  static Handle = new Type("handle");
+  static Boolean = new Type("boolean", void 0, "布尔");
+  static Integer = new Type("integer", void 0, "整数");
+  static Real = new Type("real", void 0, "实数");
+  static String = new Type("string", void 0, "字符串");
+  static Code = new Type("code", void 0, "回调方法");
+  static Handle = new Type("handle", void 0, "句柄");
 
   static StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
   static TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
 
 }
-Type.resolveTypes(fs.readFileSync(Type.commonJFilePath).toString("utf8"))
-console.log(Type.Types);
+
+const commonJ = CommonJ.build(); // 单例
 
 class Comment {
   public original: string = "";
@@ -213,6 +274,9 @@ const resolveModifier = (content: string): Modifier => {
   return Modifier.Common;
 }
 
+/**
+ * @deprecated
+ */
 enum MemberModifier {
   Private = "private",
   Public = "public"
@@ -228,50 +292,7 @@ class Global {
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
 
-  static parse(content: string, startLine = 0) {
-    const globals = new Array<Global>();
-    const lines = JassUtils.content2Lines(content);
-    let inGlobal = false
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (/^\s*globals/.test(line)) {
-        inGlobal = true;
-      }
-      if (/^\s*endglobals/.test(line)) {
-        inGlobal = false;
-      }
-      if (inGlobal) {
-        const globalRegExp = /^\s*((?<modifier>private|public)\s+)?(?<isConstant>constant\s+)?(?<type>[a-zA-Z]+)\s+(?<isArray>array\s+)?(?<name>[a-zA-Z]\w*)/;
-        if (globalRegExp.test(line)) {
-          const result = globalRegExp.exec(line);
-          if (result) {
-            const groups = result.groups;
-            if (groups) {
-              const global = new Global();
-              if (groups.modifier == "public") {
-                global.modifier = Modifier.Public;
-              } else if (groups.modifier == "private") {
-                global.modifier = Modifier.Private;
-              }
-              if (groups.isConstant) {
-                global.isConstant = true;
-              }
-              global.type = groups.type
-              if (groups.isArray) {
-                global.isArray = true;
-              }
-              global.name = groups.name;
-              global.range = new vscode.Range(startLine + i, line.indexOf(global.modifier), startLine + i, line.length);
-              global.nameRange = new vscode.Range(startLine + i, line.indexOf(global.name), startLine + i, line.indexOf(global.name) + global.name.length);
-              global.origin = `${global.modifier ? global.modifier + " " : ""}${global.isConstant ? "constant " : ""}${global.type} ${global.isArray ? "array " : ""}${global.name}`;
-              globals.push(global);
-            }
-          }
-        }
-      }
-    }
-    return globals;
-  }
+
 }
 
 class Param {
@@ -282,10 +303,10 @@ class Param {
     let takes = new Array<Param>();
     if (!content) return takes;
     if (!/takes\s+nothing/.test(content)) {
-      const takesRegExp = new RegExp(/takes\s+(?<takeString>[a-zA-Z]+\s+[a-zA-Z]\w*(\s*,\s*[a-zA-Z]+\s+[a-zA-Z]\w*)*)/);
-      const takesString = content.includes("returns") ? content.substring(0, content.indexOf("returns")) : content; // 用于避免名称为关键字returns，后续需要避免标识符命名规范
-      if (takesRegExp.test(takesString)) {
-        const result = takesRegExp.exec(takesString);
+      const takeTypeStr = Type.types2RegExpString(Type.types(true));
+      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${takeTypeStr})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${takeTypeStr})\\s+[a-zA-Z]\\w*)*)`);
+      if (takesRegExp.test(content)) {
+        const result = takesRegExp.exec(content);
         if (result && result.groups && result.groups.takeString) {
           const takeString = result.groups.takeString;
           const takesStrings = takeString.split(/\s*,\s*/);
@@ -294,8 +315,8 @@ class Param {
             const param = new Param();
             param.type = takeTypeName[0];
             param.name = takeTypeName[1];
-            return param;
-          });
+            return param; 
+          }).filter(take => take && take.name && !JassUtils.isKeyword(take.name)); // 过滤名称为jass关键字的参数
         }
       }
     }
@@ -310,7 +331,8 @@ class Param {
 const resolveReturnsType = (content: string): string | null => {
   let returns = null;
   if (!content || /returns\s+nothing/.test(content)) return returns;
-  const returnsRegexp = new RegExp(/returns\s+(?<returns>[a-zA-Z]+)/);
+  const statementTypeStr = Type.types2RegExpString(Type.types());
+  const returnsRegexp = new RegExp(`returns\\s+(?<returns>${statementTypeStr})`);
   if (returnsRegexp.test(content)) {
     const result = returnsRegexp.exec(content);
     if (result && result.groups && result.groups.returns) {
@@ -341,7 +363,7 @@ class Func {
       const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
       if (nameRegExp.test(content)) {
         const result = nameRegExp.exec(content);
-        if (result && result.groups && result.groups.name) {
+        if (result && result.groups && result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
           func.name = result.groups.name;
         }
       }
@@ -397,67 +419,6 @@ class Scope {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
 
-  static parse(content: string, startLine = 0) {
-
-    let inTextMacro = false;
-    let inLibrary = false;
-    let scopeField = 0;
-    let inGlobals = false;
-    let inFunction = false;
-
-    let scopeContent: string = ""; // 当进入scope时赋值
-    let scopeStartLine = 0;
-
-
-    let innerScopeContent: string = "";
-    let globalContent: string = "";
-    let functionContent: string = "";
-
-    const scopes = new Array<Scope>();
-
-
-    const lines = JassUtils.content2Lines(content);
-    let inScope = false;
-
-    let scopeBlocks: string[] = [];
-    let scopeInnerBlocks: string[] = []
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-
-      if (/^\s*\/\/!\s+textmacro/.test(line)) {
-        inTextMacro = true;
-      }
-      if (/^\s*\/\/!\s+endtextmacro/.test(line)) {
-        inTextMacro = false;
-      }
-
-      if (inTextMacro == false && /^\s*library/.test(line)) {
-        inLibrary = true;
-      }
-      if (inTextMacro == false && /^\s*endlibrary/.test(line)) {
-        inLibrary = false;
-      }
-
-      if (inTextMacro == false && inLibrary == false && /^\s*scope/.test(line)) {
-        scopeField++;
-        if (scopeField == 1) {
-          scopeContent = line;
-          scopeStartLine = i;
-          // 解析scope
-          const scope = new Scope();
-
-          scopes.push(scope);
-        }
-      }
-      if (inTextMacro == false && inLibrary == false && /^\s*endscope/.test(line)) {
-        scopeField--;
-        if (scopeField == 0) {
-          // 设置范围
-        }
-      }
-    }
-    return scopes;
-  }
 }
 
 class Member {
@@ -471,7 +432,8 @@ class Member {
   public origin: string | null = null;
 
   static parse(content: string): Member | null {
-    const interfaceMemberRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isStatic>static)\s+)?(?<type>[a-zA-Z]+)\s+((?<isArray>array)\s+)?(?<name>[a-zA-Z]\w*)(?=\s*=|\s*\n|\s*\/\/)/);
+    const memberTypeStr = Type.types2RegExpString(Type.types());
+    const interfaceMemberRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${memberTypeStr})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
     if (interfaceMemberRegExp.test(content)) {
       const member = new Member();
       const result = interfaceMemberRegExp.exec(content);
@@ -532,7 +494,7 @@ class Method {
         if (result.groups.isStatic) {
           method.isStatic = true;
         }
-        if (result.groups.name) {
+        if (result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
           method.name = result.groups.name;
         }
       }
@@ -608,8 +570,6 @@ class Error {
  * 運算符重載
  * 函數對象
  * 數組對象
- * 如果開啓了zinc
- * 未實現
  */
 class Jass {
   public comments: Comment[] = new Array<Comment>();
