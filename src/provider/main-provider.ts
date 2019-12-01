@@ -190,6 +190,9 @@ class Type {
    */
   public static types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
 
+  public static takesRegExpString = () => Type.types2RegExpString(Type.types(true));
+  public static statementRegExpString = () => Type.types2RegExpString(Type.types());
+
   /**
    * 解析type或数组对象
    * @param content 
@@ -292,7 +295,37 @@ class Global {
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
 
-
+  static parse(content: string): Global | null {
+    let global = null;
+    const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    console.log(globalRegExp.source)
+    if (globalRegExp.test(content)) {
+      const result = globalRegExp.exec(content);
+      if (result && result.groups) {
+        global = new Global();
+        if (result.groups.modifier) {
+          if (result.groups.modifier == Modifier.Private) {
+            global.modifier = Modifier.Private;
+          } else if (result.groups.modifier == Modifier.Public) {
+            global.modifier = Modifier.Public;
+          }
+        }
+        if (result.groups.isConstant) {
+          global.isConstant = true;
+        }
+        if (result.groups.type) {
+          global.type = result.groups.type;
+        }
+        if (result.groups.isArray) {
+          global.isArray = true;
+        }
+        if (result.groups.name) {
+          global.name = result.groups.name;
+        }
+      }
+    }
+    return global;
+  }
 }
 
 class Param {
@@ -303,8 +336,7 @@ class Param {
     let takes = new Array<Param>();
     if (!content) return takes;
     if (!/takes\s+nothing/.test(content)) {
-      const takeTypeStr = Type.types2RegExpString(Type.types(true));
-      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${takeTypeStr})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${takeTypeStr})\\s+[a-zA-Z]\\w*)*)`);
+      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${Type.takesRegExpString()})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${Type.takesRegExpString()})\\s+[a-zA-Z]\\w*)*)`);
       if (takesRegExp.test(content)) {
         const result = takesRegExp.exec(content);
         if (result && result.groups && result.groups.takeString) {
@@ -315,7 +347,7 @@ class Param {
             const param = new Param();
             param.type = takeTypeName[0];
             param.name = takeTypeName[1];
-            return param; 
+            return param;
           }).filter(take => take && take.name && !JassUtils.isKeyword(take.name)); // 过滤名称为jass关键字的参数
         }
       }
@@ -331,8 +363,7 @@ class Param {
 const resolveReturnsType = (content: string): string | null => {
   let returns = null;
   if (!content || /returns\s+nothing/.test(content)) return returns;
-  const statementTypeStr = Type.types2RegExpString(Type.types());
-  const returnsRegexp = new RegExp(`returns\\s+(?<returns>${statementTypeStr})`);
+  const returnsRegexp = new RegExp(`returns\\s+(?<returns>${Type.statementRegExpString()})`);
   if (returnsRegexp.test(content)) {
     const result = returnsRegexp.exec(content);
     if (result && result.groups && result.groups.returns) {
@@ -432,8 +463,7 @@ class Member {
   public origin: string | null = null;
 
   static parse(content: string): Member | null {
-    const memberTypeStr = Type.types2RegExpString(Type.types());
-    const interfaceMemberRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${memberTypeStr})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    const interfaceMemberRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
     if (interfaceMemberRegExp.test(content)) {
       const member = new Member();
       const result = interfaceMemberRegExp.exec(content);
@@ -675,31 +705,13 @@ class Jass {
         } else if (/^\s*endglobals/.test(lineText)) {
           inGlobals = false;
         } else if (inGlobals) { // 在global块时会无视其他语法行
-          const globalRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isConstant>constant)\s+)?(?<type>[a-zA-Z]+)\s+((?<isArray>array)\s+)?(?<name>[a-zA-Z]\w*)(?=\s*=|\s*\n|\s*\/\/)/);  // 必须保证name后面为=号或者换行或者单行注释
-          if (globalRegExp.test(lineText)) {
-            const global = new Global();
-            const result = globalRegExp.exec(lineText);
-            if (result && result.groups) {
-              if (result.groups.modifier) {
-                if (result.groups.modifier == Modifier.Private) {
-                  global.modifier = Modifier.Private;
-                } else if (result.groups.modifier == Modifier.Public) {
-                  global.modifier = Modifier.Public;
-                }
-              }
-              if (result.groups.isConstant) {
-                global.isConstant = true;
-              }
-              if (result.groups.type) {
-                global.type = result.groups.type;
-              }
-              if (result.groups.isArray) {
-                global.isArray = true;
-              }
-              if (result.groups.name) {
-                global.name = result.groups.name;
-              }
+          const global = Global.parse(lineText);
+          if (global) {
+            if (global.name) {
+              let nameIndex = lineText.indexOf(global.name);
+              if (nameIndex >= 0) global.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + global.name.length);
             }
+            global.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
             if (global.modifier == Modifier.Common) {
               jass.globals.push(global);
             } else {
@@ -722,7 +734,6 @@ class Jass {
               }
             }
           }
-        } else if (/^\s*type/.test(lineText)) {
         } else if (/^\s*function\s+interface/.test(lineText)) {
         } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
           inLibrary = true;
