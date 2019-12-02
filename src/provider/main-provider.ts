@@ -85,50 +85,13 @@ class JassUtils {
     return str;
   }
 
+  static readonly keywords = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "integer", "real", "boolean", "string", "handle", "code"];
+
   static isKeyword(keyword: string): boolean {
-    const keywords = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "integer", "real", "boolean", "string", "handle", "code"];
-    return keywords.includes(keyword);
+    return this.keywords.includes(keyword);
   }
-
-
 
 }
-
-class CommonJ {
-  private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
-  private commonJContent: string | null = null;
-
-  private static commonJ: CommonJ | null = null;
-
-  private constructor() {
-    this.init();
-  }
-
-  /**
-   * 初始化時，讀取common.j内容
-   */
-  private init() {
-    if (fs.existsSync(this.commonJFilePath)) {
-      this.commonJContent = fs.readFileSync(this.commonJFilePath).toString("utf8")
-    }
-    if (this.commonJContent) {
-      Type.resolveTypes(this.commonJContent, true);
-    }
-  }
-
-  public setCommonJFilePath(filePath: string): void {
-    this.commonJFilePath = filePath;
-    this.init();
-  }
-
-  public getCommonJFilePath = () => this.commonJFilePath;
-
-  static build() {
-    if (!this.commonJ) this.commonJ = new CommonJ;
-    return this.commonJ;
-  }
-}
-
 
 class Type {
   public name: string | null = null;
@@ -149,40 +112,30 @@ class Type {
     return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
   }
 
+  private static arrayObjects: Type[] = new Array<Type>();
 
+  public static getArrayObjects(): Type[] {
+    return this.arrayObjects;
+  }
 
-  /**
-   * 记录当前所有类型
-   */
-  private static Types: Type[] = new Array<Type>();
+  public static getBaseTypes() {
+    return CommonJ.build().getTypes();
+  }
+
+  public static getTypes(): Type[] {
+    return [...Type.getBaseTypes(), ...Type.getArrayObjects()];
+  }
 
   /**
    * 返回基本类型和已经识别的类型
    * @param isTake 是否需要code类型
    */
-  static types(isTake: boolean = false): Type[] {
-    if (isTake) return [...Type.TakeBaseTypes, ...Type.Types];
-    else return [...Type.StatementBaseTypes, ...Type.Types];
+  private static getTakesTypes(): Type[] {
+    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.TakeBaseTypes];
   }
 
-  /**
-   * 往Types中添加type,存在则替换
-   * @param type 
-   */
-  private static push(type: Type): void {
-    if (type) {
-      let anyMatch = false; // 是否存在能匹配的类型
-      for (let index = 0; index < Type.Types.length; index++) {
-        const t = Type.Types[index];
-        if (t.name == type.name) {
-          Type.Types.splice(index, 1, type);
-          anyMatch = true;
-        }
-      }
-      if (!anyMatch) {
-        Type.Types.push(type);
-      }
-    }
+  private static getStatementTypes(): Type[] {
+    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.StatementBaseTypes];
   }
 
   /**
@@ -190,8 +143,8 @@ class Type {
    */
   public static types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
 
-  public static takesRegExpString = () => Type.types2RegExpString(Type.types(true));
-  public static statementRegExpString = () => Type.types2RegExpString(Type.types());
+  public static takesRegExpString = () => Type.types2RegExpString(Type.getTakesTypes());
+  public static statementRegExpString = () => Type.types2RegExpString(Type.getStatementTypes());
 
   /**
    * 解析type或数组对象
@@ -199,54 +152,138 @@ class Type {
    * @param isCommonJ true 只解析jass类型，false 只解析数组对象
    */
   static resolveTypes(content: string, isCommonJ: boolean = false): void {
+    this.arrayObjects = new Array<Type>(); // 清空
     const jassContent = JassUtils.removeTextMacro(content);
     const lines = JassUtils.content2Lines(jassContent);
     // for内部每解析一个类型都会更新Types
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (/^\s*type\s+[a-zA-Z]+/.test(line)) {
-        const typeRegExp = isCommonJ ? new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${this.types2RegExpString([Type.Handle, ...Type.Types].filter(value => !value.isArrayObject))}))?`) : new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.types())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
-        if (typeRegExp.test(line)) {
-          let type = null;
-          const result = typeRegExp.exec(line);
-          if (result) {
-            if (result.groups) {
-              if (result.groups.name) {
-                type = new Type(result.groups.name);
-              }
-              if (type) {
-                if (result.groups.extends) {
-                  type.extends = result.groups.extends;
-                }
-                if (result.groups.arrayObject) {
-                  type.isArrayObject = true;
-                }
-                if (result.groups.size) {
-                  const size = Number.parseInt(result.groups.size);
-                  if (!Number.isNaN(size) && size > 0) type.size = size;
-                }
-              }
-            }
-          }
-          if (type) this.push(type);
+        const arrayObject = this.parseArrayObject(line);
+        if (arrayObject) {
+          this.arrayObjects.push(arrayObject);
         }
       }
     }
   }
 
-  static Boolean = new Type("boolean", void 0, "布尔");
-  static Integer = new Type("integer", void 0, "整数");
-  static Real = new Type("real", void 0, "实数");
-  static String = new Type("string", void 0, "字符串");
-  static Code = new Type("code", void 0, "回调方法");
-  static Handle = new Type("handle", void 0, "句柄");
+  static parseArrayObject(content: string): Type | null {
+    let type = null;
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.getTypes())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
+    if (typeRegExp.test(content)) {
+      const result = typeRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name) {
+          type = new Type(result.groups.name);
+          if (result.groups.extends) {
+            type.extends = result.groups.extends;
+          }
+          if (result.groups.arrayObject) {
+            type.isArrayObject = true;
+          }
+          if (result.groups.size) {
+            type.size = Number.parseInt(result.groups.size);
+          }
+        }
+      }
+    }
+    return type;
+  }
 
-  static StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
-  static TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
+  private static readonly Boolean = new Type("boolean", void 0, "布尔");
+  private static readonly Integer = new Type("integer", void 0, "整数");
+  private static readonly Real = new Type("real", void 0, "实数");
+  private static readonly String = new Type("string", void 0, "字符串");
+  private static readonly Code = new Type("code", void 0, "代码");
+  private static readonly Handle = new Type("handle", void 0, "句柄");
+
+  private static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
+  private static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
 
 }
 
-const commonJ = CommonJ.build(); // 单例
+class CommonJ {
+  private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
+  private commonJContent: string | null = null;
+
+  private static commonJ: CommonJ | null = null;
+
+  private constructor() {
+    this.init();
+  }
+
+  private types = new Array<Type>();
+
+  public getTypes(): Array<Type> {
+    return this.types;
+  }
+
+  /**
+   * 初始化時，讀取common.j内容
+   */
+  private init() {
+    if (fs.existsSync(this.commonJFilePath)) {
+      this.commonJContent = fs.readFileSync(this.commonJFilePath).toString("utf8")
+    }
+    if (this.commonJContent) {
+      this.resolveTypes();
+    }
+  }
+
+  private parseBaseType(content: string): Type | null {
+    let type = null;
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${this.types.map(type => type.name).join("|")}))?`);
+    if (typeRegExp.test(content)) {
+      const result = typeRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name) {
+          type = new Type(result.groups.name);
+          if (result.groups.extends) {
+            type.extends = result.groups.extends;
+          }
+        }
+      }
+    }
+    return type;
+  }
+
+  private resolveTypes(): void {
+    if (this.types.length > 0) {
+      this.types = new Array<Type>();
+    }
+
+    if (this.commonJContent) {
+      const jassContent = JassUtils.removeTextMacro(this.commonJContent);
+      const lines = JassUtils.content2Lines(jassContent);
+      // for内部每解析一个类型都会更新Types
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const type = this.parseBaseType(line);
+        if (type) {
+          this.types.push(type);
+        }
+      }
+    }
+  }
+
+  public setCommonJFilePath(filePath: string): void {
+    this.commonJFilePath = filePath;
+    this.init();
+  }
+
+  public getCommonJFilePath = () => this.commonJFilePath;
+
+  public getCommonJContent(): string | null {
+    return this.commonJContent;
+  }
+
+  public static build() {
+    if (!this.commonJ) this.commonJ = new CommonJ;
+    return this.commonJ;
+  }
+}
+
+const commonJ = CommonJ.build(); // 單例
 
 class Comment {
   public original: string = "";
@@ -685,7 +722,7 @@ class Jass {
   public globals: Global[] = new Array<Global>();
   public imports: Import[] = new Array<Import>();
   public funcs: Func[] = new Array<Func>();
-  public natives:Native[] = new Array<Native>();
+  public natives: Native[] = new Array<Native>();
   public textMacros: TextMacro[] = new Array<TextMacro>();
   public librarys: Library[] = new Array<Library>();
   public scopes: Scope[] = new Array<Scope>();
@@ -704,11 +741,10 @@ class Jass {
 
   static parseContent(content: string): Jass {
     if (!content) return new Jass;
-    const lineTexts = JassUtils.content2Lines(content);
 
     Type.resolveTypes(content); // 分析當前文件類型
 
-    const natives = Native.parseNatives(content);
+    const lineTexts = JassUtils.content2Lines(content);
     /**
      * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
      * text macro {all}
@@ -722,7 +758,7 @@ class Jass {
     const linesParse = () => {
       const jass = new Jass();
 
-      jass.natives = natives;
+      jass.natives = Native.parseNatives(content);
 
       let inTextMacro = false;  // 记录是否进入文本宏
       let textMacroBlocks = []; // 文本宏内容
