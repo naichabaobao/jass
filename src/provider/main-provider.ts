@@ -298,7 +298,6 @@ class Global {
   static parse(content: string): Global | null {
     let global = null;
     const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
-    console.log(globalRegExp.source)
     if (globalRegExp.test(content)) {
       const result = globalRegExp.exec(content);
       if (result && result.groups) {
@@ -387,9 +386,14 @@ class Func {
 
   static parse(content: string): Func | null {
     let func = null;
-    if (/\bfunction\b/.test(content)) {
-      func = new Func();
-      func.modifier = resolveModifier(content);
+    if (/^\s*function/.test(content)) {
+      const modifier = resolveModifier(content);
+      if (modifier != Modifier.Common) {
+        func = new Func();
+      } else if (/^\s*function/.test(content)) {
+        func = new Func();
+      } else return func;
+      func.modifier = modifier;
       // 解析方法名称
       const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
       if (nameRegExp.test(content)) {
@@ -405,12 +409,86 @@ class Func {
   }
 }
 
+class Native {
+  public origin: string | null = null;
+  public isConstant: boolean = false;
+  public name: string | null = null;
+  public takes: Param[] = new Array<Param>();
+  public returnType: string | null = null;
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
+
+  public locals: Local[] = new Array<Local>();
+
+  static parse(content: string): Native | null {
+    let native = null;
+    if (/\bnative\b/.test(content)) {
+      // 解析方法名称
+      const nativeRegExp = new RegExp(/((?<isConstant>constant)\s+)?native\s+(?<name>[a-zA-Z]\w*)/);
+      if (nativeRegExp.test(content)) {
+        const result = nativeRegExp.exec(content);
+        if (result && result.groups) {
+          if (result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
+            native = new Native;
+            native.name = result.groups.name;
+            if (result.groups.isConstant) {
+              native.isConstant = true;
+            }
+            native.takes = Param.parseTakes(content);
+            native.returnType = resolveReturnsType(content);
+          }
+        }
+      }
+    }
+    return native;
+  }
+
+  static parseNatives(content: string): Native[] {
+    const jassContent = JassUtils.removeTextMacro(content);
+    const lines = JassUtils.content2Lines(jassContent);
+    const natives = new Array<Native>();
+    lines.forEach((line, index) => {
+      const native = this.parse(line);
+      if (native) {
+        if (native.name) {
+          const nameIndex = line.indexOf(native.name);
+          native.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + native.name.length);
+        }
+        native.range = new vscode.Range(index, line.length - line.trimStart().length, index, line.length);
+        natives.push(native);
+      };
+    })
+    return natives;
+  }
+}
+
 class Local {
   public type: string | null = null;
   public name: string | null = null;
   public isArray: boolean = false;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+
+  static parse(content: string): Local | null {
+    let local = null;
+    const functionRegExp = new RegExp(`local\\s+(?<type>${Type.statementRegExpString})(\\s+(?<hasArray>array))?\\s+(?<name>[a-zA-Z]\\w*)`);
+    if (functionRegExp.test(content)) {
+      const result = functionRegExp.exec(content);
+      if (result && result.groups) {
+        local = new Local();
+        if (result.groups.type) {
+          local.type = result.groups.type;
+        }
+        if (result.groups.name) {
+          local.name = result.groups.name;
+        }
+        if (result.groups.hasArray) {
+          local.isArray = true;
+        }
+      }
+    }
+    return local;
+  }
 }
 
 class Import {
@@ -607,6 +685,7 @@ class Jass {
   public globals: Global[] = new Array<Global>();
   public imports: Import[] = new Array<Import>();
   public funcs: Func[] = new Array<Func>();
+  public natives:Native[] = new Array<Native>();
   public textMacros: TextMacro[] = new Array<TextMacro>();
   public librarys: Library[] = new Array<Library>();
   public scopes: Scope[] = new Array<Scope>();
@@ -626,6 +705,10 @@ class Jass {
   static parseContent(content: string): Jass {
     if (!content) return new Jass;
     const lineTexts = JassUtils.content2Lines(content);
+
+    Type.resolveTypes(content); // 分析當前文件類型
+
+    const natives = Native.parseNatives(content);
     /**
      * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
      * text macro {all}
@@ -638,6 +721,8 @@ class Jass {
      */
     const linesParse = () => {
       const jass = new Jass();
+
+      jass.natives = natives;
 
       let inTextMacro = false;  // 记录是否进入文本宏
       let textMacroBlocks = []; // 文本宏内容
@@ -945,139 +1030,24 @@ class Jass {
             inFunction = false;
           }
         } else if (inFunction) {
-          const functionRegExp = new RegExp(/local\s+(?<type>[a-zA-Z]+)(\s+(?<hasArray>array))?\s+(?<name>[a-zA-Z]\w*)/);
-          if (functionRegExp.test(lineText)) {
-            const local = new Local();
-            const result = functionRegExp.exec(lineText);
-            if (result && result.groups) {
-              if (result.groups.type) {
-                local.type = result.groups.type;
-              }
-              if (result.groups.name) {
-                local.name = result.groups.name;
-                local.nameRange = new vscode.Range(i, lineText.indexOf(local.name), i, lineText.indexOf(local.name) + local.name.length);
-              }
-              if (result.groups.hasArray) {
-                local.isArray = true;
-              }
+          const local = Local.parse(lineText);
+          if (local) {
+            if (local.name) {
+              const nameIndex = lineText.indexOf(local.name);
+              local.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + local.name.length);
             }
             local.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-
             if (lastFunction) { //  进入方法行时定义
               lastFunction.locals.push(local);
             }
           }
         }
-        if (/^\s*native/.test(lineText) || /^\s*constant\s+native/.test(lineText)) {
-        }
-
       }
       return jass;
     }
     return linesParse();
   }
 
-  static parseContent1(content: string): Jass {
-    const jass = new Jass();
-    if (vscode.workspace.getConfiguration().jass.vjass.support.enable || vscode.workspace.getConfiguration().jass.zinc.support.enable) { // 开启vjass支持
-      if (vscode.workspace.getConfiguration().jass.vjass.support.enable) {
-
-      }
-    } else {
-
-    }
-    const isLatter = (char: string): boolean => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"].includes(char);
-    const isSpace = (char: string): boolean => [" ", "\t"].includes(char);
-    const isNewLine = (char: string): boolean => "\n" == char;
-
-    let field: number = 0;
-    let inLineComment: boolean = false; // 单行注释
-    let inBlockComment: boolean = false; // 多行注释
-    let inString: boolean = false; // 字符串
-    let inLibrary: boolean = false; // 
-    let inLibraryNaming = false;
-    let libraryName: string | null = null;
-    let inInitializer: boolean = false;
-    let initializerNaming: boolean = false;
-    let inScope: boolean = false; // 
-    let inFunction: boolean = false; // 
-    let inStruct: boolean = false; // 
-    let inInterface: boolean = false; // 
-    let inMethod: boolean = false; // 
-    let inOperator: boolean = false; // 
-    let inInterfaceFunction: boolean = false; // 
-    let inTextMacros: boolean = false; // 
-
-    let startLine: number = 0;
-    let startCharacter: number = 0;
-
-    let line: number = 0;
-    let character: number = 0;
-    let word: string = "";
-    /*
-    1=/
-    2=//
-    3=/*
-    4=/** *
-    5=/* *\/
-    */
-    let status: number = 0;
-    for (let i = 0; i < content.length; i++) {
-      const char = (index: number): string => content.charAt(index);
-      const c = content.charAt(i);
-      if (inLineComment == false && inBlockComment == false && inString == false && c == "/" && content.charAt(i - 1) == "/") {
-        inLineComment = true;
-      } else if (inLineComment == false && inBlockComment == false && inString == false && c == "*" && content.charAt(i - 1) == "/") {
-        inBlockComment = true;
-      } else if (inLineComment == false && inBlockComment == false && inString == false && c == '"') {
-        inString = true;
-      } else if (inLineComment && c == "\n") {
-        inLineComment = false;
-      } else if (inBlockComment && c == "*" && content.charAt(i + 1) == "/") {
-        inBlockComment = false;
-      } else if (inString && ((c == '"' && content.charAt(i - 1) == "\\") || c == "\n")) {
-        inString = false;
-      } else if (
-        inLineComment == false &&
-        inBlockComment == false &&
-        inString == false &&
-        inLibrary == false &&
-        inScope == false &&
-        inFunction == false &&
-        inStruct == false &&
-        inInterface == false &&
-        inMethod == false &&
-        inOperator == false &&
-        inInterfaceFunction == false &&
-        inTextMacros == false &&
-        c == "y" &&
-        char(i - 1) == "r" &&
-        char(i - 2) == "a" &&
-        char(i - 3) == "r" &&
-        char(i - 4) == "b" &&
-        char(i - 5) == "i" &&
-        char(i - 6) == "l" &&
-        isLatter(char(i - 7)) == false &&
-        isLatter(char(i + 1)) == false) { // library
-        inLibrary = true;
-      } else if (
-        inLibrary &&
-        c == "y" &&
-        char(i - 1) == "r" &&
-        char(i - 2) == "a" &&
-        char(i - 3) == "r" &&
-        char(i - 4) == "b" &&
-        char(i - 5) == "i" &&
-        char(i - 6) == "l" &&
-        char(i - 6) == "d" &&
-        char(i - 6) == "n" &&
-        char(i - 6) == "e") {
-
-      }
-      character++;
-    }
-    return jass;
-  }
 }
 
 class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
