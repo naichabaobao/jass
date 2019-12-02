@@ -85,6 +85,9 @@ class JassUtils {
     return str;
   }
 
+  /**
+   * @deprecated 後續位置會更改
+   */
   static readonly keywords = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "integer", "real", "boolean", "string", "handle", "code"];
 
   static isKeyword(keyword: string): boolean {
@@ -158,7 +161,7 @@ class Type {
     // for内部每解析一个类型都会更新Types
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (/^\s*type\s+[a-zA-Z]+/.test(line)) {
+      if (/^\s*type\s+[a-zA-Z][a-zA-Z\d]*/.test(line)) {
         const arrayObject = this.parseArrayObject(line);
         if (arrayObject) {
           this.arrayObjects.push(arrayObject);
@@ -169,7 +172,7 @@ class Type {
 
   static parseArrayObject(content: string): Type | null {
     let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.getTypes())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.getTypes())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
     if (typeRegExp.test(content)) {
       const result = typeRegExp.exec(content);
       if (result && result.groups) {
@@ -232,7 +235,7 @@ class CommonJ {
 
   private parseBaseType(content: string): Type | null {
     let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z]+)(\\s+extends\\s+(?<extends>${this.types.map(type => type.name).join("|")}))?`);
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${this.types.map(type => type.name).join("|")}))?`);
     if (typeRegExp.test(content)) {
       const result = typeRegExp.exec(content);
       if (result && result.groups) {
@@ -539,10 +542,20 @@ class TextMacro {
   public content: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+
+  /**
+   * 待實現
+   * @param content 
+   */
+  public static parse(content:string):TextMacro {
+    const textMacro = new TextMacro;
+    const textMacroRegExp = new RegExp(/\/\/\s+textmacro\s+/);
+    return new TextMacro;
+  }
+
 }
 
 class Library {
-  public origin: string | null = null;
   public name: string | null = null;
   public scopes: Scope[] = new Array<Scope>();
   public initializer: string | null = null;
@@ -552,6 +565,32 @@ class Library {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
+
+  public origin(): string {
+    return `library${this.name ? " " + this.name : ""}${this.initializer ? " " + this.initializer : ""}${this.needs && this.needs.length > 0 ? " " + this.needs.join(", ") : ""}
+    endlibrary`;
+  }
+
+  public static parse(content: string): Library {
+    const library = new Library;
+    const libraryRegExp = new RegExp(/library\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\s+initializer\s+(?<initializer>[a-zA-Z]\w*))?(\s+(requires|uses|needs)\s+(?<needs>[a-zA-Z][a-zA-Z\d]*(\s*,\s*[a-zA-Z][a-zA-Z\d]*)*))?/); // library 名稱不能包含下劃綫
+    if (libraryRegExp.test(content)) {
+      const result = libraryRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
+          library.name = result.groups.name;
+        }
+        if (result.groups.initializer && !JassUtils.isKeyword(result.groups.initializer)) {
+          library.initializer = result.groups.initializer;
+        }
+        if (result.groups.needs) {
+          const uses = result.groups.needs.split(/\s*,\s*/);
+          library.needs = uses.filter(lib => !JassUtils.isKeyword(lib));
+        }
+      }
+    }
+    return library;
+  }
 }
 
 class Scope {
@@ -565,6 +604,22 @@ class Scope {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
 
+  public static parse(content: string): Scope {
+    const scope = new Scope();
+    const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)(\s+initializer\s+(?<initializer>[a-zA-Z]\w*))?/;
+    if (nameRegExp.test(content)) {
+      const result = nameRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name) {
+          scope.name = result.groups.name;
+        }
+        if (result.groups.initializer) {
+          scope.initializer = result.groups.initializer;
+        }
+      }
+    }
+    return scope;
+  }
 }
 
 class Member {
@@ -690,6 +745,18 @@ class Interface {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+
+  public static parse(content: string): Interface {
+    const inter = new Interface();
+    const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)/);
+    if (nameRegExp.test(content)) {
+      const result = nameRegExp.exec(content);
+      if (result && result.groups && result.groups.name) {
+        inter.name = result.groups.name;
+      }
+    }
+    return inter;
+  }
 }
 
 class ArrayType {
@@ -857,47 +924,27 @@ class Jass {
           }
         } else if (/^\s*function\s+interface/.test(lineText)) {
         } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
-          inLibrary = true;
-          const library = new Library();
-
+          const library = Library.parse(lineText);
+          if (library.name) {
+            const nameIndex = lineText.indexOf(library.name);
+            if (nameIndex > 0) library.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + library.name.length);
+          }
+          library.start = new vscode.Position(i, getStartIndex());
           jass.librarys.push(library);
+          inLibrary = true;
         } else if (/^\s*endlibrary/.test(lineText)) {
           inLibrary = false;
         } else if (/^\s*scope/.test(lineText)) {
           inScopeField++;
-          /**
-           * 解析scope头部
-           */
-          const parseScopeHead = (): Scope => {
-            // 分析首行
-            const scope = new Scope();
-            const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)/;
-            if (nameRegExp.test(lineText)) {
-              const result = nameRegExp.exec(lineText);
-              if (result) {
-                const groups = result.groups;
-                if (groups) {
-                  scope.name = groups.name;
-                  scope.start = new vscode.Position(i, lineText.indexOf("scope"));
-                  const nameIndex = lineText.indexOf(scope.name);
-                  scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
-                }
-              }
-            }
-            if (!scope.name) return scope; // scope未命名时返回空scope
-            const initRegExp = /initializer\s+(?<initializer>[a-zA-Z]\w*)/;
-            if (initRegExp.test(lineText)) {
-              const result = initRegExp.exec(lineText);
-              if (result && result.groups) {
-                if (result.groups.initializer) {
-                  scope.initializer = result.groups.initializer;
-                }
-              }
-            }
-            return scope;
+
+          const scope = Scope.parse(lineText);
+          if (scope.name) {
+            const nameIndex = lineText.indexOf(scope.name);
+            if (nameIndex > 0) scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
           }
+          scope.start = new vscode.Position(i, getStartIndex());
           const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
-          scopes.push(parseScopeHead());
+          scopes.push(scope);
         } else if (/^\s*endscope/.test(lineText)) {
           const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
           const scope = scopes[scopes.length - 1];
@@ -914,14 +961,10 @@ class Jass {
             inScopeField--;
           }
         } else if (/^\s*interface/.test(lineText)) {
-          const inter = new Interface();
-          const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
-          if (nameRegExp.test(lineText)) {
-            const result = nameRegExp.exec(lineText);
-            if (result && result.groups && result.groups.name) {
-              inter.name = result.groups.name;
-              inter.nameRange = new vscode.Range(i, lineText.indexOf(inter.name), i, lineText.indexOf(inter.name) + inter.name.length);
-            }
+          const inter = Interface.parse(lineText);
+          if(inter.name){
+            const nameIndex = lineText.indexOf(inter.name);
+            inter.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + inter.name.length);
           }
           inter.start = new vscode.Position(i, getStartIndex());
           jass.interfaces.push(inter);
