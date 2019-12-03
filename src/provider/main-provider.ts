@@ -98,9 +98,9 @@ class JassUtils {
 }
 
 class Comment {
-  
-  public content: string|null = null;
-  
+
+  public content: string | null = null;
+
   /**
    * @deprecated
    */
@@ -111,18 +111,18 @@ class Comment {
    */
   public contentRange: vscode.Range | null = null;
 
-  public origin(): string{
+  public origin(): string {
     return `${this.content ? "// " + this.content : ""}`;
   };
 
-  public static parse (content:string):Comment|null{
+  public static parse(content: string): Comment | null {
     let comment = null;
     const commentRegExp = new RegExp(/^\s*\/\/(?!!)\s*(?<content>.*)/);
-    if(commentRegExp.test(content)){
+    if (commentRegExp.test(content)) {
       comment = new Comment;
       const result = commentRegExp.exec(content);
-      if(result && result.groups){
-        if(result.groups.content){
+      if (result && result.groups) {
+        if (result.groups.content) {
           comment.content = result.groups.content;
         }
       }
@@ -148,7 +148,7 @@ class Type {
   }
 
   public origin(): string {
-    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}${this.isArrayObject ? " array" : ""}${this.size > 0 ? "["+ this.size +"]" : ""}`;
+    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}${this.isArrayObject ? " array" : ""}${this.size > 0 ? "[" + this.size + "]" : ""}`;
   }
 
   private static arrayObjects: Type[] = new Array<Type>();
@@ -165,19 +165,16 @@ class Type {
     return [...Type.getBaseTypes(), ...Type.getArrayObjects()];
   }
 
-  /**
-   * 返回基本类型和已经识别的类型
-   * @param isTake 是否需要code类型
-   */
-  private static getTakesTypes(): Type[] {
+  public static getTakesTypes(): Type[] {
     return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.TakeBaseTypes];
   }
 
-  private static getStatementTypes(): Type[] {
+  public static getStatementTypes(): Type[] {
     return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.StatementBaseTypes];
   }
 
   /**
+   * @deprecated
    * 返回 a|b|c 这种字符串
    */
   public static types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
@@ -201,7 +198,7 @@ class Type {
         const arrayObject = this.parseArrayObject(line);
         if (arrayObject) {
           const comment = Comment.parse(line);
-          if(comment) arrayObject.description = comment.content;
+          if (comment) arrayObject.description = comment.content;
           this.arrayObjects.push(arrayObject);
         }
       }
@@ -241,7 +238,31 @@ class Type {
   private static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
   private static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
 
+  public toCompletionItem():vscode.CompletionItem | null {
+    let item = null;
+    if(this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Class);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if(this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
+  }
+
 }
+
+const takesRegExpString = () => [...Type.getTakesTypes(), ...Interface.getInterfaces(), ...Struct.getStructs()].map(type => {
+  if (type.name) {
+    return type.name;
+  }
+}).filter(name => name).join("|");
+const statementRegExpString = () => [...Type.getStatementTypes(), ...Interface.getInterfaces(), ...Struct.getStructs()].map(type => {
+  if (type.name) {
+    return type.name;
+  }
+}).filter(name => name).join("|");
 
 class CommonJ {
   private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
@@ -302,7 +323,7 @@ class CommonJ {
         const type = this.parseBaseType(line);
         if (type) {
           const comment = Comment.parse(line);
-          if(comment) type.description = comment.content;
+          if (comment) type.description = comment.content;
           this.types.push(type);
         }
       }
@@ -367,11 +388,11 @@ class Global {
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
-  public description:string | null = null;
+  public description: string | null = null;
 
   static parse(content: string): Global | null {
     let global = null;
-    const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
     if (globalRegExp.test(content)) {
       const result = globalRegExp.exec(content);
       if (result && result.groups) {
@@ -409,7 +430,7 @@ class Param {
     let takes = new Array<Param>();
     if (!content) return takes;
     if (!/takes\s+nothing/.test(content)) {
-      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${Type.takesRegExpString()})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${Type.takesRegExpString()})\\s+[a-zA-Z]\\w*)*)`);
+      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${takesRegExpString()})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${takesRegExpString()})\\s+[a-zA-Z]\\w*)*)`);
       if (takesRegExp.test(content)) {
         const result = takesRegExp.exec(content);
         if (result && result.groups && result.groups.takeString) {
@@ -436,7 +457,7 @@ class Param {
 const resolveReturnsType = (content: string): string | null => {
   let returns = null;
   if (!content || /returns\s+nothing/.test(content)) return returns;
-  const returnsRegexp = new RegExp(`returns\\s+(?<returns>${Type.statementRegExpString()})`);
+  const returnsRegexp = new RegExp(`returns\\s+(?<returns>${statementRegExpString()})`);
   if (returnsRegexp.test(content)) {
     const result = returnsRegexp.exec(content);
     if (result && result.groups && result.groups.returns) {
@@ -519,6 +540,10 @@ class Native {
     return native;
   }
 
+  /**
+   * 備注：後續修改為無返回值
+   * @param content 
+   */
   static parseNatives(content: string): Native[] {
     const jassContent = JassUtils.removeTextMacro(content);
     const lines = JassUtils.content2Lines(jassContent);
@@ -531,7 +556,7 @@ class Native {
           native.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + native.name.length);
         }
         const comment = Comment.parse(line);
-        if(comment){
+        if (comment) {
           native.description = comment.content;
         }
         native.range = new vscode.Range(index, line.length - line.trimStart().length, index, line.length);
@@ -552,7 +577,7 @@ class Local {
 
   static parse(content: string): Local | null {
     let local = null;
-    const functionRegExp = new RegExp(`local\\s+(?<type>${Type.statementRegExpString})(\\s+(?<hasArray>array))?\\s+(?<name>[a-zA-Z]\\w*)`);
+    const functionRegExp = new RegExp(`^\\s*local\\s+(?<type>${statementRegExpString})(\\s+(?<hasArray>array))?\\s+(?<name>[a-zA-Z]\\w*)`);
     if (functionRegExp.test(content)) {
       const result = functionRegExp.exec(content);
       if (result && result.groups) {
@@ -607,7 +632,7 @@ class Library {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
-  public description:string|null = null;
+  public description: string | null = null;
 
   public origin(): string {
     return `library${this.name ? " " + this.name : ""}${this.initializer ? " " + this.initializer : ""}${this.needs && this.needs.length > 0 ? " " + this.needs.join(", ") : ""}
@@ -687,7 +712,7 @@ class Member {
   public description: string | null = null;
 
   static parse(content: string): Member | null {
-    const interfaceMemberRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    const interfaceMemberRegExp = new RegExp(`^\s*((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
     if (interfaceMemberRegExp.test(content)) {
       const member = new Member();
       const result = interfaceMemberRegExp.exec(content);
@@ -727,11 +752,12 @@ class Method {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public locals: Array<Local> = new Array<Local>();
   public description: string | null = null;
 
   static parse(content: string): Method | null {
     let method = null;
-    const interfaceMethodRegExp = new RegExp(/((?<modifier>private|public)\s+)?((?<isStatic>static)\s+)?method\s+(?<name>[a-zA-Z]\w*)/);
+    const interfaceMethodRegExp = new RegExp(/^\s*((?<modifier>private|public)\s+)?((?<isStatic>static)\s+)?method\s+(?<name>[a-zA-Z]\w*)/);
     if (content && interfaceMethodRegExp.test(content)) {
       method = new Method();
       const result = interfaceMethodRegExp.exec(content);
@@ -771,13 +797,19 @@ class Struct {
   public origin: string | null = null;
   public description: string | null = null;
 
+  private static structs: Array<Struct> = new Array<Struct>();
+
+  public static getStructs(): Array<Struct> {
+    return this.structs;
+  }
+
   static parse(content: string): Struct | null {
     let struct = null;
-    const nameRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
+    const nameRegExp = new RegExp(/^\s*struct\s+(?<name>[a-zA-Z][a-zA-Z\d]*)\b/);
     if (nameRegExp.test(content)) {
-      struct = new Struct();
       const result = nameRegExp.exec(content);
-      if (result && result.groups && result.groups.name) {
+      if (result && result.groups && result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
+        struct = new Struct();
         struct.name = result.groups.name;
       }
     }
@@ -789,6 +821,56 @@ class Struct {
       }
     }
     return struct;
+  }
+
+  /**
+   * 分析接口
+   * @param content 
+   */
+  public static resolveInterfaces(content: string): void {
+    if (this.structs.length > 0) this.structs = new Array<Struct>();
+    const lines: Array<string> = JassUtils.content2Lines(JassUtils.removeTextMacro(content));
+    let lastStruct: Struct | null = null; // 不爲null時表示進入struct塊
+    let lastMethod: Method | null = null; // 不爲null時表示進入method塊
+    lines.forEach((line, index) => {
+      const getStartIndex = () => line.length - line.trimStart().length;
+      const struct = Struct.parse(line);
+      if (struct) {
+        lastStruct = struct;
+        const comment = Comment.parse(lines[index - 1]);
+        if (comment) struct.description = comment.content;
+        this.structs.push(struct);
+      } else if (/^\s*endinterface/.test(line) && lastStruct) {
+        lastStruct.end = new vscode.Position(index, getStartIndex() + "endstruct".length);
+        lastStruct = null;
+        if (lastMethod) lastMethod = null; // 退出interface塊時，若已進入method塊中，一并退出
+      } else if (lastStruct) {
+        const method = Method.parse(line);
+        if (method) {
+          lastMethod = method;
+          const comment = Comment.parse(lines[index - 1]);
+          if (comment) method.description = comment.content;
+          lastStruct.methods.push(method);
+        } else if (/^\s*endmethod/.test(line) && lastMethod) {
+          lastMethod.end = new vscode.Position(index, getStartIndex() + "endmethod".length);
+          lastMethod = null;
+        } else if (lastMethod) {
+          const local = Local.parse(line);
+          if (local) {
+            const comment = Comment.parse(lines[index - 1]);
+            if (comment) local.description = comment.content;
+            lastMethod.locals.push(local);
+          }
+        } else {
+          const member = Member.parse(line);
+          if (member) {
+            const comment = Comment.parse(lines[index - 1]);
+            if (comment) member.description = comment.content;
+            lastStruct.members.push(member);
+          }
+        }
+      }
+    });
   }
 
 }
@@ -803,17 +885,62 @@ class Interface {
   public origin: string | null = null;
   public description: string | null = null;
 
-  public static parse(content: string): Interface {
-    const inter = new Interface();
-    const nameRegExp = new RegExp(/interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)/);
+  public static parse(content: string): Interface | null {
+    let inter = null;
+    const nameRegExp = new RegExp(/^\s*interface\s+(?<name>[a-zA-Z][a-zA-Z\d]*)/);
     if (nameRegExp.test(content)) {
       const result = nameRegExp.exec(content);
-      if (result && result.groups && result.groups.name) {
+      if (result && result.groups && result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
+        inter = new Interface();
         inter.name = result.groups.name;
       }
     }
     return inter;
   }
+
+  private static interfaces: Array<Interface> = new Array<Interface>();
+
+  public static getInterfaces(): Array<Interface> {
+    return this.interfaces;
+  }
+
+  /**
+   * 分析接口
+   * @param content 
+   */
+  public static resolveInterfaces(content: string): void {
+    if (this.interfaces.length > 0) this.interfaces = new Array<Interface>();
+    const lines: Array<string> = JassUtils.content2Lines(JassUtils.removeTextMacro(content));
+    let lastInter: Interface | null = null; // 不爲null時表示進入interface塊
+    lines.forEach((line, index) => {
+      const getStartIndex = () => line.length - line.trimStart().length;
+      const inter = Interface.parse(line);
+      if (inter) {
+        lastInter = inter;
+        const comment = Comment.parse(lines[index - 1]);
+        if (comment) inter.description = comment.content;
+        this.interfaces.push(inter);
+      } else if (/^\s*endinterface/.test(line) && lastInter) {
+        lastInter.end = new vscode.Position(index, getStartIndex() + "endinterface".length);
+        lastInter = null;
+      } else if (lastInter) {
+        const method = Method.parse(line);
+        if (method) {
+          const comment = Comment.parse(lines[index - 1]);
+          if (comment) method.description = comment.content;
+          lastInter.methods.push(method);
+        } else {
+          const member = Member.parse(line);
+          if (member) {
+            const comment = Comment.parse(lines[index - 1]);
+            if (comment) member.description = comment.content;
+            lastInter.members.push(member);
+          }
+        }
+      }
+    });
+  }
+
 }
 
 class ArrayType {
@@ -864,9 +991,11 @@ class Jass {
   }
 
   static parseContent(content: string): Jass {
-    if (!content) return new Jass;
+    const jass = new Jass();
 
     Type.resolveTypes(content); // 分析當前文件類型
+    Interface.resolveInterfaces(content);
+    Struct.resolveInterfaces(content);
 
     const lineTexts = JassUtils.content2Lines(content);
     /**
@@ -879,302 +1008,203 @@ class Jass {
      * function{array object,interface function }
      * text macro -> //! text macro name takes 
      */
-    const linesParse = () => {
-      const jass = new Jass();
 
-      jass.natives = Native.parseNatives(content);
 
-      let inTextMacro = false;  // 记录是否进入文本宏
-      let inInterface = false;
-      let inScopeField = 0; // 域深度
-      let inLibrary = false;  // 是否进入库
-      let inStruct = false;
-      let inFunction = false;
-      let inGlobals = false;
+    jass.natives = Native.parseNatives(content);
+    jass.interfaces = Interface.getInterfaces();
+    jass.structs = Struct.getStructs();
 
-      let inMethod = false; // 仅用于struct，interface中无需闭合
+    // 備注：後續轉爲為last方式 目前使用boolean 2019年12月4日
 
-      let lastFunction = null;  // 最后进入的方法，用于保存生命周期，方便后续local设置
+    let inTextMacro = false;  // 记录是否进入文本宏
+    let inScopeField = 0; // 域深度
+    let inLibrary = false;  // 是否进入库
+    let inFunction = false;
+    let inGlobals = false;
 
-      const findScopes = (scopes: Scope[], deep: number): Scope[] => {
-        if (deep > 1) {
-          let s = scopes;
-          for (let d = 1; d < deep; d++) {
-            s = s[s.length - 1].scopes;
-          }
-          return s;
-        } else {
-          return scopes;
+    let lastFunction = null;  // 最后进入的方法，用于保存生命周期，方便后续local设置
+
+    const findScopes = (scopes: Scope[], deep: number): Scope[] => {
+      if (deep > 1) {
+        let s = scopes;
+        for (let d = 1; d < deep; d++) {
+          s = s[s.length - 1].scopes;
         }
+        return s;
+      } else {
+        return scopes;
       }
+    }
 
-      for (let i = 0; i < lineTexts.length; i++) {
-        const lineText = lineTexts[i];
-        /**
-         * 获取第一个字符开始的下标
-         */
-        const getStartIndex = (): number => lineText.length - lineText.trimLeft().length;
-        const findDescription = ():string | null => {
-          const preLine = lineTexts[i - 1];
-          const comment = Comment.parse(preLine);
-          return comment ? comment.content : null;
-        };
-        if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
-          inTextMacro = true;
-          const textMacro = new TextMacro();
-          textMacro.name = "";
-          textMacro.takes = [];
-          textMacro.content = "";
-          textMacro.range = null;
-          textMacro.nameRange = null;
-          textMacro.origin = "";
-          jass.textMacros.push(textMacro);
-        } else if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
-          inTextMacro = false;
-        } else if (inTextMacro) {
-          jass.textMacros[jass.textMacros.length - 1].content += lineText;
-        } else if (/^\s*\/\/!\s+import/.test(lineText)) {
-        } else if (/^\s*\/\//.test(lineText)) {
-        } else if (/^\s*globals/.test(lineText)) {
-          inGlobals = true;
-        } else if (/^\s*endglobals/.test(lineText)) {
-          inGlobals = false;
-        } else if (inGlobals) { // 在global块时会无视其他语法行
-          const global = Global.parse(lineText);
-          if (global) {
-            if (global.name) {
-              let nameIndex = lineText.indexOf(global.name);
-              if (nameIndex >= 0) global.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + global.name.length);
-            }
-            global.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-            global.description = findDescription();
-            if (global.modifier == Modifier.Common) {
-              jass.globals.push(global);
-            } else {
-              if (inLibrary) {
-                if (inScopeField > 0) {
-                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
-                  const scope = scopes[scopes.length - 1];
-                  if (scope) {
-                    scope.globals.push(global);
-                  }
-                } else {
-                  jass.librarys[jass.librarys.length - 1].globals.push(global);
-                }
-              } else if (inScopeField > 0) {
-                const scopes = findScopes(jass.scopes, inScopeField);
+    for (let i = 0; i < lineTexts.length; i++) {
+      const lineText = lineTexts[i];
+      /**
+       * 获取第一个字符开始的下标
+       */
+      const getStartIndex = (): number => lineText.length - lineText.trimLeft().length;
+      const findDescription = (): string | null => {
+        const preLine = lineTexts[i - 1];
+        const comment = Comment.parse(preLine);
+        return comment ? comment.content : null;
+      };
+      if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
+        inTextMacro = true;
+        const textMacro = new TextMacro();
+        textMacro.name = "";
+        textMacro.takes = [];
+        textMacro.content = "";
+        textMacro.range = null;
+        textMacro.nameRange = null;
+        textMacro.origin = "";
+        jass.textMacros.push(textMacro);
+      } else if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
+        inTextMacro = false;
+      } else if (inTextMacro) {
+        jass.textMacros[jass.textMacros.length - 1].content += lineText;
+      } else if (/^\s*\/\/!\s+import/.test(lineText)) {
+      } else if (/^\s*\/\//.test(lineText)) {
+      } else if (/^\s*globals/.test(lineText)) {
+        inGlobals = true;
+      } else if (/^\s*endglobals/.test(lineText)) {
+        inGlobals = false;
+      } else if (inGlobals) { // 在global块时会无视其他语法行
+        const global = Global.parse(lineText);
+        if (global) {
+          if (global.name) {
+            let nameIndex = lineText.indexOf(global.name);
+            if (nameIndex >= 0) global.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + global.name.length);
+          }
+          global.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
+          global.description = findDescription();
+          if (global.modifier == Modifier.Common) {
+            jass.globals.push(global);
+          } else {
+            if (inLibrary) {
+              if (inScopeField > 0) {
+                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
                 const scope = scopes[scopes.length - 1];
                 if (scope) {
                   scope.globals.push(global);
                 }
-              }
-            }
-          }
-        } else if (/^\s*function\s+interface/.test(lineText)) { // 未實現
-        } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
-          const library = Library.parse(lineText);
-          if (library.name) {
-            const nameIndex = lineText.indexOf(library.name);
-            if (nameIndex > 0) library.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + library.name.length);
-          }
-          library.description = findDescription();
-          library.start = new vscode.Position(i, getStartIndex());
-          jass.librarys.push(library);
-          inLibrary = true;
-        } else if (/^\s*endlibrary/.test(lineText)) {
-          inLibrary = false;
-        } else if (/^\s*scope/.test(lineText)) {
-          inScopeField++;
-
-          const scope = Scope.parse(lineText);
-          if (scope.name) {
-            const nameIndex = lineText.indexOf(scope.name);
-            if (nameIndex > 0) scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
-          }
-          scope.description = findDescription();
-          scope.start = new vscode.Position(i, getStartIndex());
-          const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
-          scopes.push(scope);
-        } else if (/^\s*endscope/.test(lineText)) {
-          const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
-          const scope = scopes[scopes.length - 1];
-          const EndscopeKeyword = "endscope";
-          scope.end = new vscode.Position(i, lineText.indexOf(EndscopeKeyword) + EndscopeKeyword.length);
-          if (inScopeField > 0) {
-            inScopeField--;
-          }
-        } else if (/^\s*interface/.test(lineText)) {
-          const inter = Interface.parse(lineText);
-          if (inter.name) {
-            const nameIndex = lineText.indexOf(inter.name);
-            inter.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + inter.name.length);
-          }
-          inter.description = findDescription();
-          inter.start = new vscode.Position(i, getStartIndex());
-          jass.interfaces.push(inter);
-          inInterface = true;
-        } else if (/^\s*endinterface/.test(lineText)) {
-          const inter = jass.interfaces[jass.interfaces.length - 1];
-          if (inter) {
-            if (lineText.includes("endinterface")) {
-              inter.end = new vscode.Position(i, lineText.length - lineText.trimLeft().length);
-            }
-          }
-          inInterface = false;
-        } else if (inInterface) {  // 进入interface块时，只识别成员和
-          /*
-          解析member和method
-          */
-          if (/\bmethod\b/.test(lineText)) {
-            const method = Method.parse(lineText);
-            if (method) {
-              if (method.name) {
-                const nameIndex = lineText.indexOf(method.name);
-                if (nameIndex > -1) method.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + method.name.length);
-              }
-              method.description = findDescription();
-              method.start = new vscode.Position(i, lineText.length - lineText.trimLeft().length);
-              const inter = jass.interfaces[jass.interfaces.length - 1];
-              if (inter) {
-                inter.methods.push(method);
-              }
-            }
-          } else {
-            const member = Member.parse(lineText);
-            if (member) {
-              if (member.name) {
-                const nameIndex = lineText.indexOf(member.name);
-                if (nameIndex > -1) member.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + member.name.length);
-              }
-              member.description = findDescription();
-              member.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-              const inter = jass.interfaces[jass.interfaces.length - 1];
-              if (inter) {
-                inter.members.push(member);
-              }
-            }
-          }
-        } else if (/^\s*struct/.test(lineText)) {
-          const struct = Struct.parse(lineText);
-          if (struct) {
-            if (struct.name) {
-              const nameIndex = lineText.indexOf(struct.name);
-              struct.start = new vscode.Position(i, nameIndex);
-              struct.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + struct.name.length);
-            }
-            struct.description = findDescription();
-            struct.start = new vscode.Position(i, getStartIndex());
-            jass.structs.push(struct);
-          }
-          inStruct = true;
-        } else if (/^\s*endstruct/.test(lineText)) {
-          if (inStruct) {
-            const struct = jass.structs[jass.structs.length - 1];
-            if (struct) struct.end = new vscode.Position(i, getStartIndex());
-          }
-          inStruct = false;
-        } else if (inStruct) {
-          if (/\bmethod\b/.test(lineText)) {
-            const method = Method.parse(lineText);
-            if (method) {
-              if (method.name) {
-                const nameIndex = lineText.indexOf(method.name);
-                if (nameIndex > -1) method.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + method.name.length);
-              }
-              method.description = findDescription();
-              method.start = new vscode.Position(i, getStartIndex());
-              const struct = jass.structs[jass.structs.length - 1];
-              if (struct) {
-                struct.methods.push(method);
-              }
-            }
-          } else {
-            const member = Member.parse(lineText);
-            if (member) {
-              if (member.name) {
-                const nameIndex = lineText.indexOf(member.name);
-                if (nameIndex > -1) member.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + member.name.length);
-              }
-              member.description = findDescription();
-              member.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-              const struct = jass.structs[jass.structs.length - 1];
-              if (struct) {
-                struct.members.push(member);
-              }
-            }
-          }
-        } else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
-          const func = Func.parse(lineText);
-          if (func) {
-            if (func.name) {
-              const nameIndex = lineText.indexOf(func.name);
-              func.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + func.name.length);
-            }
-            func.description = findDescription();
-            func.start = new vscode.Position(i, getStartIndex());
-            if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
-              if (inLibrary) {
-                if (inScopeField > 0) {
-                  const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
-                  scopes[scopes.length - 1].functions.push(func);
-                } else {
-                  jass.librarys[jass.librarys.length - 1].functions.push(func);
-                }
-              } else if (inScopeField > 0) {
-                const scopes = findScopes(jass.scopes, inScopeField);
-                scopes[scopes.length - 1].functions.push(func);
-              }
-            } else {
-              if (inLibrary) {
-                const lib = jass.librarys[jass.librarys.length - 1];
-                if (lib.initializer == func.name) {
-                  lib.functions.push(func);
-                } else {
-                  jass.funcs.push(func);
-                }
               } else {
-                jass.funcs.push(func);
-              }
-            }
-            lastFunction = func;
-          }
-          inFunction = true;
-        } else if (/^\s*endfunction/.test(lineText)) {
-          if (inFunction) {
-            const end = new vscode.Position(i, lineText.indexOf("endfunction") + "endfunction".length);
-            if (inLibrary) {
-              if (inScopeField > 0) {
-                const lib = jass.librarys[jass.librarys.length - 1];
-                const scopes = findScopes(lib.scopes, inScopeField);
-                scopes[scopes.length - 1].end = end;
-              } else {
-                jass.librarys[jass.librarys.length - 1].end = end;
+                jass.librarys[jass.librarys.length - 1].globals.push(global);
               }
             } else if (inScopeField > 0) {
               const scopes = findScopes(jass.scopes, inScopeField);
-              scopes[scopes.length - 1].end = end;
-            } else {
-              jass.funcs[jass.funcs.length - 1].end = end;
-            }
-            inFunction = false;
-          }
-        } else if (inFunction) {
-          const local = Local.parse(lineText);
-          if (local) {
-            if (local.name) {
-              const nameIndex = lineText.indexOf(local.name);
-              local.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + local.name.length);
-            }
-            local.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
-            if (lastFunction) { //  进入方法行时定义
-              lastFunction.locals.push(local);
+              const scope = scopes[scopes.length - 1];
+              if (scope) {
+                scope.globals.push(global);
+              }
             }
           }
         }
+      } else if (/^\s*function\s+interface/.test(lineText)) { // 未實現
+      } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
+        const library = Library.parse(lineText);
+        if (library.name) {
+          const nameIndex = lineText.indexOf(library.name);
+          if (nameIndex > 0) library.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + library.name.length);
+        }
+        library.description = findDescription();
+        library.start = new vscode.Position(i, getStartIndex());
+        jass.librarys.push(library);
+        inLibrary = true;
+      } else if (/^\s*endlibrary/.test(lineText)) {
+        inLibrary = false;
+      } else if (/^\s*scope/.test(lineText)) {
+        inScopeField++;
+
+        const scope = Scope.parse(lineText);
+        if (scope.name) {
+          const nameIndex = lineText.indexOf(scope.name);
+          if (nameIndex > 0) scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
+        }
+        scope.description = findDescription();
+        scope.start = new vscode.Position(i, getStartIndex());
+        const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
+        scopes.push(scope);
+      } else if (/^\s*endscope/.test(lineText)) {
+        const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
+        const scope = scopes[scopes.length - 1];
+        const EndscopeKeyword = "endscope";
+        scope.end = new vscode.Position(i, lineText.indexOf(EndscopeKeyword) + EndscopeKeyword.length);
+        if (inScopeField > 0) {
+          inScopeField--;
+        }
+      } else if (/^\s*function(?!\s+interface)/.test(lineText) || /^\s*private\s+function/.test(lineText) || /^\s*public\s+function/.test(lineText)) {
+        const func = Func.parse(lineText);
+        if (func) {
+          if (func.name) {
+            const nameIndex = lineText.indexOf(func.name);
+            func.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + func.name.length);
+          }
+          func.description = findDescription();
+          func.start = new vscode.Position(i, getStartIndex());
+          if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
+            if (inLibrary) {
+              if (inScopeField > 0) {
+                const scopes = findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField);
+                scopes[scopes.length - 1].functions.push(func);
+              } else {
+                jass.librarys[jass.librarys.length - 1].functions.push(func);
+              }
+            } else if (inScopeField > 0) {
+              const scopes = findScopes(jass.scopes, inScopeField);
+              scopes[scopes.length - 1].functions.push(func);
+            }
+          } else {
+            if (inLibrary) {
+              const lib = jass.librarys[jass.librarys.length - 1];
+              if (lib.initializer == func.name) {
+                lib.functions.push(func);
+              } else {
+                jass.funcs.push(func);
+              }
+            } else {
+              jass.funcs.push(func);
+            }
+          }
+          lastFunction = func;
+        }
+        inFunction = true;
+      } else if (/^\s*endfunction/.test(lineText)) {
+        if (inFunction) {
+          const end = new vscode.Position(i, lineText.indexOf("endfunction") + "endfunction".length);
+          if (inLibrary) {
+            if (inScopeField > 0) {
+              const lib = jass.librarys[jass.librarys.length - 1];
+              const scopes = findScopes(lib.scopes, inScopeField);
+              scopes[scopes.length - 1].end = end;
+            } else {
+              jass.librarys[jass.librarys.length - 1].end = end;
+            }
+          } else if (inScopeField > 0) {
+            const scopes = findScopes(jass.scopes, inScopeField);
+            scopes[scopes.length - 1].end = end;
+          } else {
+            jass.funcs[jass.funcs.length - 1].end = end;
+          }
+          inFunction = false;
+        }
+      } else if (inFunction) {
+        const local = Local.parse(lineText);
+        if (local) {
+          if (local.name) {
+            const nameIndex = lineText.indexOf(local.name);
+            local.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + local.name.length);
+          }
+          local.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
+          if (lastFunction) { //  进入方法行时定义
+            lastFunction.locals.push(local);
+          }
+        }
       }
-      return jass;
     }
-    return linesParse();
+    return jass;
+  }
+
+  public toCompletionItems():Array<vscode.CompletionItem> {
+    return [];
   }
 
 }
@@ -1189,7 +1219,11 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
       const jass = Jass.parseContent(document.getText());
       console.log(jass);
     } catch (err) { console.error(err) }
-    return [];
+    const items = new Array<vscode.CompletionItem>();
+    Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
+      if(item) items.push(item);
+    });
+    return items;
   }
 }
 
