@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { deprecate } from 'util';
 // const vscode = require("vscode");
 
 const language = "jass";
@@ -96,6 +97,41 @@ class JassUtils {
 
 }
 
+class Comment {
+  
+  public content: string|null = null;
+  
+  /**
+   * @deprecated
+   */
+  public range: vscode.Range | null = null;
+
+  /**
+   * @deprecated
+   */
+  public contentRange: vscode.Range | null = null;
+
+  public origin(): string{
+    return `${this.content ? "// " + this.content : ""}`;
+  };
+
+  public static parse (content:string):Comment|null{
+    let comment = null;
+    const commentRegExp = new RegExp(/^\s*\/\/(?!!)\s*(?<content>.*)/);
+    if(commentRegExp.test(content)){
+      comment = new Comment;
+      const result = commentRegExp.exec(content);
+      if(result && result.groups){
+        if(result.groups.content){
+          comment.content = result.groups.content;
+        }
+      }
+    }
+    return comment;
+  }
+
+}
+
 class Type {
   public name: string | null = null;
   public extends: string | null = null; //  可以为数组对象，目前不进行进一步解析，以string形式保存
@@ -112,7 +148,7 @@ class Type {
   }
 
   public origin(): string {
-    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
+    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}${this.isArrayObject ? " array" : ""}${this.size > 0 ? "["+ this.size +"]" : ""}`;
   }
 
   private static arrayObjects: Type[] = new Array<Type>();
@@ -164,6 +200,8 @@ class Type {
       if (/^\s*type\s+[a-zA-Z][a-zA-Z\d]*/.test(line)) {
         const arrayObject = this.parseArrayObject(line);
         if (arrayObject) {
+          const comment = Comment.parse(line);
+          if(comment) arrayObject.description = comment.content;
           this.arrayObjects.push(arrayObject);
         }
       }
@@ -263,6 +301,8 @@ class CommonJ {
         const line = lines[i];
         const type = this.parseBaseType(line);
         if (type) {
+          const comment = Comment.parse(line);
+          if(comment) type.description = comment.content;
           this.types.push(type);
         }
       }
@@ -287,13 +327,6 @@ class CommonJ {
 }
 
 const commonJ = CommonJ.build(); // 單例
-
-class Comment {
-  public original: string = "";
-  public content: string = "";
-  public range: vscode.Range | null = null;
-  public contentRange: vscode.Range | null = null;
-}
 
 enum Modifier {
   Private = "private",
@@ -334,6 +367,7 @@ class Global {
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public description:string | null = null;
 
   static parse(content: string): Global | null {
     let global = null;
@@ -421,6 +455,7 @@ class Func {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
 
   public locals: Local[] = new Array<Local>();
 
@@ -457,6 +492,7 @@ class Native {
   public returnType: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
 
   public locals: Local[] = new Array<Local>();
 
@@ -494,6 +530,10 @@ class Native {
           const nameIndex = line.indexOf(native.name);
           native.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + native.name.length);
         }
+        const comment = Comment.parse(line);
+        if(comment){
+          native.description = comment.content;
+        }
         native.range = new vscode.Range(index, line.length - line.trimStart().length, index, line.length);
         natives.push(native);
       };
@@ -508,6 +548,7 @@ class Local {
   public isArray: boolean = false;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
 
   static parse(content: string): Local | null {
     let local = null;
@@ -542,12 +583,13 @@ class TextMacro {
   public content: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
 
   /**
    * 待實現
    * @param content 
    */
-  public static parse(content:string):TextMacro {
+  public static parse(content: string): TextMacro {
     const textMacro = new TextMacro;
     const textMacroRegExp = new RegExp(/\/\/\s+textmacro\s+/);
     return new TextMacro;
@@ -565,6 +607,7 @@ class Library {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
+  public description:string|null = null;
 
   public origin(): string {
     return `library${this.name ? " " + this.name : ""}${this.initializer ? " " + this.initializer : ""}${this.needs && this.needs.length > 0 ? " " + this.needs.join(", ") : ""}
@@ -594,7 +637,6 @@ class Library {
 }
 
 class Scope {
-  public origin: string | null = null;
   public name: string | null = null;
   public scopes: Scope[] = new Array<Scope>();
   public initializer: string | null = null;
@@ -603,6 +645,17 @@ class Scope {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
+
+  public origin(): string {
+    return `scope ${this.name ? this.name : ""}${this.initializer ? " initializer " + this.initializer : ""}\n
+  globals\n
+    ${this.globals.map(global => global.origin).join("\n\t\t")}
+  endglobals\n
+  ${this.functions.map(func => func.origin).join("\n\t")}
+  ${this.scopes.map(scp => scp.origin).join("\n\t")}
+  endscope`;
+  }
 
   public static parse(content: string): Scope {
     const scope = new Scope();
@@ -631,6 +684,7 @@ class Member {
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public description: string | null = null;
 
   static parse(content: string): Member | null {
     const interfaceMemberRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${Type.statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
@@ -673,6 +727,7 @@ class Method {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public description: string | null = null;
 
   static parse(content: string): Method | null {
     let method = null;
@@ -714,6 +769,7 @@ class Struct {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public description: string | null = null;
 
   static parse(content: string): Struct | null {
     let struct = null;
@@ -745,6 +801,7 @@ class Interface {
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
   public origin: string | null = null;
+  public description: string | null = null;
 
   public static parse(content: string): Interface {
     const inter = new Interface();
@@ -828,27 +885,12 @@ class Jass {
       jass.natives = Native.parseNatives(content);
 
       let inTextMacro = false;  // 记录是否进入文本宏
-      let textMacroBlocks = []; // 文本宏内容
-      let textMacroStartLine = 0; // 文本宏开始行
       let inInterface = false;
-      let interfaceBlocks = [];
-      let interfaceStartLine = 0;
-      let inScope = false;  // 是否进入域
-      let scopeBlocks = []; // 域内容
-      let scopeStartLine = 0; // 域开始行
       let inScopeField = 0; // 域深度
       let inLibrary = false;  // 是否进入库
-      let libraryBlocks = []; // 库内容
-      let libraryStartLine = 0; // 库开始行
       let inStruct = false;
-      let structBlocks: string[] = [];
-      let structStartLine = 0;
       let inFunction = false;
-      let functionBlocks: string[] = [];
-      let functionStartLine: number = 0;
       let inGlobals = false;
-      let globalBlocks: string[] = [];
-      let globalStartLine = 0;
 
       let inMethod = false; // 仅用于struct，interface中无需闭合
 
@@ -872,6 +914,11 @@ class Jass {
          * 获取第一个字符开始的下标
          */
         const getStartIndex = (): number => lineText.length - lineText.trimLeft().length;
+        const findDescription = ():string | null => {
+          const preLine = lineTexts[i - 1];
+          const comment = Comment.parse(preLine);
+          return comment ? comment.content : null;
+        };
         if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
           inTextMacro = true;
           const textMacro = new TextMacro();
@@ -900,6 +947,7 @@ class Jass {
               if (nameIndex >= 0) global.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + global.name.length);
             }
             global.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
+            global.description = findDescription();
             if (global.modifier == Modifier.Common) {
               jass.globals.push(global);
             } else {
@@ -922,13 +970,14 @@ class Jass {
               }
             }
           }
-        } else if (/^\s*function\s+interface/.test(lineText)) {
+        } else if (/^\s*function\s+interface/.test(lineText)) { // 未實現
         } else if (/^\s*library/.test(lineText) && inScopeField == 0) { // 保证lib不被包含再scope中
           const library = Library.parse(lineText);
           if (library.name) {
             const nameIndex = lineText.indexOf(library.name);
             if (nameIndex > 0) library.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + library.name.length);
           }
+          library.description = findDescription();
           library.start = new vscode.Position(i, getStartIndex());
           jass.librarys.push(library);
           inLibrary = true;
@@ -942,6 +991,7 @@ class Jass {
             const nameIndex = lineText.indexOf(scope.name);
             if (nameIndex > 0) scope.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + scope.name.length);
           }
+          scope.description = findDescription();
           scope.start = new vscode.Position(i, getStartIndex());
           const scopes = inLibrary ? findScopes(jass.librarys[jass.librarys.length - 1].scopes, inScopeField) : findScopes(jass.scopes, inScopeField);
           scopes.push(scope);
@@ -950,22 +1000,16 @@ class Jass {
           const scope = scopes[scopes.length - 1];
           const EndscopeKeyword = "endscope";
           scope.end = new vscode.Position(i, lineText.indexOf(EndscopeKeyword) + EndscopeKeyword.length);
-          scope.origin = `scope ${scope.name ? scope.name : ""}${scope.initializer ? " initializer " + scope.initializer : ""}\n
-            globals\n
-            ${scope.globals.map(global => global.origin).join("\n")}
-            endglobals\n
-            ${scope.functions.map(func => func.origin).join("\n")}
-            ${scope.scopes.map(scp => scp.origin).join("\n")}
-          endscope`;
           if (inScopeField > 0) {
             inScopeField--;
           }
         } else if (/^\s*interface/.test(lineText)) {
           const inter = Interface.parse(lineText);
-          if(inter.name){
+          if (inter.name) {
             const nameIndex = lineText.indexOf(inter.name);
             inter.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + inter.name.length);
           }
+          inter.description = findDescription();
           inter.start = new vscode.Position(i, getStartIndex());
           jass.interfaces.push(inter);
           inInterface = true;
@@ -988,6 +1032,7 @@ class Jass {
                 const nameIndex = lineText.indexOf(method.name);
                 if (nameIndex > -1) method.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + method.name.length);
               }
+              method.description = findDescription();
               method.start = new vscode.Position(i, lineText.length - lineText.trimLeft().length);
               const inter = jass.interfaces[jass.interfaces.length - 1];
               if (inter) {
@@ -1001,6 +1046,7 @@ class Jass {
                 const nameIndex = lineText.indexOf(member.name);
                 if (nameIndex > -1) member.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + member.name.length);
               }
+              member.description = findDescription();
               member.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
               const inter = jass.interfaces[jass.interfaces.length - 1];
               if (inter) {
@@ -1016,6 +1062,7 @@ class Jass {
               struct.start = new vscode.Position(i, nameIndex);
               struct.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + struct.name.length);
             }
+            struct.description = findDescription();
             struct.start = new vscode.Position(i, getStartIndex());
             jass.structs.push(struct);
           }
@@ -1028,16 +1075,17 @@ class Jass {
           inStruct = false;
         } else if (inStruct) {
           if (/\bmethod\b/.test(lineText)) {
-            const member = Member.parse(lineText);
-            if (member) {
-              if (member.name) {
-                const nameIndex = lineText.indexOf(member.name);
-                if (nameIndex > -1) member.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + member.name.length);
+            const method = Method.parse(lineText);
+            if (method) {
+              if (method.name) {
+                const nameIndex = lineText.indexOf(method.name);
+                if (nameIndex > -1) method.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + method.name.length);
               }
-              member.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
+              method.description = findDescription();
+              method.start = new vscode.Position(i, getStartIndex());
               const struct = jass.structs[jass.structs.length - 1];
               if (struct) {
-                struct.members.push(member);
+                struct.methods.push(method);
               }
             }
           } else {
@@ -1047,6 +1095,7 @@ class Jass {
                 const nameIndex = lineText.indexOf(member.name);
                 if (nameIndex > -1) member.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + member.name.length);
               }
+              member.description = findDescription();
               member.range = new vscode.Range(i, getStartIndex(), i, lineText.length);
               const struct = jass.structs[jass.structs.length - 1];
               if (struct) {
@@ -1061,6 +1110,7 @@ class Jass {
               const nameIndex = lineText.indexOf(func.name);
               func.nameRange = new vscode.Range(i, nameIndex, i, nameIndex + func.name.length);
             }
+            func.description = findDescription();
             func.start = new vscode.Position(i, getStartIndex());
             if (func.modifier == Modifier.Private || func.modifier == Modifier.Public) { // 有修饰符时
               if (inLibrary) {
