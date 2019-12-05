@@ -122,7 +122,7 @@
     },
     "vjass-keyword": {
       "name": "keyword",
-      "match": "\\b(library|initializer|needs|requires|optional|endlibrary|scope|endscope|private|public|static|execute|evaluate|create|destroy|interface|endinterface|extends|struct|endstruct|method|endmethod|this|defaults|delegate|operator|module|endmodule|implement|hook|stub|debug|import)\\b"
+      "match": "\\b(library|initializer|needs|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|debug)\\b"
     },
     "vjass-this": {
       "name": "variable.language",

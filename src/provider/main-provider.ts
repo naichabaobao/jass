@@ -148,7 +148,8 @@ class Type {
   }
 
   public origin(): string {
-    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}${this.isArrayObject ? " array" : ""}${this.size > 0 ? "[" + this.size + "]" : ""}`;
+    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
+    // ${this.isArrayObject ? " array" : ""}${this.size > 0 ? "[" + this.size + "]" : ""}
   }
 
   private static arrayObjects: Type[] = new Array<Type>();
@@ -174,15 +175,6 @@ class Type {
   }
 
   /**
-   * @deprecated
-   * 返回 a|b|c 这种字符串
-   */
-  public static types2RegExpString = (types: Type[]): string => types.map(value => value.name).join("|");
-
-  public static takesRegExpString = () => Type.types2RegExpString(Type.getTakesTypes());
-  public static statementRegExpString = () => Type.types2RegExpString(Type.getStatementTypes());
-
-  /**
    * 解析type或数组对象
    * @param content 
    * @param isCommonJ true 只解析jass类型，false 只解析数组对象
@@ -197,7 +189,7 @@ class Type {
       if (/^\s*type\s+[a-zA-Z][a-zA-Z\d]*/.test(line)) {
         const arrayObject = this.parseArrayObject(line);
         if (arrayObject) {
-          const comment = Comment.parse(line);
+          const comment = Comment.parse(lines[i - 1]);
           if (comment) arrayObject.description = comment.content;
           this.arrayObjects.push(arrayObject);
         }
@@ -207,7 +199,7 @@ class Type {
 
   static parseArrayObject(content: string): Type | null {
     let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>(${this.types2RegExpString(Type.getTypes())})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>(${statementRegExpString})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
     if (typeRegExp.test(content)) {
       const result = typeRegExp.exec(content);
       if (result && result.groups) {
@@ -228,23 +220,23 @@ class Type {
     return type;
   }
 
-  private static readonly Boolean = new Type("boolean", void 0, "布尔");
-  private static readonly Integer = new Type("integer", void 0, "整数");
-  private static readonly Real = new Type("real", void 0, "实数");
-  private static readonly String = new Type("string", void 0, "字符串");
-  private static readonly Code = new Type("code", void 0, "代码");
-  private static readonly Handle = new Type("handle", void 0, "句柄");
+  public static readonly Boolean = new Type("boolean", void 0, "布尔");
+  public static readonly Integer = new Type("integer", void 0, "整数");
+  public static readonly Real = new Type("real", void 0, "实数");
+  public static readonly String = new Type("string", void 0, "字符串");
+  public static readonly Code = new Type("code", void 0, "代码");
+  public static readonly Handle = new Type("handle", void 0, "句柄");
 
-  private static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
-  private static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
+  public static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
+  public static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
 
-  public toCompletionItem():vscode.CompletionItem | null {
+  public toCompletionItem(): vscode.CompletionItem | null {
     let item = null;
-    if(this.name) {
+    if (this.name) {
       item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Class);
       item.detail = this.name;
       const ms = new vscode.MarkdownString();
-      if(this.description) ms.appendText(this.description);
+      if (this.description) ms.appendText(this.description);
       ms.appendCodeblock(this.origin());
       item.documentation = ms;
     };
@@ -294,7 +286,7 @@ class CommonJ {
 
   private parseBaseType(content: string): Type | null {
     let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${this.types.map(type => type.name).join("|")}))?`);
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${[...this.types, Type.Handle].map(type => type.name).join("|")}))?`);
     if (typeRegExp.test(content)) {
       const result = typeRegExp.exec(content);
       if (result && result.groups) {
@@ -322,7 +314,7 @@ class CommonJ {
         const line = lines[i];
         const type = this.parseBaseType(line);
         if (type) {
-          const comment = Comment.parse(line);
+          const comment = Comment.parse(lines[i - 1]);
           if (comment) type.description = comment.content;
           this.types.push(type);
         }
@@ -361,9 +353,9 @@ enum Modifier {
  */
 const resolveModifier = (content: string): Modifier => {
   if (content) {
-    if (/\bprivate\b/.test(content)) {
+    if (/^\s*private\b/.test(content)) {
       return Modifier.Private;
-    } else if (/\bpublic\b/.test(content)) {
+    } else if (/^\s*public\b/.test(content)) {
       return Modifier.Public;
     }
     return Modifier.Common;
@@ -387,8 +379,23 @@ class Global {
   public name: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
-  public origin: string | null = null;
   public description: string | null = null;
+
+  private toOrigin(includeGlobal: boolean = false, prefix?:string|null) {
+    let name = this.name ? this.name : "";
+    if (prefix) {
+      name = prefix + "_" + name;
+    }
+    const globalsString = `${this.modifier == Modifier.Common ? "" : this.modifier + " "}${this.isConstant ? "constant " : ""}${this.type ? this.type + " " : ""}${this.isArray ? "array " : ""}${name}`;
+    if (includeGlobal) {
+      return `globals\n\t${globalsString}\nendglobals`
+    }
+    return globalsString;
+  }
+
+  public origin(includeGlobal: boolean = false, prefix?:string|null): string {
+    return this.toOrigin(includeGlobal,prefix);
+  }
 
   static parse(content: string): Global | null {
     let global = null;
@@ -420,11 +427,33 @@ class Global {
     }
     return global;
   }
+
+  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      let name = this.name;
+      if (prefix) {
+        name = prefix + "_" + this.name;
+      }
+      item = new vscode.CompletionItem(name, this.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+      item.detail = name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin(true, prefix));
+      item.documentation = ms;
+    };
+    return item;
+  }
+
 }
 
 class Param {
   public type: string | null = null;
   public name: string | null = null;
+
+  public origin(): string {
+    return `${this.type ? this.type + " " : ""}${this.name ? this.name : ""}`;
+  }
 
   static parseTakes(content: string): Param[] {
     let takes = new Array<Param>();
@@ -468,7 +497,7 @@ const resolveReturnsType = (content: string): string | null => {
 }
 
 class Func {
-  public origin: string | null = null;
+
   public modifier: Modifier = Modifier.Common;
   public name: string | null = null;
   public takes: Param[] = new Array<Param>();
@@ -480,33 +509,56 @@ class Func {
 
   public locals: Local[] = new Array<Local>();
 
+  public origin(prefix?: string|null): string {
+    let pStr = "";
+    if (prefix) {
+      pStr = prefix + "_";
+    }
+    return `${this.modifier != Modifier.Common ? this.modifier + " " : ""}function ${this.name ? pStr + this.name + " " : ""}takes ${this.takes.length > 0 ? this.takes.map(take => take.origin()).join(", ") : "nothing"} returns ${this.returnType ? this.returnType : "nothing"}`;
+  }
+
+  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      let name = this.name;
+      if (prefix) {
+        name = prefix + "_" + this.name;
+      }
+      item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Function);
+      item.detail = name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin(prefix));
+      item.documentation = ms;
+    };
+    return item;
+  }
+
   static parse(content: string): Func | null {
     let func = null;
-    if (/^\s*function/.test(content)) {
-      const modifier = resolveModifier(content);
-      if (modifier != Modifier.Common) {
-        func = new Func();
-      } else if (/^\s*function/.test(content)) {
-        func = new Func();
-      } else return func;
-      func.modifier = modifier;
+    const modifier = resolveModifier(content);
+    if ((modifier == Modifier.Common && /^\s*function\b/.test(content)) || ((modifier == Modifier.Private || modifier == Modifier.Public) && /^\s*(private|public)\s+function\b/.test(content))) {
       // 解析方法名称
       const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
       if (nameRegExp.test(content)) {
         const result = nameRegExp.exec(content);
         if (result && result.groups && result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
+          func = new Func();
           func.name = result.groups.name;
+          func.modifier = modifier;
+          func.takes = Param.parseTakes(content);
+          func.returnType = resolveReturnsType(content);
         }
       }
-      func.takes = Param.parseTakes(content);
-      func.returnType = resolveReturnsType(content);
     }
     return func;
   }
+
+
+
 }
 
 class Native {
-  public origin: string | null = null;
   public isConstant: boolean = false;
   public name: string | null = null;
   public takes: Param[] = new Array<Param>();
@@ -516,6 +568,10 @@ class Native {
   public description: string | null = null;
 
   public locals: Local[] = new Array<Local>();
+
+  public origin(): string {
+    return `${this.isConstant ? "constant " : ""}native ${this.name ? this.name + " " : ""}takes ${this.takes.length > 0 ? this.takes.map(take => take.origin()).join(", ") : "nothing"} returns ${this.returnType ? this.returnType : "nothing"}`;
+  }
 
   static parse(content: string): Native | null {
     let native = null;
@@ -555,7 +611,7 @@ class Native {
           const nameIndex = line.indexOf(native.name);
           native.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + native.name.length);
         }
-        const comment = Comment.parse(line);
+        const comment = Comment.parse(lines[index - 1]);
         if (comment) {
           native.description = comment.content;
         }
@@ -565,6 +621,20 @@ class Native {
     })
     return natives;
   }
+
+  public toCompletionItem(): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Function);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
+  }
+
 }
 
 class Local {
@@ -574,6 +644,23 @@ class Local {
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
   public description: string | null = null;
+
+  public origin(): string {
+    return `local ${this.type ? this.type + " " : ""}${this.isArray ? "array " : ""}${this.name ? this.name + " " : ""}`;
+  }
+
+  public toCompletionItem(): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Function);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
+  }
 
   static parse(content: string): Local | null {
     let local = null;
@@ -602,13 +689,20 @@ class Import {
 }
 
 class TextMacro {
-  public origin: string | null = null;
+
   public name: string | null = null;
   public takes: string[] = [];
   public content: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
   public description: string | null = null;
+
+  /**
+   * 待實現
+   */
+  public origin(): string {
+    return ``;
+  }
 
   /**
    * 待實現
@@ -635,8 +729,20 @@ class Library {
   public description: string | null = null;
 
   public origin(): string {
-    return `library${this.name ? " " + this.name : ""}${this.initializer ? " " + this.initializer : ""}${this.needs && this.needs.length > 0 ? " " + this.needs.join(", ") : ""}
-    endlibrary`;
+    return `library ${this.name ? this.name + " " : ""}${this.initializer ? "initializer " + this.initializer + " " : ""}${this.needs.length > 0 ? "requires " + this.needs.join(", ") : ""}\n${this.globals.length > 0 ? "\tglobals\n" + this.globals.map(g => g.origin().padStart(2, "\t").padEnd(1, "\n")) + "\tendglobals\n" : ""}${this.functions.length > 0 ? this.functions.map(func => func.origin().padStart(1, "\t").padEnd(1, "\n")) : ""}${this.scopes.length > 0 ? this.scopes.map(scope => scope.origin().padEnd(1, "\n")) : ""}endlibrary`;
+  }
+
+  public toCompletionItem(): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Field);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
   }
 
   public static parse(content: string): Library {
@@ -672,14 +778,25 @@ class Scope {
   public nameRange: vscode.Range | null = null;
   public description: string | null = null;
 
-  public origin(): string {
-    return `scope ${this.name ? this.name : ""}${this.initializer ? " initializer " + this.initializer : ""}\n
-  globals\n
-    ${this.globals.map(global => global.origin).join("\n\t\t")}
-  endglobals\n
-  ${this.functions.map(func => func.origin).join("\n\t")}
-  ${this.scopes.map(scp => scp.origin).join("\n\t")}
-  endscope`;
+  public origin(prefix?:string|null): string {
+    return `scope ${this.name ? prefix ? prefix + "_" + this.name : this.name + " " : ""}${this.initializer ? "initializer " + this.initializer : ""}\n${this.globals.length > 0 ? "\tglobals\n" + this.globals.map(g => g.origin().padStart(2, "\t").padEnd(1, "\n")) + "\tendglobals\n" : ""}${this.functions.length > 0 ? this.functions.map(func => func.origin().padStart(1, "\t").padEnd(1, "\n")) : ""}${this.scopes.length > 0 ? this.scopes.map(scope => scope.origin().padEnd(1, "\n")) : ""}endscope`;
+  }
+
+  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      let name = this.name;
+      if(prefix){
+        name = prefix + "_" + this.name;
+      }
+      item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Field);
+      item.detail = name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin(prefix));
+      item.documentation = ms;
+    };
+    return item;
   }
 
   public static parse(content: string): Scope {
@@ -708,8 +825,24 @@ class Member {
   public name: string | null = null;
   public range: vscode.Range | null = null;
   public nameRange: vscode.Range | null = null;
-  public origin: string | null = null;
   public description: string | null = null;
+
+  public origin(): string {
+    return `${this.modifier != Modifier.Common ? this.modifier + " " : ""}${this.isStatic ? "static " : ""}${this.type ? this.type + " " : ""}${this.isArray ? "array " : ""}${this.name ? this.name + " " : ""}`;
+  }
+
+  public toCompletionItem(): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Function);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
+  }
 
   static parse(content: string): Member | null {
     const interfaceMemberRegExp = new RegExp(`^\s*((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
@@ -751,9 +884,12 @@ class Method {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
-  public origin: string | null = null;
   public locals: Array<Local> = new Array<Local>();
   public description: string | null = null;
+
+  public origin(): string {
+    return `${this.modifier == Modifier.Private ? "private" : "public"} method ${this.name ? this.name + " " : ""}takes ${this.takes.length > 0 ? this.takes.map(take => take.origin()).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
+  }
 
   static parse(content: string): Method | null {
     let method = null;
@@ -982,6 +1118,80 @@ class Jass {
   public arrayTypes: ArrayType[] = new Array<ArrayType>();
   public errors: Error[] = new Array<Error>();
 
+  public static readonly keywordFunction = "function";
+  public static readonly keywordEndFunction = "endfunction";
+  public static readonly keywordConstant = "constant";
+  public static readonly keywordNative = "native";
+  public static readonly keywordLocal = "local";
+  public static readonly keywordType = "type";
+  public static readonly keywordSet = "set";
+  public static readonly keywordCall = "call";
+  public static readonly keywordTakes = "takes";
+  public static readonly keywordReturns = "returns";
+  public static readonly keywordExtends = "extends";
+  public static readonly keywordArray = "array";
+  public static readonly keywordTrue = "true";
+  public static readonly keywordFalse = "false";
+  public static readonly keywordNull = "null";
+  public static readonly keywordNothing = "nothing";
+  public static readonly keywordIf = "if";
+  public static readonly keywordElse = "else";
+  public static readonly keywordElseIf = "elseif";
+  public static readonly keywordEndIf = "endif";
+  public static readonly keywordThen = "then";
+  public static readonly keywordLoop = "loop";
+  public static readonly keywordEndLoop = "endloop";
+  public static readonly keywordExitWhen = "exitwhen";
+  public static readonly keywordReturn = "return";
+  public static readonly keywordInteger = "integer";
+  public static readonly keywordReal = "real";
+  public static readonly keywordBoolean = "boolean";
+  public static readonly keywordString = "string";
+  public static readonly keywordHandle = "handle";
+  public static readonly keywordCode = "code";
+  public static readonly keywordAnd = "and";
+  public static readonly keywordOr = "or";
+  public static readonly keywordNot = "not";
+  public static readonly keywordGlobals = "globals";
+  public static readonly keywordEndGlobals = "endglobals";
+
+  public static readonly keywords = [Jass.keywordFunction, Jass.keywordEndFunction, Jass.keywordConstant, Jass.keywordNative, Jass.keywordLocal, Jass.keywordType, Jass.keywordSet, Jass.keywordCall, Jass.keywordTakes, Jass.keywordReturns, Jass.keywordExtends, Jass.keywordArray, Jass.keywordTrue, Jass.keywordFalse, Jass.keywordNull, Jass.keywordNothing, Jass.keywordIf, Jass.keywordElse, Jass.keywordElseIf, Jass.keywordEndIf, Jass.keywordThen, Jass.keywordLoop, Jass.keywordEndLoop, Jass.keywordExitWhen, Jass.keywordReturn, Jass.keywordInteger, Jass.keywordReal, Jass.keywordBoolean, Jass.keywordString, Jass.keywordHandle, Jass.keywordCode, Jass.keywordAnd, Jass.keywordOr, Jass.keywordNot, Jass.keywordGlobals, Jass.keywordEndGlobals];
+
+  // library|initializer|needs|requires|optional|endlibrary|scope|endscope|private|public|static|execute|evaluate|create|destroy|interface|endinterface|extends|struct|endstruct|method|endmethod|this|defaults|delegate|operator|module|endmodule|implement|hook|stub|debug|import
+
+  public static readonly keywordLibrary = "library";
+  public static readonly keyworInitializer = "initializer";
+  public static readonly keywordNeeds = "needs";
+  public static readonly keywordRequires = "requires";
+  public static readonly keywordEndLibrary = "endlibrary";
+  public static readonly keywordScope = "scope";
+  public static readonly keywordEndScope = "endscope";
+  public static readonly keywordPrivate = "private";
+  public static readonly keywordPublic = "public";
+  public static readonly keywordStatic = "static";
+  public static readonly keywordInterface = "interface";
+  public static readonly keywordEndInterface = "endinterface";
+  public static readonly keywordImplement = "implement";
+  public static readonly keywordStruct = "struct";
+  public static readonly keywordEndStruct = "endstruct";
+  public static readonly keywordMethod = "method";
+  public static readonly keywordEndMethod = "endmethod";
+  public static readonly keywordThis = "this";
+  public static readonly keywordDelegate = "delegate";
+  public static readonly keywordOperator = "operator";
+  public static readonly keywordDebug = "debug";
+
+  public static readonly vjassKeywords = [Jass.keywordLibrary, Jass.keyworInitializer, Jass.keywordNeeds, Jass.keywordRequires, Jass.keywordEndLibrary, Jass.keywordScope, Jass.keywordEndScope, Jass.keywordPrivate, Jass.keywordPublic, Jass.keywordStatic, Jass.keywordInterface, Jass.keywordEndInterface, Jass.keywordImplement, Jass.keywordStruct, Jass.keywordEndStruct, Jass.keywordMethod, Jass.keywordEndMethod, Jass.keywordThis, Jass.keywordDelegate, Jass.keywordOperator, Jass.keywordDebug];
+
+  public static readonly allKeywords = [...Jass.keywords, ...Jass.vjassKeywords];
+
+  public static readonly macroImport = "import";
+  public static readonly macroTextMacro = "textmacro"
+  public static readonly macroEndTextMacro = "endtextmacro"
+  public static readonly macroRunTextMacro = "runtextmacro"
+
+  public static readonly macros = [Jass.macroImport, Jass.macroTextMacro, Jass.macroEndTextMacro, Jass.macroRunTextMacro];
+
   /**
    * 
    * @param uri j or ai 文件路徑
@@ -991,6 +1201,7 @@ class Jass {
   }
 
   static parseContent(content: string): Jass {
+    // text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
     const jass = new Jass();
 
     Type.resolveTypes(content); // 分析當前文件類型
@@ -998,17 +1209,6 @@ class Jass {
     Struct.resolveInterfaces(content);
 
     const lineTexts = JassUtils.content2Lines(content);
-    /**
-     * text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
-     * text macro {all}
-     * scope {scope, interface, struct, function, global, array object, interface function}
-     * library {interface, struct, function, global, array object, interface function}
-     * interface {function, global}
-     * struct {function, global}
-     * function{array object,interface function }
-     * text macro -> //! text macro name takes 
-     */
-
 
     jass.natives = Native.parseNatives(content);
     jass.interfaces = Interface.getInterfaces();
@@ -1048,6 +1248,7 @@ class Jass {
         return comment ? comment.content : null;
       };
       if (/^\s*\/\/!\s+textmacro/.test(lineText)) {
+        // 内部未實現 占位
         inTextMacro = true;
         const textMacro = new TextMacro();
         textMacro.name = "";
@@ -1055,7 +1256,6 @@ class Jass {
         textMacro.content = "";
         textMacro.range = null;
         textMacro.nameRange = null;
-        textMacro.origin = "";
         jass.textMacros.push(textMacro);
       } else if (/^\s*\/\/!\s+endtextmacro/.test(lineText)) {
         inTextMacro = false;
@@ -1110,6 +1310,12 @@ class Jass {
         jass.librarys.push(library);
         inLibrary = true;
       } else if (/^\s*endlibrary/.test(lineText)) {
+        if (inLibrary) {
+          const library = jass.librarys[jass.librarys.length - 1];
+          if (library) {
+            library.end = new vscode.Position(i, getStartIndex() + "endlibrary".length);
+          }
+        }
         inLibrary = false;
       } else if (/^\s*scope/.test(lineText)) {
         inScopeField++;
@@ -1203,8 +1409,70 @@ class Jass {
     return jass;
   }
 
-  public toCompletionItems():Array<vscode.CompletionItem> {
-    return [];
+  /**
+   * 
+   * @param position 
+   */
+  public toCompletionItems(position?: vscode.Position): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    this.funcs.map(func => func.toCompletionItem()).forEach(item => {
+      if (item) items.push(item);
+    });
+    this.natives.map(value => value.toCompletionItem()).forEach(item => {
+      if (item) items.push(item);
+    });
+    this.globals.map(value => value.toCompletionItem()).forEach(item => {
+      if (item) items.push(item);
+    });
+    const scopes2Item = (scopes: Array<Scope>,prefix?: string | null): Array<vscode.CompletionItem> => {
+      const completionItems = new Array<vscode.CompletionItem>();
+      scopes.map(scope => {
+        if(scope && scope.name){
+          const prefix2 = prefix ? prefix + "_" + scope.name : scope.name;
+          return [scope.toCompletionItem(prefix), ...scope.functions.map(func => {
+            if (position && scope.start && scope.end && new vscode.Range(scope.start, scope.end).contains(position)) {
+              return func.toCompletionItem();
+            }
+            if (func.modifier == Modifier.Public) {
+              return func.toCompletionItem(prefix2);
+            } else return null;
+          }), ...scope.globals.map(global => {
+            if (position && scope.start && scope.end && new vscode.Range(scope.start, scope.end).contains(position)) {
+              return global.toCompletionItem();
+            }
+            if (global.modifier == Modifier.Public) {
+              return global.toCompletionItem(prefix2);
+            } else return null;
+          }),...scopes2Item(scope.scopes, prefix2)];
+        }else return [];
+      }).flat().forEach(item => {
+        if (item) completionItems.push(item);
+      });
+      return completionItems;
+    }
+    this.librarys.map(value => {
+      if(value){
+        return [value.toCompletionItem(), ...value.functions.map(func => {
+          if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
+            return func.toCompletionItem();
+          }
+          if (func.modifier == Modifier.Public && value.initializer != func.name) {
+            return func.toCompletionItem(value.name);
+          } else return null;
+        }), ...value.globals.map(global => {
+          if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
+            return global.toCompletionItem();
+          }
+          if (global.modifier == Modifier.Public) {
+            return global.toCompletionItem(value.name);
+          } else return null;
+        }), ...scopes2Item(value.scopes, value.name)];
+      }else return [];
+    }).flat().forEach(item => {
+      if (item) items.push(item);
+    });
+    items.push(...scopes2Item(this.scopes));
+    return items;
   }
 
 }
@@ -1215,14 +1483,21 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    try {
-      const jass = Jass.parseContent(document.getText());
-      console.log(jass);
-    } catch (err) { console.error(err) }
     const items = new Array<vscode.CompletionItem>();
+
+    const jass = Jass.parseContent(document.getText());
+    console.log(jass);
+
     Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
-      if(item) items.push(item);
+      if (item) items.push(item);
     });
+    Jass.allKeywords.forEach(keyword => {
+      items.push(new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword));
+    });
+    Jass.macros.forEach(macro => {
+      items.push(new vscode.CompletionItem(macro, vscode.CompletionItemKind.Property));
+    });
+    items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
     return items;
   }
 }
