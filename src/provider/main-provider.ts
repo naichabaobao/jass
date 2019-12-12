@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { deprecate } from 'util';
-// const vscode = require("vscode");
+import { HoverProvider } from 'vscode';
+const md5: Function = require('../tool/md5');
+
+
 
 const language = "jass";
 
@@ -92,7 +94,7 @@ class JassUtils {
   static readonly keywords = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "integer", "real", "boolean", "string", "handle", "code"];
 
   static isKeyword(keyword: string): boolean {
-    return this.keywords.includes(keyword);
+    return Jass.keywords.includes(keyword);
   }
 
 }
@@ -286,7 +288,7 @@ class CommonJ {
 
   private parseBaseType(content: string): Type | null {
     let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${[...this.types, Type.Handle].map(type => type.name).join("|")}))?`);
+    const typeRegExp = new RegExp(`^\\s*type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${[...this.types, Type.Handle].map(type => type.name).join("|")}))?`);
     if (typeRegExp.test(content)) {
       const result = typeRegExp.exec(content);
       if (result && result.groups) {
@@ -381,7 +383,7 @@ class Global {
   public nameRange: vscode.Range | null = null;
   public description: string | null = null;
 
-  private toOrigin(includeGlobal: boolean = false, prefix?:string|null) {
+  private toOrigin(includeGlobal: boolean = false, prefix?: string | null) {
     let name = this.name ? this.name : "";
     if (prefix) {
       name = prefix + "_" + name;
@@ -393,13 +395,13 @@ class Global {
     return globalsString;
   }
 
-  public origin(includeGlobal: boolean = false, prefix?:string|null): string {
-    return this.toOrigin(includeGlobal,prefix);
+  public origin(includeGlobal: boolean = false, prefix?: string | null): string {
+    return this.toOrigin(includeGlobal, prefix);
   }
 
   static parse(content: string): Global | null {
     let global = null;
-    const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    const globalRegExp = new RegExp(`((?<modifier>private|public)\\s+)?((?<isConstant>constant)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
     if (globalRegExp.test(content)) {
       const result = globalRegExp.exec(content);
       if (result && result.groups) {
@@ -428,7 +430,7 @@ class Global {
     return global;
   }
 
-  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+  public toCompletionItem(prefix?: string | null): vscode.CompletionItem | null {
     let item = null;
     if (this.name) {
       let name = this.name;
@@ -459,7 +461,7 @@ class Param {
     let takes = new Array<Param>();
     if (!content) return takes;
     if (!/takes\s+nothing/.test(content)) {
-      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${takesRegExpString()})\\s+[a-zA-Z]\\w*(\\s*,\\s*(${takesRegExpString()})\\s+[a-zA-Z]\\w*)*)`);
+      const takesRegExp = new RegExp(`takes\\s+(?<takeString>(${takesRegExpString()})\\s+[a-zA-Z][a-zA-Z0-9_]*(\\s*,\\s*(${takesRegExpString()})\\s+[a-zA-Z][a-zA-Z0-9_]*)*)`);
       if (takesRegExp.test(content)) {
         const result = takesRegExp.exec(content);
         if (result && result.groups && result.groups.takeString) {
@@ -509,7 +511,7 @@ class Func {
 
   public locals: Local[] = new Array<Local>();
 
-  public origin(prefix?: string|null): string {
+  public origin(prefix?: string | null): string {
     let pStr = "";
     if (prefix) {
       pStr = prefix + "_";
@@ -517,7 +519,7 @@ class Func {
     return `${this.modifier != Modifier.Common ? this.modifier + " " : ""}function ${this.name ? pStr + this.name + " " : ""}takes ${this.takes.length > 0 ? this.takes.map(take => take.origin()).join(", ") : "nothing"} returns ${this.returnType ? this.returnType : "nothing"}`;
   }
 
-  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+  public toCompletionItem(prefix?: string | null): vscode.CompletionItem | null {
     let item = null;
     if (this.name) {
       let name = this.name;
@@ -539,7 +541,7 @@ class Func {
     const modifier = resolveModifier(content);
     if ((modifier == Modifier.Common && /^\s*function\b/.test(content)) || ((modifier == Modifier.Private || modifier == Modifier.Public) && /^\s*(private|public)\s+function\b/.test(content))) {
       // 解析方法名称
-      const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z]\w*)/);
+      const nameRegExp = new RegExp(/function\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/);
       if (nameRegExp.test(content)) {
         const result = nameRegExp.exec(content);
         if (result && result.groups && result.groups.name && !JassUtils.isKeyword(result.groups.name)) {
@@ -577,7 +579,7 @@ class Native {
     let native = null;
     if (/\bnative\b/.test(content)) {
       // 解析方法名称
-      const nativeRegExp = new RegExp(/((?<isConstant>constant)\s+)?native\s+(?<name>[a-zA-Z]\w*)/);
+      const nativeRegExp = new RegExp(/((?<isConstant>constant)\s+)?native\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/);
       if (nativeRegExp.test(content)) {
         const result = nativeRegExp.exec(content);
         if (result && result.groups) {
@@ -664,7 +666,7 @@ class Local {
 
   static parse(content: string): Local | null {
     let local = null;
-    const functionRegExp = new RegExp(`^\\s*local\\s+(?<type>${statementRegExpString})(\\s+(?<hasArray>array))?\\s+(?<name>[a-zA-Z]\\w*)`);
+    const functionRegExp = new RegExp(`^\\s*local\\s+(?<type>${statementRegExpString()})(\\s+(?<hasArray>array))?\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
     if (functionRegExp.test(content)) {
       const result = functionRegExp.exec(content);
       if (result && result.groups) {
@@ -747,7 +749,7 @@ class Library {
 
   public static parse(content: string): Library {
     const library = new Library;
-    const libraryRegExp = new RegExp(/library\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\s+initializer\s+(?<initializer>[a-zA-Z]\w*))?(\s+(requires|uses|needs)\s+(?<needs>[a-zA-Z][a-zA-Z\d]*(\s*,\s*[a-zA-Z][a-zA-Z\d]*)*))?/); // library 名稱不能包含下劃綫
+    const libraryRegExp = new RegExp(/library\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\s+initializer\s+(?<initializer>[a-zA-Z][a-zA-Z0-9_]*))?(\s+(requires|uses|needs)\s+(?<needs>[a-zA-Z][a-zA-Z\d]*(\s*,\s*[a-zA-Z][a-zA-Z\d]*)*))?/); // library 名稱不能包含下劃綫
     if (libraryRegExp.test(content)) {
       const result = libraryRegExp.exec(content);
       if (result && result.groups) {
@@ -778,15 +780,15 @@ class Scope {
   public nameRange: vscode.Range | null = null;
   public description: string | null = null;
 
-  public origin(prefix?:string|null): string {
+  public origin(prefix?: string | null): string {
     return `scope ${this.name ? prefix ? prefix + "_" + this.name : this.name + " " : ""}${this.initializer ? "initializer " + this.initializer : ""}\n${this.globals.length > 0 ? "\tglobals\n" + this.globals.map(g => g.origin().padStart(2, "\t").padEnd(1, "\n")) + "\tendglobals\n" : ""}${this.functions.length > 0 ? this.functions.map(func => func.origin().padStart(1, "\t").padEnd(1, "\n")) : ""}${this.scopes.length > 0 ? this.scopes.map(scope => scope.origin().padEnd(1, "\n")) : ""}endscope`;
   }
 
-  public toCompletionItem(prefix?:string|null): vscode.CompletionItem | null {
+  public toCompletionItem(prefix?: string | null): vscode.CompletionItem | null {
     let item = null;
     if (this.name) {
       let name = this.name;
-      if(prefix){
+      if (prefix) {
         name = prefix + "_" + this.name;
       }
       item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Field);
@@ -801,7 +803,7 @@ class Scope {
 
   public static parse(content: string): Scope {
     const scope = new Scope();
-    const nameRegExp = /scope\s+(?<name>[a-zA-Z]\w*)(\s+initializer\s+(?<initializer>[a-zA-Z]\w*))?/;
+    const nameRegExp = /scope\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)(\s+initializer\s+(?<initializer>[a-zA-Z][a-zA-Z0-9_]*))?/;
     if (nameRegExp.test(content)) {
       const result = nameRegExp.exec(content);
       if (result && result.groups) {
@@ -845,11 +847,12 @@ class Member {
   }
 
   static parse(content: string): Member | null {
-    const interfaceMemberRegExp = new RegExp(`^\s*((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z]\\w*)`);
+    let member = null;
+    const interfaceMemberRegExp = new RegExp(`^\\s*((?<modifier>private|public)\\s+)?((?<isStatic>static)\\s+)?(?<type>${statementRegExpString()})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
     if (interfaceMemberRegExp.test(content)) {
-      const member = new Member();
       const result = interfaceMemberRegExp.exec(content);
       if (result && result.groups) {
+        member = new Member();
         if (result.groups.modifier) {
           if (result.groups.modifier == Modifier.Private) {
             member.modifier = Modifier.Private;
@@ -870,8 +873,8 @@ class Member {
           member.name = result.groups.name;
         }
       }
-      return member;
-    } else return null;
+    }
+    return member;
   }
 }
 
@@ -893,7 +896,7 @@ class Method {
 
   static parse(content: string): Method | null {
     let method = null;
-    const interfaceMethodRegExp = new RegExp(/^\s*((?<modifier>private|public)\s+)?((?<isStatic>static)\s+)?method\s+(?<name>[a-zA-Z]\w*)/);
+    const interfaceMethodRegExp = new RegExp(/^\s*((?<modifier>private|public)\s+)?((?<isStatic>static)\s+)?method\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/);
     if (content && interfaceMethodRegExp.test(content)) {
       method = new Method();
       const result = interfaceMethodRegExp.exec(content);
@@ -930,8 +933,12 @@ class Struct {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
-  public origin: string | null = null;
+
   public description: string | null = null;
+
+  public origin(): string {
+    return `struct${this.name ? " " + this.name : ""}${this.extends ? " extends" + this.extends : ""}\n\t${this.members.length}个成员变量\n\t${this.methods.length}个方法\nendstruct`;
+  }
 
   private static structs: Array<Struct> = new Array<Struct>();
 
@@ -963,7 +970,7 @@ class Struct {
    * 分析接口
    * @param content 
    */
-  public static resolveInterfaces(content: string): void {
+  public static resolveStructs(content: string): void {
     if (this.structs.length > 0) this.structs = new Array<Struct>();
     const lines: Array<string> = JassUtils.content2Lines(JassUtils.removeTextMacro(content));
     let lastStruct: Struct | null = null; // 不爲null時表示進入struct塊
@@ -973,10 +980,15 @@ class Struct {
       const struct = Struct.parse(line);
       if (struct) {
         lastStruct = struct;
+        if (struct.name) {
+          const nameIndex = line.indexOf(struct.name);
+          struct.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + struct.name.length);
+        }
+        struct.start = new vscode.Position(index, line.length - line.trimStart().length);
         const comment = Comment.parse(lines[index - 1]);
         if (comment) struct.description = comment.content;
         this.structs.push(struct);
-      } else if (/^\s*endinterface/.test(line) && lastStruct) {
+      } else if (/^\s*endstruct/.test(line) && lastStruct) {
         lastStruct.end = new vscode.Position(index, getStartIndex() + "endstruct".length);
         lastStruct = null;
         if (lastMethod) lastMethod = null; // 退出interface塊時，若已進入method塊中，一并退出
@@ -984,6 +996,11 @@ class Struct {
         const method = Method.parse(line);
         if (method) {
           lastMethod = method;
+          if (method.name) {
+            const nameIndex = line.indexOf(method.name);
+            method.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + method.name.length);
+          }
+          method.start = new vscode.Position(index, line.length - line.trimStart().length);
           const comment = Comment.parse(lines[index - 1]);
           if (comment) method.description = comment.content;
           lastStruct.methods.push(method);
@@ -993,6 +1010,11 @@ class Struct {
         } else if (lastMethod) {
           const local = Local.parse(line);
           if (local) {
+            if (local.name) {
+              const nameIndex = line.indexOf(local.name);
+              local.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + local.name.length);
+            }
+            local.range = new vscode.Range(index, line.length - line.trimStart().length, index, line.length);
             const comment = Comment.parse(lines[index - 1]);
             if (comment) local.description = comment.content;
             lastMethod.locals.push(local);
@@ -1018,8 +1040,11 @@ class Interface {
   public start: vscode.Position | null = null;
   public end: vscode.Position | null = null;
   public nameRange: vscode.Range | null = null;
-  public origin: string | null = null;
   public description: string | null = null;
+
+  public origin(): string {
+    return `interface${this.name ? " " + this.name : ""}\n\t${this.members.length}个成员变量\n\t${this.methods.length}个方法\nendinterface`;
+  }
 
   public static parse(content: string): Interface | null {
     let inter = null;
@@ -1053,6 +1078,11 @@ class Interface {
       const inter = Interface.parse(line);
       if (inter) {
         lastInter = inter;
+        if (inter.name) {
+          const nameIndex = line.indexOf(inter.name);
+          inter.nameRange = new vscode.Range(index, nameIndex, index, nameIndex + inter.name.length);
+        }
+        inter.start = new vscode.Position(index, line.length - line.trimStart().length);
         const comment = Comment.parse(lines[index - 1]);
         if (comment) inter.description = comment.content;
         this.interfaces.push(inter);
@@ -1065,13 +1095,12 @@ class Interface {
           const comment = Comment.parse(lines[index - 1]);
           if (comment) method.description = comment.content;
           lastInter.methods.push(method);
-        } else {
-          const member = Member.parse(line);
-          if (member) {
-            const comment = Comment.parse(lines[index - 1]);
-            if (comment) member.description = comment.content;
-            lastInter.members.push(member);
-          }
+        }
+        const member = Member.parse(line);
+        if (member) {
+          const comment = Comment.parse(lines[index - 1]);
+          if (comment) member.description = comment.content;
+          lastInter.members.push(member);
         }
       }
     });
@@ -1115,7 +1144,16 @@ class Jass {
   public scopes: Scope[] = new Array<Scope>();
   public structs: Struct[] = new Array<Struct>();
   public interfaces: Interface[] = new Array<Interface>();
+
+  public types: Type[] = new Array<Type>();
+
+  /**
+   * @deprecated
+   */
   public arrayTypes: ArrayType[] = new Array<ArrayType>();
+  /**
+   * @deprecated
+   */
   public errors: Error[] = new Array<Error>();
 
   public static readonly keywordFunction = "function";
@@ -1206,7 +1244,7 @@ class Jass {
 
     Type.resolveTypes(content); // 分析當前文件類型
     Interface.resolveInterfaces(content);
-    Struct.resolveInterfaces(content);
+    Struct.resolveStructs(content);
 
     const lineTexts = JassUtils.content2Lines(content);
 
@@ -1380,15 +1418,33 @@ class Jass {
             if (inScopeField > 0) {
               const lib = jass.librarys[jass.librarys.length - 1];
               const scopes = findScopes(lib.scopes, inScopeField);
-              scopes[scopes.length - 1].end = end;
+              const scope = scopes[scopes.length - 1];
+              const functions = scope.functions;
+              const func = functions[functions.length - 1];
+              if (func) {
+                func.end = end;
+              }
             } else {
-              jass.librarys[jass.librarys.length - 1].end = end;
+              const library = jass.librarys[jass.librarys.length - 1];
+              const functions = library.functions;
+              const func = functions[functions.length - 1];
+              if (func) {
+                func.end = end;
+              }
             }
           } else if (inScopeField > 0) {
             const scopes = findScopes(jass.scopes, inScopeField);
-            scopes[scopes.length - 1].end = end;
+            const functions = scopes[scopes.length - 1].functions;
+            const func = functions[functions.length - 1];
+            if (func) {
+              func.end = end;
+            }
+
           } else {
-            jass.funcs[jass.funcs.length - 1].end = end;
+            const func = jass.funcs[jass.funcs.length - 1]
+            if (func) {
+              func.end = end;
+            }
           }
           inFunction = false;
         }
@@ -1409,25 +1465,104 @@ class Jass {
     return jass;
   }
 
+  private structOrInterfaceToItems = (si: Struct | Interface): Array<vscode.CompletionItem> => {
+    const items = new Array<vscode.CompletionItem>();
+    si.members.forEach(member => {
+      if (member.name) {
+        const item = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
+        item.detail = member.name;
+        const ms = new vscode.MarkdownString();
+        if (member.description) ms.appendText(member.description);
+        ms.appendCodeblock(member.origin());
+        item.documentation = ms;
+        items.push(item);
+      }
+    });
+    si.methods.forEach(method => {
+      if (method.name) {
+        const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
+        item.detail = method.name;
+        const ms = new vscode.MarkdownString();
+        if (method.description) ms.appendText(method.description);
+        ms.appendCodeblock(method.origin());
+        item.documentation = ms;
+        items.push(item);
+      }
+    });
+    if (si instanceof Struct && si.extends) {
+      const extend2 = [...this.interfaces, ...this.structs].find(is => is.name && is.name == si.extends);
+      if (extend2) items.push(...this.structOrInterfacePublicToItems(extend2));
+    }
+    return items;
+  }
+
+  private structOrInterfacePublicToItems = (si: Struct | Interface): Array<vscode.CompletionItem> => {
+    const items = new Array<vscode.CompletionItem>();
+    si.members.forEach(member => {
+      if (member.name && member.modifier != Modifier.Private && !member.isStatic) {
+        const item = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
+        item.detail = member.name;
+        const ms = new vscode.MarkdownString();
+        if (member.description) ms.appendText(member.description);
+        ms.appendCodeblock(member.origin());
+        item.documentation = ms;
+        items.push(item);
+      }
+    });
+    si.methods.forEach(method => {
+      if (method.name && method.modifier != Modifier.Private && !method.isStatic) {
+        const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
+        item.detail = method.name;
+        const ms = new vscode.MarkdownString();
+        if (method.description) ms.appendText(method.description);
+        ms.appendCodeblock(method.origin());
+        item.documentation = ms;
+        items.push(item);
+      }
+    });
+    if (si instanceof Struct && si.extends) {
+      const extend2 = [...this.interfaces, ...this.structs].find(is => is.name && is.name == si.extends);
+      if (extend2) items.push(...this.structOrInterfacePublicToItems(extend2));
+    }
+    return items;
+  }
+
+  private getScopesFunctions = (scopes: Array<Scope>): Array<Func> => {
+    const functions = Array<Func>();
+    const parseScopes = (scopes2: Array<Scope>) => {
+      scopes2.forEach(value => {
+        functions.push(...value.functions);
+        if (value.scopes.length > 0) {
+          parseScopes(value.scopes);
+        }
+      });
+    }
+    parseScopes(scopes);
+    return functions;
+  }
+
   /**
    * 
    * @param position 
    */
   public toCompletionItems(position?: vscode.Position): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
+    // 基本方法
     this.funcs.map(func => func.toCompletionItem()).forEach(item => {
       if (item) items.push(item);
     });
+    // 本地方法
     this.natives.map(value => value.toCompletionItem()).forEach(item => {
       if (item) items.push(item);
     });
+    // 基本全局
     this.globals.map(value => value.toCompletionItem()).forEach(item => {
       if (item) items.push(item);
     });
-    const scopes2Item = (scopes: Array<Scope>,prefix?: string | null): Array<vscode.CompletionItem> => {
+    const scopes2Item = (scopes: Array<Scope>, prefix?: string | null): Array<vscode.CompletionItem> => {
       const completionItems = new Array<vscode.CompletionItem>();
       scopes.map(scope => {
-        if(scope && scope.name){
+        if (scope && scope.name) {
           const prefix2 = prefix ? prefix + "_" + scope.name : scope.name;
           return [scope.toCompletionItem(prefix), ...scope.functions.map(func => {
             if (position && scope.start && scope.end && new vscode.Range(scope.start, scope.end).contains(position)) {
@@ -1443,15 +1578,16 @@ class Jass {
             if (global.modifier == Modifier.Public) {
               return global.toCompletionItem(prefix2);
             } else return null;
-          }),...scopes2Item(scope.scopes, prefix2)];
-        }else return [];
+          }), ...scopes2Item(scope.scopes, prefix2)];
+        } else return [];
       }).flat().forEach(item => {
         if (item) completionItems.push(item);
       });
       return completionItems;
     }
+    // library
     this.librarys.map(value => {
-      if(value){
+      if (value) {
         return [value.toCompletionItem(), ...value.functions.map(func => {
           if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
             return func.toCompletionItem();
@@ -1467,15 +1603,302 @@ class Jass {
             return global.toCompletionItem(value.name);
           } else return null;
         }), ...scopes2Item(value.scopes, value.name)];
-      }else return [];
+      } else return [];
     }).flat().forEach(item => {
       if (item) items.push(item);
     });
+    // scope
     items.push(...scopes2Item(this.scopes));
+
+    // interface
+    this.interfaces.forEach(value => {
+      if (value.name) {
+        const item = new vscode.CompletionItem(value.name, vscode.CompletionItemKind.Interface);
+        item.detail = value.name;
+        const ms = new vscode.MarkdownString();
+        if (value.description) ms.appendText(value.description);
+        ms.appendCodeblock(value.origin());
+        items.push(item);
+      }
+      if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
+        items.push(...this.structOrInterfaceToItems(value));
+      }
+    });
+    // struct
+    this.structs.forEach(value => {
+      if (value.name) {
+        const item = new vscode.CompletionItem(value.name, vscode.CompletionItemKind.Struct);
+        item.detail = value.name;
+        const ms = new vscode.MarkdownString();
+        if (value.description) ms.appendText(value.description);
+        ms.appendCodeblock(value.origin());
+        item.documentation = ms;
+        items.push(item);
+      }
+      if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
+        items.push(...this.structOrInterfaceToItems(value));
+        // if(value.extends){
+        //   resolveStructExtends(value);
+        // }
+      }
+    });
+
+    // 方法内部 参数 局部
+    // 局部
+    if (position) {
+      const code = [...this.funcs, ...this.librarys.map(value => [...value.functions, ...this.getScopesFunctions(value.scopes)]).flat(1), ... this.getScopesFunctions(this.scopes), ...this.structs.map(struct => struct.methods).flat()].find(value => value.start && value.end && new vscode.Range(value.start, value.end).contains(position));
+      if (code) {
+        code.takes.forEach(value => {
+          if (value.name) {
+            const item = new vscode.CompletionItem(value.name, vscode.CompletionItemKind.TypeParameter);
+            item.detail = value.name;
+            const ms = new vscode.MarkdownString();
+            ms.appendCodeblock(value.origin());
+            item.documentation = ms;
+            items.push(item);
+          }
+        });
+        code.locals.forEach(value => {
+          if (value.name) {
+            const item = new vscode.CompletionItem(value.name, vscode.CompletionItemKind.Variable);
+            item.detail = value.name;
+            const ms = new vscode.MarkdownString();
+            if (value.description) ms.appendText(value.description);
+            ms.appendCodeblock(value.origin());
+            item.documentation = ms;
+            items.push(item);
+          }
+        });
+      }
+    }
+
+    return items;
+  }
+
+  public toTypeCompletionItems(key: string, position?: vscode.Position): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+
+    // this
+    if (position && key == Jass.keywordThis) {
+      const obj = [...this.interfaces, ...this.structs].find(value => {
+        return value.start && value.end && new vscode.Range(value.start, value.end).contains(position);
+      });
+      if (obj) {
+        items.push(...this.structOrInterfaceToItems(obj));
+      }
+    }
+
+    // native function
+    [...this.natives, ...this.funcs].forEach(value => {
+      if (position && value.name && value.returnType && value.returnType == key) {
+        const item = new vscode.CompletionItem(value.name, vscode.CompletionItemKind.Function);
+        item.detail = value.name;
+        const ms = new vscode.MarkdownString();
+        if (value.description) ms.appendText(value.description);
+        ms.appendCodeblock(value.origin());
+        item.additionalTextEdits = [vscode.TextEdit.delete(new vscode.Range(new vscode.Position(position.line, position.character - key.length - 1), position))];
+        items.push(item);
+      }
+    });
+
+    // static
+    [...this.interfaces, ...this.structs].forEach(value => {
+      if (value.name && value.name == key) {
+        if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
+          // 私有 共有 静态
+          value.members.forEach(member => {
+            if (member.name && member.isStatic) {
+              const item = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
+              item.detail = member.name;
+              const ms = new vscode.MarkdownString();
+              if (member.description) ms.appendText(member.description);
+              ms.appendCodeblock(member.origin());
+              items.push(item);
+            }
+          });
+          value.methods.forEach(method => {
+            if (method.name && method.isStatic) {
+              const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Function);
+              item.detail = method.name;
+              const ms = new vscode.MarkdownString();
+              if (method.description) ms.appendText(method.description);
+              ms.appendCodeblock(method.origin());
+              items.push(item);
+            }
+          });
+        } else {
+          // 共有静态
+          value.members.forEach(member => {
+            if (member.name && member.isStatic && member.modifier != Modifier.Private) {
+              const item = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
+              item.detail = member.name;
+              const ms = new vscode.MarkdownString();
+              if (member.description) ms.appendText(member.description);
+              ms.appendCodeblock(member.origin());
+              items.push(item);
+            }
+          });
+          value.methods.forEach(method => {
+            if (method.name && method.isStatic && method.modifier != Modifier.Private) {
+              const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Function);
+              item.detail = method.name;
+              const ms = new vscode.MarkdownString();
+              if (method.description) ms.appendText(method.description);
+              ms.appendCodeblock(method.origin());
+              items.push(item);
+            }
+          });
+        }
+      }
+    });
+
+    // 全局 结构 接口
+    this.globals.forEach(value => {
+      if (value.name && value.name == key && !value.isArray) {
+        const obj = [...this.interfaces, ...this.structs].find(obj => obj.name && obj.name == value.type);
+        if (obj) {
+          items.push(...this.structOrInterfacePublicToItems(obj));
+        }
+      }
+    });
+
+
+
+    // 局部 接口 结构
+    if (position) {
+      const code = [...this.funcs, ...this.librarys.map(value => [...value.functions, ...this.getScopesFunctions(value.scopes)]).flat(1), ... this.getScopesFunctions(this.scopes), ...this.structs.map(struct => struct.methods).flat()].find(value => value.start && value.end && new vscode.Range(value.start, value.end).contains(position));
+      if (code) {
+        code.takes.forEach(value => {
+          if (value.name && value.name == key && value.type) {
+            const obj = [...this.interfaces, ...this.structs].find(obj => obj.name && obj.name == value.type);
+            if (obj) {
+              items.push(...this.structOrInterfacePublicToItems(obj));
+            }
+          }
+        });
+        code.locals.forEach(value => {
+          if (value.name && value.name == key && value.type) {
+            const obj = [...this.interfaces, ...this.structs].find(obj => obj.name && obj.name == value.type);
+            if (obj) {
+              items.push(...this.structOrInterfacePublicToItems(obj));
+            }
+          }
+        });
+      }
+    }
+
     return items;
   }
 
 }
+
+class JassBean {
+  public flag = "";
+  public jass: Jass = new Jass;
+
+  public constructor(flag: string, jass: Jass) {
+    this.flag = flag;
+    this.jass = jass;
+  }
+}
+
+/**
+ * 当前目录
+ * 用户指定目录
+ */
+class FileManager {
+  private static map: any = {};
+
+  private static check(filePath: string): boolean {
+    return fs.existsSync(filePath);
+  }
+
+  private static read(filePath: string): string {
+    return fs.readFileSync(filePath).toString("utf8")
+  }
+
+  private static isFile(filePath: string): boolean {
+    return fs.lstatSync(filePath).isFile();
+  }
+
+  /**
+   * 若传入文件存在则更新，否者添加再更新
+   * @param filePath j|ai文件绝对路径
+   */
+  public static put(filePath: string): void {
+    if (this.check(filePath) && this.isFile(filePath)) {
+      const jassBean: JassBean = this.map[filePath];
+      const content = this.read(filePath);
+      const hash: string = md5(content);
+
+      if (jassBean && jassBean.flag != hash) {
+        if (jassBean.flag != hash) {
+          // 更新
+          const jass = Jass.parseContent(content);
+          this.map.set(filePath, new JassBean(hash, jass));
+        }
+      } else {
+        const jass = Jass.parseContent(content);
+        this.map[filePath] = new JassBean(hash, jass);
+      }
+
+    } else {
+      this.remove(filePath);
+    }
+    console.log(this.map)
+  }
+  /**
+   * 删除文件
+   * @param filePath j|ai文件绝对路径
+   */
+  public static remove(filePath: string): void {
+    delete this.map[filePath];
+  }
+
+  public static getJasss(): Array<Jass> {
+    const jasss = new Array<Jass>();
+    Object.values(this.map).forEach(value => {
+      if (value instanceof JassBean) {
+        console.log(value)
+        jasss.push(value.jass);
+      }
+    });
+    return jasss;
+  }
+
+  /**
+   * 分析用户配置的路径
+   */
+  public static resolveConsumerFiles() {
+
+    const includes1: any = vscode.workspace.getConfiguration().get("jass.includes");
+    if (includes1 && includes1 instanceof Array) {
+      includes1.forEach(filePath => {
+        if (typeof (filePath) == 'string') {
+          this.put(filePath.replace(/^\W/, ""));
+        }
+      });
+    }
+  }
+
+  private constructor() { }
+
+  public static findSameDirFiles(filePath: string): Array<string> {
+    if (this.check(filePath) && this.isFile(filePath)) {
+      const dir = path.parse(filePath).dir;
+      const fileNames = fs.readdirSync(dir);
+      return fileNames.map(fm => path.resolve(dir, fm));
+    }
+    return [];
+  }
+
+}
+
+FileManager.resolveConsumerFiles();
+
+vscode.workspace.onDidChangeConfiguration(event => {
+  FileManager.resolveConsumerFiles();
+});
 
 class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
   public resolveCompletionItem(item: vscode.CompletionItem, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem> {
@@ -1497,9 +1920,81 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     Jass.macros.forEach(macro => {
       items.push(new vscode.CompletionItem(macro, vscode.CompletionItemKind.Property));
     });
-    items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
+
+    try {
+      items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
+    } catch (err) {
+      console.error(err);
+    }
+
+    FileManager.remove(document.uri.fsPath);
+    FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
+      if (filePath != document.uri.fsPath) {
+        FileManager.put(filePath);
+      }
+    });
+    FileManager.getJasss().forEach(j => {
+      items.push(...j.toCompletionItems());
+    });
     return items;
   }
 }
 
-vscode.languages.registerCompletionItemProvider(language, new DefaultCompletionItemProvider, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+vscode.languages.registerCompletionItemProvider(language, new DefaultCompletionItemProvider);
+
+class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
+
+  private findMatchType(document: vscode.TextDocument, position: vscode.Position): string | null {
+    const content = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
+    const result = content.match(/(?<key>[a-zA-Z][a-zA-Z0-9_]*)\.$/);// \s*
+    let key = null;
+    if (result && result.groups && result.groups.key) {
+      key = result.groups.key;
+    }
+    return key;
+  }
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items = new Array<vscode.CompletionItem>();
+    const key = this.findMatchType(document, position);
+    if (key) {
+      const jass = Jass.parseContent(document.getText());
+      items.push(...jass.toTypeCompletionItems(key, position));
+
+      FileManager.remove(document.uri.fsPath);
+      FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
+        if (filePath != document.uri.fsPath) {
+          FileManager.put(filePath);
+        }
+      });
+      FileManager.getJasss().forEach(j => {
+        items.push(...j.toTypeCompletionItems(key));
+      });
+
+    }
+
+    //items.push(...Jass.parseContent(document.getText()).toTypeCompletionItems(position));
+    return items;
+  }
+
+}
+
+vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider(), ".");
+
+class DefaultHover implements HoverProvider{
+
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+    const content = document.getText(new vscode.Range(new vscode.Position(0,0), position));
+    const keyRegExp = /(?<key>[a-zA-Z][a-zA-Z0-9_]*)$/
+    
+    const key = document.getText(document.getWordRangeAtPosition(position));
+
+    console.log(key)
+    const ms = new vscode.MarkdownString();
+    new vscode.Hover("");
+    return null;
+  }
+  
+}
+
+vscode.languages.registerHoverProvider(language,new DefaultHover);
