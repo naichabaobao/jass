@@ -1859,7 +1859,6 @@ class FileManager {
     const jasss = new Array<Jass>();
     Object.values(this.map).forEach(value => {
       if (value instanceof JassBean) {
-        console.log(value)
         jasss.push(value.jass);
       }
     });
@@ -1983,16 +1982,71 @@ vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItem
 
 class DefaultHover implements HoverProvider{
 
+  /**
+   * 未实现
+   * @param document 
+   * @param position 
+   * @param token 
+   */
   provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
     const content = document.getText(new vscode.Range(new vscode.Position(0,0), position));
     const keyRegExp = /(?<key>[a-zA-Z][a-zA-Z0-9_]*)$/
     
     const key = document.getText(document.getWordRangeAtPosition(position));
-
+    // 比对顺序
+    // 关键字 -> 局部 -> 全局
+    const markdownStrings = new Array<vscode.MarkdownString>();
+    if(Jass.allKeywords.includes(key)){
+      const keyword = Jass.allKeywords.find(value => value == key);
+      if (keyword){
+        const ms = new vscode.MarkdownString();
+        ms.appendCodeblock(keyword);
+        markdownStrings.push(ms);
+      }
+    }
+    FileManager.remove(document.uri.fsPath);
+    FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
+      if (filePath != document.uri.fsPath) {
+        FileManager.put(filePath);
+      }
+    });
+    const jass = Jass.parseContent(document.getText());
+    const jassToMSs = (jass:Jass,key:string,position? : vscode.Position) :Array<vscode.MarkdownString> => {
+      const mss = new Array<vscode.MarkdownString>();
+      const func = jass.funcs.find(value => value && value.name == key);
+      if(func){
+        const ms = new vscode.MarkdownString();
+        if(func.description) ms.appendText(func.description);
+        ms.appendCodeblock(func.origin());
+        mss.push(ms);
+        if(position && func.start && func.end && new vscode.Range(func.start,func.end).contains(position)){
+          const local = func.locals.find(value => value && value.name == key);
+          if(local){
+            const ms = new vscode.MarkdownString();
+            if(local.description) ms.appendText(local.description);
+            ms.appendCodeblock(local.origin());
+            mss.push(ms);
+          }
+          const take = func.takes.find(value => value && value.name == key);
+          if(take){
+            const ms = new vscode.MarkdownString();
+            ms.appendCodeblock(take.origin());
+            mss.push(ms);
+          }
+        }
+      }
+      return mss;
+    } 
+    console.log(`长度 ${FileManager.getJasss()}`);
+    FileManager.getJasss().forEach(jass => {
+      markdownStrings.push(...jassToMSs(jass,key));
+    });
+    markdownStrings.push(...jassToMSs(jass,key));
     console.log(key)
-    const ms = new vscode.MarkdownString();
-    new vscode.Hover("");
-    return null;
+    
+   
+    
+    return  new vscode.Hover(markdownStrings);
   }
   
 }
