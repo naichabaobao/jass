@@ -1230,6 +1230,13 @@ class Jass {
 
   public static readonly macros = [Jass.macroImport, Jass.macroTextMacro, Jass.macroEndTextMacro, Jass.macroRunTextMacro];
 
+  public static readonly staticFunctionCreate = "create";
+  public static readonly staticFunctionAllocate = "allocate";
+  public static readonly staticFunctionDestroy = "destroy";
+
+  public static readonly staticFunctions = [Jass.staticFunctionCreate, Jass.staticFunctionAllocate, Jass.staticFunctionDestroy];
+
+
   /**
    * 
    * @param uri j or ai 文件路徑
@@ -1704,6 +1711,11 @@ class Jass {
     // static
     [...this.interfaces, ...this.structs].forEach(value => {
       if (value.name && value.name == key) {
+        if(value instanceof Struct){
+          Jass.staticFunctions.forEach(s => {
+            items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Function));
+          });
+        }
         if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
           // 私有 共有 静态
           value.members.forEach(member => {
@@ -1790,13 +1802,60 @@ class Jass {
     return items;
   }
 
+  public getScopes(myss?:Scope[],parent?:Scope|Library):Scope[]{
+    const findScopes = (scopes:Scope[],parentScope?: Scope|Library):Scope[] => {
+      const ss = new Array<Scope>();
+      scopes.forEach(v => {
+        const s = Object.assign(new Scope,v);
+        if(parentScope){
+          s.name = `${parentScope.name}_${v.name}`;
+        }
+        ss.push(...findScopes(v.scopes,s))
+        ss.push(s);
+      })
+      return ss;
+    };
+    return findScopes(myss ?? this.scopes,parent);
+  }
+
+  public getFunctions():Func[] {
+    const functions = new Array<Func>();
+    functions.push(...this.funcs);
+
+    const scopes2functions = (scopes:Scope[]) => {
+      scopes.forEach(value => {
+        value.functions.forEach(func => {
+          functions.push(Object.assign(new Func,func));
+          const f = Object.assign(new Func,func);
+          f.name = `${value.name}_${func.name}`;
+          functions.push(f);
+        });
+      });
+    };
+
+    this.librarys.forEach(value => {
+      value.functions.forEach(func => {
+        functions.push(Object.assign(new Func,func));
+        const f = Object.assign(new Func,func);
+        f.name = `${value.name}_${func.name}`;
+        functions.push(f);
+      });
+      scopes2functions(this.getScopes(value.scopes, value));
+    });
+    
+    scopes2functions(this.getScopes());
+    return functions;
+  }
+
 }
 
 class JassBean {
+  public filePath:string = "";
   public flag = "";
   public jass: Jass = new Jass;
 
-  public constructor(flag: string, jass: Jass) {
+  public constructor(filePath:string, flag: string, jass: Jass) {
+    this.filePath =  filePath;
     this.flag = flag;
     this.jass = jass;
   }
@@ -1827,26 +1886,57 @@ class FileManager {
    */
   public static put(filePath: string): void {
     if (this.check(filePath) && this.isFile(filePath)) {
-      const jassBean: JassBean = this.map[filePath];
-      const content = this.read(filePath);
-      const hash: string = md5(content);
-
-      if (jassBean && jassBean.flag != hash) {
-        if (jassBean.flag != hash) {
-          // 更新
+      const parseStat = path.parse(filePath);
+      if(parseStat.ext == ".ai" || parseStat.ext == ".j"){
+        const content = this.read(filePath);
+        const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base ==  parseStat.base);
+        if(tartgetKey){
+          const jassBean: JassBean = this.map[tartgetKey];
+          const hash: string = md5(content);
+          if (jassBean && jassBean.flag != hash) {
+            // 更新
+            console.log("更新")
+            const jass = Jass.parseContent(content);
+            jass.filePath = filePath;
+            this.map[tartgetKey] = new JassBean(filePath, hash, jass);
+          }
+        }else {
+          const hash: string = md5(content);
+          console.log("新增")
           const jass = Jass.parseContent(content);
-          this.map.set(filePath, new JassBean(hash, jass));
+          jass.filePath = filePath;
+          this.map[filePath] = new JassBean(filePath, hash, jass);
         }
-      } else {
-        const jass = Jass.parseContent(content);
-        this.map[filePath] = new JassBean(hash, jass);
       }
-
-    } else {
-      this.remove(filePath);
     }
-    console.log(this.map)
   }
+
+  public static putContent(filePath:string,content:string){
+    const parseStat = path.parse(filePath);
+    if(parseStat.ext == ".ai" || parseStat.ext == ".j"){
+      const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base ==  parseStat.base);
+      if(tartgetKey){
+        const jassBean: JassBean = this.map[tartgetKey];
+        const hash: string = md5(content);
+        if (jassBean && jassBean.flag != hash) {
+          // 更新
+          console.log("更新")
+          const jass = Jass.parseContent(content);
+          jass.filePath = filePath;
+          this.map[tartgetKey] = new JassBean(filePath, hash, jass);
+        }
+      }
+      // 暂时不做添加
+      // else {
+      //   const hash: string = md5(content);
+      //   console.log("新增")
+      //   const jass = Jass.parseContent(content);
+      //   jass.filePath = filePath;
+      //   this.map[filePath] = new JassBean(filePath, hash, jass);
+      // }
+    }
+  }
+
   /**
    * 删除文件
    * @param filePath j|ai文件绝对路径
@@ -1891,6 +1981,14 @@ class FileManager {
     return [];
   }
 
+  public static resolveDirFiles(filePath: string) {
+    this.findSameDirFiles(filePath).forEach(value => {
+      if(path.parse(value).base != path.parse(filePath).base){
+        this.put(value.replace(/^\W/, "")); 
+      }
+    });
+  }
+
 }
 
 FileManager.resolveConsumerFiles();
@@ -1908,7 +2006,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     const items = new Array<vscode.CompletionItem>();
 
     const jass = Jass.parseContent(document.getText());
-    console.log(jass);
+    console.log(jass.getScopes());
 
     Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
       if (item) items.push(item);
@@ -1920,21 +2018,15 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
       items.push(new vscode.CompletionItem(macro, vscode.CompletionItemKind.Property));
     });
 
-    try {
-      items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
-    } catch (err) {
-      console.error(err);
-    }
+    // items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
 
-    FileManager.remove(document.uri.fsPath);
-    FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
-      if (filePath != document.uri.fsPath) {
-        FileManager.put(filePath);
-      }
-    });
+    FileManager.resolveDirFiles(document.uri.fsPath);
+    FileManager.putContent(document.uri.fsPath,document.getText());
     FileManager.getJasss().forEach(j => {
       items.push(...j.toCompletionItems());
     });
+
+
     return items;
   }
 }
@@ -1957,15 +2049,11 @@ class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
     const items = new Array<vscode.CompletionItem>();
     const key = this.findMatchType(document, position);
     if (key) {
-      const jass = Jass.parseContent(document.getText());
-      items.push(...jass.toTypeCompletionItems(key, position));
+      // const jass = Jass.parseContent(document.getText());
+      // items.push(...jass.toTypeCompletionItems(key, position));
 
-      FileManager.remove(document.uri.fsPath);
-      FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
-        if (filePath != document.uri.fsPath) {
-          FileManager.put(filePath);
-        }
-      });
+      // FileManager.resolveDirFiles(document.uri.fsPath);
+      // FileManager.putContent(document.uri.fsPath,document.getText());
       FileManager.getJasss().forEach(j => {
         items.push(...j.toTypeCompletionItems(key));
       });
@@ -2004,45 +2092,57 @@ class DefaultHover implements HoverProvider{
         markdownStrings.push(ms);
       }
     }
-    FileManager.remove(document.uri.fsPath);
-    FileManager.findSameDirFiles(document.uri.fsPath).forEach(filePath => {
-      if (filePath != document.uri.fsPath) {
-        FileManager.put(filePath);
-      }
-    });
-    const jass = Jass.parseContent(document.getText());
-    const jassToMSs = (jass:Jass,key:string,position? : vscode.Position) :Array<vscode.MarkdownString> => {
+
+    // FileManager.resolveDirFiles(document.uri.fsPath);
+
+    const jassToMSs = (j:Jass,key:string,position? : vscode.Position) :Array<vscode.MarkdownString> => {
       const mss = new Array<vscode.MarkdownString>();
-      const func = jass.funcs.find(value => value && value.name == key);
-      if(func){
-        const ms = new vscode.MarkdownString();
-        if(func.description) ms.appendText(func.description);
-        ms.appendCodeblock(func.origin());
-        mss.push(ms);
-        if(position && func.start && func.end && new vscode.Range(func.start,func.end).contains(position)){
-          const local = func.locals.find(value => value && value.name == key);
+
+      j.funcs.forEach(value => {
+        if(position && value.start && value.end && new vscode.Range(value.start,value.end).contains(position)){
+          const local = value.locals.find(l => l && l.name == key);
           if(local){
             const ms = new vscode.MarkdownString();
             if(local.description) ms.appendText(local.description);
             ms.appendCodeblock(local.origin());
             mss.push(ms);
           }
-          const take = func.takes.find(value => value && value.name == key);
+          const take = value.takes.find(t => t && t.name == key);
+          
           if(take){
             const ms = new vscode.MarkdownString();
             ms.appendCodeblock(take.origin());
             mss.push(ms);
           }
         }
+      });
+      console.log(j.getScopes())
+      console.log(j.getFunctions())
+      const func = j.getFunctions().find(value => value && value.name == key);
+      if(func){
+        const ms = new vscode.MarkdownString();
+        if(func.description) ms.appendText(func.description);
+        ms.appendCodeblock(func.origin());
+        mss.push(ms);
       }
+
+      const lib = j.librarys.find(value => value && value.name == key);
+      if(lib){
+        const ms = new vscode.MarkdownString();
+        if(lib.description) ms.appendText(lib.description);
+        ms.appendCodeblock(lib.origin());
+        mss.push(ms);
+      }
+      // 暂时不支持lib scope interface struct
+
       return mss;
     } 
-    console.log(`长度 ${FileManager.getJasss()}`);
     FileManager.getJasss().forEach(jass => {
-      markdownStrings.push(...jassToMSs(jass,key));
+      markdownStrings.push(...jassToMSs(jass,key,
+        jass.filePath && path.parse(jass.filePath).base == path.parse(document.uri.fsPath).base ? position : undefined));
     });
-    markdownStrings.push(...jassToMSs(jass,key));
-    console.log(key)
+
+    
     
    
     
@@ -2052,3 +2152,49 @@ class DefaultHover implements HoverProvider{
 }
 
 vscode.languages.registerHoverProvider(language,new DefaultHover);
+
+vscode.languages.registerSignatureHelpProvider("jass", {
+  provideSignatureHelp(document, position, token, context) {
+    const lineText = document.lineAt(position.line);
+    let funcNames = [];
+    let field = 1;
+    let activeParameter = 0;
+    let inString = false;
+    for (let i = position.character - 1; i >= 0; i--) {
+      const char = lineText.text.charAt(i);
+      if (field > 0) {
+        if (!inString && char == '"') {
+          inString = true;
+        } else if (inString && char == '"' && lineText.text.charAt(i - 1) != '\\') {
+          inString = false;
+        } else if (!inString && char == '(') {
+          field--;
+        } else if (!inString && char == ')') {
+          field++;
+        } else if (!inString && char == ',') {
+          activeParameter++;
+        }
+      } else if (field == 0) {
+        if (funcNames.length == 0 && /\s/.test(char)) {
+          continue;
+        } else if (/\w/.test(char)) {
+          funcNames.push(char);
+          // 向前預測
+          if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
+            const funcName = funcNames.reverse().join("");
+            // const func = funcs.find(func => func.name == funcName);
+            // if (func) {
+            //   const SignatureHelp = new vscode.SignatureHelp();
+            //   const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.parameters.map(param => param.type + " " + param.name).join(", ")})->${func.returnType}`, new vscode.MarkdownString().appendCodeblock(func.original));
+            //   SignatureInformation.parameters = func.parameters.map(param => new vscode.SignatureInformation(param.name));
+            //   SignatureHelp.activeParameter = activeParameter;
+            //   SignatureHelp.signatures.push(SignatureInformation);
+            //   return SignatureHelp;
+            // }
+          }
+        }
+      }
+    }
+    return null;
+  }
+}, "(", ",");
