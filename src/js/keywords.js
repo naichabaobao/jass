@@ -1,1 +1,0 @@
-module.exports = ["and", "or", "not", "globals", "endglobals", "function", "endfunction", "constant", "native", "local", "type", "set", "call", "takes", "returns", "extends", "array", "true", "false", "null", "nothing", "if", "else", "elseif", "endif", "then", "loop", "endloop", "exitwhen", "return", "boolean", "integer", "real", "string", "handle", "code"]

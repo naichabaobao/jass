@@ -1,7 +1,10 @@
-.vscode/
-jass/
-node_modules/
-src/test/
-src/resources/image/type-icon
-*.vsix
+.vscode/**
+.vscode-test/**
+out/test/**
+src/**
+.gitignore
 vsc-extension-quickstart.md
+**/tsconfig.json
+**/tslint.json
+**/*.map
+**/*.ts

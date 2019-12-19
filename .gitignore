@@ -1,7 +1,4 @@
-.vscode/
-assets/
-node_modules/
-
+out
+node_modules
+.vscode-test/
 *.vsix
-jass.conf
-vsc-extension-quickstart.md
