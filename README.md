@@ -1,65 +1,43 @@
-# jass2 README
+[貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
+[源碼](https://gitee.com/naichabaobao/jass)
+[Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
-This is the README for your extension "jass2". After writing up a brief description, we recommend including the following sections.
+1. 下载安装 visual studio  Code
 
-## Features
+2.  visual studio  Code   安装 Jass插件
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+3.  WE触发器    自定义脚本区    #include  "Main.j"
 
-For example if there is an image subfolder under your extension project workspace:
+"Main.j"  内容
 
-\!\[feature X\]\(images/feature-x.png\)
+--------------------------------------------------------
+``` jass
+#include  "****.j"    //这是引入的其他j文件
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+//触发器主体  注:Main文件 要有一个空的触发
+// -------------------------------------------------------
 
-## Requirements
+//以下为外部引用触发器的格式
+//Main  为触发器名字
+//MainAction  为动作函数名 对应T的动作
+//MainEvent   为触发函数名 对应T的事件
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Extension Settings
+library Main initializer MainEvent
+function MainAction takes nothing returns nothing
+        
+endfunction
+function MainEvent takes nothing returns nothing
+  local trigger mainTrigger=CreateTrigger()
+  call TriggerRegisterTimerEventSingle(mainTrigger,0)
+  call TriggerAddAction(mainTrigger,function MainAction)
+endfunction
+endlibrary
+```
+--------------------------------------------------------
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+友情提供: 枫舞
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+[貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
+[源碼](https://gitee.com/naichabaobao/jass)
+[Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
