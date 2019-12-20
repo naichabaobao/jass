@@ -1711,7 +1711,7 @@ class Jass {
     // static
     [...this.interfaces, ...this.structs].forEach(value => {
       if (value.name && value.name == key) {
-        if(value instanceof Struct){
+        if (value instanceof Struct) {
           Jass.staticFunctions.forEach(s => {
             items.push(new vscode.CompletionItem(s, vscode.CompletionItemKind.Function));
           });
@@ -1802,31 +1802,60 @@ class Jass {
     return items;
   }
 
-  public getScopes(myss?:Scope[],parent?:Scope|Library):Scope[]{
-    const findScopes = (scopes:Scope[],parentScope?: Scope|Library):Scope[] => {
+  public getScopes(myss?: Scope[], parent?: Scope | Library): Scope[] {
+    const findScopes = (scopes: Scope[], parentScope?: Scope | Library): Scope[] => {
       const ss = new Array<Scope>();
       scopes.forEach(v => {
-        const s = Object.assign(new Scope,v);
-        if(parentScope){
+        const s = Object.assign(new Scope, v);
+        if (parentScope) {
           s.name = `${parentScope.name}_${v.name}`;
         }
-        ss.push(...findScopes(v.scopes,s))
+        ss.push(...findScopes(v.scopes, s))
         ss.push(s);
       })
       return ss;
     };
-    return findScopes(myss ?? this.scopes,parent);
+    return findScopes(myss ?? this.scopes, parent);
   }
 
-  public getFunctions():Func[] {
+  public getGlobals(): Global[] {
+    const globals: Global[] = new Array<Global>();
+    globals.push(...this.globals);
+
+    const scopes2Globals = (scopes: Scope[]) => {
+      scopes.forEach(value => {
+        value.globals.forEach(global => {
+          globals.push(Object.assign(new Global, global));
+          const g = Object.assign(new Global, global);
+          g.name = `${value.name}_${global.name}`;
+          globals.push(g);
+        });
+      });
+    };
+
+    this.librarys.forEach(value => {
+      value.globals.forEach(global => {
+        globals.push(Object.assign(new Global, global));
+        const g = Object.assign(new Global, global);
+        g.name = `${value.name}_${global.name}`;
+        globals.push(g);
+      });
+      scopes2Globals(this.getScopes(value.scopes, value));
+    });
+
+    scopes2Globals(this.getScopes());
+    return globals;
+  }
+
+  public getFunctions(): Func[] {
     const functions = new Array<Func>();
     functions.push(...this.funcs);
 
-    const scopes2functions = (scopes:Scope[]) => {
+    const scopes2functions = (scopes: Scope[]) => {
       scopes.forEach(value => {
         value.functions.forEach(func => {
-          functions.push(Object.assign(new Func,func));
-          const f = Object.assign(new Func,func);
+          functions.push(Object.assign(new Func, func));
+          const f = Object.assign(new Func, func);
           f.name = `${value.name}_${func.name}`;
           functions.push(f);
         });
@@ -1835,14 +1864,14 @@ class Jass {
 
     this.librarys.forEach(value => {
       value.functions.forEach(func => {
-        functions.push(Object.assign(new Func,func));
-        const f = Object.assign(new Func,func);
+        functions.push(Object.assign(new Func, func));
+        const f = Object.assign(new Func, func);
         f.name = `${value.name}_${func.name}`;
         functions.push(f);
       });
       scopes2functions(this.getScopes(value.scopes, value));
     });
-    
+
     scopes2functions(this.getScopes());
     return functions;
   }
@@ -1850,12 +1879,12 @@ class Jass {
 }
 
 class JassBean {
-  public filePath:string = "";
+  public filePath: string = "";
   public flag = "";
   public jass: Jass = new Jass;
 
-  public constructor(filePath:string, flag: string, jass: Jass) {
-    this.filePath =  filePath;
+  public constructor(filePath: string, flag: string, jass: Jass) {
+    this.filePath = filePath;
     this.flag = flag;
     this.jass = jass;
   }
@@ -1887,10 +1916,10 @@ class FileManager {
   public static put(filePath: string): void {
     if (this.check(filePath) && this.isFile(filePath)) {
       const parseStat = path.parse(filePath);
-      if(parseStat.ext == ".ai" || parseStat.ext == ".j"){
+      if (parseStat.ext == ".ai" || parseStat.ext == ".j") {
         const content = this.read(filePath);
-        const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base ==  parseStat.base);
-        if(tartgetKey){
+        const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base == parseStat.base);
+        if (tartgetKey) {
           const jassBean: JassBean = this.map[tartgetKey];
           const hash: string = md5(content);
           if (jassBean && jassBean.flag != hash) {
@@ -1900,7 +1929,7 @@ class FileManager {
             jass.filePath = filePath;
             this.map[tartgetKey] = new JassBean(filePath, hash, jass);
           }
-        }else {
+        } else {
           const hash: string = md5(content);
           console.log("新增")
           const jass = Jass.parseContent(content);
@@ -1911,11 +1940,11 @@ class FileManager {
     }
   }
 
-  public static putContent(filePath:string,content:string){
+  public static putContent(filePath: string, content: string) {
     const parseStat = path.parse(filePath);
-    if(parseStat.ext == ".ai" || parseStat.ext == ".j"){
-      const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base ==  parseStat.base);
-      if(tartgetKey){
+    if (parseStat.ext == ".ai" || parseStat.ext == ".j") {
+      const tartgetKey = Object.keys(this.map).find(value => path.parse(value).base == parseStat.base);
+      if (tartgetKey) {
         const jassBean: JassBean = this.map[tartgetKey];
         const hash: string = md5(content);
         if (jassBean && jassBean.flag != hash) {
@@ -1983,14 +2012,16 @@ class FileManager {
 
   public static resolveDirFiles(filePath: string) {
     this.findSameDirFiles(filePath).forEach(value => {
-      if(path.parse(value).base != path.parse(filePath).base){
-        this.put(value.replace(/^\W/, "")); 
+      if (path.parse(value).base != path.parse(filePath).base) {
+        this.put(value.replace(/^\W/, ""));
       }
     });
   }
 
 }
-
+FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/blizzard.j"));
+FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.ai"));
+FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j"));
 FileManager.resolveConsumerFiles();
 
 vscode.workspace.onDidChangeConfiguration(event => {
@@ -2021,7 +2052,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     // items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
 
     FileManager.resolveDirFiles(document.uri.fsPath);
-    FileManager.putContent(document.uri.fsPath,document.getText());
+    FileManager.putContent(document.uri.fsPath, document.getText());
     FileManager.getJasss().forEach(j => {
       items.push(...j.toCompletionItems());
     });
@@ -2068,7 +2099,7 @@ class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
 
 vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider(), ".");
 
-class DefaultHover implements HoverProvider{
+class DefaultHover implements HoverProvider {
 
   /**
    * 未实现
@@ -2077,16 +2108,16 @@ class DefaultHover implements HoverProvider{
    * @param token 
    */
   provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
-    const content = document.getText(new vscode.Range(new vscode.Position(0,0), position));
+    const content = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
     const keyRegExp = /(?<key>[a-zA-Z][a-zA-Z0-9_]*)$/
-    
+
     const key = document.getText(document.getWordRangeAtPosition(position));
     // 比对顺序
     // 关键字 -> 局部 -> 全局
     const markdownStrings = new Array<vscode.MarkdownString>();
-    if(Jass.allKeywords.includes(key)){
+    if (Jass.allKeywords.includes(key)) {
       const keyword = Jass.allKeywords.find(value => value == key);
-      if (keyword){
+      if (keyword) {
         const ms = new vscode.MarkdownString();
         ms.appendCodeblock(keyword);
         markdownStrings.push(ms);
@@ -2095,66 +2126,83 @@ class DefaultHover implements HoverProvider{
 
     // FileManager.resolveDirFiles(document.uri.fsPath);
 
-    const jassToMSs = (j:Jass,key:string,position? : vscode.Position) :Array<vscode.MarkdownString> => {
+    const jassToMSs = (j: Jass, key: string, position?: vscode.Position): Array<vscode.MarkdownString> => {
       const mss = new Array<vscode.MarkdownString>();
 
-      j.funcs.forEach(value => {
-        if(position && value.start && value.end && new vscode.Range(value.start,value.end).contains(position)){
+      j.getFunctions().forEach(value => {
+        if (position && value.start && value.end && new vscode.Range(value.start, value.end).contains(position)) {
           const local = value.locals.find(l => l && l.name == key);
-          if(local){
+          if (local) {
             const ms = new vscode.MarkdownString();
-            if(local.description) ms.appendText(local.description);
+            if (local.description) ms.appendText(local.description);
             ms.appendCodeblock(local.origin());
             mss.push(ms);
           }
           const take = value.takes.find(t => t && t.name == key);
-          
-          if(take){
+
+          if (take) {
             const ms = new vscode.MarkdownString();
             ms.appendCodeblock(take.origin());
             mss.push(ms);
           }
         }
       });
-      console.log(j.getScopes())
-      console.log(j.getFunctions())
+
       const func = j.getFunctions().find(value => value && value.name == key);
-      if(func){
+      if (func) {
         const ms = new vscode.MarkdownString();
-        if(func.description) ms.appendText(func.description);
+        if (func.description) ms.appendText(func.description);
         ms.appendCodeblock(func.origin());
+        mss.push(ms);
+      }
+      console.log(j.getGlobals())
+      const global = j.getGlobals().find(value => value && value.name == key);
+      if (global) {
+        console.log(global)
+        const ms = new vscode.MarkdownString();
+        if (global.description) ms.appendText(global.description);
+        ms.appendCodeblock(global.origin());
         mss.push(ms);
       }
 
       const lib = j.librarys.find(value => value && value.name == key);
-      if(lib){
+      if (lib) {
         const ms = new vscode.MarkdownString();
-        if(lib.description) ms.appendText(lib.description);
+        if (lib.description) ms.appendText(lib.description);
         ms.appendCodeblock(lib.origin());
+        mss.push(ms);
+      }
+
+      const scope = j.getScopes().find(value => value && value.name == key);
+      if (scope) {
+        const ms = new vscode.MarkdownString();
+        if (scope.description) ms.appendText(scope.description);
+        ms.appendCodeblock(scope.origin());
         mss.push(ms);
       }
       // 暂时不支持lib scope interface struct
 
       return mss;
-    } 
+    }
     FileManager.getJasss().forEach(jass => {
-      markdownStrings.push(...jassToMSs(jass,key,
+      markdownStrings.push(...jassToMSs(jass, key,
         jass.filePath && path.parse(jass.filePath).base == path.parse(document.uri.fsPath).base ? position : undefined));
     });
 
-    
-    
-   
-    
-    return  new vscode.Hover(markdownStrings);
+
+
+
+
+    return new vscode.Hover(markdownStrings);
   }
-  
+
 }
 
-vscode.languages.registerHoverProvider(language,new DefaultHover);
+vscode.languages.registerHoverProvider(language, new DefaultHover);
 
-vscode.languages.registerSignatureHelpProvider("jass", {
+vscode.languages.registerSignatureHelpProvider(language, {
   provideSignatureHelp(document, position, token, context) {
+    const SignatureHelp = new vscode.SignatureHelp();
     const lineText = document.lineAt(position.line);
     let funcNames = [];
     let field = 1;
@@ -2182,19 +2230,179 @@ vscode.languages.registerSignatureHelpProvider("jass", {
           // 向前預測
           if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
             const funcName = funcNames.reverse().join("");
-            // const func = funcs.find(func => func.name == funcName);
-            // if (func) {
-            //   const SignatureHelp = new vscode.SignatureHelp();
-            //   const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.parameters.map(param => param.type + " " + param.name).join(", ")})->${func.returnType}`, new vscode.MarkdownString().appendCodeblock(func.original));
-            //   SignatureInformation.parameters = func.parameters.map(param => new vscode.SignatureInformation(param.name));
-            //   SignatureHelp.activeParameter = activeParameter;
-            //   SignatureHelp.signatures.push(SignatureInformation);
-            //   return SignatureHelp;
-            // }
+            const functions = new Array<Func>();
+            FileManager.getJasss().forEach(x => {
+              const func = x.getFunctions().find(s => {
+                return s.name && s.name == funcName;
+              });
+              if (func) {
+                if (func.name) {
+                  const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(param => param.type + " " + param.name).join(", ") : "nothing"})->${func.returnType ?? "nothing"}`);
+                  if (func.description) {
+                    SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.description);
+                  }
+
+                  func.takes.forEach(param => {
+                    if (param.name) {
+                      SignatureInformation.parameters.push(new vscode.SignatureInformation(param.name));
+                    }
+                  });
+                  SignatureHelp.activeParameter = activeParameter;
+                  SignatureHelp.signatures.push(SignatureInformation);
+                }
+              }
+            });
           }
         }
       }
     }
-    return null;
+    return SignatureHelp;
   }
 }, "(", ",");
+
+vscode.languages.registerDefinitionProvider(language, {
+  provideDefinition(document, position, cancel) {
+    const locations = new Array<vscode.Location>();
+    let key = document.getText(document.getWordRangeAtPosition(position));
+
+    // new vscode.Location
+
+    FileManager.getJasss().forEach(x => {
+      x.getGlobals().forEach(s => {
+        if (s.name == key && s.nameRange) {
+          locations.push(new vscode.Location(vscode.Uri.parse(`file:${x.filePath}`), s.nameRange));
+        }
+      });
+      x.getFunctions().forEach(s => {
+        if (s.name == key && s.nameRange) {
+          console.log(x.filePath)
+          locations.push(new vscode.Location(vscode.Uri.parse(`file:${x.filePath}`), s.nameRange));
+        }
+      });
+    });
+
+    return locations;
+  }
+});
+
+/// 颜色提供
+const convertInt2Hex = (int: number) => {
+  return Math.ceil(int * 255).toString(16).padStart(2, "0")
+}
+const color2JColorCode = (color: vscode.Color) => {
+  if (color instanceof vscode.Color) {
+    let r = color.red
+    let g = color.green
+    let b = color.blue
+    let a = color.alpha
+    let colorCodeString = convertInt2Hex(a) + convertInt2Hex(r) + convertInt2Hex(g) + convertInt2Hex(b)
+    return colorCodeString
+  }
+  return "00000000"
+}
+
+class JassDocumentColorProvider implements vscode.DocumentColorProvider {
+
+  /// 颜色改变到文档
+  provideDocumentColors(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.ColorInformation[]> {
+    let lineCount = document.lineCount
+    let colors = new Array<vscode.ColorInformation>();
+    // new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
+    let colorReg = new RegExp(/\|[cC][\da-fA-F]{8}/, "g")
+    for (let i = 0; i < lineCount; i++) {
+      let lineText = document.lineAt(i).text
+      let colotSet = lineText.match(colorReg)
+      let posstion = 0
+      if (colotSet) {
+        colotSet.forEach(x => {
+          posstion = lineText.indexOf(x, posstion)
+          let range = new vscode.Range(i, posstion, i, posstion + x.length)
+          let a = Number.parseInt("0x" + lineText.substr(posstion + 2, 2)) / 255
+          let r = Number.parseInt("0x" + lineText.substr(posstion + 4, 2)) / 255
+          let g = Number.parseInt("0x" + lineText.substr(posstion + 6, 2)) / 255
+          let b = Number.parseInt("0x" + lineText.substr(posstion + 8, 2)) / 255
+          colors.push(new vscode.ColorInformation(range, new vscode.Color(r, g, b, a)))
+          posstion += x.length
+        })
+      }
+    }
+    return colors
+  }
+  /// 文档改变到颜色
+  provideColorPresentations(color: vscode.Color, context: { document: vscode.TextDocument; range: vscode.Range; }, token: vscode.CancellationToken): vscode.ProviderResult<vscode.ColorPresentation[]> {
+    let r = color.red
+    let g = color.green
+    let b = color.blue
+    let a = color.alpha
+    let document = context.document
+    let range = context.range
+    let documentText = document.getText(range)
+    return [new vscode.ColorPresentation(`${
+      documentText.substr(0, 2)
+      }${
+      color2JColorCode(new vscode.Color(r, g, b, a))
+      }${
+      documentText.substring(10)
+      }`)]
+
+  }
+
+
+}
+
+vscode.languages.registerColorProvider(language, new JassDocumentColorProvider);
+
+/// 格式化
+class JassDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider {
+
+  provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+    const textEdits = new Array<vscode.TextEdit>();
+
+    // const text = document.getText();
+    // for (let i = 0; i < text.length; i++) {
+    //   const char = text.charAt(i);
+
+    // }
+
+    let field = 0;
+    for (let i = 0; i < document.lineCount; i++) {
+      const line = document.lineAt(i);
+      const trimLeftText = line.text.trimStart();
+      if (trimLeftText.startsWith(Jass.keywordFunction) ||
+        ((trimLeftText.startsWith(Jass.keywordPrivate) || trimLeftText.startsWith(Jass.keywordPublic)) && trimLeftText.includes(Jass.keywordFunction)) ||
+        trimLeftText.startsWith(Jass.keywordGlobals)||
+        trimLeftText.startsWith(Jass.keywordLibrary) ||
+        trimLeftText.startsWith(Jass.keywordScope) ||
+        trimLeftText.startsWith(Jass.keywordInterface) ||
+        trimLeftText.startsWith(Jass.keywordStruct ||
+          trimLeftText.startsWith(Jass.keywordIf))||
+          trimLeftText.startsWith(Jass.keywordLoop)) {
+        if (line.firstNonWhitespaceCharacterIndex != field)
+          textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
+            "".padStart(field, "\t")));
+        field++;
+      } else if (trimLeftText.startsWith(Jass.keywordEndFunction) ||
+        trimLeftText.startsWith(Jass.keywordEndGlobals) ||
+        trimLeftText.startsWith(Jass.keywordEndLibrary) ||
+        trimLeftText.startsWith(Jass.keywordEndScope) ||
+        trimLeftText.startsWith(Jass.keywordEndInterface) ||
+        trimLeftText.startsWith(Jass.keywordEndStruct) ||
+        trimLeftText.startsWith(Jass.keywordEndIf) ||
+        trimLeftText.startsWith(Jass.keywordEndLoop)) {
+        if (field >= 0) field--;
+        if (line.firstNonWhitespaceCharacterIndex != field)
+          textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
+            "".padStart(field, "\t")));
+      } else {
+        if (line.firstNonWhitespaceCharacterIndex != field)
+        textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
+          "".padStart(field, "\t")));
+      }
+    }
+
+    return textEdits;
+  }
+
+}
+
+vscode.languages.registerDocumentFormattingEditProvider(language, new JassDocumentFormattingEditProvider);
