@@ -302,7 +302,7 @@ class CommonJ {
     }
     return type;
   }
-
+ 
   private resolveTypes(): void {
     if (this.types.length > 0) {
       this.types = new Array<Type>();
@@ -321,6 +321,7 @@ class CommonJ {
           this.types.push(type);
         }
       }
+      
     }
   }
 
@@ -2019,6 +2020,7 @@ class FileManager {
   }
 
 }
+FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.j"));
 FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/blizzard.j"));
 FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.ai"));
 FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j"));
@@ -2051,7 +2053,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
 
     // items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
 
-    FileManager.resolveDirFiles(document.uri.fsPath);
+    // FileManager.resolveDirFiles(document.uri.fsPath);
     FileManager.putContent(document.uri.fsPath, document.getText());
     FileManager.getJasss().forEach(j => {
       items.push(...j.toCompletionItems());
@@ -2061,6 +2063,8 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 }
+
+
 
 vscode.languages.registerCompletionItemProvider(language, new DefaultCompletionItemProvider);
 
@@ -2406,3 +2410,8 @@ class JassDocumentFormattingEditProvider implements vscode.DocumentFormattingEdi
 }
 
 vscode.languages.registerDocumentFormattingEditProvider(language, new JassDocumentFormattingEditProvider);
+
+fs.writeFile(path.resolve(__dirname,"type"),
+      '"' + Jass.vjassKeywords.join("\",\"") + '"',
+      
+      (err: NodeJS.ErrnoException | null)=>{});
