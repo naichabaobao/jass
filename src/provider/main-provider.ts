@@ -302,7 +302,7 @@ class CommonJ {
     }
     return type;
   }
- 
+
   private resolveTypes(): void {
     if (this.types.length > 0) {
       this.types = new Array<Type>();
@@ -321,7 +321,7 @@ class CommonJ {
           this.types.push(type);
         }
       }
-      
+
     }
   }
 
@@ -2053,7 +2053,8 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
 
     // items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
 
-    // FileManager.resolveDirFiles(document.uri.fsPath);
+    FileManager.resolveDirFiles(document.uri.fsPath);
+
     FileManager.putContent(document.uri.fsPath, document.getText());
     FileManager.getJasss().forEach(j => {
       items.push(...j.toCompletionItems());
@@ -2063,7 +2064,6 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 }
-
 
 
 vscode.languages.registerCompletionItemProvider(language, new DefaultCompletionItemProvider);
@@ -2410,8 +2410,11 @@ class JassDocumentFormattingEditProvider implements vscode.DocumentFormattingEdi
 }
 
 vscode.languages.registerDocumentFormattingEditProvider(language, new JassDocumentFormattingEditProvider);
+// <<<<<<< HEAD
 
-fs.writeFile(path.resolve(__dirname,"type"),
-      '"' + Jass.vjassKeywords.join("\",\"") + '"',
+// fs.writeFile(path.resolve(__dirname,"type"),
+//       '"' + Jass.vjassKeywords.join("\",\"") + '"',
       
-      (err: NodeJS.ErrnoException | null)=>{});
+//       (err: NodeJS.ErrnoException | null)=>{});
+// =======
+// >>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c

@@ -2,8 +2,13 @@
   "name": "jass",
   "displayName": "jass",
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
+<<<<<<< HEAD
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
+=======
+  "publisher": "家貓hoo",
+  "icon": "https://raw.githubusercontent.com/fnfufnfu/jass/master/src/resources/image/jass.png",
+>>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
   "version": "0.0.29",
   "keywords": [
     "jass",
@@ -32,12 +37,28 @@
       "type": "object",
       "title": "Jass",
       "properties": {
+<<<<<<< HEAD
+=======
+        "jass.pjass.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否開啓pjass語法檢測"
+        },
+>>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
         "jass.includes": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
+<<<<<<< HEAD
+=======
+        },
+        "jass.vjass.support.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否开启对vjass语法支持,开启后插件会识别lib，scope，struct，interface，文本宏等"
+>>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
         }
       }
     },
@@ -75,14 +96,22 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
+<<<<<<< HEAD
     "test": "node ./out/test/runTest.js",
     "testjass": "tsc ./src/main/jass.ts & node ./src/main/jass.js"
+=======
+    "test": "node ./out/test/runTest.js"
+>>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
+<<<<<<< HEAD
     "@types/vscode": "^1.37.0",
+=======
+    "@types/vscode": "^1.40.0",
+>>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
     "tslint": "^5.20.0",
     "typescript": "^3.6.4",
     "vscode-test": "^1.2.2"
