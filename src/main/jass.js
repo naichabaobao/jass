@@ -29,7 +29,7 @@ var JassStatus;
     JassStatus[JassStatus["LineComment"] = 3] = "LineComment";
     JassStatus[JassStatus["BlockComment"] = 4] = "BlockComment";
     JassStatus[JassStatus["WillBreakBlockComment"] = 5] = "WillBreakBlockComment";
-    JassStatus[JassStatus["L"] = 6] = "L";
+    JassStatus[JassStatus["Letter"] = 6] = "Letter";
     JassStatus[JassStatus["C"] = 7] = "C";
 })(JassStatus || (JassStatus = {}));
 var JassAutoMaMachine = /** @class */ (function () {
@@ -40,7 +40,8 @@ var JassAutoMaMachine = /** @class */ (function () {
         this.startIndex = 0;
         this.index = -1;
         this.line = 0;
-        this.currentStatus = JassStatus.Nill;
+        this.commentStatus = JassStatus.Nill;
+        this.jassStatus = JassStatus.Nill;
         this.content = content;
     }
     JassAutoMaMachine.prototype.doing = function () {
@@ -52,33 +53,38 @@ var JassAutoMaMachine = /** @class */ (function () {
         this.doing();
     };
     JassAutoMaMachine.prototype.put = function (char) {
-        if (this.currentStatus == JassStatus.Nill) {
+        if (this.commentStatus == JassStatus.Nill) {
             if (Tool.isLeftSlash(char)) {
-                this.currentStatus = JassStatus.CommentStart;
+                this.commentStatus = JassStatus.CommentStart;
             }
-            else if (char == "") {
+            else if (Tool.isLatter(char)) {
+                this.commentStatus = JassStatus.Letter;
+                console.log("切换到字母");
+                this.startLine = this.line;
+                this.startIndex = this.index;
+                this.slots.push(char);
             }
         }
-        else if (this.currentStatus == JassStatus.CommentStart) {
+        else if (this.commentStatus == JassStatus.CommentStart) {
             if (Tool.isAsterisk(char)) {
-                this.currentStatus = JassStatus.BlockComment;
+                this.commentStatus = JassStatus.BlockComment;
                 this.data = new BlockComment();
                 this.startLine = this.line;
                 this.startIndex = this.index - 1;
             }
             else if (Tool.isLeftSlash(char)) {
-                this.currentStatus = JassStatus.LineComment;
+                this.commentStatus = JassStatus.LineComment;
                 this.data = new LineComment();
                 this.startLine = this.line;
                 this.startIndex = this.index - 1;
             }
             else {
-                this.currentStatus = JassStatus.Nill;
+                this.commentStatus = JassStatus.Nill;
             }
         }
-        else if (this.currentStatus == JassStatus.LineComment) {
+        else if (this.commentStatus == JassStatus.LineComment) {
             if (Tool.isNewLine(char)) {
-                this.currentStatus = JassStatus.Nill;
+                this.commentStatus = JassStatus.Nill;
                 var lineComment = this.data;
                 lineComment.startLine = this.startLine;
                 lineComment.startIndex = this.startIndex;
@@ -94,17 +100,17 @@ var JassAutoMaMachine = /** @class */ (function () {
                 this.slots.push(char);
             }
         }
-        else if (this.currentStatus == JassStatus.BlockComment) {
+        else if (this.commentStatus == JassStatus.BlockComment) {
             if (Tool.isAsterisk(char)) {
-                this.currentStatus = JassStatus.WillBreakBlockComment;
+                this.commentStatus = JassStatus.WillBreakBlockComment;
             }
             else {
                 this.slots.push(char);
             }
         }
-        else if (this.currentStatus == JassStatus.WillBreakBlockComment) {
+        else if (this.commentStatus == JassStatus.WillBreakBlockComment) {
             if (Tool.isLeftSlash(char)) {
-                this.currentStatus = JassStatus.Nill;
+                this.commentStatus = JassStatus.Nill;
                 var blockComment = this.data;
                 blockComment.startLine = this.startLine;
                 blockComment.startIndex = this.startIndex;
@@ -119,7 +125,25 @@ var JassAutoMaMachine = /** @class */ (function () {
             else {
                 this.slots.push(Tool.Asterisk);
                 this.slots.push(char);
-                this.currentStatus = JassStatus.BlockComment;
+                this.commentStatus = JassStatus.BlockComment;
+            }
+        }
+        else if (this.commentStatus == JassStatus.Letter) {
+            console.log("字母");
+            if (Tool.isLatter(char) || Tool.isNumber(char) || Tool.isUnderline(char)) {
+                this.slots.push(char);
+            }
+            else if (Tool.isLeftSlash(char)) {
+                this.commentStatus = JassStatus.CommentStart;
+                if (this.onError) {
+                    var error = new JassError("", this.get());
+                    error.startLine = this.startLine;
+                    error.startIndex = this.startIndex;
+                    error.endLine = this.line;
+                    error.endIndex = this.index;
+                    this.onError(error);
+                    this.clear();
+                }
             }
         }
         if (Tool.isNewLine(char)) {
@@ -154,6 +178,14 @@ var Tool = /** @class */ (function () {
     // 是否*
     Tool.isAsterisk = function (char) {
         return char == this.Asterisk;
+    };
+    // 是否数字
+    Tool.isNumber = function (char) {
+        return this.Numbers.includes(char);
+    };
+    // 是否下划线
+    Tool.isUnderline = function (char) {
+        return char == this.Underline;
     };
     Tool.LowercaseLetters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",];
     Tool.Capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",];
@@ -195,11 +227,31 @@ var BlockComment = /** @class */ (function () {
     }
     return BlockComment;
 }());
-var m = new JassAutoMaMachine("\n\n// /*123*/\n/* // aa */\n\n/*a/*aa*/\n\n");
+var JassError = /** @class */ (function () {
+    function JassError(errorMessage, errorContent) {
+        this.endLine = 0;
+        this.endIndex = 0;
+        this.startLine = 0;
+        this.startIndex = 0;
+        this.errorContent = "";
+        this.errorMessage = "";
+        if (errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+        if (errorContent) {
+            this.errorContent = errorContent;
+        }
+    }
+    return JassError;
+}());
+var m = new JassAutoMaMachine("\na22_/\n// /*123*/\n/* // aa */\n\n/*a/*aa*/\n\n");
 m.onLineComment = function (comment) {
     console.log(comment);
 };
 m.onBlockComment = function (comment) {
     console.log(comment);
+};
+m.onError = function (a) {
+    console.log(a);
 };
 m.start();

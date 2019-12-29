@@ -21,7 +21,7 @@ enum JassStatus {
   LineComment,
   BlockComment,
   WillBreakBlockComment,
-  L,
+  Letter,
   C,
 
 }
@@ -53,36 +53,42 @@ class JassAutoMaMachine {
     this.doing();
   }
 
-  private currentStatus:JassStatus = JassStatus.Nill;
+  private commentStatus:JassStatus = JassStatus.Nill;
+
+  private jassStatus:JassStatus = JassStatus.Nill;
 
   private data:any;
 
   public put(char:string):void{
     
 
-    if(this.currentStatus == JassStatus.Nill){
+    if(this.commentStatus == JassStatus.Nill){
       if(Tool.isLeftSlash(char)){
-        this.currentStatus = JassStatus.CommentStart;
-      }else if(char == ""){
-        
+        this.commentStatus = JassStatus.CommentStart;
+      }else if(Tool.isLatter(char)){
+        this.commentStatus = JassStatus.Letter;
+        console.log("切换到字母")
+        this.startLine = this.line;
+        this.startIndex = this.index;
+        this.slots.push(char);
       }
-    }else if(this.currentStatus == JassStatus.CommentStart){
+    }else if(this.commentStatus == JassStatus.CommentStart){
       if(Tool.isAsterisk(char)){
-        this.currentStatus = JassStatus.BlockComment;
+        this.commentStatus = JassStatus.BlockComment;
         this.data = new BlockComment();
         this.startLine = this.line;
         this.startIndex = this.index - 1;
       }else if(Tool.isLeftSlash(char)){
-        this.currentStatus = JassStatus.LineComment;
+        this.commentStatus = JassStatus.LineComment;
         this.data = new LineComment();
         this.startLine = this.line;
         this.startIndex = this.index - 1;
       }else{
-        this.currentStatus = JassStatus.Nill;
+        this.commentStatus = JassStatus.Nill;
       }
-    }else if(this.currentStatus == JassStatus.LineComment){
+    }else if(this.commentStatus == JassStatus.LineComment){
       if(Tool.isNewLine(char)){
-        this.currentStatus = JassStatus.Nill;
+        this.commentStatus = JassStatus.Nill;
         const lineComment = this.data as LineComment;
         lineComment.startLine = this.startLine;
         lineComment.startIndex = this.startIndex;
@@ -96,15 +102,15 @@ class JassAutoMaMachine {
       }else{
         this.slots.push(char);
       }
-    }else if(this.currentStatus == JassStatus.BlockComment){
+    }else if(this.commentStatus == JassStatus.BlockComment){
       if(Tool.isAsterisk(char)){
-        this.currentStatus = JassStatus.WillBreakBlockComment;
+        this.commentStatus = JassStatus.WillBreakBlockComment;
       }else{
         this.slots.push(char);
       }
-    }else if(this.currentStatus == JassStatus.WillBreakBlockComment){
+    }else if(this.commentStatus == JassStatus.WillBreakBlockComment){
       if(Tool.isLeftSlash(char)){
-        this.currentStatus = JassStatus.Nill;
+        this.commentStatus = JassStatus.Nill;
         const blockComment = this.data as BlockComment;
         blockComment.startLine = this.startLine;
         blockComment.startIndex = this.startIndex;
@@ -118,7 +124,24 @@ class JassAutoMaMachine {
       }else{
         this.slots.push(Tool.Asterisk);
         this.slots.push(char);
-        this.currentStatus = JassStatus.BlockComment;
+        this.commentStatus = JassStatus.BlockComment;
+      }
+    }else if(this.commentStatus == JassStatus.Letter){
+      if(Tool.isLatter(char) || Tool.isNumber(char) || Tool.isUnderline(char)){
+        this.slots.push(char);
+      }else if(Tool.isLeftSlash(char)){
+        this.commentStatus = JassStatus.CommentStart;
+        if(this.onError){
+          const error = new JassError("",this.get());
+          error.startLine = this.startLine;
+          error.startIndex = this.startIndex;
+          error.endLine = this.line;
+          error.endIndex = this.index;
+          this.onError(error);
+          this.clear();
+        }
+      }else if(Tool.isSpace(char)){
+        // 判断是不是关键字
       }
     }
 
@@ -142,10 +165,13 @@ private get(){
 
   public onBlockComment:BlockCommentFunction | undefined;
 
+  public onError:ErrorFunction | undefined;
+
 }
 
-type LineCommentFunction = (comment?: LineComment) => void;
-type BlockCommentFunction = (comment?: BlockComment) => void;
+type LineCommentFunction = (comment: LineComment) => void;
+type BlockCommentFunction = (comment: BlockComment) => void;
+type ErrorFunction = (comment: JassError) => void;
 
 
 class Tool {
@@ -165,6 +191,8 @@ class Tool {
   public static readonly GreaterThan = ">";
   public static readonly LessThan = "<";
   public static readonly NewLine = "\n";
+  public static readonly Space = " ";
+  public static readonly TableSpace = "\t";
 
   public static isNewLine(char:string):boolean {
     return char == this.NewLine;
@@ -181,6 +209,20 @@ class Tool {
   public static isAsterisk(char:string):boolean {
     return char == this.Asterisk;
   }
+
+  // 是否数字
+  public static isNumber(char:string):boolean {
+    return this.Numbers.includes(char);
+  }
+  // 是否下划线
+  public static isUnderline(char:string):boolean {
+    return char == this.Underline;
+  }
+// 是否空白
+  public static isSpace(char:string):boolean {
+    return [this.Space,this.TableSpace].includes(char);
+  }
+
 }
 
 
@@ -224,8 +266,25 @@ class BlockComment implements Start , End{
   }
 }
 
-const m = new JassAutoMaMachine(`
+class JassError implements Start , End{
+  public endLine: number = 0;
+  public endIndex: number = 0;
+  public startLine: number = 0;
+  public startIndex: number = 0;
+  public errorContent:string = "";
+  public errorMessage:string = ``;
+  constructor(errorMessage?:string, errorContent?:string){
+    if(errorMessage){
+      this.errorMessage = errorMessage;
+    }
+    if(errorContent){
+      this.errorContent = errorContent;
+    }
+  }
+}
 
+const m = new JassAutoMaMachine(`
+a22_/
 // /*123*/
 /* // aa */
 
@@ -240,5 +299,9 @@ m.onLineComment = (comment) => {
 m.onBlockComment = (comment) => {
   console.log(comment);
 } 
+
+m.onError = (a) => {
+  console.log(a);
+}
 
 m.start();
