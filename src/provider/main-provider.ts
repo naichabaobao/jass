@@ -344,6 +344,59 @@ class CommonJ {
 
 const commonJ = CommonJ.build(); // 單例
 
+
+
+const str = commonJ.getTypes().map(x =>  'public static readonly '+ x.name?.replace(x.name.charAt(0), x.name.charAt(0).toUpperCase()) +' = new Type2("handle", Type2.'+ (x && x.extends ? x.extends.replace(x.extends.charAt(0), x.extends.charAt(0).toUpperCase()) : "") +', "'+ (x.description ? x.description : "未提供翻译")  +'");').join("\n");
+
+const all_str = `public static readonly Types = [${commonJ.getTypes().map(x=>{
+  if(x.name){
+    return "Type2." + x.name.replace(x.name.charAt(0), x.name.charAt(0).toUpperCase())
+  }else{
+    return "";
+  }
+})}];
+
+public static readonly AllTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Code,Type2.Handle,...Type2.Types];
+public static readonly StatementTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Handle,...Type2.Types];
+public static readonly TakesTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Code,Type2.Handle,...Type2.Types];
+`;
+
+const typeOutput = `
+class Type2 {
+  public name:string = "nothing";
+  public extends:Type2 = Type2.Nothing;
+  public description: string = "";
+
+  constructor(name?:string,extend?:Type2,description?:string){
+    if(name){
+      this.name = name;
+    }
+    if(extend){
+      this.extends = extend;
+    }
+    if(description){
+      this.description = description;
+    }
+  }
+
+  public static readonly Nothing = new Type2("nothing", void 0, "");
+
+  public static readonly Boolean = new Type2("boolean", void 0, "布尔");
+  public static readonly Integer = new Type2("integer", void 0, "整数");
+  public static readonly Real = new Type2("real", void 0, "实数");
+  public static readonly String = new Type2("string", void 0, "字符串");
+  public static readonly Code = new Type2("code", void 0, "代码");
+  public static readonly Handle = new Type2("handle", void 0, "处理");
+
+  ${str}
+
+  ${all_str}
+}
+`;
+
+
+fs.writeFile("D:/javascript-workspace/jass2/src/main/type.ts", typeOutput,() => {});
+
 enum Modifier {
   Private = "private",
   Public = "public",
