@@ -153,6 +153,10 @@ class JassAutoMaMachine {
     }
   }
 
+private what(keyword:string,callback:(status:JassStatus)=>void):void{
+  
+}
+
 private clear(){
   this.slots = [];
 }

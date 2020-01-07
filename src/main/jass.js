@@ -129,7 +129,6 @@ var JassAutoMaMachine = /** @class */ (function () {
             }
         }
         else if (this.commentStatus == JassStatus.Letter) {
-            console.log("字母");
             if (Tool.isLatter(char) || Tool.isNumber(char) || Tool.isUnderline(char)) {
                 this.slots.push(char);
             }
@@ -144,6 +143,9 @@ var JassAutoMaMachine = /** @class */ (function () {
                     this.onError(error);
                     this.clear();
                 }
+            }
+            else if (Tool.isSpace(char)) {
+                // 判断是不是关键字
             }
         }
         if (Tool.isNewLine(char)) {
@@ -187,6 +189,10 @@ var Tool = /** @class */ (function () {
     Tool.isUnderline = function (char) {
         return char == this.Underline;
     };
+    // 是否空白
+    Tool.isSpace = function (char) {
+        return [this.Space, this.TableSpace].includes(char);
+    };
     Tool.LowercaseLetters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",];
     Tool.Capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",];
     Tool.Numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
@@ -199,6 +205,8 @@ var Tool = /** @class */ (function () {
     Tool.GreaterThan = ">";
     Tool.LessThan = "<";
     Tool.NewLine = "\n";
+    Tool.Space = " ";
+    Tool.TableSpace = "\t";
     return Tool;
 }());
 var LineComment = /** @class */ (function () {

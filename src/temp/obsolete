@@ -1,0 +1,200 @@
+class CommonJ {
+  private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
+  private commonJContent: string | null = null;
+
+  private static commonJ: CommonJ | null = null;
+
+  private constructor() {
+    this.init();
+  }
+
+  private types = new Array<Type>();
+
+  public getTypes(): Array<Type> {
+    return this.types;
+  }
+
+  /**
+   * 初始化時，讀取common.j内容
+   */
+  private init() {
+    if (fs.existsSync(this.commonJFilePath)) {
+      this.commonJContent = fs.readFileSync(this.commonJFilePath).toString("utf8")
+    }
+    if (this.commonJContent) {
+      this.resolveTypes();
+    }
+  }
+
+  private parseBaseType(content: string): Type | null {
+    let type = null;
+    const typeRegExp = new RegExp(`^\\s*type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${[...this.types, Type.Handle].map(type => type.name).join("|")}))?`);
+    if (typeRegExp.test(content)) {
+      const result = typeRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name) {
+          type = new Type(result.groups.name);
+          if (result.groups.extends) {
+            type.extends = result.groups.extends;
+          }
+        }
+      }
+    }
+    return type;
+  }
+
+  private resolveTypes(): void {
+    if (this.types.length > 0) {
+      this.types = new Array<Type>();
+    }
+
+    if (this.commonJContent) {
+      const jassContent = JassUtils.removeTextMacro(this.commonJContent);
+      const lines = JassUtils.content2Lines(jassContent);
+      // for内部每解析一个类型都会更新Types
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const type = this.parseBaseType(line);
+        if (type) {
+          const comment = Comment.parse(lines[i - 1]);
+          if (comment) type.description = comment.content;
+          this.types.push(type);
+        }
+      }
+
+    }
+  }
+
+  public setCommonJFilePath(filePath: string): void {
+    this.commonJFilePath = filePath;
+    this.init();
+  }
+
+  public getCommonJFilePath = () => this.commonJFilePath;
+
+  public getCommonJContent(): string | null {
+    return this.commonJContent;
+  }
+
+  public static build() {
+    if (!this.commonJ) this.commonJ = new CommonJ;
+    return this.commonJ;
+  }
+}
+
+const commonJ = CommonJ.build(); // 單例
+
+
+// ========================type =========================
+class Type {
+  public name: string | null = null;
+  public extends: string | null = null; //  可以为数组对象，目前不进行进一步解析，以string形式保存
+  public isArrayObject: boolean = false;
+  public size: number = 0; // isArrayObject为true时才有效
+  public range: vscode.Range | null = null;
+  public nameRange: vscode.Range | null = null;
+  public description: string | null = null;
+
+  public constructor(name: string, extend?: string, description?: string) {
+    this.name = name;
+    if (extend) this.extends = extend;
+    if (description) this.description = description;
+  }
+
+  public origin(): string {
+    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
+    // ${this.isArrayObject ? " array" : ""}${this.size > 0 ? "[" + this.size + "]" : ""}
+  }
+
+  private static arrayObjects: Type[] = new Array<Type>();
+
+  public static getArrayObjects(): Type[] {
+    return this.arrayObjects;
+  }
+
+  public static getBaseTypes() {
+    return CommonJ.build().getTypes();
+  }
+
+  public static getTypes(): Type[] {
+    return [...Type.getBaseTypes(), ...Type.getArrayObjects()];
+  }
+
+  public static getTakesTypes(): Type[] {
+    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.TakeBaseTypes];
+  }
+
+  public static getStatementTypes(): Type[] {
+    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.StatementBaseTypes];
+  }
+
+  /**
+   * 解析type或数组对象
+   * @param content 
+   * @param isCommonJ true 只解析jass类型，false 只解析数组对象
+   */
+  static resolveTypes(content: string, isCommonJ: boolean = false): void {
+    this.arrayObjects = new Array<Type>(); // 清空
+    const jassContent = JassUtils.removeTextMacro(content);
+    const lines = JassUtils.content2Lines(jassContent);
+    // for内部每解析一个类型都会更新Types
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (/^\s*type\s+[a-zA-Z][a-zA-Z\d]*/.test(line)) {
+        const arrayObject = this.parseArrayObject(line);
+        if (arrayObject) {
+          const comment = Comment.parse(lines[i - 1]);
+          if (comment) arrayObject.description = comment.content;
+          this.arrayObjects.push(arrayObject);
+        }
+      }
+    }
+  }
+
+  static parseArrayObject(content: string): Type | null {
+    let type = null;
+    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>(${statementRegExpString})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
+    if (typeRegExp.test(content)) {
+      const result = typeRegExp.exec(content);
+      if (result && result.groups) {
+        if (result.groups.name) {
+          type = new Type(result.groups.name);
+          if (result.groups.extends) {
+            type.extends = result.groups.extends;
+          }
+          if (result.groups.arrayObject) {
+            type.isArrayObject = true;
+          }
+          if (result.groups.size) {
+            type.size = Number.parseInt(result.groups.size);
+          }
+        }
+      }
+    }
+    return type;
+  }
+
+  public static readonly Boolean = new Type("boolean", void 0, "布尔");
+  public static readonly Integer = new Type("integer", void 0, "整数");
+  public static readonly Real = new Type("real", void 0, "实数");
+  public static readonly String = new Type("string", void 0, "字符串");
+  public static readonly Code = new Type("code", void 0, "代码");
+  public static readonly Handle = new Type("handle", void 0, "句柄");
+
+  public static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
+  public static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
+
+  public toCompletionItem(): vscode.CompletionItem | null {
+    let item = null;
+    if (this.name) {
+      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Class);
+      item.detail = this.name;
+      const ms = new vscode.MarkdownString();
+      if (this.description) ms.appendText(this.description);
+      ms.appendCodeblock(this.origin());
+      item.documentation = ms;
+    };
+    return item;
+  }
+
+}

@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { HoverProvider } from 'vscode';
+import { TypeCompletions } from '../main/completion-items';
+import {Type as JassType} from '../main/type';
+// import TypeCompletions from '../main/completion-items';
 const md5: Function = require('../tool/md5');
 
 
@@ -134,268 +137,18 @@ class Comment {
 
 }
 
-class Type {
-  public name: string | null = null;
-  public extends: string | null = null; //  可以为数组对象，目前不进行进一步解析，以string形式保存
-  public isArrayObject: boolean = false;
-  public size: number = 0; // isArrayObject为true时才有效
-  public range: vscode.Range | null = null;
-  public nameRange: vscode.Range | null = null;
-  public description: string | null = null;
-
-  public constructor(name: string, extend?: string, description?: string) {
-    this.name = name;
-    if (extend) this.extends = extend;
-    if (description) this.description = description;
-  }
-
-  public origin(): string {
-    return `type ${this.name}${this.extends ? " extends " + this.extends : ""}`;
-    // ${this.isArrayObject ? " array" : ""}${this.size > 0 ? "[" + this.size + "]" : ""}
-  }
-
-  private static arrayObjects: Type[] = new Array<Type>();
-
-  public static getArrayObjects(): Type[] {
-    return this.arrayObjects;
-  }
-
-  public static getBaseTypes() {
-    return CommonJ.build().getTypes();
-  }
-
-  public static getTypes(): Type[] {
-    return [...Type.getBaseTypes(), ...Type.getArrayObjects()];
-  }
-
-  public static getTakesTypes(): Type[] {
-    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.TakeBaseTypes];
-  }
-
-  public static getStatementTypes(): Type[] {
-    return [...this.getBaseTypes(), ...this.getArrayObjects(), ...Type.StatementBaseTypes];
-  }
-
-  /**
-   * 解析type或数组对象
-   * @param content 
-   * @param isCommonJ true 只解析jass类型，false 只解析数组对象
-   */
-  static resolveTypes(content: string, isCommonJ: boolean = false): void {
-    this.arrayObjects = new Array<Type>(); // 清空
-    const jassContent = JassUtils.removeTextMacro(content);
-    const lines = JassUtils.content2Lines(jassContent);
-    // for内部每解析一个类型都会更新Types
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (/^\s*type\s+[a-zA-Z][a-zA-Z\d]*/.test(line)) {
-        const arrayObject = this.parseArrayObject(line);
-        if (arrayObject) {
-          const comment = Comment.parse(lines[i - 1]);
-          if (comment) arrayObject.description = comment.content;
-          this.arrayObjects.push(arrayObject);
-        }
-      }
-    }
-  }
-
-  static parseArrayObject(content: string): Type | null {
-    let type = null;
-    const typeRegExp = new RegExp(`type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>(${statementRegExpString})\\s+(?<arrayObject>array)\\s*\\[(?<size>[1-9]\\d*)\\]))?`);
-    if (typeRegExp.test(content)) {
-      const result = typeRegExp.exec(content);
-      if (result && result.groups) {
-        if (result.groups.name) {
-          type = new Type(result.groups.name);
-          if (result.groups.extends) {
-            type.extends = result.groups.extends;
-          }
-          if (result.groups.arrayObject) {
-            type.isArrayObject = true;
-          }
-          if (result.groups.size) {
-            type.size = Number.parseInt(result.groups.size);
-          }
-        }
-      }
-    }
-    return type;
-  }
-
-  public static readonly Boolean = new Type("boolean", void 0, "布尔");
-  public static readonly Integer = new Type("integer", void 0, "整数");
-  public static readonly Real = new Type("real", void 0, "实数");
-  public static readonly String = new Type("string", void 0, "字符串");
-  public static readonly Code = new Type("code", void 0, "代码");
-  public static readonly Handle = new Type("handle", void 0, "句柄");
-
-  public static readonly StatementBaseTypes = [Type.Boolean, Type.Integer, Type.Real, Type.String, Type.Handle];
-  public static readonly TakeBaseTypes = [...Type.StatementBaseTypes, Type.Code];
-
-  public toCompletionItem(): vscode.CompletionItem | null {
-    let item = null;
-    if (this.name) {
-      item = new vscode.CompletionItem(this.name, vscode.CompletionItemKind.Class);
-      item.detail = this.name;
-      const ms = new vscode.MarkdownString();
-      if (this.description) ms.appendText(this.description);
-      ms.appendCodeblock(this.origin());
-      item.documentation = ms;
-    };
-    return item;
-  }
-
-}
-
-const takesRegExpString = () => [...Type.getTakesTypes(), ...Interface.getInterfaces(), ...Struct.getStructs()].map(type => {
-  if (type.name) {
-    return type.name;
-  }
-}).filter(name => name).join("|");
-const statementRegExpString = () => [...Type.getStatementTypes(), ...Interface.getInterfaces(), ...Struct.getStructs()].map(type => {
-  if (type.name) {
-    return type.name;
-  }
-}).filter(name => name).join("|");
-
-class CommonJ {
-  private commonJFilePath: string = path.resolve(__dirname, "../../src/resources/static/jass/common.j");
-  private commonJContent: string | null = null;
-
-  private static commonJ: CommonJ | null = null;
-
-  private constructor() {
-    this.init();
-  }
-
-  private types = new Array<Type>();
-
-  public getTypes(): Array<Type> {
-    return this.types;
-  }
-
-  /**
-   * 初始化時，讀取common.j内容
-   */
-  private init() {
-    if (fs.existsSync(this.commonJFilePath)) {
-      this.commonJContent = fs.readFileSync(this.commonJFilePath).toString("utf8")
-    }
-    if (this.commonJContent) {
-      this.resolveTypes();
-    }
-  }
-
-  private parseBaseType(content: string): Type | null {
-    let type = null;
-    const typeRegExp = new RegExp(`^\\s*type\\s+(?<name>[a-zA-Z][a-zA-Z\d]*)(\\s+extends\\s+(?<extends>${[...this.types, Type.Handle].map(type => type.name).join("|")}))?`);
-    if (typeRegExp.test(content)) {
-      const result = typeRegExp.exec(content);
-      if (result && result.groups) {
-        if (result.groups.name) {
-          type = new Type(result.groups.name);
-          if (result.groups.extends) {
-            type.extends = result.groups.extends;
-          }
-        }
-      }
-    }
-    return type;
-  }
-
-  private resolveTypes(): void {
-    if (this.types.length > 0) {
-      this.types = new Array<Type>();
-    }
-
-    if (this.commonJContent) {
-      const jassContent = JassUtils.removeTextMacro(this.commonJContent);
-      const lines = JassUtils.content2Lines(jassContent);
-      // for内部每解析一个类型都会更新Types
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const type = this.parseBaseType(line);
-        if (type) {
-          const comment = Comment.parse(lines[i - 1]);
-          if (comment) type.description = comment.content;
-          this.types.push(type);
-        }
-      }
-
-    }
-  }
-
-  public setCommonJFilePath(filePath: string): void {
-    this.commonJFilePath = filePath;
-    this.init();
-  }
-
-  public getCommonJFilePath = () => this.commonJFilePath;
-
-  public getCommonJContent(): string | null {
-    return this.commonJContent;
-  }
-
-  public static build() {
-    if (!this.commonJ) this.commonJ = new CommonJ;
-    return this.commonJ;
-  }
-}
-
-const commonJ = CommonJ.build(); // 單例
 
 
 
-const str = commonJ.getTypes().map(x =>  'public static readonly '+ x.name?.replace(x.name.charAt(0), x.name.charAt(0).toUpperCase()) +' = new Type2("handle", Type2.'+ (x && x.extends ? x.extends.replace(x.extends.charAt(0), x.extends.charAt(0).toUpperCase()) : "") +', "'+ (x.description ? x.description : "未提供翻译")  +'");').join("\n");
-
-const all_str = `public static readonly Types = [${commonJ.getTypes().map(x=>{
-  if(x.name){
-    return "Type2." + x.name.replace(x.name.charAt(0), x.name.charAt(0).toUpperCase())
-  }else{
-    return "";
-  }
-})}];
-
-public static readonly AllTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Code,Type2.Handle,...Type2.Types];
-public static readonly StatementTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Handle,...Type2.Types];
-public static readonly TakesTypes = [Type2.Boolean,Type2.Integer,Type2.Real,Type2.String,Type2.Code,Type2.Handle,...Type2.Types];
-`;
-
-const typeOutput = `
-class Type2 {
-  public name:string = "nothing";
-  public extends:Type2 = Type2.Nothing;
-  public description: string = "";
-
-  constructor(name?:string,extend?:Type2,description?:string){
-    if(name){
-      this.name = name;
-    }
-    if(extend){
-      this.extends = extend;
-    }
-    if(description){
-      this.description = description;
-    }
-  }
-
-  public static readonly Nothing = new Type2("nothing", void 0, "");
-
-  public static readonly Boolean = new Type2("boolean", void 0, "布尔");
-  public static readonly Integer = new Type2("integer", void 0, "整数");
-  public static readonly Real = new Type2("real", void 0, "实数");
-  public static readonly String = new Type2("string", void 0, "字符串");
-  public static readonly Code = new Type2("code", void 0, "代码");
-  public static readonly Handle = new Type2("handle", void 0, "处理");
-
-  ${str}
-
-  ${all_str}
-}
-`;
+const takesRegExpString = () => JassType.TakesTypes.map(type => type.name).join("|");
+const statementRegExpString = () => JassType.StatementTypes.map(type => type.name).join("|");
+console.log(takesRegExpString)
+console.log(statementRegExpString)
 
 
-fs.writeFile("D:/javascript-workspace/jass2/src/main/type.ts", typeOutput,() => {});
+
+
+
 
 enum Modifier {
   Private = "private",
@@ -552,7 +305,7 @@ const resolveReturnsType = (content: string): string | null => {
   return returns;
 }
 
-class Func {
+export class Func {
 
   public modifier: Modifier = Modifier.Common;
   public name: string | null = null;
@@ -1186,7 +939,7 @@ class Error {
  * 函數對象
  * 數組對象
  */
-class Jass {
+export class Jass {
   public comments: Comment[] = new Array<Comment>();
   public filePath: string = "";
   public globals: Global[] = new Array<Global>();
@@ -1199,7 +952,6 @@ class Jass {
   public structs: Struct[] = new Array<Struct>();
   public interfaces: Interface[] = new Array<Interface>();
 
-  public types: Type[] = new Array<Type>();
 
   /**
    * @deprecated
@@ -1303,7 +1055,6 @@ class Jass {
     // text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
     const jass = new Jass();
 
-    Type.resolveTypes(content); // 分析當前文件類型
     Interface.resolveInterfaces(content);
     Struct.resolveStructs(content);
 
@@ -1932,6 +1683,9 @@ class Jass {
 
 }
 
+/**
+ * @deprecated
+ */
 class JassBean {
   public filePath: string = "";
   public flag = "";
@@ -1947,6 +1701,7 @@ class JassBean {
 /**
  * 当前目录
  * 用户指定目录
+ * @deprecated
  */
 class FileManager {
   private static map: any = {};
@@ -2094,9 +1849,11 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     const jass = Jass.parseContent(document.getText());
     console.log(jass.getScopes());
 
-    Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
-      if (item) items.push(item);
-    });
+    // Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
+    //   if (item) items.push(item);
+    // });
+    items.push(...TypeCompletions);
+
     Jass.allKeywords.forEach(keyword => {
       items.push(new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword));
     });
@@ -2471,3 +2228,127 @@ vscode.languages.registerDocumentFormattingEditProvider(language, new JassDocume
 //       (err: NodeJS.ErrnoException | null)=>{});
 // =======
 // >>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// ======================================= 生成静态
+/*
+const str = commonJ.getTypes().map(x =>  'public static readonly '+ x.name +' = new Type("'+ x.name +'", Type.'+ (x && x.extends ? x.extends : "") +', "'+ (x.description ? x.description : "未提供翻译")  +'");').join("\n");
+
+var originstring = "public origin():string{return `type ${this.name} extends ${this.extends.name}`}";
+
+const all_str = `public static readonly Types = [${commonJ.getTypes().map(x=>{
+  if(x.name){
+    return "Type." + x.name
+  }else{
+    return "";
+  }
+})}];
+
+public static readonly AllTypes = [Type.boolean,Type.integer,Type.real,Type.string,Type.code,Type.handle,...Type.Types];
+public static readonly StatementTypes = [Type.boolean,Type.integer,Type.real,Type.string,Type.handle,...Type.Types];
+public static readonly TakesTypes = [Type.boolean,Type.integer,Type.real,Type.string,Type.code,Type.handle,...Type.Types];
+`;
+
+const typeOutput = `
+export class Type {
+  public name:string = "nothing";
+  public extends:Type = Type.nothing;
+  public description: string = "";
+
+  ${originstring}
+
+  constructor(name?:string,extend?:Type,description?:string){
+    if(name){
+      this.name = name;
+    }
+    if(extend){
+      this.extends = extend;
+    }
+    if(description){
+      this.description = description;
+    }
+  }
+
+  public static readonly nothing = new Type("nothing", void 0, "");
+
+  public static readonly boolean = new Type("boolean", void 0, "布尔");
+  public static readonly integer = new Type("integer", void 0, "整数");
+  public static readonly real = new Type("real", void 0, "实数");
+  public static readonly string = new Type("string", void 0, "字符串");
+  public static readonly code = new Type("code", void 0, "代码");
+  public static readonly handle = new Type("handle", void 0, "处理");
+
+  ${str}
+
+  public static readonly Bases = [Type.boolean,Type.integer,Type.real,Type.string,Type.code,Type.handle];
+
+  public static readonly Types = [Type.agent,Type.event,Type.player,Type.widget,Type.unit,Type.destructable,Type.item,Type.ability,Type.buff,Type.force,Type.group,Type.trigger,Type.triggercondition,Type.triggeraction,Type.timer,Type.location,Type.region,Type.rect,Type.boolexpr,Type.sound,Type.conditionfunc,Type.filterfunc,Type.unitpool,Type.itempool,Type.race,Type.alliancetype,Type.racepreference,Type.gamestate,Type.igamestate,Type.fgamestate,Type.playerstate,Type.playerscore,Type.playergameresult,Type.unitstate,Type.aidifficulty,Type.eventid,Type.gameevent,Type.playerevent,Type.playerunitevent,Type.unitevent,Type.limitop,Type.widgetevent,Type.dialogevent,Type.unittype,Type.gamespeed,Type.gamedifficulty,Type.gametype,Type.mapflag,Type.mapvisibility,Type.mapsetting,Type.mapdensity,Type.mapcontrol,Type.playerslotstate,Type.volumegroup,Type.camerafield,Type.camerasetup,Type.playercolor,Type.placement,Type.startlocprio,Type.raritycontrol,Type.blendmode,Type.texmapflags,Type.effect,Type.effecttype,Type.weathereffect,Type.terraindeformation,Type.fogstate,Type.fogmodifier,Type.dialog,Type.button,Type.quest,Type.questitem,Type.defeatcondition,Type.timerdialog,Type.leaderboard,Type.multiboard,Type.multiboarditem,Type.trackable,Type.gamecache,Type.version,Type.itemtype,Type.texttag,Type.attacktype,Type.damagetype,Type.weapontype,Type.soundtype,Type.lightning,Type.pathingtype,Type.mousebuttontype,Type.animtype,Type.subanimtype,Type.image,Type.ubersplat,Type.hashtable,Type.framehandle,Type.originframetype,Type.framepointtype,Type.textaligntype,Type.frameeventtype,Type.oskeytype,Type.abilityintegerfield,Type.abilityrealfield,Type.abilitybooleanfield,Type.abilitystringfield,Type.abilityintegerlevelfield,Type.abilityreallevelfield,Type.abilitybooleanlevelfield,Type.abilitystringlevelfield,Type.abilityintegerlevelarrayfield,Type.abilityreallevelarrayfield,Type.abilitybooleanlevelarrayfield,Type.abilitystringlevelarrayfield,Type.unitintegerfield,Type.unitrealfield,Type.unitbooleanfield,Type.unitstringfield,Type.unitweaponintegerfield,Type.unitweaponrealfield,Type.unitweaponbooleanfield,Type.unitweaponstringfield,Type.itemintegerfield,Type.itemrealfield,Type.itembooleanfield,Type.itemstringfield,Type.movetype,Type.targetflag,Type.armortype,Type.heroattribute,Type.defensetype,Type.regentype,Type.unitcategory,Type.pathingflag];
+
+public static readonly AllTypes = [...Type.Bases,...Type.Types];
+public static readonly StatementTypes = [Type.boolean,Type.integer,Type.real,Type.string,Type.handle,...Type.Types];
+public static readonly TakesTypes = Type.AllTypes;
+}
+
+`;
+
+
+// fs.writeFile("D:/javascript-workspace/jass2/src/main/type.ts", typeOutput,() => {});
+
+function up(a :string):string{
+  return a.charAt(0).toUpperCase() + a.substring(1);
+}
+
+var keyWordString = Jass.keywords.map(x=>`public static readonly ${up(x)} = "${x}"`).join(";\n");
+var keyWordClassString = Jass.keywords.map(x=>`Keyword.${up(x)}`).join(",");
+
+var keyWordEdutionString = Jass.keywords.map(x=>{
+  return `public is${up(x)}(keyword:string):boolean{
+    return Keyword.${up(x)} == keyword;
+  }
+  
+  public isNot${up(x)}(keyword:string):boolean{
+    return Keyword.${up(x)} != keyword;
+  }
+  `;
+}).join("\n");
+
+var keywordOutput = `
+export class Keyword {
+
+  ${keyWordString}
+
+  public static readonly Keywords = [${keyWordClassString}];
+
+  public isKeyword(keyword:string):boolean{
+    return Keyword.Keywords.includes(keyword);
+  }
+
+  public isNotKeyword(keyword:string):boolean{
+    return !Keyword.Keywords.includes(keyword);
+  }
+
+  ${keyWordEdutionString}
+
+}
+
+
+;
+`;
+
+// fs.writeFile("D:/javascript-workspace/jass2/src/main/keyword.ts", keywordOutput,() => {});
+
+
+*/
