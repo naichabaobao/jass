@@ -167,5 +167,10 @@ public static readonly pathingflag = new Type("pathingflag", Type.handle, "æœªæ
 public static readonly AllTypes = [...Type.Bases,...Type.Types];
 public static readonly StatementTypes = [Type.boolean,Type.integer,Type.real,Type.string,Type.handle,...Type.Types];
 public static readonly TakesTypes = Type.AllTypes;
+
+public static getType(typeName:string):Type{
+  return Type.StatementTypes.find(type => type.name == typeName) ?? Type.nothing;
+}
+
 }
 

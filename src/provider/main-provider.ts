@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { HoverProvider } from 'vscode';
+import { HoverProvider, LanguageConfiguration } from 'vscode';
 import { TypeCompletions } from '../main/completion-items';
 import {Type as JassType} from '../main/type';
+import { commonJFilePath, blizzardJFilePath, commonAiFilePath, DzAPIJFilePath } from '../main/path';
+import { parseGlobals } from '../main/jass-parse';
 // import TypeCompletions from '../main/completion-items';
 const md5: Function = require('../tool/md5');
 
@@ -1055,14 +1057,15 @@ export class Jass {
     // text macro -> scope -> library -> interface -> struct -> function -> global -> array object -> interface function -> import -> comment
     const jass = new Jass();
 
-    Interface.resolveInterfaces(content);
-    Struct.resolveStructs(content);
-
+    // 暂时去除对interface 和 struct支持
+    // Interface.resolveInterfaces(content);
+    // Struct.resolveStructs(content);
+    // jass.interfaces = Interface.getInterfaces();
+    // jass.structs = Struct.getStructs();
     const lineTexts = JassUtils.content2Lines(content);
 
     jass.natives = Native.parseNatives(content);
-    jass.interfaces = Interface.getInterfaces();
-    jass.structs = Struct.getStructs();
+
 
     // 備注：後續轉爲為last方式 目前使用boolean 2019年12月4日
 
@@ -1828,14 +1831,55 @@ class FileManager {
   }
 
 }
-FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.j"));
-FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/blizzard.j"));
-FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.ai"));
-FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j"));
-FileManager.resolveConsumerFiles();
+// FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.j"));
+// FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/blizzard.j"));
+// FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/common.ai"));
+// FileManager.put( path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j"));
+// FileManager.resolveConsumerFiles();
 
-vscode.workspace.onDidChangeConfiguration(event => {
-  FileManager.resolveConsumerFiles();
+// vscode.workspace.onDidChangeConfiguration(event => {
+//   FileManager.resolveConsumerFiles();
+// });
+
+// 分析主要的四个文件和用户文件
+// 全异步
+const defaultItems = new Array<vscode.CompletionItem>();
+var commonJJass:Jass;
+fs.readFile(commonJFilePath,(error,buffer) => {
+  if(error){
+    console.error(error);
+  }else{
+    commonJJass = Jass.parseContent(buffer.toString("utf8"));
+    
+    defaultItems.push(...commonJJass.toCompletionItems());
+  }
+});
+var blizzardJJass:Jass;
+fs.readFile(blizzardJFilePath,(error,buffer) => {
+  if(error){
+    console.error(error);
+  }else{
+    blizzardJJass = Jass.parseContent(buffer.toString("utf8"));
+    defaultItems.push(...blizzardJJass.toCompletionItems());
+  }
+});
+var commonAiJass:Jass;
+fs.readFile(commonAiFilePath,(error,buffer) => {
+  if(error){
+    console.error(error);
+  }else{
+    commonAiJass = Jass.parseContent(buffer.toString("utf8"));
+    defaultItems.push(...commonAiJass.toCompletionItems());
+  }
+});
+var dzAPIJJass:Jass;
+fs.readFile(DzAPIJFilePath,(error,buffer) => {
+  if(error){
+    console.error(error);
+  }else{
+    dzAPIJJass = Jass.parseContent(buffer.toString("utf8"));
+    defaultItems.push(...dzAPIJJass.toCompletionItems());
+  }
 });
 
 class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
@@ -1845,13 +1889,16 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
-
-    const jass = Jass.parseContent(document.getText());
-    console.log(jass.getScopes());
-
+    var now = Date.now()
+    // console.log(now)
+    // const jass = Jass.parseContent(document.getText());
+    // console.log(Date.now() - now  )
     // Type.getTypes().map(type => type.toCompletionItem()).forEach(item => {
     //   if (item) items.push(item);
     // });
+
+console.log(parseGlobals(document.getText()))
+
     items.push(...TypeCompletions);
 
     Jass.allKeywords.forEach(keyword => {
@@ -1861,14 +1908,16 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
       items.push(new vscode.CompletionItem(macro, vscode.CompletionItemKind.Property));
     });
 
+    items.push(...defaultItems);
+
     // items.push(...Jass.parseContent(document.getText()).toCompletionItems(position));
 
-    FileManager.resolveDirFiles(document.uri.fsPath);
+    // FileManager.resolveDirFiles(document.uri.fsPath);
 
-    FileManager.putContent(document.uri.fsPath, document.getText());
-    FileManager.getJasss().forEach(j => {
-      items.push(...j.toCompletionItems());
-    });
+    // FileManager.putContent(document.uri.fsPath, document.getText());
+    // FileManager.getJasss().forEach(j => {
+    //   items.push(...j.toCompletionItems());
+    // });
 
 
     return items;
