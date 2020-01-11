@@ -11,11 +11,10 @@ const GlobalStartRegExp = new RegExp(/^\s*globals\b/);
 const GlobalEndRegExp = new RegExp(/^\s*endglobals\b/);
 
 const GlobalRegExp = new RegExp(`${isVjassEnable ? "((?<modifier>private|public)\\s+)?" : ""}((?<isConstant>constant)\\s+)?(?<type>${StatementTypesRegExpString})\\s+((?<isArray>array)\\s+)?(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
-console.log(GlobalRegExp.source)
+
 export const parseGlobals = (content:string):Array<Global|GlobalConstant|GlobalArray> => {
   const globals = new Array<Global|GlobalConstant|GlobalArray>();
   const lines = toLines(content);
-  console.log(lines)
   let inGlobalBlock = false;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];

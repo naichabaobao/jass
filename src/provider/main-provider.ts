@@ -1889,7 +1889,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
-    var now = Date.now()
+    // var now = Date.now()
     // console.log(now)
     // const jass = Jass.parseContent(document.getText());
     // console.log(Date.now() - now  )
@@ -1897,7 +1897,7 @@ class DefaultCompletionItemProvider implements vscode.CompletionItemProvider {
     //   if (item) items.push(item);
     // });
 
-console.log(parseGlobals(document.getText()))
+    console.log(parseGlobals(document.getText()))
 
     items.push(...TypeCompletions);
 
