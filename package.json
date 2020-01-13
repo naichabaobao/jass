@@ -38,6 +38,11 @@
             "type": "string"
           },
           "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
+        },
+        "jass.vjass.support": {
+          "type": "boolean", 
+          "default": true,
+          "description": "是否开启library支持"
         }
       }
     },
@@ -84,7 +89,7 @@
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.37.0",
     "tslint": "^5.20.0",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.4",
     "vscode-test": "^1.2.2"
   },
   "bugs": {

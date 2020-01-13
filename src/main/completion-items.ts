@@ -18,6 +18,7 @@ function creatTypeCompletion(type:Type):vscode.CompletionItem {
   return item;
 }
 
+
 export const TypeCompletions: vscode.CompletionItem[] = Type.AllTypes.map(type => creatTypeCompletion(type));
 
 

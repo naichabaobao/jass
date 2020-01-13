@@ -894,7 +894,7 @@ globals
     constant unittype UNIT_TYPE_SAPPER                      = ConvertUnitType(17)
     constant unittype UNIT_TYPE_TOWNHALL                    = ConvertUnitType(18)    
     constant unittype UNIT_TYPE_ANCIENT                     = ConvertUnitType(19)
-    
+
     constant unittype UNIT_TYPE_TAUREN                      = ConvertUnitType(20)
     constant unittype UNIT_TYPE_POISONED                    = ConvertUnitType(21)
     constant unittype UNIT_TYPE_POLYMORPHED                 = ConvertUnitType(22)

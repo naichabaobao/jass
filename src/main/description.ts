@@ -1,0 +1,3 @@
+interface Description{
+  descript:string;
+}

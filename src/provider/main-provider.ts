@@ -5,7 +5,8 @@ import { HoverProvider, LanguageConfiguration } from 'vscode';
 import { TypeCompletions } from '../main/completion-items';
 import {Type as JassType} from '../main/type';
 import { commonJFilePath, blizzardJFilePath, commonAiFilePath, DzAPIJFilePath } from '../main/path';
-import { parseGlobals } from '../main/jass-parse';
+import { parseGlobals } from '../main/global';
+
 // import TypeCompletions from '../main/completion-items';
 const md5: Function = require('../tool/md5');
 

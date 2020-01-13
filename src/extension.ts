@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import("./provider/main-provider");
+import("./provider/register");
 
 export function activate(context: vscode.ExtensionContext) {}
 
