@@ -1,14 +1,18 @@
 .vscode/**
 .vscode-test/**
 out/test/**
-<<<<<<< HEAD
+node_modules
+src/main/**
+src/provider/**
+src/temp/**
+src/test/**
+src/tool/**
 
-=======
-src/**
->>>>>>> d99fd923192e420367ffeee1b87cfb4383856d9c
 .gitignore
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/tslint.json
 **/*.map
 **/*.ts
+
+*.vsix

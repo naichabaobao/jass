@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { Keyword } from '../main/keyword';
 import { allGlobals, allFunctions } from '../main/tool';
 import { Type } from '../main/type';
 import { isVjassSupport } from '../main/configuration';
