@@ -1,11 +1,11 @@
-enum GlobalModifier {
+enum ModifierEnum {
   Private= "private",
   Public="public",
   Common="common"
 }
 
 interface Modifier{
- modifier:GlobalModifier;
+ modifier:ModifierEnum;
 }
 
-export {GlobalModifier,Modifier};
+export {ModifierEnum,Modifier};

@@ -6,6 +6,10 @@ import { toLines } from './tool';
 import { isString } from 'util';
 import { isVjassSupport } from './configuration';
 import { parseComment } from './commont';
+import { Library } from './library';
+import { Range } from './range';
+import { Position } from 'vscode';
+import { ModifierEnum } from './modifier';
 
 interface JassFunction {
   name: string;
@@ -22,7 +26,7 @@ class Take implements Value,Origin {
   }
 }
 
-class FunctionImpl implements JassFunction, Origin,Description {
+class FunctionImpl extends Range implements JassFunction, Origin,Description {
   descript: string = "";
   name: string = "";
   takes: Take[] = [];
@@ -54,8 +58,21 @@ class Native extends FunctionImpl {
 
 class Function extends FunctionImpl {
 
+  public library:Library | null = null;
+  public modifier:ModifierEnum = ModifierEnum.Common;
+  /**
+   * 拼library和方法名称
+   */
+  public get libraryFunctionName(){
+    const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
+    const functionName = `${libname}${this.name}`;
+    return functionName;
+  }
+
   public origin(): string {
-    return `${Keyword.Function} ${this.name} ${Keyword.Takes} ${this.takesString()} ${Keyword.Returns} ${this.returns.name}`;
+    const functionOrigin = `${Keyword.Function} ${this.name} ${Keyword.Takes} ${this.takesString()} ${Keyword.Returns} ${this.returns.name}\n${Keyword.Endfunction}`;
+    const origin = isVjassSupport() && this.library ? `${Keyword.keywordLibrary}\n\t${functionOrigin}\n${Keyword.keywordEndLibrary}` : functionOrigin;
+    return origin;
   }
 }
 
@@ -90,6 +107,10 @@ function parseNatives(content: string): Array<Native> {
           native.takes = parseTakes(line);
           native.returns = parseReturns(line);
           native.descript = parseComment(lines[index - 1]);
+
+          native.start = new Position(index,0);
+          native.end = new Position(index,line.length);
+
           natives.push(native);
         }
       }
@@ -104,23 +125,23 @@ function parseNatives(content: string): Array<Native> {
  */
 function parseTakes(content: string): Array<Take> {
   let takes = new Array<Take>();
-  if (!content) return takes;
-  if (!takesNothingRegExp.test(content)) {
-    if (takesRegExp.test(content)) {
-      const result = takesRegExp.exec(content);
-      if (result && result.groups && result.groups.takeString) {
-        const takeString = result.groups.takeString;
-        const takesStrings = takeString.split(/\s*,\s*/);
-        takesStrings.forEach(takeString => {
-          const takeTypeName = takeString.trim().split(/\s+/);
-          const take = new Take();
-          take.type = Type.getType(takeTypeName[0]);
-          take.name = takeTypeName[1];
-          if(takeTypeName[0] && takeTypeName[1] && take.type != Type.nothing && Keyword.isNotKeyword(takeTypeName[0])){
-            takes.push(take);
-          }
-        });
-      }
+  if (takesNothingRegExp.test(content)){
+
+  }else if (takesRegExp.test(content)) {
+    const result = takesRegExp.exec(content);
+    if (result && result.groups && result.groups.takeString) {
+      const takeString = result.groups.takeString;
+      const takesStrings = takeString.split(/\s*,\s*/);
+      takesStrings.forEach(takeString => {
+        const takeTypeName = takeString.trim().split(/\s+/);
+        const take = new Take();
+      
+        take.type = Type.getType(takeTypeName[0]);
+        take.name = takeTypeName[1];
+        if(take.type.name != Type.nothing.name && Keyword.isNotKeyword(takeTypeName[1])){
+          takes.push(take);
+        }
+      });
     }
   }
   return takes;
@@ -161,11 +182,25 @@ function parseFunctions(content: string): Array<Function> {
       const func = new Function();
       const result = FunctionRegExp.exec(line);
       if (result && result.groups) {
+        if(result.groups.modifier){
+          if(result.groups.modifier == Keyword.keywordPrivate){
+            func.modifier = ModifierEnum.Private;
+          }else if(result.groups.modifier == Keyword.keywordPublic){
+            func.modifier = ModifierEnum.Public;
+          }else{
+            func.modifier = ModifierEnum.Common;
+          }
+        }
         if (result.groups.name && Keyword.isNotKeyword(result.groups.name)) {
           func.name = result.groups.name;
           func.takes = parseTakes(line);
           func.returns = parseReturns(line);
           func.descript = parseComment(lines[index - 1]);
+
+          func.start = new Position(index,0);
+          // 目前不解析块
+          func.end = new Position(index,line.length);
+
           functions.push(func);
         }
       }

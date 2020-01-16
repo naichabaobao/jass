@@ -169,7 +169,7 @@ export class Type {
   public static readonly TakesTypes = Type.AllTypes;
 
   public static getType(typeName: string): Type {
-    return Type.StatementTypes.find(type => type.name == typeName) ?? Type.nothing;
+    return Type.AllTypes.find(type => type.name == typeName) ?? Type.nothing;
   }
 
 }

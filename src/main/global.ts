@@ -1,19 +1,35 @@
 import { Value } from "./value";
 import { Type } from "./type";
-import { Modifier, GlobalModifier } from "./modifier";
+import { Modifier, ModifierEnum } from "./modifier";
 import { Origin } from "./origin";
 import { Keyword } from "./keyword";
 import { toLines } from "./tool";
 import { isVjassSupport } from "./configuration";
 import { parseComment } from "./commont";
+import { Range } from "./range";
+import { Library } from "./library";
+import { downloadAndUnzipVSCode } from "vscode-test";
+import {Position} from 'vscode';
 
-class GlobalImpl implements Value, Description, Modifier, Origin {
+class GlobalImpl extends Range implements Value, Description, Modifier, Origin {
   type: Type = Type.nothing;
   name: string = "";
   descript: string = "";
-  modifier: GlobalModifier = GlobalModifier.Common;
+  modifier: ModifierEnum = ModifierEnum.Common;
+
+  public library:Library | null = null;
+
+  /**
+   * 拼library和global名称
+   */
+  public get libraryGlobalName(){
+    const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
+    const globalName = `${libname}${this.name}`;
+    return globalName;
+  }
+
   protected modifiertoString(): string {
-    return this.modifier == GlobalModifier.Common ? "" : this.modifier;
+    return this.modifier == ModifierEnum.Common ? "" : this.modifier;
   }
   public origin(): string {
     return `${this.modifiertoString()} ${this.type.name} ${this.name}`;
@@ -51,11 +67,11 @@ function _getModifierRegExpString() {
 
 const GlobalRegExp = new RegExp(`${_getModifierRegExpString()}((?<isConstant>${Keyword.Constant})\\s+)?(?<type>${StatementTypesRegExpString})\\s+((?<isArray>${Keyword.Array})\\s+)?(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
 
-function _resolveModifier(modifier:string):GlobalModifier{
+function _resolveModifier(modifier:string):ModifierEnum{
   if(!modifier || !isVjassSupport()){ // 不支持vjass时返回Common
-    return GlobalModifier.Common;
+    return ModifierEnum.Common;
   }
-  return modifier == Keyword.keywordPrivate ? GlobalModifier.Private : modifier == Keyword.keywordPublic ? GlobalModifier.Public : GlobalModifier.Common;
+  return modifier == Keyword.keywordPrivate ? ModifierEnum.Private : modifier == Keyword.keywordPublic ? ModifierEnum.Public : ModifierEnum.Common;
 }
 
 /**
@@ -93,6 +109,10 @@ export const parseGlobals = (content: string): Array<Global | GlobalConstant | G
           global.name = result.groups.name;
         }
         global.descript = parseComment(lines[i - 1]);
+
+        global.start = new Position(i,0);
+        global.end = new Position(i,line.length);
+
         globals.push(global);
       }
     }

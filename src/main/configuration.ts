@@ -14,4 +14,8 @@ function isVjassSupport(){
   return isSupport;
 }
 
-export {isVjassSupport};
+function includes():Array<string>{
+  return vscode.workspace.getConfiguration()?.jass?.includes ?? [];
+}
+
+export {isVjassSupport,includes};

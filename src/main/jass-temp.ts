@@ -1,4 +1,4 @@
-import { interfaces } from "mocha";
+
 
 class Global{
   public static supportVjass = true;

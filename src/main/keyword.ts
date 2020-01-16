@@ -360,7 +360,9 @@ export class Keyword {
   public static readonly keywordOperator = "operator";
   public static readonly keywordDebug = "debug";
 
-  public static readonly vKeywordKeywords = [Keyword.keywordLibrary, Keyword.keyworInitializer, Keyword.keywordNeeds,Keyword.keywordUses Keyword.keywordRequires, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordImplement, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordOperator, Keyword.keywordDebug];
+  public static readonly vKeywordKeywords = [Keyword.keywordLibrary, Keyword.keyworInitializer, Keyword.keywordNeeds,Keyword.keywordUses, Keyword.keywordRequires, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordImplement, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordOperator, Keyword.keywordDebug];
+
+  public static readonly allKeywords = [...Keyword.Keywords,...Keyword.vKeywordKeywords];
 
 };
 

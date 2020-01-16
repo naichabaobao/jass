@@ -2,10 +2,13 @@ import * as vscode from 'vscode';
 import { Keyword } from '../main/keyword';
 import { isVjassSupport } from '../main/configuration';
 import { language } from '../main/constant';
-import { Global, GlobalArray, GlobalImpl } from '../main/global';
+import { Global, GlobalArray, GlobalImpl, parseGlobals } from '../main/global';
 import { Type } from '../main/type';
-import { FunctionImpl } from '../main/function';
+import { FunctionImpl, Native, Function, parseFunctions } from '../main/function';
 import { CommonJGlobals, BlizzardJGlobals, CommonAiGlobals, DzApiJGlobals, CommonJNatives, BlizzardJNatives, CommonAiNatives, DzApiJNatives, CommonJFunctions, BlizzardJFunctions, CommonAiFunctions, DzApiJFunctions } from '../main/file';
+import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
+import { Jasss } from '../main/include-file';
+import { ModifierEnum } from '../main/modifier';
 
 console.log("注册KeywordCompletionItemProvider")
 
@@ -114,8 +117,14 @@ class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     } else {
       completionItemKind = vscode.CompletionItemKind.Constant;
     }
-    const item = new vscode.CompletionItem(global.name, completionItemKind);
-    item.detail = global.name;
+    var name = "";
+    if(global.modifier == ModifierEnum.Public){
+      name = global.libraryGlobalName;
+    }else{
+      name = global.name;
+    }
+    const item = new vscode.CompletionItem(name, completionItemKind);
+    item.detail = name;
     const ms = new vscode.MarkdownString();
     ms.appendText(global.descript);
     ms.appendCodeblock(global.origin());
@@ -123,9 +132,18 @@ class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     return item;
   }
 
+  // include全局
+  private get includeGlobals(): Array<vscode.CompletionItem> {
+    return Jasss.map(jass => jass.globals).flat().filter(global => global.modifier != ModifierEnum.Private).map(global => this.creatGlobalCompletion(global));
+  }
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    return this.mainGlobals;
+    const content = document.getText();
+    const globals = parseGlobals(content);
+
+    const items = (isVjassSupport() ? resolveGlobal(parseLibrarys(content),globals) : globals).map(global => this.creatGlobalCompletion(global));
+
+    return [...this.mainGlobals,...this.includeGlobals,...items];
   }
 
 }
@@ -182,8 +200,20 @@ class FunctionCompletionItemProvider implements vscode.CompletionItemProvider {
    * @param global 全局变量
    */
   private creatCompletion(func: FunctionImpl): vscode.CompletionItem {
-    const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-    item.detail = func.name;
+    var name:string = "";
+    if(func instanceof Native){
+      name = func.name;
+    }else if(func instanceof Function){
+      func as Function;
+      if(func.modifier == ModifierEnum.Public){
+        name = func.libraryFunctionName;
+      }else{
+        name = func.name;
+      }
+    }
+
+    const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Function);
+    item.detail = name;
     const ms = new vscode.MarkdownString();
     ms.appendText(func.descript);
     ms.appendCodeblock(func.origin());
@@ -191,9 +221,19 @@ class FunctionCompletionItemProvider implements vscode.CompletionItemProvider {
     return item;
   }
 
+  private get includeFunctions(): Array<vscode.CompletionItem>{
+    return Jasss.map(jass => jass.functions).flat().filter(func => func.modifier != ModifierEnum.Private).map(func => this.creatCompletion(func));
+  }
+
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    return this.allMainCompletionItem;
+    console.log(this.includeFunctions);
+
+    const content = document.getText();
+    const functions = parseFunctions(content);
+    var items:vscode.CompletionItem[] = (isVjassSupport() ? resolveFunction(parseLibrarys(content),functions) : functions).map(func => this.creatCompletion(func));
+
+    return [...this.allMainCompletionItem,...this.includeFunctions,...items];
   }
 
 }
