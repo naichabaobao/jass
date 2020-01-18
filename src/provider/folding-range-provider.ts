@@ -1,12 +1,22 @@
 import * as vscode from 'vscode';
 import { language } from '../main/constant';
 import { toLines } from '../main/tool';
+import { Keyword } from '../main/keyword';
 
-const ifStartRegExp = new RegExp(`^\\s*if\\b`);
-const ifEndStartRegExp = new RegExp(`^\\s*endif\\b`);
+const globalStartRegExp = new RegExp(`^\\s*${Keyword.Globals}\\b`);
+const globalEndStartRegExp = new RegExp(`^\\s*${Keyword.Endglobals}\\b`);
 
-const loopStartRegExp = new RegExp(`^\\s*loop\\b`);
-const loopEndStartRegExp = new RegExp(`^\\s*endloop\\b`);
+const functionStartRegExp = new RegExp(`^\\s*((${Keyword.keywordPrivate}|${Keyword.keywordPublic}|${Keyword.keywordStatic})\\s+)?${Keyword.Function}\\b`);
+const functionEndStartRegExp = new RegExp(`^\\s*${Keyword.Endfunction}\\b`);
+
+const libraryStartRegExp = new RegExp(`^\\s*${Keyword.keywordLibrary}\\b`);
+const libraryEndStartRegExp = new RegExp(`^\\s*${Keyword.keywordEndLibrary}\\b`);
+
+const ifStartRegExp = new RegExp(`^\\s*${Keyword.If}\\b`);
+const ifEndStartRegExp = new RegExp(`^\\s*${Keyword.Endif}\\b`);
+
+const loopStartRegExp = new RegExp(`^\\s*${Keyword.Loop}\\b`);
+const loopEndStartRegExp = new RegExp(`^\\s*${Keyword.Endloop}\\b`);
 
 class FoldingRangeProvider implements vscode.FoldingRangeProvider{
 
@@ -17,6 +27,15 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
     const content = document.getText();
     const lines = toLines(content);
     
+    let inGlobal = false;
+    let globalLine = 0;
+
+    let inFunction = false;
+    let functionLine = 0;
+
+    let inLibrary = false;
+    let libraryLine = 0;
+
     let inIf = false;
     let ifLine = 0;
 
@@ -24,7 +43,7 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
     let loopLine = 0;
 
     lines.forEach((line,index) => {
-
+      // if
       if(ifStartRegExp.test(line)){
         inIf = true;
         ifLine = index;
@@ -34,7 +53,9 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
           foldings.push(folding);
           inIf = false;
         }
-      }else if(loopStartRegExp.test(line)){
+      }
+      // loop
+      else if(loopStartRegExp.test(line)){
         inLoop = true;
         loopLine = index;
       }else if(loopEndStartRegExp.test(line)){
@@ -42,6 +63,39 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
           const folding = new vscode.FoldingRange(loopLine,index);
           foldings.push(folding);
           inLoop = false;
+        }
+      }
+      // global
+      else if(globalStartRegExp.test(line)){
+        inGlobal = true;
+        globalLine = index;
+      }else if(globalEndStartRegExp.test(line)){
+        if(inGlobal == true){
+          const folding = new vscode.FoldingRange(globalLine,index);
+          foldings.push(folding);
+          inGlobal = false;
+        }
+      }
+      // function
+      else if(functionStartRegExp.test(line)){
+        inFunction = true;
+        functionLine = index;
+      }else if(functionEndStartRegExp.test(line)){
+        if(inFunction == true){
+          const folding = new vscode.FoldingRange(functionLine,index);
+          foldings.push(folding);
+          inFunction = false;
+        }
+      }
+      // library
+      else if(libraryStartRegExp.test(line)){
+        inLibrary = true;
+        libraryLine = index;
+      }else if(libraryEndStartRegExp.test(line)){
+        if(inLibrary == true){
+          const folding = new vscode.FoldingRange(libraryLine,index);
+          foldings.push(folding);
+          inLibrary = false;
         }
       }
 
