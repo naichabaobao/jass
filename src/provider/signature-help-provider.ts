@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { language } from '../main/constant';
 import { FunctionImpl, Function, parseFunctions } from '../main/function';
-import { allFunctions } from '../main/tool';
+import { allFunctionImpls } from '../main/tool';
 import { isVjassSupport } from '../main/configuration';
 import { resolveFunction, parseLibrarys } from '../main/library';
 
@@ -42,7 +42,7 @@ vscode.languages.registerSignatureHelpProvider(language, {
             const funcs = parseFunctions(content);
             var functions = (isVjassSupport() ? resolveFunction(parseLibrarys(content),funcs) : funcs);
 
-            const func = [...allFunctions(),...functions].find(func => {
+            const func = [...allFunctionImpls(),...functions].find(func => {
               let isMatch = false;
               if(isVjassSupport()){
                 if(func instanceof Function){

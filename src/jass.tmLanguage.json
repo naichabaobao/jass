@@ -90,7 +90,7 @@
     },
     "jass-const": {
       "name": "constant.language",
-      "match": "\\b(true|false|null|nothing)\\b"
+      "match": "\\b(true|false|null)\\b"
     },
     "jass-keyword-operator": {
       "name": "keyword.operator",
@@ -102,7 +102,7 @@
     },
     "jass-type": {
       "name": "support.type",
-      "match": "\\b(integer|real|boolean|string|handle|code)\\b"
+      "match": "\\b(integer|real|boolean|string|handle|code|nothing)\\b"
     },
     "jass-class": {
       "name": "support.class",
@@ -138,7 +138,7 @@
     },
     "vjass-macro": {
       "name": "comment.line.number-sign",
-      "match": "#ifndef|#if|#define|#endif|#ifdef|#include|#else|#[a-z]+"
+      "match": "#ifndef|#ifdef|#if|#define|#endif|#include|#else|#[a-z]+"
     }
   }
 }
