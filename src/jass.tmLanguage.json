@@ -114,11 +114,11 @@
     },
     "jass-variable": {
       "name": "support.variable",
-      "match": "[a-zA-Z]\\w*"
+      "match": "[a-zA-Z][a-zA-Z0-9_]*"
     },
     "jass-statement": {
       "name": "support.variable",
-      "match": "[a-zA-Z]\\w*"
+      "match": "[a-zA-Z][a-zA-Z0-9_]*"
     },
     "vjass-keyword": {
       "name": "keyword",
@@ -134,11 +134,11 @@
     },
     "vjass-variable-macro": {
       "name": "variable.other",
-      "match": "\\$\\w*?\\$"
+      "match": "\\$[a-zA-Z][a-zA-Z0-9_]*?\\$"
     },
     "vjass-macro": {
       "name": "comment.line.number-sign",
-      "match": "#ifndef|#ifdef|#if|#define|#endif|#include|#else|#[a-z]+"
+      "match": "#ifndef|#ifdef|#if|#define|#endif|#include|#else|#[a-zA-z]+"
     }
   }
 }

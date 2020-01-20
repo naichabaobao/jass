@@ -2,6 +2,7 @@ import { readFile } from "fs";
 import { commonJFilePath, blizzardJFilePath, commonAiFilePath, DzAPIJFilePath } from "./path";
 import { parseGlobals, Global, GlobalConstant, GlobalArray } from "./global";
 import { Native, parseNatives, Function, parseFunctions } from "./function";
+import { Jass } from "./jass";
 
 /**
  * jass文件内容
@@ -27,14 +28,32 @@ const BlizzardJFunctions = new Array<Function>();
 const CommonAiFunctions = new Array<Function>();
 const DzApiJFunctions = new Array<Function>();
 
+const CommonJJass = new Jass(commonJFilePath);
+const BlizzardJJass = new Jass(blizzardJFilePath);
+const CommonAiJJass = new Jass(commonAiFilePath);
+const DzApiJJass = new Jass(DzAPIJFilePath);
+
 readFile(commonJFilePath, (error, data) => {
   if (error) {
     console.error(error.message);
   } else {
     _commonJContent = data.toString("utf8");
-    Object.assign(CommonJGlobals, parseGlobals(_commonJContent));
-    Object.assign(CommonJNatives, parseNatives(_commonJContent));
-    Object.assign(CommonJFunctions, parseFunctions(_commonJContent));
+    const globals = parseGlobals(_commonJContent);
+    const natives = parseNatives(_commonJContent);
+    const functions = parseFunctions(_commonJContent);
+    
+    
+    Object.assign(CommonJGlobals, globals);
+    Object.assign(CommonJNatives, natives);
+    Object.assign(CommonJFunctions, functions);
+
+    globals.forEach(global => {
+      CommonJJass.putGlobal(global);
+    });
+    functions.forEach(func => {
+      CommonJJass.putFunction(func);
+    });
+    CommonJJass.natives = natives;
   }
 });
 readFile(blizzardJFilePath, (error, data) => {
@@ -42,9 +61,20 @@ readFile(blizzardJFilePath, (error, data) => {
     console.error(error.message);
   } else {
     _blizzardJContent = data.toString("utf8");
-    Object.assign(BlizzardJGlobals, parseGlobals(_blizzardJContent));
-    Object.assign(BlizzardJNatives, parseNatives(_blizzardJContent));
-    Object.assign(BlizzardJFunctions, parseFunctions(_blizzardJContent));
+    const globals = parseGlobals(_blizzardJContent);
+    const natives = parseNatives(_blizzardJContent);
+    const functions = parseFunctions(_blizzardJContent);
+    Object.assign(BlizzardJGlobals, globals);
+    Object.assign(BlizzardJNatives, natives);
+    Object.assign(BlizzardJFunctions, functions);
+
+    globals.forEach(global => {
+      BlizzardJJass.putGlobal(global);
+    });
+    functions.forEach(func => {
+      BlizzardJJass.putFunction(func);
+    });
+    BlizzardJJass.natives = natives;
   }
 });
 readFile(commonAiFilePath, (error, data) => {
@@ -52,9 +82,20 @@ readFile(commonAiFilePath, (error, data) => {
     console.error(error.message);
   } else {
     _commonAiContent = data.toString("utf8");
-    Object.assign(CommonAiGlobals, parseGlobals(_commonAiContent));
-    Object.assign(CommonAiNatives, parseNatives(_commonAiContent));
-    Object.assign(CommonAiFunctions, parseFunctions(_commonAiContent));
+    const globals = parseGlobals(_commonAiContent);
+    const natives = parseNatives(_commonAiContent);
+    const functions = parseFunctions(_commonAiContent);
+    Object.assign(CommonAiGlobals, globals);
+    Object.assign(CommonAiNatives, natives);
+    Object.assign(CommonAiFunctions, functions);
+
+    globals.forEach(global => {
+      CommonAiJJass.putGlobal(global);
+    });
+    functions.forEach(func => {
+      CommonAiJJass.putFunction(func);
+    });
+    CommonAiJJass.natives = natives;
   }
 });
 readFile(DzAPIJFilePath, (error, data) => {
@@ -62,9 +103,20 @@ readFile(DzAPIJFilePath, (error, data) => {
     console.error(error.message);
   } else {
     _dzApicommonJContent = data.toString("utf8");
-    Object.assign(DzApiJGlobals, parseGlobals(_dzApicommonJContent));
-    Object.assign(DzApiJNatives, parseNatives(_dzApicommonJContent));
-    Object.assign(DzApiJFunctions, parseFunctions(_dzApicommonJContent));
+    const globals = parseGlobals(_dzApicommonJContent);
+    const natives = parseNatives(_dzApicommonJContent);
+    const functions = parseFunctions(_dzApicommonJContent);
+    Object.assign(DzApiJGlobals, globals);
+    Object.assign(DzApiJNatives, natives);
+    Object.assign(DzApiJFunctions, functions);
+
+    globals.forEach(global => {
+      DzApiJJass.putGlobal(global);
+    });
+    functions.forEach(func => {
+      DzApiJJass.putFunction(func);
+    });
+    DzApiJJass.natives = natives;
   }
 });
 
@@ -77,7 +129,7 @@ function blizzardJContent(): string {
 function commonAiContent(): string {
   return _commonAiContent;
 }
-function dzApicommonJContent(): string {
+function dzApiJContent(): string {
   return _dzApicommonJContent;
 }
 
@@ -85,7 +137,7 @@ export {
   commonJContent,
   blizzardJContent,
   commonAiContent,
-  dzApicommonJContent,
+  dzApiJContent,
 
   CommonJGlobals,
   BlizzardJGlobals,
@@ -97,8 +149,13 @@ export {
   CommonAiNatives,
   DzApiJNatives,
 
-CommonJFunctions,
-BlizzardJFunctions,
-CommonAiFunctions,
-DzApiJFunctions,
+  CommonJFunctions,
+  BlizzardJFunctions,
+  CommonAiFunctions,
+  DzApiJFunctions,
+
+  CommonJJass,
+  BlizzardJJass,
+  CommonAiJJass,
+  DzApiJJass,
 };

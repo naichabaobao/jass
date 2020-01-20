@@ -55,7 +55,7 @@ class Jass {
           if (err) {
             console.error(err.message);
             throw err.message;
-          } else if (stats.isFile) {
+          } else if (stats.isFile()) {
             console.log(filePath + " 是文件");
             const parseFile = parse(filePath);
             if (parseFile.ext == j || parseFile.ext == ai) {
@@ -189,6 +189,8 @@ class Jass {
   }
 
 }
+
+
 
 export {
   Jass

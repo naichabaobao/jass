@@ -127,10 +127,7 @@ class CurrentHoverProvider implements vscode.HoverProvider {
         try {
           const local = parseLocal(text);
           if (local) {
-            console.log(local)
             if (local.name == key) {
-              console.log(local.name)
-              console.log(key)
               const markdownString = new vscode.MarkdownString();
               markdownString.appendCodeblock(local.origin());
               hovers.push(markdownString);

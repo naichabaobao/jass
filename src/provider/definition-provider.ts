@@ -5,6 +5,8 @@ import { parseLocal } from '../main/local';
 import { Keyword } from '../main/keyword';
 import { parseTakes, parseFunctions } from '../main/function';
 import { parseGlobals } from '../main/global';
+import { commonJFilePath } from '../main/path';
+import { CommonJJass, BlizzardJJass, CommonAiJJass, DzApiJJass } from '../main/file';
 
 class DefinitionProvider implements vscode.DefinitionProvider {
 
@@ -19,7 +21,7 @@ class DefinitionProvider implements vscode.DefinitionProvider {
   private getLocations(key: string): Array<vscode.Location> {
     const locations = new Array<vscode.Location>();
 
-    Jasss.forEach(jass => {
+    [...Jasss,CommonJJass,BlizzardJJass,CommonAiJJass,DzApiJJass].forEach(jass => {
       jass.globals.forEach(global => {
         if (global.libraryGlobalName == key) {
           const location = new vscode.Location(vscode.Uri.parse(this.convertFileNameToUrl(jass.fileName)), global.range);
@@ -29,6 +31,12 @@ class DefinitionProvider implements vscode.DefinitionProvider {
       jass.functions.forEach(func => {
         if (func.libraryFunctionName == key) {
           const location = new vscode.Location(vscode.Uri.parse(this.convertFileNameToUrl(jass.fileName)), func.range);
+          locations.push(location);
+        }
+      });
+      jass.natives.forEach(native => {
+        if (native.name == key) {
+          const location = new vscode.Location(vscode.Uri.parse(this.convertFileNameToUrl(jass.fileName)), native.range);
           locations.push(location);
         }
       });
@@ -104,8 +112,8 @@ class DefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
 
     let key = document.getText(document.getWordRangeAtPosition(position));
-
-    return [...this.getLocations(key),...this.getCurrentLocations(document,position,key)];
+    // new vscode.Location(vscode.Uri.file(commonJFilePath),new vscode.Range(2,0,2,0))
+    return [...this.getLocations(key),...this.getCurrentLocations(document,position,key),];
   }
 
 }
