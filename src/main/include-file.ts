@@ -1,6 +1,6 @@
 import { includes, isVjassSupport } from "./configuration";
-import { readFile, stat, exists } from "fs";
-import { parse } from "path";
+import { readFile, stat, exists, readdir } from "fs";
+import { parse, resolve } from "path";
 import { j, ai } from "./constant";
 import { parseLibrarys, Library } from "./library";
 import * as vscode from "vscode";
@@ -35,7 +35,7 @@ function parseJass(fileName: string) {
       stat(fileName, (err, stats) => {
         if (err) {
           console.error(err.message);
-        } else if (stats.isFile) {
+        } else if (stats.isFile()) {
           console.log(fileName + " 是文件");
           const parseFile = parse(fileName);
           if (parseFile.ext == j || parseFile.ext == ai) {
@@ -53,6 +53,18 @@ function parseJass(fileName: string) {
               }
             });
           }
+        }else if(stats.isDirectory()){
+          readdir(fileName,(err,files) => {
+            if(err){
+              console.error(err);
+              throw err.message;
+            }else{
+              files.forEach(file => {
+                console.log(resolve(fileName, file));
+                parseJass(resolve(fileName, file));
+              });
+            }
+          });
         }
       });
     }
