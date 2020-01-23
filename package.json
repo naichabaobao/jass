@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "keywords": [
     "jass",
     "warcraft"
@@ -37,7 +37,7 @@
           "items": {
             "type": "string"
           },
-          "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
+          "description": "包含路徑或文件,插件會找到.j|.ai"
         },
         "jass.vjass.support": {
           "type": "boolean", 

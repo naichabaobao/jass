@@ -76,7 +76,7 @@ class Function extends FunctionImpl {
   }
 }
 
-const nativeRegExp = new RegExp(`((?<isConstant>${Keyword.Constant})\\s+)?${Keyword.Native}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
+const nativeRegExp = new RegExp(`^\\s*((?<isConstant>${Keyword.Constant})\\s+)?${Keyword.Native}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
 
 const TakeTypesRegExpString = Type.TakesTypes.map(type => type.name).join("|");
 
@@ -169,7 +169,7 @@ const parseReturns = (content: string): Type => {
 const FunctionModifierString = () => {
   return isVjassSupport() ? `((?<modifier>${Keyword.keywordPrivate}|${Keyword.keywordPublic})\\s+)?` : "";
 }
-const FunctionRegExp = new RegExp(`${FunctionModifierString()}${Keyword.Function}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
+const FunctionRegExp = new RegExp(`^\\s*${FunctionModifierString()}${Keyword.Function}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
 
 /**
  * 解析function方法

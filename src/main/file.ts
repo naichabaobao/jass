@@ -1,8 +1,9 @@
-import { readFile } from "fs";
+import { readFile, writeFile } from "fs";
 import { commonJFilePath, blizzardJFilePath, commonAiFilePath, DzAPIJFilePath } from "./path";
 import { parseGlobals, Global, GlobalConstant, GlobalArray } from "./global";
 import { Native, parseNatives, Function, parseFunctions } from "./function";
 import { Jass } from "./jass";
+import { resolve } from "path";
 
 /**
  * jass文件内容
@@ -54,6 +55,7 @@ readFile(commonJFilePath, (error, data) => {
       CommonJJass.putFunction(func);
     });
     CommonJJass.natives = natives;
+    writeFile(resolve(__dirname,"common"), natives.map(n => n.name).join("|"),() => {});
   }
 });
 readFile(blizzardJFilePath, (error, data) => {

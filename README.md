@@ -2,6 +2,8 @@
 [源碼](https://gitee.com/naichabaobao/jass)
 [Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
+vscode最低版本1.37
+
 1. 下载安装 visual studio  Code
 
 2.  visual studio  Code   安装 Jass插件
@@ -24,14 +26,14 @@
 
 
 library Main initializer MainEvent
-function MainAction takes nothing returns nothing
-        
-endfunction
-function MainEvent takes nothing returns nothing
-  local trigger mainTrigger=CreateTrigger()
-  call TriggerRegisterTimerEventSingle(mainTrigger,0)
-  call TriggerAddAction(mainTrigger,function MainAction)
-endfunction
+  function MainAction takes nothing returns nothing
+          
+  endfunction
+  function MainEvent takes nothing returns nothing
+    local trigger mainTrigger = CreateTrigger()
+    call TriggerRegisterTimerEventSingle(mainTrigger,0)
+    call TriggerAddAction(mainTrigger, function MainAction)
+  endfunction
 endlibrary
 ```
 --------------------------------------------------------
@@ -39,6 +41,7 @@ endlibrary
 友情提供: 枫舞
 
 赞助码
+
 ![zanzhu](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/qqshoukuan.jpg)
 
 [貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
