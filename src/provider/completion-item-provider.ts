@@ -10,7 +10,7 @@ import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
 import { Jasss } from '../main/include-file';
 import { ModifierEnum } from '../main/modifier';
 import { parseLocal } from '../main/local';
-import { allFunctions, allGlobals } from '../main/tool';
+import { allFunctions, allGlobals, allFunctionImpls } from '../main/tool';
 
 /**
  * 关键字提示提供
@@ -598,7 +598,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   private allFunctionImplCompletionItem(): Array<vscode.CompletionItem> {
-    return this.functionsToCompletionItem(allFunctions());
+    return this.functionsToCompletionItem(allFunctionImpls());
   }
 
   private getCurrentFunctions(document: vscode.TextDocument): Array<FunctionImpl> {
@@ -630,7 +630,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return allGlobals().map(global => this.globalImplToCompletionItem(global));
   }
 
-  private globalsToCompletionItems(globals: Array<GlobalImpl>) : Array< vscode.CompletionItem> {
+  private globalsToCompletionItems(globals: Array<GlobalImpl>): Array<vscode.CompletionItem> {
     return globals.map(global => this.globalImplToCompletionItem(global));
   }
 
@@ -679,7 +679,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   /**
    * 解析出方法並進行lib處理
    */
-  private parseFunctionsAndLibraryResolve(content: string):Array<Function> {
+  private parseFunctionsAndLibraryResolve(content: string): Array<Function> {
     const functions = parseFunctions(content);
     const librarys = parseLibrarys(content);
     resolveFunction(librarys, functions);
@@ -728,7 +728,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
-  private setCompletions(document: vscode.TextDocument,position :vscode.Position): Array<vscode.CompletionItem> {
+  private setCompletions(document: vscode.TextDocument, position: vscode.Position): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     // 過濾出非constant 的global，並解析成item
     const toUnconstantGlobals = (globals: Array<Global | GlobalArray>): Array<vscode.CompletionItem> => {
@@ -741,14 +741,14 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   private functionCallCompletions(document: vscode.TextDocument): Array<vscode.CompletionItem> {
-    return [...allFunctions(),...this.parseFunctionsAndLibraryResolve(document.getText())].filter(func => func.takes.length == 0).map(func => this.functionImplToCompletionItem(func));
+    return [...allFunctionImpls(), ...this.parseFunctionsAndLibraryResolve(document.getText())].filter(func => func.takes.length == 0).map(func => this.functionImplToCompletionItem(func));
   }
 
   private modifierCompletions(): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     const keywords = [
       // jass
-       Keyword.Constant, Keyword.Function,
+      Keyword.Constant, Keyword.Function,
       // vjass
       Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordStruct, Keyword.keywordMethod
     ]
@@ -757,17 +757,17 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
-  private unkwonCompletionItems(document: vscode.TextDocument,position: vscode.Position): Array<vscode.CompletionItem> {
+  private unkwonCompletionItems(document: vscode.TextDocument, position: vscode.Position): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     items.push(...this.keywordCompletionItems());
-    items.push(...this.allAndCurrentFunctionImplCompletions(document));
+    items.push(...this.allFunctionImplCompletionItem());
     items.push(...this.allGlobalCompletionItems());
     items.push(...this.globalsToCompletionItems(this.getCurrentGlobals(document)));
     items.push(...this.getCurrentComplateItems(document, position));
     return items;
   }
 
-  private getItems(document: vscode.TextDocument,position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+  private getItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
     //9 13 14 16 6 1 3 4 2 5 7 8 11 12 15 0
     switch (this.completioType) {
@@ -798,22 +798,22 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       case CompletionPosition.Set:
         items.push(...this.setCompletions(document, position));
         break;
-        case CompletionPosition.FunctionCall:
-          items.push(...this.functionCallCompletions(document));
-          break;
-          case CompletionPosition.Modifier:
-            items.push(...this.modifierCompletions());
-            break;
-            case CompletionPosition.Constant:
-              items.push(...this.statementCompletionItems());
-              break;
-              case CompletionPosition.Extends:
-                items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
-                break;
-                              case CompletionPosition.Return:
+      case CompletionPosition.FunctionCall:
+        items.push(...this.functionCallCompletions(document));
+        break;
+      case CompletionPosition.Modifier:
+        items.push(...this.modifierCompletions());
+        break;
+      case CompletionPosition.Constant:
+        items.push(...this.statementCompletionItems());
+        break;
+      case CompletionPosition.Extends:
+        items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
+        break;
+      case CompletionPosition.Return:
       case CompletionPosition.Unkown:
-        items.push(...this.unkwonCompletionItems(document,position)
-          );
+        items.push(...this.unkwonCompletionItems(document, position)
+        );
     }
     return items;
   }
