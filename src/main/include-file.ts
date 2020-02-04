@@ -27,19 +27,18 @@ function parseJass(fileName: string) {
   if (fileName.charCodeAt(0) == 8234) {
     fileName = fileName.substring(1);
   }
-  console.log(fileName);
   // 保证文件存在 并且是文件 后缀必须是j或ai
   exists(fileName, exists => {
     if (exists) {
-      console.log(fileName + " 存在");
+      // console.log(fileName + " 存在");
       stat(fileName, (err, stats) => {
         if (err) {
           console.error(err.message);
         } else if (stats.isFile()) {
-          console.log(fileName + " 是文件");
+          // console.log(fileName + " 是文件");
           const parseFile = parse(fileName);
           if (parseFile.ext == j || parseFile.ext == ai) {
-            console.log(fileName + " 后缀正确");
+            // console.log(fileName + " 后缀正确");
             readFile(fileName, (err, buffer) => {
               if (err) {
                 console.error(err.message);
@@ -47,7 +46,6 @@ function parseJass(fileName: string) {
 
                 const content = buffer.toString("utf8");
                 const jass = _resolveJass(fileName, content);
-                  console.log(jass);
                   Jasss.push(jass);
 
               }
@@ -60,7 +58,6 @@ function parseJass(fileName: string) {
               throw err.message;
             }else{
               files.forEach(file => {
-                console.log(resolve(fileName, file));
                 parseJass(resolve(fileName, file));
               });
             }

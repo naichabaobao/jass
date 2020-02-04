@@ -78,12 +78,12 @@ class Function extends FunctionImpl {
 
 const nativeRegExp = new RegExp(`^\\s*((?<isConstant>${Keyword.Constant})\\s+)?${Keyword.Native}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
 
-const TakeTypesRegExpString = Type.TakesTypes.map(type => type.name).join("|");
+const TakeTypesRegExpString = Type.TakesTypes.map(type => type.name).sort((typeName1, typeName2) => typeName2.length - typeName1.length).join("|");
 
 const takesNothingRegExp = new RegExp(`${Keyword.Takes}\\s+${Keyword.Nothing}`);
 const takesRegExp = new RegExp(`${Keyword.Takes}\\s+(?<takeString>(${TakeTypesRegExpString})\\s+[a-zA-Z][a-zA-Z0-9_]*(\\s*,\\s*(${TakeTypesRegExpString})\\s+[a-zA-Z][a-zA-Z0-9_]*)*)`);
 
-const StatementTypesRegExpString = Type.StatementTypes.map(type => type.name).join("|");
+const StatementTypesRegExpString = Type.StatementTypes.map(type => type.name).sort((typeName1, typeName2) => typeName2.length - typeName1.length).join("|");
 
 const returnsNothingRegExp = new RegExp(`${Keyword.Returns}\\s+${Keyword.Nothing}`);
 const returnsRegexp = new RegExp(`${Keyword.Returns}\\s+(?<returns>${StatementTypesRegExpString})`);
@@ -166,10 +166,8 @@ const parseReturns = (content: string): Type => {
   return returns;
 }
 
-const FunctionModifierString = () => {
-  return isVjassSupport() ? `((?<modifier>${Keyword.keywordPrivate}|${Keyword.keywordPublic})\\s+)?` : "";
-}
-const FunctionRegExp = new RegExp(`^\\s*${FunctionModifierString()}${Keyword.Function}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
+
+const FunctionRegExp = new RegExp(`^\\s*((?<modifier>${Keyword.keywordPrivate}|${Keyword.keywordPublic})\\s+)?${Keyword.Function}\\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)`);
 
 /**
  * 解析function方法

@@ -40,6 +40,7 @@ globals
 
     // Game constants
     constant integer   bj_MAX_INVENTORY                 =   6
+    // 玩家最大数量
     constant integer   bj_MAX_PLAYERS                   =  12
     constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  13
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  14
