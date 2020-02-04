@@ -14,5 +14,10 @@ vsc-extension-quickstart.md
 **/tslint.json
 **/*.map
 **/*.ts
+**/*.md
+
+tslint.json
+package-lock.json
+tsconfig.json
 
 *.vsix

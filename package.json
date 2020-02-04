@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fnfufnfu/jass.git"
+    "url": "https://gitee.com/naichabaobao/jass.git"
   },
   "homepage": "https://gitee.com/naichabaobao/jass/blob/master/README.md",
   "activationEvents": [
@@ -42,7 +42,7 @@
         "jass.vjass.support": {
           "type": "boolean", 
           "default": true,
-          "description": "是否开启library支持"
+          "description": "是否开启library支持(部分失效，後續將會移除)"
         }
       }
     },

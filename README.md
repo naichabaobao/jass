@@ -3,6 +3,7 @@
 [Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
 vscode最低版本1.37
+common.j 為1.31
 
 1. 下载安装 visual studio  Code
 
@@ -43,6 +44,7 @@ endlibrary
 赞助码
 
 ![zanzhu](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/qqshoukuan.jpg)
+
 
 [貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
 [源碼](https://gitee.com/naichabaobao/jass)

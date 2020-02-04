@@ -9,10 +9,8 @@ import { CommonJGlobals, BlizzardJGlobals, CommonAiGlobals, DzApiJGlobals, Commo
 import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
 import { Jasss } from '../main/include-file';
 import { ModifierEnum } from '../main/modifier';
-import { parseLocal, Local } from '../main/local';
-import { allFunctionImpls, allFunctions, allGlobals } from '../main/tool';
-
-console.log("注册KeywordCompletionItemProvider")
+import { parseLocal } from '../main/local';
+import { allFunctions, allGlobals } from '../main/tool';
 
 /**
  * 关键字提示提供
@@ -318,7 +316,7 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
     if (typeName) {
       const content = document.getText();
       const functions = parseFunctions(content);
-      [...allFunctions(),...functions].filter(func => func.returns.name == typeName).forEach(func => {
+      [...allFunctions(), ...functions].filter(func => func.returns.name == typeName).forEach(func => {
         const item = new vscode.CompletionItem(func.libraryFunctionName, vscode.CompletionItemKind.Function);
         const ms = new vscode.MarkdownString();
         ms.appendText(func.descript);
@@ -331,7 +329,7 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
       });
 
       const globals = parseGlobals(content);
-      [...allGlobals(),...globals].filter(global => global.type.name == typeName).forEach(global => {
+      [...allGlobals(), ...globals].filter(global => global.type.name == typeName).forEach(global => {
         const kind = global instanceof GlobalConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
         const item = new vscode.CompletionItem(global.libraryGlobalName, kind);
         const ms = new vscode.MarkdownString();
@@ -351,9 +349,481 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
 
 }
 
-vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+/**
+ * 标记当前position提示类型
+ */
+// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
 vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
+
+/**
+ * 标记当前position提示类型
+ */
+enum CompletionPosition {
+  Unkown,
+  Nil,
+  Call,
+  TakesType,
+  Returns,
+  Local,
+  LocalNaming,
+  Set,
+  /**
+   * @unuse
+   */
+  Return,
+  FunctionNaming,
+  FunctionCall,
+  Modifier,
+  Constant,
+  Native,
+  Type,
+  Extends,
+  TypeNaming
+}
+
+/**
+ * 整合提示
+ */
+class CompletionItemProvider implements vscode.CompletionItemProvider {
+
+  private readonly isNilRegExp = new RegExp(`^\\s*[a-zA-Z0-9_]*$`);
+  private readonly isCallRegExp = new RegExp(`(\\bcall\\s+[a-zA-Z][a-zA-Z0-9_]*|\\bcall\\s+)$`);
+  private readonly isTakesTypeRegExp = new RegExp(`(\\btakes\\s+[a-zA-Z]*|\\btakes\\s+|\\btakes\\s+([a-zA-Z0-9_ \\t]+\\s*,\\s*)+[a-zA-Z]*)$`);
+  private readonly isReturnsRegExp = new RegExp(`\\breturns\\s+[a-zA-Z]*$`);
+  private readonly isLocalRegExp = new RegExp(`\\blocal\\s+[a-zA-Z]*$`);
+  private readonly isLocalNamingRegExp = new RegExp(`\\blocal\\s+[a-zA-Z]+\\s+array\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\blocal\\s+[a-zA-Z]+\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\blocal\\s+[a-zA-Z]+\\s+$`);
+  private readonly isSetRegExp = new RegExp(`\\bset\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\bset\\s+$`);
+  private readonly isFunctionNamingRegExp = new RegExp(`(?<!\\(\\s*|,\\s*)function\\s+[a-zA-Z][a-zA-Z0-9_]*$|(?<!\\(\\s*|,\\s*)\\s*function\\s+$`);
+  private readonly isNativeNamingRegExp = new RegExp(`\\bnative\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\bnative\\s+$`);
+  private readonly isFunctionCallRegExp = new RegExp(`(\\(\\s*|,\\s*)function\\s+[a-zA-Z][a-zA-Z0-9_]*$|(\\(\\s*|,\\s*)\\s*function\\s+$`);
+  private readonly isModifierRegExp = new RegExp(`\\b(private|public)\\s+[a-zA-Z]*$`);
+  private readonly isConstantRegExp = new RegExp(`\\bconstant\\s+[a-zA-Z]*$`);
+  private readonly isTypeRegExp = new RegExp(`\\btype\\s+[a-zA-Z]*$`);
+  private readonly isExtendsRegExp = new RegExp(`\\bextends\\s+[a-zA-Z]*$`);
+  // 所有類型的或字符串
+  private readonly typeString = Type.AllTypes.map(type => type.name).sort((typeName1, typeName2) => typeName2.length - typeName1.length).join("|");
+  private readonly isTypeNamingRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
+
+  private completioType = CompletionPosition.Unkown;
+
+  private handleCompletioType(document: vscode.TextDocument, position: vscode.Position) {
+    const line = document.lineAt(position.line);
+
+    const lineText = line.text;
+
+    const lineSubText = lineText.substring(0, position.character);
+
+    // console.log("this.isTakesTypeRegExp.test(lineSubText)" + this.isTakesTypeRegExp.test(lineSubText))
+    if (this.isNilRegExp.test(lineSubText)) {
+      console.log("nil")
+      this.completioType = CompletionPosition.Nil
+    } else if (this.isCallRegExp.test(lineSubText)) {
+      this.completioType = CompletionPosition.Call
+    } else if (this.isTakesTypeRegExp.test(lineSubText)) {
+      console.log("takes")
+      this.completioType = CompletionPosition.TakesType
+    } else if (this.isReturnsRegExp.test(lineSubText)) {
+      this.completioType = CompletionPosition.Returns
+    } else if (this.isLocalRegExp.test(lineSubText)) {
+      console.log("local")
+      this.completioType = CompletionPosition.Local
+    } else if (this.isLocalNamingRegExp.test(lineSubText)) {
+      console.log("local naming")
+      this.completioType = CompletionPosition.LocalNaming
+    } else if (this.isSetRegExp.test(lineSubText)) {
+      console.log("set")
+      this.completioType = CompletionPosition.Set
+    } else if (this.isFunctionNamingRegExp.test(lineSubText)) {
+      console.log("function naming")
+      this.completioType = CompletionPosition.FunctionNaming
+    }
+    else if (this.isFunctionCallRegExp.test(lineSubText)) {
+      console.log("function call")
+      this.completioType = CompletionPosition.FunctionCall
+    }
+    else if (this.isModifierRegExp.test(lineSubText)) {
+      console.log("modifier")
+      this.completioType = CompletionPosition.Modifier
+    }
+    else if (this.isConstantRegExp.test(lineSubText)) {
+      console.log("constant")
+      this.completioType = CompletionPosition.Constant
+    }
+    else if (this.isNativeNamingRegExp.test(lineSubText)) {
+      console.log("native")
+      this.completioType = CompletionPosition.Native
+    }
+    else if (this.isTypeRegExp.test(lineSubText)) {
+      console.log("type")
+      this.completioType = CompletionPosition.Type
+    }
+    else if (this.isExtendsRegExp.test(lineSubText)) {
+      console.log("extends")
+      this.completioType = CompletionPosition.Extends
+    }
+    else if (this.isTypeNamingRegExp.test(lineSubText)) {
+      console.log("TypeNaming")
+      this.completioType = CompletionPosition.TypeNaming
+    }
+    else {
+      this.completioType = CompletionPosition.Unkown
+    }
+
+
+  }
+
+  private keywordToCompletionItem(keyword: string): vscode.CompletionItem {
+    return new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+  }
+
+  private keywordsToCompletionItem(keywords: Array<string>): Array<vscode.CompletionItem> {
+    return keywords.map(key => this.keywordToCompletionItem(key));
+  }
+
+  private keywordCompletionItems(): Array<vscode.CompletionItem> {
+    return this.keywordsToCompletionItem(Keyword.allKeywords);
+  }
+
+  private typeToCompletionItem(type: Type): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
+    item.documentation = new vscode.MarkdownString().appendText(type.description).appendCodeblock(type.origin());
+    return item;
+  }
+
+  private typesToCompletionItem(types: Array<Type>): Array<vscode.CompletionItem> {
+    return types.map(type => this.typeToCompletionItem(type));
+  }
+
+  private statementCompletionItems(): Array<vscode.CompletionItem> {
+    return this.typesToCompletionItem(Type.StatementTypes);
+  }
+
+  private takeCompletionItems(): Array<vscode.CompletionItem> {
+    return this.typesToCompletionItem(Type.TakesTypes);
+  }
+
+  private functionToCompletionItem(func: Function): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(func.libraryFunctionName, vscode.CompletionItemKind.Function);
+    item.detail = func.libraryFunctionName;
+    item.documentation = new vscode.MarkdownString().appendText(func.descript).appendCodeblock(func.origin());
+    return item;
+  }
+
+  private nativeToCompletionItem(func: Native): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+    item.detail = func.name;
+    item.documentation = new vscode.MarkdownString().appendText(func.descript).appendCodeblock(func.origin());
+    return item;
+  }
+
+  private functionImplToCompletionItem(func: FunctionImpl): vscode.CompletionItem {
+    if (func instanceof Function) {
+      return this.functionToCompletionItem(func);
+    } else if (func instanceof Native) {
+      return this.nativeToCompletionItem(func);
+    }
+    const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+    item.detail = func.name;
+    item.documentation = new vscode.MarkdownString().appendText(func.descript).appendCodeblock(func.origin());
+    return item;
+  }
+
+  private functionsToCompletionItem(funcs: Array<FunctionImpl>): Array<vscode.CompletionItem> {
+    return funcs.map(func => this.functionImplToCompletionItem(func));
+  }
+
+  private allFunctionImplCompletionItem(): Array<vscode.CompletionItem> {
+    return this.functionsToCompletionItem(allFunctions());
+  }
+
+  private getCurrentFunctions(document: vscode.TextDocument): Array<FunctionImpl> {
+    return this.parseFunctionsAndLibraryResolve(document.getText());
+  }
+
+  private globalConstantToCompletionItem(global: GlobalConstant): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(global.libraryGlobalName, vscode.CompletionItemKind.Constant);
+    item.detail = global.libraryGlobalName;
+    item.documentation = new vscode.MarkdownString().appendText(global.descript).appendCodeblock(global.origin());
+    return item;
+  }
+
+  private globalUnconstantToCompletionItem(global: GlobalArray | Global): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(global.libraryGlobalName, vscode.CompletionItemKind.Variable);
+    item.detail = global.libraryGlobalName;
+    item.documentation = new vscode.MarkdownString().appendText(global.descript).appendCodeblock(global.origin());
+    return item;
+  }
+
+  private globalImplToCompletionItem(global: GlobalImpl): vscode.CompletionItem {
+    if (global instanceof GlobalConstant) {
+      return this.globalConstantToCompletionItem(global);
+    }
+    return this.globalUnconstantToCompletionItem(global);
+  }
+
+  private allGlobalCompletionItems(): Array<vscode.CompletionItem> {
+    return allGlobals().map(global => this.globalImplToCompletionItem(global));
+  }
+
+  private getCurrentGlobals(document: vscode.TextDocument): Array<GlobalImpl> {
+    return parseGlobals(document.getText());
+  }
+
+  private nilCompletionItems(): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    const keywords = [
+      // jass
+      Keyword.Function, Keyword.Endfunction, Keyword.Constant, Keyword.Native, Keyword.Local, Keyword.Type, Keyword.Set, Keyword.Call, Keyword.If, Keyword.Else, Keyword.Elseif, Keyword.Endif, Keyword.Loop, Keyword.Endloop, Keyword.Exitwhen, Keyword.Return, Keyword.Globals, Keyword.Endglobals,
+      // vjass
+      Keyword.keywordLibrary, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordDebug
+    ]
+    items.push(...this.keywordsToCompletionItem(keywords));
+    items.push(...this.statementCompletionItems());
+    return items;
+  }
+
+  private takesTypeCompletionItems(): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    items.push(...this.takeCompletionItems());
+    items.push(this.typeToCompletionItem(Type.nothing));
+    return items;
+  }
+
+  private returnsCompletionItems(): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    items.push(...this.statementCompletionItems());
+    items.push(this.typeToCompletionItem(Type.nothing));
+    return items;
+  }
+
+  private allAndCurrentFunctionImplCompletions(document: vscode.TextDocument): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    items.push(...this.allFunctionImplCompletionItem());
+    items.push(...this.functionsToCompletionItem(this.getCurrentFunctions(document)));
+    return items;
+  }
+
+  /**
+   * 解析出方法並進行lib處理
+   */
+  private parseFunctionsAndLibraryResolve(content: string):Array<Function> {
+    const functions = parseFunctions(content);
+    const librarys = parseLibrarys(content);
+    resolveFunction(librarys, functions);
+    return functions;
+  }
+
+  /**
+   * 解析当前文档
+   */
+  private getCurrentComplateItems(document: vscode.TextDocument, position: vscode.Position): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+
+    // 找local和方法参数
+    for (let i = position.line; i >= 0; i--) {
+
+      const TextLine = document.lineAt(i);
+      const text = TextLine.text;
+      if (!TextLine.isEmptyOrWhitespace) {
+
+        const local = parseLocal(text);
+        if (local) {
+          const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Variable);
+          const ms = new vscode.MarkdownString();
+          ms.appendCodeblock(local.origin());
+          item.documentation = ms;
+          items.push(item);
+        }
+
+        if (/\bfunction\b/.test(text) && /\btakes\b/.test(text)) {
+          const takes = parseTakes(text);
+          takes.forEach(take => {
+            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.TypeParameter);
+            const ms = new vscode.MarkdownString();
+            ms.appendCodeblock(take.origin());
+            item.documentation = ms;
+            items.push(item);
+          });
+          break;
+        }
+
+      }
+
+
+    }
+
+    return items;
+  }
+
+  private setCompletions(document: vscode.TextDocument,position :vscode.Position): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    // 過濾出非constant 的global，並解析成item
+    const toUnconstantGlobals = (globals: Array<Global | GlobalArray>): Array<vscode.CompletionItem> => {
+      return globals.filter(global => !(global instanceof GlobalConstant)).map(global => this.globalUnconstantToCompletionItem(global));
+    }
+    items.push(...toUnconstantGlobals(allGlobals()));
+    items.push(...toUnconstantGlobals(parseGlobals(document.getText())));
+    items.push(...this.getCurrentComplateItems(document, position));
+    return items;
+  }
+
+  private functionCallCompletions(document: vscode.TextDocument): Array<vscode.CompletionItem> {
+    return [...allFunctions(),...this.parseFunctionsAndLibraryResolve(document.getText())].filter(func => func.takes.length == 0).map(func => this.functionImplToCompletionItem(func));
+  }
+
+  private modifierCompletions(): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    const keywords = [
+      // jass
+       Keyword.Constant, Keyword.Function,
+      // vjass
+      Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordStruct, Keyword.keywordMethod
+    ]
+    items.push(...this.keywordsToCompletionItem(keywords));
+    items.push(...this.statementCompletionItems());
+    return items;
+  }
+
+  private returnCompletions(): Array<vscode.CompletionItem> {
+    // 未實現 借用unkwonCompletionItems
+    return this.unkwonCompletionItems();
+  }
+
+  private unkwonCompletionItems(): Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    items.push(...this.keywordCompletionItems());
+    return items;
+  }
+
+  private getItems(document: vscode.TextDocument,position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items = new Array<vscode.CompletionItem>();
+    //9 13 14 16 6 1 3 4 2 5 7 8 11 12 15 0
+    switch (this.completioType) {
+      case CompletionPosition.FunctionNaming:
+      case CompletionPosition.Native:
+      case CompletionPosition.Type:
+        // nothing to do
+        break;
+      case CompletionPosition.TypeNaming:
+      case CompletionPosition.LocalNaming:
+        items.push(this.keywordToCompletionItem(Keyword.Array));
+        break;
+      case CompletionPosition.Nil:
+        items.push(...this.nilCompletionItems());
+        break;
+      case CompletionPosition.TakesType:
+        items.push(...this.takesTypeCompletionItems());
+        break;
+      case CompletionPosition.Returns:
+        items.push(...this.returnsCompletionItems());
+        break;
+      case CompletionPosition.Call:
+        items.push(...this.allAndCurrentFunctionImplCompletions(document));
+        break;
+      case CompletionPosition.Local:
+        items.push(...this.statementCompletionItems());
+        break;
+      case CompletionPosition.Set:
+        items.push(...this.setCompletions(document, position));
+        break;
+      case CompletionPosition.Return:
+        items.push(...this.returnCompletions());
+        break;
+      case CompletionPosition.FunctionCall:
+        items.push(...this.functionCallCompletions(document));
+        break;
+      case CompletionPosition.Modifier:
+        items.push(...this.modifierCompletions());
+        break;
+      case CompletionPosition.Constant:
+        items.push(...this.statementCompletionItems());
+        break;
+      case CompletionPosition.Extends:
+        items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
+        break;
+      case CompletionPosition.Unkown:
+        items.push(...this.unkwonCompletionItems(),
+          ...this.allAndCurrentFunctionImplCompletions(document));
+    }
+    return items;
+  }
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+
+    try {
+      this.handleCompletioType(document, position)
+    } catch (e) {
+      console.error(e)
+    }
+
+    return this.getItems(document, position);
+  }
+
+}
+
+vscode.languages.registerCompletionItemProvider(language, new CompletionItemProvider);

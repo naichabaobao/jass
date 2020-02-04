@@ -53,7 +53,7 @@
   },
   "library": {
     "prefix": "library",
-    "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:// init_body}\n\tendfunction\nendlibrary\n",
+    "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:// TODO}\n\tendfunction\nendlibrary\n",
     "description": "library",
     "scope": "source.jass"
   }
