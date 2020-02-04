@@ -117,11 +117,11 @@
     },
     "jass-number": {
       "name": "constant.numeric",
-      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+"
+      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+(?!\\$)"
     },
     "jass-variable": {
       "name": "support.variable",
-      "match": "[a-zA-Z][a-zA-Z0-9_]*"
+      "match": "[a-zA-Z\\$][a-zA-Z0-9_\\$]*"
     },
     "jass-statement": {
       "name": "support.variable",
@@ -140,8 +140,8 @@
       "match": "\\b(execute|evaluate|create|destroy)\\b|:"
     },
     "vjass-variable-macro": {
-      "name": "variable.other",
-      "match": "\\$[a-zA-Z][a-zA-Z0-9_]*?\\$"
+      "name": "string.regexp",
+      "match": "\\$[a-zA-Z][a-zA-Z0-9_]*\\$"
     },
     "vjass-macro": {
       "name": "comment.line.number-sign",

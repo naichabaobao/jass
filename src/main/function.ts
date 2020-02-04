@@ -70,8 +70,9 @@ class Function extends FunctionImpl {
   }
 
   public origin(): string {
-    const functionOrigin = `${Keyword.Function} ${this.name} ${Keyword.Takes} ${this.takesString()} ${Keyword.Returns} ${this.returns.name}\n${Keyword.Endfunction}`;
-    const origin = isVjassSupport() && this.library ? `${Keyword.keywordLibrary}\n\t${functionOrigin}\n${Keyword.keywordEndLibrary}` : functionOrigin;
+    // 当前方式实现方式有点丑，但是工作正常
+    const functionOrigin = `${Keyword.Function} ${this.name} ${Keyword.Takes} ${this.takesString()} ${Keyword.Returns} ${this.returns.name}\n`;
+    const origin = isVjassSupport() && this.library ? `${Keyword.keywordLibrary} ${this.library.name}\n\t${functionOrigin}\t${Keyword.Endfunction}\n${Keyword.keywordEndLibrary}` : functionOrigin + Keyword.Endfunction;
     return origin;
   }
 }

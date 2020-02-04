@@ -119,5 +119,3 @@ class DefinitionProvider implements vscode.DefinitionProvider {
 }
 
 vscode.languages.registerDefinitionProvider(language, new DefinitionProvider);
-
-export { };
