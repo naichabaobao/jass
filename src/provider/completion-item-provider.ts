@@ -630,6 +630,10 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return allGlobals().map(global => this.globalImplToCompletionItem(global));
   }
 
+  private globalsToCompletionItems(globals: Array<GlobalImpl>) : Array< vscode.CompletionItem> {
+    return globals.map(global => this.globalImplToCompletionItem(global));
+  }
+
   private getCurrentGlobals(document: vscode.TextDocument): Array<GlobalImpl> {
     return parseGlobals(document.getText());
   }
@@ -661,6 +665,10 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
+  /**
+   * 所有方法 和 當前文檔方法
+   * @param document 
+   */
   private allAndCurrentFunctionImplCompletions(document: vscode.TextDocument): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     items.push(...this.allFunctionImplCompletionItem());
@@ -749,14 +757,13 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
-  private returnCompletions(): Array<vscode.CompletionItem> {
-    // 未實現 借用unkwonCompletionItems
-    return this.unkwonCompletionItems();
-  }
-
-  private unkwonCompletionItems(): Array<vscode.CompletionItem> {
+  private unkwonCompletionItems(document: vscode.TextDocument,position: vscode.Position): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     items.push(...this.keywordCompletionItems());
+    items.push(...this.allAndCurrentFunctionImplCompletions(document));
+    items.push(...this.allGlobalCompletionItems());
+    items.push(...this.globalsToCompletionItems(this.getCurrentGlobals(document)));
+    items.push(...this.getCurrentComplateItems(document, position));
     return items;
   }
 
@@ -791,24 +798,22 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       case CompletionPosition.Set:
         items.push(...this.setCompletions(document, position));
         break;
-      case CompletionPosition.Return:
-        items.push(...this.returnCompletions());
-        break;
-      case CompletionPosition.FunctionCall:
-        items.push(...this.functionCallCompletions(document));
-        break;
-      case CompletionPosition.Modifier:
-        items.push(...this.modifierCompletions());
-        break;
-      case CompletionPosition.Constant:
-        items.push(...this.statementCompletionItems());
-        break;
-      case CompletionPosition.Extends:
-        items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
-        break;
+        case CompletionPosition.FunctionCall:
+          items.push(...this.functionCallCompletions(document));
+          break;
+          case CompletionPosition.Modifier:
+            items.push(...this.modifierCompletions());
+            break;
+            case CompletionPosition.Constant:
+              items.push(...this.statementCompletionItems());
+              break;
+              case CompletionPosition.Extends:
+                items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
+                break;
+                              case CompletionPosition.Return:
       case CompletionPosition.Unkown:
-        items.push(...this.unkwonCompletionItems(),
-          ...this.allAndCurrentFunctionImplCompletions(document));
+        items.push(...this.unkwonCompletionItems(document,position)
+          );
     }
     return items;
   }
