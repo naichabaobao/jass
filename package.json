@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "icon": "src/resources/image/jass.png",
   "publisher": "jass",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "keywords": [
     "jass",
     "warcraft"
@@ -26,7 +26,7 @@
         "jass.pjass.enable": {
           "type": "boolean",
           "default": "false",
-          "description": "是否開啓語法檢測"
+          "description": "是否開啓pjass語法檢測"
         },
         "jass.includes": {
           "type": "array",
@@ -74,18 +74,22 @@
   "activationEvents": [
     "onLanguage:jass"
   ],
-  "main": "./src/js/extension",
+  "main": "./out/src/extension",
   "scripts": {
-    "test": "node ./src/test/runTest.js"
-  },
-  "devDependencies": {
-    "@types/glob": "^7.1.1",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^10.12.21",
-    "@types/vscode": "^1.36.0",
-    "eslint": "^5.13.0",
-    "glob": "^7.1.4",
-    "mocha": "^6.1.4",
-    "vscode-test": "^1.0.2"
-  }
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.39.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
+		"typescript": "^3.6.4",
+		"vscode-test": "^1.2.2"
+	}
 }
