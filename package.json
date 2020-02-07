@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "keywords": [
     "jass",
     "warcraft"
@@ -43,6 +43,11 @@
           "type": "boolean", 
           "default": true,
           "description": "是否开启library支持(部分失效，後續將會移除)"
+        },
+        "jass.diagnostic.support": {
+          "type": "boolean", 
+          "default": true,
+          "description": "是否开始错误检查(目前仅支持call检查)"
         }
       }
     },

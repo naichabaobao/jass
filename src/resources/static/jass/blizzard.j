@@ -641,7 +641,7 @@ endglobals
 //*
 //***************************************************************************
 
-
+// 显示Debug消息[C]
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop

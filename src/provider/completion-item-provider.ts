@@ -443,7 +443,16 @@ enum CompletionPosition {
   Native,
   Type,
   Extends,
-  TypeNaming
+  TypeNaming,
+
+  // 加号
+  Plus, // 未确定，未使用
+  // 减号
+  Minus, // 未确定，未使用
+  // 乘号
+  Product, // 未确定，未使用
+  // 除号
+  Division, // 未确定，未使用
 }
 
 /**
@@ -468,6 +477,11 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   // 所有類型的或字符串
   private readonly typeString = Type.AllTypes.map(type => type.name).sort((typeName1, typeName2) => typeName2.length - typeName1.length).join("|");
   private readonly isTypeNamingRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
+
+  // private readonly isPlusRegExp = new RegExp(`\\b\\+\\s+[a-zA-Z]*$`);
+  // private readonly isMinusRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
+  // private readonly isProductRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
+  // private readonly isDivisionRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
 
   private completioType = CompletionPosition.Unkown;
 

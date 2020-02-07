@@ -18,4 +18,13 @@ function includes():Array<string>{
   return vscode.workspace.getConfiguration()?.jass?.includes ?? [];
 }
 
-export {isVjassSupport,includes};
+function isdiagnosticsupport(){
+  let isSupport = false;
+  const enable = vscode.workspace.getConfiguration()?.jass?.diagnostic?.support;
+  if(enable && typeof enable == "boolean"){
+    isSupport = enable;
+  }
+  return isSupport;
+}
+
+export {isVjassSupport,includes,isdiagnosticsupport};

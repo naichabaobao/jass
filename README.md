@@ -15,6 +15,7 @@ common.j 為1.31
 
 --------------------------------------------------------
 ``` jass
+// 友情提供: 枫舞
 #include  "****.j"    //这是引入的其他j文件
 
 //触发器主体  注:Main文件 要有一个空的触发
@@ -39,9 +40,9 @@ endlibrary
 ```
 --------------------------------------------------------
 
-友情提供: 枫舞
 
-赞助码
+
+赞助码,好饿啊，赞助一下吧！
 
 ![zanzhu](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/qqshoukuan.jpg)
 
