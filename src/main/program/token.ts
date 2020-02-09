@@ -1,3 +1,4 @@
+import { deprecate } from "util";
 
 enum TokenType {
   // 关键字 
@@ -29,6 +30,9 @@ class Token {
 
 }
 
+/**
+ * @deprecate
+ */
 class lexicalError extends Error { }
 
 class ErrorToken extends Token { 
@@ -1441,4 +1445,11 @@ $我
 endfunction
 
 `))
+}
+
+export {
+  Token,
+  ErrorToken,
+  TokenType,
+  lexicalAnalyzer,
 }
