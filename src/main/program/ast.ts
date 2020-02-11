@@ -3,6 +3,7 @@
 class Node {
   public left:Node|null = null;
   public right:Node|null = null;
+  public parent: Node|null = null;
 }
 
 class  Program extends Node {
@@ -60,6 +61,10 @@ class IdentifierStatement extends Statement {
 
 class  AssignmentExpression extends Expression{
 
+}
+
+class ErrorNode extends Node {
+  
 }
 
 

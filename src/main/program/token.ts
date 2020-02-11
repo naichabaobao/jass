@@ -15,7 +15,11 @@ enum TokenType {
   Plus, Minus, Product, Divisor, Assignment, Equal, Unequal, greaterthan, LessThan, greaterthanEqual, LessThanEqual, LeftParenthesis, RightParenthesis, LeftBracket, RightBracket, Comma,
   // 单行注释
   Comment,
-  Error
+  Error,
+
+  // 结束
+  NewLine,
+  Eof
 }
 
 class Token {
@@ -159,9 +163,13 @@ function lexicalAnalyzer(sourceCode: string) {
         break;
       }
       case ' ':
-      case '\t':
-      case '\n': {
+      case '\t': {
         index++;
+        break;
+      }
+      case '\n': {
+        // tokens.push(new Token(TokenType.NewLine, char));
+        index ++;
         break;
       }
       case '': {
