@@ -1,5 +1,16 @@
 import { lexicalAnalyzer, Token, TokenType } from "./token";
 
+
+class NodeWrap {
+  public node:Node;
+  public offset:number;
+
+  constructor(node:Node, offset:number) {
+    this.node = node;
+    this.offset = offset;
+  }
+}
+
 /**
  * 语法分析
  */
@@ -7,8 +18,35 @@ function syntaxAnalyzer(tokens: Array<Token>) {
   tokens.push(new Token(TokenType.Eof, ""));
   const program = new Program();
 
+  enum Type {
+    Default,
+    Type
+  }
+
+  let type = Type.Default;
+
   for (let index = 0; index < tokens.length; index++) {
     const token = tokens[index];
+
+    switch (type) {
+      case Type.Default: {
+        switch (token.type) {
+          // 关键字 
+          case TokenType.Native:
+          case TokenType.Function:
+          case TokenType.Globals:
+          case TokenType.Type: {
+            break;
+          }
+          case TokenType.Comment:
+          // 单行注释
+          case TokenType.Error:
+          default: {
+
+          }
+        }
+      }
+    }
 
     switch (token.type) {
       // 关键字 
@@ -33,7 +71,10 @@ function syntaxAnalyzer(tokens: Array<Token>) {
       case TokenType.Array:
       case TokenType.Set:
       case TokenType.Call:
-      case TokenType.Type:
+      case TokenType.Type: {
+
+        break;
+      }
       case TokenType.Extends:
       case TokenType.True:
       case TokenType.False:
@@ -94,12 +135,35 @@ function syntaxType(tokens:Array<Token>, index:number) {
     return tokens[index ++];
   }
   
+  enum Type {
+    Default,
+    Type,
+    TypeName,
+    Extends,
+    ExtendsIdentifier
+  }
+
+  let type = Type.Default;
+
   for(;;) {
     const token = next();
     if(token.type == TokenType.Eof){
       break;
     }
     console.log(token.value);
+    switch ( +type) {
+      case Type.Default: {
+        switch(token.type) {
+          case TokenType.Type: 
+            type = Type.Type;
+            break;
+          default:
+
+        }
+        break;
+      }
+
+    }
   }
 
 }

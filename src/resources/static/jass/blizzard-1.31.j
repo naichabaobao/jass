@@ -33,28 +33,22 @@ globals
     constant real      bj_QUEUE_DELAY_HINT              =  5.00
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
     constant real      bj_HANDICAP_EASY                 = 60.00
-    constant real      bj_HANDICAP_NORMAL               = 90.00
-    constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
-    constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
-	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
     constant real      bj_WAIT_FOR_COND_MIN_INTERVAL    =  0.10
     constant real      bj_POLLED_WAIT_INTERVAL          =  0.10
     constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
 
     // Game constants
-    constant integer   bj_MAX_INVENTORY                 =  6
-    constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
-    constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
-    constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
-    constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
+    constant integer   bj_MAX_INVENTORY                 =   6
+    // 玩家最大数量
+    constant integer   bj_MAX_PLAYERS                   =  12
+    constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  13
+    constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  14
+    constant integer   bj_MAX_PLAYER_SLOTS              =  16
     constant integer   bj_MAX_SKELETONS                 =  25
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
     constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
     constant integer   bj_MAX_ITEM_LEVEL                =  10
-    
-    // Auto Save constants
-    constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
     // but there is currently no script functionality exposed to do that
@@ -166,18 +160,15 @@ globals
     constant integer   bj_CAMPAIGN_OFFSET_U       = 2
     constant integer   bj_CAMPAIGN_OFFSET_O       = 3
     constant integer   bj_CAMPAIGN_OFFSET_N       = 4
-    constant integer   bj_CAMPAIGN_OFFSET_XN      = 5
-    constant integer   bj_CAMPAIGN_OFFSET_XH      = 6
-    constant integer   bj_CAMPAIGN_OFFSET_XU      = 7
-    constant integer   bj_CAMPAIGN_OFFSET_XO      = 8
+    constant integer   bj_CAMPAIGN_OFFSET_XN      = 0
+    constant integer   bj_CAMPAIGN_OFFSET_XH      = 1
+    constant integer   bj_CAMPAIGN_OFFSET_XU      = 2
+    constant integer   bj_CAMPAIGN_OFFSET_XO      = 3
 
     // Mission indexing constants
     // Tutorial
     constant integer   bj_MISSION_INDEX_T00       = bj_CAMPAIGN_OFFSET_T * 1000 + 0
     constant integer   bj_MISSION_INDEX_T01       = bj_CAMPAIGN_OFFSET_T * 1000 + 1
-    constant integer   bj_MISSION_INDEX_T02       = bj_CAMPAIGN_OFFSET_T * 1000 + 2
-    constant integer   bj_MISSION_INDEX_T03       = bj_CAMPAIGN_OFFSET_T * 1000 + 3
-    constant integer   bj_MISSION_INDEX_T04       = bj_CAMPAIGN_OFFSET_T * 1000 + 4
     // Human
     constant integer   bj_MISSION_INDEX_H00       = bj_CAMPAIGN_OFFSET_H * 1000 + 0
     constant integer   bj_MISSION_INDEX_H01       = bj_CAMPAIGN_OFFSET_H * 1000 + 1
@@ -266,9 +257,6 @@ globals
 
     // Expansion Orc
     constant integer   bj_MISSION_INDEX_XO00       = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
-    constant integer   bj_MISSION_INDEX_XO01       = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
-    constant integer   bj_MISSION_INDEX_XO02       = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
-    constant integer   bj_MISSION_INDEX_XO03       = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
     // Cinematic indexing constants
     constant integer   bj_CINEMATICINDEX_TOP      = 0
@@ -302,11 +290,6 @@ globals
     constant integer   bj_KEYEVENTKEY_RIGHT        = 1
     constant integer   bj_KEYEVENTKEY_DOWN         = 2
     constant integer   bj_KEYEVENTKEY_UP           = 3
-
-    // Mouse Event Types
-    constant integer   bj_MOUSEEVENTTYPE_DOWN     = 0
-    constant integer   bj_MOUSEEVENTTYPE_UP       = 1
-    constant integer   bj_MOUSEEVENTTYPE_MOVE     = 2
 
     // Transmission timing methods
     constant integer   bj_TIMETYPE_ADD             = 0
@@ -417,17 +400,6 @@ globals
     constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
     constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
-	
-    // Campaign Minimap icon styles
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
-    constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
-    constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
-	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
     constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
@@ -647,8 +619,6 @@ globals
     lightning          bj_lastCreatedLightning     = null
     image              bj_lastCreatedImage         = null
     ubersplat          bj_lastCreatedUbersplat     = null
-    minimapicon        bj_lastCreatedMinimapIcon   = null
-	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
     boolexpr           filterIssueHauntOrderAtLocBJ      = null
@@ -661,9 +631,6 @@ globals
 
     // Memory cleanup vars
     boolean            bj_wantDestroyGroup         = false
-
-    // Instanced Operation Results
-    boolean            bj_lastInstObjFuncSuccessful = true
 endglobals
 
 
@@ -673,7 +640,6 @@ endglobals
 //*  Debugging Functions
 //*
 //***************************************************************************
-
 
 // 显示Debug消息[C]
 function BJDebugMsg takes string msg returns nothing
@@ -1294,8 +1260,7 @@ endfunction
 //
 // 百分比轉換為整數
 function PercentToInt takes real percentage, integer max returns integer
-    local real realpercent = percentage * I2R(max) * 0.01
-    local integer result = MathRound(realpercent)
+    local integer result = R2I(percentage * I2R(max) * 0.01)
 
     if (result < 0) then
         set result = 0
@@ -1386,9 +1351,6 @@ function GetCurrentCameraSetup takes nothing returns camerasetup
     call CameraSetupSetField(theCam, CAMERA_FIELD_FIELD_OF_VIEW,   bj_RADTODEG * GetCameraField(CAMERA_FIELD_FIELD_OF_VIEW),   duration)
     call CameraSetupSetField(theCam, CAMERA_FIELD_ROLL,            bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROLL),            duration)
     call CameraSetupSetField(theCam, CAMERA_FIELD_ROTATION,        bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROTATION),        duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_PITCH,     bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_PITCH),     duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_YAW,       bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_YAW),       duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_ROLL,      bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_ROLL),      duration)
     call CameraSetupSetDestPosition(theCam, GetCameraTargetPositionX(), GetCameraTargetPositionY(), duration)
     return theCam
 endfunction
@@ -1399,14 +1361,6 @@ function CameraSetupApplyForPlayer takes boolean doPan, camerasetup whichSetup, 
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call CameraSetupApplyForceDuration(whichSetup, doPan, duration)
-    endif
-endfunction
-
-
-function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichSetup, player whichPlayer, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
-        // Use only local code (no net traffic) within this block to avoid desyncs.
-        call BlzCameraSetupApplyForceDurationSmooth(whichSetup, doPan, forcedDuration, easeInDuration, easeOutDuration, smoothFactor)
     endif
 endfunction
 
@@ -1510,11 +1464,10 @@ endfunction
 // 必要时平移摄像机 (限时)
 function SmartCameraPanBJ takes player whichPlayer, location loc, real duration returns nothing
     local real dist
-	local location cameraLoc = GetCameraTargetPositionLoc()
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
-        set dist = DistanceBetweenPoints(loc, cameraLoc)
+        set dist = DistanceBetweenPoints(loc, GetCameraTargetPositionLoc())
         if (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
             // If the user is too far away, snap the camera.
             call PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), 0)
@@ -1525,7 +1478,6 @@ function SmartCameraPanBJ takes player whichPlayer, location loc, real duration 
             // User is close enough, so don't touch the camera.
         endif
     endif
-	call RemoveLocation(cameraLoc)
 endfunction
 
 
@@ -1699,6 +1651,7 @@ function SetCameraQuickPositionForPlayer takes player whichPlayer, real x, real 
 endfunction
 
 
+// 设置空格点击 切换镜头目标
 // 设置相机位置 (快速)
 function SetCameraQuickPositionLocForPlayer takes player whichPlayer, location loc returns nothing
     if (GetLocalPlayer() == whichPlayer) then
@@ -1890,23 +1843,6 @@ function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer,
 endfunction
 
 
-function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
-     if (meType == bj_MOUSEEVENTTYPE_DOWN) then
-        // Mouse down event
-        return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_DOWN)
-    elseif (meType == bj_MOUSEEVENTTYPE_UP) then
-        // Mouse up event
-        return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_UP)
-    elseif (meType == bj_MOUSEEVENTTYPE_MOVE) then
-        // Mouse move event
-        return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_MOVE)
-    else
-        // Unrecognized type - ignore the request and return failure.
-         return null
-    endif
-endfunction
-
-
 // 胜利
 function TriggerRegisterPlayerEventVictory takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_VICTORY)
@@ -2010,31 +1946,6 @@ endfunction
 // 建造建筑物按钮被点击
 function TriggerRegisterBuildSubmenuEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_BUILD_SUBMENU)
-endfunction
-
-
-function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId returns event
-	call TriggerRegisterCommandEvent(trig, 'ANbu', UnitId2String(unitId))
-	call TriggerRegisterCommandEvent(trig, 'AHbu', UnitId2String(unitId))
-	call TriggerRegisterCommandEvent(trig, 'AEbu', UnitId2String(unitId))
-	call TriggerRegisterCommandEvent(trig, 'AObu', UnitId2String(unitId))
-	call TriggerRegisterCommandEvent(trig, 'AUbu', UnitId2String(unitId))
-    return TriggerRegisterCommandEvent(trig, 'AGbu', UnitId2String(unitId))
-endfunction
-
-
-function TriggerRegisterTrainCommandEventBJ takes trigger trig, integer unitId returns event
-    return TriggerRegisterCommandEvent(trig, 'Aque', UnitId2String(unitId))
-endfunction
-
-
-function TriggerRegisterUpgradeCommandEventBJ takes trigger trig, integer techId returns event
-    return TriggerRegisterUpgradeCommandEvent(trig, techId)
-endfunction
-
-
-function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order returns event
-    return TriggerRegisterCommandEvent(trig, 0, order)
 endfunction
 
 
@@ -2426,159 +2337,6 @@ endfunction
 // 最后创建的地面纹理
 function GetLastCreatedUbersplat takes nothing returns ubersplat
     return bj_lastCreatedUbersplat
-endfunction
-
-
-function GetLastCreatedMinimapIcon takes nothing returns minimapicon
-    return bj_lastCreatedMinimapIcon
-endfunction
-
-
-function CreateMinimapIconOnUnitBJ takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-    set bj_lastCreatedMinimapIcon = CreateMinimapIconOnUnit(whichUnit, red, green, blue, pingPath, fogVisibility)
-    return bj_lastCreatedMinimapIcon
-endfunction
-
-
-function CreateMinimapIconAtLocBJ takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-    set bj_lastCreatedMinimapIcon = CreateMinimapIconAtLoc(where, red, green, blue, pingPath, fogVisibility)
-    return bj_lastCreatedMinimapIcon
-endfunction
-
-
-function CreateMinimapIconBJ takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-    set bj_lastCreatedMinimapIcon = CreateMinimapIcon(x, y, red, green, blue, pingPath, fogVisibility)
-    return bj_lastCreatedMinimapIcon
-endfunction
-
-
-function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns nothing
-	local integer	red
-	local integer 	green
-	local integer 	blue
-	local string 	path
-	if ( style == bj_CAMPPINGSTYLE_PRIMARY ) then
-		// green
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_GREEN ) then
-		// green
-		set red 	= 0
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_RED ) then
-		// green
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_BONUS ) then
-		// yellow
-		set red 	= 255
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectiveBonus" )
-	elseif ( style == bj_CAMPPINGSTYLE_TURNIN ) then
-		// yellow
-		set red 	= 255
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestTurnIn" )
-	elseif ( style == bj_CAMPPINGSTYLE_BOSS ) then
-		// red
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestBoss" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ALLY ) then
-		// green
-		set red 	= 0
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL ) then
-		// white
-		set red 	= 255
-		set green 	= 255
-		set blue	= 255
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ENEMY ) then
-		// red
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	endif
-	call CreateMinimapIconOnUnitBJ( whichUnit, red, green, blue, path, FOG_OF_WAR_MASKED )
-    call SetMinimapIconOrphanDestroy( bj_lastCreatedMinimapIcon, true )
-endfunction
-
-
-
-function CampaignMinimapIconLocBJ takes location where, integer style returns nothing
-	local integer	red
-	local integer 	green
-	local integer 	blue
-	local string 	path
-	if ( style == bj_CAMPPINGSTYLE_PRIMARY ) then
-		// green (different from the unit version)
-		set red 	= 0
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_GREEN ) then
-		// green (different from the unit version)
-		set red 	= 0
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_RED ) then
-		// green (different from the unit version)
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_BONUS ) then
-		// yellow
-		set red 	= 255
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectiveBonus" )
-	elseif ( style == bj_CAMPPINGSTYLE_TURNIN ) then
-		// yellow
-		set red 	= 255
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestTurnIn" )
-	elseif ( style == bj_CAMPPINGSTYLE_BOSS ) then
-		// red
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestBoss" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ALLY ) then
-		// green
-		set red 	= 0
-		set green 	= 255
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL ) then
-		// white
-		set red 	= 255
-		set green 	= 255
-		set blue	= 255
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ENEMY ) then
-		// red
-		set red 	= 255
-		set green 	= 0
-		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	endif
-	call CreateMinimapIconAtLocBJ( where, red, green, blue, path, FOG_OF_WAR_MASKED )
 endfunction
 
 
@@ -3013,67 +2771,6 @@ endfunction
 
 //***************************************************************************
 //*
-//*  Command Button Effect Utility Functions
-//*
-//***************************************************************************
-
-
-function CreateCommandButtonEffectBJ takes integer abilityId, string order returns commandbuttoneffect
-    set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(abilityId, order)
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function CreateTrainCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
-    set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect('Aque', UnitId2String(unitId))
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function CreateUpgradeCommandButtonEffectBJ takes integer techId returns commandbuttoneffect
-    set bj_lastCreatedCommandButtonEffect = CreateUpgradeCommandButtonEffect(techId)
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function CreateCommonCommandButtonEffectBJ takes string order returns commandbuttoneffect
-    set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(0, order)
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function CreateLearnCommandButtonEffectBJ takes integer abilityId returns commandbuttoneffect
-    set bj_lastCreatedCommandButtonEffect = CreateLearnCommandButtonEffect(abilityId)
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
-	local race r = GetPlayerRace(GetLocalPlayer())
-	local integer abilityId
-	if (r == RACE_HUMAN) then
-        set abilityId = 'AHbu'
-    elseif (r == RACE_ORC) then
-        set abilityId = 'AObu'
-    elseif (r == RACE_UNDEAD) then
-        set abilityId = 'AUbu'
-    elseif (r == RACE_NIGHTELF) then
-        set abilityId = 'AEbu'
-    else
-        set abilityId = 'ANbu'
-    endif
-    set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(abilityId, UnitId2String(unitId))
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-function GetLastCreatedCommandButtonEffectBJ takes nothing returns commandbuttoneffect
-    return bj_lastCreatedCommandButtonEffect
-endfunction
-
-
-//***************************************************************************
-//*
 //*  Hero and Item Utility Functions
 //*
 //***************************************************************************
@@ -3223,26 +2920,6 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
 endfunction
 
 
-function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
-    call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
-endfunction
-
-
-function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
-    return GetPlayerHandicapDamage(whichPlayer) * 100
-endfunction
-
-
-function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
-    call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
-endfunction
-
-
-function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
-    return GetPlayerHandicapReviveTime(whichPlayer) * 100
-endfunction
-
-
 // 设置玩家英雄经验值预先获得
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
@@ -3330,7 +3007,8 @@ function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integ
 endfunction
 
 
-// 单位掉落的物品
+// 发布丢弃物品命令(指定坐标)
+//  单位掉落的物品
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
@@ -3508,6 +3186,7 @@ endfunction
 
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 //
+// 矩形区域内随机物品(指定条件)
 // 随机物品在区域并匹配条件
 function RandomItemInRectBJEnum takes nothing returns nothing
     set bj_itemRandomConsidered = bj_itemRandomConsidered + 1
@@ -3697,6 +3376,7 @@ endfunction
 
 
 // 最后创建的单位组
+// 最后创建的单位组
 function GetLastCreatedGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupLastCreatedDest, GetEnumUnit())
 endfunction
@@ -3867,7 +3547,7 @@ function SelectGroupBJ takes group g returns nothing
 endfunction
 
 
-// 添加选择单位(所有玩家)
+//  添加选择单位(所有玩家)
 function SelectUnitAdd takes unit whichUnit returns nothing
     call SelectUnit(whichUnit, true)
 endfunction
@@ -4225,7 +3905,6 @@ endfunction
 
 
 // 暂停/恢复 所有单位
-// Pause all units 
 function PauseAllUnitsBJEnum takes nothing returns nothing
     call PauseUnit( GetEnumUnit(), bj_pauseAllUnitsFlag )
 endfunction
@@ -5544,7 +5223,7 @@ function DialogAddButtonBJ takes dialog whichDialog, string buttonText returns b
 endfunction
 
 
-// 添加对话框按钮(有快捷键) [R]
+//  添加对话框按钮(有快捷键) [R]
 function DialogAddButtonWithHotkeyBJ takes dialog whichDialog, string buttonText, integer hotkey returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,hotkey)
     return bj_lastCreatedButton
@@ -6132,7 +5811,7 @@ function CustomDefeatDialogBJ takes player whichPlayer, string message returns n
 endfunction
 
 
-// 游戏失败
+//  游戏失败
 function CustomDefeatBJ takes player whichPlayer, string message returns nothing
     if AllowVictoryDefeat( PLAYER_GAME_RESULT_DEFEAT ) then
         call RemovePlayer( whichPlayer, PLAYER_GAME_RESULT_DEFEAT )
@@ -7029,7 +6708,7 @@ function ShowTextTagForceBJ takes boolean show, texttag tt, force whichForce ret
 endfunction
 
 
-// 最后创建的漂浮文字
+//  最后创建的漂浮文字
 function GetLastCreatedTextTag takes nothing returns texttag
     return bj_lastCreatedTextTag
 endfunction
@@ -7211,8 +6890,8 @@ endfunction
 
 function SetCinematicSceneBJ takes sound soundHandle, integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
     set bj_cineSceneLastSound = soundHandle
-    call SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
     call PlaySoundBJ(soundHandle)
+    call SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
 endfunction
 
 
@@ -7287,8 +6966,6 @@ endfunction
 function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, string unitName, sound soundHandle, string message, integer timeType, real timeVal, boolean wait returns nothing
     call TryInitCinematicBehaviorBJ()
 
-    call AttachSoundToUnit(soundHandle, whichUnit)
-
     // Ensure that the time value is non-negative.
     set timeVal = RMaxBJ(timeVal, 0)
 
@@ -7314,62 +6991,6 @@ function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, str
         call WaitTransmissionDuration(soundHandle, timeType, timeVal)
     endif
 
-endfunction
-
-
-function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer speakerType, sound soundHandle, integer timeType, real timeVal, boolean wait returns boolean
-    //Make sure that the runtime unit type and the parameter are the same,
-    //otherwise the offline animations will not match and will fail
-    if GetUnitTypeId(speaker) != speakerType then
-        debug call BJDebugMsg(("Attempted to play FacialAnimation with the wrong speaker UnitType - Param: " + I2S(speakerType) + " Runtime: " +  I2S(GetUnitTypeId(speaker))))
-        //return false
-    endif
-
-    call TryInitCinematicBehaviorBJ()
-
-    call AttachSoundToUnit(soundHandle, speaker)
-
-    // Ensure that the time value is non-negative.
-    set timeVal = RMaxBJ(timeVal, 0)
-
-    set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
-    set bj_lastPlayedSound = soundHandle
-
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
-        call SetCinematicSceneBJ(soundHandle, speakerType, GetPlayerColor(GetOwningPlayer(speaker)), GetLocalizedString(GetDialogueSpeakerNameKey(soundHandle)), GetLocalizedString(GetDialogueTextKey(soundHandle)), bj_lastTransmissionDuration + bj_TRANSMISSION_PORT_HANGTIME, bj_lastTransmissionDuration)
-    endif
-
-    if wait and (bj_lastTransmissionDuration > 0) then
-        // call TriggerSleepAction(bj_lastTransmissionDuration)
-        call WaitTransmissionDuration(soundHandle, timeType, timeVal)
-    endif
-
-    return true
-endfunction
-
-
-function PlayDialogueFromSpeakerTypeEx takes force toForce, player fromPlayer, integer speakerType, location loc, sound soundHandle, integer timeType, real timeVal, boolean wait returns boolean
-    call TryInitCinematicBehaviorBJ()
-
-    // Ensure that the time value is non-negative.
-    set timeVal = RMaxBJ(timeVal, 0)
-
-    set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
-    set bj_lastPlayedSound = soundHandle
-
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
-        call SetCinematicSceneBJ(soundHandle, speakerType, GetPlayerColor(fromPlayer), GetLocalizedString(GetDialogueSpeakerNameKey(soundHandle)), GetLocalizedString(GetDialogueTextKey(soundHandle)), bj_lastTransmissionDuration + bj_TRANSMISSION_PORT_HANGTIME, bj_lastTransmissionDuration)
-        if(speakerType != 0) then
-            call PingMinimap(GetLocationX(loc), GetLocationY(loc), bj_TRANSMISSION_PING_TIME)
-        endif
-    endif
-
-    if wait and (bj_lastTransmissionDuration > 0) then
-        // call TriggerSleepAction(bj_lastTransmissionDuration)
-        call WaitTransmissionDuration(soundHandle, timeType, timeVal)
-    endif
-
-    return true
 endfunction
 
 
@@ -7447,7 +7068,6 @@ function CinematicModeExBJ takes boolean cineMode, force forForce, real interfac
     if (cineMode) then
         // Save the UI state so that we can restore it later.
         if (not bj_cineModeAlreadyIn) then
-            call SetCinematicAudio(true)
             set bj_cineModeAlreadyIn = true
             set bj_cineModePriorSpeed = GetGameSpeed()
             set bj_cineModePriorFogSetting = IsFogEnabled()
@@ -7478,7 +7098,6 @@ function CinematicModeExBJ takes boolean cineMode, force forForce, real interfac
         call SetRandomSeed(0)
     else
         set bj_cineModeAlreadyIn = false
-        call SetCinematicAudio(false)
 
         // Perform local changes
         if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
@@ -7535,8 +7154,8 @@ function CinematicFadeCommonBJ takes real red, real green, real blue, real durat
     call SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
     call SetCineFilterStartUV(0, 0, 1, 1)
     call SetCineFilterEndUV(0, 0, 1, 1)
-    call SetCineFilterStartColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-startTrans))
-    call SetCineFilterEndColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-endTrans))
+    call SetCineFilterStartColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100-startTrans))
+    call SetCineFilterEndColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100-endTrans))
     call SetCineFilterDuration(duration)
     call DisplayCineFilter(true)
 endfunction
@@ -7622,8 +7241,8 @@ function CinematicFilterGenericBJ takes real duration, blendmode bmode, string t
     call SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
     call SetCineFilterStartUV(0, 0, 1, 1)
     call SetCineFilterEndUV(0, 0, 1, 1)
-    call SetCineFilterStartColor(PercentTo255(red0), PercentTo255(green0), PercentTo255(blue0), PercentTo255(100.0-trans0))
-    call SetCineFilterEndColor(PercentTo255(red1), PercentTo255(green1), PercentTo255(blue1), PercentTo255(100.0-trans1))
+    call SetCineFilterStartColor(PercentTo255(red0), PercentTo255(green0), PercentTo255(blue0), PercentTo255(100-trans0))
+    call SetCineFilterEndColor(PercentTo255(red1), PercentTo255(green1), PercentTo255(blue1), PercentTo255(100-trans1))
     call SetCineFilterDuration(duration)
     call DisplayCineFilter(true)
 endfunction
@@ -7697,7 +7316,7 @@ endfunction
 // Determines whether or not rescued buildings automatically change color
 // upon being rescued.
 //
-// 设置营救颜色(建筑)
+//  设置营救颜色(建筑)
 function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothing
     set bj_rescueChangeColorBldg = changeColor
 endfunction
@@ -7913,14 +7532,14 @@ function GetLastCreatedGameCacheBJ takes nothing returns gamecache
 endfunction
 
 
-// <1.24> 新建哈希表
+//  <1.24> 新建哈希表
 function InitHashtableBJ takes nothing returns hashtable
     set bj_lastCreatedHashtable = InitHashtable()
     return bj_lastCreatedHashtable
 endfunction
 
 
-// 最后创建的哈希表
+//  最后创建的哈希表
 function GetLastCreatedHashtableBJ takes nothing returns hashtable
     return bj_lastCreatedHashtable
 endfunction
@@ -7956,31 +7575,31 @@ function StoreUnitBJ takes unit whichUnit, string key, string missionKey, gameca
 endfunction
 
 
-// <1.24> 保存实数
+//  <1.24> 保存实数
 function SaveRealBJ takes real value, integer key, integer missionKey, hashtable table returns nothing
     call SaveReal(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存整数
+//  <1.24> 保存整数
 function SaveIntegerBJ takes integer value, integer key, integer missionKey, hashtable table returns nothing
     call SaveInteger(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存布尔
+//  <1.24> 保存布尔
 function SaveBooleanBJ takes boolean value, integer key, integer missionKey, hashtable table returns nothing
     call SaveBoolean(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存字符串
+//  <1.24> 保存字符串
 function SaveStringBJ takes string value, integer key, integer missionKey, hashtable table returns boolean
     return SaveStr(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存玩家
+//  <1.24> 保存玩家
 function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missionKey, hashtable table returns boolean
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
@@ -7991,19 +7610,19 @@ function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missi
 endfunction
 
 
-// <1.24> 保存可破坏物
+//  <1.24> 保存可破坏物
 function SaveDestructableHandleBJ takes destructable whichDestructable, integer key, integer missionKey, hashtable table returns boolean
     return SaveDestructableHandle(table, missionKey, key, whichDestructable)
 endfunction
 
 
-// <1.24> 保存物品
+//  <1.24> 保存物品
 function SaveItemHandleBJ takes item whichItem, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemHandle(table, missionKey, key, whichItem)
 endfunction
 
 
-// <1.24> 保存单位
+//  <1.24> 保存单位
 function SaveUnitHandleBJ takes unit whichUnit, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitHandle(table, missionKey, key, whichUnit)
 endfunction
@@ -8014,187 +7633,187 @@ function SaveAbilityHandleBJ takes ability whichAbility, integer key, integer mi
 endfunction
 
 
-// <1.24> 保存计时器
+//  <1.24> 保存计时器
 function SaveTimerHandleBJ takes timer whichTimer, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerHandle(table, missionKey, key, whichTimer)
 endfunction
 
 
-// <1.24> 保存触发器
+//  <1.24> 保存触发器
 function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerHandle(table, missionKey, key, whichTrigger)
 endfunction
 
 
-// <1.24> 保存触发条件
+//  <1.24> 保存触发条件
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
 
 
-// <1.24> 保存触发动作
+//  <1.24> 保存触发动作
 function SaveTriggerActionHandleBJ takes triggeraction whichTriggeraction, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
 endfunction
 
 
-// <1.24> 保存触发事件
+//  <1.24> 保存触发事件
 function SaveTriggerEventHandleBJ takes event whichEvent, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerEventHandle(table, missionKey, key, whichEvent)
 endfunction
 
 
-// <1.24> 保存玩家组
+//  <1.24> 保存玩家组
 function SaveForceHandleBJ takes force whichForce, integer key, integer missionKey, hashtable table returns boolean
     return SaveForceHandle(table, missionKey, key, whichForce)
 endfunction
 
 
-// <1.24> 保存单位组
+//  <1.24> 保存单位组
 function SaveGroupHandleBJ takes group whichGroup, integer key, integer missionKey, hashtable table returns boolean
     return SaveGroupHandle(table, missionKey, key, whichGroup)
 endfunction
 
 
-// <1.24> 保存点
+//  <1.24> 保存点
 function SaveLocationHandleBJ takes location whichLocation, integer key, integer missionKey, hashtable table returns boolean
     return SaveLocationHandle(table, missionKey, key, whichLocation)
 endfunction
 
 
-// <1.24> 保存区域(矩型)
+//  <1.24> 保存区域(矩型)
 function SaveRectHandleBJ takes rect whichRect, integer key, integer missionKey, hashtable table returns boolean
     return SaveRectHandle(table, missionKey, key, whichRect)
 endfunction
 
 
-// <1.24> 保存布尔表达式
+//  <1.24> 保存布尔表达式
 function SaveBooleanExprHandleBJ takes boolexpr whichBoolexpr, integer key, integer missionKey, hashtable table returns boolean
     return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
 endfunction
 
 
-// <1.24> 保存音效
+//  <1.24> 保存音效
 function SaveSoundHandleBJ takes sound whichSound, integer key, integer missionKey, hashtable table returns boolean
     return SaveSoundHandle(table, missionKey, key, whichSound)
 endfunction
 
 
-// <1.24> 保存特效
+//  <1.24> 保存特效
 function SaveEffectHandleBJ takes effect whichEffect, integer key, integer missionKey, hashtable table returns boolean
     return SaveEffectHandle(table, missionKey, key, whichEffect)
 endfunction
 
 
-// <1.24> 保存单位池
+//  <1.24> 保存单位池
 function SaveUnitPoolHandleBJ takes unitpool whichUnitpool, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitPoolHandle(table, missionKey, key, whichUnitpool)
 endfunction
 
 
-// <1.24> 保存物品池
+//  <1.24> 保存物品池
 function SaveItemPoolHandleBJ takes itempool whichItempool, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemPoolHandle(table, missionKey, key, whichItempool)
 endfunction
 
 
-// <1.24> 保存任务
+//  <1.24> 保存任务
 function SaveQuestHandleBJ takes quest whichQuest, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestHandle(table, missionKey, key, whichQuest)
 endfunction
 
 
-// <1.24> 保存任务要求
+//  <1.24> 保存任务要求
 function SaveQuestItemHandleBJ takes questitem whichQuestitem, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestItemHandle(table, missionKey, key, whichQuestitem)
 endfunction
 
 
-// <1.24> 保存失败条件
+//  <1.24> 保存失败条件
 function SaveDefeatConditionHandleBJ takes defeatcondition whichDefeatcondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
 endfunction
 
 
-// <1.24> 保存计时器窗口
+//  <1.24> 保存计时器窗口
 function SaveTimerDialogHandleBJ takes timerdialog whichTimerdialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerDialogHandle(table, missionKey, key, whichTimerdialog)
 endfunction
 
 
-// <1.24> 保存排行榜
+//  <1.24> 保存排行榜
 function SaveLeaderboardHandleBJ takes leaderboard whichLeaderboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveLeaderboardHandle(table, missionKey, key, whichLeaderboard)
 endfunction
 
 
-// <1.24> 保存多面板
+//  <1.24> 保存多面板
 function SaveMultiboardHandleBJ takes multiboard whichMultiboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardHandle(table, missionKey, key, whichMultiboard)
 endfunction
 
 
-// <1.24> 保存多面板项目
+//  <1.24> 保存多面板项目
 function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardItemHandle(table, missionKey, key, whichMultiboarditem)
 endfunction
 
 
-// <1.24> 保存可追踪物
+//  <1.24> 保存可追踪物
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
 
 
-// <1.24> 保存对话框
+//  <1.24> 保存对话框
 function SaveDialogHandleBJ takes dialog whichDialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveDialogHandle(table, missionKey, key, whichDialog)
 endfunction
 
 
-// <1.24> 保存对话框按钮
+//  <1.24> 保存对话框按钮
 function SaveButtonHandleBJ takes button whichButton, integer key, integer missionKey, hashtable table returns boolean
     return SaveButtonHandle(table, missionKey, key, whichButton)
 endfunction
 
 
-// <1.24> 保存漂浮文字
+//  <1.24> 保存漂浮文字
 function SaveTextTagHandleBJ takes texttag whichTexttag, integer key, integer missionKey, hashtable table returns boolean
     return SaveTextTagHandle(table, missionKey, key, whichTexttag)
 endfunction
 
 
-// <1.24> 保存闪电效果
+//  <1.24> 保存闪电效果
 function SaveLightningHandleBJ takes lightning whichLightning, integer key, integer missionKey, hashtable table returns boolean
     return SaveLightningHandle(table, missionKey, key, whichLightning)
 endfunction
 
 
-// <1.24> 保存图像
+//  <1.24> 保存图像
 function SaveImageHandleBJ takes image whichImage, integer key, integer missionKey, hashtable table returns boolean
     return SaveImageHandle(table, missionKey, key, whichImage)
 endfunction
 
 
-// <1.24> 保存地面纹理变化
+//  <1.24> 保存地面纹理变化
 function SaveUbersplatHandleBJ takes ubersplat whichUbersplat, integer key, integer missionKey, hashtable table returns boolean
     return SaveUbersplatHandle(table, missionKey, key, whichUbersplat)
 endfunction
 
 
-// <1.24> 保存区域(不规则)
+//  <1.24> 保存区域(不规则)
 function SaveRegionHandleBJ takes region whichRegion, integer key, integer missionKey, hashtable table returns boolean
     return SaveRegionHandle(table, missionKey, key, whichRegion)
 endfunction
 
 
-// <1.24> 保存迷雾状态
+//  <1.24> 保存迷雾状态
 function SaveFogStateHandleBJ takes fogstate whichFogState, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogStateHandle(table, missionKey, key, whichFogState)
 endfunction
 
 
-// <1.24> 保存可见度修正器
+//  <1.24> 保存可见度修正器
 function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
@@ -8245,28 +7864,28 @@ function GetStoredStringBJ takes string key, string missionKey, gamecache cache 
 endfunction
 
 
-// <1.24> 从哈希表提取实数
+//  <1.24> 从哈希表提取实数
 function LoadRealBJ takes integer key, integer missionKey, hashtable table returns real
     //call SyncStoredReal(table, missionKey, key)
     return LoadReal(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取整数
+//  <1.24> 从哈希表提取整数
 function LoadIntegerBJ takes integer key, integer missionKey, hashtable table returns integer
     //call SyncStoredInteger(table, missionKey, key)
     return LoadInteger(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取布尔
+//  <1.24> 从哈希表提取布尔
 function LoadBooleanBJ takes integer key, integer missionKey, hashtable table returns boolean
     //call SyncStoredBoolean(table, missionKey, key)
     return LoadBoolean(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取字符串
+//  <1.24> 从哈希表提取字符串
 function LoadStringBJ takes integer key, integer missionKey, hashtable table returns string
     local string s
 
@@ -8280,7 +7899,7 @@ function LoadStringBJ takes integer key, integer missionKey, hashtable table ret
 endfunction
 
 
-// <1.24> 从哈希表提取玩家
+//  <1.24> 从哈希表提取玩家
 function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable table returns player
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
@@ -8291,19 +7910,19 @@ function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable tab
 endfunction
 
 
-// <1.24> 从哈希表提取可破坏物
+//  <1.24> 从哈希表提取可破坏物
 function LoadDestructableHandleBJ takes integer key, integer missionKey, hashtable table returns destructable
     return LoadDestructableHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取物品
+//  <1.24> 从哈希表提取物品
 function LoadItemHandleBJ takes integer key, integer missionKey, hashtable table returns item
     return LoadItemHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取单位
+//  <1.24> 从哈希表提取单位
 function LoadUnitHandleBJ takes integer key, integer missionKey, hashtable table returns unit
     return LoadUnitHandle(table, missionKey, key)
 endfunction
@@ -8314,187 +7933,187 @@ function LoadAbilityHandleBJ takes integer key, integer missionKey, hashtable ta
 endfunction
 
 
-// <1.24> 从哈希表提取计时器
+//  <1.24> 从哈希表提取计时器
 function LoadTimerHandleBJ takes integer key, integer missionKey, hashtable table returns timer
     return LoadTimerHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取触发器
+//  <1.24> 从哈希表提取触发器
 function LoadTriggerHandleBJ takes integer key, integer missionKey, hashtable table returns trigger
     return LoadTriggerHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取触发条件
+//  <1.24> 从哈希表提取触发条件
 function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, hashtable table returns triggercondition
     return LoadTriggerConditionHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取触发动作
+//  <1.24> 从哈希表提取触发动作
 function LoadTriggerActionHandleBJ takes integer key, integer missionKey, hashtable table returns triggeraction
     return LoadTriggerActionHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取触发事件
+//  <1.24> 从哈希表提取触发事件
 function LoadTriggerEventHandleBJ takes integer key, integer missionKey, hashtable table returns event
     return LoadTriggerEventHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取玩家组
+//  <1.24> 从哈希表提取玩家组
 function LoadForceHandleBJ takes integer key, integer missionKey, hashtable table returns force
     return LoadForceHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取单位组
+//  <1.24> 从哈希表提取单位组
 function LoadGroupHandleBJ takes integer key, integer missionKey, hashtable table returns group
     return LoadGroupHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取点
+//  <1.24> 从哈希表提取点
 function LoadLocationHandleBJ takes integer key, integer missionKey, hashtable table returns location
     return LoadLocationHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取区域(矩型)
+//  <1.24> 从哈希表提取区域(矩型)
 function LoadRectHandleBJ takes integer key, integer missionKey, hashtable table returns rect
     return LoadRectHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取布尔表达式
+//  <1.24> 从哈希表提取布尔表达式
 function LoadBooleanExprHandleBJ takes integer key, integer missionKey, hashtable table returns boolexpr
     return LoadBooleanExprHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取音效
+//  <1.24> 从哈希表提取音效
 function LoadSoundHandleBJ takes integer key, integer missionKey, hashtable table returns sound
     return LoadSoundHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取特效
+//  <1.24> 从哈希表提取特效
 function LoadEffectHandleBJ takes integer key, integer missionKey, hashtable table returns effect
     return LoadEffectHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取单位池
+//  <1.24> 从哈希表提取单位池
 function LoadUnitPoolHandleBJ takes integer key, integer missionKey, hashtable table returns unitpool
     return LoadUnitPoolHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取物品池
+//  <1.24> 从哈希表提取物品池
 function LoadItemPoolHandleBJ takes integer key, integer missionKey, hashtable table returns itempool
     return LoadItemPoolHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取任务
+//  <1.24> 从哈希表提取任务
 function LoadQuestHandleBJ takes integer key, integer missionKey, hashtable table returns quest
     return LoadQuestHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取任务要求
+//  <1.24> 从哈希表提取任务要求
 function LoadQuestItemHandleBJ takes integer key, integer missionKey, hashtable table returns questitem
     return LoadQuestItemHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取失败条件
+//  <1.24> 从哈希表提取失败条件
 function LoadDefeatConditionHandleBJ takes integer key, integer missionKey, hashtable table returns defeatcondition
     return LoadDefeatConditionHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取计时器窗口
+//  <1.24> 从哈希表提取计时器窗口
 function LoadTimerDialogHandleBJ takes integer key, integer missionKey, hashtable table returns timerdialog
     return LoadTimerDialogHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取排行榜
+//  <1.24> 从哈希表提取排行榜
 function LoadLeaderboardHandleBJ takes integer key, integer missionKey, hashtable table returns leaderboard
     return LoadLeaderboardHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取多面板
+//  <1.24> 从哈希表提取多面板
 function LoadMultiboardHandleBJ takes integer key, integer missionKey, hashtable table returns multiboard
     return LoadMultiboardHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取多面板项目
+//  <1.24> 从哈希表提取多面板项目
 function LoadMultiboardItemHandleBJ takes integer key, integer missionKey, hashtable table returns multiboarditem
     return LoadMultiboardItemHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取可追踪物
+//  <1.24> 从哈希表提取可追踪物
 function LoadTrackableHandleBJ takes integer key, integer missionKey, hashtable table returns trackable
     return LoadTrackableHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取对话框
+//  <1.24> 从哈希表提取对话框
 function LoadDialogHandleBJ takes integer key, integer missionKey, hashtable table returns dialog
     return LoadDialogHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取对话框按钮
+//  <1.24> 从哈希表提取对话框按钮
 function LoadButtonHandleBJ takes integer key, integer missionKey, hashtable table returns button
     return LoadButtonHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取漂浮文字
+//  <1.24> 从哈希表提取漂浮文字
 function LoadTextTagHandleBJ takes integer key, integer missionKey, hashtable table returns texttag
     return LoadTextTagHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取闪电效果
+//  <1.24> 从哈希表提取闪电效果
 function LoadLightningHandleBJ takes integer key, integer missionKey, hashtable table returns lightning
     return LoadLightningHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取图象
+//  <1.24> 从哈希表提取图象
 function LoadImageHandleBJ takes integer key, integer missionKey, hashtable table returns image
     return LoadImageHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取地面纹理变化
+//  <1.24> 从哈希表提取地面纹理变化
 function LoadUbersplatHandleBJ takes integer key, integer missionKey, hashtable table returns ubersplat
     return LoadUbersplatHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取区域(不规则)
+//  <1.24> 从哈希表提取区域(不规则)
 function LoadRegionHandleBJ takes integer key, integer missionKey, hashtable table returns region
     return LoadRegionHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取迷雾状态
+//  <1.24> 从哈希表提取迷雾状态
 function LoadFogStateHandleBJ takes integer key, integer missionKey, hashtable table returns fogstate
     return LoadFogStateHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取可见度修正器
+//  <1.24> 从哈希表提取可见度修正器
 function LoadFogModifierHandleBJ takes integer key, integer missionKey, hashtable table returns fogmodifier
     return LoadFogModifierHandle(table, missionKey, key)
 endfunction
@@ -8538,13 +8157,13 @@ function FlushStoredMissionBJ takes string missionKey, gamecache cache returns n
 endfunction
 
 
-// <1.24> 清空哈希表
+//  <1.24> 清空哈希表
 function FlushParentHashtableBJ takes hashtable table returns nothing
     call FlushParentHashtable(table)
 endfunction
 
 
-// <1.24> 清空哈希表主索引
+//  <1.24> 清空哈希表主索引
 function FlushChildHashtableBJ takes integer missionKey, hashtable table returns nothing
     call FlushChildHashtable(table, missionKey)
 endfunction
@@ -8569,7 +8188,7 @@ function HaveStoredValue takes string key, integer valueType, string missionKey,
 endfunction
 
 
-// <1.24> 哈希项存在
+//  <1.24> 哈希项存在
 function HaveSavedValue takes integer key, integer valueType, integer missionKey, hashtable table returns boolean
     if (valueType == bj_HASHTABLE_BOOLEAN) then
         return HaveSavedBoolean(table, missionKey, key)
@@ -8597,13 +8216,6 @@ endfunction
 // 自定义战役按钮是可见的
 function IsCustomCampaignButtonVisibile takes integer whichButton returns boolean
     return GetCustomCampaignButtonVisible(whichButton - 1)
-endfunction
-
-
-// Placeholder function for auto save feature
-
-function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint returns nothing
-	call SaveGameCheckpoint(mapSaveName, doCheckpointHint)
 endfunction
 
 
@@ -9916,7 +9528,10 @@ function MeleeGetAllyKeyStructureCount takes player whichPlayer returns integer
     loop
         set indexPlayer = Player(playerIndex)
         if (PlayersAreCoAllied(whichPlayer, indexPlayer)) then
-            set keyStructs = keyStructs + BlzGetPlayerTownHallCount(indexPlayer)
+            set keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "townhall", true, true)
+            set keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "greathall", true, true)
+            set keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "treeoflife", true, true)
+            set keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "necropolis", true, true)
         endif
             
         set playerIndex = playerIndex + 1
@@ -10254,11 +9869,11 @@ endfunction
 
 
 function MeleePlayerIsCrippled takes player whichPlayer returns boolean
-    local integer playerStructures  = GetPlayerStructureCount(whichPlayer, true)
-    local integer playerKeyStructures = BlzGetPlayerTownHallCount(whichPlayer)
+    local integer allyStructures    = MeleeGetAllyStructureCount(whichPlayer)
+    local integer allyKeyStructures = MeleeGetAllyKeyStructureCount(whichPlayer)
 
-    // Dead players are not considered to be crippled.
-    return (playerStructures > 0) and (playerKeyStructures <= 0)
+    // Dead teams are not considered to be crippled.
+    return (allyStructures > 0) and (allyKeyStructures <= 0)
 endfunction
 
 
@@ -11339,193 +10954,4 @@ function WidgetDropItem takes widget inWidget, integer inItemID returns item
     set y = GetRandomReal(widgetY - radius, widgetY + radius)
 
     return CreateItem(inItemID, x, y)
-endfunction
-
-
-//***************************************************************************
-//*
-//*  Instanced Object Operation Functions
-//*
-//*  Get/Set specific fields for single unit/item/ability instance
-//*
-//***************************************************************************
-
-
-function BlzIsLastInstanceObjectFunctionSuccessful takes nothing returns boolean
-    return bj_lastInstObjFuncSuccessful
-endfunction
-
-// Ability
-
-function BlzSetAbilityBooleanFieldBJ takes ability whichAbility, abilitybooleanfield whichField, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanField(whichAbility, whichField, value)
-endfunction
-
-
-function BlzSetAbilityIntegerFieldBJ takes ability whichAbility, abilityintegerfield whichField, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerField(whichAbility, whichField, value)
-endfunction
-
-
-function BlzSetAbilityRealFieldBJ takes ability whichAbility, abilityrealfield whichField, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealField(whichAbility, whichField, value)
-endfunction
-
-
-function BlzSetAbilityStringFieldBJ takes ability whichAbility, abilitystringfield whichField, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringField(whichAbility, whichField, value)
-endfunction
-
-
-function BlzSetAbilityBooleanLevelFieldBJ takes ability whichAbility, abilitybooleanlevelfield whichField, integer level, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanLevelField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzSetAbilityIntegerLevelFieldBJ takes ability whichAbility, abilityintegerlevelfield whichField, integer level, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerLevelField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzSetAbilityRealLevelFieldBJ takes ability whichAbility, abilityreallevelfield whichField, integer level, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzSetAbilityStringLevelFieldBJ takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzSetAbilityBooleanLevelArrayFieldBJ takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanLevelArrayField(whichAbility, whichField, level, index, value)
-endfunction
-
-
-function BlzSetAbilityIntegerLevelArrayFieldBJ takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerLevelArrayField(whichAbility, whichField, level, index, value)
-endfunction
-
-
-function BlzSetAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelArrayField(whichAbility, whichField, level, index, value)
-endfunction
-
-
-function BlzSetAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelArrayField(whichAbility, whichField, level, index, value)
-endfunction
-
-
-function BlzAddAbilityBooleanLevelArrayFieldBJ takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzAddAbilityBooleanLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzAddAbilityIntegerLevelArrayFieldBJ takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzAddAbilityIntegerLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzAddAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzAddAbilityRealLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzAddAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzAddAbilityStringLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzRemoveAbilityBooleanLevelArrayFieldBJ takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityBooleanLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzRemoveAbilityIntegerLevelArrayFieldBJ takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityIntegerLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzRemoveAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityRealLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-
-function BlzRemoveAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityStringLevelArrayField(whichAbility, whichField, level, value)
-endfunction
-
-// Item 
-
-function BlzItemAddAbilityBJ takes item whichItem, integer abilCode returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzItemAddAbility(whichItem, abilCode)
-endfunction
-
-
-function BlzItemRemoveAbilityBJ takes item whichItem, integer abilCode returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzItemRemoveAbility(whichItem, abilCode)
-endfunction
-
-
-function BlzSetItemBooleanFieldBJ takes item whichItem, itembooleanfield whichField, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetItemBooleanField(whichItem, whichField, value)
-endfunction
-
-
-function BlzSetItemIntegerFieldBJ takes item whichItem, itemintegerfield whichField, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetItemIntegerField(whichItem, whichField, value)
-endfunction
-
-
-function BlzSetItemRealFieldBJ takes item whichItem, itemrealfield whichField, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetItemRealField(whichItem, whichField, value)
-endfunction
-
-
-function BlzSetItemStringFieldBJ takes item whichItem, itemstringfield whichField, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetItemStringField(whichItem, whichField, value)
-endfunction
-
-
-// Unit 
-
-function BlzSetUnitBooleanFieldBJ takes unit whichUnit, unitbooleanfield whichField, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitBooleanField(whichUnit, whichField, value)
-endfunction
-
-
-function BlzSetUnitIntegerFieldBJ takes unit whichUnit, unitintegerfield whichField, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitIntegerField(whichUnit, whichField, value)
-endfunction
-
-
-function BlzSetUnitRealFieldBJ takes unit whichUnit, unitrealfield whichField, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitRealField(whichUnit, whichField, value)
-endfunction
-
-
-function BlzSetUnitStringFieldBJ takes unit whichUnit, unitstringfield whichField, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitStringField(whichUnit, whichField, value)
-endfunction
-
-// Unit Weapon
-
-function BlzSetUnitWeaponBooleanFieldBJ takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value)
-endfunction
-
-
-function BlzSetUnitWeaponIntegerFieldBJ takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value)
-endfunction
-
-
-function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
-endfunction
-
-
-function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
-    set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction

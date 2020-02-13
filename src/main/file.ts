@@ -55,7 +55,7 @@ readFile(commonJFilePath, (error, data) => {
       CommonJJass.putFunction(func);
     });
     CommonJJass.natives = natives;
-    writeFile(resolve(__dirname, "common"), natives.map(n => n.name).join("|"), () => { });
+
   }
 });
 readFile(blizzardJFilePath, (error, data) => {
@@ -78,6 +78,7 @@ readFile(blizzardJFilePath, (error, data) => {
       BlizzardJJass.putFunction(func);
     });
     BlizzardJJass.natives = natives;
+    // f666()
   }
 });
 readFile(commonAiFilePath, (error, data) => {
@@ -208,85 +209,85 @@ if(title && title != "null" ){
 */
 
 function f666() {
-  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32.j').toString('utf8');
+  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/Blizzard (1).j').toString('utf8');
   const bcontent = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard.j').toString('utf8');
 
-const b132functions = parseFunctions(b132content)
-const bfunctions = parseFunctions(bcontent)
+  const b132functions = parseFunctions(b132content)
+  const bfunctions = parseFunctions(bcontent)
 
-const b132globals = parseGlobals(b132content)
-const bglobals = parseGlobals(bcontent)
+  const b132globals = parseGlobals(b132content)
+  const bglobals = parseGlobals(bcontent)
 
-b132functions.forEach(func => {
-  const b132func = bfunctions.find(f => f.name == func.name);
-  if(b132func && b132func.descript != ""){
-    b132content = b132content.replace(new RegExp(`function\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}function ${func.name}`);
-  }
- 
-})
-
-writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32-temp.j', b132content);
-f777()
-return;
-b132globals.forEach(glo => {
-  const b132glo = bglobals.find(g => g.name == glo.name);
-  if(b132glo && b132glo.descript != "" && glo.descript != ''){
-    
-    let string = "";
-    if(glo instanceof GlobalConstant){
-      b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
-    }
-    if(glo instanceof GlobalArray){
-      b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
-    }
-    if(glo instanceof Global){
-      b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
+  b132functions.forEach(func => {
+    const b132func = bfunctions.find(f => f.name == func.name);
+    if (b132func && b132func.descript != "") {
+      b132content = b132content.replace(new RegExp(`function\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}function ${func.name}`);
     }
 
-  }
- 
-})
+  })
 
-// writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32-temp.j', b132content);
+  writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32.1-temp.j', b132content);
+  f777()
+  return;
+  b132globals.forEach(glo => {
+    const b132glo = bglobals.find(g => g.name == glo.name);
+    if (b132glo && b132glo.descript != "" && glo.descript != '') {
+
+      let string = "";
+      if (glo instanceof GlobalConstant) {
+        b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
+      }
+      if (glo instanceof GlobalArray) {
+        b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
+      }
+      if (glo instanceof Global) {
+        b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
+      }
+
+    }
+
+  })
+
+  // writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32-temp.j', b132content);
 }
 
 function f777() {
-  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common-1.32-1.j').toString('utf8');
+  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/Common (1).j').toString('utf8');
   const bcontent = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common.j').toString('utf8');
 
-const b132functions = parseNatives(b132content)
-const bfunctions = parseNatives(bcontent)
+  const b132functions = parseNatives(b132content)
+  const bfunctions = parseNatives(bcontent)
 
-const b132globals = parseGlobals(b132content)
-const bglobals = parseGlobals(bcontent)
+  const b132globals = parseGlobals(b132content)
+  const bglobals = parseGlobals(bcontent)
 
-b132functions.forEach(func => {
-  const b132func = bfunctions.find(f => f.name == func.name);
-  if(b132func && b132func.descript != ""){
-    b132content = b132content.replace(new RegExp(`(constant\\s+)?native\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}${func.isConstant ? "constant " : ""} native ${func.name}`);
-  }
- 
-})
-
-
-
-b132globals.forEach(glo => {
-  const b132glo = bglobals.find(g => g.name == glo.name);
-  if(b132glo && b132glo.descript != ""){
-    
-    if(glo instanceof GlobalConstant){
-      b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
-    }
-    if(glo instanceof GlobalArray){
-      b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
-    }
-    if(glo instanceof Global){
-      b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
+  b132functions.forEach(func => {
+    const b132func = bfunctions.find(f => f.name == func.name);
+    if (b132func && b132func.descript != "") {
+      b132content = b132content.replace(new RegExp(`(constant\\s+)?native\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}${func.isConstant ? "constant " : ""} native ${func.name}`);
     }
 
-  }
- 
-})
+  })
 
-writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common-1.32-temp.j', b132content);
+
+
+  b132globals.forEach(glo => {
+    const b132glo = bglobals.find(g => g.name == glo.name);
+    if (b132glo && b132glo.descript != "") {
+
+      if (glo instanceof GlobalConstant) {
+        b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
+      }
+      if (glo instanceof GlobalArray) {
+        b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
+      }
+      if (glo instanceof Global) {
+        b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
+      }
+
+    }
+
+  })
+
+  writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common-1.32.1-temp.j', b132content);
 }

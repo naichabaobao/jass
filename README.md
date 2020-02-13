@@ -3,7 +3,7 @@
 [Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
 vscode最低版本1.37
-common.j 為1.31
+common.j 為1.32.1
 
 1. 下载安装 visual studio  Code
 

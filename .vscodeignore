@@ -21,3 +21,9 @@ package-lock.json
 tsconfig.json
 
 *.vsix
+
+src/resources/static/jass/common-1.31.j
+src/resources/static/jass/blizzard-1.31.j
+
+src/resources/static/jass/common-1.32.j
+src/resources/static/jass/blizzard-1.32.j
