@@ -10,11 +10,16 @@
     ],
     "autoClosingPairs": [
         ["[", "]"],
-        ["(", ")"]
+        ["(", ")"],
+        ["\"", "\""],
     ],
     "wordPattern": "",
     "surroundingPairs": [
         ["[", "]"],
         ["(", ")"]
-    ]
+    ],
+    "indentationRules": {
+        "increaseIndentPattern": "\\b(returns|then|loop|library|scope|elseif|else|globals)\\b",
+        "decreaseIndentPattern": "\\b(elseif|else|endfunction|endif|endloop|endlibrary|endscope|endglobals)\\b"
+    }
 }
