@@ -11,7 +11,7 @@
     "autoClosingPairs": [
         ["[", "]"],
         ["(", ")"],
-        ["\"", "\""],
+        ["\"", "\""]
     ],
     "wordPattern": "",
     "surroundingPairs": [
