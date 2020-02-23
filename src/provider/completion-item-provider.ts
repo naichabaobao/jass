@@ -10,7 +10,7 @@ import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
 import { Jasss } from '../main/include-file';
 import { ModifierEnum } from '../main/modifier';
 import { parseLocal } from '../main/local';
-import { allFunctions, allGlobals, allFunctionImpls } from '../main/tool';
+import { allFunctions, allGlobals, allFunctionImpls, isSpace, isLetter } from '../main/tool';
 
 /**
  * 关键字提示提供
@@ -485,12 +485,45 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
   private completioType = CompletionPosition.Unkown;
 
-  private handleCompletioType(document: vscode.TextDocument, position: vscode.Position) {
+  private handleCompletionType(document: vscode.TextDocument, position: vscode.Position) {
     const line = document.lineAt(position.line);
 
     const lineText = line.text;
 
     const lineSubText = lineText.substring(0, position.character);
+
+    enum PositionType {
+      Start,
+      Letter,
+      LineComment,
+      String,
+      Code,
+
+    }
+
+    let state = PositionType.Start;
+
+    for (let index = 0; index < lineSubText.length; index++) {
+      const getChar = function (){
+        return lineSubText.charAt(index);
+      }
+      const char = getChar();
+      switch(state){
+        case PositionType.Start:
+          if(isSpace(char)) {
+            continue;
+          }else if(isLetter(char)) {
+            state = PositionType.Letter;
+          }
+          break;
+        
+      }
+      
+    }
+
+
+    return;
+
 
     // console.log("this.isTakesTypeRegExp.test(lineSubText)" + this.isTakesTypeRegExp.test(lineSubText))
     if (this.isNilRegExp.test(lineSubText)) {
@@ -835,7 +868,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
 
     try {
-      this.handleCompletioType(document, position)
+      this.handleCompletionType(document, position)
     } catch (e) {
       console.error(e)
     }
