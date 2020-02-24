@@ -4,13 +4,14 @@ import { isVjassSupport } from '../main/configuration';
 import { language } from '../main/constant';
 import { Global, GlobalArray, GlobalImpl, parseGlobals, GlobalConstant } from '../main/global';
 import { Type } from '../main/type';
-import { FunctionImpl, Native, Function, parseFunctions, parseTakes } from '../main/function';
+import { FunctionImpl, Native, Function, parseFunctions, parseTakes, Take } from '../main/function';
 import { CommonJGlobals, BlizzardJGlobals, CommonAiGlobals, DzApiJGlobals, CommonJNatives, BlizzardJNatives, CommonAiNatives, DzApiJNatives, CommonJFunctions, BlizzardJFunctions, CommonAiFunctions, DzApiJFunctions } from '../main/file';
 import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
 import { Jasss } from '../main/include-file';
 import { ModifierEnum } from '../main/modifier';
-import { parseLocal } from '../main/local';
+import { parseLocal, Local } from '../main/local';
 import { allFunctions, allGlobals, allFunctionImpls, isSpace, isLetter } from '../main/tool';
+import { isNumber } from 'util';
 
 /**
  * 关键字提示提供
@@ -446,13 +447,9 @@ enum CompletionPosition {
   TypeNaming,
 
   // 加号
-  Plus, // 未确定，未使用
-  // 减号
-  Minus, // 未确定，未使用
-  // 乘号
-  Product, // 未确定，未使用
-  // 除号
-  Division, // 未确定，未使用
+  Plus, 
+  // 减号,乘号,除号
+  Operator,
 }
 
 /**
@@ -478,8 +475,9 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   private readonly typeString = Type.AllTypes.map(type => type.name).sort((typeName1, typeName2) => typeName2.length - typeName1.length).join("|");
   private readonly isTypeNamingRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
 
-  // private readonly isPlusRegExp = new RegExp(`\\b\\+\\s+[a-zA-Z]*$`);
-  // private readonly isMinusRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
+  private readonly isPlusRegExp = new RegExp(/\+\s*[a-zA-Z][a-zA-Z0-9_]*$/);
+  // private readonly isOperatorRegExp = new RegExp(`(\\b(\\+|-|\\*)\\s*$)|(\\b(\\+|-|\\*)\\s*[a-zA-Z][a-zA-Z0-9_]*$)`);
+  private readonly isOperatorRegExp = new RegExp(/(\/|-|\*)\s*[a-zA-Z][a-zA-Z0-9_]*$/);
   // private readonly isProductRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
   // private readonly isDivisionRegExp = new RegExp(`\\b(${this.typeString})\\s+[a-zA-Z]*$|\\b(${this.typeString})\\s+array\\s+[a-zA-Z]*$`);
 
@@ -492,93 +490,70 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
     const lineSubText = lineText.substring(0, position.character);
 
-    enum PositionType {
-      Start,
-      Letter,
-      LineComment,
-      String,
-      Code,
-
-    }
-
-    let state = PositionType.Start;
-
-    for (let index = 0; index < lineSubText.length; index++) {
-      const getChar = function (){
-        return lineSubText.charAt(index);
-      }
-      const char = getChar();
-      switch(state){
-        case PositionType.Start:
-          if(isSpace(char)) {
-            continue;
-          }else if(isLetter(char)) {
-            state = PositionType.Letter;
-          }
-          break;
-        
-      }
-      
-    }
-
-
-    return;
 
 
     // console.log("this.isTakesTypeRegExp.test(lineSubText)" + this.isTakesTypeRegExp.test(lineSubText))
     if (this.isNilRegExp.test(lineSubText)) {
       console.log("nil")
-      this.completioType = CompletionPosition.Nil
+      this.completioType = CompletionPosition.Nil;
     } else if (this.isCallRegExp.test(lineSubText)) {
-      this.completioType = CompletionPosition.Call
+      this.completioType = CompletionPosition.Call;
     } else if (this.isTakesTypeRegExp.test(lineSubText)) {
       console.log("takes")
       this.completioType = CompletionPosition.TakesType
     } else if (this.isReturnsRegExp.test(lineSubText)) {
-      this.completioType = CompletionPosition.Returns
+      this.completioType = CompletionPosition.Returns;
     } else if (this.isLocalRegExp.test(lineSubText)) {
       console.log("local")
-      this.completioType = CompletionPosition.Local
+      this.completioType = CompletionPosition.Local;
     } else if (this.isLocalNamingRegExp.test(lineSubText)) {
       console.log("local naming")
-      this.completioType = CompletionPosition.LocalNaming
+      this.completioType = CompletionPosition.LocalNaming;
     } else if (this.isSetRegExp.test(lineSubText)) {
       console.log("set")
       this.completioType = CompletionPosition.Set
     } else if (this.isFunctionNamingRegExp.test(lineSubText)) {
       console.log("function naming")
-      this.completioType = CompletionPosition.FunctionNaming
+      this.completioType = CompletionPosition.FunctionNaming;
     }
     else if (this.isFunctionCallRegExp.test(lineSubText)) {
       console.log("function call")
-      this.completioType = CompletionPosition.FunctionCall
+      this.completioType = CompletionPosition.FunctionCall;
     }
     else if (this.isModifierRegExp.test(lineSubText)) {
       console.log("modifier")
-      this.completioType = CompletionPosition.Modifier
+      this.completioType = CompletionPosition.Modifier;
     }
     else if (this.isConstantRegExp.test(lineSubText)) {
       console.log("constant")
-      this.completioType = CompletionPosition.Constant
+      this.completioType = CompletionPosition.Constant;
     }
     else if (this.isNativeNamingRegExp.test(lineSubText)) {
       console.log("native")
-      this.completioType = CompletionPosition.Native
+      this.completioType = CompletionPosition.Native;
     }
     else if (this.isTypeRegExp.test(lineSubText)) {
       console.log("type")
-      this.completioType = CompletionPosition.Type
+      this.completioType = CompletionPosition.Type;
     }
     else if (this.isExtendsRegExp.test(lineSubText)) {
       console.log("extends")
-      this.completioType = CompletionPosition.Extends
+      this.completioType = CompletionPosition.Extends;
     }
     else if (this.isTypeNamingRegExp.test(lineSubText)) {
       console.log("TypeNaming")
-      this.completioType = CompletionPosition.TypeNaming
+      this.completioType = CompletionPosition.TypeNaming;
+    }
+    else if(this.isPlusRegExp.test(lineSubText)) {
+      console.log("plus");
+      this.completioType = CompletionPosition.Plus;
+    }
+    else if(this.isOperatorRegExp.test(lineSubText)) {
+      console.log("Operator");
+      this.completioType = CompletionPosition.Operator;
     }
     else {
-      this.completioType = CompletionPosition.Unkown
+      this.completioType = CompletionPosition.Unkown;
     }
 
 
@@ -814,6 +789,118 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
+  private plusCompletionItems(document: vscode.TextDocument, position: vscode.Position) : Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    this.getLocals(document, position).filter(local => {
+      return local.type.name == Type.integer.name || local.type.name == Type.real.name || local.type.name == Type.string.name;
+    }).forEach(local => {
+      const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Variable);
+      item.documentation = new vscode.MarkdownString().appendCodeblock(local.origin());
+      items.push(item);
+    });
+    this.getTakes(document, position).filter(take => {
+      return take.type.name == Type.integer.name || take.type.name == Type.real.name || take.type.name == Type.string.name;
+    }).forEach(take => {
+      const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.TypeParameter);
+      item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin());
+      items.push(item);
+    });
+    this.getCurrentGlobals(document).filter(global => {
+      return global.type.name == Type.integer.name || global.type.name == Type.real.name || global.type.name == Type.string.name;
+    }).forEach(global => {
+      items.push(this.globalImplToCompletionItem(global));
+    });
+    this.getCurrentFunctions(document).filter(func => {
+      return func.returns.name == Type.integer.name || func.returns.name == Type.real.name || func.returns.name == Type.string.name;
+    }).forEach(func => {
+      items.push(this.functionImplToCompletionItem(func));
+    });
+    allGlobals().filter(global => {
+      return global.type.name == Type.integer.name || global.type.name == Type.real.name || global.type.name == Type.string.name;
+    }).forEach(global => {
+      items.push(this.globalImplToCompletionItem(global));
+    });
+    allFunctionImpls().filter(func => {
+      return func.returns.name == Type.integer.name || func.returns.name == Type.real.name || func.returns.name == Type.string.name;
+    }).forEach(func => {
+      items.push(this.functionImplToCompletionItem(func));
+    });
+    return items;
+  }
+
+  private operatorCompletionItems(document: vscode.TextDocument, position: vscode.Position) : Array<vscode.CompletionItem> {
+    const items = new Array<vscode.CompletionItem>();
+    this.getLocals(document, position).filter(local => {
+      return local.type.name == Type.integer.name || local.type.name == Type.real.name;
+    }).forEach(local => {
+      const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Variable);
+      item.documentation = new vscode.MarkdownString().appendCodeblock(local.origin());
+      items.push(item);
+    });
+    this.getTakes(document, position).filter(take => {
+      return take.type.name == Type.integer.name || take.type.name == Type.real.name;
+    }).forEach(take => {
+      const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.TypeParameter);
+      item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin());
+      items.push(item);
+    });
+    this.getCurrentGlobals(document).filter(global => {
+      return global.type.name == Type.integer.name || global.type.name == Type.real.name;
+    }).forEach(global => {
+      items.push(this.globalImplToCompletionItem(global));
+    });
+    this.getCurrentFunctions(document).filter(func => {
+      return func.returns.name == Type.integer.name || func.returns.name == Type.real.name;
+    }).forEach(func => {
+      items.push(this.functionImplToCompletionItem(func));
+    });
+    allGlobals().filter(global => {
+      return global.type.name == Type.integer.name || global.type.name == Type.real.name;
+    }).forEach(global => {
+      items.push(this.globalImplToCompletionItem(global));
+    });
+    allFunctionImpls().filter(func => {
+      return func.returns.name == Type.integer.name || func.returns.name == Type.real.name;
+    }).forEach(func => {
+      items.push(this.functionImplToCompletionItem(func));
+    });
+    return items;
+  }
+
+  private getTakes(document: vscode.TextDocument, position: vscode.Position): Array<Take> {
+    
+    for (let index = position.line; index >= 0; index--) {
+      const line = document.lineAt(index);
+      const lineText = line.text;
+
+      if(/^\s*((private|public)\s+)?(static\s+)?(function|method)\b/.test(lineText)) {
+        console.log("zhaoda parseTakes")
+        return parseTakes(lineText);
+      }
+
+    }
+    return [];
+  }
+
+  private getLocals(document: vscode.TextDocument, position: vscode.Position):Array<Local> {
+    const locals = new Array<Local>();
+    for (let index = position.line; index >= 0; index--) {
+      const line = document.lineAt(index);
+      const lineText = line.text;
+
+      if (/^\s*local\b/.test(lineText)) {
+        const local = parseLocal(lineText);
+        if(local){
+          locals.push(local);
+
+        }
+      }else if(/^\s*((private|public)\s+)?(static\s+)?(function|method)\b/.test(lineText)) {
+        return locals;
+      }
+    }
+    return [];
+  }
+
   private getItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
     //9 13 14 16 6 1 3 4 2 5 7 8 11 12 15 0
@@ -857,10 +944,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       case CompletionPosition.Extends:
         items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
         break;
+      case CompletionPosition.Operator:
+        items.push(...this.operatorCompletionItems(document,position));
+        break;
+      case CompletionPosition.Plus:
+        items.push(...this.plusCompletionItems(document,position));
+        break;
       case CompletionPosition.Return:
       case CompletionPosition.Unkown:
-        items.push(...this.unkwonCompletionItems(document, position)
-        );
+        items.push(...this.unkwonCompletionItems(document, position));
     }
     return items;
   }
@@ -868,7 +960,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
 
     try {
-      this.handleCompletionType(document, position)
+      this.handleCompletionType(document, position);
     } catch (e) {
       console.error(e)
     }
