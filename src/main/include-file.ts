@@ -1,8 +1,8 @@
-import { includes, isVjassSupport } from "./configuration";
+import { includes, /* isVjassSupport */ } from "./configuration";
 import { readFile, stat, exists, readdir } from "fs";
 import { parse, resolve } from "path";
 import { j, ai } from "./constant";
-import { parseLibrarys, Library } from "./library";
+// import { parseLibrarys, Library } from "./library";
 import * as vscode from "vscode";
 import { Jass } from "./jass";
 import { parseGlobals } from "./global";
@@ -13,7 +13,7 @@ import { parseFunctions,Function } from "./function";
 判断后缀
 解析globals
 解析方法
-lib包含处理
+lib包含处理 -》 已经去除
 */
 
 
@@ -72,55 +72,63 @@ function _resolveJass(fileName: string, content: string) {
 
   const jass = new Jass(fileName);
 
-  var librarys: Array<Library> | null = null;
-  if (isVjassSupport()) {
-    librarys = parseLibrarys(content);
-  }
+  // var librarys: Array<Library> | null = null;
+  // if (isVjassSupport()) {
+  //   librarys = parseLibrarys(content);
+  // }
 
   // 分析globals
   const globals = parseGlobals(content);
 
-  if (librarys && librarys.length > 0) {
-    globals.forEach((global) => {
+  // if (librarys && librarys.length > 0) {
+  //   globals.forEach((global) => {
 
-      if(librarys != null ){
-        const library = librarys.find(library => library.range.contains(global.range));
-        if (library) {
-          global.library = library;
-        }
-      }
+  //     if(librarys != null ){
+  //       const library = librarys.find(library => library.range.contains(global.range));
+  //       if (library) {
+  //         global.library = library;
+  //       }
+  //     }
       
-      jass.putGlobal(global);
+  //     jass.putGlobal(global);
 
-    });
-  } else {
-    globals.forEach((global) => {
-      jass.putGlobal(global);
-    });
-  }
+  //   });
+  // } else {
+  //   globals.forEach((global) => {
+  //     jass.putGlobal(global);
+  //   });
+  // }
+
+  globals.forEach((global) => {
+    jass.putGlobal(global);
+  });
 
   // 分析方法
   const functions = parseFunctions(content);
-  if (librarys && librarys.length > 0) {
-    functions.forEach((func) => {
+  // if (librarys && librarys.length > 0) {
+  //   functions.forEach((func) => {
       
-      if(librarys != null){
-        const library = librarys.find(library => {
-          return library.range.contains(func.range);
-        });
-        if (library) {
-          func.library = library;
-        }
-      }
+  //     if(librarys != null){
+  //       const library = librarys.find(library => {
+  //         return library.range.contains(func.range);
+  //       });
+  //       if (library) {
+  //         func.library = library;
+  //       }
+  //     }
 
-      jass.putFunction(func);
+  //     jass.putFunction(func);
 
-    });
-  } else {
-    functions.forEach((func) => {
-      jass.putFunction(func);
-    });
-  }
+  //   });
+  // } else {
+  //   functions.forEach((func) => {
+  //     jass.putFunction(func);
+  //   });
+  // }
+
+  functions.forEach((func) => {
+    jass.putFunction(func);
+  });
   return jass;
 
 }

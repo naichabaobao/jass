@@ -4,14 +4,15 @@ export const isVjassEnable:boolean = vscode.workspace.getConfiguration()?.jass?.
 
 /**
  * 是否支持vjass
+ * @deprecated
  */
 function isVjassSupport(){
-  let isSupport = false;
-  const enable = vscode.workspace.getConfiguration()?.jass?.vjass?.support;
-  if(enable && typeof enable == "boolean"){
-    isSupport = enable;
-  }
-  return isSupport;
+  // let isSupport = false;
+  // const enable = vscode.workspace.getConfiguration()?.jass?.vjass?.support;
+  // if(enable && typeof enable == "boolean"){
+  //   isSupport = enable;
+  // }
+  return false;
 }
 
 function includes():Array<string>{
