@@ -106,25 +106,25 @@ function parseLibrarys(content: string): Array<Library> {
  * 对全局变量做lib前缀处理
  * @param librarys 
  * @param globals 
+ * @deprecated
  */
 function resolveGlobal(librarys:Array<Library>, globals:Array<GlobalImpl>) {
+  // if (librarys.length > 0) {
+  //   globals.forEach((global) => {
 
-  if (librarys.length > 0) {
-    globals.forEach((global) => {
+  //     if(librarys != null ){
+  //       const library = librarys.find(library => library.range.contains(global.range));
+  //       if (library) {
+  //         if(global.library){
+  //           Object.assign(global.library, library);
+  //         }else {
+  //           global.library = library;
+  //         }
+  //       }
+  //     }
 
-      if(librarys != null ){
-        const library = librarys.find(library => library.range.contains(global.range));
-        if (library) {
-          if(global.library){
-            Object.assign(global.library, library);
-          }else {
-            global.library = library;
-          }
-        }
-      }
-
-    });
-  }
+  //   });
+  // }
 
   return globals;
 }
@@ -133,33 +133,34 @@ function resolveGlobal(librarys:Array<Library>, globals:Array<GlobalImpl>) {
  * 对方法做lib前缀处理
  * @param librarys 
  * @param globals 
+ * @deprecated
  */
 function resolveFunction(librarys:Array<Library>, functions:Array<Function>) {
 
-  if (librarys.length > 0) {
-    functions.forEach((func) => {
+  // if (librarys.length > 0) {
+  //   functions.forEach((func) => {
 
-      if(librarys != null ){
-        const library = librarys.find(library => library.range.contains(func.range));
-        if (library) {
-          if(func.library){
-            Object.assign(func.library, library);
-          }else{
-            func.library = library;
-          }
-        }
-      }
+  //     if(librarys != null ){
+  //       const library = librarys.find(library => library.range.contains(func.range));
+  //       if (library) {
+  //         if(func.library){
+  //           Object.assign(func.library, library);
+  //         }else{
+  //           func.library = library;
+  //         }
+  //       }
+  //     }
 
-    });
-  }
+  //   });
+  // }
 
   return functions;
 
 }
 
 export {
-  Library,
-  parseLibrarys,
-  resolveGlobal,
-  resolveFunction,
+  // Library,
+  // parseLibrarys,
+  // resolveGlobal,
+  // resolveFunction,
 };

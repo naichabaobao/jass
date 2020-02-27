@@ -4,7 +4,7 @@ import { Type } from '../main/type';
 import { isVjassSupport } from '../main/configuration';
 import { Function, parseFunctions, parseTakes } from '../main/function';
 import { language } from '../main/constant';
-import { resolveFunction, parseLibrarys, resolveGlobal } from '../main/library';
+// import { resolveFunction, parseLibrarys, resolveGlobal } from '../main/library';
 import { parseGlobals } from '../main/global';
 import { parseLocal } from '../main/local';
 import { Keyword } from '../main/keyword';
@@ -37,7 +37,7 @@ class GlobalHoverProvider implements vscode.HoverProvider {
   private globalToHover(key: string): Array<vscode.MarkdownString> {
     const hovers = new Array<vscode.MarkdownString>();
     allGlobals().forEach(global => {
-      if (isVjassSupport() ? global.libraryGlobalName == key : global.name == key) {
+      if (isVjassSupport() ? global.name == key : global.name == key) {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendCodeblock(global.origin());
         markdownString.appendText(global.descript);
@@ -58,8 +58,8 @@ class GlobalHoverProvider implements vscode.HoverProvider {
 
     const content = document.getText();
     const globals = parseGlobals(content);
-    var hovers = (isVjassSupport() ? resolveGlobal(parseLibrarys(content), globals) : globals)
-      .filter(global => global.libraryGlobalName == key)
+    var hovers = globals
+      .filter(global => global.name == key)
       .map(global => {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendCodeblock(global.origin());
@@ -77,7 +77,7 @@ class FunctionHoverProvider implements vscode.HoverProvider {
   private functionToHover(key: string): Array<vscode.MarkdownString> {
     const hovers = new Array<vscode.MarkdownString>();
     allFunctionImpls().forEach(func => {
-      if (isVjassSupport() && func instanceof Function ? func.libraryFunctionName == key : func.name == key) {
+      if (isVjassSupport() && func instanceof Function ? func.name == key : func.name == key) {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendCodeblock(func.origin());
         markdownString.appendText(func.descript);
@@ -93,8 +93,8 @@ class FunctionHoverProvider implements vscode.HoverProvider {
 
     const content = document.getText();
     const functions = parseFunctions(content);
-    var hovers = (isVjassSupport() ? resolveFunction(parseLibrarys(content), functions) : functions)
-      .filter(func => func.libraryFunctionName == key)
+    var hovers = functions
+      .filter(func => func.name == key)
       .map(func => {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendCodeblock(func.origin());

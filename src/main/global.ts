@@ -7,7 +7,7 @@ import { toLines } from "./tool";
 import { isVjassSupport } from "./configuration";
 import { parseComment } from "./commont";
 import { Range } from "./range";
-import { Library } from "./library";
+// import { Library } from "./library";
 import { downloadAndUnzipVSCode } from "vscode-test";
 import {Position} from 'vscode';
 
@@ -17,16 +17,16 @@ class GlobalImpl extends Range implements Value, Description, Modifier, Origin {
   descript: string = "";
   modifier: ModifierEnum = ModifierEnum.Common;
 
-  public library:Library | null = null;
+  // public library:Library | null = null;
 
   /**
    * 拼library和global名称
    */
-  public get libraryGlobalName(){
-    const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
-    const globalName = `${libname}${this.name}`;
-    return globalName;
-  }
+  // public get libraryGlobalName(){
+  //   const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
+  //   const globalName = `${libname}${this.name}`;
+  //   return globalName;
+  // }
 
   protected modifiertoString(): string {
     return this.modifier == ModifierEnum.Common ? "" : this.modifier;

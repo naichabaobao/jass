@@ -7,13 +7,32 @@ import { Keyword } from '../main/keyword';
 // import { resolve, parse } from 'path';
 // import { j, ai } from '../main/constant';
 
-
+/**
+ * 是否缺少call关键字
+ * @param text 
+ */
 function isCallError(text: string) {
   let isError = false;
   const callErrorRegExp = new RegExp(`^\\s*(?<name>[a-zA-Z][a-zA-Z0-9_]*)\\s*\\(`);
   if (callErrorRegExp.test(text)) {
     const result = callErrorRegExp.exec(text);
     if(result && result.groups && result.groups.name && Keyword.isNotKeyword(result.groups.name)){
+      isError = true;
+    }
+  }
+  return isError;
+}
+
+/**
+ * 是否缺少then关键字
+ * @param text 
+ */
+function _isifUnthenError(text: string) {
+  let isError = false;
+  const ifStartRegExp = new RegExp(/^\s*if\b/);
+  if (ifStartRegExp.test(text)) {
+    const thenEndRegExp = new RegExp(/then\s*$/);
+    if(!thenEndRegExp.test(text)){ // 未找到then结尾
       isError = true;
     }
   }
@@ -30,12 +49,19 @@ function parseError(document: vscode.TextDocument) {
     const diags = new Array<vscode.Diagnostic>();
     for (let index = 0; index < document.lineCount; index++) {
       const line = document.lineAt(index);
+      if(line.isEmptyOrWhitespace) continue;
       const lineText = line.text;
       if (isCallError(lineText)) {
         const d = new vscode.Diagnostic(new vscode.Range(line.lineNumber, line.firstNonWhitespaceCharacterIndex, line.lineNumber, line.text.indexOf("(")),
           "缺少call关键字",
           vscode.DiagnosticSeverity.Error);
         diags.push(d);
+      }
+      if(_isifUnthenError(lineText)) {
+        const d = new vscode.Diagnostic(new vscode.Range(line.lineNumber, line.firstNonWhitespaceCharacterIndex, line.lineNumber, line.firstNonWhitespaceCharacterIndex + 2),
+        "缺少then关键字",
+        vscode.DiagnosticSeverity.Error);
+      diags.push(d);
       }
     }
     diagnosticCollection.set(document.uri, diags);
@@ -52,7 +78,17 @@ vscode.workspace.onDidChangeConfiguration(event => {
   if (!isdiagnosticsupport()) {
     diagnosticCollection.clear();
   }
-})
+});
+
+vscode.workspace.onDidOpenTextDocument((document) => {
+  if (!isdiagnosticsupport()) {
+    parseError(document);
+  }
+});
+
+vscode.workspace.onDidCloseTextDocument((document) => {
+  diagnosticCollection.delete(document.uri);
+});
 
 // class Diagnostic {
 //   private _uri:vscode.Uri;

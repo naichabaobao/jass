@@ -3,7 +3,7 @@ import { language } from '../main/constant';
 import { FunctionImpl, Function, parseFunctions } from '../main/function';
 import { allFunctionImpls } from '../main/tool';
 import { isVjassSupport } from '../main/configuration';
-import { resolveFunction, parseLibrarys } from '../main/library';
+// import { resolveFunction, parseLibrarys } from '../main/library';
 
 
 vscode.languages.registerSignatureHelpProvider(language, {
@@ -40,14 +40,14 @@ vscode.languages.registerSignatureHelpProvider(language, {
             // 获取当前文档的方法
             const content = document.getText();
             const funcs = parseFunctions(content);
-            var functions = (isVjassSupport() ? resolveFunction(parseLibrarys(content),funcs) : funcs);
+            var functions = funcs;
 
             const func = [...allFunctionImpls(),...functions].find(func => {
               let isMatch = false;
               if(isVjassSupport()){
                 if(func instanceof Function){
                   func as Function;
-                  isMatch = func.libraryFunctionName == funcName;
+                  isMatch = func.name == funcName;
                 }else{
                   isMatch = func.name == funcName;
                 }

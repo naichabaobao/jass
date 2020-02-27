@@ -6,7 +6,7 @@ import { toLines } from './tool';
 import { isString } from 'util';
 import { isVjassSupport } from './configuration';
 import { parseComment } from './commont';
-import { Library } from './library';
+// import { Library } from './library';
 import { Range } from './range';
 import { Position } from 'vscode';
 import { ModifierEnum } from './modifier';
@@ -58,22 +58,22 @@ class Native extends FunctionImpl {
 
 class Function extends FunctionImpl {
 
-  public library:Library | null = null;
+  // public library:Library | null = null;
   public modifier:ModifierEnum = ModifierEnum.Common;
   /**
    * 拼library和方法名称
    */
-  public get libraryFunctionName(){
-    const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
-    const functionName = `${libname}${this.name}`;
-    return functionName;
-  }
+  // public get libraryFunctionName(){
+  //   const libname = this.library && isVjassSupport() ? `${this.library.name}_` : "";
+  //   const functionName = `${libname}${this.name}`;
+  //   return functionName;
+  // }
 
   public origin(): string {
     // 当前方式实现方式有点丑，但是工作正常
     const functionOrigin = `${Keyword.Function} ${this.name} ${Keyword.Takes} ${this.takesString()} ${Keyword.Returns} ${this.returns.name}\n`;
-    const origin = isVjassSupport() && this.library ? `${Keyword.keywordLibrary} ${this.library.name}\n\t${functionOrigin}\t${Keyword.Endfunction}\n${Keyword.keywordEndLibrary}` : functionOrigin + Keyword.Endfunction;
-    return origin;
+    // const origin = isVjassSupport() && this.library ? `${Keyword.keywordLibrary} ${this.library.name}\n\t${functionOrigin}\t${Keyword.Endfunction}\n${Keyword.keywordEndLibrary}` : functionOrigin + Keyword.Endfunction;
+    return functionOrigin + Keyword.Endfunction;
   }
 }
 

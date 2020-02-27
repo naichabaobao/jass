@@ -23,13 +23,13 @@ class DefinitionProvider implements vscode.DefinitionProvider {
 
     [...Jasss,CommonJJass,BlizzardJJass,CommonAiJJass,DzApiJJass].forEach(jass => {
       jass.globals.forEach(global => {
-        if (global.libraryGlobalName == key) {
+        if (global.name == key) {
           const location = new vscode.Location(vscode.Uri.parse(this.convertFileNameToUrl(jass.fileName)), global.range);
           locations.push(location);
         }
       });
       jass.functions.forEach(func => {
-        if (func.libraryFunctionName == key) {
+        if (func.name == key) {
           const location = new vscode.Location(vscode.Uri.parse(this.convertFileNameToUrl(jass.fileName)), func.range);
           locations.push(location);
         }
@@ -92,7 +92,7 @@ class DefinitionProvider implements vscode.DefinitionProvider {
 
     // 找globals
     parseGlobals(content).forEach(global => {
-      if (global.libraryGlobalName == key) {
+      if (global.name == key) {
         const location = new vscode.Location(document.uri, global.range);
         locations.push(location);
       }
@@ -100,7 +100,7 @@ class DefinitionProvider implements vscode.DefinitionProvider {
 
     // 找方法
     parseFunctions(content).forEach(func => {
-      if (func.libraryFunctionName == key) {
+      if (func.name == key) {
         const location = new vscode.Location(document.uri, func.range);
         locations.push(location);
       }

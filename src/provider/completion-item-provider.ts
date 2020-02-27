@@ -6,7 +6,7 @@ import { Global, GlobalArray, GlobalImpl, parseGlobals, GlobalConstant } from '.
 import { Type } from '../main/type';
 import { FunctionImpl, Native, Function, parseFunctions, parseTakes, Take } from '../main/function';
 import { CommonJGlobals, BlizzardJGlobals, CommonAiGlobals, DzApiJGlobals, CommonJNatives, BlizzardJNatives, CommonAiNatives, DzApiJNatives, CommonJFunctions, BlizzardJFunctions, CommonAiFunctions, DzApiJFunctions } from '../main/file';
-import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
+// import { parseLibrarys, resolveGlobal, resolveFunction } from '../main/library';
 import { Jasss } from '../main/include-file';
 import { ModifierEnum } from '../main/modifier';
 import { parseLocal, Local } from '../main/local';
@@ -120,7 +120,7 @@ class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     }
     var name = "";
     if (global.modifier == ModifierEnum.Public) {
-      name = global.libraryGlobalName;
+      name = global.name;
     } else {
       name = global.name;
     }
@@ -142,7 +142,7 @@ class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     const content = document.getText();
     const globals = parseGlobals(content);
 
-    const items = (isVjassSupport() ? resolveGlobal(parseLibrarys(content), globals) : globals).map(global => this.creatGlobalCompletion(global));
+    const items = globals.map(global => this.creatGlobalCompletion(global));
 
     return [...this.mainGlobals, ...this.includeGlobals, ...items];
   }
@@ -207,7 +207,7 @@ class FunctionCompletionItemProvider implements vscode.CompletionItemProvider {
     } else if (func instanceof Function) {
       func as Function;
       if (func.modifier == ModifierEnum.Public) {
-        name = func.libraryFunctionName;
+        name = func.name;
       } else {
         name = func.name;
       }
@@ -232,7 +232,7 @@ class FunctionCompletionItemProvider implements vscode.CompletionItemProvider {
 
     const content = document.getText();
     const functions = parseFunctions(content);
-    var items: vscode.CompletionItem[] = (isVjassSupport() ? resolveFunction(parseLibrarys(content), functions) : functions).map(func => this.creatCompletion(func));
+    var items: vscode.CompletionItem[] = functions.map(func => this.creatCompletion(func));
 
     return [...this.allMainCompletionItem, ...this.includeFunctions, ...items];
   }
@@ -318,7 +318,7 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
       const content = document.getText();
       const functions = parseFunctions(content);
       [...allFunctions(), ...functions].filter(func => func.returns.name == typeName).forEach(func => {
-        const item = new vscode.CompletionItem(func.libraryFunctionName, vscode.CompletionItemKind.Function);
+        const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
         const ms = new vscode.MarkdownString();
         ms.appendText(func.descript);
         ms.appendCodeblock(func.origin());
@@ -332,7 +332,7 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
       const globals = parseGlobals(content);
       [...allGlobals(), ...globals].filter(global => global.type.name == typeName).forEach(global => {
         const kind = global instanceof GlobalConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable;
-        const item = new vscode.CompletionItem(global.libraryGlobalName, kind);
+        const item = new vscode.CompletionItem(global.name, kind);
         const ms = new vscode.MarkdownString();
         ms.appendText(global.descript);
         ms.appendCodeblock(global.origin());
@@ -350,75 +350,6 @@ class ClassCompletionItemProvider implements vscode.CompletionItemProvider {
 
 }
 
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
-/**
- * 标记当前position提示类型
- */
-// vscode.languages.registerCompletionItemProvider(language, new KeywordCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new TypeCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new GlobalCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new FunctionCompletionItemProvider);
-// vscode.languages.registerCompletionItemProvider(language, new CurrentCompletionItemProvider);
 vscode.languages.registerCompletionItemProvider(language, new ClassCompletionItemProvider, ".");
 
 /**
@@ -499,9 +430,10 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     } else if (this.isCallRegExp.test(lineSubText)) {
       console.log("call")
       this.completioType = CompletionPosition.Call;
+      console.log(this.completioType)
     } else if (this.isTakesTypeRegExp.test(lineSubText)) {
       console.log("takes")
-      this.completioType = CompletionPosition.TakesType
+      this.completioType = CompletionPosition.TakesType;
     } else if (this.isReturnsRegExp.test(lineSubText)) {
       this.completioType = CompletionPosition.Returns;
     } else if (this.isLocalRegExp.test(lineSubText)) {
@@ -591,8 +523,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   private functionToCompletionItem(func: Function): vscode.CompletionItem {
-    const item = new vscode.CompletionItem(func.libraryFunctionName, vscode.CompletionItemKind.Function);
-    item.detail = func.libraryFunctionName;
+    const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+    item.detail = func.name;
     item.documentation = new vscode.MarkdownString().appendText(func.descript).appendCodeblock(func.origin());
     return item;
   }
@@ -629,15 +561,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   private globalConstantToCompletionItem(global: GlobalConstant): vscode.CompletionItem {
-    const item = new vscode.CompletionItem(global.libraryGlobalName, vscode.CompletionItemKind.Constant);
-    item.detail = global.libraryGlobalName;
+    const item = new vscode.CompletionItem(global.name, vscode.CompletionItemKind.Constant);
+    item.detail = global.name;
     item.documentation = new vscode.MarkdownString().appendText(global.descript).appendCodeblock(global.origin());
     return item;
   }
 
   private globalUnconstantToCompletionItem(global: GlobalArray | Global): vscode.CompletionItem {
-    const item = new vscode.CompletionItem(global.libraryGlobalName, vscode.CompletionItemKind.Variable);
-    item.detail = global.libraryGlobalName;
+    const item = new vscode.CompletionItem(global.name, vscode.CompletionItemKind.Variable);
+    item.detail = global.name;
     item.documentation = new vscode.MarkdownString().appendText(global.descript).appendCodeblock(global.origin());
     return item;
   }
@@ -704,8 +636,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
    */
   private parseFunctionsAndLibraryResolve(content: string): Array<Function> {
     const functions = parseFunctions(content);
-    const librarys = parseLibrarys(content);
-    resolveFunction(librarys, functions);
+    // const librarys = parseLibrarys(content);
+    // resolveFunction(librarys, functions);
     return functions;
   }
 
@@ -925,15 +857,19 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         items.push(...this.returnsCompletionItems());
         break;
       case CompletionPosition.Call:
-        items.push(...this.allAndCurrentFunctionImplCompletions(document));
-        break;
+        return this.allAndCurrentFunctionImplCompletions(document);
+        // console.log(this.allAndCurrentFunctionImplCompletions(document).length)
+        // items.push(...this.allAndCurrentFunctionImplCompletions(document));
+        // break;
       case CompletionPosition.Local:
+        
         items.push(...this.statementCompletionItems());
         break;
       case CompletionPosition.Set:
         items.push(...this.setCompletions(document, position));
         break;
       case CompletionPosition.FunctionCall:
+
         items.push(...this.functionCallCompletions(document));
         break;
       case CompletionPosition.Modifier:
@@ -959,14 +895,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-
+    let items = null;
     try {
       this.handleCompletionType(document, position);
+      items = this.getItems(document, position);
     } catch (e) {
       console.error(e)
     }
 
-    return this.getItems(document, position);
+    return items;
   }
 
 }
