@@ -458,14 +458,14 @@ enum CompletionPosition {
 class CompletionItemProvider implements vscode.CompletionItemProvider {
 
   private readonly isNilRegExp = new RegExp(`^\\s*[a-zA-Z0-9_]*$`);
-  private readonly isCallRegExp = new RegExp(`(\\bcall\\s+[a-zA-Z][a-zA-Z0-9_]*|\\bcall\\s+)$`);
+  private readonly isCallRegExp = new RegExp(`\\bcall\\s+[a-zA-Z][a-zA-Z0-9_]*$`);
   private readonly isTakesTypeRegExp = new RegExp(`(\\btakes\\s+[a-zA-Z]*|\\btakes\\s+|\\btakes\\s+([a-zA-Z0-9_ \\t]+\\s*,\\s*)+[a-zA-Z]*)$`);
   private readonly isReturnsRegExp = new RegExp(`\\breturns\\s+[a-zA-Z]*$`);
   private readonly isLocalRegExp = new RegExp(`\\blocal\\s+[a-zA-Z]*$`);
   private readonly isLocalNamingRegExp = new RegExp(`\\blocal\\s+[a-zA-Z]+\\s+array\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\blocal\\s+[a-zA-Z]+\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\blocal\\s+[a-zA-Z]+\\s+$`);
   private readonly isSetRegExp = new RegExp(`\\bset\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\bset\\s+$`);
   private readonly isFunctionNamingRegExp = new RegExp(`(?<!\\(\\s*|,\\s*)function\\s+[a-zA-Z][a-zA-Z0-9_]*$|(?<!\\(\\s*|,\\s*)\\s*function\\s+$`);
-  private readonly isNativeNamingRegExp = new RegExp(`\\bnative\\s+[a-zA-Z][a-zA-Z0-9_]*$|\\bnative\\s+$`);
+  private readonly isNativeNamingRegExp = new RegExp(`\\bnative\\s+[a-zA-Z][a-zA-Z0-9_]*$`);
   private readonly isFunctionCallRegExp = new RegExp(`(\\(\\s*|,\\s*)function\\s+[a-zA-Z][a-zA-Z0-9_]*$|(\\(\\s*|,\\s*)\\s*function\\s+$`);
   private readonly isModifierRegExp = new RegExp(`\\b(private|public)\\s+[a-zA-Z]*$`);
   private readonly isConstantRegExp = new RegExp(`\\bconstant\\s+[a-zA-Z]*$`);
@@ -497,6 +497,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       console.log("nil")
       this.completioType = CompletionPosition.Nil;
     } else if (this.isCallRegExp.test(lineSubText)) {
+      console.log("call")
       this.completioType = CompletionPosition.Call;
     } else if (this.isTakesTypeRegExp.test(lineSubText)) {
       console.log("takes")

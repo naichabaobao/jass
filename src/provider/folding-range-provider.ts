@@ -13,6 +13,8 @@ const libraryStartRegExp = new RegExp(`^\\s*${Keyword.keywordLibrary}\\b`);
 const libraryEndRegExp = new RegExp(`^\\s*${Keyword.keywordEndLibrary}\\b`);
 
 const ifStartRegExp = new RegExp(`^\\s*${Keyword.If}\\b`);
+const elseRegExp = new RegExp(`^\\s*${Keyword.Else}\\b`);
+const elseIfRegExp = new RegExp(`^\\s*${Keyword.Elseif}\\b`);
 const ifEndRegExp = new RegExp(`^\\s*${Keyword.Endif}\\b`);
 
 const loopStartRegExp = new RegExp(`^\\s*${Keyword.Loop}\\b`);
@@ -41,9 +43,24 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
 
     let inIf = false;
     let ifLine = 0;
+    let ifField = 0;
+    const ifStack = new Array<number>();
+    function laseIfStack(){
+      return ifStack[ifStack.length - 1];
+    }
+    function setLast(line:number){
+      ifStack[ifStack.length - 1] = line;
+    }
 
     let inLoop = false;
     let loopLine = 0;
+    const loopStack = new Array<number>();
+    function lastLoopStack(){
+      return loopStack[ifStack.length - 1];
+    }
+    function setLastLoopStack(line:number){
+      loopStack[loopStack.length - 1] = line;
+    }
 
     let inRegion = false;
     let regionLine = 0;
@@ -51,24 +68,62 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
     lines.forEach((line,index) => {
       // if
       if(ifStartRegExp.test(line)){
-        inIf = true;
-        ifLine = index;
-      }else if(ifEndRegExp.test(line)){
-        if(inIf == true){
-          const folding = new vscode.FoldingRange(ifLine,index);
+        ifStack.push(index);
+        // inIf = true;
+        // ifLine = index;
+        // ifField++;
+      }else if(elseRegExp.test(line)){
+        if(ifStack.length > 0){
+          const folding = new vscode.FoldingRange(laseIfStack(), index);
           foldings.push(folding);
-          inIf = false;
+          setLast(index);
         }
+        // if(inIf == true){
+        //   const folding = new vscode.FoldingRange(ifLine,index);
+        //   foldings.push(folding);
+        //   ifLine = index;
+        // }
+      }else if(elseIfRegExp.test(line)){
+        if(ifStack.length > 0){
+          const folding = new vscode.FoldingRange(laseIfStack(), index);
+          foldings.push(folding);
+          setLast(index);
+        }
+        // if(inIf == true){
+        //   const folding = new vscode.FoldingRange(ifLine,index);
+        //   foldings.push(folding);
+        //   ifLine = index;
+        // }
+      }else if(ifEndRegExp.test(line)){
+        if(ifStack.length > 0){
+          const line = ifStack.pop() as number;
+          const folding = new vscode.FoldingRange(line, index);
+          foldings.push(folding);
+        }
+        // if(inIf == true){
+        //   const folding = new vscode.FoldingRange(ifLine,index);
+        //   foldings.push(folding);
+        //   inIf = false;
+        // }
       }
       // loop
-      else if(loopStartRegExp.test(line)){
-        inLoop = true;
-        loopLine = index;
+      // else if(loopStartRegExp.test(line)){
+      //   inLoop = true;
+      //   loopLine = index;
+      // }else if(loopEndRegExp.test(line)){
+      //   if(inLoop == true){
+      //     const folding = new vscode.FoldingRange(loopLine,index);
+      //     foldings.push(folding);
+      //     inLoop = false;
+      //   }
+      // }
+      if(loopStartRegExp.test(line)){
+        loopStack.push(index);
       }else if(loopEndRegExp.test(line)){
-        if(inLoop == true){
-          const folding = new vscode.FoldingRange(loopLine,index);
+        if(loopStack.length > 0){
+          const line = loopStack.pop() as number;
+          const folding = new vscode.FoldingRange(line, index);
           foldings.push(folding);
-          inLoop = false;
         }
       }
       // global
@@ -110,7 +165,7 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
         regionLine = index;
       }else if(endRegionRegExp.test(line)){
         if(inRegion == true){
-          const folding = new vscode.FoldingRange(regionLine,index);
+          const folding = new vscode.FoldingRange(regionLine,index, vscode.FoldingRangeKind.Region);
           foldings.push(folding);
           inRegion = false;
         }

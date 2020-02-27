@@ -27,6 +27,12 @@
     "description": "function",
     "scope": "source.jass"
   },
+  "boolexpr": {
+    "prefix": "function_boolexpr",
+    "body": "function ${1:function_name} takes ${2:nothing} returns boolean\n\treturn ${0:true}\nendfunction",
+    "description": "function",
+    "scope": "source.jass"
+  },
   "loop": {
     "prefix": "loop",
     "body": "loop\n\texitwhen ${1:condition}\n\t${0:// TODO}\nendloop",
@@ -35,7 +41,7 @@
   },
   "cd": {
     "prefix": "cd",
-    "body": "call BJDebugMsg(\"\")",
+    "body": "call BJDebugMsg(\"${0}\")",
     "description": "调用debug打印信息",
     "scope": "source.jass"
   },
@@ -55,6 +61,18 @@
     "prefix": "library",
     "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:// TODO}\n\tendfunction\nendlibrary\n",
     "description": "library",
+    "scope": "source.jass"
+  },
+  "method": {
+    "prefix": "method",
+    "body": "method ${1:method_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:// TODO}\nendmethod",
+    "description": "method",
+    "scope": "source.jass"
+  },
+  "struct": {
+    "prefix": "struct",
+    "body": "struct ${1:struct_name}\n\t${0:// TODO}\nendstruct",
+    "description": "struct",
     "scope": "source.jass"
   }
 }

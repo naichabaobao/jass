@@ -7,6 +7,9 @@
       "include": "#jass-block-comment"
     },
     {
+      "include": "#vjass-directive"
+    },
+    {
       "include": "#jass-comment"
     },
     {
@@ -16,11 +19,12 @@
       "include": "#jass-keyword"
     },
     {
-      "include": "#jass-const"
+      "include": "#vjass-keyword"
     },
     {
-      "include": "#jass-keyword-operator"
+      "include": "#jass-const"
     },
+    
     {
       "include": "#support.variable"
     },
@@ -35,6 +39,12 @@
     },
     {
       "include": "#jass-class"
+    },
+    {
+      "include": "#vjass-macro"
+    },
+    {
+      "include": "#vjass-variable-macro"
     },
     {
       "include": "#jass-number"
@@ -54,11 +64,9 @@
       "include": "#vjass-this"
     },
 
+    
     {
-      "include": "#vjass-variable-macro"
-    },
-    {
-      "include": "#vjass-macro"
+      "include": "#jass-keyword-operator"
     },
     {
       "include": "#jass-variable"
@@ -70,18 +78,74 @@
       "begin": "/\\*",
       "end": "\\*/"
     },
+    "vjass-directive": {
+      "name":"keyword",
+      "begin": "//!",
+      "end": "\\n",
+      "beginCaptures": {
+        "0": {
+          "name": "comment.line.double-slash"
+        } 
+      },
+      "patterns": [
+        {
+          "match": "\\b(import|textmacro)\\b",
+          "name":"keyword"
+        },
+        {
+
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "string.quoted.double"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "string.quoted.double"
+            }
+          },
+          "patterns": [
+            {
+              "name": "string.quoted.double",
+              "match": "(\\\\\")|."
+            }
+          ]
+
+        }
+      ]
+    },
     "jass-comment": {
       "name": "comment.line.double-slash",
       "begin": "//",
       "end": "\\n"
     },
     "jass-string": {
-      "name": "string.quoted.double",
-      "match": "\"((\\\\\")|.)*?\""
+
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "string.quoted.double"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "string.quoted.double"
+        }
+      },
+      "patterns": [
+        {
+          "name": "string.quoted.double",
+          "match": "(\\\\\")|."
+        }
+      ]
+
     },
     "jass-entity-name-function": {
       "name": "entity.name.function",
-      "match": "(?<=native)\\s+\\w+|(?<=function)\\s+\\w+|(?<=call)\\s+\\w+|\\w+\\s*(?=\\()"
+      "match": "(?<=(?<=\\s|^)native)\\s+[a-zA-Z][a-zA-Z0-9_]*|(?<=(?<=\\s|\\(|,|^)function)\\s+[a-zA-Z][a-zA-Z0-9_]*|(?<=(?<=\\s|^)call)\\s+[a-zA-Z][a-zA-Z0-9_]*|(?<=(?<=\\s)initializer)\\s+[a-zA-Z][a-zA-Z0-9_]*|[a-zA-Z][a-zA-Z0-9_]*\\s*(?=\\()"
     },
     "jass-keyword": {
       "name": "keyword",
@@ -109,11 +173,11 @@
     },
     "jass-number": {
       "name": "constant.numeric",
-      "match": "'[a-zA-Z][a-zA-Z0-9]{3}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+(?!\\$)"
+      "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+(?!\\$)"
     },
     "jass-variable": {
       "name": "support.variable",
-      "match": "\\b[a-zA-Z\\$][a-zA-Z0-9_\\$]*\\b"
+      "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b"
     },
     "jass-statement": {
       "name": "support.variable",
