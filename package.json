@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "keywords": [
     "jass",
     "warcraft"
@@ -22,7 +22,7 @@
     "type": "git",
     "url": "https://gitee.com/naichabaobao/jass.git"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/blob/master/README.md",
+  "homepage": "https://gitee.com/naichabaobao/jass",
   "activationEvents": [
     "onLanguage:jass"
   ],

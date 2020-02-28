@@ -7,6 +7,19 @@ import { Keyword } from '../main/keyword';
 // import { resolve, parse } from 'path';
 // import { j, ai } from '../main/constant';
 
+interface Hint {
+  /**
+   * 错误信息
+   */
+  message: string;
+  /**
+   * 错误
+   */
+  check:(document: vscode.TextDocument) => Array<vscode.Diagnostic>;
+}
+
+
+
 /**
  * 是否缺少call关键字
  * @param text 
@@ -20,7 +33,8 @@ function isCallError(text: string) {
       isError = true;
     }
   }
-  return isError;
+  // 暂时不检测
+  return false;
 }
 
 /**
@@ -31,12 +45,13 @@ function _isifUnthenError(text: string) {
   let isError = false;
   const ifStartRegExp = new RegExp(/^\s*if\b/);
   if (ifStartRegExp.test(text)) {
-    const thenEndRegExp = new RegExp(/then\s*$/);
+    const thenEndRegExp = new RegExp(/then\s*(\/\/.*)?$/);
     if(!thenEndRegExp.test(text)){ // 未找到then结尾
       isError = true;
     }
   }
-  return isError;
+  // 暂时不检测
+  return false;
 }
 
 const diagnosticCollection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection();

@@ -80,5 +80,3 @@ vscode.languages.registerSignatureHelpProvider(language, {
     return SignatureHelp;
   }
 }, "(", ",");
-
-export {};

@@ -4,16 +4,19 @@
   "name": "jass",
   "patterns": [
     {
-      "include": "#jass-block-comment"
-    },
-    {
-      "include": "#vjass-directive"
+      "include": "#zinc"
     },
     {
       "include": "#jass-lua"
     },
     {
+      "include": "#vjass-directive"
+    },
+    {
       "include": "#jass-comment"
+    },
+    {
+      "include": "#zinc-block-comment"
     },
     {
       "include": "#jass-string"
@@ -27,7 +30,7 @@
     {
       "include": "#jass-const"
     },
-    
+
     {
       "include": "#support.variable"
     },
@@ -62,12 +65,6 @@
     {
       "include": "#vjass-other"
     },
-    
-    {
-      "include": "#vjass-this"
-    },
-
-    
     {
       "include": "#jass-keyword-operator"
     },
@@ -76,46 +73,64 @@
     }
   ],
   "repository": {
-    "jass-block-comment": {
+    "zinc-block-comment": {
       "name": "comment.block",
       "begin": "/\\*",
       "end": "\\*/"
     },
     "vjass-directive": {
-      "name":"keyword",
+      "name": "keyword",
       "begin": "//!",
       "end": "\\n",
       "beginCaptures": {
         "0": {
           "name": "comment.line.double-slash"
-        } 
+        }
       },
       "patterns": [
         {
-          "match": "\\b(import|textmacro)\\b",
-          "name":"keyword"
+          "include": "#jass-string"
         },
         {
-
-          "begin": "\"",
-          "end": "\"",
-          "beginCaptures": {
-            "0": {
-              "name": "string.quoted.double"
-            }
-          },
-          "endCaptures": {
-            "0": {
-              "name": "string.quoted.double"
-            }
-          },
-          "patterns": [
-            {
-              "name": "string.quoted.double",
-              "match": "(\\\\\")|."
-            }
-          ]
-
+          "name": "keyword",
+          "match": "\\b(import|textmacro|endtextmacro|runtextmacro|takes)\\b"
+        },
+        {
+          "name": "emphasis",
+          "match": "\\b(zinc|endzinc|vjass)\\b"
+        },
+        {
+          "name": "entity.name.function",
+          "match": "(?<=(?<=\\s|^)textmacro)\\s+[a-zA-Z][a-zA-Z0-9_]*"
+        },
+        {
+          "name": "support.variable",
+          "match": "(?<=(?<=\\s|^)takes)\\s+[a-zA-Z][a-zA-Z0-9_]*|(?<=,)\\s*[a-zA-Z][a-zA-Z0-9_]*"
+        },
+        {
+          "name": "comment.line.double-slash",
+          "match": "."
+        }
+      ]
+    },
+    "zinc": {
+      "begin": "//!\\s+zinc\\s*$",
+      "end": "//!\\s+endzinc\\s*$",
+      "beginCaptures": {
+        "0": {
+          "name": "comment.block"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "comment.block"
+        }
+      },
+      "patterns": [
+        {
+          "name": "comment.block",
+          "begin": "/\\*",
+          "end": "\\*/"
         }
       ]
     },
@@ -144,7 +159,6 @@
       "end": "\\n"
     },
     "jass-string": {
-
       "begin": "\"",
       "end": "\"",
       "beginCaptures": {
@@ -160,10 +174,9 @@
       "patterns": [
         {
           "name": "string.quoted.double",
-          "match": "(\\\\\")|."
+          "match": "((?<!\\\\)\\\\\")|."
         }
       ]
-
     },
     "jass-entity-name-function": {
       "name": "entity.name.function",
@@ -207,11 +220,7 @@
     },
     "vjass-keyword": {
       "name": "keyword",
-      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|debug)\\b"
-    },
-    "vjass-this": {
-      "name": "variable.language",
-      "match": "\\bthis\\b|:"
+      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|debug|this)\\b"
     },
     "vjass-other": {
       "name": "support.other",
