@@ -10,6 +10,9 @@
       "include": "#vjass-directive"
     },
     {
+      "include": "#jass-lua"
+    },
+    {
       "include": "#jass-comment"
     },
     {
@@ -113,6 +116,25 @@
             }
           ]
 
+        }
+      ]
+    },
+    "jass-lua": {
+      "begin": "<\\?=?",
+      "beginCaptures": {
+        "0": {
+          "name": "comment.block"
+        }
+      },
+      "end": "\\?>",
+      "endCaptures": {
+        "0": {
+          "name": "comment.block"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.lua"
         }
       ]
     },
