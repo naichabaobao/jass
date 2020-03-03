@@ -30,14 +30,14 @@ enum Type {
     public type: Type;
     public value: string;
     public line: number;
-    public offset: number;
+    public position: number;
     public index: number;
 
-    constructor(type: Type, value: string, line: number, offset: number, index: number) {
+    constructor(type: Type, value: string, line: number, position: number, index: number) {
         this.type = type;
         this.value = value;
         this.line = line;
-        this.offset = offset;
+        this.position = position;
         this.index = index;
       }
   }
@@ -50,6 +50,9 @@ enum Type {
     const tokens = new Array<Token>();
     const addToken = function (token:Token) {
         tokens.push(token);
+        if(value.length>0) {
+            value = "";
+        }
     }
 
     let line = 0;
@@ -158,9 +161,112 @@ enum Type {
                     addToken(new Token(Type.RightSquareBrackets, char, line, position, index));
                 }else if(isComma(char)) { // ,
                     addToken(new Token(Type.Comma, char, line, position, index));
+                }else {
+                    addToken(new Token(Type.Error, char, line, position, index));
                 }
-                
-                
+                break;
+            case PositionType.Letter:
+                if (isId(char)) {
+                    vpp();
+                    if(!isId(getNextChar())){
+                        switch (value) {
+                            case keyword.Native:
+                                addToken(new Token(Type.Native, value, line, position, index));
+                            case keyword.Function:
+                              addToken( new Token(Type.Function, value, line, position, index));
+                            case keyword.Takes:
+                              addToken( new Token(Type.Takes, value, line, position, index));
+                            case keyword.Returns:
+                              addToken( new Token(Type.Returns, value, line, position, index));
+                            case keyword.Return:
+                              addToken(new Token(Type.Return, value, line, position, index));
+                            case keyword.EndFunction:
+                              addToken( new Token(Type.EndFunction, value, line, position, index));
+                    
+                            case keyword.Globals:
+                              addToken( new Token(Type.Globals, value, line, position, index));
+                            case keyword.EndGlobals:
+                              addToken( new Token(Type.EndGlobals, value, line, position, index));
+                    
+                            case keyword.If:
+                              addToken( new Token(Type.If, value, line, position, index));
+                            case keyword.Then:
+                              addToken( new Token(Type.Then, value, line, position, index));
+                            case keyword.Else:
+                              addToken( new Token(Type.Else, value, line, position, index));
+                            case keyword.Elseif:
+                              addToken( new Token(Type.Elseif, value, line, position, index));
+                            case keyword.EndIf:
+                              addToken( new Token(Type.EndIf, value, line, position, index));
+                    
+                            case keyword.Loop:
+                              addToken( new Token(Type.Loop, value, line, position, index));
+                            case keyword.Exitwhen:
+                              addToken( new Token(Type.Exitwhen, value, line, position, index));
+                            case keyword.EndLoop:
+                              addToken( new Token(Type.EndLoop, value, line, position, index));
+                    
+                    
+                            case keyword.Local:
+                              addToken( new Token(Type.Local, value, line, position, index));
+                            case keyword.Constant:
+                              addToken( new Token(Type.Constant, value, line, position, index));
+                    
+                            case keyword.Array:
+                              addToken( new Token(Type.Array, value, line, position, index));
+                    
+                            case keyword.Set:
+                              addToken( new Token(Type.Set, value, line, position, index));
+                    
+                            case keyword.Call:
+                              addToken( new Token(Type.Call, value, line, position, index));
+                    
+                            case keyword.Type:
+                              addToken( new Token(Type.Type, value, line, position, index));
+                            case keyword.Extends:
+                              addToken( new Token(Type.Extends, value, line, position, index));
+                    
+                            case keyword.True:
+                              addToken( new Token(Type.True, value, line, position, index));
+                            case keyword.False:
+                              addToken( new Token(Type.False, value, line, position, index));
+                    
+                            case keyword.Null:
+                              addToken( new Token(Type.Null, value, line, position, index));
+                    
+                            case keyword.Nothing:
+                              addToken( new Token(Type.Nothing, value, line, position, index));
+                    
+                            case keyword.Integer:
+                              addToken( new Token(Type.Integer, value, line, position, index));
+                            case keyword.Real:
+                              addToken( new Token(Type.Real, value, line, position, index));
+                            case keyword.Boolean:
+                              addToken( new Token(Type.Boolean, value, line, position, index));
+                            case keyword.String:
+                              addToken( new Token(Type.String, value, line, position, index));
+                            case keyword.Handle:
+                              addToken( new Token(Type.Handle, value, line, position, index));
+                            case keyword.Code:
+                              addToken( new Token(Type.Code, value, line, position, index));
+                    
+                            case keyword.And:
+                              addToken( new Token(Type.And, value, line, position, index));
+                            case keyword.Or:
+                              addToken( new Token(Type.Or, value, line, position, index));
+                            case keyword.Not:
+                              addToken( new Token(Type.Not, value, line, position, index));
+                    
+                            case keyword.Debug:
+                              addToken( new Token(Type.Debug, value, line, position, index));
+                    
+                            default:
+                              addToken( new Token(Type.Identifier, value, line, position, index));
+                        }
+                    }
+                }
+                break;
+            case PositionType.Number:
                 break;
         }
         if(isNewLine(getChar())) {
@@ -301,7 +407,7 @@ enum Type {
     }
     return false;
   } 
-      // (+ -) (* /) (= != == > < >= <=) ( ) [ ] ,
+      // (+ -) (* /) (= != == > < >= <=) ( ) [ ] , _
       function isPlus(char:string): boolean {
         if(char == '+') {
           return true;
@@ -405,4 +511,72 @@ enum Type {
           return true;
         }
         return false;
+      }
+
+      function isxiahuaxian(char:string): boolean {
+        if(char == '+') {
+          return true;
+        }
+        return false;
+      } 
+
+      function isId(char:string) {
+          return isLetter(char) || isNumber(char) || isxiahuaxian(char);
+      }
+
+      namespace keyword {
+
+        export const Native = "native";
+        export const Function = "function";
+        export const Takes = "takes";
+        export const Returns = "returns";
+        export const Return = "return";
+        export const EndFunction = "endfunction";
+      
+        export const Globals = "globals";
+        export const EndGlobals = "endglobals";
+      
+        export const If = "if";
+        export const Then = "then";
+        export const Else = "else";
+        export const Elseif = "elseif";
+        export const EndIf = "endif";
+      
+        export const Loop = "loop";
+        export const Exitwhen = "exitwhen";
+        export const EndLoop = "endloop";
+      
+      
+        export const Local = "local";
+        export const Constant = "constant";
+      
+        export const Array = "array";
+      
+        export const Set = "set";
+      
+        export const Call = "call";
+      
+        export const Type = "type";
+        export const Extends = "extends";
+      
+        export const True = "true";
+        export const False = "false";
+      
+        export const Null = "null";
+      
+        export const Nothing = "nothing";
+      
+        export const Integer = "integer";
+        export const Real = "real";
+        export const Boolean = "boolean";
+        export const String = "string";
+        export const Handle = "handle";
+        export const Code = "code";
+      
+        export const And = "and";
+        export const Or = "or";
+        export const Not = "not";
+      
+        export const Debug = "debug";
+      
       }
