@@ -10,73 +10,20 @@
       "include": "#jass-lua"
     },
     {
-      "include": "#vjass-directive"
+      "include": "#novjass"
     },
     {
-      "include": "#jass-comment"
-    },
-    {
-      "include": "#zinc-block-comment"
-    },
-    {
-      "include": "#jass-string"
-    },
-    {
-      "include": "#jass-keyword"
-    },
-    {
-      "include": "#vjass-keyword"
-    },
-    {
-      "include": "#jass-const"
-    },
-
-    {
-      "include": "#support.variable"
-    },
-    {
-      "include": "#jass-keyword-control"
-    },
-    {
-      "include": "#jass-type"
-    },
-    {
-      "include": "#jass-class-param"
-    },
-    {
-      "include": "#jass-class"
-    },
-    {
-      "include": "#vjass-macro"
-    },
-    {
-      "include": "#vjass-variable-macro"
-    },
-    {
-      "include": "#jass-number"
-    },
-    {
-      "include": "#jass-entity-name-function"
-    },
-
-    {
-      "include": "#jass-statement"
-    },
-    {
-      "include": "#vjass-other"
-    },
-    {
-      "include": "#jass-keyword-operator"
-    },
-    {
-      "include": "#jass-variable"
+      "include": "#vjass"
     }
   ],
   "repository": {
-    "zinc-block-comment": {
+    "block-comment": {
       "name": "comment.block",
       "begin": "/\\*",
-      "end": "\\*/"
+      "end": "\\*/",
+      "patterns": [
+        {"include": "#block-comment"}
+      ]
     },
     "vjass-directive": {
       "name": "keyword",
@@ -84,7 +31,7 @@
       "end": "\\n",
       "beginCaptures": {
         "0": {
-          "name": "comment.line.double-slash"
+          "name": "emphasis"
         }
       },
       "patterns": [
@@ -93,11 +40,11 @@
         },
         {
           "name": "keyword",
-          "match": "\\b(import|textmacro|endtextmacro|runtextmacro|takes)\\b"
+          "match": "\\b(import|textmacro|endtextmacro|runtextmacro|takes|inject|endinject|dovjassinit)\\b"
         },
         {
           "name": "emphasis",
-          "match": "\\b(zinc|endzinc|vjass)\\b"
+          "match": "\\b(zinc|vjass)\\b"
         },
         {
           "name": "entity.name.function",
@@ -114,23 +61,38 @@
       ]
     },
     "zinc": {
-      "begin": "//!\\s+zinc\\s*$",
-      "end": "//!\\s+endzinc\\s*$",
-      "beginCaptures": {
-        "0": {
-          "name": "comment.block"
-        }
-      },
-      "endCaptures": {
-        "0": {
-          "name": "comment.block"
-        }
-      },
       "patterns": [
         {
-          "name": "comment.block",
-          "begin": "/\\*",
-          "end": "\\*/"
+          "include": "#zinc-macro"
+        },
+        {
+          "begin": "//!\\s+zinc\\s*$",
+          "end": "//!\\s+endzinc\\s*$",
+          "beginCaptures": {
+            "0": {
+              "name": "emphasis"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "emphasis"
+            }
+          },
+          "patterns": [
+            {"include": "#block-comment"},
+            {"include": "#jass-comment"},
+            {"include": "#jass-string"},
+            {"include": "#zinc-keyword"},
+            {"include": "#zinc-keyword-control"},
+            {
+              "name": "support.type",
+              "match": "\\b(integer|real|boolean|string|handle|code|void)\\b"
+            },
+            {"include": "#jass-class"},
+            {"include": "#jass-entity-name-function"},
+            {"include": "#jass-number"},
+            {"include": "#jass-variable"}
+          ]
         }
       ]
     },
@@ -153,6 +115,7 @@
         }
       ]
     },
+  
     "jass-comment": {
       "name": "comment.line.double-slash",
       "begin": "//",
@@ -184,7 +147,7 @@
     },
     "jass-keyword": {
       "name": "keyword",
-      "match": "\\b(and|or|not|globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array)\\b"
+      "match": "\\b(and|or|not|globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array|debug)\\b"
     },
     "jass-const": {
       "name": "constant.language",
@@ -206,6 +169,51 @@
       "name": "support.class",
       "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable|mousebuttontype|animtype|subanimtype|framehandle|originframetype|framepointtype|textaligntype|frameeventtype|oskeytype|abilityintegerfield|abilityrealfield|abilitybooleanfield|abilitystringfield|abilityintegerlevelfield|abilityreallevelfield|abilitybooleanlevelfield|abilitystringlevelfield|abilityintegerlevelarrayfield|abilityreallevelarrayfield|abilitybooleanlevelarrayfield|abilitystringlevelarrayfield|unitintegerfield|unitrealfield|unitbooleanfield|unitstringfield|unitweaponintegerfield|unitweaponrealfield|unitweaponbooleanfield|unitweaponstringfield|itemintegerfield|itemrealfield|itembooleanfield|itemstringfield|movetype|targetflag|armortype|heroattribute|defensetype|regentype|unitcategory|pathingflag|minimapicon|commandbuttoneffect)\\b"
     },
+    "vjass": {
+      "patterns": [
+        {"include": "#block-comment"},
+        { "include": "#vjass-directive" },
+        {"include": "#jass-comment"},
+        {"include": "#jass-string"},
+        { "include": "#vjass-variable-macro" },
+        { "include": "#vjass-other" },
+        {"include": "#jass-keyword"},
+        { "include": "#vjass-keyword" },
+        {"include": "#jass-keyword-control"},
+        {"include": "#jass-keyword-operator"},
+        {"include": "#jass-type"},
+        {"include": "#jass-class"},
+        {"include": "#jass-entity-name-function"},
+        {"include": "#jass-number"},
+        {"include": "#jass-variable"}
+      ]
+    },
+    "novjass": {
+      "begin": "//!\\s+novjass\\b",
+      "end": "//!\\s+endnovjass\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "emphasis"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "emphasis"
+        }
+      },
+      "patterns": [
+        {"include": "#jass-comment"},
+        {"include": "#jass-string"},
+        {"include": "#jass-keyword"},
+        {"include": "#jass-keyword-control"},
+        {"include": "#jass-keyword-operator"},
+        {"include": "#jass-type"},
+        {"include": "#jass-class"},
+        {"include": "#jass-entity-name-function"},
+        {"include": "#jass-number"},
+        {"include": "#jass-variable"}
+      ]
+    },
     "jass-number": {
       "name": "constant.numeric",
       "match": "'[a-zA-Z0-9]{4}'|\\d+\\.\\d+|\\.\\d+|\\d+\\.|0x[\\da-fA-F]+|\\b\\d+\\b|\\$[a-fA-F0-9]+(?!\\$)"
@@ -220,19 +228,23 @@
     },
     "vjass-keyword": {
       "name": "keyword",
-      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|debug|this)\\b"
-    },
-    "vjass-other": {
-      "name": "support.other",
-      "match": "\\b(execute|evaluate|create|destroy)\\b|:"
+      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|size|name|allocate|deallocate)"
     },
     "vjass-variable-macro": {
       "name": "string.regexp",
       "match": "\\$[a-zA-Z][a-zA-Z0-9_]*\\$"
     },
-    "vjass-macro": {
+    "zinc-macro": {
       "name": "comment.line.number-sign",
       "match": "#ifndef|#ifdef|#if|#define|#endif|#include|#else|#[a-zA-z]+"
+    },
+    "zinc-keyword": {
+      "name": "keyword",
+      "match": "\\b(library|function|constant|onInit|struct|public|static|requires|optional|interface|struct|method|operator|module|type|extends)\\b"
+    },
+    "zinc-keyword-control": {
+      "name": "keyword.control",
+      "match": "\\b(if|else|while|for|break|debug|return)\\b"
     }
   }
 }

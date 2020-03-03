@@ -336,7 +336,7 @@ export class Keyword {
     return Keyword.Endglobals != keyword;
   }
 
-
+  // library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|size|name|allocate|deallocate
   public static readonly keywordLibrary = "library";
   public static readonly keyworInitializer = "initializer";
   public static readonly keywordNeeds = "needs";
@@ -360,7 +360,26 @@ export class Keyword {
   public static readonly keywordOperator = "operator";
   public static readonly keywordDebug = "debug";
 
-  public static readonly vKeywordKeywords = [Keyword.keywordLibrary, Keyword.keyworInitializer, Keyword.keywordNeeds,Keyword.keywordUses, Keyword.keywordRequires, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordImplement, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordOperator, Keyword.keywordDebug];
+  public static readonly keywordModule = "module";
+  public static readonly keywordEndModule = "endmodule";
+  public static readonly keywordOptional = "optional";
+  public static readonly keywordStub = "stub";
+  public static readonly keywordKey = "key";
+  public static readonly keywordThisType = "thistype";
+  public static readonly keywordOnInit = "onInit";
+  public static readonly keywordOnDestroy = "onDestroy";
+  public static readonly keywordHook = "hook";
+  public static readonly keywordDefaults = "defaults";
+  public static readonly keywordExecute = "execute";
+  public static readonly keywordCreate = "create";
+  public static readonly keywordDestroy = "destroy";
+  public static readonly keywordSize = "size";
+  public static readonly keywordName = "name";
+  public static readonly keywordAllocate = "allocate";
+  public static readonly keywordDeallocate = "deallocate";
+
+  public static readonly vKeywordKeywords = [Keyword.keywordLibrary, Keyword.keyworInitializer, Keyword.keywordNeeds,Keyword.keywordUses, Keyword.keywordRequires, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordImplement, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordOperator, Keyword.keywordDebug,
+    Keyword.keywordModule,Keyword.keywordEndModule,Keyword.keywordOptional,Keyword.keywordStub,Keyword.keywordKey,Keyword.keywordThisType,Keyword.keywordOnInit,Keyword.keywordOnDestroy,Keyword.keywordHook,Keyword.keywordDefaults,Keyword.keywordExecute,Keyword.keywordCreate,Keyword.keywordDestroy,Keyword.keywordSize,Keyword.keywordName,Keyword.keywordAllocate,Keyword.keywordDeallocate];
 
   public static readonly allKeywords = [...Keyword.Keywords,...Keyword.vKeywordKeywords];
 

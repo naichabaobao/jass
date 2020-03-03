@@ -74,5 +74,17 @@
     "body": "struct ${1:struct_name}\n\t${0:// TODO}\nendstruct",
     "description": "struct",
     "scope": "source.jass"
+  },
+  "inject": {
+    "prefix": "inject",
+    "body": "//! inject main\n\t//! dovjassinit\n\t${0:// TODO}\n//! endinject",
+    "description": "inject",
+    "scope": "source.jass"
+  },
+  "textmacro": {
+    "prefix": "textmacro",
+    "body": "//! textmacro textmacro_name takes args\n\t${0:// TODO \\$args\\$}\n//! endtextmacro",
+    "description": "文本宏",
+    "scope": "source.jass"
   }
 }

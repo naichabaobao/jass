@@ -20,7 +20,7 @@ enum TokenType {
   Eof
 }
 
-class Token {
+class TokenTemp {
   public type: TokenType;
   public value: string;
   public line: number;
@@ -37,9 +37,9 @@ class Token {
 }
 
 function parseTokens(code: string) {
-  const tokens = new Array<Token>();
+  const tokens = new Array<TokenTemp>();
   function push(tokenType: TokenType, value: string, line: number, offset: number, index: number) {
-    tokens.push(new Token(tokenType, value, line, offset, index));
+    tokens.push(new TokenTemp(tokenType, value, line, offset, index));
   }
 
 
@@ -50,7 +50,7 @@ function parseTokens(code: string) {
   function clear() {
     value = "";
   }
-  function pushToken(token: Token) {
+  function pushToken(token: TokenTemp) {
     tokens.push(token);
     clear();
   }
@@ -65,97 +65,97 @@ function parseTokens(code: string) {
     const extractToken = function (value: string) {
       switch (value) {
         case keyword.Native:
-          return new Token(TokenType.Native, value, line, offset, index);
+          return new TokenTemp(TokenType.Native, value, line, offset, index);
         case keyword.Function:
-          return new Token(TokenType.Function, value, line, offset, index);
+          return new TokenTemp(TokenType.Function, value, line, offset, index);
         case keyword.Takes:
-          return new Token(TokenType.Takes, value, line, offset, index);
+          return new TokenTemp(TokenType.Takes, value, line, offset, index);
         case keyword.Returns:
-          return new Token(TokenType.Returns, value, line, offset, index);
+          return new TokenTemp(TokenType.Returns, value, line, offset, index);
         case keyword.Return:
-          return new Token(TokenType.Return, value, line, offset, index);
+          return new TokenTemp(TokenType.Return, value, line, offset, index);
         case keyword.EndFunction:
-          return new Token(TokenType.EndFunction, value, line, offset, index);
+          return new TokenTemp(TokenType.EndFunction, value, line, offset, index);
 
         case keyword.Globals:
-          return new Token(TokenType.Globals, value, line, offset, index);
+          return new TokenTemp(TokenType.Globals, value, line, offset, index);
         case keyword.EndGlobals:
-          return new Token(TokenType.EndGlobals, value, line, offset, index);
+          return new TokenTemp(TokenType.EndGlobals, value, line, offset, index);
 
         case keyword.If:
-          return new Token(TokenType.If, value, line, offset, index);
+          return new TokenTemp(TokenType.If, value, line, offset, index);
         case keyword.Then:
-          return new Token(TokenType.Then, value, line, offset, index);
+          return new TokenTemp(TokenType.Then, value, line, offset, index);
         case keyword.Else:
-          return new Token(TokenType.Else, value, line, offset, index);
+          return new TokenTemp(TokenType.Else, value, line, offset, index);
         case keyword.Elseif:
-          return new Token(TokenType.Elseif, value, line, offset, index);
+          return new TokenTemp(TokenType.Elseif, value, line, offset, index);
         case keyword.EndIf:
-          return new Token(TokenType.EndIf, value, line, offset, index);
+          return new TokenTemp(TokenType.EndIf, value, line, offset, index);
 
         case keyword.Loop:
-          return new Token(TokenType.Loop, value, line, offset, index);
+          return new TokenTemp(TokenType.Loop, value, line, offset, index);
         case keyword.Exitwhen:
-          return new Token(TokenType.Exitwhen, value, line, offset, index);
+          return new TokenTemp(TokenType.Exitwhen, value, line, offset, index);
         case keyword.EndLoop:
-          return new Token(TokenType.EndLoop, value, line, offset, index);
+          return new TokenTemp(TokenType.EndLoop, value, line, offset, index);
 
 
         case keyword.Local:
-          return new Token(TokenType.Local, value, line, offset, index);
+          return new TokenTemp(TokenType.Local, value, line, offset, index);
         case keyword.Constant:
-          return new Token(TokenType.Constant, value, line, offset, index);
+          return new TokenTemp(TokenType.Constant, value, line, offset, index);
 
         case keyword.Array:
-          return new Token(TokenType.Array, value, line, offset, index);
+          return new TokenTemp(TokenType.Array, value, line, offset, index);
 
         case keyword.Set:
-          return new Token(TokenType.Set, value, line, offset, index);
+          return new TokenTemp(TokenType.Set, value, line, offset, index);
 
         case keyword.Call:
-          return new Token(TokenType.Call, value, line, offset, index);
+          return new TokenTemp(TokenType.Call, value, line, offset, index);
 
         case keyword.Type:
-          return new Token(TokenType.Type, value, line, offset, index);
+          return new TokenTemp(TokenType.Type, value, line, offset, index);
         case keyword.Extends:
-          return new Token(TokenType.Extends, value, line, offset, index);
+          return new TokenTemp(TokenType.Extends, value, line, offset, index);
 
         case keyword.True:
-          return new Token(TokenType.True, value, line, offset, index);
+          return new TokenTemp(TokenType.True, value, line, offset, index);
         case keyword.False:
-          return new Token(TokenType.False, value, line, offset, index);
+          return new TokenTemp(TokenType.False, value, line, offset, index);
 
         case keyword.Null:
-          return new Token(TokenType.Null, value, line, offset, index);
+          return new TokenTemp(TokenType.Null, value, line, offset, index);
 
         case keyword.Nothing:
-          return new Token(TokenType.Nothing, value, line, offset, index);
+          return new TokenTemp(TokenType.Nothing, value, line, offset, index);
 
         case keyword.Integer:
-          return new Token(TokenType.Integer, value, line, offset, index);
+          return new TokenTemp(TokenType.Integer, value, line, offset, index);
         case keyword.Real:
-          return new Token(TokenType.Real, value, line, offset, index);
+          return new TokenTemp(TokenType.Real, value, line, offset, index);
         case keyword.Boolean:
-          return new Token(TokenType.Boolean, value, line, offset, index);
+          return new TokenTemp(TokenType.Boolean, value, line, offset, index);
         case keyword.String:
-          return new Token(TokenType.String, value, line, offset, index);
+          return new TokenTemp(TokenType.String, value, line, offset, index);
         case keyword.Handle:
-          return new Token(TokenType.Handle, value, line, offset, index);
+          return new TokenTemp(TokenType.Handle, value, line, offset, index);
         case keyword.Code:
-          return new Token(TokenType.Code, value, line, offset, index);
+          return new TokenTemp(TokenType.Code, value, line, offset, index);
 
         case keyword.And:
-          return new Token(TokenType.And, value, line, offset, index);
+          return new TokenTemp(TokenType.And, value, line, offset, index);
         case keyword.Or:
-          return new Token(TokenType.Or, value, line, offset, index);
+          return new TokenTemp(TokenType.Or, value, line, offset, index);
         case keyword.Not:
-          return new Token(TokenType.Not, value, line, offset, index);
+          return new TokenTemp(TokenType.Not, value, line, offset, index);
 
         case keyword.Debug:
-          return new Token(TokenType.Debug, value, line, offset, index);
+          return new TokenTemp(TokenType.Debug, value, line, offset, index);
 
         default:
-          return new Token(TokenType.Identifier, value, line, offset, index);
+          return new TokenTemp(TokenType.Identifier, value, line, offset, index);
       }
     }
 
