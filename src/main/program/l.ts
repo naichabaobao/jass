@@ -48,12 +48,7 @@ class Token {
  */
 function tokens(content: string): Array<Token> {
   const tokens = new Array<Token>();
-  const addToken = function (token: Token) {
-    tokens.push(token);
-    if (value.length > 0) {
-      value = "";
-    }
-  }
+  
 
   let line = 0;
   let position = 0;
@@ -70,7 +65,15 @@ function tokens(content: string): Array<Token> {
   }
   let type = PositionType.Default;
   let value = "";
-
+  const addToken = function (token: Token) {
+    tokens.push(token);
+    if (value.length > 0) {
+      value = "";
+    }
+    if(type != PositionType.Default) {
+      type = PositionType.Default;
+    }
+  }
   for (let index = 0; index < content.length; index++) {
     const getChar = function () {
       return content.charAt(index);
@@ -86,14 +89,28 @@ function tokens(content: string): Array<Token> {
       // 开始字符 (/ a-z A-Z)
       case PositionType.Default:
         if (isSpace(char)) {
-          continue;
+          break;
+        }else if(isNewLine(char)){
+          addToken(new Token(Type.NewLine, char, line, position, index));
         }
         else if (isLetter(char)) {
           type = PositionType.Letter;
           vpp();
+          if(!isId(getNextChar())) {
+            addToken(new Token(Type.Identifier, value, line, position, index));
+          }
         } else if (isNumber(char) || isPoint(char) || isDollar(char)) {
           type = PositionType.Number;
           vpp();
+          if(char == '0' && !(getNextChar() == 'x' || isPoint(getNextChar()) || is0_7(getNextChar()))) { // 非 x . 0-7
+            addToken(new Token(Type.Number, value, line, position, index));
+          }else if(is1_9(char) && !(isPoint(getNextChar()) || isNumber(getNextChar()))) { // 非 . 0-9
+            addToken(new Token(Type.Number, value, line, position, index));
+          }else if(isPoint(char) && !isNumber(getNextChar())) { // 非 0-9
+            addToken(new Token(Type.Error, value, line, position, index));
+          }else if(isDollar(char) && !is16(getNextChar())) { // 非 0-f
+            addToken(new Token(Type.Error, value, line, position, index));
+          }
         } else if (isPlus(char)) { // +
           addToken(new Token(Type.Plus, char, line, position, index));
         } else if (isMinus(char)) { // -
@@ -101,11 +118,10 @@ function tokens(content: string): Array<Token> {
         } else if (isCheng(char)) { // *
           addToken(new Token(Type.Product, char, line, position, index));
         } else if (isDiv(char)) { // /
-          if (isDiv(getNextChar())) {
-            type = PositionType.Divisor;
-            vpp();
-          } else {
-            addToken(new Token(Type.Divisor, char, line, position, index));
+          type = PositionType.Divisor;
+          vpp();
+          if (!isDiv(getNextChar())) {
+            addToken(new Token(Type.Divisor, value, line, position, index));
           }
         } else if (isLeftYuan(char)) { // (
           addToken(new Token(Type.LeftParenthesis, char, line, position, index));
@@ -120,32 +136,28 @@ function tokens(content: string): Array<Token> {
         } else if (isRightFang(char)) { // ]
           addToken(new Token(Type.RightSquareBrackets, char, line, position, index));
         } else if (isEq(char)) { // =
-          if (isEq(getNextChar())) {
-            type = PositionType.Equal;
-            vpp();
-          } else {
-            addToken(new Token(Type.Equal, char, line, position, index));
+          type = PositionType.Equal;
+          vpp();
+          if (!isEq(getNextChar())) {
+            addToken(new Token(Type.Equal, value, line, position, index));
           }
         } else if (isFei(char)) { // !
-          if (isEq(getNextChar())) {
-            type = PositionType.Unequal;
-            vpp();
-          } else {
-            addToken(new Token(Type.Error, char, line, position, index));
+          type = PositionType.Unequal;
+          vpp();
+          if (!isEq(getNextChar())) {
+            addToken(new Token(Type.Error, value, line, position, index));
           }
         } else if (isGt(char)) { // >
-          if (isEq(getNextChar())) {
-            type = PositionType.greaterthan;
-            vpp();
-          } else {
-            addToken(new Token(Type.greaterthan, char, line, position, index));
+          type = PositionType.greaterthan;
+          vpp();
+          if (!isEq(getNextChar())) {
+            addToken(new Token(Type.greaterthan, value, line, position, index));
           }
         } else if (isLt(char)) { // <
-          if (isEq(getNextChar())) {
-            type = PositionType.LessThan;
+          type = PositionType.LessThan;
             vpp();
-          } else {
-            addToken(new Token(Type.LessThan, char, line, position, index));
+          if (!isEq(getNextChar())) {
+            addToken(new Token(Type.LessThan, value, line, position, index));
           }
         } else if (isLeftYuan(char)) { // (
           addToken(new Token(Type.LeftParenthesis, char, line, position, index));
@@ -166,120 +178,166 @@ function tokens(content: string): Array<Token> {
         }
         break;
       case PositionType.Letter:
-        if (isId(char)) {
-          vpp();
-          if (!isId(getNextChar())) {
-            switch (value) {
-              case keyword.Native:
-                addToken(new Token(Type.Native, value, line, position, index));
-              case keyword.Function:
-                addToken(new Token(Type.Function, value, line, position, index));
-              case keyword.Takes:
-                addToken(new Token(Type.Takes, value, line, position, index));
-              case keyword.Returns:
-                addToken(new Token(Type.Returns, value, line, position, index));
-              case keyword.Return:
-                addToken(new Token(Type.Return, value, line, position, index));
-              case keyword.EndFunction:
-                addToken(new Token(Type.EndFunction, value, line, position, index));
+        vpp();
+        if (!isId(getNextChar())) {
+          switch (value) {
+            case keyword.Native:
+              addToken(new Token(Type.Native, value, line, position, index));
+break;
+            case keyword.Function:
+              addToken(new Token(Type.Function, value, line, position, index));
+break;
+            case keyword.Takes:
+              addToken(new Token(Type.Takes, value, line, position, index));
+break;
+            case keyword.Returns:
+              addToken(new Token(Type.Returns, value, line, position, index));
+break;
+            case keyword.Return:
+              addToken(new Token(Type.Return, value, line, position, index));
+break;
+            case keyword.EndFunction:
+              addToken(new Token(Type.EndFunction, value, line, position, index));
 
-              case keyword.Globals:
-                addToken(new Token(Type.Globals, value, line, position, index));
-              case keyword.EndGlobals:
-                addToken(new Token(Type.EndGlobals, value, line, position, index));
+            case keyword.Globals:
+              addToken(new Token(Type.Globals, value, line, position, index));
+break;
+            case keyword.EndGlobals:
+              addToken(new Token(Type.EndGlobals, value, line, position, index));
 
-              case keyword.If:
-                addToken(new Token(Type.If, value, line, position, index));
-              case keyword.Then:
-                addToken(new Token(Type.Then, value, line, position, index));
-              case keyword.Else:
-                addToken(new Token(Type.Else, value, line, position, index));
-              case keyword.Elseif:
-                addToken(new Token(Type.Elseif, value, line, position, index));
-              case keyword.EndIf:
-                addToken(new Token(Type.EndIf, value, line, position, index));
+            case keyword.If:
+              addToken(new Token(Type.If, value, line, position, index));
+break;
+            case keyword.Then:
+              addToken(new Token(Type.Then, value, line, position, index));
+break;
+            case keyword.Else:
+              addToken(new Token(Type.Else, value, line, position, index));
+break;
+            case keyword.Elseif:
+              addToken(new Token(Type.Elseif, value, line, position, index));
+break;
+            case keyword.EndIf:
+              addToken(new Token(Type.EndIf, value, line, position, index));
 
-              case keyword.Loop:
-                addToken(new Token(Type.Loop, value, line, position, index));
-              case keyword.Exitwhen:
-                addToken(new Token(Type.Exitwhen, value, line, position, index));
-              case keyword.EndLoop:
-                addToken(new Token(Type.EndLoop, value, line, position, index));
+            case keyword.Loop:
+              addToken(new Token(Type.Loop, value, line, position, index));
+break;
+            case keyword.Exitwhen:
+              addToken(new Token(Type.Exitwhen, value, line, position, index));
+break;
+            case keyword.EndLoop:
+              addToken(new Token(Type.EndLoop, value, line, position, index));
 
 
-              case keyword.Local:
-                addToken(new Token(Type.Local, value, line, position, index));
-              case keyword.Constant:
-                addToken(new Token(Type.Constant, value, line, position, index));
+            case keyword.Local:
+              addToken(new Token(Type.Local, value, line, position, index));
+break;
+            case keyword.Constant:
+              addToken(new Token(Type.Constant, value, line, position, index));
 
-              case keyword.Array:
-                addToken(new Token(Type.Array, value, line, position, index));
+            case keyword.Array:
+              addToken(new Token(Type.Array, value, line, position, index));
 
-              case keyword.Set:
-                addToken(new Token(Type.Set, value, line, position, index));
+            case keyword.Set:
+              addToken(new Token(Type.Set, value, line, position, index));
 
-              case keyword.Call:
-                addToken(new Token(Type.Call, value, line, position, index));
+            case keyword.Call:
+              addToken(new Token(Type.Call, value, line, position, index));
 
-              case keyword.Type:
-                addToken(new Token(Type.Type, value, line, position, index));
-              case keyword.Extends:
-                addToken(new Token(Type.Extends, value, line, position, index));
+            case keyword.Type:
+              addToken(new Token(Type.Type, value, line, position, index));
+break;
+            case keyword.Extends:
+              addToken(new Token(Type.Extends, value, line, position, index));
 
-              case keyword.True:
-                addToken(new Token(Type.True, value, line, position, index));
-              case keyword.False:
-                addToken(new Token(Type.False, value, line, position, index));
+            case keyword.True:
+              addToken(new Token(Type.True, value, line, position, index));
+break;
+            case keyword.False:
+              addToken(new Token(Type.False, value, line, position, index));
 
-              case keyword.Null:
-                addToken(new Token(Type.Null, value, line, position, index));
+            case keyword.Null:
+              addToken(new Token(Type.Null, value, line, position, index));
 
-              case keyword.Nothing:
-                addToken(new Token(Type.Nothing, value, line, position, index));
+            case keyword.Nothing:
+              addToken(new Token(Type.Nothing, value, line, position, index));
 
-              case keyword.Integer:
-                addToken(new Token(Type.Integer, value, line, position, index));
-              case keyword.Real:
-                addToken(new Token(Type.Real, value, line, position, index));
-              case keyword.Boolean:
-                addToken(new Token(Type.Boolean, value, line, position, index));
-              case keyword.String:
-                addToken(new Token(Type.String, value, line, position, index));
-              case keyword.Handle:
-                addToken(new Token(Type.Handle, value, line, position, index));
-              case keyword.Code:
-                addToken(new Token(Type.Code, value, line, position, index));
+            case keyword.Integer:
+              addToken(new Token(Type.Integer, value, line, position, index));
+break;
+            case keyword.Real:
+              addToken(new Token(Type.Real, value, line, position, index));
+break;
+            case keyword.Boolean:
+              addToken(new Token(Type.Boolean, value, line, position, index));
+break;
+            case keyword.String:
+              addToken(new Token(Type.String, value, line, position, index));
+break;
+            case keyword.Handle:
+              addToken(new Token(Type.Handle, value, line, position, index));
+break;
+            case keyword.Code:
+              addToken(new Token(Type.Code, value, line, position, index));
 
-              case keyword.And:
-                addToken(new Token(Type.And, value, line, position, index));
-              case keyword.Or:
-                addToken(new Token(Type.Or, value, line, position, index));
-              case keyword.Not:
-                addToken(new Token(Type.Not, value, line, position, index));
-
-              case keyword.Debug:
-                addToken(new Token(Type.Debug, value, line, position, index));
-
-              default:
-                addToken(new Token(Type.Identifier, value, line, position, index));
-            }
+            case keyword.And:
+              addToken(new Token(Type.And, value, line, position, index));
+break;
+            case keyword.Or:
+              addToken(new Token(Type.Or, value, line, position, index));
+break;
+            case keyword.Not:
+              addToken(new Token(Type.Not, value, line, position, index));
+              break;
+            case keyword.Debug:
+              addToken(new Token(Type.Debug, value, line, position, index));
+              break;
+            default:
+              addToken(new Token(Type.Identifier, value, line, position, index));
+              break;
           }
         }
         break;
       case PositionType.Number:
-        if (value.length == 1) {
-          if (value == '0') {
-            if(char == 'x' || isPoint(char) || isNumber(char)) {
-              vpp();
+        vpp();
+        if(value.startsWith('0x')) {
+          if(!is16(getNextChar())) {
+            if(value == '0x') {
+              addToken(new Token(Type.Error, value, line, position, index)); // 0x
+            }else{
+              addToken(new Token(Type.Number, value, line, position, index)); // 0x0-F
             }
-          }else if(value == '$') {
-            if(is16(char)) {
-              vpp();
+          }
+        }else if(value.startsWith('$')) {
+          if(!is16(getNextChar())) {
+            addToken(new Token(Type.Number, value, line, position, index));
+          }
+        }else if(value.startsWith('0.')) {
+          if(!isNumber(getNextChar())) {
+            addToken(new Token(Type.Number, value, line, position, index));
+          }
+        }else if(value.startsWith('0')) {
+          if(!is0_7(getNextChar())) {
+            addToken(new Token(Type.Number, value, line, position, index));
+          }
+        }else if(value.startsWith('.')) {
+          if(!isNumber(getNextChar())) {
+            addToken(new Token(Type.Number, value, line, position, index));
+          }
+        }else /* 1 - 9 */ {
+          if(value.includes('.')) {
+            if(!isNumber(getNextChar())) {
+              addToken(new Token(Type.Number, value, line, position, index));
             }
-          }else /* 1-9 . */ {
-            
+          }else{
+            if(!(isNumber(getNextChar()) || isPoint(getNextChar()))) {
+              addToken(new Token(Type.Number, value, line, position, index));
+            }
           }
         }
+        break;
+      default:
         break;
     }
     if (isNewLine(getChar())) {
@@ -351,6 +409,37 @@ function is16(char:string) : boolean{
       break;
   }
   return isNumber(char) || is;
+}
+
+function is0_7(char:string) : boolean{
+  switch (char) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+      return true;
+  }
+  return false;
+}
+
+function is1_9(char:string) : boolean{
+  switch (char) {
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      return true;
+  }
+  return false;
 }
 
 export function isLowLetter(char: string): boolean {
@@ -614,3 +703,8 @@ namespace keyword {
   export const Debug = "debug";
 
 }
+
+console.log(tokens(`
+           !                                
+local abc cc3.2 = =  .2 3. 0x25 $2f.3.7 0099003ff 25.78 0x25+.75 a 0 1 09  != 
+`));
