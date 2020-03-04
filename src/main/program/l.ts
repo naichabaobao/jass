@@ -99,7 +99,7 @@ function tokens(content: string): Array<Token> {
           if(!isId(getNextChar())) {
             addToken(new Token(Type.Identifier, value, line, position, index));
           }
-        } else if (isNumber(char) || isPoint(char) || isDollar(char)) {
+        } else if (isNumber(char) || isPoint(char) || isDollar(char) || isYinhao(char)) {
           type = PositionType.Number;
           vpp();
           if(char == '0' && !(getNextChar() == 'x' || isPoint(getNextChar()) || is0_7(getNextChar()))) { // 非 x . 0-7
@@ -109,6 +109,8 @@ function tokens(content: string): Array<Token> {
           }else if(isPoint(char) && !isNumber(getNextChar())) { // 非 0-9
             addToken(new Token(Type.Error, value, line, position, index));
           }else if(isDollar(char) && !is16(getNextChar())) { // 非 0-f
+            addToken(new Token(Type.Error, value, line, position, index));
+          }else if(isYinhao(char)  && !(isnumberorletter(getNextChar()) || isYinhao(getNextChar()))) {
             addToken(new Token(Type.Error, value, line, position, index));
           }
         } else if (isPlus(char)) { // +
@@ -325,6 +327,14 @@ break;
           if(!isNumber(getNextChar())) {
             addToken(new Token(Type.Number, value, line, position, index));
           }
+        }else if(value.startsWith("'")) {
+          if(isYinhao(char)) {
+            addToken(new Token(Type.Number, value, line, position, index));
+          }else if(isnumberorletter(char)){
+            // nothing
+          } else{
+            addToken(new Token(Type.Error, value, line, position, index));
+          }
         }else /* 1 - 9 */ {
           if(value.includes('.')) {
             if(!isNumber(getNextChar())) {
@@ -335,6 +345,32 @@ break;
               addToken(new Token(Type.Number, value, line, position, index));
             }
           }
+        }
+        break;
+      case PositionType.Equal:
+        // 只有==这种情况
+        vpp();
+        addToken(new Token(Type.Equal, value, line, position, index));
+        break;
+      case PositionType.Unequal:
+        // 只有!=这种情况
+        vpp();
+        addToken(new Token(Type.Unequal, value, line, position, index));
+        break;
+      case PositionType.greaterthan:
+        // 只有>=这种情况
+        vpp();
+        addToken(new Token(Type.greaterthan, value, line, position, index));
+        break;
+      case PositionType.LessThan:
+        // 只有<=这种情况
+        vpp();
+        addToken(new Token(Type.LessThan, value, line, position, index));
+        break;
+      case PositionType.Divisor:
+        vpp();
+        if(isNewLine(getNextChar()) || index == content.length - 1) { 
+          addToken(new Token(Type.Comment, value, line, position, index));
         }
         break;
       default:
@@ -637,7 +673,7 @@ function isYinhao(char: string): boolean {
 }
 
 function isxiahuaxian(char: string): boolean {
-  if (char == '+') {
+  if (char == '_') {
     return true;
   }
   return false;
@@ -645,6 +681,10 @@ function isxiahuaxian(char: string): boolean {
 
 function isId(char: string) {
   return isLetter(char) || isNumber(char) || isxiahuaxian(char);
+}
+
+function isnumberorletter(char: string) {
+  return isLetter(char) || isNumber(char);
 }
 
 namespace keyword {
@@ -704,7 +744,19 @@ namespace keyword {
 
 }
 
-console.log(tokens(`
-           !                                
-local abc cc3.2 = =  .2 3. 0x25 $2f.3.7 0099003ff 25.78 0x25+.75 a 0 1 09  != 
-`));
+const ts = tokens(`
+type name extends handle
+function func_name1 takes string a,unit unit2_ex returns nothing
+  local integer b = 12
+  local real c = 0.3
+  local real d = .2
+  local real d = 3.
+  local integer f = 'aaad'
+  local integer array g
+  set g[0] = 1
+endfunction
+`);
+
+console.log(ts);
+console.log("ts.length = " + ts.length);
+console.log("ts.error.length = " + ts.filter(t => t.type == Type.Error).length);
