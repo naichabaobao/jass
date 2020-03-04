@@ -63,10 +63,13 @@ readFile(blizzardJFilePath, (error, data) => {
     console.error(error.message);
   } else {
     _blizzardJContent = data.toString("utf8");
+
+    const start2 = new Date().getTime();
     const globals = parseGlobals(_blizzardJContent);
     const natives = parseNatives(_blizzardJContent);
     const functions = parseFunctions(_blizzardJContent);
-
+    console.log("解析时间 = " + (new Date().getTime() - start2));
+    
     Object.assign(BlizzardJGlobals, globals);
     Object.assign(BlizzardJNatives, natives);
     Object.assign(BlizzardJFunctions, functions);

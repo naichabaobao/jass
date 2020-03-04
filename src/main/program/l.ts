@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 
 /*
 词法分析
@@ -44,7 +45,7 @@ class Token {
 
 /**
  * 对文档内容分词
- * @param content jass内容
+ * @param content jass内容,eof类型必须是\n，否者会导致行数错误
  */
 function tokens(content: string): Array<Token> {
   const tokens = new Array<Token>();
@@ -61,6 +62,8 @@ function tokens(content: string): Array<Token> {
     Divisor,
     greaterthan,
     LessThan,
+    String = 0x50,
+    R,
     Error = 0x500,
   }
   let type = PositionType.Default;
@@ -83,6 +86,9 @@ function tokens(content: string): Array<Token> {
     }
     const vpp = function () {
       value += getChar();
+    }
+    const isEnd = function () :boolean {
+      return index == content.length - 1;
     }
     const char = getChar();
     switch (type) {
@@ -175,7 +181,13 @@ function tokens(content: string): Array<Token> {
           addToken(new Token(Type.RightSquareBrackets, char, line, position, index));
         } else if (isComma(char)) { // ,
           addToken(new Token(Type.Comma, char, line, position, index));
-        } else {
+        } else if(isMaohao(char)) { // "
+          type = PositionType.String;
+          vpp();
+          if(isNewLine(getNextChar())) {
+            addToken(new Token(Type.Error, value, line, position, index));
+          }
+        }else {
           addToken(new Token(Type.Error, char, line, position, index));
         }
         break;
@@ -200,13 +212,13 @@ break;
 break;
             case keyword.EndFunction:
               addToken(new Token(Type.EndFunction, value, line, position, index));
-
+              break;
             case keyword.Globals:
               addToken(new Token(Type.Globals, value, line, position, index));
 break;
             case keyword.EndGlobals:
               addToken(new Token(Type.EndGlobals, value, line, position, index));
-
+              break;
             case keyword.If:
               addToken(new Token(Type.If, value, line, position, index));
 break;
@@ -221,7 +233,7 @@ break;
 break;
             case keyword.EndIf:
               addToken(new Token(Type.EndIf, value, line, position, index));
-
+              break;
             case keyword.Loop:
               addToken(new Token(Type.Loop, value, line, position, index));
 break;
@@ -230,41 +242,41 @@ break;
 break;
             case keyword.EndLoop:
               addToken(new Token(Type.EndLoop, value, line, position, index));
-
+              break;
 
             case keyword.Local:
               addToken(new Token(Type.Local, value, line, position, index));
 break;
             case keyword.Constant:
               addToken(new Token(Type.Constant, value, line, position, index));
-
+              break;
             case keyword.Array:
               addToken(new Token(Type.Array, value, line, position, index));
-
+              break;
             case keyword.Set:
               addToken(new Token(Type.Set, value, line, position, index));
-
+              break;
             case keyword.Call:
               addToken(new Token(Type.Call, value, line, position, index));
-
+              break;
             case keyword.Type:
               addToken(new Token(Type.Type, value, line, position, index));
 break;
             case keyword.Extends:
               addToken(new Token(Type.Extends, value, line, position, index));
-
+              break;
             case keyword.True:
               addToken(new Token(Type.True, value, line, position, index));
 break;
             case keyword.False:
               addToken(new Token(Type.False, value, line, position, index));
-
+              break;
             case keyword.Null:
               addToken(new Token(Type.Null, value, line, position, index));
-
+              break;
             case keyword.Nothing:
               addToken(new Token(Type.Nothing, value, line, position, index));
-
+              break;
             case keyword.Integer:
               addToken(new Token(Type.Integer, value, line, position, index));
 break;
@@ -282,7 +294,7 @@ break;
 break;
             case keyword.Code:
               addToken(new Token(Type.Code, value, line, position, index));
-
+              break;
             case keyword.And:
               addToken(new Token(Type.And, value, line, position, index));
 break;
@@ -369,8 +381,21 @@ break;
         break;
       case PositionType.Divisor:
         vpp();
-        if(isNewLine(getNextChar()) || index == content.length - 1) { 
+        if(isNewLine(getNextChar()) || isEnd()) { 
           addToken(new Token(Type.Comment, value, line, position, index));
+        }
+        break;
+      case PositionType.String:
+        vpp();
+        if(isMaohao(char)) {
+          if(!iszhuanyijiesu(value.substring(0, value.length - 1))) {
+            // 非转义情况下遇到 " 
+            addToken(new Token(Type.StringValue, value, line, position, index));
+          }else if(isNewLine(getNextChar()) || isEnd()) {
+            addToken(new Token(Type.Error, value, line, position, index));
+          }
+        }else if(isNewLine(getNextChar()) || isEnd()) {
+          addToken(new Token(Type.Error, value, line, position, index));
         }
         break;
       default:
@@ -400,8 +425,8 @@ export function isSpace(char: string): boolean {
 
 export function isNewLine(char: string): boolean {
   switch (char) {
-    case '\r\n':
     case '\n':
+    case '\r':
       return true;
     default:
       return false;
@@ -679,12 +704,34 @@ function isxiahuaxian(char: string): boolean {
   return false;
 }
 
-function isId(char: string) {
+function isId(char: string) : boolean{
   return isLetter(char) || isNumber(char) || isxiahuaxian(char);
 }
 
-function isnumberorletter(char: string) {
+function isnumberorletter(char: string) : boolean{
   return isLetter(char) || isNumber(char);
+}
+
+function iszhuangyi(char: string) : boolean{
+  return char == '\\';
+}
+
+
+function iszhuanyijiesu(value: string): boolean {
+  let is = false;
+  for (let index = value.length - 1; index >= 0; index--) {
+    const char = value.charAt(index);
+    if(iszhuangyi(char)) {
+      if(is) {
+        is = false;
+      }else{
+        is = true;
+      }
+    }else {
+      break;
+    }
+  }
+  return is;
 }
 
 namespace keyword {
@@ -743,20 +790,19 @@ namespace keyword {
   export const Debug = "debug";
 
 }
-
-const ts = tokens(`
-type name extends handle
-function func_name1 takes string a,unit unit2_ex returns nothing
-  local integer b = 12
-  local real c = 0.3
-  local real d = .2
-  local real d = 3.
-  local integer f = 'aaad'
-  local integer array g
-  set g[0] = 1
-endfunction
-`);
-
-console.log(ts);
+const start = new Date().getTime();
+const content = readFileSync("D:/project/jass2/src/resources/static/jass/blizzard.j", {
+  encoding: "UTF-8"
+}).toString().replace(/\r\n/g, "\n");
+console.log("读取文件时间 = " + (new Date().getTime() - start));
+const start2 = new Date().getTime();
+const ts = tokens(content);
+console.log("解析时间 = " + (new Date().getTime() - start2));
+// console.log(ts.map(t => t.type + " " +t.value));
 console.log("ts.length = " + ts.length);
+console.log(ts.filter(t => t.type == Type.Error))
 console.log("ts.error.length = " + ts.filter(t => t.type == Type.Error).length);
+
+// console.log(iszhuanyijiesu(`\\\\\\`))
+// console.log(`aaa`.substring(0, 2))
+console.log('\r\n'.length)
