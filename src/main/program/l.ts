@@ -808,7 +808,7 @@ console.log("ts.error.length = " + ts.filter(t => t.type == JTokenKind.Error).le
 // console.log(iszhuanyijiesu(`\\\\\\`))
 // console.log(`aaa`.substring(0, 2))
 console.log(tokens(`
-
+type name extends handle
 `))
 
 //=============================测试分割线结束================================
@@ -821,6 +821,10 @@ ast解析
  */
 class Jnode {
 
+}
+
+class JAst {
+  nodes:Array<Jnode> = new Array<Jnode>();
 }
 
 class Statement extends Jnode {
@@ -836,6 +840,10 @@ class Block extends Jnode {}
 class TypeDeclaration extends Statement{
   public name:string|null = null;
   public extends:string|null = null;
+
+  static instanceof(node:Jnode) :boolean {
+    return node instanceof TypeDeclaration;
+  }
 }
 
 class FunctionDeclaration extends Statement{
@@ -907,3 +915,60 @@ class IfStatement extends Statement {
 class Jexpression extends Jnode{
 
 }
+
+function ast(tokens:Array<JToken>) : JAst {
+  // if(tokens.length > 0 && tokens[tokens.length - 1].type != JTokenKind.Eof) {
+  //   tokens.push(new JToken(JTokenKind.Eof, "", 0, 0 , 0));
+  // }
+
+  const jAst = new JAst();
+  
+  enum NodeType {
+    Default,
+    Type,
+    Native,
+    Globals,
+    Function,
+    Error
+  }
+  let nodeType = NodeType.Default;
+  enum TypeType{
+    Id,
+  }
+  let typeType = TypeType.Id;
+  let node:Jnode|null = null;
+  for (let index = 0; index < tokens.length; index++) {
+    const token = tokens[index];
+    if(nodeType == NodeType.Default) {
+      if(token.type == JTokenKind.NewLine) {
+        continue;
+      } else if(token.type == JTokenKind.Type) {
+        node = new TypeDeclaration();
+        nodeType = NodeType.Type;
+      }else if(token.type == JTokenKind.Native) {
+        nodeType = NodeType.Native;
+      }else if(token.type == JTokenKind.Globals) {
+        nodeType = NodeType.Globals;
+      } else if(token.type == JTokenKind.Function) {
+        nodeType = NodeType.Function;
+      }else {
+        nodeType = NodeType.Error;
+      }
+    } else if(nodeType == NodeType.Type) {
+      node as TypeDeclaration;
+      if(typeType == TypeType.Id) {
+        if(token.type == JTokenKind.Identifier) {
+          // 类型id
+          
+        }
+      }
+    }
+  }
+
+  return jAst;
+}
+
+
+console.log(ast(tokens(`
+type name extends handle
+`)))

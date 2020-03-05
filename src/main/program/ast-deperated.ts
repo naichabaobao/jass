@@ -52,7 +52,7 @@ class ConstantStatement extends Statement {
 }
 
 class TypeStatement extends Statement {
-
+  
 }
 
 class IdentifierStatement extends Statement {
