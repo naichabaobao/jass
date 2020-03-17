@@ -2,6 +2,18 @@ import * as vscode from "vscode";
 import { Keyword } from "../main/keyword";
 import { language } from "../main/constant";
 
+
+/*
+思路
+理應支持jass語法，但又不影響其他語言
+globals 跟 endglobals 不受其他形式嵌套影響
+function endfunction 影響 if loop
+library 放棄支持
+當前版本暫保留，僅修復else縮進問題
+*/
+
+
+
 /// 格式化
 class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider {
 
@@ -66,6 +78,7 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
           libraryField++;
         }
         addTextEdit(creatTextEdit(0));
+        globalsField = 0;
       } else if (libraryEndRegExp.test(lineText)) {
         if (libraryField == 1) {
           libraryField--;
@@ -91,6 +104,7 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
           functionField++;
         }
         addTextEdit(creatTextEdit(libraryField));
+        globalsField = 0;
       } else if (functionEndRegExp.test(lineText)) {
         if (functionField == 1) {
           functionField--;
@@ -124,16 +138,20 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
         const exitwhenRegExp = new RegExp(`^\\s*${Keyword.Exitwhen}\\b`);
 
         if(elseRegExp.test(lineText) && ifField > 0){
-          addTextEdit(creatTextEdit(libraryField + globalsField + functionField + ifField + loopField - 1));
+          addTextEdit(creatTextEdit(libraryField + functionField + ifField + loopField - 1));
         }
         else if(elseIfRegExp.test(lineText) && ifField > 0){
-          addTextEdit(creatTextEdit(libraryField + globalsField + functionField + ifField + loopField - 1));
+          addTextEdit(creatTextEdit(libraryField + functionField + ifField + loopField - 1));
         }
         else if(exitwhenRegExp.test(lineText) && loopField > 0){
-          addTextEdit(creatTextEdit(libraryField + globalsField + functionField + ifField + loopField - 1));
+          addTextEdit(creatTextEdit(libraryField + functionField + ifField + loopField - 1));
         }
         else{
-          addTextEdit(creatTextEdit(libraryField + globalsField + functionField + ifField + loopField));
+          if(globalsField > 0) {
+            addTextEdit(creatTextEdit(globalsField));
+          }else{
+            addTextEdit(creatTextEdit(libraryField + functionField + ifField + loopField));
+          }
         }
  
       }
@@ -147,53 +165,7 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
   }
 
   provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
-
     return this.indentedFormatting(document, options);
-    const textEdits = new Array<vscode.TextEdit>();
-
-    // const text = document.getText();
-    // for (let i = 0; i < text.length; i++) {
-    //   const char = text.charAt(i);
-
-    // }
-
-    let field = 0;
-    for (let i = 0; i < document.lineCount; i++) {
-      const line = document.lineAt(i);
-      const trimLeftText = line.text.trimStart();
-      if (trimLeftText.startsWith(Keyword.Function) ||
-        ((trimLeftText.startsWith(Keyword.keywordPrivate) || trimLeftText.startsWith(Keyword.keywordPublic)) && trimLeftText.includes(Keyword.Function)) ||
-        trimLeftText.startsWith(Keyword.Globals) ||
-        trimLeftText.startsWith(Keyword.keywordLibrary) ||
-        trimLeftText.startsWith(Keyword.keywordScope) ||
-        trimLeftText.startsWith(Keyword.keywordInterface) ||
-        trimLeftText.startsWith(Keyword.keywordStruct ||
-          trimLeftText.startsWith(Keyword.If)) ||
-        trimLeftText.startsWith(Keyword.Loop)) {
-        if (line.firstNonWhitespaceCharacterIndex != field)
-          textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
-            "".padStart(field, "\t")));
-        field++;
-      } else if (trimLeftText.startsWith(Keyword.Endfunction) ||
-        trimLeftText.startsWith(Keyword.Endglobals) ||
-        trimLeftText.startsWith(Keyword.keywordEndLibrary) ||
-        trimLeftText.startsWith(Keyword.keywordEndScope) ||
-        trimLeftText.startsWith(Keyword.keywordEndInterface) ||
-        trimLeftText.startsWith(Keyword.keywordEndStruct) ||
-        trimLeftText.startsWith(Keyword.Endif) ||
-        trimLeftText.startsWith(Keyword.Endloop)) {
-        if (field >= 0) field--;
-        if (line.firstNonWhitespaceCharacterIndex != field)
-          textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
-            "".padStart(field, "\t")));
-      } else {
-        if (line.firstNonWhitespaceCharacterIndex != field)
-          textEdits.push(vscode.TextEdit.replace(new vscode.Range(line.lineNumber, 0, line.lineNumber, line.firstNonWhitespaceCharacterIndex),
-            "".padStart(field, "\t")));
-      }
-    }
-
-    return textEdits;
   }
 
 }

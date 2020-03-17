@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { language } from '../main/constant';
 import { toLines } from '../main/tool';
 import { Keyword } from '../main/keyword';
+import { isArray } from 'util';
 
 const globalStartRegExp = new RegExp(`^\\s*${Keyword.Globals}\\b`);
 const globalEndRegExp = new RegExp(`^\\s*${Keyword.Endglobals}\\b`);
@@ -23,7 +24,68 @@ const loopEndRegExp = new RegExp(`^\\s*${Keyword.Endloop}\\b`);
 const regionStartRegExp = new RegExp(`^\\s*//\\s*region\\b`);
 const endRegionRegExp = new RegExp(`^\\s*//\\s*endregion\\b`);
 
-class FoldingRangeProvider implements vscode.FoldingRangeProvider{
+class ElseIf {
+  public line: number;
+
+  constructor(line: number) {
+    this.line = line;
+  }
+}
+
+class ElseIfArray extends Array<ElseIf>{
+
+  public first = () => {
+    return this[0];
+  }
+
+  public last = () => {
+    return this[this.length - 1];
+  }
+
+}
+
+class If {
+  public line: number;
+  public elseIfArray: ElseIfArray = new ElseIfArray();
+  public elseLine: number | null = null;
+
+  constructor(line: number) {
+    this.line = line;
+  }
+
+}
+
+class IfArray extends Array<If>{
+
+  public first = () => {
+    return this[0];
+  }
+
+  public last = () => {
+    return this[this.length - 1];
+  }
+
+}
+
+class Loop {
+  public line:number;
+
+  constructor(line: number) {
+    this.line = line;
+  }
+}
+
+class LoopArray extends Array<Loop> {
+  public first = () => {
+    return this[0];
+  }
+
+  public last = () => {
+    return this[this.length - 1];
+  }
+}
+
+class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
   provideFoldingRanges(document: vscode.TextDocument, context: vscode.FoldingContext, token: vscode.CancellationToken): vscode.ProviderResult<vscode.FoldingRange[]> {
 
@@ -31,7 +93,7 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
 
     const content = document.getText();
     const lines = toLines(content);
-    
+
     let inGlobal = false;
     let globalLine = 0;
 
@@ -41,133 +103,133 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
     let inLibrary = false;
     let libraryLine = 0;
 
-    let inIf = false;
-    let ifLine = 0;
-    let ifField = 0;
-    const ifStack = new Array<number>();
-    function laseIfStack(){
-      return ifStack[ifStack.length - 1];
-    }
-    function setLast(line:number){
-      ifStack[ifStack.length - 1] = line;
-    }
+    const ifArray = new IfArray();
 
-    let inLoop = false;
-    let loopLine = 0;
-    const loopStack = new Array<number>();
-    function lastLoopStack(){
-      return loopStack[ifStack.length - 1];
-    }
-    function setLastLoopStack(line:number){
-      loopStack[loopStack.length - 1] = line;
-    }
+    const loopArray = new LoopArray();
 
     let inRegion = false;
     let regionLine = 0;
 
-    lines.forEach((line,index) => {
+    lines.forEach((line, index) => {
       // if
-      if(ifStartRegExp.test(line)){
-        ifStack.push(index);
-        // inIf = true;
-        // ifLine = index;
-        // ifField++;
-      }else if(elseRegExp.test(line)){
-        if(ifStack.length > 0){
-          const folding = new vscode.FoldingRange(laseIfStack(), index);
-          foldings.push(folding);
-          setLast(index);
+      if (ifStartRegExp.test(line)) {
+        ifArray.push(new If(index));
+      } else if (elseRegExp.test(line)) {
+        // 第一種 if else
+        // 第二種 elseif else
+        if (ifArray.length > 0) {
+          if (ifArray.last().elseIfArray.length > 0) { // if中含有elseif,開始行為elseif
+            if (index - ifArray.last().elseIfArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().elseIfArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          } else { // if -> else
+            if (index - ifArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          }
+          ifArray.last().elseLine = index;
         }
-        // if(inIf == true){
-        //   const folding = new vscode.FoldingRange(ifLine,index);
-        //   foldings.push(folding);
-        //   ifLine = index;
-        // }
-      }else if(elseIfRegExp.test(line)){
-        if(ifStack.length > 0){
-          const folding = new vscode.FoldingRange(laseIfStack(), index);
-          foldings.push(folding);
-          setLast(index);
+      } else if (elseIfRegExp.test(line)) {
+        if (ifArray.length > 0) {
+          if (ifArray.last().elseIfArray.length > 0) {
+            if (index - ifArray.last().elseIfArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().elseIfArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          } else {
+            if (index - ifArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          }
+          ifArray.last().elseIfArray.push(new ElseIf(index));
         }
-        // if(inIf == true){
-        //   const folding = new vscode.FoldingRange(ifLine,index);
-        //   foldings.push(folding);
-        //   ifLine = index;
-        // }
-      }else if(ifEndRegExp.test(line)){
-        if(ifStack.length > 0){
-          const line = ifStack.pop() as number;
-          const folding = new vscode.FoldingRange(line, index);
-          foldings.push(folding);
+      } else if (ifEndRegExp.test(line)) {
+        const elseLine = ifArray.last().elseLine;
+        if (elseLine) {
+          if (index - elseLine > 1) {
+            const folding = new vscode.FoldingRange(elseLine, index - 1);
+            foldings.push(folding);
+          }
+        } else if (ifArray.length > 0) {
+          if (ifArray.last().elseIfArray.length > 0) {
+            if (index - ifArray.last().elseIfArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().elseIfArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          } else {
+            if (index - ifArray.last().line > 1) {
+              const folding = new vscode.FoldingRange(ifArray.last().line, index - 1);
+              foldings.push(folding);
+            }
+          }
+          ifArray.pop();
         }
-        // if(inIf == true){
-        //   const folding = new vscode.FoldingRange(ifLine,index);
-        //   foldings.push(folding);
-        //   inIf = false;
-        // }
       }
-      // loop
-      // else if(loopStartRegExp.test(line)){
-      //   inLoop = true;
-      //   loopLine = index;
-      // }else if(loopEndRegExp.test(line)){
-      //   if(inLoop == true){
-      //     const folding = new vscode.FoldingRange(loopLine,index);
-      //     foldings.push(folding);
-      //     inLoop = false;
-      //   }
-      // }
-      if(loopStartRegExp.test(line)){
-        loopStack.push(index);
-      }else if(loopEndRegExp.test(line)){
-        if(loopStack.length > 0){
-          const line = loopStack.pop() as number;
-          const folding = new vscode.FoldingRange(line, index);
-          foldings.push(folding);
+
+      if (loopStartRegExp.test(line)) {
+        loopArray.push(new Loop(index));
+      } else if (loopEndRegExp.test(line)) {
+        if (loopArray.length > 0) {
+          if(index - loopArray.last().line > 1) {
+            const folding = new vscode.FoldingRange(loopArray.last().line, index - 1);
+            foldings.push(folding);
+          }
+          loopArray.pop();
         }
       }
       // global
-      else if(globalStartRegExp.test(line)){
+      else if (globalStartRegExp.test(line)) {
         inGlobal = true;
         globalLine = index;
-      }else if(globalEndRegExp.test(line)){
-        if(inGlobal == true){
-          const folding = new vscode.FoldingRange(globalLine,index);
-          foldings.push(folding);
-          inGlobal = false;
+      } else if (globalEndRegExp.test(line)) {
+        if (inGlobal == true) {
+          if(index - globalLine > 1) {
+            const folding = new vscode.FoldingRange(globalLine, index - 1);
+            foldings.push(folding);
+            inGlobal = false;
+          }
         }
       }
       // function
-      else if(functionStartRegExp.test(line)){
+      else if (functionStartRegExp.test(line)) {
         inFunction = true;
         functionLine = index;
-      }else if(functionEndRegExp.test(line)){
-        if(inFunction == true){
-          const folding = new vscode.FoldingRange(functionLine,index);
-          foldings.push(folding);
-          inFunction = false;
+      } else if (functionEndRegExp.test(line)) {
+        if (inFunction == true) {
+          if (index - functionLine > 1) {
+            const folding = new vscode.FoldingRange(functionLine, index);
+            foldings.push(folding);
+            inFunction = false;
+          }
         }
       }
       // library
-      else if(libraryStartRegExp.test(line)){
+      else if (libraryStartRegExp.test(line)) {
         inLibrary = true;
         libraryLine = index;
-      }else if(libraryEndRegExp.test(line)){
-        if(inLibrary == true){
-          const folding = new vscode.FoldingRange(libraryLine,index);
-          foldings.push(folding);
-          inLibrary = false;
+      } else if (libraryEndRegExp.test(line)) {
+        if (inLibrary == true) {
+          if(index - libraryLine > 1) {
+            const folding = new vscode.FoldingRange(libraryLine, index - 1);
+            foldings.push(folding);
+            inLibrary = false;
+          }
         }
       }
       // region
-      else if(regionStartRegExp.test(line)){
+      else if (regionStartRegExp.test(line)) {
         inRegion = true;
         regionLine = index;
-      }else if(endRegionRegExp.test(line)){
-        if(inRegion == true){
-          const folding = new vscode.FoldingRange(regionLine,index, vscode.FoldingRangeKind.Region);
-          foldings.push(folding);
-          inRegion = false;
+      } else if (endRegionRegExp.test(line)) {
+        if (inRegion == true) {
+          if(index - regionLine > 1) {
+            const folding = new vscode.FoldingRange(regionLine, index - 1, vscode.FoldingRangeKind.Region);
+            foldings.push(folding);
+            inRegion = false;
+          }
         }
       }
 
@@ -179,4 +241,4 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider{
 
 }
 
-vscode.languages.registerFoldingRangeProvider(language,new FoldingRangeProvider);
+vscode.languages.registerFoldingRangeProvider(language, new FoldingRangeProvider);
