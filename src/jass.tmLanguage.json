@@ -180,6 +180,7 @@
         {"include": "#jass-keyword"},
         { "include": "#vjass-keyword" },
         {"include": "#jass-keyword-control"},
+        {"include": "#jass-const"},
         {"include": "#jass-keyword-operator"},
         {"include": "#jass-type"},
         {"include": "#jass-class"},

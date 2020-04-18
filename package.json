@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "keywords": [
     "jass",
     "warcraft"
@@ -32,17 +32,22 @@
       "type": "object",
       "title": "Jass",
       "properties": {
+        "jass.common_j": {
+          "type": "string",
+          "default": null,
+          "description": "自定义common.j,不设置时默认使用插件提供的common.j\n(Customize common.j, using the common.j provided by the plug-in by default when not set)\n(common.jをカスタマイズし、設定しない場合はデフォルトでプラグインが提供するcommon.jを使用する)"
+        },
         "jass.includes": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "包含路徑或文件,插件會找到.j|.ai"
+          "description": "包含路徑或文件(如：ydwe，japi等),插件會找到.j|.ai\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find. J |.ai)\n(含ま経路やファイル(如:ydwe、japiなど)、j | . aiプラグインをする。)"
         },
         "jass.diagnostic.support": {
           "type": "boolean", 
           "default": true,
-          "description": "是否开始错误检查(目前仅支持call检查)"
+          "description": "是否开始错误检查(目前仅支持call检查)\n(Whether to start error checking (currently only support call checking))\n(エラーチェックを開始するかどうか(現在はcallチェックのみ対応))"
         }
       }
     },
