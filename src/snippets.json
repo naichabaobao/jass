@@ -5,25 +5,25 @@
   },
   "if": {
     "prefix": "if",
-    "body": "if ${1:condition} then\n\t${0:// TODO}\nendif",
+    "body": "if ${1:condition} then\n\t${0:}\nendif",
     "description": "if",
     "scope": "source.jass"
   },
   "ifelse": {
     "prefix": "ifelse",
-    "body": "if ${1:condition} then\n\t${2:// TODO}\nelse\n\t${0:// TODO}\nendif",
+    "body": "if ${1:condition} then\n\t${2:}\nelse\n\t${0:}\nendif",
     "description": "ifelse",
     "scope": "source.jass"
   },
   "elseif": {
     "prefix": "elif",
-    "body": "elseif ${1:condition} then\n\t${0:// TODO}\n",
+    "body": "elseif ${1:condition} then\n\t${0:}\n",
     "description": "elseif",
     "scope": "source.jass"
   },
   "function": {
     "prefix": "function",
-    "body": "function ${1:function_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:// TODO}\nendfunction",
+    "body": "function ${1:function_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:}\nendfunction",
     "description": "function",
     "scope": "source.jass"
   },
@@ -35,7 +35,7 @@
   },
   "loop": {
     "prefix": "loop",
-    "body": "loop\n\texitwhen ${1:condition}\n\t${0:// TODO}\nendloop",
+    "body": "loop\n\texitwhen ${1:condition}\n\t${0:}\nendloop",
     "description": "loop循环",
     "scope": "source.jass"
   },
@@ -47,43 +47,43 @@
   },
   "main": {
     "prefix": "main",
-    "body": "function main takes nothing returns nothing\n\t${0:// TODO}\nendfunction",
+    "body": "function main takes nothing returns nothing\n\t${0:}\nendfunction",
     "description": "main",
     "scope": "source.jass"
   },
   "config": {
     "prefix": "config",
-    "body": "function config takes nothing returns nothing\n\t${0:// TODO}\nendfunction",
+    "body": "function config takes nothing returns nothing\n\t${0:}\nendfunction",
     "description": "config",
     "scope": "source.jass"
   },
   "library": {
     "prefix": "library",
-    "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:// TODO}\n\tendfunction\nendlibrary\n",
+    "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:}\n\tendfunction\nendlibrary\n",
     "description": "library",
     "scope": "source.jass"
   },
   "method": {
     "prefix": "method",
-    "body": "method ${1:method_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:// TODO}\nendmethod",
+    "body": "method ${1:method_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:}\nendmethod",
     "description": "method",
     "scope": "source.jass"
   },
   "struct": {
     "prefix": "struct",
-    "body": "struct ${1:struct_name}\n\t${0:// TODO}\nendstruct",
+    "body": "struct ${1:struct_name}\n\t${0:}\nendstruct",
     "description": "struct",
     "scope": "source.jass"
   },
   "inject": {
     "prefix": "inject",
-    "body": "//! inject main\n\t//! dovjassinit\n\t${0:// TODO}\n//! endinject",
+    "body": "//! inject main\n\t//! dovjassinit\n\t${0:}\n//! endinject",
     "description": "inject",
     "scope": "source.jass"
   },
   "textmacro": {
     "prefix": "textmacro",
-    "body": "//! textmacro textmacro_name takes args\n\t${0:// TODO \\$args\\$}\n//! endtextmacro",
+    "body": "//! textmacro textmacro_name takes args\n\t${0:\\$args\\$}\n//! endtextmacro",
     "description": "文本宏",
     "scope": "source.jass"
   }
