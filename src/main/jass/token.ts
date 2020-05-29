@@ -85,10 +85,7 @@ class TokenParser {
   private support_zinc = false;
   private support_lua = false;
 
-  private need_type = false;
-  private need_native = false;
-  private need_globals = true;
-  private need_function = true;
+
 
   constructor(content: string) {
     this._content = content;
