@@ -11,7 +11,8 @@
 		"strict": true,   /* enable all strict type-checking options */
 		"removeComments": true,
 		"strictNullChecks": true,
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"downlevelIteration": true
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */

@@ -24,7 +24,7 @@ class Token {
 }
 var LexicalType;
 (function (LexicalType) {
-    LexicalType["default"] = "\u9ED8\u8A8D";
+    LexicalType["default"] = "default";
     LexicalType["id"] = "id";
     LexicalType["op"] = "op";
     LexicalType["zero"] = "zero";
@@ -64,10 +64,6 @@ class TokenParser {
         this.support_vjass = false;
         this.support_zinc = false;
         this.support_lua = false;
-        this.need_type = false;
-        this.need_native = false;
-        this.need_globals = true;
-        this.need_function = true;
         /// 配置是否改变
         this._changed = true;
         this._tokens = new Array();
@@ -197,8 +193,6 @@ class TokenParser {
                                 }
                                 else if (LexicalTool.isLeftBracketSign(char)
                                     || LexicalTool.isRightBracketSign(char)
-                                    || LexicalTool.isLeftBraceSign(char)
-                                    || LexicalTool.isRightBraceSign(char)
                                     || LexicalTool.isLeftSquareBracketSign(char)
                                     || LexicalTool.isRightSquareBracketSign(char)
                                     || LexicalTool.isCommaSign(char)
@@ -718,6 +712,7 @@ LexicalTool.keywords = [
     "not",
     "debug"
 ];
-const parserData = new TokenParser(`real      bj_RADTODEG                      = 180.0/bj_PI
-constant real      bj_DEGTORAD                      = bj_PI/180.0`);
-console.log(parserData.tokens());
+// const parserData = new TokenParser(`real      bj_RADTODEG                      = 180.0/bj_PI
+// constant real      bj_DEGTORAD                      = bj_PI/180.0`);
+// console.log(parserData.tokens());
+export { Token, TokenParser, LexicalType, LexicalTool };
