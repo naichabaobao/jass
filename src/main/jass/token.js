@@ -1,27 +1,51 @@
-class Token {
-    constructor(type, value, location) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Token = /** @class */ (function () {
+    function Token(type, value, location) {
         var _a, _b;
         this._type = type;
         this._value = value;
         this._line = (_a = location === null || location === void 0 ? void 0 : location.line) !== null && _a !== void 0 ? _a : -1;
         this._position = (_b = location === null || location === void 0 ? void 0 : location.position) !== null && _b !== void 0 ? _b : -1;
     }
-    get type() {
-        return this._type;
-    }
-    get value() {
-        return this._value;
-    }
-    get line() {
-        return this._line;
-    }
-    get position() {
-        return this._position;
-    }
-    get end_position() {
-        return this._position + this.value.length;
-    }
-}
+    Object.defineProperty(Token.prototype, "type", {
+        get: function () {
+            return this._type;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Token.prototype, "value", {
+        get: function () {
+            return this._value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Token.prototype, "line", {
+        get: function () {
+            return this._line;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Token.prototype, "position", {
+        get: function () {
+            return this._position;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Token.prototype, "end_position", {
+        get: function () {
+            return this._position + this.value.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Token;
+}());
+exports.Token = Token;
 var LexicalType;
 (function (LexicalType) {
     LexicalType["default"] = "default";
@@ -58,8 +82,9 @@ var LexicalType;
     LexicalType["eq"] = "eq";
     LexicalType["other"] = "other";
 })(LexicalType || (LexicalType = {}));
-class TokenParser {
-    constructor(content) {
+exports.LexicalType = LexicalType;
+var TokenParser = /** @class */ (function () {
+    function TokenParser(content) {
         this.supportJass = true;
         this.support_vjass = false;
         this.support_zinc = false;
@@ -69,10 +94,14 @@ class TokenParser {
         this._tokens = new Array();
         this._content = content;
     }
-    get content() {
-        return this._content;
-    }
-    tokens() {
+    Object.defineProperty(TokenParser.prototype, "content", {
+        get: function () {
+            return this._content;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TokenParser.prototype.tokens = function () {
         if (this._content.length > 0) {
             if (this.support_vjass && this.support_zinc && this.support_lua) {
             }
@@ -90,106 +119,106 @@ class TokenParser {
             }
             else if (this.supportJass) {
                 if (this._changed) {
-                    const tokens = new Array();
-                    let index = 0;
-                    const content = this._content;
-                    const getChar = function () {
-                        return content[index++];
+                    var tokens_1 = new Array();
+                    var index_1 = 0;
+                    var content_1 = this._content;
+                    var getChar = function () {
+                        return content_1[index_1++];
                     };
-                    let value = "";
-                    let type = LexicalType.default;
-                    let line = 0;
-                    let position = 0;
-                    let char;
-                    while (char = getChar()) {
-                        value += char;
+                    var value_1 = "";
+                    var type_1 = LexicalType.default;
+                    var line_1 = 0;
+                    var position_1 = 0;
+                    var char = void 0;
+                    var _loop_1 = function () {
+                        value_1 += char;
                         /// 开始只能是字母，//,\n,\s
-                        const clear = function () {
-                            value = "";
+                        var clear = function () {
+                            value_1 = "";
                         };
                         /// 添加token
-                        const pushToken = function (tokenType) {
-                            tokens.push(new Token(tokenType, value, {
-                                line,
-                                position
+                        var pushToken = function (tokenType) {
+                            tokens_1.push(new Token(tokenType, value_1, {
+                                line: line_1,
+                                position: position_1
                             }));
                             clear();
-                            type = LexicalType.default;
+                            type_1 = LexicalType.default;
                         };
-                        const pushKeywordToken = function () {
+                        var pushKeywordToken = function () {
                             pushToken("keyword");
                         };
-                        const pushOperationToken = function () {
+                        var pushOperationToken = function () {
                             pushToken("operation");
                         };
-                        const pushIdentifierToken = function () {
+                        var pushIdentifierToken = function () {
                             pushToken("identifier");
                         };
-                        const pushValueToken = function () {
+                        var pushValueToken = function () {
                             pushToken("value");
                         };
-                        const pushCommentToken = function () {
+                        var pushCommentToken = function () {
                             pushToken("comment");
                         };
-                        const pushOtherToken = function () {
+                        var pushOtherToken = function () {
                             pushToken("other");
                         };
-                        switch (type) {
+                        switch (type_1) {
                             case LexicalType.default:
                                 if (LexicalTool.isColonSign(char)) {
                                     // " 左冒号
-                                    type = LexicalType.string;
+                                    type_1 = LexicalType.string;
                                 }
                                 else if (LexicalTool.isDivisionSign(char)) {
                                     // /
-                                    type = LexicalType.div;
+                                    type_1 = LexicalType.div;
                                 }
                                 else if (LexicalTool.isSingleQuotesSign(char)) {
                                     // ' 左单引号号
-                                    type = LexicalType.code;
+                                    type_1 = LexicalType.code;
                                 }
                                 else if (LexicalTool.isLetter(char)) {
-                                    type = LexicalType.id;
+                                    type_1 = LexicalType.id;
                                 }
                                 else if (LexicalTool.isNumber0(char)) {
                                     // 0 小数或者十六进制或者八进制
-                                    type = LexicalType.zero;
+                                    type_1 = LexicalType.zero;
                                 }
                                 else if (LexicalTool.isDollarSign(char)) {
                                     // $ 十六进制
-                                    type = LexicalType.dollar;
+                                    type_1 = LexicalType.dollar;
                                 }
                                 else if (LexicalTool.isPointSign(char)) {
                                     // .
-                                    type = LexicalType.point;
+                                    type_1 = LexicalType.point;
                                 }
                                 else if (LexicalTool.isNumber(char)) {
                                     // 1-9
-                                    type = LexicalType.number;
+                                    type_1 = LexicalType.number;
                                 }
                                 else if (LexicalTool.isDivisionSign(char)) {
                                     // /
-                                    type = LexicalType.div;
+                                    type_1 = LexicalType.div;
                                 }
                                 else if (LexicalTool.isExclamationSign(char)) {
                                     // !
-                                    type = LexicalType.exclamation;
+                                    type_1 = LexicalType.exclamation;
                                 }
                                 else if (LexicalTool.isGtSign(char)) {
                                     // >
-                                    type = LexicalType.gt;
+                                    type_1 = LexicalType.gt;
                                 }
                                 else if (LexicalTool.isLtSign(char)) {
                                     // <
-                                    type = LexicalType.it;
+                                    type_1 = LexicalType.it;
                                 }
                                 else if (LexicalTool.isEqualSign(char)) {
                                     // =
-                                    type = LexicalType.eq;
+                                    type_1 = LexicalType.eq;
                                 }
                                 else if (LexicalTool.isEqualSign(char)) {
                                     // =
-                                    type = LexicalType.eq;
+                                    type_1 = LexicalType.eq;
                                 }
                                 else if (LexicalTool.isLeftBracketSign(char)
                                     || LexicalTool.isRightBracketSign(char)
@@ -201,90 +230,90 @@ class TokenParser {
                                     || LexicalTool.isProductSign(char)
                                     || LexicalTool.isNewLine(char)) {
                                     // () {} [] ,
-                                    type = LexicalType.op;
+                                    type_1 = LexicalType.op;
                                 }
                                 else if (LexicalTool.isSpace(char)) {
                                     clear();
                                 }
                                 else {
-                                    type = LexicalType.other;
+                                    type_1 = LexicalType.other;
                                 }
                                 break;
                             case LexicalType.zero:
                                 if (LexicalTool.isPointSign(char)) { // 小数
-                                    type = LexicalType.decimals;
+                                    type_1 = LexicalType.decimals;
                                 }
                                 else if (LexicalTool.isLetterX(char)) { // 十六进制
-                                    type = LexicalType.hex;
+                                    type_1 = LexicalType.hex;
                                 }
                                 else if (LexicalTool.isNumber0_7(char)) { // 八进制
-                                    type = LexicalType.octal;
+                                    type_1 = LexicalType.octal;
                                 }
                                 break;
                             case LexicalType.dollar:
                                 if (LexicalTool.isHexNumber(char)) {
-                                    type = LexicalType.hex;
+                                    type_1 = LexicalType.hex;
                                 }
                                 break;
                             case LexicalType.string:
                                 // 为"并且前面不是\（转移）
-                                if (LexicalTool.isColonSign(char) && !value.endsWith("\\")) {
-                                    type = LexicalType.close_string;
+                                if (LexicalTool.isColonSign(char) && !value_1.endsWith("\\")) {
+                                    type_1 = LexicalType.close_string;
                                 }
                                 break;
                             case LexicalType.code:
                                 if (LexicalTool.isSingleQuotesSign(char)) {
-                                    type = LexicalType.close_code;
+                                    type_1 = LexicalType.close_code;
                                 }
                                 else if (!(LexicalTool.isLetter(char) || LexicalTool.isNumber(char))) {
-                                    type = LexicalType.close_code;
+                                    type_1 = LexicalType.close_code;
                                 }
                                 break;
                             case LexicalType.point:
                                 if (LexicalTool.isNumber(char)) {
-                                    type = LexicalType.decimals;
+                                    type_1 = LexicalType.decimals;
                                 }
                                 break;
                             case LexicalType.number:
                                 if (LexicalTool.isPointSign(char)) {
-                                    type = LexicalType.decimals;
+                                    type_1 = LexicalType.decimals;
                                 }
                                 break;
                             case LexicalType.div:
                                 if (LexicalTool.isDivisionSign(char)) {
-                                    type = LexicalType.comment;
+                                    type_1 = LexicalType.comment;
                                 }
                                 break;
                             case LexicalType.exclamation:
                                 if (LexicalTool.isEqualSign(char)) {
-                                    type = LexicalType.op;
+                                    type_1 = LexicalType.op;
                                 }
                                 break;
                             case LexicalType.gt:
                                 if (LexicalTool.isEqualSign(char)) {
-                                    type = LexicalType.op;
+                                    type_1 = LexicalType.op;
                                 }
                                 break;
                             case LexicalType.it:
                                 if (LexicalTool.isEqualSign(char)) {
-                                    type = LexicalType.op;
+                                    type_1 = LexicalType.op;
                                 }
                                 break;
                             case LexicalType.eq:
                                 if (LexicalTool.isEqualSign(char)) {
-                                    type = LexicalType.op;
+                                    type_1 = LexicalType.op;
                                 }
                                 break;
                         }
                         /// 判断下个字符是否终结
-                        const over = () => {
-                            const nextChar = content.charAt(index);
-                            switch (type) {
+                        var over = function () {
+                            var nextChar = content_1.charAt(index_1);
+                            switch (type_1) {
                                 case LexicalType.default:
                                     break;
                                 case LexicalType.id:
                                     if (!(LexicalTool.isLetter(nextChar) || LexicalTool.isNumber(nextChar) || LexicalTool.isUnderlineSign(nextChar))) {
-                                        if (LexicalTool.isKeyword(value)) { // keyword
+                                        if (LexicalTool.isKeyword(value_1)) { // keyword
                                             pushKeywordToken();
                                         }
                                         else {
@@ -379,340 +408,357 @@ class TokenParser {
                         };
                         over();
                         if (LexicalTool.isNewLine(char)) {
-                            line++;
-                            position = 0;
+                            line_1++;
+                            position_1 = 0;
                         }
                         else {
-                            position++;
+                            position_1++;
                         }
+                    };
+                    while (char = getChar()) {
+                        _loop_1();
                     }
-                    this._tokens = tokens;
+                    this._tokens = tokens_1;
                     this._changed = false;
                 }
             }
             return this._tokens;
         }
         return [];
-    }
+    };
     /// 设置已改变状态
-    _change() {
+    TokenParser.prototype._change = function () {
         this._changed = true;
+    };
+    Object.defineProperty(TokenParser.prototype, "supportVjass", {
+        get: function () {
+            return this.support_vjass;
+        },
+        set: function (isSupportVjass) {
+            if (this.support_vjass !== isSupportVjass) {
+                this._change();
+                this.support_vjass = isSupportVjass;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TokenParser.prototype, "supportZinc", {
+        get: function () {
+            return this.support_zinc;
+        },
+        set: function (isSupportZinc) {
+            if (this.support_zinc !== isSupportZinc) {
+                this._change();
+                this.support_zinc = isSupportZinc;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TokenParser.prototype, "supportLua", {
+        get: function () {
+            return this.support_lua;
+        },
+        set: function (isSupportLua) {
+            if (this.support_lua !== isSupportLua) {
+                this._change();
+                this.support_lua = isSupportLua;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TokenParser;
+}());
+exports.TokenParser = TokenParser;
+var LexicalTool = /** @class */ (function () {
+    function LexicalTool() {
     }
-    get supportVjass() {
-        return this.support_vjass;
-    }
-    set supportVjass(isSupportVjass) {
-        if (this.support_vjass !== isSupportVjass) {
-            this._change();
-            this.support_vjass = isSupportVjass;
-        }
-    }
-    get supportZinc() {
-        return this.support_zinc;
-    }
-    set supportZinc(isSupportZinc) {
-        if (this.support_zinc !== isSupportZinc) {
-            this._change();
-            this.support_zinc = isSupportZinc;
-        }
-    }
-    get supportLua() {
-        return this.support_lua;
-    }
-    set supportLua(isSupportLua) {
-        if (this.support_lua !== isSupportLua) {
-            this._change();
-            this.support_lua = isSupportLua;
-        }
-    }
-}
-class LexicalTool {
-    static isChar(char) {
+    LexicalTool.isChar = function (char) {
         return char.length === 1;
-    }
+    };
     ;
     /**
     A~Z ：65~90
     a~z ：97~122
     */
-    static isLetter(char) {
+    LexicalTool.isLetter = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code >= 65 && code <= 90 || code >= 97 && code <= 122;
         })();
-    }
+    };
     /**
     A~Z ：65~90
     a~z ：97~122
     */
-    static isLowerLetter(char) {
+    LexicalTool.isLowerLetter = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code >= 97 && code <= 122;
         })();
-    }
+    };
     /**
     A~Z ：65~90
     a~z ：97~122
     */
-    static isUpperLetter(char) {
+    LexicalTool.isUpperLetter = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code >= 65 && code <= 90;
         })();
-    }
+    };
     /**
     X ：88
     x ：120
     */
-    static isLetterX(char) {
+    LexicalTool.isLetterX = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code === 88 || code === 120;
         })();
-    }
+    };
     /**
     0～9 : 48～57
     */
-    static isNumber(char) {
+    LexicalTool.isNumber = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code >= 48 && code <= 57;
         })();
-    }
+    };
     /**
     0～9 : 48～57
     a～f : 97～102
     A～F : 65～70
     */
-    static isHexNumber(char) {
+    LexicalTool.isHexNumber = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return (code >= 48 && code <= 57) || (code >= 97 && code <= 102) || (code >= 65 && code <= 70);
         })();
-    }
+    };
     /**
     0～7 : 48～55
     */
-    static isNumber0_7(char) {
+    LexicalTool.isNumber0_7 = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code >= 48 && code <= 55;
         })();
-    }
+    };
     /**
     0 : 48
     */
-    static isNumber0(char) {
+    LexicalTool.isNumber0 = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 48;
-    }
+    };
     /**
     / : 47
     */
-    static isLeftForwardSlash(char) {
+    LexicalTool.isLeftForwardSlash = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 47;
-    }
+    };
     /**
     \ : 92
     */
-    static isRightForwardSlash(char) {
+    LexicalTool.isRightForwardSlash = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 92;
-    }
+    };
     /**
     = : 61
     */
-    static isEqualSign(char) {
+    LexicalTool.isEqualSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 61;
-    }
+    };
     /**
     + : 43
     */
-    static isPlusSign(char) {
+    LexicalTool.isPlusSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 43;
-    }
+    };
     /**
     \- : 45
     */
-    static isSubtractionSign(char) {
+    LexicalTool.isSubtractionSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 45;
-    }
+    };
     /**
     \* : 42
     */
-    static isProductSign(char) {
+    LexicalTool.isProductSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 42;
-    }
+    };
     /**
     / : 47
     */
-    static isDivisionSign(char) {
+    LexicalTool.isDivisionSign = function (char) {
         return this.isChar(char) && this.isLeftForwardSlash(char);
-    }
+    };
     /**
     " : 34
     */
-    static isColonSign(char) {
+    LexicalTool.isColonSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 34;
-    }
+    };
     /**
     ' : 39
     */
-    static isSingleQuotesSign(char) {
+    LexicalTool.isSingleQuotesSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 39;
-    }
+    };
     /**
     ( : 40
     */
-    static isLeftBracketSign(char) {
+    LexicalTool.isLeftBracketSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 40;
-    }
+    };
     /**
     ) : 41
     */
-    static isRightBracketSign(char) {
+    LexicalTool.isRightBracketSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 41;
-    }
+    };
     /**
     { : 123
     */
-    static isLeftBraceSign(char) {
+    LexicalTool.isLeftBraceSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 123;
-    }
+    };
     /**
     } : 125
     */
-    static isRightBraceSign(char) {
+    LexicalTool.isRightBraceSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 125;
-    }
+    };
     /**
     [ : 91
     */
-    static isLeftSquareBracketSign(char) {
+    LexicalTool.isLeftSquareBracketSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 91;
-    }
+    };
     /**
     ] : 93
     */
-    static isRightSquareBracketSign(char) {
+    LexicalTool.isRightSquareBracketSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 93;
-    }
+    };
     /**
     , : 44
     */
-    static isCommaSign(char) {
+    LexicalTool.isCommaSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 44;
-    }
+    };
     /**
     _ : 95
     */
-    static isUnderlineSign(char) {
+    LexicalTool.isUnderlineSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 95;
-    }
+    };
     /**
     $ : 36
     */
-    static isDollarSign(char) {
+    LexicalTool.isDollarSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 36;
-    }
+    };
     /**
     . : 46
     */
-    static isPointSign(char) {
+    LexicalTool.isPointSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 46;
-    }
+    };
     /**
     ! : 33
     */
-    static isExclamationSign(char) {
+    LexicalTool.isExclamationSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 33;
-    }
+    };
     /**
     > : 62
     */
-    static isGtSign(char) {
+    LexicalTool.isGtSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 62;
-    }
+    };
     /**
     < : 60
     */
-    static isLtSign(char) {
+    LexicalTool.isLtSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 60;
-    }
+    };
     /**
     ; : 59
     */
-    static isSemicolonSign(char) {
+    LexicalTool.isSemicolonSign = function (char) {
         return this.isChar(char) && char.charCodeAt(0) === 59;
-    }
+    };
     /**
     \n : 10
     \r : 13
     */
-    static isNewLine(char) {
+    LexicalTool.isNewLine = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code === 10 || code === 13;
         })()
             ||
                 char.length == 2 && char.charCodeAt(0) === 13 && char.charCodeAt(1) === 10;
-    }
+    };
     /**
       : 32
     \t : 9
     */
-    static isSpace(char) {
+    LexicalTool.isSpace = function (char) {
         return this.isChar(char) && (function () {
-            const code = char.charCodeAt(0);
+            var code = char.charCodeAt(0);
             return code === 32 || code === 9;
         })();
-    }
-    static isKeyword(id) {
+    };
+    LexicalTool.isKeyword = function (id) {
         return this.keywords.includes(id);
-    }
-    static isNotKeyword(id) {
+    };
+    LexicalTool.isNotKeyword = function (id) {
         return !this.keywords.includes(id);
-    }
-}
-LexicalTool.keywords = [
-    "native",
-    "function",
-    "takes",
-    "returns",
-    "return",
-    "endfunction",
-    "globals",
-    "endglobals",
-    "if",
-    "then",
-    "else",
-    "elseif",
-    "endif",
-    "loop",
-    "exitwhen",
-    "endloop",
-    "local",
-    "constant",
-    "array",
-    "set",
-    "call",
-    "type",
-    "extends",
-    "true",
-    "false",
-    "null",
-    "nothing",
-    "integer",
-    "real",
-    "boolean",
-    "string",
-    "handle",
-    "code",
-    "and",
-    "or",
-    "not",
-    "debug"
-];
-// const parserData = new TokenParser(`real      bj_RADTODEG                      = 180.0/bj_PI
-// constant real      bj_DEGTORAD                      = bj_PI/180.0`);
-// console.log(parserData.tokens());
-export { Token, TokenParser, LexicalType, LexicalTool };
+    };
+    LexicalTool.keywords = [
+        "native",
+        "function",
+        "takes",
+        "returns",
+        "return",
+        "endfunction",
+        "globals",
+        "endglobals",
+        "if",
+        "then",
+        "else",
+        "elseif",
+        "endif",
+        "loop",
+        "exitwhen",
+        "endloop",
+        "local",
+        "constant",
+        "array",
+        "set",
+        "call",
+        "type",
+        "extends",
+        "true",
+        "false",
+        "null",
+        "nothing",
+        "integer",
+        "real",
+        "boolean",
+        "string",
+        "handle",
+        "code",
+        "and",
+        "or",
+        "not",
+        "debug"
+    ];
+    return LexicalTool;
+}());
+exports.LexicalTool = LexicalTool;

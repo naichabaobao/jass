@@ -3,6 +3,7 @@
 */
 
 import {Token,TokenParser, LexicalTool} from './token';
+import { j } from '../constant';
 
 class Statement {
   public readonly range:Range = Range.default();
@@ -83,18 +84,25 @@ class Comment implements Statement{
 
 class Type implements Statement{
   public readonly range: Range = Range.default();
+  private static readonly baseTypes = ["boolean", "integer", "real", "string", "code", "handle"];
+  private static readonly booleanType = new Type(Type.baseTypes[0]);
+  private static readonly integerType = new Type(Type.baseTypes[1]);
+  private static readonly realType = new Type(Type.baseTypes[2]);
+  private static readonly stringType = new Type(Type.baseTypes[3]);
+  private static readonly codeType = new Type(Type.baseTypes[4]);
+  private static readonly handleType = new Type(Type.baseTypes[5]);
   private static _types:Map<string,Type> = new Map<string,Type>([
-    ["boolean", new Type("boolean")],
-    ["integer", new Type("integer")],
-    ["real", new Type("real")],
-    ["string", new Type("string")],
+    ["boolean", Type.booleanType],
+    ["integer", Type.integerType],
+    ["real", Type.realType],
+    ["string", Type.stringType],
     // 對象樹中允許local code name的寫法，後面通過預編譯禁止；
-    ["code", new Type("code")],
-    ["handle", new Type("handle")]
+    ["code", Type.codeType],
+    ["handle", Type.handleType]
   ]);
 
   private readonly name:string;
-  protected readonly extend:Type = Type.get("handle") as Type;
+  protected readonly extend:Type = Type.handleType;
 
   private constructor (name:string, extend?:Type) {
     this.name = name;
@@ -129,6 +137,10 @@ class Type implements Statement{
     return types;
   }
   
+  public static isBaseType = (name:string) => {
+    return Type.baseTypes.includes(name);
+  };
+
 }
 
 interface StatementInterface {
@@ -480,7 +492,7 @@ class Function extends Array<Local> implements _FunctionConstrut {
 
 }
 
-class Jass extends Array<Type|Global|Comment|Native|Function>{
+class Jass extends Array<Type|Globals|Comment|Native|Function>{
   private _fileName:string = "";
   public readonly error_tokens:Array<Token> = [];
 
@@ -489,7 +501,7 @@ class Jass extends Array<Type|Global|Comment|Native|Function>{
     if(fileName) this._fileName = fileName;
   }
 
-  public clear() {
+  public clear = () => {
     this.length = 0;
   }
 
@@ -603,59 +615,173 @@ class SyntexParser {
   }
   // Identifier expected. 'if' is a reserved word that cannot be used here
   public ast1 () {
+    // console.log(this.tokens)
     if(this._change) {
       this.tree.clear();
-        
-      let block = SyntexType.nothing;
-      for (let index = 0; index < this.tokens.length; index++) {
-        const token = this.tokens[index];
-        const nextToken:Token|undefined = this.tokens[index + 1];
-        // "keyword" | "operation" | "identifier" | "value" | "other" | "comment"
-        const withs = function(any:Statement) {
-          any.range.with(token.line, token.position, token.line, token.end_position);
-        }
-        let value:Comment|Type|Native|null = null;
-        switch(block) {
-          case SyntexType.comment.toString():
-            if(token.type == "operation" && token.value == "\n") {
-              block = SyntexType.nothing;
-            }
-            break;
-          case SyntexType.type.toString():
-            break;
-          case SyntexType.native.toString():
-            break;
-          case SyntexType.globals.toString():
-            break;
-          case SyntexType.func.toString():
-            break;
-          default:
-            if(token.type == "comment") {
-              block = SyntexType.comment;
-              const comment = new Comment(token.value);
-              withs(comment);
-              this.tree.push(comment);
-            }else if(token.type == "operation") {
-              if(token.value == "\n") {
-                block = SyntexType.nothing;
-              }else {
-                this.tree.error_tokens.push(token);
-              }
-            }else if(token.type == "keyword") {
-              if(token.value == "type") {
-                block = SyntexType.type;
-              }else if(token.value == "native") {
-                block = SyntexType.native;
-              }else if(token.value == "globals") {
-                block = SyntexType.globals;
-              }else if(token.value == "function") {
-                block = SyntexType.func;
-              }else{
-                this.tree.error_tokens.push(token);
-              }
-            }
-        }
+      let index = 0;
+      const getToken = ():Token|undefined => {
+        return this.tokens[index++];
+      };
+      const withs = function(token:Token, any:Statement) {
+        any.range.with(token.line, token.position, token.line, token.end_position);
       }
+      const nothing = () => {
+        const token = getToken();
+        const type = () => {
+          console.log("進入type");
+          if(token) {
+            let tokenName = getToken();
+            console.log(tokenName);
+            if(tokenName && tokenName.type == "identifier") {
+              const name = tokenName.value;
+              const tokenExtends = getToken();
+              console.log(tokenExtends);
+              if(tokenExtends && tokenExtends.type == "keyword" && tokenExtends.value == "extends") {
+                const tokenExtendsTypeToken = getToken();
+                console.log(tokenExtendsTypeToken);
+                if(tokenExtendsTypeToken && (tokenExtendsTypeToken.type == "identifier" || (tokenExtendsTypeToken.type == "keyword" && Type.isBaseType(tokenExtendsTypeToken.value)))) {
+                  const extend = tokenExtendsTypeToken.value;
+                  const type = Type.builder(name,Type.get(extend));
+                  console.log(type);
+                  type.range.with(token.line,token.position,tokenExtendsTypeToken.line, tokenExtendsTypeToken.end_position);
+                  this.tree.push(type);
+                }
+              }
+            }
+            nothing();
+          }
+        }
+        const native = (flag?:"constant") => {
+          if(token) {
+            let nameToken = getToken();
+            if(nameToken && nameToken.type == "identifier") {
+              const name = nameToken.value;
+              const takesToken = getToken();
+              if(takesToken && takesToken.type == "keyword" && takesToken.value == "takes") {
+                let nothingTakes = new Nothing;
+                let takes:Takes = new Takes;
+                let isNothing = true;
+                const take = () => {
+                  const typeToken = getToken();
+                  if(typeToken && (typeToken.type == "identifier" || (typeToken.type == "keyword" && Type.isBaseType(typeToken.value)))) {
+                    if(isNothing) {
+                      isNothing = false;
+                    }
+                    const type = typeToken.value;
+                    const takeNameToken = getToken();
+                    if(takeNameToken && takeNameToken.type == "identifier") {
+                      const name = takeNameToken.value;
+                      const takeType = Type.get(type);
+                      console.log(takeType)
+                      if(takeType) {
+                        const t = new Take(takeType, name);
+                        t.range.with(typeToken.line, typeToken.position,takeNameToken.line, takeNameToken.end_position);
+                        takes.push(t);
+                        const splitToken = getToken();
+                        if(splitToken && splitToken.type == "operation" && splitToken.value == ",") {
+                          take();
+                        }
+                      }
+                    }
+                  }else if(isNothing && typeToken && typeToken.type == "keyword" && typeToken.value == "nothing") {
+                    nothingTakes = new Nothing();
+                    takes.range.with(typeToken.line,typeToken.position,typeToken.line, typeToken.end_position);                 
+                  }
+                };
+                take();
+
+                let returnsType:Type|Nothing = new Nothing;
+                let returnsTypeToken:Token|undefined;
+                const returns = () => {
+                  const returnsToken = getToken();
+                  if(returnsToken && returnsToken.type == "keyword" && returnsToken.value == "returns") {
+                    returnsTypeToken = getToken();
+                    if(returnsTypeToken && (returnsTypeToken.type == "identifier" || (returnsTypeToken.type == "keyword" && Type.isBaseType(returnsTypeToken.value)))) {
+                      const type = returnsTypeToken.value;
+                      const returnType = Type.get(type);
+                      if(returnType) {
+                        returnsType = returnType;
+                      }
+                    }else if(returnsTypeToken && returnsTypeToken.type == "keyword" && returnsTypeToken.value == "nothing") {
+                      returnsType = new Nothing();
+                    }
+                  }
+                };
+                returns();
+                const func = new Native(name, isNothing ? nothingTakes :takes, returnsType, flag);
+                if(returnsTypeToken) {
+                  func.range.with(token.line, token.position, returnsTypeToken.line, returnsTypeToken.end_position);
+                }else{
+                  func.range.with(token.line, token.position, token.line, token.position);
+                }
+                this.tree.push(func);
+              }
+            }
+            nothing();
+          }
+        };
+        const constantNative = () => {
+          const constantToken = getToken();
+          if(constantToken && constantToken.type == "keyword" && constantToken.value == "native") {
+            native("constant");
+          }else{
+            nothing();
+          }
+        };
+        const globals = () => {
+          if(token) {
+            const globals = new Globals();
+            const globalParse = () => {
+              const nextToken = getToken();
+              if(nextToken) {
+                if(nextToken.type == "keyword") {
+                  if(nextToken.value == "endglobals") {
+                    this.tree.push(globals);
+                  }else if(nextToken.value == "constant") {
+                    // 常量
+                  }
+                }
+                else if(nextToken.type == "comment") {
+                  const comment =new Comment(nextToken.value);
+                  comment.range.with(nextToken.line, nextToken.position, nextToken.line, nextToken.end_position);
+                  globals.push(comment);
+                }else if(nextToken.type == "identifier") {
+                  
+                }
+              }
+              globalParse();
+            };
+            globalParse();
+            nothing();
+          }
+        };
+        if(token) {
+          if(token.type == "comment") {
+            const comment =new Comment(token.value);
+            withs(token, comment);
+            this.tree.push(comment);
+          }else if(token.type == "keyword") {
+            if(token.value == "type") {
+              type();
+            }else if(token.value == "native") {
+              native();
+            }else if(token.value == "constant") {
+              constantNative();
+            }else if(token.value == "globals") {
+              globals();
+            }
+            else if(token.value == "function") {
+  
+            }else{
+              nothing();
+            }
+          }else{
+            nothing();
+          }
+        }
+        
+      };
+      nothing();
       this._change = false;
     }
     return this.tree;
@@ -726,88 +852,18 @@ class SyntexParser {
 
 }
 
-class _{
-  left:string|null = null;
-  right:string|null = null;
-  op:"+"|"-"|"*"|"/"|null = null;
-}
+const sp = new SyntexParser(`
+type aaa extends handle
 
+native woccao takes string a66, aaa wozuonima returns nothing
+constant native woccao1 takes string nothing returns laji
 
-
-/**
- * 項
- */
-class T extends _{
-}
-
-/**
- * 因子
- */
-class F  extends _{
-  value:E = new E;
-}
-
-/**
- * 表達式
- */
-class E  extends _{
-}
-
-class S extends E{
-}
-
-const tokens = ['1', "+", "2", "*", "3", "+", "(", "1", "+", "1", ")"];
-
-enum State{
-  s = "s",
-  t = "s",
-  f = "s",
-  e = "s",
-}
-
-function isNum(num:string) {
-  return ['1', "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(num);
-}
-
-function isPD(op:string) {
-  return ['+', "-"].includes(op);
-}
-
-function isCC(op:string) {
-  return ['*', "/"].includes(op);
-}
-
-function isL(op:string) {
-  return ['('].includes(op);
-}
-
-function isR(op:string) {
-  return [')'].includes(op);
-}
-let states:any[] = [];
-function push(data:any) {
-  states.push(data);
-}
-let state = State.s;
-
-let value = new S;
-function eat(token:string) {
-  if(state == State.s) {
-    if(isNum(token)) {
-      value.left = token;
-
-
-      state = State.t;
-      states.push({
-        state: State.t,
-        value: token
-      });
-    }else if(isL(token)) {
-      states.push({
-        state: State.s,
-        value: token
-      });
-    }
+`);
+const jass = sp.ast1();
+console.log("=========================================================")
+console.log(jass.filter(j => j instanceof Native).map(j => {
+  if(j instanceof Native) {
+    return j.takes;
   }
-  
-}
+  return [];
+}));

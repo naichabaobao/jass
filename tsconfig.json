@@ -4,6 +4,7 @@
 		"target": "es5",
 		"outDir": "out",
 		"lib": [
+			"ES2015.Iterable",
 			"es2020"
 		],
 		"sourceMap": false,
