@@ -729,16 +729,26 @@ class SyntexParser {
           }
         };
         const globals = () => {
+          enum GlobalState {
+
+          }
           if(token) {
             const globals = new Globals();
             const globalParse = () => {
               const nextToken = getToken();
               if(nextToken) {
+                const parseGlobal = (flag?:"constant") => {
+
+                };
                 if(nextToken.type == "keyword") {
                   if(nextToken.value == "endglobals") {
                     this.tree.push(globals);
                   }else if(nextToken.value == "constant") {
                     // 常量
+                    const typeToken = getToken();
+                    if(typeToken && typeToken.type == "identifier") {
+                      parseGlobal();
+                    }
                   }
                 }
                 else if(nextToken.type == "comment") {
@@ -746,7 +756,7 @@ class SyntexParser {
                   comment.range.with(nextToken.line, nextToken.position, nextToken.line, nextToken.end_position);
                   globals.push(comment);
                 }else if(nextToken.type == "identifier") {
-                  
+                  parseGlobal();
                 }
               }
               globalParse();
@@ -786,6 +796,86 @@ class SyntexParser {
     }
     return this.tree;
   }
+
+  public ast2 = () => {
+    enum BlockType {
+      default = "default",
+      comment = "comment",
+      type = "type",
+      native = "native",
+      globals = "globals",
+      function = "function"
+    }
+    let blockType = BlockType.default;
+    enum TypeType {
+      default = "default",
+      type = "type",
+      namming = "namming",
+      extends = "extends",
+      extends_type = "extends_type"
+    }
+    let typeType = TypeType.default;
+    enum NativeType {
+      default = "default",
+      constant = "constant",
+      native = "native",
+      namming = "namming",
+      takes = "takes",
+      take_type = "take_type",
+      take_namming = "take_namming",
+      take_separator = "take_separator",
+      returns = "returns",
+      returns_type = "returns_type"
+    }
+    let nativeType = NativeType.default;
+    enum GlobalsType {
+      default = "default",
+      globals = "globals",
+      endglobals = "endglobals"
+    }
+    let globalsType = GlobalsType.default;
+    enum GlobalType {
+      default = "default",
+      constant = "constant",
+      type = "type",
+      namming = "namming",
+      array = "array",
+      op_assignment = "op_assignment",
+      value = "value"
+    }
+    enum FunctionType {
+      default = "default",
+      function = "function",
+      namming = "namming",
+      takes = "takes",
+      take_type = "take_type",
+      take_namming = "take_namming",
+      take_separator = "take_separator",
+      returns = "returns",
+      returns_type = "returns_type",
+      endfunction = "endfunction"
+    }
+    let functionType = FunctionType.default;
+    enum ValueType {
+      default = "default",
+      // 因子
+      value = "value",
+      op = "op",
+      factor = "factor"
+    }
+    let valueType = ValueType.default;
+    const tokens = this.tokens;
+    for (let index = 0; index < tokens.length;) {
+      const token = tokens[index++];
+      const nextToken:Token|undefined = tokens[index];
+      if(token.type == "comment") {
+
+      }else if(token.type == "comment") {
+
+      }
+
+    }
+  };
 
   private _change = true;
   private _set_change() {

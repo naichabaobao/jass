@@ -3,7 +3,7 @@ import { language } from '../main/constant';
 
 /// 颜色提供
 const convertInt2Hex = (int: number) => {
-  return Math.ceil(int * 255).toString(16).padStart(2, "0")
+  return Math.round(int * 255).toString(16).padStart(2, "0")
 }
 const color2JColorCode = (color: vscode.Color) => {
   if (color instanceof vscode.Color) {

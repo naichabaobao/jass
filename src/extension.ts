@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import("./provider/register");
 
-import("./main/jass/syntax");
+import("./jass/type");
 
 export function activate(context: vscode.ExtensionContext) {
 }

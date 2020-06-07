@@ -13,6 +13,9 @@ import { parseLocal, Local } from '../main/local';
 import { allFunctions, allGlobals, allFunctionImpls, isSpace, isLetter } from '../main/tool';
 import { isNumber } from 'util';
 
+import {JassType} from '../jass/type';
+import {getTypeDesc} from '../jass/type-desc';
+
 /**
  * 关键字提示提供
  */
@@ -388,6 +391,28 @@ enum CompletionPosition {
  */
 class CompletionItemProvider implements vscode.CompletionItemProvider {
 
+  private typeItems = () => {
+    const origin = (type:JassType) => {
+      let originString = `type ${type.name}`;
+      const appendExtends = (extendType:JassType) => {
+        if(extendType.extend) {
+          originString += ` extends ${extendType.extend.name}`;
+          appendExtends(extendType.extend);
+        }
+      }
+      appendExtends(type);
+      return originString;
+    }
+    return JassType.types().map(type => {
+      const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
+      item.detail = type.name;
+      item.documentation = new vscode.MarkdownString()
+      .appendText(getTypeDesc(type.name))
+      .appendCodeblock(origin(type));
+      return item;
+    });
+  }
+
   private readonly isNilRegExp = new RegExp(`^\\s*[a-zA-Z0-9_]*$`);
   private readonly isCallRegExp = new RegExp(`\\bcall\\s+[a-zA-Z][a-zA-Z0-9_]*$`);
   private readonly isTakesTypeRegExp = new RegExp(`(\\btakes\\s+[a-zA-Z]*|\\btakes\\s+|\\btakes\\s+([a-zA-Z0-9_ \\t]+\\s*,\\s*)+[a-zA-Z]*)$`);
@@ -602,7 +627,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       Keyword.keywordLibrary, Keyword.keywordEndLibrary, Keyword.keywordScope, Keyword.keywordEndScope, Keyword.keywordPrivate, Keyword.keywordPublic, Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordEndInterface, Keyword.keywordStruct, Keyword.keywordEndStruct, Keyword.keywordMethod, Keyword.keywordEndMethod, Keyword.keywordThis, Keyword.keywordDelegate, Keyword.keywordDebug
     ]
     items.push(...this.keywordsToCompletionItem(keywords));
-    items.push(...this.statementCompletionItems());
+    // items.push(...this.statementCompletionItems());
+    items.push(...this.typeItems());
     return items;
   }
 
@@ -708,7 +734,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       Keyword.keywordStatic, Keyword.keywordInterface, Keyword.keywordStruct, Keyword.keywordMethod
     ]
     items.push(...this.keywordsToCompletionItem(keywords));
-    items.push(...this.statementCompletionItems());
+    // items.push(...this.statementCompletionItems());
+    items.push(...this.typeItems());
     return items;
   }
 
@@ -731,6 +758,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       item.documentation = new vscode.MarkdownString().appendCodeblock(local.origin());
       items.push(item);
     });
+  
     this.getTakes(document, position).filter(take => {
       return take.type.name == Type.integer.name || take.type.name == Type.real.name || take.type.name == Type.string.name;
     }).forEach(take => {
@@ -738,6 +766,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin());
       items.push(item);
     });
+   items.push(...this.typeItems());
     this.getCurrentGlobals(document).filter(global => {
       return global.type.name == Type.integer.name || global.type.name == Type.real.name || global.type.name == Type.string.name;
     }).forEach(global => {
@@ -851,10 +880,14 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         items.push(...this.nilCompletionItems());
         break;
       case CompletionPosition.TakesType:
-        items.push(...this.takesTypeCompletionItems());
+        // items.push(...this.takesTypeCompletionItems());
+        // 2020年6月7日
+        items.push(...this.typeItems());
+
         break;
       case CompletionPosition.Returns:
-        items.push(...this.returnsCompletionItems());
+        // items.push(...this.returnsCompletionItems());
+        items.push(...this.typeItems());
         break;
       case CompletionPosition.Call:
         return this.allAndCurrentFunctionImplCompletions(document);
@@ -862,8 +895,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         // items.push(...this.allAndCurrentFunctionImplCompletions(document));
         // break;
       case CompletionPosition.Local:
-        
-        items.push(...this.statementCompletionItems());
+        // items.push(...this.statementCompletionItems());
+        items.push(...this.typeItems());
         break;
       case CompletionPosition.Set:
         items.push(...this.setCompletions(document, position));
@@ -876,10 +909,12 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         items.push(...this.modifierCompletions());
         break;
       case CompletionPosition.Constant:
-        items.push(...this.statementCompletionItems());
+        // items.push(...this.statementCompletionItems());
+        items.push(...this.typeItems());
         break;
       case CompletionPosition.Extends:
-        items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
+        // items.push(...Type.ExtendsTypes.map(type => this.typeToCompletionItem(type)));
+        items.push(...this.typeItems());
         break;
       case CompletionPosition.Operator:
         items.push(...this.operatorCompletionItems(document,position));

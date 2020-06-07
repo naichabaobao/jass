@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { allGlobals, allFunctionImpls } from '../main/tool';
 import { Type } from '../main/type';
+import { JassType } from '../jass/type';
+import { getTypeDesc } from '../jass/type-desc';
 import { isVjassSupport } from '../main/configuration';
 import { Function, parseFunctions, parseTakes } from '../main/function';
 import { language } from '../main/constant';
@@ -10,6 +12,30 @@ import { parseLocal } from '../main/local';
 import { Keyword } from '../main/keyword';
 
 class TypeHoverProvider implements vscode.HoverProvider {
+
+  private typeHover = (key: string) => {
+    const hovers = new Array<vscode.MarkdownString>();
+    const origin = (type:JassType) => {
+      let originString = `type ${type.name}`;
+      const appendExtends = (extendType:JassType) => {
+        if(extendType.extend) {
+          originString += ` extends ${extendType.extend.name}`;
+          appendExtends(extendType.extend);
+        }
+      }
+      appendExtends(type);
+      return originString;
+    }
+    JassType.types().forEach(type => {
+      if(type.name == key) {
+        const markdownString = new vscode.MarkdownString();
+        markdownString.appendText(getTypeDesc(type.name));
+        markdownString.appendCodeblock(origin(type));
+        hovers.push(markdownString);
+      }
+    });
+    return hovers;
+  }
 
   private typeToHover(key: string): Array<vscode.MarkdownString> {
     const hovers = new Array<vscode.MarkdownString>();
@@ -21,13 +47,14 @@ class TypeHoverProvider implements vscode.HoverProvider {
         hovers.push(markdownString);
       }
     });
+
     return hovers;
   }
 
   provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
     const key = document.getText(document.getWordRangeAtPosition(position));
 
-    return new vscode.Hover(this.typeToHover(key));
+    return new vscode.Hover(this.typeHover(key));
   }
 
 }
@@ -165,11 +192,35 @@ class CurrentHoverProvider implements vscode.HoverProvider {
 
 }
 
+class CodeHoverProvider implements vscode.HoverProvider {
 
+  /**
+   * 解析当前文档
+   */
+  private code(key: string): Array<vscode.MarkdownString> {
+    const hovers = new Array<vscode.MarkdownString>();
+    
+    const valueString16 = '0x' + key.replace(/'/, '').replace(/[\da-zA-Z]/g, function(subString) {
+      return subString.charCodeAt(0).toString(16);
+    });
+    const value = parseInt(valueString16);
+    
+    const markdownString = new vscode.MarkdownString().appendCodeblock(`${value}`);
+    hovers.push(markdownString);
+
+    return hovers;
+  }
+
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+    const key = document.getText(document.getWordRangeAtPosition(position, /'[a-zA-Z0-9]{4,4}'/));
+    return key.length == 6 ? new vscode.Hover(this.code(key)) : null;
+  }
+
+}
 
 vscode.languages.registerHoverProvider(language, new TypeHoverProvider);
 vscode.languages.registerHoverProvider(language, new GlobalHoverProvider);
 vscode.languages.registerHoverProvider(language, new FunctionHoverProvider);
 vscode.languages.registerHoverProvider(language, new CurrentHoverProvider);
-
+vscode.languages.registerHoverProvider(language, new CodeHoverProvider);
 export { };
