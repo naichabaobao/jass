@@ -7,13 +7,15 @@ class Token {
   private _type: string;
   private _value: string;
   private _line: number;
-  private _position: number;
+  private _position: number = -1;
 
   constructor(type: "keyword" | "operation" | "identifier" | "value" | "other" | "comment", value: string, location?: { line?: number, position?: number }) {
     this._type = type;
     this._value = value;
     this._line = location?.line ?? -1;
-    this._position = location?.position ?? -1;
+    if (location && location.position) {
+      this._position = location.position - (this.value.length - 1);
+    }
   }
 
   public get type(): string {
@@ -117,18 +119,17 @@ class TokenParser {
       } else if (this.supportJass) {
         if (this._changed) {
           const tokens: Array<Token> = new Array<Token>();
-          let index = 0;
-          const content = this._content;
-          const getChar = function () {
-            return content[index++];
-          };
+
+          
+          const content = this._content.replace(/\r\n/g, "\n");
+          
           let value = "";
 
           let type = LexicalType.default;
           let line = 0;
           let position = 0;
-          let char: string;
-          while (char = getChar()) {
+          for (let index = 0; index < content.length;index++) {
+            const char = content.charAt(index);
             value += char;
             /// 开始只能是字母，//,\n,\s
             const clear = function () {
@@ -288,7 +289,7 @@ class TokenParser {
             }
             /// 判断下个字符是否终结
             const over = () => {
-              const nextChar = content.charAt(index);
+              const nextChar = content.charAt(index + 1);
               switch (type) {
                 case LexicalType.default:
                   break;
@@ -701,10 +702,8 @@ class LexicalTool {
   public static isNewLine(char: string) {
     return this.isChar(char) && (function (): boolean {
       const code = char.charCodeAt(0);
-      return code === 10 || code === 13;
-    })()
-      ||
-      char.length == 2 && char.charCodeAt(0) === 13 && char.charCodeAt(1) === 10;
+      return code === 10 || code === 13 || code === 0x2028 || code === 0x2029;
+    })();
   }
 
   /**

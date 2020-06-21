@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import { Keyword } from "../main/keyword";
 import { language } from "../main/constant";
 
+import {TokenParser, Token, LexicalType} from "../jass/token";
+
 
 /*
 思路
@@ -164,10 +166,105 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
     return textEdits;
   }
 
+  private if_space():number {
+    return vscode.workspace.getConfiguration()?.jass.format.if_space as number;
+  }
+
+  private not_space():number {
+    return vscode.workspace.getConfiguration()?.jass.format.not_space as number;
+  }
+  
+  private distanceUneq(token:Token, next_token:Token,dist: number) {
+    return Math.abs(token.end_position - next_token.position) != dist;
+  }
+  private indentSupport() {
+    return vscode.workspace.getConfiguration()?.jass.format.indent.support as boolean;
+  }
+  private indentChar() {
+    return vscode.workspace.getConfiguration()?.jass.format.indent.char as string;
+  }
+
   provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
-    return this.indentedFormatting(document, options);
+    
+    const textEdits = this.indentSupport() ? this.indentedFormatting(document, options) : new Array<vscode.TextEdit>();
+
+    const tokenParse = new TokenParser(document.getText());
+      const tokens = tokenParse.tokens();
+      console.log(tokens.length);
+      for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        const next_token = tokens[index + 1];
+        if(token && next_token) {
+          if(token.type == "keyword") {
+            if(next_token.type == "keyword") {
+              if(token.line == next_token.line && Math.abs(token.end_position - next_token.position) != 1) {
+                console.log(JSON.stringify(token,null,2))
+                console.log(JSON.stringify(next_token,null,2))
+  
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
+                textEdits.push(edit);
+              }
+            }else if(next_token.type == "identifier") {
+              if(this.distanceUneq(token, next_token, 1)) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
+                textEdits.push(edit);
+              }
+            }else if(next_token.type == "operation") {
+              if(token.value == "if" && next_token.value == "(" && this.distanceUneq(token, next_token, this.if_space())) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), "".padStart(this.if_space(), this.indentChar()));
+                textEdits.push(edit);
+              }else if(token.value == "not" && next_token.value == "(" && this.distanceUneq(token, next_token, this.not_space())) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), "".padStart(this.not_space(), this.indentChar()));
+                textEdits.push(edit);
+              }
+            }
+            if(token.value == "exitwhen" && this.distanceUneq(token, next_token, 1)) {
+              const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), "".padStart(1, this.indentChar()));
+              textEdits.push(edit);
+            }
+          }else if(token.type == "identifier") {
+            if(next_token.type == "keyword") {
+              if(this.distanceUneq(token, next_token, 1)) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
+                textEdits.push(edit);
+              }
+            }else if(next_token.type == "identifier") {
+              if(this.distanceUneq(token, next_token, 1)) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
+                textEdits.push(edit);
+              }
+            }else if(next_token.type == "operation") {
+              if((next_token.value == "(" || next_token.value == ",") && this.distanceUneq(token, next_token, 0)) {
+                const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), "");
+                textEdits.push(edit);
+              }
+            }
+          }
+        }
+      }
+    return textEdits;
   }
 
 }
 
 vscode.languages.registerDocumentFormattingEditProvider(language, new KeywordDocumentFormattingEditProvider);
+
+class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEditProvider {
+
+  
+
+  provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+    const textEdits = new Array<vscode.TextEdit>();
+    try{
+      
+
+    }catch(e) {
+      console.error(e);
+    }
+    console.log("length = " + textEdits.length);
+    return textEdits;
+  }
+  
+}
+
+// vscode.languages.registerDocumentFormattingEditProvider(language, new DocumentFormattingSortEditProvider);

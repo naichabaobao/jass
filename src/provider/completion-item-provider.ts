@@ -15,6 +15,7 @@ import { isNumber } from 'util';
 
 import {JassType} from '../jass/type';
 import {getTypeDesc} from '../jass/type-desc';
+import { File } from '../jass/ast';
 
 /**
  * 关键字提示提供
@@ -581,6 +582,10 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return this.functionsToCompletionItem(allFunctionImpls());
   }
 
+  /**
+   * @deprecated 使用代替resolveCurrentFileFunction(document)
+   * @param document  
+   */
   private getCurrentFunctions(document: vscode.TextDocument): Array<FunctionImpl> {
     return this.parseFunctionsAndLibraryResolve(document.getText());
   }
@@ -653,7 +658,11 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   private allAndCurrentFunctionImplCompletions(document: vscode.TextDocument): Array<vscode.CompletionItem> {
     const items = new Array<vscode.CompletionItem>();
     items.push(...this.allFunctionImplCompletionItem());
+    /*
     items.push(...this.functionsToCompletionItem(this.getCurrentFunctions(document)));
+    */
+    // 2020年6月21日
+    items.push(...this.resolveCurrentFileFunction(document));
     return items;
   }
 
@@ -772,11 +781,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     }).forEach(global => {
       items.push(this.globalImplToCompletionItem(global));
     });
+    /*
     this.getCurrentFunctions(document).filter(func => {
       return func.returns.name == Type.integer.name || func.returns.name == Type.real.name || func.returns.name == Type.string.name;
     }).forEach(func => {
       items.push(this.functionImplToCompletionItem(func));
     });
+    */
+    // 2020年6月21日
+    items.push(...this.resolveCurrentFileFunction(document));
     allGlobals().filter(global => {
       return global.type.name == Type.integer.name || global.type.name == Type.real.name || global.type.name == Type.string.name;
     }).forEach(global => {
@@ -811,11 +824,16 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     }).forEach(global => {
       items.push(this.globalImplToCompletionItem(global));
     });
+    /*
     this.getCurrentFunctions(document).filter(func => {
       return func.returns.name == Type.integer.name || func.returns.name == Type.real.name;
     }).forEach(func => {
       items.push(this.functionImplToCompletionItem(func));
     });
+    */
+   // 2020年6月21日
+   items.push(...this.resolveCurrentFileFunction(document));
+
     allGlobals().filter(global => {
       return global.type.name == Type.integer.name || global.type.name == Type.real.name;
     }).forEach(global => {
@@ -926,6 +944,25 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       case CompletionPosition.Unkown:
         items.push(...this.unkwonCompletionItems(document, position));
     }
+    return items;
+  }
+
+  private resolveCurrentFileFunction(document:vscode.TextDocument) {
+    const file = new File();
+    file.fileName = document.fileName;
+    file.parse(document.getText());
+    const functions = file.functions();
+
+    const items = functions.map(func => {
+      const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+      item.detail = func.name;
+      item.documentation = new vscode.MarkdownString()
+      .appendText(file.findComment(func.start.line - 1))
+      .appendText(`\n${file.findComment(func.start.line)}`)
+      .appendCodeblock(func.origin());
+      return item;
+    });
+
     return items;
   }
 

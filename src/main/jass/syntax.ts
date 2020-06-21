@@ -2,7 +2,7 @@
 語法解析
 */
 
-import {Token,TokenParser, LexicalTool} from './token';
+import {Token,TokenParser, LexicalTool} from '../../jass/token';
 import { j } from '../constant';
 
 class Statement {
