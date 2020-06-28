@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from "fs";
+import * as path from "path";
 import { Keyword } from '../main/keyword';
 import { isVjassSupport } from '../main/configuration';
 import { language } from '../main/constant';
@@ -15,7 +17,7 @@ import { isNumber } from 'util';
 
 import {JassType} from '../jass/type';
 import {getTypeDesc} from '../jass/type-desc';
-import { File } from '../jass/ast';
+import { Program } from '../jass/ast';
 
 /**
  * 关键字提示提供
@@ -386,6 +388,9 @@ enum CompletionPosition {
   // 减号,乘号,除号
   Operator,
 }
+
+// 静态化数据
+
 
 /**
  * 整合提示
@@ -948,7 +953,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   private resolveCurrentFileFunction(document:vscode.TextDocument) {
-    const file = new File();
+    const file = new Program();
     file.fileName = document.fileName;
     file.parse(document.getText());
     const functions = file.functions();
@@ -956,28 +961,63 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     const items = functions.map(func => {
       const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
       item.detail = func.name;
-      item.documentation = new vscode.MarkdownString()
-      .appendText(file.findComment(func.start.line - 1))
-      .appendText(`\n${file.findComment(func.start.line)}`)
-      .appendCodeblock(func.origin());
+      const ms = new vscode.MarkdownString();
+      const explain1 = file.findComment(func.start.line - 1);
+      const explain2 = file.findComment(func.start.line);
+      if(explain1) {
+        ms.appendText(explain1);
+      }
+      if(explain2) {
+        ms.appendText(`${explain1 ? "\n" : ""}${explain2}`);
+      }
+      ms.appendCodeblock(func.origin());
+      item.documentation = ms;
       return item;
     });
 
     return items;
   }
 
-  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+
+
+  public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    console.log(`document.version = ${document.version}`)
     let items = null;
+    /*
     try {
       this.handleCompletionType(document, position);
       items = this.getItems(document, position);
     } catch (e) {
       console.error(e)
     }
-
+    */
     return items;
   }
 
 }
 
-vscode.languages.registerCompletionItemProvider(language, new CompletionItemProvider);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

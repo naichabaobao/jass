@@ -1,8 +1,10 @@
 /**
  * 统一注册
  */
+import("./default");
 
-import('./completion-item-provider');
+// import('./completion-item-provider');
+import('./completion-provider');
 import('./signature-help-provider');
 import('./hover-provider');
 import('./definition-provider');
