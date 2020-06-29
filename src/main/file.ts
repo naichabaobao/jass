@@ -3,8 +3,9 @@ import { commonJFilePath, blizzardJFilePath, commonAiFilePath, DzAPIJFilePath } 
 import { parseGlobals, Global, GlobalConstant, GlobalArray } from "./global";
 import { Native, parseNatives, Function, parseFunctions, FunctionImpl } from "./function";
 import { Jass } from "./jass";
-import { resolve } from "path";
 
+// const start2 = new Date().getTime();
+// let col = 0;
 /**
  * jass文件内容
  */
@@ -57,6 +58,8 @@ readFile(commonJFilePath, (error, data) => {
     CommonJJass.natives = natives;
 
   }
+  // col += new Date().getTime() - start2;
+  // console.log(col)
 });
 readFile(blizzardJFilePath, (error, data) => {
   if (error) {
@@ -64,11 +67,11 @@ readFile(blizzardJFilePath, (error, data) => {
   } else {
     _blizzardJContent = data.toString("utf8");
 
-    const start2 = new Date().getTime();
+
     const globals = parseGlobals(_blizzardJContent);
     const natives = parseNatives(_blizzardJContent);
     const functions = parseFunctions(_blizzardJContent);
-    console.log("解析时间 = " + (new Date().getTime() - start2));
+
     
     Object.assign(BlizzardJGlobals, globals);
     Object.assign(BlizzardJNatives, natives);
@@ -81,8 +84,11 @@ readFile(blizzardJFilePath, (error, data) => {
       BlizzardJJass.putFunction(func);
     });
     BlizzardJJass.natives = natives;
-    // f666()
+    
   }
+
+  // col += new Date().getTime() - start2;
+  // console.log(col)
 });
 readFile(commonAiFilePath, (error, data) => {
   if (error) {
@@ -104,6 +110,9 @@ readFile(commonAiFilePath, (error, data) => {
     });
     CommonAiJJass.natives = natives;
   }
+
+  // col += new Date().getTime() - start2;
+  // console.log(col)
 });
 readFile(DzAPIJFilePath, (error, data) => {
   if (error) {
@@ -125,6 +134,9 @@ readFile(DzAPIJFilePath, (error, data) => {
     });
     DzApiJJass.natives = natives;
   }
+
+  // col += new Date().getTime() - start2;
+  // console.log(col)
 });
 
 function commonJContent(): string {
@@ -167,130 +179,5 @@ export {
   DzApiJJass,
 };
 
+// console.log("解析时间 = " + (new Date().getTime() - start2) + "毫秒");
 
-/*
-
-function test(funcs: Array<FunctionImpl>) {
-  const jsonData = readFileSync("D:/javascript-workspace/jass2/War3Api.json").toString("utf8");
-  const jsonObject = JSON.parse(jsonData);
-  let newContent = _blizzardJContent;
-  const nativeNames = funcs.filter(native => native.descript.trim() == "")
-  .forEach(native => {
-    
-      const obj = (jsonObject as Array<any>).find(obj => obj["nameUS"] == native.name);
-      if(obj){
-        let title:string = obj["title"];
-
-//         newContent = newContent.replace(new RegExp(`(constant\\s+)?(native\\s+)?${native.name}`), `// ${title}
-// ${native.isConstant ? "constant native " + native.name : "native " + native.name}`);
-if(title && title != "null" ){
-  console.log(`${native.name} --- ${title}`)
-  console.log(title)
-  newContent = newContent.replace(new RegExp(`function\\s+${native.name}`), `// ${title}
-  ${ "function " + native.name}`);
-}
-
-
-      }
-  });
-  writeFileSync("D:/javascript-workspace/jass2/ccc.j", newContent);
-}
-*/
-
-/*
-{ "nameUS": "DzTriggerRegisterMouseEventTrg",
- "title": "注册鼠标事件",
-  "description": "任意玩家${key}${actionkey}时",
-   "comment": "请使用“获取触发硬件事件的玩家”来获取触发玩家",
-    "category": "BZ_HW",
-     "categoryCH": null,
-     "args": "trigger trg, integer status, integer btn",
-      "returns": "nothing",
-       "usPath": "BlizzardAPI.j",
-        "index": 0,
-         "ID": 0 }
-*/
-
-function f666() {
-  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/Blizzard (1).j').toString('utf8');
-  const bcontent = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard.j').toString('utf8');
-
-  const b132functions = parseFunctions(b132content)
-  const bfunctions = parseFunctions(bcontent)
-
-  const b132globals = parseGlobals(b132content)
-  const bglobals = parseGlobals(bcontent)
-
-  b132functions.forEach(func => {
-    const b132func = bfunctions.find(f => f.name == func.name);
-    if (b132func && b132func.descript != "") {
-      b132content = b132content.replace(new RegExp(`function\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}function ${func.name}`);
-    }
-
-  })
-
-  writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32.1-temp.j', b132content);
-  f777()
-  return;
-  b132globals.forEach(glo => {
-    const b132glo = bglobals.find(g => g.name == glo.name);
-    if (b132glo && b132glo.descript != "" && glo.descript != '') {
-
-      let string = "";
-      if (glo instanceof GlobalConstant) {
-        b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
-      }
-      if (glo instanceof GlobalArray) {
-        b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
-      }
-      if (glo instanceof Global) {
-        b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
-      }
-
-    }
-
-  })
-
-  // writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/blizzard-1.32-temp.j', b132content);
-}
-
-function f777() {
-  let b132content = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/Common (1).j').toString('utf8');
-  const bcontent = readFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common.j').toString('utf8');
-
-  const b132functions = parseNatives(b132content)
-  const bfunctions = parseNatives(bcontent)
-
-  const b132globals = parseGlobals(b132content)
-  const bglobals = parseGlobals(bcontent)
-
-  b132functions.forEach(func => {
-    const b132func = bfunctions.find(f => f.name == func.name);
-    if (b132func && b132func.descript != "") {
-      b132content = b132content.replace(new RegExp(`(constant\\s+)?native\\s+${func.name}`), `// ${b132func.descript}${b132func.descript.endsWith('\n') ? "" : "\n"}${func.isConstant ? "constant " : ""} native ${func.name}`);
-    }
-
-  })
-
-
-
-  b132globals.forEach(glo => {
-    const b132glo = bglobals.find(g => g.name == glo.name);
-    if (b132glo && b132glo.descript != "") {
-
-      if (glo instanceof GlobalConstant) {
-        b132content = b132content.replace(new RegExp(`constant\\s+[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} constant ${glo.type.name} ${glo.name}`)
-      }
-      if (glo instanceof GlobalArray) {
-        b132content = b132content.replace(new RegExp(`[a-z]+\\s+array\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"} ${glo.type.name} array ${glo.name}`)
-      }
-      if (glo instanceof Global) {
-        b132content = b132content.replace(new RegExp(`[a-z]+\\s+${glo.name}`), `// ${b132glo.descript}${b132glo.descript.endsWith('\n') ? "" : "\n"}  ${glo.type.name} ${glo.name}`)
-      }
-
-    }
-
-  })
-
-  writeFileSync('D:/javascript-workspace/jass2/src/resources/static/jass/common-1.32.1-temp.j', b132content);
-}

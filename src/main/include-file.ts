@@ -6,7 +6,7 @@ import { j, ai } from "./constant";
 import * as vscode from "vscode";
 import { Jass } from "./jass";
 import { parseGlobals } from "./global";
-import { parseFunctions,Function } from "./function";
+import { parseFunctions, Function } from "./function";
 
 /*
 获取包含文件
@@ -16,7 +16,9 @@ import { parseFunctions,Function } from "./function";
 lib包含处理 -》 已经去除
 */
 
+// let start2 = new Date().getTime();
 
+// let col = 0;
 
 // 保存用户的jass
 const Jasss = Array<Jass>();
@@ -46,17 +48,21 @@ function parseJass(fileName: string) {
 
                 const content = buffer.toString("utf8");
                 const jass = _resolveJass(fileName, content);
-                  Jasss.push(jass);
+                Jasss.push(jass);
 
+                // const start = new Date().getTime();
+                // col += start - start2;
+                // start2 = start;
+                // console.log(`${col}毫秒`)
               }
             });
           }
-        }else if(stats.isDirectory()){
-          readdir(fileName,(err,files) => {
-            if(err){
+        } else if (stats.isDirectory()) {
+          readdir(fileName, (err, files) => {
+            if (err) {
               console.error(err);
               throw err.message;
-            }else{
+            } else {
               files.forEach(file => {
                 parseJass(resolve(fileName, file));
               });
@@ -89,7 +95,7 @@ function _resolveJass(fileName: string, content: string) {
   //         global.library = library;
   //       }
   //     }
-      
+
   //     jass.putGlobal(global);
 
   //   });
@@ -107,7 +113,7 @@ function _resolveJass(fileName: string, content: string) {
   const functions = parseFunctions(content);
   // if (librarys && librarys.length > 0) {
   //   functions.forEach((func) => {
-      
+
   //     if(librarys != null){
   //       const library = librarys.find(library => {
   //         return library.range.contains(func.range);
@@ -151,3 +157,4 @@ vscode.workspace.onDidChangeConfiguration(event => {
 export {
   Jasss
 }
+

@@ -5,7 +5,8 @@
 		"outDir": "out",
 		"lib": [
 			"ES2015.Iterable",
-			"es2020"
+			"es2020",
+			"DOM"
 		],
 		"sourceMap": false,
 		"rootDir": "src",
@@ -13,7 +14,8 @@
 		"removeComments": true,
 		"strictNullChecks": true,
 		"experimentalDecorators": true,
-		"downlevelIteration": true
+		"downlevelIteration": true,
+		"strictPropertyInitialization": true
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */

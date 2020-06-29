@@ -1,3 +1,9 @@
+/**
+ * 此文件无法作为其他的解析使用，因为读取时存在先后问题，会导致类型还未确定下来，其他方法就开始执行了。
+ * @deprecated 2020年6月28日,请不要再引用此文件,后续可能移除这个文件的实现。
+ */
+
+
 import { resolve } from "path";
 import * as vscode from "vscode";
 import {readFileSync, existsSync} from "fs";

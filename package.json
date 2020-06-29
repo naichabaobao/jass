@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "keywords": [
     "jass",
     "warcraft"
@@ -22,7 +22,7 @@
     "type": "git",
     "url": "https://gitee.com/naichabaobao/jass.git"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass",
+  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
   "activationEvents": [
     "onLanguage:jass"
   ],
@@ -33,9 +33,8 @@
       "title": "Jass",
       "properties": {
         "jass.common_j": {
-          "type": "string|null",
-          "default": null,
-          "description": "自定义common.j,不设置时默认使用插件提供的common.j\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
+          "type": "string",
+          "description": "自定义common.j,不设置时默认使用插件提供的common.j(test)\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
         },
         "jass.includes": {
           "type": "array",
@@ -47,7 +46,7 @@
         "jass.diagnostic.support": {
           "type": "boolean",
           "default": true,
-          "description": "是否开始错误检查(目前仅支持call检查)\n(Whether to start error checking (currently only support call checking))"
+          "description": "是否开始错误检查\n(Whether to start error checking (currently only support call checking))"
         },
         "jass.format.indent.support": {
           "type": "boolean",
@@ -58,21 +57,21 @@
           "type": "string",
           "default": " ",
           "enum": [" ", "\t"],
-          "description": "缩进字符\n(indent char)"
+          "description": "缩进字符(deprecated)\n(indent char)"
         },
         "jass.format.if_space": {
           "type": "number",
           "default": 0,
           "minimum": 0,
           "maximum": 8,
-          "description": "if与左括号之间空格数\n(Number of spaces between if and left parenthesis)"
+          "description": "if与左括号之间空格数(deprecated)\n(Number of spaces between if and left parenthesis)"
         },
         "jass.format.not_space": {
           "type": "number",
           "default": 0,
           "minimum": 0,
           "maximum": 8,
-          "description": "not与左括号之间空格数\n(Number of spaces between not and left parenthesis)"
+          "description": "not与左括号之间空格数(deprecated)\n(Number of spaces between not and left parenthesis)"
         }
       }
     },

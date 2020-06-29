@@ -214,7 +214,8 @@ class TokenParser {
                  || LexicalTool.isPlusSign(char)
                  || LexicalTool.isSubtractionSign(char)
                  || LexicalTool.isProductSign(char)
-                 || LexicalTool.isNewLine(char)) {
+                //  || LexicalTool.isNewLine(char)
+                 ) {
                    // () {} [] ,
                   type = LexicalType.op;
                 } else if (LexicalTool.isSpace(char)) {
