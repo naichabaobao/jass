@@ -18,19 +18,19 @@ class Position {
 
 }
 
-type node_type = "File" | "Comment" | "Function" | "Takes" | "Take" | "Returns" | "Nothing" |"Globals" | "Native" | "Variable" | "Assignment";
+type node_type = "File" | "Comment" | "Function" | "Takes" | "Take" | "Returns" | "Nothing" |"Globals" | "Native" | "Variable" | "Assignment" | "Expression" | "Factor" | "Value";
 
 interface Origin {
   origin():string;
 }
 
 class Node implements Origin{
-  public readonly nodeType:node_type;
+  public readonly nodeType:string; //node_type;
 
   public start:Position = Position.default();
   public end:Position = Position.default();
 
-  constructor(type:node_type) {
+  constructor(type:string) {
     this.nodeType = type;
   }
   origin(): string {
@@ -181,9 +181,6 @@ class Assignment extends Node {
   }
 }
 
-/**
- * @deprecated 保留
- */
 class Globals extends Node{
 
   public variables:Array<Variable> = [];
@@ -193,6 +190,174 @@ class Globals extends Node{
   }
 
 }
+
+/**
+ * 表达式
+ */
+class Expression extends Node {}
+
+class UnaryExpression extends Expression {
+
+  public op:string = null as any;
+  public right:Factor|Value|Expression = null as any;
+
+  constructor() {
+    super("UnaryExpression");
+  }
+}
+class BinaryExpression extends Expression {
+
+  public op:string = null as any;
+  public left:Factor|Value|Expression = null as any;
+  public right:Factor|Value|Expression = null as any;
+
+  constructor() {
+    super("BinaryExpression");
+  }
+}
+
+class PreferredExpression extends Expression {
+
+  public value:Expression|Value = null as any;
+
+  constructor() {
+    super("PreferredExpression");
+  }
+}
+
+class BooleanExpress extends Expression {
+  public readonly nodeType = "BooleanExpress";
+
+  public op:string = null as any;
+  public left:Factor|Value|Expression = null as any;
+  public right:Factor|Value|Expression = null as any;
+}
+
+/**
+ * 因子
+ */
+class Factor extends Node {
+
+  constructor() {
+    super("Factor");
+  }
+
+}
+
+/**
+ * 值
+ */
+class Value extends Node {
+
+  constructor() {
+    super("Value");
+  }
+
+}
+/**
+ * 0
+ */
+class Integer extends Value {
+  public readonly nodeType = "Integer";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return Number.parseInt(this.value);
+  }
+
+}
+/**
+ * 000000007
+ */
+class IntegerOctonary extends Value {
+  public readonly nodeType = "IntegerOctonary";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return Number.parseInt(this.value);
+  }
+
+}
+/**
+ * 0x00000000
+ */
+class IntegerHexadecimal extends Value {
+  public readonly nodeType = "IntegerHexadecimal";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return Number.parseInt(this.value);
+  }
+}
+/**
+ * $00000000
+ */
+class IntegerHexadecimalEx extends Value {
+  public readonly nodeType = "IntegerHexadecimalEx";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return Number.parseInt(this.value.replace(/^\$/, "0x"));
+  }
+}
+/**
+ * '0aZ9'
+ */
+class IntegerCode extends Value {
+  public readonly nodeType = "IntegerCode";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    const str = `0x${/'(?<code>[0-9a-zA-Z]{4,4})'/.exec(this.value)?.groups?.code.split("").map(val => val.charCodeAt(0).toString(16)).join("")}`;
+    return Number.parseInt(str);
+  }
+}
+
+class Real extends Value {
+  public readonly nodeType = "Real";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    let value = this.value;
+    if(value.startsWith(".")) {
+      value = `0${this.value}`;
+    }else if(value.endsWith(".")) {
+      value += "0";
+    }
+    return parseInt(value);
+  }
+}
+
+class Boolean extends Value {
+  public readonly nodeType = "Boolean";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return this.value == "true";
+  }
+}
+
+class String extends Value {
+  public readonly nodeType = "String";
+
+  public value:string = null as any;
+
+  public valueOf() {
+    return this.value;
+  }
+}
+
+
+
+
+// class 
 
 class Program extends Node {
 
@@ -225,6 +390,9 @@ class Program extends Node {
     let localType:number = 0;
     let local:Variable = null as any;
 
+    let exType = 0;
+
+
     for (let index = 0; index < tokens.length; index++) {
       const token = tokens[index];
       const setStart = (node:Node) => {
@@ -236,6 +404,9 @@ class Program extends Node {
       const setNode = (node:Node) => {
         setStart(node);
         setEnd(node);
+      };
+      const parseExpression = () => {
+
       };
       if(token.type == "comment") {
         const node = new Comment();
