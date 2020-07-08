@@ -20,20 +20,22 @@ const endRegExp = /^[ \t]*\/\/![ \t]+endzinc([ \t].*\n?|[ \t]*\n?)$/;
 
 class Scanner {
 
-  private tokens:Token[] = [];
+  private tokens:Array<Token[]> = [];
   private errors:ZincError[] = [];
 
   constructor(content:string) {
-    const LineResult = new RegExp(/.*\n/, "g").exec(content);
+    const LineResult = content.split(/\r\n|\n/).map(val => val += "\n");
     if(!LineResult) {
       return;
     }
-
     let inZinc = false;
     const ZincRange = new Array<number[]>();
-    const startEnd:number[] = [];
+    let startEnd:number[] = [];
     for (let index = 0; index < LineResult.length; index++) {
       const line = LineResult[index];
+      if(line.trimLeft() == "") {
+        continue;
+      }
       if (inZinc == false && startRegExp.test(line)) {
         startEnd.push(index);
         inZinc = true;
@@ -48,6 +50,8 @@ class Scanner {
       }else if(inZinc == true && endRegExp.test(line)) {
         startEnd.push(index);
         ZincRange.push(startEnd);
+        startEnd = [];
+        inZinc = false;
       }else if(inZinc == false && endRegExp.test(line)) {
         const error = new ZincError();
         error.message = "The start mark could not be found!";
@@ -57,6 +61,210 @@ class Scanner {
         this.errors.push(error);
       }
       
+    }
+    console.log(this.errors)
+    console.log(ZincRange);
+
+    for (let index = 0; index < ZincRange.length; index++) {
+      const range = ZincRange[index];
+      const startLine = range[0] + 1;
+      const endLine = range[1];
+      console.log(LineResult.slice(startLine, endLine));
+
+      let tokenValue:string[] = [];
+      const getValue = () => {
+        const value = tokenValue.join("");
+        tokenValue.length = 0;
+        return value;
+      };
+      const pushToken = (type:string) => {
+        this.tokens[index].push(new Token(type, getValue()));
+      };
+      for (let lineCount = startLine; lineCount < endLine; lineCount++) {
+        const line = LineResult[lineCount];
+
+        const latter = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(isLatter(next_char) || next_char == "_" || isNumber(next_char)) {
+            latter(pos);
+          } else {
+            pushToken("id");
+            start(pos);
+          }
+        };
+        const number0 = (pos:number) => {};
+        const number8 = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(["0", "1", "2", "3", "4", "5", "6", "7"].includes(next_char)) {
+            number8(pos);
+          } else {
+            pushToken("int");
+            start(pos);
+          }
+        };
+        const numberx = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(isNumber(next_char) || ["a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"].includes(next_char)) {
+            number16(pos);
+          } else {
+            const error = new ZincError();
+            error.message = "Hexadecimal digit expected!";
+            error.startLine = lineCount;
+            error.startPosition = pos;
+            error.endLine = lineCount;
+            error.endPosition = pos + tokenValue.length;
+            this.errors.push(error);
+            pushToken("other");
+            start(pos);
+          }
+        };
+        const number16 = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(isNumber(next_char) || ["a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"].includes(next_char)) {
+            number16(pos);
+          } else {
+            pushToken("int");
+            start(pos);
+          }
+        };
+        const number_real = (pos:number) => {
+          
+        };
+        const other_number = (pos:number) => {
+          // Integer number too large
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(isNumber(next_char)) {
+            other_number(pos);
+          } else if(isLatter(next_char) || next_char == "_") {
+            other_id(pos);
+          } else {
+            const error = new ZincError();
+            error.message = "Integer number too large!";
+            error.startLine = lineCount;
+            error.startPosition = pos;
+            error.endLine = lineCount;
+            error.endPosition = pos + tokenValue.length;
+            this.errors.push(error);
+            pushToken("other");
+            start(pos);
+          }
+        };
+        const other_id = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(isNumber(next_char) || isLatter(next_char) || next_char == "_") {
+            other_id(pos);
+          } else {
+            const error = new ZincError();
+            error.message = "An identifier or keyword cannot immediately follow a numeric literal!";
+            error.startLine = lineCount;
+            error.startPosition = pos;
+            error.endLine = lineCount;
+            error.endPosition = pos + tokenValue.length;
+            this.errors.push(error);
+            pushToken("other");
+            start(pos);
+          }
+        };
+        const start = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          if(!char) return;
+          tokenValue.push(char);
+
+          if(isLatter(char)) {
+            if(isLatter(next_char) || next_char == "_" || isNumber(next_char)) {
+              latter(pos);
+            } else {
+              pushToken("id");
+              start(pos);
+            }
+          } else if(char == "0") {
+            if(["0", "1", "2", "3", "4", "5", "6", "7"].includes(next_char)) {
+              number8(pos);
+            } else if(next_char == "x") {
+              numberx(pos);
+            } else if(next_char == ".") {
+              numberx(pos);
+            } else if(["8", "9"].includes(next_char)) {
+              other_number(pos);
+            } else if(isLatter(next_char) || next_char == "_") {
+              other_id(pos);
+            } else {
+              pushToken("int");
+              start(pos);
+            }
+          } else if(char == "/") {
+            
+          } else if(char == "\"") {
+
+          } else if(char == "'") {
+
+          } else if(char == "=") {
+
+          } else if(char == "+") {
+
+          } else if(char == "-") {
+
+          } else if(char == "*") {
+
+          } else if(char == "(") {
+
+          } else if(char == ")") {
+
+          } else if(char == "[") {
+
+          } else if(char == "]") {
+
+          } else if(char == "{") {
+
+          } else if(char == "}") {
+
+          } else if(char == ",") {
+
+          } else if(char == ">") {
+
+          } else if(char == "<") {
+
+          } else if(char == "!") {
+
+          } else if(char == "|") {
+
+          } else if(char == "&") {
+
+          } else if(char == "$") {
+
+          } else if(char == ".") {
+
+          } else if(char == ";") {
+
+          } else if(/\s/.test(char)) {
+            tokenValue.length = 0;
+          } else {
+            const error = new ZincError();
+            error.message = `'${char}' expected!`;
+            error.startLine = lineCount;
+            error.startPosition = pos;
+            error.endLine = lineCount;
+            error.endPosition = pos + char.length;
+            this.errors.push(error);
+            pushToken("other");
+          }
+        };
+        start(0);
+      }
+
     }
 
     return;
@@ -283,17 +491,7 @@ class Scanner2 {
 }
 
 new Scanner(`a
-a
-
-
 //! zinc 
-
-
-
-
-
-
- //! endzinc
-
-
+function aa( ){}
+//! endzinc
  `);
