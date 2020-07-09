@@ -177,6 +177,19 @@ class Scanner {
             start(pos);
           }
         };
+        const singal_comment = (pos:number) => {
+          const char = line[pos++];
+          const next_char = line[pos];
+          tokenValue.push(char);
+          if(!next_char) {
+            pushToken("comment");
+            return;
+          } else if(next_char == "\n") {
+            pushToken("comment");
+          } else {
+            singal_comment(pos);
+          }
+        };
         const start = (pos:number) => {
           const char = line[pos++];
           const next_char = line[pos];
@@ -206,7 +219,14 @@ class Scanner {
               start(pos);
             }
           } else if(char == "/") {
-            
+            if(next_char == "/") {
+              singal_comment(pos);
+            } else if(next_char == "*") {
+
+            } else {
+              pushToken("op");
+              start(pos);
+            }
           } else if(char == "\"") {
 
           } else if(char == "'") {
@@ -454,11 +474,11 @@ class Scanner {
 }
 
 function isLatter(char:string) {
-  return /[a-zA-Z]/.test(char);
+  return char && /[a-zA-Z]/.test(char);
 }
 
 function isNumber(char:string) {
-  return /\d/.test(char);
+  return char && /\d/.test(char);
 }
 
 class Scanner2 {
@@ -490,8 +510,381 @@ class Scanner2 {
 
 }
 
-new Scanner(`a
-//! zinc 
-function aa( ){}
-//! endzinc
- `);
+function to_tokens(content:string) {
+  content = content.replace(/\r\n/g, "\n");
+  let startLine:number = 0;
+  let startPosition:number = 0;
+  let endLine:number = 0;
+  let endPosition:number = 0;
+  const errors:ZincError[] = [];
+  const tokens:Token[] = [];
+  const tokenValue:string[] = [];
+  const getValue = () => {
+    const value = tokenValue.join("");
+    tokenValue.length = 0;
+    return value;
+  };
+  const pushToken = (type:string) => {
+    const value = getValue();
+    const token = new Token(type, value);
+    token.startLine = startLine;
+    token.startPosition = startPosition - value.length;
+    token.endLine = startLine;
+    token.endPosition = startPosition;
+    tokens.push(token);
+  };
+  const calcLocation = (char:string) => {
+    if(char == "\n") {
+      startLine++;
+      startPosition = 0;
+    } else {
+      startPosition++;
+    }
+  };
+  const latter = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isLatter(next_char) || next_char == "_" || isNumber(next_char)) {
+      latter(pos);
+    } else {
+      pushToken("id");
+      start(pos);
+    }
+  };
+  const number0 = (pos:number) => {};
+  const number = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(next_char)) {
+      number(pos);
+    } else if(next_char == ".") {
+      number_real(pos);
+    } else if(isLatter(next_char) || next_char == "_") {
+      other_id(pos);
+    } else {
+      pushToken("int");
+      start(pos);
+    }
+  };
+  const number8 = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(["0", "1", "2", "3", "4", "5", "6", "7"].includes(next_char)) {
+      number8(pos);
+    } else {
+      pushToken("int");
+      start(pos);
+    }
+  };
+  const numberx = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isNumber(next_char) || ["a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"].includes(next_char)) {
+      number16(pos);
+    } else {
+      const error = new ZincError();
+      error.message = "Hexadecimal digit expected!";
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + tokenValue.length;
+      errors.push(error);
+      pushToken("other");
+      start(pos);
+    }
+  };
+  const number16 = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isNumber(next_char) || ["a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"].includes(next_char)) {
+      number16(pos);
+    } else {
+      pushToken("int");
+      start(pos);
+    }
+  };
+  const number_real = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isNumber(next_char)) {
+      number_real(pos);
+    } else {
+      pushToken("real");
+      start(pos);
+    }
+  };
+  const other_number = (pos:number) => {
+    // Integer number too large
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isNumber(next_char)) {
+      other_number(pos);
+    } else if(isLatter(next_char) || next_char == "_") {
+      other_id(pos);
+    } else {
+      const error = new ZincError();
+      error.message = "Integer number too large!";
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + tokenValue.length;
+      errors.push(error);
+      pushToken("other");
+      start(pos);
+    }
+  };
+  const other_id = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(isNumber(next_char) || isLatter(next_char) || next_char == "_") {
+      other_id(pos);
+    } else {
+      const error = new ZincError();
+      error.message = "An identifier or keyword cannot immediately follow a numeric literal!";
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + tokenValue.length;
+      errors.push(error);
+      pushToken("other");
+      start(pos);
+    }
+  };
+  const singal_comment = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(!next_char) {
+      pushToken("comment");
+    } else if(next_char == "\n") {
+      pushToken("comment");
+      start(pos);
+    } else {
+      singal_comment(pos);
+    }
+  };
+  const block_comment = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(!next_char) {
+      const error = new ZincError();
+      error.message = "Block comment is not closed!";
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + tokenValue.length;
+      errors.push(error);
+      pushToken("other");
+    } else if(next_char == "*") {
+      block_comment_will(pos);
+    } else {
+      block_comment(pos);
+    }
+  };
+  const block_comment_will = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    if(!next_char) {
+      const error = new ZincError();
+      error.message = "Block comment is not closed!";
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + tokenValue.length;
+      errors.push(error);
+      pushToken("other");
+    } else if(next_char == "/") {
+      block_comment_closed(pos);
+    } else {
+      block_comment(pos);
+    }
+  };
+  const string_closed = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("string");
+
+    if(next_char) {
+      start(pos);
+    }
+  };
+  const string_in = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+
+    if(next_char == "\"") {
+      string_closed(pos);
+    } else if(!next_char || next_char == "\n") {
+      string_unclosed(pos);
+    } else {
+      string_in(pos);
+    }
+  };
+  const string_unclosed = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    const error = new ZincError();
+    error.message = "Unterminated string literal!";
+    error.startLine = startLine;
+    error.startPosition = startPosition - tokenValue.length;
+    error.endLine = startLine;
+    error.endPosition = startPosition;
+    errors.push(error);
+    pushToken("other");
+
+    if(next_char) {
+      start(pos);
+    }
+  };
+  const block_comment_closed = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("block_comment");
+    if(next_char) {
+      start(pos);
+    }
+  };
+  const start = (pos:number) => {
+    
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+
+    if(isLatter(char)) {
+      if(isLatter(next_char) || next_char == "_" || isNumber(next_char)) {
+        latter(pos);
+      } else {
+        pushToken("id");
+        start(pos);
+      }
+    } else if(char == "0") {
+      if(["0", "1", "2", "3", "4", "5", "6", "7"].includes(next_char)) {
+        number8(pos);
+      } else if(next_char == "x") {
+        numberx(pos);
+      } else if(next_char == ".") {
+        number_real(pos);
+      } else if(["8", "9"].includes(next_char)) {
+        other_number(pos);
+      } else if(isLatter(next_char) || next_char == "_") {
+        other_id(pos);
+      } else {
+        pushToken("int");
+        start(pos);
+      }
+    } else if(["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(char)) {
+      number(pos);
+    } else if(char == "/") {
+      if(next_char == "/") {
+        singal_comment(pos);
+      } else if(next_char == "*") {
+        block_comment(pos);
+      } else {
+        pushToken("op");
+        start(pos);
+      }
+    } else if(char == "\"") {
+      if(next_char == "\"") {
+        string_closed(pos);
+      } else if(!next_char || next_char == "\n") {
+        string_unclosed(pos);
+      } else if(next_char) {
+        string_in(pos);
+      }
+    } else if(char == "'") {
+
+    } else if(char == "=") {
+
+    } else if(char == "+") {
+
+    } else if(char == "-") {
+
+    } else if(char == "*") {
+
+    } else if(char == "(") {
+
+    } else if(char == ")") {
+
+    } else if(char == "[") {
+
+    } else if(char == "]") {
+
+    } else if(char == "{") {
+
+    } else if(char == "}") {
+
+    } else if(char == ",") {
+
+    } else if(char == ">") {
+
+    } else if(char == "<") {
+
+    } else if(char == "!") {
+
+    } else if(char == "|") {
+
+    } else if(char == "&") {
+
+    } else if(char == "$") {
+
+    } else if(char == ".") {
+
+    } else if(char == ";") {
+
+    } else if(/\s/.test(char)) {
+      tokenValue.length = 0;
+      start(pos);
+    } else if(!char) { 
+    } else {
+      const error = new ZincError();
+      error.message = `'${char}' expected!`;
+      error.startLine = startLine;
+      error.startPosition = startPosition;
+      error.endLine = startLine;
+      error.endPosition = startPosition + char.length;
+      errors.push(error);
+      pushToken("other");
+      start(pos);
+    }
+  };
+  start(0);
+  console.log(tokens)
+  console.log(errors)
+}
+
+to_tokens(`"   
+
+`);

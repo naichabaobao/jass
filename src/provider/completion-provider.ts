@@ -480,7 +480,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     const isType = document.getWordRangeAtPosition(position, new RegExp(`(?<=\\b(${types().join("|")})\\s+)[a-zA-Z][a-zA-Z0-9]*`));
     const isEqual = document.getWordRangeAtPosition(position, /(?<==\s*)[a-zA-Z][a-zA-Z0-9]*/);
     const isCall = document.getWordRangeAtPosition(position, /(?<=\bcall\s+)[a-zA-Z][a-zA-Z0-9]*/);
-
+ 
     const items = new Array<vscode.CompletionItem>();
     try {
       if (isReturns || isLocal || isConstant || isTakes) {
@@ -503,7 +503,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       }
       else if (isCall) {
         this.initCurrent(document);
-        this.allFunctions(document.fileName);
+        items.push(...this.allFunctions(document.fileName));
       }
       else {
         this.initCurrent(document);
