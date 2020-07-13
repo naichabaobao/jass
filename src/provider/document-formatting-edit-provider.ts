@@ -228,13 +228,13 @@ class KeywordDocumentFormattingEditProvider implements vscode.DocumentFormatting
                 const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
                 textEdits.push(edit);
               }
-            }else if(next_token.type == "identifier") {
+            }else if(next_token.type === "identifier") {
               if(this.distanceUneq(token, next_token, 1)) {
                 const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), this.indentChar());
                 textEdits.push(edit);
               }
             }else if(next_token.type == "operation") {
-              if((next_token.value == "(" || next_token.value == ",") && this.distanceUneq(token, next_token, 0)) {
+              if((/*next_token.value == "(" || */next_token.value === ",") && this.distanceUneq(token, next_token, 0)) {
                 const edit = vscode.TextEdit.replace(new vscode.Range(token.line, token.end_position,next_token.line, next_token.position), "");
                 textEdits.push(edit);
               }

@@ -669,14 +669,14 @@ class Program extends Node {
         }
       }
       // globals
-      else if(type == 300) {
-        if(token.type == "keyword" && token.value == "endglobals") {
+      else if(type === 300) {
+        if(token.type === "keyword" && token.value === "endglobals") {
           setEnd(globals);
           this.block.push(globals);
           type = 0;
         }else{
-          if(globalType == 0) {
-            if(token.type == "keyword" && token.value == "constant") {
+          if(globalType === 0) {
+            if(token.type === "keyword" && token.value === "constant") {
               global = new Variable();
               global.flags.push("constant");
               setStart(global);
@@ -687,21 +687,35 @@ class Program extends Node {
               setStart(global);
               globalType = 2;
             }
-          }else if(globalType == 1) {
+          }else if(globalType === 1) {
             if(isType(token.value)) {
               global.type = token.value;
-              globalType = 2;
-            }else{
-              globalType = 0;
-            }
-          }else if(globalType == 2) {
-            if(token.type == "identifier") {
-              global.name = token.value;
               globalType = 3;
             }else{
               globalType = 0;
             }
-          }else if(globalType == 3) {
+          }else if(globalType === 2) {
+            if(token.type === "identifier") {
+              global.name = token.value;
+              setEnd(global);
+              globals.variables.push(global);
+              globalType = 0;
+            }else if(token.type === "keyword" && token.value === "array") {
+              global.flags.push("array");
+              globalType = 4;
+            }else{
+              globalType = 0;
+            }
+          }else if(globalType === 3) {
+            if(token.type === "identifier") {
+              global.name = token.value;
+              setEnd(global);
+              globals.variables.push(global);
+              globalType = 0;
+            }else{
+              globalType = 0;
+            }
+            continue;
             if(token.type == "keyword" && token.value == "array") {
               if(!global.isConstant()) {
                 global.flags.push("array");
@@ -723,6 +737,13 @@ class Program extends Node {
               globalType = 0;
             }
             
+          }else if(globalType === 4) {
+            if(token.type === "identifier") {
+              global.name = token.value;
+              setEnd(global);
+              globals.variables.push(global);
+            }
+            globalType = 0;
           }
         }
       }

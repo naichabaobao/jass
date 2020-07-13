@@ -56,7 +56,10 @@
         "jass.format.indent.char": {
           "type": "string",
           "default": " ",
-          "enum": [" ", "\t"],
+          "enum": [
+            " ",
+            "\t"
+          ],
           "description": "缩进字符(deprecated)\n(indent char)"
         },
         "jass.format.if_space": {
@@ -102,7 +105,15 @@
         "path": "./src/snippets.json"
       }
     ],
-    "documentFormattingProvider": "true"
+    "documentFormattingProvider": "true",
+    "productIconTheme": [
+      {
+        "id": "jass",
+        "label": "jass",
+        "path": "./src/jass-product-icon-theme.json"
+      }
+    ],
+    "enableProposedApi": true
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

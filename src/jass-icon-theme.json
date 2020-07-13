@@ -1,0 +1,16 @@
+{
+    "$schema": "vscode://schemas/icon-theme",
+    "iconDefinitions": {
+        "j": {
+            "iconPath": "./resources/static/jass.png"
+        }
+    },
+    "fileExtensions": {
+        "j": "j",
+        "ai": "j"
+    },
+    "highContrast": {
+        
+    },
+    "hidesExplorerArrows": false
+}
