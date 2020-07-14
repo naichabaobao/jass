@@ -3,8 +3,12 @@
   "displayName": "jass",
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
+<<<<<<< HEAD
   "icon": "src/resources/static/jass.png",
   "version": "0.0.47",
+=======
+  "version": "0.0.29",
+>>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde
   "keywords": [
     "jass",
     "warcraft"
@@ -50,6 +54,7 @@
         },
         "jass.format.indent.support": {
           "type": "boolean",
+<<<<<<< HEAD
           "default": true,
           "description": "是否开始缩进格式化（如果你文件包含非jass语法，插件并不能保证缩进可用）\n(Whether to start indenting formatting)"
         },
@@ -75,6 +80,17 @@
           "minimum": 0,
           "maximum": 8,
           "description": "not与左括号之间空格数(deprecated)\n(Number of spaces between not and left parenthesis)"
+=======
+          "default": "false",
+          "description": "是否開啓pjass語法檢測"
+        },
+        "jass.includes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "包含路徑,插件會找到.j|.ai文件(不會深度遍歷)"
+>>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde
         }
       }
     },
@@ -115,6 +131,7 @@
     ],
     "enableProposedApi": true
   },
+<<<<<<< HEAD
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -137,4 +154,28 @@
   "dependencies": {},
   "author": "家猫hoo",
   "license": "GPL"
+=======
+  "homepage": "https://raw.githubusercontent.com/fnfufnfu/jass/master/README.md",
+  "activationEvents": [
+    "onLanguage:jass"
+  ],
+  "main": "./out/src/extension",
+  "scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.39.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
+		"typescript": "^3.6.4",
+		"vscode-test": "^1.2.2"
+	}
+>>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde
 }

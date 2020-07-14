@@ -28,6 +28,7 @@ common.j 為1.32.1
 
 
 library Main initializer MainEvent
+<<<<<<< HEAD
   function MainAction takes nothing returns nothing
           
   endfunction
@@ -36,6 +37,16 @@ library Main initializer MainEvent
     call TriggerRegisterTimerEventSingle(mainTrigger,0)
     call TriggerAddAction(mainTrigger, function MainAction)
   endfunction
+=======
+function MainAction takes nothing returns nothing
+        
+endfunction
+function MainEvent takes nothing returns nothing
+  local trigger mainTrigger=CreateTrigger()
+  call TriggerRegisterTimerEventSingle(mainTrigger,0)
+  call TriggerAddAction(mainTrigger,function MainAction)
+endfunction
+>>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde
 endlibrary
 ```
 --------------------------------------------------------
