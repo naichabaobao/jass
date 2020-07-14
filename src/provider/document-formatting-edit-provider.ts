@@ -257,7 +257,6 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     const textEdits = new Array<vscode.TextEdit>();
     try{
       
-
     }catch(e) {
       console.error(e);
     }
