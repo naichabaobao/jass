@@ -4,7 +4,6 @@
 		"target": "es6",
 		"outDir": "out",
 		"lib": [
-<<<<<<< HEAD
 			"ES2015.Iterable",
 			"es2020",
 			"DOM"
@@ -17,13 +16,6 @@
 		"experimentalDecorators": true,
 		"downlevelIteration": true,
 		"strictPropertyInitialization": true
-=======
-			"es6"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true   /* enable all strict type-checking options */
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
