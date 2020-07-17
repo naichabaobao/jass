@@ -510,7 +510,7 @@ class Scanner2 {
 
 }
 
-function to_tokens(content:string) {
+function tokens(content:string) {
   content = content.replace(/\r\n/g, "\n");
   let startLine:number = 0;
   let startPosition:number = 0;
@@ -776,6 +776,107 @@ function to_tokens(content:string) {
       start(pos);
     }
   };
+  const eq = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const uneq = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const or = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const and = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const gteq = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const lteq = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos); 
+  };
+  const in_code = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    if(isNumber(next_char) || isLatter(next_char)) {
+      in_code(pos);
+    }else if(next_char === "'") {
+      code_end(pos);
+    } else {
+      pushToken("other");
+      start(pos);
+    }
+  };
+  const code_end = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("int");
+    start(pos);
+  };
+  const returns = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    pushToken("op");
+    start(pos);
+  };
+  const wave = (pos:number) => {
+    const char = content[pos++];
+    calcLocation(char);
+    const next_char = content[pos];
+    tokenValue.push(char);
+    
+    if(!next_char || next_char === "\n") {
+      pushToken("macro");
+      start(pos);
+    }else {
+      wave(pos);
+    }
+  };
+
   const start = (pos:number) => {
     
     const char = content[pos++];
@@ -825,45 +926,138 @@ function to_tokens(content:string) {
         string_in(pos);
       }
     } else if(char == "'") {
-
+      if(isLatter(next_char) || isNumber(next_char)) {
+        in_code(pos);
+      } else if(next_char === "'") {
+        code_end(pos);
+      } else {
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == "=") {
-
+      if(next_char === "=") {
+        eq(pos);
+      }else{
+        const error = new ZincError();
+        error.message = `'${char}' expected!`;
+        error.startLine = startLine;
+        error.startPosition = startPosition;
+        error.endLine = startLine;
+        error.endPosition = startPosition + char.length;
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == "+") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "-") {
-
+      if(next_char === ">") {
+        returns(pos);
+      } else {
+        pushToken("op");
+        start(pos);
+      }
     } else if(char == "*") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "(") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == ")") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "[") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "]") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "{") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == "}") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == ",") {
-
+      pushToken("op");
+      start(pos);
     } else if(char == ">") {
-
+      if(next_char === "=") {
+        gteq(pos);
+      } else {
+        pushToken("op");
+        start(pos);
+      }
     } else if(char == "<") {
-
+      if(next_char === "=") {
+        lteq(pos);
+      } else {
+        pushToken("op");
+        start(pos);
+      }
     } else if(char == "!") {
-
+      if(next_char === "=") {
+        uneq(pos);
+      }else{
+        const error = new ZincError();
+        error.message = `'${char}' expected!`;
+        error.startLine = startLine;
+        error.startPosition = startPosition;
+        error.endLine = startLine;
+        error.endPosition = startPosition + char.length;
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == "|") {
-
+      if(next_char === "|") {
+        or(pos);
+      }else{
+        const error = new ZincError();
+        error.message = `'${char}' expected!`;
+        error.startLine = startLine;
+        error.startPosition = startPosition;
+        error.endLine = startLine;
+        error.endPosition = startPosition + char.length;
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == "&") {
-
+      if(next_char === "&") {
+        and(pos);
+      }else{
+        const error = new ZincError();
+        error.message = `'${char}' expected!`;
+        error.startLine = startLine;
+        error.startPosition = startPosition;
+        error.endLine = startLine;
+        error.endPosition = startPosition + char.length;
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == "$") {
-
+      if(/[\da-fA-f]/.test(next_char)) {
+        number16(pos);
+      } else {
+        pushToken("other");
+        start(pos);
+      }
     } else if(char == ".") {
-
-    } else if(char == ";") {
-
+      if(isNumber(next_char)) {
+        number_real(pos);
+      } else {
+        pushToken("other");
+        start(pos);
+      }
+    } else if(char === ";") {
+      pushToken("op");
+      start(pos);
+    } else if(char === "#") {
+      if(!next_char || next_char == "\n") {
+        pushToken("macro");
+        start(pos);
+      }else {
+        wave(pos);
+      }
     } else if(/\s/.test(char)) {
       tokenValue.length = 0;
       start(pos);
@@ -882,9 +1076,16 @@ function to_tokens(content:string) {
   };
   start(0);
   console.log(tokens)
-  console.log(errors)
+  // console.log(errors)
+  return tokens;
 }
 
-to_tokens(`"   
+tokens(`
+integer a = 12 * 'aadd/'
+//#region 
+`); 
 
-`);
+export {
+  tokens,
+  Token
+};

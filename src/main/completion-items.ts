@@ -1,11 +1,6 @@
 import * as vscode from 'vscode';
 import {Type} from './type';
-import * as JassPath from './path';
-/**
- * @deprecate
- */
-import {Func,Jass} from '../provider/main-provider';
-import { fstat, readFile } from 'fs';
+
 import { Keyword } from './keyword';
 
 function creatTypeCompletion(type:Type):vscode.CompletionItem {
