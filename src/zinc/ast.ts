@@ -87,16 +87,20 @@ class StringFirst {
 class ValueFirst {
     public value:IntValue|RealValue|ValueFirst = null as any;
 }
-class BooleanValue {
+
+interface Value {
+    value:string;
+}
+class BooleanValue implements Value{
     public value:string = null as any;
 }
-class StringValue {
+class StringValue  implements Value{
     public value:string = null as any;
 }
-class IntValue {
+class IntValue  implements Value{
     public value:string = null as any;
 }
-class RealValue {
+class RealValue  implements Value{
     public value:string = null as any;
 }
 class Id {
@@ -515,6 +519,46 @@ export {ast};
 
 // ast(ts);
 
+// class E {
+//     left:E|T;
+//     right:T;
+//     op:"&&"|"||";
+//     constructor(left:E|T, right:T,op:"&&"|"||") {
+//         this.left = left;
+//         this.right = right;
+//         this.op = op;
+//     }
+// }
+// class E_ {
+//     left;
+//     op:string;
+// }
+// class T{
+//     left:E|T;
+//     right:T;
+//     op:"=="|"!=";
+//     constructor(left:E|T, right:T,op:"&&"|"||") {
+//         this.left = left;
+//         this.right = right;
+//         this.op = op;
+//     }
+// }
+// class T_ {
+//     left;
+//     op:string;
+// }
+// class F {
+//     value:string|E;
+// }
+
+function isValue (token:Token) {
+    return (token.type === typeId && (token.value === True || token.value === False)) || (token.type === typeInt) || token.type === typeReal || token.type === typeString;
+}
+
+function isOp (token:Token) {
+    return (token.type === typeOp && (token.value === ">" || token.value === "<" || token.value === ">=" || token.value === "<=" || token.value === "+" || token.value === "-" || token.value === "*" || token.value === "/" || token.value === "||" || token.value === "&&" || token.value === "==" || token.value === "!=")) || (token.type === typeInt) || token.type === typeReal || token.type === typeString;
+}
+
 function toAst(ts:Token[]) {
     const zincFile = new ZincFile();
 
@@ -739,13 +783,14 @@ function toAst(ts:Token[]) {
                     state = 18;
                 }
             } else if (state === 21) { // 条件表达式开始
-                first = 0;
                 
                 // true false ( ! not string int real id
                 if (next_token.type === typeId && (next_token.value === True || next_token.value === False)) {
                     state = 22;
+                } else if (next_token.type === typeInt) {
+                    state = 22;
                 }
-            } else if (state === 22) {
+            } else if (state === 22) { // 值
                 const b  = new BooleanValue();
                 b.value = token.value;
                 if (obj instanceof BooleanBinaryExpression) {
@@ -753,7 +798,7 @@ function toAst(ts:Token[]) {
                 } else {
 
                 }
-
+                // boolean (== != )
                 if (next_token.type === typeOp && next_token.value === ")") {
                     if (expression instanceof IfExpression) {
                         // expression.condition = obj;
@@ -763,7 +808,7 @@ function toAst(ts:Token[]) {
                 } else {
 
                 }
-            } else if (state === 23) {
+            } else if (state === 23) { // 二元
                 const b = new BooleanBinaryExpression();
                 b.op = token.value;
                 if (obj instanceof BooleanValue) {
@@ -774,7 +819,7 @@ function toAst(ts:Token[]) {
                 if (next_token.type === typeId && (next_token.value === True || next_token.value === False)) {
                     state = 23;
                 }
-            } else if (state === 24) {
+            } else if (state === 24) { // 一元
 
             }
         } else {
