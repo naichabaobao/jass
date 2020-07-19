@@ -417,7 +417,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       return range.contains(position);
     });
     if (func && func.takes instanceof Takes && func.takes.takes.length > 0) {
-      console.log(func.block)
       const items = new Array<vscode.CompletionItem>();
       func.takes.takes.forEach(val => {
         const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.TypeParameter);
@@ -529,6 +528,47 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 }
 
 vscode.languages.registerCompletionItemProvider("jass", new CompletionItemProvider);
+
+import * as scanner from "../zinc/scanner";
+import * as zinc from "../zinc/ast";
+
+function linToItem(library:zinc.LibraryDeclaration) {
+  const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Field);
+  return item;
+}
+
+
+/**
+ * @description zinc提示提供，未稳定，存在有大量bug
+ */
+class ZincCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    let items:vscode.CompletionItem[]|null = null;
+    
+    const tokens = scanner.tokens(document.getText());
+    const zincFile = zinc.toAst(tokens);
+    zincFile.blocks.forEach(block => {
+      block.librarys.forEach(library => {
+        if (!items) {
+          items = [];
+        }
+        items.push(linToItem(library));
+        library.functions.forEach(func => {
+          const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+          item.detail = `${func.name} (${document.fileName}) (zinc)`;
+          item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin());
+          if (!items) {
+            items = [];
+          }
+          items.push(item);
+        });
+      }); 
+    });
+    return items;
+  }
+  
+}
+vscode.languages.registerCompletionItemProvider("jass", new ZincCompletionItemProvider);
 
 /*
 vscode.workspace.onDidChangeTextDocument(e => {

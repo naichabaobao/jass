@@ -505,7 +505,8 @@ class Program extends Node {
           node.returns = token.value;
 
           func.returns = node;
-      
+
+
           type = 108;
         }else if(token.type == "keyword" && token.value == "nothing") {
           const node = new Returns;
@@ -642,17 +643,14 @@ class Program extends Node {
         if(isType(token.value)) {
           const node = new Returns;
           setNode(node);
-          const t = token.value
-          if(t) {
-            node.returns = t;
+          const t = token.value;
+          node.returns = t;
+          native.returns = node;
+          
+          setEnd(native);
+          this.block.push(native);
 
-            setEnd(native);
-            this.block.push(native);
-
-            type = 0;
-          }else{
-            type = 0;
-          }
+          type = 0;
         }else if(token.type == "keyword" && token.value == "nothing") {
           const node = new Returns;
           const t = new Nothing;
@@ -749,7 +747,6 @@ class Program extends Node {
       }
       
     }
-    // console.log(this);
     return this;
   }
 

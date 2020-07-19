@@ -15,10 +15,10 @@ class TypeHoverProvider implements vscode.HoverProvider {
 
   private typeHover = (key: string) => {
     const hovers = new Array<vscode.MarkdownString>();
-    const origin = (type:JassType) => {
+    const origin = (type: JassType) => {
       let originString = `type ${type.name}`;
-      const appendExtends = (extendType:JassType) => {
-        if(extendType.extend) {
+      const appendExtends = (extendType: JassType) => {
+        if (extendType.extend) {
           originString += ` extends ${extendType.extend.name}`;
           appendExtends(extendType.extend);
         }
@@ -27,7 +27,7 @@ class TypeHoverProvider implements vscode.HoverProvider {
       return originString;
     }
     JassType.types().forEach(type => {
-      if(type.name == key) {
+      if (type.name == key) {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendText(getTypeDesc(type.name));
         markdownString.appendCodeblock(origin(type));
@@ -99,8 +99,28 @@ class GlobalHoverProvider implements vscode.HoverProvider {
 
 }
 
+import * as jass from "../jass/ast";
+import * as def from "./default";
+
+function programToFunctionMss(program: jass.Program, key: string) {
+  return [...program.natives(), ...program.functions()].filter(x => x.name === key).map(x => {
+    const markdownString = new vscode.MarkdownString();
+    markdownString.appendCodeblock(x.origin());
+    markdownString.appendText(program.findComment(x.start.line - 1) ?? "");
+    return markdownString;
+  });
+}
+
+import * as scanner from "../zinc/scanner";
+import * as ast from "../zinc/ast";
+
 class FunctionHoverProvider implements vscode.HoverProvider {
 
+  /**
+   * 
+   * @deprecated
+   * @param key 
+   */
   private functionToHover(key: string): Array<vscode.MarkdownString> {
     const hovers = new Array<vscode.MarkdownString>();
     allFunctionImpls().forEach(func => {
@@ -111,25 +131,47 @@ class FunctionHoverProvider implements vscode.HoverProvider {
         hovers.push(markdownString);
       }
     });
-
     return hovers;
   }
 
   provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
     const key = document.getText(document.getWordRangeAtPosition(position));
-
+    var hovers: vscode.MarkdownString[] = [];
     const content = document.getText();
+    /*
     const functions = parseFunctions(content);
-    var hovers = functions
+    
+    = functions
       .filter(func => func.name == key)
       .map(func => {
         const markdownString = new vscode.MarkdownString();
         markdownString.appendCodeblock(func.origin());
         markdownString.appendText(func.descript);
         return markdownString;
-      });
+      });*/
+      // jass
+    const current = new jass.Program();
+    current.parse(content);
+    [def.commonProgram, def.commonAiProgram, def.blizzardProgram, def.dzProgram, ...def.includeJPrograms, ...def.includeAiPrograms, current].forEach(pro => {
+      hovers.push(...programToFunctionMss(pro, key));
+    });
 
-    return new vscode.Hover([...this.functionToHover(key), ...hovers]);
+    // zinc
+    const tokens = scanner.tokens(content);
+    const zincFile = ast.toAst(tokens);
+    zincFile.blocks.forEach(block => {
+      block.librarys.forEach(library => {
+        library.functions.forEach(x => {
+          if (x.name == key) {
+            const markdownString = new vscode.MarkdownString();
+            markdownString.appendCodeblock(x.origin());
+            hovers.push(markdownString);
+          }
+        });
+      });
+    });
+
+    return new vscode.Hover([...hovers]);
   }
 
 }
@@ -180,7 +222,7 @@ class CurrentHoverProvider implements vscode.HoverProvider {
 
 
     }
-  
+
     return hovers;
   }
 
@@ -199,12 +241,12 @@ class CodeHoverProvider implements vscode.HoverProvider {
    */
   private code(key: string): Array<vscode.MarkdownString> {
     const hovers = new Array<vscode.MarkdownString>();
-    
-    const valueString16 = '0x' + key.replace(/'/, '').replace(/[\da-zA-Z]/g, function(subString) {
+
+    const valueString16 = '0x' + key.replace(/'/, '').replace(/[\da-zA-Z]/g, function (subString) {
       return subString.charCodeAt(0).toString(16);
     });
     const value = parseInt(valueString16);
-    
+
     const markdownString = new vscode.MarkdownString().appendCodeblock(`${value}`);
     hovers.push(markdownString);
 

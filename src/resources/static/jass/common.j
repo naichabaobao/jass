@@ -3587,6 +3587,7 @@ constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
+// 获取玩家科技数量
 constant native GetPlayerTechCount takes player whichPlayer, integer techid, boolean specificonly returns integer
 
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing

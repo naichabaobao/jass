@@ -39,6 +39,10 @@ class FunctionDeclaration {
     public takes:Take[] = [];
     public returns:string|null = null;
     public body:any = null as any;
+
+    public origin() {
+        return `${this.flags.length > 0 ? this.flags.map(flag => flag).join(" ") + " " : ""}function ${this.name ?? ""} (${this.takes.map(take => take.origin()).join(", ")}) ${this.returns ? "-> " + this.returns + " " : "" }{\n    // ...\n}`;
+    }
 }
 
 class OnInitFunctionDeclaration extends FunctionDeclaration{
@@ -48,6 +52,10 @@ class OnInitFunctionDeclaration extends FunctionDeclaration{
 class Take {
     public type:string = null as any;
     public name:string = null as any;
+
+    public origin () {
+        return `${this.type} ${this.name}`;
+    }
 }
 
 type PermissionFlag = "private" | "public";
@@ -77,7 +85,8 @@ class ZincFile {
     public blocks:ZincBlock[] = [];
 }
 
-//region condition
+
+/*
 class BooleanFirst {
     public value:BooleanValue|BooleanFirst|BooleanUnaryExpression|BooleanBinaryExpression|BooleanValueBinaryExpression|BooleanStringBinaryExpression = null as any;
 }
@@ -103,6 +112,7 @@ class IntValue  implements Value{
 class RealValue  implements Value{
     public value:string = null as any;
 }
+
 class Id {
     public value:string = null as any;
 }
@@ -152,14 +162,9 @@ class ValueUnaryExpression {
 
 class IfExpression {
     public condition:BooleanUnaryExpression|BooleanBinaryExpression|BooleanValueBinaryExpression|BooleanStringBinaryExpression|BooleanValue|BooleanFirst|CallExpression|Id = null as any;
-}
-//endregion
+}*/
 
-function ast(tokens:Token[]) {
-    const block = new ZincBlock;
-    start(tokens, 0, false, block);
-    console.log(block);
-}
+
 
 const typeComment = "comment";
 const typeBlockComment = "block";
@@ -210,7 +215,13 @@ function isZinc(value:string) {
 function isEndZinc(value:string) {
     return /^[ \t]*\/\/![ \t]+endzinc([ \t].*\n?|[ \t]*\n?)$/.test(value);
 }
+/*
 
+function ast(tokens:Token[]) {
+    const block = new ZincBlock;
+    start(tokens, 0, false, block);
+    console.log(block);
+}
 function start(tokens:Token[],index:number,inZincBlock = false,block:ZincBlock) {
     const token = tokens[index++];
     if (!token) return;
@@ -509,7 +520,7 @@ function library_function_end(tokens:Token[], index:number, block:ZincBlock,  li
 }
 
 export {ast};
-
+*/
 // const ts = tokens(`
 // library A {
 // function a () {}
@@ -566,13 +577,10 @@ function toAst(ts:Token[]) {
     let library:LibraryDeclaration = null as any;
     let func:FunctionDeclaration = null as any;
     let take:Take = null as any;
-    let expression:IfExpression = null as any;
-    
-    // let optional = null as any;
-    let first = 0;
-    let obj:BooleanValue|IntValue|StringValue|BooleanFirst|StringFirst|ValueUnaryExpression|
-    BooleanUnaryExpression|BooleanBinaryExpression|BooleanValueBinaryExpression|BooleanStringBinaryExpression|
-    CallExpression|Id = null as any;
+
+
+
+    let field = 0; // {} 的作用域层数
 
     let state = 0;
     let inZincBlock = false;
@@ -580,8 +588,17 @@ function toAst(ts:Token[]) {
         const token = ts[index++];
         const next_token:Token|undefined = ts[index];
 
+        if (token.value === "{") {
+            field++;
+        } else if (token.value === "}") {
+            if (field > 0) field--;
+        }
+
         if (token.type === typeComment) {
             if (isEndZinc(token.value)) {
+                field = 0;
+                state = 0;
+
                 inZincBlock = false;
             }else if (isZinc(token.value)) {
                 zincBlock = new ZincBlock;
@@ -647,6 +664,9 @@ function toAst(ts:Token[]) {
                     state = 0;
                 }
             } else if (state === 6) {
+                if (field !== 1) {
+                    continue;
+                }
                 if (next_token.type === typeOp && next_token.value === "}") {
                     state = 7;
                 } else if (next_token.type === typeId && next_token.value === Function) {
@@ -758,9 +778,11 @@ function toAst(ts:Token[]) {
                     state = 6;
                 }
             } else if (state === 18) {
-                if (next_token.type === typeOp && next_token.value === "}") {
+                if (field === 2 && next_token.type === typeOp && next_token.value === "}") {
                     state = 6;
-                }else if (next_token.type === typeId && next_token.value === If) {
+                }
+                /*
+                else if (next_token.type === typeId && next_token.value === If) {
                     state = 20;
                 } else if (next_token.type === typeId && next_token.value === While) {
 
@@ -774,51 +796,11 @@ function toAst(ts:Token[]) {
 
                 } else if (next_token.type === typeId) { // 赋值或者定义
 
-                }
+                }*/
             } else if (state === 20) {
-                expression = new IfExpression;
-                if (next_token.type === typeOp && next_token.value === "(") {
-                    state = 21;
-                } else {
-                    state = 18;
-                }
-            } else if (state === 21) { // 条件表达式开始
-                
-                // true false ( ! not string int real id
-                if (next_token.type === typeId && (next_token.value === True || next_token.value === False)) {
-                    state = 22;
-                } else if (next_token.type === typeInt) {
-                    state = 22;
-                }
-            } else if (state === 22) { // 值
-                const b  = new BooleanValue();
-                b.value = token.value;
-                if (obj instanceof BooleanBinaryExpression) {
-                    obj.right = b;
-                } else {
-
-                }
-                // boolean (== != )
-                if (next_token.type === typeOp && next_token.value === ")") {
-                    if (expression instanceof IfExpression) {
-                        // expression.condition = obj;
-                    }
-                } else if (next_token.type === typeOp && (next_token.value === "==" || next_token.value === "!=")) {
-                    state = 23;
-                } else {
-
-                }
-            } else if (state === 23) { // 二元
-                const b = new BooleanBinaryExpression();
-                b.op = token.value;
-                if (obj instanceof BooleanValue) {
-                    b.left = obj;
-                }
-                obj = b;
-
-                if (next_token.type === typeId && (next_token.value === True || next_token.value === False)) {
-                    state = 23;
-                }
+            } else if (state === 21) {
+            } else if (state === 22) {
+            } else if (state === 23) {
             } else if (state === 24) { // 一元
 
             }
@@ -826,14 +808,26 @@ function toAst(ts:Token[]) {
             continue;
         }
 
+        
+
     }
     return zincFile;
 }
 
-console.log(toAst(tokens(`
+// class 
+/*
+const zincFile = toAst(tokens(`
 //! zinc
-library A {
+}}}}library A {
     function a () {}
+    function b () {}
 }
 //! endzinc
-`)))
+`))
+console.log(JSON.stringify(zincFile,null, 2))*/
+
+export {
+    FunctionDeclaration,
+    LibraryDeclaration,
+    toAst
+};

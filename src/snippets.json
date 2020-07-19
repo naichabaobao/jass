@@ -27,6 +27,18 @@
     "description": "function",
     "scope": "source.jass"
   },
+  "function-zinc": {
+    "prefix": "function",
+    "body": "function ${1:function_name} (${2}) ${3|-> nothing, ,-> |}${4}{\n\t${0:}\n}",
+    "description": "function-zinc",
+    "scope": "source.jass"
+  },
+  "block-zinc": {
+    "prefix": "zinc",
+    "body": "//! zinc\n  ${0:}\n//! endzinc",
+    "description": "zinc-block",
+    "scope": "source.jass"
+  },
   "boolexpr": {
     "prefix": "function_boolexpr",
     "body": "function ${1:function_name} takes ${2:nothing} returns boolean\n\treturn ${0:true}\nendfunction",
