@@ -670,31 +670,29 @@ function toAst(ts:Token[]) {
                 if (next_token.type === typeOp && next_token.value === "}") {
                     state = 7;
                 } else if (next_token.type === typeId && next_token.value === Function) {
-                    if (next_token.type === typeId) {
-                        state = 8;
-                    }
+                    state = 8;
                 } else if (next_token.type === typeId && next_token.value === Constant) {
-
+                    state = 6;
                 } else if (next_token.type === typeId && next_token.value === Private) {
-
+                    state = 20;
                 } else if (next_token.type === typeId && next_token.value === Public) {
-
+                    state = 22;
                 } else if (next_token.type === typeId && next_token.value === Type) {
-
+                    state = 6;
                 } else if (next_token.type === typeId && next_token.value === Struct) {
-
+                    state = 6;
                 } else if (next_token.type === typeId && next_token.value === Interface) {
-
+                    state = 6;
                 } else if (next_token.type === typeId) {
-                    
+                    state = 6;
                 }
             } else if (state === 7) {
                 state = 0;
             } else if (state === 8) {
                 func = new FunctionDeclaration;
-                library.functions.push(func);
-
+                
                 if (next_token.type === typeId) {
+                    library.functions.push(func);
                     state = 19;
                 } else {
                     state = 6;
@@ -798,9 +796,35 @@ function toAst(ts:Token[]) {
 
                 }*/
             } else if (state === 20) {
+                if (next_token.type === typeId && next_token.value === Function) {
+                    state = 21;
+                } else {
+                    state = 6;
+                }
             } else if (state === 21) {
+                func = new FunctionDeclaration;
+                func.flags.push("private");
+                if (next_token.type === typeId) {
+                    library.functions.push(func);
+                    state = 19;
+                } else {
+                    state = 6;
+                }
             } else if (state === 22) {
+                if (next_token.type === typeId && next_token.value === Function) {
+                    state = 23;
+                } else {
+                    state = 6;
+                }
             } else if (state === 23) {
+                func = new FunctionDeclaration;
+                func.flags.push("public");
+                if (next_token.type === typeId) {
+                    library.functions.push(func);
+                    state = 19;
+                } else {
+                    state = 6;
+                }
             } else if (state === 24) { // 一元
 
             }
@@ -811,6 +835,7 @@ function toAst(ts:Token[]) {
         
 
     }
+    console.log(JSON.stringify(zincFile, null , 2))
     return zincFile;
 }
 

@@ -999,13 +999,7 @@ function tokens(content:string) {
       if(next_char === "=") {
         uneq(pos);
       }else{
-        const error = new ZincError();
-        error.message = `'${char}' expected!`;
-        error.startLine = startLine;
-        error.startPosition = startPosition;
-        error.endLine = startLine;
-        error.endPosition = startPosition + char.length;
-        pushToken("other");
+        pushToken("op");
         start(pos);
       }
     } else if(char == "|") {
@@ -1075,15 +1069,10 @@ function tokens(content:string) {
     }
   };
   start(0);
-  console.log(tokens)
+  // console.log(tokens)
   // console.log(errors)
   return tokens;
 }
-
-tokens(`
-integer a = 12 * 'aadd/'
-//#region 
-`); 
 
 export {
   tokens,

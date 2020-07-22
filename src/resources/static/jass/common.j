@@ -4990,9 +4990,9 @@ native BlzFrameSetFont takes framehandle frame, string fileName, real height, in
 // 设置字体对齐方式
 native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, textaligntype horz returns nothing
 
-// 获取Frame子组件数量
+// 获取Frame子组件数量 (1.32.7)
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件
+// 获取Frame子组件 (1.32.7)
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 

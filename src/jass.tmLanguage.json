@@ -84,10 +84,9 @@
             {"include": "#jass-string"},
             {"include": "#zinc-keyword"},
             {"include": "#zinc-keyword-control"},
-            {
-              "name": "support.type",
-              "match": "\\b(integer|real|boolean|string|handle|code|void)\\b"
-            },
+            {"include": "#jass-keyword-operator"},
+            {"include": "#jass-const"},
+            {"include": "#jass-type"},
             {"include": "#jass-class"},
             {"include": "#jass-entity-name-function"},
             {"include": "#jass-number"},
@@ -241,11 +240,11 @@
     },
     "zinc-keyword": {
       "name": "keyword",
-      "match": "\\b(library|function|constant|onInit|struct|public|static|requires|optional|interface|struct|method|operator|module|type|extends)\\b"
+      "match": "\\b(library|function|constant|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|type|extends|delegate|not|do)\\b"
     },
     "zinc-keyword-control": {
       "name": "keyword.control",
-      "match": "\\b(if|else|while|for|break|debug|return)\\b"
+      "match": "\\b(if|else|while|for|break|debug|return)\\b|->"
     }
   }
 }

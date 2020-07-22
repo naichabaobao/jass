@@ -544,26 +544,34 @@ function linToItem(library:zinc.LibraryDeclaration) {
 class ZincCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     let items:vscode.CompletionItem[]|null = null;
-    
-    const tokens = scanner.tokens(document.getText());
-    const zincFile = zinc.toAst(tokens);
-    zincFile.blocks.forEach(block => {
-      block.librarys.forEach(library => {
-        if (!items) {
-          items = [];
-        }
-        items.push(linToItem(library));
-        library.functions.forEach(func => {
-          const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-          item.detail = `${func.name} (${document.fileName}) (zinc)`;
-          item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin());
+    console.log("zinc")
+    console.time("zinc completion");
+    try{
+      const tokens = scanner.tokens(document.getText());
+      const zincFile = zinc.toAst(tokens);
+      zincFile.blocks.forEach(block => {
+        block.librarys.forEach(library => {
           if (!items) {
             items = [];
           }
-          items.push(item);
-        });
-      }); 
-    });
+          items.push(linToItem(library));
+          library.functions.forEach(func => {
+            const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+            item.detail = `${func.name} (${document.fileName}) (zinc)`;
+            item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin());
+            if (!items) {
+              items = [];
+            }
+            items.push(item);
+          });
+        }); 
+      });
+
+      console.log(JSON.stringify(zincFile))
+    } catch (error) {
+      console.error(error);
+    }
+    console.timeEnd("zinc completion");
     return items;
   }
   
