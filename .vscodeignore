@@ -9,12 +9,10 @@ src/test/**
 src/tool/**
 
 .gitignore
-vsc-extension-quickstart.md
 **/tsconfig.json
 **/tslint.json
 **/*.map
 **/*.ts
-**/*.md
 
 tslint.json
 package-lock.json
@@ -22,7 +20,7 @@ tsconfig.json
 
 *.vsix
 
-src/resources/static/jass/common-1.31.j
+src/resources/static/jass/common-1.32.7.j
 src/resources/static/jass/blizzard-1.31.j
 
 src/resources/static/jass/common-1.32.j

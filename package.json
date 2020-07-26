@@ -20,9 +20,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/naichabaobao/jass.git"
+    "url": "https://github.com/naichabaobao/jass.git"
   },
-  "homepage": "https://gitee.com/naichabaobao/jass/raw/master/README.md",
+  "homepage": "https://github.com/naichabaobao/jass",
   "activationEvents": [
     "onLanguage:jass"
   ],
@@ -132,7 +132,7 @@
     "vscode-test": "^1.2.2"
   },
   "bugs": {
-    "url": "https://github.com/fnfufnfu/jass/issues"
+    "url": "https://github.com/naichabaobao/jass/issues"
   },
   "dependencies": {},
   "author": "家猫hoo",

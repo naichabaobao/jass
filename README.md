@@ -1,9 +1,10 @@
 [貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
-[源碼](https://gitee.com/naichabaobao/jass)
+[Gitee源碼](https://gitee.com/naichabaobao/jass)
+[GitHub源碼](https://github.com/naichabaobao/jass)
 [Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
 vscode最低版本1.37
-common.j 為1.32.1
+common.j 為1.32.7
 
 1. 下载安装 visual studio  Code
 
@@ -14,7 +15,7 @@ common.j 為1.32.1
 "Main.j"  内容
 
 --------------------------------------------------------
-``` jass
+```jass
 // 友情提供: 枫舞
 #include  "****.j"    //这是引入的其他j文件
 
@@ -41,12 +42,8 @@ endlibrary
 --------------------------------------------------------
 
 
+给我start一下吧！
 
 赞助码,好饿啊，赞助一下吧！
 
 ![zanzhu](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/qqshoukuan.jpg)
-
-
-[貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
-[源碼](https://gitee.com/naichabaobao/jass)
-[Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
