@@ -77,7 +77,7 @@ function _isSpace(char:string):boolean {
   return /\s/.test(char);
 }
 
-function tokenizer(content:string):Token[] {
+function tokenize(content:string):Token[] {
   console.time()
   const tokens:Token[] = [];
   const lines:Array<Array<string>> = content.replace(/\r\n/g, "\n").split("\n").map((line, index, lines) => {
@@ -545,4 +545,4 @@ import("fs").then(fs => {
 })*/
 //#endregion
 
-export {tokenizer, Token};
+export {tokenize, Token};
