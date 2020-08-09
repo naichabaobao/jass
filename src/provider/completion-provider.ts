@@ -12,6 +12,8 @@ import { Program, Nothing, Takes, Variable } from "../jass/ast";
 
 import { commonProgram, commonAiProgram, blizzardProgram, dzProgram, includeJPrograms, includeAiPrograms } from "./default";
 
+import * as x from "../main/jass/parsing";
+
 class ProgramToItemsTool {
 
   public readonly program: Program;
@@ -282,12 +284,13 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return path.parse(filePath).ext == ".ai";
   }
 
-  private allFunctions(fileName: string) {
+  private allFunctions(document:vscode.TextDocument) {
+    const fileName = document.fileName;
     return this.isJFile(fileName)
       ? [...commonJFunctionItems, ...commonJNativeItems, ...blizzardJFunctionItems, ...blizzardJNativeItems, ...dzJFunctionItems, ...dzJNativeItems, ...includesJFunctionItems, ...includeJNativeItems,
-      ...this.currentFunction()]
+      ...this.currentFunction2(document)]
       : [...commonJFunctionItems, ...commonJNativeItems, ...commonAiFunctionItems, ...commonAiNativeItems, ...dzJFunctionItems, ...dzJNativeItems, ...includesJFunctionItems, ...includeJNativeItems, ...includesAiFunctionItems, ...includeAiNativeItems,
-      ...this.currentFunction()];
+      ...this.currentFunction2(document)];
   }
 
   private allVariablas(fileName: string) {
@@ -325,9 +328,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
      */
     const handle = () => {
       const content = document.getText();
-      const start1 = new Date().getTime();
       this.program = new Program().parse(content).setFileName(document.fileName);
-      console.log(`Program用时 ${new Date().getTime() - start1} 毫秒`);
       const funcs = this.program.functions();
       const vars = this.program.globalVariables();
       const start2 = new Date().getTime();
@@ -356,8 +357,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           this.functionMap.delete(key);
         }
       }
-      console.log(`方法转换为item用时 ${new Date().getTime() - start2} 毫秒`);
-      const start3 = new Date().getTime();
+
       vars.forEach(val => {
         if (!this.functionMap.has(val.name)) {
           const item = new vscode.CompletionItem(val.name, val.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
@@ -382,7 +382,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           this.variableMap.delete(key);
         }
       }
-      console.log(`var转换为item用时 ${new Date().getTime() - start3} 毫秒`);
     };
     // handle();
 
@@ -398,9 +397,25 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     return items;
   }
 
+  /**
+   * @deprecated 使用currentFunction2
+   */
   private currentFunction() {
     // return this.mapToItems(this.functionMap);
-    return this.tool.toFunctionItems();
+    return this.tool.toFunctionItems(); 
+  }
+
+  private currentFunction2(document:vscode.TextDocument): vscode.CompletionItem[] {
+    const support:boolean = vscode.workspace.getConfiguration("jass").get("support.zinc") as boolean;
+    return support ? x.parse(document.getText()).body.filter((s) => s instanceof x.FunctionDeclarator && s.id).map((s) => {
+      // if (!(s instanceof x.FunctionDeclarator)) {
+      //   throw "";
+      // }
+      const item = new vscode.CompletionItem((<x.FunctionDeclarator>s).id ?? "", vscode.CompletionItemKind.Function);
+      item.detail = `${(<x.FunctionDeclarator>s).id} (当前文档)` ?? "";
+      item.documentation = new vscode.MarkdownString().appendCodeblock((<x.FunctionDeclarator>s).origin());
+      return item; 
+    }) : this.tool.toFunctionItems();
   }
 
   private currentVariable() {
@@ -465,7 +480,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    const start = new Date().getTime();
+
     const isReturns = document.getWordRangeAtPosition(position, /(?<=\breturns\s+)[a-zA-Z][a-zA-Z0-9]*/);
     const isLocal = document.getWordRangeAtPosition(position, /(?<=\blocal\s+)[a-zA-Z][a-zA-Z0-9]*/);
     const isConstant = document.getWordRangeAtPosition(position, /(?<=\bconstant\s+)[a-zA-Z][a-zA-Z0-9]*/);
@@ -502,11 +517,11 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       }
       else if (isCall) {
         this.initCurrent(document);
-        items.push(...this.allFunctions(document.fileName));
+        items.push(...this.allFunctions(document));
       }
       else {
         this.initCurrent(document);
-        items.push(...keywordItems, ...typeItems, ...this.allFunctions(document.fileName), ...this.allVariablas(document.fileName));
+        items.push(...keywordItems, ...typeItems, ...this.allFunctions(document), ...this.allVariablas(document.fileName));
         items.push(...this.allVariablas(document.fileName));
         const takes = this.currentTake(position);
         if (takes) {
@@ -521,7 +536,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       console.log(error);
       return null;
     }
-    console.log(`实际用时 ${new Date().getTime() - start} 毫秒.............`)
+    
     return items;
   }
 
@@ -532,7 +547,7 @@ vscode.languages.registerCompletionItemProvider("jass", new CompletionItemProvid
 import * as scanner from "../zinc/scanner";
 import * as zinc from "../zinc/ast";
 
-function linToItem(library:zinc.LibraryDeclaration) {
+function libraryToItem(library:zinc.LibraryDeclaration) {
   const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Field);
   return item;
 }
@@ -544,8 +559,6 @@ function linToItem(library:zinc.LibraryDeclaration) {
 class ZincCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     let items:vscode.CompletionItem[]|null = null;
-    console.log("zinc")
-    console.time("zinc completion");
     try{
       const tokens = scanner.tokens(document.getText());
       const zincFile = zinc.toAst(tokens);
@@ -554,7 +567,7 @@ class ZincCompletionItemProvider implements vscode.CompletionItemProvider {
           if (!items) {
             items = [];
           }
-          items.push(linToItem(library));
+          items.push(libraryToItem(library));
           library.functions.forEach(func => {
             const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
             item.detail = `${func.name} (${document.fileName}) (zinc)`;
@@ -571,12 +584,11 @@ class ZincCompletionItemProvider implements vscode.CompletionItemProvider {
     } catch (error) {
       console.error(error);
     }
-    console.timeEnd("zinc completion");
     return items;
   }
   
 }
-vscode.languages.registerCompletionItemProvider("jass", new ZincCompletionItemProvider);
+// vscode.languages.registerCompletionItemProvider("jass", new ZincCompletionItemProvider);
 
 /*
 vscode.workspace.onDidChangeTextDocument(e => {

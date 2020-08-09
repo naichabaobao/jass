@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.48-beta-2",
+  "version": "0.0.48",
   "keywords": [
     "jass",
     "warcraft"
@@ -45,7 +45,7 @@
         },
         "jass.diagnostic.support": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "是否开始错误检查\n(Whether to start error checking (currently only support call checking))"
         },
         "jass.format.indent.support": {
@@ -75,6 +75,11 @@
           "minimum": 0,
           "maximum": 8,
           "description": "not与左括号之间空格数(deprecated)\n(Number of spaces between not and left parenthesis)"
+        },
+        "jass.support.zinc": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否支持zinc(test)\n(Whether to support Zinc)"
         }
       }
     },

@@ -7,9 +7,6 @@ import { CommonAiGlobals } from "../main/file";
 
 // vscode.languages.registerCompletionItemProvider(language, new CompletionItemProvider);
 
-const startTime = new Date().getTime()
-console.log(startTime)
-
 function configuration(){
   return vscode.workspace.getConfiguration("jass");
 }
@@ -164,7 +161,7 @@ vscode.workspace.onDidChangeConfiguration(e => {
 });
 
 
-console.log(`用时 ${new Date().getTime() - startTime} 毫秒`);
+
 /*
 2020年6月28日 5204毫秒
 */

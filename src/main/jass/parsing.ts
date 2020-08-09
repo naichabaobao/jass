@@ -10,6 +10,10 @@ interface Loc {
     loc: Location | null;
 }
 
+interface Origin {
+    origin():string;
+}
+
 class NativeDeclarator implements Loc {
     public id: string | null = null;
     public takes: Take[] = [];
@@ -17,7 +21,7 @@ class NativeDeclarator implements Loc {
     public loc: Location | null = null;
 }
 
-class FunctionDeclarator implements Loc {
+class FunctionDeclarator implements Loc, Origin {
     public id: string | null = null;
     public takes: Take[] = [];
     public returns: string | null = null;
@@ -27,12 +31,19 @@ class FunctionDeclarator implements Loc {
      * function block中的tokens
      */
     public bodyTokens: Token[] = [];
+    public origin() {
+        return `function ${this.id} takes ${this.takes.length > 0 ? this.takes.map(x => x.origin()).join(", ") : "nothing"} returns ${this.returns ?? "nothing"}`;
+    }
 }
 
-class Take extends Location {
+class Take implements Loc, Origin {
     public type: string | null = null;
     public id: string = "";
     public loc: Location | null = null;
+
+    public origin() {
+        return `${this.type} ${this.id}`;
+    }
 }
 
 class Globals implements Loc {
@@ -100,7 +111,8 @@ function start(tokens: Token[], progam: Progam) {
             index = parseFunction(tokens, index, progam, new FunctionDeclarator);
             index++;
         } else if (token.type === "id" && token.value === "globals") {
-            parseGlobals(tokens, index, progam, new Globals);
+            // parseGlobals(tokens, index, progam, new Globals);
+            // globals识别存在问题,因而暂时不对globals支持
             index++;
         } else {
             // 如果遇到无法识别的token时，直接无视掉
@@ -194,9 +206,10 @@ interface FunctionOption {
 }
 
 function parseFunction(tokens: Token[], pos: number, progam: Progam, func: FunctionDeclarator,option?:FunctionOption) {
-    if (option) {
-        option.supportZinc = true;
-    }
+
+    option = {
+        supportZinc: true
+    };
     if (tokens[pos].type === "id" && tokens[pos].value === "function") {
         const loc = new Location();
         loc.startLine = tokens[pos].loc?.startLine ?? null;
@@ -336,5 +349,6 @@ function parse(content:string) {
 
 export {
     parsing,
-    parse
+    parse,
+    FunctionDeclarator
 };
