@@ -111,8 +111,6 @@ function programToFunctionMss(program: jass.Program, key: string) {
   });
 }
 
-import * as scanner from "../zinc/scanner";
-import * as ast from "../zinc/ast";
 
 class FunctionHoverProvider implements vscode.HoverProvider {
 
@@ -157,6 +155,7 @@ class FunctionHoverProvider implements vscode.HoverProvider {
     });
 
     // zinc
+    /*
     const tokens = scanner.tokens(content);
     const zincFile = ast.toAst(tokens);
     zincFile.blocks.forEach(block => {
@@ -169,7 +168,7 @@ class FunctionHoverProvider implements vscode.HoverProvider {
           }
         });
       });
-    });
+    });*/
 
     return new vscode.Hover([...hovers]);
   }

@@ -84,12 +84,6 @@ vscode.languages.registerSignatureHelpProvider("jass", {
   }
 }, "(", ",");*/
 
-import * as jass from "../jass/ast";
-import * as def from "./default";
-
-import * as scanner from "../zinc/scanner";
-import * as ast from "../zinc/ast";
-
 class ZincSignatureHelp implements vscode.SignatureHelpProvider {
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     if (/^\s*\/\//.test(document.lineAt(position.line).text)) return;
@@ -104,70 +98,7 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
     const words:string[] = [];
     
 
-    for (let index = offset; index >= 0; index--) {
-      const char = content.charAt(index);
-      if (field1 < 0) {
-        if (/[\n\s]/.test(char)) {
-          continue;
-        } else if (/[a-zA-Z0-9_]/.test(char)) {
-          // const newPos = position.translate(line, character);
-          // const id = document.getText(document.getWordRangeAtPosition(newPos));
-          // console.log(id);
-          const key = /[a-zA-Z_0-9]+$/.exec(content.substring(0, index + 1));
-          if (!key) break;
-          const id = key[0];
 
-          let SignatureHelp:vscode.SignatureHelp|null = null; // new vscode.SignatureHelp();
-          /*
-          const current = new jass.Program();
-          current.parse(content);
-          [def.commonProgram, def.commonAiProgram, def.blizzardProgram, def.dzProgram, ...def.includeJPrograms, ...def.includeAiPrograms, current].forEach(pro => {
-            // hovers.push(...programToFunctionMss(pro, key));
-          });*/
-
-          // zinc
-          const tokens = scanner.tokens(document.getText());
-          const zincFile = ast.toAst(tokens);
-          zincFile.blocks.forEach(block => {
-            block.librarys.forEach(library => {
-              library.functions.forEach(x => {
-                if (x.name == id) {
-                  const SignatureInformation = new vscode.SignatureInformation(`${x.name}(${x.takes.length > 0 ? x.takes.map(take => take.origin()).join(", ") : ""}) -> ${x.returns ?? "nothing"} {}`);
-                  SignatureInformation.documentation = new vscode.MarkdownString().appendCodeblock(x.origin());
-                  x.takes.forEach(take => {
-                    if (take.name) {
-                      SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
-                    }
-                  });
-                  SignatureHelp = new vscode.SignatureHelp();
-                  SignatureHelp.activeParameter = count;
-                  SignatureHelp.signatures.push(SignatureInformation);
-                  
-                }
-              });
-            });
-          });
-          if (SignatureHelp) {
-            return SignatureHelp;
-          }
-          break;
-        } else {
-          break;
-        }
-      } else {
-        if (!inString1 && char == '"') {
-          inString1 = true;
-        } else if (inString1 && char == '"' && content.charAt(index - 1) != '\\') {
-          inString1 = false;
-        } else if (!inString1 && field1 === 0 && char === ",") {
-          count++;
-        } else if (!inString1 && char === ")") {
-          field1++;
-        } else if (!inString1 && char === "(") {
-          field1--;
-        }
-      }
-    }
 
     function provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext) {
       const SignatureHelp = new vscode.SignatureHelp();
@@ -247,3 +178,69 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
 }
 
 vscode.languages.registerSignatureHelpProvider("jass", new ZincSignatureHelp, "(", ",");
+
+
+// for (let index = offset; index >= 0; index--) {
+//   const char = content.charAt(index);
+//   if (field1 < 0) {
+//     if (/[\n\s]/.test(char)) {
+//       continue;
+//     } else if (/[a-zA-Z0-9_]/.test(char)) {
+//       // const newPos = position.translate(line, character);
+//       // const id = document.getText(document.getWordRangeAtPosition(newPos));
+//       // console.log(id);
+//       const key = /[a-zA-Z_0-9]+$/.exec(content.substring(0, index + 1));
+//       if (!key) break;
+//       const id = key[0];
+
+//       let SignatureHelp:vscode.SignatureHelp|null = null; // new vscode.SignatureHelp();
+//       /*
+//       const current = new jass.Program();
+//       current.parse(content);
+//       [def.commonProgram, def.commonAiProgram, def.blizzardProgram, def.dzProgram, ...def.includeJPrograms, ...def.includeAiPrograms, current].forEach(pro => {
+//         // hovers.push(...programToFunctionMss(pro, key));
+//       });*/
+
+//       // zinc
+//       const tokens = scanner.tokens(document.getText());
+//       const zincFile = ast.toAst(tokens);
+//       zincFile.blocks.forEach(block => {
+//         block.librarys.forEach(library => {
+//           library.functions.forEach(x => {
+//             if (x.name == id) {
+//               const SignatureInformation = new vscode.SignatureInformation(`${x.name}(${x.takes.length > 0 ? x.takes.map(take => take.origin()).join(", ") : ""}) -> ${x.returns ?? "nothing"} {}`);
+//               SignatureInformation.documentation = new vscode.MarkdownString().appendCodeblock(x.origin());
+//               x.takes.forEach(take => {
+//                 if (take.name) {
+//                   SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
+//                 }
+//               });
+//               SignatureHelp = new vscode.SignatureHelp();
+//               SignatureHelp.activeParameter = count;
+//               SignatureHelp.signatures.push(SignatureInformation);
+              
+//             }
+//           });
+//         });
+//       });
+//       if (SignatureHelp) {
+//         return SignatureHelp;
+//       }
+//       break;
+//     } else {
+//       break;
+//     }
+//   } else {
+//     if (!inString1 && char == '"') {
+//       inString1 = true;
+//     } else if (inString1 && char == '"' && content.charAt(index - 1) != '\\') {
+//       inString1 = false;
+//     } else if (!inString1 && field1 === 0 && char === ",") {
+//       count++;
+//     } else if (!inString1 && char === ")") {
+//       field1++;
+//     } else if (!inString1 && char === "(") {
+//       field1--;
+//     }
+//   }
+// }

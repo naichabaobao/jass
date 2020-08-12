@@ -78,7 +78,7 @@ function _isSpace(char:string):boolean {
 }
 
 function tokenize(content:string):Token[] {
-  console.time()
+
   const tokens:Token[] = [];
   const lines:Array<Array<string>> = content.replace(/\r\n/g, "\n").split("\n").map((line, index, lines) => {
     return index === lines.length - 1 ? Array.from(line) : Array.from(line).concat("\n");
@@ -481,10 +481,8 @@ function tokenize(content:string):Token[] {
         pushToken("other", startLine, startPosition, lineCount, position);
       }
     }
-    // console.log(tokens)
-    // console.log(values)
+
   });
-  console.timeEnd()
   return tokens;
 }
 //#region 
