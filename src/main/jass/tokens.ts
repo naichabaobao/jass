@@ -470,7 +470,13 @@ function tokenize(content:string):Token[] {
         values.push(char);
         position++;
         pushToken("op", startLine, startPosition, lineCount, position);
-      } else if (_isSpace(char)) {
+      }/* else if (char === "\n") {
+        startLine = lineCount;
+        startPosition = position;
+        values.push(char);
+        position++;
+        pushToken("new_line", startLine, startPosition, lineCount, position);
+      } */else if (_isSpace(char)) {
         position++;
       } else {
         startLine = lineCount;

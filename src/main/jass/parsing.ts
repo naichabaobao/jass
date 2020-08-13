@@ -3,7 +3,7 @@
  * 2020年8月8日13:25:55 支持zinc function -> jass function
  */
 
-import { Token, tokenize  } from "./tokens";
+import { Token, tokenize } from "./tokens";
 import { Location } from "./range";
 
 interface Loc {
@@ -11,7 +11,7 @@ interface Loc {
 }
 
 interface Origin {
-    origin():string;
+    origin(): string;
 }
 
 class NativeDeclarator implements Loc {
@@ -48,7 +48,7 @@ class Take implements Loc, Origin {
 
 class Globals implements Loc {
     public globals: GlobalDeclarator[] = [];
-    public globalsTokens:Token[] = [];
+    public globalsTokens: Token[] = [];
     public loc: Location | null = null;
 }
 
@@ -111,7 +111,7 @@ function start(tokens: Token[], progam: Progam) {
             index = parseFunction(tokens, index, progam, new FunctionDeclarator);
             index++;
         } else if (token.type === "id" && token.value === "globals") {
-            // parseGlobals(tokens, index, progam, new Globals);
+            parseGlobals(tokens, index, progam, new Globals);
             // globals识别存在问题,因而暂时不对globals支持
             index++;
         } else {
@@ -202,10 +202,10 @@ function parseTakes(tokens: Token[], pos: number, f: FunctionDeclarator | Native
 }
 
 interface FunctionOption {
-    supportZinc?:boolean;
+    supportZinc?: boolean;
 }
 
-function parseFunction(tokens: Token[], pos: number, progam: Progam, func: FunctionDeclarator,option?:FunctionOption) {
+function parseFunction(tokens: Token[], pos: number, progam: Progam, func: FunctionDeclarator, option?: FunctionOption) {
 
     option = {
         supportZinc: true
@@ -293,26 +293,35 @@ function parseGlobals(tokens: Token[], pos: number, progam: Progam, globals: Glo
     if (tokens[pos].type === "id" && tokens[pos].value === "globals") {
         progam.body.push(globals);
         pos++;
-        let token:Token = null as any;
-        while(token = tokens[pos]) {
+        let token: Token|null = null;
+        // 记录行是否改变了
+        const globalsTokens:Token[] = [];
+        
+        while (token = tokens[pos]) {
             if (token.isId() && token.value === "endglobals") {
                 break;
-            } else if (token.isId() && token.value === "constant") {
-                const global = new GlobalDeclarator();
-                global.flags.add("constant");
-                pos = parseGlobalValue(tokens, pos + 1, globals, global);
-                pos++;
-            } else if (token.isId() && (token.value === "private" || token.value === "public")) {
-                // 此处非匹配vjass实际的globals定义,而是避免private和public这两个vjass的关键字和jass的globals产生歧义。
-                pos++;
-            } else if(token.isId()) {
-                pos = parseGlobalValue(tokens, pos, globals, new GlobalDeclarator());
-                pos++;
             } else {
-                pos++;
+                globalsTokens.push(token);
             }
-            
+            pos++;
         }
+        // 将globals tokens数组 转为以行为key的map;
+        let col:Map<number, Token[]> = new Map();
+        globalsTokens.forEach((item, index, ts) => {
+            const key = item.loc?.startLine ?? -1;
+            if (key !== -1) {
+                if (col.has(key)) {
+                    col.get(key)?.push(item);
+                } else {
+                    
+                    const arr = new Array<Token>();
+                    arr.push(item);
+                    col.set(key, arr);
+                }
+            }
+        });
+        
+        console.log(col);
     }
     return pos;
 }
@@ -324,7 +333,7 @@ function parseGlobals(tokens: Token[], pos: number, progam: Progam, globals: Glo
  * @param globals 
  * @param value 
  */
-function parseGlobalValue(tokens:Token[], pos:number, globals:Globals, value:GlobalDeclarator) {
+function parseGlobalValue(tokens: Token[], pos: number, globals: Globals, value: GlobalDeclarator) {
     if (tokens[pos].isId()) {
         globals.globals.push(value);
         value.type = tokens[pos].value;
@@ -342,7 +351,7 @@ function parseGlobalValue(tokens:Token[], pos:number, globals:Globals, value:Glo
     return pos;
 }
 
-function parse(content:string) {
+function parse(content: string) {
     const tokens = tokenize(content);
     return parsing(tokens);
 }

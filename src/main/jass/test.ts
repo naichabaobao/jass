@@ -22,8 +22,18 @@ function xiaolongnv  (xiaocan xiaocan, xiaocan )  {
     }
 
     function ic() -> {}*/
+    function
+     name(xiaocan
+         xiaocan, xiaocan )
+          ->
+          
+          
+          void {
+        666
+        }
+
 globals
-    integer a
+    integer a a a a a a a a
     constant string haha
     private code vun
 endglobals

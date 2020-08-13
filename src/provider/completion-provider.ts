@@ -269,10 +269,6 @@ vscode.workspace.onDidChangeConfiguration(e => {
   }
 });
 
-const map = new Map<vscode.Uri, Array<vscode.CompletionItem>>();
-
-
-
 class CompletionItemProvider implements vscode.CompletionItemProvider {
 
 
