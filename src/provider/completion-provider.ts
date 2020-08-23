@@ -8,141 +8,11 @@ import * as vscode from "vscode";
 
 import { types } from "../jass/types";
 import { keywords } from "../jass/keyword";
-import { Program, Nothing, Takes, Variable } from "../jass/ast";
 
-import { commonProgram, commonAiProgram, blizzardProgram, dzProgram, includeJPrograms, includeAiPrograms } from "./default";
+import * as jass from "../main/jass/parsing";
+import { programs } from "./data-provider";
 
-import * as x from "../main/jass/parsing";
 
-class ProgramToItemsTool {
-
-  public readonly program: Program;
-
-  constructor(program: Program) {
-    this.program = program
-  }
-
-  public toFunctionItems() {
-    return this.program.functions().map(val => {
-      const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Function);
-      item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-      const ms = new vscode.MarkdownString();
-      const explain1 = this.program.findComment(val.start.line - 1);
-      const explain2 = this.program.findComment(val.start.line);
-      if (explain1) {
-        ms.appendText(explain1);
-      }
-      if (explain2) {
-        ms.appendCodeblock(explain2);
-      }
-      ms.appendCodeblock(val.origin());
-      item.documentation = ms;
-      return item;
-    });
-  }
-
-  public toNativeItems() {
-    return this.program.natives().map(val => {
-      const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Function);
-      item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-      const ms = new vscode.MarkdownString();
-      const explain1 = this.program.findComment(val.start.line - 1);
-      const explain2 = this.program.findComment(val.start.line);
-      if (explain1) {
-        ms.appendText(explain1);
-      }
-      if (explain2) {
-        ms.appendCodeblock(explain2);
-      }
-      ms.appendCodeblock(val.origin());
-      item.documentation = ms;
-      return item;
-    });
-  }
-
-  public toVariableItems() {
-    return this.program.globalVariables().map(val => {
-      const item = new vscode.CompletionItem(val.name, val.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-      item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-      const ms = new vscode.MarkdownString();
-      const explain1 = this.program.findComment(val.start.line - 1);
-      const explain2 = this.program.findComment(val.start.line);
-      if (explain1) {
-        ms.appendText(explain1);
-      }
-      if (explain2) {
-        ms.appendCodeblock(explain2);
-      }
-      ms.appendCodeblock(val.origin());
-      item.documentation = ms;
-      return item;
-    });
-  }
-
-  public toFunctionItemsByType(type: string) {
-    return this.program.functions()
-      .filter(val => val.returns.returns instanceof Nothing ? type == "nothing" : type == val.returns.returns)
-      .map(val => {
-        const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Function);
-        item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-        const ms = new vscode.MarkdownString();
-        const explain1 = this.program.findComment(val.start.line - 1);
-        const explain2 = this.program.findComment(val.start.line);
-        if (explain1) {
-          ms.appendText(explain1);
-        }
-        if (explain2) {
-          ms.appendCodeblock(explain2);
-        }
-        ms.appendCodeblock(val.origin());
-        item.documentation = ms;
-        return item;
-      });
-  }
-
-  public toNativeItemsByType(type: string) {
-    return this.program.natives()
-      .filter(val => val.returns.returns instanceof Nothing ? type == "nothing" : type == val.returns.returns)
-      .map(val => {
-        const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Function);
-        item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-        const ms = new vscode.MarkdownString();
-        const explain1 = this.program.findComment(val.start.line - 1);
-        const explain2 = this.program.findComment(val.start.line);
-        if (explain1) {
-          ms.appendText(explain1);
-        }
-        if (explain2) {
-          ms.appendCodeblock(explain2);
-        }
-        ms.appendCodeblock(val.origin());
-        item.documentation = ms;
-        return item;
-      });
-  }
-
-  public toVariableItemsByType(type: string) {
-    return this.program.globalVariables()
-      .filter(val => val.type == type)
-      .map(val => {
-        const item = new vscode.CompletionItem(val.name, val.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-        item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-        const ms = new vscode.MarkdownString();
-        const explain1 = this.program.findComment(val.start.line - 1);
-        const explain2 = this.program.findComment(val.start.line);
-        if (explain1) {
-          ms.appendText(explain1);
-        }
-        if (explain2) {
-          ms.appendCodeblock(explain2);
-        }
-        ms.appendCodeblock(val.origin());
-        item.documentation = ms;
-        return item;
-      });
-  }
-
-}
 
 let typeItems: vscode.CompletionItem[] = null as any;
 function initTypeItems(version?: "1.32" | "1.31" | "1.30" | "1.29" | "1.24" | "1.20" | null | undefined) {
@@ -162,322 +32,154 @@ function initKeywordItems() {
 }
 initKeywordItems();
 
-let commonJFunctionItems: vscode.CompletionItem[] = null as any;
-let blizzardJFunctionItems: vscode.CompletionItem[] = null as any;
-let commonAiFunctionItems: vscode.CompletionItem[] = null as any;
-let dzJFunctionItems: vscode.CompletionItem[] = null as any;
-let includesJFunctionItems: vscode.CompletionItem[] = null as any;
-let includesAiFunctionItems: vscode.CompletionItem[] = null as any;
-
-let commonJNativeItems: vscode.CompletionItem[] = null as any;
-let blizzardJNativeItems: vscode.CompletionItem[] = null as any;
-let commonAiNativeItems: vscode.CompletionItem[] = null as any;
-let dzJNativeItems: vscode.CompletionItem[] = null as any;
-let includeJNativeItems: vscode.CompletionItem[] = null as any;
-let includeAiNativeItems: vscode.CompletionItem[] = null as any;
-
-let commonJVariableItems: vscode.CompletionItem[] = null as any;
-let blizzardJVariableItems: vscode.CompletionItem[] = null as any;
-let commonAiVariableItems: vscode.CompletionItem[] = null as any;
-let dzJVariableItems: vscode.CompletionItem[] = null as any;
-let includesJVariableItems: vscode.CompletionItem[] = null as any;
-let includesAiVariableItems: vscode.CompletionItem[] = null as any;
-
-const commonProgramTool = new ProgramToItemsTool(commonProgram);
-const blizzardProgramTool = new ProgramToItemsTool(blizzardProgram);
-const commonAiProgramTool = new ProgramToItemsTool(commonAiProgram);
-const dzProgramTool = new ProgramToItemsTool(dzProgram);
-const includesJProgramTools = includeJPrograms.map(val => new ProgramToItemsTool(val));
-const includesAiProgramTool = includeAiPrograms.map(val => new ProgramToItemsTool(val));
-
-function initCommonJItems() {
-  commonJFunctionItems = commonProgramTool.toFunctionItems();
-  commonJNativeItems = commonProgramTool.toNativeItems();
-  commonJVariableItems = commonProgramTool.toVariableItems();
-}
-function initBlizzardJItems() {
-  blizzardJFunctionItems = blizzardProgramTool.toFunctionItems();
-  blizzardJNativeItems = blizzardProgramTool.toNativeItems();
-  blizzardJVariableItems = blizzardProgramTool.toVariableItems();
-}
-function initCommonAiItems() {
-  commonAiFunctionItems = commonAiProgramTool.toFunctionItems();
-  commonAiNativeItems = commonAiProgramTool.toNativeItems();
-  commonAiVariableItems = commonAiProgramTool.toVariableItems();
-}
-function initDzJItems() {
-  dzJFunctionItems = dzProgramTool.toFunctionItems();
-  dzJNativeItems = dzProgramTool.toNativeItems();
-  dzJVariableItems = dzProgramTool.toVariableItems();
-}
-function initIncludesJItems() {
-  includesJFunctionItems = includesJProgramTools.map((val, index) => {
-    return val.toFunctionItems();
-  }).flat();
-  includeJNativeItems = includesJProgramTools.map((val, index) => {
-    return val.toNativeItems();
-  }).flat();
-  includesJVariableItems = includesJProgramTools.map((val, index) => {
-    return val.toVariableItems();
-  }).flat();
-}
-function initIncludesAiItems() {
-  includesAiFunctionItems = includesAiProgramTool.map((val, index) => {
-    return val.toFunctionItems();
-  }).flat();
-  includeAiNativeItems = includesAiProgramTool.map((val, index) => {
-    return val.toNativeItems();
-  }).flat();
-  includesAiVariableItems = includesAiProgramTool.map((val, index) => {
-    return val.toVariableItems();
-  }).flat();
-}
-initCommonJItems();
-initBlizzardJItems();
-initCommonAiItems();
-initDzJItems();
-initIncludesJItems();
-initIncludesAiItems();
-
-function isJFile(filePath: string) {
-  return path.parse(filePath).ext == ".j";
+interface CompletionItemOption {
+  needFunction?:boolean;
+  needGlobal?:boolean;
+  needConstant?:boolean;
+  needVariable?:boolean;
+  needType?:boolean;
+  needKeyword?:boolean;
 }
 
-function isAiFile(filePath: string) {
-  return path.parse(filePath).ext == ".ai";
+interface CurrentCompletionItemOption extends CompletionItemOption{
+  needLocal?:boolean;
+  needTake?:boolean;
 }
-
-vscode.workspace.onDidChangeConfiguration(e => {
-  if (e.affectsConfiguration("jass.version")) {
-    initTypeItems(vscode.workspace.getConfiguration("jass").get("version"));
-  }
-  if (e.affectsConfiguration("jass.common_j")) {
-    initCommonJItems();
-  }
-  if (e.affectsConfiguration("jass.blizzard")) {
-    initBlizzardJItems();
-  }
-  if (e.affectsConfiguration("jass.common_ai")) {
-    initCommonAiItems();
-  }
-  if (e.affectsConfiguration("jass.dz")) {
-    initDzJItems();
-  }
-  if (e.affectsConfiguration("jass.includes")) {
-    initIncludesJItems();
-    initIncludesAiItems();
-  }
-});
 
 class CompletionItemProvider implements vscode.CompletionItemProvider {
 
-
-  private isJFile(filePath: string) {
-    return path.parse(filePath).ext == ".j";
+  private items(document: vscode.TextDocument, option?:CompletionItemOption) {
+    const op = Object.assign(new class CompletionItemOptionImpl implements CompletionItemOption {
+      needFunction:boolean = false;
+      needGlobal:boolean = false;
+      needConstant:boolean = true;
+      needVariable:boolean = true;
+      needType:boolean = false;
+      needKeyword:boolean = false;
+    } (), option);
   }
 
-  private isAiFile(filePath: string) {
-    return path.parse(filePath).ext == ".ai";
-  }
+  private functionCompletionItems:vscode.CompletionItem[];
+  private globalCompletionItems:vscode.CompletionItem[];
 
-  private allFunctions(document:vscode.TextDocument) {
-    const fileName = document.fileName;
-    return this.isJFile(fileName)
-      ? [...commonJFunctionItems, ...commonJNativeItems, ...blizzardJFunctionItems, ...blizzardJNativeItems, ...dzJFunctionItems, ...dzJNativeItems, ...includesJFunctionItems, ...includeJNativeItems,
-      ...this.currentFunction2(document)]
-      : [...commonJFunctionItems, ...commonJNativeItems, ...commonAiFunctionItems, ...commonAiNativeItems, ...dzJFunctionItems, ...dzJNativeItems, ...includesJFunctionItems, ...includeJNativeItems, ...includesAiFunctionItems, ...includeAiNativeItems,
-      ...this.currentFunction2(document)];
-  }
-
-  private allVariablas(fileName: string) {
-    return this.isJFile(fileName)
-      ? [...commonJVariableItems, ...blizzardJVariableItems, ...dzJVariableItems, ...includesJVariableItems,
-      ...this.currentVariable()]
-      : [...commonJVariableItems, ...commonAiVariableItems, ...dzJVariableItems, ...includesJVariableItems, ...includesAiVariableItems,
-      ...this.currentVariable()];
-  }
-
-  private allFunctionByType(type: string) {
-
-  }
-
-  private program: Program = null as any;
-  private tool: ProgramToItemsTool = null as any;
-
-  /**
-   * @deprecated
-   */
-  private functionMap = new Map<string, vscode.CompletionItem>();
-  /**
-   * @deprecated
-   */
-  private nativeMap = new Map<string, vscode.CompletionItem>();
-  /**
-   * @deprecated
-   */
-  private variableMap = new Map<string, vscode.CompletionItem>();
-
-  private initCurrent(document: vscode.TextDocument) {
-
-    /**
-     * @deprecated map方式静态items,但这种实现方式会导致文件在切换时需要大量删除item,不但性能没提升,反倒降低数倍.
-     */
-    const handle = () => {
-      const content = document.getText();
-      this.program = new Program().parse(content).setFileName(document.fileName);
-      const funcs = this.program.functions();
-      const vars = this.program.globalVariables();
-      const start2 = new Date().getTime();
-      funcs.forEach(val => {
-        if (!this.functionMap.has(val.name)) {
-          const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Function);
-          item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-          const ms = new vscode.MarkdownString();
-          const explain1 = this.program.findComment(val.start.line - 1);
-          const explain2 = this.program.findComment(val.start.line);
-          if (explain1) {
-            ms.appendText(explain1);
-          }
-          if (explain2) {
-            ms.appendCodeblock(explain2);
-          }
-          ms.appendCodeblock(val.origin());
-          item.documentation = ms;
-          this.functionMap.set(val.name, item);
-        }
+  constructor() {
+    this.functionCompletionItems = [];
+    this.globalCompletionItems = [];
+    programs().forEach(x => {
+      x.functions().filter(func => func.id).forEach(func => {
+        const item = new vscode.CompletionItem(<string>func.id, vscode.CompletionItemKind.Function);
+        item.detail = `${<string>func.id} (${path.parse(x.fileName ? x.fileName : "unkown")})`;
+        item.documentation = new vscode.MarkdownString().appendText(x.description(func)).appendCodeblock(func.origin());
+        this.functionCompletionItems.push(item);
       });
-      const funcNames = funcs.map(val => val.name);
-      for (const key of this.functionMap.keys()) {
-        // console.log("变量是否删除" + key)
-        if (!funcNames.includes(key)) {
-          this.functionMap.delete(key);
-        }
-      }
-
-      vars.forEach(val => {
-        if (!this.functionMap.has(val.name)) {
-          const item = new vscode.CompletionItem(val.name, val.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-          item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-          const ms = new vscode.MarkdownString();
-          const explain1 = this.program.findComment(val.start.line - 1);
-          const explain2 = this.program.findComment(val.start.line);
-          if (explain1) {
-            ms.appendText(explain1);
-          }
-          if (explain2) {
-            ms.appendCodeblock(explain2);
-          }
-          ms.appendCodeblock(val.origin());
-          item.documentation = ms;
-          this.variableMap.set(val.name, item);
-        }
+      x.globals().filter(func => func.id).forEach(global => {
+        const item = new vscode.CompletionItem(<string>global.id, global.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+        item.detail = `${<string>global.id} (${path.parse(x.fileName ? x.fileName : "unkown")})`;
+        item.documentation = new vscode.MarkdownString().appendText(x.description(global)).appendCodeblock(global.origin());
+        this.globalCompletionItems.push(item);
       });
-      const varNames = vars.map(val => val.name);
-      for (const key of this.variableMap.keys()) {
-        if (!varNames.includes(key)) {
-          this.variableMap.delete(key);
-        }
-      }
-    };
-    // handle();
-
-    this.program = new Program().parse(document.getText()).setFileName(document.fileName);
-    this.tool = new ProgramToItemsTool(this.program);
+    });
   }
 
-  private mapToItems(map: Map<string, vscode.CompletionItem>) {
+  private getItems(document: vscode.TextDocument, position: vscode.Position, option?:CurrentCompletionItemOption) {
+    const op = Object.assign(new class CompletionItemOptionImpl implements CurrentCompletionItemOption {
+      needFunction:boolean = false;
+      needGlobal:boolean = false;
+      needConstant:boolean = true;
+      needVariable:boolean = true;
+      needLocal:boolean = true;
+      needTake:boolean = true;
+      needType:boolean = false;
+      needKeyword:boolean = false;
+    } (), option);
     const items = new Array<vscode.CompletionItem>();
-    map.forEach(val => {
-      items.push(val);
-    });
-    return items;
-  }
-
-  /**
-   * @deprecated 使用currentFunction2
-   */
-  private currentFunction() {
-    // return this.mapToItems(this.functionMap);
-    return this.tool.toFunctionItems(); 
-  }
-
-  private currentFunction2(document:vscode.TextDocument): vscode.CompletionItem[] {
-    const support:boolean = vscode.workspace.getConfiguration("jass").get("support.zinc") as boolean;
-    return support ? x.parse(document.getText()).body.filter((s) => s instanceof x.FunctionDeclarator && s.id).map((s) => {
-      // if (!(s instanceof x.FunctionDeclarator)) {
-      //   throw "";
-      // }
-      const item = new vscode.CompletionItem((<x.FunctionDeclarator>s).id ?? "", vscode.CompletionItemKind.Function);
-      item.detail = `${(<x.FunctionDeclarator>s).id} (当前文档)` ?? "";
-      item.documentation = new vscode.MarkdownString().appendCodeblock((<x.FunctionDeclarator>s).origin());
-      return item; 
-    }) : this.tool.toFunctionItems();
-  }
-
-  private currentVariable() {
-    // return this.mapToItems(this.variableMap);
-    return this.tool.toVariableItems();
-  }
-
-  private currentTake(position: vscode.Position) {
-    const func = this.program.functions().find((val, index, functions) => {
-      if (val.takes instanceof Nothing) {
-        return null;
-      }
-      const range = new vscode.Range(val.start.line, val.start.column, val.end.line, val.end.column);
-      return range.contains(position);
-    });
-    if (func && func.takes instanceof Takes && func.takes.takes.length > 0) {
-      const items = new Array<vscode.CompletionItem>();
-      func.takes.takes.forEach(val => {
-        const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.TypeParameter);
-        item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-        const ms = new vscode.MarkdownString();
-        ms.appendCodeblock(val.origin());
-        item.documentation = ms;
-        items.push(item);
-      });
-      return items;
+    const currentProgam = jass.parse(document.getText());
+    if (op.needKeyword) {
+      items.push(...keywordItems);
     }
-    return null;
-  }
-
-  private currentLocal(position: vscode.Position) {
-    const func = this.program.functions().find((val, index, functions) => {
-      if (val.block.length == 0) {
-        return null;
+    if (op.needType) {
+      items.push(...typeItems);
+    }
+    if (op.needFunction || op.needLocal || op.needTake) {
+      const functions:jass.FunctionDeclarator[] = <jass.FunctionDeclarator[]>currentProgam.body.filter(x => x instanceof jass.FunctionDeclarator);
+      if (op.needFunction) {
+        functions.forEach(func => {
+          if (func.id) {
+            const item = new vscode.CompletionItem(func.id, vscode.CompletionItemKind.Function);
+            item.detail = `${func.id} (当前文档)`;
+            item.documentation = new vscode.MarkdownString().appendText(currentProgam.description(func)).appendCodeblock(func.origin());
+            items.push(item);
+          }
+        });
+        items.push(...this.functionCompletionItems);
       }
-      const range = new vscode.Range(val.start.line, val.start.column, val.end.line, val.end.column);
-      return range.contains(position);
-    });
-    if (func) {
-      const items = new Array<vscode.CompletionItem>();
-      func.block.forEach(val => {
-        if (val instanceof Variable) {
-          const item = new vscode.CompletionItem(val.name, vscode.CompletionItemKind.Variable);
-          item.detail = `${val.name} (${path.parse(this.program.fileName).base})`;
-          const ms = new vscode.MarkdownString();
-          const explain1 = this.program.findComment(val.start.line - 1);
-          const explain2 = this.program.findComment(val.start.line);
-          if (explain1) {
-            ms.appendText(explain1);
-          }
-          if (explain2) {
-            ms.appendText(explain2);
-          }
-          ms.appendCodeblock(val.origin());
-          item.documentation = ms;
+      if (op.needLocal) {
+        const func = functions.find(x => x.loc && Number.isInteger(x.loc.startLine) && Number.isInteger(x.loc.startPosition) && Number.isInteger(x.loc.endLine) && Number.isInteger(x.loc.endPosition) && new vscode.Range(<number>x.loc.startLine, <number>x.loc.startPosition, <number>x.loc.endLine, <number>x.loc.endPosition).contains(position));
+        if (func) {
+          func.body.filter(x => x instanceof jass.LocalDeclarator).forEach(x => {
+            if (x.type && x.id) {
+              const item = new vscode.CompletionItem(x.id, vscode.CompletionItemKind.Variable);
+              item.detail = `${func.id} (当前文档)`;
+              item.documentation = new vscode.MarkdownString().appendText(currentProgam.description(x)).appendCodeblock(x.origin());
+              items.push(item);
+            }
+          });
+        }
+      }
+      if (op.needTake) {
+        const func = functions.find(x => x.loc && Number.isInteger(x.loc.startLine) && Number.isInteger(x.loc.startPosition) && Number.isInteger(x.loc.endLine) && Number.isInteger(x.loc.endPosition) && new vscode.Range(<number>x.loc.startLine, <number>x.loc.startPosition, <number>x.loc.endLine, <number>x.loc.endPosition).contains(position));
+        if (func) {
+          func.takes.forEach(x => {
+            const item = new vscode.CompletionItem(x.id, vscode.CompletionItemKind.TypeParameter);
+            item.detail = `${x.id} (当前文档)`;
+            item.documentation = new vscode.MarkdownString().appendCodeblock(x.origin());
+            items.push(item);
+          });
+        }
+      }
+    }
+    if (op.needGlobal) {
+      const globals = <jass.Globals[]>currentProgam.body.filter(x => x instanceof jass.Globals);
+      const globalVariables = globals.map(x => x.globals).flat().filter(x => {
+        if (op.needConstant && op.needVariable) {
+          return true;
+        } else if (op.needConstant) {
+          return x.isConstant();
+        } else if (op.needVariable) {
+          return !x.isConstant();
+        } else {
+          return false;
+        }
+      });
+      globalVariables.forEach(x => {
+        if (x.type && x.id) {
+          const item = new vscode.CompletionItem(x.id, x.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+          item.detail = `${x.id} (当前文档)`;
+          item.documentation = new vscode.MarkdownString().appendText(currentProgam.description(x)).appendCodeblock(x.origin());
           items.push(item);
         }
       });
-      return items;
+      this.globalCompletionItems.filter(x => {
+        if (op.needConstant && op.needVariable) {
+          return true;
+        } else if (op.needConstant) {
+          return x.kind === vscode.CompletionItemKind.Constant;
+        } else if (op.needVariable) {
+          return x.kind === vscode.CompletionItemKind.Variable;
+        } else {
+          return false;
+        }
+      }).forEach(x => {
+        items.push(x);
+      });
+
     }
-    return null;
+    return items;
   }
 
   public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
 
-    const isReturns = document.getWordRangeAtPosition(position, /(?<=\breturns\s+)[a-zA-Z][a-zA-Z0-9]*/);
+    const isReturns = document.getWordRangeAtPosition(position, /((?<=\breturns\s+)[a-zA-Z][a-zA-Z0-9]*)|((?<=->\s*)[a-zA-Z][a-zA-Z0-9]*)/);
     const isLocal = document.getWordRangeAtPosition(position, /(?<=\blocal\s+)[a-zA-Z][a-zA-Z0-9]*/);
     const isConstant = document.getWordRangeAtPosition(position, /(?<=\bconstant\s+)[a-zA-Z][a-zA-Z0-9]*/);
     const isTakes = document.getWordRangeAtPosition(position, /(?<=\btakes\s+)[a-zA-Z][a-zA-Z0-9]*/);
@@ -491,7 +193,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     const isEqual = document.getWordRangeAtPosition(position, /(?<==\s*)[a-zA-Z][a-zA-Z0-9]*/);
     const isCall = document.getWordRangeAtPosition(position, /(?<=\bcall\s+)[a-zA-Z][a-zA-Z0-9]*/);
  
-    const items = new Array<vscode.CompletionItem>();
     try {
       if (isReturns || isLocal || isConstant || isTakes) {
         return typeItems;
@@ -500,25 +201,40 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         return null;
       }
       else if (isSet) {
-        this.initCurrent(document);
-        items.push(...this.allVariablas(document.fileName));
-        const takes = this.currentTake(position);
-        if (takes) {
-          items.push(...takes);
-        }
-        const locals = this.currentLocal(position);
-        if (locals) {
-          items.push(...locals);
-        }
+        // this.initCurrent(document);
+        return this.getItems(document, position, {
+          needTake: true,
+          needLocal: true,
+          needGlobal: true,
+          needConstant: false,
+          needVariable: true
+        });
+        // const takes = this.currentTake(position);
+        // if (takes) {
+        //   items.push(...takes);
+        // }
+        // const locals = this.currentLocal(position);
+        // if (locals) {
+        //   items.push(...locals);
+        // }
       }
       else if (isCall) {
-        this.initCurrent(document);
-        items.push(...this.allFunctions(document));
+        return this.getItems(document, position, {
+          needFunction: true
+        });
       }
       else {
-        this.initCurrent(document);
-        items.push(...keywordItems, ...typeItems, ...this.allFunctions(document), ...this.allVariablas(document.fileName));
-        items.push(...this.allVariablas(document.fileName));
+        // this.initCurrent(document);
+        return this.getItems(document, position, {
+          needFunction: true,
+          needGlobal: true,
+          needTake: true,
+          needLocal: true,
+          needKeyword: true,
+          needType: true
+        });
+        // items.push(...this.allVariablas(document.fileName));
+        /*
         const takes = this.currentTake(position);
         if (takes) {
           items.push(...takes);
@@ -526,14 +242,12 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         const locals = this.currentLocal(position);
         if (locals) {
           items.push(...locals);
-        }
+        }*/
       }
     } catch (error) {
       console.log(error);
       return null;
     }
-    
-    return items;
   }
 
 }

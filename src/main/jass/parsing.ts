@@ -14,11 +14,15 @@ interface Origin {
     origin(): string;
 }
 
-class NativeDeclarator implements Loc {
+class NativeDeclarator implements Loc, Origin {
     public id: string | null = null;
     public takes: Take[] = [];
     public returns: string | null = null;
     public loc: Location | null = null;
+
+    public origin() {
+        return `native ${this.id} takes ${this.takes.length > 0 ? this.takes.map(x => x.origin()).join(", ") : "nothing"} returns ${this.returns ?? "nothing"}`;
+    }
 }
 
 class FunctionDeclarator implements Loc, Origin {
@@ -26,6 +30,8 @@ class FunctionDeclarator implements Loc, Origin {
     public takes: Take[] = [];
     public returns: string | null = null;
     public loc: Location | null = null;
+
+    public body:Array<LocalDeclarator> = [];
 
     /**
      * function block中的tokens
@@ -48,7 +54,7 @@ class Take implements Loc, Origin {
 
 class Globals implements Loc {
     public globals: GlobalDeclarator[] = [];
-    public globalsTokens: Token[] = [];
+    // public globalsTokens: Token[] = [];
     public loc: Location | null = null;
 }
 
@@ -56,31 +62,67 @@ type FlagType = "constant" | "array";
 
 type VariableFlagType = "local";
 
-class GlobalDeclarator implements Loc {
+class GlobalDeclarator implements Loc, Origin {
     public flags: Set<FlagType> = new Set();
     public type: string | null = null;
-    public id: string = "";
+    public id: string | null = null;
     // 如果flags含有constant,则需要定义value值
     public value: null = null;
     public loc: Location | null = null;
+
+    public isArray() {
+        return this.flags.has("array");
+    }
+
+    public isConstant() {
+        return this.flags.has("constant");
+    }
+
+    public origin () {
+        return `${this.isConstant() ? "constant " : ""}${this.type} ${this.isArray() ? "array " : ""}${this.id}`;
+    }
 }
 
-class LocalDeclarator implements Loc {
+class LocalDeclarator implements Loc, Origin {
     public flags: Set<VariableFlagType> = new Set();
     public type: string | null = null;
-    public id: string = "";
+    public id: string|null = null;
     public value: null = null;
     public loc: Location | null = null;
+
+    public origin() {
+        return `local ${this.type} ${this.id}`;
+    }
 }
 
 class Comment implements Loc {
     public content: string = "";
     public loc: Location | null = null;
+
+    public parseConten() {
+        return this.content.replace(/^\/\/\s*/, "");
+    }
 }
 
-class Progam {
+class Program {
+    public fileName:string|null = null;
     public body: Array<FunctionDeclarator | Globals | NativeDeclarator> = [];
     public comments: Comment[] = [];
+
+    public functions() {
+        return <(FunctionDeclarator | NativeDeclarator)[]>this.body.filter(s => s instanceof FunctionDeclarator || s instanceof NativeDeclarator);
+    }
+
+    public globals() {
+        const globals = <Globals[]>this.body.filter(s => s instanceof Globals);
+        return globals.map(s => s.globals).flat();
+    }
+
+    public description(node:FunctionDeclarator|NativeDeclarator|GlobalDeclarator|LocalDeclarator) {
+        // console.log(this.comments.map(x => x.loc?.startLine ?? 0))
+        console.log(node)
+        return this.comments.find(x => node.loc && Number.isInteger(node.loc.startLine) && x.loc && Number.isInteger(x.loc.startLine) && (<number>node.loc.startLine - 1) == x.loc.startLine)?.parseConten() ?? "";
+    }
 }
 
 /**
@@ -91,13 +133,13 @@ class Progam {
  * @param tokens 
  * @description 如果你对token不熟悉,建议使用parse
  */
-function parsing(tokens: Token[]): Progam {
-    const progam = new Progam();
+function parsing(tokens: Token[]): Program {
+    const progam = new Program();
     start(tokens, progam);
     return progam;
 }
 
-function start(tokens: Token[], progam: Progam) {
+function start(tokens: Token[], progam: Program) {
     // 去除注释
     tokens = removeComment(tokens, progam);
 
@@ -126,7 +168,7 @@ function start(tokens: Token[], progam: Progam) {
  * @param tokens 
  * @param progam 
  */
-function removeComment(tokens: Token[], progam: Progam) {
+function removeComment(tokens: Token[], progam: Program) {
     const ts: Token[] = [];
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -145,19 +187,28 @@ function removeComment(tokens: Token[], progam: Progam) {
     return ts;
 }
 
-function parseNative(tokens: Token[], pos: number, progam: Progam, native: NativeDeclarator): number {
+function parseNative(tokens: Token[], pos: number, progam: Program, native: NativeDeclarator): number {
     if (tokens[pos].type === "id" && tokens[pos].value === "native") {
+        native.loc = new Location();
+        native.loc.startLine = tokens[pos].loc?.startLine ?? 0;
+        native.loc.startPosition = tokens[pos].loc?.startPosition ?? 0;
         pos++;
         progam.body.push(native);
         if (tokens[pos].type === "id") {
             native.id = tokens[pos].value;
             pos++;
-            if (tokens[pos].type === "id" && tokens[pos].value === "takes") {
-                pos = parseTakes(tokens, pos + 1, native);
-                if (tokens[pos].type === "id" && tokens[pos].value === "returns") {
+            if (tokens[pos] && tokens[pos].type === "id" && tokens[pos].value === "takes") {
+                pos++;
+                if (tokens[pos].isId() && tokens[pos].value === "nothing") {
+                }else {
+                    pos = parseTakes(tokens, pos, native);
+                }
+                if (tokens[pos] && tokens[pos].type === "id" && tokens[pos].value === "returns") {
                     pos++;
                     if (tokens[pos].type === "id") {
                         native.returns = tokens[pos].value;
+                        (<Location>native.loc).endLine = tokens[pos].loc?.endLine ?? 0;
+                        (<Location>native.loc).endPosition = tokens[pos].loc?.endPosition ?? 0;
                     }
                 }
             }
@@ -172,7 +223,7 @@ function parseTakes(tokens: Token[], pos: number, f: FunctionDeclarator | Native
     for (let index = pos; index < tokens.length; index++) {
         const token = tokens[index];
         if (state === 0) {
-            if (token.type === "id") {
+            if (token.isId()) {
                 take = new Take();
                 f.takes.push(take);
                 take.type = token.value;
@@ -181,7 +232,7 @@ function parseTakes(tokens: Token[], pos: number, f: FunctionDeclarator | Native
                 return index;
             }
         } else if (state === 1) {
-            if (token.type === "id") {
+            if (token.isId()) {
                 if (take == null) {
                     return index;
                 }
@@ -205,7 +256,7 @@ interface FunctionOption {
     supportZinc?: boolean;
 }
 
-function parseFunction(tokens: Token[], pos: number, progam: Progam, func: FunctionDeclarator, option?: FunctionOption) {
+function parseFunction(tokens: Token[], pos: number, progam: Program, func: FunctionDeclarator, option?: FunctionOption) {
 
     option = {
         supportZinc: true
@@ -220,20 +271,35 @@ function parseFunction(tokens: Token[], pos: number, progam: Progam, func: Funct
         if (tokens[pos].type === "id") {
             func.id = tokens[pos].value;
             pos++;
-            if (tokens[pos].type === "id" && tokens[pos].value === "takes") {
-                pos = parseTakes(tokens, pos + 1, func);
+            if (tokens[pos] && tokens[pos].type === "id" && tokens[pos].value === "takes") {
+                pos++;
+                if (tokens[pos].isId() && tokens[pos].value === "nothing") {
+                }else {
+                    pos = parseTakes(tokens, pos, func);
+                }
                 if (tokens[pos].type === "id" && tokens[pos].value === "returns") {
                     pos++;
-                    if (tokens[pos].type === "id") {
+                    if (tokens[pos] && tokens[pos].isId() && tokens[pos].value === "nothing") {
+                        const outs:Token[] = [];
+                        pos = collectFunctionBody(tokens, pos + 1, outs);
+
+                        parseFunctionBody(outs, func);
+                        loc.endLine = tokens[pos].loc?.endLine ?? null;
+                        loc.endPosition = tokens[pos].loc?.endPosition ?? null;
+                    }
+                    else if (tokens[pos].isId()) {
                         func.returns = tokens[pos].value;
-                        pos = collectFunctionBody(tokens, pos + 1, func);
+                        const outs:Token[] = [];
+                        pos = collectFunctionBody(tokens, pos + 1, outs);
+
+                        parseFunctionBody(outs, func);
                         loc.endLine = tokens[pos].loc?.endLine ?? null;
                         loc.endPosition = tokens[pos].loc?.endPosition ?? null;
                     }
                 }
             }
             // zinc function parse
-            else if (option?.supportZinc && tokens[pos].type === "op" && tokens[pos].value === "(") { // zinc takes
+            else if (option?.supportZinc && tokens[pos] && tokens[pos].type === "op" && tokens[pos].value === "(") { // zinc takes
                 pos = parseTakes(tokens, pos + 1, func);
                 if (tokens[pos].type === "op" && tokens[pos].value === ")") {
                     pos++;
@@ -260,13 +326,45 @@ function parseFunction(tokens: Token[], pos: number, progam: Progam, func: Funct
     return pos;
 }
 
-function collectFunctionBody(tokens: Token[], pos: number, func: FunctionDeclarator) {
+// 非标准实现方式,目前可以运行
+function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
+    let col:Map<number, Token[]> = new Map();
+    tokens.forEach((item, index, ts) => {
+        const key = item.loc?.startLine ?? -1;
+        if (key !== -1) {
+            if (col.has(key)) {
+                col.get(key)?.push(item);
+            }else {  
+                const arr = new Array<Token>();
+                arr.push(item);
+                col.set(key, arr);
+            }
+        }
+    });
+
+    let local:LocalDeclarator|null = null;
+    col.forEach(values => {
+        if (values[0].isId() && values[0].value === "local") {
+            local = new LocalDeclarator();
+            func.body.push(local);
+            if (values[1] && values[1].isId()) {
+                local.type = values[1].value;
+                if (values[2] && values[2].isId()) {
+                    local.id = values[2].value;
+                }
+            }
+        }
+        local = null;
+    });
+}
+
+function collectFunctionBody(tokens: Token[], pos: number, outs: Token[]) {
     let token: Token = null as any;
     while (token = tokens[pos]) {
         if (token.type === "id" && token.value === "endfunction") {
             break;
         }
-        func.bodyTokens.push(token);
+        outs.push(token);
         pos++;
     }
     return pos;
@@ -286,10 +384,11 @@ function collectZincFunctionBody(tokens: Token[], pos: number, func: FunctionDec
         func.bodyTokens.push(token);
         pos++;
     }
+
     return pos;
 }
 
-function parseGlobals(tokens: Token[], pos: number, progam: Progam, globals: Globals) {
+function parseGlobals(tokens: Token[], pos: number, progam: Program, globals: Globals) {
     if (tokens[pos].type === "id" && tokens[pos].value === "globals") {
         progam.body.push(globals);
         pos++;
@@ -298,7 +397,9 @@ function parseGlobals(tokens: Token[], pos: number, progam: Progam, globals: Glo
         const globalsTokens:Token[] = [];
         
         while (token = tokens[pos]) {
-            if (token.isId() && token.value === "endglobals") {
+            if (!token) {
+                break;
+            } else if (token.isId() && token.value === "endglobals") {
                 break;
             } else {
                 globalsTokens.push(token);
@@ -321,32 +422,54 @@ function parseGlobals(tokens: Token[], pos: number, progam: Progam, globals: Glo
             }
         });
         
-        console.log(col);
-    }
-    return pos;
-}
-
-/**
- * 解析 constant (integer name)
- * @param tokens 
- * @param pos 
- * @param globals 
- * @param value 
- */
-function parseGlobalValue(tokens: Token[], pos: number, globals: Globals, value: GlobalDeclarator) {
-    if (tokens[pos].isId()) {
-        globals.globals.push(value);
-        value.type = tokens[pos].value;
-        pos++;
-        if (tokens[pos].isId() && tokens[pos].value === "array") {
-            value.flags.add("array");
-            pos++;
-            if (tokens[pos].isId()) {
-                value.id = tokens[pos].value;
+        
+        let global:GlobalDeclarator|null = null;
+        col.forEach(values => {
+            // const values:Token[] = <Token[]>col.get(<number><unknown>key);
+            // console.log(values)
+            const type_id_parse = function (index:number) {
+                const type_id_parse2 = function (index:number) {
+                    if (values[index].isId()) {
+                        if (!global) {
+                            global = new GlobalDeclarator();
+                        }
+                        globals.globals.push(global);
+                        if (!global.loc) {
+                            global.loc = new Location();
+                            global.loc.startLine = values[index].loc?.startLine ?? 0;
+                            global.loc.startPosition = values[index].loc?.startPosition ?? 0;
+                        }
+                        global.type = values[index].value;
+                        if (values[index + 1] && values[index + 1].isId() && values[index + 1].value === "array") {
+                            global.flags.add("array");
+                            if (values[index + 2] && values[index + 2].isId()) {
+                                global.id = values[index + 2].value;
+                                global.loc.endLine = values[index + 2].loc?.endLine ?? 0;
+                                global.loc.endPosition = values[index + 2].loc?.endPosition ?? 0;
+                            }
+                        } else if (values[index + 1] && values[index + 1].isId()) {
+                            global.id = values[index + 1].value;
+                            global.loc.endLine = values[index + 1].loc?.endLine ?? 0;
+                            global.loc.endPosition = values[index + 1].loc?.endPosition ?? 0;
+                        }
+                    }
+                }
+                if (values[0].isId() && (values[0].value === "private" || values[0].value === "public")) {
+                    type_id_parse2(index + 1);
+                } else {
+                    type_id_parse2(index);
+                }
             }
-        } else if (tokens[pos].isId()) {
-            value.id = tokens[pos].value;
-        }
+            if (values[0].isId() && values[0].value === "constant") {
+                global = new GlobalDeclarator();
+                global.flags.add("constant")
+                globals.globals.push(global);
+                type_id_parse(1);
+            } else {
+                type_id_parse(0);
+            }
+            global = null;
+        });
     }
     return pos;
 }
@@ -359,5 +482,10 @@ function parse(content: string) {
 export {
     parsing,
     parse,
-    FunctionDeclarator
+    FunctionDeclarator,
+    NativeDeclarator,
+    LocalDeclarator,
+    Globals,
+    GlobalDeclarator,
+    Program
 };

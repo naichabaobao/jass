@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { Program } from "../jass/ast";
-import { CommonAiGlobals } from "../main/file";
 
 
 // vscode.languages.registerCompletionItemProvider(language, new CompletionItemProvider);
@@ -179,7 +178,7 @@ includeJPrograms.forEach(val => {
 });
 
 */
-
+/*
 export{
   commonProgram,
   blizzardProgram,
@@ -187,4 +186,4 @@ export{
   dzProgram,
   includeJPrograms,
   includeAiPrograms
-};
+};*/

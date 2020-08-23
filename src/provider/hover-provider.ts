@@ -11,6 +11,10 @@ import { parseGlobals } from '../main/global';
 import { parseLocal } from '../main/local';
 import { Keyword } from '../main/keyword';
 
+import * as jassx from "../main/jass/parsing"
+
+
+
 class TypeHoverProvider implements vscode.HoverProvider {
 
   private typeHover = (key: string) => {
@@ -101,6 +105,7 @@ class GlobalHoverProvider implements vscode.HoverProvider {
 
 import * as jass from "../jass/ast";
 import * as def from "./default";
+import { programs } from './data-provider';
 
 function programToFunctionMss(program: jass.Program, key: string) {
   return [...program.natives(), ...program.functions()].filter(x => x.name === key).map(x => {
@@ -136,6 +141,28 @@ class FunctionHoverProvider implements vscode.HoverProvider {
     const key = document.getText(document.getWordRangeAtPosition(position));
     var hovers: vscode.MarkdownString[] = [];
     const content = document.getText();
+
+    const currentProgram = jassx.parse(content);
+    const progs = programs();
+    [currentProgram, ...progs].forEach(program => {
+      program.globals().forEach(func => {
+        if (func.id && func.id === key) {
+          const markdownString = new vscode.MarkdownString();
+          markdownString.appendCodeblock(func.origin());
+          markdownString.appendText("");
+          hovers.push(markdownString);
+        }
+      });
+      program.globals().forEach(global => {
+        if (global.id && global.id === key) {
+          const markdownString = new vscode.MarkdownString();
+          markdownString.appendCodeblock(global.origin());
+          markdownString.appendText("");
+          hovers.push(markdownString);
+        }
+      });
+    });
+
     /*
     const functions = parseFunctions(content);
     
@@ -147,12 +174,13 @@ class FunctionHoverProvider implements vscode.HoverProvider {
         markdownString.appendText(func.descript);
         return markdownString;
       });*/
-      // jass
-    const current = new jass.Program();
-    current.parse(content);
+    // jass
+    // const current = new jass.Program();
+    // current.parse(content);
+    /*
     [def.commonProgram, def.commonAiProgram, def.blizzardProgram, def.dzProgram, ...def.includeJPrograms, ...def.includeAiPrograms, current].forEach(pro => {
       hovers.push(...programToFunctionMss(pro, key));
-    });
+    });*/
 
     // zinc
     /*
@@ -259,9 +287,62 @@ class CodeHoverProvider implements vscode.HoverProvider {
 
 }
 
-vscode.languages.registerHoverProvider(language, new TypeHoverProvider);
-vscode.languages.registerHoverProvider(language, new GlobalHoverProvider);
-vscode.languages.registerHoverProvider(language, new FunctionHoverProvider);
-vscode.languages.registerHoverProvider(language, new CurrentHoverProvider);
-vscode.languages.registerHoverProvider(language, new CodeHoverProvider);
-export { };
+class NewHoverProvider implements vscode.HoverProvider {
+
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+
+    const key = document.getText(document.getWordRangeAtPosition(position));
+    var hovers: vscode.MarkdownString[] = [];
+    const content = document.getText();
+
+    const currentProgram = jassx.parse(content);
+    const progs = programs();
+    [currentProgram, ...progs].forEach(program => {
+      program.functions().forEach(func => {
+        if (func.id && func.id === key) {
+          const markdownString = new vscode.MarkdownString();
+          markdownString.appendCodeblock(func.origin());
+          markdownString.appendText(program.description(func));
+          hovers.push(markdownString);
+        }
+      });
+      program.globals().forEach(global => {
+        if (global.id && global.id === key) {
+          const markdownString = new vscode.MarkdownString();
+          markdownString.appendCodeblock(global.origin());
+          markdownString.appendText(program.description(global));
+          hovers.push(markdownString);
+        }
+      });
+    });
+    currentProgram.functions().filter(x => x.loc && Number.isInteger(x.loc.startLine) && Number.isInteger(x.loc.startPosition) && Number.isInteger(x.loc.endLine) && Number.isInteger(x.loc.endPosition) && new vscode.Range(<number>x.loc.startLine, <number>x.loc.startPosition, <number>x.loc.endLine, <number>x.loc.endPosition).contains(position)).filter(x => x instanceof jassx.FunctionDeclarator).forEach((x) => {
+      if (x instanceof jassx.FunctionDeclarator) {
+        x.body.forEach(local => {
+          if (local.id && local.id === key) {
+            const markdownString = new vscode.MarkdownString();
+            markdownString.appendCodeblock(local.origin());
+            markdownString.appendText(currentProgram.description(local));
+            hovers.push(markdownString);
+          }
+        });
+        x.takes.forEach(take => {
+          if (take.id && take.id === key) {
+            const markdownString = new vscode.MarkdownString();
+            markdownString.appendCodeblock(take.origin());
+            hovers.push(markdownString);
+          }
+        });
+      }
+    });
+    return new vscode.Hover([...hovers]);
+  }
+
+}
+
+// vscode.languages.registerHoverProvider(language, new TypeHoverProvider);
+// vscode.languages.registerHoverProvider(language, new GlobalHoverProvider);
+// vscode.languages.registerHoverProvider(language, new FunctionHoverProvider);
+// vscode.languages.registerHoverProvider(language, new CurrentHoverProvider);
+// vscode.languages.registerHoverProvider(language, new CodeHoverProvider);
+vscode.languages.registerHoverProvider("jass", new NewHoverProvider());
+

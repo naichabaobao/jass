@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.49",
+  "version": "0.0.50-bate",
   "keywords": [
     "jass",
     "warcraft"
@@ -78,8 +78,8 @@
         },
         "jass.support.zinc": {
           "type": "boolean",
-          "default": false,
-          "description": "是否支持zinc(test)\n(Whether to support Zinc)"
+          "default": true,
+          "description": "是否支持zinc(暂时无效)\n(Whether to support Zinc)"
         }
       }
     },

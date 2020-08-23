@@ -21,7 +21,7 @@ function xiaolongnv  (xiaocan xiaocan, xiaocan )  {
     // 想知道
     }
 
-    function ic() -> {}*/
+    function ic() -> {}
     function
      name(xiaocan
          xiaocan, xiaocan )
@@ -31,17 +31,30 @@ function xiaolongnv  (xiaocan xiaocan, xiaocan )  {
           void {
         666
         }
-
+        
 globals
     integer a a a a a a a a
     constant string haha
-    private code vun
-endglobals
+    private code vun id diaoq
+    / code vun id diaoq
+endglobalsa
+function aaa 
 
+endfunctionc
+
+function bbb
+// function a 
+globals
+integer*/
+function aaa takes nothing returns nothing
+        local integer aaa
+endfunction
+function aa (string aa) -> nothing {}
+// jiexila
     `);
 
 const progam = parsing(tokens);
 
-console.log(JSON.stringify(progam, null, 8));
+console.log(JSON.stringify(progam));
 console.timeEnd("parsing")
 

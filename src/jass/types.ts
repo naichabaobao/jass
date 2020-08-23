@@ -6,7 +6,7 @@
 
 const defaultVersion = "1.32";
 
-const statemType = ["boolean", "integer", "real", "string", "code", "handle"];
+const statemType = ["boolean", "integer", "real", "string", "handle"];
 
 const baseType = [...statemType, "code"];
 // 基础 6

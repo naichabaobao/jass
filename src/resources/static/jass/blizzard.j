@@ -1403,7 +1403,6 @@ function CameraSetupApplyForPlayer takes boolean doPan, camerasetup whichSetup, 
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichSetup, player whichPlayer, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1412,8 +1411,6 @@ function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichS
 endfunction
 
 //===========================================================================
-=======
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 // 摄像机的数值
 function CameraSetupGetFieldSwap takes camerafield whichField, camerasetup whichSetup returns real
     return CameraSetupGetField(whichSetup, whichField)
@@ -8025,51 +8022,31 @@ function StoreUnitBJ takes unit whichUnit, string key, string missionKey, gameca
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存实数
-=======
-//  <1.24> 保存实数
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveRealBJ takes real value, integer key, integer missionKey, hashtable table returns nothing
     call SaveReal(table, missionKey, key, value)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存整数
-=======
-//  <1.24> 保存整数
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveIntegerBJ takes integer value, integer key, integer missionKey, hashtable table returns nothing
     call SaveInteger(table, missionKey, key, value)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存布尔
-=======
-//  <1.24> 保存布尔
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveBooleanBJ takes boolean value, integer key, integer missionKey, hashtable table returns nothing
     call SaveBoolean(table, missionKey, key, value)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存字符串
-=======
-//  <1.24> 保存字符串
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveStringBJ takes string value, integer key, integer missionKey, hashtable table returns boolean
     return SaveStr(table, missionKey, key, value)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存玩家
-=======
-//  <1.24> 保存玩家
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missionKey, hashtable table returns boolean
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
@@ -8080,31 +8057,19 @@ function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missi
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存可破坏物
-=======
-//  <1.24> 保存可破坏物
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveDestructableHandleBJ takes destructable whichDestructable, integer key, integer missionKey, hashtable table returns boolean
     return SaveDestructableHandle(table, missionKey, key, whichDestructable)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存物品
-=======
-//  <1.24> 保存物品
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveItemHandleBJ takes item whichItem, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemHandle(table, missionKey, key, whichItem)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存单位
-=======
-//  <1.24> 保存单位
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveUnitHandleBJ takes unit whichUnit, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitHandle(table, missionKey, key, whichUnit)
 endfunction
@@ -8115,311 +8080,187 @@ function SaveAbilityHandleBJ takes ability whichAbility, integer key, integer mi
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存计时器
-=======
-//  <1.24> 保存计时器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTimerHandleBJ takes timer whichTimer, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerHandle(table, missionKey, key, whichTimer)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存触发器
-=======
-//  <1.24> 保存触发器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerHandle(table, missionKey, key, whichTrigger)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存触发条件
-=======
-//  <1.24> 保存触发条件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存触发动作
-=======
-//  <1.24> 保存触发动作
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTriggerActionHandleBJ takes triggeraction whichTriggeraction, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存触发事件
-=======
-//  <1.24> 保存触发事件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTriggerEventHandleBJ takes event whichEvent, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerEventHandle(table, missionKey, key, whichEvent)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存玩家组
-=======
-//  <1.24> 保存玩家组
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveForceHandleBJ takes force whichForce, integer key, integer missionKey, hashtable table returns boolean
     return SaveForceHandle(table, missionKey, key, whichForce)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存单位组
-=======
-//  <1.24> 保存单位组
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveGroupHandleBJ takes group whichGroup, integer key, integer missionKey, hashtable table returns boolean
     return SaveGroupHandle(table, missionKey, key, whichGroup)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存点
-=======
-//  <1.24> 保存点
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveLocationHandleBJ takes location whichLocation, integer key, integer missionKey, hashtable table returns boolean
     return SaveLocationHandle(table, missionKey, key, whichLocation)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存区域(矩型)
-=======
-//  <1.24> 保存区域(矩型)
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveRectHandleBJ takes rect whichRect, integer key, integer missionKey, hashtable table returns boolean
     return SaveRectHandle(table, missionKey, key, whichRect)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存布尔表达式
-=======
-//  <1.24> 保存布尔表达式
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveBooleanExprHandleBJ takes boolexpr whichBoolexpr, integer key, integer missionKey, hashtable table returns boolean
     return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存音效
-=======
-//  <1.24> 保存音效
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveSoundHandleBJ takes sound whichSound, integer key, integer missionKey, hashtable table returns boolean
     return SaveSoundHandle(table, missionKey, key, whichSound)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存特效
-=======
-//  <1.24> 保存特效
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveEffectHandleBJ takes effect whichEffect, integer key, integer missionKey, hashtable table returns boolean
     return SaveEffectHandle(table, missionKey, key, whichEffect)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存单位池
-=======
-//  <1.24> 保存单位池
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveUnitPoolHandleBJ takes unitpool whichUnitpool, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitPoolHandle(table, missionKey, key, whichUnitpool)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存物品池
-=======
-//  <1.24> 保存物品池
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveItemPoolHandleBJ takes itempool whichItempool, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemPoolHandle(table, missionKey, key, whichItempool)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存任务
-=======
-//  <1.24> 保存任务
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveQuestHandleBJ takes quest whichQuest, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestHandle(table, missionKey, key, whichQuest)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存任务要求
-=======
-//  <1.24> 保存任务要求
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveQuestItemHandleBJ takes questitem whichQuestitem, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestItemHandle(table, missionKey, key, whichQuestitem)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存失败条件
-=======
-//  <1.24> 保存失败条件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveDefeatConditionHandleBJ takes defeatcondition whichDefeatcondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存计时器窗口
-=======
-//  <1.24> 保存计时器窗口
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTimerDialogHandleBJ takes timerdialog whichTimerdialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerDialogHandle(table, missionKey, key, whichTimerdialog)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存排行榜
-=======
-//  <1.24> 保存排行榜
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveLeaderboardHandleBJ takes leaderboard whichLeaderboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveLeaderboardHandle(table, missionKey, key, whichLeaderboard)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存多面板
-=======
-//  <1.24> 保存多面板
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveMultiboardHandleBJ takes multiboard whichMultiboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardHandle(table, missionKey, key, whichMultiboard)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存多面板项目
-=======
-//  <1.24> 保存多面板项目
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardItemHandle(table, missionKey, key, whichMultiboarditem)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存可追踪物
-=======
-//  <1.24> 保存可追踪物
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存对话框
-=======
-//  <1.24> 保存对话框
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveDialogHandleBJ takes dialog whichDialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveDialogHandle(table, missionKey, key, whichDialog)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存对话框按钮
-=======
-//  <1.24> 保存对话框按钮
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveButtonHandleBJ takes button whichButton, integer key, integer missionKey, hashtable table returns boolean
     return SaveButtonHandle(table, missionKey, key, whichButton)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存漂浮文字
-=======
-//  <1.24> 保存漂浮文字
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveTextTagHandleBJ takes texttag whichTexttag, integer key, integer missionKey, hashtable table returns boolean
     return SaveTextTagHandle(table, missionKey, key, whichTexttag)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存闪电效果
-=======
-//  <1.24> 保存闪电效果
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveLightningHandleBJ takes lightning whichLightning, integer key, integer missionKey, hashtable table returns boolean
     return SaveLightningHandle(table, missionKey, key, whichLightning)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存图像
-=======
-//  <1.24> 保存图像
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveImageHandleBJ takes image whichImage, integer key, integer missionKey, hashtable table returns boolean
     return SaveImageHandle(table, missionKey, key, whichImage)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存地面纹理变化
-=======
-//  <1.24> 保存地面纹理变化
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveUbersplatHandleBJ takes ubersplat whichUbersplat, integer key, integer missionKey, hashtable table returns boolean
     return SaveUbersplatHandle(table, missionKey, key, whichUbersplat)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存区域(不规则)
-=======
-//  <1.24> 保存区域(不规则)
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveRegionHandleBJ takes region whichRegion, integer key, integer missionKey, hashtable table returns boolean
     return SaveRegionHandle(table, missionKey, key, whichRegion)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存迷雾状态
-=======
-//  <1.24> 保存迷雾状态
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveFogStateHandleBJ takes fogstate whichFogState, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogStateHandle(table, missionKey, key, whichFogState)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 保存可见度修正器
-=======
-//  <1.24> 保存可见度修正器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
@@ -8470,44 +8311,28 @@ function GetStoredStringBJ takes string key, string missionKey, gamecache cache 
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取实数
-=======
-//  <1.24> 从哈希表提取实数
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadRealBJ takes integer key, integer missionKey, hashtable table returns real
     //call SyncStoredReal(table, missionKey, key)
     return LoadReal(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取整数
-=======
-//  <1.24> 从哈希表提取整数
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadIntegerBJ takes integer key, integer missionKey, hashtable table returns integer
     //call SyncStoredInteger(table, missionKey, key)
     return LoadInteger(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取布尔
-=======
-//  <1.24> 从哈希表提取布尔
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadBooleanBJ takes integer key, integer missionKey, hashtable table returns boolean
     //call SyncStoredBoolean(table, missionKey, key)
     return LoadBoolean(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取字符串
-=======
-//  <1.24> 从哈希表提取字符串
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadStringBJ takes integer key, integer missionKey, hashtable table returns string
     local string s
 
@@ -8521,11 +8346,7 @@ function LoadStringBJ takes integer key, integer missionKey, hashtable table ret
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取玩家
-=======
-//  <1.24> 从哈希表提取玩家
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable table returns player
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
@@ -8536,31 +8357,19 @@ function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable tab
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取可破坏物
-=======
-//  <1.24> 从哈希表提取可破坏物
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadDestructableHandleBJ takes integer key, integer missionKey, hashtable table returns destructable
     return LoadDestructableHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取物品
-=======
-//  <1.24> 从哈希表提取物品
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadItemHandleBJ takes integer key, integer missionKey, hashtable table returns item
     return LoadItemHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取单位
-=======
-//  <1.24> 从哈希表提取单位
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadUnitHandleBJ takes integer key, integer missionKey, hashtable table returns unit
     return LoadUnitHandle(table, missionKey, key)
 endfunction
@@ -8571,311 +8380,187 @@ function LoadAbilityHandleBJ takes integer key, integer missionKey, hashtable ta
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取计时器
-=======
-//  <1.24> 从哈希表提取计时器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTimerHandleBJ takes integer key, integer missionKey, hashtable table returns timer
     return LoadTimerHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取触发器
-=======
-//  <1.24> 从哈希表提取触发器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTriggerHandleBJ takes integer key, integer missionKey, hashtable table returns trigger
     return LoadTriggerHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取触发条件
-=======
-//  <1.24> 从哈希表提取触发条件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, hashtable table returns triggercondition
     return LoadTriggerConditionHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取触发动作
-=======
-//  <1.24> 从哈希表提取触发动作
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTriggerActionHandleBJ takes integer key, integer missionKey, hashtable table returns triggeraction
     return LoadTriggerActionHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取触发事件
-=======
-//  <1.24> 从哈希表提取触发事件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTriggerEventHandleBJ takes integer key, integer missionKey, hashtable table returns event
     return LoadTriggerEventHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取玩家组
-=======
-//  <1.24> 从哈希表提取玩家组
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadForceHandleBJ takes integer key, integer missionKey, hashtable table returns force
     return LoadForceHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取单位组
-=======
-//  <1.24> 从哈希表提取单位组
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadGroupHandleBJ takes integer key, integer missionKey, hashtable table returns group
     return LoadGroupHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取点
-=======
-//  <1.24> 从哈希表提取点
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadLocationHandleBJ takes integer key, integer missionKey, hashtable table returns location
     return LoadLocationHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取区域(矩型)
-=======
-//  <1.24> 从哈希表提取区域(矩型)
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadRectHandleBJ takes integer key, integer missionKey, hashtable table returns rect
     return LoadRectHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取布尔表达式
-=======
-//  <1.24> 从哈希表提取布尔表达式
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadBooleanExprHandleBJ takes integer key, integer missionKey, hashtable table returns boolexpr
     return LoadBooleanExprHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取音效
-=======
-//  <1.24> 从哈希表提取音效
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadSoundHandleBJ takes integer key, integer missionKey, hashtable table returns sound
     return LoadSoundHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取特效
-=======
-//  <1.24> 从哈希表提取特效
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadEffectHandleBJ takes integer key, integer missionKey, hashtable table returns effect
     return LoadEffectHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取单位池
-=======
-//  <1.24> 从哈希表提取单位池
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadUnitPoolHandleBJ takes integer key, integer missionKey, hashtable table returns unitpool
     return LoadUnitPoolHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取物品池
-=======
-//  <1.24> 从哈希表提取物品池
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadItemPoolHandleBJ takes integer key, integer missionKey, hashtable table returns itempool
     return LoadItemPoolHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取任务
-=======
-//  <1.24> 从哈希表提取任务
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadQuestHandleBJ takes integer key, integer missionKey, hashtable table returns quest
     return LoadQuestHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取任务要求
-=======
-//  <1.24> 从哈希表提取任务要求
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadQuestItemHandleBJ takes integer key, integer missionKey, hashtable table returns questitem
     return LoadQuestItemHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取失败条件
-=======
-//  <1.24> 从哈希表提取失败条件
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadDefeatConditionHandleBJ takes integer key, integer missionKey, hashtable table returns defeatcondition
     return LoadDefeatConditionHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取计时器窗口
-=======
-//  <1.24> 从哈希表提取计时器窗口
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTimerDialogHandleBJ takes integer key, integer missionKey, hashtable table returns timerdialog
     return LoadTimerDialogHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取排行榜
-=======
-//  <1.24> 从哈希表提取排行榜
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadLeaderboardHandleBJ takes integer key, integer missionKey, hashtable table returns leaderboard
     return LoadLeaderboardHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取多面板
-=======
-//  <1.24> 从哈希表提取多面板
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadMultiboardHandleBJ takes integer key, integer missionKey, hashtable table returns multiboard
     return LoadMultiboardHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取多面板项目
-=======
-//  <1.24> 从哈希表提取多面板项目
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadMultiboardItemHandleBJ takes integer key, integer missionKey, hashtable table returns multiboarditem
     return LoadMultiboardItemHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取可追踪物
-=======
-//  <1.24> 从哈希表提取可追踪物
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTrackableHandleBJ takes integer key, integer missionKey, hashtable table returns trackable
     return LoadTrackableHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取对话框
-=======
-//  <1.24> 从哈希表提取对话框
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadDialogHandleBJ takes integer key, integer missionKey, hashtable table returns dialog
     return LoadDialogHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取对话框按钮
-=======
-//  <1.24> 从哈希表提取对话框按钮
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadButtonHandleBJ takes integer key, integer missionKey, hashtable table returns button
     return LoadButtonHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取漂浮文字
-=======
-//  <1.24> 从哈希表提取漂浮文字
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadTextTagHandleBJ takes integer key, integer missionKey, hashtable table returns texttag
     return LoadTextTagHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取闪电效果
-=======
-//  <1.24> 从哈希表提取闪电效果
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadLightningHandleBJ takes integer key, integer missionKey, hashtable table returns lightning
     return LoadLightningHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取图象
-=======
-//  <1.24> 从哈希表提取图象
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadImageHandleBJ takes integer key, integer missionKey, hashtable table returns image
     return LoadImageHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取地面纹理变化
-=======
-//  <1.24> 从哈希表提取地面纹理变化
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadUbersplatHandleBJ takes integer key, integer missionKey, hashtable table returns ubersplat
     return LoadUbersplatHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取区域(不规则)
-=======
-//  <1.24> 从哈希表提取区域(不规则)
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadRegionHandleBJ takes integer key, integer missionKey, hashtable table returns region
     return LoadRegionHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取迷雾状态
-=======
-//  <1.24> 从哈希表提取迷雾状态
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadFogStateHandleBJ takes integer key, integer missionKey, hashtable table returns fogstate
     return LoadFogStateHandle(table, missionKey, key)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 从哈希表提取可见度修正器
-=======
-//  <1.24> 从哈希表提取可见度修正器
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function LoadFogModifierHandleBJ takes integer key, integer missionKey, hashtable table returns fogmodifier
     return LoadFogModifierHandle(table, missionKey, key)
 endfunction
@@ -8919,21 +8604,13 @@ function FlushStoredMissionBJ takes string missionKey, gamecache cache returns n
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 清空哈希表
-=======
-//  <1.24> 清空哈希表
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function FlushParentHashtableBJ takes hashtable table returns nothing
     call FlushParentHashtable(table)
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 清空哈希表主索引
-=======
-//  <1.24> 清空哈希表主索引
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function FlushChildHashtableBJ takes integer missionKey, hashtable table returns nothing
     call FlushChildHashtable(table, missionKey)
 endfunction
@@ -8958,11 +8635,7 @@ function HaveStoredValue takes string key, integer valueType, string missionKey,
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // <1.24> 哈希项存在
-=======
-//  <1.24> 哈希项存在
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 function HaveSavedValue takes integer key, integer valueType, integer missionKey, hashtable table returns boolean
     if (valueType == bj_HASHTABLE_BOOLEAN) then
         return HaveSavedBoolean(table, missionKey, key)
@@ -8993,7 +8666,6 @@ function IsCustomCampaignButtonVisibile takes integer whichButton returns boolea
 endfunction
 
 //===========================================================================
-<<<<<<< HEAD:src/resources/static/jass/blizzard.j
 // Placeholder function for auto save feature
 //===========================================================================
 function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint returns nothing
@@ -9001,8 +8673,6 @@ function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint
 endfunction
 
 //===========================================================================
-=======
->>>>>>> d3d9c884d17f2c780f9b3c4e9a250b028d7e7fde:src/resources/jass/blizzard.j
 // 读取游戏进度
 function LoadGameBJ takes string loadFileName, boolean doScoreScreen returns nothing
     call LoadGame(loadFileName, doScoreScreen)

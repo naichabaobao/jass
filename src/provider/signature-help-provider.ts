@@ -3,6 +3,10 @@ import * as vscode from 'vscode';
 import { FunctionImpl, Function, parseFunctions } from '../main/function';
 import { allFunctionImpls } from '../main/tool';
 import { isVjassSupport } from '../main/configuration';
+import { programs } from './data-provider';
+
+import * as jass from "../main/jass/parsing";
+
 // import { resolveFunction, parseLibrarys } from '../main/library';
 
 // 先前的方法参数提示，暂时移到下面和zinc放在一起
@@ -95,8 +99,8 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
     const offset = document.offsetAt(position);
     const content = document.getText().substring(0, offset);
 
-    const words:string[] = [];
-    
+    const words: string[] = [];
+
 
 
 
@@ -129,51 +133,45 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
             // 向前預測
             if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
               const funcName = funcNames.reverse().join("");
-  
+
               // 获取当前文档的方法
               const content = document.getText();
-              const funcs = parseFunctions(content);
-              var functions = funcs;
-  
-              const func = [...allFunctionImpls(), ...functions].find(func => {
-                let isMatch = false;
-                if (isVjassSupport()) {
-                  if (func instanceof Function) {
-                    func as Function;
-                    isMatch = func.name == funcName;
-                  } else {
-                    isMatch = func.name == funcName;
+
+              const ps = programs();
+              ps.push(jass.parse(content));
+              for (let index = 0; index < ps.length; index++) {
+                const program = ps[index];
+                
+                const funcs = program.functions();
+                const func = funcs.find(x => x.id && x.id === funcName);
+
+                if (func) {
+                  if (func.id) {
+                    const SignatureInformation = new vscode.SignatureInformation(`${func.id}(${func.takes.length > 0 ? func.takes.map(x => x.origin()).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
+                    SignatureInformation.documentation = new vscode.MarkdownString().appendText(program.description(func));
+
+                    func.takes.forEach(take => {
+                      if (take.id) {
+                        SignatureInformation.parameters.push(new vscode.SignatureInformation(take.id));
+                      }
+                    });
+                    SignatureHelp.activeParameter = activeParameter;
+                    SignatureHelp.signatures.push(SignatureInformation);
+                    break;
                   }
-                } else {
-                  isMatch = func.name == funcName;
                 }
-                return isMatch;
-              });
-              if (func) {
-                if (func.name) {
-                  const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(take => take.type.name + " " + take.name).join(", ") : "nothing"})->${func.returns.name ?? "nothing"}`);
-                  if (func.descript) {
-                    SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.descript);
-                  }
-  
-                  func.takes.forEach(take => {
-                    if (take.name) {
-                      SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
-                    }
-                  });
-                  SignatureHelp.activeParameter = activeParameter;
-                  SignatureHelp.signatures.push(SignatureInformation);
-                }
+
               }
+
             };
-  
+
           }
         }
       }
       return SignatureHelp;
     }
     return provideSignatureHelp(document, position, token, context);
-    
+
   }
 }
 
@@ -218,7 +216,7 @@ vscode.languages.registerSignatureHelpProvider("jass", new ZincSignatureHelp, "(
 //               SignatureHelp = new vscode.SignatureHelp();
 //               SignatureHelp.activeParameter = count;
 //               SignatureHelp.signatures.push(SignatureInformation);
-              
+
 //             }
 //           });
 //         });
