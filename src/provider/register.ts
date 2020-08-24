@@ -1,7 +1,3 @@
-/**
- * 统一注册
- */
-import("./default");
 
 // import('./completion-item-provider');
 import('./completion-provider');

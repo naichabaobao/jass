@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { language } from '../main/constant';
 import { toLines } from '../main/tool';
 import { Keyword } from '../main/keyword';
-import { isArray } from 'util';
 
 const globalStartRegExp = new RegExp(`^\\s*${Keyword.Globals}\\b`);
 const globalEndRegExp = new RegExp(`^\\s*${Keyword.Endglobals}\\b`);

@@ -228,7 +228,7 @@
     },
     "vjass-keyword": {
       "name": "keyword",
-      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|allocate|deallocate)"
+      "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|allocate|deallocate)\\b"
     },
     "vjass-variable-macro": {
       "name": "string.regexp",

@@ -119,8 +119,6 @@ class Program {
     }
 
     public description(node:FunctionDeclarator|NativeDeclarator|GlobalDeclarator|LocalDeclarator) {
-        // console.log(this.comments.map(x => x.loc?.startLine ?? 0))
-        console.log(node)
         return this.comments.find(x => node.loc && Number.isInteger(node.loc.startLine) && x.loc && Number.isInteger(x.loc.startLine) && (<number>node.loc.startLine - 1) == x.loc.startLine)?.parseConten() ?? "";
     }
 }
@@ -225,6 +223,9 @@ function parseTakes(tokens: Token[], pos: number, f: FunctionDeclarator | Native
         if (state === 0) {
             if (token.isId()) {
                 take = new Take();
+                take.loc = new Location();
+                take.loc.startLine = token.loc?.startLine ?? null;
+                take.loc.startPosition = token.loc?.startPosition ?? null;
                 f.takes.push(take);
                 take.type = token.value;
                 state = 1;
@@ -237,6 +238,10 @@ function parseTakes(tokens: Token[], pos: number, f: FunctionDeclarator | Native
                     return index;
                 }
                 take.id = token.value;
+                if (take.loc) {
+                    take.loc.endLine = token.loc?.endLine ?? null;
+                    take.loc.endPosition = token.loc?.endPosition ?? null;
+                }
                 state = 2;
             } else {
                 return index;
@@ -346,11 +351,16 @@ function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
     col.forEach(values => {
         if (values[0].isId() && values[0].value === "local") {
             local = new LocalDeclarator();
+            local.loc = new Location();
+            local.loc.startLine = values[0].loc?.startLine ?? null;
+            local.loc.startPosition = values[0].loc?.startPosition ?? null;
             func.body.push(local);
             if (values[1] && values[1].isId()) {
                 local.type = values[1].value;
                 if (values[2] && values[2].isId()) {
                     local.id = values[2].value;
+                    local.loc.endLine = values[2].loc?.endLine ?? null;
+                    local.loc.endPosition = values[2].loc?.endPosition ?? null;
                 }
             }
         }
@@ -426,7 +436,6 @@ function parseGlobals(tokens: Token[], pos: number, progam: Program, globals: Gl
         let global:GlobalDeclarator|null = null;
         col.forEach(values => {
             // const values:Token[] = <Token[]>col.get(<number><unknown>key);
-            // console.log(values)
             const type_id_parse = function (index:number) {
                 const type_id_parse2 = function (index:number) {
                     if (values[index].isId()) {
