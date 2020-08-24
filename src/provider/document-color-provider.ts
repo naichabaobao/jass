@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { language } from '../main/constant';
 
 /// 颜色提供
 const convertInt2Hex = (int: number) => {
@@ -66,4 +65,4 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
 }
 
-vscode.languages.registerColorProvider(language, new JassDocumentColorProvider);
+vscode.languages.registerColorProvider("jass", new JassDocumentColorProvider);

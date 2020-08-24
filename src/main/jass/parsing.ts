@@ -23,6 +23,13 @@ class NativeDeclarator implements Loc, Origin {
     public origin() {
         return `native ${this.id} takes ${this.takes.length > 0 ? this.takes.map(x => x.origin()).join(", ") : "nothing"} returns ${this.returns ?? "nothing"}`;
     }
+
+    /**
+     * 获取参数数量
+     */
+    public getTakeCount() {
+        return this.takes.length;
+    }
 }
 
 class FunctionDeclarator implements Loc, Origin {
@@ -31,7 +38,15 @@ class FunctionDeclarator implements Loc, Origin {
     public returns: string | null = null;
     public loc: Location | null = null;
 
-    public body:Array<LocalDeclarator> = [];
+    public body:Array<LocalDeclarator|CallDeclarator> = [];
+
+    public locals() {
+        return <LocalDeclarator[]>this.body.filter(x => x instanceof LocalDeclarator);
+    }
+
+    public calls() {
+        return <CallDeclarator[]>this.body.filter(x => x instanceof CallDeclarator);
+    }
 
     /**
      * function block中的tokens
@@ -39,6 +54,13 @@ class FunctionDeclarator implements Loc, Origin {
     public bodyTokens: Token[] = [];
     public origin() {
         return `function ${this.id} takes ${this.takes.length > 0 ? this.takes.map(x => x.origin()).join(", ") : "nothing"} returns ${this.returns ?? "nothing"}`;
+    }
+
+    /**
+     * 获取参数数量
+     */
+    public getTakeCount() {
+        return this.takes.length;
     }
 }
 
@@ -50,6 +72,67 @@ class Take implements Loc, Origin {
     public origin() {
         return `${this.type} ${this.id}`;
     }
+}
+
+// call 关键字调用方法
+class CallDeclarator implements Loc, Origin {
+    public id: string = "";
+    public params: any[] = [];
+    public loc: Location = new Location();
+    public origin() {
+        return `call ${this.id}(${this.params.map((x, index) => "take_" + 1).join(", ")})`;
+    }
+
+    /**
+     * 获取参数数量
+     */
+    public getTakeCount() {
+        return this.params.length;
+    }
+}
+
+function parseCallDeclarator(tokens:Token[], pos:number, caller:CallDeclarator) {
+    let field = 0;
+    let paramIndex = 0;
+    if (tokens[pos] && tokens[pos].isId()) {
+        caller.id = tokens[pos].value;
+        pos++;
+        if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === "(") {
+            pos++;
+            for (; pos < tokens.length; pos++) {
+                const token = tokens[pos];
+                if (field === 0) {
+                    if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === "(") {
+                        field++;
+                    } else if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === ")") {
+                        caller.loc.endLine = tokens[pos].loc?.endLine ?? null;
+                        caller.loc.endPosition = tokens[pos].loc?.endPosition ?? null;
+                        break;
+                    } else if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === ",") {
+                        paramIndex++;
+                    }
+                    if (!caller.params[paramIndex]) {
+                        caller.params[paramIndex] = [];
+                    }
+                    caller.params[paramIndex].push(token);
+                } else if(field !== 1) {
+                    if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === "(") {
+                        field++;
+                    } else if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === ")") {
+                        field--;
+                        continue;
+                    }
+                    if (!caller.params[paramIndex]) {
+                        caller.params[paramIndex] = [];
+                    }
+                    caller.params[paramIndex].push(token);
+                }
+            }
+            caller.loc.endLine = tokens[pos - 1].loc?.endLine ?? null;
+            caller.loc.endPosition = tokens[pos - 1].loc?.endPosition ?? null;
+        }
+    }
+    return pos;
 }
 
 class Globals implements Loc {
@@ -116,6 +199,10 @@ class Program {
     public globals() {
         const globals = <Globals[]>this.body.filter(s => s instanceof Globals);
         return globals.map(s => s.globals).flat();
+    }
+
+    public functionDeclarators() {
+        return <FunctionDeclarator[]>this.body.filter(s => s instanceof FunctionDeclarator);
     }
 
     public description(node:FunctionDeclarator|NativeDeclarator|GlobalDeclarator|LocalDeclarator) {
@@ -279,6 +366,7 @@ function parseFunction(tokens: Token[], pos: number, progam: Program, func: Func
             if (tokens[pos] && tokens[pos].type === "id" && tokens[pos].value === "takes") {
                 pos++;
                 if (tokens[pos].isId() && tokens[pos].value === "nothing") {
+                    pos++;
                 }else {
                     pos = parseTakes(tokens, pos, func);
                 }
@@ -346,7 +434,7 @@ function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
             }
         }
     });
-
+    console.log(col)
     let local:LocalDeclarator|null = null;
     col.forEach(values => {
         if (values[0].isId() && values[0].value === "local") {
@@ -363,6 +451,14 @@ function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
                     local.loc.endPosition = values[2].loc?.endPosition ?? null;
                 }
             }
+        }else if (values[0].isId() && values[0].value === "call") {
+            console.log("call")
+            const caller = new CallDeclarator();
+            caller.loc.startLine = values[0].loc?.startLine ?? null;
+            caller.loc.startPosition = values[0].loc?.startPosition ?? null;
+            func.body.push(caller);
+            parseCallDeclarator(values, 1, caller);
+            console.log(caller)
         }
         local = null;
     });

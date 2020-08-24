@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
-// import { language } from '../main/constant';
-import { FunctionImpl, Function, parseFunctions } from '../main/function';
-import { allFunctionImpls } from '../main/tool';
-import { isVjassSupport } from '../main/configuration';
-import { programs } from './data-provider';
 
+import { programs } from './data-provider';
 import * as jass from "../main/jass/parsing";
 
 // import { resolveFunction, parseLibrarys } from '../main/library';

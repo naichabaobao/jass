@@ -1,5 +1,5 @@
 
-export class Keyword {
+class Keyword {
 
   public static readonly Function = "function";
   public static readonly Endfunction = "endfunction";

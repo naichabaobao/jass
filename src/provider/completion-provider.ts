@@ -116,7 +116,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       if (op.needLocal) {
         const func = functions.find(x => x.loc && Number.isInteger(x.loc.startLine) && Number.isInteger(x.loc.startPosition) && Number.isInteger(x.loc.endLine) && Number.isInteger(x.loc.endPosition) && new vscode.Range(<number>x.loc.startLine, <number>x.loc.startPosition, <number>x.loc.endLine, <number>x.loc.endPosition).contains(position));
         if (func) {
-          func.body.filter(x => x instanceof jass.LocalDeclarator).forEach(x => {
+          func.locals().forEach(x => {
             if (x.type && x.id) {
               const item = new vscode.CompletionItem(x.id, vscode.CompletionItemKind.Variable);
               item.detail = `${func.id} (当前文档)`;

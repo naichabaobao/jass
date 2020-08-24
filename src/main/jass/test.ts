@@ -45,16 +45,19 @@ endfunctionc
 function bbb
 // function a 
 globals
-integer*/
-function aaa takes nothing returns nothing
-        local integer aaa
-endfunction
+integer
+
 function aa (string aa) -> nothing {}
 // jiexila
+*/
+function aaa takes nothing returns nothing
+        local integer aaa
+        call aaa6(12.3, a3(25.0, 47)
+endfunction
     `);
 
 const progam = parsing(tokens);
 
-console.log(JSON.stringify(progam));
+console.log(JSON.stringify(progam.functions()));
 console.timeEnd("parsing")
 

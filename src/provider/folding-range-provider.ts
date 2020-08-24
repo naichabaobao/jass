@@ -1,24 +1,21 @@
 import * as vscode from 'vscode';
-import { language } from '../main/constant';
-import { toLines } from '../main/tool';
-import { Keyword } from '../main/keyword';
 
-const globalStartRegExp = new RegExp(`^\\s*${Keyword.Globals}\\b`);
-const globalEndRegExp = new RegExp(`^\\s*${Keyword.Endglobals}\\b`);
+const globalStartRegExp = new RegExp(`^\\s*globals\\b`);
+const globalEndRegExp = new RegExp(`^\\s*endglobals\\b`);
 
-const functionStartRegExp = new RegExp(`^\\s*((${Keyword.keywordPrivate}|${Keyword.keywordPublic}|${Keyword.keywordStatic})\\s+)?${Keyword.Function}\\b`);
-const functionEndRegExp = new RegExp(`^\\s*${Keyword.Endfunction}\\b`);
+const functionStartRegExp = new RegExp(`^\\s*((private|public|static)\\s+)?function\\b`);
+const functionEndRegExp = new RegExp(`^\\s*endfunction\\b`);
 
-const libraryStartRegExp = new RegExp(`^\\s*${Keyword.keywordLibrary}\\b`);
-const libraryEndRegExp = new RegExp(`^\\s*${Keyword.keywordEndLibrary}\\b`);
+const libraryStartRegExp = new RegExp(`^\\s*library\\b`);
+const libraryEndRegExp = new RegExp(`^\\s*endlibrary\\b`);
 
-const ifStartRegExp = new RegExp(`^\\s*${Keyword.If}\\b`);
-const elseRegExp = new RegExp(`^\\s*${Keyword.Else}\\b`);
-const elseIfRegExp = new RegExp(`^\\s*${Keyword.Elseif}\\b`);
-const ifEndRegExp = new RegExp(`^\\s*${Keyword.Endif}\\b`);
+const ifStartRegExp = new RegExp(`^\\s*if\\b`);
+const elseRegExp = new RegExp(`^\\s*else\\b`);
+const elseIfRegExp = new RegExp(`^\\s*elseif\\b`);
+const ifEndRegExp = new RegExp(`^\\s*endif\\b`);
 
-const loopStartRegExp = new RegExp(`^\\s*${Keyword.Loop}\\b`);
-const loopEndRegExp = new RegExp(`^\\s*${Keyword.Endloop}\\b`);
+const loopStartRegExp = new RegExp(`^\\s*loop\\b`);
+const loopEndRegExp = new RegExp(`^\\s*endloop\\b`);
 
 const regionStartRegExp = new RegExp(`^\\s*//\\s*region\\b`);
 const endRegionRegExp = new RegExp(`^\\s*//\\s*endregion\\b`);
@@ -91,7 +88,11 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider {
     const foldings = new Array<vscode.FoldingRange>();
 
     const content = document.getText();
-    const lines = toLines(content);
+    let lines:string[] = [];
+    for (let index = 0; index < document.lineCount; index++) {
+      const element = document.lineAt(index);
+      lines.push(element.text);
+    }
 
     let inGlobal = false;
     let globalLine = 0;
@@ -240,4 +241,4 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
 }
 
-vscode.languages.registerFoldingRangeProvider(language, new FoldingRangeProvider);
+vscode.languages.registerFoldingRangeProvider("jass", new FoldingRangeProvider);

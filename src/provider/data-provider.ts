@@ -72,7 +72,7 @@ function getCommonAiPath() {
 }
 
 function getDzApiJPath() {
-    return isUsableJFile(configuration()["dz"] as string) ? configuration()["dz"] as string : path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j");
+    return isUsableJFile(configuration()["dzapi"] as string) ? configuration()["dzapi"] as string : path.resolve(__dirname, "../../src/resources/static/jass/DzAPI.j");
 }
 
 function isUsableFile(filePath: string) {

@@ -1,5 +1,5 @@
 
-export class Type {
+class Type {
   public name: string = "nothing";
   public extends?: Type = undefined;
   public description: string = "";
