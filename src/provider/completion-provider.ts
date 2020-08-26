@@ -68,13 +68,13 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     programs().forEach(x => {
       x.functions().filter(func => func.id).forEach(func => {
         const item = new vscode.CompletionItem(<string>func.id, vscode.CompletionItemKind.Function);
-        item.detail = `${<string>func.id} (${path.parse(x.fileName ? x.fileName : "unkown")})`;
+        item.detail = `${<string>func.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
         item.documentation = new vscode.MarkdownString().appendText(x.description(func)).appendCodeblock(func.origin());
         this.functionCompletionItems.push(item);
       });
       x.globals().filter(func => func.id).forEach(global => {
         const item = new vscode.CompletionItem(<string>global.id, global.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-        item.detail = `${<string>global.id} (${path.parse(x.fileName ? x.fileName : "unkown")})`;
+        item.detail = `${<string>global.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
         item.documentation = new vscode.MarkdownString().appendText(x.description(global)).appendCodeblock(global.origin());
         this.globalCompletionItems.push(item);
       });

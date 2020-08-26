@@ -98,5 +98,11 @@
     "body": "//! textmacro textmacro_name takes args\n\t${0:\\$args\\$}\n//! endtextmacro",
     "description": "文本宏",
     "scope": "source.jass"
+  },
+  "region": {
+    "prefix": "region",
+    "body": "//region\n${0}\n//endregion",
+    "description": "折叠块",
+    "scope": "source.jass"
   }
 }

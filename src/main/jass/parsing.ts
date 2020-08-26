@@ -115,12 +115,12 @@ function parseCallDeclarator(tokens:Token[], pos:number, caller:CallDeclarator) 
                         caller.params[paramIndex] = [];
                     }
                     caller.params[paramIndex].push(token);
-                } else if(field !== 1) {
+                } else if(field > 0) {
                     if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === "(") {
                         field++;
                     } else if (tokens[pos] && tokens[pos].isOp() && tokens[pos].value === ")") {
                         field--;
-                        continue;
+                        // continue;
                     }
                     if (!caller.params[paramIndex]) {
                         caller.params[paramIndex] = [];
@@ -434,7 +434,6 @@ function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
             }
         }
     });
-    console.log(col)
     let local:LocalDeclarator|null = null;
     col.forEach(values => {
         if (values[0].isId() && values[0].value === "local") {
@@ -452,13 +451,13 @@ function parseFunctionBody (tokens: Token[], func:FunctionDeclarator) {
                 }
             }
         }else if (values[0].isId() && values[0].value === "call") {
-            console.log("call")
+
             const caller = new CallDeclarator();
             caller.loc.startLine = values[0].loc?.startLine ?? null;
             caller.loc.startPosition = values[0].loc?.startPosition ?? null;
             func.body.push(caller);
             parseCallDeclarator(values, 1, caller);
-            console.log(caller)
+
         }
         local = null;
     });

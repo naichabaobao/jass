@@ -203,13 +203,16 @@ function tokenize(content:string):Token[] {
               pushToken("string", startLine, startPosition, lineCount, position);
             }
           } else if (cur === "\\") {
-            inIsm = true;
+            inIsm = !inIsm;
             values.push(cur);
             position++;
             next(pos + 1);
           } else if (!cur) {
             pushToken("unclose_string", startLine, startPosition, lineCount, position);
           } else {
+            if (inIsm) {
+              inIsm = false;
+            }
             values.push(cur);
             position++;
             next(pos + 1);

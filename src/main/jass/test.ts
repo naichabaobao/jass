@@ -51,8 +51,7 @@ function aa (string aa) -> nothing {}
 // jiexila
 */
 function aaa takes nothing returns nothing
-        local integer aaa
-        call aaa6(12.3, a3(25.0, 47)
+        call aaa6((), a3(25.0, 47))
 endfunction
     `);
 
