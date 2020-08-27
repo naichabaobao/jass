@@ -285,6 +285,7 @@ function parseNative(tokens: Token[], pos: number, progam: Program, native: Nati
             if (tokens[pos] && tokens[pos].type === "id" && tokens[pos].value === "takes") {
                 pos++;
                 if (tokens[pos].isId() && tokens[pos].value === "nothing") {
+                    pos++;
                 }else {
                     pos = parseTakes(tokens, pos, native);
                 }

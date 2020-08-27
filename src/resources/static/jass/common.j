@@ -237,7 +237,7 @@ constant native AbilityId2String takes integer abilityId returns string
 // Looks up the "name" field for any object (unit, item, ability)
 // 物体名称 [C]
 constant native GetObjectName takes integer objectId returns string
-
+// 获取最大的玩家数
 constant native GetBJMaxPlayers takes nothing returns integer
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 constant native GetBJPlayerNeutralExtra takes nothing returns integer

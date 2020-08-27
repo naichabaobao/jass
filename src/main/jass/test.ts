@@ -49,10 +49,11 @@ integer
 
 function aa (string aa) -> nothing {}
 // jiexila
-*/
+
 function aaa takes nothing returns nothing
         call aaa6((), a3(25.0, 47))
-endfunction
+endfunction*/
+native gettriggerunit takes nothing returns nothing
     `);
 
 const progam = parsing(tokens);

@@ -1,6 +1,6 @@
 // import { JassType } from "./type";
 import {TokenParser, Token} from "./token";
-import {isType} from "./types";
+import {isType} from "../main/jass/types";
 
 class Position {
 

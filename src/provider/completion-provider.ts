@@ -6,8 +6,8 @@ import * as path from "path";
 
 import * as vscode from "vscode";
 
-import { types } from "../jass/types";
-import { keywords } from "../jass/keyword";
+import { types } from "../main/jass/types";
+import { keywords } from "../main/jass/keyword";
 
 import * as jass from "../main/jass/parsing";
 import { programs } from "./data-provider";
@@ -93,15 +93,20 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       needKeyword:boolean = false;
     } (), option);
     const items = new Array<vscode.CompletionItem>();
-    const currentProgam = jass.parse(document.getText());
     if (op.needKeyword) {
       items.push(...keywordItems);
     }
     if (op.needType) {
       items.push(...typeItems);
     }
+
+    if (!(op.needFunction || op.needGlobal)) {
+      return items;
+    }
+
+    const currentProgam = jass.parse(document.getText());
     if (op.needFunction || op.needLocal || op.needTake) {
-      const functions:jass.FunctionDeclarator[] = <jass.FunctionDeclarator[]>currentProgam.body.filter(x => x instanceof jass.FunctionDeclarator);
+      const functions:jass.FunctionDeclarator[] = currentProgam.functionDeclarators();
       if (op.needFunction) {
         functions.forEach(func => {
           if (func.id) {

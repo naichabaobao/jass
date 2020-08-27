@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "keywords": [
     "jass",
     "warcraft"
