@@ -12,7 +12,7 @@ class HoverProvider implements vscode.HoverProvider {
   private _version: number = -1;
   private _currentProgram: jass.Program | null = null;
   // 规定标识符长度
-  private _maxLength = 255;
+  private _maxLength = 526;
 
   private isNumber = function (val: string) {
     var regPos = /^\d+(\.\d+)?$/; //非负浮点数
@@ -51,14 +51,8 @@ class HoverProvider implements vscode.HoverProvider {
 
     const hovers: vscode.MarkdownString[] = [];
 
-    if (!this._uri || this._uri.toString() !== document.uri.toString() && document.version !== this._version) {
-      const content = document.getText();
-      this._currentProgram = jass.parse(content);
-
-      this._version = document.version;
-    }
-    const currentProgram: jass.Program = <jass.Program>this._currentProgram;
-
+    const content = document.getText();
+    const currentProgram: jass.Program = jass.parseEx(content);
 
     const currentFunc = currentProgram.functionDeclarators().find(x => x.loc && Number.isInteger(x.loc.startLine) && Number.isInteger(x.loc.startPosition) && Number.isInteger(x.loc.endLine) && Number.isInteger(x.loc.endPosition) && new vscode.Range(<number>x.loc.startLine, <number>x.loc.startPosition, <number>x.loc.endLine, <number>x.loc.endPosition).contains(position));
     if (currentFunc) {

@@ -1,10 +1,10 @@
 
 
 class Location {
-    public startLine:number|null = null;
-    public startPosition:number|null = null;
-    public endLine:number|null = null;
-    public endPosition:number|null = null;
+    public startLine:number = null as any;
+    public startPosition:number = null as any;
+    public endLine:number = null as any;
+    public endPosition:number = null as any;
 }
 
 export { Location};

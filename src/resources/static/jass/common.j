@@ -139,9 +139,11 @@ type unitcategory extends handle
 type pathingflag extends handle
 type commandbuttoneffect extends handle
 
-
+// 转换种族
 constant native ConvertRace takes integer i returns race
+// 转换联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
+
 constant native ConvertRacePref takes integer i returns racepreference
 constant native ConvertIGameState takes integer i returns igamestate
 constant native ConvertFGameState takes integer i returns fgamestate
@@ -842,20 +844,29 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH          = ConvertPlayerUnitEvent(275)
 	// 玩家單位停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST         = ConvertPlayerUnitEvent(276)
+ // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM             = ConvertPlayerUnitEvent(277)
 	
 	//===================================================
 	// For use with TriggerRegisterUnitEvent
 	//===================================================
-	
+	// 单位出售
 	constant unitevent EVENT_UNIT_SELL                         = ConvertUnitEvent(286)
+	// 单位所属改变
 	constant unitevent EVENT_UNIT_CHANGE_OWNER                 = ConvertUnitEvent(287)
+	// 出售物品
 	constant unitevent EVENT_UNIT_SELL_ITEM                    = ConvertUnitEvent(288)
+	// 准备施放技能 (前摇开始)
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL                = ConvertUnitEvent(289)
+	// 开始施放技能 (前摇结束)
 	constant unitevent EVENT_UNIT_SPELL_CAST                   = ConvertUnitEvent(290)
+	// 发动技能效果 (后摇开始)
 	constant unitevent EVENT_UNIT_SPELL_EFFECT                 = ConvertUnitEvent(291)
+	// 发动技能结束 (后摇结束)
 	constant unitevent EVENT_UNIT_SPELL_FINISH                 = ConvertUnitEvent(292)
+	// 停止施放技能
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST                = ConvertUnitEvent(293)
+	// 抵押物品
 	constant unitevent EVENT_UNIT_PAWN_ITEM                    = ConvertUnitEvent(294)
 	
 	//===================================================
@@ -2877,6 +2888,7 @@ constant native GetOrderTargetUnit takes nothing returns unit
 constant native GetSpellAbilityUnit takes nothing returns unit
 // 使用的技能
 constant native GetSpellAbilityId takes nothing returns integer
+// 使用的技能
 constant native GetSpellAbility takes nothing returns ability
 // 对其使用技能的目标点
 constant native GetSpellTargetLoc takes nothing returns location
@@ -2929,6 +2941,7 @@ native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit,
 
 // EVENT_UNIT_STATE_LIMIT
 // EVENT_UNIT_STATE_LIMIT
+// 获取单位状态
 constant native GetEventUnitState takes nothing returns unitstate
 
 // 详细单位的事件
@@ -3486,6 +3499,7 @@ native GetUnitCurrentOrder takes unit whichUnit returns integer
 
 // 设置金矿资源
 native SetResourceAmount takes unit whichUnit, integer amount returns nothing
+// 添加金矿资源
 native AddResourceAmount takes unit whichUnit, integer amount returns nothing
 // 黄金资源数量
 native GetResourceAmount takes unit whichUnit returns integer
@@ -4136,7 +4150,9 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 // Timer Dialog API
 // 新建计时器窗口 [R]
 native CreateTimerDialog takes timer t returns timerdialog
+// 销毁计时器窗口
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
+// 设置计时器窗口标题
 native TimerDialogSetTitle takes timerdialog whichDialog, string title returns nothing
 // 改变计时器窗口文字颜色 [R]
 native TimerDialogSetTitleColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
@@ -4146,6 +4162,7 @@ native TimerDialogSetTimeColor takes timerdialog whichDialog, integer red, integ
 native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor returns nothing
 // 显示/隐藏 计时器窗口(所有玩家) [R]
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
+// 判断计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 

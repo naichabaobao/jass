@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "keywords": [
     "jass",
     "warcraft"
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/naichabaobao/jass",
   "activationEvents": [
-    "onLanguage:jass"
+    "onLanguage:jass",
+    "onLanguage:lua"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -84,6 +85,12 @@
           ".ai"
         ],
         "configuration": "./src/jass-configuration.json"
+      },
+      {
+        "id": "lua",
+        "extensions": [
+          ".lua"
+        ]
       }
     ],
     "grammars": [

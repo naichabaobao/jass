@@ -1,5 +1,5 @@
 import { tokenize } from "./tokens";
-import { parsing } from "./parsing";
+import { parsing, parseEx } from "./parsing";
 
 console.time("parsing")
 const tokens = tokenize(`
@@ -58,6 +58,16 @@ native gettriggerunit takes nothing returns nothing
 
 const progam = parsing(tokens);
 
-console.log(JSON.stringify(progam.functions()));
-console.timeEnd("parsing")
+// console.log(JSON.stringify(progam.functions()));
+// console.timeEnd("parsing")
+
+console.log(JSON.stringify(parseEx(`
+globals
+constant integer array getname
+endglobals
+
+private function a takes integer aaa, string name returns shabi
+local integer array name
+call a(1 0,2)
+`), null, 2))
 

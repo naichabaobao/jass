@@ -154,7 +154,7 @@
     },
     "jass-keyword-operator": {
       "name": "keyword.operator",
-      "match": ">|<|=|!|\\+|-|\\*|/|%|\\[|\\]|\\(|\\)|,|\\."
+      "match": "\\||&|>|<|=|!|\\+|-|\\*|/|%|\\[|\\]|\\(|\\)|,"
     },
     "jass-keyword-control": {
       "name": "keyword.control",

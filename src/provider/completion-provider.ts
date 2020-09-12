@@ -104,7 +104,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       return items;
     }
 
-    const currentProgam = jass.parse(document.getText());
+    const currentProgam = jass.parseEx(document.getText());
     if (op.needFunction || op.needLocal || op.needTake) {
       const functions:jass.FunctionDeclarator[] = currentProgam.functionDeclarators();
       if (op.needFunction) {
@@ -144,8 +144,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       }
     }
     if (op.needGlobal) {
-      const globals = <jass.Globals[]>currentProgam.body.filter(x => x instanceof jass.Globals);
-      const globalVariables = globals.map(x => x.globals).flat().filter(x => {
+      const globals = currentProgam.globals();
+      const globalVariables = globals.filter(x => {
         if (op.needConstant && op.needVariable) {
           return true;
         } else if (op.needConstant) {
@@ -197,7 +197,16 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     const isType = document.getWordRangeAtPosition(position, new RegExp(`(?<=\\b(${types().join("|")})\\s+)[a-zA-Z][a-zA-Z0-9]*`));
     const isEqual = document.getWordRangeAtPosition(position, /(?<==\s*)[a-zA-Z][a-zA-Z0-9]*/);
     const isCall = document.getWordRangeAtPosition(position, /(?<=\bcall\s+)[a-zA-Z][a-zA-Z0-9]*/);
- 
+    if (document.fileName.endsWith(".lua")) {
+      return this.getItems(document, position, {
+        needFunction: true,
+        needGlobal: true,
+        needTake: false,
+        needLocal: false,
+        needKeyword: false,
+        needType: false
+      });
+    }
     try {
       if (isReturns || isLocal || isConstant || isTakes) {
         return typeItems;
@@ -259,4 +268,23 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
 vscode.languages.registerCompletionItemProvider("jass", new CompletionItemProvider);
 
-
+vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items = new Array<vscode.CompletionItem>();
+    programs().forEach(x => {
+      x.functions().filter(func => func.id).forEach(func => {
+        const item = new vscode.CompletionItem(<string>func.id, vscode.CompletionItemKind.Function);
+        item.detail = `${<string>func.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
+        item.documentation = new vscode.MarkdownString().appendText(x.description(func)).appendCodeblock(func.origin());
+        items.push(item);
+      });
+      x.globals().filter(func => func.id).forEach(global => {
+        const item = new vscode.CompletionItem(<string>global.id, global.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+        item.detail = `${<string>global.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
+        item.documentation = new vscode.MarkdownString().appendText(x.description(global)).appendCodeblock(global.origin());
+        items.push(item);
+      });
+    });
+    return items;
+  }
+} ());

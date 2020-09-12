@@ -2,8 +2,9 @@
 #define DZAPIINCLUDE
 
 library DzAPI
-
+// 保存值
 native DzAPI_Map_SaveServerValue        takes player whichPlayer, string key, string value returns boolean
+// 获取值
 native DzAPI_Map_GetServerValue         takes player whichPlayer, string key returns string
 native DzAPI_Map_Ladder_SetStat         takes player whichPlayer, string key, string value returns nothing
 native DzAPI_Map_IsRPGLadder            takes nothing returns boolean
@@ -13,7 +14,9 @@ native DzAPI_Map_GetMatchType      		takes nothing returns integer
 native DzAPI_Map_Ladder_SetPlayerStat   takes player whichPlayer, string key, string value returns nothing
 native DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer
 native DzAPI_Map_GetLadderLevel         takes player whichPlayer returns integer
+// is土豪?
 native DzAPI_Map_IsRedVIP               takes player whichPlayer returns boolean
+// is土豪?
 native DzAPI_Map_IsBlueVIP              takes player whichPlayer returns boolean
 native DzAPI_Map_GetLadderRank          takes player whichPlayer returns integer
 native DzAPI_Map_GetMapLevelRank        takes player whichPlayer returns integer
@@ -50,9 +53,11 @@ native DzGetMouseYRelative takes nothing returns integer
 native DzSetMousePos takes integer x, integer y returns nothing
 // 注册鼠标点击触发（sync为true时，调用TriggerExecute。为false时，直接运行action函数，可以异步不掉线，action里不要有同步操作）
 native DzTriggerRegisterMouseEvent takes trigger trig, integer btn, integer status, boolean sync, string func returns nothing
+// 注册鼠标点击触发（sync为true时，调用TriggerExecute。为false时，直接运行action函数，可以异步不掉线，action里不要有同步操作）
 native DzTriggerRegisterMouseEventByCode takes trigger trig, integer btn, integer status, boolean sync, code funcHandle returns nothing
 // 注册键盘点击触发
 native DzTriggerRegisterKeyEvent takes trigger trig, integer key, integer status, boolean sync, string func returns nothing
+// 注册键盘点击触发
 native DzTriggerRegisterKeyEventByCode takes trigger trig, integer key, integer status, boolean sync, code funcHandle returns nothing
 // 注册鼠标滚轮触发
 native DzTriggerRegisterMouseWheelEvent takes trigger trig, boolean sync, string func returns nothing
@@ -141,6 +146,7 @@ native DzFrameGetTopMessage takes nothing returns integer
 native DzGetColor takes integer r, integer g, integer b, integer a returns integer
 // 设置界面更新回调（非同步）
 native DzFrameSetUpdateCallback takes string func returns nothing
+// 界面更新回调
 native DzFrameSetUpdateCallbackByCode takes code funcHandle returns nothing
 // 显示/隐藏窗体
 native DzFrameShow takes integer frame, boolean enable returns nothing
@@ -150,9 +156,9 @@ native DzCreateFrame takes string frame, integer parent, integer id returns inte
 native DzCreateSimpleFrame takes string frame, integer parent, integer id returns integer
 // 销毁窗体
 native DzDestroyFrame takes integer frame returns nothing
-// 加载内容目录 (Toc table of contents. 不知道翻译对不)
+// 加载内容目录 (Toc table of contents)
 native DzLoadToc takes string fileName returns nothing
-// 设置窗体相对位置
+// 设置窗体相对位置 [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
 native DzFrameSetPoint takes integer frame, integer point, integer relativeFrame, integer relativePoint, real x, real y returns nothing
 // 设置窗体绝对位置
 native DzFrameSetAbsolutePoint takes integer frame, integer point, real x, real y returns nothing
@@ -174,7 +180,7 @@ native DzFrameFindByName takes string name, integer id returns integer
 native DzSimpleFrameFindByName takes string name, integer id returns integer
 // 查找字符串
 native DzSimpleFontStringFindByName takes string name, integer id returns integer
-// 查找纹理
+// 查找BACKDROP frame
 native DzSimpleTextureFindByName takes string name, integer id returns integer
 // 获取游戏用户界面
 native DzGetGameUI takes nothing returns integer
@@ -234,6 +240,7 @@ native DzFrameSetSize takes integer frame, real w, real h returns nothing
 native DzCreateFrameByTagName takes string frameType, string name, integer parent, string template, integer id returns integer
 // 设置颜色（支持SimpleStatusBar）
 native DzFrameSetVertexColor takes integer frame, integer color returns nothing
+// 不明觉厉
 native DzOriginalUIAutoResetPoint takes boolean enable returns nothing
 //  设置优先级 [NEW]
 native DzFrameSetPriority takes integer frame, integer priority returns nothing
@@ -247,6 +254,7 @@ native DzFrameGetHeight takes integer frame returns real
 native DzFrameSetTextAlignment takes integer frame, integer align returns nothing
 //  获取 Frame 的 Parent [NEW]
 native DzFrameGetParent takes integer frame returns integer
+// 设置内存大小（废物函数）
 native DzSetMemory takes integer frame,real r returns nothing
 
 function GetPlayerServerValueSuccess takes player whichPlayer returns boolean

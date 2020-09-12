@@ -1,5 +1,6 @@
 
-// import('./completion-item-provider');
+import('./workspace-provider');
+
 import('./completion-provider');
 import('./signature-help-provider');
 import('./hover-provider');

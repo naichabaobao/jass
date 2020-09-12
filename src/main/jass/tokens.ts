@@ -3,7 +3,7 @@ import { Location } from "./range";
 class Token {
   public type: string;
   public value: string;
-  public loc: Location | null = null;
+  public loc: Location = new Location();
   constructor(type: string, value: string) {
     this.type = type;
     this.value = value;
