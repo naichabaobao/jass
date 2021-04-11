@@ -13,3 +13,5 @@ import('./diagnostic-collection');
 import('./rename-provider');
 
 export {};
+
+import("../jass-regexp/parse")

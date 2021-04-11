@@ -197,6 +197,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     const isType = document.getWordRangeAtPosition(position, new RegExp(`(?<=\\b(${types().join("|")})\\s+)[a-zA-Z][a-zA-Z0-9]*`));
     const isEqual = document.getWordRangeAtPosition(position, /(?<==\s*)[a-zA-Z][a-zA-Z0-9]*/);
     const isCall = document.getWordRangeAtPosition(position, /(?<=\bcall\s+)[a-zA-Z][a-zA-Z0-9]*/);
+    /*
     if (document.fileName.endsWith(".lua")) {
       return this.getItems(document, position, {
         needFunction: true,
@@ -206,7 +207,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         needKeyword: false,
         needType: false
       });
-    }
+    }*/
     try {
       if (isReturns || isLocal || isConstant || isTakes) {
         return typeItems;
@@ -223,21 +224,46 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           needConstant: false,
           needVariable: true
         });
-        // const takes = this.currentTake(position);
-        // if (takes) {
-        //   items.push(...takes);
-        // }
-        // const locals = this.currentLocal(position);
-        // if (locals) {
-        //   items.push(...locals);
-        // }
       }
       else if (isCall) {
         return this.getItems(document, position, {
           needFunction: true
         });
       }
+      else if ((function () {
+        
+        return null;
+      })()) {
+
+      }
       else {
+
+        // 判断是否是参数
+        const line = document.lineAt(position.line);
+        const lineText = line.text;
+        let field = 0;
+        let count = 0;
+        let findName = false;
+        for (let index = position.character; index > 0; index--) {
+          const char = lineText.charAt(index);
+          if (char === ",") {
+            count++;
+          }else if (char === ")") {
+            field++;
+          } else if (char === "(") {
+            if (field === 0) {
+              // document.getWordRangeAtPosition(new vscode.Position(line.lineNumber, index - 1), /[a-zA-Z\d]+/);
+              const functionName = new RegExp(/[a-zA-Z\d]+(?=\s*)$/).exec(lineText.substring(0, index - 1));
+              if (functionName) {
+                console.log(functionName)
+              }
+              break;
+            } else {
+              field--;
+            }
+          }
+        }
+        return
         // this.initCurrent(document);
         return this.getItems(document, position, {
           needFunction: true,
@@ -247,16 +273,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           needKeyword: true,
           needType: true
         });
-        // items.push(...this.allVariablas(document.fileName));
-        /*
-        const takes = this.currentTake(position);
-        if (takes) {
-          items.push(...takes);
-        }
-        const locals = this.currentLocal(position);
-        if (locals) {
-          items.push(...locals);
-        }*/
       }
     } catch (error) {
       console.log(error);
@@ -288,3 +304,5 @@ vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionIt
     return items;
   }
 } ());
+
+// 

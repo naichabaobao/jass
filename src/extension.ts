@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import("./provider/register");
+import("./boot/boot");
 
 export function activate(context: vscode.ExtensionContext) {
 }
