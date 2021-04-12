@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { Program, Scope } from './jass';
-import { commonJProgram, commonAiProgram, dzApiJProgram, blizzardJProgram, includePrograms } from './data';
+import { types,natives,functions,globals,structs } from './data';
 import { Types } from "./types";
 import { AllKeywords } from './keyword';
 
@@ -20,13 +20,7 @@ const get = (scopes:Scope[]) :Scope[] => {
   }).flat();
 }
 
-const programs = [commonJProgram, commonAiProgram, dzApiJProgram, blizzardJProgram, ...includePrograms];
-// const scopes = programs.map(program => program.allScope).flat();
-const types = programs.map(program => program.types).flat();
-const natives = programs.map(program => program.natives).flat();
-const functions = programs.map(program => program.allFunctions).flat();
-const globals = programs.map(program => program.allGlobals).flat();
-const structs = programs.map(program => program.allStructs).flat();
+
 const all = [...types, ...natives, ...functions, ...globals, ...structs];
 
 class HoverProvider implements vscode.HoverProvider {
@@ -70,9 +64,18 @@ class HoverProvider implements vscode.HoverProvider {
 
     const content = document.getText();
 
-    all.forEach(func => {
-      if (key == func.name) {
-        hovers.push(new vscode.MarkdownString(func.name).appendCodeblock(func.origin));
+    all.forEach(expr => {
+      if (key == expr.name) {
+        hovers.push(new vscode.MarkdownString(expr.name).appendCodeblock(expr.origin));
+      }
+    });
+
+    const currentProgram = new Program(document.uri.fsPath, document.getText());
+    const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs, ...currentProgram.zincFunctions];
+
+    exprs.forEach(expr => {
+      if (key == expr.name) {
+        hovers.push(new vscode.MarkdownString(expr.name).appendCodeblock(expr.origin));
       }
     });
 

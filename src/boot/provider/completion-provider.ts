@@ -9,7 +9,8 @@ import * as vscode from "vscode";
 import { Types } from "./types";
 import {getTypeDesc} from "./type-desc";
 import { AllKeywords } from "./keyword";
-import {commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram, includePrograms} from "./data";
+import { types,natives,functions,globals,structs, librarys } from './data';
+// import {commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram, includePrograms} from "./data";
 import { Program } from "./jass";
 import { Options } from "./options";
 
@@ -67,8 +68,52 @@ function programToItem(program:Program) {
   return [...nativeItems, ...functionItems, ...globalItems, ...libraryItems, ...libraryFunctionItems, ...libraryGlobalItems];
 }
 
-const commonJItems = programToItem(commonJProgram);
+// const commonJItems = programToItem(commonJProgram);
 
+const arrayTypeItems = types.map(type => {
+  const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
+  item.detail = type.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(type.origin);
+  return item;
+});
+const globalItems = globals.map(global => {
+  const item = new vscode.CompletionItem(global.name, global.constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+  item.detail = global.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(global.origin);
+  return item;
+});
+const functionItems = functions.map(func => {
+  const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+  item.detail = func.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin);
+  return item;
+});
+const nativeItems = natives.map(native => {
+  const item = new vscode.CompletionItem(native.name, vscode.CompletionItemKind.Function);
+  item.detail = native.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(native.origin);
+  return item;
+});
+const structItems = structs.map(struct => {
+  const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
+  item.detail = struct.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(struct.origin);
+  return item;
+});
+const structMethodItems = structs.map(struct => {
+  return struct.methods.map(method => {
+    const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
+    item.detail = `${struct.name}.${method.name}`;
+    item.documentation = new vscode.MarkdownString().appendCodeblock(method.origin);
+    return item;
+  });
+}).flat();
+const libraryItems = librarys.map(library => {
+  const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Module);
+  item.detail = library.name;
+  item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
+  return item;
+});
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
 
@@ -76,32 +121,81 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const items = new Array<vscode.CompletionItem>();
     items.push(...typeItems);
     items.push(...keywordItems);
-    items.push(...commonJItems);
-    items.push(...programToItem(new Program(document.uri.fsPath, document.getText())));
+    items.push(...arrayTypeItems);
+    items.push(...nativeItems);
+    items.push(...functionItems);
+    items.push(...globalItems);
+    items.push(...structItems);
+    items.push(...structMethodItems);
+    items.push(...libraryItems);
+
+    const currentProgram = new Program(document.uri.fsPath, document.getText());
+    // const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs];
+    const currentArrayTypeItems = currentProgram.types.map(type => {
+      const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
+      item.detail = type.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(type.origin);
+      return item;
+    });
+    const currentGlobalItems = currentProgram.allGlobals.map(global => {
+      const item = new vscode.CompletionItem(global.name, vscode.CompletionItemKind.Class);
+      item.detail = global.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(global.origin);
+      return item;
+    });
+    const currentFunctionItems = currentProgram.allFunctions.map(func => {
+      const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+      item.detail = func.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin);
+      return item;
+    });
+    const currentStructItems = currentProgram.allStructs.map(struct => {
+      const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
+      item.detail = struct.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(struct.origin);
+      return item;
+    });
+    const currentStructMethodItems = currentProgram.allStructs.map(struct => {
+      return struct.methods.map(method => {
+        const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
+        item.detail = `${struct.name}.${method.name}`;
+        item.documentation = new vscode.MarkdownString().appendCodeblock(method.origin);
+        return item;
+      });
+    }).flat();
+    const currentLibraryItems = currentProgram.librarys.map(library => {
+      const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Module);
+      item.detail = library.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
+      return item;
+    });
+    const currentZincFunctionItems = currentProgram.zincFunctions.map(func => {
+      const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+      item.detail = func.name;
+      item.documentation = new vscode.MarkdownString().appendCodeblock(`function ${func.name}(${func.takes.length == 0 ? "nothing" : func.takes.map(take => take.origin).join(" ,")}) -> ${func.returns ?? "nothing"} {}`);
+      return item;
+    });
+    
+    items.push(...currentArrayTypeItems);
+    items.push(...currentGlobalItems);
+    items.push(...currentFunctionItems);
+    items.push(...currentStructItems);
+    items.push(...currentStructMethodItems);
+    items.push(...currentLibraryItems);
+    
+    items.push(...currentZincFunctionItems);
+
     return items;
   }
 
 });
-/*
+
 vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
-    programs().forEach(x => {
-      x.functions().filter(func => func.id).forEach(func => {
-        const item = new vscode.CompletionItem(<string>func.id, vscode.CompletionItemKind.Function);
-        item.detail = `${<string>func.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
-        item.documentation = new vscode.MarkdownString().appendText(x.description(func)).appendCodeblock(func.origin());
-        items.push(item);
-      });
-      x.globals().filter(func => func.id).forEach(global => {
-        const item = new vscode.CompletionItem(<string>global.id, global.isConstant() ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-        item.detail = `${<string>global.id} (${path.parse(x.fileName ? x.fileName : "unkown").base})`;
-        item.documentation = new vscode.MarkdownString().appendText(x.description(global)).appendCodeblock(global.origin());
-        items.push(item);
-      });
-    });
+    items.push(...nativeItems);
+    items.push(...functionItems);
     return items;
   }
 } ());
-*/
-// 
+

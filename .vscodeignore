@@ -1,6 +1,7 @@
 .vscode/**
 .vscode-test/**
 out/test/**
+out/provider/**
 node_modules
 src/main/**
 src/provider/**

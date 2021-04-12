@@ -1,8 +1,9 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { types } from "../../main/jass/types";
 
-import {Options} from "./options";
+import {parse, ProgramBlock} from "../jass/parsing";
+import { Options } from "./options";
+
 
 type TagType = "function" | "endfunction" | "globals" | "endglobals" | "native" | "constant" | "type" | "local" | "set" | "call" | "if" | "endif" | "else" | "elseif" | "loop" | "exitwhen" | "endloop" | "return"
 | "library" | "endlibrary" | "private" | "public" | "static" | "blank" | "unkown";
@@ -51,13 +52,6 @@ class Line {
 
   public get isBlank() {
     return this._text.trimStart() == "";
-  }
-
-  public startWiths(text:string) {
-    if (text == "") {
-      return true;
-    }
-    return this._text.trimStart().startsWith(text);
   }
   
   public get loc() {
@@ -109,6 +103,8 @@ class Program {
     this._findZincBlock(lineTexts);
 
     this._handle(lineTexts);
+
+    this._handelZinc();
   }
 
   private _convertKey(key:string) {
@@ -116,6 +112,32 @@ class Program {
       throw " illegality key!";
     }
     return path.resolve(key);
+  }
+
+  /**
+   * @deprecated 
+   */
+  public readonly programBlocks:ProgramBlock[] = [];
+  public get zincFunctions() {
+    return this.programBlocks.map(x => x.functionDeclarators()).flat().map(x => {
+      return new Func(x.id ?? "", x.takes.map(take => new Take(take.type ?? "nothing", take.id)), x.returns);
+    });
+  }
+
+  private _handelZinc() {
+    if (!Options.supportZinc) {
+      return;
+    }
+    this._zincBlocks.forEach(block => {
+      try {
+        const content = block.lines.map(x => x.text).join("\n");
+        const programBlock = parse(content);
+        programBlock.fileName = this._key;
+        this.programBlocks.push(programBlock);
+      } catch(err) {
+        return;
+      }
+    });
   }
 
   private _isNewLine(char:string) {
@@ -303,7 +325,6 @@ class Program {
   }
 
   private _handle(lines:Array<Line>) {
-    const tags = new Array<Tag>();
     let inGlobals = false;
     let inFunc = false;
     let inMethod = false;

@@ -197,7 +197,7 @@ class JassError implements Loc  {
     }
 }
 
-class Program {
+class ProgramBlock {
     public fileName: string | null = null;
     public body: Array<FunctionDeclarator | NativeDeclarator | GlobalDeclarator> = [];
     public comments: Comment[] = [];
@@ -229,13 +229,13 @@ class Program {
  * @param tokens 
  * @description 如果你对token不熟悉,建议使用parse
  */
-function parsing(tokens: Token[]): Program {
-    const progam = new Program();
+function parsing(tokens: Token[]): ProgramBlock {
+    const progam = new ProgramBlock();
     start(tokens, progam);
     return progam;
 }
 
-function start(tokens: Token[], progam: Program) {
+function start(tokens: Token[], progam: ProgramBlock) {
     // 去除注释
     tokens = removeComment(tokens, progam);
 
@@ -264,7 +264,7 @@ function start(tokens: Token[], progam: Program) {
  * @param tokens 
  * @param progam 
  */
-function removeComment(tokens: Token[], progam: Program) {
+function removeComment(tokens: Token[], progam: ProgramBlock) {
     const ts: Token[] = [];
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -283,7 +283,7 @@ function removeComment(tokens: Token[], progam: Program) {
     return ts;
 }
 
-function parseNative(tokens: Token[], pos: number, progam: Program, native: NativeDeclarator): number {
+function parseNative(tokens: Token[], pos: number, progam: ProgramBlock, native: NativeDeclarator): number {
     if (tokens[pos].type === "id" && tokens[pos].value === "native") {
         native.loc = new Location();
         native.loc.startLine = tokens[pos].loc?.startLine ?? 0;
@@ -360,7 +360,7 @@ interface FunctionOption {
     supportZinc?: boolean;
 }
 
-function parseFunction(tokens: Token[], pos: number, progam: Program, func: FunctionDeclarator, option?: FunctionOption) {
+function parseFunction(tokens: Token[], pos: number, progam: ProgramBlock, func: FunctionDeclarator, option?: FunctionOption) {
 
     option = {
         supportZinc: true
@@ -512,7 +512,7 @@ function collectZincFunctionBody(tokens: Token[], pos: number, func: FunctionDec
  * @param progam 
  * @param globals 
  */
-function parseGlobals(tokens: Token[], pos: number, progam: Program, globals: Globals) {
+function parseGlobals(tokens: Token[], pos: number, progam: ProgramBlock, globals: Globals) {
     if (tokens[pos].type === "id" && tokens[pos].value === "globals") {
         // progam.body.push(globals);
         pos++;
@@ -604,7 +604,7 @@ function removeBlockComment(content: string): string {
 }
 
 function parseEx(content: string) {
-    const program = new Program();
+    const program = new ProgramBlock();
     // 去除多行注释
     content = removeBlockComment(content);
     const lines = content.split(/\n/);
@@ -857,5 +857,5 @@ export {
     LocalDeclarator,
     // Globals,
     GlobalDeclarator,
-    Program
+    ProgramBlock
 };

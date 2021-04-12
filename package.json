@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "0.0.55",
+  "version": "1.0.0",
   "keywords": [
     "jass",
     "warcraft"
@@ -35,19 +35,19 @@
       "properties": {
         "jass.common_j": {
           "type": "string",
-          "description": "自定义common.j,不设置时默认使用插件提供的common.j(需要重启)\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
+          "description": "自定义common.j(reboot)\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
         },
         "jass.blizzard": {
           "type": "string",
-          "description": "自定义blizzard.j(test)"
+          "description": "自定义blizzard.j(reboot)"
         },
         "jass.common_ai": {
           "type": "string",
-          "description": "自定义common.j(test)"
+          "description": "自定义common.j(reboot)"
         },
         "jass.dzapi": {
           "type": "string",
-          "description": "自定义dzapi.j(test)"
+          "description": "自定义dzapi.j(reboot)"
         },
         "jass.includes": {
           "type": "array",
@@ -56,25 +56,10 @@
           },
           "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j|.ai\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find. J |.ai)"
         },
-        "jass.diagnostic.support": {
-          "type": "boolean",
-          "default": true,
-          "description": "是否开始错误检查\n(Whether to start error checking (currently only support call checking))"
-        },
-        "jass.format.indent.support": {
-          "type": "boolean",
-          "default": true,
-          "description": "是否开始缩进格式化（如果你文件包含非jass语法，建议关闭）\n(Whether to start indenting formatting)"
-        },
         "jass.support.zinc": {
           "type": "boolean",
           "default": true,
           "description": "是否支持zinc\n(Whether to support Zinc)"
-        },
-        "jass.support.vjass": {
-          "type": "boolean",
-          "default": true,
-          "description": "是否支持vjass\n(Whether to support VJass)"
         }
       }
     },
@@ -111,7 +96,7 @@
         "path": "./src/snippets.json"
       }
     ],
-    "documentFormattingProvider": "true",
+    "documentFormattingProvider": "false",
     "productIconTheme": [
       {
         "id": "jass",
