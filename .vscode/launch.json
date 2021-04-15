@@ -9,7 +9,7 @@
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
-			"name": "Launch Extension",
+			"name": "测试jass插件",
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],

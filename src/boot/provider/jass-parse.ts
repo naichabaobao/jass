@@ -105,6 +105,8 @@ class Program {
     this._handle(lineTexts);
 
     this._handelZinc();
+
+    this._handleZinc2();
   }
 
   private _convertKey(key:string) {
@@ -124,6 +126,10 @@ class Program {
     });
   }
 
+  /**
+   * @deprecated
+   * @returns 
+   */
   private _handelZinc() {
     if (!Options.supportZinc) {
       return;
@@ -135,8 +141,58 @@ class Program {
         programBlock.fileName = this._key;
         this.programBlocks.push(programBlock);
       } catch(err) {
-        return;
+        throw err;
       }
+    });
+  }
+
+  public readonly zincStructs:Struct[] = [];
+
+  /**
+   * _handelZinc为过去实现
+   * _handleZinc2为最新实现，逐步使用当前方法替换掉_handelZinc
+   */
+  private _handleZinc2 () {
+    // 目前尝试实现struct和method
+    this._zincBlocks.forEach(block => {
+      const content = block.lines.map(x => x.text).join("\n");
+      // 强制正确嵌套，否则无法匹配
+      const structRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s*\{(?<body>(?:[^{}]*\{?[^{}]*\}[^{}]*)*)\}?/);
+      const handleStruct = (text:string) => {
+        const result = structRegExp.exec(text);
+        if (result) {
+          return result;
+        } else return null;
+      }
+      const structMethodRegExp = new RegExp(/method\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)(\s*\(\s*(?<takes>([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)?\s*\))?(\s*->\s*(?<returns>[a-zA-Z][a-zA-Z0-9_]*))?/);
+      const handleStructMethod = (text:string) => {
+        const result = structMethodRegExp.exec(text);
+        if (result) {
+          return result;
+        } else return null;
+      }
+      for (let result:RegExpExecArray|null = null, index = 0; index < content.length;) {
+        // console.log(result ? content.substring(index) : content)
+        result = handleStruct(result ? content.substring(index) : content)
+        if (result && result.groups) {
+          const struct = new Struct(result.groups["name"]);
+          this.zincStructs.push(struct);
+          const body = result.groups["body"];
+          for (let rs:RegExpExecArray|null = null, i = 0; i < content.length;) {
+            rs = handleStructMethod(rs ? body.substring(i) : body)
+            if (rs && rs.groups) {
+              const takeString = rs.groups["takes"];
+              const takes = takeString ? this.takeStringToTakes(takeString) : [];
+              const returns = rs.groups["returns"];
+              const method = new Method(rs.groups["name"], takes , returns ?? null);
+              struct.methods.push(method);
+            } else break;
+            i += rs[0].length;
+          }
+        } else break;
+        index += result[0].length;
+      }
+      
     });
   }
 
@@ -186,8 +242,10 @@ class Program {
     let useless = false;
     const lineCommentOver = (start:number, end:number) => {
       if (!useless) {
-        this._usefulLineComments.push(new LineComment(new vscode.Range(line, start, line, end), content.substring(start, end + 1)));
-        
+        const text = content.substring(start, end + 1);
+        if (/\s*\/\/!/.test(text)) {
+          this._usefulLineComments.push(new LineComment(new vscode.Range(line, start, line, end), text));
+        }
       }
       content = this._replace(content, start, end);
     }
@@ -413,59 +471,59 @@ class Program {
     for (let index = 0; index < lines.length; index++) {
       const line = lines[index];
       if (/^\s*type\b/.test(line.text)) {
-        const type = this._handleType(line);
+        const type = this._handleType(line.text);
         if (type) {
           this.types.push(type);
         }
       } else if (/^\s*native\b/.test(line.text)) {
-        const native = <Native>this._handleNative(line, FunctionOption.native(false));
+        const native = <Native>this._handleNative(line.text, FunctionOption.native(false));
         if (native) {
           this.natives.push(native);
         }
       } else if (/^\s*constant\s+native\b/.test(line.text)) {
-        const native = <Native>this._handleNative(line, FunctionOption.native(true));
+        const native = <Native>this._handleNative(line.text, FunctionOption.native(true));
         if (native) {
           this.natives.push(native);
         }
       }  else if (/^\s*function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func());
+        const func = <Func>this._handleNative(line.text, FunctionOption.func());
         if (func) {
           funcHandle(func);
         }
       }  else if (/^\s*private\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func("private"));
+        const func = <Func>this._handleNative(line.text, FunctionOption.func("private"));
         if (func) {
           funcHandle(func);
         }
       }  else if (/^\s*public\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func("public"));
+        const func = <Func>this._handleNative(line.text, FunctionOption.func("public"));
         if (func) {
           funcHandle(func);
         }
       }  else if (/^\s*static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func("default", true));
+        const func = <Func>this._handleNative(line.text, FunctionOption.func("default", true));
         if (func) {
           funcHandle(func);
         }
       }  else if (/^\s*public\s+static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func("public", true));
+        const func = <Func>this._handleNative(line.text, FunctionOption.func("public", true));
         if (func) {
           funcHandle(func);
         }
       }  else if (/^\s*private\s+static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
-        const func = <Func>this._handleNative(line, FunctionOption.func("private", true));
+        const func = <Func>this._handleNative(line.text, FunctionOption.func("private", true));
         if (func) {
           funcHandle(func);
         }
@@ -516,37 +574,37 @@ class Program {
       } else if (/^\s*endstruct\b/.test(line.text)) {
         inStruct = false;
       } else if (inStruct && /^\s*private\s+static\s+method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("private", true)) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("private", true)) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*public\s+static\s+method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("public", true)) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("public", true)) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*private\s+method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("private")) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("private")) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*public\s+method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("public")) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("public")) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*static\s+method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("default", true)) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("default", true)) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*method\b/.test(line.text)) {
-        const method = <Method>this._handleNative(line, FunctionOption.method("default")) ?? new Method("");
+        const method = <Method>this._handleNative(line.text, FunctionOption.method("default")) ?? new Method("");
         structMethodHandle(method);
         inMethod = true;
         inGlobals = false;
@@ -593,8 +651,8 @@ class Program {
 
 
 
-  private _handleType(line:Line) {
-    const result = /type\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s+extends\s+(?<extend>[a-zA-Z][a-zA-Z0-9_]*)\s+array\s*\[\s*(?<size>\d+)\s*\]/.exec(line.text);
+  private _handleType(text:string) {
+    const result = /type\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s+extends\s+(?<extend>[a-zA-Z][a-zA-Z0-9_]*)\s+array\s*\[\s*(?<size>\d+)\s*\]/.exec(text);
     if (result && result.groups) {
       const name = result.groups["name"];
       const extend = result.groups["extend"];
@@ -607,9 +665,9 @@ class Program {
 
   // private _natives
 
-  private _handleNative(line:Line, option:FunctionOption = FunctionOption.func()) {
+  private _handleNative(text:string, option:FunctionOption = FunctionOption.func()) {
 
-    const functionNameString = line.text.substring(0, line.text.includes("takes") ? line.text.indexOf("takes") : line.text.length);
+    const functionNameString = text.substring(0, text.includes("takes") ? text.indexOf("takes") : text.length);
     const nameResult = (function () {
       switch (option.type) {
         case "function":
@@ -626,22 +684,15 @@ class Program {
       return null;
     }
     const funcName = nameResult.groups["name"];
-    const takesResult = /takes\s+(?<takes>nothing|([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)/.exec(line.text.substring(line.text.includes("takes") ? line.text.indexOf("takes") : 0, line.text.includes("returns") ? line.text.indexOf("returns") : line.length));
+    const takesResult = /takes\s+(?<takes>nothing|([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)/.exec(text.substring(text.includes("takes") ? text.indexOf("takes") : 0, text.includes("returns") ? text.indexOf("returns") : text.length));
     let takes:Take[] = [];
     if (takesResult && takesResult.groups) {
       const takesString = takesResult.groups["takes"];
       if (takesString != "nothing") {
-        takes = <Take[]>takesString.split(",").map(takeString => takeString.trim()).map(takeString => {
-          const result = /(?<type>[a-zA-Z][a-zA-Z0-9_]*)\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(takeString);
-          if (result && result.groups) {
-            const type = result.groups["type"];
-            const name = result.groups["name"];
-            return new Take(type, name);
-          }
-        }).filter(take => take);
+        takes = this.takeStringToTakes(takesString);
       }
     }
-    const returnsResult = /returns\s+(?<returns>[a-zA-Z][a-zA-Z0-9_]*)/.exec(line.text.substring(line.text.includes("returns") ? line.text.indexOf("returns") : 0));
+    const returnsResult = /returns\s+(?<returns>[a-zA-Z][a-zA-Z0-9_]*)/.exec(text.substring(text.includes("returns") ? text.indexOf("returns") : 0));
     let returns:string|null = null;
     if (returnsResult && returnsResult.groups) {
       const returnsString = returnsResult.groups["returns"];
@@ -659,6 +710,17 @@ class Program {
       default:
         return new Func(funcName, takes, returns, option.modifier, option.static);
     }
+  }
+
+  private takeStringToTakes (takeString:string) {
+    return <Take[]>takeString.split(",").map(ts => ts.trim()).map(ts => {
+      const result = /(?<type>[a-zA-Z][a-zA-Z0-9_]*)\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(ts);
+      if (result && result.groups) {
+        const type = result.groups["type"];
+        const name = result.groups["name"];
+        return new Take(type, name);
+      }
+    }).filter(take => take);
   }
 
   private _handleGlobal(line:Line, option: GlobalOption = new GlobalOption) {
@@ -757,7 +819,8 @@ class Program {
     const structs = [...this.structs, ...this.librarys.map(library => {
       const scopes = this.flatScope(library.scopes);
       return [...library.structs, ...scopes.map(scope => scope.structs).flat()];
-    }).flat(), ...this.flatScope(this.scopes).map(scope => scope.structs).flat()];
+    }).flat(), ...this.flatScope(this.scopes).map(scope => scope.structs).flat(),
+  ...this.zincStructs];
     return structs;
   }
 
@@ -1037,6 +1100,7 @@ class Struct {
     }
   }
 }
+
 
 export {
   Program,

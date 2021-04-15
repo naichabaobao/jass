@@ -104,5 +104,41 @@
     "body": "//region\n${0}\n//endregion",
     "description": "折叠块",
     "scope": "source.jass"
+  },
+  "for": {
+    "prefix": "for",
+    "body": "for (${2:0} <= ${1:index} < ${3:10}) {${0:}}",
+    "description": "for循环",
+    "scope": "source.jass"
+  },
+  "while": {
+    "prefix": "while",
+    "body": "while (${1:true}) {${0:}}",
+    "description": "while循环",
+    "scope": "source.jass"
+  },
+  "debug": {
+    "prefix": "debug",
+    "body": "debug {${0:}}",
+    "description": "debug",
+    "scope": "source.jass"
+  },
+  "interface-zinc": {
+    "prefix": "interface",
+    "body": "interface ${1:interface_name} {\n${0:}\n}",
+    "description": "zinc接口",
+    "scope": "source.jass"
+  },
+  "interface": {
+    "prefix": "interface",
+    "body": "interface ${1:interface_name}\n${0:}\nendinterface",
+    "description": "vjass接口",
+    "scope": "source.jass"
+  },
+  "struct-zinc": {
+    "prefix": "struct",
+    "body": "struct ${1:struct_name} {\n\t${0:}\n}",
+    "description": "zinc struct block",
+    "scope": "source.jass"
   }
 }

@@ -2,9 +2,9 @@
   "name": "jass",
   "displayName": "jass",
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
-  "publisher": "jass",
+  "publisher": "家貓hoo",
   "icon": "src/resources/static/jass.png",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "jass",
     "warcraft"
@@ -96,7 +96,7 @@
         "path": "./src/snippets.json"
       }
     ],
-    "documentFormattingProvider": "false",
+    "documentFormattingProvider": true,
     "productIconTheme": [
       {
         "id": "jass",
@@ -104,7 +104,7 @@
         "path": "./src/jass-product-icon-theme.json"
       }
     ],
-    "enableProposedApi": true
+    "enableProposedApi": false
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

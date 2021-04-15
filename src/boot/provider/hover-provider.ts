@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Program, Scope } from './jass';
+import { Program, Scope } from './jass-parse';
 import { types,natives,functions,globals,structs } from './data';
 import { Types } from "./types";
 import { AllKeywords } from './keyword';

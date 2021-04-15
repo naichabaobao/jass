@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { functions, natives } from './data';
-import { Program } from "./jass";
+import { Program } from "./jass-parse";
 
 class ZincSignatureHelp implements vscode.SignatureHelpProvider {
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {

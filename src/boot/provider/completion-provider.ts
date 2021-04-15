@@ -11,7 +11,7 @@ import {getTypeDesc} from "./type-desc";
 import { AllKeywords } from "./keyword";
 import { types,natives,functions,globals,structs, librarys } from './data';
 // import {commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram, includePrograms} from "./data";
-import { Program } from "./jass";
+import { Program } from "./jass-parse";
 import { Options } from "./options";
 
 

@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 
+import * as fs from "fs";
 
 import { AllKeywords } from './keyword';
 import { Types } from './types';
-import { commonJFile, commonAiFile, blizzardJFile, dzApiJFile, includeFiles } from "./data";
+import { Options } from './options';
+// import { commonJFile, commonAiFile, blizzardJFile, dzApiJFile, includeFiles } from "./data";
 
 function _isNewLine(char: string) {
   return char == "\n";
@@ -109,7 +111,7 @@ function _removeBlockComment(content: string) {
   return content;
 }
 
-const files = [commonJFile, commonAiFile, blizzardJFile, dzApiJFile, ...includeFiles];
+
 
 function findLocations(x: { path: string, content: string }, key: string): vscode.Location[] {
   const locations = new Array<vscode.Location>();
@@ -162,14 +164,26 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       return null;
     }
     const locations = new Array<vscode.Location>();
-
-    locations.push(...findLocations({
-      path: document.uri.fsPath,
-      content: document.getText()
-    }, key).filter(x => x.range.start.line != position.line));
-    files.forEach(file => {
-      locations.push(...findLocations(file, key));
+    // fs.readFileSync(Options.commonJPath).toString()
+    // fs.readFileSync(Options.commonAiPath).toString()
+    // fs.readFileSync(Options.blizzardJPath).toString()
+    // fs.readFileSync(Options.dzApiJPath).toString()
+    const ls = findLocations({path: document.uri.fsPath, content: document.getText()}, key).filter(x => x.range.start.line != position.line);
+    locations.push(...ls);
+    [Options.commonJPath, Options.commonAiPath, Options.blizzardJPath, Options.dzApiJPath, ...Options.includes].forEach(path => {
+      const content = fs.readFileSync(path).toString();
+      const ls = findLocations({path, content}, key);
+      locations.push(...ls);
     });
+    
+    
+    // .forEach(path => {
+    //   const content = fs.readFileSync(path).toString();
+    //   locations.push(...findLocations({
+    //     path,
+    //     content
+    //   }, key));
+
 
     return locations;
   }

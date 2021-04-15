@@ -1,20 +1,30 @@
+import("./provider/document-formatting-edit-provider");
+import("./provider/folding-range-provider");
+import("./provider/document-color-provider");
 import("./provider/completion-provider");
 import("./provider/hover-provider");
 import("./provider/signature-help-provider");
-import("./provider/document-color-provider");
-import("./provider/folding-range-provider");
 import("./provider/definition-provider");
-/*
-import {Program} from "./provider/jass";
 
-const program = new Program("", `
-type shabima extends integer array  [12]
+import {Program} from "./provider/jass-parse";
 
-
-//! zinc
-
-function action() {}
+const program = new Program("", `//! zinc
+struct a {
+      method a {}
+}
+struct b {
+      method a {}
+}
+struct c {
+      method a {}
+}
 //! endzinc
 `);
-console.log(program);*/
+console.log(program)
+/*
+//! zinc
+struct a {}
+//! endzinc
+`);
+*/
 export{};
