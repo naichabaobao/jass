@@ -1259,18 +1259,27 @@ globals
 	//===================================================
 	
 	// Ability
+	// 技能按钮位置正常x
  constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X        = ConvertAbilityIntegerField('abpx')
+	// 技能按钮位置正常y
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y        = ConvertAbilityIntegerField('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_X     = ConvertAbilityIntegerField('aubx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y     = ConvertAbilityIntegerField('auby')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_X      = ConvertAbilityIntegerField('arpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_Y      = ConvertAbilityIntegerField('arpy')
+	// 技能弹道速度
 	constant abilityintegerfield ABILITY_IF_MISSILE_SPEED                   = ConvertAbilityIntegerField('amsp')
+	// 技能目标附加
 	constant abilityintegerfield ABILITY_IF_TARGET_ATTACHMENTS              = ConvertAbilityIntegerField('atac')
+	// 技能施法单位附加
 	constant abilityintegerfield ABILITY_IF_CASTER_ATTACHMENTS              = ConvertAbilityIntegerField('acac')
+	// 技能优先权
 	constant abilityintegerfield ABILITY_IF_PRIORITY                        = ConvertAbilityIntegerField('apri')
+	// 技能等级
 	constant abilityintegerfield ABILITY_IF_LEVELS                          = ConvertAbilityIntegerField('alev')
+	// 技能需求等级
 	constant abilityintegerfield ABILITY_IF_REQUIRED_LEVEL                  = ConvertAbilityIntegerField('arlv')
+	// 技能学习等级需求
 	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT          = ConvertAbilityIntegerField('alsk') 
 	
 	constant abilitybooleanfield ABILITY_BF_HERO_ABILITY                    = ConvertAbilityBooleanField('aher') // Get only
@@ -2336,7 +2345,9 @@ native GetTeams takes nothing returns integer
 // 玩家数量
 native GetPlayers takes nothing returns integer
 
+// 是否支持游戏类型
 native IsGameTypeSupported takes gametype whichGameType returns boolean
+// 游戏选择类型
 native GetGameTypeSelected takes nothing returns gametype
 // 地图参数
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
@@ -2361,6 +2372,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 // ( i.e. you can use this to put people in a fixed loc and then
 //   use random placement for any unplaced players etc )
 // use random placement for any unplaced players etc )
+// 势力玩家开始点
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 改变玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
@@ -2368,8 +2380,11 @@ native SetPlayerColor takes player whichPlayer, playercolor color returns nothin
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
 // 设置税率 [R]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
+	// 设置玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
+	// 设置玩家种族可选
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
+	// 设置玩家控制器
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
 // 设置玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
@@ -2379,9 +2394,11 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 
 // 玩家在的队伍
 native GetPlayerTeam takes player whichPlayer returns integer
+	// 玩家开始点
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 玩家的颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
+	// 玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
 // 玩家控制者
 native GetPlayerController takes player whichPlayer returns mapcontrol
@@ -2427,16 +2444,25 @@ native DestroyGroup takes group whichGroup returns nothing
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
 // 移除单位 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
+// 单位组添加单位组 [快速的]
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
+// 单位组移除单位组 [快速的]
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清除
 native GroupClear takes group whichGroup returns nothing
+// 获取单组大小
 native BlzGroupGetSize takes group whichGroup returns integer
+// 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
+// 通过单位类型匹配单位
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
+// 通过玩家匹配单位
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
+// 通过单位类型匹配单位 [countLimit 上限]
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
+// 匹配范围单位
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
+// 匹配范围单位 [countLimit 上限]
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 选取单位添加到单位组(坐标)
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
@@ -2488,9 +2514,13 @@ native ForceRemovePlayer takes force whichForce, player whichPlayer returns noth
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清除玩家
 native ForceClear takes force whichForce returns nothing
+// 匹配玩家
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
+// 匹配玩家 [countLimit 上限]
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
+// 匹配联盟
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
+// 匹配敌对
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
 // 选取所有玩家在玩家组做动作(单一的)
 native ForForce takes force whichForce, code callback returns nothing
@@ -2570,6 +2600,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 
 // Returns full map bounds, including unplayable borders, in world coordinates
 // Returns full map bounds, including unplayable borders, in world coordinates
+// 获取可用地图范围
 native GetWorldBounds takes nothing returns rect
 
 //============================================================================
@@ -2579,6 +2610,7 @@ native GetWorldBounds takes nothing returns rect
 native CreateTrigger takes nothing returns trigger
 // 删除触发器 [R]
 native DestroyTrigger takes trigger whichTrigger returns nothing
+// 重置触发
 native ResetTrigger takes trigger whichTrigger returns nothing
 // 打开触发器
 native EnableTrigger takes trigger whichTrigger returns nothing
@@ -2587,7 +2619,9 @@ native DisableTrigger takes trigger whichTrigger returns nothing
 // 触发器打开
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
+// 挂起触发
 native TriggerWaitOnSleeps takes trigger whichTrigger, boolean flag returns nothing
+// 触发是否挂起
 native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
 
 // 匹配的单位
@@ -2605,6 +2639,7 @@ constant native GetFilterItem takes nothing returns item
 // 选取的物品
 constant native GetEnumItem takes nothing returns item
 
+// 解析tags
 constant native ParseTags takes string taggedString returns string
 
 // 匹配的玩家
@@ -2614,6 +2649,7 @@ constant native GetEnumPlayer takes nothing returns player
 
 // 当前触发器
 constant native GetTriggeringTrigger takes nothing returns trigger
+// 获取触发ID
 constant native GetTriggerEventId takes nothing returns eventid
 // 触发器赋值统计
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
@@ -2627,14 +2663,21 @@ native ExecuteFunc takes string funcName returns nothing
 // Boolean Expr API ( for compositing trigger conditions and unit filter funcs...)
 //============================================================================
 // ============================================================================
+// and
 native And takes boolexpr operandA, boolexpr operandB returns boolexpr
+// or
 native Or takes boolexpr operandA, boolexpr operandB returns boolexpr
+// not
 native Not takes boolexpr operand returns boolexpr
 // 限制条件为
 native Condition takes code func returns conditionfunc
+// 销毁条件
 native DestroyCondition takes conditionfunc c returns nothing
+// 过滤
 native Filter takes code func returns filterfunc
+// 销毁过滤
 native DestroyFilter takes filterfunc f returns nothing
+// 销毁条件表达式
 native DestroyBoolExpr takes boolexpr e returns nothing
 
 //============================================================================
@@ -2649,20 +2692,25 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 
 // Creates it's own timer and triggers when it expires
 // Creates it's own timer and triggers when it expires
+// 注册计时器事件
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
 // Triggers when the timer you tell it about expires
+// 计时器到期事件
 native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
 
+// 游戏状态事件
 native TriggerRegisterGameStateEvent takes trigger whichTrigger, gamestate whichState, limitop opcode, real limitval returns event
 
+// 对话框事件
 native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog returns event
 // 对话框按钮被点击 [R]
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 //  EVENT_GAME_STATE_LIMIT
 // EVENT_GAME_STATE_LIMIT
+// 获取游戏状态
 constant native GetEventGameState takes nothing returns gamestate
 
 // 比赛游戏事件
@@ -2670,6 +2718,7 @@ native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameE
 
 // EVENT_GAME_VICTORY
 // EVENT_GAME_VICTORY
+// 过去胜利玩家
 constant native GetWinningPlayer takes nothing returns player
 
 
@@ -2695,7 +2744,7 @@ native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t 
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
 // EVENT_COMMAND_BUTTON_CLICK
-// EVENT_COMMAND_BUTTON_CLICK
+// 命令事件
 native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbility, string order returns event
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
@@ -2706,7 +2755,9 @@ constant native GetTriggeringTrackable takes nothing returns trackable
 
 // EVENT_DIALOG_BUTTON_CLICK
 // EVENT_DIALOG_BUTTON_CLICK
+// 获取点击按钮
 constant native GetClickedButton takes nothing returns button
+// 获取点击对话框
 constant native GetClickedDialog takes nothing returns dialog
 
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
@@ -2714,6 +2765,7 @@ constant native GetClickedDialog takes nothing returns dialog
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
 // 比赛结束规则
 constant native GetTournamentFinishNowRule takes nothing returns integer
+	// 比赛结束玩家
 constant native GetTournamentFinishNowPlayer takes nothing returns player
 // 对战比赛得分
 constant native GetTournamentScore takes player whichPlayer returns integer
@@ -2725,7 +2777,7 @@ constant native GetSaveBasicFilename takes nothing returns string
 //============================================================================
 // Trigger Player Based Event API
 //============================================================================
-
+// 玩家事件
 native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer, playerevent whichPlayerEvent returns event
 
 // EVENT_PLAYER_DEFEAT
@@ -2733,6 +2785,7 @@ native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer
 // 触发玩家
 constant native GetTriggerPlayer takes nothing returns player
 
+	// 玩家单位事件
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 // EVENT_PLAYER_HERO_LEVEL
@@ -2773,6 +2826,7 @@ constant native GetRescuer takes nothing returns unit
 // EVENT_PLAYER_UNIT_DEATH
 // 垂死的单位
 constant native GetDyingUnit takes nothing returns unit
+// 凶手单位
 constant native GetKillingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DECAY
@@ -2805,13 +2859,16 @@ constant native GetResearched takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
+// 训练单位类型
 constant native GetTrainedUnitType takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
+// 训练单位
 constant native GetTrainedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DETECTED
 // EVENT_PLAYER_UNIT_DETECTED
+// 检测单位
 constant native GetDetectedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SUMMONED
@@ -2822,7 +2879,9 @@ constant native GetSummonedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_LOADED
 // EVENT_PLAYER_UNIT_LOADED
+// 传送单位
 constant native GetTransportUnit takes nothing returns unit
+// 加载单位
 constant native GetLoadedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELL
@@ -2854,6 +2913,7 @@ constant native GetManipulatedItem takes nothing returns item
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 // 收到命令的单位
 constant native GetOrderedUnit takes nothing returns unit
+// 发出命令的单位
 constant native GetIssuedOrderId takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
@@ -2892,7 +2952,9 @@ constant native GetSpellAbilityId takes nothing returns integer
 constant native GetSpellAbility takes nothing returns ability
 // 对其使用技能的目标点
 constant native GetSpellTargetLoc takes nothing returns location
+// 对其使用技能的目标点x	
 constant native GetSpellTargetX takes nothing returns real
+	// 对其使用技能的目标点y	
 constant native GetSpellTargetY takes nothing returns real
 // 对其使用技能的目标可毁坏物
 constant native GetSpellTargetDestructable takes nothing returns destructable
@@ -2908,6 +2970,7 @@ native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichP
 
 // EVENT_PLAYER_STATE_LIMIT
 // EVENT_PLAYER_STATE_LIMIT
+// 获取玩家属性
 constant native GetEventPlayerState takes nothing returns playerstate
 
 // 玩家输入聊天信息
@@ -2937,6 +3000,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // 触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
+	// 单位状态事件
 native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
 
 // EVENT_UNIT_STATE_LIMIT
@@ -2959,8 +3023,10 @@ constant native GetEventDamageSource takes nothing returns unit
 
 // EVENT_UNIT_DETECTED
 // EVENT_UNIT_DETECTED 
+// 事件检测的玩家
 constant native GetEventDetectingPlayer takes nothing returns player
 
+// 特定玩家事件
 native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent, boolexpr filter returns event
 
 // EVENT_UNIT_ACQUIRED_TARGET
@@ -3000,16 +3066,21 @@ constant native GetEventTargetUnit takes nothing returns unit
 
 // See the Player Unit Order Event API above for event info funcs
 
+// 范围内玩家事件
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
 // 添加触发器限制条件
 native TriggerAddCondition takes trigger whichTrigger, boolexpr condition returns triggercondition
+	// 移除触发器限制条件
 native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
+	// 清空触发器限制条件
 native TriggerClearConditions takes trigger whichTrigger returns nothing
 
 // 添加触发器动作
 native TriggerAddAction takes trigger whichTrigger, code actionFunc returns triggeraction
+	// 移除触发器动作
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
+	// 清空触发器动作
 native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待
 native TriggerSleepAction takes real timeout returns nothing
@@ -4605,7 +4676,9 @@ native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
 // 创建/删除荒芜地表(矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
+	// 设置荒芜地表位置
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
+		// 设置荒芜地表点
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿 [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
@@ -4654,8 +4727,11 @@ native Preload takes string filename returns nothing
 // 开始预读
 native PreloadEnd takes real timeout returns nothing
 
+	// 预加载开始
 native PreloadStart takes nothing returns nothing
+		// 预加载刷新
 native PreloadRefresh takes nothing returns nothing
+		// 预加载结束
 native PreloadEndEx takes nothing returns nothing
 
 native PreloadGenClear takes nothing returns nothing
@@ -4669,14 +4745,18 @@ native Preloader takes string filename returns nothing
 //Machinima API
 //============================================================================
 // ============================================================================
+// 隐藏电影面板
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
 // Automation Test
 // Automation Test
+	// 原子性测试类型
 native AutomationSetTestType takes string testType returns nothing
+		// 原子性测试开始
 native AutomationTestStart takes string testName returns nothing
 native AutomationTestEnd takes nothing returns nothing
+	// 原子性测试结束
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
@@ -4884,10 +4964,15 @@ native BlzSetEventAttackType takes attacktype attackType returns boolean
 native BlzSetEventDamageType takes damagetype damageType returns boolean
 // 设置事件武器类型
 native BlzSetEventWeaponType takes weapontype weaponType returns boolean
+		// 是否普通攻击
 native BlzGetEventIsAttack takes nothing returns boolean
+	// 获取整型数据
 native RequestExtraIntegerData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
+	// 获取布尔数据
 native RequestExtraBooleanData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns boolean
+	// 获取字符串数据
 native RequestExtraStringData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
+	// 获取实数数据
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
 // 获取单位Z坐标
@@ -4904,10 +4989,15 @@ native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, bool
 native BlzEnableTargetIndicator takes boolean enable returns nothing
 // 闪动指示器被启用
 native BlzIsTargetIndicatorEnabled takes nothing returns boolean
+	// 显示地形
 native BlzShowTerrain takes boolean show returns nothing
+	// 显示天空
 native BlzShowSkyBox takes boolean show returns nothing
+	// 开始录制
 native BlzStartRecording takes integer fps returns nothing
+	// 结束录制
 native BlzEndRecording takes nothing returns nothing
+	// 显示黄金
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
 // 获取原生UI

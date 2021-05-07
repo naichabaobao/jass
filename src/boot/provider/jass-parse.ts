@@ -1,59 +1,44 @@
 import * as path from "path";
 import * as vscode from "vscode";
 
-import {parse, ProgramBlock} from "../jass/parsing";
+import { parse, ProgramBlock } from "../jass/parsing";
 import { Options } from "./options";
 
 
 type TagType = "function" | "endfunction" | "globals" | "endglobals" | "native" | "constant" | "type" | "local" | "set" | "call" | "if" | "endif" | "else" | "elseif" | "loop" | "exitwhen" | "endloop" | "return"
-| "library" | "endlibrary" | "private" | "public" | "static" | "blank" | "unkown";
+  | "library" | "endlibrary" | "private" | "public" | "static" | "blank" | "unkown";
 
-class Tag {
-  public tag:TagType = "constant";
-  public lines:Line|Array<Line>;
-
-  constructor(tag: TagType, lines:Line|Array<Line>) {
-    this.tag = tag;
-    this.lines = lines;
-  }
-  
-  public get line() : Line {
-    if (this.lines instanceof Line) {
-      return this.lines;
-    } else {
-      return this.lines[0];
-    }
-  }
-  
+interface Desc {
+  text: string;
 }
 
 
 
 class Line {
-  private _loc:vscode.Range;
-  private _text:string;
+  private _loc: vscode.Range;
+  private _text: string;
 
-  constructor(lineNumber:number, text:string) {
+  constructor(lineNumber: number, text: string) {
     this._text = text;
     this._loc = new vscode.Range(lineNumber, 0, lineNumber, text.length);
   }
 
-  public get lineNumber() : number {
+  public get lineNumber(): number {
     return this._loc.start.line;
   }
 
-  public get text() : string {
+  public get text(): string {
     return this._text;
   }
 
-  public get length() : number {
+  public get length(): number {
     return this._text.length;
   }
 
   public get isBlank() {
     return this._text.trimStart() == "";
   }
-  
+
   public get loc() {
     return this._loc;
   }
@@ -61,23 +46,23 @@ class Line {
 }
 
 class LineComment {
-  public loc:vscode.Range;
-  public content:string;
-  
-  constructor(loc:vscode.Range, content: string) {
-    this.loc = loc;
+  public readonly line: number;
+  public readonly content: string;
+
+  constructor(line: number, content: string) {
+    this.line = line;
     this.content = content;
   }
 
 }
 
 class _ZincBlock {
-  public loc:vscode.Range;
-  public lines:Array<Line>;
-  public startLineComment:LineComment;
-  public endLineComment:LineComment|null;
+  public loc: vscode.Range;
+  public lines: Array<Line>;
+  public startLineComment: LineComment;
+  public endLineComment: LineComment | null;
 
-  constructor(loc:vscode.Range, lines:Array<Line>, startLineComment:LineComment, endLineComment:LineComment|null = null) {
+  constructor(loc: vscode.Range, lines: Array<Line>, startLineComment: LineComment, endLineComment: LineComment | null = null) {
     this.loc = loc;
     this.lines = lines;
     this.startLineComment = startLineComment;
@@ -87,29 +72,36 @@ class _ZincBlock {
 }
 
 class Program {
-  private static _programs:Array<Program> = [];
+  private static _programs: Array<Program> = [];
 
 
-  private _key:string;
-  private _zincBlocks:Array<_ZincBlock> = [];
+  private _key: string;
+  private _zincBlocks: Array<_ZincBlock> = [];
 
+  // 目前暂且把 //! 开头的注释保存在类中，之后实现中应该用完就扔掉，免得占用内存
   private _usefulLineComments: Array<LineComment> = [];
 
-  constructor(key:string, content:string) {
+  constructor(key: string, content: string) {
     this._key = key; // this._convertKey(key);
-    const nonBlockCommentContent = this._removeBlockComment(content);
-    const lineTexts = this._toLines(nonBlockCommentContent);
+    console.info(`开始处理${this._key}文件!`);
+    const result = this._removeBlockComment(content);
+
+    const lineTexts = this._toLines(result.content);
 
     this._findZincBlock(lineTexts);
 
-    this._handle(lineTexts);
+    this._handle(lineTexts, result.comments);
+
+    // 清空内存
+    result.comments.clear();
 
     this._handelZinc();
 
     this._handleZinc2();
+
   }
 
-  private _convertKey(key:string) {
+  private _convertKey(key: string) {
     if (key.trimStart() == "") {
       throw " illegality key!";
     }
@@ -119,7 +111,7 @@ class Program {
   /**
    * @deprecated 
    */
-  public readonly programBlocks:ProgramBlock[] = [];
+  public readonly programBlocks: ProgramBlock[] = [];
   public get zincFunctions() {
     return this.programBlocks.map(x => x.functionDeclarators()).flat().map(x => {
       return new Func(x.id ?? "", x.takes.map(take => new Take(take.type ?? "nothing", take.id)), x.returns);
@@ -140,51 +132,51 @@ class Program {
         const programBlock = parse(content);
         programBlock.fileName = this._key;
         this.programBlocks.push(programBlock);
-      } catch(err) {
+      } catch (err) {
         throw err;
       }
     });
   }
 
-  public readonly zincStructs:Struct[] = [];
+  public readonly zincStructs: Struct[] = [];
 
   /**
    * _handelZinc为过去实现
    * _handleZinc2为最新实现，逐步使用当前方法替换掉_handelZinc
    */
-  private _handleZinc2 () {
+  private _handleZinc2() {
     // 目前尝试实现struct和method
     this._zincBlocks.forEach(block => {
       const content = block.lines.map(x => x.text).join("\n");
       // 强制正确嵌套，否则无法匹配
       const structRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s*\{(?<body>(?:[^{}]*\{?[^{}]*\}[^{}]*)*)\}?/);
-      const handleStruct = (text:string) => {
+      const handleStruct = (text: string) => {
         const result = structRegExp.exec(text);
         if (result) {
           return result;
         } else return null;
       }
       const structMethodRegExp = new RegExp(/method\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)(\s*\(\s*(?<takes>([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)?\s*\))?(\s*->\s*(?<returns>[a-zA-Z][a-zA-Z0-9_]*))?/);
-      const handleStructMethod = (text:string) => {
+      const handleStructMethod = (text: string) => {
         const result = structMethodRegExp.exec(text);
         if (result) {
           return result;
         } else return null;
       }
-      for (let result:RegExpExecArray|null = null, index = 0; index < content.length;) {
+      for (let result: RegExpExecArray | null = null, index = 0; index < content.length;) {
         // console.log(result ? content.substring(index) : content)
         result = handleStruct(result ? content.substring(index) : content)
         if (result && result.groups) {
           const struct = new Struct(result.groups["name"]);
           this.zincStructs.push(struct);
           const body = result.groups["body"];
-          for (let rs:RegExpExecArray|null = null, i = 0; i < content.length;) {
+          for (let rs: RegExpExecArray | null = null, i = 0; i < content.length;) {
             rs = handleStructMethod(rs ? body.substring(i) : body)
             if (rs && rs.groups) {
               const takeString = rs.groups["takes"];
               const takes = takeString ? this.takeStringToTakes(takeString) : [];
               const returns = rs.groups["returns"];
-              const method = new Method(rs.groups["name"], takes , returns ?? null);
+              const method = new Method(rs.groups["name"], takes, returns ?? null);
               struct.methods.push(method);
             } else break;
             i += rs[0].length;
@@ -192,12 +184,12 @@ class Program {
         } else break;
         index += result[0].length;
       }
-      
+
     });
   }
 
-  private _isNewLine(char:string) {
-    if (char.length == 1)return char == "\n"; // new RegExp(/\r\n|\n/).test(char);
+  private _isNewLine(char: string) {
+    if (char.length == 1) return char == "\n"; // new RegExp(/\r\n|\n/).test(char);
     else return false;
   }
 
@@ -209,11 +201,18 @@ class Program {
    * @param char 
    * @returns 
    */
-  private _replace(text:string, startIndex: number, endIndex: number, char: string = " ") {
+  private _replace(text: string, startIndex: number, endIndex: number, char: string = " ") {
     if (endIndex <= startIndex) {
       throw "endIndex <= startIndex";
     }
-    function replaceContent(content:string) {
+
+    text.replace(/.+/, (reg, match) => {
+      console.log(reg)
+      console.log(match)
+      return "";
+    })
+
+    function replaceContent(content: string) {
       if (content.length == 0) {
         return content;
       }
@@ -232,7 +231,7 @@ class Program {
    * @param content 
    * @returns 
    */
-  private _removeBlockComment(content:string) {
+  private _removeBlockComment(content: string) {
     let status = 0;
     let blockStart = 0;
 
@@ -240,17 +239,25 @@ class Program {
 
     let isStag = true;
     let useless = false;
-    const lineCommentOver = (start:number, end:number) => {
+
+    // const comments:Array<LineComment> = [];
+    const map = new Map<number, string>();
+
+    const lineCommentOver = (start: number, end: number) => {
+      const text = content.substring(start, end + 1);
       if (!useless) {
-        const text = content.substring(start, end + 1);
         if (/\s*\/\/!/.test(text)) {
-          this._usefulLineComments.push(new LineComment(new vscode.Range(line, start, line, end), text));
+          this._usefulLineComments.push(new LineComment(line, text));
+        } else if (/\s*\/\//.test(text)) {
+          map.set(line, text.replace("//", ""));
         }
       }
-      content = this._replace(content, start, end);
+      content.replace(text, "".padStart(text.length, " "));
+      // else content = this._replace(content, start, end);
     }
-    for (let index = 0; index < content.length; index++) {
-      const char = content[index];
+    const len = content.length;
+    for (let index = 0; index < len; index++) {
+      const char = content.charAt(index)
       if (status == 0) {
         if (char == "/") {
           status = 1;
@@ -283,7 +290,7 @@ class Program {
       } else if (status == 4) {
         if (char == "/") { // 块注释结束
           status = 0;
-          content = this._replace(content,blockStart, index);
+          content = this._replace(content, blockStart, index);
         } else {
           status = 2;
         }
@@ -311,13 +318,13 @@ class Program {
     }
     if (status == 2 || status == 4) { // 未闭合块注释
       content = this._replace(content, blockStart, content.length - 1);
-    }if (status == 3) { // 行注释结束
+    } if (status == 3) { // 行注释结束
       lineCommentOver(blockStart, content.length - 1);
     }
-    return content;
+    return { content, comments: map };
   }
 
-  private _toLines(content:string) {
+  private _toLines(content: string) {
     const lines = content.split("\n");
     const lineTexts = lines.map((line, index) => {
       return new Line(index, line);
@@ -331,9 +338,9 @@ class Program {
    * @param lineTexts 
    * @returns 
    */
-  private _findZincBlock(lineTexts:Array<Line>) {
+  private _findZincBlock(lineTexts: Array<Line>) {
     let inBlock = false;
-    let startLineComment:LineComment|null = null;
+    let startLineComment: LineComment | null = null;
     for (let index = 0; index < this._usefulLineComments.length;) {
       const usefulLineComment = this._usefulLineComments[index];
       if (/^\s*\/\/![ \t]+zinc\b/.test(usefulLineComment.content)) {
@@ -344,17 +351,17 @@ class Program {
         inBlock = true;
       } else if (/^\s*\/\/![ \t]+endzinc\b/.test(usefulLineComment.content)) {
         if (inBlock) {
-          const lines:Line[] = [];
-          for (let i = 0; i < lineTexts.length; ) {
+          const lines: Line[] = [];
+          for (let i = 0; i < lineTexts.length;) {
             const lineText = lineTexts[i];
-            if (lineText.lineNumber > (<LineComment>startLineComment).loc.start.line && lineText.lineNumber < usefulLineComment.loc.start.line) {
+            if (lineText.lineNumber > (<LineComment>startLineComment).line && lineText.lineNumber < usefulLineComment.line) {
               lines.push(lineText);
               lineTexts.splice(i, 1);
             } else {
               i++
             }
           }
-          const zincBlock = new _ZincBlock(new vscode.Range((<LineComment>startLineComment).loc.start, usefulLineComment.loc.end), lines, (<LineComment>startLineComment), usefulLineComment);
+          const zincBlock = new _ZincBlock(new vscode.Range((<LineComment>startLineComment).line, 0, usefulLineComment.line, 0), lines, (<LineComment>startLineComment), usefulLineComment);
           this._zincBlocks.push(zincBlock);
         }
         this._usefulLineComments.splice(index, 1);
@@ -365,24 +372,24 @@ class Program {
     }
   }
 
-  
-  public get usefulLineComments() : Array<LineComment> {
+
+  public get usefulLineComments(): Array<LineComment> {
     return this._usefulLineComments;
   }
-  
-  public readonly types:ArrayType[] = [];
-  public readonly natives:Native[] = [];
-  public readonly functions:Func[] = [];
-  public readonly globals:Global[] = [];
-  public readonly librarys:Library[] = [];
-  public readonly scopes:Scope[] = [];
-  public readonly structs:Struct[] = [];
+
+  public readonly types: ArrayType[] = [];
+  public readonly natives: Native[] = [];
+  public readonly functions: Func[] = [];
+  public readonly globals: Global[] = [];
+  public readonly librarys: Library[] = [];
+  public readonly scopes: Scope[] = [];
+  public readonly structs: Struct[] = [];
 
   private get lastLibrary() {
     return this.librarys[this.librarys.length - 1];
   }
 
-  private _handle(lines:Array<Line>) {
+  private _handle(lines: Array<Line>, comments: Map<number, string>) {
     let inGlobals = false;
     let inFunc = false;
     let inMethod = false;
@@ -390,9 +397,9 @@ class Program {
     let scopeField = 0;
     let inStruct = false;
 
-    const getScopes = (scopes:Scope[], f: number) => {
+    const getScopes = (scopes: Scope[], f: number) => {
       let field = 0;
-      function get(ss: Scope[]) : Scope[]{
+      function get(ss: Scope[]): Scope[] {
         if (field == f) {
           return ss;
         } else {
@@ -402,9 +409,9 @@ class Program {
       }
       return get(scopes);
     }
-    const getScope = (scopes:Scope[], f: number) => {
+    const getScope = (scopes: Scope[], f: number) => {
       let field = 1;
-      const get = (ss: Scope) : Scope => {
+      const get = (ss: Scope): Scope => {
         if (field >= f) {
           return ss;
         } else {
@@ -414,7 +421,7 @@ class Program {
       }
       return get(scopes[scopes.length - 1]);
     }
-    const funcHandle = (func:Func) => {
+    const funcHandle = (func: Func) => {
       if (inLibrary) {
         if (scopeField > 0) {
           // const scopes = getScopes(this.lastLibrary.scopes, scopeField);
@@ -429,7 +436,7 @@ class Program {
         this.functions.push(func);
       }
     }
-    const structHandle = (struct:Struct) => {
+    const structHandle = (struct: Struct) => {
       if (inLibrary) {
         if (scopeField > 0) {
           // const scopes = getScopes(this.lastLibrary.scopes, scopeField);
@@ -444,7 +451,7 @@ class Program {
         this.structs.push(struct);
       }
     }
-    const structMethodHandle = (method:Method) => {
+    const structMethodHandle = (method: Method) => {
       if (inLibrary) {
         if (scopeField > 0) {
           // const scopes = getScopes(this.lastLibrary.scopes, scopeField);
@@ -467,75 +474,93 @@ class Program {
         struct.methods.push(method);
       }
     }
-
+    const descHandle = (line: Line, desc: Desc) => {
+      if (comments.has(line.loc.start.line - 1)) {
+        desc.text = <string>comments.get(line.loc.start.line - 1);
+      }
+      // const commentTarget = comments.find(comment => comment.line == line.loc.start.line - 1);
+      // if (commentTarget) {
+      //   desc.text = commentTarget.content;
+      // }
+    }
     for (let index = 0; index < lines.length; index++) {
       const line = lines[index];
       if (/^\s*type\b/.test(line.text)) {
         const type = this._handleType(line.text);
         if (type) {
           this.types.push(type);
+          descHandle(line, type);
         }
       } else if (/^\s*native\b/.test(line.text)) {
         const native = <Native>this._handleNative(line.text, FunctionOption.native(false));
         if (native) {
           this.natives.push(native);
+          descHandle(line, native);
         }
       } else if (/^\s*constant\s+native\b/.test(line.text)) {
         const native = <Native>this._handleNative(line.text, FunctionOption.native(true));
         if (native) {
           this.natives.push(native);
+          descHandle(line, native);
         }
-      }  else if (/^\s*function\b/.test(line.text)) {
+      } else if (/^\s*function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func());
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*private\s+function\b/.test(line.text)) {
+      } else if (/^\s*private\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("private"));
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*public\s+function\b/.test(line.text)) {
+      } else if (/^\s*public\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("public"));
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*static\s+function\b/.test(line.text)) {
+      } else if (/^\s*static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("default", true));
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*public\s+static\s+function\b/.test(line.text)) {
+      } else if (/^\s*public\s+static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("public", true));
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*private\s+static\s+function\b/.test(line.text)) {
+      } else if (/^\s*private\s+static\s+function\b/.test(line.text)) {
         inGlobals = false;
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("private", true));
         if (func) {
           funcHandle(func);
+          descHandle(line, func);
         }
-      }  else if (/^\s*endfunction\b/.test(line.text)) {
+      } else if (/^\s*endfunction\b/.test(line.text)) {
         inFunc = false;
-      }  else if (/^\s*globals\b/.test(line.text)) {
+      } else if (/^\s*globals\b/.test(line.text)) {
         inGlobals = true;
-      }  else if (/^\s*endglobals\b/.test(line.text)) {
+      } else if (/^\s*endglobals\b/.test(line.text)) {
         inGlobals = false;
       } else if (/^\s*library\b/.test(line.text)) {
         const library = this._handleLibrary(line.text) ?? new Library("");
         this.librarys.push(library);
+        descHandle(line, library);
         inLibrary = true;
         inGlobals = false;
         inFunc = false;
@@ -568,6 +593,7 @@ class Program {
       } else if (/^\s*struct\b/.test(line.text)) {
         const struct = this._handleStruct(line.text) ?? new Struct("");
         structHandle(struct);
+        descHandle(line, struct);
         inStruct = true;
         inGlobals = false;
         inFunc = false;
@@ -576,36 +602,42 @@ class Program {
       } else if (inStruct && /^\s*private\s+static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("private", true)) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*public\s+static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("public", true)) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*private\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("private")) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*public\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("public")) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("default", true)) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
       } else if (inStruct && /^\s*method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("default")) ?? new Method("");
         structMethodHandle(method);
+        descHandle(line, method);
         inMethod = true;
         inGlobals = false;
         inFunc = false;
@@ -619,31 +651,37 @@ class Program {
         const global = this._handleGlobal(line, new GlobalOption("private", true));
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       } else if (inGlobals && /^\s*public\s+constant\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("public", true));
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       } else if (inGlobals && /^\s*private\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("private"));
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       } else if (inGlobals && /^\s*public\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("public"));
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       } else if (inGlobals && /^\s*constant\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("default", true));
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       } else if (inGlobals && /^\s*[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption);
         if (global) {
           this.globals.push(global);
+          descHandle(line, global);
         }
       }
     }
@@ -651,7 +689,7 @@ class Program {
 
 
 
-  private _handleType(text:string) {
+  private _handleType(text: string) {
     const result = /type\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s+extends\s+(?<extend>[a-zA-Z][a-zA-Z0-9_]*)\s+array\s*\[\s*(?<size>\d+)\s*\]/.exec(text);
     if (result && result.groups) {
       const name = result.groups["name"];
@@ -665,7 +703,7 @@ class Program {
 
   // private _natives
 
-  private _handleNative(text:string, option:FunctionOption = FunctionOption.func()) {
+  private _handleNative(text: string, option: FunctionOption = FunctionOption.func()) {
 
     const functionNameString = text.substring(0, text.includes("takes") ? text.indexOf("takes") : text.length);
     const nameResult = (function () {
@@ -685,7 +723,7 @@ class Program {
     }
     const funcName = nameResult.groups["name"];
     const takesResult = /takes\s+(?<takes>nothing|([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)/.exec(text.substring(text.includes("takes") ? text.indexOf("takes") : 0, text.includes("returns") ? text.indexOf("returns") : text.length));
-    let takes:Take[] = [];
+    let takes: Take[] = [];
     if (takesResult && takesResult.groups) {
       const takesString = takesResult.groups["takes"];
       if (takesString != "nothing") {
@@ -693,7 +731,7 @@ class Program {
       }
     }
     const returnsResult = /returns\s+(?<returns>[a-zA-Z][a-zA-Z0-9_]*)/.exec(text.substring(text.includes("returns") ? text.indexOf("returns") : 0));
-    let returns:string|null = null;
+    let returns: string | null = null;
     if (returnsResult && returnsResult.groups) {
       const returnsString = returnsResult.groups["returns"];
       if (returnsString != "nothing") {
@@ -712,7 +750,7 @@ class Program {
     }
   }
 
-  private takeStringToTakes (takeString:string) {
+  private takeStringToTakes(takeString: string) {
     return <Take[]>takeString.split(",").map(ts => ts.trim()).map(ts => {
       const result = /(?<type>[a-zA-Z][a-zA-Z0-9_]*)\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(ts);
       if (result && result.groups) {
@@ -723,7 +761,7 @@ class Program {
     }).filter(take => take);
   }
 
-  private _handleGlobal(line:Line, option: GlobalOption = new GlobalOption) {
+  private _handleGlobal(line: Line, option: GlobalOption = new GlobalOption) {
     const regExp = (function () {
       if (option.constant) {
         if (option.modifier == "private") {
@@ -755,14 +793,14 @@ class Program {
     }
   }
 
-  private _handleLibrary(text:string) {
+  private _handleLibrary(text: string) {
     const nameResult = /library\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(text);
     if (nameResult && nameResult.groups) {
       const name = nameResult.groups["name"];
       return new Library(name);
     } else return null;
   }
-  private _handleScope(text:string) {
+  private _handleScope(text: string) {
     const nameResult = /scope\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(text);
     if (nameResult && nameResult.groups) {
       const name = nameResult.groups["name"];
@@ -770,7 +808,7 @@ class Program {
     } else return null;
   }
 
-  private _handleStruct(text:string) {
+  private _handleStruct(text: string) {
     const result = /struct\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)(?:\s+extends\s+(?<extend>[a-zA-Z][a-zA-Z0-9_]*))?/.exec(text);
     if (result && result.groups) {
       const name = result.groups["name"];
@@ -785,7 +823,7 @@ class Program {
    * @param scopes 
    * @returns 
    */
-  private flatScope = (scopes:Scope[]) :Scope[] => {
+  private flatScope = (scopes: Scope[]): Scope[] => {
     return scopes.map(scope => {
       if (scope.scopes.length == 0) {
         return [scope];
@@ -820,8 +858,12 @@ class Program {
       const scopes = this.flatScope(library.scopes);
       return [...library.structs, ...scopes.map(scope => scope.structs).flat()];
     }).flat(), ...this.flatScope(this.scopes).map(scope => scope.structs).flat(),
-  ...this.zincStructs];
+    ...this.zincStructs];
     return structs;
+  }
+
+  private handleDesc(comments: Array<LineComment>) {
+
   }
 
 }
@@ -854,7 +896,7 @@ class FunctionOption {
 
 class GlobalOption {
   public readonly modifier: "private" | "public" | "default";
-  public readonly constant:boolean;
+  public readonly constant: boolean;
 
   constructor(modifier: "private" | "public" | "default" = "default", isConstant = false) {
     this.modifier = modifier;
@@ -864,76 +906,72 @@ class GlobalOption {
 }
 
 class BaseType {
-  public readonly name:string;
-  constructor(name:string) {
+  public readonly name: string;
+  constructor(name: string) {
     this.name = name;
   }
 }
 
-const BooleanType = new BaseType("boolean");
-const IntegerType = new BaseType("integer");
-const RealType = new BaseType("real");
-const StringType = new BaseType("string");
-const CodeType = new BaseType("code");
-const HandleType = new BaseType("handle");
-
 class Type extends BaseType {
-  public readonly extend:Type|BaseType;
-  constructor(name:string, extend:Type|BaseType) {
+  public readonly extend: Type | BaseType;
+  constructor(name: string, extend: Type | BaseType) {
     super(name);
     this.extend = extend;
   }
 }
 
-class ArrayType extends BaseType{
-  public readonly extend:string;
-  public readonly size:number;
-  constructor(name:string, extend:string, size: number) {
+
+class ArrayType extends BaseType implements Desc {
+  public readonly extend: string;
+  public readonly size: number;
+  constructor(name: string, extend: string, size: number) {
     super(name);
     this.extend = extend;
     this.size = size;
   }
+  public text: string = "";
 
-  
-  public get origin() : string {
+
+  public get origin(): string {
     return `type ${this.name} extends ${this.extend} array [${this.size}]`;
   }
-  
+
 }
 
 class Take {
-  public readonly type:string;
-  public readonly name:string;
+  public readonly type: string;
+  public readonly name: string;
 
-  constructor(type:string, name: string) {
+  constructor(type: string, name: string) {
     this.type = type;
     this.name = name;
   }
 
 
-  public get origin() : string {
+  public get origin(): string {
     return `${this.type} ${this.name}`;
   }
 
 
 }
 
-class Func {
-  public readonly name:string;
-  public readonly takes:Take[];
-  public readonly returns:string|null;
+class Func implements Desc {
+  public readonly name: string;
+  public readonly takes: Take[];
+  public readonly returns: string | null;
   public readonly modifier: "private" | "public" | "default";
-  public readonly static:boolean;
+  public readonly static: boolean;
 
-  constructor(name:string, takes:Take[] = [], returns:string|null = null, modifier:"private" | "public" | "default" = "default", isStatic = false) {
+  constructor(name: string, takes: Take[] = [], returns: string | null = null, modifier: "private" | "public" | "default" = "default", isStatic = false) {
     this.name = name;
     this.takes = takes;
     this.returns = returns;
     this.modifier = modifier;
     this.static = isStatic;
-  }  
+  }
+  public text: string = "";
 
-  public get origin() : string {
+  public get origin(): string {
     if (this.modifier == "default") {
       if (this.static) {
         return `static function ${this.name} takes ${this.takes.length == 0 ? "nothing" : this.takes.map(take => take.origin).join(" ,")} returns ${this.returns ? this.returns : "nothing"}`;
@@ -947,40 +985,42 @@ class Func {
         return `${this.modifier} function ${this.name} takes ${this.takes.length == 0 ? "nothing" : this.takes.map(take => take.origin).join(" ,")} returns ${this.returns ? this.returns : "nothing"}`;
       }
     }
-  }  
+  }
 }
 
-class Native {
-  public readonly name:string;
-  public readonly takes:Take[];
-  public readonly returns:string|null;
-  public readonly constant:boolean;
+class Native implements Desc {
+  public readonly name: string;
+  public readonly takes: Take[];
+  public readonly returns: string | null;
+  public readonly constant: boolean;
 
-  constructor(name:string, takes:Take[] = [], returns:string|null = null, constant:boolean = false) {
+  constructor(name: string, takes: Take[] = [], returns: string | null = null, constant: boolean = false) {
     this.name = name;
     this.takes = takes;
     this.returns = returns;
     this.constant = constant;
   }
+  public text: string = "";
 
-  
-  public get origin() : string {
+
+  public get origin(): string {
     if (this.constant) {
       return `constant native ${this.name} takes ${this.takes.length == 0 ? "nothing" : this.takes.map(take => take.origin).join(" ,")} returns ${this.returns ? this.returns : "nothing"}`;
     } else {
       return `native ${this.name} takes ${this.takes.length == 0 ? "nothing" : this.takes.map(take => take.origin).join(" ,")} returns ${this.returns ? this.returns : "nothing"}`;
     }
-  }  
+  }
 
 }
 
-class Method {
-  public readonly name:string;
-  public readonly takes:Take[];
-  public readonly returns:string|null;
+class Method implements Desc {
+  public readonly name: string;
+  public readonly takes: Take[];
+  public readonly returns: string | null;
   public readonly modifier: "private" | "public" | "default";
+  public text: string = "";
 
-  constructor(name:string, takes:Take[] = [], returns:string|null = null, modifier:"private" | "public" | "default" = "default") {
+  constructor(name: string, takes: Take[] = [], returns: string | null = null, modifier: "private" | "public" | "default" = "default") {
     this.name = name;
     this.takes = takes;
     this.returns = returns;
@@ -997,14 +1037,15 @@ class Method {
 
 }
 
-class Global {
-  public readonly type:string;
-  public readonly name:string;
-  public readonly constant:boolean;
-  public readonly array:boolean;
+class Global implements Desc {
+  public readonly type: string;
+  public readonly name: string;
+  public readonly constant: boolean;
+  public readonly array: boolean;
   public readonly modifier: "private" | "public" | "default";
+  public text: string = "";
 
-  constructor(type:string, name: string, constant = false, array = false, modifier: "private" | "public" | "default" = "default") {
+  constructor(type: string, name: string, constant = false, array = false, modifier: "private" | "public" | "default" = "default") {
     this.type = type;
     this.name = name;
     this.constant = constant;
@@ -1042,37 +1083,38 @@ class Global {
         }
       }
     }
-    
+
   }
-  
+
 }
 
-class Library {
-  public readonly name:string;
+class Library implements Desc {
+  public readonly name: string;
   public readonly functions: Func[] = [];
-  public readonly globals:Global[] = [];
-  public readonly scopes:Scope[] = [];
-  public readonly structs:Struct[] = [];
+  public readonly globals: Global[] = [];
+  public readonly scopes: Scope[] = [];
+  public readonly structs: Struct[] = [];
+  public text: string = "";
 
-
-  constructor(name:string) {
+  constructor(name: string) {
     this.name = name;
   }
 
   public get origin() {
     return `library ${this.name}\nendlibrary`;
   }
-  
+
 }
 
-class Scope {
-  public readonly name:string;
+class Scope implements Desc {
+  public readonly name: string;
   public readonly functions: Func[] = [];
-  public readonly globals:Global[] = [];
-  public readonly scopes:Scope[] = [];
-  public readonly structs:Struct[] = [];
+  public readonly globals: Global[] = [];
+  public readonly scopes: Scope[] = [];
+  public readonly structs: Struct[] = [];
+  public text: string = "";
 
-  constructor(name:string) {
+  constructor(name: string) {
     this.name = name;
   }
 
@@ -1082,12 +1124,14 @@ class Scope {
 
 }
 
-class Struct {
-  public readonly name:string;
-  public readonly extend:string|null;
-  public readonly methods: Method[] = [];
 
-  constructor(name:string, extend:string|null = null) {
+class Struct implements Desc {
+  public readonly name: string;
+  public readonly extend: string | null;
+  public readonly methods: Method[] = [];
+  public text: string = "";
+
+  constructor(name: string, extend: string | null = null) {
     this.name = name;
     this.extend = extend;
   }

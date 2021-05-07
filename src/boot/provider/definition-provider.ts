@@ -119,7 +119,7 @@ function findLocations(x: { path: string, content: string }, key: string): vscod
   const lines = _removeBlockComment(x.content).split("\n");
   for (let index = 0; index < lines.length; index++) {
     const line = lines[index];
-    if (new RegExp(`\\b${key}\\b`).test(line)) {
+    if (new RegExp(`^\\s*(?:(?:private\\s+|public\\s+)?(?:static\\s+)?(?:function|method)|(?:constant\\s+)?native|(?:private\\s+|public\\s+)?(?:static\\s+)?(?:constant|local\\s+)?(?:\\w+)(?:\\s+array)?|(?:private\\s+|public\\s+)?(?:struct|interfaces))\\s+${key}\\b`).test(line)) {
       const location = new vscode.Location(vscode.Uri.file(x.path), new vscode.Position(index, line.indexOf(key)));
       locations.push(location);
     }

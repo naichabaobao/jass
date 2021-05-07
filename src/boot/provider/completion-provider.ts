@@ -73,38 +73,38 @@ function programToItem(program:Program) {
 const arrayTypeItems = types.map(type => {
   const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
   item.detail = type.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(type.origin);
+  item.documentation = new vscode.MarkdownString().appendText(type.text).appendCodeblock(type.origin);
   return item;
 });
 const globalItems = globals.map(global => {
   const item = new vscode.CompletionItem(global.name, global.constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
   item.detail = global.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(global.origin);
+  item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
   return item;
 });
 const functionItems = functions.map(func => {
   const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
   item.detail = func.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin);
+  item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
   return item;
 });
 const nativeItems = natives.map(native => {
   const item = new vscode.CompletionItem(native.name, vscode.CompletionItemKind.Function);
   item.detail = native.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(native.origin);
+  item.documentation = new vscode.MarkdownString().appendText(native.text).appendCodeblock(native.origin);
   return item;
 });
 const structItems = structs.map(struct => {
   const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
   item.detail = struct.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(struct.origin);
+  item.documentation = new vscode.MarkdownString().appendText(struct.text).appendCodeblock(struct.origin);
   return item;
 });
 const structMethodItems = structs.map(struct => {
   return struct.methods.map(method => {
     const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
     item.detail = `${struct.name}.${method.name}`;
-    item.documentation = new vscode.MarkdownString().appendCodeblock(method.origin);
+    item.documentation = new vscode.MarkdownString().appendText(method.text).appendCodeblock(method.origin);
     return item;
   });
 }).flat();
@@ -134,32 +134,32 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const currentArrayTypeItems = currentProgram.types.map(type => {
       const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
       item.detail = type.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(type.origin);
+      item.documentation = new vscode.MarkdownString().appendText(type.text).appendCodeblock(type.origin);
       return item;
     });
     const currentGlobalItems = currentProgram.allGlobals.map(global => {
-      const item = new vscode.CompletionItem(global.name, vscode.CompletionItemKind.Class);
+      const item = new vscode.CompletionItem(global.name, global.constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
       item.detail = global.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(global.origin);
+      item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
       return item;
     });
     const currentFunctionItems = currentProgram.allFunctions.map(func => {
       const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
       item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(func.origin);
+      item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
       return item;
     });
     const currentStructItems = currentProgram.allStructs.map(struct => {
       const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
       item.detail = struct.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(struct.origin);
+      item.documentation = new vscode.MarkdownString().appendText(struct.text).appendCodeblock(struct.origin);
       return item;
     });
     const currentStructMethodItems = currentProgram.allStructs.map(struct => {
       return struct.methods.map(method => {
         const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
         item.detail = `${struct.name}.${method.name}`;
-        item.documentation = new vscode.MarkdownString().appendCodeblock(method.origin);
+        item.documentation = new vscode.MarkdownString().appendText(method.text).appendCodeblock(method.origin);
         return item;
       });
     }).flat();
@@ -172,7 +172,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const currentZincFunctionItems = currentProgram.zincFunctions.map(func => {
       const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
       item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(`function ${func.name}(${func.takes.length == 0 ? "nothing" : func.takes.map(take => take.origin).join(" ,")}) -> ${func.returns ?? "nothing"} {}`);
+      item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(`function ${func.name}(${func.takes.length == 0 ? "nothing" : func.takes.map(take => take.origin).join(" ,")}) -> ${func.returns ?? "nothing"} {}`);
       return item;
     });
     

@@ -2,9 +2,9 @@
   "name": "jass",
   "displayName": "jass",
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
-  "publisher": "家貓hoo",
+  "publisher": "jass",
   "icon": "src/resources/static/jass.png",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "keywords": [
     "jass",
     "warcraft"
