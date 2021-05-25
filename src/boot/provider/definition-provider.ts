@@ -147,6 +147,13 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
     let key = document.getText(document.getWordRangeAtPosition(position));
 
+    for (let line = 0; line < document.lineCount; line++) {
+      const lineText = document.lineAt(line);
+      if (new RegExp(`function ${'需要匹配的字符串'}`).test(lineText.text)) {
+        // line 就是你要的行
+      }
+    }
+
     if (key.length > this._maxLength) {
       return null;
     }
@@ -177,6 +184,8 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     });
     
     
+
+
     // .forEach(path => {
     //   const content = fs.readFileSync(path).toString();
     //   locations.push(...findLocations({

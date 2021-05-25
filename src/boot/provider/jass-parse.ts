@@ -207,8 +207,6 @@ class Program {
     }
 
     text.replace(/.+/, (reg, match) => {
-      console.log(reg)
-      console.log(match)
       return "";
     })
 

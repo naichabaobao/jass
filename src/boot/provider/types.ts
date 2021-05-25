@@ -198,6 +198,7 @@ const Types = types();
 
 export{
   Types,
+  isBaseType,
   isType
 }
 
