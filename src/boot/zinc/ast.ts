@@ -2,6 +2,7 @@ import { timeStamp } from "console";
 
 type ModifierType = "private" | "public";
 
+
 class Position {
 	public line: number;
 	public position: number;
@@ -37,12 +38,17 @@ class Take implements Rangebel {
 		this.type = type;
 		this.name = name;
 	}
+
+	public get origin() : string {
+		return `${this.type} ${this.name}`;
+	}
 }
 
 class Global implements Rangebel {
 	public isConstant: boolean = false;
-	public tag: ModifierType = "private";
-	private isStatic: boolean = false;
+	public isArray:boolean = false;
+	public size:number = 0;
+	public tag: ModifierType = "public";
 	public type: string;
 	public name: string;
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
@@ -51,20 +57,36 @@ class Global implements Rangebel {
 		this.type = type;
 		this.name = name;
 	}
+
+	public get origin() : string {
+		if (this.isConstant && this.isArray) {
+			return `${this.tag} constant ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+		} else if (this.isArray) {
+			return `${this.tag} ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+		} else if (this.isConstant) {
+			return `${this.tag} constant ${this.type} ${this.name}`;
+		} else {
+			return `${this.tag} ${this.type} ${this.name}`;
+		}
+	}
 }
 
 class Func implements Rangebel {
-	public tag: ModifierType = "private";
+	public tag: ModifierType = "public";
 	public name: string;
 	public readonly takes: Take[];
 	public returns: string | null;
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 	public readonly locals: Local[] = [];
 
-	constructor(name: string, takes: Take[] = [], returns: string | null) {
+	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
+	}
+
+	public get origin() : string {
+		return `${this.tag} function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 	}
 }
 
@@ -128,7 +150,13 @@ class DynamicArray {
 }
 
 class Method extends Func implements Rangebel {
+	public tag: ModifierType = "private";
 	public isStatic: boolean = false;
+
+	public get origin() : string {
+		return `${this.tag}${this.isStatic ? " static" : ""} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+	}
+
 }
 
 
@@ -136,6 +164,9 @@ class Member implements Rangebel {
 	public isConstant: boolean = false;
 	public tag: ModifierType = "private";
 	public isStatic: boolean = false;
+	public isArray:boolean = false;
+	// isArray 为 true 时有效
+	public size:number = 0;
 	public type: string;
 	public name: string;
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
@@ -144,9 +175,14 @@ class Member implements Rangebel {
 		this.type = type;
 		this.name = name;
 	}
+
+	public get origin() : string {
+		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
+	}
 }
 
 class Interface implements Rangebel {
+	public tag:ModifierType = "public";
 	public name: string;
 	public members:Member[] = [];
 	public methods: Method[] = [];
@@ -163,10 +199,14 @@ class InterfaceArray extends Interface{
 }
 
 class Struct extends Interface implements Rangebel {
-
+	public extends:string|null = null;
 	// constructor(name:string) {
 	// 	super(name);
 	// }
+
+	public get origin() : string {
+		return `${this.tag} struct ${this.name} {}`;
+	}
 }
 
 
@@ -193,9 +233,14 @@ class Library implements Rangebel {
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 	public readonly structs: Struct[] = [];
 	public readonly functions: Func[] = [];
+	public readonly globals: Global[] = [];
 
 	constructor(name: string) {
 		this.name = name;
+	}
+
+	public get origin() : string {
+		return `library ${this.name} {}`;
 	}
 }
 

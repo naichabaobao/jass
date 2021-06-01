@@ -1,4 +1,6 @@
 
+import { is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isSpace, isNumber } from "./tool";
+
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error";
 
 class Token {
@@ -43,161 +45,8 @@ class Token {
 }
 
 
-const letterRegExp = new RegExp(/[a-zA-Z]/);
-const numberRegExp = new RegExp(/\d/);
-const spaceRegExp = new RegExp(/[ \t]/);
-const newLineRegExp = new RegExp(/[\r\n]/);
-const idRegExp = new RegExp(/[a-zA-Z][a-zA-Z0-9_]*/);
-
-function isLetter(char: string) {
-	return letterRegExp.test(char);
-}
-
-function isNumber(char: string) {
-	return numberRegExp.test(char);
-}
-
-function is1_9(char: string) {
-	return new RegExp(/[1-9]/).test(char);
-}
-
-function is0_7(char: string) {
-	return new RegExp(/[0-7]/).test(char);
-}
-
-function is0_16(char: string) {
-	return isNumber(char) || /[a-fA-F]/.test(char);
-}
 
 
-function isSpace(char: string) {
-	return spaceRegExp.test(char);
-}
-
-function isNewLine(char: string) {
-	return newLineRegExp.test(char);
-}
-
-function isNotNewLine(char: string) {
-	return /[^\r\n]/.test(char)// || isSpace(char); // char != "\n" // !(char == "\n" || char == "\r")
-}
-
-function replaceComment(text: string, startIndex: number, endIndex: number, char: string = " ") {
-	if (endIndex <= startIndex) {
-		throw "endIndex <= startIndex";
-	}
-
-	text.replace(/.+/, (reg, match) => {
-		return "";
-	})
-
-	function replaceContent(content: string) {
-		if (content.length == 0) {
-			return content;
-		}
-		return content.split("\n").map(x => "".padStart(x.length, char)).join("\n");
-	}
-	let preText = text.substring(0, startIndex) + replaceContent(text.substring(startIndex, endIndex + 1));
-	if (endIndex + 1 < text.length) {
-		preText += text.substring(endIndex + 1, text.length);
-	}
-	return preText;
-}
-
-function removeComment(content: string) {
-	let status = 0;
-	let blockStart = 0;
-
-	let line = 0;
-
-	let isStag = true;
-	let useless = false;
-
-	// const comments:Array<LineComment> = [];
-	const map = new Map<number, string>();
-
-	const lineCommentOver = (start: number, end: number) => {
-		const text = content.substring(start, end + 1);
-		if (!useless) {
-			if (/\s*\/\/!/.test(text)) {
-				//   this._usefulLineComments.push(new LineComment(line, text));
-			} else if (/\s*\/\//.test(text)) {
-				map.set(line, text.replace("//", ""));
-			}
-		}
-		content.replace(text, "".padStart(text.length, " "));
-		// else content = this._replace(content, start, end);
-	}
-	const len = content.length;
-	for (let index = 0; index < len; index++) {
-		const char = content.charAt(index)
-		if (status == 0) {
-			if (char == "/") {
-				status = 1;
-				blockStart = index;
-				if (isStag) {
-					useless = false;
-				} else {
-					useless = true;
-				}
-			} else if (char == "\"") {
-				status = 5;
-			}
-		} else if (status == 1) {
-			if (char == "*") {
-				status = 2;
-			} else if (char == "/") {
-				status = 3;
-			} else {
-				status = 0;
-			}
-		} else if (status == 2) {
-			if (char == "*") {
-				status = 4;
-			}
-		} else if (status == 3) {
-			if (isNewLine(char)) { // 行注释结束
-				status = 0;
-				lineCommentOver(blockStart, index);
-				content = replaceComment(content, blockStart, index);
-			}
-		} else if (status == 4) {
-			if (char == "/") { // 块注释结束
-				status = 0;
-				content = replaceComment(content, blockStart, index);
-			} else {
-				status = 2;
-			}
-		} else if (status == 5) {
-			if (char == "\"") { // 字符串结束
-				status = 0;
-			} else if (char == "\\") { //字符串进入转义状态
-				status = 6;
-			} else if (isNewLine(char)) { // 字符串结束
-				status = 0;
-			}
-		} else if (status == 6) {
-			if (isNewLine(char)) { // 字符串结束
-				status = 0;
-			} else { // 从新回到字符串状态
-				status = 5;
-			}
-		}
-		if (isNewLine(char)) {
-			isStag = true;
-			line++;
-		} else if (char != " " && char != "\t") {
-			isStag = false;
-		}
-	}
-	if (status == 2 || status == 4) { // 未闭合块注释
-		content = replaceComment(content, blockStart, content.length - 1);
-	} if (status == 3) { // 行注释结束
-		lineCommentOver(blockStart, content.length - 1);
-		content = replaceComment(content, blockStart, content.length - 1);
-	}
-	return { content, comments: map };
-}
 
 /**
  * 
@@ -208,14 +57,12 @@ function tokens(content: string): Token[] {
 	const tokens: Token[] = [];
 	const bads: Token[] = [];
 
-	const nonCommentContent = removeComment(content);
-	const tempContent = nonCommentContent.content;
 
 	let lineNumber = 0;
 	let position = 0;
 	let state = 0;
 	const next = (index: number) => {
-		return tempContent[index + 1];
+		return content[index + 1];
 	}
 	const values: string[] = [];
 	const push = (char: string) => {
@@ -235,8 +82,8 @@ function tokens(content: string): Token[] {
 
 	
 	// +-*/\"|&>=!<;,()[]{}
-	for (let index = 0; index < tempContent.length; index++) {
-		const char = tempContent[index];
+	for (let index = 0; index < content.length; index++) {
+		const char = content[index];
 		const nextChar = next(index);
 
 		if (state == 0) {
@@ -385,7 +232,7 @@ function tokens(content: string): Token[] {
 		} else if (state == 1) {
 			push(char);
 			if (nextChar && isLetter(nextChar) || nextChar == "_" || isNumber(nextChar)) {
-				continue;
+		
 			} else {
 				pushToken("id");
 			}

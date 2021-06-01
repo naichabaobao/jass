@@ -95,9 +95,9 @@ class Program {
     // 清空内存
     result.comments.clear();
 
-    this._handelZinc();
+    // this._handelZinc();
 
-    this._handleZinc2();
+    // this._handleZinc2();
 
   }
 

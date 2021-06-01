@@ -1,9 +1,60 @@
 import * as vscode from 'vscode';
+import { parseZincBlock } from '../zinc/parse';
 
 import { functions, natives } from './data';
 import { Program } from "./jass-parse";
 
 class ZincSignatureHelp implements vscode.SignatureHelpProvider {
+
+  private zincSignatureInformations = (document: vscode.TextDocument, position: vscode.Position, key:string, sign:vscode.SignatureHelp, activeParameter:number) => {
+    const signatureInformations = new Array<vscode.SignatureInformation> ();
+    const ast = parseZincBlock(document.getText());
+
+    ast.librarys.forEach(library => {
+
+      library.functions.forEach(func => {
+        if (func.name == key) {
+          const signatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`, new vscode.MarkdownString().appendCodeblock(func.origin));
+
+          func.takes.forEach(take => {
+            if (take.name) {
+              signatureInformation.parameters.push(new vscode.ParameterInformation(take.name));
+            }
+          });
+          sign.activeParameter = activeParameter;
+          signatureInformations.push(signatureInformation);
+        }
+      });
+
+      library.structs.forEach(struct => {
+        
+        if (new vscode.Range(new vscode.Position(struct.loc.start.line, struct.loc.start.position),new vscode.Position(struct.loc.end.line, struct.loc.end.position)).contains(position)) {
+
+          struct.methods.forEach(method => {
+            if (method.name == key) {
+              const signatureInformation = new vscode.SignatureInformation(`${method.name}(${method.takes.length > 0 ? method.takes.map(x => x.origin).join(", ") : ""}) -> ${method.returns ?? "nothing"}`, new vscode.MarkdownString().appendCodeblock(method.origin));
+              console.log(method)
+              method.takes.forEach(take => {
+                if (take.name) {
+                  signatureInformation.parameters.push(new vscode.ParameterInformation(take.name));
+                }
+              });
+              sign.activeParameter = activeParameter;
+              signatureInformations.push(signatureInformation);
+            }
+          });
+        }
+
+      });
+
+
+
+    });
+    
+    sign.signatures.push(...signatureInformations);
+    // return signatureInformations;
+  };
+
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     if (/^\s*\/\//.test(document.lineAt(position.line).text)) return;
     let field1 = 0;
@@ -19,7 +70,7 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
 
 
 
-    function provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext) {
+    const provideSignatureHelp = (document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext) => {
       const SignatureHelp = new vscode.SignatureHelp();
       const lineText = document.lineAt(position.line);
       let funcNames = [];
@@ -48,7 +99,7 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
             // 向前預測
             if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
               const funcName = funcNames.reverse().join("");
-
+              
               // 获取当前文档的方法
               const content = document.getText();
 
@@ -73,6 +124,8 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
                   break;
                 }
               }
+
+              this.zincSignatureInformations(document, position, funcName, SignatureHelp, activeParameter);
 
             };
 

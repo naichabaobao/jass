@@ -5,7 +5,7 @@ import("./provider/completion-provider");
 import("./provider/hover-provider");
 import("./provider/signature-help-provider");
 import("./provider/definition-provider");
-
+/*
 import {Program} from "./provider/jass-parse";
 
 const program = new Program("", `//! zinc
@@ -21,7 +21,7 @@ struct c {
 //! endzinc
 `);
 console.log(program)
-/*
+
 //! zinc
 struct a {}
 //! endzinc
