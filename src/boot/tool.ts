@@ -39,7 +39,7 @@ function isNotNewLine(char: string) {
 }
 
 // 保留zinc块
-function retainZincBlock (content:string) {
+function retainZincBlock(content: string) {
 	let status = 0;
 	let blockStart = 0;
 
@@ -52,7 +52,7 @@ function retainZincBlock (content:string) {
 
 
 	const len = content.length;
-	const chars:string[] = [];
+	const chars: string[] = [];
 	for (let index = 0; index < len; index++) {
 		const char = content.charAt(index);
 		const nextChar = content.charAt(index + 1);
@@ -124,6 +124,11 @@ function retainZincBlock (content:string) {
 	return chars.join("");
 }
 
+// 去重
+function unique(arr: Array<string>) {
+	return Array.from(new Set(arr));
+}
+
 export {
 	is0_16,
 	is0_7,
@@ -133,23 +138,6 @@ export {
 	isNotNewLine,
 	isNumber,
 	isSpace,
-	retainZincBlock
+	retainZincBlock,
+	unique
 };
-/*
-console.log("|" + retainZincBlock(`
-
-aaa ///
-//! zinc
-library a {
-	struct struct_name {
-		integer dddd;
-		d
-
-		method aaaaaaaa (integer ddd, real dddd) {}
-
-		aaaaaaaa(ddd, )
-	}}
-	dddd
-}
-//! endzinc
-`) + "|");*/

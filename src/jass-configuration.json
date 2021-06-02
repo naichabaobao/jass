@@ -47,6 +47,10 @@
         [
             "{",
             "}"
+        ],
+        [
+            "\"",
+            "\""
         ]
     ],
     "folding": {
@@ -57,7 +61,7 @@
         }
     },
     "indentationRules": {
-        "increaseIndentPattern": "\\b(returns|then|loop|library|scope|elseif|globals|struct)\\b",
-        "decreaseIndentPattern": "\\b(elseif|endfunction|endif|endloop|endlibrary|endscope|endglobals|endstruct|endmethod)\\b"
+        "increaseIndentPattern": "\\b(returns|then|loop|library|scope|elseif|globals|struct)\\b|{",
+        "decreaseIndentPattern": "\\b(elseif|endfunction|endif|endloop|endlibrary|endscope|endglobals|endstruct|endmethod)\\b|}"
     }
 }

@@ -27,18 +27,7 @@
     "description": "function",
     "scope": "source.jass"
   },
-  "function-zinc": {
-    "prefix": "function",
-    "body": "function ${1:function_name} (${2}) ${3|-> nothing, ,-> |}${4}{\n\t${0:}\n}",
-    "description": "function-zinc",
-    "scope": "source.jass"
-  },
-  "block-zinc": {
-    "prefix": "zinc",
-    "body": "//! zinc\n  ${0:}\n//! endzinc",
-    "description": "zinc-block",
-    "scope": "source.jass"
-  },
+
   "boolexpr": {
     "prefix": "function_boolexpr",
     "body": "function ${1:function_name} takes ${2:nothing} returns boolean\n\treturn ${0:true}\nendfunction",
@@ -123,22 +112,66 @@
     "description": "debug",
     "scope": "source.jass"
   },
-  "interface-zinc": {
-    "prefix": "interface",
-    "body": "interface ${1:interface_name} {\n${0:}\n}",
-    "description": "zinc接口",
-    "scope": "source.jass"
-  },
+
   "interface": {
     "prefix": "interface",
     "body": "interface ${1:interface_name}\n${0:}\nendinterface",
     "description": "vjass接口",
     "scope": "source.jass"
   },
+
+  "block-zinc": {
+    "prefix": "zinc",
+    "body": "//! zinc\n  ${0:}\n//! endzinc",
+    "description": "zinc-block",
+    "scope": "source.jass"
+  },
+  "library-zinc": {
+    "prefix": "library",
+    "body": "library ${1:library_name} ${2:requires ${3:require_librarys}} {\n${0:}\n}",
+    "description": "zinc library 模板",
+    "scope": "source.jass"
+  },
+  "interface-zinc": {
+    "prefix": "interface",
+    "body": "interface ${1:interface_name} {\n${0:}\n}",
+    "description": "zinc接口",
+    "scope": "source.jass"
+  },
   "struct-zinc": {
     "prefix": "struct",
-    "body": "struct ${1:struct_name} {\n\t${0:}\n}",
-    "description": "zinc struct block",
+    "body": "struct ${1:struct_name} ${2:extends ${3:extends_name}} {\n${0:}\n}",
+    "description": "zinc struct 模板",
+    "scope": "source.jass"
+  },
+  "module-zinc": {
+    "prefix": "module",
+    "body": "module ${1:module_name} {\n${0:}\n}",
+    "description": "zinc module 模板",
+    "scope": "source.jass"
+  },
+  "function-zinc": {
+    "prefix": "function",
+    "body": "function ${1:function_name} (${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "description": "zinc function 模板",
+    "scope": "source.jass"
+  },
+  "method-zinc": {
+    "prefix": "method",
+    "body": "method ${1:function_name} (${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "description": "zinc method 模板",
+    "scope": "source.jass"
+  },
+  "public-zinc": {
+    "prefix": "public",
+    "body": "public {\n${0:}\n}",
+    "description": "zinc public 模板",
+    "scope": "source.jass"
+  },
+  "private-zinc": {
+    "prefix": "private",
+    "body": "private {\n${0:}\n}",
+    "description": "zinc private 模板",
     "scope": "source.jass"
   }
 }

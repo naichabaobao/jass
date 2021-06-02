@@ -4,6 +4,8 @@ import * as vscode from "vscode";
 import { parse, ProgramBlock } from "../jass/parsing";
 import { Options } from "./options";
 
+import {Position, Range, Rangebel} from "../common";
+
 
 type TagType = "function" | "endfunction" | "globals" | "endglobals" | "native" | "constant" | "type" | "local" | "set" | "call" | "if" | "endif" | "else" | "elseif" | "loop" | "exitwhen" | "endloop" | "return"
   | "library" | "endlibrary" | "private" | "public" | "static" | "blank" | "unkown";
@@ -75,15 +77,15 @@ class Program {
   private static _programs: Array<Program> = [];
 
 
-  private _key: string;
+  public key: string;
   private _zincBlocks: Array<_ZincBlock> = [];
 
   // 目前暂且把 //! 开头的注释保存在类中，之后实现中应该用完就扔掉，免得占用内存
   private _usefulLineComments: Array<LineComment> = [];
 
   constructor(key: string, content: string) {
-    this._key = key; // this._convertKey(key);
-    console.info(`开始处理${this._key}文件!`);
+    this.key = key; // this._convertKey(key);
+    console.info(`开始处理${this.key}文件!`);
     const result = this._removeBlockComment(content);
 
     const lineTexts = this._toLines(result.content);
@@ -130,7 +132,7 @@ class Program {
       try {
         const content = block.lines.map(x => x.text).join("\n");
         const programBlock = parse(content);
-        programBlock.fileName = this._key;
+        programBlock.fileName = this.key;
         this.programBlocks.push(programBlock);
       } catch (err) {
         throw err;
@@ -481,6 +483,10 @@ class Program {
       //   desc.text = commentTarget.content;
       // }
     }
+    const setLoc = <T extends Rangebel>(obj:T, line:Line)  => {
+      obj.loc.start = new Position(line.lineNumber, line.loc.start.character);
+      obj.loc.end = new Position(line.lineNumber, line.loc.end.character);
+    };
     for (let index = 0; index < lines.length; index++) {
       const line = lines[index];
       if (/^\s*type\b/.test(line.text)) {
@@ -492,12 +498,14 @@ class Program {
       } else if (/^\s*native\b/.test(line.text)) {
         const native = <Native>this._handleNative(line.text, FunctionOption.native(false));
         if (native) {
+          setLoc(native, line);
           this.natives.push(native);
           descHandle(line, native);
         }
       } else if (/^\s*constant\s+native\b/.test(line.text)) {
         const native = <Native>this._handleNative(line.text, FunctionOption.native(true));
         if (native) {
+          setLoc(native, line);
           this.natives.push(native);
           descHandle(line, native);
         }
@@ -506,6 +514,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func());
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -514,6 +523,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("private"));
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -522,6 +532,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("public"));
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -530,6 +541,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("default", true));
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -538,6 +550,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("public", true));
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -546,6 +559,7 @@ class Program {
         inFunc = true;
         const func = <Func>this._handleNative(line.text, FunctionOption.func("private", true));
         if (func) {
+          setLoc(func, line);
           funcHandle(func);
           descHandle(line, func);
         }
@@ -557,6 +571,7 @@ class Program {
         inGlobals = false;
       } else if (/^\s*library\b/.test(line.text)) {
         const library = this._handleLibrary(line.text) ?? new Library("");
+        
         this.librarys.push(library);
         descHandle(line, library);
         inLibrary = true;
@@ -590,6 +605,7 @@ class Program {
         inStruct = false;
       } else if (/^\s*struct\b/.test(line.text)) {
         const struct = this._handleStruct(line.text) ?? new Struct("");
+        setLoc(struct, line);
         structHandle(struct);
         descHandle(line, struct);
         inStruct = true;
@@ -599,6 +615,7 @@ class Program {
         inStruct = false;
       } else if (inStruct && /^\s*private\s+static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("private", true)) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -606,6 +623,7 @@ class Program {
         inFunc = false;
       } else if (inStruct && /^\s*public\s+static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("public", true)) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -613,6 +631,7 @@ class Program {
         inFunc = false;
       } else if (inStruct && /^\s*private\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("private")) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -620,6 +639,7 @@ class Program {
         inFunc = false;
       } else if (inStruct && /^\s*public\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("public")) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -627,6 +647,7 @@ class Program {
         inFunc = false;
       } else if (inStruct && /^\s*static\s+method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("default", true)) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -634,6 +655,7 @@ class Program {
         inFunc = false;
       } else if (inStruct && /^\s*method\b/.test(line.text)) {
         const method = <Method>this._handleNative(line.text, FunctionOption.method("default")) ?? new Method("");
+        setLoc(method, line);
         structMethodHandle(method);
         descHandle(line, method);
         inMethod = true;
@@ -648,36 +670,42 @@ class Program {
       } else if (inGlobals && /^\s*private\s+constant\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("private", true));
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
       } else if (inGlobals && /^\s*public\s+constant\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("public", true));
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
       } else if (inGlobals && /^\s*private\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("private"));
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
       } else if (inGlobals && /^\s*public\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("public"));
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
       } else if (inGlobals && /^\s*constant\s+[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption("default", true));
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
       } else if (inGlobals && /^\s*[a-zA-Z][a-zA-Z0-9_]*\b/.test(line.text)) {
         const global = this._handleGlobal(line, new GlobalOption);
         if (global) {
+          setLoc(global, line);
           this.globals.push(global);
           descHandle(line, global);
         }
@@ -936,7 +964,8 @@ class ArrayType extends BaseType implements Desc {
 
 }
 
-class Take {
+class Take implements Rangebel{
+  public loc: Range = Range.default();
   public readonly type: string;
   public readonly name: string;
 
@@ -953,7 +982,8 @@ class Take {
 
 }
 
-class Func implements Desc {
+class Func implements Desc ,Rangebel{
+  public loc: Range = Range.default();
   public readonly name: string;
   public readonly takes: Take[];
   public readonly returns: string | null;
@@ -986,7 +1016,7 @@ class Func implements Desc {
   }
 }
 
-class Native implements Desc {
+class Native implements Desc ,Rangebel{
   public readonly name: string;
   public readonly takes: Take[];
   public readonly returns: string | null;
@@ -998,6 +1028,7 @@ class Native implements Desc {
     this.returns = returns;
     this.constant = constant;
   }
+  public loc: Range = Range.default();
   public text: string = "";
 
 
@@ -1011,7 +1042,8 @@ class Native implements Desc {
 
 }
 
-class Method implements Desc {
+class Method implements Desc, Rangebel {
+  public loc: Range = Range.default();
   public readonly name: string;
   public readonly takes: Take[];
   public readonly returns: string | null;
@@ -1035,7 +1067,8 @@ class Method implements Desc {
 
 }
 
-class Global implements Desc {
+class Global implements Desc,Rangebel {
+  public loc: Range = Range.default();
   public readonly type: string;
   public readonly name: string;
   public readonly constant: boolean;
@@ -1123,7 +1156,8 @@ class Scope implements Desc {
 }
 
 
-class Struct implements Desc {
+class Struct implements Desc ,Rangebel{
+  public loc: Range = Range.default();
   public readonly name: string;
   public readonly extend: string | null;
   public readonly methods: Method[] = [];

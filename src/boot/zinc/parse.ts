@@ -23,7 +23,7 @@ import {
 import {tokens, Token} from "./tokens";
 
 import {ZincKeywords} from "../provider/keyword";
-import {retainZincBlock} from "./tool";
+import {retainZincBlock} from "../tool";
 
 class ZincTokenError {
 	public message:string;

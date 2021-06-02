@@ -55,3 +55,5 @@
 1.1.0 从新实现格式化缩进，添加zinc struct method，需要在正确嵌套下。
 
 1.3.0 zinc 语法提示，添加struct method。
+
+1.3.1 修復定義跳轉問題。

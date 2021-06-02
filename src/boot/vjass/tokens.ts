@@ -1,6 +1,52 @@
 
 import { is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isSpace, isNumber } from "../tool";
-import {Token, TokenType} from "../vjass/tokens";
+
+type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error";
+
+class Token {
+	public type: TokenType;
+	public value: string;
+	public line: number;
+	public position: number;
+
+	constructor(type: TokenType, value: string, line: number, position: number) {
+		this.type = type;
+		this.value = value;
+		this.line = line;
+		this.position = position;
+	}
+
+	public isId() {
+		return this.type === "id";
+	}
+	public isOp() {
+		return this.type === "op";
+	}
+	public isInt() {
+		return this.type === "int";
+	}
+	public isReal() {
+		return this.type === "real";
+	}
+	public isString() {
+		return this.type === "string";
+	}
+	public isMark() {
+		return this.type === "mark";
+	}
+	public isError() {
+		return this.type === "error";
+	}
+
+	public get end(): number {
+		return this.position + this.value.length;
+	}
+
+}
+
+
+
+
 
 /**
  * 
@@ -10,6 +56,7 @@ import {Token, TokenType} from "../vjass/tokens";
 function tokens(content: string): Token[] {
 	const tokens: Token[] = [];
 	const bads: Token[] = [];
+
 
 	let lineNumber = 0;
 	let position = 0;
@@ -177,6 +224,13 @@ function tokens(content: string): Token[] {
 			} else if (char == "%") {
 				push(char);
 				pushToken("op");
+			} else if (char == "$") {
+				push(char);
+				if (nextChar && is0_16(nextChar)) {
+					state = 4;
+				} else {
+					bad();
+				}
 			} else if (isSpace(char) || isNewLine(char)) {
 			} else {
 				push(char);
@@ -300,9 +354,10 @@ function tokens(content: string): Token[] {
 			position++;
 		}
 	}
-	// console.log(tokens);
+	console.log(tokens);
 	return tokens;
 }
+
 
 export {
 	Token,
