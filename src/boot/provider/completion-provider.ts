@@ -14,6 +14,8 @@ import { types,natives,functions,globals,structs, librarys } from './data';
 import { Program } from "./jass-parse";
 import { Options } from "./options";
 import { parse, parseZincBlock } from "../zinc/parse";
+import { Local, Take } from "../vjass/ast";
+import { tokens } from "../vjass/tokens";
 
 
 
@@ -183,6 +185,73 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     return items;
   };
 
+  private takeStringToTakes(takeString: string) {
+    return <Take[]>takeString.split(",").map(ts => ts.trim()).map(ts => {
+      const result = /(?<type>[a-zA-Z][a-zA-Z0-9_]*)\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)/.exec(ts);
+      if (result && result.groups) {
+        const type = result.groups["type"];
+        const name = result.groups["name"];
+        return new Take(type, name);
+      }
+    }).filter(take => take);
+  }
+
+  /**
+   * 临时变量提示符，当前方法并未无视注释
+   */
+  private localItems = (document: vscode.TextDocument, position: vscode.Position) => {
+
+    const items = new Array<vscode.CompletionItem>();
+
+    let enter = false;
+    let startLine = 0;
+    let endLine = 0;
+
+    for (let index = 0; index < document.lineCount; index++) {
+      const lineText = document.lineAt(index);
+      // console.log("/^\s*(?:endfunction|endmethod)\b/.test(lineText.text)" + enter + !lineText.isEmptyOrWhitespace + /^\s*(?:endfunction|endmethod)\b/.test(lineText.text))
+      if (enter && !lineText.isEmptyOrWhitespace && /^\s*(?:endfunction|endmethod)\b/.test(lineText.text)) {
+        endLine = lineText.lineNumber;
+        enter = false;
+        if (startLine == position.line) { // 当前行若果跟方法开始同一行不需要进一步解析 直接返回空数组
+          return items;
+        } else if (new vscode.Range(new vscode.Position(startLine, 0), new vscode.Position(endLine, 0)).contains(position)) {
+          const takes = this.takeStringToTakes(document.lineAt(startLine).text.substring(Math.max(document.lineAt(startLine).text.indexOf("takes") + 5, 0)));
+   
+          takes.forEach(take => {
+            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
+            item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
+            item.sortText = "_";
+            items.push(item);
+          });
+
+          for (let i = startLine + 1; i < endLine - 1; i++) {
+            if (!document.lineAt(i).isEmptyOrWhitespace && /^\s*local\b/.test(document.lineAt(i).text)) {
+              const result = /local\s+(?<type>[a-zA-Z][a-zA-Z\d_]*)(?:\s+(?<isArray>array))?\s+(?<name>[a-zA-Z][a-zA-Z\d_]*)\b/.exec(document.lineAt(i).text);
+              if (result && result.groups) {
+                const local = new Local(result.groups["type"], result.groups["name"]);
+                if (result.groups["isArray"]) {
+                  local.isArray = true;
+                }
+                const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
+                item.documentation = new vscode.MarkdownString().appendCodeblock(local.origin);
+                item.sortText = "_";
+                items.push(item);
+              }
+            }
+          }
+
+          // 若果包含在方法中就跳出循环
+          break;
+        }
+      } else if (!lineText.isEmptyOrWhitespace && /^[ \ta-zA-Z]*(?:function|method)\b/.test(lineText.text)) {
+        startLine = lineText.lineNumber;
+        enter = true;
+      } 
+    }
+    return items;
+  };
+
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
     items.push(...typeItems);
@@ -235,15 +304,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
       return item;
     });
-    const currentZincFunctionItems =
-    true ? 
-     this.zincItems(document, position) 
-    : currentProgram.zincFunctions.map(func => {
-      const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-      item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(`function ${func.name}(${func.takes.length == 0 ? "nothing" : func.takes.map(take => take.origin).join(" ,")}) -> ${func.returns ?? "nothing"} {}`);
-      return item;
-    });
+    const currentZincFunctionItems = this.zincItems(document, position);
+
     
     items.push(...currentArrayTypeItems);
     items.push(...currentGlobalItems);
@@ -256,6 +318,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     if (Options.supportZinc) {
       items.push(...currentZincFunctionItems);
     }
+
+    items.push(...this.localItems(document, position));
 
     return items;
   }

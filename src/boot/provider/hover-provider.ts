@@ -71,7 +71,7 @@ class HoverProvider implements vscode.HoverProvider {
     });
 
     const currentProgram = new Program(document.uri.fsPath, document.getText());
-    const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs, ...currentProgram.zincFunctions];
+    const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs];
 
     exprs.forEach(expr => {
       if (key == expr.name) {

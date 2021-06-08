@@ -184,12 +184,19 @@ class StructArray extends Struct{
 class Local implements Rangebel {
 	public type: string;
 	public name: string;
+	public isArray:boolean = false;
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 
 	constructor(type: string, name: string) {
 		this.type = type;
 		this.name = name;
 	}
+
+	
+	public get origin() : string {
+		return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`
+	}
+	
 }
 
 

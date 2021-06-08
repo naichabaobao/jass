@@ -5,6 +5,7 @@ import { parse, ProgramBlock } from "../jass/parsing";
 import { Options } from "./options";
 
 import {Position, Range, Rangebel} from "../common";
+import { retainVjassBlock } from "../tool";
 
 
 type TagType = "function" | "endfunction" | "globals" | "endglobals" | "native" | "constant" | "type" | "local" | "set" | "call" | "if" | "endif" | "else" | "elseif" | "loop" | "exitwhen" | "endloop" | "return"
@@ -78,28 +79,18 @@ class Program {
 
 
   public key: string;
-  private _zincBlocks: Array<_ZincBlock> = [];
-
-  // 目前暂且把 //! 开头的注释保存在类中，之后实现中应该用完就扔掉，免得占用内存
-  private _usefulLineComments: Array<LineComment> = [];
 
   constructor(key: string, content: string) {
     this.key = key; // this._convertKey(key);
     console.info(`开始处理${this.key}文件!`);
-    const result = this._removeBlockComment(content);
+    const result = this._retainCode(content);
 
     const lineTexts = this._toLines(result.content);
-
-    this._findZincBlock(lineTexts);
 
     this._handle(lineTexts, result.comments);
 
     // 清空内存
     result.comments.clear();
-
-    // this._handelZinc();
-
-    // this._handleZinc2();
 
   }
 
@@ -114,214 +105,19 @@ class Program {
    * @deprecated 
    */
   public readonly programBlocks: ProgramBlock[] = [];
-  public get zincFunctions() {
-    return this.programBlocks.map(x => x.functionDeclarators()).flat().map(x => {
-      return new Func(x.id ?? "", x.takes.map(take => new Take(take.type ?? "nothing", take.id)), x.returns);
-    });
-  }
+
 
   /**
-   * @deprecated
-   * @returns 
-   */
-  private _handelZinc() {
-    if (!Options.supportZinc) {
-      return;
-    }
-    this._zincBlocks.forEach(block => {
-      try {
-        const content = block.lines.map(x => x.text).join("\n");
-        const programBlock = parse(content);
-        programBlock.fileName = this.key;
-        this.programBlocks.push(programBlock);
-      } catch (err) {
-        throw err;
-      }
-    });
-  }
-
-  public readonly zincStructs: Struct[] = [];
-
-  /**
-   * _handelZinc为过去实现
-   * _handleZinc2为最新实现，逐步使用当前方法替换掉_handelZinc
-   */
-  private _handleZinc2() {
-    // 目前尝试实现struct和method
-    this._zincBlocks.forEach(block => {
-      const content = block.lines.map(x => x.text).join("\n");
-      // 强制正确嵌套，否则无法匹配
-      const structRegExp = new RegExp(/struct\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)\s*\{(?<body>(?:[^{}]*\{?[^{}]*\}[^{}]*)*)\}?/);
-      const handleStruct = (text: string) => {
-        const result = structRegExp.exec(text);
-        if (result) {
-          return result;
-        } else return null;
-      }
-      const structMethodRegExp = new RegExp(/method\s+(?<name>[a-zA-Z][a-zA-Z0-9_]*)(\s*\(\s*(?<takes>([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)(\s*,\s*[a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)*)?\s*\))?(\s*->\s*(?<returns>[a-zA-Z][a-zA-Z0-9_]*))?/);
-      const handleStructMethod = (text: string) => {
-        const result = structMethodRegExp.exec(text);
-        if (result) {
-          return result;
-        } else return null;
-      }
-      for (let result: RegExpExecArray | null = null, index = 0; index < content.length;) {
-        // console.log(result ? content.substring(index) : content)
-        result = handleStruct(result ? content.substring(index) : content)
-        if (result && result.groups) {
-          const struct = new Struct(result.groups["name"]);
-          this.zincStructs.push(struct);
-          const body = result.groups["body"];
-          for (let rs: RegExpExecArray | null = null, i = 0; i < content.length;) {
-            rs = handleStructMethod(rs ? body.substring(i) : body)
-            if (rs && rs.groups) {
-              const takeString = rs.groups["takes"];
-              const takes = takeString ? this.takeStringToTakes(takeString) : [];
-              const returns = rs.groups["returns"];
-              const method = new Method(rs.groups["name"], takes, returns ?? null);
-              struct.methods.push(method);
-            } else break;
-            i += rs[0].length;
-          }
-        } else break;
-        index += result[0].length;
-      }
-
-    });
-  }
-
-  private _isNewLine(char: string) {
-    if (char.length == 1) return char == "\n"; // new RegExp(/\r\n|\n/).test(char);
-    else return false;
-  }
-
-  /**
-   * 替换注释保留换行符
-   * @param text 
-   * @param startIndex 
-   * @param endIndex 
-   * @param char 
-   * @returns 
-   */
-  private _replace(text: string, startIndex: number, endIndex: number, char: string = " ") {
-    if (endIndex <= startIndex) {
-      throw "endIndex <= startIndex";
-    }
-
-    text.replace(/.+/, (reg, match) => {
-      return "";
-    })
-
-    function replaceContent(content: string) {
-      if (content.length == 0) {
-        return content;
-      }
-      return content.split("\n").map(x => "".padStart(x.length, char)).join("\n");
-    }
-    let preText = text.substring(0, startIndex) + replaceContent(text.substring(startIndex, endIndex + 1));
-    if (endIndex + 1 < text.length) {
-      preText += text.substring(endIndex + 1, text.length);
-    }
-    return preText;
-  }
-
-  /**
-   * 移除块注释和单行注释（不支持嵌套的块注释识别）
-   * 有用的单行注释会保存在_usefulLineComments
+   * 保留vjass代码和有用的单行注释
    * @param content 
    * @returns 
    */
-  private _removeBlockComment(content: string) {
-    let status = 0;
-    let blockStart = 0;
-
-    let line = 0;
-
-    let isStag = true;
-    let useless = false;
-
-    // const comments:Array<LineComment> = [];
+  private _retainCode(content: string) {
     const map = new Map<number, string>();
-
-    const lineCommentOver = (start: number, end: number) => {
-      const text = content.substring(start, end + 1);
-      if (!useless) {
-        if (/\s*\/\/!/.test(text)) {
-          this._usefulLineComments.push(new LineComment(line, text));
-        } else if (/\s*\/\//.test(text)) {
-          map.set(line, text.replace("//", ""));
-        }
-      }
-      content.replace(text, "".padStart(text.length, " "));
-      // else content = this._replace(content, start, end);
-    }
-    const len = content.length;
-    for (let index = 0; index < len; index++) {
-      const char = content.charAt(index)
-      if (status == 0) {
-        if (char == "/") {
-          status = 1;
-          blockStart = index;
-          if (isStag) {
-            useless = false;
-          } else {
-            useless = true;
-          }
-        } else if (char == "\"") {
-          status = 5;
-        }
-      } else if (status == 1) {
-        if (char == "*") {
-          status = 2;
-        } else if (char == "/") {
-          status = 3;
-        } else {
-          status = 0;
-        }
-      } else if (status == 2) {
-        if (char == "*") {
-          status = 4;
-        }
-      } else if (status == 3) {
-        if (this._isNewLine(char)) { // 行注释结束
-          status = 0;
-          lineCommentOver(blockStart, index);
-        }
-      } else if (status == 4) {
-        if (char == "/") { // 块注释结束
-          status = 0;
-          content = this._replace(content, blockStart, index);
-        } else {
-          status = 2;
-        }
-      } else if (status == 5) {
-        if (char == "\"") { // 字符串结束
-          status = 0;
-        } else if (char == "\\") { //字符串进入转义状态
-          status = 6;
-        } else if (this._isNewLine(char)) { // 字符串结束
-          status = 0;
-        }
-      } else if (status == 6) {
-        if (this._isNewLine(char)) { // 字符串结束
-          status = 0;
-        } else { // 从新回到字符串状态
-          status = 5;
-        }
-      }
-      if (this._isNewLine(char)) {
-        isStag = true;
-        line++;
-      } else if (char != " " && char != "\t") {
-        isStag = false;
-      }
-    }
-    if (status == 2 || status == 4) { // 未闭合块注释
-      content = this._replace(content, blockStart, content.length - 1);
-    } if (status == 3) { // 行注释结束
-      lineCommentOver(blockStart, content.length - 1);
-    }
-    return { content, comments: map };
+    const newContent = retainVjassBlock(content, (line, commentString) => {
+      map.set(line, commentString);
+    });
+    return { content: newContent, comments: map };
   }
 
   private _toLines(content: string) {
@@ -330,51 +126,6 @@ class Program {
       return new Line(index, line);
     });
     return lineTexts;
-  }
-
-  /**
-   * 获取zinc块，并移除注释
-   * 若果zinc块没有闭合情况下，直接删除注释
-   * @param lineTexts 
-   * @returns 
-   */
-  private _findZincBlock(lineTexts: Array<Line>) {
-    let inBlock = false;
-    let startLineComment: LineComment | null = null;
-    for (let index = 0; index < this._usefulLineComments.length;) {
-      const usefulLineComment = this._usefulLineComments[index];
-      if (/^\s*\/\/![ \t]+zinc\b/.test(usefulLineComment.content)) {
-        if (!startLineComment) {
-          startLineComment = usefulLineComment;
-        }
-        this._usefulLineComments.splice(index, 1);
-        inBlock = true;
-      } else if (/^\s*\/\/![ \t]+endzinc\b/.test(usefulLineComment.content)) {
-        if (inBlock) {
-          const lines: Line[] = [];
-          for (let i = 0; i < lineTexts.length;) {
-            const lineText = lineTexts[i];
-            if (lineText.lineNumber > (<LineComment>startLineComment).line && lineText.lineNumber < usefulLineComment.line) {
-              lines.push(lineText);
-              lineTexts.splice(i, 1);
-            } else {
-              i++
-            }
-          }
-          const zincBlock = new _ZincBlock(new vscode.Range((<LineComment>startLineComment).line, 0, usefulLineComment.line, 0), lines, (<LineComment>startLineComment), usefulLineComment);
-          this._zincBlocks.push(zincBlock);
-        }
-        this._usefulLineComments.splice(index, 1);
-        inBlock = false;
-      } else {
-        index++;
-      }
-    }
-  }
-
-
-  public get usefulLineComments(): Array<LineComment> {
-    return this._usefulLineComments;
   }
 
   public readonly types: ArrayType[] = [];
@@ -478,10 +229,6 @@ class Program {
       if (comments.has(line.loc.start.line - 1)) {
         desc.text = <string>comments.get(line.loc.start.line - 1);
       }
-      // const commentTarget = comments.find(comment => comment.line == line.loc.start.line - 1);
-      // if (commentTarget) {
-      //   desc.text = commentTarget.content;
-      // }
     }
     const setLoc = <T extends Rangebel>(obj:T, line:Line)  => {
       obj.loc.start = new Position(line.lineNumber, line.loc.start.character);
@@ -883,13 +630,8 @@ class Program {
     const structs = [...this.structs, ...this.librarys.map(library => {
       const scopes = this.flatScope(library.scopes);
       return [...library.structs, ...scopes.map(scope => scope.structs).flat()];
-    }).flat(), ...this.flatScope(this.scopes).map(scope => scope.structs).flat(),
-    ...this.zincStructs];
+    }).flat(), ...this.flatScope(this.scopes).map(scope => scope.structs).flat()];
     return structs;
-  }
-
-  private handleDesc(comments: Array<LineComment>) {
-
   }
 
 }

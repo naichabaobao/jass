@@ -57,18 +57,6 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
 
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     if (/^\s*\/\//.test(document.lineAt(position.line).text)) return;
-    let field1 = 0;
-    let count = 0;
-    let line = 0;
-    let character = 0;
-    let inString1 = false;
-    const offset = document.offsetAt(position);
-    const content = document.getText().substring(0, offset);
-
-    const words: string[] = [];
-
-
-
 
     const provideSignatureHelp = (document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext) => {
       const SignatureHelp = new vscode.SignatureHelp();
@@ -106,7 +94,7 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
               // const ps = programs();
               // ps.push(jass.parse(content));
               const current = new Program(document.uri.fsPath, document.getText());
-              const allFunctions = [...natives, ...functions, ...current.allFunctions, ...current.natives, ...current.zincFunctions];
+              const allFunctions = [...natives, ...functions, ...current.allFunctions, ...current.natives];
 
               for (let index = 0; index < allFunctions.length; index++) {
                 const func = allFunctions[index];
