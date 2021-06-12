@@ -66,7 +66,7 @@ class HoverProvider implements vscode.HoverProvider {
 
     all.forEach(expr => {
       if (key == expr.name) {
-        hovers.push(new vscode.MarkdownString(expr.name).appendCodeblock(expr.origin));
+        hovers.push(new vscode.MarkdownString(expr.name).appendText("\n" + expr.text).appendCodeblock(expr.origin));
       }
     });
 
@@ -75,7 +75,7 @@ class HoverProvider implements vscode.HoverProvider {
 
     exprs.forEach(expr => {
       if (key == expr.name) {
-        hovers.push(new vscode.MarkdownString(expr.name).appendText(expr.text).appendCodeblock(expr.origin));
+        hovers.push(new vscode.MarkdownString(expr.name).appendText("\n" + expr.text).appendCodeblock(expr.origin));
       }
     });
 

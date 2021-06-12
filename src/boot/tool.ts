@@ -57,7 +57,7 @@ function retainZincBlock(content: string) {
 
 	let inZinc = false;
 
-
+	content = content.replace(/\r\n/g, "\n");
 	const len = content.length;
 	const chars: string[] = [];
 	for (let index = 0; index < len; index++) {
@@ -84,7 +84,7 @@ function retainZincBlock(content: string) {
 				chars.push(char);
 			}
 		} else if (status == 1) {
-			if (isNewLine(nextChar)) {
+			if (!nextChar || isNewLine(nextChar)) {
 				if (/\s*\/\/![ \t]+zinc/.test(content.substring(blockStart, index + 1))) {
 					inZinc = true;
 				} else if (/\s*\/\/![ \t]+endzinc/.test(content.substring(blockStart, index + 1))) {
@@ -123,7 +123,7 @@ function retainZincBlock(content: string) {
 			if (!inZinc) {
 				chars.push("\n");
 			}
-		} else if (char != " " && char != "\t") {
+		} else if (isStag && char != " " && char != "\t") {
 			isStag = false;
 		}
 	}
@@ -138,12 +138,14 @@ function retainVjassBlock(content: string, callBack: ((line:number, comment:stri
 
 	let line = 0;
 
+	// 是否行开始为空白
 	let isStag = true;
+	// 是否无用
 	let useless = false;
 
 	let inZinc = false;
 
-
+	content = content.replace(/\r\n/g, "\n");
 	const len = content.length;
 	const chars: string[] = [];
 	for (let index = 0; index < len; index++) {
@@ -170,13 +172,13 @@ function retainVjassBlock(content: string, callBack: ((line:number, comment:stri
 				chars.push(char);
 			}
 		} else if (status == 1) {
-			if (isNewLine(nextChar)) {
+			if (!nextChar || isNewLine(nextChar)) {
 				const commentString = content.substring(blockStart, index + 1);
 				if (/\s*\/\/![ \t]+zinc/.test(content.substring(blockStart, index + 1))) {
 					inZinc = true;
 				} else if (/\s*\/\/![ \t]+endzinc/.test(content.substring(blockStart, index + 1))) {
 					inZinc = false;
-				} else if (useless) {
+				} else if (!useless) {
 					if (callBack) {
 						callBack(line, commentString.replace("//", ""));
 					}
@@ -215,7 +217,7 @@ function retainVjassBlock(content: string, callBack: ((line:number, comment:stri
 			if (inZinc) {
 				chars.push("\n");
 			}
-		} else if (char != " " && char != "\t") {
+		} else if (isStag && char != " " && char != "\t") {
 			isStag = false;
 		}
 	}
@@ -241,3 +243,5 @@ export {
 	unique,
 	retainVjassBlock
 };
+
+

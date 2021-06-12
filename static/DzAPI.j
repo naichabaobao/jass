@@ -14,9 +14,9 @@ native DzAPI_Map_GetMatchType      		takes nothing returns integer
 native DzAPI_Map_Ladder_SetPlayerStat   takes player whichPlayer, string key, string value returns nothing
 native DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer
 native DzAPI_Map_GetLadderLevel         takes player whichPlayer returns integer
-// is土豪?
+// is vip?
 native DzAPI_Map_IsRedVIP               takes player whichPlayer returns boolean
-// is土豪?
+// is vip?
 native DzAPI_Map_IsBlueVIP              takes player whichPlayer returns boolean
 native DzAPI_Map_GetLadderRank          takes player whichPlayer returns integer
 native DzAPI_Map_GetMapLevelRank        takes player whichPlayer returns integer

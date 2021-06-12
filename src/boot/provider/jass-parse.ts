@@ -147,7 +147,7 @@ class Program {
     let inLibrary = false;
     let scopeField = 0;
     let inStruct = false;
-
+    
     const getScopes = (scopes: Scope[], f: number) => {
       let field = 0;
       function get(ss: Scope[]): Scope[] {

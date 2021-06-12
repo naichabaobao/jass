@@ -256,34 +256,59 @@ globals
 	// pfff
  constant boolean FALSE                           = false
 	constant boolean TRUE                            = true
+	// 数组最大值
 	constant integer JASS_MAX_ARRAY_SIZE             = 32768
-	
+	// 中立被动
 	constant integer PLAYER_NEUTRAL_PASSIVE          = GetPlayerNeutralPassive()
+	// 中立敌对
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE       = GetPlayerNeutralAggressive()
-	
+	// 红方玩家
 	constant playercolor PLAYER_COLOR_RED                = ConvertPlayerColor(0)
+	// 蓝方玩家
 	constant playercolor PLAYER_COLOR_BLUE               = ConvertPlayerColor(1)
+	// 青色方玩家
 	constant playercolor PLAYER_COLOR_CYAN               = ConvertPlayerColor(2)
+	// 紫色方玩家
 	constant playercolor PLAYER_COLOR_PURPLE             = ConvertPlayerColor(3)
+	// 黄色方玩家
 	constant playercolor PLAYER_COLOR_YELLOW             = ConvertPlayerColor(4)
+	// 橙色方玩家
 	constant playercolor PLAYER_COLOR_ORANGE             = ConvertPlayerColor(5)
+	// 绿色方玩家
 	constant playercolor PLAYER_COLOR_GREEN              = ConvertPlayerColor(6)
+	// 粉色方玩家
 	constant playercolor PLAYER_COLOR_PINK               = ConvertPlayerColor(7)
+	// 深灰色方玩家
 	constant playercolor PLAYER_COLOR_LIGHT_GRAY         = ConvertPlayerColor(8)
+	// 深蓝色方玩家
 	constant playercolor PLAYER_COLOR_LIGHT_BLUE         = ConvertPlayerColor(9)
+	// 浅绿色方玩家
 	constant playercolor PLAYER_COLOR_AQUA               = ConvertPlayerColor(10)
+	// 棕色方玩家
 	constant playercolor PLAYER_COLOR_BROWN              = ConvertPlayerColor(11)
+	// 褐红色方玩家
 	constant playercolor PLAYER_COLOR_MAROON             = ConvertPlayerColor(12)
+	// 深蓝色方玩家
 	constant playercolor PLAYER_COLOR_NAVY               = ConvertPlayerColor(13)
+	// 蓝绿色方玩家
 	constant playercolor PLAYER_COLOR_TURQUOISE          = ConvertPlayerColor(14)
+	// 紫罗兰色方玩家
 	constant playercolor PLAYER_COLOR_VIOLET             = ConvertPlayerColor(15)
+	// 小麦色方玩家
 	constant playercolor PLAYER_COLOR_WHEAT              = ConvertPlayerColor(16)
+	// 桃色方玩家
 	constant playercolor PLAYER_COLOR_PEACH              = ConvertPlayerColor(17)
+	// 薄荷色方玩家
 	constant playercolor PLAYER_COLOR_MINT               = ConvertPlayerColor(18)
+	// 淡紫色方玩家
 	constant playercolor PLAYER_COLOR_LAVENDER           = ConvertPlayerColor(19)
+	// 煤焦油色方玩家
 	constant playercolor PLAYER_COLOR_COAL               = ConvertPlayerColor(20)
+	// 雪白方玩家
 	constant playercolor PLAYER_COLOR_SNOW               = ConvertPlayerColor(21)
+	// 祖母绿方玩家
 	constant playercolor PLAYER_COLOR_EMERALD            = ConvertPlayerColor(22)
+	// PEANUT玩家 [PEANUT]
 	constant playercolor PLAYER_COLOR_PEANUT             = ConvertPlayerColor(23)
 	
 	constant race RACE_HUMAN                      = ConvertRace(1)
@@ -3129,12 +3154,15 @@ native GetDestructableY takes destructable d returns real
 native SetDestructableLife takes destructable d, real life returns nothing
 // 生命值 (可毁坏物)
 native GetDestructableLife takes destructable d returns real
+	//设置可破坏物的最大生命值
 native SetDestructableMaxLife takes destructable d, real max returns nothing
 // 最大生命值 (可毁坏物)
 native GetDestructableMaxLife takes destructable d returns real
 // 复活 可毁坏物
 native DestructableRestoreLife takes destructable d, real life, boolean birth returns nothing
+	//队列可破坏物的动画
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
+	//设置可破坏物的动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 改变可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
@@ -3146,6 +3174,7 @@ native GetDestructableOccluderHeight takes destructable d returns real
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
 // 可毁坏物的名字
 native GetDestructableName takes destructable d returns string
+	// 获取触发可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
 
 //============================================================================
@@ -3164,11 +3193,15 @@ native GetItemX takes item i returns real
 native GetItemY takes item i returns real
 // 移动物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
+		// 设置物品是否死亡时掉落
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
+	// 设置物品可以丢弃
 native SetItemDroppable takes item i, boolean flag returns nothing
 // 设置物品能否变卖
 native SetItemPawnable takes item i, boolean flag returns nothing
+	// 设置物品所属
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
+	// 设置物品是否无敌的
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
 // 物品是无敌的
 native IsItemInvulnerable takes item whichItem returns boolean
@@ -3184,12 +3217,17 @@ native IsItemPowerup takes item whichItem returns boolean
 native IsItemSellable takes item whichItem returns boolean
 // 物品可被抵押 [R]
 native IsItemPawnable takes item whichItem returns boolean
+	// 物品可以充能
 native IsItemIdPowerup takes integer itemId returns boolean
+	// 物品可以销售
 native IsItemIdSellable takes integer itemId returns boolean
+	// 物品可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
+	// 物品是否在范围内
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 物品等级
 native GetItemLevel takes item whichItem returns integer
+	// 获取物品类型
 native GetItemType takes item whichItem returns itemtype
 // 设置重生神符的产生单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
@@ -3209,9 +3247,11 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // Facing arguments are specified in degrees
 // 新建单位(指定坐标) [R]
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
+	// 新建单位(指定坐标) [R]
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定点) [R]
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
+	// 新建单位(指定点) [R]
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
@@ -3239,10 +3279,13 @@ native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
 // 设置单位移动速度
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
+	//设定单位飞行高度
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
+	//设定单位转向速度
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 改变单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
+	//设置感知敌人距离
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -3276,7 +3319,7 @@ native SetUnitTimeScale takes unit whichUnit, real timeScale returns nothing
 native SetUnitBlendTime takes unit whichUnit, real blendTime returns nothing
 // 改变单位的颜色(RGB:0-255) [R]
 native SetUnitVertexColor takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-
+//队列单位动作
 native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
 // 播放单位动作
 native SetUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
@@ -3419,7 +3462,9 @@ constant native GetUnitTypeId takes unit whichUnit returns integer
 constant native GetUnitRace takes unit whichUnit returns race
 // 单位名字
 constant native GetUnitName takes unit whichUnit returns string
+		// 单位使用人口
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
+	// 单位提供人口数量
 constant native GetUnitFoodMade takes unit whichUnit returns integer
 // 单位-类型 提供的人口
 constant native GetFoodMade takes integer unitId returns integer
@@ -3461,6 +3506,7 @@ constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns 
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 检查单位 分类
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
+	// 是单位
 constant native IsUnit takes unit whichUnit, unit whichSpecifiedUnit returns boolean
 // 在指定单位范围内 [R]
 constant native IsUnitInRange takes unit whichUnit, unit otherUnit, real distance returns boolean
@@ -3468,10 +3514,13 @@ constant native IsUnitInRange takes unit whichUnit, unit otherUnit, real distanc
 constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real distance returns boolean
 // 在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
+	// 是隐藏单位
 constant native IsUnitHidden takes unit whichUnit returns boolean
+	//是镜像单位
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-
+// 是运输单元
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
+	//单位加载
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
 // 单位类型是英雄单位
@@ -3498,20 +3547,26 @@ native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
 // 删除魔法效果(详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
+	// 拥有Buff [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
 // 拥有Buff数量 [R]
 native UnitCountBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
+	// 单位添加睡眠
 native UnitAddSleep takes unit whichUnit, boolean add returns nothing
+	// 单位可以睡眠
 native UnitCanSleep takes unit whichUnit returns boolean
 // 设置单位睡眠(无论何时)
 native UnitAddSleepPerm takes unit whichUnit, boolean add returns nothing
 // 单位在睡觉
 native UnitCanSleepPerm takes unit whichUnit returns boolean
+	// 单位在睡眠
 native UnitIsSleeping takes unit whichUnit returns boolean
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置生命周期 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
+	//单位忽略报警
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
+		//单位忽略报警开关
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
 // 重设单位技能Cooldown
 native UnitResetCooldown takes unit whichUnit returns nothing
@@ -3521,6 +3576,7 @@ native UnitSetConstructionProgress takes unit whichUnit, integer constructionPer
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
+	// 设置单位小地图图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
 // 伤害区域 [R]
@@ -3544,10 +3600,15 @@ native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whic
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
 // 发布命令(指定单位)(ID)
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
+	// 发布命令(指定坐标)
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
+	// 发布命令(指定点)(ID)
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
+	// 发布命令(指定单位)
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
+	// 发布命令(指定单位)(ID)
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
+	// 发布建造命令(指定坐标) [R]
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 发布建造命令(指定坐标) [R]
 native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
@@ -3581,21 +3642,27 @@ native WaygateGetDestinationX takes unit waygate returns real
 native WaygateGetDestinationY takes unit waygate returns real
 // 设置传送门目的坐标 [R]
 native WaygateSetDestination takes unit waygate, real x, real y returns nothing
+	//传送门激活
 native WaygateActivate takes unit waygate, boolean activate returns nothing
+	//传送门状态
 native WaygateIsActive takes unit waygate returns boolean
 
 // 增加 物品-类型 (到所有商店)
 native AddItemToAllStock takes integer itemId, integer currentStock, integer stockMax returns nothing
+		// 增加 物品-类型 (到商店)
 native AddItemToStock takes unit whichUnit, integer itemId, integer currentStock, integer stockMax returns nothing
 // 增加 单位-类型 (到所有商店)
 native AddUnitToAllStock takes integer unitId, integer currentStock, integer stockMax returns nothing
+	// 增加 单位-类型 (到商店)
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
 
 // 删除 物品-类型 (从所有商店)
 native RemoveItemFromAllStock takes integer itemId returns nothing
+	// 删除 物品-类型 (从商店)
 native RemoveItemFromStock takes unit whichUnit, integer itemId returns nothing
 // 删除 单位-类型 (从所有商店)
 native RemoveUnitFromAllStock takes integer unitId returns nothing
+	// 删除 单位-类型 (从商店)
 native RemoveUnitFromStock takes unit whichUnit, integer unitId returns nothing
 
 // 限制物品的位置 (从所有商店)
@@ -3614,7 +3681,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 //============================================================================
 // Player API
-// Player API
+// 玩家(下标0)
 constant native Player takes integer number returns player
 // 本地玩家 [R]
 constant native GetLocalPlayer takes nothing returns player
@@ -3645,6 +3712,7 @@ constant native GetPlayerRace takes player whichPlayer returns race
 constant native GetPlayerId takes player whichPlayer returns integer
 // 单位数量
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
+	//获取玩家特定单位数
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
 // 获得建筑数量
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
@@ -3655,27 +3723,37 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // 玩家与玩家结盟
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
+	//经验上限 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
+	//经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
+	//玩家障碍恢复时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
+	//玩家遭受残疾伤害
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置生命上限 [R]
+// 设置经验上限 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
 // 设置经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
+	//设置玩家障碍恢复时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
+	//设置玩家残障伤害
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
-
+//允许玩家的科技上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
+	//允许玩家的科技上限
 constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid returns integer
 // 增加科技等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
+	// 设置玩家科技等级
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
+	// 获取玩家科技是否已经研究
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
 // 获取玩家科技数量
 constant native GetPlayerTechCount takes player whichPlayer, integer techid, boolean specificonly returns integer
 
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
+	// 削弱玩家
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
 
 // 允许/禁用 技能 [R]
@@ -3688,7 +3766,7 @@ native RemovePlayer takes player whichPlayer, playergameresult gameResult return
 
 // Used to store hero level data for the scorescreen
 // before units are moved to neutral passive in melee games
-//
+// 缓存玩家数据
 native CachePlayerHeroData takes player whichPlayer returns nothing
 
 //============================================================================
@@ -3697,6 +3775,7 @@ native CachePlayerHeroData takes player whichPlayer returns nothing
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
 // 设置地图迷雾(圆范围) [R]
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
+	// 设置地图迷雾(圆范围) [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
@@ -3711,6 +3790,7 @@ native IsFogEnabled takes nothing returns boolean
 native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 新建可见度修正器(圆范围) [R]
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
+	// 新建可见度修正器(圆范围) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 删除可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
@@ -3776,9 +3856,11 @@ native DoNotSaveReplay takes nothing returns nothing
 // Dialog API
 // 新建对话框 [R]
 native DialogCreate takes nothing returns dialog
-// 删除 [R]
+// 删除对话框 [R]
 native DialogDestroy takes dialog whichDialog returns nothing
+	// 清空对话框
 native DialogClear takes dialog whichDialog returns nothing
+	// 设置对话框信息
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
 // 添加对话框按钮 [R]
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
@@ -3795,6 +3877,7 @@ native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
 native InitGameCache takes string campaignFile returns gamecache
+	// 保存游戏缓存
 native SaveGameCache takes gamecache whichCache returns boolean
 
 // 记录整数
@@ -3803,6 +3886,7 @@ native StoreInteger takes gamecache cache, string missionKey, string key, intege
 native StoreReal takes gamecache cache, string missionKey, string key, real value returns nothing
 // 记录布尔值
 native StoreBoolean takes gamecache cache, string missionKey, string key, boolean value returns nothing
+	// 记录单位
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
 // 记录字符串
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
@@ -3823,10 +3907,15 @@ native HaveStoredString takes gamecache cache, string missionKey, string key ret
 native FlushGameCache takes gamecache cache returns nothing
 // 删除类别
 native FlushStoredMission takes gamecache cache, string missionKey returns nothing
+	// 删除整数
 native FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing
+	// 删除实数
 native FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing
+	// 删除布尔值
 native FlushStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
+	// 删除单位
 native FlushStoredUnit takes gamecache cache, string missionKey, string key returns nothing
+	// 删除字符串
 native FlushStoredString takes gamecache cache, string missionKey, string key returns nothing
 
 // Will return 0 if the specified value's data is not found in the cache
@@ -3838,6 +3927,7 @@ native GetStoredReal takes gamecache cache, string missionKey, string key return
 native GetStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
 // 读取字符串 [C]
 native GetStoredString takes gamecache cache, string missionKey, string key returns string
+// 恢复单位
 native RestoreUnit takes gamecache cache, string missionKey, string key, player forWhichPlayer, real x, real y, real facing returns unit
 
 
