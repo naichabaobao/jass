@@ -8,7 +8,6 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from './keyword';
 import { Types } from './types';
-import {isNewLine} from "../tool"
 // import { commonJFile, commonAiFile, blizzardJFile, dzApiJFile, includeFiles } from "./data";
 import {Program} from "./jass-parse";
 import {

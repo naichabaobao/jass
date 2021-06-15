@@ -4,55 +4,24 @@ import {
 	Rangebel
 } from "../common"
 
+import {Take, Local} from "../jass/ast";
+import * as jass from "../jass/ast";
 
 type ModifierType = "private" | "public" | "default";
 
-class Take implements Rangebel {
-
-	public type: string;
-	public name: string;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
-	}
-
-	public get origin() : string {
-		return `${this.type} ${this.name}`;
-	}
-}
-
-class Global implements Rangebel {
-	public isConstant: boolean = false;
-	public isArray:boolean = false;
+class Global extends jass.Global implements Rangebel {
 	public tag: ModifierType = "default";
-	public type: string;
-	public name: string;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
-	}
 
 	public get origin() : string {
 		return `${this.tag} ${this.type} ${this.name}`;
 	}
 }
 
-class Func implements Rangebel {
+class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "default";
-	public name: string;
-	public readonly takes: Take[];
-	public returns: string | null;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-	public readonly locals: Local[] = [];
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
-		this.name = name;
-		this.takes = takes;
-		this.returns = returns;
+		super(name, takes, returns);
 	}
 
 	public get origin() : string {
@@ -181,23 +150,6 @@ class StructArray extends Struct{
 	public size:number = 0;
 }
 
-class Local implements Rangebel {
-	public type: string;
-	public name: string;
-	public isArray:boolean = false;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
-	}
-
-	
-	public get origin() : string {
-		return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`
-	}
-	
-}
 
 
 
@@ -244,6 +196,5 @@ export {
 	Rangebel,
 	Struct,
 	StructArray,
-	Take,
 	TypePonint
 };

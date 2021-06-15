@@ -60,6 +60,16 @@
           "type": "boolean",
           "default": true,
           "description": "是否支持zinc\n(Whether to support Zinc)"
+        },
+        "jass.only": {
+          "type": "boolean",
+          "default": false,
+          "description": "only jass model"
+        },
+        "jass.diagnostic": {
+          "type": "boolean",
+          "default": false,
+          "description": "jass diagnostic, required in only jass model"
         }
       }
     },

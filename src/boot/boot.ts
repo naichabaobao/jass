@@ -5,6 +5,7 @@ import("./provider/completion-provider");
 import("./provider/hover-provider");
 import("./provider/signature-help-provider");
 import("./provider/definition-provider");
+import("./provider/diagnostic-provider");
 /*
 import {Program} from "./provider/jass-parse";
 

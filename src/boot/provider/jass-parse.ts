@@ -1,9 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { parse, ProgramBlock } from "../jass/parsing";
-import { Options } from "./options";
-
 import {Position, Range, Rangebel} from "../common";
 import { retainVjassBlock } from "../tool";
 
@@ -100,12 +97,6 @@ class Program {
     }
     return path.resolve(key);
   }
-
-  /**
-   * @deprecated 
-   */
-  public readonly programBlocks: ProgramBlock[] = [];
-
 
   /**
    * 保留vjass代码和有用的单行注释
@@ -918,6 +909,7 @@ class Struct implements Desc ,Rangebel{
     }
   }
 }
+
 
 
 export {

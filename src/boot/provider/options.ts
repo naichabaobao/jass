@@ -75,6 +75,17 @@ class Options {
   public static get supportVJass() {
     return this.configuration["support"]["vjass"] as boolean;
   }
+
+  // 纯净jass模式
+  public static get isOnlyJass() {
+    return this.configuration["only"] as boolean;
+  }
+  // jass错误检测
+  public static get isJassDiagnostic() {
+    return this.configuration["diagnostic"] as boolean;
+  }
+
+
   
 }
 

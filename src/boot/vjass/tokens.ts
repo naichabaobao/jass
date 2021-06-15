@@ -55,8 +55,6 @@ class Token {
  */
 function tokens(content: string): Token[] {
 	const tokens: Token[] = [];
-	const bads: Token[] = [];
-
 
 	let lineNumber = 0;
 	let position = 0;

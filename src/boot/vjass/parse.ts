@@ -5,7 +5,6 @@ import {
 	Global,
 	Struct,
 	Member,
-	Take,
 	Interface
 } from "./ast";
 import { Position } from "../common";

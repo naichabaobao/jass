@@ -1,48 +1,9 @@
-import { timeStamp } from "console";
+import {Take} from "../jass/ast";
+import {Rangebel, Range, Position} from "../common";
 
 type ModifierType = "private" | "public";
 
 
-class Position {
-	public line: number;
-	public position: number;
-
-	constructor(line: number, position: number = 0) {
-		this.line = line;
-		this.position = position;
-	}
-
-}
-
-class Range {
-	public start: Position;
-	public end: Position;
-
-	constructor(start: Position, end: Position) {
-		this.start = start;
-		this.end = end;
-	}
-}
-
-interface Rangebel {
-	loc: Range;
-}
-
-class Take implements Rangebel {
-
-	public type: string;
-	public name: string;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
-	}
-
-	public get origin() : string {
-		return `${this.type} ${this.name}`;
-	}
-}
 
 class Global implements Rangebel {
 	public isConstant: boolean = false;
@@ -259,9 +220,7 @@ export {
 	ModifierType,
 	Position,
 	Range,
-	Rangebel,
 	Struct,
 	StructArray,
-	Take,
 	TypePonint
 };

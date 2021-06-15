@@ -14,12 +14,11 @@ import {
 	ModifierType,
 	Position,
 	Range,
-	Rangebel,
 	Struct,
 	StructArray,
-	Take,
 	TypePonint
 } from "./ast";
+import {Take} from "../jass/ast";
 import {tokens, Token} from "./tokens";
 
 import {ZincKeywords} from "../provider/keyword";

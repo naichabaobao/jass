@@ -2,7 +2,7 @@
  * 当前文件为completion-item-provider.ts的从新实现版本，
  * 之所以新建文件而不是在原有的文件修改，为的就是有望移除旧版本实现，从而移除一般部分代码。
  */
-import * as path from "path";
+
 
 import * as vscode from "vscode";
 
@@ -13,9 +13,9 @@ import { types,natives,functions,globals,structs, librarys } from './data';
 // import {commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram, includePrograms} from "./data";
 import { Program } from "./jass-parse";
 import { Options } from "./options";
-import { parse, parseZincBlock } from "../zinc/parse";
-import { Local, Take } from "../vjass/ast";
-import { tokens } from "../vjass/tokens";
+import { parseZincBlock } from "../zinc/parse";
+import { Local } from "../vjass/ast";
+import { Take } from "../jass/ast";
 
 
 
