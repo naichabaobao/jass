@@ -21,6 +21,7 @@ class Options {
     return this.isUsableJFile(this.configuration["dzapi"] as string) ? this.configuration["dzapi"] as string : path.resolve(__dirname, "../../../static/DzAPI.j");
   }
 
+  // 是文件和是否存在
   public static isUsableFile(filePath: string) {
     return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
   }
@@ -33,6 +34,7 @@ class Options {
     return this.isUsableFile(filePath) && this.isAiFile(filePath);
   }
 
+  // 文件后缀是否为.j
   public static isJFile(filePath: string) {
     return path.parse(filePath).ext == ".j";
   }

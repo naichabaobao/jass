@@ -1,4 +1,9 @@
 import { Range, Rangebel } from "../common";
+import { Token } from "./tokens";
+
+interface Desc {
+	text:string;
+}
 
 class Take implements Rangebel {
 
@@ -16,12 +21,13 @@ class Take implements Rangebel {
 	}
 }
 
-class Native implements Rangebel{
+class Native implements Rangebel, Desc{
 	public readonly loc: Range = Range.default();
 
 	public name: string;
 	public readonly takes: Take[];
 	public returns: string | null;
+	public text:string = "";
 
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
@@ -46,27 +52,34 @@ class Func extends Native implements Rangebel{
 
 }
 
-class Global implements Rangebel{
+class Global implements Rangebel,Desc{
 	public readonly loc: Range = Range.default();
 
 	public isConstant: boolean = false;
 	public isArray:boolean = false;
 	public type: string;
 	public name: string;
+	public text:string = "";
 
 	constructor(type: string, name: string) {
 		this.type = type;
 		this.name = name;
 	}
+
+	public get origin() : string {
+		return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`
+	}
 }
 
 
-class Local implements Rangebel {
+class Local implements Rangebel,Desc {
 	public readonly loc: Range = Range.default();
 
 	public type: string;
 	public name: string;
 	public isArray:boolean = false;
+	public text:string = "";
+	public readonly initTokens:Token[] = [];
 
 	constructor(type: string, name: string) {
 		this.type = type;

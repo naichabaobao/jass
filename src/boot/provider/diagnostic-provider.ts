@@ -6,7 +6,10 @@ const diagnosticCollection = vscode.languages.createDiagnosticCollection("jass")
 
 vscode.workspace.onDidSaveTextDocument((document) => {
 	if (Options.isOnlyJass && Options.isJassDiagnostic) {
-		const program = parse(document.getText());
+		const program = parse(document.getText(), {
+			needParseLocal: true,
+			needParseInitExpr: true
+		});
 		diagnosticCollection.clear();
 		const diagnostics = program.errors.map(err => {
 			const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);

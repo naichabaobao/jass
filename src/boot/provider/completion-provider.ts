@@ -8,7 +8,7 @@ import * as vscode from "vscode";
 
 import { Types } from "./types";
 import {getTypeDesc} from "./type-desc";
-import { AllKeywords } from "./keyword";
+import { AllKeywords, Keywords } from "./keyword";
 import { types,natives,functions,globals,structs, librarys } from './data';
 // import {commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram, includePrograms} from "./data";
 import { Program } from "./jass-parse";
@@ -16,6 +16,7 @@ import { Options } from "./options";
 import { parseZincBlock } from "../zinc/parse";
 import { Local } from "../vjass/ast";
 import { Take } from "../jass/ast";
+import { parse } from "../jass/parse";
 
 
 
@@ -29,7 +30,7 @@ Types.forEach(type => {
 });
 
 const keywordItems: vscode.CompletionItem[] = [];
-AllKeywords.forEach(keyword => {
+(Options.isOnlyJass ? Keywords : AllKeywords).forEach(keyword => {
   const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
   keywordItems.push(item);
 });
@@ -256,70 +257,105 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const items = new Array<vscode.CompletionItem>();
     items.push(...typeItems);
     items.push(...keywordItems);
-    items.push(...arrayTypeItems);
     items.push(...nativeItems);
     items.push(...functionItems);
     items.push(...globalItems);
-    items.push(...structItems);
-    items.push(...structMethodItems);
-    items.push(...libraryItems);
+    if (Options.isOnlyJass) {
+      const currentProgram = parse(document.getText(), {
+        needParseLocal: true
+      });
 
-    const currentProgram = new Program(document.uri.fsPath, document.getText());
-    // const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs];
-    const currentArrayTypeItems = currentProgram.types.map(type => {
-      const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
-      item.detail = type.name;
-      item.documentation = new vscode.MarkdownString().appendText(type.text).appendCodeblock(type.origin);
-      return item;
-    });
-    const currentGlobalItems = currentProgram.allGlobals.map(global => {
-      const item = new vscode.CompletionItem(global.name, global.constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-      item.detail = global.name;
-      item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
-      return item;
-    });
-    const currentFunctionItems = currentProgram.allFunctions.map(func => {
-      const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-      item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
-      return item;
-    });
-    const currentStructItems = currentProgram.allStructs.map(struct => {
-      const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
-      item.detail = struct.name;
-      item.documentation = new vscode.MarkdownString().appendText(struct.text).appendCodeblock(struct.origin);
-      return item;
-    });
-    const currentStructMethodItems = currentProgram.allStructs.map(struct => {
-      return struct.methods.map(method => {
-        const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-        item.detail = `${struct.name}.${method.name}`;
-        item.documentation = new vscode.MarkdownString().appendText(method.text).appendCodeblock(method.origin);
+      const currentFunctionItems = currentProgram.functions.map(func => {
+        const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+        item.detail = func.name;
+        item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
+        if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
+          func.locals.forEach(local => {
+            const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
+            item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
+            item.sortText = "_";
+            items.push(item);
+          });
+          func.takes.forEach(take => {
+            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
+            item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
+            item.sortText = "_";
+            items.push(item);
+          });
+        }
         return item;
       });
-    }).flat();
-    const currentLibraryItems = currentProgram.librarys.map(library => {
-      const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Module);
-      item.detail = library.name;
-      item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
-      return item;
-    });
-    const currentZincFunctionItems = this.zincItems(document, position);
-
-    
-    items.push(...currentArrayTypeItems);
-    items.push(...currentGlobalItems);
-    items.push(...currentFunctionItems);
-    items.push(...currentStructItems);
-    items.push(...currentStructMethodItems);
-    items.push(...currentLibraryItems);
-    
-    // 就算关闭了还是解析，只是不提示而已，懒
-    if (Options.supportZinc) {
-      items.push(...currentZincFunctionItems);
+      const currentGlobalItems = currentProgram.globals.map(global => {
+        const item = new vscode.CompletionItem(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+        item.detail = global.name;
+        item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
+        return item;
+      });
+      items.push(...currentGlobalItems);
+      items.push(...currentFunctionItems);
+    } else {
+      items.push(...arrayTypeItems);
+      items.push(...structItems);
+      items.push(...structMethodItems);
+      items.push(...libraryItems);
+      const currentProgram = new Program(document.uri.fsPath, document.getText());
+      // const exprs = [...currentProgram.types, ...currentProgram.allFunctions, ...currentProgram.allGlobals, ...currentProgram.allStructs];
+      const currentArrayTypeItems = currentProgram.types.map(type => {
+        const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
+        item.detail = type.name;
+        item.documentation = new vscode.MarkdownString().appendText(type.text).appendCodeblock(type.origin);
+        return item;
+      });
+      const currentGlobalItems = currentProgram.allGlobals.map(global => {
+        const item = new vscode.CompletionItem(global.name, global.constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
+        item.detail = global.name;
+        item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
+        return item;
+      });
+      const currentFunctionItems = currentProgram.allFunctions.map(func => {
+        const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
+        item.detail = func.name;
+        item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
+        return item;
+      });
+      const currentStructItems = currentProgram.allStructs.map(struct => {
+        const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
+        item.detail = struct.name;
+        item.documentation = new vscode.MarkdownString().appendText(struct.text).appendCodeblock(struct.origin);
+        return item;
+      });
+      const currentStructMethodItems = currentProgram.allStructs.map(struct => {
+        return struct.methods.map(method => {
+          const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
+          item.detail = `${struct.name}.${method.name}`;
+          item.documentation = new vscode.MarkdownString().appendText(method.text).appendCodeblock(method.origin);
+          return item;
+        });
+      }).flat();
+      const currentLibraryItems = currentProgram.librarys.map(library => {
+        const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Module);
+        item.detail = library.name;
+        item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
+        return item;
+      });
+      const currentZincFunctionItems = this.zincItems(document, position);
+  
+      
+      items.push(...currentArrayTypeItems);
+      items.push(...currentGlobalItems);
+      items.push(...currentFunctionItems);
+      items.push(...currentStructItems);
+      items.push(...currentStructMethodItems);
+      items.push(...currentLibraryItems);
+      
+      // 就算关闭了还是解析，只是不提示而已，懒
+      if (Options.supportZinc) {
+        items.push(...currentZincFunctionItems);
+      }
+  
+      items.push(...this.localItems(document, position));
     }
 
-    items.push(...this.localItems(document, position));
 
     return items;
   }

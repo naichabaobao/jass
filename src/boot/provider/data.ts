@@ -4,7 +4,7 @@ import * as fs from "fs";
 import {Program} from "./jass-parse";
 
 const commonJProgram = new Program(Options.commonJPath, fs.readFileSync(Options.commonJPath).toString());
-
+console.log(Options.commonJPath)
 const commonAiProgram = new Program(Options.commonAiPath, fs.readFileSync(Options.commonAiPath).toString());
 
 const blizzardJProgram = new Program(Options.blizzardJPath, fs.readFileSync(Options.blizzardJPath).toString());

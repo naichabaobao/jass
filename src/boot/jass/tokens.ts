@@ -894,7 +894,7 @@ function tokens (content: string) {
 			position++;
 		}
 	}
-  console.log(tokens);
+  // console.log(tokens);
 	return tokens;
 }
 

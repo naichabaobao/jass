@@ -10,6 +10,7 @@ const ZincKeywords = unique([...Keywords, "for", "while", "library", "interface"
 const AllKeywords = unique([...Keywords, ...VjassKeywords, ...ZincKeywords]);
 
 export{
+  Keywords,
   AllKeywords,
   ZincKeywords
 }

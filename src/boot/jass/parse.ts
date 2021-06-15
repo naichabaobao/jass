@@ -1,6 +1,47 @@
 import { Position } from "../common";
-import {Func, Global, JassError, Program, Native, Take} from "./ast";
-import {Token, tokens} from "./tokens";
+import { Func, Global, JassError, Program, Native, Take, Local } from "./ast";
+import { Token, tokens } from "./tokens";
+
+interface JassOptionInterface {
+	/**
+	 * 是否解析初始表达式
+	 * 解析local或global时,解析到=号时,如果为true则解析后面token,否则等待换行符
+	 */
+	needParseInitExpr?: boolean;
+	/**
+	 * 是否解析local
+	 */
+	needParseLocal?: boolean;
+	/**
+	 * 严格模式
+	 * 正常情况只检测function和globals内部是否错误
+	 * 如果在严格模式下,会对全文所有非jass合法的语法都报错
+	 */
+	strict?: boolean;
+}
+
+class JassOption implements JassOptionInterface {
+	/**
+	 * 是否解析初始表达式
+	 * 解析local或global时,解析到=号时,如果为true则解析后面token,否则等待换行符
+	 */
+	public needParseInitExpr?: boolean = false;
+	/**
+	 * 是否解析local
+	 */
+	public needParseLocal?: boolean = false;
+	/**
+	 * 严格模式
+	 * 正常情况只检测function和globals内部是否错误
+	 * 如果在严格模式下,会对全文所有非jass合法的语法都报错
+	 */
+	public strict?: boolean = false;
+
+	public static default() {
+		const option = new JassOption();
+		return option;
+	}
+}
 
 
 
@@ -8,142 +49,343 @@ import {Token, tokens} from "./tokens";
  * 仅解析jass原生语法
  * @param content 
  */
-function parse(content: string): Program {
+function parse(content: string, options: JassOption = JassOption.default()): Program {
 	const program = new Program();
 
-	const ts = tokens(content).filter(token => !token.isBlockComment()); // 去除所有块级注释
+	const comments:Token[] = [];
+	const matchText = (line:number) => {
+		return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
+	};
+	const ts = tokens(content).filter(token => {
+		if (token.isBlockComment()) {
+			return false;
+		} else if (token.isComment()) {
+			comments.push(token);
+			return false;
+		} else {
+			return true;
+		}
+	}); // 去除所有块级注释
 
-	program.errors.push(...ts.filter(token => token.isError()).map((token) => {
-		const err = new JassError(`Unexpected token '${token.value}'`);
-		err.loc.start = new Position(token.line, token.position);
-		err.loc.end = new Position(token.line, token.end);
-		return err;
-	}));
+	if (options.strict) {
+		program.errors.push(...ts.filter(token => token.isError()).map((token) => {
+			const err = new JassError(`Unexpected token '${token.value}'`);
+			err.loc.start = new Position(token.line, token.position);
+			err.loc.end = new Position(token.line, token.end);
+			return err;
+		}));
+	}
 
 
-	let state = 0;
-	let expr:Func|Global|Native|null = null;
+	let expr: Func | Global | Native | null = null;
 
 	let inFunc = false;
 	let inFuncStart = false;
 	let funcState = 0;
 
-	let takeState = 0;
-	let take:Take|null = null;
+	let inGlobals = false;
 
+	let global: Global | null = null;
+	let globalState = 0;
+	let isConstant = false;
+
+	let take: Take | null = null;
+	let isSingleTake = false;
+
+	// 刚进入方法时为true,当遇到非local表达式为false
+	let localBreak = false;
+
+	let local: Local | null = null;
+	let inLocal = false;
+	let localState = 0;
+	// let isArray = false;
+
+	const resetTakes = () => {
+		take = null;
+		isSingleTake = false;
+	};
+	const resetFunc = () => {
+		resetTakes();
+		funcState = 0;
+		inFunc = false;
+		inFuncStart = false;
+	};
+	const resetLocal = () => {
+		inLocal = false;
+		localState = 0;
+		local = null;
+	};
+	const resetGlobal = () => {
+		// inGlobal = false;
+		globalState = 0;
+		isConstant = false;
+		global = null;
+	}
+	const resetLocalBreak = () => {
+		localBreak = false;
+	};
 	for (let index = 0; index < ts.length; index++) {
 		const token = ts[index];
+		const nextToken = ts[index + 1];
 
-		const pushError = (message:string) => {
+		const pushError = (message: string) => {
 			const err = new JassError(message);
 			err.loc.start = new Position(token.line, token.position);
 			err.loc.end = new Position(token.line, token.end);
 			program.errors.push(err);
 		};
-		const parseTakes = () => {
-			if (takeState == 0) {
-				if (token.isId()) {
-					take = new Take(token.value, "");
-					(<Func|Native>expr).takes.push(take);
-					takeState = 1;
-				} else {
-					pushError("Parameter type error");
-				}
-			} else if (takeState == 1) {
-				if (token.isId()) {
-					(<Take>take).name = token.value;
-					takeState = 2;
-				} else {
-					pushError("Identifier error");
-				}
-			} else if (takeState == 2) {
-				if (token.isOp() && token.value == ",") {
-					takeState = 0;
-				} else {
-					pushError("The takes divider is ','");
-				}
-			}
-		}
 
 		if (token.isId() && token.value == "function") {
+			resetFunc();
 			inFunc = true;
 			expr = new Func("");
+			expr.text = matchText(token.line);
+			(<Func>expr).loc.start = new Position(token.line, token.position);
 			program.functions.push((<Func>expr));
 			funcState = 1;
+		} else if (token.isId() && token.value == "endfunction") {
+			if (inFunc) {
+				(<Func>expr).loc.end = new Position(token.line, token.end);
+				resetFunc();
+			} else {
+				pushError("Redundant endfunction");
+			}
 		} else if (inFunc) {
 			if (inFuncStart == false && token.isNewLine()) {
+				if (funcState != 8) {
+					pushError("Incomplete function error");
+				}
 				inFuncStart = true;
+				(<Func>expr).loc.end = new Position(token.line, token.end);
 			} else if (inFuncStart) {
+				if (token.isNewLine()) {
+					resetLocal();
+				} else if (options.needParseLocal && token.isId() && token.value == "local") {
+					resetLocal();
+					inLocal = true;
+					localState = 1;
+					local = new Local("", "");
+					local.text = matchText(token.line);
+					if (!nextToken || nextToken.isNewLine()) {
+						pushError("Incomplete local error");
+					}
+				} else if (inLocal) {
+					if (localState == 1) {
+						if (token.isId()) {
+							(<Local>local).type = token.value;
+							(<Local>local).loc.start = new Position(token.line, token.position);
+							localState = 2;
+						} else {
+							pushError("Incorrect local type");
+						}
+						if (!nextToken || nextToken.isNewLine()) {
+							pushError("Incomplete local error");
+						}
+					} else if (localState == 2) {
+						if (token.isId() && token.value == "array") {
+							if ((<Local>local).isArray) {
+								pushError("Repetitively declared array");
+							} else {
+								(<Local>local).isArray = true;
+							}
+						} else if (token.isId()) {
+							(<Local>local).name = token.value;
+							(<Func>expr).locals.push(<Local>local);
+							(<Local>local).loc.end = new Position(token.line, token.end);
+							if ((<Local>local).isArray) {
+								localState = 6;
+							} else {
+								if (options.needParseInitExpr) {
+									localState = 3;
+								} else {
+									localState = 5
+								}
+							}
+						} else {
+							if ((<Local>local).isArray) {
+								pushError("Incorrect local name");
+							} else {
+								pushError("Incorrect local name or Incorrect declared array");
+							}
+						}
+						if (!nextToken || nextToken.isNewLine()) {
+							pushError("Incomplete local error");
+						}
+					} else if (localState == 3) {
+						if (token.isOp() && token.value == "=") {
+							localState = 4;
 
-			} else if (token.isId() &&  token.value == "returns") {
-
-			} else if (token.isId() &&  token.value == "takes") {
+							if (!nextToken || nextToken.isNewLine()) {
+								pushError("You need at least one value");
+							}
+						} else {
+							pushError("Incorrect initialization symbol");
+						}
+					} else if (localState == 4) {
+						// local init
+						(<Local>local).initTokens.push(token);
+					} else if (localState == 5) {
+						// 停止解析,等待换行符
+					} else if (localState == 6) {
+						// 数组local定义结束
+						if (token.isOp() && token.value == "=") {
+							pushError("The Jass language does not support array initialization");
+						} else {
+							pushError("Error token, if you want to initialize an array I think you should give it up");
+						}
+					}
+				}
+			} else if (token.isId() && token.value == "returns") {
+				funcState = 7;
+			} else if (token.isId() && token.value == "takes") {
+				resetTakes();
 				funcState = 3;
 			} else if (funcState == 1) {
-				if (token.isId()) {
+				if (token.isId() && (<Func>expr).name == "") {
 					(<Func>expr).name = token.value;
 					funcState = 2;
 				} else {
-					pushError("Function unnamed");
+					pushError("Function name error");
 				}
 			} else if (funcState == 2) {
-				if (token.isId() && token.value == "takes") {
-					funcState = 3;
-				} else {
-					pushError("The expected value is takes");
-					funcState = 6;
-				}
+				// 已命名
+				pushError("The expected token is takes");
 			} else if (funcState == 3) {
 				if (token.isId() && token.value == "nothing") {
-					funcState = 6;
-				} else if (token.isId() && token.value == "returns") {
-					pushError("Incomplete takes");
+					if (isSingleTake) {
+						pushError("Nothing is not a type that should be used in the argument declaration");
+						funcState = 5;
+					} else {
+						funcState = 6;
+					}
 				} else if (token.isId()) {
 					take = new Take(token.value, "");
-					(<Func>expr).takes.push(take);
 					funcState = 4;
+				} else if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
+					pushError("Nonholonomic parameter");
+				} else {
+					pushError("Incorrect parameter type");
 				}
 			} else if (funcState == 4) {
-				if (token.isId() && token.value == "returns") {
-					pushError("Missing parameter naming");
-				} else if (token.isId()) {
+				if (token.isId()) {
 					(<Take>take).name = token.value;
-					funcState = 5;
-				} else {
-					pushError("lost");
-					funcState = 8;
-				}
-			} else if (funcState == 5) {
-				if (token.isId() && token.value == "returns") {
-					funcState = 7;
+					(<Func>expr).takes.push(<Take>take);
 				} else if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
+					funcState = 3;
+					pushError("Nonholonomic parameter");
+				} else {
+					pushError("Incorrect parameter name");
+				}
+				funcState = 5;
+			} else if (funcState == 5) {
+				if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
 					funcState = 3;
 				} else {
-					pushError("lost");
-					funcState = 8;
+					pushError("The expected token is returns");
 				}
 			} else if (funcState == 6) {
-				if (token.isId() && token.value == "returns") {
-					funcState = 7;
-				} else {
-					pushError("lost");
-					funcState = 8;
-				}
+				pushError("The current function has no arguments");
 			} else if (funcState == 7) {
-				if (token.isId() && token.value == "nothing") {
-				} else if (token.isId()) {
+				if (token.isId()) {
 					(<Func>expr).returns = token.value;
+					funcState = 8;
 				} else {
 					pushError("Return type error");
 				}
-				funcState = 8;
 			} else if (funcState == 8) {
 				// 结束,等待换行符
 				pushError("unnecessary");
 			}
+			if (token.isError()) {
+				pushError(`Unexpected token '${token.value}'`);
+			}
+		} else if (token.isId() && token.value == "globals") {
+			if (inGlobals) {
+				pushError("The endglobals token is missing");
+			} else {
+				inGlobals = true;
+			}
+			resetGlobal();
+		} else if (token.isId() && token.value == "endglobals") {
+			if (inGlobals) {
+				inGlobals = false;
+				resetGlobal();
+			} else {
+				pushError("Redundant endglobals");
+			}
+		} else if (inGlobals) {
+			if (token.isId() && token.value == "endglobals") {
+				inGlobals = false;
+			} else if (token.isNewLine()) {
+				resetGlobal();
+			}  else if (globalState == 0) {
+				if (token.isId() && token.value == "constant") {
+					if (isConstant) {
+						pushError("Repetitively declared constant");
+					}
+					isConstant = true;
+					if (!nextToken || nextToken.isNewLine()) {
+						pushError("Incomplete globals constant error");
+					}
+				} else if (token.isId()) {
+					global = new Global(token.value, "");
+					global.text = matchText(token.line);
+					(<Global>global).loc.start = new Position(token.line, token.position);
+					global.isConstant = isConstant;
+					globalState = 1;
+					if (!nextToken || nextToken.isNewLine()) {
+						if (isConstant) {
+							pushError("Incomplete globals constant error");
+						} else {
+							pushError("Incomplete globals variable error");
+						}
+					}
+				} else {
+					pushError("Error global member token");
+				}
+			} else if (globalState == 1) {
+				if (token.isId() && token.value == "array") {
+					if ((<Global>global).isConstant) {
+						pushError("Constant arrays are not supported");
+					}
+					if ((<Global>global).isArray) {
+						pushError("Repetitively declared array");
+					}
+					(<Global>global).isArray = true;
+				} else if (token.isId()) {
+					(<Global>global).name = token.value;
+					program.globals.push((<Global>global));
+					(<Global>global).loc.end = new Position(token.line, token.end);
+					globalState = 2;
+				} else {
+					pushError("Incorrect global member name");
+				}
+			} else if (globalState == 2) {
+				if (token.isOp() && token.value == "=") {
+					if ((<Global>global).isArray) {
+						pushError("The Jass language does not support array initialization");
+					}
+				} else {
+					if ((<Global>global).isConstant) {
+						pushError("Constants must be initialized");
+					}
+				}
+				globalState = 3;
+			} else if (globalState == 3) {
+
+			}
+			if (token.isError()) {
+				pushError(`Unexpected token '${token.value}'`);
+			}
+			if (isConstant && token.isId() && token.value == "constant") {
+				isConstant = false;
+			}
 		}
 	}
-
+	// console.log(program)
 	return program;
 }
 
