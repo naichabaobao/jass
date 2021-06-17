@@ -42,8 +42,4 @@ endlibrary
 --------------------------------------------------------
 
 
-给我start一下吧！
-
-赞助码,好饿啊，赞助一下吧！
-
-![zanzhu](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/qqshoukuan.jpg)
+start一下吧！

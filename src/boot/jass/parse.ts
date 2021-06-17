@@ -85,9 +85,6 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 	let take: Take | null = null;
 	let isSingleTake = false;
 
-	// 刚进入方法时为true,当遇到非local表达式为false
-	let localBreak = false;
-
 	let local: Local | null = null;
 	let inLocal = false;
 	let localState = 0;
@@ -121,9 +118,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 		isConstant = false;
 		global = null;
 	}
-	const resetLocalBreak = () => {
-		localBreak = false;
-	};
+
 	for (let index = 0; index < ts.length; index++) {
 		const token = ts[index];
 		const nextToken = ts[index + 1];
@@ -315,6 +310,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 						}
 					}
 				}
+				(<Func>expr).tokens.push(token);
 			} else if (token.isId() && token.value == "returns") {
 				funcState = 7;
 			} else if (token.isId() && token.value == "takes") {
@@ -468,6 +464,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			}
 		}
 	}
+
 	// console.log(program)
 	return program;
 }

@@ -45,6 +45,7 @@ class Func extends Native implements Rangebel{
 	public readonly loc: Range = Range.default();
 
 	public readonly locals: Local[] = [];
+	public readonly tokens:Token[] = [];
 
 	public get origin() : string {
 		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"} {}`;
