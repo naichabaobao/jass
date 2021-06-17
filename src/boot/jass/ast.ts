@@ -8,6 +8,7 @@ interface Desc {
 class Take implements Rangebel {
 
 	public type: string;
+	public nameToken:Token|null = null;
 	public name: string;
 	public loc: Range = Range.default();
 
@@ -23,7 +24,7 @@ class Take implements Rangebel {
 
 class Native implements Rangebel, Desc{
 	public readonly loc: Range = Range.default();
-
+	public nameToken:Token|null = null;
 	public name: string;
 	public readonly takes: Take[];
 	public returns: string | null;
@@ -59,6 +60,7 @@ class Global implements Rangebel,Desc{
 	public isConstant: boolean = false;
 	public isArray:boolean = false;
 	public type: string;
+	public nameToken:Token|null = null;
 	public name: string;
 	public text:string = "";
 

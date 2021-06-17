@@ -42,4 +42,8 @@ endlibrary
 --------------------------------------------------------
 
 
+#测试
+![测试](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/test.jpg)
+
+
 start一下吧！

@@ -8,6 +8,7 @@ class JassOption {
 	/**
 	 * 是否解析初始表达式
 	 * 解析local或global时,解析到=号时,如果为true则解析后面token,否则等待换行符
+	 * @deprecated 后面可能需要用到时才解析
 	 */
 	public needParseInitExpr?: boolean = false;
 	/**
@@ -319,6 +320,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			} else if (funcState == 1) {
 				if (token.isId() && (<Func>expr).name == "") {
 					(<Func>expr).name = token.value;
+					(<Func>expr).nameToken = token;
 					funcState = 2;
 				} else {
 					pushError("Function name error");
@@ -346,6 +348,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			} else if (funcState == 4) {
 				if (token.isId()) {
 					(<Take>take).name = token.value;
+					(<Take>take).nameToken = token;
 					(<Func>expr).takes.push(<Take>take);
 				} else if (token.isOp() && token.value == ",") {
 					isSingleTake = true;
@@ -436,6 +439,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 					(<Global>global).isArray = true;
 				} else if (token.isId()) {
 					(<Global>global).name = token.value;
+					(<Global>global).nameToken = token;
 					program.globals.push((<Global>global));
 					(<Global>global).loc.end = new Position(token.line, token.end);
 					globalState = 2;

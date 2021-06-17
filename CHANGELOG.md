@@ -65,3 +65,5 @@
 1.3.4 初步纯jass模式（目前仅对当前文档有效）
 
 1.3.5 添加测试的rename，仅适用于function中local和takes
+
+1.3.6 对rename功能增强,可以对当前文档globals和function名称修改。
