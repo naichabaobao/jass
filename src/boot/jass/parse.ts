@@ -2,25 +2,9 @@ import { Position } from "../common";
 import { Func, Global, JassError, Program, Native, Take, Local } from "./ast";
 import { Token, tokens } from "./tokens";
 
-interface JassOptionInterface {
-	/**
-	 * 是否解析初始表达式
-	 * 解析local或global时,解析到=号时,如果为true则解析后面token,否则等待换行符
-	 */
-	needParseInitExpr?: boolean;
-	/**
-	 * 是否解析local
-	 */
-	needParseLocal?: boolean;
-	/**
-	 * 严格模式
-	 * 正常情况只检测function和globals内部是否错误
-	 * 如果在严格模式下,会对全文所有非jass合法的语法都报错
-	 */
-	strict?: boolean;
-}
 
-class JassOption implements JassOptionInterface {
+
+class JassOption {
 	/**
 	 * 是否解析初始表达式
 	 * 解析local或global时,解析到=号时,如果为true则解析后面token,否则等待换行符
@@ -33,9 +17,15 @@ class JassOption implements JassOptionInterface {
 	/**
 	 * 严格模式
 	 * 正常情况只检测function和globals内部是否错误
+	 * needParseNative为true时,也会检查native
 	 * 如果在严格模式下,会对全文所有非jass合法的语法都报错
 	 */
 	public strict?: boolean = false;
+
+	/**
+	 * 是否解析native
+	 */
+	public needParseNative?: boolean = false;
 
 	public static default() {
 		const option = new JassOption();
@@ -77,11 +67,14 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 	}
 
 
-	let expr: Func | Global | Native | null = null;
+	let expr: Func | Native | null = null;
 
 	let inFunc = false;
 	let inFuncStart = false;
 	let funcState = 0;
+
+	let inNative = false;
+	let nativeState = 0;
 
 	let inGlobals = false;
 
@@ -104,8 +97,15 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 		take = null;
 		isSingleTake = false;
 	};
+	const resetNative = () => {
+		resetTakes();
+		expr = null;
+		nativeState = 0;
+		inNative = false;
+	};
 	const resetFunc = () => {
 		resetTakes();
+		expr = null;
 		funcState = 0;
 		inFunc = false;
 		inFuncStart = false;
@@ -134,9 +134,18 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			err.loc.end = new Position(token.line, token.end);
 			program.errors.push(err);
 		};
-
-		if (token.isId() && token.value == "function") {
+		if (options.needParseNative && token.isId() && token.value == "native") {
+			resetNative();
+			resetGlobal();
+			inNative = true;
+			expr = new Native("");
+			expr.text = matchText(token.line);
+			(<Native>expr).loc.start = new Position(token.line, token.position);
+			program.natives.push((<Native>expr));
+			nativeState = 1;
+		} else if (token.isId() && token.value == "function") {
 			resetFunc();
+			resetGlobal();
 			inFunc = true;
 			expr = new Func("");
 			expr.text = matchText(token.line);
@@ -149,6 +158,77 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 				resetFunc();
 			} else {
 				pushError("Redundant endfunction");
+			}
+		
+		} else if (inNative) {
+			if (token.isNewLine()) {
+				(<Native>expr).loc.end = new Position(token.line, token.end);
+				resetNative();
+			} else if (token.isId() && token.value == "returns") {
+				nativeState = 7;
+			} else if (token.isId() && token.value == "takes") {
+				resetTakes();
+				nativeState = 3;
+			} else if (nativeState == 1) {
+				if (token.isId() && (<Native>expr).name == "") {
+					(<Native>expr).name = token.value;
+					nativeState = 2;
+				} else {
+					pushError("Function name error");
+				}
+			} else if (nativeState == 2) {
+				// 已命名
+				pushError("The expected token is takes");
+			} else if (nativeState == 3) {
+				if (token.isId() && token.value == "nothing") {
+					if (isSingleTake) {
+						pushError("Nothing is not a type that should be used in the argument declaration");
+						nativeState = 5;
+					} else {
+						nativeState = 6;
+					}
+				} else if (token.isId()) {
+					take = new Take(token.value, "");
+					nativeState = 4;
+				} else if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
+					pushError("Nonholonomic parameter");
+				} else {
+					pushError("Incorrect parameter type");
+				}
+			} else if (nativeState == 4) {
+				if (token.isId()) {
+					(<Take>take).name = token.value;
+					(<Func>expr).takes.push(<Take>take);
+				} else if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
+					nativeState = 3;
+					pushError("Nonholonomic parameter");
+				} else {
+					pushError("Incorrect parameter name");
+				}
+				nativeState = 5;
+			} else if (nativeState == 5) {
+				if (token.isOp() && token.value == ",") {
+					isSingleTake = true;
+					nativeState = 3;
+				} else {
+					pushError("The expected token is returns");
+				}
+			} else if (nativeState == 6) {
+				pushError("The current function has no arguments");
+			} else if (nativeState == 7) {
+				if (token.isId()) {
+					if (token.value != "nothing") {
+						(<Native>expr).returns = token.value;
+					}
+					nativeState = 8;
+				} else {
+					pushError("Return type error");
+				}
+			} else if (nativeState == 8) {
+				// 结束,等待换行符
+				pushError("unnecessary");
 			}
 		} else if (inFunc) {
 			if (inFuncStart == false && token.isNewLine()) {
@@ -290,7 +370,9 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 				pushError("The current function has no arguments");
 			} else if (funcState == 7) {
 				if (token.isId()) {
-					(<Func>expr).returns = token.value;
+					if (token.value != "nothing") {
+						(<Func>expr).returns = token.value;
+					}
 					funcState = 8;
 				} else {
 					pushError("Return type error");
@@ -302,6 +384,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			if (token.isError()) {
 				pushError(`Unexpected token '${token.value}'`);
 			}
+
 		} else if (token.isId() && token.value == "globals") {
 			if (inGlobals) {
 				pushError("The endglobals token is missing");

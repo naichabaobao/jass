@@ -8,8 +8,10 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 	if (Options.isOnlyJass && Options.isJassDiagnostic) {
 		const program = parse(document.getText(), {
 			needParseLocal: true,
-			needParseInitExpr: true
+			needParseInitExpr: true,
+			needParseNative: true
 		});
+		console.log(program)
 		diagnosticCollection.clear();
 		const diagnostics = program.errors.map(err => {
 			const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
