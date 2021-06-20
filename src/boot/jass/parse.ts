@@ -47,16 +47,26 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 	const matchText = (line:number) => {
 		return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
 	};
+	let inZinc = false;
 	const ts = tokens(content).filter(token => {
 		if (token.isBlockComment()) {
+			return false;
+		} else if (token.isComment() && /\/\/![ \t]+zinc\b/.test(token.value)) {
+			inZinc = true;
+			return false;
+		} else if (token.isComment() && /\/\/![ \t]+endzinc\b/.test(token.value)) {
+			inZinc = false;
 			return false;
 		} else if (token.isComment()) {
 			comments.push(token);
 			return false;
 		} else {
-			return true;
+			return !inZinc;
 		}
-	}); // 去除所有块级注释
+	});
+
+		
+
 
 	if (options.strict) {
 		program.errors.push(...ts.filter(token => token.isError()).map((token) => {

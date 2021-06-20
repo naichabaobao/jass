@@ -35,7 +35,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), "".padStart(indent, indentChar)));
         }
-      } else if (/^\s*(else|elseif|exitwhen)\b/.test(text)) {
+      } else if (/^\s*(else|elseif)\b/.test(text)) {
         if (indent > 0) {
           if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent - 1 == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));

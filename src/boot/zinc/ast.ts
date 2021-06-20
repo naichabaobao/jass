@@ -1,5 +1,7 @@
-import {Take} from "../jass/ast";
-import {Rangebel, Range, Position} from "../common";
+import {JassError, Take} from "../jass/ast";
+import * as jass from "../jass/ast";
+import {Rangebel, Range, Position, Desc} from "../common";
+import { Token } from "../jass/tokens";
 
 type ModifierType = "private" | "public";
 
@@ -32,18 +34,11 @@ class Global implements Rangebel {
 	}
 }
 
-class Func implements Rangebel {
+class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "public";
-	public name: string;
-	public readonly takes: Take[];
-	public returns: string | null;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-	public readonly locals: Local[] = [];
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
-		this.name = name;
-		this.takes = takes;
-		this.returns = returns;
+		super(name, takes, returns);
 	}
 
 	public get origin() : string {
@@ -113,15 +108,20 @@ class DynamicArray {
 class Method extends Func implements Rangebel {
 	public tag: ModifierType = "private";
 	public isStatic: boolean = false;
+	/**
+	 * 为true时,符号使用name
+	 */
+	public isOperator: boolean = false;
+	public readonly locals:Local[] = [];
 
 	public get origin() : string {
-		return `${this.tag}${this.isStatic ? " static" : ""} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+		return `${this.tag}${this.isStatic ? " static" : ""} method ${this.isOperator ? "operator " : ""}${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 	}
 
 }
 
 
-class Member implements Rangebel {
+class Member implements Rangebel, Desc {
 	public isConstant: boolean = false;
 	public tag: ModifierType = "private";
 	public isStatic: boolean = false;
@@ -130,24 +130,27 @@ class Member implements Rangebel {
 	public size:number = 0;
 	public type: string;
 	public name: string;
+	public nameToken:Token|null = null;
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
+	public text: string = "";
 	constructor(type: string, name: string) {
 		this.type = type;
 		this.name = name;
 	}
+	
 
 	public get origin() : string {
 		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
 	}
 }
 
-class Interface implements Rangebel {
+class Interface implements Rangebel,Desc {
 	public tag:ModifierType = "public";
 	public name: string;
 	public members:Member[] = [];
 	public methods: Method[] = [];
 	public operators: Method[] = [];
+	public text:string = "";
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 
 	constructor(name: string) {
@@ -175,14 +178,14 @@ class StructArray extends Struct{
 	public size:number = 0;
 }
 
-class Local implements Rangebel {
-	public type: string;
-	public name: string;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
+class Local extends jass.Local {
 
 	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
+		super(type, name);
+	}
+
+	public get origin() : string {
+		return `${this.type} ${this.name}${this.isArray ? "[]" : ""};`
 	}
 }
 
@@ -205,6 +208,18 @@ class Library implements Rangebel {
 	}
 }
 
+class ZincError extends JassError {
+
+	constructor(message:string) {
+		super(message);
+	}
+}
+
+class Program {
+	public librarys: Library[] = [];
+	public zincErrors:ZincError[] = [];
+}
+
 export {
 	ArrayType,
 	DynamicArray,
@@ -222,5 +237,7 @@ export {
 	Range,
 	Struct,
 	StructArray,
-	TypePonint
+	TypePonint,
+	ZincError,
+	Program
 };

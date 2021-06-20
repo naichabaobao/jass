@@ -1,9 +1,7 @@
-import { Range, Rangebel } from "../common";
+import { Range, Rangebel, Desc } from "../common";
 import { Token } from "./tokens";
 
-interface Desc {
-	text:string;
-}
+
 
 class Take implements Rangebel {
 
@@ -38,7 +36,7 @@ class Native implements Rangebel, Desc{
 	}
 
 	public get origin() : string {
-		return `native ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"} {}`;
+		return `native ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 	}
 }
 
@@ -49,7 +47,7 @@ class Func extends Native implements Rangebel{
 	public readonly tokens:Token[] = [];
 
 	public get origin() : string {
-		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"} {}`;
+		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 	}
 
 }

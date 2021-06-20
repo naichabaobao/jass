@@ -1,3 +1,4 @@
+
 import { is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isNumber, isSpace } from "../tool";
 import { Location } from "./range";
 
@@ -562,6 +563,21 @@ function tokenize(content:string):VToken[] {
   return tokens;
 }
 
+class TokenOption {
+  /**
+   * $a23 这种十六进制是否解析
+   */
+  needParseNewHex?:boolean = true;
+  /**
+   * -> 返回符号是否解析
+   */
+  needParseZincReturnOp?:boolean = false;
+  /**
+   * //! zinc //! endzinc 直接所有符号无视
+   */
+  ignoreZinc?:boolean = true;
+}
+
 function tokens (content: string) {
   const tokens: Token[] = [];
 
@@ -898,11 +914,6 @@ function tokens (content: string) {
 	return tokens;
 }
 
-tokens(`
-
-// aab
-0xa
-/*********/
-//`);
+// console.log(tokens(`->`));
 
 export {Token, TokenType, tokens};

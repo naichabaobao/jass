@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
+import { isAiFile, isJFile, resolvePaths } from "../tool";
 
 class Options {
 
@@ -22,51 +23,21 @@ class Options {
   }
 
   // 是文件和是否存在
-  public static isUsableFile(filePath: string) {
+  private static isUsableFile(filePath: string) {
     return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
   }
 
-  public static isUsableJFile(filePath: string) {
-      return this.isUsableFile(filePath) && this.isJFile(filePath);
+  private static isUsableJFile(filePath: string) {
+      return this.isUsableFile(filePath) && isJFile(filePath);
   }
 
-  public static isUsableAiFile(filePath: string) {
-    return this.isUsableFile(filePath) && this.isAiFile(filePath);
+  private static isUsableAiFile(filePath: string) {
+    return this.isUsableFile(filePath) && isAiFile(filePath);
   }
-
-  // 文件后缀是否为.j
-  public static isJFile(filePath: string) {
-    return path.parse(filePath).ext == ".j";
-  }
-
-  public static isAiFile(filePath: string) {
-      return path.parse(filePath).ext == ".ai";
-  }
-
-  private static _resolvePaths(paths: Array<string>) {
-    return paths.map(val => {
-        const arr = new Array<string>();
-        // 处理控制符问题
-        // if (val.charCodeAt(0) == 8234) {
-        //   val = val.substring(1);
-        // }
-        if (!fs.existsSync(val)) {
-            return arr;
-        }
-        const stat = fs.statSync(val);
-        if (stat.isFile()) {
-            arr.push(val);
-        } else if (stat.isDirectory()) {
-            const subPaths = fs.readdirSync(val).map(fileName => path.resolve(val, fileName));
-            arr.push(...this._resolvePaths(subPaths));
-        }
-        return arr;
-    }).flat();
-  }
-
+  
   public static get includes() {
     const includes = this.configuration["includes"] as Array<string>;
-    return this._resolvePaths(includes);
+    return resolvePaths(includes);
   }
 
   

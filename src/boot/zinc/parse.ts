@@ -16,28 +16,18 @@ import {
 	Range,
 	Struct,
 	StructArray,
-	TypePonint
+	TypePonint,
+	Program,
+	ZincError
 } from "./ast";
 import {Take} from "../jass/ast";
-import {tokens, Token} from "./tokens";
+import {tokens, Token} from "../jass/tokens";
 
 import {ZincKeywords} from "../provider/keyword";
 import {retainZincBlock} from "../tool";
 
-class ZincTokenError {
-	public message:string;
-	public token:Token;
 
-	constructor(token:Token, message:string) {
-		this.token = token;
-		this.message = message;
-	}
-}
 
-class Program {
-	public librarys: Library[] = [];
-	public zincTokenErrors:ZincTokenError[] = [];
-}
 
 function isKeyword (value:string) {
 	return ZincKeywords.includes(value);
@@ -75,8 +65,28 @@ class ModifierBodyType {
 function parse(content:string) {
 	console.time("parse zinc");
 	console.time("tokens");
-	const ts = tokens(content);
+	let ts = tokens(content);
 	console.timeEnd("tokens");
+
+	const comments:Token[] = [];
+	const matchText = (line:number) => {
+		return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
+	};
+	let inZinc = false;
+	// 无视掉所有非zinc块内的token
+	ts = ts.filter((token, index, ts) => {
+		if (token.isComment() && /\/\/![ \t]+zinc\b/.test(token.value)) {
+			inZinc = true;
+			return false;
+		} else if (token.isComment() && /\/\/![ \t]+endzinc\b/.test(token.value)) {
+			inZinc = false;
+			return false;
+		} else if (token.isComment()) {
+			comments.push(token);
+			return false;
+		}
+		return inZinc && !token.isBlockComment() && !token.isNewLine();
+	});
 
 	const program = new Program();
 
@@ -85,6 +95,12 @@ function parse(content:string) {
 	let inLibraryStart = false;
 	let libraryState = 0;
 	let library:Library|null = null;
+	const resetLibrary = () => {
+		inLibrary = false;
+		inLibraryStart = false;
+		libraryState = 0;
+		library = null;
+	};
 
 	let inGlobal = false;
 
@@ -97,11 +113,18 @@ function parse(content:string) {
 	let inMethodStart = false;
 	let methodState = 0;
 	let method:Method|null = null;
+	const resetMethod = () => {
+		inMethod = false;
+		inMethodStart = false;
+		methodState = 0;
+		method = null;
+	};
 
 	let take:Take|null = null;
 
-	let bodyField = 0;
 
+	//#region 识别修饰符
+	let bodyField = 0;
 	// 记录public private 块
 	const modifierTypes:ModifierBodyType[] = [];
 	const lastModifierType = () => {
@@ -113,18 +136,29 @@ function parse(content:string) {
 	const lastStructModifierType = () => {
 		return structModifierTypes[structModifierTypes.length - 1];
 	};
-
+	//#endregion
 	let inStruct = false;
 	let inStructStart = false;
 	let structState = 0;
 	let struct: Struct|null = null;
+	const resetStruct = () => {
+		inStruct = false;
+		inStructStart = false;
+		structState = 0;
+		struct = null;
+	};
 
 	let memberState = 0;
-	let member:Member|null = null;
+	// let member:Member|null = null;
 	let members:Member[] = []; 
 	const lastMember = () => {
 		return members[members.length - 1];
 	};
+	const resetMember = () => {
+		memberState = 0;
+		members.length = 0;
+	};
+
 
 	let globalState = 0;
 	let global:Global|null = null;
@@ -145,17 +179,17 @@ function parse(content:string) {
 	for (let index = 0; index < ts.length; index++) {
 		const token = ts[index];
 		
-		const pushError = (message:string) => {
-			program.zincTokenErrors.push(new ZincTokenError(token, message));
+		const pushErrorOld = (message:string) => {
+			// program.zincTokenErrors.push(new ZincTokenError(token, message));
 		};
 
 		// 期望字符
 		const pushExpectedError = (tokenValue:string) => {
-			pushError(`Expected '${tokenValue}', got token with value '${token.value}'!`);
+			pushErrorOld(`Expected '${tokenValue}', got token with value '${token.value}'!`);
 		};
 		// 非法token
 		const pushErrorToken = () => {
-			pushError(`Uncaught SyntaxError: Unexpected token '${token.value}'!`);
+			pushErrorOld(`Uncaught SyntaxError: Unexpected token '${token.value}'!`);
 		}
 		const reset = (type:"function"|"library" | "struct" | "method" | "member" | "global") => {
 			const resetBodyField = () => {
@@ -194,7 +228,6 @@ function parse(content:string) {
 			};
 			const resetMember = () => {
 				memberState = 0;
-				member = null;
 				isArr = false;
 				isConstant = false;
 				isStatic = false;
@@ -274,19 +307,19 @@ function parse(content:string) {
 					functionState = 5;
 				} else if (functionState == 2) { // 参数类型
 					if (token.isOp() && token.value == ",") {
-						pushError("缺失参数!");
+						pushErrorOld("缺失参数!");
 					} else if (token.isId()) {
 						take = new Take(token.value, "");
 						take.loc.start = new Position(token.line, token.position);
 						(<Func>func).takes.push(take);
 						functionState = 3;
 					} else {
-						pushError("未找到参数类型!");
+						pushErrorOld("未找到参数类型!");
 						functionState = 4;
 					}
 				} else if (functionState == 3) { // 参数命名
 					if (token.isOp() && token.value == ",") {
-						pushError(`参数未命名!`);
+						pushErrorOld(`参数未命名!`);
 						functionState = 2;
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
@@ -324,89 +357,103 @@ function parse(content:string) {
 					parseBody("method");
 				} else if (token.isOp() && token.value == "{") {
 					inMethodStart = true;
+				} else if (token.isOp() && token.value == "(") {
+					methodState = 2;
+				} else if (token.isId() && token.value == "operator") { // 判断是不是运算符重载
+					(<Method>method).isOperator = true;
+					methodState = 1;
+				} else if (token.isOp() && token.value == "->") {
+					methodState = 6;
+				} else if (methodState >= 2 && methodState <= 4 && token.value == ")") {
+					methodState = 5;
 				} else if (methodState == 0) {
-					if (token.isOp() && token.value == "(") {
-						methodState = 2;
-					} else if (token.isId() && token.value == "operator") { // 判断是不是运算符重载
-						methodState = 8;
-						const tempStruct = struct?.methods.pop();
-						if (tempStruct) {
-							struct?.operators.push(tempStruct);
+					if (token.isId()) {
+						if ((<Method>method).name == "") {
+							(<Method>method).name = token.value;
+							(<Method>method).nameToken = token;
+						} else {
+
 						}
-					} else if (token.isId()) {
-						(<Method>method).name = token.value;
-						methodState = 1;
 					} else {
-						pushErrorToken();
-						methodState = 1;
+
 					}
 				} else if (methodState == 1) {
-					if (token.isOp() && token.value == "(") {
-						methodState = 2;
+					if (token.isId() || token.isOp()) {
+						(<Method>method).name += token.value;
+						(<Method>method).nameToken = token;
 					} else {
-						pushExpectedError("(");
+
 					}
-				} else if ((methodState >= 2 || methodState <= 4) && token.isOp() && token.value == ")") {
-					methodState = 5;
-				} else if (methodState == 2) { // 参数类型
+					
+				} else if (methodState == 2) {
 					if (token.isOp() && token.value == ",") {
-						pushError("缺失参数!");
+						
 					} else if (token.isId()) {
 						take = new Take(token.value, "");
 						take.loc.start = new Position(token.line, token.position);
-						(<Method>method).takes.push(take);
 						methodState = 3;
 					} else {
-						pushError("未找到参数类型!");
-						methodState = 4;
+
 					}
-				} else if (methodState == 3) { // 参数命名
+				} else if (methodState == 3) { // 参数类型
 					if (token.isOp() && token.value == ",") {
-						pushError(`参数未命名!`);
 						methodState = 2;
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
+						(<Take>take).nameToken = token;
 						(<Take>take).loc.end = new Position(token.line, token.end);
+						(<Method>method).takes.push((<Take>take));
 						methodState = 4;
 					} else {
-						pushErrorToken();
-						methodState = 4;
+
 					}
-				} else if (methodState == 4) { // ,
+				} else if (methodState == 4) { // 参数命名
 					if (token.isOp() && token.value == ",") {
 						methodState = 2;
 					} else {
-						pushExpectedError(",");
-						methodState = 2;
+
 					}
 				} else if (methodState == 5) {
-					 if (token.isOp() && token.value == "->") {
-						methodState = 6;
-					} else {
-						pushExpectedError("-> or {");
-					}
+					// 参数解析结束
 				} else if (methodState == 6) {
 					if (token.isId()) {
-						(<Method>method).returns = token.value;
-						methodState = 7;
+						if ((<Method>method).returns) {
+
+						} else {
+							if (token.value == "nothing") {
+
+							} else {
+								(<Method>method).returns = token.value;
+							}
+						}
 					} else {
-						pushErrorToken();
+	
 					}
-				} else if (methodState == 7) {
-					pushExpectedError("{");
-				} else if (methodState == 8) { // 如果都到 operator 关键字时,就进入这里，因为operator解析无意义
 				}
 			}
 			
 		};
 		const parseMember = () => {
-			const pushMember = () => {
-				(<Struct>struct).members.push((<Member>member), ...members);
-			};
-			if (memberState == 0) {
+			if (token.isOp() && token.value == ";") {
+				console.log(members.length);
+				(<Struct>struct).members.push(...members.map( (member, index, ms) => {
+					if (index != 0) {
+						member.type = ms[0].type;
+						member.isStatic = ms[0].isStatic;
+						member.isConstant = ms[0].isConstant;
+						member.tag = ms[0].tag;
+						member.loc.start = ms[0].loc.start;
+					}
+					member.loc.end = new Position(token.line, token.end);
+					return member;
+				}));
+			} else if (token.isOp() && token.value == "=") {
+				memberState = 6;
+			} else if (memberState == 0) {
 				if (token.isId()) {
-					reset("member");
-					member = new Member(token.value, "");
+					resetMember();
+					const member = new Member(token.value, "");
+					member.type = token.value;
 					member.isStatic = isStatic;
 					member.isConstant = isConstant;
 					if (modifierType) {
@@ -415,88 +462,55 @@ function parse(content:string) {
 						member.tag = lastStructModifierType().type;
 					}
 					member.loc.start = new Position(token.line, token.position);
+					members.push(member);
 					memberState = 1;
 				} else {
-					// 存在不确定情况，可能误报，因此当前什么都不做
-					// 
-					// pushError("类型错误");
 				}
 			} else if (memberState == 1) {
-				if (token.isId()) {
-					(<Member>member).name = token.value;
+				if (token.isOp() && token.value == ",") {
+
+				} else if (token.isId()) {
+					if (lastMember().name == "") {
+						lastMember().name = token.value;
+						lastMember().nameToken = token;
+						lastMember().text = matchText(token.line);
+					} else {
+						const member = new Member("", token.value);
+						member.nameToken = token;
+						member.text = matchText(token.line);
+						members.push(member);
+					}
 					memberState = 2;
 				} else {
-					memberState = 0;
 				}
 			} else if (memberState == 2) {
-				if (token.isOp() && token.value == ";") {
-					(<Member>member).loc.end = new Position(token.line, token.end);
-					pushMember();
-					reset("member");
-				} else if (token.isOp() && token.value == "=") {
-					pushMember();
-					memberState = 6;
-				} else if (token.isOp() && token.value == "[") {
-					if (members.length > 0) {
-						lastMember().isArray = true;
-					} else {
-						(<Member>member).isArray = true;
-					}
+				if (token.isOp() && token.value == "[") {
+					lastMember().isArray = true;
 					memberState = 3;
 				} else if (token.isOp() && token.value == ",") {
-					memberState = 7;
+					memberState = 1;
 				} else {
-					pushErrorToken();
-					// 放弃
-					memberState = 6;
 				}
 			} else if (memberState == 3) {
 				if (token.isInt()) {
-					if (members.length > 0) {
-						lastMember().size = parseInt(token.value);
-					} else {
-						(<Member>member).size = parseInt(token.value);
-					}
+					lastMember().size = parseInt(token.value);
 					memberState = 4;
+				} else if (token.isOp() && token.value == ",") {
+					memberState = 1;
+				} else if (token.isOp() && token.value == "]") {
+					memberState = 5;
 				} else {
-					pushError("Wrong [size] definition!");
-					// 放弃
-					memberState = 6;
 				}
 			} else if (memberState == 4) {
 				if (token.isOp() && token.value == "]") {
 					memberState = 5;
+				} else if (token.isOp() && token.value == ",") {
+					memberState = 1;
 				} else {
-					pushExpectedError("]");
-					memberState = 6;
 				}
 			} else if (memberState == 5) {
-				if (token.isOp() && token.value == ";") {
-					(<Member>member).loc.end = new Position(token.line, token.end);
-					pushMember();
-					reset("member");
-				} else {
-					pushError("Missing closing symbol ';'!");
-					memberState = 6;
-				}
-			} else if (memberState == 6) {
-				if (token.isOp() && token.value == ";") {
-					reset("member");
-				}
-			} else if (methodState == 7) {
-				if (token.isId()) {
-					const m:Member = new Member((<Member>member).type, "");
-					m.tag = (<Member>member).tag;
-					m.isConstant = (<Member>member).isConstant;
-					m.isStatic = (<Member>member).isStatic;
-					m.loc.start = new Position(token.line, token.position);
-					m.name = token.value;
-					m.loc.end = new Position(token.line, token.end);
-					members.push(m);
-					methodState = 2;
-				} else {
-					pushErrorToken();
-					methodState = 6;
+				if (token.isOp() && token.value == ",") {
+					memberState = 1;
 				}
 			}
 			
@@ -578,7 +592,7 @@ function parse(content:string) {
 					pushGlobal();
 					reset("global");
 				} else {
-					pushError("Missing closing symbol ';'!");
+					pushErrorOld("Missing closing symbol ';'!");
 					globalState = 6;
 				}
 			} else if (globalState == 6) {
@@ -603,8 +617,9 @@ function parse(content:string) {
 		};
 		const parseStructBody = () => {
 			if (token.isId() && token.value == "method") {
-				reset("method");
+				resetMethod();
 				method = new Method("");
+				method.text = matchText(token.line)
 				if (modifierType) {
 					method.tag = modifierType;
 				} else if (structModifierTypes.length > 0) {
@@ -630,7 +645,7 @@ function parse(content:string) {
 				isConstant = true;
 			}  else if (token.isOp() && token.value == "}") {
 				(<Struct>struct).loc.end = new Position(token.line, token.end);
-				reset("struct");
+				resetStruct();
 			} else { // member type
 				// 解析struct成员类型，区别于其他解析方式，当类型找到了不会马上push到struct中，而是等到见到 ';' 后才push进去
 				parseMember();
@@ -651,39 +666,40 @@ function parse(content:string) {
 				parseStructBody();
 			} else if (token.isOp() && token.value == "{") {
 				inStructStart = true;
+			} else if (token.isId() && token.value == "extends") {
+				structState = 1;
 			} else if (structState == 0) {
-				if (token.isId() && token.value == "extends") {
-					structState = 2;
-				} else if (token.isId()) {
-					(<Struct>struct).name = token.value;
-					structState = 1;
-				} else {
-					pushErrorToken();
-					structState = 3;
-				}
-			} else if (structState == 1) { // 等待extends
-				if (token.isId() && token.value == "extends") {
-					structState = 2;
-				} else {
-					pushExpectedError("extends");
-					structState = 3;
-				}
-			} else if (structState == 2) { // 继承名称
 				if (token.isId()) {
-					(<Struct>struct).extends = token.value;
+					if ((<Struct>struct).name == "") {
+						(<Struct>struct).name = token.value;
+					} else {
+					}
 				} else {
-					pushErrorToken();
+
+				}
+			} else if (structState == 1) { // 继承名称
+				if (token.isId()) {
+					if ((<Struct>struct).extends) {
+
+					} else {
+						(<Struct>struct).extends = token.value;
+					}
+				} else {
+					
 				}
 				structState = 3;
-			} else if (structState == 3) {
-				pushErrorToken();
-			} else {
-				// pushErrorToken();
 			}
 		};
 
+		const pushError = (message:string) => {
+			const err = new ZincError(message);
+			err.loc.start = new Position(token.line, token.position);
+			err.loc.end = new Position(token.line, token.end);
+			program.zincErrors.push(err);
+		};
+
 		if (token.isId() && token.value == "library") {
-			reset("library");
+			resetLibrary();
 			inLibrary = true;
 			libraryState = 0;
 			library = new Library("");
@@ -692,8 +708,9 @@ function parse(content:string) {
 		} else if (inLibrary) {
 			if (inLibraryStart) {
 				if (token.isId() && token.value == "struct") {
-					reset("struct");
+					resetStruct();
 					struct = new Struct("");
+					struct.text = matchText(token.line);
 					if (modifierType) {
 						struct.tag = modifierType;
 					} else if (modifierTypes.length > 0) {
@@ -703,14 +720,13 @@ function parse(content:string) {
 					(<Library>library).structs.push(struct);
 					inStruct = true;
 				} else if (inStruct) {
-					// reset("method");
-					// reset("member");
 					parseStruct();
 				} else if (inFunction) {
 					parseFunction();
 				} else if (token.isId() && token.value == "function") { // 这个if理应在 else if (inFunction) 前，但因为可能在function body块中方法参数存在function function_name会导致错误
 					reset("function");
 					func = new Func("");
+					func.text = matchText(token.line);
 					if (modifierType) {
 						func.tag = modifierType;
 					} else if (modifierTypes.length > 0) {
@@ -730,7 +746,7 @@ function parse(content:string) {
 				} else if (modifierTypes.length > 0 && token.isOp() && token.value == "}") {
 					modifierTypes.pop();
 				} else if (token.isOp() && token.value == "}") {
-					reset("library");
+					resetLibrary();
 				} else {
 					parseGlobal();
 				}
@@ -743,40 +759,34 @@ function parse(content:string) {
 
 			} else if (token.isOp() && token.value == "{") {
 				inLibraryStart = true;
+			} else if (token.isId() && token.value == "requires") {
+				libraryState = 1;
 			} else if (libraryState == 0) {
-				if (token.isId() && token.value == "requires") {
-					libraryState = 2;
-				} else if (token.isId()) {
-					(<Library>library).name = token.value;
-					libraryState = 1;
+				if (token.isId()) {
+					if ((<Library>library).name == "") {
+						(<Library>library).name = token.value;
+					} else {
+
+					}
 				} else {
-					pushExpectedError("requires");
-					libraryState = 4;
-				}
-			} else if (libraryState == 1) { // requires
-				if (token.isId() && token.value == "requires") {
-					libraryState = 2;
-				} else {
-					pushExpectedError("requires");
-					libraryState = 4;
-				}
-			} else if (libraryState == 2) {
+					
+				} 
+			} else if (libraryState == 1) {
 				if (token.isId()) {
 					(<Library>library).requires.push(token.value);
-					libraryState = 3;
+					libraryState = 2;
+				} else if (token.isOp() && token.value == ",") {
+
 				} else {
 					pushErrorToken();
 					libraryState = 2;
 				}
-			} else if (libraryState == 3) {
+			} else if (libraryState == 2) {
 				if (token.isOp() && token.value == ",") {
-					libraryState = 2;
+					libraryState = 1;
 				} else {
-					pushErrorToken();
-					libraryState = 3;
+
 				}
-			} else if (libraryState == 4) {
-				pushErrorToken();
 			}
 		} else {
 			// pushExpectedError("library");
@@ -784,6 +794,7 @@ function parse(content:string) {
 
 	}
 	console.timeEnd("parse zinc");
+	console.log(program)
 	return program;
 
 }
@@ -805,6 +816,27 @@ export {
 	parseZincBlock,
 	parseZincFile
 };
+
+console.log(JSON.stringify(parse(`
+//! zinc
+  library library_name requires require_librarys ,,-,cccccc ccc, ccc {
+	public {
+		struct a {
+			public {
+				// 奶茶
+				private static integer a[2],
+				// 宝宝
+				b = 12 , 17;
+
+				integer c;
+
+				method operator [] () {}
+			}
+		}
+	} 
+  }
+//! endzinc
+`).librarys[0].structs, null, 2));
 
 /*
 parseZincBlock(`//! zinc

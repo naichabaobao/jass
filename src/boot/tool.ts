@@ -1,4 +1,5 @@
-
+import * as fs from "fs";
+import * as path from "path";
 
 const letterRegExp = new RegExp(/[a-zA-Z]/);
 const numberRegExp = new RegExp(/\d/);
@@ -365,6 +366,78 @@ function unique(arr: Array<string>) {
 	return Array.from(new Set(arr));
 }
 
+// 文件内文件数量
+const maxFileNumber = 24;
+
+class ResolvePathOption {
+	/**
+	 * 最大遍历数
+	 * 避免遇到文件数量太多而不停递归
+	 */
+	 recursionNumber?:number = maxFileNumber;
+	/**
+	 * 检查后缀是否为.j或.ai
+	 */
+	checkExt?:boolean = true;
+
+	public static default() {
+		const option = new ResolvePathOption();
+	}
+}
+
+/**
+ * 解析目录下所有文件
+ * @param paths 
+ * @returns 
+ */
+function resolvePaths(paths: Array<string>, options: ResolvePathOption = new ResolvePathOption()) {
+	if (paths.length == 0) {
+		return [];
+	}
+    return paths.map(val => {
+        const arr = new Array<string>();
+        // 处理控制符问题
+        // if (val.charCodeAt(0) == 8234) {
+        //   val = val.substring(1);
+        // }
+        if (!fs.existsSync(val)) {
+            return arr;
+        }
+        const stat = fs.statSync(val);
+        if (stat.isFile()) {
+			if (options.checkExt) {
+				if (isJFile(val) || isAiFile(val)) {
+					arr.push(val);
+				}
+			} else {
+				arr.push(val);
+			}
+        } else if (stat.isDirectory()) {
+            const subPaths = fs.readdirSync(val).map(fileName => path.resolve(val, fileName));
+			const recursionNumber = (options.recursionNumber ?? maxFileNumber);
+            arr.push(...resolvePaths(subPaths.length > recursionNumber ? subPaths.slice(0, recursionNumber) : subPaths));
+        }
+        return arr;
+    }).flat();
+  }
+
+    // 文件后缀是否为.j
+	function isJFile(filePath: string) {
+		return path.parse(filePath).ext == ".j";
+	  }
+	// 文件后缀是否为.ai
+	  function isAiFile(filePath: string) {
+		  return path.parse(filePath).ext == ".ai";
+	  }
+
+	  /**
+	   * 解析出路径文件名称
+	   * @param filePath 
+	   */
+function getPathFileName(filePath:string):string {
+	return path.parse(filePath).base;
+}
+
 export {
 	is0_16,
 	is0_7,
@@ -377,7 +450,11 @@ export {
 	retainZincBlock,
 	unique,
 	retainVjassBlock,
-	removeComment
+	removeComment,
+	resolvePaths,
+	isJFile,
+	isAiFile,
+	getPathFileName
 };
 
 

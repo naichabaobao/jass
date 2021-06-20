@@ -9,18 +9,23 @@ import * as vscode from 'vscode';
 import { AllKeywords } from './keyword';
 import { Types } from './types';
 // import { commonJFile, commonAiFile, blizzardJFile, dzApiJFile, includeFiles } from "./data";
-import {Program} from "./jass-parse";
+import { Program } from "../jass/ast";
 import {
   commonJProgram,
   blizzardJProgram,
   dzApiJProgram,
   includePrograms,
-  commonAiProgram
+  commonAiProgram,
+  includeJassPrograms,
+  includeMap,
+  workMap
 } from "./data"
 import { Rangebel } from '../common';
+import { Options } from './options';
+import { parse } from '../jass/parse';
 
 
-const toVsPosition = <T extends Rangebel> (any:T) => {
+const toVsPosition = <T extends Rangebel>(any: T) => {
   return new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
 
@@ -38,14 +43,14 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     }
   }
 
-  private programToLocation(key:string, uri:vscode.Uri, program:Program) :vscode.Location|null {
-    let location:vscode.Location|null = null;
-    const currentFunc = program.allFunctions.find(func => func.name == key);
-    
+  private programToLocation(key: string, uri: vscode.Uri, program: Program): vscode.Location | null {
+    let location: vscode.Location | null = null;
+    const currentFunc = program.functions.find(func => func.name == key);
+
     if (currentFunc) {
       location = new vscode.Location(uri, toVsPosition(currentFunc));
     } else {
-      const currentGlobal = program.allGlobals.find(global => global.name == key);
+      const currentGlobal = program.globals.find(global => global.name == key);
       if (currentGlobal) {
         location = new vscode.Location(uri, toVsPosition(currentGlobal));
       } else {
@@ -53,22 +58,25 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         if (currentNative) {
           location = new vscode.Location(uri, toVsPosition(currentNative));
         } else {
-          const currentStruct = program.allStructs.find(struct => struct.name == key);
-          if (currentStruct) {
-            location = new vscode.Location(uri, toVsPosition(currentStruct));
-          } else {
-            const currentMethod = program.allStructs.map(struct => {
-              return struct.methods;
-            }).flat().find(method => method.name == key);
-            if (currentMethod) {
-              location = new vscode.Location(uri, toVsPosition(currentMethod));
-            } else {
-              return null;
-            }
-          }
+          return null;
         }
       }
     }
+    /*
+    const currentStruct = program.allStructs.find(struct => struct.name == key);
+    if (currentStruct) {
+      location = new vscode.Location(uri, toVsPosition(currentStruct));
+    } else {
+      const currentMethod = program.allStructs.map(struct => {
+        return struct.methods;
+      }).flat().find(method => method.name == key);
+      if (currentMethod) {
+        location = new vscode.Location(uri, toVsPosition(currentMethod));
+      } else {
+        return null;
+      }
+    }*/
+
     return location;
   }
 
@@ -86,34 +94,40 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     if (AllKeywords.includes(key)) {
       return null;
     }
-    
+
     const type = Types.find(type => type === key);
     if (type) {
       return null;
     }
-    let location:vscode.Location|null = null; 
-    
-    const currentProgram = new Program(document.uri.fsPath, document.getText());
-    const currentLocation = this.programToLocation(key, document.uri, currentProgram);
-    if (currentLocation) {
-      location = currentLocation;
+    let location: vscode.Location | null = null;
+
+    const currentProgram = workMap
+    for (const key in workMap) {
+      if (workMap.has(key)) {
+        const program = <Program>workMap.get(key);
+        const workIocation = this.programToLocation(key, vscode.Uri.file(key), program);
+        if (workIocation) {
+          return workIocation;
+        }
+      }
+    }
+    const commonJLocation = this.programToLocation(key, vscode.Uri.file(Options.commonJPath), commonJProgram);
+    if (commonJLocation) {
+      location = commonJLocation;
     } else {
-      const commonJLocation = this.programToLocation(key, vscode.Uri.file(commonJProgram.key), commonJProgram);
-      if (commonJLocation) {
-        location = commonJLocation;
+      const blizzardJLocation = this.programToLocation(key, vscode.Uri.file(Options.blizzardJPath), blizzardJProgram);
+      if (blizzardJLocation) {
+        location = blizzardJLocation;
       } else {
-        const blizzardJLocation = this.programToLocation(key, vscode.Uri.file(blizzardJProgram.key), blizzardJProgram);
-        if (blizzardJLocation) {
-          location = blizzardJLocation;
+        const dzApiJLocation = this.programToLocation(key, vscode.Uri.file(Options.dzApiJPath), dzApiJProgram);
+        if (dzApiJLocation) {
+          location = dzApiJLocation;
         } else {
-          const dzApiJLocation = this.programToLocation(key, vscode.Uri.file(dzApiJProgram.key), dzApiJProgram);
-          if (dzApiJLocation) {
-            location = dzApiJLocation;
-          } else {
-            let hit = false;
-            for (let index = 0; index < includePrograms.length; index++) {
-              const includeProgram = includePrograms[index];
-              const includeLocation = this.programToLocation(key, vscode.Uri.file(includeProgram.key), includeProgram);
+          let hit = false;
+          for (const key in includeMap) {
+            if (includeMap.has(key)) {
+              const includeProgram = <Program>includeMap.get(key);
+              const includeLocation = this.programToLocation(key, vscode.Uri.file(key), includeProgram);
               if (includeLocation) {
                 location = includeLocation;
                 if (!hit) {
@@ -121,11 +135,11 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
                 }
               }
             }
-            if (!hit) {
-              const commonAiLocation = this.programToLocation(key, vscode.Uri.file(commonAiProgram.key), commonAiProgram);
-              if (commonAiLocation) {
-                location = commonAiLocation;
-              }
+          }
+          if (!hit) {
+            const commonAiLocation = this.programToLocation(key, vscode.Uri.file(Options.commonAiPath), commonAiProgram);
+            if (commonAiLocation) {
+              location = commonAiLocation;
             }
           }
         }

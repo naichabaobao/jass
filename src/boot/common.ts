@@ -27,8 +27,13 @@ interface Rangebel {
 	loc: Range;
 }
 
+interface Desc {
+	text:string;
+}
+
 export {
 	Position,
 	Range,
-	Rangebel
+	Rangebel,
+	Desc
 };
