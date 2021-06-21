@@ -163,6 +163,15 @@ function parse(content:string) {
 		members.length = 0;
 	};
 
+	let localState = 0;
+	let locals:Local[] = [];
+	const lastLocal = () => {
+		return locals[locals.length - 1];
+	};
+	const resetLocal = () => {
+		localState = 0;
+		locals.length = 0;
+	};
 
 	let globalState = 0;
 	let global:Global|null = null;
@@ -272,6 +281,77 @@ function parse(content:string) {
 				resetGlobal();
 			}
 		};
+		const parseLocal = (type:"func"|"method" = "func") => {
+			if (token.isOp() && token.value == ";") {
+				(type == "func" ? (<Func>func) : (<Method>method)).locals.push(...locals.map( (local, index, ms) => {
+					if (index != 0) {
+						local.type = ms[0].type;
+						local.loc.start = ms[0].loc.start;
+					}
+					local.loc.end = new Position(token.line, token.end);
+					return local;
+				}));
+			} else if (token.isOp() && token.value == "=") {
+				localState = 6;
+			} else if (localState == 0) {
+				if (token.isId()) {
+					resetLocal();
+					const local = new Local(token.value, "");
+					local.type = token.value;
+					local.loc.start = new Position(token.line, token.position);
+					locals.push(local);
+					localState = 1;
+				} else {
+				}
+			} else if (localState == 1) {
+				if (token.isOp() && token.value == ",") {
+
+				} else if (token.isId()) {
+					if (lastLocal().name == "") {
+						lastLocal().name = token.value;
+						lastLocal().nameToken = token;
+						lastLocal().text = matchText(token.line);
+					} else {
+						const local = new Local("", token.value);
+						local.nameToken = token;
+						local.text = matchText(token.line);
+						locals.push(local);
+					}
+					localState = 2;
+				} else {
+				}
+			} else if (localState == 2) {
+				if (token.isOp() && token.value == "[") {
+					lastLocal().isArray = true;
+					localState = 3;
+				} else if (token.isOp() && token.value == ",") {
+					localState = 1;
+				} else {
+				}
+			} else if (localState == 3) {
+				if (token.isInt()) {
+					lastLocal().size = parseInt(token.value);
+					localState = 4;
+				} else if (token.isOp() && token.value == ",") {
+					localState = 1;
+				} else if (token.isOp() && token.value == "]") {
+					localState = 5;
+				} else {
+				}
+			} else if (localState == 4) {
+				if (token.isOp() && token.value == "]") {
+					localState = 5;
+				} else if (token.isOp() && token.value == ",") {
+					localState = 1;
+				} else {
+				}
+			} else if (localState == 5) {
+				if (token.isOp() && token.value == ",") {
+					localState = 1;
+				}
+			}
+			
+		};
 		const parseBody = (type:"func"|"method" = "func") => {
 			if (token.isOp() && token.value == "{") {
 				bodyField++;
@@ -281,12 +361,21 @@ function parse(content:string) {
 				} else {
 					if (type == "func") {
 						(<Func>func).loc.end = new Position(token.line, token.end);
-						reset("function");
+						resetFunc();
 					} else {
 						(<Method>method).loc.end = new Position(token.line, token.end);
-						reset("method");
+						resetMethod();
 					}
+					return;
 				}
+			}
+			if (bodyField == 0) {
+				parseLocal(type);
+			}
+			if (type == "func") {
+				(<Func>func).tokens.push(token);
+			} else {
+				(<Method>method).tokens.push(token);
 			}
 		};
 		const parseFunction = (type:"func"|"method" = "func") => {
@@ -836,11 +925,13 @@ console.log(JSON.stringify(parse(`
 				method operator [] () {}
 			}
 		}
-		function assasa(integer ass) {}
+		function assasa(integer ass) {
+			int aaa[3], hahah;
+		}
 	} 
   }
 //! endzinc
-`).librarys[0].structs, null, 2));
+`).librarys, null, 2));
 
 /*
 parseZincBlock(`//! zinc

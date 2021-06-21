@@ -112,7 +112,7 @@ class Method extends Func implements Rangebel {
 	 * 为true时,符号使用name
 	 */
 	public isOperator: boolean = false;
-	public readonly locals:Local[] = [];
+
 
 	public get origin() : string {
 		return `${this.tag}${this.isStatic ? " static" : ""} method ${this.isOperator ? "operator " : ""}${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
@@ -179,6 +179,10 @@ class StructArray extends Struct{
 }
 
 class Local extends jass.Local {
+
+	public nameToken:Token|null = null;
+	public size:number = 0;
+	public isArray  = false;
 
 	constructor(type: string, name: string) {
 		super(type, name);
