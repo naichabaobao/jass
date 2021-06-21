@@ -63,10 +63,8 @@ class ModifierBodyType {
 
 // 解析zinc代码
 function parse(content:string) {
-	console.time("parse zinc");
-	console.time("tokens");
+
 	let ts = tokens(content);
-	console.timeEnd("tokens");
 
 	const comments:Token[] = [];
 	const matchText = (line:number) => {
@@ -108,6 +106,12 @@ function parse(content:string) {
 	let inFunctionStart = false;
 	let functionState = 0;
 	let func:Func|null = null;
+	const resetFunc = () => {
+		inFunction = false;
+		inFunctionStart = false;
+		functionState = 0;
+		func = null;
+	};
 	
 	let inMethod = false;
 	let inMethodStart = false;
@@ -191,6 +195,10 @@ function parse(content:string) {
 		const pushErrorToken = () => {
 			pushErrorOld(`Uncaught SyntaxError: Unexpected token '${token.value}'!`);
 		}
+		/**
+		 * @deprecated
+		 * @param type 
+		 */
 		const reset = (type:"function"|"library" | "struct" | "method" | "member" | "global") => {
 			const resetBodyField = () => {
 				bodyField = 0;
@@ -287,70 +295,67 @@ function parse(content:string) {
 					parseBody();
 				} else if (token.isOp() && token.value == "{") {
 					inFunctionStart = true;
-				} else if (functionState == 0) {
-					if (token.isOp() && token.value == "(") {
-						functionState = 2;
-					} else if (token.isId()) {
-						(<Func>func).name = token.value;
-						functionState = 1;
-					} else {
-						pushErrorToken();
-						functionState = 1;
-					}
-				} else if (functionState == 1) {
-					if (token.isOp() && token.value == "(") {
-						functionState = 2;
-					} else {
-						pushExpectedError("(");
-					}
-				} else if ((functionState >= 2 || functionState <= 4) && token.isOp() && token.value == ")") {
+				} else if (token.isOp() && token.value == "(") {
+					functionState = 1;
+				} else if ((functionState >= 1 || functionState <= 3) && token.isOp() && token.value == ")") {
+					functionState = 4;
+				} else if (token.isOp() && token.value == "->") {
 					functionState = 5;
-				} else if (functionState == 2) { // 参数类型
+				} else if (functionState == 0) {
+					if (token.isId()) {
+						if ((<Func>func).name == "") {
+							(<Func>func).name = token.value;
+							(<Func>func).nameToken = token;
+						} else {
+
+						}
+					} else {
+					}
+
+				} else if (functionState == 1) {
 					if (token.isOp() && token.value == ",") {
-						pushErrorOld("缺失参数!");
+						
 					} else if (token.isId()) {
 						take = new Take(token.value, "");
 						take.loc.start = new Position(token.line, token.position);
-						(<Func>func).takes.push(take);
-						functionState = 3;
-					} else {
-						pushErrorOld("未找到参数类型!");
-						functionState = 4;
-					}
-				} else if (functionState == 3) { // 参数命名
-					if (token.isOp() && token.value == ",") {
-						pushErrorOld(`参数未命名!`);
 						functionState = 2;
+					} else {
+
+					}
+				} else if (functionState == 2) { // 参数类型
+					if (token.isOp() && token.value == ",") {
+						functionState = 1;
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
+						(<Take>take).nameToken = token;
 						(<Take>take).loc.end = new Position(token.line, token.end);
-						functionState = 4;
+						(<Func>func).takes.push((<Take>take));
+						functionState = 3;
 					} else {
-						pushErrorToken();
-						functionState = 4;
+
 					}
-				} else if (functionState == 4) { // ,
+				} else if (functionState == 3) { // ,
 					if (token.isOp() && token.value == ",") {
 						functionState = 2;
 					} else {
-						pushExpectedError(",");
-						functionState = 2;
+
 					}
+				} else if (functionState == 4) {
+
 				} else if (functionState == 5) {
-					 if (token.isOp() && token.value == "->") {
-						functionState = 6;
-					} else {
-						pushExpectedError("-> or {");
-					}
-				} else if (functionState == 6) {
 					if (token.isId()) {
-						(<Func>func).returns = token.value;
-						functionState = 7;
+						if ((<Func>func).returns) {
+
+						} else {
+							if (token.value == "nothing") {
+
+							} else {
+								(<Func>func).returns = token.value;
+							}
+						}
 					} else {
-						pushErrorToken();
+	
 					}
-				} else if (functionState == 7) {
-					pushExpectedError("{");
 				}
 			} else {
 				if (inMethodStart) {
@@ -724,7 +729,7 @@ function parse(content:string) {
 				} else if (inFunction) {
 					parseFunction();
 				} else if (token.isId() && token.value == "function") { // 这个if理应在 else if (inFunction) 前，但因为可能在function body块中方法参数存在function function_name会导致错误
-					reset("function");
+					resetFunc();
 					func = new Func("");
 					func.text = matchText(token.line);
 					if (modifierType) {
@@ -793,8 +798,6 @@ function parse(content:string) {
 		}
 
 	}
-	console.timeEnd("parse zinc");
-	console.log(program)
 	return program;
 
 }
@@ -833,6 +836,7 @@ console.log(JSON.stringify(parse(`
 				method operator [] () {}
 			}
 		}
+		function assasa(integer ass) {}
 	} 
   }
 //! endzinc

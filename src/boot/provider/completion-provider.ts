@@ -397,7 +397,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       const currentZincFunctionItems = this.zincItems(document, position);
   
       // 就算关闭了还是解析，只是不提示而已，懒
-
       items.push(...currentZincFunctionItems);
     }
 
