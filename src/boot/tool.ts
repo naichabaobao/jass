@@ -423,12 +423,16 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 
     // 文件后缀是否为.j
 	function isJFile(filePath: string) {
-		return path.parse(filePath).ext == ".j";
+		return path.parse(filePath).ext == ".j" || path.parse(filePath).ext == ".jass";
 	  }
 	// 文件后缀是否为.ai
 	  function isAiFile(filePath: string) {
 		  return path.parse(filePath).ext == ".ai";
 	  }
+	  	// 文件后缀是否为.ai
+		  function isZincFile(filePath: string) {
+			return path.parse(filePath).ext == ".zn";
+		}
 
 	  /**
 	   * 解析出路径文件名称
@@ -454,6 +458,7 @@ export {
 	resolvePaths,
 	isJFile,
 	isAiFile,
+	isZincFile,
 	getPathFileName
 };
 

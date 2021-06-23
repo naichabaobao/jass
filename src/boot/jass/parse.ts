@@ -48,21 +48,73 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 		return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
 	};
 	let inZinc = false;
-	const ts = tokens(content).filter(token => {
-		if (token.isBlockComment()) {
-			return false;
-		} else if (token.isComment() && /\/\/![ \t]+zinc\b/.test(token.value)) {
+	let inLibrary = false;
+	let inStruct = false;
+	let inScopeState = 0;
+	let inModule = false;
+	let inTextMacro = false;
+	let inInterface = false;
+	const ts = tokens(content)
+	// 去除块注释
+	.filter((token) => !token.isBlockComment())
+	// 去除zinc块
+	.filter(token => {
+		if (token.isComment() && /\/\/![ \t]+zinc\b/.test(token.value)) {
 			inZinc = true;
 			return false;
 		} else if (token.isComment() && /\/\/![ \t]+endzinc\b/.test(token.value)) {
 			inZinc = false;
 			return false;
-		} else if (token.isComment()) {
-			comments.push(token);
-			return false;
 		} else {
 			return !inZinc;
 		}
+	})
+	// 去除vjass文本宏块
+	.filter(token => {
+		if (token.isComment() && /\/\/![ \t]+textmacro\b/.test(token.value)) {
+			inTextMacro = true;
+			return false;
+		} else if (token.isComment() && /\/\/![ \t]+endtextmacro\b/.test(token.value)) {
+			inTextMacro = false;
+			return false;
+		} else {
+			return !inTextMacro;
+		}
+	})
+	.filter((token) => {
+		// 去除vjass代码
+		if (token.value == "library") {
+			inLibrary = true;
+		} else if (token.value == "endlibrary") {
+			inLibrary = false;
+		} else if (token.value == "struct") {
+			inStruct = true;
+		} else if (token.value == "endstruct") {
+			inStruct = false;
+		} else if (token.value == "scope") {
+			inScopeState++;
+		} else if (token.value == "endscope") {
+			if (inScopeState > 0) {
+				inScopeState--;
+			}
+		} else if (token.value == "module") {
+			inModule = true;
+		} else if (token.value == "endmodule") {
+			inModule = false;
+		} else if (token.value == "interface") {
+			inInterface = true;
+		} else if (token.value == "endinterface") {
+			inInterface = false;
+		}
+		return !(inLibrary || inStruct || inModule || inInterface || inScopeState > 0);
+	})
+	.filter((token) => {
+		// 去除单行注释
+		if (token.isComment()) {
+			comments.push(token);
+			return false;
+		}
+		return true;
 	});
 
 		

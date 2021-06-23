@@ -80,6 +80,10 @@ class Local implements Rangebel,Desc {
 	public name: string;
 	public isArray:boolean = false;
 	public text:string = "";
+	public nameToken:Token|null = null;
+	/**
+	 * @deprecated
+	 */
 	public readonly initTokens:Token[] = [];
 
 	constructor(type: string, name: string) {

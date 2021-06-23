@@ -1,4 +1,5 @@
 import {
+	Desc,
 	Position,
 	Range,
 	Rangebel
@@ -13,19 +14,21 @@ class Global extends jass.Global implements Rangebel {
 	public tag: ModifierType = "default";
 
 	public get origin() : string {
-		return `${this.tag} ${this.type} ${this.name}`;
+		return `${this.tag == "default" ? "" : this.tag + " "}${this.isConstant ? "constant " : ""}${this.type} ${this.isArray ? "array " : ""}${this.name}`;
 	}
 }
 
 class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "default";
+	public defaults:string | null = null;
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
 		super(name, takes, returns);
 	}
 
 	public get origin() : string {
-		return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"} {}`;
+		const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
+		return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
 	}
 }
 
@@ -99,7 +102,7 @@ class Method extends Func implements Rangebel {
 }
 
 
-class Member implements Rangebel {
+class Member implements Rangebel,Desc {
 	public isConstant: boolean = false;
 	public tag: ModifierType = "default";
 	public isStatic: boolean = false;
@@ -108,6 +111,7 @@ class Member implements Rangebel {
 	public size:number = 0;
 	public type: string;
 	public name: string;
+	public text:string = "";
 	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 
 	constructor(type: string, name: string) {
@@ -137,7 +141,8 @@ class InterfaceArray extends Interface{
 	public size:number = 0;
 }
 
-class Struct extends Interface implements Rangebel {
+class Struct extends Interface implements Rangebel,Desc {
+	public text: string = "";
 	public extends:string|null = null;
 
 	public get origin() : string {
@@ -178,6 +183,26 @@ class Library implements Rangebel {
 
 }
 
+class VjassError extends jass.JassError {
+
+	constructor(message:string) {
+		super(message);
+	}
+
+}
+
+class Program {
+	public readonly structs:Struct[] = [];
+	public readonly interfaces:Interface[] = [];
+
+	public readonly librarys: Library[] = [];
+	public readonly zincTokenErrors:VjassError[] = [];
+
+	constructor() {
+
+	}
+}
+
 export {
 	ArrayType,
 	DynamicArray,
@@ -196,5 +221,7 @@ export {
 	Rangebel,
 	Struct,
 	StructArray,
-	TypePonint
+	TypePonint,
+	Program,
+	VjassError
 };

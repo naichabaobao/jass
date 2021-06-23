@@ -61,8 +61,13 @@ class ModifierBodyType {
 	}
 }
 
-// 解析zinc代码
-function parse(content:string) {
+/**
+ * 解析zinc代码
+ * @param content 
+ * @param isZincFile 是否后缀为.zn，当前版本临时定义，后续参数增加后去除
+ * @returns 
+ */
+function parse(content:string, isZincFile:boolean = false) {
 
 	let ts = tokens(content);
 
@@ -83,7 +88,7 @@ function parse(content:string) {
 			comments.push(token);
 			return false;
 		}
-		return inZinc && !token.isBlockComment() && !token.isNewLine();
+		return (isZincFile || inZinc) && !token.isBlockComment() && !token.isNewLine();
 	});
 
 	const program = new Program();
@@ -529,7 +534,7 @@ function parse(content:string) {
 		};
 		const parseMember = () => {
 			if (token.isOp() && token.value == ";") {
-				console.log(members.length);
+
 				(<Struct>struct).members.push(...members.map( (member, index, ms) => {
 					if (index != 0) {
 						member.type = ms[0].type;
@@ -840,6 +845,7 @@ function parse(content:string) {
 				} else if (modifierTypes.length > 0 && token.isOp() && token.value == "}") {
 					modifierTypes.pop();
 				} else if (token.isOp() && token.value == "}") {
+					(<Library>library).loc.end = new Position(token.line, token.end);
 					resetLibrary();
 				} else {
 					parseGlobal();
@@ -909,7 +915,7 @@ export {
 	parseZincFile
 };
 
-console.log(JSON.stringify(parse(`
+const testString = JSON.stringify(parse(`
 //! zinc
   library library_name requires require_librarys ,,-,cccccc ccc, ccc {
 	public {
@@ -931,7 +937,11 @@ console.log(JSON.stringify(parse(`
 	} 
   }
 //! endzinc
-`).librarys, null, 2));
+`).librarys, null, 2);
+
+if (false) {
+	console.log(testString);
+}
 
 /*
 parseZincBlock(`//! zinc

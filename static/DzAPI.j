@@ -1,7 +1,7 @@
 #ifndef DZAPIINCLUDE
 #define DZAPIINCLUDE
 
-library DzAPI
+
 // 保存值
 native DzAPI_Map_SaveServerValue        takes player whichPlayer, string key, string value returns boolean
 // 获取值
@@ -409,7 +409,7 @@ function DzAPI_Map_Ladder_SubmitPlayerExtraExp takes player whichPlayer, integer
 	call DzAPI_Map_Ladder_SetStat(whichPlayer,"ExtraExp",I2S(value))
 endfunction
 
-endlibrary
+
 
 #endif
 

@@ -240,7 +240,7 @@
     },
     "zinc-keyword": {
       "name": "keyword",
-      "match": "\\b(library|function|constant|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|type|extends|delegate|not|do)\\b"
+      "match": "\\b(library|function|constant|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|type|extends|delegate|not|do|this)\\b"
     },
     "zinc-keyword-control": {
       "name": "keyword.control",

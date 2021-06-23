@@ -7,18 +7,12 @@ type ModifierType = "private" | "public";
 
 
 
-class Global implements Rangebel {
-	public isConstant: boolean = false;
-	public isArray:boolean = false;
+class Global extends jass.Global {
 	public size:number = 0;
 	public tag: ModifierType = "public";
-	public type: string;
-	public name: string;
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
 
 	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
+		super(type, name);
 	}
 
 	public get origin() : string {
@@ -34,7 +28,7 @@ class Global implements Rangebel {
 	}
 }
 
-class Func extends jass.Func implements Rangebel {
+class Func extends jass.Func {
 	public tag: ModifierType = "public";
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {

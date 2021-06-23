@@ -1,59 +1,44 @@
 import * as vscode from 'vscode';
-import { parseZincBlock } from '../zinc/parse';
 
-import { functions, natives } from './data';
-import { Program } from "./jass-parse";
+
+import {JassMap, ZincMap, VjassMap, commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram } from './data';
+import * as jassAst from "../jass/ast";
+import * as vjassAst from "../vjass/ast";
+import * as zincAst from "../zinc/ast";
 
 class ZincSignatureHelp implements vscode.SignatureHelpProvider {
 
-  private zincSignatureInformations = (document: vscode.TextDocument, position: vscode.Position, key:string, sign:vscode.SignatureHelp, activeParameter:number) => {
-    const signatureInformations = new Array<vscode.SignatureInformation> ();
-    const ast = parseZincBlock(document.getText());
-
-    ast.librarys.forEach(library => {
-
-      library.functions.forEach(func => {
-        if (func.name == key) {
-          const signatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`, new vscode.MarkdownString().appendCodeblock(func.origin));
-
-          func.takes.forEach(take => {
-            if (take.name) {
-              signatureInformation.parameters.push(new vscode.ParameterInformation(take.name));
-            }
-          });
-          sign.activeParameter = activeParameter;
-          signatureInformations.push(signatureInformation);
-        }
-      });
-
-      library.structs.forEach(struct => {
+  private allFunctions (document: vscode.TextDocument, position: vscode.Position): (jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method)[] {
+    const functions:Array<jassAst.Native|jassAst.Func| vjassAst.Func| zincAst.Func| zincAst.Method| vjassAst.Method> = [];
+    
+    functions.push(...commonJProgram.natives, ...commonJProgram.functions);
+    functions.push(...commonAiProgram.natives, ...commonAiProgram.functions);
+    functions.push(...blizzardJProgram.natives, ...blizzardJProgram.functions);
+    functions.push(...dzApiJProgram.natives, ...dzApiJProgram.functions);
+    JassMap.forEach((program) => {
+      functions.push(...program.natives, ...program.functions);
+    });
+    VjassMap.forEach((program) => {
+      program.librarys.forEach((library) => {
         
-        if (new vscode.Range(new vscode.Position(struct.loc.start.line, struct.loc.start.position),new vscode.Position(struct.loc.end.line, struct.loc.end.position)).contains(position)) {
-
-          struct.methods.forEach(method => {
-            if (method.name == key) {
-              const signatureInformation = new vscode.SignatureInformation(`${method.name}(${method.takes.length > 0 ? method.takes.map(x => x.origin).join(", ") : ""}) -> ${method.returns ?? "nothing"}`, new vscode.MarkdownString().appendCodeblock(method.origin));
-              console.log(method)
-              method.takes.forEach(take => {
-                if (take.name) {
-                  signatureInformation.parameters.push(new vscode.ParameterInformation(take.name));
-                }
-              });
-              sign.activeParameter = activeParameter;
-              signatureInformations.push(signatureInformation);
-            }
-          });
-        }
-
+        functions.push(...library.functions);
+        library.structs.forEach((struct) => {
+          functions.push(...struct.methods);
+        });
       });
-
-
-
+    });
+    ZincMap.forEach((program) => {
+      program.librarys.forEach((library) => {
+        
+        functions.push(...library.functions);
+        library.structs.forEach((struct) => {
+          functions.push(...struct.methods);
+        });
+      });
     });
     
-    sign.signatures.push(...signatureInformations);
-    // return signatureInformations;
-  };
+    return functions;
+  }
 
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     if (/^\s*\/\//.test(document.lineAt(position.line).text)) return;
@@ -87,20 +72,16 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
             // 向前預測
             if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
               const funcName = funcNames.reverse().join("");
-              
-              // 获取当前文档的方法
-              const content = document.getText();
 
-              // const ps = programs();
-              // ps.push(jass.parse(content));
-              const current = new Program(document.uri.fsPath, document.getText());
-              const allFunctions = [...natives, ...functions, ...current.allFunctions, ...current.natives];
-
+              const allFunctions = this.allFunctions(document, position); // [...natives, ...functions, ...current.allFunctions, ...current.natives];
+              console.log(funcName)
               for (let index = 0; index < allFunctions.length; index++) {
                 const func = allFunctions[index];
                 if (func.name == funcName) {
-                  const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
-                  SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
+                  
+                  const SignatureInformation = new vscode.SignatureInformation(func.origin);
+                  // new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
+                  SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.text);
 
                   func.takes.forEach(take => {
                     if (take.name) {
@@ -113,7 +94,7 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
                 }
               }
 
-              this.zincSignatureInformations(document, position, funcName, SignatureHelp, activeParameter);
+              // this.zincSignatureInformations(document, position, funcName, SignatureHelp, activeParameter);
 
             };
 
@@ -122,7 +103,13 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
       }
       return SignatureHelp;
     }
-    return provideSignatureHelp(document, position, token, context);
+    try {
+      const sh = provideSignatureHelp(document, position, token, context);
+      return sh;
+    } catch (err) {
+      console.error(err)
+    }
+    
 
   }
 }

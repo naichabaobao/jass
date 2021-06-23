@@ -4206,7 +4206,8 @@ native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green,
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 native SkinManagerGetLocalPath takes string key returns string
-native DestroyMinimapIcon takes minimapicon pingId returns nothing
+// 销毁小地图图标
+	native DestroyMinimapIcon takes minimapicon pingId returns nothing
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止闭塞(所有玩家) [R]
@@ -4273,6 +4274,7 @@ native CreateTrackable takes string trackableModelPath, real x, real y, real fac
 // Quest API
 // 新建任务 [R]
 native CreateQuest takes nothing returns quest
+	// 销毁任务
 native DestroyQuest takes quest whichQuest returns nothing
 native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
@@ -4336,6 +4338,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 // 新建排行榜 [R]
 native CreateLeaderboard takes nothing returns leaderboard
+	//删除排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 [R]
@@ -4685,6 +4688,7 @@ native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget ta
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电效果(指定Z轴) [R]
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
+	// 销毁闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电效果(指定坐标) [R]

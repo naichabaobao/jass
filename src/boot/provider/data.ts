@@ -2,45 +2,50 @@ import { Options } from "./options";
 import * as fs from "fs";
 import * as vscode from "vscode";
 
-import { Program } from "./jass-parse";
-import { isAiFile, isJFile, resolvePaths } from "../tool";
-import { parse } from "../jass/parse";
-import * as jass from "../jass/ast";
+import { isAiFile, isJFile, isZincFile, resolvePaths } from "../tool";
+import * as jassParse from "../jass/parse";
+import * as jassAst from "../jass/ast";
+
+import * as zincParse from "../zinc/parse";
+import * as zincAst from "../zinc/ast";
+
+import * as vjassParse from "../vjass/parse";
+import * as vjassAst from "../vjass/ast";
 
 
-const commonJProgram = parse(fs.readFileSync(Options.commonJPath).toString(), {
+const commonJProgram = jassParse.parse(fs.readFileSync(Options.commonJPath).toString(), {
   needParseNative: true
 });
 // new Program(Options.commonJPath, fs.readFileSync(Options.commonJPath).toString());
 
-const commonAiProgram = parse(fs.readFileSync(Options.commonAiPath).toString(), {
-  needParseNative: true
+const commonAiProgram = jassParse.parse(fs.readFileSync(Options.commonAiPath).toString(), {
+  needParseNative: false
 });
 // new Program(Options.commonAiPath, fs.readFileSync(Options.commonAiPath).toString());
 
-const blizzardJProgram = parse(fs.readFileSync(Options.blizzardJPath).toString(), {
-  needParseNative: true
+const blizzardJProgram = jassParse.parse(fs.readFileSync(Options.blizzardJPath).toString(), {
+  needParseNative: false
 });
 // new Program(Options.blizzardJPath, fs.readFileSync(Options.blizzardJPath).toString());
 
 
-const dzApiJProgram = parse(fs.readFileSync(Options.dzApiJPath).toString(), {
+const dzApiJProgram = jassParse.parse(fs.readFileSync(Options.dzApiJPath).toString(), {
   needParseNative: true
 });
 // new Program(Options.dzApiJPath, fs.readFileSync(Options.dzApiJPath).toString());
 
-const includePrograms = Options.includes.map(path => {
-  const content = fs.readFileSync(path).toString();
-  const program = new Program(path, content);
-  return program;
-});
+// const includePrograms = Options.includes.map(path => {
+//   const content = fs.readFileSync(path).toString();
+//   const program = new Program(path, content);
+//   return program;
+// });
 
-
-const includeMap = new Map<string, jass.Program>();
+/* vjass块 过时
+const includeMap = new Map<string, jassAst.Program>();
 
 Options.includes.map(path => {
   const content = fs.readFileSync(path).toString();
-  const program = parse(content, {
+  const program = jassParse.parse(content, {
     needParseNative: true
   });
   includeMap.set(path, program);
@@ -48,17 +53,22 @@ Options.includes.map(path => {
 
 const includeJassPrograms = [...includeMap.values()];
 
+
 const programs = [commonJProgram, commonAiProgram, dzApiJProgram, blizzardJProgram, ...includeJassPrograms];
 const scopes = includePrograms.map(program => program.allScope).flat();
 const librarys = includePrograms.map(program => program.librarys).flat();
 const types = includePrograms.map(program => program.types).flat();
 const structs = includePrograms.map(program => program.allStructs).flat();
 
+
 const natives = programs.map(program => program.natives).flat();
 const functions = programs.map(program => program.functions).flat();
 const globals = programs.map(program => program.globals).flat();
+*/
 
-const workMap = new Map<string, jass.Program>();
+const JassMap = new Map<string, jassAst.Program>();
+const ZincMap = new Map<string, zincAst.Program>();
+const VjassMap = new Map<string, vjassAst.Program>();
 
 /**
  * 解析工作目录下所有j文件
@@ -69,25 +79,32 @@ function parseWorkspaceFiles(floders = vscode.workspace.workspaceFolders) {
   }
 
   floders.forEach((floder) => {
-    console.time("workspace");
-    const files = resolvePaths([floder.uri.fsPath]);
-    console.timeEnd("workspace");
-    files.forEach((file) => {
 
-      if (isJFile(file)) {
-        const program = parse(fs.readFileSync(file).toString(), {
+    const files = resolvePaths([floder.uri.fsPath]);
+
+    files.forEach((filePath) => {
+      const content = fs.readFileSync(filePath).toString();
+      if (isJFile(filePath)) {
+        const jassProgram = jassParse.parse(content, {
           needParseLocal: true
         });
-        workMap.set(file, program);
-      } else if (isAiFile(file)) {
-        fs.readFile(file, {
-          encoding: "utf-8"
-        }, (err, data) => {
-          const program = parse(data, {
-            needParseLocal: true
-          });
-          workMap.set(file, program);
+        JassMap.set(filePath, jassProgram);
+        const vjassProgram = vjassParse.parse(content);
+        VjassMap.set(filePath, vjassProgram);
+        const zincProgram: zincAst.Program = zincParse.parse(content);
+        ZincMap.set(filePath, zincProgram);
+      } else if (isAiFile(filePath)) {
+        const jassProgram = jassParse.parse(content, {
+          needParseLocal: true
         });
+        JassMap.set(filePath, jassProgram);
+        const vjassProgram = vjassParse.parse(content);
+        VjassMap.set(filePath, vjassProgram);
+        const zincProgram: zincAst.Program = zincParse.parse(content);
+        ZincMap.set(filePath, zincProgram);
+      } else if (isZincFile(filePath)) {
+        const zincProgram: zincAst.Program = zincParse.parse(content, true);
+        ZincMap.set(filePath, zincProgram);
       }
 
     });
@@ -95,6 +112,9 @@ function parseWorkspaceFiles(floders = vscode.workspace.workspaceFolders) {
   });
 }
 parseWorkspaceFiles();
+
+
+
 
 /* 不起作用，暂时不知道有什么用
 function watchWorkspaceChange() {
@@ -120,77 +140,68 @@ watchWorkspaceChange();
 */
 function startWatch() {
 
-  const watcher = vscode.workspace.createFileSystemWatcher("**/*.j", false, false, false);
+  //#region jass and zinc
+  const watcher = vscode.workspace.createFileSystemWatcher("**/*{.j,.ai,.jass}", false, false, false);
   watcher.onDidCreate((event) => {
-    console.log("onDidCreate " + event.fsPath);
-    const program = parse(fs.readFileSync(event.fsPath).toString(), {
+    const content = fs.readFileSync(event.fsPath).toString();
+    const program = jassParse.parse(content, {
       needParseLocal: true
     });
-    workMap.set(event.fsPath, program);
-
+    JassMap.set(event.fsPath, program);
+    const vjassProgram = vjassParse.parse(content);
+    VjassMap.set(event.fsPath, vjassProgram);
+    const zincProgram: zincAst.Program = zincParse.parse(content);
+    ZincMap.set(event.fsPath, zincProgram);
   });
   watcher.onDidDelete((event) => {
-    console.log("onDidDelete " + event.fsPath);
-    workMap.delete(event.fsPath);
+
+    JassMap.delete(event.fsPath);
+    VjassMap.delete(event.fsPath);
+    ZincMap.delete(event.fsPath);
   });
   // 类似于保存，暂时未发现有其他作用
   watcher.onDidChange((event) => {
-    console.log("onDidChange " + event.fsPath);
-    
-    const program = parse(fs.readFileSync(event.fsPath).toString(), {
+
+    const content = fs.readFileSync(event.fsPath).toString();
+    const program = jassParse.parse(content, {
       needParseLocal: true
     });
-    workMap.set(event.fsPath, program);
-
+    JassMap.set(event.fsPath, program);
+    const vjassProgram = vjassParse.parse(content);
+    VjassMap.set(event.fsPath, vjassProgram);
+    const zincProgram: zincAst.Program = zincParse.parse(content);
+    ZincMap.set(event.fsPath, zincProgram);
   });
-
+  //#endregion
+  //#region zinc
+  const zincWatcher = vscode.workspace.createFileSystemWatcher("**/*.zn", false, false, false);
+  zincWatcher.onDidCreate((event) => {
+    const zincProgram: zincAst.Program = zincParse.parse(fs.readFileSync(event.fsPath).toString());
+    ZincMap.set(event.fsPath, zincProgram);
+  });
+  zincWatcher.onDidDelete((event) => {
+    ZincMap.delete(event.fsPath);
+  });
+  zincWatcher.onDidChange((event) => {
+    const zincProgram: zincAst.Program = zincParse.parse(fs.readFileSync(event.fsPath).toString());
+    ZincMap.set(event.fsPath, zincProgram);
+  });
+  //#endregion
 
   vscode.workspace.onDidChangeTextDocument((event) => {
-    console.log("change")
+    
   });
 
 }
 startWatch();
-/**
- * 获取工作目录下已经解析完的jass文件
- * @returns 
- */
-function getWorkspaceFiles() {
-  const programs: jass.Program[] = [];
 
-  for (const key in workMap) {
-    if (workMap.has(key)) {
-      const program = <jass.Program>workMap.get(key)
-      programs.push(program);
-    }
-  }
-
-  return programs;
-}
-
-function getWorkspaceJson() {
-  let obj:any = {};
-  for (let[k,v] of workMap) {
-      obj[k] = v;
-  }
-  return obj;
-}
 
 export {
   commonJProgram,
   commonAiProgram,
   blizzardJProgram,
   dzApiJProgram,
-  includePrograms,
-  programs,
-  types,
-  natives,
-  functions,
-  globals,
-  structs,
-  scopes,
-  librarys,
-  workMap,
-  includeJassPrograms,
-  includeMap
+  JassMap,
+  ZincMap,
+  VjassMap
 };
