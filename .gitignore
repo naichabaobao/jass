@@ -1,5 +1,7 @@
 out
 node_modules
 .vscode-test/
+src/temp
+src/test
 *.vsix
 *.log
