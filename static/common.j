@@ -143,64 +143,121 @@ type commandbuttoneffect extends handle
 constant native ConvertRace takes integer i returns race
 // 转换联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
-
+// 转换种族
 constant native ConvertRacePref takes integer i returns racepreference
+// 转换I游戏状态
 constant native ConvertIGameState takes integer i returns igamestate
+// 转换F游戏状态
 constant native ConvertFGameState takes integer i returns fgamestate
+// 玩家状态转换
 constant native ConvertPlayerState takes integer i returns playerstate
+// 转换玩家得分
 constant native ConvertPlayerScore takes integer i returns playerscore
+// 转换玩家游戏结果
 constant native ConvertPlayerGameResult takes integer i returns playergameresult
+// 转换单位状态
 constant native ConvertUnitState takes integer i returns unitstate
+// 转换AI难度
 constant native ConvertAIDifficulty takes integer i returns aidifficulty
+// 转换游戏事件
 constant native ConvertGameEvent takes integer i returns gameevent
+// 转换玩家事件
 constant native ConvertPlayerEvent takes integer i returns playerevent
+// 转换玩家单位事件
 constant native ConvertPlayerUnitEvent takes integer i returns playerunitevent
+// 转换组件事件
 constant native ConvertWidgetEvent takes integer i returns widgetevent
+// 转换对话框事件
 constant native ConvertDialogEvent takes integer i returns dialogevent
+// 转换单位事件
 constant native ConvertUnitEvent takes integer i returns unitevent
+// 转换限制操作
 constant native ConvertLimitOp takes integer i returns limitop
+// 转换单位类型
 constant native ConvertUnitType takes integer i returns unittype
+// 转换游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
+// 转换位置
 constant native ConvertPlacement takes integer i returns placement
+// 转换起始位置优先
 constant native ConvertStartLocPrio takes integer i returns startlocprio
+// 游戏难度
 constant native ConvertGameDifficulty takes integer i returns gamedifficulty
+// 游戏类型
 constant native ConvertGameType takes integer i returns gametype
+// 地图标记
 constant native ConvertMapFlag takes integer i returns mapflag
+// 地图可见性
 constant native ConvertMapVisibility takes integer i returns mapvisibility
+// 地图设置
 constant native ConvertMapSetting takes integer i returns mapsetting
+// 地图密度
 constant native ConvertMapDensity takes integer i returns mapdensity
+// 地图控制器
 constant native ConvertMapControl takes integer i returns mapcontrol
+// 玩家颜色
 constant native ConvertPlayerColor takes integer i returns playercolor
+// 玩家位置状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
+// 音量组
 constant native ConvertVolumeGroup takes integer i returns volumegroup
+// 照相机领域
 constant native ConvertCameraField takes integer i returns camerafield
+// 混合模式
 constant native ConvertBlendMode takes integer i returns blendmode
+// 罕见的控制
 constant native ConvertRarityControl takes integer i returns raritycontrol
+// 纹理贴图标志
 constant native ConvertTexMapFlags takes integer i returns texmapflags
+// 迷雾状态
 constant native ConvertFogState takes integer i returns fogstate
+// 特效类型
 constant native ConvertEffectType takes integer i returns effecttype
+// 版本
 constant native ConvertVersion takes integer i returns version
+// 物品类型
 constant native ConvertItemType takes integer i returns itemtype
+// 攻击类型
 constant native ConvertAttackType takes integer i returns attacktype
+// 伤害类型
 constant native ConvertDamageType takes integer i returns damagetype
+// 武器类型
 constant native ConvertWeaponType takes integer i returns weapontype
+// 声音类型
 constant native ConvertSoundType takes integer i returns soundtype
+// 路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
+// 鼠标按钮类型
 constant native ConvertMouseButtonType takes integer i returns mousebuttontype
+// 动画类型
 constant native ConvertAnimType takes integer i returns animtype
+// 子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
+// 原点框架类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
+// frame点类型
 constant native ConvertFramePointType takes integer i returns framepointtype
+// 文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
+// 框架事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
+// 按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
+// 技能整数字段
 constant native ConvertAbilityIntegerField takes integer i returns abilityintegerfield
+// 技能实数字段
 constant native ConvertAbilityRealField takes integer i returns abilityrealfield
+// 技能布尔字段
 constant native ConvertAbilityBooleanField takes integer i returns abilitybooleanfield
+// 技能字符串字段
 constant native ConvertAbilityStringField takes integer i returns abilitystringfield
+// 技能整数等级字段
 constant native ConvertAbilityIntegerLevelField takes integer i returns abilityintegerlevelfield
+// 技能实数等级字段
 constant native ConvertAbilityRealLevelField takes integer i returns abilityreallevelfield
+// 技能布尔等级字段
 constant native ConvertAbilityBooleanLevelField takes integer i returns abilitybooleanlevelfield
+// 技能字符串等级字段
 constant native ConvertAbilityStringLevelField takes integer i returns abilitystringlevelfield
 constant native ConvertAbilityIntegerLevelArrayField takes integer i returns abilityintegerlevelarrayfield
 constant native ConvertAbilityRealLevelArrayField takes integer i returns abilityreallevelarrayfield
@@ -225,11 +282,15 @@ constant native ConvertHeroAttribute takes integer i returns heroattribute
 constant native ConvertDefenseType takes integer i returns defensetype
 constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
+// 路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-
+// 命令id
 constant native OrderId takes string orderIdString returns integer
+// 命令id转字符串
 constant native OrderId2String takes integer orderId returns string
+// 单位id
 constant native UnitId takes string unitIdString returns integer
+// 单位id转字符串
 constant native UnitId2String takes integer unitId returns string
 
 // Not currently working correctly...
@@ -241,10 +302,15 @@ constant native AbilityId2String takes integer abilityId returns string
 constant native GetObjectName takes integer objectId returns string
 // 获取最大的玩家数
 constant native GetBJMaxPlayers takes nothing returns integer
+// 玩家中立的受害者
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
+// 获得bj玩家中立额外
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
+// 获得最大玩家插槽
 constant native GetBJMaxPlayerSlots takes nothing returns integer
+// 玩家中立被动
 constant native GetPlayerNeutralPassive takes nothing returns integer
+// 玩家中立敌对
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
@@ -253,8 +319,9 @@ globals
 	// Game Constants
 	//===================================================
 	
-	// pfff
+	// false
  constant boolean FALSE                           = false
+ // true
 	constant boolean TRUE                            = true
 	// 数组最大值
 	constant integer JASS_MAX_ARRAY_SIZE             = 32768
@@ -401,9 +468,11 @@ globals
 	constant pathingtype PATHING_TYPE_BLIGHTPATHING      = ConvertPathingType(5)
 	constant pathingtype PATHING_TYPE_FLOATABILITY       = ConvertPathingType(6)
 	constant pathingtype PATHING_TYPE_AMPHIBIOUSPATHING  = ConvertPathingType(7)
-	
+	// 左键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_LEFT          = ConvertMouseButtonType(1)
+	// 滚轮
 	constant mousebuttontype MOUSE_BUTTON_TYPE_MIDDLE        = ConvertMouseButtonType(2)
+	// 右键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_RIGHT         = ConvertMouseButtonType(3)
 	
 	constant animtype ANIM_TYPE_BIRTH                 = ConvertAnimType(0)
@@ -706,21 +775,31 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH                    = ConvertPlayerUnitEvent(20)
 	// 玩家單位開始腐爛
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY                    = ConvertPlayerUnitEvent(21)
-	
+	// 单价检测
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED                 = ConvertPlayerUnitEvent(22)
+	// 单位隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN                   = ConvertPlayerUnitEvent(23)
 	
+	// 选取单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELECTED                 = ConvertPlayerUnitEvent(24)
+	// 取消选择单位
 	constant playerunitevent EVENT_PLAYER_UNIT_DESELECTED               = ConvertPlayerUnitEvent(25)
 	
+	// 开始建造
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_START          = ConvertPlayerUnitEvent(26)
+	// 取消建造
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL         = ConvertPlayerUnitEvent(27)
+	// 建造完成
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_FINISH         = ConvertPlayerUnitEvent(28)
 	
+	// 升级开始
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_START            = ConvertPlayerUnitEvent(29)
+	// 取消升级
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_CANCEL           = ConvertPlayerUnitEvent(30)
+	// 升级完成
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH           = ConvertPlayerUnitEvent(31)
 	
+
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_START              = ConvertPlayerUnitEvent(32)
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_CANCEL             = ConvertPlayerUnitEvent(33)
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_FINISH             = ConvertPlayerUnitEvent(34)
@@ -1051,14 +1130,23 @@ globals
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR        = ConvertOriginFrameType(21)
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL  = ConvertOriginFrameType(22)
 	
+	// 左上
 	constant framepointtype FRAMEPOINT_TOPLEFT                   = ConvertFramePointType(0)
+	// 上
 	constant framepointtype FRAMEPOINT_TOP                       = ConvertFramePointType(1)
+	// 右上
 	constant framepointtype FRAMEPOINT_TOPRIGHT                  = ConvertFramePointType(2)
+	// 左
 	constant framepointtype FRAMEPOINT_LEFT                      = ConvertFramePointType(3)
+	// 中间
 	constant framepointtype FRAMEPOINT_CENTER                    = ConvertFramePointType(4)
+	// 右
 	constant framepointtype FRAMEPOINT_RIGHT                     = ConvertFramePointType(5)
+	// 左下
 	constant framepointtype FRAMEPOINT_BOTTOMLEFT                = ConvertFramePointType(6)
+	// 下
 	constant framepointtype FRAMEPOINT_BOTTOM                    = ConvertFramePointType(7)
+	// 右下
 	constant framepointtype FRAMEPOINT_BOTTOMRIGHT               = ConvertFramePointType(8)
 	
 	constant textaligntype TEXT_JUSTIFY_TOP                     = ConvertTextAlignType(0)
@@ -3755,6 +3843,7 @@ constant native GetPlayerTechResearched takes player whichPlayer, integer techid
 // 获取玩家科技数量
 constant native GetPlayerTechCount takes player whichPlayer, integer techid, boolean specificonly returns integer
 
+// 设置单位所属玩家
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
 // 削弱玩家
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
@@ -3804,35 +3893,50 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 
 //============================================================================
 // Game API
-// Game API
+// 获取版本
 native VersionGet takes nothing returns version
+// 版本兼容
 native VersionCompatible takes version whichVersion returns boolean
+// 版本支持
 native VersionSupported takes version whichVersion returns boolean
 
+// 最后阶段
 native EndGame takes boolean doScoreScreen returns nothing
 
 // Async only!
 // 切换关卡 [R]
 native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
+// 重启游戏
 native RestartGame takes boolean doScoreScreen returns nothing
+// 从加载游戏
 native ReloadGame takes nothing returns nothing
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
+// 设置战役菜单竞赛 @deprecated("这方法不建议使用,应该使用SetCampaignMenuRaceEx代替")
 native SetCampaignMenuRace takes race r returns nothing
+// 设置战役菜单竞赛
 native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
+// 部队行动选择画面
 native ForceCampaignSelectScreen takes nothing returns nothing
 
+// 加载游戏
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 保存进度 [R]
 native SaveGame takes string saveFileName returns nothing
+// 重命名保存目录
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
+// 移除保存目录
 native RemoveSaveDirectory takes string sourceDirName returns boolean
+// 复制保存目录
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 游戏进度是存在的
 native SaveGameExists takes string saveName returns boolean
+// 设置最大关卡保存
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
+// 保存关卡
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
+// 同步选择
 native SyncSelections takes nothing returns nothing
 native SetFloatGameState takes fgamestate whichFloatGameState, real value returns nothing
 constant native GetFloatGameState takes fgamestate whichFloatGameState returns real
@@ -4021,6 +4125,7 @@ native SaveFogModifierHandle takes hashtable table, integer parentKey, integer c
 native SaveAgentHandle takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
 // <1.24> 保存哈希表 [C]
 native SaveHashtableHandle takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
+// <1.29> 保存框架
 native SaveFrameHandle takes hashtable table, integer parentKey, integer childKey, framehandle whichFrameHandle returns boolean
 
 
@@ -4106,6 +4211,7 @@ native LoadFogStateHandle takes hashtable table, integer parentKey, integer chil
 native LoadFogModifierHandle takes hashtable table, integer parentKey, integer childKey returns fogmodifier
 // <1.24> 从哈希表提取哈希表 [C]
 native LoadHashtableHandle takes hashtable table, integer parentKey, integer childKey returns hashtable
+// <1.29> 从哈希表提取框架
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
 
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
@@ -4265,19 +4371,20 @@ native EnablePreSelect takes boolean state, boolean ui returns nothing
 // 允许/禁止选择
 native EnableSelect takes boolean state, boolean ui returns nothing
 
-//============================================================================
 // Trackable API
 // 新建可追踪物 [R]
 native CreateTrackable takes string trackableModelPath, real x, real y, real facing returns trackable
 
-//============================================================================
 // Quest API
 // 新建任务 [R]
 native CreateQuest takes nothing returns quest
 	// 销毁任务
 native DestroyQuest takes quest whichQuest returns nothing
+// 设置任务标题
 native QuestSetTitle takes quest whichQuest, string title returns nothing
+// 设置任务介绍
 native QuestSetDescription takes quest whichQuest, string description returns nothing
+// 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
 
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
@@ -4291,15 +4398,18 @@ native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 native IsQuestRequired takes quest whichQuest returns boolean
 // 任务完成
 native IsQuestCompleted takes quest whichQuest returns boolean
-// 任务已发现
+// 任务找到
 native IsQuestDiscovered takes quest whichQuest returns boolean
 // 任务失败
 native IsQuestFailed takes quest whichQuest returns boolean
 // 允许任务
 native IsQuestEnabled takes quest whichQuest returns boolean
 
+// 任务创建物品
 native QuestCreateItem takes quest whichQuest returns questitem
+// 任务物品介绍
 native QuestItemSetDescription takes questitem whichQuestItem, string description returns nothing
+// 任务物品发货
 native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed returns nothing
 
 // 任务条件完成

@@ -208,6 +208,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			expr = new Func("");
 			expr.text = matchText(token.line);
 			(<Func>expr).loc.start = new Position(token.line, token.position);
+			(<Func>expr).loc.end = new Position(token.line + 1, 0);
 			program.functions.push((<Func>expr));
 			funcState = 1;
 		} else if (token.isId() && token.value == "endfunction") {

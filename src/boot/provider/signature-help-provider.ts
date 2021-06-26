@@ -79,7 +79,8 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
                 const func = allFunctions[index];
                 if (func.name == funcName) {
                   
-                  const SignatureInformation = new vscode.SignatureInformation(func.origin);
+                  const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
+                  // new vscode.SignatureInformation(func.origin);
                   // new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
                   SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.text);
 
