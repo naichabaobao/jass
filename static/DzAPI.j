@@ -7,32 +7,45 @@ native DzAPI_Map_SaveServerValue        takes player whichPlayer, string key, st
 // 获取值
 native DzAPI_Map_GetServerValue         takes player whichPlayer, string key returns string
 native DzAPI_Map_Ladder_SetStat         takes player whichPlayer, string key, string value returns nothing
+// rpg阶梯
 native DzAPI_Map_IsRPGLadder            takes nothing returns boolean
+// 游戏开始时间
 native DzAPI_Map_GetGameStartTime       takes nothing returns integer
 native DzAPI_Map_Stat_SetStat           takes player whichPlayer, string key, string value returns nothing
+// 匹配类型
 native DzAPI_Map_GetMatchType      		takes nothing returns integer
+// 玩家状态
 native DzAPI_Map_Ladder_SetPlayerStat   takes player whichPlayer, string key, string value returns nothing
 native DzAPI_Map_GetServerValueErrorCode takes player whichPlayer returns integer
+// 得到阶梯水平
 native DzAPI_Map_GetLadderLevel         takes player whichPlayer returns integer
-// is vip?
+// 红名vip
 native DzAPI_Map_IsRedVIP               takes player whichPlayer returns boolean
-// is vip?
+// 蓝名vip
 native DzAPI_Map_IsBlueVIP              takes player whichPlayer returns boolean
+// 得到梯阶
 native DzAPI_Map_GetLadderRank          takes player whichPlayer returns integer
+// 地图排名
 native DzAPI_Map_GetMapLevelRank        takes player whichPlayer returns integer
 native DzAPI_Map_GetGuildName           takes player whichPlayer returns string
 native DzAPI_Map_GetGuildRole           takes player whichPlayer returns integer
+// rpg大厅
 native DzAPI_Map_IsRPGLobby             takes nothing returns boolean
+// 获取地图等级
 native DzAPI_Map_GetMapLevel            takes player whichPlayer returns integer
+// 任务完成
 native DzAPI_Map_MissionComplete        takes player whichPlayer, string key, string value returns nothing
+// 活动数据
 native DzAPI_Map_GetActivityData        takes nothing returns string
 native DzAPI_Map_GetMapConfig           takes string key returns string
 native DzAPI_Map_HasMallItem            takes player whichPlayer, string key returns boolean
 native DzAPI_Map_SavePublicArchive      takes player whichPlayer, string key, string value returns boolean
 native DzAPI_Map_GetPublicArchive       takes player whichPlayer, string key returns string
 native DzAPI_Map_UseConsumablesItem     takes player whichPlayer, string key returns nothing
+// Orpg触发
 native DzAPI_Map_OrpgTrigger            takes player whichPlayer, string key returns nothing
 native DzAPI_Map_GetServerArchiveDrop   takes player whichPlayer, string key returns string
+// 服务器存档设备
 native DzAPI_Map_GetServerArchiveEquip  takes player whichPlayer, string key returns integer
 native DzGetMouseTerrainX takes nothing returns real
 // 获取鼠标在游戏内的坐标Y
@@ -61,9 +74,11 @@ native DzTriggerRegisterKeyEvent takes trigger trig, integer key, integer status
 native DzTriggerRegisterKeyEventByCode takes trigger trig, integer key, integer status, boolean sync, code funcHandle returns nothing
 // 注册鼠标滚轮触发
 native DzTriggerRegisterMouseWheelEvent takes trigger trig, boolean sync, string func returns nothing
+// 注册鼠标滚轮触发
 native DzTriggerRegisterMouseWheelEventByCode takes trigger trig, boolean sync, code funcHandle returns nothing
 // 注册鼠标移动触发
 native DzTriggerRegisterMouseMoveEvent takes trigger trig, boolean sync, string func returns nothing
+// 注册鼠标移动触发
 native DzTriggerRegisterMouseMoveEventByCode takes trigger trig, boolean sync, code funcHandle returns nothing
 // 获取触发器的按键码
 native DzGetTriggerKey takes nothing returns integer
@@ -83,6 +98,7 @@ native DzGetWindowX takes nothing returns integer
 native DzGetWindowY takes nothing returns integer
 // 注册war3窗口大小变化事件
 native DzTriggerRegisterWindowResizeEvent takes trigger trig, boolean sync, string func returns nothing
+// 注册war3窗口大小变化事件
 native DzTriggerRegisterWindowResizeEventByCode takes trigger trig, boolean sync, code funcHandle returns nothing
 // 判断窗口是否激活
 native DzIsWindowActive takes nothing returns boolean

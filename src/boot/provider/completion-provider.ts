@@ -39,6 +39,62 @@ const keywordItems: vscode.CompletionItem[] = [];
   keywordItems.push(item);
 });
 
+enum PositionType {
+  Unkown,
+  Returns,
+  Local,
+  Array,
+  Constant,
+  FuncNaming,
+  TakesFirstType,
+  TakesOtherType,
+  TakesNaming,
+  Call,
+  Set,
+  Point
+}
+
+/**
+ * 判断当前指标位置类型
+ */
+class PositionTool {
+  private static ReturnsRegExp = new RegExp(/\breturns\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static LocalRegExp = new RegExp(/\blocal\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static ConstantRegExp = new RegExp(/\bconstant\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static FuncNamingRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static TakeTypeFirstRegExp = new RegExp(/\btakes\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static TakeTypeOtherRegExp = new RegExp(/,\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static CallRegExp = new RegExp(/\bcall\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static SetRegExp = new RegExp(/\bset\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+
+  public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
+    const lineText = document.lineAt(position.line);
+    const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
+
+    if (this.ReturnsRegExp.test(inputText)) {
+      return PositionType.Returns;
+    } else if (this.LocalRegExp.test(inputText)) {
+      return PositionType.Local;
+    } else if (this.ConstantRegExp.test(inputText)) {
+      return PositionType.Constant;
+    } else if (this.FuncNamingRegExp.test(inputText)) {
+      return PositionType.FuncNaming;
+    } else if (/\btakes\b/.test(inputText) && this.TakeTypeFirstRegExp.test(inputText)) {
+      return PositionType.TakesFirstType;
+    } else if (/\btakes\b/.test(inputText) && this.TakeTypeOtherRegExp.test(inputText)) {
+      return PositionType.TakesOtherType;
+    } else if (this.CallRegExp.test(inputText)) {
+      return PositionType.Call;
+    } else if (this.SetRegExp.test(inputText)) {
+      return PositionType.Set;
+    } else if (this.PointRegExp.test(inputText)) {
+      return PositionType.Point;
+    }
+
+    return PositionType.Unkown;
+  }
+}
 
 // const commonJItems = programToItem(commonJProgram);
 
@@ -419,6 +475,7 @@ vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionIt
     // items.push(...commonAiItems);
     items.push(...blizzardJItems);
     items.push(...dzApiJItems);
+    /*
     JassMap.forEach((program, key) => {
       const currentFunctionItems = program.functions.map(func => {
         const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
@@ -431,10 +488,11 @@ vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionIt
         item.detail = global.name;
         item.documentation = new vscode.MarkdownString().appendText(`${global.text}(${getPathFileName(key)})`).appendCodeblock(global.origin);
         return item;
-      });
+      }); 
       items.push(...currentGlobalItems);
       items.push(...currentFunctionItems);
     });
+    */
     return items;
   }
 }());
@@ -515,13 +573,15 @@ const RecoverableTypes:Gc[] = [
   new Gc("string", (name) => {
     return `set ${name} = null`;
   }),
+  new Gc("multiboard", (name) => {
+    return `call DestroyMultiboard(${name})\nset ${name} = null`;
+  }),
   ];
-
   const defaultGc = new Gc("", (name) => {
     return `set ${name} = null`;
   });
 
-vscode.languages.registerCompletionItemProvider("jass", new class LuaCompletionItemProvider implements vscode.CompletionItemProvider {
+vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items: vscode.CompletionItem[] = [];
 
@@ -538,7 +598,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class LuaCompletionI
               const gc = RecoverableTypes.find((gc) => gc.type == take.type);
               return gc ? gc.gc(take.name) : defaultGc.gc(take.name);
             }).join("\n");
-            item.documentation = `排泄`;
+            item.documentation = new vscode.MarkdownString().appendText("自动排泄\n").appendCodeblock(`function auto_gc take nothing returns nothing\n\tlocal unit u = null\n\t// gc automatic excretion is output at the end of the function\n\tgc\nendfunction`);
             item.insertText = `${localGcString}\n${takesGcString}`;
             items.push(item);
           }
@@ -549,73 +609,15 @@ vscode.languages.registerCompletionItemProvider("jass", new class LuaCompletionI
   }
 }());
 
-function provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-  const items = new Array<vscode.CompletionItem>();
+/* 测试代码
+vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items: vscode.CompletionItem[] = [];
 
-  const lineText = document.lineAt(position.line);
-  const cutString = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-  const result = new RegExp(/(?<source>[a-zA-Z0-9][a-zA-Z0-9_]*)\s*\.\s*(?<trigger>[a-zA-Z0-9][a-zA-Z0-9_]*)$/).exec(cutString);
+    const type = PositionTool.is(document, position);
+    console.log(type)
 
-  if (result && result.groups && result.groups["source"] && result.groups["trigger"]) {
-    const source = result.groups["source"];
-    const trigger = result.groups["trigger"];
-
-    ZincMap.forEach((program, key) => {
-      if (key == document.uri.fsPath) {
-        const library = program.librarys.find((library) => {
-          return new vscode.Range(library.loc.start.line, library.loc.start.position, library.loc.end.line, library.loc.end.position).contains(position);
-        });
-        if (library) {
-          const struct = library.structs.find((struct) => {
-            return new vscode.Range(struct.loc.start.line, struct.loc.start.position, struct.loc.end.line, struct.loc.end.position).contains(position);
-          });
-          if (struct) {
-            if (source == "this") {
-              struct.methods.forEach(method => {
-                const methodItem = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-                methodItem.detail = method.name;
-                methodItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${method.text}`).appendCodeblock(method.origin);
-                items.push(methodItem);
-              });
-              struct.members.forEach(member => {
-                const memberItem = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
-                memberItem.detail = member.name;
-                memberItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${member.text}`).appendCodeblock(member.origin);
-                items.push(memberItem);
-              });
-            } else {
-              const method = struct.methods.find((method) => {
-                return new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position).contains(position);
-              });
-              if (method) {
-                const local = method.locals.find((local) => local.name == source);
-                if (local) {
-                  const struct = library.structs.find((struct) => {
-                    return struct.name = local.type;
-                  });
-                  if (struct) {
-                    struct.methods.forEach(method => {
-                      const methodItem = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-                      methodItem.detail = method.name;
-                      methodItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${method.text}`).appendCodeblock(method.origin);
-                      items.push(methodItem);
-                    });
-                    struct.members.forEach(member => {
-                      const memberItem = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
-                      memberItem.detail = member.name;
-                      memberItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${member.text}`).appendCodeblock(member.origin);
-                      items.push(memberItem);
-                    });
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-
+    return items;
   }
-  return items;
-};
-
+}());
+ */

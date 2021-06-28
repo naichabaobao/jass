@@ -5,3 +5,4 @@ src/temp
 src/test
 *.vsix
 *.log
+*.zip

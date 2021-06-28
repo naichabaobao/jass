@@ -4440,6 +4440,7 @@ native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor r
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 判断计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
+	// 可以修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
 //============================================================================
@@ -4453,6 +4454,7 @@ native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 [R]
 native LeaderboardDisplay takes leaderboard lb, boolean show returns nothing
+	// 是否显示排行榜
 native IsLeaderboardDisplayed takes leaderboard lb returns boolean
 
 // 行数
