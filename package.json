@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "keywords": [
     "jass",
     "warcraft"
@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/naichabaobao/jass.git"
+    "url": "https://github.com/naichabaobao/jass"
   },
   "homepage": "https://github.com/naichabaobao/jass",
   "activationEvents": [
@@ -54,7 +54,7 @@
           "items": {
             "type": "string"
           },
-          "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j|.ai\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find. J |.ai)"
+          "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j | .ai | .zn\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find .j | .ai | .zn)"
         },
         "jass.support.zinc": {
           "type": "boolean",
@@ -123,7 +123,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "build": "vsce package"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

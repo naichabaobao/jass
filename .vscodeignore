@@ -10,5 +10,4 @@ node_modules
 **/*.ts
 
 *.vsix
-*.md
 *.json

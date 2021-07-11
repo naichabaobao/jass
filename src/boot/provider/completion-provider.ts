@@ -6,7 +6,7 @@
 
 import * as vscode from "vscode";
 
-import { Types } from "./types";
+import { StatementTypes, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, JassMap, VjassMap, ZincMap } from './data';
@@ -26,12 +26,14 @@ import { getPathFileName, isAiFile, isZincFile } from "../tool";
 
 
 const typeItems: vscode.CompletionItem[] = [];
-Types.forEach(type => {
+StatementTypes.forEach(type => {
   const item = new vscode.CompletionItem(type, vscode.CompletionItemKind.Class);
   item.detail = type;
   item.documentation = getTypeDesc(type);
   typeItems.push(item);
 });
+
+const CodeItem = item("code", vscode.CompletionItemKind.Class, "句柄", `传递function`);
 
 const keywordItems: vscode.CompletionItem[] = [];
 (Options.isOnlyJass ? Keywords : AllKeywords).forEach(keyword => {
@@ -51,7 +53,8 @@ enum PositionType {
   TakesNaming,
   Call,
   Set,
-  Point
+  Point,
+  LocalNaming
 }
 
 /**
@@ -60,10 +63,12 @@ enum PositionType {
 class PositionTool {
   private static ReturnsRegExp = new RegExp(/\breturns\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static LocalRegExp = new RegExp(/\blocal\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static LocalNamingRegExp = new RegExp(/\blocal\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+(?:array\s+)?[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static ConstantRegExp = new RegExp(/\bconstant\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static FuncNamingRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static TakeTypeFirstRegExp = new RegExp(/\btakes\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static TakeTypeOtherRegExp = new RegExp(/,\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static TakeNamingRegExp = new RegExp(/(?:,\s*|\btakes\s+)[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static CallRegExp = new RegExp(/\bcall\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static SetRegExp = new RegExp(/\bset\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
@@ -84,12 +89,18 @@ class PositionTool {
       return PositionType.TakesFirstType;
     } else if (/\btakes\b/.test(inputText) && this.TakeTypeOtherRegExp.test(inputText)) {
       return PositionType.TakesOtherType;
+    } else if (/\btakes\b/.test(inputText) && this.TakeNamingRegExp.test(inputText)) {
+      return PositionType.TakesNaming;
     } else if (this.CallRegExp.test(inputText)) {
       return PositionType.Call;
     } else if (this.SetRegExp.test(inputText)) {
       return PositionType.Set;
     } else if (this.PointRegExp.test(inputText)) {
       return PositionType.Point;
+    } else if (this.LocalNamingRegExp.test(inputText)) {
+      return PositionType.LocalNaming;
+    } else if (this.LocalNamingRegExp.test(inputText)) {
+      return PositionType.LocalNaming;
     }
 
     return PositionType.Unkown;
@@ -344,10 +355,44 @@ const commonAiItems = jassProgramToItem(undefined, undefined, Options.commonAiPa
 const blizzardJItems = jassProgramToItem(undefined, undefined, Options.blizzardJPath, blizzardJProgram);
 const dzApiJItems = jassProgramToItem(undefined, undefined, Options.dzApiJPath, dzApiJProgram);
 
+function item(label:string, kind: vscode.CompletionItemKind, documentation?: string, code?: string) {
+  const item = new vscode.CompletionItem(label, kind);
+  item.documentation = documentation ? new vscode.MarkdownString(documentation).appendCodeblock(code ?? "") : undefined;
+  return item;
+}
+
+const NothingItem = item("nothing", vscode.CompletionItemKind.Keyword);
+
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
+
+    // 获取当前位置提示类型
+    const type = PositionTool.is(document, position);
+
+    switch(type) {
+      case PositionType.FuncNaming:
+      case PositionType.TakesNaming:
+      case PositionType.LocalNaming:
+      case PositionType.TakesNaming:
+        return null;
+      case PositionType.Returns:
+        items.push(...typeItems, NothingItem);
+        return items;
+      case PositionType.Local:
+      case PositionType.Constant:
+        items.push(...typeItems);
+        return items;
+      case PositionType.TakesFirstType:
+        items.push(...typeItems, NothingItem, CodeItem);
+        return items;
+      case PositionType.TakesOtherType:
+        items.push(...typeItems, CodeItem);
+        return items;
+    }
+
+
 
     items.push(...typeItems);
     items.push(...keywordItems);

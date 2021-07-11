@@ -160,8 +160,8 @@ type unitcategory extends handle//war3PTR1.31.0.11889
 type pathingflag extends handle//war3PTR1.31.0.11889
 */
 
-function types(version:"1.32" | "1.31" | "1.30" | "1.29" | "1.24" | "1.20" | undefined | null = defaultVersion) {
-  const types = [...baseType];
+function types(version:"1.32" | "1.31" | "1.30" | "1.29" | "1.24" | "1.20" | undefined | null = defaultVersion, containsCode = false) {
+  const types = containsCode ? baseType : statemType;
   if(!version) {
     version = "1.32";
   }
@@ -194,12 +194,15 @@ function isType(type:string, version:"1.32" | "1.31" | "1.30" | "1.29" | "1.24" 
   return types(version).includes(type);
 }
 
-const Types = types();
-
-
+// 不包含code类型的types
+const StatementTypes = types(defaultVersion, false);
+// 包含code的types
+const Types = types(defaultVersion, true);
 
 export{
+  StatementTypes,
   Types,
+  types,
   isBaseType,
   isType
 }
