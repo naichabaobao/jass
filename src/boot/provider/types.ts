@@ -163,7 +163,7 @@ type pathingflag extends handle//war3PTR1.31.0.11889
 function types(version:"1.32" | "1.31" | "1.30" | "1.29" | "1.24" | "1.20" | undefined | null = defaultVersion, containsCode = false) {
   const types = containsCode ? baseType : statemType;
   if(!version) {
-    version = "1.32";
+    version = defaultVersion;
   }
   if(version == "1.32") {
     types.push(...type_1_32, ...type_1_31, ...type_1_30, ...type_1_29, ...type_1_24, ...type_1_20);

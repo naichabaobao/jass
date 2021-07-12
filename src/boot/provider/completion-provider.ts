@@ -44,9 +44,9 @@ const keywordItems: vscode.CompletionItem[] = [];
 enum PositionType {
   Unkown,
   Returns,
-  Local,
+  LocalType,
   Array,
-  Constant,
+  ConstantType,
   FuncNaming,
   TakesFirstType,
   TakesOtherType,
@@ -54,7 +54,10 @@ enum PositionType {
   Call,
   Set,
   Point,
-  LocalNaming
+  LocalNaming,
+  TakesKeyword,
+  ReturnKeyword,
+  Assign
 }
 
 /**
@@ -72,19 +75,23 @@ class PositionTool {
   private static CallRegExp = new RegExp(/\bcall\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static SetRegExp = new RegExp(/\bset\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  private static TakesKeywordRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[takes]*$/);
+  private static ReturnsKeywordRegExp = new RegExp(/\btakes\s+nothing\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
 
   public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
     const lineText = document.lineAt(position.line);
     const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-
+    console.log(/\b=\b/.test(inputText))
     if (this.ReturnsRegExp.test(inputText)) {
       return PositionType.Returns;
     } else if (this.LocalRegExp.test(inputText)) {
-      return PositionType.Local;
+      return PositionType.LocalType;
     } else if (this.ConstantRegExp.test(inputText)) {
-      return PositionType.Constant;
+      return PositionType.ConstantType;
     } else if (this.FuncNamingRegExp.test(inputText)) {
       return PositionType.FuncNaming;
+    } else if (this.ReturnsKeywordRegExp.test(inputText)) { // 
+      return PositionType.ReturnKeyword;
     } else if (/\btakes\b/.test(inputText) && this.TakeTypeFirstRegExp.test(inputText)) {
       return PositionType.TakesFirstType;
     } else if (/\btakes\b/.test(inputText) && this.TakeTypeOtherRegExp.test(inputText)) {
@@ -99,8 +106,14 @@ class PositionTool {
       return PositionType.Point;
     } else if (this.LocalNamingRegExp.test(inputText)) {
       return PositionType.LocalNaming;
-    } else if (this.LocalNamingRegExp.test(inputText)) {
-      return PositionType.LocalNaming;
+    } else if (this.TakesKeywordRegExp.test(inputText)) {
+      return PositionType.TakesKeyword;
+    } else if (/\bfunction\b/.test(inputText) && /\btakes\b/.test(inputText) && inputText.indexOf("function") < inputText.indexOf("takes")) {
+      return PositionType.ReturnKeyword;
+    } else if (/^local\b/.test(inputText) && /(?<!=)=(?!=)/.test(inputText) && inputText.indexOf("=") < position.character) {
+      return PositionType.Assign;
+    } else if (this.CallRegExp.test(inputText)) {
+      return PositionType.Call;
     }
 
     return PositionType.Unkown;
@@ -362,26 +375,93 @@ function item(label:string, kind: vscode.CompletionItemKind, documentation?: str
 }
 
 const NothingItem = item("nothing", vscode.CompletionItemKind.Keyword);
+const TakesKeywordItem = item("takes", vscode.CompletionItemKind.Keyword);
+const ArrayKeywordItem = item("array", vscode.CompletionItemKind.Keyword);
+const ReturnsKeywordItem = item("returns", vscode.CompletionItemKind.Keyword);
+
+/**
+ * 找到jassMap中返回类型和type一样的方法和全局变量
+ * @param program 
+ * @param key 
+ * @param type 
+ * @returns 
+ */
+function programItemByType(program:jassAst.Program, key:string, type:string|null) {
+  const items = new Array<vscode.CompletionItem>();
+  const natives = program.natives.filter((native) => native.returns == type).map((native) => {
+    return item(native.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${native.text}`, native.origin);
+  });
+  const funcs = program.functions.filter((func) => func.returns == type).map((func) => {
+    return item(func.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${func.text}`, func.origin);
+  });
+  const globals = program.globals.filter((func) => func.type == type).map((global) => {
+    return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
+  });
+  items.push(...natives, ...funcs, ...globals);
+  return items;
+}
+
+function vprogramItemByType(program:vjassAst.Program, key:string, type:string|null) {
+  const items = new Array<vscode.CompletionItem>();
+  const funcs = program.librarys.map((library) => library.functions).flat().filter((func) => func.returns == type).map((func) => {
+    return item(func.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${func.text}`, func.origin);
+  });
+  const globals = program.librarys.map((library) => library.globals).flat().filter((func) => func.type == type).map((global) => {
+    return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
+  });
+  items.push(...funcs, ...globals);
+  return items;
+}
+
+function typeFunctionItems(type:string|null) {
+  const items = new Array<vscode.CompletionItem>();
+
+  const commonJItems = programItemByType(commonJProgram, Options.commonJPath, type);
+  const commonAiItems = programItemByType(commonAiProgram, Options.commonAiPath, type);
+  const blizzardJItems = programItemByType(blizzardJProgram, Options.blizzardJPath, type);
+  const dzApiJItems = programItemByType(dzApiJProgram, Options.dzApiJPath, type);
+  items.push(...commonJItems, ...commonAiItems, ...blizzardJItems, ...dzApiJItems);
+
+  JassMap.forEach((program, key) => {
+    items.push(...programItemByType(program, key, type));
+  });
+
+  VjassMap.forEach((program, key) => {
+    items.push(...vprogramItemByType(program, key, type));
+  });
+
+  return items;
+}
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
 
+    const isZincExt = isZincFile(document.uri.fsPath);
+    if (!isZincExt) {
+      const program = jassParse.parse(document.getText(), {
+        needParseLocal: true
+      });
+      JassMap.set(document.uri.fsPath, program);
+    }
+
     // 获取当前位置提示类型
     const type = PositionTool.is(document, position);
-
+    console.log(type)
     switch(type) {
       case PositionType.FuncNaming:
       case PositionType.TakesNaming:
+        case PositionType.TakesNaming:
+          return null;
       case PositionType.LocalNaming:
-      case PositionType.TakesNaming:
-        return null;
+        items.push(ArrayKeywordItem);
+        return items;
       case PositionType.Returns:
         items.push(...typeItems, NothingItem);
         return items;
-      case PositionType.Local:
-      case PositionType.Constant:
+      case PositionType.LocalType:
+      case PositionType.ConstantType:
         items.push(...typeItems);
         return items;
       case PositionType.TakesFirstType:
@@ -390,6 +470,27 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       case PositionType.TakesOtherType:
         items.push(...typeItems, CodeItem);
         return items;
+      case PositionType.TakesKeyword:
+        items.push(TakesKeywordItem);
+        return items;
+      case PositionType.ReturnKeyword:
+        items.push(ReturnsKeywordItem);
+        return items;
+      case PositionType.ReturnKeyword:
+        items.push(ReturnsKeywordItem);
+        return items;
+      case PositionType.Assign:
+        const lineText = document.lineAt(position.line);
+        const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
+        const result = /local\s+(?<type>[a-zA-Z]+[a-zA-Z0-9_]*)\b/.exec(inputText);
+        if (result && result.groups) {
+          const type = result.groups["type"];
+          return typeFunctionItems(type);
+        }
+        break;
+      case PositionType.Call:
+        // 只要nothing类型
+        return typeFunctionItems(null);
     }
 
 
@@ -397,7 +498,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     items.push(...typeItems);
     items.push(...keywordItems);
 
-    const isZincExt = isZincFile(document.uri.fsPath);
+
     const isAiExt = isAiFile(document.uri.fsPath);
 
     items.push(...commonJItems);
@@ -412,11 +513,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     // items.push(...globalItems);
 
     if (!isZincExt) {
-      const program = jassParse.parse(document.getText(), {
-        needParseLocal: true
-      });
-      JassMap.set(document.uri.fsPath, program);
-
       JassMap.forEach((program, key) => {
         const currentFunctionItems = program.functions.map(func => {
           const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
