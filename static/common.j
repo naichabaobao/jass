@@ -4313,7 +4313,7 @@ native CreateMinimapIconAtLoc takes location where, integer red, integer green, 
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 native SkinManagerGetLocalPath takes string key returns string
 // 销毁小地图图标
-	native DestroyMinimapIcon takes minimapicon pingId returns nothing
+native DestroyMinimapIcon takes minimapicon pingId returns nothing
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止闭塞(所有玩家) [R]
@@ -4378,7 +4378,7 @@ native CreateTrackable takes string trackableModelPath, real x, real y, real fac
 // Quest API
 // 新建任务 [R]
 native CreateQuest takes nothing returns quest
-	// 销毁任务
+// 销毁任务
 native DestroyQuest takes quest whichQuest returns nothing
 // 设置任务标题
 native QuestSetTitle takes quest whichQuest, string title returns nothing
@@ -4440,7 +4440,7 @@ native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor r
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 判断计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
-	// 可以修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
+// 可以修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
 //============================================================================
@@ -4449,12 +4449,12 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 // 新建排行榜 [R]
 native CreateLeaderboard takes nothing returns leaderboard
-	//删除排行榜
+//删除排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 [R]
 native LeaderboardDisplay takes leaderboard lb, boolean show returns nothing
-	// 是否显示排行榜
+// 是否显示排行榜
 native IsLeaderboardDisplayed takes leaderboard lb returns boolean
 
 // 行数
@@ -4568,7 +4568,6 @@ native MultiboardSuppressDisplay takes boolean flag returns nothing
 
 //============================================================================
 // Camera API
-// Camera API
 native SetCameraPosition takes real x, real y returns nothing
 // 设置空格键转向点(所有玩家) [R]
 native SetCameraQuickPosition takes real x, real y returns nothing
@@ -4578,9 +4577,11 @@ native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y
 native StopCamera takes nothing returns nothing
 // 重置游戏镜头(所有玩家) [R]
 native ResetToGameCamera takes real duration returns nothing
+// 平移镜头
 native PanCameraTo takes real x, real y returns nothing
 // 平移镜头(所有玩家)(限时) [R]
 native PanCameraToTimed takes real x, real y, real duration returns nothing
+// 平移镜头(包含z轴)
 native PanCameraToWithZ takes real x, real y, real zOffsetDest returns nothing
 // 指定高度平移镜头(所有玩家)(限时) [R]
 native PanCameraToTimedWithZ takes real x, real y, real zOffsetDest, real duration returns nothing
@@ -4730,7 +4731,6 @@ native SetThematicMusicVolume takes integer volume returns nothing
 native SetThematicMusicPlayPosition takes integer millisecs returns nothing
 
 // other music and sound calls
-// other music and sound calls
 native SetSoundDuration takes sound soundHandle, integer duration returns nothing
 native GetSoundDuration takes sound soundHandle returns integer
 native GetSoundFileDuration takes string musicFileName returns integer
@@ -4784,6 +4784,7 @@ native AddSpecialEffect takes string modelName, real x, real y returns effect
 native AddSpecialEffectLoc takes string modelName, location where returns effect
 // 新建特效(创建到单位) [R]
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
+// 销毁特效
 native DestroyEffect takes effect whichEffect returns nothing
 
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
@@ -4800,8 +4801,9 @@ native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget ta
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电效果(指定Z轴) [R]
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
-	// 销毁闪电特效
+// 销毁闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
+// 移动闪电效果
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电效果(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean

@@ -189,13 +189,26 @@ function startWatch() {
   //#endregion
 
   vscode.workspace.onDidChangeTextDocument((event) => {
-    
+
   });
 
 }
 startWatch();
 
-
+/**
+ * 通过方法名称查询方法
+ * @param name 方法名称
+ * @returns 
+ */
+function findFunctionByName(name: string): jassAst.Native | undefined {
+  return [...commonJProgram.natives, ...commonJProgram.functions,
+  ...blizzardJProgram.natives, ...blizzardJProgram.functions,
+  ...commonAiProgram.natives, ...commonAiProgram.functions,
+  ...dzApiJProgram.natives, ...dzApiJProgram.functions,
+  ...[...JassMap.values()].flatMap((program) => [...program.natives, ...program.functions]),
+  ...[...VjassMap.values()].flatMap((program) => [...program.librarys.flatMap((library) => library.functions)]),
+  ].find(func => func.name == name);
+}
 
 export {
   commonJProgram,
@@ -204,5 +217,6 @@ export {
   dzApiJProgram,
   JassMap,
   ZincMap,
-  VjassMap
+  VjassMap,
+  findFunctionByName
 };

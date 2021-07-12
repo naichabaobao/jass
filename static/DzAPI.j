@@ -27,7 +27,9 @@ native DzAPI_Map_IsBlueVIP              takes player whichPlayer returns boolean
 native DzAPI_Map_GetLadderRank          takes player whichPlayer returns integer
 // 地图排名
 native DzAPI_Map_GetMapLevelRank        takes player whichPlayer returns integer
+// 工会名称
 native DzAPI_Map_GetGuildName           takes player whichPlayer returns string
+// 工会权限
 native DzAPI_Map_GetGuildRole           takes player whichPlayer returns integer
 // rpg大厅
 native DzAPI_Map_IsRPGLobby             takes nothing returns boolean
@@ -37,16 +39,20 @@ native DzAPI_Map_GetMapLevel            takes player whichPlayer returns integer
 native DzAPI_Map_MissionComplete        takes player whichPlayer, string key, string value returns nothing
 // 活动数据
 native DzAPI_Map_GetActivityData        takes nothing returns string
+// 地图配置
 native DzAPI_Map_GetMapConfig           takes string key returns string
+// 是否有购物中心项目
 native DzAPI_Map_HasMallItem            takes player whichPlayer, string key returns boolean
 native DzAPI_Map_SavePublicArchive      takes player whichPlayer, string key, string value returns boolean
 native DzAPI_Map_GetPublicArchive       takes player whichPlayer, string key returns string
 native DzAPI_Map_UseConsumablesItem     takes player whichPlayer, string key returns nothing
 // Orpg触发
 native DzAPI_Map_OrpgTrigger            takes player whichPlayer, string key returns nothing
+// 获取服务器存档
 native DzAPI_Map_GetServerArchiveDrop   takes player whichPlayer, string key returns string
 // 服务器存档设备
 native DzAPI_Map_GetServerArchiveEquip  takes player whichPlayer, string key returns integer
+// 获取鼠标在游戏内的坐标X
 native DzGetMouseTerrainX takes nothing returns real
 // 获取鼠标在游戏内的坐标Y
 native DzGetMouseTerrainY takes nothing returns real
@@ -273,6 +279,7 @@ native DzFrameGetParent takes integer frame returns integer
 // 设置内存大小（废物函数）
 native DzSetMemory takes integer frame,real r returns nothing
 
+// 获得玩家服务器值是否成功
 function GetPlayerServerValueSuccess takes player whichPlayer returns boolean
 	if(DzAPI_Map_GetServerValueErrorCode(whichPlayer)==0)then
 		return true
@@ -281,7 +288,7 @@ function GetPlayerServerValueSuccess takes player whichPlayer returns boolean
 	endif
 endfunction
 
-
+// 保存整数数据
 function DzAPI_Map_StoreInteger takes player whichPlayer, string key, integer value returns nothing
 	set key="I"+key
 	call DzAPI_Map_SaveServerValue(whichPlayer,key,I2S(value))
@@ -289,6 +296,7 @@ function DzAPI_Map_StoreInteger takes player whichPlayer, string key, integer va
 	set whichPlayer=null
 endfunction
 
+// 获取整数数据
 function DzAPI_Map_GetStoredInteger takes player whichPlayer, string key returns integer
 	local integer value
 	set key="I"+key
@@ -298,12 +306,14 @@ function DzAPI_Map_GetStoredInteger takes player whichPlayer, string key returns
 	return value
 endfunction
 
+// 保存实数数据
 function DzAPI_Map_StoreReal takes player whichPlayer, string key, real value returns nothing
 	set key="R"+key
 	call DzAPI_Map_SaveServerValue(whichPlayer,key,R2S(value))
 	set key=null
 	set whichPlayer=null
 endfunction
+// 获取实数数据
 function DzAPI_Map_GetStoredReal takes player whichPlayer, string key returns real
 	local real value
 	set key="R"+key
@@ -312,6 +322,7 @@ function DzAPI_Map_GetStoredReal takes player whichPlayer, string key returns re
 	set whichPlayer=null
 	return value
 endfunction
+// 保存布尔数据
 function DzAPI_Map_StoreBoolean takes player whichPlayer, string key, boolean value returns nothing
 	set key="B"+key
 	if(value)then
@@ -322,6 +333,7 @@ function DzAPI_Map_StoreBoolean takes player whichPlayer, string key, boolean va
 	set key=null
 	set whichPlayer=null
 endfunction
+// 获取布尔数据
 function DzAPI_Map_GetStoredBoolean takes player whichPlayer, string key returns boolean
 	local boolean value
 	set key="B"+key
@@ -335,16 +347,19 @@ function DzAPI_Map_GetStoredBoolean takes player whichPlayer, string key returns
 	set whichPlayer=null
 	return value
 endfunction
+// 保存字符串数据
 function DzAPI_Map_StoreString takes player whichPlayer, string key, string value returns nothing
 	set key="S"+key
 	call DzAPI_Map_SaveServerValue(whichPlayer,key,value)
 	set key=null
 	set whichPlayer=null
 endfunction
+// 获取字符串数据
 function DzAPI_Map_GetStoredString takes player whichPlayer, string key returns string
 	return DzAPI_Map_GetServerValue(whichPlayer,"S"+key)
 endfunction
 
+// 保存单位数据
 function DzAPI_Map_GetStoredUnitType takes player whichPlayer, string key returns integer
 	local integer value
 	set key="I"+key
@@ -354,6 +369,7 @@ function DzAPI_Map_GetStoredUnitType takes player whichPlayer, string key return
 	return value
 endfunction
 
+// 获取技能id
 function DzAPI_Map_GetStoredAbilityId takes player whichPlayer, string key returns integer
 	local integer value
 	set key="I"+key

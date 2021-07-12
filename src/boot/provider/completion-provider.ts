@@ -9,7 +9,7 @@ import * as vscode from "vscode";
 import { StatementTypes, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
-import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, JassMap, VjassMap, ZincMap } from './data';
+import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, findFunctionByName, JassMap, VjassMap, ZincMap } from './data';
 import { Library, Program } from "./jass-parse"; // 准备移除
 import { Options } from "./options";
 import { Local } from "../vjass/ast";
@@ -21,6 +21,7 @@ import * as zincAst from "../zinc/ast";
 import * as vjassParse from "../vjass/parse";
 import * as vjassAst from "../vjass/ast";
 import { getPathFileName, isAiFile, isZincFile } from "../tool";
+import { functionKey } from "./tool";
 
 
 
@@ -57,7 +58,8 @@ enum PositionType {
   LocalNaming,
   TakesKeyword,
   ReturnKeyword,
-  Assign
+  Assign,
+  Args
 }
 
 /**
@@ -77,6 +79,7 @@ class PositionTool {
   private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static TakesKeywordRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[takes]*$/);
   private static ReturnsKeywordRegExp = new RegExp(/\btakes\s+nothing\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
+  
 
   public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
     const lineText = document.lineAt(position.line);
@@ -114,6 +117,11 @@ class PositionTool {
       return PositionType.Assign;
     } else if (this.CallRegExp.test(inputText)) {
       return PositionType.Call;
+    } else if ((()=>{
+      const key = functionKey(document, position);
+      return key.isSingle();
+    })()) {
+      return PositionType.Args;
     }
 
     return PositionType.Unkown;
@@ -491,6 +499,15 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       case PositionType.Call:
         // 只要nothing类型
         return typeFunctionItems(null);
+      case PositionType.Args:
+        // 方法参数列表
+        const key = functionKey(document, position);
+        // type为PositionType.Args时,可以断言key[0]不为null
+        const func = findFunctionByName(key.keys[0]);
+        if (func && func.takes[key.takeIndex]) {
+          return typeFunctionItems(func.takes[key.takeIndex].type);
+        }
+        break;
     }
 
 
