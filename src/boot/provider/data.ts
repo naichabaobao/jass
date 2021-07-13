@@ -210,6 +210,26 @@ function findFunctionByName(name: string): jassAst.Native | undefined {
   ].find(func => func.name == name);
 }
 
+function findFunctionByLine(key:string, line:number) {
+  const program = JassMap.get(key);
+  if (program) {
+    return program.functions.find((func) => func.loc.start.line < line && func.loc.end.line > line);
+  }
+  const vprogram = VjassMap.get(key);
+  if (vprogram) {
+    return vprogram.librarys.flatMap((library) => library.functions).find((func) => func.loc.start.line < line && func.loc.end.line > line);
+  }
+}
+
+function findTakes(key:string, line:number) {
+  return findFunctionByLine(key, line)?.takes;
+}
+
+
+function findLocals(key:string, line:number) {
+  return findFunctionByLine(key, line)?.locals;
+}
+
 export {
   commonJProgram,
   commonAiProgram,
@@ -218,5 +238,7 @@ export {
   JassMap,
   ZincMap,
   VjassMap,
-  findFunctionByName
+  findFunctionByName,
+  findTakes,
+  findLocals
 };

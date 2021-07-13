@@ -394,7 +394,7 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 	if (paths.length == 0) {
 		return [];
 	}
-    return paths.map(val => {
+    return paths.flatMap(val => {
         const arr = new Array<string>();
         // 处理控制符问题
         // if (val.charCodeAt(0) == 8234) {
@@ -418,7 +418,7 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
             arr.push(...resolvePaths(subPaths.length > recursionNumber ? subPaths.slice(0, recursionNumber) : subPaths));
         }
         return arr;
-    }).flat();
+    });
   }
 
     // 文件后缀是否为.j
