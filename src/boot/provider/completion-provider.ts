@@ -84,7 +84,6 @@ class PositionTool {
   public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
     const lineText = document.lineAt(position.line);
     const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-    console.log(/\b=\b/.test(inputText))
     if (this.ReturnsRegExp.test(inputText)) {
       return PositionType.Returns;
     } else if (this.LocalRegExp.test(inputText)) {
@@ -113,8 +112,6 @@ class PositionTool {
       return PositionType.TakesKeyword;
     } else if (/\bfunction\b/.test(inputText) && /\btakes\b/.test(inputText) && inputText.indexOf("function") < inputText.indexOf("takes")) {
       return PositionType.ReturnKeyword;
-    } else if (/^local\b/.test(inputText) && /(?<!=)=(?!=)/.test(inputText) && inputText.indexOf("=") < position.character) {
-      return PositionType.Assign;
     } else if (this.CallRegExp.test(inputText)) {
       return PositionType.Call;
     } else if ((()=>{
@@ -122,6 +119,8 @@ class PositionTool {
       return key.isSingle();
     })()) {
       return PositionType.Args;
+    } else if (/^local\b/.test(inputText) && /(?<!=)=(?!=)/.test(inputText) && inputText.indexOf("=") < position.character) {
+      return PositionType.Assign;
     }
 
     return PositionType.Unkown;
@@ -446,17 +445,21 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
 
-    const isZincExt = isZincFile(document.uri.fsPath);
+    const fsPath = document.uri.fsPath;
+
+    const isZincExt = isZincFile(fsPath);
     if (!isZincExt) {
-      const program = jassParse.parse(document.getText(), {
-        needParseLocal: true
-      });
-      JassMap.set(document.uri.fsPath, program);
+      // 排除内部库文件
+      if (![Options.commonJPath, Options.commonAiPath, Options.blizzardJPath, Options.dzApiJPath].includes(fsPath)) {
+        const program = jassParse.parse(document.getText(), {
+          needParseLocal: true
+        });
+        JassMap.set(fsPath, program);
+      }
     }
 
     // 获取当前位置提示类型
     const type = PositionTool.is(document, position);
-    console.log(type)
     switch(type) {
       case PositionType.FuncNaming:
       case PositionType.TakesNaming:

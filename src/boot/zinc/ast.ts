@@ -5,8 +5,6 @@ import { Token } from "../jass/tokens";
 
 type ModifierType = "private" | "public";
 
-
-
 class Global extends jass.Global {
 	public size:number = 0;
 	public tag: ModifierType = "public";

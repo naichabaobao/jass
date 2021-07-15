@@ -1,7 +1,8 @@
 {
+	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es5",
+		"target": "es6",
 		"outDir": "out",
 		"lib": [
 			// "ES2015.Iterable",
@@ -12,8 +13,8 @@
 		"strict": true,   /* enable all strict type-checking options */
 		"removeComments": true,
 		"strictNullChecks": true,
-		"experimentalDecorators": true,
-		"downlevelIteration": true,
+		"experimentalDecorators": false,
+		"downlevelIteration": true, // 允许展开迭代器
 		"strictPropertyInitialization": true
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */

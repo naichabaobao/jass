@@ -9,7 +9,9 @@ globals
     //
 
     // Misc constants
+    // Π
     constant real      bj_PI                            = 3.14159
+    // 底数
     constant real      bj_E                             = 2.71828
     constant real      bj_CELLWIDTH                     = 128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
