@@ -80,4 +80,6 @@
 
 1.5.2 修复handle,integer,real等类型提示问题, 修复code参数提示问题。
 
+1.5.3 完善set语法类型提示，修复boolean类型提示问题。
+
 

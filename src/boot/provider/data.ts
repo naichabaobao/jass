@@ -245,6 +245,31 @@ function findLocals(key:string, line:number) {
   return findFunctionByLine(key, line)?.locals;
 }
 
+function getGlobalVariables() {
+  const VariableFilter = (global: jassAst.Global) => {
+    return !global.isConstant;
+  };
+
+  const globals:(jassAst.Global|vjassAst.Global)[] = [];
+
+  const commonJGlobals = commonJProgram.globals.filter(VariableFilter);
+  const commonAiGlobals = commonAiProgram.globals.filter(VariableFilter);
+  const blizzardJGlobals = blizzardJProgram.globals.filter(VariableFilter);
+  const dzApiJGlobals = dzApiJProgram.globals.filter(VariableFilter);
+  globals.push(...commonJGlobals, ...commonAiGlobals, ...blizzardJGlobals, ...dzApiJGlobals);
+
+  JassMap.forEach((program, key) => {
+    globals.push(...program.globals.filter(VariableFilter));
+  });
+
+  VjassMap.forEach((program, key) => {
+    program.librarys.forEach((library) => {
+      globals.push(...library.globals.filter(VariableFilter));
+    });
+  });
+  return globals;
+}
+
 export {
   commonJProgram,
   commonAiProgram,
@@ -255,5 +280,6 @@ export {
   VjassMap,
   findFunctionByName,
   findTakes,
-  findLocals
+  findLocals,
+  getGlobalVariables
 };
