@@ -212,8 +212,12 @@ function findFunctionByName(name: string): jassAst.Native | undefined {
 
 function findFunctionByLine(key:string, line:number) {
   const program = JassMap.get(key);
+
   if (program) {
-    return program.functions.find((func) => func.loc.start.line < line && func.loc.end.line > line);
+    const func = program.functions.find((func) => func.loc.start.line < line && func.loc.end.line > line);
+    if (func) {
+      return func;
+    }
   }
   const vprogram = VjassMap.get(key);
   if (vprogram) {
@@ -221,11 +225,22 @@ function findFunctionByLine(key:string, line:number) {
   }
 }
 
+/**
+ * 
+ * @param key 文件路径
+ * @param line 
+ * @returns 
+ */
 function findTakes(key:string, line:number) {
   return findFunctionByLine(key, line)?.takes;
 }
 
-
+/**
+ * 
+ * @param key 文件路径
+ * @param line 
+ * @returns 
+ */
 function findLocals(key:string, line:number) {
   return findFunctionByLine(key, line)?.locals;
 }

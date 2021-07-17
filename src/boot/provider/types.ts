@@ -199,12 +199,244 @@ const StatementTypes = types(defaultVersion, false);
 // 包含code的types
 const Types = types(defaultVersion, true);
 
+/**
+ * type 继承光系json
+ */
+const TypeExtends:{[key: string]:string[]} = {
+  "agent": [
+    "handle"
+  ],
+  "player": [
+    "agent",
+    "handle"
+  ],
+  "unit": [
+    "widget"
+  ],
+  "item": [
+    "widget"
+  ],
+  "buff": [
+    "ability"
+  ],
+  "group": [
+    "agent",
+    "handle"
+  ],
+  "triggercondition": [
+    "agent",
+    "handle"
+  ],
+  "timer": [
+    "agent",
+    "handle"
+  ],
+  "region": [
+    "agent",
+    "handle"
+  ],
+  "boolexpr": [
+    "agent",
+    "handle"
+  ],
+  "conditionfunc": [
+    "boolexpr",
+    "agent",
+    "handle"
+  ],
+  "unitpool": [
+    "handle"
+  ],
+  "race": [
+    "handle"
+  ],
+  "racepreference": [
+    "handle"
+  ],
+  "igamestate": [
+    "gamestate"
+  ],
+  "playerstate": [
+    "handle"
+  ],
+  "playergameresult": [
+    "handle"
+  ],
+  "aidifficulty": [
+    "handle"
+  ],
+  "eventid": [
+    "handle"
+  ],
+  "playerevent": [
+    "eventid",
+    "handle"
+  ],
+  "unitevent": [
+    "eventid",
+    "handle"
+  ],
+  "widgetevent": [
+    "eventid",
+    "handle"
+  ],
+  "unittype": [
+    "handle"
+  ],
+  "gamespeed": [
+    "handle"
+  ],
+  "gametype": [
+    "handle"
+  ],
+  "mapvisibility": [
+    "handle"
+  ],
+  "mapdensity": [
+    "handle"
+  ],
+  "minimapicon": [
+    "handle"
+  ],
+  "volumegroup": [
+    "handle"
+  ],
+  "camerasetup": [
+    "handle"
+  ],
+  "placement": [
+    "handle"
+  ],
+  "raritycontrol": [
+    "handle"
+  ],
+  "texmapflags": [
+    "handle"
+  ],
+  "effecttype": [
+    "handle"
+  ],
+  "terraindeformation": [
+    "handle"
+  ],
+  "fogmodifier": [
+    "agent",
+    "handle"
+  ],
+  "button": [
+    "agent",
+    "handle"
+  ],
+  "questitem": [
+    "agent",
+    "handle"
+  ],
+  "timerdialog": [
+    "agent",
+    "handle"
+  ],
+  "multiboard": [
+    "agent",
+    "handle"
+  ],
+  "trackable": [
+    "agent",
+    "handle"
+  ],
+  "version": [
+    "handle"
+  ],
+  "texttag": [
+    "handle"
+  ],
+  "damagetype": [
+    "handle"
+  ],
+  "soundtype": [
+    "handle"
+  ],
+  "pathingtype": [
+    "handle"
+  ],
+  "animtype": [
+    "handle"
+  ],
+  "image": [
+    "handle"
+  ],
+  "hashtable": [
+    "agent",
+    "handle"
+  ],
+  "originframetype": [
+    "handle"
+  ],
+  "textaligntype": [
+    "handle"
+  ],
+  "oskeytype": [
+    "handle"
+  ],
+  "abilityrealfield": [
+    "handle"
+  ],
+  "abilitystringfield": [
+    "handle"
+  ],
+  "abilityreallevelfield": [
+    "handle"
+  ],
+  "abilitystringlevelfield": [
+    "handle"
+  ],
+  "abilityreallevelarrayfield": [
+    "handle"
+  ],
+  "abilitystringlevelarrayfield": [
+    "handle"
+  ],
+  "unitrealfield": [
+    "handle"
+  ],
+  "unitstringfield": [
+    "handle"
+  ],
+  "unitweaponrealfield": [
+    "handle"
+  ],
+  "unitweaponstringfield": [
+    "handle"
+  ],
+  "itemrealfield": [
+    "handle"
+  ],
+  "itemstringfield": [
+    "handle"
+  ],
+  "targetflag": [
+    "handle"
+  ],
+  "heroattribute": [
+    "handle"
+  ],
+  "regentype": [
+    "handle"
+  ],
+  "pathingflag": [
+    "handle"
+  ]
+};
+
+
+
+
 export{
   StatementTypes,
   Types,
   types,
   isBaseType,
-  isType
+  isType,
+  TypeExtends
 }
 
 
