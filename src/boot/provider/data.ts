@@ -226,7 +226,7 @@ function findFunctionByLine(key:string, line:number) {
 }
 
 /**
- * 
+ * 找到当前行方法的takes
  * @param key 文件路径
  * @param line 
  * @returns 
@@ -236,7 +236,7 @@ function findTakes(key:string, line:number) {
 }
 
 /**
- * 
+ * 找到当前行的local
  * @param key 文件路径
  * @param line 
  * @returns 
@@ -245,6 +245,10 @@ function findLocals(key:string, line:number) {
   return findFunctionByLine(key, line)?.locals;
 }
 
+/**
+ * 获取全局非constant修饰的
+ * @returns 
+ */
 function getGlobalVariables() {
   const VariableFilter = (global: jassAst.Global) => {
     return !global.isConstant;
@@ -270,6 +274,47 @@ function getGlobalVariables() {
   return globals;
 }
 
+/**
+ * 找到排除类型以外的方法
+ * @param types 
+ * @returns 
+ */
+function findFunctionExcludeReturns(...types:(string|null)[]) {
+  // types包含null值时代表排除所有返回值为nothing的方法
+  const nothing = types.some((type) => type === null);
+  return [...commonJProgram.natives, ...commonJProgram.functions,
+    ...blizzardJProgram.natives, ...blizzardJProgram.functions,
+    ...commonAiProgram.natives, ...commonAiProgram.functions,
+    ...dzApiJProgram.natives, ...dzApiJProgram.functions,
+    ...[...JassMap.values()].flatMap((program) => [...program.natives, ...program.functions]),
+    ...[...VjassMap.values()].flatMap((program) => [...program.librarys.flatMap((library) => library.functions)]),
+    ].filter(func => {
+      if (nothing) {
+        return func.returns !== null && !types.includes(func.returns);
+      } else {
+        return !types.includes(func.returns);
+      }
+    });
+}
+
+
+/**
+ * 找到排除类型以外的全局量
+ * @param types 
+ * @returns 
+ */
+ function findGlobalExcludeReturns(...types:string[]) {
+  return [...commonJProgram.globals,
+    ...blizzardJProgram.globals,
+    ...commonAiProgram.globals,
+    ...dzApiJProgram.globals,
+    ...[...JassMap.values()].flatMap((program) => program.globals),
+    ...[...VjassMap.values()].flatMap((program) => [...program.librarys.flatMap((library) => library.globals)]),
+    ].filter(func => {
+      return !types.includes(func.type);
+    });
+}
+
 export {
   commonJProgram,
   commonAiProgram,
@@ -281,5 +326,7 @@ export {
   findFunctionByName,
   findTakes,
   findLocals,
-  getGlobalVariables
+  getGlobalVariables,
+  findFunctionExcludeReturns,
+  findGlobalExcludeReturns
 };

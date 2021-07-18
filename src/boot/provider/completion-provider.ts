@@ -9,7 +9,7 @@ import * as vscode from "vscode";
 import { StatementTypes, TypeExtends, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
-import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, findFunctionByName, findLocals, findTakes, getGlobalVariables, JassMap, VjassMap, ZincMap } from './data';
+import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, findFunctionByName, findFunctionExcludeReturns, findGlobalExcludeReturns, findLocals, findTakes, getGlobalVariables, JassMap, VjassMap, ZincMap } from './data';
 import { Options } from "./options";
 import * as jassParse from "../jass/parse";
 import * as jassAst from "../jass/ast";
@@ -484,6 +484,13 @@ function typeFunctionAndGlobalItems(type:string|null) {
   } else if (type && type === "handle") {
     getHandleTypes().forEach((type) => {
       items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
+    });
+  } else if (type === "boolean") {
+    findFunctionExcludeReturns(null, "code").forEach((func) => {
+      items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
+    });
+    findGlobalExcludeReturns("code").forEach((global) => {
+      items.push(item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `${global.text}`, global.origin));
     });
   } else if (type) {
     TypeExtends[type]?.forEach((extendsName) => {
