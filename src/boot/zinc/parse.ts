@@ -430,7 +430,7 @@ function parse(content:string, isZincFile:boolean = false) {
 					}
 				} else if (functionState == 3) { // ,
 					if (token.isOp() && token.value == ",") {
-						functionState = 2;
+						functionState = 1;
 					} else {
 
 					}
