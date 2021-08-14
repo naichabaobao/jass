@@ -3021,9 +3021,9 @@ constant native GetChangingUnitPrevOwner takes nothing returns player
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
-// 英雄操作物品
+// 获取被操作的单位
 constant native GetManipulatingUnit takes nothing returns unit
-// 物品存在操作
+// 被操作的物品
 constant native GetManipulatedItem takes nothing returns item
 
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
@@ -5496,7 +5496,6 @@ native BlzSetUnitRealField takes unit whichUnit, unitrealfield whichField, real 
 // 改变单位的字符串类型域
 native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, string value returns boolean
 
-// Unit Weapon
 // Unit Weapon
 native BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
 native BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer

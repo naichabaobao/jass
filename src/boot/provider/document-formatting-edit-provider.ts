@@ -12,7 +12,17 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     const textEdits = new Array<vscode.TextEdit>();
     
     let indent = 0;
-    const indentChar = options.insertSpaces ? "".padStart(options.tabSize, " ") : "\t";
+    let indentChar:string;
+    function genString(count:number, char = " ") {
+      return new Array(count).fill(char).join("");
+    }
+    if (options.insertSpaces) {
+      indentChar = genString(options.tabSize);
+    } else {
+      indentChar = "\t";
+    }
+    
+    
     // console.log(lineText.firstNonWhitespaceCharacterIndex)
     for (let line = 0; line < document.lineCount; line++) {
       const lineText = document.lineAt(line);
@@ -22,32 +32,32 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
           } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
-            textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), "".padStart(indent, indentChar)));
+            textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
         indent++;
         // if (/}\s*$/.test(text)) {
         //   indent--;
         // }
-      } else if (indent > 0 && /^\s*(?:(endlibrary|endscope|endstruct|endinterface|endglobals|endfunction|endmethod|endif|endloop|endmodule|\/\/!\s+(?:endzinc|textmacro|endnov[Jj]ass|endinject))\b|})/.test(text)) {
+      } else if (indent > 0 && /^\s*(?:(endlibrary|endscope|endstruct|endinterface|endglobals|endfunction|endmethod|endif|endloop|endmodule|\/\/!\s+(?:endzinc|endtextmacro|endnov[Jj]ass|endinject))\b|})/.test(text)) {
         indent--;
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
         } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
-          textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), "".padStart(indent, indentChar)));
+          textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
       } else if (/^\s*(else|elseif)\b/.test(text)) {
         if (indent > 0) {
           if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent - 1 == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
           } else if (lineText.firstNonWhitespaceCharacterIndex != indent - 1) {
-            textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), "".padStart(indent - 1, indentChar)));
+            textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent - 1, indentChar)));
           }
         }
       } else if (!lineText.isEmptyOrWhitespace) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
         } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
-          textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), "".padStart(indent, indentChar)));
+          textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
       }
     }
