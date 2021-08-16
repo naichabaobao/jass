@@ -443,6 +443,11 @@ function getHandleTypes() {
   })
 }
 
+/**
+ * 找到非type类型的函数和global
+ * @param type 
+ * @returns 
+ */
 function typeFunctionAndGlobalItemNonContainExtends (type:string|null) {
 
   if (type === "handle") {
@@ -627,8 +632,12 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         }
         break;
       case PositionType.Call:
+        findFunctionExcludeReturns("code").forEach((func) => {
+          items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
+        });
+        return items;
         // 只要nothing类型
-        return typeFunctionAndGlobalItems(null);
+        // return typeFunctionAndGlobalItems(null);
       case PositionType.Args:
         // 方法参数列表
         const key = functionKey(document, position);
@@ -695,41 +704,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       });
     }
 
-    if (Options.isOnlyJass) {
-      /*
-      const currentProgram = parse(document.getText(), {
-        needParseLocal: true
-      });
-
-      const currentFunctionItems = currentProgram.functions.map(func => {
-        const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-        item.detail = func.name;
-        item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
-        if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
-          func.locals.forEach(local => {
-            const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-          func.takes.forEach(take => {
-            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-        }
-        return item;
-      });
-      const currentGlobalItems = currentProgram.globals.map(global => {
-        const item = new vscode.CompletionItem(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-        item.detail = global.name;
-        item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
-        return item;
-      });
-      items.push(...currentGlobalItems);
-      items.push(...currentFunctionItems);*/
-    } else {
+    if (!Options.isOnlyJass) {
       const vjassProgram = vjassParse.parse(document.getText());
       VjassMap.set(document.uri.fsPath, vjassProgram);
 

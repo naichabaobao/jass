@@ -88,6 +88,13 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
               new vscode.Position(lineText.lineNumber, currentValue.position)
             ), " "));
           }
+        } else if (currentValue.isId() && previousValue.isId()) {
+          if (currentValue.position - previousValue.end != 1) {
+            textEdits.push(vscode.TextEdit.replace(new vscode.Range(
+              new vscode.Position(lineText.lineNumber, previousValue.end),
+              new vscode.Position(lineText.lineNumber, currentValue.position)
+            ), " "));
+          }
         }
         return currentValue;
       })

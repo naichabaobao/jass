@@ -3021,7 +3021,7 @@ constant native GetChangingUnitPrevOwner takes nothing returns player
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
-// 获取被操作的单位
+// 获取操作物品的单位
 constant native GetManipulatingUnit takes nothing returns unit
 // 被操作的物品
 constant native GetManipulatedItem takes nothing returns item
