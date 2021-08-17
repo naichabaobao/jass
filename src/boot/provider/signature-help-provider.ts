@@ -8,7 +8,7 @@ import * as zincAst from "../zinc/ast";
 import { functionKey } from './tool';
 
 
-class ZincSignatureHelp implements vscode.SignatureHelpProvider {
+class SignatureHelp implements vscode.SignatureHelpProvider {
 
   private allFunctions(document: vscode.TextDocument, position: vscode.Position): (jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method)[] {
     const functions: Array<jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method> = [];
@@ -117,9 +117,12 @@ class ZincSignatureHelp implements vscode.SignatureHelpProvider {
   }
 }
 
-vscode.languages.registerSignatureHelpProvider("jass", new ZincSignatureHelp, "(", ",");
+vscode.languages.registerSignatureHelpProvider("jass", new SignatureHelp, "(", ",");
 
 
+/**
+ * @deprecated
+ */
 class LuaSignatureHelp implements vscode.SignatureHelpProvider {
 
   private allFunctions(): (jassAst.Native | jassAst.Func)[] {
@@ -168,4 +171,4 @@ class LuaSignatureHelp implements vscode.SignatureHelpProvider {
   }
 }
 
-vscode.languages.registerSignatureHelpProvider("lua", new LuaSignatureHelp, "(", ",");
+// vscode.languages.registerSignatureHelpProvider("lua", new LuaSignatureHelp, "(", ",");

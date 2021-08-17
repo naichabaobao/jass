@@ -732,13 +732,16 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
   }
 });
 
+/**
+ * @deprecated 体验并不好，移除
+ */
 vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    const items = new Array<vscode.CompletionItem>();
-    items.push(...commonJItems);
+    // const items = new Array<vscode.CompletionItem>();
+    // items.push(...commonJItems);
     // items.push(...commonAiItems);
-    items.push(...blizzardJItems);
-    items.push(...dzApiJItems);
+    // items.push(...blizzardJItems);
+    // items.push(...dzApiJItems);
     /*
     JassMap.forEach((program, key) => {
       const currentFunctionItems = program.functions.map(func => {
@@ -757,7 +760,7 @@ vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionIt
       items.push(...currentFunctionItems);
     });
     */
-    return items;
+    return null;
   }
 }());
 

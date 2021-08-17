@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "keywords": [
     "jass",
     "warcraft"
@@ -87,12 +87,6 @@
           ".zn"
         ],
         "configuration": "./src/jass-configuration.json"
-      },
-      {
-        "id": "lua",
-        "extensions": [
-          ".lua"
-        ]
       }
     ],
     "grammars": [
@@ -124,7 +118,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
-    "build": "vsce package"
+    "build": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

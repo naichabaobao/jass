@@ -4415,8 +4415,11 @@ native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed r
 // 任务条件完成
 native IsQuestItemCompleted takes questitem whichQuestItem returns boolean
 
+// 创建失败条件
 native CreateDefeatCondition takes nothing returns defeatcondition
+// 销毁失败条件
 native DestroyDefeatCondition takes defeatcondition whichCondition returns nothing
+// 失败条件描述
 native DefeatConditionSetDescription takes defeatcondition whichCondition, string description returns nothing
 
 native FlashQuestDialogButton takes nothing returns nothing
