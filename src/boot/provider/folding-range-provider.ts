@@ -20,6 +20,9 @@ const loopEndRegExp = new RegExp(`^\\s*endloop\\b`);
 const regionStartRegExp = new RegExp(`^\\s*//\\s*region\\b`);
 const endRegionRegExp = new RegExp(`^\\s*//\\s*endregion\\b`);
 
+const methodStartRegExp = new RegExp(`^\\s*method\\b`);
+const endMethodionRegExp = new RegExp(`^\\s*endmethod\\b`);
+
 class ElseIf {
   public line: number;
 
@@ -109,6 +112,9 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
     let inRegion = false;
     let regionLine = 0;
+
+    let inMethod = false;
+    let methodLine = 0;
 
     lines.forEach((line, index) => {
       // if
@@ -232,7 +238,24 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider {
           }
         }
       }
+      // method
+      else if (methodStartRegExp.test(line)) {
 
+        
+        inMethod = true;
+        methodLine= index;
+      } else if (endMethodionRegExp.test(line)) {
+        console.log("66");
+        
+        if (inMethod == true) {
+          if(index - methodLine > 1) {
+            const folding = new vscode.FoldingRange(methodLine, index - 1, vscode.FoldingRangeKind.Region);
+            foldings.push(folding);
+            inMethod = false;
+          }
+        }
+      }
+      
     });
 
 
