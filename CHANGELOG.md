@@ -94,3 +94,5 @@
 
 1.5.9 添加vjass method折叠。
 
+1.5.10 从新设计折叠，完善vjass和zinc折叠。
+
