@@ -361,7 +361,11 @@ function retainJassBlock(content: string) {
 
 }
 
-// 去重
+/**
+ * 去重
+ * @param arr 
+ * @returns 
+ */
 function unique(arr: Array<string>) {
 	return Array.from(new Set(arr));
 }

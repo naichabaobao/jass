@@ -3314,7 +3314,7 @@ native IsItemIdPowerup takes integer itemId returns boolean
 native IsItemIdSellable takes integer itemId returns boolean
 // 物品可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
-// 物品是否在范围内
+// 选取 区域内 所有物品在 做动作 r = 区域 ， filter = 条件 ， actionFunc = 动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 物品等级
 native GetItemLevel takes item whichItem returns integer

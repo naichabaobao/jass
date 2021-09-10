@@ -96,3 +96,5 @@
 
 1.5.10 从新设计折叠，完善vjass和zinc折叠。
 
+1.5.11 indentationRules规则增强,修复else自动缩进问题。
+
