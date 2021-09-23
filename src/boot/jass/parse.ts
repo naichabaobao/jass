@@ -181,7 +181,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 		isConstant = false;
 		global = null;
 	}
-
+	let isStart = true;
 	for (let index = 0; index < ts.length; index++) {
 		const token = ts[index];
 		const nextToken = ts[index + 1];
@@ -201,7 +201,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			(<Native>expr).loc.start = new Position(token.line, token.position);
 			program.natives.push((<Native>expr));
 			nativeState = 1;
-		} else if (token.isId() && token.value == "function") {
+		} else if (isStart && token.isId() && token.value == "function") {
 			resetFunc();
 			resetGlobal();
 			inFunc = true;
@@ -529,6 +529,11 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 			if (isConstant && token.isId() && token.value == "constant") {
 				isConstant = false;
 			}
+		} else if (token.isNewLine()) {
+			isStart = true;
+		}
+		if (isStart && !token.isNewLine()) {
+			isStart = false;
 		}
 	}
 

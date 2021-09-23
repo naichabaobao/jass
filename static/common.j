@@ -3041,7 +3041,7 @@ constant native GetOrderPointY takes nothing returns real
 constant native GetOrderPointLoc takes nothing returns location
 
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
-// EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
+// 获取接受命令的单位
 constant native GetOrderTarget takes nothing returns widget
 // 目标的可毁坏物
 constant native GetOrderTargetDestructable takes nothing returns destructable
@@ -3103,7 +3103,7 @@ constant native GetEventPlayerChatString takes nothing returns string
 // 匹配的聊天字符
 constant native GetEventPlayerChatStringMatched takes nothing returns string
 
-// 可毁坏物死亡
+// 单位死亡事件
 native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
 
 //============================================================================
@@ -3211,7 +3211,7 @@ native TriggerSyncReady takes nothing returns nothing
 
 //============================================================================
 // Widget API
-// Widget API
+
 native GetWidgetLife takes widget whichWidget returns real
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
 native GetWidgetX takes widget whichWidget returns real

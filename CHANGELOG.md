@@ -98,3 +98,5 @@
 
 1.5.11 indentationRules规则增强,修复else自动缩进问题。
 
+1.5.12 修复function位置错误问题，修复子类型不提示。
+

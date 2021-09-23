@@ -315,6 +315,106 @@ function findFunctionExcludeReturns(...types:(string|null)[]) {
     });
 }
 
+
+
+interface GlobalSearchOption {
+  modifier?: "constant" | "variable";
+  array?: boolean;
+  type?: string| string[];
+  name?: string| string[];
+  key?: string| string[];
+  jass?: boolean;
+  vjass?: boolean;
+  zinc?: boolean;
+}
+
+interface FunctionSearchOption {
+  modifier?: "private" | "public" | "default";
+  returns?: string| string[];
+  name?: string| string[];
+  key?: string| string[];
+  jass?: boolean;
+  vjass?: boolean;
+  zinc?: boolean;
+}
+class Data {
+  private is:boolean = false;
+  private static map = new Map<string, jassAst.Program>();
+
+  private _programs = [
+    commonJProgram,
+    blizzardJProgram,
+    dzApiJProgram,
+    commonAiProgram,
+    ...Data.map.values()
+  ].flat();
+
+  constructor() {
+    if (this.is == false) {
+      // this.initData();
+      this.is = true;
+    }
+  }
+  
+  private initData() {
+    const filePaths = [Options.commonJPath, Options.commonAiPath, Options.blizzardJPath, Options.dzApiJPath];
+    filePaths.forEach((filePath) => {
+      const program = jassParse.parse(fs.readFileSync(filePath).toString());
+      program.filePath = filePath;
+      Data.map.set(filePath, program);
+    });
+  }
+
+  public findGlobalsByType(option: GlobalSearchOption) {
+    const programs = option.key 
+    ? Array.isArray(option.key) ? <jassAst.Program[]>option.key.map(filePath => Data.map.get(filePath)).filter(x => x) : <jassAst.Program[]>[Data.map.get(option.key)].filter(x => x)
+    : [...Data.map.values()];
+    const globals = programs.map(x => {
+      let globals:jassAst.Global[] = [];
+      if (option.jass === undefined || option) {
+        globals.push(...x.globals);
+      }
+      /*
+      if (!Options.isOnlyJass && option.vjass) {
+        globals.push(...x.librarys.map(lib => lib.globals).flat());
+      }
+      if (!Options.isOnlyJass && Options.supportZinc && option.zinc) {
+        globals.push(...x.librarys.map(lib => lib.globals).flat());
+      }*/
+      if (option.modifier) {
+        globals = globals.filter(global => option.modifier == "constant" ? global.isConstant : !global.isConstant);
+      }
+      if (option.array) {
+        globals = globals.filter(global => global.isArray);
+      }
+      if (option.type) {
+        globals = globals.filter(global => global.type == option.type);
+      }
+      if (option.name) {
+        globals = globals.filter(global => global.name == option.name);
+      }
+      return globals;
+    }).flat();
+    return globals;
+  }
+  /**
+   * 
+   * @param option 暂时无效
+   */
+  public findFunctionsByType(option: FunctionSearchOption) {
+    const functions:(jassAst.Func|jassAst.Native)[] = [];
+    JassMap.forEach((program, key) => {
+      console.log(key);
+      
+      functions.push(...program.natives, ...program.functions);
+    });
+    return functions;
+  }
+}
+const data = new Data();
+
+export default data;
+
 export {
   commonJProgram,
   commonAiProgram,

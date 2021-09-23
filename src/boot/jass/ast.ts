@@ -108,6 +108,8 @@ class JassError implements Rangebel{
 
 class Program {
 
+	public filePath: string = "";
+
 	public readonly natives:Native[] = [];
 	public readonly functions:Func[] = [];
 	public readonly globals:Global[] = [];

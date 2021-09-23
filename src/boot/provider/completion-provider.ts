@@ -6,7 +6,7 @@
 
 import * as vscode from "vscode";
 
-import { StatementTypes, TypeExtends, Types } from "./types";
+import { getChildrenTypes, StatementTypes, TypeExtends, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, findFunctionByName, findFunctionExcludeReturns, findGlobalExcludeReturns, findLocals, findTakes, getGlobalVariables, JassMap, VjassMap, ZincMap } from './data';
@@ -19,8 +19,6 @@ import * as vjassParse from "../vjass/parse";
 import * as vjassAst from "../vjass/ast";
 import { getPathFileName, isAiFile, isZincFile } from "../tool";
 import { functionKey } from "./tool";
-
-
 
 
 const typeItems: vscode.CompletionItem[] = [];
@@ -486,11 +484,11 @@ function typeFunctionAndGlobalItems(type:string|null) {
     items.push(...typeFunctionAndGlobalItemNonContainExtends("real"));
   } else if (type === "real") {
     items.push(...typeFunctionAndGlobalItemNonContainExtends("integer"));
-  } else if (type && type === "handle") {
+  }/* else if (type && type === "handle") {
     getHandleTypes().forEach((type) => {
       items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
     });
-  } else if (type === "boolean") {
+  }*/ else if (type === "boolean") {
     findFunctionExcludeReturns(null, "code").forEach((func) => {
       items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
     });
@@ -498,8 +496,8 @@ function typeFunctionAndGlobalItems(type:string|null) {
       items.push(item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `${global.text}`, global.origin));
     });
   } else if (type) {
-    TypeExtends[type]?.forEach((extendsName) => {
-      items.push(...typeFunctionAndGlobalItemNonContainExtends(extendsName));
+    getChildrenTypes(type).forEach(childType => {
+      items.push(...typeFunctionAndGlobalItemNonContainExtends(childType));
     });
   }
 
@@ -876,15 +874,34 @@ vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionIt
   }
 }());
 
-/* 测试代码
+/*
 vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items: vscode.CompletionItem[] = [];
 
-    const type = PositionTool.is(document, position);
-    console.log(type)
+    const result = document.lineAt(position).text.substring(0, position.character).match(/(?<key>[\u4e00-\u9fa5]+)(?=\/$)/);
+
+    if (!result || !result.groups) {
+      return null;
+    }
+
+    const key = result.groups["key"];
+
+
+    console.log(JassMap);
+    
+
+    const functions:(jassAst.Func|jassAst.Native)[] = [];
+    JassMap.forEach((program, key) => {
+      console.log(key);
+      
+      functions.push(...program.natives, ...program.functions);
+    });
+
+    functions.filter(func => func.text.includes(key)).forEach(func => {
+      items.push(item(func.name, vscode.CompletionItemKind.Function, func.text, func.origin));
+    });
 
     return items;
   }
-}());
- */
+}(), "/");*/

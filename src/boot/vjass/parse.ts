@@ -13,7 +13,6 @@ import {
 } from "./ast";
 import { Position } from "../common";
 import { Local, Take } from "../jass/ast";
-import { Glob } from "glob";
 
 // type AbstractLineType = "function" | "endfunction" | "globals" | "endglobals" | "library" | "endlibrary" | "struct" | "endstruct" | "scope" | "endscope" | "module" | "endmodule" |
 // "type" | "interface" | "endinterface" | "local" | "set" | "call" | "return" | "if" | "endif" | "elseif" | "else" | "loop" | "endloop" | "exitwhen" | "method" | "endmethod" | "delegate" | "implement" | "textmacro" | "endtextmacro" | "runtextmacro" | "hook";  
@@ -404,7 +403,9 @@ function parse(content:string) {
 				struct.loc.start = new Position(token.line, token.position);
 				(<Library>library).structs.push(struct);
 				inStruct = true;
-			} else if (token.isId() && token.value == "function") {
+			} else if (inFunc) {
+				parseFunc();
+			}  else if (token.isId() && token.value == "function") {
 				resetFunc();
 				if (inStruct) {
 					resetStruct();
@@ -417,8 +418,6 @@ function parse(content:string) {
 				inFunc = true;
 			} else if (inStruct) {
 				
-			} else if (inFunc) {
-				parseFunc();
 			} else if (token.isId() && token.value == "globals") {
 				inGlobals = true;
 			} else if (inGlobals) {
@@ -518,5 +517,5 @@ endfunction
 		integer aaa
 	endglobals
 	`);
-	console.log(JSON.stringify(program, null , 4));
+	// console.log(JSON.stringify(program, null , 4));
 }

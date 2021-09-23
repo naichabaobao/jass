@@ -427,8 +427,16 @@ const TypeExtends:{[key: string]:string[]} = {
   ]
 };
 
+function getParentTypes(type:string) {
+  return TypeExtends[type] ?? [];
+}
 
-
+function getChildrenTypes(type:string) {
+  const keys = Object.keys(TypeExtends);
+  return keys.filter(key => {
+    return TypeExtends[key] && TypeExtends[key].includes(type);
+  });
+}
 
 export{
   StatementTypes,
@@ -436,7 +444,9 @@ export{
   types,
   isBaseType,
   isType,
-  TypeExtends
+  TypeExtends,
+  getParentTypes,
+  getChildrenTypes
 }
 
 
