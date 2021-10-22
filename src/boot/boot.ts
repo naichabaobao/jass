@@ -8,6 +8,6 @@ import("./provider/signature-help-provider");
 import("./provider/definition-provider");
 import("./provider/diagnostic-provider");
 import("./provider/rename-provider");
-
+import("./provider/outline-provider");
 
 export{};

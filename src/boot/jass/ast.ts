@@ -117,6 +117,38 @@ class Program {
 
 }
 
+/**
+ * 行注释
+ */
+class LineComment implements Rangebel {
+	public readonly loc: Range = Range.default();
+	public readonly text:string;
+
+	constructor(text: string) {
+		this.text = text;
+	}
+
+	public getContent() {
+		return this.text.replace(/^\/\/(?:\/)?/, "");
+	}
+
+}
+
+/**
+ * 多行注释
+ */
+class BlockComment extends LineComment {
+
+	constructor(text: string) {
+		super(text);
+	}
+
+	public getContent() {
+		return this.text.replace(/^\/\*|\*\/$/, "");
+	}
+
+}
+
 export {
 	Take,
 	Func,
@@ -124,5 +156,7 @@ export {
 	Local,
 	Program,
 	JassError,
-	Native
+	Native,
+	LineComment,
+	BlockComment
 };

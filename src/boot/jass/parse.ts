@@ -1,5 +1,7 @@
+
 import { Position } from "../common";
-import { Func, Global, JassError, Program, Native, Take, Local } from "./ast";
+import { isNewLine } from "../tool";
+import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment } from "./ast";
 import { Token, tokens } from "./tokens";
 
 
@@ -541,6 +543,155 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 	return program;
 }
 
+class CommentTree {
+	public readonly lineComments: LineComment[] = [];
+	public readonly blockComments: BlockComment[] = [];
+}
+
+function parseComment(content: string) : CommentTree {
+	const commentMap = new CommentTree();
+
+	return commentMap;
+}
+
+function similar(left: string, right: string): number {
+	if (left.length != right.length && (left.length == 0 || right.length == 0)) {
+		return 0.0;
+	}
+	if (left.length == right.length) {
+		if (left == right) {
+			return 1.0;
+		}
+	}
+	let similarity = 0.0;
+	const leftMap = new Map<string, number>();
+	for (let index = 0; index < left.length; index++) {
+		const char = left[index];
+		if (leftMap.has(char)) {
+			const count = leftMap.get(char)!;
+			leftMap.set(char, count + 1);
+		} else {
+			leftMap.set(char, 1);
+		}
+	}
+	const rightMap = new Map<string, number>();
+	for (let index = 0; index < right.length; index++) {
+		const char = left[index];
+		if (rightMap.has(char)) {
+			const count = rightMap.get(char)!;
+			rightMap.set(char, count + 1);
+		} else {
+			rightMap.set(char, 1);
+		}
+	}
+	const keySet = new Set([...leftMap.keys(), ...rightMap.keys()]);
+	let count = 0;
+	keySet.forEach((key) => {
+		if (leftMap.has(key) && rightMap.has(key)) {
+			count += Math.min(leftMap.get(key)!, rightMap.get(key)!);
+		}
+	});
+	similarity = count / Math.ceil((left.length + right.length) / 2);
+	return similarity;
+}
+
+
+
+/**
+ * 移除注释
+ * @param content 
+ * @param deleteLineComment 是否删除行注释
+ */
+ function removeComment(content: string, deleteLineComment:boolean = false):string {
+	let state = 0;
+
+	content = content.replace(/\r\n/g, "\n");
+	const len = content.length;
+	const chars: string[] = [];
+
+	for (let index = 0; index < len; index++) {
+		const char = content.charAt(index);
+		const nextChar = content.charAt(index + 1);
+		if (state == 0) {
+			if (char == "/") {
+				if (nextChar == "/") {
+					state = 1;
+					if (deleteLineComment == false) {
+						chars.push(char);
+					}
+				} else if (nextChar == "*") {
+					state = 2;
+				} else {
+					chars.push(char);
+				}
+			} else if (char == "\"") {
+				state = 4;
+				chars.push(char);
+			} else {
+				chars.push(char);
+			}
+		} else if (state == 1) {
+			if (deleteLineComment == false) {
+				chars.push(char);
+			}
+			if (!nextChar || isNewLine(nextChar)) {
+				// 注释
+				state = 0;
+			}
+		} else if (state == 2) {
+			if (nextChar == "*") {
+				state = 3;
+			} 
+			if (isNewLine(char)) {
+				chars.push("\n");
+			}
+		} else if (state == 3) {
+			if (nextChar == "/") { // 块注释结束
+				state = 6;
+			} else {
+				state = 2;
+			}
+		} else if (state == 6) {
+			state = 0;
+		} else if (state == 4) {
+			if (nextChar == "\"") { // 字符串结束
+				state = 0;
+			} else if (nextChar == "\\") { //字符串进入转义状态
+				state = 5;
+			} else if (isNewLine(nextChar)) { // 字符串结束
+				state = 0;
+			}
+			chars.push(char);
+		} else if (state == 5) {
+			if (isNewLine(nextChar)) { // 字符串结束
+				state = 0;
+			} else { // 从新回到字符串状态
+				state = 4;
+			}
+			chars.push(char);
+		}
+	}
+	return chars.join("");
+}
+
+function preparese(content: string) {
+
+}
+
+
 export {
 	parse
 };
+
+
+if (false) {
+
+	console.log(similar("aabbaa", "aabbaab"));
+
+	console.log(removeComment(`1
+	a// a
+	a/*
+	a
+	*/a`, true));
+	
+}
