@@ -57,7 +57,7 @@ function parse(content: string, options: JassOption = JassOption.default()): Pro
 				break;
 			}
 		}
-		return texts.join("\n");
+		return texts.reverse().join("\n");
 		// return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
 	};
 	let inZinc = false;

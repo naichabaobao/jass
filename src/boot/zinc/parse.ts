@@ -73,7 +73,18 @@ function parse(content:string, isZincFile:boolean = false) {
 
 	const comments:Token[] = [];
 	const matchText = (line:number) => {
-		return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
+		const texts: string[] = [];
+		for (let index = line; index > 0; index--) {
+			let comment:Token|undefined = undefined;
+			if ((comment = comments.find((token) => token.line == index - 1))) {
+				const text = comment.value.replace("//", "");
+				texts.push(text);
+			} else {
+				break;
+			}
+		}
+		return texts.reverse().join("\n");
+		// return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
 	};
 	let inZinc = false;
 	// 无视掉所有非zinc块内的token
