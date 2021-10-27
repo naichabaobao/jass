@@ -1,8 +1,9 @@
 
-import { Position } from "../common";
+import { Position, Range } from "../common";
 import { isNewLine } from "../tool";
-import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment } from "./ast";
-import { Token, tokens } from "./tokens";
+import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro } from "./ast";
+import { Scanner } from "./scanner";
+import { Token, tokenize, tokens } from "./tokens";
 
 
 
@@ -690,12 +691,233 @@ function preparese(content: string) {
 }
 
 
+
+const functionStartRegExp = /\s*function\b/;
+function isFunctionStart(text: string) {
+	return functionStartRegExp.test(text);
+}
+
+const libraryStartRegExp = /\s*library\b/;
+function isLibraryStart(text: string) {
+	return libraryStartRegExp.test(text);
+}
+
+const libraryEndRegExp = /\s*endlibrary\b/;
+function isLibraryEnd(text: string) {
+	return libraryEndRegExp.test(text);
+}
+
+
+const structStartRegExp = /\s*struct\b/;
+function isStructStart(text: string) {
+	return structStartRegExp.test(text);
+}
+
+const structEndRegExp = /\s*endstruct\b/;
+function isStructEnd(text: string) {
+	return structEndRegExp.test(text);
+}
+
+class TextMacroLineText extends Range {
+
+    private readonly text:string| RunTextMacro;
+
+    constructor(text: string| RunTextMacro) {
+		super();
+        this.text = text;
+    }
+
+	public getText(): string {
+		// return this.text instanceof RunTextMacro ? this.text.body.map(lineText => lineText.text).join("\n") : this.text;
+		return ""
+	}
+
+}
+
+class Parser {
+
+	private readonly scanner: Scanner;
+
+	constructor(content: string) {
+		this.scanner = new Scanner(content);
+
+		this.parseMacro();
+		this.parseTextMacro();
+
+	}
+
+	private field = 0;
+	private nodes: Array<Declaration> = [];
+
+	private lineTexts: (LineText|RunTextMacro)[] = [];
+
+	private textMacros: TextMacro[] = [];
+	private defineMacros: DefineMacro[] = [];
+
+	private parseMacro():void {
+		this.scanner.marcos.forEach((macro) => {
+			if (/^\s*#define\b/) {
+				const ts = tokenize(macro.raw);
+				let state = 0;
+				let defineMacro:DefineMacro;
+				console.log(ts);
+				
+				ts.forEach((token) => {
+					if (state == 0) {
+						if (token.isMacro() && token.value == "#define") {
+							defineMacro = new DefineMacro("");
+							defineMacro.setRange(macro);
+							defineMacro.start.position = token.position;
+							state = 1;
+						} else {
+							state = 3;
+						}
+					} else if (state == 1) {
+						if (token.isId()) {
+							defineMacro.name = token.value;
+							defineMacro.end.position = token.end;
+							this.defineMacros.push(defineMacro);
+							state = 2;
+						} else {
+							state = 3;
+						}
+					} else if (state == 2) {
+						if (token.isId()) {
+							defineMacro.value = token.value;
+							defineMacro.end.position = token.end;
+						}
+						state = 3;
+					} else if (state == 3) {
+						
+					}
+				});
+			}
+		});
+	}
+
+	// 解析文本宏
+	private parseTextMacro():void {
+		let inTextMaxro = false;
+		let textMacro: TextMacro;
+		this.scanner.jassLines.forEach(lineText => {
+			if (/\s*\/\/!\s+textmacro\b/.test(lineText.text)) {
+				inTextMaxro = true;
+				const result = lineText.text.match(/\s*\/\/!\s+textmacro\s+(?<name>[a-zA-z][a-zA-Z\d]*)(?:\s+takes\s+(?<takes>[a-zA-z][a-zA-Z\d]*(?:\s*,\s*[a-zA-z][a-zA-Z\d]*)*))?/);
+				
+				if (result && result.groups) {
+					textMacro = new TextMacro(result.groups["name"]);
+					if (result.groups["takes"]) {
+						textMacro.takes.push(...result.groups["takes"].split(/\s*,\s*/));
+					}
+				} else {
+					textMacro = new TextMacro("");
+				}
+				textMacro.setRange(lineText);
+				this.textMacros.push(textMacro);
+			} else if (/\s*\/\/!\s+endtextmacro\b/.test(lineText.text)) {
+				if (inTextMaxro) {
+					textMacro.end = lineText.end;
+					inTextMaxro = false;
+				} else {
+
+				}
+			} else if (/\s*\/\/!\s+runtextmacro\b/.test(lineText.text)) {
+				if (inTextMaxro) {
+					// error
+				} else {
+					const ts = tokenize(lineText.text.replace("//!", "   "));
+					let state = 0;
+					let runTextMacro:RunTextMacro;
+					ts.forEach((token) => {
+						if (state == 0) {
+							if (token.isId() && token.value === "runtextmacro") {
+								runTextMacro = new RunTextMacro("");
+								runTextMacro.setRange(lineText);
+								runTextMacro.start.position = token.position;
+								state = 1;
+							} else {
+								// error
+							}
+						} else if (state == 1) {
+							if (token.isId()) {
+								runTextMacro.name = token.value;
+								state = 2;
+							} else {
+								// name error
+							}
+						} else if (state == 2) {
+							if (token.isOp() && token.value == "(") {
+								state = 3;
+							} else {
+								// 期望 (
+							}
+						} else if (state == 3) {
+							if (token.isString()) {
+								runTextMacro.takes.push(token.value);
+								state = 4;
+							} else if (token.isOp() && token.value == ")") {
+								runTextMacro.end.position = token.end;
+								this.lineTexts.push(runTextMacro);
+								state = 5;
+							} else {
+								// error param
+							}
+						} else if (state == 4) {
+							if (token.isOp() && token.value == ",") {
+								state = 3;
+							} else if (token.isOp() && token.value == ")") {
+								runTextMacro.end.position = token.end;
+								this.lineTexts.push(runTextMacro);
+								state = 5;
+							} else {
+								// error
+							}
+						} else if (state == 5) {
+							// wait over
+						}
+					});
+				}
+			} else if (inTextMaxro) {
+				textMacro.body.push(lineText);
+			} else {
+				this.lineTexts.push(lineText);
+			}
+		});
+	}
+
+	private parseJass() {
+		let inLibrary = false;
+		let scopeFiel = 0;
+		let inStruct = false;
+		let inFunction = false;
+		let inGlobals = false;
+		let inMethod = false;
+		this.scanner.jassLines.forEach((lineText) => {
+			if (isLibraryStart(lineText.text)) {
+				inLibrary = true;
+			} else if (isLibraryEnd(lineText.text)) {
+				inLibrary = false;
+			} else if (isStructStart(lineText.text)) {
+				inLibrary = true;
+			} else if (isStructEnd(lineText.text)) {
+				inLibrary = false;
+			}
+			if (isFunctionStart(lineText.text)) {
+
+			}
+		});
+		// tokenize()
+	}
+
+}
+
 export {
-	parse
+	parse,
+	Parser
 };
 
 
-if (false) {
+if (true) {
 
 	console.log(similar("aabbaa", "aabbaab"));
 
@@ -704,5 +926,16 @@ if (false) {
 	a/*
 	a
 	*/a`, true));
+
+	console.log(new Parser(`
+	#define a b
+	#define c
+	#define
+	//! textmacro bbb takes name, baba
+//! endtextmacro
+	//! runtextmacro bbb  ( "c", "a" ,)
+aaa
+	`));
+	
 	
 }

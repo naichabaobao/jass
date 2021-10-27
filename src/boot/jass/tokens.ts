@@ -15,7 +15,7 @@ class Token {
 		this.value = value;
 		this.line = line;
 		this.position = position;
-    this.end = this.position + this.value.length;
+		this.end = this.position + this.value.length;
 	}
 
 	public isId() {
@@ -40,18 +40,18 @@ class Token {
 		return this.type === "error";
 	}
 
-  public isMacro() {
-    return this.type === "macro";
-  }
-  public isComment() {
-    return this.type === "comment";
-  }
-  public isBlockComment() {
-    return this.type === "block_comment";
-  }
-  public isNewLine() {
-    return this.isOp() && this.value == "\n";
-  }
+	public isMacro() {
+		return this.type === "macro";
+	}
+	public isComment() {
+		return this.type === "comment";
+	}
+	public isBlockComment() {
+		return this.type === "block_comment";
+	}
+	public isNewLine() {
+		return this.isOp() && this.value == "\n";
+	}
 
 	public end: number;
 
@@ -61,99 +61,99 @@ class Token {
  * @deprecated
  */
 class VToken {
-  public type: string;
-  public value: string;
-  public loc: Location = new Location();
-  constructor(type: string, value: string) {
-    this.type = type;
-    this.value = value;
-  }
-  public isId() {
-    return this.type === "id";
-  }
-  public isOp() {
-    return this.type === "op";
-  }
-  public isInt() {
-    return this.type === "int";
-  }
-  public isReal() {
-    return this.type === "real";
-  }
-  public isString() {
-    return this.type === "string";
-  }
-  public isComment() {
-    return this.type === "comment";
-  }
-  public isBlockComment() {
-    return this.type === "block_comment";
-  }
-  public isMacro() {
-    return this.type === "macro";
-  }
-  public isOther() {
-    return this.type === "other";
-  }
+	public type: string;
+	public value: string;
+	public loc: Location = new Location();
+	constructor(type: string, value: string) {
+		this.type = type;
+		this.value = value;
+	}
+	public isId() {
+		return this.type === "id";
+	}
+	public isOp() {
+		return this.type === "op";
+	}
+	public isInt() {
+		return this.type === "int";
+	}
+	public isReal() {
+		return this.type === "real";
+	}
+	public isString() {
+		return this.type === "string";
+	}
+	public isComment() {
+		return this.type === "comment";
+	}
+	public isBlockComment() {
+		return this.type === "block_comment";
+	}
+	public isMacro() {
+		return this.type === "macro";
+	}
+	public isOther() {
+		return this.type === "other";
+	}
 
 }
 
-function _isLetter(char:string):boolean {
-  if (!char) {
-    return false;
-  }
-  return /[a-zA-Z]/.test(char);
+function _isLetter(char: string): boolean {
+	if (!char) {
+		return false;
+	}
+	return /[a-zA-Z]/.test(char);
 }
 
-function _isNumerical(char:string):boolean {
-  if (!char) {
-    return false;
-  }
-  return /\d/.test(char);
+function _isNumerical(char: string): boolean {
+	if (!char) {
+		return false;
+	}
+	return /\d/.test(char);
 }
 
-function _isNumerical_0_7(char:string):boolean {
-  return ["0", "1", "2", "3", "4", "5", "6", "7"].includes(char);
+function _isNumerical_0_7(char: string): boolean {
+	return ["0", "1", "2", "3", "4", "5", "6", "7"].includes(char);
 }
 
-function _isNumerical_16(char:string):boolean {
-  if (!char) {
-    return false;
-  }
-  return _isNumerical(char) || /[a-fA-F]/.test(char);
+function _isNumerical_16(char: string): boolean {
+	if (!char) {
+		return false;
+	}
+	return _isNumerical(char) || /[a-fA-F]/.test(char);
 }
 
-function _isIdentifier(char:string):boolean {
-  if (!char) {
-    return false;
-  }
-  return _isLetter(char) || _isNumerical(char) || char === "_";
+function _isIdentifier(char: string): boolean {
+	if (!char) {
+		return false;
+	}
+	return _isLetter(char) || _isNumerical(char) || char === "_";
 }
 
-function _isSpace(char:string):boolean {
-  if (!char) {
-    return false;
-  }
-  return /\s/.test(char);
+function _isSpace(char: string): boolean {
+	if (!char) {
+		return false;
+	}
+	return /\s/.test(char);
 }
 
 class TokenOption {
-  /**
-   * $a23 这种十六进制是否解析
-   */
-  needParseNewHex?:boolean = true;
-  /**
-   * -> 返回符号是否解析
-   */
-  needParseZincReturnOp?:boolean = false;
-  /**
-   * //! zinc //! endzinc 直接所有符号无视
-   */
-  ignoreZinc?:boolean = true;
+	/**
+	 * $a23 这种十六进制是否解析
+	 */
+	needParseNewHex?: boolean = true;
+	/**
+	 * -> 返回符号是否解析
+	 */
+	needParseZincReturnOp?: boolean = false;
+	/**
+	 * //! zinc //! endzinc 直接所有符号无视
+	 */
+	ignoreZinc?: boolean = true;
 }
 
-function tokens (content: string) {
-  const tokens: Token[] = [];
+function tokens(content: string) {
+	const tokens: Token[] = [];
 
 	let lineNumber = 0;
 	let position = 0;
@@ -183,16 +183,16 @@ function tokens (content: string) {
 		const nextChar = next(index);
 
 		if (state == 0) {
-      if (char == "/") {
-        push(char);
-        if (nextChar && nextChar == "/") {
-          state = 20;
-        } else if (nextChar && nextChar == "*") {
-          state = 21;
-        } else {
-          pushToken("op");
-        }
-      } else if (isLetter(char)) {
+			if (char == "/") {
+				push(char);
+				if (nextChar && nextChar == "/") {
+					state = 20;
+				} else if (nextChar && nextChar == "*") {
+					state = 21;
+				} else {
+					pushToken("op");
+				}
+			} else if (isLetter(char)) {
 				push(char);
 				if (nextChar && isLetter(nextChar) || nextChar == "_" || isNumber(nextChar)) {
 					state = 1;
@@ -249,7 +249,7 @@ function tokens (content: string) {
 				}
 			} else if (char == "*") {
 				push(char);
-				pushToken("op");	
+				pushToken("op");
 			} else if (char == "=") {
 				push(char);
 				if (nextChar && nextChar == "=") {
@@ -333,10 +333,17 @@ function tokens (content: string) {
 				} else {
 					bad();
 				}
+			} else if (char == "#") {
+				push(char);
+				if (nextChar && isLetter(nextChar)) {
+					state = 24;
+				} else {
+					bad();
+				}
 			} else if (char == "\n") {
-        push(char);
+				push(char);
 				pushToken("op");
-      } else if (isSpace(char) || isNewLine(char)) {
+			} else if (isSpace(char) || isNewLine(char)) {
 			} else {
 				push(char);
 				bad();
@@ -344,7 +351,7 @@ function tokens (content: string) {
 		} else if (state == 1) {
 			push(char);
 			if (nextChar && isLetter(nextChar) || nextChar == "_" || isNumber(nextChar)) {
-		
+
 			} else {
 				pushToken("id");
 			}
@@ -451,31 +458,36 @@ function tokens (content: string) {
 			push(char);
 			pushToken("mark");
 		} else if (state == 20) {
-      push(char);
-      if (!nextChar || isNewLine(nextChar)) {
-        pushToken("comment");
-      }
-    } else if (state == 21) {
-      push(char);
-      if (!nextChar) {
-        bad();
-      } else if (nextChar == "*") {
-        state = 22;
-      }
-    } else if (state == 22) {
-      push(char);
-      if (!nextChar) {
-        bad();
-      } else if (nextChar == "*") {
-      } else if (nextChar == "/") {
-        state = 23;
-      } else {
-        state = 21;
-      }
-    } else if (state == 23) {
-      push(char);
-      pushToken("block_comment");
-    }
+			push(char);
+			if (!nextChar || isNewLine(nextChar)) {
+				pushToken("comment");
+			}
+		} else if (state == 21) {
+			push(char);
+			if (!nextChar) {
+				bad();
+			} else if (nextChar == "*") {
+				state = 22;
+			}
+		} else if (state == 22) {
+			push(char);
+			if (!nextChar) {
+				bad();
+			} else if (nextChar == "*") {
+			} else if (nextChar == "/") {
+				state = 23;
+			} else {
+				state = 21;
+			}
+		} else if (state == 23) {
+			push(char);
+			pushToken("block_comment");
+		} else if (state == 24) {
+			push(char);
+			if (!isLetter(nextChar)) {
+				pushToken("macro");
+			}
+		}
 
 		if (char == "\n") {
 			lineNumber++;
@@ -484,15 +496,15 @@ function tokens (content: string) {
 			position++;
 		}
 	}
-  // console.log(tokens);
+	// console.log(tokens);
 	return tokens;
 }
 
 // console.log(tokens(`->`));
 
 // 包装方法
-function tokenize(content:string) {
-  return tokens(content);
+function tokenize(content: string) {
+	return tokens(content);
 }
 
-export {Token, TokenType, tokens, tokenize};
+export { Token, TokenType, tokens, tokenize };

@@ -1,6 +1,9 @@
 import { Range, Rangebel, Desc } from "../common";
+import { isSpace } from "../tool";
 import { Token } from "./tokens";
 
+
+class Node extends Range{}
 
 
 class Take implements Rangebel {
@@ -106,7 +109,7 @@ class JassError implements Rangebel{
 	}
 }
 
-class Program {
+class Program extends Node{
 
 	public filePath: string = "";
 
@@ -160,3 +163,173 @@ export {
 	LineComment,
 	BlockComment
 };
+
+
+type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
+| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro"; 
+
+class AstNode extends Range {
+	protected readonly astType: AstType;
+
+	constructor(type: AstType) {
+		super();
+		this.astType = type;
+	}
+
+	public getType() :AstType {
+		return this.astType;
+	}
+
+}
+
+class Declaration extends AstNode{
+	protected constructor(type: AstType) {
+		super(type);
+	}
+}
+
+class Statement extends AstNode {
+	protected constructor(type: AstType) {
+		super(type);
+	}
+}
+
+class Expression extends AstNode {
+	protected constructor(type: AstType) {
+		super(type);
+	}
+}
+
+class TypeDeclaration extends Declaration {
+	constructor() {
+		super("Type");
+	}
+}
+
+class TakeDeclaration extends AstNode {
+
+	public type: string|null = null;
+	public name: string|null = null;
+
+	constructor() {
+		super("Take");
+	}
+
+	public getTakeType() {
+		return this.type;
+	}
+}
+
+class NativeDeclaration extends Declaration {
+
+	public name: string|null = null;
+	public takes: TakeDeclaration[] | null = null;
+	public returns: string| null = null;
+
+	constructor() {
+		super("Native");
+	}
+}
+
+class LocalStatement extends Statement{
+
+	public type: string | null = null;
+	public name: string | null = null;
+	public array: boolean = false;
+	public init: Expression | null = null;
+
+	constructor() {
+		super("Local");
+	}
+
+}
+
+class FunctionDeclaration extends AstNode implements NativeDeclaration{
+
+	public name: string|null = null;
+	public takes: TakeDeclaration[] | null = null;
+	public returns: string| null = null;
+	public body: Statement[] = [];
+
+	constructor() {
+		super("Function");
+	}
+	
+}
+
+class LineText extends Range{
+
+    public readonly text:string;
+
+    constructor(text: string) {
+        super();
+        this.text = text;
+    }
+
+    // 是否空行
+    public isEmpty():boolean {
+        return this.text.trimStart() === "";
+    }
+
+    public getText():string {
+        return this.text;
+    }
+
+    public lineNumber() :number {
+        return this.start.line;
+    }
+
+    // 第一个字符下标
+    public firstCharacterIndex() :number {
+        let index = 0;
+        for (; index < this.text.length; index++) {
+            const char = this.text[index];
+            if (!isSpace(char)) {
+                return index;
+            }
+        }
+        return index;
+    }
+
+}
+
+class TextMacro extends AstNode {
+
+	public name: string;
+	public takes: string[] = [];
+	public body: LineText[] = [];
+
+	constructor(name: string, takes?: string[]) {
+		super("TextMacro");
+		this.name = name;
+		if (takes) {
+			this.takes = takes;
+		}
+	}
+}
+
+class RunTextMacro extends AstNode {
+	public name: string;
+	public takes: string[] = [];
+
+	constructor(name: string, takes?: string[]) {
+		super("RunTextMacro");
+		this.name = name;
+		if (takes) {
+			this.takes = takes;
+		}
+	}
+}
+
+class DefineMacro extends AstNode {
+	public name: string;
+	public value: string|null = null;
+
+	constructor(name: string, value: string|null = null) {
+		super("DefineMacro");
+		this.name = name;
+		this.value = value;
+	}
+}
+
+export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro};

@@ -2,7 +2,7 @@ class Position {
 	public line: number;
 	public position: number;
 
-	constructor(line: number, position: number = 0) {
+	constructor(line: number = 0, position: number = 0) {
 		this.line = line;
 		this.position = position;
 	}
@@ -13,7 +13,7 @@ class Range {
 	public start: Position;
 	public end: Position;
 
-	constructor(start: Position, end: Position) {
+	constructor(start: Position = new Position(), end: Position = new Position()) {
 		this.start = start;
 		this.end = end;
 	}
@@ -21,7 +21,16 @@ class Range {
 	public static default () :Range {
 		return new Range(new Position(0,0), new Position(0,0))
 	}
+
+
+	public setRange<T extends Range>(range: T): void {
+		this.start = range.start;
+		this.end = range.end;
+	}
+
 }
+
+
 
 interface Rangebel {
 	loc: Range;
