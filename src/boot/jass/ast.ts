@@ -175,6 +175,9 @@ export {
 
 
 class Declaration extends AstNode{
+
+	public parent: Declaration|null = null;
+
 	protected constructor(type: AstType) {
 		super(type);
 	}
@@ -236,7 +239,7 @@ class LocalStatement extends Statement{
 
 }
 
-class FunctionDeclaration extends AstNode implements NativeDeclaration{
+class FunctionDeclaration extends Declaration implements NativeDeclaration{
 
 	public name: string|null = null;
 	public takes: TakeDeclaration[] | null = null;
@@ -366,6 +369,44 @@ class ZincBlock extends AstNode {
 	}
 }
 
+class LibraryDeclaration extends Declaration {
+
+	public readonly body: Declaration[] = [];
+
+	constructor() {
+		super("Library");
+	}
+}
+
+class ModuleDeclaration extends Declaration {
+
+	public readonly body: Declaration[] = [];
+
+	constructor() {
+		super("Module");
+	}
+}
+
+class StructDeclaration extends Declaration {
+
+	public readonly body: Declaration[] = [];
+
+	constructor() {
+		super("Struct");
+	}
+}
+
+
+class ScopeDeclaration extends Declaration {
+
+
+	public readonly body: Declaration[] = [];
+
+	constructor(parent: Declaration|null = null) {
+		super("Scope");
+		this.parent = parent;
+	}
+}
 
 class Program 
 // <T extends Declaration>
@@ -402,6 +443,6 @@ extends AstNode{
 }
 
 export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
-	Program,
+	Program, LibraryDeclaration, ScopeDeclaration, ModuleDeclaration, StructDeclaration
 
 };
