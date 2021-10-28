@@ -1,7 +1,7 @@
 
 import { Position, Range } from "../common";
 import { isNewLine } from "../tool";
-import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText } from "./ast";
+import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock } from "./ast";
 import { Scanner } from "./scanner";
 import { Token, tokenize, tokens } from "./tokens";
 
@@ -727,21 +727,17 @@ class Parser {
 		let contentLineTexts = scanner.jassLines;
 
 		contentLineTexts = this.parseDefineMacro(contentLineTexts);
+		contentLineTexts = this.parseZinc(contentLineTexts);
 		contentLineTexts = this.parseTextMacro(contentLineTexts);
 		const expendContentLineTexts = this.parseRunTextMacro(contentLineTexts);
 		
 		// console.log(JSON.stringify(expendContentLineTexts, null, 2));
-		console.log(expendContentLineTexts);
+		// console.log(expendContentLineTexts);
 		
 
 		// this.parseparse(contentLineTexts);
 
 	}
-
-	private field = 0;
-	private nodes: Array<Declaration> = [];
-
-	
 	
 	private textMacros: TextMacro[] = [];
 	private runTextMacros: RunTextMacro[] = [];
@@ -756,6 +752,7 @@ class Parser {
 		});
 		return text;
 	}
+	private zincBlocks:ZincBlock[] = [];
 
 	private jassErrors: JassCompileError[] = [];
 
@@ -763,50 +760,6 @@ class Parser {
 		const err = new JassCompileError(message);
 		err.setRange(range);
 		this.jassErrors.push(err);
-	}
-
-	private parseMacro():void {
-		this.scanner.marcos.forEach((macro) => {
-			if (/^\s*#define\b/) {
-				const ts = tokenize(macro.raw);
-				let state = 0;
-				let defineMacro:DefineMacro;
-
-
-
-				console.log(ts);
-				
-				ts.forEach((token) => {
-					if (state == 0) {
-						if (token.isMacro() && token.value == "#define") {
-							defineMacro = new DefineMacro("");
-							defineMacro.setRange(macro);
-							defineMacro.start.position = token.position;
-							state = 1;
-						} else {
-							state = 3;
-						}
-					} else if (state == 1) {
-						if (token.isId()) {
-							defineMacro.name = token.value;
-							defineMacro.end.position = token.end;
-							this.defineMacros.push(defineMacro);
-							state = 2;
-						} else {
-							state = 3;
-						}
-					} else if (state == 2) {
-						if (token.isId()) {
-							defineMacro.value = token.value;
-							defineMacro.end.position = token.end;
-						}
-						state = 3;
-					} else if (state == 3) {
-						
-					}
-				});
-			}
-		});
 	}
 
 	// 解析定义宏
@@ -1002,6 +955,33 @@ class Parser {
 		}).filter(lineText => lineText);
 	}
 
+	private parseZinc(lineTexts: LineText[]) : LineText[] {
+		let inZinc = false;
+		let zincBlock: ZincBlock;
+
+		return <LineText[]>lineTexts.map(lineText => {
+
+			const realText = this.getText(lineText);
+			if (/\s*\/\/!\s+zinc\b/.test(realText)) {
+				inZinc = true;
+				zincBlock = new ZincBlock();
+				zincBlock.setRange(lineText);
+				this.zincBlocks.push(zincBlock);
+			} else if (/\s*\/\/!\s+endzinc\b/.test(realText)) {
+				if (inZinc) {
+					zincBlock.end = lineText.end;
+					inZinc = false;
+				} else {
+					this.pushError("redundant endzinc", lineText);
+				}
+			} else if (inZinc) {
+				zincBlock.body.push(lineText);
+			} else {
+				return lineText;
+			}
+		}).filter((lineText) => lineText);
+	}
+
 	private str(str: string): string {
 		return str.replace(/^"/, "").replace(/"$/, "");
 	}
@@ -1018,171 +998,19 @@ class Parser {
 		});
 	}
 
-	/**
-	 * @deprecated
-	 * @param lineTexts 
-	 */
+	private parse(lineTexts: (LineText|MultiLineText)[]) {
+		// type
+		// library module
+		// scoped
+		// function
+		// globals
+		// struct interface 
+		// method
 
-	private parseparse(lineTexts: LineText[]):void {
-		let inTextMaxro = false;
-		let textMacro: TextMacro;
+		const program = new Program();
 
-		let inDefineMacro = false;
-		// 当宏以 \ 结束时需要拼接下一行
-		let defineMacroText: string;
-		let defineMacro: DefineMacro|undefined;
-
-		lineTexts.forEach(lineText => {
-			const realText = this.getText(lineText.text);
-
-			const parseDefineMacro = (text: string):void => {
-				if (defineMacro) {
-					defineMacro.end = lineText.end;
-					const result = text.match(/^\s*#define\s+(?<name>[a-zA-z][a-zA-Z\d]*)(?:\s+(?<value>.+))?$/);
-					if (result && result.groups) {
-						defineMacro.name = result.groups["name"];
-						if (result.groups["value"]) {
-							defineMacro.value = this.getText(result.groups["value"]);
-						}
-						this.defineMacros.push(defineMacro);
-					} else {
-						this.pushError("#define syntax error", defineMacro);
-					}
-				}
-			}
-			back: 
-			if (inDefineMacro) {
-				if (defineMacro && lineText.lineNumber() - 1 === defineMacro.start.line) {
-					if (/\\\s*$/.test(lineText.text)) {
-						defineMacroText += lineText.text.replace(/\\\s*$/, "");
-					} else {
-						defineMacroText += lineText.text;
-						parseDefineMacro(defineMacroText);
-						inDefineMacro = false;
-					}
-				} else {
-					parseDefineMacro(defineMacroText);
-					inDefineMacro = false;
-					break back;
-				}
-			} else if (/^\s*#define\b/.test(lineText.text)) {
-				defineMacroText = "";
-				defineMacro = new DefineMacro("");
-				defineMacro.setRange(lineText);
-				if (/\\\s*$/.test(lineText.text)) {
-					defineMacroText += lineText.text.replace(/\\\s*$/, "");
-					inDefineMacro = true;
-				} else {
-					parseDefineMacro(lineText.text);
-				}
-			} else if (/\s*\/\/!\s+textmacro\b/.test(realText)) {
-				inTextMaxro = true;
-				const result = realText.match(/\s*\/\/!\s+textmacro\s+(?<name>[a-zA-z][a-zA-Z\d]*)(?:\s+takes\s+(?<takes>[a-zA-z][a-zA-Z\d]*(?:\s*,\s*[a-zA-z][a-zA-Z\d]*)*))?/);
-				
-				if (result && result.groups) {
-					textMacro = new TextMacro(result.groups["name"]);
-					if (result.groups["takes"]) {
-						textMacro.takes.push(...result.groups["takes"].split(/\s*,\s*/));
-					}
-				} else {
-					textMacro = new TextMacro("");
-				}
-				textMacro.setRange(lineText);
-				this.textMacros.push(textMacro);
-			} else if (/\s*\/\/!\s+endtextmacro\b/.test(realText)) {
-				if (inTextMaxro) {
-					textMacro.end = lineText.end;
-					inTextMaxro = false;
-				} else {
-					this.pushError("redundant endtextmacro", lineText);
-				}
-			} else if (/\s*\/\/!\s+runtextmacro\b/.test(realText)) {
-				if (inTextMaxro) {
-					this.pushError("runtextmacro does not support nesting in textmacro block", lineText);
-				} else {
-					const ts = tokenize(realText.replace("//!", "   ") + "\n");
-					if (ts.length <= 1) this.pushError("missing text macro name", lineText);
-					else {
-						let state = 0;
-						let runTextMacro:RunTextMacro|undefined = undefined;
-						for (let index = 0; index < ts.length; index++) {
-							const token = ts[index];
-							
-							if (state == 0) {
-								if (token.isId() && token.value === "runtextmacro") {
-									runTextMacro = new RunTextMacro("");
-									runTextMacro.setRange(lineText);
-									runTextMacro.start.position = token.position;
-									state = 1;
-								} else {
-									// error
-								}
-							} else if (state == 1) {
-								if (token.isId()) {
-									runTextMacro!.name = token.value;
-									state = 2;
-								} else {
-									this.pushError("incorrect text macro name", lineText);
-									break;
-								}
-							} else if (state == 2) {
-								if (token.isOp() && token.value == "(") {
-									state = 3;
-								} else {
-									this.pushError(`Expect token '(', but '${token.value}'`, lineText);
-									break;
-								}
-							} else if (state == 3) {
-								if (token.isString()) {
-									runTextMacro!.takes.push(token.value);
-									state = 4;
-								} else if (token.isOp() && token.value == ")") {
-									runTextMacro!.end.position = token.end;
-									this.runTextMacros.push(runTextMacro!);
-									state = 5;
-								} else {
-									this.pushError(`syntax error, parameter passing is "" wrapped`, lineText);
-									break;
-								}
-							} else if (state == 4) {
-								if (token.isOp() && token.value == ",") {
-									state = 3;
-								} else if (token.isOp() && token.value == ")") {
-									runTextMacro!.end.position = token.end;
-									this.runTextMacros.push(runTextMacro!);
-									state = 5;
-								} else {
-									this.pushError(`error symbol ${token.value}`, lineText);
-									break;
-								}
-							} else if (state == 5) {
-								// wait over
-								break;
-							}
-						}
-						if (runTextMacro && runTextMacro.name !== "") {
-							const textMacros = this.textMacros.find((textMacro) => textMacro.name === runTextMacro?.name);
-							if (textMacros) {
-								if (textMacro.takes.length === runTextMacro?.takes.length) {
-									this.parseparse(this.replaceTextMacro(textMacros, ...runTextMacro.takes));
-								} else {
-									this.pushError(`expected ${textMacro.takes.length} arguments, but got ${runTextMacro.takes.length}`, lineText);
-								}
-							}
-						}
-					}
-				}
-			}  else if (inTextMaxro) {
-				// const textMacroLineText = new TextMacroLineText(lineText.text, realText);
-				// textMacroLineText.setRange(lineText);
-				textMacro.body.push(lineText);
-			} else {
-				// lineText.text = realText;
-				this.runTextMacros.push(lineText);
-			}
-		});
+		return program;
 	}
-	
 
 }
 
@@ -1211,6 +1039,14 @@ ccc
 
 //! runtextmacro bbb("a")
 
+#define zinc //! zinc
+#define endzinc //! endzinc
+//! zinc
+zinccontent
+//! endzinc
+//! endzinc
+
+//! endtextmacro
 	`));
 	
 	

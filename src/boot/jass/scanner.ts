@@ -83,7 +83,7 @@ class Scanner {
         // 获取宏
         // this.scannerMarcos();
         // 获取zinc
-        this.scannerZincLineText();
+        // this.scannerZincLineText();
         // 剔除后留下的行
         this.jassLines.push(...this.rawLines);
         // 清理
@@ -165,9 +165,7 @@ if (false) {
   // a
   #define
   
-  //! zinc
-  zinccontent
-  //! endzinc
+
   
   `);
     console.log(scanner);

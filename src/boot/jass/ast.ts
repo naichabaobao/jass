@@ -109,16 +109,23 @@ class JassError implements Rangebel{
 	}
 }
 
-class Program extends Node{
+type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
+| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock"; 
 
-	public filePath: string = "";
+class AstNode extends Range {
+	protected readonly astType: AstType;
 
-	public readonly natives:Native[] = [];
-	public readonly functions:Func[] = [];
-	public readonly globals:Global[] = [];
-	public readonly errors:JassError[] = [];
+	constructor(type: AstType) {
+		super();
+		this.astType = type;
+	}
+
+	public getType() :AstType {
+		return this.astType;
+	}
 
 }
+
 
 /**
  * 行注释
@@ -157,7 +164,7 @@ export {
 	Func,
 	Global,
 	Local,
-	Program,
+
 	JassError,
 	Native,
 	LineComment,
@@ -165,22 +172,7 @@ export {
 };
 
 
-type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
-| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro"; 
 
-class AstNode extends Range {
-	protected readonly astType: AstType;
-
-	constructor(type: AstType) {
-		super();
-		this.astType = type;
-	}
-
-	public getType() :AstType {
-		return this.astType;
-	}
-
-}
 
 class Declaration extends AstNode{
 	protected constructor(type: AstType) {
@@ -365,4 +357,51 @@ class JassCompileError extends Range{
 
 }
 
-export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText};
+class ZincBlock extends AstNode {
+
+	public readonly body: LineText[] = [];
+
+	constructor() {
+		super("ZincBlock")
+	}
+}
+
+
+class Program 
+// <T extends Declaration>
+extends AstNode{
+
+	constructor() {
+		super("Program");
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public filePath: string = "";
+	/**
+	 * @deprecated
+	 */
+	public readonly natives:Native[] = [];
+	/**
+	 * @deprecated
+	 */
+	public readonly functions:Func[] = [];
+	/**
+	 * @deprecated
+	 */
+	public readonly globals:Global[] = [];
+	/**
+	 * @deprecated
+	 */
+	public readonly errors:JassError[] = [];
+
+	public readonly body: Array<Declaration> = [];
+	
+
+}
+
+export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
+	Program,
+
+};
