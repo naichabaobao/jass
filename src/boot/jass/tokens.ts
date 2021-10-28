@@ -212,6 +212,8 @@ function tokens(content: string) {
 				}
 			} else if (char == "\"") {
 				push(char);
+				state = 5;
+				/*
 				if (nextChar && nextChar == "\"") {
 					state = 4;
 				} else if (nextChar && nextChar == "\\") {
@@ -220,7 +222,7 @@ function tokens(content: string) {
 					state = 6;
 				} else {
 					bad();
-				}
+				}*/
 			} else if (is1_9(char)) {
 				push(char);
 				if (nextChar && isNumber(nextChar)) {
@@ -378,24 +380,22 @@ function tokens(content: string) {
 			}
 		} else if (state == 5) {
 			push(char);
-			if (nextChar && nextChar == "\"") {
-				state = 7;
-			} else if (nextChar && isNotNewLine(nextChar)) {
-				state = 6;
-			} else {
+			if (isNewLine(char)) {
 				bad();
+			} else if (char == "\"") {
+				pushToken("string");
+			} else if (char == "\\") {
+				state = 6;
 			}
 		} else if (state == 6) {
 			push(char);
-			if (nextChar && nextChar == "\"") {
-				state = 4;
-			} else if (nextChar && nextChar == "\\") {
-				state = 5
-			} else if (nextChar && isNotNewLine(nextChar)) {
-			} else {
+			if (isNewLine(char)) {
 				bad();
+			} else {
+				state = 5
 			}
 		} else if (state == 7) {
+			/*
 			push(char);
 			if (nextChar && nextChar == "\"") {
 				state = 4;
@@ -403,7 +403,7 @@ function tokens(content: string) {
 				state = 6;
 			} else {
 				bad();
-			}
+			}*/
 		} else if (state == 8) {
 			push(char);
 			if (nextChar && isNumber(nextChar)) {

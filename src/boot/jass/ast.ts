@@ -293,6 +293,29 @@ class LineText extends Range{
 
 }
 
+class MultiLineText extends Range {
+
+	public readonly lineTexts: LineText[];
+
+	constructor(lineTexts: LineText[] = []) {
+		super();
+		this.lineTexts = lineTexts;
+	}
+
+}
+
+class TextMacroLineText extends Range {
+
+	public readonly raw: string;
+	public readonly text: string;
+
+	constructor(raw: string, text: string) {
+		super();
+		this.raw = raw;
+		this.text = text;
+	}
+}
+
 class TextMacro extends AstNode {
 
 	public name: string;
@@ -332,4 +355,14 @@ class DefineMacro extends AstNode {
 	}
 }
 
-export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro};
+class JassCompileError extends Range{
+	public readonly message: string;
+
+	constructor(message: string) {
+		super();
+		this.message = message;
+	}
+
+}
+
+export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText};
