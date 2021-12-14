@@ -286,6 +286,10 @@ class LineText extends Range{
         return index;
     }
 
+	public length():number {
+		return this.text.length;
+	}
+
 }
 
 class MultiLineText extends Range {
