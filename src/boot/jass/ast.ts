@@ -30,6 +30,7 @@ class Native implements Rangebel, Desc{
 	public readonly takes: Take[];
 	public returns: string | null;
 	public text:string = "";
+	private constant = false;
 
 
 	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
@@ -41,16 +42,39 @@ class Native implements Rangebel, Desc{
 	public get origin() : string {
 		return `native ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 	}
+
+	public isConstant() {
+		return this.constant;
+	}
+
+	public setConstant(isConstant: boolean) {
+		this.constant = isConstant;
+	}
+
 }
 
 class Func extends Native implements Rangebel{
 	public readonly loc: Range = Range.default();
 
+	public tag: "private" | "public" | "default" = "default";
+	public defaults:string | null = null;
+
 	public readonly locals: Local[] = [];
 	public readonly tokens:Token[] = [];
 
 	public get origin() : string {
-		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
+		const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
+		return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+	}
+
+}
+
+class Method extends Func implements Rangebel {
+	public tag: "private" | "public" | "default" = "default";
+	public modifier: "default"|"static"|"stub" = "default";
+
+	public get origin() : string {
+		return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 	}
 
 }
@@ -109,6 +133,75 @@ class JassError implements Rangebel{
 	}
 }
 
+class Member implements Rangebel,Desc {
+	public isConstant: boolean = false;
+	public tag: "private" | "public" | "default" = "default";
+	public isStatic: boolean = false;
+	public isArray:boolean = false;
+	// isArray 为 true 时有效
+	public size:number = 0;
+	public type: string;
+	public name: string;
+	public text:string = "";
+	public loc: Range = Range.default();
+
+	constructor(type: string, name: string) {
+		this.type = type;
+		this.name = name;
+	}
+
+	public get origin() : string {
+		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
+	}
+}
+
+class Interface implements Rangebel {
+	public tag: "private" | "public" | "default" = "default";
+	public name: string;
+	public members:Member[] = [];
+	public methods: Method[] = [];
+	public operators: Method[] = [];
+	public loc: Range = Range.default();
+
+	constructor(name: string) {
+		this.name = name;
+	}
+}
+
+class Struct extends Interface implements Rangebel,Desc {
+	public text: string = "";
+	public extends:string|null = null;
+
+	public get origin() : string {
+		return `${this.tag} struct ${this.name} endstruct`;
+	}
+}
+
+class Library implements Rangebel {
+	public name: string;
+	public initializer:string|null = null;
+	public requires: string[] = [];
+	public loc: Range = Range.default();
+	public readonly structs: Struct[] = [];
+	public readonly functions: Func[] = [];
+	public readonly globals: Global[] = [];
+
+	constructor(name: string) {
+		this.name = name;
+	}
+
+	public get origin() : string {
+		return `library ${this.name}${this.requires.length > 0 ? " " + this.requires.join(", ") : ""} endlibrary`;
+	}
+
+	
+	public get needs() : string[] {
+		return this.requires;
+	}
+	
+
+}
+
 type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
 | "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock"; 
 
@@ -162,8 +255,12 @@ class BlockComment extends LineComment {
 export {
 	Take,
 	Func,
+	Method,
 	Global,
 	Local,
+	Library,
+	Struct,
+	Member,
 
 	JassError,
 	Native,

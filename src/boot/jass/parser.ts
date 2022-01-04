@@ -1,6 +1,6 @@
-import { time } from "console";
 import {Position, Range} from "../common";
 import { isNewLine, isSpace } from "../tool";
+import { Func, Library, Method, Native, Take } from "./ast";
 import { tokenize } from "./tokens";
 
 class LineText extends Range{
@@ -279,8 +279,8 @@ class TextMacro extends Range {
         }
     }
 
-    public foreach(callback: (lineText: LineText, index: number) => void, params: string[] = []) {
-        this.lineTexts.map((lineText, textMacroIndex) => {
+    public foreach(callback: (lineText: LineText) => void, params: string[] = []) {
+        this.lineTexts.map((lineText) => {
             const replacedLineText = lineText.clone();
             
             let newText = lineText.getText();
@@ -288,7 +288,7 @@ class TextMacro extends Range {
                 newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
             })
             replacedLineText.setText(newText);
-            callback(replacedLineText, textMacroIndex);
+            callback(replacedLineText);
         });
     }
 
@@ -301,11 +301,13 @@ class TextMacro extends Range {
 class RunTextMacro extends Range {
     private name: string;
     private params: string[];
+    private lineText: LineText| null;
 
-    constructor(name: string = "", params: string[] = []) {
+    constructor(name: string = "", params: string[] = [], lineText: LineText|null = null) {
         super();
         this.name = name;
         this.params = params;
+        this.lineText = lineText;
     }
 
     public getName() :string {
@@ -322,6 +324,76 @@ class RunTextMacro extends Range {
 
     public getParams() :string[] {
         return this.params.map(param => param.replace(/^"/, "").replace(/"$/, ""));
+    }
+
+    public getLineText() :LineText|null {
+        return this.lineText;
+    }
+
+}
+
+class ZincBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+}
+
+class GlobalsBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+}
+
+class LibraryBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+}
+
+class StructBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+}
+
+type BlockType = "globals" | "library" | "struct" | "function" | "method";
+class Block extends Range  {
+    public type:BlockType;
+    public readonly lineTexts: (LineText|Block)[] = [];
+
+    constructor(type:BlockType) {
+        super();
+        this.type = type;
+    }
+
+}
+
+
+class MethodBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+}
+
+class FunctionBlock extends Range {
+    public readonly lineTexts: LineText[] = [];
+
+    constructor() {
+        super();
+    }
+
+    public getFunctionHeader() : LineText {
+        return this.lineTexts[0];
     }
 
 }
@@ -354,6 +426,150 @@ function parseTextMacro(text: string, textMacro: TextMacro) {
             }
         }
     }
+}
+
+function parseFunction(lineText: LineText, func: (Func|Native|Method)) {
+
+    const tokens = tokenize(lineText.getText()).map((token) => {
+        token.line = lineText.lineNumber();
+        return token;
+    });
+    let keyword:"function"|"native"|"method" = "function";
+    if (func instanceof Method) {
+        keyword = "method";
+    } else if (func instanceof Func) {
+        keyword = "function";
+    } else if (func instanceof Native) {
+        keyword = "native";
+    }
+    const functionIndex = tokens.findIndex((token) => token.isId() && token.value == keyword);
+    const takesIndex = tokens.findIndex((token) => token.isId() && token.value == "takes");
+    const returnsIndex = tokens.findIndex((token) => token.isId() && token.value == "returns");
+
+    if (functionIndex != -1) {
+        if (tokens[functionIndex + 1] && tokens[functionIndex + 1].isId()) {
+            func.name = tokens[functionIndex + 1].value;
+            func.nameToken = tokens[functionIndex + 1];
+        }
+    }
+    if (returnsIndex != -1) {
+        if (tokens[returnsIndex + 1] && tokens[returnsIndex + 1].isId()) {
+            func.returns = tokens[returnsIndex + 1].value;
+        }
+    }
+    if (takesIndex != -1) {
+        const takesTokens = tokens.slice(takesIndex + 1, returnsIndex != -1 ? returnsIndex : undefined);
+        
+        let state = 0;
+        let take:Take|null = null;
+        for (let index = 0; index < takesTokens.length; index++) {
+            const token = takesTokens[index];
+            if (state == 0) {
+                if (token.isId()) {
+                    if (token.value == "nothing") {
+                        break;
+                    }
+                    take = new Take(token.value, "");
+                    take.type = token.value;
+                    take.loc.start = new Position(token.line, token.position);
+                    func.takes.push(take);
+                    state = 1;
+                }
+            } else if (state == 1) {
+                if (token.isId()) {
+                    if (take) {
+                        take.name = token.value;
+                        take.loc.end = new Position(token.line, token.end);
+                        take.nameToken = token;
+                        func.takes.push(take);
+                        state = 2;
+                    }
+                } else if (token.isOp() && token.value == ",") {
+                    state = 0;
+                }
+            } else if (state == 2) {
+                if (token.isOp() && token.value == ",") {
+                    state = 0;
+                }
+            }
+        }
+    }
+    
+    if (functionIndex != -1) {
+        const modTokens = tokens.slice(0, functionIndex);
+
+        if (func instanceof Native) {
+            modTokens.forEach((token) => {
+                if (token.isId() && token.value == "constant") {
+                    func.setConstant(true);
+                }
+            });
+        }
+        if (func instanceof Func) {
+            modTokens.forEach((token) => {
+                if (token.isId() && token.value == "private") {
+                    func.tag = "private";
+                } else if (token.isId() && token.value == "public") {
+                    func.tag = "public";
+                }
+            });
+        }
+        if (func instanceof Method) {
+            modTokens.forEach((token) => {
+                if (token.isId() && token.value == "private") {
+                    func.tag = "private";
+                } else if (token.isId() && token.value == "public") {
+                    func.tag = "public";
+                }
+                if (token.isId() && token.value == "static") {
+                    func.modifier = "static";
+                } else if (token.isId() && token.value == "stub") {
+                    func.modifier = "stub";
+                }
+            });
+        }
+    }
+}
+
+function parseLibrary(lineText: LineText, library: Library) {
+
+    const tokens = tokenize(lineText.getText()).map((token) => {
+        token.line = lineText.lineNumber();
+        return token;
+    });
+
+    const libraryIndex = tokens.findIndex((token) => token.isId() && token.value == "library");
+
+    if (libraryIndex != -1) {
+        library.name = tokens[libraryIndex + 1].value;
+        library.loc.start = new Position(tokens[libraryIndex].line, tokens[libraryIndex].position);
+        const initializerIndex = tokens.findIndex((token) => token.isId() && token.value == "initializer");
+        if (initializerIndex != -1) {
+            if (tokens[initializerIndex + 1] && tokens[initializerIndex + 1].isId()) {
+                library.initializer = tokens[initializerIndex + 1].value;
+            }
+        }
+        
+        const requireIndex = tokens.findIndex((token) => token.isId() && (token.value == "requires" || token.value == "needs" || token.value == "uses"));
+        if (requireIndex != -1) {
+            const requireTokens = tokens.slice(requireIndex + 1);
+            
+            let state = 0;
+            requireTokens.forEach((token) => {
+                if (state == 0) {
+                    if (token.isId()) {
+                        library.requires.push(token.value);
+                        state = 1;
+                    }
+                } else if (state == 1) {
+                    if (token.isOp() && token.value == ",") {
+                        state = 0;
+                    }
+                }
+            });
+        }
+    }
+
 }
 
 function parseRunTextMacro(text: string, runTextMacro: RunTextMacro) {
@@ -392,24 +608,28 @@ class TextDocument {
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         this.lineTexts = lines(newContent);
-        this.textMacros = this.findTextMacro(this.lineTexts);
-        // this.handleTextMacro(lineTexts);
+        this.textMacros = this.findTextMacro();
+        this.parseRunTextMacro();
+        this.zincBlocks = this.findZincBlock();
+        this.parseOutline();
     }
 
-    private lineTexts:LineText[] = [];
+    private lineTexts:(LineText)[] = [];
     private textMacros: TextMacro[] = [];
+    private expandLineTexts:(LineText|RunTextMacro)[] = [];
+    private zincBlocks:ZincBlock[] = [];
 
-    private findTextMacro(lineTexts: LineText[]): TextMacro[] {
+    private findTextMacro(): TextMacro[] {
         const textMacros: TextMacro[] = [];
         let textMacro:TextMacro|null = null;
         this.lineTexts = this.lineTexts.filter((lineText) => {
-            if (/^\s*\/\/!\s+textmacro/.test(lineText.getText())) {
+            if (/^\s*\/\/!\s+textmacro\b/.test(lineText.getText())) {
                 textMacro = new TextMacro()
                 textMacro.setRange(lineText);
                 parseTextMacro(lineText.getText(), textMacro);
                 textMacros.push(textMacro);
                 return false;
-            } else if (/\/\/!\s+endtextmacro/.test(lineText.getText())) {
+            } else if (/\/\/!\s+endtextmacro\b/.test(lineText.getText())) {
                 if (textMacro) {
                     textMacro.end = lineText.end;
                 }
@@ -425,36 +645,145 @@ class TextDocument {
         return textMacros;
     }
 
-    private handleTextMacro(lineTexts: LineText[]) {
+    private parseRunTextMacro() {
+        this.lineTexts.forEach(lineText => {
+            if (/^\s*\/\/!\s+runtextmacro\b/.test(lineText.getText())) {
+                const runTextMacro = new RunTextMacro();
+                parseRunTextMacro(lineText.getText(), runTextMacro);
+                runTextMacro.setRange(lineText);
+                this.expandLineTexts.push(runTextMacro);
 
-        console.log(this.findTextMacro(lineTexts));
-        this.findTextMacro(lineTexts).forEach((textMacro, index) => {
-            textMacro.foreach((lineText, lineTextIndex) => {
-                console.log(lineText.getText());
-            }, ["物质", "只能"]);
-        })
-        
-
-        for (let index = 0; index < lineTexts.length; index++) {
-            const lineText = lineTexts[index];
-            if (/\/\/!\s+runtextmacro/.test(lineText.getText())) {
-
+                // const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == runTextMacro.getName());
+            } else {
+                this.expandLineTexts.push(lineText);
             }
-        }
+        })
     }
 
-    public foreach(callback: (lineText: LineText, index: number) => void): void {
+    private findZincBlock() {
+        const zincBlocks:ZincBlock[] = [];
+        let zinc:ZincBlock|null = null;
+        this.expandLineTexts = this.expandLineTexts.filter(x => {
+            if (x instanceof LineText) {
+                if (/^\s*\/\/!\s+zinc\b/.test(x.getText())) {
+                    zinc = new ZincBlock();
+                    zincBlocks.push(zinc);
+                    return false;
+                } else if (/^\s*\/\/!\s+endzinc\b/.test(x.getText())) {
+                    zinc = null;
+                    return false;
+                } else if (zinc) {
+                    zinc.lineTexts.push(x);
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if(x instanceof RunTextMacro) {
+                const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == x.getName());
+                textMacro?.foreach((lineText) => {
+                    if (/^\s*\/\/!\s+zinc\b/.test(lineText.getText())) {
+                        zinc = new ZincBlock();
+                        zincBlocks.push(zinc);
+                    } else if (/^\s*\/\/!\s+endzinc\b/.test(lineText.getText())) {
+                        zinc = null;
+                    } else if (zinc) {
+                        zinc.getLineTexts().push(lineText);
+                    }
+                }, x.getParams());
+                return true;
+            }
+        });
+        return zincBlocks;
+    }
+
+    private parseOutline() {
+        let globalsBlock:GlobalsBlock|null = null;
+        let functionBlock:FunctionBlock|null = null;
+        let libraryBlock:LibraryBlock|null = null;
+        function handle(lineText: LineText) {
+            if (/^\s*globals\b/.test(lineText.getText())) {
+                globalsBlock = new GlobalsBlock();
+                globalsBlock.setRange(lineText);
+            } else if (/^\s*endglobals\b/.test(lineText.getText())) {
+                if (globalsBlock) {
+                    globalsBlock.end = lineText.end;
+                    globalsBlock = null;
+                }
+            } else if (globalsBlock) {
+                globalsBlock.lineTexts.push(lineText);
+                globalsBlock.end = lineText.end;
+            } else if (/^\s*function\b/.test(lineText.getText())) {
+                functionBlock = new FunctionBlock();
+                functionBlock.setRange(lineText);
+                functionBlock.lineTexts.push(lineText);
+            } else if (/^\s*endfunction\b/.test(lineText.getText())) {
+                if (functionBlock) {
+                    functionBlock.end = lineText.end;
+                    functionBlock = null;
+                }
+            } else if (functionBlock) {
+                functionBlock.lineTexts.push(lineText);
+                functionBlock.end = lineText.end;
+            } else if (/^\s*library\b/.test(lineText.getText())) {
+                libraryBlock = new LibraryBlock();
+                libraryBlock.setRange(lineText);
+                libraryBlock.lineTexts.push(lineText);
+            } else if (/^\s*endlibrary\b/.test(lineText.getText())) {
+                if (libraryBlock) {
+                    libraryBlock.end = lineText.end;
+                    libraryBlock = null;
+                }
+            } else if (libraryBlock) {
+                libraryBlock.lineTexts.push(lineText);
+                libraryBlock.end = lineText.end;
+            }
+        }
+        this.expandLineTexts.forEach(x => {
+            if (x instanceof RunTextMacro) {
+                const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == x.getName());
+                if (textMacro) {
+                    textMacro.foreach((lineText) => {
+                        handle(lineText);
+                    }, x.getParams());
+                }
+            } else if (x instanceof LineText) {
+                handle(x);
+            }
+        });
+    }
+
+    /**
+     * @deprecated 后面会移除
+     * @param callback 
+     */
+    public foreach(callback: (lineText: LineText) => void): void {
         this.lineTexts.forEach((lineText) => {
             if (/^\s*\/\/!\s+runtextmacro/.test(lineText.getText())) {
                 const runTextMacro = new RunTextMacro();
                 parseRunTextMacro(lineText.getText(), runTextMacro);
                 runTextMacro.setRange(lineText);
+                
+
+                const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == runTextMacro.getName());
+                if (textMacro) {
+                    textMacro.foreach((lineText) => {
+                        callback(lineText);
+                    }, runTextMacro.getParams());
+                } else {
+                    callback(lineText);
+                }
+            } else {
+                callback(lineText);
             }
         });
     }
 
     public getTextMacros() :TextMacro[] {
         return this.textMacros;
+    }
+
+    public getZincBlocks() {
+        return this.zincBlocks;
     }
 }
 
@@ -520,10 +849,49 @@ if (true) {
     console.log("parse=======================");
     
     new TextDocument(`
-    //! textmacro a666(aa,bb)
-    ???$aa$ $bb$
+    //! textmacro a666(name,return_type)
+    function $name$ takes nothing returns $return_type$
+    endfunction
     //! endtextmacro
-    `)
+    //! runtextmacro a666("test_func_name", "nothing")
+    `).foreach((lineText) => {
+        console.log(lineText.lineNumber(), lineText.getText())
+    });
+
+    new TextDocument(`
+    //! textmacro start_zinc()
+    wuyong
+    //! zinc
+    youyong
+    //! endtextmacro
+
+    //! textmacro end_zinc(end)
+    $end$
+    //! endzinc
+    //! endtextmacro
+
+    //! runtextmacro start_zinc()
+
+    zinccontent
+
+    //! runtextmacro end_zinc("canshu")
+
+    `).getZincBlocks().forEach(x => {
+        console.log(x);
+        
+    })
+    
+
+    const func = new Func("");
+    const lineText = new LineText("private function func_name takes string , integer anan");
+    parseFunction(lineText, func);
+    console.log(func);
+    
+
+    const lib = new Library("");
+    const libLineText = new LineText("library dianjie initializer ifunc requires bbb, ccc, eee");
+    parseLibrary(libLineText, lib);
+    console.log(lib);
 
 }
 

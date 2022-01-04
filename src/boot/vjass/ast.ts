@@ -141,14 +141,7 @@ class InterfaceArray extends Interface{
 	public size:number = 0;
 }
 
-class Struct extends Interface implements Rangebel,Desc {
-	public text: string = "";
-	public extends:string|null = null;
 
-	public get origin() : string {
-		return `${this.tag} struct ${this.name} endstruct`;
-	}
-}
 
 
 class StructArray extends Struct{
@@ -158,30 +151,7 @@ class StructArray extends Struct{
 
 
 
-class Library implements Rangebel {
-	public name: string;
-	public initializer:string|null = null;
-	public requires: string[] = [];
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-	public readonly structs: Struct[] = [];
-	public readonly functions: Func[] = [];
-	public readonly globals: Global[] = [];
 
-	constructor(name: string) {
-		this.name = name;
-	}
-
-	public get origin() : string {
-		return `library ${this.name}${this.requires.length > 0 ? " " + this.requires.join(", ") : ""} endlibrary`;
-	}
-
-	
-	public get needs() : string[] {
-		return this.requires;
-	}
-	
-
-}
 
 class VjassError extends jass.JassError {
 
