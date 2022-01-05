@@ -102,51 +102,8 @@ class Method extends Func implements Rangebel {
 }
 
 
-class Member implements Rangebel,Desc {
-	public isConstant: boolean = false;
-	public tag: ModifierType = "default";
-	public isStatic: boolean = false;
-	public isArray:boolean = false;
-	// isArray 为 true 时有效
-	public size:number = 0;
-	public type: string;
-	public name: string;
-	public text:string = "";
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(type: string, name: string) {
-		this.type = type;
-		this.name = name;
-	}
-
-	public get origin() : string {
-		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
-	}
-}
-
-class Interface implements Rangebel {
-	public tag:ModifierType = "default";
-	public name: string;
-	public members:Member[] = [];
-	public methods: Method[] = [];
-	public operators: Method[] = [];
-	public loc: Range = new Range(new Position(0, 0), new Position(0, 0));
-
-	constructor(name: string) {
-		this.name = name;
-	}
-}
-
-class InterfaceArray extends Interface{
-	public size:number = 0;
-}
 
 
-
-
-class StructArray extends Struct{
-	public size:number = 0;
-}
 
 
 
@@ -160,38 +117,3 @@ class VjassError extends jass.JassError {
 	}
 
 }
-
-class Program {
-	public readonly structs:Struct[] = [];
-	public readonly interfaces:Interface[] = [];
-
-	public readonly librarys: Library[] = [];
-	public readonly zincTokenErrors:VjassError[] = [];
-
-	constructor() {
-
-	}
-}
-
-export {
-	ArrayType,
-	DynamicArray,
-	Func,
-	FunctionInterface,
-	Global,
-	Interface,
-	InterfaceArray,
-	Library,
-	Local,
-	Member,
-	Method,
-	ModifierType,
-	Position,
-	Range,
-	Rangebel,
-	Struct,
-	StructArray,
-	TypePonint,
-	Program,
-	VjassError
-};

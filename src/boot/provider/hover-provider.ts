@@ -26,7 +26,7 @@ class HoverProvider implements vscode.HoverProvider {
   }
 
   private all (document: vscode.TextDocument, position: vscode.Position) {
-    const contents:Array<jassAst.Native|jassAst.Func| vjassAst.Func| zincAst.Func| zincAst.Method| vjassAst.Method | jassAst.Global | vjassAst.Global | vjassAst.Struct | vjassAst.Method | vjassAst.Member | zincAst.Global | zincAst.Struct | zincAst.Member | jassAst.Local | jassAst.Take | zincAst.Local> = [];
+    const contents:Array<jassAst.Native|jassAst.Func| jassAst.Func| zincAst.Func| zincAst.Method| jassAst.Method | jassAst.Global | jassAst.Global | jassAst.Struct | jassAst.Method | jassAst.Member | zincAst.Global | zincAst.Struct | zincAst.Member | jassAst.Local | jassAst.Take | zincAst.Local> = [];
     
     contents.push(...commonJProgram.natives, ...commonJProgram.functions, ...commonJProgram.globals);
     contents.push(...commonAiProgram.natives, ...commonAiProgram.functions, ...commonAiProgram.globals);

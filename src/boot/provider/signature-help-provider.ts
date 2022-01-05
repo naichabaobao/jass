@@ -10,8 +10,8 @@ import { functionKey } from './tool';
 
 class SignatureHelp implements vscode.SignatureHelpProvider {
 
-  private allFunctions(document: vscode.TextDocument, position: vscode.Position): (jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method)[] {
-    const functions: Array<jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method> = [];
+  private allFunctions(document: vscode.TextDocument, position: vscode.Position): (jassAst.Native | jassAst.Func | jassAst.Func | zincAst.Func | zincAst.Method | jassAst.Method)[] {
+    const functions: Array<jassAst.Native | jassAst.Func | jassAst.Func | zincAst.Func | zincAst.Method | jassAst.Method> = [];
 
     functions.push(...commonJProgram.natives, ...commonJProgram.functions);
     functions.push(...commonAiProgram.natives, ...commonAiProgram.functions);

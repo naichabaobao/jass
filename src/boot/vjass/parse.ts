@@ -1,5 +1,6 @@
 import {Token, tokens} from "../jass/tokens";
-import {
+import { Position } from "../common";
+import { Local, Take,
 	Library,
 	Func,
 	Global,
@@ -7,12 +8,9 @@ import {
 	Member,
 	Interface,
 	Program,
-	VjassError,
+	JassError,
 	ModifierType,
-	Method
-} from "./ast";
-import { Position } from "../common";
-import { Local, Take } from "../jass/ast";
+	Method } from "../jass/ast";
 
 // type AbstractLineType = "function" | "endfunction" | "globals" | "endglobals" | "library" | "endlibrary" | "struct" | "endstruct" | "scope" | "endscope" | "module" | "endmodule" |
 // "type" | "interface" | "endinterface" | "local" | "set" | "call" | "return" | "if" | "endif" | "elseif" | "else" | "loop" | "endloop" | "exitwhen" | "method" | "endmethod" | "delegate" | "implement" | "textmacro" | "endtextmacro" | "runtextmacro" | "hook";  

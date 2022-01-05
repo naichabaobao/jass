@@ -10,7 +10,6 @@ import * as zincParse from "../zinc/parse";
 import * as zincAst from "../zinc/ast";
 
 import * as vjassParse from "../vjass/parse";
-import * as vjassAst from "../vjass/ast";
 
 
 const commonJProgram = jassParse.parse(fs.readFileSync(Options.commonJPath).toString(), {
@@ -68,7 +67,7 @@ const globals = programs.map(program => program.globals).flat();
 
 const JassMap = new Map<string, jassAst.Program>();
 const ZincMap = new Map<string, zincAst.Program>();
-const VjassMap = new Map<string, vjassAst.Program>();
+const VjassMap = new Map<string, jassAst.Program>();
 
 /**
  * 解析工作目录下所有j文件
@@ -254,7 +253,7 @@ function getGlobalVariables() {
     return !global.isConstant;
   };
 
-  const globals:(jassAst.Global|vjassAst.Global)[] = [];
+  const globals:(jassAst.Global|jassAst.Global)[] = [];
 
   const commonJGlobals = commonJProgram.globals.filter(VariableFilter);
   const commonAiGlobals = commonAiProgram.globals.filter(VariableFilter);

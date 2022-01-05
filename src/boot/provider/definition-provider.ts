@@ -82,7 +82,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
   }
 
   private all(document: vscode.TextDocument, position: vscode.Position, key: string) {
-    const contents: Array<jassAst.Native | jassAst.Func | vjassAst.Func | zincAst.Func | zincAst.Method | vjassAst.Method | jassAst.Global | vjassAst.Global | vjassAst.Struct | vjassAst.Method | vjassAst.Member | zincAst.Global | zincAst.Struct | zincAst.Member | jassAst.Local | jassAst.Take | zincAst.Local> = [];
+    const contents: Array<jassAst.Native | jassAst.Func | zincAst.Func | zincAst.Method | jassAst.Method | jassAst.Global | jassAst.Global | jassAst.Struct | jassAst.Method | jassAst.Member | zincAst.Global | zincAst.Struct | zincAst.Member | jassAst.Local | jassAst.Take | zincAst.Local> = [];
 
     const locations = new Array<vscode.Location>();
 

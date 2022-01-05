@@ -36,9 +36,13 @@ interface Rangebel {
 	loc: Range;
 }
 
+/**
+ * @deprecated 采用多行形式
+ */
 interface Desc {
 	text:string;
 }
+
 
 export {
 	Position,

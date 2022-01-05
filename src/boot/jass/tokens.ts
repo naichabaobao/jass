@@ -1,6 +1,5 @@
 
 import { is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isNumber, isSpace } from "../tool";
-import { Location } from "./range";
 
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "block_comment" | "comment" | "macro";
 
@@ -57,47 +56,6 @@ class Token {
 
 }
 
-/**
- * @deprecated
- */
-class VToken {
-	public type: string;
-	public value: string;
-	public loc: Location = new Location();
-	constructor(type: string, value: string) {
-		this.type = type;
-		this.value = value;
-	}
-	public isId() {
-		return this.type === "id";
-	}
-	public isOp() {
-		return this.type === "op";
-	}
-	public isInt() {
-		return this.type === "int";
-	}
-	public isReal() {
-		return this.type === "real";
-	}
-	public isString() {
-		return this.type === "string";
-	}
-	public isComment() {
-		return this.type === "comment";
-	}
-	public isBlockComment() {
-		return this.type === "block_comment";
-	}
-	public isMacro() {
-		return this.type === "macro";
-	}
-	public isOther() {
-		return this.type === "other";
-	}
-
-}
-
 function _isLetter(char: string): boolean {
 	if (!char) {
 		return false;
@@ -135,21 +93,6 @@ function _isSpace(char: string): boolean {
 		return false;
 	}
 	return /\s/.test(char);
-}
-
-class TokenOption {
-	/**
-	 * $a23 这种十六进制是否解析
-	 */
-	needParseNewHex?: boolean = true;
-	/**
-	 * -> 返回符号是否解析
-	 */
-	needParseZincReturnOp?: boolean = false;
-	/**
-	 * //! zinc //! endzinc 直接所有符号无视
-	 */
-	ignoreZinc?: boolean = true;
 }
 
 function tokens(content: string) {

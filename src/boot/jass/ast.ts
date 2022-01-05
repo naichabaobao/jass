@@ -3,13 +3,21 @@ import { isSpace } from "../tool";
 import { Token } from "./tokens";
 
 
-class Node extends Range{}
+class Node extends Range { }
 
+type ModifierType = "private" | "public" | "default";
+
+/**
+ * 多行提示
+ */
+interface Descript {
+	readonly lineComments: LineComment[];
+}
 
 class Take implements Rangebel {
 
 	public type: string;
-	public nameToken:Token|null = null;
+	public nameToken: Token | null = null;
 	public name: string;
 	public loc: Range = Range.default();
 
@@ -18,28 +26,29 @@ class Take implements Rangebel {
 		this.name = name;
 	}
 
-	public get origin() : string {
+	public get origin(): string {
 		return `${this.type} ${this.name}`;
 	}
 }
 
-class Native implements Rangebel, Desc{
+class Native implements Rangebel, Desc, Descript {
 	public readonly loc: Range = Range.default();
-	public nameToken:Token|null = null;
+	public nameToken: Token | null = null;
 	public name: string;
 	public readonly takes: Take[];
 	public returns: string | null;
-	public text:string = "";
+	public text: string = "";
 	private constant = false;
+	public readonly lineComments: LineComment[] = [];
 
-
-	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
+	constructor(name: string = "", takes: Take[] = [], returns: string | null = null) {
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
 	}
 
-	public get origin() : string {
+
+	public get origin(): string {
 		return `native ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 	}
 
@@ -53,157 +62,171 @@ class Native implements Rangebel, Desc{
 
 }
 
-class Func extends Native implements Rangebel{
+class Func extends Native implements Rangebel {
 	public readonly loc: Range = Range.default();
 
 	public tag: "private" | "public" | "default" = "default";
-	public defaults:string | null = null;
+	public defaults: string | null = null;
 
 	public readonly locals: Local[] = [];
-	public readonly tokens:Token[] = [];
+	public readonly tokens: Token[] = [];
+	private readonly globals: Global[] = [];
 
-	public get origin() : string {
+	public get origin(): string {
 		const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
 		return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+	}
+
+	public getGlobals() {
+		return this.globals;
 	}
 
 }
 
 class Method extends Func implements Rangebel {
-	public tag: "private" | "public" | "default" = "default";
-	public modifier: "default"|"static"|"stub" = "default";
+	public tag: ModifierType = "default";
+	public modifier: "default" | "static" | "stub" = "default";
 
-	public get origin() : string {
+	public get origin(): string {
 		return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 	}
 
 }
 
-class Global implements Rangebel,Desc{
+class Global implements Rangebel, Desc, Descript {
 	public readonly loc: Range = Range.default();
-
+	public tag: ModifierType = "default";
 	public isConstant: boolean = false;
-	public isArray:boolean = false;
+	public isArray: boolean = false;
 	public type: string;
-	public nameToken:Token|null = null;
+	public nameToken: Token | null = null;
 	public name: string;
-	public text:string = "";
+	public text: string = "";
+	public readonly lineComments: LineComment[] = [];
 
-	constructor(type: string, name: string) {
+	constructor(type: string = "", name: string = "") {
 		this.type = type;
 		this.name = name;
 	}
 
-	public get origin() : string {
+	public get origin(): string {
 		return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`
 	}
 }
 
 
-class Local implements Rangebel,Desc {
+class Local implements Rangebel, Desc, Descript {
 	public readonly loc: Range = Range.default();
 
 	public type: string;
 	public name: string;
-	public isArray:boolean = false;
-	public text:string = "";
-	public nameToken:Token|null = null;
+	public isArray: boolean = false;
+	public text: string = "";
+	public nameToken: Token | null = null;
 	/**
 	 * @deprecated
 	 */
-	public readonly initTokens:Token[] = [];
+	public readonly initTokens: Token[] = [];
+	public readonly lineComments: LineComment[] = [];
 
-	constructor(type: string, name: string) {
+	constructor(type: string = "", name: string = "") {
 		this.type = type;
 		this.name = name;
 	}
 
-	public get origin() : string {
+	public get origin(): string {
 		return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`
 	}
-	
+
 }
 
-class JassError implements Rangebel{
-	public readonly message:string;
+class JassError implements Rangebel {
+	public readonly message: string;
 	public readonly loc: Range = Range.default();
 
-	constructor(message:string) {
+	constructor(message: string) {
 		this.message = message;
 	}
 }
 
-class Member implements Rangebel,Desc {
+class Member implements Rangebel, Desc, Descript {
 	public isConstant: boolean = false;
 	public tag: "private" | "public" | "default" = "default";
 	public isStatic: boolean = false;
-	public isArray:boolean = false;
+	public isArray: boolean = false;
 	// isArray 为 true 时有效
-	public size:number = 0;
+	public size: number = 0;
 	public type: string;
 	public name: string;
-	public text:string = "";
+	public text: string = "";
 	public loc: Range = Range.default();
+	public readonly lineComments: LineComment[] = [];
+	public nameToken: Token | null = null;
+	public modifier: "default" | "static" | "stub" = "default";
 
-	constructor(type: string, name: string) {
+	constructor(type: string = "", name: string = "") {
 		this.type = type;
 		this.name = name;
 	}
 
-	public get origin() : string {
+	public get origin(): string {
 		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
 	}
 }
 
-class Interface implements Rangebel {
+
+class Interface implements Rangebel, Descript {
 	public tag: "private" | "public" | "default" = "default";
 	public name: string;
-	public members:Member[] = [];
+	public members: Member[] = [];
 	public methods: Method[] = [];
 	public operators: Method[] = [];
 	public loc: Range = Range.default();
+	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string) {
+	constructor(name: string = "") {
 		this.name = name;
 	}
 }
 
-class Struct extends Interface implements Rangebel,Desc {
+class Struct extends Interface {
 	public text: string = "";
-	public extends:string|null = null;
+	// vjass只支持单继承
+	public extends: string[] = [];
 
-	public get origin() : string {
+	public get origin(): string {
 		return `${this.tag} struct ${this.name} endstruct`;
 	}
 }
 
-class Library implements Rangebel {
+class Library implements Rangebel, Descript {
 	public name: string;
-	public initializer:string|null = null;
+	public initializer: string | null = null;
 	public requires: string[] = [];
 	public loc: Range = Range.default();
 	public readonly structs: Struct[] = [];
 	public readonly functions: Func[] = [];
 	public readonly globals: Global[] = [];
+	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string) {
+	constructor(name: string = "") {
 		this.name = name;
 	}
 
-	public get origin() : string {
+	public get origin(): string {
 		return `library ${this.name}${this.requires.length > 0 ? " " + this.requires.join(", ") : ""} endlibrary`;
 	}
 
-	
-	public get needs() : string[] {
+
+	public get needs(): string[] {
 		return this.requires;
 	}
-	
+
 
 }
 
 type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
-| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock"; 
+	| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock";
 
 class AstNode extends Range {
 	protected readonly astType: AstType;
@@ -213,7 +236,7 @@ class AstNode extends Range {
 		this.astType = type;
 	}
 
-	public getType() :AstType {
+	public getType(): AstType {
 		return this.astType;
 	}
 
@@ -224,15 +247,23 @@ class AstNode extends Range {
  * 行注释
  */
 class LineComment implements Rangebel {
+	protected text: string;
 	public readonly loc: Range = Range.default();
-	public readonly text:string;
 
-	constructor(text: string) {
+	constructor(text: string = "") {
 		this.text = text;
 	}
 
 	public getContent() {
 		return this.text.replace(/^\/\/(?:\/)?/, "");
+	}
+
+	public setText(text: string) {
+		this.text = text;
+	}
+
+	public getText(): string {
+		return this.text;
 	}
 
 }
@@ -261,6 +292,8 @@ export {
 	Library,
 	Struct,
 	Member,
+	Interface,
+	ModifierType,
 
 	JassError,
 	Native,
@@ -271,9 +304,46 @@ export {
 
 
 
-class Declaration extends AstNode{
 
-	public parent: Declaration|null = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Declaration extends AstNode {
+
+	public parent: Declaration | null = null;
 
 	protected constructor(type: AstType) {
 		super(type);
@@ -300,8 +370,8 @@ class TypeDeclaration extends Declaration {
 
 class TakeDeclaration extends AstNode {
 
-	public type: string|null = null;
-	public name: string|null = null;
+	public type: string | null = null;
+	public name: string | null = null;
 
 	constructor() {
 		super("Take");
@@ -314,16 +384,16 @@ class TakeDeclaration extends AstNode {
 
 class NativeDeclaration extends Declaration {
 
-	public name: string|null = null;
+	public name: string | null = null;
 	public takes: TakeDeclaration[] | null = null;
-	public returns: string| null = null;
+	public returns: string | null = null;
 
 	constructor() {
 		super("Native");
 	}
 }
 
-class LocalStatement extends Statement{
+class LocalStatement extends Statement {
 
 	public type: string | null = null;
 	public name: string | null = null;
@@ -336,59 +406,64 @@ class LocalStatement extends Statement{
 
 }
 
-class FunctionDeclaration extends Declaration implements NativeDeclaration{
+class FunctionDeclaration extends Declaration implements NativeDeclaration {
 
-	public name: string|null = null;
+	public name: string | null = null;
 	public takes: TakeDeclaration[] | null = null;
-	public returns: string| null = null;
+	public returns: string | null = null;
 	public body: Statement[] = [];
 
 	constructor() {
 		super("Function");
 	}
-	
+
 }
 
-class LineText extends Range{
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
+class LineText extends Range {
 
-    public readonly text:string;
+	public readonly text: string;
 
-    constructor(text: string) {
-        super();
-        this.text = text;
-    }
+	constructor(text: string) {
+		super();
+		this.text = text;
+	}
 
-    // 是否空行
-    public isEmpty():boolean {
-        return this.text.trimStart() === "";
-    }
+	// 是否空行
+	public isEmpty(): boolean {
+		return this.text.trimStart() === "";
+	}
 
-    public getText():string {
-        return this.text;
-    }
+	public getText(): string {
+		return this.text;
+	}
 
-    public lineNumber() :number {
-        return this.start.line;
-    }
+	public lineNumber(): number {
+		return this.start.line;
+	}
 
-    // 第一个字符下标
-    public firstCharacterIndex() :number {
-        let index = 0;
-        for (; index < this.text.length; index++) {
-            const char = this.text[index];
-            if (!isSpace(char)) {
-                return index;
-            }
-        }
-        return index;
-    }
+	// 第一个字符下标
+	public firstCharacterIndex(): number {
+		let index = 0;
+		for (; index < this.text.length; index++) {
+			const char = this.text[index];
+			if (!isSpace(char)) {
+				return index;
+			}
+		}
+		return index;
+	}
 
-	public length():number {
+	public length(): number {
 		return this.text.length;
 	}
 
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class MultiLineText extends Range {
 
 	public readonly lineTexts: LineText[];
@@ -442,16 +517,16 @@ class RunTextMacro extends AstNode {
 
 class DefineMacro extends AstNode {
 	public name: string;
-	public value: string|null = null;
+	public value: string | null = null;
 
-	constructor(name: string, value: string|null = null) {
+	constructor(name: string, value: string | null = null) {
 		super("DefineMacro");
 		this.name = name;
 		this.value = value;
 	}
 }
 
-class JassCompileError extends Range{
+class JassCompileError extends Range {
 	public readonly message: string;
 
 	constructor(message: string) {
@@ -497,21 +572,23 @@ class StructDeclaration extends Declaration {
 	}
 }
 
-
+/**
+ * @deprecated
+ */
 class ScopeDeclaration extends Declaration {
 
 
 	public readonly body: Declaration[] = [];
 
-	constructor(parent: Declaration|null = null) {
+	constructor(parent: Declaration | null = null) {
 		super("Scope");
 		this.parent = parent;
 	}
 }
 
-class Program 
-// <T extends Declaration>
-extends AstNode{
+class Program
+	// <T extends Declaration>
+	extends AstNode {
 
 	constructor() {
 		super("Program");
@@ -521,29 +598,29 @@ extends AstNode{
 	 * @deprecated
 	 */
 	public filePath: string = "";
-	/**
-	 * @deprecated
-	 */
-	public readonly natives:Native[] = [];
-	/**
-	 * @deprecated
-	 */
-	public readonly functions:Func[] = [];
-	/**
-	 * @deprecated
-	 */
-	public readonly globals:Global[] = [];
-	/**
-	 * @deprecated
-	 */
-	public readonly errors:JassError[] = [];
 
+	public readonly natives: Native[] = [];
+
+	public readonly functions: Func[] = [];
+
+	public readonly globals: Global[] = [];
+	public readonly librarys: Library[] = [];
+	public readonly structs: Struct[] = [];
+
+	/**
+	 * @deprecated
+	 */
+	public readonly errors: JassError[] = [];
+	/**
+	 * @deprecated
+	 */
 	public readonly body: Array<Declaration> = [];
-	
+
 
 }
 
-export {AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
+export {
+	AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
 	Program, LibraryDeclaration, ScopeDeclaration, ModuleDeclaration, StructDeclaration
 
 };
