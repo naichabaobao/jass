@@ -95,6 +95,11 @@ function _isSpace(char: string): boolean {
 	return /\s/.test(char);
 }
 
+/**
+ * @deprecated 使用tokenize，而非tokens
+ * @param content 
+ * @returns 
+ */
 function tokens(content: string) {
 	const tokens: Token[] = [];
 

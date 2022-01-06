@@ -2,26 +2,26 @@
 import {
 	ArrayType,
 	DynamicArray,
-	Func,
+	// Func,
 	FunctionInterface,
-	Global,
+	// Global,
 	Interface,
 	InterfaceArray,
-	Library,
-	Local,
-	Member,
-	Method,
+	// Library,
+	// Local,
+	// Member,
+	// Method,
 	ModifierType,
 	Position,
 	Range,
-	Struct,
+	// Struct,
 	StructArray,
 	TypePonint,
-	Program,
+	// Program,
 	ZincError
 } from "./ast";
-import {Take} from "../jass/ast";
-import {tokens, Token} from "../jass/tokens";
+import {Program, Take, Library, Struct, Member, Global, Func, Local, Method} from "../jass/ast";
+import {Token, tokenize} from "../jass/tokens";
 
 import {ZincKeywords} from "../provider/keyword";
 import {retainZincBlock} from "../tool";
@@ -61,15 +61,17 @@ class ModifierBodyType {
 	}
 }
 
+
+
 /**
  * 解析zinc代码
  * @param content 
  * @param isZincFile 是否后缀为.zn，当前版本临时定义，后续参数增加后去除
  * @returns 
  */
-function parse(content:string, isZincFile:boolean = false) {
+function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 
-	let ts = tokens(content);
+	
 
 	const comments:Token[] = [];
 	const matchText = (line:number) => {
@@ -88,7 +90,7 @@ function parse(content:string, isZincFile:boolean = false) {
 	};
 	let inZinc = false;
 	// 无视掉所有非zinc块内的token
-	ts = ts.filter((token, index, ts) => {
+	tokens = tokens.filter((token, index, ts) => {
 		if (token.isComment() && /\/\/![ \t]+zinc\b/.test(token.value)) {
 			inZinc = true;
 			return false;
@@ -102,7 +104,9 @@ function parse(content:string, isZincFile:boolean = false) {
 		return (isZincFile || inZinc) && !token.isBlockComment() && !token.isNewLine();
 	});
 
-	const program = new Program();
+	const program = new Program({
+		style: "zinc"
+	});
 
 
 	let inLibrary = false;
@@ -205,8 +209,8 @@ function parse(content:string, isZincFile:boolean = false) {
 	// const bodyStack = new BodyStack();
 
 
-	for (let index = 0; index < ts.length; index++) {
-		const token = ts[index];
+	for (let index = 0; index < tokens.length; index++) {
+		const token = tokens[index];
 		
 		const pushErrorOld = (message:string) => {
 			// program.zincTokenErrors.push(new ZincTokenError(token, message));
@@ -735,7 +739,7 @@ function parse(content:string, isZincFile:boolean = false) {
 				} else if (structModifierTypes.length > 0) {
 					method.tag = lastStructModifierType().type;
 				}
-				method.isStatic = isStatic;
+				method.modifier = "static";
 				method.loc.start = new Position(token.line, token.position);
 				(<Struct>struct).methods.push(method);
 				inMethod = true;
@@ -792,7 +796,7 @@ function parse(content:string, isZincFile:boolean = false) {
 					if ((<Struct>struct).extends) {
 
 					} else {
-						(<Struct>struct).extends = token.value;
+						(<Struct>struct).extends.push(token.value);
 					}
 				} else {
 					
@@ -805,7 +809,7 @@ function parse(content:string, isZincFile:boolean = false) {
 			const err = new ZincError(message);
 			err.loc.start = new Position(token.line, token.position);
 			err.loc.end = new Position(token.line, token.end);
-			program.zincErrors.push(err);
+			program.errors.push(err);
 		};
 
 		if (token.isId() && token.value == "library") {
@@ -908,6 +912,11 @@ function parse(content:string, isZincFile:boolean = false) {
 
 }
 
+function parse(content:string, isZincFile:boolean = false) {
+	let ts = tokenize(content);
+	return parseByTokens(ts, isZincFile);
+}
+
 function parseZincBlock (content:string) {
 	// 确保换行符
 	content = content.replace(/\r\n/g, "\n");
@@ -923,7 +932,8 @@ function parseZincFile(path:string) {
 export {
 	parse,
 	parseZincBlock,
-	parseZincFile
+	parseZincFile,
+	parseByTokens as parseZinc
 };
 
 const testString = JSON.stringify(parse(`

@@ -14,6 +14,14 @@ interface Descript {
 	readonly lineComments: LineComment[];
 }
 
+type OriginStyle = "jass" | "vjass" | "zinc";
+
+interface Option {
+	option: {
+		style: OriginStyle
+	}
+}
+
 class Take implements Rangebel {
 
 	public type: string;
@@ -62,7 +70,10 @@ class Native implements Rangebel, Desc, Descript {
 
 }
 
-class Func extends Native implements Rangebel {
+class Func extends Native implements Rangebel, Option {
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public readonly loc: Range = Range.default();
 
 	public tag: "private" | "public" | "default" = "default";
@@ -73,8 +84,14 @@ class Func extends Native implements Rangebel {
 	private readonly globals: Global[] = [];
 
 	public get origin(): string {
-		const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
-		return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+		if (this.option.style == "vjass") {
+			const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
+			return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag} function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+		}
+		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
+	
 	}
 
 	public getGlobals() {
@@ -87,13 +104,23 @@ class Method extends Func implements Rangebel {
 	public tag: ModifierType = "default";
 	public modifier: "default" | "static" | "stub" = "default";
 
+	public isOperator:boolean = false;
+
 	public get origin(): string {
+		if (this.option.style == "vjass") {
+			return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.isOperator ? "operator " : ""}${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+		}
 		return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 	}
 
 }
 
-class Global implements Rangebel, Desc, Descript {
+class Global implements Rangebel, Desc, Descript , Option{
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public readonly loc: Range = Range.default();
 	public tag: ModifierType = "default";
 	public isConstant: boolean = false;
@@ -104,18 +131,36 @@ class Global implements Rangebel, Desc, Descript {
 	public text: string = "";
 	public readonly lineComments: LineComment[] = [];
 
+	public size:number = 0;
+
 	constructor(type: string = "", name: string = "") {
 		this.type = type;
 		this.name = name;
 	}
 
 	public get origin(): string {
-		return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`
+		if (this.option.style == "vjass") {
+			return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`;
+		} else if (this.option.style == "zinc") {
+			if (this.isConstant && this.isArray) {
+				return `${this.tag} constant ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+			} else if (this.isArray) {
+				return `${this.tag} ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+			} else if (this.isConstant) {
+				return `${this.tag} constant ${this.type} ${this.name}`;
+			} else {
+				return `${this.tag} ${this.type} ${this.name}`;
+			}
+		}
+		return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`;
 	}
 }
 
 
-class Local implements Rangebel, Desc, Descript {
+class Local implements Rangebel, Desc, Descript, Option {
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public readonly loc: Range = Range.default();
 
 	public type: string;
@@ -129,13 +174,20 @@ class Local implements Rangebel, Desc, Descript {
 	public readonly initTokens: Token[] = [];
 	public readonly lineComments: LineComment[] = [];
 
+	public size:number = 0;
+
 	constructor(type: string = "", name: string = "") {
 		this.type = type;
 		this.name = name;
 	}
 
 	public get origin(): string {
-		return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`
+		if (this.option.style == "vjass") {
+			return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`;
+		} else if (this.option.style == "zinc") {
+			return `${this.type} ${this.name}${this.isArray ? "[]" : ""};`
+		}
+		return `local ${this.type}${this.isArray ? " array" : ""} ${this.name}`;
 	}
 
 }
@@ -149,7 +201,10 @@ class JassError implements Rangebel {
 	}
 }
 
-class Member implements Rangebel, Desc, Descript {
+class Member implements Rangebel, Desc, Descript ,Option{
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public isConstant: boolean = false;
 	public tag: "private" | "public" | "default" = "default";
 	public isStatic: boolean = false;
@@ -170,12 +225,20 @@ class Member implements Rangebel, Desc, Descript {
 	}
 
 	public get origin(): string {
-		return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
+		if (this.option.style == "vjass") {
+			return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag}${this.isStatic ? " static" : ""}${this.isConstant ? " constant" : ""} ${this.type} ${this.name}${this.isArray ? "[" + (this.size > 0 ? this.size : "") + "]" : ""};`;
+		}
+		return `${this.type}${this.isArray ? " array" : ""} ${this.name}`;
 	}
 }
 
 
-class Interface implements Rangebel, Descript {
+class Interface implements Rangebel, Descript, Option {
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public tag: "private" | "public" | "default" = "default";
 	public name: string;
 	public members: Member[] = [];
@@ -187,6 +250,15 @@ class Interface implements Rangebel, Descript {
 	constructor(name: string = "") {
 		this.name = name;
 	}
+
+	public get origin(): string {
+		if (this.option.style == "vjass") {
+			return `${this.tag} interface ${this.name} endstruct`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag} interface ${this.name} {}`;
+		}
+		return `interface ${this.name}`;
+	}
 }
 
 class Struct extends Interface {
@@ -195,11 +267,19 @@ class Struct extends Interface {
 	public extends: string[] = [];
 
 	public get origin(): string {
-		return `${this.tag} struct ${this.name} endstruct`;
+		if (this.option.style == "vjass") {
+			return `${this.tag} struct ${this.name} endstruct`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag} struct ${this.name} {}`;
+		}
+		return `struct ${this.name}`;
 	}
 }
 
-class Library implements Rangebel, Descript {
+class Library implements Rangebel, Descript, Option {
+	public option: { style: OriginStyle; } = {
+		style: "vjass"
+	};
 	public name: string;
 	public initializer: string | null = null;
 	public requires: string[] = [];
@@ -214,7 +294,12 @@ class Library implements Rangebel, Descript {
 	}
 
 	public get origin(): string {
-		return `library ${this.name}${this.requires.length > 0 ? " " + this.requires.join(", ") : ""} endlibrary`;
+		if (this.option.style == "vjass") {
+			return `library ${this.name}${this.requires.length > 0 ? " " + this.requires.join(", ") : ""} endlibrary`;
+		} else if (this.option.style == "zinc") {
+			return `library ${this.name} {}`;
+		}
+		return `library ${this.name}`;
 	}
 
 
@@ -590,7 +675,11 @@ class Program
 	// <T extends Declaration>
 	extends AstNode {
 
-	constructor() {
+	constructor(option: {
+		style: OriginStyle
+	} = {
+		style: "vjass"
+	}) {
 		super("Program");
 	}
 

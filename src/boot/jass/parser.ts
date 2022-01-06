@@ -1,7 +1,8 @@
 import { Position, Range } from "../common";
 import { isNewLine, isSpace } from "../tool";
+import { parseZinc } from "../zinc/parse";
 import { Func, Global, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take } from "./ast";
-import { tokenize } from "./tokens";
+import { Token, tokenize } from "./tokens";
 
 class LineText extends Range {
 
@@ -959,7 +960,7 @@ class Parser {
         return blocks;
     }
 
-    public parse(): Program {
+    public parsing(): Program {
         const program = new Program();
 
         function isLineCommentStart(lineText: LineText): boolean {
@@ -1182,6 +1183,25 @@ class Parser {
         return program;
     }
 
+    public zincing():Program {
+        const tokens:Token[] = [];
+        
+        this.zincBlocks.forEach((block) => {
+            block.childrens.forEach((children) => {
+                if (children instanceof LineText) {
+                    const lineTextTokens = tokenize(children.getText()).map((token) => {
+                        token.line = children.lineNumber();
+                        return token;
+                    });
+                    tokens.push(...lineTextTokens);
+                }
+            });
+        });
+
+        const zincProgram = parseZinc(tokens, true);
+        return zincProgram;
+    }
+
     /**
      * @deprecated 后面会移除
      * @param callback 
@@ -1366,8 +1386,19 @@ if (true) {
     endglobals
     endtunction
 
-    `).parse();
+    `).parsing();
     console.info(blocks.functions[0].getGlobals());
+
+    const zincProgram = new Parser(`
+
+    //! zinc
+    library a87878 {
+
+    }
+    //! endzinc
+
+    `).zincing();
+console.log(zincProgram.librarys[0].loc);
 
 }
 
