@@ -528,12 +528,18 @@ function parseLibrary(lineText: LineText, library: Library) {
 
         const requireIndex = tokens.findIndex((token) => token.isId() && (token.value == "requires" || token.value == "needs" || token.value == "uses"));
         if (requireIndex != -1) {
-            const requireTokens = tokens.slice(requireIndex + 1);
+            let requireTokens = tokens.slice(requireIndex + 1);
+
+            if (requireTokens[0] && requireTokens[0].isId() && requireTokens[0].value == "optional") {
+                requireTokens = requireTokens.slice(1);
+            }
 
             let state = 0;
             requireTokens.forEach((token) => {
                 if (state == 0) {
-                    if (token.isId()) {
+                    if (token.isId() && token.value == "optional") {
+                        // ignore
+                    } else if (token.isId()) {
                         library.requires.push(token.value);
                         state = 1;
                     }

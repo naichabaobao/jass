@@ -216,6 +216,7 @@ class Program {
 	public zincErrors:ZincError[] = [];
 }
 
+/*
 export {
 	ArrayType,
 	DynamicArray,
@@ -236,4 +237,4 @@ export {
 	TypePonint,
 	ZincError,
 	Program
-};
+};*/

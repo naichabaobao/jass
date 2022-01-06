@@ -1,26 +1,6 @@
 
-import {
-	ArrayType,
-	DynamicArray,
-	// Func,
-	FunctionInterface,
-	// Global,
-	Interface,
-	InterfaceArray,
-	// Library,
-	// Local,
-	// Member,
-	// Method,
-	ModifierType,
-	Position,
-	Range,
-	// Struct,
-	StructArray,
-	TypePonint,
-	// Program,
-	ZincError
-} from "./ast";
-import {Program, Take, Library, Struct, Member, Global, Func, Local, Method} from "../jass/ast";
+import { Position } from "../common";
+import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 
 import {ZincKeywords} from "../provider/keyword";
@@ -806,7 +786,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		};
 
 		const pushError = (message:string) => {
-			const err = new ZincError(message);
+			const err = new JassError(message);
 			err.loc.start = new Position(token.line, token.position);
 			err.loc.end = new Position(token.line, token.end);
 			program.errors.push(err);

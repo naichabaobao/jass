@@ -111,9 +111,7 @@
 ### 2. 修复globals块在function包裹时不解析bug
 ### 3. jass跟vjass解析方式改为一行行解析，而非tokens，从而减少无用的代码遍历
 ### 4. 增加注释 ***@param*** 、 ***@deprecated***
-### 5. 尝试性cjass解析
-### 6. 路径提示
-### 7. 路径跳转
-### 8. 对private和public支持
-### 9. struct成员提示，添加 ***.*** 操作符，支持this
-
+### 5. 路径提示
+### 6. 路径跳转
+### 7. 对private和public支持
+### 8. struct成员提示，添加 ***.*** 操作符，支持this

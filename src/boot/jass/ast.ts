@@ -1,4 +1,4 @@
-import { Range, Rangebel, Desc } from "../common";
+import { Range, Rangebel, Desc, Position } from "../common";
 import { isSpace } from "../tool";
 import { Token } from "./tokens";
 
@@ -705,6 +705,25 @@ class Program
 	 */
 	public readonly body: Array<Declaration> = [];
 
+	public getFunctions(options: {
+		type?: string | string[] | null,
+		notType?: string | string[] | null,
+		position?: Position| null,
+	} = {
+		type: null,
+		position: null,
+		notType: null
+	}) {
+		return [...this.functions, ...this.natives]
+		.filter((func) => {
+			let bool = (options.type ? Array.isArray(options.type) ? options.type.length == 0 ? func.returns === null : func.returns && options.type.includes(func.returns) : func.returns && func.returns == options.type : true)
+			&&
+			(options.notType ? Array.isArray(options.notType) ? options.notType.length == 0 ? func.returns !== null : func.returns === null || !options.notType.includes(func.returns) : func.returns && options.notType !== func.returns : true)
+			&&
+			(options.position ? func.loc.contains(options.position) : true);
+			return bool;
+		});
+	}
 
 }
 
