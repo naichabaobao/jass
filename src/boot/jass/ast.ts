@@ -44,12 +44,12 @@ class Native implements Rangebel, Desc, Descript {
 	public nameToken: Token | null = null;
 	public name: string;
 	public readonly takes: Take[];
-	public returns: string | null;
+	public returns: string;
 	public text: string = "";
 	private constant = false;
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "", takes: Take[] = [], returns: string | null = null) {
+	constructor(name: string = "", takes: Take[] = [], returns: string = "nothing") {
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
@@ -709,19 +709,69 @@ class Program
 		type?: string | string[] | null,
 		notType?: string | string[] | null,
 		position?: Position| null,
+		name?: string|null
 	} = {
 		type: null,
 		position: null,
 		notType: null
 	}) {
-		return [...this.functions, ...this.natives]
-		.filter((func) => {
+		const funcs = [...this.functions, ...this.natives];
+		// if (options.position) {
+		// 	function pushLibraryFunction(librarys: Library[]) {
+		// 		librarys.forEach((library) => {
+		// 			if (options.position && library.loc.contains(options.position)) {
+		// 				funcs.push(...library.functions);
+		// 			} else {
+		// 				funcs.push(...library.functions.filter((func) => {
+		// 					return func.tag != "private";
+		// 				}));
+		// 			}
+		// 		});
+		// 	}
+		// 	const librarys = this.findLibrarys({
+		// 		position: options.position
+		// 	}).map((library) => {
+		// 		return this.findLibrarys({
+		// 			and: false,
+		// 			position: options.position,
+		// 			name: library.requires
+		// 		});
+		// 	}).flat();
+		// 	pushLibraryFunction(librarys);
+		// }
+		this.librarys.forEach((library) => {
+			if (options.position && library.loc.contains(options.position)) {
+				funcs.push(...library.functions);
+			} else {
+				funcs.push(...library.functions.filter((func) => {
+					return func.tag != "private";
+				}));
+			}
+		});
+		return funcs.filter((func) => {
 			let bool = (options.type ? Array.isArray(options.type) ? options.type.length == 0 ? func.returns === null : func.returns && options.type.includes(func.returns) : func.returns && func.returns == options.type : true)
 			&&
 			(options.notType ? Array.isArray(options.notType) ? options.notType.length == 0 ? func.returns !== null : func.returns === null || !options.notType.includes(func.returns) : func.returns && options.notType !== func.returns : true)
 			&&
-			(options.position ? func.loc.contains(options.position) : true);
+			(options.position ? func.loc.contains(options.position) : true)
+			&& (options.name ? func.name == options.name : true);
 			return bool;
+		});
+	}
+
+	public findLibrarys(options: {
+		position?: Position| null,
+		name?: string|string[]|null,
+		and?: boolean|null
+	} = {
+		position: null,
+		name: null,
+		and: true
+	}) {
+		return this.librarys.filter((library) => {
+			const positionBool = (options.position ? library.loc.contains(options.position) : true);
+			const nameBool = (options.name ? Array.isArray(options.name) ? options.name.includes(library.name) : options.name == library.name : true);
+			return options.and === false ? positionBool || nameBool : positionBool && nameBool;
 		});
 	}
 

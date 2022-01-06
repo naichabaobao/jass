@@ -28,12 +28,26 @@ class Range {
 		this.end = range.end;
 	}
 
+	public contains(positionOrRange: Position | Range): boolean {
+		if (positionOrRange instanceof Position) {
+			return (this.start.line < positionOrRange.line || (this.start.line == positionOrRange.line && this.start.position < positionOrRange.position))
+				&& 
+				(this.end.line > positionOrRange.line || (this.end.line == positionOrRange.line && this.end.position > positionOrRange.position));
+		} else {
+			return (this.start.line < positionOrRange.start.line || (this.start.line == positionOrRange.start.line && this.start.position < positionOrRange.start.position) )
+				&&
+				(this.end.line > positionOrRange.end.line || (this.end.line == positionOrRange.end.line && this.end.position > positionOrRange.end.position));
+		}
+	}
+
 }
 
 
 
 interface Rangebel {
 	loc: Range;
+
+	
 }
 
 /**

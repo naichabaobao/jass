@@ -433,7 +433,6 @@ function parseFunction(lineText: LineText, func: (Func | Native | Method)) {
         }
     }
     if (takesIndex != -1) {
-        func.loc.setRange(lineText);
         const takesTokens = tokens.slice(takesIndex + 1, returnsIndex != -1 ? returnsIndex : undefined);
 
         let state = 0;
@@ -1019,7 +1018,7 @@ class Parser {
             const func = new Func();
 
             func.loc.setRange(block);
-
+            
             parseFunction(<LineText>block.childrens[0], func);
             func.lineComments.push(...lineComments);
             functions.push(func);
@@ -1266,7 +1265,7 @@ export {
     Parser
 };
 
-if (true) {
+if (false) {
     const text = `a/"\\"
     /*
     123

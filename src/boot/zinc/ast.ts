@@ -29,7 +29,7 @@ class Global extends jass.Global {
 class Func extends jass.Func {
 	public tag: ModifierType = "public";
 
-	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
+	constructor(name: string, takes: Take[] = [], returns: string = "nothing") {
 		super(name, takes, returns);
 	}
 
