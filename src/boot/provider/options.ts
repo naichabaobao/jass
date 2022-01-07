@@ -58,6 +58,12 @@ class Options {
     return this.configuration["diagnostic"] as boolean;
   }
 
+  public static get workspaces():string[] {
+    return vscode.workspace.workspaceFolders?.map((floder) => {
+      const files = resolvePaths([floder.uri.fsPath]);
+      return files;
+    }).flat() ?? [];
+  }
 
   
 }

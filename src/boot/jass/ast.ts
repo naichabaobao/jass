@@ -3,7 +3,49 @@ import { isSpace } from "../tool";
 import { Token } from "./tokens";
 
 
-class Node extends Range { }
+class Node implements Rangebel { 
+	public loc: Range = Range.default();
+}
+
+type ParamAnnotation = {
+	id: string,
+	descript: string
+};
+
+class Declaration extends Node implements Descript {
+
+	/**
+	 * 来源文件
+	 */
+	public source: string = "";
+
+	public readonly lineComments: LineComment[] = [];
+
+	public hasDeprecated(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@deprecated\b/, "").test(lineComment.getContent())) != -1;
+	}
+
+	public getParams() : ParamAnnotation[] {
+		return <ParamAnnotation[]>this.lineComments.map((lineComment) => {
+			const result = new RegExp(/^\s*@params?\s+(?<id>[a-zA-Z][a-zA-Z\d_]*)(?:\s*(?<descript>.+))?/, "").exec(lineComment.getContent());
+			if (result && result.groups) {
+				return {
+					id: result.groups["id"],
+					descript: result.groups["descript"],
+				};
+			}
+		}).filter(x => x);
+	}
+
+	public getTexts() {
+		return this.lineComments.filter((lineComment) => /^\s*@(?:deprecated|params?)\b/.test(lineComment.getContent()))
+	}
+
+	public getContents() {
+		return this.getTexts().map((text) => text.getContent());
+	}
+
+}
 
 type ModifierType = "private" | "public" | "default";
 
@@ -22,14 +64,14 @@ interface Option {
 	}
 }
 
-class Take implements Rangebel {
+class Take extends Node {
 
 	public type: string;
 	public nameToken: Token | null = null;
 	public name: string;
-	public loc: Range = Range.default();
 
 	constructor(type: string, name: string) {
+		super();
 		this.type = type;
 		this.name = name;
 	}
@@ -39,8 +81,7 @@ class Take implements Rangebel {
 	}
 }
 
-class Native implements Rangebel, Desc, Descript {
-	public readonly loc: Range = Range.default();
+class Native extends Declaration implements Rangebel, Desc, Descript {
 	public nameToken: Token | null = null;
 	public name: string;
 	public readonly takes: Take[];
@@ -50,6 +91,7 @@ class Native implements Rangebel, Desc, Descript {
 	public readonly lineComments: LineComment[] = [];
 
 	constructor(name: string = "", takes: Take[] = [], returns: string = "nothing") {
+		super();
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
@@ -117,7 +159,7 @@ class Method extends Func implements Rangebel {
 
 }
 
-class Global implements Rangebel, Desc, Descript, Option {
+class Global extends Declaration implements Desc, Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -134,6 +176,7 @@ class Global implements Rangebel, Desc, Descript, Option {
 	public size: number = 0;
 
 	constructor(type: string = "", name: string = "") {
+		super();
 		this.type = type;
 		this.name = name;
 	}
@@ -157,7 +200,7 @@ class Global implements Rangebel, Desc, Descript, Option {
 }
 
 
-class Local implements Rangebel, Desc, Descript, Option {
+class Local extends Declaration implements  Desc, Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -177,6 +220,7 @@ class Local implements Rangebel, Desc, Descript, Option {
 	public size: number = 0;
 
 	constructor(type: string = "", name: string = "") {
+		super();
 		this.type = type;
 		this.name = name;
 	}
@@ -201,7 +245,7 @@ class JassError implements Rangebel {
 	}
 }
 
-class Member implements Rangebel, Desc, Descript, Option {
+class Member extends Declaration implements Desc, Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -220,6 +264,7 @@ class Member implements Rangebel, Desc, Descript, Option {
 	public modifier: "default" | "static" | "stub" = "default";
 
 	constructor(type: string = "", name: string = "") {
+		super();
 		this.type = type;
 		this.name = name;
 	}
@@ -235,7 +280,7 @@ class Member implements Rangebel, Desc, Descript, Option {
 }
 
 
-class Interface implements Rangebel, Descript, Option {
+class Interface extends Declaration implements  Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -248,6 +293,7 @@ class Interface implements Rangebel, Descript, Option {
 	public readonly lineComments: LineComment[] = [];
 
 	constructor(name: string = "") {
+		super();
 		this.name = name;
 	}
 
@@ -276,7 +322,7 @@ class Struct extends Interface {
 	}
 }
 
-class Library implements Rangebel, Descript, Option {
+class Library extends Declaration implements  Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -290,6 +336,7 @@ class Library implements Rangebel, Descript, Option {
 	public readonly lineComments: LineComment[] = [];
 
 	constructor(name: string = "") {
+		super();
 		this.name = name;
 	}
 
@@ -426,83 +473,7 @@ export {
 
 
 
-class Declaration extends AstNode {
 
-	public parent: Declaration | null = null;
-
-	protected constructor(type: AstType) {
-		super(type);
-	}
-}
-
-class Statement extends AstNode {
-	protected constructor(type: AstType) {
-		super(type);
-	}
-}
-
-class Expression extends AstNode {
-	protected constructor(type: AstType) {
-		super(type);
-	}
-}
-
-class TypeDeclaration extends Declaration {
-	constructor() {
-		super("Type");
-	}
-}
-
-class TakeDeclaration extends AstNode {
-
-	public type: string | null = null;
-	public name: string | null = null;
-
-	constructor() {
-		super("Take");
-	}
-
-	public getTakeType() {
-		return this.type;
-	}
-}
-
-class NativeDeclaration extends Declaration {
-
-	public name: string | null = null;
-	public takes: TakeDeclaration[] | null = null;
-	public returns: string | null = null;
-
-	constructor() {
-		super("Native");
-	}
-}
-
-class LocalStatement extends Statement {
-
-	public type: string | null = null;
-	public name: string | null = null;
-	public array: boolean = false;
-	public init: Expression | null = null;
-
-	constructor() {
-		super("Local");
-	}
-
-}
-
-class FunctionDeclaration extends Declaration implements NativeDeclaration {
-
-	public name: string | null = null;
-	public takes: TakeDeclaration[] | null = null;
-	public returns: string | null = null;
-	public body: Statement[] = [];
-
-	constructor() {
-		super("Function");
-	}
-
-}
 
 /**
  * @deprecated 正常版本不会使用到，测试用
@@ -571,7 +542,9 @@ class TextMacroLineText extends Range {
 		this.text = text;
 	}
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class TextMacro extends AstNode {
 
 	public name: string;
@@ -586,7 +559,9 @@ class TextMacro extends AstNode {
 		}
 	}
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class RunTextMacro extends AstNode {
 	public name: string;
 	public takes: string[] = [];
@@ -599,7 +574,9 @@ class RunTextMacro extends AstNode {
 		}
 	}
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class DefineMacro extends AstNode {
 	public name: string;
 	public value: string | null = null;
@@ -610,7 +587,9 @@ class DefineMacro extends AstNode {
 		this.value = value;
 	}
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class JassCompileError extends Range {
 	public readonly message: string;
 
@@ -620,7 +599,9 @@ class JassCompileError extends Range {
 	}
 
 }
-
+/**
+ * @deprecated 正常版本不会使用到，测试用
+ */
 class ZincBlock extends AstNode {
 
 	public readonly body: LineText[] = [];
@@ -630,61 +611,15 @@ class ZincBlock extends AstNode {
 	}
 }
 
-class LibraryDeclaration extends Declaration {
 
-	public readonly body: Declaration[] = [];
-
-	constructor() {
-		super("Library");
-	}
-}
-
-class ModuleDeclaration extends Declaration {
-
-	public readonly body: Declaration[] = [];
+class Program extends Declaration {
 
 	constructor() {
-		super("Module");
-	}
-}
-
-class StructDeclaration extends Declaration {
-
-	public readonly body: Declaration[] = [];
-
-	constructor() {
-		super("Struct");
-	}
-}
-
-/**
- * @deprecated
- */
-class ScopeDeclaration extends Declaration {
-
-
-	public readonly body: Declaration[] = [];
-
-	constructor(parent: Declaration | null = null) {
-		super("Scope");
-		this.parent = parent;
-	}
-}
-
-class Program
-	// <T extends Declaration>
-	extends AstNode {
-
-	constructor(option: {
-		style: OriginStyle
-	} = {
-			style: "vjass"
-		}) {
-		super("Program");
+		super();
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 使用source字段代替
 	 */
 	public filePath: string = "";
 
@@ -772,10 +707,18 @@ class Program
 		});
 	}
 
+	public libraryFunctions() {
+		return this.librarys.map((lib) => lib.functions).flat();
+	}
+
+	public libraryStructs() {
+		return this.librarys.map((lib) => lib.structs).flat();
+	}
+
 }
 
 export {
 	AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
-	Program, LibraryDeclaration, ScopeDeclaration, ModuleDeclaration, StructDeclaration
+	Program
 
 };

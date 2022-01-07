@@ -446,6 +446,12 @@ function getPathFileName(filePath:string):string {
 	return path.parse(filePath).base;
 }
 
+function compare(key: string, key2: string):boolean {
+	const keyParsedPath = path.parse(key);
+	const key2ParsedPath = path.parse(key2);
+	return keyParsedPath.root == key2ParsedPath.root && keyParsedPath.dir == key2ParsedPath.dir && keyParsedPath.base == key2ParsedPath.base;
+  }
+
 export {
 	is0_16,
 	is0_7,
@@ -463,7 +469,8 @@ export {
 	isJFile,
 	isAiFile,
 	isZincFile,
-	getPathFileName
+	getPathFileName,
+	compare
 };
 
 

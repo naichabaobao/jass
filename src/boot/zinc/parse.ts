@@ -84,9 +84,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		return (isZincFile || inZinc) && !token.isBlockComment() && !token.isNewLine();
 	});
 
-	const program = new Program({
-		style: "zinc"
-	});
+	const program = new Program();
 
 
 	let inLibrary = false;

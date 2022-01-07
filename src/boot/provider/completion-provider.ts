@@ -9,7 +9,6 @@ import * as vscode from "vscode";
 import { getChildrenTypes, StatementTypes, TypeExtends, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
-import { blizzardJProgram, commonAiProgram, commonJProgram, dzApiJProgram, findFunctionByName, findFunctionExcludeReturns, findGlobalExcludeReturns, findLocals, findTakes, getGlobalVariables, JassMap, VjassMap, ZincMap } from './data';
 import { Options } from "./options";
 import * as jassParse from "../jass/parse";
 import * as jassAst from "../jass/ast";
@@ -17,8 +16,10 @@ import * as zincParse from "../zinc/parse";
 import * as zincAst from "../zinc/ast";
 import * as vjassParse from "../vjass/parse";
 import * as vjassAst from "../vjass/ast";
-import { getPathFileName, isAiFile, isZincFile } from "../tool";
+import { compare, getPathFileName, isAiFile, isZincFile } from "../tool";
 import { functionKey } from "./tool";
+import data from "./data";
+import { Position } from "../common";
 
 
 const typeItems: vscode.CompletionItem[] = [];
@@ -36,6 +37,47 @@ const keywordItems: vscode.CompletionItem[] = [];
   const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
   keywordItems.push(item);
 });
+
+
+type CompletionItemOption = {
+  kind?: vscode.CompletionItemKind,
+  detial?: string,
+  documentation?: string[]|string,
+  code?: string,
+  source?: string,
+  orderString?: string
+};
+
+function completionItem(label: string, option: CompletionItemOption = {
+  kind: undefined,
+  detial: undefined,
+  documentation: undefined,
+  code: undefined,
+  source: undefined,
+  orderString: undefined
+}) {
+  const item = new vscode.CompletionItem(label, option.kind);
+  item.detail = option.detial ?? label;
+  const ms = new vscode.MarkdownString();
+  if (option.source) {
+    ms.appendMarkdown(`(***${option.source}***)`);
+  }
+  if (option.documentation) {
+    if (Array.isArray(option.documentation)) {
+      option.documentation.forEach((documentation) => {
+        ms.appendText(documentation);
+      });
+    } else {
+      ms.appendText(option.documentation);
+    }
+  }
+  if (option.code) {
+    ms.appendCodeblock(`${option.code}`);
+  }
+  item.documentation = ms;
+  item.sortText = option.orderString;
+  return item;
+}
 
 enum PositionType {
   Unkown,
@@ -74,7 +116,7 @@ class PositionTool {
   private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
   private static TakesKeywordRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[takes]*$/);
   private static ReturnsKeywordRegExp = new RegExp(/\btakes\s+nothing\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  
+
 
   public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
     const lineText = document.lineAt(position.line);
@@ -107,13 +149,13 @@ class PositionTool {
       return PositionType.ReturnKeyword;
     } else if (this.CallRegExp.test(inputText)) {
       return PositionType.Call;
-    } else if ((()=>{
+    } else if ((() => {
       const key = functionKey(document, position);
       return key.isSingle();
     })()) {
-      return PositionType.Args;    
+      return PositionType.Args;
     } else if (this.FuncNamingRegExp.test(inputText)) {
-        return PositionType.FuncNaming;
+      return PositionType.FuncNaming;
     } else if (/^local\b/.test(inputText) && /(?<!=)=(?!=)/.test(inputText) && inputText.indexOf("=") < position.character) {
       return PositionType.Assign;
     }
@@ -370,7 +412,7 @@ const commonAiItems = jassProgramToItem(undefined, undefined, Options.commonAiPa
 const blizzardJItems = jassProgramToItem(undefined, undefined, Options.blizzardJPath, blizzardJProgram);
 const dzApiJItems = jassProgramToItem(undefined, undefined, Options.dzApiJPath, dzApiJProgram);
 
-function item(label:string, kind: vscode.CompletionItemKind, documentation?: string, code?: string) {
+function item(label: string, kind: vscode.CompletionItemKind, documentation?: string, code?: string) {
   const item = new vscode.CompletionItem(label, kind);
   item.documentation = new vscode.MarkdownString().appendMarkdown(documentation ?? "").appendCodeblock(code ?? "");
   return item;
@@ -382,7 +424,7 @@ const ArrayKeywordItem = item("array", vscode.CompletionItemKind.Keyword);
 const ReturnsKeywordItem = item("returns", vscode.CompletionItemKind.Keyword);
 const NullKeywordItem = item("null", vscode.CompletionItemKind.Keyword);
 
-function programFunctionItemByType(program:jassAst.Program, key:string, type:string|null) {
+function programFunctionItemByType(program: jassAst.Program, key: string, type: string | null) {
   const items = new Array<vscode.CompletionItem>();
   const natives = program.natives.filter((native) => native.returns == type).map((native) => {
     return item(native.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${native.text}`, native.origin);
@@ -394,7 +436,7 @@ function programFunctionItemByType(program:jassAst.Program, key:string, type:str
   return items;
 }
 
-function programGlobalItemByType(program:jassAst.Program, key:string, type:string|null) {
+function programGlobalItemByType(program: jassAst.Program, key: string, type: string | null) {
   const globals = program.globals.filter((func) => func.type == type).map((global) => {
     return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
   });
@@ -408,27 +450,27 @@ function programGlobalItemByType(program:jassAst.Program, key:string, type:strin
  * @param type 
  * @returns 
  */
-function programItemByType(program:jassAst.Program, key:string, type:string|null) {
+function programItemByType(program: jassAst.Program, key: string, type: string | null) {
   const items = new Array<vscode.CompletionItem>();
   items.push(...programFunctionItemByType(program, key, type), ...programGlobalItemByType(program, key, type));
   return items;
 }
 
-function vprogramFunctionItemByType(program:vjassAst.Program, key:string, type:string|null) {
+function vprogramFunctionItemByType(program: vjassAst.Program, key: string, type: string | null) {
   const funcs = program.librarys.map((library) => library.functions).flat().filter((func) => func.returns == type).map((func) => {
     return item(func.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${func.text}`, func.origin);
   });
   return funcs;
 }
 
-function vprogramGlobalItemByType(program:vjassAst.Program, key:string, type:string|null) {
+function vprogramGlobalItemByType(program: vjassAst.Program, key: string, type: string | null) {
   const globals = program.librarys.map((library) => library.globals).flat().filter((func) => func.type == type).map((global) => {
     return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
   });
   return globals;
 }
 
-function vprogramItemByType(program:vjassAst.Program, key:string, type:string|null) {
+function vprogramItemByType(program: vjassAst.Program, key: string, type: string | null) {
   const items = new Array<vscode.CompletionItem>();
   items.push(...vprogramFunctionItemByType(program, key, type), ...vprogramGlobalItemByType(program, key, type));
   return items;
@@ -446,7 +488,7 @@ function getHandleTypes() {
  * @param type 
  * @returns 
  */
-function typeFunctionAndGlobalItemNonContainExtends (type:string|null) {
+function typeFunctionAndGlobalItemNonContainExtends(type: string | null) {
 
   if (type === "handle") {
     return [NullKeywordItem];
@@ -471,7 +513,7 @@ function typeFunctionAndGlobalItemNonContainExtends (type:string|null) {
   return items;
 }
 
-function typeFunctionAndGlobalItems(type:string|null) {
+function typeFunctionAndGlobalItems(type: string | null) {
   const items = new Array<vscode.CompletionItem>();
 
   if (type === "code") {
@@ -504,7 +546,7 @@ function typeFunctionAndGlobalItems(type:string|null) {
   return items;
 }
 
-function setGlobalItems () {
+function setGlobalItems() {
 
   const items = new Array<vscode.CompletionItem>();
 
@@ -515,7 +557,7 @@ function setGlobalItems () {
   return items;
 }
 
-function typeGlobalItems(type:string|null) {
+function typeGlobalItems(type: string | null) {
   const items = new Array<vscode.CompletionItem>();
 
   if (type === "code") {
@@ -548,7 +590,7 @@ function typeGlobalItems(type:string|null) {
  * @param type 为null时无视类型
  * @returns 
  */
-function typeLocalAndTakeItem(document:vscode.TextDocument, position: vscode.Position, type:string|null) {
+function typeLocalAndTakeItem(document: vscode.TextDocument, position: vscode.Position, type: string | null) {
   const locals = findLocals(document.uri.fsPath, position.line);
   const takes = findTakes(document.uri.fsPath, position.line);
 
@@ -561,12 +603,29 @@ function typeLocalAndTakeItem(document:vscode.TextDocument, position: vscode.Pos
   }
 
   if (takes) {
-    takes.filter(take => type === null ||  take.type == type).forEach(take => {
+    takes.filter(take => type === null || take.type == type).forEach(take => {
       items.push(item(take.name, vscode.CompletionItemKind.Variable, "", take.origin));
     });
   }
 
   return items;
+}
+
+
+function globalToCompletionItem(global: Global, option: CompletionItemOption = {
+  kind: undefined,
+  detial: undefined,
+  documentation: undefined,
+  code: undefined,
+  source: undefined,
+  orderString: undefined
+}) :vscode.CompletionItem {
+  return completionItem(global.name, {
+    kind: option.kind ?? global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable,
+    source: global.source,
+    code: global.origin,
+    documentation: global.getContents()
+  });
 }
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
@@ -587,13 +646,55 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       }
     }
 
+    /**
+     * 转换vscode Position 为 自定义 Position
+     * @param position 
+     * @returns 
+     */
+    const convertPosition = (position: vscode.Position): Position => {
+      return new Position(position.line, position.character);
+    };
+
+    /**
+     * 获取位置上的librarys
+     */
+    const postionLibrarys = () => {
+      const requires: string[] = [];
+      return data.librarys().filter((library) => {
+        if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+          requires.push(...library.requires);
+          return true;
+        } else if (requires.includes(library.name)) {
+          return true;
+        }
+        return false;
+      });
+    };
+
+    const setItems = () => {
+      const is = items.push(...data.globalVariables().map((global) => completionItem(global.name, {
+        kind: vscode.CompletionItemKind.Variable,
+        source: global.source,
+        code: global.origin,
+        documentation: global.getContents()
+      })))
+      
+      if (!Options.isOnlyJass) {
+        data.libraryGlobalVariables().filter((global) => {
+          if () {
+  
+          }
+        });
+      }
+    };
+
     // 获取当前位置提示类型
     const type = PositionTool.is(document, position);
-    switch(type) {
+    switch (type) {
       case PositionType.FuncNaming:
       case PositionType.TakesNaming:
-        case PositionType.TakesNaming:
-          return null;
+      case PositionType.TakesNaming:
+        return null;
       case PositionType.LocalNaming:
         items.push(ArrayKeywordItem);
       case PositionType.Set:
@@ -634,8 +735,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
           items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
         });
         return items;
-        // 只要nothing类型
-        // return typeFunctionAndGlobalItems(null);
+      // 只要nothing类型
+      // return typeFunctionAndGlobalItems(null);
       case PositionType.Args:
         // 方法参数列表
         const key = functionKey(document, position);
@@ -730,51 +831,19 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
   }
 });
 
-/**
- * @deprecated 体验并不好，移除
- */
-vscode.languages.registerCompletionItemProvider("lua", new class LuaCompletionItemProvider implements vscode.CompletionItemProvider {
-  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    // const items = new Array<vscode.CompletionItem>();
-    // items.push(...commonJItems);
-    // items.push(...commonAiItems);
-    // items.push(...blizzardJItems);
-    // items.push(...dzApiJItems);
-    /*
-    JassMap.forEach((program, key) => {
-      const currentFunctionItems = program.functions.map(func => {
-        const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-        item.detail = func.name;
-        item.documentation = new vscode.MarkdownString().appendText(`${func.text}(${getPathFileName(key)})`).appendCodeblock(func.origin);
-        return item;
-      });
-      const currentGlobalItems = program.globals.map(global => {
-        const item = new vscode.CompletionItem(`${global.name}`, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-        item.detail = global.name;
-        item.documentation = new vscode.MarkdownString().appendText(`${global.text}(${getPathFileName(key)})`).appendCodeblock(global.origin);
-        return item;
-      }); 
-      items.push(...currentGlobalItems);
-      items.push(...currentFunctionItems);
-    });
-    */
-    return null;
-  }
-}());
-
-type GcFunc = (name:string) => string;
+type GcFunc = (name: string) => string;
 
 class Gc {
-  public type:string;
-  public gc:GcFunc;
+  public type: string;
+  public gc: GcFunc;
 
-  constructor(type:string, gc:GcFunc) {
+  constructor(type: string, gc: GcFunc) {
     this.type = type;
     this.gc = gc;
   }
 }
 
-const RecoverableTypes:Gc[] = [
+const RecoverableTypes: Gc[] = [
   new Gc("boolexpr", (name) => {
     return `call DestroyBoolExpr(${name})\nset ${name} = null`;
   }),
@@ -841,10 +910,10 @@ const RecoverableTypes:Gc[] = [
   new Gc("multiboard", (name) => {
     return `call DestroyMultiboard(${name})\nset ${name} = null`;
   }),
-  ];
-  const defaultGc = new Gc("", (name) => {
-    return `set ${name} = null`;
-  });
+];
+const defaultGc = new Gc("", (name) => {
+  return `set ${name} = null`;
+});
 
 vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
