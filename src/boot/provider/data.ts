@@ -5,12 +5,33 @@ import * as vscode from "vscode";
 import { isAiFile, isJFile, isZincFile, resolvePaths } from "../tool";
 import * as jassParse from "../jass/parse";
 import * as jassAst from "../jass/ast";
+import {Program} from "../jass/ast";
 
 import * as zincParse from "../zinc/parse";
 import * as zincAst from "../zinc/ast";
 
 import * as vjassParse from "../vjass/parse";
 
+
+class Pair {
+  public key: string;
+  public value: Program;
+
+  constructor(key: string, value: Program) {
+    this.key = key;
+    this.value = value;
+  }
+
+}
+
+class Map {
+  private pairs: Pair[] = [];
+
+  public put(key: string, value: Program) {
+
+  }
+
+}
 
 const commonJProgram = jassParse.parse(fs.readFileSync(Options.commonJPath).toString(), {
   needParseNative: true

@@ -516,7 +516,6 @@ function parseLibrary(lineText: LineText, library: Library) {
     const libraryIndex = tokens.findIndex((token) => token.isId() && token.value == "library");
     if (libraryIndex != -1) {
         library.name = tokens[libraryIndex + 1].value;
-        library.loc.setRange(lineText);
         library.loc.start = new Position(tokens[libraryIndex].line, tokens[libraryIndex].position);
         const initializerIndex = tokens.findIndex((token) => token.isId() && token.value == "initializer");
         if (initializerIndex != -1) {

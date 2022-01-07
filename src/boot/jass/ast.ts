@@ -91,7 +91,7 @@ class Func extends Native implements Rangebel, Option {
 			return `${this.tag} function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 		}
 		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
-	
+
 	}
 
 	public getGlobals() {
@@ -104,7 +104,7 @@ class Method extends Func implements Rangebel {
 	public tag: ModifierType = "default";
 	public modifier: "default" | "static" | "stub" = "default";
 
-	public isOperator:boolean = false;
+	public isOperator: boolean = false;
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
@@ -117,7 +117,7 @@ class Method extends Func implements Rangebel {
 
 }
 
-class Global implements Rangebel, Desc, Descript , Option{
+class Global implements Rangebel, Desc, Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -131,7 +131,7 @@ class Global implements Rangebel, Desc, Descript , Option{
 	public text: string = "";
 	public readonly lineComments: LineComment[] = [];
 
-	public size:number = 0;
+	public size: number = 0;
 
 	constructor(type: string = "", name: string = "") {
 		this.type = type;
@@ -174,7 +174,7 @@ class Local implements Rangebel, Desc, Descript, Option {
 	public readonly initTokens: Token[] = [];
 	public readonly lineComments: LineComment[] = [];
 
-	public size:number = 0;
+	public size: number = 0;
 
 	constructor(type: string = "", name: string = "") {
 		this.type = type;
@@ -201,7 +201,7 @@ class JassError implements Rangebel {
 	}
 }
 
-class Member implements Rangebel, Desc, Descript ,Option{
+class Member implements Rangebel, Desc, Descript, Option {
 	public option: { style: OriginStyle; } = {
 		style: "vjass"
 	};
@@ -678,8 +678,8 @@ class Program
 	constructor(option: {
 		style: OriginStyle
 	} = {
-		style: "vjass"
-	}) {
+			style: "vjass"
+		}) {
 		super("Program");
 	}
 
@@ -705,69 +705,66 @@ class Program
 	 */
 	public readonly body: Array<Declaration> = [];
 
-	public getFunctions(options: {
+	public findFunctionByType(...type: string[]) {
+
+	}
+
+	public findFunctionByPosition(position: Position) {
+
+	}
+
+	public findFunctions(options: {
 		type?: string | string[] | null,
-		notType?: string | string[] | null,
-		position?: Position| null,
-		name?: string|null
+		position?: Position | null,
+		name?: string | null
 	} = {
-		type: null,
-		position: null,
-		notType: null
-	}) {
+			type: null,
+			position: null
+		}) {
 		const funcs = [...this.functions, ...this.natives];
-		// if (options.position) {
-		// 	function pushLibraryFunction(librarys: Library[]) {
-		// 		librarys.forEach((library) => {
-		// 			if (options.position && library.loc.contains(options.position)) {
-		// 				funcs.push(...library.functions);
-		// 			} else {
-		// 				funcs.push(...library.functions.filter((func) => {
-		// 					return func.tag != "private";
-		// 				}));
-		// 			}
-		// 		});
-		// 	}
-		// 	const librarys = this.findLibrarys({
-		// 		position: options.position
-		// 	}).map((library) => {
-		// 		return this.findLibrarys({
-		// 			and: false,
-		// 			position: options.position,
-		// 			name: library.requires
-		// 		});
-		// 	}).flat();
-		// 	pushLibraryFunction(librarys);
-		// }
-		this.librarys.forEach((library) => {
-			if (options.position && library.loc.contains(options.position)) {
-				funcs.push(...library.functions);
-			} else {
-				funcs.push(...library.functions.filter((func) => {
-					return func.tag != "private";
-				}));
+		if (options.position) {
+			const requireStrings: string[] = [];
+			const pushRequire = (...requires: string[]) => {
+				requires.forEach((require) => {
+					if (!requireStrings.includes(require)) {
+						requireStrings.push(require);
+					}
+				});
 			}
-		});
+			this.librarys.forEach((library) => {
+				if (library.loc.contains(options.position!)) {
+					pushRequire(...library.requires);
+					funcs.push(...library.functions);
+				} else if (requireStrings.includes(library.name)) {
+					funcs.push(...library.functions.filter((func) => {
+						return func.tag != "private";
+					}));
+				}
+			});
+		}
+		
 		return funcs.filter((func) => {
-			let bool = (options.type ? Array.isArray(options.type) ? options.type.length == 0 ? func.returns === null : func.returns && options.type.includes(func.returns) : func.returns && func.returns == options.type : true)
-			&&
-			(options.notType ? Array.isArray(options.notType) ? options.notType.length == 0 ? func.returns !== null : func.returns === null || !options.notType.includes(func.returns) : func.returns && options.notType !== func.returns : true)
-			&&
-			(options.position ? func.loc.contains(options.position) : true)
-			&& (options.name ? func.name == options.name : true);
-			return bool;
+			return options.type ? Array.isArray(options.type) ? options.type.includes(func.returns) : func.returns === options.type : true;
 		});
 	}
 
+	public findFunctionByName(...name: string[]) {
+		this.functions.filter((func) => name.includes(func.name));
+	}
+
+	public findLibraryByName(...name: string[]) {
+		this.librarys.filter((library) => name.includes(library.name));
+	}
+
 	public findLibrarys(options: {
-		position?: Position| null,
-		name?: string|string[]|null,
-		and?: boolean|null
+		position?: Position | null,
+		name?: string | string[] | null,
+		and?: boolean | null
 	} = {
-		position: null,
-		name: null,
-		and: true
-	}) {
+			position: null,
+			name: null,
+			and: true
+		}) {
 		return this.librarys.filter((library) => {
 			const positionBool = (options.position ? library.loc.contains(options.position) : true);
 			const nameBool = (options.name ? Array.isArray(options.name) ? options.name.includes(library.name) : options.name == library.name : true);
