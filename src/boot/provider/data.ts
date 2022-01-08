@@ -32,8 +32,11 @@ class DataMap {
   private pairs: Pair[] = [];
 
   public put(key: string, value: Program) {
-    if (this.pairs.findIndex((pair) => compare(pair.key, key)) == -1) {
+    const index = this.pairs.findIndex((pair) => compare(pair.key, key));
+    if (index == -1) {
       this.pairs.push(new Pair(key, value));
+    } else {
+      this.pairs[index].value = value;
     }
   }
 
@@ -90,25 +93,28 @@ function setSource(filePath: string, program: Program) {
       x.source = filePath;
     });
 }
+function parseContent(filePath: string, content: string) {
+  const program = new Parser(content).parsing();
+  setSource(filePath, program);
+  dataMap.put(filePath, program);
+}
 function parsePath(...filePaths: string[]) {
   filePaths.forEach((filePath) => {
     const content = getFileContent(filePath);
   
-    const program = new Parser(content).parsing();
-    
-    setSource(filePath, program);
-    dataMap.put(filePath, program);
+    parseContent(filePath, content);
   });
 }
-
+function parseZincContent(filePath: string, content: string) {
+  const program = new Parser(content).zincing();
+  setSource(filePath, program);
+  zincDataMap.put(filePath, program);
+}
 function parseZincPath(...filePaths: string[]) {
   filePaths.forEach((filePath) => {
     const content = getFileContent(filePath);
   
-    const program = new Parser(content).zincing();
-  
-    setSource(filePath, program);
-    zincDataMap.put(filePath, program);
+    parseZincContent(filePath, content);
   });
 }
 
@@ -159,7 +165,7 @@ startWatch();
 
 class Data {
   public static programs() {
-    return [...dataMap.values(), ...zincDataMap.values()];
+    return [...dataMap.values()];
   }
   public static natives() {
     return this.programs().map((program) => program.natives).flat();
@@ -205,9 +211,27 @@ class Data {
     return this.librarys().map((library) => library.structs).flat();
   }
 
+
+
+  public static zincPrograms() {
+    return [...zincDataMap.values()];
+  }
+
+  public static zincLibrarys() {
+    return this.zincPrograms().map((program) => program.librarys).flat();
+  }
+
+  public static zincLibraryFunctions() {
+    return this.zincLibrarys().map((library) => library.functions).flat();
+  }
+
+
+
 }
 
 export default Data;
 
 export {
+  parseContent,
+  parseZincContent
 };

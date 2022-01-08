@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { Position } from '../common';
 import { tokens } from '../jass/tokens';
 
 class Key {
@@ -75,8 +76,17 @@ function functionKey(document: vscode.TextDocument, position: vscode.Position) {
 	return key;
 }
 
+/**
+ * 转换vscode Position 为 自定义 Position
+ * @param position 
+ * @returns 
+ */
+const convertPosition = (position: vscode.Position): Position => {
+	return new Position(position.line, position.character);
+};
 
 export {
 	Key,
-	functionKey
+	functionKey,
+	convertPosition
 };

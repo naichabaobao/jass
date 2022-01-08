@@ -203,6 +203,16 @@ const Types = types(defaultVersion, true);
  * type 继承光系json
  */
 const TypeExtends:{[key: string]:string[]} = {
+  "boolean": [],
+  "int": [],
+  "real": [
+    "int"
+  ],
+  "string": [],
+  "code": [
+    "nothing"
+  ],
+  "handle": [],
   "agent": [
     "handle"
   ],

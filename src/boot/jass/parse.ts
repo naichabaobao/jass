@@ -1,7 +1,7 @@
 
 import { Position, Range } from "../common";
 import { isNewLine } from "../tool";
-import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock, LibraryDeclaration, ScopeDeclaration, ModuleDeclaration, StructDeclaration } from "./ast";
+import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock } from "./ast";
 import { Scanner } from "./scanner";
 import { Token, tokenize, tokens } from "./tokens";
 
@@ -718,7 +718,9 @@ function isStructEnd(text: string) {
 	return structEndRegExp.test(text);
 }
 
-
+/**
+ * @deprecated
+ */
 class Parser {
 
 	constructor(content: string) {

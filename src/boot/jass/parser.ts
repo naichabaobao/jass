@@ -52,10 +52,6 @@ class LineText extends Range {
 
 }
 
-class MultilineText extends Range {
-
-}
-
 /**
  * 替换块注释为空白文本
  * @param content 
@@ -433,14 +429,16 @@ function parseFunction(lineText: LineText, func: (Func | Native | Method)) {
         }
     }
     if (takesIndex != -1) {
-        const takesTokens = tokens.slice(takesIndex + 1, returnsIndex != -1 ? returnsIndex : undefined);
+        const takesTokens = tokens.slice(takesIndex + 1);//, returnsIndex != -1 ? returnsIndex : undefined);
 
         let state = 0;
         let take: Take | null = null;
         for (let index = 0; index < takesTokens.length; index++) {
             const token = takesTokens[index];
             if (state == 0) {
-                if (token.isId()) {
+                if (token.isId() && token.value == "returns") {
+                    break;
+                } else if (token.isId()) {
                     if (token.value == "nothing") {
                         break;
                     }
@@ -451,12 +449,13 @@ function parseFunction(lineText: LineText, func: (Func | Native | Method)) {
                     state = 1;
                 }
             } else if (state == 1) {
-                if (token.isId()) {
+                if (token.isId() && token.value == "returns") {
+                    break;
+                } else if (token.isId()) {
                     if (take) {
                         take.name = token.value;
                         take.loc.end = new Position(token.line, token.end);
                         take.nameToken = token;
-                        func.takes.push(take);
                         state = 2;
                     }
                 } else if (token.isOp() && token.value == ",") {
@@ -465,7 +464,9 @@ function parseFunction(lineText: LineText, func: (Func | Native | Method)) {
             } else if (state == 2) {
                 if (token.isOp() && token.value == ",") {
                     state = 0;
-                }
+                } else if (token.isId() && token.value == "returns") {
+                    break;
+                }   
             }
         }
     }
@@ -734,7 +735,6 @@ function parseMember(lineText: LineText, member: Member) {
         }
     }
 }
-
 
 class Parser {
 

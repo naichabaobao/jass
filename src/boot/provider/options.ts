@@ -59,10 +59,13 @@ class Options {
   }
 
   public static get workspaces():string[] {
-    return vscode.workspace.workspaceFolders?.map((floder) => {
-      const files = resolvePaths([floder.uri.fsPath]);
-      return files;
-    }).flat() ?? [];
+    if (vscode.workspace.workspaceFolders) {
+      return vscode.workspace.workspaceFolders.map((floder) => {
+        const files = resolvePaths([floder.uri.fsPath]);
+        return files;
+      }).flat();
+    }
+    return [];
   }
 
   

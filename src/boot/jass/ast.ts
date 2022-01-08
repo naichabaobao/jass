@@ -38,11 +38,11 @@ class Declaration extends Node implements Descript {
 	}
 
 	public getTexts() {
-		return this.lineComments.filter((lineComment) => /^\s*@(?:deprecated|params?)\b/.test(lineComment.getContent()))
+		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?)\b/.test(lineComment.getContent()))
 	}
 
 	public getContents() {
-		return this.getTexts().map((text) => text.getContent());
+		return this.getTexts().map((lineComment) => lineComment.getContent());
 	}
 
 }
@@ -354,6 +354,13 @@ class Library extends Declaration implements  Descript, Option {
 		return this.requires;
 	}
 
+	public findGlobalVariables() {
+		return this.globals.filter((global) => !global.isConstant);
+	}
+
+	public findGlobalConstants() {
+		return this.globals.filter((global) => !global.isConstant);
+	}
 
 }
 
@@ -387,7 +394,7 @@ class LineComment implements Rangebel {
 	}
 
 	public getContent() {
-		return this.text.replace(/^\/\/(?:\/)?/, "");
+		return this.text.replace(/^\s*\/\/(?:\/)?\s*/, "");
 	}
 
 	public setText(text: string) {

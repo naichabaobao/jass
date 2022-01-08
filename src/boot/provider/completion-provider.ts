@@ -6,20 +6,21 @@
 
 import * as vscode from "vscode";
 
-import { getChildrenTypes, StatementTypes, TypeExtends, Types } from "./types";
+import { getChildrenTypes, getParentTypes, StatementTypes, TypeExtends, Types } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { Options } from "./options";
-import * as jassParse from "../jass/parse";
-import * as jassAst from "../jass/ast";
-import * as zincParse from "../zinc/parse";
-import * as zincAst from "../zinc/ast";
-import * as vjassParse from "../vjass/parse";
-import * as vjassAst from "../vjass/ast";
+// import * as jassParse from "../jass/parse";
+// import * as jassAst from "../jass/ast";
+// import * as zincParse from "../zinc/parse";
+// import * as zincAst from "../zinc/ast";
+// import * as vjassParse from "../vjass/parse";
+// import * as vjassAst from "../vjass/ast";
 import { compare, getPathFileName, isAiFile, isZincFile } from "../tool";
-import { functionKey } from "./tool";
-import data from "./data";
+import { convertPosition, functionKey } from "./tool";
+import data, { parseContent, parseZincContent } from "./data";
 import { Position } from "../common";
+import { Global, Local, Library, Program, Take, Func, Native } from "../jass/ast";
 
 
 const typeItems: vscode.CompletionItem[] = [];
@@ -63,12 +64,15 @@ function completionItem(label: string, option: CompletionItemOption = {
     ms.appendMarkdown(`(***${option.source}***)`);
   }
   if (option.documentation) {
+    if (option.source) {
+      ms.appendText("\n");
+    }
     if (Array.isArray(option.documentation)) {
       option.documentation.forEach((documentation) => {
-        ms.appendText(documentation);
+        ms.appendMarkdown(documentation);
       });
     } else {
-      ms.appendText(option.documentation);
+      ms.appendMarkdown(option.documentation);
     }
   }
   if (option.code) {
@@ -164,254 +168,6 @@ class PositionTool {
   }
 }
 
-// const commonJItems = programToItem(commonJProgram);
-
-/* vjass 过时
-const arrayTypeItems = types.map(type => {
-  const item = new vscode.CompletionItem(type.name, vscode.CompletionItemKind.Class);
-  item.detail = type.name;
-  item.documentation = new vscode.MarkdownString().appendText(type.text).appendCodeblock(type.origin);
-  return item;
-});
-const globalItems = globals.map(global => {
-  const item = new vscode.CompletionItem(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-  item.detail = global.name;
-  item.documentation = new vscode.MarkdownString().appendText(global.text).appendCodeblock(global.origin);
-  return item;
-});
-const functionItems = functions.map(func => {
-  const item = new vscode.CompletionItem(func.name, vscode.CompletionItemKind.Function);
-  item.detail = func.name;
-  item.documentation = new vscode.MarkdownString().appendText(func.text).appendCodeblock(func.origin);
-  return item;
-});
-const nativeItems = natives.map(native => {
-  const item = new vscode.CompletionItem(native.name, vscode.CompletionItemKind.Function);
-  item.detail = native.name;
-  item.documentation = new vscode.MarkdownString().appendText(native.text).appendCodeblock(native.origin);
-  return item;
-});
-const structItems = structs.map(struct => {
-  const item = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
-  item.detail = struct.name;
-  item.documentation = new vscode.MarkdownString().appendText(struct.text).appendCodeblock(struct.origin);
-  return item;
-});
-const structMethodItems = structs.map(struct => {
-  return struct.methods.map(method => {
-    const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-    item.detail = `${struct.name}.${method.name}`;
-    item.documentation = new vscode.MarkdownString().appendText(method.text).appendCodeblock(method.origin);
-    return item;
-  });
-}).flat();
-const libraryItems = librarys.map(library => {
-  const item = new vscode.CompletionItem(library.name, vscode.CompletionItemKind.Module);
-  item.detail = library.name;
-  item.documentation = new vscode.MarkdownString().appendCodeblock(library.origin);
-  return item;
-});
- */
-
-
-/**
- * 将zinc program 解析成 vscode.Completion[]
- * @param document 
- * @param position 
- * @param key 
- * @param program 
- * @returns 
- */
-function zincProgramToItem(document: vscode.TextDocument, position: vscode.Position, key: string, program: zincAst.Program): vscode.CompletionItem[] {
-  const items = new Array<vscode.CompletionItem>();
-  program.librarys.forEach((library) => {
-    const currentFunctionItems = library.functions.map(func => {
-      const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-      item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${func.text}`).appendCodeblock(func.origin);
-      if (document.uri.fsPath == key) {
-        if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
-          func.locals.forEach(local => {
-            const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-          func.takes.forEach(take => {
-            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-        }
-      }
-      return item;
-    });
-    const currentGlobalItems = library.globals.map(global => {
-      const item = new vscode.CompletionItem(`${global.name}`, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-      item.detail = global.name;
-      item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${global.text}`).appendCodeblock(global.origin);
-      return item;
-    });
-    library.structs.forEach((struct) => {
-      const structItem = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
-      structItem.detail = struct.name;
-      structItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${struct.text}`).appendCodeblock(struct.origin);
-      if (new vscode.Range(new vscode.Position(struct.loc.start.line, struct.loc.start.position), new vscode.Position(struct.loc.end.line, struct.loc.end.position)).contains(position)) {
-
-        struct.members.forEach(member => {
-          const memberItem = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
-          memberItem.detail = member.name;
-          memberItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${member.text}`).appendCodeblock(member.origin);
-          items.push(memberItem);
-        });
-
-        struct.methods.forEach(method => {
-          const methodItem = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-          methodItem.detail = method.name;
-          methodItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${method.text}`).appendCodeblock(method.origin);
-          items.push(methodItem);
-
-          if (new vscode.Range(new vscode.Position(method.loc.start.line, method.loc.start.position), new vscode.Position(method.loc.end.line, method.loc.end.position)).contains(position)) {
-            method.takes.forEach(take => {
-              const takeItem = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Variable);
-              takeItem.detail = take.name;
-              takeItem.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-              items.push(takeItem);
-            });
-          }
-
-        });
-        items.push(structItem);
-      }
-    });
-    items.push(...currentGlobalItems);
-    items.push(...currentFunctionItems);
-  });
-
-  return items;
-
-}
-
-function vjassProgramToItem(document: vscode.TextDocument, position: vscode.Position, key: string, program: vjassAst.Program): vscode.CompletionItem[] {
-  const items = new Array<vscode.CompletionItem>();
-  program.librarys.forEach((library) => {
-    const currentFunctionItems = library.functions.map(func => {
-      const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-      item.detail = func.name;
-      item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${func.text}`).appendCodeblock(func.origin);
-      if (document.uri.fsPath == key) {
-        if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
-          func.locals.forEach(local => {
-            const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-          func.takes.forEach(take => {
-            const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
-            item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-            item.sortText = "_";
-            items.push(item);
-          });
-        }
-      }
-      return item;
-    });
-    const currentGlobalItems = library.globals.map(global => {
-      const item = new vscode.CompletionItem(`${global.name}`, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-      item.detail = global.name;
-      item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${global.text}`).appendCodeblock(global.origin);
-      return item;
-    });
-    library.structs.forEach((struct) => {
-      const structItem = new vscode.CompletionItem(struct.name, vscode.CompletionItemKind.Struct);
-      structItem.detail = struct.name;
-      structItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${struct.text}`).appendCodeblock(struct.origin);
-      if (new vscode.Range(new vscode.Position(struct.loc.start.line, struct.loc.start.position), new vscode.Position(struct.loc.end.line, struct.loc.end.position)).contains(position)) {
-
-        struct.members.forEach(member => {
-          const memberItem = new vscode.CompletionItem(member.name, vscode.CompletionItemKind.Property);
-          memberItem.detail = member.name;
-          memberItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${member.text}`).appendCodeblock(member.origin);
-          items.push(memberItem);
-        });
-
-        struct.methods.forEach(method => {
-          const methodItem = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
-          methodItem.detail = method.name;
-          methodItem.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${method.text}`).appendCodeblock(method.origin);
-          items.push(methodItem);
-
-          if (new vscode.Range(new vscode.Position(method.loc.start.line, method.loc.start.position), new vscode.Position(method.loc.end.line, method.loc.end.position)).contains(position)) {
-            method.takes.forEach(take => {
-              const takeItem = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Variable);
-              takeItem.detail = take.name;
-              takeItem.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-              items.push(takeItem);
-            });
-          }
-
-        });
-        items.push(structItem);
-      }
-    });
-    items.push(...currentGlobalItems);
-    items.push(...currentFunctionItems);
-  });
-
-  return items;
-
-}
-
-function jassProgramToItem(document: vscode.TextDocument | undefined, position: vscode.Position | undefined, key: string, program: jassAst.Program): vscode.CompletionItem[] {
-  const items = new Array<vscode.CompletionItem>();
-  const currentNativeItems = program.natives.map(func => {
-    const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-    item.detail = func.name;
-    item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${func.text}`).appendCodeblock(func.origin);
-    return item;
-  });
-  const currentFunctionItems = program.functions.map(func => {
-    const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-    item.detail = func.name;
-    item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${func.text}`).appendCodeblock(func.origin);
-    if (document && position && document.uri.fsPath == key) {
-      if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
-        func.locals.forEach(local => {
-          const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
-          item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
-          item.sortText = "_";
-          items.push(item);
-        });
-        func.takes.forEach(take => {
-          const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
-          item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-          item.sortText = "_";
-          items.push(item);
-        });
-      }
-    }
-    return item;
-  });
-  const currentGlobalItems = program.globals.map(global => {
-    const item = new vscode.CompletionItem(`${global.name}`, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-    item.detail = global.name;
-    item.documentation = new vscode.MarkdownString().appendText(`(${getPathFileName(key)})\n${global.text}`).appendCodeblock(global.origin);
-    return item;
-  });
-  items.push(...currentGlobalItems);
-  items.push(...currentFunctionItems);
-  items.push(...currentNativeItems);
-
-  return items;
-}
-
-const commonJItems = jassProgramToItem(undefined, undefined, Options.commonJPath, commonJProgram);
-const commonAiItems = jassProgramToItem(undefined, undefined, Options.commonAiPath, commonAiProgram);
-const blizzardJItems = jassProgramToItem(undefined, undefined, Options.blizzardJPath, blizzardJProgram);
-const dzApiJItems = jassProgramToItem(undefined, undefined, Options.dzApiJPath, dzApiJProgram);
-
 function item(label: string, kind: vscode.CompletionItemKind, documentation?: string, code?: string) {
   const item = new vscode.CompletionItem(label, kind);
   item.documentation = new vscode.MarkdownString().appendMarkdown(documentation ?? "").appendCodeblock(code ?? "");
@@ -424,207 +180,47 @@ const ArrayKeywordItem = item("array", vscode.CompletionItemKind.Keyword);
 const ReturnsKeywordItem = item("returns", vscode.CompletionItemKind.Keyword);
 const NullKeywordItem = item("null", vscode.CompletionItemKind.Keyword);
 
-function programFunctionItemByType(program: jassAst.Program, key: string, type: string | null) {
-  const items = new Array<vscode.CompletionItem>();
-  const natives = program.natives.filter((native) => native.returns == type).map((native) => {
-    return item(native.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${native.text}`, native.origin);
+function funcToCompletionItem(func: Func|Native, option?: CompletionItemOption) :vscode.CompletionItem {
+  return completionItem(func.name, {
+    kind: option?.kind ?? vscode.CompletionItemKind.Function,
+    source: option?.source ?? func.source,
+    code: option?.code ?? func.origin,
+    documentation: option?.documentation ?? func.getContents(),
+    orderString: option?.orderString,
+    detial: option?.detial
   });
-  const funcs = program.functions.filter((func) => func.returns == type).map((func) => {
-    return item(func.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${func.text}`, func.origin);
-  });
-  items.push(...natives, ...funcs);
-  return items;
 }
 
-function programGlobalItemByType(program: jassAst.Program, key: string, type: string | null) {
-  const globals = program.globals.filter((func) => func.type == type).map((global) => {
-    return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
-  });
-  return globals;
-}
-
-/**
- * 找到jassMap中返回类型和type一样的方法和全局变量
- * @param program 
- * @param key 
- * @param type 
- * @returns 
- */
-function programItemByType(program: jassAst.Program, key: string, type: string | null) {
-  const items = new Array<vscode.CompletionItem>();
-  items.push(...programFunctionItemByType(program, key, type), ...programGlobalItemByType(program, key, type));
-  return items;
-}
-
-function vprogramFunctionItemByType(program: vjassAst.Program, key: string, type: string | null) {
-  const funcs = program.librarys.map((library) => library.functions).flat().filter((func) => func.returns == type).map((func) => {
-    return item(func.name, vscode.CompletionItemKind.Function, `(${getPathFileName(key)})\n${func.text}`, func.origin);
-  });
-  return funcs;
-}
-
-function vprogramGlobalItemByType(program: vjassAst.Program, key: string, type: string | null) {
-  const globals = program.librarys.map((library) => library.globals).flat().filter((func) => func.type == type).map((global) => {
-    return item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `(${getPathFileName(key)})\n${global.text}`, global.origin);
-  });
-  return globals;
-}
-
-function vprogramItemByType(program: vjassAst.Program, key: string, type: string | null) {
-  const items = new Array<vscode.CompletionItem>();
-  items.push(...vprogramFunctionItemByType(program, key, type), ...vprogramGlobalItemByType(program, key, type));
-  return items;
-}
-
-function getHandleTypes() {
-  return Object.keys(TypeExtends).filter(key => {
-    const exs = TypeExtends[key];
-    return exs.includes("handle");
-  })
-}
-
-/**
- * 找到非type类型的函数和global
- * @param type 
- * @returns 
- */
-function typeFunctionAndGlobalItemNonContainExtends(type: string | null) {
-
-  if (type === "handle") {
-    return [NullKeywordItem];
-  }
-
-  const items = new Array<vscode.CompletionItem>();
-
-  const commonJItems = programItemByType(commonJProgram, Options.commonJPath, type);
-  const commonAiItems = programItemByType(commonAiProgram, Options.commonAiPath, type);
-  const blizzardJItems = programItemByType(blizzardJProgram, Options.blizzardJPath, type);
-  const dzApiJItems = programItemByType(dzApiJProgram, Options.dzApiJPath, type);
-  items.push(...commonJItems, ...commonAiItems, ...blizzardJItems, ...dzApiJItems);
-
-  JassMap.forEach((program, key) => {
-    items.push(...programItemByType(program, key, type));
-  });
-
-  VjassMap.forEach((program, key) => {
-    items.push(...vprogramItemByType(program, key, type));
-  });
-
-  return items;
-}
-
-function typeFunctionAndGlobalItems(type: string | null) {
-  const items = new Array<vscode.CompletionItem>();
-
-  if (type === "code") {
-    type = null;
-  }
-
-  items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
-
-  if (type === "integer") {
-    items.push(...typeFunctionAndGlobalItemNonContainExtends("real"));
-  } else if (type === "real") {
-    items.push(...typeFunctionAndGlobalItemNonContainExtends("integer"));
-  }/* else if (type && type === "handle") {
-    getHandleTypes().forEach((type) => {
-      items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
-    });
-  }*/ else if (type === "boolean") {
-    findFunctionExcludeReturns(null, "code").forEach((func) => {
-      items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
-    });
-    findGlobalExcludeReturns("code").forEach((global) => {
-      items.push(item(global.name, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable, `${global.text}`, global.origin));
-    });
-  } else if (type) {
-    getChildrenTypes(type).forEach(childType => {
-      items.push(...typeFunctionAndGlobalItemNonContainExtends(childType));
-    });
-  }
-
-  return items;
-}
-
-function setGlobalItems() {
-
-  const items = new Array<vscode.CompletionItem>();
-
-  getGlobalVariables().forEach((global) => {
-    items.push(item(global.name, vscode.CompletionItemKind.Variable, global.text, global.origin));
-  });
-
-  return items;
-}
-
-function typeGlobalItems(type: string | null) {
-  const items = new Array<vscode.CompletionItem>();
-
-  if (type === "code") {
-    return [];
-  }
-
-  items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
-
-  if (type === "integer") {
-    items.push(...typeFunctionAndGlobalItemNonContainExtends("real"));
-  } else if (type === "real") {
-    items.push(...typeFunctionAndGlobalItemNonContainExtends("integer"));
-  } else if (type && type === "handle") {
-    getHandleTypes().forEach((type) => {
-      items.push(...typeFunctionAndGlobalItemNonContainExtends(type));
-    });
-  } else if (type) {
-    TypeExtends[type]?.forEach((extendsName) => {
-      items.push(...typeFunctionAndGlobalItemNonContainExtends(extendsName));
-    });
-  }
-
-  return items;
-}
-
-/**
- * 获取当前文件的function locals takes item。
- * @param document 
- * @param position 
- * @param type 为null时无视类型
- * @returns 
- */
-function typeLocalAndTakeItem(document: vscode.TextDocument, position: vscode.Position, type: string | null) {
-  const locals = findLocals(document.uri.fsPath, position.line);
-  const takes = findTakes(document.uri.fsPath, position.line);
-
-  const items = new Array<vscode.CompletionItem>();
-
-  if (locals) {
-    locals.filter(local => type === null || local.type == type).forEach(local => {
-      items.push(item(local.name, vscode.CompletionItemKind.Variable, local.text, local.origin));
-    });
-  }
-
-  if (takes) {
-    takes.filter(take => type === null || take.type == type).forEach(take => {
-      items.push(item(take.name, vscode.CompletionItemKind.Variable, "", take.origin));
-    });
-  }
-
-  return items;
-}
-
-
-function globalToCompletionItem(global: Global, option: CompletionItemOption = {
-  kind: undefined,
-  detial: undefined,
-  documentation: undefined,
-  code: undefined,
-  source: undefined,
-  orderString: undefined
-}) :vscode.CompletionItem {
+function globalToCompletionItem(global: Global, option?: CompletionItemOption) :vscode.CompletionItem {
   return completionItem(global.name, {
-    kind: option.kind ?? global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable,
-    source: global.source,
-    code: global.origin,
-    documentation: global.getContents()
+    kind: option?.kind ?? global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable,
+    source: option?.source ?? global.source,
+    code: option?.code ?? global.origin,
+    documentation: option?.documentation ?? global.getContents(),
+    orderString: option?.orderString,
+    detial: option?.detial
+  });
+}
+
+function localToCompletionItem(local: Local, option?: CompletionItemOption) :vscode.CompletionItem {
+  return completionItem(local.name, {
+    kind: option?.kind ?? vscode.CompletionItemKind.Variable,
+    source: option?.source ?? local.source,
+    code: option?.code ?? local.origin,
+    documentation: option?.documentation ?? local.getContents(),
+    orderString: option?.orderString,
+    detial: option?.detial
+  });
+}
+
+function takeToCompletionItem(take: Take, option?: CompletionItemOption) :vscode.CompletionItem {
+  return completionItem(take.name, {
+    kind: option?.kind ?? vscode.CompletionItemKind.Variable,
+    source: option?.source,
+    code: option?.code ?? take.origin,
+    documentation: option?.documentation,
+    orderString: option?.orderString,
+    detial: option?.detial
   });
 }
 
@@ -637,55 +233,205 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
 
     const isZincExt = isZincFile(fsPath);
     if (!isZincExt) {
-      // 排除内部库文件
-      if (![Options.commonJPath, Options.commonAiPath, Options.blizzardJPath, Options.dzApiJPath].includes(fsPath)) {
-        const program = jassParse.parse(document.getText(), {
-          needParseLocal: true
-        });
-        JassMap.set(fsPath, program);
+      parseContent(fsPath, document.getText());
+      
+      if (!Options.isOnlyJass) {
+        if (Options.supportZinc) {
+          parseZincContent(fsPath, document.getText());
+        }
       }
     }
 
-    /**
-     * 转换vscode Position 为 自定义 Position
-     * @param position 
-     * @returns 
-     */
-    const convertPosition = (position: vscode.Position): Position => {
-      return new Position(position.line, position.character);
+    const fieldFunctions = () => {
+      const funcs = data.functions();
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            funcs.push(...library.functions);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            funcs.push(...library.functions.filter((func) => func.tag != "private"));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              funcs.push(...library.functions);
+              return false
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              funcs.push(...library.functions.filter((func) => func.tag != "private"));
+            }
+          });
+        }
+      }
+      
+      return funcs;
+    };
+    const fieldGlobals = () => {
+      const globals = data.globals();
+
+      data.functions().forEach((func) => {
+        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+          globals.push(...func.getGlobals());
+        }
+      });
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            globals.push(...library.globals);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            globals.push(...library.globals.filter((func) => func.tag != "private"));
+          }
+        });
+        // 方法内部的globals
+        data.libraryFunctions().forEach((func) => {
+          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+            globals.push(...func.getGlobals());
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              globals.push(...library.globals);
+              return false;
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              globals.push(...library.globals.filter((func) => func.tag != "private"));
+            }
+          });
+          // 旧版本的zinc解析，这里不会执行，因为没有解析这部分的代码
+          data.zincLibraryFunctions().forEach((func) => {
+            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+              globals.push(...func.getGlobals());
+            }
+          });
+        }
+      }
+      
+      return globals;
+    };
+
+    const fieldTakes = () => {
+      const takes:{
+        take: Take,
+        func:Func
+      }[] = [];
+      data.functions().forEach((func) => {
+        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+          
+          takes.push(...func.takes.map((take) => {
+            return {take, func};
+          }));
+        }
+      });
+
+      if (!Options.isOnlyJass) {
+        data.libraryFunctions().forEach((func) => {
+          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+            takes.push(...func.takes.map((take) => {
+              return {take, func};
+            }));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibraryFunctions().forEach((func) => {
+            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+              takes.push(...func.takes.map((take) => {
+                return {take, func};
+              }));
+            }
+          });
+        }
+      }
+
+      return takes;
+    };
+
+    const fieldLocals = () => {
+      const locals:Local[] = [];
+      data.functions().forEach((func) => {
+        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+          locals.push(...func.locals);
+        }
+      });
+
+      if (!Options.isOnlyJass) {
+        data.libraryFunctions().forEach((func) => {
+          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+            locals.push(...func.locals);
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibraryFunctions().forEach((func) => {
+            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+              locals.push(...func.locals);
+            }
+          });
+        }
+      }
+
+      return locals;
     };
 
     /**
      * 获取位置上的librarys
      */
-    const postionLibrarys = () => {
+    const postionLibrarys = (current: (library: Library) => void, requireCallback: (library: Library) => void) => {
       const requires: string[] = [];
       return data.librarys().filter((library) => {
         if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
           requires.push(...library.requires);
-          return true;
-        } else if (requires.includes(library.name)) {
+          current(library);
+          return false;
+        }
+        return true;
+      }).forEach((library) => {
+        if (requires.includes(library.name)) {
+          requireCallback(library);
           return true;
         }
-        return false;
       });
     };
 
-    const setItems = () => {
-      const is = items.push(...data.globalVariables().map((global) => completionItem(global.name, {
-        kind: vscode.CompletionItemKind.Variable,
-        source: global.source,
-        code: global.origin,
-        documentation: global.getContents()
-      })))
-      
+    const findFunctionByName = (name: string): (Func|Native)[] => {
+      const funcs = [...data.functions(), ...data.natives()];
+
       if (!Options.isOnlyJass) {
-        data.libraryGlobalVariables().filter((global) => {
-          if () {
-  
-          }
+        postionLibrarys((library) => {
+          library.functions.forEach((func) => {
+            funcs.push(func);
+          });
+        }, (library) => {
+          library.functions.filter((func) => func.tag != "private").forEach((func) => {
+            funcs.push(func);
+          });
         });
       }
+      return funcs.filter((func) => func.name == name);
     };
 
     // 获取当前位置提示类型
@@ -698,7 +444,28 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       case PositionType.LocalNaming:
         items.push(ArrayKeywordItem);
       case PositionType.Set:
-        return [...typeLocalAndTakeItem(document, position, null), ...setGlobalItems()];
+        // return [...typeLocalAndTakeItem(document, position, null), ...setGlobalItems()];
+        fieldGlobals().filter((global) => !global.isConstant).forEach((global) => {
+          items.push(globalToCompletionItem(global));
+        });
+        fieldLocals().forEach((local) => {
+          items.push(localToCompletionItem(local));
+        });
+        fieldTakes().forEach((funcTake, index) => {
+          items.push(takeToCompletionItem(funcTake.take, {
+            source: funcTake.func.source,
+            documentation: funcTake.func.getParams().map((param) => {
+              if (param.id == funcTake.take.name) {
+                return `*${param.descript}*`;
+              }
+              return `*${param.descript}*`;
+            }),
+            // 尽可能让参数在最前
+            orderString: `${index}`
+          }))
+        });
+        // setItems();
+        break;
       case PositionType.Returns:
         items.push(...typeItems, NothingItem);
         return items;
@@ -727,106 +494,111 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         const result = /local\s+(?<type>[a-zA-Z]+[a-zA-Z0-9_]*)\b/.exec(inputText);
         if (result && result.groups) {
           const type = result.groups["type"];
-          return [...typeFunctionAndGlobalItems(type), ...typeLocalAndTakeItem(document, position, type)];
+          // return [...typeFunctionAndGlobalItems(type), ...typeLocalAndTakeItem(document, position, type)];
+          [...data.natives(), ...fieldFunctions()].filter((func) => {
+            return type == func.returns || getParentTypes(type).includes(func.returns);
+          }).forEach((func) => {
+            items.push(funcToCompletionItem(func));
+          });
+          fieldGlobals().filter((global) => {
+            return type == global.type || getParentTypes(type).includes(global.type);
+          }).forEach((global) => {
+            items.push(globalToCompletionItem(global));
+          });
+          fieldLocals().filter((local) => {
+            return type == local.type || getParentTypes(type).includes(local.type);
+          }).forEach((local) => {
+            items.push(localToCompletionItem(local));
+          });
+          fieldTakes().filter((funcTake) => {
+            return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
+          }).forEach((funcTake, index) => {
+            items.push(takeToCompletionItem(funcTake.take, {
+              source: funcTake.func.source,
+              documentation: funcTake.func.getParams().map((param) => {
+                if (param.id == funcTake.take.name) {
+                  return `*${param.descript}*`;
+                }
+                return `*${param.descript}*`;
+              }),
+              // 尽可能让参数在最前
+              orderString: `${index}`
+            }))
+          });
         }
         break;
       case PositionType.Call:
-        findFunctionExcludeReturns("code").forEach((func) => {
-          items.push(item(func.name, vscode.CompletionItemKind.Function, `${func.text}`, func.origin));
+        [...data.natives(), ...fieldFunctions()].forEach((func) => {
+          items.push(funcToCompletionItem(func));
         });
-        return items;
-      // 只要nothing类型
-      // return typeFunctionAndGlobalItems(null);
+        break;
       case PositionType.Args:
         // 方法参数列表
         const key = functionKey(document, position);
         // type为PositionType.Args时,可以断言key[0]不为null
-        const func = findFunctionByName(key.keys[0]);
-        if (func && func.takes[key.takeIndex]) {
-          const type = func.takes[key.takeIndex].type;
-          return [...typeFunctionAndGlobalItems(type), ...typeLocalAndTakeItem(document, position, type)];
-        }
+        const funcs = findFunctionByName(key.keys[0]);
+        funcs.forEach((func) => {
+          if (func.takes[key.takeIndex]) {
+            const type = func.takes[key.takeIndex].type;
+            [...data.natives(), ...fieldFunctions()].filter((func) => {
+              return type == func.returns || getParentTypes(type).includes(func.returns);
+            }).forEach((func) => {
+              items.push(funcToCompletionItem(func));
+            });
+            fieldGlobals().filter((global) => {
+              return type == global.type || getParentTypes(type).includes(global.type);
+            }).forEach((global) => {
+              items.push(globalToCompletionItem(global));
+            });
+            fieldLocals().filter((local) => {
+              return type == local.type || getParentTypes(type).includes(local.type);
+            }).forEach((local) => {
+              items.push(localToCompletionItem(local));
+            });
+            fieldTakes().filter((funcTake) => {
+              return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
+            }).forEach((funcTake, index) => {
+              items.push(takeToCompletionItem(funcTake.take, {
+                source: funcTake.func.source,
+                documentation: funcTake.func.getParams().map((param) => {
+                  if (param.id == funcTake.take.name) {
+                    return `> ***@param*** **${funcTake.take.name}** *${param.descript}*`;
+                  }
+                  return `> ***@param*** ~~${funcTake.take.name}~~ *${param.descript}*`;
+                }),
+                // 尽可能让参数在最前
+                orderString: `${index}`
+              }))
+            });
+          }
+        });
         break;
+      default:
+        items.push(...typeItems);
+        items.push(...keywordItems);
+        [...data.natives(), ...fieldFunctions()].forEach((func) => {
+          items.push(funcToCompletionItem(func));
+        });
     }
 
 
 
-    items.push(...typeItems);
-    items.push(...keywordItems);
 
 
     const isAiExt = isAiFile(document.uri.fsPath);
 
-    items.push(...commonJItems);
-    if (isAiExt) {
-      items.push(...commonAiItems);
-    } else {
-      items.push(...blizzardJItems);
-    }
-    items.push(...dzApiJItems);
-    // items.push(...nativeItems);
-    // items.push(...functionItems);
-    // items.push(...globalItems);
+    // items.push(...commonJItems);
+    // if (isAiExt) {
+    //   items.push(...commonAiItems);
+    // } else {
+    //   items.push(...blizzardJItems);
+    // }
+    // items.push(...dzApiJItems);
 
     if (!isZincExt) {
-      JassMap.forEach((program, key) => {
-        const currentFunctionItems = program.functions.map(func => {
-          const item = new vscode.CompletionItem(`${func.name}`, vscode.CompletionItemKind.Function);
-          item.detail = func.name;
-          item.documentation = new vscode.MarkdownString().appendText(`${func.text}(${getPathFileName(key)})`).appendCodeblock(func.origin);
-          if (document.uri.fsPath == key) {
-            if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
-              func.locals.forEach(local => {
-                const item = new vscode.CompletionItem(local.name, vscode.CompletionItemKind.Property);
-                item.documentation = new vscode.MarkdownString().appendText(`\n${local.text}`).appendCodeblock(local.origin);
-                item.sortText = "_";
-                items.push(item);
-              });
-              func.takes.forEach(take => {
-                const item = new vscode.CompletionItem(take.name, vscode.CompletionItemKind.Property);
-                item.documentation = new vscode.MarkdownString().appendCodeblock(take.origin);
-                item.sortText = "_";
-                items.push(item);
-              });
-            }
-          }
-          return item;
-        });
-        const currentGlobalItems = program.globals.map(global => {
-          const item = new vscode.CompletionItem(`${global.name}`, global.isConstant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable);
-          item.detail = global.name;
-          item.documentation = new vscode.MarkdownString().appendText(`${global.text}(${getPathFileName(key)})`).appendCodeblock(global.origin);
-          return item;
-        });
-        items.push(...currentGlobalItems);
-        items.push(...currentFunctionItems);
-      });
+
     }
 
-    if (!Options.isOnlyJass) {
-      const vjassProgram = vjassParse.parse(document.getText());
-      VjassMap.set(document.uri.fsPath, vjassProgram);
-
-      VjassMap.forEach((program, key) => {
-        const vjassItems = vjassProgramToItem(document, position, key, program);
-        items.push(...vjassItems);
-      });
-    }
-
-    if (Options.supportZinc) {
-      // const currentZincFunctionItems = this.zincItems(document, position);
-
-      // 就算关闭了还是解析，只是不提示而已，懒
-      // items.push(...currentZincFunctionItems);
-
-      const zincProgram = zincParse.parse(document.getText(), isZincExt);
-      ZincMap.set(document.uri.fsPath, zincProgram);
-
-      ZincMap.forEach((program, key) => {
-        const zincItems = zincProgramToItem(document, position, key, program);
-        items.push(...zincItems);
-      });
-    }
     return items;
   }
 });
@@ -919,8 +691,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionIt
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items: vscode.CompletionItem[] = [];
 
-    JassMap.forEach((program, key) => {
-      if (document.uri.fsPath == key) {
+    data.programs().forEach((program) => {
+      if (document.uri.fsPath == program.source) {
         program.functions.reverse().forEach(func => {
           if (new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position).contains(position)) {
             const item = new vscode.CompletionItem("gc", vscode.CompletionItemKind.Unit);

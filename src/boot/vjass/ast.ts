@@ -22,7 +22,7 @@ class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "default";
 	public defaults:string | null = null;
 
-	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
+	constructor(name: string, takes: Take[] = [], returns: string) {
 		super(name, takes, returns);
 	}
 
