@@ -1059,6 +1059,7 @@ class Parser {
                     } else if (collect.locals && isLocalStart(x)) {
                         const local = new Local();
                         parseLocal(x, local);
+                        collect.locals.push(local);
                         lineComments.length = 0;
                     } else {
                         lineComments.length = 0;

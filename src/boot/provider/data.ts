@@ -3,15 +3,10 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, isAiFile, isJFile, isZincFile, resolvePaths } from "../tool";
-import * as jassParse from "../jass/parse";
-import * as jassAst from "../jass/ast";
-import {Program} from "../jass/ast";
+import { compare} from "../tool";
 
-import * as zincParse from "../zinc/parse";
-import * as zincAst from "../zinc/ast";
+import {Program, Native, Declaration, Func, Library, Struct} from "../jass/ast";
 
-import * as vjassParse from "../vjass/parse";
 import { Parser } from "../jass/parser";
 
 
@@ -81,6 +76,51 @@ function getFileContent(filePath: string):string {
 }
 
 function setSource(filePath: string, program: Program) {
+
+  function set<T extends Declaration>(n: T) {
+    if (n instanceof Program) {
+      n.natives.forEach(x => {
+        x.source = filePath;
+      });
+      n.functions.forEach(x => {
+        x.source = filePath;
+      });
+      n.globals.forEach(x => {
+        x.source = filePath;
+      });
+      n.structs.forEach(x => {
+        x.source = filePath;
+      });
+      n.librarys.forEach(x => {
+        x.source = filePath;
+      });
+    } else if (n instanceof Func) {
+      n.getGlobals().forEach(x => {
+        x.source = filePath;
+      });
+      n.locals.forEach(x => {
+        x.source = filePath;
+      });
+    } else if (n instanceof Library) {
+      n.functions.forEach(x => {
+        x.source = filePath;
+      });
+      n.globals.forEach(x => {
+        x.source = filePath;
+      });
+      n.structs.forEach(x => {
+        x.source = filePath;
+      });
+    } else if (n instanceof Struct) {
+      n.members.forEach(x => {
+        x.source = filePath;
+      });
+      n.methods.forEach(x => {
+        x.source = filePath;
+      });
+    }
+  }
+
   [program, program.globals, program.functions, program.natives, program.librarys, program.structs,
      program.librarys.map((lib) => lib.globals).flat(),
      program.librarys.map((lib) => lib.functions).flat(),
@@ -89,6 +129,11 @@ function setSource(filePath: string, program: Program) {
      program.structs.map((struct) => struct.methods).flat(),
      program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.members).flat(),
      program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat(),
+     program.functions.map((func) => func.getGlobals()).flat(),
+     program.librarys.map((lib) => lib.functions).flat().map((func) => func.getGlobals()).flat(),
+     program.librarys.map((lib) => lib.functions).flat().map((func) => func.locals).flat(),
+     program.functions.flat().map((func) => func.locals).flat(),
+     program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat().map((method) => method.locals).flat(),
     ].flat().forEach(x => {
       x.source = filePath;
     });

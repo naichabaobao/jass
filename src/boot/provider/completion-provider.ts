@@ -21,6 +21,7 @@ import { convertPosition, functionKey } from "./tool";
 import data, { parseContent, parseZincContent } from "./data";
 import { Position } from "../common";
 import { Global, Local, Library, Program, Take, Func, Native } from "../jass/ast";
+import { Parser } from "../jass/parser";
 
 
 const typeItems: vscode.CompletionItem[] = [];

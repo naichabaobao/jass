@@ -219,8 +219,6 @@ class HoverProvider implements vscode.HoverProvider {
 
     [...fieldFunctions(),...data.natives()].forEach((func) => {
       if (key == func.name) {
-        console.log(func);
-        
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${func.name}`);
         ms.appendText("\n");
@@ -229,6 +227,47 @@ class HoverProvider implements vscode.HoverProvider {
         });
         ms.appendText("\n");
         ms.appendCodeblock(func.origin);
+        hovers.push(ms);
+      }
+    });
+    fieldGlobals().forEach((global) => {
+      if (key == global.name) {     
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown(`#### ${global.name}`);
+        ms.appendText("\n");
+        global.getContents().forEach((content) => {
+          ms.appendText(content);
+        });
+        ms.appendText("\n");
+        ms.appendCodeblock(global.origin);
+        hovers.push(ms);
+      }
+    });
+    fieldLocals().forEach((local) => {
+      if (key == local.name) {     
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown(`#### ${local.name}`);
+        ms.appendText("\n");
+        local.getContents().forEach((content) => {
+          ms.appendText(content);
+        });
+        ms.appendText("\n");
+        ms.appendCodeblock(local.origin);
+        hovers.push(ms);
+      }
+    });
+    fieldTakes().forEach((funcTake) => {
+      if (key == funcTake.take.name) {     
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown(`#### ${funcTake.take.name}`);
+        ms.appendText("\n");
+        funcTake.func.getParams().forEach((param) => {
+          if (param.id == funcTake.take.name) {
+            ms.appendText(param.descript);
+          }
+        });
+        ms.appendText("\n");
+        ms.appendCodeblock(funcTake.take.origin);
         hovers.push(ms);
       }
     });
