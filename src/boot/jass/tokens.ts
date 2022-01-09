@@ -184,6 +184,9 @@ function tokens(content: string) {
 				push(char);
 				if (nextChar && isNumber(nextChar)) {
 					state = 10;
+				} else if (nextChar && isLetter(nextChar)) {
+					pushToken("op"); // .
+					state = 0;
 				} else {
 					pushToken("op");
 				}

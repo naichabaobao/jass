@@ -270,6 +270,10 @@ class Data {
     return this.zincLibrarys().map((library) => library.functions).flat();
   }
 
+  public static zincLibraryStructs() {
+    return this.zincLibrarys().map((library) => library.structs).flat();
+  }
+
 
 
 }

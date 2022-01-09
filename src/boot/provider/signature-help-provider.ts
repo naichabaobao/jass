@@ -1,174 +1,305 @@
 import * as vscode from 'vscode';
 
 
-import { JassMap, ZincMap, VjassMap, commonJProgram, commonAiProgram, blizzardJProgram, dzApiJProgram } from './data';
-import * as jassAst from "../jass/ast";
-import * as vjassAst from "../vjass/ast";
-import * as zincAst from "../zinc/ast";
-import { functionKey } from './tool';
+import data, { parseContent, parseZincContent } from './data';
+import { convertPosition, functionKey } from './tool';
+import { tokenize } from '../jass/tokens';
+import { compare, isZincFile } from '../tool';
+import { Options } from './options';
+import { Func, Local, Struct, Take } from '../jass/ast';
 
 
 class SignatureHelp implements vscode.SignatureHelpProvider {
 
-  private allFunctions(document: vscode.TextDocument, position: vscode.Position): (jassAst.Native | jassAst.Func | jassAst.Func | zincAst.Func | zincAst.Method | jassAst.Method)[] {
-    const functions: Array<jassAst.Native | jassAst.Func | jassAst.Func | zincAst.Func | zincAst.Method | jassAst.Method> = [];
-
-    functions.push(...commonJProgram.natives, ...commonJProgram.functions);
-    functions.push(...commonAiProgram.natives, ...commonAiProgram.functions);
-    functions.push(...blizzardJProgram.natives, ...blizzardJProgram.functions);
-    functions.push(...dzApiJProgram.natives, ...dzApiJProgram.functions);
-    JassMap.forEach((program) => {
-      functions.push(...program.natives, ...program.functions);
-    });
-    VjassMap.forEach((program) => {
-      program.librarys.forEach((library) => {
-
-        functions.push(...library.functions);
-        library.structs.forEach((struct) => {
-          functions.push(...struct.methods);
-        });
-      });
-    });
-    ZincMap.forEach((program) => {
-      program.librarys.forEach((library) => {
-
-        functions.push(...library.functions);
-        library.structs.forEach((struct) => {
-          functions.push(...struct.methods);
-        });
-      });
-    });
-
-    return functions;
-  }
-
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
-    if (/^\s*\/\//.test(document.lineAt(position.line).text)) return;
+    const text = document.lineAt(position.line).text;
+    if (/^\s*\/\//.test(text)) return;
 
-    const provideSignatureHelp = (document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext) => {
-      const SignatureHelp = new vscode.SignatureHelp();
-      const lineText = document.lineAt(position.line);
-      let funcNames = [];
-      let field = 1;
-      let activeParameter = 0;
-      let inString = false;
-      for (let i = position.character - 1; i >= 0; i--) {
-        const char = lineText.text.charAt(i);
-        if (field > 0) {
-          if (!inString && char == '"') {
-            inString = true;
-          } else if (inString && char == '"' && lineText.text.charAt(i - 1) != '\\') {
-            inString = false;
-          } else if (!inString && char == '(') {
-            field--;
-          } else if (!inString && char == ')') {
-            field++;
-          } else if (!inString && char == ',') {
-            activeParameter++;
-          }
-        } else if (field == 0) {
-          if (funcNames.length == 0 && /\s/.test(char)) {
-            continue;
-          } else if (/\w/.test(char)) {
-            funcNames.push(char);
-            // 向前預測
-            if (funcNames.length > 0 && (/\W/.test(lineText.text.charAt(i - 1)) || i == 0)) {
-              const funcName = funcNames.reverse().join("");
-
-              const allFunctions = this.allFunctions(document, position); // [...natives, ...functions, ...current.allFunctions, ...current.natives];
-              console.log(funcName)
-              for (let index = 0; index < allFunctions.length; index++) {
-                const func = allFunctions[index];
-                if (func.name == funcName) {
-
-                  const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
-                  // new vscode.SignatureInformation(func.origin);
-                  // new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
-                  SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.text);
-
-                  func.takes.forEach(take => {
-                    if (take.name) {
-                      SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
-                    }
-                  });
-                  SignatureHelp.activeParameter = activeParameter;
-                  SignatureHelp.signatures.push(SignatureInformation);
-                  break;
-                }
-              }
-
-              // this.zincSignatureInformations(document, position, funcName, SignatureHelp, activeParameter);
-
-            };
-
-          }
+    const fsPath = document.uri.fsPath;
+    const isZincExt = isZincFile(fsPath);
+    if (!isZincExt) {
+      parseContent(fsPath, document.getText());
+      
+      if (!Options.isOnlyJass) {
+        if (Options.supportZinc) {
+          parseZincContent(fsPath, document.getText());
         }
       }
-      return SignatureHelp;
-    }
-    try {
-      const sh = provideSignatureHelp(document, position, token, context);
-      return sh;
-    } catch (err) {
-      console.error(err)
     }
 
+    const tokens = tokenize(text.substring(0, position.character)).reverse();
+
+    const ids: string[] = [];
+    let argc = 0;
+    let field = 0;
+    let state = 0;
+    
+    // 反向遍历
+    for (let index = 0; index < tokens.length; index++) {
+      const token = tokens[index];
+      
+      if (state == 0) {
+        if (token.isOp() && token.value == ",") {
+          if (field == 0) {
+            argc++;
+          }
+        } else if (token.isOp() && token.value == "(") {
+          if (field == 0) {
+            state = 1;
+          } else if (field > 0) {
+            field--;
+          }
+        } else if (token.isOp() && token.value == ")") {
+          field++;
+        }
+      } else if (state == 1) {
+        if (token.isId()) {
+          ids.push(token.value);
+          state = 2;
+        } else break;
+      } else if (state == 2) {
+        if (token.isOp() && token.value == ".") {
+          state = 1;
+        } else break;
+      }
+    }
+
+    
+    if (ids.length == 0) {
+      return null;
+    }
+
+    ids.reverse();
+
+
+
+    const fieldFunctions = () => {
+      const funcs = data.functions();
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            funcs.push(...library.functions);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            funcs.push(...library.functions.filter((func) => func.tag != "private"));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              funcs.push(...library.functions);
+              return false
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              funcs.push(...library.functions.filter((func) => func.tag != "private"));
+            }
+          });
+        }
+      }
+      
+      return funcs;
+    };
+
+    const fieldStructs = () => {
+      const structs = data.structs();
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            structs.push(...library.structs);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              structs.push(...library.structs);
+              return false
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+            }
+          });
+        }
+      }
+      
+      return structs;
+    };
+    const fieldTakes = () => {
+      const takes:{
+        take: Take,
+        func:Func
+      }[] = [];
+      data.functions().forEach((func) => {
+        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+          
+          takes.push(...func.takes.map((take) => {
+            return {take, func};
+          }));
+        }
+      });
+
+      if (!Options.isOnlyJass) {
+        data.libraryFunctions().forEach((func) => {
+          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+            takes.push(...func.takes.map((take) => {
+              return {take, func};
+            }));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibraryFunctions().forEach((func) => {
+            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+              takes.push(...func.takes.map((take) => {
+                return {take, func};
+              }));
+            }
+          });
+        }
+      }
+
+      return takes;
+    };
+    const fieldLocals = () => {
+      const locals:Local[] = [];
+      data.functions().forEach((func) => {
+        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+          locals.push(...func.locals);
+        }
+      });
+
+      if (!Options.isOnlyJass) {
+        data.libraryFunctions().forEach((func) => {
+          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+            locals.push(...func.locals);
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibraryFunctions().forEach((func) => {
+            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
+              locals.push(...func.locals);
+            }
+          });
+        }
+      }
+
+      return locals;
+    };
+
+    if (ids.length == 1) { // 方法
+      const func = fieldFunctions().find((func) => {
+        return ids[0] == func.name;
+      });
+
+      if (func) {
+        const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
+        
+        SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.getContents().join("\n"));
+
+        func.takes.forEach(take => {
+          if (take.name) {
+            SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
+          }
+        });
+        const SignatureHelp = new vscode.SignatureHelp();
+        SignatureHelp.activeParameter = argc;
+        SignatureHelp.signatures.push(SignatureInformation);
+
+        return SignatureHelp;
+      }
+    } else if (ids.length == 2) { // struct
+      if (ids[0] == "this") {
+
+      } else {
+        const usebleStructs = fieldStructs();
+        const struct = usebleStructs.find((struct, index, structs) => {
+          return struct.name == ids[0];
+        });
+        if (struct) { // 静态方法
+          const method = struct.methods.find((method) => {
+            return method.modifier.includes("static") && method.name == ids[1];
+          });
+          
+          if (method) {
+            const SignatureInformation = new vscode.SignatureInformation(`${method.name}(${method.takes.length > 0 ? method.takes.map(x => x.origin).join(", ") : ""}) -> ${method.returns ?? "nothing"}`);
+        
+            SignatureInformation.documentation = new vscode.MarkdownString().appendText(method.getContents().join("\n"));
+
+            method.takes.forEach(method => {
+              if (method.name) {
+                SignatureInformation.parameters.push(new vscode.SignatureInformation(method.name));
+              }
+            });
+            const SignatureHelp = new vscode.SignatureHelp();
+            SignatureHelp.activeParameter = argc;
+            SignatureHelp.signatures.push(SignatureInformation);
+
+            return SignatureHelp;
+          }
+        }
+        const usebleLocals = fieldLocals();
+        const local = usebleLocals.find((local) => {
+          return local.name == ids[0];
+        });
+        if (local) {
+          const struct = usebleStructs.find((struct, index, structs) => {
+            return struct.name == local.type;
+          });
+          
+          if (struct) {
+            const method = struct.methods.find((method) => {
+              return !method.modifier.includes("static") && method.name == ids[1];
+            });
+
+            if (method) {
+              const SignatureInformation = new vscode.SignatureInformation(`${method.name}(${method.takes.length > 0 ? method.takes.map(x => x.origin).join(", ") : ""}) -> ${method.returns ?? "nothing"}`);
+          
+              SignatureInformation.documentation = new vscode.MarkdownString().appendText(method.getContents().join("\n"));
+  
+              method.takes.forEach(method => {
+                if (method.name) {
+                  SignatureInformation.parameters.push(new vscode.SignatureInformation(method.name));
+                }
+              });
+              const SignatureHelp = new vscode.SignatureHelp();
+              SignatureHelp.activeParameter = argc;
+              SignatureHelp.signatures.push(SignatureInformation);
+  
+              return SignatureHelp;
+            }
+          }
+        }
+
+      }
+    }
+
+    return null;
 
   }
 }
 
 vscode.languages.registerSignatureHelpProvider("jass", new SignatureHelp, "(", ",");
 
-
-/**
- * @deprecated
- */
-class LuaSignatureHelp implements vscode.SignatureHelpProvider {
-
-  private allFunctions(): (jassAst.Native | jassAst.Func)[] {
-    const functions: Array<jassAst.Native | jassAst.Func> = [];
-
-    functions.push(...commonJProgram.natives, ...commonJProgram.functions);
-    functions.push(...commonAiProgram.natives, ...commonAiProgram.functions);
-    functions.push(...blizzardJProgram.natives, ...blizzardJProgram.functions);
-    functions.push(...dzApiJProgram.natives, ...dzApiJProgram.functions);
-
-    return functions;
-  }
-
-  provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
-
-    const key = functionKey(document, position);
-
-    if (key.isEmpty()) {
-      return;
-    }
-
-    const SignatureHelp = new vscode.SignatureHelp();
-    const functions = this.allFunctions();
-    if (key.isSingle()) {
-      const funcName = key.keys[0];
-
-      const func = functions.find((func) => func.name == funcName);
-
-      if (!func) {
-        return;
-      }
-      
-      const SignatureInformation = new vscode.SignatureInformation(`${func.name}(${func.takes.length > 0 ? func.takes.map(x => x.origin).join(", ") : ""}) -> ${func.returns ?? "nothing"}`);
-      SignatureInformation.documentation = new vscode.MarkdownString().appendText(func.text);
-      func.takes.forEach(take => {
-        if (take.name) {
-          SignatureInformation.parameters.push(new vscode.SignatureInformation(take.name));
-        }
-      });
-      SignatureHelp.activeParameter = key.takeIndex;
-      SignatureHelp.signatures.push(SignatureInformation);
-
-    }
-
-    return SignatureHelp;
-  }
-}
-
-// vscode.languages.registerSignatureHelpProvider("lua", new LuaSignatureHelp, "(", ",");
