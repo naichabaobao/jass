@@ -41,7 +41,7 @@ endlibrary
 ```
 --------------------------------------------------------
 
-![param](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/images/comment-param.png)
-![param-display](https://gitee.com/naichabaobao/jass/raw/master/src/resources/static/images/comment-param-display.png)
+![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
+![param-display](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
 
 ```---star一下吧！---```
