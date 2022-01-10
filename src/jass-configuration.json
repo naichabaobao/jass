@@ -61,7 +61,7 @@
         }
     },
     "indentationRules": {
-        "increaseIndentPattern": "\\b(takes|returns|if|loop|library|scope|elseif|else|globals|struct|scope|interface|method|module|textmacro)\\b|{",
+        "increaseIndentPattern": "\\b(takes|returns|if|loop|library|scope|elseif|else|globals|struct|scope|interface|method|module|textmacro|library_once)\\b|{",
         "decreaseIndentPattern": "\\b(else|elseif|endfunction|endif|endloop|endlibrary|endscope|endglobals|endstruct|endmethod|endinterface|endmodule|endtextmacro)\\b|}"
     }
 }

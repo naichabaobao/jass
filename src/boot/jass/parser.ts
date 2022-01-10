@@ -344,6 +344,23 @@ function parseTextMacro(text: string, textMacro: TextMacro) {
     if (tokens[0].isId() && tokens[0].value == "textmacro") {
         if (tokens[1].isId()) {
             textMacro.setName(tokens[1].value)
+            if (tokens[2].isId() && tokens[2].value == "takes") {
+                let state = 0;
+                for (let index = 3; index < tokens.length; index++) {
+                    const token = tokens[index];
+                    if (state == 0) {
+                        if (token.isId()) {
+                            textMacro.addTake(token.value)
+                            state = 1;
+                        } else break;
+                    } else if (state == 1) {
+                        if (token.isOp() && token.value == ",") {
+                            state = 0;
+                        } else break;
+                    }
+                }
+            }
+            /*
             if (tokens[2].isOp() && tokens[2].value == "(") {
                 let state = 0;
                 for (let index = 3; index < tokens.length; index++) {
@@ -363,7 +380,7 @@ function parseTextMacro(text: string, textMacro: TextMacro) {
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }
@@ -514,7 +531,7 @@ function parseLibrary(lineText: LineText, library: Library) {
         return token;
     });
 
-    const libraryIndex = tokens.findIndex((token) => token.isId() && token.value == "library");
+    const libraryIndex = tokens.findIndex((token) => token.isId() && (token.value == "library" || token.value == "library_once"));
     if (libraryIndex != -1) {
         library.name = tokens[libraryIndex + 1].value;
         library.loc.start = new Position(tokens[libraryIndex].line, tokens[libraryIndex].position);
@@ -612,7 +629,6 @@ function parseStruct(lineText: LineText, struct: Struct) {
         token.line = lineText.lineNumber();
         return token;
     });
-    struct.loc.setRange(lineText);
     const structIndex = tokens.findIndex((token) => token.isId() && token.value == "struct");
     if (structIndex != -1 && tokens[structIndex + 1] && tokens[structIndex + 1].isId()) {
         struct.name = tokens[structIndex + 1].value;
@@ -646,9 +662,9 @@ function parseLocal(lineText: LineText, local: Local) {
     });
 
     const localIndex = tokens.findIndex((token) => token.isId() && token.value == "local");
+    local.loc.setRange(lineText);
 
     if (localIndex != -1) {
-        local.loc.setRange(lineText);
         local.loc.start = new Position(lineText.lineNumber(), tokens[localIndex].position);
         if (tokens[localIndex + 1] && tokens[localIndex + 1].isId()) {
             local.type = tokens[localIndex + 1].value;
@@ -1089,6 +1105,8 @@ class Parser {
                     } else if (collect.members && isMemberStart(x)) {
                         const member = new Member();
                         parseMember(x, member);
+                        collect.members.push(member);
+                        member.lineComments.push(...lineComments);
                         lineComments.length = 0;
                     } else {
                         lineComments.length = 0;
@@ -1407,4 +1425,11 @@ console.log(zincProgram.librarys[0].loc);
 
 }
 
+
+if (true) {
+    const textMacro = new TextMacro();
+    parseTextMacro(`//! textmacro a takes aaa`, textMacro);
+    console.log(textMacro);
+    
+}
 

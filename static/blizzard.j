@@ -679,6 +679,7 @@ endglobals
 
 
 // 显示Debug消息[C]
+// @param msg message string
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -895,7 +896,7 @@ function ModuloReal takes real dividend, real divisor returns real
 endfunction
 
 
-// 点的坐标
+// 点的坐标位移
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
@@ -907,7 +908,10 @@ function OffsetRectBJ takes rect r, real dx, real dy returns rect
 endfunction
 
 
-// 将点,大小转换为区域
+// 将点大小转换为区域
+// @param center 中心点位置
+// @param width 宽
+// @param height 高
 function RectFromCenterSizeBJ takes location center, real width, real height returns rect
     local real x = GetLocationX( center )
     local real y = GetLocationY( center )
@@ -1267,7 +1271,8 @@ endfunction
 // CommentString triggers during script generation, but until such a time,
 // this function will serve as a stub.
 //
-// 注释
+// 此函数不起任何作用
+// WorldEdit会忽略此函数,因为此函数在脚本生成期间触发
 function CommentString takes string commentString returns nothing
 endfunction
 
@@ -1279,14 +1284,18 @@ function StringIdentity takes string theString returns string
     return GetLocalizedString(theString)
 endfunction
 
-
-// 条件A和条件B    比较
+// 与运算
+// valueA && valueB
+// @param valueA 条件A
+// @param valueB 条件B
 function GetBooleanAnd takes boolean valueA, boolean valueB returns boolean
     return valueA and valueB
 endfunction
 
-
-// 条件A或条件B    比较
+// 或运算
+// valueA || valueB
+// @param valueA 条件A
+// @param valueB 条件B
 function GetBooleanOr takes boolean valueA, boolean valueB returns boolean
     return valueA or valueB
 endfunction
@@ -1295,7 +1304,10 @@ endfunction
 // Converts a percentage (real, 0..100) into a scaled integer (0..max),
 // clipping the result to 0..max in case the input is invalid.
 //
-// 百分比轉換為整數
+// 取最大值的百分比值
+// R2I(max * percentage)
+// @param percentage 0-100区间
+// @param max 0-Finite
 function PercentToInt takes real percentage, integer max returns integer
     local real realpercent = percentage * I2R(max) * 0.01
     local integer result = MathRound(realpercent)

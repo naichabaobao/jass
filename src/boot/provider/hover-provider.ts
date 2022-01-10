@@ -7,7 +7,7 @@ import { Options } from './options';
 import data, { parseContent, parseZincContent } from "./data";
 import { compare, isZincFile } from '../tool';
 import { convertPosition } from './tool';
-import { Func, Local, Take } from '../jass/ast';
+import { Func, Library, Local, Take } from '../jass/ast';
 
 
 
@@ -62,6 +62,19 @@ class HoverProvider implements vscode.HoverProvider {
 
     const hovers: vscode.MarkdownString[] = [];
 
+    const fieldLibrarys = () => {
+      const librarys:Library[] = [];
+
+      if (!Options.isOnlyJass) {
+        librarys.push(...data.librarys());
+
+        if (Options.supportZinc) {
+          librarys.push(...data.zincLibrarys());
+        }
+      }
+      
+      return librarys;
+    };
     const fieldFunctions = () => {
       const funcs = data.functions();
 
@@ -216,6 +229,42 @@ class HoverProvider implements vscode.HoverProvider {
 
       return locals;
     };
+    const fieldStructs = () => {
+      const structs = data.structs();
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            structs.push(...library.structs);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              structs.push(...library.structs);
+              return false
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+            }
+          });
+        }
+      }
+      
+      return structs;
+    };
 
     [...fieldFunctions(),...data.natives()].forEach((func) => {
       if (key == func.name) {
@@ -224,6 +273,12 @@ class HoverProvider implements vscode.HoverProvider {
         ms.appendText("\n");
         func.getContents().forEach((content) => {
           ms.appendText(content);
+        });
+        func.getParams().forEach((param) => {
+          if (func.takes.findIndex((take) => take.name == param.id) != -1) {
+            ms.appendText("\n");
+            ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+          }
         });
         ms.appendText("\n");
         ms.appendCodeblock(func.origin);
@@ -268,6 +323,32 @@ class HoverProvider implements vscode.HoverProvider {
         });
         ms.appendText("\n");
         ms.appendCodeblock(funcTake.take.origin);
+        hovers.push(ms);
+      }
+    });
+    fieldStructs().forEach((struct) => {
+      if (key == struct.name) {     
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown(`#### ${struct.name}`);
+        ms.appendText("\n");
+        struct.getContents().forEach((content) => {
+          ms.appendText(content);
+        });
+        ms.appendText("\n");
+        ms.appendCodeblock(struct.origin);
+        hovers.push(ms);
+      }
+    });
+    fieldLibrarys().forEach((library) => {
+      if (key == library.name) {     
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown(`#### ${library.name}`);
+        ms.appendText("\n");
+        library.getContents().forEach((content) => {
+          ms.appendText(content);
+        });
+        ms.appendText("\n");
+        ms.appendCodeblock(library.origin);
         hovers.push(ms);
       }
     });

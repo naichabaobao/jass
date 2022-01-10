@@ -16,16 +16,6 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
     if (/^\s*\/\//.test(text)) return;
 
     const fsPath = document.uri.fsPath;
-    const isZincExt = isZincFile(fsPath);
-    if (!isZincExt) {
-      parseContent(fsPath, document.getText());
-      
-      if (!Options.isOnlyJass) {
-        if (Options.supportZinc) {
-          parseZincContent(fsPath, document.getText());
-        }
-      }
-    }
 
     const tokens = tokenize(text.substring(0, position.character)).reverse();
 

@@ -180,9 +180,13 @@ native DzCreateSimpleFrame takes string frame, integer parent, integer id return
 native DzDestroyFrame takes integer frame returns nothing
 // 加载内容目录 (Toc table of contents)
 native DzLoadToc takes string fileName returns nothing
-// 设置窗体相对位置 [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
+// 设置窗体相对位置
+// @param point [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
+// @param relativeFrame 相对容器,一般使用DzGetGameUI()
+// @param relativePoint [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
 native DzFrameSetPoint takes integer frame, integer point, integer relativeFrame, integer relativePoint, real x, real y returns nothing
 // 设置窗体绝对位置
+// @param point [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
 native DzFrameSetAbsolutePoint takes integer frame, integer point, real x, real y returns nothing
 // 清空窗体锚点
 native DzFrameClearAllPoints takes integer frame returns nothing
@@ -268,7 +272,10 @@ native DzOriginalUIAutoResetPoint takes boolean enable returns nothing
 native DzFrameSetPriority takes integer frame, integer priority returns nothing
 //  设置父窗口 [NEW]
 native DzFrameSetParent takes integer frame, integer parent returns nothing
-//  设置字体 [NEW]
+// 设置字体 [NEW]
+// 修改字体大小
+// @param fileName 可选值["Fonts\dffn_b31.ttf", "Fonts\\DFHeiMd.ttf", "Fonts\\dfst-m3u.ttf", "Fonts\\FRIZQT__.TTF", "Fonts\\NIM_____.ttf", "Fonts\\tt5500m_.ttf"]
+// @param height 字体大小
 native DzFrameSetFont takes integer frame, string fileName, real height, integer flag returns nothing
 //  获取 Frame 的 高度 [NEW]
 native DzFrameGetHeight takes integer frame returns real

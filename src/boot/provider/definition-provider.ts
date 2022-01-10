@@ -8,7 +8,7 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from './keyword';
 import { Types } from './types';
-import { Func, Local, Program, Take } from "../jass/ast";
+import { Func, Library, Local, Program, Take } from "../jass/ast";
 import data, { parseContent, parseZincContent } from "./data";
 import { Rangebel } from '../common';
 import { Options } from './options';
@@ -69,6 +69,19 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       }
     }
 
+    const fieldLibrarys = () => {
+      const librarys:Library[] = [];
+
+      if (!Options.isOnlyJass) {
+        librarys.push(...data.librarys());
+
+        if (Options.supportZinc) {
+          librarys.push(...data.zincLibrarys());
+        }
+      }
+      
+      return librarys;
+    };
     const fieldFunctions = () => {
       const funcs = data.functions();
 
@@ -223,20 +236,53 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
       return locals;
     };
+    const fieldStructs = () => {
+      const structs = data.structs();
+
+      if (!Options.isOnlyJass) {
+        const requires: string[] = [];
+        data.librarys().filter((library) => {
+          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+            requires.push(...library.requires);
+            structs.push(...library.structs);
+            return false;
+          }
+          return true;
+        }).forEach((library) => {
+          if (requires.includes(library.name)) {
+            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+          }
+        });
+
+        if (Options.supportZinc) {
+          data.zincLibrarys().filter((library) => {
+            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
+              requires.push(...library.requires);
+              structs.push(...library.structs);
+              return false
+            }
+            return true;
+          }).forEach((library) => {
+            if (requires.includes(library.name)) {
+              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
+            }
+          });
+        }
+      }
+      
+      return structs;
+    };
 
     const locations = new Array<vscode.Location>();
 
-    fieldFunctions().forEach((func) => {
+    [...fieldFunctions(), ...data.natives()].forEach((func) => {
       if (func.name == key) {
-        console.log(func.source);
-        
         const location = new vscode.Location(vscode.Uri.file(func.source), toVsPosition(func));
         locations.push(location);
       }
     });
     fieldGlobals().forEach((global) => {
       if (global.name == key) {
-        console.log(global.source);
         const location = new vscode.Location(vscode.Uri.file(global.source), toVsPosition(global));
         locations.push(location);
       }
@@ -249,8 +295,19 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     });
     fieldTakes().forEach((funcTake) => {
       if (funcTake.take.name == key) {
-        console.log(funcTake.func.source);
         const location = new vscode.Location(vscode.Uri.file(funcTake.func.source), toVsPosition(funcTake.take));
+        locations.push(location);
+      }
+    });
+    fieldStructs().forEach((struct) => {
+      if (struct.name == key) {
+        const location = new vscode.Location(vscode.Uri.file(struct.source), toVsPosition(struct));
+        locations.push(location);
+      }
+    });
+    fieldLibrarys().forEach((library) => {
+      if (library.name == key) {
+        const location = new vscode.Location(vscode.Uri.file(library.source), toVsPosition(library));
         locations.push(location);
       }
     });

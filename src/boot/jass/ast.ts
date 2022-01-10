@@ -128,9 +128,9 @@ class Func extends Native implements Rangebel, Option {
 	public get origin(): string {
 		if (this.option.style == "vjass") {
 			const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
-			return `${this.tag} function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
 		} else if (this.option.style == "zinc") {
-			return `${this.tag} function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 		}
 		return `function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 
@@ -186,13 +186,13 @@ class Global extends Declaration implements Desc, Descript, Option {
 			return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`;
 		} else if (this.option.style == "zinc") {
 			if (this.isConstant && this.isArray) {
-				return `${this.tag} constant ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+				return `${this.tag == "default" ? "" : this.tag + " "}constant ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
 			} else if (this.isArray) {
-				return `${this.tag} ${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
+				return `${this.tag == "default" ? "" : this.tag + " "}${this.type} ${this.name}[${this.size > 0 ? this.size : ""}]`;
 			} else if (this.isConstant) {
-				return `${this.tag} constant ${this.type} ${this.name}`;
+				return `${this.tag == "default" ? "" : this.tag + " "}constant ${this.type} ${this.name}`;
 			} else {
-				return `${this.tag} ${this.type} ${this.name}`;
+				return `${this.tag == "default" ? "" : this.tag + " "}${this.type} ${this.name}`;
 			}
 		}
 		return `${this.isConstant ? "constant " : ""}${this.type}${this.isArray ? " array" : ""} ${this.name}`;
@@ -299,9 +299,9 @@ class Interface extends Declaration implements  Descript, Option {
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
-			return `${this.tag} interface ${this.name} endstruct`;
+			return `${this.tag == "default" ? "" : this.tag + " "}interface ${this.name} endstruct`;
 		} else if (this.option.style == "zinc") {
-			return `${this.tag} interface ${this.name} {}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}interface ${this.name} {}`;
 		}
 		return `interface ${this.name}`;
 	}
@@ -314,9 +314,9 @@ class Struct extends Interface {
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
-			return `${this.tag} struct ${this.name} endstruct`;
+			return `${this.tag == "default" ? "" : this.tag + " "}struct ${this.name} endstruct`;
 		} else if (this.option.style == "zinc") {
-			return `${this.tag} struct ${this.name} {}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}struct ${this.name} {}`;
 		}
 		return `struct ${this.name}`;
 	}

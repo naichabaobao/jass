@@ -2385,11 +2385,12 @@ native SquareRoot takes real x returns real
 //
 // 求幂
 native Pow takes real x, real power returns real
-
+// 四舍五入
 constant native MathRound takes real r returns integer
 
 //============================================================================
 // String Utility API
+
 // 转换整数变量为实数
 native I2R takes integer i returns real
 // 转换实数为整数
@@ -2399,14 +2400,19 @@ native I2S takes integer i returns string
 // 将实数转换为字符串
 native R2S takes real r returns string
 // 将实数转换为格式化字符串
+//@param precision 保留小数位数
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字串符为整数
 native S2I takes string s returns integer
 // 转换字符串为实数
 native S2R takes string s returns real
 // 获取句柄id    tips:一般用于hashtable key
+// @param h 任意handle子类型, 常用于hashtable key
 native GetHandleId takes handle h returns integer
 // 截取字符串 [R]
+// @param source "hello world"
+// @param start 开始位置,下标为0
+// @param end 结束位置,需要的字符串长度
 native SubString takes string source, integer start, integer end returns string
 // 字串符长度
 native StringLength takes string s returns integer
@@ -5391,112 +5397,115 @@ native BlzBitXor takes integer x, integer y returns integer
 
 // Intanced Object Operations
 // Ability
-// 技能布尔类型域
+
+// 技能布尔类型字段
 native BlzGetAbilityBooleanField takes ability whichAbility, abilitybooleanfield whichField returns boolean
-// 技能的整数类型域
+// 技能的整数类型字段
 native BlzGetAbilityIntegerField takes ability whichAbility, abilityintegerfield whichField returns integer
-// 技能的实数类型域
+// 技能的实数类型字段
 native BlzGetAbilityRealField takes ability whichAbility, abilityrealfield whichField returns real
 // 技能字符串字段
 native BlzGetAbilityStringField takes ability whichAbility, abilitystringfield whichField returns string
-// 技能随等级改变的布尔类型域
+// 技能随等级改变的布尔类型字段
 native BlzGetAbilityBooleanLevelField takes ability whichAbility, abilitybooleanlevelfield whichField, integer level returns boolean
-// 技能随等级改变的整数类型域
+// 技能随等级改变的整数类型字段
 native BlzGetAbilityIntegerLevelField takes ability whichAbility, abilityintegerlevelfield whichField, integer level returns integer
-// 技能随等级改变的实数类型域
+// 技能随等级改变的实数类型字段
 native BlzGetAbilityRealLevelField takes ability whichAbility, abilityreallevelfield whichField, integer level returns real
 // 技能字符串等级字段
 native BlzGetAbilityStringLevelField takes ability whichAbility, abilitystringlevelfield whichField, integer level returns string
-// 技能随等级改变的布尔类型域
+// 技能随等级改变的布尔类型字段
 native BlzGetAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index returns boolean
-// 技能随等级改变的整数类型域
+// 技能随等级改变的整数类型字段
 native BlzGetAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index returns integer
-// 技能随等级改变的实数类型域
+// 技能随等级改变的实数类型字段
 native BlzGetAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index returns real
 // 技能字符串等级数组字段
 native BlzGetAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index returns string
-// 改变技能的布尔类型域
+// 改变技能的布尔类型字段
 native BlzSetAbilityBooleanField takes ability whichAbility, abilitybooleanfield whichField, boolean value returns boolean
-// 改变技能的整数类型域
+// 改变技能的整数类型字段
 native BlzSetAbilityIntegerField takes ability whichAbility, abilityintegerfield whichField, integer value returns boolean
-// 改变技能的实数类型域
+// 改变技能的实数类型字段
 native BlzSetAbilityRealField takes ability whichAbility, abilityrealfield whichField, real value returns boolean
-// 改变技能的字符串类型域
+// 改变技能的字符串类型字段
 native BlzSetAbilityStringField takes ability whichAbility, abilitystringfield whichField, string value returns boolean
-// 改变技能的随等级改变的布尔类型域
+// 改变技能的随等级改变的布尔类型字段
 native BlzSetAbilityBooleanLevelField takes ability whichAbility, abilitybooleanlevelfield whichField, integer level, boolean value returns boolean
-// 改变技能随等级改变的整数类型域
+// 改变技能随等级改变的整数类型字段
 native BlzSetAbilityIntegerLevelField takes ability whichAbility, abilityintegerlevelfield whichField, integer level, integer value returns boolean
-// 改变技能随等级改变的实数类型域
+// 改变技能随等级改变的实数类型字段
 native BlzSetAbilityRealLevelField takes ability whichAbility, abilityreallevelfield whichField, integer level, real value returns boolean
-// 改变技能随等级改变的字符串类型域
+// 改变技能随等级改变的字符串类型字段
 native BlzSetAbilityStringLevelField takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns boolean
-// 改变技能随等级改变的布尔数组类型域
+// 改变技能随等级改变的布尔数组类型字段
 native BlzSetAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index, boolean value returns boolean
-// 改变技能随等级改变的整数数组类型域
+// 改变技能随等级改变的整数数组类型字段
 native BlzSetAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index, integer value returns boolean
-// 改变技能随等级改变的实数数组类型域
+// 改变技能随等级改变的实数数组类型字段
 native BlzSetAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index, real value returns boolean
-// 改变技能随等级改变的字符串数组类型域
+// 改变技能随等级改变的字符串数组类型字段
 native BlzSetAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns boolean
-// 技能随等级改变的布尔类型域 - 添加值
+// 技能随等级改变的布尔类型字段 - 添加值
 native BlzAddAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-// 技能随等级改变的整数类型域 - 添加值
+// 技能随等级改变的整数类型字段 - 添加值
 native BlzAddAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-// 技能随等级改变的实数类型域 - 添加值
+// 技能随等级改变的实数类型字段 - 添加值
 native BlzAddAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-// 技能随等级改变的字符串类型域 - 添加值
+// 技能随等级改变的字符串类型字段 - 添加值
 native BlzAddAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
-// 技能随等级改变的布尔类型域 - 移除值
+// 技能随等级改变的布尔类型字段 - 移除值
 native BlzRemoveAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-// 技能随等级改变的整数类型域 - 移除值
+// 技能随等级改变的整数类型字段 - 移除值
 native BlzRemoveAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-// 技能随等级改变的实数类型域 - 移除值
+// 技能随等级改变的实数类型字段 - 移除值
 native BlzRemoveAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-// 技能随等级改变的字符串类型域 - 移除值
+// 技能随等级改变的字符串类型字段 - 移除值
 native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
 
 // Item 
 // 获取物品技能
+// @param index 0-5
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
+// 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
 // 物品添加技能
 native BlzItemAddAbility takes item whichItem, integer abilCode returns boolean
-// 物品的布尔类型域
+// 物品的布尔类型字段
 native BlzGetItemBooleanField takes item whichItem, itembooleanfield whichField returns boolean
-// 获取物品的整数类型域
+// 获取物品的整数类型字段
 native BlzGetItemIntegerField takes item whichItem, itemintegerfield whichField returns integer
-// 物品的实数类型域
+// 物品的实数类型字段
 native BlzGetItemRealField takes item whichItem, itemrealfield whichField returns real
 // 获取物品字符串字段
 native BlzGetItemStringField takes item whichItem, itemstringfield whichField returns string
-// 改变物品的布尔类型域
+// 改变物品的布尔类型字段
 native BlzSetItemBooleanField takes item whichItem, itembooleanfield whichField, boolean value returns boolean
-// 改变物品的整数类型域
+// 改变物品的整数类型字段
 native BlzSetItemIntegerField takes item whichItem, itemintegerfield whichField, integer value returns boolean
-// 改变物品的实数类型域
+// 改变物品的实数类型字段
 native BlzSetItemRealField takes item whichItem, itemrealfield whichField, real value returns boolean
-// 改变物品的字符串类型域
+// 改变物品的字符串类型字段
 native BlzSetItemStringField takes item whichItem, itemstringfield whichField, string value returns boolean
 // 物品移除技能
 native BlzItemRemoveAbility takes item whichItem, integer abilCode returns boolean
 
 // Unit 
-// 单位布尔类型域
+// 单位布尔类型字段
 native BlzGetUnitBooleanField takes unit whichUnit, unitbooleanfield whichField returns boolean
-// 获取单位整数类型域
+// 获取单位整数类型字段
 native BlzGetUnitIntegerField takes unit whichUnit, unitintegerfield whichField returns integer
-// Get Unit 实数类型域
+// Get Unit 实数类型字段
 native BlzGetUnitRealField takes unit whichUnit, unitrealfield whichField returns real
 // 获取单位字符串字段
 native BlzGetUnitStringField takes unit whichUnit, unitstringfield whichField returns string
-// 改变单位的布尔类型域
+// 改变单位的布尔类型字段
 native BlzSetUnitBooleanField takes unit whichUnit, unitbooleanfield whichField, boolean value returns boolean
-// 改变单位的整数类型域
+// 改变单位的整数类型字段
 native BlzSetUnitIntegerField takes unit whichUnit, unitintegerfield whichField, integer value returns boolean
-// 改变单位的实数类型域
+// 改变单位的实数类型字段
 native BlzSetUnitRealField takes unit whichUnit, unitrealfield whichField, real value returns boolean
-// 改变单位的字符串类型域
+// 改变单位的字符串类型字段
 native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, string value returns boolean
 
 // Unit Weapon
@@ -5510,10 +5519,11 @@ native BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield which
 native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
 
 // Skin
-// Skin
+
 native BlzGetUnitSkin takes unit whichUnit returns integer
 native BlzGetItemSkin takes item whichItem returns integer
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
+
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
