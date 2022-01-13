@@ -20,7 +20,7 @@ import { compare, getPathFileName, isAiFile, isZincFile } from "../tool";
 import { convertPosition, functionKey } from "./tool";
 import data, { parseContent, parseZincContent } from "./data";
 import { Position } from "../common";
-import { Global, Local, Library, Program, Take, Func, Native, Struct, Method, Member } from "../jass/ast";
+import { Global, Local, Library, Program, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
 import { Parser } from "../jass/parser";
 import { tokenize } from "../jass/tokens";
 
@@ -70,7 +70,10 @@ function completionItem(label: string, option: CompletionItemOption = {
       ms.appendText("\n");
     }
     if (Array.isArray(option.documentation)) {
-      option.documentation.forEach((documentation) => {
+      option.documentation.forEach((documentation, index) => {
+        if (index != 0) {
+          ms.appendText("\n");
+        }
         ms.appendMarkdown(documentation);
       });
     } else {
@@ -206,7 +209,7 @@ function funcToCompletionItem(func: Func|Native, option?: CompletionItemOption) 
       const contents = func.getContents();
       func.getParams().forEach((param) => {
         if (func.takes.findIndex((take) => take.name == param.id) != -1) {
-          contents.push(`\n***@param*** **${param.id}** *${param.descript}*`);
+          contents.push(`***@param*** **${param.id}** *${param.descript}*`);
         }
       });
 
@@ -226,7 +229,7 @@ function methodToCompletionItem(func: Method, option?: CompletionItemOption) :vs
       const contents = func.getContents();
       func.getParams().forEach((param) => {
         if (func.takes.findIndex((take) => take.name == param.id) != -1) {
-          contents.push(`\n***@param*** **${param.id}** *${param.descript}*`);
+          contents.push(`***@param*** **${param.id}** *${param.descript}*`);
         }
       });
 
@@ -291,6 +294,11 @@ function structToCompletionItem(struct: Struct, option?: CompletionItemOption) :
     detial: option?.detial ?? struct.name
   });
 }
+
+function toItems<T extends Declaration>(handle: (decl: T, option?: CompletionItemOption) => vscode.CompletionItem, option?: CompletionItemOption, ...datas: T[]):vscode.CompletionItem[] {
+  return datas.map(x => handle(x, option));
+}
+
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
 
@@ -552,10 +560,16 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       return funcs.filter((func) => func.name == name);
     };
 
-    function structTypeItems() {
-      return [...data.structs(), ...data.libraryStructs(), ...data.zincLibraryStructs()].map((struct) => {
-        return structToCompletionItem(struct);
-      });
+    function fieldLocalItems() {
+      items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals()));
+    }
+
+    function fieldStructTypeItems() {
+      items.push(...toItems<Struct>(structToCompletionItem, undefined, ...data.structs(), ...data.libraryStructs(), ...data.zincLibraryStructs()));
+    }
+
+    function fieldLibraryItems() {
+      items.push(...toItems<Library>(libraryToCompletionItem, undefined, ...fieldLibrarys()));
     }
 
     // 获取当前位置提示类型
@@ -568,13 +582,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       case PositionType.LocalNaming:
         items.push(ArrayKeywordItem);
       case PositionType.Set:
-        // return [...typeLocalAndTakeItem(document, position, null), ...setGlobalItems()];
-        fieldGlobals().filter((global) => !global.isConstant).forEach((global) => {
-          items.push(globalToCompletionItem(global));
-        });
-        fieldLocals().forEach((local) => {
-          items.push(localToCompletionItem(local));
-        });
+        items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => !global.isConstant)));
+        fieldLocalItems();
         fieldTakes().forEach((funcTake, index) => {
           items.push(takeToCompletionItem(funcTake.take, {
             source: funcTake.func.source,
@@ -591,19 +600,23 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         // setItems();
         break;
       case PositionType.Returns:
-        items.push(...typeItems, NothingItem, ...structTypeItems());
+        items.push(...typeItems, NothingItem);
+        fieldStructTypeItems();
         return items;
       case PositionType.LocalType:
-        items.push(...typeItems, ...structTypeItems());
+        items.push(...typeItems);
+        fieldStructTypeItems();
         break;
       case PositionType.ConstantType:
         items.push(...typeItems);
         return items;
       case PositionType.TakesFirstType:
-        items.push(...typeItems, NothingItem, CodeItem, ...structTypeItems());
+        items.push(...typeItems, NothingItem, CodeItem);
+        fieldStructTypeItems();
         return items;
       case PositionType.TakesOtherType:
-        items.push(...typeItems, CodeItem, ...structTypeItems());
+        items.push(...typeItems, CodeItem);
+        fieldStructTypeItems();
         return items;
       case PositionType.TakesKeyword:
         items.push(TakesKeywordItem);
@@ -615,9 +628,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         items.push(ReturnsKeywordItem);
         return items;
       case PositionType.Requires:
-        fieldLibrarys().forEach((library) => {
-          items.push(libraryToCompletionItem(library));
-        });
+        fieldLibraryItems();
         break;
       case PositionType.Assign:
         const lineText = document.lineAt(position.line);
@@ -625,22 +636,16 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         const result = /local\s+(?<type>[a-zA-Z]+[a-zA-Z0-9_]*)\b/.exec(inputText);
         if (result && result.groups) {
           const type = result.groups["type"];
-          // return [...typeFunctionAndGlobalItems(type), ...typeLocalAndTakeItem(document, position, type)];
-          [...data.natives(), ...fieldFunctions()].filter((func) => {
+          items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions()].filter((func) => {
             return type == func.returns || getParentTypes(type).includes(func.returns);
-          }).forEach((func) => {
-            items.push(funcToCompletionItem(func));
-          });
-          fieldGlobals().filter((global) => {
+          })));
+          items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
             return type == global.type || getParentTypes(type).includes(global.type);
-          }).forEach((global) => {
-            items.push(globalToCompletionItem(global));
-          });
-          fieldLocals().filter((local) => {
+          })));
+          items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals().filter((local) => {
             return type == local.type || getParentTypes(type).includes(local.type);
-          }).forEach((local) => {
-            items.push(localToCompletionItem(local));
-          });
+          })));
+
           fieldTakes().filter((funcTake) => {
             return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
           }).forEach((funcTake, index) => {
@@ -659,9 +664,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         }
         break;
       case PositionType.Call:
-        [...data.natives(), ...fieldFunctions()].forEach((func) => {
-          items.push(funcToCompletionItem(func));
-        });
+        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
         break;
       case PositionType.Args:
         // 方法参数列表
@@ -671,21 +674,15 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         funcs.forEach((func) => {
           if (func.takes[key.takeIndex]) {
             const type = func.takes[key.takeIndex].type;
-            [...data.natives(), ...fieldFunctions()].filter((func) => {
+            items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions()].filter((func) => {
               return type == func.returns || getParentTypes(type).includes(func.returns);
-            }).forEach((func) => {
-              items.push(funcToCompletionItem(func));
-            });
-            fieldGlobals().filter((global) => {
+            })));
+            items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
               return type == global.type || getParentTypes(type).includes(global.type);
-            }).forEach((global) => {
-              items.push(globalToCompletionItem(global));
-            });
-            fieldLocals().filter((local) => {
+            })));
+            items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals().filter((local) => {
               return type == local.type || getParentTypes(type).includes(local.type);
-            }).forEach((local) => {
-              items.push(localToCompletionItem(local));
-            });
+            })));
             fieldTakes().filter((funcTake) => {
               return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
             }).forEach((funcTake, index) => {
@@ -705,10 +702,26 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         });
         break;
       default:
-        items.push(...typeItems, ...structTypeItems());
+        items.push(...typeItems);
         items.push(...keywordItems);
-        [...data.natives(), ...fieldFunctions()].forEach((func) => {
-          items.push(funcToCompletionItem(func));
+        fieldStructTypeItems();
+        fieldLocalItems();
+        fieldLibraryItems();
+        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
+        items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals()));
+
+        fieldTakes().forEach((funcTake, index) => {
+          items.push(takeToCompletionItem(funcTake.take, {
+            source: funcTake.func.source,
+            documentation: funcTake.func.getParams().map((param) => {
+              if (param.id == funcTake.take.name) {
+                return `*${param.descript}*`;
+              }
+              return `*${param.descript}*`;
+            }),
+            // 尽可能让参数在最前
+            orderString: `${index}`
+          }))
         });
     }
 

@@ -1,6 +1,6 @@
 
-import { Position } from "../common";
-import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError} from "../jass/ast";
+import { Position, Range } from "../common";
+import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError, LineComment} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 
 import {ZincKeywords} from "../provider/keyword";
@@ -52,21 +52,39 @@ class ModifierBodyType {
 function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 
 	
-
+	
 	const comments:Token[] = [];
 	const matchText = (line:number) => {
 		const texts: string[] = [];
 		for (let index = line; index > 0; index--) {
 			let comment:Token|undefined = undefined;
 			if ((comment = comments.find((token) => token.line == index - 1))) {
-				const text = comment.value.replace("//", "");
-				texts.push(text);
+				// const text = comment.value.replace("//", "");
+				// texts.push(text);
+				const lineComment: LineComment = new LineComment(comment.value);
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
 			} else {
 				break;
 			}
 		}
 		return texts.reverse().join("\n");
 		// return comments.find((token) => token.line == line - 1)?.value.replace("//", "") ?? "";
+	};
+	const findLineComments = (line:number):LineComment[] => {
+		const lineComments:LineComment[] = [];
+		for (let index = line; index > 0; index--) {
+			let comment:Token|undefined = undefined;
+			if ((comment = comments.find((token) => token.line == index - 1))) {
+				// const text = comment.value.replace("//", "");
+				// texts.push(text);
+				const lineComment: LineComment = new LineComment(comment.value);
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
+				lineComments.push(lineComment);
+			} else {
+				break;
+			}
+		}
+		return lineComments;
 	};
 	let inZinc = false;
 	// 无视掉所有非zinc块内的token
@@ -310,11 +328,13 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 						lastLocal().name = token.value;
 						lastLocal().nameToken = token;
 						lastLocal().text = matchText(token.line);
+						lastLocal().lineComments.push(...findLineComments(token.line));
 					} else {
 						const local = new Local("", token.value);
 						local.option.style = "zinc";
 						local.nameToken = token;
 						local.text = matchText(token.line);
+						lastLocal().lineComments.push(...findLineComments(token.line));
 						locals.push(local);
 					}
 					localState = 2;
@@ -569,11 +589,13 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 						lastMember().name = token.value;
 						lastMember().nameToken = token;
 						lastMember().text = matchText(token.line);
+						lastMember().lineComments.push(...findLineComments(token.line));
 					} else {
 						const member = new Member("", token.value);
 						member.option.style = "zinc";
 						member.nameToken = token;
 						member.text = matchText(token.line);
+						member.lineComments.push(...findLineComments(token.line));
 						members.push(member);
 					}
 					memberState = 2;
@@ -627,6 +649,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 						global.tag = lastModifierType().type;
 					}
 					global.loc.start = new Position(token.line, token.position);
+					global.lineComments.push(...findLineComments(token.line));
 					globalState = 1;
 				} else {
 					// 存在不确定情况，可能误报，因此当前什么都不做
@@ -706,6 +729,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					g.name = token.value;
 					g.loc.end = new Position(token.line, token.end);
 					globals.push(g);
+					g.lineComments.push(...findLineComments(token.line));
 					globalState = 2;
 				} else {
 					pushErrorToken();
@@ -718,7 +742,8 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				resetMethod();
 				method = new Method("");
 				method.option.style = "zinc";
-				method.text = matchText(token.line)
+				method.text = matchText(token.line);
+				method.lineComments.push(...findLineComments(token.line));
 				if (modifierType) {
 					method.tag = modifierType;
 				} else if (structModifierTypes.length > 0) {
@@ -802,6 +827,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			inLibrary = true;
 			libraryState = 0;
 			library = new Library("");
+			library.lineComments.push(...findLineComments(token.line));
 			library.option.style = "zinc";
 			library.loc.start = new Position(token.line, token.position);
 			program.librarys.push(library);
@@ -812,6 +838,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					struct = new Struct("");
 					struct.option.style = "zinc";
 					struct.text = matchText(token.line);
+					struct.lineComments.push(...findLineComments(token.line));
 					if (modifierType) {
 						struct.tag = modifierType;
 					} else if (modifierTypes.length > 0) {
@@ -829,6 +856,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					func = new Func("");
 					func.option.style = "zinc";
 					func.text = matchText(token.line);
+					func.lineComments.push(...findLineComments(token.line));
 					if (modifierType) {
 						func.tag = modifierType;
 					} else if (modifierTypes.length > 0) {
@@ -924,31 +952,31 @@ export {
 	parseByTokens as parseZinc
 };
 
-const testString = JSON.stringify(parse(`
-//! zinc
-  library library_name requires require_librarys ,,-,cccccc ccc, ccc {
-	public {
-		struct a {
-			public {
-				// 奶茶
-				private static integer a[2],
-				// 宝宝
-				b = 12 , 17;
-
-				integer c;
-
-				method operator [] () {}
-			}
-		}
-		function assasa(integer ass) {
-			int aaa[3], hahah;
-		}
-	} 
-  }
-//! endzinc
-`).librarys, null, 2);
 
 if (false) {
+	const testString = JSON.stringify(parse(`
+	//! zinc
+	  library library_name requires require_librarys ,,-,cccccc ccc, ccc {
+		public {
+			struct a {
+				public {
+					// 奶茶
+					private static integer a[2],
+					// 宝宝
+					b = 12 , 17;
+	
+					integer c;
+	
+					method operator [] () {}
+				}
+			}
+			function assasa(integer ass) {
+				int aaa[3], hahah;
+			}
+		} 
+	  }
+	//! endzinc
+	`).librarys, null, 2);
 	console.log(testString);
 }
 
