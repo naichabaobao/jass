@@ -9,7 +9,7 @@ import * as vscode from 'vscode';
 import { AllKeywords } from './keyword';
 import { Types } from './types';
 import { Func, Library, Local, Program, Take } from "../jass/ast";
-import data, { parseContent, parseZincContent } from "./data";
+import data, { parseContent } from "./data";
 import { Rangebel } from '../common';
 import { Options } from './options';
 import { compare, isZincFile } from '../tool';
@@ -58,16 +58,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
     const fsPath = document.uri.fsPath;
 
-    const isZincExt = isZincFile(fsPath);
-    if (!isZincExt) {
-      parseContent(fsPath, document.getText());
-      
-      if (!Options.isOnlyJass) {
-        if (Options.supportZinc) {
-          parseZincContent(fsPath, document.getText());
-        }
-      }
-    }
+    parseContent(fsPath, document.getText());
 
     const fieldLibrarys = () => {
       const librarys:Library[] = [];

@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { Types } from "./types";
 import { AllKeywords } from './keyword';
 import { Options } from './options';
-import data, { parseContent, parseZincContent } from "./data";
+import data, { parseContent } from "./data";
 import { compare, isZincFile } from '../tool';
 import { convertPosition } from './tool';
 import { Func, Library, Local, Take } from '../jass/ast';
@@ -49,16 +49,7 @@ class HoverProvider implements vscode.HoverProvider {
     }
 
     const fsPath = document.uri.fsPath;
-    const isZincExt = isZincFile(fsPath);
-    if (!isZincExt) {
-      parseContent(fsPath, document.getText());
-      
-      if (!Options.isOnlyJass) {
-        if (Options.supportZinc) {
-          parseZincContent(fsPath, document.getText());
-        }
-      }
-    }
+    // parseContent(fsPath, document.getText());
 
     const hovers: vscode.MarkdownString[] = [];
 

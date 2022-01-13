@@ -18,7 +18,7 @@ import { Options } from "./options";
 // import * as vjassAst from "../vjass/ast";
 import { compare, getPathFileName, isAiFile, isZincFile } from "../tool";
 import { convertPosition, functionKey } from "./tool";
-import data, { parseContent, parseZincContent } from "./data";
+import data, { parseContent } from "./data";
 import { Position } from "../common";
 import { Global, Local, Library, Program, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
 import { Parser } from "../jass/parser";
@@ -310,12 +310,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const isZincExt = isZincFile(fsPath);
     if (!isZincExt) {
       parseContent(fsPath, document.getText());
-      
-      if (!Options.isOnlyJass) {
-        if (Options.supportZinc) {
-          parseZincContent(fsPath, document.getText());
-        }
-      }
     }
 
     const fieldLibrarys = () => {

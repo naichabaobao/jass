@@ -3,11 +3,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare} from "../tool";
+import { compare, isZincFile} from "../tool";
 
 import {Program, Native, Declaration, Func, Library, Struct} from "../jass/ast";
 
 import { Parser } from "../jass/parser";
+import { parse } from "../zinc/parse";
 
 
 class Pair {
@@ -139,27 +140,27 @@ function setSource(filePath: string, program: Program) {
     });
 }
 function parseContent(filePath: string, content: string) {
-  const program = new Parser(content).parsing();
-  setSource(filePath, program);
-  dataMap.put(filePath, program);
+  if (isZincFile(filePath)) {
+    const program = parse(content, true);
+    setSource(filePath, program);
+    zincDataMap.put(filePath, program);
+  } else {
+    const parser = new Parser(content);
+    if (Options.supportZinc) {
+      const program = parser.zincing();
+      setSource(filePath, program);
+      zincDataMap.put(filePath, program);
+    }
+    const program = parser.parsing();
+    setSource(filePath, program);
+    dataMap.put(filePath, program);
+  }
 }
 function parsePath(...filePaths: string[]) {
   filePaths.forEach((filePath) => {
     const content = getFileContent(filePath);
   
     parseContent(filePath, content);
-  });
-}
-function parseZincContent(filePath: string, content: string) {
-  const program = new Parser(content).zincing();
-  setSource(filePath, program);
-  zincDataMap.put(filePath, program);
-}
-function parseZincPath(...filePaths: string[]) {
-  filePaths.forEach((filePath) => {
-    const content = getFileContent(filePath);
-  
-    parseZincContent(filePath, content);
   });
 }
 
@@ -182,6 +183,7 @@ function startWatch() {
   });
   watcher.onDidDelete((event) => {
     dataMap.remove(event.fsPath);
+    zincDataMap.remove(event.fsPath);
   });
   // 类似于保存，暂时未发现有其他作用
   watcher.onDidChange((event) => {
@@ -191,13 +193,13 @@ function startWatch() {
   //#region zinc
   const zincWatcher = vscode.workspace.createFileSystemWatcher("**/*.zn", false, false, false);
   zincWatcher.onDidCreate((event) => {
-    parseZincPath(event.fsPath);
+    parsePath(event.fsPath);
   });
   zincWatcher.onDidDelete((event) => {
     zincDataMap.remove(event.fsPath);
   });
   zincWatcher.onDidChange((event) => {
-    parseZincPath(event.fsPath);
+    parsePath(event.fsPath);
   });
   //#endregion
 
@@ -281,6 +283,5 @@ class Data {
 export default Data;
 
 export {
-  parseContent,
-  parseZincContent
+  parseContent
 };

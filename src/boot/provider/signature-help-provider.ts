@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 
-import data, { parseContent, parseZincContent } from './data';
+import data, { parseContent } from './data';
 import { convertPosition, functionKey } from './tool';
 import { tokenize } from '../jass/tokens';
 import { compare, isZincFile } from '../tool';
