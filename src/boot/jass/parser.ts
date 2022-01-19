@@ -1,7 +1,7 @@
 import { Position, Range } from "../common";
 import { isNewLine, isSpace } from "../tool";
 import { parseZinc } from "../zinc/parse";
-import { Func, Global, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take } from "./ast";
+import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take } from "./ast";
 import { Token, tokenize } from "./tokens";
 
 class LineText extends Range {
@@ -752,6 +752,23 @@ function parseMember(lineText: LineText, member: Member) {
     }
 }
 
+function isLineCommentStart(lineText: LineText): boolean {
+    return /^\s*\/\/(?!!)/.test(lineText.getText());
+}
+function isGlobalStart(lineText: LineText): boolean {
+    const tokens = tokenize(lineText.getText());
+    return tokens[0] && tokens[0].isId() && (tokens[0].value == "constant" || (tokens[1] && tokens[1].isId()));
+}
+function isLocalStart(lineText: LineText): boolean {
+    return /^\s*local\b/.test(lineText.getText());
+}
+function isMemberStart(lineText: LineText): boolean {
+    return /^\s*(?:(private|public)\s+)*(?:(static|stub)\s+)*\b/.test(lineText.getText());
+}
+function isNativeStart(lineText: LineText): boolean {
+    return /^\s*(?:(constant)\s+)*native\b/.test(lineText.getText());
+}
+
 class Parser {
 
     constructor(content: string) {
@@ -983,22 +1000,6 @@ class Parser {
     public parsing(): Program {
         const program = new Program();
 
-        function isLineCommentStart(lineText: LineText): boolean {
-            return /^\s*\/\/(?!!)/.test(lineText.getText());
-        }
-        function isGlobalStart(lineText: LineText): boolean {
-            const tokens = tokenize(lineText.getText());
-            return tokens[0] && tokens[0].isId() && (tokens[0].value == "constant" || (tokens[1] && tokens[1].isId()));
-        }
-        function isLocalStart(lineText: LineText): boolean {
-            return /^\s*local\b/.test(lineText.getText());
-        }
-        function isMemberStart(lineText: LineText): boolean {
-            return /^\s*(?:(private|public)\s+)*(?:(static|stub)\s+)*\b/.test(lineText.getText());
-        }
-        function isNativeStart(lineText: LineText): boolean {
-            return /^\s*(?:(constant)\s+)*native\b/.test(lineText.getText());
-        }
         function handleGlobalsBlock(block: Block, globals: Global[]) {
             const lineComments: LineComment[] = [];
             block.childrens.forEach((x) => {
@@ -1277,11 +1278,143 @@ class Parser {
 
 }
 
+function isDefineMacroStart(text: LineText) {
+    return /^\s*#?define\b/.test(text.getText());
+}
+function isSetDefMacroStart(text: LineText) {
+    return /^\s*#setdef\b/.test(text.getText());
+}
+function isUnefMacroStart(text: LineText) {
+    return /^\s*#undef\b/.test(text.getText());
+}
+
+function parseCjass(content: string) {
+    const newContent = replaceBlockComment(content);
+
+    const lineTexts = lines(newContent);
+
+    const defineMacros:DefineMacro[] = [];
+
+    let defineMacro:DefineMacro = new DefineMacro();
+    let inDefine = false; 
+    let state = 0;
+    let field = 0;
+    lineTexts.forEach((lineText) => {
+        const tokens = tokenize(lineText.getText());
+        for (let index = 0; index < tokens.length; index++) {
+            const token = tokens[index];
+            function parseMacro (condition: boolean) {
+                if (condition && state == 0) {
+                    if (token.isId()) {
+                        defineMacro = new DefineMacro();
+                        const id = new Identifier(token.value);
+                        id.loc.start = new Position(token.line, token.position);
+                        id.loc.end = new Position(token.line, token.end);
+                        defineMacro.keys.push(id);
+                        state = 2;
+                    } else if (token.isOp() && token.value == "<") {
+                        defineMacro = new DefineMacro();
+                        state = 3;
+                    }
+                } else if (state == 2) {
+                    if (token.isOp() && token.value == "=") {
+                        defineMacros.push(defineMacro);
+                        state = 0;
+                    } else if (token.isOp() && token.value == "(") {
+                        state = 10;
+                    } else {
+                        state = 0;
+                    }
+                } else if (state == 3) {
+                    if (token.isId()) {
+                        const id = new Identifier(token.value);
+                        id.loc.start = new Position(token.line, token.position);
+                        id.loc.end = new Position(token.line, token.end);
+                        defineMacro.keys.push(id);
+                    } else if (token.isOp() && token.value == ">") {
+                        state = 4;
+                    } else {
+                        state = 0;
+                    }
+                } else if (state == 4) {
+                    if (token.isOp() && token.value == "(") {
+                        state = 10;
+                    } else if (token.isOp() && token.value == "=") {
+                        defineMacros.push(defineMacro);
+                        state = 0;
+                    } else {
+                        state = 0;
+                    }
+                } else if (state == 10) {
+                    if (token.isId()) {
+                        defineMacro.takes.push(token.value);
+                        state = 11;
+                    } else if (token.isOp() && token.value == ")") {
+                        state = 12;
+                    } else {
+                        state = 0;
+                    }
+                } else if (state == 11) {
+                    if (token.isOp() && token.value == ",") {
+                        state = 10;
+                    } else if (token.isOp() && token.value == ")") {
+                        state = 12;
+                    } else {
+                        state = 0;
+                    }
+                } else if (state == 12) {
+                    if (token.isOp() && token.value == "=") {
+                        defineMacros.push(defineMacro);
+                        state = 0;
+                    } else {
+                        state = 0;
+                    }
+                }
+            }
+            if (field > 0 && token.isOp() && token.value == "}") {
+                field--;
+            }if (inDefine && token.isOp() && token.value == "{") {
+                field++;
+            } else if (field == 1) {
+                if (inDefine) {
+                    parseMacro(index == 0);
+                }
+            } else if (field > 1) {
+                continue;
+            }  else if (index == 0 && (token.isId() && token.value == "define") || token.isMacro() && token.value == "#define") {
+                inDefine = true;
+            } else if (inDefine) {
+                parseMacro(index == 1);
+            }
+        }
+    });
+    return defineMacros;
+}
+
 export {
     replaceBlockComment,
     lines,
-    Parser
+    Parser,
+    parseCjass
 };
+
+// console.log(JSON.stringify(parseCjass(`
+// define <bbb bbbaa>(aaa ,cccc) =
+// define {
+//     dianjie = aaa
+//     // asas
+//     xilo = 
+// }
+// `), null, 2));
+console.log(parseCjass(`
+define {
+
+    aaa = {
+        bbb = 12
+    }
+}
+`));
+
 
 if (false) {
     const text = `a/"\\"
@@ -1424,7 +1557,6 @@ if (false) {
 console.log(zincProgram.librarys[0].loc);
 
 }
-
 
 if (true) {
     const textMacro = new TextMacro();

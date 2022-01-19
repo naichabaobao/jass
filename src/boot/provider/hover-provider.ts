@@ -344,6 +344,31 @@ class HoverProvider implements vscode.HoverProvider {
       }
     });
 
+    const lineText = document.lineAt(position.line);
+    const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
+    console.log(inputText);
+    
+    data.cjassDefineMacros().forEach((defineMacro) => {
+      if (defineMacro.keys.length == 1) {
+        if (key == defineMacro.keys[0].name) {     
+          const ms = new vscode.MarkdownString();
+          ms.appendMarkdown(`#### ${defineMacro.keys[0].name}`);
+          ms.appendText("\n");
+          ms.appendCodeblock(defineMacro.origin);
+          hovers.push(ms);
+        }
+      } else if (defineMacro.keys.length > 1) {
+        const findedKey = defineMacro.keys.find((id) => id.name == key);   
+        if (findedKey) {
+          const ms = new vscode.MarkdownString();
+          ms.appendMarkdown(`#### ${defineMacro.keys[defineMacro.keys.length - 1].name}`);
+          ms.appendText("\n");
+          ms.appendCodeblock(defineMacro.origin);
+          hovers.push(ms);
+        }
+      }
+    });
+
     return new vscode.Hover([...hovers]);
   }
 

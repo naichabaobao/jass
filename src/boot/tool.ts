@@ -452,6 +452,11 @@ function compare(key: string, key2: string):boolean {
 	return keyParsedPath.root == key2ParsedPath.root && keyParsedPath.dir == key2ParsedPath.dir && keyParsedPath.base == key2ParsedPath.base;
   }
 
+    // 是文件和是否存在
+	function isUsableFile(filePath: string) {
+		return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
+	  }
+
 export {
 	is0_16,
 	is0_7,
@@ -470,7 +475,8 @@ export {
 	isAiFile,
 	isZincFile,
 	getPathFileName,
-	compare
+	compare,
+	isUsableFile
 };
 
 

@@ -3,11 +3,11 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, isZincFile} from "../tool";
+import { compare, isJFile, isUsableFile, isZincFile} from "../tool";
 
-import {Program, Native, Declaration, Func, Library, Struct} from "../jass/ast";
+import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
 
-import { Parser } from "../jass/parser";
+import { parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
 
 
@@ -210,6 +210,19 @@ function startWatch() {
 }
 startWatch();
 
+
+// cjass support
+const defineMacros: DefineMacro[] = [];
+Options.cjassDependents.forEach((filePath) => {
+  if (isUsableFile(filePath)) {
+    if (isJFile(filePath)) {
+      const content = getFileContent(filePath);
+      const dms = parseCjass(content);
+      defineMacros.push(...dms);
+    }
+  }
+});
+
 class Data {
   public static programs() {
     return [...dataMap.values()];
@@ -277,6 +290,9 @@ class Data {
   }
 
 
+  public static cjassDefineMacros() {
+    return defineMacros;
+  }
 
 }
 
@@ -285,3 +301,5 @@ export default Data;
 export {
   parseContent
 };
+
+

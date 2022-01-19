@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { isAiFile, isJFile, resolvePaths } from "../tool";
+import { isAiFile, isJFile, isUsableFile, resolvePaths } from "../tool";
 
 class Options {
 
@@ -22,22 +22,25 @@ class Options {
     return this.isUsableJFile(this.configuration["dzapi"] as string) ? this.configuration["dzapi"] as string : path.resolve(__dirname, "../../../static/DzAPI.j");
   }
 
-  // 是文件和是否存在
-  private static isUsableFile(filePath: string) {
-    return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
-  }
-
   private static isUsableJFile(filePath: string) {
-      return this.isUsableFile(filePath) && isJFile(filePath);
+      return isUsableFile(filePath) && isJFile(filePath);
   }
 
   private static isUsableAiFile(filePath: string) {
-    return this.isUsableFile(filePath) && isAiFile(filePath);
+    return isUsableFile(filePath) && isAiFile(filePath);
   }
   
   public static get includes() {
     const includes = this.configuration["includes"] as Array<string>;
     return resolvePaths(includes);
+  }
+
+  public static get cjassDependents() {
+    const includes = this.configuration["cjass"]["dependents"] as Array<string>;
+    return resolvePaths(includes);
+  }
+  public static get isSupportCjass() {
+    return this.configuration["support"]["cjass"] as boolean;
   }
 
   

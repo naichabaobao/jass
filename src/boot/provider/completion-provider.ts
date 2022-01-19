@@ -565,6 +565,28 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     function fieldLibraryItems() {
       items.push(...toItems<Library>(libraryToCompletionItem, undefined, ...fieldLibrarys()));
     }
+    /**
+     * 默认global和function和locals和takes
+     */
+    function defaultItems() {
+      fieldLocalItems();
+      items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
+      items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals()));
+
+      fieldTakes().forEach((funcTake, index) => {
+        items.push(takeToCompletionItem(funcTake.take, {
+          source: funcTake.func.source,
+          documentation: funcTake.func.getParams().map((param) => {
+            if (param.id == funcTake.take.name) {
+              return `*${param.descript}*`;
+            }
+            return `*${param.descript}*`;
+          }),
+          // 尽可能让参数在最前
+          orderString: `${index}`
+        }))
+      });
+    }
 
     // 获取当前位置提示类型
     const type = PositionTool.is(document, position);
@@ -665,6 +687,10 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         const key = functionKey(document, position);
         // type为PositionType.Args时,可以断言key[0]不为null
         const funcs = findFunctionByName(key.keys[0]);
+        if (funcs.length == 0) {
+          defaultItems();
+          break;
+        }
         funcs.forEach((func) => {
           if (func.takes[key.takeIndex]) {
             const type = func.takes[key.takeIndex].type;
@@ -699,24 +725,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         items.push(...typeItems);
         items.push(...keywordItems);
         fieldStructTypeItems();
-        fieldLocalItems();
         fieldLibraryItems();
-        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
-        items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals()));
-
-        fieldTakes().forEach((funcTake, index) => {
-          items.push(takeToCompletionItem(funcTake.take, {
-            source: funcTake.func.source,
-            documentation: funcTake.func.getParams().map((param) => {
-              if (param.id == funcTake.take.name) {
-                return `*${param.descript}*`;
-              }
-              return `*${param.descript}*`;
-            }),
-            // 尽可能让参数在最前
-            orderString: `${index}`
-          }))
-        });
+        defaultItems();
     }
 
     // const isAiExt = isAiFile(document.uri.fsPath);
@@ -1024,7 +1034,24 @@ vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletion
     };
 
     if (ids[0] == "this") {
-
+      console.log("ths");
+      
+      const usebleStructs = fieldStructs();
+      const struct = usebleStructs.find((struct, index, structs) => {
+        return compare(struct.source, fsPath) && struct.loc.contains(convertPosition(position));
+      });
+      if (struct) {
+        struct.methods.filter((method) => {
+          return !method.modifier.includes("static");
+        }).forEach((method) => {
+          items.push(methodToCompletionItem(method));
+        });
+        struct.members.filter((member) => {
+          return !member.modifier.includes("static");
+        }).forEach((member) => {
+          items.push(memberToCompletionItem(member));
+        });
+      }
     } else {
       const usebleStructs = fieldStructs();
       const struct = usebleStructs.find((struct, index, structs) => {
@@ -1051,7 +1078,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletion
         });
         
         if (struct) {
-          console.log(struct);
           
           struct.methods.filter((method) => {
             return !method.modifier.includes("static");
@@ -1072,3 +1098,29 @@ vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletion
     return items;
   }
 }(), ".", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
+
+/**
+ * cjass
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const text = document.lineAt(position.line).text;
+    if (/^\s*\/\//.test(text)) return;
+    const items: vscode.CompletionItem[] = [];
+
+    const lineText = document.lineAt(position.line);
+    const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
+    if (Options.isSupportCjass) {
+      data.cjassDefineMacros().forEach((defineMacro) => {
+        const item = completionItem(defineMacro.keys.map(id => id.name).join(" "), {
+          kind: vscode.CompletionItemKind.Unit,
+          code: defineMacro.origin
+        });
+        items.push(item);
+      });
+    }
+    
+
+    return items;
+  }
+}());

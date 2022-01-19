@@ -422,6 +422,42 @@ class BlockComment extends LineComment {
 
 }
 
+class Identifier extends Node {
+	public name: string;
+
+	constructor(name: string = "") {
+		super();
+		this.name = name;
+	}
+
+}
+
+class DefineMacro extends Declaration implements  Descript, Option  {
+
+	public readonly keys: Identifier[] = [];
+	public readonly takes: string[] = [];
+
+	public readonly option: { style: OriginStyle; } = {
+		style: "jass"
+	};
+
+	public get origin(): string {
+		let keyString = "";
+		if (this.keys.length == 1) {
+			keyString = this.keys[0].name;
+		} else if (this.keys.length > 1) {
+			keyString = `<${this.keys.map(x => x.name).join(" ")}>`;
+		}
+		let takesString = "";
+		if (this.takes.length > 0) {
+			takesString = `(${takesString = this.takes.join(", ")})`;
+		}
+		return `#define ${keyString}${takesString}`;
+	}
+	
+}
+
+
 export {
 	Take,
 	Func,
@@ -437,7 +473,9 @@ export {
 	JassError,
 	Native,
 	LineComment,
-	BlockComment
+	BlockComment,
+	DefineMacro,
+	Identifier
 };
 
 
@@ -471,152 +509,6 @@ export {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class LineText extends Range {
-
-	public readonly text: string;
-
-	constructor(text: string) {
-		super();
-		this.text = text;
-	}
-
-	// 是否空行
-	public isEmpty(): boolean {
-		return this.text.trimStart() === "";
-	}
-
-	public getText(): string {
-		return this.text;
-	}
-
-	public lineNumber(): number {
-		return this.start.line;
-	}
-
-	// 第一个字符下标
-	public firstCharacterIndex(): number {
-		let index = 0;
-		for (; index < this.text.length; index++) {
-			const char = this.text[index];
-			if (!isSpace(char)) {
-				return index;
-			}
-		}
-		return index;
-	}
-
-	public length(): number {
-		return this.text.length;
-	}
-
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class MultiLineText extends Range {
-
-	public readonly lineTexts: LineText[];
-
-	constructor(lineTexts: LineText[] = []) {
-		super();
-		this.lineTexts = lineTexts;
-	}
-
-}
-
-class TextMacroLineText extends Range {
-
-	public readonly raw: string;
-	public readonly text: string;
-
-	constructor(raw: string, text: string) {
-		super();
-		this.raw = raw;
-		this.text = text;
-	}
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class TextMacro extends AstNode {
-
-	public name: string;
-	public takes: string[] = [];
-	public body: LineText[] = [];
-
-	constructor(name: string, takes?: string[]) {
-		super("TextMacro");
-		this.name = name;
-		if (takes) {
-			this.takes = takes;
-		}
-	}
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class RunTextMacro extends AstNode {
-	public name: string;
-	public takes: string[] = [];
-
-	constructor(name: string, takes?: string[]) {
-		super("RunTextMacro");
-		this.name = name;
-		if (takes) {
-			this.takes = takes;
-		}
-	}
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class DefineMacro extends AstNode {
-	public name: string;
-	public value: string | null = null;
-
-	constructor(name: string, value: string | null = null) {
-		super("DefineMacro");
-		this.name = name;
-		this.value = value;
-	}
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class JassCompileError extends Range {
-	public readonly message: string;
-
-	constructor(message: string) {
-		super();
-		this.message = message;
-	}
-
-}
-/**
- * @deprecated 正常版本不会使用到，测试用
- */
-class ZincBlock extends AstNode {
-
-	public readonly body: LineText[] = [];
-
-	constructor() {
-		super("ZincBlock")
-	}
-}
 
 
 class Program extends Declaration {
@@ -725,7 +617,5 @@ class Program extends Declaration {
 }
 
 export {
-	AstNode, Declaration, TextMacro, RunTextMacro, LineText, DefineMacro, TextMacroLineText, JassCompileError, MultiLineText, ZincBlock,
-	Program
-
+	AstNode, Declaration, Program
 };
