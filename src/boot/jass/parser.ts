@@ -771,7 +771,9 @@ function isNativeStart(lineText: LineText): boolean {
 
 class Parser {
 
-    constructor(content: string) {
+    constructor(content: string, options?: {
+        supportCjass: false
+    }) {
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         this.lineTexts = lines(newContent);
@@ -866,6 +868,138 @@ class Parser {
     }
 
     private findOutline() {
+        const blocks: (Block | LineText)[] = [];
+        let block: Block | null = null;
+
+        function handle(lineText: LineText) {
+            if (/^\s*globals\b/.test(lineText.getText())) {
+                const b = new Block("globals");
+                b.setRange(lineText);
+                if (block) {
+                    b.parent = block;
+                    block.childrens.push(b);
+                    block = b;
+                } else {
+                    blocks.push(b);
+                    block = b;
+                }
+            } else if (/^\s*endglobals\b/.test(lineText.getText())) {
+                if (block && block.type == "globals") {
+                    block.end = lineText.end;
+                    if (block.parent) {
+                        block = block.parent;
+                    } else {
+                        block = null;
+                    }
+                }
+            } else if (/^\s*(?:(?:private|public|static|stub)\s+)*function\b/.test(lineText.getText())) {
+                const b = new Block("function");
+                b.setRange(lineText);
+                b.childrens.push(lineText);
+                if (block) {
+                    b.parent = block;
+                    block.childrens.push(b);
+                    block = b;
+                } else {
+                    blocks.push(b);
+                    block = b;
+                }
+            } else if (/^\s*endfunction\b/.test(lineText.getText())) {
+                if (block && block.type == "function") {
+                    block.end = lineText.end;
+                    if (block.parent) {
+                        block = block.parent;
+                    } else {
+                        block = null;
+                    }
+                }
+            } else if (/^\s*(?:(?:private|public|static|stub)\s+)*method\b/.test(lineText.getText())) {
+                const b = new Block("method");
+                b.setRange(lineText);
+                b.childrens.push(lineText);
+                if (block) {
+                    b.parent = block;
+                    block.childrens.push(b);
+                    block = b;
+                } else {
+                    blocks.push(b);
+                    block = b;
+                }
+            } else if (/^\s*endmethod\b/.test(lineText.getText())) {
+                if (block && block.type == "method") {
+                    block.end = lineText.end;
+                    if (block.parent) {
+                        block = block.parent;
+                    } else {
+                        block = null;
+                    }
+                }
+            } else if (/^\s*(?:(?:private|public)\s+)*struct\b/.test(lineText.getText())) {
+                const b = new Block("struct");
+                b.setRange(lineText);
+                b.childrens.push(lineText);
+                if (block) {
+                    b.parent = block;
+                    block.childrens.push(b);
+                    block = b;
+                } else {
+                    blocks.push(b);
+                    block = b;
+                }
+            } else if (/^\s*endstruct\b/.test(lineText.getText())) {
+                if (block && block.type == "struct") {
+                    block.end = lineText.end;
+                    if (block.parent) {
+                        block = block.parent;
+                    } else {
+                        block = null;
+                    }
+                }
+            } else if (/^\s*(?:(?:private|public)\s+)*library\b/.test(lineText.getText())) {
+                const b = new Block("library");
+                b.setRange(lineText);
+                b.childrens.push(lineText);
+                if (block) {
+                    b.parent = block;
+                    block.childrens.push(b);
+                    block = b;
+                } else {
+                    blocks.push(b);
+                    block = b;
+                }
+            } else if (/^\s*endlibrary\b/.test(lineText.getText())) {
+                if (block && block.type == "library") {
+                    block.end = lineText.end;
+                    if (block.parent) {
+                        block = block.parent;
+                    } else {
+                        block = null;
+                    }
+                }
+            } else if (block) {
+                block.childrens.push(lineText);
+                block.end = lineText.end;
+            } else {
+                blocks.push(lineText);
+            }
+        }
+        this.expandLineTexts.forEach(x => {
+            if (x instanceof RunTextMacro) {
+                const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == x.getName());
+                if (textMacro) {
+                    textMacro.foreach((lineText) => {
+                        handle(lineText);
+                    }, x.getParams());
+                }
+            } else if (x instanceof LineText) {
+                handle(x);
+            }
+        });
+
+        return blocks;
+    }
+
+    private findCjassOutline() {
         const blocks: (Block | LineText)[] = [];
         let block: Block | null = null;
 

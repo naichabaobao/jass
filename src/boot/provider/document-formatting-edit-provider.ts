@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { tokens } from "../jass/tokens";
+import { tokenize } from "../jass/tokens";
 
 
 const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%"];
@@ -62,7 +62,6 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         }
       }
     }
-
     // 文本格式化
     for (let line = 0; line < document.lineCount; line++) {
       const lineText = document.lineAt(line);
@@ -70,7 +69,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         continue;
       }
       const text = lineText.text;
-      const ts = tokens(text);
+      const ts = tokenize(text);
       ts.reduce((previousValue, currentValue, currentIndex, array) => {
         if (currentValue.isOp() && NeedAddSpaceOps.includes(currentValue.value) && (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark())) {
           if (currentValue.position - previousValue.end != 1) {
@@ -89,6 +88,13 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
             ), " "));
           }
         } else if (currentValue.isId() && previousValue.isId()) {
+          if (currentValue.position - previousValue.end != 1) {
+            textEdits.push(vscode.TextEdit.replace(new vscode.Range(
+              new vscode.Position(lineText.lineNumber, previousValue.end),
+              new vscode.Position(lineText.lineNumber, currentValue.position)
+            ), " "));
+          }
+        } else if (previousValue.isOp() && previousValue.value == ",") {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
               new vscode.Position(lineText.lineNumber, previousValue.end),

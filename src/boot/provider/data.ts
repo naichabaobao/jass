@@ -9,6 +9,7 @@ import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "
 
 import { parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
+import { convertPosition } from "./tool";
 
 
 class Pair {
@@ -292,6 +293,32 @@ class Data {
 
   public static cjassDefineMacros() {
     return defineMacros;
+  }
+
+  /**
+   * 当前位置的function
+   * @param document 
+   * @param position 
+   * @returns 
+   */
+  public static fieldFunction(document: vscode.TextDocument, position: vscode.Position):Func|undefined {
+    const program = dataMap.get(document.uri.fsPath)?.value;
+    if (program) {
+      const func = program.functions.find((func) => {
+        return func.loc.contains(convertPosition(position));
+      });
+      if (func) {
+        return func;
+      }
+      if (Options.supportVJass) {
+        const library = program.librarys.find((library) => library.loc.contains(convertPosition(position)));
+        if (library) {
+          return library.functions.find((func) => {
+            return func.loc.contains(convertPosition(position));
+          });
+        }
+      }
+    }
   }
 
 }

@@ -344,30 +344,62 @@ class HoverProvider implements vscode.HoverProvider {
       }
     });
 
-    const lineText = document.lineAt(position.line);
-    const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-    console.log(inputText);
-    
-    data.cjassDefineMacros().forEach((defineMacro) => {
-      if (defineMacro.keys.length == 1) {
-        if (key == defineMacro.keys[0].name) {     
-          const ms = new vscode.MarkdownString();
-          ms.appendMarkdown(`#### ${defineMacro.keys[0].name}`);
-          ms.appendText("\n");
-          ms.appendCodeblock(defineMacro.origin);
-          hovers.push(ms);
+    if (Options.isSupportCjass) {
+      const lineText = document.lineAt(position.line);
+      const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
+      
+      data.cjassDefineMacros().forEach((defineMacro) => {
+        if (defineMacro.keys.length == 1) {
+          if (key == defineMacro.keys[0].name) {     
+            const ms = new vscode.MarkdownString();
+            ms.appendMarkdown(`#### ${defineMacro.keys[0].name}`);
+            ms.appendText("\n");
+            ms.appendCodeblock(defineMacro.origin);
+            hovers.push(ms);
+          }
+        } else if (defineMacro.keys.length > 1) {
+          const findedKey = defineMacro.keys.find((id) => id.name == key);   
+          if (findedKey) {
+            const ms = new vscode.MarkdownString();
+            ms.appendMarkdown(`#### ${defineMacro.keys[defineMacro.keys.length - 1].name}`);
+            ms.appendText("\n");
+            ms.appendCodeblock(defineMacro.origin);
+            hovers.push(ms);
+          }
         }
-      } else if (defineMacro.keys.length > 1) {
-        const findedKey = defineMacro.keys.find((id) => id.name == key);   
-        if (findedKey) {
-          const ms = new vscode.MarkdownString();
-          ms.appendMarkdown(`#### ${defineMacro.keys[defineMacro.keys.length - 1].name}`);
+      });
+      // cjass 全局宏
+      if (key == "DATE") {
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown("#### DATE");
+        ms.appendText("\n");
+        ms.appendMarkdown(`**${new Date().toLocaleDateString("ch", )}**`);
+        ms.appendText("\n");
+        ms.appendCodeblock("#define DATE");
+        hovers.push(ms);
+      } else if (key == "TIME") {
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown("#### TIME");
+        ms.appendText("\n");
+        ms.appendMarkdown(`**${new Date().toTimeString()}**`);
+        ms.appendText("\n");
+        ms.appendCodeblock("#define TIME");
+        hovers.push(ms);
+      } else if (key == "FUNCNAME") {
+        const func = data.fieldFunction(document, position);
+        const ms = new vscode.MarkdownString();
+        ms.appendMarkdown("#### FUNCNAME");
+        ms.appendText("\n");
+        if (func) {
+          ms.appendMarkdown(`**${func.name}**`);
           ms.appendText("\n");
-          ms.appendCodeblock(defineMacro.origin);
-          hovers.push(ms);
+          ms.appendCodeblock("#define FUNCNAME");
+        } else {
+          ms.appendText("function not found");
         }
+        hovers.push(ms);
       }
-    });
+    }
 
     return new vscode.Hover([...hovers]);
   }

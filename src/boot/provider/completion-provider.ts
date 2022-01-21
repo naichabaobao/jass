@@ -1103,6 +1103,12 @@ vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletion
  * cjass
  */
 vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
+
+  /**
+   * cjass默认的宏
+   */
+  private cjassGlobalDefineMacroItems: vscode.CompletionItem[] = [];
+
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const text = document.lineAt(position.line).text;
     if (/^\s*\/\//.test(text)) return;
@@ -1118,6 +1124,32 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         });
         items.push(item);
       });
+
+      if (this.cjassGlobalDefineMacroItems.length == 0) {
+        this.cjassGlobalDefineMacroItems.push(...[completionItem("DATE", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns current date in yyyy.mm.dd format.",
+        }),completionItem("TIME", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns current time in hh:mm:ss format.",
+        }),completionItem("COUNTER", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns integer starting from 0, every use increases this number by 1. Here’s an example of usage",
+          code: ["void unique_name () {}   // void func_0 () {}",
+          "void unique_name () {}   // void func_1 () {}",
+          "void unique_name () {}   // void func_2 () {}"].join("\n"),
+        }),completionItem("DEBUG", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns 1 if \"Debug mode\" checkbox is checked, else returns 0. Is used in conditional compilation (see 4.1) to add sets of actions, which exist only in debug mode.",
+        }),completionItem("FUNCNAME", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns the name of the function, where it’s used.",
+        }),completionItem("WAR3VER", {
+          kind: vscode.CompletionItemKind.Unit,
+          documentation: "returns WAR3VER_23 or WAR3VER_24 depending on the position of the version switch in cJass menu. Can be used in conditional compilation blocks (see 4.1) to maintain two map versions: 1.23- and 1.24+ compatible.",
+        })])
+      }
+      items.push(...this.cjassGlobalDefineMacroItems);
     }
     
 
