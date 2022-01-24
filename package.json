@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "keywords": [
     "jass",
     "warcraft"
@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/naichabaobao/jass",
   "activationEvents": [
-    "onLanguage:jass",
-    "onLanguage:lua"
+    "onLanguage:jass"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -122,7 +121,24 @@
         "path": "./src/jass-product-icon-theme.json"
       }
     ],
-    "enableProposedApi": false
+    "enableProposedApi": false,
+    "tokenColors": [
+      {
+        "scope": "comment",
+        "settings": {
+          "foreground": "#dd0000",
+          "fontStyle": "italic"
+        }
+      }
+    ],
+    "semanticHighlighting": true,
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "*.deprecated": ["invalid.deprecated"]
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -137,7 +153,7 @@
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
-    "@types/vscode": "^1.37.0",
+    "@types/vscode": "^1.49.3",
     "tslint": "^5.20.0",
     "typescript": "^3.7.4",
     "vsce": "^1.103.1",

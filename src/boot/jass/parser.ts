@@ -1,4 +1,5 @@
 import { Position, Range } from "../common";
+import { isKeyword, Keywords } from "../provider/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { parseZinc } from "../zinc/parse";
 import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take } from "./ast";
@@ -1525,11 +1526,47 @@ function parseCjass(content: string) {
     return defineMacros;
 }
 
+/**
+ * 粗略的解析cjass函数
+ * 此方法可能存在跟其他冲突的可能
+ * @deprecated 不知道内部实现不建议使用
+ * @param content 
+ */
+function parseCj(content: string): Program {
+    const newContent = replaceBlockComment(content);
+    const lineTexts = lines(newContent);
+
+    const cjassFuncRegExp = new RegExp(/^\s*(?:(?<tag>private|public)\s+)?(?<returns>[a-zA-Z][a-zA-Z\d_]*)\s+(?<name>[a-zA-Z][a-zA-Z\d_]*)\s*\(/);
+    const program = new Program();
+    lineTexts.forEach((lineText) => {
+        // const result = cjassFuncRegExp.exec(lineText.getText());
+        const result = lineText.getText().match(cjassFuncRegExp);
+        if (result && result.groups && !isKeyword(result.groups["returns"]) && !isKeyword(result.groups["name"])) {
+            
+            const takesString = lineText.getText().substring(result[0].length, lineText.length());
+            const takeStrings = takesString.split(new RegExp(/\s*,\s*/));
+            const takes:Take[] = [];
+            takeStrings.forEach((takeString) => {                
+                const takeResult = takeString.match(/(?<type>[a-zA-Z][a-zA-Z\d_]*)\s+(?<name>[a-zA-Z][a-zA-Z\d_]*)/);
+                if (takeResult && takeResult.groups) {
+                    const take = new Take(takeResult.groups["type"], takeResult.groups["name"]);
+                    takes.push(take)
+                }
+            });
+            const func = new Func(result.groups["name"], takes, result.groups["returns"]);
+            func.loc.setRange(lineText);
+            program.functions.push(func);
+        }
+    });
+    return program;
+}
+
 export {
     replaceBlockComment,
     lines,
     Parser,
-    parseCjass
+    parseCjass,
+    parseCj
 };
 
 // console.log(JSON.stringify(parseCjass(`
@@ -1548,6 +1585,9 @@ define {
     }
 }
 `));
+
+console.log(parseCj(`public void insdsada(aaa aaaccs fdsg,  fgdsg gfdg__)`).functions[0].takes);
+;
 
 
 if (false) {

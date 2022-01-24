@@ -133,3 +133,10 @@
 ### 格式化添加','
 ### 添加cjass默认宏提示
 
+## 1.6.5
+### vscode最低版本改为1.49
+### 局部添加对**@deprecated**支持
+### cjass方法
+
+> 需要开启*editor.showDeprecated*配置。
+

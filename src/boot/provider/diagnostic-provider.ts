@@ -4,6 +4,11 @@ import { Options } from './options';
 
 const diagnosticCollection = vscode.languages.createDiagnosticCollection("jass");
 
+// const range = new vscode.Range(0, 0, 0, "aaaaaaaaaaaaaaaaaaaaaaaaa".length);
+// const diagnostic = new vscode.Diagnostic(range, "what", vscode.DiagnosticSeverity.Information);
+// diagnosticCollection.set(vscode.Uri.file("C:\\Users\\Administrator\\Desktop\\ff\\1.j"), [diagnostic]);
+
+
 vscode.workspace.onDidSaveTextDocument((document) => {
 	if (Options.isOnlyJass && Options.isJassDiagnostic) {
 		const program = parse(document.getText(), {

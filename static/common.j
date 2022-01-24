@@ -2631,8 +2631,10 @@ native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius
 // 选取单位添加到单位组(点)
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 选取单位添加到单位组(坐标)(不建议使用)
+// @deprecated
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 选取单位添加到单位组(点)(不建议使用)
+// @deprecated
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
@@ -2690,7 +2692,7 @@ native ForForce takes force whichForce, code callback returns nothing
 
 //============================================================================
 // Region and Location API
-//
+
 // 将坐标转换为区域
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
 // 将点转换为区域
@@ -2872,14 +2874,12 @@ native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 //  EVENT_GAME_STATE_LIMIT
-// EVENT_GAME_STATE_LIMIT
 // 获取游戏状态
 constant native GetEventGameState takes nothing returns gamestate
 
 // 比赛游戏事件
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
-// EVENT_GAME_VICTORY
 // EVENT_GAME_VICTORY
 // 过去胜利玩家
 constant native GetWinningPlayer takes nothing returns player
@@ -2916,7 +2916,6 @@ native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer wh
 // 事件响应 - 触发可追踪物 [R]
 constant native GetTriggeringTrackable takes nothing returns trackable
 
-// EVENT_DIALOG_BUTTON_CLICK
 // EVENT_DIALOG_BUTTON_CLICK
 // 获取点击按钮
 constant native GetClickedButton takes nothing returns button
@@ -3976,8 +3975,8 @@ native RestartGame takes boolean doScoreScreen returns nothing
 native ReloadGame takes nothing returns nothing
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
-// old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 // 设置战役菜单竞赛 @deprecated("这方法不建议使用,应该使用SetCampaignMenuRaceEx代替")
+// @deprecated
 native SetCampaignMenuRace takes race r returns nothing
 // 设置战役菜单竞赛
 native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
@@ -4330,7 +4329,6 @@ native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId retur
 native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
-// Choose any random unit/item. (NP means Neutral Passive)
 native ChooseRandomCreep takes integer level returns integer
 native ChooseRandomNPBuilding takes nothing returns integer
 native ChooseRandomItem takes integer level returns integer
@@ -4340,7 +4338,7 @@ native SetRandomSeed takes integer seed returns nothing
 
 //============================================================================
 // Visual API
-// Visual API
+
 native SetTerrainFog takes real a, real b, real c, real d, real e returns nothing
 native ResetTerrainFog takes nothing returns nothing
 
@@ -5032,7 +5030,7 @@ native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
 // Automation Test
-// Automation Test
+
 // 原子性测试类型
 native AutomationSetTestType takes string testType returns nothing
 // 原子性测试开始

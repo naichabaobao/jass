@@ -3,7 +3,7 @@
 [GitHub源碼](https://github.com/naichabaobao/jass)
 [Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
 
-***vscode最低版本1.37***
+***vscode最低版本1.49***
 
 ***common.j 為1.32.7***
 

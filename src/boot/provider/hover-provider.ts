@@ -12,7 +12,7 @@ import { Func, Library, Local, Take } from '../jass/ast';
 
 
 class HoverProvider implements vscode.HoverProvider {
-  
+
   // 规定标识符长度
   private _maxLength = 526;
 
@@ -54,7 +54,7 @@ class HoverProvider implements vscode.HoverProvider {
     const hovers: vscode.MarkdownString[] = [];
 
     const fieldLibrarys = () => {
-      const librarys:Library[] = [];
+      const librarys: Library[] = [];
 
       if (!Options.isOnlyJass) {
         librarys.push(...data.librarys());
@@ -63,7 +63,7 @@ class HoverProvider implements vscode.HoverProvider {
           librarys.push(...data.zincLibrarys());
         }
       }
-      
+
       return librarys;
     };
     const fieldFunctions = () => {
@@ -99,7 +99,7 @@ class HoverProvider implements vscode.HoverProvider {
           });
         }
       }
-      
+
       return funcs;
     };
     const fieldGlobals = () => {
@@ -153,20 +153,20 @@ class HoverProvider implements vscode.HoverProvider {
           });
         }
       }
-      
+
       return globals;
     };
 
     const fieldTakes = () => {
-      const takes:{
+      const takes: {
         take: Take,
-        func:Func
+        func: Func
       }[] = [];
       data.functions().forEach((func) => {
         if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          
+
           takes.push(...func.takes.map((take) => {
-            return {take, func};
+            return { take, func };
           }));
         }
       });
@@ -175,7 +175,7 @@ class HoverProvider implements vscode.HoverProvider {
         data.libraryFunctions().forEach((func) => {
           if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
             takes.push(...func.takes.map((take) => {
-              return {take, func};
+              return { take, func };
             }));
           }
         });
@@ -184,7 +184,7 @@ class HoverProvider implements vscode.HoverProvider {
           data.zincLibraryFunctions().forEach((func) => {
             if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
               takes.push(...func.takes.map((take) => {
-                return {take, func};
+                return { take, func };
               }));
             }
           });
@@ -195,7 +195,7 @@ class HoverProvider implements vscode.HoverProvider {
     };
 
     const fieldLocals = () => {
-      const locals:Local[] = [];
+      const locals: Local[] = [];
       data.functions().forEach((func) => {
         if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
           locals.push(...func.locals);
@@ -253,11 +253,11 @@ class HoverProvider implements vscode.HoverProvider {
           });
         }
       }
-      
+
       return structs;
     };
 
-    [...fieldFunctions(),...data.natives()].forEach((func) => {
+    [...fieldFunctions(), ...data.natives()].forEach((func) => {
       if (key == func.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${func.name}`);
@@ -271,39 +271,48 @@ class HoverProvider implements vscode.HoverProvider {
             ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
           }
         });
+        if (func.hasDeprecated()) {
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
         ms.appendText("\n");
         ms.appendCodeblock(func.origin);
         hovers.push(ms);
       }
     });
     fieldGlobals().forEach((global) => {
-      if (key == global.name) {     
+      if (key == global.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${global.name}`);
         ms.appendText("\n");
         global.getContents().forEach((content) => {
           ms.appendText(content);
         });
+        if (global.hasDeprecated()) {
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
         ms.appendText("\n");
         ms.appendCodeblock(global.origin);
         hovers.push(ms);
       }
     });
     fieldLocals().forEach((local) => {
-      if (key == local.name) {     
+      if (key == local.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${local.name}`);
         ms.appendText("\n");
         local.getContents().forEach((content) => {
           ms.appendText(content);
         });
+        if (local.hasDeprecated()) {
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
         ms.appendText("\n");
         ms.appendCodeblock(local.origin);
         hovers.push(ms);
       }
     });
     fieldTakes().forEach((funcTake) => {
-      if (key == funcTake.take.name) {     
+      if (key == funcTake.take.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${funcTake.take.name}`);
         ms.appendText("\n");
@@ -318,26 +327,32 @@ class HoverProvider implements vscode.HoverProvider {
       }
     });
     fieldStructs().forEach((struct) => {
-      if (key == struct.name) {     
+      if (key == struct.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${struct.name}`);
         ms.appendText("\n");
         struct.getContents().forEach((content) => {
           ms.appendText(content);
         });
+        if (struct.hasDeprecated()) {
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
         ms.appendText("\n");
         ms.appendCodeblock(struct.origin);
         hovers.push(ms);
       }
     });
     fieldLibrarys().forEach((library) => {
-      if (key == library.name) {     
+      if (key == library.name) {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown(`#### ${library.name}`);
         ms.appendText("\n");
         library.getContents().forEach((content) => {
           ms.appendText(content);
         });
+        if (library.hasDeprecated()) {
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
         ms.appendText("\n");
         ms.appendCodeblock(library.origin);
         hovers.push(ms);
@@ -347,10 +362,10 @@ class HoverProvider implements vscode.HoverProvider {
     if (Options.isSupportCjass) {
       const lineText = document.lineAt(position.line);
       const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-      
+
       data.cjassDefineMacros().forEach((defineMacro) => {
         if (defineMacro.keys.length == 1) {
-          if (key == defineMacro.keys[0].name) {     
+          if (key == defineMacro.keys[0].name) {
             const ms = new vscode.MarkdownString();
             ms.appendMarkdown(`#### ${defineMacro.keys[0].name}`);
             ms.appendText("\n");
@@ -358,7 +373,7 @@ class HoverProvider implements vscode.HoverProvider {
             hovers.push(ms);
           }
         } else if (defineMacro.keys.length > 1) {
-          const findedKey = defineMacro.keys.find((id) => id.name == key);   
+          const findedKey = defineMacro.keys.find((id) => id.name == key);
           if (findedKey) {
             const ms = new vscode.MarkdownString();
             ms.appendMarkdown(`#### ${defineMacro.keys[defineMacro.keys.length - 1].name}`);
@@ -368,12 +383,34 @@ class HoverProvider implements vscode.HoverProvider {
           }
         }
       });
+      data.cjassFunctions().forEach((func) => {
+        if (key == func.name) {
+          const ms = new vscode.MarkdownString();
+          ms.appendMarkdown(`#### ${func.name}`);
+          ms.appendText("\n");
+          func.getContents().forEach((content) => {
+            ms.appendText(content);
+          });
+          func.getParams().forEach((param) => {
+            if (func.takes.findIndex((take) => take.name == param.id) != -1) {
+              ms.appendText("\n");
+              ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+            }
+          });
+          if (func.hasDeprecated()) {
+            ms.appendMarkdown(`***@deprecated*** `);
+          }
+          ms.appendText("\n");
+          ms.appendCodeblock(func.origin);
+          hovers.push(ms);
+        }
+      });
       // cjass 全局宏
       if (key == "DATE") {
         const ms = new vscode.MarkdownString();
         ms.appendMarkdown("#### DATE");
         ms.appendText("\n");
-        ms.appendMarkdown(`**${new Date().toLocaleDateString("ch", )}**`);
+        ms.appendMarkdown(`**${new Date().toLocaleDateString("ch",)}**`);
         ms.appendText("\n");
         ms.appendCodeblock("#define DATE");
         hovers.push(ms);

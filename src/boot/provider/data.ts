@@ -7,7 +7,7 @@ import { compare, isJFile, isUsableFile, isZincFile} from "../tool";
 
 import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
 
-import { parseCjass, Parser } from "../jass/parser";
+import { parseCj, parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
 import { convertPosition } from "./tool";
 
@@ -70,6 +70,7 @@ class DataMap {
 
 const dataMap = new DataMap();
 const zincDataMap = new DataMap();
+const cjassDataMap = new DataMap();
 
 function getFileContent(filePath: string):string {
   return fs.readFileSync(filePath, {
@@ -151,6 +152,11 @@ function parseContent(filePath: string, content: string) {
       const program = parser.zincing();
       setSource(filePath, program);
       zincDataMap.put(filePath, program);
+    }
+    if (Options.isSupportCjass) {
+      const program = parseCj(content);
+      setSource(filePath, program);
+      cjassDataMap.put(filePath, program);
     }
     const program = parser.parsing();
     setSource(filePath, program);
@@ -293,6 +299,10 @@ class Data {
 
   public static cjassDefineMacros() {
     return defineMacros;
+  }
+
+  public static cjassFunctions() {
+    return cjassDataMap.values().map((program) => program.functions).flat();
   }
 
   /**

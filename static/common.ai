@@ -1,6 +1,7 @@
 //==================================================================================================
 //  $Id: common.ai,v 1.66.2.1 2003/05/09 09:17:04 abond Exp $
 //==================================================================================================
+
 native DebugS               takes string str                            returns nothing
 native DebugFI              takes string str, integer val               returns nothing
 native DebugUnitID          takes string str, integer val               returns nothing

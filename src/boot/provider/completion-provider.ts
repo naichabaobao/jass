@@ -48,7 +48,8 @@ type CompletionItemOption = {
   documentation?: string[]|string,
   code?: string,
   source?: string,
-  orderString?: string
+  orderString?: string,
+  deprecated?: boolean
 };
 
 function completionItem(label: string, option: CompletionItemOption = {
@@ -82,6 +83,9 @@ function completionItem(label: string, option: CompletionItemOption = {
   }
   if (option.code) {
     ms.appendCodeblock(`${option.code}`);
+  }
+  if (option.deprecated) {
+    item.tags = [vscode.CompletionItemTag.Deprecated];
   }
   item.documentation = ms;
   item.sortText = option.orderString;
@@ -196,7 +200,8 @@ function libraryToCompletionItem(library: Library, option?: CompletionItemOption
     code: option?.code ?? library.origin,
     documentation: option?.documentation ?? library.getContents(),
     orderString: option?.orderString,
-    detial: option?.detial ?? library.name
+    detial: option?.detial ?? library.name,
+    deprecated: library.hasDeprecated()
   });
 }
 
@@ -216,7 +221,8 @@ function funcToCompletionItem(func: Func|Native, option?: CompletionItemOption) 
       return contents;
     })(),
     orderString: option?.orderString,
-    detial: option?.detial
+    detial: option?.detial,
+    deprecated: func.hasDeprecated()
   });
 }
 
@@ -236,7 +242,8 @@ function methodToCompletionItem(func: Method, option?: CompletionItemOption) :vs
       return contents;
     })(),
     orderString: option?.orderString,
-    detial: option?.detial
+    detial: option?.detial,
+    deprecated: func.hasDeprecated()
   });
 }
 
@@ -247,7 +254,8 @@ function memberToCompletionItem(member: Member, option?: CompletionItemOption) :
     code: option?.code ?? member.origin,
     documentation: option?.documentation ?? member.getContents(),
     orderString: option?.orderString,
-    detial: option?.detial
+    detial: option?.detial,
+    deprecated: member.hasDeprecated()
   });
 }
 
@@ -258,7 +266,8 @@ function globalToCompletionItem(global: Global, option?: CompletionItemOption) :
     code: option?.code ?? global.origin,
     documentation: option?.documentation ?? global.getContents(),
     orderString: option?.orderString,
-    detial: option?.detial
+    detial: option?.detial,
+    deprecated: global.hasDeprecated()
   });
 }
 
@@ -269,7 +278,8 @@ function localToCompletionItem(local: Local, option?: CompletionItemOption) :vsc
     code: option?.code ?? local.origin,
     documentation: option?.documentation ?? local.getContents(),
     orderString: option?.orderString,
-    detial: option?.detial
+    detial: option?.detial,
+    deprecated: local.hasDeprecated()
   });
 }
 
@@ -291,7 +301,8 @@ function structToCompletionItem(struct: Struct, option?: CompletionItemOption) :
     code: option?.code ?? struct.origin,
     documentation: option?.documentation ?? struct.getContents(),
     orderString: option?.orderString,
-    detial: option?.detial ?? struct.name
+    detial: option?.detial ?? struct.name,
+    deprecated: struct.hasDeprecated()
   });
 }
 
@@ -729,12 +740,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         defaultItems();
     }
 
-    // const isAiExt = isAiFile(document.uri.fsPath);
-
-    if (!isZincExt) {
-
-    }
-
     return items;
   }
 });
@@ -1099,6 +1104,12 @@ vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletion
   }
 }(), ".", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
 
+const CjassDateCompletionItem = completionItem("DATE", {
+  kind: vscode.CompletionItemKind.Unit,
+  documentation: "returns current date in yyyy.mm.dd format.",
+});
+CjassDateCompletionItem.tags = [vscode.CompletionItemTag.Deprecated];
+
 /**
  * cjass
  */
@@ -1124,12 +1135,13 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         });
         items.push(item);
       });
+      data.cjassFunctions().forEach((func) => {
+        const item = funcToCompletionItem(func);
+        items.push(item);
+      });
 
       if (this.cjassGlobalDefineMacroItems.length == 0) {
-        this.cjassGlobalDefineMacroItems.push(...[completionItem("DATE", {
-          kind: vscode.CompletionItemKind.Unit,
-          documentation: "returns current date in yyyy.mm.dd format.",
-        }),completionItem("TIME", {
+        this.cjassGlobalDefineMacroItems.push(...[CjassDateCompletionItem,completionItem("TIME", {
           kind: vscode.CompletionItemKind.Unit,
           documentation: "returns current time in hh:mm:ss format.",
         }),completionItem("COUNTER", {
@@ -1147,7 +1159,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         }),completionItem("WAR3VER", {
           kind: vscode.CompletionItemKind.Unit,
           documentation: "returns WAR3VER_23 or WAR3VER_24 depending on the position of the version switch in cJass menu. Can be used in conditional compilation blocks (see 4.1) to maintain two map versions: 1.23- and 1.24+ compatible.",
-        })])
+        })]);
       }
       items.push(...this.cjassGlobalDefineMacroItems);
     }
@@ -1156,3 +1168,4 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     return items;
   }
 }());
+

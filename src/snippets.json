@@ -185,5 +185,11 @@
     "body": "private {\n${0:}\n}",
     "description": "zinc private 模板",
     "scope": "source.jass"
+  },
+  "deprecated": {
+    "prefix": "deprecated",
+    "body": "// @deprecated",
+    "description": "不建议使用",
+    "scope": "source.jass"
   }
 }
