@@ -6,7 +6,7 @@ import { convertPosition, functionKey } from './tool';
 import { tokenize } from '../jass/tokens';
 import { compare, isZincFile } from '../tool';
 import { Options } from './options';
-import { DefineMacro, Func, Local, Struct, Take } from '../jass/ast';
+import { DefineMacro, Func, Local, Native, Struct, Take } from '../jass/ast';
 
 
 class SignatureHelp implements vscode.SignatureHelpProvider {
@@ -61,10 +61,9 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
 
     ids.reverse();
 
-
-
-    const fieldFunctions = () => {
-      const funcs = data.functions();
+    const fieldFunctions = () :(Func|Native)[] => {
+      const funcs:(Func|Native)[] = data.functions();
+      funcs.push(...data.natives());
 
       if (!Options.isOnlyJass) {
         const requires: string[] = [];

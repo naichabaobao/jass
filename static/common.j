@@ -3246,11 +3246,14 @@ native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction
 native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待
 native TriggerSleepAction takes real timeout returns nothing
+// @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
 // 触发器条件成立
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 native TriggerExecute takes trigger whichTrigger returns nothing
+// 运行触发器 (忽略条件)
+// @deprecated
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 native TriggerSyncStart takes nothing returns nothing
 native TriggerSyncReady takes nothing returns nothing

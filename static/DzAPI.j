@@ -174,7 +174,10 @@ native DzFrameSetUpdateCallbackByCode takes code funcHandle returns nothing
 native DzFrameShow takes integer frame, boolean enable returns nothing
 // 创建窗体
 native DzCreateFrame takes string frame, integer parent, integer id returns integer
-// 创建简单的窗体
+// 创建简单的窗体 部分原生窗体设置父窗体或者被设置父窗体直接崩溃 可用简单窗体
+// @param frame fdf中预设的窗体控件名 可用汉字
+// @param parent 父ui窗体 注意 子窗体必在父窗体之上 同一父窗体可用优先级修改上下顺序 默认顺序为创建顺序 父窗体和优先级创建后只可修改一次 多次无效
+// @param parent id 如果需要设置两个相同的fdf模板可用此id区分 获取时通过 DzFrameFindByName 函数填写对应的 id 
 native DzCreateSimpleFrame takes string frame, integer parent, integer id returns integer
 // 销毁窗体
 native DzDestroyFrame takes integer frame returns nothing
@@ -182,7 +185,7 @@ native DzDestroyFrame takes integer frame returns nothing
 native DzLoadToc takes string fileName returns nothing
 // 设置窗体相对位置
 // @param point [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
-// @param relativeFrame 相对容器,一般使用DzGetGameUI()
+// @param relativeFrame 相对容器,一般使用DzGetGameUI() frame窗体会根据relativeFrame确定自己的位置，当relativeFrame窗体移动时frame窗体也会相对移动
 // @param relativePoint [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
 native DzFrameSetPoint takes integer frame, integer point, integer relativeFrame, integer relativePoint, real x, real y returns nothing
 // 设置窗体绝对位置
@@ -190,17 +193,18 @@ native DzFrameSetPoint takes integer frame, integer point, integer relativeFrame
 native DzFrameSetAbsolutePoint takes integer frame, integer point, real x, real y returns nothing
 // 清空窗体锚点
 native DzFrameClearAllPoints takes integer frame returns nothing
-// 设置窗体禁用/启用
+// 设置窗体禁用/启用 
+// @param enable false 禁用后 按钮 或者文本 不再遮挡鼠标 
 native DzFrameSetEnable takes integer name, boolean enable returns nothing
 // 注册用户界面事件回调
 native DzFrameSetScript takes integer frame, integer eventId, string func, boolean sync returns nothing
-//  注册UI事件回调(func handle)
+//  注册UI事件回调(func handle) 注册点击按钮触发的动作
 native DzFrameSetScriptByCode takes integer frame, integer eventId, code funcHandle, boolean sync returns nothing
 // 获取触发用户界面事件的玩家
 native DzGetTriggerUIEventPlayer takes nothing returns player
 // 获取触发用户界面事件的窗体
 native DzGetTriggerUIEventFrame takes nothing returns integer
-// 通过名称查找窗体
+// 通过名称查找窗体 name为fdf内设置好的窗体模板名
 native DzFrameFindByName takes string name, integer id returns integer
 // 通过名称查找普通窗体
 native DzSimpleFrameFindByName takes string name, integer id returns integer
@@ -248,7 +252,7 @@ native DzFrameSetAnimateOffset takes integer frame, real offset returns nothing
 native DzFrameSetTexture takes integer frame, string texture, integer flag returns nothing
 // 设置缩放
 native DzFrameSetScale takes integer frame, real scale returns nothing
-// 设置提示
+// 设置提示 鼠标进入按钮时的提示窗体 有数量限制 建议自己用进入事件模拟
 native DzFrameSetTooltip takes integer frame, integer tooltip returns nothing
 // 鼠标限制在用户界面内
 native DzFrameCageMouse takes integer frame, boolean enable returns nothing
@@ -268,9 +272,9 @@ native DzCreateFrameByTagName takes string frameType, string name, integer paren
 native DzFrameSetVertexColor takes integer frame, integer color returns nothing
 // 不明觉厉
 native DzOriginalUIAutoResetPoint takes boolean enable returns nothing
-//  设置优先级 [NEW]
+//  设置优先级 [NEW] 测试时只有0和1两个优先级(不太确定) 测试时多次设置无效(不太确定)
 native DzFrameSetPriority takes integer frame, integer priority returns nothing
-//  设置父窗口 [NEW]
+//  设置父窗口 [NEW] 测试时多次设置无效(不太确定)
 native DzFrameSetParent takes integer frame, integer parent returns nothing
 // 设置字体 [NEW]
 // 修改字体大小
@@ -279,7 +283,8 @@ native DzFrameSetParent takes integer frame, integer parent returns nothing
 native DzFrameSetFont takes integer frame, string fileName, real height, integer flag returns nothing
 //  获取 Frame 的 高度 [NEW]
 native DzFrameGetHeight takes integer frame returns real
-//  设置对齐方式 [NEW]
+//  设置对齐方式 [NEW] 
+// @param align 对齐方式 [9:左上|23:上|99:右上|10:左|50:中|98:右|12:左下|20:下|100:右下]
 native DzFrameSetTextAlignment takes integer frame, integer align returns nothing
 //  获取 Frame 的 Parent [NEW]
 native DzFrameGetParent takes integer frame returns integer

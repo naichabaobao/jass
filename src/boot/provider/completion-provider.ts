@@ -6,22 +6,14 @@
 
 import * as vscode from "vscode";
 
-import { getChildrenTypes, getParentTypes, StatementTypes, TypeExtends, Types } from "./types";
+import { getParentTypes, StatementTypes } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { Options } from "./options";
-// import * as jassParse from "../jass/parse";
-// import * as jassAst from "../jass/ast";
-// import * as zincParse from "../zinc/parse";
-// import * as zincAst from "../zinc/ast";
-// import * as vjassParse from "../vjass/parse";
-// import * as vjassAst from "../vjass/ast";
-import { compare, getPathFileName, isAiFile, isZincFile } from "../tool";
+import { compare, isZincFile } from "../tool";
 import { convertPosition, functionKey } from "./tool";
 import data, { parseContent } from "./data";
-import { Position } from "../common";
-import { Global, Local, Library, Program, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
-import { Parser } from "../jass/parser";
+import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
 import { tokenize } from "../jass/tokens";
 
 
