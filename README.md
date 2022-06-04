@@ -44,7 +44,7 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/include-demo.png)
+![include-dome](https://gitee.com/naichabaobao/jass/raw/master/static/images/include-dome.png)
 
 
 ![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
