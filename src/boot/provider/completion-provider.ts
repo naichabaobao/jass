@@ -4,6 +4,9 @@
  */
 
 
+import * as path from "path";
+import * as fs from "fs";
+
 import * as vscode from "vscode";
 
 import { getParentTypes, StatementTypes } from "./types";
@@ -14,7 +17,7 @@ import { compare, isZincFile } from "../tool";
 import { convertPosition, functionKey } from "./tool";
 import data, { parseContent } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
-import { tokenize } from "../jass/tokens";
+import { Token, tokenize } from "../jass/tokens";
 
 
 const typeItems: vscode.CompletionItem[] = [];
@@ -1160,4 +1163,103 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     return items;
   }
 }());
+
+type pathMap = Map<string, pathMap>;
+
+/**
+ * 文件路径提示
+ */
+ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
+
+  /**
+   * 把路径数组转成Map嵌套形式
+   * @deprecated 这个方法在当前类没有任何引用
+   * @param allPaths 绝对路径数组
+   */
+  private getPathStruct = (allPaths: string[]) => {
+    const map:pathMap = new Map();
+    for (let index = 0, preMap:pathMap = map; index < allPaths.length; (() => {index++; preMap = map;})()) {
+      const p = allPaths[index];
+      path.parse(p).dir.replace(/\\+/g, "/").split("/").forEach(current => {
+        if (preMap.has(current)) {    
+          preMap = preMap.get(current)!;
+        } else {
+          const m:pathMap = new Map();
+          preMap.set(current, m);
+          preMap = m;
+        }
+      });
+    }
+    return map;
+  };
+
+  /**
+   * 
+   * @deprecated 还没实现的方法，也有可能压根没用，只是还不想删除而已
+   * @param targetPath 
+   * @returns 
+   */
+  private find(targetPath: string) {
+    const map = this.getPathStruct(Options.paths);
+    const pathFields = targetPath.replace(/\\+/g, "/").split("/");
+    let ps: string[] = [];
+    let preMap:pathMap = map;
+    for (let index = 0; index < pathFields.length; index++) {
+      const pathField = pathFields[index];
+      const match = preMap.get(pathField);
+      if (match) {
+        preMap = match;
+        ps = [...preMap.keys()];
+      } else {
+        break;
+      }
+    }
+    return preMap.keys();
+  }
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items:vscode.CompletionItem[] = [];
+
+    Options.paths
+
+    const lineText = document.lineAt(position);
+    const lineContent = lineText.text;
+
+    const tokens = tokenize(lineContent);
+
+    const currentFileDir = () => {
+      return path.parse(document.uri.fsPath).dir;
+    };
+
+    
+
+    const handlePath = (token:Token) => {
+      if (token) {
+        if (token.isString()) {
+
+          const strContent = token.value.substring(1, token.value.length - 1);
+
+          const prefixContent = strContent.substring(0, position.character - token.position - 1);
+
+          const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+          const stat = fs.statSync(realPath);
+          if (stat.isDirectory()) {
+            const paths = fs.readdirSync(realPath);
+            paths.forEach((p) => {
+              items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
+            });
+          }          
+        }
+      }
+    }
+
+    if (tokens[0]) {
+      if (tokens[0].isMacro() && tokens[0].value == "#include") {
+        handlePath(tokens[1]);
+      }
+    }
+
+    return items;
+  }
+}(), "\"", "/", "\\");
 

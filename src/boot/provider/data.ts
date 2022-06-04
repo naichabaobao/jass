@@ -335,6 +335,9 @@ class Data {
 
 export default Data;
 
+console.log(Options.workspaces)
+console.log(Options.includes)
+
 export {
   parseContent
 };

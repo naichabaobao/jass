@@ -17,7 +17,7 @@
 
 --------------------------------------------------------
 
-```cpp
+```jass
 // 友情提供: 枫舞
 #include  "****.j"    //这是引入的其他j文件
 
@@ -40,6 +40,12 @@ library Main initializer MainEvent
 endlibrary
 ```
 --------------------------------------------------------
+
+### 1.6.7
+##### 2022年6月5日
+###### include宏路径提示
+![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/include-demo.png)
+
 
 ![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
 ![param-display](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param-display.png)

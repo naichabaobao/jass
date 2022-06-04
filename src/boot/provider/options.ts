@@ -71,6 +71,12 @@ class Options {
     return [];
   }
 
+  /**
+   * 返回支持的所有路径
+   */
+  public static get paths():string[] {
+    return [...this.includes, ...this.workspaces];
+  }
   
 }
 
