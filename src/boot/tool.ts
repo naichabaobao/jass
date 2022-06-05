@@ -47,7 +47,7 @@ const spaceCode = " ".charCodeAt(0);
  * 移除所有注释
  * @param content 
  */
-function removeComment(content: string):string {
+function removeComment(content: string): string {
 	let status = 0;
 	let blockStart = 0;
 
@@ -84,7 +84,7 @@ function removeComment(content: string):string {
 		} else if (status == 2) {
 			if (nextChar == "*") {
 				status = 3;
-			} 
+			}
 			if (isNewLine(char)) {
 				chars.push("\n");
 			}
@@ -211,7 +211,7 @@ function retainZincBlock(content: string) {
 }
 
 // 保留vjass代码
-function retainVjassBlock(content: string, callBack: ((line:number, comment:string) => void) | null = null) {
+function retainVjassBlock(content: string, callBack: ((line: number, comment: string) => void) | null = null) {
 	let status = 0;
 	let blockStart = 0;
 
@@ -296,7 +296,7 @@ function retainVjassBlock(content: string, callBack: ((line:number, comment:stri
 		if (isNewLine(char)) {
 			isStag = true;
 			line++;
-			
+
 			if (inZinc) {
 				chars.push("\n");
 			}
@@ -309,7 +309,7 @@ function retainVjassBlock(content: string, callBack: ((line:number, comment:stri
 }
 
 // 统计换行符数
-function countNewLine(content:string) {
+function countNewLine(content: string) {
 	let count = 0;
 	for (let index = 0; index < content.length; index++) {
 		const char = content[index];
@@ -324,11 +324,11 @@ function countNewLine(content:string) {
  * @deprecated
  */
 class BlockMark {
-	public line:number;
-	public content:string;
-	public endLine:number;
+	public line: number;
+	public content: string;
+	public endLine: number;
 
-	constructor(line:number, content:string) {
+	constructor(line: number, content: string) {
 		this.line = line;
 		this.content = content;
 		this.endLine = line + countNewLine(content);
@@ -342,18 +342,18 @@ function retainJassBlock(content: string) {
 	content = removeComment(content);
 
 	const marks = new Array<BlockMark>();
-	content.replace(/(?:^globals\b[\s\S]+?^endglobals\b|^function\b[\s\S]+?^endfunction\b|(?:constant\s+)?native[\s\S]+?$)/gm, (text, index:number, origin:string) => {
+	content.replace(/(?:^globals\b[\s\S]+?^endglobals\b|^function\b[\s\S]+?^endfunction\b|(?:constant\s+)?native[\s\S]+?$)/gm, (text, index: number, origin: string) => {
 		let lineNumber = countNewLine(origin.substring(0, index))
 		marks.push(new BlockMark(lineNumber, text));
 
-		text.replace(/^globals\b[\s\S]+?^endglobals\b/gm, (text, index:number, origin:string) => {
-	
+		text.replace(/^globals\b[\s\S]+?^endglobals\b/gm, (text, index: number, origin: string) => {
+
 			let lineNumber = countNewLine(origin.substring(0, index))
 			marks.push(new BlockMark(lineNumber, text));
-	
+
 			return "";
 		});
-		
+
 		return "";
 	});
 	console.log(marks)
@@ -378,11 +378,11 @@ class ResolvePathOption {
 	 * 最大遍历数
 	 * 避免遇到文件数量太多而不停递归
 	 */
-	 recursionNumber?:number = maxFileNumber;
+	recursionNumber?: number = maxFileNumber;
 	/**
 	 * 检查后缀是否为.j或.ai
 	 */
-	checkExt?:boolean = true;
+	checkExt?: boolean = true;
 
 	public static default() {
 		const option = new ResolvePathOption();
@@ -398,17 +398,17 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 	if (paths.length == 0) {
 		return [];
 	}
-    return paths.flatMap(val => {
-        const arr = new Array<string>();
-        // 处理控制符问题
-        // if (val.charCodeAt(0) == 8234) {
-        //   val = val.substring(1);
-        // }
-        if (!fs.existsSync(val)) {
-            return arr;
-        }
-        const stat = fs.statSync(val);
-        if (stat.isFile()) {
+	return paths.flatMap(val => {
+		const arr = new Array<string>();
+		// 处理控制符问题
+		// if (val.charCodeAt(0) == 8234) {
+		//   val = val.substring(1);
+		// }
+		if (!fs.existsSync(val)) {
+			return arr;
+		}
+		const stat = fs.statSync(val);
+		if (stat.isFile()) {
 			if (options.checkExt) {
 				if (isJFile(val) || isAiFile(val)) {
 					arr.push(val);
@@ -416,46 +416,51 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 			} else {
 				arr.push(val);
 			}
-        } else if (stat.isDirectory()) {
-            const subPaths = fs.readdirSync(val).map(fileName => path.resolve(val, fileName));
+		} else if (stat.isDirectory()) {
+			const subPaths = fs.readdirSync(val).map(fileName => path.resolve(val, fileName));
 			const recursionNumber = (options.recursionNumber ?? maxFileNumber);
-            arr.push(...resolvePaths(subPaths.length > recursionNumber ? subPaths.slice(0, recursionNumber) : subPaths));
-        }
-        return arr;
-    });
-  }
-
-    // 文件后缀是否为.j
-	function isJFile(filePath: string) {
-		return path.parse(filePath).ext == ".j" || path.parse(filePath).ext == ".jass";
-	  }
-	// 文件后缀是否为.ai
-	  function isAiFile(filePath: string) {
-		  return path.parse(filePath).ext == ".ai";
-	  }
-	  	// 文件后缀是否为.ai
-		  function isZincFile(filePath: string) {
-			return path.parse(filePath).ext == ".zn";
+			arr.push(...resolvePaths(subPaths.length > recursionNumber ? subPaths.slice(0, recursionNumber) : subPaths));
 		}
-
-	  /**
-	   * 解析出路径文件名称
-	   * @param filePath 
-	   */
-function getPathFileName(filePath:string):string {
+		return arr;
+	});
+}
+function isExt(filePath: string, ext: string) {
+	return path.parse(filePath).ext == ext;
+}
+// 文件后缀是否为.j
+function isJFile(filePath: string) {
+	return isExt(filePath, ".j") || isExt(filePath, ".jass");
+}
+// 文件后缀是否为.ai
+function isAiFile(filePath: string) {
+	return isExt(filePath, ".ai");
+}
+// 文件后缀是否为.ai
+function isZincFile(filePath: string) {
+	return isExt(filePath, ".zn");
+}
+// 文件后缀是否为.ai
+function isLuaFile(filePath: string) {
+	return isExt(filePath, ".lua");
+}
+/**
+ * 解析出路径文件名称
+ * @param filePath 
+ */
+function getPathFileName(filePath: string): string {
 	return path.parse(filePath).base;
 }
 
-function compare(key: string, key2: string):boolean {
+function compare(key: string, key2: string): boolean {
 	const keyParsedPath = path.parse(key);
 	const key2ParsedPath = path.parse(key2);
 	return keyParsedPath.root == key2ParsedPath.root && keyParsedPath.dir == key2ParsedPath.dir && keyParsedPath.base == key2ParsedPath.base;
-  }
+}
 
-    // 是文件和是否存在
-	function isUsableFile(filePath: string) {
-		return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
-	  }
+// 是文件和是否存在
+function isUsableFile(filePath: string) {
+	return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
+}
 
 export {
 	is0_16,
@@ -474,6 +479,7 @@ export {
 	isJFile,
 	isAiFile,
 	isZincFile,
+	isLuaFile,
 	getPathFileName,
 	compare,
 	isUsableFile
@@ -481,7 +487,7 @@ export {
 
 
 // console.log(removeComment("'" + `
-// // a 
+// // a
 // /*
 // */
 // `) + "'");

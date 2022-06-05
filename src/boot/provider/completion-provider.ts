@@ -13,11 +13,13 @@ import { getParentTypes, StatementTypes } from "./types";
 import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { Options } from "./options";
-import { compare, isZincFile } from "../tool";
+import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition, functionKey } from "./tool";
 import data, { parseContent } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
+
+
 
 
 const typeItems: vscode.CompletionItem[] = [];
@@ -1246,7 +1248,10 @@ type pathMap = Map<string, pathMap>;
           if (stat.isDirectory()) {
             const paths = fs.readdirSync(realPath);
             paths.forEach((p) => {
-              items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
+              const filePath = path.resolve(realPath, p);
+              if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
+              }
             });
           }          
         }
@@ -1262,4 +1267,6 @@ type pathMap = Map<string, pathMap>;
     return items;
   }
 }(), "\"", "/", "\\");
+
+
 
