@@ -1249,7 +1249,9 @@ type pathMap = Map<string, pathMap>;
             const paths = fs.readdirSync(realPath);
             paths.forEach((p) => {
               const filePath = path.resolve(realPath, p);
-              if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+              if (fs.statSync(filePath).isDirectory()) {
+                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.Folder));
+              } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
                 items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
               }
             });
