@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 
 import data, { parseContent } from './data';
-import { convertPosition, functionKey } from './tool';
+import { convertPosition, fieldFunctions, functionKey } from './tool';
 import { tokenize } from '../jass/tokens';
 import { compare, isZincFile } from '../tool';
 import { Options } from './options';
@@ -61,43 +61,14 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
 
     ids.reverse();
 
-    const fieldFunctions = () :(Func|Native)[] => {
-      const funcs:(Func|Native)[] = data.functions();
-      funcs.push(...data.natives());
+    // const fieldFunctions = () :(Func|Native)[] => {
+    //   const funcs:(Func|Native)[] = data.functions();
+    //   funcs.push(...data.natives());
 
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            funcs.push(...library.functions);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            funcs.push(...library.functions.filter((func) => func.tag != "private"));
-          }
-        });
+      
 
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              funcs.push(...library.functions);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              funcs.push(...library.functions.filter((func) => func.tag != "private"));
-            }
-          });
-        }
-      }
-
-      return funcs;
-    };
+    //   return funcs;
+    // };
 
     const fieldStructs = () => {
       const structs = data.structs();
@@ -199,7 +170,7 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
     };
 
     if (ids.length == 1) { // 方法
-      const func = fieldFunctions().find((func) => {
+      const func = [...fieldFunctions(fsPath, position), ...data.natives()].find((func) => {
         return ids[0] == func.name;
       });
 

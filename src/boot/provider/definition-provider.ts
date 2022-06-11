@@ -13,7 +13,7 @@ import data, { parseContent } from "./data";
 import { Rangebel } from '../common';
 import { Options } from './options';
 import { compare, isZincFile } from '../tool';
-import { convertPosition } from './tool';
+import { convertPosition, fieldFunctions } from './tool';
 
 
 const toVsPosition = <T extends Rangebel>(any: T) => {
@@ -73,42 +73,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       
       return librarys;
     };
-    const fieldFunctions = () => {
-      const funcs = data.functions();
 
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            funcs.push(...library.functions);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            funcs.push(...library.functions.filter((func) => func.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              funcs.push(...library.functions);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              funcs.push(...library.functions.filter((func) => func.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return funcs;
-    };
     const fieldGlobals = () => {
       const globals = data.globals();
 
@@ -266,7 +231,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
     const locations = new Array<vscode.Location>();
 
-    [...fieldFunctions(), ...data.natives()].forEach((func) => {
+    [...fieldFunctions(fsPath, position), ...data.natives()].forEach((func) => {
       if (func.name == key) {
         const location = new vscode.Location(vscode.Uri.file(func.source), toVsPosition(func));
         locations.push(location);

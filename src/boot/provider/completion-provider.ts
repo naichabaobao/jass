@@ -14,7 +14,7 @@ import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "./keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
-import { convertPosition, functionKey } from "./tool";
+import { convertPosition, fieldFunctions, functionKey } from "./tool";
 import data, { parseContent } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
@@ -333,6 +333,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       
       return librarys;
     };
+    /*
     const fieldFunctions = () => {
       const funcs = data.functions();
 
@@ -369,6 +370,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
       
       return funcs;
     };
+    */
     const fieldGlobals = () => {
       const globals = data.globals();
 
@@ -578,7 +580,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
      */
     function defaultItems() {
       fieldLocalItems();
-      items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
+      items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions(fsPath, position)));
       items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals()));
 
       fieldTakes().forEach((funcTake, index) => {
@@ -660,7 +662,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         const result = /local\s+(?<type>[a-zA-Z]+[a-zA-Z0-9_]*)\b/.exec(inputText);
         if (result && result.groups) {
           const type = result.groups["type"];
-          items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions()].filter((func) => {
+          items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions(fsPath, position)].filter((func) => {
             return type == func.returns || getParentTypes(type).includes(func.returns);
           })));
           items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
@@ -688,7 +690,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         }
         break;
       case PositionType.Call:
-        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions()));
+        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions(fsPath, position)));
         break;
       case PositionType.Args:
         // 方法参数列表
@@ -702,7 +704,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
         funcs.forEach((func) => {
           if (func.takes[key.takeIndex]) {
             const type = func.takes[key.takeIndex].type;
-            items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions()].filter((func) => {
+            items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions(fsPath, position)].filter((func) => {
               return type == func.returns || getParentTypes(type).includes(func.returns);
             })));
             items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
@@ -853,7 +855,9 @@ vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionIt
   }
 }());
 
-
+/**
+ * '.'语法提示
+ */
 vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const text = document.lineAt(position.line).text;
