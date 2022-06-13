@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.6.9",
+  "version": "1.6.12",
   "keywords": [
     "jass",
     "warcraft"
@@ -55,6 +55,13 @@
           },
           "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j | .ai | .zn\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find .j | .ai | .zn)"
         },
+        "jass.excludes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "(Test) Ignore unneeded directories or files"
+        },
         "jass.cjass.dependents": {
           "type": "array",
           "items": {
@@ -80,7 +87,7 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": false,
-          "description": "jass diagnostic, required in only jass model"
+          "description": "(Deprecated) jass diagnostic, required in only jass model"
         }
       }
     },

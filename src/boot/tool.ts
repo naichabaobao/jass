@@ -454,7 +454,9 @@ function getPathFileName(filePath: string): string {
 function compare(key: string, key2: string): boolean {
 	const keyParsedPath = path.parse(key);
 	const key2ParsedPath = path.parse(key2);
-	return keyParsedPath.root == key2ParsedPath.root && keyParsedPath.dir == key2ParsedPath.dir && keyParsedPath.base == key2ParsedPath.base;
+	// console.log(path.relative(keyParsedPath.dir ,key2ParsedPath.dir), keyParsedPath.dir ,key2ParsedPath.dir, keyParsedPath.base, key2ParsedPath.base);
+	
+	return path.relative(keyParsedPath.dir ,key2ParsedPath.dir) == "" && keyParsedPath.base == key2ParsedPath.base;
 }
 
 // 是文件和是否存在
