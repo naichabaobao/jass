@@ -35,6 +35,11 @@ class Options {
     return resolvePaths(includes);
   }
 
+  public static get excludes() {
+    const includes = this.configuration["excludes"] as Array<string>;
+    return includes;
+  }
+
   public static get cjassDependents() {
     const includes = this.configuration["cjass"]["dependents"] as Array<string>;
     return resolvePaths(includes);

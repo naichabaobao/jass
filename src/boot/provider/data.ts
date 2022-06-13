@@ -142,6 +142,9 @@ function setSource(filePath: string, program: Program) {
     });
 }
 function parseContent(filePath: string, content: string) {
+  if (isExclude(filePath, Options.excludes)) {
+    return;
+  }
   if (isZincFile(filePath)) {
     const program = parse(content, true);
     setSource(filePath, program);
@@ -164,7 +167,7 @@ function parseContent(filePath: string, content: string) {
   }
 }
 function parsePath(...filePaths: string[]) {
-  filePaths.forEach((filePath) => {
+  exclude(filePaths, Options.excludes).forEach((filePath) => {
     const content = getFileContent(filePath);
   
     parseContent(filePath, content);
@@ -174,6 +177,26 @@ function parsePath(...filePaths: string[]) {
 vscode.workspace.onDidChangeConfiguration((event) => {
   parsePath(Options.commonJPath);
 });
+
+function isExclude(sourcePath:string, excludes: string[]):boolean {
+  const sourceParsed = path.parse(sourcePath.replace(/\\/g, "/"));
+  return excludes.map(excludePath => excludePath.replace(/\\/g, "/")).some(excludePath => {
+    const excludeParsed = path.parse(excludePath);
+    return fs.statSync(excludePath).isDirectory() ? path.relative(sourceParsed.dir, excludePath) == "" || /\.\.$/.test(path.relative(sourceParsed.dir, excludePath)) : path.relative(excludeParsed.dir, sourceParsed.dir) == "" && sourceParsed.base == excludeParsed.base;
+  });  
+}
+
+/**
+ * 筛选出sourcePaths集中跟excludes集的差集
+ * @param sourcePaths 包含的目录集
+ * @param excludes 无视的目录集
+ * @returns 
+ */
+function exclude(sourcePaths: string[], excludes: string[]): string[] {
+  return sourcePaths.map(p => p.replace(/\\/g, "/")).filter(p => {
+    return !isExclude(p, excludes);
+  });
+}
 parsePath(Options.commonJPath);
 parsePath(Options.blizzardJPath);
 parsePath(Options.dzApiJPath);
