@@ -180,7 +180,7 @@ vscode.workspace.onDidChangeConfiguration((event) => {
 
 function isExclude(sourcePath:string, excludes: string[]):boolean {
   const sourceParsed = path.parse(sourcePath.replace(/\\/g, "/"));
-  return excludes.map(excludePath => excludePath.replace(/\\/g, "/")).some(excludePath => {
+  return excludes.filter(excludePath => fs.existsSync(excludePath)).some(excludePath => {
     const excludeParsed = path.parse(excludePath);
     return fs.statSync(excludePath).isDirectory() ? path.relative(sourceParsed.dir, excludePath) == "" || /\.\.$/.test(path.relative(sourceParsed.dir, excludePath)) : path.relative(excludeParsed.dir, sourceParsed.dir) == "" && sourceParsed.base == excludeParsed.base;
   });  
@@ -193,7 +193,7 @@ function isExclude(sourcePath:string, excludes: string[]):boolean {
  * @returns 
  */
 function exclude(sourcePaths: string[], excludes: string[]): string[] {
-  return sourcePaths.map(p => p.replace(/\\/g, "/")).filter(p => {
+  return sourcePaths.filter(p => {
     return !isExclude(p, excludes);
   });
 }
