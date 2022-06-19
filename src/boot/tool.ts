@@ -464,6 +464,17 @@ function isUsableFile(filePath: string) {
 	return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
 }
 
+/**
+ * 获取文件内容
+ * @param filePath 
+ * @returns 
+ */
+function getFileContent(filePath: string):string {
+	return fs.readFileSync(filePath, {
+	  encoding: "utf8"
+	}).toString();
+  }
+
 export {
 	is0_16,
 	is0_7,
@@ -484,7 +495,8 @@ export {
 	isLuaFile,
 	getPathFileName,
 	compare,
-	isUsableFile
+	isUsableFile,
+	getFileContent
 };
 
 

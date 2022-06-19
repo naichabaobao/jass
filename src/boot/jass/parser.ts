@@ -1,57 +1,10 @@
-import { Position, Range } from "../common";
 import { isKeyword, Keywords } from "../provider/keyword";
 import { isNewLine, isSpace } from "../tool";
+import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take } from "./ast";
+import { DefineMacro, Document, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, LineText } from "./ast";
 import { Token, tokenize } from "./tokens";
 
-class LineText extends Range {
-
-    private text: string;
-
-    constructor(text: string) {
-        super();
-        this.text = text;
-    }
-
-    // 是否空行
-    public isEmpty(): boolean {
-        return this.text.trimStart() === "";
-    }
-
-    public getText(): string {
-        return this.text;
-    }
-
-    public setText(text: string): void {
-        this.text = text;
-    }
-
-    public lineNumber(): number {
-        return this.start.line;
-    }
-
-    // 第一个字符下标
-    public firstCharacterIndex(): number {
-        let index = 0;
-        for (; index < this.text.length; index++) {
-            const char = this.text[index];
-            if (!isSpace(char)) {
-                return index;
-            }
-        }
-        return index;
-    }
-
-    public length(): number {
-        return this.text.length;
-    }
-
-    public clone(): LineText {
-        return Object.assign(new LineText(this.getText()), this);
-    }
-
-}
 
 /**
  * 替换块注释为空白文本
@@ -174,57 +127,7 @@ function replaceBlockComment(content: string): string {
     return text;
 }
 
-function linesByIndexOf(content: string): LineText[] {
-    const LineTexts: LineText[] = [];
 
-    for (let index = 0; index < content.length;) {
-        const newLineIndex = content.indexOf("\n", index);
-        const fieldText = content.substring(index, newLineIndex == -1 ? content.length : newLineIndex + 1);
-
-        LineTexts.push(new LineText(fieldText));
-
-        if (newLineIndex == -1) {
-            break;
-        } else {
-            index = newLineIndex + 1;
-        }
-    }
-
-    return LineTexts;
-}
-
-function linesBySplit(content: string): LineText[] {
-    const ls = content.split("\n");
-
-    const last = ls.pop();
-
-    const lineTexts = ls.map(x => new LineText(x + "\n"));
-
-    if (last) {
-        lineTexts.push(new LineText(last));
-    }
-
-    return lineTexts;
-}
-
-/**
- * 
- * @param content 
- * @returns 
- */
-function lines(content: string): LineText[] {
-    // const funcs = [linesByIndexOf, linesBySplit];
-    // return funcs[Math.floor(Math.random() * funcs.length)](content).map((lineText, index) => {
-    //     lineText.start = new Position(index, 0);
-    //     lineText.end = new Position(index, lineText.text.length);
-    //     return lineText;
-    // });
-    return linesByIndexOf(content).map((lineText, index) => {
-        lineText.start = new Position(index, 0);
-        lineText.end = new Position(index, lineText.getText().length);
-        return lineText;
-    });
-}
 
 function zincLines(content: string): LineText[] {
     let inZinc = false;
@@ -770,7 +673,62 @@ function isNativeStart(lineText: LineText): boolean {
     return /^\s*(?:(constant)\s+)*native\b/.test(lineText.getText());
 }
 
+class ParserEvent {
+    public readonly document: Document;
+
+    constructor(document: Document) {
+        this.document = document;
+    }
+
+}
+type ParserHandleFunction = (event: ParserEvent) => void;
+
+/**
+ * 
+ */
 class Parser {
+    /**
+     * tokenize
+     * 
+     */
+    private static Build = class {
+
+        private document: Document;
+        private isSupportCjass:boolean = false;
+        private eventMap: Map<string, ParserHandleFunction|Array<ParserHandleFunction>> = new Map();
+        private constructor(document: Document) {
+            this.document = document;
+        }
+        public create(document: Document) {
+            return new Parser.Build(document);
+        }
+        public supportCjass(enable: boolean) {
+            this.isSupportCjass = enable;
+            return this;
+        }
+        public addEventListener(type: string, handle: ParserHandleFunction) {
+            if (this.eventMap.has(type)) {
+                const handle_ = this.eventMap.get(type)!;
+                if (Array.isArray(handle_)) {
+                    handle_.push(handle);
+                } else {
+                    this.eventMap.set(type, [handle_, handle]);
+                }
+            } else {
+                this.eventMap.set(type, handle);
+            }
+            return this;
+        }
+        private blockComment() {
+
+        }
+        public pasing() {
+
+        }
+    };
+
+    public static create(document: Document) {
+    }
 
     constructor(content: string, options?: {
         supportCjass: false
@@ -1438,7 +1396,7 @@ function parseCjass(content: string) {
         const tokens = tokenize(lineText.getText());
         for (let index = 0; index < tokens.length; index++) {
             const token = tokens[index];
-            function parseMacro (condition: boolean) {
+            const parseMacro = (condition: boolean) => {
                 if (condition && state == 0) {
                     if (token.isId()) {
                         defineMacro = new DefineMacro();
@@ -1563,7 +1521,6 @@ function parseCj(content: string): Program {
 
 export {
     replaceBlockComment,
-    lines,
     Parser,
     parseCjass,
     parseCj
@@ -1597,42 +1554,6 @@ if (false) {
     */c`;
     console.log(text, "\n\n", replaceBlockComment(text));
     console.log(text.length, replaceBlockComment(text).length);
-
-
-    console.log("===============================================");
-    console.log(linesByIndexOf(`111
-    222
-    333`));
-    console.log("===============================================");
-    console.log(linesBySplit(`111
-    222
-    333`));
-
-    const count = 10000;
-
-    // 不同实现耗时
-    console.time("linesByIndexOf");
-    for (let index = 0; index < count; index++) {
-        linesByIndexOf(`111
-        222
-        333`)
-    }
-    console.timeEnd("linesByIndexOf");
-    console.time("linesBySplit");
-    for (let index = 0; index < count; index++) {
-        linesBySplit(`111
-        222
-        333`)
-    }
-    console.timeEnd("linesBySplit");
-
-    console.time("lines");
-    for (let index = 0; index < count; index++) {
-        lines(`111
-        222
-        333`)
-    }
-    console.timeEnd("lines");
 
     // zinc
     console.log("zinc 内容");

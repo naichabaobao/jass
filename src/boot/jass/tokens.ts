@@ -1,5 +1,6 @@
 
 import { is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isNumber, isSpace } from "../tool";
+import { Document, Position, Range } from "./ast";
 
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "block_comment" | "comment" | "macro";
 
@@ -96,7 +97,7 @@ function _isSpace(char: string): boolean {
 }
 
 /**
- * @deprecated 使用tokenize，而非tokens
+ * @deprecated 此方法实现时带有主观判断token的好坏，以致无法在后续开发获取更细化的信息，后续将从新实现 Tokenizer 类替换掉
  * @param content 
  * @returns 
  */
@@ -451,6 +452,158 @@ function tokens(content: string) {
 	return tokens;
 }
 
+interface TokenPair {
+	char: string;
+	state: number;
+}
+
+interface PairName {
+	type: string;
+}
+interface WrapPair  extends PairName{
+	start: string[];
+	end: string[];
+}
+
+
+interface Chars extends PairName{
+	chars: string[]
+}
+
+
+interface TokenDefine {
+	defines: TokenPair[];
+	tokenType: string;
+	handle: (pair: TokenPair, defines: TokenPair[]) => number;
+}
+
+type TokenDefineNeed = WrapPair|Chars;
+
+function tokenizeProgram(document: Document) {
+
+}
+
+class TokenizerEvent {
+    public readonly document: Document;
+
+    constructor(document: Document) {
+        this.document = document;
+    }
+
+}
+type TokenizerHandleFunction = (token:NewToken) => void;
+
+/**
+ * 一个新的Token,使用更统一的Range,type的类型更松散
+ */
+class NewToken extends Range{
+	type: string;
+	value: string;
+
+	constructor(type: string, value: string, start?: Position, end?: Position) {
+		super(start, end);
+		this.type = type;
+		this.value = value;
+	}
+
+}
+
+interface TokenizeDefine {
+	/**
+	 * first成功跳转状态
+	 */
+	state: number;
+	/**
+	 * first失败跳转状态
+	 */
+	backState?: number;
+	first(state: number, char: string):boolean;
+	follow(char: string):boolean;
+}
+
+interface TokenizeElseDefine {
+	tokenType: string;
+	state: number;
+}
+
+class Tokenizer<D extends TokenizeDefine, E extends TokenizeElseDefine> {
+	private document: Document;
+	private eventMap: Map<string, TokenizerHandleFunction|Array<TokenizerHandleFunction>> = new Map();
+	private readonly defines: D[];
+	private readonly elseDefines: E[];
+	private readonly defaultState:number;
+	private handle?: TokenizerHandleFunction;
+
+	private constructor(document: Document, defaultState: number, defines:D[], elseDefines:E[]) {
+		this.document = document;
+		this.defaultState = defaultState;
+		this.defines = defines;
+		this.elseDefines = elseDefines;
+	}
+
+	public static create<D extends TokenizeDefine, E extends TokenizeElseDefine>(document: Document, defaultState: number, defines: D[], elseDefines:E[]) {
+		return new Tokenizer(document, defaultState, defines, elseDefines);
+	}
+
+	private tokenize(handle?: TokenizerHandleFunction) {
+		let state: number = this.defaultState;
+
+		let cellects:string[] = [];
+		for (let lineNumber = 0; lineNumber < this.document.lineCount; lineNumber++) {
+			const lineText = this.document.lineAt(lineNumber);
+			
+			for (let charPosition = 0; charPosition < lineText.length(); charPosition++) {
+				const char = lineText.getText().charAt(charPosition);
+				const next_char = lineText.getText().charAt(charPosition + 1);
+				
+				const def = this.defines.find((d) => {
+					return d.first(state, char);
+				});
+				if (def) {
+					state = def.state;
+					cellects.push(char);
+
+					if (!def.follow(next_char)) {
+						const el = this.elseDefines.find(el => el.state === state);
+						if (cellects.length > 0) {
+							const value: string = cellects.join(""), start: Position = new Position(lineNumber, charPosition - cellects.length), end: Position = new Position(lineNumber, charPosition);
+							if (el) {
+								const token = new NewToken(el.tokenType, value, start, end);
+								if (handle) handle(token);
+							} else {
+	
+							}
+							cellects = [];
+						}
+						state = this.defaultState;
+					}
+				}
+			}
+
+		}
+	}
+
+	public build(): void {
+		this.tokenize(this.handle);
+	}
+
+	public get() {
+		const tokens: NewToken[] = [];
+		this.tokenize((token) => {
+			tokens.push(token);
+			if (this.handle) this.handle(token); 
+		});
+		return tokens;
+	}
+
+	public onTokenize(handle: TokenizerHandleFunction) {
+		this.handle = handle;
+		return this;
+	}
+}
+
+
+
 // console.log(tokens(`->`));
 
 // 包装方法
@@ -459,3 +612,161 @@ function tokenize(content: string) {
 }
 
 export { Token, TokenType, tokens, tokenize };
+
+if (true) {
+	const defaultState: number = 0;
+	enum Sta {
+		default = defaultState,
+		div = 1,
+		comment_start = 2,
+		block_comment_start = 3,
+		block_comment_wait_end = 4,
+		block_comment_end = 5,
+		string_start = 6,
+		string_escape = 7,
+		string_end = 8,
+	};
+	const ds: TokenizeDefine[] = [{
+		state: Sta.div,
+		first(state, char) {
+			return state === Sta.default && char === "/";
+		},
+		follow(char) {
+			return char === "/" || char === "*";
+		},
+	}, {
+		state: Sta.comment_start,
+		first(state, char) {
+			return state === Sta.div && char === "/";
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}, {
+		state: Sta.comment_start,
+		first(state, char) {
+			return state === Sta.comment_start;
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}, {
+		state: Sta.block_comment_start,
+		first(state, char) {
+			return state === Sta.div && char === "*";
+		},
+		follow(char) {
+			return char !== "";
+		},
+	}, {
+		state: Sta.block_comment_wait_end,
+		first(state, char) {
+			return state === Sta.block_comment_start && char === "*";
+		},
+		follow(char) {
+			return char !== "";
+		},
+	}, {
+		state: Sta.block_comment_start,
+		first(state, char) {
+			return state === Sta.block_comment_start;
+		},
+		follow(char) {
+			return char !== "";
+		},
+	}, {
+		state: Sta.block_comment_wait_end,
+		first(state, char) {
+			return state === Sta.block_comment_wait_end && char === "*";
+		},
+		follow(char) {
+			return char !== "";
+		},
+	}, {
+		state: Sta.block_comment_end,
+		first(state, char) {
+			return state === Sta.block_comment_wait_end && char === "/";
+		},
+		follow(char) {
+			return false;
+		},
+	}, {
+		state: Sta.string_start,
+		first(state, char) {
+			return state === Sta.default && char === "\"";
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}, {
+		state: Sta.string_escape,
+		first(state, char) {
+			return state === Sta.string_start && char === "\\";
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}, {
+		state: Sta.string_start,
+		first(state, char) {
+			return state === Sta.string_escape;
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}, {
+		state: Sta.string_end,
+		first(state, char) {
+			return state === Sta.string_start && char === "\"";
+		},
+		follow(char) {
+			return false;
+		},
+	}, {
+		state: Sta.string_start,
+		first(state, char) {
+			return state === Sta.string_start;
+		},
+		follow(char) {
+			return char !== "" && isNotNewLine(char);
+		},
+	}];
+	const des: TokenizeElseDefine[] = [{
+		state: Sta.div,
+		tokenType: "op"
+	}, {
+		state: Sta.block_comment_start,
+		tokenType: "block_comment_defect"
+	}, {
+		state: Sta.block_comment_wait_end,
+		tokenType: "block_comment_defect"
+	}, {
+		state: Sta.block_comment_end,
+		tokenType: "block_comment"
+	}, {
+		state: Sta.comment_start,
+		tokenType: "comment"
+	}, {
+		state: Sta.string_start,
+		tokenType: "defect_string"
+	}, {
+		state: Sta.string_escape,
+		tokenType: "bad_escape_string"
+	}, {
+		state: Sta.string_end,
+		tokenType: "string"
+	}];
+	const content = `
+	/*a*//*b*/
+	"aaa""bbb"`;
+	const d1 = new Document("E:/projects/jass/src/boot/jass/tokens.ts", content);
+	const d2 = new Document("C:/Users/Administrator/Desktop/test.j");
+	
+	const tokenizer = Tokenizer.create<TokenizeDefine, TokenizeElseDefine>(d1, defaultState, ds, des);
+
+	tokenizer.onTokenize((token) => {
+		console.log(token);
+	});
+
+	tokenizer.build();
+}
