@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { tokenize } from "../jass/tokens";
 
 
-const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%"];
+const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{","}"];
 
 /**
  * 默认会认为已闭合
@@ -29,7 +29,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       const lineText = document.lineAt(line);
       const text = lineText.text;
 
-      if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text)) {
+      if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text) || /^.*\{[\s\t]*$/.test(text)) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
           } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
