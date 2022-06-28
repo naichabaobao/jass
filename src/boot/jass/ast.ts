@@ -31,9 +31,10 @@ class Range {
 	}
 
 
-	public setRange<T extends Range>(range: T): void {
+	public setRange<T extends Range>(range: T) {
 		this.start = range.start;
 		this.end = range.end;
+		return this;
 	}
 
 	public contains(positionOrRange: Position | Range): boolean {

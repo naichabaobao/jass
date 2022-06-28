@@ -3,7 +3,7 @@ import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
 import { DefineMacro, Document, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, LineText } from "./ast";
-import { Token, tokenize } from "./tokens";
+import { Token, Tokenize, tokenize } from "./tokens";
 
 
 /**
@@ -1519,6 +1519,8 @@ function parseCj(content: string): Program {
     return program;
 }
 
+
+
 export {
     replaceBlockComment,
     Parser,
@@ -1534,17 +1536,19 @@ export {
 //     xilo = 
 // }
 // `), null, 2));
-console.log(parseCjass(`
-define {
-
-    aaa = {
-        bbb = 12
+if (false) {
+    console.log(parseCjass(`
+    define {
+    
+        aaa = {
+            bbb = 12
+        }
     }
+    `));
+    
+    console.log(parseCj(`public void insdsada(aaa aaaccs fdsg,  fgdsg gfdg__)`).functions[0].takes);
+    ;
 }
-`));
-
-console.log(parseCj(`public void insdsada(aaa aaaccs fdsg,  fgdsg gfdg__)`).functions[0].takes);
-;
 
 
 if (false) {
@@ -1653,7 +1657,7 @@ console.log(zincProgram.librarys[0].loc);
 
 }
 
-if (true) {
+if (false) {
     const textMacro = new TextMacro();
     parseTextMacro(`//! textmacro a takes aaa`, textMacro);
     console.log(textMacro);

@@ -57,44 +57,8 @@ class Token {
 
 }
 
-function _isLetter(char: string): boolean {
-	if (!char) {
-		return false;
-	}
-	return /[a-zA-Z]/.test(char);
-}
 
-function _isNumerical(char: string): boolean {
-	if (!char) {
-		return false;
-	}
-	return /\d/.test(char);
-}
 
-function _isNumerical_0_7(char: string): boolean {
-	return ["0", "1", "2", "3", "4", "5", "6", "7"].includes(char);
-}
-
-function _isNumerical_16(char: string): boolean {
-	if (!char) {
-		return false;
-	}
-	return _isNumerical(char) || /[a-fA-F]/.test(char);
-}
-
-function _isIdentifier(char: string): boolean {
-	if (!char) {
-		return false;
-	}
-	return _isLetter(char) || _isNumerical(char) || char === "_";
-}
-
-function _isSpace(char: string): boolean {
-	if (!char) {
-		return false;
-	}
-	return /\s/.test(char);
-}
 
 /**
  * @deprecated 此方法实现时带有主观判断token的好坏，以致无法在后续开发获取更细化的信息，后续将从新实现 Tokenizer 类替换掉
@@ -452,51 +416,12 @@ function tokens(content: string) {
 	return tokens;
 }
 
-interface TokenPair {
-	char: string;
-	state: number;
-}
-
-interface PairName {
-	type: string;
-}
-interface WrapPair  extends PairName{
-	start: string[];
-	end: string[];
-}
-
-
-interface Chars extends PairName{
-	chars: string[]
-}
-
-
-interface TokenDefine {
-	defines: TokenPair[];
-	tokenType: string;
-	handle: (pair: TokenPair, defines: TokenPair[]) => number;
-}
-
-type TokenDefineNeed = WrapPair|Chars;
-
-function tokenizeProgram(document: Document) {
-
-}
-
-class TokenizerEvent {
-    public readonly document: Document;
-
-    constructor(document: Document) {
-        this.document = document;
-    }
-
-}
-type TokenizerHandleFunction = (token:NewToken) => void;
+type TokenizerHandleFunction = (token:Tokenize) => void;
 
 /**
  * 一个新的Token,使用更统一的Range,type的类型更松散
  */
-class NewToken extends Range{
+class Tokenize extends Range{
 	type: string;
 	value: string;
 
@@ -521,64 +446,83 @@ interface TokenizeDefine {
 	follow(char: string):boolean;
 }
 
-interface TokenizeElseDefine {
+interface TokenizeTypeDefine {
 	tokenType: string;
 	state: number;
 }
 
-class Tokenizer {
-	private document: Document;
+class TokenizerBuild {
+	private content: string;
 	private eventMap: Map<string, TokenizerHandleFunction|Array<TokenizerHandleFunction>> = new Map();
-	private readonly defines: TokenizeDefine[];
-	private readonly elseDefines: TokenizeElseDefine[];
+	private defines: TokenizeDefine[] = [];
+	private elseDefines: TokenizeTypeDefine[] = [];
 	private readonly defaultState:number;
 	private handle?: TokenizerHandleFunction;
 
-	private constructor(document: Document, defaultState: number, defines:TokenizeDefine[], elseDefines:TokenizeElseDefine[]) {
-		this.document = document;
+	private constructor(content: string, defaultState: number, defines?:TokenizeDefine[], elseDefines?:TokenizeTypeDefine[]) {
+		this.content = content;
 		this.defaultState = defaultState;
-		this.defines = defines;
-		this.elseDefines = elseDefines;
+		if (defines) {
+			this.defines = defines;
+		}
+		if (elseDefines) {
+			this.elseDefines = elseDefines;
+		}
 	}
 
-	public static create(document: Document, defaultState: number, defines: TokenizeDefine[], elseDefines:TokenizeElseDefine[]) {
-		return new Tokenizer(document, defaultState, defines, elseDefines);
+	public static create(content: string, defaultState: number, defines?: TokenizeDefine[], elseDefines?:TokenizeTypeDefine[]) {
+		return new TokenizerBuild(content, defaultState, defines, elseDefines);
+	}
+	public setTokenDefines(defines: TokenizeDefine[]) {
+		this.defines = defines;
+		return this;
+	}
+
+	public setTokenTypes(elseDefines: TokenizeTypeDefine[]) {
+		this.elseDefines = elseDefines;
+		return this;
 	}
 
 	private tokenize(handle?: TokenizerHandleFunction) {
 		let state: number = this.defaultState;
 
 		let cellects:string[] = [];
-		for (let lineNumber = 0; lineNumber < this.document.lineCount; lineNumber++) {
-			const lineText = this.document.lineAt(lineNumber);
+		let lineNumber:number = 0, charPosition:number = 0;
+		for (let index = 0; index < this.content.length; index++) {
+			const char = this.content.charAt(index);
+			const next_char = this.content.charAt(index + 1);
 			
-			for (let charPosition = 0; charPosition < lineText.length(); charPosition++) {
-				const char = lineText.getText().charAt(charPosition);
-				const next_char = lineText.getText().charAt(charPosition + 1);
-				
-				const def = this.defines.find((d) => {
-					return d.first(state, char);
-				});
-				if (def) {
-					state = def.state;
-					cellects.push(char);
+			if (isNewLine(char)) {
+				lineNumber++;
+				charPosition = 0;
+			} else {
+				charPosition++;
+			}
+			const def = this.defines.find((d) => {
+				return d.first(state, char);
+			});
 
-					if (!def.follow(next_char) || next_char === "") {
-						const el = this.elseDefines.find(el => el.state === state);
-						if (cellects.length > 0) {
-							const value: string = cellects.join(""), start: Position = new Position(lineNumber, charPosition - cellects.length), end: Position = new Position(lineNumber, charPosition);
-							if (el) {
-								const token = new NewToken(el.tokenType, value, start, end);
-								if (handle) handle(token);
-							} else {
-	
-							}
-							cellects = [];
+			if (def) {
+				state = def.state;
+				cellects.push(char);
+
+				if (!def.follow(next_char) || next_char === "") {
+					const el = this.elseDefines.find(el => el.state === state);
+					if (cellects.length > 0) {
+						const value: string = cellects.join(""), start: Position = new Position(lineNumber, charPosition - cellects.length), end: Position = new Position(lineNumber, charPosition);
+						if (el) {
+							const token = new Tokenize(el.tokenType, value, start, end);
+							if (handle) handle(token);
+						} else {
+
 						}
-						state = this.defaultState;
+						cellects = [];
 					}
+					state = this.defaultState;
 				}
 			}
+
+
 
 		}
 	}
@@ -588,7 +532,7 @@ class Tokenizer {
 	}
 
 	public get() {
-		const tokens: NewToken[] = [];
+		const tokens: Tokenize[] = [];
 		this.tokenize((token) => {
 			tokens.push(token);
 			if (this.handle) this.handle(token); 
@@ -602,10 +546,6 @@ class Tokenizer {
 	}
 }
 
-
-
-// console.log(tokens(`->`));
-
 // 包装方法
 function tokenize(content: string) {
 	return tokens(content);
@@ -613,585 +553,605 @@ function tokenize(content: string) {
 
 export { Token, TokenType, tokens, tokenize };
 
-if (true) {
-	const defaultState: number = 0;
-	enum Sta {
-		default = defaultState,
-		div = 1,
-		comment_start = 2,
-		block_comment_start = 3,
-		block_comment_wait_end = 4,
-		block_comment_end = 5,
-		string_start = 6,
-		string_escape = 7,
-		string_end = 8,
-		code_start = 9,
-		code_end = 10,
-		id = 11,
-		number_0 = 12,
-		number_8 = 13,
-		number_16_start = 14,
-		number_16 = 15,
-		double = 16,
-		number = 17,
-		point = 18,
-		macro_start = 19,
-		macro = 20,
-		dollar = 21,
-		dollar_hex = 23,
-		dollar_macro_start = 22,
-		dollar_macro_bad = 24,
-		dollar_macro_end = 25,
-		plus = 26,
-		sub = 27,
-		mul = 28,
-		assignment = 29,
-		eq = 30,
-		gt = 31,
-		gt_eq = 32,
-		lt = 33,
-		lt_eq = 34,
-		field = 35,
-		not = 36,
-		not_eq = 37
-	};
-	const ds: TokenizeDefine[] = [{
-		state: Sta.div,
-		first(state, char) {
-			return state === Sta.default && char === "/";
-		},
-		follow(char) {
-			return char === "/" || char === "*";
-		},
-	}, {
-		state: Sta.comment_start,
-		first(state, char) {
-			return state === Sta.div && char === "/";
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.comment_start,
-		first(state, char) {
-			return state === Sta.comment_start;
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.block_comment_start,
-		first(state, char) {
-			return state === Sta.div && char === "*";
-		},
-		follow(char) {
-			return char !== "";
-		},
-	}, {
-		state: Sta.block_comment_wait_end,
-		first(state, char) {
-			return state === Sta.block_comment_start && char === "*";
-		},
-		follow(char) {
-			return char !== "";
-		},
-	}, {
-		state: Sta.block_comment_start,
-		first(state, char) {
-			return state === Sta.block_comment_start;
-		},
-		follow(char) {
-			return char !== "";
-		},
-	}, {
-		state: Sta.block_comment_wait_end,
-		first(state, char) {
-			return state === Sta.block_comment_wait_end && char === "*";
-		},
-		follow(char) {
-			return char !== "";
-		},
-	}, {
-		state: Sta.block_comment_end,
-		first(state, char) {
-			return state === Sta.block_comment_wait_end && char === "/";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.string_start,
-		first(state, char) {
-			return state === Sta.default && char === "\"";
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.string_escape,
-		first(state, char) {
-			return state === Sta.string_start && char === "\\";
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.string_start,
-		first(state, char) {
-			return state === Sta.string_escape;
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.string_end,
-		first(state, char) {
-			return state === Sta.string_start && char === "\"";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.string_start,
-		first(state, char) {
-			return state === Sta.string_start;
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.code_start,
-		first(state, char) {
-			return state === Sta.default && char === "'";
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.code_end,
-		first(state, char) {
-			return state === Sta.code_start && char === "'";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.code_start,
-		first(state, char) {
-			return state === Sta.code_start;
-		},
-		follow(char) {
-			return char !== "" && isNotNewLine(char);
-		},
-	}, {
-		state: Sta.id,
-		first(state, char) {
-			return state === Sta.default && (isLetter(char) || char === "_");
-		},
-		follow(char) {
-			return char !== "" && (isLetter(char) || isNumber(char) || char === "_");
-		},
-	}, {
-		state: Sta.id,
-		first(state, char) {
-			return state === Sta.id && (isLetter(char) || isNumber(char) || char === "_");
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_";
-		},
-	}, {
-		state: Sta.number_0,
-		first(state, char) {
-			return state === Sta.default && char === "0";
-		},
-		follow(char) {
-			return char === "x" || char === "X" || is0_7(char) || char === ".";
-		},
-	}, {
-		state: Sta.number,
-		first(state, char) {
-			return state === Sta.default && is1_9(char);
-		},
-		follow(char) {
-			return isNumber(char) || char === ".";
-		},
-	}, {
-		state: Sta.number_16_start,
-		first(state, char) {
-			return state === Sta.number_0 && (char === "x" || char === "X");
-		},
-		follow(char) {
-			return is0_16(char);
-		},
-	}, {
-		state: Sta.number_8,
-		first(state, char) {
-			return state === Sta.number_0 && is0_7(char);
-		},
-		follow(char) {
-			return is0_7(char);
-		},
-	}, {
-		state: Sta.double,
-		first(state, char) {
-			return (state === Sta.number_0 || state === Sta.number) && char === ".";
-		},
-		follow(char) {
-			return isNumber(char);
-		},
-	}, {
-		state: Sta.number_16,
-		first(state, char) {
-			return state === Sta.number_16_start && is0_16(char);
-		},
-		follow(char) {
-			return is0_16(char);
-		},
-	}, {
-		state: Sta.number_16,
-		first(state, char) {
-			return state === Sta.number_16 && is0_16(char);
-		},
-		follow(char) {
-			return is0_16(char);
-		},
-	}, {
-		state: Sta.number_8,
-		first(state, char) {
-			return state === Sta.number_8 && is0_7(char);
-		},
-		follow(char) {
-			return is0_7(char);
-		},
-	}, {
-		state: Sta.double,
-		first(state, char) {
-			return state === Sta.double && isNumber(char);
-		},
-		follow(char) {
-			return isNumber(char);
-		},
-	}, {
-		state: Sta.number,
-		first(state, char) {
-			return state === Sta.number && isNumber(char);
-		},
-		follow(char) {
-			return isNumber(char) || char === ".";
-		},
-	}, {
-		state: Sta.point,
-		first(state, char) {
-			return state === Sta.default && char === ".";
-		},
-		follow(char) {
-			return isNumber(char);
-		},
-	}, {
-		state: Sta.double,
-		first(state, char) {
-			return state === Sta.point && isNumber(char);
-		},
-		follow(char) {
-			return isNumber(char);
-		},
-	}, {
-		state: Sta.macro_start,
-		first(state, char) {
-			return state === Sta.default && char === "#";
-		},
-		follow(char) {
-			return isLetter(char);
-		},
-	}, {
-		state: Sta.macro,
-		first(state, char) {
-			return state === Sta.macro_start && isLetter(char);
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_";
-		},
-	}, {
-		state: Sta.macro,
-		first(state, char) {
-			return state === Sta.macro && (isLetter(char) || isNumber(char) || char === "_");
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_";
-		},
-	}, {
-		state: Sta.dollar,
-		first(state, char) {
-			return state === Sta.default && char === "$";
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.dollar_hex,
-		first(state, char) {
-			return state === Sta.dollar && is0_16(char);
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.dollar_macro_start,
-		first(state, char) {
-			return state === Sta.dollar && (isLetter(char) && !is0_16(char) || char === "_");
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.dollar_macro_bad,
-		first(state, char) {
-			return state === Sta.dollar && char === "$";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.dollar_macro_start,
-		first(state, char) {
-			return state === Sta.dollar_hex && (isLetter(char) && !is0_16(char) || char === "_");
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.dollar_hex,
-		first(state, char) {
-			return state === Sta.dollar_hex && is0_16(char);
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.dollar_macro_end,
-		first(state, char) {
-			return (state === Sta.dollar_hex || state === Sta.dollar_macro_start) && char === "$";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.dollar_macro_start,
-		first(state, char) {
-			return state === Sta.dollar_macro_start && (isLetter(char) || isNumber(char) || char === "_");
-		},
-		follow(char) {
-			return isLetter(char) || isNumber(char) || char === "_" || char === "$";
-		},
-	}, {
-		state: Sta.plus,
-		first(state, char) {
-			return state === Sta.default && char === "+";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.sub,
-		first(state, char) {
-			return state === Sta.default && char === "-";
-		},
-		follow(char) {
-			return char === ">";
-		},
-	}, {
-		state: Sta.mul,
-		first(state, char) {
-			return state === Sta.default && char === "*";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.assignment,
-		first(state, char) {
-			return state === Sta.default && char === "=";
-		},
-		follow(char) {
-			return char === "=";
-		},
-	}, {
-		state: Sta.eq,
-		first(state, char) {
-			return state === Sta.assignment && char === "=";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.gt,
-		first(state, char) {
-			return state === Sta.default && char === ">";
-		},
-		follow(char) {
-			return char === "=";
-		},
-	}, {
-		state: Sta.gt_eq,
-		first(state, char) {
-			return state === Sta.gt && char === "=";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.lt,
-		first(state, char) {
-			return state === Sta.default && char === "<";
-		},
-		follow(char) {
-			return char === "=";
-		},
-	}, {
-		state: Sta.lt_eq,
-		first(state, char) {
-			return state === Sta.lt && char === "=";
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.field,
-		first(state, char) {
-			return state === Sta.default && (char === "(" || char === ")" || char === "[" || char === "]" || char === "{" || char === "}" || char === ",");
-		},
-		follow(char) {
-			return false;
-		},
-	}, {
-		state: Sta.not,
-		first(state, char) {
-			return state === Sta.default && char === "!";
-		},
-		follow(char) {
-			return char === "=";
-		},
-	}, {
-		state: Sta.not_eq,
-		first(state, char) {
-			return state === Sta.not && char === "=";
-		},
-		follow(char) {
-			return false;
-		},
-	}];
-	const des: TokenizeElseDefine[] = [{
-		state: Sta.div,
-		tokenType: "op"
-	}, {
-		state: Sta.block_comment_start,
-		tokenType: "block_comment_defect"
-	}, {
-		state: Sta.block_comment_wait_end,
-		tokenType: "block_comment_defect"
-	}, {
-		state: Sta.block_comment_end,
-		tokenType: "block_comment"
-	}, {
-		state: Sta.comment_start,
-		tokenType: "comment"
-	}, {
-		state: Sta.string_start,
-		tokenType: "defect_string"
-	}, {
-		state: Sta.string_escape,
-		tokenType: "bad_escape_string"
-	}, {
-		state: Sta.string_end,
-		tokenType: "string"
-	}, {
-		state: Sta.code_start,
-		tokenType: "defect_code"
-	}, {
-		state: Sta.code_end,
-		tokenType: "code"
-	}, {
-		state: Sta.id,
-		tokenType: "id"
-	}, {
-		state: Sta.number_0,
-		tokenType: "integer"
-	}, {
-		state: Sta.number,
-		tokenType: "integer"
-	}, {
-		state: Sta.number_8,
-		tokenType: "octal"
-	}, {
-		state: Sta.number_16_start,
-		tokenType: "bad_hex"
-	}, {
-		state: Sta.number_16,
-		tokenType: "hex"
-	}, {
-		state: Sta.double,
-		tokenType: "float"
-	}, {
-		state: Sta.point,
-		tokenType: "op"
-	}, {
-		state: Sta.macro_start,
-		tokenType: "bad_macro"
-	}, {
-		state: Sta.macro,
-		tokenType: "macro"
-	}, {
-		state: Sta.dollar,
-		tokenType: "bad_dollar"
-	}, {
-		state: Sta.dollar_macro_bad,
-		tokenType: "bad_macro_variable"
-	}, {
-		state: Sta.dollar_hex,
-		tokenType: "dollar_hex"
-	}, {
-		state: Sta.dollar_macro_start,
-		tokenType: "bad_macro_variable"
-	}, {
-		state: Sta.dollar_macro_end,
-		tokenType: "macro_variable"
-	}, {
-		state: Sta.plus,
-		tokenType: "op"
-	}, {
-		state: Sta.sub,
-		tokenType: "op"
-	}, {
-		state: Sta.mul,
-		tokenType: "op"
-	}, {
-		state: Sta.assignment,
-		tokenType: "op"
-	}, {
-		state: Sta.eq,
-		tokenType: "op"
-	}, {
-		state: Sta.field,
-		tokenType: "op"
-	}, {
-		state: Sta.not,
-		tokenType: "op"
-	}, {
-		state: Sta.not_eq,
-		tokenType: "op"
-	}];
-	const content = `
-	+ - * / = == > < >= <= ++ -- ! != {} () [] ,
-	+-*/===><>=<=++--!!={}()[],
-	`;
-	const d1 = new Document("E:/projects/jass/src/boot/jass/tokens.ts", content);
-	const d2 = new Document("C:/Users/Administrator/Desktop/test.j");
-	
-	const tokenizer = Tokenizer.create(d1, defaultState, ds, des);
 
-	tokenizer.onTokenize((token) => {
-		console.log(token);
-	});
+const defaultState: number = 0;
+enum DefaultState {
+	default = defaultState,
+	div = 1,
+	comment_start = 2,
+	block_comment_start = 3,
+	block_comment_wait_end = 4,
+	block_comment_end = 5,
+	string_start = 6,
+	string_escape = 7,
+	string_end = 8,
+	mark_start = 9,
+	mark_end = 10,
+	id = 11,
+	number_0 = 12,
+	number_8 = 13,
+	number_16_start = 14,
+	number_16 = 15,
+	double = 16,
+	number = 17,
+	point = 18,
+	macro_start = 19,
+	macro = 20,
+	dollar = 21,
+	dollar_hex = 23,
+	dollar_macro_start = 22,
+	dollar_macro_bad = 24,
+	dollar_macro_end = 25,
+	plus = 26,
+	sub = 27,
+	mul = 28,
+	assignment = 29,
+	eq = 30,
+	gt = 31,
+	gt_eq = 32,
+	lt = 33,
+	lt_eq = 34,
+	field = 35,
+	not = 36,
+	not_eq = 37
+};
+const DefaultTokenDefines: TokenizeDefine[] = [{
+	state: DefaultState.div,
+	first(state, char) {
+		return state === DefaultState.default && char === "/";
+	},
+	follow(char) {
+		return char === "/" || char === "*";
+	},
+}, {
+	state: DefaultState.comment_start,
+	first(state, char) {
+		return state === DefaultState.div && char === "/";
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.comment_start,
+	first(state, char) {
+		return state === DefaultState.comment_start;
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.block_comment_start,
+	first(state, char) {
+		return state === DefaultState.div && char === "*";
+	},
+	follow(char) {
+		return char !== "";
+	},
+}, {
+	state: DefaultState.block_comment_wait_end,
+	first(state, char) {
+		return state === DefaultState.block_comment_start && char === "*";
+	},
+	follow(char) {
+		return char !== "";
+	},
+}, {
+	state: DefaultState.block_comment_start,
+	first(state, char) {
+		return state === DefaultState.block_comment_start;
+	},
+	follow(char) {
+		return char !== "";
+	},
+}, {
+	state: DefaultState.block_comment_wait_end,
+	first(state, char) {
+		return state === DefaultState.block_comment_wait_end && char === "*";
+	},
+	follow(char) {
+		return char !== "";
+	},
+}, {
+	state: DefaultState.block_comment_end,
+	first(state, char) {
+		return state === DefaultState.block_comment_wait_end && char === "/";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.string_start,
+	first(state, char) {
+		return state === DefaultState.default && char === "\"";
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.string_escape,
+	first(state, char) {
+		return state === DefaultState.string_start && char === "\\";
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.string_start,
+	first(state, char) {
+		return state === DefaultState.string_escape;
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.string_end,
+	first(state, char) {
+		return state === DefaultState.string_start && char === "\"";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.string_start,
+	first(state, char) {
+		return state === DefaultState.string_start;
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.id,
+	first(state, char) {
+		return state === DefaultState.default && (isLetter(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_";
+	},
+}, {
+	state: DefaultState.mark_start,
+	first(state, char) {
+		return state === DefaultState.default && char === "'";
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.mark_end,
+	first(state, char) {
+		return state === DefaultState.mark_start && char === "'";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.mark_start,
+	first(state, char) {
+		return state === DefaultState.mark_start;
+	},
+	follow(char) {
+		return char !== "" && isNotNewLine(char);
+	},
+}, {
+	state: DefaultState.id,
+	first(state, char) {
+		return state === DefaultState.id && (isLetter(char) || isNumber(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_";
+	},
+}, {
+	state: DefaultState.number_0,
+	first(state, char) {
+		return state === DefaultState.default && char === "0";
+	},
+	follow(char) {
+		return char === "x" || char === "X" || is0_7(char) || char === ".";
+	},
+}, {
+	state: DefaultState.number,
+	first(state, char) {
+		return state === DefaultState.default && is1_9(char);
+	},
+	follow(char) {
+		return isNumber(char) || char === ".";
+	},
+}, {
+	state: DefaultState.number_16_start,
+	first(state, char) {
+		return state === DefaultState.number_0 && (char === "x" || char === "X");
+	},
+	follow(char) {
+		return is0_16(char);
+	},
+}, {
+	state: DefaultState.number_8,
+	first(state, char) {
+		return state === DefaultState.number_0 && is0_7(char);
+	},
+	follow(char) {
+		return is0_7(char);
+	},
+}, {
+	state: DefaultState.double,
+	first(state, char) {
+		return (state === DefaultState.number_0 || state === DefaultState.number) && char === ".";
+	},
+	follow(char) {
+		return isNumber(char);
+	},
+}, {
+	state: DefaultState.number_16,
+	first(state, char) {
+		return state === DefaultState.number_16_start && is0_16(char);
+	},
+	follow(char) {
+		return is0_16(char);
+	},
+}, {
+	state: DefaultState.number_16,
+	first(state, char) {
+		return state === DefaultState.number_16 && is0_16(char);
+	},
+	follow(char) {
+		return is0_16(char);
+	},
+}, {
+	state: DefaultState.number_8,
+	first(state, char) {
+		return state === DefaultState.number_8 && is0_7(char);
+	},
+	follow(char) {
+		return is0_7(char);
+	},
+}, {
+	state: DefaultState.double,
+	first(state, char) {
+		return state === DefaultState.double && isNumber(char);
+	},
+	follow(char) {
+		return isNumber(char);
+	},
+}, {
+	state: DefaultState.number,
+	first(state, char) {
+		return state === DefaultState.number && isNumber(char);
+	},
+	follow(char) {
+		return isNumber(char) || char === ".";
+	},
+}, {
+	state: DefaultState.point,
+	first(state, char) {
+		return state === DefaultState.default && char === ".";
+	},
+	follow(char) {
+		return isNumber(char);
+	},
+}, {
+	state: DefaultState.double,
+	first(state, char) {
+		return state === DefaultState.point && isNumber(char);
+	},
+	follow(char) {
+		return isNumber(char);
+	},
+}, {
+	state: DefaultState.macro_start,
+	first(state, char) {
+		return state === DefaultState.default && char === "#";
+	},
+	follow(char) {
+		return isLetter(char);
+	},
+}, {
+	state: DefaultState.macro,
+	first(state, char) {
+		return state === DefaultState.macro_start && isLetter(char);
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_";
+	},
+}, {
+	state: DefaultState.macro,
+	first(state, char) {
+		return state === DefaultState.macro && (isLetter(char) || isNumber(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_";
+	},
+}, {
+	state: DefaultState.dollar,
+	first(state, char) {
+		return state === DefaultState.default && char === "$";
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.dollar_hex,
+	first(state, char) {
+		return state === DefaultState.dollar && is0_16(char);
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.dollar_macro_start,
+	first(state, char) {
+		return state === DefaultState.dollar && (isLetter(char) && !is0_16(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.dollar_macro_bad,
+	first(state, char) {
+		return state === DefaultState.dollar && char === "$";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.dollar_macro_start,
+	first(state, char) {
+		return state === DefaultState.dollar_hex && (isLetter(char) && !is0_16(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.dollar_hex,
+	first(state, char) {
+		return state === DefaultState.dollar_hex && is0_16(char);
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.dollar_macro_end,
+	first(state, char) {
+		return (state === DefaultState.dollar_hex || state === DefaultState.dollar_macro_start) && char === "$";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.dollar_macro_start,
+	first(state, char) {
+		return state === DefaultState.dollar_macro_start && (isLetter(char) || isNumber(char) || char === "_");
+	},
+	follow(char) {
+		return isLetter(char) || isNumber(char) || char === "_" || char === "$";
+	},
+}, {
+	state: DefaultState.plus,
+	first(state, char) {
+		return state === DefaultState.default && char === "+";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.sub,
+	first(state, char) {
+		return state === DefaultState.default && char === "-";
+	},
+	follow(char) {
+		return char === ">";
+	},
+}, {
+	state: DefaultState.mul,
+	first(state, char) {
+		return state === DefaultState.default && char === "*";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.assignment,
+	first(state, char) {
+		return state === DefaultState.default && char === "=";
+	},
+	follow(char) {
+		return char === "=";
+	},
+}, {
+	state: DefaultState.eq,
+	first(state, char) {
+		return state === DefaultState.assignment && char === "=";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.gt,
+	first(state, char) {
+		return state === DefaultState.default && char === ">";
+	},
+	follow(char) {
+		return char === "=";
+	},
+}, {
+	state: DefaultState.gt_eq,
+	first(state, char) {
+		return state === DefaultState.gt && char === "=";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.lt,
+	first(state, char) {
+		return state === DefaultState.default && char === "<";
+	},
+	follow(char) {
+		return char === "=";
+	},
+}, {
+	state: DefaultState.lt_eq,
+	first(state, char) {
+		return state === DefaultState.lt && char === "=";
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.field,
+	first(state, char) {
+		return state === DefaultState.default && (char === "(" || char === ")" || char === "[" || char === "]" || char === "{" || char === "}" || char === ",");
+	},
+	follow(char) {
+		return false;
+	},
+}, {
+	state: DefaultState.not,
+	first(state, char) {
+		return state === DefaultState.default && char === "!";
+	},
+	follow(char) {
+		return char === "=";
+	},
+}, {
+	state: DefaultState.not_eq,
+	first(state, char) {
+		return state === DefaultState.not && char === "=";
+	},
+	follow(char) {
+		return false;
+	},
+}];
+const DefaultTokenTypeDefines: TokenizeTypeDefine[] = [{
+	state: DefaultState.div,
+	tokenType: "op"
+}, {
+	state: DefaultState.block_comment_start,
+	tokenType: "block_comment_defect"
+}, {
+	state: DefaultState.block_comment_wait_end,
+	tokenType: "block_comment_defect"
+}, {
+	state: DefaultState.block_comment_end,
+	tokenType: "block_comment"
+}, {
+	state: DefaultState.comment_start,
+	tokenType: "comment"
+}, {
+	state: DefaultState.string_start,
+	tokenType: "defect_string"
+}, {
+	state: DefaultState.string_escape,
+	tokenType: "bad_escape_string"
+}, {
+	state: DefaultState.string_end,
+	tokenType: "string"
+}, {
+	state: DefaultState.mark_start,
+	tokenType: "defect_mark"
+}, {
+	state: DefaultState.mark_end,
+	tokenType: "mark"
+}, {
+	state: DefaultState.id,
+	tokenType: "id"
+}, {
+	state: DefaultState.number_0,
+	tokenType: "integer"
+}, {
+	state: DefaultState.number,
+	tokenType: "integer"
+}, {
+	state: DefaultState.number_8,
+	tokenType: "octal"
+}, {
+	state: DefaultState.number_16_start,
+	tokenType: "bad_hex"
+}, {
+	state: DefaultState.number_16,
+	tokenType: "hex"
+}, {
+	state: DefaultState.double,
+	tokenType: "float"
+}, {
+	state: DefaultState.point,
+	tokenType: "op"
+}, {
+	state: DefaultState.macro_start,
+	tokenType: "bad_macro"
+}, {
+	state: DefaultState.macro,
+	tokenType: "macro"
+}, {
+	state: DefaultState.dollar,
+	tokenType: "bad_dollar"
+}, {
+	state: DefaultState.dollar_macro_bad,
+	tokenType: "bad_macro_variable"
+}, {
+	state: DefaultState.dollar_hex,
+	tokenType: "dollar_hex"
+}, {
+	state: DefaultState.dollar_macro_start,
+	tokenType: "bad_macro_variable"
+}, {
+	state: DefaultState.dollar_macro_end,
+	tokenType: "macro_variable"
+}, {
+	state: DefaultState.plus,
+	tokenType: "op"
+}, {
+	state: DefaultState.sub,
+	tokenType: "op"
+}, {
+	state: DefaultState.mul,
+	tokenType: "op"
+}, {
+	state: DefaultState.assignment,
+	tokenType: "op"
+}, {
+	state: DefaultState.eq,
+	tokenType: "op"
+}, {
+	state: DefaultState.field,
+	tokenType: "op"
+}, {
+	state: DefaultState.not,
+	tokenType: "op"
+}, {
+	state: DefaultState.not_eq,
+	tokenType: "op"
+}];
 
-	tokenizer.build();
+class Tokenizer {
+
+	private constructor() { }
+
+	public static get(content: string, handle?: TokenizerHandleFunction) {
+		const tokenizer = TokenizerBuild.create(content, defaultState, DefaultTokenDefines, DefaultTokenTypeDefines);
+
+		if (handle) {
+			tokenizer.onTokenize(handle);
+		}
+
+		return tokenizer.get();
+	}
 }
+
+export {
+	Tokenize,
+	TokenizerBuild,
+	TokenizeDefine,
+	TokenizeTypeDefine,
+	DefaultState,
+	DefaultTokenDefines,
+	DefaultTokenTypeDefines,
+	TokenizerHandleFunction,
+	Tokenizer
+};
+
+if (false) {
+	Tokenizer.get(`a123456`, (t) => {
+		console.log(t);
+	});
+}
+
+
