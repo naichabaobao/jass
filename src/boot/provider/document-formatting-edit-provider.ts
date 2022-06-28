@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { tokenize } from "../jass/tokens";
 
-
+// Symbols that require spaces
 const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{", "}", "!=", "=="];
 
 /**
@@ -71,6 +71,8 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       const text = lineText.text;
       const ts = tokenize(text);
       ts.reduce((previousValue, currentValue, currentIndex, array) => {
+        // If the current location is the symbol specified by needaddspaceops
+        // Judge whether a space should be added to the relationship between the current symbol and the previous symbol
         if (currentValue.isOp() && NeedAddSpaceOps.includes(currentValue.value) && (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark() || previousValue.value == ")" || previousValue.value == "]")) {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
@@ -79,7 +81,8 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
             ), " "));
           }
         } else if (
-         (currentValue.isId() || currentValue.isInt() || currentValue.isReal() || currentValue.isString() || currentValue.isMark() || currentValue.value == "(" || currentValue.value == "[") &&
+        // If the current position is non symbolic and preceded by a symbol
+        (currentValue.isId() || currentValue.isInt() || currentValue.isReal() || currentValue.isString() || currentValue.isMark() || currentValue.value == "(" || currentValue.value == "[") &&
          previousValue.isOp() && NeedAddSpaceOps.includes(previousValue.value)) {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
@@ -87,6 +90,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
               new vscode.Position(lineText.lineNumber, currentValue.position)
             ), " "));
           }
+        // Between two identifiers
         } else if (currentValue.isId() && previousValue.isId()) {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
@@ -94,7 +98,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
               new vscode.Position(lineText.lineNumber, currentValue.position)
             ), " "));
           }
-        } else if (previousValue.isOp() && previousValue.value == ",") {
+        } else if (previousValue.isOp() && previousValue.value == ",") { // Add only one space to the right of the symbol
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
               new vscode.Position(lineText.lineNumber, previousValue.end),
