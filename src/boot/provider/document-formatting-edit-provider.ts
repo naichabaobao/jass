@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { tokenize } from "../jass/tokens";
 
 
-const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{","}"];
+const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{", "}", "!=", "=="];
 
 /**
  * 默认会认为已闭合
@@ -71,7 +71,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       const text = lineText.text;
       const ts = tokenize(text);
       ts.reduce((previousValue, currentValue, currentIndex, array) => {
-        if (currentValue.isOp() && NeedAddSpaceOps.includes(currentValue.value) && (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark())) {
+        if (currentValue.isOp() && NeedAddSpaceOps.includes(currentValue.value) && (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark() || previousValue.value == ")" || previousValue.value == "]")) {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
               new vscode.Position(lineText.lineNumber, previousValue.end),
@@ -79,7 +79,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
             ), " "));
           }
         } else if (
-         (currentValue.isId() || currentValue.isInt() || currentValue.isReal() || currentValue.isString() || currentValue.isMark()) &&
+         (currentValue.isId() || currentValue.isInt() || currentValue.isReal() || currentValue.isString() || currentValue.isMark() || currentValue.value == "(" || currentValue.value == "[") &&
          previousValue.isOp() && NeedAddSpaceOps.includes(previousValue.value)) {
           if (currentValue.position - previousValue.end != 1) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(
