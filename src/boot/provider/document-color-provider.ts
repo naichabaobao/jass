@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { Tokenizer } from '../jass/tokens';
 
 /// 颜色提供
 const convertInt2Hex = (int: number) => {
@@ -65,6 +66,8 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
 }
 
+console.log("?????");
+
 vscode.languages.registerColorProvider("jass", new JassDocumentColorProvider);
 
 vscode.languages.registerColorProvider("jass", new class DocumentColorProvider implements vscode.DocumentColorProvider {
@@ -73,26 +76,42 @@ vscode.languages.registerColorProvider("jass", new class DocumentColorProvider i
     const lineCount = document.lineCount;
     let colors = new Array<vscode.ColorInformation>();
     // new RegExp(/\|[cC][\da-fA-F]{8}.+?\|[rR]/, "g")
-    let colorReg = new RegExp(/DzGetColor\(\s*(?<a>[\dx$'\.]+)\s*,\s*(?<r>[\dx$'\.]+)\s*,\s*(?<g>[\dx$'\.]+)\s*,\s*(?<b>[\dx$'\.]+)\)\s*/, "g")
+
+    const DzGetColorMatch = new RegExp(/\bDzGetColor/)
+
+    console.log("do ");
+
+    // let colorReg = new RegExp(/DzGetColor\(\s*(?<a>[\dxX$'\.]+)\s*,\s*(?<r>[\dxX$'\.]+)\s*,\s*(?<g>[\dxX$'\.]+)\s*,\s*(?<b>[\dxX$'\.]+))\s*\)/, "g")
     for (let i = 0; i < lineCount; i++) {
       let lineText = document.lineAt(i).text;
-      if (colorReg.test(lineText)) {
-        console.log();
-        const matchSet = lineText.match(colorReg);
 
-        const parse = (mat: RegExpMatchArray) => {
-          if (!mat.groups) {
-            return;
-          }
-          const aStr = mat.groups["a"];
-          const rStr = mat.groups["r"];
-          const gStr = mat.groups["g"];
-          const bStr = mat.groups["b"];
-
-          
-
-        };
+      if (DzGetColorMatch.test(lineText)) {
+        console.log("zhaodaole ");
       }
+
+      // if (colorReg.test(lineText)) {
+        
+      //   const matchSet = lineText.match(colorReg);
+
+      //   if (matchSet) {
+      //     const parse = (mat: RegExpMatchArray) => {
+      //       if (!mat.groups) {
+      //         return;
+      //       }
+      //       console.log(mat.index);
+            
+      //       const aStr = mat.groups["a"];
+      //       const rStr = mat.groups["r"];
+      //       const gStr = mat.groups["g"];
+      //       const bStr = mat.groups["b"];
+  
+      //       Tokenizer.get(aStr)
+  
+      //     };
+
+      //     parse(matchSet);
+      //   }
+      // }
       // let colotSet = lineText.match(colorReg)
       // let posstion = 0
       // if (colotSet && 'forEach' in colotSet) {

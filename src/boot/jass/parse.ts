@@ -1,5 +1,5 @@
 
-import { Position, Range } from "../common";
+import { Position, Range } from "./ast";
 import { isNewLine } from "../tool";
 import { Func, Global, JassError, Program, Native, Take, Local, LineComment, BlockComment, DefineMacro } from "./ast";
 import { Token, tokenize, tokens } from "./tokens";

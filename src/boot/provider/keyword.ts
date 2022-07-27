@@ -1,3 +1,7 @@
+/**
+ * 后续吧这文件移动到jass目录下
+ */
+
 import { unique } from "../tool";
 
 const JassKeywork = ["function","endfunction","constant","native","local","type","set","call","takes","returns","extends","array","true","false","null","nothing","if","else","elseif","endif","then","loop","endloop","exitwhen","return","and","or","not","globals","endglobals"];

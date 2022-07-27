@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, isJFile, isUsableFile, isZincFile} from "../tool";
+import { compare, getFileContent, isJFile, isUsableFile, isZincFile} from "../tool";
 
 import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
 
@@ -72,11 +72,7 @@ const dataMap = new DataMap();
 const zincDataMap = new DataMap();
 const cjassDataMap = new DataMap();
 
-function getFileContent(filePath: string):string {
-  return fs.readFileSync(filePath, {
-    encoding: "utf8"
-  }).toString();
-}
+
 
 function setSource(filePath: string, program: Program) {
 

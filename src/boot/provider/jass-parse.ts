@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 
-import {Position, Range, Rangebel} from "../common";
+import {Position, Range, Rangebel} from "../jass/ast";
 import { retainVjassBlock } from "../tool";
 
 

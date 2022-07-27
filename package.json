@@ -4,9 +4,15 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
+<<<<<<< HEAD
   "version": "1.6.14",
+=======
+  "version": "1.6.13",
+>>>>>>> private
   "keywords": [
     "jass",
+    "vjass",
+    "zinc",
     "warcraft"
   ],
   "engines": {

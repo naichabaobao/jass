@@ -10,7 +10,7 @@ import { AllKeywords } from './keyword';
 import { Types } from './types';
 import { Func, Library, Local, Program, Take } from "../jass/ast";
 import data, { parseContent } from "./data";
-import { Rangebel } from '../common';
+import { Rangebel } from '../jass/ast';
 import { Options } from './options';
 import { compare, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';

@@ -1,5 +1,5 @@
 
-import { Position, Range } from "../common";
+import { Position, Range } from "../jass/ast";
 import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError, LineComment} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 
