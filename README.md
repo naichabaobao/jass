@@ -44,14 +44,14 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![include-dome](https://gitee.com/naichabaobao/jass/raw/master/static/images/include-dome.png)
+![include-dome](/naichabaobao/jass/raw/master/static/images/include-dome.png)
 
 ### 1.6.12
 ##### 2022年6月13日
 ###### 新的配置项exclude
-![include-dome](https://gitee.com/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
+![include-dome](/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
 
-![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
-![param-display](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
+![param](/naichabaobao/jass/raw/master/static/images/comment-param.png)
+![param-display](/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
 
 ```---star一下吧！---```

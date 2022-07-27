@@ -165,12 +165,13 @@ native DzFrameGetUnitMessage takes nothing returns integer
 // 获取最上的信息
 native DzFrameGetTopMessage takes nothing returns integer
 // 取rgba色值
-native DzGetColor takes integer r, integer g, integer b, integer a returns integer
+native DzGetColor takes integer a, integer r, integer g, integer b returns integer
 // 设置界面更新回调（非同步）
 native DzFrameSetUpdateCallback takes string func returns nothing
 // 界面更新回调
 native DzFrameSetUpdateCallbackByCode takes code funcHandle returns nothing
 // 显示/隐藏窗体
+// @param enable [true: 显示| false: 隐藏]
 native DzFrameShow takes integer frame, boolean enable returns nothing
 // 创建窗体
 native DzCreateFrame takes string frame, integer parent, integer id returns integer
@@ -187,9 +188,13 @@ native DzLoadToc takes string fileName returns nothing
 // @param point [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
 // @param relativeFrame 相对容器,一般使用DzGetGameUI() frame窗体会根据relativeFrame确定自己的位置，当relativeFrame窗体移动时frame窗体也会相对移动
 // @param relativePoint [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
+// @param x 为0.8比例
+// @param y 为0.6比例
 native DzFrameSetPoint takes integer frame, integer point, integer relativeFrame, integer relativePoint, real x, real y returns nothing
 // 设置窗体绝对位置
 // @param point [0:左上|1:上|2:右上|3:左|4:中|5:右|6:左下|7:下|8:右下]
+// @param x 为0.8比例
+// @param y 为0.6比例
 native DzFrameSetAbsolutePoint takes integer frame, integer point, real x, real y returns nothing
 // 清空窗体锚点
 native DzFrameClearAllPoints takes integer frame returns nothing
@@ -197,8 +202,12 @@ native DzFrameClearAllPoints takes integer frame returns nothing
 // @param enable false 禁用后 按钮 或者文本 不再遮挡鼠标 
 native DzFrameSetEnable takes integer name, boolean enable returns nothing
 // 注册用户界面事件回调
+// @param eventId [1: 鼠标点击| 2: 鼠标进入|3: 鼠标离开|4: 鼠标释放|5: 未知|6: 鼠标滚轮|7: 未知|8: 未知|9: 未知|10: 未知|11: 未知|12: 鼠标双击]
+// @param sync [true: 同步|false: 异步]
 native DzFrameSetScript takes integer frame, integer eventId, string func, boolean sync returns nothing
 //  注册UI事件回调(func handle) 注册点击按钮触发的动作
+// @param eventId [1: 鼠标点击| 2: 鼠标进入|3: 鼠标离开|4: 鼠标释放|5: 未知|6: 鼠标滚轮|7: 未知|8: 未知|9: 未知|10: 未知|11: 未知|12: 鼠标双击]
+// @param sync [true: 同步|false: 异步]
 native DzFrameSetScriptByCode takes integer frame, integer eventId, code funcHandle, boolean sync returns nothing
 // 获取触发用户界面事件的玩家
 native DzGetTriggerUIEventPlayer takes nothing returns player
@@ -267,24 +276,27 @@ native DzFrameSetValue takes integer frame, real value returns nothing
 // 设置窗体大小
 native DzFrameSetSize takes integer frame, real w, real h returns nothing
 // 根据tag创建窗体
+// @param frameType ["BACKDROP", "TEXT", "BUTTON", "GLUEBUTTON", "GLUETEXTBUTTON", "FRAME"]
 native DzCreateFrameByTagName takes string frameType, string name, integer parent, string template, integer id returns integer
 // 设置颜色（支持SimpleStatusBar）
 native DzFrameSetVertexColor takes integer frame, integer color returns nothing
 // 不明觉厉
 native DzOriginalUIAutoResetPoint takes boolean enable returns nothing
-//  设置优先级 [NEW] 测试时只有0和1两个优先级(不太确定) 测试时多次设置无效(不太确定)
+//  设置优先级 [NEW]
+// @param priority 当两个frame重叠时,值大的覆盖值少的, 正常情况是后创建的覆盖前创建的
 native DzFrameSetPriority takes integer frame, integer priority returns nothing
-//  设置父窗口 [NEW] 测试时多次设置无效(不太确定)
+//  设置父窗口 [NEW]
 native DzFrameSetParent takes integer frame, integer parent returns nothing
 // 设置字体 [NEW]
 // 修改字体大小
 // @param fileName 可选值["Fonts\dffn_b31.ttf", "Fonts\\DFHeiMd.ttf", "Fonts\\dfst-m3u.ttf", "Fonts\\FRIZQT__.TTF", "Fonts\\NIM_____.ttf", "Fonts\\tt5500m_.ttf"]
 // @param height 字体大小
+// @param flag 加粗、斜体或者加粗+斜体
 native DzFrameSetFont takes integer frame, string fileName, real height, integer flag returns nothing
 //  获取 Frame 的 高度 [NEW]
 native DzFrameGetHeight takes integer frame returns real
 //  设置对齐方式 [NEW] 
-// @param align 对齐方式 [9:左上|23:上|99:右上|10:左|50:中|98:右|12:左下|20:下|100:右下]
+// @param align 对齐方式 [0:左|1:中|2:右]
 native DzFrameSetTextAlignment takes integer frame, integer align returns nothing
 //  获取 Frame 的 Parent [NEW]
 native DzFrameGetParent takes integer frame returns integer
