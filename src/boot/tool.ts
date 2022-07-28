@@ -475,6 +475,20 @@ function getFileContent(filePath: string):string {
 	}).toString();
   }
 
+// 讲jass integer字符串转为number
+function jassIntegerToNumber(type: "integer"|"hex"|"mark"|"dollar_hex"|"octal"|string, jassIntegerString: string):(number|null) {
+	if (type == "integer" || type == "hex" || type == "octal") {
+		return parseInt(jassIntegerString);
+	} else if (type == "dollar_hex") {
+		return parseInt(jassIntegerString.replace(/\$/, "0x"));
+	} else if (type == "mark") {
+		if (jassIntegerString.length == 6) {
+			return parseInt("0x" + jassIntegerString.charCodeAt(1).toString(16) + jassIntegerString.charCodeAt(2).toString(16) + jassIntegerString.charCodeAt(3).toString(16) + jassIntegerString.charCodeAt(4).toString(16))
+		} else return null;
+	}
+	return null;
+}
+
 export {
 	is0_16,
 	is0_7,
@@ -496,7 +510,8 @@ export {
 	getPathFileName,
 	compare,
 	isUsableFile,
-	getFileContent
+	getFileContent,
+	jassIntegerToNumber
 };
 
 

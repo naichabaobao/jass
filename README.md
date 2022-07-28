@@ -51,7 +51,18 @@ endlibrary
 ###### 新的配置项exclude
 ![include-dome](/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
 
+### 1.6.1
 ![param](/naichabaobao/jass/raw/master/static/images/comment-param.png)
 ![param-display](/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
+
+### 1.6.15
+##### 2022年7月28日
+###### dzGetColor颜色
+![dzGetColor](/naichabaobao/jass/raw/master/static/images/dz-color.png)
+
+--------------------------------------------------------------
+
+***请我喝奶茶***
+![一起出份力赞助我开发吧！爱你哟](/naichabaobao/jass/raw/master/static/images/qrcode.png)
 
 ```---star一下吧！---```

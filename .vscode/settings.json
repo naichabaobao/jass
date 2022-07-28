@@ -10,5 +10,32 @@
     "typescript.tsc.autoDetect": "off",
     "cSpell.words": [
         "Jass"
-    ]
+    ],
+    "terminal.integrated.profiles.linux": {
+
+        "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh"
+        },
+        "fish": {
+            "path": "fish"
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        }
+    },
+    "terminal.integrated.env.windows": {
+    
+    },
+    "terminal.integrated.env.linux": {
+    
+    }
 }
