@@ -63,6 +63,6 @@ endlibrary
 --------------------------------------------------------------
 
 ***请我喝奶茶***
-![一起出份力赞助我开发吧！爱你哟](/naichabaobao/jass/raw/master/static/images/qrcode.png)
+![一起出份力赞助我开发吧！爱你哟](./static/images/qrcode.png )
 
 ```---star一下吧！---```
