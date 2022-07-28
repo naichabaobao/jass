@@ -13,25 +13,26 @@
 3.  WE触发器    自定义脚本区    #include  "Main.j"
 
 
-### "Main.j"  内容
 
 --------------------------------------------------------
 
-```jass
-// 友情提供: 枫舞
-#include  "****.j"    //这是引入的其他j文件
+```cpp
+#include  "c://dir/any.j" // 在ydwe中使用引入
+```
 
-//触发器主体  注:Main文件 要有一个空的触发
-// -------------------------------------------------------
-
+>any.j
+```
 //以下为外部引用触发器的格式
 //Main  为触发器名字
 //MainAction  为动作函数名 对应T的动作
 //MainEvent   为触发函数名 对应T的事件
+
 library Main initializer MainEvent
+  // 动作
   function MainAction takes nothing returns nothing
           
   endfunction
+  // initializer MainEvent 指定此方法后vjass会自动执行一次,类似事件'地图初始化'
   function MainEvent takes nothing returns nothing
     local trigger mainTrigger = CreateTrigger()
     call TriggerRegisterTimerEventSingle(mainTrigger,0)
@@ -44,21 +45,21 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![include-dome](/naichabaobao/jass/raw/master/static/images/include-dome.png)
+![include-dome](./static/images/include-dome.png)
 
 ### 1.6.12
 ##### 2022年6月13日
 ###### 新的配置项exclude
-![include-dome](/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
+![include-dome](./static/images/exclude-dome.png)
 
 ### 1.6.1
-![param](/naichabaobao/jass/raw/master/static/images/comment-param.png)
-![param-display](/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
+![param](./static/images/comment-param.png)
+![param-display](./static/images/images/comment-param-display.png)
 
 ### 1.6.15
 ##### 2022年7月28日
 ###### dzGetColor颜色
-![dzGetColor](/naichabaobao/jass/raw/master/static/images/dz-color.png)
+![dzGetColor](./static/images/dz-color.png)
 
 --------------------------------------------------------------
 
