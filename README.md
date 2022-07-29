@@ -45,7 +45,7 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![include-dome](./static/images/include-dome.png)
+![include-dome](../../raw/master/static/images/include-dome.png)
 
 ### 1.6.12
 ##### 2022年6月13日
@@ -54,7 +54,7 @@ endlibrary
 
 ### 1.6.1
 ![param](./static/images/comment-param.png)
-![param-display](./static/images/images/comment-param-display.png)
+![param-display](./static/images/comment-param-display.png)
 
 ### 1.6.15
 ##### 2022年7月28日
