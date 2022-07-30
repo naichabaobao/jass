@@ -45,25 +45,25 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![include-dome](../../raw/master/static/images/include-dome.png)
+![include-dome](https://gitee.com/naichabaobao/jass/raw/master/static/images/include-dome.png)
 
 ### 1.6.12
 ##### 2022年6月13日
 ###### 新的配置项exclude
-![include-dome](../../raw/master/static/images/exclude-dome.png)
+![include-dome](https://gitee.com/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
 
 ### 1.6.1
-![param](../../raw/master/static/images/comment-param.png)
-![param-display](../../raw/master/static/images/comment-param-display.png)
+![param](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
+![param-display](https://gitee.com/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
 
 ### 1.6.15
 ##### 2022年7月28日
 ###### dzGetColor颜色
-![dzGetColor](../../raw/master/static/images/dz-color.png)
+![dzGetColor](https://gitee.com/naichabaobao/jass/raw/master/static/images/dz-color.png)
 
 --------------------------------------------------------------
 
 ***请我喝奶茶***
-![一起出份力赞助我开发吧！爱你哟](../../raw/master/static/images/qrcode.png )
+![一起出份力赞助我开发吧！爱你哟](https://gitee.com/naichabaobao/jass/raw/master/static/images/qrcode.png )
 
 ```---star一下吧！---```
