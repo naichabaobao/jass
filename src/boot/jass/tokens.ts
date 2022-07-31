@@ -2,7 +2,7 @@
 import { resolve } from "path";
 import { cwd } from "process";
 import { getFileContent, is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isNumber, isSpace } from "../tool";
-import { Document, Position, Range } from "./ast";
+import { Position, Range } from "./ast";
 
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "block_comment" | "comment" | "macro";
 
@@ -590,7 +590,11 @@ enum DefaultState {
 	field = 35,
 	not = 36,
 	not_eq = 37,
-	unkown
+	unkown = 38,
+	lua_start = 39,
+	lua_wait = 42,
+	lua_end = 40,
+	what = 41
 };
 
 class Tokenizer {
@@ -666,11 +670,18 @@ class Tokenizer {
 		new TokenizeDefineStruct(DefaultState.eq, "op", (state, char) =>  state === DefaultState.assignment && char === "=", (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.gt, "op", (state, char) =>  state === DefaultState.default && char === ">", (char) =>  char === "="),		
 		new TokenizeDefineStruct(DefaultState.gt_eq, "op", (state, char) =>  state === DefaultState.gt && char === "=", (char) =>  false),		
-		new TokenizeDefineStruct(DefaultState.lt, "op", (state, char) =>  state === DefaultState.default && char === "<", (char) =>  char === "="),		
+		new TokenizeDefineStruct(DefaultState.lt, "op", (state, char) =>  state === DefaultState.default && char === "<", (char) =>  char === "=" || char === "?"),		
 		new TokenizeDefineStruct(DefaultState.lt_eq, "op", (state, char) =>  state === DefaultState.lt && char === "=", (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.field, "op", (state, char) =>  state === DefaultState.default && (char === "(" || char === ")" || char === "[" || char === "]" || char === "{" || char === "}" || char === ","), (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.not, "op", (state, char) =>  state === DefaultState.default && char === "!", (char) =>  char === "="),		
 		new TokenizeDefineStruct(DefaultState.not_eq, "op", (state, char) =>  state === DefaultState.not && char === "=", (char) =>  false),		
+		new TokenizeDefineStruct(DefaultState.lua_start, "lua_start", (state, char) =>  state === DefaultState.lt && char === "?", (char) =>  true),		
+		// new TokenizeDefineStruct(DefaultState.default, "lua_start", (state, char) =>  state === DefaultState.lua_start && char === "=", (char) =>  false),		
+		new TokenizeDefineStruct(DefaultState.lua_wait, "lua_start", (state, char) =>  state === DefaultState.lua_start && char === "?", (char) =>  true),		
+		new TokenizeDefineStruct(DefaultState.lua_wait, "lua_start", (state, char) =>  state === DefaultState.lua_wait && char === "?", (char) =>  true),		
+		new TokenizeDefineStruct(DefaultState.lua_end, "lua", (state, char) =>  state === DefaultState.lua_wait && char === ">", (char) =>  false),		
+		new TokenizeDefineStruct(DefaultState.lua_start, "lua_start", (state, char) =>  state === DefaultState.lua_wait, (char) =>  true),		
+		new TokenizeDefineStruct(DefaultState.lua_start, "lua_start", (state, char) =>  state === DefaultState.lua_start, (char) =>  true),		
 		new TokenizeDefineStruct(DefaultState.unkown, "unkown", (state, char) =>  state ==DefaultState.default && /\S/.test(char), (char) =>  /\S/.test(char)),
 		new TokenizeDefineStruct(DefaultState.unkown, "unkown", (state, char) =>  state ==DefaultState.unkown && /\S/.test(char), (char) =>  /\S/.test(char)),
 	];
@@ -680,7 +691,7 @@ class Tokenizer {
 	}
 
 	/**
-	 * jass词法分析,包含textmacro块、zinc块、lua块和宏
+	 * jass词法分析
 	 * @param content 
 	 * @param handle 
 	 */
@@ -688,9 +699,12 @@ class Tokenizer {
 
 	}
 
-	public static build(content: string) {
+	public static build(content: string, handle?: TokenizerHandleFunction) {
 		const tokenizer = TokenizerBuild.create(content, defaultState, this.jassDefaultTokenizeDefines());
 
+		if (handle) {
+			tokenizer.onTokenize(handle)
+		}
 
 		tokenizer.build();
 	}
@@ -707,21 +721,30 @@ export {
 };
 
 if (true) {
-	const content = getFileContent(resolve(cwd(), "./static/blizzard.j"))??`
+	const content = `
 	_$$_
-	无效
+	<?=
+
+	?
+
+
+
+	??????
+
+	123
+?
 	`;
 	console.time("Tokenizer");
 	// console.log(Tokenizer.get(content).length);
 	// Tokenizer.get(content, (t) => {
 	// 	console.log(t);
 	// });
-	Tokenizer.build(content);
+	Tokenizer.get(content, (t) => console.log(t));
 	console.timeEnd("Tokenizer");
 
 	console.time("tokenize");
 	// console.log(tokenize(content));
-	console.log(tokenize(content).length);
+	// console.log(tokenize(content).length);
 	console.timeEnd("tokenize");
 }
 

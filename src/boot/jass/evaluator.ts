@@ -1,5 +1,5 @@
 import { isKeyword } from "../provider/keyword";
-import { Range } from "./ast";
+import { Position, Range } from "./ast";
 import { Tokenize, Tokenizer } from "./tokens";
 
 class TokenDocument {
@@ -518,5 +518,48 @@ function parsing(tokens: Tokenize[], then: () => void, error: (event: ParseError
 
 parsing([], () => {}, (event) => {console.log(event);
 });
+
+interface ops<O, E> {
+    match: (option: O) => boolean;
+    handle: (expr: E, token: Tokenize, option: O) => {expr: E, option: O}
+}
+
+function p<O>(content: string, ops: ParOption<O>[]) {
+    Tokenizer.build(content, (token) => {
+
+    });
+}
+
+class ParOption<E> {
+    isJ: boolean = true;
+    isZinc: boolean = false;
+    isAi: boolean = false;
+    isFirstLine: boolean = false;
+    isStart: boolean = false;
+
+    inGlobals: boolean = false;
+    inFunction: boolean = false;
+
+    inIf: boolean = false;
+    inLoop: boolean = false;
+
+    expr: E;
+
+    handle: <A>(op: ParOption<E>) => ParOption<A>;
+
+    constructor(expr: E, handle: <A>(op: ParOption<E>) => ParOption<A>) {
+        this.expr = expr;
+
+        this.handle = handle;
+    }
+}
+
+class Root {};
+
+
+p(``, [
+    // new ParOption()
+]);
+
 
     
