@@ -156,7 +156,8 @@
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "build": "vsce package",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "temp": "tsc && node ./out/boot/jass/tokens.js"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

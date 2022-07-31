@@ -132,3 +132,18 @@ function lines(content: string): LineText[] {
 }
 
 export {removeComment, lines};
+
+/**
+ * 
+ * @param content //! zinc 字符串
+ */
+export function isZincStart(content: string) {
+	return /^\s*\/\/!\s+zinc\b/.test(content);
+}
+/**
+ * 
+ * @param content //! zinc 字符串
+ */
+export function isZincEnd(content: string) {
+	return /^\s*\/\/!\s+endzinc\b/.test(content);
+}
