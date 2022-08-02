@@ -49,6 +49,13 @@ class Range {
 		}
 	}
 
+	public from<T extends Range>(range: T) {
+		this.start = range.start;
+		this.end = range.end;
+		return this;
+	}
+
+
 }
 
 
@@ -124,8 +131,8 @@ class LineText extends Range {
 
 
 
-class Node implements Rangebel { 
-	public loc: Range = Range.default();
+class Node implements Rangebel  { 
+	public readonly loc: Range = Range.default(); 
 }
 
 type ParamAnnotation = {
@@ -202,7 +209,7 @@ class Take extends Node {
 	}
 }
 
-class Native extends Declaration implements Rangebel, Desc, Descript {
+class Native extends Declaration implements Desc, Descript {
 	public nameToken: Token | null = null;
 	public name: string;
 	public readonly takes: Take[];
@@ -486,7 +493,7 @@ class Library extends Declaration implements  Descript, Option {
 }
 
 type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
-	| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock";
+	| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock" | "IDentifier";
 
 class AstNode extends Range {
 	protected readonly astType: AstType;

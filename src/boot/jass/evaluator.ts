@@ -1,5 +1,5 @@
 import { isKeyword } from "../provider/keyword";
-import { Position, Range } from "./ast";
+import { Identifier, Position, Range } from "./ast";
 import { Tokenize, Tokenizer } from "./tokens";
 
 class TokenDocument {
@@ -28,7 +28,7 @@ class TokenDocument {
 type TokenHandle = (currentToken: Tokenize, lineTokens: Tokenize[], isStart:boolean) => void;
 
 function parseTextMacro(tokens: Tokenize[], textMacro: TextMacroStatement) {
-    console.log(tokens);
+
     
     if (isId(tokens[0]) && tokens[0].value == "textmacro") {
         if (tokens[1] && isId(tokens[1])) {
@@ -53,86 +53,8 @@ function parseTextMacro(tokens: Tokenize[], textMacro: TextMacroStatement) {
     }
 }
 
-class Evaluator {
-    private toTokenDocument(tokens: Tokenize[]) {
-        return new TokenDocument(tokens);
-    }
 
-    private parseTextMacroLine(lineToken: Tokenize, textMacro: TextMacroStatement) {
-        if (lineToken.type === "comment" && lineToken.value.startsWith("//!")) {
-            const subText = lineToken.value.replace(/^\/\/!/, "   ");
-            console.log(subText);
-            
-            parseTextMacro(Tokenizer.get(subText), textMacro);
-        }
-    }
-
-    private parseTextMacro(tokens: Tokenize[]) {
-        let inTextMacroRange = false;
-        let textMacro:TextMacroStatement|null = null;
-        const textMacroStatements:TextMacroStatement[] = [];
-        const nonTextMacroTokens:Tokenize[] = [];
-        this.lineForEach(tokens, (token, ts, isStart) => {
-            if (isStart && /^\/\/!\s+textmacro\b/.test(token.value)) {
-                if (inTextMacroRange) {
-                    this.error(new ParseError("textmacro", "Duplicate definition textmacro").setRange(token));
-                } else {
-                    inTextMacroRange = true;
-                }
-                textMacro = new TextMacroStatement().setRange(token);
-                this.parseTextMacroLine(token, textMacro);
-                textMacroStatements.push(textMacro);
-            } else if (isStart && /^\/\/!\s+endtextmacro\b/.test(token.value)) {
-                if (inTextMacroRange) {
-                    inTextMacroRange = false;
-                    if (textMacro) {
-                        textMacro.isClose = true;
-                        textMacro.end = token.end;
-                    }
-                } else {
-                    this.error(new ParseError("textmacro", "Duplicate definition endtextmacro").setRange(token));
-                }
-            } else if (inTextMacroRange) {
-                textMacro?.body.push(token);
-            } else {
-                nonTextMacroTokens.push(token);
-            }
-        });
-        console.log(textMacro)
-    }
-
-    private lineForEach(tokens: Tokenize[], handle: TokenHandle) {
-        const tokenDocument = this.toTokenDocument(tokens);
-
-        tokenDocument.forEach((ts) => {
-            ts.forEach((t, index) => {
-                const isStart = index == 0;
-                handle(t, ts, isStart);
-            });
-        });
-
-    }
-
-    private error(error: ParseError) {
-
-    }
-
-    public parsing(tokens: Tokenize[], handle: TokenHandle) {
-        this.parseTextMacro(tokens);
-        return ;
-        const tokenDocument = this.toTokenDocument(tokens);
-
-        tokenDocument.forEach((ts) => {
-            ts.forEach((t, index) => {
-                const isStart = index == 0;
-                handle(t, ts, isStart);
-            });
-        });
-
-    }
-}
-
-class TreeNode extends Range {
+abstract class TreeNode extends Range {
 
     public nodeType: String;
 
@@ -199,6 +121,60 @@ class Block extends TreeNode {
     }
 }
 
+enum DiagnosticSeverity {
+
+    /**
+     * Something not allowed by the rules of a language or other means.
+     */
+    Error = 0,
+
+    /**
+     * Something suspicious but allowed.
+     */
+    Warning = 1,
+
+    /**
+     * Something to inform about but not a problem.
+     */
+    Information = 2,
+
+    /**
+     * Something to hint to a better way of doing it, like proposing
+     * a refactoring.
+     */
+    Hint = 3
+}
+
+class JassError extends Range {
+    public readonly message: string;
+    public readonly severity: DiagnosticSeverity;
+
+    constructor(message: string, severity: DiagnosticSeverity = DiagnosticSeverity.Error) {
+        super();
+        this.message = message;
+        this.severity = severity;
+    }
+
+}
+
+class Root extends TreeNode {
+    public block: Block = new Block();
+
+    constructor() {
+        super("Root");
+    }
+
+    private readonly errors: JassError[] = [];
+
+    public pushError(range: Range, message: string, severity: DiagnosticSeverity = DiagnosticSeverity.Error) {
+        this.errors.push(new JassError(message, severity).from(range));
+    }
+
+    public getErrors() {
+        return [...this.errors];
+    }
+};
+
 class NativeStatement extends Statement {
     public modifiers: string[] = [];
     public name: IDentifier|null = null;
@@ -216,7 +192,10 @@ class FunctionStatement extends ClosableStatement implements NativeStatement {
     public modifiers: string[] = [];
     public name: IDentifier|null = null;
     public takes: TakeStatement[] = [];
+    // 为ture时,就算有参数也无视
+    public isNothing:boolean = false;
     public returns: IDentifier|null = null;
+    public isNothingReturns: boolean = false;
 
     public body: Block = new Block();
 
@@ -239,6 +218,8 @@ class TextMacroStatement extends ClosableStatement {
 }
 
 class StateParam {
+    public isStart: boolean = false;
+
     public functionField: number = 0;
     public globalsField: number = 0;
     public libraryField: number = 0;
@@ -305,31 +286,6 @@ class StateParam {
 
 }
 
-interface ErrorDefine {
-    message: string;
-    type: string;
-}
-
-class ParseError extends Range implements ErrorDefine{
-    type: string;
-    message: string = "";
-    
-    constructor(type: string, message?: string) {
-        super();
-        this.type = type;
-        if (message) this.message = message;
-    }
-
-}
-
-enum ErrorTypeEnum {
-    end_tag_lost = "end_tag_lost",
-    rep = "rep",
-    modifier = "modifier",
-    staticModifier = "staticModifier",
-}
-
-
 
 function isId(token: Tokenize) {
     return token.type === "id";
@@ -367,170 +323,12 @@ function isEndFunction(token: Tokenize) {
 
 
 
-function parsing(tokens: Tokenize[], then: () => void, error: (event: ParseError) => void) {
-    const state = new StateParam();
-    const textMacroStatements:TextMacroStatement[] = [];
-    const nonTextMacroTokens:Tokenize[] = [];
-    new Evaluator().parsing(Tokenizer.get(`
-    a
-    //! textmacro temacname
-    function a takes string b, integer b returns game
-    //! endtextmacroa
-    b
-    `), (token, ts, isStart) => {
-        if (isStart && /^\/\/!\s+textmacro\b/.test(token.value)) {
-            if (state.inTextMacroRange) {
-                error(new ParseError("textmacro", "Duplicate definition textmacro").setRange(token));
-            } else {
-                state.inTextMacroRange = true;
-                state.inTextMacroLine = true;
-            }
-            state.textMacroState = 0;
-            state.textMacro = new TextMacroStatement().setRange(token);
-            textMacroStatements.push(state.textMacro);
-        } else if (isStart && /^\/\/!\s+endtextmacro\b/.test(token.value)) {
-            if (state.inTextMacroRange) {
-                state.inTextMacroRange = false;
-                if (state.textMacro) {
-                    state.textMacro.isClose = true;
-                    state.textMacro.end = token.end;
-                }
-            } else {
-                error(new ParseError("textmacro", "Duplicate definition endtextmacro").setRange(token));
-            }
-        } else if (state.inTextMacroRange) {
-            state.textMacro?.body.push(token);
-        } else {
-            nonTextMacroTokens.push(token);
-        }
-    });
-    console.log(state.textMacro);
-    
-    new Evaluator().parsing(nonTextMacroTokens, (token, ts, isStart) => {
-        console.log(token);
-        return;
-        const parseGlobals = () => {
-            if (state.inGlobalsRange) {
-    
-            }
-        };
-        const parseFunction = () => {
-            if (state.inFunctionRange) {
-    
-            } else if (state.inGlobalsRange) {
-    
-            }
-        };
-        const parseScope = () => {
-            if (state.inScopeRange) {
-                parseScope();
-            } else if (state.inFunctionRange) {
-                parseFunction();
-            } else if (state.inGlobalsRange) {
-                parseGlobals();
-            }
-        };
-        const parseLibrary = () => {
-            if (state.inScopeRange) {
-                parseScope();
-            } else if (state.inFunctionRange) {
-                parseFunction();
-            } else if (state.inGlobalsRange) {
-                parseGlobals();
-            }
-        };
-        const parseContent = () => {
-            if (state.inLibraryRange) {
-                parseLibrary();
-            } else if (state.inScopeRange) {
-                parseScope();
-            } else if (state.inFunctionRange) {
-                parseFunction();
-            } else if (state.inGlobalsRange) {
-                parseGlobals();
-            } 
-        };
-        console.log(token);
-    
-        
-
-        let func: FunctionStatement| null = null;
-
-        if (isStart) {
-            state.inFunctionLine = false;
-            state.inLibraryLine = false;
-            state.inScopeLine = false;
-            state.inStructLine = false;
-            state.inGlobalsLine = false;
-            state.inTextMacroLine = false;
-
-            state.functionState = 0;
-            state.libraryState = 0;
-            state.scopeState = 0;
-            state.structState = 0;
-            state.globalsState = 0;
-            state.textMacroState = 0;
-
-            state.inPrivate = false;
-            state.inPublic = false;
-
-            state.inStatic = false;
-
-            if (isFunction(token)) {
-                state.inFunctionRange = true;
-                state.inFunctionLine = true;
-                state.functionState = 0;
-            } else if (isEndFunction(token)) {
-                if (state.inFunctionRange) {
-                    state.inFunctionRange = false;
-                } else {
-                    // Missing endfunction keyworld
-                    error(new ParseError(ErrorTypeEnum.rep, `Redundant 'endfunction'.`).setRange(token));
-                }
-            } else if (isPrivate(token)) {
-                if (state.inLibraryRange || state.inScopeRange) {
-                    state.inPrivate = true;
-                    state.modifierToken = token;
-                } else {
-                    error(new ParseError(ErrorTypeEnum.modifier, `'private' outside (library/scope) definition.`).setRange(token));
-                }
-            } else if (isPublic(token)) {
-                if (state.inLibraryRange || state.inScopeRange) {
-                    state.inPublic = true;
-                    state.modifierToken = token;
-                } else {
-                    error(new ParseError(ErrorTypeEnum.modifier, `'public' outside (library/scope) definition.`).setRange(token));
-                }
-            } else if (isStatic(token)) {
-                if (state.inStructRange) {
-                    state.inStatic = true;
-                    state.staticToken = token;
-                } else {
-                    error(new ParseError(ErrorTypeEnum.staticModifier, `'static' outside struct definition.`).setRange(token));
-                }
-            }
-        }
 
 
-    });
-    
-}
 
-parsing([], () => {}, (event) => {console.log(event);
-});
+class ParsedOption {
+    isLineStart: boolean = false;
 
-interface ops<O, E> {
-    match: (option: O) => boolean;
-    handle: (expr: E, token: Tokenize, option: O) => {expr: E, option: O}
-}
-
-function p<O>(content: string, ops: ParOption<O>[]) {
-    Tokenizer.build(content, (token) => {
-
-    });
-}
-
-class ParOption<E> {
     isJ: boolean = true;
     isZinc: boolean = false;
     isAi: boolean = false;
@@ -538,28 +336,395 @@ class ParOption<E> {
     isStart: boolean = false;
 
     inGlobals: boolean = false;
+
     inFunction: boolean = false;
+    inFunctionLine: boolean = false;
+    functionState: number = 0;
+    func: FunctionStatement | null = null;
+
+    inMethod: boolean = false;
+    inMethodLine: boolean = false;
+    methodState: number = 0;
+    method: FunctionStatement | null = null;
+
+    inStruct: boolean = false;
+    inStructLine: boolean = false;
+    structState: number = 0;
+    struct: FunctionStatement | null = null;
+
+    take: TakeStatement|null = null;
 
     inIf: boolean = false;
     inLoop: boolean = false;
 
-    expr: E;
+    inZinc: boolean = false;
+    inZincLine: boolean = false;
+}
 
-    handle: <A>(op: ParOption<E>) => ParOption<A>;
+class ZincBlock extends TreeNode {
+    public readonly block: Block = new Block();
 
-    constructor(expr: E, handle: <A>(op: ParOption<E>) => ParOption<A>) {
-        this.expr = expr;
+    constructor() {
+        super("ZincBlock");
+    }
+}
 
+class Arg<S> {
+    is: (token: Tokenize, state: S, isStart: boolean) => boolean;
+    handle: (token: Tokenize, state: S, isStart: boolean) => void;
+
+    constructor(is: (token: Tokenize, state: S, isStart: boolean) => boolean, handle: (token: Tokenize, state: S, isStart: boolean) => void) {
+        this.is = is;
         this.handle = handle;
     }
 }
 
-class Root {};
 
+function doparse(content: string, handle: (token: Tokenize, isStart: boolean) => void) {
+    let preToken: Tokenize|null = null;
+    Tokenizer.build(content, (token) => {
+        handle(token, preToken === null || preToken.end.line !== token.start.line);
+        preToken = token;
+    });
+} 
 
-p(``, [
-    // new ParOption()
-]);
+function handleParse<S>(content: string, defaultState:S, preHandle: (token: Tokenize, state: S, isStart: boolean) => void, as: Arg<S>[]) {
+    const state:S = defaultState;
+ 
+    doparse(content, (token, isStart) => {
+        preHandle(token, state, isStart);
 
+        const handler = as.find((a) => a.is(token, state, isStart));
+
+        if (handler) {
+            handler.handle(token, state, isStart);
+        }
+
+    });
+}
+
+class UnaryExpression extends Expression {
+
+    public op:Tokenize|null = null;
+    public value: Term|null = null;
+
+    constructor() {
+        super("UnaryExpression");
+    }
+}
+
+class BinaryExpression extends Expression {
+
+    public op:Tokenize|null = null;
+    public left: Term| null = null;
+    public right: Term| null = null;
+
+    constructor() {
+        super("BinaryExpression");
+    }
+}
+
+class Call extends Expression {
+
+    public name: IDentifier|null = null;
+    public args: Term[] = [];
+
+}
+
+class Value extends Expression {
+
+    public value: Tokenize|null = null;
+
+    constructor() {
+        super("Value");
+    }
+}
+
+class Term extends Expression {
+
+    public value: IDentifier|Call|Value|BinaryExpression|UnaryExpression|Term|null = null;
+
+    constructor() {
+        super("Term");
+    }
+}
+
+class Iter {
+
+    private state: number = 0;
+    private isDone: boolean = false;
+    private root: Term|null = null;
+    private term: Term|null = null;
+    private field:number = 0;
+
+    constructor() {
+
+    }
+
+    public next(token: Tokenize): Expression|null {
+        if (this.state == 0) {
+            if (token.type == "op") {
+                if (token.value == "-" || token.value == "+") {
+                    const unaryExpression = new UnaryExpression().from(token);
+                    unaryExpression.op = token;
+                    this.term = new Term();
+                    this.term.value = unaryExpression;
+                    this.state = 1;
+                } else if (token.value == "(") {
+                    this.field++;
+                }
+            } else if (token.type == "id") { // S -> T
+                const id = new IDentifier(token.value).from(token);
+                const term = new Term().from(token);
+                term.value = id;
+                this.term = term;
+
+                this.state = 2;
+
+                this.root = term;
+            }
+        } else if (this.state == 1) {
+            if (token.type == "op") {
+                if (token.value == "-" || token.value == "+") { // T -> T'
+                    const unaryExpression = new UnaryExpression().from(token);
+                    unaryExpression.op = token;
+                    const term = new Term();
+                    term.value = unaryExpression;
+                    this.term!.value = term;
+
+                    this.term = term;
+
+                    this.state = 1;
+                } else if (token.value == "(") { // T -> T''
+                    this.field++;
+                }
+            } else if (token.type == "id") {
+                const id = new IDentifier(token.value).from(token);
+                const term = new Term().from(token);
+                term.value = id;
+                this.term = term;
+            }
+        } else if (this.state == 2) {
+            if (token.type == "op") {
+                if (token.value == "-" || token.value == "+") { // T -> T'
+                    const expr = new BinaryExpression();
+                    const term = new Term();
+                    term.value = expr;
+
+                    expr.left = this.term;
+                    expr.op = token;
+
+                    this.term = term;
+
+                    this.state = 3;
+                } else if (token.value == "*" || token.value == "/") { // T -> T''
+                    const expr = new BinaryExpression();
+                    const term = new Term();
+                    term.value = expr;
+
+                    expr.left = this.term;
+                    expr.op = token;
+
+                    this.term = term;
+
+                    this.state = 4;
+                }
+            }
+        } else if (this.state == 3) { // T' -> E
+            if (token.type == "id") {
+                const term = new Term();
+                const id = new IDentifier(token.value).from(token);
+
+                term.value = id;
+
+                term.from(id);
+
+                const expr = (<BinaryExpression>this.term!.value);
+                expr.right = term;
+
+                this.state = 2;
+            }
+        } else if (this.state == 4) { // T'' -> E
+            if (token.type == "id") {
+                const term = new Term();
+                const id = new IDentifier(token.value).from(token);
+
+                term.value = id;
+
+                term.from(id);
+
+                const expr = (<BinaryExpression>this.term!.value);
+                expr.right = term;
+
+                this.state = 2;
+            }
+        }
+
+        return this.term;
+    }
+
+    private done() :boolean {
+        return this.field == 0;
+    }
+
+}
+
+const expr = (token: Tokenize) => {
+        
+};
+
+if (true) {
 
     
+
+    const root = new Root();
+
+    handleParse<ParsedOption>(`
+    function   a/**//**//**//**//**/ takes string a ,  integer bb returns string
+    `, 
+        new ParsedOption(),
+        (token, state, isStart) => {
+            if (isStart) {
+                state.inFunctionLine = false;
+                console.log("reset");
+                
+            }
+        },
+        [
+        new Arg((token, state, isStart) => {
+            return isStart && token.type == "id" && token.value == "function";
+        }, (token, state) => {
+            if (state.inFunction) {
+                // 缺少endfunction
+                root.pushError(state.func!, "Missing 'endfunction'!");
+            }
+            if (state.inGlobals) {
+                root.pushError(state.func!, "Missing 'endglobals'!");
+            }
+            state.inFunction = true;
+            state.inFunctionLine = true;
+            state.functionState = 0;
+            state.func = new FunctionStatement();
+            state.func.from(token);
+            root.block.children.push(state.func);
+        }),
+        new Arg((token, state, isStart) => {
+            return state.inFunction && state.inFunctionLine;
+        }, (token, state, isStart) => {
+            // 0 func id
+            // 1 takes
+            // 2 take type
+            // 3 take id
+            // 4 take , or returns
+            // 5 wait returns
+            // 6 returns type
+            // 7 function over
+            if (token.type == "block_comment") {
+                console.log("hulie", token.value, state.functionState, isStart);
+                
+            } else if (state.functionState == 0) {
+                if (token.type == "id") {
+                    if (isKeyword(token.value)) {
+                        root.pushError(state.func!, "Naming cannot be a keyword!");
+                    }
+                    state.func!.name = new IDentifier(token.value).from(token);
+                    state.func!.end = token.end;
+                    state.functionState = 1;
+                } else {
+                    root.pushError(token, "Unexpected token '" + token.value + "'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 1) {
+                console.log("hulie2", state.functionState);
+                if (token.type == "id" && token.value == "takes") {
+                    state.functionState = 2;
+                } else {
+                    root.pushError(token, "Expected token 'takes'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 2) { // take type
+                if (token.type == "id") {
+                    if (token.value == "nothing") {
+                        if (state.func!.isNothing) {
+                            root.pushError(token, "Nothing is not a type");
+                        }
+                        state.func!.isNothing = true;
+                        state.functionState = 5; // wait returns
+                    } else {
+                        if (isKeyword(token.value)) {
+                            root.pushError(token, "Parameter type cannot be keyword");
+                        }
+                        state.take = new TakeStatement();
+                        state.take.type = new IDentifier(token.value).from(token);
+                        state.functionState = 3;
+                        state.func!.takes.push(state.take);
+                    }
+                } else {
+                    root.pushError(token, "Unexpected token '" + token.value + "'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 3) { // take id
+                if (token.type == "id") {
+                    if (isKeyword(token.value)) {
+                        root.pushError(token, "Parameter id cannot be keyword");
+                    }
+                    state.take!.name = new IDentifier(token.value).from(token);
+                    state.functionState = 4;
+                } else {
+                    root.pushError(token, "Unexpected token '" + token.value + "'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 4) { // take ,
+                if (token.type == "id") {
+                    if (token.value == "returns") {
+                        state.functionState = 6; // returns type
+                    } else {
+                        root.pushError(token, "Expected token ',' or 'returns'!");
+                        state.functionState = 7;
+                    }
+                } else if (token.type == "op") {
+                    if (token.value == ",") {
+                        state.functionState = 2;
+                    } else {
+                        root.pushError(token, "Expected token ',' or 'returns'!");
+                        state.functionState = 7;
+                    }
+                } else {
+                    root.pushError(token, "Expected token ',' or 'returns'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 5) {
+                if (token.type == "id") {
+                    if (token.value == "returns") {
+                        state.functionState = 6; // returns type
+                    } else {
+                        root.pushError(token, "Expected token 'returns'!");
+                        state.functionState = 7;
+                    }
+                } else {
+                    root.pushError(token, "Expected token 'returns'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 6) {
+                if (token.type == "id") {
+                    if (token.value == "nothing") {
+                        state.func!.isNothingReturns = true;
+                    } else if (isKeyword(token.value)) {
+                        root.pushError(token, "Returns type cannot be keyword");
+                    }
+                    state.func!.returns = new IDentifier(token.value).from(token);
+                    state.functionState = 7;
+                } else {
+                    root.pushError(token, "Unexpected token '" + token.value + "'!");
+                    state.functionState = 7;
+                }
+            } else if (state.functionState == 7) {
+                root.pushError(token, "Unexpected token '" + token.value + "'!");
+            }
+            console.log("sort", state.functionState);
+        }),
+    ]);
+
+    console.log(JSON.stringify(root.block.children, null, 2));
+    
+}

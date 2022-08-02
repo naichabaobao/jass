@@ -157,7 +157,8 @@
     "test": "node ./out/test/runTest.js",
     "build": "vsce package",
     "publish": "vsce publish",
-    "temp": "tsc && node ./out/boot/jass/tokens.js"
+    "temp": "tsc && node ./out/boot/jass/tokens.js",
+    "temp2": "tsc && node ./out/boot/jass/evaluator.js"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

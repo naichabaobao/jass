@@ -720,7 +720,7 @@ export {
 	Tokenizer
 };
 
-if (true) {
+if (false) {
 	const content = `
 	_$$_
 	<?=
