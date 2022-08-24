@@ -251,12 +251,12 @@ class Func extends Native implements Rangebel, Option {
 
 	public readonly locals: Local[] = [];
 	public readonly tokens: Token[] = [];
-	private readonly globals: Global[] = [];
+	public readonly globals: Global[] = [];
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
 			const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
-			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 		} else if (this.option.style == "zinc") {
 			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 		}
@@ -739,14 +739,6 @@ class Program extends Declaration {
 	 */
 	public readonly body: Array<Declaration> = [];
 
-	public findFunctionByType(...type: string[]) {
-
-	}
-
-	public findFunctionByPosition(position: Position) {
-
-	}
-
 	public findFunctions(options: {
 		type?: string | string[] | null,
 		position?: Position | null,
@@ -814,6 +806,75 @@ class Program extends Declaration {
 		return this.librarys.map((lib) => lib.structs).flat();
 	}
 
+	public allFunctions(containNative: boolean = true, containPrivate: boolean = false) {
+		let funcs:Array<Native|Func> = [...this.functions, ...this.librarys.map((library) => library.functions).flat()];
+
+		if (!containPrivate) {
+			funcs = funcs.filter((func) => (<Func>func).tag != "private");
+		}
+		
+		if (containNative) {
+			funcs.push(...this.natives);
+		}
+
+		return funcs;
+	}
+	public allGlobals(containPrivate: boolean = false) {
+		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(false, containPrivate).map((func) => (<Func>func).globals).flat()];
+		if (!containPrivate) {
+			globals = globals.filter((global) => global.tag != "private");
+		}
+		return globals;
+	}
+	public allStructs(containPrivate: boolean = false) {
+		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
+		if (!containPrivate) {
+			structs = structs.filter((struct) => struct.tag != "private");
+		}
+		return structs;
+	}
+	public allLibrarys(containPrivate: boolean = false) {
+		let librarys =  this.librarys;
+		// if (containPrivate) {
+		// 	librarys = librarys.filter((struct) => struct.tag != "private");
+		// }
+		return librarys;
+	}
+
+	public getPositionFunction(position: Position):Func|null {
+		const func = this.allFunctions(false, true).find((func) => func.loc.contains(position));
+		return func ? <Func>func : null;
+	}
+
+	public getPositionStruct(position: Position):Struct|null {
+		const struct = this.allStructs(true).find((struct) => struct.loc.contains(position));
+		return struct ? struct : null;
+	}
+
+	public allMethods(containPrivate: boolean = false) {
+		let methods:Array<Method> = this.allStructs(containPrivate).map((struct) => struct.methods).flat();
+
+		if (!containPrivate) {
+			methods = methods.filter((func) => (<Func>func).tag != "private");
+		}
+
+		return methods;
+	}
+
+	public allMembers(containPrivate: boolean = false) {
+		let members:Array<Member> = this.allStructs(containPrivate).map((struct) => struct.members).flat();
+
+		if (!containPrivate) {
+			members = members.filter((member) => (<Member>member).tag != "private");
+		}
+
+		return members;
+	}
+
+	public getPositionMethod(position: Position):Method|null {
+		const method = this.allMethods(true).find((method) => method.loc.contains(position));
+		return method ? method : null;
+	}
 }
 
 export {

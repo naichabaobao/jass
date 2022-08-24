@@ -357,8 +357,22 @@ export default Data;
 console.log(Options.workspaces)
 console.log(Options.includes)
 
+class DataGetter {
+  forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true) {
+    dataMap.forEach((key, value) => {
+      callback(value, key);
+    });
+    if (containZinc) {
+      zincDataMap.forEach((key, value) => {
+        callback(value, key);
+      });
+    }
+  }
+}
+
 export {
-  parseContent
+  parseContent,
+  DataGetter
 };
 
 

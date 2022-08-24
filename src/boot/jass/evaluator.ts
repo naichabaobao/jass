@@ -408,7 +408,7 @@ function handleParse<S>(content: string, defaultState: S, preHandle: (token: Tok
 class UnaryExpression extends Expression {
 
     public op: Tokenize | null = null;
-    public value: Term | null = null;
+    public value: T | null = null;
 
     constructor() {
         super("UnaryExpression");
@@ -528,7 +528,9 @@ class EPar {
 
     private firsts: Tokenize[] = [];
     private field:number = 0;
-    private left: boolean = false;
+    private whole: boolean = false;
+
+    private ues:T[] = [];
 
     parse() {
 
@@ -544,19 +546,50 @@ class EPar {
                 if (this.field > 0) {
                     this.firsts.push(token);
                 } else {
-                    this.left = true;
-                }
-            } else if (this.firsts.length > 0) {
-                const e = new EPar(this.firsts).parse().get();
-                if (e) {
-                    if (this.t) {
+                    if (this.firsts.length > 0) {
+                        const e = new EPar(this.firsts).parse().get();
+                        if (e) {                            
+                            if (this.t) {
+                                if (this.t instanceof BinaryExpression) {
+                                    if (this.t.right) {
+                                        
+                                    } else {
+                                        this.t.right = e;
+                                    }
+                                } else if (this.t instanceof UnaryExpression) {
+                                    this.t.value = e;
+                                }
+                            } else {
+                                this.t = e;
+                                this.top = e;
 
-                    } else {
-
+                                this.whole = true;
+                            }
+                        } else {
+                            // error
+                        }
                     }
                 }
             } else if (token.type == "id") {
-                if (this.t) {
+                if (token.value == "not") {
+                    const ue = new UnaryExpression();
+                    ue.op = token;
+
+                    if (this.t) {
+                        if (this.t instanceof BinaryExpression) {
+                            if (this.t.right) {
+                                if (this.t.right instanceof UnaryExpression) {
+                                    this.t.right.value = ue;
+                                }
+                            } else {
+                                this.t.right = ue;
+                            }
+                        }
+                    } else {
+                        this.top = ue;
+                    }
+                    this.t = ue;
+                } else if (this.t) {
                     if (this.t instanceof BinaryExpression) {
                         if (this.t.right) {
 
@@ -587,6 +620,12 @@ class EPar {
 
                             this.top = be;
                             this.t = be;
+                        } else if (this.t instanceof UnaryExpression) {
+                            const ue = new UnaryExpression();
+                            ue.op = token;
+        
+                            this.t.value = ue;
+                            this.t = ue;
                         }
                     }
                     else if (token.value == "*" || token.value == "/") {
@@ -599,20 +638,30 @@ class EPar {
                             this.top = be;
                         } else if (this.t instanceof BinaryExpression) {
                             const be = new BinaryExpression();
-                            if (this.t.op?.value == "-" || this.t.op?.value == "+") {
-                                be.left = this.t.right;
-                                be.op = token;
-
-                                this.t.right = be;
-
-                                this.top = this.t;
-                                this.t = be;
-                            } else if (this.t.op?.value == "*" || this.t.op?.value == "/") {
+                            if (this.whole) {
                                 be.left = this.t;
                                 be.op = token;
 
                                 this.t = be;
                                 this.top = be;
+
+                                this.whole = false;
+                            } else {
+                                if (this.t.op?.value == "-" || this.t.op?.value == "+") {
+                                    be.left = this.t.right;
+                                    be.op = token;
+    
+                                    this.t.right = be;
+    
+                                    this.top = this.t;
+                                    this.t = be;
+                                } else if (this.t.op?.value == "*" || this.t.op?.value == "/") {
+                                    be.left = this.t;
+                                    be.op = token;
+    
+                                    this.t = be;
+                                    this.top = be;
+                                }
                             }
 
                         }
@@ -629,12 +678,16 @@ class EPar {
                             } else {
                                 this.field++;
                             }
+                        } else if (this.t instanceof UnaryExpression) {
+                            this.field++;
                         }
                     }
                 } else {
                     if (token.value == "+" || token.value == "-") {
                         const ue = new UnaryExpression();
                         ue.op = token;
+                    } else if (token.value == "(") {
+                        this.field++;
                     }
                 }
             }
@@ -655,159 +708,161 @@ if (true) {
 
 
 
-    const root = new Root();
+    // const root = new Root();
 
-    handleParse<ParsedOption>(`
-    function   a/**//**//**//**//**/ takes string a ,  integer bb returns string
-    `,
-        new ParsedOption(),
-        (token, state, isStart) => {
-            if (isStart) {
-                state.inFunctionLine = false;
-                console.log("reset");
+    // handleParse<ParsedOption>(`
+    // function   a/**//**//**//**//**/ takes string a ,  integer bb returns string
+    // `,
+    //     new ParsedOption(),
+    //     (token, state, isStart) => {
+    //         if (isStart) {
+    //             state.inFunctionLine = false;
+    //             console.log("reset");
 
-            }
-        },
-        [
-            new Arg((token, state, isStart) => {
-                return isStart && token.type == "id" && token.value == "function";
-            }, (token, state) => {
-                if (state.inFunction) {
-                    // 缺少endfunction
-                    root.pushError(state.func!, "Missing 'endfunction'!");
-                }
-                if (state.inGlobals) {
-                    root.pushError(state.func!, "Missing 'endglobals'!");
-                }
-                state.inFunction = true;
-                state.inFunctionLine = true;
-                state.functionState = 0;
-                state.func = new FunctionStatement();
-                state.func.from(token);
-                root.block.children.push(state.func);
-            }),
-            new Arg((token, state, isStart) => {
-                return state.inFunction && state.inFunctionLine;
-            }, (token, state, isStart) => {
-                // 0 func id
-                // 1 takes
-                // 2 take type
-                // 3 take id
-                // 4 take , or returns
-                // 5 wait returns
-                // 6 returns type
-                // 7 function over
-                if (token.type == "block_comment") {
-                    console.log("hulie", token.value, state.functionState, isStart);
+    //         }
+    //     },
+    //     [
+    //         new Arg((token, state, isStart) => {
+    //             return isStart && token.type == "id" && token.value == "function";
+    //         }, (token, state) => {
+    //             if (state.inFunction) {
+    //                 // 缺少endfunction
+    //                 root.pushError(state.func!, "Missing 'endfunction'!");
+    //             }
+    //             if (state.inGlobals) {
+    //                 root.pushError(state.func!, "Missing 'endglobals'!");
+    //             }
+    //             state.inFunction = true;
+    //             state.inFunctionLine = true;
+    //             state.functionState = 0;
+    //             state.func = new FunctionStatement();
+    //             state.func.from(token);
+    //             root.block.children.push(state.func);
+    //         }),
+    //         new Arg((token, state, isStart) => {
+    //             return state.inFunction && state.inFunctionLine;
+    //         }, (token, state, isStart) => {
+    //             // 0 func id
+    //             // 1 takes
+    //             // 2 take type
+    //             // 3 take id
+    //             // 4 take , or returns
+    //             // 5 wait returns
+    //             // 6 returns type
+    //             // 7 function over
+    //             if (token.type == "block_comment") {
+    //                 console.log("hulie", token.value, state.functionState, isStart);
 
-                } else if (state.functionState == 0) {
-                    if (token.type == "id") {
-                        if (isKeyword(token.value)) {
-                            root.pushError(state.func!, "Naming cannot be a keyword!");
-                        }
-                        state.func!.name = new IDentifier(token.value).from(token);
-                        state.func!.end = token.end;
-                        state.functionState = 1;
-                    } else {
-                        root.pushError(token, "Unexpected token '" + token.value + "'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 1) {
-                    console.log("hulie2", state.functionState);
-                    if (token.type == "id" && token.value == "takes") {
-                        state.functionState = 2;
-                    } else {
-                        root.pushError(token, "Expected token 'takes'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 2) { // take type
-                    if (token.type == "id") {
-                        if (token.value == "nothing") {
-                            if (state.func!.isNothing) {
-                                root.pushError(token, "Nothing is not a type");
-                            }
-                            state.func!.isNothing = true;
-                            state.functionState = 5; // wait returns
-                        } else {
-                            if (isKeyword(token.value)) {
-                                root.pushError(token, "Parameter type cannot be keyword");
-                            }
-                            state.take = new TakeStatement();
-                            state.take.type = new IDentifier(token.value).from(token);
-                            state.functionState = 3;
-                            state.func!.takes.push(state.take);
-                        }
-                    } else {
-                        root.pushError(token, "Unexpected token '" + token.value + "'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 3) { // take id
-                    if (token.type == "id") {
-                        if (isKeyword(token.value)) {
-                            root.pushError(token, "Parameter id cannot be keyword");
-                        }
-                        state.take!.name = new IDentifier(token.value).from(token);
-                        state.functionState = 4;
-                    } else {
-                        root.pushError(token, "Unexpected token '" + token.value + "'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 4) { // take ,
-                    if (token.type == "id") {
-                        if (token.value == "returns") {
-                            state.functionState = 6; // returns type
-                        } else {
-                            root.pushError(token, "Expected token ',' or 'returns'!");
-                            state.functionState = 7;
-                        }
-                    } else if (token.type == "op") {
-                        if (token.value == ",") {
-                            state.functionState = 2;
-                        } else {
-                            root.pushError(token, "Expected token ',' or 'returns'!");
-                            state.functionState = 7;
-                        }
-                    } else {
-                        root.pushError(token, "Expected token ',' or 'returns'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 5) {
-                    if (token.type == "id") {
-                        if (token.value == "returns") {
-                            state.functionState = 6; // returns type
-                        } else {
-                            root.pushError(token, "Expected token 'returns'!");
-                            state.functionState = 7;
-                        }
-                    } else {
-                        root.pushError(token, "Expected token 'returns'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 6) {
-                    if (token.type == "id") {
-                        if (token.value == "nothing") {
-                            state.func!.isNothingReturns = true;
-                        } else if (isKeyword(token.value)) {
-                            root.pushError(token, "Returns type cannot be keyword");
-                        }
-                        state.func!.returns = new IDentifier(token.value).from(token);
-                        state.functionState = 7;
-                    } else {
-                        root.pushError(token, "Unexpected token '" + token.value + "'!");
-                        state.functionState = 7;
-                    }
-                } else if (state.functionState == 7) {
-                    root.pushError(token, "Unexpected token '" + token.value + "'!");
-                }
-                console.log("sort", state.functionState);
-            }),
-        ]);
+    //             } else if (state.functionState == 0) {
+    //                 if (token.type == "id") {
+    //                     if (isKeyword(token.value)) {
+    //                         root.pushError(state.func!, "Naming cannot be a keyword!");
+    //                     }
+    //                     state.func!.name = new IDentifier(token.value).from(token);
+    //                     state.func!.end = token.end;
+    //                     state.functionState = 1;
+    //                 } else {
+    //                     root.pushError(token, "Unexpected token '" + token.value + "'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 1) {
+    //                 console.log("hulie2", state.functionState);
+    //                 if (token.type == "id" && token.value == "takes") {
+    //                     state.functionState = 2;
+    //                 } else {
+    //                     root.pushError(token, "Expected token 'takes'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 2) { // take type
+    //                 if (token.type == "id") {
+    //                     if (token.value == "nothing") {
+    //                         if (state.func!.isNothing) {
+    //                             root.pushError(token, "Nothing is not a type");
+    //                         }
+    //                         state.func!.isNothing = true;
+    //                         state.functionState = 5; // wait returns
+    //                     } else {
+    //                         if (isKeyword(token.value)) {
+    //                             root.pushError(token, "Parameter type cannot be keyword");
+    //                         }
+    //                         state.take = new TakeStatement();
+    //                         state.take.type = new IDentifier(token.value).from(token);
+    //                         state.functionState = 3;
+    //                         state.func!.takes.push(state.take);
+    //                     }
+    //                 } else {
+    //                     root.pushError(token, "Unexpected token '" + token.value + "'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 3) { // take id
+    //                 if (token.type == "id") {
+    //                     if (isKeyword(token.value)) {
+    //                         root.pushError(token, "Parameter id cannot be keyword");
+    //                     }
+    //                     state.take!.name = new IDentifier(token.value).from(token);
+    //                     state.functionState = 4;
+    //                 } else {
+    //                     root.pushError(token, "Unexpected token '" + token.value + "'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 4) { // take ,
+    //                 if (token.type == "id") {
+    //                     if (token.value == "returns") {
+    //                         state.functionState = 6; // returns type
+    //                     } else {
+    //                         root.pushError(token, "Expected token ',' or 'returns'!");
+    //                         state.functionState = 7;
+    //                     }
+    //                 } else if (token.type == "op") {
+    //                     if (token.value == ",") {
+    //                         state.functionState = 2;
+    //                     } else {
+    //                         root.pushError(token, "Expected token ',' or 'returns'!");
+    //                         state.functionState = 7;
+    //                     }
+    //                 } else {
+    //                     root.pushError(token, "Expected token ',' or 'returns'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 5) {
+    //                 if (token.type == "id") {
+    //                     if (token.value == "returns") {
+    //                         state.functionState = 6; // returns type
+    //                     } else {
+    //                         root.pushError(token, "Expected token 'returns'!");
+    //                         state.functionState = 7;
+    //                     }
+    //                 } else {
+    //                     root.pushError(token, "Expected token 'returns'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 6) {
+    //                 if (token.type == "id") {
+    //                     if (token.value == "nothing") {
+    //                         state.func!.isNothingReturns = true;
+    //                     } else if (isKeyword(token.value)) {
+    //                         root.pushError(token, "Returns type cannot be keyword");
+    //                     }
+    //                     state.func!.returns = new IDentifier(token.value).from(token);
+    //                     state.functionState = 7;
+    //                 } else {
+    //                     root.pushError(token, "Unexpected token '" + token.value + "'!");
+    //                     state.functionState = 7;
+    //                 }
+    //             } else if (state.functionState == 7) {
+    //                 root.pushError(token, "Unexpected token '" + token.value + "'!");
+    //             }
+    //             console.log("sort", state.functionState);
+    //         }),
+    //     ]);
 
-    console.log(JSON.stringify(root.block.children, null, 2));
+    // console.log(JSON.stringify(root.block.children, null, 2));
 
-    const tokens = Tokenizer.get(`a+b*c+d`);
-    const t = new EPar(tokens).parse().get();
-    console.log(JSON.stringify(tokens, null, 2), JSON.stringify(t, null, 2));
+    const tokens = Tokenizer.get(`123`);
+    console.log(tokens);
+    
+    // const t = new EPar(tokens).parse().get();
+    // console.log(JSON.stringify(t, null, 4));
     
 
 }

@@ -531,15 +531,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					// 参数解析结束
 				} else if (methodState == 6) {
 					if (token.isId()) {
-						if ((<Method>method).returns) {
-
-						} else {
-							if (token.value == "nothing") {
-
-							} else {
-								(<Method>method).returns = token.value;
-							}
-						}
+						(<Method>method).returns = token.value;
 					} else {
 	
 					}

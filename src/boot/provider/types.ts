@@ -201,6 +201,7 @@ const Types = types(defaultVersion, true);
 
 /**
  * type 继承光系json
+ * @deprecated
  */
 const TypeExtends:{[key: string]:string[]} = {
   "boolean": [],
@@ -437,10 +438,20 @@ const TypeExtends:{[key: string]:string[]} = {
   ]
 };
 
+/**
+ * @deprecated
+ * @param type 
+ * @returns 
+ */
 function getParentTypes(type:string) {
   return TypeExtends[type] ?? [];
 }
 
+/**
+ * @deprecated
+ * @param type 
+ * @returns 
+ */
 function getChildrenTypes(type:string) {
   const keys = Object.keys(TypeExtends);
   return keys.filter(key => {

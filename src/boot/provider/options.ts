@@ -65,6 +65,10 @@ class Options {
   public static get isJassDiagnostic() {
     return this.configuration["diagnostic"] as boolean;
   }
+  // 开启新版格式化
+  public static get isFormatv2() {
+    return this.configuration["formatv2"] as boolean;
+  }
 
   public static get workspaces():string[] {
     if (vscode.workspace.workspaceFolders) {

@@ -18,7 +18,7 @@ const color2JColorCode = (color: vscode.Color) => {
   return "00000000"
 }
 
-const DzColorReg = new RegExp(/DzGetColor\(\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*\)/, "g")
+const DzColorReg = new RegExp(/(?:DzGetColor|BlzConvertColor)\(\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*\)/, "g")
 
 class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
@@ -53,7 +53,7 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
         if (DzColorReg.test(lineText)) {
           console.log(lineText);
           
-          const result = /DzGetColor\(\s*(?<a>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<r>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<g>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<b>[\dA-Fa-fxX\$'\.]+)\s*\)/g.exec(lineText);
+          const result = /(?:DzGetColor|BlzConvertColor)\(\s*(?<a>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<r>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<g>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<b>[\dA-Fa-fxX\$'\.]+)\s*\)/g.exec(lineText);
           
           if (result && result.groups) {
               const aStr = result.groups["a"];
@@ -69,12 +69,12 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
               const gToken = Tokenizer.get(gStr);
               const bToken = Tokenizer.get(bStr);
               
-              console.log(aToken, rToken, gToken, bToken);
-    
+              
               if (!(aToken.length == 1 && rToken.length == 1 && gToken.length == 1 && bToken.length == 1)) { // 确保只有一个token
                 continue;
               }
-              const types = ["integer", "hex", "mark", "dollar_hex", "octal"];
+              console.log(aToken, rToken, gToken, bToken);
+              const types = ["int", "hex", "mark", "dollar_hex", "octal"];
               if (types.includes(aToken[0].type) && types.includes(rToken[0].type) && types.includes(gToken[0].type) && types.includes(bToken[0].type)) {
     
     
@@ -119,6 +119,8 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
     
     if (documentText.startsWith("DzGetColor")) {
       return [new vscode.ColorPresentation(`DzGetColor(${"0x" + convertInt2Hex(color.alpha)}, ${"0x" + convertInt2Hex(color.red)}, ${"0x" + convertInt2Hex(color.green)}, ${"0x" + convertInt2Hex(color.blue)})`)];
+    } else if (documentText.startsWith("BlzConvertColor")) {
+      return [new vscode.ColorPresentation(`BlzConvertColor(${"0x" + convertInt2Hex(color.alpha)}, ${"0x" + convertInt2Hex(color.red)}, ${"0x" + convertInt2Hex(color.green)}, ${"0x" + convertInt2Hex(color.blue)})`)];
     } else {
       return [new vscode.ColorPresentation(`${
         documentText.substr(0, 2)

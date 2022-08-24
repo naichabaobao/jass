@@ -4,7 +4,7 @@ import * as path from "path";
 const letterRegExp = new RegExp(/[a-zA-Z]/);
 const numberRegExp = new RegExp(/\d/);
 const spaceRegExp = new RegExp(/[ \t]/);
-const newLineRegExp = new RegExp(/[\r\n]/);
+const newLineRegExp = new RegExp(/\n/);
 const idRegExp = new RegExp(/[a-zA-Z][a-zA-Z0-9_]*/);
 
 function isLetter(char: string) {
@@ -475,9 +475,9 @@ function getFileContent(filePath: string):string {
 	}).toString();
   }
 
-// 讲jass integer字符串转为number
-function jassIntegerToNumber(type: "integer"|"hex"|"mark"|"dollar_hex"|"octal"|string, jassIntegerString: string):(number|null) {
-	if (type == "integer" || type == "hex" || type == "octal") {
+// 将jass integer字符串转为number
+function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|string, jassIntegerString: string):(number|null) {
+	if (type == "int" || type == "hex" || type == "octal") {
 		return parseInt(jassIntegerString);
 	} else if (type == "dollar_hex") {
 		return parseInt(jassIntegerString.replace(/\$/, "0x"));

@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.6.15",
+  "version": "1.6.16",
   "keywords": [
     "jass",
     "vjass",
@@ -79,7 +79,7 @@
         "jass.support.zinc": {
           "type": "boolean",
           "default": true,
-          "description": "是否支持zinc\n(Whether to support Zinc)"
+          "description": "support zinc\n(Whether to support Zinc)"
         },
         "jass.only": {
           "type": "boolean",
@@ -90,6 +90,11 @@
           "type": "boolean",
           "default": false,
           "description": "(Deprecated) jass diagnostic, required in only jass model"
+        },
+        "jass.formatv2": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open new version format"
         }
       }
     },
@@ -158,7 +163,8 @@
     "build": "vsce package",
     "publish": "vsce publish",
     "temp": "tsc && node ./out/boot/jass/tokens.js",
-    "temp2": "tsc && node ./out/boot/jass/evaluator.js"
+    "temp2": "tsc && node ./out/boot/jass/evaluator.js",
+    "test:dev": "tsc && node ./out/test/test.js"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

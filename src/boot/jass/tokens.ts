@@ -665,6 +665,7 @@ class Tokenizer {
 		new TokenizeDefineStruct(DefaultState.macro, "macro", (state, char) =>  state === DefaultState.macro && (isLetter(char) || isNumber(char) || char === "_"), (char) =>  isLetter(char) || isNumber(char) || char === "_"),		
 		new TokenizeDefineStruct(DefaultState.plus, "op", (state, char) =>  state === DefaultState.default && char === "+", (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.sub, "op", (state, char) =>  state === DefaultState.default && char === "-", (char) =>  char === ">"),		
+		new TokenizeDefineStruct(DefaultState.default, "op", (state, char) =>  state === DefaultState.sub && char === ">", (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.mul, "op", (state, char) =>  state === DefaultState.default && char === "*", (char) =>  false),		
 		new TokenizeDefineStruct(DefaultState.assignment, "op", (state, char) =>  state === DefaultState.default && char === "=", (char) =>  char === "="),		
 		new TokenizeDefineStruct(DefaultState.eq, "op", (state, char) =>  state === DefaultState.assignment && char === "=", (char) =>  false),		

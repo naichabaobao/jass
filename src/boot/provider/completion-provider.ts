@@ -15,8 +15,8 @@ import { AllKeywords, Keywords } from "./keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition, fieldFunctions, functionKey } from "./tool";
-import data, { parseContent } from "./data";
-import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration } from "../jass/ast";
+import data, { DataGetter, parseContent } from "./data";
+import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 
 
@@ -307,436 +307,103 @@ function toItems<T extends Declaration>(handle: (decl: T, option?: CompletionIte
   return datas.map(x => handle(x, option));
 }
 
+function getItems(program: Program, filePath: string, isCurrent: boolean = false, position: vscode.Position| null = null):Array<vscode.CompletionItem> {
+  const items = new Array<vscode.CompletionItem>();
+
+  if (!Options.isOnlyJass) {
+    items.push(...toItems<Library>(libraryToCompletionItem, undefined, ...program.allLibrarys(isCurrent)));
+    items.push(...toItems<Struct>(structToCompletionItem, undefined, ...program.allStructs(isCurrent)));
+    items.push(...toItems<Method>(methodToCompletionItem, undefined, ...program.allMethods(isCurrent)));
+    items.push(...toItems<Member>(memberToCompletionItem, undefined, ...program.allMembers(isCurrent)));
+    
+  }
+  items.push(...toItems<Global>(globalToCompletionItem, undefined, ...program.allGlobals(isCurrent)));
+  items.push(...toItems(funcToCompletionItem, undefined, ...program.allFunctions(true, isCurrent)));
+
+  if (isCurrent && position) {
+    const findedFunc = program.getPositionFunction(convertPosition(position));
+    if (findedFunc) {
+      findedFunc.takes.forEach((take, index) => {
+        items.push(takeToCompletionItem(take, {
+          source: filePath,
+          documentation: findedFunc.getParams().map((param) => {
+            if (param.id == take.name) {
+              return `*${param.descript}*`;
+            }
+            return `*${param.descript}*`;
+          }),
+          // 尽可能让参数在最前
+          orderString: `_${index}`
+        }))
+      });
+
+      items.push(...toItems<Local>(localToCompletionItem, undefined, ...findedFunc.locals));
+    }
+    
+    const findedMethod = program.getPositionMethod(convertPosition(position));
+    if (findedMethod) {
+      findedMethod.takes.forEach((take, index) => {
+        items.push(takeToCompletionItem(take, {
+          source: filePath,
+          documentation: findedMethod.getParams().map((param) => {
+            if (param.id == take.name) {
+              return `*${param.descript}*`;
+            }
+            return `*${param.descript}*`;
+          }),
+          // 尽可能让参数在最前
+          orderString: `_${index}`
+        }))
+      });
+
+      items.push(...toItems<Local>(localToCompletionItem, undefined, ...findedMethod.locals));
+    }
+
+
+    // if (!Options.isOnlyJass) {
+    //   const findedStruct = program.getPositionStruct(convertPosition(position));
+    //   if (findedStruct) {
+    //     items.push(...toItems<Method>(methodToCompletionItem, undefined, ...findedStruct.methods));
+    //     items.push(...toItems<Member>(memberToCompletionItem, undefined, ...findedStruct.members));
+    //   }
+    // }
+  }
+
+  return items;
+}
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
+
+  private async parse(fsPath: string, content: string) {
+    return parseContent(fsPath, content);
+  }
+
+  private preParsed: Promise<void>|null = null;
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
 
     const fsPath = document.uri.fsPath;
 
-    const isZincExt = isZincFile(fsPath);
-    if (!isZincExt) {
-      parseContent(fsPath, document.getText());
+    if (token.isCancellationRequested) {
+      Promise.reject(this.preParsed);
     }
+    this.preParsed = this.parse(fsPath, document.getText());
+    // parseContent(fsPath, document.getText());
 
-    const fieldLibrarys = () => {
-      const librarys:Library[] = [];
+    items.push(...typeItems, ...keywordItems);
 
-      if (!Options.isOnlyJass) {
-        librarys.push(...data.librarys());
+    new DataGetter().forEach((program, filePath) => {
+      items.push(...getItems(program, fsPath, compare(fsPath, filePath), position))
+    }, !Options.isOnlyJass && Options.supportZinc);
 
-        if (Options.supportZinc) {
-          librarys.push(...data.zincLibrarys());
-        }
-      }
-      
-      return librarys;
-    };
-    /*
-    const fieldFunctions = () => {
-      const funcs = data.functions();
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            funcs.push(...library.functions);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            funcs.push(...library.functions.filter((func) => func.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              funcs.push(...library.functions);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              funcs.push(...library.functions.filter((func) => func.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return funcs;
-    };
-    */
-    const fieldGlobals = () => {
-      const globals = data.globals();
-
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          globals.push(...func.getGlobals());
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            globals.push(...library.globals);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            globals.push(...library.globals.filter((func) => func.tag != "private"));
-          }
-        });
-        // 方法内部的globals
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            globals.push(...func.getGlobals());
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              globals.push(...library.globals);
-              return false;
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              globals.push(...library.globals.filter((func) => func.tag != "private"));
-            }
-          });
-          // 旧版本的zinc解析，这里不会执行，因为没有解析这部分的代码
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              globals.push(...func.getGlobals());
-            }
-          });
-        }
-      }
-      
-      return globals;
-    };
-
-    const fieldTakes = () => {
-      const takes:{
-        take: Take,
-        func:Func
-      }[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          
-          takes.push(...func.takes.map((take) => {
-            return {take, func};
-          }));
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            takes.push(...func.takes.map((take) => {
-              return {take, func};
-            }));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              takes.push(...func.takes.map((take) => {
-                return {take, func};
-              }));
-            }
-          });
-        }
-      }
-
-      return takes;
-    };
-
-    const fieldLocals = () => {
-      const locals:Local[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          locals.push(...func.locals);
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            locals.push(...func.locals);
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              locals.push(...func.locals);
-            }
-          });
-        }
-      }
-
-      return locals;
-    };
-
-    const fieldStructs = () => {
-      const structs = data.structs();
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            structs.push(...library.structs);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              structs.push(...library.structs);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return structs;
-    };
-
-    /**
-     * 获取位置上的librarys
-     */
-    const postionLibrarys = (current: (library: Library) => void, requireCallback: (library: Library) => void) => {
-      const requires: string[] = [];
-      return data.librarys().filter((library) => {
-        if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-          requires.push(...library.requires);
-          current(library);
-          return false;
-        }
-        return true;
-      }).forEach((library) => {
-        if (requires.includes(library.name)) {
-          requireCallback(library);
-          return true;
-        }
-      });
-    };
-
-    const findFunctionByName = (name: string): (Func|Native)[] => {
-      const funcs = [...data.functions(), ...data.natives()];
-
-      if (!Options.isOnlyJass) {
-        postionLibrarys((library) => {
-          library.functions.forEach((func) => {
-            funcs.push(func);
-          });
-        }, (library) => {
-          library.functions.filter((func) => func.tag != "private").forEach((func) => {
-            funcs.push(func);
-          });
-        });
-      }
-      return funcs.filter((func) => func.name == name);
-    };
-
-    function fieldLocalItems() {
-      items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals()));
-    }
-
-    function fieldStructTypeItems() {
-      items.push(...toItems<Struct>(structToCompletionItem, undefined, ...data.structs(), ...data.libraryStructs(), ...data.zincLibraryStructs()));
-    }
-
-    function fieldLibraryItems() {
-      items.push(...toItems<Library>(libraryToCompletionItem, undefined, ...fieldLibrarys()));
-    }
-    /**
-     * 默认global和function和locals和takes
-     */
-    function defaultItems() {
-      fieldLocalItems();
-      items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions(fsPath, position)));
-      items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals()));
-
-      fieldTakes().forEach((funcTake, index) => {
-        items.push(takeToCompletionItem(funcTake.take, {
-          source: funcTake.func.source,
-          documentation: funcTake.func.getParams().map((param) => {
-            if (param.id == funcTake.take.name) {
-              return `*${param.descript}*`;
-            }
-            return `*${param.descript}*`;
-          }),
-          // 尽可能让参数在最前
-          orderString: `${index}`
-        }))
-      });
-    }
-
-    // 获取当前位置提示类型
-    const type = PositionTool.is(document, position);
-    switch (type) {
-      case PositionType.FuncNaming:
-      case PositionType.TakesNaming:
-      case PositionType.TakesNaming:
-        return null;
-      case PositionType.LocalNaming:
-        items.push(ArrayKeywordItem);
-      case PositionType.Set:
-        items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => !global.isConstant)));
-        fieldLocalItems();
-        fieldTakes().forEach((funcTake, index) => {
-          items.push(takeToCompletionItem(funcTake.take, {
-            source: funcTake.func.source,
-            documentation: funcTake.func.getParams().map((param) => {
-              if (param.id == funcTake.take.name) {
-                return `*${param.descript}*`;
-              }
-              return `*${param.descript}*`;
-            }),
-            // 尽可能让参数在最前
-            orderString: `${index}`
-          }))
-        });
-        // setItems();
-        break;
-      case PositionType.Returns:
-        items.push(...typeItems, NothingItem);
-        fieldStructTypeItems();
-        return items;
-      case PositionType.LocalType:
-        items.push(...typeItems);
-        fieldStructTypeItems();
-        break;
-      case PositionType.ConstantType:
-        items.push(...typeItems);
-        return items;
-      case PositionType.TakesFirstType:
-        items.push(...typeItems, NothingItem, CodeItem);
-        fieldStructTypeItems();
-        return items;
-      case PositionType.TakesOtherType:
-        items.push(...typeItems, CodeItem);
-        fieldStructTypeItems();
-        return items;
-      case PositionType.TakesKeyword:
-        items.push(TakesKeywordItem);
-        return items;
-      case PositionType.ReturnKeyword:
-        items.push(ReturnsKeywordItem);
-        return items;
-      case PositionType.ReturnKeyword:
-        items.push(ReturnsKeywordItem);
-        return items;
-      case PositionType.Requires:
-        fieldLibraryItems();
-        break;
-      case PositionType.Assign:
-        const lineText = document.lineAt(position.line);
-        const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-        const result = /local\s+(?<type>[a-zA-Z]+[a-zA-Z0-9_]*)\b/.exec(inputText);
-        if (result && result.groups) {
-          const type = result.groups["type"];
-          items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions(fsPath, position)].filter((func) => {
-            return type == func.returns || getParentTypes(type).includes(func.returns);
-          })));
-          items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
-            return type == global.type || getParentTypes(type).includes(global.type);
-          })));
-          items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals().filter((local) => {
-            return type == local.type || getParentTypes(type).includes(local.type);
-          })));
-
-          fieldTakes().filter((funcTake) => {
-            return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
-          }).forEach((funcTake, index) => {
-            items.push(takeToCompletionItem(funcTake.take, {
-              source: funcTake.func.source,
-              documentation: funcTake.func.getParams().map((param) => {
-                if (param.id == funcTake.take.name) {
-                  return `*${param.descript}*`;
-                }
-                return `*${param.descript}*`;
-              }),
-              // 尽可能让参数在最前
-              orderString: `${index}`
-            }))
-          });
-        }
-        break;
-      case PositionType.Call:
-        items.push(...toItems(funcToCompletionItem, undefined, ...data.natives(), ...fieldFunctions(fsPath, position)));
-        break;
-      case PositionType.Args:
-        // 方法参数列表
-        const key = functionKey(document, position);
-        // type为PositionType.Args时,可以断言key[0]不为null
-        const funcs = findFunctionByName(key.keys[0]);
-        if (funcs.length == 0) {
-          defaultItems();
-          break;
-        }
-        funcs.forEach((func) => {
-          if (func.takes[key.takeIndex]) {
-            const type = func.takes[key.takeIndex].type;
-            items.push(...toItems(funcToCompletionItem, undefined, ...[...data.natives(), ...fieldFunctions(fsPath, position)].filter((func) => {
-              return type == func.returns || getParentTypes(type).includes(func.returns);
-            })));
-            items.push(...toItems<Global>(globalToCompletionItem, undefined, ...fieldGlobals().filter((global) => {
-              return type == global.type || getParentTypes(type).includes(global.type);
-            })));
-            items.push(...toItems<Local>(localToCompletionItem, undefined, ...fieldLocals().filter((local) => {
-              return type == local.type || getParentTypes(type).includes(local.type);
-            })));
-            fieldTakes().filter((funcTake) => {
-              return type == funcTake.take.type || getParentTypes(type).includes(funcTake.take.type);
-            }).forEach((funcTake, index) => {
-              items.push(takeToCompletionItem(funcTake.take, {
-                source: funcTake.func.source,
-                documentation: funcTake.func.getParams().map((param) => {
-                  if (param.id == funcTake.take.name) {
-                    return `*${param.descript}*`;
-                  }
-                  return `*${param.descript}*`;
-                }),
-                // 尽可能让参数在最前
-                orderString: `${index}`
-              }))
-            });
-          }
-        });
-        break;
-      default:
-        items.push(...typeItems);
-        items.push(...keywordItems);
-        fieldStructTypeItems();
-        fieldLibraryItems();
-        defaultItems();
+    if (!Options.isOnlyJass) {
+      items.push(completionItem("SCOPE_PREFIX", {
+        kind: vscode.CompletionItemKind.Issue
+      }));
+      items.push(completionItem("SCOPE_PRIVATE", {
+        kind: vscode.CompletionItemKind.Issue
+      }));
     }
 
     return items;
@@ -855,256 +522,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class GcCompletionIt
   }
 }());
 
-/**
- * '.'语法提示
- */
-vscode.languages.registerCompletionItemProvider("jass", new class TypeCompletionItemProvider implements vscode.CompletionItemProvider {
-  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    const text = document.lineAt(position.line).text;
-    if (/^\s*\/\//.test(text)) return;
-    const items: vscode.CompletionItem[] = [];
-
-    const fsPath = document.uri.fsPath;
-
-    const tokens = tokenize(text.substring(0, position.character)).reverse();
-
-    const ids: string[] = [];
-    let argc = 0;
-    let field = 0;
-    let state = 0;
-    
-    // 反向遍历
-    for (let index = 0; index < tokens.length; index++) {
-      const token = tokens[index];
-      
-      if (state == 0) {
-        if (token.isOp() && token.value == ".") {
-          state = 1;
-        } else if (token.isId()) {
-          ids.push(token.value);
-          state = 2;
-        } else break;
-      } else if (state == 1) {
-        if (token.isId()) {
-          ids.push(token.value);
-          state = 2;
-        } else break;
-      } else if (state == 2) {
-        if (token.isOp() && token.value == ".") {
-          state = 1;
-        } else break;
-      }
-    }
-
-    
-    if (ids.length != 1 && ids.length != 2) {
-      return null;
-    }
-
-    ids.reverse();
-
-    const fieldFunctions = () => {
-      const funcs = data.functions();
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            funcs.push(...library.functions);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            funcs.push(...library.functions.filter((func) => func.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              funcs.push(...library.functions);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              funcs.push(...library.functions.filter((func) => func.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return funcs;
-    };
-
-    const fieldStructs = () => {
-      const structs = data.structs();
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            structs.push(...library.structs);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              structs.push(...library.structs);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return structs;
-    };
-    const fieldTakes = () => {
-      const takes:{
-        take: Take,
-        func:Func
-      }[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          
-          takes.push(...func.takes.map((take) => {
-            return {take, func};
-          }));
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            takes.push(...func.takes.map((take) => {
-              return {take, func};
-            }));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              takes.push(...func.takes.map((take) => {
-                return {take, func};
-              }));
-            }
-          });
-        }
-      }
-
-      return takes;
-    };
-    const fieldLocals = () => {
-      const locals:Local[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          locals.push(...func.locals);
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            locals.push(...func.locals);
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              locals.push(...func.locals);
-            }
-          });
-        }
-      }
-
-      return locals;
-    };
-
-    if (ids[0] == "this") {
-      console.log("ths");
-      
-      const usebleStructs = fieldStructs();
-      const struct = usebleStructs.find((struct, index, structs) => {
-        return compare(struct.source, fsPath) && struct.loc.contains(convertPosition(position));
-      });
-      if (struct) {
-        struct.methods.filter((method) => {
-          return !method.modifier.includes("static");
-        }).forEach((method) => {
-          items.push(methodToCompletionItem(method));
-        });
-        struct.members.filter((member) => {
-          return !member.modifier.includes("static");
-        }).forEach((member) => {
-          items.push(memberToCompletionItem(member));
-        });
-      }
-    } else {
-      const usebleStructs = fieldStructs();
-      const struct = usebleStructs.find((struct, index, structs) => {
-        return struct.name == ids[0];
-      });
-      if (struct) { // 静态方法
-        struct.methods.filter((method) => {
-          return method.modifier.includes("static");
-        }).forEach((method) => {
-          items.push(methodToCompletionItem(method));
-        });
-        struct.members.filter((member) => {
-          return member.modifier.includes("static");
-        }).forEach((member) => {
-          items.push(memberToCompletionItem(member));
-        });
-      }
-      const usebleLocals = fieldLocals();
-      usebleLocals.filter((local) => {
-        return local.name == ids[0];
-      }).forEach((local) => {
-        const struct = usebleStructs.find((struct, index, structs) => {
-          return struct.name == local.type;
-        });
-        
-        if (struct) {
-          
-          struct.methods.filter((method) => {
-            return !method.modifier.includes("static");
-          }).forEach((method) => {
-            items.push(methodToCompletionItem(method));
-          });
-          struct.members.filter((member) => {
-            return !member.modifier.includes("static");
-          }).forEach((member) => {
-            items.push(memberToCompletionItem(member));
-          });
-        }
-
-      });
-
-    }
-
-    return items;
-  }
-}(), ".", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
-
 const CjassDateCompletionItem = completionItem("DATE", {
   kind: vscode.CompletionItemKind.Unit,
   documentation: "returns current date in yyyy.mm.dd format.",
@@ -1170,58 +587,10 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   }
 }());
 
-type pathMap = Map<string, pathMap>;
-
 /**
  * 文件路径提示
  */
  vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
-
-  /**
-   * 把路径数组转成Map嵌套形式
-   * @deprecated 这个方法在当前类没有任何引用
-   * @param allPaths 绝对路径数组
-   */
-  private getPathStruct = (allPaths: string[]) => {
-    const map:pathMap = new Map();
-    for (let index = 0, preMap:pathMap = map; index < allPaths.length; (() => {index++; preMap = map;})()) {
-      const p = allPaths[index];
-      path.parse(p).dir.replace(/\\+/g, "/").split("/").forEach(current => {
-        if (preMap.has(current)) {    
-          preMap = preMap.get(current)!;
-        } else {
-          const m:pathMap = new Map();
-          preMap.set(current, m);
-          preMap = m;
-        }
-      });
-    }
-    return map;
-  };
-
-  /**
-   * 
-   * @deprecated 还没实现的方法，也有可能压根没用，只是还不想删除而已
-   * @param targetPath 
-   * @returns 
-   */
-  private find(targetPath: string) {
-    const map = this.getPathStruct(Options.paths);
-    const pathFields = targetPath.replace(/\\+/g, "/").split("/");
-    let ps: string[] = [];
-    let preMap:pathMap = map;
-    for (let index = 0; index < pathFields.length; index++) {
-      const pathField = pathFields[index];
-      const match = preMap.get(pathField);
-      if (match) {
-        preMap = match;
-        ps = [...preMap.keys()];
-      } else {
-        break;
-      }
-    }
-    return preMap.keys();
-  }
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items:vscode.CompletionItem[] = [];
