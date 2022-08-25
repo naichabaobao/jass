@@ -152,6 +152,12 @@ class Declaration extends Node implements Descript {
 	public hasDeprecated(): boolean {
 		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@deprecated\b/, "").test(lineComment.getContent())) != -1;
 	}
+	public hasPrivate(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@private\b/, "").test(lineComment.getContent())) != -1;
+	}
+	public hasIgnore(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@ignore\b/, "").test(lineComment.getContent())) != -1;
+	}
 
 	public getParams() : ParamAnnotation[] {
 		return <ParamAnnotation[]>this.lineComments.map((lineComment) => {
@@ -166,12 +172,14 @@ class Declaration extends Node implements Descript {
 	}
 
 	public getTexts() {
-		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?)\b/.test(lineComment.getContent()))
+		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params|private|ignore?)\b/.test(lineComment.getContent()))
 	}
 
 	public getContents() {
 		return this.getTexts().map((lineComment) => lineComment.getContent());
 	}
+
+
 
 }
 
@@ -811,6 +819,7 @@ class Program extends Declaration {
 
 		if (!containPrivate) {
 			funcs = funcs.filter((func) => (<Func>func).tag != "private");
+			funcs = funcs.filter((func) => !(<Func>func).hasPrivate());
 		}
 		
 		if (containNative) {
@@ -823,6 +832,7 @@ class Program extends Declaration {
 		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(false, containPrivate).map((func) => (<Func>func).globals).flat()];
 		if (!containPrivate) {
 			globals = globals.filter((global) => global.tag != "private");
+			globals = globals.filter((global) => !global.hasPrivate());
 		}
 		return globals;
 	}
@@ -830,6 +840,7 @@ class Program extends Declaration {
 		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
 		if (!containPrivate) {
 			structs = structs.filter((struct) => struct.tag != "private");
+			structs = structs.filter((struct) => !struct.hasPrivate());
 		}
 		return structs;
 	}
@@ -855,7 +866,8 @@ class Program extends Declaration {
 		let methods:Array<Method> = this.allStructs(containPrivate).map((struct) => struct.methods).flat();
 
 		if (!containPrivate) {
-			methods = methods.filter((func) => (<Func>func).tag != "private");
+			methods = methods.filter((func) => (<Method>func).tag != "private");
+			methods = methods.filter((func) => !(<Method>func).hasPrivate());
 		}
 
 		return methods;
@@ -866,6 +878,7 @@ class Program extends Declaration {
 
 		if (!containPrivate) {
 			members = members.filter((member) => (<Member>member).tag != "private");
+			members = members.filter((member) => !(<Member>member).hasPrivate());
 		}
 
 		return members;
@@ -874,6 +887,31 @@ class Program extends Declaration {
 	public getPositionMethod(position: Position):Method|null {
 		const method = this.allMethods(true).find((method) => method.loc.contains(position));
 		return method ? method : null;
+	}
+
+	public getNameFunction(name: string):(Func|Native)[] {
+		const funcs = this.allFunctions(true, true).filter((func) => func.name == name);
+		return funcs;
+	}
+	public getNameLibrary(name: string):(Library)[] {
+		const librarys = this.allLibrarys(true).filter((library) => library.name == name);
+		return librarys;
+	}
+	public getNameStruct(name: string):(Struct)[] {
+		const structs = this.allStructs(true).filter((struct) => struct.name == name);
+		return structs;
+	}
+	public getNameMethod(name: string):(Method)[] {
+		const methods = this.allMethods(true).filter((method) => method.name == name);
+		return methods;
+	}
+	public getNameMember(name: string):(Member)[] {
+		const members = this.allMembers(true).filter((member) => member.name == name);
+		return members;
+	}
+	public getNameGlobal(name: string):(Global)[] {
+		const globals = this.allGlobals(true).filter((global) => global.name == name);
+		return globals;
 	}
 }
 

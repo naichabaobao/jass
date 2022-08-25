@@ -86,6 +86,13 @@ class Options {
   public static get paths():string[] {
     return [...this.includes, ...this.workspaces];
   }
+
+  public static get pjassPath():string {
+    return path.resolve(__dirname, "../../../static/pjass-latest.exe")
+  }
+  public static get pjassTempPath():string {
+    return path.resolve(__dirname, "../../../static/temp")
+  }
   
 }
 

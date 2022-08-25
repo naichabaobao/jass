@@ -169,14 +169,16 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 	};
 
 	let memberState = 0;
-	// let member:Member|null = null;
+	let member:Member|null = null;
 	let members:Member[] = []; 
 	const lastMember = () => {
 		return members[members.length - 1];
 	};
 	const resetMember = () => {
+		members.length = 0;
 		memberState = 0;
 		members.length = 0;
+		member = null;
 	};
 
 	let localState = 0;
@@ -264,6 +266,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				isArr = false;
 				isConstant = false;
 				isStatic = false;
+				members = [];
 			};
 
 			const resetStruct = () => {
@@ -541,24 +544,30 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		};
 		const parseMember = () => {
 			if (token.isOp() && token.value == ";") {
-
-				(<Struct>struct).members.push(...members.map( (member, index, ms) => {
-					if (index != 0) {
-						member.type = ms[0].type;
-						member.isStatic = ms[0].isStatic;
-						member.isConstant = ms[0].isConstant;
-						member.tag = ms[0].tag;
-						member.loc.start = ms[0].loc.start;
-					}
+				// (<Struct>struct).members.push(...members.map( (member, index, ms) => {
+				// 	if (index != 0) {
+				// 		member.type = ms[0].type;
+				// 		member.isStatic = ms[0].isStatic;
+				// 		member.isConstant = ms[0].isConstant;
+				// 		member.tag = ms[0].tag;
+				// 		member.loc.start = ms[0].loc.start;
+				// 	}
+				// 	member.loc.end = new Position(token.line, token.end);
+					
+				// 	return member;
+				// }));
+				// members = [];
+				if (member) {
 					member.loc.end = new Position(token.line, token.end);
-					return member;
-				}));
+					(<Struct>struct).members.push(member);
+				}
+				resetMember();
 			} else if (token.isOp() && token.value == "=") {
 				memberState = 6;
 			} else if (memberState == 0) {
 				if (token.isId()) {
 					resetMember();
-					const member = new Member(token.value, "");
+					member = new Member(token.value, "");
 					member.option.style = "zinc";
 					member.type = token.value;
 					member.isStatic = isStatic;
@@ -577,25 +586,31 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				if (token.isOp() && token.value == ",") {
 
 				} else if (token.isId()) {
-					if (lastMember().name == "") {
-						lastMember().name = token.value;
-						lastMember().nameToken = token;
-						lastMember().text = matchText(token.line);
-						lastMember().lineComments.push(...findLineComments(token.line));
-					} else {
-						const member = new Member("", token.value);
-						member.option.style = "zinc";
-						member.nameToken = token;
-						member.text = matchText(token.line);
-						member.lineComments.push(...findLineComments(token.line));
-						members.push(member);
-					}
+					// if (lastMember().name == "") {
+					// 	lastMember().name = token.value;
+					// 	lastMember().nameToken = token;
+					// 	lastMember().text = matchText(token.line);
+					// 	lastMember().lineComments.push(...findLineComments(token.line));
+					// 	lastMember().option.style = "zinc";
+					// } else {
+					// 	const member = new Member("", token.value);
+					// 	member.option.style = "zinc";
+					// 	member.nameToken = token;
+					// 	member.text = matchText(token.line);
+					// 	member.lineComments.push(...findLineComments(token.line));
+					// 	members.push(member);
+					// }
+					member!.name = token.value;
+					member!.nameToken = token;
+					member!.text = matchText(token.line);
+					member!.lineComments.push(...findLineComments(token.line));
+					member!.option.style = "zinc";
 					memberState = 2;
 				} else {
 				}
 			} else if (memberState == 2) {
 				if (token.isOp() && token.value == "[") {
-					lastMember().isArray = true;
+					member!.isArray = true;
 					memberState = 3;
 				} else if (token.isOp() && token.value == ",") {
 					memberState = 1;
@@ -741,7 +756,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				} else if (structModifierTypes.length > 0) {
 					method.tag = lastStructModifierType().type;
 				}
-				method.modifier = "static";
+				method.modifier = "default";
 				method.loc.start = new Position(token.line, token.position);
 				(<Struct>struct).methods.push(method);
 				inMethod = true;

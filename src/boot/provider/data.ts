@@ -358,7 +358,8 @@ console.log(Options.workspaces)
 console.log(Options.includes)
 
 class DataGetter {
-  forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true) {
+  constructor() {}
+  forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true, containCJass: boolean = false) {
     dataMap.forEach((key, value) => {
       callback(value, key);
     });
@@ -367,6 +368,15 @@ class DataGetter {
         callback(value, key);
       });
     }
+    if (containCJass) {
+      cjassDataMap.forEach((key, value) => {
+        callback(value, key);
+      });
+    }
+  }
+
+  public getJass(key: string): Program|undefined {
+    return dataMap.get(key)?.value;
   }
 }
 

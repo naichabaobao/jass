@@ -1,0 +1,3 @@
+function function_name takes nothing returns nothing
+  call func_22()
+endfunction
