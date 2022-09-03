@@ -18,7 +18,11 @@ type De = Native|Func|Method|Library|Struct|Member|Global|Local;
 
 function toHoverlo(de: De, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
-  ms.appendMarkdown(`#### ${de.name}`);
+  if (de.hasDeprecated()) {
+    ms.appendMarkdown(`#### ~~${de.name}~~`);
+  } else {
+    ms.appendMarkdown(`#### ${de.name}`);
+  }
   if (isCurrent) {
     ms.appendText("\n(当前文件)");
   } else {
@@ -26,7 +30,7 @@ function toHoverlo(de: De, isCurrent: boolean, filePath: string) {
   }
   de.getContents().forEach((content) => {
     ms.appendText("\n");
-    ms.appendText(content);
+    ms.appendMarkdown(content);
   });
   de.getParams().forEach((param) => {
     if ("takes" in de && de.takes.findIndex((take) => take.name == param.id) != -1) {

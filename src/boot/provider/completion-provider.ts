@@ -373,22 +373,10 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
 
 vscode.languages.registerCompletionItemProvider("jass", new class JassComplation implements vscode.CompletionItemProvider {
 
-  private async parse(fsPath: string, content: string) {
-    return parseContent(fsPath, content);
-  }
-
-  private preParsed: Promise<void>|null = null;
-
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items = new Array<vscode.CompletionItem>();
 
     const fsPath = document.uri.fsPath;
-
-    if (token.isCancellationRequested) {
-      Promise.reject(this.preParsed);
-    }
-    this.preParsed = this.parse(fsPath, document.getText());
-    // parseContent(fsPath, document.getText());
 
     items.push(...typeItems, ...keywordItems);
 

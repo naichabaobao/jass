@@ -386,3 +386,30 @@ export {
 };
 
 
+function parseData(fsPath: string, content: string) {
+  return setTimeout(() => {
+    return parseContent(fsPath, content);
+  }, 2e3);
+}
+
+let lastPath: string|null = null;
+let preParsed: NodeJS.Timeout|null = null;
+
+// 当文件被改变时,把改变后的文件从新解析,如果连续输入则会把上一次的取消掉只执行最后一次
+vscode.workspace.onDidChangeTextDocument((event) => {
+  const document = event.document;
+
+  const fsPath = document.uri.fsPath;
+
+  if (lastPath == fsPath && preParsed) {
+    clearTimeout(preParsed);
+  }
+
+  lastPath = fsPath;
+  preParsed = parseData(fsPath, document.getText());
+  
+});
+
+
+
+
