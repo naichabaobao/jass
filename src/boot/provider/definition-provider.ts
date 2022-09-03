@@ -1,8 +1,5 @@
-/*
-流程
-先查找當前文件 -> 再去找common等文件 -> 再去找includes文件
-一旦找到了就直接返回，不再無畏的往下找
-*/
+import * as fs from 'fs';
+import * as path from 'path';
 
 import * as vscode from 'vscode';
 
@@ -12,8 +9,9 @@ import { Func, Library, Local, Member, Method, Program, Take } from "../jass/ast
 import data, { DataGetter, parseContent } from "./data";
 import { Rangebel, Global, Native, Struct} from '../jass/ast';
 import { Options } from './options';
-import { compare, isZincFile } from '../tool';
+import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
+import { tokenize } from '../jass/tokens';
 
 
 const toVsPosition = (any: De) => {
@@ -120,6 +118,60 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         }
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
+
+    return locations;
+  }
+
+}());
+
+vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
+
+  private _maxLength = 255;
+
+  private isNumber = function (val: string) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if (regPos.test(val) || regNeg.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
+    const locations = new Array<vscode.Location>();
+
+    const tokens = tokenize(document.lineAt(position).text);
+    if (tokens.length >= 2 && tokens[0].value == "#include" && tokens[1].isString()) {
+      const key = tokens[1].value;
+
+      console.log("file key: " + key);
+
+      const prefixContent = key.substring(1, key.length - 1);
+
+      const currentFileDir = () => {
+        return path.parse(document.uri.fsPath).dir;
+      };
+
+      const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+      const stat = fs.statSync(realPath);
+      if (stat.isFile()) {
+        const location = new vscode.Location(vscode.Uri.file(realPath), new vscode.Range(0, 0, 0, 0));
+        locations.push(location);
+      } else if (stat.isDirectory()) {
+        const paths = fs.readdirSync(realPath);
+        paths.forEach((p) => {
+          const filePath = path.resolve(realPath, p);
+          if (fs.statSync(filePath).isDirectory()) {
+          } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+            const location = new vscode.Location(vscode.Uri.file(filePath), new vscode.Range(0, 0, 0, 0));
+            locations.push(location);
+          }
+        });
+      }
+    } else {
+      return null;
+    }
 
     return locations;
   }

@@ -11,11 +11,23 @@ import { DefineMacro, Func, Local, Native, Struct, Take } from '../jass/ast';
 
 class SignatureHelp implements vscode.SignatureHelpProvider {
 
+  private async parse(fsPath: string, content: string) {
+    return parseContent(fsPath, content);
+  }
+
+  private preParsed: Promise<void>|null = null;
+
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     const text = document.lineAt(position.line).text;
     if (/^\s*\/\//.test(text)) return;
 
     const fsPath = document.uri.fsPath;
+    
+    if (token.isCancellationRequested) {
+      Promise.reject(this.preParsed);
+    }
+    this.preParsed = this.parse(fsPath, document.getText());
+
 
     const tokens = tokenize(text.substring(0, position.character)).reverse();
     let key = "";
@@ -65,6 +77,18 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
           //   }
           // });
           ms.appendText(method.getContents().join("\n"));
+
+          method.getParams().forEach((param) => {
+            if (method.takes.findIndex((take) => take.name == param.id) != -1) {
+              ms.appendText("\n");
+              ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+            }
+          });
+          if (method.hasDeprecated()) {
+            ms.appendText("\n");
+            ms.appendMarkdown(`***@deprecated*** `);
+          }
+
           SignatureInformation.documentation = ms;
           SignatureHelp.signatures.push(SignatureInformation);
           SignatureHelp.activeParameter = argc;
@@ -82,7 +106,19 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
         //     ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*\n`);
         //   }
         // });
-        ms.appendText(func.getContents().join("\n"));
+        ms.appendMarkdown(func.getContents().join("\n"));
+
+        func.getParams().forEach((param) => {
+          if (func.takes.findIndex((take) => take.name == param.id) != -1) {
+            ms.appendText("\n");
+            ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+          }
+        });
+        if (func.hasDeprecated()) {
+          ms.appendText("\n");
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
+
         SignatureInformation.documentation = ms;
         SignatureHelp.signatures.push(SignatureInformation);
         SignatureHelp.activeParameter = argc;

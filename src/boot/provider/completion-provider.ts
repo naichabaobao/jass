@@ -325,7 +325,6 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
     if (findedFunc) {
       findedFunc.takes.forEach((take, index) => {
         items.push(takeToCompletionItem(take, {
-          source: filePath,
           documentation: findedFunc.getParams().map((param) => {
             if (param.id == take.name) {
               return `*${param.descript}*`;

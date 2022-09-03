@@ -3,7 +3,7 @@ import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
 import { DefineMacro, Document, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, LineText } from "./ast";
-import { Token, Tokenize, tokenize } from "./tokens";
+import { Token, Tokenize, tokenize, Tokenizer } from "./tokens";
 
 
 /**
@@ -191,6 +191,19 @@ class TextMacro extends Range {
 
     public addTake(take: string) {
         this.takes.push(take);
+    }
+
+}
+class Include extends Range {
+    private path: string;
+
+    constructor(path: string) {
+        super();
+        this.path = path;
+    }
+
+    public getPath() {
+        return this.path;
     }
 
 }
@@ -736,6 +749,7 @@ class Parser {
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         this.lineTexts = lines(newContent);
+        // this.findInclude();
         this.textMacros = this.findTextMacro();
         this.parseRunTextMacro();
         this.zincBlocks = this.findZincBlock();
@@ -746,8 +760,24 @@ class Parser {
     private textMacros: TextMacro[] = [];
     private expandLineTexts: (LineText | RunTextMacro)[] = [];
     private zincBlocks: Block[] = [];
+    private includes:Include[] = [];
     // 依然保留着单行注释
     private blocks: (Block | LineText)[] = [];
+
+    private findInclude() {
+        this.lineTexts.forEach((lineText) => {
+            if (/^\s*#include\b/.test(lineText.getText())) {
+                const tokens = Tokenizer.get(lineText.getText());
+                if (tokens.length >= 2 && tokens[1].type == "string") {
+                    const filePath = tokens[1].value;
+                    const include = new Include(filePath);
+                    include.start = tokens[0].start;
+                    include.end = tokens[1].end;
+                    this.includes.push(include);
+                }
+            }
+        });
+    }
 
     private findTextMacro(): TextMacro[] {
         const textMacros: TextMacro[] = [];
@@ -1662,5 +1692,24 @@ if (false) {
     parseTextMacro(`//! textmacro a takes aaa`, textMacro);
     console.log(textMacro);
     
+}
+
+export function findIncludes(content:string) {
+    const newContent = replaceBlockComment(content);
+    const lineTexts = lines(newContent);
+    const includes:Include[] = [];
+    lineTexts.forEach((lineText) => {
+        if (/^\s*#include\b/.test(lineText.getText())) {
+            const tokens = Tokenizer.get(lineText.getText());
+            if (tokens.length >= 2 && tokens[1].type == "string") {
+                const filePath = tokens[1].value;
+                const include = new Include(filePath);
+                include.start = tokens[0].start;
+                include.end = tokens[1].end;
+                includes.push(include);
+            }
+        }
+    });
+    return includes;
 }
 

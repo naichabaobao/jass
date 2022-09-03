@@ -1,3 +1,6 @@
+
+
+
 import * as vscode from 'vscode';
 
 
@@ -9,6 +12,7 @@ import { compare, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
 import { Declaration, Func, Global, Library, Local, Member, Method, Take, Native, Struct } from '../jass/ast';
 import { getTypeDesc } from './type-desc';
+import { tokenize } from '../jass/tokens';
 
 type De = Native|Func|Method|Library|Struct|Member|Global|Local;
 
@@ -16,12 +20,12 @@ function toHoverlo(de: De, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
   ms.appendMarkdown(`#### ${de.name}`);
   if (isCurrent) {
-    ms.appendText("\n当前文件");
+    ms.appendText("\n(当前文件)");
   } else {
-    ms.appendText(`\n${filePath}`);
+    ms.appendText(`\n(${filePath})`);
   }
-  ms.appendText("\n");
   de.getContents().forEach((content) => {
+    ms.appendText("\n");
     ms.appendText(content);
   });
   de.getParams().forEach((param) => {
@@ -31,6 +35,7 @@ function toHoverlo(de: De, isCurrent: boolean, filePath: string) {
     }
   });
   if (de.hasDeprecated()) {
+    ms.appendText("\n");
     ms.appendMarkdown(`***@deprecated*** `);
   }
   ms.appendText("\n");
@@ -256,4 +261,5 @@ class HoverProvider implements vscode.HoverProvider {
 }
 
 vscode.languages.registerHoverProvider("jass", new HoverProvider());
+
 

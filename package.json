@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "keywords": [
     "jass",
     "vjass",
@@ -84,12 +84,12 @@
         "jass.only": {
           "type": "boolean",
           "default": false,
-          "description": "only jass model"
+          "description": "only jass model,It is not recommended to use when diagnostic is on"
         },
         "jass.diagnostic": {
           "type": "boolean",
           "default": false,
-          "description": "(Deprecated) jass diagnostic, required in only jass model"
+          "description": "(test) Check jass syntax only"
         },
         "jass.formatv2": {
           "type": "boolean",

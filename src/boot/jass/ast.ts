@@ -172,7 +172,7 @@ class Declaration extends Node implements Descript {
 	}
 
 	public getTexts() {
-		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params|private|ignore?)\b/.test(lineComment.getContent()))
+		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?|private|ignore)\b/.test(lineComment.getContent()))
 	}
 
 	public getContents() {

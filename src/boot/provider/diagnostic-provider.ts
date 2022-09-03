@@ -91,62 +91,18 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 	}
 });
 
-let canChange = true;
-vscode.workspace.onDidChangeTextDocument((event) => {
-	if (canChange == false) {
-		return;
-	}
-	canChange = false;
-	setTimeout(() => {
-		canChange = true;
-	}, 1000);
-	if (Options.isJassDiagnostic) {
-		const document = event.document;
-		const fsPath = document.uri.fsPath;
+vscode.workspace.onDidDeleteFiles((event) => {
+	event.files.forEach((filePath) => {
+		diagnosticCollection.delete(filePath);
+	});
+});
 
-		diagnosticCollection.delete(document.uri);
-		const program = new DataGetter().getJass(fsPath);
-		if (program) {
-			const diagnostics:vscode.Diagnostic[] = [];
-			program.errors.map(err => {
-				const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
-				const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
-				return diagnostic;
-			});
-			program.functions.filter(func => !func.hasIgnore()).forEach(func => {
-				fs.writeFileSync(Options.pjassTempPath, document.getText(toVsPosition(func)), {
-					encoding: "utf8"
-				});
-
-				let cmd = execSync(`"${Options.pjassPath}" +nosemanticerror "${Options.commonJPath}" "${Options.commonAiPath}" "${Options.blizzardJPath}" "${Options.pjassTempPath}"&`).toString("utf8");
-				const comLines = cmd.split("\n");
-				for (let index = 0; index < comLines.length; index++) {
-					const comLine = comLines[index];
-					if (comLine.startsWith("Parse successful:")) {
-						continue;
-					} else if (comLine.startsWith("Parse failed:")) {
-						continue;
-					} else if (comLine.includes("failed with")) {
-						continue;
-					} else {
-						const result = /:(?<line>\d+):\s*(?<message>(\w+\s*)*)/.exec(comLine);
-						if (result && result.groups) {
-							let line = parseInt(result.groups["line"]) - 1 + func.loc.start.line;
-							let message = result.groups["message"];
-							
-							const range = new vscode.Range(line, document.lineAt(line).firstNonWhitespaceCharacterIndex, line, document.lineAt(line).text.length);
-							diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error));
-							diagnosticCollection.set(document.uri, diagnostics);
-
-						}
-					}
-				}
-
-			});
-
-		}
-
-	}
+vscode.workspace.onDidRenameFiles((event) => {
+	event.files.forEach((filePath) => {
+		const diagnostics = diagnosticCollection.get(filePath.oldUri);
+		diagnosticCollection.delete(filePath.oldUri);
+		diagnosticCollection.set(filePath.newUri, diagnostics);
+	});
 });
 
 vscode.workspace.onDidSaveTextDocument((document) => {
