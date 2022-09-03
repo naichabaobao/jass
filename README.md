@@ -61,6 +61,7 @@ endlibrary
 ##### 2022年7月28日
 ###### dzGetColor颜色
 ![dzGetColor](https://github.com/naichabaobao/jass/raw/master/static/images/dz-color.png)
+![dzGetColor](https://raw.githubusercontent.com/naichabaobao/jass/master/static/images/dz-color.png)
 
 --------------------------------------------------------------
 
