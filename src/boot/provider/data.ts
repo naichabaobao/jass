@@ -3,13 +3,14 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, getFileContent, isJFile, isUsableFile, isZincFile} from "../tool";
+import { compare, getFileContent, isJFile, isLuaFile, isUsableFile, isZincFile} from "../tool";
 
 import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
 
 import { parseCj, parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
 import { convertPosition } from "./tool";
+import { Chunk, LuaParser } from "../lua/parser";
 
 
 class Pair {
@@ -71,6 +72,7 @@ class DataMap {
 const dataMap = new DataMap();
 const zincDataMap = new DataMap();
 const cjassDataMap = new DataMap();
+const luaDataMap = new Map<string, Chunk>();
 
 
 
@@ -145,6 +147,12 @@ function parseContent(filePath: string, content: string) {
     const program = parse(content, true);
     setSource(filePath, program);
     zincDataMap.put(filePath, program);
+  } else if (isLuaFile(filePath)) {
+    try {
+      let parser = new LuaParser(content);
+      luaDataMap.set(filePath, parser.parsing());
+    } catch(error) {
+    } 
   } else {
     const parser = new Parser(content);
     if (Options.supportZinc) {
@@ -199,6 +207,8 @@ parsePath(Options.dzApiJPath);
 parsePath(Options.commonAiPath);
 parsePath(...Options.includes);
 parsePath(...Options.workspaces);
+parsePath(...Options.luaDependents);
+console.log("lua", Options.luaDependents);
 
 function startWatch() {
 
@@ -379,10 +389,21 @@ class DataGetter {
     return dataMap.get(key)?.value;
   }
 }
+class LuaDataGetter {
+  constructor() {}
+  forEach(callback: (root: Chunk, fsPath: string) => void) {
+    if (Options.isSupportLua) {
+      luaDataMap.forEach((value, key) => {
+        callback(value, key);
+      })
+    }
+  }
+}
 
 export {
   parseContent,
-  DataGetter
+  DataGetter,
+  LuaDataGetter,
 };
 
 

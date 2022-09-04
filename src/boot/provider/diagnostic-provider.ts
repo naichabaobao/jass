@@ -27,6 +27,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Method, Native, Func } from '../jass/ast';
 import { parse } from '../jass/parse';
+import { isAiFile, isJFile } from '../tool';
 import { DataGetter } from './data';
 import { Options } from './options';
 
@@ -43,65 +44,71 @@ type De = Native|Func|Method;
  * 检查function内部,其他无视
  */
 vscode.workspace.onDidSaveTextDocument((document) => {
-	if (Options.isJassDiagnostic) {
-		const fsPath = document.uri.fsPath;
-
-		diagnosticCollection.delete(document.uri);
-		const program = new DataGetter().getJass(fsPath);
-		if (program) {
-			const diagnostics:vscode.Diagnostic[] = [];
-			program.errors.map(err => {
-				const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
-				const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
-				return diagnostic;
-			});
-			program.functions.filter(func => !func.hasIgnore()).forEach(func => {
-				fs.writeFileSync(Options.pjassTempPath, document.getText(toVsPosition(func)), {
-					encoding: "utf8"
+	const fsPath = document.uri.fsPath;
+	if (isJFile(fsPath) || isAiFile(fsPath)) {
+		if (Options.isJassDiagnostic) {
+	
+			diagnosticCollection.delete(document.uri);
+			const program = new DataGetter().getJass(fsPath);
+			if (program) {
+				const diagnostics:vscode.Diagnostic[] = [];
+				program.errors.map(err => {
+					const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
+					const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
+					return diagnostic;
 				});
-
-				let cmd = execSync(`"${Options.pjassPath}" +nosemanticerror "${Options.commonJPath}" "${Options.commonAiPath}" "${Options.blizzardJPath}" "${Options.pjassTempPath}"&`).toString("utf8");
-				const comLines = cmd.split("\n");
-				for (let index = 0; index < comLines.length; index++) {
-					const comLine = comLines[index];
-					if (comLine.startsWith("Parse successful:")) {
-						continue;
-					} else if (comLine.startsWith("Parse failed:")) {
-						continue;
-					} else if (comLine.includes("failed with")) {
-						continue;
-					} else {
-						const result = /:(?<line>\d+):\s*(?<message>(\w+\s*)*)/.exec(comLine);
-						if (result && result.groups) {
-							let line = parseInt(result.groups["line"]) - 1 + func.loc.start.line;
-							let message = result.groups["message"];
-							
-							const range = new vscode.Range(line, document.lineAt(line).firstNonWhitespaceCharacterIndex, line, document.lineAt(line).text.length);
-							diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error));
-							diagnosticCollection.set(document.uri, diagnostics);
-
+				program.functions.filter(func => !func.hasIgnore()).forEach(func => {
+					fs.writeFileSync(Options.pjassTempPath, document.getText(toVsPosition(func)), {
+						encoding: "utf8"
+					});
+	
+					let cmd = execSync(`"${Options.pjassPath}" +nosemanticerror "${Options.commonJPath}" "${Options.commonAiPath}" "${Options.blizzardJPath}" "${Options.pjassTempPath}"&`).toString("utf8");
+					const comLines = cmd.split("\n");
+					for (let index = 0; index < comLines.length; index++) {
+						const comLine = comLines[index];
+						if (comLine.startsWith("Parse successful:")) {
+							continue;
+						} else if (comLine.startsWith("Parse failed:")) {
+							continue;
+						} else if (comLine.includes("failed with")) {
+							continue;
+						} else {
+							const result = /:(?<line>\d+):\s*(?<message>(\w+\s*)*)/.exec(comLine);
+							if (result && result.groups) {
+								let line = parseInt(result.groups["line"]) - 1 + func.loc.start.line;
+								let message = result.groups["message"];
+								
+								const range = new vscode.Range(line, document.lineAt(line).firstNonWhitespaceCharacterIndex, line, document.lineAt(line).text.length);
+								diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error));
+								diagnosticCollection.set(document.uri, diagnostics);
+	
+							}
 						}
 					}
-				}
-
-			});
-
+	
+				});
+	
+			}
+	
 		}
-
 	}
 });
 
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach((filePath) => {
-		diagnosticCollection.delete(filePath);
+		if (isJFile(filePath.fsPath) || isAiFile(filePath.fsPath)) {
+			diagnosticCollection.delete(filePath);
+		}
 	});
 });
 
 vscode.workspace.onDidRenameFiles((event) => {
 	event.files.forEach((filePath) => {
-		const diagnostics = diagnosticCollection.get(filePath.oldUri);
-		diagnosticCollection.delete(filePath.oldUri);
-		diagnosticCollection.set(filePath.newUri, diagnostics);
+		if (isJFile(filePath.oldUri.fsPath) || isAiFile(filePath.oldUri.fsPath)) {
+			const diagnostics = diagnosticCollection.get(filePath.oldUri);
+			diagnosticCollection.delete(filePath.oldUri);
+			diagnosticCollection.set(filePath.newUri, diagnostics);
+		}
 	});
 });
 

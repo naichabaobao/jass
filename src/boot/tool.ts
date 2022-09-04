@@ -410,7 +410,7 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 		const stat = fs.statSync(val);
 		if (stat.isFile()) {
 			if (options.checkExt) {
-				if (isJFile(val) || isAiFile(val)) {
+				if (isJFile(val) || isAiFile(val) || isLuaFile(val) || isZincFile(val)) {
 					arr.push(val);
 				}
 			} else {

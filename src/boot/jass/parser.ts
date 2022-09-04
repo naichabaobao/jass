@@ -749,7 +749,6 @@ class Parser {
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         this.lineTexts = lines(newContent);
-        // this.findInclude();
         this.textMacros = this.findTextMacro();
         this.parseRunTextMacro();
         this.zincBlocks = this.findZincBlock();
@@ -760,24 +759,9 @@ class Parser {
     private textMacros: TextMacro[] = [];
     private expandLineTexts: (LineText | RunTextMacro)[] = [];
     private zincBlocks: Block[] = [];
-    private includes:Include[] = [];
     // 依然保留着单行注释
     private blocks: (Block | LineText)[] = [];
 
-    private findInclude() {
-        this.lineTexts.forEach((lineText) => {
-            if (/^\s*#include\b/.test(lineText.getText())) {
-                const tokens = Tokenizer.get(lineText.getText());
-                if (tokens.length >= 2 && tokens[1].type == "string") {
-                    const filePath = tokens[1].value;
-                    const include = new Include(filePath);
-                    include.start = tokens[0].start;
-                    include.end = tokens[1].end;
-                    this.includes.push(include);
-                }
-            }
-        });
-    }
 
     private findTextMacro(): TextMacro[] {
         const textMacros: TextMacro[] = [];
@@ -1256,7 +1240,8 @@ class Parser {
             handleBlocks(contentBlocks, {
                 globals: library.globals,
                 functions: library.functions,
-                structs: library.structs
+                structs: library.structs,
+                natives: library.natives
             });
             
         }

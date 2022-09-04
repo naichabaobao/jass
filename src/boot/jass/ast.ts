@@ -467,6 +467,7 @@ class Library extends Declaration implements  Descript, Option {
 	public requires: string[] = [];
 	public loc: Range = Range.default();
 	public readonly structs: Struct[] = [];
+	public readonly natives: Native[] = [];
 	public readonly functions: Func[] = [];
 	public readonly globals: Global[] = [];
 	public readonly lineComments: LineComment[] = [];
@@ -815,7 +816,13 @@ class Program extends Declaration {
 	}
 
 	public allFunctions(containNative: boolean = true, containPrivate: boolean = false) {
-		let funcs:Array<Native|Func> = [...this.functions, ...this.librarys.map((library) => library.functions).flat()];
+	let funcs:Array<Native|Func> = [...this.functions, ...this.librarys.map((library) => {
+		const funcs:(Native|Func)[] = library.functions;
+		if (containNative) {
+			funcs.push(...library.natives);
+		}
+		return funcs;
+	}).flat()];
 
 		if (!containPrivate) {
 			funcs = funcs.filter((func) => (<Func>func).tag != "private");

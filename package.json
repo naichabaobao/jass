@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "keywords": [
     "jass",
     "vjass",
@@ -56,6 +56,18 @@
             "type": "string"
           },
           "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j | .ai | .zn\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find .j | .ai | .zn)"
+        },
+        "jass.lua.dependents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "(Test) '.lua' file library"
+        },
+        "jass.support.lua": {
+          "type": "boolean",
+          "default": false,
+          "description": "(Test) Support lua, Cooperate with 'jass.lua.dependents' consumption"
         },
         "jass.excludes": {
           "type": "array",
@@ -149,7 +161,9 @@
     "semanticTokenScopes": [
       {
         "scopes": {
-          "*.deprecated": ["invalid.deprecated"]
+          "*.deprecated": [
+            "invalid.deprecated"
+          ]
         }
       }
     ]
@@ -179,7 +193,9 @@
   "bugs": {
     "url": "https://github.com/naichabaobao/jass/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "luaparse": "^0.3.1"
+  },
   "author": "家猫hoo",
   "license": "GPL"
 }

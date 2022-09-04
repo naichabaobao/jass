@@ -35,6 +35,14 @@ class Options {
     return resolvePaths(includes);
   }
 
+  public static get isSupportLua() {
+    return this.configuration["support"]["lua"] as boolean;
+  }
+  public static get luaDependents() {
+    const includes = this.configuration["lua"]["dependents"] as Array<string>;
+    return resolvePaths(includes);
+  }
+
   public static get excludes() {
     const includes = this.configuration["excludes"] as Array<string>;
     return includes;

@@ -1,3 +1,1 @@
-function dcccccccc6 takes nothing returns nothing
-  // call dcccccccc6
-endfunction
+function replaceBlockComment(content: string): string {}
