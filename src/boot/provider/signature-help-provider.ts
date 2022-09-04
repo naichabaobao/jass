@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import data, { DataGetter, parseContent } from './data';
 import { convertPosition, fieldFunctions, functionKey } from './tool';
 import { tokenize } from '../jass/tokens';
-import { compare, isZincFile } from '../tool';
+import { compare, getPositionKey } from '../tool';
 import { Options } from './options';
 import { DefineMacro, Func, Local, Native, Struct, Take } from '../jass/ast';
 
@@ -17,38 +17,14 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
 
     const fsPath = document.uri.fsPath;
     
-    const tokens = tokenize(text.substring(0, position.character)).reverse();
-    let key = "";
-    const ids: string[] = [];
-    let argc = 0;
-    let field = 0;
-    let state = 0;
-
-    // 反向遍历
-    for (let index = 0; index < tokens.length; index++) {
-      const token = tokens[index];
-
-      if (state == 0) {
-        if (token.isOp() && token.value == ",") {
-          if (field == 0) {
-            argc++;
-          }
-        } else if (token.isOp() && token.value == "(") {
-          if (field == 0) {
-            state = 1;
-          } else if (field > 0) {
-            field--;
-          }
-        } else if (token.isOp() && token.value == ")") {
-          field++;
-        }
-      } else if (state == 1) {
-        if (token.isId()) {
-          key = token.value;
-        } else break;
-      }
+    const info = getPositionKey(document, position);
+    if (info.key === null) {
+      return;
     }
-    console.log(key);
+    const key = info.key;
+    const argc = info.argc;
+    console.log(key, argc);
+
     const SignatureHelp = new vscode.SignatureHelp();
     new DataGetter().forEach((program, filePath) => {
       const isCurrent = compare(fsPath, filePath);
@@ -138,5 +114,5 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
   }
 }
 
-vscode.languages.registerSignatureHelpProvider("jass", new SignatureHelp, "(", ",");
+vscode.languages.registerSignatureHelpProvider("jass", new SignatureHelp, "(", ",", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split(""));
 

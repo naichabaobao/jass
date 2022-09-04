@@ -1,5 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as vscode from "vscode";
+import { Tokenizer } from "./jass/tokens";
 
 const letterRegExp = new RegExp(/[a-zA-Z]/);
 const numberRegExp = new RegExp(/\d/);
@@ -489,6 +491,53 @@ function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|strin
 	return null;
 }
 
+/**
+ * 获取当前
+ * @param document 
+ * @param position 
+ * @returns 
+ */
+function getPositionKey(document: vscode.TextDocument, position: vscode.Position) {
+	const text = document.lineAt(position).text.substring(0, position.character);
+	
+	const tokens = Tokenizer.get(text);
+    let key:string|null = null;
+    const keys: string[] = [];
+    let argc = 0;
+    let field = 0;
+    let state = 0;
+
+    for (let index = tokens.length; index > 0; index--) {
+      const token = tokens[index - 1];
+		
+      if (state == 0) {
+        if (token.type == "op" && token.value == ",") {
+          if (field == 0) {
+            argc++;
+          }
+        } else if (token.type == "op" && token.value == "(") {
+          if (field == 0) {
+            state = 1;
+          } else if (field > 0) {
+            field--;
+          }
+        } else if (token.type == "op" && token.value == ")") {
+          field++;
+        }
+      } else if (state == 1) {
+        if (token.type == "id") {
+			key = token.value;
+        }
+		break;
+      }
+    }
+
+	return {
+		key,
+		argc,
+	};
+}
+
 export {
 	is0_16,
 	is0_7,
@@ -511,7 +560,8 @@ export {
 	compare,
 	isUsableFile,
 	getFileContent,
-	jassIntegerToNumber
+	jassIntegerToNumber,
+	getPositionKey
 };
 
 

@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "keywords": [
     "jass",
     "vjass",
@@ -101,12 +101,17 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": false,
-          "description": "(test) Check jass syntax only"
+          "description": "(Test) Check jass syntax only"
         },
         "jass.formatv2": {
           "type": "boolean",
           "default": false,
           "description": "Open new version format"
+        },
+        "jass.info-style": {
+          "type": "boolean",
+          "default": true,
+          "description": "(Test) Styles with more information"
         }
       }
     },

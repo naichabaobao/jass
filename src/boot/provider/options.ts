@@ -77,6 +77,10 @@ class Options {
   public static get isFormatv2() {
     return this.configuration["formatv2"] as boolean;
   }
+  // 显示更多信息的样式
+  public static get enableInfoStyle() {
+    return this.configuration["info-style"] as boolean;
+  }
 
   public static get workspaces():string[] {
     if (vscode.workspace.workspaceFolders) {

@@ -46,7 +46,10 @@ type CompletionItemOption = {
   code?: string,
   source?: string,
   orderString?: string,
-  deprecated?: boolean
+  deprecated?: boolean,
+  filterText?: string,
+  insertText?: string,
+  additionalTextEdits?: vscode.TextEdit[],
 };
 
 function completionItem(label: string, option: CompletionItemOption = {
@@ -55,7 +58,9 @@ function completionItem(label: string, option: CompletionItemOption = {
   documentation: undefined,
   code: undefined,
   source: undefined,
-  orderString: undefined
+  orderString: undefined,
+  filterText: undefined,
+  insertText: undefined,
 }) {
   const item = new vscode.CompletionItem(label, option.kind);
   item.detail = option.detial ?? label;
@@ -86,6 +91,16 @@ function completionItem(label: string, option: CompletionItemOption = {
   }
   item.documentation = ms;
   item.sortText = option.orderString;
+  if (option.filterText) {
+    item.filterText = option.filterText;
+  }
+  if (option.insertText) {
+    item.insertText = option.insertText;
+  }
+  if (option.additionalTextEdits) {
+    item.additionalTextEdits = option.additionalTextEdits;
+  }
+
   return item;
 }
 
@@ -203,7 +218,7 @@ function libraryToCompletionItem(library: Library, option?: CompletionItemOption
 }
 
 function funcToCompletionItem(func: Func|Native, option?: CompletionItemOption) :vscode.CompletionItem {
-  return completionItem(func.name, {
+  return completionItem(Options.enableInfoStyle ? formatLabel(func) : func.name, {
     kind: option?.kind ?? vscode.CompletionItemKind.Function,
     source: option?.source ?? func.source,
     code: option?.code ?? func.origin,
@@ -219,12 +234,21 @@ function funcToCompletionItem(func: Func|Native, option?: CompletionItemOption) 
     })(),
     orderString: option?.orderString,
     detial: option?.detial,
-    deprecated: func.hasDeprecated()
+    deprecated: func.hasDeprecated(),
+    filterText: func.name,
+    insertText: Options.enableInfoStyle ? formatInsertText(func) : func.name,
   });
 }
 
+function formatLabel(func:Func|Native|Method):string {
+  return `${func.name}(${func.takes.map(take => take.type).join(", ")})`
+}
+function formatInsertText(func:Func|Native|Method):string {
+  return `${func.name}(${func.takes.map(take => take.name).join(", ")})`
+}
+
 function methodToCompletionItem(func: Method, option?: CompletionItemOption) :vscode.CompletionItem {
-  return completionItem(func.name, {
+  return completionItem(Options.enableInfoStyle ? formatLabel(func) : func.name, {
     kind: option?.kind ?? vscode.CompletionItemKind.Method,
     source: option?.source ?? func.source,
     code: option?.code ?? func.origin,
@@ -240,7 +264,9 @@ function methodToCompletionItem(func: Method, option?: CompletionItemOption) :vs
     })(),
     orderString: option?.orderString,
     detial: option?.detial,
-    deprecated: func.hasDeprecated()
+    deprecated: func.hasDeprecated(),
+    filterText: func.name,
+    insertText: Options.enableInfoStyle ? formatInsertText(func) : func.name,
   });
 }
 
