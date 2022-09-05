@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "keywords": [
     "jass",
     "vjass",
@@ -110,7 +110,7 @@
         },
         "jass.info-style": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "(Test) Styles with more information"
         }
       }
@@ -199,7 +199,6 @@
     "url": "https://github.com/naichabaobao/jass/issues"
   },
   "dependencies": {
-    "luaparse": "^0.3.1"
   },
   "author": "家猫hoo",
   "license": "GPL"

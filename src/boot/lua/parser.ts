@@ -1,5 +1,8 @@
 
-var parser = require('luaparse');
+var parser = require('./luaparse');
+
+// import parser from "./luaparse";
+
 
 export interface LuaNode {
     type: string;
