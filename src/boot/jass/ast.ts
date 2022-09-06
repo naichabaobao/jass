@@ -841,7 +841,7 @@ class Program extends Declaration {
 			globals = globals.filter((global) => global.tag != "private");
 			globals = globals.filter((global) => !global.hasPrivate());
 		}
-		return globals;
+		return globals.filter( g => g ); // remove empty globals
 	}
 	public allStructs(containPrivate: boolean = false) {
 		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
