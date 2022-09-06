@@ -1,4 +1,6 @@
 import { isNewLine } from "../tool";
+import { Position } from "./ast";
+import { LineText } from "./ast";
 
 /**
  * 移除注释
@@ -77,4 +79,71 @@ import { isNewLine } from "../tool";
 	return chars.join("");
 }
 
-export {removeComment};
+function linesByIndexOf(content: string): LineText[] {
+    const LineTexts: LineText[] = [];
+
+    for (let index = 0; index < content.length;) {
+        const newLineIndex = content.indexOf("\n", index);
+        const fieldText = content.substring(index, newLineIndex == -1 ? content.length : newLineIndex + 1);
+
+        LineTexts.push(new LineText(fieldText));
+
+        if (newLineIndex == -1) {
+            break;
+        } else {
+            index = newLineIndex + 1;
+        }
+    }
+
+    return LineTexts;
+}
+
+function linesBySplit(content: string): LineText[] {
+    const ls = content.split("\n");
+
+    const last = ls.pop();
+
+    const lineTexts = ls.map(x => new LineText(x + "\n"));
+
+    if (last) {
+        lineTexts.push(new LineText(last));
+    }
+
+    return lineTexts;
+}
+
+/**
+ * 
+ * @param content 
+ * @returns 
+ */
+function lines(content: string): LineText[] {
+    // const funcs = [linesByIndexOf, linesBySplit];
+    // return funcs[Math.floor(Math.random() * funcs.length)](content).map((lineText, index) => {
+    //     lineText.start = new Position(index, 0);
+    //     lineText.end = new Position(index, lineText.text.length);
+    //     return lineText;
+    // });
+    return linesByIndexOf(content).map((lineText, index) => {
+        lineText.start = new Position(index, 0);
+        lineText.end = new Position(index, lineText.getText().length);
+        return lineText;
+    });
+}
+
+export {removeComment, lines};
+
+/**
+ * 
+ * @param content //! zinc 字符串
+ */
+export function isZincStart(content: string) {
+	return /^\s*\/\/!\s+zinc\b/.test(content);
+}
+/**
+ * 
+ * @param content //! zinc 字符串
+ */
+export function isZincEnd(content: string) {
+	return /^\s*\/\/!\s+endzinc\b/.test(content);
+}

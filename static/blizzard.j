@@ -2393,80 +2393,80 @@ function AddUnitAnimationPropertiesBJ takes boolean add, string animProperties, 
 endfunction
 
 
-=
+
 // 创建图像
 function CreateImageBJ takes string file, real size, location where, real zOffset, integer imageType returns image
     set bj_lastCreatedImage = CreateImage(file, size, size, size, GetLocationX(where), GetLocationY(where), zOffset, 0, 0, 0, imageType)
     return bj_lastCreatedImage
 endfunction
 
-=
+
 // 显示/隐藏图像
 function ShowImageBJ takes boolean flag, image whichImage returns nothing
     call ShowImage(whichImage, flag)
 endfunction
 
-=
+
 // 改变图像位置
 function SetImagePositionBJ takes image whichImage, location where, real zOffset returns nothing
     call SetImagePosition(whichImage, GetLocationX(where), GetLocationY(where), zOffset)
 endfunction
 
-=
+
 // 改变图像颜色
 function SetImageColorBJ takes image whichImage, real red, real green, real blue, real alpha returns nothing
     call SetImageColor(whichImage, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-alpha))
 endfunction
 
-=
+
 // 最后创建的图像
 function GetLastCreatedImage takes nothing returns image
     return bj_lastCreatedImage
 endfunction
 
-=
+
 // 创建地面纹理
 function CreateUbersplatBJ takes location where, string name, real red, real green, real blue, real alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
     set bj_lastCreatedUbersplat = CreateUbersplat(GetLocationX(where), GetLocationY(where), name, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-alpha), forcePaused, noBirthTime)
     return bj_lastCreatedUbersplat
 endfunction
 
-=
+
 // 显示/隐藏地面纹理
 function ShowUbersplatBJ takes boolean flag, ubersplat whichSplat returns nothing
     call ShowUbersplat(whichSplat, flag)
 endfunction
 
-=
+
 // 最后创建的地面纹理
 function GetLastCreatedUbersplat takes nothing returns ubersplat
     return bj_lastCreatedUbersplat
 endfunction
 
-=
+
 function GetLastCreatedMinimapIcon takes nothing returns minimapicon
     return bj_lastCreatedMinimapIcon
 endfunction
 
-=
+
 function CreateMinimapIconOnUnitBJ takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconOnUnit(whichUnit, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-=
+
 function CreateMinimapIconAtLocBJ takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconAtLoc(where, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-=
+
 function CreateMinimapIconBJ takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIcon(x, y, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-=
+
 function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns nothing
 	local integer	red
 	local integer 	green
@@ -2532,7 +2532,7 @@ function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns n
 endfunction
 
 
-=
+
 function CampaignMinimapIconLocBJ takes location where, integer style returns nothing
 	local integer	red
 	local integer 	green

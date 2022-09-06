@@ -3,7 +3,7 @@ import {
 	Position,
 	Range,
 	Rangebel
-} from "../common"
+} from "../jass/ast"
 
 import {Take, Local} from "../jass/ast";
 import * as jass from "../jass/ast";

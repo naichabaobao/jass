@@ -1,6 +1,6 @@
 import {JassError, Take} from "../jass/ast";
 import * as jass from "../jass/ast";
-import {Rangebel, Range, Position, Desc} from "../common";
+import {Rangebel, Range, Position, Desc} from "../jass/ast";
 import { Token } from "../jass/tokens";
 
 type ModifierType = "private" | "public";

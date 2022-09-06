@@ -164,13 +164,13 @@
   },
   "function-zinc": {
     "prefix": "function",
-    "body": "function ${1:function_name} (${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "body": "function ${1:function_name}(${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
     "description": "zinc function 模板",
     "scope": "source.jass"
   },
   "method-zinc": {
     "prefix": "method",
-    "body": "method ${1:function_name} (${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "body": "method ${1:function_name}(${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
     "description": "zinc method 模板",
     "scope": "source.jass"
   },
@@ -190,6 +190,12 @@
     "prefix": "deprecated",
     "body": "// @deprecated",
     "description": "不建议使用",
+    "scope": "source.jass"
+  },
+  "param": {
+    "prefix": "param",
+    "body": "// @param",
+    "description": "参数提示",
     "scope": "source.jass"
   }
 }

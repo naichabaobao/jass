@@ -3,13 +3,14 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, isJFile, isUsableFile, isZincFile} from "../tool";
+import { compare, getFileContent, isJFile, isLuaFile, isUsableFile, isZincFile} from "../tool";
 
 import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
 
 import { parseCj, parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
 import { convertPosition } from "./tool";
+import { Chunk, LuaParser } from "../lua/parser";
 
 
 class Pair {
@@ -71,12 +72,9 @@ class DataMap {
 const dataMap = new DataMap();
 const zincDataMap = new DataMap();
 const cjassDataMap = new DataMap();
+const luaDataMap = new Map<string, Chunk>();
 
-function getFileContent(filePath: string):string {
-  return fs.readFileSync(filePath, {
-    encoding: "utf8"
-  }).toString();
-}
+
 
 function setSource(filePath: string, program: Program) {
 
@@ -149,6 +147,12 @@ function parseContent(filePath: string, content: string) {
     const program = parse(content, true);
     setSource(filePath, program);
     zincDataMap.put(filePath, program);
+  } else if (isLuaFile(filePath)) {
+    try {
+      let parser = new LuaParser(content);
+      luaDataMap.set(filePath, parser.parsing());
+    } catch(error) {
+    } 
   } else {
     const parser = new Parser(content);
     if (Options.supportZinc) {
@@ -203,6 +207,8 @@ parsePath(Options.dzApiJPath);
 parsePath(Options.commonAiPath);
 parsePath(...Options.includes);
 parsePath(...Options.workspaces);
+parsePath(...Options.luaDependents);
+console.log("lua", Options.luaDependents);
 
 function startWatch() {
 
@@ -361,8 +367,70 @@ export default Data;
 console.log(Options.workspaces)
 console.log(Options.includes)
 
+class DataGetter {
+  constructor() {}
+  forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true, containCJass: boolean = false) {
+    dataMap.forEach((key, value) => {
+      callback(value, key);
+    });
+    if (containZinc) {
+      zincDataMap.forEach((key, value) => {
+        callback(value, key);
+      });
+    }
+    if (containCJass) {
+      cjassDataMap.forEach((key, value) => {
+        callback(value, key);
+      });
+    }
+  }
+
+  public getJass(key: string): Program|undefined {
+    return dataMap.get(key)?.value;
+  }
+}
+class LuaDataGetter {
+  constructor() {}
+  forEach(callback: (root: Chunk, fsPath: string) => void) {
+    if (Options.isSupportLua) {
+      luaDataMap.forEach((value, key) => {
+        callback(value, key);
+      })
+    }
+  }
+}
+
 export {
-  parseContent
+  parseContent,
+  DataGetter,
+  LuaDataGetter,
 };
+
+
+function parseData(fsPath: string, content: string) {
+  return setTimeout(() => {
+    return parseContent(fsPath, content);
+  }, 2e3);
+}
+
+let lastPath: string|null = null;
+let preParsed: NodeJS.Timeout|null = null;
+
+// 当文件被改变时,把改变后的文件从新解析,如果连续输入则会把上一次的取消掉只执行最后一次
+vscode.workspace.onDidChangeTextDocument((event) => {
+  const document = event.document;
+
+  const fsPath = document.uri.fsPath;
+
+  if (lastPath == fsPath && preParsed) {
+    clearTimeout(preParsed);
+  }
+
+  lastPath = fsPath;
+  preParsed = parseData(fsPath, document.getText());
+  
+});
+
+
 
 

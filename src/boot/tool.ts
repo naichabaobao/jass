@@ -1,10 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as vscode from "vscode";
+import { Tokenizer } from "./jass/tokens";
 
 const letterRegExp = new RegExp(/[a-zA-Z]/);
 const numberRegExp = new RegExp(/\d/);
 const spaceRegExp = new RegExp(/[ \t]/);
-const newLineRegExp = new RegExp(/[\r\n]/);
+const newLineRegExp = new RegExp(/\n/);
 const idRegExp = new RegExp(/[a-zA-Z][a-zA-Z0-9_]*/);
 
 function isLetter(char: string) {
@@ -410,7 +412,7 @@ function resolvePaths(paths: Array<string>, options: ResolvePathOption = new Res
 		const stat = fs.statSync(val);
 		if (stat.isFile()) {
 			if (options.checkExt) {
-				if (isJFile(val) || isAiFile(val)) {
+				if (isJFile(val) || isAiFile(val) || isLuaFile(val) || isZincFile(val)) {
 					arr.push(val);
 				}
 			} else {
@@ -464,6 +466,78 @@ function isUsableFile(filePath: string) {
 	return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
 }
 
+/**
+ * 获取文件内容
+ * @param filePath 
+ * @returns 
+ */
+function getFileContent(filePath: string):string {
+	return fs.readFileSync(filePath, {
+	  encoding: "utf8"
+	}).toString();
+  }
+
+// 将jass integer字符串转为number
+function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|string, jassIntegerString: string):(number|null) {
+	if (type == "int" || type == "hex" || type == "octal") {
+		return parseInt(jassIntegerString);
+	} else if (type == "dollar_hex") {
+		return parseInt(jassIntegerString.replace(/\$/, "0x"));
+	} else if (type == "mark") {
+		if (jassIntegerString.length == 6) {
+			return parseInt("0x" + jassIntegerString.charCodeAt(1).toString(16) + jassIntegerString.charCodeAt(2).toString(16) + jassIntegerString.charCodeAt(3).toString(16) + jassIntegerString.charCodeAt(4).toString(16))
+		} else return null;
+	}
+	return null;
+}
+
+/**
+ * 获取当前
+ * @param document 
+ * @param position 
+ * @returns 
+ */
+function getPositionKey(document: vscode.TextDocument, position: vscode.Position) {
+	const text = document.lineAt(position).text.substring(0, position.character);
+	
+	const tokens = Tokenizer.get(text);
+    let key:string|null = null;
+    const keys: string[] = [];
+    let argc = 0;
+    let field = 0;
+    let state = 0;
+
+    for (let index = tokens.length; index > 0; index--) {
+      const token = tokens[index - 1];
+		
+      if (state == 0) {
+        if (token.type == "op" && token.value == ",") {
+          if (field == 0) {
+            argc++;
+          }
+        } else if (token.type == "op" && token.value == "(") {
+          if (field == 0) {
+            state = 1;
+          } else if (field > 0) {
+            field--;
+          }
+        } else if (token.type == "op" && token.value == ")") {
+          field++;
+        }
+      } else if (state == 1) {
+        if (token.type == "id") {
+			key = token.value;
+        }
+		break;
+      }
+    }
+
+	return {
+		key,
+		argc,
+	};
+}
+
 export {
 	is0_16,
 	is0_7,
@@ -484,7 +558,10 @@ export {
 	isLuaFile,
 	getPathFileName,
 	compare,
-	isUsableFile
+	isUsableFile,
+	getFileContent,
+	jassIntegerToNumber,
+	getPositionKey
 };
 
 

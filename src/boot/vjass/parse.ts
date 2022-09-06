@@ -1,5 +1,5 @@
 import {Token, tokens} from "../jass/tokens";
-import { Position } from "../common";
+import { Position } from "../jass/ast";
 import { Local, Take,
 	Library,
 	Func,

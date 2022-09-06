@@ -1011,7 +1011,7 @@ globals
 	//===================================================
 	// Limit Event API constants
 	// variable, // variable, // Limit Event API constants    
-	player state, game state, and unit state events
+	// player state, game state, and unit state events
 	// ( do NOT change the order of these... )
 	//===================================================
 	

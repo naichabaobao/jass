@@ -1,25 +1,25 @@
-/*
-流程
-先查找當前文件 -> 再去找common等文件 -> 再去找includes文件
-一旦找到了就直接返回，不再無畏的往下找
-*/
+import * as fs from 'fs';
+import * as path from 'path';
 
 import * as vscode from 'vscode';
 
 import { AllKeywords } from './keyword';
 import { Types } from './types';
-import { Func, Library, Local, Program, Take } from "../jass/ast";
-import data, { parseContent } from "./data";
-import { Rangebel } from '../common';
+import { Func, Library, Local, Member, Method, Program, Take } from "../jass/ast";
+import data, { DataGetter, parseContent } from "./data";
+import { Rangebel, Global, Native, Struct} from '../jass/ast';
 import { Options } from './options';
-import { compare, isZincFile } from '../tool';
+import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
+import { tokenize } from '../jass/tokens';
 
 
-const toVsPosition = <T extends Rangebel>(any: T) => {
+const toVsPosition = (any: De) => {
   const range = new vscode.Range(any.loc.start.line, any.loc.start.position, any.loc.end.line, any.loc.end.position);
   return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
+
+type De = Native|Func|Method|Library|Struct|Member|Global|Local|Take;
 
 vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
 
@@ -57,216 +57,121 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     console.log(key);
 
     const fsPath = document.uri.fsPath;
-
-    parseContent(fsPath, document.getText());
-
-    const fieldLibrarys = () => {
-      const librarys:Library[] = [];
-
-      if (!Options.isOnlyJass) {
-        librarys.push(...data.librarys());
-
-        if (Options.supportZinc) {
-          librarys.push(...data.zincLibrarys());
-        }
-      }
-      
-      return librarys;
-    };
-
-    const fieldGlobals = () => {
-      const globals = data.globals();
-
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          globals.push(...func.getGlobals());
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            globals.push(...library.globals);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            globals.push(...library.globals.filter((func) => func.tag != "private"));
-          }
-        });
-        // 方法内部的globals
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            globals.push(...func.getGlobals());
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              globals.push(...library.globals);
-              return false;
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              globals.push(...library.globals.filter((func) => func.tag != "private"));
-            }
-          });
-          // 旧版本的zinc解析，这里不会执行，因为没有解析这部分的代码
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              globals.push(...func.getGlobals());
-            }
-          });
-        }
-      }
-      
-      return globals;
-    };
-
-    const fieldTakes = () => {
-      const takes:{
-        take: Take,
-        func:Func
-      }[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          
-          takes.push(...func.takes.map((take) => {
-            return {take, func};
-          }));
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            takes.push(...func.takes.map((take) => {
-              return {take, func};
-            }));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              takes.push(...func.takes.map((take) => {
-                return {take, func};
-              }));
-            }
-          });
-        }
-      }
-
-      return takes;
-    };
-
-    const fieldLocals = () => {
-      const locals:Local[] = [];
-      data.functions().forEach((func) => {
-        if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-          locals.push(...func.locals);
-        }
-      });
-
-      if (!Options.isOnlyJass) {
-        data.libraryFunctions().forEach((func) => {
-          if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-            locals.push(...func.locals);
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibraryFunctions().forEach((func) => {
-            if (compare(func.source, fsPath) && func.loc.contains(convertPosition(position))) {
-              locals.push(...func.locals);
-            }
-          });
-        }
-      }
-
-      return locals;
-    };
-    const fieldStructs = () => {
-      const structs = data.structs();
-
-      if (!Options.isOnlyJass) {
-        const requires: string[] = [];
-        data.librarys().filter((library) => {
-          if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-            requires.push(...library.requires);
-            structs.push(...library.structs);
-            return false;
-          }
-          return true;
-        }).forEach((library) => {
-          if (requires.includes(library.name)) {
-            structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-          }
-        });
-
-        if (Options.supportZinc) {
-          data.zincLibrarys().filter((library) => {
-            if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-              requires.push(...library.requires);
-              structs.push(...library.structs);
-              return false
-            }
-            return true;
-          }).forEach((library) => {
-            if (requires.includes(library.name)) {
-              structs.push(...library.structs.filter((struct) => struct.tag != "private"));
-            }
-          });
-        }
-      }
-      
-      return structs;
-    };
-
     const locations = new Array<vscode.Location>();
 
-    [...fieldFunctions(fsPath, position), ...data.natives()].forEach((func) => {
-      if (func.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(func.source), toVsPosition(func));
-        locations.push(location);
+    new DataGetter().forEach((program, filePath) => {
+      const isCurrent = compare(fsPath, filePath);
+      
+      if (!Options.isOnlyJass) {
+        program.getNameLibrary(key).forEach(library => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(library));
+          locations.push(location);
+        });
+        program.getNameStruct(key).forEach(struct => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(struct));
+          locations.push(location);
+        });
+        program.getNameMethod(key).forEach(method => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(method));
+          locations.push(location);
+        });
+        program.getNameMember(key).forEach(member => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(member));
+          locations.push(location);
+        });
+        
       }
-    });
-    fieldGlobals().forEach((global) => {
-      if (global.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(global.source), toVsPosition(global));
+      program.getNameGlobal(key).forEach(global => {
+        const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(global));
         locations.push(location);
-      }
-    });
-    fieldLocals().forEach((local) => {
-      if (local.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(local.source), toVsPosition(local));
+      });
+      program.getNameFunction(key).forEach(func => {
+        const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
         locations.push(location);
+      });
+    
+      if (isCurrent) {
+        const findedFunc = program.getPositionFunction(convertPosition(position));
+        if (findedFunc) {
+          findedFunc.takes.filter(take => take.name == key).forEach((take, index) => {
+            const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
+            locations.push(location);
+          });
+    
+          findedFunc.locals.filter(local => local.name == key).forEach(local => {
+            const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
+            locations.push(location);
+          });
+        }
+        
+        const findedMethod = program.getPositionMethod(convertPosition(position));
+        if (findedMethod) {
+          findedMethod.takes.filter(take => take.name == key).forEach((take, index) => {
+            const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
+            locations.push(location);
+          });
+    
+          findedMethod.locals.filter(local => local.name == key).forEach(local => {
+            const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
+            locations.push(location);
+          });
+        }
       }
-    });
-    fieldTakes().forEach((funcTake) => {
-      if (funcTake.take.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(funcTake.func.source), toVsPosition(funcTake.take));
+    }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
+
+    return locations;
+  }
+
+}());
+
+vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
+
+  private _maxLength = 255;
+
+  private isNumber = function (val: string) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if (regPos.test(val) || regNeg.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
+    const locations = new Array<vscode.Location>();
+
+    const tokens = tokenize(document.lineAt(position).text);
+    if (tokens.length >= 2 && tokens[0].value == "#include" && tokens[1].isString()) {
+      const key = tokens[1].value;
+
+      console.log("file key: " + key);
+
+      const prefixContent = key.substring(1, key.length - 1);
+
+      const currentFileDir = () => {
+        return path.parse(document.uri.fsPath).dir;
+      };
+
+      const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+      const stat = fs.statSync(realPath);
+      if (stat.isFile()) {
+        const location = new vscode.Location(vscode.Uri.file(realPath), new vscode.Range(0, 0, 0, 0));
         locations.push(location);
+      } else if (stat.isDirectory()) {
+        const paths = fs.readdirSync(realPath);
+        paths.forEach((p) => {
+          const filePath = path.resolve(realPath, p);
+          if (fs.statSync(filePath).isDirectory()) {
+          } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+            const location = new vscode.Location(vscode.Uri.file(filePath), new vscode.Range(0, 0, 0, 0));
+            locations.push(location);
+          }
+        });
       }
-    });
-    fieldStructs().forEach((struct) => {
-      if (struct.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(struct.source), toVsPosition(struct));
-        locations.push(location);
-      }
-    });
-    fieldLibrarys().forEach((library) => {
-      if (library.name == key) {
-        const location = new vscode.Location(vscode.Uri.file(library.source), toVsPosition(library));
-        locations.push(location);
-      }
-    });
+    } else {
+      return null;
+    }
 
     return locations;
   }

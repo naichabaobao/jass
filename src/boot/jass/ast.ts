@@ -1,10 +1,138 @@
-import { Range, Rangebel, Desc, Position } from "../common";
-import { isSpace } from "../tool";
+
 import { Token } from "./tokens";
 
+import * as path from "path";
+import { getFileContent, isSpace, isUsableFile } from "../tool";
+import { lines } from "./tool";
 
-class Node implements Rangebel { 
-	public loc: Range = Range.default();
+
+class Position {
+	public line: number;
+	public position: number;
+
+	constructor(line: number = 0, position: number = 0) {
+		this.line = line;
+		this.position = position;
+	}
+
+}
+
+class Range {
+	public start: Position;
+	public end: Position;
+
+	constructor(start: Position = new Position(), end: Position = new Position()) {
+		this.start = start;
+		this.end = end;
+	}
+
+	public static default () :Range {
+		return new Range(new Position(0,0), new Position(0,0))
+	}
+
+
+	public setRange<T extends Range>(range: T) {
+		this.start = range.start;
+		this.end = range.end;
+		return this;
+	}
+
+	public contains(positionOrRange: Position | Range): boolean {
+		if (positionOrRange instanceof Position) {
+			return (this.start.line < positionOrRange.line || (this.start.line == positionOrRange.line && this.start.position < positionOrRange.position))
+				&& 
+				(this.end.line > positionOrRange.line || (this.end.line == positionOrRange.line && this.end.position > positionOrRange.position));
+		} else {
+			return (this.start.line < positionOrRange.start.line || (this.start.line == positionOrRange.start.line && this.start.position < positionOrRange.start.position) )
+				&&
+				(this.end.line > positionOrRange.end.line || (this.end.line == positionOrRange.end.line && this.end.position > positionOrRange.end.position));
+		}
+	}
+
+	public from<T extends Range>(range: T) {
+		this.start = range.start;
+		this.end = range.end;
+		return this;
+	}
+
+
+}
+
+
+/**
+ * @deprecated 优先使用Range
+ */
+interface Rangebel {
+	loc: Range;
+}
+
+/**
+ * @deprecated 采用多行形式
+ */
+interface Desc {
+	text:string;
+}
+
+
+export {
+	Position,
+	Range,
+	Rangebel,
+	Desc
+};
+
+class LineText extends Range {
+
+    private text: string;
+
+    constructor(text: string) {
+        super();
+        this.text = text;
+    }
+
+    // 是否空行
+    public isEmpty(): boolean {
+        return this.text.trimStart() === "";
+    }
+
+    public getText(): string {
+        return this.text;
+    }
+
+    public setText(text: string): void {
+        this.text = text;
+    }
+
+    public lineNumber(): number {
+        return this.start.line;
+    }
+
+    // 第一个字符下标
+    public firstCharacterIndex(): number {
+        let index = 0;
+        for (; index < this.text.length; index++) {
+            const char = this.text[index];
+            if (!isSpace(char)) {
+                return index;
+            }
+        }
+        return index;
+    }
+
+    public length(): number {
+        return this.text.length;
+    }
+
+    public clone(): LineText {
+        return Object.assign(new LineText(this.getText()), this);
+    }
+
+}
+
+
+
+class Node implements Rangebel  { 
+	public readonly loc: Range = Range.default(); 
 }
 
 type ParamAnnotation = {
@@ -24,6 +152,12 @@ class Declaration extends Node implements Descript {
 	public hasDeprecated(): boolean {
 		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@deprecated\b/, "").test(lineComment.getContent())) != -1;
 	}
+	public hasPrivate(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@private\b/, "").test(lineComment.getContent())) != -1;
+	}
+	public hasIgnore(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@ignore\b/, "").test(lineComment.getContent())) != -1;
+	}
 
 	public getParams() : ParamAnnotation[] {
 		return <ParamAnnotation[]>this.lineComments.map((lineComment) => {
@@ -38,12 +172,14 @@ class Declaration extends Node implements Descript {
 	}
 
 	public getTexts() {
-		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?)\b/.test(lineComment.getContent()))
+		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?|private|ignore)\b/.test(lineComment.getContent()))
 	}
 
 	public getContents() {
 		return this.getTexts().map((lineComment) => lineComment.getContent());
 	}
+
+
 
 }
 
@@ -81,7 +217,7 @@ class Take extends Node {
 	}
 }
 
-class Native extends Declaration implements Rangebel, Desc, Descript {
+class Native extends Declaration implements Desc, Descript {
 	public nameToken: Token | null = null;
 	public name: string;
 	public readonly takes: Take[];
@@ -123,12 +259,12 @@ class Func extends Native implements Rangebel, Option {
 
 	public readonly locals: Local[] = [];
 	public readonly tokens: Token[] = [];
-	private readonly globals: Global[] = [];
+	public readonly globals: Global[] = [];
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
 			const defaultString = this.defaults !== null ? (' defaults ' + this.defaults) : "";
-			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}${defaultString}`;
+			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} takes ${this.takes.length > 0 ? this.takes.map(take => take.origin).join(", ") : "nothing"} returns ${this.returns ? this.returns : "nothing"}`;
 		} else if (this.option.style == "zinc") {
 			return `${this.tag == "default" ? "" : this.tag + " "}function ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"} {}`;
 		}
@@ -331,6 +467,7 @@ class Library extends Declaration implements  Descript, Option {
 	public requires: string[] = [];
 	public loc: Range = Range.default();
 	public readonly structs: Struct[] = [];
+	public readonly natives: Native[] = [];
 	public readonly functions: Func[] = [];
 	public readonly globals: Global[] = [];
 	public readonly lineComments: LineComment[] = [];
@@ -365,7 +502,7 @@ class Library extends Declaration implements  Descript, Option {
 }
 
 type AstType = "Program" | "Global" | "Function" | "Library" | "Scope" | "Struct" | "Interface" | "Module" | "Type" | "Native"
-	| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock";
+	| "Take" | "Local" | "TextMacro" | "RunTextMacro" | "DefineMacro" | "ZincBlock" | "IDentifier";
 
 class AstNode extends Range {
 	protected readonly astType: AstType;
@@ -508,6 +645,78 @@ export {
 
 
 
+/**
+ * 表示一个脚本文件
+ */
+ class Document {
+    public readonly uri: string;
+    public readonly fileName: string;
+    public readonly lineCount: number;
+    private readonly lines: LineText[];
+    lineAt(lineOrposition: number|Position): LineText {
+        return lineOrposition instanceof Position ? this.lines[lineOrposition.line] : this.lines[lineOrposition];
+    }
+    offsetAt(position: Position): number {
+        let count = 0;
+        for (let index = 0; index < position.line - 1; index++) {
+            const lineText = this.lines[index];
+            count += lineText.length();
+        }
+        count += Math.min(position.position, this.lines[position.line].length());
+        return count;
+    }
+    positionAt(offset: number): Position {
+        const position = new Position();
+        let count = 0;
+        for (let index = 0; index < this.lines.length; index++) {
+            const lineText = this.lines[index];
+            if (count + lineText.length() > offset) {
+                position.line = index;
+                position.position = offset - count;
+                return position;
+            } else {
+                count += lineText.length();
+            }
+        }
+        return position;
+    }
+    getText(range?: Range): string {
+        return this.lines
+        .filter(lineText => (range ? (lineText.lineNumber() >= range.start.line && lineText.lineNumber() <= range.end.line) : true))
+        .map(lineText => {
+            if (lineText.lineNumber() === range?.start.line) {
+                return lineText.getText().substring(range.start.position);
+            } else if (lineText.lineNumber() === range?.start.line) {
+                return lineText.getText().substring(0, range.end.position);
+            } else {
+                return lineText.getText();
+            }
+        })
+        .join("");
+    }
+    /*
+    getWordRangeAtPosition(position: Position, regex?: RegExp): Range | undefined {
+        throw new Error("Method not implemented.");
+    }
+    validateRange(range: Range): Range {
+        throw new Error("Method not implemented.");
+    }
+    validatePosition(position: Position): Position {
+        throw new Error("Method not implemented.");
+    }*/
+
+    public constructor(uri: string, content?:string) {
+        this.uri = uri;
+        if (!isUsableFile(this.uri)) {
+            throw "create document fail!";
+        }
+        this.fileName = path.basename(this.uri);
+        
+        this.lines = lines(content ? content : getFileContent(this.uri));
+        this.lineCount = this.lines.length;
+    }
+    
+}
 
 
 
@@ -538,14 +747,6 @@ class Program extends Declaration {
 	 * @deprecated
 	 */
 	public readonly body: Array<Declaration> = [];
-
-	public findFunctionByType(...type: string[]) {
-
-	}
-
-	public findFunctionByPosition(position: Position) {
-
-	}
 
 	public findFunctions(options: {
 		type?: string | string[] | null,
@@ -614,8 +815,114 @@ class Program extends Declaration {
 		return this.librarys.map((lib) => lib.structs).flat();
 	}
 
+	public allFunctions(containNative: boolean = true, containPrivate: boolean = false) {
+	let funcs:Array<Native|Func> = [...this.functions, ...this.librarys.map((library) => {
+		const funcs:(Native|Func)[] = library.functions;
+		if (containNative) {
+			funcs.push(...library.natives);
+		}
+		return funcs;
+	}).flat()];
+
+		if (!containPrivate) {
+			funcs = funcs.filter((func) => (<Func>func).tag != "private");
+			funcs = funcs.filter((func) => !(<Func>func).hasPrivate());
+		}
+		
+		if (containNative) {
+			funcs.push(...this.natives);
+		}
+
+		return funcs;
+	}
+	public allGlobals(containPrivate: boolean = false) {
+		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(false, containPrivate).map((func) => (<Func>func).globals).flat()];
+		if (!containPrivate) {
+			globals = globals.filter((global) => global.tag != "private");
+			globals = globals.filter((global) => !global.hasPrivate());
+		}
+		return globals;
+	}
+	public allStructs(containPrivate: boolean = false) {
+		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
+		if (!containPrivate) {
+			structs = structs.filter((struct) => struct.tag != "private");
+			structs = structs.filter((struct) => !struct.hasPrivate());
+		}
+		return structs;
+	}
+	public allLibrarys(containPrivate: boolean = false) {
+		let librarys =  this.librarys;
+		// if (containPrivate) {
+		// 	librarys = librarys.filter((struct) => struct.tag != "private");
+		// }
+		return librarys;
+	}
+
+	public getPositionFunction(position: Position):Func|null {
+		const func = this.allFunctions(false, true).find((func) => func.loc.contains(position));
+		return func ? <Func>func : null;
+	}
+
+	public getPositionStruct(position: Position):Struct|null {
+		const struct = this.allStructs(true).find((struct) => struct.loc.contains(position));
+		return struct ? struct : null;
+	}
+
+	public allMethods(containPrivate: boolean = false) {
+		let methods:Array<Method> = this.allStructs(containPrivate).map((struct) => struct.methods).flat();
+
+		if (!containPrivate) {
+			methods = methods.filter((func) => (<Method>func).tag != "private");
+			methods = methods.filter((func) => !(<Method>func).hasPrivate());
+		}
+
+		return methods;
+	}
+
+	public allMembers(containPrivate: boolean = false) {
+		let members:Array<Member> = this.allStructs(containPrivate).map((struct) => struct.members).flat();
+
+		if (!containPrivate) {
+			members = members.filter((member) => (<Member>member).tag != "private");
+			members = members.filter((member) => !(<Member>member).hasPrivate());
+		}
+
+		return members;
+	}
+
+	public getPositionMethod(position: Position):Method|null {
+		const method = this.allMethods(true).find((method) => method.loc.contains(position));
+		return method ? method : null;
+	}
+
+	public getNameFunction(name: string):(Func|Native)[] {
+		const funcs = this.allFunctions(true, true).filter((func) => func.name == name);
+		return funcs;
+	}
+	public getNameLibrary(name: string):(Library)[] {
+		const librarys = this.allLibrarys(true).filter((library) => library.name == name);
+		return librarys;
+	}
+	public getNameStruct(name: string):(Struct)[] {
+		const structs = this.allStructs(true).filter((struct) => struct.name == name);
+		return structs;
+	}
+	public getNameMethod(name: string):(Method)[] {
+		const methods = this.allMethods(true).filter((method) => method.name == name);
+		return methods;
+	}
+	public getNameMember(name: string):(Member)[] {
+		const members = this.allMembers(true).filter((member) => member.name == name);
+		return members;
+	}
+	public getNameGlobal(name: string):(Global)[] {
+		const globals = this.allGlobals(true).filter((global) => global.name == name);
+		return globals;
+	}
 }
 
 export {
-	AstNode, Declaration, Program
+	AstNode, Declaration, Program, Document, LineText
 };
+
