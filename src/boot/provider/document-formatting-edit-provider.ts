@@ -173,7 +173,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     
     for (let line = 0; line < document.lineCount; line++) {
       const lineText = document.lineAt(line);
-      const text = lineText.text;
+      const text = (lineText.text || '').split(/\/\/[^!]/)[0]; // 去除注释，避免注释导致换行, 但是保留 //! 注释
 
       if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text) || /^.*\{[\s\t]*$/.test(text)) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
@@ -185,6 +185,11 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         // if (/}\s*$/.test(text)) {
         //   indent--;
         // }
+        if (/^.*function\s+interface.*$/.test(text)){
+          // vjass 语法: function interface xxxx takes xxx returns xxx
+          // 定义回调接口时，下一行不需要换行
+          indent--;
+        }
       } else if (indent > 0 && /^\s*(?:(endlibrary|endscope|endstruct|endinterface|endglobals|endfunction|endmethod|endif|endloop|endmodule|\/\/!\s+(?:endzinc|endtextmacro|endnov[Jj]ass|endinject))\b|})/.test(text)) {
         indent--;
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
