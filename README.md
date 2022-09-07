@@ -7,6 +7,7 @@
 
 ***common.j 為1.32.7***
 
+
 ### 使用步骤
 1. 下载安装 visual studio  Code
 2. visual studio  Code   安装 Jass插件
@@ -46,25 +47,28 @@ endlibrary
 ### 1.6.7
 ##### 2022年6月5日
 ###### include宏路径提示
-![include-dome](https://github.com/naichabaobao/jass/raw/master/static/images/include-dome.png)
+![include-dome](https://user-images.githubusercontent.com/38098031/188805957-823950f9-c4c7-4f03-87c1-9d29cf41003e.png)
+
 
 ### 1.6.12
 ##### 2022年6月13日
 ###### 新的配置项exclude
-![include-dome](https://github.com/naichabaobao/jass/raw/master/static/images/exclude-dome.png)
+![exclude-dome](https://user-images.githubusercontent.com/38098031/188805922-077ff428-6317-40d0-83e9-2229ba9d3a67.png)
+
 
 ### 1.6.1
-![param](https://github.com/naichabaobao/jass/raw/master/static/images/comment-param.png)
-![param-display](https://github.com/naichabaobao/jass/raw/master/static/images/comment-param-display.png)
+![comment-param](https://user-images.githubusercontent.com/38098031/188806025-26f0eb38-88d3-45ac-9bcc-6fdb338fbbbb.png)
+
 
 ### 1.6.15
 ##### 2022年7月28日
 ###### dzGetColor颜色
-![dzGetColor](https://github.com/naichabaobao/jass/raw/master/static/images/dz-color.png)
+![dzGetColor](https://user-images.githubusercontent.com/38098031/188805851-21f793a6-c5e4-4f2c-89eb-a18383352df9.png)
+
 
 --------------------------------------------------------------
 
 ***请我喝奶茶***
-![一起出份力赞助我开发吧！爱你哟](https://github.com/naichabaobao/jass/raw/master/static/images/qrcode.png )
+![一起出份力赞助我开发吧！爱你哟](https://user-images.githubusercontent.com/38098031/188805465-3aec1319-a68c-4dee-9d1a-664fbc5ee34f.png)
 
 ```---star一下吧！---```
