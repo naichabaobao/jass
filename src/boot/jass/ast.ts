@@ -30,7 +30,11 @@ class Range {
 		return new Range(new Position(0,0), new Position(0,0))
 	}
 
-
+	/**
+	 * @deprecated 使用from,更加贴近vscode方式
+	 * @param range 
+	 * @returns 
+	 */
 	public setRange<T extends Range>(range: T) {
 		this.start = range.start;
 		this.end = range.end;

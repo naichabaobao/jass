@@ -188,7 +188,9 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         if (/^.*function\s+interface.*$/.test(text)){
           // vjass 语法: function interface xxxx takes xxx returns xxx
           // 定义回调接口时，下一行不需要换行
-          indent--;
+          if (indent > 0) {
+            indent--;
+          }
         }
       } else if (indent > 0 && /^\s*(?:(endlibrary|endscope|endstruct|endinterface|endglobals|endfunction|endmethod|endif|endloop|endmodule|\/\/!\s+(?:endzinc|endtextmacro|endnov[Jj]ass|endinject))\b|})/.test(text)) {
         indent--;

@@ -506,37 +506,39 @@ function parseGlobal(lineText: LineText, global: Global) {
         token.line = lineText.lineNumber();
         return token;
     });
-
-    if (tokens[0]) {
-        if (tokens[0].isId() && tokens[0].value == "private") {
-            global.tag = "private";
-            tokens = tokens.slice(1);
-        } else if (tokens[0].isId() && tokens[0].value == "public") {
-            global.tag = "public";
-            tokens = tokens.slice(1);
+    let index = 0;
+    if (tokens[index]) {
+        if (tokens[index].isId()) {
+            if (tokens[index].value == "private") {
+                global.tag = "private";
+                index++;
+            } else if (tokens[index].value == "public") {
+                global.tag = "public";
+                index++;
+            }
         }
     }
 
-    global.loc.setRange(lineText);
-    if (tokens[0]) {
-        if (tokens[0].isId() && tokens[0].value == "constant") {
-            global.isConstant = true;
-            tokens = tokens.slice(1);
-        }
-        if (tokens[0] && tokens[0].isId()) {
-            global.type = tokens[0].value;
-        }
-        if (tokens[1] && tokens[1].isId()) {
-            if (tokens[1].value == "array") {
-                global.isArray = true;
-                if (tokens[2] && tokens[2].isId()) {
-                    global.name = tokens[2].value;
-                    global.nameToken = tokens[2];
-                }
-            } else {
-                global.name = tokens[1].value;
-                global.nameToken = tokens[1];
+    global.loc.from(lineText);
+    if (tokens[index] && tokens[index].isId() && tokens[index].value == "constant") {
+        global.isConstant = true;
+        index++;
+    }
+    if (tokens[index] && tokens[index].isId()) {
+        global.type = tokens[index].value;
+        index++;
+    }
+    if (tokens[index] && tokens[index].isId()) {
+        if (tokens[index].value == "array") {
+            global.isArray = true;
+            index++;
+            if (tokens[index] && tokens[index].isId()) {
+                global.name = tokens[index].value;
+                global.nameToken = tokens[index];
             }
+        } else {
+            global.name = tokens[index].value;
+            global.nameToken = tokens[index];
         }
     }
 }
