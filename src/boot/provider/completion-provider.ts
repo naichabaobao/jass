@@ -407,7 +407,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     items.push(...typeItems, ...keywordItems);
 
     new DataGetter().forEach((program, filePath) => {
-      items.push(...getItems(program, fsPath, compare(fsPath, filePath), position))
+      items.push(...getItems(program, filePath, compare(fsPath, filePath), position))
     }, !Options.isOnlyJass && Options.supportZinc);
 
     if (!Options.isOnlyJass) {

@@ -1,4 +1,4 @@
-//============================================================================
+
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
 //
@@ -315,9 +315,9 @@ constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
 	
-	//===================================================
+	
 	// Game Constants
-	//===================================================
+	
 	
 	// false
  constant boolean FALSE = false
@@ -571,9 +571,9 @@ globals
 	constant subanimtype SUBANIM_TYPE_ENTANGLE = ConvertSubAnimType(61)
 	constant subanimtype SUBANIM_TYPE_BERSERK = ConvertSubAnimType(62)
 	
-	//===================================================
+	
 	// Map Setup Constants
-	//===================================================
+	
 	
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
@@ -654,9 +654,9 @@ globals
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
-	//===================================================
+	
 	// Sound Constants
-	//===================================================
+	
 	
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
@@ -668,12 +668,12 @@ globals
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 	
 	
-	//===================================================
+	
 	// Game, Player, and Unit States
 	//
 	// For use with TriggerRegister<X>StateEvent
 	//
-	//===================================================
+	
 	
 	constant igamestate GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
@@ -749,7 +749,7 @@ globals
 	constant playerscore PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
 	constant playerscore PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 	
-	//===================================================
+	
 	// Game, Player and Unit Events
 	//
 	//  When an event causes a trigger to fire these
@@ -762,11 +762,11 @@ globals
 	// without insuring that the JASS_GAME_EVENTS_WAR3 enum
 	// is changed to match.
 	//
-	//===================================================
 	
-	//===================================================
+	
+	
 	// For use with TriggerRegisterGameEvent
-	//===================================================
+	
 	
 	constant gameevent EVENT_GAME_VICTORY = ConvertGameEvent(0)
 	constant gameevent EVENT_GAME_END_LEVEL = ConvertGameEvent(1)
@@ -785,9 +785,9 @@ globals
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
 	constant gameevent EVENT_GAME_BUILD_SUBMENU = ConvertGameEvent(10)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterPlayerEvent
-	//===================================================
+	
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
 	
@@ -797,9 +797,9 @@ globals
 	constant playerevent EVENT_PLAYER_CHAT = ConvertPlayerEvent(16)
 	constant playerevent EVENT_PLAYER_END_CINEMATIC = ConvertPlayerEvent(17)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterPlayerUnitEvent
-	//===================================================
+	
 	
 	// 玩家單位被攻擊
  constant playerunitevent EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
@@ -864,9 +864,9 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGING = ConvertPlayerUnitEvent(315)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterUnitEvent
-	//===================================================
+	
 	
 	constant unitevent EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
@@ -929,14 +929,14 @@ globals
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
 	constant dialogevent EVENT_DIALOG_CLICK = ConvertDialogEvent(91)
 	
-	//===================================================
+	
 	// Frozen Throne Expansion Events
 	// Need to be added here to preserve compat
-	//===================================================
 	
-	//===================================================    
+	
+	    
 	// For use with TriggerRegisterGameEvent
-	//===================================================
+	
 	
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
@@ -944,9 +944,9 @@ globals
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
 	constant gameevent EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterPlayerEvent
-	//===================================================
+	
 	
 	constant playerevent EVENT_PLAYER_ARROW_LEFT_DOWN = ConvertPlayerEvent(261)
 	constant playerevent EVENT_PLAYER_ARROW_LEFT_UP = ConvertPlayerEvent(262)
@@ -964,9 +964,9 @@ globals
 	constant playerevent EVENT_PLAYER_KEY_DOWN = ConvertPlayerEvent(312)
 	constant playerevent EVENT_PLAYER_KEY_UP = ConvertPlayerEvent(313)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterPlayerUnitEvent
-	//===================================================
+	
 	
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
 	// 玩家單位更改所有者
@@ -986,9 +986,9 @@ globals
  // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	
-	//===================================================
+	
 	// For use with TriggerRegisterUnitEvent
-	//===================================================
+	
 	// 单位出售
 	constant unitevent EVENT_UNIT_SELL = ConvertUnitEvent(286)
 	// 单位所属改变
@@ -1008,12 +1008,12 @@ globals
 	// 抵押物品
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
 	
-	//===================================================
+	
 	// Limit Event API constants
 	// variable, // variable, // Limit Event API constants    
 	// player state, game state, and unit state events
 	// ( do NOT change the order of these... )
-	//===================================================
+	
 	
  constant limitop LESS_THAN = ConvertLimitOp(0)
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
@@ -1022,9 +1022,9 @@ globals
 	constant limitop GREATER_THAN = ConvertLimitOp(4)
 	constant limitop NOT_EQUAL = ConvertLimitOp(5)
 	
-	//===================================================
+	
 	// Unit Type Constants for use with IsUnitType()
-	//===================================================
+	
 	
 	constant unittype UNIT_TYPE_HERO = ConvertUnitType(0)
 	constant unittype UNIT_TYPE_DEAD = ConvertUnitType(1)
@@ -1060,9 +1060,9 @@ globals
 	constant unittype UNIT_TYPE_ETHEREAL = ConvertUnitType(25)
 	constant unittype UNIT_TYPE_MAGIC_IMMUNE = ConvertUnitType(26)
 	
-	//===================================================
+	
 	// Unit Type Constants for use with ChooseRandomItemEx()
-	//===================================================
+	
 	
 	constant itemtype ITEM_TYPE_PERMANENT = ConvertItemType(0)
 	constant itemtype ITEM_TYPE_CHARGED = ConvertItemType(1)
@@ -1077,9 +1077,9 @@ globals
 	// Deprecated, should use ITEM_TYPE_POWERUP
  constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
-	//===================================================
+	
 	// Animatable Camera Fields
-	//===================================================
+	
 	
 	constant camerafield CAMERA_FIELD_TARGET_DISTANCE = ConvertCameraField(0)
 	constant camerafield CAMERA_FIELD_FARZ = ConvertCameraField(1)
@@ -1113,18 +1113,18 @@ globals
 	constant fogstate FOG_OF_WAR_FOGGED = ConvertFogState(2)
 	constant fogstate FOG_OF_WAR_VISIBLE = ConvertFogState(4)
 	
-	//===================================================
+	
 	// Camera Margin constants for use with GetCameraMargin
-	//===================================================
+	
 	
 	constant integer CAMERA_MARGIN_LEFT = 0
 	constant integer CAMERA_MARGIN_RIGHT = 1
 	constant integer CAMERA_MARGIN_TOP = 2
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
-	//===================================================
+	
 	// Effect API constants
-	//===================================================
+	
 	
 	constant effecttype EFFECT_TYPE_EFFECT = ConvertEffectType(0)
 	constant effecttype EFFECT_TYPE_TARGET = ConvertEffectType(1)
@@ -1137,9 +1137,9 @@ globals
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
-	//===================================================
+	
 	// Custom UI API constants
-	//===================================================
+	
 	
  constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
@@ -1208,9 +1208,9 @@ globals
 	constant frameeventtype FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
 	constant frameeventtype FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
 	
-	//===================================================
+	
 	// OS Key constants
-	//===================================================
+	
 	
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
@@ -1402,9 +1402,9 @@ globals
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
-	//===================================================
+	
 	// Instanced Object Operation API constants
-	//===================================================
+	
 	
 	// Ability
 	// 技能按钮位置正常x
@@ -2382,7 +2382,7 @@ globals
 	
 endglobals
 
-//============================================================================
+
 // MathAPI
 // 转换 度 到 弧度
 native Deg2Rad takes real degrees returns real
@@ -2422,7 +2422,7 @@ native Pow takes real x, real power returns real
 // 四舍五入
 constant native MathRound takes real r returns integer
 
-//============================================================================
+
 // String Utility API
 
 // 转换整数变量为实数
@@ -2460,7 +2460,7 @@ native GetLocalizedString takes string source returns string
 // 本地热键 
 native GetLocalizedHotkey takes string source returns integer
 
-//============================================================================
+
 // Map Setup API
 //
 //  These are native functions for describing the map configuration
@@ -2567,7 +2567,7 @@ native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns
 // 玩家名字
 native GetPlayerName takes player whichPlayer returns string
 
-//============================================================================
+
 // Timer API
 //
 // 新建计时器 [R]
@@ -2593,7 +2593,7 @@ native ResumeTimer takes timer whichTimer returns nothing
 // 与TimerStart一同使用
 native GetExpiredTimer takes nothing returns timer
 
-//============================================================================
+
 // Group API
 //
 // 新建的单位组 [R]
@@ -2664,7 +2664,7 @@ native ForGroup takes group whichGroup, code callback returns nothing
 // 单位组中第一个单位
 native FirstOfGroup takes group whichGroup returns unit
 
-//============================================================================
+
 // Force API
 //
 // 新建玩家组 [R]
@@ -2690,7 +2690,7 @@ native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr fil
 // 选取所有玩家在玩家组做动作(单一的)
 native ForForce takes force whichForce, code callback returns nothing
 
-//============================================================================
+
 // Region and Location API
 
 // 将坐标转换为区域
@@ -2768,7 +2768,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 // 获取可用地图范围
 native GetWorldBounds takes nothing returns rect
 
-//============================================================================
+
 // Native trigger interface
 //
 // 新建触发 [R]
@@ -2824,10 +2824,10 @@ constant native GetTriggerExecCount takes trigger whichTrigger returns integer
 // 运行函数 [R]
 native ExecuteFunc takes string funcName returns nothing
 
-//============================================================================
+
 // Boolean Expr API ( for compositing trigger conditions and unit filter funcs...)
-//============================================================================
-// ============================================================================
+
+
 // and
 native And takes boolexpr operandA, boolexpr operandB returns boolexpr
 // or
@@ -2845,9 +2845,9 @@ native DestroyFilter takes filterfunc f returns nothing
 // 销毁条件表达式
 native DestroyBoolExpr takes boolexpr e returns nothing
 
-//============================================================================
+
 // Trigger Game Event API
-//============================================================================
+
 
 // 变量的值
 native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
@@ -2936,9 +2936,9 @@ constant native GetTournamentScore takes player whichPlayer returns integer
 // 储存游戏文件名
 constant native GetSaveBasicFilename takes nothing returns string
 
-//============================================================================
+
 // Trigger Player Based Event API
-//============================================================================
+
 // 玩家事件
 native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer, playerevent whichPlayerEvent returns event
 
@@ -3152,9 +3152,9 @@ constant native GetEventPlayerChatStringMatched takes nothing returns string
 // 单位死亡事件
 native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
 
-//============================================================================
+
 // Trigger Unit Based Event API
-//============================================================================
+
 
 // returns handle to unit which triggered the most recent event when called from
 // within a trigger action function...returns null handle when used incorrectly
@@ -3258,7 +3258,7 @@ native TriggerExecuteWait takes trigger whichTrigger returns nothing
 native TriggerSyncStart takes nothing returns nothing
 native TriggerSyncReady takes nothing returns nothing
 
-//============================================================================
+
 // Widget API
 
 native GetWidgetLife takes widget whichWidget returns real
@@ -3267,7 +3267,7 @@ native GetWidgetX takes widget whichWidget returns real
 native GetWidgetY takes widget whichWidget returns real
 constant native GetTriggerWidget takes nothing returns widget
 
-//============================================================================
+
 // Destructable Object API
 // Facing arguments are specified in degrees
 // Facing arguments are specified in degrees
@@ -3317,7 +3317,7 @@ native GetDestructableName takes destructable d returns string
 // 获取触发可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
 
-//============================================================================
+
 // Item API
 // 创建
 native CreateItem takes integer itemid, real x, real y returns item
@@ -3382,7 +3382,7 @@ native GetItemUserData takes item whichItem returns integer
 // 设置物品自定义数据
 native SetItemUserData takes item whichItem, integer data returns nothing
 
-//============================================================================
+
 // Unit API
 // Facing arguments are specified in degrees
 // 新建单位(指定坐标) [R]
@@ -3536,17 +3536,22 @@ native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
 // 复活英雄（立即）
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
+// 使单位爆炸而死
+// @param whichUnit 单位
+// @param exploded 是否爆炸
 native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
 // 设置单位 无敌/可攻击
 native SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
 // 暂停/恢复 [R]
 native PauseUnit takes unit whichUnit, boolean flag returns nothing
+// 单位是否暂停
 native IsUnitPaused takes unit whichHero returns boolean
 // 设置碰撞 打开/关闭
 native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
 // 清除所有选定
 native ClearSelection takes nothing returns nothing
+// 选择单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
 
 // 单位的 附加值
@@ -3557,15 +3562,21 @@ native GetUnitPointValueByType takes integer unitType returns integer
 
 // 给予物品 [R]
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
+// 给予物品
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 新建物品到指定物品栏 [R]
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
+// 移除物品
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
+// 移除物品
+// @param itemSlot 0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 英雄已有物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
 // 单位持有物品
+// @param itemSlot 0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
+// 获取物品槽库存大小
 native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
@@ -3833,7 +3844,7 @@ native GetUnitUserData takes unit whichUnit returns integer
 // 设置单位自定义数据
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
-//============================================================================
+
 // Player API
 // 玩家
 // @param number 下标0
@@ -3926,7 +3937,7 @@ native RemovePlayer takes player whichPlayer, playergameresult gameResult return
 // 缓存玩家数据
 native CachePlayerHeroData takes player whichPlayer returns nothing
 
-//============================================================================
+
 // Fog of War API
 // 设置地图迷雾(矩形区域) [R]
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
@@ -3956,7 +3967,7 @@ native FogModifierStart takes fogmodifier whichFogModifier returns nothing
 // 禁止可见度修正器
 native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 
-//============================================================================
+
 
 // Game API
 // 获取版本
@@ -4014,7 +4025,7 @@ native SetIntegerGameState takes igamestate whichIntegerGameState, integer value
 constant native GetIntegerGameState takes igamestate whichIntegerGameState returns integer
 
 
-//============================================================================
+
 // Campaign API
 
 native SetTutorialCleared takes boolean cleared returns nothing
@@ -4029,7 +4040,7 @@ native GetCustomCampaignButtonVisible takes integer whichButton returns boolean
 // 关闭游戏录像功能 [R]
 native DoNotSaveReplay takes nothing returns nothing
 
-//============================================================================
+
 // Dialog API
 // 新建对话框 [R]
 native DialogCreate takes nothing returns dialog
@@ -4302,7 +4313,7 @@ native FlushParentHashtable takes hashtable table returns nothing
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
-//============================================================================
+
 // Randomization API
 // 随机数字
 native GetRandomInt takes integer lowBound, integer highBound returns integer
@@ -4339,7 +4350,7 @@ native ChooseRandomItemEx takes itemtype whichType, integer level returns intege
 // 设置随机种子
 native SetRandomSeed takes integer seed returns nothing
 
-//============================================================================
+
 // Visual API
 
 native SetTerrainFog takes real a, real b, real c, real d, real e returns nothing
@@ -4494,7 +4505,7 @@ native DefeatConditionSetDescription takes defeatcondition whichCondition, strin
 native FlashQuestDialogButton takes nothing returns nothing
 native ForceQuestDialogUpdate takes nothing returns nothing
 
-//============================================================================
+
 // Timer Dialog API
 // 新建计时器窗口 [R]
 native CreateTimerDialog takes timer t returns timerdialog
@@ -4515,7 +4526,7 @@ native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
 // 可以修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
-//============================================================================
+
 // Leaderboard API
 
 // Create a leaderboard object
@@ -4564,9 +4575,9 @@ native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean 
 native LeaderboardSetItemLabelColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
 native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
 
-//============================================================================
+
 // Multiboard API
-//============================================================================
+
 
 // Create a multiboard object
 // 新建多面板 [R]
@@ -4638,7 +4649,7 @@ native MultiboardSetItemIcon takes multiboarditem mbi, string iconFileName retur
 // 显示/隐藏多面板模式 [R]
 native MultiboardSuppressDisplay takes boolean flag returns nothing
 
-//============================================================================
+
 // Camera API
 native SetCameraPosition takes real x, real y returns nothing
 // 设置空格键转向点(所有玩家) [R]
@@ -4742,7 +4753,7 @@ constant native GetCameraEyePositionZ takes nothing returns real
 // 当前照相机的位置
 constant native GetCameraEyePositionLoc takes nothing returns location
 
-//============================================================================
+
 // Sound API
 //
 native NewSoundEnvironment takes string environmentName returns nothing
@@ -4828,7 +4839,7 @@ native GetDialogueSpeakerNameKey takes sound soundHandle returns string
 native SetDialogueTextKey takes sound soundHandle, string dialogueText returns boolean
 native GetDialogueTextKey takes sound soundHandle returns string
 
-//============================================================================
+
 // Effects API
 //
 // 新建天气效果 [R]
@@ -4890,7 +4901,7 @@ native GetAbilityEffectById takes integer abilityId, effecttype t, integer index
 native GetAbilitySound takes string abilityString, soundtype t returns string
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
-//============================================================================
+
 // Terrain API
 //
 // 地形悬崖高度(指定坐标) [R]
@@ -4910,7 +4921,7 @@ native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
 // 设置地形通行状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
 
-//============================================================================
+
 // Image API
 //
 // 新建图像 [R]
@@ -4934,7 +4945,7 @@ native SetImageAboveWater takes image whichImage, boolean flag, boolean useWater
 // 改变图像类型
 native SetImageType takes image whichImage, integer imageType returns nothing
 
-//============================================================================
+
 // Ubersplat API
 //
 // 新建地面纹理变化 [R]
@@ -4952,7 +4963,7 @@ native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothi
 // 改变地面纹理永久着色状态
 native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns nothing
 
-//============================================================================
+
 // Blight API
 //
 // 创建/删除荒芜地表(圆范围)(指定坐标) [R]
@@ -4968,7 +4979,7 @@ native CreateBlightedGoldmine takes player id, real x, real y, real face returns
 // 坐标点被荒芜地表覆盖 [R]
 native IsPointBlighted takes real x, real y returns boolean
 
-//============================================================================
+
 // Doodad API
 //
 // 播放圆范围内地形装饰物动画 [R]
@@ -4976,7 +4987,7 @@ native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, b
 // 播放矩形区域内地形装饰物动画 [R]
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
 
-//============================================================================
+
 // Computer AI interface
 //
 // 启动对战 AI 
@@ -4997,7 +5008,7 @@ native RecycleGuardPosition takes unit hUnit returns nothing
 // 忽略所有单位的防守职责
 native RemoveAllGuardPositions takes player num returns nothing
 
-//============================================================================
+
 // ** Cheat标签 **
 native Cheat takes string cheatStr returns nothing
 // 无法胜利 [R]
@@ -5017,17 +5028,28 @@ native PreloadRefresh takes nothing returns nothing
 // 预加载结束
 native PreloadEndEx takes nothing returns nothing
 
+// 清空预加载
 native PreloadGenClear takes nothing returns nothing
+// 预加载开始
+// - 配合PreloadGenEnd使用
+// 1. call PreloadGenStart()
+// 2. call Preloader("blp\\jass.blp")
+// 3. call PreloadGenEnd("log.pld")
 native PreloadGenStart takes nothing returns nothing
+// 预加载结束
+// 1. call PreloadGenStart()
+// 2. call Preloader("blp\\jass.blp")
+// 3. call PreloadGenEnd("log.pld")
+// @param filename 绝对路径,这个文件的后缀可以是任何类型,因此你可以生成可执行文件的后缀
 native PreloadGenEnd takes string filename returns nothing
 // 预读一批文件
 native Preloader takes string filename returns nothing
 
 
-//============================================================================
+
 //Machinima API
-//============================================================================
-// ============================================================================
+
+
 // 隐藏电影面板
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
@@ -5169,6 +5191,7 @@ native BlzSetSpecialEffectPitch takes effect whichEffect, real pitch returns not
 native BlzSetSpecialEffectRoll takes effect whichEffect, real roll returns nothing
 // 设置特效X坐标
 native BlzSetSpecialEffectX takes effect whichEffect, real x returns nothing
+// 设置特效Y坐标
 native BlzSetSpecialEffectY takes effect whichEffect, real y returns nothing
 // 设置特效Z坐标
 native BlzSetSpecialEffectZ takes effect whichEffect, real z returns nothing
@@ -5443,6 +5466,7 @@ native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 // native BlzFourCC2S                                 takes integer value returns string
 // native BlzS2FourCC                                 takes string value returns integer
+
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect

@@ -208,7 +208,6 @@ parsePath(Options.commonAiPath);
 parsePath(...Options.includes);
 parsePath(...Options.workspaces);
 parsePath(...Options.luaDependents);
-console.log("lua", Options.luaDependents);
 
 function startWatch() {
 
@@ -259,6 +258,10 @@ Options.cjassDependents.forEach((filePath) => {
   }
 });
 
+/**
+ * 
+ * @deprecated 存在无法获取文件来源问题,导致需要提前把文件来源写入source字段
+ */
 class Data {
   public static programs() {
     return [...dataMap.values()];

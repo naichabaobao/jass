@@ -7,16 +7,16 @@ import * as vscode from 'vscode';
 import { Types } from "./types";
 import { AllKeywords } from './keyword';
 import { Options } from './options';
-import data, { DataGetter, parseContent } from "./data";
-import { compare, isZincFile } from '../tool';
-import { convertPosition, fieldFunctions } from './tool';
-import { Declaration, Func, Global, Library, Local, Member, Method, Take, Native, Struct } from '../jass/ast';
+import data, { DataGetter } from "./data";
+import { compare } from '../tool';
+import { convertPosition } from './tool';
+import { Func, Global, Library, Local, Member, Method, Take, Native, Struct } from '../jass/ast';
 import { getTypeDesc } from './type-desc';
 import { tokenize } from '../jass/tokens';
 
-type De = Native|Func|Method|Library|Struct|Member|Global|Local;
+type Decl = Native|Func|Method|Library|Struct|Member|Global|Local;
 
-function toHoverlo(de: De, isCurrent: boolean, filePath: string) {
+function toHoverlo(de: Decl, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
   if (de.hasDeprecated()) {
     ms.appendMarkdown(`#### ~~${de.name}~~`);
@@ -86,6 +86,7 @@ class HoverProvider implements vscode.HoverProvider {
       markdownString.appendText(getTypeDesc(type));
       return new vscode.Hover(markdownString);
     }
+    console.info(key);
 
     const fsPath = document.uri.fsPath;
     // parseContent(fsPath, document.getText());
@@ -97,29 +98,29 @@ class HoverProvider implements vscode.HoverProvider {
       
       if (!Options.isOnlyJass) {
         program.getNameLibrary(key).forEach(library => {
-          const ms = toHoverlo(library, isCurrent, fsPath);
+          const ms = toHoverlo(library, isCurrent, filePath);
           hovers.push(ms);
         });
         program.getNameStruct(key).forEach(struct => {
-          const ms = toHoverlo(struct, isCurrent, fsPath);
+          const ms = toHoverlo(struct, isCurrent, filePath);
           hovers.push(ms);
         });
         program.getNameMethod(key).forEach(method => {
-          const ms = toHoverlo(method, isCurrent, fsPath);
+          const ms = toHoverlo(method, isCurrent, filePath);
           hovers.push(ms);
         });
         program.getNameMember(key).forEach(member => {
-          const ms = toHoverlo(member, isCurrent, fsPath);
+          const ms = toHoverlo(member, isCurrent, filePath);
           hovers.push(ms);
         });
         
       }
       program.getNameGlobal(key).forEach(global => {
-        const ms = toHoverlo(global, isCurrent, fsPath);
+        const ms = toHoverlo(global, isCurrent, filePath);
         hovers.push(ms);
       });
       program.getNameFunction(key).forEach(func => {
-        const ms = toHoverlo(func, isCurrent, fsPath);
+        const ms = toHoverlo(func, isCurrent, filePath);
         hovers.push(ms);
       });
     

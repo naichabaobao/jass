@@ -144,6 +144,7 @@ class Declaration extends Node implements Descript {
 
 	/**
 	 * 来源文件
+	 * @depreated 存在资源浪费
 	 */
 	public source: string = "";
 
@@ -841,7 +842,7 @@ class Program extends Declaration {
 			globals = globals.filter((global) => global.tag != "private");
 			globals = globals.filter((global) => !global.hasPrivate());
 		}
-		return globals.filter( g => g ); // remove empty globals
+		return globals.filter( global => global); // remove empty globals
 	}
 	public allStructs(containPrivate: boolean = false) {
 		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
@@ -853,9 +854,9 @@ class Program extends Declaration {
 	}
 	public allLibrarys(containPrivate: boolean = false) {
 		let librarys =  this.librarys;
-		// if (containPrivate) {
-		// 	librarys = librarys.filter((struct) => struct.tag != "private");
-		// }
+		if (containPrivate) {
+			librarys = librarys.filter((library) => library.hasPrivate());
+		}
 		return librarys;
 	}
 
