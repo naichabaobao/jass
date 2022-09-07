@@ -18,9 +18,14 @@ function isKeyword(keyword: string) {
   return JassKeywork.includes(keyword);
 }
 
+function canCjassReturn(keyword: string){
+  return ![...JassKeywork, ...VjassKeywords].includes(keyword) || ['nothing'].includes(keyword);
+}
+
 export{
   Keywords,
   AllKeywords,
   ZincKeywords,
-  isKeyword
+  isKeyword,
+  canCjassReturn
 }

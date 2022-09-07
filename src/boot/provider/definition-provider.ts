@@ -79,7 +79,6 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(member));
           locations.push(location);
         });
-        
       }
       program.getNameGlobal(key).forEach(global => {
         const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(global));
@@ -91,6 +90,12 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       });
     
       if (isCurrent) {
+
+        program.getPrivateFunction(key).forEach(func => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
+          locations.push(location);
+        });
+
         const findedFunc = program.getPositionFunction(convertPosition(position));
         if (findedFunc) {
           findedFunc.takes.filter(take => take.name == key).forEach((take, index) => {

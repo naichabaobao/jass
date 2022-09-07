@@ -858,8 +858,9 @@ class Program extends Declaration {
 	}
 	public allLibrarys(containPrivate: boolean = false) {
 		let librarys =  this.librarys;
-		if (containPrivate) {
-			librarys = librarys.filter((library) => library.hasPrivate());
+		if (!containPrivate) {
+			// 包含私有的，意思就是不过滤
+			librarys = librarys.filter((library) => !library.hasPrivate());
 		}
 		return librarys;
 	}
@@ -902,9 +903,19 @@ class Program extends Declaration {
 	}
 
 	public getNameFunction(name: string):(Func|Native)[] {
-		const funcs = this.allFunctions(true, true).filter((func) => func.name == name);
-		return funcs;
+		return this.allFunctions(true, true).filter((func) => {
+			const tagIsPrivate = (func as Func).tag === 'private';
+			return !tagIsPrivate && !func.hasPrivate() && func.name == name;
+		}) || [];
 	}
+
+	public getPrivateFunction(name: string):(Func|Native)[] {
+		return this.allFunctions(true, true).filter((func) => {
+			const tagIsPrivate = (func as Func).tag == 'private';
+			return (tagIsPrivate || func.hasPrivate()) && func.name == name;
+		}) || [];
+	}
+
 	public getNameLibrary(name: string):(Library)[] {
 		const librarys = this.allLibrarys(true).filter((library) => library.name == name);
 		return librarys;

@@ -125,6 +125,12 @@ class HoverProvider implements vscode.HoverProvider {
       });
     
       if (isCurrent) {
+
+        program.getPrivateFunction(key).forEach(func => {
+          const ms = toHoverlo(func, isCurrent, filePath);
+          hovers.push(ms);
+        });
+
         const findedFunc = program.getPositionFunction(convertPosition(position));
         if (findedFunc) {
           findedFunc.takes.filter(take => take.name == key).forEach((take, index) => {
@@ -179,7 +185,7 @@ class HoverProvider implements vscode.HoverProvider {
           });
         }
       }
-    }, !Options.isOnlyJass && Options.supportZinc);
+    }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
 
     if (Options.isSupportCjass) {
       const lineText = document.lineAt(position.line);
@@ -205,28 +211,28 @@ class HoverProvider implements vscode.HoverProvider {
           }
         }
       });
-      data.cjassFunctions().forEach((func) => {
-        if (key == func.name) {
-          const ms = new vscode.MarkdownString();
-          ms.appendMarkdown(`#### ${func.name}`);
-          ms.appendText("\n");
-          func.getContents().forEach((content) => {
-            ms.appendText(content);
-          });
-          func.getParams().forEach((param) => {
-            if (func.takes.findIndex((take) => take.name == param.id) != -1) {
-              ms.appendText("\n");
-              ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
-            }
-          });
-          if (func.hasDeprecated()) {
-            ms.appendMarkdown(`***@deprecated*** `);
-          }
-          ms.appendText("\n");
-          ms.appendCodeblock(func.origin);
-          hovers.push(ms);
-        }
-      });
+      // data.cjassFunctions().forEach((func) => {
+      //   if (key == func.name) {
+      //     const ms = new vscode.MarkdownString();
+      //     ms.appendMarkdown(`#### ${func.name}`);
+      //     ms.appendText("\n");
+      //     func.getContents().forEach((content) => {
+      //       ms.appendText(content);
+      //     });
+      //     func.getParams().forEach((param) => {
+      //       if (func.takes.findIndex((take) => take.name == param.id) != -1) {
+      //         ms.appendText("\n");
+      //         ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+      //       }
+      //     });
+      //     if (func.hasDeprecated()) {
+      //       ms.appendMarkdown(`***@deprecated*** `);
+      //     }
+      //     ms.appendText("\n");
+      //     ms.appendCodeblock(func.origin);
+      //     hovers.push(ms);
+      //   }
+      // });
       // cjass 全局宏
       if (key == "DATE") {
         const ms = new vscode.MarkdownString();

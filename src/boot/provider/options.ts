@@ -85,7 +85,7 @@ class Options {
   public static get workspaces():string[] {
     if (vscode.workspace.workspaceFolders) {
       return vscode.workspace.workspaceFolders.map((floder) => {
-        const files = resolvePaths([floder.uri.fsPath]);
+        const files = resolvePaths([floder.uri.fsPath], { recursionNumber: 200});
         return files;
       }).flat();
     }

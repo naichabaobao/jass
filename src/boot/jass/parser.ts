@@ -1,4 +1,4 @@
-import { isKeyword, Keywords } from "../provider/keyword";
+import { isKeyword, Keywords, canCjassReturn } from "../provider/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
@@ -1516,7 +1516,8 @@ function parseCj(content: string): Program {
     lineTexts.forEach((lineText) => {
         // const result = cjassFuncRegExp.exec(lineText.getText());
         const result = lineText.getText().match(cjassFuncRegExp);
-        if (result && result.groups && !isKeyword(result.groups["returns"]) && !isKeyword(result.groups["name"])) {
+        if (result && result.groups && canCjassReturn(result.groups["returns"])) {
+            // console.log(result.groups["name"], result.groups["returns"])
             
             const takesString = lineText.getText().substring(result[0].length, lineText.length());
             const takeStrings = takesString.split(new RegExp(/\s*,\s*/));
@@ -1529,6 +1530,7 @@ function parseCj(content: string): Program {
                 }
             });
             const func = new Func(result.groups["name"], takes, result.groups["returns"]);
+            func.tag = result.groups["tag"] as 'public';
             func.loc.setRange(lineText);
             program.functions.push(func);
         }
