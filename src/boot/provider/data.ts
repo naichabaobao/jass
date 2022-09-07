@@ -369,18 +369,22 @@ console.log(Options.includes)
 class DataGetter {
   constructor() {}
   forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true, containCJass: boolean = false) {
-    dataMap.forEach((key, value) => {
-      callback(value, key);
-    });
-    if (containZinc) {
-      zincDataMap.forEach((key, value) => {
+    try {
+      dataMap.forEach((key, value) => {
         callback(value, key);
       });
-    }
-    if (containCJass) {
-      cjassDataMap.forEach((key, value) => {
-        callback(value, key);
-      });
+      if (containZinc) {
+        zincDataMap.forEach((key, value) => {
+          callback(value, key);
+        });
+      }
+      if (containCJass) {
+        cjassDataMap.forEach((key, value) => {
+          callback(value, key);
+        });
+      }
+    } catch (error) {
+      console.warn(error) // surround catch to prevent process termination
     }
   }
 
