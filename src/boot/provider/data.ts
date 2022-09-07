@@ -208,7 +208,6 @@ parsePath(Options.commonAiPath);
 parsePath(...Options.includes);
 parsePath(...Options.workspaces);
 parsePath(...Options.luaDependents);
-console.log("lua", Options.luaDependents);
 
 function startWatch() {
 

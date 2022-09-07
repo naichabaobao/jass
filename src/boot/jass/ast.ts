@@ -144,6 +144,7 @@ class Declaration extends Node implements Descript {
 
 	/**
 	 * 来源文件
+	 * @depreated 存在资源浪费
 	 */
 	public source: string = "";
 

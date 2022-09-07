@@ -1,3 +1,4 @@
+// 尝试性文件，目前并不参与项目中
 import { isKeyword } from "../provider/keyword";
 import {  Position, Range } from "./ast";
 import { Tokenize, Tokenizer } from "./tokens";
