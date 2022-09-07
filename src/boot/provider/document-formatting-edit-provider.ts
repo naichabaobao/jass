@@ -173,7 +173,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     
     for (let line = 0; line < document.lineCount; line++) {
       const lineText = document.lineAt(line);
-      const text = (lineText.text || '').split('//')[0]; // 去除注释，避免注释导致换行
+      const text = (lineText.text || '').split(/\/\/[^!]/)[0]; // 去除注释，避免注释导致换行, 但是保留 //! 注释
 
       if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text) || /^.*\{[\s\t]*$/.test(text)) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
