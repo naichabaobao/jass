@@ -1530,7 +1530,7 @@ function parseCj(content: string): Program {
                 }
             });
             const func = new Func(result.groups["name"], takes, result.groups["returns"]);
-            func.tag = result.groups["tag"] as 'public';
+            func.tag = result.groups["tag"] as 'default' || 'default';
             func.loc.setRange(lineText);
             program.functions.push(func);
         }
