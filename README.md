@@ -69,6 +69,6 @@ endlibrary
 --------------------------------------------------------------
 
 ***请我喝奶茶***
-![一起出份力赞助我开发吧！爱你哟](https://user-images.githubusercontent.com/38098031/188805465-3aec1319-a68c-4dee-9d1a-664fbc5ee34f.png)
+![一起出份力赞助我开发吧！爱你哟](https://user-images.githubusercontent.com/38098031/189883735-7bbdb474-259a-4bc7-8a6b-09707aa013a4.png)
 
 ```---star一下吧！---```
