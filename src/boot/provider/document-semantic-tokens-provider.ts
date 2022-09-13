@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import { Func } from "../jass/ast";
+import { DataGetter } from "./data";
 
 /*
 namespace	用于声明或引用命名空间、模块或包的标识符。
@@ -70,7 +72,31 @@ vscode.languages.registerDocumentSemanticTokensProvider("jass", new class Docume
         // throw new Error("Method not implemented.");
         const builder = new vscode.SemanticTokensBuilder(legend);
 
-        // builder.push(new vscode.Range(0, 0, 0, 10), "function", ["deprecated"]);
+        const fsPath = document.uri.fsPath;
+        const program = new DataGetter().get(fsPath);
+        if (!program) {
+            return;
+        }
+
+        program.allFunctions(true, true).filter(func => func.hasDeprecated()).forEach(func => {
+            const token = func.nameToken;
+            if (token) {
+                builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);
+            }
+        });
+
+        const zincProgram = new DataGetter().zinc(fsPath);
+        if (!zincProgram) {
+            return;
+        }
+
+        zincProgram.allFunctions(false, true).filter(func => func.hasDeprecated()).forEach(func => {
+            const token = func.nameToken;
+            if (token) {
+                builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);
+            }
+        });
+
 
         return builder.build();
     }

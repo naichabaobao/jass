@@ -392,8 +392,11 @@ class DataGetter {
     }
   }
 
-  public getJass(key: string): Program|undefined {
+  public get(key: string): Program|undefined {
     return dataMap.get(key)?.value;
+  }
+  public zinc(key: string): Program|undefined {
+    return zincDataMap.get(key)?.value;
   }
 }
 class LuaDataGetter {
@@ -404,6 +407,9 @@ class LuaDataGetter {
         callback(value, key);
       })
     }
+  }
+  public get(key: string): Chunk|undefined {
+    return luaDataMap.get(key);
   }
 }
 
@@ -417,7 +423,7 @@ export {
 function parseData(fsPath: string, content: string) {
   return setTimeout(() => {
     return parseContent(fsPath, content);
-  }, 2e3);
+  }, 750);
 }
 
 let lastPath: string|null = null;

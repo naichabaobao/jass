@@ -388,6 +388,7 @@ class ResolvePathOption {
 
 	public static default() {
 		const option = new ResolvePathOption();
+		return option;
 	}
 }
 
@@ -453,6 +454,12 @@ function getPathFileName(filePath: string): string {
 	return path.parse(filePath).base;
 }
 
+/**
+ * 判断两个文件是否是同一个
+ * @param key 文件1
+ * @param key2 文件2
+ * @returns 
+ */
 function compare(key: string, key2: string): boolean {
 	const keyParsedPath = path.parse(key);
 	const key2ParsedPath = path.parse(key2);
@@ -492,7 +499,8 @@ function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|strin
 }
 
 /**
- * 获取当前
+ * 获取当前位置的方法名称
+ * aaa(12, position)  ->  aaa
  * @param document 
  * @param position 
  * @returns 

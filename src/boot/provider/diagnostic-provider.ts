@@ -49,7 +49,7 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 		if (Options.isJassDiagnostic) {
 	
 			diagnosticCollection.delete(document.uri);
-			const program = new DataGetter().getJass(fsPath);
+			const program = new DataGetter().get(fsPath);
 			if (program) {
 				const diagnostics:vscode.Diagnostic[] = [];
 				program.errors.map(err => {
