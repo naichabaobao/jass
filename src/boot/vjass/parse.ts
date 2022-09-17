@@ -511,7 +511,7 @@ function parse(content:string) {
 }
 
 export {
-	parse
+	// parse
 };
 
 if (false) {

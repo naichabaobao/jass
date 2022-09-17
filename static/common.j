@@ -666,7 +666,16 @@ globals
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
-	
+
+	//region Cinematic Sound Constants 1.33
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
+	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
+	//endregion
 	
 	
 	// Game, Player, and Unit States
@@ -985,6 +994,8 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
  // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
+	// 1.33
+	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
 	
 	
 	// For use with TriggerRegisterUnitEvent
@@ -1007,6 +1018,8 @@ globals
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
 	// 抵押物品
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
+	// @version 1.33
+	constant unitevent EVENT_UNIT_STACK_ITEM = ConvertUnitEvent(318)
 	
 	
 	// Limit Event API constants
@@ -3071,6 +3084,26 @@ constant native GetChangingUnitPrevOwner takes nothing returns player
 constant native GetManipulatingUnit takes nothing returns unit
 // 被操作的物品
 constant native GetManipulatedItem takes nothing returns item
+	
+//region 1.33
+// For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
+// Returns null if the item was a powerup and not a stacking item.
+
+// @version 1.33
+constant native BlzGetAbsorbingItem takes nothing returns item
+// @version 1.33
+constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
+
+// EVENT_PLAYER_UNIT_STACK_ITEM
+// Source is the item that is losing charges, Target is the item getting charges.
+	
+// @version 1.33
+constant native BlzGetStackingItemSource takes nothing returns item
+// @version 1.33
+constant native BlzGetStackingItemTarget takes nothing returns item
+// @version 1.33
+constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
+//endregion
 
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 // 收到命令的单位
@@ -3501,7 +3534,7 @@ native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns bo
 // 英雄的经验值
 native GetHeroXP takes unit whichHero returns integer
 // 设置英雄经验值
-native SetHeroXP takes unit whichHero, integer newXpVal,  boolean showEyeCandy returns nothing
+native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
 // 未用完的技能点数
 native GetHeroSkillPoints takes unit whichHero returns integer
@@ -3509,9 +3542,9 @@ native GetHeroSkillPoints takes unit whichHero returns integer
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
 // 增加经验值 [R]
-native AddHeroXP takes unit whichHero, integer xpToAdd,   boolean showEyeCandy returns nothing
+native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置英雄等级
-native SetHeroLevel takes unit whichHero, integer level,  boolean showEyeCandy returns nothing
+native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
 // 单位等级
@@ -3781,15 +3814,15 @@ native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y 
 // 发布中介命令(无目标)
 native IssueNeutralImmediateOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean
 // 发布中介命令(无目标)(ID)
-native IssueNeutralImmediateOrderById takes player forWhichPlayer,unit neutralStructure, integer unitId returns boolean
+native IssueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
 // 发布中介命令(指定坐标)
-native IssueNeutralPointOrder takes player forWhichPlayer,unit neutralStructure, string unitToBuild, real x, real y returns boolean
+native IssueNeutralPointOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, real x, real y returns boolean
 // 发布中介命令(指定坐标)(ID)
-native IssueNeutralPointOrderById takes player forWhichPlayer,unit neutralStructure, integer unitId, real x, real y returns boolean
+native IssueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
 // 发布中介命令(指定单位)
-native IssueNeutralTargetOrder takes player forWhichPlayer,unit neutralStructure, string unitToBuild, widget target returns boolean
+native IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, widget target returns boolean
 // 发布中介命令(指定单位)(ID)
-native IssueNeutralTargetOrderById takes player forWhichPlayer,unit neutralStructure, integer unitId, widget target returns boolean
+native IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
 // 单位当前的命令
 native GetUnitCurrentOrder takes unit whichUnit returns integer
@@ -4785,6 +4818,10 @@ native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns 
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 
 native StartSound takes sound soundHandle returns nothing
+// 开始声音
+// @version 1.33
+// @param fadeIn 是否淡入
+native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
@@ -4871,11 +4908,11 @@ native AddSpecialEffectTarget takes string modelName, widget targetWidget, strin
 native DestroyEffect takes effect whichEffect returns nothing
 
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
-native AddSpellEffectLoc takes string abilityString, effecttype t,location where returns effect
+native AddSpellEffectLoc takes string abilityString, effecttype t, location where returns effect
 // 新建特效(指定技能，创建到坐标) [R]
-native AddSpellEffectById takes integer abilityId, effecttype t,real x, real y returns effect
+native AddSpellEffectById takes integer abilityId, effecttype t, real x, real y returns effect
 // 新建特效(指定技能，创建到点) [R]
-native AddSpellEffectByIdLoc takes integer abilityId, effecttype t,location where returns effect
+native AddSpellEffectByIdLoc takes integer abilityId, effecttype t, location where returns effect
 native AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect
 // 新建特效(指定技能，创建到单位) [R]
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
@@ -4997,7 +5034,7 @@ native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
 native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
-native PauseCompAI takes player p,   boolean pause returns nothing
+native PauseCompAI takes player p, boolean pause returns nothing
 // 对战 AI
 native GetAIDifficulty takes player num returns aidifficulty
 
@@ -5460,7 +5497,9 @@ native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
 // 获取单位第N个技能
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
-// 模拟玩家聊天
+// 获取技能ID
+// @version 1.33
+native BlzGetAbilityId takes ability whichAbility returns integer
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
@@ -5622,3 +5661,23 @@ native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, re
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
+
+//region 1.33
+
+native BlzQueueImmediateOrderById takes unit whichUnit, integer order returns boolean
+native BlzQueuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
+native BlzQueueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
+native BlzQueueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
+native BlzQueueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
+native BlzQueueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
+native BlzQueueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
+native BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
+native BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
+
+// returns the number of orders the unit currently has queued up
+native BlzGetUnitOrderCount takes unit whichUnit returns integer
+// clears either all orders or only queued up orders
+native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing
+// stops the current order and optionally clears the queue
+native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
+//endregion
