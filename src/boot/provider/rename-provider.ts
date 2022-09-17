@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { parse } from "../jass/parse";
+import { DataGetter } from "./data";
 import { Keywords } from "./keyword";
 
 
@@ -33,9 +33,13 @@ vscode.languages.registerRenameProvider("jass", new class RenameProvider impleme
 			return null;
 		}
 
-		const program = parse(document.getText(), {
-			needParseLocal: true
-		});
+		const fsPath = document.uri.fsPath;
+
+		const program = new DataGetter().get(fsPath);
+
+		if (!program) {
+			return;
+		}
 
 		let func = program.functions.find((func) => func.name == key);
 

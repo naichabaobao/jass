@@ -26,7 +26,6 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Method, Native, Func } from '../jass/ast';
-import { parse } from '../jass/parse';
 import { isAiFile, isJFile } from '../tool';
 import { DataGetter } from './data';
 import { Options } from './options';
@@ -112,22 +111,24 @@ vscode.workspace.onDidRenameFiles((event) => {
 	});
 });
 
-vscode.workspace.onDidSaveTextDocument((document) => {
-	if (Options.isOnlyJass && Options.isJassDiagnostic) {
-		const program = parse(document.getText(), {
-			needParseLocal: true,
-			needParseInitExpr: true,
-			needParseNative: true
-		});
-		diagnosticCollection.clear();
-		const diagnostics = program.errors.map(err => {
-			const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
-			const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
-			return diagnostic;
-		});
-		diagnosticCollection.set(document.uri, diagnostics);
-	}
-});
+// 参数个数检测, 不要了
+
+// vscode.workspace.onDidSaveTextDocument((document) => {
+// 	if (Options.isOnlyJass && Options.isJassDiagnostic) {
+// 		const program = parse(document.getText(), {
+// 			needParseLocal: true,
+// 			needParseInitExpr: true,
+// 			needParseNative: true
+// 		});
+// 		diagnosticCollection.clear();
+// 		const diagnostics = program.errors.map(err => {
+// 			const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
+// 			const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
+// 			return diagnostic;
+// 		});
+// 		diagnosticCollection.set(document.uri, diagnostics);
+// 	}
+// });
 
 vscode.workspace.onDidChangeConfiguration((event) => {
 	if (!Options.isOnlyJass || !Options.isJassDiagnostic) {

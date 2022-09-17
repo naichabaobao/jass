@@ -718,7 +718,7 @@ function isStructEnd(text: string) {
 }
 
 export {
-	parse
+	// parse
 };
 
 

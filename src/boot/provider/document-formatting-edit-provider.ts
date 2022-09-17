@@ -20,7 +20,7 @@ interface FormatOption {
 }
 
 function isValue(token: Tokenize) {
-  return ["id", "string", "int", "hex", "dollar_hex", "octal", "real", "lua", "mark"].includes(token.type);
+  return ["id", "string", "int", "hex", "dollar_hex", "octal", "real", "mark"].includes(token.type);
 }
 
 const formatOptions: FormatOption[] = [
@@ -93,7 +93,7 @@ const formatOptions: FormatOption[] = [
     is: (token, previousToken, isStart) => {
       let compare: boolean = false;
 
-      if (token.type == "id" || token.type == "string" || token.type == "int" || token.type == "hex" || token.type == "dollar_hex" || token.type == "octal" || token.type == "real" || token.type == "lua" || token.type == "mark") {
+      if (token.type == "id" || token.type == "string" || token.type == "int" || token.type == "hex" || token.type == "dollar_hex" || token.type == "octal" || token.type == "real" || token.type == "mark") {
         if (previousToken) {
           if (previousToken.type == "op") {
             if (previousToken.value == "(" || previousToken.value == "[" || previousToken.value == ".") {
@@ -131,7 +131,7 @@ const formatOptions: FormatOption[] = [
         }
         else if (token.value == "(" || token.value == ")" || token.value == "[" || token.value == "]" || token.value == ".") {
           if (previousToken) {
-            if (previousToken.type == "id" || previousToken.type == "string" || previousToken.type == "int" || previousToken.type == "hex" || previousToken.type == "dollar_hex" || previousToken.type == "octal" || previousToken.type == "real" || previousToken.type == "lua" || previousToken.type == "mark") {
+            if (previousToken.type == "id" || previousToken.type == "string" || previousToken.type == "int" || previousToken.type == "hex" || previousToken.type == "dollar_hex" || previousToken.type == "octal" || previousToken.type == "real" || previousToken.type == "mark") {
               if (token.start.line == previousToken.end.line && token.start.position - previousToken.end.position != 0) {
                 compare = true;
               }

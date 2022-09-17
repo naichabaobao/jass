@@ -2,7 +2,7 @@ import { isKeyword, Keywords, canCjassReturn } from "../provider/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Document, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, LineText } from "./ast";
+import { DefineMacro, Document, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, LineText, TextMacro, RunTextMacro, Include } from "./ast";
 import { Token, Tokenize, tokenize, Tokenizer } from "./tokens";
 
 
@@ -128,119 +128,6 @@ function replaceBlockComment(content: string): string {
 }
 
 
-
-function zincLines(content: string): LineText[] {
-    let inZinc = false;
-    return lines(content).filter(lineText => {
-        if (/^\s*\/\/!\s+zinc\b/.test(lineText.getText())) {
-            inZinc = true;
-            return false;
-        } else if (/^\s*\/\/!\s+endzinc\b/.test(lineText.getText())) {
-            inZinc = false;
-            return false;
-        } else {
-            return inZinc;
-        }
-    })
-}
-
-class TextMacro extends Range {
-    private readonly lineTexts: LineText[] = [];
-    private name: string;
-    private takes: string[];
-
-    constructor(name: string = "", takes: string[] = []) {
-        super();
-        this.name = name;
-        this.takes = takes;
-    }
-
-    public getName(): string {
-        return this.name;
-    }
-    public setName(name: string) {
-        this.name = name;
-    }
-
-    public push(lineText: LineText) {
-        this.lineTexts.push(lineText);
-    }
-
-    public remove(lineNumber: number) {
-        for (let index = 0; index < this.lineTexts.length; index++) {
-            const lineText = this.lineTexts[index];
-            if (lineText.lineNumber() == lineNumber) {
-                this.lineTexts.splice(index, 1);
-                break;
-            }
-        }
-    }
-
-    public foreach(callback: (lineText: LineText) => void, params: string[] = []) {
-        this.lineTexts.map((lineText) => {
-            const replacedLineText = lineText.clone();
-
-            let newText = lineText.getText();
-            this.takes.forEach((take, takeIndex) => {
-                newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
-            })
-            replacedLineText.setText(newText);
-            callback(replacedLineText);
-        });
-    }
-
-    public addTake(take: string) {
-        this.takes.push(take);
-    }
-
-}
-class Include extends Range {
-    private path: string;
-
-    constructor(path: string) {
-        super();
-        this.path = path;
-    }
-
-    public getPath() {
-        return this.path;
-    }
-
-}
-
-class RunTextMacro extends Range {
-    private name: string;
-    private params: string[];
-    private lineText: LineText | null;
-
-    constructor(name: string = "", params: string[] = [], lineText: LineText | null = null) {
-        super();
-        this.name = name;
-        this.params = params;
-        this.lineText = lineText;
-    }
-
-    public getName(): string {
-        return this.name;
-    }
-
-    public setName(name: string): void {
-        this.name = name;
-    }
-
-    public addParam(param: string) {
-        this.params.push(param);
-    }
-
-    public getParams(): string[] {
-        return this.params.map(param => param.replace(/^"/, "").replace(/"$/, ""));
-    }
-
-    public getLineText(): LineText | null {
-        return this.lineText;
-    }
-
-}
 
 type BlockType = "globals" | "library" | "struct" | "function" | "method" | "zinc" | "program";
 class Block extends Range {
@@ -581,7 +468,7 @@ function parseLocal(lineText: LineText, local: Local) {
     });
 
     const localIndex = tokens.findIndex((token) => token.isId() && token.value == "local");
-    local.loc.setRange(lineText);
+    local.loc.from(lineText);
 
     if (localIndex != -1) {
         local.loc.start = new Position(lineText.lineNumber(), tokens[localIndex].position);
@@ -610,7 +497,7 @@ function parseMember(lineText: LineText, member: Member) {
         return token;
     });
 
-    member.loc.setRange(lineText);
+    member.loc.from(lineText);
 
     if (tokens[0]) {
         if (tokens[0].isId() && tokens[0].value == "private") {
@@ -688,66 +575,12 @@ function isNativeStart(lineText: LineText): boolean {
     return /^\s*(?:(constant)\s+)*native\b/.test(lineText.getText());
 }
 
-class ParserEvent {
-    public readonly document: Document;
-
-    constructor(document: Document) {
-        this.document = document;
-    }
-
-}
-type ParserHandleFunction = (event: ParserEvent) => void;
-
 /**
  * 
  */
 class Parser {
-    /**
-     * tokenize
-     * 
-     */
-    private static Build = class {
 
-        private document: Document;
-        private isSupportCjass:boolean = false;
-        private eventMap: Map<string, ParserHandleFunction|Array<ParserHandleFunction>> = new Map();
-        private constructor(document: Document) {
-            this.document = document;
-        }
-        public create(document: Document) {
-            return new Parser.Build(document);
-        }
-        public supportCjass(enable: boolean) {
-            this.isSupportCjass = enable;
-            return this;
-        }
-        public addEventListener(type: string, handle: ParserHandleFunction) {
-            if (this.eventMap.has(type)) {
-                const handle_ = this.eventMap.get(type)!;
-                if (Array.isArray(handle_)) {
-                    handle_.push(handle);
-                } else {
-                    this.eventMap.set(type, [handle_, handle]);
-                }
-            } else {
-                this.eventMap.set(type, handle);
-            }
-            return this;
-        }
-        private blockComment() {
-
-        }
-        public pasing() {
-
-        }
-    };
-
-    public static create(document: Document) {
-    }
-
-    constructor(content: string, options?: {
-        supportCjass: false
-    }) {
+    constructor(content: string) {
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         this.lineTexts = lines(newContent);
@@ -771,7 +604,7 @@ class Parser {
         this.lineTexts = this.lineTexts.filter((lineText) => {
             if (/^\s*\/\/!\s+textmacro\b/.test(lineText.getText())) {
                 textMacro = new TextMacro()
-                textMacro.setRange(lineText);
+                textMacro.from(lineText);
                 parseTextMacro(lineText.getText(), textMacro);
                 textMacros.push(textMacro);
                 return false;
@@ -796,7 +629,7 @@ class Parser {
             if (/^\s*\/\/!\s+runtextmacro\b/.test(lineText.getText())) {
                 const runTextMacro = new RunTextMacro();
                 parseRunTextMacro(lineText.getText(), runTextMacro);
-                runTextMacro.setRange(lineText);
+                runTextMacro.from(lineText);
                 this.expandLineTexts.push(runTextMacro);
 
                 // const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == runTextMacro.getName());
@@ -849,7 +682,7 @@ class Parser {
         function handle(lineText: LineText) {
             if (/^\s*globals\b/.test(lineText.getText())) {
                 const b = new Block("globals");
-                b.setRange(lineText);
+                b.from(lineText);
                 if (block) {
                     b.parent = block;
                     block.childrens.push(b);
@@ -869,7 +702,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public|static|stub)\s+)*function\b/.test(lineText.getText())) {
                 const b = new Block("function");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -890,7 +723,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public|static|stub)\s+)*method\b/.test(lineText.getText())) {
                 const b = new Block("method");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -911,7 +744,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public)\s+)*struct\b/.test(lineText.getText())) {
                 const b = new Block("struct");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -932,7 +765,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public)\s+)*library\b/.test(lineText.getText())) {
                 const b = new Block("library");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -981,7 +814,7 @@ class Parser {
         function handle(lineText: LineText) {
             if (/^\s*globals\b/.test(lineText.getText())) {
                 const b = new Block("globals");
-                b.setRange(lineText);
+                b.from(lineText);
                 if (block) {
                     b.parent = block;
                     block.childrens.push(b);
@@ -1001,7 +834,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public|static|stub)\s+)*function\b/.test(lineText.getText())) {
                 const b = new Block("function");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -1022,7 +855,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public|static|stub)\s+)*method\b/.test(lineText.getText())) {
                 const b = new Block("method");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -1043,7 +876,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public)\s+)*struct\b/.test(lineText.getText())) {
                 const b = new Block("struct");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -1064,7 +897,7 @@ class Parser {
                 }
             } else if (/^\s*(?:(?:private|public)\s+)*library\b/.test(lineText.getText())) {
                 const b = new Block("library");
-                b.setRange(lineText);
+                b.from(lineText);
                 b.childrens.push(lineText);
                 if (block) {
                     b.parent = block;
@@ -1109,6 +942,9 @@ class Parser {
     public parsing(): Program {
         const program = new Program();
 
+        program.textMacros.push(...this.textMacros);
+        program.runTextMacros.push(...<RunTextMacro[]>this.expandLineTexts.filter(x => x instanceof RunTextMacro));
+
         function handleGlobalsBlock(block: Block, globals: Global[]) {
             const lineComments: LineComment[] = [];
             block.childrens.forEach((x) => {
@@ -1132,7 +968,7 @@ class Parser {
         function handleNativeBlock(lineText: LineText, natives: Native[], lineComments: LineComment[]) {
             const native = new Native();
 
-            native.loc.setRange(lineText);
+            native.loc.from(lineText);
 
             parseFunction(lineText, native);
             native.lineComments.push(...lineComments);
@@ -1142,7 +978,7 @@ class Parser {
         function handleFunctionBlock(block: Block, functions: Func[], lineComments: LineComment[]) {
             const func = new Func();
 
-            func.loc.setRange(block);
+            func.loc.from(block);
             
             parseFunction(<LineText>block.childrens[0], func);
             func.lineComments.push(...lineComments);
@@ -1157,7 +993,7 @@ class Parser {
         function handleMethodsBlock(block: Block, functions: Method[], lineComments: LineComment[]) {
             const method = new Method();
 
-            method.loc.setRange(block);
+            method.loc.from(block);
 
             parseFunction(<LineText>block.childrens[0], method);
             method.lineComments.push(...lineComments);
@@ -1232,7 +1068,7 @@ class Parser {
         function handleLibraryBlock(block: Block, librarys: Library[], lineComments: LineComment[]) {
             const library = new Library();
 
-            library.loc.setRange(block);
+            library.loc.from(block);
 
             parseLibrary(<LineText>block.childrens[0], library);
             library.lineComments.push(...lineComments);
@@ -1250,7 +1086,7 @@ class Parser {
         function handleStructBlock(block: Block, structs: Struct[], lineComments: LineComment[]) {
             const struct = new Struct();
 
-            struct.loc.setRange(block);
+            struct.loc.from(block);
 
             parseStruct(<LineText>block.childrens[0], struct);
             struct.lineComments.push(...lineComments);
@@ -1333,6 +1169,10 @@ class Parser {
         });
 
         const zincProgram = parseZinc(tokens, true);
+
+        zincProgram.textMacros.push(...this.textMacros);
+        zincProgram.runTextMacros.push(...<RunTextMacro[]>this.expandLineTexts.filter(x => x instanceof RunTextMacro));
+
         return zincProgram;
     }
 
@@ -1353,25 +1193,6 @@ class Parser {
                 callback(x);
             }
         });
-        // this.lineTexts.forEach((lineText) => {
-        //     if (/^\s*\/\/!\s+runtextmacro/.test(lineText.getText())) {
-        //         const runTextMacro = new RunTextMacro();
-        //         parseRunTextMacro(lineText.getText(), runTextMacro);
-        //         runTextMacro.setRange(lineText);
-
-
-        //         const textMacro = this.textMacros.find((textMacro) => textMacro.getName() == runTextMacro.getName());
-        //         if (textMacro) {
-        //             textMacro.foreach((lineText) => {
-        //                 callback(lineText);
-        //             }, runTextMacro.getParams());
-        //         } else {
-        //             callback(lineText);
-        //         }
-        //     } else {
-        //         callback(lineText);
-        //     }
-        // });
     }
 
     public getTextMacros(): TextMacro[] {
@@ -1531,7 +1352,7 @@ function parseCj(content: string): Program {
             });
             const func = new Func(result.groups["name"], takes, result.groups["returns"]);
             func.tag = result.groups["tag"] as 'default' || 'default';
-            func.loc.setRange(lineText);
+            func.loc.from(lineText);
             program.functions.push(func);
         }
     });
@@ -1555,133 +1376,7 @@ export {
 //     xilo = 
 // }
 // `), null, 2));
-if (false) {
-    console.log(parseCjass(`
-    define {
-    
-        aaa = {
-            bbb = 12
-        }
-    }
-    `));
-    
-    console.log(parseCj(`public void insdsada(aaa aaaccs fdsg,  fgdsg gfdg__)`).functions[0].takes);
-    ;
-}
 
-
-if (false) {
-    const text = `a/"\\"
-    /*
-    123
-    */c`;
-    console.log(text, "\n\n", replaceBlockComment(text));
-    console.log(text.length, replaceBlockComment(text).length);
-
-    // zinc
-    console.log("zinc 内容");
-    console.log(zincLines(`aaa
-    //! zinc
-    bbb
-    //! endzinc
-    //! zinc
-    ccc
-    //! endzinc
-    ddd`));
-    console.log("parse=======================");
-
-    new Parser(`
-    //! textmacro a666(name,return_type)
-    function $name$ takes nothing returns $return_type$
-    endfunction
-    //! endtextmacro
-    //! runtextmacro a666("test_func_name", "nothing")
-    `).foreach((lineText) => {
-        console.log(lineText.lineNumber(), lineText.getText())
-    });
-
-    new Parser(`
-    //! textmacro start_zinc()
-    wuyong
-    //! zinc
-    youyong
-    //! endtextmacro
-
-    //! textmacro end_zinc(end)
-    $end$
-    //! endzinc
-    //! endtextmacro
-
-    //! runtextmacro start_zinc()
-
-    zinccontent
-
-    //! runtextmacro end_zinc("canshu")
-
-    `).getZincBlocks().forEach(x => {
-        console.log(x);
-
-    })
-
-
-    const func = new Func("");
-    const lineText = new LineText("private function func_name takes string , integer anan");
-    parseFunction(lineText, func);
-    console.log(func);
-
-
-    const lib = new Library("");
-    const libLineText = new LineText("library dianjie initializer ifunc requires bbb, ccc, eee");
-    parseLibrary(libLineText, lib);
-    console.log(lib);
-
-    console.log("=================================================================")
-
-    const blocks = new Parser(`
-    struct baoji extends dontbb, a222
-
-        method a666
-        endmethod
-
-    endstruct
-
-    library ab
-        globals
-            integer a
-        endglobals
-        
-    endlibrary
-
-    function b 
-    globals
-    // jiexi
-    // jiexi
-    integer a
-    endglobals
-    endtunction
-
-    `).parsing();
-    console.info(blocks.functions[0].getGlobals());
-
-    const zincProgram = new Parser(`
-
-    //! zinc
-    library a87878 {
-
-    }
-    //! endzinc
-
-    `).zincing();
-console.log(zincProgram.librarys[0].loc);
-
-}
-
-if (false) {
-    const textMacro = new TextMacro();
-    parseTextMacro(`//! textmacro a takes aaa`, textMacro);
-    console.log(textMacro);
-    
-}
 
 export function findIncludes(content:string) {
     const newContent = replaceBlockComment(content);

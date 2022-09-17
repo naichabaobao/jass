@@ -133,7 +133,103 @@ class LineText extends Range {
 
 }
 
+class TextMacro extends Range {
+    private readonly lineTexts: LineText[] = [];
+    private name: string;
+    private takes: string[];
 
+    constructor(name: string = "", takes: string[] = []) {
+        super();
+        this.name = name;
+        this.takes = takes;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+    public setName(name: string) {
+        this.name = name;
+    }
+
+    public push(lineText: LineText) {
+        this.lineTexts.push(lineText);
+    }
+
+    public remove(lineNumber: number) {
+        for (let index = 0; index < this.lineTexts.length; index++) {
+            const lineText = this.lineTexts[index];
+            if (lineText.lineNumber() == lineNumber) {
+                this.lineTexts.splice(index, 1);
+                break;
+            }
+        }
+    }
+
+    public foreach(callback: (lineText: LineText) => void, params: string[] = []) {
+        this.lineTexts.map((lineText) => {
+            const replacedLineText = lineText.clone();
+
+            let newText = lineText.getText();
+            this.takes.forEach((take, takeIndex) => {
+                newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
+            })
+            replacedLineText.setText(newText);
+            callback(replacedLineText);
+        });
+    }
+
+    public addTake(take: string) {
+        this.takes.push(take);
+    }
+
+}
+class Include extends Range {
+    private path: string;
+
+    constructor(path: string) {
+        super();
+        this.path = path;
+    }
+
+    public getPath() {
+        return this.path;
+    }
+
+}
+
+class RunTextMacro extends Range {
+    private name: string;
+    private params: string[];
+    private lineText: LineText | null;
+
+    constructor(name: string = "", params: string[] = [], lineText: LineText | null = null) {
+        super();
+        this.name = name;
+        this.params = params;
+        this.lineText = lineText;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public setName(name: string): void {
+        this.name = name;
+    }
+
+    public addParam(param: string) {
+        this.params.push(param);
+    }
+
+    public getParams(): string[] {
+        return this.params.map(param => param.replace(/^"/, "").replace(/"$/, ""));
+    }
+
+    public getLineText(): LineText | null {
+        return this.lineText;
+    }
+
+}
 
 class Node implements Rangebel  { 
 	public readonly loc: Range = Range.default(); 
@@ -743,6 +839,8 @@ class Program extends Declaration {
 	public readonly globals: Global[] = [];
 	public readonly librarys: Library[] = [];
 	public readonly structs: Struct[] = [];
+	public readonly textMacros: TextMacro[] = [];
+	public readonly runTextMacros: RunTextMacro[] = [];
 
 	/**
 	 * @deprecated
@@ -939,6 +1037,6 @@ class Program extends Declaration {
 }
 
 export {
-	AstNode, Declaration, Program, Document, LineText
+	AstNode, Declaration, Program, Document, LineText, TextMacro, RunTextMacro, Include
 };
 
