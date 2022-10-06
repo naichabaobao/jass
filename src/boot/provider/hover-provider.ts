@@ -123,13 +123,12 @@ class HoverProvider implements vscode.HoverProvider {
         const ms = toHoverlo(func, isCurrent, filePath);
         hovers.push(ms);
       });
+      program.getNameNative(key).forEach(func => {
+        const ms = toHoverlo(func, isCurrent, filePath);
+        hovers.push(ms);
+      });
     
       if (isCurrent) {
-
-        program.getPrivateFunction(key).forEach(func => {
-          const ms = toHoverlo(func, isCurrent, filePath);
-          hovers.push(ms);
-        });
 
         const findedFunc = program.getPositionFunction(convertPosition(position));
         if (findedFunc) {

@@ -8,6 +8,21 @@ import { compare, getPositionKey } from '../tool';
 import { Options } from './options';
 import { DefineMacro, Func, Local, Native, Struct, Take } from '../jass/ast';
 
+function functionUnifiedFormat(native:Func):string {
+  const takesString = native.takes.length == 0 ? "" : native.takes.map(take => take.origin).join(", ");
+  const returnString = native.returns;
+  return `function ${native.name}(${takesString}) -> ${returnString};`
+}
+function nativeUnifiedFormat(native:Native):string {
+  const takesString = native.takes.length == 0 ? "" : native.takes.map(take => take.origin).join(", ");
+  const returnString = native.returns;
+  return `native ${native.name}(${takesString}) -> ${returnString};`
+}
+function methodUnifiedFormat(native:Native):string {
+  const takesString = native.takes.length == 0 ? "" : native.takes.map(take => take.origin).join(", ");
+  const returnString = native.returns;
+  return `method ${native.name}(${takesString}) -> ${returnString};`
+}
 
 class SignatureHelp implements vscode.SignatureHelpProvider {
 
@@ -31,7 +46,7 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
       
       if (!Options.isOnlyJass) {
         program.getNameMethod(key).filter(method => method.name == key).forEach(method => {
-          const SignatureInformation = new vscode.SignatureInformation(method.origin);
+          const SignatureInformation = new vscode.SignatureInformation(methodUnifiedFormat(method));
           SignatureInformation.parameters = method.takes.map(take => new vscode.ParameterInformation(take.name, method.getParams().find(param => param.id == take.name)?.descript))
           const ms = new vscode.MarkdownString();
           // method.takes.forEach(take => {
@@ -61,7 +76,7 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
       }
 
       program.getNameFunction(key).filter(func => func.name == key).forEach(func => {
-        const SignatureInformation = new vscode.SignatureInformation(func.origin);
+        const SignatureInformation = new vscode.SignatureInformation(functionUnifiedFormat(func));
         SignatureInformation.parameters = func.takes.map(take => new vscode.ParameterInformation(take.name, func.getParams().find(param => param.id == take.name)?.descript))
         const ms = new vscode.MarkdownString();
         // func.takes.forEach(take => {
@@ -79,6 +94,28 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
           }
         });
         if (func.hasDeprecated()) {
+          ms.appendText("\n");
+          ms.appendMarkdown(`***@deprecated*** `);
+        }
+
+        SignatureInformation.documentation = ms;
+        SignatureHelp.signatures.push(SignatureInformation);
+        SignatureHelp.activeParameter = argc;
+      });
+      program.getNameNative(key).filter(func => func.name == key).forEach(native => {
+        const SignatureInformation = new vscode.SignatureInformation(nativeUnifiedFormat(native));
+        SignatureInformation.parameters = native.takes.map(take => new vscode.ParameterInformation(take.name, native.getParams().find(param => param.id == take.name)?.descript))
+        const ms = new vscode.MarkdownString();
+        
+        ms.appendMarkdown(native.getContents().join("\n"));
+
+        native.getParams().forEach((param) => {
+          if (native.takes.findIndex((take) => take.name == param.id) != -1) {
+            ms.appendText("\n");
+            ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*`);
+          }
+        });
+        if (native.hasDeprecated()) {
           ms.appendText("\n");
           ms.appendMarkdown(`***@deprecated*** `);
         }

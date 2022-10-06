@@ -80,6 +80,7 @@
           },
           "patterns": [
             {"include": "#block-comment"},
+            {"include": "#decorator"},
             {"include": "#jass-comment"},
             {"include": "#jass-string"},
             {"include": "#zinc-keyword"},
@@ -115,9 +116,14 @@
       ]
     },
   
+    "decorator": {
+      "name": "decorator",
+      "begin": "//\\s*@[a-zA-Z]+\\b",
+      "end": "\\n"
+    },
     "jass-comment": {
       "name": "comment.line.double-slash",
-      "begin": "//",
+      "begin": "//(?!!)",
       "end": "\\n"
     },
     "jass-string": {
@@ -172,6 +178,7 @@
       "patterns": [
         {"include": "#block-comment"},
         { "include": "#vjass-directive" },
+        {"include": "#decorator"},
         {"include": "#jass-comment"},
         {"include": "#jass-string"},
         { "include": "#vjass-variable-macro" },
@@ -203,6 +210,7 @@
       },
       "patterns": [
         {"include": "#jass-comment"},
+        {"include": "#decorator"},
         {"include": "#jass-string"},
         {"include": "#jass-keyword"},
         {"include": "#jass-keyword-control"},

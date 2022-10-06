@@ -918,33 +918,35 @@ class Program extends Declaration {
 		return this.librarys.map((lib) => lib.structs).flat();
 	}
 
-	public allFunctions(containNative: boolean = true, containPrivate: boolean = false) {
-	let funcs:Array<Native|Func> = [...this.functions, ...this.librarys.map((library) => {
-		const funcs:(Native|Func)[] = library.functions;
-		if (containNative) {
-			funcs.push(...library.natives);
-		}
-		return funcs;
-	}).flat()];
+	public allNatives(containPrivate: boolean = false) {
+		let funcs:Array<Native> = [...this.natives, ...this.librarys.map((library) => library.natives).flat()];
 
 		if (!containPrivate) {
-			funcs = funcs.filter((func) => (<Func>func).tag != "private");
-			funcs = funcs.filter((func) => !(<Func>func).hasPrivate());
+			funcs = funcs.filter((func) => !func.hasPrivate());
 		}
-		
-		if (containNative) {
-			funcs.push(...this.natives);
+
+		return funcs;
+	}
+	public allFunctions(containPrivate: boolean = false) {
+		let funcs:Array<Func> = [...this.functions, ...this.librarys.map((library) => library.functions).flat()];
+
+		if (!containPrivate) {
+			funcs = funcs.filter((func) => func.tag != "private");
+			funcs = funcs.filter((func) => !func.hasPrivate());
 		}
 
 		return funcs;
 	}
 	public allGlobals(containPrivate: boolean = false) {
-		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(false, containPrivate).map((func) => (<Func>func).globals).flat()];
+		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(containPrivate).map((func) => func.globals).flat()];
+
+		this.allFunctions(containPrivate).filter(f => !("tag" in f)).forEach(g => {
+			console.log(g);
+		})
 		if (!containPrivate) {
-			globals = globals.filter((global) => global.tag != "private");
-			globals = globals.filter((global) => !global.hasPrivate());
+			globals = globals.filter((global) => global.tag != "private" && !global.hasPrivate());
 		}
-		return globals.filter( global => global); // remove empty globals
+		return globals;
 	}
 	public allStructs(containPrivate: boolean = false) {
 		let structs =  [...this.structs, ...this.librarys.map((library) => library.structs).flat()];
@@ -964,7 +966,7 @@ class Program extends Declaration {
 	}
 
 	public getPositionFunction(position: Position):Func|null {
-		const func = this.allFunctions(false, true).find((func) => func.loc.contains(position));
+		const func = this.allFunctions(true).find((func) => func.loc.contains(position));
 		return func ? <Func>func : null;
 	}
 
@@ -1000,18 +1002,11 @@ class Program extends Declaration {
 		return method ? method : null;
 	}
 
-	public getNameFunction(name: string):(Func|Native)[] {
-		return this.allFunctions(true, true).filter((func) => {
-			const tagIsPrivate = (func as Func).tag === 'private';
-			return !tagIsPrivate && !func.hasPrivate() && func.name == name;
-		}) || [];
+	public getNameFunction(name: string):(Func)[] {
+		return this.allFunctions(true).filter((func) => func.name == name) || [];
 	}
-
-	public getPrivateFunction(name: string):(Func|Native)[] {
-		return this.allFunctions(true, true).filter((func) => {
-			const tagIsPrivate = (func as Func).tag == 'private';
-			return (tagIsPrivate || func.hasPrivate()) && func.name == name;
-		}) || [];
+	public getNameNative(name: string):(Native)[] {
+		return this.allNatives(true).filter((func) => func.name == name) || [];
 	}
 
 	public getNameLibrary(name: string):(Library)[] {

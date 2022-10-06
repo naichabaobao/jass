@@ -78,7 +78,7 @@ vscode.languages.registerDocumentSemanticTokensProvider("jass", new class Docume
             return;
         }
 
-        program.allFunctions(true, true).filter(func => func.hasDeprecated()).forEach(func => {
+        program.allFunctions(true).filter(func => func.hasDeprecated()).forEach(func => {
             const token = func.nameToken;
             if (token) {
                 builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);
@@ -90,7 +90,7 @@ vscode.languages.registerDocumentSemanticTokensProvider("jass", new class Docume
             return;
         }
 
-        zincProgram.allFunctions(false, true).filter(func => func.hasDeprecated()).forEach(func => {
+        zincProgram.allFunctions(true).filter(func => func.hasDeprecated()).forEach(func => {
             const token = func.nameToken;
             if (token) {
                 builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);

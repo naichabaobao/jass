@@ -367,21 +367,21 @@ class Data {
 
 export default Data;
 
-console.log(Options.workspaces)
-console.log(Options.includes)
+console.info(Options.workspaces)
+console.info(Options.includes)
 
 class DataGetter {
   constructor() {}
   forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true, containCJass: boolean = false) {
-    try {
-      dataMap.forEach((key, value) => {
+    dataMap.forEach((key, value) => {
+      callback(value, key);
+    });
+    if (containZinc) {
+      zincDataMap.forEach((key, value) => {
         callback(value, key);
       });
-      if (containZinc) {
-        zincDataMap.forEach((key, value) => {
-          callback(value, key);
-        });
-      }
+    }
+    try {
       if (containCJass) {
         cjassDataMap.forEach((key, value) => {
           callback(value, key);
@@ -423,7 +423,7 @@ export {
 function parseData(fsPath: string, content: string) {
   return setTimeout(() => {
     return parseContent(fsPath, content);
-  }, 750);
+  }, 650);
 }
 
 let lastPath: string|null = null;

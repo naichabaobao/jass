@@ -344,7 +344,8 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
     
   }
   items.push(...toItems<Global>(globalToCompletionItem, undefined, ...program.allGlobals(isCurrent)));
-  items.push(...toItems(funcToCompletionItem, undefined, ...program.allFunctions(true, isCurrent)));
+  items.push(...toItems(funcToCompletionItem, undefined, ...program.allFunctions(isCurrent)));
+  items.push(...toItems(funcToCompletionItem, undefined, ...program.allNatives(isCurrent)));
 
   if (isCurrent && position) {
     const findedFunc = program.getPositionFunction(convertPosition(position));

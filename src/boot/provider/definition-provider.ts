@@ -88,13 +88,12 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
         locations.push(location);
       });
+      program.getNameNative(key).forEach(func => {
+        const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
+        locations.push(location);
+      });
     
       if (isCurrent) {
-
-        program.getPrivateFunction(key).forEach(func => {
-          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
-          locations.push(location);
-        });
 
         const findedFunc = program.getPositionFunction(convertPosition(position));
         if (findedFunc) {
