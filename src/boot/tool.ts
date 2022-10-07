@@ -392,6 +392,20 @@ class ResolvePathOption {
 	}
 }
 
+// 读取目标文件的忽略规则
+export function readIgnoreRules(filePath: string) {
+	const ignoreRules = new Array<string>();
+	const content = fs.readFileSync(filePath, "utf-8");
+	const lines = content.split("\n");
+	for (const line of lines) {
+		if (line.startsWith("#")) {
+			continue;
+		}
+		ignoreRules.push(line);
+	}
+	return ignoreRules;
+}
+
 /**
  * 解析目录下所有文件
  * @param paths 

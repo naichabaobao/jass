@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { isAiFile, isJFile, isUsableFile, resolvePaths } from "../tool";
+import { isAiFile, isJFile, isUsableFile, readIgnoreRules, resolvePaths } from "../tool";
+import { glob } from "glob";
 
 class Options {
 
@@ -85,8 +86,16 @@ class Options {
   public static get workspaces():string[] {
     if (vscode.workspace.workspaceFolders) {
       return vscode.workspace.workspaceFolders.map((floder) => {
-        const files = resolvePaths([floder.uri.fsPath], { recursionNumber: 200});
-        return files;
+        const options = {
+            cwd: floder.uri.fsPath,
+            ignore: readIgnoreRules(
+                path.resolve(floder.uri.fsPath, ".jassignore")
+            ),
+        };
+        return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
+            .map((pattern) => glob.sync(pattern, options))
+            .flat()
+            .map((file) => path.resolve(floder.uri.fsPath, file));
       }).flat();
     }
     return [];
