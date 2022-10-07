@@ -395,6 +395,10 @@ class ResolvePathOption {
 // 读取目标文件的忽略规则
 export function readIgnoreRules(filePath: string) {
 	const ignoreRules = new Array<string>();
+	// 如果文件不存在
+	if (!fs.existsSync(filePath)) {
+		return ignoreRules;
+	}
 	const content = fs.readFileSync(filePath, "utf-8");
 	const lines = content.split("\n");
 	for (const line of lines) {
