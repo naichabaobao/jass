@@ -199,6 +199,7 @@
     "url": "https://github.com/naichabaobao/jass/issues"
   },
   "dependencies": {
+    "glob": "^7.1.1"
   },
   "author": "家猫hoo",
   "license": "GPL"
