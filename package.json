@@ -135,7 +135,10 @@
       {
         "scopeName": "source.jass",
         "language": "jass",
-        "path": "./src/jass.tmLanguage.json"
+        "path": "./src/jass.tmLanguage.json",
+        "tokenTypes": {
+          "macro.*": "other"
+        }
       }
     ],
     "snippets": [
@@ -145,33 +148,7 @@
       }
     ],
     "documentFormattingProvider": true,
-    "productIconTheme": [
-      {
-        "id": "jass",
-        "label": "jass",
-        "path": "./src/jass-product-icon-theme.json"
-      }
-    ],
-    "enableProposedApi": false,
-    "tokenColors": [
-      {
-        "scope": "comment",
-        "settings": {
-          "foreground": "#dd0000",
-          "fontStyle": "italic"
-        }
-      }
-    ],
-    "semanticHighlighting": true,
-    "semanticTokenScopes": [
-      {
-        "scopes": {
-          "*.deprecated": [
-            "invalid.deprecated"
-          ]
-        }
-      }
-    ]
+    "enableProposedApi": false
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

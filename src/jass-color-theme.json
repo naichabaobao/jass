@@ -1,3 +1,15 @@
 {
-
+    "$schema": "vscode://schemas/color-theme",
+    "tokenColors": [
+        {
+            "settings": {
+                "foreground": "#FF0000",
+                "fontStyle": "bold"
+            }
+        }
+    ],
+    "semanticHighlighting": false,
+    "semanticTokenColors": {
+        "regexp": "#bcda52"
+    }
 }

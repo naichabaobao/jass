@@ -697,7 +697,7 @@ class Tokenizer {
 	 * @param handle 
 	 */
 	public static tokenize(content: string, handle?: TokenizerHandleFunction) {
-
+		this.build(content, handle);
 	}
 
 	public static build(content: string, handle?: TokenizerHandleFunction) {

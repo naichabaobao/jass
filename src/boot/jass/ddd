@@ -497,3 +497,19 @@ function parsing(tokens: Tokenize[], then: () => void, error: (event: any) => vo
     });
     
 }
+
+
+"patterns": [
+    {
+      "include": "#zinc"
+    },
+    {
+      "include": "#jass-lua"
+    },
+    {
+      "include": "#novjass"
+    },
+    {
+      "include": "#vjass"
+    }
+  ]

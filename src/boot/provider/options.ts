@@ -4,6 +4,8 @@ import * as path from "path";
 import { isAiFile, isJFile, isUsableFile, readIgnoreRules, resolvePaths } from "../tool";
 import { glob } from "glob";
 
+
+
 class Options {
 
   public static get configuration() : vscode.WorkspaceConfiguration {
