@@ -423,7 +423,7 @@ export {
 function parseData(fsPath: string, content: string) {
   return setTimeout(() => {
     return parseContent(fsPath, content);
-  }, 650);
+  }, 500);
 }
 
 let lastPath: string|null = null;

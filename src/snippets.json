@@ -132,6 +132,13 @@
     "scope": "source.jass"
   },
 
+  "novjass": {
+    "prefix": "novjass",
+    "body": "//! novjass\n  ${0:}\n//! endnovjass",
+    "description": "novjass-block",
+    "scope": "source.jass"
+  },
+
   "block-zinc": {
     "prefix": "zinc",
     "body": "//! zinc\n  ${0:}\n//! endzinc",
@@ -194,8 +201,20 @@
   },
   "param": {
     "prefix": "param",
-    "body": "// @param",
+    "body": "// @param ${1:param_name} ${0:param_descript}",
     "description": "参数提示",
+    "scope": "source.jass"
+  },
+  "private": {
+    "prefix": "private",
+    "body": "// @private",
+    "description": "私有化",
+    "scope": "source.jass"
+  },
+  "lua-value": {
+    "prefix": "lua-value",
+    "body": "<?=${0:}?>",
+    "description": "插入lua值",
     "scope": "source.jass"
   }
 }

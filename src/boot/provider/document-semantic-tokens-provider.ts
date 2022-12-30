@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { Func } from "../jass/ast";
+import { Func, Struct } from "../jass/ast";
+import { Tokenizer } from "../jass/tokens";
 import { DataGetter } from "./data";
 
 /*
@@ -73,30 +74,25 @@ vscode.languages.registerDocumentSemanticTokensProvider("jass", new class Docume
         const builder = new vscode.SemanticTokensBuilder(legend);
 
         const fsPath = document.uri.fsPath;
-        const program = new DataGetter().get(fsPath);
-        if (!program) {
-            return;
-        }
+        const dataGetter:DataGetter = new DataGetter();
 
-        program.allFunctions(true).filter(func => func.hasDeprecated()).forEach(func => {
-            const token = func.nameToken;
-            if (token) {
-                builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);
+        const content = document.getText()
+
+
+        const structs:Struct[] = [];
+        dataGetter.forEach((program, fsPath) => {
+            structs.push(...program.allStructs(true));
+        });
+        const structNames:string[] = structs.map((struct) => struct.name);
+
+        const tokens = Tokenizer.get(content);
+        tokens.forEach((token) => {
+            if (token.type == "id") {
+                if (structNames.includes(token.value)) {
+                    builder.push(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), "class", ["definition"]);
+                }
             }
         });
-
-        const zincProgram = new DataGetter().zinc(fsPath);
-        if (!zincProgram) {
-            return;
-        }
-
-        zincProgram.allFunctions(true).filter(func => func.hasDeprecated()).forEach(func => {
-            const token = func.nameToken;
-            if (token) {
-                builder.push(new vscode.Range(token.line, token.position, token.line, token.end), "function", ["deprecated"]);
-            }
-        });
-
 
         return builder.build();
     }

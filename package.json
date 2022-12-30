@@ -4,7 +4,7 @@
   "description": "目标是扩展成为主流的jass插件。\nQQ群：137199441，提出你宝贵的建议。",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "keywords": [
     "jass",
     "vjass",
@@ -135,10 +135,7 @@
       {
         "scopeName": "source.jass",
         "language": "jass",
-        "path": "./src/jass.tmLanguage.json",
-        "tokenTypes": {
-          "macro.*": "other"
-        }
+        "path": "./src/jass.tmLanguage.json"
       }
     ],
     "snippets": [
