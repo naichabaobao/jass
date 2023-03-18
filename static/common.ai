@@ -39,10 +39,9 @@ native GetUnitWoodCost      takes integer unitid                        returns 
 // 获取指定单位类型的建造/训练时间
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
-// 拥有的金矿数
+// 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，第一个矿，如果开始点有多个未被其他玩家占据的金矿，且返回的是金矿，会导致亡灵无法正常采矿，因为HarvestGold（0，n）此时指向到的是金矿，而非闹鬼金矿，侍僧无法采矿
 native GetMinesOwned        takes nothing                               returns integer
-// 拥有的金矿金钱数量
-// 当前金钱数
+// 拥有的所有金矿的金钱数量，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一个矿，如果此时基地有多个金矿，会导致统计值过大
 native GetGoldOwned         takes nothing                               returns integer
 // 有金矿的基地编号，如果多个基地都有金矿 则返回最小编号
 native TownWithMine         takes nothing                               returns integer
@@ -169,11 +168,11 @@ native CaptainInCombat      takes boolean attack_captain                returns 
 native IsTowered            takes unit target                           returns boolean
 // 清理上一次的AI采集工人分配设置
 native ClearHarvestAI       takes nothing                               returns nothing
-// 分配指定数量的工人在指定基地采集金矿
+// 分配指定数量的工人在指定基地采集金矿，如果金矿和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达金矿，但其采集完成返回时自动会停在岸边，就像它忘记自己可以游泳一样
 native HarvestGold          takes integer town, integer peons           returns nothing
-// 分配指定数量的工人在指定基地采集木材
+// 分配指定数量的工人在指定基地采集木材，如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
 native HarvestWood          takes integer town, integer peons           returns nothing
-// 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null，如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），AI不会命令其离开金矿
+// 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null，如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会命令其离开金矿
 native GetExpansionPeon     takes nothing                               returns unit
 // 停止聚集
 native StopGathering        takes nothing                               returns nothing
