@@ -300,17 +300,17 @@ constant native AbilityId2String takes integer abilityId returns string
 // Looks up the "name" field for any object (unit, item, ability)
 // 物体名称 [C]
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数
+// 获取最大的玩家数，12或24人
 constant native GetBJMaxPlayers takes nothing returns integer
-// 玩家中立的受害者
+// 获取中立受害玩家的玩家编号
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
-// 获得bj玩家中立额外
+// 获取中立额外玩家的玩家编号
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
-// 获得最大玩家插槽
+// 获取最大玩家插槽数量，包括中力玩家
 constant native GetBJMaxPlayerSlots takes nothing returns integer
-// 玩家中立被动
+// 获取玩家中立被动玩家的玩家编号
 constant native GetPlayerNeutralPassive takes nothing returns integer
-// 玩家中立敌对
+// 获取玩家中立敌对玩家的玩家编号
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
@@ -325,9 +325,9 @@ globals
 	constant boolean TRUE = true
 	// 数组最大值，1.28及以下版本的值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
-	// 中立被动
+	// 中立被动玩家
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
-	// 中立敌对
+	// 中立敌对玩家
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 红色方玩家
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
@@ -608,19 +608,19 @@ globals
 	
 	// Map Setup Constants
 	
-	//固定玩家为人类
+	//固定玩家种族为 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	//固定玩家为兽族
+	//固定玩家种族为 兽族
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	//固定玩家为暗夜
+	//固定玩家种族为 暗夜
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	//固定玩家为亡灵
+	//固定玩家种族为 亡灵
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
-	//固定玩家为恶魔
+	//固定玩家种族为 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
-	//固定玩家为随机
+	//固定玩家种族为 随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
-	//固定玩家为用户可选择
+	//固定玩家种族为 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	//玩家控制者类型  用户
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
@@ -851,14 +851,19 @@ globals
 	
 	
 	// For use with TriggerRegisterPlayerEvent
-	
+	//玩家状态限制
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
+  //玩家联盟状态变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
-	
+	// 玩家失败
 	constant playerevent EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
+	// 玩家胜利
 	constant playerevent EVENT_PLAYER_VICTORY = ConvertPlayerEvent(14)
+	//玩家离开游戏
 	constant playerevent EVENT_PLAYER_LEAVE = ConvertPlayerEvent(15)
+	//玩家聊天
 	constant playerevent EVENT_PLAYER_CHAT = ConvertPlayerEvent(16)
+	//玩家跳过动画（按下ESC）
 	constant playerevent EVENT_PLAYER_END_CINEMATIC = ConvertPlayerEvent(17)
 	
 	
@@ -1031,7 +1036,7 @@ globals
 	
 	// For use with TriggerRegisterPlayerUnitEvent
 	
-	
+	//玩家出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
 	// 玩家單位更改所有者
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
@@ -1095,7 +1100,7 @@ globals
 	
 	// 单位分类是 英雄
 	constant unittype UNIT_TYPE_HERO = ConvertUnitType(0)
-	// 单位已 死亡
+	// 单位 已死亡
 	constant unittype UNIT_TYPE_DEAD = ConvertUnitType(1)
 	// 单位是 一座建筑
 	constant unittype UNIT_TYPE_STRUCTURE = ConvertUnitType(2)
@@ -1133,11 +1138,11 @@ globals
 	constant unittype UNIT_TYPE_ANCIENT = ConvertUnitType(19)
 	// 单位分类是 牛头人
 	constant unittype UNIT_TYPE_TAUREN = ConvertUnitType(20)
-	// 单位 中毒
+	// 单位 已中毒
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
-	// 单位 被变形的
+	// 单位 被变形
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
-	// 单位 被催眠的
+	// 单位 被催眠
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
 	// 单位 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
@@ -1168,7 +1173,7 @@ globals
 	// 物品分类属于 任何
 	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
 	
-	// 弃用 Deprecated, should use ITEM_TYPE_POWERUP
+	// 弃用事件， Deprecated, should use ITEM_TYPE_POWERUP
  constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
 	
@@ -1305,195 +1310,382 @@ globals
 	
 	// OS Key constants
 	
-	
+	//键盘 退格键
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
+	//键盘 TAB 键
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
+	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5）
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
+	//键盘 回车键
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
+	//键盘 SHIFT 键
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
+	//键盘 ctrl 键
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
+	//键盘 ALT 键
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
+	//键盘 PAUSE 键（暂停）
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
+	//键盘 CAPS LOCK 键
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
+	//键盘 KANA 键，仅用于日语键盘
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
+	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
+	//键盘 JUNJA 键，特定语言输入法
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
+	//键盘 FINAL键，特定语言输入法
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
+	//键盘 HANJA 键，仅用于朝鲜/韩语键盘
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
+	//键盘 KANJI 键，仅用于日语键盘
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
+	//键盘 ESC 键
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
+	//键盘 Caps lock 键--开启
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
+	//键盘 Caps lock 键--关闭
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
+	//键盘 ACCEPT 键
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
+	//键盘  变更模式键
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
+	//键盘 空格键
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
+	//键盘 向上翻页键
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
+	//键盘 向下翻页键
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
+	//键盘 结束键
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
+	//键盘 HOME键
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
+	//键盘 方向键 左
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
+	//键盘 方向键 上
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
+	//键盘 方向键 右
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
+	//键盘 方向键 下
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
+	//键盘 选择键（右SHIFT）
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
+	//键盘 PRINT 键
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
+	//键盘 EXECUTE 键
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
+	//键盘 截图键
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
+	//建盘 INSERT键
 	constant oskeytype OSKEY_INSERT = ConvertOsKeyType($2D)
+	//建盘 DELETE键
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
+	//键盘 帮助键（F1）
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
+	//键盘 0键（非小/数字键盘）
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
+	//键盘 1键（非小/数字键盘）
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
+	//键盘 2键（非小/数字键盘）
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
+	//键盘 3键（非小/数字键盘）
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
+	//键盘 4键（非小/数字键盘）
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
+	//键盘 5键（非小/数字键盘）
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
+	//键盘 6键（非小/数字键盘）
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
+	//键盘 7键（非小/数字键盘）
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
+	//键盘 8键（非小/数字键盘）
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
+	//键盘 9键（非小/数字键盘）
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
+	//键盘 A键
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
+	//键盘 B键
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
+	//键盘 C键
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
+	//键盘 D键
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
+	//键盘 E键
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
+	//键盘 F键
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
+	//键盘 G键
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
+	//键盘 H键
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
+	//键盘 I键
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
+	//键盘 J键
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
+	//键盘 K键
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
+	//键盘 L键
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
+	//键盘 M键
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
+	//键盘 N键
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
+	//键盘 O键
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
+	//键盘 P键
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
+	//键盘 Q键
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
+	//键盘 R键
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
+	//键盘 S键
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
+	//键盘 T键
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
+	//键盘 U键
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
+	//键盘 V键
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
+	//键盘 W键
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
+	//键盘 X键
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
+	//键盘 Y键
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
+	//键盘 Z键
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
+	//键盘 LMETA 键
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
+	//键盘 RMETA 键
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
+	//键盘 APPS 键
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
+	//键盘 休眠键
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
+	//小/数字键盘 0键
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
+	//小/数字键盘 1键
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
+	//小/数字键盘 2键
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
+	//小/数字键盘 3键
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
+	//小/数字键盘 4键
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
+	//小/数字键盘 5键
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
+	//小/数字键盘 6键
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
+	//小/数字键盘 7键
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
+	//小/数字键盘 8键
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
+	//小/数字键盘 9键
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
+	//小/数字键盘 乘号键
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
+	//小/数字键盘 加号键
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
+	//小/数字键盘 分离键/分隔符键
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
+	//小/数字键盘 减号键
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
+	//小/数字键盘 小数点键
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
+	//小/数字键盘 除号键
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
+	//键盘 F1键
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
+	//键盘 F2键
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
+	//键盘 F3键
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
+	//键盘 F4键
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
+	//键盘 F5键
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
+	//键盘 F6键
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
+	//键盘 F7键
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
+	//键盘 F8键
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
+	//键盘 F9键
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
+	//键盘 F10键
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
+	//键盘 F11键
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
+	//键盘 F12键
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
+	//键盘 F13键
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
+	//键盘 F14键
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
+	//键盘 F15键
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
+	//键盘 F16键
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
+	//键盘 F17键
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
+	//键盘 F18键
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
+	//键盘 F19键
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
+	//键盘 F20键
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
+	//键盘 F21键
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
+	//键盘 F22键
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
+	//键盘 F23键
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
+	//键盘 F24键
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
+	//小/数字键盘 开关键
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
+	//键盘 SCROLL LOCK键
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
+	//小/数字键盘 等号键（OEM 键）
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
+	//键盘 字典键（OEM 键）
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
+	//键盘 取消注册 Word 键（OEM 键）
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
+	//键盘 注册 Word 键（OEM 键）
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
+	//键盘 左 OYAYUBI 键（OEM 键）
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
+	//键盘 右 OYAYUBI 键（OEM 键）
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
+	//键盘 左 OSHIFT 键
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
+	//键盘 右 OSHIFT 键
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
+	//键盘 左 Ctrl 键
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
+	//键盘 右 Ctrl 键
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
+	//键盘 左 Alt 键
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
+	//键盘 右 Alt 键
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
+	//键盘 浏览器后退键
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
+	//键盘 浏览器前进键
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
+	//键盘 浏览器刷新键
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
+	//键盘 浏览器停止键
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
+	//键盘 浏览器搜索键
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
+	//键盘 浏览器收藏键
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
+	//键盘 浏览器“开始”和“主页”键
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
+	//键盘 静音键
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
+	//键盘 减小音量键
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
+	//键盘 增大音量键
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
+	//键盘 下一曲键
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
+	//键盘 上一曲键
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
+	//键盘 停止播放键
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
+	//键盘 暂停播放键
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
+	//键盘 打开邮箱键
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
+	//键盘 选择媒体键
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
+	//键盘 启动应用程序1键
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
+	//键盘 启动应用程序2键
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
+	//小/数字键盘 1建（OEM 键）
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
+	//键盘 加号建（OEM 键）
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
+	//键盘 逗号建（OEM 键）
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
+	//键盘 减号建（OEM 键）
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
+	//键盘 句号建（OEM 键）
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
+	//小/数字键盘 2建（OEM 键）
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
+	//小/数字键盘 3建（OEM 键）
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
+	//小/数字键盘 4建（OEM 键）
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
+	//小/数字键盘 5建（OEM 键）
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
+	//小/数字键盘 6建（OEM 键）
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
+	//小/数字键盘 7建（OEM 键）
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
+	//小/数字键盘 8建（OEM 键）
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
+	//键盘 AX 建（OEM 键）
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
+	//键盘 102 建（OEM 键）
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
+	//键盘  Ico帮助键
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
+	//键盘  Ico00 键
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
+	//键盘 Process 键
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
+	//键盘 IcoClr 键
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
+	//键盘 格式化建（OEM 键）
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
+	//键盘 重置建（OEM 键）
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
+	//键盘 ATTN 键（OEM 键）
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
+	//键盘 PA1 键（OEM 键）
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
+	//键盘 PA2 键（OEM 键）
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
+	//键盘 ATTN 键（OEM 键）
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
+	//键盘 ATTN 键（OEM 键）
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
+	//键盘 ATTN 键（OEM 键）
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
+	//键盘 完成键（OEM 键）
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
+	//键盘 复制键（OEM 键）
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
+	//键盘 自动键（OEM 键）
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
+	//键盘 ENLW 键（OEM 键）
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
+	//键盘 BACKTAB 键（OEM 键）
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
+	//键盘 ATTN 键
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
+	//键盘 CRSEL 键
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
+	//键盘 CRSEL 键
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
+	//键盘 CRSEL 键
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
+	//键盘 播放键
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
+	//键盘 缩放键
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
+	//键盘 留待将来使用的常数键
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
+	//键盘 PA1 键
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
+	//键盘 清理键（OEM 键）
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
 	
