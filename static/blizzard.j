@@ -44,12 +44,15 @@ globals
     constant real      bj_POLLED_WAIT_INTERVAL          =  0.10
     constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
 
-    // Game constants
+    // Game constants  最大库存
     constant integer   bj_MAX_INVENTORY                 =  6
-    // 最大玩家数
+    // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
+    //中立被动玩家
     constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
+    //中立可营救玩家
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
+    //最大玩家插槽数（包含所有中立玩家）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
     constant integer   bj_MAX_SKELETONS                 =  25
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
@@ -122,6 +125,7 @@ globals
 
     // Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
+    //默认游戏速度--普通
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
@@ -297,18 +301,27 @@ globals
     constant integer   bj_ALLIANCE_NEUTRAL_VISION  = 7
 
     // Keyboard Event Types
+    //键盘事件  按下按键
     constant integer   bj_KEYEVENTTYPE_DEPRESS     = 0
+    //键盘事件  松开按键
     constant integer   bj_KEYEVENTTYPE_RELEASE     = 1
 
     // Keyboard Event Keys
+    //键盘按键事件 方向键（左）
     constant integer   bj_KEYEVENTKEY_LEFT         = 0
+    //方键盘按键事件 方向键（右）
     constant integer   bj_KEYEVENTKEY_RIGHT        = 1
+    //键盘按键事件 方向键（上）
     constant integer   bj_KEYEVENTKEY_DOWN         = 2
+    //键盘按键事件 方向键（下））
     constant integer   bj_KEYEVENTKEY_UP           = 3
 
     // Mouse Event Types
+    //鼠标事件  按下
     constant integer   bj_MOUSEEVENTTYPE_DOWN     = 0
+    //鼠标事件  松开
     constant integer   bj_MOUSEEVENTTYPE_UP       = 1
+    //鼠标事件  移动
     constant integer   bj_MOUSEEVENTTYPE_MOVE     = 2
 
     // Transmission timing methods
@@ -456,7 +469,9 @@ globals
     //
 
     // Force predefs
+    //玩家组 所有玩家
     force              bj_FORCE_ALL_PLAYERS        = null
+    //玩家组
     force array        bj_FORCE_PLAYER
 
     integer            bj_MELEE_MAX_TWINKED_HEROES = 0
