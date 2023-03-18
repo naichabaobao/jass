@@ -853,7 +853,7 @@ globals
 	// For use with TriggerRegisterPlayerEvent
 	//玩家状态限制
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
-  //玩家联盟状态变更
+	//玩家联盟状态变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
 	// 玩家失败
 	constant playerevent EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
