@@ -235,7 +235,7 @@ constant native ConvertAnimType takes integer i returns animtype
 constant native ConvertSubAnimType takes integer i returns subanimtype
 // 原点框架类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// frame点类型
+// frame点（框架）类型
 constant native ConvertFramePointType takes integer i returns framepointtype
 // 文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
@@ -323,15 +323,15 @@ globals
  constant boolean FALSE = false
  // true
 	constant boolean TRUE = true
-	// 数组最大值
+	// 数组最大值，1.28及以下版本的值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 	// 中立敌对
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
-	// 红方玩家
+	// 红色方玩家
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
-	// 蓝方玩家
+	// 蓝色方玩家
 	constant playercolor PLAYER_COLOR_BLUE = ConvertPlayerColor(1)
 	// 青色方玩家
 	constant playercolor PLAYER_COLOR_CYAN = ConvertPlayerColor(2)
@@ -375,14 +375,19 @@ globals
 	constant playercolor PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
 	// 祖母绿方玩家
 	constant playercolor PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
-	// PEANUT玩家 [PEANUT]
+	// 花生色玩家
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
-	
+	// 人族
 	constant race RACE_HUMAN = ConvertRace(1)
+	// 兽族
 	constant race RACE_ORC = ConvertRace(2)
+	// 亡灵
 	constant race RACE_UNDEAD = ConvertRace(3)
+	// 暗夜
 	constant race RACE_NIGHTELF = ConvertRace(4)
+	// 恶魔族
 	constant race RACE_DEMON = ConvertRace(5)
+	// 其他种族
 	constant race RACE_OTHER = ConvertRace(7)
 	
 	constant playergameresult PLAYER_GAME_RESULT_VICTORY = ConvertPlayerGameResult(0)
@@ -400,8 +405,9 @@ globals
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
-	
+	// 游戏版本为混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
+	// 游戏版本为冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
 	// 正常
 	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
@@ -463,41 +469,69 @@ globals
 	// 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
 	
-	// 无
+	// 武器声音 无
 	constant weapontype WEAPON_TYPE_WHOKNOWS = ConvertWeaponType(0)
-	// 轻击
+	// 武器声音 金属轻砍
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_CHOP = ConvertWeaponType(1)
-	// 
+	// 武器声音 金属中砍
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_CHOP = ConvertWeaponType(2)
+	// 武器声音 金属重砍
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_CHOP = ConvertWeaponType(3)
+	// 武器声音 金属轻切
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_SLICE = ConvertWeaponType(4)
+	// 武器声音 金属中切
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_SLICE = ConvertWeaponType(5)
+	// 武器声音 金属重切
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_SLICE = ConvertWeaponType(6)
+	// 武器声音 金属中击
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_BASH = ConvertWeaponType(7)
+	// 武器声音 金属重击
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_BASH = ConvertWeaponType(8)
+	// 武器声音 金属中刺
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_STAB = ConvertWeaponType(9)
+	// 武器声音 金属重刺
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_STAB = ConvertWeaponType(10)
+	// 武器声音 木头轻切
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_SLICE = ConvertWeaponType(11)
+	// 武器声音 木头中切
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_SLICE = ConvertWeaponType(12)
+	// 武器声音 木头重切
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_SLICE = ConvertWeaponType(13)
+	// 武器声音 木头轻击
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_BASH = ConvertWeaponType(14)
+	// 武器声音 木头中击
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_BASH = ConvertWeaponType(15)
+	// 武器声音 木头重击
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_BASH = ConvertWeaponType(16)
+	// 武器声音 木头轻刺
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_STAB = ConvertWeaponType(17)
+	// 武器声音 木头中刺
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_STAB = ConvertWeaponType(18)
+	// 武器声音 利爪轻切
 	constant weapontype WEAPON_TYPE_CLAW_LIGHT_SLICE = ConvertWeaponType(19)
+	// 武器声音 利爪中切
 	constant weapontype WEAPON_TYPE_CLAW_MEDIUM_SLICE = ConvertWeaponType(20)
+	// 武器声音 利爪重切
 	constant weapontype WEAPON_TYPE_CLAW_HEAVY_SLICE = ConvertWeaponType(21)
+	// 武器声音 斧头中砍
 	constant weapontype WEAPON_TYPE_AXE_MEDIUM_CHOP = ConvertWeaponType(22)
+	// 武器声音 岩石重击
 	constant weapontype WEAPON_TYPE_ROCK_HEAVY_BASH = ConvertWeaponType(23)
-	
+	// 路径类型 任何
 	constant pathingtype PATHING_TYPE_ANY = ConvertPathingType(0)
+	// 路径类型 可通行地面
 	constant pathingtype PATHING_TYPE_WALKABILITY = ConvertPathingType(1)
+	// 路径类型 空中单位可通行
 	constant pathingtype PATHING_TYPE_FLYABILITY = ConvertPathingType(2)
+	// 路径类型 可建造地面
 	constant pathingtype PATHING_TYPE_BUILDABILITY = ConvertPathingType(3)
+	// 路径类型 任何采集工人可通行
 	constant pathingtype PATHING_TYPE_PEONHARVESTPATHING = ConvertPathingType(4)
+	// 路径类型 荒芜地表
 	constant pathingtype PATHING_TYPE_BLIGHTPATHING = ConvertPathingType(5)
+	// 路径类型 可通行海面
 	constant pathingtype PATHING_TYPE_FLOATABILITY = ConvertPathingType(6)
+	// 路径类型 两栖单位可通行
 	constant pathingtype PATHING_TYPE_AMPHIBIOUSPATHING = ConvertPathingType(7)
 	// 左键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_LEFT = ConvertMouseButtonType(1)
@@ -574,20 +608,31 @@ globals
 	
 	// Map Setup Constants
 	
-	
+	//固定玩家为人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
+	//固定玩家为兽族
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
+	//固定玩家为暗夜
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
+	//固定玩家为亡灵
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
+	//固定玩家为恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
+	//固定玩家为随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
+	//固定玩家为用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
-	
+	//玩家控制者类型  用户
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
+	//玩家控制者类型  电脑
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
+	//玩家控制者类型  中立可营救
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
+	//玩家控制者类型  中立被动
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
+	//玩家控制者类型  中立敌对
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
+	//玩家控制者类型  没有
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -639,19 +684,29 @@ globals
 	constant mapdensity MAP_DENSITY_MEDIUM = ConvertMapDensity(2)
 	constant mapdensity MAP_DENSITY_HEAVY = ConvertMapDensity(3)
 	
+	//游戏难度 简单
 	constant gamedifficulty MAP_DIFFICULTY_EASY = ConvertGameDifficulty(0)
+	//游戏难度 普通
 	constant gamedifficulty MAP_DIFFICULTY_NORMAL = ConvertGameDifficulty(1)
+	//游戏难度 困难
 	constant gamedifficulty MAP_DIFFICULTY_HARD = ConvertGameDifficulty(2)
+	//游戏难度 疯狂
 	constant gamedifficulty MAP_DIFFICULTY_INSANE = ConvertGameDifficulty(3)
-	
+	//游戏速度 最慢速
 	constant gamespeed MAP_SPEED_SLOWEST = ConvertGameSpeed(0)
+	//游戏速度 慢速
 	constant gamespeed MAP_SPEED_SLOW = ConvertGameSpeed(1)
+	//游戏速度 普通
 	constant gamespeed MAP_SPEED_NORMAL = ConvertGameSpeed(2)
+	//游戏速度 快速
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
+	//游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	
+	//玩家游戏状态  没有使用（该位置没有玩家）
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
+	//玩家游戏状态  正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
+	//玩家游戏状态  已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
 	
@@ -994,7 +1049,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
  // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
-	// 1.33
+	// 玩家单位物品栏中有物品堆叠
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
 	
 	
@@ -1018,7 +1073,7 @@ globals
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
 	// 抵押物品
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
-	// @version 1.33
+	// 单位物品栏中有物品堆叠
 	constant unitevent EVENT_UNIT_STACK_ITEM = ConvertUnitEvent(318)
 	
 	
@@ -1038,56 +1093,82 @@ globals
 	
 	// Unit Type Constants for use with IsUnitType()
 	
-	
+	// 单位分类是 英雄
 	constant unittype UNIT_TYPE_HERO = ConvertUnitType(0)
+	// 单位已 死亡
 	constant unittype UNIT_TYPE_DEAD = ConvertUnitType(1)
+	// 单位是 一座建筑
 	constant unittype UNIT_TYPE_STRUCTURE = ConvertUnitType(2)
-	
+	// 单位是 一个飞行单位
 	constant unittype UNIT_TYPE_FLYING = ConvertUnitType(3)
+	// 单位是 一个地面单位
 	constant unittype UNIT_TYPE_GROUND = ConvertUnitType(4)
-	
+	// 单位是 可以攻击飞行单位
 	constant unittype UNIT_TYPE_ATTACKS_FLYING = ConvertUnitType(5)
+	// 单位是 可以攻击地面单位
 	constant unittype UNIT_TYPE_ATTACKS_GROUND = ConvertUnitType(6)
-	
+	// 单位是 近战攻击单位
 	constant unittype UNIT_TYPE_MELEE_ATTACKER = ConvertUnitType(7)
+	// 单位是 远程攻击单位
 	constant unittype UNIT_TYPE_RANGED_ATTACKER = ConvertUnitType(8)
-	
+	// 单位分类是 泰坦
 	constant unittype UNIT_TYPE_GIANT = ConvertUnitType(9)
+	// 单位是 召唤的
 	constant unittype UNIT_TYPE_SUMMONED = ConvertUnitType(10)
+	// 单位是 被击晕的
 	constant unittype UNIT_TYPE_STUNNED = ConvertUnitType(11)
 	constant unittype UNIT_TYPE_PLAGUED = ConvertUnitType(12)
+	// 单位是 被诱捕的（被网住）
 	constant unittype UNIT_TYPE_SNARED = ConvertUnitType(13)
-	
+	// 单位分类是 不死族
 	constant unittype UNIT_TYPE_UNDEAD = ConvertUnitType(14)
 	constant unittype UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
+	// 单位分类是 工人
 	constant unittype UNIT_TYPE_PEON = ConvertUnitType(16)
+	// 单位分类是 自爆工兵
 	constant unittype UNIT_TYPE_SAPPER = ConvertUnitType(17)
+	// 单位分类是 城镇
 	constant unittype UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
+	// 单位分类是 古树
 	constant unittype UNIT_TYPE_ANCIENT = ConvertUnitType(19)
-	
+	// 单位分类是 牛头人
 	constant unittype UNIT_TYPE_TAUREN = ConvertUnitType(20)
+	// 单位 中毒
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
+	// 单位 被变形的
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
+	// 单位 被催眠的
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
+	// 单位 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
+	// 单位 处于虚无状态
 	constant unittype UNIT_TYPE_ETHEREAL = ConvertUnitType(25)
+	// 单位 免疫魔法
 	constant unittype UNIT_TYPE_MAGIC_IMMUNE = ConvertUnitType(26)
 	
 	
 	// Unit Type Constants for use with ChooseRandomItemEx()
 	
-	
+	// 物品分类属于 永久
 	constant itemtype ITEM_TYPE_PERMANENT = ConvertItemType(0)
+	// 物品分类属于 可充
 	constant itemtype ITEM_TYPE_CHARGED = ConvertItemType(1)
+	// 物品分类属于 力量提升
 	constant itemtype ITEM_TYPE_POWERUP = ConvertItemType(2)
+	// 物品分类属于 人造
 	constant itemtype ITEM_TYPE_ARTIFACT = ConvertItemType(3)
+	// 物品分类属于 可购买
 	constant itemtype ITEM_TYPE_PURCHASABLE = ConvertItemType(4)
+	// 物品分类属于 战役
 	constant itemtype ITEM_TYPE_CAMPAIGN = ConvertItemType(5)
+	// 物品分类属于 混杂（假）
 	constant itemtype ITEM_TYPE_MISCELLANEOUS = ConvertItemType(6)
+	// 物品分类属于 未知
 	constant itemtype ITEM_TYPE_UNKNOWN = ConvertItemType(7)
+	// 物品分类属于 任何
 	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
 	
-	// Deprecated, should use ITEM_TYPE_POWERUP
+	// 弃用 Deprecated, should use ITEM_TYPE_POWERUP
  constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
 	
