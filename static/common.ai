@@ -39,11 +39,11 @@ native GetUnitWoodCost      takes integer unitid                        returns 
 // 获取指定单位类型的建造/训练时间
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
-// 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，第一个矿，如果开始点有多个未被其他玩家占据的金矿，且返回的是金矿，会导致亡灵无法正常采矿，因为HarvestGold（0，n）此时指向到的是金矿，而非闹鬼金矿，侍僧无法采矿
+// 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
 native GetMinesOwned        takes nothing                               returns integer
-// 拥有的所有金矿的金钱数量，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一个矿，如果此时基地有多个金矿，会导致统计值过大
+// 拥有的所有金矿的金钱数量，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一座矿，如果此时基地有多个金矿，且金钱数不同，会导致统计值偏差
 native GetGoldOwned         takes nothing                               returns integer
-// 有金矿的基地编号，如果多个基地都有金矿 则返回最小编号
+// 有金矿的基地编号，如果多个基地都有金矿 则返回最小编号，配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
 native TownWithMine         takes nothing                               returns integer
 // 指定编号的基地是否有金矿，0为主基地
 native TownHasMine          takes integer townid                        returns boolean
