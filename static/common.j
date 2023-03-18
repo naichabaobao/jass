@@ -1310,382 +1310,383 @@ globals
 	
 	// OS Key constants
 	
-	//键盘 退格键
+	//键盘 退格键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
-	//键盘 TAB 键
+	//键盘 TAB 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
-	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5）
+	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
-	//键盘 回车键
+	//键盘 回车键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
-	//键盘 SHIFT 键
+	//键盘 SHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
-	//键盘 ctrl 键
+	//键盘 ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
-	//键盘 ALT 键
+	//键盘 ALT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
-	//键盘 PAUSE 键（暂停）
+	//键盘 PAUSE （暂停）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
-	//键盘 CAPS LOCK 键
+	//键盘 CAPS LOCK 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
-	//键盘 KANA 键，仅用于日语键盘
+	//键盘 KANA 键，仅用于日语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
-	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘
+	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
-	//键盘 JUNJA 键，特定语言输入法
+	//键盘 JUNJA 键，仅用于特定语言输入法，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
-	//键盘 FINAL键，特定语言输入法
+	//键盘 FINAL键，仅用于特定语言输入法，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
-	//键盘 HANJA 键，仅用于朝鲜/韩语键盘
+	//键盘 HANJA 键，仅用于朝鲜/韩语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
-	//键盘 KANJI 键，仅用于日语键盘
+	//键盘 KANJI 键，仅用于日语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
-	//键盘 ESC 键
+	//键盘 ESC 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
-	//键盘 Caps lock 键--开启
+	//键盘 Caps lock（开启状态） 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
-	//键盘 Caps lock 键--关闭
+	//键盘 Caps lock（关闭状态） 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
-	//键盘 ACCEPT 键
+	//键盘 ACCEPT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
-	//键盘  变更模式键
+	//键盘  变更模式键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
-	//键盘 空格键
+	//键盘 空格键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
-	//键盘 向上翻页键
+	//键盘 向上翻页键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
-	//键盘 向下翻页键
+	//键盘 向下翻页键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
-	//键盘 结束键
+	//键盘 结束键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
-	//键盘 HOME键
+	//键盘 HOME键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
-	//键盘 方向键 左
+	//键盘 方向键 左，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
-	//键盘 方向键 上
+	//键盘 方向键 上，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
-	//键盘 方向键 右
+	//键盘 方向键 右，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
-	//键盘 方向键 下
+	//键盘 方向键 下，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
-	//键盘 选择键（右SHIFT）
+	//键盘 选择（右SHIFT）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
-	//键盘 PRINT 键
+	//键盘 PRINT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
-	//键盘 EXECUTE 键
+	//键盘 EXECUTE 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
-	//键盘 截图键
+	//键盘 截图键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
-	//建盘 INSERT键
+	//建盘 INSERT键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_INSERT = ConvertOsKeyType($2D)
-	//建盘 DELETE键
+	//建盘 DELETE键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
-	//键盘 帮助键（F1）
+	//键盘 帮助（F1）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
-	//键盘 0键（非小/数字键盘）
+	//键盘 0键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
-	//键盘 1键（非小/数字键盘）
+	//键盘 1键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
-	//键盘 2键（非小/数字键盘）
+	//键盘 2键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
-	//键盘 3键（非小/数字键盘）
+	//键盘 3键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
-	//键盘 4键（非小/数字键盘）
+	//键盘 4键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
-	//键盘 5键（非小/数字键盘）
+	//键盘 5键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
-	//键盘 6键（非小/数字键盘）
+	//键盘 6键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
-	//键盘 7键（非小/数字键盘）
+	//键盘 7键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
-	//键盘 8键（非小/数字键盘）
+	//键盘 8键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
-	//键盘 9键（非小/数字键盘）
+	//键盘 9键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
-	//键盘 A键
+	//键盘 A键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
-	//键盘 B键
+	//键盘 B键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
-	//键盘 C键
+	//键盘 C键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
-	//键盘 D键
+	//键盘 D键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
-	//键盘 E键
+	//键盘 E键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
-	//键盘 F键
+	//键盘 F键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
-	//键盘 G键
+	//键盘 G键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
-	//键盘 H键
+	//键盘 H键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
-	//键盘 I键
+	//键盘 I键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
-	//键盘 J键
+	//键盘 J键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
-	//键盘 K键
+	//键盘 K键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
-	//键盘 L键
+	//键盘 L键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
-	//键盘 M键
+	//键盘 M键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
-	//键盘 N键
+	//键盘 N键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
-	//键盘 O键
+	//键盘 O键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
-	//键盘 P键
+	//键盘 P键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
-	//键盘 Q键
+	//键盘 Q键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
-	//键盘 R键
+	//键盘 R键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
-	//键盘 S键
+	//键盘 S键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
-	//键盘 T键
+	//键盘 T键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
-	//键盘 U键
+	//键盘 U键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
-	//键盘 V键
+	//键盘 V键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
-	//键盘 W键
+	//键盘 W键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
-	//键盘 X键
+	//键盘 X键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
-	//键盘 Y键
+	//键盘 Y键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
-	//键盘 Z键
+	//键盘 Z键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
-	//键盘 LMETA 键
+	//键盘 LMETA 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
-	//键盘 RMETA 键
+	//键盘 RMETA 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
-	//键盘 APPS 键
+	//键盘 APPS 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
-	//键盘 休眠键
+	//键盘 休眠键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
-	//小/数字键盘 0键
+	//小/数字键盘 0键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
-	//小/数字键盘 1键
+	//小/数字键盘 1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
-	//小/数字键盘 2键
+	//小/数字键盘 2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
-	//小/数字键盘 3键
+	//小/数字键盘 3键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
-	//小/数字键盘 4键
+	//小/数字键盘 4键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
-	//小/数字键盘 5键
+	//小/数字键盘 5键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
-	//小/数字键盘 6键
+	//小/数字键盘 6键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
-	//小/数字键盘 7键
+	//小/数字键盘 7键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
-	//小/数字键盘 8键
+	//小/数字键盘 8键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
-	//小/数字键盘 9键
+	//小/数字键盘 9键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
-	//小/数字键盘 乘号键
+	//小/数字键盘 乘号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
-	//小/数字键盘 加号键
+	//小/数字键盘 加号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
-	//小/数字键盘 分离键/分隔符键
+	//小/数字键盘 分离键/分隔符键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
-	//小/数字键盘 减号键
+	//小/数字键盘 减号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
-	//小/数字键盘 小数点键
+	//小/数字键盘 小数点键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
-	//小/数字键盘 除号键
+	//小/数字键盘 除号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
-	//键盘 F1键
+	//键盘 F1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
-	//键盘 F2键
+	//键盘 F2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
-	//键盘 F3键
+	//键盘 F3键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
-	//键盘 F4键
+	//键盘 F4键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
-	//键盘 F5键
+	//键盘 F5键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
-	//键盘 F6键
+	//键盘 F6键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
-	//键盘 F7键
+	//键盘 F7键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
-	//键盘 F8键
+	//键盘 F8键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
-	//键盘 F9键
+	//键盘 F9键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
-	//键盘 F10键
+	//键盘 F10键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
-	//键盘 F11键
+	//键盘 F11键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
-	//键盘 F12键
+	//键盘 F12键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
-	//键盘 F13键
+	//键盘 F13键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
-	//键盘 F14键
+	//键盘 F14键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
-	//键盘 F15键
+	//键盘 F15键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
-	//键盘 F16键
+	//键盘 F16键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
-	//键盘 F17键
+	//键盘 F17键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
-	//键盘 F18键
+	//键盘 F18键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
-	//键盘 F19键
+	//键盘 F19键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
-	//键盘 F20键
+	//键盘 F20键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
-	//键盘 F21键
+	//键盘 F21键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
-	//键盘 F22键
+	//键盘 F22键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
-	//键盘 F23键
+	//键盘 F23键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
-	//键盘 F24键
+	//键盘 F24键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
-	//小/数字键盘 开关键
+	//小/数字键盘 开关键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
-	//键盘 SCROLL LOCK键
+	//键盘 SCROLL LOCK键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
-	//小/数字键盘 等号键（OEM 键）
+	//小/数字键盘 等号键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
-	//键盘 字典键（OEM 键）
+	//键盘 字典键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
-	//键盘 取消注册 Word 键（OEM 键）
+	//键盘 取消注册 Word 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
-	//键盘 注册 Word 键（OEM 键）
+	//键盘 注册 Word 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
-	//键盘 左 OYAYUBI 键（OEM 键）
+	//键盘 左 OYAYUBI 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
-	//键盘 右 OYAYUBI 键（OEM 键）
+	//键盘 右 OYAYUBI 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
-	//键盘 左 OSHIFT 键
+	//键盘 左 OSHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
-	//键盘 右 OSHIFT 键
+	//键盘 右 OSHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
-	//键盘 左 Ctrl 键
+	//键盘 左 Ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
-	//键盘 右 Ctrl 键
+	//键盘 右 Ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
-	//键盘 左 Alt 键
+	//键盘 左 Alt 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
-	//键盘 右 Alt 键
+	//键盘 右 Alt 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
-	//键盘 浏览器后退键
+	//键盘 浏览器后退键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
-	//键盘 浏览器前进键
+	//键盘 浏览器前进键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
-	//键盘 浏览器刷新键
+	//键盘 浏览器刷新键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
-	//键盘 浏览器停止键
+	//键盘 浏览器停止键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
-	//键盘 浏览器搜索键
+	//键盘 浏览器搜索键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
-	//键盘 浏览器收藏键
+	//键盘 浏览器收藏键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
-	//键盘 浏览器“开始”和“主页”键
+	//键盘 浏览器“开始”和“主页”键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
-	//键盘 静音键
+	//键盘 静音键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
-	//键盘 减小音量键
+	//键盘 减小音量键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
-	//键盘 增大音量键
+	//键盘 增大音量键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
-	//键盘 下一曲键
+	//键盘 下一曲键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
-	//键盘 上一曲键
+	//键盘 上一曲键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
-	//键盘 停止播放键
+	//键盘 停止播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
-	//键盘 暂停播放键
+	//键盘 暂停播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
-	//键盘 打开邮箱键
+	//键盘 打开邮箱键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
-	//键盘 选择媒体键
+	//键盘 选择媒体键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
-	//键盘 启动应用程序1键
+	//键盘 启动应用程序1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
-	//键盘 启动应用程序2键
+	//键盘 启动应用程序2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
-	//小/数字键盘 1建（OEM 键）
+	//小/数字键盘 1建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
-	//键盘 加号建（OEM 键）
+	//键盘 加号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
-	//键盘 逗号建（OEM 键）
+	//键盘 逗号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
-	//键盘 减号建（OEM 键）
+	//键盘 减号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
-	//键盘 句号建（OEM 键）
+	//键盘 句号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
-	//小/数字键盘 2建（OEM 键）
+	//小/数字键盘 2建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
-	//小/数字键盘 3建（OEM 键）
+	//小/数字键盘 3建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
-	//小/数字键盘 4建（OEM 键）
+	//小/数字键盘 4建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
-	//小/数字键盘 5建（OEM 键）
+	//小/数字键盘 5建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
-	//小/数字键盘 6建（OEM 键）
+	//小/数字键盘 6建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
-	//小/数字键盘 7建（OEM 键）
+	//小/数字键盘 7建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
-	//小/数字键盘 8建（OEM 键）
+	//小/数字键盘 8建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
-	//键盘 AX 建（OEM 键）
+	//键盘 AX 建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
-	//键盘 102 建（OEM 键）
+	//键盘 102 建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
-	//键盘  Ico帮助键
+	//键盘  Ico帮助键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
-	//键盘  Ico00 键
+	//键盘  Ico00 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
-	//键盘 Process 键
+	//键盘 Process 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	//键盘 IcoClr 键
+	//键盘 IcoClr 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
-	//键盘 格式化建（OEM 键）
+	//键盘 格式化建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
-	//键盘 重置建（OEM 键）
+	//键盘 重置建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	//键盘 ATTN 键（OEM 键）
+	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
-	//键盘 PA1 键（OEM 键）
+	//键盘 PA1 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
-	//键盘 PA2 键（OEM 键）
+	//键盘 PA2 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	//键盘 ATTN 键（OEM 键）
+	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
+	//键盘 WSCTRL 键（OEM 键，似乎是联想杀毒软件定制按键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	//键盘 ATTN 键（OEM 键）
+	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
-	//键盘 ATTN 键（OEM 键）
+	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
-	//键盘 完成键（OEM 键）
+	//键盘 完成键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
-	//键盘 复制键（OEM 键）
+	//键盘 复制键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
-	//键盘 自动键（OEM 键）
+	//键盘 自动键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
-	//键盘 ENLW 键（OEM 键）
+	//键盘 ENLW 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
-	//键盘 BACKTAB 键（OEM 键）
+	//键盘 BACKTAB 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
-	//键盘 ATTN 键
+	//键盘 ATTN 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
-	//键盘 CRSEL 键
+	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	//键盘 CRSEL 键
+	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	//键盘 CRSEL 键
+	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
-	//键盘 播放键
+	//键盘 播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
-	//键盘 缩放键
+	//键盘 缩放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	//键盘 留待将来使用的常数键
+	//键盘 留待将来使用的常数键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
-	//键盘 PA1 键
+	//键盘 PA1 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
-	//键盘 清理键（OEM 键）
+	//键盘 清理键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
 	
