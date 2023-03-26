@@ -58,7 +58,7 @@ native GetUpgradeGoldCost   takes integer id                            returns 
 native GetUpgradeWoodCost   takes integer id                            returns integer
 // 获取下一个扩张点
 native GetNextExpansion     takes nothing                               returns integer
-// 获取大型攻击目标，似乎会随机返回一个单位给AI
+// 获取大型攻击目标，此时暴雪会往攻击组添加默认攻击类型为攻城的单位，似乎该单位是某种建筑或位于建筑群中
 native GetMegaTarget        takes nothing                               returns unit
 // 获取指定玩家正在建造的单位
 native GetBuilding          takes player p                              returns unit
