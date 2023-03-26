@@ -3,21 +3,21 @@
 //==================================================================================================
 // 显示指定文本
 native DebugS               takes string str                            returns nothing
-// 显示指定文本带1个数字
+// 显示指定文本，带1个数字
 native DebugFI              takes string str, integer val               returns nothing
-// 显示指定文本带1个单位ID
+// 显示指定文本，带1个单位ID
 native DebugUnitID          takes string str, integer val               returns nothing
 // 给指定玩家显示指定文本
 native DisplayText          takes integer p, string str                 returns nothing
-// 给指定玩家显示指定文本带1个数字
+// 给指定玩家显示指定文本，带1个数字
 native DisplayTextI         takes integer p, string str, integer val    returns nothing
-// 给指定玩家显示指定文本带2个数字
+// 给指定玩家显示指定文本，带2个数字
 native DisplayTextII        takes integer p, string str, integer v1, integer v2 returns nothing
-// 给指定玩家显示指定文本带3个数字
+// 给指定玩家显示指定文本，带3个数字
 native DisplayTextIII       takes integer p, string str, integer v1, integer v2, integer v3 returns nothing
-// AI脚本是否允许显示文本
+// AI脚本是否允许显示调试文本，供开发者DEBUG
 native DoAiScriptDebug      takes nothing                               returns boolean
-// 当前脚本控制的AI玩家
+// 获取当前脚本控制的AI玩家编号（在1.29及以上版本中，返回的是0~23任意一个实数，以下则是0~12）
 native GetAiPlayer          takes nothing                               returns integer
 // 英雄升级技能函数 获取升级的英雄类型
 native GetHeroId            takes nothing                               returns integer
@@ -30,11 +30,11 @@ native GetUnitCount         takes integer unitid                        returns 
 native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
 // 获取AI玩家指定类型单位的数量，仅统计已训练/建造完成
 native GetUnitCountDone     takes integer unitid                        returns integer
-// 指定基地对应类型的单位数，0为主基地
+// 指定基地对应类型的单位数，0为第一个基地
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-// 获取指定单位类型的造价金钱
+// 训练/建造一个指定类型单位需要消耗的金钱数量
 native GetUnitGoldCost      takes integer unitid                        returns integer
-// 获取指定单位类型的造价木材
+// 训练/建造一个指定类型单位需要消耗的木材数量
 native GetUnitWoodCost      takes integer unitid                        returns integer
 // 获取指定单位类型的建造/训练时间
 native GetUnitBuildTime     takes integer unitid                        returns integer
@@ -45,24 +45,24 @@ native GetMinesOwned        takes nothing                               returns 
 native GetGoldOwned         takes nothing                               returns integer
 // 有金矿的基地编号，如果多个基地都有金矿 则返回最小编号，配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
 native TownWithMine         takes nothing                               returns integer
-// 指定编号的基地是否有金矿，0为主基地
+// 指定编号的基地是否有金矿，0为第一个基地
 native TownHasMine          takes integer townid                        returns boolean
-// 指定编号的基地是有城镇单位（主城/基地），0为主基地
+// 指定编号的基地是有城镇单位（主城/基地），0为第一个基地
 native TownHasHall          takes integer townid                        returns boolean
 
-// 指定单位类型当前升级的等级
+// 指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
 native GetUpgradeLevel      takes integer id                            returns integer
-// 指定单位类型升级金钱消耗
+// 升级指定科技需要消耗的金钱数量，指定id就是指定科技等级
 native GetUpgradeGoldCost   takes integer id                            returns integer
-// 指定单位类型升级木材消耗
+// 升级指定科技需要消耗的木材数量，指定id就是指定科技等级
 native GetUpgradeWoodCost   takes integer id                            returns integer
-// 下一个扩张点
+// 获取下一个扩张点
 native GetNextExpansion     takes nothing                               returns integer
-// 当前攻击目标
+// 获取大型攻击目标，似乎会随机返回一个单位给AI
 native GetMegaTarget        takes nothing                               returns unit
 // 获取指定玩家正在建造的单位
 native GetBuilding          takes player p                              returns unit
-// 获得敌人进攻部队强度
+// 获得敌人进攻组强度
 native GetEnemyPower        takes nothing                               returns integer
 // 设置盟友当前的攻击目标（仅对AI盟友生效）
 native SetAllianceTarget    takes unit id                               returns nothing
@@ -70,21 +70,21 @@ native SetAllianceTarget    takes unit id                               returns 
 native GetAllianceTarget    takes nothing                               returns unit
 // 命令训练/建造单位(数量,单位类型,基地)
 native SetProduce           takes integer qty, integer id, integer town returns boolean
-// 取消建造单位
+// 反召唤指定单位（亡灵卖建筑）
 native Unsummon             takes unit unitid                           returns nothing
-// 建造扩张点/分基地<指定工人类型和建筑类型>
+// 建造扩张点/分基地（指定工人类型和建筑类型）
 native SetExpansion         takes unit peon, integer id                 returns boolean
 // 升级指定科技
 native SetUpgrade           takes integer id                            returns boolean
 // 设置英雄升级技能函数
 native SetHeroLevels        takes code func                             returns nothing
-// 设置新英雄，意义不明，可能和学习技能有关
+// 是否允许设置新英雄，意义不明，可能和学习技能有关
 native SetNewHeroes         takes boolean state                         returns nothing
 // 购买地精飞艇，运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外命令
 native PurchaseZeppelin     takes nothing                               returns nothing
-// 合体单位的数量<单位A,单位B,合体后的单位C>
+// 训练/建造指定数量的合体单位类型（单位类型a,单位类型b,合体成单位类型make），运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
 native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-// 变身单位的数量<输入变身后的单位>
+// 训练/建造指定数量的变形单位类型，此变形不是英雄/熊德鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形，运行后AI会训练变形前单位并变形，直到数量达标
 native ConvertUnits         takes integer qty, integer id               returns boolean
 
 // 设置战役AI
@@ -134,7 +134,7 @@ native AddAssault           takes integer qty, integer id               returns 
 // 增加指定数量的指定单位类型到防守组
 native AddDefenders         takes integer qty, integer id               returns boolean
 
-// 获取指定等级范围内，是否包含飞行单位的野怪
+// 获取指定等级范围内的中立敌对玩家控制的单位，即野怪（ture 为可获取飞行单位，false 为不获取），在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
 native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
 // 开始获取敌人主基地
 native StartGetEnemyBase    takes nothing                               returns nothing
@@ -156,11 +156,11 @@ native SetStagePoint        takes real x, real y                        returns 
 native AttackMoveKill       takes unit target                           returns nothing
 // 攻击指定坐标
 native AttackMoveXY         takes integer x, integer y                  returns nothing
-// 在指定坐标装载单位，该命令似乎只对装载（地精飞艇）技能生效
+// 在指定坐标卸载单位，该命令似乎只对卸载（地精飞艇）技能生效
 native LoadZepWave          takes integer x, integer y                  returns nothing
-// 指定玩家是否自杀
+// 检测是否自杀攻击是否满足指定条件（指定玩家），自杀指令被暴雪用于战役AI
 native SuicidePlayer        takes player id, boolean check_full         returns boolean
-// 指定玩家是否自杀单位
+// 检测是否自杀攻击组是否满足指定条件（指定玩家），自杀指令被暴雪用于战役AI
 native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
 // 进攻组是否在战斗
 native CaptainInCombat      takes boolean attack_captain                returns boolean
@@ -222,9 +222,9 @@ native CaptainReadinessMa   takes nothing                               returns 
 native CaptainAtGoal        takes nothing                               returns boolean
 // 地图上还有野外生物
 native CreepsOnMap          takes nothing                               returns boolean
-// 自杀单位数量
+// 在进攻组添加自杀单位，指定单位类型和数量，自杀指令被暴雪用于战役AI
 native SuicideUnit          takes integer count, integer unitid         returns nothing
-// 自杀单位数量（指定地基）
+// 在进攻组添加自杀单位，指定单位类型、数量和玩家，自杀指令被暴雪用于战役AI
 native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
 // 开始进程
 native StartThread          takes code func                             returns nothing
@@ -245,9 +245,9 @@ native SetAmphibious        takes nothing                               returns 
 
 // 队列中的指令数量，BJ发送的指令会被AI逐条执行，未执行的指令会排队
 native CommandsWaiting      takes nothing                               returns integer
-// 获取最后的指令，可通过BJ发送
+// 获取最新的指令，可通过BJ发送
 native GetLastCommand       takes nothing                               returns integer
-// 获取最后指令的数据，可通过BJ发送
+// 获取最新指令的数据，可通过BJ发送
 native GetLastData          takes nothing                               returns integer
 // 将最新指令踢出队列
 native PopLastCommand       takes nothing                               returns nothing
