@@ -17,7 +17,7 @@ native DisplayTextII        takes integer p, string str, integer v1, integer v2 
 native DisplayTextIII       takes integer p, string str, integer v1, integer v2, integer v3 returns nothing
 // AI脚本是否允许显示调试文本，供开发者DEBUG
 native DoAiScriptDebug      takes nothing                               returns boolean
-// 获取当前脚本控制的AI玩家编号（在1.29及以上版本中，返回的是0~23任意一个实数，以下则是0~12）
+// 获取当前脚本控制的AI玩家编号（在1.29及以上版本中，返回的是0~23任意一个实数，以下则是0~11）
 native GetAiPlayer          takes nothing                               returns integer
 // 英雄升级技能函数 获取升级的英雄类型
 native GetHeroId            takes nothing                               returns integer
@@ -243,11 +243,11 @@ native DisablePathing       takes nothing                               returns 
 // 获得命令队列中的指令条数
 native SetAmphibious        takes nothing                               returns nothing
 
-// 队列中的指令数量，BJ发送的指令会被AI逐条执行，未执行的指令会排队
+// 获取指令类型，可通过BJ发送，未发送时获取的值是0，（暴雪用该指令打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展），指令包含类型和数据，需灵活运用，比如设定1类为进攻指令，数据0~1代表不同的攻击点，2类为防守指令，数据0~1代表不同的防御点
 native CommandsWaiting      takes nothing                               returns integer
-// 获取最新的指令，可通过BJ发送
+// 获取最新的指令类型，可通过BJ发送，未发送时获取的值是0，指令包含类型和数据，需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
 native GetLastCommand       takes nothing                               returns integer
-// 获取最新指令的数据，可通过BJ发送
+// 获取最新指令的数据，可通过BJ发送，未发送时获取的值是0，指令包含类型和数据，需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
 native GetLastData          takes nothing                               returns integer
 // 将最新指令踢出队列
 native PopLastCommand       takes nothing                               returns nothing
