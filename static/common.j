@@ -181,108 +181,131 @@ constant native ConvertGameSpeed takes integer i returns gamespeed
 constant native ConvertPlacement takes integer i returns placement
 // 转换起始位置优先
 constant native ConvertStartLocPrio takes integer i returns startlocprio
-// 游戏难度
+// 转换游戏难度
 constant native ConvertGameDifficulty takes integer i returns gamedifficulty
-// 游戏类型
+// 转换游戏类型
 constant native ConvertGameType takes integer i returns gametype
-// 地图标记
+// 转换地图标记
 constant native ConvertMapFlag takes integer i returns mapflag
-// 地图可见性
+// 转换地图可见性
 constant native ConvertMapVisibility takes integer i returns mapvisibility
-// 地图设置
+// 转换地图设置
 constant native ConvertMapSetting takes integer i returns mapsetting
-// 地图密度
+// 转换地图密度
 constant native ConvertMapDensity takes integer i returns mapdensity
-// 地图控制器
+// 转换地图控制器
 constant native ConvertMapControl takes integer i returns mapcontrol
-// 玩家颜色
+// 转换玩家颜色
 constant native ConvertPlayerColor takes integer i returns playercolor
-// 玩家位置状态
+// 转换玩家位置状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
-// 音量组
+// 转换音量组
 constant native ConvertVolumeGroup takes integer i returns volumegroup
-// 照相机领域
+// 转换照相机领域
 constant native ConvertCameraField takes integer i returns camerafield
-// 混合模式
+// 转换混合模式
 constant native ConvertBlendMode takes integer i returns blendmode
-// 罕见的控制
+// 转换罕见的控制
 constant native ConvertRarityControl takes integer i returns raritycontrol
-// 纹理贴图标志
+// 转换纹理贴图标志
 constant native ConvertTexMapFlags takes integer i returns texmapflags
-// 迷雾状态
+// 转换迷雾状态
 constant native ConvertFogState takes integer i returns fogstate
-// 特效类型
+// 转换特效类型
 constant native ConvertEffectType takes integer i returns effecttype
-// 版本
+// 转换版本
 constant native ConvertVersion takes integer i returns version
-// 物品类型
+// 转换物品类型
 constant native ConvertItemType takes integer i returns itemtype
-// 攻击类型
+// 转换攻击类型
 constant native ConvertAttackType takes integer i returns attacktype
-// 伤害类型
+// 转换伤害类型
 constant native ConvertDamageType takes integer i returns damagetype
-// 武器类型
+// 转换武器类型
 constant native ConvertWeaponType takes integer i returns weapontype
-// 声音类型
+// 转换声音类型
 constant native ConvertSoundType takes integer i returns soundtype
-// 路径类型
+// 转换路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
-// 鼠标按钮类型
+// 转换鼠标按钮类型
 constant native ConvertMouseButtonType takes integer i returns mousebuttontype
-// 动画类型
+// 转换动画类型
 constant native ConvertAnimType takes integer i returns animtype
-// 子动画类型
+// 转换子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
-// 原点框架类型
+// 转换原点框架类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// frame点（框架）类型
+// 转换frame点（框架）类型
 constant native ConvertFramePointType takes integer i returns framepointtype
-// 文本对齐类型
+// 转换文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
-// 框架事件类型
+// 转换框架事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
-// 按键类型
+// 转换按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
-// 技能整数字段
+// 转换技能整数域
 constant native ConvertAbilityIntegerField takes integer i returns abilityintegerfield
-// 技能实数字段
+// 转换技能实数域
 constant native ConvertAbilityRealField takes integer i returns abilityrealfield
-// 技能布尔字段
+// 转换技能布尔域
 constant native ConvertAbilityBooleanField takes integer i returns abilitybooleanfield
-// 技能字符串字段
+// 转换技能字符串域
 constant native ConvertAbilityStringField takes integer i returns abilitystringfield
-// 技能整数等级字段
+// 转换技能整数等级域
 constant native ConvertAbilityIntegerLevelField takes integer i returns abilityintegerlevelfield
-// 技能实数等级字段
+// 转换技能实数等级域
 constant native ConvertAbilityRealLevelField takes integer i returns abilityreallevelfield
-// 技能布尔等级字段
+// 转换技能布尔等级域
 constant native ConvertAbilityBooleanLevelField takes integer i returns abilitybooleanlevelfield
-// 技能字符串等级字段
+// 转换技能字符串等级域
 constant native ConvertAbilityStringLevelField takes integer i returns abilitystringlevelfield
+// 转换技能整数等级数组域
 constant native ConvertAbilityIntegerLevelArrayField takes integer i returns abilityintegerlevelarrayfield
+// 转换技能实数等级数组域
 constant native ConvertAbilityRealLevelArrayField takes integer i returns abilityreallevelarrayfield
+// 转换技能布尔值等级数组域
 constant native ConvertAbilityBooleanLevelArrayField takes integer i returns abilitybooleanlevelarrayfield
+// 转换技能字符串等级数组域
 constant native ConvertAbilityStringLevelArrayField takes integer i returns abilitystringlevelarrayfield
+// 转换单位整数域
 constant native ConvertUnitIntegerField takes integer i returns unitintegerfield
+// 转换单位实数域
 constant native ConvertUnitRealField takes integer i returns unitrealfield
+// 转换单位布尔值域
 constant native ConvertUnitBooleanField takes integer i returns unitbooleanfield
+// 转换单位字符串域
 constant native ConvertUnitStringField takes integer i returns unitstringfield
+// 转换攻击整数域
 constant native ConvertUnitWeaponIntegerField takes integer i returns unitweaponintegerfield
+// 转换攻击实数域
 constant native ConvertUnitWeaponRealField takes integer i returns unitweaponrealfield
+// 转换攻击布尔值域
 constant native ConvertUnitWeaponBooleanField takes integer i returns unitweaponbooleanfield
+// 转换攻击字符串域
 constant native ConvertUnitWeaponStringField takes integer i returns unitweaponstringfield
+// 转换物品整数域
 constant native ConvertItemIntegerField takes integer i returns itemintegerfield
+// 转换物品实数域
 constant native ConvertItemRealField takes integer i returns itemrealfield
+// 转换物品布尔值域
 constant native ConvertItemBooleanField takes integer i returns itembooleanfield
+// 转换物品字符串域
 constant native ConvertItemStringField takes integer i returns itemstringfield
+// 转换移动类型
 constant native ConvertMoveType takes integer i returns movetype
+// 转换目标标志
 constant native ConvertTargetFlag takes integer i returns targetflag
+// 转换装甲类型（金属、木头、石头、气态、肉体）
 constant native ConvertArmorType takes integer i returns armortype
+// 转换英雄属性
 constant native ConvertHeroAttribute takes integer i returns heroattribute
+// 转换防御类型
 constant native ConvertDefenseType takes integer i returns defensetype
+// 转换恢复类型
 constant native ConvertRegenType takes integer i returns regentype
+// 转换单位类别
 constant native ConvertUnitCategory takes integer i returns unitcategory
-// 路径标志
+// 转换路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
 // 命令id
 constant native OrderId takes string orderIdString returns integer
@@ -293,8 +316,9 @@ constant native UnitId takes string unitIdString returns integer
 // 单位id转字符串
 constant native UnitId2String takes integer unitId returns string
 
-// Not currently working correctly...
+// 技能id Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
+// 技能id转字符串
 constant native AbilityId2String takes integer abilityId returns string
 
 // Looks up the "name" field for any object (unit, item, ability)
@@ -323,7 +347,7 @@ globals
  constant boolean FALSE = false
  // true
 	constant boolean TRUE = true
-	// 数组最大值，1.28及以下版本的值是8192
+	// 数组最大值，1.28及以下版本该值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
@@ -405,9 +429,9 @@ globals
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
-	// 游戏版本为混乱之治
+	// 游戏版本--混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
-	// 游戏版本为冰封王座
+	// 游戏版本--冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
 	// 正常
 	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
@@ -632,7 +656,7 @@ globals
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
 	//玩家控制者类型  中立敌对
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
-	//玩家控制者类型  没有
+	//玩家控制者类型  没有玩家
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -863,7 +887,7 @@ globals
 	constant playerevent EVENT_PLAYER_LEAVE = ConvertPlayerEvent(15)
 	//玩家聊天
 	constant playerevent EVENT_PLAYER_CHAT = ConvertPlayerEvent(16)
-	//玩家跳过动画（按下ESC）
+	//玩家按下ESC键
 	constant playerevent EVENT_PLAYER_END_CINEMATIC = ConvertPlayerEvent(17)
 	
 	
@@ -915,7 +939,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-	
+
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
 	
@@ -2793,16 +2817,19 @@ native IsGameTypeSupported takes gametype whichGameType returns boolean
 native GetGameTypeSelected takes nothing returns gametype
 // 地图参数
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
-
+// 获取障碍设置，怀疑是最大生命值百分比限制
 constant native GetGamePlacement takes nothing returns placement
 // 当前游戏速度
 constant native GetGameSpeed takes nothing returns gamespeed
-// 难度等级
+// 获取游戏难度等级，游戏难度和AI难度是两个维度的参数
 constant native GetGameDifficulty takes nothing returns gamedifficulty
 constant native GetResourceDensity takes nothing returns mapdensity
 constant native GetCreatureDensity takes nothing returns mapdensity
+// 获取指定开始点的 X 轴坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
 constant native GetStartLocationX takes integer whichStartLocation returns real
+// 获取指定开始点的 Y 轴坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
 constant native GetStartLocationY takes integer whichStartLocation returns real
+// 获取指定开始点的坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
@@ -2883,21 +2910,21 @@ native GetExpiredTimer takes nothing returns timer
 
 // Group API
 //
-// 新建的单位组 [R]
+// 创建单位组 [R]
 native CreateGroup takes nothing returns group
 // 删除单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
-// 添加单位 [R]
+// 为指定单位组添加添加指定单位 [R]
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
-// 移除单位 [R]
+// 为指定单位组移除指定单位 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
 // 单位组添加单位组 [快速的]
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
 // 单位组移除单位组 [快速的]
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
-// 清除
+// 清空单位组，排泄需要使用删除单位组 CreateGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
-// 获取单组大小
+// 获取单位组尺寸（组内的单位数量）
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
@@ -2913,40 +2940,41 @@ native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter retu
 // 匹配范围单位
 // @param countLimit 上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 选取单位添加到单位组(坐标)
+// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 选取单位添加到单位组(点)
+// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 选取单位添加到单位组(坐标)(不建议使用)
+// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
 // @deprecated
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 选取单位添加到单位组(点)(不建议使用)
+// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
 // @deprecated
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
+// 选取指定玩家的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
-// 发送单位组命令到 没有目标
+// 发送单位组命令（无目标）
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
-// 发布命令(无目标)(ID)
+// 发布ID命令(无目标)
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
 // 发布命令(指定坐标) [R]
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
-// 发送单位组命令到 点
+// 发送单位组命令（指定点）
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
-// 发布命令(指定坐标)(ID)
+// 发布ID命令(指定坐标)
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
-// 发布命令(指定点)(ID)
+// 发布ID命令(指定点)
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
-// 发送单位组命令到 单位
+// 发送单位组命令(指定单位)
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
-// 发布命令(指定单位)(ID)
+// 发布ID命令(指定单位)
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
 // as it would involve enumerating all the cells that are covered by a particularregion
 // a better implementation would be a trigger that adds relevant units as they enter
 // and removes them if they leave...
-// 选取所有单位在单位组做 多动作
+// 选取指定单位组做多个动作
 native ForGroup takes group whichGroup, code callback returns nothing
 // 单位组中第一个单位
 native FirstOfGroup takes group whichGroup returns unit
@@ -3196,6 +3224,7 @@ native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable 
 // EVENT_COMMAND_BUTTON_CLICK
 // 命令事件
 native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbility, string order returns event
+// 科技升级命令事件
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
 // EVENT_GAME_TRACKABLE_HIT
@@ -3283,6 +3312,7 @@ constant native GetKillingUnit takes nothing returns unit
 constant native GetDecayingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELECTED
+// 获取选择的单位
 //constant native GetSelectedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
@@ -3562,66 +3592,77 @@ native TriggerExecute takes trigger whichTrigger returns nothing
 // 运行触发器 (忽略条件)
 // @deprecated
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
+// 同步开始
 native TriggerSyncStart takes nothing returns nothing
+// 同步完成
 native TriggerSyncReady takes nothing returns nothing
 
 
 // Widget API
-
+// 获取地表装饰物的生命值
 native GetWidgetLife takes widget whichWidget returns real
+// 设置地表装饰物的生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
+// 获取地表装饰物的 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
+// 获取地表装饰物的 T 轴坐标
 native GetWidgetY takes widget whichWidget returns real
+// 获取触发的地表装饰物
 constant native GetTriggerWidget takes nothing returns widget
 
 
 // Destructable Object API
 // Facing arguments are specified in degrees
 // Facing arguments are specified in degrees
+// 新建可破坏物（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物 [R]
+// 新建可破坏物 [R]（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
+// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱)（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物(死亡的) [R]
+// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-// 删除 可毁坏物
+// 删除可破坏物
 native RemoveDestructable takes destructable d returns nothing
-// 杀死 可毁坏物
+// 杀死可破坏物
 native KillDestructable takes destructable d returns nothing
+// 设置可破坏物是否可见
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
+// 获取可破坏物的可见状态
 native IsDestructableInvulnerable takes destructable d returns boolean
+// 选取指定区域的指定条件（filter用于指定条件）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
-// 建筑的类型
+// 可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
 // 可破坏物所在X轴坐标 [R]
 native GetDestructableX takes destructable d returns real
 // 可破坏物所在Y轴坐标 [R]
 native GetDestructableY takes destructable d returns real
-// 设置 可毁坏物 生命 (值)
+// 设置可破坏物的生命值
 native SetDestructableLife takes destructable d, real life returns nothing
-// 生命值 (可毁坏物)
+// 可破坏物的生命值
 native GetDestructableLife takes destructable d returns real
-//设置可破坏物的最大生命值
+// 设置可破坏物的最大生命值
 native SetDestructableMaxLife takes destructable d, real max returns nothing
-// 最大生命值 (可毁坏物)
+// 可破坏物的最大生命值
 native GetDestructableMaxLife takes destructable d returns real
-// 复活 可毁坏物
+// 复活可破坏物
 native DestructableRestoreLife takes destructable d, real life, boolean birth returns nothing
-//队列可破坏物的动画
+// 队列可破坏物的动画
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
-//设置可破坏物的动画
+// 设置可破坏物的动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 改变可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
-// 显示/隐藏 [R]
+// 显示/隐藏可破坏物的[R]
 native ShowDestructable takes destructable d, boolean flag returns nothing
-// 闭塞高度 (可毁坏物)
+// 获取可破坏物的闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
-// 设置闭塞高度
+// 设置可破坏物的的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 可毁坏物的名字
+// 可破坏物的名字
 native GetDestructableName takes destructable d returns string
-// 获取触发可破坏物
+// 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
 
 
@@ -3907,20 +3948,20 @@ constant native GetUnitY takes unit whichUnit returns real
 constant native GetUnitLoc takes unit whichUnit returns location
 // 单位面向角度
 constant native GetUnitFacing takes unit whichUnit returns real
-// 单位移动速度 (当前)
+// 单位移动速度 (当前值)
 constant native GetUnitMoveSpeed takes unit whichUnit returns real
-// 单位移动速度 (默认)
+// 单位移动速度 (默认值)
 constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
-// 属性 [R]
+// 指定单位的指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
 // @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
-// 单位的所有者
+// 单位的所属玩家
 constant native GetOwningPlayer takes unit whichUnit returns player
 // 单位的类型
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 单位的种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 单位名字
+// 单位的名字
 constant native GetUnitName takes unit whichUnit returns string
 // 单位使用人口
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
@@ -3933,26 +3974,26 @@ constant native GetFoodUsed takes integer unitId returns integer
 // 允许/禁止 人口占用 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
-// 聚集点
+// 获取指定单位的集结点指向的位置（建筑的旗子，集结技能）
 constant native GetUnitRallyPoint takes unit whichUnit returns location
-// 拥有源聚集点单位
+// 获取指定单位集结点指向的单位，仅当集结点指向单位时可正常返回（建筑的旗子，集结技能）
 constant native GetUnitRallyUnit takes unit whichUnit returns unit
-// 单位 聚集点
+// 获取指定单位集结点指向的可破坏物（树、石头、门、柱等），仅当集结点指向可破坏物时可正常返回（建筑的旗子，集结技能）
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
-// 单位在 单位组
+// 指定单位在指定的单位组中
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
-// 是玩家组里玩家的单位
+// 指定单位是指定玩家组里任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
-// 是玩家的单位
+// 指定单位是指定玩家的单位
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
-// 单位所属玩家的同盟玩家
+// 指定单位的所属玩家是AI的盟友
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
-// 单位所属玩家的敌对玩家
+// 指定单位的所属玩家是AI敌人
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
-// 单位对于玩家可见
+// 指定单位对于玩家可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 被检测到
+// 指定单位能否被检测到
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
 // 单位对于玩家不可见
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
@@ -3962,77 +4003,78 @@ constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns bo
 constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns boolean
 // 玩家已选定单位
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
-// 单位种族检查
+// 指定单位是否是指定种族
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 检查单位 分类
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
-// 是单位
+// 指定单位是否属于单位
 constant native IsUnit takes unit whichUnit, unit whichSpecifiedUnit returns boolean
-// 在指定单位范围内 [R]
+// 指定单位是否在指定单位范围内 [R]
 constant native IsUnitInRange takes unit whichUnit, unit otherUnit, real distance returns boolean
-// 在指定坐标范围内 [R]
+// 指定单位是否在指定坐标范围内 [R]
 constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real distance returns boolean
-// 在指定点范围内 [R]
+// 指定单位是否在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
-// 是隐藏单位
+// 指定单位是否隐藏单位
 constant native IsUnitHidden takes unit whichUnit returns boolean
-//是镜像单位
+//指定单位是否只是镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-// 是运输单元
+// 指定单位是否被指定的运输单位装载（如是否进入指定的暗夜金矿、运输飞艇、运输船）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
-//单位加载
+//指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 单位类型是英雄单位
+// 单位类型是否英雄单位
 constant native IsHeroUnitId takes integer unitId returns boolean
 // 检查单位-类型 分类
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
-// 共享视野 [R]
+// 设定指定单位和指定玩家的共享视野状态（共享或不共享） [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 暂停尸体腐烂 [R]
+// 设定指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加类别 [R]
+// 给指定单位增加指定类别 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除类别 [R]
+// 给指定单位删除指定类别 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 添加技能 [R]
+// 给指定单位添加指定技能 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除技能 [R]
+// 给指定单位删除指定技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
-// 设置技能永久性 [R]
+// 给指定单位设置指定技能的永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
-// 删除魔法效果(指定极性) [R]
+// 给指定单位删除魔法效果(指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
-// 删除魔法效果(详细类别) [R]
+// 给指定单位删除魔法效果(详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
-// 拥有Buff [R]
+// 指定单位是否拥有Buff [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
-// 拥有Buff数量 [R]
+// 指定单位拥有的Buff数量 [R]
 native UnitCountBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
-// 单位添加睡眠
+// 是否给指定单位添加睡眠
 native UnitAddSleep takes unit whichUnit, boolean add returns nothing
-// 单位可以睡眠
+// 指定单位是否允许睡眠（可能由代码 UnitAddSleep 设置控制）
 native UnitCanSleep takes unit whichUnit returns boolean
-// 设置单位睡眠(无论何时)
+// 设置指定单位的睡眠状态(无论何时)
 native UnitAddSleepPerm takes unit whichUnit, boolean add returns nothing
-// 单位在睡觉
+// 单位是否可以睡眠（可能是编辑器的单位睡眠设置）
 native UnitCanSleepPerm takes unit whichUnit returns boolean
-// 单位在睡眠
+// 单位是否正在睡眠
 native UnitIsSleeping takes unit whichUnit returns boolean
+// 单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置生命周期 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
-//单位忽略报警
+//设置指定单位的忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-//单位忽略报警开关
+//读取指定单位忽略报警的开关状态
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
-// 重设单位技能Cooldown
+// 重设单位技能冷却时间 Cooldown
 native UnitResetCooldown takes unit whichUnit returns nothing
-// 设置建筑物 建筑升级比
+// 设置指定建筑建造进度（百分比）
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
-// 设置建筑物 科技升级比
+// 设置指定科技升级进度（百分比）
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
@@ -4056,29 +4098,29 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param weaponType 武器类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
-// 给单位发送命令到 没有目标
+// 给单位发送命令（无目标）
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
-// 发布命令(无目标)(ID)
+// 发布ID命令(无目标)
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
-// 给单位发送命令到 点
+// 给单位发送命令(指定点)
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
-// 发布命令(指定坐标)(ID)
+// 发布ID命令(指定坐标)
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
-// 发布命令(指定点)(ID)
+// 发布ID命令(指定点)
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
-// 给单位发送命令到 单位
+// 给单位发送命令(指定单位)
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
-// 发布命令(指定单位)(ID)
+// 发布ID命令(指定单位)
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 发布命令(指定坐标)
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
-// 发布命令(指定点)(ID)
+// 发布(ID命令(指定点)
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 发布命令(指定单位)
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
-// 发布命令(指定单位)(ID)
+// 发布ID命令(指定单位)
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
@@ -4087,36 +4129,36 @@ native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y 
 
 // 发布中介命令(无目标)
 native IssueNeutralImmediateOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean
-// 发布中介命令(无目标)(ID)
+// 发布中介ID命令(无目标)
 native IssueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
 // 发布中介命令(指定坐标)
 native IssueNeutralPointOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, real x, real y returns boolean
-// 发布中介命令(指定坐标)(ID)
+// 发布中介ID命令(指定坐标)
 native IssueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
 // 发布中介命令(指定单位)
 native IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, widget target returns boolean
-// 发布中介命令(指定单位)(ID)
+// 发布中介ID命令(指定单位)
 native IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
-// 单位当前的命令
+// 获取指定单位当前的命令
 native GetUnitCurrentOrder takes unit whichUnit returns integer
 
-// 设置金矿资源
+// 设置指定金矿储金量（指定新值）
 native SetResourceAmount takes unit whichUnit, integer amount returns nothing
-// 添加金矿资源
+// 增加指定金矿储金量（指定增量）
 native AddResourceAmount takes unit whichUnit, integer amount returns nothing
-// 黄金资源数量
+// 获取指定金矿当前储金量
 native GetResourceAmount takes unit whichUnit returns integer
 
-// 传送门目的地X坐标
+// 获取传送门目的地X坐标
 native WaygateGetDestinationX takes unit waygate returns real
-// 传送门目的地Y坐标
+// 获取传送门目的地Y坐标
 native WaygateGetDestinationY takes unit waygate returns real
 // 设置传送门目的坐标 [R]
 native WaygateSetDestination takes unit waygate, real x, real y returns nothing
-//传送门激活
+//设置传送门激活状态
 native WaygateActivate takes unit waygate, boolean activate returns nothing
-//传送门状态
+//获取传送门激活状态
 native WaygateIsActive takes unit waygate returns boolean
 
 // 增加 物品-类型 (到所有商店)
@@ -4277,14 +4319,14 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 
 
 // Game API
-// 获取版本
+// 获取当前获取版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionGet takes nothing returns version
-// 版本兼容
+// 当前游戏版本是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionCompatible takes version whichVersion returns boolean
-// 版本支持
+// 当前版本支持是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionSupported takes version whichVersion returns boolean
 
-// 最后阶段
+// 结束游戏
 native EndGame takes boolean doScoreScreen returns nothing
 
 // Async only!
