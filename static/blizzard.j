@@ -54,12 +54,16 @@ globals
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
     //最大玩家插槽数（包含所有中立玩家）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
+    //最大尸体数
     constant integer   bj_MAX_SKELETONS                 =  25
+    //最大物品库存
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
+    //最大单位库存
     constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
+    //最大物品等级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
     
-    // Auto Save constants
+    // Auto Save constants  最大保存点数量
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -77,14 +81,23 @@ globals
     //   - Distance from start loc to search for nearby mines
     //
     constant real      bj_MELEE_STARTING_TOD            = 8.00
+    //初始黄金数量（V0怀疑是混乱之治）
     constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
+    //初始黄金数量（V1怀疑是冰封王座）
     constant integer   bj_MELEE_STARTING_GOLD_V1        = 500
+    //初始木材数量（V0怀疑是混乱之治）
     constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
+    //初始木材数量（V1怀疑是冰封王座）
     constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
+    //使用随机英雄时给予的英雄数量
     constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
+    //拥有英雄最大数量
     constant integer   bj_MELEE_HERO_LIMIT              = 3
+    //每类英雄拥有限制数量
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
+    //金矿搜索距离（主要用于创建亡灵/精灵分矿）
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
+    //清除开始点中立敌对单位的范围（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
@@ -125,7 +138,7 @@ globals
 
     // Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
-    //默认游戏速度--普通
+    //默认游戏速度--默认普通
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
