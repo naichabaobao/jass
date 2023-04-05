@@ -1,6 +1,7 @@
 import { isNewLine } from "../tool";
 import { Position } from "./ast";
-import { LineText } from "./ast";
+import { LineText } from "./parser";
+
 
 /**
  * 移除注释

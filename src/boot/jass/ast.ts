@@ -1,9 +1,10 @@
 
-import { Token } from "./tokens";
+import { Token, tokenize } from "./tokens";
 
 import * as path from "path";
 import { getFileContent, isSpace, isUsableFile } from "../tool";
 import { lines } from "./tool";
+import { RunTextMacro, TextMacro } from "./parser";
 
 
 class Position {
@@ -85,151 +86,57 @@ export {
 	Desc
 };
 
-class LineText extends Range {
 
-    private text: string;
+class TextMacroDefine extends Range {
+	public id:Identifier|null = null;
+	public value: string = "";
 
-    constructor(text: string) {
-        super();
-        this.text = text;
-    }
+	private defines: Array<TextMacroDefine> = [];
 
-    // 是否空行
-    public isEmpty(): boolean {
-        return this.text.trimStart() === "";
-    }
+	// getHandleValue 之前设置可以使当前的define 的 value值亦会被其他的define替换
+	public setPredefinition(defines: TextMacroDefine[]) {
+		this.defines = defines;
+		return this;
+	};
 
-    public getText(): string {
-        return this.text;
-    }
 
-    public setText(text: string): void {
-        this.text = text;
-    }
+	public getHandleValue() : string {
+		return this.tokensToString(tokenize(this.value), this.defines);
+	}
 
-    public lineNumber(): number {
-        return this.start.line;
-    }
-
-    // 第一个字符下标
-    public firstCharacterIndex(): number {
-        let index = 0;
-        for (; index < this.text.length; index++) {
-            const char = this.text[index];
-            if (!isSpace(char)) {
-                return index;
-            }
+	private pushSpace(origin:string, count: number, char: string): string {
+        for (let index = 0; index < count; index++) {
+            origin += char;
         }
-        return index;
+        return origin;
     }
-
-    public length(): number {
-        return this.text.length;
-    }
-
-    public clone(): LineText {
-        return Object.assign(new LineText(this.getText()), this);
-    }
-
+	private tokensToString(tokens:Token[], defines: TextMacroDefine[]) {
+		let str = "";
+		let storeIndex = 0;
+	
+		tokens.forEach((token, index, ts) => {
+            // str.padEnd(index - storeIndex, " ")
+            str = this.pushSpace(str, token.position - storeIndex, " ");
+	
+			if (token.isId()) {
+				const finedIndex = defines.findIndex((define) => define.id && define.id.name == token.value);
+				if (finedIndex != -1) {
+					str += defines[finedIndex].setPredefinition(defines).getHandleValue();
+				} else {
+					str += token.value;
+				}
+			} else {
+				str += token.value;
+			}
+	
+			storeIndex = token.end;
+		});
+	
+		return str;
+	}
 }
 
-class TextMacro extends Range {
-    private readonly lineTexts: LineText[] = [];
-    private name: string;
-    private takes: string[];
 
-    constructor(name: string = "", takes: string[] = []) {
-        super();
-        this.name = name;
-        this.takes = takes;
-    }
-
-    public getName(): string {
-        return this.name;
-    }
-    public setName(name: string) {
-        this.name = name;
-    }
-
-    public push(lineText: LineText) {
-        this.lineTexts.push(lineText);
-    }
-
-    public remove(lineNumber: number) {
-        for (let index = 0; index < this.lineTexts.length; index++) {
-            const lineText = this.lineTexts[index];
-            if (lineText.lineNumber() == lineNumber) {
-                this.lineTexts.splice(index, 1);
-                break;
-            }
-        }
-    }
-
-    public foreach(callback: (lineText: LineText) => void, params: string[] = []) {
-        this.lineTexts.map((lineText) => {
-            const replacedLineText = lineText.clone();
-
-            let newText = lineText.getText();
-            this.takes.forEach((take, takeIndex) => {
-                newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
-            })
-            replacedLineText.setText(newText);
-            callback(replacedLineText);
-        });
-    }
-
-    public addTake(take: string) {
-        this.takes.push(take);
-    }
-
-}
-class Include extends Range {
-    private path: string;
-
-    constructor(path: string) {
-        super();
-        this.path = path;
-    }
-
-    public getPath() {
-        return this.path;
-    }
-
-}
-
-class RunTextMacro extends Range {
-    private name: string;
-    private params: string[];
-    private lineText: LineText | null;
-
-    constructor(name: string = "", params: string[] = [], lineText: LineText | null = null) {
-        super();
-        this.name = name;
-        this.params = params;
-        this.lineText = lineText;
-    }
-
-    public getName(): string {
-        return this.name;
-    }
-
-    public setName(name: string): void {
-        this.name = name;
-    }
-
-    public addParam(param: string) {
-        this.params.push(param);
-    }
-
-    public getParams(): string[] {
-        return this.params.map(param => param.replace(/^"/, "").replace(/"$/, ""));
-    }
-
-    public getLineText(): LineText | null {
-        return this.lineText;
-    }
-
-}
 
 class Node implements Rangebel  { 
 	public readonly loc: Range = Range.default(); 
@@ -660,7 +567,7 @@ class BlockComment extends LineComment {
 
 }
 
-class Identifier extends Node {
+class Identifier extends Range {
 	public name: string;
 
 	constructor(name: string = "") {
@@ -746,82 +653,11 @@ export {
 
 
 
-/**
- * 表示一个脚本文件
- */
- class Document {
-    public readonly uri: string;
-    public readonly fileName: string;
-    public readonly lineCount: number;
-    private readonly lines: LineText[];
-    lineAt(lineOrposition: number|Position): LineText {
-        return lineOrposition instanceof Position ? this.lines[lineOrposition.line] : this.lines[lineOrposition];
-    }
-    offsetAt(position: Position): number {
-        let count = 0;
-        for (let index = 0; index < position.line - 1; index++) {
-            const lineText = this.lines[index];
-            count += lineText.length();
-        }
-        count += Math.min(position.position, this.lines[position.line].length());
-        return count;
-    }
-    positionAt(offset: number): Position {
-        const position = new Position();
-        let count = 0;
-        for (let index = 0; index < this.lines.length; index++) {
-            const lineText = this.lines[index];
-            if (count + lineText.length() > offset) {
-                position.line = index;
-                position.position = offset - count;
-                return position;
-            } else {
-                count += lineText.length();
-            }
-        }
-        return position;
-    }
-    getText(range?: Range): string {
-        return this.lines
-        .filter(lineText => (range ? (lineText.lineNumber() >= range.start.line && lineText.lineNumber() <= range.end.line) : true))
-        .map(lineText => {
-            if (lineText.lineNumber() === range?.start.line) {
-                return lineText.getText().substring(range.start.position);
-            } else if (lineText.lineNumber() === range?.start.line) {
-                return lineText.getText().substring(0, range.end.position);
-            } else {
-                return lineText.getText();
-            }
-        })
-        .join("");
-    }
-    /*
-    getWordRangeAtPosition(position: Position, regex?: RegExp): Range | undefined {
-        throw new Error("Method not implemented.");
-    }
-    validateRange(range: Range): Range {
-        throw new Error("Method not implemented.");
-    }
-    validatePosition(position: Position): Position {
-        throw new Error("Method not implemented.");
-    }*/
-
-    public constructor(uri: string, content?:string) {
-        this.uri = uri;
-        if (!isUsableFile(this.uri)) {
-            throw "create document fail!";
-        }
-        this.fileName = path.basename(this.uri);
-        
-        this.lines = lines(content ? content : getFileContent(this.uri));
-        this.lineCount = this.lines.length;
-    }
-    
-}
 
 
 
 class Program extends Declaration {
+
 
 	constructor() {
 		super();
@@ -839,17 +675,15 @@ class Program extends Declaration {
 	public readonly globals: Global[] = [];
 	public readonly librarys: Library[] = [];
 	public readonly structs: Struct[] = [];
+
+	public readonly defines:TextMacroDefine[] = [];
 	public readonly textMacros: TextMacro[] = [];
-	public readonly runTextMacros: RunTextMacro[] = [];
+	// public readonly runTextMacros: RunTextMacro[] = [];
 
 	/**
 	 * @deprecated
 	 */
 	public readonly errors: JassError[] = [];
-	/**
-	 * @deprecated
-	 */
-	public readonly body: Array<Declaration> = [];
 
 	public findFunctions(options: {
 		type?: string | string[] | null,
@@ -1032,6 +866,6 @@ class Program extends Declaration {
 }
 
 export {
-	AstNode, Declaration, Program, Document, LineText, TextMacro, RunTextMacro, Include
+	AstNode, Declaration, Program, TextMacroDefine
 };
 

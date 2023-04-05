@@ -121,7 +121,7 @@ function setSource(filePath: string, program: Program) {
       });
     }
   }
-
+  /*
   [program, program.globals, program.functions, program.natives, program.librarys, program.structs,
      program.librarys.map((lib) => lib.globals).flat(),
      program.librarys.map((lib) => lib.functions).flat(),
@@ -137,7 +137,7 @@ function setSource(filePath: string, program: Program) {
      program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat().map((method) => method.locals).flat(),
     ].flat().forEach(x => {
       x.source = filePath;
-    });
+    });*/
 }
 function parseContent(filePath: string, content: string) {
   if (isExclude(filePath, Options.excludes)) {
@@ -170,8 +170,16 @@ function parseContent(filePath: string, content: string) {
     dataMap.put(filePath, program);
   }
 }
+
 function parsePath(...filePaths: string[]) {
-  exclude(filePaths, Options.excludes).forEach((filePath) => {
+  const excludeFiles = exclude(filePaths, Options.excludes);
+  const parseds:Parser[] = [];
+  excludeFiles.forEach(filePath => {
+    const content = getFileContent(filePath);
+
+    parseContent(filePath, content);
+  })
+  excludeFiles.forEach((filePath) => {
     const content = getFileContent(filePath);
   
     parseContent(filePath, content);
