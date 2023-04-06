@@ -88,7 +88,7 @@ export {
 
 
 class TextMacroDefine extends Range {
-	public id:Identifier|null = null;
+	public id:Identifier = null as any;
 	public value: string = "";
 
 	private defines: Array<TextMacroDefine> = [];
@@ -133,6 +133,15 @@ class TextMacroDefine extends Range {
 		});
 	
 		return str;
+	}
+
+	public get origin(): string {
+		let origin = `#define ${this.id.name}`;
+		if (this.value) {
+			origin += " " + this.value;
+		}
+		return origin;
+
 	}
 }
 
