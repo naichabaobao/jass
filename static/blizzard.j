@@ -54,13 +54,13 @@ globals
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
     //最大玩家插槽数（包含所有中立玩家）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
-    //最大尸体数
+    //最大尸体数，默认25
     constant integer   bj_MAX_SKELETONS                 =  25
-    //最大物品库存
+    //最大物品库存，默认11
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
-    //最大单位库存
+    //最大单位库存，默认11
     constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
-    //最大物品等级
+    //最大物品等级，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
     
     // Auto Save constants  最大保存点数量
@@ -79,32 +79,34 @@ globals
     //   - Max heroes allowed per player
     //   - Max heroes allowed per hero type
     //   - Distance from start loc to search for nearby mines
-    //
+    // 初始时钟，默认早上8点
     constant real      bj_MELEE_STARTING_TOD            = 8.00
-    //初始黄金数量（V0怀疑是混乱之治）
+    // 初始黄金数量，默认750（V0是混乱之治）
     constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
-    //初始黄金数量（V1怀疑是冰封王座）
+    // 初始黄金数量，默认500（V1是冰封王座）
     constant integer   bj_MELEE_STARTING_GOLD_V1        = 500
-    //初始木材数量（V0怀疑是混乱之治）
+    // 初始木材数量，默认200（V0是混乱之治）
     constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
-    //初始木材数量（V1怀疑是冰封王座）
+    // 初始木材数量，默认150（V1是冰封王座）
     constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
-    //使用随机英雄时给予的英雄数量
+    // 使用随机英雄时给予的英雄数量，默认1个
     constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
-    //拥有英雄最大数量
+    // 拥有英雄最大数量，默认3个
     constant integer   bj_MELEE_HERO_LIMIT              = 3
-    //每类英雄拥有限制数量
+    // 每类英雄拥有限制数量，默认1个
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
-    //金矿搜索距离（主要用于创建亡灵/精灵分矿）
+    // 金矿搜索距离，默认2000（主要用于创建亡灵/精灵分矿）
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
-    //清除开始点中立敌对单位的范围（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
+    // 清除开始点中立敌对单位的范围，默认1500（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
+    // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0是混乱之治）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
+    // 英雄初始物品要给予的次数，默认3次，即只给第1个获得的英雄（V1是冰封王座）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
-    // Delay between a creep's death and the time it may drop an item.
+    // 从单位死亡到掉落物品出现的时间间隔（延时），默认0.5 Delay between a creep's death and the time it may drop an item.
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
@@ -138,7 +140,7 @@ globals
 
     // Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
-    //默认游戏速度--默认普通
+    // 默认游戏速度--默认正常
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
@@ -482,11 +484,11 @@ globals
     //
 
     // Force predefs
-    //玩家组 所有玩家
+    // 玩家组 所有玩家
     force              bj_FORCE_ALL_PLAYERS        = null
-    //玩家组
+    // 玩家组
     force array        bj_FORCE_PLAYER
-
+    // 英雄初始物品要给予的次数，游戏初始化时会根据游戏版本自动设置
     integer            bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
