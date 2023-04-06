@@ -75,7 +75,12 @@ const cjassDataMap = new DataMap();
 const luaDataMap = new Map<string, Chunk>();
 
 
-
+/**
+ * 
+ * @deprecated 遍历太多
+ * @param filePath 
+ * @param program 
+ */
 function setSource(filePath: string, program: Program) {
 
   function set<T extends Declaration>(n: T) {
@@ -121,7 +126,7 @@ function setSource(filePath: string, program: Program) {
       });
     }
   }
-
+  /*
   [program, program.globals, program.functions, program.natives, program.librarys, program.structs,
      program.librarys.map((lib) => lib.globals).flat(),
      program.librarys.map((lib) => lib.functions).flat(),
@@ -137,7 +142,7 @@ function setSource(filePath: string, program: Program) {
      program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat().map((method) => method.locals).flat(),
     ].flat().forEach(x => {
       x.source = filePath;
-    });
+    });*/
 }
 function parseContent(filePath: string, content: string) {
   if (isExclude(filePath, Options.excludes)) {
@@ -146,6 +151,7 @@ function parseContent(filePath: string, content: string) {
   if (isZincFile(filePath)) {
     const program = parse(content, true);
     setSource(filePath, program);
+    program.source = filePath;
     zincDataMap.put(filePath, program);
   } else if (isLuaFile(filePath)) {
     try {
@@ -166,12 +172,21 @@ function parseContent(filePath: string, content: string) {
       cjassDataMap.put(filePath, program);
     }
     const program = parser.parsing();
+    program.source = filePath;
     setSource(filePath, program);
     dataMap.put(filePath, program);
   }
 }
+
 function parsePath(...filePaths: string[]) {
-  exclude(filePaths, Options.excludes).forEach((filePath) => {
+  const excludeFiles = exclude(filePaths, Options.excludes);
+  const parseds:Parser[] = [];
+  excludeFiles.forEach(filePath => {
+    const content = getFileContent(filePath);
+
+    parseContent(filePath, content);
+  })
+  excludeFiles.forEach((filePath) => {
     const content = getFileContent(filePath);
   
     parseContent(filePath, content);

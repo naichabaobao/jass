@@ -346,6 +346,14 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
   items.push(...toItems<Global>(globalToCompletionItem, undefined, ...program.allGlobals(isCurrent)));
   items.push(...toItems(funcToCompletionItem, undefined, ...program.allFunctions(isCurrent)));
   items.push(...toItems(funcToCompletionItem, undefined, ...program.allNatives(isCurrent)));
+  // define 提示
+  items.push(...program.defines.map(define => {
+    return completionItem(define.id.name, {
+      code: define.origin,
+      source: program.source,
+      kind: vscode.CompletionItemKind.Module
+    });
+  }));
 
   if (isCurrent && position) {
     const findedFunc = program.getPositionFunction(convertPosition(position));
