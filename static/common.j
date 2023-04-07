@@ -413,13 +413,13 @@ globals
 	constant race RACE_DEMON = ConvertRace(5)
 	// 其他种族
 	constant race RACE_OTHER = ConvertRace(7)
-	// 玩家结果-胜利
+	// 玩家游戏结果-胜利
 	constant playergameresult PLAYER_GAME_RESULT_VICTORY = ConvertPlayerGameResult(0)
-	// 玩家结果-失败
+	// 玩家游戏结果-失败
 	constant playergameresult PLAYER_GAME_RESULT_DEFEAT = ConvertPlayerGameResult(1)
-	// 玩家结果-平局
+	// 玩家游戏结果-平局
 	constant playergameresult PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
-	// 玩家结果-不确定
+	// 玩家游戏结果-不确定
 	constant playergameresult PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
 	// 被动联盟
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
@@ -575,100 +575,161 @@ globals
 	constant mousebuttontype MOUSE_BUTTON_TYPE_MIDDLE = ConvertMouseButtonType(2)
 	// 右键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_RIGHT = ConvertMouseButtonType(3)
-	
+	// 动画类型 - 出现（估计包含训练完成、创建、召唤）
 	constant animtype ANIM_TYPE_BIRTH = ConvertAnimType(0)
+	// 动画类型 - 死亡
 	constant animtype ANIM_TYPE_DEATH = ConvertAnimType(1)
+	// 动画类型 - 腐烂
 	constant animtype ANIM_TYPE_DECAY = ConvertAnimType(2)
+	// 动画类型 - 消失
 	constant animtype ANIM_TYPE_DISSIPATE = ConvertAnimType(3)
+	// 动画类型 - 站立
 	constant animtype ANIM_TYPE_STAND = ConvertAnimType(4)
+	// 动画类型 - 行走
 	constant animtype ANIM_TYPE_WALK = ConvertAnimType(5)
+	// 动画类型 - 攻击
 	constant animtype ANIM_TYPE_ATTACK = ConvertAnimType(6)
+	// 动画类型 - 变形
 	constant animtype ANIM_TYPE_MORPH = ConvertAnimType(7)
+	// 动画类型 - 睡眠
 	constant animtype ANIM_TYPE_SLEEP = ConvertAnimType(8)
+	// 动画类型 - 施法
 	constant animtype ANIM_TYPE_SPELL = ConvertAnimType(9)
+	// 动画类型 - 画像
 	constant animtype ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
-	
+	// 子动画类型 - 扎根（古树）
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
+	// 子动画类型 - 生长（古树）
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
+	// 子动画类型 - 循环（可能是无操作时的默认动作）
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
+	// 子动画类型 - 猛击
 	constant subanimtype SUBANIM_TYPE_SLAM = ConvertSubAnimType(14)
+	// 子动画类型 - 投掷
 	constant subanimtype SUBANIM_TYPE_THROW = ConvertSubAnimType(15)
+	// 子动画类型 - 尖刺
 	constant subanimtype SUBANIM_TYPE_SPIKED = ConvertSubAnimType(16)
+	// 子动画类型 - 快速
 	constant subanimtype SUBANIM_TYPE_FAST = ConvertSubAnimType(17)
+	// 子动画类型 - 旋转
 	constant subanimtype SUBANIM_TYPE_SPIN = ConvertSubAnimType(18)
+	// 子动画类型 - 准备完成
 	constant subanimtype SUBANIM_TYPE_READY = ConvertSubAnimType(19)
+	// 子动画类型 - 传送
 	constant subanimtype SUBANIM_TYPE_CHANNEL = ConvertSubAnimType(20)
+	// 子动画类型 - 防御
 	constant subanimtype SUBANIM_TYPE_DEFEND = ConvertSubAnimType(21)
+	// 子动画类型 - 胜利
 	constant subanimtype SUBANIM_TYPE_VICTORY = ConvertSubAnimType(22)
+	// 子动画类型 - 转身
 	constant subanimtype SUBANIM_TYPE_TURN = ConvertSubAnimType(23)
+	// 子动画类型 - 往左
 	constant subanimtype SUBANIM_TYPE_LEFT = ConvertSubAnimType(24)
+	// 子动画类型 - 往右
 	constant subanimtype SUBANIM_TYPE_RIGHT = ConvertSubAnimType(25)
+	// 子动画类型 - 开火
 	constant subanimtype SUBANIM_TYPE_FIRE = ConvertSubAnimType(26)
+	// 子动画类型 - 刮
 	constant subanimtype SUBANIM_TYPE_FLESH = ConvertSubAnimType(27)
+	// 子动画类型 - 打击
 	constant subanimtype SUBANIM_TYPE_HIT = ConvertSubAnimType(28)
+	// 子动画类型 - 受伤
 	constant subanimtype SUBANIM_TYPE_WOUNDED = ConvertSubAnimType(29)
+	// 子动画类型 - 光
 	constant subanimtype SUBANIM_TYPE_LIGHT = ConvertSubAnimType(30)
+	// 子动画类型 - 温和
 	constant subanimtype SUBANIM_TYPE_MODERATE = ConvertSubAnimType(31)
+	// 子动画类型 - 严厉
 	constant subanimtype SUBANIM_TYPE_SEVERE = ConvertSubAnimType(32)
+	// 子动画类型 - 关键
 	constant subanimtype SUBANIM_TYPE_CRITICAL = ConvertSubAnimType(33)
+	// 子动画类型 - 完成
 	constant subanimtype SUBANIM_TYPE_COMPLETE = ConvertSubAnimType(34)
+	// 子动画类型 - 黄金
 	constant subanimtype SUBANIM_TYPE_GOLD = ConvertSubAnimType(35)
+	// 子动画类型 - 木材
 	constant subanimtype SUBANIM_TYPE_LUMBER = ConvertSubAnimType(36)
+	// 子动画类型 - 工作
 	constant subanimtype SUBANIM_TYPE_WORK = ConvertSubAnimType(37)
+	// 子动画类型 - 说话
 	constant subanimtype SUBANIM_TYPE_TALK = ConvertSubAnimType(38)
+	// 子动画类型 - 第一
 	constant subanimtype SUBANIM_TYPE_FIRST = ConvertSubAnimType(39)
+	// 子动画类型 - 第二
 	constant subanimtype SUBANIM_TYPE_SECOND = ConvertSubAnimType(40)
+	// 子动画类型 - 第三
 	constant subanimtype SUBANIM_TYPE_THIRD = ConvertSubAnimType(41)
+	// 子动画类型 - 第四
 	constant subanimtype SUBANIM_TYPE_FOURTH = ConvertSubAnimType(42)
+	// 子动画类型 - 第五
 	constant subanimtype SUBANIM_TYPE_FIFTH = ConvertSubAnimType(43)
+	// 子动画类型 - 一
 	constant subanimtype SUBANIM_TYPE_ONE = ConvertSubAnimType(44)
+	// 子动画类型 - 二
 	constant subanimtype SUBANIM_TYPE_TWO = ConvertSubAnimType(45)
+	// 子动画类型 - 三
 	constant subanimtype SUBANIM_TYPE_THREE = ConvertSubAnimType(46)
+	// 子动画类型 - 四
 	constant subanimtype SUBANIM_TYPE_FOUR = ConvertSubAnimType(47)
+	// 子动画类型 - 五
 	constant subanimtype SUBANIM_TYPE_FIVE = ConvertSubAnimType(48)
+	// 子动画类型 - 小
 	constant subanimtype SUBANIM_TYPE_SMALL = ConvertSubAnimType(49)
+	// 子动画类型 - 中
 	constant subanimtype SUBANIM_TYPE_MEDIUM = ConvertSubAnimType(50)
+	// 子动画类型 - 大
 	constant subanimtype SUBANIM_TYPE_LARGE = ConvertSubAnimType(51)
+	// 子动画类型 - 升级
 	constant subanimtype SUBANIM_TYPE_UPGRADE = ConvertSubAnimType(52)
+	// 子动画类型 - 排出
 	constant subanimtype SUBANIM_TYPE_DRAIN = ConvertSubAnimType(53)
+	// 子动画类型 - 吞
 	constant subanimtype SUBANIM_TYPE_FILL = ConvertSubAnimType(54)
+	// 子动画类型 - 闪电链
 	constant subanimtype SUBANIM_TYPE_CHAINLIGHTNING = ConvertSubAnimType(55)
+	// 子动画类型 - 吃树
 	constant subanimtype SUBANIM_TYPE_EATTREE = ConvertSubAnimType(56)
+	// 子动画类型 - 吐
 	constant subanimtype SUBANIM_TYPE_PUKE = ConvertSubAnimType(57)
+	// 子动画类型 - 乱动
 	constant subanimtype SUBANIM_TYPE_FLAIL = ConvertSubAnimType(58)
+	// 子动画类型 - 关
 	constant subanimtype SUBANIM_TYPE_OFF = ConvertSubAnimType(59)
+	// 子动画类型 - 游泳
 	constant subanimtype SUBANIM_TYPE_SWIM = ConvertSubAnimType(60)
+	// 子动画类型 - 缠绕
 	constant subanimtype SUBANIM_TYPE_ENTANGLE = ConvertSubAnimType(61)
+	// 子动画类型 - 狂暴
 	constant subanimtype SUBANIM_TYPE_BERSERK = ConvertSubAnimType(62)
 	
 	
 	// Map Setup Constants
 	
-	//固定玩家种族为 人类
+	// 固定玩家种族为 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	//固定玩家种族为 兽族
+	// 固定玩家种族为 兽族
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	//固定玩家种族为 暗夜
+	// 固定玩家种族为 暗夜
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	//固定玩家种族为 亡灵
+	// 固定玩家种族为 亡灵
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
-	//固定玩家种族为 恶魔
+	// 固定玩家种族为 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
-	//固定玩家种族为 随机
+	// 固定玩家种族为 随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
-	//固定玩家种族为 用户可选择
+	// 固定玩家种族为 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
-	//玩家控制者类型  用户
+	// 玩家控制者类型  用户
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
-	//玩家控制者类型  电脑
+	// 玩家控制者类型  电脑
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
-	//玩家控制者类型  中立可营救
+	// 玩家控制者类型  中立可营救
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
-	//玩家控制者类型  中立被动
+	// 玩家控制者类型  中立被动
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
-	//玩家控制者类型  中立敌对
+	// 玩家控制者类型  中立敌对
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
-	//玩家控制者类型  没有玩家
+	// 玩家控制者类型  没有玩家
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型-对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -747,29 +808,29 @@ globals
 	// 地图-高密度
 	constant mapdensity MAP_DENSITY_HEAVY = ConvertMapDensity(3)
 	
-	//游戏难度 简单
+	// 游戏难度 简单
 	constant gamedifficulty MAP_DIFFICULTY_EASY = ConvertGameDifficulty(0)
-	//游戏难度 普通
+	// 游戏难度 普通
 	constant gamedifficulty MAP_DIFFICULTY_NORMAL = ConvertGameDifficulty(1)
-	//游戏难度 困难
+	// 游戏难度 困难
 	constant gamedifficulty MAP_DIFFICULTY_HARD = ConvertGameDifficulty(2)
-	//游戏难度 疯狂
+	// 游戏难度 疯狂
 	constant gamedifficulty MAP_DIFFICULTY_INSANE = ConvertGameDifficulty(3)
-	//游戏速度 最慢速
+	// 游戏速度 最慢速
 	constant gamespeed MAP_SPEED_SLOWEST = ConvertGameSpeed(0)
-	//游戏速度 慢速
+	// 游戏速度 慢速
 	constant gamespeed MAP_SPEED_SLOW = ConvertGameSpeed(1)
-	//游戏速度 正常
+	// 游戏速度 正常
 	constant gamespeed MAP_SPEED_NORMAL = ConvertGameSpeed(2)
-	//游戏速度 快速
+	// 游戏速度 快速
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
-	//游戏速度 最快速
+	// 游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	//玩家游戏状态 没有使用（该位置没有玩家）
+	// 玩家游戏状态 没有使用（该位置没有玩家）
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
-	//玩家游戏状态 正在游戏
+	// 玩家游戏状态 正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
-	//玩家游戏状态 已离开游戏
+	// 玩家游戏状态 已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
 	
@@ -893,7 +954,7 @@ globals
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
 	// 玩家积分-由于税而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
-	// 	// 玩家积分-给予盟友的黄金数量
+	// 玩家积分-给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
 	// 玩家积分-从盟友那里收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
@@ -1259,7 +1320,7 @@ globals
 	
 	// 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
- // 小于 或 等于
+    // 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
 	// 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
@@ -1397,7 +1458,7 @@ globals
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
-	// Effect API constants
+	//特效 Effect API constants
 	
 	
 	constant effecttype EFFECT_TYPE_EFFECT = ConvertEffectType(0)
@@ -2944,19 +3005,27 @@ native SetMapDescription takes string description returns nothing
 native SetTeams takes integer teamcount returns nothing
 // 设置玩家
 native SetPlayers takes integer playercount returns nothing
-
+// 默认开始点（指定坐标）
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
+// 默认开始点（指定点）
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
+// 设置开始点优先级（指定玩家槽）
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
+// 设置开始点优先级（指定玩家槽、第一开始点、第二开始点、优先级系数）
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
+// 获取开始点优先级（指定玩家槽）
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
+// 获取开始点优先权系数（指定玩家槽）
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
+// 设置敌人开始点（指定玩家槽）
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
+// 设置敌人开始点优先级（指定玩家槽、第一开始点、第二开始点、优先级系数）
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
-
+// 设置游戏类型支持
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
 // 设置地图参数
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
+// 设置游戏放置类型
 native SetGamePlacement takes placement whichPlacementType returns nothing
 // 设定游戏速度
 native SetGameSpeed takes gamespeed whichspeed returns nothing
@@ -3095,13 +3164,13 @@ native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 通过玩家匹配单位
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-// 通过单位类型匹配单位
-// @param countLimit 上限
+// 通过单位类型匹配单位（指定数量上限）
+// @param countLimit
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 匹配范围单位
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 匹配范围单位
-// @param countLimit 上限
+// 匹配范围单位（指定数量上限）
+// @param countLimit
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
@@ -3614,9 +3683,9 @@ constant native GetSpellAbilityId takes nothing returns integer
 constant native GetSpellAbility takes nothing returns ability
 // 对其使用技能的目标点
 constant native GetSpellTargetLoc takes nothing returns location
-// 对其使用技能的目标点x	
+// 对其使用技能的目标点 x 坐标
 constant native GetSpellTargetX takes nothing returns real
-// 对其使用技能的目标点y	
+// 对其使用技能的目标点 y 坐标
 constant native GetSpellTargetY takes nothing returns real
 // 对其使用技能的目标可毁坏物
 constant native GetSpellTargetDestructable takes nothing returns destructable
@@ -3746,7 +3815,7 @@ native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction
 native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待
 native TriggerSleepAction takes real timeout returns nothing
-// @deprecated
+// 弃用 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
 // 触发器条件成立
 native TriggerEvaluate takes trigger whichTrigger returns boolean
@@ -3768,7 +3837,7 @@ native GetWidgetLife takes widget whichWidget returns real
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
 // 获取地表装饰物的 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取地表装饰物的 T 轴坐标
+// 获取地表装饰物的 Y 轴坐标
 native GetWidgetY takes widget whichWidget returns real
 // 获取触发的地表装饰物
 constant native GetTriggerWidget takes nothing returns widget
@@ -3830,7 +3899,7 @@ constant native GetTriggerDestructable takes nothing returns destructable
 
 
 // Item API
-// 创建
+// 创建物品
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除物品
 native RemoveItem takes item whichItem returns nothing
@@ -3838,9 +3907,9 @@ native RemoveItem takes item whichItem returns nothing
 native GetItemPlayer takes item whichItem returns player
 // 物品的类别
 native GetItemTypeId takes item i returns integer
-// 物品的X轴坐标 [R]
+// 物品的 X 轴坐标 [R]
 native GetItemX takes item i returns real
-// 物品的Y轴坐标 [R]
+// 物品的 Y 轴坐标 [R]
 native GetItemY takes item i returns real
 // 移动物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
@@ -3852,27 +3921,27 @@ native SetItemDroppable takes item i, boolean flag returns nothing
 native SetItemPawnable takes item i, boolean flag returns nothing
 // 设置物品所属
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
-// 设置物品是否无敌的
+// 设置物品是否无敌
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
-// 物品是无敌的
+// 物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
 // 显示/隐藏 [R]
 native SetItemVisible takes item whichItem, boolean show returns nothing
-// 物品可见 [R]
+// 物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
-// 物品所有者
+// 物品所有者是否当前持有玩家
 native IsItemOwned takes item whichItem returns boolean
-// 物品是拾取时自动使用的 [R]
+// 物品是否拾取时自动使用 [R]
 native IsItemPowerup takes item whichItem returns boolean
-// 物品可被市场随机出售 [R]
+// 物品是否可被市场随机出售 [R]
 native IsItemSellable takes item whichItem returns boolean
-// 物品可被抵押 [R]
+// 物品是否可被抵押 [R]
 native IsItemPawnable takes item whichItem returns boolean
-// 物品可以充能
+// 物品是否可以充能
 native IsItemIdPowerup takes integer itemId returns boolean
-// 物品可以销售
+// 物品是否可以销售
 native IsItemIdSellable takes integer itemId returns boolean
-// 物品可以抵押
+// 物品是否可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取 区域内 所有物品在 做动作 r = 区域 ， filter = 条件 ， actionFunc = 动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
@@ -3882,11 +3951,11 @@ native GetItemLevel takes item whichItem returns integer
 native GetItemType takes item whichItem returns itemtype
 // 设置重生神符的产生单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
-// 物品名
+// 物品名称
 constant native GetItemName takes item whichItem returns string
-// 物品的数量
+// 物品数量
 native GetItemCharges takes item whichItem returns integer
-// 设置物品数量[使用次数]
+// 设置物品使用次数
 native SetItemCharges takes item whichItem, integer charges returns nothing
 // 物品自定义值
 native GetItemUserData takes item whichItem returns integer
@@ -3917,9 +3986,9 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // 设置单位属性 [R]
 // @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置X坐标 [R]
+// 设置 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置Y坐标 [R]
+// 设置 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
@@ -4096,6 +4165,7 @@ native UnitInventorySize takes unit whichUnit returns integer
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 移动物品到物品栏 [R]
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
+// 把物品交给指定单位 [R]
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 使用物品
@@ -4105,9 +4175,9 @@ native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y ret
 // 对单位使用物品
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 单位所在X轴坐标 [R]
+// 单位所在 X 轴坐标 [R]
 constant native GetUnitX takes unit whichUnit returns real
-// 单位所在Y轴坐标 [R]
+// 单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 单位的位置
 constant native GetUnitLoc takes unit whichUnit returns location
@@ -4182,11 +4252,11 @@ constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real dista
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
 // 指定单位是否隐藏单位
 constant native IsUnitHidden takes unit whichUnit returns boolean
-//指定单位是否只是镜像
+// 指定单位是否只是镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
 // 指定单位是否被指定的运输单位装载（如是否进入指定的暗夜金矿、运输飞艇、运输船）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
-//指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
+// 指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
 // 单位类型是否英雄单位
@@ -4360,8 +4430,8 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 
 // Player API
-// 玩家
-// @param number 下标0
+// 根据ID查询玩家
+// @param number
 constant native Player takes integer number returns player
 // 本地玩家 [R]
 // 通常用于异步判断
@@ -4393,7 +4463,7 @@ constant native GetPlayerRace takes player whichPlayer returns race
 constant native GetPlayerId takes player whichPlayer returns integer
 // 单位数量
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-//获取玩家特定单位数
+// 获取玩家特定单位数
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
 // 获得建筑数量
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
@@ -4404,25 +4474,25 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // 玩家与玩家结盟
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-//经验上限 [R]
+// 经验上限 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-//经验获得率 [R]
+// 经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-//玩家障碍恢复时间
+// 玩家障碍恢复时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-//玩家遭受残疾伤害
+// 玩家遭受残疾伤害
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
 // 设置经验上限 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
 // 设置经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-//设置玩家障碍恢复时间
+// 设置玩家障碍恢复时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-//设置玩家残障伤害
+// 设置玩家残障伤害
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
-//允许玩家的科技上限
+// 设置玩家的科技上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
-//允许玩家的科技上限
+// 获取玩家的科技上限
 constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid returns integer
 // 增加科技等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
@@ -4830,23 +4900,23 @@ native LoadHashtableHandle takes hashtable table, integer parentKey, integer chi
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
 // 查询指定表的指定位置是否记录了整数
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定表的指定位置是否记录了实数
+// 查询指定哈希表的指定位置是否记录了实数
 native HaveSavedReal takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定表的指定位置是否记录了布尔值
+// 查询指定哈希表的指定位置是否记录了布尔值
 native HaveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定表的指定位置是否记录了字符串
+// 查询指定哈希表的指定位置是否记录了字符串
 native HaveSavedString takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定表的指定位置是否记录了数据
+// 查询指定哈希表的指定位置是否记录了数据
 native HaveSavedHandle takes hashtable table, integer parentKey, integer childKey returns boolean
-// 删除指定表的指定位置记录的整数
+// 删除指定哈希表的指定位置记录的整数
 native RemoveSavedInteger takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定表的指定位置记录的实数
+// 删除指定哈希表的指定位置记录的实数
 native RemoveSavedReal takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定表的指定位置记录的布尔值
+// 删除指定哈希表的指定位置记录的布尔值
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定表的指定位置记录的字串符
+// 删除指定哈希表的指定位置记录的字串符
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定表的指定位置记录的数据
+// 删除指定哈希表的指定位置记录的数据
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空哈希表 [C]
@@ -4857,9 +4927,9 @@ native FlushChildHashtable takes hashtable table, integer parentKey returns noth
 
 
 // Randomization API
-// 随机数字
+// 随机整数
 native GetRandomInt takes integer lowBound, integer highBound returns integer
-// 随机数
+// 随机实数
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
@@ -4920,7 +4990,9 @@ native SetPortraitLight takes string portraitDNCFile returns nothing
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用玩家控制权(所有玩家) [R]
 native EnableUserControl takes boolean b returns nothing
+// 启用/禁用玩家UI
 native EnableUserUI takes boolean b returns nothing
+// 暂停/恢复昼夜时间
 native SuspendTimeOfDay takes boolean b returns nothing
 // 设置昼夜时间流逝速度 [R]
 native SetTimeOfDayScale takes real r returns nothing
@@ -4957,10 +5029,13 @@ native SetIntroShotText takes string introText returns nothing
 native SetIntroShotModel takes string introModelPath returns nothing
 // 允许/禁止 边界染色(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
+// 玩家电影模式
 native PlayModelCinematic takes string modelName returns nothing
+// 玩家电影
 native PlayCinematic takes string movieName returns nothing
 native ForceUIKey takes string key returns nothing
 native ForceUICancel takes nothing returns nothing
+// 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
 // 改变小地图的特殊图标
 native SetAltMinimapIcon takes string iconPath returns nothing
@@ -5031,15 +5106,15 @@ native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
 // 启用/禁用 任务 [R]
 native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
-// 任务是必须完成的
+// 任务是否必须完成
 native IsQuestRequired takes quest whichQuest returns boolean
-// 任务完成
+// 任务是否完成
 native IsQuestCompleted takes quest whichQuest returns boolean
-// 任务找到
+// 任务是否被发现
 native IsQuestDiscovered takes quest whichQuest returns boolean
-// 任务失败
+// 任务是否失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 允许任务
+// 任务是否启用
 native IsQuestEnabled takes quest whichQuest returns boolean
 
 // 任务创建物品
@@ -5089,7 +5164,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 // 新建排行榜 [R]
 native CreateLeaderboard takes nothing returns leaderboard
-//删除排行榜
+// 删除排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 [R]
@@ -5097,14 +5172,16 @@ native LeaderboardDisplay takes leaderboard lb, boolean show returns nothing
 // 是否显示排行榜
 native IsLeaderboardDisplayed takes leaderboard lb returns boolean
 
-// 行数
+// 排行榜 行数
 native LeaderboardGetItemCount takes leaderboard lb returns integer
-
 native LeaderboardSetSizeByItemCount takes leaderboard lb, integer count returns nothing
+// 排行榜 添加玩家
 native LeaderboardAddItem takes leaderboard lb, string label, integer value, player p returns nothing
+// 排行榜 移除行
 native LeaderboardRemoveItem takes leaderboard lb, integer index returns nothing
+// 排行榜 移除玩家
 native LeaderboardRemovePlayerItem takes leaderboard lb, player p returns nothing
-// 清空 [R]
+// 清空排行榜 [R]
 native LeaderboardClear takes leaderboard lb returns nothing
 
 native LeaderboardSortItemsByValue takes leaderboard lb, boolean ascending returns nothing
@@ -5120,10 +5197,11 @@ native LeaderboardGetLabelText takes leaderboard lb returns string
 native PlayerSetLeaderboard takes player toPlayer, leaderboard lb returns nothing
 native PlayerGetLeaderboard takes player toPlayer returns leaderboard
 
-// 设置文字颜色 [R]
+// 排行榜 设置文字颜色 [R]
 native LeaderboardSetLabelColor takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-// 设置数值颜色 [R]
+// 排行榜 设置数值颜色 [R]
 native LeaderboardSetValueColor takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
+// 排行榜 设置显示样式
 native LeaderboardSetStyle takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
 
 native LeaderboardSetItemValue takes leaderboard lb, integer whichItem, integer val returns nothing
@@ -5139,6 +5217,7 @@ native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, int
 // Create a multiboard object
 // 新建多面板 [R]
 native CreateMultiboard takes nothing returns multiboard
+// 摧毁多面板
 native DestroyMultiboard takes multiboard lb returns nothing
 
 // 显示/隐藏 [R]
@@ -5208,8 +5287,9 @@ native MultiboardSuppressDisplay takes boolean flag returns nothing
 
 
 // Camera API
+// 设置镜头空格键转向点(所有玩家)
 native SetCameraPosition takes real x, real y returns nothing
-// 设置空格键转向点(所有玩家) [R]
+// 快速设置镜头空格键转向点(所有玩家) [R]
 native SetCameraQuickPosition takes real x, real y returns nothing
 // 设置可用镜头区域(所有玩家) [R]
 native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
@@ -5217,11 +5297,11 @@ native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y
 native StopCamera takes nothing returns nothing
 // 重置游戏镜头(所有玩家) [R]
 native ResetToGameCamera takes real duration returns nothing
-// 平移镜头
+// 平移镜头(所有玩家)
 native PanCameraTo takes real x, real y returns nothing
 // 平移镜头(所有玩家)(限时) [R]
 native PanCameraToTimed takes real x, real y, real duration returns nothing
-// 平移镜头(包含z轴)
+// 平移镜头(所有玩家)(包含z轴)
 native PanCameraToWithZ takes real x, real y, real zOffsetDest returns nothing
 // 指定高度平移镜头(所有玩家)(限时) [R]
 native PanCameraToTimedWithZ takes real x, real y, real zOffsetDest, real duration returns nothing
@@ -5231,13 +5311,15 @@ native SetCinematicCamera takes string cameraModelFile returns nothing
 native SetCameraRotateMode takes real x, real y, real radiansToSweep, real duration returns nothing
 // 设置镜头属性(所有玩家)(限时) [R]
 native SetCameraField takes camerafield whichField, real value, real duration returns nothing
+// 调整镜头属性(所有玩家)
 native AdjustCameraField takes camerafield whichField, real offset, real duration returns nothing
 // 锁定镜头到单位(所有玩家) [R]
 native SetCameraTargetController takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
 // 锁定镜头到单位(固定镜头源)(所有玩家) [R]
 native SetCameraOrientController takes unit whichUnit, real xoffset, real yoffset returns nothing
-
+// 创建镜头
 native CreateCameraSetup takes nothing returns camerasetup
+// 创建镜头（指定属性）
 native CameraSetupSetField takes camerasetup whichSetup, camerafield whichField, real value, real duration returns nothing
 // 镜头属性(指定镜头) [R]
 native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField returns real
@@ -5314,7 +5396,7 @@ constant native GetCameraEyePositionLoc takes nothing returns location
 // Sound API
 //
 native NewSoundEnvironment takes string environmentName returns nothing
-
+// 创建音效
 native CreateSound takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string eaxSetting returns sound
 native CreateSoundFilenameWithLabel takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string SLKEntryName returns sound
 native CreateSoundFromLabel takes string soundLabel, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate returns sound
@@ -5342,26 +5424,32 @@ native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns 
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 
 native StartSound takes sound soundHandle returns nothing
-// 开始声音
+// 开始声音（指定是否淡入）
 // @version 1.33
-// @param fadeIn 是否淡入
+// @param fadeIn
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
+// 停止声音
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
+// 播放完成时关闭声音
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
 // Music Interface. Note that if music is disabled, these calls do nothing
 // 设置背景音乐列表 [R]
 native SetMapMusic takes string musicName, boolean random, integer index returns nothing
+// 清除地图背景音乐
 native ClearMapMusic takes nothing returns nothing
-
+// 播放音乐
 native PlayMusic takes string musicName returns nothing
+// 播放音乐（指定淡入）
 native PlayMusicEx takes string musicName, integer frommsecs, integer fadeinmsecs returns nothing
+// 暂停音乐
 native StopMusic takes boolean fadeOut returns nothing
+// 重新播放音乐
 native ResumeMusic takes nothing returns nothing
 
 // 播放主题音乐 [C]
 native PlayThematicMusic takes string musicFileName returns nothing
-// 跳播主题音乐 [R]
+// 跳播主题音乐（指定淡入） [R]
 native PlayThematicMusicEx takes string musicFileName, integer frommsecs returns nothing
 // 停止主题音乐[C]
 native EndThematicMusic takes nothing returns nothing
@@ -5370,20 +5458,25 @@ native EndThematicMusic takes nothing returns nothing
 native SetMusicVolume takes integer volume returns nothing
 // 设置背景音乐播放时间点 [R]
 native SetMusicPlayPosition takes integer millisecs returns nothing
+// 设置主题音乐音量 [R]
 native SetThematicMusicVolume takes integer volume returns nothing
 // 设置主题音乐播放时间点 [R]
 native SetThematicMusicPlayPosition takes integer millisecs returns nothing
-
+// 设置声音持续时间
 // other music and sound calls
 native SetSoundDuration takes sound soundHandle, integer duration returns nothing
+// 获取声音持续时间
 native GetSoundDuration takes sound soundHandle returns integer
+// 设置声音文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
 // 设置多通道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
+// 重置多通道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
-
+// 音乐是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
+// 音乐是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
 
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
@@ -5405,6 +5498,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 //
 // 新建天气效果 [R]
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
+// 删除天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
 // 打开/关闭天气效果
 native EnableWeatherEffect takes weathereffect whichEffect, boolean enable returns nothing
@@ -5422,23 +5516,25 @@ native TerrainDeformStop takes terraindeformation deformation, integer duration 
 // 停止所有地域变形
 native TerrainDeformStopAll takes nothing returns nothing
 
-// 新建特效(创建到坐标) [R]
+// 新建特效(绑定到坐标) [R]
 native AddSpecialEffect takes string modelName, real x, real y returns effect
-// 新建特效(创建到点) [R]
+// 新建特效(绑定到点) [R]
 native AddSpecialEffectLoc takes string modelName, location where returns effect
-// 新建特效(创建到单位) [R]
+// 新建特效(绑定到单位) [R]
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
 // 销毁特效
 native DestroyEffect takes effect whichEffect returns nothing
-
+// 新建特效（按字串符指定技能，绑定到坐标）
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
+// 新建特效（按字串符指定技能，绑定到点）
 native AddSpellEffectLoc takes string abilityString, effecttype t, location where returns effect
-// 新建特效(指定技能，创建到坐标) [R]
+// 按ID新建特效(按ID指定技能，绑定到坐标) [R]
 native AddSpellEffectById takes integer abilityId, effecttype t, real x, real y returns effect
-// 新建特效(指定技能，创建到点) [R]
+// 新建特效(按ID指定技能，绑定到点) [R]
 native AddSpellEffectByIdLoc takes integer abilityId, effecttype t, location where returns effect
+// 新建特效(按字串符指定攻击点，绑定到单位) [R]
 native AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect
-// 新建特效(指定技能，创建到单位) [R]
+// 按ID新建特效(按字串符指定攻击点，绑定到单位) [R]
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电效果 [R]
@@ -5451,15 +5547,23 @@ native DestroyLightning takes lightning whichBolt returns boolean
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电效果(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
+// 获取闪电效果 A通道颜色数值
 native GetLightningColorA takes lightning whichBolt returns real
+// 获取闪电效果 R通道颜色数值
 native GetLightningColorR takes lightning whichBolt returns real
+// 获取闪电效果 G通道颜色数值
 native GetLightningColorG takes lightning whichBolt returns real
+// 获取闪电效果 B通道颜色数值
 native GetLightningColorB takes lightning whichBolt returns real
+// 设置闪电效果颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-
+// 获取特效
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
+// 按ID获取特效
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
+// 获取特效声音
 native GetAbilitySound takes string abilityString, soundtype t returns string
+// 按ID获取特效声音
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
@@ -5559,7 +5663,7 @@ native StartCampaignAI takes player num, string script returns nothing
 native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
 native PauseCompAI takes player p, boolean pause returns nothing
-// 获取指定玩家的对战 AI
+// 获取指定玩家的 AI难度
 native GetAIDifficulty takes player num returns aidifficulty
 
 // 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
@@ -5671,9 +5775,9 @@ native BlzGetAbilityActivatedIcon takes integer abilCode returns string
 native BlzGetAbilityPosX takes integer abilCode returns integer
 // 技能位置 - Y
 native BlzGetAbilityPosY takes integer abilCode returns integer
-// 设置技能位置X
+// 设置技能位置 X
 native BlzSetAbilityPosX takes integer abilCode, integer x returns nothing
-// 设置技能位置Y
+// 设置技能位置 Y
 native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
 // 技能位置 - X (自动施法)
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
@@ -5729,8 +5833,9 @@ native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weap
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置攻击间隔
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
-// 设置特效颜色
+// 设置特效颜色（指定玩家）
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
+// 设置特效颜色（指定颜色）
 native BlzSetSpecialEffectColor takes effect whichEffect, integer r, integer g, integer b returns nothing
 // 设置特效透明度
 native BlzSetSpecialEffectAlpha takes effect whichEffect, integer alpha returns nothing
@@ -5740,22 +5845,23 @@ native BlzSetSpecialEffectScale takes effect whichEffect, real scale returns not
 native BlzSetSpecialEffectPosition takes effect whichEffect, real x, real y, real z returns nothing
 // 设置特效高度
 native BlzSetSpecialEffectHeight takes effect whichEffect, real height returns nothing
-// 设置特效时间
+// 设置特效播放速度
 native BlzSetSpecialEffectTimeScale takes effect whichEffect, real timeScale returns nothing
+// 设置特效持续时间
 native BlzSetSpecialEffectTime takes effect whichEffect, real time returns nothing
 // 设置特效朝向
 native BlzSetSpecialEffectOrientation takes effect whichEffect, real yaw, real pitch, real roll returns nothing
-// 设置特效Y坐标
+// 设置特效偏转度
 native BlzSetSpecialEffectYaw takes effect whichEffect, real yaw returns nothing
 // 设置特效纵摇
 native BlzSetSpecialEffectPitch takes effect whichEffect, real pitch returns nothing
 // 设置特效滚摇
 native BlzSetSpecialEffectRoll takes effect whichEffect, real roll returns nothing
-// 设置特效X坐标
+// 设置特效 X 坐标
 native BlzSetSpecialEffectX takes effect whichEffect, real x returns nothing
-// 设置特效Y坐标
+// 设置特效 Y 坐标
 native BlzSetSpecialEffectY takes effect whichEffect, real y returns nothing
-// 设置特效Z坐标
+// 设置特效 Z 坐标
 native BlzSetSpecialEffectZ takes effect whichEffect, real z returns nothing
 // 设置特效点
 native BlzSetSpecialEffectPositionLoc takes effect whichEffect, location loc returns nothing
@@ -5807,6 +5913,7 @@ native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer l
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
 // 重设技能冷却
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
+// 设置技能开始冷却
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
 // 单位技能魔法消耗
 native BlzGetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level returns integer
@@ -5843,7 +5950,7 @@ native RequestExtraStringData takes integer dataType, player whichPlayer, string
 // 获取实数数据
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
-// 获取单位Z坐标
+// 获取单位 Z 坐标
 native BlzGetUnitZ takes unit whichUnit returns real
 // 启用选择
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
@@ -6031,7 +6138,7 @@ native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 // native BlzFourCC2S                                 takes integer value returns string
 // native BlzS2FourCC                                 takes string value returns integer
-
+// 设置单位朝向度
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect
@@ -6040,11 +6147,11 @@ native CreateLearnCommandButtonEffect takes integer abilityId returns commandbut
 native DestroyCommandButtonEffect takes commandbuttoneffect whichEffect returns nothing
 
 // Bit Operations
-// 按位或
+// 按位 或
 native BlzBitOr takes integer x, integer y returns integer
-// 按位与
+// 按位 与
 native BlzBitAnd takes integer x, integer y returns integer
-// 按位异或
+// 按位 异或
 native BlzBitXor takes integer x, integer y returns integer 
 
 // Intanced Object Operations
