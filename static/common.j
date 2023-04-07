@@ -343,9 +343,9 @@ globals
 	// Game Constants
 	
 	
-	// false
+	// 假 false
  constant boolean FALSE = false
- // true
+    // 真 true
 	constant boolean TRUE = true
 	// 数组最大值，1.28及以下版本该值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
@@ -569,11 +569,11 @@ globals
 	constant pathingtype PATHING_TYPE_FLOATABILITY = ConvertPathingType(6)
 	// 路径类型 两栖单位可通行
 	constant pathingtype PATHING_TYPE_AMPHIBIOUSPATHING = ConvertPathingType(7)
-	// 左键
+	// 鼠标 左键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_LEFT = ConvertMouseButtonType(1)
-	// 滚轮
+	// 鼠标 滚轮
 	constant mousebuttontype MOUSE_BUTTON_TYPE_MIDDLE = ConvertMouseButtonType(2)
-	// 右键
+	// 鼠标 右键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_RIGHT = ConvertMouseButtonType(3)
 	// 动画类型 - 出现（估计包含训练完成、创建、召唤）
 	constant animtype ANIM_TYPE_BIRTH = ConvertAnimType(0)
@@ -719,17 +719,17 @@ globals
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
 	// 固定玩家种族为 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
-	// 玩家控制者类型  用户
+	// 玩家控制者类型 用户
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
-	// 玩家控制者类型  电脑
+	// 玩家控制者类型 电脑
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
-	// 玩家控制者类型  中立可营救
+	// 玩家控制者类型 中立可营救
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
-	// 玩家控制者类型  中立被动
+	// 玩家控制者类型 中立被动
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
-	// 玩家控制者类型  中立敌对
+	// 玩家控制者类型 中立敌对
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
-	// 玩家控制者类型  没有玩家
+	// 玩家控制者类型 没有玩家
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型-对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -2827,86 +2827,147 @@ globals
 	
 	// Move Type
 	// Move Type
+	// 移动类型 没有/未知
  constant movetype MOVE_TYPE_UNKNOWN = ConvertMoveType(0)
+	// 移动类型 步行
 	constant movetype MOVE_TYPE_FOOT = ConvertMoveType(1)
+	// 移动类型 飞行
 	constant movetype MOVE_TYPE_FLY = ConvertMoveType(2)
+	// 移动类型 骑马
 	constant movetype MOVE_TYPE_HORSE = ConvertMoveType(4)
+	// 移动类型 浮空（陆）
 	constant movetype MOVE_TYPE_HOVER = ConvertMoveType(8)
+	// 移动类型 漂浮（水）
 	constant movetype MOVE_TYPE_FLOAT = ConvertMoveType(16)
+	// 移动类型 两栖
 	constant movetype MOVE_TYPE_AMPHIBIOUS = ConvertMoveType(32)
+	// 移动类型 可建造地面
 	constant movetype MOVE_TYPE_UNBUILDABLE = ConvertMoveType(64)
 	
 	// Target Flag
 	// Target Flag
+	// 目标类型 无
  constant targetflag TARGET_FLAG_NONE = ConvertTargetFlag(1)
+	// 目标类型 地面
 	constant targetflag TARGET_FLAG_GROUND = ConvertTargetFlag(2)
+	// 目标类型 空中
 	constant targetflag TARGET_FLAG_AIR = ConvertTargetFlag(4)
+	// 目标类型 建筑
 	constant targetflag TARGET_FLAG_STRUCTURE = ConvertTargetFlag(8)
+	// 目标类型 守卫
 	constant targetflag TARGET_FLAG_WARD = ConvertTargetFlag(16)
+	// 目标类型 物品
 	constant targetflag TARGET_FLAG_ITEM = ConvertTargetFlag(32)
+	// 目标类型 树木
 	constant targetflag TARGET_FLAG_TREE = ConvertTargetFlag(64)
+	// 目标类型 墙
 	constant targetflag TARGET_FLAG_WALL = ConvertTargetFlag(128)
+	// 目标类型 残骸
 	constant targetflag TARGET_FLAG_DEBRIS = ConvertTargetFlag(256)
+	// 目标类型 装饰物
 	constant targetflag TARGET_FLAG_DECORATION = ConvertTargetFlag(512)
+	// 目标类型 桥梁
 	constant targetflag TARGET_FLAG_BRIDGE = ConvertTargetFlag(1024)
 	
 	// defense type
 	// defense type
+	//防御类型 轻型/小型，在低版本为 small ，没有 light
  constant defensetype DEFENSE_TYPE_LIGHT = ConvertDefenseType(0)
+	//防御类型 中型
 	constant defensetype DEFENSE_TYPE_MEDIUM = ConvertDefenseType(1)
+	//防御类型 大型
 	constant defensetype DEFENSE_TYPE_LARGE = ConvertDefenseType(2)
+	//防御类型 城墙
 	constant defensetype DEFENSE_TYPE_FORT = ConvertDefenseType(3)
+	//防御类型 普通
 	constant defensetype DEFENSE_TYPE_NORMAL = ConvertDefenseType(4)
+	//防御类型 英雄
 	constant defensetype DEFENSE_TYPE_HERO = ConvertDefenseType(5)
+	//防御类型 神圣
 	constant defensetype DEFENSE_TYPE_DIVINE = ConvertDefenseType(6)
+	//防御类型 无装甲
 	constant defensetype DEFENSE_TYPE_NONE = ConvertDefenseType(7)
 	
 	// Hero Attribute
 	// Hero Attribute
+	// 英雄属性 力量
  constant heroattribute HERO_ATTRIBUTE_STR = ConvertHeroAttribute(1)
+    // 英雄属性 智力
 	constant heroattribute HERO_ATTRIBUTE_INT = ConvertHeroAttribute(2)
+    // 英雄属性 敏捷
 	constant heroattribute HERO_ATTRIBUTE_AGI = ConvertHeroAttribute(3)
 	
 	// Armor Type
 	// Armor Type
+    // 装甲 没有/未知
  constant armortype ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
+    // 装甲 肉体
 	constant armortype ARMOR_TYPE_FLESH = ConvertArmorType(1)
+    // 装甲 金属
 	constant armortype ARMOR_TYPE_METAL = ConvertArmorType(2)
+    // 装甲 木头
 	constant armortype ARMOR_TYPE_WOOD = ConvertArmorType(3)
+    // 装甲 气态
 	constant armortype ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
+    // 装甲 石头
 	constant armortype ARMOR_TYPE_STONE = ConvertArmorType(5)
 	
 	// Regeneration Type
 	// Regeneration Type
+	// 生命恢复类型 无
  constant regentype REGENERATION_TYPE_NONE = ConvertRegenType(0)
+	// 生命恢复类型 总是
 	constant regentype REGENERATION_TYPE_ALWAYS = ConvertRegenType(1)
+	// 生命恢复类型 只在荒芜地表上
 	constant regentype REGENERATION_TYPE_BLIGHT = ConvertRegenType(2)
+	// 生命恢复类型 只在白天
 	constant regentype REGENERATION_TYPE_DAY = ConvertRegenType(3)
+	// 生命恢复类型 只在夜晚
 	constant regentype REGENERATION_TYPE_NIGHT = ConvertRegenType(4)
 	
 	// Unit Category
 	// Unit Category
+	// 单位类别 泰坦族
  constant unitcategory UNIT_CATEGORY_GIANT = ConvertUnitCategory(1)
+	// 单位类别 不死族
 	constant unitcategory UNIT_CATEGORY_UNDEAD = ConvertUnitCategory(2)
+	// 单位类别 召唤生物
 	constant unitcategory UNIT_CATEGORY_SUMMONED = ConvertUnitCategory(4)
+	// 单位类别 机械类
 	constant unitcategory UNIT_CATEGORY_MECHANICAL = ConvertUnitCategory(8)
+	// 单位类别 工人
 	constant unitcategory UNIT_CATEGORY_PEON = ConvertUnitCategory(16)
+	// 单位类别 自爆工兵
 	constant unitcategory UNIT_CATEGORY_SAPPER = ConvertUnitCategory(32)
+	// 单位类别 城镇大厅
 	constant unitcategory UNIT_CATEGORY_TOWNHALL = ConvertUnitCategory(64)
+	// 单位类别 古树
 	constant unitcategory UNIT_CATEGORY_ANCIENT = ConvertUnitCategory(128)
+	// 单位类别 中立
 	constant unitcategory UNIT_CATEGORY_NEUTRAL = ConvertUnitCategory(256)
+	// 单位类别 守卫
 	constant unitcategory UNIT_CATEGORY_WARD = ConvertUnitCategory(512)
+	// 单位类别 可通行
 	constant unitcategory UNIT_CATEGORY_STANDON = ConvertUnitCategory(1024)
+	// 单位类别 牛头人
 	constant unitcategory UNIT_CATEGORY_TAUREN = ConvertUnitCategory(2048)
 	
 	// Pathing Flag
+	// 放置要求 地面可通行
  constant pathingflag PATHING_FLAG_UNWALKABLE = ConvertPathingFlag(2)
+	// 放置要求 空中单位可通行
 	constant pathingflag PATHING_FLAG_UNFLYABLE = ConvertPathingFlag(4)
+	// 放置要求 可建造地面
 	constant pathingflag PATHING_FLAG_UNBUILDABLE = ConvertPathingFlag(8)
+	// 放置要求 工人可采集
 	constant pathingflag PATHING_FLAG_UNPEONHARVEST = ConvertPathingFlag(16)
+	// 放置要求 不是荒芜之地
 	constant pathingflag PATHING_FLAG_BLIGHTED = ConvertPathingFlag(32)
+	// 放置要求 海面可通行
 	constant pathingflag PATHING_FLAG_UNFLOATABLE = ConvertPathingFlag(64)
+	// 放置要求 两栖单位可通行
 	constant pathingflag PATHING_FLAG_UNAMPHIBIOUS = ConvertPathingFlag(128)
+	// 放置要求 物品可通行
 	constant pathingflag PATHING_FLAG_UNITEMPLACABLE = ConvertPathingFlag(256)
 	
 endglobals
