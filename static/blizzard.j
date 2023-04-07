@@ -132,7 +132,7 @@ globals
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
-    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的时间，默认20
+    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
     // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0是混乱之治）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
