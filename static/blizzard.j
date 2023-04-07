@@ -8,15 +8,15 @@ globals
     //
 
     // Misc constants
-    // 圆周率 π（3.1415926）
+    // 圆周率 π，默认3.14159
     constant real      bj_PI                            = 3.14159
-    // 底数
+    // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
-    // 单元格宽度
+    // 单元格宽度，默认128
     constant real      bj_CELLWIDTH                     = 128.0
-    // 悬崖高度
+    // 悬崖高度，默认128
     constant real      bj_CLIFFHEIGHT                   = 128.0
-    // 单位默认面向角度
+    // 单位默认面向角度，默认270
     constant real      bj_UNIT_FACING                   = 270.0
     // 弧度转换成为角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
@@ -5933,7 +5933,7 @@ function ConfigureNeutralVictim takes nothing returns nothing
 endfunction
 
 
-// 设置玩家所有单位到中立受害者单位
+// 设置玩家所有单位变更为中立受害玩家控制
 function MakeUnitsPassiveForPlayerEnum takes nothing returns nothing
     call SetUnitOwner(GetEnumUnit(), Player(bj_PLAYER_NEUTRAL_VICTIM), false)
 endfunction
@@ -5984,7 +5984,7 @@ function AllowVictoryDefeat takes playergameresult gameResult returns boolean
     return true
 endfunction
 
-
+//退出游戏
 function EndGameBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
@@ -6043,7 +6043,7 @@ function MeleeDefeatDialogBJ takes player whichPlayer, boolean leftGame returns 
     call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
 endfunction
 
-
+//游戏结束
 function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6067,7 +6067,7 @@ function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns not
     call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
 endfunction
 
-
+//删除存档
 function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult gameResult, boolean leftGame returns nothing
     if AllowVictoryDefeat(gameResult) then
 
@@ -6085,10 +6085,11 @@ function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult 
     endif
 endfunction
 
-
+// 游戏胜利对话框事件，继续
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
-        call PauseGame( false )
+        call 
+	( false )
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
@@ -6100,7 +6101,7 @@ function CustomVictoryOkBJ takes nothing returns nothing
     endif
 endfunction
 
-
+// 游戏胜利对话框事件，退出
 function CustomVictoryQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6111,7 +6112,7 @@ function CustomVictoryQuitBJ takes nothing returns nothing
     call EndGame( bj_changeLevelShowScores )
 endfunction
 
-
+// 游戏胜利，显示对话框（继续，退出）
 function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6139,7 +6140,7 @@ function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     call StartSoundForPlayerBJ( whichPlayer, bj_victoryDialogSound )
 endfunction
 
-
+// 游戏胜利，跳过选择，直接进入下一关或退出
 function CustomVictorySkipBJ takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         if bj_isSinglePlayer then
@@ -6156,7 +6157,7 @@ function CustomVictorySkipBJ takes player whichPlayer returns nothing
 endfunction
 
 
-// 胜利
+// 游戏胜利
 function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean showScores returns nothing
     if AllowVictoryDefeat( PLAYER_GAME_RESULT_VICTORY ) then
         call RemovePlayer( whichPlayer, PLAYER_GAME_RESULT_VICTORY )
@@ -6177,13 +6178,13 @@ function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean s
     endif
 endfunction
 
-
+//游戏失败对话框按钮事件，重新开始
 function CustomDefeatRestartBJ takes nothing returns nothing
     call PauseGame( false )
     call RestartGame( true )
 endfunction
 
-
+//游戏失败对话框按钮事件，选择难度并重新开始
 function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     local gamedifficulty diff = GetGameDifficulty()
 
@@ -6203,13 +6204,13 @@ function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     call RestartGame( true )
 endfunction
 
-
+//游戏失败对话框按钮事件，选择存档
 function CustomDefeatLoadBJ takes nothing returns nothing
     call PauseGame( false )
     call DisplayLoadDialog()
 endfunction
 
-
+//游戏失败对话框按钮事件，退出游戏
 function CustomDefeatQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6220,7 +6221,7 @@ function CustomDefeatQuitBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
 
-
+// 游戏失败对话框（重新开始，选择难度，退出）
 function CustomDefeatDialogBJ takes player whichPlayer, string message returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6302,7 +6303,7 @@ endfunction
 //***************************************************************************
 
 
-// 创建任务t
+// 创建任务
 function CreateQuestBJ takes integer questType, string title, string description, string iconPath returns quest
     local boolean required   = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
     local boolean discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED)
