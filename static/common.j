@@ -1467,9 +1467,9 @@ globals
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
 	// 混合方式 调整的2x混合
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
-        // 频率控制 普通频率
+  // 频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
-        // 频率控制 罕见频率
+  // 频率控制 罕见频率
 	constant raritycontrol RARITY_RARE = ConvertRarityControl(1)
 	// 地图涂层标志 无
 	constant texmapflags TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
@@ -2756,7 +2756,7 @@ globals
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
 	// 物品整数域 颜色值（alpha）
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
-        // 物品实数域 模型缩放	
+  // 物品实数域 模型缩放	
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
 	// 物品布尔值域 持有者死亡时掉落
 	constant itembooleanfield ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
@@ -2768,11 +2768,11 @@ globals
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
 	// 物品布尔值域 拾取时自动使用
 	constant itembooleanfield ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
-        // 物品布尔值域 可以出售给商店
+  // 物品布尔值域 可以出售给商店
 	constant itembooleanfield ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
-        // 物品布尔值域 主动使用
+  // 物品布尔值域 主动使用
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
-        // 物品字符串域 使用模型	
+  // 物品字符串域 使用模型	
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
 	
 	// Unit
@@ -2863,9 +2863,9 @@ globals
 	constant unitbooleanfield UNIT_BF_HIDE_MINIMAP_DISPLAY = ConvertUnitBooleanField('uhom')
 	// 单位布尔值域 缩放投射物
 	constant unitbooleanfield UNIT_BF_SCALE_PROJECTILES = ConvertUnitBooleanField('uscb')
-        // 单位布尔值域 选择圈在水面上
+  // 单位布尔值域 选择圈在水面上
 	constant unitbooleanfield UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
-        // 单位布尔值域 深水区有阴影
+  // 单位布尔值域 深水区有阴影
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
 	// 单位字串符域 名字
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
@@ -3138,7 +3138,7 @@ native StringCase takes string source, boolean upper returns string
 // 转换字符串为哈希码，在AI脚本中似乎只返回 null
 native StringHash takes string s returns integer
 
-// 获取本地字符串 [R]，从Globalstrings.fdf文件中获取，因附带翻译，不同语言获取的字串符不同，在AI脚本中只返回 null
+// 获取本地字符串 [R]，从Globalstrings.fdf文件中获取查询内容对应的翻译文本，不同语言返回值不同，当字符串不存在时（是当前版本不存在查询的字符串本身，不是已存在字符串但不存在翻译文本），会原封不动返回查询内容（英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等），利用该命令可得知游戏大致版本号（如1.27，1.30等），该命令不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native GetLocalizedString takes string source returns string
 // 获取本地热键
 native GetLocalizedHotkey takes string source returns integer
