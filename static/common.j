@@ -1431,31 +1431,31 @@ globals
 	
 	// Animatable Camera Fields
 	
-	// 镜头属性 距离到目标
+	// 镜头属性 镜头距离（距离到目标）
 	constant camerafield CAMERA_FIELD_TARGET_DISTANCE = ConvertCameraField(0)
-	// 镜头属性 远端Z
+	// 镜头属性 远景截断距离（远景裁剪）
 	constant camerafield CAMERA_FIELD_FARZ = ConvertCameraField(1)
-	// 镜头属性 攻击角度
+	// 镜头属性 X 轴旋转角度（水平/攻击角度）
 	constant camerafield CAMERA_FIELD_ANGLE_OF_ATTACK = ConvertCameraField(2)
-	// 镜头属性 观看区域
+	// 镜头属性 镜头区域（观察区域）
 	constant camerafield CAMERA_FIELD_FIELD_OF_VIEW = ConvertCameraField(3)
-	// 镜头属性 滚动
+	// 镜头属性 Y 轴旋转角度（滚动）
 	constant camerafield CAMERA_FIELD_ROLL = ConvertCameraField(4)
-	// 镜头属性 旋转
+	// 镜头属性 Z 轴旋转角度（旋转）
 	constant camerafield CAMERA_FIELD_ROTATION = ConvertCameraField(5)
-	// 镜头属性 高度位移
+	// 镜头属性 Z 轴偏移（高度位移）
 	constant camerafield CAMERA_FIELD_ZOFFSET = ConvertCameraField(6)
-	// 镜头属性 近平面Z值
+	// 镜头属性 近景截断距离（近景裁剪）
 	constant camerafield CAMERA_FIELD_NEARZ = ConvertCameraField(7)
-	// 镜头属性 局部纵摇
+	// 镜头属性 局部纵摇（Z 轴）
 	constant camerafield CAMERA_FIELD_LOCAL_PITCH = ConvertCameraField(8)
-	// 镜头属性 局部横摇
+	// 镜头属性 局部横摇（X 轴）
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
-	// 镜头属性 局部滚动
+	// 镜头属性 局部滚摇（Y 轴）
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合方式 无混合
+	// 混合方式 无混合，有两个无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
-	// 混合方式 无混合
+	// 混合方式 无混合，有两个无混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
 	// 混合方式 关键的alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
@@ -2919,21 +2919,21 @@ globals
 	
 	// defense type
 	// defense type
-	//防御类型 轻型/小型，在低版本为 small ，没有 light
+	// 防御类型 轻型/小型，在低版本为 small ，没有 light
  constant defensetype DEFENSE_TYPE_LIGHT = ConvertDefenseType(0)
-	//防御类型 中型
+	// 防御类型 中型
 	constant defensetype DEFENSE_TYPE_MEDIUM = ConvertDefenseType(1)
-	//防御类型 大型
+	// 防御类型 大型
 	constant defensetype DEFENSE_TYPE_LARGE = ConvertDefenseType(2)
-	//防御类型 城墙
+	// 防御类型 城墙
 	constant defensetype DEFENSE_TYPE_FORT = ConvertDefenseType(3)
-	//防御类型 普通
+	// 防御类型 普通
 	constant defensetype DEFENSE_TYPE_NORMAL = ConvertDefenseType(4)
-	//防御类型 英雄
+	// 防御类型 英雄
 	constant defensetype DEFENSE_TYPE_HERO = ConvertDefenseType(5)
-	//防御类型 神圣
+	// 防御类型 神圣
 	constant defensetype DEFENSE_TYPE_DIVINE = ConvertDefenseType(6)
-	//防御类型 无装甲
+	// 防御类型 无装甲
 	constant defensetype DEFENSE_TYPE_NONE = ConvertDefenseType(7)
 	
 	// Hero Attribute
@@ -3090,12 +3090,12 @@ native SubString takes string source, integer start, integer end returns string
 native StringLength takes string s returns integer
 // 将字串符转换为大小写字母
 native StringCase takes string source, boolean upper returns string
-// 转换字符串为哈希码
+// 转换字符串为哈希码，在AI脚本中似乎只返回 null
 native StringHash takes string s returns integer
 
-// 本地字符串 [R]
+// 获取本地字符串 [R]，从Globalstrings.fdf文件中获取，因附带翻译，不同语言获取的字串符不同，在AI脚本中只返回 null
 native GetLocalizedString takes string source returns string
-// 本地热键 
+// 获取本地热键
 native GetLocalizedHotkey takes string source returns integer
 
 
@@ -3402,21 +3402,21 @@ native Location takes real x, real y returns location
 native RemoveLocation takes location whichLocation returns nothing
 // 移动点 [R]
 native MoveLocation takes location whichLocation, real newX, real newY returns nothing
-// X 坐标
+// 获取点 X 坐标
 native GetLocationX takes location whichLocation returns real
-// Y 坐标
+// 获取点 Y 坐标
 native GetLocationY takes location whichLocation returns real
 
 // This function is asynchronous. The values it returns are not guaranteed synchronous between each player.
 //  If you attempt to use it in a synchronous manner, it may cause a desync.
-// 点的Z轴高度 [R]
+// 获取点 Z 轴高度 [R]
 native GetLocationZ takes location whichLocation returns real
 
 // 单位检查
 native IsUnitInRegion takes region whichRegion, unit whichUnit returns boolean
-// 包含坐标
+// 是否包含坐标
 native IsPointInRegion takes region whichRegion, real x, real y returns boolean
-// 包含点
+// 是否包含点
 native IsLocationInRegion takes region whichRegion, location whichLocation returns boolean
 
 // Returns full map bounds, including unplayable borders, in world coordinates
@@ -3644,7 +3644,7 @@ constant native GetAttacker takes nothing returns unit
 constant native GetRescuer takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DEATH
-// 获取垂死的单位
+// 获取死亡单位
 constant native GetDyingUnit takes nothing returns unit
 // 获取凶手单位
 constant native GetKillingUnit takes nothing returns unit
