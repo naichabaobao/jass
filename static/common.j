@@ -201,7 +201,7 @@ constant native ConvertPlayerColor takes integer i returns playercolor
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
 // 转换音量组
 constant native ConvertVolumeGroup takes integer i returns volumegroup
-// 转换照相机领域
+// 转换镜头属性
 constant native ConvertCameraField takes integer i returns camerafield
 // 转换混合模式
 constant native ConvertBlendMode takes integer i returns blendmode
@@ -307,22 +307,22 @@ constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
 // 转换路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-// 命令id
+// 命令字符串转id
 constant native OrderId takes string orderIdString returns integer
 // 命令id转字符串
 constant native OrderId2String takes integer orderId returns string
-// 单位id
+// 单位字符串转id
 constant native UnitId takes string unitIdString returns integer
 // 单位id转字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 技能id Not currently working correctly...
+// 技能字转符串id Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
 // 技能id转字符串
 constant native AbilityId2String takes integer abilityId returns string
 
 // Looks up the "name" field for any object (unit, item, ability)
-// 物体名称 [C]
+// 获取物体名称（字串符） [C]，此命令在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
 // 获取最大的玩家数，12或24人
 constant native GetBJMaxPlayers takes nothing returns integer
@@ -345,7 +345,7 @@ globals
 	
 	// 假 false
  constant boolean FALSE = false
-    // 真 true
+        // 真 true
 	constant boolean TRUE = true
 	// 数组最大值，1.28及以下版本该值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
@@ -836,23 +836,37 @@ globals
 	
 	// Sound Constants
 	
-	
+	// 单位移动声音
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
+        // 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
+	// 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
+	// 动画和法术声音
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
+	// 用户界面（UI）声音
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
+	// 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
+	// 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
+	// 火焰声音
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
+	// 电影声音 背景声
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
+	// 电影声音 场景声
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
+	// 电影声音 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
+	// 电影声音 对话声
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
+	// 电影声音 声音特效1
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
+	// 电影声音 声音特效2
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
+	// 电影声音 声音特效3
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
 	
@@ -878,7 +892,7 @@ globals
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
 	// 玩家英雄数量
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-    // 玩家人口上限数
+        // 玩家人口上限数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
 	// 玩家人口使用数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
@@ -892,7 +906,7 @@ globals
 	constant playerstate PLAYER_STATE_PLACED = ConvertPlayerState(9)
 	// 玩家状态-默认为观看者
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
-	// 	玩家状态-观看者
+	// 玩家状态-观看者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
 	// 玩家状态-不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
@@ -923,12 +937,12 @@ globals
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
 	// AI难度-普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-    // AI难度-困难
+        // AI难度-困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
 	// 玩家积分-训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-    // 玩家积分-消灭单位数量
+        // 玩家积分-消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
 	// 玩家积分-已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
@@ -1072,11 +1086,11 @@ globals
 	// 玩家升级科技完成
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
 	
-    // 玩家开始训练单位
+        // 玩家开始训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_START = ConvertPlayerUnitEvent(32)
 	// 玩家取消训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_CANCEL = ConvertPlayerUnitEvent(33)
-    // 玩家完成训练单位
+        // 玩家完成训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_FINISH = ConvertPlayerUnitEvent(34)
 	// 玩家开始研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_START = ConvertPlayerUnitEvent(35)
@@ -1088,15 +1102,15 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位命令事件（指定点）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-    // 玩家单位命令事件（指定单位）
+        // 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-    // 玩家英雄升级事件
+        // 玩家英雄升级事件
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-    // 玩家英雄学习技能事件
+        // 玩家英雄学习技能事件
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-    // 玩家英雄可复活
+        // 玩家英雄可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -1128,7 +1142,7 @@ globals
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 單位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-    // 單位（尸体）開始腐爛
+        // 單位（尸体）開始腐爛
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
 	// 单位可检测
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
@@ -1283,7 +1297,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 	// 玩家單位停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-    // 玩家單位抵押物品
+        // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位物品栏中有物品堆叠
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
@@ -1320,7 +1334,7 @@ globals
 	
 	// 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
-    // 小于 或 等于
+        // 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
 	// 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
@@ -1358,21 +1372,23 @@ globals
 	constant unittype UNIT_TYPE_SUMMONED = ConvertUnitType(10)
 	// 单位是 被击晕的
 	constant unittype UNIT_TYPE_STUNNED = ConvertUnitType(11)
+	// 单位是 受折磨的
 	constant unittype UNIT_TYPE_PLAGUED = ConvertUnitType(12)
 	// 单位是 被诱捕的（被网住）
 	constant unittype UNIT_TYPE_SNARED = ConvertUnitType(13)
-	// 单位分类是 不死族
+	// 单位分类 不死族
 	constant unittype UNIT_TYPE_UNDEAD = ConvertUnitType(14)
+	// 单位分类 机械的
 	constant unittype UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
-	// 单位分类是 工人
+	// 单位分类 工人
 	constant unittype UNIT_TYPE_PEON = ConvertUnitType(16)
-	// 单位分类是 自爆工兵
+	// 单位分类 自爆工兵
 	constant unittype UNIT_TYPE_SAPPER = ConvertUnitType(17)
-	// 单位分类是 城镇
+	// 单位分类 城镇
 	constant unittype UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
-	// 单位分类是 古树
+	// 单位分类 古树
 	constant unittype UNIT_TYPE_ANCIENT = ConvertUnitType(19)
-	// 单位分类是 牛头人
+	// 单位分类 牛头人
 	constant unittype UNIT_TYPE_TAUREN = ConvertUnitType(20)
 	// 单位 已中毒
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
@@ -1415,61 +1431,93 @@ globals
 	
 	// Animatable Camera Fields
 	
-	
+	// 镜头属性 距离到目标
 	constant camerafield CAMERA_FIELD_TARGET_DISTANCE = ConvertCameraField(0)
+	// 镜头属性 远端Z
 	constant camerafield CAMERA_FIELD_FARZ = ConvertCameraField(1)
+	// 镜头属性 攻击角度
 	constant camerafield CAMERA_FIELD_ANGLE_OF_ATTACK = ConvertCameraField(2)
+	// 镜头属性 观看区域
 	constant camerafield CAMERA_FIELD_FIELD_OF_VIEW = ConvertCameraField(3)
+	// 镜头属性 滚动
 	constant camerafield CAMERA_FIELD_ROLL = ConvertCameraField(4)
+	// 镜头属性 旋转
 	constant camerafield CAMERA_FIELD_ROTATION = ConvertCameraField(5)
+	// 镜头属性 高度位移
 	constant camerafield CAMERA_FIELD_ZOFFSET = ConvertCameraField(6)
+	// 镜头属性 近平面Z值
 	constant camerafield CAMERA_FIELD_NEARZ = ConvertCameraField(7)
+	// 镜头属性 局部纵摇
 	constant camerafield CAMERA_FIELD_LOCAL_PITCH = ConvertCameraField(8)
+	// 镜头属性 局部横摇
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
+	// 镜头属性 局部滚动
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	
+	// 混合方式 无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
+	// 混合方式 无混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
+	// 混合方式 关键的alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
+	// 混合方式 普通混合
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
+	// 混合方式 附加的混合
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
+	// 混合方式 调整的混合
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
+	// 混合方式 调整的2x混合
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
-	
+        // 频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
+        // 频率控制 罕见频率
 	constant raritycontrol RARITY_RARE = ConvertRarityControl(1)
-	
+	// 地图涂层标志 无
 	constant texmapflags TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
+	// 地图涂层标志 重叠(U)
 	constant texmapflags TEXMAP_FLAG_WRAP_U = ConvertTexMapFlags(1)
+	// 地图涂层标志 重叠(V)
 	constant texmapflags TEXMAP_FLAG_WRAP_V = ConvertTexMapFlags(2)
+	// 地图涂层标志 重叠(UV)
 	constant texmapflags TEXMAP_FLAG_WRAP_UV = ConvertTexMapFlags(3)
-	
+	// 可见效果 黑色迷雾
 	constant fogstate FOG_OF_WAR_MASKED = ConvertFogState(1)
+	// 可见效果 战争迷雾
 	constant fogstate FOG_OF_WAR_FOGGED = ConvertFogState(2)
+	// 可见效果 可见
 	constant fogstate FOG_OF_WAR_VISIBLE = ConvertFogState(4)
 	
 	
 	// Camera Margin constants for use with GetCameraMargin
 	
-	
+	// 镜头空白 左
 	constant integer CAMERA_MARGIN_LEFT = 0
+	// 镜头空白 右
 	constant integer CAMERA_MARGIN_RIGHT = 1
+	// 镜头空白 顶部
 	constant integer CAMERA_MARGIN_TOP = 2
+	// 镜头空白 底部
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
 	//特效 Effect API constants
 	
-	
+	// 特效类型 特效
 	constant effecttype EFFECT_TYPE_EFFECT = ConvertEffectType(0)
+	// 特效类型 目标特效
 	constant effecttype EFFECT_TYPE_TARGET = ConvertEffectType(1)
+	// 特效类型 施法者特效
 	constant effecttype EFFECT_TYPE_CASTER = ConvertEffectType(2)
+	// 特效类型 特殊特效
 	constant effecttype EFFECT_TYPE_SPECIAL = ConvertEffectType(3)
+	// 特效类型 区域特效
 	constant effecttype EFFECT_TYPE_AREA_EFFECT = ConvertEffectType(4)
+	// 特效类型 弹道特效
 	constant effecttype EFFECT_TYPE_MISSILE = ConvertEffectType(5)
+	// 特效类型 闪电特效
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
-	
+	// 声音类型 特效
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
+	// 声音类型 循环特效
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
 	
@@ -3532,17 +3580,17 @@ constant native GetClickedButton takes nothing returns button
 constant native GetClickedDialog takes nothing returns dialog
 
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
-// 比赛剩余时间
+// 获取比赛剩余时间
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
-// 比赛结束规则
+// 获取比赛结束规则
 constant native GetTournamentFinishNowRule takes nothing returns integer
-// 比赛结束玩家
+// 获取比赛结束玩家
 constant native GetTournamentFinishNowPlayer takes nothing returns player
-// 对战比赛得分
+// 获取对战比赛得分
 constant native GetTournamentScore takes player whichPlayer returns integer
 
 // EVENT_GAME_SAVE
-// 储存游戏文件名
+// 获取储存游戏文件名
 constant native GetSaveBasicFilename takes nothing returns string
 
 
@@ -3553,7 +3601,7 @@ native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer
 
 // EVENT_PLAYER_DEFEAT
 // EVENT_PLAYER_VICTORY
-// 触发玩家
+// 获取触发玩家
 constant native GetTriggerPlayer takes nothing returns player
 
 // 玩家单位事件
@@ -3561,16 +3609,16 @@ native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPl
 
 // EVENT_PLAYER_HERO_LEVEL
 // EVENT_UNIT_HERO_LEVEL
-// 英雄升级
+// 获取升级的英雄
 constant native GetLevelingUnit takes nothing returns unit
 
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
-// 学习技能的英雄
+// 获取学习技能的英雄
 constant native GetLearningUnit takes nothing returns unit
-// 学习技能 [R]
+// 获取学习的技能 [R]
 constant native GetLearnedSkill takes nothing returns integer
-// 学习的技能的等级
+// 获取学习的技能的等级
 constant native GetLearnedSkillLevel takes nothing returns integer
 
 // EVENT_PLAYER_HERO_REVIVABLE
@@ -3583,25 +3631,26 @@ constant native GetRevivableUnit takes nothing returns unit
 // EVENT_UNIT_HERO_REVIVE_START
 // EVENT_UNIT_HERO_REVIVE_CANCEL
 // EVENT_UNIT_HERO_REVIVE_FINISH
-// 复活英雄
+// 获取复活英雄
 constant native GetRevivingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_ATTACKED
-// 攻击的单位
+// 获取攻击的单位
 constant native GetAttacker takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_RESCUED
 // EVENT_PLAYER_UNIT_RESCUED
+// 获取救援的单位
 constant native GetRescuer takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DEATH
-// 垂死的单位
+// 获取垂死的单位
 constant native GetDyingUnit takes nothing returns unit
-// 凶手单位
+// 获取凶手单位
 constant native GetKillingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DECAY
-// 尸体腐烂单位
+// 获取尸体腐烂单位
 constant native GetDecayingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELECTED
@@ -3609,69 +3658,69 @@ constant native GetDecayingUnit takes nothing returns unit
 //constant native GetSelectedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
-// 正在建造的建筑
+// 获取正在建造的建筑
 constant native GetConstructingStructure takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
-// 取消建造中的建筑
+// 获取取消建造中的建筑
 constant native GetCancelledStructure takes nothing returns unit
-// 已建造的建筑
+// 获取已建造的建筑
 constant native GetConstructedStructure takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
-// 研究科技单位
+// 获取研究科技的单位
 constant native GetResearchingUnit takes nothing returns unit
-// 研究的 科技-类型
+// 获取研究的 科技-类型
 constant native GetResearched takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
-// 训练单位类型
+// 获取训练单位类型
 constant native GetTrainedUnitType takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
-// 训练单位
+// 获取训练的单位
 constant native GetTrainedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_DETECTED
 // EVENT_PLAYER_UNIT_DETECTED
-// 检测单位
+// 获取检测的单位
 constant native GetDetectedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SUMMONED
-// 正在召唤的单位
+// 获取正在召唤的单位
 constant native GetSummoningUnit takes nothing returns unit
-// 已召唤单位
+// 获取已召唤单位
 constant native GetSummonedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_LOADED
 // EVENT_PLAYER_UNIT_LOADED
-// 传送单位
+// 获取传送单位
 constant native GetTransportUnit takes nothing returns unit
-// 加载单位
+// 获取装载单位
 constant native GetLoadedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELL
-// 出售单位
+// 获取出售单位
 constant native GetSellingUnit takes nothing returns unit
-// 被出售单位
+// 获取被出售单位
 constant native GetSoldUnit takes nothing returns unit
-// 在购买的单位
+// 获取购买单位
 constant native GetBuyingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_SELL_ITEM
-// 卖出的物品
+// 获取卖出的物品
 constant native GetSoldItem takes nothing returns item
 
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
-// 改变了所有者的单位
+// 获取改变了所有者的单位
 constant native GetChangingUnit takes nothing returns unit
-// 前一个所有者
+// 获取前一个所有者
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
 // EVENT_PLAYER_UNIT_DROP_ITEM
@@ -3679,33 +3728,33 @@ constant native GetChangingUnitPrevOwner takes nothing returns player
 // EVENT_PLAYER_UNIT_USE_ITEM
 // 获取操作物品的单位
 constant native GetManipulatingUnit takes nothing returns unit
-// 被操作的物品
+// 获取被操作的物品
 constant native GetManipulatedItem takes nothing returns item
 	
 //region 1.33
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 
-// @version 1.33
+// 获取吸收被操作物品的物品 @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// @version 1.33
+// 获取被操作的物品被吸收 @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
 	
-// @version 1.33
+// 获取堆叠源物品 @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// @version 1.33
+// 获取堆叠目标物品 @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
-// @version 1.33
+// 获取堆叠物品的预期售价 @version 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
-// 收到命令的单位
+// 获取收到命令的单位
 constant native GetOrderedUnit takes nothing returns unit
-// 发出命令的单位
+// 获取发出命令的单位
 constant native GetIssuedOrderId takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
@@ -3927,9 +3976,9 @@ native IsDestructableInvulnerable takes destructable d returns boolean
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
-// 可破坏物所在X轴坐标 [R]
+// 可破坏物所在 X 轴坐标 [R]
 native GetDestructableX takes destructable d returns real
-// 可破坏物所在Y轴坐标 [R]
+// 可破坏物所在 Y 轴坐标 [R]
 native GetDestructableY takes destructable d returns real
 // 设置可破坏物的生命值
 native SetDestructableLife takes destructable d, real life returns nothing
@@ -4047,9 +4096,9 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // 设置单位属性 [R]
 // @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置 X 坐标 [R]
+// 设置单位的 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置 Y 坐标 [R]
+// 设置单位的 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
@@ -4138,7 +4187,7 @@ native GetHeroAgi takes unit whichHero, boolean includeBonuses returns integer
 // 英雄智力 [R]
 native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
-// 降低等级 [R]
+// 降低英雄等级 [R]
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
 // 英雄的经验值
@@ -4155,11 +4204,11 @@ native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta retur
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置英雄等级
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
-// 英雄等级
+// 获取英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
-// 单位等级
+// 获取单位等级
 constant native GetUnitLevel takes unit whichUnit returns integer
-// 英雄的姓名
+// 获取英雄名字
 native GetHeroProperName takes unit whichHero returns string
 // 允许/禁止经验获取 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
@@ -4167,7 +4216,7 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 native IsSuspendedXP takes unit whichHero returns boolean
 // 英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 单位技能等级 [R]
+// 获取单位技能等级 [R] ，此命令在AI脚本中似乎只返回0，不论技能是否存在
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
 // 降低技能等级 [R]
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -4175,7 +4224,7 @@ native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns intege
 native IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
 // 设置技能等级 [R]
 native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
-// 立即复活(指定坐标) [R]
+// 立即复活英雄(指定坐标) [R]
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
 // 复活英雄（立即）
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
@@ -5094,7 +5143,9 @@ native EnableWorldFogBoundary takes boolean b returns nothing
 native PlayModelCinematic takes string modelName returns nothing
 // 玩家电影
 native PlayCinematic takes string movieName returns nothing
+// 强制玩家UI按下特定键
 native ForceUIKey takes string key returns nothing
+// 强制玩家UI按下ESC键（取消键）
 native ForceUICancel takes nothing returns nothing
 // 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
@@ -5107,25 +5158,30 @@ native DisableRestartMission takes boolean flag returns nothing
 native CreateTextTag takes nothing returns texttag
 // 摧毁漂浮文字 [R]
 native DestroyTextTag takes texttag t returns nothing
-// 改变文字内容 [R]
+// 改变漂浮文字内容 [R]
 native SetTextTagText takes texttag t, string s, real height returns nothing
-// 改变文字位置(指定坐标) [R]
+// 改变漂浮文字位置(指定坐标) [R]
 native SetTextTagPos takes texttag t, real x, real y, real heightOffset returns nothing
-// 改变文字位置(指定坐标) [R]
+// 改变漂浮文字位置(指定坐标) [R]
 native SetTextTagPosUnit takes texttag t, unit whichUnit, real heightOffset returns nothing
-// 改变颜色 [R]
+// 改变漂浮文字颜色 [R]
 native SetTextTagColor takes texttag t, integer red, integer green, integer blue, integer alpha returns nothing
-// 设置速率 [R]
+// 设置漂浮文字速率 [R]
 native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
-// 显示/隐藏 (所有玩家) [R]
+// 显示/隐藏漂浮文字 (所有玩家) [R]
 native SetTextTagVisibility takes texttag t, boolean flag returns nothing
+// 设置漂浮文本开启/关闭暂停状态
 native SetTextTagSuspended takes texttag t, boolean flag returns nothing
+// 设置漂浮文本开启/关闭永久状态
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
+// 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
+// 设置漂浮文字清除（持续）时间
 native SetTextTagLifespan takes texttag t, real lifespan returns nothing
+// 设置漂浮文字消逝（淡出）时间
 native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
-// 保留英雄按钮
+// 保留英雄按钮（左上角英雄图标，F1~FN）
 native SetReservedLocalHeroButtons takes integer reserved returns nothing
 // 结盟滤色镜的设置值
 native GetAllyColorFilterState takes nothing returns integer
@@ -5159,33 +5215,36 @@ native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-
+// 设置任务是否必须完成
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
+// 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
+// 设置任务是否被发现
 native QuestSetDiscovered takes quest whichQuest, boolean discovered returns nothing
+// 设置任务是否失败
 native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
-// 启用/禁用 任务 [R]
+// 开启/关闭 任务 [R]
 native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
-// 任务是否必须完成
+// 查询任务是否必须完成
 native IsQuestRequired takes quest whichQuest returns boolean
-// 任务是否完成
+// 查询任务是否完成
 native IsQuestCompleted takes quest whichQuest returns boolean
-// 任务是否被发现
+// 查询任务是否被发现
 native IsQuestDiscovered takes quest whichQuest returns boolean
-// 任务是否失败
+// 查询任务是否失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 任务是否启用
+// 查询任务是否开启（激活）
 native IsQuestEnabled takes quest whichQuest returns boolean
 
-// 任务创建物品
+// 创建任务要求
 native QuestCreateItem takes quest whichQuest returns questitem
-// 任务物品介绍
+// 设置任务要求文本
 native QuestItemSetDescription takes questitem whichQuestItem, string description returns nothing
-// 任务物品发货
+// 设置任务要求完成/未完成
 native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed returns nothing
 
-// 任务条件完成
+// 查询任务要求是否已完成
 native IsQuestItemCompleted takes questitem whichQuestItem returns boolean
 
 // 创建失败条件
@@ -5194,8 +5253,9 @@ native CreateDefeatCondition takes nothing returns defeatcondition
 native DestroyDefeatCondition takes defeatcondition whichCondition returns nothing
 // 失败条件描述
 native DefeatConditionSetDescription takes defeatcondition whichCondition, string description returns nothing
-
+// 闪动任务按钮
 native FlashQuestDialogButton takes nothing returns nothing
+// 更新任务对话框
 native ForceQuestDialogUpdate takes nothing returns nothing
 
 
@@ -5396,43 +5456,60 @@ native CameraSetupApplyForceDuration takes camerasetup whichSetup, boolean doPan
 native CameraSetupApplyForceDurationWithZ takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
 native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns nothing
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
-
+// 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
+// 摇晃镜头源
 native CameraSetSourceNoise takes real mag, real velocity returns nothing
 
 // 摇晃镜头目标(所有玩家) [R]
 native CameraSetTargetNoiseEx takes real mag, real velocity, boolean vertOnly returns nothing
 // 摇晃镜头源(所有玩家) [R]
 native CameraSetSourceNoiseEx takes real mag, real velocity, boolean vertOnly returns nothing
-
+// 设置镜头平滑参数
 native CameraSetSmoothingFactor takes real factor returns nothing
 
 native CameraSetFocalDistance takes real distance returns nothing
 native CameraSetDepthOfFieldScale takes real scale returns nothing
-
+// 设置滤镜文本内容
 native SetCineFilterTexture takes string filename returns nothing
+// 设置滤镜混合模式
 native SetCineFilterBlendMode takes blendmode whichMode returns nothing
+// 设置滤镜文本地图参数
 native SetCineFilterTexMapFlags takes texmapflags whichFlags returns nothing
+// 设置滤镜初始紫外线滤光镜
 native SetCineFilterStartUV takes real minu, real minv, real maxu, real maxv returns nothing
+// 设置滤镜停止紫外线滤光镜
 native SetCineFilterEndUV takes real minu, real minv, real maxu, real maxv returns nothing
+// 设置滤镜初始颜色
 native SetCineFilterStartColor takes integer red, integer green, integer blue, integer alpha returns nothing
+// 设置滤镜停止颜色
 native SetCineFilterEndColor takes integer red, integer green, integer blue, integer alpha returns nothing
+// 设置滤镜持续时长
 native SetCineFilterDuration takes real duration returns nothing
+// 显示/隐藏滤镜
 native DisplayCineFilter takes boolean flag returns nothing
+// 查询滤镜显示/隐藏状态
 native IsCineFilterDisplayed takes nothing returns boolean
-
+// 设置电影场景
 native SetCinematicScene takes integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
+// 结束电影场景
 native EndCinematicScene takes nothing returns nothing
+// 开启/关闭电影字幕显示功能
 native ForceCinematicSubtitles takes boolean flag returns nothing
+// 启用/禁用 电影声音
 native SetCinematicAudio takes boolean cinematicAudio returns nothing
-
+// 获取镜头空白
 native GetCameraMargin takes integer whichMargin returns real
 
 // These return values for the local players camera only...
 // These return values for the local players camera only...
+// 获取可用镜头的最小 X 坐标
 constant native GetCameraBoundMinX takes nothing returns real
+// 获取可用镜头的最小 Y 坐标
 constant native GetCameraBoundMinY takes nothing returns real
+// 获取可用镜头的最大 X 坐标
 constant native GetCameraBoundMaxX takes nothing returns real
+// 获取可用镜头的最大 Y 坐标
 constant native GetCameraBoundMaxY takes nothing returns real
 // 当前摄象机的数值
 constant native GetCameraField takes camerafield whichField returns real
@@ -5792,9 +5869,9 @@ native AutomationTestEnd takes nothing returns nothing
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
-// 触发鼠标位置X
+// 触发鼠标位置 X
 native BlzGetTriggerPlayerMouseX takes nothing returns real
-// 触发鼠标位置Y
+// 触发鼠标位置 Y
 native BlzGetTriggerPlayerMouseY takes nothing returns real
 // 触发鼠标位置
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
