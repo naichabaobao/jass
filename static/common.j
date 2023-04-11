@@ -4166,7 +4166,7 @@ native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns no
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
-// 单位主动攻击范围 (当前)，中立敌对玩家单位的攻击范围以警戒范围为准
+// 单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
 native GetUnitAcquireRange takes unit whichUnit returns real
 // 转身速度 (当前)
 native GetUnitTurnSpeed takes unit whichUnit returns real
@@ -4175,7 +4175,7 @@ native GetUnitPropWindow takes unit whichUnit returns real
 // 飞行高度 (当前)
 native GetUnitFlyHeight takes unit whichUnit returns real
 
-// 单位主动攻击范围 (默认)，中立敌对玩家单位的攻击范围以警戒范围为准
+// 单位主动攻击范围 (默认)
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
 // 转身速度 (默认)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
