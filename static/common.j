@@ -5607,7 +5607,7 @@ native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns 
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 
 native StartSound takes sound soundHandle returns nothing
-// 开始声音（指定是否淡入）
+// 播放声音（指定是否淡入）
 // @version 1.33
 // @param fadeIn
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
