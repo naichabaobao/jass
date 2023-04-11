@@ -3067,9 +3067,9 @@ endglobals
 
 
 // MathAPI
-// 转换 度 到 弧度
+// 转换 度 为 弧度
 native Deg2Rad takes real degrees returns real
-// 转换 弧度 到 度
+// 转换 弧度 为 度
 native Rad2Deg takes real radians returns real
 
 // 正弦(弧度) [R]
@@ -3108,16 +3108,16 @@ constant native MathRound takes real r returns integer
 
 // String Utility API
 
-// 转换整数变量为实数
+// 转换整数为实数
 native I2R takes integer i returns real
 // 转换实数为整数
 native R2I takes real r returns integer
-// 将整数转换为字符串
+// 转换整数为字符串
 native I2S takes integer i returns string
-// 将实数转换为字符串
+// 转换实数为字符串
 native R2S takes real r returns string
-// 将实数转换为格式化字符串
-//@param precision 保留小数位数
+// 转换实数为字符串（指定保留的小数位数）
+//@param precision
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字串符为整数
 native S2I takes string s returns integer
@@ -3131,9 +3131,9 @@ native GetHandleId takes handle h returns integer
 // @param start 开始位置,下标为0
 // @param end 结束位置,需要的字符串长度
 native SubString takes string source, integer start, integer end returns string
-// 字串符长度
+// 获取字串符长度
 native StringLength takes string s returns integer
-// 将字串符转换为大小写字母
+// 转换字串符英文的大小写
 native StringCase takes string source, boolean upper returns string
 // 转换字符串为哈希码，在AI脚本中似乎只返回 null
 native StringHash takes string s returns integer
@@ -3394,9 +3394,9 @@ native ForForce takes force whichForce, code callback returns nothing
 
 // Region and Location API
 
-// 将坐标转换为区域
+// 转换坐标为区域
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
-// 将点转换为区域
+// 转换点为区域
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
