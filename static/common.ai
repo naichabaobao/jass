@@ -84,7 +84,7 @@ native SetNewHeroes         takes boolean state                         returns 
 native PurchaseZeppelin     takes nothing                               returns nothing
 // 训练/建造指定数量的合体单位类型（单位类型a,单位类型b,合体成单位类型make），运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
 native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-// 训练/建造指定数量的变形单位类型，此变形不是英雄/熊德鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形，运行后AI会训练变形前单位并变形，直到数量达标
+// 训练/建造指定数量的变形单位类型，此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形，运行后AI会训练变形前单位并变形，直到数量达标
 native ConvertUnits         takes integer qty, integer id               returns boolean
 
 // 启用战役AI
@@ -184,13 +184,13 @@ native FillGuardPosts       takes nothing                               returns 
 native ReturnGuardPosts     takes nothing                               returns nothing
 // 创建攻击组
 native CreateCaptains       takes nothing                               returns nothing
-// 设置指定组（进攻组、防守组、两组一起执行）回家后的坐标
+// 设置指定组（进攻组、防守组、两组一起执行）回家后的聚集坐标，AI默认把单位聚集在主基地的采矿路线上，应该就是这个坐标
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
 // 命令攻击组复位
 native ResetCaptainLocs     takes nothing                               returns nothing
 // 转移基地到指定坐标
 native ShiftTownSpot        takes real x, real y                        returns nothing
-// 让攻击组使用回城卷轴到指定坐标
+// 让攻击组使用传送到指定坐标
 native TeleportCaptain      takes real x, real y                        returns nothing
 // 清除攻击组当前攻击的目标
 native ClearCaptainTargets  takes nothing                               returns nothing
