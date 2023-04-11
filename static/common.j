@@ -2010,13 +2010,17 @@ globals
 	constant abilitybooleanfield ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
 	// 技能状态-检查依赖
 	constant abilitybooleanfield ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
-	
+	// 技能实数域 弹道曲率
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
-	
+	// 技能字串符域 名字
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
+	// 技能字串符域 图标（关闭）
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
+	// 技能字串符域 图标（研究）
 	constant abilitystringfield ABILITY_SF_ICON_RESEARCH = ConvertAbilityStringField('arar')
+	// 技能字串符域 音效
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
+	// 技能字串符域 音效（循环）
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
 	
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_COST = ConvertAbilityIntegerLevelField('amcs')
@@ -2730,28 +2734,45 @@ globals
 	
 	// Item
 	// Item
+	// 物品整数域 等级	
  constant itemintegerfield ITEM_IF_LEVEL = ConvertItemIntegerField('ilev')
+	// 物品整数域 使用次数
 	constant itemintegerfield ITEM_IF_NUMBER_OF_CHARGES = ConvertItemIntegerField('iuse')
+	// 物品整数域 CD间隔组
 	constant itemintegerfield ITEM_IF_COOLDOWN_GROUP = ConvertItemIntegerField('icid')
+	// 物品整数域 最大生命值
 	constant itemintegerfield ITEM_IF_MAX_HIT_POINTS = ConvertItemIntegerField('ihtp')
+	// 物品整数域 生命值
 	constant itemintegerfield ITEM_IF_HIT_POINTS = ConvertItemIntegerField('ihpc')
+	// 物品整数域 优先权
 	constant itemintegerfield ITEM_IF_PRIORITY = ConvertItemIntegerField('ipri')
+	// 物品整数域 装甲类型（本头/气态/石头/肉体/金属）
 	constant itemintegerfield ITEM_IF_ARMOR_TYPE = ConvertItemIntegerField('iarm')
+	// 物品整数域 颜色值（红）
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_RED = ConvertItemIntegerField('iclr')
+	// 物品整数域 颜色值（绿）
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_GREEN = ConvertItemIntegerField('iclg')
+	// 物品整数域 颜色值（蓝）
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
+	// 物品整数域 颜色值（alpha）
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
-	
+        // 物品实数域 模型缩放	
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
-	
+	// 物品布尔值域 持有者死亡时掉落
 	constant itembooleanfield ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
+	// 物品布尔值域 可以丢弃
 	constant itembooleanfield ITEM_BF_CAN_BE_DROPPED = ConvertItemBooleanField('idro')
+	// 物品布尔值域 使用完消失
 	constant itembooleanfield ITEM_BF_PERISHABLE = ConvertItemBooleanField('iper')
+	// 物品布尔值域 可作为随机物品
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
+	// 物品布尔值域 拾取时自动使用
 	constant itembooleanfield ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
+        // 物品布尔值域 可以出售给商店
 	constant itembooleanfield ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
+        // 物品布尔值域 主动使用
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
-	
+        // 物品字符串域 使用模型	
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
 	
 	// Unit
@@ -2822,34 +2843,56 @@ globals
 	constant unitrealfield UNIT_RF_CAST_BACK_SWING = ConvertUnitRealField('ucbs')
 	constant unitrealfield UNIT_RF_CAST_POINT = ConvertUnitRealField('ucpt')
 	constant unitrealfield UNIT_RF_MINIMUM_ATTACK_RANGE = ConvertUnitRealField('uamn')
-	
+	// 单位布尔值域 可提高的
 	constant unitbooleanfield UNIT_BF_RAISABLE = ConvertUnitBooleanField('urai')
+	// 单位布尔值域 可腐朽的
 	constant unitbooleanfield UNIT_BF_DECAYABLE = ConvertUnitBooleanField('udec')
+	// 单位布尔值域 是一个建筑
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
+	// 单位布尔值域 不可见区域显示单位
 	constant unitbooleanfield UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
+	// 单位布尔值域 中立建筑 - 显示小地图标记
 	constant unitbooleanfield UNIT_BF_NEUTRAL_BUILDING_SHOWS_MINIMAP_ICON = ConvertUnitBooleanField('unbm')
+	// 单位布尔值域 英雄 - 隐藏英雄栏图标
 	constant unitbooleanfield UNIT_BF_HERO_HIDE_HERO_INTERFACE_ICON = ConvertUnitBooleanField('uhhb')
+	// 单位布尔值域 英雄 - 隐藏小地图英雄显示
 	constant unitbooleanfield UNIT_BF_HERO_HIDE_HERO_MINIMAP_DISPLAY = ConvertUnitBooleanField('uhhm')
+	// 单位布尔值域 英雄 - 隐藏英雄死亡信息
 	constant unitbooleanfield UNIT_BF_HERO_HIDE_HERO_DEATH_MESSAGE = ConvertUnitBooleanField('uhhd')
+	// 单位布尔值域 隐藏小地图显示
 	constant unitbooleanfield UNIT_BF_HIDE_MINIMAP_DISPLAY = ConvertUnitBooleanField('uhom')
+	// 单位布尔值域 缩放投射物
 	constant unitbooleanfield UNIT_BF_SCALE_PROJECTILES = ConvertUnitBooleanField('uscb')
+        // 单位布尔值域 选择圈在水面上
 	constant unitbooleanfield UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
+        // 单位布尔值域 深水区有阴影
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
-	
+	// 单位字串符域 名字
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
+	// 单位字串符域 称谓
 	constant unitstringfield UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
+	// 单位字串符域 建筑地表纹理
 	constant unitstringfield UNIT_SF_GROUND_TEXTURE = ConvertUnitStringField('uubs')
+	// 单位字串符域 单位阴影图像
 	constant unitstringfield UNIT_SF_SHADOW_IMAGE_UNIT = ConvertUnitStringField('ushu')
 	
 	// Unit Weapon
 	// Unit Weapon
+	// 单位武器整数域 伤害骰子数量
  constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_DAMAGE_NUMBER_OF_DICE = ConvertUnitWeaponIntegerField('ua1d')
+	// 单位武器整数域 基础伤害
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_DAMAGE_BASE = ConvertUnitWeaponIntegerField('ua1b')
+	// 单位武器整数域 伤害骰子面数
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_DAMAGE_SIDES_PER_DIE = ConvertUnitWeaponIntegerField('ua1s')
+	// 单位武器整数域 最大目标数
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_MAXIMUM_NUMBER_OF_TARGETS = ConvertUnitWeaponIntegerField('utc1')
+	// 单位武器整数域 攻击类型
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_ATTACK_TYPE = ConvertUnitWeaponIntegerField('ua1t')
+	// 单位武器整数域 武器声音
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_WEAPON_SOUND = ConvertUnitWeaponIntegerField('ucs1')
+	// 单位武器整数域 范围影响目标
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_AREA_OF_EFFECT_TARGETS = ConvertUnitWeaponIntegerField('ua1p')
+	// 单位武器整数域 目标允许
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_TARGETS_ALLOWED = ConvertUnitWeaponIntegerField('ua1g')
 	
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_BACKSWING_POINT = ConvertUnitWeaponRealField('ubs1')
@@ -2866,11 +2909,13 @@ globals
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_MEDIUM_DAMAGE = ConvertUnitWeaponRealField('ua1h')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_SMALL_DAMAGE = ConvertUnitWeaponRealField('ua1q')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_RANGE = ConvertUnitWeaponRealField('ua1r')
-	
+	// 单位武器布尔值域 显示UI
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_SHOW_UI = ConvertUnitWeaponBooleanField('uwu1')
+	// 单位武器布尔值域 允许攻击模式
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACKS_ENABLED = ConvertUnitWeaponBooleanField('uaen')
+	// 单位武器布尔值域 射弹自导允许
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
-	
+	// 单位武器字串符域 投射物图像
 	constant unitweaponstringfield UNIT_WEAPON_SF_ATTACK_PROJECTILE_ART = ConvertUnitWeaponStringField('ua1m')
 	
 	// Move Type
