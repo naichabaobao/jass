@@ -5543,36 +5543,36 @@ native EndCinematicScene takes nothing returns nothing
 native ForceCinematicSubtitles takes boolean flag returns nothing
 // 启用/禁用 电影声音
 native SetCinematicAudio takes boolean cinematicAudio returns nothing
-// 获取镜头空白
+// 获取镜头指定空白的值
 native GetCameraMargin takes integer whichMargin returns real
 
 // These return values for the local players camera only...
 // These return values for the local players camera only...
-// 获取可用镜头的最小 X 坐标
+// 获取可用镜头范围的最小 X 坐标
 constant native GetCameraBoundMinX takes nothing returns real
-// 获取可用镜头的最小 Y 坐标
+// 获取可用镜头范围的最小 Y 坐标
 constant native GetCameraBoundMinY takes nothing returns real
-// 获取可用镜头的最大 X 坐标
+// 获取可用镜头范围的最大 X 坐标
 constant native GetCameraBoundMaxX takes nothing returns real
-// 获取可用镜头的最大 Y 坐标
+// 获取可用镜头范围的最大 Y 坐标
 constant native GetCameraBoundMaxY takes nothing returns real
-// 当前摄象机的数值
+// 获取当前摄象机的指定属性值
 constant native GetCameraField takes camerafield whichField returns real
-// 当前摄象机的目标的 X 坐标
+// 获取当前摄象机目标的 X 坐标
 constant native GetCameraTargetPositionX takes nothing returns real
-// 当前摄象机的目标的 Y 坐标
+// 获取当前摄象机目标的 Y 坐标
 constant native GetCameraTargetPositionY takes nothing returns real
-// 当前摄象机的目标的 Z 坐标
+// 获取当前摄象机目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
-// 当前摄象机的目标
+// 获取当前摄象机目标点（返回点）
 constant native GetCameraTargetPositionLoc takes nothing returns location
-// 当前摄象机的位置的 X 坐标
+// 获取当前摄象机观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
-// 当前摄象机的位置的 Y 坐标
+// 获取当前摄象机位置的 Y 坐标
 constant native GetCameraEyePositionY takes nothing returns real
-// 当前摄象机的位置的 Z 坐标
+// 获取当前摄象机观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
-// 当前照相机的位置
+// 获取当前照相机的观察位置（返回点）
 constant native GetCameraEyePositionLoc takes nothing returns location
 
 
