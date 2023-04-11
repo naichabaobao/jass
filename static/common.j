@@ -4155,29 +4155,29 @@ native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
 // 设置单位移动速度
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
-//设定单位飞行高度
+// 设定单位飞行高度
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
-//设定单位转向速度
+// 设定单位转身速度
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 改变单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-//设置感知敌人距离
+// 设置感知敌人距离
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
-// 单位射程 (当前)
+// 单位主动攻击范围 (当前)
 native GetUnitAcquireRange takes unit whichUnit returns real
-// 转向速度 (当前)
+// 转身速度 (当前)
 native GetUnitTurnSpeed takes unit whichUnit returns real
 // 当前转向角度(弧度制) [R]
 native GetUnitPropWindow takes unit whichUnit returns real
 // 飞行高度 (当前)
 native GetUnitFlyHeight takes unit whichUnit returns real
 
-// 单位射程 (默认)
+// 单位主动攻击范围 (默认)
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
-// 转向速度 (默认)
+// 转身速度 (默认)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
 // 转向角度(默认)
 native GetUnitDefaultPropWindow takes unit whichUnit returns real
@@ -4213,39 +4213,39 @@ native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, 
 // 重置单位面对方向
 native ResetUnitLookAt takes unit whichUnit returns nothing
 
-// 设置可否营救(对玩家) [R]
+// 设置可否营救(指定玩家) [R]
 native SetUnitRescuable takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
 // 设置营救单位的营救距离
 native SetUnitRescueRange takes unit whichUnit, real range returns nothing
 
-// 设置英雄力量 [R]
+// 设置英雄力量值 [R]
 native SetHeroStr takes unit whichHero, integer newStr, boolean permanent returns nothing
-// 设置英雄敏捷 [R]
+// 设置英雄敏捷值 [R]
 native SetHeroAgi takes unit whichHero, integer newAgi, boolean permanent returns nothing
-// 设置英雄智力 [R]
+// 设置英雄智力值 [R]
 native SetHeroInt takes unit whichHero, integer newInt, boolean permanent returns nothing
 
-// 英雄力量 [R]
+// 获取英雄力量值 [R]
 native GetHeroStr takes unit whichHero, boolean includeBonuses returns integer
-// 英雄敏捷 [R]
+// 获取英雄敏捷值 [R]
 native GetHeroAgi takes unit whichHero, boolean includeBonuses returns integer
-// 英雄智力 [R]
+// 获取英雄智力值 [R]
 native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
 // 降低英雄等级 [R]
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
-// 英雄的经验值
+// 获取英雄经验值
 native GetHeroXP takes unit whichHero returns integer
 // 设置英雄经验值
 native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
-// 未用完的技能点数
+// 获取英雄未用完的技能点数
 native GetHeroSkillPoints takes unit whichHero returns integer
-// 添加剩余技能点 [R]
+// 设置英雄剩余技能点数 [R]
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
-// 增加经验值 [R]
+// 增加英雄经验值 [R]
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置英雄等级
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
@@ -4255,19 +4255,19 @@ constant native GetHeroLevel takes unit whichHero returns integer
 constant native GetUnitLevel takes unit whichUnit returns integer
 // 获取英雄名字
 native GetHeroProperName takes unit whichHero returns string
-// 允许/禁止经验获取 [R]
+// 允许/禁止英雄获取经验值 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
-// 英雄获得经验值
+// 英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
-// 英雄学习技能
+// 命令英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
 // 获取单位技能等级 [R] ，此命令在AI脚本中似乎只返回0，不论技能是否存在
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 降低技能等级 [R]
+// 降低英雄技能等级 [R]
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 提升技能等级 [R]
+// 提升英雄技能等级 [R]
 native IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 设置技能等级 [R]
+// 设置英雄技能等级 [R]
 native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
 // 立即复活英雄(指定坐标) [R]
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
@@ -4291,9 +4291,9 @@ native ClearSelection takes nothing returns nothing
 // 选择单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
 
-// 单位的 附加值
+// 获取单位的 附加值
 native GetUnitPointValue takes unit whichUnit returns integer
-// 单位-类型的 附加值
+// 获取单位-类型的 附加值
 native GetUnitPointValueByType takes integer unitType returns integer
 //native        SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
