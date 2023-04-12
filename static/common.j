@@ -2953,13 +2953,13 @@ globals
 	// 单位实数域 战斗 - 最小攻击范围 ('uamn')
 	constant unitrealfield UNIT_RF_MINIMUM_ATTACK_RANGE = ConvertUnitRealField('uamn')
 
-	// 单位布尔值域 可提高的（意义和属性分类不明） ('urai')
+	// 单位布尔值域 可提高的（ChatGPT说这是 是否允许复活） ('urai')
 	constant unitbooleanfield UNIT_BF_RAISABLE = ConvertUnitBooleanField('urai')
 	// 单位布尔值域 战斗 - 死亡 - 可腐朽的（非死亡类型） ('udec')
 	constant unitbooleanfield UNIT_BF_ADECYABLE = ConvertUnitBooleanField('udec')
 	// 单位布尔值域 状态 - 是一个建筑 ('ubdg')
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
-	// 单位布尔值域 美术 - 不可见区域显示单位 ('ulos')
+	// 单位布尔值域 美术 - 不可见区域显示单位（ChatGPT说这是 扩展视野） ('ulos')
 	constant unitbooleanfield UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
 	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记 ('unbm')
 	constant unitbooleanfield UNIT_BF_NEUTRAL_BUILDING_SHOWS_MINIMAP_ICON = ConvertUnitBooleanField('unbm')
@@ -3792,7 +3792,7 @@ constant native GetLearnedSkill takes nothing returns integer
 constant native GetLearnedSkillLevel takes nothing returns integer
 
 // EVENT_PLAYER_HERO_REVIVABLE
-// 可复活的英雄
+// 获取可复活的英雄
 constant native GetRevivableUnit takes nothing returns unit
 
 // EVENT_PLAYER_HERO_REVIVE_START
@@ -4396,7 +4396,7 @@ native IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns intege
 native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
 // 立即复活英雄(指定坐标) [R]
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
-// 复活英雄（立即）
+// 立即复活英雄（指定点）
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
 // 设置死亡方式（是否爆炸）
 // @param whichUnit 单位
