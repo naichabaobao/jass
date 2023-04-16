@@ -10,11 +10,11 @@ import { Options } from './options';
 import data, { DataGetter } from "./data";
 import { compare } from '../tool';
 import { convertPosition } from './tool';
-import { Func, Global, Library, Local, Member, Method, Take, Native, Struct } from '../jass/ast';
+import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine } from '../jass/ast';
 import { getTypeDesc } from './type-desc';
 import { tokenize } from '../jass/tokens';
 
-type Decl = Native|Func|Method|Library|Struct|Member|Global|Local;
+type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine;
 
 function toHoverlo(de: Decl, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
@@ -155,6 +155,8 @@ class HoverProvider implements vscode.HoverProvider {
             const ms = toHoverlo(func, isCurrent, fsPath);
             hovers.push(ms);
           });
+
+
         }
         
         const findedMethod = program.getPositionMethod(convertPosition(position));
@@ -182,6 +184,13 @@ class HoverProvider implements vscode.HoverProvider {
             const ms = toHoverlo(func, isCurrent, fsPath);
             hovers.push(ms);
           });
+        }
+
+        const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
+        if (findedDefineIndex != -1) {
+          const findedDefine = program.defines[findedDefineIndex];
+          const ms = toHoverlo(findedDefine, isCurrent, fsPath);
+          hovers.push(ms);
         }
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);

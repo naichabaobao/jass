@@ -583,7 +583,7 @@ interface ParserConfig {
 }
 
 function lastLineDefine(lastLine:number, defines: TextMacroDefine[]) {
-    return defines.filter(define => define.start.line <= lastLine);
+    return defines.filter(define => define.loc.start.line <= lastLine);
 }
 
 
@@ -636,22 +636,27 @@ class LineText extends Range {
 }
 
 class ReplaceableLineText extends LineText {
-    private tokens:Token[] = [];
+    private readonly realacedText: string = "";
+
+    // private tokens:Token[] = [];
     private defines:TextMacroDefine[] = [];
 
-    constructor(lineText:LineText, defines: TextMacroDefine[]) {
+    constructor(lineText:LineText, defines?: TextMacroDefine[]) {
         super(lineText.getText());
         this.from(lineText);
 
-        this.tokens = tokenize(lineText.getText());
+        const tokens = tokenize(lineText.getText());
 
-        this.defines = lastLineDefine(lineText.lineNumber(), defines);
+        this.defines = lastLineDefine(lineText.lineNumber(), defines ?? []);
 
+
+        this.realacedText = this.tokensToString(tokens, this.defines);
     }
 
     // 宏替换后的字符串
     public replaceText(): string {
-        return this.tokensToString(this.tokens, this.defines);
+        // return this.tokensToString(this.tokens, this.defines);
+        return this.realacedText;
     }
 
     private pushSpace(origin:string, count: number, char: string): string {
@@ -870,7 +875,7 @@ class Parser {
                 if (result && result.groups) {
                     const define = new TextMacroDefine();
                     const prefixSpaceLength = result.groups["prefixSpace"].length;
-                    define.start = new Position(lineText.lineNumber(), prefixSpaceLength);
+                    define.loc.start = new Position(lineText.lineNumber(), prefixSpaceLength);
                     
                     const id = new Identifier(result.groups["name"]);
                     const namePrefixSpaceLength = result.groups["namePrefixSpace"].length;
@@ -883,7 +888,7 @@ class Parser {
                         define.value = result.groups["value"]
                     }
 
-                    define.end = new Position(lineText.lineNumber(), result[0].length);
+                    define.loc.end = new Position(lineText.lineNumber(), result[0].length);
                     
                     defines.push(define);
                 } else {

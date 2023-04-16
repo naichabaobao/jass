@@ -11587,7 +11587,7 @@ function BlzRemoveAbilityStringLevelArrayFieldBJ takes ability whichAbility, abi
 endfunction
 
 // Item 
-//=============================================================
+
 function BlzItemAddAbilityBJ takes item whichItem, integer abilCode returns nothing
     set bj_lastInstObjFuncSuccessful = BlzItemAddAbility(whichItem, abilCode)
 endfunction

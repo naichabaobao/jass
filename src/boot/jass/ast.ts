@@ -87,7 +87,65 @@ export {
 };
 
 
-class TextMacroDefine extends Range {
+
+
+
+class Node implements Rangebel  { 
+	public readonly loc: Range = Range.default(); 
+}
+
+type ParamAnnotation = {
+	id: string,
+	descript: string
+};
+
+class Declaration extends Node implements Descript {
+
+	/**
+	 * 来源文件
+	 * @depreated 存在资源浪费
+	 */
+	public source: string = "";
+
+	public readonly lineComments: LineComment[] = [];
+
+	public hasDeprecated(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@deprecated\b/, "").test(lineComment.getContent())) != -1;
+	}
+	public hasPrivate(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@private\b/, "").test(lineComment.getContent())) != -1;
+	}
+	public hasIgnore(): boolean {
+		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@ignore\b/, "").test(lineComment.getContent())) != -1;
+	}
+
+	public getParams() : ParamAnnotation[] {
+		return <ParamAnnotation[]>this.lineComments.map((lineComment) => {
+			const result = new RegExp(/^\s*@params?\s+(?<id>[a-zA-Z][a-zA-Z\d_]*)(?:\s*(?<descript>.+))?/, "").exec(lineComment.getContent());
+			if (result && result.groups) {
+				return {
+					id: result.groups["id"],
+					descript: result.groups["descript"],
+				};
+			}
+		}).filter(x => x);
+	}
+
+	public getTexts() {
+		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?|private|ignore)\b/.test(lineComment.getContent()))
+	}
+
+	public getContents() {
+		return this.getTexts().map((lineComment) => lineComment.getContent());
+	}
+
+
+
+}
+
+
+class TextMacroDefine extends Declaration {
+	
 	public id:Identifier = null as any;
 	public value: string = "";
 
@@ -143,61 +201,10 @@ class TextMacroDefine extends Range {
 		return origin;
 
 	}
-}
 
-
-
-class Node implements Rangebel  { 
-	public readonly loc: Range = Range.default(); 
-}
-
-type ParamAnnotation = {
-	id: string,
-	descript: string
-};
-
-class Declaration extends Node implements Descript {
-
-	/**
-	 * 来源文件
-	 * @depreated 存在资源浪费
-	 */
-	public source: string = "";
-
-	public readonly lineComments: LineComment[] = [];
-
-	public hasDeprecated(): boolean {
-		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@deprecated\b/, "").test(lineComment.getContent())) != -1;
+	public get name() : string {
+		return this.id.name;
 	}
-	public hasPrivate(): boolean {
-		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@private\b/, "").test(lineComment.getContent())) != -1;
-	}
-	public hasIgnore(): boolean {
-		return this.lineComments.findIndex((lineComment) => new RegExp(/^\s*@ignore\b/, "").test(lineComment.getContent())) != -1;
-	}
-
-	public getParams() : ParamAnnotation[] {
-		return <ParamAnnotation[]>this.lineComments.map((lineComment) => {
-			const result = new RegExp(/^\s*@params?\s+(?<id>[a-zA-Z][a-zA-Z\d_]*)(?:\s*(?<descript>.+))?/, "").exec(lineComment.getContent());
-			if (result && result.groups) {
-				return {
-					id: result.groups["id"],
-					descript: result.groups["descript"],
-				};
-			}
-		}).filter(x => x);
-	}
-
-	public getTexts() {
-		return this.lineComments.filter((lineComment) => !/^\s*@(?:deprecated|params?|private|ignore)\b/.test(lineComment.getContent()))
-	}
-
-	public getContents() {
-		return this.getTexts().map((lineComment) => lineComment.getContent());
-	}
-
-
-
 }
 
 type ModifierType = "private" | "public" | "default";

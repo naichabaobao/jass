@@ -12,6 +12,7 @@ import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
 import { tokenize } from '../jass/tokens';
+import { TextMacroDefine } from '../jass/ast';
 
 
 const toVsPosition = (any: De) => {
@@ -19,7 +20,7 @@ const toVsPosition = (any: De) => {
   return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
 
-type De = Native|Func|Method|Library|Struct|Member|Global|Local|Take;
+type De = Native|Func|Method|Library|Struct|Member|Global|Local|Take|TextMacroDefine;
 
 vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
 
@@ -119,6 +120,13 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
             locations.push(location);
           });
+        }
+
+        const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
+        if (findedDefineIndex != -1) {
+          const findedDefine = program.defines[findedDefineIndex];
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(findedDefine));
+          locations.push(location);
         }
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
