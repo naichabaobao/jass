@@ -8,40 +8,69 @@ globals
     //
 
     // Misc constants
-    // Π
+    // 圆周率 π，默认3.14159
     constant real      bj_PI                            = 3.14159
-    // 底数
+    // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
+    // 单元格宽度，默认128
     constant real      bj_CELLWIDTH                     = 128.0
+    // 悬崖高度，默认128
     constant real      bj_CLIFFHEIGHT                   = 128.0
-    // 单位默认面向角度
+    // 单位默认面向角度，默认270
     constant real      bj_UNIT_FACING                   = 270.0
+    // 弧度转换成为角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
+    // 角度转换成为弧度
     constant real      bj_DEGTORAD                      = bj_PI/180.0
+    // 文本显示延时 - 任务，默认20
     constant real      bj_TEXT_DELAY_QUEST              = 20.00
+    // 文本显示延时 - 任务更新，默认20
     constant real      bj_TEXT_DELAY_QUESTUPDATE        = 20.00
+    // 文本显示延时 - 任务完成，默认20
     constant real      bj_TEXT_DELAY_QUESTDONE          = 20.00
+    // 文本显示延时 - 任务失败，默认20
     constant real      bj_TEXT_DELAY_QUESTFAILED        = 20.00
+    // 文本显示延时 - 任务要求，默认20
     constant real      bj_TEXT_DELAY_QUESTREQUIREMENT   = 20.00
+    // 文本显示延时 - 失败消息，默认20
     constant real      bj_TEXT_DELAY_MISSIONFAILED      = 20.00
+    // 文本显示延时 - 常驻提示，默认12
     constant real      bj_TEXT_DELAY_ALWAYSHINT         = 12.00
+    // 文本显示延时 - 提示，默认12
     constant real      bj_TEXT_DELAY_HINT               = 12.00
+    // 文本显示延时 - 秘密，默认10
     constant real      bj_TEXT_DELAY_SECRET             = 10.00
+    // 文本显示延时 - 单位购买，默认15
     constant real      bj_TEXT_DELAY_UNITACQUIRED       = 15.00
+    // 文本显示延时 - 单位可用，默认15
     constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
+    // 文本显示延时 - 物品购买，默认15
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
+    // 文本显示延时 - 物品购买，默认15
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
+    // 队列延时 - 任务，默认5
     constant real      bj_QUEUE_DELAY_QUEST             =  5.00
+    // 队列延时 - 提示，默认5
     constant real      bj_QUEUE_DELAY_HINT              =  5.00
+    // 队列延时 - 任务，默认3
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
+    // 障碍 - 简单，默认60
     constant real      bj_HANDICAP_EASY                 = 60.00
+    // 障碍 - 普通，默认60
     constant real      bj_HANDICAP_NORMAL               = 90.00
+    // 损伤障碍 - 简单，默认50
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
+    // 损伤障碍 - 普通，默认90
     constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
+    // 损伤障碍 - 非困难，默认50
 	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
+    // 游戏开始阈值，默认0.01
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
+    // 迷雾等待最小间隔，默认0.10
     constant real      bj_WAIT_FOR_COND_MIN_INTERVAL    =  0.10
+    // 轮询间隔（游戏时间），默认0.10
     constant real      bj_POLLED_WAIT_INTERVAL          =  0.10
+    // 轮询跳过阈值（游戏时间），默认2
     constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
 
     // Game constants  最大库存
@@ -63,12 +92,14 @@ globals
     //最大物品等级，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
     
-    // Auto Save constants  最大保存点数量
+    // Auto Save constants  最大保存点数量，默认5
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
     // but there is currently no script functionality exposed to do that
+    // 黎明时间（鸡啼），默认早上6点
     constant real      bj_TOD_DAWN                      = 6.00
+    // 入夜时间（狼嚎），默认晚上18点
     constant real      bj_TOD_DUSK                      = 18.00
 
     // Melee game settings:
@@ -99,7 +130,9 @@ globals
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
     // 清除开始点中立敌对单位的范围，默认1500（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
+    // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
+    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
     // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0是混乱之治）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
@@ -110,8 +143,11 @@ globals
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
+    // 初始库存补充延时（开局后，过多久才可购买/雇佣）
     constant real      bj_STOCK_RESTOCK_INITIAL_DELAY   = 120
+    // 库存补充间隔
     constant real      bj_STOCK_RESTOCK_INTERVAL        = 30
+    // 库存最大补充次数
     constant integer   bj_STOCK_MAX_ITERATIONS          = 20
 
     // Max events registered by a single "dest dies in region" event.
@@ -126,7 +162,7 @@ globals
     constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // Rescue
+    // 救援延时，怀疑是中立可救援单位在被救援后变更队伍的延迟 Rescue
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
     // Transmission behavior settings
@@ -138,7 +174,7 @@ globals
     constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
 
-    // Cinematic mode settings
+    // 电影模式转换时间，默认0.5 Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
     // 默认游戏速度--默认正常
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
@@ -306,46 +342,59 @@ globals
     constant integer   bj_CINEMATICINDEX_XED      = 10
 
     // Alliance settings
+    // 联盟设置 - 不结盟
     constant integer   bj_ALLIANCE_UNALLIED        = 0
+    // 联盟设置 - 不结盟视野
     constant integer   bj_ALLIANCE_UNALLIED_VISION = 1
+    // 联盟设置 - 结盟
     constant integer   bj_ALLIANCE_ALLIED          = 2
+    // 联盟设置 - 结盟视野
     constant integer   bj_ALLIANCE_ALLIED_VISION   = 3
+    // 联盟设置 - 结盟单位
     constant integer   bj_ALLIANCE_ALLIED_UNITS    = 4
+    // 联盟设置 - 高级单位
     constant integer   bj_ALLIANCE_ALLIED_ADVUNITS = 5
+    // 联盟设置 - 中立
     constant integer   bj_ALLIANCE_NEUTRAL         = 6
+    // 联盟设置 - 中立视野
     constant integer   bj_ALLIANCE_NEUTRAL_VISION  = 7
 
     // Keyboard Event Types
-    //键盘事件  按下按键
+    // 键盘事件  按下按键
     constant integer   bj_KEYEVENTTYPE_DEPRESS     = 0
-    //键盘事件  松开按键
+    // 键盘事件  松开按键
     constant integer   bj_KEYEVENTTYPE_RELEASE     = 1
 
     // Keyboard Event Keys
-    //键盘按键事件 方向键（左）
+    // 键盘按键事件 方向键（左）
     constant integer   bj_KEYEVENTKEY_LEFT         = 0
-    //方键盘按键事件 方向键（右）
+    // 方键盘按键事件 方向键（右）
     constant integer   bj_KEYEVENTKEY_RIGHT        = 1
-    //键盘按键事件 方向键（上）
+    // 键盘按键事件 方向键（上）
     constant integer   bj_KEYEVENTKEY_DOWN         = 2
-    //键盘按键事件 方向键（下））
+    // 键盘按键事件 方向键（下））
     constant integer   bj_KEYEVENTKEY_UP           = 3
 
     // Mouse Event Types
-    //鼠标事件  按下
+    // 鼠标事件  按下
     constant integer   bj_MOUSEEVENTTYPE_DOWN     = 0
-    //鼠标事件  松开
+    // 鼠标事件  松开
     constant integer   bj_MOUSEEVENTTYPE_UP       = 1
-    //鼠标事件  移动
+    // 鼠标事件  移动
     constant integer   bj_MOUSEEVENTTYPE_MOVE     = 2
 
     // Transmission timing methods
+    // 传输时间方法 - 时间类型 - 增加
     constant integer   bj_TIMETYPE_ADD             = 0
+    // 传输时间方法 - 时间类型 - 设置
     constant integer   bj_TIMETYPE_SET             = 1
+    // 传输时间方法 - 时间类型 - 减少
     constant integer   bj_TIMETYPE_SUB             = 2
 
     // Camera bounds adjustment methods
+    // 镜头界限调整 - 增加
     constant integer   bj_CAMERABOUNDS_ADJUST_ADD  = 0
+    // 镜头界限调整 - 减少
     constant integer   bj_CAMERABOUNDS_ADJUST_SUB  = 1
 
     // Quest creation states
@@ -370,13 +419,19 @@ globals
     constant integer   bj_QUESTMESSAGE_WARNING       = 12
 
     // Leaderboard sorting methods
+    // 排行榜类型 - 数值排序
     constant integer   bj_SORTTYPE_SORTBYVALUE     = 0
+    // 排行榜类型 - 玩家排序
     constant integer   bj_SORTTYPE_SORTBYPLAYER    = 1
+    // 排行榜类型 - 标签排序
     constant integer   bj_SORTTYPE_SORTBYLABEL     = 2
 
     // Cinematic fade filter methods
+    // 电影类型-淡入
     constant integer   bj_CINEFADETYPE_FADEIN      = 0
+    // 电影类型-淡出
     constant integer   bj_CINEFADETYPE_FADEOUT     = 1
+    // 电影类型-淡出并淡入（一并使用）
     constant integer   bj_CINEFADETYPE_FADEOUTIN   = 2
 
     // Buff removal methods
@@ -402,8 +457,11 @@ globals
     constant integer   bj_HEROSTAT_INT             = 2
 
     // Hero skill point modification methods
+    // 英雄技能点 - 增加
     constant integer   bj_MODIFYMETHOD_ADD    = 0
+    // 英雄技能点 - 减少
     constant integer   bj_MODIFYMETHOD_SUB    = 1
+    // 英雄技能点 - 设置指定值
     constant integer   bj_MODIFYMETHOD_SET    = 2
 
     // Unit state adjustment methods (for replaced units)
@@ -413,22 +471,35 @@ globals
     constant integer   bj_UNIT_STATE_METHOD_MAXIMUM  = 3
 
     // Gate operations
+    // （操作可破坏物）门 - 关闭
     constant integer   bj_GATEOPERATION_CLOSE      = 0
+    // （操作可破坏物）门 - 开启
     constant integer   bj_GATEOPERATION_OPEN       = 1
+    // （操作可破坏物）门 - 摧毁
     constant integer   bj_GATEOPERATION_DESTROY    = 2
 
 	// Game cache value types
+    // 游戏缓存 - 布尔值
 	constant integer   bj_GAMECACHE_BOOLEAN                 = 0
+    // 游戏缓存 - 整数
 	constant integer   bj_GAMECACHE_INTEGER                 = 1
+    // 游戏缓存 - 实数
 	constant integer   bj_GAMECACHE_REAL                    = 2
+    // 游戏缓存 - 单位
 	constant integer   bj_GAMECACHE_UNIT                    = 3
+    // 游戏缓存 - 字串符
 	constant integer   bj_GAMECACHE_STRING                  = 4
 	
 	// Hashtable value types
+    // 哈希表 - 布尔值
 	constant integer   bj_HASHTABLE_BOOLEAN                 = 0
+    // 哈希表 - 整数
 	constant integer   bj_HASHTABLE_INTEGER                 = 1
+    // 哈希表 - 实数
 	constant integer   bj_HASHTABLE_REAL                    = 2
+    // 哈希表 - 字串符
 	constant integer   bj_HASHTABLE_STRING                  = 3
+    // 哈希表 - 句柄
 	constant integer   bj_HASHTABLE_HANDLE                  = 4
 
     // Item status types
@@ -445,8 +516,11 @@ globals
     constant integer   bj_ITEMCODE_STATUS_PAWNABLE = 2
 
     // Minimap ping styles
+    // 小地图信号 - 简单
     constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
+    // 小地图信号 - 丰富
     constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
+    // 小地图信号 - 攻击
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
@@ -461,10 +535,13 @@ globals
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
+    // 尸体最大死亡时间
     constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
 
     // Corpse creation styles
+    // 尸体类型 - 骨头
     constant integer   bj_CORPSETYPE_FLESH         = 0
+    // 尸体类型 - 血肉
     constant integer   bj_CORPSETYPE_BONE          = 1
 
     // Elevator pathing-blocker destructable code
@@ -492,7 +569,9 @@ globals
     integer            bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
+    // 区域 - 玩家可用地图区域
     rect               bj_mapInitialPlayableArea   = null
+    // 区域 - 镜头范围区域
     rect               bj_mapInitialCameraBounds   = null
 
     // Utility function vars
@@ -5854,7 +5933,7 @@ function ConfigureNeutralVictim takes nothing returns nothing
 endfunction
 
 
-// 设置玩家所有单位到中立受害者单位
+// 设置玩家所有单位变更为中立受害玩家控制
 function MakeUnitsPassiveForPlayerEnum takes nothing returns nothing
     call SetUnitOwner(GetEnumUnit(), Player(bj_PLAYER_NEUTRAL_VICTIM), false)
 endfunction
@@ -5905,7 +5984,7 @@ function AllowVictoryDefeat takes playergameresult gameResult returns boolean
     return true
 endfunction
 
-
+//退出游戏
 function EndGameBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
@@ -5964,7 +6043,7 @@ function MeleeDefeatDialogBJ takes player whichPlayer, boolean leftGame returns 
     call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
 endfunction
 
-
+//游戏结束
 function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -5988,7 +6067,7 @@ function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns not
     call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
 endfunction
 
-
+//删除存档
 function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult gameResult, boolean leftGame returns nothing
     if AllowVictoryDefeat(gameResult) then
 
@@ -6006,10 +6085,11 @@ function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult 
     endif
 endfunction
 
-
+// 游戏胜利对话框事件，继续
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
-        call PauseGame( false )
+        call 
+	( false )
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
@@ -6021,7 +6101,7 @@ function CustomVictoryOkBJ takes nothing returns nothing
     endif
 endfunction
 
-
+// 游戏胜利对话框事件，退出
 function CustomVictoryQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6032,7 +6112,7 @@ function CustomVictoryQuitBJ takes nothing returns nothing
     call EndGame( bj_changeLevelShowScores )
 endfunction
 
-
+// 游戏胜利，显示对话框（继续，退出）
 function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6060,7 +6140,7 @@ function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     call StartSoundForPlayerBJ( whichPlayer, bj_victoryDialogSound )
 endfunction
 
-
+// 游戏胜利，跳过选择，直接进入下一关或退出
 function CustomVictorySkipBJ takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         if bj_isSinglePlayer then
@@ -6077,7 +6157,7 @@ function CustomVictorySkipBJ takes player whichPlayer returns nothing
 endfunction
 
 
-// 胜利
+// 游戏胜利
 function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean showScores returns nothing
     if AllowVictoryDefeat( PLAYER_GAME_RESULT_VICTORY ) then
         call RemovePlayer( whichPlayer, PLAYER_GAME_RESULT_VICTORY )
@@ -6098,13 +6178,13 @@ function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean s
     endif
 endfunction
 
-
+//游戏失败对话框按钮事件，重新开始
 function CustomDefeatRestartBJ takes nothing returns nothing
     call PauseGame( false )
     call RestartGame( true )
 endfunction
 
-
+//游戏失败对话框按钮事件，选择难度并重新开始
 function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     local gamedifficulty diff = GetGameDifficulty()
 
@@ -6124,13 +6204,13 @@ function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     call RestartGame( true )
 endfunction
 
-
+//游戏失败对话框按钮事件，选择存档
 function CustomDefeatLoadBJ takes nothing returns nothing
     call PauseGame( false )
     call DisplayLoadDialog()
 endfunction
 
-
+//游戏失败对话框按钮事件，退出游戏
 function CustomDefeatQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6141,7 +6221,7 @@ function CustomDefeatQuitBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
 
-
+// 游戏失败对话框（重新开始，选择难度，退出）
 function CustomDefeatDialogBJ takes player whichPlayer, string message returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6223,7 +6303,7 @@ endfunction
 //***************************************************************************
 
 
-// 创建任务t
+// 创建任务
 function CreateQuestBJ takes integer questType, string title, string description, string iconPath returns quest
     local boolean required   = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
     local boolean discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED)
