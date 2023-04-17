@@ -24,11 +24,11 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 获取英雄等级
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取AI玩家指定类型单位/科技的数量，统计训练/建造/研究指定/研究中及已训练/建造/研究指定/研究完成
+    // 获取AI玩家指定类型单位的数量/科技的等级，含训练/建造/研究中及已训练/建造/研究完成
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家的该类型单位的数量，统计训练/建造/研究指定/研究中及已训练/建造/研究指定/研究完成
+    // 获取指定玩家的该类型单位的数量/科技的等级，含训练/建造/研究中及已训练/建造/研究完成
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取AI玩家指定类型单位的数量，仅统计已训练/建造/研究指定/研究完成
+    // 获取AI玩家指定类型单位的数量/科技的等级，仅统计已训练/建造/研究完成
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 指定基地对应类型的单位数，0为第一个基地
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
@@ -36,7 +36,7 @@ native DebugS               takes string str                            returns 
     native GetUnitGoldCost      takes integer unitid                        returns integer
     // 训练/建造/研究指定/研究一个指定类型单位/科技需要消耗的木材数量
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/科技类型的建造/训练/研究时间
+    // 获取指定单位/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
@@ -62,17 +62,17 @@ native DebugS               takes string str                            returns 
     native GetMegaTarget        takes nothing                               returns unit
     // 获取指定玩家正在训练/建造的单位
     native GetBuilding          takes player p                              returns unit
-    // 获得敌人进攻组强度
+    // 获得敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
-    // 命令训练/建造/研究指定/研究单位/科技(数量,单位类型,基地)
+    // 命令训练/建造/研究指定/研究单位/科技(指定数量,单位类型,基地)
     native SetProduce           takes integer qty, integer id, integer town returns boolean
     // 取消/反召唤指定单位（亡灵卖建筑），单位正在建造/训练会取消，建造完成时可能会被卖掉
     native Unsummon             takes unit unitid                           returns nothing
-    // 建造扩张点/分基地（指定工人类型和建筑类型）
+    // 建造扩张点/分基地（指定工人（具体到某个单位）和城镇单位的类型）
     native SetExpansion         takes unit peon, integer id                 returns boolean
     // 升级指定科技
     native SetUpgrade           takes integer id                            returns boolean
@@ -105,13 +105,13 @@ native DebugS               takes string str                            returns 
     native SetHeroesBuyItems    takes boolean state                         returns nothing
     // 没有怜悯（在敌人较弱或弱势时进攻）
     native SetWatchMegaTargets  takes boolean state                         returns nothing
-    // 受伤单位（血量50%以下）不编入进攻组
+    // 受伤单位（血量50%以下）不编入攻击组
     native SetIgnoreInjured     takes boolean state                         returns nothing
     // 允许英雄拾取物品
     native SetHeroesTakeItems   takes boolean state                         returns nothing
     // 允许单位逃跑
     native SetUnitsFlee         takes boolean state                         returns nothing
-    // 允许进攻组逃跑
+    // 允许攻击组逃跑
     native SetGroupsFlee        takes boolean state                         returns nothing
     // 启用慢速采矿（每次采集1金）
     native SetSlowChopping      takes boolean state                         returns nothing
@@ -123,9 +123,9 @@ native DebugS               takes string str                            returns 
     native SetReplacementCount  takes integer qty                           returns nothing
     // 允许受伤单位回主基地或生命之泉疗伤
     native GroupTimedLife       takes boolean allow                         returns nothing
-    // 允许从进攻组中移除受伤单位（血量50%以下）
+    // 允许从攻击组中移除受伤单位（血量50%以下）
     native RemoveInjuries       takes nothing                               returns nothing
-    // 从进攻组中移除攻城单位（默认攻击类型为攻城的单位）
+    // 从攻击组中移除攻城单位（默认攻击类型为攻城的单位）
     native RemoveSiege          takes nothing                               returns nothing
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
@@ -142,7 +142,7 @@ native DebugS               takes string str                            returns 
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 下一个扩张点是否存在具有威胁的单位
+    // 下一个扩张点是否存在具有威胁的单位（只检测中立敌对的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
@@ -162,7 +162,7 @@ native DebugS               takes string str                            returns 
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
     // 检测自杀攻击组是否满足指定条件（指定玩家），自杀指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-    // 进攻组是否在战斗
+    // 攻击组是否在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
     // 指定单位是否属于防御塔
     native IsTowered            takes unit target                           returns boolean
@@ -174,27 +174,27 @@ native DebugS               takes string str                            returns 
     native HarvestWood          takes integer town, integer peons           returns nothing
     // 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null，如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会命令其离开金矿
     native GetExpansionPeon     takes nothing                               returns unit
-    // 停止聚集
+    // 停止收集
     native StopGathering        takes nothing                               returns nothing
     // 在指定坐标增加指定类型的防守单位
     native AddGuardPost         takes integer id, real x, real y            returns nothing
-    // 填满防守岗位
+    // 补满防守岗位
     native FillGuardPosts       takes nothing                               returns nothing
     // 返回防守岗位
     native ReturnGuardPosts     takes nothing                               returns nothing
     // 创建攻击组
     native CreateCaptains       takes nothing                               returns nothing
-    // 设置指定组（进攻组、防守组、两组一起执行）回家后的聚集坐标，AI默认把单位聚集在主基地的采矿路线上，应该就是这个坐标
+    // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标，AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
-    // 命令攻击组复位
+    // 命令攻击组复位（回到 SetCaptainHome 的集结点）
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 让攻击组使用传送到指定坐标
+    // 传送攻击组到指定坐标
     native TeleportCaptain      takes real x, real y                        returns nothing
-    // 清除攻击组当前攻击的目标
+    // 清除攻击组当前的攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
-    // 让攻击组攻击到指定坐标
+    // 让攻击组攻击到指定坐标，可配合 DisablePathing 控制是否允许攻击组在路上战斗（移动攻击）
     native CaptainAttack        takes real x, real y                        returns nothing
     // 让攻击组攻击玩家的单位
     native CaptainVsUnits       takes player id                             returns nothing
@@ -202,29 +202,29 @@ native DebugS               takes string str                            returns 
     native CaptainVsPlayer      takes player id                             returns nothing
     // 让攻击组回家
     native CaptainGoHome        takes nothing                               returns nothing
-    // 进攻组是否在家
+    // 攻击组是否在家
     native CaptainIsHome        takes nothing                               returns boolean
-    // 进攻组是否完整
+    // 攻击组是否完整
     native CaptainIsFull        takes nothing                               returns boolean
-    // 进攻组是否为空
+    // 攻击组是否为空
     native CaptainIsEmpty       takes nothing                               returns boolean
-    // 进攻组规模
+    // 攻击组规模，数值越高，规模越大
     native CaptainGroupSize     takes nothing                               returns integer
     // 攻击组准备情况，似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
-    // 进攻组是否在撤退
+    // 攻击组是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 进攻组整体生命值，似乎是百分制且转百分比
+    // 攻击组整体生命值，似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 进攻组整体魔法值，似乎是百分制且转百分比
+    // 攻击组整体魔法值，似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
-    // 进攻组是否到达目的地
+    // 攻击组是否到达目的地
     native CaptainAtGoal        takes nothing                               returns boolean
     // 地图上是否还有中立敌对玩家的单位，即野怪，在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
-    // 在进攻组添加自杀单位，指定单位类型和数量，自杀指令被暴雪用于战役AI
+    // 在攻击组添加自杀单位，指定单位类型和数量，自杀指令被暴雪用于战役AI
     native SuicideUnit          takes integer count, integer unitid         returns nothing
-    // 在进攻组添加自杀单位，指定单位类型、数量和玩家，自杀指令被暴雪用于战役AI
+    // 在攻击组添加自杀单位，指定单位类型、数量和玩家，自杀指令被暴雪用于战役AI
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始进程，AI脚本最多可运行6条进程，最多可有6条进程同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量），不同进程之间互不干涉（异步），可共用全局变量，但在一条进程运行到读取变量的代码时，可能因变量已在几十秒前被另一个变量改写，造成滞后的假象
     native StartThread          takes code func                             returns nothing
@@ -238,7 +238,7 @@ native DebugS               takes string str                            returns 
     native IgnoredUnits         takes integer unitid                        returns integer
     // AI的任意基地被攻击，与小地图警报的触发条件相同，但只针对基地
     native TownThreatened       takes nothing                               returns boolean
-    // 是否允许在未到达目的地前（进攻组/防御组移动过程中）战斗
+    // 是否允许在未到达目的地前（攻击组/防御组移动过程中）战斗
     native DisablePathing       takes nothing                               returns nothing
     // 获得命令队列中的指令条数
     native SetAmphibious        takes nothing                               returns nothing
@@ -264,108 +264,193 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // human heroes
+        // 大法师
         constant integer ARCHMAGE           = 'Hamg'
+        // 圣骑士
         constant integer PALADIN            = 'Hpal'
+        // 山丘之王
         constant integer MTN_KING           = 'Hmkg'
+        // 血魔法师
         constant integer BLOOD_MAGE         = 'Hblm'
     
         // human hero abilities
+        // 技能 天神下凡（山丘之王）
         constant integer AVATAR             = 'AHav'
+        // 技能 猛击（山丘之王）
         constant integer BASH               = 'AHbh'
+        // 技能 风暴之锤（山丘之王）
         constant integer THUNDER_BOLT       = 'AHtb'
+        // 技能 雷霆一击（山丘之王）
         constant integer THUNDER_CLAP       = 'AHtc'
-    
+        // 技能 虔诚光环（圣骑士）
         constant integer DEVOTION_AURA      = 'AHad'
+        // 技能 圣盾术（圣骑士）
         constant integer DIVINE_SHIELD      = 'AHds'
+        // 技能 圣光术（圣骑士）
         constant integer HOLY_BOLT          = 'AHhb'
+        // 技能 复活术（圣骑士）
         constant integer RESURRECTION       = 'AHre'
-    
+        // 技能 暴风雪（大法师）
         constant integer BLIZZARD           = 'AHbz'
+        // 技能 辉煌光环（大法师）
         constant integer BRILLIANCE_AURA    = 'AHab'
+        // 技能 群体传送（大法师）
         constant integer MASS_TELEPORT      = 'AHmt'
+        // 技能 水元素（大法师）
         constant integer WATER_ELEMENTAL    = 'AHwe'
-    
+        // 放逐（血法）
         constant integer BANISH             = 'AHbn'
+        // 技能 烈焰风暴（血法）
         constant integer FLAME_STRIKE       = 'AHfs'
+        // 技能 火凤凰（血法）
         constant integer SUMMON_PHOENIX     = 'AHpx'
+        // 技能 法力虹吸（血法）
         constant integer SIPHON_MANA        = 'AHdr'
     
         // special human heroes
+        // 吉安娜
         constant integer JAINA              = 'Hjai'
+        // 穆拉丁·铜须
         constant integer MURADIN            = 'Hmbr'
+        // 加里瑟斯
         constant integer GARITHOS           = 'Hlgr'
+        // 卡尔萨斯
         constant integer KAEL               = 'Hkal'
     
         // human units
+        // 矮人直升机
         constant integer COPTER             = 'hgyr'
+        // 矮人直升机
         constant integer GYRO               =  COPTER
+        // 水元素
         constant integer ELEMENTAL          = 'hwat'
+        // 人族步兵
         constant integer FOOTMAN            = 'hfoo'
+        // 人族步兵
         constant integer FOOTMEN            =  FOOTMAN
+        // 狮鹫骑士
         constant integer GRYPHON            = 'hgry'
+        // 人族骑士
         constant integer KNIGHT             = 'hkni'
+        // 矮人迫机炮
         constant integer MORTAR             = 'hmtm'
+        // 农民
         constant integer PEASANT            = 'hpea'
+        // 牧师
         constant integer PRIEST             = 'hmpr'
+        // 矮人火枪手
         constant integer RIFLEMAN           = 'hrif'
+        // 矮人火枪手
         constant integer RIFLEMEN           =  RIFLEMAN
+        // 女巫
         constant integer SORCERESS          = 'hsor'
+        // 攻城坦克
         constant integer TANK               = 'hmtt'
+        // 攻城坦克
         constant integer STEAM_TANK         =  TANK
+        // 攻城坦克（弹幕升级）
         constant integer ROCKET_TANK        = 'hrtt'
+        // 民兵
         constant integer MILITIA            = 'hmil'
+        // 魔法破坏者（破法）
         constant integer SPELL_BREAKER      = 'hspt'
+        // 龙鹰骑士
         constant integer HUMAN_DRAGON_HAWK  = 'hdhw'
     
         // special human units
+        // 血精灵牧师
         constant integer BLOOD_PRIEST       = 'hbep'
+        // 血精灵女巫
         constant integer BLOOD_SORCERESS    = 'hbes'
+        // 血精灵工人
         constant integer BLOOD_PEASANT      = 'nhew'
     
         // human buildings
+        // 狮鹫笼
         constant integer AVIARY             = 'hgra'
+        // 兵营
         constant integer BARRACKS           = 'hbar'
+        // 铁匠铺
         constant integer BLACKSMITH         = 'hbla'
+        // 炮塔
         constant integer CANNON_TOWER       = 'hctw'
+        // 城堡（人族三本基地）
         constant integer CASTLE             = 'hcas'
+        // 圣塔（编辑器无此单位 'htws'）
         constant integer CHURCH             = 'htws'
+        // 圣塔（编辑器无此单位 'htws'）
         constant integer MAGE_TOWER         =  CHURCH
+        // 防御塔
         constant integer GUARD_TOWER        = 'hgtw'
+        // 农场
         constant integer HOUSE              = 'hhou'
+        // 国王祭坛
         constant integer HUMAN_ALTAR        = 'halt'
+        // 主城（人族二本基地）
         constant integer KEEP               = 'hkee'
+        // 伐木场
         constant integer LUMBER_MILL        = 'hlum'
+        // 神秘圣地
         constant integer SANCTUM            = 'hars'
+        // 神秘圣地
         constant integer ARCANE_SANCTUM     =  SANCTUM
+        // 城镇大厅（人族一本基地）
         constant integer TOWN_HALL          = 'htow'
+        // 哨塔
         constant integer WATCH_TOWER        = 'hwtw'
+        // 车间
         constant integer WORKSHOP           = 'harm'
+        // 神秘宝藏室
         constant integer ARCANE_VAULT       = 'hvlt'
+        // 神秘之塔
         constant integer ARCANE_TOWER       = 'hatw'
     
         // human upgrades
+        // 钢铁铸剑
         constant integer UPG_MELEE          = 'Rhme'
+        // 黑火药
         constant integer UPG_RANGED         = 'Rhra'
+        // 炮兵（编辑器无此科技 'Rhaa'）
         constant integer UPG_ARTILLERY      = 'Rhaa'
+        // 钢铁装甲
         constant integer UPG_ARMOR          = 'Rhar'
+        // 黄金（编辑器无此科技 'Rhmi'）
         constant integer UPG_GOLD           = 'Rhmi'
+        // 改良石工技术
         constant integer UPG_MASONRY        = 'Rhac'
+        // 控制魔法
         constant integer UPG_SIGHT          = 'Rhss'
+        // 防御
         constant integer UPG_DEFEND         = 'Rhde'
+        // 坐骑作战训练
         constant integer UPG_BREEDING       = 'Rhan'
+        // 牧师专家级训练
         constant integer UPG_PRAYING        = 'Rhpt'
+        // 女巫专家级训练
         constant integer UPG_SORCERY        = 'Rhst'
+        // 镶钉皮甲
         constant integer UPG_LEATHER        = 'Rhla'
+        // 长管火枪
         constant integer UPG_GUN_RANGE      = 'Rhri'
+        // 改良伐木技术
         constant integer UPG_WOOD           = 'Rhlh'
+        // 魔法岗哨
         constant integer UPG_SENTINEL       = 'Rhse'
+        // 散射（编辑器无此科技 'Rhsr'）
         constant integer UPG_SCATTER        = 'Rhsr'
+        // 飞行器炸弹
         constant integer UPG_BOMBS          = 'Rhgb'
+        // 风暴战锤
         constant integer UPG_HAMMERS        = 'Rhhb'
+        // 控制魔法
         constant integer UPG_CONT_MAGIC     = 'Rhss'
+        // 破片榴弹
         constant integer UPG_FRAGS          = 'Rhfs'
+        // 火箭弹幕
         constant integer UPG_TANK           = 'Rhrt'
+        // 对空炮机
         constant integer UPG_FLAK           = 'Rhfc'
+        // 迷雾之云
         constant integer UPG_CLOUD          = 'Rhcd'
     
         //--------------------------------------------------------------------
@@ -373,106 +458,187 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // orc heroes
+        // 剑圣
         constant integer BLADE_MASTER       = 'Obla'
+        // 先知
         constant integer FAR_SEER           = 'Ofar'
+        // 牛头人酋长
         constant integer TAUREN_CHIEF       = 'Otch'
+        // 暗影猎手
         constant integer SHADOW_HUNTER      = 'Oshd'
     
         // special orc heroes
+        // 格罗玛什·地狱咆哮
         constant integer GROM               = 'Ogrh'
+        // 萨尔
         constant integer THRALL             = 'Othr'
     
         // orc hero abilities
+        // 技能 致命一击（剑圣）
         constant integer CRITICAL_STRIKE    = 'AOcr'
+        // 技能 镜像（剑圣）
         constant integer MIRROR_IMAGE       = 'AOmi'
+        // 技能 剑刃风暴（剑圣）
         constant integer BLADE_STORM        = 'AOww'
+        // 技能 疾风步（剑圣）
         constant integer WIND_WALK          = 'AOwk'
-    
+        // 技能 闪电链（先知）
         constant integer CHAIN_LIGHTNING    = 'AOcl'
+        // 技能 地震术（先知）
         constant integer EARTHQUAKE         = 'AOeq'
+        // 技能 视界术（先知）
         constant integer FAR_SIGHT          = 'AOfs'
+        // 技能 野性之魂（先知）（招狼）
         constant integer SPIRIT_WOLF        = 'AOsf'
-    
+        // 技能 坚韧光环（牛头）
         constant integer ENDURANE_AURA      = 'AOae'
+        // 技能 重生（牛头）
         constant integer REINCARNATION      = 'AOre'
+        // 技能 技能 震荡波（牛头）
         constant integer SHOCKWAVE          = 'AOsh'
+        // 技能 战争践踏（牛头）
         constant integer WAR_STOMP          = 'AOws'
-    
+        // 技能 治疗波（暗影猎手）
         constant integer HEALING_WAVE       = 'AOhw'
+        // 技能 妖术（暗影猎手）
         constant integer HEX                = 'AOhx'
+        // 技能 毒蛇结界（暗影猎手）（蛇棒）
         constant integer SERPENT_WARD       = 'AOsw'
+        // 技能 巫毒狂舞（暗影猎手）（友军无敌）
         constant integer VOODOO             = 'AOvd'
     
         // orc units
+        // 兽族步兵（编辑器无此单位 'oang'）
         constant integer GUARDIAN           = 'oang'
+        // 投石车
         constant integer CATAPULT           = 'ocat'
+        // 巫医
         constant integer WITCH_DOCTOR       = 'odoc'
+        // 兽族步兵
         constant integer GRUNT              = 'ogru'
+        // 猎头者
         constant integer HEAD_HUNTER        = 'ohun'
+        // 狂战士（猎头升级）
         constant integer BERSERKER          = 'otbk'
+        // 科多兽
         constant integer KODO_BEAST         = 'okod'
+        // 苦工
         constant integer PEON               = 'opeo'
+        // 狼骑兵
         constant integer RAIDER             = 'orai'
+        // 萨满祭司
         constant integer SHAMAN             = 'oshm'
+        // 牛头人
         constant integer TAUREN             = 'otau'
+        // 驭风者
         constant integer WYVERN             = 'owyv'
+        // 蝙蝠骑士
         constant integer BATRIDER           = 'otbr'
+        // 灵魂行者
         constant integer SPIRIT_WALKER      = 'ospw'
+        // 灵魂行者（虚无形态）
         constant integer SPIRIT_WALKER_M    = 'ospm'
     
         // orc buildings
+        // 风暴祭坛
         constant integer ORC_ALTAR          = 'oalt'
+        // 兵营
         constant integer ORC_BARRACKS       = 'obar'
+        // 兽栏
         constant integer BESTIARY           = 'obea'
+        // 战争磨坊
         constant integer FORGE              = 'ofor'
+        // 堡垒（兽人三本基地）
         constant integer FORTRESS           = 'ofrt'
+        // 大厅（兽人一本基地）
         constant integer GREAT_HALL         = 'ogre'
+        // 灵魂小屋
         constant integer LODGE              = 'osld'
+        // 据点（兽人二本基地）
         constant integer STRONGHOLD         = 'ostr'
+        // 兽人地洞
         constant integer BURROW             = 'otrb'
+        // 牛头人图腾
         constant integer TOTEM              = 'otto'
+        // 了望塔
         constant integer ORC_WATCH_TOWER    = 'owtw'
+        // 巫毒小屋
         constant integer VOODOO_LOUNGE      = 'ovln'
     
         // orc upgrades
+        // 精钢近战武器
         constant integer UPG_ORC_MELEE      = 'Rome'
+        // 精钢远程武器
         constant integer UPG_ORC_RANGED     = 'Rora'
+        // 火炮（编辑器无此科技 'Roaa'）
         constant integer UPG_ORC_ARTILLERY  = 'Roaa'
+        // 精钢护甲
         constant integer UPG_ORC_ARMOR      = 'Roar'
+        // 战鼓伤害强化
         constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
+        // 掠夺
         constant integer UPG_ORC_PILLAGE    = 'Ropg'
+        // 野蛮之力
         constant integer UPG_ORC_BERSERK    = 'Robs'
+        // 粉碎伤害强化
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
+        // 诱捕
         constant integer UPG_ORC_ENSNARE    = 'Roen'
+        // 毒矛
         constant integer UPG_ORC_VENOM      = 'Rovs'
+        // 巫医专家级训练
         constant integer UPG_ORC_DOCS       = 'Rowd'
+        // 萨满祭司专家级训练
         constant integer UPG_ORC_SHAMAN     = 'Rost'
+        // 尖刺障碍
         constant integer UPG_ORC_SPIKES     = 'Rosp'
+        // 加强型防御
         constant integer UPG_ORC_BURROWS    = 'Rorb'
+        // 巨魔再生
         constant integer UPG_ORC_REGEN      = 'Rotr'
+        // 火油瓶
         constant integer UPG_ORC_FIRE       = 'Rolf'
+        // 灵魂行者专家级训练
         constant integer UPG_ORC_SWALKER    = 'Rowt'
+        // 狂战士升级
         constant integer UPG_ORC_BERSERKER  = 'Robk'
+        // 燃油
         constant integer UPG_ORC_NAPTHA     = 'Robf'
+        // 混乱
         constant integer UPG_ORC_CHAOS      = 'Roch'
     
         // Warcraft 2 orc units
+        // 食人魔法师
         constant integer OGRE_MAGI          = 'nomg'
+        // 红色巨龙
         constant integer ORC_DRAGON         = 'nrwm'
+        // 地精自爆工兵
         constant integer SAPPER             = 'ngsp'
+        // 地精飞艇
         constant integer ZEPPLIN            = 'nzep'
+        // 地精飞艇
         constant integer ZEPPELIN           =  ZEPPLIN
+        // 兽人术士
         constant integer W2_WARLOCK         = 'nw2w'
+        // 猪圈
         constant integer PIG_FARM           = 'npgf'
     
         // special orc units
+        // 邪兽人步兵
         constant integer CHAOS_GRUNT        = 'nchg'
+        // 邪兽人术士
         constant integer CHAOS_WARLOCK      = 'nchw'
+        // 邪兽人狼骑兵
         constant integer CHAOS_RAIDER       = 'nchr'
+        // 邪兽人苦工
         constant integer CHAOS_PEON         = 'ncpn'
+        // 邪兽人科多兽
         constant integer CHAOS_KODO         = 'nckb'
+        // 格罗玛什·地狱咆哮（喝下恶魔之血）
         constant integer CHAOS_GROM         = 'Opgh'
+        // 黑石氏族剑圣
         constant integer CHAOS_BLADEMASTER  = 'Nbbc'
+        // 邪兽人地洞
         constant integer CHAOS_BURROW       = 'ocbw'
     
         //--------------------------------------------------------------------
@@ -480,96 +646,171 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // undead heroes
+        // 死亡骑士
         constant integer DEATH_KNIGHT       = 'Udea'
+        // 恐惧魔王
         constant integer DREAD_LORD         = 'Udre'
+        // 巫妖
         constant integer LICH               = 'Ulic'
+        // 地穴领主
         constant integer CRYPT_LORD         = 'Ucrl'
     
         // special undead heroes
+        // 玛尔甘尼斯
         constant integer MALGANIS           = 'Umal'
+        // 提克迪奥斯
         constant integer TICHONDRIUS        = 'Utic'
+        // 阿兹加洛
         constant integer PIT_LORD           = 'Npld'
+        // 迪瑟洛克
         constant integer DETHEROC           = 'Udth'
     
         // undead hero abilities
+        // 技能 沉睡（恐惧魔王）
         constant integer SLEEP              = 'AUsl'
+        // 技能 吸血光环（恐惧魔王）
         constant integer VAMP_AURA          = 'AUav'
+        // 技能 腐臭蜂群（恐惧魔王）
         constant integer CARRION_SWARM      = 'AUcs'
+        // 技能 地狱火（恐惧魔王）
         constant integer INFERNO            = 'AUin'
-    
+        // 技能 黑暗仪式（巫妖）
         constant integer DARK_RITUAL        = 'AUdr'
+        // 技能 枯萎凋零（巫妖）
         constant integer DEATH_DECAY        = 'AUdd'
+        // 技能 冰霜新星（巫妖）
         constant integer FROST_ARMOR        = 'AUfu'
+        // 技能 霜甲术（自动施法）（巫妖）
         constant integer FROST_NOVA         = 'AUfn'
-    
+        // 技能 亡者再临（死骑）
         constant integer ANIM_DEAD          = 'AUan'
+        // 技能 凋零/死亡缠绕（死骑）
         constant integer DEATH_COIL         = 'AUdc'
+        // 技能 天灾/死亡契约（死骑）
         constant integer DEATH_PACT         = 'AUdp'
+        // 技能 邪恶光环（死骑）
         constant integer UNHOLY_AURA        = 'AUau'
-    
+        // 技能 腐尸甲虫（小强）
         constant integer CARRION_SCARAB     = 'AUcb'
+        // 技能 穿刺（小强）
         constant integer IMPALE             = 'AUim'
+        // 技能 虫群风暴（小强）
         constant integer LOCUST_SWARM       = 'AUls'
+        // 技能 尖刺甲壳（小强）
         constant integer THORNY_SHIELD      = 'AUts'
     
         // undead units
+        // 憎恶
         constant integer ABOMINATION        = 'uabo'
+        // 侍僧
         constant integer ACOLYTE            = 'uaco'
+        // 女妖
         constant integer BANSHEE            = 'uban'
+        // 地穴恶魔
         constant integer PIT_FIEND          = 'ucry'
+        // 地穴恶魔
         constant integer CRYPT_FIEND        =  PIT_FIEND
+        // 冰霜巨龙
         constant integer FROST_WYRM         = 'ufro'
+        // 石像鬼
         constant integer GARGOYLE           = 'ugar'
+        // 石像鬼石像形态
         constant integer GARGOYLE_MORPH     = 'ugrm'
+        // 食尸鬼
         constant integer GHOUL              = 'ugho'
+        // 清道夫（绞肉机）
         constant integer MEAT_WAGON         = 'umtw'
+        // 通灵师（亡灵男巫）
         constant integer NECRO              = 'unec'
+        // 骷髅战士
         constant integer SKEL_WARRIOR       = 'uske'
+        // 影魔（阴影）
         constant integer SHADE              = 'ushd'
+        // 邪灵空艇
         constant integer UNDEAD_BARGE       = 'uarb'
+        // 黑曜石雕像
         constant integer OBSIDIAN_STATUE    = 'uobs'
+        // 黑曜石雕像
         constant integer OBS_STATUE         =  OBSIDIAN_STATUE
+        // 毁灭者
         constant integer BLK_SPHINX         = 'ubsp'
     
         // undead buildings
+        // 闹鬼金矿
         constant integer UNDEAD_MINE        = 'ugol'
+        // 黑暗祭坛
         constant integer UNDEAD_ALTAR       = 'uaod'
+        // 埋骨地
         constant integer BONEYARD           = 'ubon'
+        // 某种尖塔（编辑器无此单位 'ugsp'）
         constant integer GARG_SPIRE         = 'ugsp'
+        // 浮空城（大墓地）
         constant integer NECROPOLIS_1       = 'unpl'    // normal
+        // 亡者大厅
         constant integer NECROPOLIS_2       = 'unp1'    // upgraded once
+        // 黑色城堡
         constant integer NECROPOLIS_3       = 'unp2'    // full upgrade
+        // 献祭深渊
         constant integer SAC_PIT            = 'usap'
+        // 地穴
         constant integer CRYPT              = 'usep'
+        // 屠宰场
         constant integer SLAUGHTERHOUSE     = 'uslh'
+        // 诅咒神殿
         constant integer DAMNED_TEMPLE      = 'utod'
+        // 通灵塔
         constant integer ZIGGURAT_1         = 'uzig'    // normal
+        // 幽魂之塔
         constant integer ZIGGURAT_2         = 'uzg1'    // upgraded
+        // 蛛魔之塔（冰塔）
         constant integer ZIGGURAT_FROST     = 'uzg2'    // frost tower
+        // 坟场
         constant integer GRAVEYARD          = 'ugrv'
+        // 遗物陵墓
         constant integer TOMB_OF_RELICS     = 'utom'
     
         // undead upgrades
+        // 邪恶力量
         constant integer UPG_UNHOLY_STR     = 'Rume'
+        // 生物攻击
         constant integer UPG_CR_ATTACK      = 'Rura'
+        // 邪恶护甲
         constant integer UPG_UNHOLY_ARMOR   = 'Ruar'
+        // 食尸
         constant integer UPG_CANNIBALIZE    = 'Ruac'
+        // 食尸鬼狂暴
         constant integer UPG_GHOUL_FRENZY   = 'Rugf'
+        // 蛛网
         constant integer UPG_FIEND_WEB      = 'Ruwb'
+        // 不明科技（编辑器无此科技'Ruab'）
         constant integer UPG_ABOM           = 'Ruab'
+        // 石像形态
         constant integer UPG_STONE_FORM     = 'Rusf'
+        // 通灵师/亡灵男巫专家级训练
         constant integer UPG_NECROS         = 'Rune'
+        // 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
+        // 怀疑是背包（'Rupm'），但此处写成'Rump'
         constant integer UPG_MEAT_WAGON     = 'Rump'
+        // 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
+        // 骷髅持久术
         constant integer UPG_SKEL_LIFE      = 'Rusl'
+        // 骷髅精通
         constant integer UPG_SKEL_MASTERY   = 'Rusm'
+        // 发掘尸体
         constant integer UPG_EXHUME         = 'Ruex'
+        // 牺牲（编辑器无此科技'Rurs'）
         constant integer UPG_SACRIFICE      = 'Rurs'
+        // 不明科技（编辑器无此科技'Ruax'）
         constant integer UPG_ABOM_EXPL      = 'Ruax'
+        // 生物甲壳
         constant integer UPG_CR_ARMOR       = 'Rucr'
+        // 疾病之云
         constant integer UPG_PLAGUE         = 'Rupc'
+        // 毁灭者形态
         constant integer UPG_BLK_SPHINX     = 'Rusp'
+        // 钻地
         constant integer UPG_BURROWING      = 'Rubu'
     
         //--------------------------------------------------------------------
@@ -577,141 +818,254 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // elf heroes
+        // 恶魔猎手
         constant integer DEMON_HUNTER       = 'Edem'
+        // 恶魔猎手（变身形态）
         constant integer DEMON_HUNTER_M     = 'Edmm'
+        // 丛林守护者
         constant integer KEEPER             = 'Ekee'
+        // 月之女祭司
         constant integer MOON_CHICK         = 'Emoo'
+        // 月之女祭司
         constant integer MOON_BABE          =  MOON_CHICK
+        // 月之女祭司
         constant integer MOON_HONEY         =  MOON_CHICK
+        // 守望者
         constant integer WARDEN             = 'Ewar'
     
         // special elf heroes
+        // 希尔瓦娜斯
         constant integer SYLVANUS           = 'Hvwd'
+        // 塞纳留斯
         constant integer CENARIUS           = 'Ecen'
+        // 伊利丹
         constant integer ILLIDAN            = 'Eevi'
+        // 伊利丹（恶魔形态）
         constant integer ILLIDAN_DEMON      = 'Eevm'
+        // 玛維
         constant integer MAIEV              = 'Ewrd'
     
         // elf hero abilities
+        // 技能 自然之力（丛林守护者）
         constant integer FORCE_NATURE       = 'AEfn'
+        // 技能 纠缠根须（丛林守护者）
         constant integer ENT_ROOTS          = 'AEer'
+        // 技能 荆棘光环（丛林守护者）
         constant integer THORNS_AURA        = 'AEah'
+        // 技能 宁静（丛林守护者）
         constant integer TRANQUILITY        = 'AEtq'
-    
+        // 技能 闪避（恶魔猎手）
         constant integer EVASION            = 'AEev'
+        // 技能 献祭（恶魔猎手）
         constant integer IMMOLATION         = 'AEim'
+        // 技能 法力燃烧（恶魔猎手）
         constant integer MANA_BURN          = 'AEmb'
+        // 技能 恶魔变形（恶魔猎手）
         constant integer METAMORPHOSIS      = 'AEme'
-    
+        // 技能 灼热之箭（白虎）
         constant integer SEARING_ARROWS     = 'AHfa'
+        // 技能 斥候（白虎）
         constant integer SCOUT              = 'AEst'
+        // 技能 星辰坠落（流星雨）（白虎）
         constant integer STARFALL           = 'AEsf'
+        // 技能 强击光环（白虎）
         constant integer TRUESHOT           = 'AEar'
-    
+        // 技能 闪现（守望者）
         constant integer BLINK              = 'AEbl'
+        // 技能 刀扇
         constant integer FAN_KNIVES         = 'AEfk'
+        // 技能 暗影突袭
         constant integer SHADOW_TOUCH       = 'AEsh'
+        // 技能 复仇
         constant integer VENGEANCE          = 'AEsv'
     
         // elf units
+        // 小精灵
         constant integer WISP               = 'ewsp'
+        // 弓箭手
         constant integer ARCHER             = 'earc'
+        // 猛禽德鲁伊（鸟德）（人形）
         constant integer DRUID_TALON        = 'edot'
+        // 猛禽德鲁伊（鸟德）（鸦形）
         constant integer DRUID_TALON_M      = 'edtm'
+        // 投刃车
         constant integer BALLISTA           = 'ebal'
+        // 利爪德鲁伊（熊德）（人形）
         constant integer DRUID_CLAW         = 'edoc'
+        // 利爪德鲁伊（熊德）（熊形）
         constant integer DRUID_CLAW_M       = 'edcm'
+        // 树妖（小鹿）
         constant integer DRYAD              = 'edry'
+        // 角鹰兽
         constant integer HIPPO              = 'ehip'
+        // 角鹰兽骑士
         constant integer HIPPO_RIDER        = 'ehpr'
+        // 女猎手
         constant integer HUNTRESS           = 'esen'
+        // 奇美拉
         constant integer CHIMAERA           = 'echm'
+        // 树人
         constant integer ENT                = 'efon'
+        // 山岭巨人
         constant integer MOUNTAIN_GIANT     = 'emtg'
+        // 精灵龙
         constant integer FAERIE_DRAGON      = 'efdr'
     
         // special elf units
+        // 弓箭手（高等精灵）
         constant integer HIGH_ARCHER        = 'nhea'
+        // 队长（高等精灵）
         constant integer HIGH_FOOTMAN       = 'hcth'
+        // 队长（高等精灵）
         constant integer HIGH_FOOTMEN       =  HIGH_FOOTMAN
+        // 剑士（高等精灵）
         constant integer HIGH_SWORDMAN      = 'hhes'
+        // 龙鹰（高等精灵）
         constant integer DRAGON_HAWK        = 'nws1'
+        // 腐化的树人
         constant integer CORRUPT_TREANT     = 'nenc'
+        // 剧毒树人
         constant integer POISON_TREANT      = 'nenp'
+        // 瘟疫树人
         constant integer PLAGUE_TREANT      = 'nepl'
+        // 珊蒂斯
         constant integer SHANDRIS           = 'eshd'
     
         // elf buildings
+        // 知识古树
         constant integer ANCIENT_LORE       = 'eaoe'
+        // 战争古树
         constant integer ANCIENT_WAR        = 'eaom'
+        // 风之古树
         constant integer ANCIENT_WIND       = 'eaow'
+        // 纪元之树（暗夜二本）
         constant integer TREE_AGES          = 'etoa'
+        // 永恒之树（暗夜三本）
         constant integer TREE_ETERNITY      = 'etoe'
+        // 生命之树（暗夜一本）
         constant integer TREE_LIFE          = 'etol'
+        // 守护古树
         constant integer ANCIENT_PROTECT    = 'etrp'
+        // 长者祭坛
         constant integer ELF_ALTAR          = 'eate'
         constant integer BEAR_DEN           = 'edol'
+        // 熊窝（编辑器无此单位 ）
+        constant integer BEAR_DEN           = 'edol'
+        // 奇美拉栖木
         constant integer CHIMAERA_ROOST     = 'edos'
+        // 猎手大厅
         constant integer HUNTERS_HALL       = 'edob'
+        // 月亮井
         constant integer MOON_WELL          = 'emow'
+        // 被缠绕的金矿
         constant integer ELF_MINE           = 'egol'
+        // 奇迹古树
         constant integer DEN_OF_WONDERS     = 'eden'
     
         // special elf buildings
+        // 高等精灵农场
         constant integer ELF_FARM           = 'nefm'
+        // 高等精灵警戒塔
         constant integer ELF_GUARD_TOWER    = 'negt'
+        // 天怒塔
         constant integer HIGH_SKY           = 'negm'
+        // 地怒塔 
         constant integer HIGH_EARTH         = 'negf'
+        // 高等精灵警戒塔
         constant integer HIGH_TOWER         = 'negt'
+        // 高等精灵兵营
         constant integer ELF_HIGH_BARRACKS  = 'nheb'
+        // 腐化的生命之树
         constant integer CORRUPT_LIFE       = 'nctl'
+        // 腐化的月亮井
         constant integer CORRUPT_WELL       = 'ncmw'
+        // 腐化的守护古树
         constant integer CORRUPT_PROTECTOR  = 'ncap'
+        // 腐化的战争古树
         constant integer CORRUPT_WAR        = 'ncaw'
     
         // elf upgrades
+        // 月之力量
         constant integer UPG_STR_MOON       = 'Resm'
+        // 野性力量
         constant integer UPG_STR_WILD       = 'Resw'
+        // 月之护甲
         constant integer UPG_MOON_ARMOR     = 'Rema'
+        // 强化外皮
         constant integer UPG_HIDES          = 'Rerh'
+        // 夜视能力
         constant integer UPG_ULTRAVISION    = 'Reuv'
+        // 自然祝福
         constant integer UPG_BLESSING       = 'Renb'
+        // 哨兵
         constant integer UPG_SCOUT          = 'Resc'
+        // 升级月刃
         constant integer UPG_GLAIVE         = 'Remg'
+        // 强弓
         constant integer UPG_BOWS           = 'Reib'
+        // 箭术
         constant integer UPG_MARKSMAN       = 'Remk'
+        // 猛禽德鲁伊专家级训练
         constant integer UPG_DRUID_TALON    = 'Redt'
+        // 利爪德鲁伊专家级训练
         constant integer UPG_DRUID_CLAW     = 'Redc'
+        // 驱除魔法
         constant integer UPG_ABOLISH        = 'Resi'
+        // 腐蚀吐息
         constant integer UPG_CHIM_ACID      = 'Recb'
+        // 角鹰兽训练
         constant integer UPG_HIPPO_TAME     = 'Reht'
+        // 不明科技（编辑器无此科技'Repd'）
         constant integer UPG_BOLT           = 'Repd'
+        // 利爪之印
         constant integer UPG_MARK_CLAW      = 'Reeb'
+        // 猛禽之印
         constant integer UPG_MARK_TALON     = 'Reec'
+        // 硬化体肤
         constant integer UPG_HARD_SKIN      = 'Rehs'
+        // 抗性体肤
         constant integer UPG_RESIST_SKIN    = 'Rers'
+        // 月井之春
         constant integer UPG_WELL_SPRING    = 'Rews'
     
         //--------------------------------------------------------------------
         // Neutral
         //--------------------------------------------------------------------
+        // 恶魔之门
         constant integer DEMON_GATE         = 'ndmg'
+        // 恶魔猎犬
         constant integer FELLHOUND          = 'nfel'
+        // 地狱火
         constant integer INFERNAL           = 'ninf'
+        // 末日守卫（标准）
         constant integer DOOMGUARD          = 'nbal'
+        // 萨特
         constant integer SATYR              = 'nsty'
+        // 萨特欺诈者
         constant integer TRICKSTER          = 'nsat'
+        // 萨特影舞者
         constant integer SHADOWDANCER       = 'nsts'
+        // 萨特窃魂者
         constant integer SOULSTEALER        = 'nstl'
+        // 萨特唤魔者
         constant integer HELLCALLER         = 'nsth'
+        // 骷髅弓箭手
         constant integer SKEL_ARCHER        = 'nska'
+        // 骷髅神射手
         constant integer SKEL_MARKSMAN      = 'nskm'
+        // 燃烧弓箭手
         constant integer SKEL_BURNING       = 'nskf'
+        // 巨型骷髅战士
         constant integer SKEL_GIANT         = 'nskg'
+        // 熊怪
         constant integer FURBOLG            = 'nfrl'
+        // 熊怪追踪者
         constant integer FURBOLG_TRACKER    = 'nfrb'
+        // 熊怪萨满
         constant integer FURBOLG_SHAMAN     = 'nfrs'
+        // 熊怪勇士
         constant integer FURBOLG_CHAMP      = 'nfrg'
+        // 熊怪萨满长者
         constant integer FURBOLG_ELDER      = 'nfre'
     
         //--------------------------------------------------------------------
@@ -719,37 +1073,61 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // naga heroes
+        // 海巫（娜迦族）
         constant integer NAGA_SORCERESS     = 'Nngs' 
+        // 瓦斯琪
         constant integer NAGA_VASHJ         = 'Hvsh' 
     
         // naga units
+        // 毒鳍龙
         constant integer NAGA_DRAGON        = 'nsnp'        // old names
+        // 纳迦海妖
         constant integer NAGA_WITCH         = 'nnsw'
+        // 飞蛇
         constant integer NAGA_SERPENT       = 'nwgs' 
+        // 龙龟
         constant integer NAGA_HYDRA         = 'nhyc'    
-    
+        // 深海鱼人奴隶
         constant integer NAGA_SLAVE         = 'nmpe'        // peon
+        // 毒鳍龙
         constant integer NAGA_SNAP_DRAGON   =  NAGA_DRAGON  // weak ranged
+        // 飞蛇
         constant integer NAGA_COUATL        =  NAGA_SERPENT // weak air
+        // 纳迦海妖
         constant integer NAGA_SIREN         =  NAGA_WITCH   // caster
+        // 纳迦侍从
         constant integer NAGA_MYRMIDON      = 'nmyr'        // knight
+        // 深海鱼人掠夺者
         constant integer NAGA_REAVER        = 'nnmg'        // footman
+        // 龙龟
         constant integer NAGA_TURTLE        =  NAGA_HYDRA   // siege
+        // 纳迦皇家卫兵
         constant integer NAGA_ROYAL         = 'nnrg'        // royal guard
     
         // naga buildings
+        // 潮汐神殿
         constant integer NAGA_TEMPLE        = 'nntt'        // town hall
+        // 珊瑚礁
         constant integer NAGA_CORAL         = 'nnfm'        // farm
+        // 艾萨拉圣所
         constant integer NAGA_SHRINE        = 'nnsa'        // sirens & couatls
+        // 孵化场
         constant integer NAGA_SPAWNING      = 'nnsg'        // myrm, snap dragon, hydra
+        // 潮汐守卫
         constant integer NAGA_GUARDIAN      = 'nntg'        // tower
+        // 深渊祭坛
         constant integer NAGA_ALTAR         = 'nnad'        // altar
     
         // naga upgrades
+        // 珊瑚鳞甲
         constant integer UPG_NAGA_ARMOR     = 'Rnam'
+        // 珊瑚锋刃
         constant integer UPG_NAGA_ATTACK    = 'Rnat'
+        // 驱除魔法
         constant integer UPG_NAGA_ABOLISH   = 'Rnsi'
+        // 纳迦海妖专家级训练
         constant integer UPG_SIREN          = 'Rnsw'
+        // 诱捕
         constant integer UPG_NAGA_ENSNARE   = 'Rnen'
     
     
@@ -778,9 +1156,11 @@ native DebugS               takes string str                            returns 
         constant integer MELEE_NEWBIE       = 1
         constant integer MELEE_NORMAL       = 2
         constant integer MELEE_INSANE       = 3
-    
+        // 攻击组
         constant integer ATTACK_CAPTAIN     = 1
+        // 防御组
         constant integer DEFENSE_CAPTAIN    = 2
+        // 攻击组及防御组
         constant integer BOTH_CAPTAINS      = 3
     
         constant integer BUILD_UNIT         = 1
@@ -791,23 +1171,33 @@ native DebugS               takes string str                            returns 
         constant integer UPKEEP_TIER2       = 80
     
         //--------------------------------------------------------------------
-    
+        // 当前AI玩家
         player  ai_player
-    
+        // 休眠/等待时间
         integer sleep_seconds
         integer total_gold              = 0
         integer total_wood              = 0
         integer gold_buffer             = 0 // usually for potion money
+        // 难度
         integer difficulty              = NORMAL
         integer exp_seen                = 0
+        // 默认人口建筑单位类型
         integer racial_farm             = 'hhou'
+        // 首发英雄单位类型
         integer hero_id                 = 'Hamg'
+        // 二发英雄单位类型
         integer hero_id2                = 'Hmkg'
+        // 三发英雄单位类型
         integer hero_id3                = 'Hpal'
+        // 技能数组
         integer array skill
+        // 首发英雄技能数组
         integer array skills1
+        // 二发英雄技能数组
         integer array skills2
+        // 三发英雄技能数组
         integer array skills3
+        // 最大英雄等级，默认为0
         integer max_hero_level          = 0
     
         integer array harass_qty
@@ -824,29 +1214,39 @@ native DebugS               takes string str                            returns 
         integer array build_item
         integer array build_town
         integer build_length            = 0
-    
+        // 战役采金工人数量，默认5
         integer campaign_gold_peons     = 5
+        // 战役采木工人数量，默认3
         integer campaign_wood_peons     = 3
+        // 战役等待时间，默认5秒
         integer campaign_basics_speed   = 5
-    
+        // （中立敌对玩家）最小野怪等级，默认-1
         integer min_creeps              = -1
+        // （中立敌对玩家）最大野怪等级，默认-1
         integer max_creeps              = -1
     
         boolean harvest_town1           = true
         boolean harvest_town2           = true
         boolean harvest_town3           = true
+        // 战役人口模式
         boolean do_campaign_farms       = true
+        // 二发英雄存在
         boolean two_heroes              = false
+        // 是否允许获取（中立敌对玩家）飞行野怪，默认不允许
         boolean allow_air_creeps        = false
+        // 是否开分矿
         boolean take_exp                = false
         boolean allow_signal_abort      = false
+        // 是否完成飞艇购买
         boolean ready_for_zeppelin      = true
+        // 是否购买飞艇，默认为否
         boolean get_zeppelin            = false
-    
+        // 是否建造战役进攻单位
         boolean build_campaign_attackers = true
     
         boolean do_debug_cheats         = false
         boolean trace_on                = true
+        // 是否需要飞艇空投
         boolean zep_next_wave           = false
         boolean form_group_timeouts     = true
     endglobals
@@ -947,7 +1347,7 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
-    // 设置运输下一波状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
+    // 设置运输状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
     function SetZepNextWave takes nothing returns nothing
         set zep_next_wave = true
     endfunction
@@ -1553,7 +1953,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 建造循环，启用建造核心循环程序，并无限循环
+    // 建造线程，启用建造核心循环程序，并无限循环
     function BuildLoop takes nothing returns nothing
         call OneBuildLoop()
         call StaggerSleep(1,2)
@@ -1639,6 +2039,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 循环交错设置进攻组，会设置各难度AI，e用于简单，m用于中等，h用于困难，1~3分别代表具体的数量（即每个难度都可设置3个档位），u1~u3为单位类型（即每个难度都可设置3种单位类型）
     function Interleave3 takes integer e1, integer m1, integer h1, integer u1, integer e2, integer m2, integer h2, integer u2, integer e3, integer m3, integer h3, integer u3 returns nothing
         local integer i1 = 1
         local integer i2 = 1
@@ -1739,7 +2140,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 等待进攻组完成组建，用于等待进攻组补充单位（用testReady指定组的准备情况，为真时需要攻击组准备满50，为假时准备0即可，seconds为最长等待时间）
+    // 等待攻击组完成组建，用于等待攻击组补充单位（用testReady指定组的准备情况，为真时需要攻击组准备满50，为假时准备0即可，seconds为最长等待时间）
     function FormGroup takes integer seconds, boolean testReady returns nothing
         local integer index
         local integer count
@@ -1865,7 +2266,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 进军休眠，进攻组撤退、进攻组到达目的地、进攻组回到家、进攻组为空 任意事件返回 是 时，退出休眠
+    // 进军休眠，攻击组撤退、攻击组到达目的地、攻击组回到家、攻击组为空 任意事件返回 是 时，退出休眠
     function SleepUntilAtGoal takes nothing returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -1877,7 +2278,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 战斗休眠，进攻组脱离战斗 或 进攻组为空 时，退出内层休眠，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束休眠
+    // 战斗休眠，攻击组脱离战斗 或 攻击组为空 时，退出内层休眠，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束休眠
     function SleepInCombat takes nothing returns nothing
         local integer count = 0
         debug call Trace("SleepInCombat\n")
@@ -1895,7 +2296,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 命令进攻组移动攻击到指定坐标
+    // 命令攻击组移动攻击到指定坐标
     function AttackMoveXYA takes integer x, integer y returns nothing
     
         if zep_next_wave then
@@ -1964,7 +2365,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
-    // 设置各波次进攻，默认用于自杀（战役）
+    // 设置各波次进攻，默认用于自杀（战役），启用standard时判断退出条件
     function CommonSuicideOnPlayer takes boolean standard, boolean bldgs, integer seconds, player p, integer x, integer y returns nothing
         local integer save_peons
     
@@ -2013,21 +2414,25 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定玩家）
     function SuicideOnPlayer takes integer seconds, player p returns nothing
         call CommonSuicideOnPlayer(true,true,seconds,p,0,0)
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定玩家）
     function SuicideOnUnits takes integer seconds, player p returns nothing
         call CommonSuicideOnPlayer(true,false,seconds,p,0,0)
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定坐标）
     function SuicideOnPoint takes integer seconds, player p, integer x, integer y returns nothing
         call CommonSuicideOnPlayer(false,false,seconds,p,x,y)
     endfunction
     
     //============================================================================
+    // 等待自杀信号
     function SuicideUntilSignal takes integer seconds, player p returns nothing
         local integer save
         local integer wave_prep = PrepTime()
@@ -2062,6 +2467,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 添加自杀单位类型到攻击组，指定各种AI难度的数量
     function SuicideOnce takes integer easy, integer med, integer hard, integer unitid returns nothing
         if difficulty == EASY then
             call SuicideUnit(easy,unitid)
@@ -2073,6 +2479,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 添加自杀单位类型到攻击组，每次添加1个
     function SuicideUnitA takes integer unitid returns nothing
         if unitid != 0 then
             call SuicideUnit(1,unitid)
@@ -2081,6 +2488,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 添加自杀单位类型到攻击组（指定玩家），每次添加1个
     function SuicideUnitB takes integer unitid, integer playerid returns nothing
         if unitid != 0 then
             call SuicideUnitEx(1,unitid,playerid)
@@ -2089,6 +2497,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 循环添加自杀单位到单位组（指定单位类型，u1~uA），该循环不会退出
     function SuicideUnits takes integer u1, integer u2, integer u3, integer u4, integer u5, integer u6, integer u7, integer u8, integer u9, integer uA returns nothing
         call Trace("MASS SUICIDE - this script is now technically done\n") //xxx
     
@@ -2108,6 +2517,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 循环添加自杀单位到单位组（指定玩家，指定单位类型，u1~uA），该循环不会退出
     function SuicideUnitsEx takes integer playerid, integer u1, integer u2, integer u3, integer u4, integer u5, integer u6, integer u7, integer u8, integer u9, integer uA returns nothing
         call Trace("MASS SUICIDE - this script is now technically done\n") //xxx
     
@@ -2127,6 +2537,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定玩家），指定各难度的等待时间
     function SuicideOnPlayerEx takes integer easy, integer med, integer hard, player p returns nothing
         if difficulty == EASY then
             call SuicideOnPlayer(easy,p)
@@ -2138,6 +2549,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定玩家），指定各难度的等待时间
     function SuicideOnUnitsEx takes integer easy, integer med, integer hard, player p returns nothing
         if difficulty == EASY then
             call SuicideOnUnits(easy,p)
@@ -2149,6 +2561,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 自杀进攻（指定坐标），指定各难度的等待时间
     function SuicideOnPointEx takes integer easy, integer med, integer hard, player p, integer x, integer y returns nothing
         if difficulty == EASY then
             call SuicideOnPoint(easy,p,x,y)
@@ -2160,6 +2573,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 持续自杀进攻（指定玩家）
     function ForeverSuicideOnPlayer takes integer seconds, player p returns nothing
         local integer length = harass_length
         loop
@@ -2170,7 +2584,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 战斗（循环发送进攻指定目标命令），直至攻击目标死亡或进攻组死光/撤退
+    // 战斗（循环发送进攻指定目标命令），直至攻击目标死亡或攻击组死光/撤退
     function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -2197,18 +2611,20 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 至死方休（指定目标），死为目标死亡或进攻组死光/撤退，会调用战斗程序CommonSleepUntilTargetDead，reform默认为假
+    // 至死方休（指定目标），死为目标死亡或攻击组死光/撤退，会调用战斗程序CommonSleepUntilTargetDead，reform默认为假
     function SleepUntilTargetDead takes unit target returns nothing
         call CommonSleepUntilTargetDead(target,false)
     endfunction
     
     //============================================================================
+    // 至死方休（指定目标），死为目标死亡或攻击组死光/撤退，会调用战斗程序CommonSleepUntilTargetDead，reform默认为真
     function ReformUntilTargetDead takes unit target returns nothing
         debug call Trace("ReformUntilTargetDead\n")
         call CommonSleepUntilTargetDead(target,true)
     endfunction
     
     //============================================================================
+    // 攻击指定目标（移动攻击）
     function AttackMoveKillA takes unit target returns nothing
         if target == null then
             call SuicideSleep(3)
@@ -2222,6 +2638,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+   // 攻击小型中立敌对玩家（打野）
     function MinorCreepAttack takes nothing returns nothing
         local unit target = GetMinorCreep()
         call SetAllianceTarget(target)
@@ -2230,6 +2647,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+   // 攻击大型中立敌对玩家（打野）
     function MajorCreepAttack takes nothing returns nothing
         local unit target = GetMajorCreep()
         call SetAllianceTarget(target)
@@ -2238,6 +2656,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 攻击中立敌对玩家（打野），根据当前的min_creeps、max_creeps，allow_air_creeps获取野怪
     function CreepAttackEx takes nothing returns nothing
         local unit target = GetCreepCamp(min_creeps,max_creeps,allow_air_creeps)
         call SetAllianceTarget(target)
@@ -2246,6 +2665,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 攻击任意玩家
     function AnyPlayerAttack takes nothing returns nothing
         local unit hall
     
@@ -2265,6 +2685,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 攻击扩展点
     function ExpansionAttack takes nothing returns nothing
         local unit creep = GetExpansionFoe()
         local integer x
@@ -2283,6 +2704,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  AddSiege
     //============================================================================
+    // 添加攻城单位到进攻组
     function AddSiege takes nothing returns nothing
         call SetAssaultGroup( 0, 9, SHADE       )
         call SetAssaultGroup( 0, 9, MEAT_WAGON  )
@@ -2295,6 +2717,7 @@ native DebugS               takes string str                            returns 
     //===========================================================================
     //  GetAllyCount
     //============================================================================
+    // 获取盟友玩家数量
     function GetAllyCount takes player whichPlayer returns integer
         local integer    playerIndex = 0
         local integer    count = 0
@@ -2323,6 +2746,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  SingleMeleeAttack
     //============================================================================
+    // 对战进攻循环，包含打野、开矿、攻击玩家、购买飞艇等命令
     function SingleMeleeAttack takes boolean needs_exp, boolean has_siege, boolean major_ok, boolean air_units returns nothing
         local boolean   can_siege
         local real      daytime 
@@ -2491,7 +2915,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 训练进攻组单位
+    // 训练攻击组单位
     function BuildAttackers takes nothing returns nothing
         local integer index = 0
         local integer unitid
@@ -2583,7 +3007,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 战役基础，运行后调用战役循环
+    // 战役基础线程，内置战役循环
     function CampaignBasics takes nothing returns nothing
         call Sleep(1)
         call CampaignBasicsA()
@@ -2595,7 +3019,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 设置战役AI
+    // 运行战役AI，运行后启用战役基础线程
     function CampaignAI takes integer farms, code heroes returns nothing
         if GetGameDifficulty() == MAP_DIFFICULTY_EASY then
             set difficulty = EASY
@@ -2654,7 +3078,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  SkillArrays
     //============================================================================
-    // 获取技能组，让英雄升级后根据 SetSkillArray 的顺序自动学习技能，该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
+    // 技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能，该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
     function SkillArrays takes nothing returns integer
         local integer level = GetHeroLevelAI()
     
