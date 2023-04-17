@@ -24,19 +24,19 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 获取英雄等级
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取AI玩家指定类型单位的数量，统计训练/建造中及已训练/建造完成
+    // 获取AI玩家指定类型单位/科技的数量，统计训练/建造/研究指定/研究中及已训练/建造/研究指定/研究完成
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家的该类型单位的数量，统计训练/建造中及已训练/建造完成
+    // 获取指定玩家的该类型单位的数量，统计训练/建造/研究指定/研究中及已训练/建造/研究指定/研究完成
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取AI玩家指定类型单位的数量，仅统计已训练/建造完成
+    // 获取AI玩家指定类型单位的数量，仅统计已训练/建造/研究指定/研究完成
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 指定基地对应类型的单位数，0为第一个基地
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-    // 训练/建造一个指定类型单位需要消耗的金钱数量
+    // 训练/建造/研究指定/研究一个指定类型单位/科技需要消耗的金钱数量
     native GetUnitGoldCost      takes integer unitid                        returns integer
-    // 训练/建造一个指定类型单位需要消耗的木材数量
+    // 训练/建造/研究指定/研究一个指定类型单位/科技需要消耗的木材数量
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位类型的建造/训练时间
+    // 获取指定单位/科技类型的建造/训练/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
@@ -60,7 +60,7 @@ native DebugS               takes string str                            returns 
     native GetNextExpansion     takes nothing                               returns integer
     // 获取大型攻击目标，此时暴雪会往攻击组添加默认攻击类型为攻城的单位，似乎该单位是某种建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
-    // 获取指定玩家正在建造的单位
+    // 获取指定玩家正在训练/建造的单位
     native GetBuilding          takes player p                              returns unit
     // 获得敌人进攻组强度
     native GetEnemyPower        takes nothing                               returns integer
@@ -68,9 +68,9 @@ native DebugS               takes string str                            returns 
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
-    // 命令训练/建造单位(数量,单位类型,基地)
+    // 命令训练/建造/研究指定/研究单位/科技(数量,单位类型,基地)
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 反召唤指定单位（亡灵卖建筑）
+    // 取消/反召唤指定单位（亡灵卖建筑），单位正在建造/训练会取消，建造完成时可能会被卖掉
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地（指定工人类型和建筑类型）
     native SetExpansion         takes unit peon, integer id                 returns boolean
@@ -82,9 +82,9 @@ native DebugS               takes string str                            returns 
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇，运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外命令
     native PurchaseZeppelin     takes nothing                               returns nothing
-    // 训练/建造指定数量的合体单位类型（单位类型a,单位类型b,合体成单位类型make），运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
+    // 训练/建造/研究指定指定数量的合体单位类型（单位类型a,单位类型b,合体成单位类型make），运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-    // 训练/建造指定数量的变形单位类型，此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形，运行后AI会训练变形前单位并变形，直到数量达标
+    // 训练/建造/研究指定指定数量的变形单位类型，此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形，运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
     
     // 启用战役AI
@@ -210,13 +210,13 @@ native DebugS               takes string str                            returns 
     native CaptainIsEmpty       takes nothing                               returns boolean
     // 进攻组规模
     native CaptainGroupSize     takes nothing                               returns integer
-    // 攻击组准备情况
+    // 攻击组准备情况，似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
     // 进攻组是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 进攻组整体生命值
+    // 进攻组整体生命值，似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 进攻组整体魔法值
+    // 进攻组整体魔法值，似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
     // 进攻组是否到达目的地
     native CaptainAtGoal        takes nothing                               returns boolean
@@ -852,11 +852,13 @@ native DebugS               takes string str                            returns 
     endglobals
     
     //============================================================================
+    // 根据玩家插槽查询玩家，插槽从1开始计算，玩家从0开始计算，玩家数字恒比插槽少1
     function PlayerEx takes integer slot returns player
         return Player(slot-1)
     endfunction
     
     //============================================================================
+    // 显示文本，带1个指定文本
     function Trace takes string message returns nothing
         if trace_on then
             call DisplayText(GetAiPlayer(),message)
@@ -864,6 +866,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 显示文本，带1个指定文本，1个整数
     function TraceI takes string message, integer val returns nothing
         if trace_on then
             call DisplayTextI(GetAiPlayer(),message,val)
@@ -871,6 +874,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 显示文本，带1个指定文本，2个整数
     function TraceII takes string message, integer v1, integer v2 returns nothing
         if trace_on then
             call DisplayTextII(GetAiPlayer(),message,v1,v2)
@@ -878,6 +882,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 显示文本，带1个指定文本，3个整数
     function TraceIII takes string message, integer v1, integer v2, integer v3 returns nothing
         if trace_on then
             call DisplayTextIII(GetAiPlayer(),message,v1,v2,v3)
@@ -926,6 +931,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  Utility Functions
     //============================================================================
+    // 获取最小值
     function Min takes integer A, integer B returns integer
         if A < B then
             return A
@@ -933,7 +939,7 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
-    
+    // 获取最大值
     function Max takes integer A, integer B returns integer
         if A > B then
             return A
@@ -941,11 +947,11 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
-    
+    // 设置运输下一波状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
     function SetZepNextWave takes nothing returns nothing
         set zep_next_wave = true
     endfunction
-    // 自杀休眠时间，当指定的时间小于等于0时 及 触发器有命令传入时会退出休眠
+    // 自杀休眠倒计时，当指定的时间小于等于0时 及 触发器有命令传入时会退出休眠
     function SuicideSleep takes integer seconds returns nothing
         set sleep_seconds = sleep_seconds - seconds
         loop
@@ -1109,6 +1115,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 设置建造序列，每个建造/训练命令都会被统一引导到此写入建造先后的排序，等待系统循环检索建造/训练，当 build_length 重置时，系统循环重置
     function SetBuildAll takes integer t, integer qty, integer unitid, integer town returns nothing
         if qty > 0 then
             set build_qty[build_length] = qty
@@ -1120,13 +1127,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 训练/建造指定数量的指定类型单位
+    // 训练/建造/研究指定指定数量的指定类型单位/科技
     function SetBuildUnit takes integer qty, integer unitid returns nothing
         call SetBuildAll(BUILD_UNIT,qty,unitid,-1)
     endfunction
     
     //============================================================================
-    // 继续训练/建造指定类型的单位，如果当前训练/建造中的该类型单位数量大于等于指定数量，则不建造
+    // 继续训练/建造/研究指定指定类型的单位/科技，如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
     function SetBuildNext takes integer qty, integer unitid returns nothing
         local integer has = GetUnitCount(unitid)
         if has >= qty then
@@ -1136,7 +1143,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 训练/建造指定类型的单位（指定各AI难度的数量）
+    // 训练/建造/研究指定指定类型的单位/科技（指定各AI难度的数量）
     function SetBuildUnitEx takes integer easy, integer med, integer hard, integer unitid returns nothing
         if difficulty == EASY then
             call SetBuildAll(BUILD_UNIT,easy,unitid,-1)
@@ -1148,13 +1155,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 在指定编号的基地建造指定数量的单位
+    // 在指定编号的基地建造指定数量的单位/科技，一般用于在分矿造塔和其他建筑
     function SecondaryTown takes integer town, integer qty, integer unitid returns nothing
         call SetBuildAll(BUILD_UNIT,qty,unitid,town)
     endfunction
     
     //============================================================================
-    // 在指定编号的基地建造指定数量的单位
+    // 在指定编号的基地建造指定数量的单位/科技，一般用于在分矿造塔和其他建筑
     function SecTown takes integer town, integer qty, integer unitid returns nothing
         call SetBuildAll(BUILD_UNIT,qty,unitid,town)
     endfunction
@@ -1186,6 +1193,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 开始升级科技
     function StartUpgrade takes integer level, integer upgid returns boolean
         local integer gold_cost
         local integer wood_cost
@@ -1208,6 +1216,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 建造/训练指定单位类型，当金大于1000，木大于500时造两个，否则造一个，默认用于检测建造工厂（造兵建筑）
     function BuildFactory takes integer unitid returns nothing
         if GetGold() > 1000 and GetWood() > 500 then
             call SetBuildUnit( 2, unitid )
@@ -1217,11 +1226,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 判断指定单位类型的数量（含建造/训练中）是否等于该单位类型总数量（不含建造/训练中），默认用于检测城镇类型的单位（基地）
     function HallsCompleted takes integer unitid returns boolean
         return GetUnitCount(unitid) == GetUnitCountDone(unitid) 
     endfunction
     
     //============================================================================
+    // 在指定分基地建造指定单位类型，一般用于在分矿造塔或其他建筑，训练单位无需使用此命令，AI会使用所有建筑训练，不论其在哪个基地，使用该命令建造/训练的单位会被登记为：制造于该分基地
     function GuardSecondary takes integer townid, integer qty, integer unitid returns nothing
         if TownHasHall(townid) and TownHasMine(townid) then
             call SecondaryTown( townid, qty, unitid )
@@ -1243,6 +1254,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 数量统计，指定单位类型，指定是否包含建造/训练中（only_done），指定分基地（townid，-1为不限），查询复核条件的单位类型数量
     function TownCountEx takes integer unitid, boolean only_done, integer townid returns integer
     
         local integer have_qty = GetUnitCountEx(unitid,only_done,townid)
@@ -1305,16 +1317,19 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 数量统计，指定单位类型，包含建造/训练中，不限基地，查询复核条件的单位类型数量
     function TownCountDone takes integer base returns integer
         return TownCountEx(base,true,-1)
     endfunction
     
     //============================================================================
+    // 数量统计，指定单位类型，不包含建造/训练中，不限基地，查询复核条件的单位类型数量
     function TownCount takes integer base returns integer
         return TownCountEx(base,false,-1)
     endfunction
     
     //============================================================================
+    // 基础开分基地，指定单位类型，包含建造/训练中，不限基地，查询复核条件的单位类型数量
     function BasicExpansion takes boolean build_it, integer unitid returns nothing
         if build_it and HallsCompleted(unitid) then
             call SetBuildExpa( TownCount(unitid)+1, unitid )
@@ -1322,11 +1337,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 升级科技，研究指定科技类型（baseid）已完成数量的升级科技类型（newid）
     function UpgradeAll takes integer baseid, integer newid returns nothing
         call SetBuildUnit( TownCountDone(baseid), newid )
     endfunction
     
     //============================================================================
+    // 数量统计，指定单位类型（base），指定分基地（townid，-1为不限），不否包含建造/训练中，查询复核条件的单位类型数量，默认用于检测城镇类型的单位（基地）
     function TownCountTown takes integer base, integer townid returns integer
         return TownCountEx(base,false,townid)
     endfunction
@@ -1334,6 +1351,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  FoodPool
     //============================================================================
+    // 根据人口占用情况训练指定单位类型，food为当前人口上限，use1为单位类型id1的人口占用（单个），use2为单位类型id2的人口占用（单个），当strong为真时，训练（（food - use1 * TownCount(id1)) / use2）个id2，当strong为假且weak为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
     function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
         if strong then
             call SetBuildUnit( (food - use1 * TownCount(id1)) / use2, id2 )
@@ -1345,6 +1363,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  MeleeTownHall
     //============================================================================
+    // 补造分基地，当指定的基地（townid）有金矿且该基地没有城镇时，补造一个分基地
     function MeleeTownHall takes integer townid, integer unitid returns nothing
         if TownHasMine(townid) and not TownHasHall(townid) then
             call SecondaryTown ( townid, 1, unitid )
@@ -1361,6 +1380,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 开始训练单位/建造建筑
     function StartUnit takes integer ask_qty, integer unitid, integer town returns boolean
         local integer have_qty
         local integer need_qty
@@ -1450,6 +1470,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 开始建造分基地
     function StartExpansion takes integer qty, integer hall returns boolean
         local integer count
         local integer town
@@ -1487,6 +1508,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 建造核心循环，该程序负责执行所有排队中的建造/训练/研究命令
     function OneBuildLoop takes nothing returns nothing
         local integer index = 0
         local integer qty
@@ -1525,11 +1547,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 错开休眠，休眠 (base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers())) 秒
     function StaggerSleep takes real base, real spread returns nothing
         call Sleep(base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers()))
     endfunction
     
     //============================================================================
+    // 建造循环，启用建造核心循环程序，并无限循环
     function BuildLoop takes nothing returns nothing
         call OneBuildLoop()
         call StaggerSleep(1,2)
@@ -1546,11 +1570,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 设置初始波次，设置初始波次的时间
     function SetInitialWave takes integer seconds returns nothing
         set sleep_seconds = seconds
     endfunction
     
     //============================================================================
+    // 在原基础上增加初始波次的休眠时间
     function AddSleepSeconds takes integer seconds returns nothing
         set sleep_seconds = sleep_seconds + seconds
     endfunction
@@ -1572,6 +1598,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 当指定类型的单位/科技少于1个时（包含建造/训练/研究中），建造/训练/研究1个，默认用于补充合体/变形类单位
     function ConvertNeeds takes integer unitid returns nothing
         if GetUnitCount(unitid) < 1 then
             call StartUnit(1,unitid,-1)
@@ -1598,6 +1625,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 设置攻击组
     function SetAssaultGroup takes integer qty, integer max, integer unitid returns nothing
         call Conversions(max,unitid)
     
@@ -1657,6 +1685,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 将指定类型的单位添加到对战攻击组
     function SetMeleeGroup takes integer unitid returns nothing
         if unitid == hero_id then
             call SetAssaultGroup(1,9,unitid)
@@ -1666,6 +1695,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 将指定类型的单位添加到防御组，默认用于战役
     function CampaignDefender takes integer level, integer qty, integer unitid returns nothing
         if qty > 0 and difficulty >= level then
             set defense_qty[defense_length] = qty
@@ -1677,6 +1707,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 将指定类型的单位添加到防御组（指定各难度AI的添加数量），默认用于战役
     function CampaignDefenderEx takes integer easy, integer med, integer hard, integer unitid returns nothing
         if difficulty == EASY then
             call CampaignDefender(EASY,easy,unitid)
@@ -1688,6 +1719,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 将指定类型的单位添加到战役攻击组（level必须大于等于当前AI难度时才会添加），默认用于战役
     function CampaignAttacker takes integer level, integer qty, integer unitid returns nothing
         if qty > 0 and difficulty >= level then 
             call SetAssaultGroup(qty,qty,unitid)
@@ -1695,6 +1727,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 将指定类型的单位添加到攻击组（指定各难度AI的添加数量），默认用于战役
     function CampaignAttackerEx takes integer easy, integer med, integer hard, integer unitid returns nothing
         if difficulty == EASY then
             call CampaignAttacker(EASY,easy,unitid)
@@ -1706,6 +1739,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 等待进攻组完成组建，用于等待进攻组补充单位（用testReady指定组的准备情况，为真时需要攻击组准备满50，为假时准备0即可，seconds为最长等待时间）
     function FormGroup takes integer seconds, boolean testReady returns nothing
         local integer index
         local integer count
@@ -1771,11 +1805,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 获取指定单位/科技类型的建造/训练/研究时间，该时间默认用于备战（等待该时间已补充兵力）
     function WavePrepare takes integer unitid returns integer
         return GetUnitBuildTime(unitid)
     endfunction
     
     //============================================================================
+    // 获取等待所需时间
     function PrepTime takes nothing returns integer
         local integer unitid
         local integer missing
@@ -1803,6 +1839,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 休眠指定时间（seconds），并在休眠后判断攻击组准备是否完成
     function PrepSuicideOnPlayer takes integer seconds returns boolean
         local integer wave_prep   = PrepTime()
         local integer save_length
@@ -1872,6 +1909,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 通报各波次进攻情况（默认使用Trace命令发送文字，可能需要打开调试模式）
     function SuicideOnPlayerWave takes nothing returns nothing
         call Trace("waiting for attack wave to enter combat\n") //xxx
         loop
@@ -1926,6 +1964,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
+    // 设置各波次进攻，默认用于自杀（战役）
     function CommonSuicideOnPlayer takes boolean standard, boolean bldgs, integer seconds, player p, integer x, integer y returns nothing
         local integer save_peons
     
@@ -2131,6 +2170,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 战斗（循环发送进攻指定目标命令），直至攻击目标死亡或进攻组死光/撤退
     function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -2157,6 +2197,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 至死方休（指定目标），死为目标死亡或进攻组死光/撤退，会调用战斗程序CommonSleepUntilTargetDead，reform默认为假
     function SleepUntilTargetDead takes unit target returns nothing
         call CommonSleepUntilTargetDead(target,false)
     endfunction
@@ -2418,34 +2459,39 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 设置AI是否需要购买飞艇，该设置默认是自动的
     function GetZeppelin takes nothing returns nothing
         if ready_for_zeppelin then
             set get_zeppelin = true
         endif
     endfunction
-    
+    PLAYER_STATE_FOOD_CAP_CEILING
     //============================================================================
-    // 当前AI玩家的人口使用量
+    // 获取当前AI玩家的已用人口数
     function FoodUsed takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_USED)
     endfunction
     
     //============================================================================
+    // 获取当前AI玩家的最大人口数（默认为人口建筑提供的数量），默认为100
     function FoodCap takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
     endfunction
     
     //============================================================================
+    // 获取当前AI玩家的可用人口数（人口建筑提供的人口数-已使用的人口数）
     function FoodSpace takes nothing returns integer
         return FoodCap() - FoodUsed()
     endfunction
     
     //============================================================================
+    // 获取当前AI玩家人口建筑提供的人口数量，已完成的人口建筑（默认为racial_farm）*该建筑提供的人口数 + 已完成的主城（base指定）*该建筑提供的人口数
     function FoodAvail takes integer base returns integer
         return GetFoodMade(racial_farm) * TownCount(racial_farm) + GetFoodMade(base) * TownCount(base)
     endfunction
     
     //============================================================================
+    // 训练进攻组单位
     function BuildAttackers takes nothing returns nothing
         local integer index = 0
         local integer unitid
@@ -2470,6 +2516,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 训练防御组单位
     function BuildDefenders takes nothing returns nothing
         local integer index = 0
         local integer unitid
@@ -2488,6 +2535,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 战役循环，自动运行战役默认的采集/建造/训练/研究指令
     function CampaignBasicsA takes nothing returns nothing
         local integer food_each = GetFoodMade(racial_farm)
         local integer on_wood
@@ -2535,6 +2583,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 战役基础，运行后调用战役循环
     function CampaignBasics takes nothing returns nothing
         call Sleep(1)
         call CampaignBasicsA()
@@ -2546,6 +2595,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 设置战役AI
     function CampaignAI takes integer farms, code heroes returns nothing
         if GetGameDifficulty() == MAP_DIFFICULTY_EASY then
             set difficulty = EASY
@@ -2590,6 +2640,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
+    // 取消建造，运行后取消正在建造/训练/研究的单位/科技
     function UnsummonAll takes nothing returns nothing
         local unit bldg
         loop
@@ -2603,6 +2654,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  SkillArrays
     //============================================================================
+    // 获取技能组，让英雄升级后根据 SetSkillArray 的顺序自动学习技能，该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
     function SkillArrays takes nothing returns integer
         local integer level = GetHeroLevelAI()
     
@@ -2622,6 +2674,7 @@ native DebugS               takes string str                            returns 
     //--------------------------------------------------------------------------------------------------
     //  SetSkillArray
     //--------------------------------------------------------------------------------------------------
+    // 设置3个英雄的技能学习顺序（index 为1/2/3，分别对应三个英雄），id为三个英雄的单位类型，默认只能设置10级
     function SetSkillArray takes integer index, integer id returns nothing
         local integer i = 1
     
@@ -2658,6 +2711,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  AwaitMeleeHeroes
     //============================================================================
+    // 等待二发英雄，当首发英雄完成训练/复活，且 【take_exp为真 或 二发英雄存在且完成训练/复活时】 退出休眠，否则一直休眠
     function AwaitMeleeHeroes takes nothing returns nothing
         if GetUnitCountDone(hero_id2) > 0 then
             set two_heroes = true
@@ -2671,6 +2725,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  PickMeleeHero 
     //============================================================================
+    // 设置对战英雄（含混乱之治和冰封王座），设置4个种族的默认英雄（不含中立）及本局随机顺序（首发，二发，三发），4族之外的种族默认为空，heroes[4]默认为冰封王座新加的英雄，不会出现在混乱之治中
     function PickMeleeHero takes race raceid returns integer
         local integer first
         local integer second
