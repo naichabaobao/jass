@@ -1338,7 +1338,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  Utility Functions
     //============================================================================
-    // 获取最小值
+    // 对比整数，取最小值
     function Min takes integer A, integer B returns integer
         if A < B then
             return A
@@ -1346,7 +1346,7 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
-    // 获取最大值
+    // 对比整数，取最大值
     function Max takes integer A, integer B returns integer
         if A > B then
             return A

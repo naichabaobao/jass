@@ -73,7 +73,7 @@ globals
     // 轮询跳过阈值（游戏时间），默认2
     constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
 
-    // Game constants  最大库存
+    // Game constants  最大库存，默认6
     constant integer   bj_MAX_INVENTORY                 =  6
     // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
@@ -807,7 +807,7 @@ endfunction
 //***************************************************************************
 
 
-// 最小值
+// 对比实数，取最小值
 function RMinBJ takes real a, real b returns real
     if (a < b) then
         return a
@@ -817,7 +817,7 @@ function RMinBJ takes real a, real b returns real
 endfunction
 
 
-// 最大值
+// 对比实数，取最大值
 function RMaxBJ takes real a, real b returns real
     if (a < b) then
         return b
@@ -827,7 +827,7 @@ function RMaxBJ takes real a, real b returns real
 endfunction
 
 
-// 绝对值Abs
+// 取实数的绝对值
 function RAbsBJ takes real a returns real
     if (a >= 0) then
         return a
@@ -837,7 +837,7 @@ function RAbsBJ takes real a returns real
 endfunction
 
 
-// 标记
+// 取实数正负标记，输入数值大于等于0返回 1.0，小于0返回 -1.0
 function RSignBJ takes real a returns real
     if (a >= 0.0) then
         return 1.0
@@ -847,7 +847,7 @@ function RSignBJ takes real a returns real
 endfunction
 
 
-// 取最小值
+// 对比整数，取最小值
 function IMinBJ takes integer a, integer b returns integer
     if (a < b) then
         return a
@@ -857,7 +857,7 @@ function IMinBJ takes integer a, integer b returns integer
 endfunction
 
 
-// 取最大值
+// 对比整数，取最大值
 function IMaxBJ takes integer a, integer b returns integer
     if (a < b) then
         return b
@@ -867,7 +867,7 @@ function IMaxBJ takes integer a, integer b returns integer
 endfunction
 
 
-// 绝对值Abs
+// 取整数的绝对值
 function IAbsBJ takes integer a returns integer
     if (a >= 0) then
         return a
@@ -877,7 +877,7 @@ function IAbsBJ takes integer a returns integer
 endfunction
 
 
-// 标记
+// 取整数正负标记，输入数值大于等于0返回 1，小于0返回 -1
 function ISignBJ takes integer a returns integer
     if (a >= 0) then
         return 1
@@ -917,25 +917,25 @@ function AcosBJ takes real degrees returns real
 endfunction
 
 
-// 反正切 (From Angle)
+// 2象限反正切 (From Angle)
 function AtanBJ takes real degrees returns real
     return Atan(degrees) * bj_RADTODEG
 endfunction
 
 
-// 和正半轴角度
+// 4象限反正切
 function Atan2BJ takes real y, real x returns real
     return Atan2(y, x) * bj_RADTODEG
 endfunction
 
 
-// 两个坐标之间的角度
+// 两点之间的角度
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
-// 坐标之间的距离
+// 两点之间的距离
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -943,7 +943,7 @@ function DistanceBetweenPoints takes location locA, location locB returns real
 endfunction
 
 
-// 点向方向 位移 
+// 点向指定方向 位移指定距离 
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -951,19 +951,19 @@ function PolarProjectionBJ takes location source, real dist, real angle returns 
 endfunction
 
 
-// 随机角度
+// 取随机角度
 function GetRandomDirectionDeg takes nothing returns real
     return GetRandomReal(0, 360)
 endfunction
 
 
-// 随机百分数
+// 取随机百分数
 function GetRandomPercentageBJ takes nothing returns real
     return GetRandomReal(0, 100)
 endfunction
 
 
-// 区域内的随机地点
+// 取区域内的随机地点
 function GetRandomLocInRect takes rect whichRect returns location
     return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
 endfunction
@@ -1005,7 +1005,7 @@ function ModuloReal takes real dividend, real divisor returns real
 endfunction
 
 
-// 点的坐标位移
+// 点位移
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
@@ -1040,13 +1040,13 @@ function RectContainsLoc takes rect r, location loc returns boolean
 endfunction
 
 
-// 单位在区域
+// 单位是否在区域内
 function RectContainsUnit takes rect r, unit whichUnit returns boolean
     return RectContainsCoords(r, GetUnitX(whichUnit), GetUnitY(whichUnit))
 endfunction
 
 
-// 物品在区域
+// 物品是否在区域内
 function RectContainsItem takes item whichItem, rect r returns boolean
     if (whichItem == null) then
         return false
@@ -1070,7 +1070,7 @@ endfunction
 
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
 //
-// 运行触发器 (检查条件)
+// 运行触发器 (无视条件)
 function ConditionalTriggerExecute takes trigger trig returns nothing
     if TriggerEvaluate(trig) then
         call TriggerExecute(trig)
@@ -1080,7 +1080,7 @@ endfunction
 
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
 //
-// 运行触发器
+// 运行触发器(检查条件)
 function TriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
         if not (TriggerEvaluate(trig)) then
@@ -1096,7 +1096,7 @@ endfunction
 // trigger is not interrupted as is the case with a TriggerExecute call.
 // Since the trigger executes normally, its conditions are still evaluated.
 //
-// 执行触发器
+// 执行触发器动作
 function PostTriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
         if not (TriggerEvaluate(trig)) then
