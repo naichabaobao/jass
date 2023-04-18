@@ -2863,7 +2863,7 @@ globals
 	// Unit
 	// Unit
 
- 	// 单位整数域 战斗 - 护甲类型（普通/小型/中型/大型/城墙/英雄/神圣/无装甲） ('udty')
+ 	// 单位整数域 战斗 - 防御类型（普通/小型/中型/大型/城墙/英雄/神圣/无装甲） ('udty')
 	constant unitintegerfield UNIT_IF_DEFENSE_TYPE = ConvertUnitIntegerField('udty')
 	// 单位整数域 战斗 - 装甲类型（木头/气态/石头/肉体/金属） ('uarm')
 	constant unitintegerfield UNIT_IF_ARMOR_TYPE = ConvertUnitIntegerField('uarm')
@@ -3158,17 +3158,17 @@ globals
 	
 	// Armor Type
 	// Armor Type
-    // 装甲 没有/未知
+    // 装甲类型 没有/未知
  constant armortype ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
-    // 装甲 肉体
+    // 装甲类型 肉体
 	constant armortype ARMOR_TYPE_FLESH = ConvertArmorType(1)
-    // 装甲 金属
+    // 装甲类型 金属
 	constant armortype ARMOR_TYPE_METAL = ConvertArmorType(2)
-    // 装甲 木头
+    // 装甲类型 木头
 	constant armortype ARMOR_TYPE_WOOD = ConvertArmorType(3)
-    // 装甲 气态
+    // 装甲类型 气态
 	constant armortype ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
-    // 装甲 石头
+    // 装甲类型 石头
 	constant armortype ARMOR_TYPE_STONE = ConvertArmorType(5)
 	
 	// Regeneration Type
@@ -6276,9 +6276,9 @@ native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
 // 获取动画名
 native BlzGetAnimName takes animtype whichAnim returns string
-// 获取护甲
+// 获取护甲值
 native BlzGetUnitArmor takes unit whichUnit returns real
-// 设置护甲
+// 设置护甲值
 native BlzSetUnitArmor takes unit whichUnit, real armorAmount returns nothing
 // 隐藏技能
 native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag returns nothing
