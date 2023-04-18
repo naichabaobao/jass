@@ -91,41 +91,41 @@ native DebugS               takes string str                            returns 
     native SetCampaignAI        takes nothing                               returns nothing
     // 启用对战AI
     native SetMeleeAI           takes nothing                               returns nothing
-    // 允许优先攻击英雄
+    // 允许/禁止 优先攻击英雄
     native SetTargetHeroes      takes boolean state                         returns nothing
-    // 允许工人维修建筑
+    // 允许/禁止 工人维修建筑
     native SetPeonsRepair       takes boolean state                         returns nothing
-    // 启用随机进攻路径
+    // 启用/禁用 随机进攻路径
     native SetRandomPaths       takes boolean state                         returns nothing
-    // 启用保护真人盟友
+    // 启用/禁用 保护真人盟友
     native SetDefendPlayer      takes boolean state                         returns nothing
-    // 允许英雄在受伤严重或遭受攻击时尝试逃跑
+    // 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
     native SetHeroesFlee        takes boolean state                         returns nothing
-    // 允许英雄购买物品
+    // 允许/禁止 英雄购买物品
     native SetHeroesBuyItems    takes boolean state                         returns nothing
-    // 没有怜悯（在敌人较弱或弱势时进攻）
+    // 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
     native SetWatchMegaTargets  takes boolean state                         returns nothing
-    // 受伤单位（血量50%以下）不编入攻击组
+    // 启用/禁用 受伤单位（血量50%以下）不编入攻击组
     native SetIgnoreInjured     takes boolean state                         returns nothing
-    // 允许英雄拾取物品
+    // 允许/禁止 英雄拾取物品
     native SetHeroesTakeItems   takes boolean state                         returns nothing
-    // 允许单位逃跑
+    // 允许/禁止 单位逃跑
     native SetUnitsFlee         takes boolean state                         returns nothing
-    // 允许攻击组逃跑
+    // 允许/禁止 攻击组逃跑
     native SetGroupsFlee        takes boolean state                         returns nothing
-    // 启用慢速采矿（每次采集1金）
+    // 启用/禁用 慢速采矿（每次采集1金）
     native SetSlowChopping      takes boolean state                         returns nothing
-    // 允许变更主基地
+    // 允许/禁止 变更主基地
     native SetCaptainChanges    takes boolean allow                         returns nothing
-    // 启用主动攻击敌人基地
+    // 启用/禁用 主动攻击敌人基地
     native SetSmartArtillery    takes boolean state                         returns nothing
     // 防守单位被杀后，AI的补充次数
     native SetReplacementCount  takes integer qty                           returns nothing
-    // 允许受伤单位回主基地或生命之泉疗伤
+    // 允许/禁止 受伤单位回主基地或生命之泉疗伤
     native GroupTimedLife       takes boolean allow                         returns nothing
-    // 允许从攻击组中移除受伤单位（血量50%以下）
+    // 从攻击组中移除受伤单位（血量50%以下）
     native RemoveInjuries       takes nothing                               returns nothing
-    // 从攻击组中移除攻城单位（默认攻击类型为攻城的单位）
+    // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位）
     native RemoveSiege          takes nothing                               returns nothing
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
@@ -162,9 +162,9 @@ native DebugS               takes string str                            returns 
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
     // 检测自杀式攻击组是否满足指定条件（指定玩家），该指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-    // 攻击组是否在战斗
+    // 攻击组是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
-    // 指定单位是否属于防御塔
+    // 指定单位是否有防御塔保护
     native IsTowered            takes unit target                           returns boolean
     // 清理上一次的AI采集工人分配设置，暴雪在每次运行 HarvestGold 和 HarvestWood 前都进行了清理，但清理后AI可能会交换多个基地之间的农民，比如让A矿的农民去B矿工作，反之亦然
     native ClearHarvestAI       takes nothing                               returns nothing
@@ -174,11 +174,11 @@ native DebugS               takes string str                            returns 
     native HarvestWood          takes integer town, integer peons           returns nothing
     // 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null，如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会命令其离开金矿
     native GetExpansionPeon     takes nothing                               returns unit
-    // 停止收集
+    // 停止聚集，在初始化时自动调用，且必须调用（默认自动调用，无需理会），调用后，被训练的单位才会执行防守命令，否则只会在训练他们的建筑附近
     native StopGathering        takes nothing                               returns nothing
     // 在指定坐标增加指定类型的防守单位
     native AddGuardPost         takes integer id, real x, real y            returns nothing
-    // 补满防守岗位
+    // 填补防守岗位（即时），当一个单位被杀后，AI会立即训练一个同类型单位填补其空位
     native FillGuardPosts       takes nothing                               returns nothing
     // 返回防守岗位
     native ReturnGuardPosts     takes nothing                               returns nothing
@@ -368,11 +368,11 @@ native DebugS               takes string str                            returns 
         // human buildings
         // 狮鹫笼
         constant integer AVIARY             = 'hgra'
-        // 兵营
+        // 兵营（人族）
         constant integer BARRACKS           = 'hbar'
         // 铁匠铺
         constant integer BLACKSMITH         = 'hbla'
-        // 炮塔
+        // 炮塔（人族）
         constant integer CANNON_TOWER       = 'hctw'
         // 城堡（人族三本基地）
         constant integer CASTLE             = 'hcas'
@@ -380,7 +380,7 @@ native DebugS               takes string str                            returns 
         constant integer CHURCH             = 'htws'
         // 圣塔（编辑器无此单位 'htws'）
         constant integer MAGE_TOWER         =  CHURCH
-        // 防御塔
+        // 防御塔（人族）
         constant integer GUARD_TOWER        = 'hgtw'
         // 农场
         constant integer HOUSE              = 'hhou'
@@ -402,7 +402,7 @@ native DebugS               takes string str                            returns 
         constant integer WORKSHOP           = 'harm'
         // 神秘宝藏室
         constant integer ARCANE_VAULT       = 'hvlt'
-        // 神秘之塔
+        // 神秘之塔（人族）
         constant integer ARCANE_TOWER       = 'hatw'
     
         // human upgrades
@@ -542,7 +542,7 @@ native DebugS               takes string str                            returns 
         // orc buildings
         // 风暴祭坛
         constant integer ORC_ALTAR          = 'oalt'
-        // 兵营
+        // 兵营（兽族）
         constant integer ORC_BARRACKS       = 'obar'
         // 兽栏
         constant integer BESTIARY           = 'obea'
@@ -582,7 +582,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_BERSERK    = 'Robs'
         // 粉碎伤害强化
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
-        // 诱捕
+        // 诱捕（兽族）
         constant integer UPG_ORC_ENSNARE    = 'Roen'
         // 毒矛
         constant integer UPG_ORC_VENOM      = 'Rovs'
@@ -596,13 +596,13 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_BURROWS    = 'Rorb'
         // 巨魔再生
         constant integer UPG_ORC_REGEN      = 'Rotr'
-        // 火油瓶
+        // 火油瓶（兽族）
         constant integer UPG_ORC_FIRE       = 'Rolf'
         // 灵魂行者专家级训练
         constant integer UPG_ORC_SWALKER    = 'Rowt'
         // 狂战士升级
         constant integer UPG_ORC_BERSERKER  = 'Robk'
-        // 燃油
+        // 燃油（兽族）
         constant integer UPG_ORC_NAPTHA     = 'Robf'
         // 混乱
         constant integer UPG_ORC_CHAOS      = 'Roch'
@@ -752,7 +752,7 @@ native DebugS               takes string str                            returns 
         constant integer NECROPOLIS_3       = 'unp2'    // full upgrade
         // 献祭深渊
         constant integer SAC_PIT            = 'usap'
-        // 地穴
+        // 地穴（不死族兵营）
         constant integer CRYPT              = 'usep'
         // 屠宰场
         constant integer SLAUGHTERHOUSE     = 'uslh'
@@ -790,7 +790,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NECROS         = 'Rune'
         // 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 怀疑是背包（'Rupm'），但此处写成'Rump'
+        // 编辑器无此科技，怀疑是背包（'Rupm'），但此处写成'Rump'
         constant integer UPG_MEAT_WAGON     = 'Rump'
         // 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
@@ -872,11 +872,11 @@ native DebugS               takes string str                            returns 
         constant integer TRUESHOT           = 'AEar'
         // 技能 闪现（守望者）
         constant integer BLINK              = 'AEbl'
-        // 技能 刀扇
+        // 技能 刀扇（守望者）
         constant integer FAN_KNIVES         = 'AEfk'
-        // 技能 暗影突袭
+        // 技能 暗影突袭（守望者）
         constant integer SHADOW_TOUCH       = 'AEsh'
-        // 技能 复仇
+        // 技能 复仇（守望者）
         constant integer VENGEANCE          = 'AEsv'
     
         // elf units
@@ -948,7 +948,6 @@ native DebugS               takes string str                            returns 
         constant integer ANCIENT_PROTECT    = 'etrp'
         // 长者祭坛
         constant integer ELF_ALTAR          = 'eate'
-        constant integer BEAR_DEN           = 'edol'
         // 熊窝（编辑器无此单位 ）
         constant integer BEAR_DEN           = 'edol'
         // 奇美拉栖木
@@ -1009,7 +1008,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_DRUID_TALON    = 'Redt'
         // 利爪德鲁伊专家级训练
         constant integer UPG_DRUID_CLAW     = 'Redc'
-        // 驱除魔法
+        // 驱除魔法（暗夜）
         constant integer UPG_ABOLISH        = 'Resi'
         // 腐蚀吐息
         constant integer UPG_CHIM_ACID      = 'Recb'
@@ -1085,9 +1084,9 @@ native DebugS               takes string str                            returns 
         constant integer NAGA_WITCH         = 'nnsw'
         // 飞蛇
         constant integer NAGA_SERPENT       = 'nwgs' 
-        // 龙龟
+        // 龙龟（娜迦族）
         constant integer NAGA_HYDRA         = 'nhyc'    
-        // 深海鱼人奴隶
+        // 深海鱼人奴隶（娜迦族）
         constant integer NAGA_SLAVE         = 'nmpe'        // peon
         // 毒鳍龙
         constant integer NAGA_SNAP_DRAGON   =  NAGA_DRAGON  // weak ranged
@@ -1097,9 +1096,9 @@ native DebugS               takes string str                            returns 
         constant integer NAGA_SIREN         =  NAGA_WITCH   // caster
         // 纳迦侍从
         constant integer NAGA_MYRMIDON      = 'nmyr'        // knight
-        // 深海鱼人掠夺者
+        // 深海鱼人掠夺者（娜迦族）
         constant integer NAGA_REAVER        = 'nnmg'        // footman
-        // 龙龟
+        // 龙龟（娜迦族）
         constant integer NAGA_TURTLE        =  NAGA_HYDRA   // siege
         // 纳迦皇家卫兵
         constant integer NAGA_ROYAL         = 'nnrg'        // royal guard
@@ -1123,11 +1122,11 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NAGA_ARMOR     = 'Rnam'
         // 珊瑚锋刃
         constant integer UPG_NAGA_ATTACK    = 'Rnat'
-        // 驱除魔法
+        // 驱除魔法（娜迦族）
         constant integer UPG_NAGA_ABOLISH   = 'Rnsi'
         // 纳迦海妖专家级训练
         constant integer UPG_SIREN          = 'Rnsw'
-        // 诱捕
+        // 诱捕（娜迦族）
         constant integer UPG_NAGA_ENSNARE   = 'Rnen'
     
     
