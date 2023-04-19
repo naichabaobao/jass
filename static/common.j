@@ -1489,13 +1489,13 @@ globals
 	
 	// Camera Margin constants for use with GetCameraMargin
 	
-	// 镜头空白 左
+	// 镜头空白 左，似乎恒为512
 	constant integer CAMERA_MARGIN_LEFT = 0
-	// 镜头空白 右
+	// 镜头空白 右，似乎恒为512
 	constant integer CAMERA_MARGIN_RIGHT = 1
-	// 镜头空白 顶部
+	// 镜头空白 顶部，似乎恒为256
 	constant integer CAMERA_MARGIN_TOP = 2
-	// 镜头空白 底部
+	// 镜头空白 底部，似乎恒为256
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
@@ -1535,7 +1535,7 @@ globals
 	constant originframetype ORIGIN_FRAME_HERO_HP_BAR = ConvertOriginFrameType(4)
 	// 原生UI 英雄按钮下的魔法条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_MANA_BAR = ConvertOriginFrameType(5)
-	// 原生UI 英雄获得新技能点时，英雄按钮发光; 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
+	// 原生UI 英雄获得新技能点时，英雄按钮发出的光; 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON_INDICATOR = ConvertOriginFrameType(6)
 	// 原生UI 物品栏格按钮（共6格）。当其父级可见时，每次选择物品时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_ITEM_BUTTON = ConvertOriginFrameType(7)
@@ -4499,7 +4499,7 @@ native RemoveUnit takes unit whichUnit returns nothing
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置单位属性 [R]
-// @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
+// @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置单位的 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
@@ -5041,9 +5041,9 @@ native CachePlayerHeroData takes player whichPlayer returns nothing
 // Fog of War API
 // 设置地图迷雾(矩形区域) [R]
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
-// 设置地图迷雾(圆范围) [R]
+// 设置地图迷雾(圆范围) （指定坐标）[R]
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
-// 设置地图迷雾(圆范围) [R]
+// 设置地图迷雾(圆范围)（指定点） [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
@@ -5074,7 +5074,7 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 native VersionGet takes nothing returns version
 // 当前游戏版本是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionCompatible takes version whichVersion returns boolean
-// 当前版本支持是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
+// 当前版本是否支持指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionSupported takes version whichVersion returns boolean
 
 // 结束游戏
@@ -5600,7 +5600,7 @@ native GetAllyColorFilterState takes nothing returns integer
 native SetAllyColorFilterState takes integer state returns nothing
 // 野生单位显示是开启的
 native GetCreepCampFilterState takes nothing returns boolean
-// 显示/隐藏野生生物图标在小地图
+// 显示/隐藏 小地图野生生物图标（是否在小地图显示中立敌对玩家的单位）
 native SetCreepCampFilterState takes boolean state returns nothing
 // 允许/禁止小地图按钮
 native EnableMinimapFilterButtons takes boolean enableAlly, boolean enableCreep returns nothing
