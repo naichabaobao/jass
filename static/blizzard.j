@@ -12,57 +12,57 @@ globals
     constant real      bj_PI                            = 3.14159
     // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
-    // 单元格宽度，默认128
+    // 单元格宽度，默认128.0
     constant real      bj_CELLWIDTH                     = 128.0
-    // 悬崖高度，默认128
+    // 悬崖高度，默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
-    // 单位默认面向角度，默认270
+    // 单位默认面向角度，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
     // 弧度转换成为角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
     // 角度转换成为弧度
     constant real      bj_DEGTORAD                      = bj_PI/180.0
-    // 文本显示延时 - 任务，默认20
+    // 文本显示延时 - 任务，默认20.00
     constant real      bj_TEXT_DELAY_QUEST              = 20.00
-    // 文本显示延时 - 任务更新，默认20
+    // 文本显示延时 - 任务更新，默认20.00
     constant real      bj_TEXT_DELAY_QUESTUPDATE        = 20.00
-    // 文本显示延时 - 任务完成，默认20
+    // 文本显示延时 - 任务完成，默认20.00
     constant real      bj_TEXT_DELAY_QUESTDONE          = 20.00
-    // 文本显示延时 - 任务失败，默认20
+    // 文本显示延时 - 任务失败，默认20.00
     constant real      bj_TEXT_DELAY_QUESTFAILED        = 20.00
-    // 文本显示延时 - 任务要求，默认20
+    // 文本显示延时 - 任务要求，默认20.00
     constant real      bj_TEXT_DELAY_QUESTREQUIREMENT   = 20.00
-    // 文本显示延时 - 失败消息，默认20
+    // 文本显示延时 - 失败消息，默认20.00
     constant real      bj_TEXT_DELAY_MISSIONFAILED      = 20.00
-    // 文本显示延时 - 常驻提示，默认12
+    // 文本显示延时 - 常驻提示，默认12.00
     constant real      bj_TEXT_DELAY_ALWAYSHINT         = 12.00
-    // 文本显示延时 - 提示，默认12
+    // 文本显示延时 - 提示，默认12.00
     constant real      bj_TEXT_DELAY_HINT               = 12.00
-    // 文本显示延时 - 秘密，默认10
+    // 文本显示延时 - 秘密，默认10.00
     constant real      bj_TEXT_DELAY_SECRET             = 10.00
-    // 文本显示延时 - 单位购买，默认15
+    // 文本显示延时 - 单位购买，默认15.00
     constant real      bj_TEXT_DELAY_UNITACQUIRED       = 15.00
-    // 文本显示延时 - 单位可用，默认15
+    // 文本显示延时 - 单位可用，默认10.00
     constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
-    // 文本显示延时 - 物品购买，默认15
+    // 文本显示延时 - 物品购买，默认10.00
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
-    // 文本显示延时 - 物品购买，默认15
+    // 文本显示延时 - 物品购买，默认12.00
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
-    // 队列延时 - 任务，默认5
+    // 队列延时 - 任务，默认5.00
     constant real      bj_QUEUE_DELAY_QUEST             =  5.00
-    // 队列延时 - 提示，默认5
+    // 队列延时 - 提示，默认5.00
     constant real      bj_QUEUE_DELAY_HINT              =  5.00
-    // 队列延时 - 任务，默认3
+    // 队列延时 - 任务，默认3.00
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
-    // 障碍 - 简单，默认60
+    // 障碍 - 简单，默认60.00
     constant real      bj_HANDICAP_EASY                 = 60.00
-    // 障碍 - 普通，默认60
+    // 障碍 - 普通，默认90.00
     constant real      bj_HANDICAP_NORMAL               = 90.00
-    // 损伤障碍 - 简单，默认50
+    // 损伤障碍 - 简单，默认50.00
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
-    // 损伤障碍 - 普通，默认90
+    // 损伤障碍 - 普通，默认90.00
     constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
-    // 损伤障碍 - 非困难，默认50
+    // 损伤障碍 - 非困难，默认50.00
 	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
     // 游戏开局阈值，默认0.01
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
@@ -70,7 +70,7 @@ globals
     constant real      bj_WAIT_FOR_COND_MIN_INTERVAL    =  0.10
     // 轮询间隔（游戏时间），默认0.10
     constant real      bj_POLLED_WAIT_INTERVAL          =  0.10
-    // 轮询跳过阈值（游戏时间），默认2
+    // 轮询跳过阈值（游戏时间），默认2.00
     constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
 
     // Game constants  最大库存，默认6
@@ -97,9 +97,9 @@ globals
 
     // Ideally these would be looked up from Units/MiscData.txt,
     // but there is currently no script functionality exposed to do that
-    // 黎明时间（鸡啼），默认早上6点
+    // 黎明时间（鸡啼），默认早上6点整（6.00）
     constant real      bj_TOD_DAWN                      = 6.00
-    // 入夜时间（狼嚎），默认晚上18点
+    // 入夜时间（狼嚎），默认晚上18点整（18.00）
     constant real      bj_TOD_DUSK                      = 18.00
 
     // Melee game settings:
@@ -110,15 +110,15 @@ globals
     //   - Max heroes allowed per player
     //   - Max heroes allowed per hero type
     //   - Distance from start loc to search for nearby mines
-    // 初始时钟，默认早上8点
+    // 初始时钟，默认早上8点整（8.00）
     constant real      bj_MELEE_STARTING_TOD            = 8.00
-    // 初始黄金数量，默认750（V0是混乱之治）
+    // 初始黄金数量，默认750（V0表示混乱之治）
     constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
-    // 初始黄金数量，默认500（V1是冰封王座）
+    // 初始黄金数量，默认500（V1表示冰封王座）
     constant integer   bj_MELEE_STARTING_GOLD_V1        = 500
-    // 初始木材数量，默认200（V0是混乱之治）
+    // 初始木材数量，默认200（V0表示混乱之治）
     constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
-    // 初始木材数量，默认150（V1是冰封王座）
+    // 初始木材数量，默认150（V1表示冰封王座）
     constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
     // 使用随机英雄时给予的英雄数量，默认1个
     constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
@@ -130,24 +130,25 @@ globals
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
     // 清除开始点中立敌对单位的范围，默认1500（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
-    // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120
+    // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120.00
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
-    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20
+    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20.00
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0是混乱之治）
+    // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0表示混乱之治）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
-    // 英雄初始物品要给予的次数，默认3次，即只给第1个获得的英雄（V1是冰封王座）
+    // 英雄初始物品要给予的次数，默认1次，即只给第1个获得的英雄（V1表示冰封王座）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
-    // 从单位死亡到掉落物品出现的时间间隔（延时），默认0.5 Delay between a creep's death and the time it may drop an item.
+    // Delay between a creep's death and the time it may drop an item.
+    // 从单位死亡到掉落物品出现的时间间隔（延时），默认0.50
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
-    // 初始库存补充延时（开局后，过多久才可购买/雇佣）
+    // 初始库存补充延时（开局后，过多久才可购买/雇佣），默认120
     constant real      bj_STOCK_RESTOCK_INITIAL_DELAY   = 120
-    // 库存补充间隔
+    // 库存补充间隔，默认30
     constant real      bj_STOCK_RESTOCK_INTERVAL        = 30
-    // 库存最大补充次数
+    // 库存最大补充次数，默认20
     constant integer   bj_STOCK_MAX_ITERATIONS          = 20
 
     // Max events registered by a single "dest dies in region" event.
@@ -170,7 +171,7 @@ globals
     // 镜头默认旋转值（Z 轴旋转角度）（90）
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // 救援延时，怀疑是中立可救援单位在被救援后变更队伍的延迟 Rescue
+    // 救援延时，怀疑是中立可救援单位在被救援后变更队伍的延迟，默认2.00 Rescue
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
     // Transmission behavior settings
@@ -189,7 +190,7 @@ globals
     // 传输画像悬空时间，默认1.50
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
 
-    // 电影模式转换时间，默认0.5 Cinematic mode settings
+    // 电影模式转换时间，默认0.50 Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
     // 默认游戏速度--默认正常
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
@@ -547,9 +548,9 @@ globals
     constant integer   bj_QUESTMESSAGE_COMPLETED     = 2
     // 任务信息类型 发现失败
     constant integer   bj_QUESTMESSAGE_FAILED        = 3
-    // 任务信息类型 发现要求
+    // 任务信息类型 任务要求
     constant integer   bj_QUESTMESSAGE_REQUIREMENT   = 4
-    // 任务信息类型 发现失败
+    // 任务信息类型 任务失败
     constant integer   bj_QUESTMESSAGE_MISSIONFAILED = 5
     // 任务信息类型 提示
     constant integer   bj_QUESTMESSAGE_ALWAYSHINT    = 6
@@ -627,13 +628,13 @@ globals
     constant integer   bj_MODIFYMETHOD_SET    = 2
 
     // Unit state adjustment methods (for replaced units)
-    // 替换单位时，新单位的生命值和魔法值设置 使用旧单位的生命值和魔法值
+    // 替换单位时，新单位生命值和魔法值为 旧单位 的值
     constant integer   bj_UNIT_STATE_METHOD_ABSOLUTE = 0
-    // 替换单位时，新单位的生命值和魔法值设置  使用旧单位相关物的生命值和魔法值
+    // 替换单位时，新单位生命值和魔法值为 旧单位相关物 的值
     constant integer   bj_UNIT_STATE_METHOD_RELATIVE = 1
-    // 替换单位时，新单位的生命值和魔法值设置 使用新单位默认值
+    // 替换单位时，新单位生命值和魔法值为 新单位的默认值
     constant integer   bj_UNIT_STATE_METHOD_DEFAULTS = 2
-    // 替换单位时，新单位的生命值和魔法值设置 使用新单位的最大值
+    // 替换单位时，新单位生命值和魔法值为 使用新单位的最大值
     constant integer   bj_UNIT_STATE_METHOD_MAXIMUM  = 3
 
     // Gate operations
@@ -699,27 +700,27 @@ globals
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
-    // 小地图图标类型
+    // 小地图图标样式 主要任务标识
     constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
-    // 小地图图标类型
+    // 小地图图标样式 主要任务标识（绿色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
-    // 小地图图标类型
+    // 小地图图标样式 主要任务标识（红色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
-    // 小地图图标类型
+    // 小地图图标样式 任务奖励标识
     constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
-    // 小地图图标类型
+    // 小地图图标样式 任务移交标识
     constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
-    // 小地图图标类型
+    // 小地图图标样式 任务BOSS标识
 	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
-    // 小地图图标类型
+    // 小地图图标样式 友方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
-    // 小地图图标类型
+    // 小地图图标样式 中立标识（无人占领）
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
-    // 小地图图标类型
+    // 小地图图标样式 敌方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
-    // 尸体最大死亡时间
+    // 尸体最大死亡时间，默认8.00
     constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
 
     // Corpse creation styles
@@ -759,9 +760,13 @@ globals
     rect               bj_mapInitialCameraBounds   = null
 
     // Utility function vars
+    // 循环A引索
     integer            bj_forLoopAIndex            = 0
+    // 循环A引索
     integer            bj_forLoopBIndex            = 0
+    // 循环A引索结束值
     integer            bj_forLoopAIndexEnd         = 0
+    // 循环A引索结束值
     integer            bj_forLoopBIndexEnd         = 0
     // 玩家检查是否完成，自动检查，检查完成后自动变为真，用于开局系统自动检查所有玩家槽是电脑（不论是否具备AI）还是真人
     boolean            bj_slotControlReady         = false
@@ -990,9 +995,11 @@ globals
     boolexpr           filterLivingPlayerUnitsOfTypeId   = null
 
     // Memory cleanup vars
+    // 需要清理单位组 - 是 或 否
     boolean            bj_wantDestroyGroup         = false
 
     // Instanced Operation Results
+    // 最后的值域操作结果 - 成功 或 失败
     boolean            bj_lastInstObjFuncSuccessful = true
 endglobals
 
