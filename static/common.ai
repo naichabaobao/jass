@@ -25,60 +25,67 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 获取英雄等级
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取AI玩家指定类型单位的数量/科技的等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取AI玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家的该类型单位的数量/科技的等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取AI玩家指定类型单位的数量/科技的等级，仅统计已训练/建造/研究完成
+    // 获取AI玩家指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
     native GetUnitCountDone     takes integer unitid                        returns integer
-    // 指定基地对应类型的单位数，0为第一个基地
+    // 获取指定基地对应类型的单位数
+    // @param tn基地编号，-1为不限
+    // @param dn是否包含训练/建造/研究中的单位/建筑/科技
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-    // 训练/建造/研究指定/研究一个指定类型单位/科技需要消耗的金钱数量
+    // 获取指定单位/建筑/科技类型的单位造价（金钱）
     native GetUnitGoldCost      takes integer unitid                        returns integer
-    // 训练/建造/研究指定/研究一个指定类型单位/科技需要消耗的木材数量
+    // 获取指定单位/建筑/科技类型的单位造价（木材）
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/科技类型的训练/建造/研究时间
+    // 获取指定单位/建筑/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
-    // 拥有的金矿数，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿
+    // 拥有的金矿数，会检查开始点附近所有矿，而不是只查闹鬼金矿
     // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
     native GetMinesOwned        takes nothing                               returns integer
-    // 拥有的所有金矿的金钱数量，对于亡灵，该函数会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一座矿
+    // 拥有的所有金矿的金钱数量，会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一座矿的金钱数
     // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
-    // 有金矿的基地编号，如果多个基地都有金矿 则返回最小编号
+    // 有金矿的基地编号，如果多个基地都有金矿，则返回最小编号
     // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
     native TownWithMine         takes nothing                               returns integer
-    // 指定编号的基地是否有金矿，0为第一个基地
+    // 指定编号的基地是否有金矿
+    // @param townid基地编号，-1为不限
     native TownHasMine          takes integer townid                        returns boolean
-    // 指定编号的基地是有城镇单位（基地），0为第一个基地
+    // 指定编号的基地是否拥有城镇（一、二或三本任意基地）
+    // @param townid基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
     // 指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 升级指定科技需要消耗的金钱数量，指定id就是指定科技等级
+    // 升级指定科技需要消耗的金钱数量，指定id就是指定科技类型
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 升级指定科技需要消耗的木材数量，指定id就是指定科技等级
+    // 升级指定科技需要消耗的木材数量，指定id就是指定科技类型
     native GetUpgradeWoodCost   takes integer id                            returns integer
     // 获取下一个扩张点
     native GetNextExpansion     takes nothing                               returns integer
     // 获取大型攻击目标
-    // 因运行时暴雪会往攻击组添加默认攻击类型为攻城的单位，故猜测该单位是某种建筑或位于建筑群中
+    // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
     // 获取指定玩家正在训练/建造的单位
     native GetBuilding          takes player p                              returns unit
-    // 获得敌人攻击组强度
+    // 获取敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
-    // 命令训练/建造/研究指定/研究单位/科技(指定数量,单位类型,基地)
+    // 训练/建造/研究指定/研究单位/科技(指定数量,单位类型,基地)
+    // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 取消指定单位，单位正在建造/训练会取消
+    // 取消指定单位，如果单位正在建造/训练，则会被取消
     // 因单词为反召唤，怀疑可用于建造完成时卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
-    // 建造扩张点/分基地（指定工人（具体到某个单位）和城镇单位的类型）
+    // 建造扩张点/分基地
+    // @param peon指定工人单位
+    // @param id建造的城镇单位类型
     native SetExpansion         takes unit peon, integer id                 returns boolean
     // 升级指定科技
     native SetUpgrade           takes integer id                            returns boolean
@@ -87,12 +94,17 @@ native DebugS               takes string str                            returns 
     // 是否允许设置新英雄，
     // 意义不明，可能和学习技能有关
     native SetNewHeroes         takes boolean state                         returns nothing
-    // 购买地精飞艇，运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外命令
+    // 购买地精飞艇
+    // 运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外命令
     native PurchaseZeppelin     takes nothing                               returns nothing
-    // 训练/建造/研究指定指定数量的合体单位类型（单位类型a,单位类型b,合体成单位类型make）
+    // 训练/建造/研究指定指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
+    // @param a单位类型一
+    // @param b单位类型二
+    // @param make一和二合体成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-    // 训练/建造/研究指定指定数量的变形单位类型，此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
+    // 训练/建造/研究指定指定数量的变形单位类型
+    // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
     
@@ -138,13 +150,16 @@ native DebugS               takes string str                            returns 
     native RemoveSiege          takes nothing                               returns nothing
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
-    // 增加指定数量的指定单位类型到攻击组。未被编入的单位类型不会跟随进攻，只会留在开始点
+    // 增加指定数量的指定单位类型到攻击组
+    // 未被编入的单位类型不会跟随进攻，只会留在开始点
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防守组
     native AddDefenders         takes integer qty, integer id               returns boolean
     
-    // 获取指定等级范围内的中立敌对玩家控制的单位，即野怪（ture 为可获取飞行单位，false 为不获取）
+    // 获取指定等级范围内的中立敌对玩家控制的单位
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
+    // @param min~max 获取的最小至最高等级，利用数值区间可让AI在不同的发展阶段攻击不同等级的野怪营地
+    // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取
     native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
     // 开始获取敌人主基地
     native StartGetEnemyBase    takes nothing                               returns nothing
@@ -166,25 +181,33 @@ native DebugS               takes string str                            returns 
     native AttackMoveKill       takes unit target                           returns nothing
     // 让攻击指组攻击指定坐标
     native AttackMoveXY         takes integer x, integer y                  returns nothing
-    // 在指定坐标卸载单位，该命令似乎只对卸载（地精飞艇）技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
+    // 在指定坐标卸载单位
+    // 该命令只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
     // 建议不要对飞艇类单位发送忽略防守指令，忽略后AI不会自动控制飞艇卸载
     native LoadZepWave          takes integer x, integer y                  returns nothing
-    // 检测自杀式攻击是否满足指定条件（指定玩家），该指令被暴雪用于战役AI
+    // 自杀式攻击指定玩家，返回false时代表未执行
+    // 理论上是一路打到指定玩家的出生点
+    // 该指令被暴雪用于战役AI
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
-    // 检测自杀式攻击组是否满足指定条件（指定玩家），该指令被暴雪用于战役AI
+    // 自杀式攻击指定玩家，返回false时代表未执行
+    // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家出生点
+    // 该指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
     // 攻击组是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
     // 指定单位是否有防御塔保护
     native IsTowered            takes unit target                           returns boolean
-    // 清理上一次的AI采集工人分配设置，暴雪在每次运行 HarvestGold 和 HarvestWood 前都进行了清理
+    // 清理上一次的AI采集工人分配设置
+    // 暴雪在每次运行 HarvestGold 和 HarvestWood 前都进行了清理
     // 清理后AI可能会交换多个基地之间的农民，比如让A矿的农民去B矿工作，反之亦然
     native ClearHarvestAI       takes nothing                               returns nothing
     // 分配指定数量的工人在指定基地采集金矿
     // 如果金矿和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达金矿，但其采集完成返回时自动会停在岸边，就像它忘记自己可以游泳一样
+    // @param town 0为主基地，大于0则是对应每个分基地
     native HarvestGold          takes integer town, integer peons           returns nothing
     // 分配指定数量的工人在指定基地采集木材
     // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
+    // @param town 0为主基地，大于0则是对应每个分基地
     native HarvestWood          takes integer town, integer peons           returns nothing
     // 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会命令其离开金矿
@@ -201,6 +224,7 @@ native DebugS               takes string str                            returns 
     native CreateCaptains       takes nothing                               returns nothing
     // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
+    // @param which攻击组、防守组或两组，即 1，2或3
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
     // 命令攻击组复位（回到 SetCaptainHome 的集结点）
     native ResetCaptainLocs     takes nothing                               returns nothing
@@ -243,12 +267,18 @@ native DebugS               takes string str                            returns 
     // 地图上是否还有中立敌对玩家的单位，即野怪 
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
-    // 在攻击组添加自杀单位，指定单位类型和数量，该指令被暴雪用于战役AI
+    // 在攻击组添加自杀单位，指定单位类型和数量
+    // 该指令被暴雪用于战役AI
     native SuicideUnit          takes integer count, integer unitid         returns nothing
-    // 在攻击组添加自杀单位，指定单位类型、数量和玩家，该指令被暴雪用于战役AI
+    // 在攻击组添加自杀单位
+    // 该指令被暴雪用于战役AI
+    // @param ct数量
+    // @param uid单位类型
+    // @param pid玩家编号
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
-    // 开始进程，AI脚本最多可运行6条进程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
-    // 可共用全局变量，但在一条进程运行到读取变量的代码时，可能因变量已在几十秒前被另一个变量改写，造成滞后的假象
+    // 开始线程
+    // AI脚本最多可运行6条线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
+    // 线程之间共享全局变量，但在一条线程运行到读取变量时，变量可能已在几秒前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（期间不执行任何指令）
     native Sleep                takes real seconds                          returns nothing
@@ -258,20 +288,24 @@ native DebugS               takes string str                            returns 
     native UnitInvis            takes unit id                               returns boolean
     // 攻击组忽略指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
-    // AI的任意基地被攻击，与小地图警报的触发条件相同，但只针对基地
+    // AI的任意基地被攻击
+    // 与小地图警报的触发条件相同，但只针对基地
     native TownThreatened       takes nothing                               returns boolean
     // 是否允许在未到达目的地前（攻击组/防御组移动过程中）战斗
     native DisablePathing       takes nothing                               returns nothing
     // 获得命令队列中的指令条数
     native SetAmphibious        takes nothing                               returns nothing
     
-    // 获取指令类型，可通过BJ发送，未发送时获取的值是0
+    // 获取指令类型
+    // 可通过BJ发送，未发送时获取的值是0
     // 暴雪用该指令打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
     native CommandsWaiting      takes nothing                               returns integer
-    // 获取最新的指令类型，可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
+    // 获取最新的指令类型
+    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
     // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
     native GetLastCommand       takes nothing                               returns integer
-    // 获取最新指令的数据，可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
+    // 获取最新指令的数据
+    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
     // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
     // 将最新指令踢出队列
@@ -1479,7 +1513,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-     // 获取大型中立敌对玩家的单位（10~100级之间，不含飞行单位）
+     // 获取大型中立敌对玩家的单位（10~100级之间，根据allow_air_creeps当前值确定是否获取飞行单位）
     function GetMajorCreep takes nothing returns unit
         return GetCreepCamp(10,100,allow_air_creeps)
     endfunction
@@ -1549,7 +1583,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 开启指定线程
+    // 运行指定线程
     function StartTownBuilder takes code func returns nothing
         call StartThread(func)
     endfunction
@@ -1613,7 +1647,8 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 研究/升级指定科技（简单难度AI默认不执行该命令，且只研究/升级1级）
+    // 研究/升级指定科技
+    // 简单难度AI默认不执行该命令
     function SetBuildUpgr takes integer qty, integer unitid returns nothing
         if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
             call SetBuildAll(BUILD_UPGRADE,qty,unitid,-1)
@@ -1781,14 +1816,15 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 统计指定单位类型的数量，不包含建造/训练中，不限基地，默认用于检测城镇类型的单位（基地）
+    // 统计指定单位类型的数量，不包含建造/训练中，不限基地
+    // 默认用于检测城镇类型的单位（基地）
     function TownCount takes integer base returns integer
         return TownCountEx(base,false,-1)
     endfunction
     
     //============================================================================
-    // 开分基地
-    // @param build_it为假时不执行任何操作，当 build_it 和 HallsCompleted(unitid) 都为真时才会开
+    // 建造分基地
+    // @param build_it为假时不执行任何操作，当 build_it 和 HallsCompleted(unitid) 都为真时才会建造
     function BasicExpansion takes boolean build_it, integer unitid returns nothing
         if build_it and HallsCompleted(unitid) then
             call SetBuildExpa( TownCount(unitid)+1, unitid )
@@ -1804,8 +1840,9 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 统计指定单位类型数量，不否包含建造/训练中，默认用于检测城镇类型的单位（基地）
-    // @param base，指定单位类型
+    // 统计指定单位类型数量，不否包含建造/训练中
+    // 默认用于检测城镇类型的单位（基地）
+    // @param base指定单位类型
     // @param townid基地编号，-1为不限
     function TownCountTown takes integer base, integer townid returns integer
         return TownCountEx(base,false,townid)
@@ -1849,8 +1886,10 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 开始训练单位/建造建筑
-    // @param town 基地编号，-1为不限
+    // 训练单位/建造建筑
+    // @param ask_qty数量
+    // @param town基地编号，-1为不限
+    // @param unitid单位类型
     function StartUnit takes integer ask_qty, integer unitid, integer town returns boolean
         local integer have_qty
         local integer need_qty
@@ -1929,7 +1968,8 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     // 等待指定的单位类型（包含建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
-    // @param towns 基地编号，-1为不限
+    // @param towns指定数量
+    // @param townid基地单位类型
     function WaitForTown takes integer towns, integer townid returns nothing
         local integer i = 0
         loop
@@ -1943,7 +1983,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     // 开始建造分基地
     // @param qty数量
-    // @param hall单位类型
+    // @param hall基地单位类型
     function StartExpansion takes integer qty, integer hall returns boolean
         local integer count
         local integer town
@@ -2459,8 +2499,9 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
-    // 设置各波次进攻，默认用于自杀式攻击
-    // @param standard为真时会判断退出条件
+    // 设置各波次进攻（指定玩家和坐标），默认用于自杀式攻击
+    // @param standard为真时会额外判断退出条件且不进攻指定坐标，为假时会进攻指定坐标
+    // @param bldgs当standard为真时，若bldgs为真，会额外判断退出条件 SuicidePlayer(p,sleep_seconds >= -60)，反之额外判断退出条件 SuicidePlayerUnits(p,sleep_seconds >= -60)
     function CommonSuicideOnPlayer takes boolean standard, boolean bldgs, integer seconds, player p, integer x, integer y returns nothing
         local integer save_peons
     
@@ -2798,7 +2839,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 攻击扩展点
+    // 攻击扩张点（有中立敌对单位的分矿）
     function ExpansionAttack takes nothing returns nothing
         local unit creep = GetExpansionFoe()
         local integer x
@@ -3006,7 +3047,7 @@ native DebugS               takes string str                            returns 
             set get_zeppelin = true
         endif
     endfunction
-    PLAYER_STATE_FOOD_CAP_CEILING
+
     //============================================================================
     // 获取当前AI玩家的已用人口数
     function FoodUsed takes nothing returns integer

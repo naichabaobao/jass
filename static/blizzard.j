@@ -798,25 +798,46 @@ globals
 
     // Triggered sounds
     //sound              bj_pingMinimapSound         = null
+    // 音效 救援音效
     sound              bj_rescueSound              = null
+    // 音效 发现任务音效
     sound              bj_questDiscoveredSound     = null
+    // 音效 任务更新音效
     sound              bj_questUpdatedSound        = null
+    // 音效 任务完成音效
     sound              bj_questCompletedSound      = null
+    // 音效 任务失败音效
     sound              bj_questFailedSound         = null
+    // 音效 任务提示音效
     sound              bj_questHintSound           = null
+    // 音效 发现任务秘密音效
     sound              bj_questSecretSound         = null
+    // 音效 获得新任务物品音效
     sound              bj_questItemAcquiredSound   = null
+    // 音效 任务警告音效
     sound              bj_questWarningSound        = null
+    // 音效 胜利对话框音效
     sound              bj_victoryDialogSound       = null
+    // 音效 失败对话框音效
     sound              bj_defeatDialogSound        = null
 
     // Marketplace vars
+    // 市场相关变量 任意物品被购买触发
     trigger            bj_stockItemPurchased       = null
+    // 市场相关变量 物品更新计时器
     timer              bj_stockUpdateTimer         = null
+    // 市场相关变量 物品分类布尔值数组 永久
     boolean array      bj_stockAllowedPermanent
+    // 市场相关变量 物品分类布尔值数组 可充
     boolean array      bj_stockAllowedCharged
+    // 市场相关变量 物品分类布尔值数组 人造
     boolean array      bj_stockAllowedArtifact
+    // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
+    // bj_stockPickedItemLevel = bj_stockAllowedPermanent[Level]
+    // bj_stockPickedItemLevel = bj_stockAllowedCharged[Level]
+    // bj_stockPickedItemLevel = bj_stockAllowedArtifact[Level]
     integer            bj_stockPickedItemLevel     = 0
+    // 市场相关变量 物品分类
     itemtype           bj_stockPickedItemType
 
     // Melee vars
@@ -844,8 +865,11 @@ globals
     boolean            bj_rescueChangeColorBldg    = true
 
     // Transmission vars
+    // 电影场景结束计时器
     timer              bj_cineSceneEndingTimer     = null
+    // 最后播放的电影场景声音
     sound              bj_cineSceneLastSound       = null
+    // 跳过电影场景触发器
     trigger            bj_cineSceneBeingSkipped    = null
 
     // Cinematic mode vars
@@ -867,10 +891,15 @@ globals
     string             bj_cineFadeContinueTex      = ""
 
     // QueuedTriggerExecute vars
+    // 动作队列执行次数统计
     integer            bj_queuedExecTotal          = 0
+    // 动作队列执行触发器数组
     trigger array      bj_queuedExecTriggers
+    // 动作队列执行布尔值数组 用于登记当前动作是否使用了条件
     boolean array      bj_queuedExecUseConds
+    // 动作队列执行计时器
     timer              bj_queuedExecTimeoutTimer   = CreateTimer()
+    // 动作队列执行超时触发器
     trigger            bj_queuedExecTimeout        = null
 
     // Helper vars (for Filter and Enum funcs)
@@ -917,8 +946,11 @@ globals
     widget             bj_lastDyingWidget          = null
 
     // Random distribution vars
+    // 随机分布数
     integer            bj_randDistCount            = 0
+    // 随机分布ID数组
     integer array      bj_randDistID
+    // 随机分布几率数组
     integer array      bj_randDistChance
 
     // Last X'd vars
@@ -11439,7 +11471,7 @@ endfunction
 
 
 // Update stock inventory.
-//
+// 更新商店物品库存
 function PerformStockUpdates takes nothing returns nothing
     local integer  pickedItemId
     local itemtype pickedItemType
