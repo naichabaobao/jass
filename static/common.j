@@ -347,7 +347,8 @@ globals
  constant boolean FALSE = false
     // 真 true
 	constant boolean TRUE = true
-	// 数组最大值，1.28及以下版本该值是8192
+	// 数组最大值，默认值32768
+	// 注：1.28及以下版本，默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
@@ -421,25 +422,25 @@ globals
 	constant playergameresult PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
 	// 玩家游戏结果 不确定
 	constant playergameresult PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
-	// 被动联盟
+	// 联盟类型 被动联盟（结盟不侵略）
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
-	// 联盟帮助要求
+	// 联盟类型 帮助请求
 	constant alliancetype ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
-	// 联盟帮助响应
+	// 联盟类型 帮助回答
 	constant alliancetype ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
-	// 联盟共享优先权
+	// 联盟类型 共享经验值
 	constant alliancetype ALLIANCE_SHARED_XP = ConvertAllianceType(3)
-	// 盟友法术锁定
+	// 联盟类型 盟友魔法锁定
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
-	// 联盟共享视野
+	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟共享控制
+	// 联盟类型 共享单位
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
-	// 联盟共享高级控制
+	// 联盟类型 完全共享单位
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
-	// 联盟可营救
+	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
-	// 联盟势力共享视野
+	// 联盟类型 被迫共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
 	// 游戏版本 混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
@@ -464,27 +465,27 @@ globals
 	constant damagetype DAMAGE_TYPE_UNKNOWN = ConvertDamageType(0)
 	// 伤害类型 普通
 	constant damagetype DAMAGE_TYPE_NORMAL = ConvertDamageType(4)
-	// 伤害类型 增强
+	// 伤害类型 强化
 	constant damagetype DAMAGE_TYPE_ENHANCED = ConvertDamageType(5)
 	// 伤害类型 火焰
 	constant damagetype DAMAGE_TYPE_FIRE = ConvertDamageType(8)
-	// 伤害类型 寒冰
+	// 伤害类型 冰冻
 	constant damagetype DAMAGE_TYPE_COLD = ConvertDamageType(9)
 	// 伤害类型 闪电
 	constant damagetype DAMAGE_TYPE_LIGHTNING = ConvertDamageType(10)
-	// 伤害类型 毒
+	// 伤害类型 毒药
 	constant damagetype DAMAGE_TYPE_POISON = ConvertDamageType(11)
-	// 伤害类型 瘟疫
+	// 伤害类型 疾病
 	constant damagetype DAMAGE_TYPE_DISEASE = ConvertDamageType(12)
 	// 伤害类型 神圣
 	constant damagetype DAMAGE_TYPE_DIVINE = ConvertDamageType(13)
 	// 伤害类型 魔法
 	constant damagetype DAMAGE_TYPE_MAGIC = ConvertDamageType(14)
-	// 伤害类型 声波
+	// 伤害类型 声音
 	constant damagetype DAMAGE_TYPE_SONIC = ConvertDamageType(15)
 	// 伤害类型 酸性
 	constant damagetype DAMAGE_TYPE_ACID = ConvertDamageType(16)
-	// 伤害类型 势力
+	// 伤害类型 力量
 	constant damagetype DAMAGE_TYPE_FORCE = ConvertDamageType(17)
 	// 伤害类型 死亡
 	constant damagetype DAMAGE_TYPE_DEATH = ConvertDamageType(18)
@@ -500,7 +501,7 @@ globals
 	constant damagetype DAMAGE_TYPE_SLOW_POISON = ConvertDamageType(23)
 	// 伤害类型 灵魂锁链
 	constant damagetype DAMAGE_TYPE_SPIRIT_LINK = ConvertDamageType(24)
-	// 伤害类型 暗影打击
+	// 伤害类型 暗影突袭
 	constant damagetype DAMAGE_TYPE_SHADOW_STRIKE = ConvertDamageType(25)
 	// 伤害类型 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
@@ -765,9 +766,9 @@ globals
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
 	// 地图-容许联盟资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
-	// 地图-禁止改变联盟状态
+	// 地图-禁止改变联盟类型
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
-	// 地图-隐藏联盟状态改变
+	// 地图-隐藏联盟类型改变
 	constant mapflag MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
 	// 地图-允许作弊码
 	constant mapflag MAP_CHEATS = ConvertMapFlag(4096)
@@ -886,11 +887,11 @@ globals
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
 	
 	// current resource levels
-	// 玩家黄金数量
+	// 玩家当前的黄金数量
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
-	// 玩家木材数量
+	// 玩家当前的木材数量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家英雄数量
+	// 玩家当前的英雄数量
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
     // 玩家可用人口数（默认为人口建筑提供的数量）
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
@@ -898,17 +899,17 @@ globals
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
 	// 玩家人口上限数（平衡常数或触发限制的最大数量），默认为100
 	constant playerstate PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
-	// 玩家状态-给予奖励
+	// 玩家状态 - 给予奖励
 	constant playerstate PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
-	// 玩家状态-联盟胜利
+	// 玩家状态 - 联盟胜利
 	constant playerstate PLAYER_STATE_ALLIED_VICTORY = ConvertPlayerState(8)
-	// 玩家状态-放置
+	// 玩家状态 - 放置
 	constant playerstate PLAYER_STATE_PLACED = ConvertPlayerState(9)
-	// 玩家状态-默认为观看者
+	// 玩家状态 - 默认为观看者
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
-	// 玩家状态-观看者
+	// 玩家状态 - 观看者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态-不可跟随
+	// 玩家状态 - 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
@@ -918,11 +919,11 @@ globals
 	constant playerstate PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
 	
 	// cumulative resources collected by the player during the mission
-	// 玩家状态-已收集金钱
+	// 玩家状态 - 已收集的金钱数量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态-已收集木材
+	// 玩家状态 - 已收集的木材数量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态-野生生物不睡眠
+	// 玩家状态 - 野生生物（中立敌对玩家的单位）不睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 当前生命值
@@ -933,62 +934,62 @@ globals
 	constant unitstate UNIT_STATE_MANA = ConvertUnitState(2)
 	// 最大法力值
 	constant unitstate UNIT_STATE_MAX_MANA = ConvertUnitState(3)
-	// AI难度-简单
+	// AI难度 - 简单
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
-	// AI难度-普通
+	// AI难度 - 普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-    // AI难度-困难
+    // AI难度 - 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
-	// 玩家积分-训练单位数量 player score values
+	// 玩家积分 - 训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-    // 玩家积分-消灭单位数量
+    // 玩家积分 - 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
-	// 玩家积分-已建造建筑数量
+	// 玩家积分 - 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
-	// 玩家积分-被毁建筑数量
+	// 玩家积分 - 被毁建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_RAZED = ConvertPlayerScore(3)
-	// 玩家积分-科技百分比
+	// 玩家积分 - 科技百分比
 	constant playerscore PLAYER_SCORE_TECH_PERCENT = ConvertPlayerScore(4)
-	// 玩家积分-最大可用人口数量
+	// 玩家积分 - 最大可用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXPROD = ConvertPlayerScore(5)
-	// 玩家积分-最大使用人口数量
+	// 玩家积分 - 最大使用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXUSED = ConvertPlayerScore(6)
-	// 玩家积分-杀死英雄
+	// 玩家积分 - 杀死英雄
 	constant playerscore PLAYER_SCORE_HEROES_KILLED = ConvertPlayerScore(7)
-	// 玩家积分-获得物品
+	// 玩家积分 - 获得物品
 	constant playerscore PLAYER_SCORE_ITEMS_GAINED = ConvertPlayerScore(8)
-	// 玩家积分-雇佣兵
+	// 玩家积分 - 雇佣兵
 	constant playerscore PLAYER_SCORE_MERCS_HIRED = ConvertPlayerScore(9)
-	// 玩家积分-采集到的黄金数量(全部)
+	// 玩家积分 - 采集到的黄金数量(全部)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_TOTAL = ConvertPlayerScore(10)
-	// 玩家积分-采集到的黄金数量(带有维修）
+	// 玩家积分 - 采集到的黄金数量(带有维修）
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
-	// 玩家积分-由于维修费而损失的黄金数量
+	// 玩家积分 - 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
-	// 玩家积分-由于税而损失的黄金数量
+	// 玩家积分 - 由于税而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
-	// 玩家积分-给予盟友的黄金数量
+	// 玩家积分 - 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
-	// 玩家积分-从盟友那里收到的黄金数量
+	// 玩家积分 - 从盟友那里收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
-	// 玩家积分-采集到的木材数量
+	// 玩家积分 - 采集到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
-	// 玩家积分-由于维修费而损失的木材数量
+	// 玩家积分 - 由于维修费而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_UPKEEP = ConvertPlayerScore(17)
-	// 玩家积分-由于税而损失的木材数量
+	// 玩家积分 - 由于税而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
-	// 玩家积分-给予盟友的木材数量
+	// 玩家积分 - 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
-	// 玩家积分-从盟友那里收到的木材数量
+	// 玩家积分 - 从盟友那里收到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_RECEIVED = ConvertPlayerScore(20)
-	// 玩家积分-总的单位得分
+	// 玩家积分 - 总的单位得分
 	constant playerscore PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
-	// 玩家积分-总的英雄得分
+	// 玩家积分 - 总的英雄得分
 	constant playerscore PLAYER_SCORE_HERO_TOTAL = ConvertPlayerScore(22)
-	// 玩家积分-总的资源得分
+	// 玩家积分 - 总的资源得分
 	constant playerscore PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
-	// 玩家积分-总的整体得分
+	// 玩家积分 - 总的整体得分
 	constant playerscore PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 	
 	
@@ -1036,7 +1037,7 @@ globals
 	// For use with TriggerRegisterPlayerEvent
 	// 玩家状态限制
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
-	// 玩家联盟状态变更
+	// 玩家联盟类型变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
 	// 玩家失败
 	constant playerevent EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
@@ -1118,7 +1119,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_CANCEL = ConvertPlayerUnitEvent(45)
 	// 玩家英雄完成复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_FINISH = ConvertPlayerUnitEvent(46)
-	// 玩家反召唤建筑（亡灵卖建筑）
+	// 玩家召唤事件
 	constant playerunitevent EVENT_PLAYER_UNIT_SUMMON = ConvertPlayerUnitEvent(47)
 	// 玩家单位物品掉落事件
 	constant playerunitevent EVENT_PLAYER_UNIT_DROP_ITEM = ConvertPlayerUnitEvent(48)
@@ -1208,7 +1209,7 @@ globals
 	constant unitevent EVENT_UNIT_HERO_REVIVE_CANCEL = ConvertUnitEvent(82)
 	// 英雄完成复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_FINISH = ConvertUnitEvent(83)
-	// 建筑反召唤（亡灵卖建筑）
+	// 召唤事件
 	constant unitevent EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
 	// 单位掉落物品事件
 	constant unitevent EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
@@ -1218,7 +1219,7 @@ globals
 	constant unitevent EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
 	// 单位被装载事件
 	constant unitevent EVENT_UNIT_LOADED = ConvertUnitEvent(88)
-	// 地表装饰物死亡事件
+	// 目标物死亡事件
 	constant widgetevent EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
 	// 对话框按钮点击事件
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
@@ -2580,7 +2581,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_NDOU = ConvertAbilityIntegerLevelField('Ndou')
     // 技能整数等级域 变化形态单位 ('Emeu')
 	constant abilityintegerlevelfield ABILITY_ILF_ALTERNATE_FORM_UNIT_EMEU = ConvertAbilityIntegerLevelField('Emeu')
-    // 技能整数等级域 瘟疫守卫单位类型 ('Aplu')
+    // 技能整数等级域 疾病守卫单位类型 ('Aplu')
 	constant abilityintegerlevelfield ABILITY_ILF_PLAGUE_WARD_UNIT_TYPE = ConvertAbilityIntegerLevelField('Aplu')
     // 技能整数等级域 允许单位类型 ('Btl1')
 	constant abilityintegerlevelfield ABILITY_ILF_ALLOWED_UNIT_TYPE_BTL1 = ConvertAbilityIntegerLevelField('Btl1')
@@ -2833,11 +2834,11 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_AMS1 = ConvertAbilityRealLevelField('Ams1')
     // 技能实数等级域 魔法伤害减少（无效） ('Ams2')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_AMS2 = ConvertAbilityRealLevelField('Ams2')
-    // 技能实数等级域 瘟疫效果持续时间 ('Apl1')
+    // 技能实数等级域 疾病效果持续时间 ('Apl1')
 	constant abilityreallevelfield ABILITY_RLF_AURA_DURATION = ConvertAbilityRealLevelField('Apl1')
     // 技能实数等级域 每秒伤害 ('Apl2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_APL2 = ConvertAbilityRealLevelField('Apl2')
-    // 技能实数等级域 瘟疫守卫持续时间 ('Apl3')
+    // 技能实数等级域 疾病守卫持续时间 ('Apl3')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_OF_PLAGUE_WARD = ConvertAbilityRealLevelField('Apl3')
     // 技能实数等级域 每秒生命恢复 ('Oar1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED = ConvertAbilityRealLevelField('Oar1')
@@ -4073,7 +4074,7 @@ globals
 	constant pathingflag PATHING_FLAG_UNBUILDABLE = ConvertPathingFlag(8)
 	// 放置要求 工人可采集
 	constant pathingflag PATHING_FLAG_UNPEONHARVEST = ConvertPathingFlag(16)
-	// 放置要求 不是荒芜之地
+	// 放置要求 不是荒芜地表
 	constant pathingflag PATHING_FLAG_BLIGHTED = ConvertPathingFlag(32)
 	// 放置要求 海面可通行
 	constant pathingflag PATHING_FLAG_UNFLOATABLE = ConvertPathingFlag(64)
@@ -4251,7 +4252,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 改变玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
-// 设置联盟状态(指定项目) [R]
+// 设置联盟类型(指定项目) [R]
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
 // 设置税率 [R]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
@@ -4319,43 +4320,58 @@ native GetExpiredTimer takes nothing returns timer
 native CreateGroup takes nothing returns group
 // 删除单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
-// 为指定单位组添加添加指定单位 [R]
+// 将指定单位添加到单位组中 [R]
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
-// 为指定单位组移除指定单位 [R]
+// 将指定单位移出单位组 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
-// 单位组添加单位组 [快速的]
+// 往 addGroup单位组 添加 whichGroup单位组 的单位 [快速]
+// @version 1.33
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
-// 单位组移除单位组 [快速的]
+// 从 removeGroup单位组 中移除 whichGroup单位组 的单位 [快速]
+// @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
-// 清空单位组，排泄需要使用删除单位组 CreateGroup，而非清空
+// 清空单位组
+// 排泄需要使用删除单位组 CreateGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组尺寸（组内的单位数量）
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
-// 通过单位类型匹配单位
+// 将指定单位类型的单位加入单位组
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
-// 通过玩家匹配单位
+// 将指定玩家匹的单位加入单位组
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-// 通过单位类型匹配单位（指定数量上限）
-// @param countLimit
+// 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-// 匹配范围单位
+// 将指定方形区域的的单位加入单位组
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 匹配范围单位（指定数量上限）
-// @param countLimit
+// 将指定方形区域的的单位加入单位组，同时指定添加单位的数量上限
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
+// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 // @deprecated
+// @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
+// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 // @deprecated
+// @param countLimit 数量上限
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
-// 选取指定玩家的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将指定玩家的单位添加到单位组
+// 可用filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发送单位组命令（无目标）
@@ -4874,7 +4890,7 @@ constant native GetSpellTargetItem takes nothing returns item
 // 获取被释放技能目标单位
 constant native GetSpellTargetUnit takes nothing returns unit
 
-// 注册玩家联盟状态改变事件(特殊)
+// 注册玩家联盟类型改变事件(特殊)
 native TriggerRegisterPlayerAllianceChange takes trigger whichTrigger, player whichPlayer, alliancetype whichAlliance returns event
 // 注册玩家属性事件
 native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichPlayer, playerstate whichState, limitop opcode, real limitval returns event
@@ -5011,15 +5027,15 @@ native TriggerSyncReady takes nothing returns nothing
 
 
 // Widget API
-// 获取地表装饰物的生命值
+// 获取目标的生命值
 native GetWidgetLife takes widget whichWidget returns real
-// 设置地表装饰物的生命值
+// 设置目标的生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取地表装饰物的 X 轴坐标
+// 获取目标的 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取地表装饰物的 Y 轴坐标
+// 获取目标的 Y 轴坐标
 native GetWidgetY takes widget whichWidget returns real
-// 获取触发的地表装饰物
+// 获取触发的目标
 constant native GetTriggerWidget takes nothing returns widget
 
 
@@ -5913,7 +5929,7 @@ native SaveBoolean takes hashtable table, integer parentKey, integer childKey, b
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
 // <1.24> 保存玩家 [C]
 native SavePlayerHandle takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
-// <1.24> 保存地表装饰物 [C]
+// <1.24> 保存目标 [C]
 native SaveWidgetHandle takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
 // <1.24> 保存可破坏物 [C]
 native SaveDestructableHandle takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
@@ -6003,7 +6019,7 @@ native LoadBoolean takes hashtable table, integer parentKey, integer childKey re
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
 // <1.24> 从哈希表提取玩家 [C]
 native LoadPlayerHandle takes hashtable table, integer parentKey, integer childKey returns player
-// <1.24> 从哈希表提取地表装饰物 [C]
+// <1.24> 从哈希表提取目标[C]
 native LoadWidgetHandle takes hashtable table, integer parentKey, integer childKey returns widget
 // <1.24> 从哈希表提取可破坏物 [C]
 native LoadDestructableHandle takes hashtable table, integer parentKey, integer childKey returns destructable
@@ -6187,7 +6203,7 @@ native ShowInterface takes boolean flag, real fadeDuration returns nothing
 native PauseGame takes boolean flag returns nothing
 // 添加闪动指示器(指定单位) [R]
 native UnitAddIndicator takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-// 添加闪动指示器(指定地表装饰物)
+// 添加闪动指示器(指定目标)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
 // 小地图信号(所有玩家) [R]
 native PingMinimap takes real x, real y, real duration returns nothing
@@ -6607,21 +6623,21 @@ constant native GetCameraBoundMinY takes nothing returns real
 constant native GetCameraBoundMaxX takes nothing returns real
 // 获取可用镜头范围的最大 Y 坐标
 constant native GetCameraBoundMaxY takes nothing returns real
-// 获取当前摄象机的指定属性值
+// 获取当前镜头的指定属性值
 constant native GetCameraField takes camerafield whichField returns real
-// 获取当前摄象机目标的 X 坐标
+// 获取当前镜头目标的 X 坐标
 constant native GetCameraTargetPositionX takes nothing returns real
-// 获取当前摄象机目标的 Y 坐标
+// 获取当前镜头目标的 Y 坐标
 constant native GetCameraTargetPositionY takes nothing returns real
-// 获取当前摄象机目标的 Z 坐标
+// 获取当前镜头目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
-// 获取当前摄象机目标点（返回点）
+// 获取当前镜头目标点（返回点）
 constant native GetCameraTargetPositionLoc takes nothing returns location
-// 获取当前摄象机观察位置的 X 坐标
+// 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
-// 获取当前摄象机位置的 Y 坐标
+// 获取当前镜头位置的 Y 坐标
 constant native GetCameraEyePositionY takes nothing returns real
-// 获取当前摄象机观察位置的 Z 坐标
+// 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
 // 获取当前照相机的观察位置（返回点）
 constant native GetCameraEyePositionLoc takes nothing returns location
@@ -6882,17 +6898,17 @@ native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns
 
 // Blight API
 //
-// 创建/删除荒芜地表(圆范围)(指定坐标) [R]
+// 创建/删除荒芜地表（不死族）(圆范围)(指定坐标) [R]
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
-// 创建/删除荒芜地表(矩形区域) [R]
+// 创建/删除荒芜地表（不死族）(矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
-// 设置荒芜地表（指定坐标）
+// 设置荒芜地表（不死族）（指定坐标）
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-// 设置荒芜地表（圆范围）（指定点）
+// 设置荒芜地表（不死族）（圆范围）（指定点）
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿 [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
-// 坐标点被荒芜地表覆盖 [R]
+// 指定坐标是否被荒芜地表（不死族）覆盖 [R]
 native IsPointBlighted takes real x, real y returns boolean
 
 

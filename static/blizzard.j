@@ -171,7 +171,7 @@ globals
     // 镜头默认旋转值（Z 轴旋转角度）（90）
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // 救援延时，怀疑是中立可救援单位在被救援后变更队伍的延迟，默认2.00 Rescue
+    // 可营救延时，怀疑是中立可营救单位在被可营救后变更队伍的延迟，默认2.00 Rescue
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
     // Transmission behavior settings
@@ -196,31 +196,53 @@ globals
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
+    // 电影模式默认音量 单位移动声音，默认0.40
     constant real      bj_CINEMODE_VOLUME_UNITMOVEMENT  = 0.40
+    // 电影模式默认音量 单位回应声音，默认0.00
     constant real      bj_CINEMODE_VOLUME_UNITSOUNDS    = 0.00
+    // 电影模式默认音量 战斗声音，默认0.40
     constant real      bj_CINEMODE_VOLUME_COMBAT        = 0.40
+    // 电影模式默认音量 动画和法术声音，默认0.40
     constant real      bj_CINEMODE_VOLUME_SPELLS        = 0.40
+    // 电影模式默认音量 用户界面（UI）声音，默认0.00
     constant real      bj_CINEMODE_VOLUME_UI            = 0.00
+    // 电影模式默认音量 音乐，默认0.55
     constant real      bj_CINEMODE_VOLUME_MUSIC         = 0.55
+    // 电影模式默认音量 场景配音，默认1.00
     constant real      bj_CINEMODE_VOLUME_AMBIENTSOUNDS = 1.00
+    // 电影模式默认音量 火焰声音，默认0.60
     constant real      bj_CINEMODE_VOLUME_FIRE          = 0.60
 
     // Speech mode volume levels
+    // 多通道默认音量 单位移动声音，默认0.25
     constant real      bj_SPEECH_VOLUME_UNITMOVEMENT    = 0.25
+    // 多通道默认音量 单位回应声音，默认0.00
     constant real      bj_SPEECH_VOLUME_UNITSOUNDS      = 0.00
+    // 多通道默认音量 战斗声音，默认0.25
     constant real      bj_SPEECH_VOLUME_COMBAT          = 0.25
+    // 多通道默认音量 动画和法术声音，默认0.25
     constant real      bj_SPEECH_VOLUME_SPELLS          = 0.25
+    // 多通道默认音量 用户界面（UI）声音，默认0.00
     constant real      bj_SPEECH_VOLUME_UI              = 0.00
+    // 多通道默认音量 音乐，默认0.55
     constant real      bj_SPEECH_VOLUME_MUSIC           = 0.55
+    // 多通道默认音量 场景配音，默认1.00
     constant real      bj_SPEECH_VOLUME_AMBIENTSOUNDS   = 1.00
+    // 多通道默认音量 火焰声音，默认0.60
     constant real      bj_SPEECH_VOLUME_FIRE            = 0.60
 
     // Smart pan settings
+    // 必要时平移镜头动作的距离限制，默认500
+    // 超过该值但不超过 bj_SMARTPAN_TRESHOLD_SNAP 时，使用限定的时间平移，低于该值时不平移
     constant real      bj_SMARTPAN_TRESHOLD_PAN         = 500
+    // 必要时平移镜头动作的距离限制，默认3500
+    // 平移距离超过该值时，立即完成平移（限定的时间被替换为0秒）
     constant real      bj_SMARTPAN_TRESHOLD_SNAP        = 3500
 
     // QueuedTriggerExecute settings
+    // 最大触发器队列，默认100
     constant integer   bj_MAX_QUEUED_TRIGGERS           = 100
+    // 触发器队列超时时间，默认180.00
     constant real      bj_QUEUED_TRIGGER_TIMEOUT        = 180.00
 
     // Campaign indexing constants
@@ -474,21 +496,21 @@ globals
     constant integer   bj_CINEMATICINDEX_XED      = 10
 
     // Alliance settings
-    // 联盟设置 - 不结盟
+    // 联盟设置 - 相互敌对
     constant integer   bj_ALLIANCE_UNALLIED        = 0
-    // 联盟设置 - 不结盟视野
+    // 联盟设置 - 相互敌对但共享视野
     constant integer   bj_ALLIANCE_UNALLIED_VISION = 1
-    // 联盟设置 - 结盟
+    // 联盟设置 - 相互结盟
     constant integer   bj_ALLIANCE_ALLIED          = 2
-    // 联盟设置 - 结盟视野
+    // 联盟设置 - 相互结盟且共享视野
     constant integer   bj_ALLIANCE_ALLIED_VISION   = 3
-    // 联盟设置 - 结盟单位
+    // 联盟设置 - 相互结盟并共享视野和部分单位
     constant integer   bj_ALLIANCE_ALLIED_UNITS    = 4
-    // 联盟设置 - 高级单位
+    // 联盟设置 - 相互结盟并共享视野和所有单位
     constant integer   bj_ALLIANCE_ALLIED_ADVUNITS = 5
-    // 联盟设置 - 中立
+    // 联盟设置 - 相互中立
     constant integer   bj_ALLIANCE_NEUTRAL         = 6
-    // 联盟设置 - 中立视野
+    // 联盟设置 - 相互中立但共享视野
     constant integer   bj_ALLIANCE_NEUTRAL_VISION  = 7
 
     // Keyboard Event Types
@@ -638,11 +660,11 @@ globals
     constant integer   bj_UNIT_STATE_METHOD_MAXIMUM  = 3
 
     // Gate operations
-    // （操作可破坏物）门 - 关闭
+    // 操作可破坏物 - 关闭门
     constant integer   bj_GATEOPERATION_CLOSE      = 0
-    // （操作可破坏物）门 - 开启
+    // 操作可破坏物 - 开启门
     constant integer   bj_GATEOPERATION_OPEN       = 1
-    // （操作可破坏物）门 - 摧毁
+    // 操作可破坏物 - 摧毁门
     constant integer   bj_GATEOPERATION_DESTROY    = 2
 
 	// Game cache value types
@@ -730,15 +752,26 @@ globals
     constant integer   bj_CORPSETYPE_BONE          = 1
 
     // Elevator pathing-blocker destructable code
+    // 升降机路径阻断器 物编代码 'DTep'
+    // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_BLOCKER_CODE    = 'DTep'
+    // 升降机1 物编代码 'DTrf'
+    // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_CODE01          = 'DTrf'
+    // 升降机2 物编代码 'DTrx'
+    // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_CODE02          = 'DTrx'
 
     // Elevator wall codes
+    // 升降机墙壁 所有墙
     constant integer   bj_ELEVATOR_WALL_TYPE_ALL        = 0
+    // 升降机墙壁 东墙
     constant integer   bj_ELEVATOR_WALL_TYPE_EAST       = 1
+    // 升降机墙壁 北墙
     constant integer   bj_ELEVATOR_WALL_TYPE_NORTH      = 2
+    // 升降机墙壁 南墙
     constant integer   bj_ELEVATOR_WALL_TYPE_SOUTH      = 3
+    // 升降机墙壁 西墙
     constant integer   bj_ELEVATOR_WALL_TYPE_WEST       = 4
 
     //-----------------------------------------------------------------------
@@ -750,7 +783,8 @@ globals
     force              bj_FORCE_ALL_PLAYERS        = null
     // 玩家组
     force array        bj_FORCE_PLAYER
-    // 英雄初始物品要给予的次数，游戏初始化时会根据游戏版本自动设置
+    // 给予首发英雄初始物品的数量
+    // 游戏初始化时会根据游戏版本自动设置
     integer            bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
@@ -778,10 +812,13 @@ globals
     // Game started detection vars
     // 开局计时器
     timer              bj_gameStartedTimer         = null
+    // 游戏是否已经开始
     boolean            bj_gameStarted              = false
+    // 开局音量控制计时器
     timer              bj_volumeGroupsTimer        = CreateTimer()
 
     // Singleplayer check
+    // 是否单机（只有一位人类玩家），默认为假
     boolean            bj_isSinglePlayer           = false
 
     // Day/Night Cycle vars
@@ -798,7 +835,7 @@ globals
 
     // Triggered sounds
     //sound              bj_pingMinimapSound         = null
-    // 音效 救援音效
+    // 音效 可营救音效
     sound              bj_rescueSound              = null
     // 音效 发现任务音效
     sound              bj_questDiscoveredSound     = null
@@ -841,27 +878,53 @@ globals
     itemtype           bj_stockPickedItemType
 
     // Melee vars
+    // 可见性触发器
     trigger            bj_meleeVisibilityTrained   = null
+    // 可见性
     boolean            bj_meleeVisibilityIsDay     = true
+    // 是否给予首发英雄初始物品
     boolean            bj_meleeGrantHeroItems      = false
+    // 距离玩家开始点最近的金矿所在的点
     location           bj_meleeNearestMineToLoc    = null
+    // 距离玩家开始点最近的金矿
     unit               bj_meleeNearestMine         = null
+    // 距离玩家开始点最近的金矿的距离，默认值0.00
     real               bj_meleeNearestMineDist     = 0.00
+    // 游戏是否结束
     boolean            bj_meleeGameOver            = false
+    // 游戏失败判断布尔值数组，每位玩家配一个
     boolean array      bj_meleeDefeated
+    // 游戏胜利判断布尔值数组，每位玩家配一个
     boolean array      bj_meleeVictoried
     unit array         bj_ghoul
+    // 玩家即将暴露计时器
+    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这就是计时器
     timer array        bj_crippledTimer
+    // 玩家即将暴露计时器计时窗口
+    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这就是计时窗口
     timerdialog array  bj_crippledTimerWindows
+    // 玩家即将暴露判断布尔值数组，每位玩家配一个
+    // 失去所有基地时，系统会提示要在限定内造一个基地，失去所有基地会变为真
     boolean array      bj_playerIsCrippled
+    // 玩家暴露判断布尔值数组，每位玩家配一个
+    // 失去所有基地时，系统会提示要在限定内造一个基地，如果计时完成没有造，变为真
     boolean array      bj_playerIsExposed
+    // 玩家暴露计时器
+    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这就是暴露时间的计时器
     boolean            bj_finishSoonAllExposed     = false
+    // 玩家即将暴露计时器计时窗口
+    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这就是暴露时间的计时窗口
     timerdialog        bj_finishSoonTimerDialog    = null
+    // 首发英雄初始物品创建数量数组，每位玩家配一个
+    // 用于记录已经给首发创建了多少个初始物品
     integer array      bj_meleeTwinkedHeroes
 
     // Rescue behavior vars
+    // 营救触发器
     trigger            bj_rescueUnitBehavior       = null
+    // 是否允许可营救单位的颜色在被救援后改变
     boolean            bj_rescueChangeColorUnit    = true
+    // 是否允许可营救建筑的颜色在被救援后改变
     boolean            bj_rescueChangeColorBldg    = true
 
     // Transmission vars
@@ -905,11 +968,17 @@ globals
     // Helper vars (for Filter and Enum funcs)
     integer            bj_destInRegionDiesCount    = 0
     trigger            bj_destInRegionDiesTrig     = null
+    // 单位组内单位数量
     integer            bj_groupCountUnits          = 0
+    // 玩家组内的玩家数量
     integer            bj_forceCountPlayers        = 0
+    // 执行单位组动作时，选取的单位类型
     integer            bj_groupEnumTypeId          = 0
+    // 执行玩家区域单位组动作是，选取的玩家
     player             bj_groupEnumOwningPlayer    = null
+    // 指代往 A单位组 添加 B单位组 单位完成后，需要摧毁的单位组
     group              bj_groupAddGroupDest        = null
+    // 指代 A单位组 移除 B单位组 单位完成后，需要摧毁的单位组
     group              bj_groupRemoveGroupDest     = null
     integer            bj_groupRandomConsidered    = 0
     unit               bj_groupRandomCurrentPick   = null
@@ -936,13 +1005,16 @@ globals
     boolean            bj_isUnitGroupEmptyResult   = true
     boolean            bj_isUnitGroupInRectResult  = true
     rect               bj_isUnitGroupInRectRect    = null
+    // 游戏结束时是否展示游戏得分
     boolean            bj_changeLevelShowScores    = false
+    // 下一张地图的名字（用于战役）
     string             bj_changeLevelMapName       = null
     group              bj_suspendDecayFleshGroup   = CreateGroup()
     group              bj_suspendDecayBoneGroup    = CreateGroup()
     timer              bj_delayedSuspendDecayTimer = CreateTimer()
     trigger            bj_delayedSuspendDecayTrig  = null
     integer            bj_livingPlayerUnitsTypeId  = 0
+    // 最后死亡的目标
     widget             bj_lastDyingWidget          = null
 
     // Random distribution vars
@@ -1775,7 +1847,7 @@ function GetCurrentCameraSetup takes nothing returns camerasetup
 endfunction
 
 
-// 应用摄像机 (限时)
+// 应用镜头 (限时)
 function CameraSetupApplyForPlayer takes boolean doPan, camerasetup whichSetup, player whichPlayer, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1792,13 +1864,13 @@ function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichS
 endfunction
 
 
-// 摄像机的数值
+// 镜头的数值
 function CameraSetupGetFieldSwap takes camerafield whichField, camerasetup whichSetup returns real
     return CameraSetupGetField(whichSetup, whichField)
 endfunction
 
 
-// 设定摄像机属性 (限时)
+// 设定镜头属性 (限时)
 function SetCameraFieldForPlayer takes player whichPlayer, camerafield whichField, real value, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1807,7 +1879,7 @@ function SetCameraFieldForPlayer takes player whichPlayer, camerafield whichFiel
 endfunction
 
 
-// 锁定摄像机目标到单位
+// 锁定镜头目标到单位
 function SetCameraTargetControllerNoZForPlayer takes player whichPlayer, unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1834,7 +1906,7 @@ function SetCameraPositionLocForPlayer takes player whichPlayer, location loc re
 endfunction
 
 
-// 旋转摄像机 (限时)
+// 旋转镜头 (限时)
 function RotateCameraAroundLocBJ takes real degrees, location loc, player whichPlayer, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1843,7 +1915,7 @@ function RotateCameraAroundLocBJ takes real degrees, location loc, player whichP
 endfunction
 
 
-// 平移摄像机
+// 平移镜头
 function PanCameraToForPlayer takes player whichPlayer, real x, real y returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1852,7 +1924,7 @@ function PanCameraToForPlayer takes player whichPlayer, real x, real y returns n
 endfunction
 
 
-// 平移摄像机
+// 平移镜头
 function PanCameraToLocForPlayer takes player whichPlayer, location loc returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1861,7 +1933,7 @@ function PanCameraToLocForPlayer takes player whichPlayer, location loc returns 
 endfunction
 
 
-// 平移摄像机 定时
+// 平移镜头 定时
 function PanCameraToTimedForPlayer takes player whichPlayer, real x, real y, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1870,7 +1942,7 @@ function PanCameraToTimedForPlayer takes player whichPlayer, real x, real y, rea
 endfunction
 
 
-// 平移摄像机 (限时)
+// 平移镜头 (限时)
 function PanCameraToTimedLocForPlayer takes player whichPlayer, location loc, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1879,7 +1951,7 @@ function PanCameraToTimedLocForPlayer takes player whichPlayer, location loc, re
 endfunction
 
 
-// 在指定高度平移摄像机 (限时)
+// 在指定高度平移镜头 (限时)
 function PanCameraToTimedLocWithZForPlayer takes player whichPlayer, location loc, real zOffset, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1888,7 +1960,7 @@ function PanCameraToTimedLocWithZForPlayer takes player whichPlayer, location lo
 endfunction
 
 
-// 必要时平移摄像机 (限时)
+// 必要时平移镜头 (限时)
 function SmartCameraPanBJ takes player whichPlayer, location loc, real duration returns nothing
     local real dist
 	local location cameraLoc = GetCameraTargetPositionLoc()
@@ -1910,7 +1982,7 @@ function SmartCameraPanBJ takes player whichPlayer, location loc, real duration 
 endfunction
 
 
-// 播放动画摄像机
+// 播放动画镜头
 function SetCinematicCameraForPlayer takes player whichPlayer, string cameraModelFile returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1919,7 +1991,7 @@ function SetCinematicCameraForPlayer takes player whichPlayer, string cameraMode
 endfunction
 
 
-// 重置游戏摄像机
+// 重置游戏镜头
 function ResetToGameCameraForPlayer takes player whichPlayer, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1928,7 +2000,7 @@ function ResetToGameCameraForPlayer takes player whichPlayer, real duration retu
 endfunction
 
 
-// 摇摆摄像机来源
+// 摇摆镜头来源
 function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1937,7 +2009,7 @@ function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude,
 endfunction
 
 
-// 摇摆摄像机目标
+// 摇摆镜头目标
 function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1946,7 +2018,7 @@ function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude,
 endfunction
 
 
-// 摇动摄像机
+// 摇动镜头
 function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude returns nothing
     local real richter = magnitude
     if (richter > 5.0) then
@@ -1963,7 +2035,7 @@ function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude retu
 endfunction
 
 
-// 停止 摇摆/摇动 摄像机
+// 停止 摇摆/摇动 镜头
 function CameraClearNoiseForPlayer takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2005,7 +2077,7 @@ function GetEntireMapRect takes nothing returns rect
 endfunction
 
 
-// 设置摄像机边界
+// 设置镜头边界
 function SetCameraBoundsToRect takes rect r returns nothing
     local real minX = GetRectMinX(r)
     local real minY = GetRectMinY(r)
@@ -2094,7 +2166,7 @@ function SetCameraQuickPositionLoc takes location loc returns nothing
 endfunction
 
 
-// 停止摄像机
+// 停止镜头
 function StopCameraForPlayerBJ takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2103,7 +2175,7 @@ function StopCameraForPlayerBJ takes player whichPlayer returns nothing
 endfunction
 
 
-// 锁定摄像机方向到单位
+// 锁定镜头方向到单位
 function SetCameraOrientControllerForPlayerBJ takes player whichPlayer, unit whichUnit, real xoffset, real yoffset returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2112,13 +2184,13 @@ function SetCameraOrientControllerForPlayerBJ takes player whichPlayer, unit whi
 endfunction
 
 
-// 改变摄像机平滑参数
+// 改变镜头平滑参数
 function CameraSetSmoothingFactorBJ takes real factor returns nothing
     call CameraSetSmoothingFactor(factor)
 endfunction
 
 
-// 重置摄像机平滑参数
+// 重置镜头平滑参数
 function CameraResetSmoothingFactorBJ takes nothing returns nothing
     call CameraSetSmoothingFactor(0)
 endfunction
@@ -3170,7 +3242,7 @@ function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 将所有音量设置为动画
+// 设置多通道音量为电影模式
 function SetCineModeVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3181,7 +3253,7 @@ function SetCineModeVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 设置语音多通道音量环境(立即)
+// 设置语音多通道音量环境为默认值(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT,  bj_SPEECH_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS,    bj_SPEECH_VOLUME_UNITSOUNDS)
@@ -3194,7 +3266,7 @@ function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 将所有音量设置为说话
+// 设置多通道音量为语音模式
 function SetSpeechVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3211,7 +3283,7 @@ function VolumeGroupResetImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 重置所有音量
+// 重置所有通道音量为预设值
 function VolumeGroupResetBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -7825,6 +7897,7 @@ endfunction
 //   - Reset the camera smoothing factor
 //
 // 切换影片模式(时间)
+// @param interfaceFadeTime淡出时间
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
     // If the game hasn't started yet, perform interface fades immediately
     if (not bj_gameStarted) then
@@ -8028,7 +8101,7 @@ endfunction
 // including a rescue sound, flashing selection circle, ownership change,
 // and optionally a unit color change.
 //
-// 营救单位
+// 可营救单位
 function RescueUnitBJ takes unit whichUnit, player rescuer, boolean changeColor returns nothing
     if IsUnitDeadBJ(whichUnit) or (GetOwningPlayer(whichUnit) == rescuer) then
         return
@@ -8055,7 +8128,7 @@ endfunction
 // Attempt to init triggers for default rescue behavior.  For performance
 // reasons, this should only be attempted if a player is set to Rescuable,
 // or if a specific unit is thus flagged.
-//
+// 初始化营救触发
 function TryInitRescuableTriggersBJ takes nothing returns nothing
     local integer index
 
@@ -8075,7 +8148,7 @@ endfunction
 // Determines whether or not rescued units automatically change color upon
 // being rescued.
 //
-// 安排营救单位行为
+// 设置可营救单位的颜色
 function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
     set bj_rescueChangeColorUnit = changeColor
 endfunction
@@ -8084,19 +8157,19 @@ endfunction
 // Determines whether or not rescued buildings automatically change color
 // upon being rescued.
 //
-// 设置营救颜色(建筑)
+// 设置可营救建筑的颜色
 function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothing
     set bj_rescueChangeColorBldg = changeColor
 endfunction
 
 
-// 安排营救单位
+// 执行创建可营救单位
 function MakeUnitRescuableToForceBJEnum takes nothing returns nothing
     call TryInitRescuableTriggersBJ()
     call SetUnitRescuable(bj_makeUnitRescuableUnit, GetEnumPlayer(), bj_makeUnitRescuableFlag)
 endfunction
 
-
+// 创建可营救单位
 function MakeUnitRescuableToForceBJ takes unit whichUnit, boolean isRescuable, force whichForce returns nothing
     // Flag the unit as rescuable/unrescuable for the appropriate players.
     set bj_makeUnitRescuableUnit = whichUnit
@@ -8104,7 +8177,7 @@ function MakeUnitRescuableToForceBJ takes unit whichUnit, boolean isRescuable, f
     call ForForce(whichForce, function MakeUnitRescuableToForceBJEnum)
 endfunction
 
-
+// 初始化可营救触发
 function InitRescuableBehaviorBJ takes nothing returns nothing
     local integer index
 
@@ -9203,7 +9276,7 @@ function GetLastHauntedGoldMine takes nothing returns unit
 endfunction
 
 
-// 点是不死族的地表
+// 指定点是否被荒芜地表（不死族）覆盖
 function IsPointBlightedBJ takes location where returns boolean
     return IsPointBlighted(GetLocationX(where), GetLocationY(where))
 endfunction
@@ -9344,13 +9417,13 @@ function SaveDyingWidget takes nothing returns nothing
 endfunction
 
 
-// 创造/删除 不死族地表在区域
+// 创造/删除 荒芜地表（不死族）在指定方形区域
 function SetBlightRectBJ takes boolean addBlight, player whichPlayer, rect r returns nothing
     call SetBlightRect(whichPlayer, r, addBlight)
 endfunction
 
 
-// 创造/删除 不死族地表在圆周
+// 创造/删除 荒芜地表（不死族）在指定圆形区域
 function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, location loc, real radius returns nothing
     call SetBlightLoc(whichPlayer, loc, radius, addBlight)
 endfunction
@@ -9498,7 +9571,7 @@ endfunction
 // The first N heroes trained or hired for each player start off with a
 // standard set of items.  This is currently:
 //   - 1x Scroll of Town Portal
-//
+// 给首发英雄创建初始物品
 function MeleeGrantItemsToHero takes unit whichUnit returns nothing
     local integer owner   = GetPlayerId(GetOwningPlayer(whichUnit))
 
@@ -9520,7 +9593,7 @@ function MeleeGrantItemsToHiredHero takes nothing returns nothing
 endfunction
 
 
-// 英雄初始物品
+// 给予首发英雄初始物品
 function MeleeGrantHeroItems takes nothing returns nothing
     local integer index
     local trigger trig
@@ -9659,7 +9732,7 @@ function MeleeFindNearestMine takes location src, real range returns unit
     return bj_meleeNearestMine
 endfunction
 
-
+// 创建随机英雄（进入游戏前在高级勾选 使用随机英雄）
 function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id3, integer id4, location loc returns unit
     local unit    hero = null
     local integer roll
@@ -10517,7 +10590,8 @@ endfunction
 
 
 // Returns a race-specific "build X" label for cripple timers.
-//
+// 建造默认提示文本
+// 失去全部基地时，系统会提示要在限定时间建造一个一本基地，否则将会暴露，这里控制具体的提示文本
 function MeleeGetCrippledTimerMessage takes player whichPlayer returns string
     local race r = GetPlayerRace(whichPlayer)
 
@@ -11377,7 +11451,7 @@ function InitBlizzardGlobals takes nothing returns nothing
     endif
 endfunction
 
-
+// 初始化触发器队列
 function InitQueuedTriggers takes nothing returns nothing
     set bj_queuedExecTimeout = CreateTrigger()
     call TriggerRegisterTimerExpireEvent(bj_queuedExecTimeout, bj_queuedExecTimeoutTimer)
@@ -11390,7 +11464,8 @@ function InitMapRects takes nothing returns nothing
     set bj_mapInitialCameraBounds = GetCurrentCameraBoundsMapRectBJ()
 endfunction
 
-
+// 初始化单位升级类科技等级上限（升级后会改变训练/召唤的单位类型的科技）
+// 默认针对：坦克的火箭弹幕、狂战士升级、骷髅战士
 function InitSummonableCaps takes nothing returns nothing
     local integer index
 
