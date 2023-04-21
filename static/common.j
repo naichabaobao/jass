@@ -2926,187 +2926,187 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_DURATION_EGM2 = ConvertAbilityRealLevelField('Egm2')
     // 技能实数等级域 效果延迟 ('Fla2')
 	constant abilityreallevelfield ABILITY_RLF_EFFECT_DELAY_FLA2 = ConvertAbilityRealLevelField('Fla2')
-    // 技能实数等级域 
+    // 技能实数等级域 采矿持续时间 ('Gld2')
 	constant abilityreallevelfield ABILITY_RLF_MINING_DURATION = ConvertAbilityRealLevelField('Gld2')
-    // 技能实数等级域 
+    // 技能实数等级域 墓碑范围 ('Gyd2')
 	constant abilityreallevelfield ABILITY_RLF_RADIUS_OF_GRAVESTONES = ConvertAbilityRealLevelField('Gyd2')
-    // 技能实数等级域 
+    // 技能实数等级域 尸体范围 ('Gyd3')
 	constant abilityreallevelfield ABILITY_RLF_RADIUS_OF_CORPSES = ConvertAbilityRealLevelField('Gyd3')
-    // 技能实数等级域 
+    // 技能实数等级域 治疗生命值 ('Hea1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_HEA1 = ConvertAbilityRealLevelField('Hea1')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击增加（%） ('Inf1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE_PERCENT_INF1 = ConvertAbilityRealLevelField('Inf1')
-    // 技能实数等级域 
+    // 技能实数等级域 自动施法范围 ('Inf3')
 	constant abilityreallevelfield ABILITY_RLF_AUTOCAST_RANGE = ConvertAbilityRealLevelField('Inf3')
-    // 技能实数等级域 
+    // 技能实数等级域 生命恢复速度 ('Inf4')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGEN_RATE = ConvertAbilityRealLevelField('Inf4')
-    // 技能实数等级域 
+    // 技能实数等级域 效果延迟 ('Lit1')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DELAY_LIT1 = ConvertAbilityRealLevelField('Lit1')
-    // 技能实数等级域 
+    // 技能实数等级域 效果持续时间 ('Lit2')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DURATION_LIT2 = ConvertAbilityRealLevelField('Lit2')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Lsh1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_LSH1 = ConvertAbilityRealLevelField('Lsh1')
-    // 技能实数等级域 
+    // 技能实数等级域 恢复每点魔法所需魔法值 ('Mbt1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_GAINED = ConvertAbilityRealLevelField('Mbt1')
-    // 技能实数等级域 
+    // 技能实数等级域 恢复每点生命所需魔法值 ('Mbt2')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_MBT2 = ConvertAbilityRealLevelField('Mbt2')
-    // 技能实数等级域 
+    // 技能实数等级域 自动施法魔法要求 ('Mbt3')
 	constant abilityreallevelfield ABILITY_RLF_AUTOCAST_REQUIREMENT = ConvertAbilityRealLevelField('Mbt3')
-    // 技能实数等级域 
+    // 技能实数等级域 水面高度 ('Mbt4')
 	constant abilityreallevelfield ABILITY_RLF_WATER_HEIGHT = ConvertAbilityRealLevelField('Mbt4')
-    // 技能实数等级域 
+    // 技能实数等级域 激活延迟 ('Min1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_DELAY_MIN1 = ConvertAbilityRealLevelField('Min1')
-    // 技能实数等级域 
+    // 技能实数等级域 转换时间 ('Min2')
 	constant abilityreallevelfield ABILITY_RLF_INVISIBILITY_TRANSITION_TIME = ConvertAbilityRealLevelField('Min2')
-    // 技能实数等级域 
+    // 技能实数等级域 激活范围 ('Neu1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_RADIUS = ConvertAbilityRealLevelField('Neu1')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒恢复值 ('Arm1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_REGENERATED = ConvertAbilityRealLevelField('Arm1')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Poi1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_POI1 = ConvertAbilityRealLevelField('Poi1')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度系数（%） ('Poi2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_POI2 = ConvertAbilityRealLevelField('Poi2')
-    // 技能实数等级域 
+    // 技能实数等级域 移动速度系数（%） ('Poi3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POI3 = ConvertAbilityRealLevelField('Poi3')
-    // 技能实数等级域 
+    // 技能实数等级域 额外伤害 ('Poa1')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_POA1 = ConvertAbilityRealLevelField('Poa1')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Poa2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_POA2 = ConvertAbilityRealLevelField('Poa2')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度系数 ('Poa3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_POA3 = ConvertAbilityRealLevelField('Poa3')
-    // 技能实数等级域 
+    // 技能实数等级域 移动速度系数 ('Poa4')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POA4 = ConvertAbilityRealLevelField('Poa4')   
-    // 技能实数等级域 
+    // 技能实数等级域 施法时所受伤害值 ('Pos2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_AMPLIFICATION = ConvertAbilityRealLevelField('Pos2')
-    // 技能实数等级域 
+    // 技能实数等级域 施放几率 ('War1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_STOMP_PERCENT = ConvertAbilityRealLevelField('War1')
-    // 技能实数等级域 
+    // 技能实数等级域 附加伤害 ('War2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_WAR2 = ConvertAbilityRealLevelField('War2')
-    // 技能实数等级域 
+    // 技能实数等级域 全伤害范围 ('War3')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_RADIUS_WAR3 = ConvertAbilityRealLevelField('War3')
-    // 技能实数等级域 
+    // 技能实数等级域 半伤害范围 ('War4')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_RADIUS_WAR4 = ConvertAbilityRealLevelField('War4')
-    // 技能实数等级域 
+    // 技能实数等级域 对召唤单位伤害 ('Prg3')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_PRG3 = ConvertAbilityRealLevelField('Prg3')
-    // 技能实数等级域 
+    // 技能实数等级域 单位麻痹时间 ('Prg4')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_PAUSE_DURATION = ConvertAbilityRealLevelField('Prg4')
-    // 技能实数等级域 
+    // 技能实数等级域 英雄麻痹时间 ('Prg5')
 	constant abilityreallevelfield ABILITY_RLF_HERO_PAUSE_DURATION = ConvertAbilityRealLevelField('Prg5')
-    // 技能实数等级域 
+    // 技能实数等级域 生命值恢复 ('Rej1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_REJ1 = ConvertAbilityRealLevelField('Rej1')
-    // 技能实数等级域 
+    // 技能实数等级域 魔法值恢复 ('Rej2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_POINTS_GAINED_REJ2 = ConvertAbilityRealLevelField('Rej2')
-    // 技能实数等级域 
+    // 技能实数等级域 最小生命需求 ('Rpb3')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_LIFE_REQUIRED = ConvertAbilityRealLevelField('Rpb3')
-    // 技能实数等级域 
+    // 技能实数等级域 最小魔法需求 ('Rpb4')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_MANA_REQUIRED = ConvertAbilityRealLevelField('Rpb4')
-    // 技能实数等级域 
+    // 技能实数等级域 修理费用比率 ('Rep1')
 	constant abilityreallevelfield ABILITY_RLF_REPAIR_COST_RATIO = ConvertAbilityRealLevelField('Rep1')
-    // 技能实数等级域 
+    // 技能实数等级域 修理时间比率 ('Rep2')
 	constant abilityreallevelfield ABILITY_RLF_REPAIR_TIME_RATIO = ConvertAbilityRealLevelField('Rep2')
-    // 技能实数等级域 
+    // 技能实数等级域 快速建造费用比率 ('Rep3')
 	constant abilityreallevelfield ABILITY_RLF_POWERBUILD_COST = ConvertAbilityRealLevelField('Rep3')
-    // 技能实数等级域 
+    // 技能实数等级域 快速建造时间比率 ('Rep4')
 	constant abilityreallevelfield ABILITY_RLF_POWERBUILD_RATE = ConvertAbilityRealLevelField('Rep4')
-    // 技能实数等级域 
+    // 技能实数等级域 海上修理范围提升 ('Rep5')
 	constant abilityreallevelfield ABILITY_RLF_NAVAL_RANGE_BONUS = ConvertAbilityRealLevelField('Rep5')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击增加（%） ('Roa1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE_PERCENT_ROA1 = ConvertAbilityRealLevelField('Roa1')
-    // 技能实数等级域 
+    // 技能实数等级域 生命恢复速度 ('Roa3')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGENERATION_RATE = ConvertAbilityRealLevelField('Roa3')
-    // 技能实数等级域 
+    // 技能实数等级域 魔法再生 ('Roa4')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGEN = ConvertAbilityRealLevelField('Roa4')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击增加 ('Nbr1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE = ConvertAbilityRealLevelField('Nbr1')
-    // 技能实数等级域 
+    // 技能实数等级域 掠夺比率 ('Sal1')
 	constant abilityreallevelfield ABILITY_RLF_SALVAGE_COST_RATIO = ConvertAbilityRealLevelField('Sal1')
-    // 技能实数等级域 
+    // 技能实数等级域 飞行视野范围 ('Esn1')
 	constant abilityreallevelfield ABILITY_RLF_IN_FLIGHT_SIGHT_RADIUS = ConvertAbilityRealLevelField('Esn1')
-    // 技能实数等级域 
+    // 技能实数等级域 盘踞视野范围 ('Esn2')
 	constant abilityreallevelfield ABILITY_RLF_HOVERING_SIGHT_RADIUS = ConvertAbilityRealLevelField('Esn2')
-    // 技能实数等级域 
+    // 技能实数等级域 盘踞高度 ('Esn3')
 	constant abilityreallevelfield ABILITY_RLF_HOVERING_HEIGHT = ConvertAbilityRealLevelField('Esn3')
-    // 技能实数等级域 
+    // 技能实数等级域 猫头鹰的持续时间 ('Esn5')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_OF_OWLS = ConvertAbilityRealLevelField('Esn5')
-    // 技能实数等级域 
+    // 技能实数等级域 淡化转换时间 ('Shm1')
 	constant abilityreallevelfield ABILITY_RLF_FADE_DURATION = ConvertAbilityRealLevelField('Shm1')
-    // 技能实数等级域 
+    // 技能实数等级域 昼夜交替转换时间 ('Shm2')
 	constant abilityreallevelfield ABILITY_RLF_DAY_NIGHT_DURATION = ConvertAbilityRealLevelField('Shm2')
-    // 技能实数等级域 
+    // 技能实数等级域 行动转换时间 ('Shm3')
 	constant abilityreallevelfield ABILITY_RLF_ACTION_DURATION = ConvertAbilityRealLevelField('Shm3')
-    // 技能实数等级域 
+    // 技能实数等级域 降低移动速度系数（%） ('Slo1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SLO1 = ConvertAbilityRealLevelField('Slo1')
-    // 技能实数等级域 
+    // 技能实数等级域 降低攻击速度系数（%） ('Slo2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_SLO2 = ConvertAbilityRealLevelField('Slo2')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Spo1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_SPO1 = ConvertAbilityRealLevelField('Spo1')
-    // 技能实数等级域 
+    // 技能实数等级域 降低移动速度系数（%） ('Spo2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SPO2 = ConvertAbilityRealLevelField('Spo2')
-    // 技能实数等级域 
+    // 技能实数等级域 降低攻击速度系数（%） ('Spo3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_SPO3 = ConvertAbilityRealLevelField('Spo3')
-    // 技能实数等级域 
+    // 技能实数等级域 激活延迟 ('Sta1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_DELAY_STA1 = ConvertAbilityRealLevelField('Sta1')
-    // 技能实数等级域 
+    // 技能实数等级域 侦察范围 ('Sta2')
 	constant abilityreallevelfield ABILITY_RLF_DETECTION_RADIUS_STA2 = ConvertAbilityRealLevelField('Sta2')
-    // 技能实数等级域 
+    // 技能实数等级域 爆炸范围 ('Sta3')
 	constant abilityreallevelfield ABILITY_RLF_DETONATION_RADIUS = ConvertAbilityRealLevelField('Sta3')
-    // 技能实数等级域 
+    // 技能实数等级域 眩晕持续时间 ('Sta4')
 	constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_STA4 = ConvertAbilityRealLevelField('Sta4')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度奖励（%） ('Uhf1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_BONUS_PERCENT = ConvertAbilityRealLevelField('Uhf1')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Uhf2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_UHF2 = ConvertAbilityRealLevelField('Uhf2')
-    // 技能实数等级域 
+    // 技能实数等级域 采集木材数/间隔 ('Wha1')
 	constant abilityreallevelfield ABILITY_RLF_LUMBER_PER_INTERVAL = ConvertAbilityRealLevelField('Wha1')
-    // 技能实数等级域 
+    // 技能实数等级域 附着点高度 ('Wha3')
 	constant abilityreallevelfield ABILITY_RLF_ART_ATTACHMENT_HEIGHT = ConvertAbilityRealLevelField('Wha3')
-    // 技能实数等级域 
+    // 技能实数等级域 传送区域宽度 ('Wrp1')
 	constant abilityreallevelfield ABILITY_RLF_TELEPORT_AREA_WIDTH = ConvertAbilityRealLevelField('Wrp1')
-    // 技能实数等级域 
+    // 技能实数等级域 传送区域高度 ('Wrp2')
 	constant abilityreallevelfield ABILITY_RLF_TELEPORT_AREA_HEIGHT = ConvertAbilityRealLevelField('Wrp2')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击偷取生命（%） ('Ivam')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_STOLEN_PER_ATTACK = ConvertAbilityRealLevelField('Ivam')
-    // 技能实数等级域 
+    // 技能实数等级域 附加伤害 ('Idam')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_IDAM = ConvertAbilityRealLevelField('Idam')
-    // 技能实数等级域 
+    // 技能实数等级域 击中单位几率 ('Iob2')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_UNITS_PERCENT = ConvertAbilityRealLevelField('Iob2')
-    // 技能实数等级域 
+    // 技能实数等级域 击中英雄几率 ('Iob3')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_HEROS_PERCENT = ConvertAbilityRealLevelField('Iob3')
-    // 技能实数等级域 
+    // 技能实数等级域 击中召唤物几率 ('Iob4')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_SUMMONS_PERCENT = ConvertAbilityRealLevelField('Iob4')
-    // 技能实数等级域 
+    // 技能实数等级域 目标效果延迟 ('Idel')
 	constant abilityreallevelfield ABILITY_RLF_DELAY_FOR_TARGET_EFFECT = ConvertAbilityRealLevelField('Idel')
-    // 技能实数等级域 
+    // 技能实数等级域 施加伤害（%） ('Iild')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_PERCENT_OF_NORMAL = ConvertAbilityRealLevelField('Iild')
-    // 技能实数等级域 
+    // 技能实数等级域 受到伤害倍数 ('Iilw')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RECEIVED_MULTIPLIER = ConvertAbilityRealLevelField('Iilw')
-    // 技能实数等级域 
+    // 技能实数等级域 魔法回复奖励 ('Imrp')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGENERATION_BONUS_AS_FRACTION_OF_NORMAL = ConvertAbilityRealLevelField('Imrp')
-    // 技能实数等级域 
+    // 技能实数等级域 移动速度增加（%） ('Ispi')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_ISPI = ConvertAbilityRealLevelField('Ispi')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Idps')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_IDPS = ConvertAbilityRealLevelField('Idps')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度增加（% ） ('Cac1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_DAMAGE_INCREASE_CAC1 = ConvertAbilityRealLevelField('Cac1')
-    // 技能实数等级域 
+    // 技能实数等级域 每秒伤害 ('Cor1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_COR1 = ConvertAbilityRealLevelField('Cor1')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度增加（%） ('Isx1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_ISX1 = ConvertAbilityRealLevelField('Isx1')
-    // 技能实数等级域 
+    // 技能实数等级域 伤害 ('Wrs1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_WRS1 = ConvertAbilityRealLevelField('Wrs1')
-    // 技能实数等级域 
+    // 技能实数等级域 地形变形幅度 ('Wrs2')
 	constant abilityreallevelfield ABILITY_RLF_TERRAIN_DEFORMATION_AMPLITUDE = ConvertAbilityRealLevelField('Wrs2')
-    // 技能实数等级域 
+    // 技能实数等级域 伤害 ('Ctc1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_CTC1 = ConvertAbilityRealLevelField('Ctc1')
-    // 技能实数等级域 
+    // 技能实数等级域 指定目标伤害 ('Ctc2')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_TO_TARGET = ConvertAbilityRealLevelField('Ctc2')
-    // 技能实数等级域 
+    // 技能实数等级域 移动速度减少 ('Ctc3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_CTC3 = ConvertAbilityRealLevelField('Ctc3')
-    // 技能实数等级域 
+    // 技能实数等级域 攻击速度减少 ('Ctc4')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_CTC4 = ConvertAbilityRealLevelField('Ctc4')
-    // 技能实数等级域 
+    // 技能实数等级域 伤害 ('Ctb1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_CTB1 = ConvertAbilityRealLevelField('Ctb1')
-    // 技能实数等级域 
+    // 技能实数等级域 魔法施放延迟 ('Uds2')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_DELAY_SECONDS = ConvertAbilityRealLevelField('Uds2')
     // 技能实数等级域 
 	constant abilityreallevelfield ABILITY_RLF_MANA_LOSS_PER_UNIT_DTN1 = ConvertAbilityRealLevelField('Dtn1')
