@@ -92,7 +92,7 @@ globals
     // 最大物品等级，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
     
-    // Auto Save constants  最大保存点数量，默认5
+    // Auto Save constants  最大自动保存次数，默认5
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -134,9 +134,9 @@ globals
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20.00
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 英雄初始物品要给予的次数，默认3次，即前3个获得的英雄都会给（V0表示混乱之治）
+    // 英雄初始物品给予次数，默认3次，即前3发英雄都给（V0表示混乱之治）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
-    // 英雄初始物品要给予的次数，默认1次，即只给第1个获得的英雄（V1表示冰封王座）
+    // 英雄初始物品给予次数，默认1次，即只给首发英雄（V1表示冰封王座）
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
     // Delay between a creep's death and the time it may drop an item.
@@ -522,7 +522,7 @@ globals
     // Keyboard Event Keys
     // 键盘按键事件 方向键（左）
     constant integer   bj_KEYEVENTKEY_LEFT         = 0
-    // 方键盘按键事件 方向键（右）
+    // 键盘按键事件 方向键（右）
     constant integer   bj_KEYEVENTKEY_RIGHT        = 1
     // 键盘按键事件 方向键（上）
     constant integer   bj_KEYEVENTKEY_DOWN         = 2
@@ -598,39 +598,39 @@ globals
     constant integer   bj_SORTTYPE_SORTBYLABEL     = 2
 
     // Cinematic fade filter methods
-    // 电影类型-淡入
+    // 电影淡化-淡入
     constant integer   bj_CINEFADETYPE_FADEIN      = 0
-    // 电影类型-淡出
+    // 电影淡化-淡出
     constant integer   bj_CINEFADETYPE_FADEOUT     = 1
-    // 电影类型-淡出并淡入（一并使用）
+    // 电影淡化-淡出并淡入（一并使用）
     constant integer   bj_CINEFADETYPE_FADEOUTIN   = 2
 
     // Buff removal methods
-    // BUFF 属性 - 按类别删除BUFF 肯定（正面BUFF）
+    // BUFF属性 - 按类别删除BUFF 肯定（正面BUFF）
     constant integer   bj_REMOVEBUFFS_POSITIVE     = 0
-    // BUFF 属性 - 按类别删除BUFF 否定（负面BUFF）
+    // BUFF属性 - 按类别删除BUFF 否定（负面BUFF）
     constant integer   bj_REMOVEBUFFS_NEGATIVE     = 1
-    // BUFF 属性 - 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
+    // BUFF属性 - 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer   bj_REMOVEBUFFS_ALL          = 2
-    // BUFF 属性 - 按类别删除BUFF 除终止计时器外的全部
+    // BUFF属性 - 按类别删除BUFF 除终止计时器外的全部
     constant integer   bj_REMOVEBUFFS_NONTLIFE     = 3
 
     // Buff properties - polarity
-    // BUFF 属性 - 极性 肯定（正面BUFF）
+    // BUFF属性 - 极性 肯定（正面BUFF）
     constant integer   bj_BUFF_POLARITY_POSITIVE   = 0
-    // BUFF 属性 - 极性 否定（负面BUFF）
+    // BUFF属性 - 极性 否定（负面BUFF）
     constant integer   bj_BUFF_POLARITY_NEGATIVE   = 1
-    // BUFF 属性 - 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
+    // BUFF属性 - 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
     constant integer   bj_BUFF_POLARITY_EITHER     = 2
 
     // Buff properties - resist type
-    // BUFF 属性 魔法BUFF
+    // BUFF属性 魔法BUFF
     constant integer   bj_BUFF_RESIST_MAGIC        = 0
-    // BUFF 属性 物理BUFF
+    // BUFF属性 物理BUFF
     constant integer   bj_BUFF_RESIST_PHYSICAL     = 1
-    // BUFF 属性 物理BUFF 或 魔法BUFF
+    // BUFF属性 物理BUFF 或 魔法BUFF
     constant integer   bj_BUFF_RESIST_EITHER       = 2
-    // BUFF 属性 物理BUFF 和 魔法BUFF
+    // BUFF属性 物理BUFF 和 魔法BUFF
     constant integer   bj_BUFF_RESIST_BOTH         = 3
 
     // Hero stats
@@ -822,15 +822,25 @@ globals
     boolean            bj_isSinglePlayer           = false
 
     // Day/Night Cycle vars
+    // 昼夜参数 白天声音触发器
     trigger            bj_dncSoundsDay             = null
+    // 昼夜参数 夜晚声音触发器
     trigger            bj_dncSoundsNight           = null
+    // 昼夜参数 白天环境声效
     sound              bj_dayAmbientSound          = null
+    // 昼夜参数 夜晚环境声效
     sound              bj_nightAmbientSound        = null
+    // 昼夜参数 黎明声音触发器
     trigger            bj_dncSoundsDawn            = null
+    // 昼夜参数 黄昏声音触发器
     trigger            bj_dncSoundsDusk            = null
+    // 昼夜参数 黎明声效
     sound              bj_dawnSound                = null
+    // 昼夜参数 黄昏声效
     sound              bj_duskSound                = null
+    // 昼夜参数 是否启用黎明/黄昏声效
     boolean            bj_useDawnDuskSounds        = true
+    // 昼夜参数 是否启用昼夜交替
     boolean            bj_dncIsDaytime             = false
 
     // Triggered sounds
@@ -936,21 +946,35 @@ globals
     trigger            bj_cineSceneBeingSkipped    = null
 
     // Cinematic mode vars
+    // 电影模式设置 默认速度
     gamespeed          bj_cineModePriorSpeed       = MAP_SPEED_NORMAL
+    // 电影模式设置 战争迷雾状态（启用或禁用）
     boolean            bj_cineModePriorFogSetting  = false
+    // 电影模式设置 黑色阴影状态（启用或禁用）
     boolean            bj_cineModePriorMaskSetting = false
+    // 电影模式设置 电影准备状态（完成或未完成）
     boolean            bj_cineModeAlreadyIn        = false
+    // 电影模式设置 黎明/昏黄状态（启用或禁用）
     boolean            bj_cineModePriorDawnDusk    = false
+    // 电影模式设置 保存速度，默认值0，游戏初始化后取随机数0~1000000
     integer            bj_cineModeSavedSeed        = 0
 
     // Cinematic fade vars
+    // 电影淡入淡出滤镜 淡化计时器
     timer              bj_cineFadeFinishTimer      = null
+    // 电影淡入淡出滤镜 继续淡化计时器
     timer              bj_cineFadeContinueTimer    = null
+    // 电影淡入淡出滤镜 继续淡化（红）
     real               bj_cineFadeContinueRed      = 0
+    // 电影淡入淡出滤镜 继续淡化（绿）
     real               bj_cineFadeContinueGreen    = 0
+    // 电影淡入淡出滤镜 继续淡化（蓝）
     real               bj_cineFadeContinueBlue     = 0
+    // 电影淡入淡出滤镜 透明度
     real               bj_cineFadeContinueTrans    = 0
+    // 电影淡入淡出滤镜 转化时间
     real               bj_cineFadeContinueDuration = 0
+    // 电影淡入淡出滤镜 使用图片（图片路径）
     string             bj_cineFadeContinueTex      = ""
 
     // QueuedTriggerExecute vars
@@ -966,7 +990,9 @@ globals
     trigger            bj_queuedExecTimeout        = null
 
     // Helper vars (for Filter and Enum funcs)
+    // 可破坏物死亡事件 统计死亡的可破坏物数量
     integer            bj_destInRegionDiesCount    = 0
+    // 可破坏物死亡事件 死亡的可破坏物动作的触发器
     trigger            bj_destInRegionDiesTrig     = null
     // 单位组内单位数量
     integer            bj_groupCountUnits          = 0
@@ -982,6 +1008,7 @@ globals
     group              bj_groupRemoveGroupDest     = null
     integer            bj_groupRandomConsidered    = 0
     unit               bj_groupRandomCurrentPick   = null
+    //最后创建且需要摧毁的单位组
     group              bj_groupLastCreatedDest     = null
     group              bj_randomSubGroupGroup      = null
     integer            bj_randomSubGroupWant       = 0
@@ -989,17 +1016,25 @@ globals
     real               bj_randomSubGroupChance     = 0
     integer            bj_destRandomConsidered     = 0
     destructable       bj_destRandomCurrentPick    = null
+    // 可破坏物 升降机路径阻断器
     destructable       bj_elevatorWallBlocker      = null
+    // 可破坏物 相邻的升降机
     destructable       bj_elevatorNeighbor         = null
     integer            bj_itemRandomConsidered     = 0
     item               bj_itemRandomCurrentPick    = null
     integer            bj_forceRandomConsidered    = 0
     player             bj_forceRandomCurrentPick   = null
+    // 可营救单位
     unit               bj_makeUnitRescuableUnit    = null
+    // 可营救单位是否已被营救
     boolean            bj_makeUnitRescuableFlag    = true
+    // 暂停/恢复所有单位
     boolean            bj_pauseAllUnitsFlag        = true
+    // 可破坏物中心店
     location           bj_enumDestructableCenter   = null
+    // 可破坏物半径（范围）
     real               bj_enumDestructableRadius   = 0
+    // 设置玩家颜色
     playercolor        bj_setPlayerTargetColor     = null
     boolean            bj_isUnitGroupDeadResult    = true
     boolean            bj_isUnitGroupEmptyResult   = true
@@ -2503,7 +2538,7 @@ function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
 endfunction
 
 
-// 注册可破坏物在区域内死亡(矩形区域)
+// 可破坏物在区域内死亡动作(矩形区域)
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -3360,7 +3395,7 @@ function EnableDawnDusk takes boolean flag returns nothing
 endfunction
 
 
-// 是否启用了黎明和黄昏
+// 是否启用了黎明/黄昏
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -4154,12 +4189,12 @@ function CreateNUnitsAtLocFacingLocBJ takes integer count, integer unitId, playe
 endfunction
 
 
-// 最后创建的单位组
+// 添加选取的单位到最后创建的单位组
 function GetLastCreatedGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupLastCreatedDest, GetEnumUnit())
 endfunction
 
-
+// 创建单位组并添加选取单位
 function GetLastCreatedGroup takes nothing returns group
     set bj_groupLastCreatedDest = CreateGroup()
     call ForGroup(bj_lastCreatedGroup, function GetLastCreatedGroupEnum)
@@ -8049,7 +8084,7 @@ function AbortCinematicFadeBJ takes nothing returns nothing
 endfunction
 
 
-// 淡化的过滤器
+// 淡入淡出滤镜
 function CinematicFadeBJ takes integer fadetype, real duration, string tex, real red, real green, real blue, real trans returns nothing
     if (fadetype == bj_CINEFADETYPE_FADEOUT) then
         // Fade out to the requested color.
@@ -10198,7 +10233,8 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 选择对战AI
+// @params1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用AI
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
 
@@ -10262,7 +10298,7 @@ function MeleeStartingAI takes nothing returns nothing
     endloop
 endfunction
 
-// 锁定的防守职责
+// 锁定单位防守职责
 function LockGuardPosition takes unit targ returns nothing
     call SetUnitCreepGuard(targ,true)
 endfunction

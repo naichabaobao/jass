@@ -6181,11 +6181,15 @@ native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real dura
 native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
-// 设置昼夜（指定文件）
+// 设置昼夜
+// @param terrainDNCFile迷雾模型文件路径
+// @param unitDNCFile单位模型文件路径
 native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns nothing
-// 设置肖像打光器（指定文件）
+// 设置肖像打光器
+// @param portraitDNCFile肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
-// 设置天空（指定文件）
+// 设置天空
+// @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用玩家控制权(所有玩家) [R]
 native EnableUserControl takes boolean b returns nothing
@@ -6941,7 +6945,7 @@ native RecycleGuardPosition takes unit hUnit returns nothing
 native RemoveAllGuardPositions takes player num returns nothing
 
 
-// ** Cheat标签 **
+// ** Cheat 标签 **
 native Cheat takes string cheatStr returns nothing
 // 无法胜利 [R]
 native IsNoVictoryCheat takes nothing returns boolean
@@ -6950,7 +6954,7 @@ native IsNoDefeatCheat takes nothing returns boolean
 
 // 预读文件
 native Preload takes string filename returns nothing
-// 开始预读
+// 停止预读文件时间
 native PreloadEnd takes real timeout returns nothing
 
 // 预加载开始
