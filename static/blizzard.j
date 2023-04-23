@@ -1171,7 +1171,7 @@ endfunction
 //***************************************************************************
 
 
-// 对比实数，取最小值
+// 取最小值(比对实数)
 function RMinBJ takes real a, real b returns real
     if (a < b) then
         return a
@@ -1181,7 +1181,7 @@ function RMinBJ takes real a, real b returns real
 endfunction
 
 
-// 对比实数，取最大值
+// 取最大值(比对实数)
 function RMaxBJ takes real a, real b returns real
     if (a < b) then
         return b
@@ -1191,7 +1191,7 @@ function RMaxBJ takes real a, real b returns real
 endfunction
 
 
-// 取实数的绝对值
+// 取绝对值(实数)
 function RAbsBJ takes real a returns real
     if (a >= 0) then
         return a
@@ -1201,7 +1201,7 @@ function RAbsBJ takes real a returns real
 endfunction
 
 
-// 取实数正负标记，输入数值大于等于0返回 1.0，小于0返回 -1.0
+// 取正负标记(实数)，输入值大于等于0返回 1.0，小于0返回 -1.0
 function RSignBJ takes real a returns real
     if (a >= 0.0) then
         return 1.0
@@ -1211,7 +1211,7 @@ function RSignBJ takes real a returns real
 endfunction
 
 
-// 对比整数，取最小值
+// 取最小值(比对整数)
 function IMinBJ takes integer a, integer b returns integer
     if (a < b) then
         return a
@@ -1221,7 +1221,7 @@ function IMinBJ takes integer a, integer b returns integer
 endfunction
 
 
-// 对比整数，取最大值
+// 取最大值(比对整数)
 function IMaxBJ takes integer a, integer b returns integer
     if (a < b) then
         return b
@@ -1231,7 +1231,7 @@ function IMaxBJ takes integer a, integer b returns integer
 endfunction
 
 
-// 取整数的绝对值
+// 取绝对值(整数)
 function IAbsBJ takes integer a returns integer
     if (a >= 0) then
         return a
@@ -1241,7 +1241,7 @@ function IAbsBJ takes integer a returns integer
 endfunction
 
 
-// 取整数正负标记，输入数值大于等于0返回 1，小于0返回 -1
+// 取正负标记(整数)，输入数值大于等于0返回 1，小于0返回 -1
 function ISignBJ takes integer a returns integer
     if (a >= 0) then
         return 1
@@ -1251,55 +1251,55 @@ function ISignBJ takes integer a returns integer
 endfunction
 
 
-// 正弦
+// 取正弦
 function SinBJ takes real degrees returns real
     return Sin(degrees * bj_DEGTORAD)
 endfunction
 
 
-// 余弦
+// 取余弦
 function CosBJ takes real degrees returns real
     return Cos(degrees * bj_DEGTORAD)
 endfunction
 
 
-// 正切
+// 取正切
 function TanBJ takes real degrees returns real
     return Tan(degrees * bj_DEGTORAD)
 endfunction
 
 
-// 反正弦
+// 取反正弦
 function AsinBJ takes real degrees returns real
     return Asin(degrees) * bj_RADTODEG
 endfunction
 
 
-// 反余弦
+// 取反余弦
 function AcosBJ takes real degrees returns real
     return Acos(degrees) * bj_RADTODEG
 endfunction
 
 
-// 2象限反正切 (From Angle)
+// 取2象限反正切 (From Angle)
 function AtanBJ takes real degrees returns real
     return Atan(degrees) * bj_RADTODEG
 endfunction
 
 
-// 4象限反正切
+// 取4象限反正切
 function Atan2BJ takes real y, real x returns real
     return Atan2(y, x) * bj_RADTODEG
 endfunction
 
 
-// 两点之间的角度
+// 取两点之间的角度
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
-// 两点之间的距离
+// 取两点之间的距离
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -1307,7 +1307,7 @@ function DistanceBetweenPoints takes location locA, location locB returns real
 endfunction
 
 
-// 点向指定方向 位移指定距离 
+// 点向指定方向位移指定距离
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -1336,7 +1336,7 @@ endfunction
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
 // Examples:  18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
 //
-// 取余数
+// 取余数（整数）
 function ModuloInteger takes integer dividend, integer divisor returns integer
     local integer modulus = dividend - (dividend / divisor) * divisor
 
@@ -1354,7 +1354,7 @@ endfunction
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
 // Examples:  13.000 mod 2.500 = 0.500.  -6.000 mod 2.500 = 1.500.
 //
-// 取余数
+// 取余数（实数）
 function ModuloReal takes real dividend, real divisor returns real
     local real modulus = dividend - I2R(R2I(dividend / divisor)) * divisor
 
@@ -1381,7 +1381,7 @@ function OffsetRectBJ takes rect r, real dx, real dy returns rect
 endfunction
 
 
-// 将点大小转换为区域
+// 将点转换为区域
 // @param center 中心点位置
 // @param width 宽
 // @param height 高
@@ -1392,13 +1392,13 @@ function RectFromCenterSizeBJ takes location center, real width, real height ret
 endfunction
 
 
-// 矩形是否包含坐标
+// 坐标是否在矩形内
 function RectContainsCoords takes rect r, real x, real y returns boolean
     return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
 endfunction
 
 
-// 区域是否包含点
+// 点是否在矩形内
 function RectContainsLoc takes rect r, location loc returns boolean
     return RectContainsCoords(r, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -4868,25 +4868,25 @@ function GetTransportUnitBJ takes nothing returns unit
 endfunction
 
 
-// 载入单位
+// 装载单位
 function GetLoadedUnitBJ takes nothing returns unit
     return GetLoadedUnit()
 endfunction
 
 
-// 单位已经装载
+// 单位是否已被装载
 function IsUnitInTransportBJ takes unit whichUnit, unit whichTransport returns boolean
     return IsUnitInTransport(whichUnit, whichTransport)
 endfunction
 
 
-// 单位正在被送
+// 单位是否正被传送
 function IsUnitLoadedBJ takes unit whichUnit returns boolean
     return IsUnitLoaded(whichUnit)
 endfunction
 
 
-// 单位是隐形的
+// 单位是否隐形
 function IsUnitIllusionBJ takes unit whichUnit returns boolean
     return IsUnitIllusion(whichUnit)
 endfunction
@@ -4986,7 +4986,7 @@ function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStat
 endfunction
 
 
-// 最后替换的单位
+// 获取最后替换的单位
 function GetLastReplacedUnitBJ takes nothing returns unit
     return bj_lastReplacedUnit
 endfunction
@@ -5030,7 +5030,7 @@ function RemoveUnitFromStockBJ takes integer unitId, unit whichUnit returns noth
 endfunction
 
 
-// 允许/禁止 使用人口
+// 允许/禁止 单位占用人口
 function SetUnitUseFoodBJ takes boolean enable, unit whichUnit returns nothing
     call SetUnitUseFood(whichUnit, enable)
 endfunction
@@ -5063,7 +5063,7 @@ function CreateDestructableLoc takes integer objectid, location loc, real facing
 endfunction
 
 
-// 创造[可毁坏物](毁坏的)
+// 创造 [可毁坏物](毁坏的)
 function CreateDeadDestructableLocBJ takes integer objectid, location loc, real facing, real scale, integer variation returns destructable
     set bj_lastCreatedDestructable = CreateDeadDestructable(objectid, GetLocationX(loc), GetLocationY(loc), facing, scale, variation)
     return bj_lastCreatedDestructable
@@ -5082,31 +5082,31 @@ function ShowDestructableBJ takes boolean flag, destructable d returns nothing
 endfunction
 
 
-// 设置 无敌/可攻击
+// 设置 可破坏物无敌/可攻击
 function SetDestructableInvulnerableBJ takes destructable d, boolean flag returns nothing
     call SetDestructableInvulnerable(d, flag)
 endfunction
 
 
-// 可毁坏物是无敌的
+// 可毁坏物是否无敌
 function IsDestructableInvulnerableBJ takes destructable d returns boolean
     return IsDestructableInvulnerable(d)
 endfunction
 
 
-// 可毁坏物的位置
+// 获取可毁坏物的位置
 function GetDestructableLoc takes destructable whichDestructable returns location
     return Location(GetDestructableX(whichDestructable), GetDestructableY(whichDestructable))
 endfunction
 
 
-// 选取所有可毁坏物 在区域 做 动作(单一的)
+// 选取指定方形区域所有可毁坏物做动作(单一的)
 function EnumDestructablesInRectAll takes rect r, code actionFunc returns nothing
     call EnumDestructablesInRect(r, null, actionFunc)
 endfunction
 
 
-// 选取所有可毁坏物 在圆周 做 动作(单一的)
+// 选取指定圆形区域所有可毁坏物做动作(单一的)
 function EnumDestructablesInCircleBJFilter takes nothing returns boolean
     local location destLoc = GetDestructableLoc(GetFilterDestructable())
     local boolean result
@@ -5117,13 +5117,13 @@ function EnumDestructablesInCircleBJFilter takes nothing returns boolean
 endfunction
 
 
-// 可毁坏物是死的
+// 可毁坏物是否死亡
 function IsDestructableDeadBJ takes destructable d returns boolean
     return GetDestructableLife(d) <= 0
 endfunction
 
 
-// 可毁坏物是活者的
+// 可毁坏物是否存活
 function IsDestructableAliveBJ takes destructable d returns boolean
     return not IsDestructableDeadBJ(d)
 endfunction
@@ -5131,7 +5131,7 @@ endfunction
 
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 //
-// 区域的 随机可毁坏物 且匹配条件
+// 随机选取方形区域满足指定条件的可毁坏物触发器
 function RandomDestructableInRectBJEnum takes nothing returns nothing
     set bj_destRandomConsidered = bj_destRandomConsidered + 1
     if (GetRandomInt(1,bj_destRandomConsidered) == 1) then
@@ -5141,7 +5141,7 @@ endfunction
 
 
 // Picks a random destructable from within a rect, matching a condition
-//
+// 随机选取方形区域满足指定条件的可毁坏物
 function RandomDestructableInRectBJ takes rect r, boolexpr filter returns destructable
     set bj_destRandomConsidered = 0
     set bj_destRandomCurrentPick = null
@@ -5153,7 +5153,7 @@ endfunction
 
 // Picks a random destructable from within a rect
 //
-// 区域的 随机可毁坏物
+// 随机选取方形区域的可毁坏物
 function RandomDestructableInRectSimpleBJ takes rect r returns destructable
     return RandomDestructableInRectBJ(r, null)
 endfunction
@@ -5161,7 +5161,7 @@ endfunction
 
 // Enumerates within a rect, with a filter to narrow the enumeration down
 // objects within a circular area.
-//
+// 随机选取圆形区域满足指定条件的可毁坏物
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
     local rect r
 
@@ -5212,7 +5212,7 @@ endfunction
 
 // Determine the elevator's height from its occlusion height.
 //
-// 升降机高度
+// 获取升降机高度
 function GetElevatorHeight takes destructable d returns integer
     local integer height
 
