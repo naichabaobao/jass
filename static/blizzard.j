@@ -4315,7 +4315,7 @@ function GetUnitStateSwap takes unitstate whichState, unit whichUnit returns rea
     return GetUnitState(whichUnit, whichState)
 endfunction
 
-
+// 获取指定单位指定属性的百分比
 function GetUnitStatePercent takes unit whichUnit, unitstate whichState, unitstate whichMaxState returns real
     local real value    = GetUnitState(whichUnit, whichState)
     local real maxValue = GetUnitState(whichUnit, whichMaxState)
@@ -4341,14 +4341,14 @@ function GetUnitManaPercent takes unit whichUnit returns real
 endfunction
 
 
-// 选定单位
+// 选择单位
 function SelectUnitSingle takes unit whichUnit returns nothing
     call ClearSelection()
     call SelectUnit(whichUnit, true)
 endfunction
 
 
-// 选定单位组
+// 选择单位组中的匹配单位
 function SelectGroupBJEnum takes nothing returns nothing
     call SelectUnit( GetEnumUnit(), true )
 endfunction
@@ -4366,13 +4366,13 @@ function SelectUnitAdd takes unit whichUnit returns nothing
 endfunction
 
 
-// 清除单位选择
+// 移除单位选择(所有玩家)
 function SelectUnitRemove takes unit whichUnit returns nothing
     call SelectUnit(whichUnit, false)
 endfunction
 
 
-// 清除选定对玩家
+// 让指定玩家取消选择单位
 function ClearSelectionForPlayer takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4381,7 +4381,7 @@ function ClearSelectionForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 选定单位对玩家
+// 让指定玩家取消选择指定单位
 function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4391,7 +4391,7 @@ function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer retu
 endfunction
 
 
-// 清除选定单位组对玩家
+// 让指定单位组取消选择指定单位组的指定单位
 function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4401,7 +4401,7 @@ function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothin
 endfunction
 
 
-// 增加单位到玩家的选定中
+// 让指定玩家选择指定单位
 function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4410,7 +4410,7 @@ function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns
 endfunction
 
 
-// 清除单位的选定为玩家
+// 让指定玩家取消选择指定单位
 function SelectUnitRemoveForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4443,19 +4443,19 @@ function SetUnitManaPercentBJ takes unit whichUnit, real percent returns nothing
 endfunction
 
 
-// 单位是已死亡的
+// 单位是否已死亡
 function IsUnitDeadBJ takes unit whichUnit returns boolean
     return GetUnitState(whichUnit, UNIT_STATE_LIFE) <= 0
 endfunction
 
 
-// 单位是活着的
+// 单位是否存活
 function IsUnitAliveBJ takes unit whichUnit returns boolean
     return not IsUnitDeadBJ(whichUnit)
 endfunction
 
 
-// 单位组的单位是已死亡的
+// 单位组的单位是已死亡动作
 function IsUnitGroupDeadBJEnum takes nothing returns nothing
     if not IsUnitDeadBJ(GetEnumUnit()) then
         set bj_isUnitGroupDeadResult = false
@@ -4464,7 +4464,7 @@ endfunction
 
 
 // Returns true if every unit of the group is dead.
-//
+// 单位组的单位是已死亡
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5754,7 +5754,7 @@ function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid retu
 endfunction
 
 
-// 选定的单位
+// 选择的单位
 function GetUnitsSelectedAll takes player whichPlayer returns group
     local group g = CreateGroup()
     call SyncSelections()
