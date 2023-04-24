@@ -5435,7 +5435,7 @@ constant native IsUnitInForce takes unit whichUnit, force whichForce returns boo
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
 // 指定单位的所属玩家是AI的盟友
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位的所属玩家是AI敌人
+// 指定单位的所属玩家是AI的敌人
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 指定单位对于玩家可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
@@ -5642,7 +5642,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 // Player API
 // 根据ID查询玩家
-// @param number
+// @param number玩家ID
 constant native Player takes integer number returns player
 // 本地玩家 [R]
 // 通常用于异步判断
@@ -5668,38 +5668,43 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 点被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 玩家的种族
+// 查询玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
-// 玩家ID - 1 [R]
+// 查询玩家ID [R]
 constant native GetPlayerId takes player whichPlayer returns integer
-// 单位数量
+// 获取玩家指定单位类型的数量
+// @param includeIncomplete是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家特定单位数
+// 获取玩家指定单位类型的数量
+// @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
+// @param includeUpgrades是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获得建筑数量
+// 获得玩家的建筑的数量
+// @param includeIncomplete是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获得玩家属性
+// 获取玩家属性
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
-// 获得玩家得分
+// 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家结盟
+// 玩家与玩家的联盟状态是否是指定状态
+// @param whichAllianceSetting指定联盟状态
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 经验上限 [R]
+// 获取玩家经验上限 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 经验获得率 [R]
+// 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
 // 玩家障碍恢复时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-// 玩家遭受残疾伤害
+// 获取玩家损伤
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置经验上限 [R]
+// 设置玩家经验上限 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置经验获得率 [R]
+// 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家障碍恢复时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-// 设置玩家残障伤害
+// 设置玩家损伤
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置玩家的科技上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
