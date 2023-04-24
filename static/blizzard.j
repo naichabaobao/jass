@@ -1006,7 +1006,9 @@ globals
     group              bj_groupAddGroupDest        = null
     // 指代 A单位组 移除 B单位组 单位完成后，需要摧毁的单位组
     group              bj_groupRemoveGroupDest     = null
+    // 获取单位组中随机单位，统计单位组内的单位数量
     integer            bj_groupRandomConsidered    = 0
+    // 获取单位组随机单位返回的单位
     unit               bj_groupRandomCurrentPick   = null
     //最后创建且需要摧毁的单位组
     group              bj_groupLastCreatedDest     = null
@@ -1030,24 +1032,37 @@ globals
     boolean            bj_makeUnitRescuableFlag    = true
     // 暂停/恢复所有单位
     boolean            bj_pauseAllUnitsFlag        = true
-    // 可破坏物中心店
+    // 可破坏物中心点
     location           bj_enumDestructableCenter   = null
     // 可破坏物半径（范围）
     real               bj_enumDestructableRadius   = 0
     // 设置玩家颜色
     playercolor        bj_setPlayerTargetColor     = null
+    // 单位组选择的单位是否已死亡
     boolean            bj_isUnitGroupDeadResult    = true
+    // 单位组是空的
     boolean            bj_isUnitGroupEmptyResult   = true
+    // 单位组选取的单位是否在区域内
     boolean            bj_isUnitGroupInRectResult  = true
+    // 单位组选取的单位是否在区域内中使用的区域
     rect               bj_isUnitGroupInRectRect    = null
     // 游戏结束时是否展示游戏得分
     boolean            bj_changeLevelShowScores    = false
     // 下一张地图的名字（用于战役）
     string             bj_changeLevelMapName       = null
+    // 暂停衰变延迟血肉单位组
+    // 用于对战初始化的血肉和尸体腐烂
     group              bj_suspendDecayFleshGroup   = CreateGroup()
+    // 暂停衰变延迟尸体单位组
+    // 用于对战初始化的血肉和尸体腐烂
     group              bj_suspendDecayBoneGroup    = CreateGroup()
+    // 暂停衰变延迟计时器
+    // 用于对战初始化的血肉和尸体腐烂
     timer              bj_delayedSuspendDecayTimer = CreateTimer()
+    // 暂停衰变延迟触发器
+    // 用于对战初始化的血肉和尸体腐烂
     trigger            bj_delayedSuspendDecayTrig  = null
+    // 匹配玩家拥有且存活的单位类型总数量
     integer            bj_livingPlayerUnitsTypeId  = 0
     // 最后死亡的目标
     widget             bj_lastDyingWidget          = null
@@ -1125,12 +1140,22 @@ globals
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
+    // 初始化条件 单位类型为金矿（中立金矿）的单位，默认值为空
     boolexpr           filterIssueHauntOrderAtLocBJ      = null
+    // 初始化条件 匹配的可破坏物是否离指定点小于某距离，默认值为空
     boolexpr           filterEnumDestructablesInCircleBJ = null
+    // 初始化条件 匹配指定玩家在指定区域的单位，默认值为空
     boolexpr           filterGetUnitsInRectOfPlayer      = null
+    // 初始化条件 匹配的单位类型，默认值为空
     boolexpr           filterGetUnitsOfTypeIdAll         = null
+    // 初始化条件 匹配玩家拥有的单位类型，默认值为空
+    // 用于对战初始化
     boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
+    // 初始化条件 匹配的英雄单位，默认值为空
+    // 用于对战初始化
     boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
+    // 初始化条件 匹配玩家拥有且存活的单位类型，默认值为空
+    // 用于对战初始化
     boolexpr           filterLivingPlayerUnitsOfTypeId   = null
 
     // Memory cleanup vars
@@ -4455,7 +4480,7 @@ function IsUnitAliveBJ takes unit whichUnit returns boolean
 endfunction
 
 
-// 单位组的单位是已死亡动作
+// 单位组的单位是否已死亡动作
 function IsUnitGroupDeadBJEnum takes nothing returns nothing
     if not IsUnitDeadBJ(GetEnumUnit()) then
         set bj_isUnitGroupDeadResult = false
@@ -4464,7 +4489,7 @@ endfunction
 
 
 // Returns true if every unit of the group is dead.
-// 单位组的单位是已死亡
+// 单位组的单位是否已死亡
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -4489,7 +4514,7 @@ endfunction
 
 
 // Returns true if the group contains no units.
-//
+// 单位组是否为空
 function IsUnitGroupEmptyBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5662,18 +5687,18 @@ function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
 endfunction
 
 
-// 区域中的所有单位
+// 匹配区域中的所有单位
 function GetUnitsInRectAll takes rect r returns group
     return GetUnitsInRectMatching(r, null)
 endfunction
 
 
-// 玩家在区域中的单位
+// 获取玩家在指定方形区域中的单位动作
 function GetUnitsInRectOfPlayerFilter takes nothing returns boolean
     return GetOwningPlayer(GetFilterUnit()) == bj_groupEnumOwningPlayer
 endfunction
 
-
+// 获取玩家在指定方形区域中的单位
 function GetUnitsInRectOfPlayer takes rect r, player whichPlayer returns group
     local group g = CreateGroup()
     set bj_groupEnumOwningPlayer = whichPlayer
@@ -5682,7 +5707,7 @@ function GetUnitsInRectOfPlayer takes rect r, player whichPlayer returns group
 endfunction
 
 
-// 单位在圆周内匹配条件的
+// 获取玩家在指定圆形区域中的单位
 function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRangeOfLoc(g, whichLocation, radius, filter)
@@ -5691,13 +5716,13 @@ function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation,
 endfunction
 
 
-// 圆周内的所有单位
+// 圆形区域内的所有单位（指定圆心及半径）
 function GetUnitsInRangeOfLocAll takes real radius, location whichLocation returns group
     return GetUnitsInRangeOfLocMatching(radius, whichLocation, null)
 endfunction
 
 
-// 某类型的单位
+// 匹配的单位类型
 function GetUnitsOfTypeIdAllFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
@@ -5734,13 +5759,13 @@ function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter retu
 endfunction
 
 
-// 玩家拥有的单位
+// 玩家拥有的匹配单位
 function GetUnitsOfPlayerAll takes player whichPlayer returns group
     return GetUnitsOfPlayerMatching(whichPlayer, null)
 endfunction
 
 
-// 玩家拥有的单位类型
+// 玩家拥有的匹配单位类型
 function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction

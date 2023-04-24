@@ -42,13 +42,16 @@ native DebugS               takes string str                            returns 
     // 获取指定单位/建筑/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
-    // 拥有的金矿数，会检查开始点附近所有矿，而不是只查闹鬼金矿
+    // 拥有的金矿数
+    // 会检查开始点附近所有矿，而不是只查闹鬼金矿
     // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
     native GetMinesOwned        takes nothing                               returns integer
-    // 拥有的所有金矿的金钱数量，会检查开始点所有矿，而不是只查闹鬼金矿，并返回第一座矿的金钱数
+    // 拥有的所有金矿的金钱数量，并返回第一座矿的金钱数
+    // 会检查开始点所有矿，而不是只查闹鬼金矿
     // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
     // 有金矿的基地编号，如果多个基地都有金矿，则返回最小编号
+    // 只检查主城，如果亡灵开矿不造主城，AI会视为无基地
     // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
     native TownWithMine         takes nothing                               returns integer
     // 指定编号的基地是否有金矿
@@ -1190,27 +1193,43 @@ native DebugS               takes string str                            returns 
     
     
         //--------------------------------------------------------------------
+        // 1分钟
         constant integer M1                 =    60
+        // 2分钟
         constant integer M2                 =  2*60
+        // 3分钟
         constant integer M3                 =  3*60
+        // 4分钟
         constant integer M4                 =  4*60
+        // 5分钟
         constant integer M5                 =  5*60
+        // 6分钟
         constant integer M6                 =  6*60
+        // 7分钟
         constant integer M7                 =  7*60
+        // 8分钟
         constant integer M8                 =  8*60
+        // 9分钟
         constant integer M9                 =  9*60
+        // 10分钟
         constant integer M10                = 10*60
+        // 11分钟
         constant integer M11                = 11*60
+        // 12分钟
         constant integer M12                = 12*60
+        // 13分钟
         constant integer M13                = 13*60
+        // 14分钟
         constant integer M14                = 14*60
+        // 15分钟
         constant integer M15                = 15*60
     
         constant integer EASY               = 1
         constant integer NORMAL             = 2
         constant integer HARD               = 3
+        // 该难度未使用，困难/疯狂难度为HARD
         constant integer INSANE             = 4 // not used
-    
+
         constant integer MELEE_NEWBIE       = 1
         constant integer MELEE_NORMAL       = 2
         constant integer MELEE_INSANE       = 3
@@ -1220,12 +1239,17 @@ native DebugS               takes string str                            returns 
         constant integer DEFENSE_CAPTAIN    = 2
         // 攻击组及防御组
         constant integer BOTH_CAPTAINS      = 3
-    
+        // 建造类型 单位或建筑，用于训练/建造/研究
         constant integer BUILD_UNIT         = 1
+        // 建造类型 科技，用于训练/建造/研究
         constant integer BUILD_UPGRADE      = 2
+        // 建造类型 分基地（分矿），用于训练/建造/研究
         constant integer BUILD_EXPAND       = 3
-    
+        // 建议用于升级二本主基地科技，默认值50
+        // 暴雪未使用该变量
         constant integer UPKEEP_TIER1       = 50
+        // 建议用于升级三本主基地科技，默认值80
+        // 暴雪未使用该变量
         constant integer UPKEEP_TIER2       = 80
     
         //--------------------------------------------------------------------
@@ -1233,8 +1257,15 @@ native DebugS               takes string str                            returns 
         player  ai_player
         // 等待时间
         integer sleep_seconds
+        // 黄金总计
+        // 用于计算当前黄金数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少钱
         integer total_gold              = 0
+        // 木材总计
+        // 用于计算当前木材数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少木
         integer total_wood              = 0
+        // 黄金预存数，使用后AI会一直保留该数量的黄金不使用
+        // 该值默认为0，AI不会使用，需要自行赋值，在完成指定的训练/建造/研究后请即使清零，否则AI会一直保持这笔存款
+        // 如果需要存木，请自行在 OneBuildLoop 添加
         integer gold_buffer             = 0 // usually for potion money
         // 难度
         integer difficulty              = NORMAL
@@ -1257,21 +1288,27 @@ native DebugS               takes string str                            returns 
         integer array skills3
         // 最大英雄等级，默认为0，会在英雄升级后自动调整，上限由平衡常数决定
         integer max_hero_level          = 0
-    
+        // 攻击组数组 单位数量，每种单位使用1个引索
         integer array harass_qty
+        // 攻击组数组 单位数量最大值，每种单位使用1个引索
         integer array harass_max
+        // 攻击组数组 单位类型，每种单位使用1个引索
         integer array harass_units
         // 攻击组数列，当前已记录到攻击组的单位类型，在下次初始化前，AI会使用这些单位类型进行攻击
         integer harass_length           = 0
-    
+        // 防御组数组 单位数量，每种单位使用1个引索
         integer array defense_qty
+        // 防御组数组 单位类型，每种单位使用1个引索
         integer array defense_units
         // 防御组数列，当前已记录到防御组的单位类型，在下次初始化前，AI会使用这些单位类型进行防御
         integer defense_length          = 0
-    
+        // 训练/建造/研究数组 建造数量，每种单位/建筑/科技使用1个引索
         integer array build_qty
+        // 训练/建造/研究数组 建造类型（单位/建筑，科技，分基地），每种单位/建筑/科技使用1个引索
         integer array build_type
+        // 训练/建造/研究数组 单位/建筑/科技类型（具体的单位ID），每种单位/建筑/科技使用1个引索
         integer array build_item
+        // 训练/建造/研究数组 建造位置（在哪个主/分基地建造），每种单位/建筑/科技使用1个引索
         integer array build_town
         // 建造组数列，当前已记录到建造队列的单位/建筑/科技类型，在下次初始化前，AI会依次训练/建造/研究
         integer build_length            = 0
@@ -1281,39 +1318,39 @@ native DebugS               takes string str                            returns 
         integer campaign_wood_peons     = 3
         // 战役等待时间，默认5秒
         integer campaign_basics_speed   = 5
-        // （中立敌对玩家）最小野怪等级，默认-1
+        // 最小野怪（中立敌对玩家单位）等级，默认-1
         integer min_creeps              = -1
-        // （中立敌对玩家）最大野怪等级，默认-1
+        // 最大野怪（中立敌对玩家单位）等级，默认-1
         integer max_creeps              = -1
-        // 是否允许AI在第一座基地采集黄金/木材
+        // 是否允许AI在第一座基地，以采集黄金/木材
         boolean harvest_town1           = true
-        // 是否允许AI在第二座基地采集黄金/木材
+        // 是否允许AI在第二座基地，以采集黄金/木材
         boolean harvest_town2           = true
-        // 是否允许AI在第三座基地采集黄金/木材
+        // 是否允许AI在第三座基地，以采集黄金/木材
         boolean harvest_town3           = true
-        // 战役人口模式
+        // 战役人口（建筑）建造模式
         boolean do_campaign_farms       = true
         // 二发英雄存在
         boolean two_heroes              = false
-        // 是否允许获取（中立敌对玩家）飞行野怪，默认不允许
+        // 是否允许获取飞行野怪（中立敌对玩家单位），默认不允许
         boolean allow_air_creeps        = false
-        // 是否开分矿
+        // 是否攻击分矿的野怪（中立敌对玩家单位），默认允许
         boolean take_exp                = false
         // 多用于退出自杀等待
         boolean allow_signal_abort      = false
-        // 是否完成飞艇购买
+        // 是否已完成飞艇购买
         boolean ready_for_zeppelin      = true
-        // 是否购买飞艇，默认为否
+        // 是否允许购买飞艇，默认为否
         boolean get_zeppelin            = false
         // 是否建造战役进攻单位
         boolean build_campaign_attackers = true
-    
+        // 可用于调测
         boolean do_debug_cheats         = false
         // 是否在游戏中显示 Trace 文本（开启后可用于调试，只需要调用对应的 Trace 发送指定文本即可）
         boolean trace_on                = true
         // 是否需要飞艇空投
         boolean zep_next_wave           = false
-        // 是否允许 进攻组组建超时
+        // 是否允许进攻组组建超时
         boolean form_group_timeouts     = true
     endglobals
     
@@ -2502,6 +2539,7 @@ native DebugS               takes string str                            returns 
     // 设置各波次进攻（指定玩家和坐标），默认用于自杀式攻击
     // @param standard为真时会额外判断退出条件且不进攻指定坐标，为假时会进攻指定坐标
     // @param bldgs当standard为真时，若bldgs为真，会额外判断退出条件 SuicidePlayer(p,sleep_seconds >= -60)，反之额外判断退出条件 SuicidePlayerUnits(p,sleep_seconds >= -60)
+    // @param seconds等待攻击组组建时间，若在指定时间后攻击组仍未完成组建，则不会进攻
     function CommonSuicideOnPlayer takes boolean standard, boolean bldgs, integer seconds, player p, integer x, integer y returns nothing
         local integer save_peons
     
