@@ -546,9 +546,9 @@ globals
     constant integer   bj_TIMETYPE_SUB             = 2
 
     // Camera bounds adjustment methods
-    // 镜头界限调整 - 增加
+    // 镜头界限调整 - 扩展
     constant integer   bj_CAMERABOUNDS_ADJUST_ADD  = 0
-    // 镜头界限调整 - 减少
+    // 镜头界限调整 - 收缩
     constant integer   bj_CAMERABOUNDS_ADJUST_SUB  = 1
 
     // Quest creation states
@@ -598,11 +598,11 @@ globals
     constant integer   bj_SORTTYPE_SORTBYLABEL     = 2
 
     // Cinematic fade filter methods
-    // 电影淡化-淡入
+    // 电影淡化 - 淡入
     constant integer   bj_CINEFADETYPE_FADEIN      = 0
-    // 电影淡化-淡出
+    // 电影淡化 - 淡出
     constant integer   bj_CINEFADETYPE_FADEOUT     = 1
-    // 电影淡化-淡出并淡入（一并使用）
+    // 电影淡化 - 淡出并淡入（一并使用）
     constant integer   bj_CINEFADETYPE_FADEOUTIN   = 2
 
     // Buff removal methods
@@ -908,10 +908,10 @@ globals
     boolean array      bj_meleeVictoried
     unit array         bj_ghoul
     // 玩家即将暴露计时器
-    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这就是计时器
+    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时器
     timer array        bj_crippledTimer
     // 玩家即将暴露计时器计时窗口
-    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这就是计时窗口
+    // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时窗口
     timerdialog array  bj_crippledTimerWindows
     // 玩家即将暴露判断布尔值数组，每位玩家配一个
     // 失去所有基地时，系统会提示要在限定内造一个基地，失去所有基地会变为真
@@ -920,10 +920,10 @@ globals
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果计时完成没有造，变为真
     boolean array      bj_playerIsExposed
     // 玩家暴露计时器
-    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这就是暴露时间的计时器
+    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时器
     boolean            bj_finishSoonAllExposed     = false
     // 玩家即将暴露计时器计时窗口
-    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这就是暴露时间的计时窗口
+    // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时窗口
     timerdialog        bj_finishSoonTimerDialog    = null
     // 首发英雄初始物品创建数量数组，每位玩家配一个
     // 用于记录已经给首发创建了多少个初始物品
@@ -978,29 +978,29 @@ globals
     string             bj_cineFadeContinueTex      = ""
 
     // QueuedTriggerExecute vars
-    // 动作队列执行次数统计
+    // 触发器队列执行次数统计
     integer            bj_queuedExecTotal          = 0
-    // 动作队列执行触发器数组
+    // 触发器队列执行触发器数组
     trigger array      bj_queuedExecTriggers
-    // 动作队列执行布尔值数组 用于登记当前动作是否使用了条件
+    // 触发器队列执行布尔值数组 用于登记当前触发器是否使用了条件
     boolean array      bj_queuedExecUseConds
-    // 动作队列执行计时器
+    // 触发器队列执行计时器
     timer              bj_queuedExecTimeoutTimer   = CreateTimer()
-    // 动作队列执行超时触发器
+    // 触发器队列执行超时触发器
     trigger            bj_queuedExecTimeout        = null
 
     // Helper vars (for Filter and Enum funcs)
     // 可破坏物死亡事件 统计死亡的可破坏物数量
     integer            bj_destInRegionDiesCount    = 0
-    // 可破坏物死亡事件 死亡的可破坏物动作的触发器
+    // 可破坏物死亡事件 死亡的可破坏物的触发器
     trigger            bj_destInRegionDiesTrig     = null
     // 单位组内单位数量
     integer            bj_groupCountUnits          = 0
     // 玩家组内的玩家数量
     integer            bj_forceCountPlayers        = 0
-    // 执行单位组动作时，选取的单位类型
+    // 获取单位组中指定类型的单位，指定的单位类型
     integer            bj_groupEnumTypeId          = 0
-    // 执行玩家区域单位组动作是，选取的玩家
+    // 获取玩家在指定方形区域中的单位，指定的玩家
     player             bj_groupEnumOwningPlayer    = null
     // 指代往 A单位组 添加 B单位组 单位完成后，需要摧毁的单位组
     group              bj_groupAddGroupDest        = null
@@ -1010,21 +1010,32 @@ globals
     integer            bj_groupRandomConsidered    = 0
     // 获取单位组随机单位返回的单位
     unit               bj_groupRandomCurrentPick   = null
-    //最后创建且需要摧毁的单位组
+    // 最后创建且需要摧毁的单位组
     group              bj_groupLastCreatedDest     = null
+    // 随机选取单位组中的单位，返回的新单位组
     group              bj_randomSubGroupGroup      = null
+    // 随机选取单位组中的单位，指定的单位数量
     integer            bj_randomSubGroupWant       = 0
+    // 随机选取单位组中的单位，原单位组的单位数量
     integer            bj_randomSubGroupTotal      = 0
+    // 随机选取单位组中的单位，指定的单位数量 与 原单位组的单位数量 的比例
+    // bj_randomSubGroupChance = I2R(bj_randomSubGroupWant) / I2R(bj_randomSubGroupTotal)
     real               bj_randomSubGroupChance     = 0
+    // 随机选取方形区域的可破坏物，区域内的可破坏物数量
     integer            bj_destRandomConsidered     = 0
+    // 随机选取方形区域的可破坏物，选取的可破坏物
     destructable       bj_destRandomCurrentPick    = null
     // 可破坏物 升降机路径阻断器
     destructable       bj_elevatorWallBlocker      = null
     // 可破坏物 相邻的升降机
     destructable       bj_elevatorNeighbor         = null
+    // 随机选取的区域中的物品，区域内的物品数量
     integer            bj_itemRandomConsidered     = 0
+    // 随机选取的区域中的物品，选取的物品
     item               bj_itemRandomCurrentPick    = null
+    // 随机获取玩家组中的玩家，玩家组的玩家数量
     integer            bj_forceRandomConsidered    = 0
+    // 随机获取玩家组中的玩家，选取的玩家
     player             bj_forceRandomCurrentPick   = null
     // 可营救单位
     unit               bj_makeUnitRescuableUnit    = null
@@ -1140,21 +1151,21 @@ globals
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
-    // 初始化条件 单位类型为金矿（中立金矿）的单位，默认值为空
+    // 初始化过滤 单位类型为金矿（中立金矿）的单位，默认值为空
     boolexpr           filterIssueHauntOrderAtLocBJ      = null
-    // 初始化条件 匹配的可破坏物是否离指定点小于某距离，默认值为空
+    // 初始化过滤 匹配的可破坏物是否离指定点小于某距离，默认值为空
     boolexpr           filterEnumDestructablesInCircleBJ = null
-    // 初始化条件 匹配指定玩家在指定区域的单位，默认值为空
+    // 初始化过滤 匹配指定玩家在指定区域的单位，默认值为空
     boolexpr           filterGetUnitsInRectOfPlayer      = null
-    // 初始化条件 匹配的单位类型，默认值为空
+    // 初始化过滤 匹配的单位类型，默认值为空
     boolexpr           filterGetUnitsOfTypeIdAll         = null
-    // 初始化条件 匹配玩家拥有的单位类型，默认值为空
+    // 初始化过滤 匹配玩家拥有的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
-    // 初始化条件 匹配的英雄单位，默认值为空
+    // 初始化过滤 匹配的英雄单位，默认值为空
     // 用于对战初始化
     boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
-    // 初始化条件 匹配玩家拥有且存活的单位类型，默认值为空
+    // 初始化过滤 匹配玩家拥有且存活的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterLivingPlayerUnitsOfTypeId   = null
 
@@ -1485,7 +1496,7 @@ endfunction
 // trigger is not interrupted as is the case with a TriggerExecute call.
 // Since the trigger executes normally, its conditions are still evaluated.
 //
-// 执行触发器动作
+// 执行触发器
 function PostTriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
         if not (TriggerEvaluate(trig)) then
@@ -1888,7 +1899,7 @@ endfunction
 //***************************************************************************
 
 
-// 当前的视角
+// 获取当前镜头设置
 function GetCurrentCameraSetup takes nothing returns camerasetup
     local camerasetup theCam = CreateCameraSetup()
     local real duration = 0
@@ -1915,7 +1926,7 @@ function CameraSetupApplyForPlayer takes boolean doPan, camerasetup whichSetup, 
     endif
 endfunction
 
-
+// 设置镜头平滑持续时间
 function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichSetup, player whichPlayer, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1924,7 +1935,7 @@ function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichS
 endfunction
 
 
-// 镜头的数值
+// 获取指定镜头的指定属性
 function CameraSetupGetFieldSwap takes camerafield whichField, camerasetup whichSetup returns real
     return CameraSetupGetField(whichSetup, whichField)
 endfunction
@@ -1948,7 +1959,7 @@ function SetCameraTargetControllerNoZForPlayer takes player whichPlayer, unit wh
 endfunction
 
 
-// 设置玩家的镜头位置
+// 设置玩家的镜头位置（指定坐标）
 function SetCameraPositionForPlayer takes player whichPlayer, real x, real y returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1957,7 +1968,7 @@ function SetCameraPositionForPlayer takes player whichPlayer, real x, real y ret
 endfunction
 
 
-// 设置玩家的镜头位置
+// 设置玩家的镜头位置（指定点）
 function SetCameraPositionLocForPlayer takes player whichPlayer, location loc returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1975,7 +1986,7 @@ function RotateCameraAroundLocBJ takes real degrees, location loc, player whichP
 endfunction
 
 
-// 平移镜头
+// 平移镜头（指定坐标）
 function PanCameraToForPlayer takes player whichPlayer, real x, real y returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1984,7 +1995,7 @@ function PanCameraToForPlayer takes player whichPlayer, real x, real y returns n
 endfunction
 
 
-// 平移镜头
+// 平移镜头（指定点）
 function PanCameraToLocForPlayer takes player whichPlayer, location loc returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -1993,7 +2004,7 @@ function PanCameraToLocForPlayer takes player whichPlayer, location loc returns 
 endfunction
 
 
-// 平移镜头 定时
+// 平移镜头（定时）
 function PanCameraToTimedForPlayer takes player whichPlayer, real x, real y, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2060,7 +2071,9 @@ function ResetToGameCameraForPlayer takes player whichPlayer, real duration retu
 endfunction
 
 
-// 摇摆镜头来源
+// 摇晃镜头源
+// @param magnitude摇晃幅度
+// @param velocity摇晃速率
 function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2069,7 +2082,9 @@ function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude,
 endfunction
 
 
-// 摇摆镜头目标
+// 摇晃镜头目标
+// @param magnitude摇晃幅度
+// @param velocity摇晃速率
 function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2078,7 +2093,8 @@ function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude,
 endfunction
 
 
-// 摇动镜头
+// 震动镜头
+// @param magnitude摇晃幅度
 function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude returns nothing
     local real richter = magnitude
     if (richter > 5.0) then
@@ -2095,7 +2111,7 @@ function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude retu
 endfunction
 
 
-// 停止 摇摆/摇动 镜头
+// 停止 摇摆/摇晃 镜头
 function CameraClearNoiseForPlayer takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2107,7 +2123,7 @@ endfunction
 
 // Query the current camera bounds.
 //
-// 当前的摄象机范围
+// 获取当前镜头范围
 function GetCurrentCameraBoundsMapRectBJ takes nothing returns rect
     return Rect(GetCameraBoundMinX(), GetCameraBoundMinY(), GetCameraBoundMaxX(), GetCameraBoundMaxY())
 endfunction
@@ -2115,7 +2131,7 @@ endfunction
 
 // Query the initial camera bounds, as defined at map init.
 //
-// 初始游戏时的摄象机范围
+// 获取初始游戏时的镜头范围
 function GetCameraBoundsMapRect takes nothing returns rect
     return bj_mapInitialCameraBounds
 endfunction
@@ -2123,7 +2139,7 @@ endfunction
 
 // Query the playable map area, as defined at map init.
 //
-// 可玩的地图区域
+// 获取可玩的地图区域
 function GetPlayableMapRect takes nothing returns rect
     return bj_mapInitialPlayableArea
 endfunction
@@ -2131,7 +2147,7 @@ endfunction
 
 // Query the entire map area, as defined at map init.
 //
-// 全地图
+// 获取全地图可用区域
 function GetEntireMapRect takes nothing returns rect
     return GetWorldBounds()
 endfunction
@@ -2156,7 +2172,7 @@ function SetCameraBoundsToRectForPlayerBJ takes player whichPlayer, rect r retur
 endfunction
 
 
-// 调整相机边界
+// 调整镜头边界
 function AdjustCameraBoundsBJ takes integer adjustMethod, real dxWest, real dxEast, real dyNorth, real dySouth returns nothing
     local real minX = 0
     local real minY = 0
@@ -2194,7 +2210,8 @@ function AdjustCameraBoundsBJ takes integer adjustMethod, real dxWest, real dxEa
 endfunction
 
 
-// 扩展/收缩摄像绑定
+// 扩展/收缩 可用镜头区域（指定玩家）
+// @param adjustMethod扩展/收缩
 function AdjustCameraBoundsForPlayerBJ takes integer adjustMethod, player whichPlayer, real dxWest, real dxEast, real dyNorth, real dySouth returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2203,7 +2220,7 @@ function AdjustCameraBoundsForPlayerBJ takes integer adjustMethod, player whichP
 endfunction
 
 
-// 设置相机位置 (快速)
+// 设置镜头空格键转向坐标（指定玩家） (快速)
 function SetCameraQuickPositionForPlayer takes player whichPlayer, real x, real y returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2212,7 +2229,7 @@ function SetCameraQuickPositionForPlayer takes player whichPlayer, real x, real 
 endfunction
 
 
-// 设置相机位置 (快速)
+// 设置镜头空格键转向点（指定玩家） (快速)
 function SetCameraQuickPositionLocForPlayer takes player whichPlayer, location loc returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2220,13 +2237,13 @@ function SetCameraQuickPositionLocForPlayer takes player whichPlayer, location l
     endif
 endfunction
 
-
+// 设置镜头空格键转向点（指定玩家）
 function SetCameraQuickPositionLoc takes location loc returns nothing
     call SetCameraQuickPosition(GetLocationX(loc), GetLocationY(loc))
 endfunction
 
 
-// 停止镜头
+// 停止播放镜头
 function StopCameraForPlayerBJ takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2563,7 +2580,7 @@ function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
 endfunction
 
 
-// 可破坏物在区域内死亡动作(矩形区域)
+// 让指定区域内的可破坏物死亡(毁坏的)触发器(矩形区域)
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -2572,7 +2589,7 @@ function RegisterDestDeathInRegionEnum takes nothing returns nothing
 endfunction
 
 
-// 可毁坏物在 区域 死亡
+// 让指定区域的可毁坏物死亡(毁坏的)
 function TriggerRegisterDestDeathInRegionEvent takes trigger trig, rect r returns nothing
     set bj_destInRegionDiesTrig = trig
     set bj_destInRegionDiesCount = 0
@@ -2873,13 +2890,13 @@ function ResetTerrainFogBJ takes nothing returns nothing
 endfunction
 
 
-// 播放圆周内地形装饰物的动作
+// 播放圆周内地形装饰物的触发器
 function SetDoodadAnimationBJ takes string animName, integer doodadID, real radius, location center returns nothing
     call SetDoodadAnimation(GetLocationX(center), GetLocationY(center), radius, doodadID, false, animName, false)
 endfunction
 
 
-// 播放区域内地形装饰物的动作
+// 播放区域内地形装饰物的触发器
 function SetDoodadAnimationRectBJ takes string animName, integer doodadID, rect r returns nothing
     call SetDoodadAnimationRect(r, doodadID, animName, false)
 endfunction
@@ -4018,7 +4035,7 @@ function ChooseRandomCreepBJ takes integer level returns integer
 endfunction
 
 
-// 选取所有物品在 区域 做动作(单一的)
+// 选取所有物品在 区域 做动作(单个动作)
 function EnumItemsInRectBJ takes rect r, code actionFunc returns nothing
     call EnumItemsInRect(r, null, actionFunc)
 endfunction
@@ -4026,7 +4043,7 @@ endfunction
 
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 //
-// 随机物品在区域并匹配条件
+// 随机选取指定区域的物品触发器
 function RandomItemInRectBJEnum takes nothing returns nothing
     set bj_itemRandomConsidered = bj_itemRandomConsidered + 1
     if (GetRandomInt(1, bj_itemRandomConsidered) == 1) then
@@ -4036,7 +4053,7 @@ endfunction
 
 
 // Picks a random item from within a rect, matching a condition
-//
+// 随机选取指定区域的匹配物品（过滤）
 function RandomItemInRectBJ takes rect r, boolexpr filter returns item
     set bj_itemRandomConsidered = 0
     set bj_itemRandomCurrentPick = null
@@ -4048,7 +4065,7 @@ endfunction
 
 // Picks a random item from within a rect
 //
-// 随机物品在区域
+// 随机选取指定区域的物品
 function RandomItemInRectSimpleBJ takes rect r returns item
     return RandomItemInRectBJ(r, null)
 endfunction
@@ -4480,7 +4497,7 @@ function IsUnitAliveBJ takes unit whichUnit returns boolean
 endfunction
 
 
-// 单位组的单位是否已死亡动作
+// 单位组的单位是否已死亡触发器
 function IsUnitGroupDeadBJEnum takes nothing returns nothing
     if not IsUnitDeadBJ(GetEnumUnit()) then
         set bj_isUnitGroupDeadResult = false
@@ -5125,13 +5142,13 @@ function GetDestructableLoc takes destructable whichDestructable returns locatio
 endfunction
 
 
-// 选取指定方形区域所有可毁坏物做动作(单一的)
+// 选取指定方形区域所有可毁坏物做动作(单个动作)
 function EnumDestructablesInRectAll takes rect r, code actionFunc returns nothing
     call EnumDestructablesInRect(r, null, actionFunc)
 endfunction
 
 
-// 选取指定圆形区域所有可毁坏物做动作(单一的)
+// 选取指定圆形区域所有可毁坏物做动作(单个动作)
 function EnumDestructablesInCircleBJFilter takes nothing returns boolean
     local location destLoc = GetDestructableLoc(GetFilterDestructable())
     local boolean result
@@ -5156,7 +5173,7 @@ endfunction
 
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 //
-// 随机选取方形区域满足指定条件的可毁坏物触发器
+// 随机选取方形区域的可毁坏物触发器
 function RandomDestructableInRectBJEnum takes nothing returns nothing
     set bj_destRandomConsidered = bj_destRandomConsidered + 1
     if (GetRandomInt(1,bj_destRandomConsidered) == 1) then
@@ -5166,7 +5183,7 @@ endfunction
 
 
 // Picks a random destructable from within a rect, matching a condition
-// 随机选取方形区域满足指定条件的可毁坏物
+// 随机选取方形区域满足过滤的可毁坏物
 function RandomDestructableInRectBJ takes rect r, boolexpr filter returns destructable
     set bj_destRandomConsidered = 0
     set bj_destRandomCurrentPick = null
@@ -5186,7 +5203,7 @@ endfunction
 
 // Enumerates within a rect, with a filter to narrow the enumeration down
 // objects within a circular area.
-// 随机选取圆形区域满足指定条件的可毁坏物
+// 随机选取圆形区域满足过滤的可毁坏物
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
     local rect r
 
@@ -5528,7 +5545,7 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 选取单位组做指定动作
 function ForGroupBJ takes group whichGroup, code callback returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5550,18 +5567,18 @@ function GroupAddUnitSimple takes unit whichUnit, group whichGroup returns nothi
 endfunction
 
 
-// 清除单位从单位组
+// 从单位组清除单位
 function GroupRemoveUnitSimple takes unit whichUnit, group whichGroup returns nothing
     call GroupRemoveUnit(whichGroup, whichUnit)
 endfunction
 
 
-// 增加单位组到单位组
+// 增加单位组到单位组触发器
 function GroupAddGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupAddGroupDest, GetEnumUnit())
 endfunction
 
-
+// 增加 sourceGroup单位组中的单位 到 destGroup单位组
 function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5578,12 +5595,12 @@ function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
 endfunction
 
 
-// 清除单位组从单位组
+// 清除单位组从单位组触发器
 function GroupRemoveGroupEnum takes nothing returns nothing
     call GroupRemoveUnit(bj_groupRemoveGroupDest, GetEnumUnit())
 endfunction
 
-
+// 将 sourceGroup单位组中的单位 从 destGroup单位组 中清除
 function GroupRemoveGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5618,7 +5635,7 @@ endfunction
 // The chance of picking a given unit over the "current pick" is 1/N, where N is
 // the number of units considered thusfar (including the current consideration).
 //
-// 单位组里的随机单位
+// 随机选取单位组中的单位触发器
 function GroupPickRandomUnitEnum takes nothing returns nothing
     set bj_groupRandomConsidered = bj_groupRandomConsidered + 1
     if (GetRandomInt(1,bj_groupRandomConsidered) == 1) then
@@ -5628,7 +5645,7 @@ endfunction
 
 
 // Picks a random unit from a group.
-//
+// 随机选取单位组中的单位
 function GroupPickRandomUnit takes group whichGroup returns unit
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5649,7 +5666,7 @@ endfunction
 
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 //
-// 玩家组里的随机玩家
+// 随机选择玩家组中的玩家触发器
 function ForcePickRandomPlayerEnum takes nothing returns nothing
     set bj_forceRandomConsidered = bj_forceRandomConsidered + 1
     if (GetRandomInt(1,bj_forceRandomConsidered) == 1) then
@@ -5659,7 +5676,7 @@ endfunction
 
 
 // Picks a random player from a force.
-//
+// 随机选择玩家组中的玩家（指定玩家组）
 function ForcePickRandomPlayer takes force whichForce returns player
     set bj_forceRandomConsidered = 0
     set bj_forceRandomCurrentPick = null
@@ -5667,7 +5684,7 @@ function ForcePickRandomPlayer takes force whichForce returns player
     return bj_forceRandomCurrentPick
 endfunction
 
-
+// 选取区域中的所有单位触发器
 function EnumUnitsSelected takes player whichPlayer, boolexpr enumFilter, code enumAction returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -5678,7 +5695,7 @@ function EnumUnitsSelected takes player whichPlayer, boolexpr enumFilter, code e
 endfunction
 
 
-// 单位在区域中并匹配条件
+// 选取区域中的所有单位（过滤）
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRect(g, r, filter)
@@ -5687,13 +5704,13 @@ function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
 endfunction
 
 
-// 匹配区域中的所有单位
+// 选取区域中的所有单位
 function GetUnitsInRectAll takes rect r returns group
     return GetUnitsInRectMatching(r, null)
 endfunction
 
 
-// 获取玩家在指定方形区域中的单位动作
+// 获取玩家在指定方形区域中的单位触发器
 function GetUnitsInRectOfPlayerFilter takes nothing returns boolean
     return GetOwningPlayer(GetFilterUnit()) == bj_groupEnumOwningPlayer
 endfunction
@@ -5750,7 +5767,7 @@ function GetUnitsOfTypeIdAll takes integer unitid returns group
 endfunction
 
 
-// 玩家拥有的单位匹配条件
+// 匹配玩家拥有的单位（过滤）
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsOfPlayer(g, whichPlayer, filter)
@@ -5770,7 +5787,7 @@ function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
-// 获取玩家的制定类型单位组
+// 获取玩家的指定类型单位组
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
     set bj_groupEnumTypeId = unitid
@@ -5839,7 +5856,7 @@ function GetPlayersEnemies takes player whichPlayer returns force
 endfunction
 
 
-// 所有玩家匹配条件
+// 匹配所有玩家（过滤）
 function GetPlayersMatching takes boolexpr filter returns force
     local force f = CreateForce()
     call ForceEnumPlayers(f, filter)
@@ -5884,7 +5901,7 @@ function CountPlayersInForceBJ takes force f returns integer
 endfunction
 
 
-// 随机选 N 个单位在单位组中
+// 在单位组中随机选 N 个单位
 function GetRandomSubGroupEnum takes nothing returns nothing
     if (bj_randomSubGroupWant > 0) then
         if (bj_randomSubGroupWant >= bj_randomSubGroupTotal) or (GetRandomReal(0,1) < bj_randomSubGroupChance) then
@@ -5896,7 +5913,8 @@ function GetRandomSubGroupEnum takes nothing returns nothing
     set bj_randomSubGroupTotal = bj_randomSubGroupTotal - 1
 endfunction
 
-// 获取单位组的随机子单位组
+// 获取单位组的随机单位，并添加在新单位组中，返回新单位组
+// @param 指定获取的单位数量
 // GetRandomSubGroup(2, [unit(8),unit(4),unit(2)]) -> [unit(4),unit(2)]
 function GetRandomSubGroup takes integer count, group sourceGroup returns group
     local group g = CreateGroup()
@@ -5914,14 +5932,14 @@ function GetRandomSubGroup takes integer count, group sourceGroup returns group
     return g
 endfunction
 
-
+// 匹配的单位类型是否存活
 function LivingPlayerUnitsOfTypeIdFilter takes nothing returns boolean
     local unit filterUnit = GetFilterUnit()
     return IsUnitAliveBJ(filterUnit) and GetUnitTypeId(filterUnit) == bj_livingPlayerUnitsTypeId
 endfunction
 
 
-// 玩家活着的某类型单位的数量
+// 玩家存活的指定单位类型的数量
 function CountLivingPlayerUnitsOfTypeId takes integer unitId, player whichPlayer returns integer
     local group g
     local integer matchedCount
@@ -5944,7 +5962,7 @@ endfunction
 //***************************************************************************
 
 
-// 重置单位动作
+// 重置单位触发器
 function ResetUnitAnimation takes unit whichUnit returns nothing
     call SetUnitAnimation(whichUnit, "stand")
 endfunction
@@ -6012,19 +6030,19 @@ function SetUnitFacingToFaceUnitTimed takes unit whichUnit, unit target, real du
 endfunction
 
 
-// 队列单位动作
+// 队列单位触发器
 function QueueUnitAnimationBJ takes unit whichUnit, string whichAnimation returns nothing
     call QueueUnitAnimation(whichUnit, whichAnimation)
 endfunction
 
 
-// 播放可毁坏物的动作
+// 播放可毁坏物的触发器
 function SetDestructableAnimationBJ takes destructable d, string whichAnimation returns nothing
     call SetDestructableAnimation(d, whichAnimation)
 endfunction
 
 
-// 排列可毁坏物的动作
+// 排列可毁坏物的触发器
 function QueueDestructableAnimationBJ takes destructable d, string whichAnimation returns nothing
     call QueueDestructableAnimation(d, whichAnimation)
 endfunction

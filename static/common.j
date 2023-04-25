@@ -4352,40 +4352,40 @@ native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位类型的单位加入单位组
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家匹的单位加入单位组
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定方形区域的的单位加入单位组
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定方形区域的的单位加入单位组，同时指定添加单位的数量上限
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将圆形区域的单位添加到单位组（指定圆心坐标）
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将圆形区域的单位添加到单位组（指定圆心坐标）
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家的单位添加到单位组
-// @param filter附加选择单位的额外条件，不建议使用在AI脚本中，即filter写成null
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发送单位组命令（无目标）
@@ -4412,6 +4412,7 @@ native GroupTargetOrderById takes group whichGroup, integer order, widget target
 // 选取指定单位组做多个动作
 native ForGroup takes group whichGroup, code callback returns nothing
 // 获取单位组中第一个单位
+// 在单位组内单位未发生变化时（添加或移除单位），单位的排序不会发生变化，即每次获取的都是同一个单位
 native FirstOfGroup takes group whichGroup returns unit
 
 
@@ -4427,18 +4428,18 @@ native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 玩家是否存在
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
-// 清除玩家
+// 清除玩家组
 native ForceClear takes force whichForce returns nothing
-// 匹配玩家
+// 匹配玩家组
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
-// 匹配玩家（指定上限）
-// @param countLimit
+// 在指定的玩家组中匹配玩家（指定匹配的数量）
+// @param countLimit玩家数量
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
-// 匹配联盟
+// 在指定的玩家组中匹配联盟玩家
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 匹配敌对
+// 在指定的玩家组中匹配敌对玩家
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 选取所有玩家在玩家组做动作(单一的)
+// 选取所有玩家在玩家组做动作(单个动作)
 native ForForce takes force whichForce, code callback returns nothing
 
 
@@ -4456,7 +4457,7 @@ native SetRect takes rect whichRect, real minx, real miny, real maxx, real maxy 
 native SetRectFromLoc takes rect whichRect, location min, location max returns nothing
 // 移动矩形区域(指定坐标) [R]
 native MoveRectTo takes rect whichRect, real newCenterX, real newCenterY returns nothing
-// 移动区域
+// 移动区域（指定新的中心点）
 native MoveRectToLoc takes rect whichRect, location newCenterLoc returns nothing
 
 // 获取区域中心的 X 坐标
@@ -4491,7 +4492,7 @@ native RegionClearCell takes region whichRegion, real x, real y returns nothing
 // 移除点(指定区域) [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
-// 转换坐标到点
+// 将坐标转换成点
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
@@ -4516,7 +4517,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 
 // Returns full map bounds, including unplayable borders, in world coordinates
 // Returns full map bounds, including unplayable borders, in world coordinates
-// 获取可用地图范围
+// 获取可用地图区域
 native GetWorldBounds takes nothing returns rect
 
 
@@ -4555,7 +4556,7 @@ constant native GetFilterItem takes nothing returns item
 // 获取选取的物品
 constant native GetEnumItem takes nothing returns item
 
-// 解析标签tags
+// 解析标签 tags
 constant native ParseTags takes string taggedString returns string
 
 // 获取匹配的玩家
@@ -4565,7 +4566,7 @@ constant native GetEnumPlayer takes nothing returns player
 
 // 当前触发器
 constant native GetTriggeringTrigger takes nothing returns trigger
-// 获取触发ID
+// 获取触发事件ID
 constant native GetTriggerEventId takes nothing returns eventid
 // 触发器赋值统计
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
@@ -4590,6 +4591,8 @@ native Condition takes code func returns conditionfunc
 // 销毁条件
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤
+// 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
+// 使用后需要使用（DestroyFilter）排泄，并set null，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤
 native DestroyFilter takes filterfunc f returns nothing
@@ -4636,7 +4639,7 @@ native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameE
 constant native GetWinningPlayer takes nothing returns player
 
 
-// 单位进入不规则区域(指定条件) [R]
+// 单位进入不规则区域(过滤) [R]
 native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 
 // EVENT_GAME_ENTER_REGION
@@ -4647,7 +4650,7 @@ constant native GetEnteringUnit takes nothing returns unit
 
 // EVENT_GAME_LEAVE_REGION
 
-// 单位离开不规则区域(指定条件) [R]
+// 单位离开不规则区域(过滤) [R]
 native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 // 获取正在离开的单位
 constant native GetLeavingUnit takes nothing returns unit
@@ -5056,13 +5059,13 @@ constant native GetTriggerWidget takes nothing returns widget
 // Destructable Object API
 // Facing arguments are specified in degrees
 // Facing arguments are specified in degrees
-// 新建可破坏物（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物（非毁坏的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物 [R]（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物 [R]（非毁坏的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱)（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱)（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
 // 删除可破坏物
 native RemoveDestructable takes destructable d returns nothing
@@ -5072,7 +5075,7 @@ native KillDestructable takes destructable d returns nothing
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
 // 获取可破坏物的可见状态
 native IsDestructableInvulnerable takes destructable d returns boolean
-// 选取指定区域的指定条件（filter用于指定条件）的可破坏物执行指定动作（actionFunc可指定动作）
+// 选取指定区域的过滤（filter用于过滤）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
@@ -5153,7 +5156,10 @@ native IsItemIdPowerup takes integer itemId returns boolean
 native IsItemIdSellable takes integer itemId returns boolean
 // 物品是否可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
-// 选取 区域内 所有物品 做动作 r = 区域 ， filter = 条件 ， actionFunc = 动作
+// 选取 区域内 所有物品 做动作
+// @param r区域
+// @param filter过滤
+// @param actionFunc动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取物品等级
 native GetItemLevel takes item whichItem returns integer
@@ -5316,7 +5322,9 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 native IsSuspendedXP takes unit whichHero returns boolean
 // 命令英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取单位技能等级 [R] ，此命令在AI脚本中似乎只返回0，不论技能是否存在
+// 获取单位技能等级 [R] 
+// 对于触发器添加的技能，此命令在AI脚本中似乎只返回0，不论技能是否存在
+// 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
 // 降低英雄技能等级 [R]
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -7586,11 +7594,13 @@ native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield w
 native BlzGetUnitSkin takes unit whichUnit returns integer
 // 改变物品皮肤
 native BlzGetItemSkin takes item whichItem returns integer
+// 获取可破坏物皮肤
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
 // 改变单位皮肤
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 // 改变物品皮肤
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
+// 改变可破坏物皮肤
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
 // 创建物品皮肤
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
@@ -7600,9 +7610,9 @@ native BlzCreateUnitWithSkin takes player id, integer unitid, real x, real y, re
 native BlzCreateDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
 // 创建可破坏物皮肤（包含Z轴）
 native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（死亡的）皮肤（不包含Z轴）
+// 创建可破坏物（毁坏的）皮肤（不包含Z轴）
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（死亡的）皮肤（包含Z轴）
+// 创建可破坏物（毁坏的）皮肤（包含Z轴）
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
 // 获取指定玩家的基地数量（按基地单位的数量统计）
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
