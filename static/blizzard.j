@@ -5389,7 +5389,7 @@ endfunction
 // This toggles pathing on or off for one wall of an elevator by killing
 // or reviving a pathing blocker at the appropriate location (and creating
 // the pathing blocker in the first place, if it does not yet exist).
-//
+// 设置升降机路径阻断器
 function ChangeElevatorWallBlocker takes real x, real y, real facing, boolean open returns nothing
     local destructable blocker = null
     local real         findThreshold = 32
@@ -5488,7 +5488,7 @@ function WaygateActivateBJ takes boolean activate, unit waygate returns nothing
 endfunction
 
 
-// 传送门是允许的
+// 查询传送门激活状态
 function WaygateIsActiveBJ takes unit waygate returns boolean
     return WaygateIsActive(waygate)
 endfunction
@@ -5500,13 +5500,13 @@ function WaygateSetDestinationLocBJ takes unit waygate, location loc returns not
 endfunction
 
 
-// 传送门的目的地
+// 获取传送门的目的地
 function WaygateGetDestinationLocBJ takes unit waygate returns location
     return Location(WaygateGetDestinationX(waygate), WaygateGetDestinationY(waygate))
 endfunction
 
 
-// 改变单位的小地图图标
+// 设置单位的小地图图标
 function UnitSetUsesAltIconBJ takes boolean flag, unit whichUnit returns nothing
     call UnitSetUsesAltIcon(whichUnit, flag)
 endfunction
