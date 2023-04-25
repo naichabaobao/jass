@@ -4250,6 +4250,7 @@ constant native GetStartLocationX takes integer whichStartLocation returns real
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定开始点的坐标
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的开始点
+// 会生成点，需要排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
@@ -4493,6 +4494,7 @@ native RegionClearCell takes region whichRegion, real x, real y returns nothing
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 将坐标转换成点
+// 会生成点，需要排泄
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
@@ -4866,6 +4868,7 @@ constant native GetOrderPointX takes nothing returns real
 // 获取命令目标点 Y 坐标 [R]
 constant native GetOrderPointY takes nothing returns real
 // 获取命令目标点
+// 会生成点，需要排泄
 constant native GetOrderPointLoc takes nothing returns location
 
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
@@ -4895,6 +4898,7 @@ constant native GetSpellAbilityId takes nothing returns integer
 // 获取被释放技能
 constant native GetSpellAbility takes nothing returns ability
 // 获取被释放技能目标点
+// 会生成点，需要排泄
 constant native GetSpellTargetLoc takes nothing returns location
 // 获取被释放技能目标点 X 坐标
 constant native GetSpellTargetX takes nothing returns real
@@ -5399,6 +5403,7 @@ constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位的位置
+// 会生成点，需要排泄
 constant native GetUnitLoc takes unit whichUnit returns location
 // 获取指定单位面向角度
 constant native GetUnitFacing takes unit whichUnit returns real
@@ -5429,6 +5434,7 @@ constant native GetFoodUsed takes integer unitId returns integer
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位的集结点指向的位置（建筑的旗子，集结技能）
+// 会生成点，需要排泄
 constant native GetUnitRallyPoint takes unit whichUnit returns location
 // 获取指定单位集结点指向的单位，仅当集结点指向单位时可正常返回（建筑的旗子，集结技能）
 constant native GetUnitRallyUnit takes unit whichUnit returns unit
@@ -6071,6 +6077,7 @@ native LoadForceHandle takes hashtable table, integer parentKey, integer childKe
 // <1.24> 从哈希表提取单位组 [C]
 native LoadGroupHandle takes hashtable table, integer parentKey, integer childKey returns group
 // <1.24> 从哈希表提取点 [C]
+// 若仍需继续使用该点，请勿排泄
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
 // <1.24> 从哈希表提取区域(矩型) [C]
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
@@ -6581,6 +6588,7 @@ native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField 
 // 设置指定镜头的坐标
 native CameraSetupSetDestPosition takes camerasetup whichSetup, real x, real y, real duration returns nothing
 // 获取指定镜头的目标点
+// 会生成点，需要排泄
 native CameraSetupGetDestPositionLoc takes camerasetup whichSetup returns location
 // 获取指定镜头的 X 坐标
 native CameraSetupGetDestPositionX takes camerasetup whichSetup returns real
@@ -6662,7 +6670,8 @@ constant native GetCameraTargetPositionX takes nothing returns real
 constant native GetCameraTargetPositionY takes nothing returns real
 // 获取当前镜头目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
-// 获取当前镜头目标点（返回点）
+// 获取当前镜头目标点
+// 会生成点，需要排泄
 constant native GetCameraTargetPositionLoc takes nothing returns location
 // 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
@@ -6670,7 +6679,8 @@ constant native GetCameraEyePositionX takes nothing returns real
 constant native GetCameraEyePositionY takes nothing returns real
 // 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
-// 获取当前照相机的观察位置（返回点）
+// 获取当前照相机的观察位置
+// 会生成点，需要排泄
 constant native GetCameraEyePositionLoc takes nothing returns location
 
 
@@ -7029,11 +7039,12 @@ native AutomationTestEnd takes nothing returns nothing
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
-// 触发鼠标位置 - X
+// 触发鼠标位置 - X 坐标
 native BlzGetTriggerPlayerMouseX takes nothing returns real
-// 触发鼠标位置 - Y
+// 触发鼠标位置 - Y 坐标
 native BlzGetTriggerPlayerMouseY takes nothing returns real
-// 触发鼠标位置
+// 触发鼠标位置 - 点
+// 会生成点，需要排泄
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 触发鼠标按键
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype

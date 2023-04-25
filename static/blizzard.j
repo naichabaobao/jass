@@ -1344,6 +1344,7 @@ endfunction
 
 
 // 点向指定方向位移指定距离
+// 会生成点，需要排泄
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -1364,6 +1365,7 @@ endfunction
 
 
 // 取区域内的随机地点
+// 会生成点，需要排泄
 function GetRandomLocInRect takes rect whichRect returns location
     return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
 endfunction
@@ -1406,6 +1408,7 @@ endfunction
 
 
 // 点位移
+// 会生成点，需要排泄
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
@@ -3615,6 +3618,7 @@ endfunction
 
 
 // 物品的位置
+// 会生成点，需要排泄
 function GetItemLoc takes item whichItem returns location
     return Location(GetItemX(whichItem), GetItemY(whichItem))
 endfunction
@@ -5137,6 +5141,7 @@ endfunction
 
 
 // 获取可毁坏物的位置
+// 会生成点，需要排泄
 function GetDestructableLoc takes destructable whichDestructable returns location
     return Location(GetDestructableX(whichDestructable), GetDestructableY(whichDestructable))
 endfunction
@@ -5501,6 +5506,7 @@ endfunction
 
 
 // 获取传送门的目的地
+// 会生成点，需要排泄
 function WaygateGetDestinationLocBJ takes unit waygate returns location
     return Location(WaygateGetDestinationX(waygate), WaygateGetDestinationY(waygate))
 endfunction
@@ -8895,6 +8901,7 @@ endfunction
 
 
 // <1.24> 从哈希表提取点
+// 若仍需使用该点，请勿排泄
 function LoadLocationHandleBJ takes integer key, integer missionKey, hashtable table returns location
     return LoadLocationHandle(table, missionKey, key)
 endfunction
@@ -9202,12 +9209,14 @@ endfunction
 
 
 // 玩家的初始位置
+// 会生成点，需要排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 
 // 区域中心
+// 会生成点，需要排泄
 function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 endfunction
@@ -9716,7 +9725,8 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 删除当前开始点多余单位触发器
+// 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑类单位
 function MeleeClearExcessUnit takes nothing returns nothing
     local unit    theUnit = GetEnumUnit()
     local integer owner   = GetPlayerId(GetOwningPlayer(theUnit))
@@ -9732,7 +9742,7 @@ function MeleeClearExcessUnit takes nothing returns nothing
     endif
 endfunction
 
-
+// 选取当前开始点的多余单位
 function MeleeClearNearbyUnits takes real x, real y, real range returns nothing
     local group nearbyUnits
     
@@ -9743,7 +9753,7 @@ function MeleeClearNearbyUnits takes real x, real y, real range returns nothing
 endfunction
 
 
-// 删除多余单位
+// 删除所有玩家开始点多余单位
 function MeleeClearExcessUnits takes nothing returns nothing
     local integer index
     local real    locX
@@ -9775,7 +9785,7 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 寻找玩家开始点附近的金矿触发器
 function MeleeEnumFindNearestMine takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
     local real dist
@@ -9794,7 +9804,8 @@ function MeleeEnumFindNearestMine takes nothing returns nothing
     endif
 endfunction
 
-
+// 寻找玩家开始点附近的金矿
+// 主要用于对战初始化时创建被缠绕的金矿或闹鬼金矿
 function MeleeFindNearestMine takes location src, real range returns unit
     local group nearbyMines
 
@@ -9810,7 +9821,8 @@ function MeleeFindNearestMine takes location src, real range returns unit
     return bj_meleeNearestMine
 endfunction
 
-// 创建随机英雄（进入游戏前在高级勾选 使用随机英雄）
+// 创建随机英雄
+// 进入游戏前在高级勾选 使用随机英雄
 function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id3, integer id4, location loc returns unit
     local unit    hero = null
     local integer roll
@@ -9849,7 +9861,8 @@ endfunction
 
 
 // Returns a location which is (distance) away from (src) in the direction of (targ).
-//
+// 极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
+// 会生成点，需要排泄
 function MeleeGetProjectedLoc takes location src, location targ, real distance, real deltaAngle returns location
     local real srcX = GetLocationX(src)
     local real srcY = GetLocationY(src)
@@ -9857,7 +9870,8 @@ function MeleeGetProjectedLoc takes location src, location targ, real distance, 
     return Location(srcX + distance * Cos(direction), srcY + distance * Sin(direction))
 endfunction
 
-
+// 取区间值
+// val在minVal~maxVal之外时，若小于minVal，则返回minVal，若大于maxVal，则返回maxVal，在区间内时返回val
 function MeleeGetNearestValueWithin takes real val, real minVal, real maxVal returns real
     if (val < minVal) then
         return minVal
@@ -9868,7 +9882,9 @@ function MeleeGetNearestValueWithin takes real val, real minVal, real maxVal ret
     endif
 endfunction
 
-
+// 取区域内的点（不影响输入点）
+// 当输入点在区域内时，会返回一个相同坐标的新点，当输入点在区域外时，会返回距离输入点最近的区域边界上的新点
+// 会生成点，需要排泄
 function MeleeGetLocWithinRect takes location src, rect r returns location
     local real withinX = MeleeGetNearestValueWithin(GetLocationX(src), GetRectMinX(r), GetRectMaxX(r))
     local real withinY = MeleeGetNearestValueWithin(GetLocationY(src), GetRectMinY(r), GetRectMaxY(r))
@@ -9880,7 +9896,9 @@ endfunction
 //   - 1 Town Hall, placed at start location
 //   - 5 Peasants, placed between start location and nearest gold mine
 //
-// 创建初始单位
+// 创建初始单位 - 人族
+// 创建点 - 玩家开始点
+// 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsHuman takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
     local real     unitSpacing   = 64.00
@@ -9955,7 +9973,9 @@ endfunction
 // Starting Units for Orc Players
 //   - 1 Great Hall, placed at start location
 //   - 5 Peons, placed between start location and nearest gold mine
-//
+// 创建初始单位 - 兽族
+// 创建点 - 玩家开始点
+// 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
     local real     unitSpacing   = 64.00
@@ -10027,7 +10047,9 @@ endfunction
 //   - 3 Acolytes, placed between start location and nearest gold mine
 //   - 1 Ghoul, placed between start location and nearest gold mine
 //   - Blight, centered on nearest gold mine, spread across a "large area"
-//
+// 创建初始单位 - 亡灵
+// 创建点 - 玩家开始点
+// 默认包含3个农民，1个食尸鬼，一个一本基地，一座闹鬼金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
     local real     unitSpacing   = 64.00
@@ -10111,7 +10133,9 @@ endfunction
 // Starting Units for Night Elf Players
 //   - 1 Tree of Life, placed by nearest gold mine, already entangled
 //   - 5 Wisps, placed between Tree of Life and nearest gold mine
-//
+// 创建初始单位 - 暗夜
+// 创建点 - 玩家开始点
+// 默认包含5个农民，一个一本基地，一座被缠绕的金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
     local real     unitSpacing   = 64.00
@@ -10189,7 +10213,9 @@ endfunction
 
 // Starting Units for Players Whose Race is Unknown
 //   - 12 Sheep, placed randomly around the start location
-//
+// 创建初始单位 - 未知种族
+// 创建点 - 随机
+// 默认包含12只绵羊，是的，12只绵羊（'nshe'）
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
@@ -10215,7 +10241,7 @@ function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startL
     endif
 endfunction
 
-
+// 创建对战初始单位
 function MeleeStartingUnits takes nothing returns nothing
     local integer  index
     local player   indexPlayer
@@ -10252,7 +10278,8 @@ function MeleeStartingUnits takes nothing returns nothing
 endfunction
 
 
-// 创建初始单位为了玩家
+// 创建初始单位（指定玩家及种族）
+// 默认只支持创建4大对战种族的初始单位，其他种族使用该命令无效
 function MeleeStartingUnitsForPlayer takes race whichRace, player whichPlayer, location loc, boolean doHeroes returns nothing
     // Create initial race-specific starting units
     if (whichRace == RACE_HUMAN) then
