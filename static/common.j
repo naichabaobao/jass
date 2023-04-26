@@ -5160,7 +5160,7 @@ native IsItemIdPowerup takes integer itemId returns boolean
 native IsItemIdSellable takes integer itemId returns boolean
 // 物品是否可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
-// 选取 区域内 所有物品 做动作
+// 选取区域内所有物品做动作
 // @param r区域
 // @param filter过滤
 // @param actionFunc动作
@@ -5169,7 +5169,7 @@ native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns no
 native GetItemLevel takes item whichItem returns integer
 // 获取物品类型
 native GetItemType takes item whichItem returns itemtype
-// 设置掉落重生神符的单位类型
+// 设置掉落物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 物品名称
 constant native GetItemName takes item whichItem returns string
