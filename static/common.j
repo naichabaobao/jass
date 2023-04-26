@@ -426,7 +426,7 @@ globals
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
 	// 联盟类型 帮助请求
 	constant alliancetype ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
-	// 联盟类型 帮助回答
+	// 联盟类型 帮助请求响应
 	constant alliancetype ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
 	// 联盟类型 共享经验值
 	constant alliancetype ALLIANCE_SHARED_XP = ConvertAllianceType(3)
@@ -434,9 +434,9 @@ globals
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
 	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟类型 共享单位
+	// 联盟类型 共享单位控制
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
-	// 联盟类型 完全共享单位
+	// 联盟类型 完全共享单位控制
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
@@ -602,7 +602,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
 	// 子动画类型 - 生长（古树）
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
-	// 子动画类型 - 循环（可能是无操作时的默认动作）
+	// 子动画类型 - 循环（可能是无操作时的默认动画）
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
 	// 子动画类型 - 猛击
 	constant subanimtype SUBANIM_TYPE_SLAM = ConvertSubAnimType(14)
@@ -3366,7 +3366,7 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DELAY = ConvertAbilityRealLevelField('Nst5')
     // 技能实数等级域 施法持续时间 ('Ncl1')
 	constant abilityreallevelfield ABILITY_RLF_FOLLOW_THROUGH_TIME = ConvertAbilityRealLevelField('Ncl1')
-    // 技能实数等级域 动作持续时间 ('Ncl4')
+    // 技能实数等级域 技能持续时间 ('Ncl4')
 	constant abilityreallevelfield ABILITY_RLF_ART_DURATION = ConvertAbilityRealLevelField('Ncl4')
     // 技能实数等级域 移动速度增加（%） ('Nab1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NAB1 = ConvertAbilityRealLevelField('Nab1')
@@ -4362,10 +4362,10 @@ native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolex
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-// 将指定方形区域的的单位加入单位组
+// 将指定矩形区域的的单位加入单位组
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 将指定方形区域的的单位加入单位组，同时指定添加单位的数量上限
+// 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
@@ -4763,7 +4763,7 @@ constant native GetConstructingStructure takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
-// 获取取消建造中的建筑
+// 获取取消建造的建筑
 constant native GetCancelledStructure takes nothing returns unit
 // 获取已建造的建筑
 constant native GetConstructedStructure takes nothing returns unit
@@ -5538,7 +5538,7 @@ native UnitSetConstructionProgress takes unit whichUnit, integer constructionPer
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
-// 设置单位小地图图标
+// 启用/禁用 单位的小地图图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
 // 伤害区域 [R]
@@ -5710,7 +5710,7 @@ constant native GetPlayerHandicap takes player whichPlayer returns real
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
 // 玩家障碍恢复时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-// 获取玩家损伤
+// 获取玩家损伤障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
 // 设置玩家经验上限 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
@@ -5718,7 +5718,7 @@ constant native SetPlayerHandicap takes player whichPlayer, real handicap return
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家障碍恢复时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-// 设置玩家损伤
+// 设置玩家损伤障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置玩家的科技上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
@@ -6186,9 +6186,9 @@ native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId retur
 native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
-// 随机的中立敌对单位单位类型(有等级)
+// 获取随机中立敌对单位单位类型(指定单位等级)
 native ChooseRandomCreep takes integer level returns integer
-// 随机的中立建筑物类型
+// 获取随机中立建筑物类型
 native ChooseRandomNPBuilding takes nothing returns integer
 // 随机物品-所有等级
 native ChooseRandomItem takes integer level returns integer
