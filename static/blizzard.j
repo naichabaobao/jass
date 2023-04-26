@@ -11869,7 +11869,7 @@ endfunction
 //*        item into the unpathable area where nobody can get it...
 //*
 //***************************************************************************
-
+// 创建指定物品（指定单位）
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y
@@ -11896,7 +11896,7 @@ function UnitDropItem takes unit inUnit, integer inItemID returns item
     return droppedItem
 endfunction
 
-
+// 创建指定物品（指定目标点）
 function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real x
     local real y
