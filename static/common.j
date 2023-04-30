@@ -1,153 +1,288 @@
 
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
-//
+// 代理
 type agent extends handle  // all reference counted objects
+// 事件
 type event extends agent  // a reference to an event registration
+// 玩家
 type player extends agent  // a single player reference
+// 目标
+// 可以是任意有生命的互动游戏对象，如单位、物品、可破坏物
 type widget extends agent  // an interactive game object with life
+// 单位
 type unit extends widget  // a single unit reference
+// 可破坏物
 type destructable extends widget
+// 物品
 type item extends widget
+// 技能
 type ability extends agent
+// 魔法效果
 type buff extends ability
+// 玩家组
 type force extends agent
+// 单位组
 type group extends agent
+// 触发器
 type trigger extends agent
+// 触发器条件
 type triggercondition extends agent
+// 触发器动作
 type triggeraction extends handle
+// 计时器
 type timer extends agent
+// 点
 type location extends agent
+// 区域
 type region extends agent
+// 矩形
 type rect extends agent
+// 条件表达式
 type boolexpr extends agent
+// 声音
 type sound extends agent
+// 条件
 type conditionfunc extends boolexpr
+// 过滤
 type filterfunc extends boolexpr
+// 单位池
 type unitpool extends handle
+// 物品池
 type itempool extends handle
+// 种族
 type race extends handle
+// 联盟类型
 type alliancetype extends handle
+// 种族偏好
 type racepreference extends handle
+// 游戏状态
 type gamestate extends handle
+// 游戏整数状态
 type igamestate extends gamestate
+// 游戏浮动状态
 type fgamestate extends gamestate
+// 玩家状态
 type playerstate extends handle
+// 玩家得分
 type playerscore extends handle
+// 玩家游戏结果
 type playergameresult extends handle
+// 单位状态
 type unitstate extends handle
+// AI难度
 type aidifficulty extends handle
 
+// 事件ID
 type eventid extends handle
+// 游戏事件
 type gameevent extends eventid
+// 玩家事件
 type playerevent extends eventid
+// 玩家单位事件
 type playerunitevent extends eventid
+// 单位事件
 type unitevent extends eventid
+// 比较事件
 type limitop extends eventid
+// 目标事件
 type widgetevent extends eventid
+// 对话框事件
 type dialogevent extends eventid
+// 单位类型
 type unittype extends handle
 
+// 游戏速度
 type gamespeed extends handle
+// 游戏难度
 type gamedifficulty extends handle
+// 游戏类型
 type gametype extends handle
+// 地图参数
 type mapflag extends handle
+// 地图可见性
 type mapvisibility extends handle
+// 地图设置
 type mapsetting extends handle
+// 地图密度
 type mapdensity extends handle
+// 玩家控制者
 type mapcontrol extends handle
+// 小地图标志
 type minimapicon extends handle
+// 玩家槽状态
 type playerslotstate extends handle
+// 音量组
 type volumegroup extends handle
+// 镜头属性
 type camerafield extends handle
+// 镜头
 type camerasetup extends handle
+// 玩家颜色
 type playercolor extends handle
+// 开始点
 type placement extends handle
+// 开始点优先级
 type startlocprio extends handle
+// 罕见动画控制
 type raritycontrol extends handle
+// 混合模式
 type blendmode extends handle
+// 纹理贴图标志
 type texmapflags extends handle
+// 特效
 type effect extends agent
+// 特效类型
 type effecttype extends handle
+// 天气特效
 type weathereffect extends handle
+// 地形变化
 type terraindeformation extends handle
+// 迷雾状态
 type fogstate extends handle
+// 可见度修整器
 type fogmodifier extends agent
+// 对话框
 type dialog extends agent
+// 按钮
 type button extends agent
+// 任务
 type quest extends agent
+// 任务要求
 type questitem extends agent
+// 任务失败条件
 type defeatcondition extends agent
+// 计时器窗口
 type timerdialog extends agent
+// 排行榜
 type leaderboard extends agent
+// 多面板
 type multiboard extends agent
+// 多面板项目
 type multiboarditem extends agent
+// 可追踪物
 type trackable extends agent
+// 游戏缓存
 type gamecache extends agent
+// 版本
+// 混乱之治 或 冰封王座
 type version extends handle
+// 物品类型
 type itemtype extends handle
+// 漂浮文字
 type texttag extends handle
+// 攻击类型
 type attacktype extends handle
+// 伤害类型
 type damagetype extends handle
+// 武器类型
 type weapontype extends handle
+// 声音类型
 type soundtype extends handle
+// 闪电效果
 type lightning extends handle
+// 路径类型
 type pathingtype extends handle
+// 鼠标按键类型
 type mousebuttontype extends handle
+// 动画类型
 type animtype extends handle
+// 子动画类型
 type subanimtype extends handle
+// 图像
 type image extends handle
+// 地表纹理
 type ubersplat extends handle
-type hashtable extends agent
+// 哈希表
+type hashtable extends 
+// 框架/UI
 type framehandle extends handle
+// 原生框架/原生UI类型
 type originframetype extends handle
+// 原生框架/原生UI相对位置
 type framepointtype extends handle
+// 文本对齐方式
 type textaligntype extends handle
+// 框架/UI事件类型
 type frameeventtype extends handle
+// 键盘按键类型
 type oskeytype extends handle
+// 技能整数域
 type abilityintegerfield extends handle
+// 技能实数域
 type abilityrealfield extends handle
+// 技能布尔值域
 type abilitybooleanfield extends handle
+// 技能字串符域
 type abilitystringfield extends handle
+// 技能随等级改变的整数域
 type abilityintegerlevelfield extends handle
+// 技能随等级改变的实数域
 type abilityreallevelfield extends handle
+// 技能随等级改变的布尔值域
 type abilitybooleanlevelfield extends handle
+// 技能随等级改变的字串符域
 type abilitystringlevelfield extends handle
+// 技能随等级改变的整数数组域
 type abilityintegerlevelarrayfield extends handle
+// 技能随等级改变的实数数组域
 type abilityreallevelarrayfield extends handle
+// 技能随等级改变的布尔值数组域
 type abilitybooleanlevelarrayfield extends handle
+// 技能随等级改变的字串符数组域
 type abilitystringlevelarrayfield extends handle
+// 单位整数域
 type unitintegerfield extends handle
+// 单位实数域
 type unitrealfield extends handle
+// 单位布尔值域
 type unitbooleanfield extends handle
+// 单位字串符域
 type unitstringfield extends handle
+// 单位武器整数域
 type unitweaponintegerfield extends handle
+// 单位武器实数域
 type unitweaponrealfield extends handle
+// 单位武器布尔值域
 type unitweaponbooleanfield extends handle
+// 单位武器字串符域
 type unitweaponstringfield extends handle
+// 物品整数域
 type itemintegerfield extends handle
+// 物品实数域
 type itemrealfield extends handle
+// 物品布尔值域
 type itembooleanfield extends handle
+// 物品字串符域
 type itemstringfield extends handle
+// 移动类型
 type movetype extends handle
+// 目标甲类型
 type targetflag extends handle
+// 装甲类型
 type armortype extends handle
+// 英雄属性
 type heroattribute extends handle
+// 防御类型
 type defensetype extends handle
+// 生命恢复类型
 type regentype extends handle
+// 单位类别
 type unitcategory extends handle
+// 放置要求（默认用于建筑物）
 type pathingflag extends handle
+// 特效按钮
 type commandbuttoneffect extends handle
 
 // 转换种族
 constant native ConvertRace takes integer i returns race
 // 转换联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
-// 转换种族
+// 转换种族偏好
 constant native ConvertRacePref takes integer i returns racepreference
-// 转换I游戏状态
+// 转换游戏整数状态
 constant native ConvertIGameState takes integer i returns igamestate
-// 转换F游戏状态
+// 转换浮动游戏状态
 constant native ConvertFGameState takes integer i returns fgamestate
 // 玩家状态转换
 constant native ConvertPlayerState takes integer i returns playerstate
@@ -171,21 +306,21 @@ constant native ConvertWidgetEvent takes integer i returns widgetevent
 constant native ConvertDialogEvent takes integer i returns dialogevent
 // 转换单位事件
 constant native ConvertUnitEvent takes integer i returns unitevent
-// 转换限制操作
+// 转换比较
 constant native ConvertLimitOp takes integer i returns limitop
 // 转换单位类型
 constant native ConvertUnitType takes integer i returns unittype
 // 转换游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
-// 转换位置
+// 转换开始点
 constant native ConvertPlacement takes integer i returns placement
-// 转换起始位置优先
+// 转换开始点优先级
 constant native ConvertStartLocPrio takes integer i returns startlocprio
 // 转换游戏难度
 constant native ConvertGameDifficulty takes integer i returns gamedifficulty
 // 转换游戏类型
 constant native ConvertGameType takes integer i returns gametype
-// 转换地图标记
+// 转换地图参数
 constant native ConvertMapFlag takes integer i returns mapflag
 // 转换地图可见性
 constant native ConvertMapVisibility takes integer i returns mapvisibility
@@ -193,11 +328,11 @@ constant native ConvertMapVisibility takes integer i returns mapvisibility
 constant native ConvertMapSetting takes integer i returns mapsetting
 // 转换地图密度
 constant native ConvertMapDensity takes integer i returns mapdensity
-// 转换地图控制器
+// 转换玩家控制者类型
 constant native ConvertMapControl takes integer i returns mapcontrol
 // 转换玩家颜色
 constant native ConvertPlayerColor takes integer i returns playercolor
-// 转换玩家位置状态
+// 转换玩家槽状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
 // 转换音量组
 constant native ConvertVolumeGroup takes integer i returns volumegroup
@@ -205,7 +340,7 @@ constant native ConvertVolumeGroup takes integer i returns volumegroup
 constant native ConvertCameraField takes integer i returns camerafield
 // 转换混合模式
 constant native ConvertBlendMode takes integer i returns blendmode
-// 转换罕见的控制
+// 转换罕见动画控制
 constant native ConvertRarityControl takes integer i returns raritycontrol
 // 转换纹理贴图标志
 constant native ConvertTexMapFlags takes integer i returns texmapflags
@@ -233,7 +368,7 @@ constant native ConvertMouseButtonType takes integer i returns mousebuttontype
 constant native ConvertAnimType takes integer i returns animtype
 // 转换子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
-// 转换原点框架类型
+// 转换原生框架（原生UI）类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
 // 转换frame点（框架）类型
 constant native ConvertFramePointType takes integer i returns framepointtype
@@ -247,25 +382,25 @@ constant native ConvertOsKeyType takes integer i returns oskeytype
 constant native ConvertAbilityIntegerField takes integer i returns abilityintegerfield
 // 转换技能实数域
 constant native ConvertAbilityRealField takes integer i returns abilityrealfield
-// 转换技能布尔域
+// 转换技能布尔值域
 constant native ConvertAbilityBooleanField takes integer i returns abilitybooleanfield
 // 转换技能字符串域
 constant native ConvertAbilityStringField takes integer i returns abilitystringfield
-// 转换技能整数等级域
+// 转换技能随等级改变的整数域
 constant native ConvertAbilityIntegerLevelField takes integer i returns abilityintegerlevelfield
-// 转换技能实数等级域
+// 转换技能随等级改变的实数域
 constant native ConvertAbilityRealLevelField takes integer i returns abilityreallevelfield
-// 转换技能布尔等级域
+// 转换技能随等级改变的布尔值域
 constant native ConvertAbilityBooleanLevelField takes integer i returns abilitybooleanlevelfield
-// 转换技能字符串等级域
+// 转换技能随等级改变的字符串域
 constant native ConvertAbilityStringLevelField takes integer i returns abilitystringlevelfield
-// 转换技能整数等级数组域
+// 转换技能随等级改变的整数数组域
 constant native ConvertAbilityIntegerLevelArrayField takes integer i returns abilityintegerlevelarrayfield
-// 转换技能实数等级数组域
+// 转换技能随等级改变的实数数组域
 constant native ConvertAbilityRealLevelArrayField takes integer i returns abilityreallevelarrayfield
-// 转换技能布尔值等级数组域
+// 转换技能随等级改变的布尔值数组域
 constant native ConvertAbilityBooleanLevelArrayField takes integer i returns abilitybooleanlevelarrayfield
-// 转换技能字符串等级数组域
+// 转换技能随等级改变的字符串数组域
 constant native ConvertAbilityStringLevelArrayField takes integer i returns abilitystringlevelarrayfield
 // 转换单位整数域
 constant native ConvertUnitIntegerField takes integer i returns unitintegerfield
@@ -345,9 +480,10 @@ globals
 	
 	// 假 false
  constant boolean FALSE = false
-        // 真 true
+    // 真 true
 	constant boolean TRUE = true
-	// 数组最大值，1.28及以下版本该值是8192
+	// 数组最大值，默认值32768
+	// 注：1.28及以下版本，默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
@@ -413,96 +549,96 @@ globals
 	constant race RACE_DEMON = ConvertRace(5)
 	// 其他种族
 	constant race RACE_OTHER = ConvertRace(7)
-	// 玩家游戏结果-胜利
+	// 玩家游戏结果 胜利
 	constant playergameresult PLAYER_GAME_RESULT_VICTORY = ConvertPlayerGameResult(0)
-	// 玩家游戏结果-失败
+	// 玩家游戏结果 失败
 	constant playergameresult PLAYER_GAME_RESULT_DEFEAT = ConvertPlayerGameResult(1)
-	// 玩家游戏结果-平局
+	// 玩家游戏结果 平局
 	constant playergameresult PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
-	// 玩家游戏结果-不确定
+	// 玩家游戏结果 不确定
 	constant playergameresult PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
-	// 被动联盟
+	// 联盟类型 被动联盟（联盟不侵略）
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
-	// 联盟帮助要求
+	// 联盟类型 帮助请求
 	constant alliancetype ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
-	// 联盟帮助响应
+	// 联盟类型 帮助请求响应
 	constant alliancetype ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
-	// 联盟共享优先权
+	// 联盟类型 共享经验值
 	constant alliancetype ALLIANCE_SHARED_XP = ConvertAllianceType(3)
-	// 盟友法术锁定
+	// 联盟类型 盟友魔法锁定
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
-	// 联盟共享视野
+	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟共享控制
+	// 联盟类型 共享单位控制
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
-	// 联盟共享高级控制
+	// 联盟类型 完全共享单位控制
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
-	// 联盟可营救
+	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
-	// 联盟势力共享视野
+	// 联盟类型 被迫共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
-	// 游戏版本--混乱之治
+	// 游戏版本 混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
-	// 游戏版本--冰封王座
+	// 游戏版本 冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
-	// 正常
+	// 攻击类型 普通
 	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
-	// 普通
+	// 攻击类型 近战
 	constant attacktype ATTACK_TYPE_MELEE = ConvertAttackType(1)
-	// 穿刺
+	// 攻击类型 穿刺
 	constant attacktype ATTACK_TYPE_PIERCE = ConvertAttackType(2)
-	// 攻城
+	// 攻击类型 攻城
 	constant attacktype ATTACK_TYPE_SIEGE = ConvertAttackType(3)
-	// 魔法
+	// 攻击类型 魔法
 	constant attacktype ATTACK_TYPE_MAGIC = ConvertAttackType(4)
-	// 混乱
+	// 攻击类型 混乱
 	constant attacktype ATTACK_TYPE_CHAOS = ConvertAttackType(5)
-	// 英雄
+	// 攻击类型 英雄
 	constant attacktype ATTACK_TYPE_HERO = ConvertAttackType(6)
 	
-	// 未知
+	// 伤害类型 未知
 	constant damagetype DAMAGE_TYPE_UNKNOWN = ConvertDamageType(0)
-	// 正常
+	// 伤害类型 普通
 	constant damagetype DAMAGE_TYPE_NORMAL = ConvertDamageType(4)
-	// 增强
+	// 伤害类型 强化
 	constant damagetype DAMAGE_TYPE_ENHANCED = ConvertDamageType(5)
-	// 火焰
+	// 伤害类型 火焰
 	constant damagetype DAMAGE_TYPE_FIRE = ConvertDamageType(8)
-	// 寒冰
+	// 伤害类型 冰冻
 	constant damagetype DAMAGE_TYPE_COLD = ConvertDamageType(9)
-	// 闪电
+	// 伤害类型 闪电
 	constant damagetype DAMAGE_TYPE_LIGHTNING = ConvertDamageType(10)
-	// 毒
+	// 伤害类型 毒药
 	constant damagetype DAMAGE_TYPE_POISON = ConvertDamageType(11)
-	// 瘟疫
+	// 伤害类型 疾病
 	constant damagetype DAMAGE_TYPE_DISEASE = ConvertDamageType(12)
-	// 瘟疫
+	// 伤害类型 神圣
 	constant damagetype DAMAGE_TYPE_DIVINE = ConvertDamageType(13)
-	// 神圣
+	// 伤害类型 魔法
 	constant damagetype DAMAGE_TYPE_MAGIC = ConvertDamageType(14)
-	// 音速
+	// 伤害类型 声音
 	constant damagetype DAMAGE_TYPE_SONIC = ConvertDamageType(15)
-	// 酸性
+	// 伤害类型 酸性
 	constant damagetype DAMAGE_TYPE_ACID = ConvertDamageType(16)
-	// 势力
+	// 伤害类型 力量
 	constant damagetype DAMAGE_TYPE_FORCE = ConvertDamageType(17)
-	// 死亡
+	// 伤害类型 死亡
 	constant damagetype DAMAGE_TYPE_DEATH = ConvertDamageType(18)
-	// 精神
+	// 伤害类型 精神
 	constant damagetype DAMAGE_TYPE_MIND = ConvertDamageType(19)
-	// 植物
+	// 伤害类型 植物
 	constant damagetype DAMAGE_TYPE_PLANT = ConvertDamageType(20)
-	// 防御
+	// 伤害类型 防御
 	constant damagetype DAMAGE_TYPE_DEFENSIVE = ConvertDamageType(21)
-	// 破坏
+	// 伤害类型 破坏
 	constant damagetype DAMAGE_TYPE_DEMOLITION = ConvertDamageType(22)
-	// 慢性毒药
+	// 伤害类型 慢性毒药
 	constant damagetype DAMAGE_TYPE_SLOW_POISON = ConvertDamageType(23)
-	// 灵魂锁链
+	// 伤害类型 灵魂锁链
 	constant damagetype DAMAGE_TYPE_SPIRIT_LINK = ConvertDamageType(24)
-	// 暗影打击
+	// 伤害类型 暗影突袭
 	constant damagetype DAMAGE_TYPE_SHADOW_STRIKE = ConvertDamageType(25)
-	// 通用
+	// 伤害类型 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
 	
 	// 武器声音 无
@@ -601,7 +737,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
 	// 子动画类型 - 生长（古树）
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
-	// 子动画类型 - 循环（可能是无操作时的默认动作）
+	// 子动画类型 - 循环（可能是无操作时的默认动画）
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
 	// 子动画类型 - 猛击
 	constant subanimtype SUBANIM_TYPE_SLAM = ConvertSubAnimType(14)
@@ -629,7 +765,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_RIGHT = ConvertSubAnimType(25)
 	// 子动画类型 - 开火
 	constant subanimtype SUBANIM_TYPE_FIRE = ConvertSubAnimType(26)
-	// 子动画类型 - 刮
+	// 子动画类型 - 吃肉
 	constant subanimtype SUBANIM_TYPE_FLESH = ConvertSubAnimType(27)
 	// 子动画类型 - 打击
 	constant subanimtype SUBANIM_TYPE_HIT = ConvertSubAnimType(28)
@@ -705,19 +841,19 @@ globals
 	
 	// Map Setup Constants
 	
-	// 固定玩家种族为 人类
+	// 预设玩家种族 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	// 固定玩家种族为 兽族
+	// 预设玩家种族 兽族
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	// 固定玩家种族为 暗夜
+	// 预设玩家种族 暗夜
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	// 固定玩家种族为 亡灵
+	// 预设玩家种族 亡灵
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
-	// 固定玩家种族为 恶魔
+	// 预设玩家种族 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
-	// 固定玩家种族为 随机
+	// 预设玩家种族 随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
-	// 固定玩家种族为 用户可选择
+	// 预设玩家种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
@@ -731,81 +867,81 @@ globals
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
 	// 玩家控制者类型 没有玩家
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
-	// 游戏类型-对战
+	// 游戏类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
-	// 游戏类型-自由竞赛
+	// 游戏类型 - 自由竞赛
 	constant gametype GAME_TYPE_FFA = ConvertGameType(2)
-	// 游戏类型-使用地图设置
+	// 游戏类型 - 使用地图设置
 	constant gametype GAME_TYPE_USE_MAP_SETTINGS = ConvertGameType(4)
-	// 游戏类型-官方地图
+	// 游戏类型 - 官方地图
 	constant gametype GAME_TYPE_BLIZ = ConvertGameType(8)
-	// 游戏类型- 1 V 1
+	// 游戏类型 -  1 V 1
 	constant gametype GAME_TYPE_ONE_ON_ONE = ConvertGameType(16)
-	// 游戏类型-2队竞赛
+	// 游戏类型 - 2支队伍竞赛
 	constant gametype GAME_TYPE_TWO_TEAM_PLAY = ConvertGameType(32)
-	// 游戏类型-3队竞赛
+	// 游戏类型 - 3支队伍竞赛
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
-	// 游戏类型-4队竞赛
+	// 游戏类型 - 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
-	// 地图迷雾-隐藏地图（默认迷雾状态）
+	// 地图迷雾 - 隐藏地图（默认迷雾状态）
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图迷雾-地图已探索（探索后总是可见）
+	// 地图迷雾 - 地图已探索（探索后总是可见）
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
-	// 地图迷雾-总是可见
+	// 地图迷雾 - 总是可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图-使用障碍
+	// 地图 - 使用障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
-	// 地图-允许有观察者
+	// 地图 - 允许有观察者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
-	// 地图-默认为观看者
+	// 地图 - 默认为观看者
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
-	// 地图-固定玩家颜色
+	// 地图 - 固定玩家颜色
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
-	// 地图-禁止资源交易
+	// 地图 - 禁止资源交易
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图-容许联盟资源交易
+	// 地图 - 容许联盟资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
-	// 地图-禁止改变联盟状态
+	// 地图 - 禁止变更联盟类型
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
-	// 地图-隐藏联盟状态改变
+	// 地图 - 隐藏联盟类型变更
 	constant mapflag MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
-	// 地图-允许作弊码
+	// 地图 - 允许作弊码
 	constant mapflag MAP_CHEATS = ConvertMapFlag(4096)
-	// 地图-隐藏作弊码
+	// 地图 - 隐藏作弊码
 	constant mapflag MAP_CHEATS_HIDDEN = ConvertMapFlag(8192)
-	// 地图-锁定游戏速度
+	// 地图 - 锁定游戏速度
 	constant mapflag MAP_LOCK_SPEED = ConvertMapFlag(8192 * 2)
-	// 地图-禁止随机游戏速度
+	// 地图 - 禁止随机游戏速度
 	constant mapflag MAP_LOCK_RANDOM_SEED = ConvertMapFlag(8192 * 4)
-	// 地图-共享高级控制
+	// 地图 - 共享高级控制
 	constant mapflag MAP_SHARED_ADVANCED_CONTROL = ConvertMapFlag(8192 * 8)
-	// 地图-随机英雄
+	// 地图 - 随机英雄
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
-	// 地图-随机种族
+	// 地图 - 随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图-地图转换
+	// 地图 - 地图转换
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
-	// 地图-玩家开始点随机
+	// 地图 - 玩家开始点随机
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
-	// 地图-玩家开始点固定
+	// 地图 - 玩家开始点固定
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
-	// 地图-使用地图设置的玩家开始点
+	// 地图 - 使用地图设置的玩家开始点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 地图-联盟玩家开始点放在一起
+	// 地图 - 联盟玩家开始点放在一起
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
-	// 起始位置分布优先权-低
+	// 开始点分布优先权-低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
-	// 起始位置分布优先权-高
+	// 开始点分布优先权-高
 	constant startlocprio MAP_LOC_PRIO_HIGH = ConvertStartLocPrio(1)
-	// 起始位置分布优先权-无
+	// 开始点分布优先权-无
 	constant startlocprio MAP_LOC_PRIO_NOT = ConvertStartLocPrio(2)
-	// 地图-无密度
+	// 地图 - 无密度
 	constant mapdensity MAP_DENSITY_NONE = ConvertMapDensity(0)
-	// 地图-低密度
+	// 地图 - 低密度
 	constant mapdensity MAP_DENSITY_LIGHT = ConvertMapDensity(1)
-	// 地图-中等密度
+	// 地图 - 中等密度
 	constant mapdensity MAP_DENSITY_MEDIUM = ConvertMapDensity(2)
-	// 地图-高密度
+	// 地图 - 高密度
 	constant mapdensity MAP_DENSITY_HEAVY = ConvertMapDensity(3)
 	
 	// 游戏难度 简单
@@ -826,11 +962,11 @@ globals
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
 	// 游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	// 玩家游戏状态 没有使用（该位置没有玩家）
+	// 玩家插槽状态 没有使用（该位置没有玩家）
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
-	// 玩家游戏状态 正在游戏
+	// 玩家插槽状态 正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
-	// 玩家游戏状态 已离开游戏
+	// 玩家插槽状态 已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
 	
@@ -838,7 +974,7 @@ globals
 	
 	// 单位移动声音
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-        // 单位回应声音
+    // 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
 	// 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
@@ -876,53 +1012,53 @@ globals
 	// For use with TriggerRegister<X>StateEvent
 	//
 	
-	// 游戏状态-干涉
+	// 游戏整数状态 - 神圣干涉
 	constant igamestate GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
-	// 游戏状态-断开连接
+	// 游戏整数状态 - 断开连接
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
-	// 游戏状态-当前时间
+	// 游戏浮动状态 - 当前时间
 	constant fgamestate GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
-	// 玩家状态-游戏结果
+	// 玩家状态 - 游戏结果
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
 	
 	// current resource levels
-	// 玩家黄金数量
+	// 玩家状态 - 当前的黄金数量
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
-	// 玩家木材数量
+	// 玩家状态 - 当前的木材数量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家英雄数量
+	// 玩家状态 - 当前的英雄数量
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-        // 玩家人口上限数
+    // 玩家状态 - 可用人口数（默认为人口建筑提供的数量）
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
-	// 玩家人口使用数
+	// 玩家状态 - 已用人口数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
-	// 玩家可用人口数	
+	// 玩家状态 - 人口上限数（平衡常数或触发限制的最大数量），默认为100
 	constant playerstate PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
-	// 玩家状态-给予奖励
+	// 玩家状态 - 给予奖励
 	constant playerstate PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
-	// 玩家状态-联盟胜利
+	// 玩家状态 - 联盟胜利
 	constant playerstate PLAYER_STATE_ALLIED_VICTORY = ConvertPlayerState(8)
-	// 玩家状态-放置
+	// 玩家状态 - 放置
 	constant playerstate PLAYER_STATE_PLACED = ConvertPlayerState(9)
-	// 玩家状态-默认为观看者
+	// 玩家状态 - 默认为观看者
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
-	// 玩家状态-观看者
+	// 玩家状态 - 观看者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态-不可跟随
+	// 玩家状态 - 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
-	// 玩家黄金税率
+	// 玩家状态 - 黄金税率
 	constant playerstate PLAYER_STATE_GOLD_UPKEEP_RATE = ConvertPlayerState(13)
-	// 玩家木材税率
+	// 玩家状态 - 木材税率
 	constant playerstate PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
 	
 	// cumulative resources collected by the player during the mission
-	// 玩家状态-已收集金钱
+	// 玩家状态 - 已收集的金钱数量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态-已收集木材
+	// 玩家状态 - 已收集的木材数量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态-野生生物不睡眠
+	// 玩家状态 - 野生生物（中立敌对玩家的单位）不睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 当前生命值
@@ -933,62 +1069,62 @@ globals
 	constant unitstate UNIT_STATE_MANA = ConvertUnitState(2)
 	// 最大法力值
 	constant unitstate UNIT_STATE_MAX_MANA = ConvertUnitState(3)
-	// AI难度-简单
+	// AI难度 - 简单
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
-	// AI难度-普通
+	// AI难度 - 普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-        // AI难度-困难
+    // AI难度 - 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
-	// 玩家积分-训练单位数量 player score values
+	// 玩家积分 - 训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-        // 玩家积分-消灭单位数量
+    // 玩家积分 - 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
-	// 玩家积分-已建造建筑数量
+	// 玩家积分 - 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
-	// 玩家积分-被毁建筑数量
+	// 玩家积分 - 被毁建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_RAZED = ConvertPlayerScore(3)
-	// 玩家积分-科技百分比
+	// 玩家积分 - 科技百分比
 	constant playerscore PLAYER_SCORE_TECH_PERCENT = ConvertPlayerScore(4)
-	// 玩家积分-最大可用人口数量
+	// 玩家积分 - 最大可用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXPROD = ConvertPlayerScore(5)
-	// 玩家积分-最大使用人口数量
+	// 玩家积分 - 最大使用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXUSED = ConvertPlayerScore(6)
-	// 玩家积分-杀死英雄
+	// 玩家积分 - 杀死英雄
 	constant playerscore PLAYER_SCORE_HEROES_KILLED = ConvertPlayerScore(7)
-	// 玩家积分-获得物品
+	// 玩家积分 - 获得物品
 	constant playerscore PLAYER_SCORE_ITEMS_GAINED = ConvertPlayerScore(8)
-	// 玩家积分-雇佣兵
+	// 玩家积分 - 雇佣兵
 	constant playerscore PLAYER_SCORE_MERCS_HIRED = ConvertPlayerScore(9)
-	// 玩家积分-采集到的黄金数量(全部)
+	// 玩家积分 - 采集到的黄金数量(全部)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_TOTAL = ConvertPlayerScore(10)
-	// 玩家积分-采集到的黄金数量(带有维修）
+	// 玩家积分 - 采集到的黄金数量(带有维修）
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
-	// 玩家积分-由于维修费而损失的黄金数量
+	// 玩家积分 - 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
-	// 玩家积分-由于税而损失的黄金数量
+	// 玩家积分 - 由于税而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
-	// 玩家积分-给予盟友的黄金数量
+	// 玩家积分 - 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
-	// 玩家积分-从盟友那里收到的黄金数量
+	// 玩家积分 - 从盟友那里收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
-	// 玩家积分-采集到的木材数量
+	// 玩家积分 - 采集到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
-	// 玩家积分-由于维修费而损失的木材数量
+	// 玩家积分 - 由于维修费而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_UPKEEP = ConvertPlayerScore(17)
-	// 玩家积分-由于税而损失的木材数量
+	// 玩家积分 - 由于税而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
-	// 玩家积分-给予盟友的木材数量
+	// 玩家积分 - 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
-	// 玩家积分-从盟友那里收到的木材数量
+	// 玩家积分 - 从盟友那里收到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_RECEIVED = ConvertPlayerScore(20)
-	// 玩家积分-总的单位得分
+	// 玩家积分 - 总的单位得分
 	constant playerscore PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
-	// 玩家积分-总的英雄得分
+	// 玩家积分 - 总的英雄得分
 	constant playerscore PLAYER_SCORE_HERO_TOTAL = ConvertPlayerScore(22)
-	// 玩家积分-总的资源得分
+	// 玩家积分 - 总的资源得分
 	constant playerscore PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
-	// 玩家积分-总的整体得分
+	// 玩家积分 - 总的整体得分
 	constant playerscore PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 	
 	
@@ -1036,7 +1172,7 @@ globals
 	// For use with TriggerRegisterPlayerEvent
 	// 玩家状态限制
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
-	// 玩家联盟状态变更
+	// 玩家联盟类型变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
 	// 玩家失败
 	constant playerevent EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
@@ -1086,11 +1222,11 @@ globals
 	// 玩家升级科技完成
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
 	
-        // 玩家开始训练单位
+    // 玩家开始训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_START = ConvertPlayerUnitEvent(32)
 	// 玩家取消训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_CANCEL = ConvertPlayerUnitEvent(33)
-        // 玩家完成训练单位
+    // 玩家完成训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_FINISH = ConvertPlayerUnitEvent(34)
 	// 玩家开始研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_START = ConvertPlayerUnitEvent(35)
@@ -1102,15 +1238,15 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位命令事件（指定点）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-        // 玩家单位命令事件（指定单位）
+    // 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-        // 玩家英雄升级事件
+    // 玩家英雄升级事件
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-        // 玩家英雄学习技能事件
+    // 玩家英雄学习技能事件
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-        // 玩家英雄可复活
+    // 玩家英雄可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -1118,7 +1254,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_CANCEL = ConvertPlayerUnitEvent(45)
 	// 玩家英雄完成复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_FINISH = ConvertPlayerUnitEvent(46)
-	// 玩家反召唤建筑（亡灵卖建筑）
+	// 玩家召唤事件
 	constant playerunitevent EVENT_PLAYER_UNIT_SUMMON = ConvertPlayerUnitEvent(47)
 	// 玩家单位物品掉落事件
 	constant playerunitevent EVENT_PLAYER_UNIT_DROP_ITEM = ConvertPlayerUnitEvent(48)
@@ -1142,7 +1278,7 @@ globals
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 單位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-        // 單位（尸体）開始腐爛
+    // 單位（尸体）開始腐爛
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
 	// 单位可检测
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
@@ -1208,7 +1344,7 @@ globals
 	constant unitevent EVENT_UNIT_HERO_REVIVE_CANCEL = ConvertUnitEvent(82)
 	// 英雄完成复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_FINISH = ConvertUnitEvent(83)
-	// 建筑反召唤（亡灵卖建筑）
+	// 召唤事件
 	constant unitevent EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
 	// 单位掉落物品事件
 	constant unitevent EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
@@ -1218,7 +1354,7 @@ globals
 	constant unitevent EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
 	// 单位被装载事件
 	constant unitevent EVENT_UNIT_LOADED = ConvertUnitEvent(88)
-	// 地表装饰物死亡事件
+	// 目标物死亡事件
 	constant widgetevent EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
 	// 对话框按钮点击事件
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
@@ -1297,7 +1433,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 	// 玩家單位停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-        // 玩家單位抵押物品
+    // 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位物品栏中有物品堆叠
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
@@ -1307,7 +1443,7 @@ globals
 	
 	// 单位出售
 	constant unitevent EVENT_UNIT_SELL = ConvertUnitEvent(286)
-	// 单位所属改变
+	// 单位所属变更
 	constant unitevent EVENT_UNIT_CHANGE_OWNER = ConvertUnitEvent(287)
 	// 出售物品
 	constant unitevent EVENT_UNIT_SELL_ITEM = ConvertUnitEvent(288)
@@ -1334,7 +1470,7 @@ globals
 	
 	// 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
-        // 小于 或 等于
+    // 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
 	// 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
@@ -1348,81 +1484,81 @@ globals
 	
 	// Unit Type Constants for use with IsUnitType()
 	
-	// 单位分类是 英雄
+	// 单位类型 英雄
 	constant unittype UNIT_TYPE_HERO = ConvertUnitType(0)
-	// 单位 已死亡
+	// 单位类型 已死亡
 	constant unittype UNIT_TYPE_DEAD = ConvertUnitType(1)
-	// 单位是 一座建筑
+	// 单位类型 建筑
 	constant unittype UNIT_TYPE_STRUCTURE = ConvertUnitType(2)
-	// 单位是 一个飞行单位
+	// 单位类型 飞行单位
 	constant unittype UNIT_TYPE_FLYING = ConvertUnitType(3)
-	// 单位是 一个地面单位
+	// 单位类型 地面单位
 	constant unittype UNIT_TYPE_GROUND = ConvertUnitType(4)
-	// 单位是 可以攻击飞行单位
+	// 单位类型 可以攻击飞行单位
 	constant unittype UNIT_TYPE_ATTACKS_FLYING = ConvertUnitType(5)
-	// 单位是 可以攻击地面单位
+	// 单位类型 可以攻击地面单位
 	constant unittype UNIT_TYPE_ATTACKS_GROUND = ConvertUnitType(6)
-	// 单位是 近战攻击单位
+	// 单位类型 近战攻击单位
 	constant unittype UNIT_TYPE_MELEE_ATTACKER = ConvertUnitType(7)
-	// 单位是 远程攻击单位
+	// 单位类型 远程攻击单位
 	constant unittype UNIT_TYPE_RANGED_ATTACKER = ConvertUnitType(8)
-	// 单位分类是 泰坦
+	// 单位类型 泰坦
 	constant unittype UNIT_TYPE_GIANT = ConvertUnitType(9)
-	// 单位是 召唤的
+	// 单位类型 召唤物
 	constant unittype UNIT_TYPE_SUMMONED = ConvertUnitType(10)
-	// 单位是 被击晕的
+	// 单位类型 被击晕的
 	constant unittype UNIT_TYPE_STUNNED = ConvertUnitType(11)
-	// 单位是 受折磨的
+	// 单位类型 受折磨的
 	constant unittype UNIT_TYPE_PLAGUED = ConvertUnitType(12)
-	// 单位是 被诱捕的（被网住）
+	// 单位类型 被诱捕（被网住）
 	constant unittype UNIT_TYPE_SNARED = ConvertUnitType(13)
-	// 单位分类 不死族
+	// 单位类型 不死族
 	constant unittype UNIT_TYPE_UNDEAD = ConvertUnitType(14)
-	// 单位分类 机械的
+	// 单位类型 机械
 	constant unittype UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
-	// 单位分类 工人
+	// 单位类型 工人
 	constant unittype UNIT_TYPE_PEON = ConvertUnitType(16)
-	// 单位分类 自爆工兵
+	// 单位类型 自爆工兵
 	constant unittype UNIT_TYPE_SAPPER = ConvertUnitType(17)
-	// 单位分类 城镇
+	// 单位类型 城镇
 	constant unittype UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
-	// 单位分类 古树
+	// 单位类型 古树
 	constant unittype UNIT_TYPE_ANCIENT = ConvertUnitType(19)
-	// 单位分类 牛头人
+	// 单位类型 牛头人
 	constant unittype UNIT_TYPE_TAUREN = ConvertUnitType(20)
-	// 单位 已中毒
+	// 单位类型 已中毒
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
-	// 单位 被变形
+	// 单位类型 被变形
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
-	// 单位 被催眠
+	// 单位类型 被催眠
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
-	// 单位 有抗性皮肤
+	// 单位类型 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
-	// 单位 处于虚无状态
+	// 单位类型 处于虚无状态
 	constant unittype UNIT_TYPE_ETHEREAL = ConvertUnitType(25)
-	// 单位 免疫魔法
+	// 单位类型 免疫魔法
 	constant unittype UNIT_TYPE_MAGIC_IMMUNE = ConvertUnitType(26)
 	
 	
 	// Unit Type Constants for use with ChooseRandomItemEx()
 	
-	// 物品分类属于 永久
+	// 物品分类 永久
 	constant itemtype ITEM_TYPE_PERMANENT = ConvertItemType(0)
-	// 物品分类属于 可充
+	// 物品分类 可充
 	constant itemtype ITEM_TYPE_CHARGED = ConvertItemType(1)
-	// 物品分类属于 力量提升
+	// 物品分类 力量提升
 	constant itemtype ITEM_TYPE_POWERUP = ConvertItemType(2)
-	// 物品分类属于 人造
+	// 物品分类 人造
 	constant itemtype ITEM_TYPE_ARTIFACT = ConvertItemType(3)
-	// 物品分类属于 可购买
+	// 物品分类 可购买
 	constant itemtype ITEM_TYPE_PURCHASABLE = ConvertItemType(4)
-	// 物品分类属于 战役
+	// 物品分类 战役
 	constant itemtype ITEM_TYPE_CAMPAIGN = ConvertItemType(5)
-	// 物品分类属于 混杂（假）
+	// 物品分类 混杂（假）
 	constant itemtype ITEM_TYPE_MISCELLANEOUS = ConvertItemType(6)
-	// 物品分类属于 未知
+	// 物品分类 未知
 	constant itemtype ITEM_TYPE_UNKNOWN = ConvertItemType(7)
-	// 物品分类属于 任何
+	// 物品分类 任何
 	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
 	
 	// 弃用事件， Deprecated, should use ITEM_TYPE_POWERUP
@@ -1467,35 +1603,35 @@ globals
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
 	// 混合方式 调整的2x混合
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
-  // 频率控制 普通频率
+    // 频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
-  // 频率控制 罕见频率
+    // 频率控制 罕见频率
 	constant raritycontrol RARITY_RARE = ConvertRarityControl(1)
-	// 地图涂层标志 无
+	// 纹理贴图标志 无
 	constant texmapflags TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
-	// 地图涂层标志 重叠(U)
+	// 纹理贴图标志 重叠(U)
 	constant texmapflags TEXMAP_FLAG_WRAP_U = ConvertTexMapFlags(1)
-	// 地图涂层标志 重叠(V)
+	// 纹理贴图标志 重叠(V)
 	constant texmapflags TEXMAP_FLAG_WRAP_V = ConvertTexMapFlags(2)
-	// 地图涂层标志 重叠(UV)
+	// 纹理贴图标志 重叠(UV)
 	constant texmapflags TEXMAP_FLAG_WRAP_UV = ConvertTexMapFlags(3)
-	// 可见效果 黑色迷雾
+	// 迷雾状态 黑色迷雾
 	constant fogstate FOG_OF_WAR_MASKED = ConvertFogState(1)
-	// 可见效果 战争迷雾
+	// 迷雾状态 战争迷雾
 	constant fogstate FOG_OF_WAR_FOGGED = ConvertFogState(2)
-	// 可见效果 可见
+	// 迷雾状态 可见
 	constant fogstate FOG_OF_WAR_VISIBLE = ConvertFogState(4)
 	
 	
 	// Camera Margin constants for use with GetCameraMargin
 	
-	// 镜头空白 左
+	// 镜头空白 左，似乎恒为512
 	constant integer CAMERA_MARGIN_LEFT = 0
-	// 镜头空白 右
+	// 镜头空白 右，似乎恒为512
 	constant integer CAMERA_MARGIN_RIGHT = 1
-	// 镜头空白 顶部
+	// 镜头空白 顶部，似乎恒为256
 	constant integer CAMERA_MARGIN_TOP = 2
-	// 镜头空白 底部
+	// 镜头空白 底部，似乎恒为256
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
@@ -1523,454 +1659,684 @@ globals
 	
 	// Custom UI API constants
 	
-	
+	// 原生UI 初始化游戏UI，必要，没有它，什么都不显示
  constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
+    // 原生UI 单位操作面板按钮（技能栏，含移动/停止/巡逻/攻击，共12格），每次选择单位时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
+	// 原生UI 英雄栏（F1、F2按钮对应的英雄头像所在区域），所有 HERO_BUTTONS 的父类，由 HeroButtons 控制可见性
 	constant originframetype ORIGIN_FRAME_HERO_BAR = ConvertOriginFrameType(2)
+	// 原生UI 英雄按钮，屏幕左侧的自己/共享控制盟友的英雄可点击按钮
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON = ConvertOriginFrameType(3)
+	// 原生UI 英雄按钮下的血量条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_HP_BAR = ConvertOriginFrameType(4)
+	// 原生UI 英雄按钮下的魔法条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_MANA_BAR = ConvertOriginFrameType(5)
+	// 原生UI 英雄获得新技能点时，英雄按钮发出的光; 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON_INDICATOR = ConvertOriginFrameType(6)
+	// 原生UI 物品栏格按钮（共6格）。当其父级可见时，每次选择物品时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_ITEM_BUTTON = ConvertOriginFrameType(7)
+	// 原生UI 小地图
 	constant originframetype ORIGIN_FRAME_MINIMAP = ConvertOriginFrameType(8)
+	// 原生UI 小地图按钮，0是顶部按钮，到底部的共4个按钮（发送信号、显示/隐藏地形、切换敌友/玩家颜色、显示中立敌对单位营地、编队方式）
 	constant originframetype ORIGIN_FRAME_MINIMAP_BUTTON = ConvertOriginFrameType(9)
+	// 原生UI 系统按钮，菜单，盟友，日志/聊天，任务
 	constant originframetype ORIGIN_FRAME_SYSTEM_BUTTON = ConvertOriginFrameType(10)
+	// 原生UI 工具提示
 	constant originframetype ORIGIN_FRAME_TOOLTIP = ConvertOriginFrameType(11)
+	// 原生UI 用户工具提示窗口柄句
 	constant originframetype ORIGIN_FRAME_UBERTOOLTIP = ConvertOriginFrameType(12)
+	// 原生UI 聊天信息显示框（玩家聊天信息）
 	constant originframetype ORIGIN_FRAME_CHAT_MSG = ConvertOriginFrameType(13)
+	// 原生UI 游戏消息显示框（如 DisplayTextToPlayer 发送的信息）
 	constant originframetype ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
+	// 原生UI 持续显示的变更警告消息，显示在昼夜时钟下方
 	constant originframetype ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
+	// 原生UI 主选单位的模型视图（模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域），其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
 	constant originframetype ORIGIN_FRAME_PORTRAIT = ConvertOriginFrameType(16)
+	// 原生UI 世界UI，游戏区域、单位、物品、特效、雾... 游戏的每个对象都显示在这
 	constant originframetype ORIGIN_FRAME_WORLD_FRAME = ConvertOriginFrameType(17)
+	// 原生UI 简易UI（父级）
 	constant originframetype ORIGIN_FRAME_SIMPLE_UI_PARENT = ConvertOriginFrameType(18)
+	// 原生UI 主选单位的模型视图（ORIGIN_FRAME_PORTRAIT）下方的生命值文字
 	constant originframetype ORIGIN_FRAME_PORTRAIT_HP_TEXT = ConvertOriginFrameType(19)
+	// 原生UI 主选单位的模型视图（ORIGIN_FRAME_PORTRAIT）下方的魔法值文字
 	constant originframetype ORIGIN_FRAME_PORTRAIT_MANA_TEXT = ConvertOriginFrameType(20)
+	// 原生UI BUFF状态栏（单位当前拥有光环的显示区域），尺寸固定，最多显示8个BUFF
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR = ConvertOriginFrameType(21)
+	// 原生UI BUFF状态栏标题（单位当前拥有光环的显示区域的标题），默认值是 Status:（状态：）
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL = ConvertOriginFrameType(22)
 	
-	// 左上
+	// 框架点（UI） 左上
 	constant framepointtype FRAMEPOINT_TOPLEFT = ConvertFramePointType(0)
-	// 上
+	// 框架点（UI） 上
 	constant framepointtype FRAMEPOINT_TOP = ConvertFramePointType(1)
-	// 右上
+	// 框架点（UI） 右上
 	constant framepointtype FRAMEPOINT_TOPRIGHT = ConvertFramePointType(2)
-	// 左
+	// 框架点（UI） 左
 	constant framepointtype FRAMEPOINT_LEFT = ConvertFramePointType(3)
-	// 中间
+	// 框架点（UI） 中间
 	constant framepointtype FRAMEPOINT_CENTER = ConvertFramePointType(4)
-	// 右
+	// 框架点（UI） 右
 	constant framepointtype FRAMEPOINT_RIGHT = ConvertFramePointType(5)
-	// 左下
+	// 框架点（UI） 左下
 	constant framepointtype FRAMEPOINT_BOTTOMLEFT = ConvertFramePointType(6)
-	// 下
+	// 框架点（UI） 下
 	constant framepointtype FRAMEPOINT_BOTTOM = ConvertFramePointType(7)
-	// 右下
+	// 框架点（UI） 右下
 	constant framepointtype FRAMEPOINT_BOTTOMRIGHT = ConvertFramePointType(8)
-	
+	// 文本对齐方式 顶部对齐
 	constant textaligntype TEXT_JUSTIFY_TOP = ConvertTextAlignType(0)
+	// 文本对齐方式 中部对齐
 	constant textaligntype TEXT_JUSTIFY_MIDDLE = ConvertTextAlignType(1)
+	// 文本对齐方式 底部对齐
 	constant textaligntype TEXT_JUSTIFY_BOTTOM = ConvertTextAlignType(2)
+	// 文本对齐方式 左侧对齐
 	constant textaligntype TEXT_JUSTIFY_LEFT = ConvertTextAlignType(3)
+	// 文本对齐方式 居中对齐
 	constant textaligntype TEXT_JUSTIFY_CENTER = ConvertTextAlignType(4)
+	// 文本对齐方式 右侧对齐
 	constant textaligntype TEXT_JUSTIFY_RIGHT = ConvertTextAlignType(5)
-	
+	// 框架（UI）事件类型 控制点击
 	constant frameeventtype FRAMEEVENT_CONTROL_CLICK = ConvertFrameEventType(1)
+	// 框架（UI）事件类型 鼠标移入
 	constant frameeventtype FRAMEEVENT_MOUSE_ENTER = ConvertFrameEventType(2)
+	// 框架（UI）事件类型 鼠标移出
 	constant frameeventtype FRAMEEVENT_MOUSE_LEAVE = ConvertFrameEventType(3)
+	// 框架（UI）事件类型 鼠标松开
 	constant frameeventtype FRAMEEVENT_MOUSE_UP = ConvertFrameEventType(4)
+	// 框架（UI）事件类型 鼠标按下
 	constant frameeventtype FRAMEEVENT_MOUSE_DOWN = ConvertFrameEventType(5)
+	// 框架（UI）事件类型 鼠标滚轴滚动
 	constant frameeventtype FRAMEEVENT_MOUSE_WHEEL = ConvertFrameEventType(6)
+	// 框架（UI）事件类型 复选框-选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_CHECKED = ConvertFrameEventType(7)
+	// 框架（UI）事件类型 复选框-未选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_UNCHECKED = ConvertFrameEventType(8)
+	// 框架（UI）事件类型 输入框-文本变化
 	constant frameeventtype FRAMEEVENT_EDITBOX_TEXT_CHANGED = ConvertFrameEventType(9)
+	// 框架（UI）事件类型 弹出菜单按钮变化
 	constant frameeventtype FRAMEEVENT_POPUPMENU_ITEM_CHANGED = ConvertFrameEventType(10)
+	// 框架（UI）事件类型 鼠标双击
 	constant frameeventtype FRAMEEVENT_MOUSE_DOUBLECLICK = ConvertFrameEventType(11)
+	// 框架（UI）事件类型 独立元素动画更新
 	constant frameeventtype FRAMEEVENT_SPRITE_ANIM_UPDATE = ConvertFrameEventType(12)
+	// 框架（UI）事件类型 滑块数值变化
 	constant frameeventtype FRAMEEVENT_SLIDER_VALUE_CHANGED = ConvertFrameEventType(13)
+	// 框架（UI）事件类型 对话框-点击取消
 	constant frameeventtype FRAMEEVENT_DIALOG_CANCEL = ConvertFrameEventType(14)
+	// 框架（UI）事件类型 对话框-点击接受
 	constant frameeventtype FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
+	// 框架（UI）事件类型 输入框-文本输入
 	constant frameeventtype FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
 	
 	
 	// OS Key constants
 	
-	//键盘 退格键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 退格键
+	// @version 1.33
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
-	//键盘 TAB 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 TAB 键
+	// @version 1.33
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
-	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5）
+	// @version 1.33
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
-	//键盘 回车键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 回车键
+	// @version 1.33
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
-	//键盘 SHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 SHIFT 键
+	// @version 1.33
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
-	//键盘 ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ctrl 键
+	// @version 1.33
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
-	//键盘 ALT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ALT 键
+	// @version 1.33
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
-	//键盘 PAUSE （暂停）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 PAUSE （暂停）键
+	// @version 1.33
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
-	//键盘 CAPS LOCK 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 CAPS LOCK 键
+	// @version 1.33
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
-	//键盘 KANA 键，仅用于日语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 KANA 键，仅用于日语键盘
+	// @version 1.33
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
-	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘
+	// @version 1.33
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
-	//键盘 JUNJA 键，仅用于特定语言输入法，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 JUNJA 键，仅用于特定语言输入法
+	// @version 1.33
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
-	//键盘 FINAL键，仅用于特定语言输入法，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 FINAL键，仅用于特定语言输入法
+	// @version 1.33
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
-	//键盘 HANJA 键，仅用于朝鲜/韩语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 HANJA 键，仅用于朝鲜/韩语键盘
+	// @version 1.33
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
-	//键盘 KANJI 键，仅用于日语键盘，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 KANJI 键，仅用于日语键盘
+	// @version 1.33
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
-	//键盘 ESC 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ESC 键
+	// @version 1.33
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
-	//键盘 Caps lock（开启状态） 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Caps lock（开启状态） 键
+	// @version 1.33
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
-	//键盘 Caps lock（关闭状态） 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Caps lock（关闭状态） 键
+	// @version 1.33
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
-	//键盘 ACCEPT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ACCEPT 键
+	// @version 1.33
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
-	//键盘  变更模式键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘  变更模式键
+	// @version 1.33
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
-	//键盘 空格键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 空格键
+	// @version 1.33
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
-	//键盘 向上翻页键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 向上翻页键
+	// @version 1.33
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
-	//键盘 向下翻页键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 向下翻页键
+	// @version 1.33
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
-	//键盘 结束键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 结束键
+	// @version 1.33
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
-	//键盘 HOME键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 HOME键
+	// @version 1.33
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
-	//键盘 方向键 左，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 方向键 左
+	// @version 1.33
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
-	//键盘 方向键 上，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 方向键 上
+	// @version 1.33
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
-	//键盘 方向键 右，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 方向键 右
+	// @version 1.33
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
-	//键盘 方向键 下，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 方向键 下
+	// @version 1.33
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
-	//键盘 选择（右SHIFT）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 选择（右SHIFT）键
+	// @version 1.33
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
-	//键盘 PRINT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 PRINT 键
+	// @version 1.33
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
-	//键盘 EXECUTE 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 EXECUTE 键
+	// @version 1.33
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
-	//键盘 截图键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 截图键
+	// @version 1.33
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
-	//建盘 INSERT键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//建盘 INSERT键
+	// @version 1.33
 	constant oskeytype OSKEY_INSERT = ConvertOsKeyType($2D)
-	//建盘 DELETE键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//建盘 DELETE键
+	// @version 1.33
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
-	//键盘 帮助（F1）键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 帮助（F1）键
+	// @version 1.33
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
-	//键盘 0键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 0键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
-	//键盘 1键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 1键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
-	//键盘 2键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 2键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
-	//键盘 3键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 3键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
-	//键盘 4键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 4键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
-	//键盘 5键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 5键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
-	//键盘 6键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 6键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
-	//键盘 7键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 7键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
-	//键盘 8键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 8键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
-	//键盘 9键（非小/数字键盘），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 9键（非小/数字键盘）
+	// @version 1.33
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
-	//键盘 A键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 A键
+	// @version 1.33
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
-	//键盘 B键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 B键
+	// @version 1.33
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
-	//键盘 C键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 C键
+	// @version 1.33
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
-	//键盘 D键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 D键
+	// @version 1.33
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
-	//键盘 E键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 E键
+	// @version 1.33
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
-	//键盘 F键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F键
+	// @version 1.33
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
-	//键盘 G键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 G键
+	// @version 1.33
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
-	//键盘 H键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 H键
+	// @version 1.33
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
-	//键盘 I键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 I键
+	// @version 1.33
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
-	//键盘 J键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 J键
+	// @version 1.33
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
-	//键盘 K键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 K键
+	// @version 1.33
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
-	//键盘 L键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 L键
+	// @version 1.33
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
-	//键盘 M键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 M键
+	// @version 1.33
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
-	//键盘 N键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 N键
+	// @version 1.33
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
-	//键盘 O键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 O键
+	// @version 1.33
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
-	//键盘 P键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 P键
+	// @version 1.33
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
-	//键盘 Q键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Q键
+	// @version 1.33
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
-	//键盘 R键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 R键
+	// @version 1.33
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
-	//键盘 S键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 S键
+	// @version 1.33
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
-	//键盘 T键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 T键
+	// @version 1.33
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
-	//键盘 U键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 U键
+	// @version 1.33
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
-	//键盘 V键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 V键
+	// @version 1.33
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
-	//键盘 W键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 W键
+	// @version 1.33
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
-	//键盘 X键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 X键
+	// @version 1.33
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
-	//键盘 Y键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Y键
+	// @version 1.33
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
-	//键盘 Z键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Z键
+	// @version 1.33
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
-	//键盘 LMETA 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 LMETA 键
+	// @version 1.33
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
-	//键盘 RMETA 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 RMETA 键
+	// @version 1.33
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
-	//键盘 APPS 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 APPS 键
+	// @version 1.33
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
-	//键盘 休眠键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 休眠键
+	// @version 1.33
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
-	//小/数字键盘 0键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 0键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
-	//小/数字键盘 1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 1键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
-	//小/数字键盘 2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 2键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
-	//小/数字键盘 3键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 3键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
-	//小/数字键盘 4键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 4键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
-	//小/数字键盘 5键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 5键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
-	//小/数字键盘 6键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 6键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
-	//小/数字键盘 7键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 7键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
-	//小/数字键盘 8键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 8键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
-	//小/数字键盘 9键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 9键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
-	//小/数字键盘 乘号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 乘号键
+	// @version 1.33
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
-	//小/数字键盘 加号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 加号键
+	// @version 1.33
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
-	//小/数字键盘 分离键/分隔符键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 分离键/分隔符键
+	// @version 1.33
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
-	//小/数字键盘 减号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 减号键
+	// @version 1.33
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
-	//小/数字键盘 小数点键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 小数点键
+	// @version 1.33
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
-	//小/数字键盘 除号键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 除号键
+	// @version 1.33
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
-	//键盘 F1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F1键
+	// @version 1.33
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
-	//键盘 F2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F2键
+	// @version 1.33
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
-	//键盘 F3键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F3键
+	// @version 1.33
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
-	//键盘 F4键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F4键
+	// @version 1.33
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
-	//键盘 F5键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F5键
+	// @version 1.33
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
-	//键盘 F6键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F6键
+	// @version 1.33
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
-	//键盘 F7键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F7键
+	// @version 1.33
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
-	//键盘 F8键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F8键
+	// @version 1.33
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
-	//键盘 F9键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F9键
+	// @version 1.33
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
-	//键盘 F10键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F10键
+	// @version 1.33
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
-	//键盘 F11键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F11键
+	// @version 1.33
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
-	//键盘 F12键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F12键
+	// @version 1.33
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
-	//键盘 F13键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F13键
+	// @version 1.33
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
-	//键盘 F14键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F14键
+	// @version 1.33
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
-	//键盘 F15键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F15键
+	// @version 1.33
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
-	//键盘 F16键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F16键
+	// @version 1.33
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
-	//键盘 F17键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F17键
+	// @version 1.33
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
-	//键盘 F18键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F18键
+	// @version 1.33
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
-	//键盘 F19键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F19键
+	// @version 1.33
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
-	//键盘 F20键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F20键
+	// @version 1.33
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
-	//键盘 F21键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F21键
+	// @version 1.33
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
-	//键盘 F22键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F22键
+	// @version 1.33
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
-	//键盘 F23键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F23键
+	// @version 1.33
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
-	//键盘 F24键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 F24键
+	// @version 1.33
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
-	//小/数字键盘 开关键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 开关键
+	// @version 1.33
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
-	//键盘 SCROLL LOCK键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 SCROLL LOCK键
+	// @version 1.33
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
-	//小/数字键盘 等号键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 等号键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
-	//键盘 字典键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 字典键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
-	//键盘 取消注册 Word 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 取消注册 Word 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
-	//键盘 注册 Word 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 注册 Word 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
-	//键盘 左 OYAYUBI 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 左 OYAYUBI 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
-	//键盘 右 OYAYUBI 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 右 OYAYUBI 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
-	//键盘 左 OSHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 左 OSHIFT 键
+	// @version 1.33
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
-	//键盘 右 OSHIFT 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 右 OSHIFT 键
+	// @version 1.33
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
-	//键盘 左 Ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 左 Ctrl 键
+	// @version 1.33
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
-	//键盘 右 Ctrl 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 右 Ctrl 键
+	// @version 1.33
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
-	//键盘 左 Alt 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 左 Alt 键
+	// @version 1.33
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
-	//键盘 右 Alt 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 右 Alt 键
+	// @version 1.33
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
-	//键盘 浏览器后退键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器后退键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
-	//键盘 浏览器前进键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器前进键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
-	//键盘 浏览器刷新键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器刷新键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
-	//键盘 浏览器停止键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器停止键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
-	//键盘 浏览器搜索键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器搜索键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
-	//键盘 浏览器收藏键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器收藏键，
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
-	//键盘 浏览器“开始”和“主页”键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 浏览器“开始”和“主页”键
+	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
-	//键盘 静音键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 静音键
+	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
-	//键盘 减小音量键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 减小音量键
+	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
-	//键盘 增大音量键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 增大音量键
+	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
-	//键盘 下一曲键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 下一曲键
+	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
-	//键盘 上一曲键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 上一曲键
+	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
-	//键盘 停止播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 停止播放键
+	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
-	//键盘 暂停播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 暂停播放键
+	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
-	//键盘 打开邮箱键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 打开邮箱键
+	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
-	//键盘 选择媒体键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 选择媒体键
+	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
-	//键盘 启动应用程序1键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 启动应用程序1键
+	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
-	//键盘 启动应用程序2键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 启动应用程序2键
+	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
-	//小/数字键盘 1建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 1建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
-	//键盘 加号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 加号建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
-	//键盘 逗号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 逗号建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
-	//键盘 减号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 减号建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
-	//键盘 句号建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 句号建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
-	//小/数字键盘 2建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 2建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
-	//小/数字键盘 3建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 3建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
-	//小/数字键盘 4建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 4建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
-	//小/数字键盘 5建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 5建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
-	//小/数字键盘 6建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 6建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
-	//小/数字键盘 7建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 7建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
-	//小/数字键盘 8建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//小/数字键盘 8建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
-	//键盘 AX 建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 AX 建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
-	//键盘 102 建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 102 建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
-	//键盘  Ico帮助键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘  Ico帮助键
+	// @version 1.33
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
-	//键盘  Ico00 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘  Ico00 键
+	// @version 1.33
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
-	//键盘 Process 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 Process 键
+	// @version 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	//键盘 IcoClr 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 IcoClr 键
+	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
-	//键盘 格式化建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 格式化建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
-	//键盘 重置建（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 重置建（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ATTN 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
-	//键盘 PA1 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 PA1 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
-	//键盘 PA2 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 PA2 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ATTN 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
-	//键盘 WSCTRL 键（OEM 键，似乎是联想杀毒软件定制按键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 WSCTRL 键（OEM 键，似乎是联想杀毒软件定制按键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ATTN 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
-	//键盘 ATTN 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ATTN 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
-	//键盘 完成键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 完成键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
-	//键盘 复制键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 复制键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
-	//键盘 自动键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 自动键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
-	//键盘 ENLW 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ENLW 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
-	//键盘 BACKTAB 键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 BACKTAB 键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
-	//键盘 ATTN 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 ATTN 键
+	// @version 1.33
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
-	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 CRSEL 键
+	// @version 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 CRSEL 键
+	// @version 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	//键盘 CRSEL 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 CRSEL 键
+	// @version 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
-	//键盘 播放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 播放键
+	// @version 1.33
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
-	//键盘 缩放键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 缩放键
+	// @version 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	//键盘 留待将来使用的常数键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 留待将来使用的常数键
+	// @version 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
-	//键盘 PA1 键，该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 PA1 键
+	// @version 1.33
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
-	//键盘 清理键（OEM 键），该函数在1.31及以上版本可用，1.29及以下版本不可用，1.30及1.30.2未验证
+	//键盘 清理键（OEM 键）
+	// @version 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
 	
@@ -1978,40 +2344,43 @@ globals
 	
 	
 	// Ability
-	// 技能按钮位置 x 坐标（常规状态） ('abpx')
+	// 技能整数域 技能按钮位置 x 坐标（常规状态） ('abpx')
  constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
-	// 技能按钮位置 y 坐标（常规状态） ('abpy')
+	// 技能整数域 技能按钮位置 y 坐标（常规状态） ('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
-	// 技能按钮位置 x 坐标（激活状态） ('aubx')
+	// 技能整数域 技能按钮位置 x 坐标（激活状态） ('aubx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_X = ConvertAbilityIntegerField('aubx')
-	// 技能按钮位置 y 坐标（激活状态） ('auby')
+	// 技能整数域 技能按钮位置 y 坐标（激活状态） ('auby')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y = ConvertAbilityIntegerField('auby')
-	// 技能按钮位置 x 坐标（研究状态） ('arpx')
+	// 技能整数域 技能按钮位置 x 坐标（研究状态） ('arpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_X = ConvertAbilityIntegerField('arpx')
-	// 技能按钮位置 y 坐标（研究状态） ('arpy')
+	// 技能整数域 技能按钮位置 y 坐标（研究状态） ('arpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_Y = ConvertAbilityIntegerField('arpy')
-	// 技能弹道速度 ('amsp')
+	// 技能整数域 技能弹道速度 ('amsp')
 	constant abilityintegerfield ABILITY_IF_MISSILE_SPEED = ConvertAbilityIntegerField('amsp')
-	// 技能目标附加 ('atac')
+	// 技能整数域 技能目标附加 ('atac')
 	constant abilityintegerfield ABILITY_IF_TARGET_ATTACHMENTS = ConvertAbilityIntegerField('atac')
-	// 技能施法单位附加 ('acac')
+	// 技能整数域 技能施法单位附加 ('acac')
 	constant abilityintegerfield ABILITY_IF_CASTER_ATTACHMENTS = ConvertAbilityIntegerField('acac')
-	// 技能优先权 ('apri')
+	// 技能整数域 技能优先权 ('apri')
 	constant abilityintegerfield ABILITY_IF_PRIORITY = ConvertAbilityIntegerField('apri')
-	// 技能等级 ('alev')
+	// 技能整数域 技能等级 ('alev')
 	constant abilityintegerfield ABILITY_IF_LEVELS = ConvertAbilityIntegerField('alev')
-	// 技能需求等级 ('arlv')
+	// 技能整数域 技能需求等级 ('arlv')
 	constant abilityintegerfield ABILITY_IF_REQUIRED_LEVEL = ConvertAbilityIntegerField('arlv')
-	// 技能学习等级需求 ('alsk')
-	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk') 
-	// 技能状态-英雄技能 ('aher')
+	// 技能整数域 技能学习等级需求 ('alsk')
+	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk')
+
+	// 技能布尔值域 技能状态-英雄技能 ('aher')
 	constant abilitybooleanfield ABILITY_BF_HERO_ABILITY = ConvertAbilityBooleanField('aher') // Get only
-	// 技能状态-物品技能 ('aite')
+	// 技能布尔值域 技能状态-物品技能 ('aite')
 	constant abilitybooleanfield ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
-	// 技能状态-检查依赖 ('achd')
+	// 技能布尔值域 技能状态-检查依赖 ('achd')
 	constant abilitybooleanfield ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
+
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
+
 	// 技能字串符域 名字 ('anam')
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
 	// 技能字串符域 图标（关闭） ('auar')
@@ -2023,756 +2392,1418 @@ globals
 	// 技能字串符域 音效（循环） ('aefl')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
 	
+    // 技能随等级改变的整数域 魔法消耗 ('amcs')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_COST = ConvertAbilityIntegerLevelField('amcs')
+    // 技能随等级改变的整数域 波次数量 ('Hbz1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_WAVES = ConvertAbilityIntegerLevelField('Hbz1')
+    // 技能随等级改变的整数域 碎片数量 ('Hbz3')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SHARDS = ConvertAbilityIntegerLevelField('Hbz3')
+    // 技能随等级改变的整数域 传送单位数量 ('Hmt1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_UNITS_TELEPORTED = ConvertAbilityIntegerLevelField('Hmt1')
+    // 技能随等级改变的整数域 召唤单位数量 ('Hwe2')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_COUNT_HWE2 = ConvertAbilityIntegerLevelField('Hwe2')
+    // 技能随等级改变的整数域 镜像数量 ('Omi1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_IMAGES = ConvertAbilityIntegerLevelField('Omi1')
+    // 技能随等级改变的整数域 复活死尸数量 ('Uan1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_UAN1 = ConvertAbilityIntegerLevelField('Uan1')
+    // 技能随等级改变的整数域 变化参数 ('Eme2')
 	constant abilityintegerlevelfield ABILITY_ILF_MORPHING_FLAGS = ConvertAbilityIntegerLevelField('Eme2')
+    // 技能随等级改变的整数域 力量奖励 ('Nrg5')
 	constant abilityintegerlevelfield ABILITY_ILF_STRENGTH_BONUS_NRG5 = ConvertAbilityIntegerLevelField('Nrg5')
+    // 技能随等级改变的整数域 防御奖励 ('Nrg6')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_BONUS_NRG6 = ConvertAbilityIntegerLevelField('Nrg6')
+    // 技能随等级改变的整数域 最大目标数量 ('Ocl2')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_TARGETS_HIT = ConvertAbilityIntegerLevelField('Ocl2')
+    // 技能随等级改变的整数域 侦察类型 ('Ofs1')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_OFS1 = ConvertAbilityIntegerLevelField('Ofs1')
+    // 技能随等级改变的整数域 召唤单位数量 ('Osf2')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_OSF2 = ConvertAbilityIntegerLevelField('Osf2')
+    // 技能随等级改变的整数域 召唤单位数量 ('Efn1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_EFN1 = ConvertAbilityIntegerLevelField('Efn1')
+    // 技能随等级改变的整数域 复活单位数量 ('Hre1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_HRE1 = ConvertAbilityIntegerLevelField('Hre1')
+    // 技能随等级改变的整数域 叠加参数 ('Hca4')
 	constant abilityintegerlevelfield ABILITY_ILF_STACK_FLAGS = ConvertAbilityIntegerLevelField('Hca4')
+    // 技能随等级改变的整数域 最小单位数 ('Ndp2')
 	constant abilityintegerlevelfield ABILITY_ILF_MINIMUM_NUMBER_OF_UNITS = ConvertAbilityIntegerLevelField('Ndp2')
+    // 技能随等级改变的整数域 最大单位数 ('Ndp3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_NDP3 = ConvertAbilityIntegerLevelField('Ndp3')
+    // 技能随等级改变的整数域 创建单位数 ('Nrc2')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_UNITS_CREATED_NRC2 = ConvertAbilityIntegerLevelField('Nrc2')
+    // 技能随等级改变的整数域 护盾生命值 ('Ams3')
 	constant abilityintegerlevelfield ABILITY_ILF_SHIELD_LIFE = ConvertAbilityIntegerLevelField('Ams3')
+    // 技能随等级改变的整数域 魔法损耗 ('Ams4')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_LOSS_AMS4 = ConvertAbilityIntegerLevelField('Ams4')
+    // 技能随等级改变的整数域 采集黄金数/间隔 ('Bgm1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_PER_INTERVAL_BGM1 = ConvertAbilityIntegerLevelField('Bgm1')
+    // 技能随等级改变的整数域 最大矿工数量 ('Bgm3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_NUMBER_OF_MINERS = ConvertAbilityIntegerLevelField('Bgm3')
+    // 技能随等级改变的整数域 装载容量 ('Car1')
 	constant abilityintegerlevelfield ABILITY_ILF_CARGO_CAPACITY = ConvertAbilityIntegerLevelField('Car1')
+    // 技能随等级改变的整数域 最大目标中立等级 ('Dev3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_DEV3 = ConvertAbilityIntegerLevelField('Dev3')
+    // 技能随等级改变的整数域 最大目标中立等级 ('Dev1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_CREEP_LEVEL_DEV1 = ConvertAbilityIntegerLevelField('Dev1')
+    // 技能随等级改变的整数域 采集黄金数/间隔 ('Fae1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_PER_INTERVAL_EGM1 = ConvertAbilityIntegerLevelField('Egm1')
+    // 技能随等级改变的整数域 防御减少 ('Fae1')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_REDUCTION = ConvertAbilityIntegerLevelField('Fae1')
+    // 技能随等级改变的整数域 侦察类型 ('Fla1')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_FLA1 = ConvertAbilityIntegerLevelField('Fla1')
+    // 技能随等级改变的整数域 闪光弹数量 ('Fla3')
 	constant abilityintegerlevelfield ABILITY_ILF_FLARE_COUNT = ConvertAbilityIntegerLevelField('Fla3')
+    // 技能随等级改变的整数域 最大黄金数量 ('Gld1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_GOLD = ConvertAbilityIntegerLevelField('Gld1')
+    // 技能随等级改变的整数域 最大矿工容量 ('Gld3')
 	constant abilityintegerlevelfield ABILITY_ILF_MINING_CAPACITY = ConvertAbilityIntegerLevelField('Gld3')
+    // 技能随等级改变的整数域 最大尸体数量 ('Gyd1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_GYD1 = ConvertAbilityIntegerLevelField('Gyd1')
+    // 技能随等级改变的整数域 对树伤害 ('Har1')
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_TO_TREE = ConvertAbilityIntegerLevelField('Har1')
+    // 技能随等级改变的整数域 （单次采集最大）木材容量 ('Har2')
 	constant abilityintegerlevelfield ABILITY_ILF_LUMBER_CAPACITY = ConvertAbilityIntegerLevelField('Har2')
+    // 技能随等级改变的整数域 （单次采集最大）黄金容量 ('Har3')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_CAPACITY = ConvertAbilityIntegerLevelField('Har3')
+    // 技能随等级改变的整数域 防御增加 ('Inf2')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_INCREASE_INF2 = ConvertAbilityIntegerLevelField('Inf2')
+    // 技能随等级改变的整数域 选择单位类型 ('Neu2')
 	constant abilityintegerlevelfield ABILITY_ILF_INTERACTION_TYPE = ConvertAbilityIntegerLevelField('Neu2')
+    // 技能随等级改变的整数域 黄金消耗 ('Ndt1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_COST_NDT1 = ConvertAbilityIntegerLevelField('Ndt1')
+    // 技能随等级改变的整数域 木材消耗 ('Ndt2')
 	constant abilityintegerlevelfield ABILITY_ILF_LUMBER_COST_NDT2 = ConvertAbilityIntegerLevelField('Ndt2')
+    // 技能随等级改变的整数域 侦察类型 ('Ndt3')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_NDT3 = ConvertAbilityIntegerLevelField('Ndt3')
+    // 技能随等级改变的整数域 叠加类型 ('Poi4')
 	constant abilityintegerlevelfield ABILITY_ILF_STACKING_TYPE_POI4 = ConvertAbilityIntegerLevelField('Poi4')
+    // 技能随等级改变的整数域 叠加类型 ('Poa5')
 	constant abilityintegerlevelfield ABILITY_ILF_STACKING_TYPE_POA5 = ConvertAbilityIntegerLevelField('Poa5')
+    // 技能随等级改变的整数域 最大目标中立生物等级 ('Ply1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_PLY1 = ConvertAbilityIntegerLevelField('Ply1')
+    // 技能随等级改变的整数域 最大目标中立生物等级 ('Pos1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_POS1 = ConvertAbilityIntegerLevelField('Pos1')
+    // 技能随等级改变的整数域 移动速度更新次数 ('Prg1')
 	constant abilityintegerlevelfield ABILITY_ILF_MOVEMENT_UPDATE_FREQUENCY_PRG1 = ConvertAbilityIntegerLevelField('Prg1')
+    // 技能随等级改变的整数域 攻击速度更新次数 ('Prg2')
 	constant abilityintegerlevelfield ABILITY_ILF_ATTACK_UPDATE_FREQUENCY_PRG2 = ConvertAbilityIntegerLevelField('Prg2')
+    // 技能随等级改变的整数域 魔法损耗 ('Prg6')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_LOSS_PRG6 = ConvertAbilityIntegerLevelField('Prg6')
+    // 技能随等级改变的整数域 单位召唤数量1 ('Rai1')
 	constant abilityintegerlevelfield ABILITY_ILF_UNITS_SUMMONED_TYPE_ONE = ConvertAbilityIntegerLevelField('Rai1')
+    // 技能随等级改变的整数域 单位召唤数量1 ('Rai2')
 	constant abilityintegerlevelfield ABILITY_ILF_UNITS_SUMMONED_TYPE_TWO = ConvertAbilityIntegerLevelField('Rai2')
+    // 技能随等级改变的整数域 最大召唤数量 ('Ucb5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_UNITS_SUMMONED = ConvertAbilityIntegerLevelField('Ucb5')
+    // 技能随等级改变的整数域 选项完整时可用 ('Rej3')
 	constant abilityintegerlevelfield ABILITY_ILF_ALLOW_WHEN_FULL_REJ3 = ConvertAbilityIntegerLevelField('Rej3')
+    // 技能随等级改变的整数域 最多消耗魔法倍数 ('Rpb5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_UNITS_CHARGED_TO_CASTER = ConvertAbilityIntegerLevelField('Rpb5')
+    // 技能随等级改变的整数域 最多可影响到的单位数量('Rpb6')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_UNITS_AFFECTED = ConvertAbilityIntegerLevelField('Rpb6')
+    // 技能随等级改变的整数域 防御增加 ('Roa2')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_INCREASE_ROA2 = ConvertAbilityIntegerLevelField('Roa2')
+    // 技能随等级改变的整数域 最大单位数量 ('Roa7')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_UNITS_ROA7 = ConvertAbilityIntegerLevelField('Roa7')
+    // 技能随等级改变的整数域 扎根攻击模式 ('Roo1')
 	constant abilityintegerlevelfield ABILITY_ILF_ROOTED_WEAPONS = ConvertAbilityIntegerLevelField('Roo1')
+    // 技能随等级改变的整数域 拔起攻击模式 ('Roo2')
 	constant abilityintegerlevelfield ABILITY_ILF_UPROOTED_WEAPONS = ConvertAbilityIntegerLevelField('Roo2')
+    // 技能随等级改变的整数域 拔起防御模式 ('Roo4')
 	constant abilityintegerlevelfield ABILITY_ILF_UPROOTED_DEFENSE_TYPE = ConvertAbilityIntegerLevelField('Roo4')
+    // 技能随等级改变的整数域 积聚等级 ('Sal2')
 	constant abilityintegerlevelfield ABILITY_ILF_ACCUMULATION_STEP = ConvertAbilityIntegerLevelField('Sal2')
+    // 技能随等级改变的整数域 猫头鹰数量 ('Esn4')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_OWLS = ConvertAbilityIntegerLevelField('Esn4')
+    // 技能随等级改变的整数域 叠加类型 ('Spo4')
 	constant abilityintegerlevelfield ABILITY_ILF_STACKING_TYPE_SPO4 = ConvertAbilityIntegerLevelField('Spo4')
+    // 技能随等级改变的整数域 单位数量 ('Sod1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_UNITS = ConvertAbilityIntegerLevelField('Sod1')
+    // 技能随等级改变的整数域 蜘蛛数量 ('Spa1')
 	constant abilityintegerlevelfield ABILITY_ILF_SPIDER_CAPACITY = ConvertAbilityIntegerLevelField('Spa1')
+    // 技能随等级改变的整数域 间隔时间 ('Wha2')
 	constant abilityintegerlevelfield ABILITY_ILF_INTERVALS_BEFORE_CHANGING_TREES = ConvertAbilityIntegerLevelField('Wha2')
+    // 技能随等级改变的整数域 敏捷奖励 ('Iagi')
 	constant abilityintegerlevelfield ABILITY_ILF_AGILITY_BONUS = ConvertAbilityIntegerLevelField('Iagi')
+    // 技能随等级改变的整数域 智力奖励 ('Iint')
 	constant abilityintegerlevelfield ABILITY_ILF_INTELLIGENCE_BONUS = ConvertAbilityIntegerLevelField('Iint')
+    // 技能随等级改变的整数域 力量奖励 ('Istr')
 	constant abilityintegerlevelfield ABILITY_ILF_STRENGTH_BONUS_ISTR = ConvertAbilityIntegerLevelField('Istr')
+    // 技能随等级改变的整数域 攻击奖励 ('Iatt')
 	constant abilityintegerlevelfield ABILITY_ILF_ATTACK_BONUS = ConvertAbilityIntegerLevelField('Iatt')
+    // 技能随等级改变的整数域 防御奖励 ('Idef')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_BONUS_IDEF = ConvertAbilityIntegerLevelField('Idef')
+    // 技能随等级改变的整数域 召唤单位数量1 ('Isn1')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMON_1_AMOUNT = ConvertAbilityIntegerLevelField('Isn1')
+    // 技能随等级改变的整数域 召唤单位数量2 ('Isn2')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMON_2_AMOUNT = ConvertAbilityIntegerLevelField('Isn2')
+    // 技能随等级改变的整数域 取得经验值 ('Ixpg')
 	constant abilityintegerlevelfield ABILITY_ILF_EXPERIENCE_GAINED = ConvertAbilityIntegerLevelField('Ixpg')
+    // 技能随等级改变的整数域 生命值恢复 ('Ihpg')
 	constant abilityintegerlevelfield ABILITY_ILF_HIT_POINTS_GAINED_IHPG = ConvertAbilityIntegerLevelField('Ihpg')
+    // 技能随等级改变的整数域 魔法值恢复 ('Impg')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_POINTS_GAINED_IMPG = ConvertAbilityIntegerLevelField('Impg')
+    // 技能随等级改变的整数域 治疗生命值 ('Ihp2')
 	constant abilityintegerlevelfield ABILITY_ILF_HIT_POINTS_GAINED_IHP2 = ConvertAbilityIntegerLevelField('Ihp2')
+    // 技能随等级改变的整数域 魔法值获取 ('Imp2')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_POINTS_GAINED_IMP2 = ConvertAbilityIntegerLevelField('Imp2')
+    // 技能随等级改变的整数域 攻击奖励 ('Idic')
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_BONUS_DICE = ConvertAbilityIntegerLevelField('Idic')
+    // 技能随等级改变的整数域 目标防御降低 ('Iarp')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_IARP = ConvertAbilityIntegerLevelField('Iarp')
+    // 技能随等级改变的整数域 允许攻击引索 ('Iob5')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5 = ConvertAbilityIntegerLevelField('Iob5')
+    // 技能随等级改变的整数域 等级提升 ('Ilev')
 	constant abilityintegerlevelfield ABILITY_ILF_LEVELS_GAINED = ConvertAbilityIntegerLevelField('Ilev')
+    // 技能随等级改变的整数域 增加最大生命值 ('Ilif')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_LIFE_GAINED = ConvertAbilityIntegerLevelField('Ilif')
+    // 技能随等级改变的整数域 增加最大魔法值 ('Iman')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_MANA_GAINED = ConvertAbilityIntegerLevelField('Iman')
+    // 技能随等级改变的整数域 获得金钱 ('Igol')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_GIVEN = ConvertAbilityIntegerLevelField('Igol')
+    // 技能随等级改变的整数域 获得木材 ('Ilum')
 	constant abilityintegerlevelfield ABILITY_ILF_LUMBER_GIVEN = ConvertAbilityIntegerLevelField('Ilum')
+    // 技能随等级改变的整数域 侦察类型 ('Ifa1')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_IFA1 = ConvertAbilityIntegerLevelField('Ifa1')
+    // 技能随等级改变的整数域 最大目标中立生物等级 ('Icre')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_ICRE = ConvertAbilityIntegerLevelField('Icre')
+    // 技能随等级改变的整数域 移动速度奖励 ('Imvb')
 	constant abilityintegerlevelfield ABILITY_ILF_MOVEMENT_SPEED_BONUS = ConvertAbilityIntegerLevelField('Imvb')
+    // 技能随等级改变的整数域 每秒生命恢复 ('Ihpr')
 	constant abilityintegerlevelfield ABILITY_ILF_HIT_POINTS_REGENERATED_PER_SECOND = ConvertAbilityIntegerLevelField('Ihpr')
+    // 技能随等级改变的整数域 视野范围奖励 ('Isib')
 	constant abilityintegerlevelfield ABILITY_ILF_SIGHT_RANGE_BONUS = ConvertAbilityIntegerLevelField('Isib')
+    // 技能随等级改变的整数域 伤害/间隔 ('Icfd')
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_PER_DURATION = ConvertAbilityIntegerLevelField('Icfd')
+    // 技能随等级改变的整数域 每秒消耗魔法值 ('Icfm')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_USED_PER_SECOND = ConvertAbilityIntegerLevelField('Icfm')
+    // 技能随等级改变的整数域 额外魔法需求 ('Icfx')
 	constant abilityintegerlevelfield ABILITY_ILF_EXTRA_MANA_REQUIRED = ConvertAbilityIntegerLevelField('Icfx')
+    // 技能随等级改变的整数域 侦察范围 ('Idet')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_RADIUS_IDET = ConvertAbilityIntegerLevelField('Idet')
+    // 技能随等级改变的整数域 每个单位魔法损耗 ('Idim')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_LOSS_PER_UNIT_IDIM = ConvertAbilityIntegerLevelField('Idim')
+    // 技能随等级改变的整数域 对召唤单位伤害 ('Idid')
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_TO_SUMMONED_UNITS_IDID = ConvertAbilityIntegerLevelField('Idid')
+    // 技能随等级改变的整数域 最大单位数 ('Irec')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_IREC = ConvertAbilityIntegerLevelField('Irec')
+    // 技能随等级改变的整数域 重生延迟 ('Ircd')
 	constant abilityintegerlevelfield ABILITY_ILF_DELAY_AFTER_DEATH_SECONDS = ConvertAbilityIntegerLevelField('Ircd')
+    // 技能随等级改变的整数域 生命值回复 ('irc2')
 	constant abilityintegerlevelfield ABILITY_ILF_RESTORED_LIFE = ConvertAbilityIntegerLevelField('irc2')
+    // 技能随等级改变的整数域 魔法值回复 ('irc3')
 	constant abilityintegerlevelfield ABILITY_ILF_RESTORED_MANA__1_FOR_CURRENT = ConvertAbilityIntegerLevelField('irc3')
+    // 技能随等级改变的整数域 生命值回复 ('Ihps')
 	constant abilityintegerlevelfield ABILITY_ILF_HIT_POINTS_RESTORED = ConvertAbilityIntegerLevelField('Ihps')
+    // 技能随等级改变的整数域 魔法值回复 ('Imps')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_POINTS_RESTORED = ConvertAbilityIntegerLevelField('Imps')
+    // 技能随等级改变的整数域 最大单位数 ('Itpm')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_ITPM = ConvertAbilityIntegerLevelField('Itpm')
+    // 技能随等级改变的整数域 复活死尸数量 ('Cad1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_CAD1 = ConvertAbilityIntegerLevelField('Cad1')
+    // 技能随等级改变的整数域 地形变形持续时间（毫秒） ('Wrs3')
 	constant abilityintegerlevelfield ABILITY_ILF_TERRAIN_DEFORMATION_DURATION_MS = ConvertAbilityIntegerLevelField('Wrs3')
+    // 技能随等级改变的整数域 传送单位数量 ('Uds1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_UNITS = ConvertAbilityIntegerLevelField('Uds1')
+    // 技能随等级改变的整数域 侦察类型 ('Det1')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_DET1 = ConvertAbilityIntegerLevelField('Det1')
+    // 技能随等级改变的整数域 每次建造的金钱消耗 ('Nsp1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_COST_PER_STRUCTURE = ConvertAbilityIntegerLevelField('Nsp1')
+    // 技能随等级改变的整数域 每次使用的木材消耗 ('Nsp2')
 	constant abilityintegerlevelfield ABILITY_ILF_LUMBER_COST_PER_USE = ConvertAbilityIntegerLevelField('Nsp2')
+    // 技能随等级改变的整数域 侦察类型 ('Nsp3')
 	constant abilityintegerlevelfield ABILITY_ILF_DETECTION_TYPE_NSP3 = ConvertAbilityIntegerLevelField('Nsp3')
+    // 技能随等级改变的整数域 蝗虫群数量 ('Uls1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SWARM_UNITS = ConvertAbilityIntegerLevelField('Uls1')
+    // 技能随等级改变的整数域 每个目标最大蝗虫数量 ('Uls3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_SWARM_UNITS_PER_TARGET = ConvertAbilityIntegerLevelField('Uls3')
+    // 技能随等级改变的整数域 召唤单位数量 ('Nba2')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NBA2 = ConvertAbilityIntegerLevelField('Nba2')
+    // 技能随等级改变的整数域 最大目标中立生物等级 ('Nch1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_NCH1 = ConvertAbilityIntegerLevelField('Nch1')
+    // 技能随等级改变的整数域 禁止类型 ('Nsi1')
 	constant abilityintegerlevelfield ABILITY_ILF_ATTACKS_PREVENTED = ConvertAbilityIntegerLevelField('Nsi1')
+    // 技能随等级改变的整数域 最大目标数 ('Efk3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_EFK3 = ConvertAbilityIntegerLevelField('Efk3')
+    // 技能随等级改变的整数域 召唤单位数量 ('Esv1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_ESV1 = ConvertAbilityIntegerLevelField('Esv1')
+    // 技能随等级改变的整数域 最大尸体数量 ('exh1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_EXH1 = ConvertAbilityIntegerLevelField('exh1')
+    // 技能随等级改变的整数域 物品容量 ('inv1')
 	constant abilityintegerlevelfield ABILITY_ILF_ITEM_CAPACITY = ConvertAbilityIntegerLevelField('inv1')
+    // 技能随等级改变的整数域 最大目标数 ('spl2')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_SPL2 = ConvertAbilityIntegerLevelField('spl2')
+    // 技能随等级改变的整数域 选项完整时可用 ('irl3')
 	constant abilityintegerlevelfield ABILITY_ILF_ALLOW_WHEN_FULL_IRL3 = ConvertAbilityIntegerLevelField('irl3')
+    // 技能随等级改变的整数域 最大驱散单位数量 ('idc3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_DISPELLED_UNITS = ConvertAbilityIntegerLevelField('idc3')
+    // 技能随等级改变的整数域 陷阱数量 ('imo1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_LURES = ConvertAbilityIntegerLevelField('imo1')
+    // 技能随等级改变的整数域 设置游戏时间 - 时 ('ict1')
 	constant abilityintegerlevelfield ABILITY_ILF_NEW_TIME_OF_DAY_HOUR = ConvertAbilityIntegerLevelField('ict1')
+    // 技能随等级改变的整数域 设置游戏时间 - 分 ('ict2')
 	constant abilityintegerlevelfield ABILITY_ILF_NEW_TIME_OF_DAY_MINUTE = ConvertAbilityIntegerLevelField('ict2')
+    // 技能随等级改变的整数域 创建单位数量 ('mec1')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_UNITS_CREATED_MEC1 = ConvertAbilityIntegerLevelField('mec1')
+    // 技能随等级改变的整数域 最小法术数量 ('spb3')
 	constant abilityintegerlevelfield ABILITY_ILF_MINIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb3')
+    // 技能随等级改变的整数域 最大法术数量 ('spb4')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb4')
+    // 技能随等级改变的整数域 禁止攻击引索 ('gra3')
 	constant abilityintegerlevelfield ABILITY_ILF_DISABLED_ATTACK_INDEX = ConvertAbilityIntegerLevelField('gra3')
+    // 技能随等级改变的整数域 允许攻击引索 ('gra4')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4 = ConvertAbilityIntegerLevelField('gra4')
+    // 技能随等级改变的整数域 最大攻击次数 ('gra5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_ATTACKS = ConvertAbilityIntegerLevelField('gra5')
+    // 技能随等级改变的整数域 建筑类型允许 ('Npr1')
 	constant abilityintegerlevelfield ABILITY_ILF_BUILDING_TYPES_ALLOWED_NPR1 = ConvertAbilityIntegerLevelField('Npr1')
+    // 技能随等级改变的整数域 建筑类型允许 ('Nsa1')
 	constant abilityintegerlevelfield ABILITY_ILF_BUILDING_TYPES_ALLOWED_NSA1 = ConvertAbilityIntegerLevelField('Nsa1')
+    // 技能随等级改变的整数域 攻击增加 ('Iaa1')
 	constant abilityintegerlevelfield ABILITY_ILF_ATTACK_MODIFICATION = ConvertAbilityIntegerLevelField('Iaa1')
+    // 技能随等级改变的整数域 召唤单位数量 ('Npa5')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_COUNT_NPA5 = ConvertAbilityIntegerLevelField('Npa5')
+    // 技能随等级改变的整数域 科技升级等级 ('Igl1')
 	constant abilityintegerlevelfield ABILITY_ILF_UPGRADE_LEVELS = ConvertAbilityIntegerLevelField('Igl1')
+    // 技能随等级改变的整数域 召唤单位数量 ('Ndo2')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NDO2 = ConvertAbilityIntegerLevelField('Ndo2')
+    // 技能随等级改变的整数域 每秒野怪数量 ('Nst1')
 	constant abilityintegerlevelfield ABILITY_ILF_BEASTS_PER_SECOND = ConvertAbilityIntegerLevelField('Nst1')
+    // 技能随等级改变的整数域 目标类型 ('Ncl2')
 	constant abilityintegerlevelfield ABILITY_ILF_TARGET_TYPE = ConvertAbilityIntegerLevelField('Ncl2')
+    // 技能随等级改变的整数域 选项 ('Ncl3')
 	constant abilityintegerlevelfield ABILITY_ILF_OPTIONS = ConvertAbilityIntegerLevelField('Ncl3')
+    // 技能随等级改变的整数域 护甲减少 ('Nab3')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_NAB3 = ConvertAbilityIntegerLevelField('Nab3')
+    // 技能随等级改变的整数域 医疗波次 ('Nhs6')
 	constant abilityintegerlevelfield ABILITY_ILF_WAVE_COUNT_NHS6 = ConvertAbilityIntegerLevelField('Nhs6')
+    // 技能随等级改变的整数域 最大目标中立生物等级 ('Ntm3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_CREEP_LEVEL_NTM3 = ConvertAbilityIntegerLevelField('Ntm3')
+    // 技能随等级改变的整数域 导弹数量 ('Ncs3')
 	constant abilityintegerlevelfield ABILITY_ILF_MISSILE_COUNT = ConvertAbilityIntegerLevelField('Ncs3')
+    // 技能随等级改变的整数域 分裂所需攻击次数 ('Nlm3')
 	constant abilityintegerlevelfield ABILITY_ILF_SPLIT_ATTACK_COUNT = ConvertAbilityIntegerLevelField('Nlm3')
+    // 技能随等级改变的整数域 分裂代数 ('Nlm6')
 	constant abilityintegerlevelfield ABILITY_ILF_GENERATION_COUNT = ConvertAbilityIntegerLevelField('Nlm6')
+    // 技能随等级改变的整数域 岩石数 ('Nvc1')
 	constant abilityintegerlevelfield ABILITY_ILF_ROCK_RING_COUNT = ConvertAbilityIntegerLevelField('Nvc1')
+    // 技能随等级改变的整数域 波数 ('Nvc2')
 	constant abilityintegerlevelfield ABILITY_ILF_WAVE_COUNT_NVC2 = ConvertAbilityIntegerLevelField('Nvc2')
+    // 技能随等级改变的整数域 影响敌方数量 ('Tau1')
 	constant abilityintegerlevelfield ABILITY_ILF_PREFER_HOSTILES_TAU1 = ConvertAbilityIntegerLevelField('Tau1')
+    // 技能随等级改变的整数域 影响友军数量 ('Tau2')
 	constant abilityintegerlevelfield ABILITY_ILF_PREFER_FRIENDLIES_TAU2 = ConvertAbilityIntegerLevelField('Tau2')
+    // 技能随等级改变的整数域 最大单位数量 ('Tau3')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_UNITS_TAU3 = ConvertAbilityIntegerLevelField('Tau3')
+    // 技能随等级改变的整数域 增加数量 ('Tau4')
 	constant abilityintegerlevelfield ABILITY_ILF_NUMBER_OF_PULSES = ConvertAbilityIntegerLevelField('Tau4')
+    // 技能随等级改变的整数域 召唤单位类型 ('Hwe1')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_HWE1 = ConvertAbilityIntegerLevelField('Hwe1')
+    // 技能随等级改变的整数域 召唤单位类型 ('Uin4')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_UIN4 = ConvertAbilityIntegerLevelField('Uin4')
+    // 技能随等级改变的整数域 召唤单位类型 ('Osf1')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_OSF1 = ConvertAbilityIntegerLevelField('Osf1')
+    // 技能随等级改变的整数域 召唤单位类型 ('Efnu')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_EFNU = ConvertAbilityIntegerLevelField('Efnu')
+    // 技能随等级改变的整数域 召唤单位类型 ('Nbau')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_NBAU = ConvertAbilityIntegerLevelField('Nbau')
+    // 技能随等级改变的整数域 召唤单位类型 ('Ntou')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_NTOU = ConvertAbilityIntegerLevelField('Ntou')
+    // 技能随等级改变的整数域 召唤单位类型 ('Esvu')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_ESVU = ConvertAbilityIntegerLevelField('Esvu')
+    // 技能随等级改变的整数域 召唤单位类型 ('Nef1')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPES = ConvertAbilityIntegerLevelField('Nef1')
+    // 技能随等级改变的整数域 召唤单位类型 ('Ndou')
 	constant abilityintegerlevelfield ABILITY_ILF_SUMMONED_UNIT_TYPE_NDOU = ConvertAbilityIntegerLevelField('Ndou')
+    // 技能随等级改变的整数域 变化形态单位 ('Emeu')
 	constant abilityintegerlevelfield ABILITY_ILF_ALTERNATE_FORM_UNIT_EMEU = ConvertAbilityIntegerLevelField('Emeu')
+    // 技能随等级改变的整数域 疾病守卫单位类型 ('Aplu')
 	constant abilityintegerlevelfield ABILITY_ILF_PLAGUE_WARD_UNIT_TYPE = ConvertAbilityIntegerLevelField('Aplu')
+    // 技能随等级改变的整数域 允许单位类型 ('Btl1')
 	constant abilityintegerlevelfield ABILITY_ILF_ALLOWED_UNIT_TYPE_BTL1 = ConvertAbilityIntegerLevelField('Btl1')
+    // 技能随等级改变的整数域 替换单位类型 ('Cha1')
 	constant abilityintegerlevelfield ABILITY_ILF_NEW_UNIT_TYPE = ConvertAbilityIntegerLevelField('Cha1')
+    // 技能随等级改变的整数域 新单位类型 ('ent1')
 	constant abilityintegerlevelfield ABILITY_ILF_RESULTING_UNIT_TYPE_ENT1 = ConvertAbilityIntegerLevelField('ent1')
+    // 技能随等级改变的整数域 尸体单位类型 ('Gydu')
 	constant abilityintegerlevelfield ABILITY_ILF_CORPSE_UNIT_TYPE = ConvertAbilityIntegerLevelField('Gydu')
+    // 技能随等级改变的整数域 允许单位类型 ('Loa1')
 	constant abilityintegerlevelfield ABILITY_ILF_ALLOWED_UNIT_TYPE_LOA1 = ConvertAbilityIntegerLevelField('Loa1')
+    // 技能随等级改变的整数域 单位类型限制检查 ('Raiu')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_FOR_LIMIT_CHECK = ConvertAbilityIntegerLevelField('Raiu')
+    // 技能随等级改变的整数域 守卫单位类型 ('Stau')
 	constant abilityintegerlevelfield ABILITY_ILF_WARD_UNIT_TYPE_STAU = ConvertAbilityIntegerLevelField('Stau')
+    // 技能随等级改变的整数域 效果技能 ('Iobu')
 	constant abilityintegerlevelfield ABILITY_ILF_EFFECT_ABILITY = ConvertAbilityIntegerLevelField('Iobu')
+    // 技能随等级改变的整数域 变化单位类型 ('Ndc2')
 	constant abilityintegerlevelfield ABILITY_ILF_CONVERSION_UNIT = ConvertAbilityIntegerLevelField('Ndc2')
+    // 技能随等级改变的整数域 可被保存单位 ('Nsl1')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TO_PRESERVE = ConvertAbilityIntegerLevelField('Nsl1')
+    // 技能随等级改变的整数域 允许单位类型 ('Chl1')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_ALLOWED = ConvertAbilityIntegerLevelField('Chl1')
+    // 技能随等级改变的整数域 蝗虫单位类型 ('Ulsu')
 	constant abilityintegerlevelfield ABILITY_ILF_SWARM_UNIT_TYPE = ConvertAbilityIntegerLevelField('Ulsu')
+    // 技能随等级改变的整数域 合成单位类型 ('coau')
 	constant abilityintegerlevelfield ABILITY_ILF_RESULTING_UNIT_TYPE_COAU = ConvertAbilityIntegerLevelField('coau')
+    // 技能随等级改变的整数域 尸体单位类型 ('exhu')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_EXHU = ConvertAbilityIntegerLevelField('exhu')
+    // 技能随等级改变的整数域 守卫单位类型 ('hwdu')
 	constant abilityintegerlevelfield ABILITY_ILF_WARD_UNIT_TYPE_HWDU = ConvertAbilityIntegerLevelField('hwdu')
+    // 技能随等级改变的整数域 陷阱单位类型 ('imou')
 	constant abilityintegerlevelfield ABILITY_ILF_LURE_UNIT_TYPE = ConvertAbilityIntegerLevelField('imou')
+    // 技能随等级改变的整数域 单位类型 ('ipmu')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_IPMU = ConvertAbilityIntegerLevelField('ipmu')
+    // 技能随等级改变的整数域 工厂单位ID ('Nsyu')
 	constant abilityintegerlevelfield ABILITY_ILF_FACTORY_UNIT_ID = ConvertAbilityIntegerLevelField('Nsyu')
+    // 技能随等级改变的整数域 生产单位ID ('Nfyu')
 	constant abilityintegerlevelfield ABILITY_ILF_SPAWN_UNIT_ID_NFYU = ConvertAbilityIntegerLevelField('Nfyu')
+    // 技能随等级改变的整数域 可破坏物ID ('Nvcu')
 	constant abilityintegerlevelfield ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
+    // 技能随等级改变的整数域 科技类型 ('Iglu')
 	constant abilityintegerlevelfield ABILITY_ILF_UPGRADE_TYPE = ConvertAbilityIntegerLevelField('Iglu')
 	
+    // 技能随等级改变的实数域 魔法释放时间 ('acas')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_TIME = ConvertAbilityRealLevelField('acas')
+    // 技能随等级改变的实数域 持续时间 - 普通 ('adur')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_NORMAL = ConvertAbilityRealLevelField('adur')
+    // 技能随等级改变的实数域 持续时间 - 英雄 ('ahdu')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_HERO = ConvertAbilityRealLevelField('ahdu')
+    // 技能随等级改变的实数域 魔法释放时间间隔 ('acdn')
 	constant abilityreallevelfield ABILITY_RLF_COOLDOWN = ConvertAbilityRealLevelField('acdn')
+    // 技能随等级改变的实数域 影响区域 ('aare')
 	constant abilityreallevelfield ABILITY_RLF_AREA_OF_EFFECT = ConvertAbilityRealLevelField('aare')
+    // 技能随等级改变的实数域 施法距离 ('aran')
 	constant abilityreallevelfield ABILITY_RLF_CAST_RANGE = ConvertAbilityRealLevelField('aran')
+    // 技能随等级改变的实数域 每波伤害 ('Hbz2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_HBZ2 = ConvertAbilityRealLevelField('Hbz2')
+    // 技能随等级改变的实数域 建筑伤害参数（%） ('Hbz4')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_REDUCTION_HBZ4 = ConvertAbilityRealLevelField('Hbz4')
+    // 技能随等级改变的实数域 每秒伤害 ('Hbz5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_HBZ5 = ConvertAbilityRealLevelField('Hbz5')
+    // 技能随等级改变的实数域 每波最大伤害 ('Hbz6')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_DAMAGE_PER_WAVE = ConvertAbilityRealLevelField('Hbz6')
+    // 技能随等级改变的实数域 魔法回复加快 ('Hab1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGENERATION_INCREASE = ConvertAbilityRealLevelField('Hab1')
+    // 技能随等级改变的实数域 魔法施放延迟 ('Hmt2')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_DELAY = ConvertAbilityRealLevelField('Hmt2')
+    // 技能随等级改变的实数域 每秒伤害 ('Oww1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_OWW1 = ConvertAbilityRealLevelField('Oww1')
+    // 技能随等级改变的实数域 魔法伤害减少 ('Oww2')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_OWW2 = ConvertAbilityRealLevelField('Oww2')
+    // 技能随等级改变的实数域 致命一击几率 ('Ocr1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE = ConvertAbilityRealLevelField('Ocr1')
+    // 技能随等级改变的实数域 伤害倍数 ('Ocr2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2 = ConvertAbilityRealLevelField('Ocr2')
+    // 技能随等级改变的实数域 伤害奖励 ('Ocr3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_OCR3 = ConvertAbilityRealLevelField('Ocr3')
+    // 技能随等级改变的实数域 闪避几率 ('Ocr4')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_EVADE_OCR4 = ConvertAbilityRealLevelField('Ocr4')
+    // 技能随等级改变的实数域 施加伤害（%） ('Omi2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_PERCENT_OMI2 = ConvertAbilityRealLevelField('Omi2')
+    // 技能随等级改变的实数域 所受伤害（%） ('Omi3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TAKEN_PERCENT_OMI3 = ConvertAbilityRealLevelField('Omi3')
+    // 技能随等级改变的实数域 技能延迟 ('Omi4')
 	constant abilityreallevelfield ABILITY_RLF_ANIMATION_DELAY = ConvertAbilityRealLevelField('Omi4')
+    // 技能随等级改变的实数域 转变时间 ('Owk1')
 	constant abilityreallevelfield ABILITY_RLF_TRANSITION_TIME = ConvertAbilityRealLevelField('Owk1')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Owk2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OWK2 = ConvertAbilityRealLevelField('Owk2')
+    // 技能随等级改变的实数域 加成伤害 ('Owk3')
 	constant abilityreallevelfield ABILITY_RLF_BACKSTAB_DAMAGE = ConvertAbilityRealLevelField('Owk3')
+    // 技能随等级改变的实数域 治疗数值 ('Udc1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_HEALED_DAMAGED_UDC1 = ConvertAbilityRealLevelField('Udc1')
+    // 技能随等级改变的实数域 每点生命转换为魔法 ('Udp1')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_CONVERTED_TO_MANA = ConvertAbilityRealLevelField('Udp1')
+    // 技能随等级改变的实数域 每点生命转换为生命 ('Udp2')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_CONVERTED_TO_LIFE = ConvertAbilityRealLevelField('Udp2')
+    // 技能随等级改变的实数域 移动速率增加（%） ('Uau1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_UAU1 = ConvertAbilityRealLevelField('Uau1')
+    // 技能随等级改变的实数域 生命回复增加 ('Uau2')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGENERATION_INCREASE_PERCENT = ConvertAbilityRealLevelField('Uau2')
+    // 技能随等级改变的实数域 闪避几率 ('Eev1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_EVADE_EEV1 = ConvertAbilityRealLevelField('Eev1')
+    // 技能随等级改变的实数域 伤害/间隔时间 ('Eim1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_INTERVAL = ConvertAbilityRealLevelField('Eim1')
+    // 技能随等级改变的实数域 每秒魔法消耗 ('Eim2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_DRAINED_PER_SECOND_EIM2 = ConvertAbilityRealLevelField('Eim2')
+    // 技能随等级改变的实数域 启动魔法需求 ('Eim3')
 	constant abilityreallevelfield ABILITY_RLF_BUFFER_MANA_REQUIRED = ConvertAbilityRealLevelField('Eim3')
+    // 技能随等级改变的实数域 魔法燃烧值 ('Emb1')
 	constant abilityreallevelfield ABILITY_RLF_MAX_MANA_DRAINED = ConvertAbilityRealLevelField('Emb1')
+    // 技能随等级改变的实数域 数字显示延迟 ('Emb2')
 	constant abilityreallevelfield ABILITY_RLF_BOLT_DELAY = ConvertAbilityRealLevelField('Emb2')
+    // 技能随等级改变的实数域 数字显示持续时间 ('Emb3')
 	constant abilityreallevelfield ABILITY_RLF_BOLT_LIFETIME = ConvertAbilityRealLevelField('Emb3')
+    // 技能随等级改变的实数域 高度调整时间 ('Eme3')
 	constant abilityreallevelfield ABILITY_RLF_ALTITUDE_ADJUSTMENT_DURATION = ConvertAbilityRealLevelField('Eme3')
+    // 技能随等级改变的实数域 着陆延迟时间 ('Eme4')
 	constant abilityreallevelfield ABILITY_RLF_LANDING_DELAY_TIME = ConvertAbilityRealLevelField('Eme4')
+    // 技能随等级改变的实数域 变形生命值奖励 ('Eme5')
 	constant abilityreallevelfield ABILITY_RLF_ALTERNATE_FORM_HIT_POINT_BONUS = ConvertAbilityRealLevelField('Eme5')
+    // 技能随等级改变的实数域 移动速度奖励（仅限信息面板） ('Ncr5')
 	constant abilityreallevelfield ABILITY_RLF_MOVE_SPEED_BONUS_INFO_PANEL_ONLY = ConvertAbilityRealLevelField('Ncr5')
+    // 技能随等级改变的实数域 攻击速度奖励（仅限信息面板） ('Ncr6')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_BONUS_INFO_PANEL_ONLY = ConvertAbilityRealLevelField('Ncr6')
+    // 技能随等级改变的实数域 每秒生命回复 ('ave5')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGENERATION_RATE_PER_SECOND = ConvertAbilityRealLevelField('ave5')
+    // 技能随等级改变的实数域 无敌时间 ('Usl1')
 	constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_USL1 = ConvertAbilityRealLevelField('Usl1')
+    // 技能随等级改变的实数域 近战伤害偷取（%） ('Uav1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_DAMAGE_STOLEN_PERCENT = ConvertAbilityRealLevelField('Uav1')
+    // 技能随等级改变的实数域 伤害 ('Ucs1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_UCS1 = ConvertAbilityRealLevelField('Ucs1')
+    // 技能随等级改变的实数域 最大伤害 ('Ucs2')
 	constant abilityreallevelfield ABILITY_RLF_MAX_DAMAGE_UCS2 = ConvertAbilityRealLevelField('Ucs2')
+    // 技能随等级改变的实数域 距离 ('Ucs3')
 	constant abilityreallevelfield ABILITY_RLF_DISTANCE_UCS3 = ConvertAbilityRealLevelField('Ucs3')
+    // 技能随等级改变的实数域 最终区域范围 ('Ucs4')
 	constant abilityreallevelfield ABILITY_RLF_FINAL_AREA_UCS4 = ConvertAbilityRealLevelField('Ucs4')
+    // 技能随等级改变的实数域 伤害 ('Uin1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_UIN1 = ConvertAbilityRealLevelField('Uin1')
+    // 技能随等级改变的实数域 单位持续时间 ('Uin2')
 	constant abilityreallevelfield ABILITY_RLF_DURATION = ConvertAbilityRealLevelField('Uin2')
+    // 技能随等级改变的实数域 碰撞延迟 ('Uin3')
 	constant abilityreallevelfield ABILITY_RLF_IMPACT_DELAY = ConvertAbilityRealLevelField('Uin3')
+    // 技能随等级改变的实数域 伤害 ('Ocl1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_TARGET_OCL1 = ConvertAbilityRealLevelField('Ocl1')
+    // 技能随等级改变的实数域 单位持续时间 ('Ocl3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_REDUCTION_PER_TARGET = ConvertAbilityRealLevelField('Ocl3')
+    // 技能随等级改变的实数域 效果延迟 ('Oeq1')
 	constant abilityreallevelfield ABILITY_RLF_EFFECT_DELAY_OEQ1 = ConvertAbilityRealLevelField('Oeq1')
+    // 技能随等级改变的实数域 每秒对建筑伤害 ('Oeq2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_TO_BUILDINGS = ConvertAbilityRealLevelField('Oeq2')
+    // 技能随等级改变的实数域 单位减速（%） ('Oeq3')
 	constant abilityreallevelfield ABILITY_RLF_UNITS_SLOWED_PERCENT = ConvertAbilityRealLevelField('Oeq3')
+    // 技能随等级改变的实数域 最终区域范围 ('Oeq4')
 	constant abilityreallevelfield ABILITY_RLF_FINAL_AREA_OEQ4 = ConvertAbilityRealLevelField('Oeq4')
+    // 技能随等级改变的实数域 每秒伤害 ('Eer1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_EER1 = ConvertAbilityRealLevelField('Eer1')
+    // 技能随等级改变的实数域 近战伤害反弹 ('Eah1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_TO_ATTACKERS = ConvertAbilityRealLevelField('Eah1')
+    // 技能随等级改变的实数域 治疗生命值 ('Etq1')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_HEALED = ConvertAbilityRealLevelField('Etq1')
+    // 技能随等级改变的实数域 治疗间隔 ('Etq2')
 	constant abilityreallevelfield ABILITY_RLF_HEAL_INTERVAL = ConvertAbilityRealLevelField('Etq2')
+    // 技能随等级改变的实数域 建筑伤害参数（无效） ('Etq3')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_REDUCTION_ETQ3 = ConvertAbilityRealLevelField('Etq3')
+    // 技能随等级改变的实数域 初始完成CD ('Etq4')
 	constant abilityreallevelfield ABILITY_RLF_INITIAL_IMMUNITY_DURATION = ConvertAbilityRealLevelField('Etq4')
+    // 技能随等级改变的实数域 每秒损耗生命百分比 ('Udd1')
 	constant abilityreallevelfield ABILITY_RLF_MAX_LIFE_DRAINED_PER_SECOND_PERCENT = ConvertAbilityRealLevelField('Udd1')
+    // 技能随等级改变的实数域 建筑伤害参数（无效） ('Udd2')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_REDUCTION_UDD2 = ConvertAbilityRealLevelField('Udd2')
+    // 技能随等级改变的实数域 护甲持续时间 ('Ufa1')
 	constant abilityreallevelfield ABILITY_RLF_ARMOR_DURATION = ConvertAbilityRealLevelField('Ufa1')
+    // 技能随等级改变的实数域 防御奖励 ('Ufa2')
 	constant abilityreallevelfield ABILITY_RLF_ARMOR_BONUS_UFA2 = ConvertAbilityRealLevelField('Ufa2')
+    // 技能随等级改变的实数域 范围目标伤害 ('Ufn1')
 	constant abilityreallevelfield ABILITY_RLF_AREA_OF_EFFECT_DAMAGE = ConvertAbilityRealLevelField('Ufn1')
+    // 技能随等级改变的实数域 特定目标伤害 ('Ufn2')
 	constant abilityreallevelfield ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_UFN2 = ConvertAbilityRealLevelField('Ufn2')
+    // 技能随等级改变的实数域 伤害奖励 ('Hfa1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_HFA1 = ConvertAbilityRealLevelField('Hfa1')
+    // 技能随等级改变的实数域 伤害 ('Esf1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_ESF1 = ConvertAbilityRealLevelField('Esf1')
+    // 技能随等级改变的实数域 伤害间隔 ('Esf2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INTERVAL_ESF2 = ConvertAbilityRealLevelField('Esf2')
+    // 技能随等级改变的实数域 建筑伤害参数（%） ('Esf3')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_REDUCTION_ESF3 = ConvertAbilityRealLevelField('Esf3')
+    // 技能随等级改变的实数域 伤害奖励（%） ('Ear1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_PERCENT = ConvertAbilityRealLevelField('Ear1')
+    // 技能随等级改变的实数域 防御奖励 ('Hav1')
 	constant abilityreallevelfield ABILITY_RLF_DEFENSE_BONUS_HAV1 = ConvertAbilityRealLevelField('Hav1')
+    // 技能随等级改变的实数域 生命值奖励 ('Hav2')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINT_BONUS = ConvertAbilityRealLevelField('Hav2')
+    // 技能随等级改变的实数域 伤害奖励 ('Hav3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_HAV3 = ConvertAbilityRealLevelField('Hav3')
+    // 技能随等级改变的实数域 魔法伤害减少（无效） ('Hav4')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_HAV4 = ConvertAbilityRealLevelField('Hav4')
+    // 技能随等级改变的实数域 重击几率 ('Hbh1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_BASH = ConvertAbilityRealLevelField('Hbh1')
+    // 技能随等级改变的实数域 伤害倍数 ('Hbh2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_MULTIPLIER_HBH2 = ConvertAbilityRealLevelField('Hbh2')
+    // 技能随等级改变的实数域 伤害奖励 ('Hbh3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_HBH3 = ConvertAbilityRealLevelField('Hbh3')
+    // 技能随等级改变的实数域 未命中率 ('Hbh4')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_MISS_HBH4 = ConvertAbilityRealLevelField('Hbh4')
+    // 技能随等级改变的实数域 伤害 ('Htb1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_HTB1 = ConvertAbilityRealLevelField('Htb1')
+    // 技能随等级改变的实数域 范围伤害 ('Htc1')
 	constant abilityreallevelfield ABILITY_RLF_AOE_DAMAGE = ConvertAbilityRealLevelField('Htc1')
+    // 技能随等级改变的实数域 指定目标伤害（无效） ('Htc2')
 	constant abilityreallevelfield ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_HTC2 = ConvertAbilityRealLevelField('Htc2')
+    // 技能随等级改变的实数域 移动速度减少（%） ('Htc3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HTC3 = ConvertAbilityRealLevelField('Htc3')
+    // 技能随等级改变的实数域 攻击速度减少（%） ('Htc4')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HTC4 = ConvertAbilityRealLevelField('Htc4')
+    // 技能随等级改变的实数域 防御奖励 ('Had1')
 	constant abilityreallevelfield ABILITY_RLF_ARMOR_BONUS_HAD1 = ConvertAbilityRealLevelField('Had1')
+    // 技能随等级改变的实数域 治疗数值 ('Hhb1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_HEALED_DAMAGED_HHB1 = ConvertAbilityRealLevelField('Hhb1')
+    // 技能随等级改变的实数域 附加伤害 ('Hca1')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_HCA1 = ConvertAbilityRealLevelField('Hca1')
+    // 技能随等级改变的实数域 移动速度减少（%） ('Hca2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_HCA2 = ConvertAbilityRealLevelField('Hca2')
+    // 技能随等级改变的实数域 攻击速度减少（%） ('Hca3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_HCA3 = ConvertAbilityRealLevelField('Hca3')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Oae1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OAE1 = ConvertAbilityRealLevelField('Oae1')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('Oae2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_OAE2 = ConvertAbilityRealLevelField('Oae2')
+    // 技能随等级改变的实数域 重生延迟 ('Ore1')
 	constant abilityreallevelfield ABILITY_RLF_REINCARNATION_DELAY = ConvertAbilityRealLevelField('Ore1')
+    // 技能随等级改变的实数域 伤害 ('Osh1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_OSH1 = ConvertAbilityRealLevelField('Osh1')
+    // 技能随等级改变的实数域 最大伤害 ('Osh2')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_DAMAGE_OSH2 = ConvertAbilityRealLevelField('Osh2')
+    // 技能随等级改变的实数域 距离 ('Osh3')
 	constant abilityreallevelfield ABILITY_RLF_DISTANCE_OSH3 = ConvertAbilityRealLevelField('Osh3')
+    // 技能随等级改变的实数域 最终区域范围 ('Osh4')
 	constant abilityreallevelfield ABILITY_RLF_FINAL_AREA_OSH4 = ConvertAbilityRealLevelField('Osh4')
+    // 技能随等级改变的实数域 效果延迟 ('Nfd1')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DELAY_NFD1 = ConvertAbilityRealLevelField('Nfd1')
+    // 技能随等级改变的实数域 效果持续时间 ('Nfd2')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DURATION_NFD2 = ConvertAbilityRealLevelField('Nfd2')
+    // 技能随等级改变的实数域 伤害 ('Nfd3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_NFD3 = ConvertAbilityRealLevelField('Nfd3')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('Ams1')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_AMS1 = ConvertAbilityRealLevelField('Ams1')
+    // 技能随等级改变的实数域 魔法伤害减少（无效） ('Ams2')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_AMS2 = ConvertAbilityRealLevelField('Ams2')
+    // 技能随等级改变的实数域 疾病效果持续时间 ('Apl1')
 	constant abilityreallevelfield ABILITY_RLF_AURA_DURATION = ConvertAbilityRealLevelField('Apl1')
+    // 技能随等级改变的实数域 每秒伤害 ('Apl2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_APL2 = ConvertAbilityRealLevelField('Apl2')
+    // 技能随等级改变的实数域 疾病守卫持续时间 ('Apl3')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_OF_PLAGUE_WARD = ConvertAbilityRealLevelField('Apl3')
+    // 技能随等级改变的实数域 每秒生命恢复 ('Oar1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED = ConvertAbilityRealLevelField('Oar1')
+    // 技能随等级改变的实数域 攻击伤害增加 ('Akb1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_DAMAGE_INCREASE_AKB1 = ConvertAbilityRealLevelField('Akb1')
+    // 技能随等级改变的实数域 目标魔法损耗 ('Adm1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_LOSS_ADM1 = ConvertAbilityRealLevelField('Adm1')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('Adm2')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_ADM2 = ConvertAbilityRealLevelField('Adm2')
+    // 技能随等级改变的实数域 扩张范围 ('Bli1')
 	constant abilityreallevelfield ABILITY_RLF_EXPANSION_AMOUNT = ConvertAbilityRealLevelField('Bli1')
+    // 技能随等级改变的实数域 采集间隔时间 ('Bgm2')
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_DURATION_BGM2 = ConvertAbilityRealLevelField('Bgm2')
+    // 技能随等级改变的实数域 采集环形半径 ('Bgm4')
 	constant abilityreallevelfield ABILITY_RLF_RADIUS_OF_MINING_RING = ConvertAbilityRealLevelField('Bgm4')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('Blo1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_BLO1 = ConvertAbilityRealLevelField('Blo1')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Blo2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_BLO2 = ConvertAbilityRealLevelField('Blo2')
+    // 技能随等级改变的实数域 模型放大比例 ('Blo3')
 	constant abilityreallevelfield ABILITY_RLF_SCALING_FACTOR = ConvertAbilityRealLevelField('Blo3')
+    // 技能随等级改变的实数域 每秒恢复生命 ('Can1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_PER_SECOND_CAN1 = ConvertAbilityRealLevelField('Can1')
+    // 技能随等级改变的实数域 最大恢复生命 ('Can2')
 	constant abilityreallevelfield ABILITY_RLF_MAX_HIT_POINTS = ConvertAbilityRealLevelField('Can2')
+    // 技能随等级改变的实数域 每秒伤害 ('Dev2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_DEV2 = ConvertAbilityRealLevelField('Dev2')
+    // 技能随等级改变的实数域 移动速度更新次数 ('Chd1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_UPDATE_FREQUENCY_CHD1 = ConvertAbilityRealLevelField('Chd1')
+    // 技能随等级改变的实数域 攻击速度更新次数 ('Chd2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_UPDATE_FREQUENCY_CHD2 = ConvertAbilityRealLevelField('Chd2')
+    // 技能随等级改变的实数域 对召唤单位伤害（无效） ('Chd3')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_CHD3 = ConvertAbilityRealLevelField('Chd3')
+    // 技能随等级改变的实数域 移动速度减少（%） ('Cri1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_CRI1 = ConvertAbilityRealLevelField('Cri1')
+    // 技能随等级改变的实数域 攻击速度减少（%） ('Cri2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_CRI2 = ConvertAbilityRealLevelField('Cri2')
+    // 技能随等级改变的实数域 伤害减少（%） ('Cri3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_REDUCTION_CRI3 = ConvertAbilityRealLevelField('Cri3')
+    // 技能随等级改变的实数域 未命中率 ('Crs1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_MISS_CRS = ConvertAbilityRealLevelField('Crs1')
+    // 技能随等级改变的实数域 全伤害范围 ('Dda1')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_RADIUS_DDA1 = ConvertAbilityRealLevelField('Dda1')
+    // 技能随等级改变的实数域 全伤害数值 ('Dda2')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_AMOUNT_DDA2 = ConvertAbilityRealLevelField('Dda2')
+    // 技能随等级改变的实数域 部分伤害范围 ('Dda3')
 	constant abilityreallevelfield ABILITY_RLF_PARTIAL_DAMAGE_RADIUS = ConvertAbilityRealLevelField('Dda3')
+    // 技能随等级改变的实数域 部分伤害数值 ('Dda4')
 	constant abilityreallevelfield ABILITY_RLF_PARTIAL_DAMAGE_AMOUNT = ConvertAbilityRealLevelField('Dda4')
+    // 技能随等级改变的实数域 建筑伤害参数 ('Sds1')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_DAMAGE_FACTOR_SDS1 = ConvertAbilityRealLevelField('Sds1')
+    // 技能随等级改变的实数域 最大攻击伤害 ('Uco5')
 	constant abilityreallevelfield ABILITY_RLF_MAX_DAMAGE_UCO5 = ConvertAbilityRealLevelField('Uco5')
+    // 技能随等级改变的实数域 移动速度奖励 ('Uco6')
 	constant abilityreallevelfield ABILITY_RLF_MOVE_SPEED_BONUS_UCO6 = ConvertAbilityRealLevelField('Uco6')
+    // 技能随等级改变的实数域 所受穿刺伤害（%） ('Def1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TAKEN_PERCENT_DEF1 = ConvertAbilityRealLevelField('Def1')
+    // 技能随等级改变的实数域 伤害倍乘（%） ('Def2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_PERCENT_DEF2 = ConvertAbilityRealLevelField('Def2')
+    // 技能随等级改变的实数域 移动速度系数（%） ('Def3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_DEF3 = ConvertAbilityRealLevelField('Def3')
+    // 技能随等级改变的实数域 攻击速度系数（%） ('Def4')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_DEF4 = ConvertAbilityRealLevelField('Def4')
+    // 技能随等级改变的实数域 所受魔法伤害（%） ('Def5')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_DEF5 = ConvertAbilityRealLevelField('Def5')
+    // 技能随等级改变的实数域 反弹几率 ('Def6')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_DEFLECT = ConvertAbilityRealLevelField('Def6')
+    // 技能随等级改变的实数域 接受反弹攻击伤害（穿刺） ('Def7')
 	constant abilityreallevelfield ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_PIERCING = ConvertAbilityRealLevelField('Def7')
+    // 技能随等级改变的实数域 接受反弹攻击伤害（魔法） ('Def8')
 	constant abilityreallevelfield ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_SPELLS = ConvertAbilityRealLevelField('Def8')
+    // 技能随等级改变的实数域 技能延迟 ('Eat1')
 	constant abilityreallevelfield ABILITY_RLF_RIP_DELAY = ConvertAbilityRealLevelField('Eat1')
+    // 技能随等级改变的实数域 吞食延迟 ('Eat2')
 	constant abilityreallevelfield ABILITY_RLF_EAT_DELAY = ConvertAbilityRealLevelField('Eat2')
+    // 技能随等级改变的实数域 总恢复生命值 ('Eat3')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_EAT3 = ConvertAbilityRealLevelField('Eat3')
+    // 技能随等级改变的实数域 空中单位坠落时间 ('Ens1')
 	constant abilityreallevelfield ABILITY_RLF_AIR_UNIT_LOWER_DURATION = ConvertAbilityRealLevelField('Ens1')
+    // 技能随等级改变的实数域 空中单位高度 ('Ens2')
 	constant abilityreallevelfield ABILITY_RLF_AIR_UNIT_HEIGHT = ConvertAbilityRealLevelField('Ens2')
+    // 技能随等级改变的实数域 近战攻击范围 ('Ens3')
 	constant abilityreallevelfield ABILITY_RLF_MELEE_ATTACK_RANGE = ConvertAbilityRealLevelField('Ens3')
+    // 技能随等级改变的实数域 间隔时间 ('Egm2')
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_DURATION_EGM2 = ConvertAbilityRealLevelField('Egm2')
+    // 技能随等级改变的实数域 效果延迟 ('Fla2')
 	constant abilityreallevelfield ABILITY_RLF_EFFECT_DELAY_FLA2 = ConvertAbilityRealLevelField('Fla2')
+    // 技能随等级改变的实数域 采矿持续时间 ('Gld2')
 	constant abilityreallevelfield ABILITY_RLF_MINING_DURATION = ConvertAbilityRealLevelField('Gld2')
+    // 技能随等级改变的实数域 墓碑范围 ('Gyd2')
 	constant abilityreallevelfield ABILITY_RLF_RADIUS_OF_GRAVESTONES = ConvertAbilityRealLevelField('Gyd2')
+    // 技能随等级改变的实数域 尸体范围 ('Gyd3')
 	constant abilityreallevelfield ABILITY_RLF_RADIUS_OF_CORPSES = ConvertAbilityRealLevelField('Gyd3')
+    // 技能随等级改变的实数域 治疗生命值 ('Hea1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_HEA1 = ConvertAbilityRealLevelField('Hea1')
+    // 技能随等级改变的实数域 攻击增加（%） ('Inf1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE_PERCENT_INF1 = ConvertAbilityRealLevelField('Inf1')
+    // 技能随等级改变的实数域 自动施法范围 ('Inf3')
 	constant abilityreallevelfield ABILITY_RLF_AUTOCAST_RANGE = ConvertAbilityRealLevelField('Inf3')
+    // 技能随等级改变的实数域 生命恢复速度 ('Inf4')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGEN_RATE = ConvertAbilityRealLevelField('Inf4')
+    // 技能随等级改变的实数域 效果延迟 ('Lit1')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DELAY_LIT1 = ConvertAbilityRealLevelField('Lit1')
+    // 技能随等级改变的实数域 效果持续时间 ('Lit2')
 	constant abilityreallevelfield ABILITY_RLF_GRAPHIC_DURATION_LIT2 = ConvertAbilityRealLevelField('Lit2')
+    // 技能随等级改变的实数域 每秒伤害 ('Lsh1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_LSH1 = ConvertAbilityRealLevelField('Lsh1')
+    // 技能随等级改变的实数域 恢复每点魔法所需魔法值 ('Mbt1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_GAINED = ConvertAbilityRealLevelField('Mbt1')
+    // 技能随等级改变的实数域 恢复每点生命所需魔法值 ('Mbt2')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_MBT2 = ConvertAbilityRealLevelField('Mbt2')
+    // 技能随等级改变的实数域 自动施法魔法要求 ('Mbt3')
 	constant abilityreallevelfield ABILITY_RLF_AUTOCAST_REQUIREMENT = ConvertAbilityRealLevelField('Mbt3')
+    // 技能随等级改变的实数域 水面高度 ('Mbt4')
 	constant abilityreallevelfield ABILITY_RLF_WATER_HEIGHT = ConvertAbilityRealLevelField('Mbt4')
+    // 技能随等级改变的实数域 激活延迟 ('Min1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_DELAY_MIN1 = ConvertAbilityRealLevelField('Min1')
+    // 技能随等级改变的实数域 转换时间 ('Min2')
 	constant abilityreallevelfield ABILITY_RLF_INVISIBILITY_TRANSITION_TIME = ConvertAbilityRealLevelField('Min2')
+    // 技能随等级改变的实数域 激活范围 ('Neu1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_RADIUS = ConvertAbilityRealLevelField('Neu1')
+    // 技能随等级改变的实数域 每秒恢复值 ('Arm1')
 	constant abilityreallevelfield ABILITY_RLF_AMOUNT_REGENERATED = ConvertAbilityRealLevelField('Arm1')
+    // 技能随等级改变的实数域 每秒伤害 ('Poi1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_POI1 = ConvertAbilityRealLevelField('Poi1')
+    // 技能随等级改变的实数域 攻击速度系数（%） ('Poi2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_POI2 = ConvertAbilityRealLevelField('Poi2')
+    // 技能随等级改变的实数域 移动速度系数（%） ('Poi3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POI3 = ConvertAbilityRealLevelField('Poi3')
+    // 技能随等级改变的实数域 额外伤害 ('Poa1')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_POA1 = ConvertAbilityRealLevelField('Poa1')
+    // 技能随等级改变的实数域 每秒伤害 ('Poa2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_POA2 = ConvertAbilityRealLevelField('Poa2')
+    // 技能随等级改变的实数域 攻击速度系数 ('Poa3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_POA3 = ConvertAbilityRealLevelField('Poa3')
+    // 技能随等级改变的实数域 移动速度系数 ('Poa4')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POA4 = ConvertAbilityRealLevelField('Poa4')   
+    // 技能随等级改变的实数域 施法时所受伤害值 ('Pos2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_AMPLIFICATION = ConvertAbilityRealLevelField('Pos2')
+    // 技能随等级改变的实数域 施放几率 ('War1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_STOMP_PERCENT = ConvertAbilityRealLevelField('War1')
+    // 技能随等级改变的实数域 附加伤害 ('War2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_WAR2 = ConvertAbilityRealLevelField('War2')
+    // 技能随等级改变的实数域 全伤害范围 ('War3')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_RADIUS_WAR3 = ConvertAbilityRealLevelField('War3')
+    // 技能随等级改变的实数域 半伤害范围 ('War4')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_RADIUS_WAR4 = ConvertAbilityRealLevelField('War4')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('Prg3')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_PRG3 = ConvertAbilityRealLevelField('Prg3')
+    // 技能随等级改变的实数域 单位麻痹时间 ('Prg4')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_PAUSE_DURATION = ConvertAbilityRealLevelField('Prg4')
+    // 技能随等级改变的实数域 英雄麻痹时间 ('Prg5')
 	constant abilityreallevelfield ABILITY_RLF_HERO_PAUSE_DURATION = ConvertAbilityRealLevelField('Prg5')
+    // 技能随等级改变的实数域 生命值恢复 ('Rej1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_GAINED_REJ1 = ConvertAbilityRealLevelField('Rej1')
+    // 技能随等级改变的实数域 魔法值恢复 ('Rej2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_POINTS_GAINED_REJ2 = ConvertAbilityRealLevelField('Rej2')
+    // 技能随等级改变的实数域 最小生命需求 ('Rpb3')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_LIFE_REQUIRED = ConvertAbilityRealLevelField('Rpb3')
+    // 技能随等级改变的实数域 最小魔法需求 ('Rpb4')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_MANA_REQUIRED = ConvertAbilityRealLevelField('Rpb4')
+    // 技能随等级改变的实数域 修理费用比率 ('Rep1')
 	constant abilityreallevelfield ABILITY_RLF_REPAIR_COST_RATIO = ConvertAbilityRealLevelField('Rep1')
+    // 技能随等级改变的实数域 修理时间比率 ('Rep2')
 	constant abilityreallevelfield ABILITY_RLF_REPAIR_TIME_RATIO = ConvertAbilityRealLevelField('Rep2')
+    // 技能随等级改变的实数域 快速建造费用比率 ('Rep3')
 	constant abilityreallevelfield ABILITY_RLF_POWERBUILD_COST = ConvertAbilityRealLevelField('Rep3')
+    // 技能随等级改变的实数域 快速建造时间比率 ('Rep4')
 	constant abilityreallevelfield ABILITY_RLF_POWERBUILD_RATE = ConvertAbilityRealLevelField('Rep4')
+    // 技能随等级改变的实数域 海上修理范围提升 ('Rep5')
 	constant abilityreallevelfield ABILITY_RLF_NAVAL_RANGE_BONUS = ConvertAbilityRealLevelField('Rep5')
+    // 技能随等级改变的实数域 攻击增加（%） ('Roa1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE_PERCENT_ROA1 = ConvertAbilityRealLevelField('Roa1')
+    // 技能随等级改变的实数域 生命恢复速度 ('Roa3')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGENERATION_RATE = ConvertAbilityRealLevelField('Roa3')
+    // 技能随等级改变的实数域 魔法再生 ('Roa4')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGEN = ConvertAbilityRealLevelField('Roa4')
+    // 技能随等级改变的实数域 攻击增加 ('Nbr1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INCREASE = ConvertAbilityRealLevelField('Nbr1')
+    // 技能随等级改变的实数域 掠夺比率 ('Sal1')
 	constant abilityreallevelfield ABILITY_RLF_SALVAGE_COST_RATIO = ConvertAbilityRealLevelField('Sal1')
+    // 技能随等级改变的实数域 飞行视野范围 ('Esn1')
 	constant abilityreallevelfield ABILITY_RLF_IN_FLIGHT_SIGHT_RADIUS = ConvertAbilityRealLevelField('Esn1')
+    // 技能随等级改变的实数域 盘踞视野范围 ('Esn2')
 	constant abilityreallevelfield ABILITY_RLF_HOVERING_SIGHT_RADIUS = ConvertAbilityRealLevelField('Esn2')
+    // 技能随等级改变的实数域 盘踞高度 ('Esn3')
 	constant abilityreallevelfield ABILITY_RLF_HOVERING_HEIGHT = ConvertAbilityRealLevelField('Esn3')
+    // 技能随等级改变的实数域 猫头鹰的持续时间 ('Esn5')
 	constant abilityreallevelfield ABILITY_RLF_DURATION_OF_OWLS = ConvertAbilityRealLevelField('Esn5')
+    // 技能随等级改变的实数域 淡化转换时间 ('Shm1')
 	constant abilityreallevelfield ABILITY_RLF_FADE_DURATION = ConvertAbilityRealLevelField('Shm1')
+    // 技能随等级改变的实数域 昼夜交替转换时间 ('Shm2')
 	constant abilityreallevelfield ABILITY_RLF_DAY_NIGHT_DURATION = ConvertAbilityRealLevelField('Shm2')
+    // 技能随等级改变的实数域 行动转换时间 ('Shm3')
 	constant abilityreallevelfield ABILITY_RLF_ACTION_DURATION = ConvertAbilityRealLevelField('Shm3')
+    // 技能随等级改变的实数域 降低移动速度系数（%） ('Slo1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SLO1 = ConvertAbilityRealLevelField('Slo1')
+    // 技能随等级改变的实数域 降低攻击速度系数（%） ('Slo2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_SLO2 = ConvertAbilityRealLevelField('Slo2')
+    // 技能随等级改变的实数域 每秒伤害 ('Spo1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_SPO1 = ConvertAbilityRealLevelField('Spo1')
+    // 技能随等级改变的实数域 降低移动速度系数（%） ('Spo2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SPO2 = ConvertAbilityRealLevelField('Spo2')
+    // 技能随等级改变的实数域 降低攻击速度系数（%） ('Spo3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_SPO3 = ConvertAbilityRealLevelField('Spo3')
+    // 技能随等级改变的实数域 激活延迟 ('Sta1')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_DELAY_STA1 = ConvertAbilityRealLevelField('Sta1')
+    // 技能随等级改变的实数域 侦察范围 ('Sta2')
 	constant abilityreallevelfield ABILITY_RLF_DETECTION_RADIUS_STA2 = ConvertAbilityRealLevelField('Sta2')
+    // 技能随等级改变的实数域 爆炸范围 ('Sta3')
 	constant abilityreallevelfield ABILITY_RLF_DETONATION_RADIUS = ConvertAbilityRealLevelField('Sta3')
+    // 技能随等级改变的实数域 眩晕持续时间 ('Sta4')
 	constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_STA4 = ConvertAbilityRealLevelField('Sta4')
+    // 技能随等级改变的实数域 攻击速度奖励（%） ('Uhf1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_BONUS_PERCENT = ConvertAbilityRealLevelField('Uhf1')
+    // 技能随等级改变的实数域 每秒伤害 ('Uhf2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_UHF2 = ConvertAbilityRealLevelField('Uhf2')
+    // 技能随等级改变的实数域 采集木材数/间隔 ('Wha1')
 	constant abilityreallevelfield ABILITY_RLF_LUMBER_PER_INTERVAL = ConvertAbilityRealLevelField('Wha1')
+    // 技能随等级改变的实数域 附着点高度 ('Wha3')
 	constant abilityreallevelfield ABILITY_RLF_ART_ATTACHMENT_HEIGHT = ConvertAbilityRealLevelField('Wha3')
+    // 技能随等级改变的实数域 传送区域宽度 ('Wrp1')
 	constant abilityreallevelfield ABILITY_RLF_TELEPORT_AREA_WIDTH = ConvertAbilityRealLevelField('Wrp1')
+    // 技能随等级改变的实数域 传送区域高度 ('Wrp2')
 	constant abilityreallevelfield ABILITY_RLF_TELEPORT_AREA_HEIGHT = ConvertAbilityRealLevelField('Wrp2')
+    // 技能随等级改变的实数域 攻击偷取生命（%） ('Ivam')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_STOLEN_PER_ATTACK = ConvertAbilityRealLevelField('Ivam')
+    // 技能随等级改变的实数域 附加伤害 ('Idam')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_IDAM = ConvertAbilityRealLevelField('Idam')
+    // 技能随等级改变的实数域 击中单位几率 ('Iob2')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_UNITS_PERCENT = ConvertAbilityRealLevelField('Iob2')
+    // 技能随等级改变的实数域 击中英雄几率 ('Iob3')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_HEROS_PERCENT = ConvertAbilityRealLevelField('Iob3')
+    // 技能随等级改变的实数域 击中召唤物几率 ('Iob4')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_HIT_SUMMONS_PERCENT = ConvertAbilityRealLevelField('Iob4')
+    // 技能随等级改变的实数域 目标效果延迟 ('Idel')
 	constant abilityreallevelfield ABILITY_RLF_DELAY_FOR_TARGET_EFFECT = ConvertAbilityRealLevelField('Idel')
+    // 技能随等级改变的实数域 施加伤害（%） ('Iild')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_PERCENT_OF_NORMAL = ConvertAbilityRealLevelField('Iild')
+    // 技能随等级改变的实数域 受到伤害倍数 ('Iilw')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RECEIVED_MULTIPLIER = ConvertAbilityRealLevelField('Iilw')
+    // 技能随等级改变的实数域 魔法回复奖励 ('Imrp')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGENERATION_BONUS_AS_FRACTION_OF_NORMAL = ConvertAbilityRealLevelField('Imrp')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Ispi')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_ISPI = ConvertAbilityRealLevelField('Ispi')
+    // 技能随等级改变的实数域 每秒伤害 ('Idps')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_IDPS = ConvertAbilityRealLevelField('Idps')
+    // 技能随等级改变的实数域 攻击速度增加（% ） ('Cac1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_DAMAGE_INCREASE_CAC1 = ConvertAbilityRealLevelField('Cac1')
+    // 技能随等级改变的实数域 每秒伤害 ('Cor1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_COR1 = ConvertAbilityRealLevelField('Cor1')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('Isx1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_ISX1 = ConvertAbilityRealLevelField('Isx1')
+    // 技能随等级改变的实数域 伤害 ('Wrs1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_WRS1 = ConvertAbilityRealLevelField('Wrs1')
+    // 技能随等级改变的实数域 地形变形幅度 ('Wrs2')
 	constant abilityreallevelfield ABILITY_RLF_TERRAIN_DEFORMATION_AMPLITUDE = ConvertAbilityRealLevelField('Wrs2')
+    // 技能随等级改变的实数域 伤害 ('Ctc1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_CTC1 = ConvertAbilityRealLevelField('Ctc1')
+    // 技能随等级改变的实数域 指定目标伤害 ('Ctc2')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_TO_TARGET = ConvertAbilityRealLevelField('Ctc2')
+    // 技能随等级改变的实数域 移动速度减少 ('Ctc3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_CTC3 = ConvertAbilityRealLevelField('Ctc3')
+    // 技能随等级改变的实数域 攻击速度减少 ('Ctc4')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_CTC4 = ConvertAbilityRealLevelField('Ctc4')
+    // 技能随等级改变的实数域 伤害 ('Ctb1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_CTB1 = ConvertAbilityRealLevelField('Ctb1')
+    // 技能随等级改变的实数域 魔法施放延迟 ('Uds2')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_DELAY_SECONDS = ConvertAbilityRealLevelField('Uds2')
+    // 技能随等级改变的实数域 范围目标魔法损耗 ('Dtn1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_LOSS_PER_UNIT_DTN1 = ConvertAbilityRealLevelField('Dtn1')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('Dtn2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_DTN2 = ConvertAbilityRealLevelField('Dtn2')
+    // 技能随等级改变的实数域 转变时间 ('Ivs1')
 	constant abilityreallevelfield ABILITY_RLF_TRANSITION_TIME_SECONDS = ConvertAbilityRealLevelField('Ivs1')
+    // 技能随等级改变的实数域 每秒魔法消耗 ('Nmr1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_DRAINED_PER_SECOND_NMR1 = ConvertAbilityRealLevelField('Nmr1')
+    // 技能随等级改变的实数域 减少伤害几率（%） ('Ssk1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_REDUCE_DAMAGE_PERCENT = ConvertAbilityRealLevelField('Ssk1')
+    // 技能随等级改变的实数域 最小伤害 ('Ssk2')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_DAMAGE = ConvertAbilityRealLevelField('Ssk2')
+    // 技能随等级改变的实数域 忽略伤害 ('Ssk3')
 	constant abilityreallevelfield ABILITY_RLF_IGNORED_DAMAGE = ConvertAbilityRealLevelField('Ssk3')
+    // 技能随等级改变的实数域 全伤害数值 ('Hfs1')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_DEALT = ConvertAbilityRealLevelField('Hfs1')
+    // 技能随等级改变的实数域 全伤害间隔 ('Hfs2')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_INTERVAL = ConvertAbilityRealLevelField('Hfs2')
+    // 技能随等级改变的实数域 半伤害数值 ('Hfs3')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_DEALT = ConvertAbilityRealLevelField('Hfs3')
+    // 技能随等级改变的实数域 半伤害间隔 ('Hfs4')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_INTERVAL = ConvertAbilityRealLevelField('Hfs4')
+    // 技能随等级改变的实数域 建筑伤害因素（%） ('Hfs5')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_REDUCTION_HFS5 = ConvertAbilityRealLevelField('Hfs5')
+    // 技能随等级改变的实数域 最大伤害 ('Hfs6')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_DAMAGE_HFS6 = ConvertAbilityRealLevelField('Hfs6')
+    // 技能随等级改变的实数域 每点魔法抵消的伤害值 ('Nms1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_PER_HIT_POINT = ConvertAbilityRealLevelField('Nms1')
+    // 技能随等级改变的实数域 伤害吸收（%） ('Nms2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_ABSORBED_PERCENT = ConvertAbilityRealLevelField('Nms2')
+    // 技能随等级改变的实数域 波距离 ('Uim1')
 	constant abilityreallevelfield ABILITY_RLF_WAVE_DISTANCE = ConvertAbilityRealLevelField('Uim1')
+    // 技能随等级改变的实数域 波持续时间 ('Uim2')
 	constant abilityreallevelfield ABILITY_RLF_WAVE_TIME_SECONDS = ConvertAbilityRealLevelField('Uim2')
+    // 技能随等级改变的实数域 施加伤害 ('Uim3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DEALT_UIM3 = ConvertAbilityRealLevelField('Uim3')
+    // 技能随等级改变的实数域 空中停留时间 ('Uim4')
 	constant abilityreallevelfield ABILITY_RLF_AIR_TIME_SECONDS_UIM4 = ConvertAbilityRealLevelField('Uim4')
+    // 技能随等级改变的实数域 单位施放间隔 ('Uls2')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_RELEASE_INTERVAL_SECONDS = ConvertAbilityRealLevelField('Uls2')
+    // 技能随等级改变的实数域 生命偷取参数 ('Uls4')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RETURN_FACTOR = ConvertAbilityRealLevelField('Uls4')
+    // 技能随等级改变的实数域 生命偷取极限 ('Uls5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RETURN_THRESHOLD = ConvertAbilityRealLevelField('Uls5')
+    // 技能随等级改变的实数域 近战伤害反弹 ('Uts1')
 	constant abilityreallevelfield ABILITY_RLF_RETURNED_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Uts1')
+    // 技能随等级改变的实数域 所受近战伤害（%） ('Uts2')
 	constant abilityreallevelfield ABILITY_RLF_RECEIVED_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Uts2')
+    // 技能随等级改变的实数域 防御奖励 ('Uts3')
 	constant abilityreallevelfield ABILITY_RLF_DEFENSE_BONUS_UTS3 = ConvertAbilityRealLevelField('Uts3')
+    // 技能随等级改变的实数域 伤害奖励 ('Nba1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_NBA1 = ConvertAbilityRealLevelField('Nba1')
+    // 技能随等级改变的实数域 召唤单位持续时间 ('Nba3')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NBA3 = ConvertAbilityRealLevelField('Nba3')
+    // 技能随等级改变的实数域 召唤单位每点生命需要的魔法值 ('Cmg2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_PER_SUMMONED_HITPOINT = ConvertAbilityRealLevelField('Cmg2')
+    // 技能随等级改变的实数域 增加当前生命值 ('Cmg3')
 	constant abilityreallevelfield ABILITY_RLF_CHARGE_FOR_CURRENT_LIFE = ConvertAbilityRealLevelField('Cmg3')
+    // 技能随等级改变的实数域 生命值汲取 ('Ndr1')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_DRAINED = ConvertAbilityRealLevelField('Ndr1')
+    // 技能随等级改变的实数域 魔法值汲取 ('Ndr2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_POINTS_DRAINED = ConvertAbilityRealLevelField('Ndr2')
+    // 技能随等级改变的实数域 汲取间隔 ('Ndr3')
 	constant abilityreallevelfield ABILITY_RLF_DRAIN_INTERVAL_SECONDS = ConvertAbilityRealLevelField('Ndr3')
+    // 技能随等级改变的实数域 每秒传输的生命值 ('Ndr4')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_TRANSFERRED_PER_SECOND = ConvertAbilityRealLevelField('Ndr4')
+    // 技能随等级改变的实数域 每秒传输的魔法值 ('Ndr5')
 	constant abilityreallevelfield ABILITY_RLF_MANA_TRANSFERRED_PER_SECOND = ConvertAbilityRealLevelField('Ndr5')
+    // 技能随等级改变的实数域 生命值奖励参数 ('Ndr6')
 	constant abilityreallevelfield ABILITY_RLF_BONUS_LIFE_FACTOR = ConvertAbilityRealLevelField('Ndr6')
+    // 技能随等级改变的实数域 生命值奖励衰减 ('Ndr7')
 	constant abilityreallevelfield ABILITY_RLF_BONUS_LIFE_DECAY = ConvertAbilityRealLevelField('Ndr7')
+    // 技能随等级改变的实数域 魔法值奖励参数 ('Ndr8')
 	constant abilityreallevelfield ABILITY_RLF_BONUS_MANA_FACTOR = ConvertAbilityRealLevelField('Ndr8')
+    // 技能随等级改变的实数域 魔法值奖励衰减 ('Ndr9')
 	constant abilityreallevelfield ABILITY_RLF_BONUS_MANA_DECAY = ConvertAbilityRealLevelField('Ndr9')
+    // 技能随等级改变的实数域 未命中率（%） ('Nsi2')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_MISS_PERCENT = ConvertAbilityRealLevelField('Nsi2')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Nsi3')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_MODIFIER = ConvertAbilityRealLevelField('Nsi3')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('Nsi4')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_MODIFIER = ConvertAbilityRealLevelField('Nsi4')
+    // 技能随等级改变的实数域 每秒伤害 ('Tdg1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_TDG1 = ConvertAbilityRealLevelField('Tdg1')
+    // 技能随等级改变的实数域 中范围半径 ('Tdg2')
 	constant abilityreallevelfield ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_TDG2 = ConvertAbilityRealLevelField('Tdg2')
+    // 技能随等级改变的实数域 中范围每秒伤害 ('Tdg3')
 	constant abilityreallevelfield ABILITY_RLF_MEDIUM_DAMAGE_PER_SECOND = ConvertAbilityRealLevelField('Tdg3')
+    // 技能随等级改变的实数域 小范围半径 ('Tdg4')
 	constant abilityreallevelfield ABILITY_RLF_SMALL_DAMAGE_RADIUS_TDG4 = ConvertAbilityRealLevelField('Tdg4')
+    // 技能随等级改变的实数域 小范围每秒伤害 ('Tdg5')
 	constant abilityreallevelfield ABILITY_RLF_SMALL_DAMAGE_PER_SECOND = ConvertAbilityRealLevelField('Tdg5')
+    // 技能随等级改变的实数域 空中时间 ('Tsp1')
 	constant abilityreallevelfield ABILITY_RLF_AIR_TIME_SECONDS_TSP1 = ConvertAbilityRealLevelField('Tsp1')
+    // 技能随等级改变的实数域 最小间隔 ('Tsp2')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_HIT_INTERVAL_SECONDS = ConvertAbilityRealLevelField('Tsp2')
+    // 技能随等级改变的实数域 每秒伤害 ('Nbf5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_NBF5 = ConvertAbilityRealLevelField('Nbf5')
+    // 技能随等级改变的实数域 最大范围 ('Ebl1')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_RANGE = ConvertAbilityRealLevelField('Ebl1')
+    // 技能随等级改变的实数域 最小范围 ('Ebl2')
 	constant abilityreallevelfield ABILITY_RLF_MINIMUM_RANGE = ConvertAbilityRealLevelField('Ebl2')
+    // 技能随等级改变的实数域 目标伤害 ('Efk1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_TARGET_EFK1 = ConvertAbilityRealLevelField('Efk1')
+    // 技能随等级改变的实数域 最大输出伤害 ('Efk2')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_TOTAL_DAMAGE = ConvertAbilityRealLevelField('Efk2')
+    // 技能随等级改变的实数域 最大速度调整 ('Efk4')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_SPEED_ADJUSTMENT = ConvertAbilityRealLevelField('Efk4')
+    // 技能随等级改变的实数域 持续伤害 ('Esh1')
 	constant abilityreallevelfield ABILITY_RLF_DECAYING_DAMAGE = ConvertAbilityRealLevelField('Esh1')
+    // 技能随等级改变的实数域 移动速度系数（%） ('Esh2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_FACTOR_ESH2 = ConvertAbilityRealLevelField('Esh2')
+    // 技能随等级改变的实数域 攻击速度减少 ('Esh3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_FACTOR_ESH3 = ConvertAbilityRealLevelField('Esh3')
+    // 技能随等级改变的实数域 速度衰减幅度 ('Esh4')
 	constant abilityreallevelfield ABILITY_RLF_DECAY_POWER = ConvertAbilityRealLevelField('Esh4')
+    // 技能随等级改变的实数域 初始伤害 ('Esh5')
 	constant abilityreallevelfield ABILITY_RLF_INITIAL_DAMAGE_ESH5 = ConvertAbilityRealLevelField('Esh5')
+    // 技能随等级改变的实数域 最大生命吸收 ('abs1')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_LIFE_ABSORBED = ConvertAbilityRealLevelField('abs1')
+    // 技能随等级改变的实数域 最大魔法吸收 ('abs2')
 	constant abilityreallevelfield ABILITY_RLF_MAXIMUM_MANA_ABSORBED = ConvertAbilityRealLevelField('abs2')
+    // 技能随等级改变的实数域 移动速度增加（%） ('bsk1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_INCREASE_BSK1 = ConvertAbilityRealLevelField('bsk1')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('bsk2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_BSK2 = ConvertAbilityRealLevelField('bsk2')
+    // 技能随等级改变的实数域 所受伤害增加（%） ('bsk3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TAKEN_INCREASE = ConvertAbilityRealLevelField('bsk3')
+    // 技能随等级改变的实数域 每个单位给予生命值 ('dvm1')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_PER_UNIT = ConvertAbilityRealLevelField('dvm1')
+    // 技能随等级改变的实数域 每个单位给予魔法值 ('dvm2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_PER_UNIT = ConvertAbilityRealLevelField('dvm2')
+    // 技能随等级改变的实数域 每个Buff给予生命值 ('dvm3')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_PER_BUFF = ConvertAbilityRealLevelField('dvm3')
+    // 技能随等级改变的实数域 每个Buff给予魔法值 ('dvm4')
 	constant abilityreallevelfield ABILITY_RLF_MANA_PER_BUFF = ConvertAbilityRealLevelField('dvm4')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('dvm5')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_DVM5 = ConvertAbilityRealLevelField('dvm5')
+    // 技能随等级改变的实数域 伤害奖励 ('fak1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_FAK1 = ConvertAbilityRealLevelField('fak1')
+    // 技能随等级改变的实数域 中伤害参数 ('fak2')
 	constant abilityreallevelfield ABILITY_RLF_MEDIUM_DAMAGE_FACTOR_FAK2 = ConvertAbilityRealLevelField('fak2')
+    // 技能随等级改变的实数域 小伤害参数 ('fak3')
 	constant abilityreallevelfield ABILITY_RLF_SMALL_DAMAGE_FACTOR_FAK3 = ConvertAbilityRealLevelField('fak3')
+    // 技能随等级改变的实数域 全伤害范围 ('fak4')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_RADIUS_FAK4 = ConvertAbilityRealLevelField('fak4')
+    // 技能随等级改变的实数域 中伤害范围 ('fak5')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_RADIUS_FAK5 = ConvertAbilityRealLevelField('fak5')
+    // 技能随等级改变的实数域 额外每秒伤害 ('liq1')
 	constant abilityreallevelfield ABILITY_RLF_EXTRA_DAMAGE_PER_SECOND = ConvertAbilityRealLevelField('liq1')
+    // 技能随等级改变的实数域 移动速度减少 ('liq2')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_LIQ2 = ConvertAbilityRealLevelField('liq2')
+    // 技能随等级改变的实数域 攻击速度减少 ('liq3')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_LIQ3 = ConvertAbilityRealLevelField('liq3')
+    // 技能随等级改变的实数域 魔法伤害参数 ('mim1')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_FACTOR = ConvertAbilityRealLevelField('mim1')
+    // 技能随等级改变的实数域 单位 - 每点魔法造成的伤害 ('mfl1')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_DAMAGE_PER_MANA_POINT = ConvertAbilityRealLevelField('mfl1')
+    // 技能随等级改变的实数域 英雄 - 每点魔法造成的伤害 ('mfl2')
 	constant abilityreallevelfield ABILITY_RLF_HERO_DAMAGE_PER_MANA_POINT = ConvertAbilityRealLevelField('mfl2')
+    // 技能随等级改变的实数域 单位 - 最大伤害 ('mfl3')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_MAXIMUM_DAMAGE = ConvertAbilityRealLevelField('mfl3')
+    // 技能随等级改变的实数域 英雄 - 最大伤害 ('mfl3')
 	constant abilityreallevelfield ABILITY_RLF_HERO_MAXIMUM_DAMAGE = ConvertAbilityRealLevelField('mfl4')
+    // 技能随等级改变的实数域 护甲增加 ('mfl5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_COOLDOWN = ConvertAbilityRealLevelField('mfl5')
+    // 技能随等级改变的实数域 分布伤害参数 ('spl1')
 	constant abilityreallevelfield ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_SPL1 = ConvertAbilityRealLevelField('spl1')
+    // 技能随等级改变的实数域 生命回复 ('irl1')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_REGENERATED = ConvertAbilityRealLevelField('irl1')
+    // 技能随等级改变的实数域 魔法回复 ('irl2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_REGENERATED = ConvertAbilityRealLevelField('irl2')
+    // 技能随等级改变的实数域 每个单位魔法损耗 ('idc1')
 	constant abilityreallevelfield ABILITY_RLF_MANA_LOSS_PER_UNIT_IDC1 = ConvertAbilityRealLevelField('idc1')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('idc2')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DAMAGE_IDC2 = ConvertAbilityRealLevelField('idc2')
+    // 技能随等级改变的实数域 激活延迟 ('imo2')
 	constant abilityreallevelfield ABILITY_RLF_ACTIVATION_DELAY_IMO2 = ConvertAbilityRealLevelField('imo2')
+    // 技能随等级改变的实数域 引诱间隔 ('imo3')
 	constant abilityreallevelfield ABILITY_RLF_LURE_INTERVAL_SECONDS = ConvertAbilityRealLevelField('imo3')
+    // 技能随等级改变的实数域 伤害奖励 ('isr1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_ISR1 = ConvertAbilityRealLevelField('isr1')
+    // 技能随等级改变的实数域 魔法伤害减少 ('isr2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_REDUCTION_ISR2 = ConvertAbilityRealLevelField('isr2')
+    // 技能随等级改变的实数域 伤害奖励 ('ipv1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_IPV1 = ConvertAbilityRealLevelField('ipv1')
+    // 技能随等级改变的实数域 生命偷取值 ('ipv2')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_STEAL_AMOUNT = ConvertAbilityRealLevelField('ipv2')
+    // 技能随等级改变的实数域 生命回复参数 ('ast1')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_RESTORED_FACTOR = ConvertAbilityRealLevelField('ast1')
+    // 技能随等级改变的实数域 魔法回复参数 ('ast2')
 	constant abilityreallevelfield ABILITY_RLF_MANA_RESTORED_FACTOR = ConvertAbilityRealLevelField('ast2')
+    // 技能随等级改变的实数域 附加延迟 ('gra1')
 	constant abilityreallevelfield ABILITY_RLF_ATTACH_DELAY = ConvertAbilityRealLevelField('gra1')
+    // 技能随等级改变的实数域 移除延迟 ('gra2')
 	constant abilityreallevelfield ABILITY_RLF_REMOVE_DELAY = ConvertAbilityRealLevelField('gra2')
+    // 技能随等级改变的实数域 英雄回复延迟 ('Nsa2')
 	constant abilityreallevelfield ABILITY_RLF_HERO_REGENERATION_DELAY = ConvertAbilityRealLevelField('Nsa2')
+    // 技能随等级改变的实数域 单位回复延迟 ('Nsa3')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_REGENERATION_DELAY = ConvertAbilityRealLevelField('Nsa3')
+    // 技能随等级改变的实数域 魔法伤害参数 ('Nsa4')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_NSA4 = ConvertAbilityRealLevelField('Nsa4')
+    // 技能随等级改变的实数域 每秒生命恢复 ('Nsa5')
 	constant abilityreallevelfield ABILITY_RLF_HIT_POINTS_PER_SECOND_NSA5 = ConvertAbilityRealLevelField('Nsa5')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('Ixs1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_IXS1 = ConvertAbilityRealLevelField('Ixs1')
+    // 技能随等级改变的实数域 魔法伤害减少 ('Ixs2')
 	constant abilityreallevelfield ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_IXS2 = ConvertAbilityRealLevelField('Ixs2')
+    // 技能随等级改变的实数域 召唤单位持续时间 ('Npa6')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DURATION = ConvertAbilityRealLevelField('Npa6')
+    // 技能随等级改变的实数域 护盾CD间隔 ('Nse1')
 	constant abilityreallevelfield ABILITY_RLF_SHIELD_COOLDOWN_TIME = ConvertAbilityRealLevelField('Nse1')
+    // 技能随等级改变的实数域 每秒伤害 ('Ndo1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_NDO1 = ConvertAbilityRealLevelField('Ndo1')
+    // 技能随等级改变的实数域 召唤单位持续时间 ('Ndo3')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NDO3 = ConvertAbilityRealLevelField('Ndo3')
+    // 技能随等级改变的实数域 小伤害范围 ('flk1')
 	constant abilityreallevelfield ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_FLK1 = ConvertAbilityRealLevelField('flk1')
+    // 技能随等级改变的实数域 中伤害范围 ('flk2')
 	constant abilityreallevelfield ABILITY_RLF_SMALL_DAMAGE_RADIUS_FLK2 = ConvertAbilityRealLevelField('flk2')
+    // 技能随等级改变的实数域 全伤害数值 ('flk3')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_AMOUNT_FLK3 = ConvertAbilityRealLevelField('flk3')
+    // 技能随等级改变的实数域 中伤害数值 ('flk4')
 	constant abilityreallevelfield ABILITY_RLF_MEDIUM_DAMAGE_AMOUNT = ConvertAbilityRealLevelField('flk4')
+    // 技能随等级改变的实数域 小伤害数值 ('flk5')
 	constant abilityreallevelfield ABILITY_RLF_SMALL_DAMAGE_AMOUNT = ConvertAbilityRealLevelField('flk5')
+    // 技能随等级改变的实数域 移动速度减少（%） ('Hbn1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HBN1 = ConvertAbilityRealLevelField('Hbn1')
+    // 技能随等级改变的实数域 攻击速度减少（%） ('Hbn2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HBN2 = ConvertAbilityRealLevelField('Hbn2')
+    // 技能随等级改变的实数域 最大损耗魔法 - 单位 ('fbk1')
 	constant abilityreallevelfield ABILITY_RLF_MAX_MANA_DRAINED_UNITS = ConvertAbilityRealLevelField('fbk1')
+    // 技能随等级改变的实数域 伤害比率 - 单位('fbk2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RATIO_UNITS_PERCENT = ConvertAbilityRealLevelField('fbk2')
+    // 技能随等级改变的实数域 最大损耗魔法 - 英雄 ('fbk3')
 	constant abilityreallevelfield ABILITY_RLF_MAX_MANA_DRAINED_HEROS = ConvertAbilityRealLevelField('fbk3')
+    // 技能随等级改变的实数域 伤害比率 - 英雄 ('fbk4')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RATIO_HEROS_PERCENT = ConvertAbilityRealLevelField('fbk4')
+    // 技能随等级改变的实数域 对召唤单位伤害 ('fbk5')
 	constant abilityreallevelfield ABILITY_RLF_SUMMONED_DAMAGE = ConvertAbilityRealLevelField('fbk5')
+    // 技能随等级改变的实数域 分裂伤害参数 ('nca1')
 	constant abilityreallevelfield ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_NCA1 = ConvertAbilityRealLevelField('nca1')
+    // 技能随等级改变的实数域 初始伤害 ('pxf1')
 	constant abilityreallevelfield ABILITY_RLF_INITIAL_DAMAGE_PXF1 = ConvertAbilityRealLevelField('pxf1')
+    // 技能随等级改变的实数域 每秒伤害 ('pxf2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_PXF2 = ConvertAbilityRealLevelField('pxf2')
+    // 技能随等级改变的实数域 每秒伤害 ('mls1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_MLS1 = ConvertAbilityRealLevelField('mls1')
+    // 技能随等级改变的实数域 野兽碰撞范围 ('Nst2')
 	constant abilityreallevelfield ABILITY_RLF_BEAST_COLLISION_RADIUS = ConvertAbilityRealLevelField('Nst2')
+    // 技能随等级改变的实数域 伤害数值 ('Nst3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_AMOUNT_NST3 = ConvertAbilityRealLevelField('Nst3')
+    // 技能随等级改变的实数域 伤害范围 ('Nst4')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_RADIUS = ConvertAbilityRealLevelField('Nst4')
+    // 技能随等级改变的实数域 伤害延迟 ('Nst5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_DELAY = ConvertAbilityRealLevelField('Nst5')
+    // 技能随等级改变的实数域 施法持续时间 ('Ncl1')
 	constant abilityreallevelfield ABILITY_RLF_FOLLOW_THROUGH_TIME = ConvertAbilityRealLevelField('Ncl1')
+    // 技能随等级改变的实数域 技能持续时间 ('Ncl4')
 	constant abilityreallevelfield ABILITY_RLF_ART_DURATION = ConvertAbilityRealLevelField('Ncl4')
+    // 技能随等级改变的实数域 移动速度增加（%） ('Nab1')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NAB1 = ConvertAbilityRealLevelField('Nab1')
+    // 技能随等级改变的实数域 攻击速度增加（%） ('Nab2')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NAB2 = ConvertAbilityRealLevelField('Nab2')
+    // 技能随等级改变的实数域 目标持续伤害数值 ('Nab4')
 	constant abilityreallevelfield ABILITY_RLF_PRIMARY_DAMAGE = ConvertAbilityRealLevelField('Nab4')
+    // 技能随等级改变的实数域 范围持续伤害数值 ('Nab5')
 	constant abilityreallevelfield ABILITY_RLF_SECONDARY_DAMAGE = ConvertAbilityRealLevelField('Nab5')
+    // 技能随等级改变的实数域 伤害间隔 ('Nab6')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INTERVAL_NAB6 = ConvertAbilityRealLevelField('Nab6')
+    // 技能随等级改变的实数域 黄金奖励参数 ('Ntm1')
 	constant abilityreallevelfield ABILITY_RLF_GOLD_COST_FACTOR = ConvertAbilityRealLevelField('Ntm1')
+    // 技能随等级改变的实数域 木材奖励参数 ('Ntm2')
 	constant abilityreallevelfield ABILITY_RLF_LUMBER_COST_FACTOR = ConvertAbilityRealLevelField('Ntm2')
+    // 技能随等级改变的实数域 移动速度奖励 ('Neg1')
 	constant abilityreallevelfield ABILITY_RLF_MOVE_SPEED_BONUS_NEG1 = ConvertAbilityRealLevelField('Neg1')
+    // 技能随等级改变的实数域 攻击奖励 ('Neg2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_NEG2 = ConvertAbilityRealLevelField('Neg2')
+    // 技能随等级改变的实数域 伤害数值 ('Ncs1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_AMOUNT_NCS1 = ConvertAbilityRealLevelField('Ncs1')
+    // 技能随等级改变的实数域 伤害间隔 ('Ncs2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_INTERVAL_NCS2 = ConvertAbilityRealLevelField('Ncs2')
+    // 技能随等级改变的实数域 最高输出伤害 ('Ncs4')
 	constant abilityreallevelfield ABILITY_RLF_MAX_DAMAGE_NCS4 = ConvertAbilityRealLevelField('Ncs4')
+    // 技能随等级改变的实数域 建筑物伤害参数 ('Ncs5')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NCS5 = ConvertAbilityRealLevelField('Ncs5')
+    // 技能随等级改变的实数域 技能持续时间 ('Ncs6')
 	constant abilityreallevelfield ABILITY_RLF_EFFECT_DURATION = ConvertAbilityRealLevelField('Ncs6')
+    // 技能随等级改变的实数域 生产单位间隔 ('Nsy1')
 	constant abilityreallevelfield ABILITY_RLF_SPAWN_INTERVAL_NSY1 = ConvertAbilityRealLevelField('Nsy1')
+    // 技能随等级改变的实数域 生产单位持续时间 ('Nsy3')
 	constant abilityreallevelfield ABILITY_RLF_SPAWN_UNIT_DURATION = ConvertAbilityRealLevelField('Nsy3')
+    // 技能随等级改变的实数域 产生单位位移 ('Nsy4')
 	constant abilityreallevelfield ABILITY_RLF_SPAWN_UNIT_OFFSET = ConvertAbilityRealLevelField('Nsy4')
+    // 技能随等级改变的实数域 约束范围 ('Nsy5')
 	constant abilityreallevelfield ABILITY_RLF_LEASH_RANGE_NSY5 = ConvertAbilityRealLevelField('Nsy5')
+    // 技能随等级改变的实数域 生产单位间隔 ('Nfy1')
 	constant abilityreallevelfield ABILITY_RLF_SPAWN_INTERVAL_NFY1 = ConvertAbilityRealLevelField('Nfy1')
+    // 技能随等级改变的实数域 约束范围 ('Nfy2')
 	constant abilityreallevelfield ABILITY_RLF_LEASH_RANGE_NFY2 = ConvertAbilityRealLevelField('Nfy2')
+    // 技能随等级改变的实数域 粉碎几率 ('Nde1')
 	constant abilityreallevelfield ABILITY_RLF_CHANCE_TO_DEMOLISH = ConvertAbilityRealLevelField('Nde1')
+    // 技能随等级改变的实数域 伤害倍乘（建筑物） ('Nde2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_MULTIPLIER_BUILDINGS = ConvertAbilityRealLevelField('Nde2')
+    // 技能随等级改变的实数域 伤害倍乘（单位） ('Nde3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_MULTIPLIER_UNITS = ConvertAbilityRealLevelField('Nde3')
+    // 技能随等级改变的实数域 伤害倍乘（英雄） ('Nde4')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_MULTIPLIER_HEROES = ConvertAbilityRealLevelField('Nde4')
+    // 技能随等级改变的实数域 燃灰伤害值奖励 ('Nic1')
 	constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_MULTIPLIER = ConvertAbilityRealLevelField('Nic1')
+    // 技能随等级改变的实数域 死亡伤害 - 全伤害 ('Nic2')
 	constant abilityreallevelfield ABILITY_RLF_DEATH_DAMAGE_FULL_AMOUNT = ConvertAbilityRealLevelField('Nic2')
+    // 技能随等级改变的实数域 死亡伤害 - 全伤害范围 ('Nic3')
 	constant abilityreallevelfield ABILITY_RLF_DEATH_DAMAGE_FULL_AREA = ConvertAbilityRealLevelField('Nic3')
+    // 技能随等级改变的实数域 死亡伤害 - 半伤害 ('Nic4')
 	constant abilityreallevelfield ABILITY_RLF_DEATH_DAMAGE_HALF_AMOUNT = ConvertAbilityRealLevelField('Nic4')
+    // 技能随等级改变的实数域 死亡伤害 - 半伤害范围 ('Nic5')
 	constant abilityreallevelfield ABILITY_RLF_DEATH_DAMAGE_HALF_AREA = ConvertAbilityRealLevelField('Nic5')
+    // 技能随等级改变的实数域 死亡伤害 - 延迟 ('Nic6')
 	constant abilityreallevelfield ABILITY_RLF_DEATH_DAMAGE_DELAY = ConvertAbilityRealLevelField('Nic6')
+    // 技能随等级改变的实数域 伤害值 ('Nso1')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_AMOUNT_NSO1 = ConvertAbilityRealLevelField('Nso1')
+    // 技能随等级改变的实数域 伤害周期 ('Nso2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PERIOD = ConvertAbilityRealLevelField('Nso2')
+    // 技能随等级改变的实数域 攻击减少 ('Nso3')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PENALTY = ConvertAbilityRealLevelField('Nso3')
+    // 技能随等级改变的实数域 移动速度减少（%） ('Nso4')
 	constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NSO4 = ConvertAbilityRealLevelField('Nso4')
+    // 技能随等级改变的实数域 攻击速度减少（%） ('Nso5')
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NSO5 = ConvertAbilityRealLevelField('Nso5')
+    // 技能随等级改变的实数域 分裂延迟 ('Nlm2')
 	constant abilityreallevelfield ABILITY_RLF_SPLIT_DELAY = ConvertAbilityRealLevelField('Nlm2')
+    // 技能随等级改变的实数域 最大生命值参数 ('Nlm4')
 	constant abilityreallevelfield ABILITY_RLF_MAX_HITPOINT_FACTOR = ConvertAbilityRealLevelField('Nlm4')
+    // 技能随等级改变的实数域 分裂生命周期奖励 ('Nlm5')
 	constant abilityreallevelfield ABILITY_RLF_LIFE_DURATION_SPLIT_BONUS = ConvertAbilityRealLevelField('Nlm5')
+    // 技能随等级改变的实数域 波间隔时间 ('Nvc3')
 	constant abilityreallevelfield ABILITY_RLF_WAVE_INTERVAL = ConvertAbilityRealLevelField('Nvc3')
+    // 技能随等级改变的实数域 建筑伤害参数（%） ('Nvc4')
 	constant abilityreallevelfield ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NVC4 = ConvertAbilityRealLevelField('Nvc4')
+    // 技能随等级改变的实数域 全伤害数值 ('Nvc5')
 	constant abilityreallevelfield ABILITY_RLF_FULL_DAMAGE_AMOUNT_NVC5 = ConvertAbilityRealLevelField('Nvc5')
+    // 技能随等级改变的实数域 半伤害参数 ('Nvc6')
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Nvc6')
+    // 技能随等级改变的实数域 增量间隔 ('Tau5')
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_BETWEEN_PULSES = ConvertAbilityRealLevelField('Tau5')
 	
+    // 技能随等级改变的布尔值域 百分比奖励 ('Hab2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_HAB2 = ConvertAbilityBooleanLevelField('Hab2')
+    // 技能随等级改变的布尔值域 传送单位聚集 ('Hmt3')
 	constant abilitybooleanlevelfield ABILITY_BLF_USE_TELEPORT_CLUSTERING_HMT3 = ConvertAbilityBooleanLevelField('Hmt3')
+    // 技能随等级改变的布尔值域 不会丢失 ('Ocr5')
 	constant abilitybooleanlevelfield ABILITY_BLF_NEVER_MISS_OCR5 = ConvertAbilityBooleanLevelField('Ocr5')
+    // 技能随等级改变的布尔值域 排除物品伤害 ('Ocr6')
 	constant abilitybooleanlevelfield ABILITY_BLF_EXCLUDE_ITEM_DAMAGE = ConvertAbilityBooleanLevelField('Ocr6')
+    // 技能随等级改变的布尔值域 加成伤害 ('Owk4')
 	constant abilitybooleanlevelfield ABILITY_BLF_BACKSTAB_DAMAGE = ConvertAbilityBooleanLevelField('Owk4')
+    // 技能随等级改变的布尔值域 继承升级 ('Uan3')
 	constant abilitybooleanlevelfield ABILITY_BLF_INHERIT_UPGRADES_UAN3 = ConvertAbilityBooleanLevelField('Uan3')
+    // 技能随等级改变的布尔值域 魔法数值转换 ('Udp3')
 	constant abilitybooleanlevelfield ABILITY_BLF_MANA_CONVERSION_AS_PERCENT = ConvertAbilityBooleanLevelField('Udp3')
+    // 技能随等级改变的布尔值域 生命数值转换 ('Udp4')
 	constant abilitybooleanlevelfield ABILITY_BLF_LIFE_CONVERSION_AS_PERCENT = ConvertAbilityBooleanLevelField('Udp4')
+    // 技能随等级改变的布尔值域 目标存活 ('Udp5')
 	constant abilitybooleanlevelfield ABILITY_BLF_LEAVE_TARGET_ALIVE = ConvertAbilityBooleanLevelField('Udp5')
+    // 技能随等级改变的布尔值域 百分比奖励 ('Uau3')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_UAU3 = ConvertAbilityBooleanLevelField('Uau3')
+    // 技能随等级改变的布尔值域 按百分比反弹 ('Eah2')
 	constant abilitybooleanlevelfield ABILITY_BLF_DAMAGE_IS_PERCENT_RECEIVED = ConvertAbilityBooleanLevelField('Eah2')
+    // 技能随等级改变的布尔值域 近战奖励 ('Ear2')
 	constant abilitybooleanlevelfield ABILITY_BLF_MELEE_BONUS = ConvertAbilityBooleanLevelField('Ear2')
+    // 技能随等级改变的布尔值域 远程奖励 ('Ear3')
 	constant abilitybooleanlevelfield ABILITY_BLF_RANGED_BONUS = ConvertAbilityBooleanLevelField('Ear3')
+    // 技能随等级改变的布尔值域 使用指定数值奖励 ('Ear4')
 	constant abilitybooleanlevelfield ABILITY_BLF_FLAT_BONUS = ConvertAbilityBooleanLevelField('Ear4')
+    // 技能随等级改变的布尔值域 不会丢失 ('Hbh5')
 	constant abilitybooleanlevelfield ABILITY_BLF_NEVER_MISS_HBH5 = ConvertAbilityBooleanLevelField('Hbh5')
+    // 技能随等级改变的布尔值域 百分比奖励 ('Had2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_HAD2 = ConvertAbilityBooleanLevelField('Had2')
+    // 技能随等级改变的布尔值域 可以取消 ('Hds1')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_DEACTIVATE = ConvertAbilityBooleanLevelField('Hds1')
+    // 技能随等级改变的布尔值域 复活单位是无敌的 ('Hre2')
 	constant abilitybooleanlevelfield ABILITY_BLF_RAISED_UNITS_ARE_INVULNERABLE = ConvertAbilityBooleanLevelField('Hre2')
+    // 技能随等级改变的布尔值域 按百分比回复 ('Oar2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENTAGE_OAR2 = ConvertAbilityBooleanLevelField('Oar2')
+    // 技能随等级改变的布尔值域 召唤非空闲单位 ('Btl2')
 	constant abilitybooleanlevelfield ABILITY_BLF_SUMMON_BUSY_UNITS = ConvertAbilityBooleanLevelField('Btl2')
+    // 技能随等级改变的布尔值域 创建荒芜地表 ('Bli2')
 	constant abilitybooleanlevelfield ABILITY_BLF_CREATES_BLIGHT = ConvertAbilityBooleanLevelField('Bli2')
+    // 技能随等级改变的布尔值域 尸体爆炸 ('Sds6')
 	constant abilitybooleanlevelfield ABILITY_BLF_EXPLODES_ON_DEATH = ConvertAbilityBooleanLevelField('Sds6')
+    // 技能随等级改变的布尔值域 总是自动施放 ('Fae2')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALWAYS_AUTOCAST_FAE2 = ConvertAbilityBooleanLevelField('Fae2')
+    // 技能随等级改变的布尔值域 只能在夜间回复 ('Mbt5')
 	constant abilitybooleanlevelfield ABILITY_BLF_REGENERATE_ONLY_AT_NIGHT = ConvertAbilityBooleanLevelField('Mbt5')
+    // 技能随等级改变的布尔值域 显示选择单位按钮 ('Neu3')
 	constant abilitybooleanlevelfield ABILITY_BLF_SHOW_SELECT_UNIT_BUTTON = ConvertAbilityBooleanLevelField('Neu3')
+    // 技能随等级改变的布尔值域 显示单位指示器 ('Neu4')
 	constant abilitybooleanlevelfield ABILITY_BLF_SHOW_UNIT_INDICATOR = ConvertAbilityBooleanLevelField('Neu4')
+    // 技能随等级改变的布尔值域 向技能拥有者收费 ('Ans6')
 	constant abilitybooleanlevelfield ABILITY_BLF_CHARGE_OWNING_PLAYER = ConvertAbilityBooleanLevelField('Ans6')
+    // 技能随等级改变的布尔值域 按百分比回复 ('Arm2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENTAGE_ARM2 = ConvertAbilityBooleanLevelField('Arm2')
+    // 技能随等级改变的布尔值域 目标无敌 ('Pos3')
 	constant abilitybooleanlevelfield ABILITY_BLF_TARGET_IS_INVULNERABLE = ConvertAbilityBooleanLevelField('Pos3')
+    // 技能随等级改变的布尔值域 目标魔法免疫 ('Pos4')
 	constant abilitybooleanlevelfield ABILITY_BLF_TARGET_IS_MAGIC_IMMUNE = ConvertAbilityBooleanLevelField('Pos4')
+    // 技能随等级改变的布尔值域 施法者死亡时杀死召唤单位 ('Ucb6')
 	constant abilitybooleanlevelfield ABILITY_BLF_KILL_ON_CASTER_DEATH = ConvertAbilityBooleanLevelField('Ucb6')
+    // 技能随等级改变的布尔值域 只能对自己施放 ('Rej4')
 	constant abilitybooleanlevelfield ABILITY_BLF_NO_TARGET_REQUIRED_REJ4 = ConvertAbilityBooleanLevelField('Rej4')
+    // 技能随等级改变的布尔值域 接受黄金 ('Rtn1')
 	constant abilitybooleanlevelfield ABILITY_BLF_ACCEPTS_GOLD = ConvertAbilityBooleanLevelField('Rtn1')
+    // 技能随等级改变的布尔值域 接受木材 ('Rtn2')
 	constant abilitybooleanlevelfield ABILITY_BLF_ACCEPTS_LUMBER = ConvertAbilityBooleanLevelField('Rtn2')
+    // 技能随等级改变的布尔值域 影响敌方数量 ('Roa5')
 	constant abilitybooleanlevelfield ABILITY_BLF_PREFER_HOSTILES_ROA5 = ConvertAbilityBooleanLevelField('Roa5')
+    // 技能随等级改变的布尔值域 影响友方数量 ('Roa6')
 	constant abilitybooleanlevelfield ABILITY_BLF_PREFER_FRIENDLIES_ROA6 = ConvertAbilityBooleanLevelField('Roa6')
+    // 技能随等级改变的布尔值域 扎根可转向 ('Roo3')
 	constant abilitybooleanlevelfield ABILITY_BLF_ROOTED_TURNING = ConvertAbilityBooleanLevelField('Roo3')
+    // 技能随等级改变的布尔值域 总是自动施放 ('Slo3')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALWAYS_AUTOCAST_SLO3 = ConvertAbilityBooleanLevelField('Slo3')
+    // 技能随等级改变的布尔值域 隐藏按钮 ('Ihid')
 	constant abilitybooleanlevelfield ABILITY_BLF_HIDE_BUTTON = ConvertAbilityBooleanLevelField('Ihid')
+    // 技能随等级改变的布尔值域 传送单位聚集 ('Itp2')
 	constant abilitybooleanlevelfield ABILITY_BLF_USE_TELEPORT_CLUSTERING_ITP2 = ConvertAbilityBooleanLevelField('Itp2')
+    // 技能随等级改变的布尔值域 对变形效果免疫 ('Eth1')
 	constant abilitybooleanlevelfield ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS = ConvertAbilityBooleanLevelField('Eth1')
+    // 技能随等级改变的布尔值域 不妨碍建造 ('Eth2')
 	constant abilitybooleanlevelfield ABILITY_BLF_DOES_NOT_BLOCK_BUILDINGS = ConvertAbilityBooleanLevelField('Eth2')
+    // 技能随等级改变的布尔值域 自动获取攻击目标 ('Gho1')
 	constant abilitybooleanlevelfield ABILITY_BLF_AUTO_ACQUIRE_ATTACK_TARGETS = ConvertAbilityBooleanLevelField('Gho1')
+    // 技能随等级改变的布尔值域 对变形效果免疫 ('Gho2')
 	constant abilitybooleanlevelfield ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS_GHO2 = ConvertAbilityBooleanLevelField('Gho2')
+    // 技能随等级改变的布尔值域 不妨碍建造 ('Gho3')
 	constant abilitybooleanlevelfield ABILITY_BLF_DO_NOT_BLOCK_BUILDINGS = ConvertAbilityBooleanLevelField('Gho3')
+    // 技能随等级改变的布尔值域 远程伤害加成 ('Ssk4')
 	constant abilitybooleanlevelfield ABILITY_BLF_INCLUDE_RANGED_DAMAGE = ConvertAbilityBooleanLevelField('Ssk4')
+    // 技能随等级改变的布尔值域 近战伤害加成 ('Ssk5')
 	constant abilitybooleanlevelfield ABILITY_BLF_INCLUDE_MELEE_DAMAGE = ConvertAbilityBooleanLevelField('Ssk5')
+    // 技能随等级改变的布尔值域 向目标靠拢 ('coa2')
 	constant abilitybooleanlevelfield ABILITY_BLF_MOVE_TO_PARTNER = ConvertAbilityBooleanLevelField('coa2')
+    // 技能随等级改变的布尔值域 可以被驱散 ('cyc1')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_BE_DISPELLED = ConvertAbilityBooleanLevelField('cyc1')
+    // 技能随等级改变的布尔值域 忽略友军的增益魔法效果 ('dvm6')
 	constant abilitybooleanlevelfield ABILITY_BLF_IGNORE_FRIENDLY_BUFFS = ConvertAbilityBooleanLevelField('dvm6')
+    // 技能随等级改变的布尔值域 死亡掉落物品 ('inv2')
 	constant abilitybooleanlevelfield ABILITY_BLF_DROP_ITEMS_ON_DEATH = ConvertAbilityBooleanLevelField('inv2')
+    // 技能随等级改变的布尔值域 可以使用物品 ('inv3')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_USE_ITEMS = ConvertAbilityBooleanLevelField('inv3')
+    // 技能随等级改变的布尔值域 可以取得物品 ('inv4')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_GET_ITEMS = ConvertAbilityBooleanLevelField('inv4')
+    // 技能随等级改变的布尔值域 可以丢弃物品 ('inv5')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_DROP_ITEMS = ConvertAbilityBooleanLevelField('inv5')
+    // 技能随等级改变的布尔值域 修理允许 ('liq4')
 	constant abilitybooleanlevelfield ABILITY_BLF_REPAIRS_ALLOWED = ConvertAbilityBooleanLevelField('liq4')
+    // 技能随等级改变的布尔值域 仅溅射伤害有魔法单位 ('mfl6')
 	constant abilitybooleanlevelfield ABILITY_BLF_CASTER_ONLY_SPLASH = ConvertAbilityBooleanLevelField('mfl6')
+    // 技能随等级改变的布尔值域 只对自己施放 ('irl4')
 	constant abilitybooleanlevelfield ABILITY_BLF_NO_TARGET_REQUIRED_IRL4 = ConvertAbilityBooleanLevelField('irl4')
+    // 技能随等级改变的布尔值域 被攻击时驱散效果 ('irl5')
 	constant abilitybooleanlevelfield ABILITY_BLF_DISPEL_ON_ATTACK = ConvertAbilityBooleanLevelField('irl5')
+    // 技能随等级改变的布尔值域 使用原始值 ('ipv3')
 	constant abilitybooleanlevelfield ABILITY_BLF_AMOUNT_IS_RAW_VALUE = ConvertAbilityBooleanLevelField('ipv3')
+    // 技能随等级改变的布尔值域 共享法术CD间隔 ('spb2')
 	constant abilitybooleanlevelfield ABILITY_BLF_SHARED_SPELL_COOLDOWN = ConvertAbilityBooleanLevelField('spb2')
+    // 技能随等级改变的布尔值域 睡眠一次 ('sla1')
 	constant abilitybooleanlevelfield ABILITY_BLF_SLEEP_ONCE = ConvertAbilityBooleanLevelField('sla1')
+    // 技能随等级改变的布尔值域 允许任意玩家 ('sla2')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_ON_ANY_PLAYER_SLOT = ConvertAbilityBooleanLevelField('sla2')
+    // 技能随等级改变的布尔值域 使其他技能无效 ('Ncl5')
 	constant abilitybooleanlevelfield ABILITY_BLF_DISABLE_OTHER_ABILITIES = ConvertAbilityBooleanLevelField('Ncl5')
+    // 技能随等级改变的布尔值域 附加杀敌奖励 ('Ntm4')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
 	
-	// 技能字符串等级域 图标 - 普通 ('aart')
+	// 技能随等级改变的字串符域 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
-	// 技能字符串等级域 效果 - 施法者 ('acat')
+	// 技能随等级改变的字串符域 效果 - 施法者 ('acat')
 	constant abilitystringlevelfield ABILITY_SLF_CASTER = ConvertAbilityStringLevelField('acat')
-	// 技能字符串等级域 效果 - 目标 ('atat')
+	// 技能随等级改变的字串符域 效果 - 目标 ('atat')
 	constant abilitystringlevelfield ABILITY_SLF_TARGET = ConvertAbilityStringLevelField('atat')
-	// 技能字符串等级域 效果 - 特殊 ('asat')
+	// 技能随等级改变的字串符域 效果 - 特殊 ('asat')
 	constant abilitystringlevelfield ABILITY_SLF_SPECIAL = ConvertAbilityStringLevelField('asat')
-	// 技能字符串等级域 效果 - 目标点 ('aeat')
+	// 技能随等级改变的字串符域 效果 - 目标点 ('aeat')
 	constant abilitystringlevelfield ABILITY_SLF_EFFECT = ConvertAbilityStringLevelField('aeat')
-	// 技能字符串等级域 效果 - 区域 ('aaea')
+	// 技能随等级改变的字串符域 效果 - 区域 ('aaea')
 	constant abilitystringlevelfield ABILITY_SLF_AREA_EFFECT = ConvertAbilityStringLevelField('aaea')
-	// 技能字符串等级域 效果 - 闪电效果 ('alig')
+	// 技能随等级改变的字串符域 效果 - 闪电效果 ('alig')
 	constant abilitystringlevelfield ABILITY_SLF_LIGHTNING_EFFECTS = ConvertAbilityStringLevelField('alig')
-	// 技能字符串等级域 效果 - 投射物图像 ('amat')
+	// 技能随等级改变的字串符域 效果 - 投射物图像 ('amat')
 	constant abilitystringlevelfield ABILITY_SLF_MISSILE_ART = ConvertAbilityStringLevelField('amat')
-	// 技能字符串等级域 提示工具 - 学习 ('aret')
+	// 技能随等级改变的字串符域 提示工具 - 学习 ('aret')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN = ConvertAbilityStringLevelField('aret')
-	// 技能字符串等级域 提示工具 - 学习 - 扩展 ('arut')
+	// 技能随等级改变的字串符域 提示工具 - 学习 - 扩展 ('arut')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN_EXTENDED = ConvertAbilityStringLevelField('arut')
-	// 技能字符串等级域 提示工具 - 普通 ('atp1')
+	// 技能随等级改变的字串符域 提示工具 - 普通 ('atp1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL = ConvertAbilityStringLevelField('atp1')
-	// 技能字符串等级域 提示工具 - 关闭 ('aut1')
+	// 技能随等级改变的字串符域 提示工具 - 关闭 ('aut1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF = ConvertAbilityStringLevelField('aut1')
-	// 技能字符串等级域 提示工具 - 普通 - 扩展 ('aub1')
+	// 技能随等级改变的字串符域 提示工具 - 普通 - 扩展 ('aub1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED = ConvertAbilityStringLevelField('aub1')
-	// 技能字符串等级域 提示工具 - 关闭 - 扩展 ('auu1')
+	// 技能随等级改变的字串符域 提示工具 - 关闭 - 扩展 ('auu1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED = ConvertAbilityStringLevelField('auu1')
-	// 技能字符串等级域 普通形态单位 ('Eme1')
+	// 技能随等级改变的字串符域 普通形态单位 ('Eme1')
 	constant abilitystringlevelfield ABILITY_SLF_NORMAL_FORM_UNIT_EME1 = ConvertAbilityStringLevelField('Eme1')
-	// 技能字符串等级域 召唤单位类型 ('Ndp1')
+	// 技能随等级改变的字串符域 召唤单位类型 ('Ndp1')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWNED_UNITS = ConvertAbilityStringLevelField('Ndp1')
-	// 技能字符串等级域 关联技能 ('Nrc1')
+	// 技能随等级改变的字串符域 关联技能 ('Nrc1')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_FOR_UNIT_CREATION = ConvertAbilityStringLevelField('Nrc1')
-	// 技能字符串等级域 普通形态单位 ('Mil1')
+	// 技能随等级改变的字串符域 普通形态单位 ('Mil1')
 	constant abilitystringlevelfield ABILITY_SLF_NORMAL_FORM_UNIT_MIL1 = ConvertAbilityStringLevelField('Mil1')
-	// 技能字符串等级域 变化形态单位 ('Mil2')
+	// 技能随等级改变的字串符域 变化形态单位 ('Mil2')
 	constant abilitystringlevelfield ABILITY_SLF_ALTERNATE_FORM_UNIT_MIL2 = ConvertAbilityStringLevelField('Mil2')
-	// 技能字符串等级域 基础命令ID ('Ans5')
+	// 技能随等级改变的字串符域 基础命令ID ('Ans5')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_ANS5 = ConvertAbilityStringLevelField('Ans5')
-	// 技能字符串等级域 变形单位 - 地面 ('Ply2')
+	// 技能随等级改变的字串符域 变形单位 - 地面 ('Ply2')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_GROUND = ConvertAbilityStringLevelField('Ply2')
-	// 技能字符串等级域 变形单位 - 空中 ('Ply3')
+	// 技能随等级改变的字串符域 变形单位 - 空中 ('Ply3')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_AIR = ConvertAbilityStringLevelField('Ply3')
-	// 技能字符串等级域 变形单位 - 两栖 ('Ply4')
+	// 技能随等级改变的字串符域 变形单位 - 两栖 ('Ply4')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_AMPHIBIOUS = ConvertAbilityStringLevelField('Ply4')
-	// 技能字符串等级域 变形单位 - 水中 ('Ply5')
+	// 技能随等级改变的字串符域 变形单位 - 水中 ('Ply5')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_WATER = ConvertAbilityStringLevelField('Ply5')
-	// 技能字符串等级域 单位召唤类型1 ('Rai3')
+	// 技能随等级改变的字串符域 单位召唤类型1 ('Rai3')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_ONE = ConvertAbilityStringLevelField('Rai3')
-	// 技能字符串等级域 单位召唤类型2 ('Rai4')
+	// 技能随等级改变的字串符域 单位召唤类型2 ('Rai4')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_TWO = ConvertAbilityStringLevelField('Rai4')
-	// 技能字符串等级域 单位类型 ('Sod2')
+	// 技能随等级改变的字串符域 单位类型 ('Sod2')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_SOD2 = ConvertAbilityStringLevelField('Sod2')
-	// 技能字符串等级域 召唤单位类型1 ('Ist1')
+	// 技能随等级改变的字串符域 召唤单位类型1 ('Ist1')
 	constant abilitystringlevelfield ABILITY_SLF_SUMMON_1_UNIT_TYPE = ConvertAbilityStringLevelField('Ist1')
-	// 技能字符串等级域 召唤单位类型2 ('Ist2')
+	// 技能随等级改变的字串符域 召唤单位类型2 ('Ist2')
 	constant abilitystringlevelfield ABILITY_SLF_SUMMON_2_UNIT_TYPE = ConvertAbilityStringLevelField('Ist2')
-	// 技能字符串等级域 允许转换种族 ('Ndc1')
+	// 技能随等级改变的字串符域 允许转换种族 ('Ndc1')
 	constant abilitystringlevelfield ABILITY_SLF_RACE_TO_CONVERT = ConvertAbilityStringLevelField('Ndc1')
-	// 技能字符串等级域 辅助单位类型 ('coa1')
+	// 技能随等级改变的字串符域 辅助单位类型 ('coa1')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE = ConvertAbilityStringLevelField('coa1')
-	// 技能字符串等级域 辅助单位类型1 ('dcp1')
+	// 技能随等级改变的字串符域 辅助单位类型1 ('dcp1')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE_ONE = ConvertAbilityStringLevelField('dcp1')
-	// 技能字符串等级域 辅助单位类型2 ('dcp2')
+	// 技能随等级改变的字串符域 辅助单位类型2 ('dcp2')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE_TWO = ConvertAbilityStringLevelField('dcp2')
-	// 技能字符串等级域 要求单位类型 ('tpi1')
+	// 技能随等级改变的字串符域 要求单位类型 ('tpi1')
 	constant abilitystringlevelfield ABILITY_SLF_REQUIRED_UNIT_TYPE = ConvertAbilityStringLevelField('tpi1')
-	// 技能字符串等级域 转换单位类型 ('tpi2')
+	// 技能随等级改变的字串符域 转换单位类型 ('tpi2')
 	constant abilitystringlevelfield ABILITY_SLF_CONVERTED_UNIT_TYPE = ConvertAbilityStringLevelField('tpi2')
-	// 技能字符串等级域 法术列表 ('spb1')
+	// 技能随等级改变的字串符域 法术列表 ('spb1')
 	constant abilitystringlevelfield ABILITY_SLF_SPELL_LIST = ConvertAbilityStringLevelField('spb1')
-	// 技能字符串等级域 基础命令ID ('spb5')
+	// 技能随等级改变的字串符域 基础命令ID ('spb5')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_SPB5 = ConvertAbilityStringLevelField('spb5')
-	// 技能字符串等级域 基础命令ID ('spb6')
+	// 技能随等级改变的字串符域 基础命令ID ('spb6')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_NCL6 = ConvertAbilityStringLevelField('Ncl6')
-	// 技能字符串等级域 技能升级1 ('Neg3')
+	// 技能随等级改变的字串符域 技能升级1 ('Neg3')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_1 = ConvertAbilityStringLevelField('Neg3')
-	// 技能字符串等级域 技能升级2 ('Neg4')
+	// 技能随等级改变的字串符域 技能升级2 ('Neg4')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_2 = ConvertAbilityStringLevelField('Neg4')
-	// 技能字符串等级域 技能升级3 ('Neg5')
+	// 技能随等级改变的字串符域 技能升级3 ('Neg5')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
-	// 技能字符串等级域 技能升级4 ('Neg6')
+	// 技能随等级改变的字串符域 技能升级4 ('Neg6')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
-	// 技能字符串等级域 生产单位ID ('Nsy2')
+	// 技能随等级改变的字串符域 生产单位ID ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
 	
 	// Item
@@ -2811,17 +3842,17 @@ globals
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
 	// 物品布尔值域 拾取时自动使用 ('ipow')
 	constant itembooleanfield ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
-  // 物品布尔值域 可以出售给商店 ('ipaw')
+    // 物品布尔值域 可以出售给商店 ('ipaw')
 	constant itembooleanfield ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
-  // 物品布尔值域 主动使用 ('iusa')
+    // 物品布尔值域 主动使用 ('iusa')
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
-  // 物品字符串域 使用模型 ('ifil')
+    // 物品字符串域 使用模型 ('ifil')
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
 	
 	// Unit
 	// Unit
 
- 	// 单位整数域 战斗 - 护甲类型（普通/小型/中型/大型/城墙/英雄/神圣/无装甲） ('udty')
+ 	// 单位整数域 战斗 - 防御类型（普通/小型/中型/大型/城墙/英雄/神圣/无装甲） ('udty')
 	constant unitintegerfield UNIT_IF_DEFENSE_TYPE = ConvertUnitIntegerField('udty')
 	// 单位整数域 战斗 - 装甲类型（木头/气态/石头/肉体/金属） ('uarm')
 	constant unitintegerfield UNIT_IF_ARMOR_TYPE = ConvertUnitIntegerField('uarm')
@@ -3088,7 +4119,7 @@ globals
 	
 	// defense type
 	// defense type
-	// 防御类型 轻型/小型，在低版本为 small ，没有 light
+	// 防御类型 轻型/小型，在低版本似乎为 small ，并没有 light
  constant defensetype DEFENSE_TYPE_LIGHT = ConvertDefenseType(0)
 	// 防御类型 中型
 	constant defensetype DEFENSE_TYPE_MEDIUM = ConvertDefenseType(1)
@@ -3116,17 +4147,17 @@ globals
 	
 	// Armor Type
 	// Armor Type
-    // 装甲 没有/未知
+    // 装甲类型 没有/未知
  constant armortype ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
-    // 装甲 肉体
+    // 装甲类型 肉体
 	constant armortype ARMOR_TYPE_FLESH = ConvertArmorType(1)
-    // 装甲 金属
+    // 装甲类型 金属
 	constant armortype ARMOR_TYPE_METAL = ConvertArmorType(2)
-    // 装甲 木头
+    // 装甲类型 木头
 	constant armortype ARMOR_TYPE_WOOD = ConvertArmorType(3)
-    // 装甲 气态
+    // 装甲类型 气态
 	constant armortype ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
-    // 装甲 石头
+    // 装甲类型 石头
 	constant armortype ARMOR_TYPE_STONE = ConvertArmorType(5)
 	
 	// Regeneration Type
@@ -3178,7 +4209,7 @@ globals
 	constant pathingflag PATHING_FLAG_UNBUILDABLE = ConvertPathingFlag(8)
 	// 放置要求 工人可采集
 	constant pathingflag PATHING_FLAG_UNPEONHARVEST = ConvertPathingFlag(16)
-	// 放置要求 不是荒芜之地
+	// 放置要求 不是荒芜地表
 	constant pathingflag PATHING_FLAG_BLIGHTED = ConvertPathingFlag(32)
 	// 放置要求 海面可通行
 	constant pathingflag PATHING_FLAG_UNFLOATABLE = ConvertPathingFlag(64)
@@ -3240,8 +4271,8 @@ native R2I takes real r returns integer
 native I2S takes integer i returns string
 // 转换实数为字符串
 native R2S takes real r returns string
-// 转换实数为字符串（指定保留的小数位数）
-//@param precision
+// 转换实数为字符串
+//@param precision指定保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字串符为整数
 native S2I takes string s returns integer
@@ -3262,7 +4293,10 @@ native StringCase takes string source, boolean upper returns string
 // 转换字符串为哈希码，在AI脚本中似乎只返回 null
 native StringHash takes string s returns integer
 
-// 获取（外部文件的）本地字符串 [R]，从Globalstrings.fdf文件获取查询内容对应的翻译文本，不同语言返回不同的值，当字符串不存在时（是当前版本不存在查询的字符串本身，不是字符串已存在但没有翻译文本），会原封不动返回查询内容（英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等），利用该命令可得知游戏大致版本号（如1.27，1.30等），该命令不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
+// 获取（外部文件的）本地字符串 [R]
+// 从Globalstrings.fdf文件获取查询内容对应的翻译文本，不同语言返回不同的值
+// 当字符串不存在时（是当前版本不存在查询的字符串本身，不是字符串已存在但没有翻译文本），会原封不动返回查询内容（英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等），利用该命令可得知游戏大致版本号（如1.27，1.30等）
+// 该命令不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native GetLocalizedString takes string source returns string
 // 获取本地热键
 native GetLocalizedHotkey takes string source returns integer
@@ -3287,9 +4321,13 @@ native SetPlayers takes integer playercount returns nothing
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
 // 默认开始点（指定点）
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
-// 设置开始点优先级（指定玩家槽）
+// 设置开始点优先级（指定点）
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置开始点优先级（指定玩家槽、第一开始点、第二开始点、优先级系数）
+// 设置开始点优先级
+// @param whichStartLoc第一开始点
+// @param prioSlotIndex指定玩家槽
+// @param otherStartLocIndex其他开始点（仅在允许玩家变更开始点时有效）
+// @param priority优先级系数
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 获取开始点优先级（指定玩家槽）
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
@@ -3297,7 +4335,11 @@ native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex re
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
 // 设置敌人开始点（指定玩家槽）
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置敌人开始点优先级（指定玩家槽、第一开始点、第二开始点、优先级系数）
+// 设置敌人开始点优先级
+// @param whichStartLoc第一开始点
+// @param prioSlotIndex指定敌方玩家槽
+// @param otherStartLocIndex其他开始点（仅在允许玩家变更开始点时有效）
+// @param priority优先级系数
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏类型支持
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
@@ -3323,7 +4365,7 @@ native GetPlayers takes nothing returns integer
 native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 游戏选择类型
 native GetGameTypeSelected takes nothing returns gametype
-// 地图参数
+// 查询地图参数状态（指定参数）
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取障碍设置，怀疑是最大生命值百分比限制
 constant native GetGamePlacement takes nothing returns placement
@@ -3335,11 +4377,15 @@ constant native GetGameDifficulty takes nothing returns gamedifficulty
 constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
-// 获取指定开始点的 X 轴坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
+// 获取指定开始点的 X 轴坐标
+// 理论上带入0~11/23的玩家编号即可返回指定玩家的开始点
 constant native GetStartLocationX takes integer whichStartLocation returns real
-// 获取指定开始点的 Y 轴坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
+// 获取指定开始点的 Y 轴坐标
+// 理论上带入0~11/23的玩家编号即可返回指定玩家的开始点
 constant native GetStartLocationY takes integer whichStartLocation returns real
-// 获取指定开始点的坐标，理论上带入0~23的玩家编号即可返回指定玩家的开始点
+// 获取指定开始点的坐标
+// 理论上带入0~11/23的玩家编号即可返回指定玩家的开始点
+// 会生成点，需要排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
@@ -3354,9 +4400,9 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 // use random placement for any unplaced players etc )
 // 势力玩家开始点
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
-// 改变玩家颜色 [R]
+// 设置玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
-// 设置联盟状态(指定项目) [R]
+// 设置联盟类型(指定项目) [R]
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
 // 设置税率 [R]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
@@ -3372,23 +4418,23 @@ native SetPlayerName takes player whichPlayer, string name returns nothing
 // 显示/隐藏计分屏显示 [R]
 native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns nothing
 
-// 玩家在的队伍
+// 获取玩家队伍编号
 native GetPlayerTeam takes player whichPlayer returns integer
-// 玩家开始点
+// 获取玩家开始点
 native GetPlayerStartLocation takes player whichPlayer returns integer
-// 玩家的颜色
+// 获取玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
-// 玩家是否可选
+// 获取玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
-// 玩家控制者
+// 获取玩家控制者
 native GetPlayerController takes player whichPlayer returns mapcontrol
-// 玩家游戏属性
+// 获取玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
-// 玩家税率 [R]
+// 获取玩家税率 [R]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
-// 玩家的种族选择
+// 判断玩家的种族
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
-// 玩家名字
+// 获取玩家名字
 native GetPlayerName takes player whichPlayer returns string
 
 
@@ -3399,7 +4445,7 @@ native CreateTimer takes nothing returns timer
 // 删除计时器 [R]
 native DestroyTimer takes timer whichTimer returns nothing
 // 运行计时器 [C]
-// @param whichTimer 计时器对象
+// @param whichTimer 计时器
 // @param timeout 超时
 // @param periodic 是否循环
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
@@ -3424,43 +4470,58 @@ native GetExpiredTimer takes nothing returns timer
 native CreateGroup takes nothing returns group
 // 删除单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
-// 为指定单位组添加添加指定单位 [R]
+// 将指定单位添加到单位组中 [R]
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
-// 为指定单位组移除指定单位 [R]
+// 将指定单位移出单位组 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
-// 单位组添加单位组 [快速的]
+// 往 addGroup单位组 添加 whichGroup单位组 的单位 [快速]
+// @version 1.33
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
-// 单位组移除单位组 [快速的]
+// 从 removeGroup单位组 中移除 whichGroup单位组 的单位 [快速]
+// @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
-// 清空单位组，排泄需要使用删除单位组 CreateGroup，而非清空
+// 清空单位组
+// 排泄需要使用删除单位组 CreateGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组尺寸（组内的单位数量）
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
-// 通过单位类型匹配单位
+// 将指定单位类型的单位加入单位组
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
-// 通过玩家匹配单位
+// 将指定玩家匹的单位加入单位组
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-// 通过单位类型匹配单位（指定数量上限）
-// @param countLimit
+// 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-// 匹配范围单位
+// 将指定矩形区域的的单位加入单位组
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 匹配范围单位（指定数量上限）
-// @param countLimit
+// 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 选取指定坐标点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
+// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
+// @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 选取指定点指定范围内的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)(不建议使用)
+// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
+// @param countLimit 数量上限
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
-// 选取指定玩家的单位添加到指定单位组(可用filter附加选择单位的额外条件，在AI脚本中，filter建议使用null)
+// 将指定玩家的单位添加到单位组
+// @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发送单位组命令（无目标）
@@ -3486,7 +4547,8 @@ native GroupTargetOrderById takes group whichGroup, integer order, widget target
 // and removes them if they leave...
 // 选取指定单位组做多个动作
 native ForGroup takes group whichGroup, code callback returns nothing
-// 单位组中第一个单位
+// 获取单位组中第一个单位
+// 在单位组内单位未发生变化时（添加或移除单位），单位的排序不会发生变化，即每次获取的都是同一个单位
 native FirstOfGroup takes group whichGroup returns unit
 
 
@@ -3502,18 +4564,18 @@ native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 玩家是否存在
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
-// 清除玩家
+// 清除玩家组
 native ForceClear takes force whichForce returns nothing
-// 匹配玩家
+// 匹配玩家组
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
-// 匹配玩家
-// @param countLimit 上限
+// 在指定的玩家组中匹配玩家（指定匹配的数量）
+// @param countLimit玩家数量
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
-// 匹配联盟
+// 在指定的玩家组中匹配联盟玩家
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 匹配敌对
+// 在指定的玩家组中匹配敌对玩家
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 选取所有玩家在玩家组做动作(单一的)
+// 选取所有玩家在玩家组做动作(单个动作)
 native ForForce takes force whichForce, code callback returns nothing
 
 
@@ -3531,20 +4593,20 @@ native SetRect takes rect whichRect, real minx, real miny, real maxx, real maxy 
 native SetRectFromLoc takes rect whichRect, location min, location max returns nothing
 // 移动矩形区域(指定坐标) [R]
 native MoveRectTo takes rect whichRect, real newCenterX, real newCenterY returns nothing
-// 移动区域
+// 移动区域（指定新的中心点）
 native MoveRectToLoc takes rect whichRect, location newCenterLoc returns nothing
 
-// 区域中心的 X 坐标
+// 获取区域中心的 X 坐标
 native GetRectCenterX takes rect whichRect returns real
-// 区域中心的 Y 坐标
+// 获取区域中心的 Y 坐标
 native GetRectCenterY takes rect whichRect returns real
-// 区域最小 X 坐标
+// 获取区域最小 X 坐标
 native GetRectMinX takes rect whichRect returns real
-// 区域最小 Y 坐标
+// 获取区域最小 Y 坐标
 native GetRectMinY takes rect whichRect returns real
-// 区域最大 X 坐标
+// 获取区域最大 X 坐标
 native GetRectMaxX takes rect whichRect returns real
-// 区域最大 Y 坐标
+// 获取区域最大 Y 坐标
 native GetRectMaxY takes rect whichRect returns real
 
 // 新建区域 [R]
@@ -3557,16 +4619,17 @@ native RegionAddRect takes region whichRegion, rect r returns nothing
 // 移除区域 [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
-// 添加单元点(指定坐标) [R]
+// 添加坐标(指定区域) [R]
 native RegionAddCell takes region whichRegion, real x, real y returns nothing
-// 添加单元点(指定点) [R]
+// 添加点(指定区域) [R]
 native RegionAddCellAtLoc takes region whichRegion, location whichLocation returns nothing
-// 移除单元点(指定坐标) [R]
+// 移除坐标(指定区域) [R]
 native RegionClearCell takes region whichRegion, real x, real y returns nothing
-// 移除单元点(指定点) [R]
+// 移除点(指定区域) [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
-// 转换坐标到点
+// 将坐标转换成点
+// 会生成点，需要排泄
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
@@ -3582,16 +4645,16 @@ native GetLocationY takes location whichLocation returns real
 // 获取点 Z 轴高度 [R]
 native GetLocationZ takes location whichLocation returns real
 
-// 单位检查
+// 单位是否在区域内
 native IsUnitInRegion takes region whichRegion, unit whichUnit returns boolean
-// 是否包含坐标
+// 坐标是否在区域内
 native IsPointInRegion takes region whichRegion, real x, real y returns boolean
-// 是否包含点
+// 点是否在区域内
 native IsLocationInRegion takes region whichRegion, location whichLocation returns boolean
 
 // Returns full map bounds, including unplayable borders, in world coordinates
 // Returns full map bounds, including unplayable borders, in world coordinates
-// 获取可用地图范围
+// 获取可用地图区域
 native GetWorldBounds takes nothing returns rect
 
 
@@ -3615,32 +4678,32 @@ native TriggerWaitOnSleeps takes trigger whichTrigger, boolean flag returns noth
 // 触发是否挂起
 native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
 
-// 匹配的单位
+// 获取匹配的单位
 constant native GetFilterUnit takes nothing returns unit
-// 选取的单位
+// 获取选取的单位
 constant native GetEnumUnit takes nothing returns unit
 
-// 匹配的可毁坏物
+// 获取匹配的可破坏物
 constant native GetFilterDestructable takes nothing returns destructable
-// 选取的可毁坏物
+// 获取选取的可破坏物
 constant native GetEnumDestructable takes nothing returns destructable
 
-// 匹配的物品
+// 获取匹配的物品
 constant native GetFilterItem takes nothing returns item
-// 选取的物品
+// 获取选取的物品
 constant native GetEnumItem takes nothing returns item
 
-// 解析tags
+// 解析标签 tags
 constant native ParseTags takes string taggedString returns string
 
-// 匹配的玩家
+// 获取匹配的玩家
 constant native GetFilterPlayer takes nothing returns player
-// 选取的玩家
+// 获取选取的玩家
 constant native GetEnumPlayer takes nothing returns player
 
 // 当前触发器
 constant native GetTriggeringTrigger takes nothing returns trigger
-// 获取触发ID
+// 获取触发事件ID
 constant native GetTriggerEventId takes nothing returns eventid
 // 触发器赋值统计
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
@@ -3660,11 +4723,13 @@ native And takes boolexpr operandA, boolexpr operandB returns boolexpr
 native Or takes boolexpr operandA, boolexpr operandB returns boolexpr
 // not 不是/否
 native Not takes boolexpr operand returns boolexpr
-// 限制条件为
+// 限制条件
 native Condition takes code func returns conditionfunc
 // 销毁条件
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤
+// 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
+// 使用后需要使用（DestroyFilter）排泄，并set null，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤
 native DestroyFilter takes filterfunc f returns nothing
@@ -3707,24 +4772,24 @@ constant native GetEventGameState takes nothing returns gamestate
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
 // EVENT_GAME_VICTORY
-// 过去胜利玩家
+// 获取胜利玩家
 constant native GetWinningPlayer takes nothing returns player
 
 
-// 单位进入不规则区域(指定条件) [R]
+// 单位进入不规则区域(过滤) [R]
 native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 
 // EVENT_GAME_ENTER_REGION
-// 触发区域 [R]
+// 获取触发区域 [R]
 constant native GetTriggeringRegion takes nothing returns region
-// 正在进入的单位
+// 获取正在进入的单位
 constant native GetEnteringUnit takes nothing returns unit
 
 // EVENT_GAME_LEAVE_REGION
 
-// 单位离开不规则区域(指定条件) [R]
+// 单位离开不规则区域(过滤) [R]
 native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
-// 正在离开的单位
+// 获取正在离开的单位
 constant native GetLeavingUnit takes nothing returns unit
 
 // 鼠标点击可追踪物 [R]
@@ -3760,7 +4825,7 @@ constant native GetTournamentFinishNowPlayer takes nothing returns player
 constant native GetTournamentScore takes player whichPlayer returns integer
 
 // EVENT_GAME_SAVE
-// 获取储存游戏文件名
+// 获取游戏存档的文件名
 constant native GetSaveBasicFilename takes nothing returns string
 
 
@@ -3833,7 +4898,7 @@ constant native GetConstructingStructure takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
-// 获取取消建造中的建筑
+// 获取取消建造的建筑
 constant native GetCancelledStructure takes nothing returns unit
 // 获取已建造的建筑
 constant native GetConstructedStructure takes nothing returns unit
@@ -3888,7 +4953,7 @@ constant native GetBuyingUnit takes nothing returns unit
 constant native GetSoldItem takes nothing returns item
 
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
-// 获取改变了所有者的单位
+// 获取变更了所有者的单位
 constant native GetChangingUnit takes nothing returns unit
 // 获取前一个所有者
 constant native GetChangingUnitPrevOwner takes nothing returns player
@@ -3905,19 +4970,24 @@ constant native GetManipulatedItem takes nothing returns item
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 
-// 获取吸收被操作物品的物品 @version 1.33
+// 获取吸收被操作物品的物品 
+// @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// 获取被操作的物品被吸收 @version 1.33
+// 获取被操作的物品被吸收 
+// @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
 	
-// 获取堆叠源物品 @version 1.33
+// 获取堆叠源物品 
+// @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// 获取堆叠目标物品 @version 1.33
+// 获取堆叠目标物品 
+// @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
-// 获取堆叠物品的预期售价 @version 1.33
+// 获取堆叠物品的预期售价 
+// @version 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
@@ -3930,15 +5000,16 @@ constant native GetIssuedOrderId takes nothing returns integer
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 // 获取命令目标点 X 坐标 [R]
 constant native GetOrderPointX takes nothing returns real
-// 获取命令目标点 Y 标 [R]
+// 获取命令目标点 Y 坐标 [R]
 constant native GetOrderPointY takes nothing returns real
 // 获取命令目标点
+// 会生成点，需要排泄
 constant native GetOrderPointLoc takes nothing returns location
 
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 // 获取接受命令的单位
 constant native GetOrderTarget takes nothing returns widget
-// 获取命令目标可毁坏物
+// 获取命令目标可破坏物
 constant native GetOrderTargetDestructable takes nothing returns destructable
 // 获取命令目标物品
 constant native GetOrderTargetItem takes nothing returns item
@@ -3962,26 +5033,27 @@ constant native GetSpellAbilityId takes nothing returns integer
 // 获取被释放技能
 constant native GetSpellAbility takes nothing returns ability
 // 获取被释放技能目标点
+// 会生成点，需要排泄
 constant native GetSpellTargetLoc takes nothing returns location
-// 获取被释放技能目标点 x 坐标
+// 获取被释放技能目标点 X 坐标
 constant native GetSpellTargetX takes nothing returns real
-// 获取被释放技能目标点 y 坐标
+// 获取被释放技能目标点 Y 坐标
 constant native GetSpellTargetY takes nothing returns real
-// 获取被释放技能目标可毁坏物
+// 获取被释放技能目标可破坏物
 constant native GetSpellTargetDestructable takes nothing returns destructable
 // 获取被释放技能目标物品
 constant native GetSpellTargetItem takes nothing returns item
 // 获取被释放技能目标单位
 constant native GetSpellTargetUnit takes nothing returns unit
 
-// 注册玩家联盟状态改变事件(特殊)
+// 注册玩家联盟类型变更事件(特殊)
 native TriggerRegisterPlayerAllianceChange takes trigger whichTrigger, player whichPlayer, alliancetype whichAlliance returns event
-// 注册玩家属性事件
+// 注册玩家状态事件
 native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichPlayer, playerstate whichState, limitop opcode, real limitval returns event
 
 // EVENT_PLAYER_STATE_LIMIT
 // EVENT_PLAYER_STATE_LIMIT
-// 获取玩家属性
+// 获取玩家状态
 constant native GetEventPlayerState takes nothing returns playerstate
 
 // 玩家输入聊天信息
@@ -3995,7 +5067,7 @@ native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPl
 constant native GetEventPlayerChatString takes nothing returns string
 
 // returns the string that you registered for
-// 匹配的聊天字符
+// 获取匹配的聊天字符
 constant native GetEventPlayerChatStringMatched takes nothing returns string
 
 // 单位死亡事件
@@ -4042,7 +5114,7 @@ native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit
 
 // EVENT_UNIT_ACQUIRED_TARGET
 // EVENT_UNIT_TARGET_IN_RANGE
-// 目标单位
+// 获取目标单位
 constant native GetEventTargetUnit takes nothing returns unit
 
 // EVENT_UNIT_ATTACKED
@@ -4111,28 +5183,28 @@ native TriggerSyncReady takes nothing returns nothing
 
 
 // Widget API
-// 获取地表装饰物的生命值
+// 获取目标的生命值
 native GetWidgetLife takes widget whichWidget returns real
-// 设置地表装饰物的生命值
+// 设置目标的生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取地表装饰物的 X 轴坐标
+// 获取目标的 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取地表装饰物的 Y 轴坐标
+// 获取目标的 Y 轴坐标
 native GetWidgetY takes widget whichWidget returns real
-// 获取触发的地表装饰物
+// 获取触发的目标
 constant native GetTriggerWidget takes nothing returns widget
 
 
 // Destructable Object API
 // Facing arguments are specified in degrees
 // Facing arguments are specified in degrees
-// 新建可破坏物（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物（非毁坏的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物 [R]（非死亡的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物 [R]（非毁坏的）（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱)（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱)（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-// 新建可破坏物(死亡的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
+// 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
 // 删除可破坏物
 native RemoveDestructable takes destructable d returns nothing
@@ -4142,7 +5214,7 @@ native KillDestructable takes destructable d returns nothing
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
 // 获取可破坏物的可见状态
 native IsDestructableInvulnerable takes destructable d returns boolean
-// 选取指定区域的指定条件（filter用于指定条件）的可破坏物执行指定动作（actionFunc可指定动作）
+// 选取指定区域的过滤（filter用于过滤）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
@@ -4164,9 +5236,9 @@ native DestructableRestoreLife takes destructable d, real life, boolean birth re
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 设置可破坏物的动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
-// 改变可破坏物动画播放速度 [R]
+// 设置可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
-// 显示/隐藏可破坏物的[R]
+// 显示/隐藏 可破坏物[R]
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取可破坏物的闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -4223,13 +5295,16 @@ native IsItemIdPowerup takes integer itemId returns boolean
 native IsItemIdSellable takes integer itemId returns boolean
 // 物品是否可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
-// 选取 区域内 所有物品 做动作 r = 区域 ， filter = 条件 ， actionFunc = 动作
+// 选取区域内所有物品做动作
+// @param r区域
+// @param filter过滤
+// @param actionFunc动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取物品等级
 native GetItemLevel takes item whichItem returns integer
 // 获取物品类型
 native GetItemType takes item whichItem returns itemtype
-// 设置掉落重生神符的单位类型
+// 设置掉落物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 物品名称
 constant native GetItemName takes item whichItem returns string
@@ -4264,7 +5339,7 @@ native RemoveUnit takes unit whichUnit returns nothing
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置单位属性 [R]
-// @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
+// @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置单位的 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
@@ -4286,7 +5361,7 @@ native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns 
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置感知敌人距离
+// 设置主动攻击范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -4309,18 +5384,18 @@ native GetUnitDefaultPropWindow takes unit whichUnit returns real
 // 飞行高度 (默认)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
-// 改变单位所有者
+// 设置单位所有者
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
-// 改变单位颜色
+// 设置单位颜色
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
 
-// 改变单位尺寸(按倍数) [R]
+// 设置单位尺寸(按倍数) [R]
 native SetUnitScale takes unit whichUnit, real scaleX, real scaleY, real scaleZ returns nothing
-// 改变单位动画播放速度(按倍数) [R]
+// 设置单位动画播放速度(按倍数) [R]
 native SetUnitTimeScale takes unit whichUnit, real timeScale returns nothing
-// 改变单位混合时间
+// 设置单位混合时间
 native SetUnitBlendTime takes unit whichUnit, real blendTime returns nothing
-// 改变单位的颜色(RGB:0-255) [R]
+// 设置单位的颜色(RGB:0-255) [R]
 native SetUnitVertexColor takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
 // 将单位动画加入队列
 native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
@@ -4386,7 +5461,9 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 native IsSuspendedXP takes unit whichHero returns boolean
 // 命令英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取单位技能等级 [R] ，此命令在AI脚本中似乎只返回0，不论技能是否存在
+// 获取单位技能等级 [R] 
+// 对于触发器添加的技能，此命令在AI脚本中似乎只返回0，不论技能是否存在
+// 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
 // 降低英雄技能等级 [R]
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -4406,12 +5483,12 @@ native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
 native SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
 // 暂停/恢复 [R]
 native PauseUnit takes unit whichUnit, boolean flag returns nothing
-// 单位是否暂停
+// 查询单位是否暂停
 native IsUnitPaused takes unit whichHero returns boolean
-// 设置碰撞 打开/关闭
+// 打开/关闭单位碰撞体积
 native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
-// 清除所有选定
+// 清除所有选择
 native ClearSelection takes nothing returns nothing
 // 选择单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
@@ -4429,9 +5506,9 @@ native UnitAddItem takes unit whichUnit, item whichItem returns boolean
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数 [R]
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 丢弃物品
+// 丢弃物品（指定物品）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 丢弃物品
+// 丢弃物品（指定物品栏格数：0-5，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
 // @param itemSlot 0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 单位是否持有指定物品
@@ -4456,41 +5533,43 @@ native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y ret
 // 对单位使用物品
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 单位所在 X 轴坐标 [R]
+// 获取指定单位所在 X 轴坐标 [R]
 constant native GetUnitX takes unit whichUnit returns real
-// 单位所在 Y 轴坐标 [R]
+// 获取指定单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
-// 单位的位置
+// 获取指定单位的位置
+// 会生成点，需要排泄
 constant native GetUnitLoc takes unit whichUnit returns location
-// 单位面向角度
+// 获取指定单位面向角度
 constant native GetUnitFacing takes unit whichUnit returns real
-// 单位移动速度 (当前值)
+// 获取指定单位移动速度 (当前值)
 constant native GetUnitMoveSpeed takes unit whichUnit returns real
-// 单位移动速度 (默认值)
+// 获取指定单位移动速度 (默认值)
 constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
-// 指定单位的指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
+// 获取指定单位的指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
 // @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
-// 单位的所属玩家
+// 获取指定单位的所属玩家
 constant native GetOwningPlayer takes unit whichUnit returns player
-// 单位的类型
+// 获取指定单位的类型
 constant native GetUnitTypeId takes unit whichUnit returns integer
-// 单位的种族
+// 获取指定单位的种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 单位的名字
+// 获取指定单位的名字
 constant native GetUnitName takes unit whichUnit returns string
-// 单位使用人口
+// 获取指定单位使用的人口数量（单个）
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
-// 单位提供人口数量
+// 获取指定单位提供的人口数量（单个）
 constant native GetUnitFoodMade takes unit whichUnit returns integer
-// 单位-类型 提供的人口
+// 获取指定单位类型 提供的人口数量（单个）
 constant native GetFoodMade takes integer unitId returns integer
-// 单位-类型 使用的人口
+// 获取指定单位类型 使用的人口数量（单个）
 constant native GetFoodUsed takes integer unitId returns integer
 // 启用/禁用 人口占用 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位的集结点指向的位置（建筑的旗子，集结技能）
+// 会生成点，需要排泄
 constant native GetUnitRallyPoint takes unit whichUnit returns location
 // 获取指定单位集结点指向的单位，仅当集结点指向单位时可正常返回（建筑的旗子，集结技能）
 constant native GetUnitRallyUnit takes unit whichUnit returns unit
@@ -4505,7 +5584,7 @@ constant native IsUnitInForce takes unit whichUnit, force whichForce returns boo
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
 // 指定单位的所属玩家是AI的盟友
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位的所属玩家是AI敌人
+// 指定单位的所属玩家是AI的敌人
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 指定单位对于玩家可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
@@ -4540,9 +5619,9 @@ constant native IsUnitInTransport takes unit whichUnit, unit whichTransport retu
 // 指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 单位类型是否英雄单位
+// 指定单位类型是否英雄单位
 constant native IsHeroUnitId takes integer unitId returns boolean
-// 检查单位-类型 分类
+// 单位类型是否匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
 // 设定指定单位和指定玩家的共享视野状态（共享或不共享） [R]
@@ -4582,9 +5661,9 @@ native UnitIsSleeping takes unit whichUnit returns boolean
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置生命周期 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
-//设置指定单位的忽略报警状态
+// 设置指定单位的忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-//读取指定单位忽略报警的开关状态
+// 读取指定单位忽略报警的开关状态
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
 // 重设单位技能冷却时间 Cooldown
 native UnitResetCooldown takes unit whichUnit returns nothing
@@ -4594,7 +5673,7 @@ native UnitSetConstructionProgress takes unit whichUnit, integer constructionPer
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
-// 设置单位小地图图标
+// 启用/禁用 单位的小地图图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
 // 伤害区域 [R]
@@ -4672,9 +5751,9 @@ native WaygateGetDestinationX takes unit waygate returns real
 native WaygateGetDestinationY takes unit waygate returns real
 // 设置传送门目的坐标 [R]
 native WaygateSetDestination takes unit waygate, real x, real y returns nothing
-//设置传送门激活状态
+// 设置传送门激活状态
 native WaygateActivate takes unit waygate, boolean activate returns nothing
-//获取传送门激活状态
+// 获取传送门激活状态
 native WaygateIsActive takes unit waygate returns boolean
 
 // 增加 物品-类型 (到所有商店)
@@ -4712,7 +5791,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 // Player API
 // 根据ID查询玩家
-// @param number
+// @param number玩家ID
 constant native Player takes integer number returns player
 // 本地玩家 [R]
 // 通常用于异步判断
@@ -4738,38 +5817,43 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 点被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 玩家的种族
+// 查询玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
-// 玩家ID - 1 [R]
+// 查询玩家ID [R]
 constant native GetPlayerId takes player whichPlayer returns integer
-// 单位数量
+// 获取玩家指定单位类型的数量
+// @param includeIncomplete是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家特定单位数
+// 获取玩家指定单位类型的数量
+// @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
+// @param includeUpgrades是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获得建筑数量
+// 获得玩家的建筑的数量
+// @param includeIncomplete是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获得玩家属性
+// 获取玩家状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
-// 获得玩家得分
+// 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家结盟
+// 玩家与玩家的联盟状态是否是指定状态
+// @param whichAllianceSetting指定联盟状态
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 经验上限 [R]
+// 获取玩家经验上限 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 经验获得率 [R]
+// 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
 // 玩家障碍恢复时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-// 玩家遭受残疾伤害
+// 获取玩家损伤障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置经验上限 [R]
+// 设置玩家经验上限 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置经验获得率 [R]
+// 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家障碍恢复时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-// 设置玩家残障伤害
+// 设置玩家损伤障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置玩家的科技上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
@@ -4786,13 +5870,14 @@ constant native GetPlayerTechCount takes player whichPlayer, integer techid, boo
 
 // 设置单位所属玩家
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
-// 削弱玩家
+// 暴露玩家位置（出生点）
+// 默认用于对战模式胜负判定规则
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
 
 // 允许/禁用 技能 [R]
 native SetPlayerAbilityAvailable takes player whichPlayer, integer abilid, boolean avail returns nothing
 
-// 设置玩家属性
+// 设置玩家状态
 native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
 // 踢除玩家
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
@@ -4804,11 +5889,11 @@ native CachePlayerHeroData takes player whichPlayer returns nothing
 
 
 // Fog of War API
-// 设置地图迷雾(矩形区域) [R]
+// 设置迷雾状态(矩形区域) [R]
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
-// 设置地图迷雾(圆范围) [R]
+// 设置迷雾状态(圆形区域) （指定坐标）[R]
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
-// 设置地图迷雾(圆范围) [R]
+// 设置迷雾状态(圆形区域)（指定点） [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
@@ -4821,9 +5906,9 @@ native IsFogEnabled takes nothing returns boolean
 
 // 新建可见度修正器(矩形区域) [R]
 native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆范围) [R]
+// 新建可见度修正器(圆形区域) [R]
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆范围) [R]
+// 新建可见度修正器(圆形区域) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 删除可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
@@ -4839,7 +5924,7 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 native VersionGet takes nothing returns version
 // 当前游戏版本是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionCompatible takes version whichVersion returns boolean
-// 当前版本支持是否指定版本（版本指混乱之治或冰封王座，并非补丁号）
+// 当前版本是否支持指定版本（版本指混乱之治或冰封王座，并非补丁号）
 native VersionSupported takes version whichVersion returns boolean
 
 // 结束游戏
@@ -4880,13 +5965,13 @@ native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
-// 为游戏状态设置一个浮点值
+// 设置游戏浮动值（指定浮动游戏状态）
 native SetFloatGameState takes fgamestate whichFloatGameState, real value returns nothing
-// 获取游戏状态浮点值
+// 获取游戏浮动值（指定浮动游戏状态）
 constant native GetFloatGameState takes fgamestate whichFloatGameState returns real
-// 为游戏状态设置一个整数
+// 设置游戏整数（指定整数游戏状态）
 native SetIntegerGameState takes igamestate whichIntegerGameState, integer value returns nothing
-// 获取游戏状态整数
+// 获取游戏整数（指定整数游戏状态）
 constant native GetIntegerGameState takes igamestate whichIntegerGameState returns integer
 
 
@@ -5013,7 +6098,7 @@ native SaveBoolean takes hashtable table, integer parentKey, integer childKey, b
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
 // <1.24> 保存玩家 [C]
 native SavePlayerHandle takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
-// <1.24> 保存地表装饰物 [C]
+// <1.24> 保存目标 [C]
 native SaveWidgetHandle takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
 // <1.24> 保存可破坏物 [C]
 native SaveDestructableHandle takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
@@ -5055,7 +6140,7 @@ native SaveItemPoolHandle takes hashtable table, integer parentKey, integer chil
 native SaveQuestHandle takes hashtable table, integer parentKey, integer childKey, quest whichQuest returns boolean
 // <1.24> 保存任务要求 [C]
 native SaveQuestItemHandle takes hashtable table, integer parentKey, integer childKey, questitem whichQuestitem returns boolean
-// <1.24> 保存失败条件 [C]
+// <1.24> 保存任务失败条件 [C]
 native SaveDefeatConditionHandle takes hashtable table, integer parentKey, integer childKey, defeatcondition whichDefeatcondition returns boolean
 // <1.24> 保存计时器窗口 [C]
 native SaveTimerDialogHandle takes hashtable table, integer parentKey, integer childKey, timerdialog whichTimerdialog returns boolean
@@ -5103,7 +6188,7 @@ native LoadBoolean takes hashtable table, integer parentKey, integer childKey re
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
 // <1.24> 从哈希表提取玩家 [C]
 native LoadPlayerHandle takes hashtable table, integer parentKey, integer childKey returns player
-// <1.24> 从哈希表提取地表装饰物 [C]
+// <1.24> 从哈希表提取目标[C]
 native LoadWidgetHandle takes hashtable table, integer parentKey, integer childKey returns widget
 // <1.24> 从哈希表提取可破坏物 [C]
 native LoadDestructableHandle takes hashtable table, integer parentKey, integer childKey returns destructable
@@ -5128,6 +6213,7 @@ native LoadForceHandle takes hashtable table, integer parentKey, integer childKe
 // <1.24> 从哈希表提取单位组 [C]
 native LoadGroupHandle takes hashtable table, integer parentKey, integer childKey returns group
 // <1.24> 从哈希表提取点 [C]
+// 若仍需继续使用该点，请勿排泄
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
 // <1.24> 从哈希表提取区域(矩型) [C]
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
@@ -5145,7 +6231,7 @@ native LoadItemPoolHandle takes hashtable table, integer parentKey, integer chil
 native LoadQuestHandle takes hashtable table, integer parentKey, integer childKey returns quest
 // <1.24> 从哈希表提取任务要求 [C]
 native LoadQuestItemHandle takes hashtable table, integer parentKey, integer childKey returns questitem
-// <1.24> 从哈希表提取失败条件 [C]
+// <1.24> 从哈希表提取任务失败条件 [C]
 native LoadDefeatConditionHandle	takes hashtable table, integer parentKey, integer childKey returns defeatcondition
 // <1.24> 从哈希表提取计时器窗口 [C]
 native LoadTimerDialogHandle takes hashtable table, integer parentKey, integer childKey returns timerdialog
@@ -5236,9 +6322,9 @@ native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId retur
 native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
-// 随机的中立敌对单位单位类型(有等级)
+// 获取随机中立敌对单位单位类型(指定单位等级)
 native ChooseRandomCreep takes integer level returns integer
-// 随机的中立建筑物类型
+// 获取随机中立建筑物类型
 native ChooseRandomNPBuilding takes nothing returns integer
 // 随机物品-所有等级
 native ChooseRandomItem takes integer level returns integer
@@ -5265,11 +6351,15 @@ native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real dura
 native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
-// 设置昼夜（指定文件）
+// 设置昼夜
+// @param terrainDNCFile迷雾模型文件路径
+// @param unitDNCFile单位模型文件路径
 native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns nothing
-// 设置肖像打光器（指定文件）
+// 设置肖像打光器
+// @param portraitDNCFile肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
-// 设置天空（指定文件）
+// 设置天空
+// @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用玩家控制权(所有玩家) [R]
 native EnableUserControl takes boolean b returns nothing
@@ -5287,11 +6377,11 @@ native ShowInterface takes boolean flag, real fadeDuration returns nothing
 native PauseGame takes boolean flag returns nothing
 // 添加闪动指示器(指定单位) [R]
 native UnitAddIndicator takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-// 添加闪动指示器(指定地表装饰物)
+// 添加闪动指示器(指定目标)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
-// 小地图信号(所有玩家) [R]
+// 发送小地图信号(对所有玩家发送) [R]
 native PingMinimap takes real x, real y, real duration returns nothing
-// 小地图信号(指定颜色)(所有玩家) [R]
+// 发送小地图信号(指定颜色)(对所有玩家发送) [R]
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图特殊图标（指定单位）
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
@@ -5325,7 +6415,7 @@ native ForceUIKey takes string key returns nothing
 native ForceUICancel takes nothing returns nothing
 // 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
-// 改变小地图的特殊图标
+// 设置小地图的特殊图标
 native SetAltMinimapIcon takes string iconPath returns nothing
 // 禁用 重新开始任务按钮
 native DisableRestartMission takes boolean flag returns nothing
@@ -5334,13 +6424,13 @@ native DisableRestartMission takes boolean flag returns nothing
 native CreateTextTag takes nothing returns texttag
 // 摧毁漂浮文字 [R]
 native DestroyTextTag takes texttag t returns nothing
-// 改变漂浮文字内容 [R]
+// 设置漂浮文字内容 [R]
 native SetTextTagText takes texttag t, string s, real height returns nothing
-// 改变漂浮文字位置(指定坐标) [R]
+// 设置漂浮文字位置(指定坐标) [R]
 native SetTextTagPos takes texttag t, real x, real y, real heightOffset returns nothing
-// 改变漂浮文字位置(指定坐标) [R]
+// 设置漂浮文字位置(指定坐标) [R]
 native SetTextTagPosUnit takes texttag t, unit whichUnit, real heightOffset returns nothing
-// 改变漂浮文字颜色 [R]
+// 设置漂浮文字颜色 [R]
 native SetTextTagColor takes texttag t, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置漂浮文字速率 [R]
 native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
@@ -5359,13 +6449,13 @@ native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
 // 保留英雄按钮（左上角英雄图标，F1~FN）
 native SetReservedLocalHeroButtons takes integer reserved returns nothing
-// 结盟滤色镜的设置值
+// 联盟滤色镜的设置值
 native GetAllyColorFilterState takes nothing returns integer
-// 设置结盟滤色镜
+// 设置联盟滤色镜
 native SetAllyColorFilterState takes integer state returns nothing
 // 野生单位显示是开启的
 native GetCreepCampFilterState takes nothing returns boolean
-// 显示/隐藏野生生物图标在小地图
+// 显示/隐藏 小地图野生生物图标（是否在小地图显示中立敌对玩家的单位）
 native SetCreepCampFilterState takes boolean state returns nothing
 // 允许/禁止小地图按钮
 native EnableMinimapFilterButtons takes boolean enableAlly, boolean enableCreep returns nothing
@@ -5423,11 +6513,11 @@ native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed r
 // 查询任务要求是否已完成
 native IsQuestItemCompleted takes questitem whichQuestItem returns boolean
 
-// 创建失败条件
+// 创建任务失败条件
 native CreateDefeatCondition takes nothing returns defeatcondition
-// 销毁失败条件
+// 销毁任务失败条件
 native DestroyDefeatCondition takes defeatcondition whichCondition returns nothing
-// 失败条件描述
+// 任务失败条件描述
 native DefeatConditionSetDescription takes defeatcondition whichCondition, string description returns nothing
 // 闪动任务按钮
 native FlashQuestDialogButton takes nothing returns nothing
@@ -5442,9 +6532,9 @@ native CreateTimerDialog takes timer t returns timerdialog
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
 // 设置计时器窗口标题
 native TimerDialogSetTitle takes timerdialog whichDialog, string title returns nothing
-// 改变计时器窗口文字颜色 [R]
+// 设置计时器窗口文字颜色 [R]
 native TimerDialogSetTitleColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
-// 改变计时器窗口计时颜色 [R]
+// 设置计时器窗口计时颜色 [R]
 native TimerDialogSetTimeColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置计时器窗口速率 [R]
 native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor returns nothing
@@ -5634,6 +6724,7 @@ native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField 
 // 设置指定镜头的坐标
 native CameraSetupSetDestPosition takes camerasetup whichSetup, real x, real y, real duration returns nothing
 // 获取指定镜头的目标点
+// 会生成点，需要排泄
 native CameraSetupGetDestPositionLoc takes camerasetup whichSetup returns location
 // 获取指定镜头的 X 坐标
 native CameraSetupGetDestPositionX takes camerasetup whichSetup returns real
@@ -5670,15 +6761,15 @@ native CameraSetDepthOfFieldScale takes real scale returns nothing
 native SetCineFilterTexture takes string filename returns nothing
 // 设置滤镜混合模式
 native SetCineFilterBlendMode takes blendmode whichMode returns nothing
-// 设置滤镜文本地图参数
+// 设置滤镜纹理贴图标志
 native SetCineFilterTexMapFlags takes texmapflags whichFlags returns nothing
 // 设置滤镜初始紫外线滤光镜
 native SetCineFilterStartUV takes real minu, real minv, real maxu, real maxv returns nothing
-// 设置滤镜停止紫外线滤光镜
+// 设置滤镜结束紫外线滤光镜
 native SetCineFilterEndUV takes real minu, real minv, real maxu, real maxv returns nothing
 // 设置滤镜初始颜色
 native SetCineFilterStartColor takes integer red, integer green, integer blue, integer alpha returns nothing
-// 设置滤镜停止颜色
+// 设置滤镜结束颜色
 native SetCineFilterEndColor takes integer red, integer green, integer blue, integer alpha returns nothing
 // 设置滤镜持续时长
 native SetCineFilterDuration takes real duration returns nothing
@@ -5707,23 +6798,25 @@ constant native GetCameraBoundMinY takes nothing returns real
 constant native GetCameraBoundMaxX takes nothing returns real
 // 获取可用镜头范围的最大 Y 坐标
 constant native GetCameraBoundMaxY takes nothing returns real
-// 获取当前摄象机的指定属性值
+// 获取当前镜头的指定属性值
 constant native GetCameraField takes camerafield whichField returns real
-// 获取当前摄象机目标的 X 坐标
+// 获取当前镜头目标的 X 坐标
 constant native GetCameraTargetPositionX takes nothing returns real
-// 获取当前摄象机目标的 Y 坐标
+// 获取当前镜头目标的 Y 坐标
 constant native GetCameraTargetPositionY takes nothing returns real
-// 获取当前摄象机目标的 Z 坐标
+// 获取当前镜头目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
-// 获取当前摄象机目标点（返回点）
+// 获取当前镜头目标点
+// 会生成点，需要排泄
 constant native GetCameraTargetPositionLoc takes nothing returns location
-// 获取当前摄象机观察位置的 X 坐标
+// 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
-// 获取当前摄象机位置的 Y 坐标
+// 获取当前镜头位置的 Y 坐标
 constant native GetCameraEyePositionY takes nothing returns real
-// 获取当前摄象机观察位置的 Z 坐标
+// 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
-// 获取当前照相机的观察位置（返回点）
+// 获取当前照相机的观察位置
+// 会生成点，需要排泄
 constant native GetCameraEyePositionLoc takes nothing returns location
 
 
@@ -5924,17 +7017,17 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
-// 设置 水变形 开/关
+// 启用/禁用 水变形
 native SetWaterDeforms takes boolean val returns nothing
 // 指定坐标地形 [R]
 native GetTerrainType takes real x, real y returns integer
 // 地形样式(指定坐标) [R]
 native GetTerrainVariance takes real x, real y returns integer
-// 改变地形类型(指定坐标) [R]
+// 设置地形类型(指定坐标) [R]
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
-// 地形通行状态关闭(指定坐标) [R]
+// 路径类型状态是否关闭(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
-// 设置地形通行状态(指定坐标) [R]
+// 设置路径类型状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
 
 
@@ -5946,19 +7039,19 @@ native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real p
 native DestroyImage takes image whichImage returns nothing
 // 显示/隐藏 [R]
 native ShowImage takes image whichImage, boolean flag returns nothing
-// 改变图像高度
+// 设置图像高度
 native SetImageConstantHeight takes image whichImage, boolean flag, real height returns nothing
-// 改变图像位置(指定坐标) [R]
+// 设置图像位置(指定坐标) [R]
 native SetImagePosition takes image whichImage, real x, real y, real z returns nothing
-// 改变图像颜色 [R]
+// 设置图像颜色 [R]
 native SetImageColor takes image whichImage, integer red, integer green, integer blue, integer alpha returns nothing
-// 改变图像着色状态
+// 设置图像着色状态
 native SetImageRender takes image whichImage, boolean flag returns nothing
-// 改变图像永久着色状态
+// 设置图像永久着色状态
 native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
-// 改变图像水上状态
+// 设置图像水上状态
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
-// 改变图像类型
+// 设置图像类型
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
@@ -5974,31 +7067,31 @@ native ResetUbersplat takes ubersplat whichSplat returns nothing
 native FinishUbersplat takes ubersplat whichSplat returns nothing
 // 显示/隐藏 地面纹理变化[R]
 native ShowUbersplat takes ubersplat whichSplat, boolean flag returns nothing
-// 改变地面纹理着色状态
+// 设置地面纹理着色状态
 native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothing
-// 改变地面纹理永久着色状态
+// 设置地面纹理永久着色状态
 native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns nothing
 
 
 // Blight API
 //
-// 创建/删除荒芜地表(圆范围)(指定坐标) [R]
+// 创建/删除荒芜地表（不死族）(圆形区域)(指定坐标) [R]
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
-// 创建/删除荒芜地表(矩形区域) [R]
+// 创建/删除荒芜地表（不死族）(矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
-// 设置荒芜地表（指定坐标）
+// 设置荒芜地表（不死族）（指定坐标）
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-// 设置荒芜地表（圆范围）（指定点）
+// 设置荒芜地表（不死族）（圆形区域）（指定点）
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿 [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
-// 坐标点被荒芜地表覆盖 [R]
+// 指定坐标是否被荒芜地表（不死族）覆盖 [R]
 native IsPointBlighted takes real x, real y returns boolean
 
 
 // Doodad API
 //
-// 播放圆范围内地形装饰物动画 [R]
+// 播放圆形区域内地形装饰物动画 [R]
 native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
 // 播放矩形区域内地形装饰物动画 [R]
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
@@ -6006,9 +7099,9 @@ native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, b
 
 // Computer AI interface
 //
-// 启动对战 AI 
+// 启用对战 AI 脚本
 native StartMeleeAI takes player num, string script returns nothing
-// 启动战役 AI 
+// 启用战役 AI 脚本
 native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
 native CommandAI takes player num, integer command, integer data returns nothing
@@ -6025,7 +7118,7 @@ native RecycleGuardPosition takes unit hUnit returns nothing
 native RemoveAllGuardPositions takes player num returns nothing
 
 
-// ** Cheat标签 **
+// ** Cheat 标签 **
 native Cheat takes string cheatStr returns nothing
 // 无法胜利 [R]
 native IsNoVictoryCheat takes nothing returns boolean
@@ -6034,7 +7127,7 @@ native IsNoDefeatCheat takes nothing returns boolean
 
 // 预读文件
 native Preload takes string filename returns nothing
-// 开始预读
+// 停止预读文件时间
 native PreloadEnd takes real timeout returns nothing
 
 // 预加载开始
@@ -6082,11 +7175,12 @@ native AutomationTestEnd takes nothing returns nothing
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
-// 触发鼠标位置 - X
+// 触发鼠标位置 - X 坐标
 native BlzGetTriggerPlayerMouseX takes nothing returns real
-// 触发鼠标位置 - Y
+// 触发鼠标位置 - Y 坐标
 native BlzGetTriggerPlayerMouseY takes nothing returns real
-// 触发鼠标位置
+// 触发鼠标位置 - 点
+// 会生成点，需要排泄
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 触发鼠标按键
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype
@@ -6234,9 +7328,9 @@ native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
 // 获取动画名
 native BlzGetAnimName takes animtype whichAnim returns string
-// 获取护甲
+// 获取护甲值
 native BlzGetUnitArmor takes unit whichUnit returns real
-// 设置护甲
+// 设置护甲值
 native BlzSetUnitArmor takes unit whichUnit, real armorAmount returns nothing
 // 隐藏技能
 native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag returns nothing
@@ -6290,7 +7384,7 @@ native BlzSetEventAttackType takes attacktype attackType returns boolean
 native BlzSetEventDamageType takes damagetype damageType returns boolean
 // 设置事件武器类型
 native BlzSetEventWeaponType takes weapontype weaponType returns boolean
-// 是否普通攻击
+// 是否攻击事件
 native BlzGetEventIsAttack takes nothing returns boolean
 // 获取额外的整数数据
 native RequestExtraIntegerData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
@@ -6301,7 +7395,7 @@ native RequestExtraStringData takes integer dataType, player whichPlayer, string
 // 获取额外的实数数据
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
-// 获取单位 Z 坐标
+// 获取单位 Z 轴高度
 native BlzGetUnitZ takes unit whichUnit returns real
 // 开启/关闭选择和选择圈
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
@@ -6326,7 +7420,7 @@ native BlzEndRecording takes nothing returns nothing
 // 显示黄金
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
-// 获取原生UI
+// 获取原生框架（原生UI）
 native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle
 // UI自动设置位置
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
@@ -6386,23 +7480,23 @@ native BlzFrameGetEnable takes framehandle frame returns boolean
 native BlzFrameSetAlpha takes framehandle frame, integer alpha returns nothing
 // 获取Frame透明度
 native BlzFrameGetAlpha takes framehandle frame returns integer
-// 设置Frame动画
+// 设置Frame独立元素动画
 native BlzFrameSetSpriteAnimate takes framehandle frame, integer primaryProp, integer flags returns nothing
-// 设置Frame图片
+// 设置Frame文本
 native BlzFrameSetTexture takes framehandle frame, string texFile, integer flag, boolean blend returns nothing
 // 缩放Frame
 native BlzFrameSetScale takes framehandle frame, real scale returns nothing
 // 设置Frame提示
 native BlzFrameSetTooltip takes framehandle frame, framehandle tooltip returns nothing
-// 锁定鼠标
+// 锁定frame鼠标
 native BlzFrameCageMouse takes framehandle frame, boolean enable returns nothing
-// 设置当前值
+// 设置frame当前值
 native BlzFrameSetValue takes framehandle frame, real value returns nothing
-// 获取当前值
+// 获取frame当前值
 native BlzFrameGetValue takes framehandle frame returns real
-// 设置最大最小值
+// 设置frame最大最小值
 native BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing
-// 设置Step值
+// 设置frame的Step值
 native BlzFrameSetStepSize takes framehandle frame, real stepSize returns nothing
 // 设置Frame大小
 native BlzFrameSetSize takes framehandle frame, real width, real height returns nothing
@@ -6418,24 +7512,26 @@ native BlzFrameGetParent takes framehandle frame returns framehandle
 native BlzFrameGetHeight takes framehandle frame returns real
 // 获取Frame宽度
 native BlzFrameGetWidth takes framehandle frame returns real
-// 设置字体
+// 设置frame字体
 native BlzFrameSetFont takes framehandle frame, string fileName, real height, integer flags returns nothing
-// 设置字体对齐方式
+// 设置frame字体对齐方式
 native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, textaligntype horz returns nothing
 
-// 获取Frame子组件数量 (1.32.7)
+// 获取Frame子组件数量
+// @version 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件 (1.32.7)
+// 获取Frame子组件 
+// @version 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
-// 注册Frame事件
+// 注册框架（UI）事件
 native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
-// 获取触发的Frame
+// 获取框架（UI）触发事件
 native BlzGetTriggerFrame takes nothing returns framehandle
-// 获取触发的事件类型
+// 获取frame/框架（UI）事件类型
 native BlzGetTriggerFrameEvent takes nothing returns frameeventtype
-// 获取触发的Frame值
+// 获取框架（UI）触发事件的值
 native BlzGetTriggerFrameValue takes nothing returns real
 // 获取触发的Frame文本
 native BlzGetTriggerFrameText takes nothing returns string
@@ -6490,7 +7586,7 @@ native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 // native BlzFourCC2S                                 takes integer value returns string
 // native BlzS2FourCC                                 takes string value returns integer
-// 设置单位朝向度
+// 设置单位朝向（角度）
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 // 创建技能按钮特效
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect
@@ -6512,144 +7608,146 @@ native BlzBitXor takes integer x, integer y returns integer
 // Intanced Object Operations
 // Ability
 
-// 技能布尔类型字段
+// 获取技能布尔值域
 native BlzGetAbilityBooleanField takes ability whichAbility, abilitybooleanfield whichField returns boolean
-// 技能的整数类型字段
+// 获取技能的整数域
 native BlzGetAbilityIntegerField takes ability whichAbility, abilityintegerfield whichField returns integer
-// 技能的实数类型字段
+// 获取技能的实数域
 native BlzGetAbilityRealField takes ability whichAbility, abilityrealfield whichField returns real
-// 技能字符串字段
+// 获取技能字符串域
 native BlzGetAbilityStringField takes ability whichAbility, abilitystringfield whichField returns string
-// 技能随等级改变的布尔类型字段
+// 获取技能随等级改变的布尔值域
 native BlzGetAbilityBooleanLevelField takes ability whichAbility, abilitybooleanlevelfield whichField, integer level returns boolean
-// 技能随等级改变的整数类型字段
+// 获取技能随等级改变的整数域
 native BlzGetAbilityIntegerLevelField takes ability whichAbility, abilityintegerlevelfield whichField, integer level returns integer
-// 技能随等级改变的实数类型字段
+// 获取技能随等级改变的实数域
 native BlzGetAbilityRealLevelField takes ability whichAbility, abilityreallevelfield whichField, integer level returns real
-// 技能字符串等级字段
+// 获取技能随等级改变的字符串域
 native BlzGetAbilityStringLevelField takes ability whichAbility, abilitystringlevelfield whichField, integer level returns string
-// 技能随等级改变的布尔类型字段
+// 获取技能随等级改变的布尔值数组域
 native BlzGetAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index returns boolean
-// 技能随等级改变的整数类型字段
+// 获取技能随等级改变的整数数组域
 native BlzGetAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index returns integer
-// 技能随等级改变的实数类型字段
+// 获取技能随等级改变的实数数组域
 native BlzGetAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index returns real
-// 技能字符串等级数组字段
+// 获取技能随等级改变的字符串数组域
 native BlzGetAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index returns string
-// 改变技能的布尔类型字段
+// 设置技能的布尔值域
 native BlzSetAbilityBooleanField takes ability whichAbility, abilitybooleanfield whichField, boolean value returns boolean
-// 改变技能的整数类型字段
+// 设置技能的整数域
 native BlzSetAbilityIntegerField takes ability whichAbility, abilityintegerfield whichField, integer value returns boolean
-// 改变技能的实数类型字段
+// 设置技能的实数域
 native BlzSetAbilityRealField takes ability whichAbility, abilityrealfield whichField, real value returns boolean
-// 改变技能的字符串类型字段
+// 设置技能的字符串域
 native BlzSetAbilityStringField takes ability whichAbility, abilitystringfield whichField, string value returns boolean
-// 改变技能的随等级改变的布尔类型字段
+// 设置技能随等级改变的布尔值域
 native BlzSetAbilityBooleanLevelField takes ability whichAbility, abilitybooleanlevelfield whichField, integer level, boolean value returns boolean
-// 改变技能随等级改变的整数类型字段
+// 设置技能随等级改变的整数域
 native BlzSetAbilityIntegerLevelField takes ability whichAbility, abilityintegerlevelfield whichField, integer level, integer value returns boolean
-// 改变技能随等级改变的实数类型字段
+// 设置技能随等级改变的实数域
 native BlzSetAbilityRealLevelField takes ability whichAbility, abilityreallevelfield whichField, integer level, real value returns boolean
-// 改变技能随等级改变的字符串类型字段
+// 设置技能随等级改变的字符串域
 native BlzSetAbilityStringLevelField takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns boolean
-// 改变技能随等级改变的布尔数组类型字段
+// 设置技能随等级改变的布尔值数组域
 native BlzSetAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index, boolean value returns boolean
-// 改变技能随等级改变的整数数组类型字段
+// 设置技能随等级改变的整数数组域
 native BlzSetAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index, integer value returns boolean
-// 改变技能随等级改变的实数数组类型字段
+// 设置技能随等级改变的实数数组域
 native BlzSetAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index, real value returns boolean
-// 改变技能随等级改变的字符串数组类型字段
+// 设置技能随等级改变的字符串数组域
 native BlzSetAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns boolean
-// 技能随等级改变的布尔类型字段 - 添加值
+// 添加技能随等级改变的布尔值数组域
 native BlzAddAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-// 技能随等级改变的整数类型字段 - 添加值
+// 添加技能随等级改变的整数数组域
 native BlzAddAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-// 技能随等级改变的实数类型字段 - 添加值
+// 添加技能随等级改变的实数数组域
 native BlzAddAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-// 技能随等级改变的字符串类型字段 - 添加值
+// 添加技能随等级改变的字符串数组域
 native BlzAddAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
-// 技能随等级改变的布尔类型字段 - 移除值
+// 移除技能随等级改变的布尔值数组域
 native BlzRemoveAbilityBooleanLevelArrayField takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-// 技能随等级改变的整数类型字段 - 移除值
+// 移除技能随等级改变的整数数组域
 native BlzRemoveAbilityIntegerLevelArrayField takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-// 技能随等级改变的实数类型字段 - 移除值
+// 移除技能随等级改变的实数数组域
 native BlzRemoveAbilityRealLevelArrayField takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-// 技能随等级改变的字符串类型字段 - 移除值
+// 移除技能随等级改变的字符串数组域
 native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
 
 // Item 
 // 获取物品技能
-// @param index 0-5
+// @param index 引索为 0-5
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
 // 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
 // 物品添加技能
 native BlzItemAddAbility takes item whichItem, integer abilCode returns boolean
-// 物品的布尔类型字段
+// 物品的布尔值域
 native BlzGetItemBooleanField takes item whichItem, itembooleanfield whichField returns boolean
-// 获取物品的整数类型字段
+// 获取物品整数域
 native BlzGetItemIntegerField takes item whichItem, itemintegerfield whichField returns integer
-// 物品的实数类型字段
+// 获取物品实数域
 native BlzGetItemRealField takes item whichItem, itemrealfield whichField returns real
-// 获取物品字符串字段
+// 获取物品字符串域
 native BlzGetItemStringField takes item whichItem, itemstringfield whichField returns string
-// 改变物品的布尔类型字段
+// 设置物品布尔值域
 native BlzSetItemBooleanField takes item whichItem, itembooleanfield whichField, boolean value returns boolean
-// 改变物品的整数类型字段
+// 设置物品整数域
 native BlzSetItemIntegerField takes item whichItem, itemintegerfield whichField, integer value returns boolean
-// 改变物品的实数类型字段
+// 设置物品实数域
 native BlzSetItemRealField takes item whichItem, itemrealfield whichField, real value returns boolean
-// 改变物品的字符串类型字段
+// 设置物品字符串域
 native BlzSetItemStringField takes item whichItem, itemstringfield whichField, string value returns boolean
-// 物品移除技能
+// 移除物品技能
 native BlzItemRemoveAbility takes item whichItem, integer abilCode returns boolean
 
 // Unit 
-// 获取单位布尔类型字段
+// 获取单位布尔值域
 native BlzGetUnitBooleanField takes unit whichUnit, unitbooleanfield whichField returns boolean
-// 获取单位整数类型字段
+// 获取单位整数域
 native BlzGetUnitIntegerField takes unit whichUnit, unitintegerfield whichField returns integer
-// 获取单位实数类型字段
+// 获取单位实数域
 native BlzGetUnitRealField takes unit whichUnit, unitrealfield whichField returns real
-// 获取单位字符串字段
+// 获取单位字符串域
 native BlzGetUnitStringField takes unit whichUnit, unitstringfield whichField returns string
-// 改变单位的布尔类型字段
+// 设置单位布尔值域
 native BlzSetUnitBooleanField takes unit whichUnit, unitbooleanfield whichField, boolean value returns boolean
-// 改变单位的整数类型字段
+// 设置单位整数域
 native BlzSetUnitIntegerField takes unit whichUnit, unitintegerfield whichField, integer value returns boolean
-// 改变单位的实数类型字段
+// 设置单位实数域
 native BlzSetUnitRealField takes unit whichUnit, unitrealfield whichField, real value returns boolean
-// 改变单位的字符串类型字段
+// 设置单位字符串域
 native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, string value returns boolean
 
 // Unit Weapon
-// 获取单位武器布尔类型字段
+// 获取单位武器布尔值域
 native BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
-// 获取单位武器整数类型字段
+// 获取单位武器整数域
 native BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer
-// 获取单位武器实数类型字段
+// 获取单位武器实数域
 native BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real
-// 获取单位武器字符串类型字段
+// 获取单位武器字符串域
 native BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string
-// 改变单位武器布尔类型字段
+// 设置单位武器布尔值域
 native BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean
-// 改变单位武器整数类型字段
+// 设置单位武器整数域
 native BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean
-// 改变单位武器实数类型字段
+// 设置单位武器实数域
 native BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean
-// 改变单位武器字符串类型字段
+// 设置单位武器字符串域
 native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
 
 // Skin
 // 获取单位皮肤
 native BlzGetUnitSkin takes unit whichUnit returns integer
-// 改变物品皮肤
+// 设置物品皮肤
 native BlzGetItemSkin takes item whichItem returns integer
+// 获取可破坏物皮肤
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
-// 改变单位皮肤
+// 设置单位皮肤
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
-// 改变物品皮肤
+// 设置物品皮肤
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
+// 设置可破坏物皮肤
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
 // 创建物品皮肤
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
@@ -6659,9 +7757,9 @@ native BlzCreateUnitWithSkin takes player id, integer unitid, real x, real y, re
 native BlzCreateDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
 // 创建可破坏物皮肤（包含Z轴）
 native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（死亡的）皮肤（不包含Z轴）
+// 创建可破坏物（毁坏的）皮肤（不包含Z轴）
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（死亡的）皮肤（包含Z轴）
+// 创建可破坏物（毁坏的）皮肤（包含Z轴）
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
 // 获取指定玩家的基地数量（按基地单位的数量统计）
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
