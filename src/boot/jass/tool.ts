@@ -1,6 +1,6 @@
 import { isNewLine } from "../tool";
 import { Position } from "./ast";
-import { LineText } from "./parser";
+import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 
 
 /**
@@ -148,3 +148,6 @@ export function isZincStart(content: string) {
 export function isZincEnd(content: string) {
 	return /^\s*\/\/!\s+endzinc\b/.test(content);
 }
+
+// 
+

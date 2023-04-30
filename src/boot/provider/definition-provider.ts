@@ -128,6 +128,8 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(findedDefine));
           locations.push(location);
         }
+
+
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
 

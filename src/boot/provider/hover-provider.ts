@@ -192,6 +192,14 @@ class HoverProvider implements vscode.HoverProvider {
           const ms = toHoverlo(findedDefine, isCurrent, fsPath);
           hovers.push(ms);
         }
+
+        const text = program.findRunTextMacroText(key);
+        if(text) {
+          const ms = new vscode.MarkdownString();
+          
+          ms.appendCodeblock(text);
+          hovers.push(ms);
+        }
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
 

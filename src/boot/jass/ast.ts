@@ -4,7 +4,7 @@ import { Token, tokenize } from "./tokens";
 import * as path from "path";
 import { getFileContent, isSpace, isUsableFile } from "../tool";
 import { lines } from "./tool";
-import { RunTextMacro, TextMacro } from "./parser";
+import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 
 
 class Position {
@@ -670,7 +670,15 @@ export {
 
 
 
-
+export function runTextMacroReplace(runTextMacro:RunTextMacro, textMacros:TextMacro[]) {
+    const findedTextMacroIndex = textMacros.findIndex((textMacro) => {textMacro.getName() == runTextMacro.getName()});
+    const findedTextMacro = textMacros[findedTextMacroIndex];
+    const lineTexts:ReplaceableLineText[] = [];
+    findedTextMacro.foreach((lineText) => {
+        lineTexts.push(lineText);
+    }, runTextMacro.getParams());
+    return lineTexts;
+}
 
 class Program extends Declaration {
 
@@ -694,7 +702,7 @@ class Program extends Declaration {
 
 	public readonly defines:TextMacroDefine[] = [];
 	public readonly textMacros: TextMacro[] = [];
-	// public readonly runTextMacros: RunTextMacro[] = [];
+	public runTextMacros: RunTextMacro[] = [];
 
 	/**
 	 * @deprecated
@@ -790,9 +798,9 @@ class Program extends Declaration {
 	public allGlobals(containPrivate: boolean = false) {
 		let globals = [...this.globals, ...this.librarys.map((library) => library.globals).flat(), ...this.allFunctions(containPrivate).map((func) => func.globals).flat()];
 
-		this.allFunctions(containPrivate).filter(f => !("tag" in f)).forEach(g => {
-			console.log(g);
-		})
+		// this.allFunctions(containPrivate).filter(f => !("tag" in f)).forEach(g => {
+		// 	console.log(g);
+		// })
 		if (!containPrivate) {
 			globals = globals.filter((global) => global.tag != "private" && !global.hasPrivate());
 		}
@@ -879,9 +887,38 @@ class Program extends Declaration {
 		const globals = this.allGlobals(true).filter((global) => global.name == name);
 		return globals;
 	}
+
+	// 尝试临时实现
+	public findRunTextMacroText(name: string, maxLine:number = 15) {		
+		const findedRunTextMacro = this.runTextMacros.find(runTextMacro => {			
+			return runTextMacro.getName() == name;
+		});
+		
+		if (findedRunTextMacro) {
+			const findedTextMacro = this.textMacros.find(textMacro => {
+				return textMacro.getName() == name;
+			});
+			
+			if (findedTextMacro) {
+				let result = "";
+				let count = 0
+				findedTextMacro.foreach(lineText => {
+					result += lineText.replaceText();
+					if (count < maxLine) {
+						count++;
+					}
+				}, findedRunTextMacro.getParams());
+				return result;
+			}
+		}
+
+		return undefined;
+	}
 }
 
 export {
 	AstNode, Declaration, Program, TextMacroDefine
 };
+
+
 

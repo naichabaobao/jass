@@ -693,6 +693,7 @@ class ReplaceableLineText extends LineText {
 
     public clone(): ReplaceableLineText {
         return Object.assign(new ReplaceableLineText(this, this.defines), this);
+        // return new ReplaceableLineText(this, this.defines);
     }
 }
 
@@ -796,7 +797,11 @@ class RunTextMacro extends Range {
         return this.lineText;
     }
 
+
+
 }
+
+
 
 /**
  * 
@@ -837,6 +842,11 @@ class Parser {
 
         this.jassProgram.defines.push(...defines);
         this.jassProgram.textMacros.push(...textMacros);
+        this.jassProgram.runTextMacros = <RunTextMacro[]>withRunTextMacroLineTexts.filter(x => x instanceof RunTextMacro);
+
+    
+        
+        
 
         this.blocks = outLines;
 
@@ -1544,7 +1554,7 @@ export {
     Parser,
     parseCjass,
     parseCj,
-    TextMacro, RunTextMacro, Include, LineText
+    TextMacro, RunTextMacro, Include, LineText, ReplaceableLineText
 };
 
 // console.log(JSON.stringify(parseCjass(`
