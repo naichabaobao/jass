@@ -58,9 +58,9 @@ type alliancetype extends handle
 type racepreference extends handle
 // 游戏状态
 type gamestate extends handle
-// 游戏整数状态
+// 游戏整点状态
 type igamestate extends gamestate
-// 游戏浮动状态
+// 游戏浮点状态
 type fgamestate extends gamestate
 // 玩家状态
 type playerstate extends handle
@@ -280,7 +280,7 @@ constant native ConvertRace takes integer i returns race
 constant native ConvertAllianceType takes integer i returns alliancetype
 // 转换种族偏好
 constant native ConvertRacePref takes integer i returns racepreference
-// 转换游戏整数状态
+// 转换游戏整点状态
 constant native ConvertIGameState takes integer i returns igamestate
 // 转换浮动游戏状态
 constant native ConvertFGameState takes integer i returns fgamestate
@@ -1012,11 +1012,11 @@ globals
 	// For use with TriggerRegister<X>StateEvent
 	//
 	
-	// 游戏整数状态 - 神圣干涉
+	// 游戏整点状态 - 神圣干涉
 	constant igamestate GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
-	// 游戏整数状态 - 断开连接
+	// 游戏整点状态 - 断开连接
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
-	// 游戏浮动状态 - 当前时间
+	// 游戏浮点状态 - 当前时间
 	constant fgamestate GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
 	// 玩家状态 - 游戏结果
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
@@ -4278,7 +4278,8 @@ native R2SW takes real r, integer width, integer precision returns string
 native S2I takes string s returns integer
 // 转换字符串为实数
 native S2R takes string s returns real
-// 获取句柄id    tips:一般用于hashtable key
+// 获取句柄id    
+// tips:一般用于hashtable key
 // @param h 任意handle子类型, 常用于hashtable key
 native GetHandleId takes handle h returns integer
 // 截取字符串 [R]
@@ -4449,11 +4450,11 @@ native DestroyTimer takes timer whichTimer returns nothing
 // @param timeout 超时
 // @param periodic 是否循环
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
-// 计时器经过的时间
+// 获取计时器经过的时间
 native TimerGetElapsed takes timer whichTimer returns real
-// 计时器剩余时间
+// 获取计时器剩余时间
 native TimerGetRemaining takes timer whichTimer returns real
-// 计时器初始的时间
+// 获取计时器的初始时间
 native TimerGetTimeout takes timer whichTimer returns real
 // 暂停计时器 [R]
 native PauseTimer takes timer whichTimer returns nothing
@@ -4483,7 +4484,7 @@ native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns
 // 清空单位组
 // 排泄需要使用删除单位组 CreateGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
-// 获取单位组尺寸（组内的单位数量）
+// 获取单位组的单位数量
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
@@ -4701,13 +4702,13 @@ constant native GetFilterPlayer takes nothing returns player
 // 获取选取的玩家
 constant native GetEnumPlayer takes nothing returns player
 
-// 当前触发器
+// 获取当前触发器
 constant native GetTriggeringTrigger takes nothing returns trigger
 // 获取触发事件ID
 constant native GetTriggerEventId takes nothing returns eventid
-// 触发器赋值统计
+// 获取触发器赋值统计
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
-// 触发器运行次数统计
+// 获取触发器运行次数统计
 constant native GetTriggerExecCount takes trigger whichTrigger returns integer
 
 // 运行函数 [R]
@@ -5057,13 +5058,15 @@ native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichP
 constant native GetEventPlayerState takes nothing returns playerstate
 
 // 玩家输入聊天信息
+// @param chatMessageToDetect输入的聊天信息，需使用""
+// @param exactMatchOnly输入的聊天信息是否需要完全匹配
 native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
 
 // EVENT_PLAYER_CHAT
 
 // returns the actual string they typed in ( same as what you registered for
 // if you required exact match )
-// 输入的聊天字符
+// 获取输入的聊天字符
 constant native GetEventPlayerChatString takes nothing returns string
 
 // returns the string that you registered for
@@ -5080,7 +5083,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // returns handle to unit which triggered the most recent event when called from
 // within a trigger action function...returns null handle when used incorrectly
 
-// 触发单位
+// 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
 // 单位状态事件
@@ -5965,13 +5968,13 @@ native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
-// 设置游戏浮动值（指定浮动游戏状态）
+// 设置游戏浮点值（指定浮动游戏状态）
 native SetFloatGameState takes fgamestate whichFloatGameState, real value returns nothing
-// 获取游戏浮动值（指定浮动游戏状态）
+// 获取游戏浮点值（指定浮动游戏状态）
 constant native GetFloatGameState takes fgamestate whichFloatGameState returns real
-// 设置游戏整数（指定整数游戏状态）
+// 设置游戏整点（指定整数游戏状态）
 native SetIntegerGameState takes igamestate whichIntegerGameState, integer value returns nothing
-// 获取游戏整数（指定整数游戏状态）
+// 获取游戏整点（指定整数游戏状态）
 constant native GetIntegerGameState takes igamestate whichIntegerGameState returns integer
 
 
