@@ -179,13 +179,13 @@ globals
     constant real      bj_NOTHING_SOUND_DURATION        = 5.00
     // 传输延迟，默认1.00
     constant real      bj_TRANSMISSION_PING_TIME        = 1.00
-    // 传输颜色值（红），默认255
+    // 传输颜色通道（红），默认255
     constant integer   bj_TRANSMISSION_IND_RED          = 255
-    // 传输颜色值（蓝），默认255
+    // 传输颜色通道（蓝），默认255
     constant integer   bj_TRANSMISSION_IND_BLUE         = 255
-    // 传输颜色值（绿），默认255
+    // 传输颜色通道（绿），默认255
     constant integer   bj_TRANSMISSION_IND_GREEN        = 255
-    // 传输颜色值（alpha），默认255
+    // 传输颜色通道（alpha），默认255
     constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
     // 传输画像悬空时间，默认1.50
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
@@ -716,9 +716,9 @@ globals
     // Minimap ping styles
     // 小地图信号 - 简单
     constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
-    // 小地图信号 - 丰富
+    // 小地图信号 - 闪烁
     constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
-    // 小地图信号 - 攻击
+    // 小地图信号 - 警告
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
@@ -1162,7 +1162,7 @@ globals
     // 初始化过滤 匹配玩家拥有的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
-    // 初始化过滤 匹配的英雄单位，默认值为空
+    // 初始化过滤 匹配的英雄单位（首发英雄），默认值为空
     // 用于对战初始化
     boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
     // 初始化过滤 匹配玩家拥有且存活的单位类型，默认值为空
@@ -2319,7 +2319,7 @@ endfunction
 // The parameters for the API Substring function are unintuitive, so this
 // merely performs a translation for the starting index.
 //
-// 切割字符串
+// 截取字符串
 function SubStringBJ takes string source, integer start, integer end returns string
     return SubString(source, start-1, end)
 endfunction  
@@ -2329,7 +2329,7 @@ function GetHandleIdBJ takes handle h returns integer
     return GetHandleId(h)
 endfunction
 
-// 字符串哈希
+// 字符串转哈希
 function StringHashBJ takes string s returns integer
     return StringHash(s)
 endfunction
@@ -2343,31 +2343,31 @@ endfunction
 //***************************************************************************
 
 
-// 循环逝去的时间
+// 事件 时间周期（每N秒）
 function TriggerRegisterTimerEventPeriodic takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, true)
 endfunction
 
 
-// 游戏开始逝去的时间
+// 事件 游戏逝去的时间(游戏开始N秒)
 function TriggerRegisterTimerEventSingle takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, false)
 endfunction
 
 
-// 计时器期满
+// 事件 计时器到期
 function TriggerRegisterTimerExpireEventBJ takes trigger trig, timer t returns event
     return TriggerRegisterTimerExpireEvent(trig, t)
 endfunction
 
 
-// 玩家单位的事件
+// 事件 玩家指定单位事件
 function TriggerRegisterPlayerUnitEventSimple takes trigger trig, player whichPlayer, playerunitevent whichEvent returns event
     return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, whichEvent, null)
 endfunction
 
 
-// 单位的事件
+// 事件 玩家任意单位事件
 function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent whichEvent returns nothing
     local integer index
 
@@ -2381,7 +2381,7 @@ function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent which
 endfunction
 
 
-// 选择单位事件
+// 事件 玩家选择单位
 function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichPlayer, boolean selected returns event
     if selected then
         return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_SELECTED, null)
@@ -2391,7 +2391,7 @@ function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichP
 endfunction
 
 
-// 键盘事件
+// 事件 玩家按下键盘
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
     if (keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
@@ -2427,7 +2427,7 @@ function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer,
     endif
 endfunction
 
-
+// 事件 玩家按下鼠标
 function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
      if (meType == bj_MOUSEEVENTTYPE_DOWN) then
         // Mouse down event
@@ -2445,55 +2445,55 @@ function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlaye
 endfunction
 
 
-// 胜利
+// 事件 玩家胜利
 function TriggerRegisterPlayerEventVictory takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_VICTORY)
 endfunction
 
 
-// 失败
+// 事件 玩家失败
 function TriggerRegisterPlayerEventDefeat takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_DEFEAT)
 endfunction
 
 
-// 玩家离开游戏
+// 事件 玩家离开游戏
 function TriggerRegisterPlayerEventLeave takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_LEAVE)
 endfunction
 
 
-// 联盟状态改变(任何状态)
+// 事件 联盟状态更改(任何状态)
 function TriggerRegisterPlayerEventAllianceChanged takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ALLIANCE_CHANGED)
 endfunction
 
 
-// 按ESC键(跳过动画)
+// 事件 按下ESC键
 function TriggerRegisterPlayerEventEndCinematic takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_END_CINEMATIC)
 endfunction
 
 
-// 游戏时间改变
+// 事件 游戏时间改变
 function TriggerRegisterGameStateEventTimeOfDay takes trigger trig, limitop opcode, real limitval returns event
     return TriggerRegisterGameStateEvent(trig, GAME_STATE_TIME_OF_DAY, opcode, limitval)
 endfunction
 
 
-// 单位-任意单位进入不规则区域
+// 事件 任意单位进入不规则区域
 function TriggerRegisterEnterRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterEnterRegion(trig, whichRegion, null)
 endfunction
 
 
-// 单位-任意单位离开不规则区域
+// 事件 任意单位离开不规则区域
 function TriggerRegisterLeaveRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterLeaveRegion(trig, whichRegion, null)
 endfunction
 
 
-// 单位进入区域
+// 事件 单位进入矩形区域
 function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2501,7 +2501,7 @@ function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 单位离开区域
+// 事件 单位离开矩形区域
 function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2509,48 +2509,48 @@ function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 两单位之间的距离
+// 事件 两单位之间的距离变化
 function TriggerRegisterDistanceBetweenUnits takes trigger trig, unit whichUnit, boolexpr condition, real range returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, condition)
 endfunction
 
 
-// 进入单位的范围
+// 事件 单位接近指定单位
 function TriggerRegisterUnitInRangeSimple takes trigger trig, real range, unit whichUnit returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, null)
 endfunction
 
 
-// 单位生命值
+// 事件 单位生命值变化
 function TriggerRegisterUnitLifeEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_LIFE, opcode, limitval)
 endfunction
 
 
-// 单位魔法值
+// 事件 单位魔法值变化
 function TriggerRegisterUnitManaEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_MANA, opcode, limitval)
 endfunction
 
 
-// 对话框按钮点击
+// 事件 对话框按钮点击
 function TriggerRegisterDialogEventBJ takes trigger trig, dialog whichDialog returns event
     return TriggerRegisterDialogEvent(trig, whichDialog)
 endfunction
 
 
-// 英雄学习技能按钮被点击
+// 事件 英雄学习技能按钮被点击
 function TriggerRegisterShowSkillEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SHOW_SKILL)
 endfunction
 
 
-// 建造建筑物按钮被点击
+// 事件 建造按钮被点击
 function TriggerRegisterBuildSubmenuEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_BUILD_SUBMENU)
 endfunction
 
-
+// 事件 建造命令事件
 function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId returns event
 	call TriggerRegisterCommandEvent(trig, 'ANbu', UnitId2String(unitId))
 	call TriggerRegisterCommandEvent(trig, 'AHbu', UnitId2String(unitId))
@@ -2560,35 +2560,35 @@ function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId r
     return TriggerRegisterCommandEvent(trig, 'AGbu', UnitId2String(unitId))
 endfunction
 
-
+// 事件 训练命令事件
 function TriggerRegisterTrainCommandEventBJ takes trigger trig, integer unitId returns event
     return TriggerRegisterCommandEvent(trig, 'Aque', UnitId2String(unitId))
 endfunction
 
-
+// 事件 研究命令事件
 function TriggerRegisterUpgradeCommandEventBJ takes trigger trig, integer techId returns event
     return TriggerRegisterUpgradeCommandEvent(trig, techId)
 endfunction
 
-
+// 事件 指定命令事件
 function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order returns event
     return TriggerRegisterCommandEvent(trig, 0, order)
 endfunction
 
 
-// 读取游戏
+// 事件 读取进度
 function TriggerRegisterGameLoadedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_LOADED)
 endfunction
 
 
-// 储存游戏
+// 事件 保存进度
 function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SAVE)
 endfunction
 
 
-// 选取指定矩形区域内可破坏物(毁坏的)触发器动作
+// 可破坏物在矩形区域内死亡动作
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -2597,7 +2597,7 @@ function RegisterDestDeathInRegionEnum takes nothing returns nothing
 endfunction
 
 
-// 选取指定区域内可破坏物(毁坏的)
+// 事件 可破坏物在矩形区域内死亡
 function TriggerRegisterDestDeathInRegionEvent takes trigger trig, rect r returns nothing
     set bj_destInRegionDiesTrig = trig
     set bj_destInRegionDiesCount = 0
@@ -2620,7 +2620,7 @@ function AddWeatherEffectSaveLast takes rect where, integer effectID returns wea
 endfunction
 
 
-// 最后创建的天气效果
+// 获取最后创建的天气效果
 function GetLastCreatedWeatherEffect takes nothing returns weathereffect
     return bj_lastCreatedWeatherEffect
 endfunction
@@ -2632,7 +2632,7 @@ function RemoveWeatherEffectBJ takes weathereffect whichWeatherEffect returns no
 endfunction
 
 
-// 创造地域变形 :弹坑
+// 创造地形变化: 弹坑
 function TerrainDeformationCraterBJ takes real duration, boolean permanent, location where, real radius, real depth returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformCrater(GetLocationX(where), GetLocationY(where), radius, depth, R2I(duration * 1000), permanent)
     return bj_lastCreatedTerrainDeformation
@@ -2658,7 +2658,7 @@ function TerrainDeformationRippleBJ takes real duration, boolean limitNeg, locat
 endfunction
 
 
-// 创造地域变形: 波
+// 创造地形变化: 冲击波
 function TerrainDeformationWaveBJ takes real duration, location source, location target, real radius, real depth, real trailDelay returns terraindeformation
     local real distance
     local real dirX
@@ -2679,20 +2679,20 @@ function TerrainDeformationWaveBJ takes real duration, location source, location
 endfunction
 
 
-// 创造地域变形: 随机
+// 创造地形变化: 随机
 function TerrainDeformationRandomBJ takes real duration, location where, real radius, real minDelta, real maxDelta, real updateInterval returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformRandom(GetLocationX(where), GetLocationY(where), radius, minDelta, maxDelta, R2I(duration * 1000), R2I(updateInterval * 1000))
     return bj_lastCreatedTerrainDeformation
 endfunction
 
 
-// 停止地域变形
+// 停止地形变化
 function TerrainDeformationStopBJ takes terraindeformation deformation, real duration returns nothing
     call TerrainDeformStop(deformation, R2I(duration * 1000))
 endfunction
 
 
-// 最后创建的可破坏物
+// 获取最后创建的可破坏物
 function GetLastCreatedTerrainDeformation takes nothing returns terraindeformation
     return bj_lastCreatedTerrainDeformation
 endfunction
@@ -2717,25 +2717,25 @@ function MoveLightningLoc takes lightning whichBolt, location where1, location w
 endfunction
 
 
-// 闪电的Alpha通道颜色
+// 获取闪电的Alpha通道颜色
 function GetLightningColorABJ takes lightning whichBolt returns real
     return GetLightningColorA(whichBolt)
 endfunction
 
 
-// 闪电的红色通道颜色
+// 获取闪电的红色通道颜色
 function GetLightningColorRBJ takes lightning whichBolt returns real
     return GetLightningColorR(whichBolt)
 endfunction
 
 
-// 闪电的绿色通道颜色
+// 获取闪电的绿色通道颜色
 function GetLightningColorGBJ takes lightning whichBolt returns real
     return GetLightningColorG(whichBolt)
 endfunction
 
 
-// 闪电的蓝色通道颜色
+// 获取闪电的蓝色通道颜色
 function GetLightningColorBBJ takes lightning whichBolt returns real
     return GetLightningColorB(whichBolt)
 endfunction
@@ -2747,38 +2747,38 @@ function SetLightningColorBJ takes lightning whichBolt, real r, real g, real b, 
 endfunction
 
 
-// 最后创建的闪电效果
+// 获取最后创建的闪电效果
 function GetLastCreatedLightningBJ takes nothing returns lightning
     return bj_lastCreatedLightning
 endfunction
 
 
-// 技能效果图像
+// 获取特效路径（指定特效类型和引索）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
 
 
-// 技能效果音
+// 获取特效声音路径（指定技能和声音类型）
 function GetAbilitySoundBJ takes integer abilcode, soundtype t returns string
     return GetAbilitySoundById(abilcode, t)
 endfunction
 
 
 
-// 悬崖的高度
+// 获取悬崖高度
 function GetTerrainCliffLevelBJ takes location where returns integer
     return GetTerrainCliffLevel(GetLocationX(where), GetLocationY(where))
 endfunction
 
 
-// 地形类型
+// 获取地形类型
 function GetTerrainTypeBJ takes location where returns integer
     return GetTerrainType(GetLocationX(where), GetLocationY(where))
 endfunction
 
 
-// 地形形态
+// 地形样式
 function GetTerrainVarianceBJ takes location where returns integer
     return GetTerrainVariance(GetLocationX(where), GetLocationY(where))
 endfunction
@@ -2898,19 +2898,19 @@ function ResetTerrainFogBJ takes nothing returns nothing
 endfunction
 
 
-// 播放圆形区域内地形装饰物动画
+// 播放圆形区域内地表装饰物动画
 function SetDoodadAnimationBJ takes string animName, integer doodadID, real radius, location center returns nothing
     call SetDoodadAnimation(GetLocationX(center), GetLocationY(center), radius, doodadID, false, animName, false)
 endfunction
 
 
-// 播放矩形区域内地形装饰物动画
+// 播放矩形区域内地表装饰物动画
 function SetDoodadAnimationRectBJ takes string animName, integer doodadID, rect r returns nothing
     call SetDoodadAnimationRect(r, doodadID, animName, false)
 endfunction
 
 
-// 添加/删除 单位动画 标签
+// 添加/删除 单位动画 附加名
 function AddUnitAnimationPropertiesBJ takes boolean add, string animProperties, unit whichUnit returns nothing
     call AddUnitAnimationProperties(whichUnit, animProperties, add)
 endfunction
@@ -3280,7 +3280,7 @@ function SetThematicMusicVolumeBJ takes real volumePercent returns nothing
 endfunction
 
 
-// 声音长度
+// 获取声音持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real
     if (soundHandle == null) then
         return bj_NOTHING_SOUND_DURATION
@@ -3290,19 +3290,19 @@ function GetSoundDurationBJ takes sound soundHandle returns real
 endfunction
 
 
-// 音乐长度
+// 获取音乐持续时间
 function GetSoundFileDurationBJ takes string musicFileName returns real
     return I2R(GetSoundFileDuration(musicFileName)) * 0.001
 endfunction
 
 
-// 最后播放的声音
+// 获取最后播放的声音
 function GetLastPlayedSound takes nothing returns sound
     return bj_lastPlayedSound
 endfunction
 
 
-// 最后播放的音乐
+// 获取最后播放的音乐
 function GetLastPlayedMusic takes nothing returns string
     return bj_lastPlayedMusic
 endfunction
@@ -4216,7 +4216,7 @@ function CreateUnitAtLocSaveLast takes player id, integer unitid, location loc, 
 endfunction
 
 
-// 最后创建的单位
+// 获取最后创建的单位
 function GetLastCreatedUnit takes nothing returns unit
     return bj_lastCreatedUnit
 endfunction
@@ -6281,7 +6281,6 @@ endfunction
 
 // Force (whichPlayer) AI player to share vision and advanced unit control 
 // with all AI players of its allies.
-//
 // 同队共享视野与单位控制权
 function ShareEverythingWithTeamAI takes player whichPlayer returns nothing
     local integer playerIndex
@@ -6850,7 +6849,7 @@ function FlashQuestDialogButtonBJ takes nothing returns nothing
 endfunction
 
 
-// 任务消息
+// 显示任务消息
 function QuestMessageBJ takes force f, integer messageType, string message returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -6937,27 +6936,27 @@ endfunction
 //***************************************************************************
 
 
-// 开启计时器
+// 计时器开始计时
 function StartTimerBJ takes timer t, boolean periodic, real timeout returns timer
     set bj_lastStartedTimer = t
     call TimerStart(t, timeout, periodic, null)
     return bj_lastStartedTimer
 endfunction
 
-
+// 创建计时器
 function CreateTimerBJ takes boolean periodic, real timeout returns timer
     set bj_lastStartedTimer = CreateTimer()
     call TimerStart(bj_lastStartedTimer, timeout, periodic, null)
     return bj_lastStartedTimer
 endfunction
 
-
+// 摧毁计时器
 function DestroyTimerBJ takes timer whichTimer returns nothing
     call DestroyTimer(whichTimer)
 endfunction
 
 
-// 暂停计时器r
+// 暂停计时器
 function PauseTimerBJ takes boolean pause, timer whichTimer returns nothing
     if pause then
         call PauseTimer(whichTimer)
@@ -7040,7 +7039,7 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 设置排行榜高度
 function LeaderboardResizeBJ takes leaderboard lb returns nothing
     local integer size = LeaderboardGetItemCount(lb)
 
@@ -7100,12 +7099,12 @@ function LeaderboardSetLabelBJ takes leaderboard lb, string label returns nothin
 endfunction
 
 
-// 设置排行榜风格
+// 设置排行榜显示样式
 function LeaderboardSetStyleBJ takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
     call LeaderboardSetStyle(lb, showLabel, showNames, showValues, showIcons)
 endfunction
 
-
+// 获取排行榜行数
 function LeaderboardGetItemCountBJ takes leaderboard lb returns integer
     return LeaderboardGetItemCount(lb)
 endfunction
@@ -7116,7 +7115,7 @@ function LeaderboardHasPlayerItemBJ takes leaderboard lb, player whichPlayer ret
     return LeaderboardHasPlayerItem(lb, whichPlayer)
 endfunction
 
-
+// 设置玩家组使用排行榜
 function ForceSetLeaderboardBJ takes leaderboard lb, force toForce returns nothing
     local integer index
     local player  indexPlayer
@@ -7186,18 +7185,18 @@ function LeaderboardSortItemsBJ takes leaderboard lb, integer sortType, boolean 
     endif
 endfunction
 
-
+// 排行榜 按玩家排序
 function LeaderboardSortItemsByPlayerBJ takes leaderboard lb, boolean ascending returns nothing
     call LeaderboardSortItemsByPlayer(lb, ascending)
 endfunction
 
-
+// 排行榜 按文本排序
 function LeaderboardSortItemsByLabelBJ takes leaderboard lb, boolean ascending returns nothing
     call LeaderboardSortItemsByLabel(lb, ascending)
 endfunction
 
 
-// 排行榜位置
+// 排行榜的玩家位置加一
 function LeaderboardGetPlayerIndexBJ takes player whichPlayer, leaderboard lb returns integer
     return LeaderboardGetPlayerIndex(lb, whichPlayer) + 1
 endfunction
@@ -7226,13 +7225,13 @@ function LeaderboardGetIndexedPlayerBJ takes integer position, leaderboard lb re
 endfunction
 
 
-// 玩家排行榜
+// 获取玩家使用的排行榜
 function PlayerGetLeaderboardBJ takes player whichPlayer returns leaderboard
     return PlayerGetLeaderboard(whichPlayer)
 endfunction
 
 
-// 最后创建的排行榜
+// 获取最后创建的排行榜
 function GetLastCreatedLeaderboard takes nothing returns leaderboard
     return bj_lastCreatedLeaderboard
 endfunction
@@ -7423,7 +7422,7 @@ function MultiboardSetItemWidthBJ takes multiboard mb, integer col, integer row,
 endfunction
 
 
-// 设置项目图标
+// 设置物品图标
 function MultiboardSetItemIconBJ takes multiboard mb, integer col, integer row, string iconFileName returns nothing
     local integer curRow = 0
     local integer curCol = 0
@@ -7466,7 +7465,7 @@ endfunction
 
 // Scale the font size linearly such that size 10 equates to height 0.023.
 // Screen-relative font heights are harder to grasp and than font sizes.
-//
+// 设置文本高度
 function TextTagSize2Height takes real size returns real
     return size * 0.023 / 10
 endfunction
@@ -7474,7 +7473,7 @@ endfunction
 
 // Scale the speed linearly such that speed 128 equates to 0.071.
 // Screen-relative speeds are hard to grasp.
-//
+// 设置文本速度
 function TextTagSpeed2Velocity takes real speed returns real
     return speed * 0.071 / 128
 endfunction
@@ -7735,7 +7734,7 @@ endfunction
 
 
 // If cancelled, stop the sound and end the cinematic scene.
-//
+// 结束电影场景并停止播放声音
 function CancelCineSceneBJ takes nothing returns nothing
     call StopSoundBJ(bj_cineSceneLastSound, true)
     call EndCinematicScene()
@@ -7746,7 +7745,7 @@ endfunction
 // a cinematic scene is in progress.  For performance reasons, this should
 // only be called once a cinematic scene has been started, so that maps
 // lacking such scenes do not bother to register for these events.
-//
+// 尝试初始化电影场景（停止播放）
 function TryInitCinematicBehaviorBJ takes nothing returns nothing
     local integer index
 
@@ -7762,14 +7761,14 @@ function TryInitCinematicBehaviorBJ takes nothing returns nothing
     endif
 endfunction
 
-
+// 设置电影场景并播放声音
 function SetCinematicSceneBJ takes sound soundHandle, integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
     set bj_cineSceneLastSound = soundHandle
     call SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
     call PlaySoundBJ(soundHandle)
 endfunction
 
-
+// 获取声音持续时间
 function GetTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns real
     local real duration
 
@@ -7791,7 +7790,7 @@ function GetTransmissionDuration takes sound soundHandle, integer timeType, real
     return duration
 endfunction
 
-
+// 等待信息播放完成（指定传输时间方法）
 function WaitTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns nothing
     if (timeType == bj_TIMETYPE_SET) then
         // If we have a static duration wait, just perform the wait.
@@ -7817,7 +7816,7 @@ function WaitTransmissionDuration takes sound soundHandle, integer timeType, rea
     endif
 endfunction
 
-
+// 设置电影场景并在指定坐标发送小地图信号
 function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real x, real y, sound soundHandle, string unitName, string message, real duration returns nothing
     call SetCinematicSceneBJ(soundHandle, unitId, color, unitName, message, duration + bj_TRANSMISSION_PORT_HANGTIME, duration)
 
@@ -7837,7 +7836,7 @@ endfunction
 //   - Display a speech indicator for the unit
 //   - Ping the minimap
 //
-// 播送 单位消息
+// 播放 单位消息
 function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, string unitName, sound soundHandle, string message, integer timeType, real timeVal, boolean wait returns nothing
     call TryInitCinematicBehaviorBJ()
 
@@ -7870,7 +7869,7 @@ function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, str
 
 endfunction
 
-
+// 设置电影场景（指定玩家组内的指定玩家）
 function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer speakerType, sound soundHandle, integer timeType, real timeVal, boolean wait returns boolean
     //Make sure that the runtime unit type and the parameter are the same,
     //otherwise the offline animations will not match and will fail
@@ -7901,7 +7900,7 @@ function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer sp
     return true
 endfunction
 
-
+// 设置电影场景并在指定点发送小地图信号（指定玩家组内的指定玩家）
 function PlayDialogueFromSpeakerTypeEx takes force toForce, player fromPlayer, integer speakerType, location loc, sound soundHandle, integer timeType, real timeVal, boolean wait returns boolean
     call TryInitCinematicBehaviorBJ()
 
@@ -7954,7 +7953,7 @@ function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlay
 endfunction
 
 
-// 最后 播送的 单位消息 的时间长度
+// 获取最后播放的 单位消息 的持续时间
 function GetLastTransmissionDurationBJ takes nothing returns real
     return bj_lastTransmissionDuration
 endfunction
@@ -8072,12 +8071,12 @@ endfunction
 //***************************************************************************
 
 
-// 显示/隐藏过滤器
+// 显示/隐藏 滤镜
 function DisplayCineFilterBJ takes boolean flag returns nothing
     call DisplayCineFilter(flag)
 endfunction
 
-
+// 电影淡出滤镜
 function CinematicFadeCommonBJ takes real red, real green, real blue, real duration, string tex, real startTrans, real endTrans returns nothing
     if (duration == 0) then
         // If the fade is instant, use the same starting and ending values,
@@ -8096,7 +8095,7 @@ function CinematicFadeCommonBJ takes real red, real green, real blue, real durat
     call DisplayCineFilter(true)
 endfunction
 
-
+// 电影结束淡出滤镜触发器动作
 function FinishCinematicFadeBJ takes nothing returns nothing
     call DestroyTimer(bj_cineFadeFinishTimer)
     set bj_cineFadeFinishTimer = null
@@ -8104,21 +8103,21 @@ function FinishCinematicFadeBJ takes nothing returns nothing
     call EnableUserUI(true)
 endfunction
 
-
+// 电影结束淡出滤镜
 function FinishCinematicFadeAfterBJ takes real duration returns nothing
     // Create a timer to end the cinematic fade.
     set bj_cineFadeFinishTimer = CreateTimer()
     call TimerStart(bj_cineFadeFinishTimer, duration, false, function FinishCinematicFadeBJ)
 endfunction
 
-
+// 电影持续淡出滤镜触发器动作
 function ContinueCinematicFadeBJ takes nothing returns nothing
     call DestroyTimer(bj_cineFadeContinueTimer)
     set bj_cineFadeContinueTimer = null
     call CinematicFadeCommonBJ(bj_cineFadeContinueRed, bj_cineFadeContinueGreen, bj_cineFadeContinueBlue, bj_cineFadeContinueDuration, bj_cineFadeContinueTex, bj_cineFadeContinueTrans, 100)
 endfunction
 
-
+// 电影持续淡出滤镜
 function ContinueCinematicFadeAfterBJ takes real duration, real red, real green, real blue, real trans, string tex returns nothing
     set bj_cineFadeContinueRed = red
     set bj_cineFadeContinueGreen = green
@@ -8132,7 +8131,7 @@ function ContinueCinematicFadeAfterBJ takes real duration, real red, real green,
     call TimerStart(bj_cineFadeContinueTimer, duration, false, function ContinueCinematicFadeBJ)
 endfunction
 
-
+// 电影中断淡出滤镜
 function AbortCinematicFadeBJ takes nothing returns nothing
     if (bj_cineFadeContinueTimer != null) then
         call DestroyTimer(bj_cineFadeContinueTimer)
@@ -8523,7 +8522,7 @@ function SaveIntegerBJ takes integer value, integer key, integer missionKey, has
 endfunction
 
 
-// <1.24> 保存布尔
+// <1.24> 保存布尔值
 function SaveBooleanBJ takes boolean value, integer key, integer missionKey, hashtable table returns nothing
     call SaveBoolean(table, missionKey, key, value)
 endfunction
@@ -8540,7 +8539,7 @@ function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missi
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
 
-
+// <1.24> 保存目标
 function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missionKey, hashtable table returns boolean
     return SaveWidgetHandle(table, missionKey, key, whichWidget)
 endfunction
@@ -8563,7 +8562,7 @@ function SaveUnitHandleBJ takes unit whichUnit, integer key, integer missionKey,
     return SaveUnitHandle(table, missionKey, key, whichUnit)
 endfunction
 
-
+// <1.24> 保存技能
 function SaveAbilityHandleBJ takes ability whichAbility, integer key, integer missionKey, hashtable table returns boolean
     return SaveAbilityHandle(table, missionKey, key, whichAbility)
 endfunction
@@ -8617,13 +8616,13 @@ function SaveLocationHandleBJ takes location whichLocation, integer key, integer
 endfunction
 
 
-// <1.24> 保存区域(矩型)
+// <1.24> 保存区域(矩形)
 function SaveRectHandleBJ takes rect whichRect, integer key, integer missionKey, hashtable table returns boolean
     return SaveRectHandle(table, missionKey, key, whichRect)
 endfunction
 
 
-// <1.24> 保存布尔表达式
+// <1.24> 保存条件表达式
 function SaveBooleanExprHandleBJ takes boolexpr whichBoolexpr, integer key, integer missionKey, hashtable table returns boolean
     return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
 endfunction
@@ -8754,12 +8753,12 @@ function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
 
-
+// <1.24> 保存实体对象
 function SaveAgentHandleBJ takes agent whichAgent, integer key, integer missionKey, hashtable table returns boolean
     return SaveAgentHandle(table, missionKey, key, whichAgent)
 endfunction
 
-
+// <1.24> 保存哈希表
 function SaveHashtableHandleBJ takes hashtable whichHashtable, integer key, integer missionKey, hashtable table returns boolean
     return SaveHashtableHandle(table, missionKey, key, whichHashtable)
 endfunction
@@ -8840,7 +8839,7 @@ function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable tab
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
 
-
+// <1.24> 从哈希表提取目标
 function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable table returns widget
     return LoadWidgetHandle(table, missionKey, key)
 endfunction
@@ -8863,7 +8862,7 @@ function LoadUnitHandleBJ takes integer key, integer missionKey, hashtable table
     return LoadUnitHandle(table, missionKey, key)
 endfunction
 
-
+// <1.24> 从哈希表提取技能
 function LoadAbilityHandleBJ takes integer key, integer missionKey, hashtable table returns ability
     return LoadAbilityHandle(table, missionKey, key)
 endfunction
@@ -8918,13 +8917,13 @@ function LoadLocationHandleBJ takes integer key, integer missionKey, hashtable t
 endfunction
 
 
-// <1.24> 从哈希表提取区域(矩型)
+// <1.24> 从哈希表提取区域(矩形)
 function LoadRectHandleBJ takes integer key, integer missionKey, hashtable table returns rect
     return LoadRectHandle(table, missionKey, key)
 endfunction
 
 
-// <1.24> 从哈希表提取布尔表达式
+// <1.24> 从哈希表提取条件表达式
 function LoadBooleanExprHandleBJ takes integer key, integer missionKey, hashtable table returns boolexpr
     return LoadBooleanExprHandle(table, missionKey, key)
 endfunction
@@ -9055,7 +9054,7 @@ function LoadFogModifierHandleBJ takes integer key, integer missionKey, hashtabl
     return LoadFogModifierHandle(table, missionKey, key)
 endfunction
 
-
+// <1.24> 从哈希表提取哈希表
 function LoadHashtableHandleBJ takes integer key, integer missionKey, hashtable table returns hashtable
     return LoadHashtableHandle(table, missionKey, key)
 endfunction
@@ -9157,7 +9156,7 @@ endfunction
 
 
 // Placeholder function for auto save feature
-
+// 保存关卡
 function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint returns nothing
 	call SaveGameCheckpoint(mapSaveName, doCheckpointHint)
 endfunction
@@ -9208,12 +9207,12 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 获取指定玩家开始点的 X 坐标
 function GetPlayerStartLocationX takes player whichPlayer returns real
     return GetStartLocationX(GetPlayerStartLocation(whichPlayer))
 endfunction
 
-
+// 获取指定玩家开始点的 Y 坐标
 function GetPlayerStartLocationY takes player whichPlayer returns real
     return GetStartLocationY(GetPlayerStartLocation(whichPlayer))
 endfunction
@@ -9232,12 +9231,13 @@ function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 endfunction
 
-
+// 玩家槽状态是否指定状态
 function IsPlayerSlotState takes player whichPlayer, playerslotstate whichState returns boolean
     return GetPlayerSlotState(whichPlayer) == whichState
 endfunction
 
-
+// 获取淡出时间（整数）
+// @param seconds不为0时返回 128 / R2I(seconds) ，为0时返回10000
 function GetFadeFromSeconds takes real seconds returns integer
     if (seconds != 0) then
         return 128 / R2I(seconds)
@@ -9245,7 +9245,8 @@ function GetFadeFromSeconds takes real seconds returns integer
     return 10000
 endfunction
 
-
+// 获取淡出时间（实数）
+// @param seconds不为0时返回 128.00 / R2I(seconds) ，为0时返回10000.00
 function GetFadeFromSecondsAsReal takes real seconds returns real
     if (seconds != 0) then
         return 128.00 / seconds
@@ -9253,7 +9254,7 @@ function GetFadeFromSecondsAsReal takes real seconds returns real
     return 10000.00
 endfunction
 
-
+// 设置玩家状态
 function AdjustPlayerStateSimpleBJ takes player whichPlayer, playerstate whichPlayerState, integer delta returns nothing
     call SetPlayerState(whichPlayer, whichPlayerState, GetPlayerState(whichPlayer, whichPlayerState) + delta)
 endfunction
@@ -9274,14 +9275,14 @@ function AdjustPlayerStateBJ takes integer delta, player whichPlayer, playerstat
     call AdjustPlayerStateSimpleBJ(whichPlayer, whichPlayerState, delta)
 endfunction
 
-
+// 设置玩家状态（value 减去当前状态）
 function SetPlayerStateBJ takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
     local integer oldValue = GetPlayerState(whichPlayer, whichPlayerState)
     call AdjustPlayerStateBJ(value - oldValue, whichPlayer, whichPlayerState)
 endfunction
 
 
-// 打开/关闭 玩家参数
+// 打开/关闭 玩家状态
 function SetPlayerFlagBJ takes playerstate whichPlayerFlag, boolean flag, player whichPlayer returns nothing
     call SetPlayerState(whichPlayer, whichPlayerFlag, IntegerTertiaryOp(flag, 1, 0))
 endfunction
@@ -9299,19 +9300,19 @@ function GetPlayerTaxRateBJ takes playerstate whichResource, player sourcePlayer
 endfunction
 
 
-// 玩家旗是打开的
+// 玩家状态是允许的
 function IsPlayerFlagSetBJ takes playerstate whichPlayerFlag, player whichPlayer returns boolean
     return GetPlayerState(whichPlayer, whichPlayerFlag) == 1
 endfunction
 
 
-// 增加黄金到金矿
+// 增加金矿黄金数量
 function AddResourceAmountBJ takes integer delta, unit whichUnit returns nothing
     call AddResourceAmount(whichUnit, delta)
 endfunction
 
 
-// 玩家索引
+// 获取玩家索引
 function GetConvertedPlayerId takes player whichPlayer returns integer
     return GetPlayerId(whichPlayer) + 1
 endfunction
@@ -9323,7 +9324,7 @@ function ConvertedPlayer takes integer convertedPlayerId returns player
 endfunction
 
 
-// 区域宽度
+// 获取区域宽度
 function GetRectWidthBJ takes rect r returns real
     return GetRectMaxX(r) - GetRectMinX(r)
 endfunction
@@ -9336,8 +9337,7 @@ endfunction
 
 
 // Replaces a gold mine with a blighted gold mine for the given player.
-//
-// 设置金矿为不死族金矿
+// 将指定金矿替换为指定玩家的不死族金矿
 function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer returns unit
     local real    mineX
     local real    mineY
@@ -9361,14 +9361,14 @@ function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer retur
     return newMine
 endfunction
 
-
+// 将指定金矿替换为指定玩家的不死族金矿，并获取该单位
 function BlightGoldMineForPlayer takes unit goldMine, player whichPlayer returns unit
     set bj_lastHauntedGoldMine = BlightGoldMineForPlayerBJ(goldMine, whichPlayer)
     return bj_lastHauntedGoldMine
 endfunction
 
 
-// 最后建造的不死族金矿
+// 获取最后建造的不死族金矿
 function GetLastHauntedGoldMine takes nothing returns unit
     return bj_lastHauntedGoldMine
 endfunction
@@ -9385,7 +9385,8 @@ function SetPlayerColorBJEnum takes nothing returns nothing
     call SetUnitColor(GetEnumUnit(), bj_setPlayerTargetColor)
 endfunction
 
-
+// 设置玩家颜色
+// @param changeExisting为真时设置
 function SetPlayerColorBJ takes player whichPlayer, playercolor color, boolean changeExisting returns nothing
     local group g
 
@@ -9421,12 +9422,12 @@ function UnlockGameSpeedBJ takes nothing returns nothing
     call SetMapFlag(MAP_LOCK_SPEED, false)
 endfunction
 
-
+// 给单位发送命令到 可破坏物指定单位
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-
+// 给单位发送命令到 指定点
 function IssuePointOrderLocBJ takes unit whichUnit, string order, location whichLocation returns boolean
     return IssuePointOrderLoc( whichUnit, order, whichLocation )
 endfunction
@@ -9445,22 +9446,22 @@ function IssueTargetItemOrder takes unit whichUnit, string order, widget targetW
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-
+// 给单位发送命令 无目标
 function IssueImmediateOrderBJ takes unit whichUnit, string order returns boolean
     return IssueImmediateOrder( whichUnit, order )
 endfunction
 
-
+// 给单位组发送命令到 指定单位
 function GroupTargetOrderBJ takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-
+// 给单位组发送命令到 指定点
 function GroupPointOrderLocBJ takes group whichGroup, string order, location whichLocation returns boolean
     return GroupPointOrderLoc( whichGroup, order, whichLocation )
 endfunction
 
-
+// 给单位组发送命令 无目标
 function GroupImmediateOrderBJ takes group whichGroup, string order returns boolean
     return GroupImmediateOrder( whichGroup, order )
 endfunction
@@ -9509,7 +9510,8 @@ endfunction
 // Utility function for use by editor-generated item drop table triggers.
 // This function is added as an action to all destructable drop triggers,
 // so that a widget drop may be differentiated from a unit drop.
-//
+// 储存死亡目标
+// 将 bj_lastDyingWidget 设置为触发单位
 function SaveDyingWidget takes nothing returns nothing
     set bj_lastDyingWidget = GetTriggerWidget()
 endfunction
@@ -9527,7 +9529,7 @@ function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, locat
 endfunction
 
 
-// 技能名字
+// 获取技能名字
 function GetAbilityName takes integer abilcode returns string
     return GetObjectName(abilcode)
 endfunction
@@ -9597,7 +9599,7 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 设置玩家科技上限
 function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, integer limit returns nothing
     local integer oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId)
 
@@ -9660,7 +9662,7 @@ endfunction
 //*
 //***************************************************************************
 
-
+// 获取匹配单位的单位类型是否为英雄
 function MeleeTrainedUnitIsHeroBJFilter takes nothing returns boolean
     return IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO)
 endfunction
@@ -9669,7 +9671,8 @@ endfunction
 // The first N heroes trained or hired for each player start off with a
 // standard set of items.  This is currently:
 //   - 1x Scroll of Town Portal
-// 给首发英雄创建初始物品
+// 给指定单位创建初始物品（回程卷轴）
+// 该程序会自动判断已创建初始物品的次数，确保不会超限
 function MeleeGrantItemsToHero takes unit whichUnit returns nothing
     local integer owner   = GetPlayerId(GetOwningPlayer(whichUnit))
 
@@ -9680,12 +9683,12 @@ function MeleeGrantItemsToHero takes unit whichUnit returns nothing
     endif
 endfunction
 
-
+// 给英雄创建初始物品（祭坛训练的英雄）
 function MeleeGrantItemsToTrainedHero takes nothing returns nothing
     call MeleeGrantItemsToHero(GetTrainedUnit())
 endfunction
 
-
+// 给英雄创建初始物品（酒馆购买的英雄）
 function MeleeGrantItemsToHiredHero takes nothing returns nothing
     call MeleeGrantItemsToHero(GetSoldUnit())
 endfunction

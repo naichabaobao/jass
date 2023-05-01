@@ -1,7 +1,7 @@
 
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
-// 代理
+// 实体对象
 type agent extends handle  // all reference counted objects
 // 事件
 type event extends agent  // a reference to an event registration
@@ -3822,13 +3822,13 @@ globals
 	constant itemintegerfield ITEM_IF_PRIORITY = ConvertItemIntegerField('ipri')
 	// 物品整数域 装甲类型（本头/气态/石头/肉体/金属） ('iarm')
 	constant itemintegerfield ITEM_IF_ARMOR_TYPE = ConvertItemIntegerField('iarm')
-	// 物品整数域 颜色值（红） ('iclr')
+	// 物品整数域 颜色通道（红） ('iclr')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_RED = ConvertItemIntegerField('iclr')
-	// 物品整数域 颜色值（绿） ('iclg')
+	// 物品整数域 颜色通道（绿） ('iclg')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_GREEN = ConvertItemIntegerField('iclg')
-	// 物品整数域 颜色值（蓝） ('iclb')
+	// 物品整数域 颜色通道（蓝） ('iclb')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
-	// 物品整数域 颜色值（alpha） ('ical')
+	// 物品整数域 颜色通道（alpha） ('ical')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
     // 物品实数域 模型缩放 ('isca')
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
@@ -3898,13 +3898,13 @@ globals
 	constant unitintegerfield UNIT_IF_ORIENTATION_INTERPOLATION = ConvertUnitIntegerField('uori')
 	// 单位整数域 美术 - 高度变化- 采样点数量 ('uept')
 	constant unitintegerfield UNIT_IF_ELEVATION_SAMPLE_POINTS = ConvertUnitIntegerField('uept')
-	// 单位整数域 美术 - 颜色值（红） ('uclr')
+	// 单位整数域 美术 - 颜色通道（红） ('uclr')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_RED = ConvertUnitIntegerField('uclr')
-	// 单位整数域 美术 - 颜色值（绿） ('uclg')
+	// 单位整数域 美术 - 颜色通道（绿） ('uclg')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_GREEN = ConvertUnitIntegerField('uclg')
-	// 单位整数域 美术 - 颜色值（蓝） ('uclb')
+	// 单位整数域 美术 - 颜色通道（蓝） ('uclb')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_BLUE = ConvertUnitIntegerField('uclb')
-	// 单位整数域 美术 - 颜色值（alpha） ('ucal')
+	// 单位整数域 美术 - 颜色通道（alpha） ('ucal')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_ALPHA = ConvertUnitIntegerField('ucal')
 	// 单位整数域 移动 - 类型 ('umvt')
 	constant unitintegerfield UNIT_IF_MOVE_TYPE = ConvertUnitIntegerField('umvt')
@@ -6129,7 +6129,7 @@ native SaveGroupHandle takes hashtable table, integer parentKey, integer childKe
 native SaveLocationHandle takes hashtable table, integer parentKey, integer childKey, location whichLocation returns boolean
 // <1.24> 保存区域(矩型) [C]
 native SaveRectHandle takes hashtable table, integer parentKey, integer childKey, rect whichRect returns boolean
-// <1.24> 保存布尔表达式 [C]
+// <1.24> 保存条件表达式 [C]
 native SaveBooleanExprHandle takes hashtable table, integer parentKey, integer childKey, boolexpr whichBoolexpr returns boolean
 // <1.24> 保存音效 [C]
 native SaveSoundHandle takes hashtable table, integer parentKey, integer childKey, sound whichSound returns boolean
@@ -6220,7 +6220,7 @@ native LoadGroupHandle takes hashtable table, integer parentKey, integer childKe
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
 // <1.24> 从哈希表提取区域(矩型) [C]
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
-// <1.24> 从哈希表提取布尔表达式 [C]
+// <1.24> 从哈希表提取条件表达式 [C]
 native LoadBooleanExprHandle takes hashtable table, integer parentKey, integer childKey returns boolexpr
 // <1.24> 从哈希表提取音效 [C]
 native LoadSoundHandle takes hashtable table, integer parentKey, integer childKey returns sound
@@ -6776,7 +6776,7 @@ native SetCineFilterStartColor takes integer red, integer green, integer blue, i
 native SetCineFilterEndColor takes integer red, integer green, integer blue, integer alpha returns nothing
 // 设置滤镜持续时长
 native SetCineFilterDuration takes real duration returns nothing
-// 显示/隐藏滤镜
+// 显示/隐藏 滤镜
 native DisplayCineFilter takes boolean flag returns nothing
 // 查询滤镜显示/隐藏状态
 native IsCineFilterDisplayed takes nothing returns boolean
@@ -6994,13 +6994,13 @@ native DestroyLightning takes lightning whichBolt returns boolean
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电效果(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
-// 获取闪电效果 A通道颜色数值
+// 获取闪电效果 A通道颜色值
 native GetLightningColorA takes lightning whichBolt returns real
-// 获取闪电效果 R通道颜色数值
+// 获取闪电效果 R通道颜色值
 native GetLightningColorR takes lightning whichBolt returns real
-// 获取闪电效果 G通道颜色数值
+// 获取闪电效果 G通道颜色值
 native GetLightningColorG takes lightning whichBolt returns real
-// 获取闪电效果 B通道颜色数值
+// 获取闪电效果 B通道颜色值
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电效果颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
@@ -7008,23 +7008,23 @@ native SetLightningColor takes lightning whichBolt, real r, real g, real b, real
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
 // 获取特效路径（指定技能ID和引索）
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取特效声音路径
+// 获取特效声音路径（指定技能字串符和声音类型）
 native GetAbilitySound takes string abilityString, soundtype t returns string
-// 按ID获取特效声音路径
+// 获取特效声音路径（指定技能ID和声音类型）
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
 // Terrain API
 //
-// 地形悬崖高度(指定坐标) [R]
+// 获取地形悬崖高度(指定坐标) [R]
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
 // 启用/禁用 水变形
 native SetWaterDeforms takes boolean val returns nothing
-// 指定坐标地形 [R]
+// 获取指定坐标地形类型 [R]
 native GetTerrainType takes real x, real y returns integer
-// 地形样式(指定坐标) [R]
+// 获取地形样式(指定坐标) [R]
 native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
@@ -7094,9 +7094,9 @@ native IsPointBlighted takes real x, real y returns boolean
 
 // Doodad API
 //
-// 播放圆形区域内地形装饰物动画 [R]
+// 播放圆形区域内地表装饰物动画 [R]
 native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
-// 播放矩形区域内地形装饰物动画 [R]
+// 播放矩形区域内地表装饰物动画 [R]
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
 
 
