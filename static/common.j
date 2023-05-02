@@ -4362,11 +4362,11 @@ native GetTeams takes nothing returns integer
 // 玩家数量
 native GetPlayers takes nothing returns integer
 
-// 是否支持游戏类型
+// 查询是否支持指定的游戏类型
 native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 游戏选择类型
 native GetGameTypeSelected takes nothing returns gametype
-// 查询地图参数状态（指定参数）
+// 查询地图参数状态是否开启（指定参数）
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取障碍设置，怀疑是最大生命值百分比限制
 constant native GetGamePlacement takes nothing returns placement
@@ -4433,7 +4433,7 @@ native GetPlayerController takes player whichPlayer returns mapcontrol
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取玩家税率 [R]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
-// 判断玩家的种族
+// 查询玩家种族是否指定种族
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -4646,11 +4646,11 @@ native GetLocationY takes location whichLocation returns real
 // 获取点 Z 轴高度 [R]
 native GetLocationZ takes location whichLocation returns real
 
-// 单位是否在区域内
+// 查询单位是否在区域内
 native IsUnitInRegion takes region whichRegion, unit whichUnit returns boolean
-// 坐标是否在区域内
+// 查询坐标是否在区域内
 native IsPointInRegion takes region whichRegion, real x, real y returns boolean
-// 点是否在区域内
+// 查询点是否在区域内
 native IsLocationInRegion takes region whichRegion, location whichLocation returns boolean
 
 // Returns full map bounds, including unplayable borders, in world coordinates
@@ -4671,12 +4671,12 @@ native ResetTrigger takes trigger whichTrigger returns nothing
 native EnableTrigger takes trigger whichTrigger returns nothing
 // 关掉触发器
 native DisableTrigger takes trigger whichTrigger returns nothing
-// 触发器打开
+// 查询触发器是否打开
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
 // 挂起触发
 native TriggerWaitOnSleeps takes trigger whichTrigger, boolean flag returns nothing
-// 触发是否挂起
+// 查询触发是否挂起
 native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
 
 // 获取匹配的单位
@@ -5215,7 +5215,7 @@ native RemoveDestructable takes destructable d returns nothing
 native KillDestructable takes destructable d returns nothing
 // 设置可破坏物是否可见
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
-// 获取可破坏物的可见状态
+// 查询可破坏物是否可见
 native IsDestructableInvulnerable takes destructable d returns boolean
 // 选取指定区域的过滤（filter用于过滤）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
@@ -5258,13 +5258,13 @@ constant native GetTriggerDestructable takes nothing returns destructable
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除物品
 native RemoveItem takes item whichItem returns nothing
-// 物品的所有者
+// 获取物品的所有者
 native GetItemPlayer takes item whichItem returns player
-// 物品的类别
+// 获取物品的类别
 native GetItemTypeId takes item i returns integer
-// 物品的 X 轴坐标 [R]
+// 获取物品的 X 轴坐标 [R]
 native GetItemX takes item i returns real
-// 物品的 Y 轴坐标 [R]
+// 获取物品的 Y 轴坐标 [R]
 native GetItemY takes item i returns real
 // 移动物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
@@ -5278,25 +5278,25 @@ native SetItemPawnable takes item i, boolean flag returns nothing
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
 // 设置物品是否无敌
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
-// 物品是否无敌
+// 查询物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
-// 显示/隐藏 [R]
+// 设置显示/隐藏 物品 [R]
 native SetItemVisible takes item whichItem, boolean show returns nothing
-// 物品是否可见 [R]
+// 查询物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
-// 物品所有者是否当前持有玩家
+// 查询物品所有者是否当前持有玩家
 native IsItemOwned takes item whichItem returns boolean
-// 物品是否拾取时自动使用 [R]
+// 查询物品是否拾取时自动使用 [R]
 native IsItemPowerup takes item whichItem returns boolean
-// 物品是否可被市场随机出售 [R]
+// 查询物品是否可被市场随机出售 [R]
 native IsItemSellable takes item whichItem returns boolean
-// 物品是否可被抵押 [R]
+// 查询物品是否可被抵押 [R]
 native IsItemPawnable takes item whichItem returns boolean
 // 物品是否可以充能
 native IsItemIdPowerup takes integer itemId returns boolean
-// 物品是否可以销售
+// 查询物品是否可以销售
 native IsItemIdSellable takes integer itemId returns boolean
-// 物品是否可以抵押
+// 查询物品是否可以抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
@@ -5309,13 +5309,13 @@ native GetItemLevel takes item whichItem returns integer
 native GetItemType takes item whichItem returns itemtype
 // 设置掉落物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
-// 物品名称
+// 获取物品名称
 constant native GetItemName takes item whichItem returns string
-// 物品数量
+// 获取物品数量
 native GetItemCharges takes item whichItem returns integer
 // 设置物品使用次数
 native SetItemCharges takes item whichItem, integer charges returns nothing
-// 物品自定义值
+// 获取物品自定义值
 native GetItemUserData takes item whichItem returns integer
 // 设置物品自定义数据
 native SetItemUserData takes item whichItem, integer data returns nothing
@@ -5338,7 +5338,7 @@ native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, re
 native KillUnit takes unit whichUnit returns nothing
 // 删除单位
 native RemoveUnit takes unit whichUnit returns nothing
-// 显示/隐藏 [R]
+// 显示/隐藏 单位 [R]
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置单位属性 [R]
@@ -5378,13 +5378,13 @@ native GetUnitPropWindow takes unit whichUnit returns real
 // 获取单位飞行高度 (当前)
 native GetUnitFlyHeight takes unit whichUnit returns real
 
-// 单位主动攻击范围 (默认)
+// 获取单位主动攻击范围 (默认)
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
-// 转身速度 (默认)
+// 获取单位转身速度 (默认)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
-// 转向角度(默认)
+// 获取单位转向角度(默认)
 native GetUnitDefaultPropWindow takes unit whichUnit returns real
-// 飞行高度 (默认)
+// 获取单位飞行高度 (默认)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
 // 设置单位所有者
@@ -5460,7 +5460,7 @@ constant native GetUnitLevel takes unit whichUnit returns integer
 native GetHeroProperName takes unit whichHero returns string
 // 允许/禁止英雄获取经验值 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
-// 英雄是否可获取经验值
+// 查询英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
 // 命令英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
@@ -5579,52 +5579,52 @@ constant native GetUnitRallyUnit takes unit whichUnit returns unit
 // 获取指定单位集结点指向的可破坏物（树、石头、门、柱等），仅当集结点指向可破坏物时可正常返回（建筑的旗子，集结技能）
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
-// 指定单位在指定的单位组中
+// 查询指定单位是否在指定的单位组中
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
-// 指定单位是指定玩家组里任意玩家的单位
+// 查询指定单位是否指定玩家组任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
-// 指定单位是指定玩家的单位
+// 查询指定单位是否指定玩家的单位
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位的所属玩家是AI的盟友
+// 查询指定单位的所属玩家是否指定玩家的盟友
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位的所属玩家是AI的敌人
+// 查询指定单位的所属玩家是否指定玩家的敌人
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位对于玩家可见
+// 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位能否被检测到
+// 查询指定单位能否被检测到
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
-// 单位对于玩家不可见
+// 查询指定单位是否对指定玩家不可见
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
-// 单位被战争迷雾遮挡
+// 查询指定单位是否被战争迷雾遮挡
 constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns boolean
-// 单位被黑色阴影遮挡
+// 查询指定单位是否被黑色阴影遮挡
 constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns boolean
-// 玩家已选定单位
+// 查询指定单位是否已被指定玩家选择
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
-// 指定单位是否是指定种族
+// 查询指定指定单位是否指定种族
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
-// 检查单位 分类
+// 查询指定单位是否与指定类型匹配
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
-// 指定单位是否属于单位
+// 查询指定单位是否另一指定单位
 constant native IsUnit takes unit whichUnit, unit whichSpecifiedUnit returns boolean
-// 指定单位是否在指定单位范围内 [R]
+// 查询指定单位是否在指定单位范围内 [R]
 constant native IsUnitInRange takes unit whichUnit, unit otherUnit, real distance returns boolean
-// 指定单位是否在指定坐标范围内 [R]
+// 查询指定单位是否在指定坐标范围内 [R]
 constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real distance returns boolean
-// 指定单位是否在指定点范围内 [R]
+// 查询指定单位是否在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
-// 指定单位是否隐藏单位
+// 查询指定单位是否隐藏
 constant native IsUnitHidden takes unit whichUnit returns boolean
-// 指定单位是否只是镜像
+// 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-// 指定单位是否被指定的运输单位装载（如是否进入指定的暗夜金矿、运输飞艇、运输船）
+// 查询指定单位是否被指定的运输单位装载（如是否进入指定的暗夜金矿、运输飞艇、运输船）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
-// 指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
+// 查询指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 指定单位类型是否英雄单位
+// 查询指定单位类型是否英雄单位
 constant native IsHeroUnitId takes integer unitId returns boolean
-// 单位类型是否匹配
+// 查询指定单位类型是否与指定类型匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
 // 设定指定单位和指定玩家的共享视野状态（共享或不共享） [R]
@@ -5799,25 +5799,25 @@ constant native Player takes integer number returns player
 // 本地玩家 [R]
 // 通常用于异步判断
 constant native GetLocalPlayer takes nothing returns player
-// 玩家是玩家的同盟
+// 查询指定玩家是否同另一指定玩家是盟友
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
-// 玩家是玩家的敌人
+// 查询指定玩家是否同另一指定玩家是敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
-// 玩家在玩家组
+// 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
-// 玩家是裁判或观察者 [R]
+// 查询指定玩家是否裁判或观察者 [R]
 constant native IsPlayerObserver takes player whichPlayer returns boolean
-// 坐标可见
+// 查询坐标对指定玩家是否可见
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
-// 点对于玩家可见
+// 查询点对指定玩家是否可见
 constant native IsLocationVisibleToPlayer takes location whichLocation, player whichPlayer returns boolean
-// 坐标在迷雾中
+// 查询坐标是否在迷雾中（指定玩家）
 constant native IsFoggedToPlayer takes real x, real y, player whichPlayer returns boolean
-// 点被迷雾遮挡
+// 查询点是否被迷雾遮挡（指定玩家）
 constant native IsLocationFoggedToPlayer takes location whichLocation, player whichPlayer returns boolean
-// 坐标在黑色阴影中
+// 查询坐标是否在黑色阴影中（指定玩家）
 constant native IsMaskedToPlayer takes real x, real y, player whichPlayer returns boolean
-// 点被黑色阴影遮挡
+// 查询点是否被黑色阴影遮挡（指定玩家）
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
 // 查询玩家的种族
@@ -5900,11 +5900,11 @@ native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real 
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
-// 启用黑色阴影
+// 查询黑色阴影是否启用
 native IsFogMaskEnabled takes nothing returns boolean
 // 启用/禁用 战争迷雾 [R]
 native FogEnable takes boolean enable returns nothing
-// 启用战争迷雾
+// 查询战争迷雾是否启用
 native IsFogEnabled takes nothing returns boolean
 
 // 新建可见度修正器(矩形区域) [R]
@@ -6559,7 +6559,7 @@ native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 [R]
 native LeaderboardDisplay takes leaderboard lb, boolean show returns nothing
-// 是否显示排行榜
+// 查询排行榜是否显示
 native IsLeaderboardDisplayed takes leaderboard lb returns boolean
 
 // 排行榜 获取行数
@@ -6623,12 +6623,12 @@ native DestroyMultiboard takes multiboard lb returns nothing
 
 // 设置多列面板 显示/隐藏 [R]
 native MultiboardDisplay takes multiboard lb, boolean show returns nothing
-// 多列面板 是否已显示
+// 查询多列面板是否已显示
 native IsMultiboardDisplayed takes multiboard lb returns boolean
 
 // 设置多列面板 最大/最小化 [R]
 native MultiboardMinimize takes multiboard lb, boolean minimize returns nothing
-// 获取多列面板 是否最小化
+// 查询多列面板是否最小化
 native IsMultiboardMinimized takes multiboard lb returns boolean
 // 清除 多列面板
 native MultiboardClear takes multiboard lb returns nothing
@@ -6778,7 +6778,7 @@ native SetCineFilterEndColor takes integer red, integer green, integer blue, int
 native SetCineFilterDuration takes real duration returns nothing
 // 显示/隐藏 滤镜
 native DisplayCineFilter takes boolean flag returns nothing
-// 查询滤镜显示/隐藏状态
+// 查询滤镜是否显示
 native IsCineFilterDisplayed takes nothing returns boolean
 // 设置电影场景
 native SetCinematicScene takes integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
@@ -7028,7 +7028,7 @@ native GetTerrainType takes real x, real y returns integer
 native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
-// 路径类型状态是否关闭(指定坐标) [R]
+// 查询路径类型状态是否关闭(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
 // 设置路径类型状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
@@ -7088,7 +7088,7 @@ native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBligh
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿 [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
-// 指定坐标是否被荒芜地表（不死族）覆盖 [R]
+// 查询指定坐标是否被荒芜地表（不死族）覆盖 [R]
 native IsPointBlighted takes real x, real y returns boolean
 
 
@@ -7123,9 +7123,9 @@ native RemoveAllGuardPositions takes player num returns nothing
 
 // ** Cheat 标签 **
 native Cheat takes string cheatStr returns nothing
-// 无法胜利 [R]
+// 查询游戏是否无法胜利 [R]
 native IsNoVictoryCheat takes nothing returns boolean
-// 无法失败 [R]
+// 查询游戏是否无法失败 [R]
 native IsNoDefeatCheat takes nothing returns boolean
 
 // 预读文件

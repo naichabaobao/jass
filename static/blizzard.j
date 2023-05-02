@@ -2790,7 +2790,7 @@ function SetTerrainTypeBJ takes location where, integer terrainType, integer var
 endfunction
 
 
-// 地形是否为对应路径
+// 地形对应路径类型是否关闭
 function IsTerrainPathableBJ takes location where, pathingtype t returns boolean
     return IsTerrainPathable(GetLocationX(where), GetLocationY(where), t)
 endfunction
@@ -8168,7 +8168,7 @@ function CinematicFadeBJ takes integer fadetype, real duration, string tex, real
 endfunction
 
 
-// 高级的过滤器
+// 设置滤镜（高级）
 function CinematicFilterGenericBJ takes real duration, blendmode bmode, string tex, real red0, real green0, real blue0, real trans0, real red1, real green1, real blue1, real trans1 returns nothing
     call AbortCinematicFadeBJ()
     call SetCineFilterTexture(tex)
