@@ -6621,33 +6621,33 @@ native CreateMultiboard takes nothing returns multiboard
 // 摧毁多面板
 native DestroyMultiboard takes multiboard lb returns nothing
 
-// 设置多列面板 显示/隐藏 [R]
+// 设置多面板 显示/隐藏 [R]
 native MultiboardDisplay takes multiboard lb, boolean show returns nothing
-// 查询多列面板是否已显示
+// 查询多面板是否已显示
 native IsMultiboardDisplayed takes multiboard lb returns boolean
 
-// 设置多列面板 最大/最小化 [R]
+// 设置多面板 最大/最小化 [R]
 native MultiboardMinimize takes multiboard lb, boolean minimize returns nothing
-// 查询多列面板是否最小化
+// 查询多面板是否最小化
 native IsMultiboardMinimized takes multiboard lb returns boolean
-// 清除 多列面板
+// 清除 多面板
 native MultiboardClear takes multiboard lb returns nothing
 
-// 设置多列面板标题
+// 设置多面板标题
 native MultiboardSetTitleText takes multiboard lb, string label returns nothing
-// 获取多列面板标题
+// 获取多面板标题
 native MultiboardGetTitleText takes multiboard lb returns string
 // 设置标题颜色 [R]
 native MultiboardSetTitleTextColor takes multiboard lb, integer red, integer green, integer blue, integer alpha returns nothing
 
-// 获取多列面板行数
+// 获取多面板行数
 native MultiboardGetRowCount takes multiboard lb returns integer
-// 获取多列面板列数
+// 获取多面板列数
 native MultiboardGetColumnCount takes multiboard lb returns integer
 
-// 设置多列面板列数
+// 设置多面板列数
 native MultiboardSetColumnCount takes multiboard lb, integer count returns nothing
-// 设置多列面板行数
+// 设置多面板行数
 native MultiboardSetRowCount takes multiboard lb, integer count returns nothing
 
 // broadcast settings to all items

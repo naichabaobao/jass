@@ -7243,7 +7243,7 @@ endfunction
 //***************************************************************************
 
 
-// 创建 多列面板
+// 创建 多面板
 function CreateMultiboardBJ takes integer cols, integer rows, string title returns multiboard
     set bj_lastCreatedMultiboard = CreateMultiboard()
     call MultiboardSetRowCount(bj_lastCreatedMultiboard, rows)
@@ -7254,43 +7254,43 @@ function CreateMultiboardBJ takes integer cols, integer rows, string title retur
 endfunction
 
 
-// 删除 多列面板
+// 删除 多面板
 function DestroyMultiboardBJ takes multiboard mb returns nothing
     call DestroyMultiboard(mb)
 endfunction
 
 
-// 最后创建的 多列面板
+// 最后创建的 多面板
 function GetLastCreatedMultiboard takes nothing returns multiboard
     return bj_lastCreatedMultiboard
 endfunction
 
 
-// 显示/隐藏 多列面板
+// 显示/隐藏 多面板
 function MultiboardDisplayBJ takes boolean show, multiboard mb returns nothing
     call MultiboardDisplay(mb, show)
 endfunction
 
 
-// 最大化/最小化 多列面板
+// 最大化/最小化 多面板
 function MultiboardMinimizeBJ takes boolean minimize, multiboard mb returns nothing
     call MultiboardMinimize(mb, minimize)
 endfunction
 
 
-// 设置 多列面板 标题颜色
+// 设置 多面板 标题颜色
 function MultiboardSetTitleTextColorBJ takes multiboard mb, real red, real green, real blue, real transparency returns nothing
     call MultiboardSetTitleTextColor(mb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 显示/隐藏 所有 多列面板
+// 显示/隐藏 所有 多面板
 function MultiboardAllowDisplayBJ takes boolean flag returns nothing
     call MultiboardSuppressDisplay(not flag)
 endfunction
 
 
-// 设置多列面板项目显示风格
+// 设置多面板项目显示风格
 function MultiboardSetItemStyleBJ takes multiboard mb, integer col, integer row, boolean showValue, boolean showIcon returns nothing
     local integer curRow = 0
     local integer curCol = 0
@@ -7323,7 +7323,7 @@ function MultiboardSetItemStyleBJ takes multiboard mb, integer col, integer row,
 endfunction
 
 
-// 设置多列面板项目文本
+// 设置多面板项目文本
 function MultiboardSetItemValueBJ takes multiboard mb, integer col, integer row, string val returns nothing
     local integer curRow = 0
     local integer curCol = 0
@@ -7356,7 +7356,7 @@ function MultiboardSetItemValueBJ takes multiboard mb, integer col, integer row,
 endfunction
 
 
-// 设置多列面板项目颜色
+// 设置多面板项目颜色
 function MultiboardSetItemColorBJ takes multiboard mb, integer col, integer row, real red, real green, real blue, real transparency returns nothing
     local integer curRow = 0
     local integer curCol = 0
@@ -7389,7 +7389,7 @@ function MultiboardSetItemColorBJ takes multiboard mb, integer col, integer row,
 endfunction
 
 
-// 设置多列面板项目宽度
+// 设置多面板项目宽度
 function MultiboardSetItemWidthBJ takes multiboard mb, integer col, integer row, real width returns nothing
     local integer curRow = 0
     local integer curCol = 0
@@ -7422,7 +7422,7 @@ function MultiboardSetItemWidthBJ takes multiboard mb, integer col, integer row,
 endfunction
 
 
-// 设置物品图标
+// 设置多面板项目图标
 function MultiboardSetItemIconBJ takes multiboard mb, integer col, integer row, string iconFileName returns nothing
     local integer curRow = 0
     local integer curCol = 0
