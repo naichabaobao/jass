@@ -4265,7 +4265,8 @@ constant native MathRound takes real r returns integer
 
 // 转换整数为实数
 native I2R takes integer i returns real
-// 转换实数为整数（向下取整）
+// 转换实数为整数（大于0时向下取整，小于0时向上取整）
+// 7.x返回7， -7.x返回-7
 native R2I takes real r returns integer
 // 转换整数为字符串
 native I2S takes integer i returns string
