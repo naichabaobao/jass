@@ -927,7 +927,7 @@ globals
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
 	// 地图 - 使用地图设置的玩家开始点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 地图 - 联盟玩家开始点放在一起
+	// 地图 - 联盟玩家开始点（优先）放在一起
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
 	// 开始点分布优先权-低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
@@ -4301,6 +4301,7 @@ native StringHash takes string s returns integer
 // 该命令不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native GetLocalizedString takes string source returns string
 // 获取本地热键
+// 理论上该命令不能在AI脚本使用
 native GetLocalizedHotkey takes string source returns integer
 
 
@@ -4358,9 +4359,9 @@ native SetResourceDensity takes mapdensity whichdensity returns nothing
 // 设置单位密度
 native SetCreatureDensity takes mapdensity whichdensity returns nothing
 
-// 队伍数量
+// 获取队伍数量
 native GetTeams takes nothing returns integer
-// 玩家数量
+// 获取玩家编号
 native GetPlayers takes nothing returns integer
 
 // 查询是否支持指定的游戏类型
@@ -4400,7 +4401,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 // ( i.e. you can use this to put people in a fixed loc and then
 //   use random placement for any unplaced players etc )
 // use random placement for any unplaced players etc )
-// 势力玩家开始点
+// 设置玩家组玩家开始点
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 设置玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
