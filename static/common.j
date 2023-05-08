@@ -1417,49 +1417,49 @@ globals
 	
 	// For use with TriggerRegisterPlayerUnitEvent
 	
-	// 玩家出售单位
+	// 玩家事件-玩家出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
-	// 玩家單位更改所有者
+	// 玩家事件-玩家單位更改所有者
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
-	// 玩家單位出售物品
+	// 玩家事件-玩家單位出售物品
  constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家單位準備施放技能
+	// 玩家事件-玩家單位準備施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
-	// 玩家單位開始施放技能
+	// 玩家事件-玩家單位開始施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
-	// 玩家單位發動技能效果
+	// 玩家事件-玩家單位發動技能效果
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
-	// 玩家單位釋放技能結束
+	// 玩家事件-玩家單位釋放技能結束
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
-	// 玩家單位停止施放技能
+	// 玩家事件-玩家單位停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-    // 玩家單位抵押物品
+        // 玩家事件-玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
-	// 玩家单位物品栏中有物品堆叠
+	// 玩家事件-玩家单位物品栏中有物品堆叠
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
 	
 	
 	// For use with TriggerRegisterUnitEvent
 	
-	// 单位出售
+	// 单位事件-出售单位（指商店单位）
 	constant unitevent EVENT_UNIT_SELL = ConvertUnitEvent(286)
-	// 单位所属变更
+	// 单位事件-单位所属变更
 	constant unitevent EVENT_UNIT_CHANGE_OWNER = ConvertUnitEvent(287)
-	// 出售物品
+	// 单位事件-出售物品（指商店单位）
 	constant unitevent EVENT_UNIT_SELL_ITEM = ConvertUnitEvent(288)
-	// 准备施放技能 (前摇开始)
+	// 单位事件-准备施放技能 (前摇开始)
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
-	// 开始施放技能 (前摇结束)
+	// 单位事件-开始施放技能 (前摇结束)
 	constant unitevent EVENT_UNIT_SPELL_CAST = ConvertUnitEvent(290)
-	// 发动技能效果 (后摇开始)
+	// 单位事件-发动技能效果 (后摇开始)
 	constant unitevent EVENT_UNIT_SPELL_EFFECT = ConvertUnitEvent(291)
-	// 发动技能结束 (后摇结束)
+	// 单位事件-发动技能结束 (后摇结束)
 	constant unitevent EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
-	// 停止施放技能
+	// 单位事件-停止施放技能
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
-	// 抵押物品
+	// 单位事件-抵押（卖）物品（指购买单位）
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
-	// 单位物品栏中有物品堆叠
+	// 单位事件-单位物品栏中有物品堆叠
 	constant unitevent EVENT_UNIT_STACK_ITEM = ConvertUnitEvent(318)
 	
 	
