@@ -304,14 +304,14 @@ native DebugS               takes string str                            returns 
     // 暴雪用该指令打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
     native CommandsWaiting      takes nothing                               returns integer
     // 获取最新的指令类型
-    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据，在AI脚本初始化完成前发送无效
+    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本命令）前发送
     // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
     native GetLastCommand       takes nothing                               returns integer
-    // 获取最新指令的数据，在AI脚本初始化完成前发送无效
+    // 获取最新指令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本命令）前发送
     // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
     // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
-    // 将最新指令踢出队列，在AI脚本初始化完成前发送无效
+    // 将最新指令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本命令）前发送
     native PopLastCommand       takes nothing                               returns nothing
     // 获取对战难度
     native MeleeDifficulty      takes nothing                               returns integer
@@ -1223,15 +1223,19 @@ native DebugS               takes string str                            returns 
         constant integer M14                = 14*60
         // 15分钟
         constant integer M15                = 15*60
-    
+        // 难度 简单，可与对战难度划等号
         constant integer EASY               = 1
+        // 难度 中等，可与对战难度划等号
         constant integer NORMAL             = 2
+        // 难度 困难/疯狂，可与对战难度划等号
         constant integer HARD               = 3
-        // 该难度未使用，困难/疯狂难度为HARD
+        // 该难度未使用，困难/疯狂难度为HARD，可与对战难度划等号
         constant integer INSANE             = 4 // not used
-
+        // 对战难度 简单，可与难度划等号
         constant integer MELEE_NEWBIE       = 1
+        // 对战难度 中等，可与难度划等号
         constant integer MELEE_NORMAL       = 2
+        // 对战难度 困难/疯狂，可与难度划等号
         constant integer MELEE_INSANE       = 3
         // 攻击组
         constant integer ATTACK_CAPTAIN     = 1
@@ -1267,8 +1271,9 @@ native DebugS               takes string str                            returns 
         // 该值默认为0，AI不会使用，需要自行赋值，在完成指定的训练/建造/研究后请即使清零，否则AI会一直保持这笔存款
         // 如果需要存木，请自行在 OneBuildLoop 添加
         integer gold_buffer             = 0 // usually for potion money
-        // 难度
+        // AI难度，该变量用于统一对地图难度、战难度和难度，便于书写
         integer difficulty              = NORMAL
+        // 攻击敌人基地延迟（按次计），攻城单位准备完毕后，简单难度需要循环3次后才攻击，中等难度需要循环3次后才攻击，困难/疯狂需要循环0次后才攻击，攻击后置零
         integer exp_seen                = 0
         // 默认人口建筑单位类型
         integer racial_farm             = 'hhou'
