@@ -9231,7 +9231,7 @@ function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 endfunction
 
-// 玩家槽状态是否指定状态
+// 查询玩家槽状态是否指定状态
 function IsPlayerSlotState takes player whichPlayer, playerslotstate whichState returns boolean
     return GetPlayerSlotState(whichPlayer) == whichState
 endfunction
