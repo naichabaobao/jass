@@ -4484,7 +4484,7 @@ native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integ
 // @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
-// 排泄需要使用删除单位组 CreateGroup，而非清空
+// 排泄需要使用删除单位组 DestroyGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
 native BlzGroupGetSize takes group whichGroup returns integer
