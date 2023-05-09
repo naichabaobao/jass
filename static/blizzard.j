@@ -1330,14 +1330,14 @@ endfunction
 
 
 // 取两点之间的角度
-// 两个点仍会保留，如不再使用则需要排泄
+// 两个点仍会保留，如不再使用则请注意排泄
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
 // 取两点之间的距离
-// 两个点仍会保留，如不再使用则需要排泄
+// 两个点仍会保留，如不再使用则请注意排泄
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -1346,7 +1346,7 @@ endfunction
 
 
 // 点向指定方向位移指定距离
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -1367,7 +1367,7 @@ endfunction
 
 
 // 取区域内的随机地点
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function GetRandomLocInRect takes rect whichRect returns location
     return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
 endfunction
@@ -1410,19 +1410,21 @@ endfunction
 
 
 // 点位移
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
 
 
 // 区域位移
+// 会生成区域，请注意排泄
 function OffsetRectBJ takes rect r, real dx, real dy returns rect
     return Rect( GetRectMinX(r) + dx, GetRectMinY(r) + dy, GetRectMaxX(r) + dx, GetRectMaxY(r) + dy )
 endfunction
 
 
 // 将点转换为区域
+// 会生成区域，请注意排泄
 // @param center 中心点位置
 // @param width 宽
 // @param height 高
@@ -1891,7 +1893,8 @@ endfunction
 //
 // 将圆形区域转换为矩形区域
 // 以圆心和为中心，直径为边长创建区域
-// 原有区域仍然保留，如不再使用则需要排泄
+// 原有区域仍然保留，如不再使用则请注意排泄
+// 会生成新区域，请注意排泄
 function GetRectFromCircleBJ takes location center, real radius returns rect
     local real centerX = GetLocationX(center)
     local real centerY = GetLocationY(center)
@@ -2132,6 +2135,7 @@ endfunction
 // Query the current camera bounds.
 //
 // 获取当前镜头范围
+// 会生成区域，请注意排泄
 function GetCurrentCameraBoundsMapRectBJ takes nothing returns rect
     return Rect(GetCameraBoundMinX(), GetCameraBoundMinY(), GetCameraBoundMaxX(), GetCameraBoundMaxY())
 endfunction
@@ -2140,6 +2144,7 @@ endfunction
 // Query the initial camera bounds, as defined at map init.
 //
 // 获取初始游戏时的镜头范围
+// 会生成区域，请注意排泄
 function GetCameraBoundsMapRect takes nothing returns rect
     return bj_mapInitialCameraBounds
 endfunction
@@ -2148,6 +2153,7 @@ endfunction
 // Query the playable map area, as defined at map init.
 //
 // 获取可玩的地图区域
+// 会生成区域，请注意排泄
 function GetPlayableMapRect takes nothing returns rect
     return bj_mapInitialPlayableArea
 endfunction
@@ -2156,6 +2162,7 @@ endfunction
 // Query the entire map area, as defined at map init.
 //
 // 获取全地图可用区域
+// 会生成区域，请注意排泄
 function GetEntireMapRect takes nothing returns rect
     return GetWorldBounds()
 endfunction
@@ -3623,7 +3630,7 @@ endfunction
 
 
 // 物品的位置
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function GetItemLoc takes item whichItem returns location
     return Location(GetItemX(whichItem), GetItemY(whichItem))
 endfunction
@@ -4223,7 +4230,7 @@ endfunction
 
 
 // 创建指定数量的单位（指定面向角度）动作
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlayer, location loc, real face returns group
     call GroupClear(bj_lastCreatedGroup)
     loop
@@ -4237,7 +4244,7 @@ endfunction
 
 
 // 创建指定数量的单位（指定面向角度）
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function CreateNUnitsAtLocFacingLocBJ takes integer count, integer unitId, player whichPlayer, location loc, location lookAt returns group
     return CreateNUnitsAtLoc(count, unitId, whichPlayer, loc, AngleBetweenPoints(loc, lookAt))
 endfunction
@@ -4249,7 +4256,7 @@ function GetLastCreatedGroupEnum takes nothing returns nothing
 endfunction
 
 // 创建单位组并添加选取单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetLastCreatedGroup takes nothing returns group
     set bj_groupLastCreatedDest = CreateGroup()
     call ForGroup(bj_lastCreatedGroup, function GetLastCreatedGroupEnum)
@@ -5151,7 +5158,7 @@ endfunction
 
 
 // 获取可破坏物的位置
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function GetDestructableLoc takes destructable whichDestructable returns location
     return Location(GetDestructableX(whichDestructable), GetDestructableY(whichDestructable))
 endfunction
@@ -5516,7 +5523,7 @@ endfunction
 
 
 // 获取传送门的目的地
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function WaygateGetDestinationLocBJ takes unit waygate returns location
     return Location(WaygateGetDestinationX(waygate), WaygateGetDestinationY(waygate))
 endfunction
@@ -5713,7 +5720,7 @@ endfunction
 
 
 // 选取矩形区域内所有单位（过滤）
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRect(g, r, filter)
@@ -5723,7 +5730,7 @@ endfunction
 
 
 // 选取矩形区域内所有单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsInRectAll takes rect r returns group
     return GetUnitsInRectMatching(r, null)
 endfunction
@@ -5735,7 +5742,7 @@ function GetUnitsInRectOfPlayerFilter takes nothing returns boolean
 endfunction
 
 // 选取玩家在指定矩形区域内单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsInRectOfPlayer takes rect r, player whichPlayer returns group
     local group g = CreateGroup()
     set bj_groupEnumOwningPlayer = whichPlayer
@@ -5745,7 +5752,7 @@ endfunction
 
 
 // 选取玩家在指定圆形区域内单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRangeOfLoc(g, whichLocation, radius, filter)
@@ -5755,7 +5762,7 @@ endfunction
 
 
 // 选取圆形区域内所有单位（指定圆心及半径）
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsInRangeOfLocAll takes real radius, location whichLocation returns group
     return GetUnitsInRangeOfLocMatching(radius, whichLocation, null)
 endfunction
@@ -5768,7 +5775,7 @@ endfunction
 
 
 // 获取指定单位类型的单位组
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsOfTypeIdAll takes integer unitid returns group
     local group   result = CreateGroup()
     local group   g      = CreateGroup()
@@ -5791,7 +5798,7 @@ endfunction
 
 
 // 匹配玩家拥有的单位（过滤）
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsOfPlayer(g, whichPlayer, filter)
@@ -5801,7 +5808,7 @@ endfunction
 
 
 // 玩家拥有的匹配单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerAll takes player whichPlayer returns group
     return GetUnitsOfPlayerMatching(whichPlayer, null)
 endfunction
@@ -5813,7 +5820,7 @@ function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
 endfunction
 
 // 选取玩家的指定类型单位组
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
     set bj_groupEnumTypeId = unitid
@@ -5823,7 +5830,7 @@ endfunction
 
 
 // 获取玩家选择的单位
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 function GetUnitsSelectedAll takes player whichPlayer returns group
     local group g = CreateGroup()
     call SyncSelections()
@@ -5945,7 +5952,7 @@ endfunction
 
 // 获取单位组的随机单位，并添加在新单位组中，返回新单位组
 // @param 指定获取的单位数量
-// 以单位组形式返回，用完需要排泄
+// 会生成单位组，用完请注意排泄
 // GetRandomSubGroup(2, [unit(8),unit(4),unit(2)]) -> [unit(4),unit(2)]
 function GetRandomSubGroup takes integer count, group sourceGroup returns group
     local group g = CreateGroup()
@@ -8922,7 +8929,7 @@ endfunction
 
 
 // <1.24> 从哈希表提取单位组
-// 以单位组形式返回，若仍需使用该单位组，请勿排泄
+// 会生成单位组，若仍需使用该单位组，请勿排泄
 function LoadGroupHandleBJ takes integer key, integer missionKey, hashtable table returns group
     return LoadGroupHandle(table, missionKey, key)
 endfunction
@@ -8936,6 +8943,7 @@ endfunction
 
 
 // <1.24> 从哈希表提取区域(矩形)
+// 若仍需使用该区域，请勿排泄
 function LoadRectHandleBJ takes integer key, integer missionKey, hashtable table returns rect
     return LoadRectHandle(table, missionKey, key)
 endfunction
@@ -9237,14 +9245,14 @@ endfunction
 
 
 // 玩家的初始位置
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 
 // 区域中心
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 endfunction
@@ -9894,7 +9902,7 @@ endfunction
 
 // Returns a location which is (distance) away from (src) in the direction of (targ).
 // 极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function MeleeGetProjectedLoc takes location src, location targ, real distance, real deltaAngle returns location
     local real srcX = GetLocationX(src)
     local real srcY = GetLocationY(src)
@@ -9916,7 +9924,7 @@ endfunction
 
 // 取区域内的点（不影响输入点）
 // 当输入点在区域内时，会返回一个相同坐标的新点，当输入点在区域外时，会返回距离输入点最近的区域边界上的新点
-// 会生成点，需要排泄
+// 会生成点，请注意排泄
 function MeleeGetLocWithinRect takes location src, rect r returns location
     local real withinX = MeleeGetNearestValueWithin(GetLocationX(src), GetRectMinX(r), GetRectMaxX(r))
     local real withinY = MeleeGetNearestValueWithin(GetLocationY(src), GetRectMinY(r), GetRectMaxY(r))
