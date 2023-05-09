@@ -4015,25 +4015,25 @@ function SetItemVisibleBJ takes boolean show, item whichItem returns nothing
 endfunction
 
 
-// 物品是隐藏的
+// 查询物品是否隐藏
 function IsItemHiddenBJ takes item whichItem returns boolean
     return not IsItemVisible(whichItem)
 endfunction
 
 
-// 随机物品-所有类别
+// 获取随机物品（所有类别）
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 随机物品-指定类别
+// 获取随机物品（指定类别）
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
 
 
-// 获取随机=中立建筑物类型
+// 获取随机中立建筑物类型
 function ChooseRandomNPBuildingBJ takes nothing returns integer
     return ChooseRandomNPBuilding()
 endfunction
