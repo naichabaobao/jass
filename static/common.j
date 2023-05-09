@@ -5100,7 +5100,7 @@ native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit,
 // 获取单位状态
 constant native GetEventUnitState takes nothing returns unitstate
 
-// 详细单位的事件
+// 单位的指定事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // EVENT_UNIT_DAMAGED
