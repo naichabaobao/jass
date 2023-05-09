@@ -189,11 +189,11 @@ native DebugS               takes string str                            returns 
     // 建议不要对飞艇类单位发送忽略防守指令，忽略后AI不会自动控制飞艇卸载
     native LoadZepWave          takes integer x, integer y                  returns nothing
     // 自杀式攻击指定玩家，返回false时代表未执行
-    // 理论上是一路打到指定玩家的出生点
+    // 理论上是一路打到指定玩家的开始点
     // 该指令被暴雪用于战役AI
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
     // 自杀式攻击指定玩家，返回false时代表未执行
-    // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家出生点
+    // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家开始点
     // 该指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
     // 攻击组是否正在战斗
