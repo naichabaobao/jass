@@ -106,7 +106,7 @@ type mapvisibility extends handle
 type mapsetting extends handle
 // 地图密度
 type mapdensity extends handle
-// 玩家控制者
+// 玩家控制者类型
 type mapcontrol extends handle
 // 小地图标志
 type minimapicon extends handle
@@ -4413,7 +4413,7 @@ native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playersta
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置玩家种族可选
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
-// 设置玩家控制器
+// 设置玩家控制者类型
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
 // 设置玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
@@ -4429,7 +4429,7 @@ native GetPlayerStartLocation takes player whichPlayer returns integer
 native GetPlayerColor takes player whichPlayer returns playercolor
 // 获取玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
-// 获取玩家控制者
+// 获取玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
 // 获取玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
