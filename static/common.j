@@ -962,11 +962,11 @@ globals
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
 	// 游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	// 玩家插槽状态 没有使用（该位置没有玩家）
+	// 玩家插槽状态 没有真人玩家使用（该位置从没有过真人玩家），如果此时对该玩家启用AI，AI能正常运行，但此处依旧返回该状态
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
-	// 玩家插槽状态 正在游戏
+	// 玩家插槽状态 玩家正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
-	// 玩家插槽状态 已离开游戏
+	// 玩家插槽状态 玩家已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
 	
