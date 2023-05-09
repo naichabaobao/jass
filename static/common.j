@@ -5889,7 +5889,7 @@ constant native GetPlayerTechCount takes player whichPlayer, integer techid, boo
 
 // 设置单位所属玩家
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
-// 暴露玩家位置（出生点）
+// 暴露玩家位置（开始点）
 // 默认用于对战模式胜负判定规则
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
 
