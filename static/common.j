@@ -4563,9 +4563,9 @@ native CreateForce takes nothing returns force
 native DestroyForce takes force whichForce returns nothing
 // 添加玩家到玩家组 [R]
 native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
-// 从单位组移除玩家 [R]
+// 从玩家组移除玩家 [R]
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
-// 玩家是否存在
+// 查询玩家是否在玩家组内
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清除玩家组
 native ForceClear takes force whichForce returns nothing
