@@ -106,7 +106,7 @@ type mapvisibility extends handle
 type mapsetting extends handle
 // 地图密度
 type mapdensity extends handle
-// 玩家控制者类型
+// 玩家控制者
 type mapcontrol extends handle
 // 小地图标志
 type minimapicon extends handle
@@ -4413,7 +4413,7 @@ native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playersta
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置玩家种族可选
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
-// 设置玩家控制者类型
+// 设置玩家控制器
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
 // 设置玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
@@ -4429,7 +4429,7 @@ native GetPlayerStartLocation takes player whichPlayer returns integer
 native GetPlayerColor takes player whichPlayer returns playercolor
 // 获取玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
-// 获取玩家控制者类型
+// 获取玩家控制者
 native GetPlayerController takes player whichPlayer returns mapcontrol
 // 获取玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
@@ -4484,7 +4484,7 @@ native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integ
 // @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
-// 排泄需要使用删除单位组 DestroyGroup，而非清空
+// 排泄需要使用删除单位组 CreateGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
 native BlzGroupGetSize takes group whichGroup returns integer
@@ -4548,7 +4548,7 @@ native GroupTargetOrderById takes group whichGroup, integer order, widget target
 // as it would involve enumerating all the cells that are covered by a particularregion
 // a better implementation would be a trigger that adds relevant units as they enter
 // and removes them if they leave...
-// 选取指定单位组做多个动作
+// 选取指定单位组做单个动作
 native ForGroup takes group whichGroup, code callback returns nothing
 // 获取单位组中第一个单位
 // 在单位组内单位未发生变化时（添加或移除单位），单位的排序不会发生变化，即每次获取的都是同一个单位
@@ -4561,9 +4561,9 @@ native FirstOfGroup takes group whichGroup returns unit
 native CreateForce takes nothing returns force
 // 删除玩家组 [R]
 native DestroyForce takes force whichForce returns nothing
-// 添加玩家 [R]
+// 添加玩家到玩家组 [R]
 native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
-// 移除玩家 [R]
+// 从单位组移除玩家 [R]
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 玩家是否存在
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
@@ -4574,11 +4574,11 @@ native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
 // 在指定的玩家组中匹配玩家（指定匹配的数量）
 // @param countLimit玩家数量
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
-// 在指定的玩家组中匹配联盟玩家
+// 在指定的玩家组中匹配盟友
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 在指定的玩家组中匹配敌对玩家
+// 在指定的玩家组中匹配敌人
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 选取所有玩家在玩家组做动作(单个动作)
+// 选取指定玩家组（的所有玩家）做动作(单个动作)
 native ForForce takes force whichForce, code callback returns nothing
 
 
