@@ -7768,19 +7768,19 @@ native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
 // 设置可破坏物皮肤
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
-// 创建物品皮肤
+// 创建物品(指定皮肤)
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
-// 创建单位皮肤
+// 创建单位(指定皮肤)
 native BlzCreateUnitWithSkin takes player id, integer unitid, real x, real y, real face, integer skinId returns unit
-// 创建可破坏物皮肤（不包含Z轴）
+// 创建可破坏物(指定皮肤)（不包含Z轴）
 native BlzCreateDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物皮肤（包含Z轴）
+// 创建可破坏物(指定皮肤)（包含Z轴）
 native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（毁坏的）皮肤（不包含Z轴）
+// 创建可破坏物（毁坏的）(指定皮肤)（不包含Z轴）
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物（毁坏的）皮肤（包含Z轴）
+// 创建可破坏物（毁坏的）(指定皮肤)（包含Z轴）
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 获取指定玩家的基地数量（按基地单位的数量统计）
+// 获取指定玩家的主城数量（按主城单位的数量统计，即三个本的主城都算）
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
 
 //region 1.33
