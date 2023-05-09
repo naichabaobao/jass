@@ -5668,9 +5668,9 @@ native UnitWakeUp takes unit whichUnit returns nothing
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
 // 设置指定单位的忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-// 读取指定单位忽略报警的开关状态
+// 查询指定单位忽略报警的开关状态
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
-// 重设单位技能冷却时间 Cooldown
+// 重设指定单位的（所有）技能冷却时间 Cooldown
 native UnitResetCooldown takes unit whichUnit returns nothing
 // 设置指定建筑建造进度（百分比）
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
@@ -5679,6 +5679,8 @@ native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage re
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
 // 启用/禁用 单位的小地图图标
+// 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能知道地图中有没有商店泉水之类的建筑
+// 需要完全隐藏应该还是要改物编的不显示中立建筑图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
 // 伤害区域 [R]
@@ -5761,22 +5763,34 @@ native WaygateActivate takes unit waygate, boolean activate returns nothing
 // 获取传送门激活状态
 native WaygateIsActive takes unit waygate returns boolean
 
-// 增加 物品-类型 (应用于所有商店)
+// 增加商店出售的物品 (应用于所有商店)
+// @param itemId 物品ID
+// @param currentStock 设置后立即拥有的库存数
+// @param stockMax 自动刷新库存后最大的库存数
 native AddItemToAllStock takes integer itemId, integer currentStock, integer stockMax returns nothing
-// 增加 物品-类型 (应用于指定商店)
+// 增加商店出售的物品 (应用于指定商店)
+// @param itemId 物品ID
+// @param currentStock 设置后立即拥有的库存数
+// @param stockMax 自动刷新库存后最大的库存数
 native AddItemToStock takes unit whichUnit, integer itemId, integer currentStock, integer stockMax returns nothing
-// 增加 单位-类型 (应用于所有商店)
+// 增加商店出售的单位 (应用于所有商店)
+// @param unitId 单位ID
+// @param currentStock 设置后立即拥有的库存数
+// @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToAllStock takes integer unitId, integer currentStock, integer stockMax returns nothing
-// 增加 单位-类型 (应用于指定商店)
+// 增加商店出售的单位 (应用于指定商店)
+// @param unitId 单位ID
+// @param currentStock 设置后立即拥有的库存数
+// @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
 
-// 删除 物品-类型 (应用于所有商店)
+// 删除商店出售的物品 (应用于所有商店)
 native RemoveItemFromAllStock takes integer itemId returns nothing
-// 删除 物品-类型 (应用于商店)
+// 删除商店出售的物品 (应用于指定商店)
 native RemoveItemFromStock takes unit whichUnit, integer itemId returns nothing
-// 删除 单位-类型 (应用于所有商店)
+// 删除商店出售的单位 (应用于所有商店)
 native RemoveUnitFromAllStock takes integer unitId returns nothing
-// 删除 单位-类型 (应用于商店)
+// 删除商店出售的单位 (应用于指定商店)
 native RemoveUnitFromStock takes unit whichUnit, integer unitId returns nothing
 
 // 设置物品库存上限 (应用于所有商店)
