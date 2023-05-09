@@ -869,7 +869,7 @@ globals
     sound              bj_defeatDialogSound        = null
 
     // Marketplace vars
-    // 市场相关变量 任意物品被购买触发器
+    // 市场相关变量 任意单位/物品被出售后扣除库存触发器
     trigger            bj_stockItemPurchased       = null
     // 市场相关变量 物品更新计时器
     timer              bj_stockUpdateTimer         = null
@@ -11734,7 +11734,7 @@ function StartStockUpdates takes nothing returns nothing
     call TimerStart(bj_stockUpdateTimer, bj_STOCK_RESTOCK_INTERVAL, true, function PerformStockUpdates)
 endfunction
 
-// 删除购买物品（游戏化初始化时初始化商店库存）
+// 扣除被购买物品的库存（出售单位事件发生后）
 function RemovePurchasedItem takes nothing returns nothing
     call RemoveItemFromStock(GetSellingUnit(), GetItemTypeId(GetSoldItem()))
 endfunction
