@@ -4204,7 +4204,7 @@ function GetKillingUnitBJ takes nothing returns unit
 endfunction
 
 
-// 创建单位(指定点)
+// 创建单位(指定点及面向角度)
 function CreateUnitAtLocSaveLast takes player id, integer unitid, location loc, real face returns unit
     if (unitid == 'ugol') then
         set bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
@@ -4222,7 +4222,8 @@ function GetLastCreatedUnit takes nothing returns unit
 endfunction
 
 
-// 创建单位（指定面向角度）
+// 创建指定数量的单位（指定面向角度）动作
+// 以单位组形式返回，用完需要排泄
 function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlayer, location loc, real face returns group
     call GroupClear(bj_lastCreatedGroup)
     loop
@@ -4235,7 +4236,8 @@ function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlay
 endfunction
 
 
-// 创建单位（指定面向点）
+// 创建指定数量的单位（指定面向角度）
+// 以单位组形式返回，用完需要排泄
 function CreateNUnitsAtLocFacingLocBJ takes integer count, integer unitId, player whichPlayer, location loc, location lookAt returns group
     return CreateNUnitsAtLoc(count, unitId, whichPlayer, loc, AngleBetweenPoints(loc, lookAt))
 endfunction
@@ -4247,6 +4249,7 @@ function GetLastCreatedGroupEnum takes nothing returns nothing
 endfunction
 
 // 创建单位组并添加选取单位
+// 以单位组形式返回，用完需要排泄
 function GetLastCreatedGroup takes nothing returns group
     set bj_groupLastCreatedDest = CreateGroup()
     call ForGroup(bj_lastCreatedGroup, function GetLastCreatedGroupEnum)
@@ -5710,6 +5713,7 @@ endfunction
 
 
 // 选取矩形区域内所有单位（过滤）
+// 以单位组形式返回，用完需要排泄
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRect(g, r, filter)
@@ -5719,6 +5723,7 @@ endfunction
 
 
 // 选取矩形区域内所有单位
+// 以单位组形式返回，用完需要排泄
 function GetUnitsInRectAll takes rect r returns group
     return GetUnitsInRectMatching(r, null)
 endfunction
@@ -5730,6 +5735,7 @@ function GetUnitsInRectOfPlayerFilter takes nothing returns boolean
 endfunction
 
 // 选取玩家在指定矩形区域内单位
+// 以单位组形式返回，用完需要排泄
 function GetUnitsInRectOfPlayer takes rect r, player whichPlayer returns group
     local group g = CreateGroup()
     set bj_groupEnumOwningPlayer = whichPlayer
@@ -5739,6 +5745,7 @@ endfunction
 
 
 // 选取玩家在指定圆形区域内单位
+// 以单位组形式返回，用完需要排泄
 function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsInRangeOfLoc(g, whichLocation, radius, filter)
@@ -5748,6 +5755,7 @@ endfunction
 
 
 // 选取圆形区域内所有单位（指定圆心及半径）
+// 以单位组形式返回，用完需要排泄
 function GetUnitsInRangeOfLocAll takes real radius, location whichLocation returns group
     return GetUnitsInRangeOfLocMatching(radius, whichLocation, null)
 endfunction
@@ -5759,7 +5767,8 @@ function GetUnitsOfTypeIdAllFilter takes nothing returns boolean
 endfunction
 
 
-// 获取指定类型的单位组
+// 获取指定单位类型的单位组
+// 以单位组形式返回，用完需要排泄
 function GetUnitsOfTypeIdAll takes integer unitid returns group
     local group   result = CreateGroup()
     local group   g      = CreateGroup()
@@ -5782,6 +5791,7 @@ endfunction
 
 
 // 匹配玩家拥有的单位（过滤）
+// 以单位组形式返回，用完需要排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
     call GroupEnumUnitsOfPlayer(g, whichPlayer, filter)
@@ -5791,6 +5801,7 @@ endfunction
 
 
 // 玩家拥有的匹配单位
+// 以单位组形式返回，用完需要排泄
 function GetUnitsOfPlayerAll takes player whichPlayer returns group
     return GetUnitsOfPlayerMatching(whichPlayer, null)
 endfunction
@@ -5802,6 +5813,7 @@ function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
 endfunction
 
 // 选取玩家的指定类型单位组
+// 以单位组形式返回，用完需要排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
     set bj_groupEnumTypeId = unitid
@@ -5810,7 +5822,8 @@ function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid retu
 endfunction
 
 
-// 选择的单位
+// 获取玩家选择的单位
+// 以单位组形式返回，用完需要排泄
 function GetUnitsSelectedAll takes player whichPlayer returns group
     local group g = CreateGroup()
     call SyncSelections()
@@ -5819,7 +5832,8 @@ function GetUnitsSelectedAll takes player whichPlayer returns group
 endfunction
 
 
-// 将玩家转换为玩家组
+// 将玩家添加到玩家组
+// 以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -5833,7 +5847,7 @@ function GetPlayersAll takes nothing returns force
 endfunction
 
 
-// 所有某种控制的玩家
+// 所有某种控制类型的玩家
 function GetPlayersByMapControl takes mapcontrol whichControl returns force
     local force f = CreateForce()
     local integer playerIndex
@@ -5854,7 +5868,8 @@ function GetPlayersByMapControl takes mapcontrol whichControl returns force
 endfunction
 
 
-// 获取玩家联盟的玩家组
+// 获取玩家的盟友
+// 以玩家组形式
 function GetPlayersAllies takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceEnumAllies(f, whichPlayer, null)
@@ -5862,7 +5877,8 @@ function GetPlayersAllies takes player whichPlayer returns force
 endfunction
 
 
-// 获取玩家敌对的玩家组
+// 获取玩家的敌人
+// 以玩家组形式返回
 function GetPlayersEnemies takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceEnumEnemies(f, whichPlayer, null)
@@ -5929,6 +5945,7 @@ endfunction
 
 // 获取单位组的随机单位，并添加在新单位组中，返回新单位组
 // @param 指定获取的单位数量
+// 以单位组形式返回，用完需要排泄
 // GetRandomSubGroup(2, [unit(8),unit(4),unit(2)]) -> [unit(4),unit(2)]
 function GetRandomSubGroup takes integer count, group sourceGroup returns group
     local group g = CreateGroup()
@@ -8905,6 +8922,7 @@ endfunction
 
 
 // <1.24> 从哈希表提取单位组
+// 以单位组形式返回，若仍需使用该单位组，请勿排泄
 function LoadGroupHandleBJ takes integer key, integer missionKey, hashtable table returns group
     return LoadGroupHandle(table, missionKey, key)
 endfunction
