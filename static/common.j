@@ -108,7 +108,7 @@ type mapsetting extends handle
 type mapdensity extends handle
 // 玩家控制者
 type mapcontrol extends handle
-// 小地图标志
+// 小地图特殊图标
 type minimapicon extends handle
 // 玩家槽状态
 type playerslotstate extends handle
