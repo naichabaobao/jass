@@ -616,7 +616,7 @@ globals
 	constant damagetype DAMAGE_TYPE_DIVINE = ConvertDamageType(13)
 	// 伤害类型 魔法
 	constant damagetype DAMAGE_TYPE_MAGIC = ConvertDamageType(14)
-	// 伤害类型 声音
+	// 伤害类型 音速
 	constant damagetype DAMAGE_TYPE_SONIC = ConvertDamageType(15)
 	// 伤害类型 酸性
 	constant damagetype DAMAGE_TYPE_ACID = ConvertDamageType(16)
@@ -869,7 +869,7 @@ globals
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
-	// 游戏类型 - 自由竞赛
+	// 游戏类型 - 自由竞赛/混战
 	constant gametype GAME_TYPE_FFA = ConvertGameType(2)
 	// 游戏类型 - 使用地图设置
 	constant gametype GAME_TYPE_USE_MAP_SETTINGS = ConvertGameType(4)
