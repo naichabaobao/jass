@@ -581,9 +581,9 @@ globals
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
 	// 游戏版本 冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
-	// 攻击类型 普通
+	// 攻击类型 法术
 	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
-	// 攻击类型 近战
+	// 攻击类型 普通
 	constant attacktype ATTACK_TYPE_MELEE = ConvertAttackType(1)
 	// 攻击类型 穿刺
 	constant attacktype ATTACK_TYPE_PIERCE = ConvertAttackType(2)
