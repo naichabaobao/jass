@@ -52,7 +52,7 @@ const map = new Map<string,string>([
   ["dialogevent", "对话框事件"],
   ["unittype", "单位类型"],
   ["gamespeed", "游戏速度"],
-  ["gamedifficulty", "游戏难度"],
+  ["gamedifficulty", "游戏难度（用于战役地图）"],
   ["gametype", "游戏类型"],
   ["mapflag", "地图参数"],
   ["mapvisibility", "游戏可见性"],
