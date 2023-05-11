@@ -158,17 +158,17 @@ globals
     // Camera settings
     // 镜头最小截断距离（远景裁剪），默认100
     constant integer   bj_CAMERA_MIN_FARZ               = 100
-    // 镜头默认距离（1650）
+    // 镜头默认距离，默认1650
     constant integer   bj_CAMERA_DEFAULT_DISTANCE       = 1650
-    // 镜头默认截断距离（远景裁剪）（5000）
+    // 镜头默认截断距离（远景裁剪），默认5000
     constant integer   bj_CAMERA_DEFAULT_FARZ           = 5000
-    // 镜头默认水平/攻击角度（X 轴旋转角度）（304）
+    // 镜头默认水平/攻击角度（X 轴旋转角度），默认304
     constant integer   bj_CAMERA_DEFAULT_AOA            = 304
-    // 镜头默认视场角（70）
+    // 镜头默认视场角，默认70
     constant integer   bj_CAMERA_DEFAULT_FOV            = 70
-    // 镜头默认滚动值（Y 轴旋转距离）（0）
+    // 镜头默认滚动值（Y 轴旋转距离），默认0
     constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
-    // 镜头默认旋转值（Z 轴旋转角度）（90）
+    // 镜头默认旋转值（Z 轴旋转角度），默认90
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
     // 可营救延时，怀疑是中立可营救单位在被可营救后变更队伍的延迟，默认2.00 Rescue
@@ -590,11 +590,11 @@ globals
     constant integer   bj_QUESTMESSAGE_WARNING       = 12
 
     // Leaderboard sorting methods
-    // 排行榜类型 - 数值排序
+    // 排行榜排序类型 - 按分值排序
     constant integer   bj_SORTTYPE_SORTBYVALUE     = 0
-    // 排行榜类型 - 玩家排序
+    // 排行榜排序类型 - 按玩家排序
     constant integer   bj_SORTTYPE_SORTBYPLAYER    = 1
-    // 排行榜类型 - 标签排序
+    // 排行榜排序类型 - 按文本排序
     constant integer   bj_SORTTYPE_SORTBYLABEL     = 2
 
     // Cinematic fade filter methods
@@ -722,23 +722,23 @@ globals
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
-    // 小地图图标样式 主要任务标识
+    // 小地图特殊图标样式 主要任务标识
     constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
-    // 小地图图标样式 主要任务标识（绿色）
+    // 小地图特殊图标样式 主要任务标识（绿色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
-    // 小地图图标样式 主要任务标识（红色）
+    // 小地图特殊图标样式 主要任务标识（红色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
-    // 小地图图标样式 任务奖励标识
+    // 小地图特殊图标样式 任务奖励标识
     constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
-    // 小地图图标样式 任务移交标识
+    // 小地图特殊图标样式 任务移交标识
     constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
-    // 小地图图标样式 任务BOSS标识
+    // 小地图特殊图标样式 任务BOSS标识
 	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
-    // 小地图图标样式 友方占领标识
+    // 小地图特殊图标样式 友方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
-    // 小地图图标样式 中立标识（无人占领）
+    // 小地图特殊图标样式 中立标识（无人占领）
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
-    // 小地图图标样式 敌方占领标识
+    // 小地图特殊图标样式 敌方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
@@ -1145,7 +1145,7 @@ globals
     image              bj_lastCreatedImage         = null
     // 最后创建的地面纹理变化
     ubersplat          bj_lastCreatedUbersplat     = null
-    // 最后创建的小地图图标
+    // 最后创建的小地图特殊图标
     minimapicon        bj_lastCreatedMinimapIcon   = null
     // 最后创建的按钮特效
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
@@ -2595,7 +2595,7 @@ function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
 endfunction
 
 
-// 可破坏物在矩形区域内死亡动作
+// 可破坏物在矩形区域内死亡触发器动作
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -2973,30 +2973,30 @@ function GetLastCreatedUbersplat takes nothing returns ubersplat
     return bj_lastCreatedUbersplat
 endfunction
 
-// 获取最后创建的小地图图标
+// 获取最后创建的小地图特殊图标
 function GetLastCreatedMinimapIcon takes nothing returns minimapicon
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图图标（指定单位）
+// 创建小地图特殊图标（指定单位）
 function CreateMinimapIconOnUnitBJ takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconOnUnit(whichUnit, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图图标（指定点）
+// 创建小地图特殊图标（指定点）
 function CreateMinimapIconAtLocBJ takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconAtLoc(where, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图图标（指定坐标）
+// 创建小地图特殊图标（指定坐标）
 function CreateMinimapIconBJ takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIcon(x, y, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图图标（指定单位和图标样式）
+// 创建小地图特殊图标（指定单位和图标样式）
 function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns nothing
 	local integer	red
 	local integer 	green
@@ -3062,7 +3062,7 @@ function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns n
 endfunction
 
 
-// 创建小地图图标（指定点和图标样式）
+// 创建小地图特殊图标（指定点和图标样式）
 function CampaignMinimapIconLocBJ takes location where, integer style returns nothing
 	local integer	red
 	local integer 	green
@@ -3386,7 +3386,7 @@ function VolumeGroupResetBJ takes nothing returns nothing
 endfunction
 
 
-// 获取声音是否播放中
+// 判断声音是否已在加载/播放
 function GetSoundIsPlayingBJ takes sound soundHandle returns boolean
     return GetSoundIsLoading(soundHandle) or GetSoundIsPlaying(soundHandle)
 endfunction
@@ -3438,7 +3438,7 @@ function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle retur
 endfunction
 
 
-// 设置玩家声音组音量
+// 设置玩家音量组音量
 function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup vgroup, real scale returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         call VolumeGroupSetVolume(vgroup, scale)
@@ -3446,13 +3446,13 @@ function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup v
 endfunction
 
 
-// 打开/关闭 日出/日落 的声音
+// 启用/禁用 黎明/黄昏 声音
 function EnableDawnDusk takes boolean flag returns nothing
     set bj_useDawnDuskSounds = flag
 endfunction
 
 
-// 是否启用了黎明/黄昏
+// 是否启用了 黎明/黄昏 声音
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -3756,7 +3756,7 @@ function GetLastRemovedItem takes nothing returns item
 endfunction
 
 
-// 移动物品到点 (立刻)
+// 移动物品到点 (立即)
 function SetItemPositionLoc takes item whichItem, location loc returns nothing
     call SetItemPosition(whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -4229,7 +4229,7 @@ function GetLastCreatedUnit takes nothing returns unit
 endfunction
 
 
-// 创建指定数量的单位（指定面向角度）动作
+// 创建指定数量的单位（指定面向角度）触发器动作
 // 会生成单位组，用完请注意排泄
 function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlayer, location loc, real face returns group
     call GroupClear(bj_lastCreatedGroup)
@@ -4726,7 +4726,7 @@ function UnitSetCanSleepBJ takes unit whichUnit, boolean canSleep returns nothin
 endfunction
 
 
-// 单位晚上是否睡觉
+//  查询单位晚上是否睡觉
 function UnitCanSleepBJ takes unit whichUnit returns boolean
     return UnitCanSleep(whichUnit)
 endfunction
@@ -4738,17 +4738,17 @@ function UnitWakeUpBJ takes unit whichUnit returns nothing
 endfunction
 
 
-// 单位是否正在睡觉
+// 查询单位是否正在睡觉
 function UnitIsSleepingBJ takes unit whichUnit returns boolean
     return UnitIsSleeping(whichUnit)
 endfunction
 
-// 唤醒单位
+// 唤醒单位（指定玩家）触发器动作
 function WakePlayerUnitsEnum takes nothing returns nothing
     call UnitWakeUp(GetEnumUnit())
 endfunction
 
-// 唤醒指定玩家的单位
+// 唤醒单位（指定玩家）
 function WakePlayerUnits takes player whichPlayer returns nothing
     local group g = CreateGroup()
     call GroupEnumUnitsOfPlayer(g, whichPlayer, null)
@@ -4845,7 +4845,7 @@ function UnitShareVisionBJ takes boolean share, unit whichUnit, player whichPlay
 endfunction
 
 
-// 删除 持续状态（BUFF）
+// 删除 魔法效果（BUFF）
 function UnitRemoveBuffsBJ takes integer buffType, unit whichUnit returns nothing
     if (buffType == bj_REMOVEBUFFS_POSITIVE) then
         call UnitRemoveBuffs(whichUnit, true, false)
@@ -4895,13 +4895,13 @@ function UnitAddAbilityBJ takes integer abilityId, unit whichUnit returns boolea
 endfunction
 
 
-// 移除类别
+// 删除单位类别
 function UnitRemoveTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitRemoveType(whichUnit, whichType)
 endfunction
 
 
-// 添加类别
+// 添加单位类别
 function UnitAddTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitAddType(whichUnit, whichType)
 endfunction
@@ -4937,19 +4937,19 @@ function GetLoadedUnitBJ takes nothing returns unit
 endfunction
 
 
-// 单位是否已被装载
+// 查询单位是否已被传送
 function IsUnitInTransportBJ takes unit whichUnit, unit whichTransport returns boolean
     return IsUnitInTransport(whichUnit, whichTransport)
 endfunction
 
 
-// 单位是否正被传送
+// 查询单位是否正被传送
 function IsUnitLoadedBJ takes unit whichUnit returns boolean
     return IsUnitLoaded(whichUnit)
 endfunction
 
 
-// 单位是否隐形
+// 查询单位是否镜像
 function IsUnitIllusionBJ takes unit whichUnit returns boolean
     return IsUnitIllusion(whichUnit)
 endfunction
@@ -5055,39 +5055,39 @@ function GetLastReplacedUnitBJ takes nothing returns unit
 endfunction
 
 
-// 移动单位并改变面对角度 (立刻)
+// 移动单位并改变面对角度 (立即)
 function SetUnitPositionLocFacingBJ takes unit whichUnit, location loc, real facing returns nothing
     call SetUnitPositionLoc(whichUnit, loc)
     call SetUnitFacing(whichUnit, facing)
 endfunction
 
 
-// 移动单位并改变面对点 (立刻)
+// 移动单位并改变面对点 (立即)
 function SetUnitPositionLocFacingLocBJ takes unit whichUnit, location loc, location lookAt returns nothing
     call SetUnitPositionLoc(whichUnit, loc)
     call SetUnitFacing(whichUnit, AngleBetweenPoints(loc, lookAt))
 endfunction
 
 
-// 增加 物品-类型 (指定商店)
+// 增加 商店出售的 物品类型 (指定商店)
 function AddItemToStockBJ takes integer itemId, unit whichUnit, integer currentStock, integer stockMax returns nothing
     call AddItemToStock(whichUnit, itemId, currentStock, stockMax)
 endfunction
 
 
-// 增加 单位-类型 (指定商店)
+// 增加 商店出售的 单位类型 (指定商店)
 function AddUnitToStockBJ takes integer unitId, unit whichUnit, integer currentStock, integer stockMax returns nothing
     call AddUnitToStock(whichUnit, unitId, currentStock, stockMax)
 endfunction
 
 
-// 删除 物品-类型 (指定商店)
+// 删除 商店出售的 物品类型 (指定商店)
 function RemoveItemFromStockBJ takes integer itemId, unit whichUnit returns nothing
     call RemoveItemFromStock(whichUnit, itemId)
 endfunction
 
 
-// 删除 单位-类型 (指定商店)
+// 删除 商店出售的 单位类型 (指定商店)
 function RemoveUnitFromStockBJ takes integer unitId, unit whichUnit returns nothing
     call RemoveUnitFromStock(whichUnit, unitId)
 endfunction
@@ -5151,7 +5151,7 @@ function SetDestructableInvulnerableBJ takes destructable d, boolean flag return
 endfunction
 
 
-// 可破坏物是否无敌
+// 查询可破坏物是否无敌
 function IsDestructableInvulnerableBJ takes destructable d returns boolean
     return IsDestructableInvulnerable(d)
 endfunction
@@ -5181,13 +5181,13 @@ function EnumDestructablesInCircleBJFilter takes nothing returns boolean
 endfunction
 
 
-// 可破坏物是否死亡
+// 查询可破坏物是否死亡
 function IsDestructableDeadBJ takes destructable d returns boolean
     return GetDestructableLife(d) <= 0
 endfunction
 
 
-// 可破坏物是否存活
+// 查询可破坏物是否存活
 function IsDestructableAliveBJ takes destructable d returns boolean
     return not IsDestructableDeadBJ(d)
 endfunction
@@ -5239,19 +5239,19 @@ function EnumDestructablesInCircleBJ takes real radius, location loc, code actio
 endfunction
 
 
-// 设置 可破坏物 生命 (百分比)
+// 设置 可破坏物 生命值 (百分比)
 function SetDestructableLifePercentBJ takes destructable d, real percent returns nothing
     call SetDestructableLife(d, GetDestructableMaxLife(d) * percent * 0.01)
 endfunction
 
 
-// 设置 可破坏物 最大生命
+// 设置 可破坏物 最大生命值
 function SetDestructableMaxLifeBJ takes destructable d, real max returns nothing
     call SetDestructableMaxLife(d, max)
 endfunction
 
 
-// 打开/关闭/破坏门
+// 打开/关闭/破坏 门
 function ModifyGateBJ takes integer gateOperation, destructable d returns nothing
     if (gateOperation == bj_GATEOPERATION_CLOSE) then
         if (GetDestructableLife(d) <= 0) then
@@ -5388,7 +5388,7 @@ function NearbyElevatorExistsEnum takes nothing returns nothing
     endif
 endfunction
 
-// 附近是否存在升降机
+// 判断附近是否存在升降机
 function NearbyElevatorExists takes real x, real y returns boolean
     local real findThreshold = 32
     local rect r
@@ -5510,7 +5510,7 @@ function WaygateActivateBJ takes boolean activate, unit waygate returns nothing
 endfunction
 
 
-// 查询传送门激活状态
+// 获取传送门激活状态
 function WaygateIsActiveBJ takes unit waygate returns boolean
     return WaygateIsActive(waygate)
 endfunction
@@ -7065,7 +7065,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 设置排行榜高度
+// 设置排行榜行数
 function LeaderboardResizeBJ takes leaderboard lb returns nothing
     local integer size = LeaderboardGetItemCount(lb)
 
@@ -7076,56 +7076,60 @@ function LeaderboardResizeBJ takes leaderboard lb returns nothing
 endfunction
 
 
-// 设置排行榜中玩家的 数值
+// 设置排行榜 玩家分值
 function LeaderboardSetPlayerItemValueBJ takes player whichPlayer, leaderboard lb, integer val returns nothing
     call LeaderboardSetItemValue(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 endfunction
 
 
-// 设置排行榜中玩家 标签
+// 设置排行榜 玩家名字
 function LeaderboardSetPlayerItemLabelBJ takes player whichPlayer, leaderboard lb, string val returns nothing
     call LeaderboardSetItemLabel(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 endfunction
 
 
-// 设置排行榜中玩家的 风格
+// 设置排行榜 玩家的显示样式
 function LeaderboardSetPlayerItemStyleBJ takes player whichPlayer, leaderboard lb, boolean showLabel, boolean showValue, boolean showIcon returns nothing
     call LeaderboardSetItemStyle(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), showLabel, showValue, showIcon)
 endfunction
 
 
-// 设置排行榜中玩家的 标签颜色
+// 设置排行榜 玩家名字颜色
 function LeaderboardSetPlayerItemLabelColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetItemLabelColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 设置排行榜中玩家的 数值颜色
+// 设置排行榜 玩家分值颜色
 function LeaderboardSetPlayerItemValueColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetItemValueColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 设置排行榜 标签颜色
+// 排行榜 设置文字颜色
 function LeaderboardSetLabelColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetLabelColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 设置排行榜 数值颜色
+// 排行榜 设置分值颜色
 function LeaderboardSetValueColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetValueColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 设置排行榜标题
+// 排行榜 设置标题及行数
 function LeaderboardSetLabelBJ takes leaderboard lb, string label returns nothing
     call LeaderboardSetLabel(lb, label)
     call LeaderboardResizeBJ(lb)
 endfunction
 
 
-// 设置排行榜显示样式
+// 排行榜 设置显示样式
+// @param showLabel是否显示文字
+// @param showNames是否显示标题
+// @param showValues是否显示分数
+// @param showIcons是否显示图标
 function LeaderboardSetStyleBJ takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
     call LeaderboardSetStyle(lb, showLabel, showNames, showValues, showIcons)
 endfunction
@@ -7136,12 +7140,12 @@ function LeaderboardGetItemCountBJ takes leaderboard lb returns integer
 endfunction
 
 
-// 排行榜包含玩家
+// 排行榜 查询玩家是否上榜
 function LeaderboardHasPlayerItemBJ takes leaderboard lb, player whichPlayer returns boolean
     return LeaderboardHasPlayerItem(lb, whichPlayer)
 endfunction
 
-// 设置玩家组使用排行榜
+// 排行榜 设置玩家组上榜
 function ForceSetLeaderboardBJ takes leaderboard lb, force toForce returns nothing
     local integer index
     local player  indexPlayer
@@ -7181,6 +7185,9 @@ endfunction
 
 
 // 在排行榜中增加玩家
+// @param lb指定玩家在榜上的排名（行数）
+// @param label指定玩家在榜上的名字
+// @param value指定玩家在榜上的分数
 function LeaderboardAddItemBJ takes player whichPlayer, leaderboard lb, string label, integer value returns nothing
     if (LeaderboardHasPlayerItem(lb, whichPlayer)) then
         call LeaderboardRemovePlayerItem(lb, whichPlayer)
@@ -7198,7 +7205,7 @@ function LeaderboardRemovePlayerItemBJ takes player whichPlayer, leaderboard lb 
 endfunction
 
 
-// 排行榜分类
+// 设置排行榜排序类型
 function LeaderboardSortItemsBJ takes leaderboard lb, integer sortType, boolean ascending returns nothing
     if (sortType == bj_SORTTYPE_SORTBYVALUE) then
         call LeaderboardSortItemsByValue(lb, ascending)
@@ -8612,7 +8619,7 @@ function SaveTriggerConditionHandleBJ takes triggercondition whichTriggerconditi
 endfunction
 
 
-// <1.24> 保存触发动作
+// <1.24> 保存触发器动作
 function SaveTriggerActionHandleBJ takes triggeraction whichTriggeraction, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
 endfunction
@@ -8912,7 +8919,7 @@ function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, has
 endfunction
 
 
-// <1.24> 从哈希表提取触发动作
+// <1.24> 从哈希表提取触发器动作
 function LoadTriggerActionHandleBJ takes integer key, integer missionKey, hashtable table returns triggeraction
     return LoadTriggerActionHandle(table, missionKey, key)
 endfunction
@@ -9088,7 +9095,7 @@ function LoadHashtableHandleBJ takes integer key, integer missionKey, hashtable 
 endfunction
 
 
-// 读取单位 (有角度)
+// 读取单位 (指定角度)
 function RestoreUnitLocFacingAngleBJ takes string key, string missionKey, gamecache cache, player forWhichPlayer, location loc, real facing returns unit
     //call SyncStoredUnit(cache, missionKey, key)
     set bj_lastLoadedUnit = RestoreUnit(cache, missionKey, key, forWhichPlayer, GetLocationX(loc), GetLocationY(loc), facing)
@@ -9096,7 +9103,7 @@ function RestoreUnitLocFacingAngleBJ takes string key, string missionKey, gameca
 endfunction
 
 
-// 读取单位 (有位置方向)
+// 读取单位 (指定点偏移角度)
 function RestoreUnitLocFacingPointBJ takes string key, string missionKey, gamecache cache, player forWhichPlayer, location loc, location lookAt returns unit
     //call SyncStoredUnit(cache, missionKey, key)
     return RestoreUnitLocFacingAngleBJ(key, missionKey, cache, forWhichPlayer, loc, AngleBetweenPoints(loc, lookAt))
@@ -9517,19 +9524,19 @@ endfunction
 
 // Rally point setting
 //
-// 设置 聚集点 在点
+// 设置 聚集点（指定点）
 function SetUnitRallyPoint takes unit whichUnit, location targPos returns nothing
     call IssuePointOrderLocBJ(whichUnit, "setrally", targPos)
 endfunction
 
 
-// 设置 聚集点 在单位
+// 设置 聚集点（指定单位）
 function SetUnitRallyUnit takes unit whichUnit, unit targUnit returns nothing
     call IssueTargetOrder(whichUnit, "setrally", targUnit)
 endfunction
 
 
-// 设置 聚集点 在可破坏物
+// 设置 聚集点（指定可破坏物）
 function SetUnitRallyDestructable takes unit whichUnit, destructable targDest returns nothing
     call IssueTargetOrder(whichUnit, "setrally", targDest)
 endfunction
@@ -9570,7 +9577,7 @@ endfunction
 //***************************************************************************
 
 
-// 对用对战的时间设置
+// 设置对战的时间
 function MeleeStartingVisibility takes nothing returns nothing
     // Start by setting the ToD.
     call SetFloatGameState(GAME_STATE_TIME_OF_DAY, bj_MELEE_STARTING_TOD)
@@ -10015,8 +10022,7 @@ endfunction
 // Starting Units for Orc Players
 //   - 1 Great Hall, placed at start location
 //   - 5 Peons, placed between start location and nearest gold mine
-// 创建初始单位 - 兽族
-// 创建点 - 玩家开始点
+// 在玩家开始点创建初始单位 - 兽族
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10089,8 +10095,7 @@ endfunction
 //   - 3 Acolytes, placed between start location and nearest gold mine
 //   - 1 Ghoul, placed between start location and nearest gold mine
 //   - Blight, centered on nearest gold mine, spread across a "large area"
-// 创建初始单位 - 亡灵
-// 创建点 - 玩家开始点
+// 在玩家开始点创建初始单位 - 亡灵
 // 默认包含3个农民，1个食尸鬼，一个一本基地，一座闹鬼金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10175,8 +10180,7 @@ endfunction
 // Starting Units for Night Elf Players
 //   - 1 Tree of Life, placed by nearest gold mine, already entangled
 //   - 5 Wisps, placed between Tree of Life and nearest gold mine
-// 创建初始单位 - 暗夜
-// 创建点 - 玩家开始点
+// 在玩家开始点创建初始单位 - 暗夜
 // 默认包含5个农民，一个一本基地，一座被缠绕的金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10255,9 +10259,9 @@ endfunction
 
 // Starting Units for Players Whose Race is Unknown
 //   - 12 Sheep, placed randomly around the start location
-// 创建初始单位 - 未知种族
-// 创建点 - 随机
+// 在玩家开始点创建初始单位 - 未知种族
 // 默认包含12只绵羊，是的，12只绵羊（'nshe'）
+// 如果是重置版，建议手动改为24只，这属于官方BUG
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
@@ -10346,7 +10350,7 @@ endfunction
 //***************************************************************************
 
 // 选择对战AI
-// @params1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用AI
+// @params1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
 
@@ -11919,6 +11923,7 @@ endfunction
 //*
 //***************************************************************************
 // 创建指定物品（指定单位）
+// 默认用于物品掉落
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y
@@ -11945,7 +11950,7 @@ function UnitDropItem takes unit inUnit, integer inItemID returns item
     return droppedItem
 endfunction
 
-// 创建指定物品（指定目标点）
+// 创建指定物品（指定目标单位/物品/可破坏物）
 // 默认用于物品掉落
 function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real x
