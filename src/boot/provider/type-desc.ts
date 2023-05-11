@@ -1,12 +1,12 @@
 
 const map = new Map<string,string>([
+  
   ["boolean", "布尔值"],
   ["integer", "整数"],
   ["real", "实数"],
   ["string", "字符串"],
   ["code", "代码"],
   ["handle", "处理/句柄"],
-
   ["agent", "中介(代理)/实体对象"],
   ["event", "事件"],
   ["player", "玩家"],
