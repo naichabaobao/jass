@@ -916,9 +916,9 @@ globals
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
 	// 游戏类型 - 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
-	// 地图参数 - 隐藏地图（默认迷雾状态）
+	// 地图参数 - 隐藏（默认迷雾状态）
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图参数 - 地图已探索（探索后总是可见）
+	// 地图参数 - 已探索
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 	// 地图参数 - 总是可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
@@ -6148,7 +6148,7 @@ native InitHashtable takes nothing returns hashtable
 native SaveInteger takes hashtable table, integer parentKey, integer childKey, integer value returns nothing
 // <1.24> 保存实数 [C]
 native SaveReal takes hashtable table, integer parentKey, integer childKey, real value returns nothing
-// <1.24> 保存布尔 [C]
+// <1.24> 保存布尔值 [C]
 native SaveBoolean takes hashtable table, integer parentKey, integer childKey, boolean value returns nothing
 // <1.24> 保存字符串 [C]
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
@@ -6238,7 +6238,7 @@ native SaveFrameHandle takes hashtable table, integer parentKey, integer childKe
 native LoadInteger takes hashtable table, integer parentKey, integer childKey returns integer
 // <1.24> 从哈希表提取实数 [C]
 native LoadReal takes hashtable table, integer parentKey, integer childKey returns real
-// <1.24> 从哈希表提取布尔 [C]
+// <1.24> 从哈希表提取布尔值 [C]
 native LoadBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
 // <1.24> 从哈希表提取字符串 [C]
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
@@ -6352,9 +6352,9 @@ native FlushChildHashtable takes hashtable table, integer parentKey returns noth
 
 
 // Randomization API
-// 随机整数
+// 获取随机整数
 native GetRandomInt takes integer lowBound, integer highBound returns integer
-// 随机实数
+// 获取随机实数
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
@@ -6393,13 +6393,13 @@ native SetRandomSeed takes integer seed returns nothing
 
 
 // Visual API
-// 设置迷雾
+// 设置地形迷雾
 native SetTerrainFog takes real a, real b, real c, real d, real e returns nothing
-// 重置迷雾
+// 重置地形迷雾
 native ResetTerrainFog takes nothing returns nothing
 // 设置单位迷雾
 native SetUnitFog takes real a, real b, real c, real d, real e returns nothing
-// 设置迷雾 [R]
+// 设置地形迷雾 [R]
 native SetTerrainFogEx takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
 // 对玩家显示文本消息(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
