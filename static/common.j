@@ -1139,7 +1139,7 @@ globals
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
 	// 玩家积分 - 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
-	// 玩家积分 - 从盟友那里收到的黄金数量
+	// 玩家积分 - 从盟友那收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
 	// 玩家积分 - 采集到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
@@ -1149,7 +1149,7 @@ globals
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
 	// 玩家积分 - 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
-	// 玩家积分 - 从盟友那里收到的木材数量
+	// 玩家积分 - 从盟友那收到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_RECEIVED = ConvertPlayerScore(20)
 	// 玩家积分 - 总的单位得分
 	constant playerscore PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
@@ -1648,7 +1648,7 @@ globals
 	constant texmapflags TEXMAP_FLAG_WRAP_V = ConvertTexMapFlags(2)
 	// 纹理贴图标志 重叠(UV)
 	constant texmapflags TEXMAP_FLAG_WRAP_UV = ConvertTexMapFlags(3)
-	// 迷雾状态 黑色迷雾
+	// 迷雾状态 黑色阴影
 	constant fogstate FOG_OF_WAR_MASKED = ConvertFogState(1)
 	// 迷雾状态 迷雾
 	constant fogstate FOG_OF_WAR_FOGGED = ConvertFogState(2)
@@ -4608,9 +4608,9 @@ native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
 // 在指定的玩家组中匹配玩家（指定匹配的数量）
 // @param countLimit玩家数量
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
-// 在指定的玩家组中匹配盟友
+// 在指定玩家组中匹配盟友
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 在指定的玩家组中匹配敌人
+// 在指定玩家组中匹配敌人
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
 // 选取指定玩家组（的所有玩家）做动作(单个动作)
 native ForForce takes force whichForce, code callback returns nothing
@@ -5624,9 +5624,9 @@ constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boo
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
 // 查询指定单位是否指定玩家的单位
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位的所属玩家是否指定玩家的盟友
+// 查询指定单位的所属玩家与指定玩家是否盟友关系
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位的所属玩家是否指定玩家的敌人
+// 查询指定单位的所属玩家与指定玩家是否敌对关系
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
@@ -5846,31 +5846,31 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 
 // Player API
-// 根据ID查询玩家
-// @param number玩家ID
+// 根据编号查询玩家
+// @param number玩家编号
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
 // 通常用于异步判断
 constant native GetLocalPlayer takes nothing returns player
-// 查询指定玩家是否同另一指定玩家是盟友
+// 查询指定玩家与另一指定玩家是否盟友关系
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
-// 查询指定玩家是否同另一指定玩家是敌人
+// 查询指定玩家与另一指定玩家是否敌对关系
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
 // 查询指定玩家是否裁判或观察者 [R]
 constant native IsPlayerObserver takes player whichPlayer returns boolean
-// 查询坐标对指定玩家是否可见
+// 查询指定坐标在指定玩家视野中，是否可见
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
-// 查询点对指定玩家是否可见
+// 查询指定点在指定玩家视野中，是否可见
 constant native IsLocationVisibleToPlayer takes location whichLocation, player whichPlayer returns boolean
 // 查询指定坐标在指定玩家视野中，是否被迷雾遮挡
 constant native IsFoggedToPlayer takes real x, real y, player whichPlayer returns boolean
 // 查询指定点在指定玩家视野中，是否被迷雾遮挡
 constant native IsLocationFoggedToPlayer takes location whichLocation, player whichPlayer returns boolean
-// 查询坐标是否在黑色阴影中（指定玩家）
+// 查询指定坐标在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsMaskedToPlayer takes real x, real y, player whichPlayer returns boolean
-// 查询点是否被黑色阴影遮挡（指定玩家）
+// 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
 // 查询玩家的种族
