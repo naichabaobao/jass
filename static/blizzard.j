@@ -948,7 +948,7 @@ globals
     // Cinematic mode vars
     // 电影模式设置 默认速度
     gamespeed          bj_cineModePriorSpeed       = MAP_SPEED_NORMAL
-    // 电影模式设置 战争迷雾状态（启用或禁用）
+    // 电影模式设置 迷雾状态（启用或禁用）
     boolean            bj_cineModePriorFogSetting  = false
     // 电影模式设置 黑色阴影状态（启用或禁用）
     boolean            bj_cineModePriorMaskSetting = false
@@ -1075,7 +1075,7 @@ globals
     trigger            bj_delayedSuspendDecayTrig  = null
     // 匹配玩家拥有且存活的单位类型总数量
     integer            bj_livingPlayerUnitsTypeId  = 0
-    // 最后死亡的目标
+    // 最后死亡的单位/物品/可破坏物
     widget             bj_lastDyingWidget          = null
 
     // Random distribution vars
@@ -1330,14 +1330,14 @@ endfunction
 
 
 // 取两点之间的角度
-// 两个点仍会保留，如不再使用则请注意排泄
+// 两个点仍会保留，如不再使用用完请注意排泄
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
 // 取两点之间的距离
-// 两个点仍会保留，如不再使用则请注意排泄
+// 两个点仍会保留，如不再使用用完请注意排泄
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -1346,7 +1346,7 @@ endfunction
 
 
 // 点向指定方向位移指定距离
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -1367,7 +1367,7 @@ endfunction
 
 
 // 取区域内的随机地点
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function GetRandomLocInRect takes rect whichRect returns location
     return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
 endfunction
@@ -1410,21 +1410,21 @@ endfunction
 
 
 // 点位移
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
 
 
 // 区域位移
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 function OffsetRectBJ takes rect r, real dx, real dy returns rect
     return Rect( GetRectMinX(r) + dx, GetRectMinY(r) + dy, GetRectMaxX(r) + dx, GetRectMaxY(r) + dy )
 endfunction
 
 
 // 将点转换为区域
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 // @param center 中心点位置
 // @param width 宽
 // @param height 高
@@ -1893,8 +1893,8 @@ endfunction
 //
 // 将圆形区域转换为矩形区域
 // 以圆心和为中心，直径为边长创建区域
-// 原有区域仍然保留，如不再使用则请注意排泄
-// 会生成新区域，请注意排泄
+// 原有区域仍然保留，如不再使用请排泄
+// 会生成新区域，用完请注意排泄
 function GetRectFromCircleBJ takes location center, real radius returns rect
     local real centerX = GetLocationX(center)
     local real centerY = GetLocationY(center)
@@ -2135,7 +2135,7 @@ endfunction
 // Query the current camera bounds.
 //
 // 获取当前镜头范围
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 function GetCurrentCameraBoundsMapRectBJ takes nothing returns rect
     return Rect(GetCameraBoundMinX(), GetCameraBoundMinY(), GetCameraBoundMaxX(), GetCameraBoundMaxY())
 endfunction
@@ -2144,7 +2144,7 @@ endfunction
 // Query the initial camera bounds, as defined at map init.
 //
 // 获取初始游戏时的镜头范围
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 function GetCameraBoundsMapRect takes nothing returns rect
     return bj_mapInitialCameraBounds
 endfunction
@@ -2153,7 +2153,7 @@ endfunction
 // Query the playable map area, as defined at map init.
 //
 // 获取可玩的地图区域
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 function GetPlayableMapRect takes nothing returns rect
     return bj_mapInitialPlayableArea
 endfunction
@@ -2162,7 +2162,7 @@ endfunction
 // Query the entire map area, as defined at map init.
 //
 // 获取全地图可用区域
-// 会生成区域，请注意排泄
+// 会生成区域，用完请注意排泄
 function GetEntireMapRect takes nothing returns rect
     return GetWorldBounds()
 endfunction
@@ -2863,13 +2863,13 @@ function GetLastCreatedFogModifier takes nothing returns fogmodifier
 endfunction
 
 
-// 允许战争迷雾
+// 允许迷雾
 function FogEnableOn takes nothing returns nothing
     call FogEnable(true)
 endfunction
 
 
-// 禁用战争迷雾
+// 禁用迷雾
 function FogEnableOff takes nothing returns nothing
     call FogEnable(false)
 endfunction
@@ -3514,14 +3514,14 @@ endfunction
 //***************************************************************************
 
 
-// 对某点创造特殊效果
+// 新建特殊效果（指定点）
 function AddSpecialEffectLocBJ takes location where, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectLoc(modelName, where)
     return bj_lastCreatedEffect
 endfunction
 
 
-// 对某单位创造特殊效果
+// 新建特殊效果（指定单位/物品/可破坏物）
 function AddSpecialEffectTargetUnitBJ takes string attachPointName, widget targetWidget, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectTarget(modelName, targetWidget, attachPointName)
     return bj_lastCreatedEffect
@@ -3532,7 +3532,7 @@ endfunction
 // dummy function simply mimics the behavior of an existing call.
 //
 // Commented out - Destructibles have no attachment points.
-//
+// 新建特殊效果（指定可破坏物）
 //function AddSpecialEffectTargetDestructableBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
@@ -3542,7 +3542,7 @@ endfunction
 // dummy function simply mimics the behavior of an existing call.
 //
 // Commented out - Items have no attachment points.
-//
+// 新建特殊效果（指定物品）
 //function AddSpecialEffectTargetItemBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
@@ -3630,13 +3630,13 @@ endfunction
 
 
 // 物品的位置
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function GetItemLoc takes item whichItem returns location
     return Location(GetItemX(whichItem), GetItemY(whichItem))
 endfunction
 
 
-// 获取物品生命
+// 获取物品生命值
 function GetItemLifeBJ takes widget whichWidget returns real
     return GetWidgetLife(whichWidget)
 endfunction
@@ -3914,7 +3914,7 @@ function UnitUseItemDestructable takes unit whichUnit, item whichItem, widget ta
 endfunction
 
 
-// 使用物品（制订单）
+// 使用物品（指定单位）
 function UnitUseItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitUseItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -5158,7 +5158,7 @@ endfunction
 
 
 // 获取可破坏物的位置
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function GetDestructableLoc takes destructable whichDestructable returns location
     return Location(GetDestructableX(whichDestructable), GetDestructableY(whichDestructable))
 endfunction
@@ -5523,7 +5523,7 @@ endfunction
 
 
 // 获取传送门的目的地
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function WaygateGetDestinationLocBJ takes unit waygate returns location
     return Location(WaygateGetDestinationX(waygate), WaygateGetDestinationY(waygate))
 endfunction
@@ -5848,13 +5848,15 @@ function GetForceOfPlayer takes player whichPlayer returns force
 endfunction
 
 
-// 获取所有玩家（返回玩家组）
+// 获取所有玩家
+// 以玩家组形式返回
 function GetPlayersAll takes nothing returns force
     return bj_FORCE_ALL_PLAYERS
 endfunction
 
 
-// 所有某种控制类型的玩家
+// 所有指定控制类型的玩家
+// 以玩家组形式返回
 function GetPlayersByMapControl takes mapcontrol whichControl returns force
     local force f = CreateForce()
     local integer playerIndex
@@ -5876,7 +5878,7 @@ endfunction
 
 
 // 获取玩家的盟友
-// 以玩家组形式
+// 以玩家组形式返回
 function GetPlayersAllies takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceEnumAllies(f, whichPlayer, null)
@@ -8563,7 +8565,7 @@ function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missi
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
 
-// <1.24> 保存目标
+// <1.24> 保存容器（单位/物品/可破坏物）
 function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missionKey, hashtable table returns boolean
     return SaveWidgetHandle(table, missionKey, key, whichWidget)
 endfunction
@@ -8863,7 +8865,7 @@ function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable tab
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
 
-// <1.24> 从哈希表提取目标
+// <1.24> 从哈希表提取容器（单位/物品/可破坏物）
 function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable table returns widget
     return LoadWidgetHandle(table, missionKey, key)
 endfunction
@@ -9245,14 +9247,14 @@ endfunction
 
 
 // 玩家的初始位置
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 
 // 区域中心
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 endfunction
@@ -9448,7 +9450,7 @@ function UnlockGameSpeedBJ takes nothing returns nothing
     call SetMapFlag(MAP_LOCK_SPEED, false)
 endfunction
 
-// 给单位发送命令到 可破坏物指定单位
+// 给单位发送命令到 指定单位
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
@@ -9536,10 +9538,10 @@ endfunction
 // Utility function for use by editor-generated item drop table triggers.
 // This function is added as an action to all destructable drop triggers,
 // so that a widget drop may be differentiated from a unit drop.
-// 储存死亡目标
-// 将 bj_lastDyingWidget 设置为触发单位
+// 储存死亡单位/物品/可破坏物
+// 将 bj_lastDyingWidget 设置为触发单位/物品/可破坏物
 function SaveDyingWidget takes nothing returns nothing
-    set bj_lastDyingWidget = GetTriggerWidget()
+    set bj_lastDyingWidget = GetTriggereWidgt()
 endfunction
 
 
@@ -9902,7 +9904,7 @@ endfunction
 
 // Returns a location which is (distance) away from (src) in the direction of (targ).
 // 极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function MeleeGetProjectedLoc takes location src, location targ, real distance, real deltaAngle returns location
     local real srcX = GetLocationX(src)
     local real srcY = GetLocationY(src)
@@ -9924,7 +9926,7 @@ endfunction
 
 // 取区域内的点（不影响输入点）
 // 当输入点在区域内时，会返回一个相同坐标的新点，当输入点在区域外时，会返回距离输入点最近的区域边界上的新点
-// 会生成点，请注意排泄
+// 会生成点，用完请注意排泄
 function MeleeGetLocWithinRect takes location src, rect r returns location
     local real withinX = MeleeGetNearestValueWithin(GetLocationX(src), GetRectMinX(r), GetRectMaxX(r))
     local real withinY = MeleeGetNearestValueWithin(GetLocationY(src), GetRectMinY(r), GetRectMaxY(r))
@@ -11944,6 +11946,7 @@ function UnitDropItem takes unit inUnit, integer inItemID returns item
 endfunction
 
 // 创建指定物品（指定目标点）
+// 默认用于物品掉落
 function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real x
     local real y
