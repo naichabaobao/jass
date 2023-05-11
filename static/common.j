@@ -916,11 +916,11 @@ globals
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
 	// 游戏类型 - 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
-	// 地图参数 - 隐藏（默认迷雾状态）
+	// 地图参数 - 隐藏地形（默认迷雾状态）
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图参数 - 已探索
+	// 地图参数 - 已探索地图
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
-	// 地图参数 - 总是可见
+	// 地图参数 - 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
 	// 地图参数 - 使用障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
@@ -932,7 +932,7 @@ globals
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
 	// 地图参数 - 禁止资源交易
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图参数 - 容许联盟资源交易
+	// 地图参数 - 允许联盟资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
 	// 地图参数 - 禁止变更联盟类型
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
@@ -952,7 +952,7 @@ globals
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
 	// 地图参数 - 随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 - 地图转换
+	// 地图参数 - 地图重载
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
 	// 地图参数 - 玩家开始点随机
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
@@ -960,7 +960,7 @@ globals
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
 	// 地图参数 - 使用地图设置的玩家开始点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 地图参数 - 联盟玩家开始点（优先）放在一起
+	// 地图参数 - 同队开始点相邻
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
 	// 开始点分布优先权-低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
@@ -1007,7 +1007,7 @@ globals
 	
 	// 单位移动声音
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-    // 单位回应声音
+        // 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
 	// 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
@@ -1061,7 +1061,7 @@ globals
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
 	// 玩家状态 - 当前的英雄数量
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-    // 玩家状态 - 可用人口数（默认为人口建筑提供的数量）
+        // 玩家状态 - 可用人口数（默认为人口建筑提供的数量）
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
 	// 玩家状态 - 已用人口数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
@@ -1091,7 +1091,7 @@ globals
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
 	// 玩家状态 - 已收集的木材数量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态 - 野生生物（中立敌对玩家的单位）不睡眠
+	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 当前生命值
@@ -5667,9 +5667,9 @@ constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位类型是否与指定类型匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
-// 设定指定单位和指定玩家的共享视野状态（共享或不共享） [R]
+// 给指定单位和指定玩家的共享视野状态（共享或不共享） [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 设定指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
+// 给指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
 // 给指定单位增加指定类别 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
@@ -5686,21 +5686,24 @@ native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
 // 给指定单位删除魔法效果(详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
-// 指定单位是否拥有 Buff [R]
+// 查询指定单位是否拥有 Buff [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
-// 指定单位拥有的 Buff 数量 [R]
+// 查询指定单位拥有的 Buff 数量 [R]
 native UnitCountBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
-// 是否给指定单位添加睡眠
+// 设置指定单位睡眠
+// @param add 真为睡眠，假为清醒
 native UnitAddSleep takes unit whichUnit, boolean add returns nothing
-// 指定单位是否允许睡眠（可能由代码 UnitAddSleep 设置控制）
+// 查询指定单位晚上是否会睡眠
 native UnitCanSleep takes unit whichUnit returns boolean
-// 设置指定单位的睡眠状态(无论何时)
+// 设置指定单位的睡眠状态(不受挑衅时)
+// @param add 真为睡眠，假为清醒
 native UnitAddSleepPerm takes unit whichUnit, boolean add returns nothing
-// 单位是否可以睡眠（可能是编辑器的单位睡眠设置）
+// 设置指定单位的睡眠状态（在晚上）
+// @param add 真为睡眠，假为清醒
 native UnitCanSleepPerm takes unit whichUnit returns boolean
-// 单位是否正在睡眠
+// 查询单位是否正在睡眠
 native UnitIsSleeping takes unit whichUnit returns boolean
-// 单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
+// 查询单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置生命周期 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
