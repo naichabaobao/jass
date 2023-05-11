@@ -81,7 +81,7 @@ globals
     constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
     // 中立可营救玩家
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
-    // 最大玩家插槽数（包含所有中立玩家）
+    // 最大玩家槽数（包含所有中立玩家）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
     // 最大尸体数，默认25
     constant integer   bj_MAX_SKELETONS                 =  25
@@ -779,7 +779,7 @@ globals
     //
 
     // Force predefs
-    // 玩家组 所有玩家
+    // 玩家组（所有玩家）
     force              bj_FORCE_ALL_PLAYERS        = null
     // 玩家组
     force array        bj_FORCE_PLAYER
@@ -806,7 +806,7 @@ globals
     boolean            bj_slotControlReady         = false
     // 玩家槽是否可用，每位玩家配一个，系统在开局时自动设置
     boolean array      bj_slotControlUsed
-    // 标识当前插槽的玩家是电脑还是真人，每位玩家配一个
+    // 标识当前玩家槽的玩家是电脑还是真人，每位玩家配一个
     mapcontrol array   bj_slotControl
 
     // Game started detection vars

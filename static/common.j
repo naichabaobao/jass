@@ -370,7 +370,7 @@ constant native ConvertAnimType takes integer i returns animtype
 constant native ConvertSubAnimType takes integer i returns subanimtype
 // 转换原生框架（原生UI）类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// 转换frame点（框架）类型
+// 转换原生框架/原生UI相对位置
 constant native ConvertFramePointType takes integer i returns framepointtype
 // 转换文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
@@ -459,17 +459,34 @@ constant native AbilityId2String takes integer abilityId returns string
 // Looks up the "name" field for any object (unit, item, ability)
 // 获取物体名称（字串符） [C]，此命令在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数，12或24人
+// 获取最大的玩家数
+// 1.28及以下：11
+// 1.29及以上：23
+// 因为玩家1是0
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
+// 1.28及以下：13
+// 1.29及以上：25
+// 因为玩家1是0
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
-// 获取中立额外玩家的玩家编号
+// 获取中立特殊玩家的玩家编号
+// 1.28及以下：14
+// 1.29及以上：26
+// 因为玩家1是0
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
-// 获取最大玩家插槽数量，包括中力玩家
+// 获取最大玩家槽数量，包括中立玩家
+// 1.28及以下：玩家1~玩家12，中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
+// 1.29及以上：玩家1~玩家24，中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
 constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
+// 1.28及以下：15
+// 1.29及以上：27
+// 因为玩家1是0
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家的玩家编号
+// 1.28及以下：12
+// 1.29及以上：24
+// 因为玩家1是0
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
@@ -486,71 +503,71 @@ globals
 	// 注：1.28及以下版本，默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家（玩家16/28）
-	// 1.28及以下：中立敌对（玩家13），中立被害（玩家14），中立特殊（玩家15），中立被动（玩家16）
-	// 1.29及以上：中立敌对（玩家25），中立被害（玩家26），中立特殊（玩家26），中立被动（玩家28）
+	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
+	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 	// 中立敌对玩家（玩家13/25）
-	// 1.28及以下：中立敌对（玩家13），中立被害（玩家14），中立特殊（玩家15），中立被动（玩家16）
-	// 1.29及以上：中立敌对（玩家25），中立被害（玩家26），中立特殊（玩家26），中立被动（玩家28）
+	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
+	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
-	// 红色方玩家
+	// 玩家颜色 红色
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
-	// 蓝色方玩家
+	// 玩家颜色 蓝色
 	constant playercolor PLAYER_COLOR_BLUE = ConvertPlayerColor(1)
-	// 青色方玩家
+	// 玩家颜色 青色
 	constant playercolor PLAYER_COLOR_CYAN = ConvertPlayerColor(2)
-	// 紫色方玩家
+	// 玩家颜色 紫色
 	constant playercolor PLAYER_COLOR_PURPLE = ConvertPlayerColor(3)
-	// 黄色方玩家
+	// 玩家颜色 黄色
 	constant playercolor PLAYER_COLOR_YELLOW = ConvertPlayerColor(4)
-	// 橙色方玩家
+	// 玩家颜色 橙色
 	constant playercolor PLAYER_COLOR_ORANGE = ConvertPlayerColor(5)
-	// 绿色方玩家
+	// 玩家颜色 绿色
 	constant playercolor PLAYER_COLOR_GREEN = ConvertPlayerColor(6)
-	// 粉色方玩家
+	// 玩家颜色 粉色
 	constant playercolor PLAYER_COLOR_PINK = ConvertPlayerColor(7)
-	// 深灰色方玩家
+	// 玩家颜色 深灰色
 	constant playercolor PLAYER_COLOR_LIGHT_GRAY = ConvertPlayerColor(8)
-	// 深蓝色方玩家
+	// 玩家颜色 深蓝色
 	constant playercolor PLAYER_COLOR_LIGHT_BLUE = ConvertPlayerColor(9)
-	// 浅绿色方玩家
+	// 玩家颜色 浅绿色
 	constant playercolor PLAYER_COLOR_AQUA = ConvertPlayerColor(10)
-	// 棕色方玩家
+	// 玩家颜色 棕色
 	constant playercolor PLAYER_COLOR_BROWN = ConvertPlayerColor(11)
-	// 褐红色方玩家
+	// 玩家颜色 褐红色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_MAROON = ConvertPlayerColor(12)
-	// 深蓝色方玩家
+	// 玩家颜色 深蓝色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_NAVY = ConvertPlayerColor(13)
-	// 蓝绿色方玩家
+	// 玩家颜色 蓝绿色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_TURQUOISE = ConvertPlayerColor(14)
-	// 紫罗兰色方玩家
+	// 玩家颜色 紫罗兰色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_VIOLET = ConvertPlayerColor(15)
-	// 小麦色方玩家
+	// 玩家颜色 小麦色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_WHEAT = ConvertPlayerColor(16)
-	// 桃色方玩家
+	// 玩家颜色 桃色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_PEACH = ConvertPlayerColor(17)
-	// 薄荷色方玩家
+	// 玩家颜色 薄荷色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_MINT = ConvertPlayerColor(18)
-	// 淡紫色方玩家
+	// 玩家颜色 淡紫色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_LAVENDER = ConvertPlayerColor(19)
-	// 煤焦油色方玩家
+	// 玩家颜色 煤焦油色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_COAL = ConvertPlayerColor(20)
-	// 雪白方玩家
+	// 玩家颜色 雪白色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
-	// 祖母绿方玩家
+	// 玩家颜色 祖母绿色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
-	// 花生色玩家
+	// 玩家颜色 花生色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
 	// 人族
@@ -978,11 +995,11 @@ globals
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
 	// 游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	// 玩家插槽状态 没有真人玩家使用（该位置从没有过真人玩家），如果此时对该玩家启用AI，AI能正常运行，但此处依旧返回该状态
+	// 玩家槽状态 没有真人玩家使用（该位置从没有过真人玩家），如果此时对该玩家启用AI，AI能正常运行，但此处依旧返回该状态
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
-	// 玩家插槽状态 玩家正在游戏
+	// 玩家槽状态 玩家正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
-	// 玩家插槽状态 玩家已离开游戏
+	// 玩家槽状态 玩家已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 	
 	
@@ -1722,23 +1739,23 @@ globals
 	// 原生UI BUFF状态栏标题（单位当前拥有光环的显示区域的标题），默认值是 Status:（状态：）
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL = ConvertOriginFrameType(22)
 	
-	// 框架点（UI） 左上
+	// 框架相对位置（UI） 左上
 	constant framepointtype FRAMEPOINT_TOPLEFT = ConvertFramePointType(0)
-	// 框架点（UI） 上
+	// 框架相对位置（UI） 上
 	constant framepointtype FRAMEPOINT_TOP = ConvertFramePointType(1)
-	// 框架点（UI） 右上
+	// 框架相对位置（UI） 右上
 	constant framepointtype FRAMEPOINT_TOPRIGHT = ConvertFramePointType(2)
-	// 框架点（UI） 左
+	// 框架相对位置（UI） 左
 	constant framepointtype FRAMEPOINT_LEFT = ConvertFramePointType(3)
-	// 框架点（UI） 中间
+	// 框架相对位置（UI） 中间
 	constant framepointtype FRAMEPOINT_CENTER = ConvertFramePointType(4)
-	// 框架点（UI） 右
+	// 框架相对位置（UI） 右
 	constant framepointtype FRAMEPOINT_RIGHT = ConvertFramePointType(5)
-	// 框架点（UI） 左下
+	// 框架相对位置（UI） 左下
 	constant framepointtype FRAMEPOINT_BOTTOMLEFT = ConvertFramePointType(6)
-	// 框架点（UI） 下
+	// 框架相对位置（UI） 下
 	constant framepointtype FRAMEPOINT_BOTTOM = ConvertFramePointType(7)
-	// 框架点（UI） 右下
+	// 框架相对位置（UI） 右下
 	constant framepointtype FRAMEPOINT_BOTTOMRIGHT = ConvertFramePointType(8)
 	// 文本对齐方式 顶部对齐
 	constant textaligntype TEXT_JUSTIFY_TOP = ConvertTextAlignType(0)
@@ -1752,7 +1769,7 @@ globals
 	constant textaligntype TEXT_JUSTIFY_CENTER = ConvertTextAlignType(4)
 	// 文本对齐方式 右侧对齐
 	constant textaligntype TEXT_JUSTIFY_RIGHT = ConvertTextAlignType(5)
-	// 框架（UI）事件类型 控制点击
+	// 框架（UI）事件类型 点击控制
 	constant frameeventtype FRAMEEVENT_CONTROL_CLICK = ConvertFrameEventType(1)
 	// 框架（UI）事件类型 鼠标移入
 	constant frameeventtype FRAMEEVENT_MOUSE_ENTER = ConvertFrameEventType(2)
@@ -1836,16 +1853,16 @@ globals
 	//键盘 ESC 键
 	// @version 1.33
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
-	//键盘 Caps lock（开启状态） 键
+	//键盘 Caps lock 键（开启状态）
 	// @version 1.33
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
-	//键盘 Caps lock（关闭状态） 键
+	//键盘 Caps lock 键（关闭状态）
 	// @version 1.33
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
 	//键盘 ACCEPT 键
 	// @version 1.33
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
-	//键盘  变更模式键
+	//键盘 变更模式键
 	// @version 1.33
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
 	//键盘 空格键
@@ -1860,7 +1877,7 @@ globals
 	//键盘 结束键
 	// @version 1.33
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
-	//键盘 HOME键
+	//键盘 HOME 键
 	// @version 1.33
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
 	//键盘 方向键 左
@@ -1875,7 +1892,7 @@ globals
 	//键盘 方向键 下
 	// @version 1.33
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
-	//键盘 选择（右SHIFT）键
+	//键盘 选择键（右SHIFT）
 	// @version 1.33
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
 	//键盘 PRINT 键
@@ -1893,7 +1910,7 @@ globals
 	//建盘 DELETE键
 	// @version 1.33
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
-	//键盘 帮助（F1）键
+	//键盘 帮助键（F1）
 	// @version 1.33
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
 	//键盘 0键（非小/数字键盘）
@@ -2160,10 +2177,10 @@ globals
 	//键盘 右 OYAYUBI 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
-	//键盘 左 OSHIFT 键
+	//键盘 左 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
-	//键盘 右 OSHIFT 键
+	//键盘 右 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
 	//键盘 左 Ctrl 键
@@ -2193,7 +2210,7 @@ globals
 	//键盘 浏览器搜索键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
-	//键盘 浏览器收藏键，
+	//键盘 浏览器收藏键
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
 	//键盘 浏览器“开始”和“主页”键
 	// @version 1.33
@@ -4295,7 +4312,7 @@ native R2SW takes real r, integer width, integer precision returns string
 native S2I takes string s returns integer
 // 转换字符串为实数
 native S2R takes string s returns real
-// 获取句柄id    
+// 获取句柄ID    
 // tips:一般用于hashtable key
 // @param h 任意handle子类型, 常用于hashtable key
 native GetHandleId takes handle h returns integer
@@ -5500,7 +5517,7 @@ native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
 // 立即复活英雄（指定点）
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
-// 设置死亡方式（是否爆炸）
+// 设置单位死亡方式（是否爆炸）
 // @param whichUnit 单位
 // @param exploded 是否爆炸
 native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
@@ -5513,7 +5530,7 @@ native IsUnitPaused takes unit whichHero returns boolean
 // 打开/关闭单位碰撞体积
 native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
-// 清除所有选择
+// 清除所有选择（鼠标框选的单位/物品/可破坏物）
 native ClearSelection takes nothing returns nothing
 // 选择单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
@@ -5668,9 +5685,9 @@ native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
 // 给指定单位删除魔法效果(详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
-// 指定单位是否拥有Buff [R]
+// 指定单位是否拥有 Buff [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
-// 指定单位拥有的Buff数量 [R]
+// 指定单位拥有的 Buff 数量 [R]
 native UnitCountBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
 // 是否给指定单位添加睡眠
 native UnitAddSleep takes unit whichUnit, boolean add returns nothing
