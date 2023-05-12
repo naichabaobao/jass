@@ -94,7 +94,7 @@ native DebugS               takes string str                            returns 
     native SetUpgrade           takes integer id                            returns boolean
     // 设置英雄升级技能函数
     native SetHeroLevels        takes code func                             returns nothing
-    // 是否允许设置新英雄，
+    // 是否允许设置新英雄
     // 意义不明，可能和学习技能有关
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
@@ -126,6 +126,7 @@ native DebugS               takes string str                            returns 
     // 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
     native SetHeroesFlee        takes boolean state                         returns nothing
     // 允许/禁止 英雄购买物品
+    // 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品
     native SetHeroesBuyItems    takes boolean state                         returns nothing
     // 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
     native SetWatchMegaTargets  takes boolean state                         returns nothing
