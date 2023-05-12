@@ -16,7 +16,7 @@ globals
     constant real      bj_CELLWIDTH                     = 128.0
     // 悬崖高度，默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
-    // 单位默认面向角度，默认270.0
+    // 单位默认朝向，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
     // 弧度转换成为角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
@@ -128,7 +128,7 @@ globals
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
     // 金矿搜索距离，默认2000（主要用于创建亡灵/精灵分矿）
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
-    // 清除开始点中立敌对单位的范围，默认1500（使用清除开始点的野怪时，要删除距离开始点多少范围内的野怪）
+    // 清除出生点中立敌对单位的范围，默认1500（使用清除出生点的野怪时，要删除距离出生点多少范围内的野怪）
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120.00
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
@@ -894,11 +894,11 @@ globals
     boolean            bj_meleeVisibilityIsDay     = true
     // 是否给予首发英雄初始物品
     boolean            bj_meleeGrantHeroItems      = false
-    // 距离玩家开始点最近的金矿所在的点
+    // 距离玩家出生点最近的金矿所在的点
     location           bj_meleeNearestMineToLoc    = null
-    // 距离玩家开始点最近的金矿
+    // 距离玩家出生点最近的金矿
     unit               bj_meleeNearestMine         = null
-    // 距离玩家开始点最近的金矿的距离，默认值0.00
+    // 距离玩家出生点最近的金矿的距离，默认值0.00
     real               bj_meleeNearestMineDist     = 0.00
     // 游戏是否结束
     boolean            bj_meleeGameOver            = false
@@ -4211,7 +4211,7 @@ function GetKillingUnitBJ takes nothing returns unit
 endfunction
 
 
-// 创建单位(指定点及面向角度)
+// 创建单位(指定点及朝向)
 function CreateUnitAtLocSaveLast takes player id, integer unitid, location loc, real face returns unit
     if (unitid == 'ugol') then
         set bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
@@ -4229,7 +4229,7 @@ function GetLastCreatedUnit takes nothing returns unit
 endfunction
 
 
-// 创建指定数量的单位（指定面向角度）触发器动作
+// 创建指定数量的单位（指定朝向）触发器动作
 // 会生成单位组，用完请注意排泄
 function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlayer, location loc, real face returns group
     call GroupClear(bj_lastCreatedGroup)
@@ -4243,7 +4243,7 @@ function CreateNUnitsAtLoc takes integer count, integer unitId, player whichPlay
 endfunction
 
 
-// 创建指定数量的单位（指定面向角度）
+// 创建指定数量的单位（指定朝向）
 // 会生成单位组，用完请注意排泄
 function CreateNUnitsAtLocFacingLocBJ takes integer count, integer unitId, player whichPlayer, location loc, location lookAt returns group
     return CreateNUnitsAtLoc(count, unitId, whichPlayer, loc, AngleBetweenPoints(loc, lookAt))
@@ -4277,7 +4277,7 @@ function UnitSuspendDecayBJ takes boolean suspend, unit whichUnit returns nothin
 endfunction
 
 
-// 延迟挂衰变停止动画
+// 延迟尸体腐烂
 function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
@@ -4287,7 +4287,7 @@ function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
 endfunction
 
 
-// 延迟挂衰变停止动画骨骼
+// 延迟并停止尸体腐烂
 function DelayedSuspendDecayBoneEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
@@ -4505,13 +4505,13 @@ function SetUnitManaPercentBJ takes unit whichUnit, real percent returns nothing
 endfunction
 
 
-// 单位是否已死亡
+// 查询单位是否已死亡
 function IsUnitDeadBJ takes unit whichUnit returns boolean
     return GetUnitState(whichUnit, UNIT_STATE_LIFE) <= 0
 endfunction
 
 
-// 单位是否存活
+// 查询单位是否存活
 function IsUnitAliveBJ takes unit whichUnit returns boolean
     return not IsUnitDeadBJ(whichUnit)
 endfunction
@@ -4526,7 +4526,7 @@ endfunction
 
 
 // Returns true if every unit of the group is dead.
-// 单位组的单位是否已死亡
+// 查询单位组的单位是否已死亡
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -4544,14 +4544,14 @@ function IsUnitGroupDeadBJ takes group g returns boolean
 endfunction
 
 
-// 单位组是否为空触发器动作
+// 查询单位组是否为空触发器动作
 function IsUnitGroupEmptyBJEnum takes nothing returns nothing
     set bj_isUnitGroupEmptyResult = false
 endfunction
 
 
 // Returns true if the group contains no units.
-// 单位组是否为空
+// 查询单位组是否为空
 function IsUnitGroupEmptyBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -4569,7 +4569,7 @@ function IsUnitGroupEmptyBJ takes group g returns boolean
 endfunction
 
 
-// 选取单位是否在区域内
+// 查询选取单位是否在区域内
 function IsUnitGroupInRectBJEnum takes nothing returns nothing
     if not RectContainsUnit(bj_isUnitGroupInRectRect, GetEnumUnit()) then
         set bj_isUnitGroupInRectResult = false
@@ -4578,7 +4578,7 @@ endfunction
 
 
 // Returns true if every unit of the group is within the given rect.
-// 单位组中的单位是否在指定区域内
+// 查询单位组中的单位是否在指定区域内
 // 全都在区域内才返回是，任意一个单位不在区域内时返回否
 function IsUnitGroupInRectBJ takes group g, rect r returns boolean
     set bj_isUnitGroupInRectResult = true
@@ -4610,12 +4610,12 @@ function ShowUnitShow takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, true)
 endfunction
 
-// 发送建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
+// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
 function IssueHauntOrderAtLocBJFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == 'ngol'
 endfunction
 
-// 发送建造闹鬼金矿命令（指定农民及金矿）
+// 发布建造闹鬼金矿命令（指定农民及金矿）
 function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boolean
     local group g = null
     local unit goldMine = null
@@ -4636,7 +4636,7 @@ function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boole
 endfunction
 
 
-// 发送命令到 建造建筑
+// 发布命令到 建造建筑
 function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location loc returns boolean
     if (unitId == 'ugol') then
         return IssueHauntOrderAtLocBJ(whichPeon, loc)
@@ -4646,19 +4646,19 @@ function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location
 endfunction
 
 
-// 发送命令到 训练兵种/升级建筑
+// 发布命令到 训练兵种/升级建筑
 function IssueTrainOrderByIdBJ takes unit whichUnit, integer unitId returns boolean
     return IssueImmediateOrderById(whichUnit, unitId)
 endfunction
 
 
-// 发送单位组命令到 训练兵种/升级建筑
+// 发布单位组命令到 训练兵种/升级建筑
 function GroupTrainOrderByIdBJ takes group g, integer unitId returns boolean
     return GroupImmediateOrderById(g, unitId)
 endfunction
 
 
-// 发送命令到 研究科技
+// 发布命令到 研究科技
 function IssueUpgradeOrderByIdBJ takes unit whichUnit, integer techId returns boolean
     return IssueImmediateOrderById(whichUnit, techId)
 endfunction
@@ -7749,7 +7749,7 @@ function EnableWorldFogBoundaryBJ takes boolean enable, force f returns nothing
 endfunction
 
 
-// 允许/禁止 闭合
+// 允许/禁止 闭塞
 function EnableOcclusionBJ takes boolean enable, force f returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -9242,12 +9242,12 @@ endfunction
 //*
 //***************************************************************************
 
-// 获取指定玩家开始点的 X 坐标
+// 获取指定玩家出生点的 X 坐标
 function GetPlayerStartLocationX takes player whichPlayer returns real
     return GetStartLocationX(GetPlayerStartLocation(whichPlayer))
 endfunction
 
-// 获取指定玩家开始点的 Y 坐标
+// 获取指定玩家出生点的 Y 坐标
 function GetPlayerStartLocationY takes player whichPlayer returns real
     return GetStartLocationY(GetPlayerStartLocation(whichPlayer))
 endfunction
@@ -9457,12 +9457,12 @@ function UnlockGameSpeedBJ takes nothing returns nothing
     call SetMapFlag(MAP_LOCK_SPEED, false)
 endfunction
 
-// 给单位发送命令到 指定单位
+// 发布单位命令到 指定单位
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 给单位发送命令到 指定点
+// 发布单位命令到 指定点
 function IssuePointOrderLocBJ takes unit whichUnit, string order, location whichLocation returns boolean
     return IssuePointOrderLoc( whichUnit, order, whichLocation )
 endfunction
@@ -9471,32 +9471,32 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
-// 给单位发送命令到 可破坏物
+// 发布单位命令到 可破坏物
 function IssueTargetDestructableOrder takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 给单位发送命令到 物品
+// 发布单位命令到 物品
 function IssueTargetItemOrder takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 给单位发送命令 无目标
+// 发布单位命令 无目标
 function IssueImmediateOrderBJ takes unit whichUnit, string order returns boolean
     return IssueImmediateOrder( whichUnit, order )
 endfunction
 
-// 给单位组发送命令到 指定单位
+// 发布单位组命令到 指定单位
 function GroupTargetOrderBJ takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 给单位组发送命令到 指定点
+// 发布单位组命令到 指定点
 function GroupPointOrderLocBJ takes group whichGroup, string order, location whichLocation returns boolean
     return GroupPointOrderLoc( whichGroup, order, whichLocation )
 endfunction
 
-// 给单位组发送命令 无目标
+// 发布单位组命令 无目标
 function GroupImmediateOrderBJ takes group whichGroup, string order returns boolean
     return GroupImmediateOrder( whichGroup, order )
 endfunction
@@ -9505,12 +9505,12 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
-// 发送单位组命令到 可破坏物
+// 发布单位组命令到 可破坏物
 function GroupTargetDestructableOrder takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 发送单位组命令到 物品
+// 发布单位组命令到 物品
 function GroupTargetItemOrder takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
@@ -9774,7 +9774,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 删除当前开始点多余单位
+// 删除当前出生点多余单位
 // 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑类单位
 function MeleeClearExcessUnit takes nothing returns nothing
     local unit    theUnit = GetEnumUnit()
@@ -9791,7 +9791,7 @@ function MeleeClearExcessUnit takes nothing returns nothing
     endif
 endfunction
 
-// 选取当前开始点的多余单位
+// 选取当前出生点的多余单位
 function MeleeClearNearbyUnits takes real x, real y, real range returns nothing
     local group nearbyUnits
     
@@ -9802,7 +9802,7 @@ function MeleeClearNearbyUnits takes real x, real y, real range returns nothing
 endfunction
 
 
-// 删除所有玩家开始点多余单位
+// 删除所有玩家出生点多余单位
 function MeleeClearExcessUnits takes nothing returns nothing
     local integer index
     local real    locX
@@ -9834,7 +9834,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 寻找玩家开始点附近的金矿
+// 寻找玩家出生点附近的金矿
 function MeleeEnumFindNearestMine takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
     local real dist
@@ -9853,7 +9853,7 @@ function MeleeEnumFindNearestMine takes nothing returns nothing
     endif
 endfunction
 
-// 寻找玩家开始点附近的金矿
+// 寻找玩家出生点附近的金矿
 // 主要用于对战初始化时创建被缠绕的金矿或闹鬼金矿
 function MeleeFindNearestMine takes location src, real range returns unit
     local group nearbyMines
@@ -9946,7 +9946,7 @@ endfunction
 //   - 5 Peasants, placed between start location and nearest gold mine
 //
 // 创建初始单位 - 人族
-// 创建点 - 玩家开始点
+// 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsHuman takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10022,7 +10022,7 @@ endfunction
 // Starting Units for Orc Players
 //   - 1 Great Hall, placed at start location
 //   - 5 Peons, placed between start location and nearest gold mine
-// 在玩家开始点创建初始单位 - 兽族
+// 在玩家出生点创建初始单位 - 兽族
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10095,7 +10095,7 @@ endfunction
 //   - 3 Acolytes, placed between start location and nearest gold mine
 //   - 1 Ghoul, placed between start location and nearest gold mine
 //   - Blight, centered on nearest gold mine, spread across a "large area"
-// 在玩家开始点创建初始单位 - 亡灵
+// 在玩家出生点创建初始单位 - 亡灵
 // 默认包含3个农民，1个食尸鬼，一个一本基地，一座闹鬼金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10180,7 +10180,7 @@ endfunction
 // Starting Units for Night Elf Players
 //   - 1 Tree of Life, placed by nearest gold mine, already entangled
 //   - 5 Wisps, placed between Tree of Life and nearest gold mine
-// 在玩家开始点创建初始单位 - 暗夜
+// 在玩家出生点创建初始单位 - 暗夜
 // 默认包含5个农民，一个一本基地，一座被缠绕的金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10259,7 +10259,7 @@ endfunction
 
 // Starting Units for Players Whose Race is Unknown
 //   - 12 Sheep, placed randomly around the start location
-// 在玩家开始点创建初始单位 - 未知种族
+// 在玩家出生点创建初始单位 - 未知种族
 // 默认包含12只绵羊，是的，12只绵羊（'nshe'）
 // 如果是重置版，建议手动改为24只，这属于官方BUG
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
@@ -10775,7 +10775,7 @@ function MeleeGetCrippledRevealedMessage takes player whichPlayer returns string
     return GetLocalizedString("CRIPPLE_REVEALING_PREFIX") + GetPlayerName(whichPlayer) + GetLocalizedString("CRIPPLE_REVEALING_POSTFIX")
 endfunction
 
-// 设置指定玩家是否暴露位置（开始点）
+// 设置指定玩家是否暴露位置（出生点）
 function MeleeExposePlayer takes player whichPlayer, boolean expose returns nothing
     local integer playerIndex
     local player  indexPlayer
@@ -10799,7 +10799,7 @@ function MeleeExposePlayer takes player whichPlayer, boolean expose returns noth
     call DestroyForce(toExposeTo)
 endfunction
 
-// 对所有玩家暴露 在规定时间未补造基地玩家 的位置（开始点）
+// 对所有玩家暴露 在规定时间未补造基地玩家 的位置（出生点）
 // 默认在对战模式胜负判定规则下运行
 function MeleeExposeAllPlayers takes nothing returns nothing
     local integer playerIndex
