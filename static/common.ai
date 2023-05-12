@@ -1244,11 +1244,14 @@ native DebugS               takes string str                            returns 
         constant integer DEFENSE_CAPTAIN    = 2
         // 攻击组及防御组
         constant integer BOTH_CAPTAINS      = 3
-        // 建造类型 单位或建筑，用于训练/建造/研究
+        // 建造类型 单位或建筑
+        // 用于训练单位/建造建筑
         constant integer BUILD_UNIT         = 1
-        // 建造类型 科技，用于训练/建造/研究
+        // 建造类型 科技
+        // 用于研究科技
         constant integer BUILD_UPGRADE      = 2
-        // 建造类型 分基地（分矿），用于训练/建造/研究
+        // 建造类型 分基地（分矿）
+        // 用于建造分基地
         constant integer BUILD_EXPAND       = 3
         // 建议用于升级二本主基地科技，默认值50
         // 暴雪未使用该变量
@@ -1308,15 +1311,15 @@ native DebugS               takes string str                            returns 
         integer array defense_units
         // 防御组数列，当前已记录到防御组的单位类型，在下次初始化前，AI会使用这些单位类型进行防御
         integer defense_length          = 0
-        // 训练/建造/研究数组 建造数量，每种单位/建筑/科技使用1个引索
+        // 训练/建造/研究数组 建造数量序列，每发送一次训练/建造/研究指令时，引索加1
         integer array build_qty
-        // 训练/建造/研究数组 建造类型（单位/建筑，科技，分基地），每种单位/建筑/科技使用1个引索
+        // 训练/建造/研究数组 建造类型（单位/建筑，科技，分基地）序列，每发送一次训练/建造/研究指令时，引索加1
         integer array build_type
-        // 训练/建造/研究数组 单位/建筑/科技类型（具体的单位ID），每种单位/建筑/科技使用1个引索
+        // 训练/建造/研究数组 单位/建筑/科技类型（具体的单位ID）序列，每发送一次训练/建造/研究指令时，引索加1
         integer array build_item
-        // 训练/建造/研究数组 建造位置（在哪个主/分基地建造），每种单位/建筑/科技使用1个引索
+        // 训练/建造/研究数组 建造位置（在哪个主/分基地建造）序列，每发送一次训练/建造/研究指令时，引索加1
         integer array build_town
-        // 建造组数列，当前已记录到建造队列的单位/建筑/科技类型，在下次初始化前，AI会依次训练/建造/研究
+        // 训练/建造/研究数组数列，当前已记录到建造序列的单位/建筑/科技类型，在下次初始化前，AI会依次训练/建造/研究
         integer build_length            = 0
         // 战役采金工人数量，默认5
         integer campaign_gold_peons     = 5
@@ -1328,15 +1331,15 @@ native DebugS               takes string str                            returns 
         integer min_creeps              = -1
         // 最大野怪（中立敌对玩家单位）等级，默认-1
         integer max_creeps              = -1
-        // 是否允许AI在第一座基地，以采集黄金/木材
+        // 是否允许AI开设第一座基地，以采集黄金/木材
         boolean harvest_town1           = true
-        // 是否允许AI在第二座基地，以采集黄金/木材
+        // 是否允许AI开设第二座基地，以采集黄金/木材
         boolean harvest_town2           = true
-        // 是否允许AI在第三座基地，以采集黄金/木材
+        // 是否允许AI开设第三座基地，以采集黄金/木材
         boolean harvest_town3           = true
-        // 战役人口（建筑）建造模式
+        // 战役人口建筑建造模式
         boolean do_campaign_farms       = true
-        // 二发英雄存在
+        // 二发英雄是否存在
         boolean two_heroes              = false
         // 是否允许获取飞行野怪（中立敌对玩家单位），默认不允许
         boolean allow_air_creeps        = false
@@ -1361,7 +1364,7 @@ native DebugS               takes string str                            returns 
     endglobals
     
     //============================================================================
-    // 根据玩家插槽查询玩家，插槽从1开始计算，玩家从0开始计算，玩家数字恒比插槽少1
+    // 根据玩家槽查询玩家，槽从1开始计算，玩家从0开始计算，玩家数字恒比槽少1
     function PlayerEx takes integer slot returns player
         return Player(slot-1)
     endfunction
@@ -1544,7 +1547,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 设置是否建造人口建筑
+    // 设置是否使用战役人口建筑建造模式
     function DoCampaignFarms takes boolean state returns nothing
         set do_campaign_farms = state
     endfunction
@@ -1562,13 +1565,13 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 获取当前AI玩家的黄金数（指定玩家）
+    // 查询当前AI玩家的黄金数（指定玩家）
     function GetGold takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_GOLD)
     endfunction
     
     //============================================================================
-    // 获取当前AI玩家的木材数
+    // 查询当前AI玩家的木材数
     function GetWood takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_LUMBER)
     endfunction
