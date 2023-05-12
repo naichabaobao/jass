@@ -4325,7 +4325,7 @@ native SubString takes string source, integer start, integer end returns string
 native StringLength takes string s returns integer
 // 转换字串符英文的大小写
 native StringCase takes string source, boolean upper returns string
-// 转换字符串为哈希码，在AI脚本中似乎只返回 null
+// 转换字符串为哈希码
 native StringHash takes string s returns integer
 
 // 获取（外部文件的）本地字符串 [R]
