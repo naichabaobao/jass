@@ -4850,9 +4850,9 @@ constant native GetTriggeringTrackable takes nothing returns trackable
 
 // EVENT_DIALOG_BUTTON_CLICK
 
-// 获取点击按钮
+// 获取被点击的对话框按钮
 constant native GetClickedButton takes nothing returns button
-// 获取点击对话框
+// 获取被点击的对话框
 constant native GetClickedDialog takes nothing returns dialog
 
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
