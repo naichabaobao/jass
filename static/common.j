@@ -199,7 +199,7 @@ type hashtable extends
 type framehandle extends handle
 // 原生框架/原生UI类型
 type originframetype extends handle
-// 原生框架/原生UI相对位置
+// 框架/UI相对位置
 type framepointtype extends handle
 // 文本对齐方式
 type textaligntype extends handle
