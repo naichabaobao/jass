@@ -4801,7 +4801,7 @@ native TriggerRegisterGameStateEvent takes trigger whichTrigger, gamestate which
 
 // 对话框事件
 native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog returns event
-// 对话框按钮被点击 [R]
+// 点击对话框按钮事件 [R]
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 //  EVENT_GAME_STATE_LIMIT
