@@ -2620,7 +2620,7 @@ endfunction
 //***************************************************************************
 
 
-// 创造天气效果
+// 创建天气效果
 function AddWeatherEffectSaveLast takes rect where, integer effectID returns weathereffect
     set bj_lastCreatedWeatherEffect = AddWeatherEffect(where, effectID)
     return bj_lastCreatedWeatherEffect
@@ -2639,14 +2639,14 @@ function RemoveWeatherEffectBJ takes weathereffect whichWeatherEffect returns no
 endfunction
 
 
-// 创造地形变化: 弹坑
+// 创建地形变化: 弹坑
 function TerrainDeformationCraterBJ takes real duration, boolean permanent, location where, real radius, real depth returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformCrater(GetLocationX(where), GetLocationY(where), radius, depth, R2I(duration * 1000), permanent)
     return bj_lastCreatedTerrainDeformation
 endfunction
 
 
-// 创造地域变形: 波纹
+// 创建地域变形: 波纹
 function TerrainDeformationRippleBJ takes real duration, boolean limitNeg, location where, real startRadius, real endRadius, real depth, real wavePeriod, real waveWidth returns terraindeformation
     local real spaceWave
     local real timeWave
@@ -2665,7 +2665,7 @@ function TerrainDeformationRippleBJ takes real duration, boolean limitNeg, locat
 endfunction
 
 
-// 创造地形变化: 冲击波
+// 创建地形变化: 冲击波
 function TerrainDeformationWaveBJ takes real duration, location source, location target, real radius, real depth, real trailDelay returns terraindeformation
     local real distance
     local real dirX
@@ -2686,7 +2686,7 @@ function TerrainDeformationWaveBJ takes real duration, location source, location
 endfunction
 
 
-// 创造地形变化: 随机
+// 创建地形变化: 随机
 function TerrainDeformationRandomBJ takes real duration, location where, real radius, real minDelta, real maxDelta, real updateInterval returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformRandom(GetLocationX(where), GetLocationY(where), radius, minDelta, maxDelta, R2I(duration * 1000), R2I(updateInterval * 1000))
     return bj_lastCreatedTerrainDeformation
@@ -6998,7 +6998,7 @@ function GetLastCreatedTimerBJ takes nothing returns timer
 endfunction
 
 
-// 创造计时器窗口
+// 创建计时器窗口
 function CreateTimerDialogBJ takes timer t, string title returns timerdialog
     set bj_lastCreatedTimerDialog = CreateTimerDialog(t)
     call TimerDialogSetTitle(bj_lastCreatedTimerDialog, title)
@@ -9552,13 +9552,13 @@ function SaveDyingWidget takes nothing returns nothing
 endfunction
 
 
-// 创造/删除 荒芜地表（不死族）在指定矩形区域
+// 创建/删除 荒芜地表（不死族）在指定矩形区域
 function SetBlightRectBJ takes boolean addBlight, player whichPlayer, rect r returns nothing
     call SetBlightRect(whichPlayer, r, addBlight)
 endfunction
 
 
-// 创造/删除 荒芜地表（不死族）在指定圆形区域
+// 创建/删除 荒芜地表（不死族）在指定圆形区域
 function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, location loc, real radius returns nothing
     call SetBlightLoc(whichPlayer, loc, radius, addBlight)
 endfunction
