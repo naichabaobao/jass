@@ -6114,26 +6114,26 @@ function DialogSetMessageBJ takes dialog whichDialog, string message returns not
 endfunction
 
 
-// 创造对话按钮
+// 创建对话按钮
 function DialogAddButtonBJ takes dialog whichDialog, string buttonText returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,0)
     return bj_lastCreatedButton
 endfunction
 
-// 添加对话框按钮(有快捷键) [R]
+// 添加对话框按钮(指定快捷键) [R]
 function DialogAddButtonWithHotkeyBJ takes dialog whichDialog, string buttonText, integer hotkey returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,hotkey)
     return bj_lastCreatedButton
 endfunction
 
 
-// 清除所有对话的标题和按钮
+// 清空对话框（标题和按钮）
 function DialogClearBJ takes dialog whichDialog returns nothing
     call DialogClear(whichDialog)
 endfunction
 
 
-// 最后创建的对话按钮
+// 获取最后创建的对话按钮
 function GetLastCreatedButtonBJ takes nothing returns button
     return bj_lastCreatedButton
 endfunction
