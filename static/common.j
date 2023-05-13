@@ -6068,7 +6068,7 @@ native DialogCreate takes nothing returns dialog
 native DialogDestroy takes dialog whichDialog returns nothing
 // 清空对话框
 native DialogClear takes dialog whichDialog returns nothing
-// 设置对话框信息
+// 设置对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
 // 添加对话框按钮 [R]
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
