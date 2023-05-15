@@ -889,16 +889,22 @@ globals
 	// 预设玩家种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
+	// 默认值在情节-玩家设置编辑
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
 	// 玩家控制者类型 电脑
+	// 默认值在情节-玩家设置编辑
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
 	// 玩家控制者类型 中立可营救
+	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
 	// 玩家控制者类型 中立被动
+	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
 	// 玩家控制者类型 中立敌对
+	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
 	// 玩家控制者类型 没有玩家
+	// 默认值在情节-玩家设置编辑
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -7171,8 +7177,10 @@ native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, b
 // Computer AI interface
 //
 // 启用对战 AI 脚本
+// AI只对电脑玩家生效
 native StartMeleeAI takes player num, string script returns nothing
 // 启用战役 AI 脚本
+// AI只对电脑玩家生效
 native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
 native CommandAI takes player num, integer command, integer data returns nothing
