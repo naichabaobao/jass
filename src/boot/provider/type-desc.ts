@@ -142,6 +142,23 @@ const map = new Map<string,string>([
 // 1.32
   ["minimapicon", "小地图特殊图标"],
   ["commandbuttoneffect", "特效按钮"],
+  
+// 自定义关键词
+  ["constant", "常数，表示该全局变量无法重新赋值，只能获取默认值"],
+
+// 物编-单位
+
+// 物编-物品
+
+// 物编-技能
+
+// 物编-科技
+
+// 物编-可破坏物
+  ["'DTep'", "升降机路径阻断器"],
+  ["'DTrf'", "升降机1],
+  ["'DTrx'", "升降机2],
+
 ]);
 
 export function getTypeDesc (name:string):string {
