@@ -906,6 +906,7 @@ globals
     boolean array      bj_meleeDefeated
     // 游戏胜利判断布尔值数组，每位玩家配一个
     boolean array      bj_meleeVictoried
+    // 创建初始单位触发器动作为亡灵种族创建的食尸鬼
     unit array         bj_ghoul
     // 玩家即将暴露计时器
     // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时器
@@ -6307,7 +6308,7 @@ endfunction
 
 // Force (whichPlayer) AI player to share vision and advanced unit control 
 // with all AI players of its allies.
-// 同队共享视野与单位控制权
+// 设置AI玩家向盟友共享视野与单位控制权
 function ShareEverythingWithTeamAI takes player whichPlayer returns nothing
     local integer playerIndex
     local player  indexPlayer
@@ -6330,7 +6331,7 @@ endfunction
 
 
 // Force (whichPlayer) to share vision and advanced unit control with all of his/her allies.
-// 设置玩家组内共享状态
+// 设置指定玩家向盟友共享视野与单位控制权
 // 会同时共享视野、共享单位控制、完全共享单位控制
 function ShareEverythingWithTeam takes player whichPlayer returns nothing
     local integer playerIndex
@@ -6354,7 +6355,7 @@ endfunction
 
 // Creates a 'Neutral Victim' player slot.  This slot is passive towards all
 // other players, but all other players are aggressive towards him/her.
-// 配置中立被动玩家联盟状态
+// 设置中立被动玩家联盟状态
 // 设置所有玩家和中立被动玩家相互结盟（被动结盟，互不侵犯）
 function ConfigureNeutralVictim takes nothing returns nothing
     local integer index
@@ -6382,14 +6383,14 @@ function ConfigureNeutralVictim takes nothing returns nothing
 endfunction
 
 
-// 设置玩家所有单位变更为中立被动玩家控制
+// 设置玩家所有单位移交给中立被动玩家控制
 function MakeUnitsPassiveForPlayerEnum takes nothing returns nothing
     call SetUnitOwner(GetEnumUnit(), Player(bj_PLAYER_NEUTRAL_VICTIM), false)
 endfunction
 
 
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
-// 将指定玩家的单位移交给中立被动玩家
+// 将指定玩家的单位移交给中立被动玩家控制
 function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
     local group   playerUnits = CreateGroup()
     call CachePlayerHeroData(whichPlayer)
@@ -6400,7 +6401,7 @@ endfunction
 
 
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
-// 联盟玩家的单位全部移交给中立被动玩家
+// 盟友玩家的单位全部移交给中立被动玩家控制
 function MakeUnitsPassiveForTeam takes player whichPlayer returns nothing
     local integer playerIndex
     local player  indexPlayer
