@@ -4221,7 +4221,7 @@ native SetMapName takes string name returns nothing
 native SetMapDescription takes string description returns nothing
 // 设置队伍
 native SetTeams takes integer teamcount returns nothing
-// 设置玩家
+// 设置玩家，需在设置玩家颜色前使用
 native SetPlayers takes integer playercount returns nothing
 // 默认出生点（指定坐标）
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
@@ -4269,13 +4269,13 @@ native GetPlayers takes nothing returns integer
 
 // 查询是否支持指定的游戏类型
 native IsGameTypeSupported takes gametype whichGameType returns boolean
-// 游戏选择类型
+// 获取游戏选择类型
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数状态是否开启（指定参数）
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取障碍设置，怀疑是最大生命值百分比限制
 constant native GetGamePlacement takes nothing returns placement
-// 当前游戏速度
+// 获取当前游戏速度
 constant native GetGameSpeed takes nothing returns gamespeed
 // 获取游戏难度，游戏难度和AI难度是两个维度的参数
 constant native GetGameDifficulty takes nothing returns gamedifficulty
@@ -4321,7 +4321,7 @@ native SetPlayerController takes player whichPlayer, mapcontrol controlType retu
 // 设置玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
 
-// 显示/隐藏计分屏显示 [R]
+// 显示/隐藏 计分屏显示 [R]
 native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns nothing
 
 // 获取玩家队伍编号
@@ -4339,6 +4339,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取玩家税率 [R]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询玩家优先种族是否指定种族
+// 在情节–玩家设置指定的种族，如果未指定（设为可选），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取玩家名字
 native GetPlayerName takes player whichPlayer returns string
