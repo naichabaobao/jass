@@ -77,6 +77,7 @@ native DebugS               takes string str                            returns 
     // 获取敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
+    // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
@@ -290,7 +291,7 @@ native DebugS               takes string str                            returns 
     native UnitAlive            takes unit id                               returns boolean
     // 查询单位是否可见
     native UnitInvis            takes unit id                               returns boolean
-    // 攻击组忽略指定类型单位的数量
+    // 查询攻击组已忽略的指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
     // 查询AI的任意基地是否被攻击
     // 与小地图警报的触发条件相同，但只针对基地
