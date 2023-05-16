@@ -1,277 +1,141 @@
 
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
-// 实体对象
 type agent extends handle  // all reference counted objects
-// 事件
 type event extends agent  // a reference to an event registration
-// 玩家
 type player extends agent  // a single player reference
-// 控件/容器
-// 可以是任意有生命的互动游戏对象，如单位、物品、可破坏物
 type widget extends agent  // an interactive game object with life
-// 单位
 type unit extends widget  // a single unit reference
-// 可破坏物
 type destructable extends widget
-// 物品
 type item extends widget
-// 技能
 type ability extends agent
-// 魔法效果
 type buff extends ability
-// 玩家组
 type force extends agent
-// 单位组
 type group extends agent
-// 触发器
 type trigger extends agent
-// 触发器条件
 type triggercondition extends agent
-// 触发器动作
 type triggeraction extends handle
-// 计时器
 type timer extends agent
-// 点
 type location extends agent
-// 区域
 type region extends agent
-// 矩形
 type rect extends agent
-// 条件表达式
 type boolexpr extends agent
-// 声音
 type sound extends agent
-// 条件方法
 type conditionfunc extends boolexpr
-// 过滤方法
 type filterfunc extends boolexpr
-// 单位池
 type unitpool extends handle
-// 物品池
 type itempool extends handle
-// 种族
 type race extends handle
-// 联盟类型
 type alliancetype extends handle
-// 优先种族
 type racepreference extends handle
-// 游戏状态
 type gamestate extends handle
-// 游戏整点状态
 type igamestate extends gamestate
-// 游戏浮点状态
 type fgamestate extends gamestate
-// 玩家状态
 type playerstate extends handle
-// 玩家得分
 type playerscore extends handle
-// 玩家游戏结果
 type playergameresult extends handle
-// 单位状态
 type unitstate extends handle
-// AI难度
 type aidifficulty extends handle
 
-// 事件ID
 type eventid extends handle
-// 游戏事件
 type gameevent extends eventid
-// 玩家事件
 type playerevent extends eventid
-// 玩家单位事件
 type playerunitevent extends eventid
-// 单位事件
 type unitevent extends eventid
-// 比较算符
 type limitop extends eventid
-// 控件/容器事件
 type widgetevent extends eventid
-// 对话框事件
 type dialogevent extends eventid
-// 单位类型
 type unittype extends handle
 
-// 游戏速度
 type gamespeed extends handle
-// 游戏难度（用于战役地图）
 type gamedifficulty extends handle
-// 游戏类型
 type gametype extends handle
-// 地图参数
 type mapflag extends handle
-// 地图可见性
 type mapvisibility extends handle
-// 地图设置
 type mapsetting extends handle
-// 地图密度
 type mapdensity extends handle
-// 玩家控制者类型
 type mapcontrol extends handle
-// 小地图特殊图标
 type minimapicon extends handle
-// 玩家槽状态
 type playerslotstate extends handle
-// 音量组
 type volumegroup extends handle
-// 镜头属性
 type camerafield extends handle
-// 镜头
 type camerasetup extends handle
-// 玩家颜色
 type playercolor extends handle
-// 出生点
 type placement extends handle
-// 出生点分布优先权
 type startlocprio extends handle
-// 罕见动画控制
 type raritycontrol extends handle
-// 混合模式
 type blendmode extends handle
-// 纹理贴图标志
 type texmapflags extends handle
-// 特效
 type effect extends agent
-// 特效类型
 type effecttype extends handle
-// 天气特效
 type weathereffect extends handle
-// 地形变化
 type terraindeformation extends handle
-// 迷雾状态
 type fogstate extends handle
-// 可见度修整器
 type fogmodifier extends agent
-// 对话框
 type dialog extends agent
-// 按钮
 type button extends agent
-// 任务
 type quest extends agent
-// 任务要求
 type questitem extends agent
-// 任务失败条件
 type defeatcondition extends agent
-// 计时器窗口
 type timerdialog extends agent
-// 排行榜
 type leaderboard extends agent
-// 多面板
 type multiboard extends agent
-// 多面板项目
 type multiboarditem extends agent
-// 可追踪物
 type trackable extends agent
-// 游戏缓存
 type gamecache extends agent
-// 版本
-// 混乱之治 或 冰封王座
 type version extends handle
-// 物品类型
 type itemtype extends handle
-// 漂浮文字
 type texttag extends handle
-// 攻击类型
 type attacktype extends handle
-// 伤害类型
 type damagetype extends handle
-// 武器类型
 type weapontype extends handle
-// 声音类型
 type soundtype extends handle
-// 闪电效果
 type lightning extends handle
-// 路径类型
 type pathingtype extends handle
-// 鼠标按键类型
 type mousebuttontype extends handle
-// 动画类型
 type animtype extends handle
-// 子动画类型
 type subanimtype extends handle
-// 图像
 type image extends handle
-// 地表纹理
 type ubersplat extends handle
-// 哈希表
 type hashtable extends 
-// 框架/UI
 type framehandle extends handle
-// 原生框架/原生UI类型
 type originframetype extends handle
-// 框架/UI相对位置
 type framepointtype extends handle
-// 文本对齐方式
 type textaligntype extends handle
-// 框架/UI事件类型
 type frameeventtype extends handle
-// 键盘按键类型
 type oskeytype extends handle
-// 技能整数域
 type abilityintegerfield extends handle
-// 技能实数域
 type abilityrealfield extends handle
-// 技能布尔值域
 type abilitybooleanfield extends handle
-// 技能字串符域
 type abilitystringfield extends handle
-// 技能随等级改变的整数域
 type abilityintegerlevelfield extends handle
-// 技能随等级改变的实数域
 type abilityreallevelfield extends handle
-// 技能随等级改变的布尔值域
 type abilitybooleanlevelfield extends handle
-// 技能随等级改变的字串符域
 type abilitystringlevelfield extends handle
-// 技能随等级改变的整数数组域
 type abilityintegerlevelarrayfield extends handle
-// 技能随等级改变的实数数组域
 type abilityreallevelarrayfield extends handle
-// 技能随等级改变的布尔值数组域
 type abilitybooleanlevelarrayfield extends handle
-// 技能随等级改变的字串符数组域
 type abilitystringlevelarrayfield extends handle
-// 单位整数域
 type unitintegerfield extends handle
-// 单位实数域
 type unitrealfield extends handle
-// 单位布尔值域
 type unitbooleanfield extends handle
-// 单位字串符域
 type unitstringfield extends handle
-// 单位武器整数域
 type unitweaponintegerfield extends handle
-// 单位武器实数域
 type unitweaponrealfield extends handle
-// 单位武器布尔值域
 type unitweaponbooleanfield extends handle
-// 单位武器字串符域
 type unitweaponstringfield extends handle
-// 物品整数域
 type itemintegerfield extends handle
-// 物品实数域
 type itemrealfield extends handle
-// 物品布尔值域
 type itembooleanfield extends handle
-// 物品字串符域
 type itemstringfield extends handle
-// 移动类型
 type movetype extends handle
-// 目标类型
 type targetflag extends handle
-// 装甲类型
 type armortype extends handle
-// 英雄属性
 type heroattribute extends handle
-// 防御类型
 type defensetype extends handle
-// 生命恢复类型
 type regentype extends handle
-// 单位类别
 type unitcategory extends handle
-// 放置要求（默认用于建筑物）
 type pathingflag extends handle
-// 特效按钮
 type commandbuttoneffect extends handle
 
 // 转换种族
@@ -300,7 +164,7 @@ constant native ConvertGameEvent takes integer i returns gameevent
 constant native ConvertPlayerEvent takes integer i returns playerevent
 // 转换玩家单位事件
 constant native ConvertPlayerUnitEvent takes integer i returns playerunitevent
-// 转换控件/容器事件
+// 转换实体/微件事件
 constant native ConvertWidgetEvent takes integer i returns widgetevent
 // 转换对话框事件
 constant native ConvertDialogEvent takes integer i returns dialogevent
