@@ -226,7 +226,7 @@ constant native ConvertWeaponType takes integer i returns weapontype
 constant native ConvertSoundType takes integer i returns soundtype
 // 转换路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
-// 转换鼠标按钮类型
+// 转换鼠标按键类型
 constant native ConvertMouseButtonType takes integer i returns mousebuttontype
 // 转换动画类型
 constant native ConvertAnimType takes integer i returns animtype
@@ -753,10 +753,10 @@ globals
 	// 预设玩家种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
-	// 默认值在情节-玩家设置编辑
+	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
 	// 玩家控制者类型 电脑
-	// 默认值在情节-玩家设置编辑
+	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
 	// 玩家控制者类型 中立可营救
 	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
@@ -768,7 +768,7 @@ globals
 	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
 	// 玩家控制者类型 没有玩家
-	// 默认值在情节-玩家设置编辑
+	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
