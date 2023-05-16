@@ -15,10 +15,10 @@ native DebugS               takes string str                            returns 
     native DisplayTextII        takes integer p, string str, integer v1, integer v2 returns nothing
     // 给指定玩家显示指定文本，带3个数字
     native DisplayTextIII       takes integer p, string str, integer v1, integer v2, integer v3 returns nothing
-    // AI脚本是否允许显示调试文本，供开发者DEBUG
+    // 查询AI脚本是否允许显示调试文本，以供开发者DEBUG
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
-    // 在1.29及以上版本中，返回的是0~23任意一个整数，以下则是0~11
+    // 在1.29及以上版本中，返回的是0~23中的一个整数，以下则是0~11
     native GetAiPlayer          takes nothing                               returns integer
     // 英雄升级技能相关函数 获取升级的英雄类型
     native GetHeroId            takes nothing                               returns integer
@@ -42,11 +42,11 @@ native DebugS               takes string str                            returns 
     // 获取指定单位/建筑/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
-    // 拥有的金矿数
+    // 获取拥有的金矿数
     // 会检查开始点附近所有矿，而不是只查闹鬼金矿
     // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
     native GetMinesOwned        takes nothing                               returns integer
-    // 拥有的所有金矿的金钱数量，并返回第一座矿的金钱数
+    // 获取拥有的所有金矿的金钱数量，并返回第一座矿的金钱数
     // 会检查开始点所有矿，而不是只查闹鬼金矿
     // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
@@ -54,16 +54,16 @@ native DebugS               takes string str                            returns 
     // 只检查主城，如果亡灵开矿不造主城，AI会视为无基地
     // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
     native TownWithMine         takes nothing                               returns integer
-    // 指定编号的基地是否有金矿
+    // 查询指定编号的基地是否有金矿
     // @param townid基地编号，-1为不限
     native TownHasMine          takes integer townid                        returns boolean
     // 指定编号的基地是否拥有城镇（一、二或三本任意基地）
     // @param townid基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
+    // 获取指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 升级指定科技需要消耗的金钱数量，指定id就是指定科技类型
+    // 获取升级指定科技需要消耗的金钱数量，指定id就是指定科技类型
     native GetUpgradeGoldCost   takes integer id                            returns integer
     // 升级指定科技需要消耗的木材数量，指定id就是指定科技类型
     native GetUpgradeWoodCost   takes integer id                            returns integer
@@ -94,7 +94,7 @@ native DebugS               takes string str                            returns 
     native SetUpgrade           takes integer id                            returns boolean
     // 设置英雄升级技能函数
     native SetHeroLevels        takes code func                             returns nothing
-    // 是否允许设置新英雄
+    // 是否设置新英雄
     // 意义不明，可能和学习技能有关
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
@@ -111,9 +111,9 @@ native DebugS               takes string str                            returns 
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
     
-    // 启用战役AI
+    // 启用战役AI（仅对电脑玩家生效）
     native SetCampaignAI        takes nothing                               returns nothing
-    // 启用对战AI
+    // 启用对战AI（仅对电脑玩家生效）
     native SetMeleeAI           takes nothing                               returns nothing
     // 允许/禁止 优先攻击英雄
     native SetTargetHeroes      takes boolean state                         returns nothing
@@ -144,7 +144,7 @@ native DebugS               takes string str                            returns 
     native SetCaptainChanges    takes boolean allow                         returns nothing
     // 启用/禁用 主动攻击敌人基地
     native SetSmartArtillery    takes boolean state                         returns nothing
-    // 防守单位被杀后，AI的补充次数
+    // 设置防守单位被杀后，AI的补充次数
     native SetReplacementCount  takes integer qty                           returns nothing
     // 允许/禁止 受伤单位回主基地或生命之泉疗伤
     native GroupTimedLife       takes boolean allow                         returns nothing
@@ -181,9 +181,9 @@ native DebugS               takes string str                            returns 
     native GetExpansionY        takes nothing                               returns integer
     // 设置某种阶段点，意义不明
     native SetStagePoint        takes real x, real y                        returns nothing
-    // 让攻击组攻击指定目标
+    // 命令攻击组攻击指定目标
     native AttackMoveKill       takes unit target                           returns nothing
-    // 让攻击指组攻击指定坐标
+    // 命令攻击指组攻击指定坐标
     native AttackMoveXY         takes integer x, integer y                  returns nothing
     // 在指定坐标卸载单位
     // 该命令只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
@@ -197,9 +197,9 @@ native DebugS               takes string str                            returns 
     // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家开始点
     // 该指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-    // 攻击组是否正在战斗
+    // 查询攻击组是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
-    // 指定单位是否有防御塔保护
+    // 查询指定单位是否有防御塔保护
     native IsTowered            takes unit target                           returns boolean
     // 清理上一次的AI采集工人分配设置
     // 暴雪在每次运行 HarvestGold 和 HarvestWood 前都进行了清理
@@ -238,37 +238,37 @@ native DebugS               takes string str                            returns 
     native TeleportCaptain      takes real x, real y                        returns nothing
     // 清除攻击组当前的攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
-    // 让攻击组攻击到指定坐标
+    // 命令攻击组攻击到指定坐标
     // 可配合 DisablePathing 控制是否允许攻击组在路上战斗（移动攻击）
     native CaptainAttack        takes real x, real y                        returns nothing
-    // 让攻击组攻击玩家的单位
+    // 命令攻击组攻击玩家的单位
     native CaptainVsUnits       takes player id                             returns nothing
-    // 让攻击组攻击指定玩家
+    // 命令攻击组攻击指定玩家
     native CaptainVsPlayer      takes player id                             returns nothing
-    // 让攻击组回家
+    // 命令攻击组回家
     native CaptainGoHome        takes nothing                               returns nothing
-    // 攻击组是否在家
+    // 查询攻击组是否在家
     native CaptainIsHome        takes nothing                               returns boolean
-    // 攻击组是否完整
+    // 查询攻击组是否完整
     native CaptainIsFull        takes nothing                               returns boolean
-    // 攻击组是否为空
+    // 查询攻击组是否为空
     native CaptainIsEmpty       takes nothing                               returns boolean
-    // 攻击组规模，数值越高，规模越大
+    // 获取攻击组规模，数值越高，规模越大
     native CaptainGroupSize     takes nothing                               returns integer
-    // 攻击组准备情况
+    // 获取攻击组准备情况
     // 似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
-    // 攻击组是否在撤退
+    // 查询攻击组是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 攻击组整体生命值
+    // 获取攻击组整体生命值
     // 似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
     // 攻击组整体魔法值
     // 似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
-    // 攻击组是否到达目的地
+    // 查询攻击组是否到达目的地
     native CaptainAtGoal        takes nothing                               returns boolean
-    // 地图上是否还有中立敌对玩家的单位，即野怪 
+    // 查询地图上是否还有中立敌对玩家的单位，即野怪 
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
     // 在攻击组添加自杀单位，指定单位类型和数量
@@ -286,16 +286,16 @@ native DebugS               takes string str                            returns 
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（期间不执行任何指令）
     native Sleep                takes real seconds                          returns nothing
-    // 单位是否存活
+    // 查询单位是否存活
     native UnitAlive            takes unit id                               returns boolean
-    // 单位是否可见
+    // 查询单位是否可见
     native UnitInvis            takes unit id                               returns boolean
     // 攻击组忽略指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
-    // AI的任意基地被攻击
+    // 查询AI的任意基地是否被攻击
     // 与小地图警报的触发条件相同，但只针对基地
     native TownThreatened       takes nothing                               returns boolean
-    // 是否允许在未到达目的地前（攻击组/防御组移动过程中）战斗
+    // 允许在未到达目的地前（攻击组/防御组移动过程中）战斗
     native DisablePathing       takes nothing                               returns nothing
     // 获得命令队列中的指令条数
     native SetAmphibious        takes nothing                               returns nothing
