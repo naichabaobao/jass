@@ -3763,7 +3763,7 @@ function SetItemPositionLoc takes item whichItem, location loc returns nothing
 endfunction
 
 
-// 学习英雄技能
+// 获取学习的英雄技能
 function GetLearnedSkillBJ takes nothing returns integer
     return GetLearnedSkill()
 endfunction
@@ -3784,12 +3784,12 @@ function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
 
-// 设置玩家障碍恢复时间
+// 设置玩家复活时间
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家障碍恢复时间
+// 获取玩家复活时间
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
