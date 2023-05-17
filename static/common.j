@@ -4564,7 +4564,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 
 // Returns full map bounds, including unplayable borders, in world coordinates
 // Returns full map bounds, including unplayable borders, in world coordinates
-// 获取可用地图区域
+// 获取完整地图区域
 // 会生成区域，用完请注意排泄
 native GetWorldBounds takes nothing returns rect
 
