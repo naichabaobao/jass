@@ -3763,7 +3763,7 @@ function SetItemPositionLoc takes item whichItem, location loc returns nothing
 endfunction
 
 
-// 获取学习的英雄技能
+// 获取学习的技能
 function GetLearnedSkillBJ takes nothing returns integer
     return GetLearnedSkill()
 endfunction
