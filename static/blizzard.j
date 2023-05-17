@@ -2153,7 +2153,7 @@ endfunction
 
 // Query the playable map area, as defined at map init.
 //
-// 获取可玩的地图区域
+// 获取可用地图区域
 // 会生成区域，用完请注意排泄
 function GetPlayableMapRect takes nothing returns rect
     return bj_mapInitialPlayableArea
@@ -2162,7 +2162,7 @@ endfunction
 
 // Query the entire map area, as defined at map init.
 //
-// 获取全地图可用区域
+// 获取完整地图区域
 // 会生成区域，用完请注意排泄
 function GetEntireMapRect takes nothing returns rect
     return GetWorldBounds()
