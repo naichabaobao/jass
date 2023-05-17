@@ -27,12 +27,11 @@ globals
         // 卡尔萨斯
         integer Hkal
 
+
         // 人族对战单位
 
         // 矮人直升机
         integer hgyr
-        // 水元素
-        integer hwat
         // 人族步兵
         integer hfoo
         // 狮鹫骑士
@@ -47,7 +46,7 @@ globals
         integer hmpr
         // 矮人火枪手
         integer hrif
-        // 女巫
+        // 女巫（人族）
         integer hsor
         // 攻城坦克
         integer hmtt
@@ -59,7 +58,18 @@ globals
         integer hspt
         // 龙鹰骑士
         integer hdhw
-    
+        // 水元素（1级）
+        integer hwat
+        // 水元素（2级）
+        integer hwt2
+        // 水元素（3级）
+        integer hwt3
+        // 凤凰（人族）
+        integer hphx
+        // 凤凰蛋（人族）
+        integer hpxe
+
+
         // 人族战役单位
 
         // 血精灵牧师
@@ -68,8 +78,13 @@ globals
         integer hbes
         // 血精灵工人
         integer nhew
-    
-        // 人族对战建筑
+        // 麦迪文
+        integer nmed
+        // 麦迪文（乌鸦形态）
+        integer nmdm
+
+
+        // 人族建筑
 
         // 狮鹫笼
         integer hgra
@@ -107,6 +122,12 @@ globals
         integer hvlt
 
 
+        // 人族战役建筑
+
+        // 传送门
+        integer hprt
+
+
         // 兽族对战英雄
 
         // 剑圣
@@ -117,7 +138,8 @@ globals
         integer Otch
         // 暗影猎手
         integer Oshd
-    
+
+
         // 兽族战役英雄
 
         // 格罗玛什·地狱咆哮
@@ -129,7 +151,7 @@ globals
         // 萨尔
         integer Othr
 
-    
+
         // 兽族对战单位
 
         // 兽族步兵（编辑器无此单位）
@@ -162,8 +184,9 @@ globals
         integer ospw
         // 灵魂行者（虚无形态）
         integer ospm
-    
-        // 兽族对战建筑
+
+
+        // 兽族建筑
 
         // 风暴祭坛
         integer oalt
@@ -190,7 +213,7 @@ globals
         // 巫毒小屋
         integer ovln
 
-    
+
         // 魔兽争霸2兽族单位
 
         // 食人魔法师
@@ -205,7 +228,8 @@ globals
         integer nw2w
         // 猪圈
         integer npgf
-    
+
+
         // 兽族战役单位
 
         // 邪兽人步兵
@@ -277,7 +301,8 @@ globals
         integer uobs
         // 毁灭者
         integer ubsp
-    
+
+
         // 不死族建筑
 
         // 闹鬼金矿
@@ -312,9 +337,8 @@ globals
         integer ugrv
         // 遗物陵墓
         integer utom
-    
 
-    
+
         // 暗夜精灵族对战英雄
 
         // 恶魔猎手
@@ -327,7 +351,8 @@ globals
         integer Emoo
         // 守望者
         integer Ewar
-    
+
+
         // 暗夜精灵族战役英雄
 
         // 希尔瓦娜斯
@@ -340,7 +365,7 @@ globals
         integer Eevm
         // 玛維
         integer Ewrd
-    
+
     
         // 暗夜精灵族单位
 
@@ -374,7 +399,8 @@ globals
         integer emtg
         // 精灵龙
         integer efdr
-    
+
+
         // 暗夜精灵族战役单位
 
         // 弓箭手（高等精灵）
@@ -391,9 +417,10 @@ globals
         integer nenp
         // 瘟疫树人
         integer nepl
-        // 珊蒂斯
+        // 珊蒂斯（暗夜精灵族）
         integer eshd
-    
+
+
         // 暗夜精灵族建筑
 
         // 知识古树
@@ -402,17 +429,17 @@ globals
         integer eaom
         // 风之古树
         integer eaow
+        // 生命之树（暗夜一本）
+        integer etol
         // 纪元之树（暗夜二本）
         integer etoa
         // 永恒之树（暗夜三本）
         integer etoe
-        // 生命之树（暗夜一本）
-        integer etol
         // 守护古树
         integer etrp
         // 长者祭坛
         integer eate
-        // 熊窝（编辑器无此单位 ）
+        // 熊窝（暗夜精灵族）（编辑器无此单位）
         integer edol
         // 奇美拉栖木
         integer edos
@@ -424,8 +451,9 @@ globals
         integer egol
         // 奇迹古树
         integer eden
-    
-        // 暗夜精灵族战役建筑
+
+
+        // 高等精灵族/血精灵族战役建筑
 
         // 高等精灵农场
         integer nefm
@@ -439,6 +467,10 @@ globals
         integer negt
         // 高等精灵兵营
         integer nheb
+
+
+        // 腐化的暗夜精灵族/萨特族建筑
+
         // 腐化的生命之树
         integer nctl
         // 腐化的月亮井
@@ -447,52 +479,198 @@ globals
         integer ncap
         // 腐化的战争古树
         integer ncaw
-    
-        // 暗夜精灵族科技
+        // 威能之泉
+        integer nfnp
 
-        // 月之力量
-        integer Resm
-        // 野性力量
-        integer Resw
-        // 月之护甲
-        integer Rema
-        // 强化外皮
-        integer Rerh
-        // 夜视能力
-        integer Reuv
-        // 自然祝福
-        integer Renb
-        // 哨兵
-        integer Resc
-        // 升级月刃
-        integer Remg
-        // 强弓
-        integer Reib
-        // 箭术
-        integer Remk
-        // 猛禽德鲁伊专家级训练
-        integer Redt
-        // 利爪德鲁伊专家级训练
-        integer Redc
-        // 驱除魔法（暗夜）
-        integer Resi
-        // 腐蚀吐息
-        integer Recb
-        // 角鹰兽训练
-        integer Reht
-        // 不明科技（暗夜精灵族）（编辑器无此科技）
-        integer Repd
-        // 利爪之印
-        integer Reeb
-        // 猛禽之印
-        integer Reec
-        // 硬化体肤
-        integer Rehs
-        // 抗性体肤
-        integer Rers
-        // 月井之春
-        integer Rews
+
+        // 达拉内尔族（破碎者）英雄
+
+        // 阿卡玛（达拉内尔族（破碎者））
+        integer Naka
+
+
+        // 达拉内尔族（破碎者）单位
+
+        // 德莱尼工人（达拉内尔族（破碎者））
+        integer ndrl
+        // 德莱尼守备官（达拉内尔族（破碎者））
+        integer ndrn
+        // 德莱尼追猎者（达拉内尔族（破碎者））
+        integer ndrt
+        // 德莱尼守卫（达拉内尔族（破碎者））
+        integer ndrf
+        // 德莱尼保护者（达拉内尔族（破碎者））
+        integer ndrp
+        // 德莱尼信徒（达拉内尔族（破碎者））
+        integer ndrm
+        // 德莱尼哨兵（达拉内尔族（破碎者））
+        integer ndrw
+        // 德莱尼先驱（达拉内尔族（破碎者））
+        integer ndrh
+        // 德莱尼屠魔者（达拉内尔族（破碎者））
+        integer ndrd
+        // 德莱尼先知（达拉内尔族（破碎者））
+        integer ndrs
+        // 德莱尼投石车（达拉内尔族（破碎者））
+        integer ncat
+        // 火蜥蜴
+        integer ndsa
+
+
+        // 达拉内尔族（破碎者）建筑
+
+        // 先知陋室（达拉内尔族（破碎者））
+        integer ndh4
+        // 德莱尼兵营（达拉内尔族（破碎者））
+        integer ndh3
+        // 德莱尼避难所（达拉内尔族（破碎者））
+        integer ndh2
+        // 德莱尼小屋（达拉内尔族（破碎者））
+        integer ndh0
+        // 德莱尼小屋 2（达拉内尔族（破碎者））
+        integer ndh1
+        // 德莱尼酋长小屋（达拉内尔族（破碎者））
+        integer ndch
+
+
+        // 酒馆英雄
+
+        // 炼金术士（常规形态）
+        integer Nalc
+        // 炼金术士（变形 1级）
+        integer Nalm
+        // 炼金术士（变形 2级）
+        integer Nal2
+        // 炼金术士（变形 3级）
+        integer Nal3
+        // 海巫（娜迦族）
+        integer Nngs
+        // 修补匠（常规形态）
+        integer Ntin
+        // 修补匠（变身）
+        integer Nrob
+        // 兽王
+        integer Nbst
+        // 深渊领主
+        integer Nplh
+        // 炎魔领主
+        integer Nfir
+        // 熊猫酒仙
+        integer Npbm
+        // 黑暗游侠
+        integer Nbrn
+
+
+        // 特殊英雄
+
+        // 鱼人巫师
+        integer Nmsr
+
+
+        // 娜迦族英雄
+        // 海巫（娜迦族）(非酒馆出售)
+        integer Nswt 
+        // 瓦斯琪
+        integer Hvsh 
+
+
+        // 娜迦族单位
+
+        // 毒鳍龙
+        integer nsnp
+        // 纳迦海妖
+        integer nnsw
+        // 飞蛇
+        integer nwgs 
+        // 龙龟（娜迦族）
+        integer nhyc    
+        // 深海鱼人奴隶（娜迦族）
+        integer nmpe
+        // 纳迦侍从
+        integer nmyr
+        // 深海鱼人掠夺者（娜迦族）
+        integer nnmg
+        // 纳迦皇家卫兵
+        integer nnrg
+
+
+        // 娜迦建筑
+
+        // 潮汐神殿
+        integer nntt
+        // 珊瑚礁
+        integer nnfm
+        // 艾萨拉圣所
+        integer nnsa
+        // 孵化场
+        integer nnsg
+        // 潮汐守卫
+        integer nntg
+        // 深渊祭坛
+        integer nnad
     
+
+        // 小动物及人类
+
+        // 企鹅
+        integer npng
+        // 信天翁
+        integer nalb
+        // 兔子
+        integer necr
+        // 寄居蟹
+        integer nhmc
+        // 小蜥蜴
+        integer nskk
+        // 小鸡
+        integer nech
+        // 沙虫
+        integer ndwm
+        // 浣熊
+        integer nrac
+        // 海豹
+        integer nsea
+        // 狗
+        integer ndog
+        // 猪
+        integer npig
+        // 白色猫头鹰
+        integer nsno
+        // 秃鹫
+        integer nvul
+        // 绵羊
+        integer nshe
+        // 老鼠
+        integer nrat
+        // 螃蟹
+        integer ncrb
+        // 邪能野猪
+        integer nfbr
+        // 雄鹿
+        integer nder
+        // 青蛙
+        integer nfro
+        // 骷髅战士
+        integer nske
+        // 企鹅（水生的）
+        integer npnw
+        // 绵羊（两栖）
+        integer nsha
+        // 绵羊（水生的）
+        integer nshf
+        // 看门狗
+        integer ngog
+        // 小孩
+        integer nvlk
+        // 小孩（2）
+        integer nvk2
+        // 村民（女性）
+        integer nvlw
+        // 村民（男性）
+        integer nvil
+        // 村民（男性2）
+        integer nvl2
+
 
         // 中立单位
 
@@ -504,6 +682,8 @@ globals
         integer ninf
         // 末日守卫（标准）
         integer nbal
+        // 末日守卫（召唤）
+        integer nba2
         // 萨特
         integer nsty
         // 萨特欺诈者
@@ -534,65 +714,284 @@ globals
         integer nfre
 
 
-        //达拉内尔族（破碎者）单位
+        // 中立建筑及特殊建筑
+
+        // 地精实验室
+        integer ngad
+        // 地精商店
+        integer ngme
+        // 市集（市场）
+        integer nmrk
+        // 酒馆
+        integer ntav
+        // 生命之泉
+        integer nfoh
+        // 魔法之泉
+        integer nmoo
+        // 红龙栖地
+        integer ndrr
+        // 绿龙栖地
+        integer ndrg
+        // 虚空龙栖地
+        integer ndro
+        // 蓝龙栖地
+        integer ndru
+        // 青铜龙栖地
+        integer ndrz
+        // 黑龙栖地
+        integer ndrk
+        // 雇佣兵营地（洛丹伦（夏））
+        integer nmer
+        // 雇佣兵营地（洛丹伦（秋））
+        integer nmr2
+        // 雇佣兵营地（洛丹伦（冬））
+        integer nmr3
+        // 雇佣兵营地（贫瘠之地）
+        integer nmr4
+        // 雇佣兵营地（灰谷）
+        integer nmr5
+        // 雇佣兵营地（费伍德森林）
+        integer nmr6
+        // 雇佣兵营地（诺森德）
+        integer nmr7
+        // 雇佣兵营地（城邦）
+        integer nmr8
+        // 雇佣兵营地（达拉然）
+        integer nmr9
+        // 雇佣兵营地（村庄）
+        integer nmr0
+        // 雇佣兵营地（地牢）
+        integer nmra
+        // 雇佣兵营地（地下）
+        integer nmrb
+        // 雇佣兵营地（沉落的废墟）
+        integer nmrc
+        // 雇佣兵营地（冰冠冰川）
+        integer nmrd
+        // 雇佣兵营地（外域）
+        integer nmre
+        // 雇佣兵营地（黑色城堡）
+        integer nmrf
+        // 传送门
+        integer nwgt
+        // 地精船坞
+        integer nshp
+        // 能量法阵
+        integer ncop
+        // 能量法阵（中型）
+        integer ncp2
+        // 能量法阵（大型的）
+        integer ncp3
+        // 帐篷
+        integer nten
+        // 帐篷 2
+        integer ntn2
+        // 帐篷 3
+        integer ntn3
+        // 冰冠方尖碑
+        integer nico
+        // 区域指示器（自定义战役）
+        integer nzin
+        // 复活石（面向东南）
+        integer nbse
+        // 复活石（面向西南）
+        integer nbsw
+        // 次元之门（面向东南）
+        integer ndke
+        // 次元之门（面向西南）
+        integer ndkw
+        // 被忘却者（古神）
+        integer nfgo
+        // 触须（古神）
+        integer nfgt
 
 
+        // 中立特殊单位
 
-        
-        //达拉内尔族（破碎者）建筑
+        // 运输船
+        integer nbot
+        // 船只
+        integer nbsp
+        // 地精伐木机
+        integer ngir
+        // 亡灵赛车
+        integer nccu
+        // 兽人赛车
+        integer ncco
+        // 矮人赛车
+        integer nccr
+        // 迪亚波罗赛车
+        integer nccd
+        // 战车
+        integer nwar
+        // 无骑手的马
+        integer hhdl
+        // 背负行囊的马
+        integer hrdh
+        // 货车
+        integer hbew
+        // 地精地雷（单位）
+        integer nglm
+        // 豺狼人督军
+        integer ngow
+        // 沥血者斯纳麦恩
+        integer ngos
+        // 血巫师
+        integer nwzw
+        // 石槌食人魔
+        integer nogo
+        // 石槌法师
+        integer nogn
+        // 石槌酋长
+        integer noga
+        // 防卫魔像
+        integer nggd
+        // 守护魔像
+        integer nggg
+        // 覆苔花岗岩魔像
+        integer nggm
+        // 血肉魔像
+        integer nfgl
 
 
+        // 星际争霸单位
 
+        // 泰伦人类陆战队员
+        integer zcso
+        // 刺蛇
+        integer zhyd
+        // 跳虫
+        integer zzrg
 
-        // 酒馆英雄
-
-
-        // 娜迦英雄
-        // 海巫（娜迦族）
-        integer Nngs 
-
-        // 瓦斯琪
-        integer Hvsh 
-    
-        // 娜迦单位
-
-        // 毒鳍龙
-        integer nsnp
-        // 纳迦海妖
-        integer nnsw
-        // 飞蛇
-        integer nwgs 
-        // 龙龟（娜迦族）
-        integer nhyc    
-        // 深海鱼人奴隶（娜迦族）
-        integer nmpe
-        // 纳迦侍从
-        integer nmyr
-        // 深海鱼人掠夺者（娜迦族）
-        integer nnmg
-        // 纳迦皇家卫兵
-        integer nnrg
-    
-        // 娜迦建筑
-
-        // 潮汐神殿
-        integer nntt
-        // 珊瑚礁
-        integer nnfm
-        // 艾萨拉圣所
-        integer nnsa
-        // 孵化场
-        integer nnsg
-        // 潮汐守卫
-        integer nntg
-        // 深渊祭坛
-        integer nnad
-    
 
 // 常用物品
 
-
-
+        // 物品 城镇传送卷轴
+        integer stwp
+        // 物品 传送法杖
+        integer stel
+        // 物品 召唤钻石
+        integer dsum
+        // 物品 召回护符
+        integer amrc
+        // 物品 庇护法杖
+        integer ssan
+        // 物品 保存法杖
+        integer  spre
+        // 物品 月亮石
+        integer moon
+        // 物品 速度之靴
+        integer bspd
+        // 物品 机械小动物
+        integer mcri
+        // 物品 闪电宝珠
+        integer oli2
+        // 物品 闪电宝珠
+        integer olig
+        // 物品 火焰宝珠
+        integer ofir
+        // 物品 火焰宝珠
+        integer ofr2
+        // 物品 腐蚀宝珠
+        integer ocor
+        // 物品 毒液宝珠
+        integer oven
+        // 物品 冰霜宝珠
+        integer ofro
+        // 物品 基尔加丹宝珠
+        integer gldo
+        // 物品 减速宝珠
+        integer oslo
+        // 物品 天界灵魂宝珠
+        integer cosl
+        // 物品 灵魂
+        integer soul
+        // 物品 灵魂宝石
+        integer gsou
+        // 物品 黑暗宝珠
+        integer odef
+        // 物品 暗影宝珠+10
+        integer sora
+        // 物品 暗影宝珠+1
+        integer sor1
+        // 物品 暗影宝珠+2
+        integer sor2
+        // 物品 暗影宝珠+3
+        integer sor3
+        // 物品 暗影宝珠+4
+        integer sor4
+        // 物品 暗影宝珠+5
+        integer sor5
+        // 物品 暗影宝珠+6
+        integer sor6
+        // 物品 暗影宝珠+7
+        integer sor7
+        // 物品 暗影宝珠+8
+        integer sor8
+        // 物品 暗影宝珠+9
+        integer sor9
+        // 物品 真视宝石
+        integer gemt
+        // 物品 暗夜精灵旗帜
+        integer nflg
+        // 物品 亡灵旗帜
+        integer uflg
+        // 物品 人类旗帜
+        integer flag
+        // 物品 兽人旗帜
+        integer oflg
+        // 物品 复活卷轴
+        integer srrc
+        // 物品 地精地雷
+        integer gobm
+        // 物品 地精夜视镜
+        integer tels
+        // 物品 迷你伐木场
+        integer tlum
+        // 物品 迷你兵营
+        integer tbar
+        // 物品 迷你农场
+        integer tfar
+        // 物品 迷你列王祭坛
+        integer tbak
+        // 物品 迷你铁匠铺
+        integer tbsm
+        // 物品 迷你城堡
+        integer tcas
+        // 物品 象牙塔
+        integer tsct
+        // 物品 迷你大厅
+        integer tgrh
+        // 物品 重修之书
+        integer tret
+        // 物品 金币
+        integer gold
+        // 物品 一捆木柴
+        integer lmbr
+        // 物品 重生符文
+        integer rreb
+        // 物品 全知雕文
+        integer gomn
+        // 物品 反魔法药剂
+        integer pams
+        // 物品 神圣药水
+        integer pdiv
+        // 物品 神圣药水
+        integer pdi2
+        // 物品 次级无敌药水
+        integer pdiv
+        // 物品 无敌药水
+        integer pnvu
+        // 物品 重生十字章
+        integer ankh
+        // 物品 警戒结界
+        integer wswd
+        // 物品 显影之尘
+        integer dust
+        // 物品 恢复卷轴
+        integer sreg
+        // 物品 治疗卷轴
+        integer shea
 
 
 // 对战英雄技能
@@ -891,6 +1290,52 @@ globals
         integer Rusp
         // 钻地
         integer Rubu
+
+
+        // 暗夜精灵族科技
+
+        // 月之力量
+        integer Resm
+        // 野性力量
+        integer Resw
+        // 月之护甲
+        integer Rema
+        // 强化外皮
+        integer Rerh
+        // 夜视能力
+        integer Reuv
+        // 自然祝福
+        integer Renb
+        // 哨兵
+        integer Resc
+        // 升级月刃
+        integer Remg
+        // 强弓
+        integer Reib
+        // 箭术
+        integer Remk
+        // 猛禽德鲁伊专家级训练
+        integer Redt
+        // 利爪德鲁伊专家级训练
+        integer Redc
+        // 驱除魔法（暗夜）
+        integer Resi
+        // 腐蚀吐息
+        integer Recb
+        // 角鹰兽训练
+        integer Reht
+        // 不明科技（暗夜精灵族）（编辑器无此科技）
+        integer Repd
+        // 利爪之印
+        integer Reeb
+        // 猛禽之印
+        integer Reec
+        // 硬化体肤
+        integer Rehs
+        // 抗性体肤
+        integer Rers
+        // 月井之春
+        integer Rews
 
 
         // 娜迦科技
