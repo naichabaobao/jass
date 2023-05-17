@@ -752,26 +752,26 @@ globals
     constant integer   bj_CORPSETYPE_BONE          = 1
 
     // Elevator pathing-blocker destructable code
-    // 升降机路径阻断器 物编代码 'DTep'
+    // 升降台墙 物编代码 'DTep'
     // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_BLOCKER_CODE    = 'DTep'
-    // 升降机1 物编代码 'DTrf'
+    // 升降台1 物编代码 'DTrf'
     // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_CODE01          = 'DTrf'
-    // 升降机2 物编代码 'DTrx'
+    // 升降台2 物编代码 'DTrx'
     // 可在物编的 可破坏物 分类下找到
     constant integer   bj_ELEVATOR_CODE02          = 'DTrx'
 
     // Elevator wall codes
-    // 升降机墙壁 所有墙
+    // 升降台墙壁 所有墙
     constant integer   bj_ELEVATOR_WALL_TYPE_ALL        = 0
-    // 升降机墙壁 东墙
+    // 升降台墙壁 东墙
     constant integer   bj_ELEVATOR_WALL_TYPE_EAST       = 1
-    // 升降机墙壁 北墙
+    // 升降台墙壁 北墙
     constant integer   bj_ELEVATOR_WALL_TYPE_NORTH      = 2
-    // 升降机墙壁 南墙
+    // 升降台墙壁 南墙
     constant integer   bj_ELEVATOR_WALL_TYPE_SOUTH      = 3
-    // 升降机墙壁 西墙
+    // 升降台墙壁 西墙
     constant integer   bj_ELEVATOR_WALL_TYPE_WEST       = 4
 
     //-----------------------------------------------------------------------
@@ -1026,9 +1026,9 @@ globals
     integer            bj_destRandomConsidered     = 0
     // 随机选取矩形区域的可破坏物，选取的可破坏物
     destructable       bj_destRandomCurrentPick    = null
-    // 可破坏物 升降机路径阻断器
+    // 可破坏物 升降台墙
     destructable       bj_elevatorWallBlocker      = null
-    // 可破坏物 相邻的升降机
+    // 可破坏物 相邻的升降台
     destructable       bj_elevatorNeighbor         = null
     // 随机选取的区域中的物品，区域内的物品数量
     integer            bj_itemRandomConsidered     = 0
@@ -5277,7 +5277,7 @@ endfunction
 
 // Determine the elevator's height from its occlusion height.
 //
-// 获取升降机高度
+// 获取升降台高度
 function GetElevatorHeight takes destructable d returns integer
     local integer height
 
@@ -5294,7 +5294,7 @@ endfunction
 // determines the elevator's current height from its occlusion height.
 // Arbitrarily changing an elevator's occlusion height is thus inadvisable.
 //
-// 设置升降机高度
+// 设置升降台高度
 function ChangeElevatorHeight takes destructable d, integer newHeight returns nothing
     local integer oldHeight
 
@@ -5379,7 +5379,7 @@ function NudgeObjectsInRect takes rect nudgeArea returns nothing
     call EnumItemsInRect(nudgeArea, null, function NudgeItemsInRectEnum)
 endfunction
 
-// 获取附近的升降机
+// 获取附近的升降台
 function NearbyElevatorExistsEnum takes nothing returns nothing
     local destructable d     = GetEnumDestructable()
     local integer      dType = GetDestructableTypeId(d)
@@ -5389,7 +5389,7 @@ function NearbyElevatorExistsEnum takes nothing returns nothing
     endif
 endfunction
 
-// 判断附近是否存在升降机
+// 判断附近是否存在升降台
 function NearbyElevatorExists takes real x, real y returns boolean
     local real findThreshold = 32
     local rect r
@@ -5403,7 +5403,7 @@ function NearbyElevatorExists takes real x, real y returns boolean
     return bj_elevatorNeighbor != null
 endfunction
 
-// 获取升降机路径阻断器
+// 获取升降台墙
 function FindElevatorWallBlockerEnum takes nothing returns nothing
     set bj_elevatorWallBlocker = GetEnumDestructable()
 endfunction
@@ -5412,7 +5412,7 @@ endfunction
 // This toggles pathing on or off for one wall of an elevator by killing
 // or reviving a pathing blocker at the appropriate location (and creating
 // the pathing blocker in the first place, if it does not yet exist).
-// 设置升降机路径阻断器
+// 设置升降台墙
 function ChangeElevatorWallBlocker takes real x, real y, real facing, boolean open returns nothing
     local destructable blocker = null
     local real         findThreshold = 32
@@ -5464,7 +5464,7 @@ function ChangeElevatorWallBlocker takes real x, real y, real facing, boolean op
 endfunction
 
 
-// 打开/关闭 升降机
+// 打开/关闭 升降台
 function ChangeElevatorWalls takes boolean open, integer walls, destructable d returns nothing
     local real x = GetDestructableX(d)
     local real y = GetDestructableY(d)
