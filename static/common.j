@@ -7273,23 +7273,23 @@ native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
 // 获取动画名
 native BlzGetAnimName takes animtype whichAnim returns string
-// 获取护甲值
+// 获取指定单位护甲值
 native BlzGetUnitArmor takes unit whichUnit returns real
-// 设置护甲值
+// 设置指定单位护甲值
 native BlzSetUnitArmor takes unit whichUnit, real armorAmount returns nothing
-// 隐藏技能
+// 隐藏指定单位技能
 native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag returns nothing
-// 禁用技能
+// 禁用指定单位技能
 native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
-// 取消限时生命
+// 取消指定单位限时生命
 native BlzUnitCancelTimedLife takes unit whichUnit returns nothing
 // 查询单位是否被选择
 native BlzIsUnitSelectable takes unit whichUnit returns boolean
 // 查询单位是否无敌
 native BlzIsUnitInvulnerable takes unit whichUnit returns boolean
-// 打断攻击
+// 打断指定单位攻击
 native BlzUnitInterruptAttack takes unit whichUnit returns nothing
-// 获取碰撞体积
+// 获取指定单位碰撞体积
 native BlzGetUnitCollisionSize takes unit whichUnit returns real
 // 获取技能魔法消耗
 native BlzGetAbilityManaCost takes integer abilId, integer level returns integer
@@ -7297,21 +7297,21 @@ native BlzGetAbilityManaCost takes integer abilId, integer level returns integer
 native BlzGetAbilityCooldown takes integer abilId, integer level returns real
 // 设置技能冷却时间
 native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level, real cooldown returns nothing
-// 获取单位技能
+// 获取单位技能冷却时间
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
-// 单位技能的剩余冷却时间
+// 获取单位技能的剩余冷却时间
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
-// 重设技能冷却
+// 重设单位技能冷却
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
-// 设置技能开始冷却
+// 设置单位技能开始冷却
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
 // 获取单位技能魔法消耗
 native BlzGetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level returns integer
 // 设置单位技能法力消耗
 native BlzSetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level, integer manaCost returns nothing
-// 获取本地单位Z坐标
+// 获取本地单位 Z 坐标
 native BlzGetLocalUnitZ takes unit whichUnit returns real
-// 降低玩家科技
+// 降低玩家科技等级
 native BlzDecPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 // 设置单位伤害事件的伤害
 native BlzSetEventDamage takes real damage returns nothing
