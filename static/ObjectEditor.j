@@ -1,5 +1,6 @@
 globals
 // 物理编辑器对照表（部分）
+// 以重置版为基准（v1.36）
 
 // 单位
 
@@ -16,7 +17,7 @@ globals
         integer Hblm
 
     
-        // 人族战役英雄
+        // 人族战役英雄及特殊人物
 
         // 吉安娜
         integer Hjai
@@ -26,6 +27,10 @@ globals
         integer Hlgr
         // 卡尔萨斯
         integer Hkal
+        // 麦迪文
+        integer nmed
+        // 麦迪文（乌鸦形态）
+        integer nmdm
 
 
         // 人族对战单位
@@ -50,7 +55,7 @@ globals
         integer hsor
         // 攻城坦克
         integer hmtt
-        // 攻城坦克（弹幕升级）
+        // 攻城坦克（火箭弹幕升级后）
         integer hrtt
         // 民兵
         integer hmil
@@ -78,10 +83,6 @@ globals
         integer hbes
         // 血精灵工人
         integer nhew
-        // 麦迪文
-        integer nmed
-        // 麦迪文（乌鸦形态）
-        integer nmdm
 
 
         // 人族建筑
@@ -140,16 +141,52 @@ globals
         integer Oshd
 
 
-        // 兽族战役英雄
+        // 兽族战役英雄及特殊人物
 
         // 格罗玛什·地狱咆哮
         integer Ogrh
-        // 格罗玛什·地狱咆哮（喝下恶魔之血）
+        // 格罗玛什·地狱咆哮（喝下恶魔之血/着魔的）
         integer Opgh
         // 黑石氏族剑圣
         integer Nbbc
         // 萨尔
         integer Othr
+        // 萨尔（无座骑）
+        integer Oths
+        // 加索克
+        integer ogrk
+        // 达克苏尔
+        integer odkt
+        // 贝恩
+        integer obai
+        // 沃金
+        integer ovlj
+        // 马索格
+        integer omtg
+        // 纳兹格雷尔
+        integer onzg
+        // 工程师加兹鲁维
+        integer negz
+        // 米纱
+        integer nmsh
+        // 凯恩·血蹄（过场动画）
+        integer Otcc
+        // 凯恩·血蹄
+        integer Ocbh
+        // 凯恩·血蹄（资料片）
+        integer Ocb2
+        // 古尔丹
+        integer Ogld
+        // 德雷克塔尔
+        integer Odrt
+        // 洛坎
+        integer Orkn
+        // 萨穆罗
+        integer Osam
+        // 陈·风暴烈酒
+        integer Nsjs
+        // 雷克萨
+        integer Orex
 
 
         // 兽族对战单位
@@ -164,7 +201,7 @@ globals
         integer ogru
         // 猎头者
         integer ohun
-        // 狂战士（猎头升级）
+        // 狂战士（猎头升级后）
         integer otbk
         // 科多兽
         integer okod
@@ -184,6 +221,28 @@ globals
         integer ospw
         // 灵魂行者（虚无形态）
         integer ospm
+        // 监视结界（单位）
+        integer nwad
+        // 警戒结界（单位）
+        integer oeye
+        // 治疗结界（单位）
+        integer ohwd
+        // 毒蛇结界（1级）（单位）
+        integer osp1
+        // 毒蛇结界（2级）（单位）
+        integer osp2
+        // 毒蛇结界（3级）（单位）
+        integer osp3
+        // 毒蛇结界（4级）（单位）
+        integer osp4
+        // 静滞陷阱（单位）
+        integer otot
+        // 幽灵狼（1级）
+        integer osw1
+        // 恐狼（2级）
+        integer osw2
+        // 影狼（3级）
+        integer osw3
 
 
         // 兽族建筑
@@ -232,6 +291,10 @@ globals
 
         // 兽族战役单位
 
+        // 奴隶主
+        integer owad
+        // 兽人督军
+        integer owar
         // 邪兽人步兵
         integer nchg
         // 邪兽人术士
@@ -242,10 +305,44 @@ globals
         integer ncpn
         // 邪兽人科多兽
         integer nckb
-        // 邪兽人地洞
+        // 邪兽人地洞（混乱）
         integer ocbw
-    
-    
+        // 兽人船坞
+        integer ocbw
+        // 巨龙栖地
+        integer ndrb
+        // 鲜血之泉
+        integer nbfl
+        // 被污染的生命之泉
+        integer ndfl
+        // 能量产生器
+        integer npgr
+        // 驭风者牢笼（1）
+        integer nwc1
+        // 驭风者牢笼（2）
+        integer nwc2
+        // 驭风者牢笼（3）
+        integer nwc3
+        // 驭风者牢笼（4）
+        integer nwc4
+        // 支柱（单位）
+        integer nspc
+        // 科多兽（无骑手）
+        integer oosc
+        // 灵魂驭风者
+        integer oswy
+        // 驭风者（无骑手）
+        integer ownr
+        // 地精爆破者
+        integer ngbl
+        // 兽人运输船
+        integer obot
+        // 兽人护卫舰
+        integer odes
+        // 兽人毁灭战舰
+        integer ojgn
+
+
         // 不死族对战英雄
 
         // 死亡骑士
@@ -256,7 +353,8 @@ globals
         integer Ulic
         // 地穴领主
         integer Ucrl
-    
+
+
         // 不死族战役英雄
 
         // 玛尔甘尼斯
@@ -267,7 +365,7 @@ globals
         integer Npld
         // 迪瑟洛克
         integer Udth
-    
+
 
         // 不死族对战单位
 
@@ -291,8 +389,6 @@ globals
         integer umtw
         // 通灵师（亡灵男巫）
         integer unec
-        // 骷髅战士
-        integer uske
         // 影魔（阴影）
         integer ushd
         // 邪灵空艇
@@ -301,6 +397,28 @@ globals
         integer uobs
         // 毁灭者
         integer ubsp
+        // 骷髅战士
+        integer uske
+        // 骷髅法师
+        integer uskm
+        // 钻地的地穴恶魔
+        integer ucrm
+        // 钻地的腐尸甲虫（2级）
+        integer ucsB
+        // 钻地的腐尸甲虫（3级）
+        integer ucsC
+        // 腐尸甲虫（1级）
+        integer ucs1
+        // 腐尸甲虫（2级）
+        integer ucs2
+        // 腐尸甲虫（3级）
+        integer ucs3
+        // 疾病之云（单位）
+        integer uplg
+        // 蝗虫（单位）
+        integer uloc
+        // 石像鬼石像形态
+        integer ugrm
 
 
         // 不死族建筑
@@ -366,7 +484,7 @@ globals
         // 玛維
         integer Ewrd
 
-    
+
         // 暗夜精灵族单位
 
         // 小精灵
@@ -393,12 +511,22 @@ globals
         integer esen
         // 奇美拉
         integer echm
-        // 树人
-        integer efon
         // 山岭巨人
         integer emtg
         // 精灵龙
         integer efdr
+        // 树人
+        integer efon
+        // 复仇的化身
+        integer espv
+        // 复仇之魂
+        integer even
+        // 猫头鹰斥候（1级）
+        integer nowl
+        // 猫头鹰斥候（2级）
+        integer now2
+        // 猫头鹰斥候（3级）
+        integer now3
 
 
         // 暗夜精灵族战役单位
@@ -592,6 +720,14 @@ globals
         integer nnmg
         // 纳迦皇家卫兵
         integer nnrg
+        // 召唤者（娜迦族）
+        integer nnsu
+        // 潜水的毒鳍龙
+        integer nsbs
+        // 潜水的纳迦侍从
+        integer nmys
+        // 潜水的纳迦皇家卫兵
+        integer nnrs    
 
 
         // 娜迦建筑
@@ -1140,6 +1276,7 @@ globals
         // 英雄技能 复仇（守望者）
         integer AEsv
 
+
         // 酒馆英雄技能
 
 
@@ -1147,6 +1284,80 @@ globals
 
 // 常见单位技能
 
+        // 单位技能 传送门技能
+        integer Awrp
+        // 单位技能 共享商店，联盟建筑
+        integer Aall
+        // 单位技能 出售单位
+        integer Asud
+        // 单位技能 出售物品
+        integer Asid
+        // 单位技能 卸载（空中载具）
+        integer Adro
+        // 单位技能 卸载（海上载具）
+        integer Sdro
+        // 单位技能 商店购买物品
+        integer Apit
+        // 单位技能 地雷 - 爆炸（地精地雷）
+        integer Amin
+        // 单位技能 死亡时造成范围伤害（地精地雷）
+        integer Amnx
+        // 单位技能 死亡时造成范围伤害（大地雷）
+        integer Amnz
+        // 单位技能 死亡时造成范围伤害（工兵）
+        integer Adda
+        // 单位技能 永久隐形
+        integer Apiv
+        // 单位技能 游荡（中立）
+        integer Awan
+        // 单位技能 无敌（中立）
+        integer Avul
+        // 单位技能 立刻复活英雄
+        integer Aawa
+        // 单位技能 立刻卸载（被缠绕的金矿）
+        integer Adri
+        // 单位技能 装载（地精飞艇）
+        integer Aloa
+        // 单位技能 装载（船） 
+        integer Slo3
+        // 单位技能 货舱（地精飞艇）
+        integer Sch3
+        // 单位技能 货舱（坦克）
+        integer Sch4
+        // 单位技能 货舱（船）
+        integer Sch5
+        // 单位技能 货舱（清道夫/绞肉车）
+        integer Sch2
+        // 单位技能 货舱（兽人地洞）
+        integer Abun
+        // 单位技能 货舱死亡（中立敌对） 
+        integer Achd
+        // 单位技能 金矿技能
+        integer Agld
+        // 单位技能 被缠绕的金矿技能
+        integer Aegm
+        // 单位技能 荒芜金矿技能
+        integer Abgm
+        // 单位技能 集结
+        integer ARal
+        // 单位技能 选择单位
+        integer Ane2
+        // 单位技能 选择英雄
+        integer Aneu
+        // 单位技能 装载小精灵（被缠绕的金矿）
+        integer Slo2
+        // 单位技能 装载（被缠绕的金矿） 
+        integer Aenc
+        // 单位技能 卸载尸体
+        integer Amed
+        // 单位技能 获取尸体
+        integer Amel
+        // 单位技能 装载（兽人地洞） 
+        integer Sloa
+        // 单位技能 解除戒备（兽人地洞） 
+        integer Astd
+        // 单位技能 运货骡子 
+        integer Apak
 
 
 // 科技
@@ -1200,6 +1411,10 @@ globals
         integer Rhfc
         // 迷雾之云
         integer Rhcd
+        // 裂甲之刃
+        integer Rhsb
+        // 背包（人类）
+        integer Rhpm
 
 
         // 兽族科技
@@ -1242,8 +1457,8 @@ globals
         integer Robk
         // 燃油（兽族）
         integer Robf
-        // 混乱（兽族）
-        integer Roch
+        // 背包（兽人）
+        integer Ropm
 
 
         // 不死族科技
@@ -1260,7 +1475,7 @@ globals
         integer Rugf
         // 蛛网
         integer Ruwb
-        // 不明科技（编辑器无此科技Ruab）
+        // 不明科技（编辑器无此科技）
         integer Ruab
         // 石像形态
         integer Rusf
@@ -1290,6 +1505,8 @@ globals
         integer Rusp
         // 钻地
         integer Rubu
+        // 背包（亡灵）
+        integer Rupm
 
 
         // 暗夜精灵族科技
@@ -1336,6 +1553,10 @@ globals
         integer Rers
         // 月井之春
         integer Rews
+        // 锐锋之刃
+        integer Repb
+        // 背包（暗夜精灵）
+        integer Repm
 
 
         // 娜迦科技
@@ -1346,21 +1567,34 @@ globals
         integer Rnat
         // 驱除魔法（娜迦族）
         integer Rnsi
-        // 纳迦海妖专家级训练
-        integer Rnsw
         // 诱捕（娜迦族）
         integer Rnen
+        // 潜水
+        integer Rnsb
+        // 纳迦海妖专家级训练
+        integer Rnsw
+
+
+        // 中立科技
+
+        // 混乱
+        integer Roch
+        // 夜视雕文（升级）
+        integer Rguv
+        // 强固雕文（升级1）
+        integer Rgfo
 
 
 // 常用可破坏物
 
-        // 升降机路径阻断器
+        // 可破坏物 升降台墙
         integer DTep
-        // 升降机1
+        // 可破坏物 升降台1
         integer DTrf
-        // 升降机2
+        // 可破坏物 升降台2
         integer DTrx
-
+        // 可破坏物 发光的传送门
+        integer OTsp
 
 
 endglobals
