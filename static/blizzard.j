@@ -58,11 +58,11 @@ globals
     constant real      bj_HANDICAP_EASY                 = 60.00
     // 障碍 - 普通，默认90.00
     constant real      bj_HANDICAP_NORMAL               = 90.00
-    // 损伤障碍 - 简单，默认50.00
+    // 伤害障碍 - 简单，默认50.00
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
-    // 损伤障碍 - 普通，默认90.00
+    // 伤害障碍 - 普通，默认90.00
     constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
-    // 损伤障碍 - 非困难，默认50.00
+    // 伤害障碍 - 非困难，默认50.00
 	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
     // 游戏开局阈值，默认0.01
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
@@ -3774,12 +3774,12 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
     call SuspendHeroXP(whichHero, not flag)
 endfunction
 
-// 设置玩家损伤障碍
+// 设置玩家伤害障碍
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家损伤障碍
+// 获取玩家伤害障碍
 function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
