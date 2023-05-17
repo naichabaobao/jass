@@ -5788,17 +5788,17 @@ constant native SetPlayerHandicapXP takes player whichPlayer, real handicap retu
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家损伤障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
-// 设置玩家的科技上限
+// 设置玩家的科技等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
-// 获取玩家的科技上限
+// 获取玩家的科技等级上限
 constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid returns integer
 // 增加科技等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 // 设置玩家科技等级
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
-// 获取玩家科技是否已经研究
+// 查询玩家科技是否已研究
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
-// 获取玩家科技数量
+// 查询玩家科技等级
 constant native GetPlayerTechCount takes player whichPlayer, integer techid, boolean specificonly returns integer
 
 // 设置单位所属玩家
