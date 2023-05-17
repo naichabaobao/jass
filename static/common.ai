@@ -363,7 +363,7 @@ native DebugS               takes string str                            returns 
         constant integer MASS_TELEPORT      = 'AHmt'
         // 技能 水元素（大法师）
         constant integer WATER_ELEMENTAL    = 'AHwe'
-        // 放逐（血法）
+        // 技能 放逐（血法）
         constant integer BANISH             = 'AHbn'
         // 技能 烈焰风暴（血法）
         constant integer FLAME_STRIKE       = 'AHfs'
@@ -559,7 +559,7 @@ native DebugS               takes string str                            returns 
         constant integer ENDURANE_AURA      = 'AOae'
         // 技能 重生（牛头）
         constant integer REINCARNATION      = 'AOre'
-        // 技能 技能 震荡波（牛头）
+        // 技能 震荡波（牛头）
         constant integer SHOCKWAVE          = 'AOsh'
         // 技能 战争践踏（牛头）
         constant integer WAR_STOMP          = 'AOws'
