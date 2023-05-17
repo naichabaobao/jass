@@ -77,7 +77,8 @@ native DebugS               takes string str                            returns 
     // 获取敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
-    // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
+    //
+ 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
@@ -440,9 +441,9 @@ native DebugS               takes string str                            returns 
         constant integer CANNON_TOWER       = 'hctw'
         // 城堡（人族三本基地）
         constant integer CASTLE             = 'hcas'
-        // 圣塔（编辑器无此单位 'htws'）
+        // 圣塔（人族）（编辑器无此单位 'htws'）
         constant integer CHURCH             = 'htws'
-        // 圣塔（编辑器无此单位 'htws'）
+        // 圣塔（人族）（编辑器无此单位 'htws'）
         constant integer MAGE_TOWER         =  CHURCH
         // 防御塔（人族）
         constant integer GUARD_TOWER        = 'hgtw'
@@ -474,11 +475,11 @@ native DebugS               takes string str                            returns 
         constant integer UPG_MELEE          = 'Rhme'
         // 黑火药
         constant integer UPG_RANGED         = 'Rhra'
-        // 炮兵（编辑器无此科技 'Rhaa'）
+        // 炮兵（人族）（编辑器无此科技 'Rhaa'）
         constant integer UPG_ARTILLERY      = 'Rhaa'
         // 钢铁装甲
         constant integer UPG_ARMOR          = 'Rhar'
-        // 黄金（编辑器无此科技 'Rhmi'）
+        // 黄金（人族）（编辑器无此科技 'Rhmi'）
         constant integer UPG_GOLD           = 'Rhmi'
         // 改良石工技术
         constant integer UPG_MASONRY        = 'Rhac'
@@ -500,7 +501,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_WOOD           = 'Rhlh'
         // 魔法岗哨
         constant integer UPG_SENTINEL       = 'Rhse'
-        // 散射（编辑器无此科技 'Rhsr'）
+        // 散射（人族）（编辑器无此科技 'Rhsr'）
         constant integer UPG_SCATTER        = 'Rhsr'
         // 飞行器炸弹
         constant integer UPG_BOMBS          = 'Rhgb'
@@ -634,7 +635,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_MELEE      = 'Rome'
         // 精钢远程武器
         constant integer UPG_ORC_RANGED     = 'Rora'
-        // 火炮（编辑器无此科技 'Roaa'）
+        // 火炮（兽族）（编辑器无此科技 'Roaa'）
         constant integer UPG_ORC_ARTILLERY  = 'Roaa'
         // 精钢护甲
         constant integer UPG_ORC_ARMOR      = 'Roar'
@@ -648,7 +649,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
         // 诱捕（兽族）
         constant integer UPG_ORC_ENSNARE    = 'Roen'
-        // 毒矛
+        // 毒矛（兽族）
         constant integer UPG_ORC_VENOM      = 'Rovs'
         // 巫医专家级训练
         constant integer UPG_ORC_DOCS       = 'Rowd'
@@ -668,7 +669,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_BERSERKER  = 'Robk'
         // 燃油（兽族）
         constant integer UPG_ORC_NAPTHA     = 'Robf'
-        // 混乱
+        // 混乱（兽族）
         constant integer UPG_ORC_CHAOS      = 'Roch'
     
         // Warcraft 2 orc units
@@ -806,7 +807,7 @@ native DebugS               takes string str                            returns 
         constant integer UNDEAD_ALTAR       = 'uaod'
         // 埋骨地
         constant integer BONEYARD           = 'ubon'
-        // 某种尖塔（编辑器无此单位 'ugsp'）
+        // 某种尖塔（不死族）（编辑器无此单位 'ugsp'）
         constant integer GARG_SPIRE         = 'ugsp'
         // 浮空城（大墓地）
         constant integer NECROPOLIS_1       = 'unpl'    // normal
@@ -846,7 +847,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_GHOUL_FRENZY   = 'Rugf'
         // 蛛网
         constant integer UPG_FIEND_WEB      = 'Ruwb'
-        // 不明科技（编辑器无此科技'Ruab'）
+        // 不明科技（不死族）（编辑器无此科技'Ruab'）
         constant integer UPG_ABOM           = 'Ruab'
         // 石像形态
         constant integer UPG_STONE_FORM     = 'Rusf'
@@ -854,7 +855,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NECROS         = 'Rune'
         // 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 编辑器无此科技，怀疑是背包（'Rupm'），但此处写成'Rump'
+        // 编辑器无此科技（不死族），怀疑是背包（'Rupm'），但此处写成'Rump'
         constant integer UPG_MEAT_WAGON     = 'Rump'
         // 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
@@ -864,9 +865,9 @@ native DebugS               takes string str                            returns 
         constant integer UPG_SKEL_MASTERY   = 'Rusm'
         // 发掘尸体
         constant integer UPG_EXHUME         = 'Ruex'
-        // 牺牲（编辑器无此科技'Rurs'）
+        // 牺牲（不死族）（编辑器无此科技'Rurs'）
         constant integer UPG_SACRIFICE      = 'Rurs'
-        // 不明科技（编辑器无此科技'Ruax'）
+        // 不明科技（不死族）（编辑器无此科技'Ruax'）
         constant integer UPG_ABOM_EXPL      = 'Ruax'
         // 生物甲壳
         constant integer UPG_CR_ARMOR       = 'Rucr'
@@ -1012,7 +1013,7 @@ native DebugS               takes string str                            returns 
         constant integer ANCIENT_PROTECT    = 'etrp'
         // 长者祭坛
         constant integer ELF_ALTAR          = 'eate'
-        // 熊窝（编辑器无此单位 ）
+        // 熊窝（暗夜精灵族）（编辑器无此单位 ）
         constant integer BEAR_DEN           = 'edol'
         // 奇美拉栖木
         constant integer CHIMAERA_ROOST     = 'edos'
@@ -1078,7 +1079,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_CHIM_ACID      = 'Recb'
         // 角鹰兽训练
         constant integer UPG_HIPPO_TAME     = 'Reht'
-        // 不明科技（编辑器无此科技'Repd'）
+        // 不明科技（暗夜精灵族）（编辑器无此科技'Repd'）
         constant integer UPG_BOLT           = 'Repd'
         // 利爪之印
         constant integer UPG_MARK_CLAW      = 'Reeb'
