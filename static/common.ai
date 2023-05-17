@@ -553,7 +553,7 @@ native DebugS               takes string str                            returns 
         constant integer EARTHQUAKE         = 'AOeq'
         // 技能 视界术（先知）
         constant integer FAR_SIGHT          = 'AOfs'
-        // 技能 野性之魂（先知）（招狼）
+        // 技能 野性之魂（先知）（召狼）
         constant integer SPIRIT_WOLF        = 'AOsf'
         // 技能 坚韧光环（牛头）
         constant integer ENDURANE_AURA      = 'AOae'
@@ -669,7 +669,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_BERSERKER  = 'Robk'
         // 燃油（兽族）
         constant integer UPG_ORC_NAPTHA     = 'Robf'
-        // 混乱（兽族）
+        // 混乱（中立）
         constant integer UPG_ORC_CHAOS      = 'Roch'
     
         // Warcraft 2 orc units
