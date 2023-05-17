@@ -4489,11 +4489,11 @@ native ForForce takes force whichForce, code callback returns nothing
 
 // Region and Location API
 
-// 转换坐标为区域
-// 会生成区域，用完请注意排泄
+// 转换坐标为矩形区域
+// 会生成矩形区域，用完请注意排泄
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
-// 转换点为区域
-// 会生成区域，用完请注意排泄
+// 转换点为矩形区域
+// 会生成矩形区域，用完请注意排泄
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
@@ -4503,39 +4503,39 @@ native SetRect takes rect whichRect, real minx, real miny, real maxx, real maxy 
 native SetRectFromLoc takes rect whichRect, location min, location max returns nothing
 // 移动矩形区域(指定坐标) [R]
 native MoveRectTo takes rect whichRect, real newCenterX, real newCenterY returns nothing
-// 移动区域（指定新的中心点）
+// 移动矩形区域（指定新的中心点）
 native MoveRectToLoc takes rect whichRect, location newCenterLoc returns nothing
 
-// 获取区域中心的 X 坐标
+// 获取矩形区域中心的 X 坐标
 native GetRectCenterX takes rect whichRect returns real
-// 获取区域中心的 Y 坐标
+// 获取矩形区域中心的 Y 坐标
 native GetRectCenterY takes rect whichRect returns real
-// 获取区域最小 X 坐标
+// 获取矩形区域最小 X 坐标
 native GetRectMinX takes rect whichRect returns real
-// 获取区域最小 Y 坐标
+// 获取矩形区域最小 Y 坐标
 native GetRectMinY takes rect whichRect returns real
-// 获取区域最大 X 坐标
+// 获取矩形区域最大 X 坐标
 native GetRectMaxX takes rect whichRect returns real
-// 获取区域最大 Y 坐标
+// 获取矩形区域最大 Y 坐标
 native GetRectMaxY takes rect whichRect returns real
 
-// 新建区域 [R]
+// 新建不规则区域 [R]
 native CreateRegion takes nothing returns region
 // 删除不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
-// 添加区域 [R]
+// 添加矩形区域(指定不规则区域)  [R]
 native RegionAddRect takes region whichRegion, rect r returns nothing
-// 移除区域 [R]
+// 移除矩形区域(指定不规则区域)  [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
-// 添加坐标(指定区域) [R]
+// 添加坐标(指定不规则区域) [R]
 native RegionAddCell takes region whichRegion, real x, real y returns nothing
-// 添加点(指定区域) [R]
+// 添加点(指定不规则区域) [R]
 native RegionAddCellAtLoc takes region whichRegion, location whichLocation returns nothing
-// 移除坐标(指定区域) [R]
+// 移除坐标(指定不规则区域) [R]
 native RegionClearCell takes region whichRegion, real x, real y returns nothing
-// 移除点(指定区域) [R]
+// 移除点(指定不规则区域) [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 将坐标转换成点
@@ -4555,11 +4555,11 @@ native GetLocationY takes location whichLocation returns real
 // 获取点 Z 轴高度 [R]
 native GetLocationZ takes location whichLocation returns real
 
-// 查询单位是否在区域内
+// 查询单位是否在不规则区域内
 native IsUnitInRegion takes region whichRegion, unit whichUnit returns boolean
-// 查询坐标是否在区域内
+// 查询坐标是否在不规则区域内
 native IsPointInRegion takes region whichRegion, real x, real y returns boolean
-// 查询点是否在区域内
+// 查询点是否在不规则区域内
 native IsLocationInRegion takes region whichRegion, location whichLocation returns boolean
 
 // Returns full map bounds, including unplayable borders, in world coordinates
@@ -4692,7 +4692,7 @@ native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion
 
 // EVENT_GAME_ENTER_REGION
 
-// 获取触发区域 [R]
+// 获取触发不规则区域 [R]
 constant native GetTriggeringRegion takes nothing returns region
 // 获取正在进入的单位
 constant native GetEnteringUnit takes nothing returns unit
@@ -6057,7 +6057,7 @@ native SaveForceHandle takes hashtable table, integer parentKey, integer childKe
 native SaveGroupHandle takes hashtable table, integer parentKey, integer childKey, group whichGroup returns boolean
 // <1.24> 保存点 [C]
 native SaveLocationHandle takes hashtable table, integer parentKey, integer childKey, location whichLocation returns boolean
-// <1.24> 保存区域(矩型) [C]
+// <1.24> 保存矩形区域 [C]
 native SaveRectHandle takes hashtable table, integer parentKey, integer childKey, rect whichRect returns boolean
 // <1.24> 保存条件表达式 [C]
 native SaveBooleanExprHandle takes hashtable table, integer parentKey, integer childKey, boolexpr whichBoolexpr returns boolean
@@ -6097,7 +6097,7 @@ native SaveLightningHandle takes hashtable table, integer parentKey, integer chi
 native SaveImageHandle takes hashtable table, integer parentKey, integer childKey, image whichImage returns boolean
 // <1.24> 保存地面纹理变化 [C]
 native SaveUbersplatHandle takes hashtable table, integer parentKey, integer childKey, ubersplat whichUbersplat returns boolean
-// <1.24> 保存区域(不规则) [C]
+// <1.24> 保存不规则区域 [C]
 native SaveRegionHandle takes hashtable table, integer parentKey, integer childKey, region whichRegion returns boolean
 // <1.24> 保存迷雾状态 [C]
 native SaveFogStateHandle takes hashtable table, integer parentKey, integer childKey, fogstate whichFogState returns boolean
@@ -6149,7 +6149,7 @@ native LoadGroupHandle takes hashtable table, integer parentKey, integer childKe
 // <1.24> 从哈希表提取点 [C]
 // 若仍需继续使用该点，请勿排泄
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
-// <1.24> 从哈希表提取区域(矩型) [C]
+// <1.24> 从哈希表提取矩形区域 [C]
 // 若仍需继续使用该区域，请勿排泄
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
 // <1.24> 从哈希表提取条件表达式 [C]
@@ -6190,7 +6190,7 @@ native LoadLightningHandle takes hashtable table, integer parentKey, integer chi
 native LoadImageHandle takes hashtable table, integer parentKey, integer childKey returns image
 // <1.24> 从哈希表提取地面纹理变化 [C]
 native LoadUbersplatHandle takes hashtable table, integer parentKey, integer childKey returns ubersplat
-// <1.24> 从哈希表提取区域(不规则) [C]
+// <1.24> 从哈希表提取不规则区域 [C]
 native LoadRegionHandle takes hashtable table, integer parentKey, integer childKey returns region
 // <1.24> 从哈希表提取迷雾状态 [C]
 native LoadFogStateHandle takes hashtable table, integer parentKey, integer childKey returns fogstate
@@ -6857,9 +6857,9 @@ native VolumeGroupReset takes nothing returns nothing
 native GetSoundIsPlaying takes sound soundHandle returns boolean
 // 音乐是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
-// 注册区域3D音效
+// 注册矩形区域3D音效
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
-// 注销区域3D音效
+// 注销矩形区域3D音效
 native UnregisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
 // 设置对白的面部动画标签
 native SetSoundFacialAnimationLabel takes sound soundHandle, string animationLabel returns boolean
