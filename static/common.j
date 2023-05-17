@@ -5776,7 +5776,7 @@ constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer,
 constant native GetPlayerHandicap takes player whichPlayer returns real
 // 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 玩家障碍恢复时间
+// 获取玩家复活时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
@@ -5784,7 +5784,7 @@ constant native GetPlayerHandicapDamage takes player whichPlayer returns real
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
 // 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家障碍恢复时间
+// 设置玩家复活时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
