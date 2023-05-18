@@ -113,6 +113,16 @@ globals
         integer hdes
         // 人类战舰
         integer hbsh
+        // 小孩
+        integer nvlk
+        // 小孩(2)
+        integer nvk2
+        // 村民(女性)
+        integer nvlw
+        // 村民(男性)
+        integer nvil
+        // 村民(男性2)
+        integer nvl2
 
 
         // 人族建筑
@@ -1009,7 +1019,7 @@ globals
         integer nnad
     
 
-        // 小动物及人类
+        // 小动物
 
         // 企鹅
         integer npng
@@ -1049,8 +1059,6 @@ globals
         integer nder
         // 青蛙
         integer nfro
-        // 骷髅战士
-        integer nske
         // 企鹅(水生的)
         integer npnw
         // 绵羊(两栖)
@@ -1059,16 +1067,6 @@ globals
         integer nshf
         // 看门狗
         integer ngog
-        // 小孩
-        integer nvlk
-        // 小孩(2)
-        integer nvk2
-        // 村民(女性)
-        integer nvlw
-        // 村民(男性)
-        integer nvil
-        // 村民(男性2)
-        integer nvl2
 
 
         // 中立单位
@@ -1081,6 +1079,8 @@ globals
         integer nbal
         // 末日守卫(召唤)
         integer nba2
+        // 骷髅战士
+        integer nske
         // 骷髅弓箭手
         integer nska
         // 骷髅神射手
