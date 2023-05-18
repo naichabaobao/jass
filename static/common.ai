@@ -721,7 +721,7 @@ native DebugS               takes string str                            returns 
         constant integer CRYPT_LORD         = 'Ucrl'
     
         // special undead heroes
-        // 玛尔甘尼斯
+        // 玛尔加尼斯
         constant integer MALGANIS           = 'Umal'
         // 提克迪奥斯
         constant integer TICHONDRIUS        = 'Utic'
