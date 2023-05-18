@@ -905,7 +905,7 @@ native DebugS               takes string str                            returns 
         constant integer CENARIUS           = 'Ecen'
         // 伊利丹
         constant integer ILLIDAN            = 'Eevi'
-        // 伊利丹（恶魔形态）
+        // 伊利丹（恶魔变形）
         constant integer ILLIDAN_DEMON      = 'Eevm'
         // 玛維
         constant integer MAIEV              = 'Ewrd'
