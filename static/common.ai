@@ -553,7 +553,7 @@ native DebugS               takes string str                            returns 
         constant integer EARTHQUAKE         = 'AOeq'
         // 技能 视界术（先知）
         constant integer FAR_SIGHT          = 'AOfs'
-        // 技能 野性之魂（先知）（召狼）
+        // 技能 野性之魂（召狼）（先知）
         constant integer SPIRIT_WOLF        = 'AOsf'
         // 技能 坚韧光环（牛头）
         constant integer ENDURANE_AURA      = 'AOae'
@@ -567,9 +567,9 @@ native DebugS               takes string str                            returns 
         constant integer HEALING_WAVE       = 'AOhw'
         // 技能 妖术（暗影猎手）
         constant integer HEX                = 'AOhx'
-        // 技能 毒蛇结界（暗影猎手）（蛇棒）
+        // 技能 毒蛇结界（蛇棒）（暗影猎手）
         constant integer SERPENT_WARD       = 'AOsw'
-        // 技能 巫毒狂舞（暗影猎手）（友军无敌）
+        // 技能 巫毒狂舞（友军无敌）（暗影猎手）
         constant integer VOODOO             = 'AOvd'
     
         // orc units
@@ -699,7 +699,7 @@ native DebugS               takes string str                            returns 
         constant integer CHAOS_PEON         = 'ncpn'
         // 邪兽人科多兽
         constant integer CHAOS_KODO         = 'nckb'
-        // 格罗玛什·地狱咆哮（喝下恶魔之血）
+        // 格罗玛什·地狱咆哮（喝下恶魔之血/着魔的）
         constant integer CHAOS_GROM         = 'Opgh'
         // 黑石氏族剑圣
         constant integer CHAOS_BLADEMASTER  = 'Nbbc'
