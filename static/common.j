@@ -5395,7 +5395,7 @@ native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy retu
 native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
 // 设置单位 无敌/可攻击
 native SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
-// 暂停/恢复 [R]
+// 暂停/恢复 单位 [R]
 native PauseUnit takes unit whichUnit, boolean flag returns nothing
 // 查询单位是否暂停
 native IsUnitPaused takes unit whichHero returns boolean
@@ -5425,7 +5425,7 @@ native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 丢弃物品（指定物品栏格数：0-5，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
 // @param itemSlot 0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
-// 单位是否持有指定物品
+// 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
 // 获取单位物品栏物品(指定格数)
 // @param itemSlot 0-5
@@ -5435,16 +5435,16 @@ native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 移动物品到物品栏 [R]
+// 移动物品到物品栏格子 [R]
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 把物品交给指定单位 [R]
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 使用物品
+// 发布使用物品命令
 native UnitUseItem takes unit whichUnit, item whichItem returns boolean
-// 使用物品(指定坐标)
+// 发布使用物品命令(指定坐标)
 native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 对单位使用物品
+// 发布使用物品命令(指定单位)
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 获取指定单位所在 X 轴坐标 [R]
@@ -5479,7 +5479,7 @@ constant native GetUnitFoodMade takes unit whichUnit returns integer
 constant native GetFoodMade takes integer unitId returns integer
 // 获取指定单位类型 使用的人口数量（单个）
 constant native GetFoodUsed takes integer unitId returns integer
-// 启用/禁用 人口占用 [R]
+// 启用/禁用 单位的人口占用 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位的集结点指向的位置（建筑的旗子，集结技能）
@@ -5538,9 +5538,9 @@ constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位类型是否与指定类型匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
-// 给指定单位和指定玩家的共享视野状态（共享或不共享） [R]
+// 设置指定单位和指定玩家的共享视野状态（共享或不共享） [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 给指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
+// 设置指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
 // 给指定单位增加指定类别 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
