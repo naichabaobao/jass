@@ -92,7 +92,7 @@ globals
     // 最大物品等级，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
     
-    // Auto Save constants  最大自动保存次数，默认5
+    // Auto Save constants  最大自动保存游戏次数，默认5
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -112,13 +112,13 @@ globals
     //   - Distance from start loc to search for nearby mines
     // 初始时钟，默认早上8点整（8.00）
     constant real      bj_MELEE_STARTING_TOD            = 8.00
-    // 初始黄金数量，默认750（V0表示混乱之治）
+    // 混乱之治版本初始黄金数量，默认750
     constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
-    // 初始黄金数量，默认500（V1表示冰封王座）
+    // 冰封王座版本初始黄金数量，默认500
     constant integer   bj_MELEE_STARTING_GOLD_V1        = 500
-    // 初始木材数量，默认200（V0表示混乱之治）
+    // 混乱之治版本初始木材数量，默认200
     constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
-    // 初始木材数量，默认150（V1表示冰封王座）
+    // 冰封王座版本初始木材数量，默认150
     constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
     // 使用随机英雄时给予的英雄数量，默认1个
     constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
@@ -134,9 +134,9 @@ globals
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20.00
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 英雄初始物品给予次数，默认3次，即前3发英雄都给（V0表示混乱之治）
+    // 混乱之治英雄初始物品给予次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
-    // 英雄初始物品给予次数，默认1次，即只给首发英雄（V1表示冰封王座）
+    // 冰封王座版本英雄初始物品给予次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
     // Delay between a creep's death and the time it may drop an item.
@@ -192,7 +192,7 @@ globals
 
     // 电影模式转换时间，默认0.50 Cinematic mode settings
     constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
-    // 默认游戏速度--默认正常
+    // 游戏默认速度，默认正常
     constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
