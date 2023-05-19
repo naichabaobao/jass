@@ -1195,9 +1195,9 @@ globals
 	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)                                                                        
 	
 	// Events which may have a filter for the "other unit"              
-	// 单位获取目标
+	// 单位获取到目标（类似触发单位警戒攻击）
 	constant unitevent EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
-	// 单位目标范围
+	// 目标在单位获取范围内（类似警戒范围）
 	constant unitevent EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
 	// 單位被攻擊
 	constant unitevent EVENT_UNIT_ATTACKED = ConvertUnitEvent(62)
