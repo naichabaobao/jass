@@ -2458,6 +2458,248 @@ globals
         integer LTg1
         // 可破坏物 奥格瑞玛大门
         integer YTcn
+        // 可破坏物 寒冰大门(垂直)
+        integer ITg3
+        // 可破坏物 寒冰大门(对角1)
+        integer ITg2
+        // 可破坏物 寒冰大门(对角2)
+        integer ITg4
+        // 可破坏物 寒冰大门(水平)
+        integer ITg1
+        // 可破坏物 寒冰岩石
+        integer ITor
+        // 可破坏物 寒冰岩石大门(垂直)
+        integer ITx3
+        // 可破坏物 寒冰岩石大门(对角1)
+        integer ITx2
+        // 可破坏物 寒冰岩石大门(对角2)
+        integer ITx4
+        // 可破坏物 寒冰岩石大门(水平)
+        integer ITx1
+        // 可破坏物 巨型废墟大门(垂直)
+        integer ZTsg
+        // 可破坏物 巨型废墟大门(水平)
+        integer ZTsx
+        // 可破坏物 已完成的奥格瑞玛塔楼
+        integer XTv8
+        // 可破坏物 已完成的奥格瑞玛墙节
+        integer XTv6
+        // 可破坏物 废墟大门(垂直)
+        integer ZTg3
+        // 可破坏物 废墟大门(对角1)
+        integer ZTg2
+        // 可破坏物 废墟大门(对角2)
+        integer ZTg4
+        // 可破坏物 废墟大门(水平)
+        integer ZTg1
+        // 可破坏物 建造中的奥格瑞玛塔楼
+        integer XTv7
+        // 可破坏物 建造中的奥格瑞玛墙节
+        integer XTv5
+        // 可破坏物 恶魔大门(垂直)
+        integer ATg3
+        // 可破坏物 恶魔大门(对角1)
+        integer ATg2
+        // 可破坏物 恶魔大门(对角2)
+        integer ATg4
+        // 可破坏物 恶魔大门(水平)
+        integer ATg1
+        // 可破坏物 恶魔风暴
+        integer OTds
+        // 可破坏物 悬崖洞穴大门(1)
+        integer DTc1
+        // 可破坏物 悬崖洞穴大门(2)
+        integer DTc2
+        // 可破坏物 控制杆
+        integer DTlv
+        // 可破坏物 摇滚阿尔萨斯
+        integer ITag
+        // 可破坏物 支柱
+        integer BTsc
+        // 可破坏物 板条箱
+        integer LTcr
+        // 可破坏物 桶
+        integer LTbr
+        // 可破坏物 桶
+        integer LTbx
+        // 可破坏物 桶
+        integer LTbs
+        // 可破坏物 洛丹伦城市主建筑
+        integer XTv3
+        // 可破坏物 洛丹伦城市主门
+        integer YTc2
+        // 可破坏物 洛丹伦城市主门柱塔
+        integer BTsk
+        // 可破坏物 洛丹伦城市尖塔
+        integer BTs4
+        // 可破坏物 洛丹伦城市穹顶
+        integer XTv1
+        // 可破坏物 浮冰
+        integer ITf1
+        // 可破坏物 浮冰
+        integer ITf2
+        // 可破坏物 浮冰
+        integer ITf3
+        // 可破坏物 浮冰
+        integer ITf4
+        // 可破坏物 滚石之门(垂直1)
+        integer ZTd2
+        // 可破坏物 滚石之门(垂直1)
+        integer ITd2
+        // 可破坏物 滚石之门(垂直2)
+        integer ITd4
+        // 可破坏物 滚石之门(垂直2)
+        integer ZTd4
+        // 可破坏物 滚石之门(垂直3)
+        integer ZTd6
+        // 可破坏物 滚石之门(垂直4)
+        integer ZTd8
+        // 可破坏物 滚石之门(水平1)
+        integer ITd1
+        // 可破坏物 滚石之门(水平1)
+        integer ZTd1
+        // 可破坏物 滚石之门(水平2)
+        integer ITd3
+        // 可破坏物 滚石之门(水平2)
+        integer ZTd3
+        // 可破坏物 滚石之门(水平3)
+        integer ZTd5
+        // 可破坏物 滚石之门(水平4)
+        integer ZTd7
+        // 可破坏物 火山
+        integer Volc
+        // 可破坏物 炸药桶
+        integer LTex
+        // 可破坏物 牢笼
+        integer LOcg
+        // 可破坏物 狮子雕像
+        integer BTs2
+        // 可破坏物 石块
+        integer DTrc
+        // 可破坏物 石块
+        integer LTrt
+        // 可破坏物 石块
+        integer LTrc
+        // 可破坏物 石质墙(垂直)
+        integer ZTw2
+        // 可破坏物 石质墙(垂直)
+        integer ITw2
+        // 可破坏物 石质墙(垂直)
+        integer LTw2
+        // 可破坏物 石质墙(对角1)
+        integer LTw3
+        // 可破坏物 石质墙(对角1)
+        integer ZTw3
+        // 可破坏物 石质墙(对角1)
+        integer ITw3
+        // 可破坏物 石质墙(对角2)
+        integer ZTw1
+        // 可破坏物 石质墙(对角2)
+        integer LTw1
+        // 可破坏物 石质墙(对角2)
+        integer ITw1
+        // 可破坏物 石质墙(水平)
+        integer ITw0
+        // 可破坏物 石质墙(水平)
+        integer ZTw0
+        // 可破坏物 石质墙(水平)
+        integer LTw0
+        // 可破坏物 精灵大门(垂直)
+        integer LTe3
+        // 可破坏物 精灵大门(对角1)
+        integer LTe2
+        // 可破坏物 精灵大门(对角2)
+        integer LTe4
+        // 可破坏物 精灵大门(水平)
+        integer LTe1
+        // 可破坏物 纳迦废墟圆圈
+        integer ZTnc
+        // 可破坏物 船只
+        integer NTbd
+        // 可破坏物 被毁的洛丹伦城市主建筑
+        integer XTv4
+        // 可破坏物 被毁的洛丹伦城市主门
+        integer YTc4
+        // 可破坏物 被毁的洛丹伦城市主门柱塔
+        integer BTs1
+        // 可破坏物 被毁的洛丹伦城市尖塔
+        integer BTs5
+        // 可破坏物 被毁的洛丹伦城市穹顶
+        integer XTv2
+        // 可破坏物 被毁的狮子雕像
+        integer BTs3
+        // 可破坏物 路障
+        integer LTba
+        // 可破坏物 达拉然建筑
+        integer XTbd
+        // 可破坏物 达拉然紫罗兰城堡
+        integer XTvt
+        // 可破坏物 钢铁大门(垂直)
+        integer DTg7
+        // 可破坏物 钢铁大门(对角1)
+        integer DTg6
+        // 可破坏物 钢铁大门(对角2)
+        integer DTg8
+        // 可破坏物 钢铁大门(水平)
+        integer DTg5
+        // 可破坏物 魔法围栏
+        integer XTmp
+        // 可破坏物 魔法围栏(有角度的)
+        integer XTm5
+        // 可破坏物 魔法围栏墙
+        integer XTmx
+        // 可破坏物 魔法围栏墙(有角度的)
+        integer XTx5
 
+        // 可破坏物 视线阻断器
+        integer YTlb
+        // 可破坏物 视线阻断器(大)
+        integer YTlc
+        // 可破坏物 视线阻断器(全部)
+        integer YTfb
+        // 可破坏物 视线阻断器(全部)(大)
+        integer YTfc
+        // 可破坏物 视线阻断器(地面)
+        integer YTpb
+        // 可破坏物 视线阻断器(地面)(大)
+        integer YTpc
+        // 可破坏物 视线阻断器(空中)
+        integer YTab
+        // 可破坏物 视线阻断器(空中)(大)
+        integer YTac
 
+        // 可破坏物 传送门斜坡
+        integer WGTR
+        // 可破坏物 力场之桥(垂直)
+        integer DTs0
+        // 可破坏物 力场之桥(对角1)
+        integer DTs1
+        // 可破坏物 力场之桥(对角2)
+        integer DTs3
+        // 可破坏物 力场之桥(水平)
+        integer DTs2
+        // 可破坏物 宽天然桥(垂直)
+        integer YT32
+        // 可破坏物 宽天然桥(垂直)
+        integer YT08
+        // 可破坏物 宽天然桥(对角1)
+        integer YT33
+        // 可破坏物 宽天然桥(对角1)
+        integer YT09
+        // 可破坏物 宽天然桥(对角2)
+        integer YT11
+        // 可破坏物 宽天然桥(对角2)
+        integer YT35
+        // 可破坏物 宽天然桥(水平)
+        integer YT10
+        // 可破坏物 宽天然桥(水平)
+        integer YT34
+        // 可破坏物 宽斯坦索姆桥(垂直)
+        integer YT20
+        // 可破坏物 宽斯坦索姆桥(对角1)
+        integer YT21
+        // 可破坏物 宽斯坦索姆桥(对角2)
+        integer YT23
+        // 可破坏物 宽斯坦索姆桥(水平)
+        integer YT22
 endglobals
