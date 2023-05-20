@@ -19,39 +19,39 @@ globals
     
         // 人族战役英雄及特殊人物
 
+        // 阿尔萨斯
+        integer Hart
+        // 阿尔萨斯(使用霜之哀伤)
+        integer Harf
         // 吉安娜
         integer Hjai
         // 穆拉丁·铜须
         integer Hmbr
         // 乌瑟尔
         integer Huht
-        // 兽人克星达格伦/达贡兽族屠杀者
-        integer Hdgo
-        // 加里瑟斯/加里索斯大人
-        integer Hlgr
         // 安东尼达斯
         integer Hgam
         // 安东尼达斯
         integer Hant
-        // 尼古拉斯·布赞勋爵/尼科拉斯大人
-        integer Hpb1
-        // 格雷戈里·埃德蒙森爵士
-        integer Hpb2
-        // 海军上将普罗德摩尔
-        integer Hapm
-        // 生命使者哈拉克
-        integer Hhkl
-        // 维护者玛古洛斯/马格罗斯守御者
-        integer Hmgd
-        // 阿尔萨斯
-        integer Hart
-        // 阿尔萨斯(使用霜之哀伤)
-        integer Harf
         // 麦迪文
         integer nmed
         // 麦迪文(乌鸦形态)
         integer nmdm
-        // 希雷诺斯
+        // 加里瑟斯/加里索斯大人
+        integer Hlgr
+        // 海军上将普罗德摩尔
+        integer Hapm
+        // 兽人克星达格伦/达贡兽族屠杀者
+        integer Hdgo
+        // 尼古拉斯·布赞勋爵/尼科拉斯大人
+        integer Hpb1
+        // 格雷戈里·埃德蒙森爵士/格雷戈里爵士
+        integer Hpb2
+        // 生命使者哈拉克/哈拉生命使者
+        integer Hhkl
+        // 维护者玛古洛斯/马格罗斯守御者
+        integer Hmgd
+        // 希雷诺斯/西里诺克斯
         integer nser
 
 
@@ -103,7 +103,7 @@ globals
         integer nchp
         // 水术师(人族)
         integer nhym
-        // 队长(人族)
+        // 队长(人族)/船长(人族)
         integer hcth
         // 狱卒卡塞恩(人族)
         integer njks
@@ -804,31 +804,32 @@ globals
 
         // 弓箭手(高等精灵)
         integer nhea
-        // 队长(高等精灵)
-        integer hcth
         // 剑士(高等精灵)
         integer hhes
         // 龙鹰(高等精灵)
         integer nws1
         // 信使(高等精灵)
+        // @version 1.32
         integer hrrh
-        // 特使(高等精灵)
+        // 特使(高等精灵)/使者(高等精灵)
         integer nemi
         // 高等精灵(女性)
         integer nhef
         // 高等精灵(男性)
         integer nhem
-        // 血精灵副官
+        // 血精灵副官/血精灵中尉
         integer nbel
         // 血精灵牧师
+        // @version 1.32
         integer hbep
         // 血精灵女巫
+        // @version 1.32
         integer hbes
-        // 血精灵工人
+        // 血精灵工人/工人(血精灵)
         integer nhew
         // 血精灵工程师
         integer nbee
-        // 货车
+        // 货车/车
         integer hbew
 
 
@@ -1213,9 +1214,9 @@ globals
         integer nccd
         // 战车
         integer nwar
-        // 无骑手的马
+        // 无骑手的马/无人之马
         integer hhdl
-        // 背负行囊的马
+        // 背负行囊的马/背负背包的马
         integer hrdh
         // 地精地雷(单位)
         integer nglm
@@ -1429,67 +1430,400 @@ globals
         integer zzrg
 
 
-// 常用物品
+// 常用物品(应该齐)
 
-        // 物品 传送法杖
+
+        // 物品 优越之戒
+        integer rnsp
+        // 物品 再生之戒/恢复指环
+        integer rlif
+        // 物品 恶魔雕像
+        integer fgdg
+        // 物品 主宰权杖/统治权杖
+        integer ccmd
+        // 物品 沉默法杖/沉默权杖
+        integer ssil
+        // 物品 法盾护符/魔法护盾护身符
+        integer spsh
+        // 物品 灵巧头巾
+        integer hcun
+        // 物品 勇气头盔
+        integer hval
+        // 物品 勇气勋章
+        integer mcou
+        // 物品 战歌军鼓/战歌之鼓
+        integer war2
+        // 物品 军团末日号角/毁灭之角
+        integer lgdh
+        // 物品 远古坚韧杖鼓/古之忍耐姜歌
+        integer ajen
+        // 物品 卡德加的洞察烟斗/卡嘉长萧
+        integer kpin
+        // 物品 暴风雄狮号角/风暴狮角
+        integer lhst
+        // 物品 奥蕾莉亚的精准长笛/阿利亚之笛
+        integer afac
+        // 物品 天灾骨风铃/天灾骨钟
+        integer sbch
+        // 物品 战歌军鼓/战歌之鼓
+        integer ward
+        // 物品 烈焰披风/火焰风衣
+        integer clfm
+        // 物品 水晶球
+        integer crys
+        // 物品 法力垂饰/魔法垂饰
+        integer pmna
+        // 物品 能量垂饰
+        integer penr
+        // 物品 卡德加的生命宝石/卡嘉医疗宝石
+        integer rhth
+        // 物品 活力护身符/生命护身符
+        integer prvt
+        // 物品 攻击之爪+3
+        integer rat3
+        // 物品 攻击之爪+4
+        // 在1.35或以下版本中是攻击之爪+5
+        integer rat6
+        // 物品 攻击之爪+8
+        // 在1.35或以下版本中是攻击之爪+9
+        integer rat9
+        // 物品 攻击之爪+12
+        integer ratc
+        // 物品 攻击之爪+15
+        integer ratf
+        // 物品 防护之戒+1
+        integer rde0
+        // 物品 防护之戒+2
+        integer rde1
+        // 物品 防护之戒+3
+        integer rde2
+        // 物品 防护之戒+4
+        integer rde3
+        // 物品 防护之戒+5
+        integer rde4
+        // 物品 贵族头环
+        integer cnob
+        // 物品 急速手套/加速手套
+        integer gcel
+        // 物品 符文护腕/神秘腰带
+        integer brac
+        // 物品 闪避护符
+        integer evtl
+        // 物品 艺人面罩
+        integer rwiz
+        // 物品 暗影斗篷/影子风衣
+        integer clsd
+        // 物品 奎尔萨拉斯之靴+6
+        integer belv
+        // 物品 巨人力量腰带+6
+        integer bgst
+        // 物品 法师长袍+6
+        integer ciri
+        // 物品 敏捷便鞋+3
+        integer rag1
+        // 物品 智力斗篷+3
+        integer rin1
+        // 物品 食人魔力量护手+3
+        integer rst1
+        // 物品 法术免疫项链/魔法免疫项链
+        integer nspi
+        // 物品 法术书/魔法书
+        integer sbok
+        // 物品 远古雕像
+        integer anfg
+        // 物品 敏捷护腕
+        integer brag
+        // 物品 德鲁伊布袋
+        integer drph
+        // 物品 铁树枝干
+        integer iwbr
+        // 物品 青玉戒指/灵巧指环
+        integer jdrn
+        // 物品 雄狮之戒
+        integer lnrn
+        // 物品 力量之锤
+        integer mlst
+        // 物品 颅骨盾
+        integer sksh
+        // 物品 蜘蛛戒指
+        integer sprn
+        // 物品 巨力图腾
+        integer tmmt
+        // 物品 巫毒娃娃
+        integer vddl
+        // 物品 乌云号角
+        integer sfog
+        // 物品 大法师之戒(全属性+3，不带辉煌光环)
+        integer ram4
+        // 物品 大法师之戒(全属性+3，带辉煌光环)
+        integer ram3
+        // 物品 大法师之戒(全属性+2，不带辉煌光环)
+        integer ram2
+        // 物品 大法师之戒(全属性+1，不带辉煌光环)
+        integer ram1
+        // 物品 冰龙颅骨盾/冰霜巨龙头骨护盾
+        integer fwss
+        // 物品 萨满图腾
+        integer shtm
+        // 物品 生锈的矿镐/生锈的矿铲
+        integer rump
+        // 物品 塞拉希尔/瑟拉思尔
+        integer srtl
+        // 物品 结实的战斧/战斧
+        integer stwa
+        // 物品 血杀斧/远古战斧
+        integer klmm
+        // 物品 海洋权杖/海之权杖
+        integer rots
+        // 物品 先祖法杖/先祖权杖
+        integer axas
+        // 物品 心灵法杖/心灵权杖
+        integer mnsf
+        // 物品 驱魔种子
+        // @version 1.32
+        integer sxpl
+        // 物品 净化藤蔓
+        // @version 1.32
+        integer vpur
+        // 物品 艾苏恩之心/埃苏尼之心
+        integer azhr
+        // 物品 空瓶子/空瓶
+        integer bzbe
+        // 物品 装满的瓶子/盛满泉水的瓶子
+        integer bzbf
+        // 物品 奶酪
+        integer ches
+        // 物品 塞纳留斯之角
+        integer cnhn
+        // 物品 古尔丹之颅
+        integer glsk
+        // 物品 净化雕文/净化浮雕
+        integer gopr
+        // 物品 月亮水晶
+        integer k3m1
+        // 物品 不完整的三合月匙/三月之匙的另外一个部分
+        integer k3m2
+        // 物品 三合月匙/三月之匙
+        integer k3m3
+        // 物品 泰瑞纳斯国王的骨灰罐
+        integer ktrm
+        // 物品 鲜血钥匙
+        integer kybl
+        // 物品 幽灵钥匙/魔鬼钥匙
+        integer kygh
+        // 物品 月亮钥匙
+        integer kymn
+        // 物品 太阳钥匙
+        integer kysn
+        // 物品 杰拉德丢失的帐本/吉拉德的账本
+        integer ledg
+        // 物品 好东西/李维特
+        integer phlt
+        // 物品 希雷诺斯之心/赛瑞诺克斯之心
+        integer sehr
+        // 物品 附魔宝石/魔法宝石
+        integer engs
+        // 物品 暗影宝珠碎片
+        integer sorf
+        // 物品 宝石碎片
+        integer gmfr
+        // 物品 给吉安娜·普罗德摩尔的便条
+        integer jpnt
+        // 物品 微光草/荧光草
+        integer shwd
+        // 物品 骸骨法器/骸骨宝物
+        integer skrt
+        // 物品 隐藏关卡道具/秘密关卡激活
+        integer sclp
+        // 物品 怀特的腿
+        integer wtlg
+        // 物品 怀特的另一条腿
+        integer wolg
+        // 物品 魔法钥匙串
+        integer mgtk
+        // 物品 莫戈林的报告/莫哥林的报告
+        integer mort
+        // 物品 一桶雷酒/雷霆水桶
+        integer dkfw
+        // 物品 雷霆蜥蜴蛋/雷霆蜥蜴之蛋
+        integer thle
+        // 物品 雷霆凤凰蛋
+        integer dphe
+        // 物品 雷霆花的鳞茎/雷电花芯
+        integer dthb
+        // 物品 雷蜥钻石/雷霆蜥蜴钻石
+        integer thdm
+        // 物品 德雷克塔尔的法术书/德雷克萨尔的魔法书
+        integer dtsb
+        // 物品 信号枪
+        integer fgun
+        // 物品 怪兽诱饵/怪兽诱捕守卫
+        integer lure
+        // 物品 灵魂魔典/灵魂宝物
+        integer grsl
+        // 物品 奥金护盾/芒硝护盾
+        integer arsh
+        // 物品 艾苏恩的精华
+        integer esaz
+        // 物品 复生法杖/鼓舞权杖
+        integer stre
+        // 物品 古老圣物/稀有神器
+        integer horl
+        // 物品 好战头盔/战舰之舵
+        integer hbth
+        // 物品 折刃护甲/剑刃护甲
+        integer blba
+        // 物品 符文护手/神秘手套
+        integer rugt
+        // 物品 火拳护手/火焰手套
+        integer frhg
+        // 物品 法术掌握手套/法术大师手套
+        integer gvsm
+        // 物品 死亡领主之冠/死亡领主皇冠
+        integer crdt
+        // 物品 死亡领主之盾/死亡领主护盾
+        integer shdt
+        // 物品 荣誉护盾
+        integer shhn
+        // 物品 附魔盾牌/施魔护盾
+        integer shen
+        // 物品 发条企鹅/时钟企鹅
+        integer stpg
+        // 物品 微光烤肉/烤肉
+        integer shrs
+        // 物品 血羽之心
+        integer bfhr
+        // 物品 萨满利爪
+        integer shcw
+        // 物品 灼热之刃/灼热之刀
+        integer srbd
+        // 物品 寒冰护卫者/霜冻守卫
+        integer frgd
+        // 物品 附魔小瓶/魔法小瓶
+        integer envl
+        // 物品 治疗权杖/医疗权杖
+        integer schl
+        // 物品 刺客之刃/刺客佩刀
+        integer asbl
+        // 物品 一桶麦酒/麦酒桶
+        integer kgal
+        // 物品 金币
+        integer gold
+        // 物品 一捆木柴
+        integer lmbr
+        // 物品 强固雕文/防御浮雕
+        integer gfor
+        // 物品 夜视雕文/夜视浮雕
+        integer guvi
+        // 物品 全知雕文/全知浮雕
+        integer gomn
+        // 物品 灵魂链接符文/灵魂锁链神符
+        integer rspl
+        // 物品 次级复活符文/小型复活神符
+        integer rre1
+        // 物品 强效复活符文/大型复活神符
+        integer rre2
+        // 物品 重生符文/重生神符
+        integer rreb
+        // 物品 护盾符文/护盾神符
+        integer rsps
+        // 物品 速度符文/速度神符
+        integer rspd
+        // 物品 法力符文/魔法神符
+        integer rman
+        // 物品 强效法力符文/大型魔法神符
+        integer rma2
+        // 物品 复原符文/恢复神符
+        integer rres
+        // 物品 次级治疗符文/小型治疗神符
+        integer rhe1
+        // 物品 治疗符文/治疗神符
+        integer rhe2
+        // 物品 强效治疗符文/大型治疗神符
+        integer rhe3
+        // 物品 驱魔符文/驱魔神符
+        integer rdis
+        // 物品 监视符文/岗哨神符
+        integer rwat
+        // 物品 生命手册
+        integer manh
+        // 物品 知识之书
+        integer tpow
+        // 物品 敏捷之书+2
+        integer tdx2
+        // 物品 智力之书+2
+        integer tin2
+        // 物品 力量之书+2
+        integer tst2
+        // 物品 敏捷之书
+        integer tdex
+        // 物品 智力之书
+        integer tint
+        // 物品 力量之书
+        integer tstr
+        // 物品 强效经验之书/超级经验之书
+        integer tgxp
+        // 物品 经验之书
+        integer texp
+        // 物品 传送法杖/传送权杖
         integer stel
         // 物品 召唤钻石
         integer dsum
         // 物品 召回护符
         integer amrc
-        // 物品 保存法杖
-        integer  spre
+        // 物品 保存法杖/保存权杖
+        integer spre
         // 物品 月亮石
         integer moon
         // 物品 速度之靴
         integer bspd
         // 物品 机械小动物
         integer mcri
-        // 物品 闪电宝珠
+        // 物品 闪电宝珠/闪电之球
         integer oli2
-        // 物品 闪电宝珠
+        // 物品 闪电宝珠/闪电之球
         integer olig
-        // 物品 火焰宝珠
+        // 物品 火焰宝珠/火焰之球
         integer ofir
-        // 物品 火焰宝珠
+        // 物品 火焰宝珠/火焰之球
         integer ofr2
-        // 物品 腐蚀宝珠
+        // 物品 腐蚀宝珠/腐蚀之球
         integer ocor
-        // 物品 毒液宝珠
+        // 物品 毒液宝珠/毒液之球
         integer oven
-        // 物品 冰霜宝珠
+        // 物品 冰霜宝珠/霜冻之球
         integer ofro
-        // 物品 基尔加丹宝珠
+        // 物品 基尔加丹宝珠/之球
         integer gldo
-        // 物品 减速宝珠
+        // 物品 减速宝珠/减速之球
         integer oslo
-        // 物品 天界灵魂宝珠
+        // 物品 天界灵魂宝珠/灵魂之球
         integer cosl
         // 物品 灵魂
         integer soul
         // 物品 灵魂宝石
         integer gsou
-        // 物品 黑暗宝珠
+        // 物品 黑暗宝珠/黑暗之球
         integer odef
-        // 物品 暗影宝珠+10
+        // 物品 暗影宝珠+10/黑暗之球+10
         integer sora
-        // 物品 暗影宝珠+1
+        // 物品 暗影宝珠+1/黑暗之球+1
         integer sor1
-        // 物品 暗影宝珠+2
+        // 物品 暗影宝珠+2/黑暗之球+2
         integer sor2
-        // 物品 暗影宝珠+3
+        // 物品 暗影宝珠+3/黑暗之球+3
         integer sor3
-        // 物品 暗影宝珠+4
+        // 物品 暗影宝珠+4/黑暗之球+4
         integer sor4
-        // 物品 暗影宝珠+5
+        // 物品 暗影宝珠+5/黑暗之球+5
         integer sor5
-        // 物品 暗影宝珠+6
+        // 物品 暗影宝珠+6/黑暗之球+6
         integer sor6
-        // 物品 暗影宝珠+7
+        // 物品 暗影宝珠+7/黑暗之球+7
         integer sor7
-        // 物品 暗影宝珠+8
+        // 物品 暗影宝珠+8/黑暗之球+8
         integer sor8
-        // 物品 暗影宝珠+9
+        // 物品 暗影宝珠+9/黑暗之球+9
         integer sor9
         // 物品 真视宝石
         integer gemt
@@ -1501,93 +1835,117 @@ globals
         integer flag
         // 物品 兽人旗帜
         integer oflg
+        // 物品 战旗
+        integer btst
         // 物品 复活卷轴
         integer srrc
         // 物品 地精地雷
         integer gobm
         // 物品 地精夜视镜
         integer tels
-        // 物品 迷你伐木场
+        // 物品 迷你伐木场/微型伐木场
         integer tlum
-        // 物品 迷你兵营
+        // 物品 迷你兵营/微型兵营
         integer tbar
-        // 物品 迷你农场
+        // 物品 迷你农场/微型农场
         integer tfar
-        // 物品 迷你列王祭坛
+        // 物品 迷你列王祭坛/微型国王祭坛
         integer tbak
-        // 物品 迷你铁匠铺
+        // 物品 迷你铁匠铺/微型铁匠铺
         integer tbsm
-        // 物品 迷你城堡
+        // 物品 迷你城堡/小城堡
         integer tcas
         // 物品 象牙塔
         integer tsct
-        // 物品 迷你大厅
+        // 物品 迷你大厅/小型的大厅
         integer tgrh
-        // 物品 金币
-        integer gold
-        // 物品 一捆木柴
-        integer lmbr
-        // 物品 重生符文
-        integer rreb
-        // 物品 全知雕文
-        integer gomn
-        // 物品 反魔法药剂
+        // 物品 反魔法药剂/抗体药水
         integer pams
         // 物品 神圣药水
         integer pdiv
         // 物品 神圣药水
+        // @version 1.32
         integer pdi2
-        // 物品 次级无敌药水
-        integer pdiv
+        // 物品 次级无敌药水/较小的无敌药水
+        integer pnvl
         // 物品 无敌药水
         integer pnvu
-        // 物品 主宰权杖
-        integer ocmd
-        // 物品 亡者之书
+        // 物品 亡者之书/死亡之书
         integer fgsk
         // 物品 全知药水
         integer pomn
         // 物品 嗜财权杖
+        // @version 1.32
         integer scav
-        // 物品 复原卷轴
+        // 物品 复原卷轴/恢复卷轴
         integer sres
-        // 物品 复原药水
+        // 物品 复原药水/恢复药水
         integer pres
-        // 物品 寒冰碎片
+        // 物品 寒冰碎片/冰冻碎片
         integer shar
-        // 物品 尖刺项圈
+        // 物品 尖刺项圈/长钉衣领
         integer fgfh
-        // 物品 岩石徽记
+        // 物品 岩石徽记/岩石印记
         integer fgrg
-        // 物品 幻象魔杖
+        // 物品 幻象魔杖/幻象权杖
         integer will
-        // 物品 强效治疗药水
+        // 物品 强效治疗药水/大生命药水
         integer pghe
-        // 物品 强效法力药水
+        // 物品 强效法力药水/大魔法药水
         integer pgma
-        // 物品 眼影魔杖
+        // 物品 眼影魔杖/影子权杖
         integer wshs
         // 物品 恢复药水
         integer rej3
         // 物品 恶魔雕像
         integer fhdg
-        // 物品 治疗结界
+        // 物品 治疗结界/治疗守卫
         integer whwd
         // 物品 法力窃取魔杖
         integer woms
-        // 物品 生命石头
+        // 物品 生命石/医疗石
         integer hlst
-        // 物品 蓝色幼龙蛋
+        // 物品 蓝色幼龙蛋/蓝龙之卵
+        // @version 1.32
         integer fgbd
-        // 物品 警戒结界
+        // 物品 红色幼龙蛋/红龙之卵
+        integer fgrd
+        // 物品 警戒结界/岗哨守卫
         integer wswd
         // 物品 重生十字章
         integer ankh
         // 物品 野兽卷轴
         integer sror
-        // 物品 野性护符
+        // 物品 野性护符/野性护身符
         integer wild
+        // 物品 奥术卷轴/神秘卷轴
+        integer arsc
+        // 物品 邪恶军团卷轴
+        integer scul
+        // 物品 献祭之书/牺牲之书
+        integer tmsc
+        // 物品 大型恢复卷轴/大型恢复卷轴
+        integer rej6
+        // 物品 次级恢复卷轴/小型恢复卷轴
+        integer rej5
+        // 物品 强效恢复药水/大型恢复药水
+        integer rej4
+        // 物品 次级恢复药水/小型恢复药水
+        integer rej2
+        // 物品 法力卷轴/魔法卷轴
+        integer sman
+        // 物品 初级恢复药水/小型恢复药水
+        integer rej1
+        // 物品 速度药水
+        integer pspd
+        // 物品 强效隐形药水/大隐形药水
+        integer pgin
+        // 物品 野性咒符/野性护符
+        integer totw
+        // 物品 亡者再临卷轴/操作死尸卷轴
+        integer sand
         // 物品 野性神像
+        // @version 1.32
         integer iotw
         // 物品 闪电之盾魔杖
         integer wlsd
@@ -1602,58 +1960,56 @@ globals
         // 物品技能 仪式匕首
         // @version 1.30
         integer ritd
-        // 物品 保护卷轴
+        // 物品 保护卷轴/守护卷轴
         integer spro
         // 物品 吸血药水
         integer vamp
-        // 物品 城镇传送卷轴
+        // 物品 城镇传送卷轴/回城卷轴
         integer stwp
-        // 物品 庇护法杖
+        // 物品 庇护法杖/避难权杖
         integer ssan
         // 物品 恢复卷轴
         integer sreg
-        // 物品 明澈药水
+        // 物品 明澈药水/净化药水
         integer pclr
-        // 物品 次级明澈药水
+        // 物品 次级明澈药水/小净化药水
         integer plcl
         // 物品 治疗卷轴
         integer shea
-        // 物品 治疗药水
+        // 物品 治疗药水/生命药水
         integer phea
-        // 物品 治疗药膏
+        // 物品 治疗药膏/医疗剂
         integer hslv
-        // 物品 法力卷轴
+        // 物品 魔法药水
         integer pman
-        // 物品 献祭之颅
+        // 物品 显影之尘
+        integer dust
+        // 物品 献祭之颅/献祭头骨
         integer skul
-        // 物品 虚无法杖
+        // 物品 地狱火之石/恶魔岩石
+        integer infs
+        // 物品 虚无法杖/否决权杖(非消耗品)
         integer sneg
-        // 物品 虚无魔杖
+        // 物品 虚无魔杖/否决权杖(消耗品)
         integer wneg
-        // 物品 蛛丝胸针
+        // 物品 蛛丝胸针/蜘蛛丝饰针
         integer silk
-        // 物品 通灵魔棒
+        // 物品 通灵魔棒/巫术妖棍
         integer rnec
         // 物品 速度卷轴
         integer shas
-        // 物品 重修之书
+        // 物品 重修之书/再训练之书
         integer tret
         // 物品 隐形药水
         integer pinv
-        // 物品 凯伦的逃脱匕首
+        // 物品 凯伦的逃脱匕首/科勒恩的逃脱匕首
         integer desc
-        // 物品 列王之冠+5
+        // 物品 列王之冠+5/国王之冠 +5
         integer ckng
-        // 物品 地狱火之石
-        integer infs
-        // 物品 威能之书
+        // 物品 威能之书/能量之书
         integer tkno
-        // 物品 攻击之爪+15
-        integer ratf
-        // 物品 死亡面具
+        // 物品 死亡面具/死亡面罩
         integer modt
-        // 物品 显影之尘
-        integer dust
 
 
 // 英雄技能(齐)
@@ -2176,227 +2532,227 @@ globals
 
         // 人族科技
 
-        // 钢铁铸剑
+        // 科技 钢铁铸剑
         integer Rhme
-        // 黑火药
+        // 科技 黑火药
         integer Rhra
-        // 炮兵(人族)(编辑器无此科技)
+        // 科技 炮兵(人族)(编辑器无此科技)
         integer Rhaa
-        // 钢铁装甲
+        // 科技 钢铁装甲
         integer Rhar
-        // 黄金(人族)(编辑器无此科技)
+        // 科技 黄金(人族)(编辑器无此科技)
         integer Rhmi
-        // 改良石工技术
+        // 科技 改良石工技术
         integer Rhac
-        // 控制魔法
+        // 科技 控制魔法
         integer Rhss
-        // 防御
+        // 科技 防御
         integer Rhde
-        // 坐骑作战训练
+        // 科技 坐骑作战训练
         integer Rhan
-        // 牧师专家级训练
+        // 科技 牧师专家级训练
         integer Rhpt
-        // 女巫专家级训练
+        // 科技 女巫专家级训练
         integer Rhst
-        // 镶钉皮甲
+        // 科技 镶钉皮甲
         integer Rhla
-        // 长管火枪
+        // 科技 长管火枪
         integer Rhri
-        // 改良伐木技术
+        // 科技 改良伐木技术
         integer Rhlh
-        // 魔法岗哨
+        // 科技 魔法岗哨
         integer Rhse
-        // 散射(人族)(编辑器无此科技)
+        // 科技 散射(人族)(编辑器无此科技)
         integer Rhsr
-        // 飞行器炸弹
+        // 科技 飞行器炸弹
         integer Rhgb
-        // 风暴战锤
+        // 科技 风暴战锤
         integer Rhhb
-        // 控制魔法
+        // 科技 控制魔法
         integer Rhss
-        // 破片榴弹
+        // 科技 破片榴弹
         integer Rhfs
-        // 火箭弹幕
+        // 科技 火箭弹幕
         integer Rhrt
-        // 对空炮机
+        // 科技 对空炮机
         integer Rhfc
-        // 迷雾之云
+        // 科技 迷雾之云
         integer Rhcd
-        // 裂甲之刃
+        // 科技 裂甲之刃
         integer Rhsb
-        // 背包(人类)
+        // 科技 背包(人类)
         integer Rhpm
 
 
         // 兽族科技
 
-        // 精钢近战武器
+        // 科技 精钢近战武器
         integer Rome
-        // 精钢远程武器
+        // 科技 精钢远程武器
         integer Rora
-        // 火炮(兽族)(编辑器无此科技)
+        // 科技 火炮(兽族)(编辑器无此科技)
         integer Roaa
-        // 精钢护甲
+        // 科技 精钢护甲
         integer Roar
-        // 战鼓伤害强化
+        // 科技 战鼓伤害强化
         integer Rwdm
-        // 掠夺
+        // 科技 掠夺
         integer Ropg
-        // 野蛮之力
+        // 科技 野蛮之力
         integer Robs
-        // 粉碎伤害强化
+        // 科技 粉碎伤害强化
         integer Rows
-        // 诱捕(兽族)
+        // 科技 诱捕(兽族)
         integer Roen
-        // 毒矛(兽族)
+        // 科技 毒矛(兽族)
         integer Rovs
-        // 巫医专家级训练
+        // 科技 巫医专家级训练
         integer Rowd
-        // 萨满祭司专家级训练
+        // 科技 萨满祭司专家级训练
         integer Rost
-        // 尖刺障碍
+        // 科技 尖刺障碍
         integer Rosp
-        // 加强型防御
+        // 科技 加强型防御
         integer Rorb
-        // 巨魔再生
+        // 科技 巨魔再生
         integer Rotr
-        // 火油瓶(兽族)
+        // 科技 火油瓶(兽族)
         integer Rolf
-        // 灵魂行者专家级训练
+        // 科技 灵魂行者专家级训练
         integer Rowt
-        // 狂战士升级
+        // 科技 狂战士升级
         integer Robk
-        // 燃油(兽族)
+        // 科技 燃油(兽族)
         integer Robf
-        // 背包(兽人)
+        // 科技 背包(兽人)
         integer Ropm
 
 
         // 不死族科技
 
-        // 邪恶力量
+        // 科技 邪恶力量
         integer Rume
-        // 生物攻击
+        // 科技 生物攻击
         integer Rura
-        // 邪恶护甲
+        // 科技 邪恶护甲
         integer Ruar
-        // 食尸
+        // 科技 食尸
         integer Ruac
-        // 食尸鬼狂暴
+        // 科技 食尸鬼狂暴
         integer Rugf
-        // 蛛网
+        // 科技 蛛网
         integer Ruwb
-        // 不明科技(编辑器无此科技)
+        // 科技 不明科技(不死族)(编辑器无此科技)
         integer Ruab
-        // 石像形态
+        // 科技 石像形态
         integer Rusf
-        // 通灵师/亡灵男巫专家级训练
+        // 科技 通灵师/亡灵男巫专家级训练
         integer Rune
-        // 女妖专家级训练
+        // 科技 女妖专家级训练
         integer Ruba
-        // 编辑器无此科技(不死族)，怀疑是背包(Rupm)
+        // 科技 不明科技(不死族)(编辑器无此科技)
         integer Rump
-        // 冰冻吐息
+        // 科技 冰冻吐息
         integer Rufb
-        // 骷髅持久术
+        // 科技 骷髅持久术
         integer Rusl
-        // 骷髅精通
+        // 科技 骷髅精通
         integer Rusm
-        // 发掘尸体
+        // 科技 发掘尸体
         integer Ruex
-        // 牺牲(不死族)(编辑器无此科技)
+        // 科技 牺牲(不死族)(编辑器无此科技)
         integer Rurs
-        // 不明科技(不死族)(编辑器无此科技)
+        // 科技 不明科技(不死族)(编辑器无此科技)
         integer Ruax
-        // 生物甲壳
+        // 科技 生物甲壳
         integer Rucr
-        // 疾病之云
+        // 科技 疾病之云
         integer Rupc
-        // 毁灭者形态
+        // 科技 毁灭者形态
         integer Rusp
-        // 钻地
+        // 科技 钻地
         integer Rubu
-        // 背包(亡灵)
+        // 科技 背包(亡灵)
         integer Rupm
 
 
         // 暗夜精灵族科技
 
-        // 月之力量
+        // 科技 月之力量
         integer Resm
-        // 野性力量
+        // 科技 野性力量
         integer Resw
-        // 月之护甲
+        // 科技 月之护甲
         integer Rema
-        // 强化外皮
+        // 科技 强化外皮
         integer Rerh
-        // 夜视能力
+        // 科技 夜视能力
         integer Reuv
-        // 自然祝福
+        // 科技 自然祝福
         integer Renb
-        // 哨兵
+        // 科技 哨兵
         integer Resc
-        // 升级月刃
+        // 科技 升级月刃
         integer Remg
-        // 强弓
+        // 科技 强弓
         integer Reib
-        // 箭术
+        // 科技 箭术
         integer Remk
-        // 猛禽德鲁伊专家级训练
+        // 科技 猛禽德鲁伊专家级训练
         integer Redt
-        // 利爪德鲁伊专家级训练
+        // 科技 利爪德鲁伊专家级训练
         integer Redc
-        // 驱除魔法(暗夜)
+        // 科技 驱除魔法(暗夜精灵族)
         integer Resi
-        // 腐蚀吐息
+        // 科技 腐蚀吐息
         integer Recb
-        // 角鹰兽训练
+        // 科技 角鹰兽训练
         integer Reht
-        // 不明科技(暗夜精灵族)(编辑器无此科技)
+        // 科技 不明科技(暗夜精灵族)(编辑器无此科技)
         integer Repd
-        // 利爪之印
+        // 科技 利爪之印
         integer Reeb
-        // 猛禽之印
+        // 科技 猛禽之印
         integer Reec
-        // 硬化体肤
+        // 科技 硬化体肤
         integer Rehs
-        // 抗性体肤
+        // 科技 抗性体肤
         integer Rers
-        // 月井之春
+        // 科技 月井之春
         integer Rews
-        // 锐锋之刃
+        // 科技 锐锋之刃
         integer Repb
-        // 背包(暗夜精灵)
+        // 科技 背包(暗夜精灵)
         integer Repm
 
 
         // 娜迦科技
 
-        // 珊瑚鳞甲
+        // 科技 珊瑚鳞甲
         integer Rnam
-        // 珊瑚锋刃
+        // 科技 珊瑚锋刃
         integer Rnat
-        // 驱除魔法(娜迦族)
+        // 科技 驱除魔法(娜迦族)
         integer Rnsi
-        // 诱捕(娜迦族)
+        // 科技 诱捕(娜迦族)
         integer Rnen
-        // 潜水
+        // 科技 潜水
         integer Rnsb
-        // 纳迦海妖专家级训练
+        // 科技 纳迦海妖专家级训练
         integer Rnsw
 
 
         // 中立科技
 
-        // 混乱
+        // 科技 混乱
         integer Roch
-        // 夜视雕文(升级)
+        // 科技 夜视雕文(升级)
         integer Rguv
-        // 强固雕文(升级1)
+        // 科技 强固雕文(升级1)
         integer Rgfo
 
 
-// 常用可破坏物
+// 常用可破坏物(齐)
 
         // 可破坏物 升降台墙
         integer DTep
@@ -2404,6 +2760,66 @@ globals
         integer DTrf
         // 可破坏物 升降台2
         integer DTrx
+        // 可破坏物 冬天树墙
+        integer WTtw
+        // 可破坏物 冰冠树墙
+        integer ITtw
+        // 可破坏物 地下树墙
+        integer GTsh
+        // 可破坏物 地牢树墙
+        integer DTsh
+        // 可破坏物 城邦冬天树墙
+        integer YTwt
+        // 可破坏物 城邦夏天树墙
+        integer YTct
+        // 可破坏物 城邦废墟树墙
+        integer JTct
+        // 可破坏物 城邦秋天树墙
+        integer YTft
+        // 可破坏物 城邦落雪树墙
+        integer YTst
+        // 可破坏物 夏天树墙
+        integer LTlt
+        // 可破坏物 外域树墙
+        integer OTtw
+        // 可破坏物 废墟树墙
+        integer ZTtw
+        // 可破坏物 村庄树墙
+        integer VTlt
+        // 可破坏物 灰谷树墙
+        integer ATtr
+        // 可破坏物 烧焦树墙
+        integer Ytsc
+        // 可破坏物 秋天树墙
+        integer FTtw
+        // 可破坏物 落雪树墙
+        integer WTst
+        // 可破坏物 诺森德冰树墙
+        integer NTiw
+        // 可破坏物 诺森德树墙
+        integer NTtw
+        // 可破坏物 贫瘠之地树墙
+        integer BTtw
+        // 可破坏物 费伍德树墙
+        integer CTtr
+        // 可破坏物 达拉然废墟树墙
+        integer JTtw
+        // 可破坏物 银月城树
+        integer Yts1
+        // 可破坏物 黑色城堡树墙
+        integer KTtw
+        // 可破坏物 冰冠巨冠树
+        integer ITtc
+        // 可破坏物 废墟巨冠树
+        integer ZTtc
+        // 可破坏物 灰谷巨冠树
+        integer ATtc
+        // 可破坏物 诺森德巨冠树
+        integer NTtc
+        // 可破坏物 贫瘠之地巨冠树
+        integer BTtc
+        // 可破坏物 费伍德巨冠树
+        integer CTtc
         // 可破坏物 发光的传送门
         integer OTsp
         // 可破坏物 冰冠堡垒入口
@@ -2702,4 +3118,308 @@ globals
         integer YT23
         // 可破坏物 宽斯坦索姆桥(水平)
         integer YT22
+        // 可破坏物 宽暗夜精灵木质桥(垂直)
+        integer NB08
+        // 可破坏物 宽暗夜精灵木质桥(对角1)
+        integer NB09
+        // 可破坏物 宽暗夜精灵木质桥(对角2)
+        integer NB11
+        // 可破坏物 宽暗夜精灵木质桥(水平)
+        integer NB10
+        // 可破坏物 宽木质桥(垂直)
+        integer LT08
+        // 可破坏物 宽木质桥(对角1)
+        integer LT09
+        // 可破坏物 宽木质桥(对角2)
+        integer LT11
+        // 可破坏物 宽木质桥(水平)
+        integer LT10
+        // 可破坏物 宽板条木质桥(垂直)
+        integer RW08
+        // 可破坏物 宽板条木质桥(对角1)
+        integer RW09
+        // 可破坏物 宽板条木质桥(对角2)
+        integer RW11
+        // 可破坏物 宽板条木质桥(水平)
+        integer RW10
+        // 可破坏物 宽石质桥(垂直)
+        integer YT20
+        // 可破坏物 宽石质桥(垂直)
+        integer YT44
+        // 可破坏物 宽石质桥(对角1)
+        integer YT45
+        // 可破坏物 宽石质桥(对角1)
+        integer YT21
+        // 可破坏物 宽石质桥(对角2)
+        integer YT23
+        // 可破坏物 宽石质桥(对角2)
+        integer YT47
+        // 可破坏物 宽石质桥(水平)
+        integer YT22
+        // 可破坏物 宽石质桥(水平)
+        integer YT46
+        // 可破坏物 宽精灵桥(垂直)
+        integer EB08
+        // 可破坏物 宽精灵桥(对角1)
+        integer EB09
+        // 可破坏物 宽精灵桥(对角2)
+        integer EB11
+        // 可破坏物 宽精灵桥(水平)
+        integer EB10
+        // 可破坏物 宽茂盛之桥(垂直)
+        integer OG08
+        // 可破坏物 宽茂盛之桥(对角1)
+        integer OG09
+        // 可破坏物 宽茂盛之桥(对角2)
+        integer OG11
+        // 可破坏物 宽茂盛之桥(水平)
+        integer OG10
+        // 可破坏物 寒冰之桥(垂直)
+        integer ITib
+        // 可破坏物 寒冰之桥(对角1)
+        integer ITi2
+        // 可破坏物 寒冰之桥(对角2)
+        integer ITi4
+        // 可破坏物 寒冰之桥(水平)
+        integer ITi3
+        // 可破坏物 最后希望之桥(垂直)
+        integer LTtc
+        // 可破坏物 最后希望之桥(水平)
+        integer LTtx
+        // 可破坏物 树桥(垂直)
+        integer ATt1
+        // 可破坏物 树桥(垂直)
+        integer LTt4
+        // 可破坏物 树桥(垂直)
+        integer LTt2
+        // 可破坏物 树桥(垂直)
+        integer LTt0
+        // 可破坏物 树桥(水平)
+        integer LTt1
+        // 可破坏物 树桥(水平)
+        integer ATt0
+        // 可破坏物 树桥(水平)
+        integer LTt3
+        // 可破坏物 树桥(水平)
+        integer LTt5
+        // 可破坏物 特殊寒冰之桥
+        integer YT66
+        // 可破坏物 短天然桥(垂直)
+        integer YT24
+        // 可破坏物 短天然桥(垂直)
+        integer YT00
+        // 可破坏物 短天然桥(对角1)
+        integer YT25
+        // 可破坏物 短天然桥(对角1)
+        integer YT01
+        // 可破坏物 短天然桥(对角2)
+        integer YT27
+        // 可破坏物 短天然桥(对角2)
+        integer YT03
+        // 可破坏物 短天然桥(水平)
+        integer YT02
+        // 可破坏物 短天然桥(水平)
+        integer YT26
+        // 可破坏物 短斯坦索姆桥(垂直)
+        integer YY12
+        // 可破坏物 短斯坦索姆桥(对角1)
+        integer YY13
+        // 可破坏物 短斯坦索姆桥(对角2)
+        integer YY15
+        // 可破坏物 短斯坦索姆桥(水平)
+        integer YY14
+        // 可破坏物 短暗夜精灵木质桥(垂直)
+        integer NB00
+        // 可破坏物 短暗夜精灵木质桥(对角1)
+        integer NB01
+        // 可破坏物 短暗夜精灵木质桥(对角2)
+        integer NB03
+        // 可破坏物 短暗夜精灵木质桥(水平)
+        integer NB02
+        // 可破坏物 短板条木质桥(垂直)
+        integer RW00
+        // 可破坏物 短板条木质桥(对角1)
+        integer RW01
+        // 可破坏物 短板条木质桥(对角2)
+        integer RW03
+        // 可破坏物 短板条木质桥(水平)
+        integer RW02
+        // 可破坏物 短石质桥(垂直)
+        integer YT12
+        // 可破坏物 短石质桥(垂直)
+        integer YT36
+        // 可破坏物 短石质桥(对角1)
+        integer YT37
+        // 可破坏物 短石质桥(对角1)
+        integer YT13
+        // 可破坏物 短石质桥(对角2)
+        integer YT39
+        // 可破坏物 短石质桥(对角2)
+        integer YT15
+        // 可破坏物 短石质桥(水平)
+        integer YT38
+        // 可破坏物 短石质桥(水平)
+        integer YT14
+        // 可破坏物 短精灵桥(垂直)
+        integer EB00
+        // 可破坏物 短精灵桥(对角1)
+        integer EB01
+        // 可破坏物 短精灵桥(对角2)
+        integer EB03
+        // 可破坏物 短精灵桥(水平)
+        integer EB02
+        // 可破坏物 短茂盛之桥(垂直)
+        integer OG00
+        // 可破坏物 短茂盛之桥(对角1)
+        integer OG01
+        // 可破坏物 短茂盛之桥(对角2)
+        integer OG03
+        // 可破坏物 短茂盛之桥(水平)
+        integer OG02
+        // 可破坏物 石质斜坡(右上)
+        integer LTr3
+        // 可破坏物 石质斜坡(右上)
+        integer LTs3
+        // 可破坏物 石质斜坡(右上2)
+        integer LTs7
+        // 可破坏物 石质斜坡(右上2)
+        integer LTr7
+        // 可破坏物 石质斜坡(右下)
+        integer LTr4
+        // 可破坏物 石质斜坡(右下)
+        integer LTs4
+        // 可破坏物 石质斜坡(右下2)
+        integer LTs8
+        // 可破坏物 石质斜坡(右下2)
+        integer LTr8
+        // 可破坏物 石质斜坡(左上 2)
+        integer LTs6
+        // 可破坏物 石质斜坡(左上 2)
+        integer LTr6
+        // 可破坏物 石质斜坡(左上)
+        integer LTr2
+        // 可破坏物 石质斜坡(左上)
+        integer LTs2
+        // 可破坏物 石质斜坡(左下)
+        integer LTs1
+        // 可破坏物 石质斜坡(左下)
+        integer LTr1
+        // 可破坏物 石质斜坡(左下2)
+        integer LTs5
+        // 可破坏物 石质斜坡(左下2)
+        integer LTr5
+        // 可破坏物 码头
+        integer ATwf
+        // 可破坏物 精灵桥
+        integer YT67
+        // 可破坏物 纳迦小斜坡(向上)
+        integer ZTr1
+        // 可破坏物 纳迦小斜坡(向下)
+        integer ZTr3
+        // 可破坏物 纳迦小斜坡(向右)
+        integer ZTr2
+        // 可破坏物 纳迦小斜坡(向左)
+        integer ZTr0
+        // 可破坏物 脚踏开关
+        integer DTfx
+        // 可破坏物 脚踏开关
+        integer DTfp
+        // 可破坏物 被毁的桥
+        integer YSdb
+        // 可破坏物 被毁的桥
+        integer YSdc
+        // 可破坏物 超宽天然桥(垂直)
+        integer YT48
+        // 可破坏物 超宽天然桥(对角1)
+        integer YT49
+        // 可破坏物 超宽天然桥(对角2)
+        integer YT51
+        // 可破坏物 超宽天然桥(水平)
+        integer YT50
+        // 可破坏物 长天然桥(垂直)
+        integer YT28
+        // 可破坏物 长天然桥(垂直)
+        integer YT04
+        // 可破坏物 长天然桥(对角1)
+        integer YT05
+        // 可破坏物 长天然桥(对角1)
+        integer YT29
+        // 可破坏物 长天然桥(对角2)
+        integer YT07
+        // 可破坏物 长天然桥(对角2)
+        integer YT31
+        // 可破坏物 长天然桥(水平)
+        integer YT30
+        // 可破坏物 长天然桥(水平)
+        integer YT06
+        // 可破坏物 长斯坦索姆桥(垂直)
+        integer YY16
+        // 可破坏物 长斯坦索姆桥(对角1)
+        integer YY17
+        // 可破坏物 长斯坦索姆桥(对角2)
+        integer YY19
+        // 可破坏物 长斯坦索姆桥(水平)
+        integer YY18
+        // 可破坏物 长暗夜精灵木质桥(垂直)
+        integer NB04
+        // 可破坏物 长暗夜精灵木质桥(对角1)
+        integer NB05
+        // 可破坏物 长暗夜精灵木质桥(对角2)
+        integer NB07
+        // 可破坏物 长暗夜精灵木质桥(水平)
+        integer NB06
+        // 可破坏物 长木质桥(垂直)
+        integer LT04
+        // 可破坏物 长木质桥(对角1)
+        integer LT05
+        // 可破坏物 长木质桥(对角2)
+        integer LT07
+        // 可破坏物 长木质桥(水平)
+        integer LT06
+        // 可破坏物 长板条木质桥(垂直)
+        integer RW04
+        // 可破坏物 长板条木质桥(对角1)
+        integer RW05
+        // 可破坏物 长板条木质桥(对角2)
+        integer RW07
+        // 可破坏物 长板条木质桥(水平)
+        integer RW06
+        // 可破坏物 长石质桥(垂直)
+        integer YT16
+        // 可破坏物 长石质桥(垂直)
+        integer YT40
+        // 可破坏物 长石质桥(对角1)
+        integer YT17
+        // 可破坏物 长石质桥(对角1)
+        integer YT41
+        // 可破坏物 长石质桥(对角2)
+        integer YT43
+        // 可破坏物 长石质桥(对角2)
+        integer YT19
+        // 可破坏物 长石质桥(水平)
+        integer YT18
+        // 可破坏物 长石质桥(水平)
+        integer YT42
+        // 可破坏物 长精灵桥(垂直)
+        integer EB04
+        // 可破坏物 长精灵桥(对角1)
+        integer EB05
+        // 可破坏物 长精灵桥(对角2)
+        integer EB07
+        // 可破坏物 长精灵桥(水平)
+        integer EB06
+        // 可破坏物 长茂盛之桥(垂直)
+        integer OG04
+        // 可破坏物 长茂盛之桥(对角1)
+        integer OG05
+        // 可破坏物 长茂盛之桥(对角2)
+        integer OG07
+        // 可破坏物 长茂盛之桥(水平)
+        integer OG06
+        // 可破坏物 隐形平台
+        integer OTip
+        // 可破坏物 隐形平台(小)
+        integer OTis
+
+
 endglobals
