@@ -329,6 +329,7 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // human heroes
+    
         // 大法师
         constant integer ARCHMAGE           = 'Hamg'
         // 圣骑士
@@ -339,40 +340,42 @@ native DebugS               takes string str                            returns 
         constant integer BLOOD_MAGE         = 'Hblm'
     
         // human hero abilities
-        // 技能 天神下凡（山丘之王）
+    
+        // 英雄技能 天神下凡（山丘之王）
         constant integer AVATAR             = 'AHav'
-        // 技能 猛击（山丘之王）
+        // 英雄技能 猛击（山丘之王）
         constant integer BASH               = 'AHbh'
-        // 技能 风暴之锤（山丘之王）
+        // 英雄技能 风暴之锤（山丘之王）
         constant integer THUNDER_BOLT       = 'AHtb'
-        // 技能 雷霆一击（山丘之王）
+        // 英雄技能 雷霆一击（山丘之王）
         constant integer THUNDER_CLAP       = 'AHtc'
-        // 技能 虔诚光环（圣骑士）
+        // 英雄技能 虔诚光环（圣骑士）
         constant integer DEVOTION_AURA      = 'AHad'
-        // 技能 圣盾术（圣骑士）
+        // 英雄技能 圣盾术（圣骑士）
         constant integer DIVINE_SHIELD      = 'AHds'
-        // 技能 圣光术（圣骑士）
+        // 英雄技能 圣光术（圣骑士）
         constant integer HOLY_BOLT          = 'AHhb'
-        // 技能 复活术（圣骑士）
+        // 英雄技能 复活术（圣骑士）
         constant integer RESURRECTION       = 'AHre'
-        // 技能 暴风雪（大法师）
+        // 英雄技能 暴风雪（大法师）
         constant integer BLIZZARD           = 'AHbz'
-        // 技能 辉煌光环（大法师）
+        // 英雄技能 辉煌光环（大法师）
         constant integer BRILLIANCE_AURA    = 'AHab'
-        // 技能 群体传送（大法师）
+        // 英雄技能 群体传送（大法师）
         constant integer MASS_TELEPORT      = 'AHmt'
-        // 技能 水元素（大法师）
+        // 英雄技能 水元素（大法师）
         constant integer WATER_ELEMENTAL    = 'AHwe'
-        // 技能 放逐（血法）
+        // 英雄技能 放逐（血法）
         constant integer BANISH             = 'AHbn'
-        // 技能 烈焰风暴（血法）
+        // 英雄技能 烈焰风暴（血法）
         constant integer FLAME_STRIKE       = 'AHfs'
-        // 技能 火凤凰（血法）
+        // 英雄技能 火凤凰（血法）
         constant integer SUMMON_PHOENIX     = 'AHpx'
-        // 技能 法力虹吸（血法）
+        // 英雄技能 法力虹吸（血法）
         constant integer SIPHON_MANA        = 'AHdr'
     
         // special human heroes
+    
         // 吉安娜
         constant integer JAINA              = 'Hjai'
         // 穆拉丁·铜须
@@ -383,6 +386,7 @@ native DebugS               takes string str                            returns 
         constant integer KAEL               = 'Hkal'
     
         // human units
+    
         // 矮人直升机
         constant integer COPTER             = 'hgyr'
         // 矮人直升机
@@ -423,6 +427,7 @@ native DebugS               takes string str                            returns 
         constant integer HUMAN_DRAGON_HAWK  = 'hdhw'
     
         // special human units
+    
         // 血精灵牧师
         constant integer BLOOD_PRIEST       = 'hbep'
         // 血精灵女巫
@@ -431,6 +436,7 @@ native DebugS               takes string str                            returns 
         constant integer BLOOD_PEASANT      = 'nhew'
     
         // human buildings
+    
         // 狮鹫笼
         constant integer AVIARY             = 'hgra'
         // 兵营（人族）
@@ -471,51 +477,52 @@ native DebugS               takes string str                            returns 
         constant integer ARCANE_TOWER       = 'hatw'
     
         // human upgrades
-        // 钢铁铸剑
+    
+        // 科技 钢铁铸剑
         constant integer UPG_MELEE          = 'Rhme'
-        // 黑火药
+        // 科技 黑火药
         constant integer UPG_RANGED         = 'Rhra'
-        // 炮兵（人族）（编辑器无此科技 'Rhaa'）
+        // 科技 炮兵（人族）（编辑器无此科技 'Rhaa'）
         constant integer UPG_ARTILLERY      = 'Rhaa'
-        // 钢铁装甲
+        // 科技 钢铁装甲
         constant integer UPG_ARMOR          = 'Rhar'
-        // 黄金（人族）（编辑器无此科技 'Rhmi'）
+        // 科技 黄金（人族）（编辑器无此科技 'Rhmi'）
         constant integer UPG_GOLD           = 'Rhmi'
-        // 改良石工技术
+        // 科技 改良石工技术
         constant integer UPG_MASONRY        = 'Rhac'
-        // 控制魔法
+        // 科技 控制魔法
         constant integer UPG_SIGHT          = 'Rhss'
-        // 防御
+        // 科技 防御
         constant integer UPG_DEFEND         = 'Rhde'
-        // 坐骑作战训练
+        // 科技 坐骑作战训练
         constant integer UPG_BREEDING       = 'Rhan'
-        // 牧师专家级训练
+        // 科技 牧师专家级训练
         constant integer UPG_PRAYING        = 'Rhpt'
-        // 女巫专家级训练
+        // 科技 女巫专家级训练
         constant integer UPG_SORCERY        = 'Rhst'
-        // 镶钉皮甲
+        // 科技 镶钉皮甲
         constant integer UPG_LEATHER        = 'Rhla'
-        // 长管火枪
+        // 科技 长管火枪
         constant integer UPG_GUN_RANGE      = 'Rhri'
-        // 改良伐木技术
+        // 科技 改良伐木技术
         constant integer UPG_WOOD           = 'Rhlh'
-        // 魔法岗哨
+        // 科技 魔法岗哨
         constant integer UPG_SENTINEL       = 'Rhse'
-        // 散射（人族）（编辑器无此科技 'Rhsr'）
+        // 科技 散射（人族）（编辑器无此科技 'Rhsr'）
         constant integer UPG_SCATTER        = 'Rhsr'
-        // 飞行器炸弹
+        // 科技 飞行器炸弹
         constant integer UPG_BOMBS          = 'Rhgb'
-        // 风暴战锤
+        // 科技 风暴战锤
         constant integer UPG_HAMMERS        = 'Rhhb'
-        // 控制魔法
+        // 科技 控制魔法
         constant integer UPG_CONT_MAGIC     = 'Rhss'
-        // 破片榴弹
+        // 科技 破片榴弹
         constant integer UPG_FRAGS          = 'Rhfs'
-        // 火箭弹幕
+        // 科技 火箭弹幕
         constant integer UPG_TANK           = 'Rhrt'
-        // 对空炮机
+        // 科技 对空炮机
         constant integer UPG_FLAK           = 'Rhfc'
-        // 迷雾之云
+        // 科技 迷雾之云
         constant integer UPG_CLOUD          = 'Rhcd'
     
         //--------------------------------------------------------------------
@@ -523,6 +530,7 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // orc heroes
+    
         // 剑圣
         constant integer BLADE_MASTER       = 'Obla'
         // 先知
@@ -533,46 +541,49 @@ native DebugS               takes string str                            returns 
         constant integer SHADOW_HUNTER      = 'Oshd'
     
         // special orc heroes
+    
         // 格罗玛什·地狱咆哮
         constant integer GROM               = 'Ogrh'
         // 萨尔
         constant integer THRALL             = 'Othr'
     
         // orc hero abilities
-        // 技能 致命一击（剑圣）
+    
+        // 英雄技能 致命一击（剑圣）
         constant integer CRITICAL_STRIKE    = 'AOcr'
-        // 技能 镜像（剑圣）
+        // 英雄技能 镜像（剑圣）
         constant integer MIRROR_IMAGE       = 'AOmi'
-        // 技能 剑刃风暴（剑圣）
+        // 英雄技能 剑刃风暴（剑圣）
         constant integer BLADE_STORM        = 'AOww'
-        // 技能 疾风步（剑圣）
+        // 英雄技能 疾风步（剑圣）
         constant integer WIND_WALK          = 'AOwk'
-        // 技能 闪电链（先知）
+        // 英雄技能 闪电链（先知）
         constant integer CHAIN_LIGHTNING    = 'AOcl'
-        // 技能 地震术（先知）
+        // 英雄技能 地震术（先知）
         constant integer EARTHQUAKE         = 'AOeq'
-        // 技能 视界术（先知）
+        // 英雄技能 视界术（先知）
         constant integer FAR_SIGHT          = 'AOfs'
-        // 技能 野性之魂（召狼）（先知）
+        // 英雄技能 野性之魂（召狼）（先知）
         constant integer SPIRIT_WOLF        = 'AOsf'
-        // 技能 坚韧光环（牛头）
+        // 英雄技能 坚韧光环（牛头）
         constant integer ENDURANE_AURA      = 'AOae'
-        // 技能 重生（牛头）
+        // 英雄技能 重生（牛头）
         constant integer REINCARNATION      = 'AOre'
-        // 技能 震荡波（牛头）
+        // 英雄技能 震荡波（牛头）
         constant integer SHOCKWAVE          = 'AOsh'
-        // 技能 战争践踏（牛头）
+        // 英雄技能 战争践踏（牛头）
         constant integer WAR_STOMP          = 'AOws'
-        // 技能 治疗波（暗影猎手）
+        // 英雄技能 治疗波（暗影猎手）
         constant integer HEALING_WAVE       = 'AOhw'
-        // 技能 妖术（暗影猎手）
+        // 英雄技能 妖术（暗影猎手）
         constant integer HEX                = 'AOhx'
-        // 技能 毒蛇结界（蛇棒）（暗影猎手）
+        // 英雄技能 毒蛇结界（蛇棒）（暗影猎手）
         constant integer SERPENT_WARD       = 'AOsw'
-        // 技能 巫毒狂舞（友军无敌）（暗影猎手）
+        // 英雄技能 巫毒狂舞（友军无敌）（暗影猎手）
         constant integer VOODOO             = 'AOvd'
     
         // orc units
+    
         // 兽族步兵（编辑器无此单位 'oang'）
         constant integer GUARDIAN           = 'oang'
         // 投石车
@@ -605,6 +616,7 @@ native DebugS               takes string str                            returns 
         constant integer SPIRIT_WALKER_M    = 'ospm'
     
         // orc buildings
+    
         // 风暴祭坛
         constant integer ORC_ALTAR          = 'oalt'
         // 兵营（兽族）
@@ -631,48 +643,50 @@ native DebugS               takes string str                            returns 
         constant integer VOODOO_LOUNGE      = 'ovln'
     
         // orc upgrades
-        // 精钢近战武器
+    
+        // 科技 精钢近战武器
         constant integer UPG_ORC_MELEE      = 'Rome'
-        // 精钢远程武器
+        // 科技 精钢远程武器
         constant integer UPG_ORC_RANGED     = 'Rora'
-        // 火炮（兽族）（编辑器无此科技 'Roaa'）
+        // 科技 火炮（兽族）（编辑器无此科技 'Roaa'）
         constant integer UPG_ORC_ARTILLERY  = 'Roaa'
-        // 精钢护甲
+        // 科技 精钢护甲
         constant integer UPG_ORC_ARMOR      = 'Roar'
-        // 战鼓伤害强化
+        // 科技 战鼓伤害强化
         constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
-        // 掠夺
+        // 科技 掠夺
         constant integer UPG_ORC_PILLAGE    = 'Ropg'
-        // 野蛮之力
+        // 科技 野蛮之力
         constant integer UPG_ORC_BERSERK    = 'Robs'
-        // 粉碎伤害强化
+        // 科技 粉碎伤害强化
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
-        // 诱捕（兽族）
+        // 科技 诱捕（兽族）
         constant integer UPG_ORC_ENSNARE    = 'Roen'
-        // 毒矛（兽族）
+        // 科技 毒矛（兽族）
         constant integer UPG_ORC_VENOM      = 'Rovs'
-        // 巫医专家级训练
+        // 科技 巫医专家级训练
         constant integer UPG_ORC_DOCS       = 'Rowd'
-        // 萨满祭司专家级训练
+        // 科技 萨满祭司专家级训练
         constant integer UPG_ORC_SHAMAN     = 'Rost'
-        // 尖刺障碍
+        // 科技 尖刺障碍
         constant integer UPG_ORC_SPIKES     = 'Rosp'
-        // 加强型防御
+        // 科技 加强型防御
         constant integer UPG_ORC_BURROWS    = 'Rorb'
-        // 巨魔再生
+        // 科技 巨魔再生
         constant integer UPG_ORC_REGEN      = 'Rotr'
-        // 火油瓶（兽族）
+        // 科技 火油瓶（兽族）
         constant integer UPG_ORC_FIRE       = 'Rolf'
-        // 灵魂行者专家级训练
+        // 科技 灵魂行者专家级训练
         constant integer UPG_ORC_SWALKER    = 'Rowt'
-        // 狂战士升级
+        // 科技 狂战士升级
         constant integer UPG_ORC_BERSERKER  = 'Robk'
-        // 燃油（兽族）
+        // 科技 燃油（兽族）
         constant integer UPG_ORC_NAPTHA     = 'Robf'
-        // 混乱（中立）
+        // 科技 混乱（中立）
         constant integer UPG_ORC_CHAOS      = 'Roch'
     
         // Warcraft 2 orc units
+    
         // 食人魔法师
         constant integer OGRE_MAGI          = 'nomg'
         // 红色巨龙
@@ -689,6 +703,7 @@ native DebugS               takes string str                            returns 
         constant integer PIG_FARM           = 'npgf'
     
         // special orc units
+    
         // 邪兽人步兵
         constant integer CHAOS_GRUNT        = 'nchg'
         // 邪兽人术士
@@ -711,6 +726,7 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // undead heroes
+    
         // 死亡骑士
         constant integer DEATH_KNIGHT       = 'Udea'
         // 恐惧魔王
@@ -721,6 +737,7 @@ native DebugS               takes string str                            returns 
         constant integer CRYPT_LORD         = 'Ucrl'
     
         // special undead heroes
+    
         // 玛尔加尼斯
         constant integer MALGANIS           = 'Umal'
         // 提克迪奥斯
@@ -731,40 +748,42 @@ native DebugS               takes string str                            returns 
         constant integer DETHEROC           = 'Udth'
     
         // undead hero abilities
-        // 技能 沉睡（恐惧魔王）
+    
+        // 英雄技能 沉睡（恐惧魔王）
         constant integer SLEEP              = 'AUsl'
-        // 技能 吸血光环（恐惧魔王）
+        // 英雄技能 吸血光环（恐惧魔王）
         constant integer VAMP_AURA          = 'AUav'
-        // 技能 腐臭蜂群（恐惧魔王）
+        // 英雄技能 腐臭蜂群（恐惧魔王）
         constant integer CARRION_SWARM      = 'AUcs'
-        // 技能 地狱火（恐惧魔王）
+        // 英雄技能 地狱火（恐惧魔王）
         constant integer INFERNO            = 'AUin'
-        // 技能 黑暗仪式（巫妖）
+        // 英雄技能 黑暗仪式（巫妖）
         constant integer DARK_RITUAL        = 'AUdr'
-        // 技能 枯萎凋零（巫妖）
+        // 英雄技能 枯萎凋零（巫妖）
         constant integer DEATH_DECAY        = 'AUdd'
-        // 技能 冰霜新星（巫妖）
+        // 英雄技能 冰霜新星（巫妖）
         constant integer FROST_ARMOR        = 'AUfu'
-        // 技能 霜甲术（自动施法）（巫妖）
+        // 英雄技能 霜甲术（自动施法）（巫妖）
         constant integer FROST_NOVA         = 'AUfn'
-        // 技能 亡者再临（死骑）
+        // 英雄技能 亡者再临（死骑）
         constant integer ANIM_DEAD          = 'AUan'
-        // 技能 凋零/死亡缠绕（死骑）
+        // 英雄技能 凋零/死亡缠绕（死骑）
         constant integer DEATH_COIL         = 'AUdc'
-        // 技能 天灾/死亡契约（死骑）
+        // 英雄技能 天灾/死亡契约（死骑）
         constant integer DEATH_PACT         = 'AUdp'
-        // 技能 邪恶光环（死骑）
+        // 英雄技能 邪恶光环（死骑）
         constant integer UNHOLY_AURA        = 'AUau'
-        // 技能 腐尸甲虫（小强）
+        // 英雄技能 腐尸甲虫（小强）
         constant integer CARRION_SCARAB     = 'AUcb'
-        // 技能 穿刺（小强）
+        // 英雄技能 穿刺（小强）
         constant integer IMPALE             = 'AUim'
-        // 技能 虫群风暴（小强）
+        // 英雄技能 虫群风暴（小强）
         constant integer LOCUST_SWARM       = 'AUls'
-        // 技能 尖刺甲壳（小强）
+        // 英雄技能 尖刺甲壳（小强）
         constant integer THORNY_SHIELD      = 'AUts'
     
         // undead units
+    
         // 憎恶
         constant integer ABOMINATION        = 'uabo'
         // 侍僧
@@ -801,6 +820,7 @@ native DebugS               takes string str                            returns 
         constant integer BLK_SPHINX         = 'ubsp'
     
         // undead buildings
+    
         // 闹鬼金矿
         constant integer UNDEAD_MINE        = 'ugol'
         // 黑暗祭坛
@@ -835,47 +855,48 @@ native DebugS               takes string str                            returns 
         constant integer TOMB_OF_RELICS     = 'utom'
     
         // undead upgrades
-        // 邪恶力量
+    
+        // 科技 邪恶力量
         constant integer UPG_UNHOLY_STR     = 'Rume'
-        // 生物攻击
+        // 科技 生物攻击
         constant integer UPG_CR_ATTACK      = 'Rura'
-        // 邪恶护甲
+        // 科技 邪恶护甲
         constant integer UPG_UNHOLY_ARMOR   = 'Ruar'
-        // 食尸
+        // 科技 食尸
         constant integer UPG_CANNIBALIZE    = 'Ruac'
-        // 食尸鬼狂暴
+        // 科技 食尸鬼狂暴
         constant integer UPG_GHOUL_FRENZY   = 'Rugf'
-        // 蛛网
+        // 科技 蛛网
         constant integer UPG_FIEND_WEB      = 'Ruwb'
-        // 疑似与憎恶相关（不死族）（编辑器无此科技'Ruab'）
+        // 科技 疑似与憎恶相关（不死族）（编辑器无此科技'Ruab'）
         constant integer UPG_ABOM           = 'Ruab'
-        // 石像形态
+        // 科技 石像形态
         constant integer UPG_STONE_FORM     = 'Rusf'
-        // 通灵师/亡灵男巫专家级训练
+        // 科技 通灵师/亡灵男巫专家级训练
         constant integer UPG_NECROS         = 'Rune'
-        // 女妖专家级训练
+        // 科技 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 编辑器无此科技（不死族），怀疑是背包（'Rupm'），但此处写成'Rump'
+        // 科技 不明科技（不死族）（编辑器无此科技'Rump'）
         constant integer UPG_MEAT_WAGON     = 'Rump'
-        // 冰冻吐息
+        // 科技 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
-        // 骷髅持久术
+        // 科技 骷髅持久术
         constant integer UPG_SKEL_LIFE      = 'Rusl'
-        // 骷髅精通
+        // 科技 骷髅精通
         constant integer UPG_SKEL_MASTERY   = 'Rusm'
-        // 发掘尸体
+        // 科技 发掘尸体
         constant integer UPG_EXHUME         = 'Ruex'
-        // 牺牲（不死族）（编辑器无此科技'Rurs'）
+        // 科技 牺牲（不死族）（编辑器无此科技'Rurs'）
         constant integer UPG_SACRIFICE      = 'Rurs'
-        // 疑似憎恶自爆（不死族）（编辑器无此科技'Ruax'）
+        // 科技 疑似憎恶自爆（不死族）（编辑器无此科技'Ruax'）
         constant integer UPG_ABOM_EXPL      = 'Ruax'
-        // 生物甲壳
+        // 科技 生物甲壳
         constant integer UPG_CR_ARMOR       = 'Rucr'
-        // 疾病之云
+        // 科技 疾病之云
         constant integer UPG_PLAGUE         = 'Rupc'
-        // 毁灭者形态
+        // 科技 毁灭者形态
         constant integer UPG_BLK_SPHINX     = 'Rusp'
-        // 钻地
+        // 科技 钻地
         constant integer UPG_BURROWING      = 'Rubu'
     
         //--------------------------------------------------------------------
@@ -883,6 +904,7 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // elf heroes
+    
         // 恶魔猎手
         constant integer DEMON_HUNTER       = 'Edem'
         // 恶魔猎手（变身形态）
@@ -911,40 +933,42 @@ native DebugS               takes string str                            returns 
         constant integer MAIEV              = 'Ewrd'
     
         // elf hero abilities
-        // 技能 自然之力（丛林守护者）
+    
+        // 英雄技能 自然之力（丛林守护者）
         constant integer FORCE_NATURE       = 'AEfn'
-        // 技能 纠缠根须（丛林守护者）
+        // 英雄技能 纠缠根须（丛林守护者）
         constant integer ENT_ROOTS          = 'AEer'
-        // 技能 荆棘光环（丛林守护者）
+        // 英雄技能 荆棘光环（丛林守护者）
         constant integer THORNS_AURA        = 'AEah'
-        // 技能 宁静（丛林守护者）
+        // 英雄技能 宁静（丛林守护者）
         constant integer TRANQUILITY        = 'AEtq'
-        // 技能 闪避（恶魔猎手）
+        // 英雄技能 闪避（恶魔猎手）
         constant integer EVASION            = 'AEev'
-        // 技能 献祭（恶魔猎手）
+        // 英雄技能 献祭（恶魔猎手）
         constant integer IMMOLATION         = 'AEim'
-        // 技能 法力燃烧（恶魔猎手）
+        // 英雄技能 法力燃烧（恶魔猎手）
         constant integer MANA_BURN          = 'AEmb'
-        // 技能 恶魔变形（恶魔猎手）
+        // 英雄技能 恶魔变形（恶魔猎手）
         constant integer METAMORPHOSIS      = 'AEme'
-        // 技能 灼热之箭（白虎）
+        // 英雄技能 灼热之箭（白虎）
         constant integer SEARING_ARROWS     = 'AHfa'
-        // 技能 斥候（白虎）
+        // 英雄技能 斥候（白虎）
         constant integer SCOUT              = 'AEst'
-        // 技能 星辰坠落（流星雨）（白虎）
+        // 英雄技能 星辰坠落（流星雨）（白虎）
         constant integer STARFALL           = 'AEsf'
-        // 技能 强击光环（白虎）
+        // 英雄技能 强击光环（白虎）
         constant integer TRUESHOT           = 'AEar'
-        // 技能 闪现（守望者）
+        // 英雄技能 闪现（守望者）
         constant integer BLINK              = 'AEbl'
-        // 技能 刀扇（守望者）
+        // 英雄技能 刀扇（守望者）
         constant integer FAN_KNIVES         = 'AEfk'
-        // 技能 暗影突袭（守望者）
+        // 英雄技能 暗影突袭（守望者）
         constant integer SHADOW_TOUCH       = 'AEsh'
-        // 技能 复仇（守望者）
+        // 英雄技能 复仇（守望者）
         constant integer VENGEANCE          = 'AEsv'
     
         // elf units
+    
         // 小精灵
         constant integer WISP               = 'ewsp'
         // 弓箭手
@@ -977,11 +1001,12 @@ native DebugS               takes string str                            returns 
         constant integer FAERIE_DRAGON      = 'efdr'
     
         // special elf units
+    
         // 弓箭手（高等精灵）
         constant integer HIGH_ARCHER        = 'nhea'
-        // 队长（高等精灵）
+        // 队长/船长
         constant integer HIGH_FOOTMAN       = 'hcth'
-        // 队长（高等精灵）
+        // 队长/船长
         constant integer HIGH_FOOTMEN       =  HIGH_FOOTMAN
         // 剑士（高等精灵）
         constant integer HIGH_SWORDMAN      = 'hhes'
@@ -997,6 +1022,7 @@ native DebugS               takes string str                            returns 
         constant integer SHANDRIS           = 'eshd'
     
         // elf buildings
+    
         // 知识古树
         constant integer ANCIENT_LORE       = 'eaoe'
         // 战争古树
@@ -1027,6 +1053,7 @@ native DebugS               takes string str                            returns 
         constant integer DEN_OF_WONDERS     = 'eden'
     
         // special elf buildings
+    
         // 高等精灵农场
         constant integer ELF_FARM           = 'nefm'
         // 高等精灵警戒塔
@@ -1049,52 +1076,54 @@ native DebugS               takes string str                            returns 
         constant integer CORRUPT_WAR        = 'ncaw'
     
         // elf upgrades
-        // 月之力量
+    
+        // 科技 月之力量
         constant integer UPG_STR_MOON       = 'Resm'
-        // 野性力量
+        // 科技 野性力量
         constant integer UPG_STR_WILD       = 'Resw'
-        // 月之护甲
+        // 科技 月之护甲
         constant integer UPG_MOON_ARMOR     = 'Rema'
-        // 强化外皮
+        // 科技 强化外皮
         constant integer UPG_HIDES          = 'Rerh'
-        // 夜视能力
+        // 科技 夜视能力
         constant integer UPG_ULTRAVISION    = 'Reuv'
-        // 自然祝福
+        // 科技 自然祝福
         constant integer UPG_BLESSING       = 'Renb'
-        // 哨兵
+        // 科技 哨兵
         constant integer UPG_SCOUT          = 'Resc'
-        // 升级月刃
+        // 科技 升级月刃
         constant integer UPG_GLAIVE         = 'Remg'
-        // 强弓
+        // 科技 强弓
         constant integer UPG_BOWS           = 'Reib'
-        // 箭术
+        // 科技 箭术
         constant integer UPG_MARKSMAN       = 'Remk'
-        // 猛禽德鲁伊专家级训练
+        // 科技 猛禽德鲁伊专家级训练
         constant integer UPG_DRUID_TALON    = 'Redt'
-        // 利爪德鲁伊专家级训练
+        // 科技 利爪德鲁伊专家级训练
         constant integer UPG_DRUID_CLAW     = 'Redc'
-        // 驱除魔法（暗夜）
+        // 科技 驱除魔法（暗夜精灵族）
         constant integer UPG_ABOLISH        = 'Resi'
-        // 腐蚀吐息
+        // 科技 腐蚀吐息
         constant integer UPG_CHIM_ACID      = 'Recb'
-        // 角鹰兽训练
+        // 科技 角鹰兽训练
         constant integer UPG_HIPPO_TAME     = 'Reht'
-        // 不明科技（暗夜精灵族）（编辑器无此科技'Repd'）
+        // 科技 不明科技（暗夜精灵族）（编辑器无此科技'Repd'）
         constant integer UPG_BOLT           = 'Repd'
-        // 利爪之印
+        // 科技 利爪之印
         constant integer UPG_MARK_CLAW      = 'Reeb'
-        // 猛禽之印
+        // 科技 猛禽之印
         constant integer UPG_MARK_TALON     = 'Reec'
-        // 硬化体肤
+        // 科技 硬化体肤
         constant integer UPG_HARD_SKIN      = 'Rehs'
-        // 抗性体肤
+        // 科技 抗性体肤
         constant integer UPG_RESIST_SKIN    = 'Rers'
-        // 月井之春
+        // 科技 月井之春
         constant integer UPG_WELL_SPRING    = 'Rews'
     
         //--------------------------------------------------------------------
         // Neutral
         //--------------------------------------------------------------------
+    
         // 恶魔之门
         constant integer DEMON_GATE         = 'ndmg'
         // 恶魔猎犬
@@ -1137,12 +1166,14 @@ native DebugS               takes string str                            returns 
         //--------------------------------------------------------------------
     
         // naga heroes
+    
         // 海巫（娜迦族）
         constant integer NAGA_SORCERESS     = 'Nngs' 
         // 瓦斯琪
         constant integer NAGA_VASHJ         = 'Hvsh' 
     
         // naga units
+    
         // 毒鳍龙
         constant integer NAGA_DRAGON        = 'nsnp'        // old names
         // 纳迦海妖
@@ -1169,6 +1200,7 @@ native DebugS               takes string str                            returns 
         constant integer NAGA_ROYAL         = 'nnrg'        // royal guard
     
         // naga buildings
+    
         // 潮汐神殿
         constant integer NAGA_TEMPLE        = 'nntt'        // town hall
         // 珊瑚礁
@@ -1183,15 +1215,16 @@ native DebugS               takes string str                            returns 
         constant integer NAGA_ALTAR         = 'nnad'        // altar
     
         // naga upgrades
-        // 珊瑚鳞甲
+    
+        // 科技 珊瑚鳞甲
         constant integer UPG_NAGA_ARMOR     = 'Rnam'
-        // 珊瑚锋刃
+        // 科技 珊瑚锋刃
         constant integer UPG_NAGA_ATTACK    = 'Rnat'
-        // 驱除魔法（娜迦族）
+        // 科技 驱除魔法（娜迦族）
         constant integer UPG_NAGA_ABOLISH   = 'Rnsi'
-        // 纳迦海妖专家级训练
+        // 科技 纳迦海妖专家级训练
         constant integer UPG_SIREN          = 'Rnsw'
-        // 诱捕（娜迦族）
+        // 科技 诱捕（娜迦族）
         constant integer UPG_NAGA_ENSNARE   = 'Rnen'
     
     
