@@ -4166,21 +4166,21 @@ constant native MathRound takes real r returns integer
 
 // String Utility API
 
-// 转换整数为实数
+// 转换整数成实数
 native I2R takes integer i returns real
-// 转换实数为整数（大于0时向下取整，小于0时向上取整）
+// 转换实数成整数（大于0时向下取整，小于0时向上取整）
 // 7.x返回7， -7.x返回-7
 native R2I takes real r returns integer
-// 转换整数为字符串
+// 转换整数成字符串
 native I2S takes integer i returns string
-// 转换实数为字符串
+// 转换实数成字符串
 native R2S takes real r returns string
-// 转换实数为字符串
+// 转换实数成字符串
 //@param precision指定保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
-// 转换字串符为整数
+// 转换字串符成整数
 native S2I takes string s returns integer
-// 转换字符串为实数
+// 转换字符串成实数
 native S2R takes string s returns real
 // 获取句柄ID    
 // tips:一般用于hashtable key
@@ -4195,7 +4195,7 @@ native SubString takes string source, integer start, integer end returns string
 native StringLength takes string s returns integer
 // 转换字串符英文的大小写
 native StringCase takes string source, boolean upper returns string
-// 转换字符串为哈希码
+// 转换字符串成哈希码
 native StringHash takes string s returns integer
 
 // 获取（外部文件的）本地字符串 [R]
@@ -4283,13 +4283,13 @@ constant native GetGameDifficulty takes nothing returns gamedifficulty
 constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
-// 获取指定出生点的 X 轴坐标
+// 获取指定出生点 X 轴坐标
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
 constant native GetStartLocationX takes integer whichStartLocation returns real
-// 获取指定出生点的 Y 轴坐标
+// 获取指定出生点 Y 轴坐标
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
 constant native GetStartLocationY takes integer whichStartLocation returns real
-// 获取指定出生点的坐标
+// 获取指定出生点
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
 // 会生成点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
@@ -4308,9 +4308,9 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 设置玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
-// 设置联盟类型(指定项目) [R]
+// 设置玩家联盟类型(指定项目) [R]
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
-// 设置税率 [R]
+// 设置玩家税率 [R]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
@@ -4324,17 +4324,17 @@ native SetPlayerName takes player whichPlayer, string name returns nothing
 // 显示/隐藏 计分屏显示 [R]
 native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns nothing
 
-// 获取玩家队伍编号
+// 获取玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
 // 获取玩家出生点
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
-// 获取玩家是否可选
+// 查询玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
-// 获取玩家控制者
+// 查询玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
-// 获取玩家槽状态
+// 查询玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取玩家税率 [R]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
@@ -4474,7 +4474,7 @@ native ForceRemovePlayer takes force whichForce, player whichPlayer returns noth
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清除玩家组
 native ForceClear takes force whichForce returns nothing
-// 匹配玩家组
+// 匹配玩家组（指定条件表达式）
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
 // 在指定的玩家组中匹配玩家（指定匹配的数量）
 // @param countLimit玩家数量
@@ -4524,18 +4524,18 @@ native CreateRegion takes nothing returns region
 // 删除不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
-// 添加矩形区域(指定不规则区域)  [R]
+// 在指定不规则区域添加矩形区域  [R]
 native RegionAddRect takes region whichRegion, rect r returns nothing
-// 移除矩形区域(指定不规则区域)  [R]
+// 移除指定不规则区域的矩形区域  [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
-// 添加坐标(指定不规则区域) [R]
+// 在指定不规则区域添加坐标 [R]
 native RegionAddCell takes region whichRegion, real x, real y returns nothing
-// 添加点(指定不规则区域) [R]
+// 在指定不规则区域添加点 [R]
 native RegionAddCellAtLoc takes region whichRegion, location whichLocation returns nothing
-// 移除坐标(指定不规则区域) [R]
+// 移除指定不规则区域的坐标 [R]
 native RegionClearCell takes region whichRegion, real x, real y returns nothing
-// 移除点(指定不规则区域) [R]
+// 移除指定不规则区域的点 [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 转换坐标成点
@@ -4948,9 +4948,9 @@ constant native GetSpellAbility takes nothing returns ability
 // 获取被释放技能的目标（点）
 // 会生成点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
-// 获取被释放技能目标（点的 X 坐标）
+// 获取被释放技能目标（点 X 坐标）
 constant native GetSpellTargetX takes nothing returns real
-// 获取被释放技能目标（点的 Y 坐标）
+// 获取被释放技能目标（点 Y 坐标）
 constant native GetSpellTargetY takes nothing returns real
 // 获取被释放技能的目标（可破坏物）
 constant native GetSpellTargetDestructable takes nothing returns destructable
