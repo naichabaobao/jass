@@ -4822,7 +4822,7 @@ constant native GetConstructedStructure takes nothing returns unit
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 // 获取研究科技的单位
 constant native GetResearchingUnit takes nothing returns unit
-// 获取研究的 科技-类型
+// 获取研究的 科技类型
 constant native GetResearched takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_START
@@ -4844,7 +4844,7 @@ constant native GetDetectedUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_SUMMONED
 // 获取正在召唤的单位
 constant native GetSummoningUnit takes nothing returns unit
-// 获取已召唤单位
+// 获取被召唤单位
 constant native GetSummonedUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_LOADED
@@ -4868,9 +4868,9 @@ constant native GetBuyingUnit takes nothing returns unit
 constant native GetSoldItem takes nothing returns item
 
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
-// 获取变更了所有者的单位
+// 获取变更了所有者（玩家）的单位
 constant native GetChangingUnit takes nothing returns unit
-// 获取前一个所有者
+// 获取前一个所有者（玩家）
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
 // EVENT_PLAYER_UNIT_DROP_ITEM
@@ -4884,19 +4884,19 @@ constant native GetManipulatedItem takes nothing returns item
 //region 1.33
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
-// 获取吸收被操作物品的物品 
+// 获取被拾取物品
 // @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// 获取被操作的物品被吸收 
+// 判断被操作的物品是否被拾取的物品
 // @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
-// 获取堆叠源物品 
+// 获取被堆叠的源物品 
 // @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// 获取堆叠目标物品 
+// 获取被堆叠的目标物品 
 // @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
 // 获取堆叠物品的预期售价 
