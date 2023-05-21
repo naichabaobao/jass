@@ -6258,14 +6258,19 @@ native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
 // 获取随机中立敌对单位单位类型(指定单位等级)
+// 默认用于地图初始化时创建随机中立敌对单位
 native ChooseRandomCreep takes integer level returns integer
 // 获取随机中立建筑物类型
+// 默认用于地图初始化时创建随机中立被动单位（如商店、泉水等）
 native ChooseRandomNPBuilding takes nothing returns integer
-// 随机物品-所有等级
+// 随机选择物品-所有等级
+// 默认用于市场随机出售物品
 native ChooseRandomItem takes integer level returns integer
-// 随机物品-指定等级
+// 随机选择物品-指定等级
+// 默认用于市场随机出售物品
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
-// 设置随机种子，用于统一电影播放效果
+// 设置随机种子
+// 默认用于统一电影播放效果
 native SetRandomSeed takes integer seed returns nothing
 
 
@@ -6297,6 +6302,8 @@ native SetPortraitLight takes string portraitDNCFile returns nothing
 // @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用玩家控制权(所有玩家) [R]
+// 使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
+// 该操作对AI无效
 native EnableUserControl takes boolean b returns nothing
 // 启用/禁用玩家UI
 native EnableUserUI takes boolean b returns nothing
