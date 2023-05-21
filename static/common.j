@@ -7141,17 +7141,17 @@ native BlzSetAbilityActivatedExtendedTooltip takes integer abilCode, string exte
 native BlzSetAbilityResearchTooltip takes integer abilCode, string researchTooltip, integer level returns nothing
 // 设置扩展提示信息（学习）
 native BlzSetAbilityResearchExtendedTooltip takes integer abilCode, string researchExtendedTooltip, integer level returns nothing
-// 技能提示信息
+// 获取技能提示信息
 native BlzGetAbilityTooltip takes integer abilCode, integer level returns string
-// 技能提示信息（自动施法启用）
+// 获取技能提示信息（自动施法启用）
 native BlzGetAbilityActivatedTooltip takes integer abilCode, integer level returns string
-// 技能扩展提示信息
+// 获取技能扩展提示信息
 native BlzGetAbilityExtendedTooltip takes integer abilCode, integer level returns string
-// 技能扩展提示信息（自动施法启用）
+// 获取技能扩展提示信息（自动施法启用）
 native BlzGetAbilityActivatedExtendedTooltip takes integer abilCode, integer level returns string
-// 技能提示信息（学习）
+// 获取技能提示信息（学习）
 native BlzGetAbilityResearchTooltip takes integer abilCode, integer level returns string
-// 技能扩展提示信息（学习）
+// 获取技能扩展提示信息（学习）
 native BlzGetAbilityResearchExtendedTooltip takes integer abilCode, integer level returns string
 // 设置技能图标
 native BlzSetAbilityIcon takes integer abilCode, string iconPath returns nothing
@@ -7159,7 +7159,7 @@ native BlzSetAbilityIcon takes integer abilCode, string iconPath returns nothing
 native BlzGetAbilityIcon takes integer abilCode returns string
 // 设置技能图标（自动施法启用）
 native BlzSetAbilityActivatedIcon takes integer abilCode, string iconPath returns nothing
-// 技能图标（自动施法启用）
+// 获取技能图标（自动施法启用）
 native BlzGetAbilityActivatedIcon takes integer abilCode returns string
 // 获取技能位置（技能图标坐标）- X
 native BlzGetAbilityPosX takes integer abilCode returns integer
@@ -7197,7 +7197,7 @@ native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
 native BlzGetItemTooltip takes item whichItem returns string
 // 设置物品扩展提示
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
-// 物品扩展提示信息
+// 获取物品扩展提示信息
 native BlzGetItemExtendedTooltip takes item whichItem returns string
 // 设置物品图标路径
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
@@ -7371,7 +7371,7 @@ native BlzGetOriginFrame takes originframetype frameType, integer index returns 
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
 // 隐藏原生界面
 native BlzHideOriginFrames takes boolean enable returns nothing
-// 转变颜色
+// 变换颜色
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 导入toc文件
 native BlzLoadTOCFile takes string TOCFile returns boolean
@@ -7470,7 +7470,7 @@ native BlzFrameGetChildrenCount takes framehandle frame returns integer
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
-// 注册框架（UI）事件
+// 框架（UI）事件
 native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
 // 获取框架（UI）触发事件
 native BlzGetTriggerFrame takes nothing returns framehandle
