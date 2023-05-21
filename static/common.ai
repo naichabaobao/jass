@@ -35,9 +35,9 @@ native DebugS               takes string str                            returns 
     // @param tn基地编号，-1为不限
     // @param dn是否包含训练/建造/研究中的单位/建筑/科技
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-    // 获取指定单位/建筑/科技类型的单位造价（金钱）
+    // 获取指定单位/建筑类型的单位造价（金钱）
     native GetUnitGoldCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑/科技类型的单位造价（木材）
+    // 获取指定单位/建筑类型的单位造价（木材）
     native GetUnitWoodCost      takes integer unitid                        returns integer
     // 获取指定单位/建筑/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
