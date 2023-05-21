@@ -3094,7 +3094,7 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_BONUS_PERCENT = ConvertAbilityRealLevelField('Uhf1')
     // 技能随等级改变的实数域 每秒伤害 ('Uhf2')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_PER_SECOND_UHF2 = ConvertAbilityRealLevelField('Uhf2')
-    // 技能随等级改变的实数域 采集木材数/间隔 ('Wha1')
+    // 技能随等级改变的实数域 每个间隔周期内采集的木材数 ('Wha1')
 	constant abilityreallevelfield ABILITY_RLF_LUMBER_PER_INTERVAL = ConvertAbilityRealLevelField('Wha1')
     // 技能随等级改变的实数域 附着点高度 ('Wha3')
 	constant abilityreallevelfield ABILITY_RLF_ART_ATTACHMENT_HEIGHT = ConvertAbilityRealLevelField('Wha3')
