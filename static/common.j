@@ -4489,10 +4489,10 @@ native ForForce takes force whichForce, code callback returns nothing
 
 // Region and Location API
 
-// 转换坐标为矩形区域
+// 转换坐标成矩形区域
 // 会生成矩形区域，用完请注意排泄
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
-// 转换点为矩形区域
+// 转换点成矩形区域
 // 会生成矩形区域，用完请注意排泄
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
@@ -4538,7 +4538,7 @@ native RegionClearCell takes region whichRegion, real x, real y returns nothing
 // 移除点(指定不规则区域) [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
-// 将坐标转换成点
+// 转换坐标成点
 // 会生成点，用完请注意排泄
 native Location takes real x, real y returns location
 // 清除点 [R]
@@ -4651,7 +4651,7 @@ native DestroyBoolExpr takes boolexpr e returns nothing
 // Trigger Game Event API
 
 
-// 注册变量事件
+// 变量事件
 native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
 
 // EVENT_GAME_VARIABLE_LIMIT
@@ -4659,7 +4659,7 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 
 // Creates it's own timer and triggers when it expires
 // Creates it's own timer and triggers when it expires
-// 注册计时器事件
+// 计时器事件
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
@@ -4870,7 +4870,7 @@ constant native GetSoldItem takes nothing returns item
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 // 获取变更了所有者（玩家）的单位
 constant native GetChangingUnit takes nothing returns unit
-// 获取前一个所有者（玩家）
+// 获取变更所有者单位的前一个所有者（玩家）
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
 // EVENT_PLAYER_UNIT_DROP_ITEM
@@ -4943,25 +4943,25 @@ constant native GetOrderTargetUnit takes nothing returns unit
 constant native GetSpellAbilityUnit takes nothing returns unit
 // 获取被释放技能的ID
 constant native GetSpellAbilityId takes nothing returns integer
-// 获取被释放技能
+// 获取被释放的技能
 constant native GetSpellAbility takes nothing returns ability
-// 获取被释放技能目标点
+// 获取被释放技能的目标（点）
 // 会生成点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
-// 获取被释放技能目标点 X 坐标
+// 获取被释放技能目标（点的 X 坐标）
 constant native GetSpellTargetX takes nothing returns real
-// 获取被释放技能目标点 Y 坐标
+// 获取被释放技能目标（点的 Y 坐标）
 constant native GetSpellTargetY takes nothing returns real
-// 获取被释放技能目标可破坏物
+// 获取被释放技能的目标（可破坏物）
 constant native GetSpellTargetDestructable takes nothing returns destructable
-// 获取被释放技能目标物品
+// 获取被释放技能的目标（物品）
 constant native GetSpellTargetItem takes nothing returns item
-// 获取被释放技能目标单位
+// 获取被释放技能的目标（单位）
 constant native GetSpellTargetUnit takes nothing returns unit
 
-// 注册玩家联盟类型变更事件(特殊)
+// 玩家联盟类型变更事件(特殊)
 native TriggerRegisterPlayerAllianceChange takes trigger whichTrigger, player whichPlayer, alliancetype whichAlliance returns event
-// 注册玩家状态事件
+// 玩家状态事件
 native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichPlayer, playerstate whichState, limitop opcode, real limitval returns event
 
 // EVENT_PLAYER_STATE_LIMIT
@@ -4969,7 +4969,7 @@ native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichP
 // 获取玩家状态
 constant native GetEventPlayerState takes nothing returns playerstate
 
-// 玩家输入聊天信息
+// 玩家输入聊天信息事件
 // @param chatMessageToDetect输入的聊天信息，需使用""
 // @param exactMatchOnly输入的聊天信息是否需要完全匹配
 native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
@@ -4997,7 +4997,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
-// 注册单位状态事件
+// 单位状态事件
 // @param whichState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
 
@@ -5005,7 +5005,7 @@ native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit,
 // 获取单位状态
 constant native GetEventUnitState takes nothing returns unitstate
 
-// 注册单位指定事件
+// 单位指定事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // EVENT_UNIT_DAMAGED
@@ -5023,7 +5023,7 @@ constant native GetEventDamageSource takes nothing returns unit
 // 获取事件检测的玩家
 constant native GetEventDetectingPlayer takes nothing returns player
 
-// 注册特定玩家事件
+// 指定玩家事件
 native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent, boolexpr filter returns event
 
 // EVENT_UNIT_ACQUIRED_TARGET
@@ -5063,7 +5063,7 @@ constant native GetEventTargetUnit takes nothing returns unit
 
 // See the Player Unit Order Event API above for event info funcs
 
-// 注册范围内玩家事件
+// 范围内玩家事件
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
 // 添加触发器限制条件
@@ -6853,9 +6853,9 @@ native GetSoundFileDuration takes string musicFileName returns integer
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
 // 重置多通道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
-// 音乐是否播放
+// 判断音乐是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
-// 音乐是否加载
+// 判断音乐是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
 // 注册矩形区域3D音效
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
@@ -7371,7 +7371,7 @@ native BlzGetOriginFrame takes originframetype frameType, integer index returns 
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
 // 隐藏原生界面
 native BlzHideOriginFrames takes boolean enable returns nothing
-// 转换颜色
+// 转变颜色
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 导入toc文件
 native BlzLoadTOCFile takes string TOCFile returns boolean
@@ -7480,7 +7480,7 @@ native BlzGetTriggerFrameEvent takes nothing returns frameeventtype
 native BlzGetTriggerFrameValue takes nothing returns real
 // 获取触发的Frame文本
 native BlzGetTriggerFrameText takes nothing returns string
-// 注册玩家同步事件
+// 玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
 native BlzSendSyncData takes string prefix, string data returns boolean
@@ -7488,7 +7488,7 @@ native BlzSendSyncData takes string prefix, string data returns boolean
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
-// 注册玩家键盘事件
+// 玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
 // 获取触发的按键
 native BlzGetTriggerPlayerKey takes nothing returns oskeytype
