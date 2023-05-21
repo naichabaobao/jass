@@ -7651,7 +7651,8 @@ function SetUserControlForceOn takes force whichForce returns nothing
 endfunction
 
 
-// 禁止用户控制权
+// 禁止用户控制权（使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应）
+// 该操作对AI无效
 function SetUserControlForceOff takes force whichForce returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7660,7 +7661,7 @@ function SetUserControlForceOff takes force whichForce returns nothing
 endfunction
 
 
-// 关闭信箱模式
+// 开启信箱模式（显示（所有玩家）的游戏UI，淡入宽屏UI），指定淡入持续时间
 function ShowInterfaceForceOn takes force whichForce, real fadeDuration returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7669,7 +7670,7 @@ function ShowInterfaceForceOn takes force whichForce, real fadeDuration returns 
 endfunction
 
 
-// 开启信箱模式
+// 关闭信箱模式（隐藏（所有玩家）的宽屏UI，淡入游戏UI），指定淡入持续时间
 function ShowInterfaceForceOff takes force whichForce, real fadeDuration returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
