@@ -2718,7 +2718,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
-    // 循环添加自杀单位到单位组，该循环不会退出
+    // 循环添加自杀单位到单位组，该循环不会退出，只能作为单独线程使用
     // @param u1~uA 单位类型，可指定10种
     function SuicideUnits takes integer u1, integer u2, integer u3, integer u4, integer u5, integer u6, integer u7, integer u8, integer u9, integer uA returns nothing
         call Trace("MASS SUICIDE - this script is now technically done\n") //xxx
@@ -2739,7 +2739,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
-    // 循环添加自杀单位类型到单位组，该循环不会退出
+    // 循环添加自杀单位类型到单位组，该循环不会退出，只能作为单独线程使用
     // @param playerid指定玩家
     // @param u1~uA 单位类型，可指定10种
     function SuicideUnitsEx takes integer playerid, integer u1, integer u2, integer u3, integer u4, integer u5, integer u6, integer u7, integer u8, integer u9, integer uA returns nothing
