@@ -138,186 +138,186 @@ type unitcategory extends handle
 type pathingflag extends handle
 type commandbuttoneffect extends handle
 
-// 转换种族
+// 转换整数成种族
 constant native ConvertRace takes integer i returns race
-// 转换联盟类型
+// 转换整数成联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
-// 转换优先种族
+// 转换整数成优先种族
 constant native ConvertRacePref takes integer i returns racepreference
-// 转换游戏整点状态
+// 转换整数成游戏整点状态
 constant native ConvertIGameState takes integer i returns igamestate
-// 转换浮动游戏状态
+// 转换整数成浮动游戏状态
 constant native ConvertFGameState takes integer i returns fgamestate
-// 玩家状态转换
+// 转换整数成玩家状态
 constant native ConvertPlayerState takes integer i returns playerstate
-// 转换玩家得分
+// 转换整数成玩家得分
 constant native ConvertPlayerScore takes integer i returns playerscore
-// 转换玩家游戏结果
+// 转换整数成玩家游戏结果
 constant native ConvertPlayerGameResult takes integer i returns playergameresult
-// 转换单位状态
+// 转换整数成单位状态
 constant native ConvertUnitState takes integer i returns unitstate
-// 转换AI难度
+// 转换整数成AI难度
 constant native ConvertAIDifficulty takes integer i returns aidifficulty
-// 转换游戏事件
+// 转换整数成游戏事件
 constant native ConvertGameEvent takes integer i returns gameevent
-// 转换玩家事件
+// 转换整数成玩家事件
 constant native ConvertPlayerEvent takes integer i returns playerevent
-// 转换玩家单位事件
+// 转换整数成玩家单位事件
 constant native ConvertPlayerUnitEvent takes integer i returns playerunitevent
-// 转换实体/微件事件
+// 转换整数成实体/微件事件
 constant native ConvertWidgetEvent takes integer i returns widgetevent
-// 转换对话框事件
+// 转换整数成对话框事件
 constant native ConvertDialogEvent takes integer i returns dialogevent
-// 转换单位事件
+// 转换整数成单位事件
 constant native ConvertUnitEvent takes integer i returns unitevent
-// 转换比较
+// 转换整数成比较
 constant native ConvertLimitOp takes integer i returns limitop
-// 转换单位类型
+// 转换整数成单位类型
 constant native ConvertUnitType takes integer i returns unittype
-// 转换游戏速度
+// 转换整数成游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
-// 转换出生点
+// 转换整数成出生点
 constant native ConvertPlacement takes integer i returns placement
-// 转换出生点分布优先权
+// 转换整数成出生点分布优先权
 constant native ConvertStartLocPrio takes integer i returns startlocprio
-// 转换游戏难度
+// 转换整数成游戏难度
 constant native ConvertGameDifficulty takes integer i returns gamedifficulty
-// 转换游戏类型
+// 转换整数成游戏类型
 constant native ConvertGameType takes integer i returns gametype
-// 转换地图参数
+// 转换整数成地图参数
 constant native ConvertMapFlag takes integer i returns mapflag
-// 转换地图可见性
+// 转换整数成地图可见性
 constant native ConvertMapVisibility takes integer i returns mapvisibility
-// 转换地图设置
+// 转换整数成地图设置
 constant native ConvertMapSetting takes integer i returns mapsetting
-// 转换地图密度
+// 转换整数成地图密度
 constant native ConvertMapDensity takes integer i returns mapdensity
-// 转换玩家控制者类型
+// 转换整数成玩家控制者类型
 constant native ConvertMapControl takes integer i returns mapcontrol
-// 转换玩家颜色
+// 转换整数成玩家颜色
 constant native ConvertPlayerColor takes integer i returns playercolor
-// 转换玩家槽状态
+// 转换整数成玩家槽状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
-// 转换音量组
+// 转换整数成音量组
 constant native ConvertVolumeGroup takes integer i returns volumegroup
-// 转换镜头属性
+// 转换整数成镜头属性
 constant native ConvertCameraField takes integer i returns camerafield
-// 转换混合模式
+// 转换整数成混合模式
 constant native ConvertBlendMode takes integer i returns blendmode
-// 转换罕见动画控制
+// 转换整数成罕见动画控制
 constant native ConvertRarityControl takes integer i returns raritycontrol
-// 转换纹理贴图标志
+// 转换整数成纹理贴图标志
 constant native ConvertTexMapFlags takes integer i returns texmapflags
-// 转换迷雾状态
+// 转换整数成迷雾状态
 constant native ConvertFogState takes integer i returns fogstate
-// 转换特效类型
+// 转换整数成特效类型
 constant native ConvertEffectType takes integer i returns effecttype
-// 转换版本
+// 转换整数成版本
 constant native ConvertVersion takes integer i returns version
-// 转换物品类型
+// 转换整数成物品类型
 constant native ConvertItemType takes integer i returns itemtype
-// 转换攻击类型
+// 转换整数成攻击类型
 constant native ConvertAttackType takes integer i returns attacktype
-// 转换伤害类型
+// 转换整数成伤害类型
 constant native ConvertDamageType takes integer i returns damagetype
-// 转换武器类型
+// 转换整数成武器类型
 constant native ConvertWeaponType takes integer i returns weapontype
-// 转换声音类型
+// 转换整数成声音类型
 constant native ConvertSoundType takes integer i returns soundtype
-// 转换路径类型
+// 转换整数成路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
-// 转换鼠标按键类型
+// 转换整数成鼠标按键类型
 constant native ConvertMouseButtonType takes integer i returns mousebuttontype
-// 转换动画类型
+// 转换整数成动画类型
 constant native ConvertAnimType takes integer i returns animtype
-// 转换子动画类型
+// 转换整数成子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
-// 转换原生框架（原生UI）类型
+// 转换整数成原生框架（原生UI）类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// 转换原生框架/原生UI相对位置
+// 转换整数成原生框架/原生UI相对位置
 constant native ConvertFramePointType takes integer i returns framepointtype
-// 转换文本对齐类型
+// 转换整数成文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
-// 转换框架事件类型
+// 转换整数成框架事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
-// 转换按键类型
+// 转换整数成按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
-// 转换技能整数域
+// 转换整数成技能整数域
 constant native ConvertAbilityIntegerField takes integer i returns abilityintegerfield
-// 转换技能实数域
+// 转换整数成技能实数域
 constant native ConvertAbilityRealField takes integer i returns abilityrealfield
-// 转换技能布尔值域
+// 转换整数成技能布尔值域
 constant native ConvertAbilityBooleanField takes integer i returns abilitybooleanfield
-// 转换技能字符串域
+// 转换整数成技能字符串域
 constant native ConvertAbilityStringField takes integer i returns abilitystringfield
-// 转换技能随等级改变的整数域
+// 转换整数成技能随等级改变的整数域
 constant native ConvertAbilityIntegerLevelField takes integer i returns abilityintegerlevelfield
-// 转换技能随等级改变的实数域
+// 转换整数成技能随等级改变的实数域
 constant native ConvertAbilityRealLevelField takes integer i returns abilityreallevelfield
-// 转换技能随等级改变的布尔值域
+// 转换整数成技能随等级改变的布尔值域
 constant native ConvertAbilityBooleanLevelField takes integer i returns abilitybooleanlevelfield
-// 转换技能随等级改变的字符串域
+// 转换整数成技能随等级改变的字符串域
 constant native ConvertAbilityStringLevelField takes integer i returns abilitystringlevelfield
-// 转换技能随等级改变的整数数组域
+// 转换整数成技能随等级改变的整数数组域
 constant native ConvertAbilityIntegerLevelArrayField takes integer i returns abilityintegerlevelarrayfield
-// 转换技能随等级改变的实数数组域
+// 转换整数成技能随等级改变的实数数组域
 constant native ConvertAbilityRealLevelArrayField takes integer i returns abilityreallevelarrayfield
-// 转换技能随等级改变的布尔值数组域
+// 转换整数成技能随等级改变的布尔值数组域
 constant native ConvertAbilityBooleanLevelArrayField takes integer i returns abilitybooleanlevelarrayfield
-// 转换技能随等级改变的字符串数组域
+// 转换整数成技能随等级改变的字符串数组域
 constant native ConvertAbilityStringLevelArrayField takes integer i returns abilitystringlevelarrayfield
-// 转换单位整数域
+// 转换整数成单位整数域
 constant native ConvertUnitIntegerField takes integer i returns unitintegerfield
-// 转换单位实数域
+// 转换整数成单位实数域
 constant native ConvertUnitRealField takes integer i returns unitrealfield
-// 转换单位布尔值域
+// 转换整数成单位布尔值域
 constant native ConvertUnitBooleanField takes integer i returns unitbooleanfield
-// 转换单位字符串域
+// 转换整数成单位字符串域
 constant native ConvertUnitStringField takes integer i returns unitstringfield
-// 转换攻击整数域
+// 转换整数成攻击整数域
 constant native ConvertUnitWeaponIntegerField takes integer i returns unitweaponintegerfield
-// 转换攻击实数域
+// 转换整数成攻击实数域
 constant native ConvertUnitWeaponRealField takes integer i returns unitweaponrealfield
-// 转换攻击布尔值域
+// 转换整数成攻击布尔值域
 constant native ConvertUnitWeaponBooleanField takes integer i returns unitweaponbooleanfield
-// 转换攻击字符串域
+// 转换整数成攻击字符串域
 constant native ConvertUnitWeaponStringField takes integer i returns unitweaponstringfield
-// 转换物品整数域
+// 转换整数成物品整数域
 constant native ConvertItemIntegerField takes integer i returns itemintegerfield
-// 转换物品实数域
+// 转换整数成物品实数域
 constant native ConvertItemRealField takes integer i returns itemrealfield
-// 转换物品布尔值域
+// 转换整数成物品布尔值域
 constant native ConvertItemBooleanField takes integer i returns itembooleanfield
-// 转换物品字符串域
+// 转换整数成物品字符串域
 constant native ConvertItemStringField takes integer i returns itemstringfield
-// 转换移动类型
+// 转换整数成移动类型
 constant native ConvertMoveType takes integer i returns movetype
-// 转换目标类型
+// 转换整数成目标类型
 constant native ConvertTargetFlag takes integer i returns targetflag
-// 转换装甲类型（金属、木头、石头、气态、肉体）
+// 转换整数成装甲类型（金属、木头、石头、气态、肉体）
 constant native ConvertArmorType takes integer i returns armortype
-// 转换英雄属性
+// 转换整数成英雄属性
 constant native ConvertHeroAttribute takes integer i returns heroattribute
-// 转换防御类型
+// 转换整数成防御类型
 constant native ConvertDefenseType takes integer i returns defensetype
-// 转换恢复类型
+// 转换整数成恢复类型
 constant native ConvertRegenType takes integer i returns regentype
-// 转换单位类别
+// 转换整数成单位类别
 constant native ConvertUnitCategory takes integer i returns unitcategory
-// 转换路径标志
+// 转换整数成路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-// 命令字符串转ID
+// 命令字符串转换成ID
 constant native OrderId takes string orderIdString returns integer
-// 命令ID转字符串
+// 命令ID转换成字符串
 constant native OrderId2String takes integer orderId returns string
-// 单位字符串转ID
+// 单位字符串转换成ID
 constant native UnitId takes string unitIdString returns integer
-// 单位ID转字符串
+// 单位ID转换成字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 技能字转符串ID Not currently working correctly...
+// 技能字转换成符串ID    Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
-// 技能ID转字符串
+// 技能ID转换成字符串
 constant native AbilityId2String takes integer abilityId returns string
 
 // Looks up the "name" field for any object (unit, item, ability)
@@ -875,21 +875,21 @@ globals
 	
 	// Sound Constants
 	
-	// 单位移动声音
+	// 音量组 单位移动声音
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-    // 单位回应声音
+    // 音量组 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
-	// 战斗声音
+	// 音量组 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
-	// 动画和法术声音
+	// 音量组 动画和法术声音
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
-	// 用户界面（UI）声音
+	// 音量组 用户界面（UI）声音
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
-	// 音乐
+	// 音量组 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
-	// 场景配音
+	// 音量组 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
-	// 火焰声音
+	// 音量组 火焰声音
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
@@ -964,13 +964,13 @@ globals
 	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
-	// 当前生命值
+	// 单位状态 当前生命值
 	constant unitstate UNIT_STATE_LIFE = ConvertUnitState(0)
-	// 最大生命值
+	// 单位状态 最大生命值
 	constant unitstate UNIT_STATE_MAX_LIFE = ConvertUnitState(1)
-	// 当前法力值
+	// 单位状态 当前法力值
 	constant unitstate UNIT_STATE_MANA = ConvertUnitState(2)
-	// 最大法力值
+	// 单位状态 最大法力值
 	constant unitstate UNIT_STATE_MAX_MANA = ConvertUnitState(3)
 	// AI难度 - 简单
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
@@ -1048,220 +1048,220 @@ globals
 	
 	// For use with TriggerRegisterGameEvent
 	
-	// 游戏事件-游戏胜利
+	// 游戏事件 游戏胜利
 	constant gameevent EVENT_GAME_VICTORY = ConvertGameEvent(0)
-	// 游戏事件-游戏本关结束
+	// 游戏事件 游戏本关结束
 	constant gameevent EVENT_GAME_END_LEVEL = ConvertGameEvent(1)
-	// 游戏事件-游戏变量限制
+	// 游戏事件 游戏变量限制
 	constant gameevent EVENT_GAME_VARIABLE_LIMIT = ConvertGameEvent(2)
-	// 游戏事件-游戏状态限制
+	// 游戏事件 游戏状态限制
 	constant gameevent EVENT_GAME_STATE_LIMIT = ConvertGameEvent(3)
-	// 游戏事件-游戏超时
+	// 游戏事件 游戏超时
 	constant gameevent EVENT_GAME_TIMER_EXPIRED = ConvertGameEvent(4)
-	// 游戏事件-进入区域
+	// 游戏事件 进入区域
 	constant gameevent EVENT_GAME_ENTER_REGION = ConvertGameEvent(5)
-	// 游戏事件-离开区域
+	// 游戏事件 离开区域
 	constant gameevent EVENT_GAME_LEAVE_REGION = ConvertGameEvent(6)
-	// 游戏事件-可跟踪打击
+	// 游戏事件 可跟踪打击
 	constant gameevent EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
-	// 游戏事件-可跟踪跟踪
+	// 游戏事件 可跟踪跟踪
 	constant gameevent EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
-	// 游戏事件-显示技能
+	// 游戏事件 显示技能
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
-	// 游戏事件-创建子菜单
+	// 游戏事件 创建子菜单
 	constant gameevent EVENT_GAME_BUILD_SUBMENU = ConvertGameEvent(10)
 	
 	
 	// For use with TriggerRegisterPlayerEvent
-	// 玩家状态限制
+	// 玩家事件 玩家状态限制
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
-	// 玩家联盟类型变更
+	// 玩家事件 玩家联盟类型变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
-	// 玩家失败
+	// 玩家事件 玩家失败
 	constant playerevent EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
-	// 玩家胜利
+	// 玩家事件 玩家胜利
 	constant playerevent EVENT_PLAYER_VICTORY = ConvertPlayerEvent(14)
-	// 玩家离开游戏
+	// 玩家事件 玩家离开游戏
 	constant playerevent EVENT_PLAYER_LEAVE = ConvertPlayerEvent(15)
-	// 玩家聊天
+	// 玩家事件 玩家聊天
 	constant playerevent EVENT_PLAYER_CHAT = ConvertPlayerEvent(16)
-	// 玩家按下 ESC键
+	// 玩家事件 玩家按下 ESC键
 	constant playerevent EVENT_PLAYER_END_CINEMATIC = ConvertPlayerEvent(17)
 	
 	
 	// For use with TriggerRegisterPlayerUnitEvent
 	
 	
-	// 玩家單位被攻擊
+	// 玩家单位事件 玩家單位被攻擊
  constant playerunitevent EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
-	// 玩家單位被救援
+	// 玩家单位事件 玩家單位被救援
  constant playerunitevent EVENT_PLAYER_UNIT_RESCUED = ConvertPlayerUnitEvent(19)
 	
-	// 玩家單位死亡
+	// 玩家单位事件 玩家單位死亡
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
-	// 玩家單位（尸体）開始腐爛
+	// 玩家单位事件 玩家單位（尸体）開始腐爛
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
-	// 玩家单位可检测
+	// 玩家单位事件 玩家单位可检测
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
-	// 玩家单位被隐藏
+	// 玩家单位事件 玩家单位被隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
 	
-	// 玩家选择单位
+	// 玩家单位事件 玩家选择单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELECTED = ConvertPlayerUnitEvent(24)
-	// 玩家取消选择单位
+	// 玩家单位事件 玩家取消选择单位
 	constant playerunitevent EVENT_PLAYER_UNIT_DESELECTED = ConvertPlayerUnitEvent(25)
 	
-	// 玩家开始建造
+	// 玩家单位事件 玩家开始建造
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_START = ConvertPlayerUnitEvent(26)
-	// 玩家取消建造
+	// 玩家单位事件 玩家取消建造
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL = ConvertPlayerUnitEvent(27)
-	// 玩家建造完成
+	// 玩家单位事件 玩家建造完成
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_FINISH = ConvertPlayerUnitEvent(28)
 	
-	// 玩家开始升级科技
+	// 玩家单位事件 玩家开始升级科技
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_START = ConvertPlayerUnitEvent(29)
-	// 玩家取消升级科技
+	// 玩家单位事件 玩家取消升级科技
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_CANCEL = ConvertPlayerUnitEvent(30)
-	// 玩家升级科技完成
+	// 玩家单位事件 玩家升级科技完成
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
 	
-    // 玩家开始训练单位
+    // 玩家单位事件 玩家开始训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_START = ConvertPlayerUnitEvent(32)
-	// 玩家取消训练单位
+	// 玩家单位事件 玩家取消训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_CANCEL = ConvertPlayerUnitEvent(33)
-    // 玩家完成训练单位
+    // 玩家单位事件 玩家完成训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_FINISH = ConvertPlayerUnitEvent(34)
-	// 玩家开始研究科技
+	// 玩家单位事件 玩家开始研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_START = ConvertPlayerUnitEvent(35)
-	// 玩家取消研究科技
+	// 玩家单位事件 玩家取消研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_CANCEL = ConvertPlayerUnitEvent(36)
-	// 玩家完成研究科技
+	// 玩家单位事件 玩家完成研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_FINISH = ConvertPlayerUnitEvent(37)
-	// 玩家单位命令事件（无目标）
+	// 玩家单位事件 玩家单位命令事件（无目标）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
-	// 玩家单位命令事件（指定点）
+	// 玩家单位事件 玩家单位命令事件（指定点）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-    // 玩家单位命令事件（指定单位）
+    // 玩家单位事件 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
-	// 玩家单位命令事件（指定单位）
+	// 玩家单位事件 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-    // 玩家英雄升级事件
+    // 玩家单位事件 玩家英雄升级事件
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-    // 玩家英雄学习技能事件
+    // 玩家单位事件 玩家英雄学习技能事件
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-    // 玩家英雄可复活
+    // 玩家单位事件 玩家英雄可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
-	// 玩家英雄开始复活
+	// 玩家单位事件 玩家英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
-	// 玩家英雄取消复活
+	// 玩家单位事件 玩家英雄取消复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_CANCEL = ConvertPlayerUnitEvent(45)
-	// 玩家英雄完成复活
+	// 玩家单位事件 玩家英雄完成复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_FINISH = ConvertPlayerUnitEvent(46)
-	// 玩家召唤事件
+	// 玩家单位事件 玩家召唤事件
 	constant playerunitevent EVENT_PLAYER_UNIT_SUMMON = ConvertPlayerUnitEvent(47)
-	// 玩家单位物品掉落事件
+	// 玩家单位事件 玩家单位物品掉落事件
 	constant playerunitevent EVENT_PLAYER_UNIT_DROP_ITEM = ConvertPlayerUnitEvent(48)
-	// 玩家单位拾取物品事件
+	// 玩家单位事件 玩家单位拾取物品事件
 	constant playerunitevent EVENT_PLAYER_UNIT_PICKUP_ITEM = ConvertPlayerUnitEvent(49)
-	// 玩家单位使用物品事件
+	// 玩家单位事件 玩家单位使用物品事件
 	constant playerunitevent EVENT_PLAYER_UNIT_USE_ITEM = ConvertPlayerUnitEvent(50)
-	// 玩家单位被装载事件
+	// 玩家单位事件 玩家单位被装载事件
 	constant playerunitevent EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
-	// 玩家单位被伤害
+	// 玩家单位事件 玩家单位被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
-	// 玩家单位造成伤害
+	// 玩家单位事件 玩家单位造成伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGING = ConvertPlayerUnitEvent(315)
 	
 	
 	// For use with TriggerRegisterUnitEvent
 	
-	// 单位被伤害
+	// 单位事件 单位被伤害
 	constant unitevent EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
-	// 单位造成伤害
+	// 单位事件 单位造成伤害
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
-	// 單位死亡
+	// 单位事件 單位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-    // 單位（尸体）開始腐爛
+    // 单位事件 單位（尸体）開始腐爛
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
-	// 单位可检测
+	// 单位事件 单位可检测
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
-	// 单位被隐藏
+	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
-	// 单位被选择
+	// 单位事件 单位被选择
 	constant unitevent EVENT_UNIT_SELECTED = ConvertUnitEvent(57)
-	// 单位被取消选择
+	// 单位事件 单位被取消选择
 	constant unitevent EVENT_UNIT_DESELECTED = ConvertUnitEvent(58)
-	// 单位状态限制
+	// 单位事件 单位状态限制
 	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)                                                                        
 	
 	// Events which may have a filter for the "other unit"              
-	// 单位获取到目标（类似触发单位警戒攻击）
+	// 单位事件 单位获取到目标（类似触发单位警戒攻击）
 	constant unitevent EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
-	// 目标在单位获取范围内（类似警戒范围）
+	// 单位事件 目标在单位获取范围内（类似警戒范围）
 	constant unitevent EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
-	// 單位被攻擊
+	// 单位事件 單位被攻擊
 	constant unitevent EVENT_UNIT_ATTACKED = ConvertUnitEvent(62)
-	// 單位被救援
+	// 单位事件 單位被救援
 	constant unitevent EVENT_UNIT_RESCUED = ConvertUnitEvent(63)
-	// 取消建造
+	// 单位事件 取消建造
 	constant unitevent EVENT_UNIT_CONSTRUCT_CANCEL = ConvertUnitEvent(64)
-	// 完成建造
+	// 单位事件 完成建造
 	constant unitevent EVENT_UNIT_CONSTRUCT_FINISH = ConvertUnitEvent(65)
-	// 开始升级科技
+	// 单位事件 开始升级科技
 	constant unitevent EVENT_UNIT_UPGRADE_START = ConvertUnitEvent(66)
-	// 取消升级科技
+	// 单位事件 取消升级科技
 	constant unitevent EVENT_UNIT_UPGRADE_CANCEL = ConvertUnitEvent(67)
-	// 完成升级科技
+	// 单位事件 完成升级科技
 	constant unitevent EVENT_UNIT_UPGRADE_FINISH = ConvertUnitEvent(68)
 	
 	// Events which involve the specified unit performing               
 	// training of other units                                          
-	// 开始训练单位
+	// 单位事件 开始训练单位
 	constant unitevent EVENT_UNIT_TRAIN_START = ConvertUnitEvent(69)
-	// 取消训练单位
+	// 单位事件 取消训练单位
 	constant unitevent EVENT_UNIT_TRAIN_CANCEL = ConvertUnitEvent(70)
-	// 完成训练单位
+	// 单位事件 完成训练单位
 	constant unitevent EVENT_UNIT_TRAIN_FINISH = ConvertUnitEvent(71)
-	// 开始研究科技
+	// 单位事件 开始研究科技
 	constant unitevent EVENT_UNIT_RESEARCH_START = ConvertUnitEvent(72)
-	// 取消研究科技
+	// 单位事件 取消研究科技
 	constant unitevent EVENT_UNIT_RESEARCH_CANCEL = ConvertUnitEvent(73)
-	// 完成研究科技
+	// 单位事件 完成研究科技
 	constant unitevent EVENT_UNIT_RESEARCH_FINISH = ConvertUnitEvent(74)
-	// 单位命令事件（无目标）
+	// 单位事件 单位命令事件（无目标）
 	constant unitevent EVENT_UNIT_ISSUED_ORDER = ConvertUnitEvent(75)
-	// 单位命令事件（指定点）
+	// 单位事件 单位命令事件（指定点）
 	constant unitevent EVENT_UNIT_ISSUED_POINT_ORDER = ConvertUnitEvent(76)
-	// 单位命令事件（指定单位）
+	// 单位事件 单位命令事件（指定单位）
 	constant unitevent EVENT_UNIT_ISSUED_TARGET_ORDER = ConvertUnitEvent(77)
-	// 英雄升级事件
+	// 单位事件 英雄升级事件
 	constant unitevent EVENT_UNIT_HERO_LEVEL = ConvertUnitEvent(78)
-	// 英雄学习技能事件
+	// 单位事件 英雄学习技能事件
 	constant unitevent EVENT_UNIT_HERO_SKILL = ConvertUnitEvent(79)
 	
-	// 英雄可复活
+	// 单位事件 英雄可复活
 	constant unitevent EVENT_UNIT_HERO_REVIVABLE = ConvertUnitEvent(80)
-	// 英雄开始复活
+	// 单位事件 英雄开始复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_START = ConvertUnitEvent(81)
-	// 英雄取消复活
+	// 单位事件 英雄取消复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_CANCEL = ConvertUnitEvent(82)
-	// 英雄完成复活
+	// 单位事件 英雄完成复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_FINISH = ConvertUnitEvent(83)
-	// 召唤事件
+	// 单位事件 召唤事件
 	constant unitevent EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
 	// 单位掉落物品事件
 	constant unitevent EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
-	// 单位拾取物品事件
+	// 单位事件 单位拾取物品事件
 	constant unitevent EVENT_UNIT_PICKUP_ITEM = ConvertUnitEvent(86)
-	// 单位使用物品事件
+	// 单位事件 单位使用物品事件
 	constant unitevent EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
-	// 单位被装载事件
+	// 单位事件 单位被装载事件
 	constant unitevent EVENT_UNIT_LOADED = ConvertUnitEvent(88)
-	// 单位/物品/可破坏物死亡事件
+	// 单位事件 单位/物品/可破坏物死亡事件
 	constant widgetevent EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
-	// 对话框按钮点击事件
+	// 单位事件 对话框按钮点击事件
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
-	// 对话框点击事件
+	// 单位事件 对话框点击事件
 	constant dialogevent EVENT_DIALOG_CLICK = ConvertDialogEvent(91)
 	
 	
@@ -1272,73 +1272,73 @@ globals
 	    
 	// For use with TriggerRegisterGameEvent
 	
-	// 游戏事件-游戏加装完毕
+	// 游戏事件 游戏加装完毕
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
-	// 游戏事件-比赛即将完成
+	// 游戏事件 比赛即将完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
-	// 游戏事件-比赛完成
+	// 游戏事件 比赛完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
-	// 游戏事件-储存
+	// 游戏事件 储存
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
-	// 游戏事件-自定义框架（UI）
+	// 游戏事件 自定义框架（UI）
 	constant gameevent EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
 	
 	
 	// For use with TriggerRegisterPlayerEvent
 	
-	// 玩家事件-按下 左方向键
+	// 玩家事件 按下 左方向键
 	constant playerevent EVENT_PLAYER_ARROW_LEFT_DOWN = ConvertPlayerEvent(261)
-	// 玩家事件-松开 左方向键
+	// 玩家事件 松开 左方向键
 	constant playerevent EVENT_PLAYER_ARROW_LEFT_UP = ConvertPlayerEvent(262)
-	// 玩家事件-按下 右方向键
+	// 玩家事件 按下 右方向键
 	constant playerevent EVENT_PLAYER_ARROW_RIGHT_DOWN = ConvertPlayerEvent(263)
-	// 玩家事件-松开 右方向键
+	// 玩家事件 松开 右方向键
 	constant playerevent EVENT_PLAYER_ARROW_RIGHT_UP = ConvertPlayerEvent(264)
-	// 玩家事件-按下 上方向键
+	// 玩家事件 按下 上方向键
 	constant playerevent EVENT_PLAYER_ARROW_DOWN_DOWN = ConvertPlayerEvent(265)
-	// 玩家事件-松开 上方向键
+	// 玩家事件 松开 上方向键
 	constant playerevent EVENT_PLAYER_ARROW_DOWN_UP = ConvertPlayerEvent(266)
-	// 玩家事件-按下 下方向键
+	// 玩家事件 按下 下方向键
 	constant playerevent EVENT_PLAYER_ARROW_UP_DOWN = ConvertPlayerEvent(267)
-	// 玩家事件-松开 下方向键
+	// 玩家事件 松开 下方向键
 	constant playerevent EVENT_PLAYER_ARROW_UP_UP = ConvertPlayerEvent(268)
-	// 玩家事件-按下 鼠标
+	// 玩家事件 按下 鼠标
 	constant playerevent EVENT_PLAYER_MOUSE_DOWN = ConvertPlayerEvent(305)
-	// 玩家事件-松开 鼠标
+	// 玩家事件 松开 鼠标
 	constant playerevent EVENT_PLAYER_MOUSE_UP = ConvertPlayerEvent(306)
-	// 玩家事件-移动 鼠标
+	// 玩家事件 移动 鼠标
 	constant playerevent EVENT_PLAYER_MOUSE_MOVE = ConvertPlayerEvent(307)
-	// 玩家事件-同步数据
+	// 玩家事件 同步数据
 	constant playerevent EVENT_PLAYER_SYNC_DATA = ConvertPlayerEvent(309)
-	// 玩家事件-键盘事件
+	// 玩家事件 键盘事件
 	constant playerevent EVENT_PLAYER_KEY = ConvertPlayerEvent(311)
-	// 玩家事件-按下 键盘
+	// 玩家事件 按下 键盘
 	constant playerevent EVENT_PLAYER_KEY_DOWN = ConvertPlayerEvent(312)
-	// 玩家事件-松开 键盘
+	// 玩家事件 松开 键盘
 	constant playerevent EVENT_PLAYER_KEY_UP = ConvertPlayerEvent(313)
 	
 	
 	// For use with TriggerRegisterPlayerUnitEvent
 	
-	// 玩家事件-玩家出售单位
+	// 玩家事件 玩家出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
-	// 玩家事件-玩家單位更改所有者
+	// 玩家事件 玩家單位更改所有者
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
-	// 玩家事件-玩家單位出售物品
+	// 玩家事件 玩家單位出售物品
  constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家事件-玩家單位準備施放技能
+	// 玩家事件 玩家單位準備施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
-	// 玩家事件-玩家單位開始施放技能
+	// 玩家事件 玩家單位開始施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
-	// 玩家事件-玩家單位發動技能效果
+	// 玩家事件 玩家單位發動技能效果
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
-	// 玩家事件-玩家單位釋放技能結束
+	// 玩家事件 玩家單位釋放技能結束
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
-	// 玩家事件-玩家單位停止施放技能
+	// 玩家事件 玩家單位停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-    // 玩家事件-玩家單位抵押物品
+    // 玩家事件 玩家單位抵押物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
-	// 玩家事件-玩家单位物品栏中有物品堆叠
+	// 玩家事件 玩家单位物品栏中有物品堆叠
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
 	
 	
@@ -1675,103 +1675,103 @@ globals
 	
 	// OS Key constants
 	
-	//键盘 退格键
+	// 键盘 退格键
 	// @version 1.33
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
-	//键盘 TAB 键
+	// 键盘 TAB 键
 	// @version 1.33
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
-	//键盘 CLEAR 键（Num Lock关闭时的数字键盘5）
+	// 键盘 CLEAR 键（Num Lock关闭时的数字键盘5）
 	// @version 1.33
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
-	//键盘 回车键
+	// 键盘 回车键
 	// @version 1.33
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
-	//键盘 SHIFT 键
+	// 键盘 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
-	//键盘 ctrl 键
+	// 键盘 ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
-	//键盘 ALT 键
+	// 键盘 ALT 键
 	// @version 1.33
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
-	//键盘 PAUSE （暂停）键
+	// 键盘 PAUSE （暂停）键
 	// @version 1.33
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
-	//键盘 CAPS LOCK 键
+	// 键盘 CAPS LOCK 键
 	// @version 1.33
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
-	//键盘 KANA 键，仅用于日语键盘
+	// 键盘 KANA 键，仅用于日语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
-	//键盘 HANGUL 键，仅用于朝鲜/韩语键盘
+	// 键盘 HANGUL 键，仅用于朝鲜/韩语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
-	//键盘 JUNJA 键，仅用于特定语言输入法
+	// 键盘 JUNJA 键，仅用于特定语言输入法
 	// @version 1.33
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
-	//键盘 FINAL键，仅用于特定语言输入法
+	// 键盘 FINAL键，仅用于特定语言输入法
 	// @version 1.33
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
-	//键盘 HANJA 键，仅用于朝鲜/韩语键盘
+	// 键盘 HANJA 键，仅用于朝鲜/韩语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
-	//键盘 KANJI 键，仅用于日语键盘
+	// 键盘 KANJI 键，仅用于日语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
-	//键盘 ESC 键
+	// 键盘 ESC 键
 	// @version 1.33
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
-	//键盘 Caps lock 键（开启状态）
+	// 键盘 Caps lock 键（开启状态）
 	// @version 1.33
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
-	//键盘 Caps lock 键（关闭状态）
+	// 键盘 Caps lock 键（关闭状态）
 	// @version 1.33
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
-	//键盘 ACCEPT 键
+	// 键盘 ACCEPT 键
 	// @version 1.33
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
-	//键盘 变更模式键
+	// 键盘 变更模式键
 	// @version 1.33
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
-	//键盘 空格键
+	// 键盘 空格键
 	// @version 1.33
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
-	//键盘 向上翻页键
+	// 键盘 向上翻页键
 	// @version 1.33
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
-	//键盘 向下翻页键
+	// 键盘 向下翻页键
 	// @version 1.33
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
-	//键盘 结束键
+	// 键盘 结束键
 	// @version 1.33
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
-	//键盘 HOME 键
+	// 键盘 HOME 键
 	// @version 1.33
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
-	//键盘 方向键 左
+	// 键盘 方向键 左
 	// @version 1.33
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
-	//键盘 方向键 上
+	// 键盘 方向键 上
 	// @version 1.33
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
-	//键盘 方向键 右
+	// 键盘 方向键 右
 	// @version 1.33
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
-	//键盘 方向键 下
+	// 键盘 方向键 下
 	// @version 1.33
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
-	//键盘 选择键（右SHIFT）
+	// 键盘 选择键（右SHIFT）
 	// @version 1.33
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
-	//键盘 PRINT 键
+	// 键盘 PRINT 键
 	// @version 1.33
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
-	//键盘 EXECUTE 键
+	// 键盘 EXECUTE 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
-	//键盘 截图键
+	// 键盘 截图键
 	// @version 1.33
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
 	//建盘 INSERT键
@@ -1780,465 +1780,465 @@ globals
 	//建盘 DELETE键
 	// @version 1.33
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
-	//键盘 帮助键（F1）
+	// 键盘 帮助键（F1）
 	// @version 1.33
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
-	//键盘 0键（非小/数字键盘）
+	// 键盘 0键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
-	//键盘 1键（非小/数字键盘）
+	// 键盘 1键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
-	//键盘 2键（非小/数字键盘）
+	// 键盘 2键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
-	//键盘 3键（非小/数字键盘）
+	// 键盘 3键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
-	//键盘 4键（非小/数字键盘）
+	// 键盘 4键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
-	//键盘 5键（非小/数字键盘）
+	// 键盘 5键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
-	//键盘 6键（非小/数字键盘）
+	// 键盘 6键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
-	//键盘 7键（非小/数字键盘）
+	// 键盘 7键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
-	//键盘 8键（非小/数字键盘）
+	// 键盘 8键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
-	//键盘 9键（非小/数字键盘）
+	// 键盘 9键（非小/数字键盘）
 	// @version 1.33
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
-	//键盘 A键
+	// 键盘 A键
 	// @version 1.33
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
-	//键盘 B键
+	// 键盘 B键
 	// @version 1.33
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
-	//键盘 C键
+	// 键盘 C键
 	// @version 1.33
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
-	//键盘 D键
+	// 键盘 D键
 	// @version 1.33
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
-	//键盘 E键
+	// 键盘 E键
 	// @version 1.33
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
-	//键盘 F键
+	// 键盘 F键
 	// @version 1.33
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
-	//键盘 G键
+	// 键盘 G键
 	// @version 1.33
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
-	//键盘 H键
+	// 键盘 H键
 	// @version 1.33
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
-	//键盘 I键
+	// 键盘 I键
 	// @version 1.33
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
-	//键盘 J键
+	// 键盘 J键
 	// @version 1.33
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
-	//键盘 K键
+	// 键盘 K键
 	// @version 1.33
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
-	//键盘 L键
+	// 键盘 L键
 	// @version 1.33
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
-	//键盘 M键
+	// 键盘 M键
 	// @version 1.33
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
-	//键盘 N键
+	// 键盘 N键
 	// @version 1.33
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
-	//键盘 O键
+	// 键盘 O键
 	// @version 1.33
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
-	//键盘 P键
+	// 键盘 P键
 	// @version 1.33
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
-	//键盘 Q键
+	// 键盘 Q键
 	// @version 1.33
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
-	//键盘 R键
+	// 键盘 R键
 	// @version 1.33
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
-	//键盘 S键
+	// 键盘 S键
 	// @version 1.33
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
-	//键盘 T键
+	// 键盘 T键
 	// @version 1.33
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
-	//键盘 U键
+	// 键盘 U键
 	// @version 1.33
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
-	//键盘 V键
+	// 键盘 V键
 	// @version 1.33
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
-	//键盘 W键
+	// 键盘 W键
 	// @version 1.33
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
-	//键盘 X键
+	// 键盘 X键
 	// @version 1.33
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
-	//键盘 Y键
+	// 键盘 Y键
 	// @version 1.33
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
-	//键盘 Z键
+	// 键盘 Z键
 	// @version 1.33
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
-	//键盘 LMETA 键
+	// 键盘 LMETA 键
 	// @version 1.33
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
-	//键盘 RMETA 键
+	// 键盘 RMETA 键
 	// @version 1.33
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
-	//键盘 APPS 键
+	// 键盘 APPS 键
 	// @version 1.33
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
-	//键盘 休眠键
+	// 键盘 休眠键
 	// @version 1.33
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
-	//小/数字键盘 0键
+	// 小/数字键盘 0键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
-	//小/数字键盘 1键
+	// 小/数字键盘 1键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
-	//小/数字键盘 2键
+	// 小/数字键盘 2键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
-	//小/数字键盘 3键
+	// 小/数字键盘 3键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
-	//小/数字键盘 4键
+	// 小/数字键盘 4键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
-	//小/数字键盘 5键
+	// 小/数字键盘 5键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
-	//小/数字键盘 6键
+	// 小/数字键盘 6键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
-	//小/数字键盘 7键
+	// 小/数字键盘 7键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
-	//小/数字键盘 8键
+	// 小/数字键盘 8键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
-	//小/数字键盘 9键
+	// 小/数字键盘 9键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
-	//小/数字键盘 乘号键
+	// 小/数字键盘 乘号键
 	// @version 1.33
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
-	//小/数字键盘 加号键
+	// 小/数字键盘 加号键
 	// @version 1.33
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
-	//小/数字键盘 分离键/分隔符键
+	// 小/数字键盘 分离键/分隔符键
 	// @version 1.33
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
-	//小/数字键盘 减号键
+	// 小/数字键盘 减号键
 	// @version 1.33
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
-	//小/数字键盘 小数点键
+	// 小/数字键盘 小数点键
 	// @version 1.33
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
-	//小/数字键盘 除号键
+	// 小/数字键盘 除号键
 	// @version 1.33
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
-	//键盘 F1键
+	// 键盘 F1键
 	// @version 1.33
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
-	//键盘 F2键
+	// 键盘 F2键
 	// @version 1.33
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
-	//键盘 F3键
+	// 键盘 F3键
 	// @version 1.33
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
-	//键盘 F4键
+	// 键盘 F4键
 	// @version 1.33
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
-	//键盘 F5键
+	// 键盘 F5键
 	// @version 1.33
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
-	//键盘 F6键
+	// 键盘 F6键
 	// @version 1.33
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
-	//键盘 F7键
+	// 键盘 F7键
 	// @version 1.33
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
-	//键盘 F8键
+	// 键盘 F8键
 	// @version 1.33
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
-	//键盘 F9键
+	// 键盘 F9键
 	// @version 1.33
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
-	//键盘 F10键
+	// 键盘 F10键
 	// @version 1.33
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
-	//键盘 F11键
+	// 键盘 F11键
 	// @version 1.33
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
-	//键盘 F12键
+	// 键盘 F12键
 	// @version 1.33
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
-	//键盘 F13键
+	// 键盘 F13键
 	// @version 1.33
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
-	//键盘 F14键
+	// 键盘 F14键
 	// @version 1.33
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
-	//键盘 F15键
+	// 键盘 F15键
 	// @version 1.33
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
-	//键盘 F16键
+	// 键盘 F16键
 	// @version 1.33
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
-	//键盘 F17键
+	// 键盘 F17键
 	// @version 1.33
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
-	//键盘 F18键
+	// 键盘 F18键
 	// @version 1.33
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
-	//键盘 F19键
+	// 键盘 F19键
 	// @version 1.33
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
-	//键盘 F20键
+	// 键盘 F20键
 	// @version 1.33
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
-	//键盘 F21键
+	// 键盘 F21键
 	// @version 1.33
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
-	//键盘 F22键
+	// 键盘 F22键
 	// @version 1.33
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
-	//键盘 F23键
+	// 键盘 F23键
 	// @version 1.33
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
-	//键盘 F24键
+	// 键盘 F24键
 	// @version 1.33
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
-	//小/数字键盘 开关键
+	// 小/数字键盘 开关键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
-	//键盘 SCROLL LOCK键
+	// 键盘 SCROLL LOCK键
 	// @version 1.33
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
-	//小/数字键盘 等号键（OEM 键）
+	// 小/数字键盘 等号键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
-	//键盘 字典键（OEM 键）
+	// 键盘 字典键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
-	//键盘 取消注册 Word 键（OEM 键）
+	// 键盘 取消注册 Word 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
-	//键盘 注册 Word 键（OEM 键）
+	// 键盘 注册 Word 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
-	//键盘 左 OYAYUBI 键（OEM 键）
+	// 键盘 左 OYAYUBI 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
-	//键盘 右 OYAYUBI 键（OEM 键）
+	// 键盘 右 OYAYUBI 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
-	//键盘 左 SHIFT 键
+	// 键盘 左 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
-	//键盘 右 SHIFT 键
+	// 键盘 右 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
-	//键盘 左 Ctrl 键
+	// 键盘 左 Ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
-	//键盘 右 Ctrl 键
+	// 键盘 右 Ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
-	//键盘 左 Alt 键
+	// 键盘 左 Alt 键
 	// @version 1.33
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
-	//键盘 右 Alt 键
+	// 键盘 右 Alt 键
 	// @version 1.33
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
-	//键盘 浏览器后退键
+	// 键盘 浏览器后退键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
-	//键盘 浏览器前进键
+	// 键盘 浏览器前进键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
-	//键盘 浏览器刷新键
+	// 键盘 浏览器刷新键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
-	//键盘 浏览器停止键
+	// 键盘 浏览器停止键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
-	//键盘 浏览器搜索键
+	// 键盘 浏览器搜索键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
-	//键盘 浏览器收藏键
+	// 键盘 浏览器收藏键
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
-	//键盘 浏览器“开始”和“主页”键
+	// 键盘 浏览器“开始”和“主页”键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
-	//键盘 静音键
+	// 键盘 静音键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
-	//键盘 减小音量键
+	// 键盘 减小音量键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
-	//键盘 增大音量键
+	// 键盘 增大音量键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
-	//键盘 下一曲键
+	// 键盘 下一曲键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
-	//键盘 上一曲键
+	// 键盘 上一曲键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
-	//键盘 停止播放键
+	// 键盘 停止播放键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
-	//键盘 暂停播放键
+	// 键盘 暂停播放键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
-	//键盘 打开邮箱键
+	// 键盘 打开邮箱键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
-	//键盘 选择媒体键
+	// 键盘 选择媒体键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
-	//键盘 启动应用程序1键
+	// 键盘 启动应用程序1键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
-	//键盘 启动应用程序2键
+	// 键盘 启动应用程序2键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
-	//小/数字键盘 1建（OEM 键）
+	// 小/数字键盘 1建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
-	//键盘 加号建（OEM 键）
+	// 键盘 加号建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
-	//键盘 逗号建（OEM 键）
+	// 键盘 逗号建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
-	//键盘 减号建（OEM 键）
+	// 键盘 减号建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
-	//键盘 句号建（OEM 键）
+	// 键盘 句号建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
-	//小/数字键盘 2建（OEM 键）
+	// 小/数字键盘 2建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
-	//小/数字键盘 3建（OEM 键）
+	// 小/数字键盘 3建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
-	//小/数字键盘 4建（OEM 键）
+	// 小/数字键盘 4建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
-	//小/数字键盘 5建（OEM 键）
+	// 小/数字键盘 5建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
-	//小/数字键盘 6建（OEM 键）
+	// 小/数字键盘 6建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
-	//小/数字键盘 7建（OEM 键）
+	// 小/数字键盘 7建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
-	//小/数字键盘 8建（OEM 键）
+	// 小/数字键盘 8建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
-	//键盘 AX 建（OEM 键）
+	// 键盘 AX 建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
-	//键盘 102 建（OEM 键）
+	// 键盘 102 建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
-	//键盘  Ico帮助键
+	// 键盘  Ico帮助键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
-	//键盘  Ico00 键
+	// 键盘  Ico00 键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
-	//键盘 Process 键
+	// 键盘 Process 键
 	// @version 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	//键盘 IcoClr 键
+	// 键盘 IcoClr 键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
-	//键盘 格式化建（OEM 键）
+	// 键盘 格式化建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
-	//键盘 重置建（OEM 键）
+	// 键盘 重置建（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	//键盘 ATTN 键（OEM 键）
+	// 键盘 ATTN 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
-	//键盘 PA1 键（OEM 键）
+	// 键盘 PA1 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
-	//键盘 PA2 键（OEM 键）
+	// 键盘 PA2 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	//键盘 ATTN 键（OEM 键）
+	// 键盘 ATTN 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
-	//键盘 WSCTRL 键（OEM 键，似乎是联想杀毒软件定制按键）
+	// 键盘 WSCTRL 键（OEM 键，似乎是联想杀毒软件定制按键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	//键盘 ATTN 键（OEM 键）
+	// 键盘 ATTN 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
-	//键盘 ATTN 键（OEM 键）
+	// 键盘 ATTN 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
-	//键盘 完成键（OEM 键）
+	// 键盘 完成键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
-	//键盘 复制键（OEM 键）
+	// 键盘 复制键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
-	//键盘 自动键（OEM 键）
+	// 键盘 自动键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
-	//键盘 ENLW 键（OEM 键）
+	// 键盘 ENLW 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
-	//键盘 BACKTAB 键（OEM 键）
+	// 键盘 BACKTAB 键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
-	//键盘 ATTN 键
+	// 键盘 ATTN 键
 	// @version 1.33
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
-	//键盘 CRSEL 键
+	// 键盘 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	//键盘 CRSEL 键
+	// 键盘 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	//键盘 CRSEL 键
+	// 键盘 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
-	//键盘 播放键
+	// 键盘 播放键
 	// @version 1.33
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
-	//键盘 缩放键
+	// 键盘 缩放键
 	// @version 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	//键盘 留待将来使用的常数键
+	// 键盘 留待将来使用的常数键
 	// @version 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
-	//键盘 PA1 键
+	// 键盘 PA1 键
 	// @version 1.33
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
-	//键盘 清理键（OEM 键）
+	// 键盘 清理键（OEM 键）
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
