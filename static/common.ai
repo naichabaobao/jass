@@ -20,9 +20,11 @@ native DebugS               takes string str                            returns 
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
     // 在1.29及以上版本中，返回的是0~23中的一个整数，以下则是0~11
     native GetAiPlayer          takes nothing                               returns integer
-    // 英雄升级技能相关函数 获取升级的英雄类型
+    // 获取升级的英雄类型
+    // 英雄升级技能相关函数 
     native GetHeroId            takes nothing                               returns integer
-    // 英雄升级技能相关函数 获取英雄等级
+    // 获取英雄等级
+    // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
     // 获取AI玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
@@ -77,8 +79,7 @@ native DebugS               takes string str                            returns 
     // 获取敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
-    //
- 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
+    // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
@@ -113,9 +114,11 @@ native DebugS               takes string str                            returns 
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
     
-    // 启用战役AI（仅对电脑玩家生效）
+    // 启用战役AI
+    // 仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管，或在游戏内启用未使用的玩家槽运行AI无效
     native SetCampaignAI        takes nothing                               returns nothing
-    // 启用对战AI（仅对电脑玩家生效）
+    // 启用对战AI
+    // 仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管，或在游戏内启用未使用的玩家槽运行AI无效
     native SetMeleeAI           takes nothing                               returns nothing
     // 允许/禁止 优先攻击英雄
     native SetTargetHeroes      takes boolean state                         returns nothing
@@ -169,11 +172,11 @@ native DebugS               takes string str                            returns 
     native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
     // 开始获取敌人主基地
     native StartGetEnemyBase    takes nothing                               returns nothing
-    // 是否获取到敌人主基地
+    // 判断是否获取到敌人主基地
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 下一个扩张点是否存在具有威胁的单位（只检测中立敌对的单位）
+    // 判断下一个扩张点是否存在具有威胁的单位（只检测中立敌对的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
@@ -181,7 +184,7 @@ native DebugS               takes string str                            returns 
     native GetExpansionX        takes nothing                               returns integer
     // 获取扩张点的 Y 轴坐标
     native GetExpansionY        takes nothing                               returns integer
-    // 设置某种阶段点，意义不明
+    // 设置集合点
     native SetStagePoint        takes real x, real y                        returns nothing
     // 命令攻击组攻击指定目标
     native AttackMoveKill       takes unit target                           returns nothing
@@ -265,7 +268,7 @@ native DebugS               takes string str                            returns 
     // 获取攻击组整体生命值
     // 似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 攻击组整体魔法值
+    // 获取攻击组整体魔法值
     // 似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
     // 查询攻击组是否到达目的地
@@ -273,10 +276,10 @@ native DebugS               takes string str                            returns 
     // 查询地图上是否还有中立敌对玩家的单位，即野怪 
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
-    // 在攻击组添加自杀单位，指定单位类型和数量
+    // 添加指定单位类型到自杀攻击组，指定单位类型和数量
     // 该指令被暴雪用于战役AI
     native SuicideUnit          takes integer count, integer unitid         returns nothing
-    // 在攻击组添加自杀单位
+    // 添加指定单位到自杀攻击组
     // 该指令被暴雪用于战役AI
     // @param ct数量
     // @param uid单位类型
@@ -286,7 +289,7 @@ native DebugS               takes string str                            returns 
     // AI脚本最多可运行6条线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
     // 线程之间共享全局变量，但在一条线程运行到读取变量时，变量可能已在几秒前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
-    // 等待指定时间，按秒计时（期间不执行任何指令）
+    // 等待指定时间，按秒计时（等待期间不执行任何指令）
     native Sleep                takes real seconds                          returns nothing
     // 查询单位是否存活
     native UnitAlive            takes unit id                               returns boolean
