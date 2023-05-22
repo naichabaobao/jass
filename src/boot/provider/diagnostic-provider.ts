@@ -5,7 +5,7 @@ If you would like to parse from standard input (the keyboard), then
 use - as an argument.  If you supply no arguments to pjass, it will
 parse the console standard input by default.
 To test this program, go into your Scripts directory, and type:
-pjass common.j common.ai Blizzard.j
+pjass common.j common.ai Blizzard.j ObjectEditor.j
 pjass accepts some options:
 pjass -h               Display this help
 pjass -v               Display version information and exit
