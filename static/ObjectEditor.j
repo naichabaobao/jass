@@ -2808,6 +2808,8 @@ globals
         integer ANfb
         // 英雄技能 震荡波(凯恩)
         integer AOs2
+        // 英雄技能 战争践踏
+        integer AOw2
         // 英雄技能 坚韧光环(凯恩)
         integer AOr2
         // 英雄技能 重生(凯恩)
@@ -2818,11 +2820,13 @@ globals
         integer ANhx
         // 英雄技能 毒蛇结界(洛坎)
         integer Arsw
+        // 英雄技能 巫毒幽魂
+        integer AOls
         // 英雄技能 闪现(中立)
         integer ANbl
 
 
-// 常见单位及物品技能
+// 单位技能(未按种族区分)
 
         // 单位技能 传送门技能
         integer Awrp
@@ -2838,20 +2842,28 @@ globals
         integer Sdro
         // 单位技能 商店购买物品
         integer Apit
+        // 单位技能 选择使用者
+        integer Anei
+        // 单位技能 返回
+        integer Artn
         // 单位技能 地雷 - 爆炸(地精地雷)/金矿- 爆炸了(地精地雷)
         integer Amin
         // 单位技能 死亡时造成范围伤害(地精地雷)
         integer Amnx
         // 单位技能 死亡时造成范围伤害(大地雷)
         integer Amnz
-        // 单位技能 死亡时造成范围伤害(工兵)
+        // 单位技能 死亡时造成范围伤害(地精工兵)
         integer Adda
+        // 单位技能 咔嘣！(地精工兵)
+        integer Asds
         // 单位技能 永久隐形
         integer Apiv
         // 单位技能 游荡(中立)/游荡者(中立)
         integer Awan
         // 单位技能 无敌(中立)
         integer Avul
+        // 单位技能 复活英雄
+        integer Arev
         // 单位技能 立刻复活英雄
         integer Aawa
         // 单位技能 立刻卸载(被缠绕的金矿)
@@ -2860,6 +2872,8 @@ globals
         integer Aloa
         // 单位技能 装载(船) 
         integer Slo3
+        // 单位技能 货舱
+        integer Acar
         // 单位技能 货舱(地精飞艇)
         integer Sch3
         // 单位技能 货舱(坦克)
@@ -2890,15 +2904,15 @@ globals
         integer Aneu
         // 单位技能 装载小精灵(被缠绕的金矿)
         integer Slo2
-        // 单位技能 装载(被缠绕的金矿) 
+        // 单位技能 装载(被缠绕的金矿)
         integer Aenc
         // 单位技能 卸载尸体
         integer Amed
         // 单位技能 获取尸体
         integer Amel
-        // 单位技能 装载(兽人地洞) 
+        // 单位技能 装载(兽人地洞)
         integer Sloa
-        // 单位技能 解除戒备(兽人地洞) 
+        // 单位技能 解除戒备(兽人地洞)
         integer Astd
         // 单位技能 运货骡子 
         integer Apak
@@ -2932,14 +2946,16 @@ globals
         integer Aion
         // 单位技能 物品栏(暗夜精灵)
         integer Aien
-        // 单位技能 报警(在重置版，至少在1.36中找不到)
+        // 单位技能 报警
         integer Aalr
-        // 单位技能 开火(在重置版，至少在1.36中找不到)
+        // 单位技能 开火
         integer Afir
-        // 单位技能 移动(在重置版，至少在1.36中找不到)
+        // 单位技能 移动
         integer Amov
-        // 单位技能 (英雄)(在重置版，至少在1.36中找不到)
+        // 单位技能 英雄
         integer AHer
+        // 单位技能 攻击
+        integer Aatk
         // 单位技能 优先攻击(石像鬼)
         // @version 1.32.9
         integer Aatp
@@ -3001,7 +3017,1153 @@ globals
         integer Aews
         // 单位技能 箭术(图标)
         // @version 1.32
-        integer Aemk   
+        integer Aemk
+        // 单位技能 黑暗召唤(玛尔加尼斯)
+        integer AUmd
+        // 单位技能 亡者再临(中立敌对)
+        integer ACad
+        // 单位技能 强固雕文
+        integer AIgf
+        // 单位技能 强固雕文
+        integer AIgu
+        // 单位技能 减速光环(龙卷风)
+        integer Aasl
+        // 单位技能 建筑伤害光环(龙卷风)
+        integer Atdg
+        // 单位技能 龙卷风旋转(龙卷风)
+        integer Atsp
+        // 单位技能 龙卷风游荡(龙卷风)
+        integer Atwa
+        // 单位技能 刚毛飞射
+        integer ANak
+        // 单位技能 干扰射线
+        integer Ache
+        // 单位技能 钻地(中立敌对)
+        integer Abu5
+        // 单位技能 寄生虫
+        integer ACpa
+        // 单位技能 法力虹吸(中立敌对)
+        integer ACsm
+        // 单位技能 吞噬魔法(中立敌对)
+        integer ACde
+        // 单位技能 硬化体肤
+        integer Ansk
+        // 单位技能 火焰之雨(中立敌对1)
+        integer ACrg
+        // 单位技能 恐惧嚎叫(中立敌对)
+        integer Acht
+        // 单位技能 顺劈斩(中立敌对)
+        integer ACce
+        // 单位技能 疾风步(中立敌对)
+        integer ANwk
+        // 单位技能 嘲讽(中立敌对)
+        integer ANta
+        // 单位技能 放逐(中立敌对)
+        integer ACbn
+        // 单位技能 生命吸取(中立敌对)
+        integer ACdr
+        // 单位技能 妖术(中立敌对)
+        integer AChx
+        // 单位技能 纠缠根须(中立敌对2)
+        integer Aenw
+        // 单位技能 治疗波(中立敌对)
+        integer AChv
+        // 单位技能 沉默(中立敌对)
+        integer ACsi
+        // 单位技能 法力护盾(中立敌对)
+        integer ACmf
+        // 单位技能 暗影突袭(中立敌对)
+        integer ACss
+        // 单位技能 寒冰箭
+        integer ACcb
+        // 单位技能 冰霜吐息
+        integer ACbf
+        // 单位技能 火焰之息(中立敌对)
+        integer ACbc
+        // 单位技能 烈焰风暴(中立敌对)
+        integer ACfs
+        // 单位技能 烈焰风暴(中立敌对2)
+        integer ANfs
+        // 单位技能 穿刺(中立敌对)
+        integer ACmp
+        // 单位技能 尖刺外壳
+        integer ANth
+        // 单位技能 尖刺外壳(按钮位置2,2)
+        integer ANt2
+        // 单位技能 心智腐烂
+        integer ANmr
+        // 单位技能 蛊惑(中立敌对)
+        integer ACch
+        // 单位技能 蛊惑
+        integer ANch
+        // 单位技能 治疗结界(中立敌对)
+        integer AChw
+        // 单位技能 回春术(熊怪)
+        integer ACr2
+        // 单位技能 法术免疫,法术免疫
+        integer ACm2
+        // 单位技能 法术免疫,法术免疫
+        integer ACm3
+        // 单位技能 复仇
+        integer Arng
+        // 单位技能 真视(中立1)
+        integer Adtg
+        // 单位技能 真视(中立2)
+        integer ANtr
+        // 单位技能 生命之树升级技能
+        integer Atol
+        // 单位技能 苦痛之指(中立敌对)
+        integer ACfd
+        // 单位技能 苦痛之指(中立敌对)
+        integer ACf3
+        // 单位技能 死亡一指(中立敌对)
+        integer Afod
+        // 单位技能 虔诚光环(中立敌对)
+        integer ACav
+        // 单位技能 一直沉睡
+        integer Asla
+        // 单位技能 吞噬货物
+        integer Advc
+        // 单位技能 永久献祭(中立敌对1)
+        integer ANpi
+        // 单位技能 永久献祭(中立敌对2)
+        integer Apig
+        // 单位技能 战斗戒备(邪兽人地洞)
+        integer Sbtl
+        // 单位技能 收取黄金和木材
+        integer AAns
+        // 单位技能 暴露
+        integer Andt
+        // 单位技能 用黄金交换木材
+        integer ANgl
+        // 单位技能 用木材交换黄金
+        integer ANlg
+        // 单位技能 法力恢复, 生命恢复光环(中立)
+        integer ANre
+        // 单位技能 生命恢复
+        integer ANrl
+        // 单位技能 窥探
+        integer ANsp
+        // 单位技能 乌鸦形态
+        integer Amrf
+        // 单位技能 治疗术(中立敌对1)
+        integer Anhe
+        // 单位技能 减速术(中立敌对)
+        integer ACsw
+        // 单位技能 砸击(中立敌对)
+        integer ACtc
+        // 单位技能 砸击(雷霆蜥蜴)
+        integer ACt2
+        // 单位技能 投掷巨石
+        integer ACtb
+        // 单位技能 狂暴之怒
+        integer ACbr
+        // 单位技能 嗜血(中立敌对2)
+        integer ACbb
+        // 单位技能 狂乱
+        integer Afzy
+        // 单位技能 嗜血(中立敌对1)
+        integer ACbl
+        // 单位技能 诱捕(中立敌对)
+        integer ACen
+        // 单位技能 吞噬(中立敌对)
+        integer ACdv
+        // 单位技能 沉睡
+        integer ACsp
+        // 单位技能 生出骷髅(可能是黑蚀箭)
+        integer Asod
+        // 单位技能 生出小蜘蛛(中立敌对)
+        integer Assp
+        // 单位技能 生出蜘蛛(中立敌对)
+        integer Aspd
+        // 单位技能 生出多头蛇
+        integer Aspy
+        // 单位技能 生出多头蛇幼崽
+        integer Aspt
+        // 单位技能 统御光环
+        integer AOac
+        // 单位技能 统御光环
+        integer ACac
+        // 单位技能 重生(中立敌对)
+        integer ACrn
+        // 单位技能 法力燃烧(中立敌对1)
+        integer Ambd
+        // 单位技能 法力燃烧(中立敌对2)
+        integer Amnb
+        // 单位技能 法力燃烧(中立敌对3)
+        integer Ambb
+        // 单位技能 幽魂
+        integer Agho
+        // 单位技能 幽魂(可见)
+        integer Aeth
+        // 单位技能 法力恢复光环
+        integer Aarm
+        // 单位技能 生命恢复光环(中立)
+        integer ACnr
+        // 单位技能 法力恢复(中立)
+        integer ANre
+        // 单位技能 返送黄金
+        integer Argd
+        // 单位技能 返送黄金和木材
+        integer Argl
+        // 单位技能 返送木材
+        integer Arlm
+        // 单位技能 未知技能(中立敌对)
+        integer Aand
+        // 单位技能 反魔法护罩(中立敌对)
+        integer ACam
+        // 单位技能 辉煌光环(中立敌对)
+        integer ACba
+        // 单位技能 猛击(中立敌对1)
+        integer ACbh
+        // 单位技能 猛击(中立敌对2)
+        integer ANbh
+        // 单位技能 重殴(中立敌对3/重殴)
+        integer ANb2
+        // 单位技能 疾病之云(憎恶)
+        integer Aap1
+        // 单位技能 疾病之云(瘟疫结界)
+        integer Aap2
+        // 单位技能 疾病之云(中立敌对)
+        integer Aap3
+        // 单位技能 疾病之云(中立敌对)(无伤害)
+        integer Aap4
+        // 单位技能 强击光环(中立敌对)
+        integer ACat
+        // 单位技能 荒芜
+        integer Abli
+        // 单位技能 荒芜驱散 小
+        integer Abds
+        // 单位技能 荒芜驱散 大
+        integer Abdl
+        // 单位技能 荒芜蔓延 小
+        integer Abgs
+        // 单位技能 荒芜蔓延 大
+        integer Abgl
+        // 单位技能 暴风雪(中立敌对)
+        integer ACbz
+        // 单位技能 食尸(中立敌对)
+        integer ACcn
+        // 单位技能 腐臭蝠群(中立敌对)
+        integer ACca
+        // 单位技能 闪电链(中立敌对)
+        integer ACcl
+        // 单位技能 寒冰箭矢(中立敌对)
+        integer ACcw
+        // 单位技能 残废术(中立敌对)
+        integer ACcr
+        // 单位技能 致命一击(中立敌对)
+        integer ACct
+        // 单位技能 诅咒(中立敌对)
+        integer ACcs
+        // 单位技能 飓风术(中立敌对)
+        integer ACcy
+        // 单位技能 枯萎凋零(中立敌对)
+        integer SNdd
+        // 单位技能 凋零缠绕(中立敌对)
+        integer ACdc
+        // 单位技能 侦测者
+        integer Adet
+        // 单位技能 侦测者(警戒结界)
+        integer Adt1
+        // 单位技能 侦测者(影魔)(未使用)
+        integer Adt2
+        // 单位技能 侦测者(飞行器)(未使用)
+        integer Adt3
+        // 单位技能 驱散魔法(中立敌对)
+        integer Adsm
+        // 单位技能 驱除魔法(中立敌对)
+        integer ACdm
+        // 单位技能 驱除魔法(中立敌对、二号位)
+        integer ACd2
+        // 单位技能 圣盾术(中立敌对)
+        integer ACds
+        // 单位技能 坚韧光环(中立敌对)
+        integer SCae
+        // 单位技能 诱捕(中立敌对)
+        integer ACen
+        // 单位技能 纠缠根须(中立敌对1)
+        integer Aenr
+        // 单位技能 闪避(中立敌对)
+        integer ACev
+        // 单位技能 闪避(中立敌对)(100%生效)
+        integer ACes
+        // 单位技能 精灵之火(中立敌对)
+        integer ACff
+        // 单位技能 野性之魂(中立敌对)
+        integer ACsf
+        // 单位技能 野性之魂(中立敌对、猪)
+        integer ACs9
+        // 单位技能 火焰箭(中立敌对)
+        integer ACfb
+        // 单位技能 自然之力(中立敌对)
+        integer ACfr
+        // 单位技能 霜甲术(中立敌对)
+        integer ACfa
+        // 单位技能 霜甲术(自动施法)(中立敌对)
+        integer ACf2
+        // 单位技能 霜甲术(自动施法)(中立敌对)
+        integer ACfu
+        // 单位技能 冰霜新星(中立敌对)
+        integer ACfn
+        // 单位技能 采集(阿克蒙德的食尸鬼采集木材)
+        integer Ahr2
+        // 单位技能 采集(地精伐木机采集木材)
+        integer Ahr3
+        // 单位技能 治疗术(中立敌对2)
+        integer Anh1
+        // 单位技能 治疗术(中立敌对3)
+        integer Anh2
+        // 单位技能 献祭(中立敌对)
+        integer ACim
+        // 单位技能 未知技能(总是开启)
+        integer ACma
+        // 单位技能 心灵之火(中立敌对)
+        integer ACif
+        // 单位技能 闪电之盾(中立敌对)
+        integer ACls
+        // 单位技能 变形术(中立敌对)
+        integer ACpy
+        // 单位技能 占据(中立敌对)
+        integer ACps
+        // 单位技能 粉碎(中立敌对)
+        integer ACpv
+        // 单位技能 净化(中立敌对)
+        integer ACpu
+        // 单位技能 火焰之雨(中立敌对2)
+        integer ACrf
+        // 单位技能 亡者复生(中立敌对)
+        integer ACrd
+        // 单位技能 回春术(中立敌对)
+        integer ACrj
+        // 单位技能 修理(人类)
+        integer Ahrp
+        // 单位技能 咆哮(中立敌对)
+        integer ACro
+        // 单位技能 咆哮(骷髅兽人勇士)
+        integer ACr1
+        // 单位技能 扎根(古树)
+        integer Aro1
+        // 单位技能 扎根(守护古树)
+        integer Aro2
+        // 单位技能 灼热之箭(中立敌对)
+        integer ACsa
+        // 单位技能 震荡波(中立敌对)
+        integer ACsh
+        // 单位技能 震荡波(陷阱)
+        integer ACst
+        // 单位技能 沉睡(中立敌对)
+        integer ACsl
+        // 单位技能 减速术(中立敌对)
+        integer ACsw
+        // 单位技能 荆棘光环(中立敌对)
+        integer ACah
+        // 单位技能 邪恶光环(中立敌对)
+        integer ACua
+        // 单位技能 邪恶狂热(中立敌对)
+        integer ACuf
+        // 单位技能 生命窃取(霜之哀伤)
+        integer SCva
+        // 单位技能 吸血光环(中立敌对)
+        integer ACvp
+        // 单位技能 战争践踏(中立敌对1),(中立敌对)
+        integer Awrs
+        // 单位技能 战争践踏(中立敌对2),(中立敌对)
+        integer Awrh
+        // 单位技能 战争践踏(中立敌对3),(中立敌对)
+        integer Awrg
+        // 单位技能 粉碎(中立敌对)
+        integer ACpv
+        // 单位技能 浸毒武器(中立敌对)
+        integer ACvs
+        // 单位技能 蛛网(中立敌对)
+        integer ACwb
+        // 单位技能 粉碎波浪
+        integer ACcv
+        // 单位技能 粉碎波浪(次级)
+        integer ACc2
+        // 单位技能 粉碎波浪(次级)
+        integer ACc3
+        // 单位技能 召唤海元素
+        integer ACwe
+        // 单位技能 凤凰烈焰(飞行单位)
+        integer Apmf
+        // 单位技能 抗性体肤(中立敌对1)
+        integer ACrk
+        // 单位技能 抗性体肤(中立敌对2)
+        integer ACsk
+        // 单位技能 叉状闪电(中立敌对)
+        integer ACfl
+        // 单位技能 孳生触须
+        integer ACtn
+        // 单位技能 反噬
+        integer Afbb
+        // 单位技能 驱除魔法(娜迦)
+        integer Andm
+        // 单位技能 采集(娜迦)(中立)(采集黄金和木材)
+        integer ANha
+        // 单位技能 诱捕(娜迦)
+        integer ANen
+        // 单位技能 寄生虫(娜迦)
+        integer ANpa
+        // 单位技能 飓风术(娜迦)
+        integer Acny
+        // 单位技能 召唤仪式(娜迦)
+        integer Ahnl
+        // 单位技能 地洞侦测(飞行单位、已废弃)
+        integer Abdt
+        // 单位技能 骑乘
+        integer Amou
+        // 单位技能 采集(黄金和木材)
+        integer Ahar
+        // 单位技能 采集(食尸鬼采集木材)
+        integer Ahrl
+        // 单位技能 暴露
+        integer Adta
+        // 单位技能 修理
+        integer Arep
+        // 单位技能 建造(暗夜精灵)
+        integer AEbu
+        // 单位技能 建造(纳迦)
+        integer AGbu
+        // 单位技能 建造(人类)
+        integer AHbu
+        // 单位技能 建造(中立)
+        integer ANbu
+        // 单位技能 建造(兽人)
+        integer AObu
+        // 单位技能 建造(亡灵)
+        integer AUbu
+        // 单位技能 着火(人类)
+        integer Afih
+        // 单位技能 着火(暗夜精灵)
+        integer Afin
+        // 单位技能 着火(兽人)
+        integer Afio
+        // 单位技能 着火
+        integer Afir
+        // 单位技能 着火(亡灵)
+        integer Afiu
+        // 单位技能 蝗虫
+        integer Aloc
+        // 单位技能 卸下驾驶员
+        integer Atdp
+        // 单位技能 装载驾驶员
+        integer Atlp
+        // 单位技能 塔楼
+        integer Attu
+
+
+// 物品技能
+
+        // 物品技能 监视符文
+        integer APwt
+        // 物品技能 闪现
+        integer AIbk
+        // 物品技能 力量提升
+        integer AIsm
+        // 物品技能 敏捷提升
+        integer AIam
+        // 物品技能 暂时速度加成
+        integer AIsp
+        // 物品技能 攻击力加成(+3)
+        integer AIat
+        // 物品技能 护甲加成
+        integer AIde
+        // 物品技能 范围树木/城墙伤害
+        integer AIdm
+        // 物品技能 经验获取
+        integer AIem
+        // 物品技能 经验获取(强效)
+        integer AIe2
+        // 物品技能 浓雾之云
+        integer AIfg
+        // 物品技能 夺取旗帜
+        integer AIfl
+        // 物品技能 夺取旗帜(人类)
+        integer AIfm
+        // 物品技能 夺取旗帜(暗夜精灵)
+        integer AIfn
+        // 物品技能 夺取旗帜(兽人)
+        integer AIfo
+        // 物品技能 夺取旗帜(亡灵)
+        integer AIfe
+        // 物品技能 等级提升
+        integer AIlm
+        // 物品技能 智力提升
+        integer AIim
+        // 物品技能 力量/敏捷/智力提升
+        integer AIxm
+        // 物品技能 治疗
+        integer AIhe
+        // 物品技能 治疗(最小的)
+        integer AIhx
+        // 物品技能 范围治疗
+        integer AIha
+        // 物品技能 范围治疗(强效)
+        integer AIhb
+        // 物品技能 范围治疗 - 次级
+        integer APh1
+        // 物品技能 范围治疗
+        integer APh2
+        // 物品技能 范围治疗 - 强效
+        integer APh3
+        // 物品技能 暂时隐形
+        integer AIvi
+        // 物品技能 暂时无敌
+        integer AIvu
+        // 物品技能 暂时无敌(次级)
+        integer AIvl
+        // 物品技能 法力值恢复
+        integer AIma
+        // 物品技能 范围法力值恢复
+        integer AImr
+        // 物品技能 符文 - 范围法力值恢复
+        integer APmr
+        // 物品技能 符文 - 范围法力值恢复 - 强效
+        integer APmg
+        // 物品技能 生命值/法力值恢复
+        integer AIre
+        // 物品技能 范围生命值/法力值恢复
+        integer AIra
+        // 物品技能 符文 - 范围生命值/法力值恢复
+        integer APra
+        // 物品技能 暂时范围护甲加成
+        integer AIda
+        // 物品技能 暂时范围护甲加成(有生命&法力恢复)
+        integer AIdb
+        // 物品技能 保护卷轴
+        integer Bdef
+        // 物品技能 范围侦测
+        integer AIta
+        // 物品技能 法力恢复
+        integer AIrm
+        // 物品技能 火焰箭
+        integer AIfi
+        // 物品技能 幻象
+        integer AIil
+        // 物品技能 幻象
+        integer BIil
+        // 物品技能 驱散
+        integer AIdi
+        // 物品技能 驱散(有冷却时间)
+        integer AIds
+        // 物品技能 驱散
+        integer APdi
+        // 物品技能 攻击火焰加成
+        integer AIfb
+        // 物品技能 攻击闪电加成
+        integer AIlb
+        // 物品技能 攻击黑蚀箭加成
+        integer AIdf
+        // 物品技能 净化(1)
+        integer AIlp
+        // 物品技能 攻击冰霜加成
+        integer AIob
+        // 物品技能 攻击毒素加成
+        integer AIpb
+        // 物品技能 攻击腐化加成
+        integer AIcb
+        // 物品技能 腐蚀
+        integer BIcb
+        // 物品技能 视野范围加成
+        integer AIsi
+        // 物品技能 盗取灵魂
+        integer AIso
+        // 物品技能 灵魂占据
+        integer Asou
+        // 物品技能 盗取灵魂
+        integer BIsv
+        // 物品技能 重生
+        integer AIrc
+        // 物品技能 召回
+        integer AIrt
+        // 物品技能 城镇传送
+        integer AItp
+        // 物品技能 统御
+        integer AIco
+        // 物品技能 召唤红色/蓝色幼龙
+        integer AIfd
+        // 物品技能 召唤熊怪/蓝色龙人
+        integer AIff
+        // 物品技能 召唤岩石魔像
+        integer AIfr
+        // 物品技能 召唤末日守卫
+        integer AIfu
+        // 物品技能 召唤恶魔猎犬
+        integer AIfh
+        // 物品技能 召唤骷髅
+        integer AIfs
+        // 物品技能 召唤冰雪亡魂
+        integer AIir
+        // 物品技能 召唤巨熊怪战士
+        integer AIuw
+        // 物品技能 召唤单位
+        integer BFig
+        // 物品技能 放置地精地雷
+        integer AIpm
+        // 物品技能 永久伤害提升,攻击力提升
+        integer AIaa
+        // 物品技能 永久生命值提升,生命值提升
+        integer AImi
+        // 物品技能 永久生命值提升(次级)
+        integer AIpx
+        // 物品技能 生命窃取
+        integer AIva
+        // 物品技能 献祭
+        integer AIcf
+        // 物品技能 烈焰披风
+        integer BIcf
+        // 物品技能 英雄属性加成
+        integer AIab
+        // 物品技能 冰冻攻击力加成
+        integer AIzb
+        // 物品技能 生命值加成
+        integer AIml
+        // 物品技能 生命值加成(最小的)
+        integer AIlz
+        // 物品技能 生命恢复
+        integer Arel
+        // 物品技能 反魔法护罩
+        integer Aami
+        // 物品技能 法力值加成
+        integer AImm
+        // 物品技能 法力值加成(100)
+        integer AImz
+        // 物品技能 法力值加成(75)
+        integer AImv
+        // 物品技能 法力值加成(200)
+        integer AI2m
+        // 物品技能 攻击速度加成
+        integer AIas
+        // 物品技能 攻击速度加成(急速手套)
+        integer AIsx
+        // 物品技能 攻击速度加成(强效)
+        integer AIs2
+        // 物品技能 亡者再临
+        integer AIan
+        // 物品技能 复活术
+        integer AIrs
+        // 物品技能 复活术(冷却时间)
+        integer AIrx
+        // 物品技能 次级复活符文
+        integer APrl
+        // 物品技能 强效复活符文
+        integer APrr
+        // 物品技能 永久伤害提升 - 攻击力提升
+        integer AIaa
+        // 物品技能 永久生命值提升 - 生命值提升
+        integer AImi
+        // 物品技能 移动速度加成
+        integer AIms
+        // 物品技能 英雄属性加成(+3 敏捷)
+        integer AIa3
+        // 物品技能 英雄属性加成(+4 敏捷)
+        integer AIa4
+        // 物品技能 英雄属性加成(+6 敏捷)
+        integer AIa6
+        // 物品技能 英雄属性加成(+10 敏捷)
+        integer AIaz
+        // 物品技能 英雄属性加成(+5 所有属性)
+        integer AIx5
+        // 物品技能 英雄属性加成(+2 所有属性)
+        integer AIx2
+        // 物品技能 英雄属性加成(+3 力量)
+        integer AIs3
+        // 物品技能 英雄属性加成(+4 力量)
+        integer AIs4
+        // 物品技能 英雄属性加成(+6 力量)
+        integer AIs6
+        // 物品技能 英雄属性加成(+3 智力)
+        integer AIi3
+        // 物品技能 英雄属性加成(+4 智力)
+        integer AIi4
+        // 物品技能 英雄属性加成(+6 智力)
+        integer AIi6
+        // 物品技能 敏捷提升(+2)
+        integer AIgm
+        // 物品技能 智力提升(+2)
+        integer AItm
+        // 物品技能 力量提升(+2)
+        integer AInm
+        // 物品技能 攻击力加成(+6)
+        integer AIt6
+        // 物品技能 攻击力加成(+9)(在1.36中为+8,技能名称和说明未修改)
+        integer AIt9
+        // 物品技能 攻击力加成(+12)
+        integer AItc
+        // 物品技能 攻击力加成(+15)
+        integer AItf
+        // 物品技能 飓风术
+        integer AIcy
+        // 物品技能 护甲加成(+1)
+        integer AId1
+        // 物品技能 护甲加成(+2)
+        integer AId2
+        // 物品技能 护甲加成(+3)
+        integer AId3
+        // 物品技能 护甲加成(+4)
+        integer AId4
+        // 物品技能 护甲加成(+5)
+        integer AId5
+        // 物品技能 护甲加成(+7)
+        integer AId7
+        // 物品技能 护甲加成(+8)
+        integer AId8
+        // 物品技能 护甲加成(+10)
+        integer AId0
+        // 物品技能 召唤地狱火
+        integer AIin
+        // 物品技能 生命值加成(最小的)
+        integer AIlf
+        // 物品技能 生命值加成(次级)
+        integer AIl1
+        // 物品技能 生命值加成(强效)
+        integer AIl2
+        // 物品技能 生命恢复(次级)
+        integer Arll
+        // 物品技能 治疗(次级)
+        integer AIh1
+        // 物品技能 治疗(强效)
+        integer AIh2
+        // 物品技能 治疗结界
+        integer AIhw
+        // 物品技能 警戒结界
+        integer AIsw
+        // 物品技能 暂时隐形(次级)
+        integer AIv1
+        // 物品技能 暂时隐形(强效)
+        integer AIv2
+        // 物品技能 法力值恢复(次级)
+        integer AIm1
+        // 物品技能 法力值恢复(强效)
+        integer AIm2
+        // 物品技能 法力恢复(次级)
+        integer AIrn
+        // 物品技能 虔诚光环
+        integer AIad
+        // 物品技能 统御光环
+        integer AIcd
+        // 物品技能 辉煌光环
+        integer AIba
+        // 物品技能 吸血光环
+        integer AIav
+        // 物品技能 强击光环
+        integer AIar
+        // 物品技能 坚韧光环
+        integer AIae
+        // 物品技能 邪恶光环
+        integer AIau
+        // 物品技能 闪电之盾
+        integer AIls
+        // 物品技能 咆哮
+        integer AIrr
+        // 物品技能 闪避
+        integer AIev
+        // 物品技能 法术免疫
+        integer AImx
+        // 物品技能 法力值加成(最小的)
+        integer AImb
+        // 物品技能 法力值加成(强效)
+        integer AIbm
+        // 物品技能 夜视能力
+        integer AIuv
+        // 物品技能 永久生命值提升(+50)
+        integer AImh
+        // 物品技能 英雄属性加成(+1 敏捷)
+        integer AIa1
+        // 物品技能 英雄属性加成(+1 所有属性)
+        integer AIx1
+        // 物品技能 英雄属性加成(+1 力量)
+        integer AIs1
+        // 物品技能 英雄属性加成(+1 智力)
+        integer AIi1
+        // 物品技能 飞毯
+        integer AIfc
+        // 物品技能 治疗药膏
+        integer AIrl
+        // 物品技能 再生(持续恢复)
+        integer BIrl
+        // 物品技能 明澈药水
+        integer AIpr
+        // 物品技能 次级明澈药水
+        integer AIpl
+        // 物品技能 普通物品技能 恢复效果
+        integer AIp1
+        // 物品技能 明澈药水(持续恢复)
+        integer BIrm
+        // 物品技能 普通物品技能 恢复效果(II)
+        integer AIp2
+        // 物品技能 普通物品技能 恢复效果(III)
+        integer AIp3
+        // 物品技能 普通物品技能 恢复效果(IV)
+        integer AIp4
+        // 物品技能 普通物品技能 恢复效果(V)
+        integer AIp5
+        // 物品技能 普通物品技能 恢复效果(VI)
+        integer AIp6
+        // 物品技能 恢复卷轴
+        integer AIsl
+        // 物品技能 回春术(持续恢复)
+        integer BIrg
+        // 物品技能 一箱黄金
+        integer AIgo
+        // 物品技能 一捆木材
+        integer AIlu
+        // 物品技能 信号枪
+        integer AIfa
+        // 物品技能 暴露整张地图
+        integer AIrv
+        // 物品技能 连锁驱散
+        integer AIdc
+        // 物品技能 蛛网
+        integer AIwb
+        // 物品技能 怪兽诱饵
+        integer AImo
+        // 物品技能 怪兽诱饵
+        integer BImo
+        // 物品技能 随机物品
+        integer AIri
+        // 物品技能 放置荒芜
+        integer Ablp
+        // 物品技能 窃取
+        integer Aste
+        // 物品技能 改变一天的时间
+        integer AIct
+        // 物品技能 吸血药水
+        integer AIpv
+        // 物品技能 吸血药水
+        integer BIpv
+        // 物品技能 法术伤害减免
+        integer AIsr
+        // 物品技能 建造迷你城堡
+        integer AIbl
+        // 物品技能 建造迷你大厅
+        integer AIbg
+        // 物品技能 建造迷你哨塔
+        integer AIbt
+        // 物品技能 影眼魔杖
+        integer Ashs
+        // 物品技能 影眼魔杖
+        integer Bshs
+        // 物品技能 重修之书
+        integer Aret
+        // 物品技能 传送法杖
+        integer AImt
+        // 物品技能 保存法杖
+        integer ANpr
+        // 物品技能 机械小动物
+        integer Amec
+        // 物品技能 机械小动物
+        integer Bmec
+        // 物品技能 法术护盾(护符)
+        integer ANss
+        // 物品技能 法术护盾(符文)
+        integer ANse
+        // 物品技能 法术护盾
+        integer BNss
+        // 物品技能 法术书
+        integer Aspb
+        // 物品技能 亡者复生 
+        integer AIrd
+        // 物品技能 庇护法杖
+        integer ANsa
+        // 物品技能 庇护
+        integer BNsa
+        // 物品技能 急速卷轴
+        integer AIsa
+        // 物品技能 速度符文
+        integer APsa
+        // 物品技能 显影之尘
+        integer AItb
+        // 物品技能 显影之尘
+        integer Bdet
+        // 物品技能 攻击减速加成
+        integer AIsb
+        // 物品技能 攻击闪电加成(新的)
+        integer AIll
+        // 物品技能 减速
+        integer AIos
+        // 物品技能 黑蚀箭
+        integer ANbs
+        // 物品技能 灵魂链接(范围)
+        integer Aspp
+        // 物品技能 重生
+        integer AIrb
+        // 物品技能 重生(这个单位已经重生过了)
+        integer BIrb
+        // 物品技能 黑暗召唤
+        integer AUds
+        // 物品技能 反魔法护罩
+        integer AIxs
+        // 物品技能 圣盾术
+        integer AIdv
+        // 物品技能 沉默
+        integer AIse
+        // 物品技能 净化(2)
+        integer AIpg
+        // 物品技能 净化(3)
+        integer AIps
+        // 物品技能 攻击力加成(+1)
+        integer AItg
+        // 物品技能 攻击力加成(+2)
+        integer AIth
+        // 物品技能 攻击力加成(+4)
+        integer AIti
+        // 物品技能 攻击力加成(+5)(在1.36中为+4,技能名称和说明未修改)
+        integer AItj
+        // 物品技能 攻击力加成(+7)
+        integer AItk
+        // 物品技能 攻击力加成(+8)
+        integer AItl
+        // 物品技能 攻击力加成(+10)
+        integer AItn
+        // 物品技能 攻击力加成(+20)
+        integer AItx
+        // 物品技能 最低治疗(减慢冷却时间)
+        integer AIh3
+        // 物品技能 兽人战旗
+        integer AIfx
+        // 物品技能 攻击火焰加成(古尔丹)
+        integer AIgd
+        // 物品技能 建造迷你列王祭坛
+        integer AIbh
+        // 物品技能 建造迷你铁匠铺
+        integer AIbb
+        // 物品技能 建造迷你伐木场
+        integer AIbr
+        // 物品技能 建造迷你农场
+        integer AIbf
+        // 物品技能 建造迷你兵营
+        integer AIbs
+        // 物品技能 暗影宝珠技能
+        integer AIdn
+        // 物品技能 复活(特别战役物品)
+        integer AInd
+        // 物品技能 邪恶狂热
+        integer AIuf
+        // 物品技能 控制魔法
+        integer AIcm
+        // 物品技能 死亡一指
+        integer AIfz
+        // 物品技能 天灾契约
+        integer AIdp
+        // 物品技能 防御(被动防御)
+        integer AIdd
+        // 物品技能 猛击
+        integer AIbx
+        // 物品技能 水栖奴仆
+        integer AIwm
+        // 物品技能 召唤猎头者
+        integer AIsh
+        // 物品技能 猎头者之灵
+        integer BIsh
+        // 物品技能 恢复光环
+        integer AIgx
+        // 物品技能 圣光术
+        integer AIhl
+        // 物品技能 减速毒药
+        integer AIsz
+        // 物品技能 企鹅叫
+        integer AIpz
+        // 物品技能 近战火焰攻击力加成
+        integer AIfw
+        // 物品技能 近战冰霜攻击力加成
+        integer AIft
+        // 物品技能 近战闪电攻击力加成
+        integer AIlx
+        // 物品技能 致命一击
+        integer AIcs
+        // 物品技能 防御
+        integer AIdd
+        // 物品技能 闪电链
+        integer AIcl
+        // 物品技能 狂暴
+        integer AIxk
+        // 物品技能 蛛网
+        integer BIwb
+        // 物品技能 传送 - 暴露
+        integer Btrv
+        // 物品技能 仪式匕首(瞬发治疗)
+        // @version 1.30
+        integer AIdg
+        // 物品技能 治疗减免(降低目标单位的生命恢复速度)
+        integer BIhm
+        // 物品技能 战鼓
+        integer AIwd
+        // 物品技能 仪式匕首(持续恢复)
+        // @version 1.30
+        integer AIg2
+        // 物品技能 暂时无敌(神圣)
+        integer AIvg
+        // 物品技能 攻击治疗减免加成
+        integer AIf2
+        // 物品技能 点金术
+        integer AIts
+        // 物品技能 召唤熊怪追踪者
+        integer AIut
+        // 物品技能 英雄属性加成(+5 敏捷)
+        integer AIa5
+        // 物品技能 英雄属性加成(+3 所有属性)
+        integer AIx3
+        // 物品技能 英雄属性加成(+4 所有属性)
+        integer AIx4
+        // 物品技能 英雄属性加成(+5 力量)
+        integer AIs5
+        // 物品技能 英雄属性加成(+5 智力)
+        integer AIi5
+
+
+// 技能 BUFF(魔法效果)
+
+        // 技能 BUFF(魔法效果) 永久献祭(中立敌对1)
+        integer BNpi
+        // 技能 BUFF(魔法效果) 永久献祭(中立敌对2)
+        integer Bpig
+        // 技能 BUFF(魔法效果) 灵魂保存
+        integer BNsl
+        // 技能 BUFF(魔法效果) 群兽奔腾
+        integer BNst
+        // 技能 BUFF(魔法效果) 火焰之雨(范围)
+        integer BNrf
+        // 技能 BUFF(魔法效果) 冰冻
+        integer Bfre
+        // 技能 BUFF(魔法效果) 共享视野
+        integer Bsha
+        // 技能 BUFF(魔法效果) 龙卷风伤害
+        integer Btdg
+        // 技能 BUFF(魔法效果) 龙卷风旋转(范围)
+        integer Btsa
+        // 技能 BUFF(魔法效果) 季风
+        integer ANmd
+        // 技能 BUFF(魔法效果) 混乱之雨(效果)
+        integer XErc
+        // 技能 BUFF(魔法效果) 火焰之雨(效果)
+        integer XErf
+        // 技能 BUFF(魔法效果) 改变一天的时间(物品)
+        integer XIct
+        // 技能 BUFF(魔法效果) 季风(效果)
+        integer XNmo
+        // 技能 BUFF(魔法效果) 火山爆发(范围)
+        integer BNva
+        // 技能 BUFF(魔法效果) 火山爆发(效果)
+        integer XNvc
+        // 技能 BUFF(魔法效果) 集束火箭(效果)
+        integer XNcs
+        // 技能 BUFF(魔法效果) 治疗喷雾(效果)
+        integer XNhs
+        // 技能 BUFF(魔法效果) 焚身化骨
+        integer BNic
+        // 技能 BUFF(魔法效果) 灵魂燃烧
+        integer BNso
+        // 技能 BUFF(魔法效果) 熔岩爪牙
+        integer BNlm
+        // 技能 BUFF(魔法效果) 口袋工厂
+        integer BNfy
+        // 技能 BUFF(魔法效果) 集束火箭
+        integer BNcs
+        // 技能 BUFF(魔法效果) 工程学升级
+        integer BNeg
+        // 技能 BUFF(魔法效果) 发条地精
+        integer BNcg
+        // 技能 BUFF(魔法效果) 治疗喷雾
+        integer BNhs
+        // 技能 BUFF(魔法效果) 酸液炸弹
+        integer BNab
+        // 技能 BUFF(魔法效果) 化学狂暴
+        integer BNcr
+        // 技能 BUFF(魔法效果) 点金术
+        integer BNtm
+        // 技能 BUFF(魔法效果) 法力护盾
+        integer BNms
+        // 技能 BUFF(魔法效果) 火焰之雨
+        integer BNrd
+        // 技能 BUFF(魔法效果) 寒冰箭矢
+        integer BHca
+        // 技能 BUFF(魔法效果) 寒冰箭矢(叠加)
+        integer Bcsd
+        // 技能 BUFF(魔法效果) 寒冰箭矢(信息)
+        integer Bcsi
+        // 技能 BUFF(魔法效果) 恐惧嚎叫
+        integer BNht
+        // 技能 BUFF(魔法效果) 末日降临
+        integer BNdo
+        // 技能 BUFF(魔法效果) 末日降临(奴仆)
+        integer BNdi
+        // 技能 BUFF(魔法效果) 熊猫人元素之灵
+        integer BNef
+        // 技能 BUFF(魔法效果) 巨熊
+        integer BNsg
+        // 技能 BUFF(魔法效果) 豪猪
+        integer BNsq
+        // 技能 BUFF(魔法效果) 战鹰
+        integer BNsw
+        // 技能 BUFF(魔法效果) 心智腐烂
+        integer BNmr
+        // 技能 BUFF(魔法效果) 火焰之息
+        integer BNbf
+        // 技能 BUFF(魔法效果) 酩酊酒雾
+        integer BNdh
+        // 技能 BUFF(魔法效果) 沉默
+        integer BNsi
+        // 技能 BUFF(魔法效果) 黑蚀箭
+        integer BNba
+        // 技能 BUFF(魔法效果) 黑暗奴仆
+        integer BNdm
+        // 技能 BUFF(魔法效果) 季风
+        integer BNmo
+        // 技能 BUFF(魔法效果) 水栖奴仆
+        integer BNwm
+        // 技能 BUFF(魔法效果) 龙卷风(减速光环)
+        integer Basl
+        // 技能 BUFF(魔法效果) 龙卷风旋转(自动施放飓风)
+        integer Btsp
+        // 技能 BUFF(魔法效果) 龙卷风(时间化生命)
+        integer BNto
+        // 技能 BUFF(魔法效果) 黑暗转换
+        integer BNdc
+        // 技能 BUFF(魔法效果) 灵魂保存
+        integer BNsp
+        // 技能 BUFF(魔法效果) 眩晕
+        integer Bchd
+        // 技能 BUFF(魔法效果) 地狱火
+        integer BNin
+        // 技能 BUFF(魔法效果) 狂乱
+        integer Bfzy
+        // 技能 BUFF(魔法效果) 统御光环
+        integer Boac
+        // 技能 BUFF(魔法效果) 时间化生命
+        integer Btlf
+        // 技能 BUFF(魔法效果) 法力恢复光环
+        integer Barm
+        // 技能 BUFF(魔法效果) 冰霜吐息
+        integer BCbf
+        // 技能 BUFF(魔法效果) 砸击
+        integer BCtc
+        // 技能 BUFF(魔法效果) 战斗咆哮
+        integer BNbr
+        // 技能 BUFF(魔法效果) 寄生虫
+        integer BNpm
+        // 技能 BUFF(魔法效果) 寄生虫
+        integer BNpa
+        // 技能 BUFF(魔法效果) 被侦测到
+        integer Bdet
+        // 技能 BUFF(魔法效果) 无敌
+        integer Bvul
+        // 技能 BUFF(魔法效果) 速度加成
+        integer Bspe
+        // 技能 BUFF(魔法效果) 减速
+        integer Bfro
+        // 技能 BUFF(魔法效果) 昏迷
+        integer BSTN
+        // 技能 BUFF(魔法效果) 昏迷(暂停)
+        integer BPSE
+        // 技能 BUFF(魔法效果) 荒芜(效果)
+        integer Xbli
+        // 技能 BUFF(魔法效果) 暴露(效果)
+        integer Xbdt
+        // 技能 BUFF(魔法效果) 英雄消散(效果)
+        integer Xdis
 
 
 // 科技
