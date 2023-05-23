@@ -2872,6 +2872,8 @@ globals
         integer Aloa
         // 单位技能 装载(船) 
         integer Slo3
+        // 单位技能 货舱(编辑器无此技能)
+        integer Amtc
         // 单位技能 货舱
         integer Acar
         // 单位技能 货舱(地精飞艇)
@@ -2930,8 +2932,12 @@ globals
         integer ACm3
         // 单位技能 法术免疫
         integer Amim
-        // 物品技能 法术免疫
+        // 物品技能 法术免疫(物品)
         integer AImx
+        // 单位技能 影遁
+        integer Ashm
+        // 单位技能 影遁(立刻的)
+        integer Sshm
         // 单位技能 影遁(阿卡玛)
         integer Ahid
         // 单位技能 飓风术(塞纳留斯)
@@ -3004,7 +3010,7 @@ globals
         // 单位技能 野蛮之力(图标)
         // @version 1.32
         integer Aobs
-        // 单位技能 冰霜攻击(新的)
+        // 单位技能 冰霜攻击(新的,具有图标)
         integer Afrc
         // 单位技能 影魔(图标)
         // @version 1.32
@@ -3078,6 +3084,14 @@ globals
         integer ACcb
         // 单位技能 冰霜吐息
         integer ACbf
+        // 单位技能 冰霜吐息
+        integer Afrb
+        // 单位技能 冰霜攻击
+        integer Afra
+        // 单位技能 冰霜攻击
+        integer Afr2
+        // 单位技能 冰冻吐息
+        integer Afrz
         // 单位技能 火焰之息(中立敌对)
         integer ACbc
         // 单位技能 烈焰风暴(中立敌对)
@@ -3220,12 +3234,16 @@ globals
         integer ANbh
         // 单位技能 重殴(中立敌对3/重殴)
         integer ANb2
+        // 单位技能 疾病之云(编辑器无此技能)
+        integer Aapl
         // 单位技能 疾病之云(憎恶)
         integer Aap1
         // 单位技能 疾病之云(瘟疫结界)
         integer Aap2
         // 单位技能 疾病之云(中立敌对)
         integer Aap3
+        // 单位技能 疾病之云(清道夫)
+        integer Apts
         // 单位技能 疾病之云(中立敌对)(无伤害)
         integer Aap4
         // 单位技能 强击光环(中立敌对)
@@ -3452,6 +3470,324 @@ globals
         integer Atlp
         // 单位技能 塔楼
         integer Attu
+        // 单位技能 复仇之魂
+        integer Avng
+        // 单位技能 法力闪耀
+        integer Amfl
+        // 单位技能 相位变换
+        integer Apsh
+        // 单位技能 虚灵
+        integer Aetl
+        // 单位技能 球体(复仇 - 1级)
+        integer Asp1
+        // 单位技能 球体(复仇 - 2级)
+        integer Asp2
+        // 单位技能 球体(复仇 - 3级)
+        integer Asp3
+        // 单位技能 球体(复仇 - 4级)
+        integer Asp4
+        // 单位技能 球体(复仇 - 5级)
+        integer Asp5
+        // 单位技能 球体(复仇 - 6级)
+        integer Asp6
+        // 单位技能 战棍
+        integer Agra
+        // 单位技能 硬化体肤
+        integer Assk
+        // 单位技能 抗性体肤
+        integer Arsk
+        // 单位技能 嘲讽
+        integer Atau
+        // 单位技能 月刃
+        integer Amgl
+        // 单位技能 月刃(娜萨)
+        integer Amgr
+        // 单位技能 减速毒药
+        integer Aspo
+        // 单位技能 哨兵
+        integer Aesn
+        // 单位技能 哨兵(娜萨)
+        integer Aesr
+        // 单位技能 吃树
+        integer Aeat
+        // 单位技能 补充法力和生命
+        integer Ambt
+        // 单位技能 采集(小精灵采集黄金和木材)
+        integer Awha
+        // 单位技能 采集(小精灵黄金和木材－远古之魂)
+        integer Awh2
+        // 单位技能 自爆
+        integer Adtn
+        // 单位技能 治疗术
+        integer Awhe
+        // 单位技能 扎根
+        integer Aroo
+        // 单位技能 熊形态
+        integer Abrf
+        // 单位技能 风暴乌鸦形态
+        integer Arav
+        // 单位技能 不明技能(用于熊德变身)(可选的)
+        integer Sbr2
+        // 单位技能 不明技能(用于鸟德变身)(可选的)
+        integer Sra2
+        // 单位技能 驱除魔法
+        integer Aadm
+        // 单位技能 法术免疫
+        integer Amim
+        // 单位技能 夜视能力
+        integer Ault
+        // 单位技能 艾露恩的赐福
+        integer Aegr
+        // 单位技能 骑乘角鹰兽(老的)
+        integer Acoa
+        // 单位技能 骑乘角鹰兽
+        integer Aco2
+        // 单位技能 搭载弓箭手(老的)
+        integer Acoh
+        // 单位技能 搭载弓箭手
+        integer Aco3
+        // 单位技能 解散(角鹰兽骑士骑乘)
+        integer Adec
+        // 单位技能 腐蚀吐息
+        integer Acor
+        // 单位技能 精灵之火
+        integer Afae
+        // 单位技能 精灵之火(变形)
+        integer Afa2
+        // 单位技能 飓风术
+        integer Acyc
+        // 单位技能 回春术
+        integer Arej
+        // 单位技能 复苏
+        integer Aren
+        // 单位技能 咆哮
+        integer Aroa
+        // 单位技能 咆哮(变形)
+        integer Ara2
+        // 单位技能 闪电攻击
+        integer Alit
+        // 单位技能 不明技能(标注为生命之树升级)
+        integer Atol
+        // 单位技能 隐藏/影遁(物品)
+        integer AIhm
+        // 单位技能 空中枷锁
+        integer Amls
+        // 单位技能 暴露
+        integer AHta
+        // 单位技能 反噬(破法者)
+        integer Afbk
+        // 单位技能 反噬(奥术塔)
+        integer Afbt
+        // 单位技能 控制魔法
+        integer Acmg
+        // 单位技能 对空机炮
+        integer Aflk
+        // 单位技能 破片榴弹
+        integer Afsh
+        // 单位技能 火箭弹幕
+        integer Aroc
+        // 单位技能 混乱
+        integer Srtt
+        // 单位技能 魔法防御
+        integer Amdf
+        // 单位技能 球体
+        integer Asph
+        // 单位技能 法术窃取
+        integer Asps
+        // 单位技能 迷雾之云
+        integer Aclf
+        // 单位技能 凤凰变形 (凤凰蛋相关)
+        integer Aphx
+        // 单位技能 凤凰烈焰
+        integer Apxf
+        // 单位技能 飞行器炸弹
+        integer Agyb
+        // 单位技能 风暴战锤
+        integer Asth
+        // 单位技能 真视(飞行器)
+        integer Agyv
+        // 单位技能 防御
+        integer Adef
+        // 单位技能 照明弹
+        integer Afla
+        // 单位技能 魔法岗哨(人类防御塔)
+        integer Adts
+        // 单位技能 心灵之火
+        integer Ainf
+        // 单位技能 驱散魔法
+        integer Adis
+        // 单位技能 治疗术
+        integer Ahea
+        // 单位技能 减速术
+        integer Aslo
+        // 单位技能 隐形术
+        integer Aivs
+        // 单位技能 变形术
+        integer Aply
+        // 单位技能 战斗号召(农夫)
+        integer Amil
+        // 单位技能 战斗号召(议政厅)
+        integer Amic
+        // 单位技能 裂甲之刃
+        integer Ahsb
+        // 单位技能 荒芜上的生命恢复
+        integer Ablr
+        // 单位技能 补充
+        integer Arpb
+        // 单位技能 荒芜精华
+        integer Arpl
+        // 单位技能 灵魂之触
+        integer Arpm
+        // 单位技能 发掘尸体
+        integer Aexh
+        // 单位技能 补充法力
+        integer Amb2
+        // 单位技能 毁灭者形态
+        integer Aave 
+        // 单位技能 毁灭宝珠
+        integer Afak
+        // 单位技能 吞噬魔法
+        integer Advm
+        // 单位技能 荒芜光环
+        integer Aabr
+        // 单位技能 吸收法力
+        integer Aabs
+        // 单位技能 钻地(地穴恶魔)
+        integer Abur
+        // 单位技能 钻地(2级甲虫)
+        integer Abu2
+        // 单位技能 钻地(3级甲虫)
+        integer Abu3
+        // 单位技能 真视(影魔)
+        integer Atru
+        // 单位技能 采集(侍僧黄金)
+        integer Aaha
+        // 单位技能 反召唤建筑
+        integer Auns
+        // 单位技能 产生尸体
+        integer Agyd
+        // 单位技能 献祭(侍僧)
+        integer Alam
+        // 单位技能 献祭(献祭深渊)
+        integer Asac
+        // 单位技能 食尸(食尸鬼)
+        integer Acan
+        // 单位技能 食尸(憎恶)
+        integer Acn2
+        // 单位技能 蜘蛛攻击
+        integer Aspa
+        // 单位技能 蛛网
+        integer Aweb
+        // 单位技能 石像形态
+        integer Astn
+        // 单位技能 亡者复生
+        integer Arai
+        // 单位技能 邪恶狂热
+        integer Auhf
+        // 单位技能 邪恶狂热(术士)
+        integer Suhf
+        // 单位技能 诅咒
+        integer Acrs
+        // 单位技能 反魔法护罩
+        integer Aams
+        // 单位技能 反魔法护罩(魔法抗性)
+        integer Aam2
+        // 单位技能 占据
+        integer Apos
+        // 单位技能 占据(引导中)
+        integer Aps2
+        // 单位技能 残废术
+        integer Acri
+        // 单位技能 残废术(术士)
+        integer Scri
+        // 单位技能 恢复
+        integer Arst
+        // 单位技能 邪恶狂潮
+        integer Auuf
+        // 单位技能 燃油
+        integer Abof
+        // 单位技能 狂暴
+        integer Absk
+        // 单位技能 狂战士升级
+        integer Sbsk
+        // 单位技能 加强型地洞升级
+        integer Arbr
+        // 单位技能 先祖之魂
+        integer Aast
+        // 单位技能 消魔(老的)
+        integer Adch
+        // 单位技能 消魔
+        integer Adcn
+        // 单位技能 肉身形态
+        integer Acpf
+        // 单位技能 虚灵形态
+        integer Aetf
+        // 单位技能 灵魂链接
+        integer Aspl
+        // 单位技能 火油瓶
+        integer Aliq
+        // 单位技能 不稳定化合物
+        integer Auco
+        // 单位技能 火焰箭(术士)
+        integer Awfb
+        // 单位技能 混乱(兽人步兵)
+        integer Acha
+        // 单位技能 混乱
+        integer Sca1
+        // 单位技能 混乱(狼骑兵)
+        integer Sca2
+        // 单位技能 混乱(萨满祭司)
+        integer Sca3
+        // 单位技能 混乱(科多兽)
+        integer Sca4
+        // 单位技能 混乱(苦工)
+        integer Sca5
+        // 单位技能 混乱(格罗玛什)
+        integer Sca6
+        // 单位技能 粉碎
+        integer Awar
+        // 单位技能 战斗戒备
+        integer Abtl
+        // 单位技能 解除戒备
+        integer Astd
+        // 单位技能 诱捕
+        integer Aens
+        // 单位技能 粉碎
+        integer Awar
+        // 单位技能 吞噬
+        integer Adev
+        // 单位技能 净化
+        integer Aprg
+        // 单位技能 净化
+        integer Apg2
+        // 单位技能 闪电之盾
+        integer Alsh
+        // 单位技能 嗜血
+        integer Ablo
+        // 单位技能 警戒结界
+        integer Aeye
+        // 单位技能 静滞陷阱
+        integer Asta
+        // 单位技能 治疗结界(巫医)
+        integer Ahwd
+        // 单位技能 治疗结界光环(治疗结界)
+        integer Aoar
+        // 单位技能 毒矛
+        integer Aven
+        // 单位技能 毒刺
+        integer Apoi
+        // 单位技能 毒刺(毒液之球)
+        integer Apo2
+        // 单位技能 追踪术
+        integer Anit
+        // 单位技能 尖刺障碍
+        integer Aspi
+        // 单位技能 掠夺
+        integer Asal
+        // 单位技能 掠夺
+        integer Asa2
+        // 单位技能 战鼓
+        integer Aakb
 
 
 // 物品技能
@@ -4164,6 +4500,328 @@ globals
         integer Xbdt
         // 技能 BUFF(魔法效果) 英雄消散(效果)
         integer Xdis
+        // 技能 BUFF(魔法效果) 复仇之魂
+        integer integer Bvng
+        // 技能 BUFF(魔法效果) 法力闪耀
+        integer integer Bmfl
+        // 技能 BUFF(魔法效果) 法力闪耀(额外的)
+        integer integer Bmfa
+        // 技能 BUFF(魔法效果) 相位变换
+        integer integer Bpsh
+        // 技能 BUFF(魔法效果) 嘲讽
+        integer integer Btau
+        // 技能 BUFF(魔法效果) 暗影突袭
+        integer integer BEsh
+        // 技能 BUFF(魔法效果) 暗影突袭
+        integer integer BEsi
+        // 技能 BUFF(魔法效果) 复仇
+        integer integer BEsv
+        // 技能 BUFF(魔法效果) 减速毒药(不叠加)
+        integer integer Bspo
+        // 技能 BUFF(魔法效果) 减速毒药(叠加)
+        integer integer Bssd
+        // 技能 BUFF(魔法效果) 腐蚀吐息
+        integer integer Bcor
+        // 技能 BUFF(魔法效果) 献祭
+        integer integer BEim
+        // 技能 BUFF(魔法效果) 恶魔变形
+        integer integer BEme
+        // 技能 BUFF(魔法效果) 纠缠根须
+        integer integer BEer
+        // 技能 BUFF(魔法效果) 自然之力
+        integer integer BEfn
+        // 技能 BUFF(魔法效果) 荆棘光环
+        integer integer BEah
+        // 技能 BUFF(魔法效果) 斥候
+        integer integer BEst
+        // 技能 BUFF(魔法效果) 强击光环
+        integer integer BEar
+        // 技能 BUFF(魔法效果) 精灵之火
+        integer integer Bfae
+        // 技能 BUFF(魔法效果) 飓风术
+        integer integer Bcyc
+        // 技能 BUFF(魔法效果) 飓风术(额外的)
+        integer integer Bcy2
+        // 技能 BUFF(魔法效果) 回春术
+        integer integer Brej
+        // 技能 BUFF(魔法效果) 咆哮
+        integer integer Broa
+        // 技能 BUFF(魔法效果) 献祭(施法者)
+        integer integer BEia
+        // 技能 BUFF(魔法效果) 吃树
+        integer integer Beat
+        // 技能 BUFF(魔法效果) 战棍
+        integer integer Bgra
+        // 技能 BUFF(魔法效果) 减速毒药(信息)
+        integer integer Bssi
+        // 技能 BUFF(魔法效果) 树皮术
+        integer integer Bbar
+        // 技能 BUFF(魔法效果) 星辰坠落(目标)
+        integer integer AEsd
+        // 技能 BUFF(魔法效果) 宁静(目标)
+        integer integer AEtr
+        // 技能 BUFF(魔法效果) 夜视能力
+        integer integer Bult
+        // 技能 BUFF(魔法效果) 星辰坠落(效果)
+        integer integer XEsf
+        // 技能 BUFF(魔法效果) 宁静(效果)
+        integer integer XEtq
+        // 技能 BUFF(魔法效果) 哨兵(效果)
+        integer integer XEsn
+        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 小
+        integer integer Xfns
+        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 中
+        integer integer Xfnm
+        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 大
+        integer integer Xfnl
+        // 技能 BUFF(魔法效果) 空中枷锁
+        integer integer Bmlt
+        // 技能 BUFF(魔法效果) 控制魔法
+        integer integer Bcmg
+        // 技能 BUFF(魔法效果) 吸取生命和法力(附加)
+        integer integer Bdbb
+        // 技能 BUFF(魔法效果) 吸取生命(附加)
+        integer integer Bdbl
+        // 技能 BUFF(魔法效果) 法力虹吸(附加)
+        integer integer Bdbm
+        // 技能 BUFF(魔法效果) 迷雾之云
+        integer integer Bclf
+        // 技能 BUFF(魔法效果) 烈焰风暴
+        integer integer BHfs
+        // 技能 BUFF(魔法效果) 放逐
+        integer integer BHbn
+        // 技能 BUFF(魔法效果) 凤凰
+        integer integer Bphx
+        // 技能 BUFF(魔法效果) 凤凰烈焰
+        integer integer Bpxf
+        // 技能 BUFF(魔法效果) 心灵之火
+        integer integer Binf
+        // 技能 BUFF(魔法效果) 治疗术
+        integer integer Bhea
+        // 技能 BUFF(魔法效果) 中立治疗术
+        integer integer BNhe
+        // 技能 BUFF(魔法效果) 减速术
+        integer integer Bslo
+        // 技能 BUFF(魔法效果) 隐形术
+        integer integer Binv
+        // 技能 BUFF(魔法效果) 变形术
+        integer integer Bply
+        // 技能 BUFF(魔法效果) 暴风雪
+        integer integer BHbd
+        // 技能 BUFF(魔法效果) 水元素
+        integer integer BHwe
+        // 技能 BUFF(魔法效果) 辉煌光环
+        integer integer BHab
+        // 技能 BUFF(魔法效果) 风暴之锤
+        integer integer BHtb
+        // 技能 BUFF(魔法效果) 雷霆一击
+        integer integer BHtc
+        // 技能 BUFF(魔法效果) 猛击
+        integer integer BHbh
+        // 技能 BUFF(魔法效果) 天神下凡
+        integer integer BHav
+        // 技能 BUFF(魔法效果) 圣盾术
+        integer integer BHds
+        // 技能 BUFF(魔法效果) 虔诚光环
+        integer integer BHad
+        // 技能 BUFF(魔法效果) 民兵
+        integer integer Bmil
+        // 技能 BUFF(魔法效果) 暴风雪(施法者)
+        integer integer BHbz
+        // 技能 BUFF(魔法效果) 吸取生命和法力(施法者)
+        integer integer Bdcb
+        // 技能 BUFF(魔法效果) 吸取生命(施法者)
+        integer integer Bdcl
+        // 技能 BUFF(魔法效果) 吸取法力(施法者)
+        integer integer Bdcm
+        // 技能 BUFF(魔法效果) 吸取生命和法力(目标)
+        integer integer Bdtb
+        // 技能 BUFF(魔法效果) 吸取生命(目标)
+        integer integer Bdtl
+        // 技能 BUFF(魔法效果) 吸取法力(目标)
+        integer integer Bdtm
+        // 技能 BUFF(魔法效果) 空中枷锁(施法者)
+        integer integer Bmlc
+        // 技能 BUFF(魔法效果) 隐形术(额外的)
+        integer integer Bivs
+        // 技能 BUFF(魔法效果) 暴风雪 (效果)
+        integer integer XHbz
+        // 技能 BUFF(魔法效果) 烈焰风暴(效果)
+        integer integer XHfs
+        // 技能 BUFF(魔法效果) 迷雾之云(效果)
+        integer integer Xclf
+        // 技能 BUFF(魔法效果) 照明弹(效果)
+        integer integer Xfla
+        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  小
+        integer integer Xfhs
+        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  中
+        integer integer Xfhm
+        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  大
+        integer integer Xfhl
+        // 技能 BUFF(魔法效果) 补充
+        integer integer Brpb
+        // 技能 BUFF(魔法效果) 荒芜精华
+        integer integer Brpl
+        // 技能 BUFF(魔法效果) 灵魂之触
+        integer integer Brpm
+        // 技能 BUFF(魔法效果) 荒芜光环
+        integer integer Babr
+        // 技能 BUFF(魔法效果) 穿刺
+        integer integer BUim
+        // 技能 BUFF(魔法效果) 腐尸甲虫
+        integer integer BUcb
+        // 技能 BUFF(魔法效果) 蝗虫
+        integer integer BUlo
+        // 技能 BUFF(魔法效果) 反召唤
+        integer integer Buns
+        // 技能 BUFF(魔法效果) 小蜘蛛
+        integer integer Bspa
+        // 技能 BUFF(魔法效果) 蛛网(地面)
+        integer integer Bweb
+        // 技能 BUFF(魔法效果) 蛛网(空中)
+        integer integer Bwea
+        // 技能 BUFF(魔法效果) 疾病
+        integer integer Bapl
+        // 技能 BUFF(魔法效果) 冰冻吐息
+        integer integer Bfrz
+        // 技能 BUFF(魔法效果) 骷髅奴仆
+        integer integer Brai
+        // 技能 BUFF(魔法效果) 邪恶狂热
+        integer integer Buhf
+        // 技能 BUFF(魔法效果) 反魔法护罩
+        integer integer Bams
+        // 技能 BUFF(魔法效果) 反魔法护罩(额外的)
+        integer integer Bam2
+        // 技能 BUFF(魔法效果) 占据
+        integer integer Bpos
+        // 技能 BUFF(魔法效果) 邪恶光环
+        integer integer BUau
+        // 技能 BUFF(魔法效果) 亡者再临
+        integer integer BUan
+        // 技能 BUFF(魔法效果) 沉睡
+        integer integer BUsl
+        // 技能 BUFF(魔法效果) 吸血光环
+        integer integer BUav
+        // 技能 BUFF(魔法效果) 霜甲术
+        integer integer BUfa
+        // 技能 BUFF(魔法效果) 枯萎凋零
+        integer integer BUdd
+        // 技能 BUFF(魔法效果) 诅咒
+        integer integer Bcrs
+        // 技能 BUFF(魔法效果) 残废术
+        integer integer Bcri
+        // 技能 BUFF(魔法效果) 腐臭蝠群(施法者)
+        integer integer BUcs
+        // 技能 BUFF(魔法效果) 沉睡(暂停)
+        integer integer BUsp
+        // 技能 BUFF(魔法效果) 沉睡(昏迷)
+        integer integer BUst
+        // 技能 BUFF(魔法效果) 尖刺甲壳
+        integer integer BUts
+        // 技能 BUFF(魔法效果) 疾病之云
+        integer integer Bplg
+        // 技能 BUFF(魔法效果) 亡者再临(额外的)
+        integer integer BUad
+        // 技能 BUFF(魔法效果) 占据(施法者)
+        integer integer Bpoc
+        // 技能 BUFF(魔法效果) 枯萎凋零(效果)
+        integer integer XUdd
+        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵 小
+        integer integer Xfus
+        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵  中
+        integer integer Xfum
+        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵  大
+        integer integer Xful
+        // 技能 BUFF(魔法效果) 优先攻击
+        integer integer Batp
+        // 技能 BUFF(魔法效果) 燃油
+        integer integer Bbof
+        // 技能 BUFF(魔法效果) 狂暴
+        integer integer Bbsk
+        // 技能 BUFF(魔法效果) 灵魂链接
+        integer integer Bspl
+        // 技能 BUFF(魔法效果) 妖术
+        integer integer BOhx
+        // 技能 BUFF(魔法效果) 结界
+        integer integer BOwd
+        // 技能 BUFF(魔法效果) 巫毒狂舞
+        integer integer BOvd
+        // 技能 BUFF(魔法效果) 诱捕(地面的)
+        integer integer Beng
+        // 技能 BUFF(魔法效果) 诱捕(空中的)
+        integer integer Bena
+        // 技能 BUFF(魔法效果) 吞噬
+        integer integer Bdvv
+        // 技能 BUFF(魔法效果) 净化
+        integer integer Bprg
+        // 技能 BUFF(魔法效果) 闪电之盾
+        integer integer Blsh
+        // 技能 BUFF(魔法效果) 嗜血
+        integer integer Bblo
+        // 技能 BUFF(魔法效果) 警戒结界
+        integer integer Beye
+        // 技能 BUFF(魔法效果) 静滞陷阱
+        integer integer Bstt
+        // 技能 BUFF(魔法效果) 静滞陷阱
+        integer integer Bsta
+        // 技能 BUFF(魔法效果) 治疗结界
+        integer integer Bhwd
+        // 技能 BUFF(魔法效果) 治疗结界光环
+        integer integer Boar
+        // 技能 BUFF(魔法效果) 毒素(不叠加)
+        integer integer Bpoi
+        // 技能 BUFF(魔法效果) 毒素(叠加)
+        integer integer Bpsd
+        // 技能 BUFF(魔法效果) 毒素(信息)
+        integer integer Bpsi
+        // 技能 BUFF(魔法效果) 战鼓
+        integer integer Bakb
+        // 技能 BUFF(魔法效果) 疾风步
+        integer integer BOwk
+        // 技能 BUFF(魔法效果) 镜像
+        integer integer BOmi
+        // 技能 BUFF(魔法效果) 野性之魂
+        integer integer BOsf
+        // 技能 BUFF(魔法效果) 地震术
+        integer integer BOeq
+        // 技能 BUFF(魔法效果) 坚韧光环
+        integer integer BOae
+        // 技能 BUFF(魔法效果) 战争践踏
+        integer integer BOws
+        // 技能 BUFF(魔法效果) 地震术(施法者)
+        integer integer BOea
+        // 技能 BUFF(魔法效果) 震荡波(施法者)
+        integer integer BOsh
+        // 技能 BUFF(魔法效果) 巫毒狂舞(施法者)
+        integer integer BOvc
+        // 技能 BUFF(魔法效果) 剑刃风暴(施法者)
+        integer integer BOww
+        // 技能 BUFF(魔法效果) 吞噬(施法者)
+        integer integer Bdig
+        // 技能 BUFF(魔法效果) 诱捕(一般的)
+        integer integer Bens
+        // 技能 BUFF(魔法效果) 火油瓶
+        integer integer Bliq
+        // 技能 BUFF(魔法效果) 闪电之盾(施法者)
+        integer integer Blsa
+        // 技能 BUFF(魔法效果) 地震术(效果)
+        integer integer XOeq
+        // 技能 BUFF(魔法效果) 重生(效果)
+        integer integer XOre
+        // 技能 BUFF(魔法效果) 燃油(效果)
+        integer integer Xbof
+        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  小
+        integer integer Xfos
+        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  中
+        integer integer Xfom
+        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  大
+        integer integer Xfol
+        // 技能 BUFF(魔法效果) 剧毒(不叠加)
+        integer integer BIpb
+        // 技能 BUFF(魔法效果) 剧毒(叠加)
+        integer integer BIpd
+        // 技能 BUFF(魔法效果) 剧毒 (信息)
+        integer integer BIpi
 
 
 // 科技
