@@ -140,7 +140,7 @@ const map = new Map<string,string>([
   ["unitcategory", "单位类别"],
   ["pathingflag", "放置要求（默认用于建筑物）"],
 // 1.32
-  ["minimapicon", "小地图特殊图标"],
+  ["minimapicon", "小地图图标（不同于中立建筑的小地图特殊图标，这是任务类图标）"],
   ["commandbuttoneffect", "特效按钮"],
   
 // 自定义关键词
