@@ -6335,7 +6335,7 @@ native CreateMinimapIcon takes real x, real y, integer red, integer green, integ
 native SkinManagerGetLocalPath takes string key returns string
 // 销毁小地图特殊图标
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
-// 设置小地图特殊图标可见状态
+// 设置小地图特殊图标迷雾内状态(可见/战争迷雾/黑色阴影)
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
 // 设置小地图特殊图标摧毁状态
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
