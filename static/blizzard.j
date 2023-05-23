@@ -722,23 +722,23 @@ globals
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
-    // 小地图特殊图标样式 主要任务标识
+    // 小地图（任务）图标样式 主任务标识（普通）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
-    // 小地图特殊图标样式 主要任务标识（绿色）
+    // 小地图（任务）图标样式 主任务标识（绿色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
-    // 小地图特殊图标样式 主要任务标识（红色）
+    // 小地图（任务）图标样式 主任务标识（红色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
-    // 小地图特殊图标样式 任务奖励标识
+    // 小地图（任务）图标样式 任务奖励标识
     constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
-    // 小地图特殊图标样式 任务移交标识
+    // 小地图（任务）图标样式 任务交付标识
     constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
-    // 小地图特殊图标样式 任务BOSS标识
+    // 小地图（任务）图标样式 任务BOSS标识
 	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
-    // 小地图特殊图标样式 友方占领标识
+    // 小地图（任务）图标样式 友方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
-    // 小地图特殊图标样式 中立标识（无人占领）
+    // 小地图（任务）图标样式 中立标识（无人占领）
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
-    // 小地图特殊图标样式 敌方占领标识
+    // 小地图（任务）图标样式 敌方占领标识
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
@@ -1146,7 +1146,7 @@ globals
     image              bj_lastCreatedImage         = null
     // 最后创建的地面纹理变化
     ubersplat          bj_lastCreatedUbersplat     = null
-    // 最后创建的小地图特殊图标
+    // 最后创建的小地图（任务）图标
     minimapicon        bj_lastCreatedMinimapIcon   = null
     // 最后创建的按钮特效
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
@@ -2974,30 +2974,30 @@ function GetLastCreatedUbersplat takes nothing returns ubersplat
     return bj_lastCreatedUbersplat
 endfunction
 
-// 获取最后创建的小地图特殊图标
+// 获取最后创建的小地图（任务）图标
 function GetLastCreatedMinimapIcon takes nothing returns minimapicon
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图特殊图标（指定单位）
+// 创建小地图（任务）图标（指定单位和迷雾内状态）
 function CreateMinimapIconOnUnitBJ takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconOnUnit(whichUnit, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图特殊图标（指定点）
+// 创建小地图（任务）图标（指定点和迷雾内状态）
 function CreateMinimapIconAtLocBJ takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIconAtLoc(where, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图特殊图标（指定坐标）
+// 创建小地图（任务）图标（指定坐标和迷雾内状态）
 function CreateMinimapIconBJ takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
     set bj_lastCreatedMinimapIcon = CreateMinimapIcon(x, y, red, green, blue, pingPath, fogVisibility)
     return bj_lastCreatedMinimapIcon
 endfunction
 
-// 创建小地图特殊图标（指定单位和图标样式）
+// 创建小地图（任务）图标（指定单位和样式）
 function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns nothing
 	local integer	red
 	local integer 	green
@@ -3063,7 +3063,7 @@ function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns n
 endfunction
 
 
-// 创建小地图特殊图标（指定点和图标样式）
+// 创建小地图（任务）图标（指定点和样式）
 function CampaignMinimapIconLocBJ takes location where, integer style returns nothing
 	local integer	red
 	local integer 	green
@@ -5530,7 +5530,7 @@ function WaygateGetDestinationLocBJ takes unit waygate returns location
 endfunction
 
 
-// 启用/禁用 单位的小地图图标
+// 启用/禁用 单位的小地图特殊图标
 function UnitSetUsesAltIconBJ takes boolean flag, unit whichUnit returns nothing
     call UnitSetUsesAltIcon(whichUnit, flag)
 endfunction
