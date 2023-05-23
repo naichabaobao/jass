@@ -50,6 +50,10 @@
           "type": "string",
           "description": "自定义dzapi.j(reboot)"
         },
+        "jass.ObjectEditor": {
+          "type": "string",
+          "description": "自定义ObjectEditor.j(reboot)"
+        },
         "jass.includes": {
           "type": "array",
           "items": {
