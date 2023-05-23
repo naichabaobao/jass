@@ -5590,7 +5590,7 @@ native UnitSetConstructionProgress takes unit whichUnit, integer constructionPer
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
-// 启用/禁用 单位的小地图图标
+// 启用/禁用 单位的小地图特殊图标
 // 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能知道地图中有没有商店泉水之类的建筑
 // 需要完全隐藏应该还是要改物编的不显示中立建筑图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
@@ -6325,19 +6325,19 @@ native AddIndicator takes widget whichWidget, integer red, integer green, intege
 native PingMinimap takes real x, real y, real duration returns nothing
 // 发送小地图信号(指定颜色)(所有玩家可见) [R]
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
-// 创建小地图特殊图标（指定单位）
+// 创建小地图图标（指定单位）
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 创建小地图特殊图标（指定点）
+// 创建小地图图标（指定点）
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 创建小地图特殊图标（指定坐标）
+// 创建小地图图标（指定坐标）
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径
 native SkinManagerGetLocalPath takes string key returns string
-// 销毁小地图特殊图标
+// 销毁小地图图标
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
-// 设置小地图特殊图标迷雾内状态(可见/战争迷雾/黑色阴影)
+// 设置小地图图标迷雾内状态(可见/战争迷雾/黑色阴影)
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 摧毁小地图特殊图标
+// 设置小地图图标自我销毁
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
@@ -6357,7 +6357,7 @@ native ForceUIKey takes string key returns nothing
 native ForceUICancel takes nothing returns nothing
 // 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
-// 设置小地图的特殊图标
+// 设置小地图图标
 native SetAltMinimapIcon takes string iconPath returns nothing
 // 禁用 重新开始任务按钮
 native DisableRestartMission takes boolean flag returns nothing
@@ -7515,7 +7515,7 @@ native BlzGetLocalClientHeight takes nothing returns integer
 native BlzIsLocalClientActive takes nothing returns boolean
 // 获取鼠标锁定的单位
 native BlzGetMouseFocusUnit takes nothing returns unit
-// 设置小地图特殊图标
+// 设置小地图图标
 native BlzChangeMinimapTerrainTex takes string texFile returns boolean
 // 获取（游戏当前的）语言
 native BlzGetLocale takes nothing returns string
