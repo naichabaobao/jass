@@ -6337,9 +6337,9 @@ native SkinManagerGetLocalPath takes string key returns string
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
 // 设置小地图特殊图标迷雾内状态(可见/战争迷雾/黑色阴影)
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 设置小地图特殊图标摧毁状态
+// 摧毁小地图特殊图标
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
-// 允许/禁止闭塞(所有玩家) [R]
+// 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
 // 设置介绍文本
 native SetIntroShotText takes string introText returns nothing
@@ -6347,13 +6347,13 @@ native SetIntroShotText takes string introText returns nothing
 native SetIntroShotModel takes string introModelPath returns nothing
 // 允许/禁止 边界染色(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
-// 玩家电影模式
+// 调用电影模式(所有玩家)
 native PlayModelCinematic takes string modelName returns nothing
-// 玩家电影
+// 调用电影(所有玩家)
 native PlayCinematic takes string movieName returns nothing
-// 强制玩家UI按下特定键
+// 强制玩家按下UI键
 native ForceUIKey takes string key returns nothing
-// 强制玩家UI按下ESC键（取消键）
+// 强制玩家按下UI ESC键（UI取消键）
 native ForceUICancel takes nothing returns nothing
 // 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
