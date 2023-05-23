@@ -1520,7 +1520,7 @@ globals
 	constant texmapflags TEXMAP_FLAG_WRAP_UV = ConvertTexMapFlags(3)
 	// 迷雾状态 黑色阴影
 	constant fogstate FOG_OF_WAR_MASKED = ConvertFogState(1)
-	// 迷雾状态 迷雾
+	// 迷雾状态 战争迷雾
 	constant fogstate FOG_OF_WAR_FOGGED = ConvertFogState(2)
 	// 迷雾状态 可见
 	constant fogstate FOG_OF_WAR_VISIBLE = ConvertFogState(4)
