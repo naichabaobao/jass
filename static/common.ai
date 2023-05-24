@@ -231,7 +231,7 @@ native DebugS               takes string str                            returns 
     native ReturnGuardPosts     takes nothing                               returns nothing
     // 创建攻击队长
     native CreateCaptains       takes nothing                               returns nothing
-    // 设置指定组（攻击队长、防守队长、两种队长一起执行）回家后的集结坐标
+    // 设置指定队长（攻击队长、防守队长、两种队长一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
     // @param which攻击队长、防守队长或两种队长，即 1，2或3
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
@@ -254,21 +254,21 @@ native DebugS               takes string str                            returns 
     native CaptainGoHome        takes nothing                               returns nothing
     // 查询攻击队长是否在家
     native CaptainIsHome        takes nothing                               returns boolean
-    // 查询攻击队长所在进攻/防御组是否完整
+    // 查询攻击队长是否完整
     native CaptainIsFull        takes nothing                               returns boolean
     // 查询攻击队长是否为空
     native CaptainIsEmpty       takes nothing                               returns boolean
     // 获取攻击队长所在进攻/防御组规模，数值越高，规模越大
     native CaptainGroupSize     takes nothing                               returns integer
-    // 获取攻击队长所在进攻/防御组准备情况
+    // 获取攻击队长准备情况
     // 似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
     // 查询攻击队长是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 获取攻击队长所在进攻/防御组整体生命值
+    // 获取攻击队长生命值
     // 似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 获取攻击队长所在进攻/防御组整体魔法值
+    // 获取攻击队长魔法值
     // 似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
     // 查询攻击队长是否到达目的地
