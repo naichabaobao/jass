@@ -202,7 +202,7 @@ native DebugS               takes string str                            returns 
     // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家开始点
     // 该指令被暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-    // 查询攻击组是否正在战斗
+    // 查询攻击队长是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
     // 查询指定单位是否有防御塔保护
     native IsTowered            takes unit target                           returns boolean
@@ -229,49 +229,49 @@ native DebugS               takes string str                            returns 
     native FillGuardPosts       takes nothing                               returns nothing
     // 返回防守岗位
     native ReturnGuardPosts     takes nothing                               returns nothing
-    // 创建攻击组
+    // 创建攻击队长
     native CreateCaptains       takes nothing                               returns nothing
-    // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
+    // 设置指定组（攻击队长、防守队长、两种队长一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
-    // @param which攻击组、防守组或两组，即 1，2或3
+    // @param which攻击队长、防守队长或两种队长，即 1，2或3
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
-    // 命令攻击组复位（回到 SetCaptainHome 的集结点）
+    // 命令攻击队长复位（回到 SetCaptainHome 的集结点）
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 传送攻击组到指定坐标
+    // 传送攻击队长到指定坐标
     native TeleportCaptain      takes real x, real y                        returns nothing
-    // 清除攻击组当前的攻击目标
+    // 清除攻击队长当前的攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
-    // 命令攻击组攻击到指定坐标
-    // 可配合 DisablePathing 控制是否允许攻击组在路上战斗（移动攻击）
+    // 命令攻击队长攻击到指定坐标
+    // 可配合 DisablePathing 控制是否允许攻击队长在路上战斗（移动攻击）
     native CaptainAttack        takes real x, real y                        returns nothing
-    // 命令攻击组攻击玩家的单位
+    // 命令攻击队长攻击玩家的单位
     native CaptainVsUnits       takes player id                             returns nothing
-    // 命令攻击组攻击指定玩家
+    // 命令攻击队长攻击指定玩家
     native CaptainVsPlayer      takes player id                             returns nothing
-    // 命令攻击组回家
+    // 命令攻击队长回家
     native CaptainGoHome        takes nothing                               returns nothing
-    // 查询攻击组是否在家
+    // 查询攻击队长是否在家
     native CaptainIsHome        takes nothing                               returns boolean
-    // 查询攻击组是否完整
+    // 查询攻击队长所在进攻/防御组是否完整
     native CaptainIsFull        takes nothing                               returns boolean
-    // 查询攻击组是否为空
+    // 查询攻击队长是否为空
     native CaptainIsEmpty       takes nothing                               returns boolean
-    // 获取攻击组规模，数值越高，规模越大
+    // 获取攻击队长所在进攻/防御组规模，数值越高，规模越大
     native CaptainGroupSize     takes nothing                               returns integer
-    // 获取攻击组准备情况
+    // 获取攻击队长所在进攻/防御组准备情况
     // 似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
-    // 查询攻击组是否在撤退
+    // 查询攻击队长是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 获取攻击组整体生命值
+    // 获取攻击队长所在进攻/防御组整体生命值
     // 似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 获取攻击组整体魔法值
+    // 获取攻击队长所在进攻/防御组整体魔法值
     // 似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
-    // 查询攻击组是否到达目的地
+    // 查询攻击队长是否到达目的地
     native CaptainAtGoal        takes nothing                               returns boolean
     // 查询地图上是否还有中立敌对玩家的单位，即野怪 
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
@@ -1276,11 +1276,11 @@ native DebugS               takes string str                            returns 
         constant integer MELEE_NORMAL       = 2
         // 对战难度 困难/疯狂，可与难度划等号
         constant integer MELEE_INSANE       = 3
-        // 攻击组
+        // 攻击队长
         constant integer ATTACK_CAPTAIN     = 1
-        // 防御组
+        // 防御队长
         constant integer DEFENSE_CAPTAIN    = 2
-        // 攻击组及防御组
+        // 攻击队长及防御队长
         constant integer BOTH_CAPTAINS      = 3
         // 建造类型 单位或建筑
         // 用于训练单位/建造建筑
@@ -2167,7 +2167,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 设置初始波次，设置初始波次的时间
+    // 设置初始波次的等待时间
     function SetInitialWave takes integer seconds returns nothing
         set sleep_seconds = seconds
     endfunction
@@ -2483,7 +2483,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     // 进军等待
-    // 攻击组撤退、攻击组到达目的地、攻击组回到家、攻击组为空 任意事件返回 是 时，结束等待
+    // 攻击队长撤退、攻击队长到达目的地、攻击队长回到家、攻击队长为空 任意事件返回 是 时，结束等待
     function SleepUntilAtGoal takes nothing returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -2496,7 +2496,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     // 战斗等待
-    // 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束等待
+    // 攻击队长脱离战斗 或 攻击队长为空 时，退出内层循环，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束等待
     function SleepInCombat takes nothing returns nothing
         local integer count = 0
         debug call Trace("SleepInCombat\n")
@@ -2712,7 +2712,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //--------------------------------------------------------------------------------------------------
-    // 添加自杀单位类型到攻击组（指定玩家），每次添加1个
+    // 添加自杀单位类型到攻击组（指定被攻击的玩家），每次添加1个
     function SuicideUnitB takes integer unitid, integer playerid returns nothing
         if unitid != 0 then
             call SuicideUnitEx(1,unitid,playerid)
@@ -2820,7 +2820,7 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 战斗（循环发送进攻指定目标命令），直至攻击目标死亡或攻击组死光/撤退
+    // 战斗（循环发送进攻指定目标命令），直至攻击目标死亡或攻击队长阵亡/撤退
     function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -2847,14 +2847,14 @@ native DebugS               takes string str                            returns 
     endfunction
     
     //============================================================================
-    // 至死方休（指定目标），死为目标死亡或攻击组死光/撤退
+    // 至死方休（指定目标），死为目标死亡或攻击队长阵亡/撤退
     // 调用战斗程序CommonSleepUntilTargetDead，且reform默认为假
     function SleepUntilTargetDead takes unit target returns nothing
         call CommonSleepUntilTargetDead(target,false)
     endfunction
     
     //============================================================================
-    // 至死方休（指定目标），死为目标死亡或攻击组死光/撤退
+    // 至死方休（指定目标），死为目标死亡或攻击队长阵亡/撤退
     // 调用战斗程序CommonSleepUntilTargetDead，且reform默认为真
     function ReformUntilTargetDead takes unit target returns nothing
         debug call Trace("ReformUntilTargetDead\n")
@@ -3324,7 +3324,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     //  SkillArrays
     //============================================================================
-    // 技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
+    // 升级后自动学习技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
     // 该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
     function SkillArrays takes nothing returns integer
         local integer level = GetHeroLevelAI()
@@ -3462,4 +3462,3 @@ native DebugS               takes string str                            returns 
     
         return hero_id
     endfunction
-    
