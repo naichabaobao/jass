@@ -4269,13 +4269,13 @@ native GetPlayers takes nothing returns integer
 
 // 查询是否支持指定的游戏类型
 native IsGameTypeSupported takes gametype whichGameType returns boolean
-// 获取游戏选择类型
+// 获取选择的游戏类型
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数状态是否开启（指定参数）
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
-// 获取障碍设置，怀疑是最大生命值百分比限制
+// 获取障碍设置（最大生命值百分比限制，攻击百分比限制，复活时间限制）
 constant native GetGamePlacement takes nothing returns placement
-// 获取当前游戏速度
+// 获取游戏速度
 constant native GetGameSpeed takes nothing returns gamespeed
 // 获取游戏难度，游戏难度和AI难度是两个维度的参数
 constant native GetGameDifficulty takes nothing returns gamedifficulty
@@ -4304,7 +4304,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 // ( i.e. you can use this to put people in a fixed loc and then
 //   use random placement for any unplaced players etc )
 // use random placement for any unplaced players etc )
-// 设置玩家组玩家出生点
+// 设置玩家出生点（默认用于按玩家组设置玩家出生点触发器）
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 设置玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
