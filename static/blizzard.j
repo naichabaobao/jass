@@ -4071,7 +4071,7 @@ endfunction
 
 
 // Picks a random item from within a rect, matching a condition
-// 随机选取指定区域的匹配物品（过滤）
+// 随机选取指定区域的匹配物品（可指定过滤）
 function RandomItemInRectBJ takes rect r, boolexpr filter returns item
     set bj_itemRandomConsidered = 0
     set bj_itemRandomCurrentPick = null
@@ -5720,7 +5720,7 @@ function EnumUnitsSelected takes player whichPlayer, boolexpr enumFilter, code e
 endfunction
 
 
-// 选取矩形区域内所有单位（过滤）
+// 选取矩形区域内所有单位（可指定过滤）
 // 会生成单位组，用完请注意排泄
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5798,7 +5798,7 @@ function GetUnitsOfTypeIdAll takes integer unitid returns group
 endfunction
 
 
-// 匹配玩家拥有的单位（过滤）
+// 匹配玩家拥有的单位（可指定过滤）
 // 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5896,7 +5896,7 @@ function GetPlayersEnemies takes player whichPlayer returns force
 endfunction
 
 
-// 获取选取玩家匹配的玩家组（过滤）
+// 获取选取玩家匹配的玩家组（可指定过滤）
 function GetPlayersMatching takes boolexpr filter returns force
     local force f = CreateForce()
     call ForceEnumPlayers(f, filter)
