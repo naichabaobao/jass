@@ -84,7 +84,7 @@ const map = new Map<string,string>([
   ["leaderboard", "排行榜"],
   ["multiboard", "多面板"],
   ["multiboarditem", "多面板项目"],
-  ["trackable", "可跟踪物"],
+  ["trackable", "可跟踪对象"],
   ["gamecache", "游戏缓存"],
   ["version", "版本（混乱之治 或 冰封王座）"],
   ["itemtype", "物品类型"],
