@@ -3819,7 +3819,7 @@ function GetPlayerHandicapBJ takes player whichPlayer returns real
 endfunction
 
 
-// 获取英雄属性值
+// 获取英雄属性值，获取失败会返回0
 function GetHeroStatBJ takes integer whichStat, unit whichHero, boolean includeBonuses returns integer
     if (whichStat == bj_HEROSTAT_STR) then
         return GetHeroStr(whichHero, includeBonuses)
@@ -3867,7 +3867,7 @@ function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyM
 endfunction
 
 
-// 修改英雄技能点数
+// 修改英雄技能点数，修改失败会返回 false
 function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integer value returns boolean
     if (modifyMethod == bj_MODIFYMETHOD_ADD) then
         return UnitModifySkillPoints(whichHero, value)
@@ -3882,25 +3882,25 @@ function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integ
 endfunction
 
 
-// 单位丢弃物品
+// 命令指定单位丢弃物品
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
 
 
-// 丢弃物品于指定点
+// 命令指定单位丢弃物品于指定点
 function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
 
 
-// 放置物品于指定物品格
+// 命令指定单位放置物品于指定物品格
 function UnitDropItemSlotBJ takes unit whichUnit, item whichItem, integer slot returns boolean
     return UnitDropItemSlot(whichUnit, whichItem, slot-1)
 endfunction
 
 
-// 将物品给予其它单位
+// 命令指定单位将物品给予其它单位
 function UnitDropItemTargetBJ takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitDropItemTarget(whichUnit, whichItem, target)
 endfunction
@@ -3909,13 +3909,13 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
-// 对可破坏物使用物品
+// 命令指定单位使用物品（指定可破坏物）
 function UnitUseItemDestructable takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitUseItemTarget(whichUnit, whichItem, target)
 endfunction
 
 
-// 使用物品（指定单位）
+// 命令指定单位使用物品（指定点）
 function UnitUseItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitUseItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -3923,7 +3923,7 @@ endfunction
 
 // Translates 0-based slot indices to 1-based slot indices.
 //
-// 英雄携带的物品（指定物品格）
+// 获取英雄携带的物品（指定物品格）
 function UnitItemInSlotBJ takes unit whichUnit, integer itemSlot returns item
     return UnitItemInSlot(whichUnit, itemSlot-1)
 endfunction
@@ -3962,13 +3962,13 @@ function GetItemOfTypeFromUnitBJ takes unit whichUnit, integer itemId returns it
 endfunction
 
 
-// 英雄是否已有物品（指定物品类型）
+// 查询英雄是否已有物品（指定物品类型）
 function UnitHasItemOfTypeBJ takes unit whichUnit, integer itemId returns boolean
     return GetInventoryIndexOfItemTypeBJ(whichUnit, itemId) > 0
 endfunction
 
 
-// 单位拥有物品的数量
+// 获取指定单位拥有物品的数量
 // 只判断所有物品格是否被占，不统计物品堆叠，即只返回0~6
 function UnitInventoryCount takes unit whichUnit returns integer
     local integer index = 0
@@ -3987,7 +3987,7 @@ function UnitInventoryCount takes unit whichUnit returns integer
 endfunction
 
 
-// 物品栏格数
+// 获取指定单位的物品栏格数
 function UnitInventorySizeBJ takes unit whichUnit returns integer
     return UnitInventorySize(whichUnit)
 endfunction
@@ -4029,19 +4029,19 @@ function IsItemHiddenBJ takes item whichItem returns boolean
 endfunction
 
 
-// 获取随机物品（所有类别）
+// 获取随机物品（所有类别），默认用于市场/集市随机出售物品
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 获取随机物品（指定类别）
+// 获取随机物品（指定类别），默认用于市场/集市随机出售物品
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
 
 
-// 获取随机中立建筑物类型
+// 获取随机中立建筑物类型，默认用于开始游戏时创建随机中立建筑
 function ChooseRandomNPBuildingBJ takes nothing returns integer
     return ChooseRandomNPBuilding()
 endfunction
@@ -4089,7 +4089,7 @@ function RandomItemInRectSimpleBJ takes rect r returns item
 endfunction
 
 
-// 物品状态检查
+// 物品状态检查（指定物品）
 function CheckItemStatus takes item whichItem, integer status returns boolean
     if (status == bj_ITEM_STATUS_HIDDEN) then
         return not IsItemVisible(whichItem)
@@ -4110,7 +4110,7 @@ function CheckItemStatus takes item whichItem, integer status returns boolean
 endfunction
 
 
-// 物品 - 类型 状态检查
+// 物品状态检查（指定类型）
 function CheckItemcodeStatus takes integer itemId, integer status returns boolean
     if (status == bj_ITEMCODE_STATUS_POWERUP) then
         return IsItemIdPowerup(itemId)
@@ -4278,7 +4278,7 @@ function UnitSuspendDecayBJ takes boolean suspend, unit whichUnit returns nothin
 endfunction
 
 
-// 延迟尸体腐烂
+// 设置尸体延迟腐烂
 function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
@@ -4288,7 +4288,7 @@ function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
 endfunction
 
 
-// 延迟并停止尸体腐烂
+// 设置延迟并停止尸体腐烂
 function DelayedSuspendDecayBoneEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
@@ -4444,7 +4444,7 @@ function ClearSelectionForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 让指定玩家取消选择指定单位
+// 命令指定玩家取消选择指定单位
 function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4454,7 +4454,7 @@ function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer retu
 endfunction
 
 
-// 让指定单位组取消选择指定单位组的指定单位
+// 命令指定单位组取消选择指定单位组的指定单位
 function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4464,7 +4464,7 @@ function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothin
 endfunction
 
 
-// 让指定玩家选择指定单位
+// 命令指定玩家选择指定单位
 function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4473,7 +4473,7 @@ function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns
 endfunction
 
 
-// 让指定玩家取消选择指定单位
+// 命令指定玩家取消选择指定单位
 function SelectUnitRemoveForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4518,7 +4518,7 @@ function IsUnitAliveBJ takes unit whichUnit returns boolean
 endfunction
 
 
-// 单位组的单位是否已死亡触发器动作
+// 查询单位组的单位是否已死亡触发器动作
 function IsUnitGroupDeadBJEnum takes nothing returns nothing
     if not IsUnitDeadBJ(GetEnumUnit()) then
         set bj_isUnitGroupDeadResult = false
@@ -4769,13 +4769,13 @@ function EnableCreepSleepBJ takes boolean enable returns nothing
 endfunction
 
 
-// 设置警报产生 打开/关闭
+// 打开/关闭 发出警报
 function UnitGenerateAlarms takes unit whichUnit, boolean generate returns boolean
     return UnitIgnoreAlarm(whichUnit, not generate)
 endfunction
 
 
-// 单位发出警报
+// 查询单位是否发出警报
 function DoesUnitGenerateAlarms takes unit whichUnit returns boolean
     return not UnitIgnoreAlarmToggled(whichUnit)
 endfunction
@@ -4816,7 +4816,7 @@ function PauseAllUnitsBJ takes boolean pause returns nothing
 endfunction
 
 
-// 设置单位 暂停/恢复
+// 暂停/恢复 单位
 function PauseUnitBJ takes boolean pause, unit whichUnit returns nothing
     call PauseUnit(whichUnit, pause)
 endfunction
@@ -4862,7 +4862,7 @@ function UnitRemoveBuffsBJ takes integer buffType, unit whichUnit returns nothin
 endfunction
 
 
-// 删除单位拥有的 魔法效果 (按类型)
+// 删除单位拥有的 魔法效果（BUFF） (按类型)
 function UnitRemoveBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns nothing
     local boolean bPos   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
     local boolean bNeg   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
@@ -4873,7 +4873,7 @@ function UnitRemoveBuffsExBJ takes integer polarity, integer resist, unit whichU
 endfunction
 
 
-// 获取单位拥有的 魔法效果 的数量
+// 获取单位拥有的 魔法效果（BUFF） 的数量
 function UnitCountBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns integer
     local boolean bPos   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
     local boolean bNeg   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
@@ -4932,7 +4932,7 @@ function GetTransportUnitBJ takes nothing returns unit
 endfunction
 
 
-// 获取装载单位
+// 获取被装载的单位
 function GetLoadedUnitBJ takes nothing returns unit
     return GetLoadedUnit()
 endfunction
