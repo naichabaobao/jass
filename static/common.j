@@ -5866,9 +5866,9 @@ native EndGame takes boolean doScoreScreen returns nothing
 // Async only!
 // 切换关卡 [R]
 native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
-// 重启游戏
+// 重新开始游戏
 native RestartGame takes boolean doScoreScreen returns nothing
-// 从加载游戏
+// 重新读档
 native ReloadGame takes nothing returns nothing
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
@@ -5880,9 +5880,9 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 // 玩家战役选择画面
 native ForceCampaignSelectScreen takes nothing returns nothing
 
-// 加载游戏
+// 加载存档
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
-// 保存进度 [R]
+// 存档 [R]
 native SaveGame takes string saveFileName returns nothing
 // 重命名保存目录
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
@@ -5890,11 +5890,11 @@ native RenameSaveDirectory takes string sourceDirName, string destDirName return
 native RemoveSaveDirectory takes string sourceDirName returns boolean
 // 复制保存目录
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
-// 游戏进度是存在的
-native SaveGameExists takes string saveName returns boolean
-// 设置最大关卡保存
+// 查询游戏进度是否存在
+native SaveGame takes string saveName returns boolean
+// 设置最大检查单（自动）存档次数
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
-// 保存关卡
+// 检查点（自动）存档
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
@@ -5914,11 +5914,11 @@ constant native GetIntegerGameState takes igamestate whichIntegerGameState retur
 native SetTutorialCleared takes boolean cleared returns nothing
 // 设置任务状态（允许/禁止）
 native SetMissionAvailable takes integer campaignNumber, integer missionNumber, boolean available returns nothing
-// 设置战役状态（允许/禁止）
+// 启用/禁用 战役（前章未通关不显示后续战役，非同一战役不同关卡，而是新战役）
 native SetCampaignAvailable takes integer campaignNumber, boolean available returns nothing
-// 设置Op电影状态（允许/禁止）
+// 允许/禁止 Op电影（战役首关电影）
 native SetOpCinematicAvailable takes integer campaignNumber, boolean available returns nothing
-// 设置Ed电影状态（允许/禁止）
+// 允许/禁止 Ed电影（战役末关电影）
 native SetEdCinematicAvailable takes integer campaignNumber, boolean available returns nothing
 // 获取默认游戏难度
 native GetDefaultDifficulty takes nothing returns gamedifficulty
@@ -5926,9 +5926,9 @@ native GetDefaultDifficulty takes nothing returns gamedifficulty
 native SetDefaultDifficulty takes gamedifficulty g returns nothing
 // 设置自定义战役按钮是否可见
 native SetCustomCampaignButtonVisible takes integer whichButton, boolean visible returns nothing
-// 获取自定义战役按钮可见性
+// 查询自定义战役按钮是否可见
 native GetCustomCampaignButtonVisible takes integer whichButton returns boolean
-// 关闭游戏录像功能 [R]
+// 关闭保存游戏录像功能 [R]
 native DoNotSaveReplay takes nothing returns nothing
 
 
