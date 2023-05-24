@@ -4378,7 +4378,7 @@ native GetPlayerName takes player whichPlayer returns string
 
 // 新建计时器 [R]
 native CreateTimer takes nothing returns timer
-// 删除计时器 [R]
+// 删除指定计时器 [R]
 native DestroyTimer takes timer whichTimer returns nothing
 // 运行计时器 [C]
 // @param whichTimer 计时器
@@ -4496,7 +4496,7 @@ native FirstOfGroup takes group whichGroup returns unit
 
 // 新建玩家组 [R]
 native CreateForce takes nothing returns force
-// 删除玩家组 [R]
+// 删除指定玩家组 [R]
 native DestroyForce takes force whichForce returns nothing
 // 添加玩家到玩家组 [R]
 native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
@@ -4553,7 +4553,7 @@ native GetRectMaxY takes rect whichRect returns real
 
 // 新建不规则区域 [R]
 native CreateRegion takes nothing returns region
-// 删除不规则区域 [R]
+// 删除指定不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
 // 在指定不规则区域添加矩形区域  [R]
@@ -4812,7 +4812,7 @@ constant native GetLearningUnit takes nothing returns unit
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkill takes nothing returns integer
-// 获取学习的技能的等级（对应玩家英雄学习技能和英雄学习技能事件）
+// 获取学习技能的等级（对应玩家英雄学习技能和英雄学习技能事件）
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkillLevel takes nothing returns integer
@@ -5624,24 +5624,24 @@ constant native IsUnitIdType takes integer unitId, unittype whichUnitType return
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
 // 设置指定尸体腐烂的状态（正常腐烂或暂停腐烂） [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 给指定单位增加指定类别 [R]
+// 添加指定类别到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 给指定单位删除指定类别 [R]
+// 删除指定单位的指定类别 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 给指定单位添加指定技能 [R]
+// 添加指定技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 给指定单位删除指定技能 [R]
+// 删除指定单位的指定技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
-// 给指定单位设置指定技能的永久性 [R]
+// 设置指定单位指定技能的永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
-// 给指定单位删除魔法效果(指定极性) [R]
+// 删除指定单位的魔法效果(指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
-// 给指定单位删除魔法效果(详细类别) [R]
+// 删除指定单位的魔法效果(指定详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
-// 查询指定单位是否拥有 Buff [R]
+// 查询指定单位是否拥有 魔法效果（Buff） [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
-// 查询指定单位拥有的 Buff 数量 [R]
+// 查询指定单位拥有的 魔法效果（Buff） 数量 [R]
 native UnitCountBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
 // 设置指定单位睡眠
 // @param add 真为睡眠，假为清醒
@@ -5927,11 +5927,11 @@ native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, r
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 新建可见度修正器(圆形区域) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 删除可见度修正器
+// 删除指定可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
-// 启用可见度修正器
+// 启用指定可见度修正器
 native FogModifierStart takes fogmodifier whichFogModifier returns nothing
-// 禁用可见度修正器
+// 禁用指定可见度修正器
 native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 
 
@@ -5977,7 +5977,7 @@ native RemoveSaveDirectory takes string sourceDirName returns boolean
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 查询游戏进度是否存在
 native SaveGame takes string saveName returns boolean
-// 设置检查单（自动）最大存档数，超过数量时会自动替换最早的存档
+// 设置检查点（自动）最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 // 检查点（自动）存档
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
@@ -5998,7 +5998,7 @@ constant native GetIntegerGameState takes igamestate whichIntegerGameState retur
 
 // 保留/清除 战役任务教程
 native SetTutorialCleared takes boolean cleared returns nothing
-// 设置战役任务状态（允许/禁止）
+// 启用/禁用 战役任务
 native SetMissionAvailable takes integer campaignNumber, integer missionNumber, boolean available returns nothing
 // 启用/禁用 战役（前章未通关不显示后续战役，非同一战役不同关卡，而是新战役）
 native SetCampaignAvailable takes integer campaignNumber, boolean available returns nothing
@@ -6010,7 +6010,7 @@ native SetEdCinematicAvailable takes integer campaignNumber, boolean available r
 native GetDefaultDifficulty takes nothing returns gamedifficulty
 // 设置默认游戏难度
 native SetDefaultDifficulty takes gamedifficulty g returns nothing
-// 设置自定义战役按钮是否可见
+// 显示/隐藏 自定义战役按钮
 native SetCustomCampaignButtonVisible takes integer whichButton, boolean visible returns nothing
 // 查询自定义战役按钮是否可见
 native GetCustomCampaignButtonVisible takes integer whichButton returns boolean
@@ -6022,13 +6022,13 @@ native DoNotSaveReplay takes nothing returns nothing
 
 // 新建对话框 [R]
 native DialogCreate takes nothing returns dialog
-// 删除对话框 [R]
+// 删除指定对话框 [R]
 native DialogDestroy takes dialog whichDialog returns nothing
-// 清空对话框
+// 清空指定对话框
 native DialogClear takes dialog whichDialog returns nothing
-// 设置对话框标题
+// 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
-// 添加对话框按钮 [R]
+// 添加指定对话框按钮 [R]
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
 // 添加退出游戏按钮（指定对话框） [R]
 native DialogAddQuitButton takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
@@ -6335,20 +6335,22 @@ native CreateUnitPool takes nothing returns unitpool
 native DestroyUnitPool takes unitpool whichPool returns nothing
 // 添加单位类型 [R]
 native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight returns nothing
-// 删除单位类型 [R]
+// 删除指定单位池的指定单位类型 [R]
 native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns nothing
-// 选择放置单位 [R]
+// 随机创建单位池的单位（指定单位所属玩家）（指定坐标） [R]
+// 默认用于创建随机中立敌对单位
 native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
 
 // 新建物品池 [R]
 native CreateItemPool takes nothing returns itempool
-// 删除物品池 [R]
+// 删除指定物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
-// 添加物品类型 [R]
+// 添加指定物品类型到指定物品池 [R]
 native ItemPoolAddItemType takes itempool whichItemPool, integer itemId, real weight returns nothing
-// 删除物品类型 [R]
+// 删除指定物品池的指定物品类型 [R]
 native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId returns nothing
-// 选择放置物品 [R]
+// 随机创建物品池的物品（指定坐标） [R]
+// 默认用于创建随机掉落物品
 native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
@@ -6667,7 +6669,7 @@ native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, int
 
 // 新建多面板 [R]
 native CreateMultiboard takes nothing returns multiboard
-// 删除多面板
+// 删除指定多面板
 native DestroyMultiboard takes multiboard lb returns nothing
 
 // 显示/隐藏 多面板 [R]
@@ -6717,7 +6719,7 @@ native MultiboardSetItemsIcon takes multiboard lb, string iconPath returns nothi
 
 // 多面板项目 [R]
 native MultiboardGetItem takes multiboard lb, integer row, integer column returns multiboarditem
-// 删除多面板项目 [R]
+// 删除指定多面板项目 [R]
 native MultiboardReleaseItem takes multiboarditem mbi returns nothing
 
 // 设置多面板指定项目显示风格 [R]
@@ -6743,11 +6745,11 @@ native MultiboardSuppressDisplay takes boolean flag returns nothing
 
 // 设置镜头空格键转向点(所有玩家)
 native SetCameraPosition takes real x, real y returns nothing
-// 快速设置镜头空格键转向点(所有玩家) [R]
+// 设置镜头空格键转向点(所有玩家)[快速] [R]
 native SetCameraQuickPosition takes real x, real y returns nothing
 // 设置可用镜头区域(所有玩家) [R]
 native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
-// 停止播放镜头(所有玩家) [R]
+// 停用镜头(所有玩家) [R]
 native StopCamera takes nothing returns nothing
 // 重置游戏镜头(所有玩家) [R]
 native ResetToGameCamera takes real duration returns nothing
@@ -6775,7 +6777,7 @@ native SetCameraOrientController takes unit whichUnit, real xoffset, real yoffse
 native CreateCameraSetup takes nothing returns camerasetup
 // 创建镜头（指定属性）
 native CameraSetupSetField takes camerasetup whichSetup, camerafield whichField, real value, real duration returns nothing
-// 镜头属性(指定镜头) [R]
+// 获取镜头属性(指定镜头) [R]
 native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField returns real
 // 设置指定镜头的坐标
 native CameraSetupSetDestPosition takes camerasetup whichSetup, real x, real y, real duration returns nothing
@@ -6786,17 +6788,17 @@ native CameraSetupGetDestPositionLoc takes camerasetup whichSetup returns locati
 native CameraSetupGetDestPositionX takes camerasetup whichSetup returns real
 // 获取指定镜头的 Y 坐标
 native CameraSetupGetDestPositionY takes camerasetup whichSetup returns real
-// 应用镜头对象
+// 应用镜头
 native CameraSetupApply takes camerasetup whichSetup, boolean doPan, boolean panTimed returns nothing
-// 应用镜头对象(指定高度)
+// 应用镜头(指定高度)
 native CameraSetupApplyWithZ takes camerasetup whichSetup, real zDestOffset returns nothing
 // 应用镜头(所有玩家)(限时) [R]
 native CameraSetupApplyForceDuration takes camerasetup whichSetup, boolean doPan, real forceDuration returns nothing
 // 应用镜头(所有玩家)(限时)(指定高度) [R]
 native CameraSetupApplyForceDurationWithZ takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
-// 设置镜头对象的标签
+// 设置镜头标签
 native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns nothing
-// 获得镜头对象的标签
+// 获得镜头标签
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
 // 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
@@ -6811,7 +6813,7 @@ native CameraSetSourceNoiseEx takes real mag, real velocity, boolean vertOnly re
 native CameraSetSmoothingFactor takes real factor returns nothing
 // 设置镜头焦距
 native CameraSetFocalDistance takes real distance returns nothing
-// 设置相机景深比例
+// 设置镜头景深比例
 native CameraSetDepthOfFieldScale takes real scale returns nothing
 // 设置滤镜文本内容
 native SetCineFilterTexture takes string filename returns nothing
@@ -6872,7 +6874,7 @@ constant native GetCameraEyePositionX takes nothing returns real
 constant native GetCameraEyePositionY takes nothing returns real
 // 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
-// 获取当前照相机的观察位置
+// 获取当前镜头的观察位置
 // 会生成点，用完请注意排泄
 constant native GetCameraEyePositionLoc takes nothing returns location
 
@@ -6985,9 +6987,9 @@ native GetSoundFileDuration takes string musicFileName returns integer
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
 // 重置多通道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
-// 判断音乐是否播放
+// 判断声音是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
-// 判断音乐是否加载
+// 判断声音是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
 // 注册矩形区域3D音效
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
@@ -7018,7 +7020,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 
 // 新建天气效果 [R]
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
-// 删除天气效果
+// 删除指定天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
 // 打开/关闭 天气效果
 native EnableWeatherEffect takes weathereffect whichEffect, boolean enable returns nothing
@@ -7031,7 +7033,7 @@ native TerrainDeformRipple takes real x, real y, real radius, real depth, intege
 native TerrainDeformWave takes real x, real y, real dirX, real dirY, real distance, real speed, real radius, real depth, integer trailTime, integer count returns terraindeformation
 // 新建地形变化:随机 [R]
 native TerrainDeformRandom takes real x, real y, real radius, real minDelta, real maxDelta, integer duration, integer updateInterval returns terraindeformation
-// 停止地形变化 [R]
+// 停止指定地形变化 [R]
 native TerrainDeformStop takes terraindeformation deformation, integer duration returns nothing
 // 停止所有地形变化
 native TerrainDeformStopAll takes nothing returns nothing
@@ -7042,7 +7044,7 @@ native AddSpecialEffect takes string modelName, real x, real y returns effect
 native AddSpecialEffectLoc takes string modelName, location where returns effect
 // 新建特效(绑定到单位/物品/可破坏物) [R]
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
-// 删除特效
+// 删除指定特效
 native DestroyEffect takes effect whichEffect returns nothing
 // 新建特效（按字串符指定技能，绑定到坐标）
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
@@ -7061,7 +7063,7 @@ native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget ta
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电效果(指定Z轴) [R]
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
-// 删除闪电特效
+// 删除指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
 // 移动闪电效果
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
@@ -7113,7 +7115,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 
 // 新建图像 [R]
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
-// 删除图像
+// 删除指定图像
 native DestroyImage takes image whichImage returns nothing
 // 显示/隐藏 图像[R]
 native ShowImage takes image whichImage, boolean flag returns nothing
@@ -7138,7 +7140,7 @@ native SetImageType takes image whichImage, integer imageType returns nothing
 
 // 新建地面纹理变化 [R]
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-// 删除地面纹理
+// 删除指定地面纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
 // 重置地面纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
@@ -7155,15 +7157,15 @@ native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns
 // Blight API
 //
 
-// 创建/删除荒芜地表（不死族）(圆形区域)(指定坐标) [R]
+// 创建/删除 荒芜地表（不死族）(圆形区域)(指定坐标) [R]
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
-// 创建/删除荒芜地表（不死族）(矩形区域) [R]
+// 创建/删除 荒芜地表（不死族）(指定矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
-// 设置荒芜地表（不死族）（指定坐标）
+// 创建/删除 荒芜地表（不死族）（指定坐标）
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-// 设置荒芜地表（不死族）（圆形区域）（指定点）
+// 创建/删除 荒芜地表（不死族）（指定圆形区域）（指定点）
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
-// 新建不死族金矿 [R]
+// 新建不死族金矿（指定所属玩家，坐标及朝向） [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
 // 查询指定坐标是否被荒芜地表（不死族）覆盖 [R]
 native IsPointBlighted takes real x, real y returns boolean
@@ -7522,13 +7524,13 @@ native BlzCreateFrame takes string name, framehandle owner, integer priority, in
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建指定类型名的Frame
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
-// 删除Frame
+// 删除指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
 // 设置Frame的相对位置
 native BlzFrameSetPoint takes framehandle frame, framepointtype point, framehandle relative, framepointtype relativePoint, real x, real y returns nothing
 // 设置Frame的绝对位置
 native BlzFrameSetAbsPoint takes framehandle frame, framepointtype point, real x, real y returns nothing
-// 清空Frame锚点
+// 清空指定Frame锚点
 native BlzFrameClearAllPoints takes framehandle frame returns nothing
 // 设置所有锚点到目标frame上
 native BlzFrameSetAllPoints takes framehandle frame, framehandle relative returns nothing
@@ -7681,9 +7683,9 @@ native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect
 // 创建研究按钮特效
 native CreateUpgradeCommandButtonEffect takes integer whichUprgade returns commandbuttoneffect
-// 创建技能学习按钮特效
+// 创建学习技能按钮特效
 native CreateLearnCommandButtonEffect takes integer abilityId returns commandbuttoneffect
-// 删除按钮特效
+// 删除指定按钮特效
 native DestroyCommandButtonEffect takes commandbuttoneffect whichEffect returns nothing
 
 // Bit Operations
