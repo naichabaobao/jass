@@ -2858,7 +2858,7 @@ function CreateFogModifierRadiusLocBJ takes boolean enabled, player whichPlayer,
 endfunction
 
 
-// 最后创建的可见度修正器
+// 获取最后创建的可见度修正器
 function GetLastCreatedFogModifier takes nothing returns fogmodifier
     return bj_lastCreatedFogModifier
 endfunction
@@ -2894,13 +2894,13 @@ function UseTimeOfDayBJ takes boolean flag returns nothing
 endfunction
 
 
-// 设置 迷雾 
+// 设置 地形迷雾 
 function SetTerrainFogExBJ takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
     call SetTerrainFogEx(style, zstart, zend, density, red * 0.01, green * 0.01, blue * 0.01)
 endfunction
 
 
-// 重置 迷雾
+// 重置 地形迷雾
 function ResetTerrainFogBJ takes nothing returns nothing
     call ResetTerrainFog()
 endfunction
@@ -2932,13 +2932,13 @@ function CreateImageBJ takes string file, real size, location where, real zOffse
 endfunction
 
 
-// 显示/隐藏图像
+// 显示/隐藏 图像
 function ShowImageBJ takes boolean flag, image whichImage returns nothing
     call ShowImage(whichImage, flag)
 endfunction
 
 
-// 设置图像位置
+// 设置图像位置（指定点）
 function SetImagePositionBJ takes image whichImage, location where, real zOffset returns nothing
     call SetImagePosition(whichImage, GetLocationX(where), GetLocationY(where), zOffset)
 endfunction
@@ -2950,7 +2950,7 @@ function SetImageColorBJ takes image whichImage, real red, real green, real blue
 endfunction
 
 
-// 最后创建的图像
+// 获取最后创建的图像
 function GetLastCreatedImage takes nothing returns image
     return bj_lastCreatedImage
 endfunction
@@ -2963,7 +2963,7 @@ function CreateUbersplatBJ takes location where, string name, real red, real gre
 endfunction
 
 
-// 显示/隐藏地面纹理
+// 显示/隐藏 地面纹理
 function ShowUbersplatBJ takes boolean flag, ubersplat whichSplat returns nothing
     call ShowUbersplat(whichSplat, flag)
 endfunction
@@ -3144,7 +3144,7 @@ function PlaySoundBJ takes sound soundHandle returns nothing
 endfunction
 
 
-// 停止声音
+// 停止播放声音
 function StopSoundBJ takes sound soundHandle, boolean fadeOut returns nothing
     call StopSound(soundHandle, false, fadeOut)
 endfunction
@@ -3156,7 +3156,7 @@ function SetSoundVolumeBJ takes sound soundHandle, real volumePercent returns no
 endfunction
 
 
-// 跳跃播放声音
+// 播放声音（指定跳到的时间帧）
 function SetSoundOffsetBJ takes real newOffset, sound soundHandle returns nothing
     call SetSoundPlayPosition(soundHandle, R2I(newOffset * 1000))
 endfunction
@@ -3235,7 +3235,7 @@ function PlayMusicExBJ takes string musicFileName, real startingOffset, real fad
 endfunction
 
 
-// 设置音乐跳到的时间帧
+// 指定音乐跳到的时间帧
 function SetMusicOffsetBJ takes real newOffset returns nothing
     call SetMusicPlayPosition(R2I(newOffset * 1000))
 endfunction
@@ -3399,13 +3399,13 @@ function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
 endfunction
 
 
-// 设置音乐列表 (使用指定的开始音乐)
+// 设置音乐列表 (使用指定音乐开始)
 function SetMapMusicIndexedBJ takes string musicName, integer index returns nothing
     call SetMapMusic(musicName, false, index)
 endfunction
 
 
-// 设定音乐列表 (使用随机的开始音乐)
+// 设定音乐列表 (使用随机音乐开始)
 function SetMapMusicRandomBJ takes string musicName returns nothing
     call SetMapMusic(musicName, true, 0)
 endfunction
@@ -3453,7 +3453,7 @@ function EnableDawnDusk takes boolean flag returns nothing
 endfunction
 
 
-// 是否启用了 黎明/黄昏 声音
+// 查询是否启用了 黎明/黄昏 声音
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -3555,7 +3555,7 @@ function DestroyEffectBJ takes effect whichEffect returns nothing
 endfunction
 
 
-// 最后创建的特殊效果
+// 获取最后创建的特殊效果
 function GetLastCreatedEffectBJ takes nothing returns effect
     return bj_lastCreatedEffect
 endfunction
@@ -5134,7 +5134,7 @@ function CreateDeadDestructableLocBJ takes integer objectid, location loc, real 
 endfunction
 
 
-// 最后创建的可破坏物
+// 获取最后创建的可破坏物
 function GetLastCreatedDestructable takes nothing returns destructable
     return bj_lastCreatedDestructable
 endfunction
@@ -6811,7 +6811,7 @@ function QuestSetDiscoveredBJ takes quest whichQuest, boolean discovered returns
 endfunction
 
 
-// 最后创建的任务
+// 获取最后创建的任务
 function GetLastCreatedQuestBJ takes nothing returns quest
     return bj_lastCreatedQuest
 endfunction
@@ -6838,7 +6838,7 @@ function QuestItemSetCompletedBJ takes questitem whichQuestItem, boolean complet
 endfunction
 
 
-// 最后创建的任务完成条件
+// 获取最后创建的任务完成条件
 function GetLastCreatedQuestItemBJ takes nothing returns questitem
     return bj_lastCreatedQuestItem
 endfunction
@@ -6864,7 +6864,7 @@ function DefeatConditionSetDescriptionBJ takes defeatcondition whichCondition, s
 endfunction
 
 
-// 最后创建的任务失败条件
+// 获取最后创建的任务失败条件
 function GetLastCreatedDefeatConditionBJ takes nothing returns defeatcondition
     return bj_lastCreatedDefeatCondition
 endfunction
@@ -6993,7 +6993,7 @@ function PauseTimerBJ takes boolean pause, timer whichTimer returns nothing
 endfunction
 
 
-// 最后创建的计时器
+// 获取最后创建的计时器
 function GetLastCreatedTimerBJ takes nothing returns timer
     return bj_lastStartedTimer
 endfunction
@@ -7038,7 +7038,7 @@ function TimerDialogSetSpeedBJ takes timerdialog td, real speedMultFactor return
 endfunction
 
 
-// 显示/隐藏计时器窗口为玩家
+// 显示/隐藏 计时器窗口为玩家
 function TimerDialogDisplayForPlayerBJ takes boolean show, timerdialog td, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7047,13 +7047,13 @@ function TimerDialogDisplayForPlayerBJ takes boolean show, timerdialog td, playe
 endfunction
 
 
-// 显示/隐藏计时器窗口
+// 显示/隐藏 计时器窗口
 function TimerDialogDisplayBJ takes boolean show, timerdialog td returns nothing
     call TimerDialogDisplay(td, show)
 endfunction
 
 
-// 最后创建的计时器窗口
+// 获取最后创建的计时器窗口
 function GetLastCreatedTimerDialogBJ takes nothing returns timerdialog
     return bj_lastCreatedTimerDialog
 endfunction
@@ -7294,7 +7294,7 @@ function DestroyMultiboardBJ takes multiboard mb returns nothing
 endfunction
 
 
-// 最后创建的 多面板
+// 获取最后创建的 多面板
 function GetLastCreatedMultiboard takes nothing returns multiboard
     return bj_lastCreatedMultiboard
 endfunction
@@ -7616,7 +7616,7 @@ function ShowTextTagForceBJ takes boolean show, texttag tt, force whichForce ret
 endfunction
 
 
-// 最后创建的漂浮文字
+// 获取最后创建的漂浮文字
 function GetLastCreatedTextTag takes nothing returns texttag
     return bj_lastCreatedTextTag
 endfunction
@@ -8496,7 +8496,7 @@ function SaveGameCacheBJ takes gamecache cache returns boolean
 endfunction
 
 
-// 最后创建的游戏缓存
+// 获取最后创建的游戏缓存
 function GetLastCreatedGameCacheBJ takes nothing returns gamecache
     return bj_lastCreatedGameCache
 endfunction
@@ -9112,7 +9112,7 @@ function RestoreUnitLocFacingPointBJ takes string key, string missionKey, gameca
 endfunction
 
 
-// 最后恢复的单位
+// 获取最后恢复的单位
 function GetLastRestoredUnitBJ takes nothing returns unit
     return bj_lastLoadedUnit
 endfunction
