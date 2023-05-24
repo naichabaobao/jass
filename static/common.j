@@ -4679,7 +4679,7 @@ native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button which
 // 获取游戏状态
 constant native GetEventGameState takes nothing returns gamestate
 
-// 比赛游戏事件
+// 游戏事件
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
 // EVENT_GAME_VICTORY
@@ -4687,25 +4687,25 @@ native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameE
 constant native GetWinningPlayer takes nothing returns player
 
 
-// 单位进入不规则区域(过滤) [R]
+// 单位进入不规则区域(可指定过滤) [R]
 native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 
 // EVENT_GAME_ENTER_REGION
 
-// 获取触发不规则区域 [R]
+// 获取触发的不规则区域 [R]
 constant native GetTriggeringRegion takes nothing returns region
 // 获取正在进入的单位
 constant native GetEnteringUnit takes nothing returns unit
 
 // EVENT_GAME_LEAVE_REGION
-// 单位离开不规则区域(过滤) [R]
+// 单位离开不规则区域(可指定过滤) [R]
 native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 // 获取正在离开的单位
 constant native GetLeavingUnit takes nothing returns unit
 
-// 鼠标点击可追踪物 [R]
+// 鼠标点击可追踪物事件 [R]
 native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t returns event
-// 鼠标移动到追踪对象 [R]
+// 鼠标移动到追踪对象事件 [R]
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
 // EVENT_COMMAND_BUTTON_CLICK
@@ -4716,7 +4716,7 @@ native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer wh
 
 // EVENT_GAME_TRACKABLE_HIT
 // EVENT_GAME_TRACKABLE_TRACK
-// 事件响应 - 触发可追踪物 [R]
+// 事件响应 - 触发的可追踪物 [R]
 constant native GetTriggeringTrackable takes nothing returns trackable
 
 // EVENT_DIALOG_BUTTON_CLICK
@@ -4779,7 +4779,7 @@ constant native GetRevivableUnit takes nothing returns unit
 // EVENT_UNIT_HERO_REVIVE_START
 // EVENT_UNIT_HERO_REVIVE_CANCEL
 // EVENT_UNIT_HERO_REVIVE_FINISH
-// 获取复活英雄
+// 获取复活的英雄
 constant native GetRevivingUnit takes nothing returns unit
 
 // EVENT_PLAYER_UNIT_ATTACKED
@@ -4822,14 +4822,14 @@ constant native GetConstructedStructure takes nothing returns unit
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 // 获取研究科技的单位
 constant native GetResearchingUnit takes nothing returns unit
-// 获取研究的 科技类型
+// 获取研究的科技类型
 constant native GetResearched takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
-// 获取训练单位类型
+// 获取训练的单位类型
 constant native GetTrainedUnitType takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
@@ -4907,7 +4907,7 @@ constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns in
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 // 获取收到命令的单位
 constant native GetOrderedUnit takes nothing returns unit
-// 获取发出命令的单位
+// 获取发出的命令ID
 constant native GetIssuedOrderId takes nothing returns integer
 
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
@@ -4920,13 +4920,13 @@ constant native GetOrderPointY takes nothing returns real
 constant native GetOrderPointLoc takes nothing returns location
 
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
-// 获取命令的单位/物品/可破坏物
+// 获取命令目标（单位/物品/可破坏物）
 constant native GetOrderTarget takes nothing returns widget
-// 获取命令目标可破坏物
+// 获取命令目标（可破坏物）
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 获取命令目标物品
+// 获取命令目标（物品)
 constant native GetOrderTargetItem takes nothing returns item
-// 获取命令目标单位
+// 获取命令目标（单位）
 constant native GetOrderTargetUnit takes nothing returns unit
 
 // EVENT_UNIT_SPELL_CHANNEL
@@ -4970,7 +4970,7 @@ native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichP
 constant native GetEventPlayerState takes nothing returns playerstate
 
 // 玩家输入聊天信息事件
-// @param chatMessageToDetect输入的聊天信息，需使用""
+// @param chatMessageToDetect输入的聊天信息，需使用""框住
 // @param exactMatchOnly输入的聊天信息是否需要完全匹配
 native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
 
@@ -5009,9 +5009,9 @@ constant native GetEventUnitState takes nothing returns unitstate
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // EVENT_UNIT_DAMAGED
-// 被伤害的生命值
+// 获取被伤害后损失的生命值
 constant native GetEventDamage takes nothing returns real
-// 伤害来源
+// 获取造成伤害的单位
 constant native GetEventDamageSource takes nothing returns unit
 
 // EVENT_UNIT_DEATH
@@ -5083,7 +5083,7 @@ native TriggerClearActions takes trigger whichTrigger returns nothing
 native TriggerSleepAction takes real timeout returns nothing
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
-// 触发器条件成立
+// 判断触发器条件是否成立
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 native TriggerExecute takes trigger whichTrigger returns nothing
@@ -5128,7 +5128,7 @@ native KillDestructable takes destructable d returns nothing
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
 // 查询可破坏物是否可见
 native IsDestructableInvulnerable takes destructable d returns boolean
-// 选取指定区域的过滤（filter用于过滤）的可破坏物执行指定动作（actionFunc可指定动作）
+// 选取指定区域（filter可附带过滤）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
