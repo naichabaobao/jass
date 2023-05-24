@@ -5778,27 +5778,27 @@ native AddUnitToAllStock takes integer unitId, integer currentStock, integer sto
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
 
-// 删除商店出售的物品类型 (应用于所有商店)
+// 删除商店出售的指定物品类型 (应用于所有商店)
 native RemoveItemFromAllStock takes integer itemId returns nothing
-// 删除商店出售的物品类型 (应用于指定商店)
+// 删除商店出售的指定物品类型 (应用于指定商店)
 native RemoveItemFromStock takes unit whichUnit, integer itemId returns nothing
-// 删除商店出售的单位类型 (应用于所有商店)
+// 删除商店出售的指定单位类型 (应用于所有商店)
 native RemoveUnitFromAllStock takes integer unitId returns nothing
-// 删除商店出售的单位类型 (应用于指定商店)
+// 删除商店出售的指定单位类型 (应用于指定商店)
 native RemoveUnitFromStock takes unit whichUnit, integer unitId returns nothing
 
-// 设置物品库存上限 (应用于所有商店)
+// 设置所有物品库存上限 (应用于所有商店)
 native SetAllItemTypeSlots takes integer slots returns nothing
-// 设置单位库存上限 (应用于所有商店)
+// 设置所有单位库存上限 (应用于所有商店)
 native SetAllUnitTypeSlots takes integer slots returns nothing
-// 设置物品库存上限 (应用于指定商店)
+// 设置所有物品库存上限 (应用于指定商店)
 native SetItemTypeSlots takes unit whichUnit, integer slots returns nothing
-// 设置单位库存上限 (应用于指定商店)
+// 设置所有单位库存上限 (应用于指定商店)
 native SetUnitTypeSlots takes unit whichUnit, integer slots returns nothing
 
-// 获取单位自定义值
+// 获取指定单位自定义值
 native GetUnitUserData takes unit whichUnit returns integer
-// 设置单位自定义数据
+// 设置指定单位自定义数据
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 
