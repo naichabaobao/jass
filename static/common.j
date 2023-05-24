@@ -5740,9 +5740,9 @@ constant native IsPlayerObserver takes player whichPlayer returns boolean
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
 // 查询指定点在指定玩家视野中，是否可见
 constant native IsLocationVisibleToPlayer takes location whichLocation, player whichPlayer returns boolean
-// 查询指定坐标在指定玩家视野中，是否被迷雾遮挡
+// 查询指定坐标在指定玩家视野中，是否被战争迷雾遮挡
 constant native IsFoggedToPlayer takes real x, real y, player whichPlayer returns boolean
-// 查询指定点在指定玩家视野中，是否被迷雾遮挡
+// 查询指定点在指定玩家视野中，是否被战争迷雾遮挡
 constant native IsLocationFoggedToPlayer takes location whichLocation, player whichPlayer returns boolean
 // 查询指定坐标在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsMaskedToPlayer takes real x, real y, player whichPlayer returns boolean
@@ -5788,26 +5788,26 @@ constant native SetPlayerHandicapXP takes player whichPlayer, real handicap retu
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
-// 设置玩家的科技等级上限
+// 设置指定玩家指定科技的等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
-// 获取玩家的科技等级上限
+// 获取指定玩家指定科技的等级上限
 constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid returns integer
-// 增加科技等级
+// 增加指定玩家指定科技的等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
-// 设置玩家科技等级
+// 设置指定玩家指定科技的等级
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
-// 查询玩家科技是否已研究
+// 查询指定玩家指定科技是否已研究
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
-// 查询玩家科技等级
+// 查询指定玩家指定科技的等级
 constant native GetPlayerTechCount takes player whichPlayer, integer techid, boolean specificonly returns integer
 
-// 设置单位所属玩家
+// 设置指定单位所属玩家
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
 // 暴露玩家位置（出生点）
 // 默认用于对战模式胜负判定规则
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
 
-// 允许/禁用 技能 [R]
+// 允许/禁用 技能（指定玩家） [R]
 native SetPlayerAbilityAvailable takes player whichPlayer, integer abilid, boolean avail returns nothing
 
 // 设置玩家状态
@@ -5872,10 +5872,10 @@ native RestartGame takes boolean doScoreScreen returns nothing
 native ReloadGame takes nothing returns nothing
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
-// 设置战役菜单竞赛 @deprecated("这方法不建议使用,应该使用SetCampaignMenuRaceEx代替")
+// 设置战役菜单种族 @deprecated("这方法不建议使用,应该使用SetCampaignMenuRaceEx代替")
 // @deprecated
 native SetCampaignMenuRace takes race r returns nothing
-// 设置战役菜单竞赛
+// 设置战役菜单种族
 native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 // 玩家战役选择画面
 native ForceCampaignSelectScreen takes nothing returns nothing
