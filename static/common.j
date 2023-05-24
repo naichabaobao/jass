@@ -4948,9 +4948,9 @@ constant native GetSpellAbility takes nothing returns ability
 // 获取被释放技能的目标（点）
 // 会生成点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
-// 获取被释放技能目标（点 X 坐标）
+// 获取被释放技能的目标（点 X 坐标）
 constant native GetSpellTargetX takes nothing returns real
-// 获取被释放技能目标（点 Y 坐标）
+// 获取被释放技能的目标（点 Y 坐标）
 constant native GetSpellTargetY takes nothing returns real
 // 获取被释放技能的目标（可破坏物）
 constant native GetSpellTargetDestructable takes nothing returns destructable
