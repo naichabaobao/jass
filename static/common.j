@@ -4997,7 +4997,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
-// 单位状态事件
+// 指定单位状态事件
 // @param whichState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
 
@@ -5005,7 +5005,7 @@ native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit,
 // 获取单位状态
 constant native GetEventUnitState takes nothing returns unitstate
 
-// 单位指定事件
+// 指定单位的指定事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // EVENT_UNIT_DAMAGED
@@ -5020,10 +5020,10 @@ constant native GetEventDamageSource takes nothing returns unit
 
 // EVENT_UNIT_DETECTED
 // EVENT_UNIT_DETECTED 
-// 获取事件检测的玩家
+// 获取事件检测到的玩家
 constant native GetEventDetectingPlayer takes nothing returns player
 
-// 指定玩家事件
+// 指定玩家指定单位事件
 native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent, boolexpr filter returns event
 
 // EVENT_UNIT_ACQUIRED_TARGET
@@ -5063,7 +5063,7 @@ constant native GetEventTargetUnit takes nothing returns unit
 
 // See the Player Unit Order Event API above for event info funcs
 
-// 范围内玩家事件
+// 指定范围内指定单位事件
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
 // 添加触发器限制条件
@@ -5079,7 +5079,7 @@ native TriggerAddAction takes trigger whichTrigger, code actionFunc returns trig
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
 // 清空触发器动作
 native TriggerClearActions takes trigger whichTrigger returns nothing
-// 等待
+// 等待（指定时间）
 native TriggerSleepAction takes real timeout returns nothing
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
@@ -5090,9 +5090,9 @@ native TriggerExecute takes trigger whichTrigger returns nothing
 // 运行触发器 (等待忽略条件)
 // @deprecated
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
-// 同步开始
+// 触发器同步开始
 native TriggerSyncStart takes nothing returns nothing
-// 同步完成
+// 触发器同步完成
 native TriggerSyncReady takes nothing returns nothing
 
 
@@ -5120,45 +5120,45 @@ native CreateDestructableZ takes integer objectid, real x, real y, real z, real 
 native CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
 // 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱) [R]（指定类型、X坐标，Y坐标，朝向度，尺寸，样式）
 native CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-// 删除可破坏物
+// 删除指定可破坏物
 native RemoveDestructable takes destructable d returns nothing
-// 杀死可破坏物
+// 杀死指定可破坏物（变成毁坏的）
 native KillDestructable takes destructable d returns nothing
-// 设置可破坏物是否可见
+// 设置指定可破坏物是否可见
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
-// 查询可破坏物是否可见
+// 查询指定可破坏物是否可见
 native IsDestructableInvulnerable takes destructable d returns boolean
 // 选取指定区域（filter可附带过滤）的可破坏物执行指定动作（actionFunc可指定动作）
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
-// 获取可破坏物的类型
+// 获取指定可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
-// 获取可破坏物所在 X 轴坐标 [R]
+// 获取指定可破坏物所在 X 轴坐标 [R]
 native GetDestructableX takes destructable d returns real
-// 获取可破坏物所在 Y 轴坐标 [R]
+// 获取指定可破坏物所在 Y 轴坐标 [R]
 native GetDestructableY takes destructable d returns real
-// 设置可破坏物的生命值
+// 设置指定可破坏物的生命值
 native SetDestructableLife takes destructable d, real life returns nothing
-// 获取可破坏物生命值
+// 获取指定可破坏物生命值
 native GetDestructableLife takes destructable d returns real
-// 设置可破坏物的最大生命值
+// 设置指定可破坏物的最大生命值
 native SetDestructableMaxLife takes destructable d, real max returns nothing
-// 获取可破坏物最大生命值
+// 获取指定可破坏物最大生命值
 native GetDestructableMaxLife takes destructable d returns real
-// 复活可破坏物（指定生命值）
+// 复活指定可破坏物（指定生命值）（变回未毁坏）
 native DestructableRestoreLife takes destructable d, real life, boolean birth returns nothing
-// 队列可破坏物的动画
+// 队列指定可破坏物的动画
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
-// 设置可破坏物的动画
+// 设置指定可破坏物的动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
-// 设置可破坏物动画播放速度 [R]
+// 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
-// 显示/隐藏 可破坏物[R]
+// 显示/隐藏 指定可破坏物[R]
 native ShowDestructable takes destructable d, boolean flag returns nothing
-// 获取可破坏物的闭塞高度
+// 获取指定可破坏物的闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
-// 设置可破坏物的的闭塞高度
+// 设置指定可破坏物的的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 获取可破坏物的名字
+// 获取指定可破坏物的名字
 native GetDestructableName takes destructable d returns string
 // 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
@@ -5167,68 +5167,68 @@ constant native GetTriggerDestructable takes nothing returns destructable
 // Item API
 // 创建物品
 native CreateItem takes integer itemid, real x, real y returns item
-// 删除物品
+// 删除指定物品
 native RemoveItem takes item whichItem returns nothing
-// 获取物品的所有者
+// 获取指定物品的所有者
 native GetItemPlayer takes item whichItem returns player
-// 获取物品的类别
+// 获取指定物品的类别
 native GetItemTypeId takes item i returns integer
-// 获取物品的 X 轴坐标 [R]
+// 获取指定物品的 X 轴坐标 [R]
 native GetItemX takes item i returns real
-// 获取物品的 Y 轴坐标 [R]
+// 获取指定物品的 Y 轴坐标 [R]
 native GetItemY takes item i returns real
-// 移动物品到坐标(立即)(指定坐标) [R]
+// 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
-// 设置物品是否死亡时掉落
+// 允许/禁止 指定物品死亡时掉落
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
-// 设置物品可以丢弃
+// 允许/禁止 指定物品被丢弃
 native SetItemDroppable takes item i, boolean flag returns nothing
-// 设置物品能否变卖
+// 允许/禁止 指定物品被贩卖/出售
 native SetItemPawnable takes item i, boolean flag returns nothing
-// 设置物品所属
+// 设置指定物品所属
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
-// 设置物品是否无敌
+// 设置指定物品 无敌/可攻击
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
-// 查询物品是否无敌
+// 查询指定物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
-// 设置显示/隐藏 物品 [R]
+// 显示/隐藏 指定物品 [R]
 native SetItemVisible takes item whichItem, boolean show returns nothing
-// 查询物品是否可见 [R]
+// 查询指定物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
-// 查询物品所有者是否当前持有玩家
+// 查询指定物品所有者是否当前持有玩家
 native IsItemOwned takes item whichItem returns boolean
-// 查询物品是否拾取时自动使用 [R]
+// 查询指定物品是否拾取时自动使用 [R]
 native IsItemPowerup takes item whichItem returns boolean
-// 查询物品是否可被市场随机出售 [R]
+// 查询指定物品是否可在市场随机出售 [R]
 native IsItemSellable takes item whichItem returns boolean
-// 查询物品是否可被抵押 [R]
+// 查询指定物品是否可被抵押/出售 [R]
 native IsItemPawnable takes item whichItem returns boolean
-// 物品是否拾取时自动使用
+// 查询指定物品是否拾取时自动使用
 native IsItemIdPowerup takes integer itemId returns boolean
-// 查询物品是否可以被市场出售
+// 查询指定物品是否可以被市场出售
 native IsItemIdSellable takes integer itemId returns boolean
-// 查询物品是否可以被抵押
+// 查询知道物品是否可以被抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
 // @param filter过滤
 // @param actionFunc动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
-// 获取物品等级
+// 获取指定物品等级
 native GetItemLevel takes item whichItem returns integer
-// 获取物品类型
+// 获取指定物品类型
 native GetItemType takes item whichItem returns itemtype
 // 设置掉落物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
-// 获取物品名称
+// 获取指定物品名称
 constant native GetItemName takes item whichItem returns string
-// 获取物品数量
+// 获取指定物品数量
 native GetItemCharges takes item whichItem returns integer
-// 设置物品使用次数
+// 设置指定物品使用次数
 native SetItemCharges takes item whichItem, integer charges returns nothing
-// 获取物品自定义值
+// 获取指定物品自定义值
 native GetItemUserData takes item whichItem returns integer
-// 设置物品自定义值
+// 设置指定物品自定义值
 native SetItemUserData takes item whichItem, integer data returns nothing
 
 
@@ -5245,166 +5245,166 @@ native CreateUnitAtLocByName takes player id, string unitname, location whichLoc
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
 
-// 杀死单位
+// 杀死指定单位
 native KillUnit takes unit whichUnit returns nothing
-// 删除单位
+// 删除指定单位
 native RemoveUnit takes unit whichUnit returns nothing
-// 显示/隐藏 单位 [R]
+// 显示/隐藏 指定单位 [R]
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
-// 设置单位属性 [R]
+// 设置指定单位属性 [R]
 // @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置单位的 X 坐标 [R]
+// 设置指定单位的 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置单位的 Y 坐标 [R]
+// 设置指定单位的 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
-// 移动单位(立即)(指定坐标) [R]
+// 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
-// 移动单位 (立刻)
+// 移动指定单位(立刻)（指定点）
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
-// 设置单位朝向 [R]
+// 设置指定单位朝向 [R]
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
-// 设置单位朝向（指定持续时间）
+// 设置指定单位朝向（指定转身持续时间）
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
-// 设置单位移动速度
+// 设置指定单位移动速度
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
-// 设置单位飞行高度
+// 设置指定单位飞行高度
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
-// 设置单位转身速度
+// 设置指定单位转身速度
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
-// 设置单位转向角度(弧度制) [R]
+// 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置单位主动攻击范围
+// 设置指定单位主动攻击范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
-// 获取单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
+// 获取指定单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
 native GetUnitAcquireRange takes unit whichUnit returns real
-// 获取单位转身速度 (当前)
+// 获取指定单位转身速度 (当前)
 native GetUnitTurnSpeed takes unit whichUnit returns real
-// 获取单位转向角度（当前）(弧度制) [R]
+// 获取指定单位转向角度（当前）(弧度制) [R]
 native GetUnitPropWindow takes unit whichUnit returns real
-// 获取单位飞行高度 (当前)
+// 获取指定单位飞行高度 (当前)
 native GetUnitFlyHeight takes unit whichUnit returns real
 
-// 获取单位主动攻击范围 (默认)
+// 获取指定单位主动攻击范围 (默认)
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
-// 获取单位转身速度 (默认)
+// 获取指定单位转身速度 (默认)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
-// 获取单位转向角度(默认)
+// 获取指定单位转向角度(默认)
 native GetUnitDefaultPropWindow takes unit whichUnit returns real
-// 获取单位飞行高度 (默认)
+// 获取指定单位飞行高度 (默认)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
-// 设置单位所有者
+// 设置指定单位所有者（指定玩家）
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
-// 设置单位颜色
+// 设置指定单位颜色（指定玩家颜色）
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
 
-// 设置单位尺寸(按倍数) [R]
+// 设置指定单位尺寸(按倍数) [R]
 native SetUnitScale takes unit whichUnit, real scaleX, real scaleY, real scaleZ returns nothing
-// 设置单位动画播放速度(按倍数) [R]
+// 设置指定单位动画播放速度(按倍数) [R]
 native SetUnitTimeScale takes unit whichUnit, real timeScale returns nothing
-// 设置单位混合时间
+// 设置指定单位混合时间
 native SetUnitBlendTime takes unit whichUnit, real blendTime returns nothing
-// 设置单位顶点颜色(RGB:0-255) [R]
+// 设置指定单位顶点颜色(RGB:0-255) [R]
 native SetUnitVertexColor takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-// 将单位动画加入队列
+// 将指定单位的指定动画加入队列
 native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
-// 播放单位动画
+// 播放指定单位指定动画
 native SetUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
-// 播放单位指定序号动动画 [R]
+// 播放指定单位的指定序号动动画 [R]
 native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation returns nothing
-// 播放单位动画 (指定概率)
+// 播放指定单位的指定动画 (指定概率)
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
-// 添加/删除 单位动画附加名 [R]
+// 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
 
-// 锁定单位朝向
+// 锁定指定单位朝向
 native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
-// 重置单位朝向
+// 重置指定单位朝向
 native ResetUnitLookAt takes unit whichUnit returns nothing
 
-// 设置单位可否营救(指定玩家) [R]
+// 设置指定单位可否营救(指定玩家) [R]
 native SetUnitRescuable takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
-// 设置营救单位的营救距离
+// 设置指定营救单位的营救距离
 native SetUnitRescueRange takes unit whichUnit, real range returns nothing
 
-// 设置英雄力量值 [R]
+// 设置指定英雄力量值 [R]
 native SetHeroStr takes unit whichHero, integer newStr, boolean permanent returns nothing
-// 设置英雄敏捷值 [R]
+// 设置指定英雄敏捷值 [R]
 native SetHeroAgi takes unit whichHero, integer newAgi, boolean permanent returns nothing
-// 设置英雄智力值 [R]
+// 设置指定英雄智力值 [R]
 native SetHeroInt takes unit whichHero, integer newInt, boolean permanent returns nothing
 
-// 获取英雄力量值 [R]
+// 获取指定英雄力量值 [R]
 native GetHeroStr takes unit whichHero, boolean includeBonuses returns integer
-// 获取英雄敏捷值 [R]
+// 获取指定英雄敏捷值 [R]
 native GetHeroAgi takes unit whichHero, boolean includeBonuses returns integer
-// 获取英雄智力值 [R]
+// 获取指定英雄智力值 [R]
 native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
-// 降低英雄等级 [R]
+// 降低指定英雄等级 [R]
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
-// 获取英雄经验值
+// 获取指定英雄经验值
 native GetHeroXP takes unit whichHero returns integer
-// 设置英雄经验值
+// 设置指定英雄经验值
 native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
-// 获取英雄未使用的技能点数
+// 获取指定英雄未使用的技能点数
 native GetHeroSkillPoints takes unit whichHero returns integer
-// 设置英雄未使用的技能点数 [R]
+// 设置指定英雄未使用的技能点数 [R]
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
-// 增加英雄经验值 [R]
+// 增加指定英雄经验值 [R]
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
-// 设置英雄等级
+// 设置指定英雄等级
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
-// 获取英雄等级
+// 获取指定英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
-// 获取单位等级
+// 获取指定单位等级
 constant native GetUnitLevel takes unit whichUnit returns integer
-// 获取英雄名字
+// 获取指定英雄名字
 native GetHeroProperName takes unit whichHero returns string
-// 允许/禁止 英雄获取经验值 [R]
+// 允许/禁止 指定英雄获取经验值 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
-// 查询英雄是否可获取经验值
+// 查询指定英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
-// 命令英雄学习技能
+// 命令指定英雄学习技能
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取单位技能等级 [R] 
+// 获取知道单位技能等级 [R] 
 // 对于触发器添加的技能，此命令在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 降低英雄技能等级 [R]
+// 降低指定英雄技能等级 [R]
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 提升英雄技能等级 [R]
+// 提升指定英雄技能等级 [R]
 native IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 设置英雄技能等级 [R]
+// 设置指定英雄技能等级 [R]
 native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
-// 立即复活英雄(指定坐标) [R]
+// 立即复活指定英雄(指定坐标) [R]
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
-// 立即复活英雄（指定点）
+// 立即复活指定英雄（指定点）
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
-// 设置单位死亡方式（是否爆炸）
+// 设置指定单位死亡方式（是否爆炸）
 // @param whichUnit 单位
 // @param exploded 是否爆炸
 native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
-// 设置单位 无敌/可攻击
+// 设置指定单位 无敌/可攻击
 native SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
-// 暂停/恢复 单位 [R]
+// 暂停/恢复 指定单位 [R]
 native PauseUnit takes unit whichUnit, boolean flag returns nothing
-// 查询单位是否暂停
+// 查询指定单位是否暂停
 native IsUnitPaused takes unit whichHero returns boolean
-// 打开/关闭 单位碰撞体积
+// 打开/关闭 指定单位碰撞体积
 native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
 // 清除所有选择（鼠标框选的单位/物品/可破坏物）
 native ClearSelection takes nothing returns nothing
-// 选择单位
+// 选择/不选择 指定单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
 
 // 获取单位附加值(指定单位)
@@ -5866,9 +5866,9 @@ native EndGame takes boolean doScoreScreen returns nothing
 // Async only!
 // 切换关卡 [R]
 native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
-// 重新开始游戏
+// 重新开始游戏（当前关卡）
 native RestartGame takes boolean doScoreScreen returns nothing
-// 重新读档
+// 重新读档（当前存档或最新的检查点（自动）存档）
 native ReloadGame takes nothing returns nothing
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
@@ -5880,9 +5880,9 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 // 玩家战役选择画面
 native ForceCampaignSelectScreen takes nothing returns nothing
 
-// 加载存档
+// 加载存档（手动选择存档）
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
-// 存档 [R]
+// 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
 // 重命名保存目录
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
@@ -5892,7 +5892,7 @@ native RemoveSaveDirectory takes string sourceDirName returns boolean
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 查询游戏进度是否存在
 native SaveGame takes string saveName returns boolean
-// 设置最大检查单（自动）存档次数
+// 设置检查单（自动）最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 // 检查点（自动）存档
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
