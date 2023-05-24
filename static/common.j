@@ -5269,22 +5269,22 @@ native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
 // 设置单位移动速度
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
-// 设定单位飞行高度
+// 设置单位飞行高度
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
-// 设定单位转身速度
+// 设置单位转身速度
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置主动攻击范围
+// 设置单位主动攻击范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
-// 获取单位单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
+// 获取单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
 native GetUnitAcquireRange takes unit whichUnit returns real
 // 获取单位转身速度 (当前)
 native GetUnitTurnSpeed takes unit whichUnit returns real
-// 获取单位当前转向角度(弧度制) [R]
+// 获取单位转向角度（当前）(弧度制) [R]
 native GetUnitPropWindow takes unit whichUnit returns real
 // 获取单位飞行高度 (当前)
 native GetUnitFlyHeight takes unit whichUnit returns real
@@ -5327,7 +5327,7 @@ native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, 
 // 重置单位朝向
 native ResetUnitLookAt takes unit whichUnit returns nothing
 
-// 设置可否营救(指定玩家) [R]
+// 设置单位可否营救(指定玩家) [R]
 native SetUnitRescuable takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
 // 设置营救单位的营救距离
 native SetUnitRescueRange takes unit whichUnit, real range returns nothing
@@ -5354,9 +5354,9 @@ native GetHeroXP takes unit whichHero returns integer
 // 设置英雄经验值
 native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
-// 获取英雄未用完的技能点数
+// 获取英雄未使用的技能点数
 native GetHeroSkillPoints takes unit whichHero returns integer
-// 设置英雄剩余技能点数 [R]
+// 设置英雄未使用的技能点数 [R]
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
 // 增加英雄经验值 [R]
@@ -5369,7 +5369,7 @@ constant native GetHeroLevel takes unit whichHero returns integer
 constant native GetUnitLevel takes unit whichUnit returns integer
 // 获取英雄名字
 native GetHeroProperName takes unit whichHero returns string
-// 允许/禁止英雄获取经验值 [R]
+// 允许/禁止 英雄获取经验值 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 // 查询英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
@@ -5399,7 +5399,7 @@ native SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
 native PauseUnit takes unit whichUnit, boolean flag returns nothing
 // 查询单位是否暂停
 native IsUnitPaused takes unit whichHero returns boolean
-// 打开/关闭单位碰撞体积
+// 打开/关闭 单位碰撞体积
 native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
 // 清除所有选择（鼠标框选的单位/物品/可破坏物）
@@ -5414,20 +5414,20 @@ native GetUnitPointValueByType takes integer unitType returns integer
 // 设置单位附加值(指定单位类型)
 native SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
-// 给予物品 [R]
+// 给予物品（指定具体物品） [R]
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
-// 给予物品
+// 给予物品（指定物品ID）
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
-// 把物品移动到指定物品栏格数 [R]
+// 把物品移动到指定物品栏格数（指定物品ID） [R]
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 丢弃物品（指定物品）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 丢弃物品（指定物品栏格数：0-5，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
+// 丢弃物品（指定物品栏格数，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
 // @param itemSlot 0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
-// 获取单位物品栏物品(指定格数)
+// 获取单位物品栏物品(指定物品栏格数)
 // @param itemSlot 0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取物品栏格数
@@ -5435,9 +5435,9 @@ native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 移动物品到物品栏格子 [R]
+// 移动物品到指定的物品栏格数 [R]
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
-// 把物品交给指定单位 [R]
+// 把物品丢弃到指定目标位置（单位/物品/可破坏物） [R]
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 发布使用物品命令
@@ -5473,7 +5473,7 @@ constant native GetUnitRace takes unit whichUnit returns race
 constant native GetUnitName takes unit whichUnit returns string
 // 获取指定单位使用的人口数量（单个）
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
-// 获取指定单位提供的人口数量（单个）
+// 获取指定单位 提供的人口数量（单个）
 constant native GetUnitFoodMade takes unit whichUnit returns integer
 // 获取指定单位类型 提供的人口数量（单个）
 constant native GetFoodMade takes integer unitId returns integer
@@ -5482,7 +5482,7 @@ constant native GetFoodUsed takes integer unitId returns integer
 // 启用/禁用 单位的人口占用 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
-// 获取指定单位的集结点指向的位置（建筑的旗子，集结技能）
+// 获取指定单位的集结点指向的点（建筑的旗子，集结技能）
 // 会生成点，用完请注意排泄
 constant native GetUnitRallyPoint takes unit whichUnit returns location
 // 获取指定单位集结点指向的单位，仅当集结点指向单位时可正常返回（建筑的旗子，集结技能）
@@ -5516,7 +5516,7 @@ constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns 
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 查询指定单位是否与指定类型匹配
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
-// 查询指定单位是否另一指定单位
+// 查询指定单位是否另一指定单位（两个变量是否指向同一单位）
 constant native IsUnit takes unit whichUnit, unit whichSpecifiedUnit returns boolean
 // 查询指定单位是否在指定单位范围内 [R]
 constant native IsUnitInRange takes unit whichUnit, unit otherUnit, real distance returns boolean
@@ -5528,12 +5528,12 @@ constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, r
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-// 查询指定单位是否被指定的单位传送
+// 查询指定单位是否被另一指定单位传送
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
 // 查询指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 查询指定单位类型是否英雄单位
+// 查询指定单位类型是否属于英雄
 constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位类型是否与指定类型匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
