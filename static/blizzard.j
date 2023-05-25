@@ -6860,7 +6860,7 @@ function DestroyQuestBJ takes quest whichQuest returns nothing
 endfunction
 
 
-// 允许/禁止 任务
+// 启用/禁用 任务
 function QuestSetEnabledBJ takes boolean enabled, quest whichQuest returns nothing
     call QuestSetEnabled(whichQuest, enabled)
 endfunction
@@ -6872,7 +6872,7 @@ function QuestSetTitleBJ takes quest whichQuest, string title returns nothing
 endfunction
 
 
-// 设置任务文本内容
+// 设置任务说明
 function QuestSetDescriptionBJ takes quest whichQuest, string description returns nothing
     call QuestSetDescription(whichQuest, description)
 endfunction
@@ -6943,7 +6943,7 @@ function DestroyDefeatConditionBJ takes defeatcondition whichCondition returns n
 endfunction
 
 
-// 设置失败条件的内容
+// 设置失败条件说明
 function DefeatConditionSetDescriptionBJ takes defeatcondition whichCondition, string description returns nothing
     call DefeatConditionSetDescription(whichCondition, description)
 endfunction
@@ -6955,7 +6955,7 @@ function GetLastCreatedDefeatConditionBJ takes nothing returns defeatcondition
 endfunction
 
 
-// 使任务按钮发光
+// 闪烁任务按钮
 function FlashQuestDialogButtonBJ takes nothing returns nothing
     call FlashQuestDialogButton()
 endfunction
