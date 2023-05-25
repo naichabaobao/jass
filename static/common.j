@@ -4748,7 +4748,7 @@ native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t 
 // 鼠标移动到追踪对象事件 [R]
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
-// 命令按钮被点击事件
+// 点击命令按钮事件
 // EVENT_COMMAND_BUTTON_CLICK
 native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbility, string order returns event
 // 科技升级命令事件
@@ -4767,16 +4767,16 @@ constant native GetClickedButton takes nothing returns button
 // EVENT_DIALOG_BUTTON_CLICK
 constant native GetClickedDialog takes nothing returns dialog
 
-// 获取比赛剩余时间（对应比赛完成事件）
+// 获取锦标赛剩余时间（对应锦标赛完成事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
-// 获取比赛结束规则（对应比赛完成事件）
+// 获取锦标赛结束规则（对应锦标赛完成事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowRule takes nothing returns integer
-// 获取比赛结束玩家（对应比赛完成事件）
+// 获取锦标赛结束玩家（对应锦标赛完成事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowPlayer takes nothing returns player
-// 获取对战比赛得分（对应比赛完成事件）
+// 获取锦标赛得分（对应锦标赛完成事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentScore takes player whichPlayer returns integer
 
