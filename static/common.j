@@ -6425,10 +6425,13 @@ native PingMinimap takes real x, real y, real duration returns nothing
 // 发送小地图信号(指定颜色)(所有玩家可见) [R]
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图（任务）图标（指定单位）
+// @param fogstate 迷雾内状态（可见/战争迷雾/黑色阴影）
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图（任务）图标（指定点）
+// @param fogstate 迷雾内状态（可见/战争迷雾/黑色阴影）
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图（任务）图标（指定坐标）
+// @param fogstate 迷雾内状态（可见/战争迷雾/黑色阴影）
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径
 native SkinManagerGetLocalPath takes string key returns string
