@@ -6424,19 +6424,19 @@ native AddIndicator takes widget whichWidget, integer red, integer green, intege
 native PingMinimap takes real x, real y, real duration returns nothing
 // 发送小地图信号(指定颜色)(所有玩家可见) [R]
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
-// 创建小地图图标（指定单位）
+// 创建小地图（任务）图标（指定单位）
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 创建小地图图标（指定点）
+// 创建小地图（任务）图标（指定点）
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 创建小地图图标（指定坐标）
+// 创建小地图（任务）图标（指定坐标）
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径
 native SkinManagerGetLocalPath takes string key returns string
-// 销毁小地图图标
+// 销毁小地图（任务）图标
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
-// 设置小地图图标迷雾内状态(可见/战争迷雾/黑色阴影)
+// 显示/隐藏 小地图（任务）图标
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 设置小地图图标自我销毁
+// 设置小地图（任务）图标自我销毁
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
