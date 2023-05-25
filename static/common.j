@@ -5844,7 +5844,7 @@ constant native GetPlayerUnitCount takes player whichPlayer, boolean includeInco
 // @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获得玩家的建筑的数量
+// 获取玩家的建筑的数量
 // @param includeIncomplete是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家状态
@@ -6414,7 +6414,7 @@ native SetTimeOfDayScale takes real r returns nothing
 native GetTimeOfDayScale takes nothing returns real
 // 开启/关闭 信箱模式(所有玩家) [R]
 native ShowInterface takes boolean flag, real fadeDuration returns nothing
-// 暂停/恢复游戏 [R]
+// 暂停/恢复 游戏 [R]
 native PauseGame takes boolean flag returns nothing
 // 添加闪动指示器(指定单位) [R]
 native UnitAddIndicator takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
@@ -6459,7 +6459,7 @@ native ForceUIKey takes string key returns nothing
 native ForceUICancel takes nothing returns nothing
 // 显示加载对话框
 native DisplayLoadDialog takes nothing returns nothing
-// 设置小地图图标
+// 设置小地图（任务）图标
 native SetAltMinimapIcon takes string iconPath returns nothing
 // 禁用 重新开始任务按钮
 native DisableRestartMission takes boolean flag returns nothing
@@ -6478,11 +6478,11 @@ native SetTextTagPosUnit takes texttag t, unit whichUnit, real heightOffset retu
 native SetTextTagColor takes texttag t, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置漂浮文字速率 [R]
 native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
-// 显示/隐藏漂浮文字 (所有玩家) [R]
+// 显示/隐藏 漂浮文字 (所有玩家) [R]
 native SetTextTagVisibility takes texttag t, boolean flag returns nothing
-// 设置漂浮文本开启/关闭暂停状态
+// 启用/禁用 漂浮文本暂停状态
 native SetTextTagSuspended takes texttag t, boolean flag returns nothing
-// 设置漂浮文本开启/关闭永久状态
+// 启用/禁用 漂浮文本永久状态
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
 // 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
@@ -6493,21 +6493,21 @@ native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
 // 保留英雄按钮（左上角英雄图标，F1~FN）
 native SetReservedLocalHeroButtons takes integer reserved returns nothing
-// 联盟滤色镜的设置值
+// 获取联盟颜色过滤值
 native GetAllyColorFilterState takes nothing returns integer
-// 设置联盟滤色镜
+// 设置联盟颜色过滤值
 native SetAllyColorFilterState takes integer state returns nothing
-// 野生单位显示是开启的
+// 判断小地图是否显示野生单位营地图标
 native GetCreepCampFilterState takes nothing returns boolean
-// 显示/隐藏 小地图野生生物图标（是否在小地图显示中立敌对玩家的单位）
+// 显示/隐藏 小地图野生单位营地图标（是否在小地图显示中立敌对玩家的单位）
 native SetCreepCampFilterState takes boolean state returns nothing
-// 允许/禁止小地图按钮
+// 启用/禁用 小地图按钮
 native EnableMinimapFilterButtons takes boolean enableAlly, boolean enableCreep returns nothing
-// 允许/禁止框选
+// 启用/禁用 框选
 native EnableDragSelect takes boolean state, boolean ui returns nothing
-// 允许/禁止预选
+// 启用/禁用 预选
 native EnablePreSelect takes boolean state, boolean ui returns nothing
-// 允许/禁止选择
+// 启用/禁用 选择
 native EnableSelect takes boolean state, boolean ui returns nothing
 
 // Trackable API
@@ -6527,11 +6527,11 @@ native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-// 设置任务是否必须完成
+// 设置任务是否必须完成（主线任务）
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
 // 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
-// 设置任务是否被发现
+// 设置任务是否被发现（隐藏任务）
 native QuestSetDiscovered takes quest whichQuest, boolean discovered returns nothing
 // 设置任务是否失败
 native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
@@ -6540,7 +6540,7 @@ native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
 // 查询任务是否必须完成
 native IsQuestRequired takes quest whichQuest returns boolean
-// 查询任务是否完成
+// 查询任务是否已完成
 native IsQuestCompleted takes quest whichQuest returns boolean
 // 查询任务是否被发现
 native IsQuestDiscovered takes quest whichQuest returns boolean
@@ -6589,7 +6589,7 @@ native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor r
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 判断计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
-// 可以修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
+// 修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
 
@@ -6602,64 +6602,64 @@ native CreateLeaderboard takes nothing returns leaderboard
 // 删除排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
 
-// 显示/隐藏 [R]
+// 显示/隐藏 排行榜[R]
 native LeaderboardDisplay takes leaderboard lb, boolean show returns nothing
 // 查询排行榜是否显示
 native IsLeaderboardDisplayed takes leaderboard lb returns boolean
 
-// 排行榜 获取行数
+// 获取指定排行榜行数
 native LeaderboardGetItemCount takes leaderboard lb returns integer
-// 排行榜 设置行高度
+// 设置排行榜行行数
 native LeaderboardSetSizeByItemCount takes leaderboard lb, integer count returns nothing
-// 排行榜 添加玩家
+// 添加指定玩家到指定排行榜
 // @param lb指定玩家在榜上的排名（行数）
 // @param label指定玩家在榜上的名字
 // @param value指定玩家在榜上的分数
 // @param p指定玩家
 native LeaderboardAddItem takes leaderboard lb, string label, integer value, player p returns nothing
-// 排行榜 移除行
+// 移除排行榜指定行
 native LeaderboardRemoveItem takes leaderboard lb, integer index returns nothing
-// 排行榜 移除玩家
+// 移除排行榜指定玩家
 native LeaderboardRemovePlayerItem takes leaderboard lb, player p returns nothing
 // 清空排行榜 [R]
 native LeaderboardClear takes leaderboard lb returns nothing
-// 排行榜 按分值排序（真为升序，假为降序）
+// 设置排行榜按分值排序（真为升序，假为降序）
 native LeaderboardSortItemsByValue takes leaderboard lb, boolean ascending returns nothing
-// 排行榜 按玩家排序（真为升序，假为降序）
+// 设置排行榜按玩家排序（真为升序，假为降序）
 native LeaderboardSortItemsByPlayer takes leaderboard lb, boolean ascending returns nothing
-// 排行榜 按文本排序（真为升序，假为降序）
+// 设置排行榜按文本排序（真为升序，假为降序）
 native LeaderboardSortItemsByLabel takes leaderboard lb, boolean ascending returns nothing
-// 排行榜 查询玩家是否上榜
+// 查询指定玩家是否已上榜（指定排行榜）
 native LeaderboardHasPlayerItem takes leaderboard lb, player p returns boolean
-// 排行榜 查询玩家在排行榜的位置
+// 查询指定玩家在排行榜的排名
 native LeaderboardGetPlayerIndex takes leaderboard lb, player p returns integer
-// 排行榜 设置标题
+// 设置排行榜标题
 native LeaderboardSetLabel takes leaderboard lb, string label returns nothing
-// 排行榜 获取标题
+// 获取排行榜标题
 native LeaderboardGetLabelText takes leaderboard lb returns string
 
-// 排行榜 设置玩家上榜 [R]
+// 设置指定玩家上榜（指定排行榜） [R]
 native PlayerSetLeaderboard takes player toPlayer, leaderboard lb returns nothing
-// 排行榜 获取玩家上榜的排行榜 [R]
+// 获取玩家已登上的排行榜 [R]
 native PlayerGetLeaderboard takes player toPlayer returns leaderboard
 
-// 排行榜 设置标题颜色 [R]
+// 设置排行榜标题颜色 [R]
 native LeaderboardSetLabelColor takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-// 排行榜 设置数值颜色 [R]
+// 设置排行榜数值颜色 [R]
 native LeaderboardSetValueColor takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-// 排行榜 设置显示样式
+// 设置排行榜显示样式
 native LeaderboardSetStyle takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
-// 排行榜 设置玩家分值
+// 设置排行榜玩家分值
 native LeaderboardSetItemValue takes leaderboard lb, integer whichItem, integer val returns nothing
-// 排行榜 设置玩家名字
+// 设置排行榜玩家名字
 native LeaderboardSetItemLabel takes leaderboard lb, integer whichItem, string val returns nothing
-// 排行榜 设置玩家显示样式
+// 设置排行榜玩家显示样式
 // @param whichItem玩家在排行榜中的位置
 // @param showLabel是否显示名字
 // @param showValue是否显示分数
 // @param showIcon是否显示图标
 native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
-// 排行榜 设置玩家名字颜色
+// 设置排行榜玩家名字颜色
 native LeaderboardSetItemLabelColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
 // 排行榜 设置玩家分值颜色
 native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
@@ -6801,7 +6801,7 @@ native CameraSetupApplyForceDuration takes camerasetup whichSetup, boolean doPan
 native CameraSetupApplyForceDurationWithZ takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
 // 设置镜头标签
 native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns nothing
-// 获得镜头标签
+// 获取镜头标签
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
 // 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
