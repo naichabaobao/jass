@@ -11164,7 +11164,7 @@ function MeleeTriggerActionAllianceChange takes nothing returns nothing
     call MeleeCheckForCrippledPlayers()
 endfunction
 
-// 对战比赛即将结束（暴露提示）
+// 锦标赛即将结束（暴露提示）
 function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
     // Note: We may get this trigger multiple times
     local integer    playerIndex
@@ -11218,7 +11218,7 @@ function MeleeWasUserPlayer takes player whichPlayer returns boolean
     return (slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
 endfunction
 
-// 判断对战比赛的结束规则
+// 判断锦标赛结束规则
 function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     local integer array playerScore
     local integer array teamScore
@@ -11345,7 +11345,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
 
 endfunction
 
-// 对战比赛结束
+// 锦标赛结束
 function MeleeTriggerTournamentFinishNow takes nothing returns nothing
     local integer rule = GetTournamentFinishNowRule()
 
