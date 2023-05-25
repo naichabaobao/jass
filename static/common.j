@@ -6870,7 +6870,7 @@ constant native GetCameraTargetPositionZ takes nothing returns real
 constant native GetCameraTargetPositionLoc takes nothing returns location
 // 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
-// 获取当前镜头位置的 Y 坐标
+// 获取当前镜头观察位置的 Y 坐标
 constant native GetCameraEyePositionY takes nothing returns real
 // 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
