@@ -97,7 +97,7 @@ globals
 
     // Auto Save constants
 
-    // 最大自动保存游戏次数，默认5
+    // 最大（自动）存档数量，默认5
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
