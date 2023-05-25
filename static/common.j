@@ -4442,18 +4442,18 @@ native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter retu
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// 将指定圆形区域的单位添加到单位组（指定圆心坐标）
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 将圆形区域的单位添加到单位组（指定圆心坐标）
+// 将指定圆形区域的单位添加到单位组（指定圆心坐标）
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// 【弃用】将指定圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 【弃用】将圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
+// 【弃用】将指定圆形区域的单位添加到单位组（指定圆心坐标），同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
@@ -4464,19 +4464,19 @@ native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolex
 
 // 发布单位组命令（无目标）
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
-// 发布ID命令(无目标)
+// 发布单位组ID命令(无目标)
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
-// 发布命令(指定坐标) [R]
+// 发布单位组命令(指定坐标) [R]
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
 // 发布单位组命令（指定点）
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
-// 发布ID命令(指定坐标)
+// 发布单位组ID命令(指定坐标)
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
-// 发布ID命令(指定点)
+// 发布单位组ID命令(指定点)
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
 // 发布单位组命令(指定单位/物品/可破坏物)
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
-// 发布ID命令(指定单位/物品/可破坏物)
+// 发布单位组ID命令(指定单位/物品/可破坏物)
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
