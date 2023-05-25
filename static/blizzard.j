@@ -6911,7 +6911,7 @@ function CreateQuestItemBJ takes quest whichQuest, string description returns qu
 endfunction
 
 
-// 设置任务完成条件内容
+// 设置任务完成条件说明
 function QuestItemSetDescriptionBJ takes questitem whichQuestItem, string description returns nothing
     call QuestItemSetDescription(whichQuestItem, description)
 endfunction
