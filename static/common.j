@@ -6439,7 +6439,7 @@ native SkinManagerGetLocalPath takes string key returns string
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
 // 显示/隐藏 小地图（任务）图标
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 设置小地图（任务）图标自我销毁
+// 设置小地图（任务）图标在指定布尔值满足时自我销毁
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
