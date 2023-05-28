@@ -323,10 +323,9 @@ constant native AbilityId2String takes integer abilityId returns string
 // 获取物体名称（字串符） [C]，此命令在AI脚本返回值为 null
 // Looks up the "name" field for any object (unit, item, ability)
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数
-// 1.28及以下：11
-// 1.29及以上：23
-// 因为玩家1是0
+// 获取最大的玩家数，不包括中立玩家
+// 1.28及以下：12
+// 1.29及以上：24
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
@@ -339,8 +338,8 @@ constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 因为玩家1是0
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 获取最大玩家槽数量，包括中立玩家
-// 1.28及以下：玩家1~玩家12，中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
-// 1.29及以上：玩家1~玩家24，中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
+// 1.28及以下：16
+// 1.29及以上：28
 constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
 // 1.28及以下：15
@@ -361,18 +360,18 @@ globals
 	
 	// 假 false
  constant boolean FALSE = false
-    // 真 true
+        // 真 true
 	constant boolean TRUE = true
 	// 数组最大值，默认值32768
 	// 注：1.28及以下版本，默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家（玩家16/28）
 	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
-	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
+	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家27），中立被动（玩家28）
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 	// 中立敌对玩家（玩家13/25）
 	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
-	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家26），中立被动（玩家28）
+	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家27），中立被动（玩家28）
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 玩家颜色 红色
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
