@@ -2671,7 +2671,7 @@ function TriggerRegisterGameLoadedEventBJ takes trigger trig returns event
 endfunction
 
 
-// 事件 保存进度
+// 事件 存档
 function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SAVE)
 endfunction
@@ -6937,13 +6937,13 @@ function CreateDefeatConditionBJ takes string description returns defeatconditio
 endfunction
 
 
-// 删除失败条件
+// 删除任务失败条件
 function DestroyDefeatConditionBJ takes defeatcondition whichCondition returns nothing
     call DestroyDefeatCondition(whichCondition)
 endfunction
 
 
-// 设置失败条件说明
+// 设置任务失败条件说明
 function DefeatConditionSetDescriptionBJ takes defeatcondition whichCondition, string description returns nothing
     call DefeatConditionSetDescription(whichCondition, description)
 endfunction
@@ -8661,7 +8661,7 @@ function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missi
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
 
-// <1.24> 保存容器（单位/物品/可破坏物）
+// <1.24> 保存微件/对象（单位/物品/可破坏物）
 function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missionKey, hashtable table returns boolean
     return SaveWidgetHandle(table, missionKey, key, whichWidget)
 endfunction
@@ -8786,7 +8786,7 @@ function SaveQuestItemHandleBJ takes questitem whichQuestitem, integer key, inte
 endfunction
 
 
-// <1.24> 保存失败条件
+// <1.24> 保存（任务）失败条件
 function SaveDefeatConditionHandleBJ takes defeatcondition whichDefeatcondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
 endfunction
@@ -8816,7 +8816,7 @@ function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, in
 endfunction
 
 
-// <1.24> 保存可追踪物
+// <1.24> 保存可追踪对象
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
@@ -8875,7 +8875,7 @@ function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
 
-// <1.24> 保存实体对象
+// <1.24> 保存句柄
 function SaveAgentHandleBJ takes agent whichAgent, integer key, integer missionKey, hashtable table returns boolean
     return SaveAgentHandle(table, missionKey, key, whichAgent)
 endfunction
@@ -8886,14 +8886,14 @@ function SaveHashtableHandleBJ takes hashtable whichHashtable, integer key, inte
 endfunction
 
 
-// 读取实数值
+// 读取实数
 function GetStoredRealBJ takes string key, string missionKey, gamecache cache returns real
     //call SyncStoredReal(cache, missionKey, key)
     return GetStoredReal(cache, missionKey, key)
 endfunction
 
 
-// 读取整数数据
+// 读取整数
 function GetStoredIntegerBJ takes string key, string missionKey, gamecache cache returns integer
     //call SyncStoredInteger(cache, missionKey, key)
     return GetStoredInteger(cache, missionKey, key)
@@ -8907,7 +8907,7 @@ function GetStoredBooleanBJ takes string key, string missionKey, gamecache cache
 endfunction
 
 
-// 度曲字串符数据
+// 读取字串符
 function GetStoredStringBJ takes string key, string missionKey, gamecache cache returns string
     local string s
 
@@ -8935,7 +8935,7 @@ function LoadIntegerBJ takes integer key, integer missionKey, hashtable table re
 endfunction
 
 
-// <1.24> 从哈希表提取布尔
+// <1.24> 从哈希表提取布尔值
 function LoadBooleanBJ takes integer key, integer missionKey, hashtable table returns boolean
     //call SyncStoredBoolean(table, missionKey, key)
     return LoadBoolean(table, missionKey, key)
@@ -8961,7 +8961,7 @@ function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable tab
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
 
-// <1.24> 从哈希表提取容器（单位/物品/可破坏物）
+// <1.24> 从哈希表提取微件/实体（单位/物品/可破坏物）
 function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable table returns widget
     return LoadWidgetHandle(table, missionKey, key)
 endfunction
@@ -9089,7 +9089,7 @@ function LoadQuestItemHandleBJ takes integer key, integer missionKey, hashtable 
 endfunction
 
 
-// <1.24> 从哈希表提取失败条件
+// <1.24> 从哈希表提取（任务）失败条件
 function LoadDefeatConditionHandleBJ takes integer key, integer missionKey, hashtable table returns defeatcondition
     return LoadDefeatConditionHandle(table, missionKey, key)
 endfunction
@@ -9119,7 +9119,7 @@ function LoadMultiboardItemHandleBJ takes integer key, integer missionKey, hasht
 endfunction
 
 
-// <1.24> 从哈希表提取可追踪物
+// <1.24> 从哈希表提取可追踪对象
 function LoadTrackableHandleBJ takes integer key, integer missionKey, hashtable table returns trackable
     return LoadTrackableHandle(table, missionKey, key)
 endfunction
@@ -9162,6 +9162,7 @@ endfunction
 
 
 // <1.24> 从哈希表提取区域(不规则)
+// 如仍需使用该区域，请勿排泄
 function LoadRegionHandleBJ takes integer key, integer missionKey, hashtable table returns region
     return LoadRegionHandle(table, missionKey, key)
 endfunction
@@ -9199,19 +9200,19 @@ function RestoreUnitLocFacingPointBJ takes string key, string missionKey, gameca
 endfunction
 
 
-// 获取最后恢复的单位
+// 获取最后读取的单位
 function GetLastRestoredUnitBJ takes nothing returns unit
     return bj_lastLoadedUnit
 endfunction
 
 
-// 清除所有缓存
+// 清除所有游戏缓存
 function FlushGameCacheBJ takes gamecache cache returns nothing
     call FlushGameCache(cache)
 endfunction
 
 
-// 清除缓存[分类]
+// 清除游戏缓存[分类]
 function FlushStoredMissionBJ takes string missionKey, gamecache cache returns nothing
     call FlushStoredMission(cache, missionKey)
 endfunction
@@ -9229,7 +9230,7 @@ function FlushChildHashtableBJ takes integer missionKey, hashtable table returns
 endfunction
 
 
-// 游戏缓存的数据
+// 判断游戏缓存是否存有数据
 function HaveStoredValue takes string key, integer valueType, string missionKey, gamecache cache returns boolean
     if (valueType == bj_GAMECACHE_BOOLEAN) then
         return HaveStoredBoolean(cache, missionKey, key)
@@ -9248,7 +9249,7 @@ function HaveStoredValue takes string key, integer valueType, string missionKey,
 endfunction
 
 
-// <1.24> 哈希项存在
+// <1.24> 判断哈希表是否存有数据
 function HaveSavedValue takes integer key, integer valueType, integer missionKey, hashtable table returns boolean
     if (valueType == bj_HASHTABLE_BOOLEAN) then
         return HaveSavedBoolean(table, missionKey, key)
@@ -9267,13 +9268,13 @@ function HaveSavedValue takes integer key, integer valueType, integer missionKey
 endfunction
 
 
-// 显示/隐藏自定义战役按钮
+// 显示/隐藏 自定义战役按钮
 function ShowCustomCampaignButton takes boolean show, integer whichButton returns nothing
     call SetCustomCampaignButtonVisible(whichButton - 1, show)
 endfunction
 
 
-// 自定义战役按钮是可见的
+// 查询自定义战役按钮是否可见
 function IsCustomCampaignButtonVisibile takes integer whichButton returns boolean
     return GetCustomCampaignButtonVisible(whichButton - 1)
 endfunction
@@ -9286,39 +9287,39 @@ function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint
 endfunction
 
 
-// 读取游戏进度
+// 读取存档
 function LoadGameBJ takes string loadFileName, boolean doScoreScreen returns nothing
     call LoadGame(loadFileName, doScoreScreen)
 endfunction
 
 
-// 保存进度同时设置下一张地图
+// 存档并设置下一张地图
 function SaveAndChangeLevelBJ takes string saveFileName, string newLevel, boolean doScoreScreen returns nothing
     call SaveGame(saveFileName)
     call ChangeLevel(newLevel, doScoreScreen)
 endfunction
 
 
-// 保存进度同时读取进度
+// 存档并读档
 function SaveAndLoadGameBJ takes string saveFileName, string loadFileName, boolean doScoreScreen returns nothing
     call SaveGame(saveFileName)
     call LoadGame(loadFileName, doScoreScreen)
 endfunction
 
 
-// 重命名游戏进度文件夹
+// 重命名存档文件夹
 function RenameSaveDirectoryBJ takes string sourceDirName, string destDirName returns boolean
     return RenameSaveDirectory(sourceDirName, destDirName)
 endfunction
 
 
-// 删除游戏进度文件夹
+// 删除存档文件夹
 function RemoveSaveDirectoryBJ takes string sourceDirName returns boolean
     return RemoveSaveDirectory(sourceDirName)
 endfunction
 
 
-// 复制游戏进度
+// 复制存档
 function CopySaveGameBJ takes string sourceSaveName, string destSaveName returns boolean
     return CopySaveGame(sourceSaveName, destSaveName)
 endfunction
