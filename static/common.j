@@ -315,7 +315,7 @@ constant native UnitId takes string unitIdString returns integer
 // 单位ID转换成字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 技能字转换成符串ID    Not currently working correctly...
+// 技能转换成符串ID    Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
 // 技能ID转换成字符串
 constant native AbilityId2String takes integer abilityId returns string
