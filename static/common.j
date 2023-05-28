@@ -6131,7 +6131,7 @@ native SaveBoolean takes hashtable table, integer parentKey, integer childKey, b
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
 // <1.24> 保存玩家到哈希表 [C]
 native SavePlayerHandle takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
-// <1.24> 保存单位/物品/可破坏物到哈希表 [C]
+// <1.24> 保存微件/实体（单位/物品/可破坏物）到哈希表 [C]
 native SaveWidgetHandle takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
 // <1.24> 保存可破坏物到哈希表 [C]
 native SaveDestructableHandle takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
@@ -6147,7 +6147,7 @@ native SaveTimerHandle takes hashtable table, integer parentKey, integer childKe
 native SaveTriggerHandle takes hashtable table, integer parentKey, integer childKey, trigger whichTrigger returns boolean
 // <1.24> 保存触发条件到哈希表 [C]
 native SaveTriggerConditionHandle takes hashtable table, integer parentKey, integer childKey, triggercondition whichTriggercondition returns boolean
-// <1.24> 保存触发动作到哈希表 [C]
+// <1.24> 保存触发器动作到哈希表 [C]
 native SaveTriggerActionHandle takes hashtable table, integer parentKey, integer childKey, triggeraction whichTriggeraction returns boolean
 // <1.24> 保存触发事件到哈希表 [C]
 native SaveTriggerEventHandle takes hashtable table, integer parentKey, integer childKey, event whichEvent returns boolean
@@ -6203,7 +6203,7 @@ native SaveRegionHandle takes hashtable table, integer parentKey, integer childK
 native SaveFogStateHandle takes hashtable table, integer parentKey, integer childKey, fogstate whichFogState returns boolean
 // <1.24> 保存可见度修正器到哈希表 [C]
 native SaveFogModifierHandle takes hashtable table, integer parentKey, integer childKey, fogmodifier whichFogModifier returns boolean
-// <1.24> 保存实体对象到哈希表 [C]
+// <1.24> 保存句柄到哈希表 [C]
 native SaveAgentHandle takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
 // <1.24> 保存哈希表到哈希表 [C]
 native SaveHashtableHandle takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
@@ -6221,7 +6221,7 @@ native LoadBoolean takes hashtable table, integer parentKey, integer childKey re
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
 // <1.24> 从哈希表提取玩家 [C]
 native LoadPlayerHandle takes hashtable table, integer parentKey, integer childKey returns player
-// <1.24> 从哈希表提取单位/物品/可破坏物[C]
+// <1.24> 从哈希表提取微件/实体（单位/物品/可破坏物）[C]
 native LoadWidgetHandle takes hashtable table, integer parentKey, integer childKey returns widget
 // <1.24> 从哈希表提取可破坏物 [C]
 native LoadDestructableHandle takes hashtable table, integer parentKey, integer childKey returns destructable
@@ -6291,6 +6291,7 @@ native LoadImageHandle takes hashtable table, integer parentKey, integer childKe
 // <1.24> 从哈希表提取地面纹理变化 [C]
 native LoadUbersplatHandle takes hashtable table, integer parentKey, integer childKey returns ubersplat
 // <1.24> 从哈希表提取不规则区域 [C]
+// 如仍需使用该区域，请勿排泄
 native LoadRegionHandle takes hashtable table, integer parentKey, integer childKey returns region
 // <1.24> 从哈希表提取迷雾状态 [C]
 native LoadFogStateHandle takes hashtable table, integer parentKey, integer childKey returns fogstate
@@ -6300,25 +6301,25 @@ native LoadFogModifierHandle takes hashtable table, integer parentKey, integer c
 native LoadHashtableHandle takes hashtable table, integer parentKey, integer childKey returns hashtable
 // <1.29> 从哈希表提取框架（UI）
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
-// 查询指定哈希表的指定位置是否记录了整数
+// <1.24> 查询指定哈希表的指定位置是否记录了整数
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定哈希表的指定位置是否记录了实数
+// <1.24> 查询指定哈希表的指定位置是否记录了实数
 native HaveSavedReal takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定哈希表的指定位置是否记录了布尔值
+// <1.24> 查询指定哈希表的指定位置是否记录了布尔值
 native HaveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定哈希表的指定位置是否记录了字符串
+// <1.24> 查询指定哈希表的指定位置是否记录了字符串
 native HaveSavedString takes hashtable table, integer parentKey, integer childKey returns boolean
-// 查询指定哈希表的指定位置是否记录了数据
+// <1.24> 查询指定哈希表的指定位置是否记录了数据
 native HaveSavedHandle takes hashtable table, integer parentKey, integer childKey returns boolean
-// 删除指定哈希表的指定位置记录的整数
+// <1.24> 删除指定哈希表的指定位置记录的整数
 native RemoveSavedInteger takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定哈希表的指定位置记录的实数
+// <1.24> 删除指定哈希表的指定位置记录的实数
 native RemoveSavedReal takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定哈希表的指定位置记录的布尔值
+// <1.24> 删除指定哈希表的指定位置记录的布尔值
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定哈希表的指定位置记录的字串符
+// <1.24> 删除指定哈希表的指定位置记录的字串符
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
-// 删除指定哈希表的指定位置记录的数据
+// <1.24> 删除指定哈希表的指定位置记录的数据
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
@@ -6330,16 +6331,16 @@ native FlushChildHashtable takes hashtable table, integer parentKey returns noth
 
 // Randomization API
 
-// 获取随机整数
+// 获取随机整数（指定区间）
 native GetRandomInt takes integer lowBound, integer highBound returns integer
-// 获取随机实数
+// 获取随机实数（指定区间）
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
 native CreateUnitPool takes nothing returns unitpool
 // 删除单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
-// 添加单位类型 [R]
+// 添加指定单位类型到指定单位池 [R]
 native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight returns nothing
 // 删除指定单位池的指定单位类型 [R]
 native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns nothing
@@ -6361,10 +6362,10 @@ native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // Choose any random unit/item. (NP means Neutral Passive)
 
-// 获取随机中立敌对单位单位类型(指定单位等级)
+// 获取随机中立敌对玩家单位的单位类型(指定单位等级)
 // 默认用于地图初始化时创建随机中立敌对单位
 native ChooseRandomCreep takes integer level returns integer
-// 获取随机中立建筑物类型
+// 获取随机中立被动玩家建筑单位的单位类型
 // 默认用于地图初始化时创建随机中立被动单位（如商店、泉水等）
 native ChooseRandomNPBuilding takes nothing returns integer
 // 随机选择物品-所有等级
@@ -6388,11 +6389,11 @@ native ResetTerrainFog takes nothing returns nothing
 native SetUnitFog takes real a, real b, real c, real d, real e returns nothing
 // 设置地形迷雾 [R]
 native SetTerrainFogEx takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
-// 对玩家显示文本消息(自动限时) [R]
+// 对指定玩家显示文本消息(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
-// 对玩家显示文本消息(指定时间) [R]
+// 对指定玩家显示文本消息(指定时间) [R]
 native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
-// 从玩家显示文本消息(指定时间) [R]
+// 从指定玩家显示文本消息(指定时间) [R]
 native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
@@ -6406,11 +6407,11 @@ native SetPortraitLight takes string portraitDNCFile returns nothing
 // 设置天空
 // @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
-// 启用/禁用玩家控制权(所有玩家) [R]
+// 启用/禁用 玩家控制权(所有玩家) [R]
 // 使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
 // 该操作对AI无效
 native EnableUserControl takes boolean b returns nothing
-// 启用/禁用玩家UI
+// 启用/禁用 玩家UI
 native EnableUserUI takes boolean b returns nothing
 // 暂停/恢复昼夜时间
 native SuspendTimeOfDay takes boolean b returns nothing
@@ -6499,11 +6500,11 @@ native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
 // 保留英雄按钮（左上角英雄图标，F1~FN）
 native SetReservedLocalHeroButtons takes integer reserved returns nothing
-// 获取联盟颜色过滤值
+// 获取联盟颜色过滤状态
 native GetAllyColorFilterState takes nothing returns integer
-// 设置联盟颜色过滤值
+// 设置联盟颜色过滤状态
 native SetAllyColorFilterState takes integer state returns nothing
-// 判断小地图是否显示野生单位营地图标
+// 判断小地图是否显示野生（中立敌对）单位营地图标
 native GetCreepCampFilterState takes nothing returns boolean
 // 显示/隐藏 小地图野生单位营地图标（是否在小地图显示中立敌对玩家的单位）
 native SetCreepCampFilterState takes boolean state returns nothing
@@ -6533,7 +6534,7 @@ native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-// 设置任务是否必须完成（主线任务）
+// 设置任务是否必须完成（主线或支线任务）
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
 // 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
@@ -6548,11 +6549,11 @@ native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 native IsQuestRequired takes quest whichQuest returns boolean
 // 查询任务是否已完成
 native IsQuestCompleted takes quest whichQuest returns boolean
-// 查询任务是否被发现
+// 查询任务是否已被发现
 native IsQuestDiscovered takes quest whichQuest returns boolean
-// 查询任务是否失败
+// 查询任务是否已失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 查询任务是否开启（激活）
+// 查询任务是否已开启（已激活）
 native IsQuestEnabled takes quest whichQuest returns boolean
 
 // 创建任务要求
@@ -6569,7 +6570,7 @@ native IsQuestItemCompleted takes questitem whichQuestItem returns boolean
 native CreateDefeatCondition takes nothing returns defeatcondition
 // 销毁任务失败条件
 native DestroyDefeatCondition takes defeatcondition whichCondition returns nothing
-// 任务失败条件描述
+// 设置任务失败条件描述
 native DefeatConditionSetDescription takes defeatcondition whichCondition, string description returns nothing
 // 闪动任务按钮
 native FlashQuestDialogButton takes nothing returns nothing
