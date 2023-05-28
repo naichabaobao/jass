@@ -2377,7 +2377,7 @@ endfunction
 //***************************************************************************
 
 
-// 文本消息(自动计时)
+// 为玩家组显示文本消息(自动计时)
 function DisplayTextToForce takes force toForce, string message returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2386,7 +2386,7 @@ function DisplayTextToForce takes force toForce, string message returns nothing
 endfunction
 
 
-// 文本消息(指定计时)
+// 为玩家组显示文本消息(指定时间)
 function DisplayTimedTextToForce takes force toForce, real duration, string message returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
