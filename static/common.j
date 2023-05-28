@@ -323,7 +323,7 @@ constant native AbilityId2String takes integer abilityId returns string
 // 获取物体名称（字串符） [C]，此命令在AI脚本返回值为 null
 // Looks up the "name" field for any object (unit, item, ability)
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数，不包括中立玩家
+// 获取最大的玩家数量，不包括中立玩家
 // 1.28及以下：12
 // 1.29及以上：24
 constant native GetBJMaxPlayers takes nothing returns integer
@@ -363,7 +363,7 @@ globals
         // 真 true
 	constant boolean TRUE = true
 	// 数组最大值，默认值32768
-	// 注：1.28及以下版本，默认值是8192
+	// 注：1.28及以下版本的默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家（玩家16/28）
 	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
