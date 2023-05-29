@@ -6469,13 +6469,13 @@ function ConfigureNeutralVictim takes nothing returns nothing
 endfunction
 
 
-// 设置玩家所有单位移交给中立被动玩家控制
+// 设置指定玩家所有单位移交给中立被动玩家控制触发器动作
 function MakeUnitsPassiveForPlayerEnum takes nothing returns nothing
     call SetUnitOwner(GetEnumUnit(), Player(bj_PLAYER_NEUTRAL_VICTIM), false)
 endfunction
 
 
-// 将指定玩家的单位移交给中立被动玩家控制
+// 设置指定玩家所有单位移交给中立被动玩家控制
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
     local group   playerUnits = CreateGroup()
