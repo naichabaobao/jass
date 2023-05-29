@@ -5023,13 +5023,13 @@ function GetLoadedUnitBJ takes nothing returns unit
 endfunction
 
 
-// 查询单位是否已被传送
+// 查询单位是否已被装载
 function IsUnitInTransportBJ takes unit whichUnit, unit whichTransport returns boolean
     return IsUnitInTransport(whichUnit, whichTransport)
 endfunction
 
 
-// 查询单位是否正被传送
+// 查询单位是否正被装载
 function IsUnitLoadedBJ takes unit whichUnit returns boolean
     return IsUnitLoaded(whichUnit)
 endfunction
@@ -8419,13 +8419,13 @@ endfunction
 //***************************************************************************
 
 
-// 设置当前科技级别
+// 设置指定玩家指定科技当前等级
 function SetPlayerTechResearchedSwap takes integer techid, integer levels, player whichPlayer returns nothing
     call SetPlayerTechResearched(whichPlayer, techid, levels)
 endfunction
 
 
-// 设置最高科技级别
+// 设置指定玩家指定科技最高等级
 function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, techid, maximum)
 endfunction
@@ -8437,19 +8437,19 @@ function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer ret
 endfunction
 
 
-// 获取科技等级
+// 获取指定玩家指定科技当前等级
 function GetPlayerTechCountSimple takes integer techid, player whichPlayer returns integer
     return GetPlayerTechCount(whichPlayer, techid, true)
 endfunction
 
 
-// 获取最大科技等级
+// 获取指定玩家指定科技的最大等级
 function GetPlayerTechMaxAllowedSwap takes integer techid, player whichPlayer returns integer
     return GetPlayerTechMaxAllowed(whichPlayer, techid)
 endfunction
 
 
-// 允许/禁止 技能
+// 启用/禁用 技能（指定玩家）
 function SetPlayerAbilityAvailableBJ takes boolean avail, integer abilid, player whichPlayer returns nothing
     call SetPlayerAbilityAvailable(whichPlayer, abilid, avail)
 endfunction
