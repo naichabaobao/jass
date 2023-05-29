@@ -803,7 +803,7 @@ globals
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
 	// 地图参数 - 使用障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
-	// 地图参数 - 裁判
+	// 地图参数 - 启用裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
 	// 地图参数 - 战败后成为观战者
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
@@ -963,7 +963,7 @@ globals
 	constant playerstate PLAYER_STATE_PLACED = ConvertPlayerState(9)
 	// 玩家状态 - 战败后成为观战者
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
-	// 玩家状态 - 裁判
+	// 玩家状态 - 裁判或观战者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
 	// 玩家状态 - 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
