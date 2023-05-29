@@ -5856,13 +5856,13 @@ function GetUnitsInRangeOfLocAll takes real radius, location whichLocation retur
 endfunction
 
 
-// 匹配的单位类型
+// 获取指定单位类型触发器动作
 function GetUnitsOfTypeIdAllFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
 
-// 获取指定单位类型的单位组
+// 获取指定单位类型，并以单位组形式返回
 // 会生成单位组，用完请注意排泄
 function GetUnitsOfTypeIdAll takes integer unitid returns group
     local group   result = CreateGroup()
@@ -5885,7 +5885,7 @@ function GetUnitsOfTypeIdAll takes integer unitid returns group
 endfunction
 
 
-// 匹配玩家拥有的单位（可指定过滤）
+// 选取玩家拥有的单位（可指定过滤），并以单位组形式返回
 // 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5895,19 +5895,19 @@ function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter retu
 endfunction
 
 
-// 玩家拥有的匹配单位
+// 选取玩家拥有的单位
 // 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerAll takes player whichPlayer returns group
     return GetUnitsOfPlayerMatching(whichPlayer, null)
 endfunction
 
 
-// 玩家拥有的匹配单位类型
+// 选取玩家的指定单位类型，并以单位组形式返回触发器动作
 function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
-// 选取玩家的指定类型单位组
+// 选取玩家的指定单位类型，并以单位组形式返回
 // 会生成单位组，用完请注意排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
@@ -5965,7 +5965,7 @@ function GetPlayersByMapControl takes mapcontrol whichControl returns force
 endfunction
 
 
-// 获取玩家的盟友
+// 获取指定玩家的盟友
 // 以玩家组形式返回
 function GetPlayersAllies takes player whichPlayer returns force
     local force f = CreateForce()
@@ -5974,7 +5974,7 @@ function GetPlayersAllies takes player whichPlayer returns force
 endfunction
 
 
-// 获取玩家的敌人
+// 获取指定玩家的敌人
 // 以玩家组形式返回
 function GetPlayersEnemies takes player whichPlayer returns force
     local force f = CreateForce()
@@ -6107,12 +6107,11 @@ function SetUnitScalePercent takes unit whichUnit, real percentScaleX, real perc
     call SetUnitScale(whichUnit, percentScaleX * 0.01, percentScaleY * 0.01, percentScaleZ * 0.01)
 endfunction
 
-
+// 设置单位颜色
 // This version differs from the common.j interface in that the alpha value
 // is reversed so as to be displayed as transparency, and all four parameters
 // are treated as percentages rather than bytes.
 //
-// 设置单位着色
 function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
     call SetUnitVertexColor(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
@@ -6196,7 +6195,7 @@ function DialogDisplayBJ takes boolean flag, dialog whichDialog, player whichPla
 endfunction
 
 
-// 设置 对话框 标题
+// 设置 对话框标题
 function DialogSetMessageBJ takes dialog whichDialog, string message returns nothing
     call DialogSetMessage(whichDialog, message)
 endfunction
