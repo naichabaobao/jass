@@ -6408,16 +6408,16 @@ native SetPortraitLight takes string portraitDNCFile returns nothing
 // @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
-// 使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
+// 启用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
 // 该操作对AI无效
 native EnableUserControl takes boolean b returns nothing
 // 启用/禁用 玩家UI
 native EnableUserUI takes boolean b returns nothing
-// 暂停/恢复昼夜时间
+// 暂停/恢复 昼夜交替
 native SuspendTimeOfDay takes boolean b returns nothing
-// 设置昼夜时间流逝速度 [R]
+// 设置昼夜交替时间流逝速度 [R]
 native SetTimeOfDayScale takes real r returns nothing
-// 获取昼夜时间流逝速度
+// 获取昼夜交替时间流逝速度
 native GetTimeOfDayScale takes nothing returns real
 // 开启/关闭 信箱模式(所有玩家) [R]
 native ShowInterface takes boolean flag, real fadeDuration returns nothing
@@ -7194,10 +7194,10 @@ native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, b
 //
 
 // 启用对战 AI 脚本
-// AI只对电脑玩家生效
+// 只对游戏初始化时控制者类型为电脑的玩家生效
 native StartMeleeAI takes player num, string script returns nothing
 // 启用战役 AI 脚本
-// AI只对电脑玩家生效
+// 只对游戏初始化时控制者类型为电脑的玩家生效
 native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
 native CommandAI takes player num, integer command, integer data returns nothing
@@ -7243,10 +7243,10 @@ native PreloadGenClear takes nothing returns nothing
 // 3. call PreloadGenEnd("log.pld")
 native PreloadGenStart takes nothing returns nothing
 // 预加载结束
+// @param filename 绝对路径,这个文件的后缀可以是任何类型,因此你可以生成可执行文件的后缀
 // 1. call PreloadGenStart()
 // 2. call Preloader("blp\\jass.blp")
 // 3. call PreloadGenEnd("log.pld")
-// @param filename 绝对路径,这个文件的后缀可以是任何类型,因此你可以生成可执行文件的后缀
 native PreloadGenEnd takes string filename returns nothing
 // 预读文件
 native Preloader takes string filename returns nothing
@@ -7262,13 +7262,13 @@ native BlzHideCinematicPanels takes boolean enable returns nothing
 
 // Automation Test
 
-// 原子性测试类型
+// 设置自动化测试类型
 native AutomationSetTestType takes string testType returns nothing
-// 原子性测试开始
+// 开始自动化测试
 native AutomationTestStart takes string testName returns nothing
-// 原子性测试结束
+// 结束自动化测试
 native AutomationTestEnd takes nothing returns nothing
-// 原子性测试完成
+// 完成自动化测试
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
@@ -7330,101 +7330,101 @@ native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
 // 设置技能位置（技能图标坐标）- Y（启用自动施法）
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
-// 获取单位最大生命值
+// 获取指定单位最大生命值
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
 // 设置最大生命值
 native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
-// 获取单位最大魔法值
+// 获取指定单位最大魔法值
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
-// 设置最大法力值
+// 设置指定单位最大法力值
 native BlzSetUnitMaxMana takes unit whichUnit, integer mana returns nothing
-// 设置物品名字
+// 设置指定物品名字
 native BlzSetItemName takes item whichItem, string name returns nothing
-// 设置物品介绍
+// 设置指定物品介绍
 native BlzSetItemDescription takes item whichItem, string description returns nothing
-// 获取物品介绍
+// 获取指定物品介绍
 native BlzGetItemDescription takes item whichItem returns string
-// 设置物品提示
+// 设置指定物品提示
 native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
-// 获取物品提示信息
+// 获取指定物品提示信息
 native BlzGetItemTooltip takes item whichItem returns string
-// 设置物品扩展提示
+// 设置指定物品扩展提示
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
-// 获取物品扩展提示信息
+// 获取指定物品扩展提示信息
 native BlzGetItemExtendedTooltip takes item whichItem returns string
-// 设置物品图标路径
+// 设置指定物品图标路径
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
-// 获取物品图标
+// 获取指定物品图标
 native BlzGetItemIconPath takes item whichItem returns string
-// 设置单位名字
+// 设置指定单位名字
 native BlzSetUnitName takes unit whichUnit, string name returns nothing
-// 设置英雄称谓
+// 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
-// 获取单位基础伤害
+// 获取指定单位基础伤害
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
-// 设置基础伤害
+// 设置指定单位基础伤害
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
-// 获取单位骰子数量
+// 获取指定单位骰子数量
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
-// 设置单位骰子数
+// 设置指定单位骰子数
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
-// 获取单位骰子面数
+// 获取指定单位骰子面数
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
-// 设置骰子面数
+// 设置指定单位骰子面数
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
-// 获取攻击间隔
+// 获取指定单位攻击间隔
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
-// 设置攻击间隔
+// 设置指定单位攻击间隔
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
-// 设置特效颜色（指定玩家）
+// 设置指定特效颜色（指定玩家）
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
-// 设置特效颜色（指定颜色）
+// 设置指定特效颜色（指定颜色）
 native BlzSetSpecialEffectColor takes effect whichEffect, integer r, integer g, integer b returns nothing
-// 设置特效透明度
+// 设置指定特效透明度
 native BlzSetSpecialEffectAlpha takes effect whichEffect, integer alpha returns nothing
-// 设置特效缩放
+// 设置指定特效缩放
 native BlzSetSpecialEffectScale takes effect whichEffect, real scale returns nothing
-// 设置特效坐标
+// 设置指定特效坐标
 native BlzSetSpecialEffectPosition takes effect whichEffect, real x, real y, real z returns nothing
-// 设置特效高度
+// 设置指定特效高度
 native BlzSetSpecialEffectHeight takes effect whichEffect, real height returns nothing
-// 设置特效播放速度
+// 设置指定特效播放速度
 native BlzSetSpecialEffectTimeScale takes effect whichEffect, real timeScale returns nothing
-// 设置特效持续时间
+// 设置指定特效持续时间
 native BlzSetSpecialEffectTime takes effect whichEffect, real time returns nothing
-// 设置特效朝向
+// 设置指定特效朝向
 native BlzSetSpecialEffectOrientation takes effect whichEffect, real yaw, real pitch, real roll returns nothing
-// 设置特效偏转度
+// 设置指定特效偏转度
 native BlzSetSpecialEffectYaw takes effect whichEffect, real yaw returns nothing
-// 设置特效纵摇
+// 设置指定特效纵摇
 native BlzSetSpecialEffectPitch takes effect whichEffect, real pitch returns nothing
-// 设置特效滚摇
+// 设置指定特效滚摇
 native BlzSetSpecialEffectRoll takes effect whichEffect, real roll returns nothing
-// 设置特效 X 坐标
+// 设置指定特效 X 坐标
 native BlzSetSpecialEffectX takes effect whichEffect, real x returns nothing
-// 设置特效 Y 坐标
+// 设置指定特效 Y 坐标
 native BlzSetSpecialEffectY takes effect whichEffect, real y returns nothing
-// 设置特效 Z 坐标
+// 设置指定特效 Z 坐标
 native BlzSetSpecialEffectZ takes effect whichEffect, real z returns nothing
-// 设置特效位置（指定点）
+// 设置指定特效位置（指定点）
 native BlzSetSpecialEffectPositionLoc takes effect whichEffect, location loc returns nothing
-// 获取特效位置 - X
+// 获取指定特效位置 - X
 native BlzGetLocalSpecialEffectX takes effect whichEffect returns real
 // 获取特效位置 - Y
 native BlzGetLocalSpecialEffectY takes effect whichEffect returns real
-// 获取特效位置 - Z
+// 获取指定特效位置 - Z
 native BlzGetLocalSpecialEffectZ takes effect whichEffect returns real
-// 清除特效子动画
+// 清除指定特效所有子动画
 native BlzSpecialEffectClearSubAnimations takes effect whichEffect returns nothing
-// 移除特效子动画
+// 移除指定特效的指定子动画
 native BlzSpecialEffectRemoveSubAnimation takes effect whichEffect, subanimtype whichSubAnim returns nothing
-// 添加特效子动画
+// 添加指定子动画到指定特效
 native BlzSpecialEffectAddSubAnimation takes effect whichEffect, subanimtype whichSubAnim returns nothing
-// 播放特效动画
+// 播放指定特效动画
 native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns nothing
-// 播放特效动画持续时间
+// 播放指定特效动画持续时间
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
-// 获取动画名
+// 获取指定动画类型名称
 native BlzGetAnimName takes animtype whichAnim returns string
 // 获取指定单位护甲值
 native BlzGetUnitArmor takes unit whichUnit returns real
