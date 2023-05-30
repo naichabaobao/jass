@@ -795,7 +795,7 @@ globals
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
 	// 游戏类型 - 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
-	// 地图参数 - 隐藏地形（默认迷雾状态）
+	// 地图参数 - 隐藏地形
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
 	// 地图参数 - 已探索地图
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
@@ -831,11 +831,11 @@ globals
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
 	// 地图参数 - 随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 - 地图重载
+	// 地图参数 - 重载地图
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
-	// 地图参数 - 玩家出生点随机
+	// 地图参数 - 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
-	// 地图参数 - 玩家出生点固定
+	// 地图参数 - 固定玩家出生点
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
 	// 地图参数 - 使用地图设置的玩家出生点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
@@ -965,7 +965,7 @@ globals
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
 	// 玩家状态 - 裁判或观战者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态 - 不可跟随
+	// 玩家状态 - 不可关注
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
@@ -984,13 +984,13 @@ globals
 	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
-	// 单位状态 当前生命值
+	// 单位状态 单位当前生命值
 	constant unitstate UNIT_STATE_LIFE = ConvertUnitState(0)
-	// 单位状态 最大生命值
+	// 单位状态 单位最大生命值
 	constant unitstate UNIT_STATE_MAX_LIFE = ConvertUnitState(1)
-	// 单位状态 当前法力值
+	// 单位状态 单位当前法力值
 	constant unitstate UNIT_STATE_MANA = ConvertUnitState(2)
-	// 单位状态 最大法力值
+	// 单位状态 单位最大法力值
 	constant unitstate UNIT_STATE_MAX_MANA = ConvertUnitState(3)
 	// AI难度 - 简单
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
@@ -1013,15 +1013,15 @@ globals
 	constant playerscore PLAYER_SCORE_FOOD_MAXPROD = ConvertPlayerScore(5)
 	// 玩家积分 - 最大使用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXUSED = ConvertPlayerScore(6)
-	// 玩家积分 - 杀死英雄
+	// 玩家积分 - 杀死英雄数量
 	constant playerscore PLAYER_SCORE_HEROES_KILLED = ConvertPlayerScore(7)
-	// 玩家积分 - 获得物品
+	// 玩家积分 - 获得物品数量
 	constant playerscore PLAYER_SCORE_ITEMS_GAINED = ConvertPlayerScore(8)
-	// 玩家积分 - 雇佣兵
+	// 玩家积分 - 购买雇佣兵数量
 	constant playerscore PLAYER_SCORE_MERCS_HIRED = ConvertPlayerScore(9)
 	// 玩家积分 - 采集到的黄金数量(全部)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_TOTAL = ConvertPlayerScore(10)
-	// 玩家积分 - 采集到的黄金数量(带有维修）
+	// 玩家积分 - 采集到的黄金数量(维修费生效期间采集的）
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
 	// 玩家积分 - 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
