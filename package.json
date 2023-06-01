@@ -1,10 +1,10 @@
 {
   "name": "jass",
   "displayName": "jass",
-  "description": "jass插件",
+  "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.14",
+  "version": "1.7.15",
   "keywords": [
     "jass",
     "vjass",

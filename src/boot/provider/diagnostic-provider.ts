@@ -29,6 +29,8 @@ import { Method, Native, Func } from '../jass/ast';
 import { isAiFile, isJFile } from '../tool';
 import { DataGetter } from './data';
 import { Options } from './options';
+import { Document } from '../check/mark';
+import { flow } from '../check/ast';
 
 const diagnosticCollection = vscode.languages.createDiagnosticCollection("jass");
 
@@ -48,6 +50,7 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 		if (Options.isJassDiagnostic) {
 	
 			diagnosticCollection.delete(document.uri);
+			/*
 			const program = new DataGetter().get(fsPath);
 			if (program) {
 				const diagnostics:vscode.Diagnostic[] = [];
@@ -88,7 +91,17 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 				});
 	
 			}
-	
+			*/
+			const dc = new Document(document.uri.fsPath, document.getText());
+			flow(dc);
+			const diagnostics:vscode.Diagnostic[] = [];
+			dc.errors.forEach(err => {
+				const range = new vscode.Range(new vscode.Position(err.loc.start.line, err.loc.start.position), new vscode.Position(err.loc.end.line, err.loc.end.position));
+				diagnostics.push(new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error));
+			});
+			diagnosticCollection.set(document.uri, diagnostics);
+
+			
 		}
 	}
 });

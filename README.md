@@ -1,7 +1,7 @@
 [貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
 [gitee源碼](https://gitee.com/naichabaobao/jass)
 [GitHub源碼](https://github.com/naichabaobao/jass)
-[Q群,點擊加入](https://shang.qq.com/wpa/qunwpa?idkey=56ca07f1d46b310f878eb4ccf4e153697d85aac546385fab0e31b569d3b0a79e)
+[Q群,點擊加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=j4VO5JOZy4x2zX9qRXWpG9mTs0lZq0_A&authKey=V1Vz47EJpB%2BkkZQ2bSKEIPBCpAqBJTQ%2Bg3wty9x0BtrvAp16ZkIWhDdF0p56rcq%2B&noverify=0&group_code=786204376)
 
 ***vscode最低版本1.49***
 
