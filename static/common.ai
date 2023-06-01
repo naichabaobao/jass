@@ -240,14 +240,14 @@ native DebugS               takes string str                            returns 
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 传送攻击队长到指定坐标
+    // 运输/传送攻击队长到指定坐标
     native TeleportCaptain      takes real x, real y                        returns nothing
     // 清除攻击队长当前的攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
-    // 命令攻击队长攻击到指定坐标
+    // 命令攻击队长攻击指定坐标
     // 可配合 DisablePathing 控制是否允许攻击队长在路上战斗（移动攻击）
     native CaptainAttack        takes real x, real y                        returns nothing
-    // 命令攻击队长攻击玩家的单位
+    // 命令攻击队长攻击指定玩家的单位
     native CaptainVsUnits       takes player id                             returns nothing
     // 命令攻击队长攻击指定玩家
     native CaptainVsPlayer      takes player id                             returns nothing
@@ -287,23 +287,23 @@ native DebugS               takes string str                            returns 
     // @param pid玩家编号
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始线程
-    // AI脚本最多可运行6条线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
+    // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
     // 线程之间共享全局变量，但在一条线程运行到读取变量时，变量可能已在几秒前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（等待期间不执行任何指令）
     native Sleep                takes real seconds                          returns nothing
-    // 查询单位是否存活
+    // 查询指定单位是否存活
     native UnitAlive            takes unit id                               returns boolean
-    // 查询单位是否可见
+    // 查询指定单位是否可见
     native UnitInvis            takes unit id                               returns boolean
     // 查询攻击组已忽略的指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
     // 查询AI的任意基地是否被攻击
     // 与小地图警报的触发条件相同，但只针对基地
     native TownThreatened       takes nothing                               returns boolean
-    // 允许在未到达目的地前（攻击组/防御组移动过程中）战斗
+    // 禁止在未到达目的地前（攻击组/防御组移动过程中）战斗
     native DisablePathing       takes nothing                               returns nothing
-    // 获得命令队列中的指令条数
+    // 获取命令队列中的指令数量
     native SetAmphibious        takes nothing                               returns nothing
     
     // 获取指令类型
