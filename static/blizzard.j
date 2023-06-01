@@ -6014,13 +6014,13 @@ function CountUnitsInGroup takes group g returns integer
     return bj_groupCountUnits
 endfunction
 
-// 玩家组中的玩家数
+// 玩家组中的玩家数量
 function CountPlayersInForceEnum takes nothing returns nothing
     set bj_forceCountPlayers = bj_forceCountPlayers + 1
 endfunction
 
 
-// 获取玩家组中的玩家数
+// 获取玩家组中的玩家数量
 function CountPlayersInForceBJ takes force f returns integer
     set bj_forceCountPlayers = 0
     call ForForce(f, function CountPlayersInForceEnum)
@@ -6028,7 +6028,7 @@ function CountPlayersInForceBJ takes force f returns integer
 endfunction
 
 
-// 在单位组中随机选 N 个单位
+// 在单位组中随机选取 N 个单位
 function GetRandomSubGroupEnum takes nothing returns nothing
     if (bj_randomSubGroupWant > 0) then
         if (bj_randomSubGroupWant >= bj_randomSubGroupTotal) or (GetRandomReal(0,1) < bj_randomSubGroupChance) then
@@ -6040,7 +6040,7 @@ function GetRandomSubGroupEnum takes nothing returns nothing
     set bj_randomSubGroupTotal = bj_randomSubGroupTotal - 1
 endfunction
 
-// 获取单位组的随机单位，并添加在新单位组中，返回新单位组
+// 获取单位组的随机单位（指定数量），并添加在新单位组中，返回新单位组
 // @param 指定获取的单位数量
 // 会生成单位组，用完请注意排泄
 // GetRandomSubGroup(2, [unit(8),unit(4),unit(2)]) -> [unit(4),unit(2)]
@@ -6060,14 +6060,14 @@ function GetRandomSubGroup takes integer count, group sourceGroup returns group
     return g
 endfunction
 
-// 匹配的单位类型是否存活
+// 判断匹配的单位类型是否存活
 function LivingPlayerUnitsOfTypeIdFilter takes nothing returns boolean
     local unit filterUnit = GetFilterUnit()
     return IsUnitAliveBJ(filterUnit) and GetUnitTypeId(filterUnit) == bj_livingPlayerUnitsTypeId
 endfunction
 
 
-// 玩家存活的指定单位类型的数量
+// 查询玩家存活的指定单位类型的数量
 function CountLivingPlayerUnitsOfTypeId takes integer unitId, player whichPlayer returns integer
     local group g
     local integer matchedCount
@@ -6090,24 +6090,24 @@ endfunction
 //***************************************************************************
 
 
-// 重置单位动画为 "stand"
+// 重置指定单位动画为 "stand"
 function ResetUnitAnimation takes unit whichUnit returns nothing
     call SetUnitAnimation(whichUnit, "stand")
 endfunction
 
 
-// 设置单位动画速度
+// 设置指定单位动画速度
 function SetUnitTimeScalePercent takes unit whichUnit, real percentScale returns nothing
     call SetUnitTimeScale(whichUnit, percentScale * 0.01)
 endfunction
 
 
-// 设置单位尺寸
+// 设置指定单位尺寸
 function SetUnitScalePercent takes unit whichUnit, real percentScaleX, real percentScaleY, real percentScaleZ returns nothing
     call SetUnitScale(whichUnit, percentScaleX * 0.01, percentScaleY * 0.01, percentScaleZ * 0.01)
 endfunction
 
-// 设置单位颜色
+// 设置指定单位颜色
 // This version differs from the common.j interface in that the alpha value
 // is reversed so as to be displayed as transparency, and all four parameters
 // are treated as percentages rather than bytes.
@@ -6135,7 +6135,7 @@ function ItemAddIndicatorBJ takes item whichItem, real red, real green, real blu
 endfunction
 
 
-// 设置单位面对点
+// 设置指定单位面对点
 // Sets a unit's facing to point directly at a location.
 //
 function SetUnitFacingToFaceLocTimed takes unit whichUnit, location target, real duration returns nothing
@@ -6146,7 +6146,7 @@ function SetUnitFacingToFaceLocTimed takes unit whichUnit, location target, real
 endfunction
 
 
-// 设置单位面对单位
+// 设置指定单位面对另一指定单位
 // Sets a unit's facing to point directly at another unit.
 //
 function SetUnitFacingToFaceUnitTimed takes unit whichUnit, unit target, real duration returns nothing
@@ -6157,7 +6157,7 @@ function SetUnitFacingToFaceUnitTimed takes unit whichUnit, unit target, real du
 endfunction
 
 
-// 队列单位动画
+// 队列指定单位动画
 function QueueUnitAnimationBJ takes unit whichUnit, string whichAnimation returns nothing
     call QueueUnitAnimation(whichUnit, whichAnimation)
 endfunction

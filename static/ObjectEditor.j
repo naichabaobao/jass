@@ -1,6 +1,7 @@
 globals
 // 物理编辑器对照表(部分)
 // 以重置版为基准(v1.36)，部分添加了1.27a译文，从1.27a获取了极少量重置版缺失数据
+// 不含地表装饰物
 
 
 // 单位（可能齐了）
@@ -4350,477 +4351,478 @@ globals
         integer AIi5
 
 
-// 技能 BUFF(魔法效果)
+// BUFF(魔法效果)
 
-        // 技能 BUFF(魔法效果) 永久献祭(中立敌对1)
+
+        // BUFF(魔法效果)  永久献祭(中立敌对1)
         integer BNpi
-        // 技能 BUFF(魔法效果) 永久献祭(中立敌对2)
+        // BUFF(魔法效果)  永久献祭(中立敌对2)
         integer Bpig
-        // 技能 BUFF(魔法效果) 灵魂保存
+        // BUFF(魔法效果)  灵魂保存
         integer BNsl
-        // 技能 BUFF(魔法效果) 群兽奔腾
+        // BUFF(魔法效果)  群兽奔腾
         integer BNst
-        // 技能 BUFF(魔法效果) 火焰之雨(范围)
+        // BUFF(魔法效果)  火焰之雨(范围)
         integer BNrf
-        // 技能 BUFF(魔法效果) 冰冻
+        // BUFF(魔法效果)  冰冻
         integer Bfre
-        // 技能 BUFF(魔法效果) 共享视野
+        // BUFF(魔法效果)  共享视野
         integer Bsha
-        // 技能 BUFF(魔法效果) 龙卷风伤害
+        // BUFF(魔法效果)  龙卷风伤害
         integer Btdg
-        // 技能 BUFF(魔法效果) 龙卷风旋转(范围)
+        // BUFF(魔法效果)  龙卷风旋转(范围)
         integer Btsa
-        // 技能 BUFF(魔法效果) 季风
+        // BUFF(魔法效果)  季风
         integer ANmd
-        // 技能 BUFF(魔法效果) 混乱之雨(效果)
+        // BUFF(魔法效果)  混乱之雨(效果)
         integer XErc
-        // 技能 BUFF(魔法效果) 火焰之雨(效果)
+        // BUFF(魔法效果)  火焰之雨(效果)
         integer XErf
-        // 技能 BUFF(魔法效果) 改变一天的时间(物品)
+        // BUFF(魔法效果)  改变一天的时间(物品)
         integer XIct
-        // 技能 BUFF(魔法效果) 季风(效果)
+        // BUFF(魔法效果)  季风(效果)
         integer XNmo
-        // 技能 BUFF(魔法效果) 火山爆发(范围)
+        // BUFF(魔法效果)  火山爆发(范围)
         integer BNva
-        // 技能 BUFF(魔法效果) 火山爆发(效果)
+        // BUFF(魔法效果)  火山爆发(效果)
         integer XNvc
-        // 技能 BUFF(魔法效果) 集束火箭(效果)
+        // BUFF(魔法效果)  集束火箭(效果)
         integer XNcs
-        // 技能 BUFF(魔法效果) 治疗喷雾(效果)
+        // BUFF(魔法效果)  治疗喷雾(效果)
         integer XNhs
-        // 技能 BUFF(魔法效果) 焚身化骨
+        // BUFF(魔法效果)  焚身化骨
         integer BNic
-        // 技能 BUFF(魔法效果) 灵魂燃烧
+        // BUFF(魔法效果)  灵魂燃烧
         integer BNso
-        // 技能 BUFF(魔法效果) 熔岩爪牙
+        // BUFF(魔法效果)  熔岩爪牙
         integer BNlm
-        // 技能 BUFF(魔法效果) 口袋工厂
+        // BUFF(魔法效果)  口袋工厂
         integer BNfy
-        // 技能 BUFF(魔法效果) 集束火箭
+        // BUFF(魔法效果)  集束火箭
         integer BNcs
-        // 技能 BUFF(魔法效果) 工程学升级
+        // BUFF(魔法效果)  工程学升级
         integer BNeg
-        // 技能 BUFF(魔法效果) 发条地精
+        // BUFF(魔法效果)  发条地精
         integer BNcg
-        // 技能 BUFF(魔法效果) 治疗喷雾
+        // BUFF(魔法效果)  治疗喷雾
         integer BNhs
-        // 技能 BUFF(魔法效果) 酸液炸弹
+        // BUFF(魔法效果)  酸液炸弹
         integer BNab
-        // 技能 BUFF(魔法效果) 化学狂暴
+        // BUFF(魔法效果)  化学狂暴
         integer BNcr
-        // 技能 BUFF(魔法效果) 点金术
+        // BUFF(魔法效果)  点金术
         integer BNtm
-        // 技能 BUFF(魔法效果) 法力护盾
+        // BUFF(魔法效果)  法力护盾
         integer BNms
-        // 技能 BUFF(魔法效果) 火焰之雨
+        // BUFF(魔法效果)  火焰之雨
         integer BNrd
-        // 技能 BUFF(魔法效果) 寒冰箭矢
+        // BUFF(魔法效果)  寒冰箭矢
         integer BHca
-        // 技能 BUFF(魔法效果) 寒冰箭矢(叠加)
+        // BUFF(魔法效果)  寒冰箭矢(叠加)
         integer Bcsd
-        // 技能 BUFF(魔法效果) 寒冰箭矢(信息)
+        // BUFF(魔法效果)  寒冰箭矢(信息)
         integer Bcsi
-        // 技能 BUFF(魔法效果) 恐惧嚎叫
+        // BUFF(魔法效果)  恐惧嚎叫
         integer BNht
-        // 技能 BUFF(魔法效果) 末日降临
+        // BUFF(魔法效果)  末日降临
         integer BNdo
-        // 技能 BUFF(魔法效果) 末日降临(奴仆)
+        // BUFF(魔法效果)  末日降临(奴仆)
         integer BNdi
-        // 技能 BUFF(魔法效果) 熊猫人元素之灵
+        // BUFF(魔法效果)  熊猫人元素之灵
         integer BNef
-        // 技能 BUFF(魔法效果) 巨熊
+        // BUFF(魔法效果)  巨熊
         integer BNsg
-        // 技能 BUFF(魔法效果) 豪猪
+        // BUFF(魔法效果)  豪猪
         integer BNsq
-        // 技能 BUFF(魔法效果) 战鹰
+        // BUFF(魔法效果)  战鹰
         integer BNsw
-        // 技能 BUFF(魔法效果) 心智腐烂
+        // BUFF(魔法效果)  心智腐烂
         integer BNmr
-        // 技能 BUFF(魔法效果) 火焰之息
+        // BUFF(魔法效果)  火焰之息
         integer BNbf
-        // 技能 BUFF(魔法效果) 酩酊酒雾
+        // BUFF(魔法效果)  酩酊酒雾
         integer BNdh
-        // 技能 BUFF(魔法效果) 沉默
+        // BUFF(魔法效果)  沉默
         integer BNsi
-        // 技能 BUFF(魔法效果) 黑蚀箭
+        // BUFF(魔法效果)  黑蚀箭
         integer BNba
-        // 技能 BUFF(魔法效果) 黑暗奴仆
+        // BUFF(魔法效果)  黑暗奴仆
         integer BNdm
-        // 技能 BUFF(魔法效果) 季风
+        // BUFF(魔法效果)  季风
         integer BNmo
-        // 技能 BUFF(魔法效果) 水栖奴仆
+        // BUFF(魔法效果)  水栖奴仆
         integer BNwm
-        // 技能 BUFF(魔法效果) 龙卷风(减速光环)
+        // BUFF(魔法效果)  龙卷风(减速光环)
         integer Basl
-        // 技能 BUFF(魔法效果) 龙卷风旋转(自动施放飓风)
+        // BUFF(魔法效果)  龙卷风旋转(自动施放飓风)
         integer Btsp
-        // 技能 BUFF(魔法效果) 龙卷风(时间化生命)
+        // BUFF(魔法效果)  龙卷风(时间化生命)
         integer BNto
-        // 技能 BUFF(魔法效果) 黑暗转换
+        // BUFF(魔法效果)  黑暗转换
         integer BNdc
-        // 技能 BUFF(魔法效果) 灵魂保存
+        // BUFF(魔法效果)  灵魂保存
         integer BNsp
-        // 技能 BUFF(魔法效果) 眩晕
+        // BUFF(魔法效果)  眩晕
         integer Bchd
-        // 技能 BUFF(魔法效果) 地狱火
+        // BUFF(魔法效果)  地狱火
         integer BNin
-        // 技能 BUFF(魔法效果) 狂乱
+        // BUFF(魔法效果)  狂乱
         integer Bfzy
-        // 技能 BUFF(魔法效果) 统御光环
+        // BUFF(魔法效果)  统御光环
         integer Boac
-        // 技能 BUFF(魔法效果) 时间化生命
+        // BUFF(魔法效果)  时间化生命
         integer Btlf
-        // 技能 BUFF(魔法效果) 法力恢复光环
+        // BUFF(魔法效果)  法力恢复光环
         integer Barm
-        // 技能 BUFF(魔法效果) 冰霜吐息
+        // BUFF(魔法效果)  冰霜吐息
         integer BCbf
-        // 技能 BUFF(魔法效果) 砸击
+        // BUFF(魔法效果)  砸击
         integer BCtc
-        // 技能 BUFF(魔法效果) 战斗咆哮
+        // BUFF(魔法效果)  战斗咆哮
         integer BNbr
-        // 技能 BUFF(魔法效果) 寄生虫
+        // BUFF(魔法效果)  寄生虫
         integer BNpm
-        // 技能 BUFF(魔法效果) 寄生虫
+        // BUFF(魔法效果)  寄生虫
         integer BNpa
-        // 技能 BUFF(魔法效果) 被侦测到
+        // BUFF(魔法效果)  被侦测到
         integer Bdet
-        // 技能 BUFF(魔法效果) 无敌
+        // BUFF(魔法效果)  无敌
         integer Bvul
-        // 技能 BUFF(魔法效果) 速度加成
+        // BUFF(魔法效果)  速度加成
         integer Bspe
-        // 技能 BUFF(魔法效果) 减速
+        // BUFF(魔法效果)  减速
         integer Bfro
-        // 技能 BUFF(魔法效果) 昏迷
+        // BUFF(魔法效果)  昏迷
         integer BSTN
-        // 技能 BUFF(魔法效果) 昏迷(暂停)
+        // BUFF(魔法效果)  昏迷(暂停)
         integer BPSE
-        // 技能 BUFF(魔法效果) 荒芜(效果)
+        // BUFF(魔法效果)  荒芜(效果)
         integer Xbli
-        // 技能 BUFF(魔法效果) 暴露(效果)
+        // BUFF(魔法效果)  暴露(效果)
         integer Xbdt
-        // 技能 BUFF(魔法效果) 英雄消散(效果)
+        // BUFF(魔法效果)  英雄消散(效果)
         integer Xdis
-        // 技能 BUFF(魔法效果) 复仇之魂
+        // BUFF(魔法效果)  复仇之魂
         integer integer Bvng
-        // 技能 BUFF(魔法效果) 法力闪耀
+        // BUFF(魔法效果)  法力闪耀
         integer integer Bmfl
-        // 技能 BUFF(魔法效果) 法力闪耀(额外的)
+        // BUFF(魔法效果)  法力闪耀(额外的)
         integer integer Bmfa
-        // 技能 BUFF(魔法效果) 相位变换
+        // BUFF(魔法效果)  相位变换
         integer integer Bpsh
-        // 技能 BUFF(魔法效果) 嘲讽
+        // BUFF(魔法效果)  嘲讽
         integer integer Btau
-        // 技能 BUFF(魔法效果) 暗影突袭
+        // BUFF(魔法效果)  暗影突袭
         integer integer BEsh
-        // 技能 BUFF(魔法效果) 暗影突袭
+        // BUFF(魔法效果)  暗影突袭
         integer integer BEsi
-        // 技能 BUFF(魔法效果) 复仇
+        // BUFF(魔法效果)  复仇
         integer integer BEsv
-        // 技能 BUFF(魔法效果) 减速毒药(不叠加)
+        // BUFF(魔法效果)  减速毒药(不叠加)
         integer integer Bspo
-        // 技能 BUFF(魔法效果) 减速毒药(叠加)
+        // BUFF(魔法效果)  减速毒药(叠加)
         integer integer Bssd
-        // 技能 BUFF(魔法效果) 腐蚀吐息
+        // BUFF(魔法效果)  腐蚀吐息
         integer integer Bcor
-        // 技能 BUFF(魔法效果) 献祭
+        // BUFF(魔法效果)  献祭
         integer integer BEim
-        // 技能 BUFF(魔法效果) 恶魔变形
+        // BUFF(魔法效果)  恶魔变形
         integer integer BEme
-        // 技能 BUFF(魔法效果) 纠缠根须
+        // BUFF(魔法效果)  纠缠根须
         integer integer BEer
-        // 技能 BUFF(魔法效果) 自然之力
+        // BUFF(魔法效果)  自然之力
         integer integer BEfn
-        // 技能 BUFF(魔法效果) 荆棘光环
+        // BUFF(魔法效果)  荆棘光环
         integer integer BEah
-        // 技能 BUFF(魔法效果) 斥候
+        // BUFF(魔法效果)  斥候
         integer integer BEst
-        // 技能 BUFF(魔法效果) 强击光环
+        // BUFF(魔法效果)  强击光环
         integer integer BEar
-        // 技能 BUFF(魔法效果) 精灵之火
+        // BUFF(魔法效果)  精灵之火
         integer integer Bfae
-        // 技能 BUFF(魔法效果) 飓风术
+        // BUFF(魔法效果)  飓风术
         integer integer Bcyc
-        // 技能 BUFF(魔法效果) 飓风术(额外的)
+        // BUFF(魔法效果)  飓风术(额外的)
         integer integer Bcy2
-        // 技能 BUFF(魔法效果) 回春术
+        // BUFF(魔法效果)  回春术
         integer integer Brej
-        // 技能 BUFF(魔法效果) 咆哮
+        // BUFF(魔法效果)  咆哮
         integer integer Broa
-        // 技能 BUFF(魔法效果) 献祭(施法者)
+        // BUFF(魔法效果)  献祭(施法者)
         integer integer BEia
-        // 技能 BUFF(魔法效果) 吃树
+        // BUFF(魔法效果)  吃树
         integer integer Beat
-        // 技能 BUFF(魔法效果) 战棍
+        // BUFF(魔法效果)  战棍
         integer integer Bgra
-        // 技能 BUFF(魔法效果) 减速毒药(信息)
+        // BUFF(魔法效果)  减速毒药(信息)
         integer integer Bssi
-        // 技能 BUFF(魔法效果) 树皮术
+        // BUFF(魔法效果)  树皮术
         integer integer Bbar
-        // 技能 BUFF(魔法效果) 星辰坠落(目标)
+        // BUFF(魔法效果)  星辰坠落(目标)
         integer integer AEsd
-        // 技能 BUFF(魔法效果) 宁静(目标)
+        // BUFF(魔法效果)  宁静(目标)
         integer integer AEtr
-        // 技能 BUFF(魔法效果) 夜视能力
+        // BUFF(魔法效果)  夜视能力
         integer integer Bult
-        // 技能 BUFF(魔法效果) 星辰坠落(效果)
+        // BUFF(魔法效果)  星辰坠落(效果)
         integer integer XEsf
-        // 技能 BUFF(魔法效果) 宁静(效果)
+        // BUFF(魔法效果)  宁静(效果)
         integer integer XEtq
-        // 技能 BUFF(魔法效果) 哨兵(效果)
+        // BUFF(魔法效果)  哨兵(效果)
         integer integer XEsn
-        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 小
+        // BUFF(魔法效果)  建筑伤害 - 暗夜精灵 小
         integer integer Xfns
-        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 中
+        // BUFF(魔法效果)  建筑伤害 - 暗夜精灵 中
         integer integer Xfnm
-        // 技能 BUFF(魔法效果) 建筑伤害 - 暗夜精灵 大
+        // BUFF(魔法效果)  建筑伤害 - 暗夜精灵 大
         integer integer Xfnl
-        // 技能 BUFF(魔法效果) 空中枷锁
+        // BUFF(魔法效果)  空中枷锁
         integer integer Bmlt
-        // 技能 BUFF(魔法效果) 控制魔法
+        // BUFF(魔法效果)  控制魔法
         integer integer Bcmg
-        // 技能 BUFF(魔法效果) 吸取生命和法力(附加)
+        // BUFF(魔法效果)  吸取生命和法力(附加)
         integer integer Bdbb
-        // 技能 BUFF(魔法效果) 吸取生命(附加)
+        // BUFF(魔法效果)  吸取生命(附加)
         integer integer Bdbl
-        // 技能 BUFF(魔法效果) 法力虹吸(附加)
+        // BUFF(魔法效果)  法力虹吸(附加)
         integer integer Bdbm
-        // 技能 BUFF(魔法效果) 迷雾之云
+        // BUFF(魔法效果)  迷雾之云
         integer integer Bclf
-        // 技能 BUFF(魔法效果) 烈焰风暴
+        // BUFF(魔法效果)  烈焰风暴
         integer integer BHfs
-        // 技能 BUFF(魔法效果) 放逐
+        // BUFF(魔法效果)  放逐
         integer integer BHbn
-        // 技能 BUFF(魔法效果) 凤凰
+        // BUFF(魔法效果)  凤凰
         integer integer Bphx
-        // 技能 BUFF(魔法效果) 凤凰烈焰
+        // BUFF(魔法效果)  凤凰烈焰
         integer integer Bpxf
-        // 技能 BUFF(魔法效果) 心灵之火
+        // BUFF(魔法效果)  心灵之火
         integer integer Binf
-        // 技能 BUFF(魔法效果) 治疗术
+        // BUFF(魔法效果)  治疗术
         integer integer Bhea
-        // 技能 BUFF(魔法效果) 中立治疗术
+        // BUFF(魔法效果)  中立治疗术
         integer integer BNhe
-        // 技能 BUFF(魔法效果) 减速术
+        // BUFF(魔法效果)  减速术
         integer integer Bslo
-        // 技能 BUFF(魔法效果) 隐形术
+        // BUFF(魔法效果)  隐形术
         integer integer Binv
-        // 技能 BUFF(魔法效果) 变形术
+        // BUFF(魔法效果)  变形术
         integer integer Bply
-        // 技能 BUFF(魔法效果) 暴风雪
+        // BUFF(魔法效果)  暴风雪
         integer integer BHbd
-        // 技能 BUFF(魔法效果) 水元素
+        // BUFF(魔法效果)  水元素
         integer integer BHwe
-        // 技能 BUFF(魔法效果) 辉煌光环
+        // BUFF(魔法效果)  辉煌光环
         integer integer BHab
-        // 技能 BUFF(魔法效果) 风暴之锤
+        // BUFF(魔法效果)  风暴之锤
         integer integer BHtb
-        // 技能 BUFF(魔法效果) 雷霆一击
+        // BUFF(魔法效果)  雷霆一击
         integer integer BHtc
-        // 技能 BUFF(魔法效果) 猛击
+        // BUFF(魔法效果)  猛击
         integer integer BHbh
-        // 技能 BUFF(魔法效果) 天神下凡
+        // BUFF(魔法效果)  天神下凡
         integer integer BHav
-        // 技能 BUFF(魔法效果) 圣盾术
+        // BUFF(魔法效果)  圣盾术
         integer integer BHds
-        // 技能 BUFF(魔法效果) 虔诚光环
+        // BUFF(魔法效果)  虔诚光环
         integer integer BHad
-        // 技能 BUFF(魔法效果) 民兵
+        // BUFF(魔法效果)  民兵
         integer integer Bmil
-        // 技能 BUFF(魔法效果) 暴风雪(施法者)
+        // BUFF(魔法效果)  暴风雪(施法者)
         integer integer BHbz
-        // 技能 BUFF(魔法效果) 吸取生命和法力(施法者)
+        // BUFF(魔法效果)  吸取生命和法力(施法者)
         integer integer Bdcb
-        // 技能 BUFF(魔法效果) 吸取生命(施法者)
+        // BUFF(魔法效果)  吸取生命(施法者)
         integer integer Bdcl
-        // 技能 BUFF(魔法效果) 吸取法力(施法者)
+        // BUFF(魔法效果)  吸取法力(施法者)
         integer integer Bdcm
-        // 技能 BUFF(魔法效果) 吸取生命和法力(目标)
+        // BUFF(魔法效果)  吸取生命和法力(目标)
         integer integer Bdtb
-        // 技能 BUFF(魔法效果) 吸取生命(目标)
+        // BUFF(魔法效果)  吸取生命(目标)
         integer integer Bdtl
-        // 技能 BUFF(魔法效果) 吸取法力(目标)
+        // BUFF(魔法效果)  吸取法力(目标)
         integer integer Bdtm
-        // 技能 BUFF(魔法效果) 空中枷锁(施法者)
+        // BUFF(魔法效果)  空中枷锁(施法者)
         integer integer Bmlc
-        // 技能 BUFF(魔法效果) 隐形术(额外的)
+        // BUFF(魔法效果)  隐形术(额外的)
         integer integer Bivs
-        // 技能 BUFF(魔法效果) 暴风雪 (效果)
+        // BUFF(魔法效果)  暴风雪 (效果)
         integer integer XHbz
-        // 技能 BUFF(魔法效果) 烈焰风暴(效果)
+        // BUFF(魔法效果)  烈焰风暴(效果)
         integer integer XHfs
-        // 技能 BUFF(魔法效果) 迷雾之云(效果)
+        // BUFF(魔法效果)  迷雾之云(效果)
         integer integer Xclf
-        // 技能 BUFF(魔法效果) 照明弹(效果)
+        // BUFF(魔法效果)  照明弹(效果)
         integer integer Xfla
-        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  小
+        // BUFF(魔法效果)  建筑伤害 – 人类 小
         integer integer Xfhs
-        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  中
+        // BUFF(魔法效果)  建筑伤害 – 人类 中
         integer integer Xfhm
-        // 技能 BUFF(魔法效果) 建筑伤害 – 人类  大
+        // BUFF(魔法效果)  建筑伤害 – 人类 大
         integer integer Xfhl
-        // 技能 BUFF(魔法效果) 补充
+        // BUFF(魔法效果)  补充
         integer integer Brpb
-        // 技能 BUFF(魔法效果) 荒芜精华
+        // BUFF(魔法效果)  荒芜精华
         integer integer Brpl
-        // 技能 BUFF(魔法效果) 灵魂之触
+        // BUFF(魔法效果)  灵魂之触
         integer integer Brpm
-        // 技能 BUFF(魔法效果) 荒芜光环
+        // BUFF(魔法效果)  荒芜光环
         integer integer Babr
-        // 技能 BUFF(魔法效果) 穿刺
+        // BUFF(魔法效果)  穿刺
         integer integer BUim
-        // 技能 BUFF(魔法效果) 腐尸甲虫
+        // BUFF(魔法效果)  腐尸甲虫
         integer integer BUcb
-        // 技能 BUFF(魔法效果) 蝗虫
+        // BUFF(魔法效果)  蝗虫
         integer integer BUlo
-        // 技能 BUFF(魔法效果) 反召唤
+        // BUFF(魔法效果)  反召唤
         integer integer Buns
-        // 技能 BUFF(魔法效果) 小蜘蛛
+        // BUFF(魔法效果)  小蜘蛛
         integer integer Bspa
-        // 技能 BUFF(魔法效果) 蛛网(地面)
+        // BUFF(魔法效果)  蛛网(地面)
         integer integer Bweb
-        // 技能 BUFF(魔法效果) 蛛网(空中)
+        // BUFF(魔法效果)  蛛网(空中)
         integer integer Bwea
-        // 技能 BUFF(魔法效果) 疾病
+        // BUFF(魔法效果)  疾病
         integer integer Bapl
-        // 技能 BUFF(魔法效果) 冰冻吐息
+        // BUFF(魔法效果)  冰冻吐息
         integer integer Bfrz
-        // 技能 BUFF(魔法效果) 骷髅奴仆
+        // BUFF(魔法效果)  骷髅奴仆
         integer integer Brai
-        // 技能 BUFF(魔法效果) 邪恶狂热
+        // BUFF(魔法效果)  邪恶狂热
         integer integer Buhf
-        // 技能 BUFF(魔法效果) 反魔法护罩
+        // BUFF(魔法效果)  反魔法护罩
         integer integer Bams
-        // 技能 BUFF(魔法效果) 反魔法护罩(额外的)
+        // BUFF(魔法效果)  反魔法护罩(额外的)
         integer integer Bam2
-        // 技能 BUFF(魔法效果) 占据
+        // BUFF(魔法效果)  占据
         integer integer Bpos
-        // 技能 BUFF(魔法效果) 邪恶光环
+        // BUFF(魔法效果)  邪恶光环
         integer integer BUau
-        // 技能 BUFF(魔法效果) 亡者再临
+        // BUFF(魔法效果)  亡者再临
         integer integer BUan
-        // 技能 BUFF(魔法效果) 沉睡
+        // BUFF(魔法效果)  沉睡
         integer integer BUsl
-        // 技能 BUFF(魔法效果) 吸血光环
+        // BUFF(魔法效果)  吸血光环
         integer integer BUav
-        // 技能 BUFF(魔法效果) 霜甲术
+        // BUFF(魔法效果)  霜甲术
         integer integer BUfa
-        // 技能 BUFF(魔法效果) 枯萎凋零
+        // BUFF(魔法效果)  枯萎凋零
         integer integer BUdd
-        // 技能 BUFF(魔法效果) 诅咒
+        // BUFF(魔法效果)  诅咒
         integer integer Bcrs
-        // 技能 BUFF(魔法效果) 残废术
+        // BUFF(魔法效果)  残废术
         integer integer Bcri
-        // 技能 BUFF(魔法效果) 腐臭蝠群(施法者)
+        // BUFF(魔法效果)  腐臭蝠群(施法者)
         integer integer BUcs
-        // 技能 BUFF(魔法效果) 沉睡(暂停)
+        // BUFF(魔法效果)  沉睡(暂停)
         integer integer BUsp
-        // 技能 BUFF(魔法效果) 沉睡(昏迷)
+        // BUFF(魔法效果)  沉睡(昏迷)
         integer integer BUst
-        // 技能 BUFF(魔法效果) 尖刺甲壳
+        // BUFF(魔法效果)  尖刺甲壳
         integer integer BUts
-        // 技能 BUFF(魔法效果) 疾病之云
+        // BUFF(魔法效果)  疾病之云
         integer integer Bplg
-        // 技能 BUFF(魔法效果) 亡者再临(额外的)
+        // BUFF(魔法效果)  亡者再临(额外的)
         integer integer BUad
-        // 技能 BUFF(魔法效果) 占据(施法者)
+        // BUFF(魔法效果)  占据(施法者)
         integer integer Bpoc
-        // 技能 BUFF(魔法效果) 枯萎凋零(效果)
+        // BUFF(魔法效果)  枯萎凋零(效果)
         integer integer XUdd
-        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵 小
+        // BUFF(魔法效果)  建筑伤害 – 亡灵 小
         integer integer Xfus
-        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵  中
+        // BUFF(魔法效果)  建筑伤害 – 亡灵 中
         integer integer Xfum
-        // 技能 BUFF(魔法效果) 建筑伤害 – 亡灵  大
+        // BUFF(魔法效果)  建筑伤害 – 亡灵 大
         integer integer Xful
-        // 技能 BUFF(魔法效果) 优先攻击
+        // BUFF(魔法效果)  优先攻击
         integer integer Batp
-        // 技能 BUFF(魔法效果) 燃油
+        // BUFF(魔法效果)  燃油
         integer integer Bbof
-        // 技能 BUFF(魔法效果) 狂暴
+        // BUFF(魔法效果)  狂暴
         integer integer Bbsk
-        // 技能 BUFF(魔法效果) 灵魂链接
+        // BUFF(魔法效果)  灵魂链接
         integer integer Bspl
-        // 技能 BUFF(魔法效果) 妖术
+        // BUFF(魔法效果)  妖术
         integer integer BOhx
-        // 技能 BUFF(魔法效果) 结界
+        // BUFF(魔法效果)  结界
         integer integer BOwd
-        // 技能 BUFF(魔法效果) 巫毒狂舞
+        // BUFF(魔法效果)  巫毒狂舞
         integer integer BOvd
-        // 技能 BUFF(魔法效果) 诱捕(地面的)
+        // BUFF(魔法效果)  诱捕(地面的)
         integer integer Beng
-        // 技能 BUFF(魔法效果) 诱捕(空中的)
+        // BUFF(魔法效果)  诱捕(空中的)
         integer integer Bena
-        // 技能 BUFF(魔法效果) 吞噬
+        // BUFF(魔法效果)  吞噬
         integer integer Bdvv
-        // 技能 BUFF(魔法效果) 净化
+        // BUFF(魔法效果)  净化
         integer integer Bprg
-        // 技能 BUFF(魔法效果) 闪电之盾
+        // BUFF(魔法效果)  闪电之盾
         integer integer Blsh
-        // 技能 BUFF(魔法效果) 嗜血
+        // BUFF(魔法效果)  嗜血
         integer integer Bblo
-        // 技能 BUFF(魔法效果) 警戒结界
+        // BUFF(魔法效果)  警戒结界
         integer integer Beye
-        // 技能 BUFF(魔法效果) 静滞陷阱
+        // BUFF(魔法效果)  静滞陷阱
         integer integer Bstt
-        // 技能 BUFF(魔法效果) 静滞陷阱
+        // BUFF(魔法效果)  静滞陷阱
         integer integer Bsta
-        // 技能 BUFF(魔法效果) 治疗结界
+        // BUFF(魔法效果)  治疗结界
         integer integer Bhwd
-        // 技能 BUFF(魔法效果) 治疗结界光环
+        // BUFF(魔法效果)  治疗结界光环
         integer integer Boar
-        // 技能 BUFF(魔法效果) 毒素(不叠加)
+        // BUFF(魔法效果)  毒素(不叠加)
         integer integer Bpoi
-        // 技能 BUFF(魔法效果) 毒素(叠加)
+        // BUFF(魔法效果)  毒素(叠加)
         integer integer Bpsd
-        // 技能 BUFF(魔法效果) 毒素(信息)
+        // BUFF(魔法效果)  毒素(信息)
         integer integer Bpsi
-        // 技能 BUFF(魔法效果) 战鼓
+        // BUFF(魔法效果)  战鼓
         integer integer Bakb
-        // 技能 BUFF(魔法效果) 疾风步
+        // BUFF(魔法效果)  疾风步
         integer integer BOwk
-        // 技能 BUFF(魔法效果) 镜像
+        // BUFF(魔法效果)  镜像
         integer integer BOmi
-        // 技能 BUFF(魔法效果) 野性之魂
+        // BUFF(魔法效果)  野性之魂
         integer integer BOsf
-        // 技能 BUFF(魔法效果) 地震术
+        // BUFF(魔法效果)  地震术
         integer integer BOeq
-        // 技能 BUFF(魔法效果) 坚韧光环
+        // BUFF(魔法效果)  坚韧光环
         integer integer BOae
-        // 技能 BUFF(魔法效果) 战争践踏
+        // BUFF(魔法效果)  战争践踏
         integer integer BOws
-        // 技能 BUFF(魔法效果) 地震术(施法者)
+        // BUFF(魔法效果)  地震术(施法者)
         integer integer BOea
-        // 技能 BUFF(魔法效果) 震荡波(施法者)
+        // BUFF(魔法效果)  震荡波(施法者)
         integer integer BOsh
-        // 技能 BUFF(魔法效果) 巫毒狂舞(施法者)
+        // BUFF(魔法效果)  巫毒狂舞(施法者)
         integer integer BOvc
-        // 技能 BUFF(魔法效果) 剑刃风暴(施法者)
+        // BUFF(魔法效果)  剑刃风暴(施法者)
         integer integer BOww
-        // 技能 BUFF(魔法效果) 吞噬(施法者)
+        // BUFF(魔法效果)  吞噬(施法者)
         integer integer Bdig
-        // 技能 BUFF(魔法效果) 诱捕(一般的)
+        // BUFF(魔法效果)  诱捕(一般的)
         integer integer Bens
-        // 技能 BUFF(魔法效果) 火油瓶
+        // BUFF(魔法效果)  火油瓶
         integer integer Bliq
-        // 技能 BUFF(魔法效果) 闪电之盾(施法者)
+        // BUFF(魔法效果)  闪电之盾(施法者)
         integer integer Blsa
-        // 技能 BUFF(魔法效果) 地震术(效果)
+        // BUFF(魔法效果)  地震术(效果)
         integer integer XOeq
-        // 技能 BUFF(魔法效果) 重生(效果)
+        // BUFF(魔法效果)  重生(效果)
         integer integer XOre
-        // 技能 BUFF(魔法效果) 燃油(效果)
+        // BUFF(魔法效果)  燃油(效果)
         integer integer Xbof
-        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  小
+        // BUFF(魔法效果)  建筑伤害 – 兽人 小
         integer integer Xfos
-        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  中
+        // BUFF(魔法效果)  建筑伤害 – 兽人 中
         integer integer Xfom
-        // 技能 BUFF(魔法效果) 建筑伤害 – 兽人  大
+        // BUFF(魔法效果)  建筑伤害 – 兽人 大
         integer integer Xfol
-        // 技能 BUFF(魔法效果) 剧毒(不叠加)
+        // BUFF(魔法效果)  剧毒(不叠加)
         integer integer BIpb
-        // 技能 BUFF(魔法效果) 剧毒(叠加)
+        // BUFF(魔法效果)  剧毒(叠加)
         integer integer BIpd
-        // 技能 BUFF(魔法效果) 剧毒 (信息)
+        // BUFF(魔法效果)  剧毒 (信息)
         integer integer BIpi
 
 
