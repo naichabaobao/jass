@@ -7412,7 +7412,7 @@ native BlzSetSpecialEffectZ takes effect whichEffect, real z returns nothing
 native BlzSetSpecialEffectPositionLoc takes effect whichEffect, location loc returns nothing
 // 获取指定特效位置 - X
 native BlzGetLocalSpecialEffectX takes effect whichEffect returns real
-// 获取特效位置 - Y
+// 获取指定特效位置 - Y
 native BlzGetLocalSpecialEffectY takes effect whichEffect returns real
 // 获取指定特效位置 - Z
 native BlzGetLocalSpecialEffectZ takes effect whichEffect returns real
@@ -7424,7 +7424,7 @@ native BlzSpecialEffectRemoveSubAnimation takes effect whichEffect, subanimtype 
 native BlzSpecialEffectAddSubAnimation takes effect whichEffect, subanimtype whichSubAnim returns nothing
 // 播放指定特效动画
 native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns nothing
-// 播放指定特效动画持续时间
+// 播放指定特效动画（指定持续时间）
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
 // 获取指定动画类型名称
 native BlzGetAnimName takes animtype whichAnim returns string
@@ -7438,9 +7438,9 @@ native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag ret
 native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
 // 取消指定单位限时生命
 native BlzUnitCancelTimedLife takes unit whichUnit returns nothing
-// 查询单位是否被选择
+// 查询指定单位是否被选择
 native BlzIsUnitSelectable takes unit whichUnit returns boolean
-// 查询单位是否无敌
+// 查询指定单位是否无敌
 native BlzIsUnitInvulnerable takes unit whichUnit returns boolean
 // 打断指定单位攻击
 native BlzUnitInterruptAttack takes unit whichUnit returns nothing
