@@ -4255,9 +4255,9 @@ native GetLocalizedHotkey takes string source returns integer
 native SetMapName takes string name returns nothing
 // 设置地图说明
 native SetMapDescription takes string description returns nothing
-// 设置队伍
+// 设置队伍数量
 native SetTeams takes integer teamcount returns nothing
-// 设置玩家，需在设置玩家颜色前使用
+// 设置玩家数量，需在设置玩家颜色前使用
 native SetPlayers takes integer playercount returns nothing
 // 默认出生点（指定坐标）
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
@@ -4267,7 +4267,7 @@ native DefineStartLocationLoc takes integer whichStartLoc, location whichLocatio
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置出生点优先权系数
 // @param whichStartLoc第一出生点
-// @param prioSlotIndex指定玩家槽
+// @param prioSlotIndex玩家槽
 // @param otherStartLocIndex其他出生点（仅在允许玩家变更出生点时有效）
 // @param priority优先权系数
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
@@ -4279,7 +4279,7 @@ native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex return
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置敌人出生点优先权系数
 // @param whichStartLoc第一出生点
-// @param prioSlotIndex指定敌方玩家槽
+// @param prioSlotIndex玩家槽
 // @param otherStartLocIndex其他出生点（仅在允许玩家变更出生点时有效）
 // @param priority出生点分布优先权系数
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
@@ -4287,7 +4287,7 @@ native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, 
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
 // 设置地图参数
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
-// 设置游戏放置类型
+// 设置游戏放置（指定放置类型）
 native SetGamePlacement takes placement whichPlacementType returns nothing
 // 设定游戏速度
 native SetGameSpeed takes gamespeed whichspeed returns nothing
@@ -4300,7 +4300,7 @@ native SetCreatureDensity takes mapdensity whichdensity returns nothing
 
 // 获取队伍数量
 native GetTeams takes nothing returns integer
-// 获取当前玩家编号（用于AI脚本）
+// 获取玩家数量
 native GetPlayers takes nothing returns integer
 
 // 查询是否支持指定的游戏类型
@@ -4404,7 +4404,7 @@ native TimerGetTimeout takes timer whichTimer returns real
 native PauseTimer takes timer whichTimer returns nothing
 // 恢复计时器 [R]
 native ResumeTimer takes timer whichTimer returns nothing
-// 事件响应 - 计时器期满
+// 事件响应 - 计时器到期
 // 与TimerStart一同使用
 native GetExpiredTimer takes nothing returns timer
 
@@ -4432,7 +4432,7 @@ native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
 native BlzGroupGetSize takes group whichGroup returns integer
-// 获取单位组中下标的单位
+// 获取单位组中指定下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位类型的单位加入单位组
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
@@ -5567,7 +5567,7 @@ constant native GetUnitFoodMade takes unit whichUnit returns integer
 constant native GetFoodMade takes integer unitId returns integer
 // 获取指定单位类型 使用的人口数量（单个）
 constant native GetFoodUsed takes integer unitId returns integer
-// 启用/禁用 单位的人口占用 [R]
+// 允许/禁止 指定单位占用人口 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位的集结点指向的点（建筑的旗子，集结技能）
@@ -5616,7 +5616,7 @@ constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, r
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-// 查询指定单位是否被另一指定单位传送
+// 查询指定单位是否被另一指定单位装载
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
 // 查询指定单位是否被装载（进入暗夜金矿、运输飞艇、运输船都属于装载）
 constant native IsUnitLoaded takes unit whichUnit returns boolean
@@ -6309,7 +6309,7 @@ native HaveSavedReal takes hashtable table, integer parentKey, integer childKey 
 native HaveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
 // <1.24> 查询指定哈希表的指定位置是否记录了字符串
 native HaveSavedString takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 查询指定哈希表的指定位置是否记录了数据
+// <1.24> 查询指定哈希表的指定位置是否记录了句柄
 native HaveSavedHandle takes hashtable table, integer parentKey, integer childKey returns boolean
 // <1.24> 删除指定哈希表的指定位置记录的整数
 native RemoveSavedInteger takes hashtable table, integer parentKey, integer childKey returns nothing
@@ -6319,7 +6319,7 @@ native RemoveSavedReal takes hashtable table, integer parentKey, integer childKe
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
 // <1.24> 删除指定哈希表的指定位置记录的字串符
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的数据
+// <1.24> 删除指定哈希表的指定位置记录的句柄
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
@@ -6420,6 +6420,8 @@ native SetTimeOfDayScale takes real r returns nothing
 // 获取昼夜交替时间流逝速度
 native GetTimeOfDayScale takes nothing returns real
 // 开启/关闭 信箱模式(所有玩家) [R]
+// @param flag显示/隐藏 宽屏UI（所有玩家），淡入/谈出 游戏UI
+// @param fadeDuration淡入持续时间
 native ShowInterface takes boolean flag, real fadeDuration returns nothing
 // 暂停/恢复 游戏 [R]
 native PauseGame takes boolean flag returns nothing
@@ -6647,7 +6649,7 @@ native LeaderboardGetLabelText takes leaderboard lb returns string
 
 // 设置指定玩家上榜（指定排行榜） [R]
 native PlayerSetLeaderboard takes player toPlayer, leaderboard lb returns nothing
-// 获取玩家已登上的排行榜 [R]
+// 获取指定玩家已登上的排行榜 [R]
 native PlayerGetLeaderboard takes player toPlayer returns leaderboard
 
 // 设置排行榜标题颜色 [R]
@@ -6668,7 +6670,7 @@ native LeaderboardSetItemLabel takes leaderboard lb, integer whichItem, string v
 native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
 // 设置排行榜玩家名字颜色
 native LeaderboardSetItemLabelColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
-// 排行榜 设置玩家分值颜色
+// 设置排行榜玩家分值颜色
 native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
 
 
@@ -6849,7 +6851,7 @@ native IsCineFilterDisplayed takes nothing returns boolean
 native SetCinematicScene takes integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
 // 结束电影场景
 native EndCinematicScene takes nothing returns nothing
-// 开启/关闭电影字幕显示功能
+// 开启/关闭 电影字幕显示功能
 native ForceCinematicSubtitles takes boolean flag returns nothing
 // 启用/禁用 电影声音
 native SetCinematicAudio takes boolean cinematicAudio returns nothing
