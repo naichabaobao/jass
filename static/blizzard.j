@@ -4011,7 +4011,7 @@ function UnitItemInSlotBJ takes unit whichUnit, integer itemSlot returns item
 endfunction
 
 
-// 获取物品的类型
+// 获取物品在物品栏的格数（指定物品类型）
 // Translates 0-based slot indices to 1-based slot indices.
 //
 function GetInventoryIndexOfItemTypeBJ takes unit whichUnit, integer itemId returns integer
@@ -4032,7 +4032,7 @@ function GetInventoryIndexOfItemTypeBJ takes unit whichUnit, integer itemId retu
 endfunction
 
 
-// 获取英雄携带物品的类型
+// 获取英雄携带的物品（指定物品类型）
 function GetItemOfTypeFromUnitBJ takes unit whichUnit, integer itemId returns item
     local integer index = GetInventoryIndexOfItemTypeBJ(whichUnit, itemId)
 
