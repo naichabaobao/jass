@@ -711,28 +711,28 @@ globals
 
 	// Game cache value types
 
-    // 游戏缓存 - 布尔值
+	// 游戏缓存类型 - 布尔值
 	constant integer   bj_GAMECACHE_BOOLEAN                 = 0
-    // 游戏缓存 - 整数
+	// 游戏缓存类型 - 整数
 	constant integer   bj_GAMECACHE_INTEGER                 = 1
-    // 游戏缓存 - 实数
+	// 游戏缓存类型 - 实数
 	constant integer   bj_GAMECACHE_REAL                    = 2
-    // 游戏缓存 - 单位
+	// 游戏缓存类型 - 单位
 	constant integer   bj_GAMECACHE_UNIT                    = 3
-    // 游戏缓存 - 字串符
+	// 游戏缓存类型 - 字串符
 	constant integer   bj_GAMECACHE_STRING                  = 4
 	
 	// Hashtable value types
 
-    // 哈希表 - 布尔值
+	// 哈希表类型 - 布尔值
 	constant integer   bj_HASHTABLE_BOOLEAN                 = 0
-    // 哈希表 - 整数
+	// 哈希表类型 - 整数
 	constant integer   bj_HASHTABLE_INTEGER                 = 1
-    // 哈希表 - 实数
+	// 哈希表类型 - 实数
 	constant integer   bj_HASHTABLE_REAL                    = 2
-    // 哈希表 - 字串符
+	// 哈希表类型 - 字串符
 	constant integer   bj_HASHTABLE_STRING                  = 3
-    // 哈希表 - 句柄
+	// 哈希表类型 - 句柄
 	constant integer   bj_HASHTABLE_HANDLE                  = 4
 
     // Item status types
@@ -770,23 +770,23 @@ globals
 	
     // Campaign Minimap icon styles
 
-    // 小地图（任务）图标样式 主任务标识（普通）
+    // 小地图（任务）图标样式 主任务图标（普通）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
-    // 小地图（任务）图标样式 主任务标识（绿色）
+    // 小地图（任务）图标样式 主任务图标（绿色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
-    // 小地图（任务）图标样式 主任务标识（红色）
+    // 小地图（任务）图标样式 主任务图标（红色）
     constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
-    // 小地图（任务）图标样式 任务奖励标识
+    // 小地图（任务）图标样式 任务奖励图标
     constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
-    // 小地图（任务）图标样式 任务交付标识
+    // 小地图（任务）图标样式 任务交付图标
     constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
-    // 小地图（任务）图标样式 任务BOSS标识
+    // 小地图（任务）图标样式 任务BOSS图标
 	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
-    // 小地图（任务）图标样式 友方占领标识
+    // 小地图（任务）图标样式 友方占领图标
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
-    // 小地图（任务）图标样式 中立标识（无人占领）
+    // 小地图（任务）图标样式 中立图标（无人占领）
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
-    // 小地图（任务）图标样式 敌方占领标识
+    // 小地图（任务）图标样式 敌方占领图标
 	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
@@ -834,7 +834,7 @@ globals
 
     // 玩家组（所有玩家）
     force              bj_FORCE_ALL_PLAYERS        = null
-    // 玩家组
+    // 玩家组（数组）
     force array        bj_FORCE_PLAYER
     // 给予首发英雄初始物品的数量
     // 游戏初始化时会根据游戏版本自动设置
@@ -868,14 +868,14 @@ globals
 
     // 开局计时器
     timer              bj_gameStartedTimer         = null
-    // 游戏是否已经开始
+    // 游戏开始标识，默认为未开始（false）
     boolean            bj_gameStarted              = false
     // 开局音量控制计时器
     timer              bj_volumeGroupsTimer        = CreateTimer()
 
     // Singleplayer check
 
-    // 是否单机（只有一位人类玩家），默认为假
+    // 单机标识（只有一位人类玩家），默认为否（false）
     boolean            bj_isSinglePlayer           = false
 
     // Day/Night Cycle vars
@@ -896,9 +896,9 @@ globals
     sound              bj_dawnSound                = null
     // 昼夜参数 黄昏声效
     sound              bj_duskSound                = null
-    // 昼夜参数 是否启用黎明/黄昏声效
+    // 昼夜参数 黎明/黄昏声效启用标识，默认启用（true）
     boolean            bj_useDawnDuskSounds        = true
-    // 昼夜参数 是否启用昼夜交替
+    // 昼夜参数 昼夜交替启用标识，默认启用（false）
     boolean            bj_dncIsDaytime             = false
 
     // Triggered sounds
@@ -952,9 +952,9 @@ globals
 
     // 可见性触发器
     trigger            bj_meleeVisibilityTrained   = null
-    // 可见性
+    // 可见性标识，默认可见（true）
     boolean            bj_meleeVisibilityIsDay     = true
-    // 是否给予首发英雄初始物品
+    // 已给予首发英雄初始物品标识，默认未给予（false）
     boolean            bj_meleeGrantHeroItems      = false
     // 距离玩家出生点最近的金矿所在的点
     location           bj_meleeNearestMineToLoc    = null
@@ -962,33 +962,33 @@ globals
     unit               bj_meleeNearestMine         = null
     // 距离玩家出生点最近的金矿的距离，默认值0.00
     real               bj_meleeNearestMineDist     = 0.00
-    // 游戏是否结束
+    // 游戏结束标识，默认未结束（false）
     boolean            bj_meleeGameOver            = false
-    // 游戏失败判断布尔值数组，每位玩家配一个
+    // 游戏失败标识，每位玩家配一个（数组）
     boolean array      bj_meleeDefeated
-    // 游戏胜利判断布尔值数组，每位玩家配一个
+    // 游戏胜利标识，每位玩家配一个（数组）
     boolean array      bj_meleeVictoried
-    // 创建初始单位触发器动作为亡灵种族创建的食尸鬼
+    // 创建初始单位触发器动作为亡灵种族创建的食尸鬼，每位玩家配一个（数组）
     unit array         bj_ghoul
-    // 玩家即将暴露计时器
+    // 玩家即将暴露计时器，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时器
     timer array        bj_crippledTimer
-    // 玩家即将暴露计时器计时窗口
+    // 玩家即将暴露计时器计时窗口，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时窗口
     timerdialog array  bj_crippledTimerWindows
-    // 玩家即将暴露判断布尔值数组，每位玩家配一个
+    // 玩家即将暴露标识，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，失去所有基地会变为真
     boolean array      bj_playerIsCrippled
-    // 玩家暴露判断布尔值数组，每位玩家配一个
+    // 玩家暴露标识，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果计时完成没有造，变为真
     boolean array      bj_playerIsExposed
-    // 玩家暴露计时器
+    // 玩家暴露计时器显示标识，默认未显示（false）
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时器
     boolean            bj_finishSoonAllExposed     = false
     // 玩家即将暴露计时器计时窗口
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时窗口
     timerdialog        bj_finishSoonTimerDialog    = null
-    // 首发英雄初始物品创建数量数组，每位玩家配一个
+    // 首发英雄初始物品创建数量，每位玩家配一个（数组）
     // 用于记录已经给首发创建了多少个初始物品
     integer array      bj_meleeTwinkedHeroes
 
@@ -996,9 +996,9 @@ globals
 
     // 营救触发器
     trigger            bj_rescueUnitBehavior       = null
-    // 是否允许可营救单位的颜色在被救援后改变
+    // 被营救后改变单位的颜色标识，默认允许改变（true）
     boolean            bj_rescueChangeColorUnit    = true
-    // 是否允许可营救建筑的颜色在被救援后改变
+    // 被营救后改变建筑的颜色标识，默认允许改变（true
     boolean            bj_rescueChangeColorBldg    = true
 
     // Transmission vars
@@ -1014,13 +1014,13 @@ globals
 
     // 电影模式设置 默认速度
     gamespeed          bj_cineModePriorSpeed       = MAP_SPEED_NORMAL
-    // 电影模式设置 迷雾状态（启用或禁用）
+    // 电影模式设置 迷雾状态，默认禁用（false）
     boolean            bj_cineModePriorFogSetting  = false
-    // 电影模式设置 黑色阴影状态（启用或禁用）
+    // 电影模式设置 黑色阴影状态，默认禁用（false）
     boolean            bj_cineModePriorMaskSetting = false
-    // 电影模式设置 电影准备状态（完成或未完成）
+    // 电影模式设置 电影准备状态，默认未准备完成（false）
     boolean            bj_cineModeAlreadyIn        = false
-    // 电影模式设置 黎明/昏黄状态（启用或禁用）
+    // 电影模式设置 黎明/昏黄状态，默认禁用（false）
     boolean            bj_cineModePriorDawnDusk    = false
     // 电影模式设置 保存速度，默认值0，游戏初始化后取随机数0~1000000
     integer            bj_cineModeSavedSeed        = 0
@@ -1108,9 +1108,9 @@ globals
     player             bj_forceRandomCurrentPick   = null
     // 可营救单位
     unit               bj_makeUnitRescuableUnit    = null
-    // 可营救单位是否已被营救
+    // 可营救单位已创建标识，默认为真（true）
     boolean            bj_makeUnitRescuableFlag    = true
-    // 暂停/恢复所有单位
+    // 暂停/恢复 所有单位标识，默认为真（true）
     boolean            bj_pauseAllUnitsFlag        = true
     // 可破坏物中心点
     location           bj_enumDestructableCenter   = null
@@ -1118,15 +1118,15 @@ globals
     real               bj_enumDestructableRadius   = 0
     // 设置玩家颜色
     playercolor        bj_setPlayerTargetColor     = null
-    // 单位组选择的单位是否已死亡
+    // 单位组选择的单位已死亡标识，默认为已死亡（true）
     boolean            bj_isUnitGroupDeadResult    = true
-    // 单位组是空的
+    // 单位组为空标识，默认为真（true）
     boolean            bj_isUnitGroupEmptyResult   = true
-    // 单位组选取的单位是否在区域内
+    // 单位组选取的单位在区域内标识，默认为真（true）
     boolean            bj_isUnitGroupInRectResult  = true
-    // 单位组选取的单位是否在区域内中使用的区域
+    // 判断 单位组选取的单位是否在区域内 使用的区域
     rect               bj_isUnitGroupInRectRect    = null
-    // 游戏结束时是否展示游戏得分
+    // 游戏结束时展示游戏得分标识，默认为不允许（false）
     boolean            bj_changeLevelShowScores    = false
     // 下一张地图的名字（用于战役）
     string             bj_changeLevelMapName       = null
@@ -1151,9 +1151,9 @@ globals
 
     // 随机分布数
     integer            bj_randDistCount            = 0
-    // 随机分布ID数组
+    // 随机分布ID（数组）
     integer array      bj_randDistID
-    // 随机分布几率数组
+    // 随机分布几率（数组）
     integer array      bj_randDistChance
 
     // Last X'd vars
@@ -1162,7 +1162,7 @@ globals
     unit               bj_lastCreatedUnit          = null
     // 最后创建的物品
     item               bj_lastCreatedItem          = null
-    // 最后丢弃的物品
+    // 最后删除的物品
     item               bj_lastRemovedItem          = null
     // 最后创建的闹鬼金矿
     unit               bj_lastHauntedGoldMine      = null
@@ -1182,7 +1182,7 @@ globals
     quest              bj_lastCreatedQuest         = null
     // 最后创建的任务要求
     questitem          bj_lastCreatedQuestItem     = null
-    // 最后创建的失败条件
+    // 最后创建的任务失败条件
     defeatcondition    bj_lastCreatedDefeatCondition = null
     // 最后创建的计时器
     timer              bj_lastStartedTimer         = CreateTimer()
@@ -1196,17 +1196,17 @@ globals
     sound              bj_lastPlayedSound          = null
     // 最后播放的音乐
     string             bj_lastPlayedMusic          = ""
-    // 最后传输的消息的持续时间
+    // 最后传输消息的持续时间
     real               bj_lastTransmissionDuration = 0
     // 最后创建的游戏缓存
     gamecache          bj_lastCreatedGameCache     = null
     // 最后创建的哈希表
     hashtable          bj_lastCreatedHashtable     = null
-    // 最后恢复的单位
+    // 最后被装载的单位（被飞艇、船、被缠绕的金矿等装载的单位）
     unit               bj_lastLoadedUnit           = null
     // 最后创建的按钮
     button             bj_lastCreatedButton        = null
-    // 最后替代的单位
+    // 最后替换的单位
     unit               bj_lastReplacedUnit         = null
     // 最后创建的文本
     texttag            bj_lastCreatedTextTag       = null
@@ -1242,12 +1242,12 @@ globals
 
     // Memory cleanup vars
 
-    // 需要清理单位组 - 是 或 否
+    // 需要清理单位组标识，默认不需要（false）
     boolean            bj_wantDestroyGroup         = false
 
     // Instanced Operation Results
 
-    // 最后的值域操作结果 - 成功 或 失败
+    // 最后的值域操作结果标识，默认成功（true）
     boolean            bj_lastInstObjFuncSuccessful = true
 endglobals
 
@@ -3294,7 +3294,7 @@ function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whi
 endfunction
 
 
-// 播放声音 有等待时间
+// 播放声音（有等待时间）
 function PlaySoundFromOffsetBJ takes sound soundHandle, real volumePercent, real startingOffset returns nothing
     call SetSoundVolumeBJ(soundHandle, volumePercent)
     call PlaySoundBJ(soundHandle)
@@ -3334,13 +3334,13 @@ function PlayThematicMusicExBJ takes string musicName, real startingOffset retur
 endfunction
 
 
-// 跳越音乐主题曲
+// 跳越音乐主题音乐
 function SetThematicMusicOffsetBJ takes real newOffset returns nothing
     call SetThematicMusicPlayPosition(R2I(newOffset * 1000))
 endfunction
 
 
-// 停放主题曲
+// 停放主题音乐
 function EndThematicMusicBJ takes nothing returns nothing
     call EndThematicMusic()
 endfunction
@@ -3498,7 +3498,7 @@ function ClearMapMusicBJ takes nothing returns nothing
 endfunction
 
 
-// 添加/删除穿越区域的3D声音
+// 添加/删除 穿越区域的3D声音
 function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns nothing
     local real width = GetRectMaxX(r) - GetRectMinX(r)
     local real height = GetRectMaxY(r) - GetRectMinY(r)
@@ -7161,56 +7161,56 @@ function LeaderboardResizeBJ takes leaderboard lb returns nothing
 endfunction
 
 
-// 设置排行榜 玩家分值
+// 设置排行榜玩家分值
 function LeaderboardSetPlayerItemValueBJ takes player whichPlayer, leaderboard lb, integer val returns nothing
     call LeaderboardSetItemValue(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 endfunction
 
 
-// 设置排行榜 玩家名字
+// 设置排行榜玩家名字
 function LeaderboardSetPlayerItemLabelBJ takes player whichPlayer, leaderboard lb, string val returns nothing
     call LeaderboardSetItemLabel(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 endfunction
 
 
-// 设置排行榜 玩家的显示样式
+// 设置排行榜玩家的显示样式
 function LeaderboardSetPlayerItemStyleBJ takes player whichPlayer, leaderboard lb, boolean showLabel, boolean showValue, boolean showIcon returns nothing
     call LeaderboardSetItemStyle(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), showLabel, showValue, showIcon)
 endfunction
 
 
-// 设置排行榜 玩家名字颜色
+// 设置排行榜玩家名字颜色
 function LeaderboardSetPlayerItemLabelColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetItemLabelColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 设置排行榜 玩家分值颜色
+// 设置排行榜玩家分值颜色
 function LeaderboardSetPlayerItemValueColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetItemValueColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 排行榜 设置文字颜色
+// 设置排行榜文字颜色
 function LeaderboardSetLabelColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetLabelColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 排行榜 设置分值颜色
+// 设置排行榜分值颜色
 function LeaderboardSetValueColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
     call LeaderboardSetValueColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 排行榜 设置标题及行数
+// 设置排行榜标题及行数
 function LeaderboardSetLabelBJ takes leaderboard lb, string label returns nothing
     call LeaderboardSetLabel(lb, label)
     call LeaderboardResizeBJ(lb)
 endfunction
 
 
-// 排行榜 设置显示样式
+// 设置排行榜显示样式
 // @param showLabel是否显示文字
 // @param showNames是否显示标题
 // @param showValues是否显示分数
@@ -7225,12 +7225,12 @@ function LeaderboardGetItemCountBJ takes leaderboard lb returns integer
 endfunction
 
 
-// 排行榜 查询玩家是否上榜
+// 查询玩家是否登上排行榜
 function LeaderboardHasPlayerItemBJ takes leaderboard lb, player whichPlayer returns boolean
     return LeaderboardHasPlayerItem(lb, whichPlayer)
 endfunction
 
-// 排行榜 设置玩家组上榜
+// 设置玩家组登上排行榜 
 function ForceSetLeaderboardBJ takes leaderboard lb, force toForce returns nothing
     local integer index
     local player  indexPlayer
@@ -7269,7 +7269,7 @@ function LeaderboardDisplayBJ takes boolean show, leaderboard lb returns nothing
 endfunction
 
 
-// 在排行榜中增加玩家
+// 增加排行榜的玩家
 // @param lb指定玩家在榜上的排名（行数）
 // @param label指定玩家在榜上的名字
 // @param value指定玩家在榜上的分数
@@ -7283,7 +7283,7 @@ function LeaderboardAddItemBJ takes player whichPlayer, leaderboard lb, string l
 endfunction
 
 
-// 在排行榜中删除玩家
+// 删除排行榜的玩家
 function LeaderboardRemovePlayerItemBJ takes player whichPlayer, leaderboard lb returns nothing
     call LeaderboardRemovePlayerItem(lb, whichPlayer)
     call LeaderboardResizeBJ(lb)
@@ -7303,18 +7303,18 @@ function LeaderboardSortItemsBJ takes leaderboard lb, integer sortType, boolean 
     endif
 endfunction
 
-// 排行榜 按玩家排序
+// 设置排行榜按玩家排序
 function LeaderboardSortItemsByPlayerBJ takes leaderboard lb, boolean ascending returns nothing
     call LeaderboardSortItemsByPlayer(lb, ascending)
 endfunction
 
-// 排行榜 按文本排序
+// 设置排行榜按文本排序
 function LeaderboardSortItemsByLabelBJ takes leaderboard lb, boolean ascending returns nothing
     call LeaderboardSortItemsByLabel(lb, ascending)
 endfunction
 
 
-// 排行榜的玩家位置加一
+// 获取排行榜玩家排名的后一位排名值
 function LeaderboardGetPlayerIndexBJ takes player whichPlayer, leaderboard lb returns integer
     return LeaderboardGetPlayerIndex(lb, whichPlayer) + 1
 endfunction
@@ -7361,7 +7361,7 @@ endfunction
 //***************************************************************************
 
 
-// 创建 多面板
+// 创建多面板
 function CreateMultiboardBJ takes integer cols, integer rows, string title returns multiboard
     set bj_lastCreatedMultiboard = CreateMultiboard()
     call MultiboardSetRowCount(bj_lastCreatedMultiboard, rows)
@@ -7372,13 +7372,13 @@ function CreateMultiboardBJ takes integer cols, integer rows, string title retur
 endfunction
 
 
-// 删除 多面板
+// 删除多面板
 function DestroyMultiboardBJ takes multiboard mb returns nothing
     call DestroyMultiboard(mb)
 endfunction
 
 
-// 获取最后创建的 多面板
+// 获取最后创建的多面板
 function GetLastCreatedMultiboard takes nothing returns multiboard
     return bj_lastCreatedMultiboard
 endfunction
@@ -7390,19 +7390,19 @@ function MultiboardDisplayBJ takes boolean show, multiboard mb returns nothing
 endfunction
 
 
-// 最大化/最小化 多面板
+// 最大化/最小化多面板
 function MultiboardMinimizeBJ takes boolean minimize, multiboard mb returns nothing
     call MultiboardMinimize(mb, minimize)
 endfunction
 
 
-// 设置 多面板 标题颜色
+// 设置多面板标题颜色
 function MultiboardSetTitleTextColorBJ takes multiboard mb, real red, real green, real blue, real transparency returns nothing
     call MultiboardSetTitleTextColor(mb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
 
 
-// 显示/隐藏 所有 多面板
+// 显示/隐藏 所有多面板
 function MultiboardAllowDisplayBJ takes boolean flag returns nothing
     call MultiboardSuppressDisplay(not flag)
 endfunction
@@ -7633,13 +7633,13 @@ function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset retu
 endfunction
 
 
-// 暂停/继续漂浮文字
+// 暂停/恢复 漂浮文字
 function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagSuspended(tt, flag)
 endfunction
 
 
-// 永久存在/允许过期
+// 永久存在/允许过期 漂浮文字
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
@@ -7826,7 +7826,7 @@ function PingMinimapLocForForceEx takes force whichForce, location loc, real dur
 endfunction
 
 
-// 允许/禁止 边界色彩
+// 允许/禁止 边界染色（指定玩家组）
 function EnableWorldFogBoundaryBJ takes boolean enable, force f returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7835,7 +7835,7 @@ function EnableWorldFogBoundaryBJ takes boolean enable, force f returns nothing
 endfunction
 
 
-// 允许/禁止 闭塞
+// 允许/禁止 闭塞（指定玩家组）
 function EnableOcclusionBJ takes boolean enable, force f returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7946,7 +7946,7 @@ function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real 
 endfunction
 
 
-// 播放 单位消息
+// 播放单位消息
 // Display a text message to a Player Group with an accompanying sound,
 // portrait, speech indicator, and all that good stuff.
 //   - Query duration of sound
@@ -8045,7 +8045,7 @@ function PlayDialogueFromSpeakerTypeEx takes force toForce, player fromPlayer, i
 endfunction
 
 
-// 播送 单位[类型]消息
+// 播送单位消息（指定单位类型）
 // This operates like TransmissionFromUnitWithNameBJ, but for a unit type
 // rather than a unit instance.  As such, no speech indicator is employed.
 //
@@ -8072,13 +8072,13 @@ function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlay
 endfunction
 
 
-// 获取最后播放的 单位消息 的持续时间
+// 获取最后播放的单位消息的持续时间
 function GetLastTransmissionDurationBJ takes nothing returns real
     return bj_lastTransmissionDuration
 endfunction
 
 
-// 副标题显示超过
+// 开启/关闭 电影字幕显示功能
 function ForceCinematicSubtitlesBJ takes boolean flag returns nothing
     call ForceCinematicSubtitles(flag)
 endfunction
@@ -8378,13 +8378,13 @@ function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothin
 endfunction
 
 
-// 执行创建可营救单位
+// 创建可营救单位触发器动作
 function MakeUnitRescuableToForceBJEnum takes nothing returns nothing
     call TryInitRescuableTriggersBJ()
     call SetUnitRescuable(bj_makeUnitRescuableUnit, GetEnumPlayer(), bj_makeUnitRescuableFlag)
 endfunction
 
-// 创建可营救单位
+// 创建可营救单位触发器
 function MakeUnitRescuableToForceBJ takes unit whichUnit, boolean isRescuable, force whichForce returns nothing
     // Flag the unit as rescuable/unrescuable for the appropriate players.
     set bj_makeUnitRescuableUnit = whichUnit
