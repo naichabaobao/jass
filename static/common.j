@@ -5847,9 +5847,9 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 查询玩家的种族
+// 获取玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
-// 查询玩家ID [R]
+// 获取玩家ID [R]
 // 玩家1的编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
