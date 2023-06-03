@@ -5888,7 +5888,7 @@ globals
 	integer 852255
 	// 技能命令串或ID 取消毒箭
 	integer 852256
-	// 技能命令串或ID 生命汲取
+	// 技能命令串或ID 生命汲取/魔法吸吮
 	integer 852487
 	// 技能命令串或ID 产卵触角
 	integer 852504
@@ -6574,8 +6574,6 @@ globals
 	integer 852485
 	// 技能命令串或ID 虚无（血法）
 	integer 852486
-	// 技能命令串或ID 魔法吸吮
-	integer 852487
 	// 技能命令串或ID 烈焰风暴
 	integer 852488
 	// 技能命令串或ID 火凤凰
