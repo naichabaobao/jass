@@ -3964,13 +3964,13 @@ function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integ
 endfunction
 
 
-// 命令指定单位丢弃物品
+// 命令指定单位丢弃物品（指定坐标）
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
 
 
-// 命令指定单位丢弃物品于指定点
+// 命令指定单位丢弃物品于（指定点）
 function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -3982,7 +3982,7 @@ function UnitDropItemSlotBJ takes unit whichUnit, item whichItem, integer slot r
 endfunction
 
 
-// 命令指定单位将物品给予其它单位
+// 命令指定单位丢弃物品（指定目标单位/物品/可破坏物）
 function UnitDropItemTargetBJ takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitDropItemTarget(whichUnit, whichItem, target)
 endfunction
