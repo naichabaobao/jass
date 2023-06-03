@@ -5266,7 +5266,7 @@ native CreateItem takes integer itemid, real x, real y returns item
 native RemoveItem takes item whichItem returns nothing
 // 获取指定物品的所有者
 native GetItemPlayer takes item whichItem returns player
-// 获取指定物品的物品类型ID
+// 获取指定物品的物品分类ID
 native GetItemTypeId takes item i returns integer
 // 获取指定物品的 X 轴坐标 [R]
 native GetItemX takes item i returns real
@@ -5311,7 +5311,7 @@ native IsItemIdPawnable takes integer itemId returns boolean
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取指定物品等级
 native GetItemLevel takes item whichItem returns integer
-// 获取指定物品类型
+// 获取指定物品分类
 native GetItemType takes item whichItem returns itemtype
 // 设置掉落物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
