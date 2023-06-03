@@ -53,7 +53,7 @@ globals
     constant real      bj_QUEUE_DELAY_QUEST             =  5.00
     // 队列延时 - 提示，默认5.00
     constant real      bj_QUEUE_DELAY_HINT              =  5.00
-    // 队列延时 - 任务，默认3.00
+    // 队列延时 - 秘密，默认3.00
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
     // 障碍 - 简单，默认60.00
     constant real      bj_HANDICAP_EASY                 = 60.00
