@@ -366,7 +366,7 @@ globals
 	
 	// 假 false
  constant boolean FALSE = false
-  // 真 true
+	// 真 true
 	constant boolean TRUE = true
 	// 数组最大值，默认值32768
 	// 注：1.28及以下版本的默认值是8192
@@ -374,14 +374,14 @@ globals
 	// 中立被动玩家（玩家16/28）
 	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
 	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家27），中立被动（玩家28）
-  // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
-  // 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时（如果打开了），中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中（如果运行了）这些单位也会消失
+	// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+	// 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时（如果打开了），中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中（如果运行了）这些单位也会消失
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 	// 中立敌对玩家（玩家13/25）
 	// 1.28及以下：中立敌对（玩家13），中立受害（玩家14），中立特殊（玩家15），中立被动（玩家16）
 	// 1.29及以上：中立敌对（玩家25），中立受害（玩家26），中立特殊（玩家27），中立被动（玩家28）
-  // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
- // 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时（如果打开了），中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中（如果运行了）这些单位也会消失
+	// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+	// 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时（如果打开了），中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中（如果运行了）这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 玩家颜色 红色
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
@@ -762,10 +762,10 @@ globals
 	// 预设玩家种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
-	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
+	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
 	// 玩家控制者类型 电脑
-	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
+	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
 	// 玩家控制者类型 中立可营救
 	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
@@ -777,7 +777,7 @@ globals
 	// 默认值写死，随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍会自动适配
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
 	// 玩家控制者类型 没有玩家
-	// 默认值在情节-玩家设置编辑，游戏初始化时按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
+	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况（槽位是否有打开/无玩家，玩家是电脑还是用户）再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
@@ -4241,7 +4241,7 @@ native StringCase takes string source, boolean upper returns string
 // 转换字符串成哈希码
 native StringHash takes string s returns integer
 
-// 获取（外部文件的）本地字符串 [R]
+// 获取外部字串符的译文 [R]
 // 从Globalstrings.fdf文件获取查询内容对应的翻译文本，不同语言返回不同的值
 // 当字符串不存在时（是当前版本不存在查询的字符串本身，不是字符串已存在但没有翻译文本），会原封不动返回查询内容（英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等），利用该命令可得知游戏大致版本号（如1.27，1.30等）
 // 该命令不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
@@ -5376,25 +5376,26 @@ native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns no
 // 锁定指定单位的警戒点 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
-// 获取指定单位主动攻击范围 (当前)，中立敌对玩家单位的当前攻击范围以警戒范围为准
+// 获取指定单位主动攻击范围 (当前值)，中立敌对玩家单位的当前攻击范围以警戒范围为准
 native GetUnitAcquireRange takes unit whichUnit returns real
-// 获取指定单位转身速度 (当前)
+// 获取指定单位转身速度 (当前值)
 native GetUnitTurnSpeed takes unit whichUnit returns real
-// 获取指定单位转向角度（当前）(弧度制) [R]
+// 获取指定单位转向角度（当前值）(弧度制) [R]
 native GetUnitPropWindow takes unit whichUnit returns real
-// 获取指定单位飞行高度 (当前)
+// 获取指定单位飞行高度 (当前值)
 native GetUnitFlyHeight takes unit whichUnit returns real
 
-// 获取指定单位主动攻击范围 (默认)
+// 获取指定单位主动攻击范围 (默认值)
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
-// 获取指定单位转身速度 (默认)
+// 获取指定单位转身速度 (默认值)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
-// 获取指定单位转向角度(默认)
+// 获取指定单位转向角度(默认值)
 native GetUnitDefaultPropWindow takes unit whichUnit returns real
-// 获取指定单位飞行高度 (默认)
+// 获取指定单位飞行高度 (默认值)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
 // 设置指定单位所有者（指定玩家）
+// @param changeColor是否改变队伍颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色（指定玩家颜色）
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
@@ -6451,7 +6452,7 @@ native CreateMinimapIconAtLoc takes location where, integer red, integer green, 
 // @param fogstate 迷雾内状态（可见/战争迷雾/黑色阴影）
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径（指定字串符）
-// 应该无法在AI脚本中获取（返回null）
+// 该命令应该不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native SkinManagerGetLocalPath takes string key returns string
 // 销毁小地图（任务）图标
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
