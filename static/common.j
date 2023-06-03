@@ -5266,7 +5266,7 @@ native CreateItem takes integer itemid, real x, real y returns item
 native RemoveItem takes item whichItem returns nothing
 // 获取指定物品的所有者
 native GetItemPlayer takes item whichItem returns player
-// 获取指定物品的类别
+// 获取指定物品的物品类型
 native GetItemTypeId takes item i returns integer
 // 获取指定物品的 X 轴坐标 [R]
 native GetItemX takes item i returns real
