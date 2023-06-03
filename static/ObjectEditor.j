@@ -5725,84 +5725,85 @@ globals
 
 	// 技能命令串
 
-	// 技能命令串或ID 移动（字串符）
-	integer move
-	// 技能命令串或ID 停止（字串符）
-	integer stop
-	// 技能命令串或ID 修理建筑（字串符）
-	integer repair
-	// 技能命令串或ID 建造命令（字串符）
+	// 技能命令串或ID 移动
+	string move
+	// 技能命令串或ID 停止
+	string stop
+	// 技能命令串或ID 修理建筑
+	string repair
+	// 技能命令串或ID 建造命令
 	// 建造具体建筑物时，返回的命令字符串是该建筑物的物编英文名（全大写）
 	// 只要将对应建筑物的四字代码作为命令ID，即可实现建造/升级指定建筑
-	integer build
-	// 技能命令串或ID 扎根（古树）（字串符）
-	integer root
-	// 技能命令串或ID 拔根（古树）（字串符）
-	integer unroot
-	// 技能命令串或ID 战斗号召（农民单点发起）（农民变成民兵）（字串符）
-	integer militia
-	// 技能命令串或ID 返回工作（农民单点发起）（民兵变回农民）（字串符）
-	integer militiaoff	
-	// 技能命令串或ID 返回工作（农民单点发起）（民兵变回农民）（字串符）
-	integer peasant
-	// 技能命令串或ID 战斗号召（人族基地发起）（农民变成民兵）（字串符）
-	integer townbellon
-	// 技能命令串或ID 返回工作（人族基地发起）（民兵变回农民）（字串符）
-	integer townbelloff
-	// 技能命令串或ID 战斗位置（苦工进入地洞）（字串符）
-	integer battlestations
-	// 技能命令串或ID 卸载苦工（苦工离开地洞）（字串符）
-	integer standdown
-	// 技能命令串或ID 变熊（熊德）（字串符）
-	integer bearform
-	// 技能命令串或ID 变人（熊德）（字串符）
-	integer unbearform
-	// 技能命令串或ID 变鸟（鸟德）（字串符）
-	integer ravenform
-	// 技能命令串或ID 变人（鸟德）（字串符）
-	integer unravenform
-	// 技能命令串或ID 潜水（娜迦）（字串符）
-	integer submerga
-	// 技能命令串或ID （潜水后）上浮（娜迦）（字串符）
-	integer unsubmerga
-	// 技能命令串或ID 采集（指定金矿或指定树木）（字串符） 
-	integer harvest
-	// 技能命令串或ID 自动采集最近的树木（字串符） 
-	integer autoharvestlumber
-	// 技能命令串或ID 缠绕金矿（字串符）
-        integer entangle
-	// 技能命令串或ID 右键点击（字串符）
-	integer smart
-	// 技能命令串或ID 装载（飞艇、船、缠绕金矿等）（字串符）
-	integer loadall
-	// 技能命令串或ID 全部卸载（飞艇、船、缠绕金矿等）（字串符）
-	integer unloadall
-	// 技能命令串或ID 疾风步（剑圣）（字串符）
-	integer windwalk
-	// 技能命令串或ID 暴风雪（大法师）（字串符）
-	integer blizzard
-	// 技能命令串或ID 烈焰风暴（火法）（字串符）
-	integer flamestrike
-	// 技能命令串或ID 群体传送（大法师）（字串符）
-	integer massteleport
-	// 技能命令串或ID 地震（先知大招）（字串符）
-	integer earthquake
-	// 技能命令串或ID 巫毒（小Y/暗影猎手大招）（字串符）
-	integer voodoo
-	// 技能命令串或ID 死亡凋零（巫妖大招）（字串符）
-	integer deathanddecay
-	// 技能命令串或ID 群星坠落（白虎大招）（字串符）
-	integer starfall
-	// 技能命令串或ID 宁静（老鹿大招）（字串符）
-	integer tranquility
-	// 技能命令串或ID 火箭群（修补匠）（字串符）
-	integer clusterrockets
-	// 技能命令串或ID 龙卷风（娜迦海巫大招）（字串符）
-	integer tornado
-	// 技能命令串或ID 火山爆发（炎魔大招）（字串符）
-	integer volcano
-	// 技能命令串或ID 狂战士技能（字串符）
-	binteger erserk
+	string build
+	// 技能命令串或ID 扎根（古树）
+	string root
+	// 技能命令串或ID 拔根（古树）
+	string unroot
+	// 技能命令串或ID 战斗号召（农民单点发起）（农民变成民兵）
+	string militia
+	// 技能命令串或ID 返回工作（农民单点发起）（民兵变回农民）
+	string militiaoff
+	// 技能命令串或ID 返回工作（农民单点发起）（民兵变回农民）
+	string peasant
+	// 技能命令串或ID 战斗号召（人族基地发起）（农民变成民兵）
+	string townbellon
+	// 技能命令串或ID 返回工作（人族基地发起）（民兵变回农民）
+	string townbelloff
+	// 技能命令串或ID 战斗位置（苦工进入地洞）
+	string battlestations
+	// 技能命令串或ID 卸载苦工（苦工离开地洞）
+	string standdown
+	// 技能命令串或ID 变熊（熊德）
+	string bearform
+	// 技能命令串或ID 变人（熊德）
+	string unbearform
+	// 技能命令串或ID 变鸟（鸟德）
+	string ravenform
+	// 技能命令串或ID 变人（鸟德）
+	string unravenform
+	// 技能命令串或ID 潜水（娜迦）
+	string submerga
+	// 技能命令串或ID （潜水后）上浮（娜迦）
+	string unsubmerga
+	// 技能命令串或ID 采集（指定金矿或指定树木）
+	string harvest
+	// 技能命令串或ID 自动采集最近的树木
+	string autoharvestlumber
+	// 技能命令串或ID 缠绕金矿
+	string entangle
+	// 技能命令串或ID 右键点击
+	string smart
+	// 技能命令串或ID 装载（飞艇、船、缠绕金矿等）
+	string loadall
+	// 技能命令串或ID 全部卸载（飞艇、船、缠绕金矿等）
+	string unloadall
+	// 技能命令串或ID 疾风步（剑圣）
+	string windwalk
+	// 技能命令串或ID 暴风雪（大法师）
+	string blizzard
+	// 技能命令串或ID 烈焰风暴（火法）
+	string flamestrike
+	// 技能命令串或ID 群体传送（大法师）
+	string massteleport
+	// 技能命令串或ID 地震（先知大招）
+	string earthquake
+	// 技能命令串或ID 巫毒（小Y/暗影猎手大招）
+	string voodoo
+	// 技能命令串或ID 死亡凋零（巫妖大招）
+	string deathanddecay
+	// 技能命令串或ID 群星坠落（白虎大招）
+	string starfall
+	// 技能命令串或ID 宁静（老鹿大招）
+	string tranquility
+	// 技能命令串或ID 火箭群（修补匠）
+	string clusterrockets
+	// 技能命令串或ID 龙卷风（娜迦海巫大招）
+	string tornado
+	// 技能命令串或ID 火山爆发（炎魔大招）
+	string volcano
+	// 技能命令串或ID 狂战士技能
+	string berserk
+
 
 	// 技能ID
 
@@ -5910,7 +5911,7 @@ globals
 	integer 852595
 	// 技能命令串或ID 召唤战鹰
 	integer 852596
-	// 技能命令串或ID 龙卷风
+	// 技能命令串或ID 龙卷风（娜迦女海巫）
 	integer 852597
 	// 技能命令串或ID 召唤水奴
 	integer 852598
@@ -5918,15 +5919,15 @@ globals
 	integer 852599
 	// 技能命令串或ID 通魔
 	integer 852600
-	// 技能命令串或ID 寄生虫
+	// 技能命令串或ID 寄生虫（娜迦）
 	integer 852601
-	// 技能命令串或ID 激活寄生虫
+	// 技能命令串或ID 激活寄生虫（娜迦）
 	integer 852602
-	// 技能命令串或ID 取消寄生虫
+	// 技能命令串或ID 取消寄生虫（娜迦）
 	integer 852603
-	// 技能命令串或ID 潜水
+	// 技能命令串或ID 潜水（娜迦）
 	integer 852604
-	// 技能命令串或ID 取消潜水
+	// 技能命令串或ID 取消潜水（娜迦）
 	integer 852605
 	// 技能命令串或ID 瓦解光线（中立）
 	integer 852615
