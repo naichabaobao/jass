@@ -4511,7 +4511,7 @@ function SelectUnitAdd takes unit whichUnit returns nothing
 endfunction
 
 
-// 移除单位选择(所有玩家)
+// 取消选择单位(所有玩家)
 function SelectUnitRemove takes unit whichUnit returns nothing
     call SelectUnit(whichUnit, false)
 endfunction
