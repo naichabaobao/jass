@@ -3623,7 +3623,7 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_USE_ITEMS = ConvertAbilityBooleanLevelField('inv3')
     // 技能随等级改变的布尔值域 可以取得物品 ('inv4')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_GET_ITEMS = ConvertAbilityBooleanLevelField('inv4')
-    // 技能随等级改变的布尔值域 可以、 ('inv5')
+    // 技能随等级改变的布尔值域 可以丢弃物品 ('inv5')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_DROP_ITEMS = ConvertAbilityBooleanLevelField('inv5')
     // 技能随等级改变的布尔值域 修理允许 ('liq4')
 	constant abilitybooleanlevelfield ABILITY_BLF_REPAIRS_ALLOWED = ConvertAbilityBooleanLevelField('liq4')
