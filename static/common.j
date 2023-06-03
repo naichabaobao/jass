@@ -5849,7 +5849,7 @@ constant native IsLocationMaskedToPlayer takes location whichLocation, player wh
 
 // 获取玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
-// 获取玩家ID [R]
+// 获取玩家编号 [R]
 // 玩家1的编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
@@ -5859,10 +5859,10 @@ constant native GetPlayerUnitCount takes player whichPlayer, boolean includeInco
 // @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获取玩家的建筑的数量
+// 获取玩家的建筑数量
 // @param includeIncomplete是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家状态
+// 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
 // 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
