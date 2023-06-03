@@ -6297,7 +6297,7 @@ globals
 	// 技能命令串或ID 诅咒
 	integer 852190
 	// 技能命令串或ID 激活诅咒
-	integer 85219one
+	integer 852191
 	// 技能命令串或ID 解除诅咒
 	integer 852192
 	// 技能命令串或ID 占据
@@ -6517,7 +6517,7 @@ globals
 	// 技能命令串或ID 激活神圣护甲
 	integer 852090
 	// 技能命令串或ID 取消神圣护甲
-	integer 85209one
+	integer 852091
 	// 技能命令串或ID 神圣之光
 	integer 852092
 	// 技能命令串或ID 群体传送
