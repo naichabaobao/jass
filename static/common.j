@@ -5535,6 +5535,7 @@ native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y re
 // 命令指定单位移动物品到指定的物品栏格数 [R]
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 命令指定单位丢弃物品（指定目标单位/物品/可破坏物） [R]
+// 指定目标为商店时会卖出物品
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 发布使用物品命令
