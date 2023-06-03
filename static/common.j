@@ -6450,7 +6450,8 @@ native CreateMinimapIconAtLoc takes location where, integer red, integer green, 
 // 创建小地图（任务）图标（指定坐标）
 // @param fogstate 迷雾内状态（可见/战争迷雾/黑色阴影）
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 获取皮肤管理器的本地路径
+// 获取皮肤管理器的本地路径（指定字串符）
+// 应该无法在AI脚本中获取（返回null）
 native SkinManagerGetLocalPath takes string key returns string
 // 销毁小地图（任务）图标
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
