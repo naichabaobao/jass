@@ -3477,7 +3477,7 @@ globals
         integer Amfl
         // 单位技能 相位变换
         integer Apsh
-        // 单位技能 虚灵
+        // 单位技能 虚灵（暗夜精灵族）
         integer Aetl
         // 单位技能 球体(复仇 - 1级)
         integer Asp1
@@ -5801,8 +5801,31 @@ globals
 	string tornado
 	// 技能命令串或ID 火山爆发（炎魔大招）
 	string volcano
-	// 技能命令串或ID 狂战士技能
+	// 技能命令串或ID 治疗喷雾
+	string healingspray
+	// 技能命令串或ID 群兽奔腾
+	string stampede
+	// 技能命令串或ID 火焰之雨（深渊领主）
+	string rainoffire
+	// 技能命令串或ID 狂战士
 	string berserk
+	// 技能命令串或ID 空中枷锁（龙鹰）
+	string magicleash
+	// 技能命令串或ID 迷雾之云（龙鹰）
+	string cloudoffog
+	// 技能命令串或ID 不稳定化合物（自爆蝙蝠）
+	string unstableconcoction
+	// 技能命令串或ID 战棍（山岭巨人）
+	string grabtree
+	// 技能命令串或ID 占据
+	string possession
+	// 技能命令串或ID 影遁
+	string ambush
+	// 技能命令串或ID 诱捕（网）
+	string ensnare
+	// 技能命令串或ID 吞噬（科多兽等）
+	string devour
+
 
 
 	// 技能ID
@@ -6420,7 +6443,7 @@ globals
 	integer 852102
 	// 技能命令串或ID 取消嗜血术
 	integer 852103
-	// 技能命令串或ID 吞食/吞噬（科多兽）
+	// 技能命令串或ID 吞噬（科多兽等）
 	integer 852104
 	// 技能命令串或ID 岗哨守卫
 	integer 852105
