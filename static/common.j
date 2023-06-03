@@ -1587,9 +1587,11 @@ globals
 	
 	// 原生UI 初始化游戏UI，必要，没有它，什么都不显示
  constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
-    // 原生UI 单位操作面板按钮（技能栏，含移动/停止/巡逻/攻击，共12格），每次选择单位时它会重新出现/更新
+	// 原生UI 单位操作面板按钮（技能栏，含移动/停止/巡逻/攻击，共12格）
+	// 每次选择单位时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
-	// 原生UI 英雄栏（F1、F2按钮对应的英雄头像所在区域），所有 HERO_BUTTONS 的父类，由 HeroButtons 控制可见性
+	// 原生UI 英雄栏（F1、F2按钮对应的英雄头像所在区域）
+	// 所有 HERO_BUTTONS 的父类，由 HeroButtons 控制可见性
 	constant originframetype ORIGIN_FRAME_HERO_BAR = ConvertOriginFrameType(2)
 	// 原生UI 英雄按钮，屏幕左侧的自己/共享控制盟友的英雄可点击按钮
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON = ConvertOriginFrameType(3)
@@ -1597,19 +1599,23 @@ globals
 	constant originframetype ORIGIN_FRAME_HERO_HP_BAR = ConvertOriginFrameType(4)
 	// 原生UI 英雄按钮下的魔法条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_MANA_BAR = ConvertOriginFrameType(5)
-	// 原生UI 英雄获得新技能点时，英雄按钮发出的光; 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
+	// 原生UI 英雄获得新技能点时，英雄按钮发出的光
+	// 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON_INDICATOR = ConvertOriginFrameType(6)
-	// 原生UI 物品栏格按钮（共6格）。当其父级可见时，每次选择物品时它会重新出现/更新
+	// 原生UI 物品栏格按钮（共6格）
+	// 当其父级可见时，每次选择物品时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_ITEM_BUTTON = ConvertOriginFrameType(7)
 	// 原生UI 小地图
 	constant originframetype ORIGIN_FRAME_MINIMAP = ConvertOriginFrameType(8)
-	// 原生UI 小地图按钮，0是顶部按钮，到底部的共4个按钮（发送信号、显示/隐藏地形、切换敌友/玩家颜色、显示中立敌对单位营地、编队方式）
+	// 原生UI 小地图按钮
+	// 0是顶部按钮，到底部的共4个按钮（发送信号、显示/隐藏地形、切换敌友/玩家颜色、显示中立敌对单位营地、编队方式）
 	constant originframetype ORIGIN_FRAME_MINIMAP_BUTTON = ConvertOriginFrameType(9)
-	// 原生UI 系统按钮，菜单，盟友，日志/聊天，任务
+	// 原生UI 系统按钮
+	// 菜单，盟友，日志/聊天，任务
 	constant originframetype ORIGIN_FRAME_SYSTEM_BUTTON = ConvertOriginFrameType(10)
 	// 原生UI 工具提示
 	constant originframetype ORIGIN_FRAME_TOOLTIP = ConvertOriginFrameType(11)
-	// 原生UI 用户工具提示窗口柄句
+	// 原生UI 用户工具提示
 	constant originframetype ORIGIN_FRAME_UBERTOOLTIP = ConvertOriginFrameType(12)
 	// 原生UI 聊天信息显示框（玩家聊天信息）
 	constant originframetype ORIGIN_FRAME_CHAT_MSG = ConvertOriginFrameType(13)
@@ -1617,9 +1623,11 @@ globals
 	constant originframetype ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
 	// 原生UI 持续显示的变更警告消息，显示在昼夜时钟下方
 	constant originframetype ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
-	// 原生UI 主选单位的模型视图（模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域），其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
+	// 原生UI 主选单位的模型视图
+	// 模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域，其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
 	constant originframetype ORIGIN_FRAME_PORTRAIT = ConvertOriginFrameType(16)
-	// 原生UI 世界UI，游戏区域、单位、物品、特效、雾...游戏每个对象都显示在这
+	// 原生UI 世界UI
+	// 游戏区域、单位、物品、特效、雾...游戏每个对象都显示在这
 	constant originframetype ORIGIN_FRAME_WORLD_FRAME = ConvertOriginFrameType(17)
 	// 原生UI 简易UI（父级）
 	constant originframetype ORIGIN_FRAME_SIMPLE_UI_PARENT = ConvertOriginFrameType(18)
@@ -1629,7 +1637,7 @@ globals
 	constant originframetype ORIGIN_FRAME_PORTRAIT_MANA_TEXT = ConvertOriginFrameType(20)
 	// 原生UI BUFF状态栏（单位当前拥有光环的显示区域），尺寸固定，最多显示8个BUFF
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR = ConvertOriginFrameType(21)
-	// 原生UI BUFF状态栏标题（单位当前拥有光环的显示区域的标题），默认值是 Status:（状态：）
+	// 原生UI BUFF状态栏标题（单位当前拥有光环的显示区域的标题），默认文本是 Status:（状态：）
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL = ConvertOriginFrameType(22)
 	
 	// 框架相对位置（UI） 左上
@@ -5492,7 +5500,7 @@ native SetUnitPathing takes unit whichUnit, boolean flag returns nothing
 
 // 清除所有选择（鼠标框选的单位/物品/可破坏物）
 native ClearSelection takes nothing returns nothing
-// 选择/不选择 指定单位
+// 选择/取消选择 指定单位
 native SelectUnit takes unit whichUnit, boolean flag returns nothing
 
 // 获取单位附加值(指定单位)
