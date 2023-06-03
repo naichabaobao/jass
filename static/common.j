@@ -5294,7 +5294,7 @@ native IsItemPawnable takes item whichItem returns boolean
 native IsItemIdPowerup takes integer itemId returns boolean
 // 查询指定物品是否可以被市场出售
 native IsItemIdSellable takes integer itemId returns boolean
-// 查询知道物品是否可以被抵押
+// 查询指定物品是否可以被抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
