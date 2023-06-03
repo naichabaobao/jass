@@ -3623,7 +3623,7 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_USE_ITEMS = ConvertAbilityBooleanLevelField('inv3')
     // 技能随等级改变的布尔值域 可以取得物品 ('inv4')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_GET_ITEMS = ConvertAbilityBooleanLevelField('inv4')
-    // 技能随等级改变的布尔值域 可以丢弃物品 ('inv5')
+    // 技能随等级改变的布尔值域 可以、 ('inv5')
 	constant abilitybooleanlevelfield ABILITY_BLF_CAN_DROP_ITEMS = ConvertAbilityBooleanLevelField('inv5')
     // 技能随等级改变的布尔值域 修理允许 ('liq4')
 	constant abilitybooleanlevelfield ABILITY_BLF_REPAIRS_ALLOWED = ConvertAbilityBooleanLevelField('liq4')
@@ -5508,9 +5508,9 @@ native UnitAddItem takes unit whichUnit, item whichItem returns boolean
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数（指定物品ID） [R]
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 丢弃物品（指定物品）
+// 删除物品（指定物品）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 丢弃物品（指定物品栏格数，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
+// 删除物品（指定物品栏格数，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
 // @param itemSlot 0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
@@ -5523,9 +5523,9 @@ native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 移动物品到指定的物品栏格数 [R]
+// 命令指定单位移动物品到指定的物品栏格数 [R]
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
-// 把物品丢弃到指定目标位置（单位/物品/可破坏物） [R]
+// 命令指定单位丢弃物品（指定目标单位/物品/可破坏物） [R]
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 发布使用物品命令
