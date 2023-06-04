@@ -7651,19 +7651,20 @@ function SetTextTagAgeBJ takes texttag tt, real age returns nothing
 endfunction
 
 
-// 设置漂浮文字存在时限
+// 设置漂浮文字清除时间（在指定时间后自动清除）
+// 似乎可替代排泄
 function SetTextTagLifespanBJ takes texttag tt, real lifespan returns nothing
     call SetTextTagLifespan(tt, lifespan)
 endfunction
 
 
-// 设置漂浮文字淡化点
+// 设置漂浮文字消逝（淡化）时间
 function SetTextTagFadepointBJ takes texttag tt, real fadepoint returns nothing
     call SetTextTagFadepoint(tt, fadepoint)
 endfunction
 
 
-// 创建漂浮文字在指定点
+// 创建漂浮文字（指定点）
 function CreateTextTagLocBJ takes string s, location loc, real zOffset, real size, real red, real green, real blue, real transparency returns texttag
     set bj_lastCreatedTextTag = CreateTextTag()
     call SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
@@ -7674,7 +7675,7 @@ function CreateTextTagLocBJ takes string s, location loc, real zOffset, real siz
 endfunction
 
 
-// 创建漂浮文字在指定单位
+// 创建漂浮文字（指定单位）
 function CreateTextTagUnitBJ takes string s, unit whichUnit, real zOffset, real size, real red, real green, real blue, real transparency returns texttag
     set bj_lastCreatedTextTag = CreateTextTag()
     call SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
@@ -7685,7 +7686,7 @@ function CreateTextTagUnitBJ takes string s, unit whichUnit, real zOffset, real 
 endfunction
 
 
-// 删除漂浮文字
+// 摧毁漂浮文字
 function DestroyTextTagBJ takes texttag tt returns nothing
     call DestroyTextTag(tt)
 endfunction
