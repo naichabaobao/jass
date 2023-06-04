@@ -5549,7 +5549,7 @@ native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target ret
 constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
-// 获取指定单位的位置
+// 获取指定单位位置
 // 会生成点，用完请注意排泄
 constant native GetUnitLoc takes unit whichUnit returns location
 // 获取指定单位朝向
@@ -5558,18 +5558,18 @@ constant native GetUnitFacing takes unit whichUnit returns real
 constant native GetUnitMoveSpeed takes unit whichUnit returns real
 // 获取指定单位移动速度 (默认值)
 constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
-// 获取指定单位的指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
+// 获取指定单位指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
 // @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
-// 获取指定单位的所属玩家
+// 获取指定单位所属玩家
 constant native GetOwningPlayer takes unit whichUnit returns player
-// 获取指定单位的类型
+// 获取指定单位类型（返回四字代码）
 constant native GetUnitTypeId takes unit whichUnit returns integer
-// 获取指定单位的种族
+// 获取指定单位种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 获取指定单位的名字
+// 获取指定单位名字
 constant native GetUnitName takes unit whichUnit returns string
-// 获取指定单位使用的人口数量（单个）
+// 获取指定单位 使用的人口数量（单个）
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
 // 获取指定单位 提供的人口数量（单个）
 constant native GetUnitFoodMade takes unit whichUnit returns integer
@@ -5580,17 +5580,20 @@ constant native GetFoodUsed takes integer unitId returns integer
 // 允许/禁止 指定单位占用人口 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
-// 获取指定单位的集结点指向的点（建筑的旗子，集结技能）
+// 获取指定单位集结点（指向点）
 // 会生成点，用完请注意排泄
+// 建筑的旗子，集结技能
 constant native GetUnitRallyPoint takes unit whichUnit returns location
-// 获取指定单位集结点指向的单位，仅当集结点指向单位时可正常返回（建筑的旗子，集结技能）
+// 获取指定单位集结点（指向单位），未指向单位时返回null
+// 建筑的旗子，集结技能
 constant native GetUnitRallyUnit takes unit whichUnit returns unit
-// 获取指定单位集结点指向的可破坏物（树、石头、门、柱等），仅当集结点指向可破坏物时可正常返回（建筑的旗子，集结技能）
+// 获取指定单位集结点（指向可破坏物（树、石头、门、柱等）），未指向可破坏物时返回null
+// 建筑的旗子，集结技能
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
 // 查询指定单位是否在指定的单位组中
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
-// 查询指定单位是否指定玩家组任意玩家的单位
+// 查询指定单位是否指定玩家组中任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
 // 查询指定单位是否指定玩家的单位
 constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean
