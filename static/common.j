@@ -6489,17 +6489,20 @@ native DisableRestartMission takes boolean flag returns nothing
 
 // 新建漂浮文字 [R]
 native CreateTextTag takes nothing returns texttag
-// 摧毁漂浮文字 [R]
+// 销毁漂浮文字 [R]
 native DestroyTextTag takes texttag t returns nothing
-// 设置漂浮文字内容 [R]
+// 设置漂浮文字文本 [R]
+// @param height 文字高度，可使用 TextTagSize2Height(任意实数) 转换字号（字体大小）获得
 native SetTextTagText takes texttag t, string s, real height returns nothing
 // 设置漂浮文字位置(指定坐标) [R]
+// @param height 文字高度，可使用 TextTagSize2Height(任意实数) 转换字号（字体大小）获得
 native SetTextTagPos takes texttag t, real x, real y, real heightOffset returns nothing
 // 设置漂浮文字位置(指定坐标) [R]
+// @param height 文字高度，可使用 TextTagSize2Height(任意实数) 转换字号（字体大小）获得
 native SetTextTagPosUnit takes texttag t, unit whichUnit, real heightOffset returns nothing
 // 设置漂浮文字颜色 [R]
 native SetTextTagColor takes texttag t, integer red, integer green, integer blue, integer alpha returns nothing
-// 设置漂浮文字速率 [R]
+// 设置漂浮文字速度 [R]
 native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
 // 显示/隐藏 漂浮文字 (所有玩家) [R]
 native SetTextTagVisibility takes texttag t, boolean flag returns nothing
@@ -6509,21 +6512,21 @@ native SetTextTagSuspended takes texttag t, boolean flag returns nothing
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
 // 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
-// 设置漂浮文字清除时间（持续指定后自动清除）
+// 设置漂浮文字清除时间（在指定生命周期后自动清除）
 // 可替代排泄
 native SetTextTagLifespan takes texttag t, real lifespan returns nothing
 // 设置漂浮文字消逝（淡出）时间
 native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
-// 保留英雄按钮（左上角英雄图标，F1~FN）
+// 保留英雄按钮（指定左上角英雄图标，F1~FN）
 native SetReservedLocalHeroButtons takes integer reserved returns nothing
 // 获取联盟颜色过滤状态
 native GetAllyColorFilterState takes nothing returns integer
 // 设置联盟颜色过滤状态
 native SetAllyColorFilterState takes integer state returns nothing
-// 判断小地图是否显示野生（中立敌对）单位营地图标
+// 判断小地图是否显示中立敌对单位营地图标
 native GetCreepCampFilterState takes nothing returns boolean
-// 显示/隐藏 小地图野生单位营地图标（是否在小地图显示中立敌对玩家的单位）
+// 显示/隐藏 小地图中立敌对单位营地图标（是否在小地图显示中立敌对玩家的单位）
 native SetCreepCampFilterState takes boolean state returns nothing
 // 启用/禁用 小地图按钮
 native EnableMinimapFilterButtons takes boolean enableAlly, boolean enableCreep returns nothing
@@ -6570,7 +6573,7 @@ native IsQuestCompleted takes quest whichQuest returns boolean
 native IsQuestDiscovered takes quest whichQuest returns boolean
 // 查询任务是否已失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 查询任务是否已开启（已激活）
+// 查询任务是否已开启/已激活
 native IsQuestEnabled takes quest whichQuest returns boolean
 
 // 创建任务要求
@@ -6870,7 +6873,7 @@ native EndCinematicScene takes nothing returns nothing
 native ForceCinematicSubtitles takes boolean flag returns nothing
 // 启用/禁用 电影声音
 native SetCinematicAudio takes boolean cinematicAudio returns nothing
-// 获取镜头指定空白的值
+// 获取镜头指定空白值
 native GetCameraMargin takes integer whichMargin returns real
 
 // These return values for the local players camera only...
