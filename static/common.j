@@ -6509,7 +6509,8 @@ native SetTextTagSuspended takes texttag t, boolean flag returns nothing
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
 // 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
-// 设置漂浮文字清除（持续）时间
+// 设置漂浮文字清除时间（持续指定后自动清除）
+// 似乎可替代排泄
 native SetTextTagLifespan takes texttag t, real lifespan returns nothing
 // 设置漂浮文字消逝（淡出）时间
 native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
