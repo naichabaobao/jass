@@ -7639,7 +7639,7 @@ function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
 endfunction
 
 
-// 永久存在/允许过期 漂浮文字
+// 允许/禁止 漂浮文字永久显示
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
@@ -7652,7 +7652,7 @@ endfunction
 
 
 // 设置漂浮文字清除时间（在指定时间后自动清除）
-// 似乎可替代排泄
+// 可替代排泄
 function SetTextTagLifespanBJ takes texttag tt, real lifespan returns nothing
     call SetTextTagLifespan(tt, lifespan)
 endfunction
