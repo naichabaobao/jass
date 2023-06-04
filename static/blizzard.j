@@ -7621,13 +7621,13 @@ function SetTextTagTextBJ takes texttag tt, string s, real size returns nothing
 endfunction
 
 
-// 设置漂浮文字位置到指定点
+// 设置漂浮文字位置（指定点）
 function SetTextTagPosBJ takes texttag tt, location loc, real zOffset returns nothing
     call SetTextTagPos(tt, GetLocationX(loc), GetLocationY(loc), zOffset)
 endfunction
 
 
-// 设置漂浮文字位置到指定单位
+// 设置漂浮文字位置（指定单位）
 function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset returns nothing
     call SetTextTagPosUnit(tt, whichUnit, zOffset)
 endfunction
@@ -7686,7 +7686,7 @@ function CreateTextTagUnitBJ takes string s, unit whichUnit, real zOffset, real 
 endfunction
 
 
-// 摧毁漂浮文字
+// 销毁漂浮文字
 function DestroyTextTagBJ takes texttag tt returns nothing
     call DestroyTextTag(tt)
 endfunction
