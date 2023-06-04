@@ -7598,6 +7598,7 @@ endfunction
 
 
 // 设置漂浮文字颜色
+// @param transparency 透明度（建议为0，越大越透明）
 function SetTextTagColorBJ takes texttag tt, real red, real green, real blue, real transparency returns nothing
     call SetTextTagColor(tt, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
@@ -7613,7 +7614,7 @@ function SetTextTagVelocityBJ takes texttag tt, real speed, real angle returns n
 endfunction
 
 
-// 设置漂浮文字内容
+// 设置漂浮文字文本
 function SetTextTagTextBJ takes texttag tt, string s, real size returns nothing
     local real textHeight = TextTagSize2Height(size)
 
@@ -7622,24 +7623,26 @@ endfunction
 
 
 // 设置漂浮文字位置（指定点）
+// @param zOffset 字体大小
 function SetTextTagPosBJ takes texttag tt, location loc, real zOffset returns nothing
     call SetTextTagPos(tt, GetLocationX(loc), GetLocationY(loc), zOffset)
 endfunction
 
 
 // 设置漂浮文字位置（指定单位）
+// @param zOffset 字体大小
 function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset returns nothing
     call SetTextTagPosUnit(tt, whichUnit, zOffset)
 endfunction
 
 
-// 暂停/恢复 漂浮文字
+// 允许/禁止 漂浮文字暂停状态
 function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagSuspended(tt, flag)
 endfunction
 
 
-// 允许/禁止 漂浮文字永久显示
+// 允许/禁止 漂浮文字永久（显示）状态
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
@@ -7651,7 +7654,7 @@ function SetTextTagAgeBJ takes texttag tt, real age returns nothing
 endfunction
 
 
-// 设置漂浮文字清除时间（在指定时间后自动清除）
+// 设置漂浮文字清除时间（在指定生命周期后自动清除）
 // 可替代排泄
 function SetTextTagLifespanBJ takes texttag tt, real lifespan returns nothing
     call SetTextTagLifespan(tt, lifespan)
