@@ -1085,9 +1085,9 @@ globals
 	constant gameevent EVENT_GAME_ENTER_REGION = ConvertGameEvent(5)
 	// 游戏事件 离开区域
 	constant gameevent EVENT_GAME_LEAVE_REGION = ConvertGameEvent(6)
-	// 游戏事件 点击可追踪对象
+	// 游戏事件 鼠标点击可追踪物
 	constant gameevent EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
-	// 游戏事件 可追踪对象轨迹
+	// 游戏事件 鼠标移动到可追踪物
 	constant gameevent EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
 	// 游戏事件 显示技能
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
@@ -1285,7 +1285,7 @@ globals
 	// 单位事件 单位被装载
 	// 被飞艇、船、被缠绕的金矿等装载
 	constant unitevent EVENT_UNIT_LOADED = ConvertUnitEvent(88)
-	// 目标事件 单位/物品/可破坏物死亡
+	// 微件/实体事件 单位/物品/可破坏物死亡
 	constant widgetevent EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
 	// 对话框事件 点击对话框按钮
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
@@ -4766,9 +4766,9 @@ native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion
 // EVENT_GAME_LEAVE_REGION
 constant native GetLeavingUnit takes nothing returns unit
 
-// 触发器登记鼠标点击可追踪对象事件 [R]
+// 触发器登记鼠标点击可追踪物事件 [R]
 native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t returns event
-// 触发器登记可追踪对象轨迹事件 [R]
+// 触发器登记鼠标移动到可追踪物事件 [R]
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
 // 触发器登记点击命令按钮事件
@@ -4777,7 +4777,7 @@ native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbil
 // 触发器登记科技升级命令事件
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
-// 事件响应 获取触发的可追踪对象 [R]（对应鼠标点击可追踪对象及可追踪对象轨迹等事件）
+// 事件响应 获取触发的可追踪物 [R]（对应鼠标点击可追踪物及鼠标移动到可追踪物事件）
 // EVENT_GAME_TRACKABLE_HIT
 // EVENT_GAME_TRACKABLE_TRACK
 constant native GetTriggeringTrackable takes nothing returns trackable
@@ -6206,7 +6206,7 @@ native SaveLeaderboardHandle takes hashtable table, integer parentKey, integer c
 native SaveMultiboardHandle takes hashtable table, integer parentKey, integer childKey, multiboard whichMultiboard returns boolean
 // <1.24> 保存多面板项目到哈希表 [C]
 native SaveMultiboardItemHandle takes hashtable table, integer parentKey, integer childKey, multiboarditem whichMultiboarditem returns boolean
-// <1.24> 保存可追踪对象到哈希表 [C]
+// <1.24> 保存可追踪物到哈希表 [C]
 native SaveTrackableHandle takes hashtable table, integer parentKey, integer childKey, trackable whichTrackable returns boolean
 // <1.24> 保存对话框到哈希表 [C]
 native SaveDialogHandle takes hashtable table, integer parentKey, integer childKey, dialog whichDialog returns boolean
@@ -6299,7 +6299,7 @@ native LoadLeaderboardHandle takes hashtable table, integer parentKey, integer c
 native LoadMultiboardHandle takes hashtable table, integer parentKey, integer childKey returns multiboard
 // <1.24> 从哈希表提取多面板项目 [C]
 native LoadMultiboardItemHandle	takes hashtable table, integer parentKey, integer childKey returns multiboarditem
-// <1.24> 从哈希表提取可追踪对象 [C]
+// <1.24> 从哈希表提取可追踪物 [C]
 native LoadTrackableHandle takes hashtable table, integer parentKey, integer childKey returns trackable
 // <1.24> 从哈希表提取对话框 [C]
 native LoadDialogHandle takes hashtable table, integer parentKey, integer childKey returns dialog
@@ -6549,7 +6549,7 @@ native EnableSelect takes boolean state, boolean ui returns nothing
 
 // Trackable API
 
-// 创建可追踪对象 [R]
+// 创建可追踪物 [R]
 native CreateTrackable takes string trackableModelPath, real x, real y, real facing returns trackable
 
 // Quest API
