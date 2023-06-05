@@ -4352,477 +4352,477 @@ globals
         
         
         // 魔法效果 (BUFF)
-        
-        
-                // 魔法效果 (BUFF)  永久献祭(中立敌对1)
+
+
+                // 魔法效果 (BUFF) 永久献祭(中立敌对1)
                 integer BNpi
-                // 魔法效果 (BUFF)  永久献祭(中立敌对2)
+                // 魔法效果 (BUFF) 永久献祭(中立敌对2)
                 integer Bpig
-                // 魔法效果 (BUFF)  灵魂保存
+                // 魔法效果 (BUFF) 灵魂保存
                 integer BNsl
-                // 魔法效果 (BUFF)  群兽奔腾
+                // 魔法效果 (BUFF) 群兽奔腾
                 integer BNst
-                // 魔法效果 (BUFF)  火焰之雨(范围)
+                // 魔法效果 (BUFF) 火焰之雨(范围)
                 integer BNrf
-                // 魔法效果 (BUFF)  冰冻
+                // 魔法效果 (BUFF) 冰冻
                 integer Bfre
-                // 魔法效果 (BUFF)  共享视野
+                // 魔法效果 (BUFF) 共享视野
                 integer Bsha
-                // 魔法效果 (BUFF)  龙卷风伤害
+                // 魔法效果 (BUFF) 龙卷风伤害
                 integer Btdg
-                // 魔法效果 (BUFF)  龙卷风旋转(范围)
+                // 魔法效果 (BUFF) 龙卷风旋转(范围)
                 integer Btsa
-                // 魔法效果 (BUFF)  季风
+                // 魔法效果 (BUFF) 季风
                 integer ANmd
-                // 魔法效果 (BUFF)  混乱之雨(效果)
+                // 魔法效果 (BUFF) 混乱之雨(效果)
                 integer XErc
-                // 魔法效果 (BUFF)  火焰之雨(效果)
+                // 魔法效果 (BUFF) 火焰之雨(效果)
                 integer XErf
-                // 魔法效果 (BUFF)  改变一天的时间(物品)
+                // 魔法效果 (BUFF) 改变一天的时间(物品)
                 integer XIct
-                // 魔法效果 (BUFF)  季风(效果)
+                // 魔法效果 (BUFF) 季风(效果)
                 integer XNmo
-                // 魔法效果 (BUFF)  火山爆发(范围)
+                // 魔法效果 (BUFF) 火山爆发(范围)
                 integer BNva
-                // 魔法效果 (BUFF)  火山爆发(效果)
+                // 魔法效果 (BUFF) 火山爆发(效果)
                 integer XNvc
-                // 魔法效果 (BUFF)  集束火箭(效果)
+                // 魔法效果 (BUFF) 集束火箭(效果)
                 integer XNcs
-                // 魔法效果 (BUFF)  治疗喷雾(效果)
+                // 魔法效果 (BUFF) 治疗喷雾(效果)
                 integer XNhs
-                // 魔法效果 (BUFF)  焚身化骨
+                // 魔法效果 (BUFF) 焚身化骨
                 integer BNic
-                // 魔法效果 (BUFF)  灵魂燃烧
+                // 魔法效果 (BUFF) 灵魂燃烧
                 integer BNso
-                // 魔法效果 (BUFF)  熔岩爪牙
+                // 魔法效果 (BUFF) 熔岩爪牙
                 integer BNlm
-                // 魔法效果 (BUFF)  口袋工厂
+                // 魔法效果 (BUFF) 口袋工厂
                 integer BNfy
-                // 魔法效果 (BUFF)  集束火箭
+                // 魔法效果 (BUFF) 集束火箭
                 integer BNcs
-                // 魔法效果 (BUFF)  工程学升级
+                // 魔法效果 (BUFF) 工程学升级
                 integer BNeg
-                // 魔法效果 (BUFF)  发条地精
+                // 魔法效果 (BUFF) 发条地精
                 integer BNcg
-                // 魔法效果 (BUFF)  治疗喷雾
+                // 魔法效果 (BUFF) 治疗喷雾
                 integer BNhs
-                // 魔法效果 (BUFF)  酸液炸弹
+                // 魔法效果 (BUFF) 酸液炸弹
                 integer BNab
-                // 魔法效果 (BUFF)  化学狂暴
+                // 魔法效果 (BUFF) 化学狂暴
                 integer BNcr
-                // 魔法效果 (BUFF)  点金术
+                // 魔法效果 (BUFF) 点金术
                 integer BNtm
-                // 魔法效果 (BUFF)  法力护盾
+                // 魔法效果 (BUFF) 法力护盾
                 integer BNms
-                // 魔法效果 (BUFF)  火焰之雨
+                // 魔法效果 (BUFF) 火焰之雨
                 integer BNrd
-                // 魔法效果 (BUFF)  寒冰箭矢
+                // 魔法效果 (BUFF) 寒冰箭矢
                 integer BHca
-                // 魔法效果 (BUFF)  寒冰箭矢(叠加)
+                // 魔法效果 (BUFF) 寒冰箭矢(叠加)
                 integer Bcsd
-                // 魔法效果 (BUFF)  寒冰箭矢(信息)
+                // 魔法效果 (BUFF) 寒冰箭矢(信息)
                 integer Bcsi
-                // 魔法效果 (BUFF)  恐惧嚎叫
+                // 魔法效果 (BUFF) 恐惧嚎叫
                 integer BNht
-                // 魔法效果 (BUFF)  末日降临
+                // 魔法效果 (BUFF) 末日降临
                 integer BNdo
-                // 魔法效果 (BUFF)  末日降临(奴仆)
+                // 魔法效果 (BUFF) 末日降临(奴仆)
                 integer BNdi
-                // 魔法效果 (BUFF)  熊猫人元素之灵
+                // 魔法效果 (BUFF) 熊猫人元素之灵
                 integer BNef
-                // 魔法效果 (BUFF)  巨熊
+                // 魔法效果 (BUFF) 巨熊
                 integer BNsg
-                // 魔法效果 (BUFF)  豪猪
+                // 魔法效果 (BUFF) 豪猪
                 integer BNsq
-                // 魔法效果 (BUFF)  战鹰
+                // 魔法效果 (BUFF) 战鹰
                 integer BNsw
-                // 魔法效果 (BUFF)  心智腐烂
+                // 魔法效果 (BUFF) 心智腐烂
                 integer BNmr
-                // 魔法效果 (BUFF)  火焰之息
+                // 魔法效果 (BUFF) 火焰之息
                 integer BNbf
-                // 魔法效果 (BUFF)  酩酊酒雾
+                // 魔法效果 (BUFF) 酩酊酒雾
                 integer BNdh
-                // 魔法效果 (BUFF)  沉默
+                // 魔法效果 (BUFF) 沉默
                 integer BNsi
-                // 魔法效果 (BUFF)  黑蚀箭
+                // 魔法效果 (BUFF) 黑蚀箭
                 integer BNba
-                // 魔法效果 (BUFF)  黑暗奴仆
+                // 魔法效果 (BUFF) 黑暗奴仆
                 integer BNdm
-                // 魔法效果 (BUFF)  季风
+                // 魔法效果 (BUFF) 季风
                 integer BNmo
-                // 魔法效果 (BUFF)  水栖奴仆
+                // 魔法效果 (BUFF) 水栖奴仆
                 integer BNwm
-                // 魔法效果 (BUFF)  龙卷风(减速光环)
+                // 魔法效果 (BUFF) 龙卷风(减速光环)
                 integer Basl
-                // 魔法效果 (BUFF)  龙卷风旋转(自动施放飓风)
+                // 魔法效果 (BUFF) 龙卷风旋转(自动施放飓风)
                 integer Btsp
-                // 魔法效果 (BUFF)  龙卷风(时间化生命)
+                // 魔法效果 (BUFF) 龙卷风(时间化生命)
                 integer BNto
-                // 魔法效果 (BUFF)  黑暗转换
+                // 魔法效果 (BUFF) 黑暗转换
                 integer BNdc
-                // 魔法效果 (BUFF)  灵魂保存
+                // 魔法效果 (BUFF) 灵魂保存
                 integer BNsp
-                // 魔法效果 (BUFF)  眩晕
+                // 魔法效果 (BUFF) 眩晕
                 integer Bchd
-                // 魔法效果 (BUFF)  地狱火
+                // 魔法效果 (BUFF) 地狱火
                 integer BNin
-                // 魔法效果 (BUFF)  狂乱
+                // 魔法效果 (BUFF) 狂乱
                 integer Bfzy
-                // 魔法效果 (BUFF)  统御光环
+                // 魔法效果 (BUFF) 统御光环
                 integer Boac
-                // 魔法效果 (BUFF)  时间化生命
+                // 魔法效果 (BUFF) 时间化生命
                 integer Btlf
-                // 魔法效果 (BUFF)  法力恢复光环
+                // 魔法效果 (BUFF) 法力恢复光环
                 integer Barm
-                // 魔法效果 (BUFF)  冰霜吐息
+                // 魔法效果 (BUFF) 冰霜吐息
                 integer BCbf
-                // 魔法效果 (BUFF)  砸击
+                // 魔法效果 (BUFF) 砸击
                 integer BCtc
-                // 魔法效果 (BUFF)  战斗咆哮
+                // 魔法效果 (BUFF) 战斗咆哮
                 integer BNbr
-                // 魔法效果 (BUFF)  寄生虫
+                // 魔法效果 (BUFF) 寄生虫
                 integer BNpm
-                // 魔法效果 (BUFF)  寄生虫
+                // 魔法效果 (BUFF) 寄生虫
                 integer BNpa
-                // 魔法效果 (BUFF)  被侦测到
+                // 魔法效果 (BUFF) 被侦测到
                 integer Bdet
-                // 魔法效果 (BUFF)  无敌
+                // 魔法效果 (BUFF) 无敌
                 integer Bvul
-                // 魔法效果 (BUFF)  速度加成
+                // 魔法效果 (BUFF) 速度加成
                 integer Bspe
-                // 魔法效果 (BUFF)  减速
+                // 魔法效果 (BUFF) 减速
                 integer Bfro
-                // 魔法效果 (BUFF)  昏迷
+                // 魔法效果 (BUFF) 昏迷
                 integer BSTN
-                // 魔法效果 (BUFF)  昏迷(暂停)
+                // 魔法效果 (BUFF) 昏迷(暂停)
                 integer BPSE
-                // 魔法效果 (BUFF)  荒芜(效果)
+                // 魔法效果 (BUFF) 荒芜(效果)
                 integer Xbli
-                // 魔法效果 (BUFF)  暴露(效果)
+                // 魔法效果 (BUFF) 暴露(效果)
                 integer Xbdt
-                // 魔法效果 (BUFF)  英雄消散(效果)
+                // 魔法效果 (BUFF) 英雄消散(效果)
                 integer Xdis
-                // 魔法效果 (BUFF)  复仇之魂
+                // 魔法效果 (BUFF) 复仇之魂
                 integer integer Bvng
-                // 魔法效果 (BUFF)  法力闪耀
+                // 魔法效果 (BUFF) 法力闪耀
                 integer integer Bmfl
-                // 魔法效果 (BUFF)  法力闪耀(额外的)
+                // 魔法效果 (BUFF) 法力闪耀(额外的)
                 integer integer Bmfa
-                // 魔法效果 (BUFF)  相位变换
+                // 魔法效果 (BUFF) 相位变换
                 integer integer Bpsh
-                // 魔法效果 (BUFF)  嘲讽
+                // 魔法效果 (BUFF) 嘲讽
                 integer integer Btau
-                // 魔法效果 (BUFF)  暗影突袭
+                // 魔法效果 (BUFF) 暗影突袭
                 integer integer BEsh
-                // 魔法效果 (BUFF)  暗影突袭
+                // 魔法效果 (BUFF) 暗影突袭
                 integer integer BEsi
-                // 魔法效果 (BUFF)  复仇
+                // 魔法效果 (BUFF) 复仇
                 integer integer BEsv
-                // 魔法效果 (BUFF)  减速毒药(不叠加)
+                // 魔法效果 (BUFF) 减速毒药(不叠加)
                 integer integer Bspo
-                // 魔法效果 (BUFF)  减速毒药(叠加)
+                // 魔法效果 (BUFF) 减速毒药(叠加)
                 integer integer Bssd
-                // 魔法效果 (BUFF)  腐蚀吐息
+                // 魔法效果 (BUFF) 腐蚀吐息
                 integer integer Bcor
-                // 魔法效果 (BUFF)  献祭
+                // 魔法效果 (BUFF) 献祭
                 integer integer BEim
-                // 魔法效果 (BUFF)  恶魔变形
+                // 魔法效果 (BUFF) 恶魔变形
                 integer integer BEme
-                // 魔法效果 (BUFF)  纠缠根须
+                // 魔法效果 (BUFF) 纠缠根须
                 integer integer BEer
-                // 魔法效果 (BUFF)  自然之力
+                // 魔法效果 (BUFF) 自然之力
                 integer integer BEfn
-                // 魔法效果 (BUFF)  荆棘光环
+                // 魔法效果 (BUFF) 荆棘光环
                 integer integer BEah
-                // 魔法效果 (BUFF)  斥候
+                // 魔法效果 (BUFF) 斥候
                 integer integer BEst
-                // 魔法效果 (BUFF)  强击光环
+                // 魔法效果 (BUFF) 强击光环
                 integer integer BEar
-                // 魔法效果 (BUFF)  精灵之火
+                // 魔法效果 (BUFF) 精灵之火
                 integer integer Bfae
-                // 魔法效果 (BUFF)  飓风术
+                // 魔法效果 (BUFF) 飓风术
                 integer integer Bcyc
-                // 魔法效果 (BUFF)  飓风术(额外的)
+                // 魔法效果 (BUFF) 飓风术(额外的)
                 integer integer Bcy2
-                // 魔法效果 (BUFF)  回春术
+                // 魔法效果 (BUFF) 回春术
                 integer integer Brej
-                // 魔法效果 (BUFF)  咆哮
+                // 魔法效果 (BUFF) 咆哮
                 integer integer Broa
-                // 魔法效果 (BUFF)  献祭(施法者)
+                // 魔法效果 (BUFF) 献祭(施法者)
                 integer integer BEia
-                // 魔法效果 (BUFF)  吃树
+                // 魔法效果 (BUFF) 吃树
                 integer integer Beat
-                // 魔法效果 (BUFF)  战棍
+                // 魔法效果 (BUFF) 战棍
                 integer integer Bgra
-                // 魔法效果 (BUFF)  减速毒药(信息)
+                // 魔法效果 (BUFF) 减速毒药(信息)
                 integer integer Bssi
-                // 魔法效果 (BUFF)  树皮术
+                // 魔法效果 (BUFF) 树皮术
                 integer integer Bbar
-                // 魔法效果 (BUFF)  星辰坠落(目标)
+                // 魔法效果 (BUFF) 星辰坠落(目标)
                 integer integer AEsd
-                // 魔法效果 (BUFF)  宁静(目标)
+                // 魔法效果 (BUFF) 宁静(目标)
                 integer integer AEtr
-                // 魔法效果 (BUFF)  夜视能力
+                // 魔法效果 (BUFF) 夜视能力
                 integer integer Bult
-                // 魔法效果 (BUFF)  星辰坠落(效果)
+                // 魔法效果 (BUFF) 星辰坠落(效果)
                 integer integer XEsf
-                // 魔法效果 (BUFF)  宁静(效果)
+                // 魔法效果 (BUFF) 宁静(效果)
                 integer integer XEtq
-                // 魔法效果 (BUFF)  哨兵(效果)
+                // 魔法效果 (BUFF) 哨兵(效果)
                 integer integer XEsn
-                // 魔法效果 (BUFF)  建筑伤害 - 暗夜精灵 小
+                // 魔法效果 (BUFF) 建筑伤害 - 暗夜精灵 小
                 integer integer Xfns
-                // 魔法效果 (BUFF)  建筑伤害 - 暗夜精灵 中
+                // 魔法效果 (BUFF) 建筑伤害 - 暗夜精灵 中
                 integer integer Xfnm
-                // 魔法效果 (BUFF)  建筑伤害 - 暗夜精灵 大
+                // 魔法效果 (BUFF) 建筑伤害 - 暗夜精灵 大
                 integer integer Xfnl
-                // 魔法效果 (BUFF)  空中枷锁
+                // 魔法效果 (BUFF) 空中枷锁
                 integer integer Bmlt
-                // 魔法效果 (BUFF)  控制魔法
+                // 魔法效果 (BUFF) 控制魔法
                 integer integer Bcmg
-                // 魔法效果 (BUFF)  吸取生命和法力(附加)
+                // 魔法效果 (BUFF) 吸取生命和法力(附加)
                 integer integer Bdbb
-                // 魔法效果 (BUFF)  吸取生命(附加)
+                // 魔法效果 (BUFF) 吸取生命(附加)
                 integer integer Bdbl
-                // 魔法效果 (BUFF)  法力虹吸(附加)
+                // 魔法效果 (BUFF) 法力虹吸(附加)
                 integer integer Bdbm
-                // 魔法效果 (BUFF)  迷雾之云
+                // 魔法效果 (BUFF) 迷雾之云
                 integer integer Bclf
-                // 魔法效果 (BUFF)  烈焰风暴
+                // 魔法效果 (BUFF) 烈焰风暴
                 integer integer BHfs
-                // 魔法效果 (BUFF)  放逐
+                // 魔法效果 (BUFF) 放逐
                 integer integer BHbn
-                // 魔法效果 (BUFF)  凤凰
+                // 魔法效果 (BUFF) 凤凰
                 integer integer Bphx
-                // 魔法效果 (BUFF)  凤凰烈焰
+                // 魔法效果 (BUFF) 凤凰烈焰
                 integer integer Bpxf
-                // 魔法效果 (BUFF)  心灵之火
+                // 魔法效果 (BUFF) 心灵之火
                 integer integer Binf
-                // 魔法效果 (BUFF)  治疗术
+                // 魔法效果 (BUFF) 治疗术
                 integer integer Bhea
-                // 魔法效果 (BUFF)  中立治疗术
+                // 魔法效果 (BUFF) 中立治疗术
                 integer integer BNhe
-                // 魔法效果 (BUFF)  减速术
+                // 魔法效果 (BUFF) 减速术
                 integer integer Bslo
-                // 魔法效果 (BUFF)  隐形术
+                // 魔法效果 (BUFF) 隐形术
                 integer integer Binv
-                // 魔法效果 (BUFF)  变形术
+                // 魔法效果 (BUFF) 变形术
                 integer integer Bply
-                // 魔法效果 (BUFF)  暴风雪
+                // 魔法效果 (BUFF) 暴风雪
                 integer integer BHbd
-                // 魔法效果 (BUFF)  水元素
+                // 魔法效果 (BUFF) 水元素
                 integer integer BHwe
-                // 魔法效果 (BUFF)  辉煌光环
+                // 魔法效果 (BUFF) 辉煌光环
                 integer integer BHab
-                // 魔法效果 (BUFF)  风暴之锤
+                // 魔法效果 (BUFF) 风暴之锤
                 integer integer BHtb
-                // 魔法效果 (BUFF)  雷霆一击
+                // 魔法效果 (BUFF) 雷霆一击
                 integer integer BHtc
-                // 魔法效果 (BUFF)  猛击
+                // 魔法效果 (BUFF) 猛击
                 integer integer BHbh
-                // 魔法效果 (BUFF)  天神下凡
+                // 魔法效果 (BUFF) 天神下凡
                 integer integer BHav
-                // 魔法效果 (BUFF)  圣盾术
+                // 魔法效果 (BUFF) 圣盾术
                 integer integer BHds
-                // 魔法效果 (BUFF)  虔诚光环
+                // 魔法效果 (BUFF) 虔诚光环
                 integer integer BHad
-                // 魔法效果 (BUFF)  民兵
+                // 魔法效果 (BUFF) 民兵
                 integer integer Bmil
-                // 魔法效果 (BUFF)  暴风雪(施法者)
+                // 魔法效果 (BUFF) 暴风雪(施法者)
                 integer integer BHbz
-                // 魔法效果 (BUFF)  吸取生命和法力(施法者)
+                // 魔法效果 (BUFF) 吸取生命和法力(施法者)
                 integer integer Bdcb
-                // 魔法效果 (BUFF)  吸取生命(施法者)
+                // 魔法效果 (BUFF) 吸取生命(施法者)
                 integer integer Bdcl
-                // 魔法效果 (BUFF)  吸取法力(施法者)
+                // 魔法效果 (BUFF) 吸取法力(施法者)
                 integer integer Bdcm
-                // 魔法效果 (BUFF)  吸取生命和法力(目标)
+                // 魔法效果 (BUFF) 吸取生命和法力(目标)
                 integer integer Bdtb
-                // 魔法效果 (BUFF)  吸取生命(目标)
+                // 魔法效果 (BUFF) 吸取生命(目标)
                 integer integer Bdtl
-                // 魔法效果 (BUFF)  吸取法力(目标)
+                // 魔法效果 (BUFF) 吸取法力(目标)
                 integer integer Bdtm
-                // 魔法效果 (BUFF)  空中枷锁(施法者)
+                // 魔法效果 (BUFF) 空中枷锁(施法者)
                 integer integer Bmlc
-                // 魔法效果 (BUFF)  隐形术(额外的)
+                // 魔法效果 (BUFF) 隐形术(额外的)
                 integer integer Bivs
-                // 魔法效果 (BUFF)  暴风雪 (效果)
+                // 魔法效果 (BUFF) 暴风雪 (效果)
                 integer integer XHbz
-                // 魔法效果 (BUFF)  烈焰风暴(效果)
+                // 魔法效果 (BUFF) 烈焰风暴(效果)
                 integer integer XHfs
-                // 魔法效果 (BUFF)  迷雾之云(效果)
+                // 魔法效果 (BUFF) 迷雾之云(效果)
                 integer integer Xclf
-                // 魔法效果 (BUFF)  照明弹(效果)
+                // 魔法效果 (BUFF) 照明弹(效果)
                 integer integer Xfla
-                // 魔法效果 (BUFF)  建筑伤害 – 人类 小
+                // 魔法效果 (BUFF) 建筑伤害 – 人类 小
                 integer integer Xfhs
-                // 魔法效果 (BUFF)  建筑伤害 – 人类 中
+                // 魔法效果 (BUFF) 建筑伤害 – 人类 中
                 integer integer Xfhm
-                // 魔法效果 (BUFF)  建筑伤害 – 人类 大
+                // 魔法效果 (BUFF) 建筑伤害 – 人类 大
                 integer integer Xfhl
-                // 魔法效果 (BUFF)  补充
+                // 魔法效果 (BUFF) 补充
                 integer integer Brpb
-                // 魔法效果 (BUFF)  荒芜精华
+                // 魔法效果 (BUFF) 荒芜精华
                 integer integer Brpl
-                // 魔法效果 (BUFF)  灵魂之触
+                // 魔法效果 (BUFF) 灵魂之触
                 integer integer Brpm
-                // 魔法效果 (BUFF)  荒芜光环
+                // 魔法效果 (BUFF) 荒芜光环
                 integer integer Babr
-                // 魔法效果 (BUFF)  穿刺
+                // 魔法效果 (BUFF) 穿刺
                 integer integer BUim
-                // 魔法效果 (BUFF)  腐尸甲虫
+                // 魔法效果 (BUFF) 腐尸甲虫
                 integer integer BUcb
-                // 魔法效果 (BUFF)  蝗虫
+                // 魔法效果 (BUFF) 蝗虫
                 integer integer BUlo
-                // 魔法效果 (BUFF)  反召唤
+                // 魔法效果 (BUFF) 反召唤
                 integer integer Buns
-                // 魔法效果 (BUFF)  小蜘蛛
+                // 魔法效果 (BUFF) 小蜘蛛
                 integer integer Bspa
-                // 魔法效果 (BUFF)  蛛网(地面)
+                // 魔法效果 (BUFF) 蛛网(地面)
                 integer integer Bweb
-                // 魔法效果 (BUFF)  蛛网(空中)
+                // 魔法效果 (BUFF) 蛛网(空中)
                 integer integer Bwea
-                // 魔法效果 (BUFF)  疾病
+                // 魔法效果 (BUFF) 疾病
                 integer integer Bapl
-                // 魔法效果 (BUFF)  冰冻吐息
+                // 魔法效果 (BUFF) 冰冻吐息
                 integer integer Bfrz
-                // 魔法效果 (BUFF)  骷髅奴仆
+                // 魔法效果 (BUFF) 骷髅奴仆
                 integer integer Brai
-                // 魔法效果 (BUFF)  邪恶狂热
+                // 魔法效果 (BUFF) 邪恶狂热
                 integer integer Buhf
-                // 魔法效果 (BUFF)  反魔法护罩
+                // 魔法效果 (BUFF) 反魔法护罩
                 integer integer Bams
-                // 魔法效果 (BUFF)  反魔法护罩(额外的)
+                // 魔法效果 (BUFF) 反魔法护罩(额外的)
                 integer integer Bam2
-                // 魔法效果 (BUFF)  占据
+                // 魔法效果 (BUFF) 占据
                 integer integer Bpos
-                // 魔法效果 (BUFF)  邪恶光环
+                // 魔法效果 (BUFF) 邪恶光环
                 integer integer BUau
-                // 魔法效果 (BUFF)  亡者再临
+                // 魔法效果 (BUFF) 亡者再临
                 integer integer BUan
-                // 魔法效果 (BUFF)  沉睡
+                // 魔法效果 (BUFF) 沉睡
                 integer integer BUsl
-                // 魔法效果 (BUFF)  吸血光环
+                // 魔法效果 (BUFF) 吸血光环
                 integer integer BUav
-                // 魔法效果 (BUFF)  霜甲术
+                // 魔法效果 (BUFF) 霜甲术
                 integer integer BUfa
-                // 魔法效果 (BUFF)  枯萎凋零
+                // 魔法效果 (BUFF) 枯萎凋零
                 integer integer BUdd
-                // 魔法效果 (BUFF)  诅咒
+                // 魔法效果 (BUFF) 诅咒
                 integer integer Bcrs
-                // 魔法效果 (BUFF)  残废术
+                // 魔法效果 (BUFF) 残废术
                 integer integer Bcri
-                // 魔法效果 (BUFF)  腐臭蝠群(施法者)
+                // 魔法效果 (BUFF) 腐臭蝠群(施法者)
                 integer integer BUcs
-                // 魔法效果 (BUFF)  沉睡(暂停)
+                // 魔法效果 (BUFF) 沉睡(暂停)
                 integer integer BUsp
-                // 魔法效果 (BUFF)  沉睡(昏迷)
+                // 魔法效果 (BUFF) 沉睡(昏迷)
                 integer integer BUst
-                // 魔法效果 (BUFF)  尖刺甲壳
+                // 魔法效果 (BUFF) 尖刺甲壳
                 integer integer BUts
-                // 魔法效果 (BUFF)  疾病之云
+                // 魔法效果 (BUFF) 疾病之云
                 integer integer Bplg
-                // 魔法效果 (BUFF)  亡者再临(额外的)
+                // 魔法效果 (BUFF) 亡者再临(额外的)
                 integer integer BUad
-                // 魔法效果 (BUFF)  占据(施法者)
+                // 魔法效果 (BUFF) 占据(施法者)
                 integer integer Bpoc
-                // 魔法效果 (BUFF)  枯萎凋零(效果)
+                // 魔法效果 (BUFF) 枯萎凋零(效果)
                 integer integer XUdd
-                // 魔法效果 (BUFF)  建筑伤害 – 亡灵 小
+                // 魔法效果 (BUFF) 建筑伤害 – 亡灵 小
                 integer integer Xfus
-                // 魔法效果 (BUFF)  建筑伤害 – 亡灵 中
+                // 魔法效果 (BUFF) 建筑伤害 – 亡灵 中
                 integer integer Xfum
-                // 魔法效果 (BUFF)  建筑伤害 – 亡灵 大
+                // 魔法效果 (BUFF) 建筑伤害 – 亡灵 大
                 integer integer Xful
-                // 魔法效果 (BUFF)  优先攻击
+                // 魔法效果 (BUFF) 优先攻击
                 integer integer Batp
-                // 魔法效果 (BUFF)  燃油
+                // 魔法效果 (BUFF) 燃油
                 integer integer Bbof
-                // 魔法效果 (BUFF)  狂暴
+                // 魔法效果 (BUFF) 狂暴
                 integer integer Bbsk
-                // 魔法效果 (BUFF)  灵魂链接
+                // 魔法效果 (BUFF) 灵魂链接
                 integer integer Bspl
-                // 魔法效果 (BUFF)  妖术
+                // 魔法效果 (BUFF) 妖术
                 integer integer BOhx
-                // 魔法效果 (BUFF)  结界
+                // 魔法效果 (BUFF) 结界
                 integer integer BOwd
-                // 魔法效果 (BUFF)  巫毒狂舞
+                // 魔法效果 (BUFF) 巫毒狂舞
                 integer integer BOvd
-                // 魔法效果 (BUFF)  诱捕(地面的)
+                // 魔法效果 (BUFF) 诱捕(地面的)
                 integer integer Beng
-                // 魔法效果 (BUFF)  诱捕(空中的)
+                // 魔法效果 (BUFF) 诱捕(空中的)
                 integer integer Bena
-                // 魔法效果 (BUFF)  吞噬
+                // 魔法效果 (BUFF) 吞噬
                 integer integer Bdvv
-                // 魔法效果 (BUFF)  净化
+                // 魔法效果 (BUFF) 净化
                 integer integer Bprg
-                // 魔法效果 (BUFF)  闪电之盾
+                // 魔法效果 (BUFF) 闪电之盾
                 integer integer Blsh
-                // 魔法效果 (BUFF)  嗜血
+                // 魔法效果 (BUFF) 嗜血
                 integer integer Bblo
-                // 魔法效果 (BUFF)  警戒结界
+                // 魔法效果 (BUFF) 警戒结界
                 integer integer Beye
-                // 魔法效果 (BUFF)  静滞陷阱
+                // 魔法效果 (BUFF) 静滞陷阱
                 integer integer Bstt
-                // 魔法效果 (BUFF)  静滞陷阱
+                // 魔法效果 (BUFF) 静滞陷阱
                 integer integer Bsta
-                // 魔法效果 (BUFF)  治疗结界
+                // 魔法效果 (BUFF) 治疗结界
                 integer integer Bhwd
-                // 魔法效果 (BUFF)  治疗结界光环
+                // 魔法效果 (BUFF) 治疗结界光环
                 integer integer Boar
-                // 魔法效果 (BUFF)  毒素(不叠加)
+                // 魔法效果 (BUFF) 毒素(不叠加)
                 integer integer Bpoi
-                // 魔法效果 (BUFF)  毒素(叠加)
+                // 魔法效果 (BUFF) 毒素(叠加)
                 integer integer Bpsd
-                // 魔法效果 (BUFF)  毒素(信息)
+                // 魔法效果 (BUFF) 毒素(信息)
                 integer integer Bpsi
-                // 魔法效果 (BUFF)  战鼓
+                // 魔法效果 (BUFF) 战鼓
                 integer integer Bakb
-                // 魔法效果 (BUFF)  疾风步
+                // 魔法效果 (BUFF) 疾风步
                 integer integer BOwk
-                // 魔法效果 (BUFF)  镜像
+                // 魔法效果 (BUFF) 镜像
                 integer integer BOmi
-                // 魔法效果 (BUFF)  野性之魂
+                // 魔法效果 (BUFF) 野性之魂
                 integer integer BOsf
-                // 魔法效果 (BUFF)  地震术
+                // 魔法效果 (BUFF) 地震术
                 integer integer BOeq
-                // 魔法效果 (BUFF)  坚韧光环
+                // 魔法效果 (BUFF) 坚韧光环
                 integer integer BOae
-                // 魔法效果 (BUFF)  战争践踏
+                // 魔法效果 (BUFF) 战争践踏
                 integer integer BOws
-                // 魔法效果 (BUFF)  地震术(施法者)
+                // 魔法效果 (BUFF) 地震术(施法者)
                 integer integer BOea
-                // 魔法效果 (BUFF)  震荡波(施法者)
+                // 魔法效果 (BUFF) 震荡波(施法者)
                 integer integer BOsh
-                // 魔法效果 (BUFF)  巫毒狂舞(施法者)
+                // 魔法效果 (BUFF) 巫毒狂舞(施法者)
                 integer integer BOvc
-                // 魔法效果 (BUFF)  剑刃风暴(施法者)
+                // 魔法效果 (BUFF) 剑刃风暴(施法者)
                 integer integer BOww
-                // 魔法效果 (BUFF)  吞噬(施法者)
+                // 魔法效果 (BUFF) 吞噬(施法者)
                 integer integer Bdig
-                // 魔法效果 (BUFF)  诱捕(一般的)
+                // 魔法效果 (BUFF) 诱捕(一般的)
                 integer integer Bens
-                // 魔法效果 (BUFF)  火油瓶
+                // 魔法效果 (BUFF) 火油瓶
                 integer integer Bliq
-                // 魔法效果 (BUFF)  闪电之盾(施法者)
+                // 魔法效果 (BUFF) 闪电之盾(施法者)
                 integer integer Blsa
-                // 魔法效果 (BUFF)  地震术(效果)
+                // 魔法效果 (BUFF) 地震术(效果)
                 integer integer XOeq
-                // 魔法效果 (BUFF)  重生(效果)
+                // 魔法效果 (BUFF) 重生(效果)
                 integer integer XOre
-                // 魔法效果 (BUFF)  燃油(效果)
+                // 魔法效果 (BUFF) 燃油(效果)
                 integer integer Xbof
-                // 魔法效果 (BUFF)  建筑伤害 – 兽人 小
+                // 魔法效果 (BUFF) 建筑伤害 – 兽人 小
                 integer integer Xfos
-                // 魔法效果 (BUFF)  建筑伤害 – 兽人 中
+                // 魔法效果 (BUFF) 建筑伤害 – 兽人 中
                 integer integer Xfom
-                // 魔法效果 (BUFF)  建筑伤害 – 兽人 大
+                // 魔法效果 (BUFF) 建筑伤害 – 兽人 大
                 integer integer Xfol
-                // 魔法效果 (BUFF)  剧毒(不叠加)
+                // 魔法效果 (BUFF) 剧毒(不叠加)
                 integer integer BIpb
-                // 魔法效果 (BUFF)  剧毒(叠加)
+                // 魔法效果 (BUFF) 剧毒(叠加)
                 integer integer BIpd
-                // 魔法效果 (BUFF)  剧毒 (信息)
+                // 魔法效果 (BUFF) 剧毒 (信息)
                 integer integer BIpi
         
         
@@ -5725,106 +5725,757 @@ globals
 
                 // 技能命令串
 
-                // 技能命令串或ID 移动
-                string move
-                // 技能命令串或ID 停止
-                string stop
-                // 技能命令串或ID 修理建筑
-                string repair
-                // 技能命令串或ID 建造命令
-                // 建造具体建筑物时，返回的命令字符串是该建筑物的物编英文名(全大写)
-                // 只要将对应建筑物的四字代码作为命令ID，即可实现建造/升级指定建筑
-                string build
-                // 技能命令串或ID 扎根(古树)
-                string root
-                // 技能命令串或ID 拔根(古树)
-                string unroot
-                // 技能命令串或ID 战斗号召(农民单点发起)(农民变成民兵)
-                string militia
-                // 技能命令串或ID 返回工作(农民单点发起)(民兵变回农民)
-                string militiaoff
+
                 // 技能命令串或ID 返回工作(农民单点发起)(民兵变回农民)
                 string peasant
-                // 技能命令串或ID 战斗号召(人族基地发起)(农民变成民兵)
-                string townbellon
-                // 技能命令串或ID 返回工作(人族基地发起)(民兵变回农民)
-                string townbelloff
-                // 技能命令串或ID 战斗位置(苦工进入地洞)
-                string battlestations
-                // 技能命令串或ID 卸载苦工(苦工离开地洞)
-                string standdown
-                // 技能命令串或ID 变熊(熊德)
-                string bearform
-                // 技能命令串或ID 变人(熊德)
-                string unbearform
-                // 技能命令串或ID 变鸟(鸟德)
-                string ravenform
-                // 技能命令串或ID 变人(鸟德)
-                string unravenform
                 // 技能命令串或ID 潜水(娜迦)
                 string submerga
-                // 技能命令串或ID (潜水后)上浮(娜迦)
-                string unsubmerga
-                // 技能命令串或ID 采集(指定金矿或指定树木)
-                string harvest
-                // 技能命令串或ID 自动采集最近的树木
-                string autoharvestlumber
-                // 技能命令串或ID 缠绕金矿
-                string entangle
-                // 技能命令串或ID 右键点击
-                string smart
+                // 技能命令串或ID 取消潜水(娜迦)
+                string unsubmerge
                 // 技能命令串或ID 装载(飞艇、船、缠绕金矿等)
                 string loadall
-                // 技能命令串或ID 全部卸载(飞艇、船、缠绕金矿等)
-                string unloadall
-                // 技能命令串或ID 疾风步(剑圣)
-                string windwalk
-                // 技能命令串或ID 暴风雪(大法师)
-                string blizzard
-                // 技能命令串或ID 烈焰风暴(火法)
-                string flamestrike
-                // 技能命令串或ID 群体传送(大法师)
-                string massteleport
-                // 技能命令串或ID 地震(先知大招)
-                string earthquake
-                // 技能命令串或ID 巫毒(小Y/暗影猎手大招)
-                string voodoo
-                // 技能命令串或ID 死亡凋零(巫妖大招)
-                string deathanddecay
-                // 技能命令串或ID 群星坠落(白虎大招)
-                string starfall
-                // 技能命令串或ID 宁静(老鹿大招)
-                string tranquility
-                // 技能命令串或ID 火箭群(修补匠)
-                string clusterrockets
-                // 技能命令串或ID 龙卷风(娜迦海巫大招)
-                string tornado
-                // 技能命令串或ID 火山爆发(炎魔大招)
-                string volcano
-                // 技能命令串或ID 治疗喷雾
-                string healingspray
-                // 技能命令串或ID 群兽奔腾
-                string stampede
-                // 技能命令串或ID 火焰之雨(深渊领主)
-                string rainoffire
-                // 技能命令串或ID 狂战士
-                string berserk
-                // 技能命令串或ID 空中枷锁(龙鹰)
-                string magicleash
-                // 技能命令串或ID 迷雾之云(龙鹰)
-                string cloudoffog
-                // 技能命令串或ID 不稳定化合物(自爆蝙蝠)
-                string unstableconcoction
-                // 技能命令串或ID 战棍(山岭巨人)
-                string grabtree
-                // 技能命令串或ID 占据
-                string possession
                 // 技能命令串或ID 影遁
                 string ambush
                 // 技能命令串或ID 诱捕(网)
                 string ensnare
                 // 技能命令串或ID 吞噬(科多兽等)
                 string devour
+                // 技能命令串或ID 幻象物品(物品技能)
+                string wandillusion
+                // 技能命令串或ID 吸收魔法(毁灭者)
+                string absorb
+                // 技能命令串或ID 酸性炸弹
+                string acidbomb
+                // 技能命令串或ID 采集(侍僧)(黄金)
+                string acolyteharvest
+                // 技能命令串或ID AImove(AI移动)
+                string aimove
+                // 技能命令串或ID 影遁(夜晚)
+                string ambush
+                // 技能命令串或ID 先祖幽灵
+                string ancestralspirit
+                // 技能命令串或ID 先祖幽灵(目标)
+                string ancestralspirittarget
+                // 技能命令串或ID 操纵死尸
+                string animatedead
+                // 技能命令串或ID 反魔法外壳(单位技能)/具有反魔法盾的物品(物品技能)
+                string antimagicshell
+                // 技能命令串或ID 攻击
+                string attack
+                // 技能命令串或ID 攻击地面
+                string attackground
+                // 技能命令串或ID 攻击一次
+                string attackonce
+                // 技能命令串或ID 属性加成(黄点技能)
+                string attributemodskill
+                // 技能命令串或ID 邪恶光环
+                string auraunholy
+                // 技能命令串或ID 吸血光环
+                string auravampiric
+                // 技能命令串或ID 驱逐魔法(小鹿)
+                string autodispel
+                // 技能命令串或ID 取消驱逐(小鹿)
+                string autodispeloff
+                // 技能命令串或ID 激活驱逐(小鹿)
+                string autodispelon
+                // 技能命令串或ID 缠绕金矿(指定单位)
+                string autoentangle
+                // 技能命令串或ID 缠绕金矿(立即)(指定单位)
+                string autoentangleinstant
+                // 技能命令串或ID 自动采集黄金
+                string autoharvestgold
+                // 技能命令串或ID 自动采集木材
+                string autoharvestlumber
+                // 技能命令串或ID 天神下凡
+                string avatar
+                // 技能命令串或ID 破坏者形态
+                string avengerform
+                // 技能命令串或ID 唤醒
+                string awaken
+                // 技能命令串或ID 虚无(血法)
+                string banish
+                // 技能命令串或ID 硬化皮肤
+                string barkskin
+                // 技能命令串或ID 激活硬化皮肤
+                string barkskinoff
+                // 技能命令串或ID 取消硬化皮肤
+                string barkskinon
+                // 技能命令串或ID 战斗咆哮
+                string battleroar
+                // 技能命令串或ID 战斗警备(兽族地洞)
+                string battlestations
+                // 技能命令串或ID 变熊
+                string bearform
+                // 技能命令串或ID 狂战士
+                string berserk
+                // 技能命令串或ID 黑暗之箭
+                string blackarrow
+                // 技能命令串或ID 取消黑暗之箭
+                string blackarrowoff
+                // 技能命令串或ID 激活黑暗之箭
+                string blackarrowon
+                // 技能命令串或ID 荒芜(荒芜之地)
+                string blight
+                // 技能命令串或ID 闪烁(物品等级)(英雄技能&物品技能)
+                string blink
+                // 技能命令串或ID 暴风雪
+                string blizzard
+                // 技能命令串或ID 嗜血术
+                string bloodlust
+                // 技能命令串或ID 取消嗜血术
+                string bloodlustoff
+                // 技能命令串或ID 激活嗜血术
+                string bloodluston
+                // 技能命令串或ID 登船
+                string board
+                // 技能命令串或ID 火焰吐息
+                string breathoffire
+                // 技能命令串或ID 霜冻呼吸
+                string breathoffrost
+                // 技能命令串或ID 建筑菜单
+                string build
+                // 技能命令串或ID 钻地
+                string burrow
+                // 技能命令串或ID 吞食尸体
+                string cannibalize
+                // 技能命令串或ID 腐尸甲虫(指定单位)
+                string carrionscarabs
+                // 技能命令串或ID 召唤腐尸甲虫(无目标)
+                string carrionscarabsinstant
+                // 技能命令串或ID 取消腐尸甲虫
+                string carrionscarabsoff
+                // 技能命令串或ID 激活腐尸甲虫
+                string carrionscarabson
+                // 技能命令串或ID 腐臭蜂群
+                string carrionswarm
+                // 技能命令串或ID 闪电链
+                string chainlightning
+                // 技能命令串或ID 通魔
+                string channel
+                // 技能命令串或ID 符咒
+                string charm
+                // 技能命令串或ID 化学风暴
+                string chemicalrage
+                // 技能命令串或ID 乌云技能(单位技能&物品技能)
+                string cloudoffog
+                // 技能命令串或ID 火箭群
+                string clusterrockets
+                // 技能命令串或ID 激活霜冻之箭
+                string coldarrows
+                // 技能命令串或ID 霜冻之箭
+                string coldarrowstarg
+                // 技能命令串或ID 控制魔法
+                string controlmagic
+                // 技能命令串或ID 腐蚀喷吐
+                string corrosivebreath
+                // 技能命令串或ID 骑乘角鹰兽&搭载弓箭手
+                string coupleinstant
+                // 技能命令串或ID 搭载弓箭手
+                string coupletarget
+                // 技能命令串或ID 操纵死尸(中立)
+                string creepanimatedead
+                // 技能命令串或ID 吞噬(中立)
+                string creepdevour
+                // 技能命令串或ID 治疗(中立)
+                string creepheal
+                // 技能命令串或ID 取消治疗(中立)
+                string creephealoff
+                // 技能命令串或ID 激活治疗(中立)
+                string creephealon
+                // 技能命令串或ID 投石(中立)
+                string creepthunderbolt
+                // 技能命令串或ID 雷霆一击(中立)
+                string creepthunderclap
+                // 技能命令串或ID 残废
+                string cripple
+                // 技能命令串或ID 诅咒
+                string curse
+                // 技能命令串或ID 解除诅咒
+                string curseoff
+                // 技能命令串或ID 激活诅咒
+                string curseon
+                // 技能命令串或ID 飓风术(鸟德)
+                string cyclone
+                // 技能命令串或ID 黑暗转换
+                string darkconversion
+                // 技能命令串或ID 黑暗之门
+                string darkportal
+                // 技能命令串或ID 黑暗仪式
+                string darkritual
+                // 技能命令串或ID 黑暗召唤(英雄技能&物品技能)
+                string darksummoning
+                // 技能命令串或ID 死亡凋零
+                string deathanddecay
+                // 技能命令串或ID 死亡缠绕
+                string deathcoil
+                // 技能命令串或ID 死亡契约
+                string deathpact
+                // 技能命令串或ID 卸载弓箭手
+                string decouple
+                // 技能命令串或ID 激活防御
+                string defend
+                // 技能命令串或ID 显示/探测
+                string detectaoe
+                // 技能命令串或ID 自爆(小精灵)
+                string detonate
+                // 技能命令串或ID 吞噬(科多兽等)
+                string devour
+                // 技能命令串或ID 吞噬魔法(毁灭者)
+                string devourmagic
+                // 技能命令串或ID 分离
+                string disassociate
+                // 技能命令串或ID 消魔(白牛)
+                string disenchant
+                // 技能命令串或ID 取消坐骑
+                string dismount
+                // 技能命令串或ID 驱散(人族牧师)
+                string dispel
+                // 技能命令串或ID 激活神圣护甲
+                string divineshield
+                // 技能命令串或ID 末日审判
+                string doom
+                // 技能命令串或ID 生命汲取/魔法吸吮
+                string drain
+                // 技能命令串或ID 地狱火
+                string dreadlordinferno
+                // 技能命令串或ID 丢弃物品
+                string dropitem
+                // 技能命令串或ID 醉酒云雾
+                string drunkenhaze
+                // 技能命令串或ID 地震(先知)
+                string earthquake
+                // 技能命令串或ID 吃树(古树)
+                string eattree
+                // 技能命令串或ID 火土风暴
+                string elementalfury
+                // 技能命令串或ID 诱捕(网，非蛛网)
+                string ensnare
+                // 技能命令串或ID 激活诱捕(网，非蛛网)
+                string ensnareoff
+                // 技能命令串或ID 取消诱捕(网，非蛛网)
+                string ensnareon
+                // 技能命令串或ID 缠绕金矿
+                string entangle
+                // 技能命令串或ID 缠绕金矿(立即)
+                string entangleinstant
+                // 技能命令串或ID 纠缠须根
+                string entanglingroots
+                // 技能命令串或ID 虚无状态(白牛转换形态技能)
+                string etherealform
+                // 技能命令串或ID 取消虚无状态(白牛转换形态技能)
+                string unetherealform
+                // 技能命令串或ID 虚无状态(白牛转换形态技能)
+                string uncorporealform
+                // 技能命令串或ID 灵肉状态(白牛转换形态技能)
+                string corporealform
+                // 技能命令串或ID 岗哨守卫
+                string evileye
+                // 技能命令串或ID 精灵之火
+                string faeriefire
+                // 技能命令串或ID 取消精灵之火
+                string faeriefireoff
+                // 技能命令串或ID 激活精灵之火
+                string faeriefireon
+                // 技能命令串或ID 刀阵旋风
+                string fanofknives
+                // 技能命令串或ID 远视(先知)
+                string farsight
+                // 技能命令串或ID 死亡之指(物品)(单位技能&物品技能)
+                string fingerofdeath
+                // 技能命令串或ID 霹雳闪电
+                string firebolt
+                // 技能命令串或ID 烈焰风暴
+                string flamestrike
+                // 技能命令串或ID 激活灼热之箭
+                string flamingarrows
+                // 技能命令串或ID 灼热之箭
+                string flamingarrowstarg
+                // 技能命令串或ID 激活毁灭之球(毁灭者)
+                string flamingattack
+                // 技能命令串或ID 毁灭之球(毁灭者)
+                string flamingattacktarg
+                // 技能命令串或ID 照明弹
+                string flare
+                // 技能命令串或ID 自然之船
+                string forceboard
+                // 技能命令串或ID 自然之力
+                string forceofnature
+                // 技能命令串或ID 火土风暴
+                string forkedlightning
+                // 技能命令串或ID 冰冻喷吐
+                string freezingbreath
+                // 技能命令串或ID 狂热(中立)
+                string frenzy
+                // 技能命令串或ID 取消狂热
+                string frenzyoff
+                // 技能命令串或ID 激活狂热
+                string frenzyon
+                // 技能命令串或ID 霜冻护甲
+                string frostarmor
+                // 技能命令串或ID 取消霜冻护甲
+                string frostarmoroff
+                // 技能命令串或ID 激活霜冻护甲
+                string frostarmoron
+                // 技能命令串或ID 霜冻新星
+                string frostnova
+                // 技能命令串或ID 给与物品
+                string getitem
+                // 技能命令串或ID 黄金交换木材
+                string gold2lumber
+                // 技能命令串或ID 战棍(山岭巨人)
+                string grabtree
+                // 技能命令串或ID 采集(黄金和木材)
+                string harvest
+                // 技能命令串或ID 医疗喷雾
+                string healingspray
+                // 技能命令串或ID 治疗守卫
+                string healingward
+                // 技能命令串或ID 医疗波
+                string healingwave
+                // 技能命令串或ID 取消治疗(人族牧师)
+                string healoff
+                // 技能命令串或ID 激活治疗(人族牧师)
+                string healon
+                // 技能命令串或ID 治疗(人族牧师)
+                string heal
+                // 技能命令串或ID 妖术
+                string hex
+                // 技能命令串或ID 保持原位(技能面板)
+                string holdposition
+                // 技能命令串或ID 神圣之光
+                string holybolt
+                // 技能命令串或ID 恐怖嚎叫
+                string howlofterror
+                // 技能命令串或ID 人族建筑菜单
+                string humanbuild
+                // 技能命令串或ID 激活献祭(恶魔猎手)
+                string immolation
+                // 技能命令串或ID 穿刺(地穴领主)
+                string impale
+                // 技能命令串或ID 燃灰(箭矢)
+                string incineratearrow
+                // 技能命令串或ID 取消燃灰(箭矢)
+                string incineratearrowoff
+                // 技能命令串或ID 激活燃灰(箭矢)
+                string incineratearrowon
+                // 技能命令串或ID 地狱火
+                string inferno
+                // 技能命令串或ID 心灵之火(人族牧师)
+                string innerfire
+                // 技能命令串或ID 取消心灵之火(人族牧师)
+                string innerfireoff
+                // 技能命令串或ID 激活心灵之火(人族牧师)
+                string innerfireon
+                // 技能命令串或ID 召唤骷髅(无目标)
+                string instant
+                // 技能命令串或ID 隐形术(人族女巫)
+                string invisibility
+                // 技能命令串或ID 召唤炎魔
+                string lavamonster
+                // 技能命令串或ID 闪电护盾
+                string lightningshield
+                // 技能命令串或ID 搭载弓箭手
+                string loadarcher 
+                // 技能命令串或ID 获取尸体(绞肉车)
+                string loadcorpse
+                // 技能命令串或ID 获取尸体(立即)(绞肉车)
+                string loadcorpseinstant
+                // 技能命令串或ID 蝗虫群
+                string locustswarm
+                // 技能命令串或ID 木材交换黄金
+                string lumber2gold
+                // 技能命令串或ID 激活魔法防御
+                string magicdefense
+                // 技能命令串或ID 空中锁链
+                string magicleash
+                // 技能命令串或ID 取消魔法防御
+                string magicundefense
+                // 技能命令串或ID 法力燃烧
+                string manaburn
+                // 技能命令串或ID 停止魔力之焰(精灵龙)
+                string manaflareoff
+                // 技能命令串或ID 魔力之焰(精灵龙)
+                string manaflareon
+                // 技能命令串或ID 取消魔法盾
+                string manashieldoff
+                // 技能命令串或ID 激活魔法盾
+                string manashieldon
+                // 技能命令串或ID 群体传送/传送权杖(英雄技能&物品技能)
+                string massteleport
+                // 技能命令串或ID 机械类的小玩艺(物品技能)
+                string mechanicalcritter
+                // 技能命令串或ID 恶魔变身
+                string metamorphosis
+                // 技能命令串或ID 战斗号召(人族民兵)
+                string militia
+                // 技能命令串或ID 农民转换成民兵
+                string militiaconvert
+                // 技能命令串或ID 返回工作(人族民兵)
+                string militiaoff
+                // 技能命令串或ID 民兵转换成农民
+                string militiaunconvert
+                // 技能命令串或ID 心灵腐烂
+                string mindrot
+                // 技能命令串或ID 镜像
+                string mirrorimage
+                // 技能命令串或ID 季风
+                string monsoon
+                // 技能命令串或ID 骑乘
+                string mount
+                // 技能命令串或ID 骑乘角鹰兽
+                string mounthippogryph
+                // 技能命令串或ID 移动/跟随
+                string move
+                // 技能命令串或ID 娜迦建造菜单
+                string nagabuild
+                // 技能命令串或ID 显示(人族及中立)
+                string neutraldetectaoe
+                // 技能命令串或ID 选择英雄
+                string neutralinteract
+                // 技能命令串或ID 收费(中立)
+                string neutralspell
+                // 技能命令串或ID 暗夜精灵建造菜单
+                string nightelfbuild
+                // 技能命令串或ID 兽族建筑菜单
+                string orcbuild
+                // 技能命令串或ID 寄生虫(娜迦)
+                string parasite
+                // 技能命令串或ID 取消寄生虫(娜迦)
+                string parasiteoff
+                // 技能命令串或ID 激活寄生虫(娜迦)
+                string parasiteon
+                // 技能命令串或ID 巡逻
+                string patrol
+                // 技能命令串或ID 相位移动(精灵龙)
+                string phaseshift
+                // 技能命令串或ID 相位移动(立即)(精灵龙)
+                string phaseshiftinstant
+                // 技能命令串或ID 取消相位移动(精灵龙)
+                string phaseshiftoff
+                // 技能命令串或ID 激活相位移动(精灵龙)
+                string phaseshifton
+                // 技能命令串或ID 凤凰烈焰(飞行单位)
+                string phoenixfire
+                // 技能命令串或ID 凤凰转换形态
+                string phoenixmorph
+                // 技能命令串或ID 毒箭
+                string poisonarrowstarg
+                // 技能命令串或ID 变形术(人族女巫)
+                string polymorph
+                // 技能命令串或ID 占据
+                string possession
+                // 技能命令串或ID 保存权杖(物品技能)
+                string preservation
+                // 技能命令串或ID 净化/带有净化效果的物品(1)(单位技能&物品技能)
+                string purge
+                // 技能命令串或ID 混乱之雨
+                string rainofchaos
+                // 技能命令串或ID 火焰雨
+                string rainoffire
+                // 技能命令串或ID 召唤骷髅(指定单位)
+                string raisedead
+                // 技能命令串或ID 取消召唤骷髅(亡灵男巫)
+                string raisedeadoff
+                // 技能命令串或ID 激活召唤骷髅(亡灵男巫)
+                string raisedeadon
+                // 技能命令串或ID 补充(月井之春)
+                string recharge
+                // 技能命令串或ID 取消补充(月井之春)
+                string rechargeoff
+                // 技能命令串或ID 激活补充(月井之春)
+                string rechargeon
+                // 技能命令串或ID 回春术
+                string rejuvination
+                // 技能命令串或ID 修理(暗夜精灵族)
+                string renew
+                // 技能命令串或ID 取消修理(暗夜精灵族)
+                string renewoff
+                // 技能命令串或ID 激活修理(暗夜精灵族)
+                string renewon
+                // 技能命令串或ID 修理(人族、兽族、娜迦族、达拉内尔族(破碎者))
+                string repair
+                // 技能命令串或ID 取消修理(人族、兽族、娜迦族、达拉内尔族(破碎者))
+                string repairoff
+                // 技能命令串或ID 激活修理(人族、兽族、娜迦族、达拉内尔族(破碎者))
+                string repairon
+                // 技能命令串或ID 枯萎精髓及灵魂触摸(十胜石雕像)
+                string replenish
+                // 技能命令串或ID 枯萎精髓(十胜石雕像)
+                string replenishlife
+                // 技能命令串或ID 取消枯萎精髓(十胜石雕像)
+                string replenishlifeoff
+                // 技能命令串或ID 激活枯萎精髓(十胜石雕像)
+                string replenishlifeon
+                // 技能命令串或ID 灵魂触摸(十胜石雕像)
+                string replenishmana
+                // 技能命令串或ID 取消灵魂触摸(十胜石雕像)
+                string replenishmanaoff
+                // 技能命令串或ID 激活灵魂触摸(十胜石雕像)
+                string replenishmanaon
+                // 技能命令串或ID 取消枯萎精髓及灵魂触摸(十胜石雕像)
+                string replenishoff
+                // 技能命令串或ID 激活枯萎精髓及灵魂触摸(十胜石雕像)
+                string replenishon
+                // 技能命令串或ID 请求(英雄)
+                string request_hero
+                // 技能命令串或ID 牺牲(侍僧)
+                string requestsacrifice
+                // 技能命令串或ID 修理(不死灵族)
+                string restoration
+                // 技能命令串或ID 取消修理(不死灵族)
+                string restorationoff
+                // 技能命令串或ID 激活修理(不死灵族)
+                string restorationon
+                // 技能命令串或ID 返还建造
+                string resumebuild
+                // 技能命令串或ID 返还资源
+                string resumeharvesting
+                // 技能命令串或ID 复活(圣骑士)
+                string resurrection
+                // 技能命令串或ID 复活英雄
+                string returnresources
+                // 技能命令串或ID 复仇(中立)
+                string revenge
+                // 技能命令串或ID 复活英雄
+                string revive
+                // 技能命令串或ID 咆哮
+                string roar
+                // 技能命令串或ID 牺牲(深渊)(不死灵族)
+                string sacrifice
+                // 技能命令串或ID 避难
+                string sanctuary
+                // 技能命令串或ID 侦查(白虎猫头鹰)
+                string scout
+                // 技能命令串或ID 卡布恩(自爆工兵)
+                string selfdestruct
+                // 技能命令串或ID 取消卡布恩(自爆工兵)
+                string selfdestructoff
+                // 技能命令串或ID 激活卡布恩(自爆工兵)
+                string selfdestructon
+                // 技能命令串或ID 哨兵(女猎)
+                string sentinel
+                // 技能命令串或ID 设置集结点
+                string setrally
+                // 技能命令串或ID 影子权杖(物品技能)
+                string shadowsight
+                // 技能命令串或ID 暗影突袭
+                string shadowstrike
+                // 技能命令串或ID 震荡波
+                string shockwave
+                // 技能命令串或ID 沉默
+                string silence
+                // 技能命令串或ID 睡眠(恐惧魔王)
+                string sleep
+                // 技能命令串或ID 减速(人族女巫)
+                string slow
+                // 技能命令串或ID 取消减速(人族女巫)
+                string slowoff
+                // 技能命令串或ID 激活减速(人族女巫)
+                string slowon
+                // 技能命令串或ID 右键点击
+                string smart
+                // 技能命令串或ID 灵魂燃烧
+                string soulburn
+                // 技能命令串或ID 灵魂保存
+                string soulpreservation
+                // 技能命令串或ID 魔法护盾(物品技能)
+                string spellshield
+                // 技能命令串或ID 魔法护盾(AEO)
+                string spellshieldaoe
+                // 技能命令串或ID 魔法盗取
+                string spellsteal
+                // 技能命令串或ID 取消魔法盗取
+                string spellstealoff
+                // 技能命令串或ID 激活魔法盗取
+                string spellstealon
+                // 技能命令串或ID 监视(岗哨守卫)
+                string spies
+                // 技能命令串或ID 灵魂链接
+                string spiritlink
+                // 技能命令串或ID 复仇天神
+                string spiritofvengeance
+                // 技能命令串或ID 灵魂巨魔
+                string spirittroll
+                // 技能命令串或ID 野兽幽魂
+                string spiritwolf
+                // 技能命令串或ID 惊吓
+                string stampede
+                // 技能命令串或ID 卸载苦工(兽族地洞)
+                string standdown
+                // 技能命令串或ID 群星坠落
+                string starfall
+                // 技能命令串或ID 静止陷阱
+                string stasistrap
+                // 技能命令串或ID 盗取(物品技能)
+                string steal
+                // 技能命令串或ID 战争践踏
+                string stomp
+                // 技能命令串或ID 停止
+                string stop
+                // 技能命令串或ID 口袋工厂
+                string summonfactory
+                // 技能命令串或ID 召唤熊
+                string summongrizzly
+                // 技能命令串或ID 召唤凤凰
+                string summonphoenix
+                // 技能命令串或ID 召唤豪猪
+                string summonquillbeast
+                // 技能命令串或ID 召唤战鹰
+                string summonwareagle
+                // 技能命令串或ID 空投坦克
+                string tankdroppilot
+                // 技能命令串或ID 挂载坦克
+                string tankloadpilot
+                // 技能命令串或ID 挂载坦克形态(tankpilot)
+                string tankpilot
+                // 技能命令串或ID 嘲讽(山岭巨人)
+                string taunt
+                // 技能命令串或ID 风暴之锤
+                string thunderbolt
+                // 技能命令串或ID 雷霆一击
+                string thunderclap
+                // 技能命令串或ID 龙卷风(娜迦女海巫)
+                string tornado
+                // 技能命令串或ID 返回工作(城镇大厅)(townbelloff)
+                string townbelloff
+                // 技能命令串或ID 战斗号召(城镇大厅)(townbellon)
+                string townbellon
+                // 技能命令串或ID 宁静
+                string tranquility
+                // 技能命令串或ID 点金术
+                string transmute
+                // 技能命令串或ID 取消天神下凡
+                string unavatar
+                // 技能命令串或ID 取消破坏者形态
+                string unavengerform
+                // 技能命令串或ID 取消变熊
+                string unbearform
+                // 技能命令串或ID 取消钻地
+                string unburrow
+                // 技能命令串或ID 取消霜冻之箭
+                string uncoldarrows
+                // 技能命令串或ID 不死建造菜单
+                string undeadbuild
+                // 技能命令串或ID 取消防御
+                string undefend
+                // 技能命令串或ID 取消神圣护甲
+                string undivineshield
+                // 技能命令串或ID 取消灼热之箭
+                string unflamingarrows
+                // 技能命令串或ID 取消毁灭之球(毁灭者)
+                string unflamingattack
+                // 技能命令串或ID 邪恶狂热
+                string unholyfrenzy
+                // 技能命令串或ID 激活献祭(恶魔猎手)
+                string immolation
+                // 技能命令串或ID 解除献祭(恶魔猎手)
+                string unimmolation
+                // 技能命令串或ID 装载
+                string load
+                // 技能命令串或ID 卸载
+                string unload
+                // 技能命令串或ID 全部卸载
+                string unloadall
+                // 技能命令串或ID 丢弃所有尸体(绞肉车)
+                string unloadallcorpses
+                // 技能命令串或ID 全部卸载(立即)
+                string unloadallinstant
+                // 技能命令串或ID 毒箭
+                string poisonarrows
+                // 技能命令串或ID 取消毒箭
+                string unpoisonarrows
+                // 技能命令串或ID 风暴之鸦
+                string ravenform
+                // 技能命令串或ID 取消风暴之鸦
+                string unravenform
+                // 技能命令串或ID 机器人形态
+                string robogoblin
+                // 技能命令串或ID 取消机器人形态
+                string unrobogoblin
+                // 技能命令串或ID 扎根(古树)
+                string root
+                // 技能命令串或ID 拔根(古树)
+                string unroot
+                // 技能命令串或ID 不稳定化合物(自爆蝙蝠)
+                string unstableconcoction
+                // 技能命令串或ID 石像形态
+                string stoneform
+                // 技能命令串或ID 取消石像形态
+                string unstoneform
+                // 技能命令串或ID 反召唤(物品技能)(侍僧卖建筑)(单位技能&物品技能)
+                string unsummon
+                // 技能命令串或ID 取消疾风步
+                string unwindwalk
+                // 技能命令串或ID 复仇之魂
+                string vengeance
+                // 技能命令串或ID 复仇之魂(无目标)
+                string vengeanceinstant
+                // 技能命令串或ID 取消复仇之魂
+                string vengeanceoff
+                // 技能命令串或ID 激活复仇之魂
+                string vengeanceon
+                // 技能命令串或ID 火山爆发
+                string volcano
+                // 技能命令串或ID 巫毒(暗影猎手)
+                string voodoo
+                // 技能命令串或ID 产卵触角/毒蛇守卫
+                string ward
+                // 技能命令串或ID (召唤)水元素
+                string waterelemental
+                // 技能命令串或ID 召唤水奴
+                string wateryminion
+                // 技能命令串或ID 蛛网
+                string web
+                // 技能命令串或ID 取消蛛网
+                string weboff
+                // 技能命令串或ID 激活蛛网
+                string webon
+                // 技能命令串或ID 剑刃风暴
+                string whirlwind
+                // 技能命令串或ID 疾风步
+                string windwalk
+                // 技能命令串或ID 采集(小精灵)(黄金和木材)
+                string wispharvest
+                // 技能命令串或ID 加速卷轴/能暂时加快移动速度的物品(物品技能)
+                string scrollofspeed
+                // 技能命令串或ID 取消
+                string cancel
+                // 技能命令串或ID 移动物品到第一格
+                string moveslot1
+                // 技能命令串或ID 移动物品到第二格
+                string moveslot2
+                // 技能命令串或ID 移动物品到第三格
+                string moveslot3
+                // 技能命令串或ID 移动物品到第四格
+                string moveslot4
+                // 技能命令串或ID 移动物品到第五格
+                string moveslot5
+                // 技能命令串或ID 移动物品到第六格
+                string moveslot6
+                // 技能命令串或ID 使用第一格物品
+                string useslot1
+                // 技能命令串或ID 使用第二格物品
+                string useslot2
+                // 技能命令串或ID 使用第三格物品
+                string useslot3
+                // 技能命令串或ID 使用第四格物品
+                string useslot4
+                // 技能命令串或ID 使用第五格物品
+                string useslot5
+                // 技能命令串或ID 使用第六格物品
+                string useslot6
+                // 技能命令串或ID 技能菜单(技能面板)
+                string skillmenu
+                // 技能命令串或ID 昏迷
+                string stunned
+                // 技能命令串或ID 巡逻(技能面板)
+                string instant1
+                // 技能命令串或ID 移动(技能面板)
+                string instant2
+                // 技能命令串或ID 停止(技能面板)
+                string instant3
+                // 技能命令串或ID 采集(黄金和木材)(技能面板)
+                string instant4
 
 
                 // 技能ID
@@ -5864,19 +6515,21 @@ globals
                 integer 852244
                 // 技能命令串或ID 取消霜冻之箭
                 integer 852245
-                // 技能命令串或ID 中立操纵死尸
+                // 技能命令串或ID 操纵死尸(中立)
                 integer 852246
-                // 技能命令串或ID 中立吞噬
+                // 技能命令串或ID 吞噬(中立)
                 integer 852247
-                // 技能命令串或ID 中立野怪医疗
+                // 技能命令串或ID 野怪医疗(中立)
                 integer 852248
-                // 技能命令串或ID 中立激活治疗
+                // 技能命令串或ID 治疗(中立)
+                integer 852248
+                // 技能命令串或ID 激活治疗(中立)
                 integer 852249
-                // 技能命令串或ID 中立取消治疗
+                // 技能命令串或ID 取消治疗(中立)
                 integer 852250
                 // 技能命令串或ID 投石(中立)
                 integer 852252
-                // 技能命令串或ID 中立雷霆一击
+                // 技能命令串或ID 雷霆一击(中立)
                 integer 852253
                 // 技能命令串或ID 毒箭
                 integer 852254
@@ -5964,7 +6617,7 @@ globals
                 integer 852662
                 // 技能命令串或ID 化学风暴
                 integer 852663
-                // 技能命令串或ID 医疗气雾
+                // 技能命令串或ID 医疗喷雾
                 integer 852664
                 // 技能命令串或ID 点金术
                 integer 852665
@@ -5980,17 +6633,17 @@ globals
                 integer 852671
                 // 技能命令串或ID 取消燃灰(箭矢)
                 integer 852672
-                // 技能命令串或ID 建造(娜迦)
+                // 技能命令串或ID 娜迦建造菜单
                 integer 852467
                 // 技能命令串或ID 魔法护盾(AEO)(spellshieldaoe)
                 integer 852572
-                // 技能命令串或ID 属性技能(attributemodskill)
+                // 技能命令串或ID 属性加成(黄点技能)
                 integer 852576
 
 
                 // 物品技能
 
-                // 技能命令串或ID 群体传送/传送权杖(单位技能&物品技能)
+                // 技能命令串或ID 群体传送/传送权杖(英雄技能&物品技能)
                 integer 852093
                 // 技能命令串或ID 净化/带有净化效果的物品(1)(单位技能&物品技能)
                 integer 852111
@@ -5998,7 +6651,7 @@ globals
                 integer 852186
                 // 技能命令串或ID 反召唤(物品技能)(侍僧卖建筑)(单位技能&物品技能)
                 integer 852210
-                // 技能命令串或ID 黑暗召唤(单位技能&物品技能)
+                // 技能命令串或ID 黑暗召唤(英雄技能&物品技能)
                 integer 852220
                 // 技能命令串或ID 死亡之指(物品)(单位技能&物品技能)
                 integer 852230
@@ -6044,12 +6697,10 @@ globals
                 integer 852471
                 // 技能命令串或ID 乌云技能(单位技能&物品技能)
                 integer 852473
-                // 技能命令串或ID 闪烁(物品等级)(单位技能&物品技能)
+                // 技能命令串或ID 闪烁(物品等级)(英雄技能&物品技能)
                 integer 852525
                 // 技能命令串或ID 机械类的小玩艺(物品技能)
                 integer 852564
-                // 技能命令串或ID 选择英雄(物品技能)
-                integer 852566
                 // 技能命令串或ID 保存权杖(物品技能)
                 integer 852568
                 // 技能命令串或ID 影子权杖(物品技能)
@@ -6102,8 +6753,6 @@ globals
                 integer 851985
                 // 技能命令串或ID 攻击地面
                 integer 851984
-                // 技能命令串或ID 给与物品
-                integer 851981
                 // 技能命令串或ID 黄金交换木材
                 integer 852233
                 // 技能命令串或ID 木材交换黄金
@@ -6114,7 +6763,7 @@ globals
                 integer 851987
                 // 技能命令串或ID 停止(技能面板)
                 integer 851975
-                // 技能命令串或ID 采集(技能面板)
+                // 技能命令串或ID 采集(黄金和木材)(技能面板)
                 integer 852019
                 // 技能命令串或ID 移动/跟随
                 integer 851986
@@ -6152,11 +6801,15 @@ globals
                 integer 852012
                 // 技能命令串或ID 使用第六格物品
                 integer 852013
+                // 技能命令串或ID 给与物品
+                integer 851981
+                // 技能命令串或ID 丢弃物品
+                integer 852001
                 // 技能命令串或ID 返还资源
                 integer 852017
                 // 技能命令串或ID 返还建造(resumebuild)
                 integer 851999
-                // 技能命令串或ID 采集资源
+                // 技能命令串或ID 采集(黄金和木材)
                 integer 852018
                 // 技能命令串或ID 自动采集黄金
                 integer 852021
@@ -6178,9 +6831,9 @@ globals
                 integer 852033
                 // 技能命令串或ID 复活英雄
                 integer 852039
-                // 技能命令串或ID 登陆
+                // 技能命令串或ID 登船
                 integer 852043
-                // 技能命令串或ID 全部登陆
+                // 技能命令串或ID 全部登船
                 integer 85044
                 // 技能命令串或ID 装载
                 integer 852046
@@ -6190,8 +6843,6 @@ globals
                 integer 852048
                 // 技能命令串或ID 全部卸载(立即)
                 integer 852049
-                // 技能命令串或ID 中立单位逃跑
-                integer 852248
                 // 技能命令串或ID 立即复活酒馆里的第一个英雄
                 integer 852462
                 // 技能命令串或ID 立即复活酒馆里的第二个英雄
@@ -6206,15 +6857,17 @@ globals
                 integer 852558
                 // 技能命令串或ID 请求(英雄)(request_hero)
                 integer 852239
-                // 技能命令串或ID 复活英雄
+                // 技能命令串或ID 返还资源(returnresources)
                 integer 852020
+                // 技能命令串或ID 选择英雄
+                integer 852566
 
 
                 // 暗夜精灵族技能
 
-                // 技能命令串或ID 暗夜建造菜单
+                // 技能命令串或ID 暗夜精灵建造菜单
                 integer 851997
-                // 技能命令串或ID 影遁(夜晚)(暗夜女性)
+                // 技能命令串或ID 影遁(夜晚)
                 integer 852131
                 // 技能命令串或ID 驱逐魔法(小鹿)
                 integer 852132
@@ -6226,9 +6879,9 @@ globals
                 integer 852138
                 // 技能命令串或ID 取消变熊
                 integer 852139
-                // 技能命令串或ID 飓风(鸟德)
+                // 技能命令串或ID 飓风术(鸟德)
                 integer 852144
-                // 技能命令串或ID 爆炸(小精灵)
+                // 技能命令串或ID 自爆(小精灵)
                 integer 852145
                 // 技能命令串或ID 吃树(古树)
                 integer 852146
@@ -6246,13 +6899,13 @@ globals
                 integer 852155
                 // 技能命令串或ID 取消风暴之鸦
                 integer 852156
-                // 技能命令串或ID 月井
+                // 技能命令串或ID 补充(月井之春)
                 integer 852157
-                // 技能命令串或ID 激活月亮井
+                // 技能命令串或ID 激活补充(月井之春)
                 integer 852158
-                // 技能命令串或ID 取消月亮井
+                // 技能命令串或ID 取消补充(月井之春)
                 integer 852159
-                // 技能命令串或ID 生命回复
+                // 技能命令串或ID 回春术
                 integer 852160
                 // 技能命令串或ID 修理(暗夜精灵族)
                 integer 852161
@@ -6268,6 +6921,8 @@ globals
                 integer 852166
                 // 技能命令串或ID 纠缠须根
                 integer 852171
+                // 技能命令串或ID 灼热之箭
+                integer 852173
                 // 技能命令串或ID 激活灼热之箭
                 integer 852174
                 // 技能命令串或ID 灼热之箭目标(flamingarrowstarg)
@@ -6286,7 +6941,7 @@ globals
                 integer 852179
                 // 技能命令串或ID 恶魔变身
                 integer 852180
-                // 技能命令串或ID 侦查(白虎)
+                // 技能命令串或ID 侦查(白虎猫头鹰)
                 integer 852181
                 // 技能命令串或ID 哨兵(女猎)
                 integer 852182
@@ -6303,7 +6958,7 @@ globals
                 // 技能命令串或ID 搭载弓箭手
                 integer 852142
                 // 技能命令串或ID 骑乘(mount)
-                integer 852143
+                integer 852469
                 // 技能命令串或ID 骑乘角鹰兽(mounthippogryph)
                 integer 852143
                 // 技能命令串或ID 骑乘角鹰兽&搭载弓箭手
@@ -6348,9 +7003,11 @@ globals
                 integer 852136
                 // 技能命令串或ID 腐蚀喷吐
                 integer 852140
-                // 技能命令串或ID 分离
+                // 技能命令串或ID 分离(disassociate)
                 integer 852240
-                // 技能命令串或ID 采集(小精灵)
+                // 技能命令串或ID 取消坐骑(dismount)
+                integer 852470
+                // 技能命令串或ID 采集(小精灵)(黄金和木材)
                 integer 852214
 
 
@@ -6358,9 +7015,9 @@ globals
 
                 // 技能命令串或ID 不死建造菜单
                 integer 851998
-                // 技能命令串或ID 拾取尸体(绞肉车)
+                // 技能命令串或ID 获取尸体(绞肉车)
                 integer 852050
-                // 技能命令串或ID 装载尸体(立即)(绞肉车)
+                // 技能命令串或ID 获取尸体(立即)(绞肉车)
                 integer 852053
                 // 技能命令串或ID 丢弃所有尸体(绞肉车)
                 integer 852054
@@ -6378,9 +7035,9 @@ globals
                 integer 852196
                 // 技能命令串或ID 召唤骷髅(指定单位)
                 integer 852197
-                // 技能命令串或ID 激活召唤骷髅
+                // 技能命令串或ID 激活召唤骷髅(亡灵男巫)
                 integer 852198
-                // 技能命令串或ID 取消召唤骷髅
+                // 技能命令串或ID 取消召唤骷髅(亡灵男巫)
                 integer 852199
                 // 技能命令串或ID 召唤骷髅(无目标)
                 integer 852200
@@ -6392,7 +7049,7 @@ globals
                 integer 852203
                 // 技能命令串或ID 取消修理(不死灵族)
                 integer 852204
-                // 技能命令串或ID 采集(侍僧)
+                // 技能命令串或ID 采集(侍僧)(黄金)
                 integer 852185
                 // 技能命令串或ID 牺牲(深渊)(不死灵族)
                 integer 852205
@@ -6426,7 +7083,7 @@ globals
                 integer 852225
                 // 技能命令串或ID 霜冻新星
                 integer 852226
-                // 技能命令串或ID 睡眠
+                // 技能命令串或ID 睡眠(恐惧魔王)
                 integer 852227
                 // 技能命令串或ID 激活霜冻护甲
                 integer 852458
@@ -6522,11 +7179,11 @@ globals
                 integer 852104
                 // 技能命令串或ID 岗哨守卫
                 integer 852105
-                // 技能命令串或ID 诱捕(网)
+                // 技能命令串或ID 诱捕(网，非蛛网)
                 integer 852106
-                // 技能命令串或ID 激活诱捕(网)
+                // 技能命令串或ID 激活诱捕(网，非蛛网)
                 integer 852108
-                // 技能命令串或ID 取消诱捕(网)
+                // 技能命令串或ID 取消诱捕(网，非蛛网)
                 integer 852107
                 // 技能命令串或ID 治疗守卫
                 integer 852109
@@ -6538,7 +7195,7 @@ globals
                 integer 852114
                 // 技能命令串或ID 闪电链
                 integer 852119
-                // 技能命令串或ID 地震
+                // 技能命令串或ID 地震(先知)
                 integer 852121
                 // 技能命令串或ID 远视(先知)
                 integer 852122
@@ -6582,6 +7239,8 @@ globals
                 integer 854299
                 // 技能命令串或ID 监视(岗哨守卫)(spies)
                 integer 852235
+                // 技能命令串或ID 灵魂巨魔(spirittroll)
+                integer 852573
 
 
                 // 人族技能
@@ -6632,7 +7291,7 @@ globals
                 integer 852077
                 // 技能命令串或ID 天神下凡
                 integer 852086
-                // 技能命令串或ID 取消天神下凡(unavatar)
+                // 技能命令串或ID 取消天神下凡
                 integer 852087
                 // 技能命令串或ID 暴风雪
                 integer 852089
@@ -6648,7 +7307,7 @@ globals
                 integer 852095
                 // 技能命令串或ID 雷霆一击
                 integer 852096
-                // 技能命令串或ID 水元素
+                // 技能命令串或ID (召唤)水元素
                 integer 852097
                 // 技能命令串或ID 控制魔法
                 integer 852474
@@ -6658,11 +7317,11 @@ globals
                 integer 852479
                 // 技能命令串或ID 空中锁链
                 integer 852480
-                // 技能命令串或ID 凤凰火焰
+                // 技能命令串或ID 凤凰烈焰(飞行单位)
                 integer a = 852481
                 // 技能命令串或ID 凤凰转换形态
                 integer 852482
-                // 技能命令串或ID 火凤凰
+                // 技能命令串或ID 召唤凤凰
                 integer 852489
                 // 技能命令串或ID 魔法盗取
                 integer 852483
@@ -6674,7 +7333,7 @@ globals
                 integer 852486
                 // 技能命令串或ID 烈焰风暴
                 integer 852488
-                // 技能命令串或ID 避难
+                // 技能命令串或ID 避难(sanctuary)
                 integer 852569
                 // 技能命令串或ID 显示/探测(detectaoe)
                 integer 852015
@@ -6682,7 +7341,7 @@ globals
                 integer 852079
                 // 技能命令串或ID 挂载坦克(tankloadpilot)
                 integer 852080
-                // 技能命令串或ID 被挂载的坦克(tankpilot)
+                // 技能命令串或ID 挂载坦克形态(tankpilot)
                 integer 852081
 
 
