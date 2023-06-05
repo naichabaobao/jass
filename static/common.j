@@ -620,13 +620,13 @@ globals
 	constant mousebuttontype MOUSE_BUTTON_TYPE_MIDDLE = ConvertMouseButtonType(2)
 	// 鼠标 右键
 	constant mousebuttontype MOUSE_BUTTON_TYPE_RIGHT = ConvertMouseButtonType(3)
-	// 动画类型 - 出现（估计包含训练完成、创建、召唤）
+	// 动画类型 - 出生（估计包含训练完成、创建、召唤）
 	constant animtype ANIM_TYPE_BIRTH = ConvertAnimType(0)
 	// 动画类型 - 死亡
 	constant animtype ANIM_TYPE_DEATH = ConvertAnimType(1)
 	// 动画类型 - 腐烂
 	constant animtype ANIM_TYPE_DECAY = ConvertAnimType(2)
-	// 动画类型 - 消失
+	// 动画类型 - 英雄消散
 	constant animtype ANIM_TYPE_DISSIPATE = ConvertAnimType(3)
 	// 动画类型 - 站立
 	constant animtype ANIM_TYPE_STAND = ConvertAnimType(4)
@@ -634,19 +634,19 @@ globals
 	constant animtype ANIM_TYPE_WALK = ConvertAnimType(5)
 	// 动画类型 - 攻击
 	constant animtype ANIM_TYPE_ATTACK = ConvertAnimType(6)
-	// 动画类型 - 变形
+	// 动画类型 - 变身
 	constant animtype ANIM_TYPE_MORPH = ConvertAnimType(7)
 	// 动画类型 - 睡眠
 	constant animtype ANIM_TYPE_SLEEP = ConvertAnimType(8)
 	// 动画类型 - 施法
 	constant animtype ANIM_TYPE_SPELL = ConvertAnimType(9)
-	// 动画类型 - 画像
+	// 动画类型 - 头像窗口
 	constant animtype ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
 	// 子动画类型 - 扎根（古树）
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
 	// 子动画类型 - 生长（古树）
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
-	// 子动画类型 - 循环（可能是无操作时的默认动画）
+	// 子动画类型 - 循环
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
 	// 子动画类型 - 猛击
 	constant subanimtype SUBANIM_TYPE_SLAM = ConvertSubAnimType(14)
@@ -664,7 +664,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_CHANNEL = ConvertSubAnimType(20)
 	// 子动画类型 - 防御
 	constant subanimtype SUBANIM_TYPE_DEFEND = ConvertSubAnimType(21)
-	// 子动画类型 - 胜利
+	// 子动画类型 - 庆祝胜利
 	constant subanimtype SUBANIM_TYPE_VICTORY = ConvertSubAnimType(22)
 	// 子动画类型 - 转身
 	constant subanimtype SUBANIM_TYPE_TURN = ConvertSubAnimType(23)
@@ -680,7 +680,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_HIT = ConvertSubAnimType(28)
 	// 子动画类型 - 受伤
 	constant subanimtype SUBANIM_TYPE_WOUNDED = ConvertSubAnimType(29)
-	// 子动画类型 - 光
+	// 子动画类型 - 发光
 	constant subanimtype SUBANIM_TYPE_LIGHT = ConvertSubAnimType(30)
 	// 子动画类型 - 温和
 	constant subanimtype SUBANIM_TYPE_MODERATE = ConvertSubAnimType(31)
@@ -690,9 +690,9 @@ globals
 	constant subanimtype SUBANIM_TYPE_CRITICAL = ConvertSubAnimType(33)
 	// 子动画类型 - 完成
 	constant subanimtype SUBANIM_TYPE_COMPLETE = ConvertSubAnimType(34)
-	// 子动画类型 - 黄金
+	// 子动画类型 - 背运黄金
 	constant subanimtype SUBANIM_TYPE_GOLD = ConvertSubAnimType(35)
-	// 子动画类型 - 木材
+	// 子动画类型 - 背运木材
 	constant subanimtype SUBANIM_TYPE_LUMBER = ConvertSubAnimType(36)
 	// 子动画类型 - 工作
 	constant subanimtype SUBANIM_TYPE_WORK = ConvertSubAnimType(37)
@@ -738,7 +738,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_PUKE = ConvertSubAnimType(57)
 	// 子动画类型 - 乱动
 	constant subanimtype SUBANIM_TYPE_FLAIL = ConvertSubAnimType(58)
-	// 子动画类型 - 关
+	// 子动画类型 - 关闭
 	constant subanimtype SUBANIM_TYPE_OFF = ConvertSubAnimType(59)
 	// 子动画类型 - 游泳
 	constant subanimtype SUBANIM_TYPE_SWIM = ConvertSubAnimType(60)
@@ -752,11 +752,11 @@ globals
 	
 	// 预设玩家种族 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	// 预设玩家种族 兽族
+	// 预设玩家种族 兽人
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	// 预设玩家种族 暗夜
+	// 预设玩家种族 暗夜精灵
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	// 预设玩家种族 亡灵
+	// 预设玩家种族 天灾亡灵/不死
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
 	// 预设玩家种族 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
@@ -877,7 +877,7 @@ globals
 	constant gamespeed MAP_SPEED_FAST = ConvertGameSpeed(3)
 	// 游戏速度 最快速
 	constant gamespeed MAP_SPEED_FASTEST = ConvertGameSpeed(4)
-	// 玩家槽状态 没有真人玩家使用（该位置从没有过真人玩家），如果此时对该玩家启用AI，AI能正常运行，但此处依旧返回该状态
+	// 玩家槽状态 没有玩家使用
 	constant playerslotstate PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
 	// 玩家槽状态 玩家正在游戏
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
