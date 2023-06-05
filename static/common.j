@@ -306,22 +306,25 @@ constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
 // 转换整数成路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-// 命令字符串转换成ID
+// 转换命令ID字符串成命令ID
 constant native OrderId takes string orderIdString returns integer
-// 命令ID转换成字符串
+// 转换命令ID成命令ID字符串
 constant native OrderId2String takes integer orderId returns string
-// 单位字符串转换成ID
+// 转换单位ID字符串成单位ID
 constant native UnitId takes string unitIdString returns integer
-// 单位ID转换成字符串
+// 转换单位ID成单位ID字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 技能转换成符串ID    Not currently working correctly...
+// 转换技能ID字符串成技能ID   Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
-// 技能ID转换成字符串
+// 转换技能ID成技能ID字符串
 constant native AbilityId2String takes integer abilityId returns string
 
-// 获取物体名称（字串符） [C]，此命令在AI脚本返回值为 null
 // Looks up the "name" field for any object (unit, item, ability)
+
+// 获取对象（单位、物品、技能等任何对象）名称（字串符） [C]
+// 获取的名称为英语，非本地语言
+// 此命令在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
 // 获取最大的玩家数量，不包括中立玩家
 // 1.28及以下：12
@@ -331,13 +334,13 @@ constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
-// 因为玩家1是0
+// 注：玩家1是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家的玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
-// 因为玩家1是0
+// 注：玩家1是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 获取最大玩家槽数量，包括中立玩家
@@ -348,13 +351,13 @@ constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
-// 因为玩家1是0
+// 注：玩家1是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家的玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
-// 因为玩家1是0
+// 注：玩家1是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
@@ -443,17 +446,17 @@ globals
 	// 玩家颜色 花生色
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
-	// 人族
+	// 种族 人类
 	constant race RACE_HUMAN = ConvertRace(1)
-	// 兽族
+	// 种族 兽人
 	constant race RACE_ORC = ConvertRace(2)
-	// 亡灵
+	// 种族 天灾亡灵/不死
 	constant race RACE_UNDEAD = ConvertRace(3)
-	// 暗夜
+	// 种族 暗夜精灵
 	constant race RACE_NIGHTELF = ConvertRace(4)
-	// 恶魔族
+	// 种族 恶魔族
 	constant race RACE_DEMON = ConvertRace(5)
-	// 其他种族
+	// 种族 其他
 	constant race RACE_OTHER = ConvertRace(7)
 	// 玩家游戏结果 胜利
 	constant playergameresult PLAYER_GAME_RESULT_VICTORY = ConvertPlayerGameResult(0)
@@ -1072,9 +1075,9 @@ globals
 	constant gameevent EVENT_GAME_VICTORY = ConvertGameEvent(0)
 	// 游戏事件 游戏本关结束
 	constant gameevent EVENT_GAME_END_LEVEL = ConvertGameEvent(1)
-	// 游戏事件 游戏变量限制
+	// 游戏事件 游戏变量变更
 	constant gameevent EVENT_GAME_VARIABLE_LIMIT = ConvertGameEvent(2)
-	// 游戏事件 游戏状态限制
+	// 游戏事件 游戏状态变更
 	constant gameevent EVENT_GAME_STATE_LIMIT = ConvertGameEvent(3)
 	// 游戏事件 游戏超时
 	constant gameevent EVENT_GAME_TIMER_EXPIRED = ConvertGameEvent(4)
@@ -1082,9 +1085,9 @@ globals
 	constant gameevent EVENT_GAME_ENTER_REGION = ConvertGameEvent(5)
 	// 游戏事件 离开区域
 	constant gameevent EVENT_GAME_LEAVE_REGION = ConvertGameEvent(6)
-	// 游戏事件 可跟踪打击
+	// 游戏事件 点击可追踪对象
 	constant gameevent EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
-	// 游戏事件 可跟踪跟踪
+	// 游戏事件 可追踪对象轨迹
 	constant gameevent EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
 	// 游戏事件 显示技能
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
@@ -1094,7 +1097,7 @@ globals
 	
 	// For use with TriggerRegisterPlayerEvent
 	
-	// 玩家事件 玩家状态限制
+	// 玩家事件 玩家状态变更
  constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
 	// 玩家事件 玩家联盟类型变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
@@ -1113,18 +1116,18 @@ globals
 	// For use with TriggerRegisterPlayerUnitEvent
 	
 	
-	// 玩家单位事件 玩家單位被攻擊
+	// 玩家单位事件 单位被攻击
  constant playerunitevent EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
-	// 玩家单位事件 玩家單位被救援
+	// 玩家单位事件 单位被营救
  constant playerunitevent EVENT_PLAYER_UNIT_RESCUED = ConvertPlayerUnitEvent(19)
 	
-	// 玩家单位事件 玩家單位死亡
+	// 玩家单位事件 单位死亡
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
-	// 玩家单位事件 玩家單位（尸体）開始腐爛
+	// 玩家单位事件 单位（尸体）开始腐烂
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
-	// 玩家单位事件 玩家单位可检测
+	// 玩家单位事件 单位可检测
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
-	// 玩家单位事件 玩家单位被隐藏
+	// 玩家单位事件 单位被隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
 	
 	// 玩家单位事件 玩家选择单位
@@ -1166,27 +1169,28 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 玩家单位命令事件（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-        // 玩家单位事件 玩家英雄升级事件
+        // 玩家单位事件 英雄升级事件
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-        // 玩家单位事件 玩家英雄学习技能事件
+        // 玩家单位事件 英雄学习技能事件
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-        // 玩家单位事件 玩家英雄可复活
+        // 玩家单位事件 英雄可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
-	// 玩家单位事件 玩家英雄开始复活
+	// 玩家单位事件 英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
-	// 玩家单位事件 玩家英雄取消复活
+	// 玩家单位事件 英雄取消复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_CANCEL = ConvertPlayerUnitEvent(45)
-	// 玩家单位事件 玩家英雄完成复活
+	// 玩家单位事件 英雄完成复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_FINISH = ConvertPlayerUnitEvent(46)
-	// 玩家单位事件 玩家召唤事件
+	// 玩家单位事件 召唤单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SUMMON = ConvertPlayerUnitEvent(47)
-	// 玩家单位事件 玩家单位物品掉落事件
+	// 玩家单位事件 物品掉落
 	constant playerunitevent EVENT_PLAYER_UNIT_DROP_ITEM = ConvertPlayerUnitEvent(48)
-	// 玩家单位事件 玩家单位拾取物品事件
+	// 玩家单位事件 拾取物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PICKUP_ITEM = ConvertPlayerUnitEvent(49)
-	// 玩家单位事件 玩家单位使用物品事件
+	// 玩家单位事件 使用物品
 	constant playerunitevent EVENT_PLAYER_UNIT_USE_ITEM = ConvertPlayerUnitEvent(50)
-	// 玩家单位事件 玩家单位被装载事件
+	// 玩家单位事件 被装载
+	// 被飞艇、船、被缠绕的金矿等装载
 	constant playerunitevent EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
 	// 玩家单位事件 玩家单位被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
@@ -1196,13 +1200,13 @@ globals
 	
 	// For use with TriggerRegisterUnitEvent
 	
-	// 单位事件 单位被伤害
+	// 单位事件 单位受到伤害
 	constant unitevent EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
 	// 单位事件 单位造成伤害
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
-	// 单位事件 單位死亡
+	// 单位事件 单位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-        // 单位事件 單位（尸体）開始腐爛
+        // 单位事件 单位（尸体）开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
 	// 单位事件 单位可检测
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
@@ -1212,7 +1216,7 @@ globals
 	constant unitevent EVENT_UNIT_SELECTED = ConvertUnitEvent(57)
 	// 单位事件 单位被取消选择
 	constant unitevent EVENT_UNIT_DESELECTED = ConvertUnitEvent(58)
-	// 单位事件 单位状态限制
+	// 单位事件 单位状态变更
 	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)                                                                        
 	
 	// Events which may have a filter for the "other unit"   
@@ -1221,9 +1225,9 @@ globals
 	constant unitevent EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
 	// 单位事件 目标在单位获取范围内（类似警戒范围）
 	constant unitevent EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
-	// 单位事件 單位被攻擊
+	// 单位事件 单位被攻击
 	constant unitevent EVENT_UNIT_ATTACKED = ConvertUnitEvent(62)
-	// 单位事件 單位被救援
+	// 单位事件 单位被营救
 	constant unitevent EVENT_UNIT_RESCUED = ConvertUnitEvent(63)
 	// 单位事件 取消建造
 	constant unitevent EVENT_UNIT_CONSTRUCT_CANCEL = ConvertUnitEvent(64)
@@ -1257,9 +1261,9 @@ globals
 	constant unitevent EVENT_UNIT_ISSUED_POINT_ORDER = ConvertUnitEvent(76)
 	// 单位事件 单位命令事件（指定单位）
 	constant unitevent EVENT_UNIT_ISSUED_TARGET_ORDER = ConvertUnitEvent(77)
-	// 单位事件 英雄升级事件
+	// 单位事件 英雄升级
 	constant unitevent EVENT_UNIT_HERO_LEVEL = ConvertUnitEvent(78)
-	// 单位事件 英雄学习技能事件
+	// 单位事件 英雄学习技能
 	constant unitevent EVENT_UNIT_HERO_SKILL = ConvertUnitEvent(79)
 	
 	// 单位事件 英雄可复活
@@ -1270,21 +1274,22 @@ globals
 	constant unitevent EVENT_UNIT_HERO_REVIVE_CANCEL = ConvertUnitEvent(82)
 	// 单位事件 英雄完成复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_FINISH = ConvertUnitEvent(83)
-	// 单位事件 召唤事件
+	// 单位事件 召唤单位
 	constant unitevent EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
-	// 单位掉落物品事件
+	// 单位事件 掉落物品
 	constant unitevent EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
-	// 单位事件 单位拾取物品事件
+	// 单位事件 拾取物品
 	constant unitevent EVENT_UNIT_PICKUP_ITEM = ConvertUnitEvent(86)
-	// 单位事件 单位使用物品事件
+	// 单位事件 使用物品
 	constant unitevent EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
-	// 单位事件 单位被装载事件
+	// 单位事件 单位被装载
+	// 被飞艇、船、被缠绕的金矿等装载
 	constant unitevent EVENT_UNIT_LOADED = ConvertUnitEvent(88)
-	// 单位事件 单位/物品/可破坏物死亡事件
+	// 目标事件 单位/物品/可破坏物死亡
 	constant widgetevent EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
-	// 单位事件 对话框按钮点击事件
+	// 对话框事件 点击对话框按钮
 	constant dialogevent EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
-	// 单位事件 对话框点击事件
+	// 对话框事件 点击对话框
 	constant dialogevent EVENT_DIALOG_CLICK = ConvertDialogEvent(91)
 	
 	
@@ -1343,35 +1348,35 @@ globals
 	
 	// For use with TriggerRegisterPlayerUnitEvent
 	
-	// 玩家事件 玩家出售单位
+	// 玩家单位事件 出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
-	// 玩家事件 玩家單位更改所有者
+	// 玩家单位事件 变更所有者
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
-	// 玩家事件 玩家單位出售物品
+	// 玩家单位事件 出售物品
  constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家事件 玩家單位準備施放技能
+	// 玩家单位事件 准备施放技能 (前摇开始)
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
-	// 玩家事件 玩家單位開始施放技能
+	// 玩家单位事件 开始施放技能(前摇结束)
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
-	// 玩家事件 玩家單位發動技能效果
+	// 玩家单位事件 发动技能效果(后摇开始)
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
-	// 玩家事件 玩家單位釋放技能結束
+	// 玩家单位事件 释放技能結束 (后摇结束)
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
-	// 玩家事件 玩家單位停止施放技能
+	// 玩家单位事件 停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-        // 玩家事件 玩家單位抵押物品
+        // 玩家单位事件 抵押（卖）物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
-	// 玩家事件 玩家单位物品栏中有物品堆叠
+	// 玩家单位事件 堆叠物品
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
 	
 	
 	// For use with TriggerRegisterUnitEvent
 	
-	// 单位事件 出售单位（指商店单位）
+	// 单位事件 出售单位
 	constant unitevent EVENT_UNIT_SELL = ConvertUnitEvent(286)
 	// 单位事件 单位所属变更
 	constant unitevent EVENT_UNIT_CHANGE_OWNER = ConvertUnitEvent(287)
-	// 单位事件 出售物品（指商店单位）
+	// 单位事件 出售物品
 	constant unitevent EVENT_UNIT_SELL_ITEM = ConvertUnitEvent(288)
 	// 单位事件 准备施放技能 (前摇开始)
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
@@ -1383,9 +1388,9 @@ globals
 	constant unitevent EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
 	// 单位事件 停止施放技能
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
-	// 单位事件 抵押（卖）物品（指购买单位）
+	// 单位事件 抵押（卖）物品
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
-	// 单位事件 单位物品栏中有物品堆叠
+	// 单位事件 堆叠物品
 	constant unitevent EVENT_UNIT_STACK_ITEM = ConvertUnitEvent(318)
 	
 	
@@ -4397,22 +4402,23 @@ native GetPlayerName takes player whichPlayer returns string
 native CreateTimer takes nothing returns timer
 // 删除指定计时器 [R]
 native DestroyTimer takes timer whichTimer returns nothing
-// 运行计时器 [C]
+// 开始计时器（计时） [C]
 // @param whichTimer 计时器
-// @param timeout 超时
+// @param timeout 超时/倒计时初始值
 // @param periodic 是否循环
+// @param handlerFunc 到期后运行的函数
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
-// 获取计时器经过的时间
+// 获取计时器经过的时间//已倒计的时间
 native TimerGetElapsed takes timer whichTimer returns real
 // 获取计时器剩余时间
 native TimerGetRemaining takes timer whichTimer returns real
-// 获取计时器的初始时间
+// 获取计时器初始时间/倒计时初始值
 native TimerGetTimeout takes timer whichTimer returns real
-// 暂停计时器 [R]
+// 暂停计时器（计时） [R]
 native PauseTimer takes timer whichTimer returns nothing
-// 恢复计时器 [R]
+// 恢复计时器（计时） [R]
 native ResumeTimer takes timer whichTimer returns nothing
-// 事件响应 - 计时器到期
+// 获取到期的计时器
 // 与TimerStart一同使用
 native GetExpiredTimer takes nothing returns timer
 
@@ -4521,7 +4527,8 @@ native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 查询玩家是否在玩家组内
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
-// 清除玩家组
+// 清空玩家组
+// 排泄需使用删除玩家组 DestroyForce，而非清空
 native ForceClear takes force whichForce returns nothing
 // 匹配玩家组（指定条件表达式）
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
@@ -4761,7 +4768,7 @@ constant native GetLeavingUnit takes nothing returns unit
 
 // 触发器登记鼠标点击可追踪对象事件 [R]
 native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t returns event
-// 触发器登记鼠标移动到追踪对象事件 [R]
+// 触发器登记可追踪对象轨迹事件 [R]
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
 // 触发器登记点击命令按钮事件
@@ -4770,7 +4777,7 @@ native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbil
 // 触发器登记科技升级命令事件
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
-// 事件响应 获取触发的可追踪对象 [R]（对应鼠标点击可追踪对象及鼠标移动到追踪对象等事件）
+// 事件响应 获取触发的可追踪对象 [R]（对应鼠标点击可追踪对象及可追踪对象轨迹等事件）
 // EVENT_GAME_TRACKABLE_HIT
 // EVENT_GAME_TRACKABLE_TRACK
 constant native GetTriggeringTrackable takes nothing returns trackable
@@ -5112,7 +5119,6 @@ constant native GetEventDamageSource takes nothing returns unit
 
 // 事件响应 获取事件检测到的玩家（对应检测到单位等事件）
 // EVENT_UNIT_DETECTED
-// EVENT_UNIT_DETECTED 
 constant native GetEventDetectingPlayer takes nothing returns player
 
 // 事件响应 触发器登记玩家单位事件
@@ -5170,6 +5176,7 @@ native TriggerAddAction takes trigger whichTrigger, code actionFunc returns trig
 // 移除触发器动作
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
 // 清空触发器动作
+// 排泄需使用移除触发器动作 TriggerRemoveAction，而非清空
 native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待（指定时间）
 native TriggerSleepAction takes real timeout returns nothing
@@ -5516,16 +5523,17 @@ native UnitAddItem takes unit whichUnit, item whichItem returns boolean
 // 给予物品（指定物品ID）
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数（指定物品ID） [R]
+// @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 删除物品（指定物品）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 删除物品（指定物品栏格数，不论哪个物品在该格中，都会执行该命令，丢弃成功的前提是该物品允许丢弃）
-// @param itemSlot 0-5
+// @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
 // 获取单位物品栏物品(指定物品栏格数)
-// @param itemSlot 0-5
+// @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取物品栏格数
 native UnitInventorySize takes unit whichUnit returns integer
@@ -5533,6 +5541,7 @@ native UnitInventorySize takes unit whichUnit returns integer
 // 发布丢弃物品命令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 命令指定单位移动物品到指定的物品栏格数 [R]
+// @param slot 物品栏格数：0-5
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 命令指定单位丢弃物品（指定目标单位/物品/可破坏物） [R]
 // 指定目标为商店时会卖出物品
@@ -5797,13 +5806,13 @@ native AddUnitToAllStock takes integer unitId, integer currentStock, integer sto
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
 
-// 删除商店出售的指定物品类型 (应用于所有商店)
+// 移除商店出售的指定物品类型 (应用于所有商店)
 native RemoveItemFromAllStock takes integer itemId returns nothing
-// 删除商店出售的指定物品类型 (应用于指定商店)
+// 移除商店出售的指定物品类型 (应用于指定商店)
 native RemoveItemFromStock takes unit whichUnit, integer itemId returns nothing
-// 删除商店出售的指定单位类型 (应用于所有商店)
+// 移除商店出售的指定单位类型 (应用于所有商店)
 native RemoveUnitFromAllStock takes integer unitId returns nothing
-// 删除商店出售的指定单位类型 (应用于指定商店)
+// 移除商店出售的指定单位类型 (应用于指定商店)
 native RemoveUnitFromStock takes unit whichUnit, integer unitId returns nothing
 
 // 设置所有物品库存上限 (应用于所有商店)
@@ -6044,6 +6053,7 @@ native DialogCreate takes nothing returns dialog
 // 删除指定对话框 [R]
 native DialogDestroy takes dialog whichDialog returns nothing
 // 清空指定对话框
+// 排泄需使用删除对话框 DialogDestroy，而非清空
 native DialogClear takes dialog whichDialog returns nothing
 // 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
@@ -6616,7 +6626,8 @@ native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor r
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 判断计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
-// 修改倒计时窗口的时间，可以开启另一个计时器每隔一段时间，修改倒计时窗口时间，从而实现正计时
+// 修改计时器窗口的倒计时
+// 可创建另一个计时器（隐藏），在其倒计时结束后，修改本窗口的倒计时，从而实现正向计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
 
@@ -6649,6 +6660,7 @@ native LeaderboardRemoveItem takes leaderboard lb, integer index returns nothing
 // 移除排行榜指定玩家
 native LeaderboardRemovePlayerItem takes leaderboard lb, player p returns nothing
 // 清空排行榜 [R]
+// 排泄需使用删除排行榜 DestroyLeaderboard，而非清空
 native LeaderboardClear takes leaderboard lb returns nothing
 // 设置排行榜按分值排序（真为升序，假为降序）
 native LeaderboardSortItemsByValue takes leaderboard lb, boolean ascending returns nothing
@@ -6712,6 +6724,7 @@ native MultiboardMinimize takes multiboard lb, boolean minimize returns nothing
 // 查询多面板是否最小化
 native IsMultiboardMinimized takes multiboard lb returns boolean
 // 清空多面板
+// 排泄需使用删除多面板 DestroyMultiboard，而非清空
 native MultiboardClear takes multiboard lb returns nothing
 
 // 设置多面板标题
