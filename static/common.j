@@ -4702,7 +4702,7 @@ native DestroyBoolExpr takes boolexpr e returns nothing
 // Trigger Game Event API
 
 
-// 变量事件
+// 触发器登记变量事件
 native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
 
 // 获取触发器变量名
@@ -4712,28 +4712,28 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 // Creates it's own timer and triggers when it expires
 // Creates it's own timer and triggers when it expires
 
-// 计时器事件
+// 触发器登记计时器事件
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
 // Triggers when the timer you tell it about expires
 
-// 计时器到期事件
+// 触发器登记计时器到期事件
 native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
 
-// 游戏状态事件
+// 触发器登记游戏状态事件
 native TriggerRegisterGameStateEvent takes trigger whichTrigger, gamestate whichState, limitop opcode, real limitval returns event
 
-// 对话框事件
+// 触发器登记对话框事件
 native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog returns event
-// 点击对话框按钮事件 [R]
+// 触发器登记点击对话框按钮事件 [R]
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 // 获取游戏状态（对应游戏状态设置等事件）
 //  EVENT_GAME_STATE_LIMIT
 constant native GetEventGameState takes nothing returns gamestate
 
-// 游戏事件
+// 触发器登记游戏事件
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
 
@@ -4742,102 +4742,102 @@ native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameE
 constant native GetWinningPlayer takes nothing returns player
 
 
-// 单位进入不规则区域(可指定过滤) [R]
+// 触发器登记单位进入不规则区域事件(可指定过滤) [R]
 native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 
-// 获取触发的不规则区域 [R]（对应进入不规则区域等事件）
+// 事件响应 获取触发的不规则区域 [R]（对应进入不规则区域等事件）
 // EVENT_GAME_ENTER_REGION
 constant native GetTriggeringRegion takes nothing returns region
-// 获取正在进入的单位（对应进入不规则区域等事件）
+// 事件响应 获取正在进入的单位（对应进入不规则区域等事件）
 // EVENT_GAME_ENTER_REGION
 constant native GetEnteringUnit takes nothing returns unit
 
-// 单位离开不规则区域(可指定过滤) [R]（对应离开不规则区域等事件）
+// 触发器登记单位离开不规则区域事件(可指定过滤) [R]（对应离开不规则区域等事件）
 // EVENT_GAME_LEAVE_REGION
 native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
-// 获取正在离开的单位（对应离开不规则区域等事件）
+// 事件响应 获取正在离开的单位（对应离开不规则区域等事件）
 // EVENT_GAME_LEAVE_REGION
 constant native GetLeavingUnit takes nothing returns unit
 
-// 鼠标点击可追踪对象事件 [R]
+// 触发器登记鼠标点击可追踪对象事件 [R]
 native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t returns event
-// 鼠标移动到追踪对象事件 [R]
+// 触发器登记鼠标移动到追踪对象事件 [R]
 native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
 
-// 点击命令按钮事件
+// 触发器登记点击命令按钮事件
 // EVENT_COMMAND_BUTTON_CLICK
 native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbility, string order returns event
-// 科技升级命令事件
+// 触发器登记科技升级命令事件
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
-// 事件响应 - 触发的可追踪对象 [R]（对应鼠标点击可追踪对象及鼠标移动到追踪对象等事件）
+// 事件响应 获取触发的可追踪对象 [R]（对应鼠标点击可追踪对象及鼠标移动到追踪对象等事件）
 // EVENT_GAME_TRACKABLE_HIT
 // EVENT_GAME_TRACKABLE_TRACK
 constant native GetTriggeringTrackable takes nothing returns trackable
 
-// 获取被点击的对话框按钮（对应对话框按钮被点击等事件）
+// 事件响应 获取被点击的对话框按钮（对应对话框按钮被点击等事件）
 // EVENT_DIALOG_BUTTON_CLICK
 constant native GetClickedButton takes nothing returns button
-// 获取被点击的对话框（对应对话框按钮被点击等事件）
+// 事件响应 获取被点击的对话框（对应对话框按钮被点击等事件）
 // EVENT_DIALOG_BUTTON_CLICK
 constant native GetClickedDialog takes nothing returns dialog
 
-// 获取锦标赛剩余时间（对应锦标赛完成等事件）
+// 事件响应 获取锦标赛剩余时间（对应锦标赛完成等事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
-// 获取锦标赛结束规则（对应锦标赛完成等事件）
+// 事件响应 获取锦标赛结束规则（对应锦标赛完成等事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowRule takes nothing returns integer
-// 获取锦标赛结束玩家（对应锦标赛完成等事件）
+// 事件响应 获取锦标赛结束玩家（对应锦标赛完成等事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowPlayer takes nothing returns player
-// 获取锦标赛得分（对应锦标赛完成等事件）
+// 事件响应 获取锦标赛得分（对应锦标赛完成等事件）
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentScore takes player whichPlayer returns integer
 
-// 获取游戏存档的文件名（对应存档等事件）
+// 事件响应 获取游戏存档的文件名（对应存档等事件）
 // EVENT_GAME_SAVE
 constant native GetSaveBasicFilename takes nothing returns string
 
 
 // Trigger Player Based Event API
 
-// 玩家事件
+// 触发器登记玩家事件
 native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer, playerevent whichPlayerEvent returns event
 
-// 获取触发玩家（对应玩家失败和玩家胜利等事件）
+// 事件响应 获取触发玩家（对应玩家失败和玩家胜利等事件）
 // EVENT_PLAYER_DEFEAT
 // EVENT_PLAYER_VICTORY
 constant native GetTriggerPlayer takes nothing returns player
 
-// 玩家单位事件
+// 触发器登记玩家单位事件
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 
-// 获取升级的英雄（对应玩家英雄升级和英雄升级等事件）
+// 事件响应 获取升级的英雄（对应玩家英雄升级和英雄升级等事件）
 // EVENT_PLAYER_HERO_LEVEL
 // EVENT_UNIT_HERO_LEVEL
 constant native GetLevelingUnit takes nothing returns unit
 
-// 获取学习技能的英雄（对应玩家英雄学习技能和英雄学习技能等事件）
+// 事件响应 获取学习技能的英雄（对应玩家英雄学习技能和英雄学习技能等事件）
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearningUnit takes nothing returns unit
-// 获取学习的技能 [R]（对应玩家英雄学习技能和英雄学习技能等事件）
+// 事件响应 获取学习的技能 [R]（对应玩家英雄学习技能和英雄学习技能等事件）
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkill takes nothing returns integer
-// 获取学习技能的等级（对应玩家英雄学习技能和英雄学习技能等事件）
+// 事件响应 获取学习技能的等级（对应玩家英雄学习技能和英雄学习技能等事件）
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkillLevel takes nothing returns integer
 
 
-// 获取可复活的英雄（对应玩家可复活英雄等事件）
+// 事件响应 获取可复活的英雄（对应玩家可复活英雄等事件）
 // EVENT_PLAYER_HERO_REVIVABLE
 constant native GetRevivableUnit takes nothing returns unit
 
-// 获取复活的英雄（对应玩家开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件）
+// 事件响应 获取复活的英雄（对应玩家开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件）
 // EVENT_PLAYER_HERO_REVIVE_START
 // EVENT_PLAYER_HERO_REVIVE_CANCEL
 // EVENT_PLAYER_HERO_REVIVE_FINISH
@@ -4846,7 +4846,7 @@ constant native GetRevivableUnit takes nothing returns unit
 // EVENT_UNIT_HERO_REVIVE_FINISH
 constant native GetRevivingUnit takes nothing returns unit
 
-// 获取攻击的单位（对应玩家单位被攻击等事件）
+// 事件响应 获取攻击的单位（对应玩家单位被攻击等事件）
 // EVENT_PLAYER_UNIT_ATTACKED
 constant native GetAttacker takes nothing returns unit
 
@@ -4857,167 +4857,167 @@ constant native GetRescuer takes nothing returns unit
 
 
 
-// 获取死亡单位（对应玩家单位死亡等事件）
+// 事件响应 获取死亡单位（对应玩家单位死亡等事件）
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetDyingUnit takes nothing returns unit
-// 获取凶手单位（对应玩家单位死亡等事件）
+// 事件响应 获取凶手单位（对应玩家单位死亡等事件）
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetKillingUnit takes nothing returns unit
 
-// 获取尸体腐烂单位（对应玩家单位尸体腐烂等事件）
+// 事件响应 获取尸体腐烂单位（对应玩家单位尸体腐烂等事件）
 // EVENT_PLAYER_UNIT_DECAY
 constant native GetDecayingUnit takes nothing returns unit
 
-// 获取选择的单位（对应玩家选择单位等事件）
+// 事件响应 获取选择的单位（对应玩家选择单位等事件）
 // EVENT_PLAYER_UNIT_SELECTED
 //constant native GetSelectedUnit takes nothing returns unit
 
-// 获取正在建造的建筑（对应玩家开始建造单位等事件）
+// 事件响应 获取正在建造的建筑（对应玩家开始建造单位等事件）
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
 constant native GetConstructingStructure takes nothing returns unit
 
 
-// 获取取消建造的建筑（对应玩家完成/取消建造单位等事件）
+// 事件响应 获取取消建造的建筑（对应玩家完成/取消建造单位等事件）
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetCancelledStructure takes nothing returns unit
-// 获取已建造的建筑（对应玩家完成/取消建造单位等事件）
+// 事件响应 获取已建造的建筑（对应玩家完成/取消建造单位等事件）
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetConstructedStructure takes nothing returns unit
 
-// 获取研究科技的单位（对应玩家开始/完成/取消研究科技等事件）
+// 事件响应 获取研究科技的单位（对应玩家开始/完成/取消研究科技等事件）
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearchingUnit takes nothing returns unit
-// 获取研究的科技类型（对应玩家开始/完成/取消研究科技等事件）
+// 事件响应 获取研究的科技类型（对应玩家开始/完成/取消研究科技等事件）
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearched takes nothing returns integer
 
-// 获取训练的单位类型（对应玩家开始/完成/取消训练单位等事件）
+// 事件响应 获取训练的单位类型（对应玩家开始/完成/取消训练单位等事件）
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnitType takes nothing returns integer
 
-// 获取训练的单位（对应玩家完成训练单位等事件）
+// 事件响应 获取训练的单位（对应玩家完成训练单位等事件）
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 获取检测的单位（对应玩家单位被检测到等事件）
+// 事件响应 获取检测的单位（对应玩家单位被检测到等事件）
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
-// 获取正在召唤的单位（对应玩家召唤单位等事件）
+// 事件响应 获取正在召唤的单位（对应玩家召唤单位等事件）
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummoningUnit takes nothing returns unit
-// 获取被召唤单位（对应玩家召唤单位等事件）
+// 事件响应 获取被召唤单位（对应玩家召唤单位等事件）
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
-// 获取运输单位（对应玩家装载单位等事件）
+// 事件响应 获取运输单位（对应玩家装载单位等事件）
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
-// 获取装载单位（对应玩家装载单位等事件）
+// 事件响应 获取装载单位（对应玩家装载单位等事件）
 // 在飞艇/船内、在缠绕的金矿内的单位都属于装载单位
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetLoadedUnit takes nothing returns unit
 
-// 获取出售单位（对应玩家出售单位等事件）
+// 事件响应 获取出售单位（对应玩家出售单位等事件）
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 获取被出售单位（对应玩家出售单位等事件）
+// 事件响应 获取被出售单位（对应玩家出售单位等事件）
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
-// 获取购买单位（对应玩家出售单位等事件）
+// 事件响应 获取购买单位（对应玩家出售单位等事件）
 // EVENT_PLAYER_UNIT_SELL
 constant native GetBuyingUnit takes nothing returns unit
 
-// 获取卖出的物品（对应玩家出售物品等事件）
+// 事件响应 获取卖出的物品（对应玩家出售物品等事件）
 // EVENT_PLAYER_UNIT_SELL_ITEM
 constant native GetSoldItem takes nothing returns item
 
-// 获取变更了所有者（玩家）的单位（对应玩家变更物品所有者等事件）
+// 事件响应 获取变更了所有者（玩家）的单位（对应玩家变更物品所有者等事件）
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnit takes nothing returns unit
-// 获取变更所有者单位的前一个所有者（玩家）（对应玩家变更物品所有者等事件）
+// 事件响应 获取变更所有者单位的前一个所有者（玩家）（对应玩家变更物品所有者等事件）
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
-// 获取操作物品的单位（对应玩家丢弃/拾取/使用物品等事件）
+// 事件响应 获取操作物品的单位（对应玩家丢弃/拾取/使用物品等事件）
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatingUnit takes nothing returns unit
-// 获取被操作的物品（对应玩家丢弃/拾取/使用物品等事件）
+// 事件响应 获取被操作的物品（对应玩家丢弃/拾取/使用物品等事件）
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatedItem takes nothing returns item
 	
 
-// 获取被拾取物品（对应玩家拾取物品等事件），如果拾取的是拾取时自动使用的物品则返回null
+// 事件响应 获取被拾取物品（对应玩家拾取物品等事件），如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 // @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// 判断被操作的物品是否被拾取的物品（对应玩家拾取物品等事件）
+// 事件响应 判断被操作的物品是否被拾取的物品（对应玩家拾取物品等事件）
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
-// 获取被堆叠的源物品（对应玩家堆叠物品等事件）
+// 事件响应 获取被堆叠的源物品（对应玩家堆叠物品等事件）
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
 // @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// 获取被堆叠的目标物品（对应玩家堆叠物品等事件）
+// 事件响应 获取被堆叠的目标物品（对应玩家堆叠物品等事件）
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
-// 获取堆叠物品的预期售价（对应玩家堆叠物品等事件）
+// 事件响应 获取堆叠物品的预期售价（对应玩家堆叠物品等事件）
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
-// 获取收到命令的单位（对应玩家发布单位命令等事件）
+// 事件响应 获取收到命令的单位（对应玩家发布单位命令等事件）
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetOrderedUnit takes nothing returns unit
-// 获取发出的命令ID
+// 事件响应 获取发出的命令ID
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetIssuedOrderId takes nothing returns integer
 
 
-// 获取命令目标点 X 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
+// 事件响应 获取命令目标点 X 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointX takes nothing returns real
-// 获取命令目标点 Y 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
+// 事件响应 获取命令目标点 Y 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
-// 获取命令目标点（对应玩家发布单位命令（指定点）等事件）
+// 事件响应 获取命令目标点（对应玩家发布单位命令（指定点）等事件）
 // 会生成点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 获取命令目标（单位/物品/可破坏物）（对应玩家发布单位命令（指定目标）等事件）
+// 事件响应 获取命令目标（单位/物品/可破坏物）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 获取命令目标（可破坏物）（对应玩家发布单位命令（指定目标）等事件）
+// 事件响应 获取命令目标（可破坏物）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 获取命令目标（物品)（对应玩家发布单位命令（指定目标）等事件）
+// 事件响应 获取命令目标（物品)（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 获取命令目标（单位）（对应玩家发布单位命令（指定目标）等事件）
+// 事件响应 获取命令目标（单位）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
-// 获取释放技能的单位
+// 事件响应 获取释放技能的单位
 // EVENT_UNIT_SPELL_CHANNEL
 // EVENT_UNIT_SPELL_CAST
 // EVENT_UNIT_SPELL_EFFECT
@@ -5029,40 +5029,40 @@ constant native GetOrderTargetUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_SPELL_FINISH
 // EVENT_PLAYER_UNIT_SPELL_ENDCAST
 constant native GetSpellAbilityUnit takes nothing returns unit
-// 获取被释放技能的ID
+// 事件响应 获取被释放技能的ID
 constant native GetSpellAbilityId takes nothing returns integer
-// 获取被释放的技能
+// 事件响应 获取被释放的技能
 constant native GetSpellAbility takes nothing returns ability
-// 获取被释放技能的目标（点）
+// 事件响应 获取被释放技能的目标（点）
 // 会生成点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
-// 获取被释放技能的目标（点 X 坐标）
+// 事件响应 获取被释放技能的目标（点 X 坐标）
 constant native GetSpellTargetX takes nothing returns real
-// 获取被释放技能的目标（点 Y 坐标）
+// 事件响应 获取被释放技能的目标（点 Y 坐标）
 constant native GetSpellTargetY takes nothing returns real
-// 获取被释放技能的目标（可破坏物）
+// 事件响应 获取被释放技能的目标（可破坏物）
 constant native GetSpellTargetDestructable takes nothing returns destructable
-// 获取被释放技能的目标（物品）
+// 事件响应 获取被释放技能的目标（物品）
 constant native GetSpellTargetItem takes nothing returns item
-// 获取被释放技能的目标（单位）
+// 事件响应 获取被释放技能的目标（单位）
 constant native GetSpellTargetUnit takes nothing returns unit
 
-// 玩家联盟类型变更事件(特殊)
+// 触发器登记玩家联盟类型变更事件(特殊)
 native TriggerRegisterPlayerAllianceChange takes trigger whichTrigger, player whichPlayer, alliancetype whichAlliance returns event
-// 玩家状态事件
+// 触发器登记玩家状态事件
 native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichPlayer, playerstate whichState, limitop opcode, real limitval returns event
 
-// 获取玩家状态（对应设置玩家状态等事件）
+// 事件响应 获取玩家状态（对应设置玩家状态等事件）
 // EVENT_PLAYER_STATE_LIMIT
 constant native GetEventPlayerState takes nothing returns playerstate
 
-// 玩家输入聊天信息事件
+// 触发器登记玩家输入聊天信息事件
 // @param chatMessageToDetect输入的聊天信息，需使用""框住
 // @param exactMatchOnly输入的聊天信息是否需要完全匹配
 native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
 
 
-// 获取输入的聊天字符（对应玩家输入聊天信息等事件）
+// 事件响应 获取输入的聊天字符（对应玩家输入聊天信息等事件）
 // 返回实际输入的字串符，如需完全匹配，则返回指定的字串符
 // EVENT_PLAYER_CHAT
 // returns the actual string they typed in ( same as what you registered for
@@ -5075,7 +5075,7 @@ constant native GetEventPlayerChatString takes nothing returns string
 // returns the string that you registered for
 constant native GetEventPlayerChatStringMatched takes nothing returns string
 
-// 单位/物品/可破坏物死亡事件
+// 触发器登记单位/物品/可破坏物死亡事件
 native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
 
 
@@ -5085,24 +5085,24 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // returns handle to unit which triggered the most recent event when called from
 // within a trigger action function...returns null handle when used incorrectly
 
-// 获取触发单位
+// 事件响应 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
-// 单位状态事件
+// 触发器登记单位状态事件
 // @param whichState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
 
-// 获取单位状态（对应设置单位状态等事件）
+// 事件响应 获取单位状态（对应设置单位状态等事件）
 // EVENT_UNIT_STATE_LIMIT
 constant native GetEventUnitState takes nothing returns unitstate
 
-// 单位指定事件
+// 触发器登记单位指定事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
-// 获取被伤害后损失的生命值（对应单位受到伤害等事件）
+// 事件响应 获取被伤害后损失的生命值（对应单位受到伤害等事件）
 // EVENT_UNIT_DAMAGED
 constant native GetEventDamage takes nothing returns real
-// 获取造成伤害的单位（对应单位受到伤害等事件）
+// 事件响应 获取造成伤害的单位（对应单位受到伤害等事件）
 // EVENT_UNIT_DAMAGED
 constant native GetEventDamageSource takes nothing returns unit
 
@@ -5110,12 +5110,12 @@ constant native GetEventDamageSource takes nothing returns unit
 // EVENT_UNIT_DECAY
 // Use the GetDyingUnit and GetDecayingUnit funcs above
 
-// 获取事件检测到的玩家（对应检测到单位等事件）
+// 事件响应 获取事件检测到的玩家（对应检测到单位等事件）
 // EVENT_UNIT_DETECTED
 // EVENT_UNIT_DETECTED 
 constant native GetEventDetectingPlayer takes nothing returns player
 
-// 玩家单位事件
+// 事件响应 触发器登记玩家单位事件
 native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent, boolexpr filter returns event
 
 // 获取事件目标单位（对应单位获取到目标及目标进入单位获取范围等事件）
@@ -5155,7 +5155,7 @@ constant native GetEventTargetUnit takes nothing returns unit
 
 // See the Player Unit Order Event API above for event info funcs
 
-// 范围内单位事件
+// 触发器登记范围内单位事件
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
 // 添加触发器限制条件
