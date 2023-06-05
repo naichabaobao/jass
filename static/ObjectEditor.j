@@ -7318,7 +7318,7 @@ globals
                 // 技能命令串或ID 空中锁链
                 integer 852480
                 // 技能命令串或ID 凤凰烈焰(飞行单位)
-                integer a = 852481
+                integer 852481
                 // 技能命令串或ID 凤凰转换形态
                 integer 852482
                 // 技能命令串或ID 召唤凤凰
