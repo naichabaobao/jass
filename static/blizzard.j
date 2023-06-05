@@ -8819,7 +8819,7 @@ function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, in
 endfunction
 
 
-// <1.24> 保存可追踪对象
+// <1.24> 保存可追踪物
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
@@ -9122,7 +9122,7 @@ function LoadMultiboardItemHandleBJ takes integer key, integer missionKey, hasht
 endfunction
 
 
-// <1.24> 从哈希表提取可追踪对象
+// <1.24> 从哈希表提取可追踪物
 function LoadTrackableHandleBJ takes integer key, integer missionKey, hashtable table returns trackable
     return LoadTrackableHandle(table, missionKey, key)
 endfunction
