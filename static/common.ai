@@ -4,27 +4,28 @@
 
 // 显示指定文本
 native DebugS               takes string str                            returns nothing
-    // 显示指定文本，带1个数字
+    // 显示指定文本，带1个整数
     native DebugFI              takes string str, integer val               returns nothing
-    // 显示指定文本，带1个单位ID
+    // 显示指定文本，带1个单位ID（整数）
     native DebugUnitID          takes string str, integer val               returns nothing
     // 给指定玩家显示指定文本
     native DisplayText          takes integer p, string str                 returns nothing
-    // 给指定玩家显示指定文本，带1个数字
+    // 给指定玩家显示指定文本，带1个整数
     native DisplayTextI         takes integer p, string str, integer val    returns nothing
-    // 给指定玩家显示指定文本，带2个数字
+    // 给指定玩家显示指定文本，带2个整数
     native DisplayTextII        takes integer p, string str, integer v1, integer v2 returns nothing
-    // 给指定玩家显示指定文本，带3个数字
+    // 给指定玩家显示指定文本，带3个整数
     native DisplayTextIII       takes integer p, string str, integer v1, integer v2, integer v3 returns nothing
     // 查询AI脚本是否允许显示调试文本，以供开发者DEBUG
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
     // 在1.29及以上版本中，返回的是0~23中的一个整数，以下则是0~11
+    // 注：玩家1是0
     native GetAiPlayer          takes nothing                               returns integer
-    // 获取升级的英雄类型
+    // 获取升级英雄的单位类型
     // 英雄升级技能相关函数 
     native GetHeroId            takes nothing                               returns integer
-    // 获取英雄等级
+    // 获取升级英雄的等级
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
@@ -35,8 +36,8 @@ native DebugS               takes string str                            returns 
     // 获取AI玩家指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应类型的单位数
-    // @param tn基地编号，-1为不限
-    // @param dn是否包含训练/建造/研究中的单位/建筑/科技
+    // @param tn 基地编号，-1为不限
+    // @param dn 是否包含训练/建造/研究中的单位/建筑/科技
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
     // 获取指定单位/建筑类型的单位造价（金钱）
     native GetUnitGoldCost      takes integer unitid                        returns integer
@@ -58,10 +59,10 @@ native DebugS               takes string str                            returns 
     // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
     native TownWithMine         takes nothing                               returns integer
     // 查询指定编号的基地是否有金矿
-    // @param townid基地编号，-1为不限
+    // @param townid 基地编号，-1为不限
     native TownHasMine          takes integer townid                        returns boolean
     // 指定编号的基地是否拥有城镇（一、二或三本任意基地）
-    // @param townid基地编号，-1为不限
+    // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
     // 获取指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
@@ -91,8 +92,8 @@ native DebugS               takes string str                            returns 
     // 因单词为反召唤，怀疑可用于建造完成时卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
-    // @param peon指定工人单位
-    // @param id建造的城镇单位类型
+    // @param peon 指定工人单位
+    // @param id 建造的城镇单位类型
     native SetExpansion         takes unit peon, integer id                 returns boolean
     // 升级指定科技
     native SetUpgrade           takes integer id                            returns boolean
@@ -106,9 +107,9 @@ native DebugS               takes string str                            returns 
     native PurchaseZeppelin     takes nothing                               returns nothing
     // 训练/建造/研究指定指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
-    // @param a单位类型一
-    // @param b单位类型二
-    // @param make一和二合体成的单位类型
+    // @param a 单位类型一
+    // @param b 单位类型二
+    // @param make 一和二合体成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
     // 训练/建造/研究指定指定数量的变形单位类型
     // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
@@ -234,7 +235,7 @@ native DebugS               takes string str                            returns 
     native CreateCaptains       takes nothing                               returns nothing
     // 设置指定队长（攻击队长、防守队长、两种队长一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
-    // @param which攻击队长、防守队长或两种队长，即 1，2或3
+    // @param which 攻击队长、防守队长或两种队长，即 1，2或3
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
     // 命令攻击队长复位（回到 SetCaptainHome 的集结点）
     native ResetCaptainLocs     takes nothing                               returns nothing
@@ -282,9 +283,9 @@ native DebugS               takes string str                            returns 
     native SuicideUnit          takes integer count, integer unitid         returns nothing
     // 添加指定单位到自杀攻击组
     // 该指令被暴雪用于战役AI
-    // @param ct数量
-    // @param uid单位类型
-    // @param pid玩家编号
+    // @param ct 数量
+    // @param uid 单位类型
+    // @param pid 玩家编号
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始线程
     // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
