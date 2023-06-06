@@ -2432,31 +2432,31 @@ endfunction
 //***************************************************************************
 
 
-// 事件 时间周期（每N秒）
+// 事件 注册时间周期（每N秒）事件
 function TriggerRegisterTimerEventPeriodic takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, true)
 endfunction
 
 
-// 事件 游戏逝去的时间(游戏开始N秒)
+// 事件 注册游戏逝去的时间(游戏开始N秒)事件
 function TriggerRegisterTimerEventSingle takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, false)
 endfunction
 
 
-// 事件 计时器到期
+// 事件 注册计时器到期事件
 function TriggerRegisterTimerExpireEventBJ takes trigger trig, timer t returns event
     return TriggerRegisterTimerExpireEvent(trig, t)
 endfunction
 
 
-// 事件 玩家指定单位事件
+// 事件 注册玩家指定单位事件
 function TriggerRegisterPlayerUnitEventSimple takes trigger trig, player whichPlayer, playerunitevent whichEvent returns event
     return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, whichEvent, null)
 endfunction
 
 
-// 事件 玩家任意单位事件
+// 事件 注册玩家任意单位事件
 function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent whichEvent returns nothing
     local integer index
 
@@ -2470,7 +2470,7 @@ function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent which
 endfunction
 
 
-// 事件 玩家选择单位
+// 事件 注册玩家选择单位事件
 function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichPlayer, boolean selected returns event
     if selected then
         return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_SELECTED, null)
@@ -2480,7 +2480,7 @@ function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichP
 endfunction
 
 
-// 事件 玩家按下键盘
+// 事件 注册玩家按下键盘事件
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
     if (keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
@@ -2516,7 +2516,7 @@ function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer,
     endif
 endfunction
 
-// 事件 玩家按下鼠标
+// 事件 注册玩家按下鼠标事件
 function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
      if (meType == bj_MOUSEEVENTTYPE_DOWN) then
         // Mouse down event
@@ -2534,55 +2534,55 @@ function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlaye
 endfunction
 
 
-// 事件 玩家胜利
+// 事件 注册玩家胜利事件
 function TriggerRegisterPlayerEventVictory takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_VICTORY)
 endfunction
 
 
-// 事件 玩家失败
+// 事件 注册玩家失败事件事件
 function TriggerRegisterPlayerEventDefeat takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_DEFEAT)
 endfunction
 
 
-// 事件 玩家离开游戏
+// 事件 注册玩家离开游戏事件
 function TriggerRegisterPlayerEventLeave takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_LEAVE)
 endfunction
 
 
-// 事件 联盟状态更改(任何状态)
+// 事件 注册联盟状态变更(任何状态)事件
 function TriggerRegisterPlayerEventAllianceChanged takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ALLIANCE_CHANGED)
 endfunction
 
 
-// 事件 按下ESC键
+// 事件 注册按下ESC键事件
 function TriggerRegisterPlayerEventEndCinematic takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_END_CINEMATIC)
 endfunction
 
 
-// 事件 游戏时间改变
+// 事件 注册游戏时间改变事件
 function TriggerRegisterGameStateEventTimeOfDay takes trigger trig, limitop opcode, real limitval returns event
     return TriggerRegisterGameStateEvent(trig, GAME_STATE_TIME_OF_DAY, opcode, limitval)
 endfunction
 
 
-// 事件 任意单位进入不规则区域
+// 事件 注册任意单位进入不规则区域事件
 function TriggerRegisterEnterRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterEnterRegion(trig, whichRegion, null)
 endfunction
 
 
-// 事件 任意单位离开不规则区域
+// 事件 注册任意单位离开不规则区域事件
 function TriggerRegisterLeaveRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterLeaveRegion(trig, whichRegion, null)
 endfunction
 
 
-// 事件 单位进入矩形区域
+// 事件 注册单位进入矩形区域事件
 function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2590,7 +2590,7 @@ function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 事件 单位离开矩形区域
+// 事件 注册单位离开矩形区域事件
 function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2598,48 +2598,48 @@ function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 事件 两单位之间的距离变化
+// 事件 注册两单位（之间的）距离变化事件
 function TriggerRegisterDistanceBetweenUnits takes trigger trig, unit whichUnit, boolexpr condition, real range returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, condition)
 endfunction
 
 
-// 事件 单位接近指定单位
+// 事件 注册单位接近指定单位事件
 function TriggerRegisterUnitInRangeSimple takes trigger trig, real range, unit whichUnit returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, null)
 endfunction
 
 
-// 事件 单位生命值变化
+// 事件 注册单位生命值变化事件
 function TriggerRegisterUnitLifeEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_LIFE, opcode, limitval)
 endfunction
 
 
-// 事件 单位魔法值变化
+// 事件 注册单位魔法值变化事件
 function TriggerRegisterUnitManaEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_MANA, opcode, limitval)
 endfunction
 
 
-// 事件 对话框按钮点击
+// 事件 注册点击对话框按钮事件
 function TriggerRegisterDialogEventBJ takes trigger trig, dialog whichDialog returns event
     return TriggerRegisterDialogEvent(trig, whichDialog)
 endfunction
 
 
-// 事件 英雄学习技能按钮被点击
+// 事件 注册英雄学习技能按钮被点击事件
 function TriggerRegisterShowSkillEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SHOW_SKILL)
 endfunction
 
 
-// 事件 建造按钮被点击
+// 事件 注册建造按钮被点击事件
 function TriggerRegisterBuildSubmenuEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_BUILD_SUBMENU)
 endfunction
 
-// 事件 建造命令事件
+// 事件 注册建造单位事件
 function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId returns event
 	call TriggerRegisterCommandEvent(trig, 'ANbu', UnitId2String(unitId))
 	call TriggerRegisterCommandEvent(trig, 'AHbu', UnitId2String(unitId))
@@ -2649,35 +2649,35 @@ function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId r
     return TriggerRegisterCommandEvent(trig, 'AGbu', UnitId2String(unitId))
 endfunction
 
-// 事件 训练命令事件
+// 事件 注册训练单位事件
 function TriggerRegisterTrainCommandEventBJ takes trigger trig, integer unitId returns event
     return TriggerRegisterCommandEvent(trig, 'Aque', UnitId2String(unitId))
 endfunction
 
-// 事件 研究命令事件
+// 事件 注册研究科技事件
 function TriggerRegisterUpgradeCommandEventBJ takes trigger trig, integer techId returns event
     return TriggerRegisterUpgradeCommandEvent(trig, techId)
 endfunction
 
-// 事件 指定命令事件
+// 事件 注册命令事件
 function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order returns event
     return TriggerRegisterCommandEvent(trig, 0, order)
 endfunction
 
 
-// 事件 读取进度
+// 事件 注册读取进度事件
 function TriggerRegisterGameLoadedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_LOADED)
 endfunction
 
 
-// 事件 存档
+// 事件 注册存档事件
 function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SAVE)
 endfunction
 
 
-// 可破坏物在矩形区域内死亡触发器动作
+// 事件 注册可破坏物在矩形区域内死亡事件
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -2686,7 +2686,7 @@ function RegisterDestDeathInRegionEnum takes nothing returns nothing
 endfunction
 
 
-// 事件 可破坏物在矩形区域内死亡
+// 事件 可破坏物在矩形区域内死亡触发器
 function TriggerRegisterDestDeathInRegionEvent takes trigger trig, rect r returns nothing
     set bj_destInRegionDiesTrig = trig
     set bj_destInRegionDiesCount = 0
@@ -3964,31 +3964,31 @@ function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integ
 endfunction
 
 
-// 命令指定单位丢弃物品（指定坐标）
+// 发布丢弃物品指令（指定坐标）
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
 
 
-// 命令指定单位丢弃物品于（指定点）
+// 发布丢弃物品指令（指定点）
 function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
 
 
-// 命令指定单位放置物品于指定物品格
+// 发布移动物品指令（指定物品格）
 function UnitDropItemSlotBJ takes unit whichUnit, item whichItem, integer slot returns boolean
     return UnitDropItemSlot(whichUnit, whichItem, slot-1)
 endfunction
 
 
-// 命令指定单位丢弃物品（指定目标单位/物品/可破坏物）
+// 发布丢弃物品指令（指定目标单位/物品/可破坏物）
 function UnitDropItemTargetBJ takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitDropItemTarget(whichUnit, whichItem, target)
 endfunction
 
 
-// 命令指定单位使用物品（指定可破坏物）
+// 发布使用物品指令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
@@ -3997,7 +3997,7 @@ function UnitUseItemDestructable takes unit whichUnit, item whichItem, widget ta
 endfunction
 
 
-// 命令指定单位使用物品（指定点）
+// 发布使用物品指令（指定点）
 function UnitUseItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitUseItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -4215,19 +4215,19 @@ endfunction
 //***************************************************************************
 
 
-// 将单位类型转换为命令
+// 转换单位类型成命令ID
 function UnitId2OrderIdBJ takes integer unitId returns integer
     return unitId
 endfunction
 
 
-// 将单位类型转换为字符串
+// 转换字符串成单位类型
 function String2UnitIdBJ takes string unitIdString returns integer
     return UnitId(unitIdString)
 endfunction
 
 
-// 将单位转换为字符串
+// 转换单位类型成字符串
 function UnitId2StringBJ takes integer unitId returns string
     local string unitString = UnitId2String(unitId)
 
@@ -4240,7 +4240,7 @@ function UnitId2StringBJ takes integer unitId returns string
 endfunction
 
 
-// 将字符串转换为命令
+// 转换为命令串成命令ID
 function String2OrderIdBJ takes string orderIdString returns integer
     local integer orderId
     
@@ -4261,7 +4261,7 @@ function String2OrderIdBJ takes string orderIdString returns integer
 endfunction
 
 
-// 将命令转换为字符串
+// 转换命令ID成命令串
 function OrderId2StringBJ takes integer orderId returns string
     local string orderString
 
@@ -4282,7 +4282,7 @@ function OrderId2StringBJ takes integer orderId returns string
 endfunction
 
 
-// 获取发出的命令
+// 获取发布的命令ID
 function GetIssuedOrderIdBJ takes nothing returns integer
     return GetIssuedOrderId()
 endfunction
@@ -4517,7 +4517,7 @@ function SelectUnitRemove takes unit whichUnit returns nothing
 endfunction
 
 
-// 命令指定玩家取消选择单位
+// 取消选择单位（指定玩家）
 function ClearSelectionForPlayer takes player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4526,7 +4526,7 @@ function ClearSelectionForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 命令指定玩家取消选择指定单位
+// 取消选择单位（指定单位和玩家）
 function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4536,7 +4536,7 @@ function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer retu
 endfunction
 
 
-// 命令指定单位组取消选择指定单位组的指定单位
+// 取消选择单位（指定单位组和玩家）
 function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4546,7 +4546,7 @@ function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothin
 endfunction
 
 
-// 命令指定玩家选择指定单位
+// 选择单位（指定单位和玩家）
 function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4555,7 +4555,7 @@ function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns
 endfunction
 
 
-// 命令指定玩家取消选择指定单位
+// 取消选择单位（指定单位和玩家）
 function SelectUnitRemoveForPlayer takes unit whichUnit, player whichPlayer returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -4696,12 +4696,12 @@ function ShowUnitShow takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, true)
 endfunction
 
-// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
+// 发布建造闹鬼金矿指令（指定农民及金矿）触发器条件（匹配金矿）
 function IssueHauntOrderAtLocBJFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == 'ngol'
 endfunction
 
-// 发布建造闹鬼金矿命令（指定农民及金矿）
+// 发布建造闹鬼金矿指令（指定农民及金矿）
 function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boolean
     local group g = null
     local unit goldMine = null
@@ -4722,7 +4722,7 @@ function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boole
 endfunction
 
 
-// 发布命令到 建造建筑
+// 发布建造建筑ID指令（指定点）
 function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location loc returns boolean
     if (unitId == 'ugol') then
         return IssueHauntOrderAtLocBJ(whichPeon, loc)
@@ -4732,19 +4732,19 @@ function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location
 endfunction
 
 
-// 发布命令到 训练兵种/升级建筑
+// 发布训练兵种/升级建筑指令
 function IssueTrainOrderByIdBJ takes unit whichUnit, integer unitId returns boolean
     return IssueImmediateOrderById(whichUnit, unitId)
 endfunction
 
 
-// 发布单位组命令到 训练兵种/升级建筑
+// 发布单位组训练兵种/升级建筑指令
 function GroupTrainOrderByIdBJ takes group g, integer unitId returns boolean
     return GroupImmediateOrderById(g, unitId)
 endfunction
 
 
-// 发布命令到 研究科技
+// 发布研究科技指令
 function IssueUpgradeOrderByIdBJ takes unit whichUnit, integer techId returns boolean
     return IssueImmediateOrderById(whichUnit, techId)
 endfunction
@@ -9365,7 +9365,7 @@ function IsPlayerSlotState takes player whichPlayer, playerslotstate whichState 
 endfunction
 
 // 获取淡出时间（整数）
-// @param seconds不为0时返回 128 / R2I(seconds) ，为0时返回10000
+// @param seconds 不为0时返回 128 / R2I(seconds) ，为0时返回10000
 function GetFadeFromSeconds takes real seconds returns integer
     if (seconds != 0) then
         return 128 / R2I(seconds)
@@ -9374,7 +9374,7 @@ function GetFadeFromSeconds takes real seconds returns integer
 endfunction
 
 // 获取淡出时间（实数）
-// @param seconds不为0时返回 128.00 / R2I(seconds) ，为0时返回10000.00
+// @param seconds 不为0时返回 128.00 / R2I(seconds) ，为0时返回10000.00
 function GetFadeFromSecondsAsReal takes real seconds returns real
     if (seconds != 0) then
         return 128.00 / seconds
@@ -9416,7 +9416,7 @@ function SetPlayerFlagBJ takes playerstate whichPlayerFlag, boolean flag, player
 endfunction
 
 
-// 截留玩家收入 (税率)
+// 设置玩家税率
 function SetPlayerTaxRateBJ takes integer rate, playerstate whichResource, player sourcePlayer, player otherPlayer returns nothing
     call SetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource, rate)
 endfunction
@@ -9428,7 +9428,7 @@ function GetPlayerTaxRateBJ takes playerstate whichResource, player sourcePlayer
 endfunction
 
 
-// 玩家状态是允许的
+// 查询玩家状态是否为1（指定状态）
 function IsPlayerFlagSetBJ takes playerstate whichPlayerFlag, player whichPlayer returns boolean
     return GetPlayerState(whichPlayer, whichPlayerFlag) == 1
 endfunction
@@ -9514,7 +9514,7 @@ function SetPlayerColorBJEnum takes nothing returns nothing
 endfunction
 
 // 设置玩家颜色
-// @param changeExisting为真时设置
+// @param changeExisting 为真时设置
 function SetPlayerColorBJ takes player whichPlayer, playercolor color, boolean changeExisting returns nothing
     local group g
 
@@ -9545,23 +9545,23 @@ function LockGameSpeedBJ takes nothing returns nothing
 endfunction
 
 
-// 解锁游戏速度
+// 解除游戏速度锁定
 function UnlockGameSpeedBJ takes nothing returns nothing
     call SetMapFlag(MAP_LOCK_SPEED, false)
 endfunction
 
-// 发布单位命令到 指定单位
+// 发布单位指令（指定单位）
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令到 指定点
+// 发布单位指令（指定点）
 function IssuePointOrderLocBJ takes unit whichUnit, string order, location whichLocation returns boolean
     return IssuePointOrderLoc( whichUnit, order, whichLocation )
 endfunction
 
 
-// 发布单位命令到 可破坏物
+// 发布单位指令（可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
@@ -9569,33 +9569,33 @@ function IssueTargetDestructableOrder takes unit whichUnit, string order, widget
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令到 物品
+// 发布单位指令（物品）
 function IssueTargetItemOrder takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令 无目标
+// 发布单位指令（无目标）
 function IssueImmediateOrderBJ takes unit whichUnit, string order returns boolean
     return IssueImmediateOrder( whichUnit, order )
 endfunction
 
-// 发布单位组命令到 指定单位
+// 发布单位组指令（指定单位）
 function GroupTargetOrderBJ takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 发布单位组命令到 指定点
+// 发布单位组指令（指定点）
 function GroupPointOrderLocBJ takes group whichGroup, string order, location whichLocation returns boolean
     return GroupPointOrderLoc( whichGroup, order, whichLocation )
 endfunction
 
-// 发布单位组命令 无目标
+// 发布单位组指令（无目标）
 function GroupImmediateOrderBJ takes group whichGroup, string order returns boolean
     return GroupImmediateOrder( whichGroup, order )
 endfunction
 
 
-// 发布单位组命令到 可破坏物
+// 发布单位组指令（可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
@@ -9603,13 +9603,13 @@ function GroupTargetDestructableOrder takes group whichGroup, string order, widg
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 发布单位组命令到 物品
+// 发布单位组指令（物品）
 function GroupTargetItemOrder takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
 
-// 垂死的可破坏物
+// 获取死亡的可破坏物
 function GetDyingDestructable takes nothing returns destructable
     return GetTriggerDestructable()
 endfunction
