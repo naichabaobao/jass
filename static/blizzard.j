@@ -10424,7 +10424,7 @@ endfunction
 
 
 // 创建初始单位（指定玩家及种族）
-// 默认只支持创建4大对战种族的初始单位，其他种族使用该命令无效
+// 默认只支持创建4大对战种族的初始单位，其他种族无效
 function MeleeStartingUnitsForPlayer takes race whichRace, player whichPlayer, location loc, boolean doHeroes returns nothing
     // Create initial race-specific starting units
     if (whichRace == RACE_HUMAN) then
