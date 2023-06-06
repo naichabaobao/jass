@@ -3976,7 +3976,7 @@ function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc
 endfunction
 
 
-// 发布移动物品指令（指定物品格）
+// 发布移动物品指令（指定物品栏格数）
 function UnitDropItemSlotBJ takes unit whichUnit, item whichItem, integer slot returns boolean
     return UnitDropItemSlot(whichUnit, whichItem, slot-1)
 endfunction
