@@ -4768,7 +4768,7 @@ function SetUnitTurnSpeedBJ takes unit whichUnit, real turnSpeed returns nothing
 endfunction
 
 
-// 设置单位头像视窗角度
+// 设置单位转向角度
 function SetUnitPropWindowBJ takes unit whichUnit, real propWindow returns nothing
     local real angle = propWindow
     if (angle <= 0) then
@@ -4782,13 +4782,13 @@ function SetUnitPropWindowBJ takes unit whichUnit, real propWindow returns nothi
 endfunction
 
 
-// 获取单位在头像窗口的角度 (当前)
+// 获取单位默认转向角度 (当前值)
 function GetUnitPropWindowBJ takes unit whichUnit returns real
     return GetUnitPropWindow(whichUnit) * bj_RADTODEG
 endfunction
 
 
-// 获取单位在头像窗口的角度 (默认)
+// 获取单位头像视窗默认转向角度 (默认值)
 function GetUnitDefaultPropWindowBJ takes unit whichUnit returns real
     return GetUnitDefaultPropWindow(whichUnit)
 endfunction
@@ -4800,13 +4800,13 @@ function SetUnitBlendTimeBJ takes unit whichUnit, real blendTime returns nothing
 endfunction
 
 
-// 设置主动攻击范围
+// 设置单位主动攻击范围
 function SetUnitAcquireRangeBJ takes unit whichUnit, real acquireRange returns nothing
     call SetUnitAcquireRange(whichUnit, acquireRange)
 endfunction
 
 
-// 设置单位睡觉(在晚上)
+// 设置单位(晚上)睡觉
 function UnitSetCanSleepBJ takes unit whichUnit, boolean canSleep returns nothing
     call UnitAddSleep(whichUnit, canSleep)
 endfunction
