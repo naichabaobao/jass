@@ -5671,24 +5671,24 @@ function ForGroupBJ takes group whichGroup, code callback returns nothing
 endfunction
 
 
-// 增加单位到单位组
+// 将指定单位添加到单位组
 function GroupAddUnitSimple takes unit whichUnit, group whichGroup returns nothing
     call GroupAddUnit(whichGroup, whichUnit)
 endfunction
 
 
-// 从单位组清除单位
+// 将指定单位移出单位组
 function GroupRemoveUnitSimple takes unit whichUnit, group whichGroup returns nothing
     call GroupRemoveUnit(whichGroup, whichUnit)
 endfunction
 
 
-// 增加单位组到单位组触发器动作
+// 增加选取单位到单位组触发器动作
 function GroupAddGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupAddGroupDest, GetEnumUnit())
 endfunction
 
-// 增加 sourceGroup单位组中的单位 到 destGroup单位组
+// 往 destGroup单位组 添加 sourceGroup单位组 的单位
 function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5705,12 +5705,12 @@ function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
 endfunction
 
 
-// 清除单位组从单位组触发器动作
+// 将指定单位移出单位组触发器动作
 function GroupRemoveGroupEnum takes nothing returns nothing
     call GroupRemoveUnit(bj_groupRemoveGroupDest, GetEnumUnit())
 endfunction
 
-// 将 sourceGroup单位组中的单位 从 destGroup单位组 中清除
+// 从 destGroup单位组 中移除 sourceGroup单位组 的单位
 function GroupRemoveGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
