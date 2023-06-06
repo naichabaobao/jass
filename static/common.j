@@ -4433,7 +4433,7 @@ native CreateGroup takes nothing returns group
 native DestroyGroup takes group whichGroup returns nothing
 // 将指定单位添加到单位组中 [R]
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
-// 将指定单位移出单位组 [R]
+// 将指定单位移除单位组 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
 // 往 addGroup单位组 添加 whichGroup单位组 的单位 [快速]
 // @version 1.33
