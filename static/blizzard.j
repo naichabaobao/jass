@@ -2432,31 +2432,31 @@ endfunction
 //***************************************************************************
 
 
-// 事件 注册时间周期（每N秒）事件
+// 时间周期（每N秒）事件
 function TriggerRegisterTimerEventPeriodic takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, true)
 endfunction
 
 
-// 事件 注册游戏逝去的时间(游戏开始N秒)事件
+// 游戏逝去的时间(游戏开始N秒)事件
 function TriggerRegisterTimerEventSingle takes trigger trig, real timeout returns event
     return TriggerRegisterTimerEvent(trig, timeout, false)
 endfunction
 
 
-// 事件 注册计时器到期事件
+// 计时器到期事件
 function TriggerRegisterTimerExpireEventBJ takes trigger trig, timer t returns event
     return TriggerRegisterTimerExpireEvent(trig, t)
 endfunction
 
 
-// 事件 注册玩家指定单位事件
+// 玩家指定单位事件
 function TriggerRegisterPlayerUnitEventSimple takes trigger trig, player whichPlayer, playerunitevent whichEvent returns event
     return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, whichEvent, null)
 endfunction
 
 
-// 事件 注册玩家任意单位事件
+// 任意单位事件
 function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent whichEvent returns nothing
     local integer index
 
@@ -2470,7 +2470,7 @@ function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent which
 endfunction
 
 
-// 事件 注册玩家选择单位事件
+// 玩家选择单位事件
 function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichPlayer, boolean selected returns event
     if selected then
         return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_SELECTED, null)
@@ -2480,7 +2480,7 @@ function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichP
 endfunction
 
 
-// 事件 注册玩家按下键盘事件
+// 玩家按下键盘事件
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
     if (keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
@@ -2516,7 +2516,7 @@ function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer,
     endif
 endfunction
 
-// 事件 注册玩家按下鼠标事件
+// 玩家按下鼠标事件
 function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
      if (meType == bj_MOUSEEVENTTYPE_DOWN) then
         // Mouse down event
@@ -2534,55 +2534,55 @@ function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlaye
 endfunction
 
 
-// 事件 注册玩家胜利事件
+// 玩家胜利事件
 function TriggerRegisterPlayerEventVictory takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_VICTORY)
 endfunction
 
 
-// 事件 注册玩家失败事件事件
+// 玩家失败事件事件
 function TriggerRegisterPlayerEventDefeat takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_DEFEAT)
 endfunction
 
 
-// 事件 注册玩家离开游戏事件
+// 玩家离开游戏事件
 function TriggerRegisterPlayerEventLeave takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_LEAVE)
 endfunction
 
 
-// 事件 注册联盟状态变更(任何状态)事件
+// 联盟状态变更(任何状态)事件
 function TriggerRegisterPlayerEventAllianceChanged takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ALLIANCE_CHANGED)
 endfunction
 
 
-// 事件 注册按下ESC键事件
+// 按下ESC键事件
 function TriggerRegisterPlayerEventEndCinematic takes trigger trig, player whichPlayer returns event
     return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_END_CINEMATIC)
 endfunction
 
 
-// 事件 注册游戏时间改变事件
+// 游戏时间改变事件
 function TriggerRegisterGameStateEventTimeOfDay takes trigger trig, limitop opcode, real limitval returns event
     return TriggerRegisterGameStateEvent(trig, GAME_STATE_TIME_OF_DAY, opcode, limitval)
 endfunction
 
 
-// 事件 注册任意单位进入不规则区域事件
+// 任意单位进入不规则区域事件
 function TriggerRegisterEnterRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterEnterRegion(trig, whichRegion, null)
 endfunction
 
 
-// 事件 注册任意单位离开不规则区域事件
+// 任意单位离开不规则区域事件
 function TriggerRegisterLeaveRegionSimple takes trigger trig, region whichRegion returns event
     return TriggerRegisterLeaveRegion(trig, whichRegion, null)
 endfunction
 
 
-// 事件 注册单位进入矩形区域事件
+// 单位进入矩形区域事件
 function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2590,7 +2590,7 @@ function TriggerRegisterEnterRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 事件 注册单位离开矩形区域事件
+// 单位离开矩形区域事件
 function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
     local region rectRegion = CreateRegion()
     call RegionAddRect(rectRegion, r)
@@ -2598,48 +2598,48 @@ function TriggerRegisterLeaveRectSimple takes trigger trig, rect r returns event
 endfunction
 
 
-// 事件 注册两单位（之间的）距离变化事件
+// 两单位（之间的）距离变化事件
 function TriggerRegisterDistanceBetweenUnits takes trigger trig, unit whichUnit, boolexpr condition, real range returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, condition)
 endfunction
 
 
-// 事件 注册单位接近指定单位事件
+// 单位接近指定单位事件
 function TriggerRegisterUnitInRangeSimple takes trigger trig, real range, unit whichUnit returns event
     return TriggerRegisterUnitInRange(trig, whichUnit, range, null)
 endfunction
 
 
-// 事件 注册单位生命值变化事件
+// 单位生命值变化事件
 function TriggerRegisterUnitLifeEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_LIFE, opcode, limitval)
 endfunction
 
 
-// 事件 注册单位魔法值变化事件
+// 单位魔法值变化事件
 function TriggerRegisterUnitManaEvent takes trigger trig, unit whichUnit, limitop opcode, real limitval returns event
     return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_MANA, opcode, limitval)
 endfunction
 
 
-// 事件 注册点击对话框按钮事件
+// 点击对话框按钮事件
 function TriggerRegisterDialogEventBJ takes trigger trig, dialog whichDialog returns event
     return TriggerRegisterDialogEvent(trig, whichDialog)
 endfunction
 
 
-// 事件 注册英雄学习技能按钮被点击事件
+// 英雄学习技能按钮被点击事件
 function TriggerRegisterShowSkillEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SHOW_SKILL)
 endfunction
 
 
-// 事件 注册建造按钮被点击事件
+// 建造按钮被点击事件
 function TriggerRegisterBuildSubmenuEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_BUILD_SUBMENU)
 endfunction
 
-// 事件 注册建造单位事件
+// 建造单位事件
 function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId returns event
 	call TriggerRegisterCommandEvent(trig, 'ANbu', UnitId2String(unitId))
 	call TriggerRegisterCommandEvent(trig, 'AHbu', UnitId2String(unitId))
@@ -2649,35 +2649,35 @@ function TriggerRegisterBuildCommandEventBJ takes trigger trig, integer unitId r
     return TriggerRegisterCommandEvent(trig, 'AGbu', UnitId2String(unitId))
 endfunction
 
-// 事件 注册训练单位事件
+// 训练单位事件
 function TriggerRegisterTrainCommandEventBJ takes trigger trig, integer unitId returns event
     return TriggerRegisterCommandEvent(trig, 'Aque', UnitId2String(unitId))
 endfunction
 
-// 事件 注册研究科技事件
+// 研究科技事件
 function TriggerRegisterUpgradeCommandEventBJ takes trigger trig, integer techId returns event
     return TriggerRegisterUpgradeCommandEvent(trig, techId)
 endfunction
 
-// 事件 注册命令事件
+// 命令事件
 function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order returns event
     return TriggerRegisterCommandEvent(trig, 0, order)
 endfunction
 
 
-// 事件 注册读取进度事件
+// 读取进度事件
 function TriggerRegisterGameLoadedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_LOADED)
 endfunction
 
 
-// 事件 注册存档事件
+// 存档事件
 function TriggerRegisterGameSavedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_SAVE)
 endfunction
 
 
-// 事件 注册可破坏物在矩形区域内死亡事件
+// 矩形区域内可破坏物死亡事件动作
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
     if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
@@ -2686,7 +2686,7 @@ function RegisterDestDeathInRegionEnum takes nothing returns nothing
 endfunction
 
 
-// 事件 可破坏物在矩形区域内死亡触发器
+// 矩形区域内可破坏物死亡事件
 function TriggerRegisterDestDeathInRegionEvent takes trigger trig, rect r returns nothing
     set bj_destInRegionDiesTrig = trig
     set bj_destInRegionDiesCount = 0
