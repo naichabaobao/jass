@@ -5166,19 +5166,20 @@ native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, re
 
 // 添加触发器限制条件
 native TriggerAddCondition takes trigger whichTrigger, boolexpr condition returns triggercondition
-// 移除触发器限制条件
+// 删除触发器限制条件
 native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
 // 清空触发器限制条件
+// 排泄需使用删除触发器条件 TriggerRemoveCondition，而非清空
 native TriggerClearConditions takes trigger whichTrigger returns nothing
 
 // 添加触发器动作
 native TriggerAddAction takes trigger whichTrigger, code actionFunc returns triggeraction
-// 移除触发器动作
+// 删除触发器动作
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
 // 清空触发器动作
-// 排泄需使用移除触发器动作 TriggerRemoveAction，而非清空
+// 排泄需使用删除触发器动作 TriggerRemoveAction，而非清空
 native TriggerClearActions takes trigger whichTrigger returns nothing
-// 等待（指定时间）
+// 等待动作（指定时间）
 native TriggerSleepAction takes real timeout returns nothing
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
@@ -5191,7 +5192,7 @@ native TriggerExecute takes trigger whichTrigger returns nothing
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
 native TriggerSyncStart takes nothing returns nothing
-// 触发器同步完成
+// 触发器同步准备完成
 native TriggerSyncReady takes nothing returns nothing
 
 
