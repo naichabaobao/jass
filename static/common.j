@@ -4631,7 +4631,7 @@ native GetWorldBounds takes nothing returns rect
 
 // 新建触发器 [R]
 native CreateTrigger takes nothing returns trigger
-// 删除触发器 [R]
+// 销毁触发器 [R]
 native DestroyTrigger takes trigger whichTrigger returns nothing
 // 重置触发器
 native ResetTrigger takes trigger whichTrigger returns nothing
