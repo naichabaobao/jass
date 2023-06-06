@@ -5540,7 +5540,7 @@ native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品指令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 发布移动物品到指定物品栏格数指令（指定单位） [R]
+// 发布移动物品指令（指定物品栏格数） [R]
 // @param slot 物品栏格数：0-5
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 发布丢弃物品指令（指定单位和目标单位/物品/可破坏物） [R]
