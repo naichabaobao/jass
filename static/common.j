@@ -640,7 +640,7 @@ globals
 	constant animtype ANIM_TYPE_SLEEP = ConvertAnimType(8)
 	// 动画类型 - 施法
 	constant animtype ANIM_TYPE_SPELL = ConvertAnimType(9)
-	// 动画类型 - 头像窗口
+	// 动画类型 - 头像视窗
 	constant animtype ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
 	// 子动画类型 - 扎根（古树）
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
@@ -5396,7 +5396,7 @@ native GetUnitFlyHeight takes unit whichUnit returns real
 native GetUnitDefaultAcquireRange takes unit whichUnit returns real
 // 获取指定单位转身速度 (默认值)
 native GetUnitDefaultTurnSpeed takes unit whichUnit returns real
-// 获取指定单位转向角度(默认值)
+// 获取指定单位（头像视窗）转向角度(默认值)
 native GetUnitDefaultPropWindow takes unit whichUnit returns real
 // 获取指定单位飞行高度 (默认值)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
