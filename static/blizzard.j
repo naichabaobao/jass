@@ -1071,15 +1071,15 @@ globals
     integer            bj_groupEnumTypeId          = 0
     // 获取玩家在指定矩形区域中的单位，指定的玩家
     player             bj_groupEnumOwningPlayer    = null
-    // 指代往 A单位组 添加 B单位组 单位完成后，需要摧毁的单位组
+    // 指代往 A单位组 添加 B单位组 单位完成后，需要销毁的单位组
     group              bj_groupAddGroupDest        = null
-    // 指代 A单位组 移除 B单位组 单位完成后，需要摧毁的单位组
+    // 指代 A单位组 移除 B单位组 单位完成后，需要销毁的单位组
     group              bj_groupRemoveGroupDest     = null
     // 获取单位组中随机单位，统计单位组内的单位数量
     integer            bj_groupRandomConsidered    = 0
     // 获取单位组随机单位返回的单位
     unit               bj_groupRandomCurrentPick   = null
-    // 最后创建且需要摧毁的单位组
+    // 最后创建且需要销毁的单位组
     group              bj_groupLastCreatedDest     = null
     // 随机选取单位组中的单位，返回的新单位组
     group              bj_randomSubGroupGroup      = null
@@ -6226,13 +6226,13 @@ function GetLastCreatedButtonBJ takes nothing returns button
 endfunction
 
 
-// 事件响应: 单击对话按钮
+// 事件响应: 单击对话框按钮
 function GetClickedButtonBJ takes nothing returns button
     return GetClickedButton()
 endfunction
 
 
-// 事件响应 - 单击对话
+// 事件响应 - 单击对话框
 function GetClickedDialogBJ takes nothing returns dialog
     return GetClickedDialog()
 endfunction
@@ -6374,7 +6374,7 @@ function SetForceAllianceStateBJ takes force sourceForce, force targetForce, int
 endfunction
 
 
-// 玩家组是否相互联盟（被动联盟，互不侵犯）
+// 查询玩家组是否相互联盟（被动联盟，互不侵犯）
 // Test to see if two players are co-allied (allied with each other).
 function PlayersAreCoAllied takes player playerA, player playerB returns boolean
     // Players are considered to be allied with themselves.
@@ -6485,7 +6485,7 @@ function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 盟友玩家的单位全部移交给中立被动玩家控制
+// 设置盟友玩家的单位全部移交给中立被动玩家控制
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForTeam takes player whichPlayer returns nothing
     local integer playerIndex
@@ -6523,7 +6523,7 @@ function EndGameBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
 
-// 对战胜利对话框
+// 显示对战胜利对话框
 function MeleeVictoryDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6548,7 +6548,7 @@ function MeleeVictoryDialogBJ takes player whichPlayer, boolean leftGame returns
     call StartSoundForPlayerBJ( whichPlayer, bj_victoryDialogSound )
 endfunction
 
-// 对战失败对话框
+// 显示对战失败对话框
 function MeleeDefeatDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6577,7 +6577,7 @@ function MeleeDefeatDialogBJ takes player whichPlayer, boolean leftGame returns 
     call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
 endfunction
 
-// 游戏结束
+// 显示游戏结束对话框
 function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6619,7 +6619,7 @@ function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult 
     endif
 endfunction
 
-// 游戏胜利对话框事件，继续
+// 游戏胜利对话框事件-继续
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call 
@@ -6635,7 +6635,7 @@ function CustomVictoryOkBJ takes nothing returns nothing
     endif
 endfunction
 
-// 游戏胜利对话框事件，退出
+// 游戏胜利对话框事件-退出
 function CustomVictoryQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6646,7 +6646,7 @@ function CustomVictoryQuitBJ takes nothing returns nothing
     call EndGame( bj_changeLevelShowScores )
 endfunction
 
-// 游戏胜利，显示对话框（继续，退出）
+// 游戏胜利，显示对话框-继续&退出
 function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6738,13 +6738,13 @@ function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     call RestartGame( true )
 endfunction
 
-// 游戏失败对话框按钮事件，选择存档
+// 游戏失败对话框按钮事件-选择存档
 function CustomDefeatLoadBJ takes nothing returns nothing
     call PauseGame( false )
     call DisplayLoadDialog()
 endfunction
 
-// 游戏失败对话框按钮事件，退出游戏
+// 游戏失败对话框按钮事件-退出游戏
 function CustomDefeatQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame( false )
@@ -6755,7 +6755,7 @@ function CustomDefeatQuitBJ takes nothing returns nothing
     call EndGame( true )
 endfunction
 
-// 游戏失败对话框（重新开始，选择难度，退出）
+// 游戏失败对话框-重新开始&选择难度&退出
 function CustomDefeatDialogBJ takes player whichPlayer, string message returns nothing
     local trigger t = CreateTrigger()
     local dialog  d = DialogCreate()
@@ -6813,7 +6813,7 @@ function CustomDefeatBJ takes player whichPlayer, string message returns nothing
 endfunction
 
 
-// 设置下一张地图
+// 设置下一张/关地图，用于战役
 function SetNextLevelBJ takes string nextLevel returns nothing
     if (nextLevel == "") then
         set bj_changeLevelMapName = null
@@ -7061,7 +7061,7 @@ function CreateTimerBJ takes boolean periodic, real timeout returns timer
     return bj_lastStartedTimer
 endfunction
 
-// 摧毁计时器
+// 销毁计时器
 function DestroyTimerBJ takes timer whichTimer returns nothing
     call DestroyTimer(whichTimer)
 endfunction
@@ -8082,7 +8082,7 @@ function GetLastTransmissionDurationBJ takes nothing returns real
 endfunction
 
 
-// 开启/关闭 电影字幕显示功能
+// 开启/关闭 电影字幕显示
 function ForceCinematicSubtitlesBJ takes boolean flag returns nothing
     call ForceCinematicSubtitles(flag)
 endfunction
@@ -8114,7 +8114,7 @@ endfunction
 //   - Reset the camera smoothing factor
 //
 
-// 切换影片模式(时间)
+// 切换影片模式(指定玩家组)
 // @param interfaceFadeTime淡出时间
 // 注意：某些影响会作用于所有玩家
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
@@ -8201,7 +8201,7 @@ function DisplayCineFilterBJ takes boolean flag returns nothing
     call DisplayCineFilter(flag)
 endfunction
 
-// 电影淡出滤镜
+// 电影 淡出滤镜
 function CinematicFadeCommonBJ takes real red, real green, real blue, real duration, string tex, real startTrans, real endTrans returns nothing
     if (duration == 0) then
         // If the fade is instant, use the same starting and ending values,
@@ -8220,7 +8220,7 @@ function CinematicFadeCommonBJ takes real red, real green, real blue, real durat
     call DisplayCineFilter(true)
 endfunction
 
-// 电影结束淡出滤镜触发器动作
+// 电影 结束淡出滤镜触发器动作
 function FinishCinematicFadeBJ takes nothing returns nothing
     call DestroyTimer(bj_cineFadeFinishTimer)
     set bj_cineFadeFinishTimer = null
@@ -8228,21 +8228,21 @@ function FinishCinematicFadeBJ takes nothing returns nothing
     call EnableUserUI(true)
 endfunction
 
-// 电影结束淡出滤镜
+// 电影 结束淡出滤镜
 function FinishCinematicFadeAfterBJ takes real duration returns nothing
     // Create a timer to end the cinematic fade.
     set bj_cineFadeFinishTimer = CreateTimer()
     call TimerStart(bj_cineFadeFinishTimer, duration, false, function FinishCinematicFadeBJ)
 endfunction
 
-// 电影持续淡出滤镜触发器动作
+// 电影 持续淡出滤镜触发器动作
 function ContinueCinematicFadeBJ takes nothing returns nothing
     call DestroyTimer(bj_cineFadeContinueTimer)
     set bj_cineFadeContinueTimer = null
     call CinematicFadeCommonBJ(bj_cineFadeContinueRed, bj_cineFadeContinueGreen, bj_cineFadeContinueBlue, bj_cineFadeContinueDuration, bj_cineFadeContinueTex, bj_cineFadeContinueTrans, 100)
 endfunction
 
-// 电影持续淡出滤镜
+// 电影 持续淡出滤镜
 function ContinueCinematicFadeAfterBJ takes real duration, real red, real green, real blue, real trans, string tex returns nothing
     set bj_cineFadeContinueRed = red
     set bj_cineFadeContinueGreen = green
@@ -8256,7 +8256,7 @@ function ContinueCinematicFadeAfterBJ takes real duration, real red, real green,
     call TimerStart(bj_cineFadeContinueTimer, duration, false, function ContinueCinematicFadeBJ)
 endfunction
 
-// 电影中断淡出滤镜
+// 电影 中断淡出滤镜
 function AbortCinematicFadeBJ takes nothing returns nothing
     if (bj_cineFadeContinueTimer != null) then
         call DestroyTimer(bj_cineFadeContinueTimer)
@@ -8268,7 +8268,7 @@ function AbortCinematicFadeBJ takes nothing returns nothing
 endfunction
 
 
-// 淡入淡出滤镜
+// 电影 淡入淡出滤镜
 function CinematicFadeBJ takes integer fadetype, real duration, string tex, real red, real green, real blue, real trans returns nothing
     if (fadetype == bj_CINEFADETYPE_FADEOUT) then
         // Fade out to the requested color.
@@ -8293,7 +8293,7 @@ function CinematicFadeBJ takes integer fadetype, real duration, string tex, real
 endfunction
 
 
-// 设置滤镜（高级）
+// 电影 设置滤镜（高级）
 function CinematicFilterGenericBJ takes real duration, blendmode bmode, string tex, real red0, real green0, real blue0, real trans0, real red1, real green1, real blue1, real trans1 returns nothing
     call AbortCinematicFadeBJ()
     call SetCineFilterTexture(tex)
@@ -9346,14 +9346,14 @@ function GetPlayerStartLocationY takes player whichPlayer returns real
 endfunction
 
 
-// 玩家的初始位置
+// 获取玩家的初始位置
 // 会生成点，用完请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 
-// 区域中心
+// 获取区域中心（指定区域）
 // 会生成点，用完请注意排泄
 function GetRectCenter takes rect whichRect returns location
     return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
@@ -9422,7 +9422,7 @@ function SetPlayerTaxRateBJ takes integer rate, playerstate whichResource, playe
 endfunction
 
 
-// 获得玩家税率
+// 获取玩家税率
 function GetPlayerTaxRateBJ takes playerstate whichResource, player sourcePlayer, player otherPlayer returns integer
     return GetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource)
 endfunction
@@ -9446,25 +9446,25 @@ function GetConvertedPlayerId takes player whichPlayer returns integer
 endfunction
 
 
-// 将玩家索引转换为玩家
+// 转换玩家索引成玩家
 function ConvertedPlayer takes integer convertedPlayerId returns player
     return Player(convertedPlayerId - 1)
 endfunction
 
 
-// 获取区域宽度
+// 获取区域宽度（指定区域）
 function GetRectWidthBJ takes rect r returns real
     return GetRectMaxX(r) - GetRectMinX(r)
 endfunction
 
 
-// 区域高度
+// 获取区域高度（指定区域）
 function GetRectHeightBJ takes rect r returns real
     return GetRectMaxY(r) - GetRectMinY(r)
 endfunction
 
 
-// 将指定金矿替换为指定玩家的不死族金矿
+// 替换指定金矿为指定玩家的不死族金矿
 // Replaces a gold mine with a blighted gold mine for the given player.
 function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer returns unit
     local real    mineX
@@ -9489,7 +9489,7 @@ function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer retur
     return newMine
 endfunction
 
-// 将指定金矿替换为指定玩家的不死族金矿，并获取该单位
+// 替换指定金矿为指定玩家的不死族金矿，并使用最后替换的金矿变量获取该单位
 function BlightGoldMineForPlayer takes unit goldMine, player whichPlayer returns unit
     set bj_lastHauntedGoldMine = BlightGoldMineForPlayerBJ(goldMine, whichPlayer)
     return bj_lastHauntedGoldMine
@@ -9502,7 +9502,7 @@ function GetLastHauntedGoldMine takes nothing returns unit
 endfunction
 
 
-// 指定点是否被荒芜地表（不死族）覆盖
+// 查询指定点是否被荒芜地表（不死族）覆盖
 function IsPointBlightedBJ takes location where returns boolean
     return IsPointBlighted(GetLocationX(where), GetLocationY(where))
 endfunction
@@ -9739,7 +9739,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
 endfunction
 
 
-// 英雄数量限制
+// 设置英雄数量限制
 function MeleeStartingHeroLimit takes nothing returns nothing
     local integer index
 
@@ -9797,7 +9797,8 @@ function MeleeTrainedUnitIsHeroBJFilter takes nothing returns boolean
 endfunction
 
 
-// 给指定单位创建初始物品（回程卷轴）
+// 创建初始物品（指定单位）
+// 物品为回城卷轴
 // 该程序会自动判断已创建初始物品的次数，确保不会超限
 // The first N heroes trained or hired for each player start off with a
 // standard set of items.  This is currently:
@@ -9812,18 +9813,21 @@ function MeleeGrantItemsToHero takes unit whichUnit returns nothing
     endif
 endfunction
 
-// 给英雄创建初始物品（祭坛训练的英雄）
+// 创建初始物品（祭坛训练的英雄）
+// 物品为回城卷轴
 function MeleeGrantItemsToTrainedHero takes nothing returns nothing
     call MeleeGrantItemsToHero(GetTrainedUnit())
 endfunction
 
-// 给英雄创建初始物品（酒馆购买的英雄）
+// 创建初始物品（酒馆购买的英雄）
+// 物品为回城卷轴
 function MeleeGrantItemsToHiredHero takes nothing returns nothing
     call MeleeGrantItemsToHero(GetSoldUnit())
 endfunction
 
 
-// 给予首发英雄初始物品
+// 创建初始物品（首发英雄）
+// 物品为回城卷轴
 function MeleeGrantHeroItems takes nothing returns nothing
     local integer index
     local trigger trig
@@ -9928,7 +9932,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 寻找玩家出生点附近的金矿
+// 搜索玩家出生点附近的金矿触发器动作
 function MeleeEnumFindNearestMine takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
     local real dist
@@ -9947,7 +9951,7 @@ function MeleeEnumFindNearestMine takes nothing returns nothing
     endif
 endfunction
 
-// 寻找玩家出生点附近的金矿
+// 搜索玩家出生点附近的金矿触发器
 // 主要用于对战初始化时创建被缠绕的金矿或闹鬼金矿
 function MeleeFindNearestMine takes location src, real range returns unit
     local group nearbyMines
@@ -10118,7 +10122,8 @@ endfunction
 //   - 1 Great Hall, placed at start location
 //   - 5 Peons, placed between start location and nearest gold mine
 
-// 在玩家出生点创建初始单位 - 兽族
+// 创建初始单位 - 兽族
+// 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10192,7 +10197,8 @@ endfunction
 //   - 1 Ghoul, placed between start location and nearest gold mine
 //   - Blight, centered on nearest gold mine, spread across a "large area"
 
-// 在玩家出生点创建初始单位 - 亡灵
+// 创建初始单位 - 亡灵
+// 创建点 - 玩家出生点
 // 默认包含3个农民，1个食尸鬼，一个一本基地，一座闹鬼金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10278,7 +10284,8 @@ endfunction
 //   - 1 Tree of Life, placed by nearest gold mine, already entangled
 //   - 5 Wisps, placed between Tree of Life and nearest gold mine
 
-// 在玩家出生点创建初始单位 - 暗夜
+// 创建初始单位 - 暗夜
+// 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，一座被缠绕的金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
@@ -10358,9 +10365,10 @@ endfunction
 // Starting Units for Players Whose Race is Unknown
 //   - 12 Sheep, placed randomly around the start location
 
-// 在玩家出生点创建初始单位 - 未知种族
+// 创建初始单位 - 未知种族
+// 创建点 - 玩家出生点
 // 默认包含12只绵羊，是的，12只绵羊（'nshe'）
-// 如果是重置版，建议手动改为24只，这属于官方BUG
+// 如果是1.29或以上版本，建议手动改为24只，这属于官方BUG
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
@@ -10448,7 +10456,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 选择对战AI
+// 选择并运行对战AI，用于多个AI脚本时随机分配不同的AI
 // @params1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
@@ -11209,7 +11217,7 @@ function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
 endfunction
 
 
-// 玩家是否真人
+// 查询玩家是否真人
 function MeleeWasUserPlayer takes player whichPlayer returns boolean
     local playerslotstate slotState
 
@@ -11528,17 +11536,17 @@ function TeamInitPlayerSlots takes integer teamCount returns nothing
     endloop
 endfunction
 
-// 玩家队伍 混战
+// 设置玩家队伍（混战）
 function MeleeInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(bj_MAX_PLAYERS)
 endfunction
 
-// 玩家队伍 FFA
+// 设置玩家队伍（FFA）
 function FFAInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(bj_MAX_PLAYERS)
 endfunction
 
-// 玩家队伍 1V1
+// 设置玩家队伍（1V1）
 function OneOnOneInitPlayerSlots takes nothing returns nothing
     // Limit the game to 2 players.
     call SetTeams(2)
@@ -11918,7 +11926,7 @@ function DetectGameStarted takes nothing returns nothing
     call TimerStart(bj_gameStartedTimer, bj_GAME_STARTED_THRESHOLD, false, function MarkGameStarted)
 endfunction
 
-// 初始化
+// 系统初始化
 function InitBlizzard takes nothing returns nothing
     // Set up the Neutral Victim player slot, to torture the abandoned units
     // of defeated players.  Since some triggers expect this player slot to
@@ -12031,7 +12039,7 @@ endfunction
 //***************************************************************************
 
 // 创建指定物品（指定单位）
-// 默认用于物品掉落
+// 默认用于但为死亡后掉落物品
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y
@@ -12059,7 +12067,7 @@ function UnitDropItem takes unit inUnit, integer inItemID returns item
 endfunction
 
 // 创建指定物品（指定目标单位/物品/可破坏物）
-// 默认用于物品掉落
+// 默认用于目标死亡后掉落物品
 function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real x
     local real y
