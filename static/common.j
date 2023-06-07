@@ -7657,15 +7657,15 @@ native BlzFrameGetChildrenCount takes framehandle frame returns integer
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
-// 框架（UI）事件
+// frame/框架（UI）事件
 native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
-// 获取框架（UI）触发事件
+// 获取frame/框架（UI）触发事件
 native BlzGetTriggerFrame takes nothing returns framehandle
 // 获取frame/框架（UI）事件类型
 native BlzGetTriggerFrameEvent takes nothing returns frameeventtype
-// 获取框架（UI）触发事件的值
+// 获取触发的frame/框架（UI）值
 native BlzGetTriggerFrameValue takes nothing returns real
-// 获取触发的Frame文本
+// 获取触发的Frame/框架（UI）文本
 native BlzGetTriggerFrameText takes nothing returns string
 // 玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
