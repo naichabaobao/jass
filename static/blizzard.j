@@ -19,9 +19,9 @@ globals
     constant real      bj_CLIFFHEIGHT                   = 128.0
     // 单位默认朝向，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
-    // 弧度转换成为角度
+    // 弧度转换成角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
-    // 角度转换成为弧度
+    // 角度转换成弧度
     constant real      bj_DEGTORAD                      = bj_PI/180.0
     // 文本显示延时 - 任务，默认20.00
     constant real      bj_TEXT_DELAY_QUEST              = 20.00
@@ -47,7 +47,7 @@ globals
     constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
     // 文本显示延时 - 物品购买，默认10.00
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
-    // 文本显示延时 - 物品购买，默认12.00
+    // 文本显示延时 - 警告，默认12.00
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
     // 队列延时 - 任务，默认5.00
     constant real      bj_QUEUE_DELAY_QUEST             =  5.00
