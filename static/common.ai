@@ -105,13 +105,13 @@ native DebugS               takes string str                            returns 
     // 购买地精飞艇
     // 运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外指令
     native PurchaseZeppelin     takes nothing                               returns nothing
-    // 训练/建造/研究指定指定数量的合体单位类型
+    // 训练/建造/研究指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
     // @param a 单位类型一
     // @param b 单位类型二
     // @param make 一和二合体成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-    // 训练/建造/研究指定指定数量的变形单位类型
+    // 训练/建造/研究指定数量的变形单位类型
     // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
@@ -1717,14 +1717,14 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 训练/建造/研究指定指定数量的指定类型单位/科技
+    // 训练/建造/研究指定数量的指定类型单位/科技
     function SetBuildUnit takes integer qty, integer unitid returns nothing
         call SetBuildAll(BUILD_UNIT,qty,unitid,-1)
     endfunction
     
     //============================================================================
 
-    // 继续训练/建造/研究指定指定类型的单位/科技，如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
+    // 继续训练/建造/研究指定类型的单位/科技，如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
     function SetBuildNext takes integer qty, integer unitid returns nothing
         local integer has = GetUnitCount(unitid)
         if has >= qty then
@@ -1735,7 +1735,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 训练/建造/研究指定指定类型的单位/科技
+    // 训练/建造/研究指定类型的单位/科技
     // @param easy简单AI的数量
     // @param med中等AI的数量
     // @param hard疯狂AI的数量
