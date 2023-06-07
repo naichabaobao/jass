@@ -7537,9 +7537,9 @@ native BlzIsSelectionEnabled takes nothing returns boolean
 native BlzIsSelectionCircleEnabled takes nothing returns boolean
 // 设置镜头平滑持续时间
 native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-// 启用目标指示器
+// 启用目标闪动指示器
 native BlzEnableTargetIndicator takes boolean enable returns nothing
-// 查询闪动指示器是否启用
+// 查询目标闪动指示器是否启用
 native BlzIsTargetIndicatorEnabled takes nothing returns boolean
 // 显示地形
 native BlzShowTerrain takes boolean show returns nothing
@@ -7549,24 +7549,24 @@ native BlzShowSkyBox takes boolean show returns nothing
 native BlzStartRecording takes integer fps returns nothing
 // 结束录制
 native BlzEndRecording takes nothing returns nothing
-// 显示/隐藏 指定单位的队伍颜色
+// 显示/隐藏 指定单位队伍颜色
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
 // 获取原生框架（原生UI）
 native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle
-// UI自动设置位置
+// 启用原生框架（原生UI）自动设置位置
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
-// 隐藏原生界面
+// 隐藏原生框架（原生UI）
 native BlzHideOriginFrames takes boolean enable returns nothing
 // 变换颜色
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
-// 导入toc文件
+// 加载toc文件
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
-// 创建SimpleFrame
+// 创建简易Frame
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
-// 创建指定类型名的Frame
+// 创建Frame（指定类型名称）
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 删除指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
@@ -7576,15 +7576,15 @@ native BlzFrameSetPoint takes framehandle frame, framepointtype point, framehand
 native BlzFrameSetAbsPoint takes framehandle frame, framepointtype point, real x, real y returns nothing
 // 清空指定Frame锚点
 native BlzFrameClearAllPoints takes framehandle frame returns nothing
-// 设置所有锚点到目标frame上
+// 设置所有锚点到指定frame
 native BlzFrameSetAllPoints takes framehandle frame, framehandle relative returns nothing
 // 显示/隐藏 Frame
 native BlzFrameSetVisible takes framehandle frame, boolean visible returns nothing
 // 查询Frame是否可见
 native BlzFrameIsVisible takes framehandle frame returns boolean
-// 获取frame类型名（指定名字）
+// 获取frame类型名称（指定名字）
 native BlzGetFrameByName takes string name, integer createContext returns framehandle
-// 获取Frame的名字（指定Frame类型名）
+// 获取Frame名称（指定Frame类型名）
 native BlzFrameGetName takes framehandle frame returns string
 // 点击Frame
 native BlzFrameClick takes framehandle frame returns nothing
@@ -7594,9 +7594,9 @@ native BlzFrameSetText takes framehandle frame, string text returns nothing
 native BlzFrameGetText takes framehandle frame returns string
 // 添加Frame文本
 native BlzFrameAddText takes framehandle frame, string text returns nothing
-// 设置Frame字数限制
+// 设置Frame最大尺寸
 native BlzFrameSetTextSizeLimit takes framehandle frame, integer size returns nothing
-// 获取Frame字数限制
+// 获取Frame最大尺寸
 native BlzFrameGetTextSizeLimit takes framehandle frame returns integer
 // 设置Frame文本颜色
 native BlzFrameSetTextColor takes framehandle frame, integer color returns nothing
@@ -7606,7 +7606,7 @@ native BlzFrameSetFocus takes framehandle frame, boolean flag returns nothing
 native BlzFrameSetModel takes framehandle frame, string modelFile, integer cameraIndex returns nothing
 // 启用/禁用 Frame
 native BlzFrameSetEnable takes framehandle frame, boolean enabled returns nothing
-// 查询Frame启用/禁用状态
+// 查询Frame是否启用
 native BlzFrameGetEnable takes framehandle frame returns boolean
 // 设置Frame透明度
 native BlzFrameSetAlpha takes framehandle frame, integer alpha returns nothing
@@ -7620,17 +7620,17 @@ native BlzFrameSetTexture takes framehandle frame, string texFile, integer flag,
 native BlzFrameSetScale takes framehandle frame, real scale returns nothing
 // 设置Frame提示
 native BlzFrameSetTooltip takes framehandle frame, framehandle tooltip returns nothing
-// 锁定frame鼠标
+// 锁定frame
 native BlzFrameCageMouse takes framehandle frame, boolean enable returns nothing
-// 设置frame当前值
+// 设置frame值
 native BlzFrameSetValue takes framehandle frame, real value returns nothing
-// 获取frame当前值
+// 获取frame值
 native BlzFrameGetValue takes framehandle frame returns real
 // 设置frame最大和最小值
 native BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing
 // 设置frame的Step值
 native BlzFrameSetStepSize takes framehandle frame, real stepSize returns nothing
-// 设置Frame大小
+// 设置Frame尺寸
 native BlzFrameSetSize takes framehandle frame, real width, real height returns nothing
 // 设置Frame颜色
 native BlzFrameSetVertexColor takes framehandle frame, integer color returns nothing
