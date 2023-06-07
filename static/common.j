@@ -4451,7 +4451,7 @@ native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位类型的单位加入单位组
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
-// 将指定玩家匹的单位加入单位组
+// 将指定玩家的单位加入单位组
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
@@ -4481,7 +4481,7 @@ native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
-// 将指定玩家的单位添加到单位组
+// 将指定玩家选择的单位添加到单位组
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
