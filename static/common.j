@@ -4344,7 +4344,7 @@ constant native GetStartLocationY takes integer whichStartLocation returns real
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
-// 设置指定玩家队伍
+// 设置指定玩家所在队伍
 native SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing
 // 设置指定玩家出生点
 native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
@@ -5623,7 +5623,7 @@ constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns bo
 constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否已被指定玩家选择
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定指定单位是否指定种族
+// 查询指定单位是否指定种族
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 查询指定单位是否与指定类型匹配
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
