@@ -4372,6 +4372,7 @@ native SetPlayerController takes player whichPlayer, mapcontrol controlType retu
 native SetPlayerName takes player whichPlayer, string name returns nothing
 
 // 显示/隐藏 计分屏显示 [R]
+// 游戏结束后的得分统计面板，战役默认不显示
 native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns nothing
 
 // 获取指定玩家所在队伍的编号
