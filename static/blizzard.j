@@ -1126,7 +1126,7 @@ globals
     boolean            bj_isUnitGroupInRectResult  = true
     // 判断 单位组选取的单位是否在区域内 使用的区域
     rect               bj_isUnitGroupInRectRect    = null
-    // 游戏结束时展示游戏得分标识，默认为不允许（false）
+    // 游戏结束时展示得分屏标识，默认为不允许（false）
     boolean            bj_changeLevelShowScores    = false
     // 下一张地图的名字（用于战役）
     string             bj_changeLevelMapName       = null
@@ -6823,7 +6823,8 @@ function SetNextLevelBJ takes string nextLevel returns nothing
 endfunction
 
 
-// 显示/隐藏 得分屏幕
+// 显示/隐藏 得分屏
+// 游戏结束后的得分统计面板，战役默认不显示
 function SetPlayerOnScoreScreenBJ takes boolean flag, player whichPlayer returns nothing
     call SetPlayerOnScoreScreen(whichPlayer, flag)
 endfunction
