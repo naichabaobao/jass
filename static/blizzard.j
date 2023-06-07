@@ -6824,7 +6824,7 @@ endfunction
 
 
 // 显示/隐藏 得分屏
-// 游戏结束后的得分统计面板，战役默认不显示
+// 游戏结束后的得分统计面板，官方战役默认不显示
 function SetPlayerOnScoreScreenBJ takes boolean flag, player whichPlayer returns nothing
     call SetPlayerOnScoreScreen(whichPlayer, flag)
 endfunction
