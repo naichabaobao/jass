@@ -7562,12 +7562,14 @@ native BlzHideOriginFrames takes boolean enable returns nothing
 // 变换颜色
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 加载toc文件
+// 该文件用于载入已列出的fdf（帧定义文件）
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame（指定类型名称）
+// @param inherits 父类
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 删除指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
