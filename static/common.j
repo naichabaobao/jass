@@ -7559,17 +7559,28 @@ native BlzGetOriginFrame takes originframetype frameType, integer index returns 
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
 // 隐藏原生框架（原生UI）
 native BlzHideOriginFrames takes boolean enable returns nothing
-// 变换颜色
+// 变换颜色，似乎对原生框架（原生UI）全局生效
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 加载toc文件
 // 该文件用于载入已列出的fdf（帧定义文件）
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
+// @param name 可输入任意名称
+// @param owner 可使用BlzGetFrameByName获取，也可输入任意框架
+// @param priority 优先级，似乎是图层排序 
+// @param createContext 上下文，一般默认为0
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
+// @param name 可输入任意名称
+// @param owner 可使用BlzGetFrameByName获取，也可输入任意框架
+// @param createContext 上下文，一般默认为0
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame（指定类型名称）
-// @param inherits 父类
+// @param typeName 框架类型
+// @param name 可输入任意名称
+// @param framehandle 可使用BlzGetOriginFrame获取原生UI
+// @param inherits 父类框架命称
+// @param createContext 上下文，一般默认为0
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 删除指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
