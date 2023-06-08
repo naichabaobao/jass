@@ -4282,7 +4282,7 @@ function OrderId2StringBJ takes integer orderId returns string
 endfunction
 
 
-// 获取按ID发布的命令
+// 获取发布的命令ID
 function GetIssuedOrderIdBJ takes nothing returns integer
     return GetIssuedOrderId()
 endfunction
