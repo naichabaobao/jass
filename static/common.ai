@@ -103,7 +103,7 @@ native DebugS               takes string str                            returns 
     // 意义不明，可能和学习技能有关
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
-    // 运行后AI会自动前往地精实验室并自动购买地精飞艇，无需额外指令
+    // 运行后AI会自动前往地精实验室并自动购买地精飞艇
     native PurchaseZeppelin     takes nothing                               returns nothing
     // 训练/建造/研究指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
@@ -188,21 +188,21 @@ native DebugS               takes string str                            returns 
     native GetExpansionY        takes nothing                               returns integer
     // 设置集合点
     native SetStagePoint        takes real x, real y                        returns nothing
-    // 发布攻击组攻击指令（指定目标）
+    // 发布攻击组攻击命令（指定目标）
     native AttackMoveKill       takes unit target                           returns nothing
-    // 发布攻击组攻击指令（指定坐标）
+    // 发布攻击组攻击命令（指定坐标）
     native AttackMoveXY         takes integer x, integer y                  returns nothing
     // 在指定坐标卸载单位
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
-    // 建议不要对飞艇类单位发送忽略防守指令，忽略后AI不会自动控制飞艇卸载
+    // 建议不要对飞艇类单位发送忽略防守命令，忽略后AI不会自动控制飞艇卸载
     native LoadZepWave          takes integer x, integer y                  returns nothing
     // 自杀式攻击指定玩家，返回false时代表未执行
     // 理论上是一路打到指定玩家的开始点
-    // 该指令被暴雪用于战役AI
+    // 暴雪用于战役AI
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
     // 自杀式攻击指定玩家，返回false时代表未执行
     // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家开始点
-    // 该指令被暴雪用于战役AI
+    // 暴雪用于战役AI
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
     // 查询攻击队长是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
@@ -237,7 +237,7 @@ native DebugS               takes string str                            returns 
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
     // @param which 攻击队长、防守队长或两种队长，即 1，2或3
     native SetCaptainHome       takes integer which, real x, real y         returns nothing
-    // 发布攻击队长复位指令（回到 SetCaptainHome 的集结点）
+    // 发布攻击队长复位命令（回到 SetCaptainHome 的集结点）
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
@@ -245,14 +245,14 @@ native DebugS               takes string str                            returns 
     native TeleportCaptain      takes real x, real y                        returns nothing
     // 清除攻击队长当前的攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
-    // 发布攻击队长攻击指令（指定坐标）
+    // 发布攻击队长攻击命令（指定坐标）
     // 可配合 DisablePathing 控制是否允许攻击队长在路上战斗（移动攻击）
     native CaptainAttack        takes real x, real y                        returns nothing
-    // 发布攻击队长攻击指令（指定玩家单位）
+    // 发布攻击队长攻击命令（指定玩家单位）
     native CaptainVsUnits       takes player id                             returns nothing
-    // 发布攻击队长攻击指令（指定玩家）
+    // 发布攻击队长攻击命令（指定玩家）
     native CaptainVsPlayer      takes player id                             returns nothing
-    // 发布攻击队长回家指令
+    // 发布攻击队长回家命令
     native CaptainGoHome        takes nothing                               returns nothing
     // 查询攻击队长是否在家
     native CaptainIsHome        takes nothing                               returns boolean
@@ -279,10 +279,10 @@ native DebugS               takes string str                            returns 
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
     // 添加指定单位类型到自杀攻击组，指定单位类型和数量
-    // 该指令被暴雪用于战役AI
+    // 暴雪用于战役AI
     native SuicideUnit          takes integer count, integer unitid         returns nothing
     // 添加指定单位到自杀攻击组
-    // 该指令被暴雪用于战役AI
+    // 暴雪用于战役AI
     // @param ct 数量
     // @param uid 单位类型
     // @param pid 玩家编号
@@ -291,7 +291,7 @@ native DebugS               takes string str                            returns 
     // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
     // 线程之间共享全局变量，但在一条线程运行到读取变量时，变量可能已在几秒前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
-    // 等待指定时间，按秒计时（等待期间不执行任何指令）
+    // 等待指定时间，按秒计时（等待期间不执行任何代码）
     native Sleep                takes real seconds                          returns nothing
     // 查询指定单位是否存活
     native UnitAlive            takes unit id                               returns boolean
@@ -304,22 +304,22 @@ native DebugS               takes string str                            returns 
     native TownThreatened       takes nothing                               returns boolean
     // 禁止在未到达目的地前（攻击组/防御组移动过程中）战斗
     native DisablePathing       takes nothing                               returns nothing
-    // 获取队列中的指令数量
+    // 获取队列中的命令数量
     native SetAmphibious        takes nothing                               returns nothing
     
-    // 获取指令类型
-    // 可通过BJ发送，未发送时获取的值是0
-    // 暴雪用该指令打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
+    // 获取命令类型
+    // 可通过BJ发送，未发送时获取的类型是0
+    // 暴雪用于打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
     native CommandsWaiting      takes nothing                               returns integer
-    // 获取最新的指令类型
-    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
-    // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
+    // 获取最新的命令类型
+    // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
+    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
     native GetLastCommand       takes nothing                               returns integer
-    // 获取最新指令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
-    // 可通过BJ发送，未发送时获取的值是0，指令包含类型和数据
-    // 需灵活运用，比如设定1类型为进攻指令，数据0~N代表不同的攻击点，2类型为防守指令，数据0~N代表不同的防御点
+    // 获取最新命令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
+    // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据
+    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
-    // 将最新指令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
+    // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
     native PopLastCommand       takes nothing                               returns nothing
     // 获取对战难度
     native MeleeDifficulty      takes nothing                               returns integer
@@ -1353,13 +1353,13 @@ native DebugS               takes string str                            returns 
         integer array defense_units
         // 防御组数列，当前已记录到防御组的单位类型，在下次初始化前，AI会使用这些单位类型进行防御
         integer defense_length          = 0
-        // 训练/建造/研究数组 建造数量序列，每发送一次训练/建造/研究指令时，引索加1
+        // 训练/建造/研究数组 建造数量序列，每发送一次训练/建造/研究命令时，引索加1
         integer array build_qty
-        // 训练/建造/研究数组 建造类型（单位/建筑，科技，分基地）序列，每发送一次训练/建造/研究指令时，引索加1
+        // 训练/建造/研究数组 建造类型（单位/建筑，科技，分基地）序列，每发送一次训练/建造/研究命令时，引索加1
         integer array build_type
-        // 训练/建造/研究数组 单位/建筑/科技类型（具体的单位ID）序列，每发送一次训练/建造/研究指令时，引索加1
+        // 训练/建造/研究数组 单位/建筑/科技类型（具体的单位ID）序列，每发送一次训练/建造/研究命令时，引索加1
         integer array build_item
-        // 训练/建造/研究数组 建造位置（在哪个主/分基地建造）序列，每发送一次训练/建造/研究指令时，引索加1
+        // 训练/建造/研究数组 建造位置（在哪个主/分基地建造）序列，每发送一次训练/建造/研究命令时，引索加1
         integer array build_town
         // 训练/建造/研究数组数列，当前已记录到建造序列的单位/建筑/科技类型，在下次初始化前，AI会依次训练/建造/研究
         integer build_length            = 0
@@ -1516,7 +1516,7 @@ native DebugS               takes string str                            returns 
     function SetZepNextWave takes nothing returns nothing
         set zep_next_wave = true
     endfunction
-    // 自杀倒计时（等待），当指定的时间小于等于0时 及 触发器有指令传入时会结束等待
+    // 自杀倒计时（等待），当指定的时间小于等于0时 及 触发器有命令传入时会结束等待
     function SuicideSleep takes integer seconds returns nothing
         set sleep_seconds = sleep_seconds - seconds
         loop
@@ -1535,7 +1535,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 等待信号，等待从触发器发送的指令，若无发送，不会执行下一步
+    // 等待信号，等待从触发器发送的命令，若无发送，不会执行下一步
     function WaitForSignal takes nothing returns integer
         local integer cmd
         local boolean display = false //xxx
@@ -1660,7 +1660,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 初始化攻击组
-    // 执行初始化攻击组数组长度、移除受伤单位、移除攻城单位3条指令
+    // 执行初始化攻击组数组长度、移除受伤单位、移除攻城单位
     function InitMeleeGroup takes nothing returns nothing
         call InitAssaultGroup()
         call RemoveInjuries()
@@ -1670,7 +1670,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 准备自杀
-    // 执行初始化攻击组数组、初始化防御组数组、采集（金和木）工人置零4条指令
+    // 执行初始化攻击组数组、初始化防御组数组、采集（金和木）工人置零
     function PrepFullSuicide takes nothing returns nothing
         call InitAssaultGroup()
         call InitDefenseGroup()
@@ -2595,7 +2595,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 发布攻击组移动攻击指令（指定坐标）
+    // 发布攻击组移动攻击命令（指定坐标）
     function AttackMoveXYA takes integer x, integer y returns nothing
     
         if zep_next_wave then
@@ -2917,7 +2917,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 战斗（循环发送发布攻击组进攻指令（指定目标）），直至攻击目标死亡或攻击队长阵亡/撤退
+    // 战斗（循环发送发布攻击组进攻命令（指定目标）），直至攻击目标死亡或攻击队长阵亡/撤退
     function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
         loop
             exitwhen CaptainRetreating()
@@ -3317,7 +3317,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 战役循环，自动运行战役默认的采集/建造/训练/研究指令
+    // 战役循环，自动运行战役默认的采集/建造/训练/研究命令
     function CampaignBasicsA takes nothing returns nothing
         local integer food_each = GetFoodMade(racial_farm)
         local integer on_wood
