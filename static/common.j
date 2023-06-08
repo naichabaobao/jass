@@ -2156,46 +2156,46 @@ globals
 	// 键盘 启动应用程序2键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
-	// 小/数字键盘 1建(OEM 键)
+	// 小/数字键盘 1键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
-	// 键盘 加号建(OEM 键)
+	// 键盘 加号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
-	// 键盘 逗号建(OEM 键)
+	// 键盘 逗号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
-	// 键盘 减号建(OEM 键)
+	// 键盘 减号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
-	// 键盘 句号建(OEM 键)
+	// 键盘 句号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
-	// 小/数字键盘 2建(OEM 键)
+	// 小/数字键盘 2键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
-	// 小/数字键盘 3建(OEM 键)
+	// 小/数字键盘 3键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
-	// 小/数字键盘 4建(OEM 键)
+	// 小/数字键盘 4键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
-	// 小/数字键盘 5建(OEM 键)
+	// 小/数字键盘 5键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
-	// 小/数字键盘 6建(OEM 键)
+	// 小/数字键盘 6键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
-	// 小/数字键盘 7建(OEM 键)
+	// 小/数字键盘 7键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
-	// 小/数字键盘 8建(OEM 键)
+	// 小/数字键盘 8键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
-	// 键盘 AX 建(OEM 键)
+	// 键盘 AX 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
-	// 键盘 102 建(OEM 键)
+	// 键盘 102 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
 	// 键盘  Ico帮助键
@@ -2210,10 +2210,10 @@ globals
 	// 键盘 IcoClr 键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
-	// 键盘 格式化建(OEM 键)
+	// 键盘 格式化键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
-	// 键盘 重置建(OEM 键)
+	// 键盘 重置键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
 	// 键盘 ATTN 键(OEM 键)
@@ -2286,17 +2286,17 @@ globals
 	
 	// Ability
 	
-	// 技能整数域 技能按钮位置 x 坐标(常规状态) ('abpx')
+	// 技能整数域 技能按钮位置 X 坐标(常规状态) ('abpx')
  constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
-	// 技能整数域 技能按钮位置 y 坐标(常规状态) ('abpy')
+	// 技能整数域 技能按钮位置 Y 坐标(常规状态) ('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
-	// 技能整数域 技能按钮位置 x 坐标(激活状态) ('aubx')
+	// 技能整数域 技能按钮位置 X 坐标(激活状态) ('aubx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_X = ConvertAbilityIntegerField('aubx')
-	// 技能整数域 技能按钮位置 y 坐标(激活状态) ('auby')
+	// 技能整数域 技能按钮位置 Y 坐标(激活状态) ('auby')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y = ConvertAbilityIntegerField('auby')
-	// 技能整数域 技能按钮位置 x 坐标(研究状态) ('arpx')
+	// 技能整数域 技能按钮位置 X 坐标(研究状态) ('arpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_X = ConvertAbilityIntegerField('arpx')
-	// 技能整数域 技能按钮位置 y 坐标(研究状态) ('arpy')
+	// 技能整数域 技能按钮位置 Y 坐标(研究状态) ('arpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_Y = ConvertAbilityIntegerField('arpy')
 	// 技能整数域 技能弹道速度 ('amsp')
 	constant abilityintegerfield ABILITY_IF_MISSILE_SPEED = ConvertAbilityIntegerField('amsp')
@@ -7564,7 +7564,7 @@ native BlzHideOriginFrames takes boolean enable returns nothing
 // 变换颜色，似乎对原生框架(原生UI)全局生效
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 加载toc文件
-// 该文件用于载入已列出的fdf(帧定义文件)
+// 该文件用于载入已列出的fdf(框架定义文件)
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
 // @param name 可输入任意名称
