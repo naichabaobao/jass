@@ -7413,22 +7413,22 @@ globals
                 string TIMERTEXT
 
 
-                // FDF关键词
+                // FDF（框架定义）
                 
-                // FDF关键词 字母表模式
-                // 变量如下
+                // FDF（框架定义） 字母表模式
+                // 变量如下（官方默认提供）
                 // "ADD"  添加
                 // "ALPHAKEY"  字母键
                 string AlphaMode
-                // FDF关键词
-                // 变量如下 锚点
-                // BOTTOMLEFT,-0.256,0  左下角
-                // BOTTOMRIGHT,0,0  右下角
+                // FDF（框架定义） 锚点
+                // 变量如下
+                // BOTTOMLEFT, -0.256,0  左下角
+                // BOTTOMRIGHT, 0,0  右下角
                 // TOPLEFT, 0.0, -0.003  左上角
                 // TOPRIGHT, -0.0914, -0.003125  右上角
                 string Anchor
-                // FDF关键词 背景
-                // 变量如下
+                // FDF（框架定义） 背景
+                // 变量如下（官方默认提供）
                 // "EscMenuBackground"  Esc菜单背景
                 // "EscMenuBlankBackground"  Esc菜单空白背景
                 // "EscMenuEditBoxBackground"  Esc菜单编辑框背景
@@ -7443,8 +7443,8 @@ globals
                 // "UI\Widgets\BattleNet\bnet-inputbox-back.blp"  输入框按钮背景
                 // "UI\Widgets\BattleNet\bnet-mainmenu-clans-disabled.blp"  禁用战队主菜单
                 string BackdropBackground
-                // FDF关键词 背景插图
-                // 变量如下
+                // FDF（框架定义） 背景插图
+                // 变量如下（官方默认提供）
                 // 
                 // 
                 // 
@@ -7458,8 +7458,8 @@ globals
                 // 
                 // 
                 string BackdropBackgroundInsets
-                // FDF关键词 背景大小
-                // 变量如下
+                // FDF（框架定义） 背景大小
+                // 变量如下（官方默认提供）
                 // 
                 // 
                 // 
@@ -7473,212 +7473,230 @@ globals
                 // 
                 // 
                 string BackdropBackgroundSize
-                // FDF关键词 背景混合
+                // FDF（框架定义） 背景混合
                 string BackdropBlendAll
-                // FDF关键词 背景底部文件
+                // FDF（框架定义） 背景底部文件
                 string BackdropBottomFile
-                // FDF关键词 背景边角文件
+                // FDF（框架定义） 背景边角文件
                 string BackdropCornerFile
-                // FDF关键词 背景边角标志
+                // FDF（框架定义） 背景边角标志
                 string BackdropCornerFlags
                 // FDF关键词 背景边角尺寸
                 string BackdropCornerSize
-                // FDF关键词 背景边文件
+                // FDF（框架定义） 背景边文件
                 string BackdropEdgeFile
-                // FDF关键词
+                // FDF（框架定义） 背景半侧文件
                 string BackdropHalfSides
-                // FDF关键词
+                // FDF（框架定义） 背景左侧边文件
                 string BackdropLeftFile
-                // FDF关键词
+                // FDF（框架定义） 背景镜像
                 string BackdropMirrored
-                // FDF关键词
+                // FDF（框架定义） 背景右侧边文件
                 string BackdropRightFile
-                // FDF关键词
+                // FDF（框架定义） 背景平铺
                 string BackdropTileBackground
-                // FDF关键词
+                // FDF（框架定义） 背景顶边文件
                 string BackdropTopFile
-                // FDF关键词
+                // FDF（框架定义） 背景艺术
                 string BackgroundArt
-                // FDF关键词
+                // FDF（框架定义） 栏纹理
                 string BarTexture
-                // FDF关键词
+                // FDF（框架定义） 按钮推动的文本偏移
                 string ButtonPushedTextOffset
-                // FDF关键词
+                // FDF（框架定义） 按钮文本
                 string ButtonText
-                // FDF关键词
+                // FDF（框架定义）
                 string ChatDisplayBorderSize
-                // FDF关键词
+                // FDF（框架定义）
                 string ChatDisplayEditBox
-                // FDF关键词
+                // FDF（框架定义）
                 string ChatDisplayLineHeight
-                // FDF关键词
+                // FDF（框架定义）
                 string ChatDisplayScrollBar
-                // FDF关键词
+                // FDF（框架定义）
                 string CheckBoxCheckHighlight
-                // FDF关键词
+                // FDF（框架定义）
                 string CheckBoxDisabledCheckHighlight
-                // FDF关键词
+                // FDF（框架定义）
                 string CheckedTexture
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlBackdrop
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlDisabledBackdrop
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlDisabledPushedBackdrop
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlFocusHighlight
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlMouseOverHighlight
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlPushedBackdrop
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlShortcutKey
-                // FDF关键词
+                // FDF（框架定义）
                 string ControlStyle
-                // FDF关键词
+                // FDF（框架定义）
                 string DecorateFileNames
-                // FDF关键词
+                // FDF（框架定义）
                 string DialogBackdrop
-                // FDF关键词
+                // FDF（框架定义）
                 string DisabledText
-                // FDF关键词
+                // FDF（框架定义）
                 string DisabledTexture
-                // FDF关键词
+                // FDF（框架定义）
                 string EditBorderSize
-                // FDF关键词
+                // FDF（框架定义）
                 string EditCursorColor
-                // FDF关键词
+                // FDF（框架定义）
                 string EditTextFrame
-                // FDF关键词
+                // FDF（框架定义）
                 string File
-                // FDF关键词
+                // FDF（框架定义）
                 string Font
-                // FDF关键词
+                // FDF（框架定义）
                 string FontColor
-                // FDF关键词
+                // FDF（框架定义）
                 string FontDisabledColor
-                // FDF关键词
+                // FDF（框架定义）
                 string FontFlags
-                // FDF关键词
+                // FDF（框架定义）
                 string FontHighlightColor
-                // FDF关键词
+                // FDF（框架定义）
                 string FontJustificationH
-                // FDF关键词
+                // FDF（框架定义）
                 string FontJustificationOffset
-                // FDF关键词
+                // FDF（框架定义）
                 string FontJustificationV
-                // FDF关键词
+                // FDF（框架定义）
                 string FontShadowColor
-                // FDF关键词
+                // FDF（框架定义）
                 string FontShadowOffset
-                // FDF关键词
+                // FDF（框架定义）
                 string Frame
-                // FDF关键词
+                // FDF（框架定义）
                 string FrameFont
-                // FDF关键词
+                // FDF（框架定义）
                 string Height
-                // FDF关键词
+                // FDF（框架定义）
                 string HighlightAlphaFile
-                // FDF关键词
+                // FDF（框架定义）
                 string HighlightAlphaMode
-                // FDF关键词
+                // FDF（框架定义） 
                 string HighlightColor
-                // FDF关键词
+                // FDF（框架定义） 
                 string HighlightText
-                // FDF关键词
+                // FDF（框架定义） 
                 string HighlightType
-                // FDF关键词
+                // FDF（框架定义） 
                 string IncludeFile
-                // FDF关键词
+                // FDF（框架定义） 
                 string Layer
-                // FDF关键词
+                // FDF（框架定义） 
                 string LayerStyle
-                // FDF关键词
+                // FDF（框架定义） 
                 string ListBoxBorder
-                // FDF关键词
+                // FDF（框架定义） 
                 string ListBoxScrollBar
-                // FDF关键词
+                // FDF（框架定义） 
                 string MenuBorder
-                // FDF关键词
+                // FDF（框架定义） 
                 string MenuItem
-                // FDF关键词
+                // FDF（框架定义） 
                 string MenuItemHeight
-                // FDF关键词
+                // FDF（框架定义） 
                 string MenuTextHighlightColor
-                // FDF关键词
+                // FDF（框架定义） 
                 string NormalText
-                // FDF关键词
+                // FDF（框架定义） 
                 string NormalTexture
-                // FDF关键词
+                // FDF（框架定义） 
                 string PopupArrowFrame
-                // FDF关键词
+                // FDF（框架定义） 
                 string PopupButtonInset
-                // FDF关键词
+                // FDF（框架定义） 
                 string PopupMenuFrame
-                // FDF关键词
+                // FDF（框架定义） 
                 string PopupTitleFrame
-                // FDF关键词
+                // FDF（框架定义） 
                 string PushedTexture
-                // FDF关键词
+                // FDF（框架定义） 
                 string ScrollBarDecButtonFrame
-                // FDF关键词
+                // FDF（框架定义） 
                 string ScrollBarIncButtonFrame
-                // FDF关键词
+                // FDF（框架定义） 
                 string SetAllPoints
-                // FDF关键词
+                // FDF（框架定义） 
                 string SetPoint
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderInitialValue
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderLayoutHorizontal
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderLayoutVertical
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderMaxValue
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderMinValue
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderStepSize
-                // FDF关键词
+                // FDF（框架定义） 
                 string SliderThumbButtonFrame
-                // FDF关键词
+                // FDF（框架定义） 字串符
+                // 官方默认值，"UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
                 string String
-                // FDF关键词
+                // FDF（框架定义） 字串符列表
                 string StringList
-                // FDF关键词
+                // FDF（框架定义） 选项卡焦点（默认值)
                 string TabFocusDefault
-                // FDF关键词
+                // FDF（框架定义） 选项卡焦点-下一个
+                // 官方默认值如下
+                // "AddProfileButton" 添加配置文件按钮
+                // "BackButton" 返回按钮
                 string TabFocusNext
-                // FDF关键词
+                // FDF（框架定义） 选项卡焦点-推送
                 string TabFocusPush
-                // FDF关键词
+                // FDF（框架定义） 贴图坐标
+                // 官方默认坐标如下
+                // 0, 0.33984375, 0, 0.125
+                // 0, 1, 0.4140625, 1
+                // 0.0, 0.6640625, 0.25, 0.421875
+                // 0.0, 0.6640625, 0.75, 0.921875
                 string TexCoord
-                // FDF关键词
+                // FDF（框架定义） 文本
+                // 变量类型为字串符，如"30"
                 string Text
-                // FDF关键词
+                // FDF（框架定义） 文本区域插入
+                // 变量为实数，如0.005,0.0
                 string TextAreaInset
-                // FDF关键词
+                // FDF（框架定义） 文本区域行间距
+                // 变量为实数，如0.001,0.0015
                 string TextAreaLineGap
-                // FDF关键词
+                // FDF（框架定义） 文本区域行高度
+                // 变量为实数，如0.011,0.015
                 string TextAreaLineHeight
-                // FDF关键词
+                // FDF（框架定义） 文本区域最大行数 
+                // 变量为整数，如128,32
                 string TextAreaMaxLines
-                // FDF关键词
+                // FDF（框架定义） 文本区域滚动条
+                // 变量如下（官方默认提供）
+                // "ChatScrollBar" 聊天滚动条
                 string TextAreaScrollBar
-                // FDF关键词
+                // FDF（框架定义）  文本长度
+                // 变量为整数，如8
                 string TextLength
-                // FDF关键词
+                // FDF（框架定义） 纹理
+                // 继承于父类 "ResourceIconTemplate"  资源图标模板
+                // 变量如下（官方默认提供）
+                // "InfoPanelIconAllyFoodIcon"  信息面板图标-盟友人口图标
                 string Texture
-                // FDF关键词 使用活动上下文
+                // FDF（框架定义） 使用活动上下文
                 string UseActiveContext
-                // FDF关键词 高亮显示
-                // 变量如下
+                // FDF（框架定义）  高亮显示
+                // 变量如下（官方默认提供）
                 // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
                 string UseHighlight
-                // FDF关键词 宽度
-                // 变量如下
-                // 0.24
-                // 0.417f
+                // FDF（框架定义） 宽度
+                // 变量为实数，如0.24,0.417
                 string Width
                 
                 
@@ -7951,40 +7969,10 @@ SliderThumbButtonFrame "BattleNetThumbButton",
 SliderThumbButtonFrame "EscMenuScrollThumbButton",
 SliderThumbButtonFrame "StandardThumbButton",
 
-String "UpperButtonBarButtonTextTemplate" {
 
-StringList {
 
-TabFocusDefault,
-TabFocusNext "AddProfileButton",
-TabFocusNext "BackButton",
 
-TabFocusPush,
 
-TexCoord 0, 0.33984375, 0, 0.125,
-TexCoord 0, 1, 0.4140625, 1,
-TexCoord 0.0, 0.6640625, 0.25, 0.421875,
-TexCoord 0.0, 0.6640625, 0.75, 0.921875,
-
-Text "30",
-
-TextAreaInset           0.005,
-TextAreaInset 0.0,
-
-TextAreaLineGap         0.001,
-TextAreaLineGap 0.0015,
-
-TextAreaLineHeight      0.011,
-TextAreaLineHeight 0.015,
-
-TextAreaMaxLines 128,
-TextAreaMaxLines        32,
-
-TextAreaScrollBar "ChatScrollBar",
-
-TextLength 8,
-
-Texture "InfoPanelIconAllyFoodIcon" INHERITS "ResourceIconTemplate" {
 
 
 
@@ -8009,6 +7997,7 @@ Texture "InfoPanelIconAllyFoodIcon" INHERITS "ResourceIconTemplate" {
                 string FRAMEPOINT_BOTTOM
                 // 框架位置类型 右下角
                 string FRAMEPOINT_BOTTOMRIGHT
+
 
                 
         endglobals
