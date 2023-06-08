@@ -7669,7 +7669,7 @@ globals
                 string TextLength
                 // FDF关键词
                 string Texture
-                // FDF关键词
+                // FDF关键词 使用活动上下文
                 string UseActiveContext
                 // FDF关键词 高亮显示
                 // 变量如下
@@ -7986,10 +7986,29 @@ TextLength 8,
 
 Texture "InfoPanelIconAllyFoodIcon" INHERITS "ResourceIconTemplate" {
 
-UseActiveContext,
 
 
 
+// 框架位置类型
+
+                // 框架位置类型 左上角
+                string FRAMEPOINT_TOPLEFT
+                // 框架位置类型 顶部（正中)
+                string FRAMEPOINT_TOP
+                // 框架位置类型 右上角
+                string FRAMEPOINT_TOPRIGHT
+                // 框架位置类型 最左边（正中)
+                string FRAMEPOINT_LEFT
+                // 框架位置类型 屏幕中心
+                string FRAMEPOINT_CENTER
+                // 框架位置类型 最右边（正中)
+                string FRAMEPOINT_RIGHT
+                // 框架位置类型 左下角
+                string FRAMEPOINT_BOTTOMLEFT
+                // 框架位置类型 底部（正中)
+                string FRAMEPOINT_BOTTOM
+                // 框架位置类型 右下角
+                string FRAMEPOINT_BOTTOMRIGHT
 
                 
         endglobals
