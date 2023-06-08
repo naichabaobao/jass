@@ -1675,7 +1675,8 @@ globals
 	constant textaligntype TEXT_JUSTIFY_CENTER = ConvertTextAlignType(4)
 	// 文本对齐方式 右侧对齐
 	constant textaligntype TEXT_JUSTIFY_RIGHT = ConvertTextAlignType(5)
-	// 框架（UI）事件类型 点击控制
+	// 框架（UI）事件类型 控制点击
+	// 可能是键盘和鼠标按下（因该事件发生在鼠标松开之前，可能不含鼠标松开）
 	constant frameeventtype FRAMEEVENT_CONTROL_CLICK = ConvertFrameEventType(1)
 	// 框架（UI）事件类型 鼠标移入
 	constant frameeventtype FRAMEEVENT_MOUSE_ENTER = ConvertFrameEventType(2)
