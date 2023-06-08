@@ -4282,7 +4282,7 @@ function OrderId2StringBJ takes integer orderId returns string
 endfunction
 
 
-// 获取发布的命令ID
+// 获取按ID发布的命令
 function GetIssuedOrderIdBJ takes nothing returns integer
     return GetIssuedOrderId()
 endfunction
@@ -4722,7 +4722,7 @@ function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boole
 endfunction
 
 
-// 发布建造建筑ID命令（指定点）
+// 按ID发布建造建筑命令（指定点）
 function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location loc returns boolean
     if (unitId == 'ugol') then
         return IssueHauntOrderAtLocBJ(whichPeon, loc)
@@ -4732,19 +4732,19 @@ function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location
 endfunction
 
 
-// 发布训练兵种/升级建筑命令
+// 按ID发布训练兵种/升级建筑命令
 function IssueTrainOrderByIdBJ takes unit whichUnit, integer unitId returns boolean
     return IssueImmediateOrderById(whichUnit, unitId)
 endfunction
 
 
-// 发布单位组训练兵种/升级建筑命令
+// 按ID发布（单位组）训练兵种/升级建筑命令
 function GroupTrainOrderByIdBJ takes group g, integer unitId returns boolean
     return GroupImmediateOrderById(g, unitId)
 endfunction
 
 
-// 发布研究科技命令
+// 按ID发布研究科技命令
 function IssueUpgradeOrderByIdBJ takes unit whichUnit, integer techId returns boolean
     return IssueImmediateOrderById(whichUnit, techId)
 endfunction
@@ -9551,18 +9551,18 @@ function UnlockGameSpeedBJ takes nothing returns nothing
     call SetMapFlag(MAP_LOCK_SPEED, false)
 endfunction
 
-// 发布单位命令（指定单位）
+// 发布命令（指定单位）
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令（指定点）
+// 发布命令（指定点）
 function IssuePointOrderLocBJ takes unit whichUnit, string order, location whichLocation returns boolean
     return IssuePointOrderLoc( whichUnit, order, whichLocation )
 endfunction
 
 
-// 发布单位命令（可破坏物）
+// 发布命令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
@@ -9570,33 +9570,33 @@ function IssueTargetDestructableOrder takes unit whichUnit, string order, widget
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令（物品）
+// 发布命令（指定物品）
 function IssueTargetItemOrder takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
 
-// 发布单位命令（无目标）
+// 发布命令（无目标）
 function IssueImmediateOrderBJ takes unit whichUnit, string order returns boolean
     return IssueImmediateOrder( whichUnit, order )
 endfunction
 
-// 发布单位组命令（指定单位）
+// 发布（单位组）命令（指定单位）
 function GroupTargetOrderBJ takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 发布单位组命令（指定点）
+// 发布（单位组）命令（指定点）
 function GroupPointOrderLocBJ takes group whichGroup, string order, location whichLocation returns boolean
     return GroupPointOrderLoc( whichGroup, order, whichLocation )
 endfunction
 
-// 发布单位组命令（无目标）
+// 发布（单位组）命令（无目标）
 function GroupImmediateOrderBJ takes group whichGroup, string order returns boolean
     return GroupImmediateOrder( whichGroup, order )
 endfunction
 
 
-// 发布单位组命令（可破坏物）
+// 发布（单位组）命令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 //
@@ -9604,7 +9604,7 @@ function GroupTargetDestructableOrder takes group whichGroup, string order, widg
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
 
-// 发布单位组命令（物品）
+// 发布（单位组）命令（指定物品）
 function GroupTargetItemOrder takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
