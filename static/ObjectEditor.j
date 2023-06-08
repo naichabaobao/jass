@@ -7878,7 +7878,7 @@ globals
                 string Texture
                 // FDF（框架定义） 使用活动上下文
                 string UseActiveContext
-                // FDF（框架定义）  高亮显示
+                // FDF（框架定义） 高亮显示
                 // 变量如（官方默认提供）
                 // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
                 string UseHighlight
