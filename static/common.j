@@ -306,9 +306,9 @@ constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
 // 转换整数成路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-// 转换命令ID字符串成命令ID
+// 转换命令串成命令ID
 constant native OrderId takes string orderIdString returns integer
-// 转换命令ID成命令ID字符串
+// 转换命令ID成命令串
 constant native OrderId2String takes integer orderId returns string
 // 转换单位ID字符串成单位ID
 constant native UnitId takes string unitIdString returns integer
@@ -4996,7 +4996,7 @@ constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns in
 // 事件响应 获取收到命令的单位（对应玩家发布命令等事件）
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetOrderedUnit takes nothing returns unit
-// 事件响应 获取发出的命令ID
+// 事件响应 获取发布的命令ID
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetIssuedOrderId takes nothing returns integer
 
