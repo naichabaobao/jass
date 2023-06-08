@@ -1161,17 +1161,17 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_CANCEL = ConvertPlayerUnitEvent(36)
 	// 玩家单位事件 完成研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_FINISH = ConvertPlayerUnitEvent(37)
-	// 玩家单位事件 发布单位指令事件（无目标）
+	// 玩家单位事件 发布单位命令（无目标）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
-	// 玩家单位事件 发布单位指令事件（指定点）
+	// 玩家单位事件 发布单位命令（指定点）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-        // 玩家单位事件 发布单位指令事件（指定单位）
+        // 玩家单位事件 发布单位命令（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
-	// 玩家单位事件 发布单位指令事件（指定单位）
+	// 玩家单位事件 发布单位命令（指定单位）
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-        // 玩家单位事件 英雄升级事件
+        // 玩家单位事件 英雄升级
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-        // 玩家单位事件 英雄学习技能事件
+        // 玩家单位事件 英雄学习技能
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
         // 玩家单位事件 英雄可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
@@ -1189,7 +1189,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_PICKUP_ITEM = ConvertPlayerUnitEvent(49)
 	// 玩家单位事件 使用物品
 	constant playerunitevent EVENT_PLAYER_UNIT_USE_ITEM = ConvertPlayerUnitEvent(50)
-	// 玩家单位事件 被装载
+	// 玩家单位事件 单位被装载
 	// 被飞艇、船、被缠绕的金矿等装载
 	constant playerunitevent EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
 	// 玩家单位事件 单位被伤害
@@ -1221,7 +1221,7 @@ globals
 	
 	// Events which may have a filter for the "other unit"   
 	
-	// 单位事件 单位获取到目标（类似触发单位警戒攻击）
+	// 单位事件 单位获取到攻击目标（类似触发单位警戒攻击）
 	constant unitevent EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
 	// 单位事件 目标在单位获取范围内（类似警戒范围）
 	constant unitevent EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
@@ -1255,11 +1255,11 @@ globals
 	constant unitevent EVENT_UNIT_RESEARCH_CANCEL = ConvertUnitEvent(73)
 	// 单位事件 完成研究科技
 	constant unitevent EVENT_UNIT_RESEARCH_FINISH = ConvertUnitEvent(74)
-	// 单位事件 发布单位指令事件（无目标）
+	// 单位事件 发布单位命令（无目标）
 	constant unitevent EVENT_UNIT_ISSUED_ORDER = ConvertUnitEvent(75)
-	// 单位事件 发布单位指令事件（指定点）
+	// 单位事件 发布单位命令（指定点）
 	constant unitevent EVENT_UNIT_ISSUED_POINT_ORDER = ConvertUnitEvent(76)
-	// 单位事件 发布单位指令事件（指定单位）
+	// 单位事件 发布单位命令（指定单位）
 	constant unitevent EVENT_UNIT_ISSUED_TARGET_ORDER = ConvertUnitEvent(77)
 	// 单位事件 英雄升级
 	constant unitevent EVENT_UNIT_HERO_LEVEL = ConvertUnitEvent(78)
@@ -4486,21 +4486,21 @@ native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichL
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
-// 发布单位组指令（无目标）
+// 发布单位组命令（无目标）
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
-// 发布单位组ID指令(无目标)
+// 发布单位组ID命令(无目标)
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
-// 发布单位组指令(指定坐标) [R]
+// 发布单位组命令(指定坐标) [R]
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
-// 发布单位组指令（指定点）
+// 发布单位组命令（指定点）
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
-// 发布单位组ID指令(指定坐标)
+// 发布单位组ID命令(指定坐标)
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
-// 发布单位组ID指令(指定点)
+// 发布单位组ID命令(指定点)
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
-// 发布单位组指令(指定单位/物品/可破坏物)
+// 发布单位组命令(指定单位/物品/可破坏物)
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
-// 发布单位组ID指令(指定单位/物品/可破坏物)
+// 发布单位组ID命令(指定单位/物品/可破坏物)
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
@@ -4993,35 +4993,35 @@ constant native BlzGetStackingItemTarget takes nothing returns item
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
-// 事件响应 获取收到指令的单位（对应玩家发布单位指令等事件）
+// 事件响应 获取收到命令的单位（对应玩家发布单位命令等事件）
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetOrderedUnit takes nothing returns unit
-// 事件响应 获取发出的指令ID
+// 事件响应 获取发出的命令ID
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetIssuedOrderId takes nothing returns integer
 
 
-// 事件响应 获取指令目标点 X 坐标 [R]（对应玩家发布单位指令（指定点）等事件）
+// 事件响应 获取命令目标点 X 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointX takes nothing returns real
-// 事件响应 获取指令目标点 Y 坐标 [R]（对应玩家发布单位指令（指定点）等事件）
+// 事件响应 获取命令目标点 Y 坐标 [R]（对应玩家发布单位命令（指定点）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
-// 事件响应 获取指令目标点（对应玩家发布单位指令（指定点）等事件）
+// 事件响应 获取命令目标点（对应玩家发布单位命令（指定点）等事件）
 // 会生成点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 事件响应 获取指令目标（单位/物品/可破坏物）（对应玩家发布单位指令（指定目标）等事件）
+// 事件响应 获取命令目标（单位/物品/可破坏物）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 事件响应 获取指令目标（可破坏物）（对应玩家发布单位指令（指定目标）等事件）
+// 事件响应 获取命令目标（可破坏物）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 事件响应 获取指令目标（物品)（对应玩家发布单位指令（指定目标）等事件）
+// 事件响应 获取命令目标（物品)（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 事件响应 获取指令目标（单位）（对应玩家发布单位指令（指定目标）等事件）
+// 事件响应 获取命令目标（单位）（对应玩家发布单位命令（指定目标）等事件）
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
@@ -5479,7 +5479,7 @@ native GetHeroProperName takes unit whichHero returns string
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 // 查询指定英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
-// 发布学习技能指令（指定英雄）
+// 发布学习技能命令（指定英雄）
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
 // 获取知道单位技能等级 [R] 
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
@@ -5540,20 +5540,20 @@ native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取物品栏格数
 native UnitInventorySize takes unit whichUnit returns integer
 
-// 发布丢弃物品指令(指定坐标) [R]
+// 发布丢弃物品命令(指定坐标) [R]
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 发布移动物品指令（指定物品栏格数） [R]
+// 发布移动物品命令（指定物品栏格数） [R]
 // @param slot 物品栏格数：0-5
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
-// 发布丢弃物品指令（指定单位和目标单位/物品/可破坏物） [R]
+// 发布丢弃物品命令（指定单位和目标单位/物品/可破坏物） [R]
 // 指定目标为商店时会卖出物品
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 发布使用物品指令（无目标）
+// 发布使用物品命令（无目标）
 native UnitUseItem takes unit whichUnit, item whichItem returns boolean
-// 发布使用物品指令(指定坐标)
+// 发布使用物品命令(指定坐标)
 native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
-// 发布使用物品指令(指定单位)
+// 发布使用物品命令(指定单位)
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 获取指定单位所在 X 轴坐标 [R]
@@ -5724,49 +5724,49 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param weaponType 武器类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
-// 发布指令（无目标）
+// 发布命令（无目标）
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
-// 发布ID指令(无目标)
+// 发布ID命令(无目标)
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
-// 发布指令(指定坐标)
+// 发布命令(指定坐标)
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
-// 发布指令(指定点)
+// 发布命令(指定点)
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
-// 发布ID指令(指定坐标)
+// 发布ID命令(指定坐标)
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
-// 发布ID指令(指定点)
+// 发布ID命令(指定点)
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
-// 发布指令(指定单位/物品/可破坏物)
+// 发布命令(指定单位/物品/可破坏物)
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
-// 发布ID指令(指定单位/物品/可破坏物)
+// 发布ID命令(指定单位/物品/可破坏物)
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
-// 发布即时指令(指定坐标)
+// 发布即时命令(指定坐标)
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
-// 发布即时ID指令(指定点)
+// 发布即时ID命令(指定点)
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
-// 发布即时指令(指定单位/物品/可破坏物)
+// 发布即时命令(指定单位/物品/可破坏物)
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
-// 发布即时ID指令(指定单位/物品/可破坏物)
+// 发布即时ID命令(指定单位/物品/可破坏物)
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
-// 发布建造指令(指定坐标) [R]
+// 发布建造命令(指定坐标) [R]
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
-// 发布建造ID指令(指定坐标) [R]
+// 发布建造ID命令(指定坐标) [R]
 native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
 
-// 发布中介指令(无目标)
+// 发布中介命令(无目标)
 native IssueNeutralImmediateOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean
-// 发布中介ID指令(无目标)
+// 发布中介ID命令(无目标)
 native IssueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
-// 发布中介指令(指定坐标)
+// 发布中介命令(指定坐标)
 native IssueNeutralPointOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, real x, real y returns boolean
-// 发布中介ID指令(指定坐标)
+// 发布中介ID命令(指定坐标)
 native IssueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
-// 发布中介指令(指定单位/物品/可破坏物)
+// 发布中介命令(指定单位/物品/可破坏物)
 native IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, widget target returns boolean
-// 发布中介ID指令(指定单位/物品/可破坏物)
+// 发布中介ID命令(指定单位/物品/可破坏物)
 native IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
-// 获取指定单位当前的指令
+// 获取指定单位当前的命令
 native GetUnitCurrentOrder takes unit whichUnit returns integer
 
 // 设置指定金矿储金量（指定新值）
@@ -7907,41 +7907,41 @@ native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
 
 //region 1.33
 
-// 将发布的ID指令(无目标)加入队列
+// 将发布的ID命令(无目标)加入队列
 // @version 1.33
 native BlzQueueImmediateOrderById takes unit whichUnit, integer order returns boolean
-// 将发布的ID指令(指定坐标)加入队列
+// 将发布的ID命令(指定坐标)加入队列
 // @version 1.33
 native BlzQueuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
-// 将发布的ID指令(指定单位/物品/可破坏物)加入队列
+// 将发布的ID命令(指定单位/物品/可破坏物)加入队列
 // @version 1.33
 native BlzQueueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
-// 将发布的即时ID指令(指定坐标)加入队列
+// 将发布的即时ID命令(指定坐标)加入队列
 // @version 1.33
 native BlzQueueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
-// 将发布的即时ID指令(指定单位/物品/可破坏物)加入队列
+// 将发布的即时ID命令(指定单位/物品/可破坏物)加入队列
 // @version 1.33
 native BlzQueueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
-// 将发布的建造ID指令(指定坐标)加入队列
+// 将发布的建造ID命令(指定坐标)加入队列
 // @version 1.33
 native BlzQueueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
-// 将发布的中介ID指令(无目标)加入队列
+// 将发布的中介ID命令(无目标)加入队列
 // @version 1.33
 native BlzQueueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
-// 将发布的中介ID指令(指定坐标)加入队列
+// 将发布的中介ID命令(指定坐标)加入队列
 // @version 1.33
 native BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
-// 将发布的中介ID指令(指定单位/物品/可破坏物)加入队列
+// 将发布的中介ID命令(指定单位/物品/可破坏物)加入队列
 // @version 1.33
 native BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
-// 获取指定单位当前指令数量
+// 获取指定单位当前命令数量
 // returns the number of orders the unit currently has queued up
 native BlzGetUnitOrderCount takes unit whichUnit returns integer
-// 停止指定单位所有指令或只清除指令队列
+// 停止指定单位所有命令或只清除命令队列
 // clears either all orders or only queued up orders
 native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing
-// 停止指定单位当前的指令，并可选择清除指令队列
+// 停止指定单位当前的命令，并可选择清除命令队列
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
