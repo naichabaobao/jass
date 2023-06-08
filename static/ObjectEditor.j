@@ -7696,7 +7696,7 @@ globals
                 // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
                 string UseHighlight
                 // FDF（框架定义） 宽度
-                // 变量为实数，如0.24,0.417
+                // 支持变量实数和带f的实数（f意义不明），如0.24,0.417f
                 string Width
                 
                 
