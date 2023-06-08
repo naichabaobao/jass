@@ -7365,7 +7365,7 @@ globals
                 string DIALOG
                 // 框架类型 输入框
                 string EDITBOX
-                // 框架类型 框架
+                // 框架类型 控件
                 string FRAME
                 // 框架类型 黏合按钮
                 string GLUEBUTTON
