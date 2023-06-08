@@ -7345,4 +7345,651 @@ globals
                 integer 852081
 
 
+//fdf (Frame 定义文件) 
+// 1.32+原生UI/框架
+// 源：https://www.hiveworkshop.com/threads/ui-reading-a-fdf.315850/
+
+                // 原生UI/框架类型
+
+                // 原生UI/框架类型 背景
+                string BACKDROP
+                // 原生UI/框架类型 按钮
+                string BUTTON
+                // 原生UI/框架类型 聊天显示
+                string CHATDISPLAY
+                // 原生UI/框架类型 复选框
+                string CHECKBOX
+                // 原生UI/框架类型 控制
+                string CONTROL
+                // 原生UI/框架类型 对话框
+                string DIALOG
+                // 原生UI/框架类型 编辑框
+                string EDITBOX
+                // 原生UI/框架类型 框架
+                string FRAME
+                // 原生UI/框架类型 胶合按钮
+                string GLUEBUTTON
+                // 原生UI/框架类型 胶合复选框
+                string GLUECHECKBOX
+                // 原生UI/框架类型 胶合编辑框
+                string GLUEEDITBOX
+                // 原生UI/框架类型 胶合弹出菜单
+                string GLUEPOPUPMENU
+                // 原生UI/框架类型 胶合文本按钮
+                string GLUETEXTBUTTON
+                // 原生UI/框架类型 高亮显示
+                string HIGHLIGHT
+                // 原生UI/框架类型 列表框
+                string LISTBOX
+                // 原生UI/框架类型 菜单
+                string MENU
+                // 原生UI/框架类型 模型
+                string MODEL
+                // 原生UI/框架类型 弹出菜单
+                string POPUPMENU
+                // 原生UI/框架类型 滚动条
+                string SCROLLBAR
+                // 原生UI/框架类型 简易按钮
+                string SIMPLEBUTTON
+                // 原生UI/框架类型 简易复选框
+                string SIMPLECHECKBOX
+                // 原生UI/框架类型 简易框架
+                string SIMPLEFRAME
+                // 原生UI/框架类型 简易状态栏
+                string SIMPLESTATUSBAR
+                // 原生UI/框架类型 聊天框
+                string SLASHCHATBOX
+                // 原生UI/框架类型 滑块
+                string SLIDER
+                // 原生UI/框架类型 精灵图
+                string SPRITE
+                // 原生UI/框架类型 文本
+                string TEXT
+                // 原生UI/框架类型 文本区域
+                string TEXTAREA
+                // 原生UI/框架类型 文本按钮
+                string TEXTBUTTON
+                // 原生UI/框架类型 限时文本
+                string TIMERTEXT
+
+
+                // FDF关键词
+                
+                // FDF关键词 字母表模式
+                // 变量如下
+                // "ADD"  添加
+                // "ALPHAKEY"  字母键
+                string AlphaMode
+                // FDF关键词
+                // 变量如下 锚点
+                // BOTTOMLEFT,-0.256,0  左下角
+                // BOTTOMRIGHT,0,0  右下角
+                // TOPLEFT, 0.0, -0.003  左上角
+                // TOPRIGHT, -0.0914, -0.003125  右上角
+                string Anchor
+                // FDF关键词 背景
+                // 变量如下
+                // "EscMenuBackground"  Esc菜单背景
+                // "EscMenuBlankBackground"  Esc菜单空白背景
+                // "EscMenuEditBoxBackground"  Esc菜单编辑框背景
+                // "MultiboardBackground"  多面板背景
+                // "MultiboardMinimizeButtonDisabled"  禁用多面板最小化按钮
+                // "EscMenuButtonBackground"  Esc菜单按钮背景
+                // "EscMenuButtonDisabledPushedBackground"  禁用Esc菜单按钮推送背景
+                // "EscMenuCheckBoxPushedBackground"  Esc菜单复选框推送背景
+                // "HeroAgilityIcon"  英雄敏捷图标
+                // "HeroIntelligenceIcon"  英雄智力图标
+                // "QuestDialogCompletedBackground"  任务完成对话框背景
+                // "UI\Widgets\BattleNet\bnet-inputbox-back.blp"  输入框按钮背景
+                // "UI\Widgets\BattleNet\bnet-mainmenu-clans-disabled.blp"  禁用战队主菜单
+                string BackdropBackground
+                // FDF关键词 背景插图
+                // 变量如下
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                string BackdropBackgroundInsets
+                // FDF关键词 背景大小
+                // 变量如下
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
+                string BackdropBackgroundSize
+                // FDF关键词 背景混合
+                string BackdropBlendAll
+                // FDF关键词 背景底部文件
+                string BackdropBottomFile
+                // FDF关键词 背景边角文件
+                string BackdropCornerFile
+                // FDF关键词 背景边角标志
+                string BackdropCornerFlags
+                // FDF关键词 背景边角尺寸
+                string BackdropCornerSize
+                // FDF关键词 背景边文件
+                string BackdropEdgeFile
+                // FDF关键词
+                string BackdropHalfSides
+                // FDF关键词
+                string BackdropLeftFile
+                // FDF关键词
+                string BackdropMirrored
+                // FDF关键词
+                string BackdropRightFile
+                // FDF关键词
+                string BackdropTileBackground
+                // FDF关键词
+                string BackdropTopFile
+                // FDF关键词
+                string BackgroundArt
+                // FDF关键词
+                string BarTexture
+                // FDF关键词
+                string ButtonPushedTextOffset
+                // FDF关键词
+                string ButtonText
+                // FDF关键词
+                string ChatDisplayBorderSize
+                // FDF关键词
+                string ChatDisplayEditBox
+                // FDF关键词
+                string ChatDisplayLineHeight
+                // FDF关键词
+                string ChatDisplayScrollBar
+                // FDF关键词
+                string CheckBoxCheckHighlight
+                // FDF关键词
+                string CheckBoxDisabledCheckHighlight
+                // FDF关键词
+                string CheckedTexture
+                // FDF关键词
+                string ControlBackdrop
+                // FDF关键词
+                string ControlDisabledBackdrop
+                // FDF关键词
+                string ControlDisabledPushedBackdrop
+                // FDF关键词
+                string ControlFocusHighlight
+                // FDF关键词
+                string ControlMouseOverHighlight
+                // FDF关键词
+                string ControlPushedBackdrop
+                // FDF关键词
+                string ControlShortcutKey
+                // FDF关键词
+                string ControlStyle
+                // FDF关键词
+                string DecorateFileNames
+                // FDF关键词
+                string DialogBackdrop
+                // FDF关键词
+                string DisabledText
+                // FDF关键词
+                string DisabledTexture
+                // FDF关键词
+                string EditBorderSize
+                // FDF关键词
+                string EditCursorColor
+                // FDF关键词
+                string EditTextFrame
+                // FDF关键词
+                string File
+                // FDF关键词
+                string Font
+                // FDF关键词
+                string FontColor
+                // FDF关键词
+                string FontDisabledColor
+                // FDF关键词
+                string FontFlags
+                // FDF关键词
+                string FontHighlightColor
+                // FDF关键词
+                string FontJustificationH
+                // FDF关键词
+                string FontJustificationOffset
+                // FDF关键词
+                string FontJustificationV
+                // FDF关键词
+                string FontShadowColor
+                // FDF关键词
+                string FontShadowOffset
+                // FDF关键词
+                string Frame
+                // FDF关键词
+                string FrameFont
+                // FDF关键词
+                string Height
+                // FDF关键词
+                string HighlightAlphaFile
+                // FDF关键词
+                string HighlightAlphaMode
+                // FDF关键词
+                string HighlightColor
+                // FDF关键词
+                string HighlightText
+                // FDF关键词
+                string HighlightType
+                // FDF关键词
+                string IncludeFile
+                // FDF关键词
+                string Layer
+                // FDF关键词
+                string LayerStyle
+                // FDF关键词
+                string ListBoxBorder
+                // FDF关键词
+                string ListBoxScrollBar
+                // FDF关键词
+                string MenuBorder
+                // FDF关键词
+                string MenuItem
+                // FDF关键词
+                string MenuItemHeight
+                // FDF关键词
+                string MenuTextHighlightColor
+                // FDF关键词
+                string NormalText
+                // FDF关键词
+                string NormalTexture
+                // FDF关键词
+                string PopupArrowFrame
+                // FDF关键词
+                string PopupButtonInset
+                // FDF关键词
+                string PopupMenuFrame
+                // FDF关键词
+                string PopupTitleFrame
+                // FDF关键词
+                string PushedTexture
+                // FDF关键词
+                string ScrollBarDecButtonFrame
+                // FDF关键词
+                string ScrollBarIncButtonFrame
+                // FDF关键词
+                string SetAllPoints
+                // FDF关键词
+                string SetPoint
+                // FDF关键词
+                string SliderInitialValue
+                // FDF关键词
+                string SliderLayoutHorizontal
+                // FDF关键词
+                string SliderLayoutVertical
+                // FDF关键词
+                string SliderMaxValue
+                // FDF关键词
+                string SliderMinValue
+                // FDF关键词
+                string SliderStepSize
+                // FDF关键词
+                string SliderThumbButtonFrame
+                // FDF关键词
+                string String
+                // FDF关键词
+                string StringList
+                // FDF关键词
+                string TabFocusDefault
+                // FDF关键词
+                string TabFocusNext
+                // FDF关键词
+                string TabFocusPush
+                // FDF关键词
+                string TexCoord
+                // FDF关键词
+                string Text
+                // FDF关键词
+                string TextAreaInset
+                // FDF关键词
+                string TextAreaLineGap
+                // FDF关键词
+                string TextAreaLineHeight
+                // FDF关键词
+                string TextAreaMaxLines
+                // FDF关键词
+                string TextAreaScrollBar
+                // FDF关键词
+                string TextLength
+                // FDF关键词
+                string Texture
+                // FDF关键词
+                string UseActiveContext
+                // FDF关键词 高亮显示
+                // 变量如下
+                // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
+                string UseHighlight
+                // FDF关键词 宽度
+                // 变量如下
+                // 0.24
+                // 0.417f
+                string Width
+                
+                
+
+
+BackdropBackgroundInsets 0.0 0.0 0.01 0.0,
+BackdropBackgroundInsets 0.0 0.01 0.0 0.0,
+BackdropBackgroundInsets 0.0025 0.0025 0.0025 0.0025,
+BackdropBackgroundInsets 0.003 0.003 0.003 0.003,
+
+BackdropBackgroundSize 0.128,
+
+BackdropBlendAll,
+
+BackdropBottomFile  "UI\Widgets\HeavyBorderBottom.blp",
+BackdropBottomFile  "UI\Widgets\LightBorderBottom.blp",
+BackdropCornerFile  "UI\Widgets\ButtonCorners.blp",
+BackdropCornerFile  "UI\Widgets\LightBorderCorners.blp",
+
+BackdropCornerFlags "BL|BR|B",
+BackdropCornerFlags "UL|UR|T",
+
+BackdropCornerSize 0.0125,
+BackdropCornerSize  0.006,
+BackdropCornerSize  0.008,
+BackdropCornerSize  0.0125,
+BackdropCornerSize  0.0155,
+
+BackdropEdgeFile            "EscMenuBorder",
+BackdropEdgeFile            "EscMenuEditBoxBorder",
+BackdropEdgeFile    "EscMenuButtonBorder",
+BackdropEdgeFile  "CinematicBorder",
+BackdropEdgeFile  "EscMenuButtonBorder",
+BackdropEdgeFile  "EscMenuButtonDisabledPushedBorder",
+BackdropEdgeFile  "EscMenuButtonPushedBorder",
+BackdropEdgeFile  "UI\Glues\ScoreScreen\scorescreen-buttonbackground.blp",
+BackdropEdgeFile  "UI\Widgets\BattleNet\bnet-dialoguebox-border.blp",
+BackdropEdgeFile  "UI\widgets\BattleNet\bnet-tooltip-border.blp",
+BackdropEdgeFile  "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-Disabled.blp",
+BackdropEdgeFile  "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-DisabledDown.blp",
+BackdropEdgeFile  "UI\Widgets\Glues\GlueScreen-Button1-BorderedBackdropBorder-Disabled.blp",
+BackdropEdgeFile  "UI\Widgets\Glues\GlueScreen-Button2-BackdropBorder-Disabled.blp",
+
+BackdropHalfSides,
+
+BackdropLeftFile    "UI\Widgets\ButtonLeft.blp",
+
+BackdropMirrored,
+
+BackdropRightFile   "UI\Widgets\HeavyBorderRight.blp",
+
+BackdropTileBackground,
+
+BackdropTopFile     "UI\Widgets\ButtonTop.blp",
+
+BackgroundArt "UI\Glues\BattleNet\BattlenetLoginGlue\BattlenetLoginGlue.mdl",
+BackgroundArt "UI\Glues\BattleNet\BattleNetTeamLevelBar\BattleNetTeamLevelBar.mdl",
+
+BarTexture "SimpleBuildTimeIndicator",
+
+ButtonPushedTextOffset -0.0015f -0.0015f,
+ButtonPushedTextOffset 0.001 -0.001,
+
+ButtonText "AddFriendButtonText",
+ButtonText "AdvancedOptionsButtonText",
+
+ChatDisplayBorderSize 0.01,
+ChatDisplayEditBox "BattleNetChatDisplayEditBoxTemplate",
+ChatDisplayLineHeight 0.01,
+ChatDisplayScrollBar "BattleNetChatDisplayScrollBarTemplate",
+
+CheckBoxCheckHighlight "BattleNetRadioButtonHighlightTemplate",
+CheckBoxCheckHighlight "EscMenuRadioButtonHighlightTemplate",
+
+CheckBoxDisabledCheckHighlight "BattleNetDisabledRadioButtonHighlightTemplate",
+CheckBoxDisabledCheckHighlight "EscMenuDisabledCheckHighlightTemplate",
+
+CheckedTexture "ReplayCheckBoxCheck",
+
+ControlBackdrop "ActionMenuBackdrop",
+ControlBackdrop "AdvancedPopupMenuBackdrop",
+
+ControlDisabledBackdrop "BattleNetCheckBoxDisabledBackdrop",
+ControlDisabledBackdrop "BattleNetPopupMenuDisabledBackdropTemplate",
+
+ControlFocusHighlight "CampaignCameraButtonFocusHighlightTemplate",
+ControlFocusHighlight "IconicButtonFocusHighlightTemplate",
+
+ControlMouseOverHighlight "BorderedButtonMouseOverHighlightTemplate",
+ControlMouseOverHighlight "ButtonMouseOverHighlightTemplate",
+
+ControlPushedBackdrop "BattleNetRadioButtonPushedBackdrop",
+ControlPushedBackdrop "BorderedButtonPushedBackdropTemplate",
+
+ControlShortcutKey "BNET_LADDER_SHORTCUT",
+ControlShortcutKey "BNET_PASSWORD_RECOVERY_SHORTCUT",
+
+ControlStyle "AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER",
+ControlStyle "AUTOTRACK|HIGHLIGHTONMOUSEOVER",
+ControlStyle "AUTOTRACK",
+
+DecorateFileNames,
+
+DialogBackdrop "BattleNetDialogBackdropTemplate",
+DialogBackdrop "CustomFilterDialogBackdrop",
+
+DisabledText "UpperButtonBarButtonDisabledTextTemplate" "ALLIES",
+DisabledText "UpperButtonBarButtonDisabledTextTemplate" "CHAT",
+
+DisabledTexture "UpperMenuButtonDisabledBackground",
+
+EditBorderSize 0.009,
+EditCursorColor 1.0 1.0 1.0,
+EditTextFrame "AccountNameEditBoxText",
+
+File "ConsoleTexture01",
+File "ConsoleTexture03",
+File "ConsoleTexture04",
+File "ConsoleTexture05",
+File "ConsoleTexture06",
+File "GoldIcon",
+File "HeroStrengthIcon",
+File "LumberIcon",
+File "SimpleBuildTimeIndicatorBorder",
+
+Font "InfoPanelTextFont", 0.0085,
+Font "InfoPanelTextFont",0.0085,
+Font "InfoPanelTextFont",0.01,
+Font "MasterFont",0.008,
+Font "MasterFont",0.01,
+
+
+FontColor 0.99 0.827 0.0705 1.0,
+FontDisabledColor 0.5 0.5 0.5 1.0,
+
+FontFlags "FIXEDSIZE",
+FontFlags "PASSWORDFIELD",
+
+FontHighlightColor 1.0 1.0 1.0 1.0,
+
+FontJustificationH JUSTIFYCENTER,
+FontJustificationH JUSTIFYLEFT,
+FontJustificationH JUSTIFYRIGHT,
+
+FontJustificationOffset 0.0 -0.001,
+FontJustificationOffset 0.0 -0.002,
+FontJustificationOffset 0.0 0.0,
+FontJustificationOffset 0.01 0.0,
+FontJustificationOffset 0.01 0.001,
+
+FontJustificationV JUSTIFYTOP,
+FontJustificationV JUSTIFYMIDDLE,
+FontJustificationV JUSTIFYBOTTOM,
+
+FontShadowColor 0.0 0.0 0.0 0.9,
+FontShadowOffset 0.001 -0.001,
+
+FrameFont "EscMenuTextFont", 0.011, "",
+FrameFont "EscMenuTextFont",0.011,"",
+FrameFont "InfoPanelTextFont", 0.011, "",
+FrameFont "InfoPanelTextFont", 0.013, "",
+FrameFont "MasterFont", 0.007, "",
+FrameFont "MasterFont", 0.01, "",
+FrameFont "MasterFont", 0.011, "",
+FrameFont "MasterFont", 0.01171, "",
+
+Frame "GLUEBUTTON" "HeroSelectorButton" {
+
+Height  0.024,
+Height 0.48f,
+
+HighlightAlphaFile "EscMenuButtonMouseOverHighlight",
+HighlightAlphaFile "EscMenuCheckBoxCheckHighlight",
+HighlightAlphaFile "EscMenuDisabledRadioButtonSelectedHighlight",
+HighlightAlphaFile "UI\Glues\ScoreScreen\scorescreen-tab-hilight.blp",
+HighlightAlphaFile "UI\Widgets\Glues\GlueScreen-Button-KeyboardHighlight.blp",
+HighlightAlphaFile "UI\Widgets\Glues\GlueScreen-Checkbox-Check.blp",
+HighlightAlphaFile "UI\Widgets\Glues\GlueScreen-Checkbox-CheckDisabled.blp",
+HighlightAlphaFile "UI\Widgets\Glues\GlueScreen-RadioButton-ButtonDisabled.blp",
+
+HighlightAlphaMode "ADD",
+HighlightAlphaMode "BLEND",
+
+HighlightColor 0.0 0.0 1.0 0.1,
+HighlightColor 1.0 0.0 0.0 0.2,
+
+HighlightText "UpperButtonBarButtonHighlightTextTemplate" "KEY_ALLIES",
+HighlightText "UpperButtonBarButtonHighlightTextTemplate" "KEY_CHAT",
+
+HighlightType "FILETEXTURE",
+HighlightType "SHADE",
+
+IncludeFile "UI\FrameDef\UI\InfoPanelTemplates.fdf",
+
+LayerStyle "NOSHADING",
+LayerStyle "IGNORETRACKEVENTS",
+LayerStyle "NOSHADING|IGNORETRACKEVENTS",
+
+ListBoxBorder 0.01,
+ListBoxScrollBar "StandardListBoxScrollBarTemplate",
+
+MenuBorder 0.009,
+
+MenuItem "NORMAL",  -2,
+MenuItem "WINDOW_MODE_WINDOWED",             -2,
+
+MenuItemHeight 0.0082,
+MenuItemHeight 0.011,
+
+MenuTextHighlightColor 0.99 0.827 0.0705 1.0,
+
+NormalText "UpperButtonBarButtonTextTemplate" "KEY_ALLIES",
+NormalText "UpperButtonBarButtonTextTemplate" "KEY_MENU",
+
+NormalTexture "ReplayCheckBoxNormal",
+
+PopupArrowFrame "CampaignPopupMenuArrow",
+PopupArrowFrame "CustomPopupMenuArrow",
+
+PopupButtonInset 0.01,
+PopupButtonInset 0.015,
+
+PopupMenuFrame "TeamMemberRaceMenuMenu3",
+PopupMenuFrame "TextureQualityPopupMenuMenu",
+
+PopupTitleFrame "EscOptionsLightsPopupMenuTitle",
+PopupTitleFrame "PopupMenuTitle",
+PopupTitleFrame "ReplayVisionMenuTitle",
+PopupTitleFrame "TeamMemberPopupMenuTitle",
+
+PushedTexture "UpperMenuButtonPushedBackground",
+
+ScrollBarDecButtonFrame "EscMenuScrollBarDecButton",
+ScrollBarIncButtonFrame "EscMenuScrollBarIncButton",
+
+SetAllPoints,
+
+SetPoint BOTTOM, "BuildTimeIndicator", TOP, 0.0, 0.00325,
+SetPoint BOTTOM, "ChatDialog", BOTTOM, 0.0, 0.03,
+SetPoint BOTTOMLEFT, "AllyHeader", BOTTOMRIGHT, 0.004, 0.0,
+SetPoint BOTTOMLEFT, "BattleNetChatPanel", BOTTOMLEFT, 0.01125, 0.02125,
+SetPoint BOTTOMRIGHT,   "QuestListItem",                BOTTOMRIGHT,   -0.003,  0,
+SetPoint BOTTOMRIGHT, "AllianceDialog", BOTTOM, -0.003, 0.03,
+SetPoint CENTER, "GameSaveSplashDialog", CENTER, 0.0, 0.0,
+SetPoint CENTER, "IconBackdrop4", BOTTOMRIGHT, -0.007625, 0.006875,
+SetPoint LEFT, "AllianceAcceptButton", RIGHT, 0.005, 0.0,
+SetPoint LEFT, "AlliedVictoryCheckBox", RIGHT, 0.01, 0.0,
+SetPoint RIGHT, "ChannelEnterButton", LEFT, -0.02, 0.0,
+SetPoint RIGHT, "ChatDialog", TOPRIGHT, -0.031, -0.0765,
+SetPoint TOP, "AnonSearchTitle", BOTTOM, 0.0, -0.005,
+SetPoint TOP, "AuthorLabel", BOTTOM, 0.0, -0.004,
+SetPoint TOPLEFT,       "LeaderboardTitle",     BOTTOMLEFT,     -0.02f,  -0.002,
+SetPoint TOPLEFT,"WindowModeBackdrop",BOTTOMLEFT, 0.0, 0.01375,
+SetPoint TOPRIGHT, "AdvancedOptionsPane", TOPRIGHT, -0.004, -0.03,
+
+SliderInitialValue 0,
+SliderInitialValue 1,
+
+SliderLayoutHorizontal,
+SliderLayoutVertical,
+
+SliderMaxValue 2,
+SliderMaxValue 4,
+
+SliderMinValue 0,
+
+SliderStepSize 1,
+
+SliderThumbButtonFrame "BattleNetThumbButton",
+SliderThumbButtonFrame "EscMenuScrollThumbButton",
+SliderThumbButtonFrame "StandardThumbButton",
+
+String "UpperButtonBarButtonTextTemplate" {
+
+StringList {
+
+TabFocusDefault,
+TabFocusNext "AddProfileButton",
+TabFocusNext "BackButton",
+
+TabFocusPush,
+
+TexCoord 0, 0.33984375, 0, 0.125,
+TexCoord 0, 1, 0.4140625, 1,
+TexCoord 0.0, 0.6640625, 0.25, 0.421875,
+TexCoord 0.0, 0.6640625, 0.75, 0.921875,
+
+Text "30",
+
+TextAreaInset           0.005,
+TextAreaInset 0.0,
+
+TextAreaLineGap         0.001,
+TextAreaLineGap 0.0015,
+
+TextAreaLineHeight      0.011,
+TextAreaLineHeight 0.015,
+
+TextAreaMaxLines 128,
+TextAreaMaxLines        32,
+
+TextAreaScrollBar "ChatScrollBar",
+
+TextLength 8,
+
+Texture "InfoPanelIconAllyFoodIcon" INHERITS "ResourceIconTemplate" {
+
+UseActiveContext,
+
+
+
+
+                
         endglobals
