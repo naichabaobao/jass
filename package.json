@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.7.15",
+  "version": "1.8.0",
   "keywords": [
     "jass",
     "vjass",
@@ -150,6 +150,10 @@
     ],
     "documentFormattingProvider": true,
     "enableProposedApi": false
+  },
+  "capabilities" : {
+    "documentSymbolProvider" : "true",
+    "workspaceSymbolProvider" : "true"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

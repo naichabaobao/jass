@@ -10,7 +10,7 @@ import("./provider/definition-provider");
 import("./provider/diagnostic-provider");
 import("./provider/rename-provider");
 import("./provider/outline-provider");
-import("./provider/symbol-provider");
 import("./provider/document-semantic-tokens-provider");
 
+import("./provider/reverse-lookup-document-symbol-provider");
 export{};
