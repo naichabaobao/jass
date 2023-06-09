@@ -606,7 +606,7 @@ globals
                 integer Efur
                 // 玛法里奥(未骑鹿)
                 integer Emns
-                // 泰兰德
+                // 泰栏德
                 integer Etyr
                 // 珊蒂斯(暗夜精灵族)
                 integer eshd
@@ -5346,7 +5346,7 @@ globals
                 integer LTba
                 // 可破坏物 达拉然建筑
                 integer XTbd
-                // 可破坏物 达拉然紫罗兰城堡
+                // 可破坏物 达拉然紫罗栏城堡
                 integer XTvt
                 // 可破坏物 钢铁大门(垂直)
                 integer DTg7
@@ -5721,7 +5721,7 @@ globals
 
 
 // 技能命令串或ID(命令串只有部分,ID估计全了,已去重)
-// 内容主要源自百度陈年旧贴,故不含1.29及之后新技能的命令串和ID（查了一下,好像也没有新命令串,ID就不管了）
+// 内容主要源自百度陈年旧贴,故不含1.29及之后新技能的命令串和ID(查了一下,好像也没有新命令串,ID就不管了)
 
                 // 技能命令串
 
@@ -7345,9 +7345,10 @@ globals
                 integer 852081
 
 
-//fdf (Frame 定义文件) 
+//fdf (Frame 定义文件)
 // 1.32+原生UI/框架
 // 源：https://www.hiveworkshop.com/threads/ui-reading-a-fdf.315850/
+
 
                 // 框架类型
 
@@ -7365,7 +7366,7 @@ globals
                 string DIALOG
                 // 框架类型 输入框
                 string EDITBOX
-                // 框架类型 控件
+                // 框架类型 框架
                 string FRAME
                 // 框架类型 黏合按钮
                 string GLUEBUTTON
@@ -7413,208 +7414,208 @@ globals
                 string TIMERTEXT
 
 
-                // FDF（框架定义）
+                // FDF(框架定义)
 
-                // FDF（框架定义） 字母模式
-                // 变量如（官方默认提供）
+                // FDF(框架定义) 字母模式
+                // 变量类型为字符串,如(官方默认提供)
                 // "ADD"  添加
                 // "ALPHAKEY"  字母键
                 string AlphaMode
-                // FDF（框架定义） 锚点
-                // 变量如（官方默认提供）
-                // BOTTOMLEFT, -0.256,0  左下角
-                // BOTTOMRIGHT, 0,0  右下角
+                // FDF(框架定义) 锚点
+                // 变量类型为组合,如(官方默认提供)
+                // BOTTOMLEFT, -0.256, 0  左下角
+                // BOTTOMRIGHT, 0, 0  右下角
                 // TOPLEFT, 0.0, -0.003  左上角
                 // TOPRIGHT, -0.0914, -0.003125  右上角
                 string Anchor
-                // FDF（框架定义） 背景
-                // 变量如（官方默认提供）
+                // FDF(框架定义) 背景
+                // 变量类型为字符串,如(官方默认提供)
                 // "EscMenuBackground"  Esc菜单背景
                 // "EscMenuBlankBackground"  Esc菜单空白背景
                 // "EscMenuEditBoxBackground"  Esc菜单输入框背景
                 // "MultiboardBackground"  多面板背景
                 // "MultiboardMinimizeButtonDisabled"  禁用多面板最小化按钮
                 // "EscMenuButtonBackground"  Esc菜单按钮背景
-                // "EscMenuButtonDisabledPushedBackground"  禁用Esc菜单按钮背景（按下时）
-                // "EscMenuCheckBoxPushedBackground"  Esc菜单复选框背景（按下时）
+                // "EscMenuButtonDisabledPushedBackground"  禁用Esc菜单按钮背景(按下时)
+                // "EscMenuCheckBoxPushedBackground"  Esc菜单复选框背景(按下时)
                 // "HeroAgilityIcon"  英雄敏捷图标
                 // "HeroIntelligenceIcon"  英雄智力图标
                 // "QuestDialogCompletedBackground"  任务完成对话框背景
                 // "UI\Widgets\BattleNet\bnet-inputbox-back.blp"  输入框按钮背景
                 // "UI\Widgets\BattleNet\bnet-mainmenu-clans-disabled.blp"  禁用战队主菜单
                 string BackdropBackground
-                // FDF（框架定义） 背景插入
-                // 变量为实数,默认值如（官方默认提供）
+                // FDF(框架定义) 背景插入
+                // 变量类型为实数,默认值如(官方默认提供)
                 // 0.0 0.0 0.01 0.0
                 // 0.0 0.01 0.0 0.0
                 // 0.0025 0.0025 0.0025 0.0025
                 // 0.003 0.003 0.003 0.003
                 string BackdropBackgroundInsets
-                // FDF（框架定义） 背景大小
-                // 变量为实数,默认值（官方默认提供），如 0.128
+                // FDF(框架定义) 背景大小
+                // 变量类型为实数,默认值(官方默认提供),如 0.128
                 string BackdropBackgroundSize
-                // FDF（框架定义） 背景混合
+                // FDF(框架定义) 背景混合
                 string BackdropBlendAll
-                // FDF（框架定义） 背景底部文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景底部文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "UI\Widgets\HeavyBorderBottom.blp"  加粗底边
                 // "UI\Widgets\LightBorderBottom.blp"  高亮底边
-                // "UI\Widgets\ButtonCorners.blp"  按钮边框样式（怀疑是圆角方角）
+                // "UI\Widgets\ButtonCorners.blp"  按钮边框样式(怀疑是圆角方角)
                 // "UI\Widgets\LightBorderCorners.blp"  高亮边框
                 string BackdropBottomFile
-                // FDF（框架定义） 背景边框文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景边框文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "BL|BR|B"
                 // "UL|UR|T"
                 string BackdropCornerFile
-                // FDF（框架定义） 背景边框标志
-                // 变量为实数,如（官方默认提供）
+                // FDF(框架定义) 背景边框标志
+                // 变量类型为实数,如(官方默认提供)
                 // 0.0125,0.006,0.008,0.0155
                 string BackdropCornerFlags
-                // FDF（框架定义） 背景边框尺寸
+                // FDF(框架定义) 背景边框尺寸
                 string BackdropCornerSize
-                // FDF（框架定义） 背景边文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景边文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "EscMenuBorder"  ESC菜单边框
                 // "EscMenuEditBoxBorder"  ESC菜单输入框边框
                 // "EscMenuButtonBorder"  ESC菜单按钮边框
                 // "CinematicBorder"  电影边框
-                // "EscMenuButtonDisabledPushedBorder"  禁用Esc菜单按钮边框（按下时）
-                // "EscMenuButtonPushedBorder"  Esc菜单按钮边框（按下时）
+                // "EscMenuButtonDisabledPushedBorder"  禁用Esc菜单按钮边框(按下时)
+                // "EscMenuButtonPushedBorder"  Esc菜单按钮边框(按下时)
                 // "UI\Glues\ScoreScreen\scorescreen-buttonbackground.blp"  得分屏按钮背景
                 // "UI\Widgets\BattleNet\bnet-dialoguebox-border.blp"  对话框边框
                 // "UI\widgets\BattleNet\bnet-tooltip-border.blp"  提示工具边框
-                // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-Disabled.blp"  黏合屏按钮1背景框（禁用）
-                // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-DisabledDown.blp"  黏合屏按钮1背景框（禁用按下）
-                // "UI\Widgets\Glues\GlueScreen-Button1-BorderedBackdropBorder-Disabled.blp"  黏合屏按钮1背景框（禁用按下）
-                // "UI\Widgets\Glues\GlueScreen-Button2-BackdropBorder-Disabled.blp"
+                // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+                // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-DisabledDown.blp"  黏合屏按钮1背景框(禁用按下)
+                // "UI\Widgets\Glues\GlueScreen-Button1-BorderedBackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+                // "UI\Widgets\Glues\GlueScreen-Button2-BackdropBorder-Disabled.blp"  黏合按钮2背景框(禁用)
                 string BackdropEdgeFile
-                // FDF（框架定义） 背景半侧文件
+                // FDF(框架定义) 背景半侧文件
                 string BackdropHalfSides
-                // FDF（框架定义） 背景左侧文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景左侧文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "UI\Widgets\ButtonLeft.blp"  左按钮
                 string BackdropLeftFile
-                // FDF（框架定义） 背景镜像
+                // FDF(框架定义) 背景镜像
                 string BackdropMirrored
-                // FDF（框架定义） 背景右侧文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景右侧文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "UI\Widgets\HeavyBorderRight.blp"  加粗右边框
                 string BackdropRightFile
-                // FDF（框架定义） 背景平铺
+                // FDF(框架定义) 背景平铺
                 string BackdropTileBackground
-                // FDF（框架定义） 背景顶部文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景顶部文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "UI\Widgets\ButtonTop.blp"  顶部按钮
                 string BackdropTopFile
-                // FDF（框架定义） 背景艺术
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 背景艺术
+                // 变量类型为字符串,如(官方默认提供)
                 // "UI\Glues\BattleNet\BattlenetLoginGlue\BattlenetLoginGlue.mdl"  战网登录
                 // "UI\Glues\BattleNet\BattleNetTeamLevelBar\BattleNetTeamLevelBar.mdl"  战网战队等级栏
                 string BackgroundArt
-                // FDF（框架定义） 栏纹理
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 栏纹理
+                // 变量类型为字符串,如(官方默认提供)
                 // "SimpleBuildTimeIndicator"  简易建造时间指示器
                 string BarTexture
-                // FDF（框架定义） 按钮文本偏移（按下时）
-                // 支持变量实数和带f的实数（f意义不明）
+                // FDF(框架定义) 按钮文本偏移(按下时)
+                // 支持变量实数和带f的实数(f意义不明)
                 // -0.0015f -0.0015f
                 // 0.001 -0.001
                 string ButtonPushedTextOffset
-                // FDF（框架定义） 按钮文本
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 按钮文本
+                // 变量类型为字符串,如(官方默认提供)
                 // "AddFriendButtonText"  添加好友按钮文本
                 // "AdvancedOptionsButtonText"  高级设置按钮文本
                 string ButtonText
-                // FDF（框架定义） 聊天框边框尺寸
-                // 变量为实数，如 0.01
+                // FDF(框架定义) 聊天框边框尺寸
+                // 变量类型为实数,如 0.01
                 string ChatDisplayBorderSize
-                // FDF（框架定义） 聊天框输入框
-                // 变量为字符串,如 "BattleNetChatDisplayEditBoxTemplate"  战网聊天框输入框模板
+                // FDF(框架定义) 聊天框输入框
+                // 变量类型为字符串,如 "BattleNetChatDisplayEditBoxTemplate"  战网聊天框输入框模板
                 string ChatDisplayEditBox
-                // FDF（框架定义） 聊天框高亮
-                // 变量为实数，如 0.01
+                // FDF(框架定义) 聊天框高亮
+                // 变量类型为实数,如 0.01
                 string ChatDisplayLineHeight
-                // FDF（框架定义） 聊天框滚动条
-                // 变量为字符串,如 "BattleNetChatDisplayScrollBarTemplate"  战网聊天框滚动条模板
+                // FDF(框架定义) 聊天框滚动条
+                // 变量类型为字符串,如 "BattleNetChatDisplayScrollBarTemplate"  战网聊天框滚动条模板
                 string ChatDisplayScrollBar
-                // FDF（框架定义） 复选框选中高亮
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 复选框选中高亮
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetRadioButtonHighlightTemplate"  战网单选按钮高亮模板
                 // "EscMenuRadioButtonHighlightTemplate"  菜单单选按钮高亮模板
                 string CheckBoxCheckHighlight
-                // FDF（框架定义）禁用复选框选中高亮
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义)禁用复选框选中高亮
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetDisabledRadioButtonHighlightTemplate"  禁用战网单选按钮选中高亮模板
                 // "EscMenuDisabledCheckHighlightTemplate"  禁用菜单单选按钮选中高亮模板
                 string CheckBoxDisabledCheckHighlight
-                // FDF（框架定义） 选中纹理
-                // 变量为字符串,如（官方默认提供） "ReplayCheckBoxCheck"  录像复选框选中
+                // FDF(框架定义) 选中纹理
+                // 变量类型为字符串,如(官方默认提供) "ReplayCheckBoxCheck"  录像复选框选中
                 string CheckedTexture
-                // FDF（框架定义） 控制背景
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制背景
+                // 变量类型为字符串,如(官方默认提供)
                 // "ActionMenuBackdrop"  活动菜单背景
                 // "AdvancedPopupMenuBackdrop"  高级弹出菜单背景
                 string ControlBackdrop
-                // FDF（框架定义） 禁用控制背景
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 禁用控制背景
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetCheckBoxDisabledBackdrop"  禁用战网复选框背景
                 // "BattleNetPopupMenuDisabledBackdropTemplate"  禁用战网弹出菜单背景
                 string ControlDisabledBackdrop
-                // FDF（框架定义） 禁用控制背景(按下时)
+                // FDF(框架定义) 禁用控制背景(按下时)
                 string ControlDisabledPushedBackdrop
-                // FDF（框架定义） 控制焦点高亮
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制焦点高亮
+                // 变量类型为字符串,如(官方默认提供)
                 // "CampaignCameraButtonFocusHighlightTemplate"  战役镜头按钮焦点高亮模板
                 // "IconicButtonFocusHighlightTemplate"  图标按钮焦点高亮模板
                 string ControlFocusHighlight
-                // FDF（框架定义） 控制鼠标悬停高亮
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制鼠标悬停高亮
+                // 变量类型为字符串,如(官方默认提供)
                 // "BorderedButtonMouseOverHighlightTemplate"  背景按钮鼠标悬停高亮模板
                 // "ButtonMouseOverHighlightTemplate"  按钮鼠标悬停高亮模板
                 string ControlMouseOverHighlight
-                // FDF（框架定义） 控制背景(按下时)
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制背景(按下时)
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetRadioButtonPushedBackdrop"  战网单选按钮背景(按下时)
                 // "BorderedButtonPushedBackdropTemplate"  背景按钮背景模板(按下时)
                 string ControlPushedBackdrop
-                // FDF（框架定义） 控制快捷键
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制快捷键
+                // 变量类型为字符串,如(官方默认提供)
                 // "BNET_LADDER_SHORTCUT"
                 // "BNET_PASSWORD_RECOVERY_SHORTCUT"
                 string ControlShortcutKey
-                // FDF（框架定义） 控制尺寸
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 控制尺寸
+                // 变量类型为字符串,如(官方默认提供)
                 // "AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER"  自动跟踪|焦点高亮|鼠标悬停高亮
                 // "AUTOTRACK|HIGHLIGHTONMOUSEOVER"  自动跟踪|鼠标悬停高亮
                 // "AUTOTRACK"  自动跟踪
                 string ControlStyle
-                // FDF（框架定义） 装饰文件名称
+                // FDF(框架定义) 装饰文件名称
                 string DecorateFileNames
-                // FDF（框架定义） 对话框背景
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 对话框背景
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetDialogBackdropTemplate"  战网对话框背景模板
                 // "CustomFilterDialogBackdrop"  自定义对话框背景
                 string DialogBackdrop
-                // FDF（框架定义） 禁用状态提示
-                // 变量为字符串,如（官方默认提供）
-                // "UpperButtonBarButtonDisabledTextTemplate" "ALLIES"  上部按纽兰按钮禁用状态提示模板-盟友
-                // "UpperButtonBarButtonDisabledTextTemplate" "CHAT"  上部按纽兰按钮禁用状态提示模板-聊天
+                // FDF(框架定义) 禁用状态提示
+                // 变量类型为字符串,如(官方默认提供)
+                // "UpperButtonBarButtonDisabledTextTemplate" "ALLIES"  左上方默认按纽栏按钮禁用状态提示模板-盟友
+                // "UpperButtonBarButtonDisabledTextTemplate" "CHAT"  左上方默认按纽栏按钮禁用状态提示模板-聊天
                 string DisabledText
-                // FDF（框架定义） 禁用状态纹理
-                // 变量为字符串,如（官方默认提供） "UpperMenuButtonDisabledBackground"  上部按纽兰按钮禁用状态背景
+                // FDF(框架定义) 禁用状态纹理
+                // 变量类型为字符串,如(官方默认提供) "UpperMenuButtonDisabledBackground"  左上方默认按纽栏按钮禁用状态背景
                 string DisabledTexture
-                // FDF（框架定义） 输入框尺寸
-                // 变量为实数,如 0.009
+                // FDF(框架定义) 输入框尺寸
+                // 变量类型为实数,如 0.009
                 string EditBorderSize
-                // FDF（框架定义） 输入框光标颜色
-                // 变量为红绿蓝三色实数组,如 1.0 1.0 1.0
+                // FDF(框架定义) 输入框光标颜色
+                // 变量类型为红绿蓝三色实数组,如 1.0 1.0 1.0
                 string EditCursorColor
-                // FDF（框架定义） 输入框文本控件
-                // 变量为字符串,如（官方默认提供） "AccountNameEditBoxText"  账户名输入框文本
+                // FDF(框架定义) 输入框文本控件
+                // 变量类型为字符串,如(官方默认提供) "AccountNameEditBoxText"  账户名输入框文本
                 string EditTextFrame
-                // FDF（框架定义） 文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "ConsoleTexture01"  控制台纹理
                 // "ConsoleTexture03"  控制台纹理
                 // "ConsoleTexture04"  控制台纹理
@@ -7625,56 +7626,55 @@ globals
                 // "LumberIcon"  木材图标
                 // "SimpleBuildTimeIndicatorBorder"  简易建造时间指示器
                 string File
-                // FDF（框架定义） 字体（似乎包含字号）
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 字体(似乎包含字号)
+                // 变量类型为字符串,如(官方默认提供)
                 // "InfoPanelTextFont", 0.0085  信息面板字体
                 // "InfoPanelTextFont",0.01  信息面板字体
                 // "MasterFont",0.008  大师字体
                 // "MasterFont",0.01  大师字体
                 string Font
-                // FDF（框架定义） 字体颜色
-                // 变量为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+                // FDF(框架定义) 字体颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
                 string FontColor
-                // FDF（框架定义） 字体禁用状态颜色
-                // 变量为红绿蓝三色+透明度实数组,如 0.5 0.5 0.5 1.0
+                // FDF(框架定义) 字体禁用状态颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如 0.5 0.5 0.5 1.0
                 string FontDisabledColor
-                // FDF（框架定义） 字体标识（限制输入字符数或文本类型）
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 字体标识(限制输入字符数或文本类型)
+                // 变量类型为字符串,如(官方默认提供)
                 // "FIXEDSIZE"  固定长度
-                // "PASSWORDFIELD"  密码类型（输入任意字符都显示成 **）
+                // "PASSWORDFIELD"  密码类型(输入任意字符都显示成 **)
                 string FontFlags
-                // FDF（框架定义） 字体高亮颜色
-                // 变量为红绿蓝三色+透明度实数组,如 1.0 1.0 1.0 1.0
+                // FDF(框架定义) 字体高亮颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如 1.0 1.0 1.0 1.0
                 string FontHighlightColor
-                // FDF（框架定义） 字体（两端）对齐
+                // FDF(框架定义) 字体(两端)对齐
                 // JUSTIFYCENTER  居中对齐
                 // JUSTIFYLEFT  左对齐
                 // JUSTIFYRIGHT  右对齐
                 string FontJustificationH
-                // FDF（框架定义） 字体两端边距
-                // 变量为左右两端边距实数组，如
+                // FDF(框架定义) 字体两端边距
+                // 变量类型为左右两端边距实数组,如
                 // 0.0 -0.001
                 // 0.0 -0.002
                 // 0.0 0.0
                 // 0.01 0.0
                 // 0.01 0.001
                 string FontJustificationOffset
-                // FDF（框架定义） 字体（垂直）对齐
+                // FDF(框架定义) 字体(垂直)对齐
                 // JUSTIFYTOP  顶部对齐
                 // JUSTIFYMIDDLE  中部对齐
                 // JUSTIFYBOTTOM  底部对齐
                 string FontJustificationV
-                // FDF（框架定义） 字体阴影颜色
-                // 变量为红绿蓝三色+透明度实数组,如 0.0 0.0 0.0 0.9
+                // FDF(框架定义) 字体阴影颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如 0.0 0.0 0.0 0.9
                 string FontShadowColor
-                // FDF（框架定义） 字体阴影偏移
-                // 变量为 X Y 双向偏移量实数组,如 0.001 -0.001
+                // FDF(框架定义) 字体阴影偏移
+                // 变量类型为 X Y 双向偏移量实数组,如 0.001 -0.001
                 string FontShadowOffset
-                // FDF（框架定义） 控件
-                // 变量为字符串,如（官方默认提供）
-                // "GLUEBUTTON" "HeroSelectorButton"  黏合按钮 英雄选择按钮
+                // FDF(框架定义) 控件
+                // 变量类型为字符串,如(官方默认提供) "GLUEBUTTON" "HeroSelectorButton"  黏合按钮 英雄选择按钮
                 string Frame
-                // FDF（框架定义） 控件字体（似乎包含字号）
+                // FDF(框架定义) 控件字体(似乎包含字号)
                 // "EscMenuTextFont", 0.011, ""  ESC菜单文本字体
                 // "InfoPanelTextFont", 0.011, "",  信息面板字体
                 // "InfoPanelTextFont", 0.013, "",  信息面板字体
@@ -7683,11 +7683,11 @@ globals
                 // "MasterFont", 0.011, "",  大师字体
                 // "MasterFont", 0.01171, "",  大师字体
                 string FrameFont
-                // FDF（框架定义） 高度
-                // 支持变量实数和带f的实数（f意义不明）,如 0.024,0.48f
+                // FDF(框架定义) 高度
+                // 支持变量实数和带f的实数(f意义不明),如 0.024,0.48f
                 string Height
-                // FDF（框架定义） 高亮字母文件
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 高亮字母文件
+                // 变量类型为字符串,如(官方默认提供)
                 // "EscMenuButtonMouseOverHighlight"  ESC菜单按钮鼠标悬停高亮
                 // "EscMenuCheckBoxCheckHighlight"  ESC菜单复选框选中高亮
                 // "EscMenuDisabledRadioButtonSelectedHighlight"  禁用ESC菜单单选按钮选中高亮
@@ -7697,97 +7697,97 @@ globals
                 // "UI\Widgets\Glues\GlueScreen-Checkbox-CheckDisabled.blp"  禁用得分屏检查栏选中
                 // "UI\Widgets\Glues\GlueScreen-RadioButton-ButtonDisabled.blp"  禁用得分屏单选按钮
                 string HighlightAlphaFile
-                // FDF（框架定义） 高亮字母模式
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 高亮字母模式
+                // 变量类型为字符串,如(官方默认提供)
                 // "ADD"  添加
                 // "BLEND"  混合
                 string HighlightAlphaMode
-                // FDF（框架定义） 高亮颜色
-                // 变量为红绿蓝三色+透明度实数组,如
+                // FDF(框架定义) 高亮颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如
                 // 0.0 0.0 1.0 0.1
                 // 1.0 0.0 0.0 0.2
                 string HighlightColor
-                // FDF（框架定义） 高亮文本
-                // 变量为字符串,如（官方默认提供）
-                // "UpperButtonBarButtonHighlightTextTemplate" "KEY_ALLIES"  上部按纽兰按钮高亮文本提示模板-关键词 盟友
-                // "UpperButtonBarButtonHighlightTextTemplate" "KEY_CHAT"  上部按纽兰按钮高亮文本提示模板-关键词 聊天
+                // FDF(框架定义) 高亮文本
+                // 变量类型为字符串,如(官方默认提供)
+                // "UpperButtonBarButtonHighlightTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮高亮文本提示模板-关键词 盟友
+                // "UpperButtonBarButtonHighlightTextTemplate" "KEY_CHAT"  左上方默认按纽栏按钮高亮文本提示模板-关键词 聊天
                 string HighlightText
-                // FDF（框架定义） 高亮类型
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 高亮类型
+                // 变量类型为字符串,如(官方默认提供)
                 // "FILETEXTURE"  文件纹理
                 // "SHADE"  遮罩
                 string HighlightType
-                // FDF（框架定义） 包含文件
-                // 变量为字符串,如（官方默认提供） "UI\FrameDef\UI\InfoPanelTemplates.fdf"  信息面板模板文件
+                // FDF(框架定义) 包含文件
+                // 变量类型为字符串,如(官方默认提供) "UI\FrameDef\UI\InfoPanelTemplates.fdf"  信息面板模板文件
                 string IncludeFile
-                // FDF（框架定义） 层级(图层)
+                // FDF(框架定义) 层级(图层)
                 string Layer
-                // FDF（框架定义） 层级样式(图层样式)
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 层级样式(图层样式)
+                // 变量类型为字符串,如(官方默认提供)
                 // "NOSHADING"  无遮蔽
                 // "IGNORETRACKEVENTS"  忽略可追溯事件
                 // "NOSHADING|IGNORETRACKEVENTS"  无遮蔽|忽略可追溯事件
                 string LayerStyle
-                // FDF（框架定义） 列表边框
-                // 变量为实数，如 0.01
+                // FDF(框架定义) 列表边框
+                // 变量类型为实数,如 0.01
                 string ListBoxBorder
-                // FDF（框架定义） 列表滚动条边框
-                // 变量为字符串,如（官方默认提供） "StandardListBoxScrollBarTemplate"  标准列表滚动条模板
+                // FDF(框架定义) 列表滚动条边框
+                // 变量类型为字符串,如(官方默认提供) "StandardListBoxScrollBarTemplate"  标准列表滚动条模板
                 string ListBoxScrollBar
-                // FDF（框架定义） 菜单边框
-                // 变量为实数，如 0.009
+                // FDF(框架定义) 菜单边框
+                // 变量类型为实数,如 0.009
                 string MenuBorder
-                // FDF（框架定义） 菜单项目
-                // 变量为字符串,如（官方默认提供）
-                // "NORMAL", -2  普通（-2）
-                // "WINDOW_MODE_WINDOWED", -2  跟随系统（-2）
+                // FDF(框架定义) 菜单项目
+                // 变量类型为字符串,如(官方默认提供)
+                // "NORMAL", -2  普通(-2)
+                // "WINDOW_MODE_WINDOWED", -2  跟随系统(-2)
                 string MenuItem
-                // FDF（框架定义） 菜单项目高度
-                // 变量为实数，如 0.0082, 0.011
+                // FDF(框架定义) 菜单项目高度
+                // 变量类型为实数,如 0.0082, 0.011
                 string MenuItemHeight
-                // FDF（框架定义） 菜单文本高亮颜色
-                // 变量为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+                // FDF(框架定义) 菜单文本高亮颜色
+                // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
                 string MenuTextHighlightColor
-                // FDF（框架定义） 普通文本
-                // 变量为字符串,如（官方默认提供）
-                // "UpperButtonBarButtonTextTemplate" "KEY_ALLIES"  上部按纽兰按钮文本模板-关键词 盟友
-                // "UpperButtonBarButtonTextTemplate" "KEY_MENU"  上部按纽兰按钮文本模板-关键词 菜单
+                // FDF(框架定义) 普通文本
+                // 变量类型为字符串,如(官方默认提供)
+                // "UpperButtonBarButtonTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮文本模板-关键词 盟友
+                // "UpperButtonBarButtonTextTemplate" "KEY_MENU"  左上方默认按纽栏按钮文本模板-关键词 菜单
                 string NormalText
-                // FDF（框架定义） 普通纹理
-                // 变量为字符串,如（官方默认提供） "ReplayCheckBoxNormal"  普通录像复选框
+                // FDF(框架定义) 普通纹理
+                // 变量类型为字符串,如(官方默认提供) "ReplayCheckBoxNormal"  普通录像复选框
                 string NormalTexture
-                // FDF（框架定义） 弹出指示符
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 弹出指示符
+                // 变量类型为字符串,如(官方默认提供)
                 // "CampaignPopupMenuArrow"  战役弹出菜单指示符
                 // "CustomPopupMenuArrow"  自定义弹出菜单指示符
                 string PopupArrowFrame
-                // FDF（框架定义） 弹出按钮插入
+                // FDF(框架定义) 弹出按钮插入
+                // 变量类型为实数,如 0.01, 0.015
                 string PopupButtonInset
-                // 变量为实数，如 0.01, 0.015
-                // FDF（框架定义） 弹出按钮
+                // FDF(框架定义) 弹出按钮
                 // "TeamMemberRaceMenuMenu3"  队伍成员种族菜单
                 // "TextureQualityPopupMenuMenu"  纹理材质弹出菜单
                 string PopupMenuFrame
-                // FDF（框架定义） 弹出标题
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 弹出(菜单)标题
+                // 变量类型为字符串,如(官方默认提供)
                 // "EscOptionsLightsPopupMenuTitle"  ESC设置弹出菜单常亮标题
                 // "PopupMenuTitle"  弹出菜单标题
                 // "ReplayVisionMenuTitle"  录像查看菜单标题
                 // "TeamMemberPopupMenuTitle"  队伍成员弹出菜单标题
                 string PopupTitleFrame
-                // FDF（框架定义） 纹理（按下时）
-                // 变量为字符串,如（官方默认提供） "UpperMenuButtonPushedBackground"  顶部菜单按钮背景（按下时）
+                // FDF(框架定义) 纹理(按下时)
+                // 变量类型为字符串,如(官方默认提供) "UpperMenuButtonPushedBackground"  顶部菜单按钮背景(按下时)
                 string PushedTexture
-                // FDF（框架定义） 滚动条下滚动按钮
-                // 变量为字符串,如（官方默认提供） "EscMenuScrollBarDecButton"  滚动条下滚动按钮
+                // FDF(框架定义) 滚动条下滚动按钮
+                // 变量类型为字符串,如(官方默认提供) "EscMenuScrollBarDecButton"  滚动条下滚动按钮
                 string ScrollBarDecButtonFrame
-                // FDF（框架定义） 滚动条上滚动按钮
-                // 变量为字符串,如（官方默认提供） "EscMenuScrollBarIncButton"  滚动条上滚动按钮
+                // FDF(框架定义) 滚动条上滚动按钮
+                // 变量类型为字符串,如(官方默认提供) "EscMenuScrollBarIncButton"  滚动条上滚动按钮
                 string ScrollBarIncButtonFrame
-                // FDF（框架定义） 设置所有锚点
+                // FDF(框架定义) 设置所有锚点
                 string SetAllPoints
-                // FDF（框架定义） 设置锚点
-                // 变量组合,如（官方默认提供）
+                // FDF(框架定义) 设置锚点
+                // 变量组合,如(官方默认提供)
                 // BOTTOM, "BuildTimeIndicator", TOP, 0.0, 0.00325  建造时间指示器
                 // BOTTOM, "ChatDialog", BOTTOM, 0.0, 0.03  聊天对话框
                 // BOTTOMLEFT, "AllyHeader", BOTTOMRIGHT, 0.004, 0.0  表头
@@ -7806,84 +7806,81 @@ globals
                 // TOPLEFT,"WindowModeBackdrop",BOTTOMLEFT, 0.0, 0.01375  跟随系统模式背景
                 // TOPRIGHT, "AdvancedOptionsPane", TOPRIGHT, -0.004, -0.03  高级设置框
                 string SetPoint
-                // FDF（框架定义） 滑块初始值
-                // 变量为实数，如 0,1
+                // FDF(框架定义) 滑块初始值
+                // 变量类型为实数,如 0, 1
                 string SliderInitialValue
-                // FDF（框架定义） 轮播图水平布局
+                // FDF(框架定义) 轮播图水平布局
                 string SliderLayoutHorizontal
-                // FDF（框架定义） 轮播图垂直布局
+                // FDF(框架定义) 轮播图垂直布局
                 string SliderLayoutVertical
-                // FDF（框架定义） 滑块最大值
-                // 变量为实数，如 2，4
+                // FDF(框架定义) 滑块最大值
+                // 变量类型为实数,如 2, 4
                 string SliderMaxValue
-                // FDF（框架定义） 滑块最小值
-                // 变量为实数，如 0
+                // FDF(框架定义) 滑块最小值
+                // 变量类型为实数,如 0
                 string SliderMinValue
-                // FDF（框架定义） 滑块滑动距离（格数）
-                // 变量为实数，如 1
+                // FDF(框架定义) 滑块滑动距离(格数)
+                // 变量类型为实数,如 1
                 string SliderStepSize
-                // FDF（框架定义） 滑块拇指按钮
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 滑块拇指按钮
+                // 变量类型为字符串,如(官方默认提供)
                 // "BattleNetThumbButton"  战网滑块拇指按钮
                 // "EscMenuScrollThumbButton"  ESC菜单滑块拇指按钮
                 // "StandardThumbButton"  标准滑块拇指按钮
                 string SliderThumbButtonFrame
-                // FDF（框架定义） 字串符
-                // 变量为字符串,如（官方默认提供） "UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
+                // FDF(框架定义) 字串符
+                // 变量类型为字符串,如(官方默认提供) "UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
                 string String
-                // FDF（框架定义） 字串符列表
+                // FDF(框架定义) 字串符列表
                 string StringList
-                // FDF（框架定义） 选项卡焦点（默认值)
+                // FDF(框架定义) 选项卡焦点(默认值)
                 string TabFocusDefault
-                // FDF（框架定义） 选项卡焦点-下一个
-                // 变量为字符串,如（官方默认提供）
+                // FDF(框架定义) 选项卡焦点-下一个
+                // 变量类型为字符串,如(官方默认提供)
                 // "AddProfileButton"  添加配置文件按钮
                 // "BackButton"  返回按钮
                 string TabFocusNext
-                // FDF（框架定义） 选项卡焦点-推送
+                // FDF(框架定义) 选项卡焦点-推送
                 string TabFocusPush
-                // FDF（框架定义） 贴图坐标
+                // FDF(框架定义) 贴图坐标
                 // 官方默认坐标如
                 // 0, 0.33984375, 0, 0.125
                 // 0, 1, 0.4140625, 1
                 // 0.0, 0.6640625, 0.25, 0.421875
                 // 0.0, 0.6640625, 0.75, 0.921875
                 string TexCoord
-                // FDF（框架定义） 文本
+                // FDF(框架定义) 文本
                 // 变量类型为字串符,如 "30"
                 string Text
-                // FDF（框架定义） 文本区域插入
-                // 变量为实数,如 0.005,0.0
+                // FDF(框架定义) 文本区域插入
+                // 变量类型为实数,如 0.005, 0.0
                 string TextAreaInset
-                // FDF（框架定义） 文本区域行间距
-                // 变量为实数,如 0.001,0.0015
+                // FDF(框架定义) 文本区域行间距
+                // 变量类型为实数,如 0.001, 0.0015
                 string TextAreaLineGap
-                // FDF（框架定义） 文本区域行高度
-                // 变量为实数,如 0.011,0.015
+                // FDF(框架定义) 文本区域行高度
+                // 变量类型为实数,如 0.011, 0.015
                 string TextAreaLineHeight
-                // FDF（框架定义） 文本区域最大行数 
-                // 变量为整数,如 128,32
+                // FDF(框架定义) 文本区域最大行数
+                // 变量类型为整数,如 128, 32
                 string TextAreaMaxLines
-                // FDF（框架定义） 文本区域滚动条
-                // 变量如（官方默认提供）
-                // "ChatScrollBar"  聊天滚动条
+                // FDF(框架定义) 文本区域滚动条
+                // 变量类型为字串符,如(官方默认提供) "ChatScrollBar"  聊天滚动条
                 string TextAreaScrollBar
-                // FDF（框架定义）  文本长度
-                // 变量为整数,如 8
+                // FDF(框架定义)文本长度
+                // 变量类型为整数,如 8
                 string TextLength
-                // FDF（框架定义） 纹理
+                // FDF(框架定义) 纹理
                 // 继承于父类 "ResourceIconTemplate"  资源图标模板
-                // 变量如（官方默认提供）
-                // "InfoPanelIconAllyFoodIcon"  信息面板图标-盟友人口图标
+                // 变量类型为字串符,如(官方默认提供) "InfoPanelIconAllyFoodIcon"  信息面板图标-盟友人口图标
                 string Texture
-                // FDF（框架定义） 使用活动上下文
+                // FDF(框架定义) 使用活动上下文
                 string UseActiveContext
-                // FDF（框架定义） 高亮显示
-                // 变量如（官方默认提供）
-                // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
+                // FDF(框架定义) 高亮显示
+                // 变量类型为字串符,如(官方默认提供) "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
                 string UseHighlight
-                // FDF（框架定义） 宽度
-                // 支持变量实数和带f的实数（f意义不明）,如 0.24,0.417f
+                // FDF(框架定义) 宽度
+                // 支持变量实数和带f的实数(f意义不明),如 0.24, 0.417f
                 string Width
 
 
