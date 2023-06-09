@@ -1212,12 +1212,12 @@ globals
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
-	// 单位事件 单位被选择
+	// 单位事件 选择单位
 	constant unitevent EVENT_UNIT_SELECTED = ConvertUnitEvent(57)
-	// 单位事件 单位被取消选择
+	// 单位事件 取消选择单位
 	constant unitevent EVENT_UNIT_DESELECTED = ConvertUnitEvent(58)
 	// 单位事件 单位状态变更
-	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)                                                                        
+	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)
 	
 	// Events which may have a filter for the "other unit"   
 	
@@ -1302,13 +1302,13 @@ globals
 	
 	// 游戏事件 游戏加装完毕
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
-	// 游戏事件 比赛即将完成
+	// 游戏事件 锦标赛即将完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
-	// 游戏事件 比赛完成
+	// 游戏事件 锦标赛完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
-	// 游戏事件 储存
+	// 游戏事件 存档
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
-	// 游戏事件 自定义框架(UI)
+	// 游戏事件 控件(自定义UI)
 	constant gameevent EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
 	
 	
@@ -4226,7 +4226,7 @@ native I2S takes integer i returns string
 // 转换实数成字符串
 native R2S takes real r returns string
 // 转换实数成字符串
-//@param precision指定保留的小数位数
+//@param precision 保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字串符成整数
 native S2I takes string s returns integer
@@ -4281,10 +4281,10 @@ native DefineStartLocationLoc takes integer whichStartLoc, location whichLocatio
 // 设置出生点优先权(指定点)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置出生点优先权系数
-// @param whichStartLoc第一出生点
-// @param prioSlotIndex玩家槽
-// @param otherStartLocIndex其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority优先权系数
+// @param whichStartLoc 第一出生点
+// @param prioSlotIndex 玩家槽
+// @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
+// @param priority 优先权系数
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 获取出生点优先权(指定玩家槽)
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
@@ -4293,10 +4293,10 @@ native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex return
 // 设置敌人出生点(指定玩家槽)
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置敌人出生点优先权系数
-// @param whichStartLoc第一出生点
-// @param prioSlotIndex玩家槽
-// @param otherStartLocIndex其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority出生点分布优先权系数
+// @param whichStartLoc 第一出生点
+// @param prioSlotIndex 玩家槽
+// @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
+// @param priority 出生点分布优先权系数
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏类型支持
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
@@ -4363,6 +4363,9 @@ native SetPlayerColor takes player whichPlayer, playercolor color returns nothin
 // 设置指定玩家联盟类型(指定项目) [R]
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
 // 设置指定玩家税率 [R]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
@@ -4390,6 +4393,9 @@ native GetPlayerController takes player whichPlayer returns mapcontrol
 // 查询指定玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取指定玩家税率 [R]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家优先种族是否指定种族
 // 在情节–玩家设置指定的种族，如果未指定(设为可选)，则取房间玩家自主选择的种族，使用随机时应该返回否
@@ -5406,7 +5412,7 @@ native GetUnitDefaultPropWindow takes unit whichUnit returns real
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
 // 设置指定单位所有者(指定玩家)
-// @param changeColor是否改变队伍颜色
+// @param changeColor 是否改变队伍颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
