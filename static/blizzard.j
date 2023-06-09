@@ -7599,6 +7599,9 @@ endfunction
 
 
 // 设置漂浮文字颜色
+// @param red 红色（输入的是百分比）
+// @param green 绿色（输入的是百分比）
+// @param blue 蓝色（输入的是百分比）
 // @param transparency 透明度（建议为0，越大越透明）
 function SetTextTagColorBJ takes texttag tt, real red, real green, real blue, real transparency returns nothing
     call SetTextTagColor(tt, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
