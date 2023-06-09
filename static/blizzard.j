@@ -7672,6 +7672,12 @@ endfunction
 
 
 // 创建漂浮文字（指定点）
+// @param zOffset Z 轴高度
+// @param size 字体大小
+// @param red 红色（输入的是百分比）
+// @param green 绿色（输入的是百分比）
+// @param blue 蓝色（输入的是百分比）
+// @param transparency 透明度（建议为0，越大越透明）
 function CreateTextTagLocBJ takes string s, location loc, real zOffset, real size, real red, real green, real blue, real transparency returns texttag
     set bj_lastCreatedTextTag = CreateTextTag()
     call SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
