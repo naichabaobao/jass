@@ -7683,6 +7683,12 @@ endfunction
 
 
 // 创建漂浮文字（指定单位）
+// @param zOffset Z 轴高度
+// @param size 字体大小
+// @param red 红色（输入的是百分比）
+// @param green 绿色（输入的是百分比）
+// @param blue 蓝色（输入的是百分比）
+// @param transparency 透明度（建议为0，越大越透明）
 function CreateTextTagUnitBJ takes string s, unit whichUnit, real zOffset, real size, real red, real green, real blue, real transparency returns texttag
     set bj_lastCreatedTextTag = CreateTextTag()
     call SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
@@ -7744,7 +7750,7 @@ endfunction
 
 
 // 禁止用户控制权（使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应）
-// 该操作对AI无效
+// 对AI无效
 function SetUserControlForceOff takes force whichForce returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
