@@ -9418,12 +9418,18 @@ endfunction
 
 
 // 设置玩家税率
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
 function SetPlayerTaxRateBJ takes integer rate, playerstate whichResource, player sourcePlayer, player otherPlayer returns nothing
     call SetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource, rate)
 endfunction
 
 
 // 获取玩家税率
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
 function GetPlayerTaxRateBJ takes playerstate whichResource, player sourcePlayer, player otherPlayer returns integer
     return GetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource)
 endfunction
