@@ -466,11 +466,11 @@ globals
 	constant playergameresult PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
 	// 玩家游戏结果 不确定
 	constant playergameresult PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
-	// 联盟类型 被动联盟(联盟不侵略)
+	// 联盟类型 被动联盟(联盟不侵犯)
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
-	// 联盟类型 帮助请求
+	// 联盟类型 救援请求
 	constant alliancetype ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
-	// 联盟类型 帮助请求响应
+	// 联盟类型 响应救援请求（救援回应）
 	constant alliancetype ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
 	// 联盟类型 共享经验值
 	constant alliancetype ALLIANCE_SHARED_XP = ConvertAllianceType(3)
@@ -478,13 +478,13 @@ globals
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
 	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟类型 共享单位控制
+	// 联盟类型 共享单位（控制）
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
 	// 联盟类型 完全共享单位控制
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
-	// 联盟类型 被迫共享视野
+	// 联盟类型 强制共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
 	// 游戏版本 混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
@@ -941,22 +941,22 @@ globals
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
 	// 游戏浮点状态 - 当前时间
 	constant fgamestate GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
-	// 玩家状态 - 游戏结果
+	// 玩家状态 - 游戏得分
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
 	
 	// current resource levels
 	
-	// 玩家状态 - 当前的黄金数量
+	// 玩家状态 - 现有黄金量
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
-	// 玩家状态 - 当前的木材数量
+	// 玩家状态 - 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家状态 - 当前的英雄数量
+	// 玩家状态 - 剩余可用英雄数
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-        // 玩家状态 - 可用人口数(默认为人口建筑提供的数量)
+	// 玩家状态 - 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
-	// 玩家状态 - 已用人口数
+	// 玩家状态 - 已使用人口数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
-	// 玩家状态 - 人口上限数(平衡常数或触发限制的最大数量)，默认为100
+	// 玩家状态 - 最大人口上限(平衡常数或触发限制的最大数量)，默认为100
 	constant playerstate PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
 	// 玩家状态 - 给予奖励
 	constant playerstate PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
@@ -968,21 +968,21 @@ globals
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
 	// 玩家状态 - 裁判或观战者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态 - 不允许观战者
+	// 玩家状态 - 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
 	
-	// 玩家状态 - 黄金税率
+	// 玩家状态 - 黄金维修费率
 	constant playerstate PLAYER_STATE_GOLD_UPKEEP_RATE = ConvertPlayerState(13)
-	// 玩家状态 - 木材税率
+	// 玩家状态 - 木材维修费率
 	constant playerstate PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
 	
 	// cumulative resources collected by the player during the mission
 	
-	// 玩家状态 - 已收集的金钱数量
+	// 玩家状态 - 总金钱采集量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态 - 已收集的木材数量
+	// 玩家状态 - 总木材采集量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
 	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
