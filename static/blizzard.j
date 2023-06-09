@@ -13,7 +13,7 @@ globals
     constant real      bj_PI                            = 3.14159
     // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
-    // 单元格宽度，默认128.0
+    // 单元尺寸，默认128.0
     constant real      bj_CELLWIDTH                     = 128.0
     // 悬崖高度，默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
