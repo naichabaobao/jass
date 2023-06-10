@@ -1402,14 +1402,14 @@ function Atan2BJ takes real y, real x returns real
 endfunction
 
 
-// 取两点之间的角度
+// 获取两点之间的角度
 // 两个点仍会保留，如不再使用用完请注意排泄
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
-// 取两点之间的距离
+// 获取两点之间的距离
 // 两个点仍会保留，如不再使用用完请注意排泄
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
@@ -1427,19 +1427,19 @@ function PolarProjectionBJ takes location source, real dist, real angle returns 
 endfunction
 
 
-// 取随机角度（0~360，可以取非整数）
+// 获取随机角度（0~360，可以取非整数）
 function GetRandomDirectionDeg takes nothing returns real
     return GetRandomReal(0, 360)
 endfunction
 
 
-// 取随机实数（0~100，可以取非整数）
+// 获取随机实数（0~100，可以取非整数）
 function GetRandomPercentageBJ takes nothing returns real
     return GetRandomReal(0, 100)
 endfunction
 
 
-// 取区域内的随机地点
+// 获取区域内的随机点
 // 会生成点，用完请注意排泄
 function GetRandomLocInRect takes rect whichRect returns location
     return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
@@ -1497,7 +1497,7 @@ function OffsetRectBJ takes rect r, real dx, real dy returns rect
 endfunction
 
 
-// 将点转换为区域
+// 转换点成区域
 // 会生成区域，用完请注意排泄
 // @param center 中心点位置
 // @param width 宽
@@ -1509,19 +1509,19 @@ function RectFromCenterSizeBJ takes location center, real width, real height ret
 endfunction
 
 
-// 坐标是否在矩形内
+// 查询坐标是否在矩形内
 function RectContainsCoords takes rect r, real x, real y returns boolean
     return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
 endfunction
 
 
-// 点是否在矩形内
+// 查询点是否在矩形内
 function RectContainsLoc takes rect r, location loc returns boolean
     return RectContainsCoords(r, GetLocationX(loc), GetLocationY(loc))
 endfunction
 
 
-// 单位是否在区域内
+// 查询单位是否在区域内
 function RectContainsUnit takes rect r, unit whichUnit returns boolean
     return RectContainsCoords(r, GetUnitX(whichUnit), GetUnitY(whichUnit))
 endfunction
@@ -1591,7 +1591,7 @@ function PostTriggerExecuteBJ takes trigger trig, boolean checkConditions return
 endfunction
 
 
-// 触发器队列检查
+// 检查触发器队列
 // Debug - Display the contents of the trigger queue (as either null or "x"
 // for each entry).
 function QueuedTriggerCheck takes nothing returns nothing
@@ -1614,7 +1614,7 @@ function QueuedTriggerCheck takes nothing returns nothing
 endfunction
 
 
-// 队列中获取触发器下标
+// 获取触发器队列中指定下标的触发器
 // Searches the queue for a given trigger, returning the index of the
 // trigger within the queue if it is found, or -1 if it is not found.
 //
@@ -1632,7 +1632,7 @@ function QueuedTriggerGetIndex takes trigger trig returns integer
 endfunction
 
 
-// 队列中移除下标对应的触发器
+// 从触发器队列中移除指定下标的触发器
 // Removes a trigger from the trigger queue, shifting other triggers down
 // to fill the unused space.  If the currently running trigger is removed
 // in this manner, this function does NOT attempt to run the next trigger.
@@ -1658,7 +1658,7 @@ function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
 endfunction
 
 
-// 尝试执行队列中的触发器
+// 尝试执行触发器队列中的触发器
 // Attempt to execute the first trigger in the queue.  If it fails, remove
 // it and execute the next one.  Continue this cycle until a trigger runs,
 // or until the queue is empty.
@@ -1679,7 +1679,7 @@ function QueuedTriggerAttemptExec takes nothing returns boolean
 endfunction
 
 
-// 增加触发器到队列
+// 增加触发器到触发器队列
 // Queues a trigger to be executed, assuring that such triggers are not
 // executed at the same time.
 //
@@ -1702,7 +1702,7 @@ function QueuedTriggerAddBJ takes trigger trig, boolean checkConditions returns 
 endfunction
 
 
-// 从队列中清除触发器
+// 从触发器队列中清除触发器
 // Denotes the end of a queued trigger. Be sure to call this only once per
 // queued trigger, or risk stepping on the toes of other queued triggers.
 //
@@ -1728,7 +1728,7 @@ function QueuedTriggerRemoveBJ takes trigger trig returns nothing
 endfunction
 
 
-// 触发器队列完成
+// 完成触发器队列
 // Denotes the end of a queued trigger. Be sure to call this only once per
 // queued trigger, lest you step on the toes of other queued triggers.
 //
@@ -1766,19 +1766,19 @@ function QueuedTriggerClearInactiveBJ takes nothing returns nothing
 endfunction
 
 
-// 统计触发器队列中触发器的数量
+// 查询触发器队列的触发器数量
 function QueuedTriggerCountBJ takes nothing returns integer
     return bj_queuedExecTotal
 endfunction
 
 
-// 触发器队列是否为空
+// 查询触发器队列是否为空
 function IsTriggerQueueEmptyBJ takes nothing returns boolean
     return bj_queuedExecTotal <= 0
 endfunction
 
 
-// 触发器是否在队列中
+// 查询触发器是否在队列中
 function IsTriggerQueuedBJ takes trigger trig returns boolean
     return QueuedTriggerGetIndex(trig) != -1
 endfunction
@@ -1855,7 +1855,7 @@ endfunction
 //***************************************************************************
 
 
-// 不做任何动作
+// 不做任何动作/无动作
 function DoNothing takes nothing returns nothing
 endfunction
 
@@ -1916,7 +1916,7 @@ function PercentToInt takes real percentage, integer max returns integer
 endfunction
 
 
-// 百分比小数(0-1)转(0-255)
+// 转换百分比成小数，(0-1)转(0-255)
 function PercentTo255 takes real percentage returns integer
     return PercentToInt(percentage, 255)
 endfunction
@@ -2142,7 +2142,7 @@ function SmartCameraPanBJ takes player whichPlayer, location loc, real duration 
 endfunction
 
 
-// 播放动画镜头
+// 播放电影镜头
 function SetCinematicCameraForPlayer takes player whichPlayer, string cameraModelFile returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2151,7 +2151,7 @@ function SetCinematicCameraForPlayer takes player whichPlayer, string cameraMode
 endfunction
 
 
-// 重置游戏镜头
+// 重置游戏镜头（限时）
 function ResetToGameCameraForPlayer takes player whichPlayer, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2161,8 +2161,8 @@ endfunction
 
 
 // 摇晃镜头源
-// @param magnitude摇晃幅度
-// @param velocity摇晃速率
+// @param magnitude 摇晃幅度
+// @param velocity 摇晃速率
 function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2172,8 +2172,8 @@ endfunction
 
 
 // 摇晃镜头目标
-// @param magnitude摇晃幅度
-// @param velocity摇晃速率
+// @param magnitude 摇晃幅度
+// @param velocity 摇晃速率
 function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2183,7 +2183,7 @@ endfunction
 
 
 // 震动镜头
-// @param magnitude摇晃幅度
+// @param magnitude 摇晃幅度
 function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude returns nothing
     local real richter = magnitude
     if (richter > 5.0) then
@@ -2307,7 +2307,7 @@ endfunction
 
 
 // 扩展/收缩 可用镜头区域（指定玩家）
-// @param adjustMethod扩展/收缩
+// @param adjustMethod 扩展/收缩
 function AdjustCameraBoundsForPlayerBJ takes integer adjustMethod, player whichPlayer, real dxWest, real dxEast, real dyNorth, real dySouth returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
