@@ -2678,7 +2678,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_EFFECT_ABILITY = ConvertAbilityIntegerLevelField('Iobu')
     // 技能随等级改变的整数域 变化单位类型 ('Ndc2')
 	constant abilityintegerlevelfield ABILITY_ILF_CONVERSION_UNIT = ConvertAbilityIntegerLevelField('Ndc2')
-    // 技能随等级改变的整数域 可被保存单位 ('Nsl1')
+    // 技能随等级改变的整数域 可被保存单位 ('Nsl1')（保存灵魂技能）
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TO_PRESERVE = ConvertAbilityIntegerLevelField('Nsl1')
     // 技能随等级改变的整数域 允许单位类型 ('Chl1')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_ALLOWED = ConvertAbilityIntegerLevelField('Chl1')
