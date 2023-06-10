@@ -6007,13 +6007,13 @@ native ForceCampaignSelectScreen takes nothing returns nothing
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
-// 重命名保存目录
+// 重命名存档目录
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
-// 移除保存目录
+// 移除存档目录
 native RemoveSaveDirectory takes string sourceDirName returns boolean
-// 复制保存目录
+// 复制存档目录
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
-// 查询游戏进度是否存在
+// 查询存档是否存在
 native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
