@@ -5,8 +5,7 @@
 globals
     //-----------------------------------------------------------------------
     // Constants
-    //
-
+    
     // Misc constants
 
     // 圆周率 π，默认3.14159
@@ -761,11 +760,11 @@ globals
 
     // Minimap ping styles
 
-    // 小地图信号 - 简单
+    // 小地图信号样式 - 简易
     constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
-    // 小地图信号 - 闪烁
+    // 小地图信号样式 - 闪烁
     constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
-    // 小地图信号 - 警告
+    // 小地图信号样式 - 警告
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
@@ -828,8 +827,7 @@ globals
 
     //-----------------------------------------------------------------------
     // Variables
-    //
-
+    
     // Force predefs
 
     // 玩家组（所有玩家）
@@ -1450,7 +1448,6 @@ endfunction
 // 取余数（整数）
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
 // Examples:  18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
-//
 function ModuloInteger takes integer dividend, integer divisor returns integer
     local integer modulus = dividend - (dividend / divisor) * divisor
 
@@ -1468,7 +1465,6 @@ endfunction
 // 取余数（实数）
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
 // Examples:  13.000 mod 2.500 = 0.500.  -6.000 mod 2.500 = 1.500.
-//
 function ModuloReal takes real dividend, real divisor returns real
     local real modulus = dividend - I2R(R2I(dividend / divisor)) * divisor
 
@@ -1552,7 +1548,6 @@ endfunction
 
 // 运行触发器 (无视条件)
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
-//
 function ConditionalTriggerExecute takes trigger trig returns nothing
     if TriggerEvaluate(trig) then
         call TriggerExecute(trig)
@@ -1562,7 +1557,6 @@ endfunction
 
 // 运行触发器(检查条件)
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
-//
 
 function TriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
@@ -1579,7 +1573,6 @@ endfunction
 // Arranges for a trigger to fire almost immediately, except that the calling
 // trigger is not interrupted as is the case with a TriggerExecute call.
 // Since the trigger executes normally, its conditions are still evaluated.
-//
 function PostTriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
         if not (TriggerEvaluate(trig)) then
@@ -1617,7 +1610,6 @@ endfunction
 // 获取触发器队列中指定下标的触发器
 // Searches the queue for a given trigger, returning the index of the
 // trigger within the queue if it is found, or -1 if it is not found.
-//
 function QueuedTriggerGetIndex takes trigger trig returns integer
     // Determine which, if any, of the queued triggers is being removed.
     local integer index     = 0
@@ -1636,7 +1628,6 @@ endfunction
 // Removes a trigger from the trigger queue, shifting other triggers down
 // to fill the unused space.  If the currently running trigger is removed
 // in this manner, this function does NOT attempt to run the next trigger.
-//
 function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
     local integer index
 
@@ -1662,7 +1653,6 @@ endfunction
 // Attempt to execute the first trigger in the queue.  If it fails, remove
 // it and execute the next one.  Continue this cycle until a trigger runs,
 // or until the queue is empty.
-//
 function QueuedTriggerAttemptExec takes nothing returns boolean
     loop
         exitwhen bj_queuedExecTotal == 0
@@ -1682,7 +1672,6 @@ endfunction
 // 增加触发器到触发器队列
 // Queues a trigger to be executed, assuring that such triggers are not
 // executed at the same time.
-//
 function QueuedTriggerAddBJ takes trigger trig, boolean checkConditions returns boolean
     // Make sure our queue isn't full.  If it is, return failure.
     if (bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS) then
@@ -1705,7 +1694,6 @@ endfunction
 // 从触发器队列中清除触发器
 // Denotes the end of a queued trigger. Be sure to call this only once per
 // queued trigger, or risk stepping on the toes of other queued triggers.
-//
 function QueuedTriggerRemoveBJ takes trigger trig returns nothing
     local integer index
     local integer trigIndex
@@ -1731,7 +1719,6 @@ endfunction
 // 完成触发器队列
 // Denotes the end of a queued trigger. Be sure to call this only once per
 // queued trigger, lest you step on the toes of other queued triggers.
-//
 function QueuedTriggerDoneBJ takes nothing returns nothing
     local integer index
 
@@ -1751,7 +1738,6 @@ endfunction
 
 // 清除所有触发器队列
 // Empty the trigger queue.
-//
 function QueuedTriggerClearBJ takes nothing returns nothing
     call PauseTimer(bj_queuedExecTimeoutTimer)
     set bj_queuedExecTotal = 0
@@ -1760,7 +1746,6 @@ endfunction
 
 // 清除触发器队列中未执行任务
 // Remove all but the currently executing trigger from the trigger queue.
-//
 function QueuedTriggerClearInactiveBJ takes nothing returns nothing
     set bj_queuedExecTotal = IMinBJ(bj_queuedExecTotal, 1)
 endfunction
@@ -1865,14 +1850,12 @@ endfunction
 // This function does nothing.  WorldEdit should should eventually ignore
 // CommentString triggers during script generation, but until such a time,
 // this function will serve as a stub.
-//
 function CommentString takes string commentString returns nothing
 endfunction
 
 
 // 获取外部字串符的译文
 // This function returns the input string, converting it from the localized text, if necessary
-//
 function StringIdentity takes string theString returns string
     return GetLocalizedString(theString)
 endfunction
@@ -1896,7 +1879,6 @@ endfunction
 
 // Converts a percentage (real, 0..100) into a scaled integer (0..max),
 // clipping the result to 0..max in case the input is invalid.
-//
 
 // 取最大值的百分比值
 // R2I(max * percentage)
@@ -1967,7 +1949,6 @@ endfunction
 
 
 // Returns a square rect that exactly encompasses the specified circle.
-//
 
 // 将圆形区域转换为矩形区域
 // 以圆心和为中心，直径为边长创建区域
@@ -2151,7 +2132,7 @@ function SetCinematicCameraForPlayer takes player whichPlayer, string cameraMode
 endfunction
 
 
-// 重置游戏镜头（限时）
+// 重置镜头到游戏默认状态（限时）（指定玩家）
 function ResetToGameCameraForPlayer takes player whichPlayer, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2211,7 +2192,6 @@ endfunction
 
 
 // Query the current camera bounds.
-//
 
 // 获取当前镜头范围
 // 会生成区域，用完请注意排泄
@@ -2221,7 +2201,6 @@ endfunction
 
 
 // Query the initial camera bounds, as defined at map init.
-//
 // 获取初始游戏时的镜头范围
 // 会生成区域，用完请注意排泄
 function GetCameraBoundsMapRect takes nothing returns rect
@@ -2230,7 +2209,6 @@ endfunction
 
 
 // Query the playable map area, as defined at map init.
-//
 
 // 获取可用地图区域
 // 会生成区域，用完请注意排泄
@@ -2240,7 +2218,6 @@ endfunction
 
 
 // Query the entire map area, as defined at map init.
-//
 
 // 获取完整地图区域
 // 会生成区域，用完请注意排泄
@@ -2406,7 +2383,6 @@ endfunction
 
 // The parameters for the API Substring function are unintuitive, so this
 // merely performs a translation for the starting index.
-//
 
 // 截取字符串
 function SubStringBJ takes string source, integer start, integer end returns string
@@ -2722,6 +2698,10 @@ endfunction
 
 
 // 创建地形变化: 弹坑
+// @param duration 持续时间
+// @param permanent 临时(false)/永久(true)
+// @param radius 半径
+// @param depth 深度
 function TerrainDeformationCraterBJ takes real duration, boolean permanent, location where, real radius, real depth returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformCrater(GetLocationX(where), GetLocationY(where), radius, depth, R2I(duration * 1000), permanent)
     return bj_lastCreatedTerrainDeformation
@@ -2729,6 +2709,13 @@ endfunction
 
 
 // 创建地域变形: 波纹
+// @param duration 持续时间
+// @param limitNeg 普通(false)/下陷(true)
+// @param startRadius 开始半径
+// @param endRadius 结束半径
+// @param depth 深度
+// @param wavePeriod 涟漪间隔
+// @param waveWidth 分开距离
 function TerrainDeformationRippleBJ takes real duration, boolean limitNeg, location where, real startRadius, real endRadius, real depth, real wavePeriod, real waveWidth returns terraindeformation
     local real spaceWave
     local real timeWave
@@ -2748,6 +2735,12 @@ endfunction
 
 
 // 创建地形变化: 冲击波
+// @param source 开始点
+// @param target 结束点
+// @param duration 持续时间
+// @param radius 结束半径
+// @param depth 深度
+// @param trailDelay 拖尾延时
 function TerrainDeformationWaveBJ takes real duration, location source, location target, real radius, real depth, real trailDelay returns terraindeformation
     local real distance
     local real dirX
@@ -2769,6 +2762,11 @@ endfunction
 
 
 // 创建地形变化: 随机
+// @param duration 持续时间
+// @param radius 半径
+// @param minDelta 最小深度
+// @param maxDelta 最大深度
+// @param updateInterval 更新间隔
 function TerrainDeformationRandomBJ takes real duration, location where, real radius, real minDelta, real maxDelta, real updateInterval returns terraindeformation
     set bj_lastCreatedTerrainDeformation = TerrainDeformRandom(GetLocationX(where), GetLocationY(where), radius, minDelta, maxDelta, R2I(duration * 1000), R2I(updateInterval * 1000))
     return bj_lastCreatedTerrainDeformation
@@ -2915,7 +2913,6 @@ endfunction
 // Version of CreateFogModifierRect that assumes use of sharedVision and
 // gives the option of immediately enabling the modifier, so that triggers
 // can default to modifiers that are immediately enabled.
-//
 function CreateFogModifierRectBJ takes boolean enabled, player whichPlayer, fogstate whichFogState, rect r returns fogmodifier
     set bj_lastCreatedFogModifier = CreateFogModifierRect(whichPlayer, whichFogState, r, true, false)
     if enabled then
@@ -2929,7 +2926,6 @@ endfunction
 // Version of CreateFogModifierRadius that assumes use of sharedVision and
 // gives the option of immediately enabling the modifier, so that triggers
 // can default to modifiers that are immediately enabled.
-//
 function CreateFogModifierRadiusLocBJ takes boolean enabled, player whichPlayer, fogstate whichFogState, location center, real radius returns fogmodifier
     set bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, false)
     if enabled then
@@ -3612,7 +3608,6 @@ endfunction
 
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
-//
 // Commented out - Destructibles have no attachment points.
 // 新建特殊效果（指定可破坏物）
 //function AddSpecialEffectTargetDestructableBJ takes string attachPointName, widget targetWidget, string modelName returns effect
@@ -3622,7 +3617,6 @@ endfunction
 
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
-//
 // Commented out - Items have no attachment points.
 // 新建特殊效果（指定物品）
 //function AddSpecialEffectTargetItemBJ takes string attachPointName, widget targetWidget, string modelName returns effect
@@ -3813,7 +3807,6 @@ endfunction
 
 // 英雄丢弃物品（指定物品栏位置）
 // Translates 0-based slot indices to 1-based slot indices.
-//
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot-1)
     return bj_lastRemovedItem
@@ -3991,7 +3984,6 @@ endfunction
 // 发布使用物品命令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
-//
 function UnitUseItemDestructable takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitUseItemTarget(whichUnit, whichItem, target)
 endfunction
@@ -4005,7 +3997,6 @@ endfunction
 
 // 获取英雄携带的物品（指定物品格）
 // Translates 0-based slot indices to 1-based slot indices.
-//
 function UnitItemInSlotBJ takes unit whichUnit, integer itemSlot returns item
     return UnitItemInSlot(whichUnit, itemSlot-1)
 endfunction
@@ -4013,7 +4004,6 @@ endfunction
 
 // 获取物品在物品栏的格数（指定物品类型）
 // Translates 0-based slot indices to 1-based slot indices.
-//
 function GetInventoryIndexOfItemTypeBJ takes unit whichUnit, integer itemId returns integer
     local integer index
     local item    indexItem
@@ -4143,7 +4133,6 @@ endfunction
 
 // 随机选取指定区域的物品触发器动作
 // See GroupPickRandomUnitEnum for the details of this algorithm.
-//
 function RandomItemInRectBJEnum takes nothing returns nothing
     set bj_itemRandomConsidered = bj_itemRandomConsidered + 1
     if (GetRandomInt(1, bj_itemRandomConsidered) == 1) then
@@ -4165,7 +4154,6 @@ endfunction
 
 // 随机选取指定区域的物品
 // Picks a random item from within a rect
-//
 function RandomItemInRectSimpleBJ takes rect r returns item
     return RandomItemInRectBJ(r, null)
 endfunction
@@ -5044,7 +5032,6 @@ endfunction
 // 替换单位
 // This attempts to replace a unit with a new unit type by creating a new
 // unit of the desired type using the old unit's location, facing, etc.
-//
 function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStateMethod returns unit
     local unit    oldUnit = whichUnit
     local unit    newUnit
@@ -5281,7 +5268,6 @@ endfunction
 
 // 随机选取矩形区域的可破坏物触发器
 // See GroupPickRandomUnitEnum for the details of this algorithm.
-//
 function RandomDestructableInRectBJEnum takes nothing returns nothing
     set bj_destRandomConsidered = bj_destRandomConsidered + 1
     if (GetRandomInt(1,bj_destRandomConsidered) == 1) then
@@ -5303,7 +5289,6 @@ endfunction
 
 // 随机选取矩形区域的可破坏物
 // Picks a random destructable from within a rect
-//
 function RandomDestructableInRectSimpleBJ takes rect r returns destructable
     return RandomDestructableInRectBJ(r, null)
 endfunction
@@ -5362,7 +5347,6 @@ endfunction
 
 // 获取升降台高度
 // Determine the elevator's height from its occlusion height.
-//
 function GetElevatorHeight takes destructable d returns integer
     local integer height
 
@@ -5379,7 +5363,6 @@ endfunction
 // want to change to, but also what height we are currently at.  This code
 // determines the elevator's current height from its occlusion height.
 // Arbitrarily changing an elevator's occlusion height is thus inadvisable.
-//
 function ChangeElevatorHeight takes destructable d, integer newHeight returns nothing
     local integer oldHeight
 
@@ -5742,10 +5725,8 @@ endfunction
 // 随机选取单位组中的单位触发器动作
 // Consider each unit, one at a time, keeping a "current pick".   Once all units
 // are considered, this "current pick" will be the resulting random unit.
-//
 // The chance of picking a given unit over the "current pick" is 1/N, where N is
 // the number of units considered thusfar (including the current consideration).
-//
 function GroupPickRandomUnitEnum takes nothing returns nothing
     set bj_groupRandomConsidered = bj_groupRandomConsidered + 1
     if (GetRandomInt(1,bj_groupRandomConsidered) == 1) then
@@ -5777,7 +5758,6 @@ endfunction
 
 // 随机选择玩家组中的玩家触发器动作
 // See GroupPickRandomUnitEnum for the details of this algorithm.
-//
 function ForcePickRandomPlayerEnum takes nothing returns nothing
     set bj_forceRandomConsidered = bj_forceRandomConsidered + 1
     if (GetRandomInt(1,bj_forceRandomConsidered) == 1) then
@@ -6111,7 +6091,6 @@ endfunction
 // This version differs from the common.j interface in that the alpha value
 // is reversed so as to be displayed as transparency, and all four parameters
 // are treated as percentages rather than bytes.
-//
 function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
     call SetUnitVertexColor(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
@@ -6137,7 +6116,6 @@ endfunction
 
 // 设置指定单位面对点
 // Sets a unit's facing to point directly at a location.
-//
 function SetUnitFacingToFaceLocTimed takes unit whichUnit, location target, real duration returns nothing
     local location unitLoc = GetUnitLoc(whichUnit)
 
@@ -6148,7 +6126,6 @@ endfunction
 
 // 设置指定单位面对另一指定单位
 // Sets a unit's facing to point directly at another unit.
-//
 function SetUnitFacingToFaceUnitTimed takes unit whichUnit, unit target, real duration returns nothing
     local location unitLoc = GetUnitLoc(target)
 
@@ -6348,7 +6325,6 @@ endfunction
 
 // 设置玩家组联盟状态
 // Set the alliance states for an entire force towards another force.
-//
 function SetForceAllianceStateBJ takes force sourceForce, force targetForce, integer allianceState returns nothing
     local integer sourceIndex
     local integer targetIndex
@@ -7324,7 +7300,6 @@ endfunction
 // 获取排行榜中第N位的玩家
 // Returns the player who is occupying a specified position in a leaderboard.
 // The position parameter is expected in the range of 1..16.
-//
 function LeaderboardGetIndexedPlayerBJ takes integer position, leaderboard lb returns player
     local integer index
     local player  indexPlayer
@@ -7841,6 +7816,7 @@ endfunction
 
 
 // 发送小地图信号颜色（指定点，指定颜色，指定玩家组）
+// @param style 小地图信号样式，[bj_MINIMAPPINGSTYLE_SIMPLE,bj_MINIMAPPINGSTYLE_FLASHY,bj_MINIMAPPINGSTYLE_ATTACK]
 function PingMinimapLocForForceEx takes force whichForce, location loc, real duration, integer style, real red, real green, real blue returns nothing
     call PingMinimapForForceEx(whichForce, GetLocationX(loc), GetLocationY(loc), duration, style, red, green, blue)
 endfunction
@@ -7975,7 +7951,6 @@ endfunction
 //   - Display animating portrait for duration
 //   - Display a speech indicator for the unit
 //   - Ping the minimap
-//
 function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, string unitName, sound soundHandle, string message, integer timeType, real timeVal, boolean wait returns nothing
     call TryInitCinematicBehaviorBJ()
 
@@ -8068,7 +8043,6 @@ endfunction
 // 播送单位消息（指定单位类型）
 // This operates like TransmissionFromUnitWithNameBJ, but for a unit type
 // rather than a unit instance.  As such, no speech indicator is employed.
-//
 function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlayer, integer unitId, string unitName, location loc, sound soundHandle, string message, integer timeType, real timeVal, boolean wait returns nothing
     call TryInitCinematicBehaviorBJ()
 
@@ -8128,7 +8102,6 @@ endfunction
 //   - End any outstanding music themes
 //   - Fix the random seed to a set value
 //   - Reset the camera smoothing factor
-//
 
 // 切换影片模式(指定玩家组)
 // @param interfaceFadeTime淡出时间
@@ -8310,6 +8283,11 @@ endfunction
 
 
 // 电影 设置滤镜（高级）
+// @param duration 持续时间
+// @param bmode 混合模式
+// @param tex 电影滤镜纹理(可在 ObjectEditor.j 文件找到)
+// @param red0~trans0 开始颜色(红绿蓝三色及透明度)
+// @param red1~trans1 结束颜色(红绿蓝三色及透明度)
 function CinematicFilterGenericBJ takes real duration, blendmode bmode, string tex, real red0, real green0, real blue0, real trans0, real red1, real green1, real blue1, real trans1 returns nothing
     call AbortCinematicFadeBJ()
     call SetCineFilterTexture(tex)
@@ -8336,7 +8314,6 @@ endfunction
 // Rescues a unit for a player.  This performs the default rescue behavior,
 // including a rescue sound, flashing selection circle, ownership change,
 // and optionally a unit color change.
-//
 function RescueUnitBJ takes unit whichUnit, player rescuer, boolean changeColor returns nothing
     if IsUnitDeadBJ(whichUnit) or (GetOwningPlayer(whichUnit) == rescuer) then
         return
@@ -8383,7 +8360,6 @@ endfunction
 // 设置可营救单位的颜色
 // Determines whether or not rescued units automatically change color upon
 // being rescued.
-//
 function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
     set bj_rescueChangeColorUnit = changeColor
 endfunction
@@ -8392,7 +8368,6 @@ endfunction
 // 设置可营救建筑的颜色
 // Determines whether or not rescued buildings automatically change color
 // upon being rescued.
-//
 function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothing
     set bj_rescueChangeColorBldg = changeColor
 endfunction
@@ -8513,7 +8488,6 @@ endfunction
 // digit is considered the mission index within that campaign.  This is done
 // so that the trigger for this can use a single drop-down to list all of
 // the campaign missions.
-//
 function SetMissionAvailableBJ takes boolean available, integer missionIndex returns nothing
     local integer campaignNumber = missionIndex / 1000
     local integer missionNumber = missionIndex - campaignNumber * 1000
@@ -8522,7 +8496,7 @@ function SetMissionAvailableBJ takes boolean available, integer missionIndex ret
 endfunction
 
 
-// 允许/禁止 战役
+// 允许/禁止 战役关卡
 function SetCampaignAvailableBJ takes boolean available, integer campaignNumber returns nothing
     local integer campaignOffset
 
@@ -9586,7 +9560,6 @@ endfunction
 // 发布命令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
-//
 function IssueTargetDestructableOrder takes unit whichUnit, string order, widget targetWidget returns boolean
     return IssueTargetOrder( whichUnit, order, targetWidget )
 endfunction
@@ -9620,7 +9593,6 @@ endfunction
 // 发布（单位组）命令（指定可破坏物）
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
-//
 function GroupTargetDestructableOrder takes group whichGroup, string order, widget targetWidget returns boolean
     return GroupTargetOrder( whichGroup, order, targetWidget )
 endfunction
@@ -9638,7 +9610,6 @@ endfunction
 
 
 // Rally point setting
-//
 
 // 设置 聚集点（指定点）
 function SetUnitRallyPoint takes unit whichUnit, location targPos returns nothing
@@ -10064,7 +10035,6 @@ endfunction
 // Starting Units for Human Players
 //   - 1 Town Hall, placed at start location
 //   - 5 Peasants, placed between start location and nearest gold mine
-//
 
 // 创建初始单位 - 人族
 // 创建点 - 玩家出生点
@@ -10485,8 +10455,7 @@ function PickMeleeAI takes player num, string s1, string s2, string s3 returns n
 
     // easy difficulty never uses any custom AI scripts
     // that are designed to be a bit more challenging
-    //
-    if GetAIDifficulty(num) == AI_DIFFICULTY_NEWBIE then
+        if GetAIDifficulty(num) == AI_DIFFICULTY_NEWBIE then
         call StartMeleeAI(num,s1)
         return
     endif
@@ -10646,7 +10615,6 @@ endfunction
 // 统计所有尚未被击败的盟友（包括玩家自己）建筑数量
 // Counts key structures owned by a player and his or her allies, including
 // structures currently upgrading or under construction.
-//
 // Key structures: Town Hall, Great Hall, Tree of Life, Necropolis
 function MeleeGetAllyKeyStructureCount takes player whichPlayer returns integer
     local integer    playerIndex

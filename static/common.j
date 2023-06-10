@@ -642,9 +642,9 @@ globals
 	constant animtype ANIM_TYPE_SPELL = ConvertAnimType(9)
 	// 动画类型 - 头像视窗
 	constant animtype ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
-	// 子动画类型 - 扎根(古树)
+	// 子动画类型 - 定身
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
-	// 子动画类型 - 生长(古树)
+	// 子动画类型 - 变形
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
 	// 子动画类型 - 循环
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
@@ -658,9 +658,9 @@ globals
 	constant subanimtype SUBANIM_TYPE_FAST = ConvertSubAnimType(17)
 	// 子动画类型 - 旋转
 	constant subanimtype SUBANIM_TYPE_SPIN = ConvertSubAnimType(18)
-	// 子动画类型 - 准备完成
+	// 子动画类型 - 就绪
 	constant subanimtype SUBANIM_TYPE_READY = ConvertSubAnimType(19)
-	// 子动画类型 - 传送
+	// 子动画类型 - 引导
 	constant subanimtype SUBANIM_TYPE_CHANNEL = ConvertSubAnimType(20)
 	// 子动画类型 - 防御
 	constant subanimtype SUBANIM_TYPE_DEFEND = ConvertSubAnimType(21)
@@ -672,11 +672,11 @@ globals
 	constant subanimtype SUBANIM_TYPE_LEFT = ConvertSubAnimType(24)
 	// 子动画类型 - 往右
 	constant subanimtype SUBANIM_TYPE_RIGHT = ConvertSubAnimType(25)
-	// 子动画类型 - 开火
+	// 子动画类型 - 火焰
 	constant subanimtype SUBANIM_TYPE_FIRE = ConvertSubAnimType(26)
-	// 子动画类型 - 吃肉
+	// 子动画类型 - 血肉
 	constant subanimtype SUBANIM_TYPE_FLESH = ConvertSubAnimType(27)
-	// 子动画类型 - 打击
+	// 子动画类型 - 命中
 	constant subanimtype SUBANIM_TYPE_HIT = ConvertSubAnimType(28)
 	// 子动画类型 - 受伤
 	constant subanimtype SUBANIM_TYPE_WOUNDED = ConvertSubAnimType(29)
@@ -696,7 +696,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_LUMBER = ConvertSubAnimType(36)
 	// 子动画类型 - 工作
 	constant subanimtype SUBANIM_TYPE_WORK = ConvertSubAnimType(37)
-	// 子动画类型 - 说话
+	// 子动画类型 - 交谈
 	constant subanimtype SUBANIM_TYPE_TALK = ConvertSubAnimType(38)
 	// 子动画类型 - 第一
 	constant subanimtype SUBANIM_TYPE_FIRST = ConvertSubAnimType(39)
@@ -726,17 +726,17 @@ globals
 	constant subanimtype SUBANIM_TYPE_LARGE = ConvertSubAnimType(51)
 	// 子动画类型 - 升级
 	constant subanimtype SUBANIM_TYPE_UPGRADE = ConvertSubAnimType(52)
-	// 子动画类型 - 排出
+	// 子动画类型 - 吸取
 	constant subanimtype SUBANIM_TYPE_DRAIN = ConvertSubAnimType(53)
-	// 子动画类型 - 吞
+	// 子动画类型 - 吞噬
 	constant subanimtype SUBANIM_TYPE_FILL = ConvertSubAnimType(54)
 	// 子动画类型 - 闪电链
 	constant subanimtype SUBANIM_TYPE_CHAINLIGHTNING = ConvertSubAnimType(55)
 	// 子动画类型 - 吃树
 	constant subanimtype SUBANIM_TYPE_EATTREE = ConvertSubAnimType(56)
-	// 子动画类型 - 吐
+	// 子动画类型 - 呕吐
 	constant subanimtype SUBANIM_TYPE_PUKE = ConvertSubAnimType(57)
-	// 子动画类型 - 乱动
+	// 子动画类型 - 抽打
 	constant subanimtype SUBANIM_TYPE_FLAIL = ConvertSubAnimType(58)
 	// 子动画类型 - 关闭
 	constant subanimtype SUBANIM_TYPE_OFF = ConvertSubAnimType(59)
@@ -1165,7 +1165,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位事件 发布命令(指定点)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-        // 玩家单位事件 发布命令(指定单位)
+	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
@@ -1520,23 +1520,23 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合方式 无混合，有两个无混合
+	// 混合方式 无混合物，有两个无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
-	// 混合方式 无混合，有两个无混合
+	// 混合方式 无视混合物
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合方式 关键的alpha混合
+	// 混合方式 关键的alpha混合物
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
-	// 混合方式 普通混合
+	// 混合方式 普通混合物
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合方式 附加的混合
+	// 混合方式 附加的混合物
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合方式 调整的混合
+	// 混合方式 调整的混合物
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合方式 调整的2x混合
+	// 混合方式 调整的2倍混合物
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
-        // 动画频率控制 普通频率
+	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
-        // 动画频率控制 罕见频率
+	// 动画频率控制 罕见频率
 	constant raritycontrol RARITY_RARE = ConvertRarityControl(1)
 	// 纹理贴图标志 无
 	constant texmapflags TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
@@ -4208,7 +4208,6 @@ native SquareRoot takes real x returns real
 // computes x to the y power
 // y == 0.0             => 1
 // x ==0.0 and y < 0    => 0
-//
 native Pow takes real x, real power returns real
 // 四舍五入
 constant native MathRound takes real r returns integer
@@ -4495,20 +4494,28 @@ native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichL
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
 // 按ID发布(单位组)命令(无目标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
 // 发布(单位组)命令(指定坐标) [R]
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
 // 发布(单位组)命令(指定点)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
 // 按ID发布(单位组)命令(指定坐标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
 // 按ID发布(单位组)命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
 // 发布(单位组)命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
 // 按ID发布(单位组)命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
@@ -5431,14 +5438,15 @@ native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns no
 native SetUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
 // 播放指定单位的指定序号动动画 [R]
 native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation returns nothing
-// 播放指定单位的指定动画 (指定概率)
+// 播放指定单位的指定动画
+// @param rarity 稀有度：普通的(RARITY_FREQUENT)或罕见的(RARITY_RARE)
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
 
-// 锁定指定单位朝向
+// 锁定指定单位身体朝向
 native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
-// 重置指定单位朝向
+// 重置指定单位身体朝向
 native ResetUnitLookAt takes unit whichUnit returns nothing
 
 // 设置指定单位可否营救(指定玩家) [R]
@@ -5733,32 +5741,46 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // 按ID发布命令(无目标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
 // 按ID发布命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 发布即时命令(指定坐标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 发布即时命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
+// @param unitToBuild 建筑物的系统名字字符串，可在 common.ai 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
+// @param unitId 单位类型，可在 ObjectEditor.j 文件找到
 native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
 
 // 发布中介命令(无目标)
@@ -6437,7 +6459,7 @@ native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns
 // 设置肖像打光器
 // @param portraitDNCFile肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
-// 设置天空
+// 设置天空模型
 // @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
@@ -6790,7 +6812,7 @@ native MultiboardSetItemIcon takes multiboarditem mbi, string iconFileName retur
 // subsequently displayed multiboards
 //
 
-// 显示/隐藏 多面板模式 [R]
+// 显示/隐藏 所有多面板 [R]
 native MultiboardSuppressDisplay takes boolean flag returns nothing
 
 
@@ -6804,7 +6826,7 @@ native SetCameraQuickPosition takes real x, real y returns nothing
 native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
 // 停用镜头(所有玩家) [R]
 native StopCamera takes nothing returns nothing
-// 重置游戏镜头(所有玩家) [R]
+// 重置镜头到游戏默认状态(所有玩家) [R]
 native ResetToGameCamera takes real duration returns nothing
 // 平移镜头(所有玩家)
 native PanCameraTo takes real x, real y returns nothing
@@ -7079,12 +7101,41 @@ native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
 native EnableWeatherEffect takes weathereffect whichEffect, boolean enable returns nothing
 
 // 新建地形变化:弹坑 [R]
+// @param radius 半径
+// @param depth 深度
+// @param duration 持续时间
+// @param permanent 临时(false)/永久(true)
 native TerrainDeformCrater takes real x, real y, real radius, real depth, integer duration, boolean permanent returns terraindeformation
 // 新建地形变化:波纹 [R]
+// @param radius 结束半径
+// @param depth 深度
+// @param duration 持续时间
+// @param count 记数，默认为1
+// @param spaceWaves 分开距离比例(2倍的结束半径 除以 分开距离)
+// @param timeWaves 涟漪间隔比例(2倍的持续时间 除以 涟漪间隔)
+// @param radiusStartPct 半径比例(变形开始半径 除以 变形结束半径)
+// @param limitNeg 普通(false)/下陷(true)
 native TerrainDeformRipple takes real x, real y, real radius, real depth, integer duration, integer count, real spaceWaves, real timeWaves, real radiusStartPct, boolean limitNeg returns terraindeformation
 // 新建地形变化:冲击波 [R]
+// @param x 开始点
+// @param y 结束点
+// @param dirX 坐标比例(结束点 X 坐标 减 开始点 X 坐标 的差 除以 距离)
+// @param dirY 坐标比例(结束点 Y 坐标 减 开始点 Y 坐标 的差 除以 距离)
+// @param distance 距离(开始点到结束点距离)
+// @param speed 速度(持续时间 除以 距离)
+// @param radius 结束半径
+// @param depth 深度
+// @param trailDelay 拖尾延时
+// @param count 记数，默认为1
 native TerrainDeformWave takes real x, real y, real dirX, real dirY, real distance, real speed, real radius, real depth, integer trailTime, integer count returns terraindeformation
 // 新建地形变化:随机 [R]
+// @param x 开始点
+// @param y 结束点
+// @param radius 半径
+// @param minDelta 最小深度
+// @param maxDelta 最大深度
+// @param duration 持续时间
+// @param updateInterval 更新间隔
 native TerrainDeformRandom takes real x, real y, real radius, real minDelta, real maxDelta, integer duration, integer updateInterval returns terraindeformation
 // 停止指定地形变化 [R]
 native TerrainDeformStop takes terraindeformation deformation, integer duration returns nothing
@@ -7147,7 +7198,7 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 // 获取地形悬崖高度(指定坐标) [R]
 native GetTerrainCliffLevel takes real x, real y returns integer
-// 设置水颜色 [R]
+// 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
 // 启用/禁用 水面变形
 native SetWaterDeforms takes boolean val returns nothing
@@ -7177,14 +7228,17 @@ native SetImageConstantHeight takes image whichImage, boolean flag, real height 
 // 设置图像位置(指定坐标) [R]
 native SetImagePosition takes image whichImage, real x, real y, real z returns nothing
 // 设置图像颜色 [R]
+// @param alpha 透明度
 native SetImageColor takes image whichImage, integer red, integer green, integer blue, integer alpha returns nothing
-// 设置图像着色状态
+// 允许/禁止 图像渲染
 native SetImageRender takes image whichImage, boolean flag returns nothing
-// 设置图像永久着色状态
+// 允许/禁止 图像永久渲染
 native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
-// 设置图像水上状态
+// 允许/禁止 图像在水面显示
+// @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
+// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
@@ -7197,13 +7251,13 @@ native CreateUbersplat takes real x, real y, string name, integer red, integer g
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
 // 重置地面纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
-// 完成地面纹理
+// 结束地面纹理
 native FinishUbersplat takes ubersplat whichSplat returns nothing
 // 显示/隐藏 地面纹理变化[R]
 native ShowUbersplat takes ubersplat whichSplat, boolean flag returns nothing
-// 设置地面纹理着色状态
+// 允许/禁止 地面纹理渲染
 native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothing
-// 设置地面纹理永久着色状态
+// 允许/禁止 地面纹理永久渲染
 native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns nothing
 
 
@@ -7299,7 +7353,7 @@ native Preloader takes string filename returns nothing
 //Machinima API
 
 
-// 隐藏电影面板
+// 显示/隐藏 电影面板，包含标题栏、字幕及头像框体
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
@@ -7389,7 +7443,7 @@ native BlzSetItemDescription takes item whichItem, string description returns no
 native BlzGetItemDescription takes item whichItem returns string
 // 设置指定物品提示
 native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
-// 获取指定物品提示信息
+// 获取指定物品提示
 native BlzGetItemTooltip takes item whichItem returns string
 // 设置指定物品扩展提示
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
@@ -7433,7 +7487,7 @@ native BlzSetSpecialEffectPosition takes effect whichEffect, real x, real y, rea
 native BlzSetSpecialEffectHeight takes effect whichEffect, real height returns nothing
 // 设置指定特效播放速度
 native BlzSetSpecialEffectTimeScale takes effect whichEffect, real timeScale returns nothing
-// 设置指定特效持续时间
+// 设置指定特效开始时间
 native BlzSetSpecialEffectTime takes effect whichEffect, real time returns nothing
 // 设置指定特效朝向
 native BlzSetSpecialEffectOrientation takes effect whichEffect, real yaw, real pitch, real roll returns nothing
@@ -7497,7 +7551,7 @@ native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer l
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
 // 获取单位技能的剩余冷却时间
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
-// 重设单位技能冷却
+// 设置单位结束技能冷却
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
 // 设置单位技能开始冷却
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
@@ -7546,9 +7600,9 @@ native BlzIsSelectionEnabled takes nothing returns boolean
 native BlzIsSelectionCircleEnabled takes nothing returns boolean
 // 设置镜头平滑持续时间
 native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-// 启用目标闪动指示器
+// 启用/禁用 目标闪烁指示器
 native BlzEnableTargetIndicator takes boolean enable returns nothing
-// 查询目标闪动指示器是否启用
+// 查询目标闪烁指示器是否启用
 native BlzIsTargetIndicatorEnabled takes nothing returns boolean
 // 显示地形
 native BlzShowTerrain takes boolean show returns nothing
@@ -7558,14 +7612,14 @@ native BlzShowSkyBox takes boolean show returns nothing
 native BlzStartRecording takes integer fps returns nothing
 // 结束录制
 native BlzEndRecording takes nothing returns nothing
-// 显示/隐藏 指定单位队伍颜色
+// 显示/隐藏 指定单位队伍光晕
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
 // 获取原生框架(原生UI)
 native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle
-// 启用原生框架(原生UI)自动重置位置
+// 启用/禁用 原生框架(原生UI)自动重置位置
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
-// 隐藏原生框架(原生UI)
+// 显示/隐藏 原生框架(原生UI)
 native BlzHideOriginFrames takes boolean enable returns nothing
 // 变换颜色，似乎对原生框架(原生UI)全局生效
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
