@@ -806,15 +806,15 @@ globals
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
 	// 地图参数 - 使用障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
-	// 地图参数 - 启用裁判/观战者
+	// 地图参数 - 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
 	// 地图参数 - 战败后成为观战者
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
 	// 地图参数 - 固定玩家颜色
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
-	// 地图参数 - 禁止资源交易
+	// 地图参数 - 禁止交易资源
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图参数 - 允许联盟资源交易
+	// 地图参数 - 只允许盟友交易资源
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
 	// 地图参数 - 禁止变更联盟类型
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
@@ -984,7 +984,7 @@ globals
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
 	// 玩家状态 - 总木材采集量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
+	// 玩家状态 - 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 单位状态 单位当前生命值
