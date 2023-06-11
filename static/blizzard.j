@@ -3780,13 +3780,14 @@ function UnitRemoveBuffBJ takes integer buffcode, unit whichUnit returns boolean
 endfunction
 
 
-// 给英雄添加物品
+// 创建物品（指定单位）触发器动作
 function UnitAddItemSwapped takes item whichItem, unit whichHero returns boolean
     return UnitAddItem(whichHero, whichItem)
 endfunction
 
 
-// 创建物品给英雄
+// 创建物品（指定单位）触发器
+// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns item
     // Create the item at the hero's feet first, and then give it to him.
     // This is to ensure that the item will be left at the hero's feet if
@@ -3797,7 +3798,7 @@ function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns ite
 endfunction
 
 
-// 英雄丢弃物品
+// 删除物品
 function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns nothing
     set bj_lastRemovedItem = whichItem
     call UnitRemoveItem(whichHero, whichItem)
@@ -3805,7 +3806,7 @@ endfunction
 
 
 
-// 英雄丢弃物品（指定物品栏位置）
+// 删除物品（指定物品栏位置）
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot-1)
@@ -3813,7 +3814,7 @@ function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero re
 endfunction
 
 
-// 创建物品
+// 创建物品（指定点）
 function CreateItemLoc takes integer itemId, location loc returns item
     set bj_lastCreatedItem = CreateItem(itemId, GetLocationX(loc), GetLocationY(loc))
     return bj_lastCreatedItem
@@ -3826,7 +3827,7 @@ function GetLastCreatedItem takes nothing returns item
 endfunction
 
 
-// 获取最后丢弃的物品
+// 获取最后删除的物品
 function GetLastRemovedItem takes nothing returns item
     return bj_lastRemovedItem
 endfunction
