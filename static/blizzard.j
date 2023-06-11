@@ -4078,13 +4078,13 @@ function SetItemDropOnDeathBJ takes item whichItem, boolean flag returns nothing
 endfunction
 
 
-// 设置物品能否丢弃
+// 设置物品可否丢弃
 function SetItemDroppableBJ takes item whichItem, boolean flag returns nothing
     call SetItemDroppable(whichItem, flag)
 endfunction
 
 
-// 设置物品的所有者
+// 设置物品所属
 function SetItemPlayerBJ takes item whichItem, player whichPlayer, boolean changeColor returns nothing
     call SetItemPlayer(whichItem, whichPlayer, changeColor)
 endfunction
