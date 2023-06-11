@@ -800,11 +800,11 @@ globals
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
 	// 地图参数 - 隐藏地形
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图参数 - 已探索地图
+	// 地图参数 - 已探索地图/可见地形
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 	// 地图参数 - 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图参数 - 使用障碍
+	// 地图参数 - 使用生命障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
 	// 地图参数 - 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
@@ -812,11 +812,11 @@ globals
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
 	// 地图参数 - 固定玩家颜色
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
-	// 地图参数 - 禁止交易资源
+	// 地图参数 - 锁定交易资源（禁止交易）
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图参数 - 只允许盟友交易资源
+	// 地图参数 - 限制盟友资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
-	// 地图参数 - 禁止变更联盟类型
+	// 地图参数 - 锁定联盟设置（禁止更改）
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
 	// 地图参数 - 隐藏联盟类型变更
 	constant mapflag MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
@@ -830,11 +830,11 @@ globals
 	constant mapflag MAP_LOCK_RANDOM_SEED = ConvertMapFlag(8192 * 4)
 	// 地图参数 - 共享高级控制
 	constant mapflag MAP_SHARED_ADVANCED_CONTROL = ConvertMapFlag(8192 * 8)
-	// 地图参数 - 随机英雄
+	// 地图参数 - 使用随机英雄
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
-	// 地图参数 - 随机种族
+	// 地图参数 - 使用随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 - 重载地图
+	// 地图参数 - 地图转换（加载新地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
 	// 地图参数 - 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
@@ -4321,7 +4321,7 @@ native GetPlayers takes nothing returns integer
 native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 获取选择的游戏类型
 native GetGameTypeSelected takes nothing returns gametype
-// 查询地图参数状态是否开启(指定参数)
+// 查询地图参数/地图选项是否开启(指定参数)
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取障碍设置(最大生命值百分比限制，攻击百分比限制，复活时间限制)
 constant native GetGamePlacement takes nothing returns placement
