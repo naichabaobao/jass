@@ -96,7 +96,8 @@ globals
 
     // Auto Save constants
 
-    // 最大（自动）存档数量，默认5
+    // 保留的最大（自动）存档数量，默认5
+    // 怀疑超过会自动替换，但按理说该设置不该在这里
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -116,7 +117,7 @@ globals
     //   - Max heroes allowed per hero type
     //   - Distance from start loc to search for nearby mines
 
-    // 初始时钟，默认早上8点整（8.00）
+    // 初始时间，默认早上8点整（8.00）
     constant real      bj_MELEE_STARTING_TOD            = 8.00
     // 混乱之治版本初始黄金数量，默认750
     constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
@@ -126,23 +127,27 @@ globals
     constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
     // 冰封王座版本初始木材数量，默认150
     constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
-    // 使用随机英雄时给予的英雄数量，默认1个
+    // 使用随机英雄时创建的英雄数量，默认1个
     constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
-    // 拥有英雄最大数量，默认3个
+    // 英雄数量上限，默认3个
     constant integer   bj_MELEE_HERO_LIMIT              = 3
-    // 每类英雄拥有限制数量，默认1个
+    // 每类英雄数量上限，默认1个
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
-    // 金矿搜索距离，默认2000（主要用于创建亡灵/精灵分矿）
+    // 金矿搜索距离，默认2000
+    // 主要用于创建亡灵/精灵主矿
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
-    // 清除出生点中立敌对单位的范围，默认1500（使用清除出生点的野怪时，要删除距离出生点多少范围内的野怪）
+    // 清除出生点中立敌对单位的范围，默认1500
+    // 使用清除出生点的野怪时，要删除距离出生点多少范围内的野怪
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
-    // 失去全部基地时，在暴露位置前，留给玩家造基地的时间（暴露倒计时），默认120.00
+    // 暴露倒计时，默认120.00
+    // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
-    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间，默认20.00
+    // 暴露持续时间，默认20.00
+    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 混乱之治英雄初始物品给予次数，默认3次，即前3发英雄都给
+    // 混乱之治英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
-    // 冰封王座版本英雄初始物品给予次数，默认1次，即只给首发英雄
+    // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
     // Delay between a creep's death and the time it may drop an item.
@@ -179,7 +184,8 @@ globals
     // 镜头默认旋转值（Z 轴旋转角度），默认90
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // 可营救延时，怀疑是中立可营救单位在被可营救后变更队伍的延迟，默认2.00 Rescue
+    // 可营救延时，默认2.00
+    // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
     // Transmission behavior settings
