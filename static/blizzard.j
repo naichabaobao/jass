@@ -3557,7 +3557,7 @@ endfunction
 //***************************************************************************
 
 
-// 使用白昼环境的音乐
+// 设置白昼环境音乐
 function SetAmbientDaySound takes string inLabel returns nothing
     local real ToD
 
@@ -3577,7 +3577,7 @@ function SetAmbientDaySound takes string inLabel returns nothing
 endfunction
 
 
-// 使用夜晚环境的音乐
+// 设置夜晚环境音乐
 function SetAmbientNightSound takes string inLabel returns nothing
     local real ToD
 
