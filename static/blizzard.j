@@ -602,11 +602,11 @@ globals
 
     // 任务信息类型 发现任务
     constant integer   bj_QUESTMESSAGE_DISCOVERED    = 0
-    // 任务信息类型 任务升级
+    // 任务信息类型 任务更新
     constant integer   bj_QUESTMESSAGE_UPDATED       = 1
     // 任务信息类型 任务完成
     constant integer   bj_QUESTMESSAGE_COMPLETED     = 2
-    // 任务信息类型 发现失败
+    // 任务信息类型 任务失败
     constant integer   bj_QUESTMESSAGE_FAILED        = 3
     // 任务信息类型 任务要求
     constant integer   bj_QUESTMESSAGE_REQUIREMENT   = 4
@@ -620,7 +620,7 @@ globals
     constant integer   bj_QUESTMESSAGE_SECRET        = 8
     // 任务信息类型 获得新单位
     constant integer   bj_QUESTMESSAGE_UNITACQUIRED  = 9
-    // 任务信息类型 新单位可取得
+    // 任务信息类型 新单位可用（新获得单位的介绍）
     constant integer   bj_QUESTMESSAGE_UNITAVAILABLE = 10
     // 任务信息类型 获得新物品
     constant integer   bj_QUESTMESSAGE_ITEMACQUIRED  = 11
