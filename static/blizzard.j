@@ -16,7 +16,7 @@ globals
     constant real      bj_CELLWIDTH                     = 128.0
     // 悬崖高度，默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
-    // 单位默认朝向，默认270.0
+    // （建筑）单位默认朝向，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
     // 弧度转换成角度
     constant real      bj_RADTODEG                      = 180.0/bj_PI
@@ -48,22 +48,22 @@ globals
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
     // 文本显示延时 - 警告，默认12.00
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
-    // 队列延时 - 任务，默认5.00
+    // 任务延时 - 任务，默认5.00
     constant real      bj_QUEUE_DELAY_QUEST             =  5.00
-    // 队列延时 - 提示，默认5.00
+    // 任务延时 - 任务提示，默认5.00
     constant real      bj_QUEUE_DELAY_HINT              =  5.00
-    // 队列延时 - 秘密，默认3.00
+    // 任务延时 - 任务秘密，默认3.00
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
-    // 障碍 - 简单，默认60.00
+    // 生命障碍 - 简单，默认60.00
     constant real      bj_HANDICAP_EASY                 = 60.00
-    // 障碍 - 普通，默认90.00
+    // 生命障碍 - 无限制/普通，默认90.00
     constant real      bj_HANDICAP_NORMAL               = 90.00
     // 伤害障碍 - 简单，默认50.00
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
     // 伤害障碍 - 普通，默认90.00
     constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
-    // 伤害障碍 - 非困难，默认50.00
-	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
+    // 伤害障碍 - 困难，默认50.00
+	constant real      bj_HANDICAPRE	VIVE_NOTHARD        = 50.00
     // 游戏开局阈值，默认0.01
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
     // 迷雾等待最小间隔，默认0.10
@@ -171,17 +171,17 @@ globals
 
     // 镜头最小截断距离（远景裁剪），默认100
     constant integer   bj_CAMERA_MIN_FARZ               = 100
-    // 镜头默认距离，默认1650
+    // 镜头默认距离（距离到目标），默认1650
     constant integer   bj_CAMERA_DEFAULT_DISTANCE       = 1650
     // 镜头默认截断距离（远景裁剪），默认5000
     constant integer   bj_CAMERA_DEFAULT_FARZ           = 5000
     // 镜头默认水平/攻击角度（X 轴旋转角度），默认304
     constant integer   bj_CAMERA_DEFAULT_AOA            = 304
-    // 镜头默认视场角，默认70
+    // 默认镜头（观察区域，默认70
     constant integer   bj_CAMERA_DEFAULT_FOV            = 70
-    // 镜头默认滚动值（Y 轴旋转距离），默认0
+    // 镜头默认滚动（Y 轴旋转角度），默认0
     constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
-    // 镜头默认旋转值（Z 轴旋转角度），默认90
+    // 镜头默认高度位移值（Z 轴旋转角度），默认90
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
     // 可营救延时，默认2.00
@@ -3040,6 +3040,9 @@ endfunction
 
 
 // 创建地面纹理
+// @param alpha 透明度
+// @param forcePaused 是否禁用暂停状态
+// @param noBirthTime 是否启用出生动画
 function CreateUbersplatBJ takes location where, string name, real red, real green, real blue, real alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
     set bj_lastCreatedUbersplat = CreateUbersplat(GetLocationX(where), GetLocationY(where), name, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-alpha), forcePaused, noBirthTime)
     return bj_lastCreatedUbersplat
@@ -4797,7 +4800,7 @@ function SetUnitBlendTimeBJ takes unit whichUnit, real blendTime returns nothing
 endfunction
 
 
-// 设置单位主动攻击范围
+// 设置单位主采集范围
 function SetUnitAcquireRangeBJ takes unit whichUnit, real acquireRange returns nothing
     call SetUnitAcquireRange(whichUnit, acquireRange)
 endfunction
@@ -4910,13 +4913,13 @@ function IsUnitPausedBJ takes unit whichUnit returns boolean
 endfunction
 
 
-// 暂停/恢复 指定单位生命计时器
+// 暂停/恢复 指定单位限时生命
 function UnitPauseTimedLifeBJ takes boolean flag, unit whichUnit returns nothing
     call UnitPauseTimedLife(whichUnit, flag)
 endfunction
 
 
-// 设置指定单位生命计时器
+// 设置指定单位限时生命
 function UnitApplyTimedLifeBJ takes real duration, integer buffId, unit whichUnit returns nothing
     call UnitApplyTimedLife(whichUnit, buffId, duration)
 endfunction
@@ -5001,14 +5004,15 @@ function SetUnitExplodedBJ takes unit whichUnit, boolean exploded returns nothin
 endfunction
 
 
-// 使单位爆炸而死
+// 设置单位爆炸而死
 function ExplodeUnitBJ takes unit whichUnit returns nothing
     call SetUnitExploded(whichUnit, true)
     call KillUnit(whichUnit)
 endfunction
 
 
-// 获取传送单位
+// 获取运输单位
+// 飞艇/船/被缠绕的金矿等
 function GetTransportUnitBJ takes nothing returns unit
     return GetTransportUnit()
 endfunction
@@ -8388,7 +8392,7 @@ function MakeUnitRescuableToForceBJEnum takes nothing returns nothing
     call SetUnitRescuable(bj_makeUnitRescuableUnit, GetEnumPlayer(), bj_makeUnitRescuableFlag)
 endfunction
 
-// 创建可营救单位触发器
+// 创建可营救单位触发器（指定玩家组）
 function MakeUnitRescuableToForceBJ takes unit whichUnit, boolean isRescuable, force whichForce returns nothing
     // Flag the unit as rescuable/unrescuable for the appropriate players.
     set bj_makeUnitRescuableUnit = whichUnit
