@@ -5497,7 +5497,7 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取知道单位技能等级 [R] 
+// 获取指定单位技能等级 [R] 
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -5550,7 +5550,7 @@ native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
-// 获取单位物品栏物品(指定物品栏格数)
+// 获取单位持有物品(指定物品栏格数)
 // @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取物品栏格数
@@ -5670,16 +5670,16 @@ constant native IsUnitIdType takes integer unitId, unittype whichUnitType return
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
 // 设置指定尸体腐烂的状态(正常腐烂或暂停腐烂) [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加指定类别到指定单位 [R]
+// 添加类别到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除指定单位的指定类别 [R]
+// 删除指定单位的类别 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 添加指定技能到指定单位 [R]
+// 添加技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除指定单位的指定技能 [R]
+// 删除指定单位的技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
-// 设置指定单位指定技能的永久性 [R]
+// 设置指定单位技能的永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
 // 删除指定单位的魔法效果(指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
@@ -5719,7 +5719,7 @@ native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage re
 // 暂停/恢复生命周期 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
 // 启用/禁用 单位的小地图特殊图标
-// 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能知道地图中有没有商店泉水之类的建筑
+// 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能在小地图中未探索的迷雾遮罩区域看到商店泉水之类的中立建筑图标
 // 需要完全隐藏应该还是要改物编的不显示中立建筑图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
