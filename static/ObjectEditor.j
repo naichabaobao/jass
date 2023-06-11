@@ -5883,6 +5883,7 @@ globals
 // 技能命令串或ID(命令串只有部分,ID估计全了,已去重)
 // 内容主要源自百度陈年旧贴,故不含1.29及之后新技能的命令串和ID(查了一下,好像也没有新命令串,ID就不管了)
 
+
         // 技能命令串
 
 
@@ -8046,6 +8047,7 @@ globals
 
 // 电影滤镜纹理
 
+
         // 电影滤镜纹理 白色迷雾
         string White_mask.blp
         // 电影滤镜纹理 黑色迷雾
@@ -8073,6 +8075,7 @@ globals
 
 
 // 闪电类型
+
 
         // 闪电类型 闪电链 - 主
         string CLPB
@@ -8105,6 +8108,7 @@ globals
 
 
 // 地形设置
+
 
         // 地形设置 洛丹伦(夏)
         string LORDAERON_SUMMER
@@ -8147,6 +8151,7 @@ globals
 
 
 // 地表纹理
+
 
         // 地表纹理 洛丹伦(夏) - 泥地
         string Ldrt
@@ -8506,6 +8511,7 @@ globals
 
 // 地形形状
 
+
         // 地形形状 圆形
         string CIRCLE
         // 地形形状 方形
@@ -8513,6 +8519,7 @@ globals
 
 
 // 图像类型
+
 
         // 图像类型 阴影
         string SHADOW
@@ -8529,6 +8536,7 @@ globals
 
 
 // 地表纹理变化
+
 
         // 地表纹理变化 测试
         string TEST
@@ -8733,11 +8741,8 @@ globals
         string AshenvaleDay
         // 白天环境音效 贫瘠之地
         string BarrensDay
-        // 白天环境音效 黑色城堡(K)
-        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
-        string BlackCitadelDay
-        // 白天环境音效 黑色城堡(O)
-        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
+        // 白天环境音效 黑色城堡
+        // 黑色城堡有两个音效，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
         string BlackCitadelDay
         // 白天环境音效 城邦
         string CityScapeDay
@@ -8775,11 +8780,8 @@ globals
         string AshenvaleNight
         // 夜晚环境音效 贫瘠之地
         string BarrensNight
-        // 夜晚环境音效 黑色城堡(K)
-        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
-        string BlackCitadelNight
-        // 夜晚环境音效 黑色城堡(O)
-        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
+        // 夜晚环境音效 黑色城堡
+        // 黑色城堡有两个音效，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
         string BlackCitadelNight
         // 夜晚环境音效 城邦
         string CityScapeNight
