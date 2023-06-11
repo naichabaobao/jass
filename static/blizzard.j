@@ -3861,11 +3861,13 @@ function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
 endfunction
 
 // 设置玩家复活时间
+// 玩家障碍，额外的复活时间
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 // 获取玩家复活时间
+// 玩家障碍，额外的复活时间
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
