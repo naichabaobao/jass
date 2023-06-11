@@ -1173,7 +1173,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
         // 玩家单位事件 英雄学习技能
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-        // 玩家单位事件 英雄可复活
+        // 玩家单位事件 英雄可复活/阵亡
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家单位事件 英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -1266,7 +1266,7 @@ globals
 	// 单位事件 英雄学习技能
 	constant unitevent EVENT_UNIT_HERO_SKILL = ConvertUnitEvent(79)
 	
-	// 单位事件 英雄可复活
+	// 单位事件 英雄可复活/阵亡
 	constant unitevent EVENT_UNIT_HERO_REVIVABLE = ConvertUnitEvent(80)
 	// 单位事件 英雄开始复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_START = ConvertUnitEvent(81)
@@ -1350,7 +1350,7 @@ globals
 	
 	// 玩家单位事件 出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
-	// 玩家单位事件 变更所有者
+	// 玩家单位事件 变更所属
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
  constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
@@ -4837,30 +4837,30 @@ constant native GetTriggerPlayer takes nothing returns player
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 
-// 事件响应 获取升级的英雄(对应玩家英雄升级和英雄升级等事件)
+// 事件响应 获取升级的英雄(对应英雄升级和英雄升级等事件)
 // EVENT_PLAYER_HERO_LEVEL
 // EVENT_UNIT_HERO_LEVEL
 constant native GetLevelingUnit takes nothing returns unit
 
-// 事件响应 获取学习技能的英雄(对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习技能的英雄(对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearningUnit takes nothing returns unit
-// 事件响应 获取学习的技能 [R](对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习的技能 [R](对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkill takes nothing returns integer
-// 事件响应 获取学习技能的等级(对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习技能的等级(对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkillLevel takes nothing returns integer
 
 
-// 事件响应 获取可复活的英雄(对应玩家可复活英雄等事件)
+// 事件响应 获取可复活/阵亡的英雄(对应可复活/阵亡英雄等事件)
 // EVENT_PLAYER_HERO_REVIVABLE
 constant native GetRevivableUnit takes nothing returns unit
 
-// 事件响应 获取复活的英雄(对应玩家开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件)
+// 事件响应 获取复活的英雄(对应开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件)
 // EVENT_PLAYER_HERO_REVIVE_START
 // EVENT_PLAYER_HERO_REVIVE_CANCEL
 // EVENT_PLAYER_HERO_REVIVE_FINISH
@@ -4869,146 +4869,146 @@ constant native GetRevivableUnit takes nothing returns unit
 // EVENT_UNIT_HERO_REVIVE_FINISH
 constant native GetRevivingUnit takes nothing returns unit
 
-// 事件响应 获取攻击的单位(对应玩家单位被攻击等事件)
+// 事件响应 获取攻击的单位(对应单位被攻击等事件)
 // EVENT_PLAYER_UNIT_ATTACKED
 constant native GetAttacker takes nothing returns unit
 
 
-// 获取营救单位(对应玩家单位被营救等事件)
+// 获取营救单位(对应单位被营救等事件)
 // EVENT_PLAYER_UNIT_RESCUED
 constant native GetRescuer takes nothing returns unit
 
 
 
-// 事件响应 获取死亡单位(对应玩家单位死亡等事件)
+// 事件响应 获取死亡单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetDyingUnit takes nothing returns unit
-// 事件响应 获取凶手单位(对应玩家单位死亡等事件)
+// 事件响应 获取凶手单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetKillingUnit takes nothing returns unit
 
-// 事件响应 获取尸体腐烂单位(对应玩家单位尸体腐烂等事件)
+// 事件响应 获取尸体腐烂单位(对应单位尸体腐烂等事件)
 // EVENT_PLAYER_UNIT_DECAY
 constant native GetDecayingUnit takes nothing returns unit
 
-// 事件响应 获取选择的单位(对应玩家选择单位等事件)
+// 事件响应 获取被选择的单位(对应玩家选择单位等事件)
 // EVENT_PLAYER_UNIT_SELECTED
 //constant native GetSelectedUnit takes nothing returns unit
 
-// 事件响应 获取正在建造的建筑(对应玩家开始建造单位等事件)
+// 事件响应 获取正在建造的建筑(对应开始建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
 constant native GetConstructingStructure takes nothing returns unit
 
 
-// 事件响应 获取取消建造的建筑(对应玩家完成/取消建造单位等事件)
+// 事件响应 获取取消建造的建筑(对应完成/取消建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetCancelledStructure takes nothing returns unit
-// 事件响应 获取已建造的建筑(对应玩家完成/取消建造单位等事件)
+// 事件响应 获取已建造的建筑(对应完成/取消建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetConstructedStructure takes nothing returns unit
 
-// 事件响应 获取研究科技的单位(对应玩家开始/完成/取消研究科技等事件)
+// 事件响应 获取研究科技的单位(对应开始/完成/取消研究科技等事件)
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearchingUnit takes nothing returns unit
-// 事件响应 获取研究的科技类型(对应玩家开始/完成/取消研究科技等事件)
+// 事件响应 获取研究的科技类型(对应开始/完成/取消研究科技等事件)
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearched takes nothing returns integer
 
-// 事件响应 获取训练的单位类型(对应玩家开始/完成/取消训练单位等事件)
+// 事件响应 获取训练的单位类型(对应开始/完成/取消训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnitType takes nothing returns integer
 
-// 事件响应 获取训练的单位(对应玩家完成训练单位等事件)
+// 事件响应 获取训练的单位(对应完成训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取检测的单位(对应玩家单位被检测到等事件)
+// 事件响应 获取检测的单位(对应单位被检测到等事件)
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
-// 事件响应 获取正在召唤的单位(对应玩家召唤单位等事件)
+// 事件响应 获取正在召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummoningUnit takes nothing returns unit
-// 事件响应 获取被召唤单位(对应玩家召唤单位等事件)
+// 事件响应 获取被召唤单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
-// 事件响应 获取运输单位(对应玩家装载单位等事件)
+// 事件响应 获取运输单位(对应装载单位等事件)
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
-// 事件响应 获取装载单位(对应玩家装载单位等事件)
-// 在飞艇/船内、在缠绕的金矿内的单位都属于装载单位
+// 事件响应 获取被装载单位(对应装载单位等事件)
+// 在飞艇/船内、在缠绕的金矿内的单位都可装载单位
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetLoadedUnit takes nothing returns unit
 
-// 事件响应 获取出售单位(对应玩家出售单位等事件)
+// 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售单位(对应玩家出售单位等事件)
+// 事件响应 获取被出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
-// 事件响应 获取购买单位(对应玩家出售单位等事件)
+// 事件响应 获取购买单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetBuyingUnit takes nothing returns unit
 
-// 事件响应 获取卖出的物品(对应玩家出售物品等事件)
+// 事件响应 获取卖出的物品(对应出售物品等事件)
 // EVENT_PLAYER_UNIT_SELL_ITEM
 constant native GetSoldItem takes nothing returns item
 
-// 事件响应 获取变更了所有者(玩家)的单位(对应玩家变更物品所有者等事件)
+// 事件响应 获取变更了所属(玩家)的单位(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnit takes nothing returns unit
-// 事件响应 获取变更所有者单位的前一个所有者(玩家)(对应玩家变更物品所有者等事件)
+// 事件响应 获取变更所属单位的前一个所属(玩家)(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
-// 事件响应 获取操作物品的单位(对应玩家丢弃/拾取/使用物品等事件)
+// 事件响应 获取操作物品的单位(对应丢弃/拾取/使用物品等事件)
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatingUnit takes nothing returns unit
-// 事件响应 获取被操作的物品(对应玩家丢弃/拾取/使用物品等事件)
+// 事件响应 获取被操作的物品(对应丢弃/拾取/使用物品等事件)
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatedItem takes nothing returns item
 	
 
-// 事件响应 获取被拾取物品(对应玩家拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
+// 事件响应 获取被拾取物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 // @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// 事件响应 判断被操作的物品是否被拾取的物品(对应玩家拾取物品等事件)
+// 事件响应 判断被操作的物品是否被拾取的物品(对应拾取物品等事件)
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
-// 事件响应 获取被堆叠的源物品(对应玩家堆叠物品等事件)
+// 事件响应 获取被堆叠的源物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
 // @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// 事件响应 获取被堆叠的目标物品(对应玩家堆叠物品等事件)
+// 事件响应 获取被堆叠的目标物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
-// 事件响应 获取堆叠物品的预期售价(对应玩家堆叠物品等事件)
+// 事件响应 获取堆叠物品的预期售价(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
-// 事件响应 获取收到命令的单位(对应玩家发布命令等事件)
+// 事件响应 获取收到命令的单位(对应发布命令等事件)
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetOrderedUnit takes nothing returns unit
 // 事件响应 获取发布的命令ID
@@ -5016,27 +5016,27 @@ constant native GetOrderedUnit takes nothing returns unit
 constant native GetIssuedOrderId takes nothing returns integer
 
 
-// 事件响应 获取命令目标点 X 坐标 [R](对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点 X 坐标 [R](对应发布命令(指定点)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointX takes nothing returns real
-// 事件响应 获取命令目标点 Y 坐标 [R](对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点 Y 坐标 [R](对应发布命令(指定点)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
-// 事件响应 获取命令目标点(对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点(对应发布命令(指定点)等事件)
 // 会生成点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 事件响应 获取命令目标(单位/物品/可破坏物)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 事件响应 获取命令目标(可破坏物)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 事件响应 获取命令目标(物品)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(物品)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 事件响应 获取命令目标(单位)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
@@ -5199,11 +5199,11 @@ native TriggerClearActions takes trigger whichTrigger returns nothing
 native TriggerSleepAction takes real timeout returns nothing
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
-// 判断触发器条件是否成立
+// 判断触发器条件是否满足
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 native TriggerExecute takes trigger whichTrigger returns nothing
-// 运行触发器 (等待忽略条件)
+// 等待运行触发器 (忽略条件)
 // @deprecated
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
@@ -5214,15 +5214,15 @@ native TriggerSyncReady takes nothing returns nothing
 
 // Widget API
 
-// 获取指定单位/物品/可破坏物的生命值
+// 获取指定单位/物品/可破坏物生命值
 native GetWidgetLife takes widget whichWidget returns real
-// 设置指定单位/物品/可破坏物的生命值
+// 设置指定单位/物品/可破坏物生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取指定单位/物品/可破坏物的 X 轴坐标
+// 获取指定单位/物品/可破坏物所在 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取指定单位/物品/可破坏物的 Y 轴坐标
+// 获取指定单位/物品/可破坏物所在 Y 轴坐标
 native GetWidgetY takes widget whichWidget returns real
-// 获取触发的单位/物品/可破坏物
+// 获取触发单位/物品/可破坏物
 constant native GetTriggerWidget takes nothing returns widget
 
 
@@ -5254,29 +5254,29 @@ native GetDestructableTypeId takes destructable d returns integer
 native GetDestructableX takes destructable d returns real
 // 获取指定可破坏物所在 Y 轴坐标 [R]
 native GetDestructableY takes destructable d returns real
-// 设置指定可破坏物的生命值
+// 设置指定可破坏物生命值
 native SetDestructableLife takes destructable d, real life returns nothing
 // 获取指定可破坏物生命值
 native GetDestructableLife takes destructable d returns real
-// 设置指定可破坏物的最大生命值
+// 设置指定可破坏物最大生命值
 native SetDestructableMaxLife takes destructable d, real max returns nothing
 // 获取指定可破坏物最大生命值
 native GetDestructableMaxLife takes destructable d returns real
 // 复活指定可破坏物(指定生命值)(变回 未毁坏)
 native DestructableRestoreLife takes destructable d, real life, boolean birth returns nothing
-// 队列指定可破坏物的动画
+// 队列指定可破坏物动画
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
-// 设置指定可破坏物的动画
+// 设置指定可破坏物动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
 native ShowDestructable takes destructable d, boolean flag returns nothing
-// 获取指定可破坏物的闭塞高度
+// 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
-// 设置指定可破坏物的的闭塞高度
+// 设置指定可破坏物的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 获取指定可破坏物的名字
+// 获取指定可破坏物名字
 native GetDestructableName takes destructable d returns string
 // 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
@@ -5284,17 +5284,17 @@ constant native GetTriggerDestructable takes nothing returns destructable
 
 // Item API
 
-// 创建物品
+// 创建物品(指定坐标)
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除指定物品
 native RemoveItem takes item whichItem returns nothing
-// 获取指定物品的所有者
+// 获取指定物品所属
 native GetItemPlayer takes item whichItem returns player
-// 获取指定物品的物品类型(4字编码)
+// 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
-// 获取指定物品的 X 轴坐标 [R]
+// 获取指定物品所在 X 轴坐标 [R]
 native GetItemX takes item i returns real
-// 获取指定物品的 Y 轴坐标 [R]
+// 获取指定物品所在 Y 轴坐标 [R]
 native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
@@ -5304,7 +5304,7 @@ native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 native SetItemDroppable takes item i, boolean flag returns nothing
 // 允许/禁止 指定物品被贩卖/出售
 native SetItemPawnable takes item i, boolean flag returns nothing
-// 设置指定物品所有者
+// 设置指定物品所属
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
 // 设置指定物品 无敌/可攻击
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
@@ -5314,7 +5314,7 @@ native IsItemInvulnerable takes item whichItem returns boolean
 native SetItemVisible takes item whichItem, boolean show returns nothing
 // 查询指定物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
-// 查询指定物品所有者是否当前持有玩家
+// 查询指定物品所属是否当前持有玩家
 native IsItemOwned takes item whichItem returns boolean
 // 查询指定物品是否拾取时自动使用 [R]
 native IsItemPowerup takes item whichItem returns boolean
@@ -5337,7 +5337,7 @@ native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns no
 native GetItemLevel takes item whichItem returns integer
 // 获取指定物品分类
 native GetItemType takes item whichItem returns itemtype
-// 设置掉落物品的单位类型
+// 设置掉落指定物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 获取指定物品名称
 constant native GetItemName takes item whichItem returns string
@@ -5418,7 +5418,7 @@ native GetUnitDefaultPropWindow takes unit whichUnit returns real
 // 获取指定单位飞行高度 (默认值)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
-// 设置指定单位所有者(指定玩家)
+// 设置指定单位所属(指定玩家)
 // @param changeColor 是否改变队伍颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
@@ -5436,7 +5436,7 @@ native SetUnitVertexColor takes unit whichUnit, integer red, integer green, inte
 native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
 // 播放指定单位指定动画
 native SetUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
-// 播放指定单位的指定序号动动画 [R]
+// 播放指定单位的指定序号动画 [R]
 native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation returns nothing
 // 播放指定单位的指定动画
 // @param rarity 稀有度：普通的(RARITY_FREQUENT)或罕见的(RARITY_RARE)
@@ -5451,7 +5451,7 @@ native ResetUnitLookAt takes unit whichUnit returns nothing
 
 // 设置指定单位可否营救(指定玩家) [R]
 native SetUnitRescuable takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
-// 设置指定营救单位的营救距离
+// 设置指定可营救单位的营救距离
 native SetUnitRescueRange takes unit whichUnit, real range returns nothing
 
 // 设置指定英雄力量值 [R]
@@ -5536,16 +5536,19 @@ native GetUnitPointValueByType takes integer unitType returns integer
 // 设置单位附加值(指定单位类型)
 native SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
-// 给予物品(指定具体物品) [R]
+// 创建物品(指定物品) [R]
+// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
-// 给予物品(指定物品ID)
+// 创建物品(指定物品ID)
+// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数(指定物品ID) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除物品(指定物品)
+// 删除指定物品
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 删除物品(指定物品栏格数，不论哪个物品在该格中，都会被丢弃，丢弃成功的前提是该物品允许丢弃)
+// 删除物品(指定物品栏格数)
+// 不论哪个物品在该格中，都会被删除
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
@@ -5553,15 +5556,18 @@ native UnitHasItem takes unit whichUnit, item whichItem returns boolean
 // 获取单位持有物品(指定物品栏格数)
 // @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
-// 获取物品栏格数
+// 获取已存档物品的物品栏格数（指定单位）
 native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
+// 丢弃成功的前提是该物品允许丢弃
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 发布移动物品命令(指定物品栏格数) [R]
+// 丢弃成功的前提是该格的物品允许丢弃
 // @param slot 物品栏格数：0-5
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 发布丢弃物品命令(指定单位和目标单位/物品/可破坏物) [R]
+// 丢弃成功的前提是该物品允许丢弃
 // 指定目标为商店时会卖出物品
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
@@ -7979,17 +7985,17 @@ native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
 // 设置可破坏物皮肤
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
-// 创建物品(指定皮肤)
+// 创建物品(指定皮肤)(指定坐标)
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
-// 创建单位(指定皮肤)
+// 创建单位(指定皮肤)(指定坐标)
 native BlzCreateUnitWithSkin takes player id, integer unitid, real x, real y, real face, integer skinId returns unit
-// 创建可破坏物(指定皮肤)(不包含Z轴)
+// 创建可破坏物(指定皮肤)(指定坐标,不包含Z轴)
 native BlzCreateDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(指定皮肤)(包含Z轴)
+// 创建可破坏物(指定皮肤)(指定坐标,包含Z轴)
 native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(毁坏的)(指定皮肤)(不包含Z轴)
+// 创建可破坏物(毁坏的)(指定皮肤)(指定坐标,不包含Z轴)
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(毁坏的)(指定皮肤)(包含Z轴)
+// 创建可破坏物(毁坏的)(指定皮肤)(指定坐标,包含Z轴)
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
 // 获取指定玩家的主城数量(按主城单位的数量统计，即三个本的主城都算)
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
