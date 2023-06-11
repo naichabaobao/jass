@@ -94,7 +94,7 @@ const map = new Map<string,string>([
   ["weapontype", "武器类型"],
   ["soundtype", "声音类型"],
   ["lightning", "闪电效果"],
-  ["pathingtype", "路径类型"],
+  ["pathingtype", "地形类型/地表纹理"],
   ["mousebuttontype", "鼠标按键类型"],
   ["animtype", "动画类型"],
   ["subanimtype", "子动画类型"],
