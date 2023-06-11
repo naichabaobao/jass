@@ -4205,7 +4205,7 @@ globals
         integer BNss
         // 物品技能 法术书
         integer Aspb
-        // 物品技能 亡者复生 
+        // 物品技能 亡者复生
         integer AIrd
         // 物品技能 庇护法杖
         integer ANsa
@@ -8047,28 +8047,766 @@ globals
 // 电影滤镜纹理
 
         // 电影滤镜纹理 白色迷雾
-        string "ReplaceableTextures\\CameraMasks\\White_mask.blp"
+        string White_mask.blp
         // 电影滤镜纹理 黑色迷雾
-        string "ReplaceableTextures\\CameraMasks\\Black_mask.blp"
+        string Black_mask.blp
         // 电影滤镜纹理 薄雾滤镜
-        string "ReplaceableTextures\\CameraMasks\\HazeFilter_mask.blp"
+        string HazeFilter_mask.blp
         // 电影滤镜纹理 地面迷雾
-        string "ReplaceableTextures\\CameraMasks\\GroundFog_mask.blp"
+        string GroundFog_mask.blp
         // 电影滤镜纹理 薄雾和迷雾
-        string "ReplaceableTextures\\CameraMasks\\HazeAndFogFilter_Mask.blp"
+        string HazeAndFogFilter_Mask.blp
         // 电影滤镜纹理 对角线消减
-        string "ReplaceableTextures\\CameraMasks\\DiagonalSlash_mask.blp"
+        string DiagonalSlash_mask.blp
         // 电影滤镜纹理 梦境(边框模糊)
-        string "ReplaceableTextures\\CameraMasks\\DreamFilter_Mask.blp"
+        string DreamFilter_Mask.blp
         // 电影滤镜纹理 冰
-        string "ReplaceableTextures\\CameraMasks\\IceFilter_Mask.blp"
+        string IceFilter_Mask.blp
         // 电影滤镜纹理 范围
-        string "ReplaceableTextures\\CameraMasks\\Scope_Mask.blp"
+        string Scope_Mask.blp
         // 电影滤镜纹理 兵!(字图)
-        string "ReplaceableTextures\\CameraMasks\\SpecialPowMask.blp"
+        string SpecialPowMask.blp
         // 电影滤镜纹理 溅泼声!(字图)
-        string "ReplaceableTextures\\CameraMasks\\SpecialSplatMask.blp"
+        string SpecialSplatMask.blp
         // 电影滤镜纹理 幼年熊猫!(字图)
-        string "ReplaceableTextures\\CameraMasks\\Panda-n-Cub.blp"
+        string Panda-n-Cub.blp
 
+
+// 闪电类型
+
+        // 闪电类型 闪电链 - 主
+        string CLPB
+        // 闪电类型 闪电链 - 次
+        string CLSB
+        // 闪电类型 汲取
+        string DRAB
+        // 闪电类型 生命汲取
+        string DRAL
+        // 闪电类型 魔法汲取
+        string DRAM
+        // 闪电类型 死亡之指
+        string AFOD
+        // 闪电类型 叉状闪电
+        string FORK
+        // 闪电类型 医疗波 - 主
+        string HWPB
+        // 闪电类型 医疗波 - 次
+        string HWSB
+        // 闪电类型 闪电攻击
+        string CHIM
+        // 闪电类型 魔法镣铐
+        string LEAS
+        // 闪电类型 法力燃烧
+        string MBUR
+        // 闪电类型 魔力之焰
+        string MFPB
+        // 闪电类型 灵魂锁链
+        string SPLK
+
+
+// 地形设置
+
+        // 地形设置 洛丹伦(夏)
+        string LORDAERON_SUMMER
+        // 地形设置 洛丹伦(秋)
+        string LORDAERON_FALL
+        // 地形设置 洛丹伦(冬)
+        string LORDAERON_WINTER
+        // 地形设置 贫瘠之地
+        string BARRENS
+        // 地形设置 白杨谷
+        string ASHENVALE
+        // 地形设置 费尔伍德
+        string FELWOOD
+        // 地形设置 诺森德
+        string NORTHREND
+        // 地形设置 城邦
+        string CITYSCAPE
+        // 地形设置 村庄
+        string VILLAGE
+        // 地形设置 村庄(秋)
+        string VILLAGEFALL
+        // 地形设置 地下城/地牢
+        string DUNGEON
+        // 地形设置 地底
+        string DUNGEON2
+        // 地形设置 达拉然
+        string DALARAN
+        // 地形设置 达拉然遗迹
+        string DALARANRUINS
+        // 地形设置 沉沦的遗迹
+        string RUINS
+        // 地形设置 冰封王座
+        string ICECROWN
+        // 地形设置 边缘之地
+        string OUTLAND
+        // 地形设置 黑色城堡
+        string BLACKCITADEL
+        // 地形设置 所有
+        string ALL
+
+
+// 地表纹理
+
+        // 地表纹理 洛丹伦(夏) - 泥地
+        string Ldrt
+        // 地表纹理 洛丹伦(夏) - 烂泥地
+        string Ldro
+        // 地表纹理 洛丹伦(夏) - 泥草地
+        string Ldrg
+        // 地表纹理 洛丹伦(夏) - 岩石
+        string Lrok
+        // 地表纹理 洛丹伦(夏) - 草地
+        string Lgrs
+        // 地表纹理 洛丹伦(夏) - 黑暗草地
+        string Lgrd
+        // 地表纹理 洛丹伦(秋) - 泥地
+        string Fdrt
+        // 地表纹理 洛丹伦(秋) - 烂泥地
+        string Fdro
+        // 地表纹理 洛丹伦(秋) - 泥草地
+        string Fdrg
+        // 地表纹理 洛丹伦(秋) - 岩石
+        string Frok
+        // 地表纹理 洛丹伦(秋) - 草地
+        string Fgrs
+        // 地表纹理 洛丹伦(秋) - 黑暗草地
+        string Fgrd
+        // 地表纹理 洛丹伦(冬) - 泥地
+        string Wdrt
+        // 地表纹理 洛丹伦(冬) - 烂泥地
+        string Wdro
+        // 地表纹理 洛丹伦(冬) - 雪草地
+        string Wsng
+        // 地表纹理 洛丹伦(冬) - 岩石
+        string Wrok
+        // 地表纹理 洛丹伦(冬) - 草地
+        string Wgrs
+        // 地表纹理 洛丹伦(冬) - 雪地
+        string Wsnw
+        // 地表纹理 贫瘠之地 - 泥地
+        string Bdrt
+        // 地表纹理 贫瘠之地 - 烂泥地
+        string Bdrh
+        // 地表纹理 贫瘠之地 - 鹅卵石
+        string Bdrr
+        // 地表纹理 贫瘠之地 - 泥草地
+        string Bdrg
+        // 地表纹理 贫瘠之地 - 沙漠
+        string Bdsr
+        // 地表纹理 贫瘠之地 - 黑暗沙漠
+        string Bdsd
+        // 地表纹理 贫瘠之地 - 岩石
+        string Bflr
+        // 地表纹理 贫瘠之地 - 草地
+        string Bgrr
+        // 地表纹理 白杨谷 - 泥地
+        string Adrt
+        // 地表纹理 白杨谷 - 烂泥地
+        string Adrd
+        // 地表纹理 白杨谷 - 草地
+        string Agrs
+        // 地表纹理 白杨谷 - 岩石
+        string Arck
+        // 地表纹理 白杨谷 - 长草
+        string Agrd
+        // 地表纹理 白杨谷 - 藤蔓
+        string Avin
+        // 地表纹理 白杨谷 - 泥草地
+        string Adrg
+        // 地表纹理 白杨谷 - 树叶
+        string Alvd
+        // 地表纹理 费尔伍德 - 泥地
+        string Cdrt
+        // 地表纹理 费尔伍德 - 烂泥地
+        string Cdrd
+        // 地表纹理 费尔伍德 - 毒沼
+        string Cpos
+        // 地表纹理 费尔伍德 - 岩石
+        string Crck
+        // 地表纹理 费尔伍德 - 藤蔓
+        string Cvin
+        // 地表纹理 费尔伍德 - 草地
+        string Cgrs
+        // 地表纹理 费尔伍德 - 树叶
+        string Clvg
+        // 地表纹理 诺森德 - 泥地
+        string Ndrt
+        // 地表纹理 诺森德 - 暗黑泥地
+        string Ndrd
+        // 地表纹理 诺森德 - 岩石
+        string Nrck
+        // 地表纹理 诺森德 - 草地
+        string Ngrs
+        // 地表纹理 诺森德 - 冰
+        string Nice
+        // 地表纹理 诺森德 - 雪地
+        string Nsnw
+        // 地表纹理 诺森德 - 雪岩地
+        string Nsnr
+        // 地表纹理 城邦 - 泥地
+        string Ydrt
+        // 地表纹理 城邦 - 烂泥地
+        string Ydtr
+        // 地表纹理 城邦 - 黑大理石
+        string Yblm
+        // 地表纹理 城邦 - 砖
+        string Ybtl
+        // 地表纹理 城邦 - 方形地砖
+        string Ysqd
+        // 地表纹理 城邦 - 圆形地砖
+        string Yrtl
+        // 地表纹理 城邦 - 草地
+        string Ygsb
+        // 地表纹理 城邦 - 修剪的草地
+        string Yhdg
+        // 地表纹理 城邦 - 白大理石
+        string Ywmb
+        // 地表纹理 村庄 - 泥地
+        string Vdrt
+        // 地表纹理 村庄 - 烂泥地
+        string Vdrr
+        // 地表纹理 村庄 - 庄稼
+        string Vcrp
+        // 地表纹理 村庄 - 卵石路
+        string Vcbp
+        // 地表纹理 村庄 - 碎石路
+        string Vstp
+        // 地表纹理 村庄 - 矮草
+        string Vgrs
+        // 地表纹理 村庄 - 岩石
+        string Vrck
+        // 地表纹理 村庄 - 长草
+        string Vgrt
+        // 地表纹理 村庄(秋) - 泥地
+        string Qdrt
+        // 地表纹理 村庄(秋) - 烂泥地
+        string Qdrr
+        // 地表纹理 村庄(秋) - 庄稼
+        string Qcrp
+        // 地表纹理 村庄(秋) - 卵石路
+        string Qcbp
+        // 地表纹理 村庄(秋) - 碎石路
+        string Qstp
+        // 地表纹理 村庄(秋) - 矮草
+        string Qgrs
+        // 地表纹理 村庄(秋) - 岩石
+        string Qrck
+        // 地表纹理 村庄(秋) - 长草
+        string Qgrt
+        // 地表纹理 达拉然 - 泥地
+        string Xdrt
+        // 地表纹理 达拉然 - 烂泥地
+        string Xdtr
+        // 地表纹理 达拉然 - 黑大理石
+        string Xblm
+        // 地表纹理 达拉然 - 砖块
+        string Xbtl
+        // 地表纹理 达拉然 - 方形地砖
+        string Xsqd
+        // 地表纹理 达拉然 - 圆形地砖
+        string Xrtl
+        // 地表纹理 达拉然 - 草地
+        string Xgsb
+        // 地表纹理 达拉然 - 修剪的草地
+        string Xhdg
+        // 地表纹理 达拉然 - 白大理石
+        string Xwmb
+        // 地表纹理 地下城/地牢 - 泥地
+        string Ddrt
+        // 地表纹理 地下城/地牢 - 砖
+        string Dbrk
+        // 地表纹理 地下城/地牢 - 红色石头
+        string Drds
+        // 地表纹理 地下城/地牢 - 熔岩裂缝
+        string Dlvc
+        // 地表纹理 地下城/地牢 - 熔岩
+        string Dlav
+        // 地表纹理 地下城/地牢 - 黑暗岩石
+        string Ddkr
+        // 地表纹理 地下城/地牢 - 灰色石头
+        string Dgrs
+        // 地表纹理 地下城/地牢 - 方形地砖
+        string Dsqd
+        // 地表纹理 地底 - 泥地
+        string Gdrt
+        // 地表纹理 地底 - 砖
+        string Gbrk
+        // 地表纹理 地底 - 红色石头
+        string Grds
+        // 地表纹理 地底 - 熔岩裂缝
+        string Glvc
+        // 地表纹理 地底 - 熔岩
+        string Glav
+        // 地表纹理 地底 - 黑暗岩石
+        string Gdkr
+        // 地表纹理 地底 - 灰色石头
+        string Ggrs
+        // 地表纹理 地底 - 方形地砖
+        string Gsqd
+        // 地表纹理 沉沦的遗迹 - 泥地
+        string Zdrt
+        // 地表纹理 沉沦的遗迹 - 烂泥地
+        string Zdtr
+        // 地表纹理 沉沦的遗迹 - 泥草地
+        string Zdrg
+        // 地表纹理 沉沦的遗迹 - 碎砖
+        string Zbks
+        // 地表纹理 沉沦的遗迹 - 沙地
+        string Zsan
+        // 地表纹理 沉沦的遗迹 - 大砖块
+        string Zbkl
+        // 地表纹理 沉沦的遗迹 - 圆形地砖
+        string Ztil
+        // 地表纹理 沉沦的遗迹 - 草地
+        string Zgrs
+        // 地表纹理 沉沦的遗迹 - 黑暗草地
+        string Zvin
+        // 地表纹理 冰封王座 - 泥地
+        string Idrt
+        // 地表纹理 冰封王座 - 烂泥地
+        string Idtr
+        // 地表纹理 冰封王座 - 黑暗冰
+        string Idki
+        // 地表纹理 冰封王座 - 黑砖块
+        string Ibkb
+        // 地表纹理 冰封王座 - 刻字砖块
+        string Irbk
+        // 地表纹理 冰封王座 - 砖铺
+        string Itbk
+        // 地表纹理 冰封王座 - 冰
+        string Iice
+        // 地表纹理 冰封王座 - 黑方块
+        string Ibsq
+        // 地表纹理 冰封王座 - 雪地
+        string Isnw
+        // 地表纹理 边缘之地 - 泥地
+        string Odrt
+        // 地表纹理 边缘之地 - 轻泥地
+        string Odtr
+        // 地表纹理 边缘之地 - 烂泥地
+        string Osmb
+        // 地表纹理 边缘之地 - 干裂土地
+        string Ofst
+        // 地表纹理 边缘之地 - 平石头
+        string Olgb
+        // 地表纹理 边缘之地 - 岩石
+        string Orok
+        // 地表纹理 边缘之地 - 轻石头
+        string Ofsl
+        // 地表纹理 边缘之地 - 深谷
+        string Oaby
+        // 地表纹理 黑色城堡 - 泥地
+        string Kdrt
+        // 地表纹理 黑色城堡 - 轻泥地
+        string Kfsl
+        // 地表纹理 黑色城堡 - 烂泥地
+        string Kdtr
+        // 地表纹理 黑色城堡 - 平石头
+        string Kfst
+        // 地表纹理 黑色城堡 - 碎砖
+        string Ksmb
+        // 地表纹理 黑色城堡 - 大砖块
+        string Klgb
+        // 地表纹理 黑色城堡 - 方形地砖
+        string Ksqt
+        // 地表纹理 黑色城堡 - 黑砖块
+        string Kdkt
+        // 地表纹理 达拉然遗迹 - 泥地
+        string Jdrt
+        // 地表纹理 达拉然遗迹 - 烂泥地
+        string Jdtr
+        // 地表纹理 达拉然遗迹 - 黑大理石
+        string Jblm
+        // 地表纹理 达拉然遗迹 - 砖块
+        string Jbtl
+        // 地表纹理 达拉然遗迹 - 方形地砖
+        string Jsqd
+        // 地表纹理 达拉然遗迹 - 圆形地砖
+        string Jrtl
+        // 地表纹理 达拉然遗迹 - 草地
+        string Jgsb
+        // 地表纹理 达拉然遗迹 - 修剪的草地
+        string Jhdg
+        // 地表纹理 达拉然遗迹 - 白大理石
+        string Jwmb
+        // 地表纹理 白杨谷 - 泥土悬崖
+        string cAc2
+        // 地表纹理 白杨谷 - 草地悬崖
+        string cAc1
+        // 地表纹理 贫瘠之地 - 沙地悬崖
+        string cBc2
+        // 地表纹理 贫瘠之地 - 草地悬崖
+        string cBc1
+        // 地表纹理 黑色城堡 - 泥土悬崖
+        string cKc1
+        // 地表纹理 黑色城堡 - 砖砌墙壁
+        string cKc2
+        // 地表纹理 城邦 - 泥土悬崖
+        string cYc2
+        // 地表纹理 城邦 - 方砖墙壁
+        string cYc1
+        // 地表纹理 达拉然 - 泥土悬崖
+        string cXc2
+        // 地表纹理 达拉然 - 方砖墙壁
+        string cXc1
+        // 地表纹理 达拉然遗迹 - 泥土悬崖
+        string cJc2
+        // 地表纹理 达拉然遗迹 - 方砖墙壁
+        string cJc1
+        // 地表纹理 地下城 - 天然墙壁
+        string cDc2
+        // 地表纹理 地下城 - 石砖墙壁
+        string cDc1
+        // 地表纹理 费尔伍德 - 泥土悬崖
+        string cCc2
+        // 地表纹理 费尔伍德 - 草地悬崖
+        string cCc1
+        // 地表纹理 冰封王座 - 石砌墙壁
+        string cIc2
+        // 地表纹理 冰封王座 - 雪地悬崖
+        string cIc1
+        // 地表纹理 洛丹伦(秋) - 泥土悬崖
+        string cFc2
+        // 地表纹理 洛丹伦(秋) - 草地悬崖
+        string cFc1
+        // 地表纹理 洛丹伦(夏) - 泥土悬崖
+        string cLc2
+        // 地表纹理 洛丹伦(夏) - 草地悬崖
+        string cLc1
+        // 地表纹理 洛丹伦(冬) - 草地悬崖
+        string cWc2
+        // 地表纹理 洛丹伦(冬) - 雪地悬崖
+        string cWc1
+        // 地表纹理 诺森德- 泥土悬崖
+        string cNc2
+        // 地表纹理 诺森德- 雪地悬崖
+        string cNc1
+        // 地表纹理 边缘之地- 深渊
+        string cOc1
+        // 地表纹理 边缘之地- 泥土悬崖
+        string cOc2
+        // 地表纹理 沉沦的遗迹 - 泥土悬崖
+        string cZc2
+        // 地表纹理 沉沦的遗迹 - 石砌墙壁
+        string cZc1
+        // 地表纹理 地底 - 天然墙壁
+        string cGc2
+        // 地表纹理 地底 - 砖砌墙壁
+        string cGc1
+        // 地表纹理 村庄 - 泥土悬崖
+        string cVc2
+        // 地表纹理 村庄 - 厚草地悬崖
+        string cVc1
+        // 地表纹理 村庄(秋) - 泥土悬崖
+        string cQc2
+        // 地表纹理 村庄(秋) - 厚草地悬崖
+        string cQc1
+
+
+// 地形形状
+
+        // 地形形状 圆形
+        string CIRCLE
+        // 地形形状 方形
+        string SQUARE
+
+
+// 图像类型
+
+        // 图像类型 阴影
+        string SHADOW
+        // 图像类型 选择
+        string SELECTION
+        // 图像类型 指示器
+        string INDICATOR
+        // 图像类型 闭塞标志
+        string OCCLUSIONMARK
+        // 图像类型 地面纹理变化
+        string UBERSPLAT
+        // 图像类型 最顶端
+        string LAST
+
+
+// 地表纹理变化
+
+        // 地表纹理变化 测试
+        string TEST
+        // 地表纹理变化 洛丹伦(夏)泥地小
+        string LSDS
+        // 地表纹理变化 洛丹伦(夏)泥地中
+        string LSDM
+        // 地表纹理变化 洛丹伦(夏)泥地大
+        string LSDL
+        // 地表纹理变化 人类弹坑
+        string HCRT
+        // 地表纹理变化 不死族金矿
+        string UDSU
+        // 地表纹理变化 中立城市小建筑(死亡)
+        string DNCS
+        // 地表纹理变化 群体传送
+        string HMTP
+        // 地表纹理变化 回城卷轴
+        string SCTP
+        // 地表纹理变化 召唤护身符
+        string AMRC
+        // 地表纹理变化 黑暗转换
+        string DRKC
+        // 地表纹理变化 兽族小建筑(死亡)
+        string DOSB
+        // 地表纹理变化 兽族中建筑(死亡)
+        string DOMB
+        // 地表纹理变化 兽族大建筑(死亡)
+        string DOLB
+        // 地表纹理变化 人类小建筑(死亡)
+        string DHSB
+        // 地表纹理变化 人类中建筑(死亡)
+        string DHMB
+        // 地表纹理变化 人类大建筑(死亡)
+        string DHLB
+        // 地表纹理变化 不死族小建筑(死亡)
+        string DUSB
+        // 地表纹理变化 不死族中建筑(死亡)
+        string DUMB
+        // 地表纹理变化 不死族大建筑(死亡)
+        string DULB
+        // 地表纹理变化 暗夜精灵小古树(死亡)
+        string DNSB
+        // 地表纹理变化 暗夜精灵中古树(死亡)
+        string DNMB
+        // 地表纹理变化 暗夜精灵小古迹(死亡)
+        string DNSA
+        // 地表纹理变化 暗夜精灵中古迹(死亡)
+        string DNMA
+        // 地表纹理变化 人类小建筑
+        string HSMA
+        // 地表纹理变化 人类中建筑
+        string HMED
+        // 地表纹理变化 人类大建筑
+        string HLAR
+        // 地表纹理变化 兽族小建筑
+        string OSMA
+        // 地表纹理变化 兽族中建筑
+        string OMED
+        // 地表纹理变化 兽族大建筑
+        string OLAR
+        // 地表纹理变化 不死族建筑
+        string USMA
+        // 地表纹理变化 不死族建筑
+        string UMED
+        // 地表纹理变化 不死族建筑
+        string ULAR
+        // 地表纹理变化 暗夜精灵小古树
+        string ESMA
+        // 地表纹理变化 暗夜精灵中古树
+        string EMDA
+        // 地表纹理变化 暗夜精灵小建筑
+        string ESMB
+        // 地表纹理变化 暗夜精灵中建筑
+        string EMDB
+        // 地表纹理变化 城镇大厅
+        string HTOW
+        // 地表纹理变化 城堡
+        string HCAS
+        // 地表纹理变化 金矿
+        string NGOL
+        // 地表纹理变化 雷霆一击
+        string THND
+        // 地表纹理变化 恶魔之门
+        string NDGS
+        // 地表纹理变化 荆棘之盾
+        string CLTS
+        // 地表纹理变化 烈焰风暴1
+        string HFS1
+        // 地表纹理变化 烈焰风暴2
+        string HFS2
+        // 地表纹理变化 兽族地洞
+        string USBR
+        // 地表纹理变化 娜迦族大建筑
+        string NLAR
+        // 地表纹理变化 娜迦族中建筑
+        string NMED
+        // 地表纹理变化 黑暗之门(面向西南)
+        string DPSW
+        // 地表纹理变化 黑暗之门(面向东南)
+        string DPSE
+        // 地表纹理变化 火山
+        string NVOL
+        // 地表纹理变化 火山口
+        string NVCR
+
+
+// 主题音乐
+
+        // 主题音乐 阿尔塞斯的主题曲
+        string ARTHAS
+        // 主题音乐 血精灵的主题曲
+        string BLOODELF
+        // 主题音乐 伙伴的友谊
+        string COMRADESHIP
+        // 主题音乐 制作人员
+        string CREDITS
+        // 主题音乐 黑暗代言人
+        string DARKAGENTS
+        // 主题音乐 黑暗胜利
+        string DARKVICTORY
+        // 主题音乐 毁灭
+        string DOOM
+        // 主题音乐 英雄胜利
+        string HEROIC_VICTORY
+        // 主题音乐 人族1
+        string HUMAN1
+        // 主题音乐 人族2
+        string HUMAN2
+        // 主题音乐 人族3
+        string HUMAN3
+        // 主题音乐 人族X1
+        string HUMANX1
+        // 主题音乐 人族失败
+        string DEFEAT_HUMAN
+        // 主题音乐 人族胜利
+        string VICTORY_HUMAN
+        // 主题音乐 尤迪安的主题曲
+        string ILLIDAN
+        // 主题音乐 巫妖王的主题曲
+        string LICHKING
+        // 主题音乐 主要场景
+        string MAINSCREEN
+        // 主题音乐 主要场景X
+        string MAINSCREENX
+        // 主题音乐 娜迦的主题曲
+        string NAGA
+        // 主题音乐 暗夜精灵族1
+        string NIGHTELF1
+        // 主题音乐 暗夜精灵族2
+        string NIGHTELF2
+        // 主题音乐 暗夜精灵族3
+        string NIGHTELF3
+        // 主题音乐 暗夜精灵族X1
+        string NIGHTELFX1
+        // 主题音乐 暗夜精灵族失败
+        string DEFEAT_NIGHTELF
+        // 主题音乐 暗夜精灵族胜利
+        string VICTORY_NIGHTELF
+        // 主题音乐 兽族1
+        string ORC1
+        // 主题音乐 兽族2
+        string ORC2
+        // 主题音乐 兽族3
+        string ORC3
+        // 主题音乐 兽族X1
+        string ORCX1
+        // 主题音乐 兽族失败
+        string DEFEAT_ORC
+        // 主题音乐 半兽人的主题曲
+        string ORC_THEME
+        // 主题音乐 兽族胜利
+        string VICTORY_ORC
+        // 主题音乐 追击
+        string PURSUIT
+        // 主题音乐 神秘哀伤
+        string SADMYSTERY
+        // 主题音乐 紧张
+        string TENSION
+        // 主题音乐 悲剧降临
+        string TRAGICCONFRONTATION
+        // 主题音乐 不死族1
+        string UNDEAD1
+        // 主题音乐 不死族2
+        string UNDEAD2
+        // 主题音乐 不死族3
+        string UNDEAD3
+        // 主题音乐 不死族 X1
+        string UNDEADX1
+        // 主题音乐 不死族失败
+        string DEFEAT_UNDEAD
+        // 主题音乐 不死族胜利
+        string VICTORY_UNDEAD
+
+
+// 环境音效
+
+
+// 白天环境音效
+
+        // 白天环境音效 白杨谷
+        string AshenvaleDay
+        // 白天环境音效 贫瘠之地
+        string BarrensDay
+        // 白天环境音效 黑色城堡(K)
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
+        string BlackCitadelDay
+        // 白天环境音效 黑色城堡(O)
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
+        string BlackCitadelDay
+        // 白天环境音效 城邦
+        string CityScapeDay
+        // 白天环境音效 达拉然
+        string DalaranDay
+        // 白天环境音效 达拉然遗迹
+        string DalaranRuinsDay
+        // 白天环境音效 地下城/地牢
+        string DungeonDay
+        // 白天环境音效 费尔伍德
+        string FelwoodDay
+        // 白天环境音效 冰封王座
+        string IceCrownDay
+        // 白天环境音效 洛丹伦(秋)
+        string LordaeronFallDay
+        // 白天环境音效 洛丹伦(夏)
+        string LordaeronSummerDay
+        // 白天环境音效 洛丹伦(冬)
+        string LordaeronWinterDay
+        // 白天环境音效 诺森德
+        string NorthrendDay
+        // 白天环境音效 沉沦的遗迹
+        string SunkenRuinsDay
+        // 白天环境音效 村庄
+        string VillageDay
+        // 白天环境音效 村庄(秋)
+        string VillageFallDay
+        // 白天环境音效 地底
+        string DungeonCaveDay
+
+
+// 夜晚环境音效
+
+        // 夜晚环境音效 白杨谷
+        string AshenvaleNight
+        // 夜晚环境音效 贫瘠之地
+        string BarrensNight
+        // 夜晚环境音效 黑色城堡(K)
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
+        string BlackCitadelNight
+        // 夜晚环境音效 黑色城堡(O)
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
+        string BlackCitadelNight
+        // 夜晚环境音效 城邦
+        string CityScapeNight
+        // 夜晚环境音效 达拉然
+        string DalaranNight
+        // 夜晚环境音效 达拉然遗迹
+        string DalaranRuinsNight
+        // 夜晚环境音效 地下城/地牢
+        string DungeonNight
+        // 夜晚环境音效 费尔伍德
+        string FelwoodNight
+        // 夜晚环境音效 冰封王座
+        string IceCrownNight
+        // 夜晚环境音效 洛丹伦(秋)
+        string LordaeronFallNight
+        // 夜晚环境音效 洛丹伦(夏)
+        string LordaeronSummerNight
+        // 夜晚环境音效 洛丹伦(冬)
+        string LordaeronWinterNight
+        // 夜晚环境音效 诺森德
+        string NorthrendNight
+        // 夜晚环境音效 沉沦的遗迹
+        string SunkenRuinsNight
+        // 夜晚环境音效 村庄
+        string VillageNight
+        // 夜晚环境音效 村庄(秋)
+        string VillageFallNight
+        // 夜晚环境音效 地底
+        string DungeonCaveNight
 endglobals
