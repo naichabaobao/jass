@@ -5375,9 +5375,9 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // 设置指定单位属性 [R]
 // @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置指定单位的 X 坐标 [R]
+// 设置指定单位所在 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置指定单位的 Y 坐标 [R]
+// 设置指定单位所在 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
@@ -5397,7 +5397,7 @@ native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
 // 设置指定单位主动攻击范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
-// 锁定指定单位的警戒点 [R]
+// 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
 // 获取指定单位主动攻击范围 (当前值)，中立敌对玩家单位的当前攻击范围以警戒范围为准
