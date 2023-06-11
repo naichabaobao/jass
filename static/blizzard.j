@@ -884,13 +884,13 @@ globals
 
     // Day/Night Cycle vars
 
-    // 昼夜参数 白天声音触发器
+    // 昼夜参数 白天音效触发器
     trigger            bj_dncSoundsDay             = null
-    // 昼夜参数 夜晚声音触发器
+    // 昼夜参数 夜晚音效触发器
     trigger            bj_dncSoundsNight           = null
-    // 昼夜参数 白天环境声效
+    // 昼夜参数 白天环境音效
     sound              bj_dayAmbientSound          = null
-    // 昼夜参数 夜晚环境声效
+    // 昼夜参数 夜晚环境音效
     sound              bj_nightAmbientSound        = null
     // 昼夜参数 黎明声音触发器
     trigger            bj_dncSoundsDawn            = null
@@ -3557,7 +3557,7 @@ endfunction
 //***************************************************************************
 
 
-// 设置白昼环境音乐
+// 设置白天环境音效
 function SetAmbientDaySound takes string inLabel returns nothing
     local real ToD
 
@@ -3577,7 +3577,7 @@ function SetAmbientDaySound takes string inLabel returns nothing
 endfunction
 
 
-// 设置夜晚环境音乐
+// 设置夜晚环境音效
 function SetAmbientNightSound takes string inLabel returns nothing
     local real ToD
 
