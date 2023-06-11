@@ -5395,7 +5395,7 @@ native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns 
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置指定单位主动攻击范围
+// 设置指定单位采集范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -5685,7 +5685,7 @@ native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boole
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
 // 删除指定单位的技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
-// 设置指定单位技能的永久性 [R]
+// 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
 // 删除指定单位的魔法效果(指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
@@ -5710,7 +5710,7 @@ native UnitCanSleepPerm takes unit whichUnit returns boolean
 native UnitIsSleeping takes unit whichUnit returns boolean
 // 查询单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
-// 设置生命周期 [R]
+// 设置指定单位限时生命 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
 // 设置指定单位的忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
@@ -5722,7 +5722,7 @@ native UnitResetCooldown takes unit whichUnit returns nothing
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
 // 设置指定科技升级进度(百分比)
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
-// 暂停/恢复生命周期 [R]
+// 暂停/恢复 指定单位限时生命 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
 // 启用/禁用 单位的小地图特殊图标
 // 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能在小地图中未探索的迷雾遮罩区域看到商店泉水之类的中立建筑图标
@@ -7253,7 +7253,10 @@ native SetImageType takes image whichImage, integer imageType returns nothing
 // Ubersplat API
 //
 
-// 新建地面纹理变化 [R]
+// 新建地面纹理 [R]
+// @param alpha 透明度
+// @param forcePaused 是否禁用暂停状态
+// @param noBirthTime 是否启用出生动画
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
 // 删除指定地面纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
@@ -7261,7 +7264,7 @@ native DestroyUbersplat takes ubersplat whichSplat returns nothing
 native ResetUbersplat takes ubersplat whichSplat returns nothing
 // 结束地面纹理
 native FinishUbersplat takes ubersplat whichSplat returns nothing
-// 显示/隐藏 地面纹理变化[R]
+// 显示/隐藏 地面纹理[R]
 native ShowUbersplat takes ubersplat whichSplat, boolean flag returns nothing
 // 允许/禁止 地面纹理渲染
 native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothing
@@ -7419,21 +7422,21 @@ native BlzGetAbilityIcon takes integer abilCode returns string
 native BlzSetAbilityActivatedIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标(自动施法启用)
 native BlzGetAbilityActivatedIcon takes integer abilCode returns string
-// 获取技能位置(技能图标坐标)- X
+// 获取技能图标位置 - X
 native BlzGetAbilityPosX takes integer abilCode returns integer
-// 获取技能位置(技能图标坐标)- Y
+// 获取技能图标位置 - Y
 native BlzGetAbilityPosY takes integer abilCode returns integer
-// 设置技能位置(技能图标坐标)- X
+// 设置技能图标位置 - X
 native BlzSetAbilityPosX takes integer abilCode, integer x returns nothing
-// 设置技能位置(技能图标坐标)- Y
+// 设置技能图标位置 - Y
 native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
-// 获取技能位置(技能图标坐标)- X (启用自动施法)
+// 获取技能图标位置 - X (启用自动施法)
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
-// 获取技能位置(技能图标坐标)- Y (启用自动施法)
+// 获取技能图标位置 - Y (启用自动施法)
 native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
-// 设置技能位置(技能图标坐标)- X(启用自动施法)
+// 设置技能图标位置 - X(启用自动施法)
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
-// 设置技能位置(技能图标坐标)- Y(启用自动施法)
+// 设置技能图标位置 - Y(启用自动施法)
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
