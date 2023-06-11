@@ -310,9 +310,9 @@ constant native ConvertPathingFlag takes integer i returns pathingflag
 constant native OrderId takes string orderIdString returns integer
 // 转换命令ID成命令串
 constant native OrderId2String takes integer orderId returns string
-// 转换单位ID字符串成单位ID
+// 转换单位类型字符串成单位类型
 constant native UnitId takes string unitIdString returns integer
-// 转换单位ID成单位ID字符串
+// 转换单位类型成单位类型字符串
 constant native UnitId2String takes integer unitId returns string
 
 // 转换技能ID字符串成技能ID   Not currently working correctly...
@@ -2694,9 +2694,9 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_LURE_UNIT_TYPE = ConvertAbilityIntegerLevelField('imou')
     // 技能随等级改变的整数域 单位类型 ('ipmu')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_IPMU = ConvertAbilityIntegerLevelField('ipmu')
-    // 技能随等级改变的整数域 工厂单位ID ('Nsyu')
+    // 技能随等级改变的整数域 工厂单位类型 ('Nsyu')
 	constant abilityintegerlevelfield ABILITY_ILF_FACTORY_UNIT_ID = ConvertAbilityIntegerLevelField('Nsyu')
-    // 技能随等级改变的整数域 生产单位ID ('Nfyu')
+    // 技能随等级改变的整数域 生产单位类型 ('Nfyu')
 	constant abilityintegerlevelfield ABILITY_ILF_SPAWN_UNIT_ID_NFYU = ConvertAbilityIntegerLevelField('Nfyu')
     // 技能随等级改变的整数域 可破坏物ID ('Nvcu')
 	constant abilityintegerlevelfield ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
@@ -3745,7 +3745,7 @@ globals
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
 	// 技能随等级改变的字串符域 技能升级4 ('Neg6')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
-	// 技能随等级改变的字串符域 生产单位ID ('Nsy2')
+	// 技能随等级改变的字串符域 生产单位类型 ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
 	
 	// Item
@@ -5539,10 +5539,10 @@ native SetUnitPointValueByType takes integer unitType, integer newPointValue ret
 // 创建物品(指定物品) [R]
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
-// 创建物品(指定物品ID)
+// 创建物品(指定物品类型)
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
-// 把物品移动到指定物品栏格数(指定物品ID) [R]
+// 把物品移动到指定物品栏格数(指定物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 删除指定物品
@@ -5824,22 +5824,22 @@ native WaygateActivate takes unit waygate, boolean activate returns nothing
 native WaygateIsActive takes unit waygate returns boolean
 
 // 增加商店出售的物品类型 (应用于所有商店)
-// @param itemId 物品ID
+// @param itemId 物品类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddItemToAllStock takes integer itemId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的物品类型 (应用于指定商店)
-// @param itemId 物品ID
+// @param itemId 物品类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddItemToStock takes unit whichUnit, integer itemId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的单位类型 (应用于所有商店)
-// @param unitId 单位ID
+// @param unitId 单位类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToAllStock takes integer unitId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的单位类型 (应用于指定商店)
-// @param unitId 单位ID
+// @param unitId 单位类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
@@ -5871,7 +5871,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // Player API
 
 // 根据编号查询玩家
-// @param number玩家编号
+// @param number 玩家编号
 // 玩家1的编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
@@ -5904,21 +5904,21 @@ constant native GetPlayerRace takes player whichPlayer returns race
 // 玩家1的编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
-// @param includeIncomplete是否仅包含已完成训练/建造/研究的单位/建筑/科技
+// @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位类型的数量
-// @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
-// @param includeUpgrades是否仅包含已完成研究的科技
+// @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
+// @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
 // 获取玩家的建筑数量
-// @param includeIncomplete是否仅包含已完成建造的建筑
+// @param includeIncomplete 是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
 // 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家的联盟状态是否是指定状态
-// @param whichAllianceSetting指定联盟状态
+// 玩家与玩家的联盟类型是否是指定类型
+// @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
 // 获取玩家经验上限 [R]
@@ -5926,6 +5926,7 @@ constant native GetPlayerHandicap takes player whichPlayer returns real
 // 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
 // 获取玩家复活时间
+// 玩家障碍，额外的复活时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
@@ -5934,6 +5935,7 @@ constant native SetPlayerHandicap takes player whichPlayer, real handicap return
 // 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家复活时间
+// 玩家障碍、额外的复活时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
