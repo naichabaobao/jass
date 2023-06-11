@@ -2865,37 +2865,37 @@ function GetTerrainCliffLevelBJ takes location where returns integer
 endfunction
 
 
-// 获取地形类型
+// 获取地形类型/地表纹理
 function GetTerrainTypeBJ takes location where returns integer
     return GetTerrainType(GetLocationX(where), GetLocationY(where))
 endfunction
 
 
-// 地形样式
+// 查询地表类型/地表纹理（指定点）
 function GetTerrainVarianceBJ takes location where returns integer
     return GetTerrainVariance(GetLocationX(where), GetLocationY(where))
 endfunction
 
 
-// 设置地形类型
+// 设置地形类型/地表纹理
 function SetTerrainTypeBJ takes location where, integer terrainType, integer variation, integer area, integer shape returns nothing
     call SetTerrainType(GetLocationX(where), GetLocationY(where), terrainType, variation, area, shape)
 endfunction
 
 
-// 地形对应路径类型是否关闭
+// 查询路径类型是否指定类型（指定点）
 function IsTerrainPathableBJ takes location where, pathingtype t returns boolean
     return IsTerrainPathable(GetLocationX(where), GetLocationY(where), t)
 endfunction
 
 
-// 设置 地形路径 开/关
+// 启用/禁用 路径类型
 function SetTerrainPathableBJ takes location where, pathingtype t, boolean flag returns nothing
     call SetTerrainPathable(GetLocationX(where), GetLocationY(where), t, flag)
 endfunction
 
 
-// 设置 水 颜色
+// 设置 水面 颜色
 function SetWaterBaseColorBJ takes real red, real green, real blue, real transparency returns nothing
     call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
 endfunction
@@ -2947,25 +2947,25 @@ function GetLastCreatedFogModifier takes nothing returns fogmodifier
 endfunction
 
 
-// 允许迷雾
+// 启用 迷雾
 function FogEnableOn takes nothing returns nothing
     call FogEnable(true)
 endfunction
 
 
-// 禁用迷雾
+// 禁用 迷雾
 function FogEnableOff takes nothing returns nothing
     call FogEnable(false)
 endfunction
 
 
-// 允许黑色阴影
+// 启用 黑色阴影
 function FogMaskEnableOn takes nothing returns nothing
     call FogMaskEnable(true)
 endfunction
 
 
-// 禁用黑色阴影
+// 禁用 黑色阴影
 function FogMaskEnableOff takes nothing returns nothing
     call FogMaskEnable(false)
 endfunction
@@ -2977,7 +2977,11 @@ function UseTimeOfDayBJ takes boolean flag returns nothing
 endfunction
 
 
-// 设置 地形迷雾 
+// 设置地形迷雾 
+//@param style 风格，输入0,1,2[对应直线，指数1，指数2]
+//@param zstart Z 轴开始值
+//@param zend Z 轴结束值
+//@param density 密度
 function SetTerrainFogExBJ takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
     call SetTerrainFogEx(style, zstart, zend, density, red * 0.01, green * 0.01, blue * 0.01)
 endfunction
