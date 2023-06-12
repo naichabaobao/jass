@@ -1251,7 +1251,7 @@ globals
 
     // Instanced Operation Results
 
-    // 最后的值域操作结果标识，默认成功（true）
+    // 最后的值域操作结果标识/实例函数调用结果标识，默认成功（true）
     boolean            bj_lastInstObjFuncSuccessful = true
 endglobals
 
@@ -12105,7 +12105,7 @@ endfunction
 //*
 //***************************************************************************
 
-// 获取最后的值域操作结果
+// 获取最后一次值域操作结果/实例函数调用结果
 function BlzIsLastInstanceObjectFunctionSuccessful takes nothing returns boolean
     return bj_lastInstObjFuncSuccessful
 endfunction
