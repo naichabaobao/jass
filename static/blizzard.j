@@ -1956,9 +1956,9 @@ endfunction
 
 // Returns a square rect that exactly encompasses the specified circle.
 
-// 将圆形区域转换为矩形区域
+// 将圆形范围转换为矩形区域
 // 以圆心和为中心，直径为边长创建区域
-// 原有区域仍然保留，如不再使用请排泄
+// 原有点仍然保留，如不再使用请排泄
 // 会生成新区域，用完请注意排泄
 function GetRectFromCircleBJ takes location center, real radius returns rect
     local real centerX = GetLocationX(center)
@@ -2908,7 +2908,7 @@ function CreateFogModifierRectSimple takes player whichPlayer, fogstate whichFog
 endfunction
 
 
-// 创建可见度修正器(圆形区域)
+// 创建可见度修正器(圆形范围)
 function CreateFogModifierRadiusLocSimple takes player whichPlayer, fogstate whichFogState, location center, real radius, boolean afterUnits returns fogmodifier
     set bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, afterUnits)
     return bj_lastCreatedFogModifier
@@ -2928,7 +2928,7 @@ function CreateFogModifierRectBJ takes boolean enabled, player whichPlayer, fogs
 endfunction
 
 
-// 启用可见度修正器(圆形区域)
+// 启用可见度修正器(圆形范围)
 // Version of CreateFogModifierRadius that assumes use of sharedVision and
 // gives the option of immediately enabling the modifier, so that triggers
 // can default to modifiers that are immediately enabled.
@@ -2993,7 +2993,7 @@ function ResetTerrainFogBJ takes nothing returns nothing
 endfunction
 
 
-// 播放圆形区域内地表装饰物动画
+// 播放圆形范围内地表装饰物动画
 function SetDoodadAnimationBJ takes string animName, integer doodadID, real radius, location center returns nothing
     call SetDoodadAnimation(GetLocationX(center), GetLocationY(center), radius, doodadID, false, animName, false)
 endfunction
@@ -5260,7 +5260,7 @@ function EnumDestructablesInRectAll takes rect r, code actionFunc returns nothin
 endfunction
 
 
-// 选取指定圆形区域所有可破坏物做动作(单个动作)
+// 选取指定圆形范围所有可破坏物做动作(单个动作)
 function EnumDestructablesInCircleBJFilter takes nothing returns boolean
     local location destLoc = GetDestructableLoc(GetFilterDestructable())
     local boolean result
@@ -5311,7 +5311,7 @@ function RandomDestructableInRectSimpleBJ takes rect r returns destructable
 endfunction
 
 
-// 随机选取圆形区域满足过滤的可破坏物
+// 随机选取圆形范围满足过滤的可破坏物
 // Enumerates within a rect, with a filter to narrow the enumeration down
 // objects within a circular area.
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
@@ -5836,7 +5836,7 @@ function GetUnitsInRectOfPlayer takes rect r, player whichPlayer returns group
 endfunction
 
 
-// 选取玩家在指定圆形区域内单位
+// 选取玩家在指定圆形范围内单位
 // 会生成单位组，用完请注意排泄
 function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5846,7 +5846,7 @@ function GetUnitsInRangeOfLocMatching takes real radius, location whichLocation,
 endfunction
 
 
-// 选取圆形区域内所有单位（指定圆心及半径）
+// 选取圆形范围内所有单位（指定圆心及半径）
 // 会生成单位组，用完请注意排泄
 function GetUnitsInRangeOfLocAll takes real radius, location whichLocation returns group
     return GetUnitsInRangeOfLocMatching(radius, whichLocation, null)
@@ -9663,7 +9663,7 @@ function SetBlightRectBJ takes boolean addBlight, player whichPlayer, rect r ret
 endfunction
 
 
-// 创建/删除 荒芜地表（不死族）在指定圆形区域
+// 创建/删除 荒芜地表（不死族）在指定圆形范围
 function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, location loc, real radius returns nothing
     call SetBlightLoc(whichPlayer, loc, radius, addBlight)
 endfunction
