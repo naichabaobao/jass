@@ -6048,7 +6048,8 @@ native CopySaveGame takes string sourceSaveName, string destSaveName returns boo
 native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
-// 检查点(自动)存档
+// 游戏检查点(自动)存档
+// @param showWindow 是否显示自动存档消息
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
