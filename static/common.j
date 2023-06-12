@@ -6034,6 +6034,7 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 native ForceCampaignSelectScreen takes nothing returns nothing
 
 // 加载存档(手动选择存档)
+// @param doScoreScreen 是否跳过得分屏
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
@@ -6530,7 +6531,7 @@ native PlayCinematic takes string movieName returns nothing
 native ForceUIKey takes string key returns nothing
 // 强制玩家按下UI ESC键(UI取消键)
 native ForceUICancel takes nothing returns nothing
-// 显示加载对话框
+// 显示选择存档对话框
 native DisplayLoadDialog takes nothing returns nothing
 // 设置小地图(任务)图标
 native SetAltMinimapIcon takes string iconPath returns nothing
@@ -7619,7 +7620,7 @@ native BlzIsTargetIndicatorEnabled takes nothing returns boolean
 native BlzShowTerrain takes boolean show returns nothing
 // 显示天空
 native BlzShowSkyBox takes boolean show returns nothing
-// 开始录制
+// 开始录制（指定帧数）
 native BlzStartRecording takes integer fps returns nothing
 // 结束录制
 native BlzEndRecording takes nothing returns nothing
