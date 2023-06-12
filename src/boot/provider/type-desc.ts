@@ -73,7 +73,7 @@ const map = new Map<string,string>([
   ["effecttype", "特效类型"],
   ["weathereffect", "天气特效"],
   ["terraindeformation", "地形变形"],
-  ["terrainshape", "地形形状"],
+  ["terrainshape", "地形形状/刷子类型"],
   ["terraintype", "地形类型"],
   ["fogstate", "迷雾状态"],
   ["fogmodifier", "可见度修整器"],
