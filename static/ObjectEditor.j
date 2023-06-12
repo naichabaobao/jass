@@ -5883,7 +5883,6 @@ globals
 // 技能命令串或ID(命令串只有部分,ID估计全了,已去重)
 // 内容主要源自百度陈年旧贴,故不含1.29及之后新技能的命令串和ID(查了一下,好像也没有新命令串,ID就不管了)
 
-
         // 技能命令串
 
 
@@ -8049,29 +8048,88 @@ globals
 
 
         // 电影滤镜纹理 白色迷雾
+        // 是blp文件，需文件名带后缀
         string White_mask.blp
         // 电影滤镜纹理 黑色迷雾
+        // 是blp文件，需文件名带后缀
         string Black_mask.blp
         // 电影滤镜纹理 薄雾滤镜
+        // 是blp文件，需文件名带后缀
         string HazeFilter_mask.blp
         // 电影滤镜纹理 地面迷雾
+        // 是blp文件，需文件名带后缀
         string GroundFog_mask.blp
         // 电影滤镜纹理 薄雾和迷雾
+        // 是blp文件，需文件名带后缀
         string HazeAndFogFilter_Mask.blp
         // 电影滤镜纹理 对角线消减
+        // 是blp文件，需文件名带后缀
         string DiagonalSlash_mask.blp
         // 电影滤镜纹理 梦境(边框模糊)
+        // 是blp文件，需文件名带后缀
         string DreamFilter_Mask.blp
         // 电影滤镜纹理 冰
+        // 是blp文件，需文件名带后缀
         string IceFilter_Mask.blp
         // 电影滤镜纹理 范围
+        // 是blp文件，需文件名带后缀
         string Scope_Mask.blp
         // 电影滤镜纹理 兵!(字图)
+        // 是blp文件，需文件名带后缀
         string SpecialPowMask.blp
         // 电影滤镜纹理 溅泼声!(字图)
+        // 是blp文件，需文件名带后缀
         string SpecialSplatMask.blp
         // 电影滤镜纹理 幼年熊猫!(字图)
+        // 是blp文件，需文件名带后缀
         string Panda-n-Cub.blp
+
+
+// 天气特效类型
+
+
+        // 天气特效类型 白杨谷大雨
+        string RAhr
+        // 天气特效类型 白杨谷小雨
+        string RAlr
+        // 天气特效类型 达拉然之盾
+        string MEds
+        // 天气特效类型 地下城/地牢 蓝雾(厚)
+        string FDbh
+        // 天气特效类型 地下城/地牢 蓝雾(薄)
+        string FDbl
+        // 天气特效类型 地下城/地牢 绿雾(厚)
+        string FDgh
+        // 天气特效类型 地下城/地牢 绿雾(薄)
+        string FDgl
+        // 天气特效类型 地下城/地牢 红雾(厚)
+        string FDrh
+        // 天气特效类型 地下城/地牢 红雾(薄)
+        string FDrl
+        // 天气特效类型 地下城/地牢 白雾(厚)
+        string FDwh
+        // 天气特效类型 地下城/地牢 白雾(薄)
+        string FDwl
+        // 天气特效类型 洛丹伦大雨
+        string RLhr
+        // 天气特效类型 洛丹伦小雨
+        string RLlr
+        // 天气特效类型 诺森德的暴风雪
+        string SNbs
+        // 天气特效类型 诺森德大雪
+        string SNhs
+        // 天气特效类型 诺森德小雪
+        string SNls
+        // 天气特效类型 边缘之地大风
+        string WOcw
+        // 天气特效类型 边缘之地的风
+        string WOlw
+        // 天气特效类型 日光
+        string LRaa
+        // 天气特效类型 月光
+        string LRma
+        // 天气特效类型 大风
+        string WNcw
 
 
 // 闪电类型
@@ -8509,12 +8567,12 @@ globals
         string cQc1
 
 
-// 地形形状
+// 地形形状/刷子类型
 
 
-        // 地形形状 圆形
+        // 地形形状/刷子类型 圆形
         string CIRCLE
-        // 地形形状 方形
+        // 地形形状/刷子类型 方形
         string SQUARE
 
 
@@ -8646,6 +8704,7 @@ globals
 
 // 主题音乐
 
+
         // 主题音乐 阿尔塞斯的主题曲
         string ARTHAS
         // 主题音乐 血精灵的主题曲
@@ -8742,7 +8801,7 @@ globals
         // 白天环境音效 贫瘠之地
         string BarrensDay
         // 白天环境音效 黑色城堡
-        // 黑色城堡有两个音效，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMEDAY_K WESTRING_AMBIENTTHEMEDAY_O
         string BlackCitadelDay
         // 白天环境音效 城邦
         string CityScapeDay
@@ -8781,7 +8840,7 @@ globals
         // 夜晚环境音效 贫瘠之地
         string BarrensNight
         // 夜晚环境音效 黑色城堡
-        // 黑色城堡有两个音效，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
+        // 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O
         string BlackCitadelNight
         // 夜晚环境音效 城邦
         string CityScapeNight
@@ -8811,4 +8870,6 @@ globals
         string VillageFallNight
         // 夜晚环境音效 地底
         string DungeonCaveNight
+
+
 endglobals
