@@ -6526,7 +6526,7 @@ native EnableWorldFogBoundary takes boolean b returns nothing
 native PlayModelCinematic takes string modelName returns nothing
 // 调用电影(所有玩家)
 native PlayCinematic takes string movieName returns nothing
-// 强制玩家按下UI键
+// 强制玩家按下特定UI键
 native ForceUIKey takes string key returns nothing
 // 强制玩家按下UI ESC键(UI取消键)
 native ForceUICancel takes nothing returns nothing
@@ -7330,33 +7330,33 @@ native IsNoVictoryCheat takes nothing returns boolean
 // 查询游戏是否无法失败 [R]
 native IsNoDefeatCheat takes nothing returns boolean
 
-// 预读文件
+// 预载文件
 native Preload takes string filename returns nothing
-// 停止预读文件时间
+// 停止预载（指定时间）
 native PreloadEnd takes real timeout returns nothing
 
-// 预加载开始
+// 开始预载
 native PreloadStart takes nothing returns nothing
-// 预加载刷新
+// 刷新预载
 native PreloadRefresh takes nothing returns nothing
-// 预加载结束
+// 结束预载
 native PreloadEndEx takes nothing returns nothing
 
-// 清空预加载
+// 清空预载
 native PreloadGenClear takes nothing returns nothing
-// 预加载开始
+// 开始预载
 // - 配合PreloadGenEnd使用
 // 1. call PreloadGenStart()
 // 2. call Preloader("blp\\jass.blp")
 // 3. call PreloadGenEnd("log.pld")
 native PreloadGenStart takes nothing returns nothing
-// 预加载结束
+// 结束预载
 // @param filename 绝对路径,这个文件的后缀可以是任何类型,因此你可以生成可执行文件的后缀
 // 1. call PreloadGenStart()
 // 2. call Preloader("blp\\jass.blp")
 // 3. call PreloadGenEnd("log.pld")
 native PreloadGenEnd takes string filename returns nothing
-// 预读文件
+// 预载文件
 native Preloader takes string filename returns nothing
 
 
