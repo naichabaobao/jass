@@ -6391,10 +6391,10 @@ globals
         string resumebuild
         // 技能命令串或ID 返还资源
         string resumeharvesting
+        // 技能命令串或ID 返还资源
+        string returnresources
         // 技能命令串或ID 复活(圣骑士)
         string resurrection
-        // 技能命令串或ID 复活英雄
-        string returnresources
         // 技能命令串或ID 复仇(中立)
         string revenge
         // 技能命令串或ID 复活英雄
