@@ -4473,18 +4473,18 @@ native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter retu
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 将指定圆形区域的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 将指定圆形区域的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 【弃用】将指定圆形区域的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 【弃用】将指定圆形区域的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
@@ -5976,9 +5976,9 @@ native CachePlayerHeroData takes player whichPlayer returns nothing
 
 // 设置迷雾状态(矩形区域) [R]
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
-// 设置迷雾状态(圆形区域) (指定坐标)[R]
+// 设置迷雾状态(圆形范围) (指定坐标)[R]
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
-// 设置迷雾状态(圆形区域)(指定点) [R]
+// 设置迷雾状态(圆形范围)(指定点) [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
@@ -5991,9 +5991,9 @@ native IsFogEnabled takes nothing returns boolean
 
 // 新建可见度修正器(矩形区域) [R]
 native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆形区域) [R]
+// 新建可见度修正器(圆形范围) [R]
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆形区域) [R]
+// 新建可见度修正器(圆形范围) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 删除指定可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
@@ -7174,8 +7174,10 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电效果 [R]
+// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电效果(指定Z轴) [R]
+// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 删除指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
@@ -7217,6 +7219,7 @@ native GetTerrainType takes real x, real y returns integer
 // 获取地形样式(指定坐标) [R]
 native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
+// @param terrainType 地表纹理，具体类型可在 ObjectEditor.j 文件找到
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
 // 查询路径类型状态是否关闭(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
@@ -7228,6 +7231,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
+// @param imageType 图像类型，具体类型可在 ObjectEditor.j 文件找到
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 删除指定图像
 native DestroyImage takes image whichImage returns nothing
@@ -7248,42 +7252,43 @@ native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
 // @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
-// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]
+// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 ObjectEditor.j 文件找到
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
 // Ubersplat API
 //
 
-// 新建地面纹理 [R]
+// 新建地表纹理 [R]
+// @param name 具体纹理可在 ObjectEditor.j 文件找到
 // @param alpha 透明度
 // @param forcePaused 是否禁用暂停状态
 // @param noBirthTime 是否启用出生动画
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-// 删除指定地面纹理
+// 删除指定地表纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
-// 重置地面纹理
+// 重置地表纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
-// 结束地面纹理
+// 结束地表纹理
 native FinishUbersplat takes ubersplat whichSplat returns nothing
-// 显示/隐藏 地面纹理[R]
+// 显示/隐藏 地表纹理[R]
 native ShowUbersplat takes ubersplat whichSplat, boolean flag returns nothing
-// 允许/禁止 地面纹理渲染
+// 允许/禁止 地表纹理渲染
 native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothing
-// 允许/禁止 地面纹理永久渲染
+// 允许/禁止 地表纹理永久渲染
 native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns nothing
 
 
 // Blight API
 //
 
-// 创建/删除 荒芜地表(不死族)(圆形区域)(指定坐标) [R]
+// 创建/删除 荒芜地表(不死族)(圆形范围)(指定坐标) [R]
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
 // 创建/删除 荒芜地表(不死族)(指定矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
 // 创建/删除 荒芜地表(不死族)(指定坐标)
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-// 创建/删除 荒芜地表(不死族)(指定圆形区域)(指定点)
+// 创建/删除 荒芜地表(不死族)(指定圆形范围)(指定点)
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿(指定所属玩家，坐标及朝向) [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
@@ -7294,7 +7299,7 @@ native IsPointBlighted takes real x, real y returns boolean
 // Doodad API
 //
 
-// 播放圆形区域内地表装饰物动画 [R]
+// 播放圆形范围内地表装饰物动画 [R]
 native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
 // 播放矩形区域内地表装饰物动画 [R]
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
