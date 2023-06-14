@@ -6499,7 +6499,7 @@ native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns
 // @param portraitDNCFile肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
 // 设置天空模型
-// @param skyModelFile天空模型文件路径
+// @param skyModelFile天空模型文件路径，可在 ObjectEditor.j 文件找到
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
 // 启用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
