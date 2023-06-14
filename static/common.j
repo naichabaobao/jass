@@ -310,9 +310,9 @@ constant native ConvertPathingFlag takes integer i returns pathingflag
 constant native OrderId takes string orderIdString returns integer
 // 转换命令ID成命令串
 constant native OrderId2String takes integer orderId returns string
-// 转换单位ID字符串成单位ID
+// 转换单位类型字符串成单位类型
 constant native UnitId takes string unitIdString returns integer
-// 转换单位ID成单位ID字符串
+// 转换单位类型成单位类型字符串
 constant native UnitId2String takes integer unitId returns string
 
 // 转换技能ID字符串成技能ID   Not currently working correctly...
@@ -466,11 +466,11 @@ globals
 	constant playergameresult PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
 	// 玩家游戏结果 不确定
 	constant playergameresult PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
-	// 联盟类型 被动联盟(联盟不侵略)
+	// 联盟类型 被动联盟(联盟不侵犯)
 	constant alliancetype ALLIANCE_PASSIVE = ConvertAllianceType(0)
-	// 联盟类型 帮助请求
+	// 联盟类型 救援请求
 	constant alliancetype ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
-	// 联盟类型 帮助请求响应
+	// 联盟类型 响应救援请求（救援回应）
 	constant alliancetype ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
 	// 联盟类型 共享经验值
 	constant alliancetype ALLIANCE_SHARED_XP = ConvertAllianceType(3)
@@ -478,13 +478,13 @@ globals
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
 	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟类型 共享单位控制
+	// 联盟类型 共享单位（控制）
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
 	// 联盟类型 完全共享单位控制
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
-	// 联盟类型 被迫共享视野
+	// 联盟类型 强制共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
 	// 游戏版本 混乱之治
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
@@ -642,9 +642,9 @@ globals
 	constant animtype ANIM_TYPE_SPELL = ConvertAnimType(9)
 	// 动画类型 - 头像视窗
 	constant animtype ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
-	// 子动画类型 - 扎根(古树)
+	// 子动画类型 - 定身
 	constant subanimtype SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
-	// 子动画类型 - 生长(古树)
+	// 子动画类型 - 变形
 	constant subanimtype SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
 	// 子动画类型 - 循环
 	constant subanimtype SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
@@ -658,9 +658,9 @@ globals
 	constant subanimtype SUBANIM_TYPE_FAST = ConvertSubAnimType(17)
 	// 子动画类型 - 旋转
 	constant subanimtype SUBANIM_TYPE_SPIN = ConvertSubAnimType(18)
-	// 子动画类型 - 准备完成
+	// 子动画类型 - 就绪
 	constant subanimtype SUBANIM_TYPE_READY = ConvertSubAnimType(19)
-	// 子动画类型 - 传送
+	// 子动画类型 - 引导
 	constant subanimtype SUBANIM_TYPE_CHANNEL = ConvertSubAnimType(20)
 	// 子动画类型 - 防御
 	constant subanimtype SUBANIM_TYPE_DEFEND = ConvertSubAnimType(21)
@@ -672,11 +672,11 @@ globals
 	constant subanimtype SUBANIM_TYPE_LEFT = ConvertSubAnimType(24)
 	// 子动画类型 - 往右
 	constant subanimtype SUBANIM_TYPE_RIGHT = ConvertSubAnimType(25)
-	// 子动画类型 - 开火
+	// 子动画类型 - 火焰
 	constant subanimtype SUBANIM_TYPE_FIRE = ConvertSubAnimType(26)
-	// 子动画类型 - 吃肉
+	// 子动画类型 - 血肉
 	constant subanimtype SUBANIM_TYPE_FLESH = ConvertSubAnimType(27)
-	// 子动画类型 - 打击
+	// 子动画类型 - 命中
 	constant subanimtype SUBANIM_TYPE_HIT = ConvertSubAnimType(28)
 	// 子动画类型 - 受伤
 	constant subanimtype SUBANIM_TYPE_WOUNDED = ConvertSubAnimType(29)
@@ -696,7 +696,7 @@ globals
 	constant subanimtype SUBANIM_TYPE_LUMBER = ConvertSubAnimType(36)
 	// 子动画类型 - 工作
 	constant subanimtype SUBANIM_TYPE_WORK = ConvertSubAnimType(37)
-	// 子动画类型 - 说话
+	// 子动画类型 - 交谈
 	constant subanimtype SUBANIM_TYPE_TALK = ConvertSubAnimType(38)
 	// 子动画类型 - 第一
 	constant subanimtype SUBANIM_TYPE_FIRST = ConvertSubAnimType(39)
@@ -726,17 +726,17 @@ globals
 	constant subanimtype SUBANIM_TYPE_LARGE = ConvertSubAnimType(51)
 	// 子动画类型 - 升级
 	constant subanimtype SUBANIM_TYPE_UPGRADE = ConvertSubAnimType(52)
-	// 子动画类型 - 排出
+	// 子动画类型 - 吸取
 	constant subanimtype SUBANIM_TYPE_DRAIN = ConvertSubAnimType(53)
-	// 子动画类型 - 吞
+	// 子动画类型 - 吞噬
 	constant subanimtype SUBANIM_TYPE_FILL = ConvertSubAnimType(54)
 	// 子动画类型 - 闪电链
 	constant subanimtype SUBANIM_TYPE_CHAINLIGHTNING = ConvertSubAnimType(55)
 	// 子动画类型 - 吃树
 	constant subanimtype SUBANIM_TYPE_EATTREE = ConvertSubAnimType(56)
-	// 子动画类型 - 吐
+	// 子动画类型 - 呕吐
 	constant subanimtype SUBANIM_TYPE_PUKE = ConvertSubAnimType(57)
-	// 子动画类型 - 乱动
+	// 子动画类型 - 抽打
 	constant subanimtype SUBANIM_TYPE_FLAIL = ConvertSubAnimType(58)
 	// 子动画类型 - 关闭
 	constant subanimtype SUBANIM_TYPE_OFF = ConvertSubAnimType(59)
@@ -800,23 +800,23 @@ globals
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
 	// 地图参数 - 隐藏地形
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图参数 - 已探索地图
+	// 地图参数 - 已探索地图/可见地形
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 	// 地图参数 - 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图参数 - 使用障碍
+	// 地图参数 - 使用生命障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
-	// 地图参数 - 启用裁判/观战者
+	// 地图参数 - 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
 	// 地图参数 - 战败后成为观战者
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
 	// 地图参数 - 固定玩家颜色
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
-	// 地图参数 - 禁止资源交易
+	// 地图参数 - 锁定交易资源（禁止交易）
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图参数 - 允许联盟资源交易
+	// 地图参数 - 限制盟友资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
-	// 地图参数 - 禁止变更联盟类型
+	// 地图参数 - 锁定联盟设置（禁止更改）
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
 	// 地图参数 - 隐藏联盟类型变更
 	constant mapflag MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
@@ -830,11 +830,11 @@ globals
 	constant mapflag MAP_LOCK_RANDOM_SEED = ConvertMapFlag(8192 * 4)
 	// 地图参数 - 共享高级控制
 	constant mapflag MAP_SHARED_ADVANCED_CONTROL = ConvertMapFlag(8192 * 8)
-	// 地图参数 - 随机英雄
+	// 地图参数 - 使用随机英雄
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
-	// 地图参数 - 随机种族
+	// 地图参数 - 使用随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 - 重载地图
+	// 地图参数 - 地图转换（加载新地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
 	// 地图参数 - 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
@@ -941,22 +941,22 @@ globals
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
 	// 游戏浮点状态 - 当前时间
 	constant fgamestate GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
-	// 玩家状态 - 游戏结果
+	// 玩家状态 - 游戏得分
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
 	
 	// current resource levels
 	
-	// 玩家状态 - 当前的黄金数量
+	// 玩家状态 - 现有黄金量
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
-	// 玩家状态 - 当前的木材数量
+	// 玩家状态 - 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家状态 - 当前的英雄数量
+	// 玩家状态 - 剩余可用英雄数
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-        // 玩家状态 - 可用人口数(默认为人口建筑提供的数量)
+	// 玩家状态 - 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
-	// 玩家状态 - 已用人口数
+	// 玩家状态 - 已使用人口数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
-	// 玩家状态 - 人口上限数(平衡常数或触发限制的最大数量)，默认为100
+	// 玩家状态 - 最大人口上限(平衡常数或触发限制的最大数量)，默认为100
 	constant playerstate PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
 	// 玩家状态 - 给予奖励
 	constant playerstate PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
@@ -968,23 +968,23 @@ globals
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
 	// 玩家状态 - 裁判或观战者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态 - 不允许观战者
+	// 玩家状态 - 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
 	
-	// 玩家状态 - 黄金税率
+	// 玩家状态 - 黄金维修费率
 	constant playerstate PLAYER_STATE_GOLD_UPKEEP_RATE = ConvertPlayerState(13)
-	// 玩家状态 - 木材税率
+	// 玩家状态 - 木材维修费率
 	constant playerstate PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
 	
 	// cumulative resources collected by the player during the mission
 	
-	// 玩家状态 - 已收集的金钱数量
+	// 玩家状态 - 总金钱采集量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态 - 已收集的木材数量
+	// 玩家状态 - 总木材采集量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态 - 启用/禁用 中立敌对玩家单位睡眠
+	// 玩家状态 - 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 单位状态 单位当前生命值
@@ -1165,7 +1165,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位事件 发布命令(指定点)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-        // 玩家单位事件 发布命令(指定单位)
+	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
@@ -1173,7 +1173,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
         // 玩家单位事件 英雄学习技能
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-        // 玩家单位事件 英雄可复活
+        // 玩家单位事件 英雄可复活/阵亡
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家单位事件 英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -1212,12 +1212,12 @@ globals
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
-	// 单位事件 单位被选择
+	// 单位事件 选择单位
 	constant unitevent EVENT_UNIT_SELECTED = ConvertUnitEvent(57)
-	// 单位事件 单位被取消选择
+	// 单位事件 取消选择单位
 	constant unitevent EVENT_UNIT_DESELECTED = ConvertUnitEvent(58)
 	// 单位事件 单位状态变更
-	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)                                                                        
+	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)
 	
 	// Events which may have a filter for the "other unit"   
 	
@@ -1266,7 +1266,7 @@ globals
 	// 单位事件 英雄学习技能
 	constant unitevent EVENT_UNIT_HERO_SKILL = ConvertUnitEvent(79)
 	
-	// 单位事件 英雄可复活
+	// 单位事件 英雄可复活/阵亡
 	constant unitevent EVENT_UNIT_HERO_REVIVABLE = ConvertUnitEvent(80)
 	// 单位事件 英雄开始复活
 	constant unitevent EVENT_UNIT_HERO_REVIVE_START = ConvertUnitEvent(81)
@@ -1302,13 +1302,13 @@ globals
 	
 	// 游戏事件 游戏加装完毕
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
-	// 游戏事件 比赛即将完成
+	// 游戏事件 锦标赛即将完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
-	// 游戏事件 比赛完成
+	// 游戏事件 锦标赛完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
-	// 游戏事件 储存
+	// 游戏事件 存档
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
-	// 游戏事件 自定义框架(UI)
+	// 游戏事件 控件(自定义UI)
 	constant gameevent EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
 	
 	
@@ -1350,7 +1350,7 @@ globals
 	
 	// 玩家单位事件 出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
-	// 玩家单位事件 变更所有者
+	// 玩家单位事件 变更所属
  constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
  constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
@@ -1520,23 +1520,23 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合方式 无混合，有两个无混合
+	// 混合方式 无混合物，有两个无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
-	// 混合方式 无混合，有两个无混合
+	// 混合方式 无视混合物
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合方式 关键的alpha混合
+	// 混合方式 关键的alpha混合物
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
-	// 混合方式 普通混合
+	// 混合方式 普通混合物
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合方式 附加的混合
+	// 混合方式 附加的混合物
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合方式 调整的混合
+	// 混合方式 调整的混合物
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合方式 调整的2x混合
+	// 混合方式 调整的2倍混合物
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
-        // 动画频率控制 普通频率
+	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
-        // 动画频率控制 罕见频率
+	// 动画频率控制 罕见频率
 	constant raritycontrol RARITY_RARE = ConvertRarityControl(1)
 	// 纹理贴图标志 无
 	constant texmapflags TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
@@ -2678,7 +2678,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_EFFECT_ABILITY = ConvertAbilityIntegerLevelField('Iobu')
     // 技能随等级改变的整数域 变化单位类型 ('Ndc2')
 	constant abilityintegerlevelfield ABILITY_ILF_CONVERSION_UNIT = ConvertAbilityIntegerLevelField('Ndc2')
-    // 技能随等级改变的整数域 可被保存单位 ('Nsl1')
+    // 技能随等级改变的整数域 可被保存单位 ('Nsl1')（保存灵魂技能）
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TO_PRESERVE = ConvertAbilityIntegerLevelField('Nsl1')
     // 技能随等级改变的整数域 允许单位类型 ('Chl1')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_ALLOWED = ConvertAbilityIntegerLevelField('Chl1')
@@ -2694,9 +2694,9 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_LURE_UNIT_TYPE = ConvertAbilityIntegerLevelField('imou')
     // 技能随等级改变的整数域 单位类型 ('ipmu')
 	constant abilityintegerlevelfield ABILITY_ILF_UNIT_TYPE_IPMU = ConvertAbilityIntegerLevelField('ipmu')
-    // 技能随等级改变的整数域 工厂单位ID ('Nsyu')
+    // 技能随等级改变的整数域 工厂单位类型 ('Nsyu')
 	constant abilityintegerlevelfield ABILITY_ILF_FACTORY_UNIT_ID = ConvertAbilityIntegerLevelField('Nsyu')
-    // 技能随等级改变的整数域 生产单位ID ('Nfyu')
+    // 技能随等级改变的整数域 生产单位类型 ('Nfyu')
 	constant abilityintegerlevelfield ABILITY_ILF_SPAWN_UNIT_ID_NFYU = ConvertAbilityIntegerLevelField('Nfyu')
     // 技能随等级改变的整数域 可破坏物ID ('Nvcu')
 	constant abilityintegerlevelfield ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
@@ -3745,7 +3745,7 @@ globals
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
 	// 技能随等级改变的字串符域 技能升级4 ('Neg6')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
-	// 技能随等级改变的字串符域 生产单位ID ('Nsy2')
+	// 技能随等级改变的字串符域 生产单位类型 ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
 	
 	// Item
@@ -4208,7 +4208,6 @@ native SquareRoot takes real x returns real
 // computes x to the y power
 // y == 0.0             => 1
 // x ==0.0 and y < 0    => 0
-//
 native Pow takes real x, real power returns real
 // 四舍五入
 constant native MathRound takes real r returns integer
@@ -4226,7 +4225,7 @@ native I2S takes integer i returns string
 // 转换实数成字符串
 native R2S takes real r returns string
 // 转换实数成字符串
-//@param precision指定保留的小数位数
+//@param precision 保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字串符成整数
 native S2I takes string s returns integer
@@ -4281,10 +4280,10 @@ native DefineStartLocationLoc takes integer whichStartLoc, location whichLocatio
 // 设置出生点优先权(指定点)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置出生点优先权系数
-// @param whichStartLoc第一出生点
-// @param prioSlotIndex玩家槽
-// @param otherStartLocIndex其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority优先权系数
+// @param whichStartLoc 第一出生点
+// @param prioSlotIndex 玩家槽
+// @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
+// @param priority 优先权系数
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 获取出生点优先权(指定玩家槽)
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
@@ -4293,10 +4292,10 @@ native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex return
 // 设置敌人出生点(指定玩家槽)
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置敌人出生点优先权系数
-// @param whichStartLoc第一出生点
-// @param prioSlotIndex玩家槽
-// @param otherStartLocIndex其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority出生点分布优先权系数
+// @param whichStartLoc 第一出生点
+// @param prioSlotIndex 玩家槽
+// @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
+// @param priority 出生点分布优先权系数
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏类型支持
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
@@ -4322,7 +4321,7 @@ native GetPlayers takes nothing returns integer
 native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 获取选择的游戏类型
 native GetGameTypeSelected takes nothing returns gametype
-// 查询地图参数状态是否开启(指定参数)
+// 查询地图参数/地图选项是否开启(指定参数)
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取障碍设置(最大生命值百分比限制，攻击百分比限制，复活时间限制)
 constant native GetGamePlacement takes nothing returns placement
@@ -4363,6 +4362,9 @@ native SetPlayerColor takes player whichPlayer, playercolor color returns nothin
 // 设置指定玩家联盟类型(指定项目) [R]
 native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
 // 设置指定玩家税率 [R]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
@@ -4390,6 +4392,9 @@ native GetPlayerController takes player whichPlayer returns mapcontrol
 // 查询指定玩家槽状态
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取指定玩家税率 [R]
+// @param sourcePlayer 纳税玩家
+// @param otherPlayer 收税玩家
+// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家优先种族是否指定种族
 // 在情节–玩家设置指定的种族，如果未指定(设为可选)，则取房间玩家自主选择的种族，使用随机时应该返回否
@@ -4468,18 +4473,18 @@ native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter retu
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 将指定圆形区域的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 将指定圆形区域的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 【弃用】将指定圆形区域的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 【弃用】将指定圆形区域的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter过滤，不建议使用在AI脚本中，即filter写成null
 // @deprecated
 // @param countLimit 数量上限
@@ -4489,20 +4494,28 @@ native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichL
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
 // 按ID发布(单位组)命令(无目标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
 // 发布(单位组)命令(指定坐标) [R]
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
 // 发布(单位组)命令(指定点)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
 // 按ID发布(单位组)命令(指定坐标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
 // 按ID发布(单位组)命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
 // 发布(单位组)命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
 // 按ID发布(单位组)命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
@@ -4824,30 +4837,30 @@ constant native GetTriggerPlayer takes nothing returns player
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 
-// 事件响应 获取升级的英雄(对应玩家英雄升级和英雄升级等事件)
+// 事件响应 获取升级的英雄(对应英雄升级和英雄升级等事件)
 // EVENT_PLAYER_HERO_LEVEL
 // EVENT_UNIT_HERO_LEVEL
 constant native GetLevelingUnit takes nothing returns unit
 
-// 事件响应 获取学习技能的英雄(对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习技能的英雄(对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearningUnit takes nothing returns unit
-// 事件响应 获取学习的技能 [R](对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习的技能 [R](对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkill takes nothing returns integer
-// 事件响应 获取学习技能的等级(对应玩家英雄学习技能和英雄学习技能等事件)
+// 事件响应 获取学习技能的等级(对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
 constant native GetLearnedSkillLevel takes nothing returns integer
 
 
-// 事件响应 获取可复活的英雄(对应玩家可复活英雄等事件)
+// 事件响应 获取可复活/阵亡的英雄(对应可复活/阵亡英雄等事件)
 // EVENT_PLAYER_HERO_REVIVABLE
 constant native GetRevivableUnit takes nothing returns unit
 
-// 事件响应 获取复活的英雄(对应玩家开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件)
+// 事件响应 获取复活的英雄(对应开始/取消/完成复活英雄和开始/取消/完成复活英雄等事件)
 // EVENT_PLAYER_HERO_REVIVE_START
 // EVENT_PLAYER_HERO_REVIVE_CANCEL
 // EVENT_PLAYER_HERO_REVIVE_FINISH
@@ -4856,146 +4869,146 @@ constant native GetRevivableUnit takes nothing returns unit
 // EVENT_UNIT_HERO_REVIVE_FINISH
 constant native GetRevivingUnit takes nothing returns unit
 
-// 事件响应 获取攻击的单位(对应玩家单位被攻击等事件)
+// 事件响应 获取攻击的单位(对应单位被攻击等事件)
 // EVENT_PLAYER_UNIT_ATTACKED
 constant native GetAttacker takes nothing returns unit
 
 
-// 获取营救单位(对应玩家单位被营救等事件)
+// 获取营救单位(对应单位被营救等事件)
 // EVENT_PLAYER_UNIT_RESCUED
 constant native GetRescuer takes nothing returns unit
 
 
 
-// 事件响应 获取死亡单位(对应玩家单位死亡等事件)
+// 事件响应 获取死亡单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetDyingUnit takes nothing returns unit
-// 事件响应 获取凶手单位(对应玩家单位死亡等事件)
+// 事件响应 获取凶手单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
 constant native GetKillingUnit takes nothing returns unit
 
-// 事件响应 获取尸体腐烂单位(对应玩家单位尸体腐烂等事件)
+// 事件响应 获取尸体腐烂单位(对应单位尸体腐烂等事件)
 // EVENT_PLAYER_UNIT_DECAY
 constant native GetDecayingUnit takes nothing returns unit
 
-// 事件响应 获取选择的单位(对应玩家选择单位等事件)
+// 事件响应 获取被选择的单位(对应玩家选择单位等事件)
 // EVENT_PLAYER_UNIT_SELECTED
 //constant native GetSelectedUnit takes nothing returns unit
 
-// 事件响应 获取正在建造的建筑(对应玩家开始建造单位等事件)
+// 事件响应 获取正在建造的建筑(对应开始建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_START
 constant native GetConstructingStructure takes nothing returns unit
 
 
-// 事件响应 获取取消建造的建筑(对应玩家完成/取消建造单位等事件)
+// 事件响应 获取取消建造的建筑(对应完成/取消建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetCancelledStructure takes nothing returns unit
-// 事件响应 获取已建造的建筑(对应玩家完成/取消建造单位等事件)
+// 事件响应 获取已建造的建筑(对应完成/取消建造单位等事件)
 // EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 // EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 constant native GetConstructedStructure takes nothing returns unit
 
-// 事件响应 获取研究科技的单位(对应玩家开始/完成/取消研究科技等事件)
+// 事件响应 获取研究科技的单位(对应开始/完成/取消研究科技等事件)
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearchingUnit takes nothing returns unit
-// 事件响应 获取研究的科技类型(对应玩家开始/完成/取消研究科技等事件)
+// 事件响应 获取研究的科技类型(对应开始/完成/取消研究科技等事件)
 // EVENT_PLAYER_UNIT_RESEARCH_START
 // EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearched takes nothing returns integer
 
-// 事件响应 获取训练的单位类型(对应玩家开始/完成/取消训练单位等事件)
+// 事件响应 获取训练的单位类型(对应开始/完成/取消训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnitType takes nothing returns integer
 
-// 事件响应 获取训练的单位(对应玩家完成训练单位等事件)
+// 事件响应 获取训练的单位(对应完成训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取检测的单位(对应玩家单位被检测到等事件)
+// 事件响应 获取检测的单位(对应单位被检测到等事件)
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
-// 事件响应 获取正在召唤的单位(对应玩家召唤单位等事件)
+// 事件响应 获取正在召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummoningUnit takes nothing returns unit
-// 事件响应 获取被召唤单位(对应玩家召唤单位等事件)
+// 事件响应 获取被召唤单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
-// 事件响应 获取运输单位(对应玩家装载单位等事件)
+// 事件响应 获取运输单位(对应装载单位等事件)
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
-// 事件响应 获取装载单位(对应玩家装载单位等事件)
-// 在飞艇/船内、在缠绕的金矿内的单位都属于装载单位
+// 事件响应 获取被装载单位(对应装载单位等事件)
+// 在飞艇/船内、在缠绕的金矿内的单位都可装载单位
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetLoadedUnit takes nothing returns unit
 
-// 事件响应 获取出售单位(对应玩家出售单位等事件)
+// 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售单位(对应玩家出售单位等事件)
+// 事件响应 获取被出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
-// 事件响应 获取购买单位(对应玩家出售单位等事件)
+// 事件响应 获取购买单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetBuyingUnit takes nothing returns unit
 
-// 事件响应 获取卖出的物品(对应玩家出售物品等事件)
+// 事件响应 获取卖出的物品(对应出售物品等事件)
 // EVENT_PLAYER_UNIT_SELL_ITEM
 constant native GetSoldItem takes nothing returns item
 
-// 事件响应 获取变更了所有者(玩家)的单位(对应玩家变更物品所有者等事件)
+// 事件响应 获取变更了所属(玩家)的单位(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnit takes nothing returns unit
-// 事件响应 获取变更所有者单位的前一个所有者(玩家)(对应玩家变更物品所有者等事件)
+// 事件响应 获取变更所属单位的前一个所属(玩家)(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
-// 事件响应 获取操作物品的单位(对应玩家丢弃/拾取/使用物品等事件)
+// 事件响应 获取操作物品的单位(对应丢弃/拾取/使用物品等事件)
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatingUnit takes nothing returns unit
-// 事件响应 获取被操作的物品(对应玩家丢弃/拾取/使用物品等事件)
+// 事件响应 获取被操作的物品(对应丢弃/拾取/使用物品等事件)
 // EVENT_PLAYER_UNIT_DROP_ITEM
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatedItem takes nothing returns item
 	
 
-// 事件响应 获取被拾取物品(对应玩家拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
+// 事件响应 获取被拾取物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 // @version 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
-// 事件响应 判断被操作的物品是否被拾取的物品(对应玩家拾取物品等事件)
+// 事件响应 判断被操作的物品是否被拾取的物品(对应拾取物品等事件)
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // @version 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
-// 事件响应 获取被堆叠的源物品(对应玩家堆叠物品等事件)
+// 事件响应 获取被堆叠的源物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
 // @version 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
-// 事件响应 获取被堆叠的目标物品(对应玩家堆叠物品等事件)
+// 事件响应 获取被堆叠的目标物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
-// 事件响应 获取堆叠物品的预期售价(对应玩家堆叠物品等事件)
+// 事件响应 获取堆叠物品的预期售价(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // @version 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
-// 事件响应 获取收到命令的单位(对应玩家发布命令等事件)
+// 事件响应 获取收到命令的单位(对应发布命令等事件)
 // EVENT_PLAYER_UNIT_ISSUED_ORDER
 constant native GetOrderedUnit takes nothing returns unit
 // 事件响应 获取发布的命令ID
@@ -5003,27 +5016,27 @@ constant native GetOrderedUnit takes nothing returns unit
 constant native GetIssuedOrderId takes nothing returns integer
 
 
-// 事件响应 获取命令目标点 X 坐标 [R](对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点 X 坐标 [R](对应发布命令(指定点)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointX takes nothing returns real
-// 事件响应 获取命令目标点 Y 坐标 [R](对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点 Y 坐标 [R](对应发布命令(指定点)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
-// 事件响应 获取命令目标点(对应玩家发布命令(指定点)等事件)
+// 事件响应 获取命令目标点(对应发布命令(指定点)等事件)
 // 会生成点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 事件响应 获取命令目标(单位/物品/可破坏物)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 事件响应 获取命令目标(可破坏物)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 事件响应 获取命令目标(物品)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(物品)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 事件响应 获取命令目标(单位)(对应玩家发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位)(对应发布命令(指定目标)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
@@ -5186,11 +5199,11 @@ native TriggerClearActions takes trigger whichTrigger returns nothing
 native TriggerSleepAction takes real timeout returns nothing
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
-// 判断触发器条件是否成立
+// 判断触发器条件是否满足
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 native TriggerExecute takes trigger whichTrigger returns nothing
-// 运行触发器 (等待忽略条件)
+// 等待运行触发器 (忽略条件)
 // @deprecated
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
@@ -5201,15 +5214,15 @@ native TriggerSyncReady takes nothing returns nothing
 
 // Widget API
 
-// 获取指定单位/物品/可破坏物的生命值
+// 获取指定单位/物品/可破坏物生命值
 native GetWidgetLife takes widget whichWidget returns real
-// 设置指定单位/物品/可破坏物的生命值
+// 设置指定单位/物品/可破坏物生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取指定单位/物品/可破坏物的 X 轴坐标
+// 获取指定单位/物品/可破坏物所在 X 轴坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取指定单位/物品/可破坏物的 Y 轴坐标
+// 获取指定单位/物品/可破坏物所在 Y 轴坐标
 native GetWidgetY takes widget whichWidget returns real
-// 获取触发的单位/物品/可破坏物
+// 获取触发单位/物品/可破坏物
 constant native GetTriggerWidget takes nothing returns widget
 
 
@@ -5241,29 +5254,29 @@ native GetDestructableTypeId takes destructable d returns integer
 native GetDestructableX takes destructable d returns real
 // 获取指定可破坏物所在 Y 轴坐标 [R]
 native GetDestructableY takes destructable d returns real
-// 设置指定可破坏物的生命值
+// 设置指定可破坏物生命值
 native SetDestructableLife takes destructable d, real life returns nothing
 // 获取指定可破坏物生命值
 native GetDestructableLife takes destructable d returns real
-// 设置指定可破坏物的最大生命值
+// 设置指定可破坏物最大生命值
 native SetDestructableMaxLife takes destructable d, real max returns nothing
 // 获取指定可破坏物最大生命值
 native GetDestructableMaxLife takes destructable d returns real
 // 复活指定可破坏物(指定生命值)(变回 未毁坏)
 native DestructableRestoreLife takes destructable d, real life, boolean birth returns nothing
-// 队列指定可破坏物的动画
+// 队列指定可破坏物动画
 native QueueDestructableAnimation takes destructable d, string whichAnimation returns nothing
-// 设置指定可破坏物的动画
+// 设置指定可破坏物动画
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
 native ShowDestructable takes destructable d, boolean flag returns nothing
-// 获取指定可破坏物的闭塞高度
+// 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
-// 设置指定可破坏物的的闭塞高度
+// 设置指定可破坏物的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 获取指定可破坏物的名字
+// 获取指定可破坏物名字
 native GetDestructableName takes destructable d returns string
 // 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
@@ -5271,17 +5284,17 @@ constant native GetTriggerDestructable takes nothing returns destructable
 
 // Item API
 
-// 创建物品
+// 创建物品(指定坐标)
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除指定物品
 native RemoveItem takes item whichItem returns nothing
-// 获取指定物品的所有者
+// 获取指定物品所属
 native GetItemPlayer takes item whichItem returns player
-// 获取指定物品的物品类型(4字编码)
+// 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
-// 获取指定物品的 X 轴坐标 [R]
+// 获取指定物品所在 X 轴坐标 [R]
 native GetItemX takes item i returns real
-// 获取指定物品的 Y 轴坐标 [R]
+// 获取指定物品所在 Y 轴坐标 [R]
 native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
@@ -5291,7 +5304,7 @@ native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 native SetItemDroppable takes item i, boolean flag returns nothing
 // 允许/禁止 指定物品被贩卖/出售
 native SetItemPawnable takes item i, boolean flag returns nothing
-// 设置指定物品所有者
+// 设置指定物品所属
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
 // 设置指定物品 无敌/可攻击
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
@@ -5301,7 +5314,7 @@ native IsItemInvulnerable takes item whichItem returns boolean
 native SetItemVisible takes item whichItem, boolean show returns nothing
 // 查询指定物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
-// 查询指定物品所有者是否当前持有玩家
+// 查询指定物品所属是否当前持有玩家
 native IsItemOwned takes item whichItem returns boolean
 // 查询指定物品是否拾取时自动使用 [R]
 native IsItemPowerup takes item whichItem returns boolean
@@ -5324,7 +5337,7 @@ native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns no
 native GetItemLevel takes item whichItem returns integer
 // 获取指定物品分类
 native GetItemType takes item whichItem returns itemtype
-// 设置掉落物品的单位类型
+// 设置掉落指定物品的单位类型
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 获取指定物品名称
 constant native GetItemName takes item whichItem returns string
@@ -5362,9 +5375,9 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // 设置指定单位属性 [R]
 // @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置指定单位的 X 坐标 [R]
+// 设置指定单位所在 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置指定单位的 Y 坐标 [R]
+// 设置指定单位所在 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
@@ -5382,9 +5395,9 @@ native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns 
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置指定单位主动攻击范围
+// 设置指定单位采集范围
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
-// 锁定指定单位的警戒点 [R]
+// 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
 
 // 获取指定单位主动攻击范围 (当前值)，中立敌对玩家单位的当前攻击范围以警戒范围为准
@@ -5405,8 +5418,8 @@ native GetUnitDefaultPropWindow takes unit whichUnit returns real
 // 获取指定单位飞行高度 (默认值)
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
-// 设置指定单位所有者(指定玩家)
-// @param changeColor是否改变队伍颜色
+// 设置指定单位所属(指定玩家)
+// @param changeColor 是否改变队伍颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
@@ -5423,21 +5436,22 @@ native SetUnitVertexColor takes unit whichUnit, integer red, integer green, inte
 native QueueUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
 // 播放指定单位指定动画
 native SetUnitAnimation takes unit whichUnit, string whichAnimation returns nothing
-// 播放指定单位的指定序号动动画 [R]
+// 播放指定单位的指定序号动画 [R]
 native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation returns nothing
-// 播放指定单位的指定动画 (指定概率)
+// 播放指定单位的指定动画
+// @param rarity 稀有度：普通的(RARITY_FREQUENT)或罕见的(RARITY_RARE)
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
 
-// 锁定指定单位朝向
+// 锁定指定单位身体朝向
 native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
-// 重置指定单位朝向
+// 重置指定单位身体朝向
 native ResetUnitLookAt takes unit whichUnit returns nothing
 
 // 设置指定单位可否营救(指定玩家) [R]
 native SetUnitRescuable takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
-// 设置指定营救单位的营救距离
+// 设置指定可营救单位的营救距离
 native SetUnitRescueRange takes unit whichUnit, real range returns nothing
 
 // 设置指定英雄力量值 [R]
@@ -5483,7 +5497,7 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取知道单位技能等级 [R] 
+// 获取指定单位技能等级 [R] 
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -5522,32 +5536,38 @@ native GetUnitPointValueByType takes integer unitType returns integer
 // 设置单位附加值(指定单位类型)
 native SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
-// 给予物品(指定具体物品) [R]
+// 创建物品(指定物品) [R]
+// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
-// 给予物品(指定物品ID)
+// 创建物品(指定物品类型)
+// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
-// 把物品移动到指定物品栏格数(指定物品ID) [R]
+// 把物品移动到指定物品栏格数(指定物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除物品(指定物品)
+// 删除指定物品
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 删除物品(指定物品栏格数，不论哪个物品在该格中，都会被丢弃，丢弃成功的前提是该物品允许丢弃)
+// 删除物品(指定物品栏格数)
+// 不论哪个物品在该格中，都会被删除
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
-// 获取单位物品栏物品(指定物品栏格数)
+// 获取单位持有物品(指定物品栏格数)
 // @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
-// 获取物品栏格数
+// 获取已存档物品的物品栏格数（指定单位）
 native UnitInventorySize takes unit whichUnit returns integer
 
 // 发布丢弃物品命令(指定坐标) [R]
+// 丢弃成功的前提是该物品允许丢弃
 native UnitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 发布移动物品命令(指定物品栏格数) [R]
+// 丢弃成功的前提是该格的物品允许丢弃
 // @param slot 物品栏格数：0-5
 native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot returns boolean
 // 发布丢弃物品命令(指定单位和目标单位/物品/可破坏物) [R]
+// 丢弃成功的前提是该物品允许丢弃
 // 指定目标为商店时会卖出物品
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
@@ -5656,16 +5676,16 @@ constant native IsUnitIdType takes integer unitId, unittype whichUnitType return
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
 // 设置指定尸体腐烂的状态(正常腐烂或暂停腐烂) [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加指定类别到指定单位 [R]
+// 添加类别到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除指定单位的指定类别 [R]
+// 删除指定单位的类别 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 添加指定技能到指定单位 [R]
+// 添加技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除指定单位的指定技能 [R]
+// 删除指定单位的技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
-// 设置指定单位指定技能的永久性 [R]
+// 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
 // 删除指定单位的魔法效果(指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
@@ -5690,7 +5710,7 @@ native UnitCanSleepPerm takes unit whichUnit returns boolean
 native UnitIsSleeping takes unit whichUnit returns boolean
 // 查询单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
-// 设置生命周期 [R]
+// 设置指定单位限时生命 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
 // 设置指定单位的忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
@@ -5702,10 +5722,10 @@ native UnitResetCooldown takes unit whichUnit returns nothing
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
 // 设置指定科技升级进度(百分比)
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
-// 暂停/恢复生命周期 [R]
+// 暂停/恢复 指定单位限时生命 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
 // 启用/禁用 单位的小地图特殊图标
-// 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能知道地图中有没有商店泉水之类的建筑
+// 禁用后只是未探索该单位前不显示，战役地图中利用此操作隐藏中立建筑物，这样进入游戏时玩家就不能在小地图中未探索的迷雾遮罩区域看到商店泉水之类的中立建筑图标
 // 需要完全隐藏应该还是要改物编的不显示中立建筑图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
@@ -5727,32 +5747,46 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // 按ID发布命令(无目标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
 // 按ID发布命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 发布即时命令(指定坐标)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定点)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 发布即时命令(指定单位/物品/可破坏物)
+// @param order 技能命令串可在 ObjectEditor.j 文件找到
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定单位/物品/可破坏物)
+// @param order 技能ID可在 ObjectEditor.j 文件找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
+// @param unitToBuild 建筑物的系统名字字符串，可在 common.ai 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
+// @param unitId 单位类型，可在 ObjectEditor.j 文件找到
 native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
 
 // 发布中介命令(无目标)
@@ -5790,22 +5824,22 @@ native WaygateActivate takes unit waygate, boolean activate returns nothing
 native WaygateIsActive takes unit waygate returns boolean
 
 // 增加商店出售的物品类型 (应用于所有商店)
-// @param itemId 物品ID
+// @param itemId 物品类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddItemToAllStock takes integer itemId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的物品类型 (应用于指定商店)
-// @param itemId 物品ID
+// @param itemId 物品类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddItemToStock takes unit whichUnit, integer itemId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的单位类型 (应用于所有商店)
-// @param unitId 单位ID
+// @param unitId 单位类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToAllStock takes integer unitId, integer currentStock, integer stockMax returns nothing
 // 增加商店出售的单位类型 (应用于指定商店)
-// @param unitId 单位ID
+// @param unitId 单位类型
 // @param currentStock 设置后立即拥有的库存数
 // @param stockMax 自动刷新库存后最大的库存数
 native AddUnitToStock takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
@@ -5837,7 +5871,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // Player API
 
 // 根据编号查询玩家
-// @param number玩家编号
+// @param number 玩家编号
 // 玩家1的编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
@@ -5870,21 +5904,21 @@ constant native GetPlayerRace takes player whichPlayer returns race
 // 玩家1的编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
-// @param includeIncomplete是否仅包含已完成训练/建造/研究的单位/建筑/科技
+// @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位类型的数量
-// @param includeIncomplete是否仅包含已完成训练/建造的单位/建筑
-// @param includeUpgrades是否仅包含已完成研究的科技
+// @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
+// @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
 // 获取玩家的建筑数量
-// @param includeIncomplete是否仅包含已完成建造的建筑
+// @param includeIncomplete 是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
 // 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家的联盟状态是否是指定状态
-// @param whichAllianceSetting指定联盟状态
+// 玩家与玩家的联盟类型是否是指定类型
+// @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
 // 获取玩家经验上限 [R]
@@ -5892,6 +5926,7 @@ constant native GetPlayerHandicap takes player whichPlayer returns real
 // 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
 // 获取玩家复活时间
+// 玩家障碍，额外的复活时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
@@ -5900,6 +5935,7 @@ constant native SetPlayerHandicap takes player whichPlayer, real handicap return
 // 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家复活时间
+// 玩家障碍、额外的复活时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
@@ -5940,9 +5976,9 @@ native CachePlayerHeroData takes player whichPlayer returns nothing
 
 // 设置迷雾状态(矩形区域) [R]
 native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
-// 设置迷雾状态(圆形区域) (指定坐标)[R]
+// 设置迷雾状态(圆形范围) (指定坐标)[R]
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
-// 设置迷雾状态(圆形区域)(指定点) [R]
+// 设置迷雾状态(圆形范围)(指定点) [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
 // 启用/禁用黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
@@ -5955,9 +5991,9 @@ native IsFogEnabled takes nothing returns boolean
 
 // 新建可见度修正器(矩形区域) [R]
 native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆形区域) [R]
+// 新建可见度修正器(圆形范围) [R]
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 新建可见度修正器(圆形区域) [R]
+// 新建可见度修正器(圆形范围) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 删除指定可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
@@ -5998,20 +6034,22 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 native ForceCampaignSelectScreen takes nothing returns nothing
 
 // 加载存档(手动选择存档)
+// @param doScoreScreen 是否跳过得分屏
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
-// 重命名保存目录
+// 重命名存档目录
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
-// 移除保存目录
+// 移除存档目录
 native RemoveSaveDirectory takes string sourceDirName returns boolean
-// 复制保存目录
+// 复制存档目录
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
-// 查询游戏进度是否存在
+// 查询存档是否存在
 native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
-// 检查点(自动)存档
+// 游戏检查点(自动)存档
+// @param showWindow 是否显示自动存档消息
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
@@ -6431,7 +6469,7 @@ native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns
 // 设置肖像打光器
 // @param portraitDNCFile肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
-// 设置天空
+// 设置天空模型
 // @param skyModelFile天空模型文件路径
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
@@ -6490,11 +6528,11 @@ native EnableWorldFogBoundary takes boolean b returns nothing
 native PlayModelCinematic takes string modelName returns nothing
 // 调用电影(所有玩家)
 native PlayCinematic takes string movieName returns nothing
-// 强制玩家按下UI键
+// 强制玩家按下特定UI键
 native ForceUIKey takes string key returns nothing
 // 强制玩家按下UI ESC键(UI取消键)
 native ForceUICancel takes nothing returns nothing
-// 显示加载对话框
+// 显示选择存档对话框
 native DisplayLoadDialog takes nothing returns nothing
 // 设置小地图(任务)图标
 native SetAltMinimapIcon takes string iconPath returns nothing
@@ -6784,7 +6822,7 @@ native MultiboardSetItemIcon takes multiboarditem mbi, string iconFileName retur
 // subsequently displayed multiboards
 //
 
-// 显示/隐藏 多面板模式 [R]
+// 显示/隐藏 所有多面板 [R]
 native MultiboardSuppressDisplay takes boolean flag returns nothing
 
 
@@ -6798,7 +6836,7 @@ native SetCameraQuickPosition takes real x, real y returns nothing
 native SetCameraBounds takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
 // 停用镜头(所有玩家) [R]
 native StopCamera takes nothing returns nothing
-// 重置游戏镜头(所有玩家) [R]
+// 重置镜头到游戏默认状态(所有玩家) [R]
 native ResetToGameCamera takes real duration returns nothing
 // 平移镜头(所有玩家)
 native PanCameraTo takes real x, real y returns nothing
@@ -7073,12 +7111,41 @@ native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
 native EnableWeatherEffect takes weathereffect whichEffect, boolean enable returns nothing
 
 // 新建地形变化:弹坑 [R]
+// @param radius 半径
+// @param depth 深度
+// @param duration 持续时间
+// @param permanent 临时(false)/永久(true)
 native TerrainDeformCrater takes real x, real y, real radius, real depth, integer duration, boolean permanent returns terraindeformation
 // 新建地形变化:波纹 [R]
+// @param radius 结束半径
+// @param depth 深度
+// @param duration 持续时间
+// @param count 记数，默认为1
+// @param spaceWaves 分开距离比例(2倍的结束半径 除以 分开距离)
+// @param timeWaves 涟漪间隔比例(2倍的持续时间 除以 涟漪间隔)
+// @param radiusStartPct 半径比例(变形开始半径 除以 变形结束半径)
+// @param limitNeg 普通(false)/下陷(true)
 native TerrainDeformRipple takes real x, real y, real radius, real depth, integer duration, integer count, real spaceWaves, real timeWaves, real radiusStartPct, boolean limitNeg returns terraindeformation
 // 新建地形变化:冲击波 [R]
+// @param x 开始点
+// @param y 结束点
+// @param dirX 坐标比例(结束点 X 坐标 减 开始点 X 坐标 的差 除以 距离)
+// @param dirY 坐标比例(结束点 Y 坐标 减 开始点 Y 坐标 的差 除以 距离)
+// @param distance 距离(开始点到结束点距离)
+// @param speed 速度(持续时间 除以 距离)
+// @param radius 结束半径
+// @param depth 深度
+// @param trailDelay 拖尾延时
+// @param count 记数，默认为1
 native TerrainDeformWave takes real x, real y, real dirX, real dirY, real distance, real speed, real radius, real depth, integer trailTime, integer count returns terraindeformation
 // 新建地形变化:随机 [R]
+// @param x 开始点
+// @param y 结束点
+// @param radius 半径
+// @param minDelta 最小深度
+// @param maxDelta 最大深度
+// @param duration 持续时间
+// @param updateInterval 更新间隔
 native TerrainDeformRandom takes real x, real y, real radius, real minDelta, real maxDelta, integer duration, integer updateInterval returns terraindeformation
 // 停止指定地形变化 [R]
 native TerrainDeformStop takes terraindeformation deformation, integer duration returns nothing
@@ -7107,8 +7174,10 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电效果 [R]
+// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电效果(指定Z轴) [R]
+// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 删除指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
@@ -7141,7 +7210,7 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 // 获取地形悬崖高度(指定坐标) [R]
 native GetTerrainCliffLevel takes real x, real y returns integer
-// 设置水颜色 [R]
+// 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
 // 启用/禁用 水面变形
 native SetWaterDeforms takes boolean val returns nothing
@@ -7150,6 +7219,7 @@ native GetTerrainType takes real x, real y returns integer
 // 获取地形样式(指定坐标) [R]
 native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
+// @param terrainType 地表纹理，具体类型可在 ObjectEditor.j 文件找到
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
 // 查询路径类型状态是否关闭(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
@@ -7161,6 +7231,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
+// @param imageType 图像类型，具体类型可在 ObjectEditor.j 文件找到
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 删除指定图像
 native DestroyImage takes image whichImage returns nothing
@@ -7171,46 +7242,53 @@ native SetImageConstantHeight takes image whichImage, boolean flag, real height 
 // 设置图像位置(指定坐标) [R]
 native SetImagePosition takes image whichImage, real x, real y, real z returns nothing
 // 设置图像颜色 [R]
+// @param alpha 透明度
 native SetImageColor takes image whichImage, integer red, integer green, integer blue, integer alpha returns nothing
-// 设置图像着色状态
+// 允许/禁止 图像渲染
 native SetImageRender takes image whichImage, boolean flag returns nothing
-// 设置图像永久着色状态
+// 允许/禁止 图像永久渲染
 native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
-// 设置图像水上状态
+// 允许/禁止 图像在水面显示
+// @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
+// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 ObjectEditor.j 文件找到
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
 // Ubersplat API
 //
 
-// 新建地面纹理变化 [R]
+// 新建地表纹理 [R]
+// @param name 具体纹理可在 ObjectEditor.j 文件找到
+// @param alpha 透明度
+// @param forcePaused 是否禁用暂停状态
+// @param noBirthTime 是否启用出生动画
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-// 删除指定地面纹理
+// 删除指定地表纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
-// 重置地面纹理
+// 重置地表纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
-// 完成地面纹理
+// 结束地表纹理
 native FinishUbersplat takes ubersplat whichSplat returns nothing
-// 显示/隐藏 地面纹理变化[R]
+// 显示/隐藏 地表纹理[R]
 native ShowUbersplat takes ubersplat whichSplat, boolean flag returns nothing
-// 设置地面纹理着色状态
+// 允许/禁止 地表纹理渲染
 native SetUbersplatRender takes ubersplat whichSplat, boolean flag returns nothing
-// 设置地面纹理永久着色状态
+// 允许/禁止 地表纹理永久渲染
 native SetUbersplatRenderAlways takes ubersplat whichSplat, boolean flag returns nothing
 
 
 // Blight API
 //
 
-// 创建/删除 荒芜地表(不死族)(圆形区域)(指定坐标) [R]
+// 创建/删除 荒芜地表(不死族)(圆形范围)(指定坐标) [R]
 native SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
 // 创建/删除 荒芜地表(不死族)(指定矩形区域) [R]
 native SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing
 // 创建/删除 荒芜地表(不死族)(指定坐标)
 native SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-// 创建/删除 荒芜地表(不死族)(指定圆形区域)(指定点)
+// 创建/删除 荒芜地表(不死族)(指定圆形范围)(指定点)
 native SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
 // 新建不死族金矿(指定所属玩家，坐标及朝向) [R]
 native CreateBlightedGoldmine takes player id, real x, real y, real face returns unit
@@ -7221,7 +7299,7 @@ native IsPointBlighted takes real x, real y returns boolean
 // Doodad API
 //
 
-// 播放圆形区域内地表装饰物动画 [R]
+// 播放圆形范围内地表装饰物动画 [R]
 native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
 // 播放矩形区域内地表装饰物动画 [R]
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
@@ -7259,33 +7337,33 @@ native IsNoVictoryCheat takes nothing returns boolean
 // 查询游戏是否无法失败 [R]
 native IsNoDefeatCheat takes nothing returns boolean
 
-// 预读文件
+// 预载文件
 native Preload takes string filename returns nothing
-// 停止预读文件时间
+// 停止预载（指定时间）
 native PreloadEnd takes real timeout returns nothing
 
-// 预加载开始
+// 开始预载
 native PreloadStart takes nothing returns nothing
-// 预加载刷新
+// 刷新预载
 native PreloadRefresh takes nothing returns nothing
-// 预加载结束
+// 结束预载
 native PreloadEndEx takes nothing returns nothing
 
-// 清空预加载
+// 清空预载
 native PreloadGenClear takes nothing returns nothing
-// 预加载开始
+// 开始预载
 // - 配合PreloadGenEnd使用
 // 1. call PreloadGenStart()
 // 2. call Preloader("blp\\jass.blp")
 // 3. call PreloadGenEnd("log.pld")
 native PreloadGenStart takes nothing returns nothing
-// 预加载结束
+// 结束预载
 // @param filename 绝对路径,这个文件的后缀可以是任何类型,因此你可以生成可执行文件的后缀
 // 1. call PreloadGenStart()
 // 2. call Preloader("blp\\jass.blp")
 // 3. call PreloadGenEnd("log.pld")
 native PreloadGenEnd takes string filename returns nothing
-// 预读文件
+// 预载文件
 native Preloader takes string filename returns nothing
 
 
@@ -7293,7 +7371,7 @@ native Preloader takes string filename returns nothing
 //Machinima API
 
 
-// 隐藏电影面板
+// 显示/隐藏 电影面板，包含标题栏、字幕及头像框体
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
@@ -7351,21 +7429,21 @@ native BlzGetAbilityIcon takes integer abilCode returns string
 native BlzSetAbilityActivatedIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标(自动施法启用)
 native BlzGetAbilityActivatedIcon takes integer abilCode returns string
-// 获取技能位置(技能图标坐标)- X
+// 获取技能图标位置 - X
 native BlzGetAbilityPosX takes integer abilCode returns integer
-// 获取技能位置(技能图标坐标)- Y
+// 获取技能图标位置 - Y
 native BlzGetAbilityPosY takes integer abilCode returns integer
-// 设置技能位置(技能图标坐标)- X
+// 设置技能图标位置 - X
 native BlzSetAbilityPosX takes integer abilCode, integer x returns nothing
-// 设置技能位置(技能图标坐标)- Y
+// 设置技能图标位置 - Y
 native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
-// 获取技能位置(技能图标坐标)- X (启用自动施法)
+// 获取技能图标位置 - X (启用自动施法)
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
-// 获取技能位置(技能图标坐标)- Y (启用自动施法)
+// 获取技能图标位置 - Y (启用自动施法)
 native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
-// 设置技能位置(技能图标坐标)- X(启用自动施法)
+// 设置技能图标位置 - X(启用自动施法)
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
-// 设置技能位置(技能图标坐标)- Y(启用自动施法)
+// 设置技能图标位置 - Y(启用自动施法)
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
@@ -7383,7 +7461,7 @@ native BlzSetItemDescription takes item whichItem, string description returns no
 native BlzGetItemDescription takes item whichItem returns string
 // 设置指定物品提示
 native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
-// 获取指定物品提示信息
+// 获取指定物品提示
 native BlzGetItemTooltip takes item whichItem returns string
 // 设置指定物品扩展提示
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
@@ -7398,20 +7476,28 @@ native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
-// 设置指定单位骰子数
+// 设置指定单位骰子数量
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
@@ -7427,7 +7513,7 @@ native BlzSetSpecialEffectPosition takes effect whichEffect, real x, real y, rea
 native BlzSetSpecialEffectHeight takes effect whichEffect, real height returns nothing
 // 设置指定特效播放速度
 native BlzSetSpecialEffectTimeScale takes effect whichEffect, real timeScale returns nothing
-// 设置指定特效持续时间
+// 设置指定特效开始时间
 native BlzSetSpecialEffectTime takes effect whichEffect, real time returns nothing
 // 设置指定特效朝向
 native BlzSetSpecialEffectOrientation takes effect whichEffect, real yaw, real pitch, real roll returns nothing
@@ -7491,7 +7577,7 @@ native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer l
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
 // 获取单位技能的剩余冷却时间
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
-// 重设单位技能冷却
+// 设置单位结束技能冷却
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
 // 设置单位技能开始冷却
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
@@ -7540,26 +7626,26 @@ native BlzIsSelectionEnabled takes nothing returns boolean
 native BlzIsSelectionCircleEnabled takes nothing returns boolean
 // 设置镜头平滑持续时间
 native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-// 启用目标闪动指示器
+// 启用/禁用 目标闪烁指示器
 native BlzEnableTargetIndicator takes boolean enable returns nothing
-// 查询目标闪动指示器是否启用
+// 查询目标闪烁指示器是否启用
 native BlzIsTargetIndicatorEnabled takes nothing returns boolean
 // 显示地形
 native BlzShowTerrain takes boolean show returns nothing
 // 显示天空
 native BlzShowSkyBox takes boolean show returns nothing
-// 开始录制
+// 开始录制（指定帧数）
 native BlzStartRecording takes integer fps returns nothing
 // 结束录制
 native BlzEndRecording takes nothing returns nothing
-// 显示/隐藏 指定单位队伍颜色
+// 显示/隐藏 指定单位队伍光晕
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
 // 获取原生框架(原生UI)
 native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle
-// 启用原生框架(原生UI)自动重置位置
+// 启用/禁用 原生框架(原生UI)自动重置位置
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
-// 隐藏原生框架(原生UI)
+// 显示/隐藏 原生框架(原生UI)
 native BlzHideOriginFrames takes boolean enable returns nothing
 // 变换颜色，似乎对原生框架(原生UI)全局生效
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
@@ -7919,17 +8005,17 @@ native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
 // 设置可破坏物皮肤
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
-// 创建物品(指定皮肤)
+// 创建物品(指定皮肤)(指定坐标)
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
-// 创建单位(指定皮肤)
+// 创建单位(指定皮肤)(指定坐标)
 native BlzCreateUnitWithSkin takes player id, integer unitid, real x, real y, real face, integer skinId returns unit
-// 创建可破坏物(指定皮肤)(不包含Z轴)
+// 创建可破坏物(指定皮肤)(指定坐标,不包含Z轴)
 native BlzCreateDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(指定皮肤)(包含Z轴)
+// 创建可破坏物(指定皮肤)(指定坐标,包含Z轴)
 native BlzCreateDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(毁坏的)(指定皮肤)(不包含Z轴)
+// 创建可破坏物(毁坏的)(指定皮肤)(指定坐标,不包含Z轴)
 native BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable
-// 创建可破坏物(毁坏的)(指定皮肤)(包含Z轴)
+// 创建可破坏物(毁坏的)(指定皮肤)(指定坐标,包含Z轴)
 native BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable
 // 获取指定玩家的主城数量(按主城单位的数量统计，即三个本的主城都算)
 native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
