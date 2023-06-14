@@ -1,8 +1,8 @@
 globals
 // 物理编辑器及额外变量对照表(绝大部分)
 // 物编以重置版为基准(v1.36),部分添加了1.27a译文,从1.27a获取了极少量重置版缺失数据
-// 物编包含单位、物品、可破坏物、技能、魔法效果（buff）、科技的四字码，不含地表装饰物，包含技能ID（纯数字变量不一定能识别，请手动搜索，缺少1.29后的新技能）及命令串
-// 额外变量：地表纹理，地表纹理变化、地形设置，地形形状/刷子类型，天气特效，昼夜环境音效，主题曲，闪电特效，自定义UI/控件的框架定义，UI/控件的框架类型，图像类型，电影滤镜纹理等
+// 物编不含地表装饰物
+// 额外变量：UI
 
 
 // 单位(很可能齐了)
@@ -8871,5 +8871,52 @@ globals
         // 夜晚环境音效 地底
         string DungeonCaveNight
 
+
+
+// 天空盒子模型文件名
+
+
+        // 天空盒子模型文件名 暴风雪的天空
+        // mdl格式
+        string BlizzardSky.mdl
+        // 天空盒子模型文件名 达拉然的天空
+        // mdl格式
+        string DalaranSky.mdl
+        // 天空盒子模型文件名 费尔伍德的天空
+        // mdl格式
+        string FelwoodSky.mdl
+        // 天空盒子模型文件名 迷雾的天空
+        // mdl格式
+        string FoggedSky.mdl
+        // 天空盒子模型文件名 一般的天空
+        // mdl格式
+        string SkyLight.mdl
+        // 天空盒子模型文件名 洛丹伦的秋天的天空
+        // mdl格式
+        string LordaeronFallSky.mdl
+        // 天空盒子模型文件名 洛丹伦的夏天的天空
+        // mdl格式
+        string LordaeronSummerSky.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天
+        // mdl格式
+        string LordaeronWinterSky.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天空 (亮绿色)
+        // mdl格式
+        string LordaeronWinterSkyBrightGreen.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天空 (粉红色)
+        // mdl格式
+        string LordaeronWinterSkyPink.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天空 (紫色)
+        // mdl格式
+        string LordaeronWinterSkyPurple.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天空 (红色)
+        // mdl格式
+        string LordaeronWinterSkyRed.mdl
+        // 天空盒子模型文件名 洛丹伦的冬天的天空 (黄色)
+        // mdl格式
+        string LordaeronWinterSkyYellow.mdl
+        // 天空盒子模型文件名 边缘之地的天空
+        // mdl格式
+        string Outland_Sky.mdl
 
 endglobals

@@ -198,7 +198,7 @@ constant native ConvertMapControl takes integer i returns mapcontrol
 constant native ConvertPlayerColor takes integer i returns playercolor
 // 转换整数成玩家槽状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
-// 转换整数成音量组
+// 转换整数成声音频道
 constant native ConvertVolumeGroup takes integer i returns volumegroup
 // 转换整数成镜头属性
 constant native ConvertCameraField takes integer i returns camerafield
@@ -387,63 +387,87 @@ globals
 	// 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如果打开了)，中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中(如果运行了)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 玩家颜色 红色
+	// 代码：|CffFF0000|r , 三色值： 255, 3, 3
 	constant playercolor PLAYER_COLOR_RED = ConvertPlayerColor(0)
 	// 玩家颜色 蓝色
+	// 代码：|Cff0064FF|r , 三色值：0, 66, 255
 	constant playercolor PLAYER_COLOR_BLUE = ConvertPlayerColor(1)
 	// 玩家颜色 青色
+	// 代码：|Cff1BE7BA|r , 三色值：28, 230, 185
 	constant playercolor PLAYER_COLOR_CYAN = ConvertPlayerColor(2)
 	// 玩家颜色 紫色
+	// 代码：|Cff550081|r , 三色值：84, 0, 129
 	constant playercolor PLAYER_COLOR_PURPLE = ConvertPlayerColor(3)
 	// 玩家颜色 黄色
+	// 代码：|CffFFFC00|r , 三色值：255, 252, 0
 	constant playercolor PLAYER_COLOR_YELLOW = ConvertPlayerColor(4)
 	// 玩家颜色 橙色
+	// 代码：|CffFF8A0D|r , 三色值：254, 138, 14
 	constant playercolor PLAYER_COLOR_ORANGE = ConvertPlayerColor(5)
 	// 玩家颜色 绿色
+	// 代码：|Cff21BF00|r , 三色值：32, 192, 0
 	constant playercolor PLAYER_COLOR_GREEN = ConvertPlayerColor(6)
 	// 玩家颜色 粉色
+	// 代码：|CffE45CAF|r , 三色值：229, 91, 176
 	constant playercolor PLAYER_COLOR_PINK = ConvertPlayerColor(7)
 	// 玩家颜色 深灰色
+	// 代码：|Cff949696|r , 三色值：149, 150, 151
 	constant playercolor PLAYER_COLOR_LIGHT_GRAY = ConvertPlayerColor(8)
 	// 玩家颜色 深蓝色
+	// 代码：|Cff7EBFF1|r , 三色值：126, 191, 241
 	constant playercolor PLAYER_COLOR_LIGHT_BLUE = ConvertPlayerColor(9)
 	// 玩家颜色 浅绿色
+	// 代码：|Cff106247|r , 三色值：16, 98, 70
 	constant playercolor PLAYER_COLOR_AQUA = ConvertPlayerColor(10)
 	// 玩家颜色 棕色
+	// 代码：|Cff4F2B05|r , 三色值：78, 42, 3
 	constant playercolor PLAYER_COLOR_BROWN = ConvertPlayerColor(11)
 	// 玩家颜色 褐红色
+	// 代码：|Cff9C0000|r , 三色值：155, 0, 0
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_MAROON = ConvertPlayerColor(12)
 	// 玩家颜色 深蓝色
+	// 代码：|Cff0000C3|r , 三色值：0, 0, 195
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_NAVY = ConvertPlayerColor(13)
 	// 玩家颜色 蓝绿色
+	// 代码：|Cff00EBFF|r , 三色值：0, 234, 255
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_TURQUOISE = ConvertPlayerColor(14)
 	// 玩家颜色 紫罗兰色
+	// 代码：|CffBD00FF|r , 三色值：190, 0, 254
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_VIOLET = ConvertPlayerColor(15)
 	// 玩家颜色 小麦色
+	// 代码：|CffECCD87|r , 三色值：235, 205, 135
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_WHEAT = ConvertPlayerColor(16)
 	// 玩家颜色 桃色
+	// 代码：|CffF7A58B|r , 三色值：248, 164, 139
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_PEACH = ConvertPlayerColor(17)
 	// 玩家颜色 薄荷色
+	// 代码：|CffBFFF81|r , 三色值：191, 255, 128
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_MINT = ConvertPlayerColor(18)
 	// 玩家颜色 淡紫色
+	// 代码：|CffDBB9EB|r , 三色值：220, 185, 235
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_LAVENDER = ConvertPlayerColor(19)
 	// 玩家颜色 煤焦油色
+	// 代码：|Cff4F5055|r , 三色值：80, 79, 85
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_COAL = ConvertPlayerColor(20)
 	// 玩家颜色 雪白色
+	// 代码：|CffECF0FF|r , 三色值：235, 240, 255
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
 	// 玩家颜色 祖母绿色
+	// 代码：|Cff00781E|r , 三色值：0, 120, 30
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
 	// 玩家颜色 花生色
+	// 代码：|CffA57033|r , 三色值：164, 111, 51
 	// @version 1.29
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
 	// 种族 人类
@@ -887,44 +911,44 @@ globals
 	
 	// Sound Constants
 	
-	// 音量组 单位移动声音
+	// 声音频道 单位移动声音
  constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-        // 音量组 单位回应声音
+	// 声音频道 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
-	// 音量组 战斗声音
+	// 声音频道 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
-	// 音量组 动画和法术声音
+	// 声音频道 动画和法术声音
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
-	// 音量组 用户界面(UI)声音
+	// 声音频道 用户界面(UI)声音
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
-	// 音量组 音乐
+	// 声音频道 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
-	// 音量组 场景配音
+	// 声音频道 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
-	// 音量组 火焰声音
+	// 声音频道 火焰声音
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
 	
-	// 电影声音 背景声
+	// 声音频道 背景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
-	// 电影声音 场景声
+	// 声音频道 场景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
-	// 电影声音 音乐
+	// 声音频道 音乐
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
-	// 电影声音 对话声
+	// 声音频道 对话声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
-	// 电影声音 声音特效1
+	// 声音频道 声音特效1
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
-	// 电影声音 声音特效2
+	// 声音频道 声音特效2
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
-	// 电影声音 声音特效3
+	// 声音频道 声音特效3
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
@@ -2492,7 +2516,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_BONUS_DICE = ConvertAbilityIntegerLevelField('Idic')
     // 技能随等级改变的整数域 目标防御降低 ('Iarp')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_IARP = ConvertAbilityIntegerLevelField('Iarp')
-    // 技能随等级改变的整数域 允许攻击引索 ('Iob5')
+    // 技能随等级改变的整数域 允许攻击索引 ('Iob5')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5 = ConvertAbilityIntegerLevelField('Iob5')
     // 技能随等级改变的整数域 等级提升 ('Ilev')
 	constant abilityintegerlevelfield ABILITY_ILF_LEVELS_GAINED = ConvertAbilityIntegerLevelField('Ilev')
@@ -2590,9 +2614,9 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_MINIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb3')
     // 技能随等级改变的整数域 最大法术数量 ('spb4')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb4')
-    // 技能随等级改变的整数域 禁止攻击引索 ('gra3')
+    // 技能随等级改变的整数域 禁止攻击索引 ('gra3')
 	constant abilityintegerlevelfield ABILITY_ILF_DISABLED_ATTACK_INDEX = ConvertAbilityIntegerLevelField('gra3')
-    // 技能随等级改变的整数域 允许攻击引索 ('gra4')
+    // 技能随等级改变的整数域 允许攻击索引 ('gra4')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4 = ConvertAbilityIntegerLevelField('gra4')
     // 技能随等级改变的整数域 最大攻击次数 ('gra5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_ATTACKS = ConvertAbilityIntegerLevelField('gra5')
@@ -5596,7 +5620,7 @@ constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
 // 获取指定单位所属玩家
 constant native GetOwningPlayer takes unit whichUnit returns player
-// 获取指定单位类型(返回四字代码)
+// 获取指定单位类型(返回四字符码)
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
 constant native GetUnitRace takes unit whichUnit returns race
@@ -6072,9 +6096,9 @@ native SetTutorialCleared takes boolean cleared returns nothing
 native SetMissionAvailable takes integer campaignNumber, integer missionNumber, boolean available returns nothing
 // 启用/禁用 战役(前章未通关不显示后续战役，非同一战役不同关卡，而是新战役)
 native SetCampaignAvailable takes integer campaignNumber, boolean available returns nothing
-// 允许/禁止 Op电影(战役首关电影)
+// 允许/禁止 Op电影(战役首关开场电影)
 native SetOpCinematicAvailable takes integer campaignNumber, boolean available returns nothing
-// 允许/禁止 Ed电影(战役末关电影)
+// 允许/禁止 Ed电影(战役末关结尾电影)
 native SetEdCinematicAvailable takes integer campaignNumber, boolean available returns nothing
 // 获取默认游戏难度
 native GetDefaultDifficulty takes nothing returns gamedifficulty
@@ -7073,9 +7097,9 @@ native GetSoundDuration takes sound soundHandle returns integer
 // 设置声音文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
-// 设置多通道音量 [R]
+// 设置所有频道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
-// 重置多通道音量 [R]
+// 重置所有频道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
 // 判断声音是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
@@ -7200,9 +7224,9 @@ native GetLightningColorG takes lightning whichBolt returns real
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电效果颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取特效路径(指定技能字串符和引索)
+// 获取特效路径(指定技能字串符和索引)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
-// 获取特效路径(指定技能ID和引索)
+// 获取特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
 // 获取特效声音路径(指定技能字串符和声音类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
@@ -7481,28 +7505,28 @@ native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子数量
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
@@ -7828,7 +7852,7 @@ native BlzSetSpecialEffectMatrixScale takes effect whichEffect, real x, real y, 
 native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 // 获取单位技能(指定技能ID)
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
-// 获取单位技能(指定技能引索)
+// 获取单位技能(指定技能索引)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
 // 获取技能ID
 // @version 1.33
@@ -7837,9 +7861,9 @@ native BlzGetAbilityId takes ability whichAbility returns integer
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
-// 转换四字编码成字串符
+// 转换四字符码成字串符
 // native BlzFourCC2S                                 takes integer value returns string
-// 转换字串符成四字编码
+// 转换字串符成四字符码
 // native BlzS2FourCC                                 takes string value returns integer
 
 // 设置单位朝向(角度)
@@ -7933,7 +7957,7 @@ native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, ability
 // Item 
 
 // 获取物品技能
-// @param index 引索为 0-5
+// @param index 索引为 0-5
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
 // 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
