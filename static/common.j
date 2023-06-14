@@ -6110,7 +6110,7 @@ native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag 
 // in the current campaign profile dir
 //
 
-// 读取所有缓存
+// 读取所有游戏缓存（从本地硬盘）
 native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
@@ -6118,68 +6118,70 @@ native InitGameCache takes string campaignFile returns gamecache
 // 保存游戏缓存
 native SaveGameCache takes gamecache whichCache returns boolean
 
-// 记录整数到缓存
+// 存储整数到游戏缓存
 native StoreInteger takes gamecache cache, string missionKey, string key, integer value returns nothing
-// 记录实数到缓存
+// 存储实数到游戏缓存
 native StoreReal takes gamecache cache, string missionKey, string key, real value returns nothing
-// 记录布尔值到缓存
+// 存储布尔值到游戏缓存
 native StoreBoolean takes gamecache cache, string missionKey, string key, boolean value returns nothing
-// 记录单位到缓存
+// 存储单位到游戏缓存
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
-// 记录字符串到缓存
+// 存储字符串到缓游戏存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
-// 同步缓存记录的整数
+// 同步游戏缓存存储值（整数类别）
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 同步缓存记录的实数
+// 同步游戏缓存存储值（实数类别）
 native SyncStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 同步缓存记录的布尔值
+// 同步游戏缓存存储值（布尔值类别）
 native SyncStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 同步缓存记录的单位
+// 同步游戏缓存存储值（单位类别）
 native SyncStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 同步缓存记录的字符串
+// 同步游戏缓存存储值（字符串类别）
 native SyncStoredString takes gamecache cache, string missionKey, string key returns nothing
-// 查询缓存是否记录了整数
+// 查询游戏缓存是否有存储值（整数类别）
 native HaveStoredInteger takes gamecache cache, string missionKey, string key returns boolean
-// 查询缓存是否记录了实数
+// 查询游戏缓存是否有存储值（实数类别）
 native HaveStoredReal takes gamecache cache, string missionKey, string key returns boolean
-// 查询缓存是否记录了布尔值
+// 查询游戏缓存是否有存储值（布尔值类别）
 native HaveStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 查询缓存是否记录了单位
+// 查询游戏缓存是否有存储值（单位类别）
 native HaveStoredUnit takes gamecache cache, string missionKey, string key returns boolean
-// 查询缓存是否记录了字符串
+// 查询游戏缓存是否有存储值（字符串类别）
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
-// 删除指定游戏缓存 [C]
+// 清空指定游戏缓存 [C]
+// 清空指定游戏缓存下所有类别
 native FlushGameCache takes gamecache cache returns nothing
-// 删除指定缓存记录的指定类别
+// 清空指定游戏缓存（指定类别）
+// 仅清空指定缓存的指定类别
 native FlushStoredMission takes gamecache cache, string missionKey returns nothing
-// 删除指定缓存记录的指定整数
+// 清空指定游戏缓存存储值（整数类别）
 native FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 删除指定缓存记录的指定实数
+// 清空指定游戏缓存存储值（实数类别）
 native FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 删除指定缓存记录的指定布尔值
+// 清空指定游戏缓存存储值（布尔值类别）
 native FlushStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 删除指定缓存记录的指定单位
+// 清空指定游戏缓存存储值（单位类别）
 native FlushStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 删除指定缓存记录的指定字符串
+// 清空指定游戏缓存存储值（字符串类别）
 native FlushStoredString takes gamecache cache, string missionKey, string key returns nothing
 
 // Will return 0 if the specified value's data is not found in the cache
 
-// 从缓存读取整数 [C]
+// 从游戏缓存读取存储值（整数类别） [C]
 // 无数据时返回0
 native GetStoredInteger takes gamecache cache, string missionKey, string key returns integer
-// 从缓存读取实数 [C]
-// 无数据时返回0
+// 从游戏缓存读取存储值（实数类别） [C]
+// 无数据时返回0.00
 native GetStoredReal takes gamecache cache, string missionKey, string key returns real
-// 从缓存读取布尔值[R]
-// 无数据时返回0
+// 从游戏缓存读取存储值（布尔值类别）[R]
+// 无数据时返回false
 native GetStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 从缓存读取字符串 [C]
-// 无数据时返回0
+// 从游戏缓存读取存储值（字符串类别） [C]
+// 无数据时返回null
 native GetStoredString takes gamecache cache, string missionKey, string key returns string
-// 从缓存读取单位
-// 无数据时返回0
+// 重新存储单位到游戏缓存 (指定朝向角度)
+// 无数据时返回null
 native RestoreUnit takes gamecache cache, string missionKey, string key, player forWhichPlayer, real x, real y, real facing returns unit
 
 
@@ -6297,6 +6299,7 @@ native LoadUnitHandle takes hashtable table, integer parentKey, integer childKey
 // <1.24> 从哈希表提取技能 [C]
 native LoadAbilityHandle takes hashtable table, integer parentKey, integer childKey returns ability
 // <1.24> 从哈希表提取计时器 [C]
+// 若仍需继续使用该计时器，请勿排泄
 native LoadTimerHandle takes hashtable table, integer parentKey, integer childKey returns timer
 // <1.24> 从哈希表提取触发器 [C]
 native LoadTriggerHandle takes hashtable table, integer parentKey, integer childKey returns trigger
@@ -6388,8 +6391,10 @@ native RemoveSavedString takes hashtable table, integer parentKey, integer child
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
+// 清空整张表
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表主索引 [C]
+// <1.24> 清空指定哈希表（指定主索引） [C]
+// 仅清空指定索引
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
