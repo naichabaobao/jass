@@ -5691,14 +5691,14 @@ constant native IsUnitInTransport takes unit whichUnit, unit whichTransport retu
 // 查询指定单位是否被装载(进入暗夜金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 查询指定单位类型是否属于英雄
+// 查询指定单位类型是否为英雄
 constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位类型是否与指定类型匹配
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
 // 设置指定单位和指定玩家的共享视野状态(共享或不共享) [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 设置指定尸体腐烂的状态(正常腐烂或暂停腐烂) [R]
+// 设置指定尸体腐烂状态(正常腐烂或暂停腐烂) [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
 // 添加类别到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
@@ -5707,13 +5707,13 @@ native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boole
 
 // 添加技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除指定单位的技能 [R]
+// 删除指定单位技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
 // 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
-// 删除指定单位的魔法效果(指定极性) [R]
+// 删除指定单位的魔法效果(Buff) (指定极性) [R]
 native UnitRemoveBuffs takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
-// 删除指定单位的魔法效果(指定详细类别) [R]
+// 删除指定单位的魔法效果(Buff) (指定详细类别) [R]
 native UnitRemoveBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
 // 查询指定单位是否拥有 魔法效果(Buff) [R]
 native UnitHasBuffsEx takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
@@ -5732,15 +5732,15 @@ native UnitAddSleepPerm takes unit whichUnit, boolean add returns nothing
 native UnitCanSleepPerm takes unit whichUnit returns boolean
 // 查询单位是否正在睡眠
 native UnitIsSleeping takes unit whichUnit returns boolean
-// 查询单位是否未睡眠，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
+// 查询单位是否清醒，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置指定单位限时生命 [R]
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
-// 设置指定单位的忽略报警状态
+// 设置指定单位忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-// 查询指定单位忽略报警的开关状态
+// 查询指定单位忽略报警开关状态
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
-// 重设指定单位的(所有)技能冷却时间 Cooldown
+// 重设指定单位(所有)技能冷却时间 Cooldown
 native UnitResetCooldown takes unit whichUnit returns nothing
 // 设置指定建筑建造进度(百分比)
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
@@ -5753,18 +5753,19 @@ native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
 // 需要完全隐藏应该还是要改物编的不显示中立建筑图标
 native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 
-// 伤害区域 [R]
-// @param amount 伤害
-// @param attack 普通攻击
-// @param ranged 远程伤害
+// 伤害圆形范围（指定单位） [R]
+// @param delay 延迟
+// @param amount 伤害量
+// @param attack 是否攻击
+// @param ranged 是否远程
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
 // @param weaponType 武器类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
-// 伤害单位/物品/可破坏物 [R]
-// @param amount 伤害
-// @param ranged 远程伤害
-// @param ranged 远程伤害
+// 伤害单位/物品/可破坏物（指定单位） [R]
+// @param amount 伤害量
+// @param attack 是否攻击
+// @param ranged 是否远程
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
 // @param weaponType 武器类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
