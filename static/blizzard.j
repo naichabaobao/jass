@@ -5189,13 +5189,13 @@ function SetUnitUseFoodBJ takes boolean enable, unit whichUnit returns nothing
 endfunction
 
 
-// 伤害区域
+// 伤害圆形范围（指定单位）
 function UnitDamagePointLoc takes unit whichUnit, real delay, real radius, location loc, real amount, attacktype whichAttack, damagetype whichDamage returns boolean
     return UnitDamagePoint(whichUnit, delay, radius, GetLocationX(loc), GetLocationY(loc), amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
 
 
-// 伤害目标
+// 伤害单位/物品/可破坏物（指定单位）
 function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, attacktype whichAttack, damagetype whichDamage returns boolean
     return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
