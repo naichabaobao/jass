@@ -575,14 +575,14 @@ globals
 
     // 传输时间方法 - 时间类型 - 增加
     constant integer   bj_TIMETYPE_ADD             = 0
-    // 传输时间方法 - 时间类型 - 设置
+    // 传输时间方法 - 时间类型 - 设为（指定值）
     constant integer   bj_TIMETYPE_SET             = 1
     // 传输时间方法 - 时间类型 - 减少
     constant integer   bj_TIMETYPE_SUB             = 2
 
     // Camera bounds adjustment methods
 
-    // 镜头界限调整 - 扩展
+    // 镜头界限调整 - 扩张
     constant integer   bj_CAMERABOUNDS_ADJUST_ADD  = 0
     // 镜头界限调整 - 收缩
     constant integer   bj_CAMERABOUNDS_ADJUST_SUB  = 1
@@ -691,7 +691,7 @@ globals
     constant integer   bj_MODIFYMETHOD_ADD    = 0
     // 英雄技能点 - 减少
     constant integer   bj_MODIFYMETHOD_SUB    = 1
-    // 英雄技能点 - 设置指定值
+    // 英雄技能点 - 设为（指定值）
     constant integer   bj_MODIFYMETHOD_SET    = 2
 
     // Unit state adjustment methods (for replaced units)
