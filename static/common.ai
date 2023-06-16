@@ -1992,11 +1992,11 @@ native DebugS               takes string str                            returns 
     //  FoodPool
     //============================================================================
 
-    // 根据人口占用情况训练指定单位类型
-    // @param food 建议使用当前已用人口
+    // 根据人口占用情况切换训练指定单位类型
+    // @param food 建议使用当前已使用人口
     // @param use1 单位类型1的人口占用（单个）
-    // @param use2单位类型2的人口占用（单个）
-    // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2，
+    // @param use2 单位类型2的人口占用（单个）
+    // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
     // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
     function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
         if strong then
@@ -3053,7 +3053,7 @@ native DebugS               takes string str                            returns 
     //  AddSiege
     //============================================================================
     
-    // 添加攻城单位到进攻组
+    // 添加（默认攻击类型为）攻城单位到进攻组
     function AddSiege takes nothing returns nothing
         call SetAssaultGroup( 0, 9, SHADE       )
         call SetAssaultGroup( 0, 9, MEAT_WAGON  )
@@ -3248,21 +3248,21 @@ native DebugS               takes string str                            returns 
 
     //============================================================================
     
-    // 获取当前AI玩家的已用人口数
+    // 获取当前AI玩家的已使用人口数
     function FoodUsed takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_USED)
     endfunction
     
     //============================================================================
     
-    // 获取当前AI玩家的最大人口数（默认为人口建筑提供的数量），默认为100
+    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的数量）
     function FoodCap takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
     endfunction
     
     //============================================================================
     
-    // 获取当前AI玩家的可用人口数（人口建筑提供的人口数-已使用的人口数）
+    // 获取当前AI玩家的未使用人口数（可使用人口数-已使用人口数）
     function FoodSpace takes nothing returns integer
         return FoodCap() - FoodUsed()
     endfunction
@@ -3433,7 +3433,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 取消建造，运行后取消正在建造/训练/研究的单位/科技
+    // 取消一切，会取消正在建造/训练/研究的单位/科技
     function UnsummonAll takes nothing returns nothing
         local unit bldg
         loop
