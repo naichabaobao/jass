@@ -85,10 +85,10 @@ native DebugS               takes string str                            returns 
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
-    // 训练/建造/研究指定/研究单位/科技(指定数量,单位类型,基地)
+    // 训练/建造/研究指定单位/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 取消指定单位，如果单位正在建造/训练，则会被取消
+    // 取消指定单位建造/训练
     // 因单词为反召唤，怀疑可用于建造完成时卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
