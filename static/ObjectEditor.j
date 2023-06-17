@@ -71,7 +71,7 @@ globals
         integer hmtm
         // 农民
         integer hpea
-        // 牧师
+        // 牧师（人族）
         integer hmpr
         // 矮人火枪手
         integer hrif
