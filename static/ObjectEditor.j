@@ -581,6 +581,8 @@ globals
         integer Ekee
         // 月之女祭司
         integer Emoo
+        // 月之女祭司
+        integer MOON_PRIESTESS
         // 守望者
         integer Ewar
 
