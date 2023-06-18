@@ -4924,6 +4924,7 @@ endfunction
 
 
 // 设置指定单位限时生命
+// @param buffId 魔法效果(buff)类型，只支持 'BTLF','BUan','Bapl','BEfn','Bhwd','BHwe','Brai'
 function UnitApplyTimedLifeBJ takes real duration, integer buffId, unit whichUnit returns nothing
     call UnitApplyTimedLife(whichUnit, buffId, duration)
 endfunction
