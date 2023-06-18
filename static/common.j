@@ -5735,6 +5735,7 @@ native UnitIsSleeping takes unit whichUnit returns boolean
 // 查询单位是否清醒，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置指定单位限时生命 [R]
+// @param buffId 魔法效果(buff)类型，只支持 'BTLF','BUan','Bapl','BEfn','Bhwd','BHwe','Brai'
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
 // 设置指定单位忽略报警状态
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
