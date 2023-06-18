@@ -1,4 +1,4 @@
-import { Document, JassError, Position, Range, lexically } from "./mark";
+import { Document, JassError, Mark, Position, Range, lexically } from "./mark";
 
 enum ASTState {
     Default
@@ -44,6 +44,72 @@ function isSameLine(range1:Range, range2:Range) {
     return range1.end.line == range2.start.line;
 }
 
+class Expr {
+
+    private state:number = 0;
+    private errors: JassError[] = [];
+
+    public constructor(marks:Mark[]) {
+        for (let index = 0; index < marks.length; index++) {
+            const mark = marks[index];
+            const next_mark = marks[index + 1];
+            const document = mark.doc;
+            const pushError = (message: string, range: Range) => {
+                const err = new JassError(document, message, range);
+                document.errors.push(err);
+            }
+            // value 1, op 2
+            const isOp = (m: Mark) => {
+                return (m.isOp() && (m.value() == "+" || m.value() == "-" || m.value() == "*" || m.value() == "/" || m.value() == "==")) || (m.isId() && (m.value() == "or" || m.value() == "and"));
+            };
+            if (this.state == 0) {
+                if (isOp(mark)) {
+                    if (next_mark) {
+                        if (next_mark.isValue()) {
+                            this.state = 1;
+                        } else {
+                            pushError("error expression!", mark.loc);
+                            return;
+                        }
+                    } else {
+                        pushError("error expression!", mark.loc);
+                        return;
+                    }
+                }
+                if (mark.isValue()) {
+                    if (next_mark) {
+                        if (next_mark.isOp()) {
+                            if (next_mark.value() == "+" || next_mark.value() == "-" || next_mark.value() == "*" || next_mark.value() == "/" || next_mark.value() == "==") {
+                                this.state = 1;
+                            } else {
+                                pushError("error expression!", mark.loc);
+                                return;
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                }
+                else if (mark.isOp()) {
+                    if (next_mark && next_mark.isValue()) {
+                        this.state = 0;
+                    } else {
+                        pushError("error expression!", mark.loc);
+                        return;
+                    }
+                }
+            } else if (this.state == 1) { // 前面是值 后面只能是 + - * / or and == 
+                if (next_mark && next_mark.isValue()) {
+                    this.state = 2;
+                } else {
+                    pushError("error expression!", mark.loc);
+                    return;
+                }
+            }
+        }
+    }
+}
+
 /**
  * 
  * @param document 
@@ -86,6 +152,15 @@ function flow(document: Document) {
         const isSameLineWithPre = () => {
             if (!pre_mark) return true;
             return isSameLine(mark.loc, pre_mark.loc);
+        };
+        let flowExpression:Function;
+        enum ExpressionState {
+            LeftBor,
+            RightBor,
+            Op, Value
+        };
+        flowExpression = (mks:Mark[]) => {
+            
         };
         // 
         const flowFunction = () => {

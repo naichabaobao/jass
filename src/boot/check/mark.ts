@@ -560,7 +560,7 @@ class Document {
 
 type MarkType = "real" | "int" | "string" | "mark" | "id" | "comment" | "op" | "macro" | "comment" | "error-string" | "error-mark" | "lua";
 
-class Mark {
+export class Mark {
 
     private readonly document:Document;
     private readonly range:Range;
@@ -606,12 +606,20 @@ class Mark {
         return this.type == "lua";
     }
 
+    public isValue() {
+        return this.isId() || this.isInt() || this.isString() || this.isReal();
+    }
+
     public value():string {
         return this.document.getText().substring(this.fragment.start, this.fragment.end);
     }
 
     public get loc():Range {
         return this.range;
+    }
+
+    public get doc() {
+        return this.document;
     }
 }
 

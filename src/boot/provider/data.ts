@@ -28,43 +28,58 @@ class Pair {
 
 class DataMap {
   private pairs: Pair[] = [];
+  private map:Map<string, Program> = new Map();
+
+  private generateKey(originFilePath:string):string {
+    const parsed = path.parse(originFilePath);
+    return `${parsed.base}-${parsed.dir}-${parsed.name}-${parsed.ext}`;
+  }
 
   public put(key: string, value: Program) {
-    const index = this.pairs.findIndex((pair) => compare(pair.key, key));
-    if (index == -1) {
-      this.pairs.push(new Pair(key, value));
-    } else {
-      this.pairs[index].value = value;
-    }
+    // const index = this.pairs.findIndex((pair) => compare(pair.key, key));
+    // if (index == -1) {
+    //   this.pairs.push(new Pair(key, value));
+    // } else {
+    //   this.pairs[index].value = value;
+    // }
+    this.map.set(this.generateKey(key), value);
   }
 
   public remove(key: string) {
-    const index = this.pairs.findIndex((pair) => compare(pair.key, key));
-    if (index != -1) {
-      if (index == 0) {
-        this.pairs.shift();
-      } else if (index == this.pairs.length - 1) {
-        this.pairs.pop();
-      } else {
-        this.pairs.splice(index, 1);
-      }
-    }
+    // const index = this.pairs.findIndex((pair) => compare(pair.key, key));
+    // if (index != -1) {
+    //   if (index == 0) {
+    //     this.pairs.shift();
+    //   } else if (index == this.pairs.length - 1) {
+    //     this.pairs.pop();
+    //   } else {
+    //     this.pairs.splice(index, 1);
+    //   }
+    // }
+    this.map.delete(this.generateKey(key));
   }
 
   public get(key: string) {
-    return this.pairs.find((pair) => compare(pair.key, key))
+    // return this.pairs.find((pair) => compare(pair.key, key))
+    return this.map.get(this.generateKey(key));
   }
 
   public keys() {
-    return this.pairs.map((pair) => pair.key);
+    // return this.pairs.map((pair) => pair.key);
+    return [...this.map.keys()];
+    
   }
 
   public values() {
-    return this.pairs.map((pair) => pair.value);
+    // return this.pairs.map((pair) => pair.value);
+    return [...this.map.values()];
   }
 
   public forEach(callback: (key:string, value:Program) => void) {
-    this.pairs.forEach((pair) => callback(pair.key, pair.value));
+    // this.pairs.forEach((pair) => callback(pair.key, pair.value));
+    this.map.forEach((value, key, index) => {
+      callback(key, value);
+    });
   }
 
 }
@@ -361,7 +376,7 @@ class Data {
    * @returns 
    */
   public static fieldFunction(document: vscode.TextDocument, position: vscode.Position):Func|undefined {
-    const program = dataMap.get(document.uri.fsPath)?.value;
+    const program = dataMap.get(document.uri.fsPath);
     if (program) {
       const func = program.functions.find((func) => {
         return func.loc.contains(convertPosition(position));
@@ -410,10 +425,10 @@ class DataGetter {
   }
 
   public get(key: string): Program|undefined {
-    return dataMap.get(key)?.value;
+    return dataMap.get(key);
   }
   public zinc(key: string): Program|undefined {
-    return zincDataMap.get(key)?.value;
+    return zincDataMap.get(key);
   }
 }
 class LuaDataGetter {
