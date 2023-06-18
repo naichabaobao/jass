@@ -4476,8 +4476,8 @@ globals
         integer Bfzy
         // 魔法效果 (BUFF) 统御光环
         integer Boac
-        // 魔法效果 (BUFF) 时间化生命
-        integer Btlf
+        // 魔法效果 (BUFF) 限时生命
+        integer BTLF
         // 魔法效果 (BUFF) 法力恢复光环
         integer Barm
         // 魔法效果 (BUFF) 冰霜吐息
@@ -4688,11 +4688,11 @@ globals
         integer integer Bweb
         // 魔法效果 (BUFF) 蛛网(空中)
         integer integer Bwea
-        // 魔法效果 (BUFF) 疾病
+        // 魔法效果 (BUFF) 疾病云雾
         integer integer Bapl
         // 魔法效果 (BUFF) 冰冻吐息
         integer integer Bfrz
-        // 魔法效果 (BUFF) 骷髅奴仆
+        // 魔法效果 (BUFF) 骷髅奴仆/复活死尸
         integer integer Brai
         // 魔法效果 (BUFF) 邪恶狂热
         integer integer Buhf
@@ -4704,7 +4704,7 @@ globals
         integer integer Bpos
         // 魔法效果 (BUFF) 邪恶光环
         integer integer BUau
-        // 魔法效果 (BUFF) 亡者再临
+        // 魔法效果 (BUFF) 亡者再临/操纵死尸
         integer integer BUan
         // 魔法效果 (BUFF) 沉睡
         integer integer BUsl
