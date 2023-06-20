@@ -4459,12 +4459,12 @@ function CreatePermanentCorpseLocBJ takes integer style, integer unitid, player 
 endfunction
 
 
-// 获取单位属性
+// 获取指定单位指定属性
 function GetUnitStateSwap takes unitstate whichState, unit whichUnit returns real
     return GetUnitState(whichUnit, whichState)
 endfunction
 
-// 获取指定单位指定属性的百分比
+// 获取指定单位指定属性（以百分比形式返回）
 function GetUnitStatePercent takes unit whichUnit, unitstate whichState, unitstate whichMaxState returns real
     local real value    = GetUnitState(whichUnit, whichState)
     local real maxValue = GetUnitState(whichUnit, whichMaxState)
@@ -4490,7 +4490,7 @@ function GetUnitManaPercent takes unit whichUnit returns real
 endfunction
 
 
-// 选择单位
+// 选择指定单位
 function SelectUnitSingle takes unit whichUnit returns nothing
     call ClearSelection()
     call SelectUnit(whichUnit, true)
