@@ -97,7 +97,7 @@ globals
     // Auto Save constants
 
     // 保留的最大（自动）存档数量，默认5
-    // 怀疑超过会自动替换，但按理说该设置不该在这里
+    // 怀疑超过会自动替换，但按理说这种设置不应在此
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -134,10 +134,10 @@ globals
     // 每类英雄数量上限，默认1个
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
     // 金矿搜索距离，默认2000
-    // 主要用于创建亡灵/精灵主矿
+    // 主要用于开局创建亡灵/精灵主矿
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
     // 清除出生点中立敌对单位的范围，默认1500
-    // 使用清除出生点的野怪时，要删除距离出生点多少范围内的野怪
+    // 开局清除出生点的野怪时，要删除出生点多少范围内的野怪
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     // 暴露倒计时，默认120.00
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
@@ -145,13 +145,13 @@ globals
     // 暴露持续时间，默认20.00
     // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 混乱之治英雄初始物品创建次数，默认3次，即前3发英雄都给
+    // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
     // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
     // Delay between a creep's death and the time it may drop an item.
-    // 从单位死亡到掉落物品出现的时间间隔（延时），默认0.50
+    // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
@@ -177,14 +177,14 @@ globals
     constant integer   bj_CAMERA_DEFAULT_FARZ           = 5000
     // 镜头默认水平/攻击角度（X 轴旋转角度），默认304
     constant integer   bj_CAMERA_DEFAULT_AOA            = 304
-    // 默认镜头（观察区域，默认70
+    // 默认镜头（观察区域），默认70
     constant integer   bj_CAMERA_DEFAULT_FOV            = 70
     // 镜头默认滚动（Y 轴旋转角度），默认0
     constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
     // 镜头默认高度位移值（Z 轴旋转角度），默认90
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // 可营救延时，默认2.00
+    // 营救（所属玩家变更）延时，默认2.00
     // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
@@ -192,17 +192,17 @@ globals
 
     // 常规声音持续时间，默认5.00
     constant real      bj_NOTHING_SOUND_DURATION        = 5.00
-    // 传输延迟，默认1.00
+    // 传讯延迟，默认1.00
     constant real      bj_TRANSMISSION_PING_TIME        = 1.00
-    // 传输颜色通道（红），默认255
+    // 传讯指示器颜色（红），默认255
     constant integer   bj_TRANSMISSION_IND_RED          = 255
-    // 传输颜色通道（蓝），默认255
+    // 传讯指示器颜色（蓝），默认255
     constant integer   bj_TRANSMISSION_IND_BLUE         = 255
-    // 传输颜色通道（绿），默认255
+    // 传讯指示器颜色（绿），默认255
     constant integer   bj_TRANSMISSION_IND_GREEN        = 255
-    // 传输颜色通道（alpha），默认255
+    // 传讯指示器颜色（alpha），默认255
     constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
-    // 传输画像悬空时间，默认1.50
+    // 传讯画像悬空时间，默认1.50
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
 
     // 电影模式转换时间，默认0.50 Cinematic mode settings
