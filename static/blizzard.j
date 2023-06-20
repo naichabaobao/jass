@@ -192,17 +192,17 @@ globals
 
     // 常规声音持续时间，默认5.00
     constant real      bj_NOTHING_SOUND_DURATION        = 5.00
-    // 传讯延迟，默认1.00
+    // 单位消息延迟，默认1.00
     constant real      bj_TRANSMISSION_PING_TIME        = 1.00
-    // 传讯指示器颜色（红），默认255
+    // 单位消息闪动指示器颜色（红），默认255
     constant integer   bj_TRANSMISSION_IND_RED          = 255
-    // 传讯指示器颜色（蓝），默认255
+    // 单位消息闪动指示器颜色（蓝），默认255
     constant integer   bj_TRANSMISSION_IND_BLUE         = 255
-    // 传讯指示器颜色（绿），默认255
+    // 单位消息闪动指示器颜色（绿），默认255
     constant integer   bj_TRANSMISSION_IND_GREEN        = 255
-    // 传讯指示器颜色（alpha），默认255
+    // 单位消息闪动指示器颜色（alpha），默认255
     constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
-    // 传讯画像悬空时间，默认1.50
+    // 单位消息画像悬空时间，默认1.50
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
 
     // 电影模式转换时间，默认0.50 Cinematic mode settings
