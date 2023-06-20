@@ -401,7 +401,8 @@ export function readIgnoreRules(filePath: string) {
 	}
 	const content = fs.readFileSync(filePath, "utf-8");
 	const lines = content.split("\n");
-	for (const line of lines) {
+	for (let line of lines) {
+		line = line.replace(/\r/g, "");
 		if (line.startsWith("#")) {
 			continue;
 		}
