@@ -98,7 +98,7 @@ class Options {
     console.log('read space')
     if (vscode.workspace.workspaceFolders) {
       const lastUpdate = this.lastWorkspacesUpdate
-      const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 60 * 1 // 1秒
+      const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
       if (usingCache){
         return this.workspacesCache
       }
