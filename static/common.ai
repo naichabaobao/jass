@@ -1672,7 +1672,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 准备自杀
-    // 执行初始化攻击组数组长度、初始化防御组数组、采集（金和木）工人置零
+    // 执行初始化攻击组数组长度、初始化防御组数组、战役采集（金和木）工人数量置零
     function PrepFullSuicide takes nothing returns nothing
         call InitAssaultGroup()
         call InitDefenseGroup()
