@@ -97,7 +97,7 @@ globals
     // Auto Save constants
 
     // 保留的最大（自动）存档数量，默认5
-    // 怀疑超过会自动替换，但按理说该设置不该在这里
+    // 怀疑超过会自动替换，但按理说这种设置不应在此
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
     // Ideally these would be looked up from Units/MiscData.txt,
@@ -134,10 +134,10 @@ globals
     // 每类英雄数量上限，默认1个
     constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
     // 金矿搜索距离，默认2000
-    // 主要用于创建亡灵/精灵主矿
+    // 主要用于开局创建亡灵/精灵主矿
     constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
     // 清除出生点中立敌对单位的范围，默认1500
-    // 使用清除出生点的野怪时，要删除距离出生点多少范围内的野怪
+    // 开局清除出生点的野怪时，要删除出生点多少范围内的野怪
     constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
     // 暴露倒计时，默认120.00
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
@@ -145,13 +145,13 @@ globals
     // 暴露持续时间，默认20.00
     // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
-    // 混乱之治英雄初始物品创建次数，默认3次，即前3发英雄都给
+    // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
     // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
     // Delay between a creep's death and the time it may drop an item.
-    // 从单位死亡到掉落物品出现的时间间隔（延时），默认0.50
+    // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
@@ -177,14 +177,14 @@ globals
     constant integer   bj_CAMERA_DEFAULT_FARZ           = 5000
     // 镜头默认水平/攻击角度（X 轴旋转角度），默认304
     constant integer   bj_CAMERA_DEFAULT_AOA            = 304
-    // 默认镜头（观察区域，默认70
+    // 默认镜头（观察区域），默认70
     constant integer   bj_CAMERA_DEFAULT_FOV            = 70
     // 镜头默认滚动（Y 轴旋转角度），默认0
     constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
     // 镜头默认高度位移值（Z 轴旋转角度），默认90
     constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
 
-    // 可营救延时，默认2.00
+    // 营救（所属玩家变更）延时，默认2.00
     // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
     constant real      bj_RESCUE_PING_TIME              = 2.00
 
@@ -192,17 +192,17 @@ globals
 
     // 常规声音持续时间，默认5.00
     constant real      bj_NOTHING_SOUND_DURATION        = 5.00
-    // 传输延迟，默认1.00
+    // 单位消息延迟，默认1.00
     constant real      bj_TRANSMISSION_PING_TIME        = 1.00
-    // 传输颜色通道（红），默认255
+    // 单位消息闪动指示器颜色（红），默认255
     constant integer   bj_TRANSMISSION_IND_RED          = 255
-    // 传输颜色通道（蓝），默认255
+    // 单位消息闪动指示器颜色（蓝），默认255
     constant integer   bj_TRANSMISSION_IND_BLUE         = 255
-    // 传输颜色通道（绿），默认255
+    // 单位消息闪动指示器颜色（绿），默认255
     constant integer   bj_TRANSMISSION_IND_GREEN        = 255
-    // 传输颜色通道（alpha），默认255
+    // 单位消息闪动指示器颜色（alpha），默认255
     constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
-    // 传输画像悬空时间，默认1.50
+    // 单位消息画像悬空时间，默认1.50
     constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
 
     // 电影模式转换时间，默认0.50 Cinematic mode settings
@@ -231,21 +231,21 @@ globals
 
     // Speech mode volume levels
 
-    // 多通道默认音量 单位移动声音，默认0.25
+    // 所有频道默认音量 单位移动声音，默认0.25
     constant real      bj_SPEECH_VOLUME_UNITMOVEMENT    = 0.25
-    // 多通道默认音量 单位回应声音，默认0.00
+    // 所有频道默认音量 单位回应声音，默认0.00
     constant real      bj_SPEECH_VOLUME_UNITSOUNDS      = 0.00
-    // 多通道默认音量 战斗声音，默认0.25
+    // 所有频道默认音量 战斗声音，默认0.25
     constant real      bj_SPEECH_VOLUME_COMBAT          = 0.25
-    // 多通道默认音量 动画和法术声音，默认0.25
+    // 所有频道默认音量 动画和法术声音，默认0.25
     constant real      bj_SPEECH_VOLUME_SPELLS          = 0.25
-    // 多通道默认音量 用户界面（UI）声音，默认0.00
+    // 所有频道默认音量 用户界面（UI）声音，默认0.00
     constant real      bj_SPEECH_VOLUME_UI              = 0.00
-    // 多通道默认音量 音乐，默认0.55
+    // 所有频道默认音量 音乐，默认0.55
     constant real      bj_SPEECH_VOLUME_MUSIC           = 0.55
-    // 多通道默认音量 场景配音，默认1.00
+    // 所有频道默认音量 场景配音，默认1.00
     constant real      bj_SPEECH_VOLUME_AMBIENTSOUNDS   = 1.00
-    // 多通道默认音量 火焰声音，默认0.60
+    // 所有频道默认音量 火焰声音，默认0.60
     constant real      bj_SPEECH_VOLUME_FIRE            = 0.60
 
     // Smart pan settings
@@ -266,263 +266,263 @@ globals
 
     // Campaign indexing constants
 
-    // 战役引索常量（0）
+    // 战役过场电影索引 - 混乱之治教程战役（0）
     constant integer   bj_CAMPAIGN_INDEX_T        = 0
-    // 战役引索常量（1）
+    // 战役过场电影索引 - 混乱之治人族战役（1）
     constant integer   bj_CAMPAIGN_INDEX_H        = 1
-    // 战役引索常量（2）
+    // 战役过场电影索引 - 混乱之治兽族战役（2）
     constant integer   bj_CAMPAIGN_INDEX_U        = 2
-    // 战役引索常量（3）
+    // 战役过场电影索引 - 混乱之治不死族战役（3）
     constant integer   bj_CAMPAIGN_INDEX_O        = 3
-    // 战役引索常量（4）
+    // 战役过场电影索引 - 混乱之治暗夜精灵族战役（4）
     constant integer   bj_CAMPAIGN_INDEX_N        = 4
-    // 战役引索常量（5）
+    // 战役过场电影索引 - 冰封王座暗夜精灵族战役（5）
     constant integer   bj_CAMPAIGN_INDEX_XN       = 5
-    // 战役引索常量（6）
+    // 战役过场电影索引 - 冰封王座人族战役（6）
     constant integer   bj_CAMPAIGN_INDEX_XH       = 6
-    // 战役引索常量（7）
+    // 战役过场电影索引 - 冰封王座不死族战役（7）
     constant integer   bj_CAMPAIGN_INDEX_XU       = 7
-    // 战役引索常量（8）
+    // 战役过场电影索引 - 冰封王座兽族战役（8）
     constant integer   bj_CAMPAIGN_INDEX_XO       = 8
 
     // Campaign offset constants (for mission indexing)
 
-    // 任务引索的战役抵消常量（0）
+    // 战役关卡索引 - 混乱之治教程战役（0）
     constant integer   bj_CAMPAIGN_OFFSET_T       = 0
-    // 任务引索的战役抵消常量（1）
+    // 战役关卡索引 - 混乱之治人族战役（1）
     constant integer   bj_CAMPAIGN_OFFSET_H       = 1
-    // 任务引索的战役抵消常量（2）
+    // 战役关卡索引 - 混乱之治不死族战役（2）
     constant integer   bj_CAMPAIGN_OFFSET_U       = 2
-    // 任务引索的战役抵消常量（3）
+    // 战役关卡索引 - 混乱之治兽族战役（3）
     constant integer   bj_CAMPAIGN_OFFSET_O       = 3
-    // 任务引索的战役抵消常量（4）
+    // 战役关卡索引 - 冰封王座暗夜精灵族战役（4）
     constant integer   bj_CAMPAIGN_OFFSET_N       = 4
-    // 任务引索的战役抵消常量（5）
+    // 战役关卡索引 - 冰封王座暗夜精灵族战役（5）
     constant integer   bj_CAMPAIGN_OFFSET_XN      = 5
-    // 任务引索的战役抵消常量（6）
+    // 战役关卡索引 - 冰封王座人族战役（6）
     constant integer   bj_CAMPAIGN_OFFSET_XH      = 6
-    // 任务引索的战役抵消常量（7）
+    // 战役关卡索引 - 冰封王座不死族战役（7）
     constant integer   bj_CAMPAIGN_OFFSET_XU      = 7
-    // 任务引索的战役抵消常量（8）
+    // 战役关卡索引 - 冰封王座兽族战役（8）
     constant integer   bj_CAMPAIGN_OFFSET_XO      = 8
 
     // Mission indexing constants
     // Tutorial
 
-    // 战役任务引索常量 - 混乱之治教程（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
+    // 战役关卡 - 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
     constant integer   bj_MISSION_INDEX_T00       = bj_CAMPAIGN_OFFSET_T * 1000 + 0
-    // 战役任务引索常量 - 混乱之治教程（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
+    // 战役关卡 - 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
     constant integer   bj_MISSION_INDEX_T01       = bj_CAMPAIGN_OFFSET_T * 1000 + 1
-    // 战役任务引索常量 - 混乱之治教程（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
+    // 战役关卡 - 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
     constant integer   bj_MISSION_INDEX_T02       = bj_CAMPAIGN_OFFSET_T * 1000 + 2
-    // 战役任务引索常量 - 混乱之治教程（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
+    // 战役关卡 - 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
     constant integer   bj_MISSION_INDEX_T03       = bj_CAMPAIGN_OFFSET_T * 1000 + 3
-    // 战役任务引索常量 - 混乱之治教程（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
+    // 战役关卡 - 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
     constant integer   bj_MISSION_INDEX_T04       = bj_CAMPAIGN_OFFSET_T * 1000 + 4
     // Human
 
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
+    // 战役关卡 - 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
     constant integer   bj_MISSION_INDEX_H00       = bj_CAMPAIGN_OFFSET_H * 1000 + 0
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
+    // 战役关卡 - 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
     constant integer   bj_MISSION_INDEX_H01       = bj_CAMPAIGN_OFFSET_H * 1000 + 1
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
+    // 战役关卡 - 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
     constant integer   bj_MISSION_INDEX_H02       = bj_CAMPAIGN_OFFSET_H * 1000 + 2
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
+    // 战役关卡 - 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
     constant integer   bj_MISSION_INDEX_H03       = bj_CAMPAIGN_OFFSET_H * 1000 + 3
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
+    // 战役关卡 - 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
     constant integer   bj_MISSION_INDEX_H04       = bj_CAMPAIGN_OFFSET_H * 1000 + 4
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
+    // 战役关卡 - 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
     constant integer   bj_MISSION_INDEX_H05       = bj_CAMPAIGN_OFFSET_H * 1000 + 5
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
+    // 战役关卡 - 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
     constant integer   bj_MISSION_INDEX_H06       = bj_CAMPAIGN_OFFSET_H * 1000 + 6
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
+    // 战役关卡 - 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
     constant integer   bj_MISSION_INDEX_H07       = bj_CAMPAIGN_OFFSET_H * 1000 + 7
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
+    // 战役关卡 - 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
     constant integer   bj_MISSION_INDEX_H08       = bj_CAMPAIGN_OFFSET_H * 1000 + 8
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
+    // 战役关卡 - 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
     constant integer   bj_MISSION_INDEX_H09       = bj_CAMPAIGN_OFFSET_H * 1000 + 9
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
+    // 战役关卡 - 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
     constant integer   bj_MISSION_INDEX_H10       = bj_CAMPAIGN_OFFSET_H * 1000 + 10
-    // 战役任务引索常量 - 混乱之治人族（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
+    // 战役关卡 - 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
     constant integer   bj_MISSION_INDEX_H11       = bj_CAMPAIGN_OFFSET_H * 1000 + 11
     // Undead
 
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
+    // 战役关卡 - 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
     constant integer   bj_MISSION_INDEX_U00       = bj_CAMPAIGN_OFFSET_U * 1000 + 0
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
+    // 战役关卡 - 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
     constant integer   bj_MISSION_INDEX_U01       = bj_CAMPAIGN_OFFSET_U * 1000 + 1
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
+    // 战役关卡 - 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
     constant integer   bj_MISSION_INDEX_U02       = bj_CAMPAIGN_OFFSET_U * 1000 + 2
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
+    // 战役关卡 - 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
     constant integer   bj_MISSION_INDEX_U03       = bj_CAMPAIGN_OFFSET_U * 1000 + 3
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
+    // 战役关卡 - 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
     constant integer   bj_MISSION_INDEX_U05       = bj_CAMPAIGN_OFFSET_U * 1000 + 4
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
+    // 战役关卡 - 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
     constant integer   bj_MISSION_INDEX_U07       = bj_CAMPAIGN_OFFSET_U * 1000 + 5
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
+    // 战役关卡 - 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
     constant integer   bj_MISSION_INDEX_U08       = bj_CAMPAIGN_OFFSET_U * 1000 + 6
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
+    // 战役关卡 - 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
     constant integer   bj_MISSION_INDEX_U09       = bj_CAMPAIGN_OFFSET_U * 1000 + 7
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
+    // 战役关卡 - 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
     constant integer   bj_MISSION_INDEX_U10       = bj_CAMPAIGN_OFFSET_U * 1000 + 8
-    // 战役任务引索常量 - 混乱之治不死族（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
+    // 战役关卡 - 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
     constant integer   bj_MISSION_INDEX_U11       = bj_CAMPAIGN_OFFSET_U * 1000 + 9
     // Orc
 
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
+    // 战役关卡 - 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
     constant integer   bj_MISSION_INDEX_O00       = bj_CAMPAIGN_OFFSET_O * 1000 + 0
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
+    // 战役关卡 - 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
     constant integer   bj_MISSION_INDEX_O01       = bj_CAMPAIGN_OFFSET_O * 1000 + 1
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
+    // 战役关卡 - 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
     constant integer   bj_MISSION_INDEX_O02       = bj_CAMPAIGN_OFFSET_O * 1000 + 2
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
+    // 战役关卡 - 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
     constant integer   bj_MISSION_INDEX_O03       = bj_CAMPAIGN_OFFSET_O * 1000 + 3
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
+    // 战役关卡 - 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
     constant integer   bj_MISSION_INDEX_O04       = bj_CAMPAIGN_OFFSET_O * 1000 + 4
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
+    // 战役关卡 - 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
     constant integer   bj_MISSION_INDEX_O05       = bj_CAMPAIGN_OFFSET_O * 1000 + 5
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
+    // 战役关卡 - 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
     constant integer   bj_MISSION_INDEX_O06       = bj_CAMPAIGN_OFFSET_O * 1000 + 6
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
+    // 战役关卡 - 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
     constant integer   bj_MISSION_INDEX_O07       = bj_CAMPAIGN_OFFSET_O * 1000 + 7
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
+    // 战役关卡 - 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
     constant integer   bj_MISSION_INDEX_O08       = bj_CAMPAIGN_OFFSET_O * 1000 + 8
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
+    // 战役关卡 - 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
     constant integer   bj_MISSION_INDEX_O09       = bj_CAMPAIGN_OFFSET_O * 1000 + 9
-    // 战役任务引索常量 - 混乱之治兽族（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
+    // 战役关卡 - 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
     constant integer   bj_MISSION_INDEX_O10       = bj_CAMPAIGN_OFFSET_O * 1000 + 10
     // Night Elf
 
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
+    // 战役关卡 - 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
     constant integer   bj_MISSION_INDEX_N00       = bj_CAMPAIGN_OFFSET_N * 1000 + 0
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
+    // 战役关卡 - 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
     constant integer   bj_MISSION_INDEX_N01       = bj_CAMPAIGN_OFFSET_N * 1000 + 1
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
+    // 战役关卡 - 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
     constant integer   bj_MISSION_INDEX_N02       = bj_CAMPAIGN_OFFSET_N * 1000 + 2
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
+    // 战役关卡 - 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
     constant integer   bj_MISSION_INDEX_N03       = bj_CAMPAIGN_OFFSET_N * 1000 + 3
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
+    // 战役关卡 - 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
     constant integer   bj_MISSION_INDEX_N04       = bj_CAMPAIGN_OFFSET_N * 1000 + 4
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
+    // 战役关卡 - 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
     constant integer   bj_MISSION_INDEX_N05       = bj_CAMPAIGN_OFFSET_N * 1000 + 5
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
+    // 战役关卡 - 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
     constant integer   bj_MISSION_INDEX_N06       = bj_CAMPAIGN_OFFSET_N * 1000 + 6
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
+    // 战役关卡 - 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
     constant integer   bj_MISSION_INDEX_N07       = bj_CAMPAIGN_OFFSET_N * 1000 + 7
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
+    // 战役关卡 - 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
     constant integer   bj_MISSION_INDEX_N08       = bj_CAMPAIGN_OFFSET_N * 1000 + 8
-    // 战役任务引索常量 - 混乱之治暗夜精灵族（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
+    // 战役关卡 - 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
     constant integer   bj_MISSION_INDEX_N09       = bj_CAMPAIGN_OFFSET_N * 1000 + 9
     // Expansion Night Elf
 
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
+    // 战役关卡 - 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
     constant integer   bj_MISSION_INDEX_XN00       = bj_CAMPAIGN_OFFSET_XN * 1000 + 0
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
+    // 战役关卡 - 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
     constant integer   bj_MISSION_INDEX_XN01       = bj_CAMPAIGN_OFFSET_XN * 1000 + 1
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
+    // 战役关卡 - 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
     constant integer   bj_MISSION_INDEX_XN02       = bj_CAMPAIGN_OFFSET_XN * 1000 + 2
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
+    // 战役关卡 - 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
     constant integer   bj_MISSION_INDEX_XN03       = bj_CAMPAIGN_OFFSET_XN * 1000 + 3
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
+    // 战役关卡 - 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
     constant integer   bj_MISSION_INDEX_XN04       = bj_CAMPAIGN_OFFSET_XN * 1000 + 4
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
+    // 战役关卡 - 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
     constant integer   bj_MISSION_INDEX_XN05       = bj_CAMPAIGN_OFFSET_XN * 1000 + 5
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
+    // 战役关卡 - 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
     constant integer   bj_MISSION_INDEX_XN06       = bj_CAMPAIGN_OFFSET_XN * 1000 + 6
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
+    // 战役关卡 - 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
     constant integer   bj_MISSION_INDEX_XN07       = bj_CAMPAIGN_OFFSET_XN * 1000 + 7
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
+    // 战役关卡 - 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
     constant integer   bj_MISSION_INDEX_XN08       = bj_CAMPAIGN_OFFSET_XN * 1000 + 8
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
+    // 战役关卡 - 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
     constant integer   bj_MISSION_INDEX_XN09       = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
-    // 战役任务引索常量 - 冰封王座暗夜精灵族（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
+    // 战役关卡 - 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
     constant integer   bj_MISSION_INDEX_XN10       = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
     // Expansion Human
 
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 0）
+    // 战役关卡 - 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
     constant integer   bj_MISSION_INDEX_XH00       = bj_CAMPAIGN_OFFSET_XH * 1000 + 0
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 1）
+    // 战役关卡 - 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
     constant integer   bj_MISSION_INDEX_XH01       = bj_CAMPAIGN_OFFSET_XH * 1000 + 1
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 2）
+    // 战役关卡 - 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
     constant integer   bj_MISSION_INDEX_XH02       = bj_CAMPAIGN_OFFSET_XH * 1000 + 2
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 3）
+    // 战役关卡 - 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
     constant integer   bj_MISSION_INDEX_XH03       = bj_CAMPAIGN_OFFSET_XH * 1000 + 3
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 4）
+    // 战役关卡 - 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
     constant integer   bj_MISSION_INDEX_XH04       = bj_CAMPAIGN_OFFSET_XH * 1000 + 4
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 5）
+    // 战役关卡 - 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
     constant integer   bj_MISSION_INDEX_XH05       = bj_CAMPAIGN_OFFSET_XH * 1000 + 5
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 6）
+    // 战役关卡 - 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
     constant integer   bj_MISSION_INDEX_XH06       = bj_CAMPAIGN_OFFSET_XH * 1000 + 6
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 7）
+    // 战役关卡 - 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
     constant integer   bj_MISSION_INDEX_XH07       = bj_CAMPAIGN_OFFSET_XH * 1000 + 7
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 8）
+    // 战役关卡 - 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
     constant integer   bj_MISSION_INDEX_XH08       = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
-    // 战役任务引索常量 - 冰封王座人族（bj_CAMPAIGN_OFFSET_XH * 1000 + 9）
+    // 战役关卡 - 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
     constant integer   bj_MISSION_INDEX_XH09       = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
     // Expansion Undead
 
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 0）
+    // 战役关卡 - 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
     constant integer   bj_MISSION_INDEX_XU00       = bj_CAMPAIGN_OFFSET_XU * 1000 + 0
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 1）
+    // 战役关卡 - 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
     constant integer   bj_MISSION_INDEX_XU01       = bj_CAMPAIGN_OFFSET_XU * 1000 + 1
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 2）
+    // 战役关卡 - 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
     constant integer   bj_MISSION_INDEX_XU02       = bj_CAMPAIGN_OFFSET_XU * 1000 + 2
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 3）
+    // 战役关卡 - 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
     constant integer   bj_MISSION_INDEX_XU03       = bj_CAMPAIGN_OFFSET_XU * 1000 + 3
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 4）
+    // 战役关卡 - 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
     constant integer   bj_MISSION_INDEX_XU04       = bj_CAMPAIGN_OFFSET_XU * 1000 + 4
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 5）
+    // 战役关卡 - 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
     constant integer   bj_MISSION_INDEX_XU05       = bj_CAMPAIGN_OFFSET_XU * 1000 + 5
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 6）
+    // 战役关卡 - 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
     constant integer   bj_MISSION_INDEX_XU06       = bj_CAMPAIGN_OFFSET_XU * 1000 + 6
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 7）
+    // 战役关卡 - 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
     constant integer   bj_MISSION_INDEX_XU07       = bj_CAMPAIGN_OFFSET_XU * 1000 + 7
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 8）
+    // 战役关卡 - 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
     constant integer   bj_MISSION_INDEX_XU08       = bj_CAMPAIGN_OFFSET_XU * 1000 + 8
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 9）
+    // 战役关卡 - 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
     constant integer   bj_MISSION_INDEX_XU09       = bj_CAMPAIGN_OFFSET_XU * 1000 + 9
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 10）
+    // 战役关卡 - 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
     constant integer   bj_MISSION_INDEX_XU10       = bj_CAMPAIGN_OFFSET_XU * 1000 + 10
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 11）
+    // 战役关卡 - 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
     constant integer   bj_MISSION_INDEX_XU11       = bj_CAMPAIGN_OFFSET_XU * 1000 + 11
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 12）
+    // 战役关卡 - 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
     constant integer   bj_MISSION_INDEX_XU12       = bj_CAMPAIGN_OFFSET_XU * 1000 + 12
-    // 战役任务引索常量 - 冰封王座不死族（bj_CAMPAIGN_OFFSET_XU * 1000 + 13）
+    // 战役关卡 - 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
     constant integer   bj_MISSION_INDEX_XU13       = bj_CAMPAIGN_OFFSET_XU * 1000 + 13
     // Expansion Orc
 
-    // 战役任务引索常量 - 冰封王座兽族（额外战役）（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
+    // 战役关卡 - 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
     constant integer   bj_MISSION_INDEX_XO00       = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
-    // 战役任务引索常量 - 冰封王座兽族（额外战役）（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
+    // 战役关卡 - 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
     constant integer   bj_MISSION_INDEX_XO01       = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
-    // 战役任务引索常量 - 冰封王座兽族（额外战役）（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
+    // 战役关卡 - 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
     constant integer   bj_MISSION_INDEX_XO02       = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
-    // 战役任务引索常量 - 冰封王座兽族（额外战役）（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
+    // 战役关卡 - 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
     constant integer   bj_MISSION_INDEX_XO03       = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
     // Cinematic indexing constants
 
-    // 电影引索常量（0）
+    // 战役过场电影名称 - 教程（0）
     constant integer   bj_CINEMATICINDEX_TOP      = 0
-    // 电影引索常量（1）
+    // 战役过场电影名称 - 人族开场（1）
     constant integer   bj_CINEMATICINDEX_HOP      = 1
-    // 电影引索常量（2）
+    // 战役过场电影名称 - 人族结尾（2）
     constant integer   bj_CINEMATICINDEX_HED      = 2
-    // 电影引索常量（3）
+    // 战役过场电影名称 - 兽族开场（3）
     constant integer   bj_CINEMATICINDEX_OOP      = 3
-    // 电影引索常量（4）
+    // 战役过场电影名称 - 兽族结尾（4）
     constant integer   bj_CINEMATICINDEX_OED      = 4
-    // 电影引索常量（5）
+    // 战役过场电影名称 - 不死族开场（5）
     constant integer   bj_CINEMATICINDEX_UOP      = 5
-    // 电影引索常量（6）
+    // 战役过场电影名称 - 不死族结尾（6）
     constant integer   bj_CINEMATICINDEX_UED      = 6
-    // 电影引索常量（7）
+    // 战役过场电影名称 - 暗夜精灵族开场（7）
     constant integer   bj_CINEMATICINDEX_NOP      = 7
-    // 电影引索常量（8）
+    // 战役过场电影名称 - 暗夜精灵族结尾（8）
     constant integer   bj_CINEMATICINDEX_NED      = 8
-    // 电影引索常量（9）
+    // 战役过场电影名称 - 冰封王座开场（9）
     constant integer   bj_CINEMATICINDEX_XOP      = 9
-    // 电影引索常量（10）
+    // 战役过场电影名称 - 冰封王座结尾（10）
     constant integer   bj_CINEMATICINDEX_XED      = 10
 
     // Alliance settings
@@ -575,14 +575,14 @@ globals
 
     // 传输时间方法 - 时间类型 - 增加
     constant integer   bj_TIMETYPE_ADD             = 0
-    // 传输时间方法 - 时间类型 - 设置
+    // 传输时间方法 - 时间类型 - 设为（指定值）
     constant integer   bj_TIMETYPE_SET             = 1
     // 传输时间方法 - 时间类型 - 减少
     constant integer   bj_TIMETYPE_SUB             = 2
 
     // Camera bounds adjustment methods
 
-    // 镜头界限调整 - 扩展
+    // 镜头界限调整 - 扩张
     constant integer   bj_CAMERABOUNDS_ADJUST_ADD  = 0
     // 镜头界限调整 - 收缩
     constant integer   bj_CAMERABOUNDS_ADJUST_SUB  = 1
@@ -691,7 +691,7 @@ globals
     constant integer   bj_MODIFYMETHOD_ADD    = 0
     // 英雄技能点 - 减少
     constant integer   bj_MODIFYMETHOD_SUB    = 1
-    // 英雄技能点 - 设置指定值
+    // 英雄技能点 - 设为（指定值）
     constant integer   bj_MODIFYMETHOD_SET    = 2
 
     // Unit state adjustment methods (for replaced units)
@@ -853,13 +853,13 @@ globals
 
     // Utility function vars
 
-    // 循环A引索
+    // 循环A索引
     integer            bj_forLoopAIndex            = 0
-    // 循环A引索
+    // 循环A索引
     integer            bj_forLoopBIndex            = 0
-    // 循环A引索结束值
+    // 循环A索引结束值
     integer            bj_forLoopAIndexEnd         = 0
-    // 循环A引索结束值
+    // 循环A索引结束值
     integer            bj_forLoopBIndexEnd         = 0
     // 玩家检查是否完成，自动检查，检查完成后自动变为真，用于开局系统自动检查所有玩家槽是电脑（不论是否具备AI）还是真人
     boolean            bj_slotControlReady         = false
@@ -1188,7 +1188,7 @@ globals
     questitem          bj_lastCreatedQuestItem     = null
     // 最后创建的任务失败条件
     defeatcondition    bj_lastCreatedDefeatCondition = null
-    // 最后创建的计时器
+    // 最后启用的计时器
     timer              bj_lastStartedTimer         = CreateTimer()
     // 最后创建的计时器窗口
     timerdialog        bj_lastCreatedTimerDialog   = null
@@ -2846,7 +2846,7 @@ function GetLastCreatedLightningBJ takes nothing returns lightning
 endfunction
 
 
-// 获取特效路径（指定特效类型和引索）
+// 获取特效路径（指定特效类型和索引）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
@@ -3412,7 +3412,7 @@ function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns n
 endfunction
 
 
-// 设置电影多通道音量环境(立即)
+// 设置电影所有频道音量环境(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT,  bj_CINEMODE_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS,    bj_CINEMODE_VOLUME_UNITSOUNDS)
@@ -3425,7 +3425,7 @@ function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置多通道音量为电影模式
+// 设置所有频道音量为电影模式
 function SetCineModeVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3436,7 +3436,7 @@ function SetCineModeVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 设置语音多通道音量环境为默认值(立即)
+// 设置所有频道发言音量环境为默认值(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT,  bj_SPEECH_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS,    bj_SPEECH_VOLUME_UNITSOUNDS)
@@ -3449,7 +3449,7 @@ function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置多通道音量为语音模式
+// 设置所有频道发言模式
 function SetSpeechVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3460,7 +3460,7 @@ function SetSpeechVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 重置多通道音量(立即)
+// 重置所有频道音量(立即)
 function VolumeGroupResetImmediateBJ takes nothing returns nothing
     call VolumeGroupReset()
 endfunction
@@ -3529,7 +3529,7 @@ function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle retur
 endfunction
 
 
-// 设置玩家音量组音量
+// 设置玩家声音频道音量
 function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup vgroup, real scale returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         call VolumeGroupSetVolume(vgroup, scale)
@@ -4459,12 +4459,12 @@ function CreatePermanentCorpseLocBJ takes integer style, integer unitid, player 
 endfunction
 
 
-// 获取单位属性
+// 获取指定单位指定属性
 function GetUnitStateSwap takes unitstate whichState, unit whichUnit returns real
     return GetUnitState(whichUnit, whichState)
 endfunction
 
-// 获取指定单位指定属性的百分比
+// 获取指定单位指定属性（以百分比形式返回）
 function GetUnitStatePercent takes unit whichUnit, unitstate whichState, unitstate whichMaxState returns real
     local real value    = GetUnitState(whichUnit, whichState)
     local real maxValue = GetUnitState(whichUnit, whichMaxState)
@@ -4490,7 +4490,7 @@ function GetUnitManaPercent takes unit whichUnit returns real
 endfunction
 
 
-// 选择单位
+// 选择指定单位
 function SelectUnitSingle takes unit whichUnit returns nothing
     call ClearSelection()
     call SelectUnit(whichUnit, true)
@@ -4924,6 +4924,7 @@ endfunction
 
 
 // 设置指定单位限时生命
+// @param buffId 魔法效果(buff)类型，只支持 'BTLF','BUan','Bapl','BEfn','Bhwd','BHwe','Brai'
 function UnitApplyTimedLifeBJ takes real duration, integer buffId, unit whichUnit returns nothing
     call UnitApplyTimedLife(whichUnit, buffId, duration)
 endfunction
@@ -5189,13 +5190,13 @@ function SetUnitUseFoodBJ takes boolean enable, unit whichUnit returns nothing
 endfunction
 
 
-// 伤害区域
+// 伤害圆形范围（指定单位）
 function UnitDamagePointLoc takes unit whichUnit, real delay, real radius, location loc, real amount, attacktype whichAttack, damagetype whichDamage returns boolean
     return UnitDamagePoint(whichUnit, delay, radius, GetLocationX(loc), GetLocationY(loc), amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
 
 
-// 伤害目标
+// 伤害单位/物品/可破坏物（指定单位）
 function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, attacktype whichAttack, damagetype whichDamage returns boolean
     return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
@@ -8513,7 +8514,7 @@ function SetMissionAvailableBJ takes boolean available, integer missionIndex ret
 endfunction
 
 
-// 允许/禁止 战役关卡
+// 允许/禁止 战役教程关卡
 function SetCampaignAvailableBJ takes boolean available, integer campaignNumber returns nothing
     local integer campaignOffset
 
@@ -8587,7 +8588,7 @@ function InitGameCacheBJ takes string campaignFile returns gamecache
 endfunction
 
 
-// 存储游戏缓存
+// 存储游戏缓存到本地硬盘
 function SaveGameCacheBJ takes gamecache cache returns boolean
     return SaveGameCache(cache)
 endfunction
@@ -8612,312 +8613,312 @@ function GetLastCreatedHashtableBJ takes nothing returns hashtable
 endfunction
 
 
-// 记录 实数
+// 存储 实数 到游戏缓存
 function StoreRealBJ takes real value, string key, string missionKey, gamecache cache returns nothing
     call StoreReal(cache, missionKey, key, value)
 endfunction
 
 
-// 记录 整数
+// 存储 整数 到游戏缓存
 function StoreIntegerBJ takes integer value, string key, string missionKey, gamecache cache returns nothing
     call StoreInteger(cache, missionKey, key, value)
 endfunction
 
 
-// 记录 布尔值
+// 存储 布尔值 到游戏缓存
 function StoreBooleanBJ takes boolean value, string key, string missionKey, gamecache cache returns nothing
     call StoreBoolean(cache, missionKey, key, value)
 endfunction
 
 
-// 记录 字串符
+// 存储 字串符 到游戏缓存
 function StoreStringBJ takes string value, string key, string missionKey, gamecache cache returns boolean
     return StoreString(cache, missionKey, key, value)
 endfunction
 
 
-// 记录 单位
+// 存储 单位 到游戏缓存
 function StoreUnitBJ takes unit whichUnit, string key, string missionKey, gamecache cache returns boolean
     return StoreUnit(cache, missionKey, key, whichUnit)
 endfunction
 
 
-// <1.24> 保存实数
+// <1.24> 保存 实数 到哈希表
 function SaveRealBJ takes real value, integer key, integer missionKey, hashtable table returns nothing
     call SaveReal(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存整数
+// <1.24> 保存 整数 到哈希表
 function SaveIntegerBJ takes integer value, integer key, integer missionKey, hashtable table returns nothing
     call SaveInteger(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存布尔值
+// <1.24> 保存 布尔值 到哈希表
 function SaveBooleanBJ takes boolean value, integer key, integer missionKey, hashtable table returns nothing
     call SaveBoolean(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存字符串
+// <1.24> 保存 字符串 到哈希表
 function SaveStringBJ takes string value, integer key, integer missionKey, hashtable table returns boolean
     return SaveStr(table, missionKey, key, value)
 endfunction
 
 
-// <1.24> 保存玩家
+// <1.24> 保存 玩家 到哈希表
 function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missionKey, hashtable table returns boolean
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
 
-// <1.24> 保存微件/对象（单位/物品/可破坏物）
+// <1.24> 保存 微件/对象（单位/物品/可破坏物） 到哈希表
 function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missionKey, hashtable table returns boolean
     return SaveWidgetHandle(table, missionKey, key, whichWidget)
 endfunction
 
 
-// <1.24> 保存可破坏物
+// <1.24> 保存 可破坏物 到哈希表
 function SaveDestructableHandleBJ takes destructable whichDestructable, integer key, integer missionKey, hashtable table returns boolean
     return SaveDestructableHandle(table, missionKey, key, whichDestructable)
 endfunction
 
 
-// <1.24> 保存物品
+// <1.24> 保存 物品 到哈希表
 function SaveItemHandleBJ takes item whichItem, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemHandle(table, missionKey, key, whichItem)
 endfunction
 
 
-// <1.24> 保存单位
+// <1.24> 保存 单位 到哈希表
 function SaveUnitHandleBJ takes unit whichUnit, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitHandle(table, missionKey, key, whichUnit)
 endfunction
 
-// <1.24> 保存技能
+// <1.24> 保存 技能 到哈希表
 function SaveAbilityHandleBJ takes ability whichAbility, integer key, integer missionKey, hashtable table returns boolean
     return SaveAbilityHandle(table, missionKey, key, whichAbility)
 endfunction
 
 
-// <1.24> 保存计时器
+// <1.24> 保存 计时器 到哈希表
 function SaveTimerHandleBJ takes timer whichTimer, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerHandle(table, missionKey, key, whichTimer)
 endfunction
 
 
-// <1.24> 保存触发器
+// <1.24> 保存 触发器 到哈希表
 function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerHandle(table, missionKey, key, whichTrigger)
 endfunction
 
 
-// <1.24> 保存触发条件
+// <1.24> 保存 触发条件 到哈希表
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
 
 
-// <1.24> 保存触发器动作
+// <1.24> 保存 触发器动作 到哈希表
 function SaveTriggerActionHandleBJ takes triggeraction whichTriggeraction, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
 endfunction
 
 
-// <1.24> 保存触发事件
+// <1.24> 保存 触发事件 到哈希表
 function SaveTriggerEventHandleBJ takes event whichEvent, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerEventHandle(table, missionKey, key, whichEvent)
 endfunction
 
 
-// <1.24> 保存玩家组
+// <1.24> 保存 玩家组 到哈希表
 function SaveForceHandleBJ takes force whichForce, integer key, integer missionKey, hashtable table returns boolean
     return SaveForceHandle(table, missionKey, key, whichForce)
 endfunction
 
 
-// <1.24> 保存单位组
+// <1.24> 保存 单位组 到哈希表
 function SaveGroupHandleBJ takes group whichGroup, integer key, integer missionKey, hashtable table returns boolean
     return SaveGroupHandle(table, missionKey, key, whichGroup)
 endfunction
 
 
-// <1.24> 保存点
+// <1.24> 保存 点 到哈希表
 function SaveLocationHandleBJ takes location whichLocation, integer key, integer missionKey, hashtable table returns boolean
     return SaveLocationHandle(table, missionKey, key, whichLocation)
 endfunction
 
 
-// <1.24> 保存区域(矩形)
+// <1.24> 保存 区域(矩形) 到哈希表
 function SaveRectHandleBJ takes rect whichRect, integer key, integer missionKey, hashtable table returns boolean
     return SaveRectHandle(table, missionKey, key, whichRect)
 endfunction
 
 
-// <1.24> 保存条件表达式
+// <1.24> 保存 条件表达式 到哈希表
 function SaveBooleanExprHandleBJ takes boolexpr whichBoolexpr, integer key, integer missionKey, hashtable table returns boolean
     return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
 endfunction
 
 
-// <1.24> 保存音效
+// <1.24> 保存 音效 到哈希表
 function SaveSoundHandleBJ takes sound whichSound, integer key, integer missionKey, hashtable table returns boolean
     return SaveSoundHandle(table, missionKey, key, whichSound)
 endfunction
 
 
-// <1.24> 保存特效
+// <1.24> 保存 特效 到哈希表
 function SaveEffectHandleBJ takes effect whichEffect, integer key, integer missionKey, hashtable table returns boolean
     return SaveEffectHandle(table, missionKey, key, whichEffect)
 endfunction
 
 
-// <1.24> 保存单位池
+// <1.24> 保存 单位池 到哈希表
 function SaveUnitPoolHandleBJ takes unitpool whichUnitpool, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitPoolHandle(table, missionKey, key, whichUnitpool)
 endfunction
 
 
-// <1.24> 保存物品池
+// <1.24> 保存 物品池 到哈希表
 function SaveItemPoolHandleBJ takes itempool whichItempool, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemPoolHandle(table, missionKey, key, whichItempool)
 endfunction
 
 
-// <1.24> 保存任务
+// <1.24> 保存 任务 到哈希表
 function SaveQuestHandleBJ takes quest whichQuest, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestHandle(table, missionKey, key, whichQuest)
 endfunction
 
 
-// <1.24> 保存任务要求
+// <1.24> 保存 任务要求 到哈希表
 function SaveQuestItemHandleBJ takes questitem whichQuestitem, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestItemHandle(table, missionKey, key, whichQuestitem)
 endfunction
 
 
-// <1.24> 保存（任务）失败条件
+// <1.24> 保存 任务失败条件 到哈希表
 function SaveDefeatConditionHandleBJ takes defeatcondition whichDefeatcondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
 endfunction
 
 
-// <1.24> 保存计时器窗口
+// <1.24> 保存 计时器窗口 到哈希表
 function SaveTimerDialogHandleBJ takes timerdialog whichTimerdialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerDialogHandle(table, missionKey, key, whichTimerdialog)
 endfunction
 
 
-// <1.24> 保存排行榜
+// <1.24> 保存 排行榜 到哈希表
 function SaveLeaderboardHandleBJ takes leaderboard whichLeaderboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveLeaderboardHandle(table, missionKey, key, whichLeaderboard)
 endfunction
 
 
-// <1.24> 保存多面板
+// <1.24> 保存 多面板 到哈希表
 function SaveMultiboardHandleBJ takes multiboard whichMultiboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardHandle(table, missionKey, key, whichMultiboard)
 endfunction
 
 
-// <1.24> 保存多面板项目
+// <1.24> 保存 多面板项目 到哈希表
 function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardItemHandle(table, missionKey, key, whichMultiboarditem)
 endfunction
 
 
-// <1.24> 保存可追踪物
+// <1.24> 保存 可追踪物 到哈希表
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
 
 
-// <1.24> 保存对话框
+// <1.24> 保存 对话框 到哈希表
 function SaveDialogHandleBJ takes dialog whichDialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveDialogHandle(table, missionKey, key, whichDialog)
 endfunction
 
 
-// <1.24> 保存对话框按钮
+// <1.24> 保存 对话框按钮 到哈希表
 function SaveButtonHandleBJ takes button whichButton, integer key, integer missionKey, hashtable table returns boolean
     return SaveButtonHandle(table, missionKey, key, whichButton)
 endfunction
 
 
-// <1.24> 保存漂浮文字
+// <1.24> 保存 漂浮文字 到哈希表
 function SaveTextTagHandleBJ takes texttag whichTexttag, integer key, integer missionKey, hashtable table returns boolean
     return SaveTextTagHandle(table, missionKey, key, whichTexttag)
 endfunction
 
 
-// <1.24> 保存闪电效果
+// <1.24> 保存 闪电效果 到哈希表
 function SaveLightningHandleBJ takes lightning whichLightning, integer key, integer missionKey, hashtable table returns boolean
     return SaveLightningHandle(table, missionKey, key, whichLightning)
 endfunction
 
 
-// <1.24> 保存图像
+// <1.24> 保存 图像 到哈希表
 function SaveImageHandleBJ takes image whichImage, integer key, integer missionKey, hashtable table returns boolean
     return SaveImageHandle(table, missionKey, key, whichImage)
 endfunction
 
 
-// <1.24> 保存地面纹理变化
+// <1.24> 保存 地面纹理变化 到哈希表
 function SaveUbersplatHandleBJ takes ubersplat whichUbersplat, integer key, integer missionKey, hashtable table returns boolean
     return SaveUbersplatHandle(table, missionKey, key, whichUbersplat)
 endfunction
 
 
-// <1.24> 保存区域(不规则)
+// <1.24> 保存 区域(不规则) 到哈希表
 function SaveRegionHandleBJ takes region whichRegion, integer key, integer missionKey, hashtable table returns boolean
     return SaveRegionHandle(table, missionKey, key, whichRegion)
 endfunction
 
 
-// <1.24> 保存迷雾状态
+// <1.24> 保存 迷雾状态 到哈希表
 function SaveFogStateHandleBJ takes fogstate whichFogState, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogStateHandle(table, missionKey, key, whichFogState)
 endfunction
 
 
-// <1.24> 保存可见度修正器
+// <1.24> 保存 可见度修正器 到哈希表
 function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
 
-// <1.24> 保存句柄
+// <1.24> 保存 句柄 到哈希表
 function SaveAgentHandleBJ takes agent whichAgent, integer key, integer missionKey, hashtable table returns boolean
     return SaveAgentHandle(table, missionKey, key, whichAgent)
 endfunction
 
-// <1.24> 保存哈希表
+// <1.24> 保存 哈希表 到哈希表
 function SaveHashtableHandleBJ takes hashtable whichHashtable, integer key, integer missionKey, hashtable table returns boolean
     return SaveHashtableHandle(table, missionKey, key, whichHashtable)
 endfunction
 
 
-// 读取实数
+// 从游戏缓读取实数
 function GetStoredRealBJ takes string key, string missionKey, gamecache cache returns real
     //call SyncStoredReal(cache, missionKey, key)
     return GetStoredReal(cache, missionKey, key)
 endfunction
 
 
-// 读取整数
+// 从游戏缓读取整数
 function GetStoredIntegerBJ takes string key, string missionKey, gamecache cache returns integer
     //call SyncStoredInteger(cache, missionKey, key)
     return GetStoredInteger(cache, missionKey, key)
 endfunction
 
 
-// 读取布尔值
+// 从游戏缓读取布尔值
 function GetStoredBooleanBJ takes string key, string missionKey, gamecache cache returns boolean
     //call SyncStoredBoolean(cache, missionKey, key)
     return GetStoredBoolean(cache, missionKey, key)
 endfunction
 
 
-// 读取字串符
+// 从游戏缓读取字串符
 function GetStoredStringBJ takes string key, string missionKey, gamecache cache returns string
     local string s
 
@@ -9195,7 +9196,7 @@ function LoadHashtableHandleBJ takes integer key, integer missionKey, hashtable 
 endfunction
 
 
-// 读取单位 (指定角度)
+// 重新存储单位到游戏缓存 (指定朝向角度)
 function RestoreUnitLocFacingAngleBJ takes string key, string missionKey, gamecache cache, player forWhichPlayer, location loc, real facing returns unit
     //call SyncStoredUnit(cache, missionKey, key)
     set bj_lastLoadedUnit = RestoreUnit(cache, missionKey, key, forWhichPlayer, GetLocationX(loc), GetLocationY(loc), facing)
@@ -9203,38 +9204,42 @@ function RestoreUnitLocFacingAngleBJ takes string key, string missionKey, gameca
 endfunction
 
 
-// 读取单位 (指定点偏移角度)
+// 重新存储单位到游戏缓存 (指定朝向)
 function RestoreUnitLocFacingPointBJ takes string key, string missionKey, gamecache cache, player forWhichPlayer, location loc, location lookAt returns unit
     //call SyncStoredUnit(cache, missionKey, key)
     return RestoreUnitLocFacingAngleBJ(key, missionKey, cache, forWhichPlayer, loc, AngleBetweenPoints(loc, lookAt))
 endfunction
 
 
-// 获取最后读取的单位
+// 获取从游戏缓存最后读取的单位
 function GetLastRestoredUnitBJ takes nothing returns unit
     return bj_lastLoadedUnit
 endfunction
 
 
-// 清除所有游戏缓存
+// 清空游戏缓存
+// 清空指定游戏缓存下所有类别
 function FlushGameCacheBJ takes gamecache cache returns nothing
     call FlushGameCache(cache)
 endfunction
 
 
-// 清除游戏缓存[分类]
+// 清空游戏缓存（指定类别）
+// 仅清空指定缓存的指定类别
 function FlushStoredMissionBJ takes string missionKey, gamecache cache returns nothing
     call FlushStoredMission(cache, missionKey)
 endfunction
 
 
 // <1.24> 清空哈希表
+// 清空整张表
 function FlushParentHashtableBJ takes hashtable table returns nothing
     call FlushParentHashtable(table)
 endfunction
 
 
-// <1.24> 清空哈希表主索引
+// <1.24> 清空哈希表（指定主索引）
+// 仅清空指定索引
 function FlushChildHashtableBJ takes integer missionKey, hashtable table returns nothing
     call FlushChildHashtable(table, missionKey)
 endfunction

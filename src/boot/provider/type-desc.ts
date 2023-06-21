@@ -60,7 +60,7 @@ const map = new Map<string,string>([
   ["mapdensity", "地图密度"],
   ["mapcontrol", "玩家控制者类型"],
   ["playerslotstate", "玩家槽状态"],
-  ["volumegroup", "音量组"],
+  ["volumegroup", "声音通道"],
   ["camerafield", "镜头属性"],
   ["camerasetup", "镜头"],
   ["playercolor", "玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）"],
