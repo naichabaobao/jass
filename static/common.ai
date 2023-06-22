@@ -85,10 +85,10 @@ native DebugS               takes string str                            returns 
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
-    // 训练/建造/研究指定/研究单位/科技(指定数量,单位类型,基地)
+    // 训练/建造/研究指定单位/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 取消指定单位，如果单位正在建造/训练，则会被取消
+    // 取消指定单位建造/训练
     // 因单词为反召唤，怀疑可用于建造完成时卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
@@ -192,17 +192,19 @@ native DebugS               takes string str                            returns 
     native AttackMoveKill       takes unit target                           returns nothing
     // 发布攻击组攻击命令（指定坐标）
     native AttackMoveXY         takes integer x, integer y                  returns nothing
-    // 在指定坐标卸载单位
+    // 在指定坐标卸载单位/空投
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
     // 建议不要对飞艇类单位发送忽略防守命令，忽略后AI不会自动控制飞艇卸载
     native LoadZepWave          takes integer x, integer y                  returns nothing
-    // 自杀式攻击指定玩家，返回false时代表未执行
+    // 发布自杀式攻击命令（指定玩家），返回false时代表未执行
     // 理论上是一路打到指定玩家的开始点
     // 暴雪用于战役AI
+    // @param check_full 怀疑是 是否检查攻击组完整
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
-    // 自杀式攻击指定玩家，返回false时代表未执行
-    // 和SuicidePlayer的区别怀疑是 只要攻击到指定的单位即可，无需一路打到玩家开始点
+    // 发布自杀式攻击命令（指定玩家单位），返回false时代表未执行
+    // 和SuicidePlayer的区别怀疑是 只要攻击到该玩家任意单位即可，无需一路打到玩家开始点
     // 暴雪用于战役AI
+    // @param check_full 怀疑是 是否检查攻击组完整
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
     // 查询攻击队长是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
@@ -1670,7 +1672,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 准备自杀
-    // 执行初始化攻击组数组长度、初始化防御组数组、采集（金和木）工人置零
+    // 执行初始化攻击组数组长度、初始化防御组数组、战役采集（金和木）工人数量置零
     function PrepFullSuicide takes nothing returns nothing
         call InitAssaultGroup()
         call InitDefenseGroup()
@@ -1991,10 +1993,10 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 根据人口占用情况训练指定单位类型
-    // @param food 建议使用当前已用人口
+    // @param food 建议使用当前已使用人口
     // @param use1 单位类型1的人口占用（单个）
-    // @param use2单位类型2的人口占用（单个）
-    // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2，
+    // @param use2 单位类型2的人口占用（单个）
+    // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
     // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
     function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
         if strong then
@@ -2167,7 +2169,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 建造核心循环，该程序负责执行所有排队中的建造/训练/研究函数
+    // 建造核心循环，负责执行队列中全部建造/训练/研究
     function OneBuildLoop takes nothing returns nothing
         local integer index = 0
         local integer qty
@@ -2432,9 +2434,9 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 等待攻击组完成组建，给予AI一定的时间补充兵力
-    // @param testReady 指定组的准备情况，为真时需要攻击组准备满50，为假时准备0即可
-    // @param seconds 指定最长等待时间
+    // 等待攻击组完成组建，即给AI一定的时间补充兵力
+    // @param testReady 攻击组准备情况，为真时需要攻击组准备满50，为假时准备0即可
+    // @param seconds 最长等待时间
     function FormGroup takes integer seconds, boolean testReady returns nothing
         local integer index
         local integer count
@@ -2599,7 +2601,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 发布攻击组移动攻击命令（指定坐标）
+    // 攻击组移动攻击（指定坐标）
     function AttackMoveXYA takes integer x, integer y returns nothing
     
         if zep_next_wave then
@@ -2614,7 +2616,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 通报各波次进攻情况（默认使用Trace函数发送文字，查看可能需要打开调试模式）
+    // 通报自杀攻击各波次进攻情况（默认使用Trace函数发送文字，查看可能需要打开调试模式）
     function SuicideOnPlayerWave takes nothing returns nothing
         call Trace("waiting for attack wave to enter combat\n") //xxx
         loop
@@ -2670,7 +2672,7 @@ native DebugS               takes string str                            returns 
     
     //--------------------------------------------------------------------------------------------------
 
-    // 设置各波次进攻（指定玩家和坐标），默认用于自杀式攻击
+    // 设置自杀攻击各波次进攻（指定玩家和坐标）
     // @param standard 为真时会额外判断退出条件且不进攻指定坐标，为假时会进攻指定坐标
     // @param bldgs 当standard为真时，若bldgs为真，会额外判断退出条件 SuicidePlayer(p,sleep_seconds >= -60)，反之额外判断退出条件 SuicidePlayerUnits(p,sleep_seconds >= -60)
     // @param seconds 等待攻击组组建时间，若在指定时间后攻击组仍未完成组建，则不会进攻
@@ -2730,21 +2732,21 @@ native DebugS               takes string str                            returns 
     
     //--------------------------------------------------------------------------------------------------
    
-    // 自杀式攻击（指定玩家）
+    // 自杀式攻击（指定玩家单位）
     function SuicideOnUnits takes integer seconds, player p returns nothing
         call CommonSuicideOnPlayer(true,false,seconds,p,0,0)
     endfunction
     
     //--------------------------------------------------------------------------------------------------
    
-    // 自杀式攻击（指定坐标）
+    // 自杀式攻击（指定玩家坐标）
     function SuicideOnPoint takes integer seconds, player p, integer x, integer y returns nothing
         call CommonSuicideOnPlayer(false,false,seconds,p,x,y)
     endfunction
     
     //============================================================================
     
-    // 等待自杀信号
+    // 等待自杀命令信号
     function SuicideUntilSignal takes integer seconds, player p returns nothing
         local integer save
         local integer wave_prep = PrepTime()
@@ -2877,7 +2879,7 @@ native DebugS               takes string str                            returns 
     
     //--------------------------------------------------------------------------------------------------
    
-    // 自杀式攻击（指定玩家）
+    // 自杀式攻击（指定玩家单位）
     // @param easy 简单AI的等待时间
     // @param med 中等AI的等待时间
     // @param hard 疯狂AI的等待时间
@@ -2893,7 +2895,7 @@ native DebugS               takes string str                            returns 
     
     //--------------------------------------------------------------------------------------------------
    
-    // 自杀式攻击（指定坐标）
+    // 自杀式攻击（指定玩家坐标）
     // @param easy 简单AI的等待时间
     // @param med 中等AI的等待时间
     // @param hard 疯狂AI的等待时间
@@ -3051,7 +3053,7 @@ native DebugS               takes string str                            returns 
     //  AddSiege
     //============================================================================
     
-    // 添加攻城单位到进攻组
+    // 添加（默认攻击类型为）攻城单位到进攻组
     function AddSiege takes nothing returns nothing
         call SetAssaultGroup( 0, 9, SHADE       )
         call SetAssaultGroup( 0, 9, MEAT_WAGON  )
@@ -3246,21 +3248,21 @@ native DebugS               takes string str                            returns 
 
     //============================================================================
     
-    // 获取当前AI玩家的已用人口数
+    // 获取当前AI玩家的已使用人口数
     function FoodUsed takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_USED)
     endfunction
     
     //============================================================================
     
-    // 获取当前AI玩家的最大人口数（默认为人口建筑提供的数量），默认为100
+    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的数量）
     function FoodCap takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
     endfunction
     
     //============================================================================
     
-    // 获取当前AI玩家的可用人口数（人口建筑提供的人口数-已使用的人口数）
+    // 获取当前AI玩家的未使用人口数（可使用人口数-已使用人口数）
     function FoodSpace takes nothing returns integer
         return FoodCap() - FoodUsed()
     endfunction
@@ -3431,7 +3433,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 取消建造，运行后取消正在建造/训练/研究的单位/科技
+    // 取消一切，会取消正在建造/训练/研究的单位/科技
     function UnsummonAll takes nothing returns nothing
         local unit bldg
         loop

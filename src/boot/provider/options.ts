@@ -88,20 +88,37 @@ class Options {
     return this.configuration["info-style"] as boolean;
   }
 
+  // 加入工作空间缓存
+  private static workspacesCache: string[] = []
+  private static lastWorkspacesUpdate: number = 0
+  // 大于该值则使用缓存
+  private static triggerCount = 20
+
   public static get workspaces():string[] {
+    console.log('read space')
     if (vscode.workspace.workspaceFolders) {
-      return vscode.workspace.workspaceFolders.map((floder) => {
+      const lastUpdate = this.lastWorkspacesUpdate
+      const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
+      if (usingCache){
+        return this.workspacesCache
+      }
+      console.time('read space')
+      this.workspacesCache = vscode.workspace.workspaceFolders.map((floder) => {
         const options = {
             cwd: floder.uri.fsPath,
             ignore: readIgnoreRules(
                 path.resolve(floder.uri.fsPath, ".jassignore")
             ),
         };
+        console.log(options)
         return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
             .map((pattern) => glob.sync(pattern, options))
             .flat()
             .map((file) => path.resolve(floder.uri.fsPath, file));
       }).flat();
+      console.timeEnd('read space')
+      this.lastWorkspacesUpdate = Date.now()
+      return this.workspacesCache
     }
     return [];
   }
