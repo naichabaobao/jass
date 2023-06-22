@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 
 
 import { Types } from "./types";
-import { AllKeywords } from './keyword';
+import { AllKeywords } from '../jass/keyword';
 import { Options } from './options';
 import data, { DataGetter } from "./data";
 import { compare } from '../tool';

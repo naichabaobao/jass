@@ -1,3 +1,4 @@
+// 废弃了
 
 import { Position, Range } from "./ast";
 import { isNewLine } from "../tool";

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { DataGetter } from "./data";
-import { Keywords } from "./keyword";
+import { Keywords } from "../jass/keyword";
 
 
 vscode.languages.registerRenameProvider("jass", new class RenameProvider implements vscode.RenameProvider {

@@ -11,17 +11,18 @@ import * as vscode from "vscode";
 
 import { getParentTypes, StatementTypes } from "./types";
 import { getTypeDesc } from "./type-desc";
-import { AllKeywords, Keywords } from "./keyword";
+import { AllKeywords, Keywords } from "../jass/keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition, fieldFunctions, functionKey } from "./tool";
 import data, { DataGetter, parseContent } from "./data";
-import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program } from "../jass/ast";
+import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
+import { getKeywordDescription } from "./keyword-desc";
 
 
 
-
+/* 
 const typeItems: vscode.CompletionItem[] = [];
 StatementTypes.forEach(type => {
   const item = new vscode.CompletionItem(type, vscode.CompletionItemKind.Class);
@@ -29,12 +30,16 @@ StatementTypes.forEach(type => {
   item.documentation = getTypeDesc(type);
   typeItems.push(item);
 });
+*/
 
-const CodeItem = item("code", vscode.CompletionItemKind.Class, "句柄", `传递function`);
 
 const keywordItems: vscode.CompletionItem[] = [];
 (Options.isOnlyJass ? Keywords : AllKeywords).forEach(keyword => {
-  const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+  const item = completionItem(keyword, {
+    documentation: getKeywordDescription(keyword),
+    kind: vscode.CompletionItemKind.Keyword,
+    orderString: "!"
+  });
   keywordItems.push(item);
 });
 
@@ -102,95 +107,6 @@ function completionItem(label: string, option: CompletionItemOption = {
   }
 
   return item;
-}
-
-enum PositionType {
-  Unkown,
-  Returns,
-  LocalType,
-  Array,
-  ConstantType,
-  FuncNaming,
-  TakesFirstType,
-  TakesOtherType,
-  TakesNaming,
-  Call,
-  Set,
-  Point,
-  LocalNaming,
-  TakesKeyword,
-  ReturnKeyword,
-  Assign,
-  Args,
-  Requires
-}
-
-/**
- * 判断当前指标位置类型
- */
-class PositionTool {
-  private static ReturnsRegExp = new RegExp(/\breturns\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static LocalRegExp = new RegExp(/\blocal\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static LocalNamingRegExp = new RegExp(/\blocal\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+(?:array\s+)?[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static ConstantRegExp = new RegExp(/\bconstant\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static FuncNamingRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static TakeTypeFirstRegExp = new RegExp(/\btakes\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static TakeTypeOtherRegExp = new RegExp(/,\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static TakeNamingRegExp = new RegExp(/(?:,\s*|\btakes\s+)[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static CallRegExp = new RegExp(/\bcall\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static SetRegExp = new RegExp(/\bset\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static PointRegExp = new RegExp(/\b[a-zA-Z0-9]+[a-zA-Z0-9_]*\s*\.\s*[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static TakesKeywordRegExp = new RegExp(/\bfunction\s+[a-zA-Z0-9]+[a-zA-Z0-9_]*\s+[takes]*$/);
-  private static ReturnsKeywordRegExp = new RegExp(/\btakes\s+nothing\s+[a-zA-Z0-9]?[a-zA-Z0-9_]*$/);
-  private static RequiresKeywordRegExp = new RegExp(/\b(?:requires|needs|uses)\s+(?:optional\s+)?[a-zA-Z0-9]?[a-zA-Z0-9_]*(?:\s*,\s*(?:optional\s+)?[a-zA-Z0-9]?[a-zA-Z0-9_]*)*$/);
-
-
-  public static is(document: vscode.TextDocument, position: vscode.Position): PositionType {
-    const lineText = document.lineAt(position.line);
-    const inputText = lineText.text.substring(lineText.firstNonWhitespaceCharacterIndex, position.character);
-    if (this.ReturnsRegExp.test(inputText)) {
-      return PositionType.Returns;
-    } else if (this.LocalRegExp.test(inputText)) {
-      return PositionType.LocalType;
-    } else if (this.ConstantRegExp.test(inputText)) {
-      return PositionType.ConstantType;
-    } else if (this.ReturnsKeywordRegExp.test(inputText)) { // 
-      return PositionType.ReturnKeyword;
-    } else if (/\btakes\b/.test(inputText) && this.TakeTypeFirstRegExp.test(inputText)) {
-      return PositionType.TakesFirstType;
-    } else if (/\btakes\b/.test(inputText) && this.TakeTypeOtherRegExp.test(inputText)) {
-      return PositionType.TakesOtherType;
-    } else if (/\btakes\b/.test(inputText) && this.TakeNamingRegExp.test(inputText)) {
-      return PositionType.TakesNaming;
-    } else if (this.CallRegExp.test(inputText)) {
-      return PositionType.Call;
-    } else if (this.SetRegExp.test(inputText)) {
-      return PositionType.Set;
-    } else if (this.PointRegExp.test(inputText)) {
-      return PositionType.Point;
-    } else if (this.LocalNamingRegExp.test(inputText)) {
-      return PositionType.LocalNaming;
-    } else if (this.TakesKeywordRegExp.test(inputText)) {
-      return PositionType.TakesKeyword;
-    } else if (/\bfunction\b/.test(inputText) && /\btakes\b/.test(inputText) && inputText.indexOf("function") < inputText.indexOf("takes")) {
-      return PositionType.ReturnKeyword;
-    } else if (this.CallRegExp.test(inputText)) {
-      return PositionType.Call;
-    } else if ((() => {
-      const key = functionKey(document, position);
-      return key.isSingle();
-    })()) {
-      return PositionType.Args;
-    } else if (this.FuncNamingRegExp.test(inputText)) {
-      return PositionType.FuncNaming;
-    } else if (/^local\b/.test(inputText) && /(?<!=)=(?!=)/.test(inputText) && inputText.indexOf("=") < position.character) {
-      return PositionType.Assign;
-    } else if (this.RequiresKeywordRegExp.test(inputText)) {
-      return PositionType.Requires;
-    }
-
-    return PositionType.Unkown;
-  }
 }
 
 function item(label: string, kind: vscode.CompletionItemKind, documentation?: string, code?: string) {
@@ -346,6 +262,18 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
   items.push(...toItems<Global>(globalToCompletionItem, undefined, ...program.allGlobals(isCurrent)));
   items.push(...toItems(funcToCompletionItem, undefined, ...program.allFunctions(isCurrent)));
   items.push(...toItems(funcToCompletionItem, undefined, ...program.allNatives(isCurrent)));
+  // types
+  items.push(...program.types.map(type => {
+    return completionItem(type.name, {
+      detial: type.name,
+      documentation: type.getContents(),
+      source: program.source,
+      kind: vscode.CompletionItemKind.Class,
+      deprecated: type.hasDeprecated(),
+      orderString: "-",
+      code: type.origin
+    })
+  }));
   // define 提示
   items.push(...program.defines.map(define => {
     return completionItem(define.id.name, {
@@ -413,7 +341,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
 
     const fsPath = document.uri.fsPath;
 
-    items.push(...typeItems, ...keywordItems);
+    items.push(...keywordItems);
 
     new DataGetter().forEach((program, filePath) => {
       items.push(...getItems(program, filePath, compare(fsPath, filePath), position))

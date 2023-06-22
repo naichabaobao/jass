@@ -3,7 +3,7 @@ import { Position, Range } from "../jass/ast";
 import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError, LineComment} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 
-import {ZincKeywords} from "../provider/keyword";
+import {ZincKeywords} from "../jass/keyword";
 import {retainZincBlock} from "../tool";
 
 

@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as vscode from 'vscode';
 
-import { AllKeywords } from './keyword';
+import { AllKeywords } from '../jass/keyword';
 import { Types } from './types';
 import { Func, Library, Local, Member, Method, Program, Take } from "../jass/ast";
 import data, { DataGetter, parseContent } from "./data";

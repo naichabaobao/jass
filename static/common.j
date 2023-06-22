@@ -1,80 +1,145 @@
 
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
+
+// 引用计数的对象/代理
 type agent extends handle  // all reference counted objects
+// 事件
 type event extends agent  // a reference to an event registration
+// 玩家
 type player extends agent  // a single player reference
+// 实体/微件（任意有生命的可互动游戏对象，如单位、物品、可破坏物）
 type widget extends agent  // an interactive game object with life
+// 单位
 type unit extends widget  // a single unit reference
+// 可破坏物
 type destructable extends widget
+// 物品
 type item extends widget
+// 技能
 type ability extends agent
+// 魔法效果
 type buff extends ability
+// 玩家组
 type force extends agent
+// 单位组
 type group extends agent
+// 触发器
 type trigger extends agent
+// 触发器条件
 type triggercondition extends agent
+// 触发器动作
 type triggeraction extends handle
+// 计时器
 type timer extends agent
+// 点
 type location extends agent
+// 不规则区域
 type region extends agent
+// 矩形区域
 type rect extends agent
+// 条件表达式
 type boolexpr extends agent
+// 声音
 type sound extends agent
+// 条件方法
 type conditionfunc extends boolexpr
+// 过滤方法
 type filterfunc extends boolexpr
+// 单位池
 type unitpool extends handle
+// 物品池
 type itempool extends handle
+// 种族
 type race extends handle
+// 联盟类型
 type alliancetype extends handle
+// 优先种族
 type racepreference extends handle
+// 游戏状态
 type gamestate extends handle
+// 游戏整点状态
 type igamestate extends gamestate
+// 游戏浮点状态
 type fgamestate extends gamestate
+// 玩家状态
 type playerstate extends handle
+// 玩家得分
 type playerscore extends handle
+// 玩家游戏结果
 type playergameresult extends handle
+// 单位状态
 type unitstate extends handle
+// AI难度
 type aidifficulty extends handle
 
+// 事件ID
 type eventid extends handle
+// 游戏事件
 type gameevent extends eventid
+// 玩家事件
 type playerevent extends eventid
+// 玩家单位事件
 type playerunitevent extends eventid
+// 单位事件
 type unitevent extends eventid
+
+// 比较算符
 type limitop extends eventid
+// 实体/微件事件
 type widgetevent extends eventid
+// 对话框事件
 type dialogevent extends eventid
+// 单位类型
 type unittype extends handle
 
+// 游戏速度
 type gamespeed extends handle
+// "游戏难度（用于战役地图）
 type gamedifficulty extends handle
+// 游戏类型
 type gametype extends handle
+// 地图参数（部分参数初始值源自房间的玩家设置和高级选项设置）
 type mapflag extends handle
+// 游戏可见性
 type mapvisibility extends handle
+// 地图设置
 type mapsetting extends handle
+// 地图密度
 type mapdensity extends handle
+// 玩家控制者类型
 type mapcontrol extends handle
+// 
 type minimapicon extends handle
+// 玩家槽状态
 type playerslotstate extends handle
+// 
 type volumegroup extends handle
+// 镜头
 type camerafield extends handle
+
 type camerasetup extends handle
+// 玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）
 type playercolor extends handle
 type placement extends handle
 type startlocprio extends handle
 type raritycontrol extends handle
 type blendmode extends handle
 type texmapflags extends handle
+// 特效
 type effect extends agent
 type effecttype extends handle
 type weathereffect extends handle
 type terraindeformation extends handle
 type fogstate extends handle
 type fogmodifier extends agent
+// 对话框
 type dialog extends agent
+// 按钮
 type button extends agent
+// 任务
 type quest extends agent
+// 
 type questitem extends agent
 type defeatcondition extends agent
 type timerdialog extends agent

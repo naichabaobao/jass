@@ -680,6 +680,60 @@ export function runTextMacroReplace(runTextMacro:RunTextMacro, textMacros:TextMa
     return lineTexts;
 }
 
+export class BaseType extends Declaration {
+	public readonly name:string;
+
+	constructor(baseType:string) {
+		super();
+		this.name = baseType;
+	}
+
+	public get origin(): string {
+		return `type ${this.name}`;
+	}
+}
+
+export const BooleanBaseType = new BaseType("boolean");
+export const IntegerBaseType = new BaseType("integer");
+export const RealBaseType = new BaseType("real");
+export const StringBaseType = new BaseType("string");
+export const CodeBaseType = new BaseType("code");
+export const HandleBaseType = new BaseType("handle");
+
+export class Type  extends BaseType {
+	public ext:Type|BaseType;
+
+	public static readonly types:Type[] = [];
+
+	constructor(name:string, ext: Type|BaseType = HandleBaseType) {
+		super(name);
+		this.ext = ext;
+
+		Type.push(this);
+	}
+
+	public static push(type:Type) {
+		const typeIndex = Type.types.findIndex(t => {
+			return t.name == type.name;
+		});
+		if (typeIndex == -1) {
+			Type.types.push(type);
+		} else {
+			Type.types[typeIndex] = type;
+		}
+	}
+
+	public static find(typeName:string):Type|undefined {
+		return Type.types.find(type => {
+			return type.name == typeName;
+		});
+	}
+
+	public get origin(): string {
+		return `type ${this.name} extends ${this.ext.name}`;
+	}
+}
+
 class Program extends Declaration {
 
 
@@ -692,6 +746,7 @@ class Program extends Declaration {
 	 */
 	public filePath: string = "";
 
+	public readonly types: Type[] = [];
 	public readonly natives: Native[] = [];
 
 	public readonly functions: Func[] = [];

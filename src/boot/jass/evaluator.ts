@@ -1,5 +1,7 @@
 // 尝试性文件，目前并不参与项目中
-import { isKeyword } from "../provider/keyword";
+// 废弃了
+
+import { isKeyword } from "./keyword";
 import {  Position, Range } from "./ast";
 import { Tokenize, Tokenizer } from "./tokens";
 

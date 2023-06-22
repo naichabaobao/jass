@@ -1,9 +1,9 @@
-import { isKeyword, Keywords, canCjassReturn } from "../provider/keyword";
+import { canCjassReturn } from "../jass/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine } from "./ast";
-import { Token, Tokenize, tokenize, Tokenizer } from "./tokens";
+import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine, Type } from "./ast";
+import { Token,  tokenize, Tokenizer } from "./tokens";
 
 
 /**
@@ -218,6 +218,32 @@ function parseRunTextMacro(text: string, runTextMacro: RunTextMacro) {
         }
     }
 }
+
+function parseType(lineText: ReplaceableLineText):Type|undefined {
+
+    
+    const tokens = tokenize(lineText.replaceText()).map((token) => {
+        token.line = lineText.lineNumber();
+        return token;
+    });
+    let type : Type|undefined;
+    if (tokens.length >= 2) {
+        if (tokens[0].isId() && tokens[0].value == "type" && tokens[1].isId()) {
+            type = new Type(tokens[1].value);
+            if (tokens.length >= 4) {
+                if (tokens[2].isId() && tokens[2].value == "extends" && tokens[3].isId()) {
+                    const extName:string = tokens[3].value;
+                    const extType = Type.find(extName);
+                    if (extType) {
+                        type.ext = extType;
+                    }
+                }
+            }
+        }
+    }
+    return type;
+}
+
 
 function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Method)) {
 
@@ -574,6 +600,10 @@ function isMemberStart(lineText: ReplaceableLineText): boolean {
 }
 function isNativeStart(lineText: ReplaceableLineText): boolean {
     return /^\s*(?:(constant)\s+)*native\b/.test(lineText.replaceText());
+}
+
+function isTypeStart(lineText: ReplaceableLineText): boolean {
+    return /^\s*type\b/.test(lineText.replaceText());
 }
 
 interface ParserConfig {
@@ -1175,6 +1205,17 @@ class Parser {
                 }
             });
         }
+        function handleTypeBlock(lineText: ReplaceableLineText, types: Type[], lineComments: LineComment[]) {
+            const type = parseType(lineText);
+
+            if (type) {
+                type.loc.from(lineText);
+    
+                type.lineComments.push(...lineComments);
+                types.push(type);
+            }
+
+        }
         function handleNativeBlock(lineText: ReplaceableLineText, natives: Native[], lineComments: LineComment[]) {
             const native = new Native();
 
@@ -1314,12 +1355,14 @@ class Parser {
             librarys?: Library[] | null,
             structs?: Struct[] | null,
             natives?: Native[] | null,
+            types?: Type[] | null,
         } = {
                 globals: null,
                 functions: null,
                 librarys: null,
                 structs: null,
-                natives: null
+                natives: null,
+                types: null,
             }) {
             const lineComments: LineComment[] = [];
             blocks.forEach((x) => {
@@ -1330,6 +1373,9 @@ class Parser {
                         lineComments.push(lineComment);
                     } else if (collect.natives && isNativeStart(x)) {
                         handleNativeBlock(x, collect.natives, lineComments);
+                        lineComments.length = 0;
+                    } else if (collect.types && isTypeStart(x)) {
+                        handleTypeBlock(x, collect.types, lineComments);
                         lineComments.length = 0;
                     } else {
                         lineComments.length = 0;
@@ -1358,7 +1404,8 @@ class Parser {
             functions: this.jassProgram.functions,
             librarys: this.jassProgram.librarys,
             structs: this.jassProgram.structs,
-            natives: this.jassProgram.natives
+            natives: this.jassProgram.natives,
+            types: this.jassProgram.types,
         });
 
         return this.jassProgram;
@@ -1586,8 +1633,10 @@ export function findIncludes(content:string) {
     return includes;
 }
 
-if (true) {
+if (false) {
     const program = new Parser(`
+    type bbb
+    type aaaaaaa extends bbb
     #define fn function
     fn aaa takes nothing returns nothing
     endfunction
@@ -1595,6 +1644,8 @@ if (true) {
 
     console.log(program.defines);
     console.log(program.functions);
+    console.log(program.types);
+    console.log(program.source);
     
 }
 
