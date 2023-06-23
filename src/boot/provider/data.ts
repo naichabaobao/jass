@@ -31,8 +31,9 @@ class DataMap {
   private map:Map<string, Program> = new Map();
 
   private generateKey(originFilePath:string):string {
-    const parsed = path.parse(originFilePath);
-    return `${parsed.base}-${parsed.dir}-${parsed.name}-${parsed.ext}`;
+    return path.resolve(originFilePath);
+    // const parsed = path.parse(originFilePath);
+    // return `${parsed.base}-${parsed.dir}-${parsed.name}-${parsed.ext}`;
   }
 
   public put(key: string, value: Program) {

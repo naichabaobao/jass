@@ -115,23 +115,33 @@ type minimapicon extends handle
 type playerslotstate extends handle
 // 
 type volumegroup extends handle
-// 镜头
+// 镜头属性
 type camerafield extends handle
-
+// 镜头
 type camerasetup extends handle
 // 玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）
 type playercolor extends handle
+// 出生点
 type placement extends handle
+// 出生点分布优先权
 type startlocprio extends handle
+// 罕见动画控制
 type raritycontrol extends handle
+// 混合模型
 type blendmode extends handle
+// 纹理贴图标志
 type texmapflags extends handle
 // 特效
 type effect extends agent
+// 特效类型
 type effecttype extends handle
+// 天气特效
 type weathereffect extends handle
+// 地形变形
 type terraindeformation extends handle
+// 迷雾状态
 type fogstate extends handle
+// 可见度修整器
 type fogmodifier extends agent
 // 对话框
 type dialog extends agent
@@ -139,31 +149,55 @@ type dialog extends agent
 type button extends agent
 // 任务
 type quest extends agent
-// 
+// 任务要求
 type questitem extends agent
+// 任务失败条件
 type defeatcondition extends agent
+// 计时器窗口
 type timerdialog extends agent
+// 排行榜
 type leaderboard extends agent
+// 多面板
 type multiboard extends agent
+// 多面板项目
 type multiboarditem extends agent
+// 可追踪物
 type trackable extends agent
+// 游戏缓存
 type gamecache extends agent
+// 版本（混乱之治 或 冰封王座）
 type version extends handle
+// 物品类型
 type itemtype extends handle
+// 物品类型
 type texttag extends handle
+// 攻击类型
 type attacktype extends handle
+// 伤害类型
 type damagetype extends handle
+// 武器类型
 type weapontype extends handle
+// 声音类型
 type soundtype extends handle
+// 闪电效果
 type lightning extends handle
+// 路径类型
 type pathingtype extends handle
+// 鼠标按键类型
 type mousebuttontype extends handle
+// 动画类型
 type animtype extends handle
+// 子动画类型
 type subanimtype extends handle
+// 图像
 type image extends handle
+// 地表纹理变化
 type ubersplat extends handle
+// 哈希表
 type hashtable extends 
+// 框架/UI
 type framehandle extends handle
+// 框架/UI锚点类型
 type originframetype extends handle
 type framepointtype extends handle
 type textaligntype extends handle
