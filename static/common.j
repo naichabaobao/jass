@@ -95,7 +95,7 @@ type unittype extends handle
 
 // 游戏速度
 type gamespeed extends handle
-// "游戏难度（用于战役地图）
+// 游戏难度（用于战役地图）
 type gamedifficulty extends handle
 // 游戏类型
 type gametype extends handle
@@ -109,11 +109,11 @@ type mapsetting extends handle
 type mapdensity extends handle
 // 玩家控制者类型
 type mapcontrol extends handle
-// 
+// 迷你小地图图标（用于任务目标标识）
 type minimapicon extends handle
 // 玩家槽状态
 type playerslotstate extends handle
-// 
+// 声音频道
 type volumegroup extends handle
 // 镜头属性
 type camerafield extends handle
@@ -169,7 +169,7 @@ type gamecache extends agent
 type version extends handle
 // 物品类型
 type itemtype extends handle
-// 物品类型
+// 文本标签
 type texttag extends handle
 // 攻击类型
 type attacktype extends handle
@@ -199,9 +199,13 @@ type hashtable extends
 type framehandle extends handle
 // 框架/UI锚点类型
 type originframetype extends handle
+// 框架/UI点类型
 type framepointtype extends handle
+// 文本高亮类型
 type textaligntype extends handle
+// 框架/UI事件类型
 type frameeventtype extends handle
+// 按键类型
 type oskeytype extends handle
 type abilityintegerfield extends handle
 type abilityrealfield extends handle
@@ -227,14 +231,21 @@ type itemintegerfield extends handle
 type itemrealfield extends handle
 type itembooleanfield extends handle
 type itemstringfield extends handle
+// 移动类型
 type movetype extends handle
+// 目标类型
 type targetflag extends handle
+// 装甲类型
 type armortype extends handle
+// 英雄属性
 type heroattribute extends handle
+// 防御类型
 type defensetype extends handle
+// 生命恢复类型
 type regentype extends handle
 type unitcategory extends handle
 type pathingflag extends handle
+// 命令按钮特效
 type commandbuttoneffect extends handle
 
 // 转换整数成种族
@@ -337,7 +348,7 @@ constant native ConvertOriginFrameType takes integer i returns originframetype
 constant native ConvertFramePointType takes integer i returns framepointtype
 // 转换整数成文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
-// 转换整数成框架事件类型
+// 转换整数成框架/UI事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
 // 转换整数成按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
