@@ -5,22 +5,23 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from '../jass/keyword';
 import { Types } from './types';
-import { Func, Library, Local, Member, Method, Program, Take } from "../jass/ast";
+import { Func, Library, Local, Member, Method, Node, Program, Range, Rangebel, Take } from "../jass/ast";
 import data, { DataGetter, parseContent } from "./data";
-import { Rangebel, Global, Native, Struct} from '../jass/ast';
+import { Global, Native, Struct} from '../jass/ast';
 import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
 import { tokenize } from '../jass/tokens';
-import { TextMacroDefine } from '../jass/ast';
+import { TextMacroDefine, } from '../jass/ast';
 
+// type T =  keyof Rangebel;
 
-const toVsPosition = (any: De) => {
+const toVsPosition = <A extends Node>(any:  A) => {
   const range = new vscode.Range(any.loc.start.line, any.loc.start.position, any.loc.end.line, any.loc.end.position);
   return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
 
-type De = Native|Func|Method|Library|Struct|Member|Global|Local|Take|TextMacroDefine;
+// type De = Native|Func|Method|Library|Struct|Member|Global|Local|Take|TextMacroDefine;
 
 vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
 
@@ -51,10 +52,10 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       return null;
     }
 
-    const type = Types.find(type => type === key);
-    if (type) {
-      return null;
-    }
+    // const type = Types.find(type => type === key);
+    // if (type) {
+    //   return null;
+    // }
     console.log(key);
 
     const fsPath = document.uri.fsPath;
@@ -80,6 +81,11 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(member));
           locations.push(location);
         });
+      }
+      const type = program.types.find(type => type.name == key);
+      if (type) {
+        const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(type));
+        locations.push(location);
       }
       program.getNameGlobal(key).forEach(global => {
         const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(global));

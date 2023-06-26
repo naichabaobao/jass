@@ -90,7 +90,7 @@ export {
 
 
 
-class Node implements Rangebel  { 
+export class Node implements Rangebel  { 
 	public readonly loc: Range = Range.default(); 
 }
 
