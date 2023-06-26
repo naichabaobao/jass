@@ -19,7 +19,7 @@ native DebugS               takes string str                            returns 
     // 查询AI脚本是否允许显示调试文本，以供开发者DEBUG
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
-    // 在1.29及以上版本中，返回的是0~23任意一个整数，以下则是0~11
+    // 在1.29及以上版本中，返回的是0 ~ 23任意一个整数，以下则是0 ~ 11
     // 注：玩家1是0
     native GetAiPlayer          takes nothing                               returns integer
     // 获取升级英雄的单位类型
@@ -315,11 +315,11 @@ native DebugS               takes string str                            returns 
     native CommandsWaiting      takes nothing                               returns integer
     // 获取最新的命令类型
     // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
-    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
+    // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastCommand       takes nothing                               returns integer
     // 获取最新命令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
     // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据
-    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
+    // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
     // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
     native PopLastCommand       takes nothing                               returns nothing
@@ -3449,7 +3449,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     
     // 升级后自动学习技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
-    // 该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
+    // 该代码在1.30中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
     function SkillArrays takes nothing returns integer
         local integer level = GetHeroLevelAI()
     

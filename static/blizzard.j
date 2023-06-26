@@ -2846,13 +2846,13 @@ function GetLastCreatedLightningBJ takes nothing returns lightning
 endfunction
 
 
-// 获取特效路径（指定特效类型和索引）
+// 获取技能音效路径（指定技能、声音类型和索引）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
 
 
-// 获取特效声音路径（指定技能和声音类型）
+// 获取技能音效路径（指定技能和声音类型）
 function GetAbilitySoundBJ takes integer abilcode, soundtype t returns string
     return GetAbilitySoundById(abilcode, t)
 endfunction

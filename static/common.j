@@ -1691,7 +1691,7 @@ globals
 	
 	// Effect API constants
 	
-	// 特效类型 特效
+	// 特效类型 点目标特效
 	constant effecttype EFFECT_TYPE_EFFECT = ConvertEffectType(0)
 	// 特效类型 目标特效
 	constant effecttype EFFECT_TYPE_TARGET = ConvertEffectType(1)
@@ -1701,7 +1701,7 @@ globals
 	constant effecttype EFFECT_TYPE_SPECIAL = ConvertEffectType(3)
 	// 特效类型 区域特效
 	constant effecttype EFFECT_TYPE_AREA_EFFECT = ConvertEffectType(4)
-	// 特效类型 弹道特效
+	// 特效类型 弹道/投射物特效
 	constant effecttype EFFECT_TYPE_MISSILE = ConvertEffectType(5)
 	// 特效类型 闪电特效
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
@@ -7325,13 +7325,13 @@ native GetLightningColorG takes lightning whichBolt returns real
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电效果颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取特效路径(指定技能字串符和索引)
+// 获取技能特效路径(指定技能字串符和索引)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
-// 获取特效路径(指定技能ID和索引)
+// 获取技能特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取特效声音路径(指定技能字串符和声音类型)
+// 获取技能音效路径(指定技能字串符和声音类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
-// 获取特效声音路径(指定技能ID和声音类型)
+// 获取技能音效路径(指定技能ID和声音类型)
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
