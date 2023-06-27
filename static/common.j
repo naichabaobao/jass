@@ -4617,27 +4617,27 @@ native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位类型的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定矩形区域的的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
@@ -4645,7 +4645,7 @@ native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation
 // @deprecated
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
