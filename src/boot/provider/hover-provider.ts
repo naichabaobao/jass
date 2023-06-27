@@ -10,11 +10,11 @@ import { Options } from './options';
 import data, { DataGetter } from "./data";
 import { compare } from '../tool';
 import { convertPosition } from './tool';
-import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine } from '../jass/ast';
+import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine, Declaration, Type } from '../jass/ast';
 import { getTypeDesc } from './type-desc';
 import { tokenize } from '../jass/tokens';
 
-type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine;
+type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine|Type;
 
 function toHoverlo(de: Decl, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
@@ -79,13 +79,13 @@ class HoverProvider implements vscode.HoverProvider {
       return null;
     }
 
-    const type = Types.find(type => type === key);
-    if (type) {
-      const markdownString = new vscode.MarkdownString().appendCodeblock(type);
-      markdownString.appendText("\n");
-      markdownString.appendText(getTypeDesc(type));
-      return new vscode.Hover(markdownString);
-    }
+    // const type = Types.find(type => type === key);
+    // if (type) {
+    //   const markdownString = new vscode.MarkdownString().appendCodeblock(type);
+    //   markdownString.appendText("\n");
+    //   markdownString.appendText(getTypeDesc(type));
+    //   return new vscode.Hover(markdownString);
+    // }
     console.info(key);
 
     const fsPath = document.uri.fsPath;
@@ -115,6 +115,10 @@ class HoverProvider implements vscode.HoverProvider {
         });
         
       }
+      program.getNameType(key).forEach(type => {
+        const ms = toHoverlo(type, isCurrent, filePath);
+        hovers.push(ms);
+      });
       program.getNameGlobal(key).forEach(global => {
         const ms = toHoverlo(global, isCurrent, filePath);
         hovers.push(ms);

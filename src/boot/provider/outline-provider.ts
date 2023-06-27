@@ -12,7 +12,16 @@ function genSymbols(program:Program) {
         } else {
             selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
         }
-        symbols.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
+        symbols.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
+            if (global.isArray) {
+                return vscode.SymbolKind.Array;
+            } 
+            if (global.isConstant) {
+                return vscode.SymbolKind.Constant;
+            } else {
+                return vscode.SymbolKind.Variable;
+            }
+        })(), range, selectRange));
     });
     program.functions.forEach((func) => {
         const range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
@@ -33,7 +42,16 @@ function genSymbols(program:Program) {
             } else {
                 selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
             }
-            funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
+            funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
+                if (global.isArray) {
+                    return vscode.SymbolKind.Array;
+                } 
+                if (global.isConstant) {
+                    return vscode.SymbolKind.Constant;
+                } else {
+                    return vscode.SymbolKind.Variable;
+                }
+            })(), range, selectRange));
         });
         func.locals.forEach((local) => {
             const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
@@ -111,7 +129,16 @@ function genSymbols(program:Program) {
             } else {
                 selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
             }
-            librarySymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
+            librarySymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
+                if (global.isArray) {
+                    return vscode.SymbolKind.Array;
+                } 
+                if (global.isConstant) {
+                    return vscode.SymbolKind.Constant;
+                } else {
+                    return vscode.SymbolKind.Variable;
+                }
+            })(), range, selectRange));
         });
         library.functions.forEach((func) => {
             const range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
@@ -132,7 +159,16 @@ function genSymbols(program:Program) {
                 } else {
                     selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
                 }
-                funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
+                funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
+                    if (global.isArray) {
+                        return vscode.SymbolKind.Array;
+                    } 
+                    if (global.isConstant) {
+                        return vscode.SymbolKind.Constant;
+                    } else {
+                        return vscode.SymbolKind.Variable;
+                    }
+                })(), range, selectRange));
             });
             func.locals.forEach((local) => {
                 const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
@@ -196,10 +232,20 @@ function genSymbols(program:Program) {
             });
         });
     });
+    program.types.forEach((type) => {
+        const range = new vscode.Range(type.loc.start.line, type.loc.start.position, type.loc.end.line, type.loc.end.position);
+        let selectRange:vscode.Range = new vscode.Range(type.loc.start.line, type.loc.start.position, type.loc.end.line, type.loc.end.position);
+        symbols.push(new vscode.DocumentSymbol(type.name, type.getContents().join(" "), vscode.SymbolKind.Object, range, selectRange));
+    });
     return symbols;
 }
 
-async function getSymbols(document: vscode.TextDocument):Promise<Program> {
+/**
+ * 获取当前文档的Program对象，此方法通过计时器实现的
+ * @param document 
+ * @returns 
+ */
+async function getCurrentDocumentProgram(document: vscode.TextDocument):Promise<Program> {
     let program = new DataGetter().get(document.uri.fsPath);
     await setInterval(async () => {
         // @ts-ignore
@@ -218,7 +264,7 @@ async function getSymbols(document: vscode.TextDocument):Promise<Program> {
 class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     async provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
 
-        const program = await getSymbols(document);
+        const program = await getCurrentDocumentProgram(document);
         console.info("outline");
         return genSymbols(program);
     }

@@ -915,6 +915,9 @@ class Program extends Declaration {
 		return method ? method : null;
 	}
 
+	public getNameType(name: string):Type[] {
+		return this.types.filter(type => type.name == name);
+	}
 	public getNameFunction(name: string):(Func)[] {
 		return this.allFunctions(true).filter((func) => func.name == name) || [];
 	}
