@@ -20,7 +20,7 @@ native DebugS               takes string str                            returns 
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
     // 在1.29及以上版本中，返回的是0 ~ 23任意一个整数，以下则是0 ~ 11
-    // 注：玩家1是0
+    // 注：编号从0开始，级玩家1编号为0
     native GetAiPlayer          takes nothing                               returns integer
     // 获取升级英雄的单位类型
     // 英雄升级技能相关函数 
