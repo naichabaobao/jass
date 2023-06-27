@@ -5762,13 +5762,13 @@ constant native GetUnitTypeId takes unit whichUnit returns integer
 constant native GetUnitRace takes unit whichUnit returns race
 // 获取指定单位名字
 constant native GetUnitName takes unit whichUnit returns string
-// 获取指定单位 使用的人口数量(单个)
+// 获取指定单位 占用的人口数量(单个)
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
 // 获取指定单位 提供的人口数量(单个)
 constant native GetUnitFoodMade takes unit whichUnit returns integer
 // 获取指定单位类型 提供的人口数量(单个)
 constant native GetFoodMade takes integer unitId returns integer
-// 获取指定单位类型 使用的人口数量(单个)
+// 获取指定单位类型 占用的人口数量(单个)
 constant native GetFoodUsed takes integer unitId returns integer
 // 允许/禁止 指定单位占用人口 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
