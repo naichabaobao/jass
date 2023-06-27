@@ -2205,8 +2205,8 @@ function GetCurrentCameraBoundsMapRectBJ takes nothing returns rect
     return Rect(GetCameraBoundMinX(), GetCameraBoundMinY(), GetCameraBoundMaxX(), GetCameraBoundMaxY())
 endfunction
 
-
 // Query the initial camera bounds, as defined at map init.
+
 // 获取初始游戏时的镜头范围
 // 会生成区域，用完请注意排泄
 function GetCameraBoundsMapRect takes nothing returns rect
@@ -2400,7 +2400,7 @@ function GetHandleIdBJ takes handle h returns integer
     return GetHandleId(h)
 endfunction
 
-// 字符串转哈希
+// 字符串转换成哈希
 function StringHashBJ takes string s returns integer
     return StringHash(s)
 endfunction
@@ -2462,7 +2462,7 @@ function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichP
 endfunction
 
 
-// 玩家按下键盘事件
+// 玩家按下方向键事件
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
     if (keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
@@ -2641,7 +2641,7 @@ function TriggerRegisterUpgradeCommandEventBJ takes trigger trig, integer techId
     return TriggerRegisterUpgradeCommandEvent(trig, techId)
 endfunction
 
-// 命令事件
+// 发布命令事件
 function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order returns event
     return TriggerRegisterCommandEvent(trig, 0, order)
 endfunction
@@ -2846,26 +2846,26 @@ function GetLastCreatedLightningBJ takes nothing returns lightning
 endfunction
 
 
-// 获取特效路径（指定特效类型和索引）
+// 获取技能音效路径（指定技能、声音类型和索引）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
 
 
-// 获取特效声音路径（指定技能和声音类型）
+// 获取技能音效路径（指定技能和声音类型）
 function GetAbilitySoundBJ takes integer abilcode, soundtype t returns string
     return GetAbilitySoundById(abilcode, t)
 endfunction
 
 
 
-// 获取悬崖高度
+// 获取悬崖高度（指定点）
 function GetTerrainCliffLevelBJ takes location where returns integer
     return GetTerrainCliffLevel(GetLocationX(where), GetLocationY(where))
 endfunction
 
 
-// 获取地形类型/地表纹理
+// 获取地形类型/地表纹理（指定点）
 function GetTerrainTypeBJ takes location where returns integer
     return GetTerrainType(GetLocationX(where), GetLocationY(where))
 endfunction
@@ -2877,7 +2877,7 @@ function GetTerrainVarianceBJ takes location where returns integer
 endfunction
 
 
-// 设置地形类型/地表纹理
+// 设置地形类型/地表纹理（指定点）
 function SetTerrainTypeBJ takes location where, integer terrainType, integer variation, integer area, integer shape returns nothing
     call SetTerrainType(GetLocationX(where), GetLocationY(where), terrainType, variation, area, shape)
 endfunction
@@ -2889,7 +2889,7 @@ function IsTerrainPathableBJ takes location where, pathingtype t returns boolean
 endfunction
 
 
-// 启用/禁用 路径类型
+// 启用/禁用 路径类型（指定点）
 function SetTerrainPathableBJ takes location where, pathingtype t, boolean flag returns nothing
     call SetTerrainPathable(GetLocationX(where), GetLocationY(where), t, flag)
 endfunction
@@ -3656,37 +3656,37 @@ endfunction
 //*
 //***************************************************************************
 
-// 创建技能命令特效按钮
+// 创建技能按钮特效
 function CreateCommandButtonEffectBJ takes integer abilityId, string order returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(abilityId, order)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建技能特效按钮（'Aque'）
+// 创建技能按钮特效（'Aque'）
 function CreateTrainCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect('Aque', UnitId2String(unitId))
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建科技特效按钮
+// 创建科技按钮特效
 function CreateUpgradeCommandButtonEffectBJ takes integer techId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateUpgradeCommandButtonEffect(techId)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建命令特效按钮
+// 创建技能按钮特效
 function CreateCommonCommandButtonEffectBJ takes string order returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(0, order)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建学习技能特效按钮
+// 创建学习技能按钮特效
 function CreateLearnCommandButtonEffectBJ takes integer abilityId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateLearnCommandButtonEffect(abilityId)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建建造/训练单位特效按钮
+// 创建建造/训练单位按钮特效
 function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
 	local race r = GetPlayerRace(GetLocalPlayer())
 	local integer abilityId
@@ -3705,7 +3705,7 @@ function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbu
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 获取最后创建的特效按钮
+// 获取最后创建的按钮特效
 function GetLastCreatedCommandButtonEffectBJ takes nothing returns commandbuttoneffect
     return bj_lastCreatedCommandButtonEffect
 endfunction
@@ -8122,7 +8122,7 @@ endfunction
 //   - Reset the camera smoothing factor
 
 // 切换影片模式(指定玩家组)
-// @param interfaceFadeTime淡出时间
+// @param interfaceFadeTime 淡出时间
 // 注意：某些影响会作用于所有玩家
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
     // If the game hasn't started yet, perform interface fades immediately
@@ -10472,7 +10472,7 @@ endfunction
 //***************************************************************************
 
 // 选择并运行对战AI，用于多个AI脚本时随机分配不同的AI
-// @params1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
+// @param s1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
 
@@ -12274,22 +12274,22 @@ endfunction
 
 // Unit Weapon
 
-// 设置单位武器布尔值域
+// 设置武器布尔值域
 function BlzSetUnitWeaponBooleanFieldBJ takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置单位武器整数域
+// 设置武器整数域
 function BlzSetUnitWeaponIntegerFieldBJ takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置单位武器实数域
+// 设置武器实数域
 function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置单位武器字串符域
+// 设置武器字串符域
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction

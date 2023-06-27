@@ -19,8 +19,8 @@ native DebugS               takes string str                            returns 
     // 查询AI脚本是否允许显示调试文本，以供开发者DEBUG
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
-    // 在1.29及以上版本中，返回的是0~23任意一个整数，以下则是0~11
-    // 注：玩家1是0
+    // 在1.29及以上版本中，返回的是0 ~ 23任意一个整数，以下则是0 ~ 11
+    // 注：编号从0开始，级玩家1编号为0
     native GetAiPlayer          takes nothing                               returns integer
     // 获取升级英雄的单位类型
     // 英雄升级技能相关函数 
@@ -173,8 +173,10 @@ native DebugS               takes string str                            returns 
     // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取
     native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
     // 开始获取敌人主基地
+    // 使用 WaitGetEnemyBase 停止获取，使用 GetEnemyBase 捕获获取到的单位
     native StartGetEnemyBase    takes nothing                               returns nothing
     // 判断是否获取到敌人主基地
+    // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
     native GetEnemyBase         takes nothing                               returns unit
@@ -315,11 +317,11 @@ native DebugS               takes string str                            returns 
     native CommandsWaiting      takes nothing                               returns integer
     // 获取最新的命令类型
     // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
-    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
+    // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastCommand       takes nothing                               returns integer
     // 获取最新命令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
     // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据
-    // 需灵活运用，比如设定1类型为进攻命令，数据0~N代表不同的攻击点，2类型为防守命令，数据0~N代表不同的防御点
+    // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
     // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
     native PopLastCommand       takes nothing                               returns nothing
@@ -1728,7 +1730,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 继续训练/建造/研究指定类型的单位/科技
-// 如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
+    // 如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
     function SetBuildNext takes integer qty, integer unitid returns nothing
         local integer has = GetUnitCount(unitid)
         if has >= qty then
@@ -1993,9 +1995,9 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 根据人口占用情况训练指定单位类型
-    // @param food 建议使用当前已使用人口
-    // @param use1 单位类型1的人口占用（单个）
-    // @param use2 单位类型2的人口占用（单个）
+    // @param food 建议使用当前已使用的人口数
+    // @param use1 单位类型1占用的人口数（单个）
+    // @param use2 单位类型占用的人口数（单个）
     // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
     // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
     function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
@@ -3255,7 +3257,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的数量）
+    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的总人口数）
     function FoodCap takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
     endfunction
@@ -3269,8 +3271,8 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 获取当前AI玩家人口建筑提供的人口数量
-    // 公式：已完成的人口建筑数量（默认单位类型为racial_farm）*该建筑提供的人口数 + 已完成的城镇数量（单位类型用base指定）*该建筑提供的人口数
+    // 获取当前AI玩家人口建筑提供的人口数
+    // 公式：已建造完成的人口建筑数量（默认单位类型为racial_farm）*该建筑提供的人口数 + 已完成的城镇数量（单位类型用base指定）*该建筑提供的人口数
     function FoodAvail takes integer base returns integer
         return GetFoodMade(racial_farm) * TownCount(racial_farm) + GetFoodMade(base) * TownCount(base)
     endfunction
@@ -3449,7 +3451,7 @@ native DebugS               takes string str                            returns 
     //============================================================================
     
     // 升级后自动学习技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
-    // 该代码在1.30~1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
+    // 该代码在1.30中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
     function SkillArrays takes nothing returns integer
         local integer level = GetHeroLevelAI()
     

@@ -95,7 +95,7 @@ type unittype extends handle
 
 // 游戏速度
 type gamespeed extends handle
-// "游戏难度（用于战役地图）
+// 游戏难度（用于战役地图）
 type gamedifficulty extends handle
 // 游戏类型
 type gametype extends handle
@@ -109,11 +109,11 @@ type mapsetting extends handle
 type mapdensity extends handle
 // 玩家控制者类型
 type mapcontrol extends handle
-// 
+// 小地图（任务）图标
 type minimapicon extends handle
 // 玩家槽状态
 type playerslotstate extends handle
-// 
+// 声音频道
 type volumegroup extends handle
 // 镜头属性
 type camerafield extends handle
@@ -169,7 +169,7 @@ type gamecache extends agent
 type version extends handle
 // 物品类型
 type itemtype extends handle
-// 物品类型
+// 文本标签
 type texttag extends handle
 // 攻击类型
 type attacktype extends handle
@@ -199,42 +199,79 @@ type hashtable extends
 type framehandle extends handle
 // 框架/UI锚点类型
 type originframetype extends handle
+// 框架/原生UI相对锚点类型
 type framepointtype extends handle
+// 文本高亮类型
 type textaligntype extends handle
+// 框架/UI事件类型
 type frameeventtype extends handle
+// 按键类型
 type oskeytype extends handle
+// 技能整数域
 type abilityintegerfield extends handle
+// 技能实数域
 type abilityrealfield extends handle
+// 技能布尔值域
 type abilitybooleanfield extends handle
+// 技能字符串域
 type abilitystringfield extends handle
+// 技能随等级改变的整数域
 type abilityintegerlevelfield extends handle
+// 技能随等级改变的实数域
 type abilityreallevelfield extends handle
+// 技能随等级改变的布尔值域
 type abilitybooleanlevelfield extends handle
+// 技能随等级改变的字符串域
 type abilitystringlevelfield extends handle
+// 技能随等级改变的整数数组域
 type abilityintegerlevelarrayfield extends handle
+// 技能随等级改变的实数数组域
 type abilityreallevelarrayfield extends handle
+// 技能随等级改变的布尔值数组域
 type abilitybooleanlevelarrayfield extends handle
+// 技能随等级改变的字符串数组域
 type abilitystringlevelarrayfield extends handle
+// 单位整数域
 type unitintegerfield extends handle
+// 单位实数域
 type unitrealfield extends handle
+// 单位布尔值域
 type unitbooleanfield extends handle
+// 单位字符串域
 type unitstringfield extends handle
+// 攻击整数域
 type unitweaponintegerfield extends handle
+// 攻击实数域
 type unitweaponrealfield extends handle
+// 攻击布尔值域
 type unitweaponbooleanfield extends handle
+// 攻击字符串域
 type unitweaponstringfield extends handle
+// 物品整数域
 type itemintegerfield extends handle
+// 物品实数域
 type itemrealfield extends handle
+// 物品布尔值域
 type itembooleanfield extends handle
+// 物品字符串域
 type itemstringfield extends handle
+// 移动类型
 type movetype extends handle
+// 目标类型
 type targetflag extends handle
+// 装甲类型
 type armortype extends handle
+// 英雄属性
 type heroattribute extends handle
+// 防御类型
 type defensetype extends handle
+// 生命恢复类型
 type regentype extends handle
+// 单位类别
 type unitcategory extends handle
+// 放置要求
 type pathingflag extends handle
+// 技能按钮特效
 type commandbuttoneffect extends handle
 
 // 转换整数成种族
@@ -337,7 +374,7 @@ constant native ConvertOriginFrameType takes integer i returns originframetype
 constant native ConvertFramePointType takes integer i returns framepointtype
 // 转换整数成文本对齐类型
 constant native ConvertTextAlignType takes integer i returns textaligntype
-// 转换整数成框架事件类型
+// 转换整数成框架/UI事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
 // 转换整数成按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
@@ -433,13 +470,13 @@ constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
-// 注：玩家1是0
+// 注：编号从0开始，即玩家1编号是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家的玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
-// 注：玩家1是0
+// 注：编号从0开始，即玩家1编号是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 获取最大玩家槽数量，包括中立玩家
@@ -450,13 +487,13 @@ constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
-// 注：玩家1是0
+// 注：编号从0开始，即玩家1编号是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家的玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
-// 注：玩家1是0
+// 注：编号从0开始，即玩家1编号是0
 // 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
@@ -1691,7 +1728,7 @@ globals
 	
 	// Effect API constants
 	
-	// 特效类型 特效
+	// 特效类型 点目标特效
 	constant effecttype EFFECT_TYPE_EFFECT = ConvertEffectType(0)
 	// 特效类型 目标特效
 	constant effecttype EFFECT_TYPE_TARGET = ConvertEffectType(1)
@@ -1701,7 +1738,7 @@ globals
 	constant effecttype EFFECT_TYPE_SPECIAL = ConvertEffectType(3)
 	// 特效类型 区域特效
 	constant effecttype EFFECT_TYPE_AREA_EFFECT = ConvertEffectType(4)
-	// 特效类型 弹道特效
+	// 特效类型 弹道/投射物特效
 	constant effecttype EFFECT_TYPE_MISSILE = ConvertEffectType(5)
 	// 特效类型 闪电特效
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
@@ -4580,40 +4617,40 @@ native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位类型的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定矩形区域的的单位加入单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
-// @deprecated
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
+// @deprecated
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
-// @deprecated
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
+// @deprecated
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家选择的单位添加到单位组
-// @param filter过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
@@ -4672,7 +4709,7 @@ native ForceClear takes force whichForce returns nothing
 // 匹配玩家组(指定条件表达式)
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
 // 在指定的玩家组中匹配玩家(指定匹配的数量)
-// @param countLimit玩家数量
+// @param countLimit 玩家数量
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
 // 在指定玩家组中匹配盟友
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
@@ -5725,13 +5762,13 @@ constant native GetUnitTypeId takes unit whichUnit returns integer
 constant native GetUnitRace takes unit whichUnit returns race
 // 获取指定单位名字
 constant native GetUnitName takes unit whichUnit returns string
-// 获取指定单位 使用的人口数量(单个)
+// 获取指定单位 占用的人口数量(单个)
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
 // 获取指定单位 提供的人口数量(单个)
 constant native GetUnitFoodMade takes unit whichUnit returns integer
 // 获取指定单位类型 提供的人口数量(单个)
 constant native GetFoodMade takes integer unitId returns integer
-// 获取指定单位类型 使用的人口数量(单个)
+// 获取指定单位类型 占用的人口数量(单个)
 constant native GetFoodUsed takes integer unitId returns integer
 // 允许/禁止 指定单位占用人口 [R]
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
@@ -5928,6 +5965,7 @@ native IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructur
 native IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
 // 获取指定单位当前的命令
+// 返回值为0或null时标识该单位当前未接受任何命令，但不代表该单位停止，可能是命令已无法获取，其可能仍在执行命令，比如移动
 native GetUnitCurrentOrder takes unit whichUnit returns integer
 
 // 设置指定金矿储金量(指定新值)
@@ -5997,7 +6035,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 // 根据编号查询玩家
 // @param number 玩家编号
-// 玩家1的编号为0
+// 编号是从0开始的，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
 // 通常用于异步判断
@@ -6026,7 +6064,7 @@ constant native IsLocationMaskedToPlayer takes location whichLocation, player wh
 // 获取玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
-// 玩家1的编号为0
+// 编号是从0开始的，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
@@ -6149,7 +6187,8 @@ native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
 native RestartGame takes boolean doScoreScreen returns nothing
 // 重新读档(当前存档或最新的检查点(自动)存档)
 native ReloadGame takes nothing returns nothing
-// 设置战役菜单种族 @deprecated("此方法不建议使用,应使用SetCampaignMenuRaceEx代替")
+// 设置战役菜单种族
+// @deprecated ("此方法不建议使用,应使用SetCampaignMenuRaceEx代替")
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 native SetCampaignMenuRace takes race r returns nothing
@@ -6593,14 +6632,14 @@ native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real du
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
 // 设置昼夜
-// @param terrainDNCFile迷雾模型文件路径
-// @param unitDNCFile单位模型文件路径
+// @param terrainDNCFile 迷雾模型文件路径
+// @param unitDNCFile 单位模型文件路径
 native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns nothing
 // 设置肖像打光器
-// @param portraitDNCFile肖像打光器文件路径
+// @param portraitDNCFile 肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
 // 设置天空模型
-// @param skyModelFile天空模型文件路径，可在 ObjectEditor.j 文件找到
+// @param skyModelFile 天空模型文件路径，可在 ObjectEditor.j 文件找到
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
 // 启用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
@@ -6615,8 +6654,8 @@ native SetTimeOfDayScale takes real r returns nothing
 // 获取昼夜交替时间流逝速度
 native GetTimeOfDayScale takes nothing returns real
 // 开启/关闭 信箱模式(所有玩家) [R]
-// @param flag显示/隐藏 宽屏UI(所有玩家)，淡入/谈出 游戏UI
-// @param fadeDuration淡入持续时间
+// @param flag 显示/隐藏 宽屏UI(所有玩家)，淡入/谈出 游戏UI
+// @param fadeDuration 淡入持续时间
 native ShowInterface takes boolean flag, real fadeDuration returns nothing
 // 暂停/恢复 游戏 [R]
 native PauseGame takes boolean flag returns nothing
@@ -6822,10 +6861,10 @@ native LeaderboardGetItemCount takes leaderboard lb returns integer
 // 设置排行榜行行数
 native LeaderboardSetSizeByItemCount takes leaderboard lb, integer count returns nothing
 // 添加指定玩家到指定排行榜
-// @param lb指定玩家在榜上的排名(行数)
-// @param label指定玩家在榜上的名字
-// @param value指定玩家在榜上的分数
-// @param p指定玩家
+// @param lb 指定玩家在榜上的排名(行数)
+// @param label 指定玩家在榜上的名字
+// @param value 指定玩家在榜上的分数
+// @param p 指定玩家
 native LeaderboardAddItem takes leaderboard lb, string label, integer value, player p returns nothing
 // 移除排行榜指定行
 native LeaderboardRemoveItem takes leaderboard lb, integer index returns nothing
@@ -6865,10 +6904,10 @@ native LeaderboardSetItemValue takes leaderboard lb, integer whichItem, integer 
 // 设置排行榜玩家名字
 native LeaderboardSetItemLabel takes leaderboard lb, integer whichItem, string val returns nothing
 // 设置排行榜玩家显示样式
-// @param whichItem玩家在排行榜中的位置
-// @param showLabel是否显示名字
-// @param showValue是否显示分数
-// @param showIcon是否显示图标
+// @param whichItem 玩家在排行榜中的位置
+// @param showLabel 是否显示名字
+// @param showValue 是否显示分数
+// @param showIcon 是否显示图标
 native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
 // 设置排行榜玩家名字颜色
 native LeaderboardSetItemLabelColor takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
@@ -7118,7 +7157,7 @@ native SetSoundVolume takes sound soundHandle, integer volume returns nothing
 native SetSoundPitch takes sound soundHandle, real pitch returns nothing
 
 // 设置音效播放时间点 [R]
-// 使用前必须先调用StartSound
+// 使用前必须先调用 StartSound
 // the following method must be called immediately after calling "StartSound"
 native SetSoundPlayPosition takes sound soundHandle, integer millisecs returns nothing
 
@@ -7303,35 +7342,35 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 // 按ID新建特效(按字串符指定攻击点，绑定到单位/物品/可破坏物) [R]
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
-// 新建闪电效果 [R]
+// 新建闪电特效 [R]
 // @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
-// 新建闪电效果(指定Z轴) [R]
+// 新建闪电特效(指定Z轴) [R]
 // @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 删除指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
-// 移动闪电效果
+// 移动闪电特效
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
-// 移动闪电效果(指定坐标) [R]
+// 移动闪电特效(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
-// 获取闪电效果 A通道颜色值
+// 获取闪电特效 A通道颜色值
 native GetLightningColorA takes lightning whichBolt returns real
-// 获取闪电效果 R通道颜色值
+// 获取闪电特效 R通道颜色值
 native GetLightningColorR takes lightning whichBolt returns real
-// 获取闪电效果 G通道颜色值
+// 获取闪电特效 G通道颜色值
 native GetLightningColorG takes lightning whichBolt returns real
-// 获取闪电效果 B通道颜色值
+// 获取闪电特效 B通道颜色值
 native GetLightningColorB takes lightning whichBolt returns real
-// 设置闪电效果颜色
+// 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取特效路径(指定技能字串符和索引)
+// 获取技能特效路径(指定技能字串符和索引)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
-// 获取特效路径(指定技能ID和索引)
+// 获取技能特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取特效声音路径(指定技能字串符和声音类型)
+// 获取技能音效路径(指定技能字串符和声音类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
-// 获取特效声音路径(指定技能ID和声音类型)
+// 获取技能音效路径(指定技能ID和声音类型)
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
@@ -7449,7 +7488,7 @@ native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
 native PauseCompAI takes player p, boolean pause returns nothing
 // 获取指定玩家的 AI难度
-// 玩家1为0
+// 编号是从0开始的，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
 // 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
