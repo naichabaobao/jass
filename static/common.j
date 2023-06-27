@@ -199,7 +199,7 @@ type hashtable extends
 type framehandle extends handle
 // 框架/UI锚点类型
 type originframetype extends handle
-// 框架/UI点类型
+// 框架/原生UI相对锚点类型
 type framepointtype extends handle
 // 文本高亮类型
 type textaligntype extends handle
@@ -207,29 +207,53 @@ type textaligntype extends handle
 type frameeventtype extends handle
 // 按键类型
 type oskeytype extends handle
+// 技能整数域
 type abilityintegerfield extends handle
+// 技能实数域
 type abilityrealfield extends handle
+// 技能布尔值域
 type abilitybooleanfield extends handle
+// 技能字符串域
 type abilitystringfield extends handle
+// 技能随等级改变的整数域
 type abilityintegerlevelfield extends handle
+// 技能随等级改变的实数域
 type abilityreallevelfield extends handle
+// 技能随等级改变的布尔值域
 type abilitybooleanlevelfield extends handle
+// 技能随等级改变的字符串域
 type abilitystringlevelfield extends handle
+// 技能随等级改变的整数数组域
 type abilityintegerlevelarrayfield extends handle
+// 技能随等级改变的实数数组域
 type abilityreallevelarrayfield extends handle
+// 技能随等级改变的布尔值数组域
 type abilitybooleanlevelarrayfield extends handle
+// 技能随等级改变的字符串数组域
 type abilitystringlevelarrayfield extends handle
+// 单位整数域
 type unitintegerfield extends handle
+// 单位实数域
 type unitrealfield extends handle
+// 单位布尔值域
 type unitbooleanfield extends handle
+// 单位字符串域
 type unitstringfield extends handle
+// 攻击整数域
 type unitweaponintegerfield extends handle
+// 攻击实数域
 type unitweaponrealfield extends handle
+// 攻击布尔值域
 type unitweaponbooleanfield extends handle
+// 攻击字符串域
 type unitweaponstringfield extends handle
+// 物品整数域
 type itemintegerfield extends handle
+// 物品实数域
 type itemrealfield extends handle
+// 物品布尔值域
 type itembooleanfield extends handle
+// 物品字符串域
 type itemstringfield extends handle
 // 移动类型
 type movetype extends handle
@@ -243,9 +267,11 @@ type heroattribute extends handle
 type defensetype extends handle
 // 生命恢复类型
 type regentype extends handle
+// 单位类别
 type unitcategory extends handle
+// 放置要求
 type pathingflag extends handle
-// 命令按钮特效
+// 技能按钮特效
 type commandbuttoneffect extends handle
 
 // 转换整数成种族
