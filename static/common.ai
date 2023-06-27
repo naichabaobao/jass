@@ -1995,9 +1995,9 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 根据人口占用情况训练指定单位类型
-    // @param food 建议使用当前已使用人口
-    // @param use1 单位类型1的人口占用（单个）
-    // @param use2 单位类型2的人口占用（单个）
+    // @param food 建议使用当前已使用的人口数
+    // @param use1 单位类型1占用的人口数（单个）
+    // @param use2 单位类型占用的人口数（单个）
     // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
     // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
     function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
@@ -3257,7 +3257,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的数量）
+    // 获取当前AI玩家的可使用人口数（默认为人口建筑提供的总人口数）
     function FoodCap takes nothing returns integer
         return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
     endfunction
@@ -3271,8 +3271,8 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 获取当前AI玩家人口建筑提供的人口数量
-    // 公式：已完成的人口建筑数量（默认单位类型为racial_farm）*该建筑提供的人口数 + 已完成的城镇数量（单位类型用base指定）*该建筑提供的人口数
+    // 获取当前AI玩家人口建筑提供的人口数
+    // 公式：已建造完成的人口建筑数量（默认单位类型为racial_farm）*该建筑提供的人口数 + 已完成的城镇数量（单位类型用base指定）*该建筑提供的人口数
     function FoodAvail takes integer base returns integer
         return GetFoodMade(racial_farm) * TownCount(racial_farm) + GetFoodMade(base) * TownCount(base)
     endfunction
