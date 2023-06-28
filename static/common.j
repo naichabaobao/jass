@@ -7378,6 +7378,7 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 //
 
 // 获取地形悬崖高度(指定坐标) [R]
+// 深水区为0，浅水区为1，平原为2，之后每层+1
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
