@@ -3605,14 +3605,14 @@ endfunction
 //***************************************************************************
 
 
-// 新建特殊效果（指定点）
+// 新建特效（指定点）
 function AddSpecialEffectLocBJ takes location where, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectLoc(modelName, where)
     return bj_lastCreatedEffect
 endfunction
 
 
-// 新建特殊效果（指定单位/物品/可破坏物）
+// 新建特效（指定单位/物品/可破坏物）
 function AddSpecialEffectTargetUnitBJ takes string attachPointName, widget targetWidget, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectTarget(modelName, targetWidget, attachPointName)
     return bj_lastCreatedEffect
@@ -3622,7 +3622,7 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 // Commented out - Destructibles have no attachment points.
-// 新建特殊效果（指定可破坏物）
+// 新建特效（指定可破坏物）
 //function AddSpecialEffectTargetDestructableBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
@@ -3631,19 +3631,19 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 // Commented out - Items have no attachment points.
-// 新建特殊效果（指定物品）
+// 新建特效（指定物品）
 //function AddSpecialEffectTargetItemBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
 
 
-// 删除特殊效果
+// 删除特效
 function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
 
 
-// 获取最后创建的特殊效果
+// 获取最后创建的特效
 function GetLastCreatedEffectBJ takes nothing returns effect
     return bj_lastCreatedEffect
 endfunction
@@ -3662,19 +3662,19 @@ function CreateCommandButtonEffectBJ takes integer abilityId, string order retur
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建技能按钮特效（'Aque'）
+// 创建训练单位按钮特效（'Aque'）
 function CreateTrainCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect('Aque', UnitId2String(unitId))
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建科技按钮特效
+// 创建研究科技按钮特效
 function CreateUpgradeCommandButtonEffectBJ takes integer techId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateUpgradeCommandButtonEffect(techId)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建技能按钮特效
+// 创建命令按钮特效
 function CreateCommonCommandButtonEffectBJ takes string order returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(0, order)
     return bj_lastCreatedCommandButtonEffect
@@ -3686,7 +3686,7 @@ function CreateLearnCommandButtonEffectBJ takes integer abilityId returns comman
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建建造/训练单位按钮特效
+// 创建建造单位按钮特效
 function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
 	local race r = GetPlayerRace(GetLocalPlayer())
 	local integer abilityId
