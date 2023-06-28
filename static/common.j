@@ -8010,7 +8010,7 @@ native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 // 创建技能按钮特效
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect
-// 创建研究按钮特效
+// 创建研究科技按钮特效
 native CreateUpgradeCommandButtonEffect takes integer whichUprgade returns commandbuttoneffect
 // 创建学习技能按钮特效
 native CreateLearnCommandButtonEffect takes integer abilityId returns commandbuttoneffect
