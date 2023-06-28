@@ -7992,9 +7992,9 @@ globals
                 constant string SliderThumbButtonFrame
                 // FDF(框架定义) 字串符
                 // 变量类型为字符串,如(官方默认提供) "UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
-                constant string constant string
+                constant string String
                 // FDF(框架定义) 字串符列表
-                constant string constant stringList
+                constant string StringList
                 // FDF(框架定义) 选项卡焦点(默认值)
                 constant string TabFocusDefault
                 // FDF(框架定义) 选项卡焦点-下一个
