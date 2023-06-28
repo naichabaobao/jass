@@ -6578,7 +6578,7 @@ globals
                 constant string vengeanceon
                 // 技能命令串或ID 火山爆发
                 constant string volcano
-                // 技能命令串或ID 巫毒(暗影猎手)
+                // 技能命令串或ID 巫毒狂舞(暗影猎手)
                 constant string voodoo
                 // 技能命令串或ID 产卵触角/毒蛇守卫
                 constant string ward
@@ -7395,7 +7395,7 @@ globals
                 constant integer 852501
                 // 技能命令串或ID 妖术
                 constant integer 852502
-                // 技能命令串或ID 巫毒(暗影猎手)
+                // 技能命令串或ID 巫毒狂舞(暗影猎手)
                 constant integer 852503
                 // 技能命令串或ID 灵魂锁链
                 constant integer 854299
