@@ -4220,7 +4220,7 @@ globals
 	constant targetflag TARGET_FLAG_DEBRIS = ConvertTargetFlag(256)
 	// 目标类型 装饰物
 	constant targetflag TARGET_FLAG_DECORATION = ConvertTargetFlag(512)
-	// 目标类型 桥梁
+	// 目标类型 桥
 	constant targetflag TARGET_FLAG_BRIDGE = ConvertTargetFlag(1024)
 	
 	// defense type
