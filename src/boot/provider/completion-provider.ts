@@ -19,6 +19,8 @@ import data, { DataGetter, parseContent } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
+import { Document, lexically } from "../check/mark";
+import { kindToString, MarkCodes, raceToString, typeToString } from "../war/mark";
 
 
 
@@ -593,5 +595,88 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   }
 }(), "\"", "/", "\\");
 
+
+/**
+ * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+    
+    if (Options.isSupportMark) {
+
+      const mark = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
+        return mark.isMark() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
+      });
+      
+
+      
+      if (mark) {
+        const markValue = mark.value();
+        
+        
+        for (let index = 0; index < MarkCodes.length; index++) {
+          const markCode = MarkCodes[index];
+          if (markCode.code == "") {
+            continue;
+          }
+          const originCodeValue = `'${markCode.code}'`;
+          const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
+
+          const ms = new vscode.MarkdownString()
+          .appendCodeblock(originCodeValue)
+          .appendMarkdown(markCode.tip)
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@type***(" + typeToString(markCode.type) + ")")
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@race***(" + raceToString(markCode.race) + ")")
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@kind***(" + kindToString(markCode.kind) + ")");
+          item.detail = markCode.name;
+          item.documentation = ms;
+
+          item.filterText = originCodeValue;
+          // console.log(item.filterText);
+          
+          item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
+
+          items.push(item);
+        }
+
+        /*
+        for (const key in Object.keys(MarkCode)) {
+          // @ts-ignore
+          const markCode = MarkCode[key];
+          console.log("markCode" , markCode);
+          const item = new vscode.CompletionItem(markCode.name, vscode.CompletionItemKind.Value);
+
+          const ms = new vscode.MarkdownString().appendCodeblock(markValue)
+          .appendMarkdown(markCode.tip)
+          .appendMarkdown("***@type***(" + typeToString(markCode.type) + ")")
+          .appendMarkdown("***@race***(" + raceToString(markCode.race) + ")")
+          .appendMarkdown("***@kind***(" + kindToString(markCode.kind) + ")");
+          item.documentation = ms;
+
+          item.filterText = markValue.replace(/'/g, "");
+          item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
+
+          items.push(item);
+        }
+        */
+        
+      }
+    }
+    return items;
+  }
+
+}(), "'")
+
+/*
+,
+ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+*/
 
 

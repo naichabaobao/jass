@@ -2,6 +2,7 @@
  * 静态jass type
  * 动态解析完全没卵用
  * 简单实现完虐所有
+ * 后面将会移除
  */
 
 const defaultVersion = "1.32";

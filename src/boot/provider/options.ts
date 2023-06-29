@@ -87,6 +87,11 @@ class Options {
   public static get enableInfoStyle() {
     return this.configuration["info-style"] as boolean;
   }
+  // 是否需要显示mark
+  public static get isSupportMark() {
+    return this.configuration["support"]["mark"] as boolean;
+  }
+
 
   // 加入工作空间缓存
   private static workspacesCache: string[] = []
