@@ -1,3 +1,8 @@
+// 当前文件依然有效，部分已经移到src/boot/war/mark.ts文件中
+// 整理好保留那部分
+// integer 852001 这种必须移除，以数字开头的是非法的标识符,写了只会让integer提示过多
+
+/*
 globals
         // 物理编辑器及额外变量对照表(绝大部分)
         // 物编以重置版为基准(v1.36),部分添加了1.27a译文,从1.27a获取了极少量重置版缺失数据
@@ -9063,4 +9068,5 @@ globals
                 constant string Cff8a2be2
 
 
-        endglobals
+endglobals
+*/
