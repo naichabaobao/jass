@@ -9,13 +9,11 @@ import * as fs from "fs";
 
 import * as vscode from "vscode";
 
-import { getParentTypes, StatementTypes } from "./types";
-import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "../jass/keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
-import { convertPosition, fieldFunctions, functionKey } from "./tool";
-import data, { DataGetter, parseContent } from "./data";
+import { convertPosition} from "./tool";
+import data, { DataGetter } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
@@ -595,6 +593,38 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   }
 }(), "\"", "/", "\\");
 
+// "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+interface PresetOption {
+  code: string,
+  name: string,
+  descript: string,
+  kind: string,
+  race: string,
+  type: string,
+}
+
+interface ConfigFileOption {
+  presets?: PresetOption[]
+}
+
+/**
+ * 获取根目录下插件预设的配置文件
+ */
+function getConfigureFileObject() {
+  const workspacePath = vscode.workspace.workspaceFile?.fsPath;
+  if (workspacePath) {
+    const configFile = path.resolve(workspacePath, "./jass.config.json");
+    if (fs.existsSync(configFile)) {
+      const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
+      if (configObject.presets) {
+        
+      }
+      // vscode.window.showErrorMessage()
+    } else {
+      vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍")
+    }
+  }
+}
 
 /**
  * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
@@ -670,7 +700,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
     return items;
   }
 
-}(), "'")
+}(), "'");
 
 /*
 ,
