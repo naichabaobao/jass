@@ -75,7 +75,7 @@ globals
 
     // Game constants
 
-    // 最大库存，默认6
+    // 最大物品栏格子数，默认6
     constant integer   bj_MAX_INVENTORY                 =  6
     // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
