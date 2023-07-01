@@ -13,7 +13,7 @@ import { AllKeywords, Keywords } from "../jass/keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition} from "./tool";
-import data, { DataGetter } from "./data";
+import data, { ConsumerMarkCode, DataGetter } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
@@ -593,38 +593,9 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   }
 }(), "\"", "/", "\\");
 
-// "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
-interface PresetOption {
-  code: string,
-  name: string,
-  descript: string,
-  kind: string,
-  race: string,
-  type: string,
-}
 
-interface ConfigFileOption {
-  presets?: PresetOption[]
-}
 
-/**
- * 获取根目录下插件预设的配置文件
- */
-function getConfigureFileObject() {
-  const workspacePath = vscode.workspace.workspaceFile?.fsPath;
-  if (workspacePath) {
-    const configFile = path.resolve(workspacePath, "./jass.config.json");
-    if (fs.existsSync(configFile)) {
-      const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
-      if (configObject.presets) {
-        
-      }
-      // vscode.window.showErrorMessage()
-    } else {
-      vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍")
-    }
-  }
-}
+
 
 /**
  * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
@@ -674,28 +645,35 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
           items.push(item);
         }
 
-        /*
-        for (const key in Object.keys(MarkCode)) {
-          // @ts-ignore
-          const markCode = MarkCode[key];
-          console.log("markCode" , markCode);
-          const item = new vscode.CompletionItem(markCode.name, vscode.CompletionItemKind.Value);
 
-          const ms = new vscode.MarkdownString().appendCodeblock(markValue)
-          .appendMarkdown(markCode.tip)
-          .appendMarkdown("***@type***(" + typeToString(markCode.type) + ")")
-          .appendMarkdown("***@race***(" + raceToString(markCode.race) + ")")
-          .appendMarkdown("***@kind***(" + kindToString(markCode.kind) + ")");
-          item.documentation = ms;
-
-          item.filterText = markValue.replace(/'/g, "");
-          item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
-
-          items.push(item);
-        }
-        */
         
+        ConsumerMarkCode.instance(document).getDatas().forEach(preset => {
+         const originCodeValue = `'${preset.code}'`;
+           const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
+ 
+           const ms = new vscode.MarkdownString()
+           .appendCodeblock(originCodeValue)
+           .appendMarkdown(preset.descript)
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@type***(" + (preset.type ? preset.type : "未知") + ")")
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@race***(" + (preset.race ? preset.race : "未知") + ")")
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@kind***(" + (preset.kind ? preset.kind : "未知") + ")");
+           item.detail = preset.name;
+           item.documentation = ms;
+ 
+           item.filterText = originCodeValue;
+           // console.log(item.filterText);
+           
+           item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
+ 
+           items.push(item);
+           
+       });
       }
+
+
     }
     return items;
   }
