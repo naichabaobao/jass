@@ -498,7 +498,7 @@ interface StringOption {
 
 interface ConfigFileOption {
   presets?: PresetOption[];
-  strings?: StringOption[];
+  strings?: (StringOption|string)[];
 }
 
 export class ConsumerMarkCode {
@@ -520,7 +520,7 @@ export class ConsumerMarkCode {
   }
 
   private presets:PresetOption[] = [];
-  private strings:StringOption[] = [];
+  private strings:(StringOption|string)[] = [];
   private readonly document: vscode.TextDocument;
   private constructor(document: vscode.TextDocument) {
     this.document = document;
@@ -562,13 +562,21 @@ export class ConsumerMarkCode {
         if (configObject.strings) {
           if (Array.isArray(configObject.strings)) { // 确保传进来的是数组
             const strings = (<Array<any>>(configObject.strings)).filter(str => {
-              return typeof(str["content"]) == "string"
-              && (str["descript"] ? typeof(str["descript"]) == "string" : true);
-            }).map(function(str):StringOption {
-              return {
-                content: str["content"] as string,
-                descript: str["descript"] as string|undefined,
-              }
+              return (typeof(str["content"]) == "string"
+              && (str["descript"] ? typeof(str["descript"]) == "string" : true))
+              ||
+              typeof(str) == "string";
+            }).map(function(str):StringOption|string {
+              return (function () {
+                if (typeof(str) == "string") {
+                  return str;
+                } else {
+                  return {
+                    content: str["content"] as string,
+                    descript: str["descript"] as string|undefined,
+                  };
+                }
+              })();
             });
 
             option.strings = strings;
@@ -608,7 +616,7 @@ export class ConsumerMarkCode {
     return this.presets;
   }
 
-  public getstrings():StringOption[] {
+  public getstrings():(StringOption|string)[] {
     if (this.isStartWatch == false) {
       const configFile = this.getConfigFilePath(this.document);
       if (configFile) {

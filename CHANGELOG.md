@@ -341,7 +341,8 @@
         {
             content: string,
             descript?: string
-        }
+        },
+        "string"
     ]
 }
 ```

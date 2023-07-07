@@ -708,13 +708,21 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
 
         
         ConsumerMarkCode.instance(document).getstrings().forEach(str => {
-          const item = new vscode.CompletionItem(`"${str.content}"`, vscode.CompletionItemKind.Value);
-
-          const ms = new vscode.MarkdownString()
-          .appendCodeblock(`"${str.content}"`)
-          .appendMarkdown(str.descript ?? "");
-          item.detail = `"${str.content}"`;
-          item.documentation = ms;
+          let item: vscode.CompletionItem;
+          if (typeof(str) == "string") {
+            item = new vscode.CompletionItem(`"${str}"`, vscode.CompletionItemKind.Value);
+            item.detail = `"${str}"`;
+            const ms = new vscode.MarkdownString()
+            .appendCodeblock(`"${str}"`);
+            item.documentation = ms;
+          } else {
+            item = new vscode.CompletionItem(`"${str.content}"`, vscode.CompletionItemKind.Value);
+            item.detail = `"${str.content}"`;
+            const ms = new vscode.MarkdownString()
+            .appendCodeblock(`"${str.content}"`)
+            .appendMarkdown(str.descript ?? "");
+            item.documentation = ms;
+          }
 
           // item.filterText = str.content;
           // console.log(item.filterText);
