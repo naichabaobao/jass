@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.4",
+  "version": "1.8.6",
   "keywords": [
     "jass",
     "vjass",
@@ -105,7 +105,7 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": false,
-          "description": "(Test) Check jass syntax only"
+          "description": "(Deprecation) Check jass syntax only"
         },
         "jass.formatv2": {
           "type": "boolean",
@@ -116,6 +116,16 @@
           "type": "boolean",
           "default": false,
           "description": "(Test) Styles with more information"
+        },
+        "jass.support.mark": {
+          "type": "boolean",
+          "default": true,
+          "description": "Provide default 'mark' prompts for Warcraft"
+        },
+        "jass.support.string": {
+          "type": "boolean",
+          "default": true,
+          "description": "String prompt support"
         }
       }
     },

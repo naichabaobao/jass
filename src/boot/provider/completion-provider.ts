@@ -9,16 +9,16 @@ import * as fs from "fs";
 
 import * as vscode from "vscode";
 
-import { getParentTypes, StatementTypes } from "./types";
-import { getTypeDesc } from "./type-desc";
 import { AllKeywords, Keywords } from "../jass/keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
-import { convertPosition, fieldFunctions, functionKey } from "./tool";
-import data, { DataGetter, parseContent } from "./data";
+import { convertPosition} from "./tool";
+import data, { ConsumerMarkCode, DataGetter } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
+import { Document, lexically } from "../check/mark";
+import { kindToString, MarkCodes, raceToString, typeToString } from "../war/mark";
 
 
 
@@ -593,5 +593,161 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   }
 }(), "\"", "/", "\\");
 
+
+
+
+
+/**
+ * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+    
+    if (Options.isSupportMark) {
+
+      const mark = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
+        return mark.isMark() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
+      });
+      
+
+      
+      if (mark) {
+        const markValue = mark.value();
+        
+        
+        for (let index = 0; index < MarkCodes.length; index++) {
+          const markCode = MarkCodes[index];
+          if (markCode.code == "") {
+            continue;
+          }
+          const originCodeValue = `'${markCode.code}'`;
+          const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
+
+          const ms = new vscode.MarkdownString()
+          .appendCodeblock(originCodeValue)
+          .appendMarkdown(markCode.tip)
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@type***(" + typeToString(markCode.type) + ")")
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@race***(" + raceToString(markCode.race) + ")")
+          .appendMarkdown("  \n")
+          .appendMarkdown("***@kind***(" + kindToString(markCode.kind) + ")");
+          item.detail = markCode.name;
+          item.documentation = ms;
+
+          item.filterText = originCodeValue;
+          // console.log(item.filterText);
+          
+          item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
+
+          items.push(item);
+        }
+
+
+        
+        ConsumerMarkCode.instance(document.uri).getPresets().forEach(preset => {
+         const originCodeValue = `'${preset.code}'`;
+           const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
+ 
+           const ms = new vscode.MarkdownString()
+           .appendCodeblock(originCodeValue)
+           .appendMarkdown(preset.descript)
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@type***(" + (preset.type ? preset.type : "未知") + ")")
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@race***(" + (preset.race ? preset.race : "未知") + ")")
+           .appendMarkdown("  \n")
+           .appendMarkdown("***@kind***(" + (preset.kind ? preset.kind : "未知") + ")");
+           item.detail = preset.name;
+           item.documentation = ms;
+ 
+           item.filterText = originCodeValue;
+           // console.log(item.filterText);
+           
+           item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
+ 
+           items.push(item);
+           
+       });
+
+       
+      }
+
+
+    }
+    return items;
+  }
+
+}(), "'");
+
+
+/**
+ * config.strings
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class StringCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+    
+    if (Options.isSupportString) {
+
+      const strToken = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
+        return mark.isString() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
+      });
+      
+
+      console.log(strToken);
+      
+      if (strToken) {
+        const strValue = strToken.value();
+        
+        
+
+
+        
+        ConsumerMarkCode.instance(document.uri).getstrings().forEach(str => {
+          let item: vscode.CompletionItem;
+          if (typeof(str) == "string") {
+            item = new vscode.CompletionItem(`"${str}"`, vscode.CompletionItemKind.Value);
+            item.detail = `"${str}"`;
+            const ms = new vscode.MarkdownString()
+            .appendCodeblock(`"${str}"`);
+            item.documentation = ms;
+          } else {
+            item = new vscode.CompletionItem(`"${str.content}"`, vscode.CompletionItemKind.Value);
+            item.detail = `"${str.content}"`;
+            const ms = new vscode.MarkdownString()
+            .appendCodeblock(`"${str.content}"`)
+            .appendMarkdown(str.descript ?? "");
+            item.documentation = ms;
+          }
+
+          // item.filterText = str.content;
+          // console.log(item.filterText);
+          
+          item.range = new vscode.Range(position.line, strToken.loc.start.position,position.line, strToken.loc.end.position);
+
+          items.push(item);
+           
+       });
+
+       
+      }
+
+
+    }
+    return items;
+  }
+
+}(), "\"");
+
+/*
+,
+ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+*/
 
 

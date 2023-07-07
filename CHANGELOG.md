@@ -311,3 +311,38 @@
 ## 1.8.4
 - 类型可以显示在Outline中
 - 类型可以悬浮提示
+
+## 1.8.5
+- 可以在工程目录下创建 'jass.config.json' 文件，格式如下
+
+```json
+{
+    presets: [
+        {
+            code: string,
+            name: string,
+            descript: string,
+            type?: string,
+            race?: string,
+            kind?: string
+        }
+    ]
+}
+```
+
+- 增加物编默认提示
+- 移除ObjectEditor.j提示
+
+## 1.8.5
+- 增加配置文件strings提示
+```json
+{
+    strings: [
+        {
+            content: string,
+            descript?: string
+        },
+        "string"
+    ]
+}
+```
