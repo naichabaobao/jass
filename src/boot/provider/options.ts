@@ -49,6 +49,9 @@ class Options {
     return resolvePaths(includes);
   }
 
+  /**
+   * @deprecated 使用ConsumerMarkCode.excludes
+   */
   public static get excludes() {
     const includes = this.configuration["excludes"] as Array<string>;
     return includes;
@@ -91,7 +94,10 @@ class Options {
   public static get isSupportMark() {
     return this.configuration["support"]["mark"] as boolean;
   }
-
+  // 是否需要显示string
+  public static get isSupportString() {
+    return this.configuration["support"]["string"] as boolean;
+  }
 
   // 加入工作空间缓存
   private static workspacesCache: string[] = []
@@ -100,14 +106,14 @@ class Options {
   private static triggerCount = 20
 
   public static get workspaces():string[] {
-    console.log('read space')
+    // console.log('read space')
     if (vscode.workspace.workspaceFolders) {
       const lastUpdate = this.lastWorkspacesUpdate
       const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
       if (usingCache){
         return this.workspacesCache
       }
-      console.time('read space')
+      // console.time('read space')
       this.workspacesCache = vscode.workspace.workspaceFolders.map((floder) => {
         const options = {
             cwd: floder.uri.fsPath,
@@ -115,13 +121,13 @@ class Options {
                 path.resolve(floder.uri.fsPath, ".jassignore")
             ),
         };
-        console.log(options)
+        // console.log(options)
         return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
             .map((pattern) => glob.sync(pattern, options))
             .flat()
             .map((file) => path.resolve(floder.uri.fsPath, file));
       }).flat();
-      console.timeEnd('read space')
+      // console.timeEnd('read space')
       this.lastWorkspacesUpdate = Date.now()
       return this.workspacesCache
     }

@@ -13,21 +13,210 @@ import { convertPosition } from "./tool";
 import { Chunk, LuaParser } from "../lua/parser";
 
 
-class Pair {
-  public key: string;
-  public value: Program;
+// "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+interface PresetOption {
+  code: string,
+  name: string,
+  descript: string,
+  // 种类
+  kind?: string,
+  // 种类
+  race?: string,
+  // 类型
+  type?: string,
+}
 
-  constructor(key: string, value: Program) {
-    this.key = key;
-    this.value = value;
+interface StringOption {
+  content: string;
+  descript?: string;
+};
+
+interface ConfigFileOption {
+  presets?: PresetOption[];
+  strings?: (StringOption|string)[];
+  excludes?: string[];
+}
+
+export class ConsumerMarkCode {
+
+  public static excludes:string[] = [];
+
+  private getWorkspacePath(uri: vscode.Uri) {
+    const workspacePath = vscode.workspace.getWorkspaceFolder(uri)?.uri.fsPath;
+    
+    return workspacePath;
+  }
+
+  private getConfigFilePath(uri: vscode.Uri) {
+    const workspacePath = this.getWorkspacePath(uri);
+    
+    // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
+    if (workspacePath) {
+      const configFile = path.resolve(workspacePath, "./jass.config.json");
+      return configFile;
+    }
+  }
+
+
+  private uri: vscode.Uri;
+  private constructor(uri: vscode.Uri) {
+    this.uri = uri;
+  }
+
+  // 是否已经解释过
+  private isParsed: boolean = false;
+  private result:ConfigFileOption|undefined;
+
+  private parse() {
+    if (!this.isParsed) {
+      const configPath = this.getConfigFilePath(this.uri);
+      if (configPath) {
+        if (fs.existsSync(configPath)) {
+          this.result = this.getConfigureFileObject(this.uri);
+          this.isParsed = true;
+        }
+      }
+    }
+  }
+
+  private getConfigureFileObject(uri: vscode.Uri):ConfigFileOption {
+    const workspacePath = this.getWorkspacePath(uri);
+    
+    const option: ConfigFileOption = {};
+
+    // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
+    if (workspacePath) {
+      const configFile = path.resolve(workspacePath, "./jass.config.json");
+      
+      if (fs.existsSync(configFile)) {
+        const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
+        if (configObject.presets) {
+          if (Array.isArray(configObject.presets)) { // 确保传进来的是数组
+            const presets =  (<Array<any>>(configObject.presets)).filter(preset => {
+              return typeof(preset["code"]) == "string" && typeof(preset["name"]) == "string" && typeof(preset["descript"]) == "string"
+              && (preset["kind"] ? typeof(preset["kind"]) == "string" : true)
+              && (preset["race"] ? typeof(preset["race"]) == "string" : true)
+              && (preset["type"] ? typeof(preset["type"]) == "string" : true);
+            }).map(function(preset):PresetOption {
+              return {
+                code: preset["code"] as string,
+                name: preset["name"] as string,
+                descript: preset["descript"] as string,
+                kind: preset["kind"] as string|undefined,
+                race: preset["race"] as string|undefined,
+                type: preset["type"] as string|undefined,
+              }
+            });
+            option.presets = presets;
+          } else {
+            vscode.window.showInformationMessage("presets必须是数组形式");
+          }
+        }
+        if (configObject.strings) {
+          if (Array.isArray(configObject.strings)) { // 确保传进来的是数组
+            const strings = (<Array<any>>(configObject.strings)).filter(str => {
+              return (typeof(str["content"]) == "string"
+              && (str["descript"] ? typeof(str["descript"]) == "string" : true))
+              ||
+              typeof(str) == "string";
+            }).map(function(str):StringOption|string {
+              return (function () {
+                if (typeof(str) == "string") {
+                  return str;
+                } else {
+                  return {
+                    content: str["content"] as string,
+                    descript: str["descript"] as string|undefined,
+                  };
+                }
+              })();
+            });
+
+            option.strings = strings;
+          } else {
+            vscode.window.showInformationMessage("strings必须是数组形式");
+          }
+        }
+        if (configObject.excludes) {
+          if (Array.isArray(configObject.excludes)) { // 确保传进来的是数组
+            const excludes = <string[]>(<Array<any>>(configObject.excludes)).filter(function (exclude):boolean {
+              return typeof(exclude) == "string";
+            });
+
+            option.excludes = excludes;
+          } else {
+            vscode.window.showInformationMessage("excludes必须是数组形式");
+          }
+        }
+        // vscode.window.showErrorMessage()
+      } else {
+        vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
+      }
+    }
+    return option;
+  }
+
+  private isWatch:boolean = false;
+
+  watch() {
+    if (!this.isWatch) {
+      const configPath = this.getConfigFilePath(this.uri);
+      if (configPath) {
+        if (fs.existsSync(configPath)) {
+          fs.watch(configPath, (event, fileName) => {
+            this.isParsed = false;
+            this.doExclude();
+          });
+          this.isWatch = true;
+        }
+      }
+    }
+
+  }
+
+  public getPresets():PresetOption[] {
+    this.parse();
+    this.watch();
+    return this.result?.presets ?? [];
+  }
+
+  public getstrings():(StringOption|string)[] {
+    this.parse();
+    this.watch();
+    return this.result?.strings ?? [];
+  }
+
+  // 获取无视文件
+  public getExcludes():string[] {
+    this.parse();
+    this.watch();
+    return this.result?.excludes ?? [];
+  }
+
+  // 配置文件发生改变时,把excludes配置的文件从数据中移除
+  private doExclude() {
+    this.getExcludes().forEach(filePath => {
+      console.log("删除", filePath);
+      
+      dataMap.remove(filePath);
+      zincDataMap.remove(filePath);    
+    });
+  }
+
+  private static _?:ConsumerMarkCode;
+  public static instance(uri: vscode.Uri):ConsumerMarkCode {
+    if (!this._) {
+      this._ = new ConsumerMarkCode(uri);
+    } else {
+      this._.uri = uri;
+    }
+    return this._;
   }
 
 }
 
-
-
 class DataMap {
-  private pairs: Pair[] = [];
+
   private map:Map<string, Program> = new Map();
 
   private generateKey(originFilePath:string):string {
@@ -160,8 +349,10 @@ function setSource(filePath: string, program: Program) {
       x.source = filePath;
     });*/
 }
+
 function parseContent(filePath: string, content: string) {
-  if (isExclude(filePath, Options.excludes)) {
+
+  if (isExclude(filePath, vscode.workspace.workspaceFolders ? ConsumerMarkCode.instance(vscode.workspace.workspaceFolders[0].uri).getExcludes() : [])) {    
     return;
   }
   if (isZincFile(filePath)) {
@@ -195,7 +386,9 @@ function parseContent(filePath: string, content: string) {
 }
 
 function parsePath(...filePaths: string[]) {
-  const excludeFiles = exclude(filePaths, Options.excludes);
+  
+
+  const excludeFiles = filePaths;
   const parseds:Parser[] = [];
   excludeFiles.forEach(filePath => {
     const content = getFileContent(filePath);
@@ -478,210 +671,7 @@ vscode.workspace.onDidChangeTextDocument((event) => {
 });
 
 
-// "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
-interface PresetOption {
-  code: string,
-  name: string,
-  descript: string,
-  // 种类
-  kind?: string,
-  // 种类
-  race?: string,
-  // 类型
-  type?: string,
-}
 
-interface StringOption {
-  content: string;
-  descript?: string;
-};
-
-interface ConfigFileOption {
-  presets?: PresetOption[];
-  strings?: (StringOption|string)[];
-}
-
-export class ConsumerMarkCode {
-
-  private getWorkspacePath(document: vscode.TextDocument) {
-    const workspacePath = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
-    
-    return workspacePath;
-  }
-
-  private getConfigFilePath(document: vscode.TextDocument) {
-    const workspacePath = this.getWorkspacePath(document);
-    
-    // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
-    if (workspacePath) {
-      const configFile = path.resolve(workspacePath, "./jass.config.json");
-      return configFile;
-    }
-  }
-
-  private presets:PresetOption[] = [];
-  private strings:(StringOption|string)[] = [];
-  private readonly document: vscode.TextDocument;
-  private constructor(document: vscode.TextDocument) {
-    this.document = document;
-  }
-
-  private getConfigureFileObject(document: vscode.TextDocument):ConfigFileOption {
-    const workspacePath = this.getWorkspacePath(document);
-    
-    const option: ConfigFileOption = {};
-
-    // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
-    if (workspacePath) {
-      const configFile = path.resolve(workspacePath, "./jass.config.json");
-      
-      if (fs.existsSync(configFile)) {
-        const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
-        if (configObject.presets) {
-          if (Array.isArray(configObject.presets)) { // 确保传进来的是数组
-            const presets =  (<Array<any>>(configObject.presets)).filter(preset => {
-              return typeof(preset["code"]) == "string" && typeof(preset["name"]) == "string" && typeof(preset["descript"]) == "string"
-              && (preset["kind"] ? typeof(preset["kind"]) == "string" : true)
-              && (preset["race"] ? typeof(preset["race"]) == "string" : true)
-              && (preset["type"] ? typeof(preset["type"]) == "string" : true);
-            }).map(function(preset):PresetOption {
-              return {
-                code: preset["code"] as string,
-                name: preset["name"] as string,
-                descript: preset["descript"] as string,
-                kind: preset["kind"] as string|undefined,
-                race: preset["race"] as string|undefined,
-                type: preset["type"] as string|undefined,
-              }
-            });
-            option.presets = presets;
-          } else {
-            vscode.window.showInformationMessage("presets必须是数组形式");
-          }
-        }
-        if (configObject.strings) {
-          if (Array.isArray(configObject.strings)) { // 确保传进来的是数组
-            const strings = (<Array<any>>(configObject.strings)).filter(str => {
-              return (typeof(str["content"]) == "string"
-              && (str["descript"] ? typeof(str["descript"]) == "string" : true))
-              ||
-              typeof(str) == "string";
-            }).map(function(str):StringOption|string {
-              return (function () {
-                if (typeof(str) == "string") {
-                  return str;
-                } else {
-                  return {
-                    content: str["content"] as string,
-                    descript: str["descript"] as string|undefined,
-                  };
-                }
-              })();
-            });
-
-            option.strings = strings;
-          } else {
-            vscode.window.showInformationMessage("strings必须是数组形式");
-          }
-        }
-        // vscode.window.showErrorMessage()
-      } else {
-        vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
-      }
-    }
-    return option;
-  }
-
-  private isChange:boolean = true;
-  private isStartWatch:boolean = false;
-
-  startWatchForMark(fileName:string) {
-    fs.watch(fileName, (event, fileName) => {
-      this.isChange = true;
-    });
-  }
-
-  public getPresets():PresetOption[] {
-    if (this.isStartWatch == false) {
-      const configFile = this.getConfigFilePath(this.document);
-      if (configFile) {
-        this.startWatchForMark(configFile);
-        this.isStartWatch = true;
-      }
-    }
-    if (this.isChange) {
-      this.presets = this.getConfigureFileObject(this.document).presets ?? [];
-      this.isChange = false;
-    }
-    return this.presets;
-  }
-
-  public getstrings():(StringOption|string)[] {
-    if (this.isStartWatch == false) {
-      const configFile = this.getConfigFilePath(this.document);
-      if (configFile) {
-        this.startWatchForMark(configFile);
-        this.isStartWatch = true;
-      }
-    }
-    if (this.isChange) {
-      this.strings = this.getConfigureFileObject(this.document).strings ?? [];
-      this.isChange = false;
-    }
-    return this.strings;
-  }
-
-  private static _?:ConsumerMarkCode;
-  public static instance(document: vscode.TextDocument):ConsumerMarkCode {
-    if (!this._) {
-      this._ = new ConsumerMarkCode(document);
-    }
-    return this._;
-  }
-
-}
-
-/**
- * 获取根目录下插件预设的配置文件
- * @deprecated
- */
-export function getConfigureFileObject(document: vscode.TextDocument) {
-  const workspacePath = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
-  
-  // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
-  if (workspacePath) {
-    const configFile = path.resolve(workspacePath, "./jass.config.json");
-    
-    if (fs.existsSync(configFile)) {
-      const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
-      if (configObject.presets) {
-        if (Array.isArray(configObject.presets)) { // 确保传进来的是数组
-          return (<Array<any>>(configObject.presets)).filter(preset => {
-            return typeof(preset["code"]) == "string" && typeof(preset["name"]) == "string" && typeof(preset["descript"]) == "string"
-            && (preset["kind"] ? typeof(preset["kind"]) == "string" : true)
-            && (preset["race"] ? typeof(preset["race"]) == "string" : true)
-            && (preset["type"] ? typeof(preset["type"]) == "string" : true);
-          }).map(function(preset):PresetOption {
-            return {
-              code: preset["code"] as string,
-              name: preset["name"] as string,
-              descript: preset["descript"] as string,
-              kind: preset["kind"] as string|undefined,
-              race: preset["race"] as string|undefined,
-              type: preset["type"] as string|undefined,
-            }
-          });
-        } else {
-          vscode.window.showInformationMessage("presets必须是数组形式");
-        }
-      }
-      // vscode.window.showErrorMessage()
-    } else {
-      vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
-    }
-  }
-  return [];
-}
 
 
 
