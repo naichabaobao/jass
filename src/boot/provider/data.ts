@@ -491,8 +491,14 @@ interface PresetOption {
   type?: string,
 }
 
+interface StringOption {
+  content: string;
+  descript?: string;
+};
+
 interface ConfigFileOption {
-  presets?: PresetOption[]
+  presets?: PresetOption[];
+  strings?: StringOption[];
 }
 
 export class ConsumerMarkCode {
@@ -513,15 +519,18 @@ export class ConsumerMarkCode {
     }
   }
 
-  private datas:PresetOption[] = [];
+  private presets:PresetOption[] = [];
+  private strings:StringOption[] = [];
   private readonly document: vscode.TextDocument;
   private constructor(document: vscode.TextDocument) {
     this.document = document;
   }
 
-  private getConfigureFileObject(document: vscode.TextDocument) {
+  private getConfigureFileObject(document: vscode.TextDocument):ConfigFileOption {
     const workspacePath = this.getWorkspacePath(document);
     
+    const option: ConfigFileOption = {};
+
     // const workspacePath = vscode.workspace.workspaceFile?.fsPath;
     if (workspacePath) {
       const configFile = path.resolve(workspacePath, "./jass.config.json");
@@ -530,7 +539,7 @@ export class ConsumerMarkCode {
         const configObject = JSON.parse(fs.readFileSync(configFile).toString("utf-8"));
         if (configObject.presets) {
           if (Array.isArray(configObject.presets)) { // 确保传进来的是数组
-            return (<Array<any>>(configObject.presets)).filter(preset => {
+            const presets =  (<Array<any>>(configObject.presets)).filter(preset => {
               return typeof(preset["code"]) == "string" && typeof(preset["name"]) == "string" && typeof(preset["descript"]) == "string"
               && (preset["kind"] ? typeof(preset["kind"]) == "string" : true)
               && (preset["race"] ? typeof(preset["race"]) == "string" : true)
@@ -545,8 +554,26 @@ export class ConsumerMarkCode {
                 type: preset["type"] as string|undefined,
               }
             });
+            option.presets = presets;
           } else {
             vscode.window.showInformationMessage("presets必须是数组形式");
+          }
+        }
+        if (configObject.strings) {
+          if (Array.isArray(configObject.strings)) { // 确保传进来的是数组
+            const strings = (<Array<any>>(configObject.strings)).filter(str => {
+              return typeof(str["content"]) == "string"
+              && (str["descript"] ? typeof(str["descript"]) == "string" : true);
+            }).map(function(str):StringOption {
+              return {
+                content: str["content"] as string,
+                descript: str["descript"] as string|undefined,
+              }
+            });
+
+            option.strings = strings;
+          } else {
+            vscode.window.showInformationMessage("strings必须是数组形式");
           }
         }
         // vscode.window.showErrorMessage()
@@ -554,7 +581,7 @@ export class ConsumerMarkCode {
         vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
       }
     }
-    return [];
+    return option;
   }
 
   private isChange:boolean = true;
@@ -566,7 +593,7 @@ export class ConsumerMarkCode {
     });
   }
 
-  public getDatas():PresetOption[] {
+  public getPresets():PresetOption[] {
     if (this.isStartWatch == false) {
       const configFile = this.getConfigFilePath(this.document);
       if (configFile) {
@@ -575,10 +602,25 @@ export class ConsumerMarkCode {
       }
     }
     if (this.isChange) {
-      this.datas = this.getConfigureFileObject(this.document);
+      this.presets = this.getConfigureFileObject(this.document).presets ?? [];
       this.isChange = false;
     }
-    return this.datas;
+    return this.presets;
+  }
+
+  public getstrings():StringOption[] {
+    if (this.isStartWatch == false) {
+      const configFile = this.getConfigFilePath(this.document);
+      if (configFile) {
+        this.startWatchForMark(configFile);
+        this.isStartWatch = true;
+      }
+    }
+    if (this.isChange) {
+      this.strings = this.getConfigureFileObject(this.document).strings ?? [];
+      this.isChange = false;
+    }
+    return this.strings;
   }
 
   private static _?:ConsumerMarkCode;

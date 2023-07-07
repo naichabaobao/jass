@@ -647,7 +647,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
 
 
         
-        ConsumerMarkCode.instance(document).getDatas().forEach(preset => {
+        ConsumerMarkCode.instance(document).getPresets().forEach(preset => {
          const originCodeValue = `'${preset.code}'`;
            const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
  
@@ -671,6 +671,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
            items.push(item);
            
        });
+
+       
       }
 
 
@@ -679,6 +681,59 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
   }
 
 }(), "'");
+
+
+/**
+ * config.strings
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class StringCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+    
+    if (Options.isSupportMark) {
+
+      const strToken = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
+        return mark.isString() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
+      });
+      
+
+      console.log(strToken);
+      
+      if (strToken) {
+        const strValue = strToken.value();
+        
+        
+
+
+        
+        ConsumerMarkCode.instance(document).getstrings().forEach(str => {
+          const item = new vscode.CompletionItem(`"${str.content}"`, vscode.CompletionItemKind.Value);
+
+          const ms = new vscode.MarkdownString()
+          .appendCodeblock(`"${str.content}"`)
+          .appendMarkdown(str.descript ?? "");
+          item.detail = `"${str.content}"`;
+          item.documentation = ms;
+
+          // item.filterText = str.content;
+          // console.log(item.filterText);
+          
+          item.range = new vscode.Range(position.line, strToken.loc.start.position,position.line, strToken.loc.end.position);
+
+          items.push(item);
+           
+       });
+
+       
+      }
+
+
+    }
+    return items;
+  }
+
+}(), "\"");
 
 /*
 ,

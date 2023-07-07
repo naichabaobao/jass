@@ -332,3 +332,16 @@
 
 - 增加物编默认提示
 - 移除ObjectEditor.j提示
+
+## 1.8.5
+- 增加配置文件strings提示
+```json
+{
+    strings: [
+        {
+            content: string,
+            descript?: string
+        }
+    ]
+}
+```
