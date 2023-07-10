@@ -8303,7 +8303,7 @@ endfunction
 // 电影 设置滤镜（高级）
 // @param duration 持续时间
 // @param bmode 混合模式
-// @param tex 电影滤镜纹理(可在 ObjectEditor.j 文件找到)
+// @param tex 电影滤镜纹理(可在 记录物编的文件 找到)
 // @param red0~trans0 开始颜色(红绿蓝三色及透明度)
 // @param red1~trans1 结束颜色(红绿蓝三色及透明度)
 function CinematicFilterGenericBJ takes real duration, blendmode bmode, string tex, real red0, real green0, real blue0, real trans0, real red1, real green1, real blue1, real trans1 returns nothing
