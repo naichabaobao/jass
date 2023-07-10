@@ -1309,11 +1309,11 @@ globals
 	// 玩家单位事件 升级科技完成
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
 	
-        // 玩家单位事件 开始训练单位
+	// 玩家单位事件 开始训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_START = ConvertPlayerUnitEvent(32)
 	// 玩家单位事件 取消训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_CANCEL = ConvertPlayerUnitEvent(33)
-        // 玩家单位事件 完成训练单位
+	// 玩家单位事件 完成训练单位
 	constant playerunitevent EVENT_PLAYER_UNIT_TRAIN_FINISH = ConvertPlayerUnitEvent(34)
 	// 玩家单位事件 开始研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_RESEARCH_START = ConvertPlayerUnitEvent(35)
@@ -1329,11 +1329,11 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
-        // 玩家单位事件 英雄升级
+	// 玩家单位事件 英雄升级
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
-        // 玩家单位事件 英雄学习技能
+	// 玩家单位事件 英雄学习技能
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-        // 玩家单位事件 英雄可复活/阵亡
+	// 玩家单位事件 英雄可复活/阵亡
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家单位事件 英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -4654,28 +4654,28 @@ native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichL
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
 // 按ID发布(单位组)命令(无目标)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
 // 发布(单位组)命令(指定坐标) [R]
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
 // 发布(单位组)命令(指定点)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
 // 按ID发布(单位组)命令(指定坐标)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
 // 按ID发布(单位组)命令(指定点)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
 // 发布(单位组)命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
 // 按ID发布(单位组)命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
@@ -5656,6 +5656,7 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 // 查询指定英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
+// 当英雄拥有不能叠加的技能时，此命令似乎无效，比如牛头捡了一个提供坚韧光环的物品（物编未作任何修改），因为他此时已拥有了坚韧光环（物品技能），在发布该指令后，他可能不会学习他本身的坚韧光环（测试时用的不是技能四字编码，而是变量）
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
 // 获取指定单位技能等级 [R] 
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
@@ -5672,7 +5673,7 @@ native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy retur
 // 立即复活指定英雄(指定点)
 native ReviveHeroLoc takes unit whichHero, location loc, boolean doEyecandy returns boolean
 // 设置指定单位死亡方式(是否爆炸)
-// @param whichUnit 单位
+// @param whichUnit 指定单位
 // @param exploded 是否爆炸
 native SetUnitExploded takes unit whichUnit, boolean exploded returns nothing
 // 设置指定单位 无敌/可攻击
@@ -5785,6 +5786,7 @@ constant native GetUnitRallyUnit takes unit whichUnit returns unit
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
 // 查询指定单位是否在指定的单位组中
+// 怀疑底层是个循环，逐个检查该单位组的单位，所以在检查多个单位的循环内使用该指令时，若该单位组本身的单位也不少，游戏可能会爆卡，不建议在循环内使用此指令
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
 // 查询指定单位是否指定玩家组中任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
@@ -5796,7 +5798,7 @@ constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns bool
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位能否被检测到
+// 查询指定单位能否被指定玩家检测到
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否对指定玩家不可见
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
@@ -5806,9 +5808,9 @@ constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns bo
 constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否已被指定玩家选择
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位是否指定种族
+// 查询指定单位是否指定的种族
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
-// 查询指定单位是否与指定类型匹配
+// 查询指定单位是否指定的单位类型
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
 // 查询指定单位是否另一指定单位(两个变量是否指向同一单位)
 constant native IsUnit takes unit whichUnit, unit whichSpecifiedUnit returns boolean
@@ -5823,8 +5825,9 @@ constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
 // 查询指定单位是否被另一指定单位装载
+// 用于检测单位被哪艘（座）船/飞艇/被缠绕的金矿装载
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
-// 查询指定单位是否被装载(进入暗夜金矿、运输飞艇、运输船都属于装载)
+// 查询指定单位是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
 // 查询指定单位类型是否为英雄
@@ -5909,46 +5912,46 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // 按ID发布命令(无目标)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
 // 按ID发布命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 发布即时命令(指定坐标)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定点)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 发布即时命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 ObjectEditor.j 文件找到
+// @param order 技能命令串可在 记录物编的文件 找到
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 ObjectEditor.j 文件找到
+// @param order 技能ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
 // @param unitToBuild 建筑物的系统名字字符串，可在 common.ai 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
-// @param unitId 单位类型，可在 ObjectEditor.j 文件找到
+// @param unitId 单位类型，可在 记录物编的文件 找到
 native IssueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
 
 // 发布中介命令(无目标)
@@ -6639,7 +6642,7 @@ native SetDayNightModels takes string terrainDNCFile, string unitDNCFile returns
 // @param portraitDNCFile 肖像打光器文件路径
 native SetPortraitLight takes string portraitDNCFile returns nothing
 // 设置天空模型
-// @param skyModelFile 天空模型文件路径，可在 ObjectEditor.j 文件找到
+// @param skyModelFile 天空模型文件路径，可在 记录物编的文件 找到
 native SetSkyModel takes string skyModelFile returns nothing
 // 启用/禁用 玩家控制权(所有玩家) [R]
 // 启用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应
@@ -7343,10 +7346,10 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电特效 [R]
-// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
+// @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电特效(指定Z轴) [R]
-// @param codeName 闪电类型，具体类型可在 ObjectEditor.j 文件找到
+// @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 删除指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
@@ -7389,7 +7392,7 @@ native GetTerrainType takes real x, real y returns integer
 // 获取地形样式(指定坐标) [R]
 native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
-// @param terrainType 地表纹理，具体类型可在 ObjectEditor.j 文件找到
+// @param terrainType 地表纹理，具体类型可在 记录物编的文件 找到
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
 // 查询路径类型状态是否关闭(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
@@ -7401,7 +7404,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
-// @param imageType 图像类型，具体类型可在 ObjectEditor.j 文件找到
+// @param imageType 图像类型，具体类型可在 记录物编的文件 找到
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 删除指定图像
 native DestroyImage takes image whichImage returns nothing
@@ -7422,7 +7425,7 @@ native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
 // @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
-// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 ObjectEditor.j 文件找到
+// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 记录物编的文件 找到
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
@@ -7430,7 +7433,7 @@ native SetImageType takes image whichImage, integer imageType returns nothing
 //
 
 // 新建地表纹理 [R]
-// @param name 具体纹理可在 ObjectEditor.j 文件找到
+// @param name 具体纹理可在 记录物编的文件 找到
 // @param alpha 透明度
 // @param forcePaused 是否禁用暂停状态
 // @param noBirthTime 是否启用出生动画
