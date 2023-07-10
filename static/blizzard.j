@@ -40,11 +40,11 @@ globals
     constant real      bj_TEXT_DELAY_HINT               = 12.00
     // 文本显示延时 - 秘密，默认10.00
     constant real      bj_TEXT_DELAY_SECRET             = 10.00
-    // 文本显示延时 - 单位购买，默认15.00
+    // 文本显示延时 - 有新单位可购买，默认15.00
     constant real      bj_TEXT_DELAY_UNITACQUIRED       = 15.00
-    // 文本显示延时 - 单位可用，默认10.00
+    // 文本显示延时 - 有新单位可用，默认10.00
     constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
-    // 文本显示延时 - 物品购买，默认10.00
+    // 文本显示延时 - 有新物品可购买，默认10.00
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
     // 文本显示延时 - 警告，默认12.00
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
