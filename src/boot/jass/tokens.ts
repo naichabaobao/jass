@@ -109,7 +109,7 @@ function tokens(content: string) {
 				}
 			} else if (isLetter(char)) {
 				push(char);
-				if (nextChar && isLetter(nextChar) || nextChar == "_" || isNumber(nextChar)) {
+				if (nextChar && (isLetter(nextChar) || nextChar == "_" || nextChar == "$" || isNumber(nextChar))) {
 					state = 1;
 				} else {
 					pushToken("id");

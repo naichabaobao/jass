@@ -3,6 +3,8 @@ import { DataGetter, parseContent } from "./data";
 import { Program } from "../jass/ast";
 
 function genSymbols(program:Program) {
+    
+    
     const symbols:vscode.DocumentSymbol[] = [];
     program.globals.forEach((global) => {
         const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
@@ -23,47 +25,39 @@ function genSymbols(program:Program) {
             }
         })(), range, selectRange));
     });
-    program.functions.forEach((func) => {
-        const range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
-        let selectRange:vscode.Range;
-        if (func.nameToken) {
-            selectRange = new vscode.Range(func.nameToken.line, func.nameToken.position, func.nameToken.line, func.nameToken.end);
-        } else {
-            selectRange = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
-        }
-        const funcSymbol = new vscode.DocumentSymbol(func.name, func.getContents().join(" "), vscode.SymbolKind.Function, range, selectRange);
-        symbols.push(funcSymbol);
+    
+    try {
+        program.functions.forEach((func) => {
+            const range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
+            let selectRange:vscode.Range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
+            const funcSymbol = new vscode.DocumentSymbol(func.name, func.getContents().join(" "), vscode.SymbolKind.Function, range, selectRange);
+            symbols.push(funcSymbol);
+    
+            func.globals.forEach((global) => {
+                const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
+                let selectRange:vscode.Range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
+                funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
+                    if (global.isArray) {
+                        return vscode.SymbolKind.Array;
+                    } 
+                    if (global.isConstant) {
+                        return vscode.SymbolKind.Constant;
+                    } else {
+                        return vscode.SymbolKind.Variable;
+                    }
+                })(), range, selectRange));
+            });
+            func.locals.forEach((local) => {
+                const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
+                let selectRange:vscode.Range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
+                funcSymbol.children.push(new vscode.DocumentSymbol(local.name, local.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
+            });
+        });
+    } catch (error) {
+        console.log(error);
+        
+    }
 
-        func.globals.forEach((global) => {
-            const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
-            let selectRange:vscode.Range;
-            if (global.nameToken) {
-                selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end);
-            } else {
-                selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
-            }
-            funcSymbol.children.push(new vscode.DocumentSymbol(global.name, global.getContents().join(" "), (() => {
-                if (global.isArray) {
-                    return vscode.SymbolKind.Array;
-                } 
-                if (global.isConstant) {
-                    return vscode.SymbolKind.Constant;
-                } else {
-                    return vscode.SymbolKind.Variable;
-                }
-            })(), range, selectRange));
-        });
-        func.locals.forEach((local) => {
-            const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
-            let selectRange:vscode.Range;
-            if (local.nameToken) {
-                selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end);
-            } else {
-                selectRange = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
-            }
-            funcSymbol.children.push(new vscode.DocumentSymbol(local.name, local.getContents().join(" "), vscode.SymbolKind.Constant, range, selectRange));
-        });
-    });
     program.natives.forEach((native) => {
         const range = new vscode.Range(native.loc.start.line, native.loc.start.position, native.loc.end.line, native.loc.end.position);
         let selectRange:vscode.Range;
@@ -237,16 +231,17 @@ function genSymbols(program:Program) {
         let selectRange:vscode.Range = new vscode.Range(type.loc.start.line, type.loc.start.position, type.loc.end.line, type.loc.end.position);
         symbols.push(new vscode.DocumentSymbol(type.name, type.getContents().join(" "), vscode.SymbolKind.Object, range, selectRange));
     });
+    /*
     program.defines.forEach(define => {
         const range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
         let selectRange:vscode.Range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
-        symbols.push(new vscode.DocumentSymbol(define.name, define.getContents().join(" "), vscode.SymbolKind.Key, range, selectRange));
+        symbols.push(new vscode.DocumentSymbol(define.name, define.value, vscode.SymbolKind.Key, range, selectRange));
     });
     program.textMacros.forEach(textMacro => {
         const range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
         let selectRange:vscode.Range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
-        symbols.push(new vscode.DocumentSymbol(textMacro.getName(), textMacro.origin, vscode.SymbolKind.Field, range, selectRange));
-    });
+        symbols.push(new vscode.DocumentSymbol(textMacro.getName(), "", vscode.SymbolKind.Field, range, selectRange));
+    });*/
     return symbols;
 }
 
@@ -263,6 +258,9 @@ async function getCurrentDocumentProgram(document: vscode.TextDocument):Promise<
             return;
         } else {
             program  = new DataGetter().get(document.uri.fsPath);
+            if (program) {
+                return;
+            }
         }
     }, 100);
     return <Program>program;
@@ -272,11 +270,25 @@ async function getCurrentDocumentProgram(document: vscode.TextDocument):Promise<
  * OutLine
  */
 class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
-    async provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
-
-        const program = await getCurrentDocumentProgram(document);
+    provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
         console.info("outline");
-        return genSymbols(program);
+        let program = new DataGetter().get(document.uri.fsPath);
+        if (!program) {
+            parseContent(document.uri.fsPath, document.getText());
+            
+            program = new DataGetter().get(document.uri.fsPath);
+        }
+
+        console.log(program);
+        if (program) {
+            
+            console.info("begin get symbols!");
+            const ss = genSymbols(program);
+            console.info("outline end");
+            return ss;
+        }
+
+        return undefined;
     }
     
 }

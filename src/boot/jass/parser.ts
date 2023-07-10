@@ -247,6 +247,7 @@ function parseType(lineText: ReplaceableLineText):Type|undefined {
 
 function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Method)) {
 
+
     
     const tokens = tokenize(lineText.replaceText()).map((token) => {
         token.line = lineText.lineNumber();
@@ -671,6 +672,7 @@ class ReplaceableLineText extends LineText {
     // private tokens:Token[] = [];
     private defines:TextMacroDefine[] = [];
 
+    // 跟textmacro冲突,还没找到原因
     constructor(lineText:LineText, defines?: TextMacroDefine[]) {
         super(lineText.getText());
         this.from(lineText);
@@ -763,10 +765,11 @@ class TextMacro extends Range {
         this.lineTexts.map((lineText) => {
             const replacedLineText = lineText.clone();
 
+
             let newText = lineText.replaceText();
             this.takes.forEach((take, takeIndex) => {
                 newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
-            })
+            });
             replacedLineText.setText(newText);
             callback(replacedLineText);
         });
@@ -1205,7 +1208,7 @@ class Parser {
         function handleGlobalsBlock(block: Block, globals: Global[]) {
             const lineComments: LineComment[] = [];
             block.childrens.forEach((x) => {
-                if (x instanceof LineText) {
+                if (x instanceof ReplaceableLineText) {
                     if (isLineCommentStart(x)) {
                         const lineComment = new LineComment();
                         parseLineComment(x, lineComment);
@@ -1272,7 +1275,7 @@ class Parser {
                 locals: method.locals
             });
         }
-        function handleFunctionBody(blocks: (Block|LineText)[], collect: {
+        function handleFunctionBody(blocks: (Block|ReplaceableLineText)[], collect: {
             locals?: Local[]|null,
             globals?: Global[]|null
         } = {
@@ -1302,7 +1305,7 @@ class Parser {
                 }
             });
         }
-        function handleStructBody(blocks: (Block|LineText)[], collect: {
+        function handleStructBody(blocks: (Block|ReplaceableLineText)[], collect: {
             members?: Member[]|null,
             methods?: Method[]|null
         } = {
