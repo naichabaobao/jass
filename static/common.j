@@ -5431,6 +5431,7 @@ native SetDestructableAnimation takes destructable d, string whichAnimation retu
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
+// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -5471,6 +5472,7 @@ native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
 // 查询指定物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
 // 显示/隐藏 指定物品 [R]
+// 隐藏后反隐也看不到
 native SetItemVisible takes item whichItem, boolean show returns nothing
 // 查询指定物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
@@ -5530,6 +5532,7 @@ native KillUnit takes unit whichUnit returns nothing
 // 删除指定单位
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
+// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]
@@ -5800,7 +5803,7 @@ constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boo
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位能否被指定玩家侦测到（可被反隐看到）
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位是否对指定玩家不可见
+// 查询指定单位是否对指定玩家不可见（未使用反隐的情况下）
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位在指定玩家视野中，是否被迷雾遮挡
 constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns boolean
@@ -5821,6 +5824,7 @@ constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real dista
 // 查询指定单位是否在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
 // 查询指定单位是否隐藏
+// 隐藏的单位反隐也看不到，但其碰撞体积仍可按设置工作
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
