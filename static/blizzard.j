@@ -3662,19 +3662,19 @@ function CreateCommandButtonEffectBJ takes integer abilityId, string order retur
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建技能按钮特效（'Aque'）
+// 创建训练单位按钮特效（'Aque'）
 function CreateTrainCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect('Aque', UnitId2String(unitId))
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建科技按钮特效
+// 创建研究科技按钮特效
 function CreateUpgradeCommandButtonEffectBJ takes integer techId returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateUpgradeCommandButtonEffect(techId)
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建技能按钮特效
+// 创建命令按钮特效
 function CreateCommonCommandButtonEffectBJ takes string order returns commandbuttoneffect
     set bj_lastCreatedCommandButtonEffect = CreateCommandButtonEffect(0, order)
     return bj_lastCreatedCommandButtonEffect
@@ -3686,7 +3686,7 @@ function CreateLearnCommandButtonEffectBJ takes integer abilityId returns comman
     return bj_lastCreatedCommandButtonEffect
 endfunction
 
-// 创建建造/训练单位按钮特效
+// 创建建造单位按钮特效
 function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
 	local race r = GetPlayerRace(GetLocalPlayer())
 	local integer abilityId
