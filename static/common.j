@@ -1285,7 +1285,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
 	// 玩家单位事件 单位(尸体)开始腐烂
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
-	// 玩家单位事件 单位可检测
+	// 玩家单位事件 单位可侦测
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
 	// 玩家单位事件 单位被隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
@@ -1368,7 +1368,7 @@ globals
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
         // 单位事件 单位(尸体)开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
-	// 单位事件 单位可检测
+	// 单位事件 单位可侦测
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
@@ -5090,7 +5090,7 @@ constant native GetTrainedUnitType takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取检测的单位(对应单位被检测到等事件)
+// 事件响应 获取侦测的单位(对应单位被侦测到等事件)
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
@@ -5293,7 +5293,7 @@ constant native GetEventDamageSource takes nothing returns unit
 // EVENT_UNIT_DECAY
 // Use the GetDyingUnit and GetDecayingUnit funcs above
 
-// 事件响应 获取事件检测到的玩家(对应检测到单位等事件)
+// 事件响应 获取事件侦测到的玩家(对应侦测到单位等事件)
 // EVENT_UNIT_DETECTED
 constant native GetEventDetectingPlayer takes nothing returns player
 
@@ -5798,7 +5798,7 @@ constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns bool
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位能否被指定玩家检测到
+// 查询指定单位能否被指定玩家侦测到
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否对指定玩家不可见
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
@@ -5825,7 +5825,7 @@ constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
 // 查询指定单位是否被另一指定单位装载
-// 用于检测单位被哪艘（座）船/飞艇/被缠绕的金矿装载
+// 可用于查询单位被哪艘（座）船/飞艇/被缠绕的金矿装载（每个载具逐一检查）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
 // 查询指定单位是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
