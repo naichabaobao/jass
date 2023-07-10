@@ -237,6 +237,16 @@ function genSymbols(program:Program) {
         let selectRange:vscode.Range = new vscode.Range(type.loc.start.line, type.loc.start.position, type.loc.end.line, type.loc.end.position);
         symbols.push(new vscode.DocumentSymbol(type.name, type.getContents().join(" "), vscode.SymbolKind.Object, range, selectRange));
     });
+    program.defines.forEach(define => {
+        const range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
+        let selectRange:vscode.Range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
+        symbols.push(new vscode.DocumentSymbol(define.name, define.getContents().join(" "), vscode.SymbolKind.Key, range, selectRange));
+    });
+    program.textMacros.forEach(textMacro => {
+        const range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
+        let selectRange:vscode.Range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
+        symbols.push(new vscode.DocumentSymbol(textMacro.getName(), textMacro.origin, vscode.SymbolKind.Field, range, selectRange));
+    });
     return symbols;
 }
 

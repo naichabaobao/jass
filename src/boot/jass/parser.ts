@@ -776,6 +776,23 @@ class TextMacro extends Range {
         this.takes.push(take);
     }
 
+    public get origin():string {
+        const content = (() => {
+            const maxLine = 5;
+            let result = "";
+            if (this.lineTexts.length > 0) {
+                result = this.lineTexts.slice(0, maxLine).map(lineText => {
+                    return lineText.replaceText();
+                }).join("\n");
+            }
+            if (this.lineTexts.length > maxLine) {
+                result += "\n..."
+            }
+            return result;
+        })();
+        return `//!textmacro ${this.name}${this.takes.length > 0 ? ` takes ${this.takes.join(", ")}` : ""}\n${content}\n//!endtextmacro`;
+    }
+
 }
 class Include extends Range {
     private path: string;

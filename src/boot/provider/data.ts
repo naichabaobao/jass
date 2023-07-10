@@ -524,6 +524,7 @@ export class ConsumerMarkCode {
   private readonly document: vscode.TextDocument;
   private constructor(document: vscode.TextDocument) {
     this.document = document;
+    
   }
 
   private getConfigureFileObject(document: vscode.TextDocument):ConfigFileOption {
@@ -602,13 +603,6 @@ export class ConsumerMarkCode {
   }
 
   public getPresets():PresetOption[] {
-    if (this.isStartWatch == false) {
-      const configFile = this.getConfigFilePath(this.document);
-      if (configFile) {
-        this.startWatchForMark(configFile);
-        this.isStartWatch = true;
-      }
-    }
     if (this.isChange) {
       this.presets = this.getConfigureFileObject(this.document).presets ?? [];
       this.isChange = false;
@@ -617,13 +611,6 @@ export class ConsumerMarkCode {
   }
 
   public getstrings():(StringOption|string)[] {
-    if (this.isStartWatch == false) {
-      const configFile = this.getConfigFilePath(this.document);
-      if (configFile) {
-        this.startWatchForMark(configFile);
-        this.isStartWatch = true;
-      }
-    }
     if (this.isChange) {
       this.strings = this.getConfigureFileObject(this.document).strings ?? [];
       this.isChange = false;
@@ -635,6 +622,13 @@ export class ConsumerMarkCode {
   public static instance(document: vscode.TextDocument):ConsumerMarkCode {
     if (!this._) {
       this._ = new ConsumerMarkCode(document);
+    }
+    if (this._.isStartWatch == false) {
+      const configFile = this._.getConfigFilePath(document);
+      if (configFile) {
+        this._.startWatchForMark(configFile);
+        this._.isStartWatch = true;
+      }
     }
     return this._;
   }

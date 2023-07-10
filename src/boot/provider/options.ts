@@ -100,14 +100,14 @@ class Options {
   private static triggerCount = 20
 
   public static get workspaces():string[] {
-    console.log('read space')
+    // console.log('read space')
     if (vscode.workspace.workspaceFolders) {
       const lastUpdate = this.lastWorkspacesUpdate
       const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
       if (usingCache){
         return this.workspacesCache
       }
-      console.time('read space')
+      // console.time('read space')
       this.workspacesCache = vscode.workspace.workspaceFolders.map((floder) => {
         const options = {
             cwd: floder.uri.fsPath,
@@ -115,13 +115,13 @@ class Options {
                 path.resolve(floder.uri.fsPath, ".jassignore")
             ),
         };
-        console.log(options)
+        // console.log(options)
         return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
             .map((pattern) => glob.sync(pattern, options))
             .flat()
             .map((file) => path.resolve(floder.uri.fsPath, file));
       }).flat();
-      console.timeEnd('read space')
+      // console.timeEnd('read space')
       this.lastWorkspacesUpdate = Date.now()
       return this.workspacesCache
     }
@@ -135,6 +135,9 @@ class Options {
     return [...this.includes, ...this.workspaces];
   }
 
+  /**
+   * @deprecated 不用了
+   */
   public static get pjassPath():string {
     return path.resolve(__dirname, "../../../static/pjass-latest.exe")
   }

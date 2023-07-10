@@ -346,3 +346,12 @@
     ]
 }
 ```
+- 移除jass.excludes配置项,改为使用jass.config.json，配置
+```json
+// 目前仅支持绝对路径
+{
+    excludes: [
+        "c:/absolute-path/name.ext"
+    ]
+}
+```
