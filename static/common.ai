@@ -279,7 +279,7 @@ native DebugS               takes string str                            returns 
     native CaptainReadinessMa   takes nothing                               returns integer
     // 查询攻击队长是否到达目的地
     native CaptainAtGoal        takes nothing                               returns boolean
-    // 查询地图上是否还有中立敌对玩家的单位，即野怪 
+    // 查询地图上是否还有中立敌对玩家的单位，即野怪
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
     native CreepsOnMap          takes nothing                               returns boolean
     // 添加指定单位类型到自杀攻击组，指定单位类型和数量

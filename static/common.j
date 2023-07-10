@@ -4220,7 +4220,7 @@ globals
 	constant targetflag TARGET_FLAG_DEBRIS = ConvertTargetFlag(256)
 	// 目标类型 装饰物
 	constant targetflag TARGET_FLAG_DECORATION = ConvertTargetFlag(512)
-	// 目标类型 桥梁
+	// 目标类型 桥
 	constant targetflag TARGET_FLAG_BRIDGE = ConvertTargetFlag(1024)
 	
 	// defense type
@@ -7378,6 +7378,7 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 //
 
 // 获取地形悬崖高度(指定坐标) [R]
+// 深水区为0，浅水区为1，平原为2，之后每层+1
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
@@ -8010,7 +8011,7 @@ native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
 // 创建技能按钮特效
 native CreateCommandButtonEffect takes integer abilityId, string order returns commandbuttoneffect
-// 创建研究按钮特效
+// 创建研究科技按钮特效
 native CreateUpgradeCommandButtonEffect takes integer whichUprgade returns commandbuttoneffect
 // 创建学习技能按钮特效
 native CreateLearnCommandButtonEffect takes integer abilityId returns commandbuttoneffect

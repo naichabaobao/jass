@@ -49,6 +49,9 @@ class Options {
     return resolvePaths(includes);
   }
 
+  /**
+   * @deprecated 使用ConsumerMarkCode.excludes
+   */
   public static get excludes() {
     const includes = this.configuration["excludes"] as Array<string>;
     return includes;
@@ -91,7 +94,10 @@ class Options {
   public static get isSupportMark() {
     return this.configuration["support"]["mark"] as boolean;
   }
-
+  // 是否需要显示string
+  public static get isSupportString() {
+    return this.configuration["support"]["string"] as boolean;
+  }
 
   // 加入工作空间缓存
   private static workspacesCache: string[] = []

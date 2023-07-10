@@ -647,7 +647,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
 
 
         
-        ConsumerMarkCode.instance(document).getPresets().forEach(preset => {
+        ConsumerMarkCode.instance(document.uri).getPresets().forEach(preset => {
          const originCodeValue = `'${preset.code}'`;
            const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
  
@@ -691,7 +691,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
     
     const items:vscode.CompletionItem[] = [];
     
-    if (Options.isSupportMark) {
+    if (Options.isSupportString) {
 
       const strToken = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
         return mark.isString() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
@@ -707,7 +707,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
 
 
         
-        ConsumerMarkCode.instance(document).getstrings().forEach(str => {
+        ConsumerMarkCode.instance(document.uri).getstrings().forEach(str => {
           let item: vscode.CompletionItem;
           if (typeof(str) == "string") {
             item = new vscode.CompletionItem(`"${str}"`, vscode.CompletionItemKind.Value);

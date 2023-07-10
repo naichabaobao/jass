@@ -105,7 +105,7 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": false,
-          "description": "(Test) Check jass syntax only"
+          "description": "(Deprecation) Check jass syntax only"
         },
         "jass.formatv2": {
           "type": "boolean",
@@ -121,6 +121,11 @@
           "type": "boolean",
           "default": true,
           "description": "Provide default 'mark' prompts for Warcraft"
+        },
+        "jass.support.string": {
+          "type": "boolean",
+          "default": true,
+          "description": "String prompt support"
         }
       }
     },
