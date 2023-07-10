@@ -75,7 +75,7 @@ globals
 
     // Game constants
 
-    // 最大库存，默认6
+    // 最大物品栏格子数，默认6
     constant integer   bj_MAX_INVENTORY                 =  6
     // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
@@ -3605,14 +3605,14 @@ endfunction
 //***************************************************************************
 
 
-// 新建特殊效果（指定点）
+// 新建特效（指定点）
 function AddSpecialEffectLocBJ takes location where, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectLoc(modelName, where)
     return bj_lastCreatedEffect
 endfunction
 
 
-// 新建特殊效果（指定单位/物品/可破坏物）
+// 新建特效（指定单位/物品/可破坏物）
 function AddSpecialEffectTargetUnitBJ takes string attachPointName, widget targetWidget, string modelName returns effect
     set bj_lastCreatedEffect = AddSpecialEffectTarget(modelName, targetWidget, attachPointName)
     return bj_lastCreatedEffect
@@ -3622,7 +3622,7 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 // Commented out - Destructibles have no attachment points.
-// 新建特殊效果（指定可破坏物）
+// 新建特效（指定可破坏物）
 //function AddSpecialEffectTargetDestructableBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
@@ -3631,19 +3631,19 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 // Commented out - Items have no attachment points.
-// 新建特殊效果（指定物品）
+// 新建特效（指定物品）
 //function AddSpecialEffectTargetItemBJ takes string attachPointName, widget targetWidget, string modelName returns effect
 //    return AddSpecialEffectTargetUnitBJ(attachPointName, targetWidget, modelName)
 //endfunction
 
 
-// 删除特殊效果
+// 删除特效
 function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
 
 
-// 获取最后创建的特殊效果
+// 获取最后创建的特效
 function GetLastCreatedEffectBJ takes nothing returns effect
     return bj_lastCreatedEffect
 endfunction
