@@ -56,7 +56,7 @@ globals
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
     // 生命障碍 - 简单，默认60.00
     constant real      bj_HANDICAP_EASY                 = 60.00
-    // 生命障碍 - 无限制/普通，默认90.00
+    // 生命障碍 - 普通，默认90.00
     constant real      bj_HANDICAP_NORMAL               = 90.00
     // 伤害障碍 - 简单，默认50.00
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
