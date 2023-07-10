@@ -2364,7 +2364,7 @@ const unitHuman = {
     "Bclf": { code: "", name: "迷雾之云/乌云技能", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "Binf": { code: "", name: "心灵之火", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "Bhea": { code: "", name: "治疗术", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
-    "Bivs": { code: "", name: "隐形(额外的)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
+    "Bivs": { code: "", name: "隐形术(额外的)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "Binv": { code: "", name: "隐形术", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "BHtb": { code: "", name: "风暴之锤", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "BHbh": { code: "", name: "猛击", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
