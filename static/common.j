@@ -1285,7 +1285,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
 	// 玩家单位事件 单位(尸体)开始腐烂
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
-	// 玩家单位事件 单位可侦测
+	// 玩家单位事件 单位可侦测（可被反隐看到）
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
 	// 玩家单位事件 单位被隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
@@ -1368,7 +1368,7 @@ globals
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
         // 单位事件 单位(尸体)开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
-	// 单位事件 单位可侦测
+	// 单位事件 单位可侦测（可被反隐看到）
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
@@ -5090,7 +5090,7 @@ constant native GetTrainedUnitType takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取侦测的单位(对应单位被侦测到等事件)
+// 事件响应 获取被侦测的单位(对应单位被侦测到等事件)（被反隐看到的单位）
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
@@ -5293,7 +5293,7 @@ constant native GetEventDamageSource takes nothing returns unit
 // EVENT_UNIT_DECAY
 // Use the GetDyingUnit and GetDecayingUnit funcs above
 
-// 事件响应 获取事件侦测到的玩家(对应侦测到单位等事件)
+// 事件响应 获取侦测单位的玩家(对应单位被侦测到等事件)（操作反隐的玩家）
 // EVENT_UNIT_DETECTED
 constant native GetEventDetectingPlayer takes nothing returns player
 
@@ -5798,7 +5798,7 @@ constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns bool
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位能否被指定玩家侦测到
+// 查询指定单位能否被指定玩家侦测到（可被反隐看到）
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否对指定玩家不可见
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
