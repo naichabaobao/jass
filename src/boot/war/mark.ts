@@ -41,8 +41,8 @@ enum Kind {
   }
   
   /**
-   * 种族
-   */
+  * 种族
+  */
   enum Race {
     /**
      * 人族
@@ -77,308 +77,308 @@ enum Kind {
      */
     Special= 0x70,
   }
-  
+
   /**
    * 转换race为可读字符串
    * @param {Race} race 
    * @returns {string}
-   */
+  */
   const raceToString = (race: Race) => {
     switch (race) {
-      case Race.Human:
-        return "人族";
-      case Race.Orc:
-        return "兽族";
-      case Race.NightElf:
-        return "暗夜精灵";
-      case Race.Undead:
-        return "不死族";
-      case Race.Naga:
-        return "娜伽";
-      case Race.NeutralHostile:
-        return "中立被动";
-      case Race.NeutralPassive:
-        return "中立敌对";
-      case Race.Special:
-        return "特殊";
-      default:
-        return "";
+        case Race.Human:
+            return "人族";
+        case Race.Orc:
+            return "兽族";
+        case Race.NightElf:
+            return "暗夜精灵";
+        case Race.Undead:
+            return "不死族";
+        case Race.Naga:
+            return "娜伽";
+        case Race.NeutralHostile:
+            return "中立被动";
+        case Race.NeutralPassive:
+            return "中立敌对";
+        case Race.Special:
+            return "特殊";
+        default:
+            return "";
     }
   }
   
-  /**
-   * 类型
-   */
-  enum Type {
-    Unit= 0x00,
-    Architecture= 0x10,
-    Hero= 0x20,
-    Special= 0x30,
-    Item= 0x40
+/**
+ * 类型
+ */
+enum Type {
+  Unit= 0x00,
+  Architecture= 0x10,
+  Hero= 0x20,
+  Special= 0x30,
+  Item= 0x40
   }
-  
-  /**
-   * 转换type为可读字符串
-   * @param {Type} type 
-   * @returns {string}
-   */
-  const typeToString = (type: Type) => {
+
+/**
+ * 转换type为可读字符串
+ * @param {Type} type 
+ * @returns {string}
+ */
+const typeToString = (type: Type) => {
     switch (type) {
-      case Type.Unit:
-        return "单位";
-      case Type.Architecture:
-        return "建筑";
-      case Type.Hero:
-        return "英雄";
-      case Type.Special:
-        return "特殊";
-      case Type.Item:
-        return "物品";
-      default:
-        return "";
+        case Type.Unit:
+            return "单位";
+        case Type.Architecture:
+            return "建筑";
+        case Type.Hero:
+            return "英雄";
+        case Type.Special:
+            return "特殊";
+        case Type.Item:
+            return "物品";
+        default:
+            return "";
     }
   }
   
-  const unitHuman = {
+const unitHuman = {
     "hpea": {
-      code: "hpea",
-      name: "农民",
-      tip: "人族的基本工作单位，能采集金矿和木材还能建造和修理建筑物。紧急情况之下还可以变成民兵。能攻击地面单位和树木。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hpea",
+        name: "农民",
+        tip: "人族的基本工作单位，能采集金矿和木材还能建造和修理建筑物。紧急情况之下还可以变成民兵。能攻击地面单位和树木。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hfoo": {
-      code: "hfoo",
-      name: "步兵",
-      tip: "步兵能学习到防御模式技能。能攻击地面单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hfoo",
+        name: "步兵",
+        tip: "步兵能学习到防御模式技能。能攻击地面单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hkni": {
-      code: "hkni",
-      name: "骑士",
-      tip: "强大的地面单位，能学到训兽术。能攻击地面单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hkni",
+        name: "骑士",
+        tip: "强大的地面单位，能学到训兽术。能攻击地面单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hrif": {
-      code: "hrif",
-      name: "矮人火炮手",
-      tip: "非常适合于对付敌人的空中单位，还能获得长管火枪的升级。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hrif",
+        name: "矮人火炮手",
+        tip: "非常适合于对付敌人的空中单位，还能获得长管火枪的升级。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hmtm": {
-      code: "hmtm",
-      name: "迫击炮小队",
-      tip: "远距离攻城单位，对付建筑物特别地有效，但是速度很慢很容易遭受敌人的近身攻击。还能获得照明弹和碎片攻击技能。能攻击地面单位和树木。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hmtm",
+        name: "迫击炮小队",
+        tip: "远距离攻城单位，对付建筑物特别地有效，但是速度很慢很容易遭受敌人的近身攻击。还能获得照明弹和碎片攻击技能。能攻击地面单位和树木。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hgyr": {
-      code: "hgyr",
-      name: "飞行机器",
-      tip: "快速移动的飞行机器，能出色地完成侦察任务也能有效地抵抗敌人的空中单位，能获得飞行机器炸弹和高射炮火的升级。能看见隐形单位。能攻击空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hgyr",
+        name: "飞行机器",
+        tip: "快速移动的飞行机器，能出色地完成侦察任务也能有效地抵抗敌人的空中单位，能获得飞行机器炸弹和高射炮火的升级。能看见隐形单位。能攻击空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hgry": {
-      code: "hgry",
-      name: "狮鹫骑士",
-      tip: "威力巨大的飞行单位，狮鹫上面骑乘着一个矮人族的锤手。能学到风暴战锤技能。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hgry",
+        name: "狮鹫骑士",
+        tip: "威力巨大的飞行单位，狮鹫上面骑乘着一个矮人族的锤手。能学到风暴战锤技能。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hmpr": {
-      code: "hmpr",
-      name: "牧师",
-      tip: "一开始就拥有强大的医疗能力，随后还能学习到驱逐魔法和心灵之火这两项技能。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hmpr",
+        name: "牧师",
+        tip: "一开始就拥有强大的医疗能力，随后还能学习到驱逐魔法和心灵之火这两项技能。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hsor": {
-      code: "hsor",
-      name: "女巫",
-      tip: "一开始能施放减慢敌人移动和进攻速度的减速魔法，随后还能学习到隐形术和变形术。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hsor",
+        name: "女巫",
+        tip: "一开始能施放减慢敌人移动和进攻速度的减速魔法，随后还能学习到隐形术和变形术。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hmtt": {
-      code: "hmtt",
-      name: "蒸汽机车",
-      tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。升级之后可以拥有弹幕攻击能力。能攻击建筑物。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hmtt",
+        name: "蒸汽机车",
+        tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。升级之后可以拥有弹幕攻击能力。能攻击建筑物。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hspt": {
-      code: "hspt",
-      name: "魔法破坏者",
-      tip: "精灵族的英勇战士，被训练来消灭法师。初始技能为魔法盗取，可以操纵魔法效果为你所用，还有魔法免疫和反馈技能，也可以学会控制魔法。能攻击地面单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hspt",
+        name: "魔法破坏者",
+        tip: "精灵族的英勇战士，被训练来消灭法师。初始技能为魔法盗取，可以操纵魔法效果为你所用，还有魔法免疫和反馈技能，也可以学会控制魔法。能攻击地面单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "hdhw": {
-      code: "hdhw",
-      name: "龙鹰骑士",
-      tip: "动作敏捷的飞行单位，骑乘一位精灵族战士。拥有空中锁镣技能，可以暂时禁锢和残废敌空中单位。可以学习到训兽术和乌云技能。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Unit
+        code: "hdhw",
+        name: "龙鹰骑士",
+        tip: "动作敏捷的飞行单位，骑乘一位精灵族战士。拥有空中锁镣技能，可以暂时禁锢和残废敌空中单位。可以学习到训兽术和乌云技能。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Unit
     },
     "htow": {
-      code: "htow",
-      name: "城镇大厅",
-      tip: "基本建筑物，用来训练农民和存贮搜集到的资源，在升级到了主城和城堡之后能让玩家建造许多新的建筑物和单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "htow",
+        name: "城镇大厅",
+        tip: "基本建筑物，用来训练农民和存贮搜集到的资源，在升级到了主城和城堡之后能让玩家建造许多新的建筑物和单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hkee": {
-      code: "hkee",
-      name: "主城",
-      tip: "升级到主城之后能使玩家建造许多新的建筑物和单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hkee",
+        name: "主城",
+        tip: "升级到主城之后能使玩家建造许多新的建筑物和单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hcas": {
-      code: "hcas",
-      name: "城堡",
-      tip: "升级到城堡之后能使玩家建造许多新的建筑物和单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hcas",
+        name: "城堡",
+        tip: "升级到城堡之后能使玩家建造许多新的建筑物和单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hhou": {
-      code: "hhou",
-      name: "农场",
-      tip: "提供人口，增加可造单位数量的最大值。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hhou",
+        name: "农场",
+        tip: "提供人口，增加可造单位数量的最大值。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "halt": {
-      code: "halt",
-      name: "国王祭坛",
-      tip: "召唤新的英雄或者复活死去的英雄。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "halt",
+        name: "国王祭坛",
+        tip: "召唤新的英雄或者复活死去的英雄。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hbar": {
-      code: "hbar",
-      name: "兵营",
-      tip: "最基本的产兵建筑物。能训练出人族的步兵，矮人火枪手和骑士。步兵的防御模式，矮人火枪手的长管火枪以及训兽术也都是在这里进行研究的。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hbar",
+        name: "兵营",
+        tip: "最基本的产兵建筑物。能训练出人族的步兵，矮人火枪手和骑士。步兵的防御模式，矮人火枪手的长管火枪以及训兽术也都是在这里进行研究的。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hlum": {
-      code: "hlum",
-      name: "伐木场",
-      tip: "能储存采集到的木材。还包括对伐木效率和石工技术的研究。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hlum",
+        name: "伐木场",
+        tip: "能储存采集到的木材。还包括对伐木效率和石工技术的研究。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hbla": {
-      code: "hbla",
-      name: "铁匠铺",
-      tip: "能对护甲，武器和火药进行升级。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hbla",
+        name: "铁匠铺",
+        tip: "能对护甲，武器和火药进行升级。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "harm": {
-      code: "harm",
-      name: "车间",
-      tip: "能生产出蒸汽机车、迫击炮小队和飞行机器。并且包括对照明弹、碎片攻击、弹幕攻击、飞行机器炸弹和高射炮火的升级。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "harm",
+        name: "车间",
+        tip: "能生产出蒸汽机车、迫击炮小队和飞行机器。并且包括对照明弹、碎片攻击、弹幕攻击、飞行机器炸弹和高射炮火的升级。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hars": {
-      code: "hars",
-      name: "神秘圣地",
-      tip: "能训练出牧师，女巫，魔法破坏者。还包括对牧师，女巫的魔法技能升级，控制魔法的技能升级。使得人族的防御塔具有探测隐形单位能力的魔法岗哨也是在这里进行研究的。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hars",
+        name: "神秘圣地",
+        tip: "能训练出牧师，女巫，魔法破坏者。还包括对牧师，女巫的魔法技能升级，控制魔法的技能升级。使得人族的防御塔具有探测隐形单位能力的魔法岗哨也是在这里进行研究的。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hgra": {
-      code: "hgra",
-      name: "狮鹫笼",
-      tip: "能训练出狮鹫骑士和龙鹰骑士。还包括对风暴战锤和乌云技能的研究。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hgra",
+        name: "狮鹫笼",
+        tip: "能训练出狮鹫骑士和龙鹰骑士。还包括对风暴战锤和乌云技能的研究。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hwtw": {
-      code: "hwtw",
-      name: "哨塔",
-      tip: "基本的侦察型建筑物，能升级到炮塔或者防御塔，还能学习到魔法岗哨技能。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hwtw",
+        name: "哨塔",
+        tip: "基本的侦察型建筑物，能升级到炮塔或者防御塔，还能学习到魔法岗哨技能。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hgtw": {
-      code: "hgtw",
-      name: "防御塔",
-      tip: "基本的防守型建筑物，能学习到魔法岗哨技能。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hgtw",
+        name: "防御塔",
+        tip: "基本的防守型建筑物，能学习到魔法岗哨技能。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hctw": {
-      code: "hctw",
-      name: "炮塔",
-      tip: "重型的防御性建筑物，对付成群结队的敌人尤为有效。还能学到魔法岗哨技能。能攻击地面单位和树木。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hctw",
+        name: "炮塔",
+        tip: "重型的防御性建筑物，对付成群结队的敌人尤为有效。还能学到魔法岗哨技能。能攻击地面单位和树木。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hatw": {
-      code: "hatw",
-      name: "神秘之塔",
-      tip: "魔法防御塔。对于敌人的英雄和魔法施放者特别有效。有魔法回应技能，使它的攻击能够破坏魔法值，破坏的量与攻击的伤害相同。可以学习魔法哨兵技能。攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hatw",
+        name: "神秘之塔",
+        tip: "魔法防御塔。对于敌人的英雄和魔法施放者特别有效。有魔法回应技能，使它的攻击能够破坏魔法值，破坏的量与攻击的伤害相同。可以学习魔法哨兵技能。攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "hvlt": {
-      code: "hvlt",
-      name: "神秘藏宝室",
-      tip: "建造一个出售物品的商店。可供购买的物品的种类取决于你的城镇大厅的升级情况(城镇大厅，主城或者城堡)以及你所拥有的建筑物种类。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Architecture
+        code: "hvlt",
+        name: "神秘藏宝室",
+        tip: "建造一个出售物品的商店。可供购买的物品的种类取决于你的城镇大厅的升级情况(城镇大厅，主城或者城堡)以及你所拥有的建筑物种类。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Architecture
     },
     "Hpal": {
-      code: "Hpal",
-      name: "圣骑士",
-      tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光，神圣护甲，专注光环和复活这四项技能。能攻击地面单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Hero
+        code: "Hpal",
+        name: "圣骑士",
+        tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光，神圣护甲，专注光环和复活这四项技能。能攻击地面单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Hero
     },
     "Hamg": {
-      code: "Hamg",
-      name: "大魔法师",
-      tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪，召唤水元素，辉煌光环和群体传送魔法。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Hero
+        code: "Hamg",
+        name: "大魔法师",
+        tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪，召唤水元素，辉煌光环和群体传送魔法。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Hero
     },
     "Hmkg": {
-      code: "Hmkg",
-      name: "山丘之王",
-      tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。能攻击地面单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Hero
+        code: "Hmkg",
+        name: "山丘之王",
+        tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。能攻击地面单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Hero
     },
     "Hblm": {
-      code: "Hblm",
-      name: "血魔法师",
-      tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。能攻击地面和空中单位。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Hero
+        code: "Hblm",
+        name: "血魔法师",
+        tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。能攻击地面和空中单位。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Hero
     },
     "hpxe": {
-      code: "hpxe",
-      name: "凤凰蛋",
-      tip: "",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hpxe",
+        name: "凤凰蛋",
+        tip: "",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hrtt": {
-      code: "hrtt",
-      name: "蒸汽机车",
-      tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。拥有弹幕攻击技能从而可以对敌人的空中单位进行攻击。能攻击建筑物。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hrtt",
+        name: "蒸汽机车",
+        tip: "重型装甲车辆，特别擅长于对付敌人的建筑物。拥有弹幕攻击技能从而可以对敌人的空中单位进行攻击。能攻击建筑物。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hmil": {
-      code: "hmil",
-      name: "民兵",
-      tip: "农民相应战斗号召跑到最近的一个城镇大厅转变成民兵。",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hmil",
+        name: "民兵",
+        tip: "农民相应战斗号召跑到最近的一个城镇大厅转变成民兵。",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hwat": {
-      code: "hwat",
-      name: "水元素",
-      tip: "等级一",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hwat",
+        name: "水元素",
+        tip: "等级一",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hwt2": {
-      code: "hwt2",
-      name: "水元素",
-      tip: "等级二",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hwt2",
+        name: "水元素",
+        tip: "等级二",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hwt3": {
-      code: "hwt3",
-      name: "水元素",
-      tip: "等级三",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hwt3",
+        name: "水元素",
+        tip: "等级三",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hphx": {
-      code: "hphx",
-      name: "火凤凰",
-      tip: "",
-      kind: Kind.Unit, race: Race.Human, type: Type.Special
+        code: "hphx",
+        name: "火凤凰",
+        tip: "",
+        kind: Kind.Unit, race: Race.Human, type: Type.Special
     },
     "hrdh": { code: "hrdh", name: "背负背包的马", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "hbew": { code: "hbew", name: "车", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "hbew": { code: "hbew", name: "货车/车", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhew": { code: "nhew", name: "工人(血精灵)", tip: "基本的工人单位。能建造建筑物和进行修理。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "njks": { code: "njks", name: "监狱小卒", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "hhal": { code: "hhal", name: "(无人之马", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "njks": { code: "njks", name: "监狱小卒/狱卒卡塞恩", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "hhdl": { code: "hhdl", name: "无人之马", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nbee": { code: "nbee", name: "血精灵工程师", tip: "极度聪慧的血精灵在发明新的技术和打造强大的防御塔方面极为擅长。攻击地面单位和树木。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nbel": { code: "nbel", name: "血精灵中尉", tip: "来自于强大的卡尔省血精灵军队的中尉。破坏魔法施放单位的专家。攻击地面单位", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "hhes": { code: "hhes", name: "剑士", tip: "多才多艺的步兵战士。能学习到防御技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
@@ -386,12 +386,15 @@ enum Kind {
     "hbot": { code: "hbot", name: "人族运输船", tip: "大型的海上船只，能携带单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "hdes": { code: "hdes", name: "人族护卫舰", tip: "多功能的攻击舰。擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "hbsh": { code: "hbsh", name: "人族战舰", tip: "强大的舰船，能够有效地攻击地面建筑物。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "nemi": { code: "nemi", name: "使者", tip: "基本的远程攻击单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "nemi": { code: "nemi", name: "特使(高等精灵)/使者(高等精灵)", tip: "基本的远程攻击单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "hrrh": { code: "hrrh", name: "信使(高等精灵)(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhef": { code: "nhef", name: "高等精灵(女性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhem": { code: "nhem", name: "高等精灵(男性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "nhem": { code: "hbep", name: "血精灵牧师(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "nhem": { code: "hbes", name: "血精灵女巫(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhea": { code: "nhea", name: "弓箭手", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nmed": { code: "nmed", name: "麦迪文", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "nser": { code: "nser", name: "西里诺克斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "nser": { code: "nser", name: "希雷诺斯/西里诺克斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nchp": { code: "nchp", name: "牧师", tip: "支持性的魔法单位。能施放医疗，驱逐魔法和心灵之火技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhym": { code: "nhym", name: "术士", tip: "多才多艺的魔法单位。能施放减速，冲击波和变形魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nws1": { code: "nws1", name: "龙鹰", tip: "重型的远程攻击单位，能诱捕敌方单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
@@ -429,22 +432,26 @@ enum Kind {
     "Harf": { code: "Harf", name: "阿尔塞斯(挥舞着霜之哀伤宝剑)", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hgam": { code: "Hgam", name: "安东尼达斯", tip: "一位神秘的英雄，擅长于远程攻击。能学习到暴风雪、召唤水元素、辉煌光环、和群体传送技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hant": { code: "Hant", name: "安东尼达斯", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hdgo": { code: "Hdgo", name: "达贡兽族屠杀者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hpb2": { code: "Hpb2", name: "格雷戈里爵士", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hhkl": { code: "Hhkl", name: "哈拉生命使者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hdgo": { code: "Hdgo", name: "兽人克星达格伦/达贡兽族屠杀者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hpb2": { code: "Hpb2", name: "格雷戈里·埃德蒙森爵士/格雷戈里爵士", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hhkl": { code: "Hhkl", name: "生命使者哈拉克/哈拉生命使者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hapm": { code: "Hapm", name: "海军上将普洛德摩尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hjai": { code: "Hjai", name: "吉安娜", tip: "一位神秘的英雄，特别擅长于远程攻击。他能学到暴风雪、召唤水元素、辉煌光环和群体传送魔法。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hlgr": { code: "Hlgr", name: "加理瑟斯", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hkal": { code: "Hkal", name: "卡尔", tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hmgd": { code: "Hmgd", name: "马格罗斯守御者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hkal": { code: "Hkal", name: "卡尔萨斯", tip: "一位神秘的英雄，擅长于控制魔法能量和远程攻击。能学习到烈焰风暴、驱散、吸魔和火凤凰这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hmgd": { code: "Hmgd", name: "维护者玛古洛斯/马格罗斯守御者", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hmbr": { code: "Hmbr", name: "穆拉丁", tip: "战士型英雄，特别擅长于冲锋陷阵。能学习到风暴之锤、雷霆一击、重击和天神下凡。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
-    "Hpb1": { code: "Hpb1", name: "尼科拉斯大人", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hpb1": { code: "Hpb1", name: "尼古拉斯·布赞勋爵/尼科拉斯大人", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Huth": { code: "Huth", name: "乌瑟尔", tip: "战士型英雄，特别擅长于保护自己周围的部队，能学习到神圣之光、神圣护甲、专注光环和复活这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "Hvwd": { code: "Hvwd", name: "追风之西尔瓦娜斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
     "hprt": { code: "hprt", name: "传送门", tip: "打开传送门。", kind: Kind.Unit, race: Race.Human, type: Type.Special },
     "nmdm": { code: "nmdm", name: "麦迪文(血乌鸦形态)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Special },
+    "Hssa": { code: "Hssa", name: "安纳斯特里亚·逐日者(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hddt": { code: "Hddt", name: "萨洛瑞安·寻晨者(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Haah": { code: "Haah", name: "求知者凯伦(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
+    "Hjnd": { code: "Hjnd", name: "婕娜拉·晓春(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
   }
-  
+
   const unitOrc = {
     "opeo": { code: "opeo", name: "苦工", tip: "兽族的基本工人单位。能采集黄金和木材。还能建造建筑物和进行修理。在钻入地洞以后还能对来犯的敌人进行反击。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "ogru": { code: "ogru", name: "兽族步兵", tip: "基本的兽族地面单位。能得到狂暴力量的升级。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
@@ -487,13 +494,12 @@ enum Kind {
     "osp4": { code: "osp4", name: "毒蛇守卫(等级4)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
     "ospm": { code: "ospm", name: "灵魂行者(虚无状态)", tip: "诡秘的牛头人法师。具有虚无形态技能，从而能让其对物理攻击免疫。还具有灵魂锁链技能，从而能对敌人进行连锁伤害。同时也能学习到消魔和先祖幽灵技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
     "otbk": { code: "otbk", name: "巨竟狂暴战士", tip: "能有效对空的投矛战士，拥有狂暴愤怒技能，从而增加了攻击力但是也会因此而受到额外的伤害。能学习巨魔再生技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-  
     "nspc": { code: "nspc", name: "支柱", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
-    "oosc": { code: "oosc", name: "科多兽(怀需要分配驾驭者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+    "oosc": { code: "oosc", name: "科多兽(怀需要分配驾驭者)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "owar": { code: "owar", name: "兽族战争首领", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
-    "ogrk": { code: "ogrk", name: "加嗦克", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+    "ogrk": { code: "ogrk", name: "加索克", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "oswy": { code: "oswy", name: "灵魂飞龙", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
-    "ownr": { code: "ownr", name: "双足飞龙(不需要分驾驭者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
+    "ownr": { code: "ownr", name: "双足飞龙(不需要分驾驭者)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "odkt": { code: "odkt", name: "德拉克苏尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "obot": { code: "obot", name: "兽族运输船", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "odes": { code: "odes", name: "兽族护卫舰", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
@@ -504,40 +510,37 @@ enum Kind {
     "nchr": { code: "nchr", name: "邪恶的掠夺者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "nckb": { code: "nckb", name: "邪恶的科多兽", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "ncpn": { code: "ncpn", name: "邪恶的苦工", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
-  
-    "npgr": { code: "npgr", name: "能里产生器", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+    "npgr": { code: "npgr", name: "能量产生器", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "oshy": { code: "oshy", name: "兽族船坞", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
-    "nwc1": { code: "nwc1", name: "双足飞龙牢笼(1", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
-    "nwc2": { code: "nwc2", name: "双足飞龙牢笼(2", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+    "nwc1": { code: "nwc1", name: "双足飞龙牢笼(1)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
+    "nwc2": { code: "nwc2", name: "双足飞龙牢笼(2)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "npgf": { code: "npgf", name: "猪圈农场", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "ndrb": { code: "ndrb", name: "龙之栖木", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "nbfl": { code: "nbfl", name: "血浴之泉", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "ndfl": { code: "ndfl", name: "被污染的生命之泉", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
-    "ocbw": { code: "ocbw", name: "邪恶兽族地洞(混乱的", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
-  
+    "ocbw": { code: "ocbw", name: "邪恶兽族地洞(混乱的)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Architecture },
     "Nsjs": { code: "Nsjs", name: "陈-风暴烈酒", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Odrt": { code: "Odrt", name: "德雷克萨尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
-    "Ogrh": { code: "Ogrh", name: "格罗姆地狱咆哮", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
-    "Opgh": { code: "Opgh", name: "格罗姆一地狱咆哮(恶魔附体)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+    "Ogrh": { code: "Ogrh", name: "格罗姆-地狱咆哮", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+    "Opgh": { code: "Opgh", name: "格罗姆-地狱咆哮(喝下恶魔之血/着魔的)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Ogld": { code: "Ogld", name: "古尔丹", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Ocbh": { code: "Ocbh", name: "卡林-血蹄", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
-    "Ocb2": { code: "Ocb2", name: "卡林血蹄(资料片", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+    "Ocb2": { code: "Ocb2", name: "卡林血蹄(资料片)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Orex": { code: "Orex", name: "雷克萨", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
-    "Orkn": { code: "Orkn", name: "洛克汗", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+    "Orkn": { code: "Orkn", name: "洛坎", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Othr": { code: "Othr", name: "萨尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
+    "Oths": { code: "Oths", name: "萨尔(无座骑)(1.32)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Osam": { code: "Osam", name: "萨穆罗", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Nbbc": { code: "Nbbc", name: "黑岩氏族的剑圣", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
-  
     "omtg": { code: "omtg", name: "马索格", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-    "ovlj": { code: "ovlj", name: "沃尔京", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-    "onzg": { code: "onzg", name: "那滋盖尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-    "negz": { code: "negz", name: "工程师加磁劳", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+    "ovlj": { code: "ovlj", name: "沃金", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+    "onzg": { code: "onzg", name: "纳兹格雷尔", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+    "negz": { code: "negz", name: "工程师加兹鲁维", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
     "nmsh": { code: "nmsh", name: "米纱", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-    "Otcc": { code: "Otcc", name: "卡林-血蹄(过场动画", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-    "ngbl": { code: "ngbl", name: "地精爆破T", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
-  
+    "Otcc": { code: "Otcc", name: "卡林-血蹄(过场动画)", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
+    "ngbl": { code: "ngbl", name: "地精爆破者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
   }
-  
+
   const unitNightElf = {
     "ewsp": { code: "ewsp", name: "小精灵", tip: "暗夜精灵族基本的工人单位。能采集金矿和木材。还能建造精灵族的建筑物并进行修理更新。能自我爆炸从而伤害到周围被召唤出来的单位并吸收一定范围内所有单位的魔法值。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "earc": { code: "earc", name: "弓箭手", tip: "基本的远程攻击单位。拥有艾鲁尼之优雅技能。能学习到射击术，硬弓和驯服角鹰兽这三项技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
@@ -551,7 +554,6 @@ enum Kind {
     "edoc": { code: "edoc", name: "利爪德鲁伊(暗夜精灵族形态)", tip: "近战型的魔法施放单位。一开始能施放咆哮技能，从而增加攻击力。随后还能学习到生命恢复，变熊和利爪之痕技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "emtg": { code: "emtg", name: "山岭巨人", tip: "大型的近战单位，善于吸收敌人的进攻。具有嘲讽和拔树技能。也能学习到硬化皮肤和抗性皮肤这两个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "efdr": { code: "efdr", name: "精灵龙", tip: "小型的飞行单位，擅长伤害敌人的魔法单位。具有变相移动，魔力之焰和魔法免疫技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
-  
     "etol": { code: "etol", name: "生命之树", tip: "暗夜精灵族的基本建筑物。能训练小精灵和缠绕金矿。在升级到了远古之树和永恒之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "etoa": { code: "etoa", name: "远古之树", tip: "升级到了远古之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "etoe": { code: "etoe", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
@@ -565,12 +567,10 @@ enum Kind {
     "edos": { code: "edos", name: "奇美拉栖木", tip: "能训练出奇美拉怪兽。还包括对腐蚀喷吐的研究。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "egol": { code: "egol", name: "被缠绕的金矿", tip: "冒出一些根须缠绕在金矿上，使得小精灵能采集资源。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "eden": { code: "eden", name: "奇迹古树", tip: "建造一个可以出售物品的商店。物品的类型取决于你的生命之树的升级情况(生命之树,远古之树,永恒之树)以及你当前所拥有的建筑物种类。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
-  
     "Ekee": { code: "Ekee", name: "从林守护者", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须，自然之力，荆刺光环和宁静这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Emoo": { code: "Emoo", name: "月之女祭司", tip: "战士型英雄，擅长于远程攻击。能学习到侦察，灼热之箭，强击光环和群星坠落这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Edem": { code: "Edem", name: "恶魔猎手", tip: "一种灵活的英雄，能学习到献祭，闪避法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Ewar": { code: "Ewar", name: "守望者", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁, 刀阵旋风, 暗影突袭和复仇之魂这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-  
     "now1": { code: "now1", name: "猫头鹰侦察者(等级1)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
     "now2": { code: "now2", name: "猫头鹰侦察者(等级2)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
     "now3": { code: "now3", name: "猫头鹰侦察者(等级3)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
@@ -580,18 +580,16 @@ enum Kind {
     "efon": { code: "efon", name: "树人", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
     "espv": { code: "espv", name: "复仇天神", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
     "even": { code: "even", name: "复仇之魂", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
-  
     "enec": { code: "enec", name: "暗夜精灵信使", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "eilw": { code: "eilw", name: "囚车", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "nwat": { code: "nwat", name: "岗哨", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "ensh": { code: "ensh", name: "娜萨", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "nssh": { code: "nssh", name: "守望者", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
-    "eshd": { code: "eshd", name: "塞恩德里斯", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
+    "eshd": { code: "eshd", name: "珊蒂斯/塞恩德里斯", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "etrs": { code: "etrs", name: "暗夜精灵族运输船", tip: "能够运送单位的运输船。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "edes": { code: "edes", name: "暗夜精灵族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "ebsh": { code: "ebsh", name: "暗夜精灵族战舰", tip: "强大的攻城舰船，能够很好地攻击地面建筑物和敌人的船只。攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "nthr": { code: "nthr", name: "萨里法斯", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
-  
     "eshy": { code: "eshy", name: "暗夜精灵族船坞", tip: "船只建造工厂。能建造出暗夜精灵族的运输船，护卫舰和战舰。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "nvr1": { code: "nvr1", name: "暗夜精灵族渔村(被毁坏的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "nvr0": { code: "nvr0", name: "暗夜精灵族渔村(被毁坏的)", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
@@ -608,24 +606,22 @@ enum Kind {
     "ncte": { code: "ncte", name: "永恒之树", tip: "升级到了永恒之树之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "ncap": { code: "ncap", name: "远古守护者", tip: "防御性的古树。当扎根于地面的时候，能投掷出巨大的石块对敌人造成伤害。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "ncaw": { code: "ncaw", name: "战争古树", tip: "主要的产兵建筑。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
-    "nhcn": { code: "nhcn", name: "伴神赛纳留斯之角", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
+    "nhcn": { code: "nhcn", name: "半神赛纳留斯之角", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
     "nfnp": { code: "nfnp", name: "威力之泉", tip: "", kind: Kind.Unit, race: Race.NightElf, type: Type.Architecture },
-  
     "Efur": { code: "Efur", name: "法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-    "Emfr": { code: "Emfr", name: "玛尔法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-    "Emns": { code: "Emns", name: "玛尔法里奥(没有鹿角)", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+    "Emfr": { code: "Emfr", name: "玛法里奥", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+    "Emns": { code: "Emns", name: "玛法里奥(没有鹿角)", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Ewrd": { code: "Ewrd", name: "玛维", tip: "灵巧型英雄，能在战场上来去自如，能学习到闪烁、刀阵旋风、暗影突袭和复仇之魂这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Ecen": { code: "Ecen", name: "赛纳留斯", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Hero },
     "Etyr": { code: "Etyr", name: "泰兰德", tip: "战士型英雄，擅长于远程攻击。能学习到侦察、灼热之箭、强击光环和群星坠落这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
     "Ekgg": { code: "Ekgg", name: "幽灵", tip: "一种神秘的英雄，特别擅长于自然类的魔法。能学习到纠缠根须、自然之力、荆刺光环和宁静这四项技能。攻击地面和空中单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-    "Eill": { code: "Eill", name: "尤迪安", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-    "Eevi": { code: "Eevi", name: "尤迪安(邪恶的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
-  
-    "Eevm": { code: "Eevm", name: "尤迪安(Morphed)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
-    "Eilm": { code: "Eilm", name: "尤迪安(被变了形的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
-    "Eidm": { code: "Eidm", name: "尤迪安(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+    "Eill": { code: "Eill", name: "伊利丹", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+    "Eevi": { code: "Eevi", name: "伊利丹(邪恶的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Hero },
+    "Eevm": { code: "Eevm", name: "伊利丹(恶魔变形)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+    "Eilm": { code: "Eilm", name: "伊利丹(被变了形的)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
+    "Eidm": { code: "Eidm", name: "伊利丹(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
   }
-  
+
   const unitUndead = {
     "uaco": { code: "uaco", name: "侍僧", tip: "不死族的基本工人单位。能召唤建筑物，采集金矿和进行修复工作。在牺牲深渊里牺牲以后侍僧还可以变为阴影。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "ushd": { code: "ushd", name: "阴影", tip: "一个永远隐形的灵魂，能看见其他隐形单位，但是不能进攻。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
@@ -638,7 +634,6 @@ enum Kind {
     "unec": { code: "unec", name: "不死族巫师", tip: "一种魔法单位。一开始能施放复活死尸技能。随后还能学习到邪恶狂热和残废技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uobs": { code: "uobs", name: "十胜石雕像", tip: "一种坚固的雕像，能帮助你恢复自己部队的生命值和魔法值。具有灵魂触摸，枯萎精髓技能，还可以学习到破坏者形态技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "ufro": { code: "ufro", name: "冰霜巨龙", tip: "重型的飞行单位，能学习到冰冻喷吐技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
-  
     "unpl": { code: "unpl", name: "大墓地", tip: "不死族的基本建筑物。能训练出侍僧和存贮采集到木材资源。在升级到了亡者大厅和黑色城堡之后能让玩家建造许多新的建筑物和单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "unp1": { code: "unp1", name: "亡者大厅", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "unp2": { code: "unp2", name: "黑色城堡", tip: "升级到了亡者大厅之后能让玩家建造许多新的建筑物和单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
@@ -654,12 +649,10 @@ enum Kind {
     "ubon": { code: "ubon", name: "埋骨地", tip: "能生产出霜冻巨龙。还包括对冰冻喷吐的研究。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "ugol": { code: "ugol", name: "闹鬼金矿", tip: "在金矿被闹鬼了之后侍僧才可以从中采集黄金资源。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "utom": { code: "utom", name: "古墓废墟", tip: "建造出一个能出售物品的商店。商店内的物品种类取决于你的大墓地的升级情况(大墓地, 亡者大厅, 黑色城堡)以及你所拥有的建筑物种类。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
-  
     "Udea": { code: "Udea", name: "死亡骑士", tip: "是人族圣骑士的邪恶对手。能学习到死亡缠绕，死亡契约，邪恶光环和操纵死尸这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Ulic": { code: "Ulic", name: "巫妖", tip: "一种神秘的英雄，能学习到霜冻护甲，霜冻新星，黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Udre": { code: "Udre", name: "恐惧魔王", tip: "一种狡猾的英雄，能学习到腐臭蜂群，睡眠，吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Ucrl": { code: "Ucrl", name: "地穴领主", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺，尖刺外壳, 腐尸甲虫和蝗虫群这四个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-  
     "uloc": { code: "uloc", name: "蝗虫", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "uplg": { code: "uplg", name: "疾病云雾", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "ucrm": { code: "ucrm", name: "钻入地下的穴居恶魔", tip: "远程攻击单位。能学习到蛛网和钻地技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
@@ -672,8 +665,7 @@ enum Kind {
     "ucsB": { code: "ucsB", name: "钻入地下的腐尸甲虫(等级2)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "ucs3": { code: "ucs3", name: "腐尸甲虫(等级3)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "UcsC": { code: "UcsC", name: "钻入地下的腐户甲虫(等级3)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
-  
-    "uarb": { code: "uarb", name: "飞艇", tip: "一种大批量的运输机。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
+    "uarb": { code: "uarb", name: "邪灵飞艇", tip: "一种大批量的运输机。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uktn": { code: "uktn", name: "克尔苏加德(不死族巫师)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uktg": { code: "uktg", name: "克尔苏加德(幽灵)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uswb": { code: "uswb", name: "追风之西尔瓦娜斯(女妖)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
@@ -683,36 +675,34 @@ enum Kind {
     "udes": { code: "udes", name: "不死族族护卫舰", tip: "多功能的战斗舰船，擅长于攻击空中单位。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uubs": { code: "uubs", name: "不死族战舰", tip: "强大的攻城舰船能够很好地攻击地面建筑物和敌人的船只。攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "uzom": { code: "uzom", name: "僵尸", tip: "轻型的近战单位。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
-  
+    "nzof": { code: "nzof", name: "僵尸(女性)(1.32)", tip: "轻型的近战单位。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "ushp": { code: "ushp", name: "不死族船坞", tip: "造船工厂，能制造出不死族的运输船，护卫舰和战舰。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "ushr": { code: "ushr", name: "神殿", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "udmg": { code: "udmg", name: "恶魔之门", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "ugni": { code: "ugni", name: "腐烂谷仓", tip: "里面都是糜烂的谷物。", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "ufrm": { code: "ufrm", name: "霜之哀伤底座", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
     "ubsm": { code: "ubsm", name: "召唤底座之书", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Architecture },
-  
     "Uear": { code: "Uear", name: "阿尔塞斯(邪恶的)", tip: "战士型英雄，是人族圣骑士的邪恶对手。能学习到死亡缠绕、死亡契约、邪恶光环和操纵死尸这四种技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Uanb": { code: "Uanb", name: "阿诺拉克", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺、尖刺外壳、腐尸甲虫和蝗虫群这四个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Ubal": { code: "Ubal", name: "巴那泽尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Uvng": { code: "Uvng", name: "戴尔维恩格尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Udth": { code: "Udth", name: "德赛洛克", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Uvar": { code: "Uvar", name: "法理玛瑟斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Uanb": { code: "Uanb", name: "阿努巴拉克/阿诺拉克", tip: "战士型英雄，擅长于控制昆虫进行攻击。能学习到穿刺、尖刺外壳、腐尸甲虫和蝗虫群这四个技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Ubal": { code: "Ubal", name: "巴纳扎尔/巴那泽尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Uvng": { code: "Uvng", name: "达文格尔/戴尔维恩格尔", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Udth": { code: "Udth", name: "迪瑟洛克/德赛洛克", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Uvar": { code: "Uvar", name: "瓦里玛萨斯/法理玛瑟斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Uktl": { code: "Uktl", name: "克尔苏加德(巫妖)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Umal": { code: "Umal", name: "麦尔盖尼斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Umal": { code: "Umal", name: "玛尔加尼斯/麦尔盖尼斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Utic": { code: "Utic", name: "提克迪奥斯", tip: "一种狡猾的英雄，善于控制战场。能学习到腐臭蜂群、睡眠、吸血光环和地狱火技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Usyl": { code: "Usyl", name: "西尔瓦娜斯", tip: "灵巧型的英雄，擅长于与对手周旋。能学习到沉默魔法、黑暗之箭、生命汲取和符咒这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Uman": { code: "Uman", name: "玛诺洛斯", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Usyl": { code: "Usyl", name: "希尔瓦娜斯", tip: "灵巧型的英雄，擅长于与对手周旋。能学习到沉默魔法、黑暗之箭、生命汲取和符咒这四项技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Nman": { code: "Nman", name: "玛诺洛斯", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "Uwar": { code: "Uwar", name: "阿克蒙德", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Upld": { code: "Upld", name: "阿哥勒尔", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Uklj": { code: "Uklj", name: "基尔加丹", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-    "Umag": { code: "Umag", name: "麦哥瑟里登", tip: "战士型英雄，善于恐吓敌人。能学习火焰雨、恐怖嚎叫、分裂攻击和魔鬼缠身。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
-  
+    "Npld": { code: "Npld", name: "阿兹加洛/阿哥勒尔", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Nklj": { code: "Nklj", name: "基尔加丹", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
+    "Nmag": { code: "Nmag", name: "麦哥瑟里登", tip: "战士型英雄，善于恐吓敌人。能学习火焰雨、恐怖嚎叫、分裂攻击和魔鬼缠身。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Hero },
     "nzlc": { code: "nzlc", name: "巫妖王(过场动画战役单位)", tip: "这就是巫妖王，事实的确是如此的，难道你不相信我么？", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "uabc": { code: "uabc", name: "憎恶(过场动画)", tip: "重型近战单位。可以学习疾病云雾技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "Uclc": { code: "Uclc", name: "克尔苏加德(巫妖，过场动画)", tip: "一种神秘的英雄，特别擅长于冰系魔法。能学习到霜冻护甲、霜冻新星、黑暗仪式和死亡凋零技能。能攻击地面和空中单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
     "Nkjx": { code: "Nkjx", name: "基尔加丹(过场动画)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
   }
-  
+
   const unitNaga = {
     "nmpe": { code: "nmpe", name: "穆格尔奴隶", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
     "nwgs": { code: "nwgs", name: "飞蛇", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
@@ -722,16 +712,13 @@ enum Kind {
     "nmyr": { code: "nmyr", name: "娜迦暴徒", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
     "nnrg": { code: "nnrg", name: "娜迦皇家卫兵", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
     "nhyc": { code: "nhyc", name: "龙龟", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
-  
     "nnsa": { code: "nnsa", name: "艾萨拉女王神殿", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
     "nnsg": { code: "nnsg", name: "产卵之地", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
     "nntt": { code: "nntt", name: "朝汐神庙", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
     "nnfm": { code: "nnfm", name: "珊瑚礁", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
     "nnad": { code: "nnad", name: "深渊祭坛", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
     "nntg": { code: "nntg", name: "守护者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Architecture },
-  
     "Hvsh": { code: "Hvsh", name: "法斯琪", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Hero },
-  
     "nnsu": { code: "nnsu", name: "召唤者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
     "nsbs": { code: "nsbs", name: "潜水的飞龙", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
     "nmys": { code: "nmys", name: "潜水的娜迦暴徒", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
@@ -777,13 +764,13 @@ enum Kind {
     "ndth": { code: "ndth", name: "黑魔高级牧师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "ndtb": { code: "ndtb", name: "黑魔狂战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "ndtw": { code: "ndtw", name: "黑魔首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrf": { code: "ndrf", name: "达拉内尔守卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrp": { code: "ndrp", name: "达拉内尔护卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrm": { code: "ndrm", name: "达拉内尔信徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrw": { code: "ndrw", name: "达拉内尔哨兵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrh": { code: "ndrh", name: "达拉内尔先驱", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrd": { code: "ndrd", name: "达拉内尔暗黑屠杀者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrs": { code: "ndrs", name: "达拉内尔先知", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrf": { code: "ndrf", name: "德莱尼守卫/达拉内尔守卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrp": { code: "ndrp", name: "德莱尼保护者/达拉内尔护卫", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrm": { code: "ndrm", name: "德莱尼信徒/达拉内尔信徒", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrw": { code: "ndrw", name: "德莱尼哨兵/达拉内尔哨兵", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrh": { code: "ndrh", name: "德莱尼先驱/达拉内尔先驱", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrd": { code: "ndrd", name: "德莱尼屠魔者/达拉内尔暗黑屠杀者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrs": { code: "ndrs", name: "德莱尼先知/达拉内尔先知", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nrdk": { code: "nrdk", name: "红幼龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nrdr": { code: "nrdr", name: "红蜉蝣", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nrwm": { code: "nrwm", name: "红龙", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
@@ -1011,9 +998,7 @@ enum Kind {
     "nskm": { code: "nskm", name: "骷髅射手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "ninf": { code: "ninf", name: "地狱火", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nbal": { code: "nbal", name: "毁灭守卫(标准)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-  
     "nfgo": { code: "nfgo", name: "遗忘者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Architecture },
-  
     "nspp": { code: "nspp", name: "灵魂之猪", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "nlps": { code: "nlps", name: "召唤出来的巨虾", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "ncfs": { code: "ncfs", name: "水奴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
@@ -1021,22 +1006,20 @@ enum Kind {
     "nsns": { code: "nsns", name: "水奴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "nsca": { code: "nsca", name: "骷髅弓箭手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "nba2": { code: "nba2", name: "毁灭守卫(召唤的)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
-  
     "nglm": { code: "nglm", name: "地精地雷", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nfgl": { code: "nfgl", name: "灵肉傀儡", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrl": { code: "ndrl", name: "达拉内尔工人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrn": { code: "ndrn", name: "达拉内尔辩护者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "ndrt": { code: "ndrt", name: "达拉内尔漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrl": { code: "ndrl", name: "德莱尼工人/达拉内尔工人", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrn": { code: "ndrn", name: "德莱尼守备官/达拉内尔辩护者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "ndrt": { code: "ndrt", name: "德莱尼追猎者/达拉内尔漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nogo": { code: "nogo", name: "石槌食人魔", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nogn": { code: "nogn", name: "石槌法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "noga": { code: "noga", name: "石槌酋长", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "ndsa": { code: "ndsa", name: "火断蜴", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-  
     "nsw1": { code: "nsw1", name: "小型灵兽(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "nsw2": { code: "nsw2", name: "灵兽(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
     "nsw3": { code: "nsw3", name: "大型灵兽(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
   }
-  
+
   const unitNeutralPassive = {
     "nske": { code: "nske", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nsea": { code: "nsea", name: "海豹", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
@@ -1058,7 +1041,6 @@ enum Kind {
     "ndog": { code: "ndog", name: "野狗", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nfbr": { code: "nfbr", name: "野猪", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "npig": { code: "npig", name: "野猪", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
-  
     "ngol": { code: "ngol", name: "金矿", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "ngme": { code: "ngme", name: "地精商店", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nfoh": { code: "nfoh", name: "生命之泉", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
@@ -1074,7 +1056,7 @@ enum Kind {
     "nmer": { code: "nmer", name: "雇佣兵营地(洛丹伦的夏天)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmr2": { code: "nmr2", name: "雇佣兵营地(洛丹伦的秋天)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmr3": { code: "nmr3", name: "雇佣兵营地(洛丹伦的冬日)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
-    "nmr4": { code: "nmr4", name: "雇佣兵营地(荒地)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+    "nmr4": { code: "nmr4", name: "雇佣兵营地(贫瘠之地)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmr5": { code: "nmr5", name: "雇佣兵营地(白杨谷)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmr6": { code: "nmr6", name: "雇佣兵营地(费尔伍德)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmr7": { code: "nmr7", name: "雇佣兵营地(诺森德)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
@@ -1089,8 +1071,6 @@ enum Kind {
     "nmrd": { code: "nmrd", name: "雇佣兵营地(寒冰皇冠水川)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nshp": { code: "nshp", name: "地精船坞", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nmre": { code: "nmre", name: "雇佣兵营地(边缘之地)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
-  
-  
     "Nbrn": { code: "Nbrn", name: "黑暗游侠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
     "Nfir": { code: "Nfir", name: "伙焰巨魔", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
     "Nplh": { code: "Nplh", name: "深渊魔王", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
@@ -1099,13 +1079,12 @@ enum Kind {
     "Nalc": { code: "Nalc", name: "炼金术士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
     "Nngs": { code: "Nngs", name: "娜迦女海巫", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
     "Ntin": { code: "Ntin", name: "修补匠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
-  
     "nlur": { code: "nlur", name: "怪兽诱捕守卫", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nsce": { code: "nsce", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ntor": { code: "ntor", name: "龙卷风", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "Nalm": { code: "Nalm", name: "炼金术士(Morph level 1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "Nal2": { code: "Nal2", name: "炼金术士(Morph level 2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "Nal3": { code: "Nal3", name: "炼金术士(Morph level 3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "Nalm": { code: "Nalm", name: "炼金术士(变形 level 1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "Nal2": { code: "Nal2", name: "炼金术士(变形 level 2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "Nal3": { code: "Nal3", name: "炼金术士(变形 level 3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nsha": { code: "nsha", name: "绵羊(两栖的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nshw": { code: "nshw", name: "绵羊(水生的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "npnw": { code: "npnw", name: "企鹅(水生的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
@@ -1168,14 +1147,13 @@ enum Kind {
     "npn4": { code: "npn4", name: "火之熊猫战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nqb1": { code: "nqb1", name: "豪猪(等级1)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nqb2": { code: "nqb2", name: "必恶豪猪(等级2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "nqb3": { code: "nqb3", name: "(影子豪猪(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "nqb3": { code: "nqb3", name: "影子豪猪(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "nqb4": { code: "nqb4", name: "狂暴豪猪(等级4)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndr1": { code: "ndr1", name: "小黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndr2": { code: "ndr2", name: "黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndr3": { code: "ndr3", name: "大黑暗之奴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "Nrob": { code: "Nrob", name: "修补匠", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-  
-    "ncat": { code: "ncat", name: "达拉内尔粉碎者", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
+    "ncat": { code: "ncat", name: "德莱尼投石车/达拉内尔粉碎者", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nvl2": { code: "nvl2", name: "村民(男性2)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nvi1": { code: "nvi1", name: "村民(男性)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nvlw": { code: "nvlw", name: "村民(女性)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
@@ -1186,8 +1164,7 @@ enum Kind {
     "zmar": { code: "zmar", name: "马里恩", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "zjug": { code: "zjug", name: "兽族魔力战舰(过场动画)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "zzrg": { code: "zzrg", name: "小狗", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
-  
-    "nzin": { code: "nzin", name: "地区显示(自定义战役)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
+    "nzin": { code: "nzin", name: "区域指示器(自定义战役)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nbse": { code: "nbse", name: "复活石(面向东南的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nbsw": { code: "nbsw", name: "复活石(面向西南的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "nico": { code: "nico", name: "寒水王座方尖塔", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
@@ -1213,20 +1190,17 @@ enum Kind {
     "ncop": { code: "ncop", name: "能里圈", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "ncp2": { code: "ncp2", name: "能里圈(中型)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
     "ncp3": { code: "ncp3", name: "能里圈(大型的)", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Architecture },
-  
-  
     "Naka": { code: "Naka", name: "阿卡玛", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Hero },
-  
     "nbsp": { code: "nbsp", name: "船只", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndh3": { code: "ndh3", name: "达拉内尔兵营", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndh2": { code: "ndh2", name: "达拉内尔港口", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
     "ndh4": { code: "ndh4", name: "先知洞穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
   
   }
-  
+
   //*******************************************************************技能 */
   const abilityHuman = {
-    "Sch4": { code: "Sch4", name: "保持原位(罐)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "Sch4": { code: "Sch4", name: "保持原位(坦克)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Aply": { code: "Aply", name: "变形术", tip: "使得敌人的一个单位变成一头小绵羊，保有原有的生命值和防御，但是会使其丧失攻击力。|n不能被用在英雄身上。|n持续<Aply,Dur1>秒。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Aroc": { code: "Aroc", name: "弹幕攻击", tip: "对周围的敌方空中单位进行强有力的弹幕攻击。每次发射能造成<hrtt,mindmg2> - <hrtt,maxdmg2>点的伤害。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Adef": { code: "Adef", name: "防御", tip: "激活以拥有<Adef,DataF1>%的概率反弹穿刺攻击。对于没有被反弹的攻击，也只会受到<Adef,DataA1,%>%的伤害。如果防御状态被激活，移动速度会变成<Adef,DataC1,%>%的常规速度。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
@@ -1252,7 +1226,7 @@ enum Kind {
     "Afsh": { code: "Afsh", name: "碎片攻击", tip: "迫击炮小队使用碎片攻击的迫击炮，将会增加其对无护甲和中型护甲单位的伤害。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Aclf": { code: "Aclf", name: "乌云技能", tip: "施放在具有远程攻击能力的敌方建筑物上使其丧失攻击力。|n持续<Aclf,Dur1>秒。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "AHta": { code: "AHta", name: "显示", tip: "在地图上显示一块区域。|n探测到隐形的单位。|n持续<AHta,Dur1>秒。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
-    "attu": { code: "attu", name: "小塔", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "attu": { code: "attu", name: "塔楼", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Ainf": { code: "Ainf", name: "心灵之火", tip: "增加目标友军单位<Ainf,DataA1,%>%的攻击力和<Ainf,DataB1>的防御力。|n持续<Ainf,Dur1>秒。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Ahrp": { code: "Ahrp", name: "修理(人族)", tip: "修理建筑物和机械单位，需要消耗资源。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Ahea": { code: "Ahea", name: "医疗", tip: "医疗一个友军的非机械受伤单位，恢复其<Ahea,DataA1>的生命值。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
@@ -1262,7 +1236,6 @@ enum Kind {
     "Afla": { code: "Afla", name: "照明弹", tip: "在目标区域内投射一颗矮人族的照明弹，从而在<Afla,Dur1>秒的时间内驱散那里的战争迷雾。|n也能探测到隐形单位。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Agyv": { code: "Agyv", name: "真实视域(飞行机器)", tip: "显示周围的隐形单位。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Atlp": { code: "Atlp", name: "装载驾驶员", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
-  
     "AHbz": { code: "AHbz", name: "暴风雪", tip: "能召唤出若干次冰片攻击，对目标区域内的单位造成一定的伤害。|n|n|cffffcc00等级 1|r -<AHbz,DataA1>次攻击，每次造成<AHbz,DataB1>点的伤害。|n|cffffcc00等级 2|r -<AHbz,DataA2>次攻击，每次造成<AHbz,DataB2>点的伤害。|n|cffffcc00等级 3|r -<AHbz,DataA3>次攻击，每次造成<AHbz,DataB3>点的伤害。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
     "AHtb": { code: "AHtb", name: "风暴之锤", tip: "向目标投掷一巨大的魔法锤，对其造成一定伤害并使其处于眩晕状态。|n|n|cffffcc00等级 1|r - <AHtb,DataA1>点伤害，<AHtb,Dur1>秒眩晕状态。|n|cffffcc00等级 2|r - <AHtb,DataA2>点伤害，<AHtb,Dur2>秒眩晕状态。|n|cffffcc00等级 3|r - <AHtb,DataA3>点伤害，<AHtb,Dur3>秒眩晕状态。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
     "AHre": { code: "AHre", name: "复活", tip: "复活周围<AHre,DataA1>个友军单位。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
@@ -1279,6 +1252,11 @@ enum Kind {
     "AHwe": { code: "AHwe", name: "召唤水元素", tip: "召唤出一个水元素来帮大魔法师进行战斗。|n持续<AHwe,Dur1>秒。|n|n|cffffcc00能攻击地面和空中单位。|r|n|n|cffffcc00等级 1|r - <hwat,realHP>点生命值，<hwat,mindmg1>-<hwat,maxdmg1>点的伤害。|n|cffffcc00等级 2|r - <hwt2,realHP>点生命值，<hwt2,mindmg1>-<hwt2,maxdmg1>点的伤害。|n|cffffcc00等级 3|r - <hwt3,realHP>点生命值，<hwt3,mindmg1>-<hwt3,maxdmg1>点的伤害。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
     "AHbh": { code: "AHbh", name: "重击", tip: "给予一定的概率使得山丘之王的常规攻击能附带<AHbh,DataC1>点的附加伤害值并在<AHbh,Dur1>秒内使得对手处于眩晕状态。|n|n|cffffcc00等级 1|r - 每次攻击<AHbh,DataA1>%的概率。|n|cffffcc00等级 2|r - 每次攻击<AHbh,DataA2>%的概率。|n|cffffcc00等级 3|r - 每次攻击<AHbh,DataA3>%的概率。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
     "AHad": { code: "AHad", name: "专注光环", tip: "为周围友军提供一定额外的护甲。|n|n|cffffcc00等级 1|r - 增加<AHad,DataA1>点的护甲。|n|cffffcc00等级 2|r - 增加<AHad,DataA2>点的护甲。|n|cffffcc00等级 3|r - 增加<AHad,DataA3>点的护甲。", kind: Kind.Ability, race: Race.Human, type: Type.Hero },
+    "Ahpe": { code: "Ahpe", name: "凤凰(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "Ahan": { code: "Ahan", name: "坐骑作战训练(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "Ahlh": { code: "Ahlh", name: "改良伐木技术(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "Ahri": { code: "Ahri", name: "长管火枪(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
+    "Ahsb": { code: "Ahpe", name: "裂甲之刃(1.30)", tip: "对具有中型护甲的敌方目标造成的伤害提高<Ahsb,DataB1,%>%。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
   }
   
   const abilityOrc = {
@@ -1327,33 +1305,37 @@ enum Kind {
     "Aoar": { code: "Aoar", name: "治疗守卫光环(治疗守卫)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
     "Achl": { code: "Achl", name: "装载", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
     "Sloa": { code: "Sloa", name: "装载(兽族地洞)", tip: "装载一个指定的友方地面单位。", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
-  
     "AOeq": { code: "AOeq", name: "地震", tip: "使得大地发生颤抖，对有效范围内的建筑物造成每秒<AOeq,DataB1>点的伤害，并使该范围内的单位减速<AOeq,DataC1,%>%。持续<AOeq,Dur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOsw": { code: "AOsw", name: "毒蛇守卫", tip: "召唤出一个固定不动的毒蛇守卫来为暗影猎手攻击。并对魔法免疫。|n持续<AOsw,Dur1>秒。|n|n|cffffcc00能攻击地面和空中单位。|r|n|n|cffffcc00等级 1|r - <osp1,realHP>点生命值，<osp1,mindmg1> - <osp1,maxdmg1>点攻击力。|n|cffffcc00等级 2|r - <osp2,realHP>点生命值，<osp2,mindmg1> - <osp2,maxdmg1>点攻击力。|n|cffffcc00等级 3|r - <osp3,realHP>点生命值，<osp3,mindmg1> - <osp3,maxdmg1>点攻击力。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "Arsw": { code: "Arsw", name: "毒蛇守卫(洛克汗)", tip: "召唤出一个固定不动的毒蛇守卫来为暗影猎手攻击。守卫对魔法免疫。|n持续<Arsw,Dur1>秒。|n|n|cffffcc00能攻击地面和空中单位。|r|n|n|cffffcc00等级 1|r -<osp1,realHP>点生命值，<osp1,mindmg1>-<osp1,maxdmg1>点攻击力。|n|cffffcc00等级 2|r -<osp2,realHP>点生命值，<osp2,mindmg1>-<osp2,maxdmg1>点攻击力。|n|cffffcc00等级 3|r -<osp3,realHP>点生命值，<osp3,mindmg1>-<osp3,maxdmg1>点攻击力。|n|cffffcc00等级 4|r -<osp4,realHP>点生命值，<osp4,mindmg1>-<osp4,maxdmg1>点溅射攻击力。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "Arsw": { code: "Arsw", name: "毒蛇守卫(洛坎)", tip: "召唤出一个固定不动的毒蛇守卫来为暗影猎手攻击。守卫对魔法免疫。|n持续<Arsw,Dur1>秒。|n|n|cffffcc00能攻击地面和空中单位。|r|n|n|cffffcc00等级 1|r -<osp1,realHP>点生命值，<osp1,mindmg1>-<osp1,maxdmg1>点攻击力。|n|cffffcc00等级 2|r -<osp2,realHP>点生命值，<osp2,mindmg1>-<osp2,maxdmg1>点攻击力。|n|cffffcc00等级 3|r -<osp3,realHP>点生命值，<osp3,mindmg1>-<osp3,maxdmg1>点攻击力。|n|cffffcc00等级 4|r -<osp4,realHP>点生命值，<osp4,mindmg1>-<osp4,maxdmg1>点溅射攻击力。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOwk": { code: "AOwk", name: "疾步风", tip: "使得剑圣在一定时间内隐形并加快移动速度，如果此时进行攻击的话，那么就不再隐形但会造成更多的伤害。|n|n|cffffcc00等级 1|r -消耗<AOwk,Cost1>点魔法，加快<AOwk,DataB1,%>%的移动速度，增加<AOwk,DataC1>点的伤害，持续<AOwk,Dur1>秒。|n|cffffcc00等级 2|r -消耗<AOwk,Cost2>点魔法，加快<AOwk,DataB2,%>%的移动速度，增加<AOwk,DataC2>点的伤害，持续<AOwk,Dur2>秒。|n|cffffcc00等级 3|r -消耗<AOwk,Cost3>点魔法，加快<AOwk,DataB3,%>%的移动速度，增加<AOwk,DataC3>点的伤害，持续<AOwk,Dur3>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOww": { code: "AOww", name: "剑刃风暴", tip: "使得剑圣周围能形成一股具有极强攻击力的剑刃风暴。对周围敌方的地面单位造成每秒<AOww,DataA1>点的伤害。|n持续<AOww,Dur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOmi": { code: "AOmi", name: "镜像", tip: "制造出一定数量的幻象来迷惑敌人。同时也会驱逐掉剑圣身上所有的魔法效果。|n|n|cffffcc00等级 1|r - 创造出<AOmi,DataA1>个幻象。|n|cffffcc00等级 2|r - 创造出<AOmi,DataA2>个幻象。|n|cffffcc00等级 3|r - 创造出<AOmi,DataA3>个幻象。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOae": { code: "AOae", name: "耐久光环", tip: "能增加周围单位的移动速度和攻击速度。|n|n|cffffcc00等级 1|r - 提高<AOae,DataA1,%>%的移动速度和<AOae,DataB1,%>%的攻击速度。|n|cffffcc00等级 2|r - 提高<AOae,DataA2,%>%的移动速度和<AOae,DataB2,%>%的攻击速度。|n|cffffcc00等级 3|r - 提高<AOae,DataA3,%>%的移动速度和<AOae,DataB3,%>%的攻击速度。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "AOr2": { code: "AOr2", name: "耐久光环(卡林)", tip: "增加周围单位的移动和攻击速度。|n|n|cffffcc00等级 1|r - <AOr2,DataA1,%>%的移动速度和<AOr2,DataB1,%>%的攻击速度。|n|cffffcc00等级 2|r - <AOr2,DataA2,%>%的移动速度和<AOr2,DataB2,%>%的攻击速度。|n|cffffcc00等级 3|r - <AOr2,DataA3,%>%的移动速度和<AOr2,DataB3,%>%的攻击速度。|n|cffffcc00等级 4|r - <AOr2,DataA4,%>%的移动速度和<AOr2,DataB4,%>%的攻击速度。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "AOr2": { code: "AOr2", name: "耐久光环(凯恩)", tip: "增加周围单位的移动和攻击速度。|n|n|cffffcc00等级 1|r - <AOr2,DataA1,%>%的移动速度和<AOr2,DataB1,%>%的攻击速度。|n|cffffcc00等级 2|r - <AOr2,DataA2,%>%的移动速度和<AOr2,DataB2,%>%的攻击速度。|n|cffffcc00等级 3|r - <AOr2,DataA3,%>%的移动速度和<AOr2,DataB3,%>%的攻击速度。|n|cffffcc00等级 4|r - <AOr2,DataA4,%>%的移动速度和<AOr2,DataB4,%>%的攻击速度。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOcl": { code: "AOcl", name: "闪电链", tip: "投掷出一道能进行跳跃的闪电。每次跳跃都会减小闪电的攻击力。|n|n|cffffcc00等级 1|r - <AOcl,DataA1>点伤害，跳跃<AOcl,DataB1>次。|n|cffffcc00等级 2|r - <AOcl,DataA2>点伤害，跳跃<AOcl,DataB2>次。|n|cffffcc00等级 3|r - <AOcl,DataA3>点伤害，跳跃<AOcl,DataB3>次。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOfs": { code: "AOfs", name: "透视", tip: "能在一定时间内驱散目标区域内的战争迷雾。还能看见敌方的隐形单位。|n|n|cffffcc00等级 1|r - 消耗<AOfs,Cost1>点魔法。|n|cffffcc00等级 2|r - 消耗<AOfs,Cost2>点魔法。|n|cffffcc00等级 3|r - 消耗<AOfs,Cost3>点魔法。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOvd": { code: "AOvd", name: "巫毒", tip: "将在暗影猎手附近一定区域内的所有友军单位都变为无敌。|n但是暗影猎手自己不会变为无敌。|n持续<AOvd,Dur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "AOls": { code: "AOls", name: "巫毒幽魂", tip: "召唤出愤怒的幽灵来汲取敌人的生命值，幽灵能将汲取到的生命值补充到洛克汗的身上。|n|n|cffffcc00等级 1|r — <AOls,DataA1> 个幽灵。 |n|cffffcc00等级 2|r — <AOls,DataA2>幽灵。|n|n持续<AOls,HeroDur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "AOls": { code: "AOls", name: "巫毒幽魂", tip: "召唤出愤怒的幽灵来汲取敌人的生命值，幽灵能将汲取到的生命值补充到洛坎的身上。|n|n|cffffcc00等级 1|r — <AOls,DataA1> 个幽灵。 |n|cffffcc00等级 2|r — <AOls,DataA2>幽灵。|n|n持续<AOls,HeroDur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOhx": { code: "AOhx", name: "妖术", tip: "让目标单位在<AOhx,Dur1>秒内变成一只随机的小动物, 废除其特殊技能的使用。|n|n|cffffcc00等级 1|r - 持续<AOhx,Dur1>秒。|n|cffffcc00等级 2|r - 持续<AOhx,Dur2>秒。|n|cffffcc00等级 3|r - 持续<AOhx,Dur3>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "ANhx": { code: "ANhx", name: "妖术(洛克汗)", tip: "将敌方某个单位变成一种随机的小动物。|n|n|cffffcc00等级 1|r - 消耗<ANhx,Cost1>点魔法，持续<ANhx,Dur1>秒。|n|cffffcc00等级 2|r - 消耗<ANhx,Cost2>点魔法，持续<ANhx,Dur2>秒。|n|cffffcc00等级 3|r - 消耗<ANhx,Cost3>点魔法，持续<ANhx,Dur3>秒。|n|cffffcc00等级 4|r - 消耗<ANhx,Cost4>点魔法，持续<ANhx,Dur4>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "ANhx": { code: "ANhx", name: "妖术(洛坎)", tip: "将敌方某个单位变成一种随机的小动物。|n|n|cffffcc00等级 1|r - 消耗<ANhx,Cost1>点魔法，持续<ANhx,Dur1>秒。|n|cffffcc00等级 2|r - 消耗<ANhx,Cost2>点魔法，持续<ANhx,Dur2>秒。|n|cffffcc00等级 3|r - 消耗<ANhx,Cost3>点魔法，持续<ANhx,Dur3>秒。|n|cffffcc00等级 4|r - 消耗<ANhx,Cost4>点魔法，持续<ANhx,Dur4>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOsf": { code: "AOsf", name: "野兽幽魂", tip: "召唤出<AOsf,DataB1>头幽狼来为你战斗。|n持续<AOsf,Dur1>秒。|n|n|cffffcc00等级 1|r -<osw1,realHP>点生命值，<osw1,mindmg1>-<osw1,maxdmg1>点的攻击力。|n|cffffcc00等级 2|r -<osw2,realHP>点生命值，<osw2,mindmg1>-<osw2,maxdmg1>点攻击力，且具有致命一击技能。|n|cffffcc00等级 3|r -<osw3,realHP>点生命值，<osw3,mindmg1>-<osw3,maxdmg1>点攻击力，且具有致命一击和隐形技能。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOhw": { code: "AOhw", name: "医疗波", tip: "召唤出一道能进行跳跃的医疗能量波，每次跳跃都会削弱医疗波的医疗能力。|n|n|cffffcc00等级 1|r - 恢复<AOhw,DataA1>点生命值，跳跃<AOhw,DataB1>次。|n|cffffcc00等级 2|r - 恢复<AOhw,DataA2>点生命值，跳跃<AOhw,DataB2>次。|n|cffffcc00等级 3|r - 恢复<AOhw,DataA3>点生命值，跳跃<AOhw,DataB3>次。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "ANhw": { code: "ANhw", name: "医疗波(洛克汗)", tip: "召唤出一道能进行跳跃的医疗能量波，每次跳跃都会削弱医疗波的医疗能力。|n|n|cffffcc00等级 1|r - 恢复<ANhw,DataA1>点生命值，跳跃<ANhw,DataB1>次。|n|cffffcc00等级 2|r - 恢复<ANhw,DataA2>点生命值，跳跃<ANhw,DataB2>次。|n|cffffcc00等级 3|r - 恢复<ANhw,DataA3>点生命值，跳跃<ANhw,DataB3>次。|n|cffffcc00等级 4|r - 恢复<ANhw,DataA4>点生命值，跳跃<ANhw,DataB4>次。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "ANhw": { code: "ANhw", name: "医疗波(洛坎)", tip: "召唤出一道能进行跳跃的医疗能量波，每次跳跃都会削弱医疗波的医疗能力。|n|n|cffffcc00等级 1|r - 恢复<ANhw,DataA1>点生命值，跳跃<ANhw,DataB1>次。|n|cffffcc00等级 2|r - 恢复<ANhw,DataA2>点生命值，跳跃<ANhw,DataB2>次。|n|cffffcc00等级 3|r - 恢复<ANhw,DataA3>点生命值，跳跃<ANhw,DataB3>次。|n|cffffcc00等级 4|r - 恢复<ANhw,DataA4>点生命值，跳跃<ANhw,DataB4>次。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOw2": { code: "AOw2", name: "战争践踏", tip: "震击地面，击晕周围的地面单位。|n|n|cffffcc00等级 1|r - <AOw2,DataA1>点伤害，昏晕状态持续<AOw2,Dur1>秒。|n|n|cffffcc00等级 2|r - <AOw2,DataA2>点伤害，昏晕状态持续<AOw2,Dur2>秒。|n|n|cffffcc00等级 3|r - <AOw2,DataA3>点伤害，昏晕状态持续<AOw2,Dur3>秒。|n|n|cffffcc00等级 4|r - <AOw2,DataA4>点伤害，昏晕状态持续<AOw2,Dur4>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOws": { code: "AOws", name: "战争践踏", tip: "重击地面，对周围的地面单位造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOws,DataA1>点伤害，<AOws,Dur1>秒眩晕效果。|n|cffffcc00等级 2|r - <AOws,DataA2>点伤害，<AOws,Dur2>秒眩晕效果。|n|cffffcc00等级 3|r - <AOws,DataA3>点伤害，<AOws,Dur3>秒眩晕效果。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOsh": { code: "AOsh", name: "震荡波", tip: "能发出一道向前的能量波，对一条线上的敌方地面单位造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOsh,DataA1>点的伤害。|n|cffffcc00等级 2|r - <AOsh,DataA2>点的伤害。|n|cffffcc00等级 3|r - <AOsh,DataA3>点的伤害。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "AOs2": { code: "AOs2", name: "震荡波(卡林)", tip: "发射出一道向前的能量波，对一直线上的敌人造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOs2,DataA1>点伤害。|n|cffffcc00等级 2|r - <AOs2,DataA2>点伤害。|n|cffffcc00等级 3|r - <AOs2,DataA3>点伤害。|n|cffffcc00等级 4|r - <AOs2,DataA4>点伤害。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "AOs2": { code: "AOs2", name: "震荡波(凯恩)", tip: "发射出一道向前的能量波，对一直线上的敌人造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOs2,DataA1>点伤害。|n|cffffcc00等级 2|r - <AOs2,DataA2>点伤害。|n|cffffcc00等级 3|r - <AOs2,DataA3>点伤害。|n|cffffcc00等级 4|r - <AOs2,DataA4>点伤害。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOcr": { code: "AOcr", name: "致命一击", tip: "给予一定的概率使得攻击力能大大增强。|n|n|cffffcc00等级 1|r -<AOcr,DataA1>%的概率，<AOcr,DataB1>倍于一般攻击的伤害值。|n|cffffcc00等级 2|r -<AOcr,DataA2>%的概率，<AOcr,DataB2>倍于一般攻击的伤害值。|n|cffffcc00等级 3|r -<AOcr,DataA1>%的概率，<AOcr,DataB3>倍于一般攻击的伤害值。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
     "AOre": { code: "AOre", name: "重生", tip: "使当牛头人酋长被杀时，它就会自动复活。重生技能有<AOre,Cool1>秒的魔法施放间隔时间。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
-    "AOr3": { code: "AOr3", name: "重生(卡林)", tip: "当被杀害的时候，酋长会自动复活。|n|n|cffffcc00等级 1|r - <AOr3,Cool1>秒的魔法施放间隔时间。|n|cffffcc00等级 2|r - <AOr3,Cool2>秒的魔法施放间隔时间。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "AOr3": { code: "AOr3", name: "重生(凯恩)", tip: "当被杀害的时候，酋长会自动复活。|n|n|cffffcc00等级 1|r - <AOr3,Cool1>秒的魔法施放间隔时间。|n|cffffcc00等级 2|r - <AOr3,Cool2>秒的魔法施放间隔时间。", kind: Kind.Ability, race: Race.Orc, type: Type.Hero },
+    "Aorb": { code: "Aorb", name: "加强型防御(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
+    "Aosp": { code: "Aosp", name: "尖刺障碍(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
+    "Aotr": { code: "Aotr", name: "巨魔再生(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
+    "Aobk": { code: "Aobk", name: "狂战士升级(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
+    "Aobs": { code: "Aobs", name: "野蛮之力(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
   }
-  
+
   const abilityNightElf = {
     "Aegr": { code: "Aegr", name: "艾鲁尼之优雅", tip: "减少来自穿刺攻击的伤害到原来的<Aegr,DataA1,%>%，并减少来自魔法攻击的伤害到原来的<Aegr,DataE1,%>%。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Adtn": { code: "Adtn", name: "爆炸", tip: "会毁灭掉小精灵，但可以消除一定范围内所有的魔法效果并会吸收周围每个单位<Adtn,DataA1>点的魔法值。|n|cffffcc00对召唤出来的单位造成<Adtn,DataB1>点的伤害。|r", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
@@ -1393,7 +1375,7 @@ enum Kind {
     "Aadm": { code: "Aadm", name: "驱逐魔法", tip: "能去除敌方单位身上有利的魔法效果和友军单位身上不利的魔法效果。|n|cffffcc00对召唤出来的单位造成<Aadm,DataB1>点的伤害。|r", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Alit": { code: "Alit", name: "闪电攻击", tip: "能使单位的攻击变成瞬间的闪电效果。5级空法球效果+类攻击特效，被更高级的攻击特效覆盖。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Aesn": { code: "Aesn", name: "哨兵", tip: "能召唤出一头用来侦察地图的猫头鹰。|n能看见隐形单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
-    "Aesr": { code: "Aesr", name: "哨兵(娴萨)", tip: "能召唤出一头用来侦察地图的猫头鹰。|n能看见隐形单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    "Aesr": { code: "Aesr", name: "哨兵(娜萨)", tip: "能召唤出一头用来侦察地图的猫头鹰。|n能看见隐形单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Arej": { code: "Arej", name: "生命恢复", tip: "在<Arej,Dur1>秒内恢复目标友军单位<Arej,DataA1>点的生命值。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Atol": { code: "Atol", name: "生命之树升级技能", tip: "该技能能够给单位绑定模型,单位死亡模型消失", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Aeat": { code: "Aeat", name: "吞食树木", tip: "吞食一棵树木以在<Aeat,Dur1>秒内恢复<Aeat,DataC1>点的生命值。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
@@ -1404,13 +1386,12 @@ enum Kind {
     "Sshm": { code: "Sshm", name: "影遁(立刻的)", tip: "让单位停止自动攻击敌人，可以使其影遁，在夜间变的隐形。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Assk": { code: "Assk", name: "硬化皮肤", tip: "降低所有施加在山岭巨人身上的伤害<Assk,DataC1>点。攻击不能低于<Assk,DataB1>点。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Amgl": { code: "Amgl", name: "月刃", tip: "使得女猎手的月刃剑能在攻击的时候进行弹射，从而伤害到敌人其他的单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
-    "Amgr": { code: "Amgr", name: "月刃(娴萨)", tip: "使得女猎手的月刃剑能在攻击的时候进行弹射，从而伤害到敌人其他的单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    "Amgr": { code: "Amgr", name: "月刃(娜萨)", tip: "使得女猎手的月刃剑能在攻击的时候进行弹射，从而伤害到敌人其他的单位。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Aro1": { code: "Aro1", name: "扎根(估树)", tip: "使得暗夜精灵族的古树固定在地上，从而能生产各种单位。对远古保护者来说，这就意味着它能向空中投掷大量的岩石以攻击来犯的敌人。同时使古树变成加强型护甲。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Aro2": { code: "Aro2", name: "扎根(远古守护者)", tip: "使得暗夜精灵族的古树固定在地上，从而能生产各种单位。对远古保护者来说，这就意味着它能向空中投掷大量的岩石以攻击来犯的敌人。同时使古树变成加强型护甲。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Agra": { code: "Agra", name: "战棍", tip: "让山岭巨人拔起一棵树木从而拥有攻城能力，并且增加远程攻击范围。|n持续<Agra,DataE1>次攻击。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
-    "Aenc": { code: "Aenc", name: "装载(缠绕金矿)", tip: "让某个小精灵进入金矿。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    "Aenc": { code: "Aenc", name: "装载(被缠绕的金矿)", tip: "让某个小精灵进入金矿。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Slo2": { code: "Slo2", name: "装载小精灵", tip: "装载一个小精灵。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
-  
     "AEsh": { code: "AEsh", name: "暗影突袭", tip: "投掷出一把毒性的匕首，能对敌方的地面单位造成巨大的伤害。最初造成很大的伤害，随后每秒造成一定的伤害。匕首上的毒素能在短时间内减慢目标单位的攻击速度和移动速度。|n|n|cffffcc00等级 1|r - <AEsh,DataE1> 点初始伤害，<AEsh,DataA1> 点持续伤害。 |n|cffffcc00等级 2|r - <AEsh,DataE2>点初始伤害，<AEsh,DataA2>点持续伤害。 |n|cffffcc00等级 3|r - <AEsh,DataE3>点初始伤害，<AEsh,DataA3>点持续伤害。.", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
     "AEme": { code: "AEme", name: "变身", tip: "让恶魔猎手变身为一个威力巨大的恶魔。该恶魔具有远程攻击能力并会增加<AEme,DataE1>点的生命值。|n持续<AEme,HeroDur1>秒。", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
     "AEfk": { code: "AEfk", name: "刀阵旋风", tip: "守望者对周围的敌人发射出锋利的尖刀进行伤害。|n|n|cffffcc00等级 1|r - 对每个目标造成<AEfk,DataA1>点伤害。|n|cffffcc00等级 2|r - 对每个目标造成<AEfk,DataA2>点伤害。|n|cffffcc00等级 3|r - 对每个目标造成<AEfk,DataA3>点伤害。", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
@@ -1428,8 +1409,11 @@ enum Kind {
     "AEst": { code: "AEst", name: "侦察", tip: "能召唤出一头用来侦察地图的猫头鹰。|n能看见隐形单位。|n|n|cffffcc00等级 1|r -消耗<AEst,Cost1>点魔法值来召唤出一头猫头鹰。|n|cffffcc00等级 2|r -消耗<AEst,Cost2>点魔法值来召唤出一头猫头鹰。|n|cffffcc00等级 3|r -消耗<AEst,Cost3>点魔法值来召唤出一头猫头鹰。", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
     "AEfa": { code: "AEfa", name: "灼热之箭", tip: "通过附加的火焰伤害来增加女祭司的攻击力。|n|n|cffffcc00等级 1|r - 增加<AHfa,DataA1>点的伤害。|n|cffffcc00等级 2|r - 增加<AHfa,DataA2>点的伤害。|n|cffffcc00等级 3|r - 增加<AHfa,DataA3>点的伤害。", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
     "AEfn": { code: "AEfn", name: "自然之力", tip: "将一定范围内的树木转化成树人，每个树人具有<efon,realHP>点的生命值和<efon,mindmg1>-<efon,maxdmg1>点的攻击力。可以学会自然之祝福能力。|n|n|cffffcc00能攻击地面单位。|r|n|n|cffffcc00等级 1|r - 召唤<AEfn,DataA1>个树人，持续时间<AEfn,Dur1>秒。|n|cffffcc00等级 2|r - 召唤<AEfn,DataA2>个树人，持续时间<AEfn,Dur2>秒。|n|cffffcc00等级 3|r - 召唤<AEfn,DataA3>个树人，持续时间<AEfn,Dur3>秒。", kind: Kind.Ability, race: Race.NightElf, type: Type.Hero },
+    "Aeib": { code: "Aeib", name: "强弓(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    "Aews": { code: "Aews", name: "月井之春(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    "Aemk": { code: "Aemk", name: "箭术(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
   }
-  
+
   const abilityUndead = {
     "Sch2": { code: "Sch2", name: "保持原位(绞肉车)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
     "Afrz": { code: "Afrz", name: "冰冻喷吐", tip: "用在建筑物上时，能在段时间内使其失去应有的功效。|n持续<Afrz,Dur1>秒。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
@@ -1484,7 +1468,6 @@ enum Kind {
     "Abu2": { code: "Abu2", name: "钻地(圣甲虫等级2)", tip: "让腐尸甲虫钻入地下从而变为隐形的。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
     "Abu3": { code: "Abu3", name: "钻地(圣甲虫等级3)", tip: "让腐尸甲虫钻入地下从而变为隐形的。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
     "Abur": { code: "Abur", name: "钻地(穴居恶魔)", tip: "穴居恶魔钻入地下从而变为隐形的，在此期间它能以每秒<ucrm,regenHP>点的速度来恢复自己的生命值。|n穴居恶魔在此期间也不能进行攻击。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
-  
     "AUan": { code: "AUan", name: "操纵死尸", tip: "复活<AUan,DataA1>个阵亡单位，持续时间为<AUan,Dur1>秒。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
     "AUim": { code: "AUim", name: "穿刺", tip: "以地穴领主的巨爪震击地面，射出一道直线形尖刺蔓藤，造成极大伤害并将其轨迹上的敌地面单位抛入空中。|n|n|cffffcc00等级 1|r - <AUim,DataC1>伤害力，<AUim,Dur1>秒晕眩。|n|cffffcc00等级 2|r - <AUim,DataC2> 伤害力，<AUim,Dur2>秒晕眩。|n|cffffcc00等级 3|r - <AUim,DataC3>伤害力，<AUim,Dur3>秒晕眩。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
     "AUin": { code: "AUin", name: "地狱火", tip: "召唤出一地狱火恶魔从天而降，对地面上的敌人造成<AUin,DataA1>点的伤害，并在<AUin,Dur1>秒内使其处于昏晕状态。地狱火恶魔持续<AUin,DataB1>秒。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
@@ -1502,8 +1485,14 @@ enum Kind {
     "AUdp": { code: "AUdp", name: "死亡契约", tip: "杀死一个友军单位，将其一定百分比的生命值转成死亡骑士的生命值。|n|n|cffffcc00等级 1|r - 转化<AUdp,DataB1,%>%。|n|cffffcc00等级 2|r -转化 <AUdp,DataB2,%>%。|n|cffffcc00等级 3|r - 转化<AUdp,DataB3,%>%。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
     "AUav": { code: "AUav", name: "吸血光环", tip: "能对敌人进行一轮冰冻攻击，对其造成一定伤害并使其减速。|n|n|cffffcc00等级 1|r -<AUfn,DataB1>点常规伤害，<AUfn,DataA1>点新星伤害。|n|cffffcc00等级 2|r -<AUfn,DataB2>点常规伤害，<AUfn,DataA2>点新星伤害。|n|cffffcc00等级 3|r -<AUfn,DataB3>点常规伤害，<AUfn,DataA3>点新星伤害。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
     "AUau": { code: "AUau", name: "邪恶光环", tip: "增加周围友军单位的移动速度和生命恢复速度。|n|n|cffffcc00等级 1|r - 增加<AUau,DataA1,%>%的移动速度和小幅度的生命恢复速度。|n|cffffcc00等级 2|r - 增加<AUau,DataA2,%>%的移动速度和中等幅度的生命恢复速度。|n|cffffcc00等级 3|r - 增加<AUau,DataA3,%>%的移动速度和大幅度的生命恢复速度。", kind: Kind.Ability, race: Race.Undead, type: Type.Hero },
+    "Aatp": { code: "Aatp", name: "优先攻击(石像鬼)(1.32.9)", tip: "未收到其他命令时，优先攻击敌方飞行单位。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
+    "Aap5": { code: "Aap5", name: "疾病云雾(亡者再临)(1.33)", tip: "用疾病之云感染周围的敌方生命单位，每秒对其造成<Aap5,DataB1>点伤害。|n持续<Aap5,DataA1>秒。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
+    "Augf": { code: "Augf", name: "食尸鬼狂暴(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
+    "Ausm": { code: "Ausm", name: "骷髅精通(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
+    "Afrc": { code: "Afrc", name: "冰霜攻击(新的,具有图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
+    "Augh": { code: "Augh", name: "影魔(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
   }
-  
+
   const abilityNeutralHostile = {
     "ACmo": { code: "ACmo", name: "季风", tip: "在一小块区域内召唤出闪电风暴对敌人造成<ACmo,DataA1>伤害力。|n持续<ACmo,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACbn": { code: "ACbn", name: "驱散(中立敌对)", tip: "将一个非机械单位变为气态并减缓其移动速度<ACbn,DataA1,%>%，<ACbn,Dur1>秒。气态生物无法攻击，但他们可以施放魔法，而某些魔法也可以对他们产生极大的作用。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
@@ -1550,7 +1539,7 @@ enum Kind {
     "Aap3": { code: "Aap3", name: "疾病云雾(中立敌对)", tip: "用疾病来感染周围的敌人。疾病云雾每秒能对敌人造成<Aap3,DataB1>点的伤害。|n持续<Aap3,DataA1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACpa": { code: "ACpa", name: "寄生虫", tip: "用一个致命的寄生虫折磨目标单位，使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ANth": { code: "ANth", name: "尖刺外壳", tip: "海龟身上的尖刺能将敌人<ANth,DataA1,%>%的攻击力化为对敌人的伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-    "ANt2": { code: "ANt2", name: "尖刺外壳(2,2 按钮)", tip: "海龟身上的尖刺能将敌人<ANth,DataA1,%>%的攻击力化为对敌人的伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "ANt2": { code: "ANt2", name: "尖刺外壳(按钮位置2,2)", tip: "海龟身上的尖刺能将敌人<ANth,DataA1,%>%的攻击力化为对敌人的伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "Ansp": { code: "Ansp", name: "间谍", tip: "", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACsw": { code: "ACsw", name: "减速(中立敌对)", tip: "减慢<ACsw,DataB1,%>%的攻击速度和<ACsw,DataA1,%>%的移动速度。持续<ACsw,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACvs": { code: "ACvs", name: "浸毒武器(中立敌对)", tip: "每秒能造成<ACvs,DataA1>点的毒性伤害。|n持续<ACvs,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
@@ -1561,10 +1550,10 @@ enum Kind {
     "Aenw": { code: "Aenw", name: "纠缠根须(中立敌对2)", tip: "从地面冒出根须使目标在<Aenr,Dur1>秒内不能动弹，并对其造成每秒<Aenr,DataA1>点的伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "SCcl": { code: "SCcl", name: "飓风(赛纳留斯)", tip: "将目标单位投掷到空中，使其不能移动，攻击和施放任何的魔法技能。而且其他单位也不能在这期间攻击它。|n持续<SCc1,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACcy": { code: "ACcy", name: "飓风(中立敌对)", tip: "将目标单位投掷到空中，使其不能移动，攻击和施放任何的魔法技能。而且其他单位也不能在这期间攻击它。|n持续<SCc1,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-    "Asds": { code: "Asds", name: "卡布恩(地精工兵)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-    "Asdg": { code: "Asdg", name: "卡布恩(时钟地精等级1)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-    "Asd2": { code: "Asd2", name: "卡布恩(时钟地精等级2)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-    "Asd3": { code: "Asd3", name: "卡布恩(时钟地精等级3)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Asds": { code: "Asds", name: "咔嘣！(地精工兵)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Asdg": { code: "Asdg", name: "咔嘣！(发条地精-等级1)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Asd2": { code: "Asd2", name: "咔嘣！(发条地精-等级2)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Asd3": { code: "Asd3", name: "咔嘣！(发条地精-等级3)", tip: "对一定区域造成<Asds,DataB1>点伤害。对付建筑物和数目特别地有效。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACrk": { code: "ACrk", name: "抗性皮肤(中立敌对1)", tip: "减少负面魔法的持续时间，使单位对某些魔法免疫。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACsk": { code: "ACsk", name: "抗性皮肤(中立敌对2)", tip: "减少负面魔法的持续时间，使单位对某些魔法免疫。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "Acht": { code: "Acht", name: "恐怖嚎叫(中立敌对)", tip: "发出恐怖的嚎叫，降低周围敌单位的攻击力<Acht,DataA1,%>%，<Acht,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
@@ -1659,9 +1648,8 @@ enum Kind {
     "ACfr": { code: "ACfr", name: "自然之力(中立敌对)", tip: "将一小块区域内的树木转化成<ACfr,DataA1>个树人。|n持续<ACfr,Dur1>秒。|n|n|cffffcc00能攻击地面单位。|r", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACcs": { code: "ACcs", name: "诅咒(中立敌对)", tip: "诅咒敌人的某个单位使其有<ACcs,DataA1,%>%的概率不能击中自己的目标。|n持续<ACcs,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "Abu5": { code: "Abu5", name: "钻地(中立敌对)", tip: "阿卡那瑟德钻入地面而消失不见。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
-  
-    "AEvi": { code: "AEvi", name: "变身(邪恶的尤迪安)", tip: "让恶魔猎手变身为一个威力巨大的恶魔，该恶魔具有远程攻击能力。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
-    "AEIl": { code: "AEIl", name: "变身(尤迪安)", tip: "让恶魔猎手变身为一个威力巨大的恶魔，该恶魔具有远程攻击能力。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
+    "AEvi": { code: "AEvi", name: "变身(邪恶的伊利丹)", tip: "让恶魔猎手变身为一个威力巨大的恶魔，该恶魔具有远程攻击能力。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
+    "AEIl": { code: "AEIl", name: "变身(伊利丹)", tip: "让恶魔猎手变身为一个威力巨大的恶魔，该恶魔具有远程攻击能力。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "AHca": { code: "AHca", name: "冰冻冷箭", tip: "每次攻击带有冰冻效果，使敌人单位减慢攻击和移动。|n|n|cffffcc00等级 1|r - <AHca,DataB1,%>%攻击速度，<AHca,DataC1,%>%移动速度，持续<AHca,Dur1>秒。|n|cffffcc00等级 2|r - <AHca,DataB2,%>%攻击速度，<AHca,DataC2,%>%移动速度，持续<AHca,Dur2>秒。|n|cffffcc00等级 3|r - <AHca,DataB3,%>%攻击速度，<AHca,DataC3,%>%移动速度，持续<AHca,Dur3>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANfl": { code: "ANfl", name: "叉状闪电", tip: "召唤一道锥形闪电伤害女海巫面前的多个敌人。|n|n|cffffcc00等级 1|r - <ANfl,DataA1>伤害/单位。|n|cffffcc00等级 2|r - <ANfl,DataA2>伤害/单位。|n|cffffcc00等级 3|r - <ANfl,DataA3>伤害力/单位。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANsi": { code: "ANsi", name: "沉默魔法", tip: "阻止一定范围内的所有敌人施放魔法。魔法的效果范围和持续时间会随着等级的增加而增加。|n|n|cffffcc00等级 1|r - 小范围，持续<ANsi,Dur1>秒。|n|cffffcc00等级 2|r - 中等范围，持续<ANsi,Dur2>秒。|n|cffffcc00等级 3|r - 大型范围，持续<ANsi,Dur3>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
@@ -1705,7 +1693,7 @@ enum Kind {
     "ANht": { code: "ANht", name: "恐怖嚎叫", tip: "深渊魔王发出恐怖的嚎叫，使周围敌人在恐惧中战栗，丢失当前的魔法效果，减少他们的伤害力。|n持续<ANht,Dur1>秒。|n|n|cffffcc00等级 1|r - 攻击减少<ANht,DataA1,%>%。|n|cffffcc00等级 2|r - 攻击减少<ANht,DataA2,%>%。|n|cffffcc00等级 3|r - 攻击减少<ANht,DataA3,%>%。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANsy": { code: "ANsy", name: "口袋工厂", tip: "建造一座能自动生成地精的工厂。这些地精都是人工地精。它们是强大的攻击者，在阵亡之后还能发生爆炸从而对周围的造成一定的伤害。|n|n|cffffcc00等级 1|r – 爆炸具有<Asdg,DataB1> 攻击力。|n|cffffcc00等级 2|r – 爆炸具有<Asd2,DataB1> 攻击力。|n|cffffcc00等级 3|r – 爆炸具有<Asd3,DataB1> 攻击力。|n工厂持续<ANsy,Dur3> 秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANs1": { code: "ANs1", name: "口袋工厂(Uperade 1)", tip: "建造一座能自动生成地精的工厂。这些地精都是人工地精。它们是强大的攻击者，在阵亡之后还能发生爆炸从而对周围的造成一定的伤害。|n|n|cffffcc00等级 1|r – 爆炸具有<Asdg,DataB1> 攻击力。|n|cffffcc00等级 2|r – 爆炸具有<Asd2,DataB1> 攻击力。|n|cffffcc00等级 3|r – 爆炸具有<Asd3,DataB1> 攻击力。|n工厂持续<ANs1,Dur3> 秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
-    "ANs2": { code: "ANs2", name: "(口袋工厂(Upgrade 2)", tip: "建造一座能自动生成地精的工厂。这些地精都是人工地精。它们是强大的攻击者，在阵亡之后还能发生爆炸从而对周围的造成一定的伤害。|n|n|cffffcc00等级 1|r – 爆炸具有<Asdg,DataB1> 攻击力。|n|cffffcc00等级 2|r – 爆炸具有<Asd2,DataB1> 攻击力。|n|cffffcc00等级 3|r – 爆炸具有<Asd3,DataB1> 攻击力。|n工厂持续<ANs2,Dur3> 秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
+    "ANs2": { code: "ANs2", name: "口袋工厂(Upgrade 2)", tip: "建造一座能自动生成地精的工厂。这些地精都是人工地精。它们是强大的攻击者，在阵亡之后还能发生爆炸从而对周围的造成一定的伤害。|n|n|cffffcc00等级 1|r – 爆炸具有<Asdg,DataB1> 攻击力。|n|cffffcc00等级 2|r – 爆炸具有<Asd2,DataB1> 攻击力。|n|cffffcc00等级 3|r – 爆炸具有<Asd3,DataB1> 攻击力。|n工厂持续<ANs2,Dur3> 秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANs3": { code: "ANs3", name: "口袋工厂(Upsrade 3)", tip: "建造一座能自动生成地精的工厂。这些地精都是人工的地精。它们是强大的攻击者，在阵亡之后还能发生爆炸从而对周围的造成一定的伤害。|n|n|cffffcc00等级 1|r – 爆炸具有<Asdg,DataB1> 攻击力。|n|cffffcc00等级 2|r – 爆炸具有<Asd2,DataB1> 攻击力。|n|cffffcc00等级 3|r – 爆炸具有<Asd3,DataB1> 攻击力。|n工厂持续<ANs3,Dur3> 秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANsl": { code: "ANsl", name: "灵魂保存(马哥尼斯)", tip: "将一个僵尸放入下面的地域以备后用。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANso": { code: "ANso", name: "灵魂燃烧", tip: "让火焰包围敌人，让其在一段时间之内持续受到伤害，并阻止其施放任何魔法和减少其<ANso,DataC1,%>%的攻击力。 |n|n|cffffcc00等级 1|r - 100 点伤害， 持续<ANso,Dur1>秒。|n|cffffcc00等级 2|r - 225 点伤害， 持续 <ANso,Dur2>秒。|n|cffffcc00等级 3|r - 375 点伤害， 持续<ANso,Dur3>秒。|n|n灵魂燃烧在英雄身上持续的时间会减半。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
@@ -1743,7 +1731,7 @@ enum Kind {
     "Acdb": { code: "Acdb", name: "醉拳(陈)", tip: "给予一定的概率来躲避攻击和<Acdb,DataA1>%的概率来对敌人造成额外的伤害。|n|n|cffffcc00等级 1|r -<Acdb,DataD1,%>%的概率来躲避攻击，<Acdb,DataB1>倍于常规攻击的额外伤害。|n|cffffcc00等级 2|r -<Acdb,DataD2,%>%的概率来躲避攻击，<Acdb,DataB2>倍于常规攻击的额外伤害。|n|cffffcc00等级 3|r -<Acdb,DataD3,%>%的概率来躲避攻击，<Acdb,DataB3>倍于常规攻击的额外伤害。|n|cffffcc00等级 4|r -<Acdb,DataD4,%>%的概率来躲避攻击，<Acdb,DataB4>倍于常规攻击的额外伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANwk": { code: "ANwk", name: "疾风步(中立敌对)", tip: "允许熊猫人隐形，移动速度快<ANwk,DataB1,%>%。如果熊猫人攻击某单位它就会显形，这次攻击将会增加<ANwk,DataC1> 。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
   }
-  
+
   const abilityNeutralPassive = {
     "ANpa": { code: "ANpa", name: "寄生虫", tip: "用一个致命的寄生虫折磨目标单位,使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
     "Aasl": { code: "Aasl", name: "减速光环(龙卷风)", tip: "被该光环影响的单位在获得光环效果时会受到0点伤害。多个减速光环的buff可以叠加", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
@@ -1757,11 +1745,11 @@ enum Kind {
     "ANen": { code: "ANen", name: "诱捕", tip: "能将一个目标空中单位固定在地面上，使其在<Aens,Dur1>秒内不能移动。被诱捕的空中单位可以当作地面单位进行攻击。", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
     "Ahnl": { code: "Ahnl", name: "召唤仪式", tip: "从扭曲的地狱召唤能量。", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
   }
-  
+
   const abilitySpecial = {
     "Sch5": { code: "Sch5", name: "保持原位(船)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Sch3": { code: "Sch3", name: "保持原位(地精飞艇)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-    "ANha": { code: "ANha", name: "采集(Neutral)", tip: "从金矿处采集黄金资源，从树木上砍伐木材资源。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
+    "ANha": { code: "ANha", name: "采集(娜迦)(中立)(采集黄金和木材)", tip: "从金矿处采集黄金资源，从树木上砍伐木材资源。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Ahar": { code: "Ahar", name: "采集(黄金和木材)", tip: "从金矿处采集黄金资源，从树木上砍伐木材资源。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Asud": { code: "Asud", name: "出售单位", tip: "能卖出你自己的单位。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Asid": { code: "Asid", name: "出售物品", tip: "能卖出你所拥有的物品。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
@@ -1784,8 +1772,8 @@ enum Kind {
     "ARal": { code: "ARal", name: "集结", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "AGbu": { code: "AGbu", name: "建造(娜迦)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "ANbu": { code: "ANbu", name: "建造(中立)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-    "Amin": { code: "Amin", name: "金矿-爆炸了(地精地雷)", tip: "该技能使得单位可以隐身，但是该单位即使是飞行单位也会有地面碰撞，且无论如何不能通过不可建造地面", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-    "Agld": { code: "Agld", name: "金矿能力", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
+    "Amin": { code: "Amin", name: "地雷/金矿-爆炸了(地精地雷)", tip: "该技能使得单位可以隐身，但是该单位即使是飞行单位也会有地面碰撞，且无论如何不能通过不可建造地面", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
+    "Agld": { code: "Agld", name: "金矿技能", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Aalr": { code: "Aalr", name: "警报", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Afir": { code: "Afir", name: "开火", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Aawa": { code: "Aawa", name: "立刻复活英雄", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
@@ -1812,13 +1800,14 @@ enum Kind {
     "ANtr": { code: "ANtr", name: "真实视域(中立2)", tip: "显示周围的隐形单位。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Slo3": { code: "Slo3", name: "装载(船只)", tip: "装载一个指定的友方地面单位。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Aloa": { code: "Aloa", name: "装载(地精飞艇)", tip: "装载一个指定的友方地面单位。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-  
     "ANav": { code: "ANav", name: "天神下凡(中立的)", tip: "激活天神下凡之后给予加理瑟斯<ANav,DataA1>点额外的护甲，<ANav,DataB1>点额外的生命值，<AHav,DataC1>点额外的攻击力和魔法免疫技能。|n持续<ANav,Dur1>秒。", kind: Kind.Ability, race: Race.Special, type: Type.Hero },
     "ANsh": { code: "ANsh", name: "震荡波", tip: "从英雄身上发射出一道威力巨大的能量波，从而对一直线上的敌人地面单位造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOsh,DataA1>点伤害。|n|cffffcc00等级 2|r - <AOsh,DataA2>点伤害。|n|cffffcc00等级 3|r - <AOsh,DataA3>点伤害。", kind: Kind.Ability, race: Race.Special, type: Type.Hero },
   }
-  
+
   const abilityItem = {
-    "AIaa": { code: "AIaa", name: "Item Fermanent Damage Gain", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIg2": { code: "AIg2", name: "仪式匕首(恢复)(1.30)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIdg": { code: "AIdg", name: "仪式匕首(瞬发治疗)(1.30)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIaa": { code: "AIaa", name: "永久伤害提升,攻击力提升", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "ANpr": { code: "ANpr", name: "保存权杖", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "ANsa": { code: "ANsa", name: "避难权杖", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AItb": { code: "AItb", name: "尘土之影", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -1874,7 +1863,7 @@ enum Kind {
     "AIrs": { code: "AIrs", name: "具有复活效果的物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIrx": { code: "AIrx", name: "具有复活效果的物品(魔法施放间隔时间)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIdi": { code: "AIdi", name: "具有驱逐魔法效果的物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AIds": { code: "AIds", name: "(具有驱逐魔法效果的物品(有使用间隔)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIds": { code: "AIds", name: "具有驱逐魔法效果的物品(有使用间隔)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIcf": { code: "AIcf", name: "具有献祭效果的物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIh2": { code: "AIh2", name: "具有医疗效果的物品(较大的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIh1": { code: "AIh1", name: "具有医疗效果的物品(较小的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -1920,7 +1909,7 @@ enum Kind {
     "AIlm": { code: "AIlm", name: "能提高等级的物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIsx": { code: "AIsx", name: "能提高攻击速度的物品(加速手套)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AId1": { code: "AId1", name: "能提高护甲的物品(+1)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AId0": { code: "AId0", name: "(能提高护甲的物品(+10)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AId0": { code: "AId0", name: "能提高护甲的物品(+10)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AId2": { code: "AId2", name: "能提高护甲的物品(+2)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AId3": { code: "AId3", name: "能提高护甲的物品(+3)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AId4": { code: "AId4", name: "能提高护甲的物品(+4)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -1944,7 +1933,7 @@ enum Kind {
     "AIa3": { code: "AIa3", name: "能提高英雄属性的物品(+3 敏捷度)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIi3": { code: "AIi3", name: "能提高英雄属性的物品(+3 智力)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIs4": { code: "AIs4", name: "能提高英雄属性的物品(+4 力量)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AIa4": { code: "AIa4", name: "(能提高英雄属性的物品(+4 敏捷度)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIa4": { code: "AIa4", name: "能提高英雄属性的物品(+4 敏捷度)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIi4": { code: "AIi4", name: "能提高英雄属性的物品(+4 智力)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIx5": { code: "AIx5", name: "能提高英雄属性的物品(+5 所有属性)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIs6": { code: "AIs6", name: "能提高英雄属性的物品(+6 力里)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -1972,7 +1961,7 @@ enum Kind {
     "AI2m": { code: "AI2m", name: "能增加魔法值的物品(200)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AImv": { code: "AImv", name: "能增加魔法值的物品(75)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIl2": { code: "AIl2", name: "能增加生命值的物品(较大的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AIl1": { code: "AIl1", name: "(能增加生命值的物品(较小的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIl1": { code: "AIl1", name: "能增加生命值的物品(较小的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIlz": { code: "AIlz", name: "能增加生命值的物品(最小的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIlf": { code: "AIlf", name: "能增加生命值的物品(最小的)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "Asou": { code: "Asou", name: "能占据单位灵魂的物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -2039,11 +2028,11 @@ enum Kind {
     "AItx": { code: "AItx", name: "增加攻击力的物品 (+20)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIat": { code: "AIat", name: "增加攻击力的物品 (+3)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIti": { code: "AIti", name: "增加攻击力的物品 (+4)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AItj": { code: "AItj", name: "增加攻击力的物品 (+5)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AItj": { code: "AItj", name: "增加攻击力的物品 (+5)(在1.36中为+4,技能名称和说明未修改)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIt6": { code: "AIt6", name: "增加攻击力的物品 (+6)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AItk": { code: "AItk", name: "增加攻击力的物品 (+7)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AItl": { code: "AItl", name: "增加攻击力的物品 (+8)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
-    "AIt9": { code: "AIt9", name: "增加攻击力的物品 (+9)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
+    "AIt9": { code: "AIt9", name: "增加攻击力的物品 (+9)(在1.36中为+8,技能名称和说明未修改)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIsh": { code: "AIsh", name: "召唤巨魔猎头者 (物品)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIrt": { code: "AIrt", name: "召唤物品", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIhw": { code: "AIhw", name: "治疗守卫 (物品)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -2053,7 +2042,7 @@ enum Kind {
     "AIad": { code: "AIad", name: "专注光环(物品)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIh3": { code: "AIh3", name: "最小的医疗能力(增加魔法施放间隔时间)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
   }
-  
+
   const item = {
     // 永久
     "afac": { code: "", name: "阿利亚之笛", tip: "增加附近远程攻击型单位 <AIar,DataA1,%>%的攻击力。|n不能和强击光环同时使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
@@ -2194,14 +2183,14 @@ enum Kind {
     "silk": { code: "", name: "蜘蛛丝饰针", tip: "将敌人的空中单位捕获到地面，被捕获到地面的空中单位能被地面单位攻击。|n可使用<silk,uses>次。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "wneu": { code: "", name: "中和权杖", tip: "投掷出一道魔法能量波，在不同的单位间跳跃<AIdc,DataC1>次从而驱散各类的魔法效果。|n可使用<wneu,uses>次。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     // 战役
-    "azhr": { code: "", name: "埃苏尼之心", tip: "传说被囚禁的埃苏尼灵魂一直在寻找着她的这颗心。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "azhr": { code: "", name: "艾苏恩之心/埃苏尼之心", tip: "传说被囚禁的埃苏尼灵魂一直在寻找着她的这颗心。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "gmfr": { code: "", name: "宝石碎片", tip: "戒指宝石的碎片", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "jpnt": { code: "", name: "给吉安娜·普罗德摩尔的便条", tip: "萨尔给吉安娜-普罗德摩尔的便条。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "glsk": { code: "", name: "古尔丹之颅", tip: "古尔丹曾是一个恶魔魔法的使用者，不幸的是召唤出来的恶魔反而杀害了他。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "skrt": { code: "", name: "骸骨宝物", tip: "这件古老的人工制品能够诱陷那些死于暴力的不死族，迫使他们为了永恒的生命重新体验生命的最后瞬间。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "wolg": { code: "", name: "怀特的另一条腿", tip: "也许过分热心的冒险者在他的旅途结束之前窥视到了这个，以为它能给予他在屠杀中的最后机会。但他并不知道这能将他领向何处。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "wtlg": { code: "", name: "怀特之腿", tip: "是否这个打开的空间门释放我们在暗黑破坏神世界的亲爱的朋友们？如果是这样, 那是个玩家,还是个恶魔？燃烧军团到底征服了多少个世界？是否燃烧军团的恶魔们和那些避难所中的是同一类呢？思维已经混乱。", kind: Kind.Item, race: Race.Special, type: Type.Item },
-    "ledg": { code: "", name: "吉拉德的帐本", tip: "里面似乎充满着无聊的数字和事实记载。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "ledg": { code: "", name: "杰拉德丢失的帐本/吉拉德的帐本", tip: "里面似乎充满着无聊的数字和事实记载。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "gopr": { code: "", name: "净化浮雕", tip: "由古代的德鲁伊所造，有着无穷的医疗力量。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "bzbe": { code: "", name: "空瓶", tip: "能盛放生命之泉泉水的一个魔法容器。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "dthb": { code: "", name: "雷电花芯", tip: "一种奇异的植物，以其不稳定性和危险性而著称。", kind: Kind.Item, race: Race.Special, type: Type.Item },
@@ -2280,7 +2269,7 @@ enum Kind {
     "shhn": { code: "", name: "荣誉护盾", tip: "|cff8b00ff特有的|r|n增加周围单位<AIcd,DataA1,%>%的攻击力。同时增加英雄<AId8,DataA1>点的护甲。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "shcw": { code: "", name: "萨满利爪", tip: "|cff8b00ff特有的|r|n这装备是在萨满学完所有技能之后得到的。能增加<AIlx,DataA1>点的攻击力。并使得英雄有一定的概率来驱散魔法和在 <AIpg,Dur1> 秒内减慢敌人的移动速度。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "shtm": { code: "", name: "萨满图腾", tip: "萨满图腾中蕴含着萨满祭司强大的魔法力量。能让携带者施放净化魔法。", kind: Kind.Item, race: Race.Special, type: Type.Item },
-    "srtl": { code: "", name: "瑟拉思尔", tip: "|cffff8c00神器|r|n增加英雄<AIsx,DataA1,%>%的攻击速度和<AItf,DataA1>点的攻击力。|n|cffffcc00历史|r|n|cffffdead这把巨大的战斧是为了卡斯德拉克所造。并在血河战争中被是使用。随着黑疤部落的灭亡，这把战斧也最终不知了去向。那滋盖尔是卡斯德拉克唯一一个还健在的亲戚。|r", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "srtl": { code: "", name: "塞拉希尔/瑟拉思尔", tip: "|cffff8c00神器|r|n增加英雄<AIsx,DataA1,%>%的攻击速度和<AItf,DataA1>点的攻击力。|n|cffffcc00历史|r|n|cffffdead这把巨大的战斧是为了卡斯德拉克所造。并在血河战争中被是使用。随着黑疤部落的灭亡，这把战斧也最终不知了去向。那滋盖尔是卡斯德拉克唯一一个还健在的亲戚。|r", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "olig": { code: "", name: "闪电之球", tip: "能增加英雄<AIlb,DataA1>点的攻击力。也使得英雄的攻击在攻击空中单位的时候会变为远程攻击，还能驱逐魔法和在<AIlp,Dur1>秒内减慢敌人的移动速度。|n|cffffcc00对召唤出来的单位能造成 <AIlp,DataC1>点的伤害。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "oli2": { code: "", name: "闪电之球", tip: "能增加英雄<AIlb,DataA1>点的攻击力。也使得英雄的攻击在攻击空中单位的时候会变为远程攻击，还能驱逐魔法和在<AIlp,Dur1>秒内减慢敌人的移动速度。|n|cffffcc00对召唤出来的单位能造成 <AIpg,DataC1>点的伤害。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "arsc": { code: "", name: "神秘卷轴", tip: "一种强大的卷轴。能恢复<AIha,DataA1>点的生命值，<AImr,DataA1>点的魔法值。并能增加周围单位<AIda,DataA1>点的护甲。", kind: Kind.Item, race: Race.Special, type: Type.Item },
@@ -2335,8 +2324,15 @@ enum Kind {
     "amrc": { code: "", name: "召唤护身符", tip: "将目标区域内<AIrt,DataA1>个玩家的单位传送到英雄的旁边。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "sprn": { code: "", name: "蜘蛛戒指", tip: "增加英雄1点的敏捷度。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "srbd": { code: "", name: "灼热之刀", tip: "增加英雄<AIfw,DataA1>点的火焰攻击力。英雄的攻击也带有溅射效果，能对目标周围的单位同时造成伤害。同时英雄有<AIcs,DataA1>%的概率能对目标造成<AIcs,DataB1>倍于普通攻击的伤害。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "iotw": { code: "", name: "野性神像(1.32)", tip: "召唤一头熊怪追踪者为你而战。|n持续<AIut,Dur1>秒。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "ritd": { code: "", name: "仪式匕首(1.30)", tip: "|cff87ceeb非战斗消耗品|r|n献祭一个友方亡灵单位，在<AIg2,Dur1>秒内为其周围的所有友方非机械单位恢复<AIg2,DataA1>点生命值。|n可使用<ritd,uses>次。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "fgbd": { code: "", name: "蓝色幼龙蛋/蓝龙之卵(1.32)", tip: "召唤一头蓝色幼龙为你而战。|n持续<AIbd,Dur1>秒。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "scav": { code: "", name: "嗜财权杖(1.32)", tip: "立刻消灭目标单位，并将其变成黄金。该单位所耗黄金的<AIts,DataA1,%>%会被加入你的金库。|n点金术不能对英雄和<AIts,DataC1>级以上的中立生物使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "pdi2": { code: "", name: "神圣药水(1.32)", tip: "使用后英雄变为无敌，持续<AIvg,Dur1>秒。无敌状态下的英雄不会成为法术或效果的目标。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "vpur": { code: "", name: "净化藤蔓(1.32)", tip: "这根藤蔓在发出能量的嗡鸣声。。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "sxpl": { code: "", name: "驱魔种子(1.32)", tip: "这颗种子在发出能量的嗡鸣声。", kind: Kind.Item, race: Race.Special, type: Type.Item },
   }
-  
+
   const buffHuman = {
     "BHbd": { code: "", name: "暴风雪", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "BHbz": { code: "", name: "暴风雪(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
@@ -2370,7 +2366,6 @@ enum Kind {
     "Bhea": { code: "", name: "医疗", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "Bivs": { code: "", name: "隐形(额外的)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
     "Binv": { code: "", name: "隐形术", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
-  
     "XHbz": { code: "", name: "暴风雪(效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "XHfs": { code: "", name: "烈焰风暴(效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "Xfhl": { code: "", name: "建筑物伤害-人族大", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
@@ -2420,4 +2415,3 @@ enum Kind {
   export {
     MarkCode, Kind, Race, Type, kindToString, raceToString, typeToString, MarkCodes
   }
-
