@@ -47,11 +47,11 @@ native DebugS               takes string str                            returns 
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数
-    // 会检查开始点附近所有矿，而不是只查闹鬼金矿
-    // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地返回的第一座矿，如果返回的非闹鬼金矿，侍僧就无法采矿
+    // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
+    // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵/暗夜无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地附近返回的第一座矿，如果返回的非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
     native GetMinesOwned        takes nothing                               returns integer
     // 获取拥有的所有金矿的金钱数量，并返回第一座矿的金钱数
-    // 会检查开始点所有矿，而不是只查闹鬼金矿
+    // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
     // 有金矿的基地编号，如果多个基地都有金矿，则返回最小编号
@@ -100,7 +100,7 @@ native DebugS               takes string str                            returns 
     // 设置英雄升级技能函数
     native SetHeroLevels        takes code func                             returns nothing
     // 是否设置新英雄
-    // 意义不明，可能和学习技能有关
+    // 意义不明，可能和英雄升级技能函数有关
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
     // 运行后AI会自动前往地精实验室并自动购买地精飞艇
@@ -109,7 +109,7 @@ native DebugS               takes string str                            returns 
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
     // @param a 单位类型一
     // @param b 单位类型二
-    // @param make 一和二合体成的单位类型
+    // @param make 一和二合体而成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
     // 训练/建造/研究指定数量的变形单位类型
     // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
@@ -148,6 +148,7 @@ native DebugS               takes string str                            returns 
     // 启用/禁用 慢速采矿（每次采集1金）
     native SetSlowChopping      takes boolean state                         returns nothing
     // 允许/禁止 变更主基地
+    // 理论上是在非出生点/初始矿之外的其他矿点建造基地，并将其作为新主基地
     native SetCaptainChanges    takes boolean allow                         returns nothing
     // 启用/禁用 主动攻击敌人基地
     native SetSmartArtillery    takes boolean state                         returns nothing
@@ -163,8 +164,9 @@ native DebugS               takes string str                            returns 
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
     // 未被编入的单位类型不会跟随进攻，只会留在开始点
+    // 似乎攻击队长会在这些单位类型中挑选一名类型为英雄的单位担任
     native AddAssault           takes integer qty, integer id               returns boolean
-    // 增加指定数量的指定单位类型到防守组
+    // 增加指定数量的指定单位类型到防御组
     native AddDefenders         takes integer qty, integer id               returns boolean
     
     // 获取指定等级范围内的中立敌对玩家控制的单位
@@ -201,12 +203,12 @@ native DebugS               takes string str                            returns 
     // 发布自杀式攻击命令（指定玩家），返回false时代表未执行
     // 理论上是一路打到指定玩家的开始点
     // 暴雪用于战役AI
-    // @param check_full 怀疑是 是否检查攻击组完整
+    // @param check_full 怀疑是 是否检查攻击队长满血
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
     // 发布自杀式攻击命令（指定玩家单位），返回false时代表未执行
     // 和SuicidePlayer的区别怀疑是 只要攻击到该玩家任意单位即可，无需一路打到玩家开始点
     // 暴雪用于战役AI
-    // @param check_full 怀疑是 是否检查攻击组完整
+    // @param check_full 怀疑是 是否检查攻击队长满血
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
     // 查询攻击队长是否正在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
@@ -260,21 +262,21 @@ native DebugS               takes string str                            returns 
     native CaptainGoHome        takes nothing                               returns nothing
     // 查询攻击队长是否在家
     native CaptainIsHome        takes nothing                               returns boolean
-    // 查询攻击队长是否完整
+    // 查询攻击队长是否满血
     native CaptainIsFull        takes nothing                               returns boolean
-    // 查询攻击队长是否为空
+    // 查询攻击队长是否为空（未创建或已阵亡或已创建但不可用-比如控制权转移或被删除）
     native CaptainIsEmpty       takes nothing                               returns boolean
     // 获取攻击队长所在进攻/防御组规模，数值越高，规模越大
     native CaptainGroupSize     takes nothing                               returns integer
-    // 获取攻击队长准备情况
+    // 获取攻击队长准备情况，似乎同时比对当前生命值和魔法值与其最大值
     // 似乎是百分制，数值越高，准备越充分
     native CaptainReadiness     takes nothing                               returns integer
     // 查询攻击队长是否在撤退
     native CaptainRetreating    takes nothing                               returns boolean
-    // 获取攻击队长生命值
+    // 获取攻击队长生命值，比对当前生命值与最大生命值
     // 似乎是百分制且转百分比
     native CaptainReadinessHP   takes nothing                               returns integer
-    // 获取攻击队长魔法值
+    // 获取攻击队长魔法值，比对当前魔法值与最大魔法值
     // 似乎是百分制且转百分比
     native CaptainReadinessMa   takes nothing                               returns integer
     // 查询攻击队长是否到达目的地
@@ -1321,7 +1323,7 @@ native DebugS               takes string str                            returns 
         // 该值默认为0，AI不会使用，需要自行赋值，在完成指定的训练/建造/研究后请即使清零，否则AI会一直保持这笔存款
         // 如果需要存木，请自行在 OneBuildLoop 添加
         integer gold_buffer             = 0 // usually for potion money
-        // AI难度，该变量用于统一对地图难度、战难度和难度，便于书写
+        // AI难度，该变量用于统一对地图难度、战难度和难度，便于书写和检索
         integer difficulty              = NORMAL
         // 攻击敌人基地延迟（按次计），攻城单位准备完毕后，简单难度需要循环3次后才攻击，中等难度需要循环3次后才攻击，困难/疯狂需要循环0次后才攻击，攻击后置零
         integer exp_seen                = 0
@@ -1405,7 +1407,7 @@ native DebugS               takes string str                            returns 
         boolean trace_on                = true
         // 是否允许飞艇空投
         boolean zep_next_wave           = false
-        // 是否允许进攻组组建超时
+        // 是否允许攻击组组建超时
         boolean form_group_timeouts     = true
     endglobals
     
@@ -1600,7 +1602,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 启用/禁用 进攻组组建超时
+    // 启用/禁用 攻击组组建超时
     function SetFormGroupTimeouts takes boolean state returns nothing
         set form_group_timeouts = state
     endfunction
@@ -2318,7 +2320,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
     
-    // 交错设置进攻组
+    // 交错设置攻击组
     // @param e1~e3 简单AI添加的数量，可设置3个档位
     // @param m1~m3 中等AI添加的数量，可设置3个档位
     // @param h1~h3 疯狂AI添加的数量，可设置3个档位
@@ -3055,7 +3057,7 @@ native DebugS               takes string str                            returns 
     //  AddSiege
     //============================================================================
     
-    // 添加（默认攻击类型为）攻城单位到进攻组
+    // 添加（默认攻击类型为）攻城单位到攻击组
     function AddSiege takes nothing returns nothing
         call SetAssaultGroup( 0, 9, SHADE       )
         call SetAssaultGroup( 0, 9, MEAT_WAGON  )

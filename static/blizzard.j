@@ -40,11 +40,11 @@ globals
     constant real      bj_TEXT_DELAY_HINT               = 12.00
     // 文本显示延时 - 秘密，默认10.00
     constant real      bj_TEXT_DELAY_SECRET             = 10.00
-    // 文本显示延时 - 单位购买，默认15.00
+    // 文本显示延时 - 有新单位可购买，默认15.00
     constant real      bj_TEXT_DELAY_UNITACQUIRED       = 15.00
-    // 文本显示延时 - 单位可用，默认10.00
+    // 文本显示延时 - 有新单位可用，默认10.00
     constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
-    // 文本显示延时 - 物品购买，默认10.00
+    // 文本显示延时 - 有新物品可购买，默认10.00
     constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
     // 文本显示延时 - 警告，默认12.00
     constant real      bj_TEXT_DELAY_WARNING            = 12.00
@@ -56,7 +56,7 @@ globals
     constant real      bj_QUEUE_DELAY_SECRET            =  3.00
     // 生命障碍 - 简单，默认60.00
     constant real      bj_HANDICAP_EASY                 = 60.00
-    // 生命障碍 - 无限制/普通，默认90.00
+    // 生命障碍 - 普通，默认90.00
     constant real      bj_HANDICAP_NORMAL               = 90.00
     // 伤害障碍 - 简单，默认50.00
     constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
@@ -8303,7 +8303,7 @@ endfunction
 // 电影 设置滤镜（高级）
 // @param duration 持续时间
 // @param bmode 混合模式
-// @param tex 电影滤镜纹理(可在 ObjectEditor.j 文件找到)
+// @param tex 电影滤镜纹理(可在 记录物编的文件 找到)
 // @param red0~trans0 开始颜色(红绿蓝三色及透明度)
 // @param red1~trans1 结束颜色(红绿蓝三色及透明度)
 function CinematicFilterGenericBJ takes real duration, blendmode bmode, string tex, real red0, real green0, real blue0, real trans0, real red1, real green1, real blue1, real trans1 returns nothing
