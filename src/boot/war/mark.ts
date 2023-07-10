@@ -2375,7 +2375,42 @@ const unitHuman = {
     "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
   }
   
-  
+  const buffOrc = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Unit },
+  }
+
+  const buffNightElf = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Unit },
+  }
+
+  const buffUndead = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Buff, race: Race.Undead, type: Type.Unit },
+  }
+
+  const buffNeutral = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Buff, race: Race.Neutral, type: Type.Unit },
+  }
+
+  const technologyHuman = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+  }
+
+  const technologyOrc = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+  }
+
+  const technologyNightElf = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+  }
+
+  const technologyUndead = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+  }
+
+  const technologyNeutral = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
+  }
+
   const MarkCode = {
     ...unitHuman,
     ...unitOrc,
@@ -2393,6 +2428,15 @@ const unitHuman = {
     ...abilityItem,
     ...item,
     ...buffHuman
+    ...buffOrc
+    ...buffNightElf
+    ...buffUndead
+    ...buffNeutral
+    ...technologyHuman
+    ...technologyOrc
+    ...technologyNightElf
+    ...technologyUndead
+    ...technologyNeutral
   }
   
   const MarkCodes = [...Object.values(unitHuman),
@@ -2410,7 +2454,16 @@ const unitHuman = {
     ...Object.values(abilityNeutralPassive),
     ...Object.values(abilityItem),
     ...Object.values(item),
-    ...Object.values(buffHuman)];
+    ...Object.values(buffHuman)
+    ...Object.values(buffOrc)
+    ...Object.values(buffNightElf)
+    ...Object.values(buffUndead)            
+    ...Object.values(buffNeutral)
+    ...Object.values(technologyHuman)
+    ...Object.values(technologyOrc)
+    ...Object.values(technologyNightElf)
+    ...Object.values(technologyUndead)
+    ...Object.values(technologyNeutral)];
 
   export {
     MarkCode, Kind, Race, Type, kindToString, raceToString, typeToString, MarkCodes
