@@ -1285,7 +1285,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
 	// 玩家单位事件 单位(尸体)开始腐烂
  constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
-	// 玩家单位事件 单位可检测
+	// 玩家单位事件 单位可侦测（可被反隐看到）
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
 	// 玩家单位事件 单位被隐藏
 	constant playerunitevent EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
@@ -1368,7 +1368,7 @@ globals
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
         // 单位事件 单位(尸体)开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
-	// 单位事件 单位可检测
+	// 单位事件 单位可侦测（可被反隐看到）
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 	// 单位事件 单位被隐藏
 	constant unitevent EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
@@ -5090,7 +5090,7 @@ constant native GetTrainedUnitType takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取检测的单位(对应单位被检测到等事件)
+// 事件响应 获取被侦测的单位(对应单位被侦测到等事件)（被反隐看到的单位）
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
@@ -5293,7 +5293,7 @@ constant native GetEventDamageSource takes nothing returns unit
 // EVENT_UNIT_DECAY
 // Use the GetDyingUnit and GetDecayingUnit funcs above
 
-// 事件响应 获取事件检测到的玩家(对应检测到单位等事件)
+// 事件响应 获取侦测单位的玩家(对应单位被侦测到等事件)（操作反隐的玩家）
 // EVENT_UNIT_DETECTED
 constant native GetEventDetectingPlayer takes nothing returns player
 
@@ -5431,6 +5431,7 @@ native SetDestructableAnimation takes destructable d, string whichAnimation retu
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
+// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -5471,6 +5472,7 @@ native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
 // 查询指定物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
 // 显示/隐藏 指定物品 [R]
+// 隐藏后反隐也看不到
 native SetItemVisible takes item whichItem, boolean show returns nothing
 // 查询指定物品是否可见 [R]
 native IsItemVisible takes item whichItem returns boolean
@@ -5530,6 +5532,7 @@ native KillUnit takes unit whichUnit returns nothing
 // 删除指定单位
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
+// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]
@@ -5798,9 +5801,9 @@ constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns bool
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位对指定玩家是否可见
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位能否被指定玩家检测到
+// 查询指定单位能否被指定玩家侦测到（可被反隐看到）
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位是否对指定玩家不可见
+// 查询指定单位是否对指定玩家不可见（未使用反隐的情况下）
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位在指定玩家视野中，是否被迷雾遮挡
 constant native IsUnitFogged takes unit whichUnit, player whichPlayer returns boolean
@@ -5821,11 +5824,12 @@ constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real dista
 // 查询指定单位是否在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
 // 查询指定单位是否隐藏
+// 隐藏的单位反隐也看不到，但其碰撞体积仍可按设置工作
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
 // 查询指定单位是否被另一指定单位装载
-// 用于检测单位被哪艘（座）船/飞艇/被缠绕的金矿装载
+// 可用于查询单位被哪艘（座）船/飞艇/被缠绕的金矿装载（每个载具逐一检查）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
 // 查询指定单位是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
