@@ -417,6 +417,7 @@ function parseLineComment(lineText: ReplaceableLineText, lineComment: LineCommen
 }
 
 function parseGlobal(lineText: ReplaceableLineText, global: Global) {
+    
     let tokens = tokenize(lineText.replaceText()).map((token) => {
         token.line = lineText.lineNumber();
         return token;
@@ -667,22 +668,29 @@ class LineText extends Range {
 }
 
 class ReplaceableLineText extends LineText {
-    private readonly realacedText: string = "";
+    private realacedText: string = "";
 
     // private tokens:Token[] = [];
     private defines:TextMacroDefine[] = [];
 
-    // 跟textmacro冲突,还没找到原因
     constructor(lineText:LineText, defines?: TextMacroDefine[]) {
         super(lineText.getText());
         this.from(lineText);
 
-        const tokens = tokenize(lineText.getText());
+        // const tokens = tokenize(lineText.getText());
 
         this.defines = lastLineDefine(lineText.lineNumber(), defines ?? []);
 
 
-        this.realacedText = this.tokensToString(tokens, this.defines);
+        // this.realacedText = this.tokensToString(tokens, this.defines);
+        this.realacedText = this.replaceTextByRegExp(this.getText(), this.defines);
+    }
+
+    private replaceTextByRegExp(text:string, defines:TextMacroDefine[]) {
+        defines.forEach(define => {
+            text = text.replace(new RegExp(`\\b${define.name}\\b`, "g"), define.value);
+        });
+        return text;
     }
 
     // 宏替换后的字符串
@@ -727,6 +735,10 @@ class ReplaceableLineText extends LineText {
         return Object.assign(new ReplaceableLineText(this, this.defines), this);
         // return new ReplaceableLineText(this, this.defines);
     }
+
+    public setReplaceText(text: string): void {
+        this.realacedText = text;
+    }
 }
 
 class TextMacro extends Range {
@@ -765,13 +777,13 @@ class TextMacro extends Range {
         this.lineTexts.map((lineText) => {
             const replacedLineText = lineText.clone();
 
-
             let newText = lineText.replaceText();
             this.takes.forEach((take, takeIndex) => {
                 newText = newText.replace(new RegExp(`\\$${take}\\$`, "g"), params[takeIndex] ?? "");
             });
-            replacedLineText.setText(newText);
+            replacedLineText.setReplaceText(newText);
             callback(replacedLineText);
+            
         });
     }
 
@@ -1593,8 +1605,6 @@ function parseCj(content: string): Program {
         // const result = cjassFuncRegExp.exec(lineText.getText());
         const result = lineText.getText().match(cjassFuncRegExp);
         if (result && result.groups && canCjassReturn(result.groups["returns"])) {
-            // console.log(result.groups["name"], result.groups["returns"])
-            
             const takesString = lineText.getText().substring(result[0].length, lineText.length());
             const takeStrings = takesString.split(new RegExp(/\s*,\s*/));
             const takes:Take[] = [];
