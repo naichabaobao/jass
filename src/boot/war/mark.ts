@@ -2565,7 +2565,7 @@ const unitHuman = {
     "BNbr": { code: "", name: "战斗咆哮", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "BNpm": { code: "", name: "寄生虫", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "BNpa": { code: "", name: "寄生虫", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
-    "Bdet": { code: "", name: "被侦测到", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
+    "Bdet": { code: "", name: "被（反隐）侦测到", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "Bvul": { code: "", name: "无敌", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "Bspe": { code: "", name: "速度加成", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "Bfro": { code: "", name: "减速", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
