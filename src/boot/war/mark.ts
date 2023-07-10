@@ -1,5 +1,16 @@
-import * as fs from "fs";
-import * as path from "path";
+
+interface ObjectEditor {
+  code: string;
+  name: string;
+  tip: string;
+  kind: Kind;
+  race: Race;
+  type: Type;
+};
+
+interface Format {
+  [key:string]: ObjectEditor;
+};
 
 /**
  * 种类
@@ -139,7 +150,7 @@ const typeToString = (type: Type) => {
     }
   }
   
-const unitHuman = {
+const unitHuman:Format = {
     "hpea": {
         code: "hpea",
         name: "农民",
@@ -390,8 +401,9 @@ const unitHuman = {
     "hrrh": { code: "hrrh", name: "信使(高等精灵)(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhef": { code: "nhef", name: "高等精灵(女性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhem": { code: "nhem", name: "高等精灵(男性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "nhem": { code: "hbep", name: "血精灵牧师(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    "nhem": { code: "hbes", name: "血精灵女巫(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    // key值必须唯一
+    // "nhem": { code: "hbep", name: "血精灵牧师(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    // "nhem": { code: "hbes", name: "血精灵女巫(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhea": { code: "nhea", name: "弓箭手", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nmed": { code: "nmed", name: "麦迪文", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nser": { code: "nser", name: "希雷诺斯/西里诺克斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
@@ -452,7 +464,7 @@ const unitHuman = {
     "Hjnd": { code: "Hjnd", name: "婕娜拉·晓春(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Hero },
   }
 
-  const unitOrc = {
+  const unitOrc:Format = {
     "opeo": { code: "opeo", name: "苦工", tip: "兽族的基本工人单位。能采集黄金和木材。还能建造建筑物和进行修理。在钻入地洞以后还能对来犯的敌人进行反击。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "ogru": { code: "ogru", name: "兽族步兵", tip: "基本的兽族地面单位。能得到狂暴力量的升级。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
     "orai": { code: "orai", name: "掠夺者", tip: "一种机动性很强的狼骑士。对付建筑物特别的有效，能学习到诱捕技能。能攻击地面单位。", kind: Kind.Unit, race: Race.Orc, type: Type.Unit },
@@ -541,7 +553,7 @@ const unitHuman = {
     "ngbl": { code: "ngbl", name: "地精爆破者", tip: "", kind: Kind.Unit, race: Race.Orc, type: Type.Special },
   }
 
-  const unitNightElf = {
+  const unitNightElf:Format = {
     "ewsp": { code: "ewsp", name: "小精灵", tip: "暗夜精灵族基本的工人单位。能采集金矿和木材。还能建造精灵族的建筑物并进行修理更新。能自我爆炸从而伤害到周围被召唤出来的单位并吸收一定范围内所有单位的魔法值。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "earc": { code: "earc", name: "弓箭手", tip: "基本的远程攻击单位。拥有艾鲁尼之优雅技能。能学习到射击术，硬弓和驯服角鹰兽这三项技能。能攻击地面和空中单位。 ", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
     "esen": { code: "esen", name: "女猎手", tip: "灵活的远程攻击单位，能学习到哨兵和月刃技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Unit },
@@ -622,7 +634,7 @@ const unitHuman = {
     "Eidm": { code: "Eidm", name: "伊利丹(恶魔形态)", tip: "一种灵活的英雄，能学习到献祭、闪避、法力燃烧和变身这四项技能。能攻击地面单位。", kind: Kind.Unit, race: Race.NightElf, type: Type.Special },
   }
 
-  const unitUndead = {
+  const unitUndead:Format = {
     "uaco": { code: "uaco", name: "侍僧", tip: "不死族的基本工人单位。能召唤建筑物，采集金矿和进行修复工作。在牺牲深渊里牺牲以后侍僧还可以变为阴影。能攻击地面单位。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "ushd": { code: "ushd", name: "阴影", tip: "一个永远隐形的灵魂，能看见其他隐形单位，但是不能进攻。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
     "ugho": { code: "ugho", name: "食尸鬼", tip: "基本的地面单位，也能采集木材。能学习到吞食尸体和食尸鬼狂热技能。能攻击地面单位和树木。", kind: Kind.Unit, race: Race.Undead, type: Type.Unit },
@@ -703,7 +715,7 @@ const unitHuman = {
     "Nkjx": { code: "Nkjx", name: "基尔加丹(过场动画)", tip: "", kind: Kind.Unit, race: Race.Undead, type: Type.Special },
   }
 
-  const unitNaga = {
+  const unitNaga:Format = {
     "nmpe": { code: "nmpe", name: "穆格尔奴隶", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
     "nwgs": { code: "nwgs", name: "飞蛇", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
     "nnmg": { code: "nnmg", name: "穆格尔掠夺者", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Unit },
@@ -725,7 +737,7 @@ const unitHuman = {
     "nnrs": { code: "nnrs", name: "潜水的娜迦皇家卫兵", tip: "", kind: Kind.Unit, race: Race.Naga, type: Type.Special },
   }
   
-  const unitNeutralHostile = {
+  const unitNeutralHostile:Format = {
     "ndrj": { code: "ndrj", name: "达拉然之孤胆怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "ndmu": { code: "ndmu", name: "达拉然之变种怪物", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "njg1": { code: "njg1", name: "丛林漫步者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
@@ -1020,7 +1032,7 @@ const unitHuman = {
     "nsw3": { code: "nsw3", name: "大型灵兽(等级3)", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Special },
   }
 
-  const unitNeutralPassive = {
+  const unitNeutralPassive:Format = {
     "nske": { code: "nske", name: "骷髅战士", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nsea": { code: "nsea", name: "海豹", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
     "nrac": { code: "nrac", name: "浣熊", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Unit },
@@ -1199,7 +1211,7 @@ const unitHuman = {
   }
 
   //*******************************************************************技能 */
-  const abilityHuman = {
+  const abilityHuman:Format = {
     "Sch4": { code: "Sch4", name: "保持原位(坦克)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Aply": { code: "Aply", name: "变形术", tip: "使得敌人的一个单位变成一头小绵羊，保有原有的生命值和防御，但是会使其丧失攻击力。|n不能被用在英雄身上。|n持续<Aply,Dur1>秒。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
     "Aroc": { code: "Aroc", name: "弹幕攻击", tip: "对周围的敌方空中单位进行强有力的弹幕攻击。每次发射能造成<hrtt,mindmg2> - <hrtt,maxdmg2>点的伤害。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
@@ -1259,7 +1271,7 @@ const unitHuman = {
     "Ahsb": { code: "Ahpe", name: "裂甲之刃(1.30)", tip: "对具有中型护甲的敌方目标造成的伤害提高<Ahsb,DataB1,%>%。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
   }
   
-  const abilityOrc = {
+  const abilityOrc:Format = {
     "Auco": { code: "Auco", name: "不稳定化合物", tip: "制造出一次强力爆炸，对目标敌方空中单位造成<Auco,DataB1>点伤害，对周围敌空中单位造成<Auco,DataD1>点伤害。", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
     "Awar": { code: "Awar", name: "粉碎", tip: "给予<Awar,DataA1>%的概率使得攻击能对周围的单位造成<Awar,DataB1>点的伤害。", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
     "Aeye": { code: "Aeye", name: "岗哨守卫", tip: "能召唤出一个固定隐形的守卫来监视一定的区域。|n能看见隐形单位。|n持续<Aeye,Dur1>秒。", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
@@ -1336,7 +1348,7 @@ const unitHuman = {
     "Aobs": { code: "Aobs", name: "野蛮之力(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Orc, type: Type.Unit },
   }
 
-  const abilityNightElf = {
+  const abilityNightElf:Format = {
     "Aegr": { code: "Aegr", name: "艾鲁尼之优雅", tip: "减少来自穿刺攻击的伤害到原来的<Aegr,DataA1,%>%，并减少来自魔法攻击的伤害到原来的<Aegr,DataE1,%>%。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Adtn": { code: "Adtn", name: "爆炸", tip: "会毁灭掉小精灵，但可以消除一定范围内所有的魔法效果并会吸收周围每个单位<Adtn,DataA1>点的魔法值。|n|cffffcc00对召唤出来的单位造成<Adtn,DataB1>点的伤害。|r", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Apsh": { code: "Apsh", name: "变相移动", tip: "让该单位一旦遭到攻击就处于消失的状态之中。在短时间内不再受到任何的伤害。|n持续<Apsh,Dur1>秒。", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
@@ -1414,7 +1426,7 @@ const unitHuman = {
     "Aemk": { code: "Aemk", name: "箭术(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
   }
 
-  const abilityUndead = {
+  const abilityUndead:Format = {
     "Sch2": { code: "Sch2", name: "保持原位(绞肉车)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
     "Afrz": { code: "Afrz", name: "冰冻喷吐", tip: "用在建筑物上时，能在段时间内使其失去应有的功效。|n持续<Afrz,Dur1>秒。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
     "Arpb": { code: "Arpb", name: "补充意法和生命值", tip: "恢复一个目标单位的魔法和生命值。", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
@@ -1493,7 +1505,7 @@ const unitHuman = {
     "Augh": { code: "Augh", name: "影魔(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.Undead, type: Type.Unit },
   }
 
-  const abilityNeutralHostile = {
+  const abilityNeutralHostile:Format = {
     "ACmo": { code: "ACmo", name: "季风", tip: "在一小块区域内召唤出闪电风暴对敌人造成<ACmo,DataA1>伤害力。|n持续<ACmo,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACbn": { code: "ACbn", name: "驱散(中立敌对)", tip: "将一个非机械单位变为气态并减缓其移动速度<ACbn,DataA1,%>%，<ACbn,Dur1>秒。气态生物无法攻击，但他们可以施放魔法，而某些魔法也可以对他们产生极大的作用。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "ACwe": { code: "ACwe", name: "召唤海元素", tip: "召唤一个强大的有<nsel,realHP>点生命值的海元素，具有<nsel,mindmg1> - <nsel,maxdmg1>的伤害值。|n持续<ACwe,Dur1>秒。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
@@ -1732,7 +1744,7 @@ const unitHuman = {
     "ANwk": { code: "ANwk", name: "疾风步(中立敌对)", tip: "允许熊猫人隐形，移动速度快<ANwk,DataB1,%>%。如果熊猫人攻击某单位它就会显形，这次攻击将会增加<ANwk,DataC1> 。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
   }
 
-  const abilityNeutralPassive = {
+  const abilityNeutralPassive:Format = {
     "ANpa": { code: "ANpa", name: "寄生虫", tip: "用一个致命的寄生虫折磨目标单位,使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
     "Aasl": { code: "Aasl", name: "减速光环(龙卷风)", tip: "被该光环影响的单位在获得光环效果时会受到0点伤害。多个减速光环的buff可以叠加", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
     "Atdg": { code: "Atdg", name: "建筑物破坏光环(龙卷风)", tip: "造成法术攻击，力量伤害(魔法伤害)", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
@@ -1746,7 +1758,7 @@ const unitHuman = {
     "Ahnl": { code: "Ahnl", name: "召唤仪式", tip: "从扭曲的地狱召唤能量。", kind: Kind.Ability, race: Race.NeutralPassive, type: Type.Unit },
   }
 
-  const abilitySpecial = {
+  const abilitySpecial:Format = {
     "Sch5": { code: "Sch5", name: "保持原位(船)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Sch3": { code: "Sch3", name: "保持原位(地精飞艇)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "ANha": { code: "ANha", name: "采集(娜迦)(中立)(采集黄金和木材)", tip: "从金矿处采集黄金资源，从树木上砍伐木材资源。", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
@@ -1804,7 +1816,7 @@ const unitHuman = {
     "ANsh": { code: "ANsh", name: "震荡波", tip: "从英雄身上发射出一道威力巨大的能量波，从而对一直线上的敌人地面单位造成一定的伤害。|n|n|cffffcc00等级 1|r - <AOsh,DataA1>点伤害。|n|cffffcc00等级 2|r - <AOsh,DataA2>点伤害。|n|cffffcc00等级 3|r - <AOsh,DataA3>点伤害。", kind: Kind.Ability, race: Race.Special, type: Type.Hero },
   }
 
-  const abilityItem = {
+  const abilityItem:Format = {
     "AIg2": { code: "AIg2", name: "仪式匕首(恢复)(1.30)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIdg": { code: "AIdg", name: "仪式匕首(瞬发治疗)(1.30)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
     "AIaa": { code: "AIaa", name: "永久伤害提升,攻击力提升", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
@@ -2043,7 +2055,7 @@ const unitHuman = {
     "AIh3": { code: "AIh3", name: "最小的医疗能力(增加魔法施放间隔时间)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Item },
   }
 
-  const item = {
+  const item:Format = {
     // 永久
     "afac": { code: "", name: "阿利亚之笛", tip: "增加附近远程攻击型单位 <AIar,DataA1,%>%的攻击力。|n不能和强击光环同时使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "ssil": { code: "", name: "沉默权杖", tip: "阻止一定区域内所有敌人施放魔法。", kind: Kind.Item, race: Race.Special, type: Type.Item },
@@ -2333,7 +2345,7 @@ const unitHuman = {
     "sxpl": { code: "", name: "驱魔种子(1.32)", tip: "这颗种子在发出能量的嗡鸣声。", kind: Kind.Item, race: Race.Special, type: Type.Item },
   }
 
-  const buffHuman = {
+  const buffHuman:Format = {
     "BHbd": { code: "", name: "暴风雪", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "BHbz": { code: "", name: "暴风雪(施法者)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
     "BHab": { code: "", name: "辉煌光环", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Hero },
@@ -2377,7 +2389,7 @@ const unitHuman = {
     "Xfhm": { code: "", name: "建筑物伤害-人族 中(区域效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
   }
   
-  const buffOrc = {
+  const buffOrc:Format = {
     "Bbof": { code: "", name: "燃油", tip: "", kind: Kind.Buff, race: Race.Orc, type: Type.Unit },
     "Bbsk": { code: "", name: "狂暴", tip: "", kind: Kind.Buff, race: Race.Orc, type: Type.Unit },
     "Bspl": { code: "", name: "灵魂链接", tip: "", kind: Kind.Buff, race: Race.Orc, type: Type.Unit },
@@ -2424,7 +2436,7 @@ const unitHuman = {
     "Xfol": { code: "", name: "建筑伤害 – 兽人 大(区域效果)", tip: "", kind: Kind.Buff, race: Race.Orc, type: Type.Unit },
   }
 
-  const buffNightElf = {
+  const buffNightElf:Format = {
     "Bvng": { code: "", name: "复仇之魂", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Hero },
     "Bmfl": { code: "", name: "法力闪耀", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Unit },
     "Bmfa": { code: "", name: "法力闪耀(额外的)", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Unit },
@@ -2464,7 +2476,7 @@ const unitHuman = {
     "Xfnl": { code: "", name: "建筑伤害 - 暗夜精灵 大(区域效果)", tip: "", kind: Kind.Buff, race: Race.NightElf, type: Type.Unit },
   }
 
-  const buffUndead = {
+  const buffUndead:Format = {
     "Brpb": { code: "", name: "补充", tip: "", kind: Kind.Buff, race: Race.Undead, type: Type.Unit },
     "Brpl": { code: "", name: "荒芜精华", tip: "", kind: Kind.Buff, race: Race.Undead, type: Type.Unit },
     "Brpm": { code: "", name: "灵魂之触", tip: "", kind: Kind.Buff, race: Race.Undead, type: Type.Unit },
@@ -2505,7 +2517,7 @@ const unitHuman = {
     "Xful": { code: "", name: "建筑伤害 – 亡灵 大(区域效果)", tip: "", kind: Kind.Buff, race: Race.Undead, type: Type.Unit },
   }
 
-  const buffSpecial = {
+  const buffSpecial:Format = {
     "BNhe": { code: "", name: "中立治疗术", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "BNpi": { code: "", name: "永久献祭(中立敌对1)", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
     "Bpig": { code: "", name: "永久献祭(中立敌对2)", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Unit },
@@ -2583,23 +2595,24 @@ const unitHuman = {
     "XNhs": { code: "", name: "治疗喷雾(效果)(区域效果)", tip: "", kind: Kind.Buff, race: Race.Special, type: Type.Hero },
   }
 
-  const technologyHuman = {
+
+  const technologyHuman:Format = {
     //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
   }
 
-  const technologyOrc = {
+  const technologyOrc:Format = {
     //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
   }
 
-  const technologyNightElf = {
+  const technologyNightElf:Format = {
     //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
   }
 
-  const technologyUndead = {
+  const technologyUndead:Format = {
     //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
   }
 
-  const technologyNeutral = {
+  const technologyNeutral:Format = {
     //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
   }
 
@@ -2619,16 +2632,16 @@ const unitHuman = {
     ...abilityNeutralPassive,
     ...abilityItem,
     ...item,
-    ...buffHuman
-    ...buffOrc
-    ...buffNightElf
-    ...buffUndead
-    ...buffSpecial
-    ...technologyHuman
-    ...technologyOrc
-    ...technologyNightElf
-    ...technologyUndead
-    ...technologyNeutral
+    ...buffHuman,
+    ...buffOrc,
+    ...buffNightElf,
+    ...buffUndead,
+    ...buffSpecial,
+    ...technologyHuman,
+    ...technologyOrc,
+    ...technologyNightElf,
+    ...technologyUndead,
+    ...technologyNeutral,
   }
   
   const MarkCodes = [...Object.values(unitHuman),
@@ -2646,15 +2659,15 @@ const unitHuman = {
     ...Object.values(abilityNeutralPassive),
     ...Object.values(abilityItem),
     ...Object.values(item),
-    ...Object.values(buffHuman)
-    ...Object.values(buffOrc)
-    ...Object.values(buffNightElf)
-    ...Object.values(buffUndead)            
-    ...Object.values(buffSpecial)
-    ...Object.values(technologyHuman)
-    ...Object.values(technologyOrc)
-    ...Object.values(technologyNightElf)
-    ...Object.values(technologyUndead)
+    ...Object.values(buffHuman),
+    ...Object.values(buffOrc),
+    ...Object.values(buffNightElf),
+    ...Object.values(buffUndead),       
+    ...Object.values(buffSpecial),
+    ...Object.values(technologyHuman),
+    ...Object.values(technologyOrc),
+    ...Object.values(technologyNightElf),
+    ...Object.values(technologyUndead),
     ...Object.values(technologyNeutral)];
 
   export {
