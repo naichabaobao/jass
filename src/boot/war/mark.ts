@@ -1868,8 +1868,6 @@ const unitHuman:Format = {
     "Abli": { code: "Abli", name: "荒芜", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "Adet": { code: "Adet", name: "侦测者", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
     "ACma": { code: "ACma", name: "未知技能(总是开启)", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-    "": { code: "", name: "", tip: "", kind: Kind.Ability, race: Race.Special, type: Type.Unit },
-
   }
 
   const abilityItem:Format = {
@@ -2934,7 +2932,7 @@ const unitHuman:Format = {
     "LTe2": { code: "LTe2", name: "精灵大门(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
     "LTe4": { code: "LTe4", name: "精灵大门(对角2)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
     "LTe1": { code: "LTe1", name: "精灵大门(水平)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
-    "ZTnc": { code: "ZTnc", name: "纳迦废墟圆圈", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
+    "ZTnc": { code: "ZTnc", name: "娜迦废墟圆圈", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
     "NTbd": { code: "NTbd", name: "船只", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
     "XTv4": { code: "XTv4", name: "被毁的洛丹伦城市主建筑", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
     "YTc4": { code: "YTc4", name: "被毁的洛丹伦城市主门", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
