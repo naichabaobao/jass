@@ -2179,7 +2179,7 @@ const unitHuman:Format = {
     "ward": { code: "ward", name: "战歌军鼓/战歌之鼓", tip: "能增加周围单位 <AIcd,DataA1,%>%的攻击力。|n不能和命令光环同时使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "dsum": { code: "dsum", name: "召唤钻石", tip: "使用后传送目标区域内<AUds,DataA1>个玩家的单位到英雄所在的位置。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "rinl": { code: "rinl", name: "智力斗篷+3", tip: "增加英雄3点的智力。", kind: Kind.Item, race: Race.Special, type: Type.Item },
-    "war2": { code: "war2", name: "战歌军鼓/战歌之鼓", tip: "能增加周围单位的攻击力。|n不能和统御光环同时使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
+    "war2": { code: "war2", name: "战歌军鼓/战歌之鼓", tip: "能增加周围单位的攻击力。|n不能和战鼓同时使用。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     // 可充
     "shar": { code: "shar", name: "冰冻碎片", tip: "召唤出一个冰冻幽灵。冰冻幽灵持续<AIir,Dur1>秒。", kind: Kind.Item, race: Race.Special, type: Type.Item },
     "sand": { code: "sand", name: "操作死尸卷轴", tip: "复活周围<AIan,DataA1>个单位来为你战斗。持续时间为<AIan,Dur1>秒。", kind: Kind.Item, race: Race.Special, type: Type.Item },
