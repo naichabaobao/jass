@@ -48,7 +48,7 @@ enum Kind {
       case Kind.Technology:
         return "科技树";
       case Kind.Decoration:
-        return "地表装饰物";
+        return "地形装饰物";
       default:
         return "";
     }
@@ -138,12 +138,12 @@ enum Type {
   /**
    * 地表装饰物类型
   */
-  Film= 0x80,
-  Environment= 0x90,
+  Prop= 0x80,
+  Building= 0x90,
   Water= 0x100,
-  Prop= 0x110,
-  Building= 0x120,
-  CliffTerrain= 0x130
+  CliffTerrain= 0x110,
+  Environment= 0x120,
+  Film= 0x130
   }
 
 /**
@@ -169,18 +169,18 @@ const typeToString = (type: Type) => {
             return "路径/视线阻断器";
         case Type.BridgeSlope:
             return "桥/斜坡";
-        case Type.Film:
-            return "电影";
-        case Type.Environment:
-            return "环境";
-        case Type.Water:
-            return "水";
         case Type.Prop:
             return "道具";
         case Type.Building:
             return "建筑";
+        case Type.Water:
+            return "水";
         case Type.CliffTerrain:
             return "悬崖/地形";
+        case Type.Environment:
+            return "环境";
+        case Type.Film:
+            return "电影";
         default:
             return "";
     }
@@ -1782,7 +1782,7 @@ const unitHuman:Format = {
     "ANdb": { code: "ANdb", name: "醉拳", tip: "给予一定的概率来躲避来自敌人的攻击和<ANdb,DataA1>%的概率来施放额外的攻击伤害。|n|n|cffffcc00等级 1|r - <ANdb,DataD1,%>%的概率躲避攻击，施放<ANdb,DataB1>倍于普通伤害的攻击。|n|cffffcc00等级 2|r - <ANdb,DataD2,%>%的概率躲避攻击，施放<ANdb,DataB2>倍于普通伤害的攻击。|n|cffffcc00等级 3|r - <ANdb,DataD3,%>%的概率躲避攻击，施放<ANdb,DataB3>倍于普通伤害的攻击。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "Acdb": { code: "Acdb", name: "醉拳(陈)", tip: "给予一定的概率来躲避攻击和<Acdb,DataA1>%的概率来对敌人造成额外的伤害。|n|n|cffffcc00等级 1|r -<Acdb,DataD1,%>%的概率来躲避攻击，<Acdb,DataB1>倍于常规攻击的额外伤害。|n|cffffcc00等级 2|r -<Acdb,DataD2,%>%的概率来躲避攻击，<Acdb,DataB2>倍于常规攻击的额外伤害。|n|cffffcc00等级 3|r -<Acdb,DataD3,%>%的概率来躲避攻击，<Acdb,DataB3>倍于常规攻击的额外伤害。|n|cffffcc00等级 4|r -<Acdb,DataD4,%>%的概率来躲避攻击，<Acdb,DataB4>倍于常规攻击的额外伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANwk": { code: "ANwk", name: "疾风步(中立敌对)", tip: "允许熊猫人隐形，移动速度快<ANwk,DataB1,%>%。如果熊猫人攻击某单位它就会显形，这次攻击将会增加<ANwk,DataC1> 。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
-    "Anit": { code: "Anit", name: "追踪术", tip: "", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Anit": { code: "Anit", name: "追踪术(编辑器无此技能)", tip: "", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
   }
 
   const abilityNeutralPassive:Format = {
