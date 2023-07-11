@@ -23,6 +23,7 @@ enum Kind {
     Ability= 0x40,
     Buff= 0x50,
     Technology= 0x60,
+    Decoration= 0x70,
   }
   
   /**
@@ -46,6 +47,8 @@ enum Kind {
         return "状态效果";
       case Kind.Technology:
         return "科技树";
+      case Kind.Decoration:
+        return "地表装饰物";
       default:
         return "";
     }
@@ -72,7 +75,7 @@ enum Kind {
      */
     Undead= 0x30,
     /**
-     * 娜伽
+     * 娜迦
      */
     Naga= 0x40,
     /**
@@ -105,11 +108,11 @@ enum Kind {
         case Race.Undead:
             return "不死族";
         case Race.Naga:
-            return "娜伽";
+            return "娜迦";
         case Race.NeutralHostile:
-            return "中立被动";
-        case Race.NeutralPassive:
             return "中立敌对";
+        case Race.NeutralPassive:
+            return "中立被动";
         case Race.Special:
             return "特殊";
         default:
@@ -125,7 +128,22 @@ enum Type {
   Architecture= 0x10,
   Hero= 0x20,
   Special= 0x30,
-  Item= 0x40
+  Item= 0x40,
+  /**
+   * 可破坏物类型
+  */
+  TreeDestructible = 0x50,
+  Pathblocker= 0x60,
+  BridgeSlope= 0x70,
+  /**
+   * 地表装饰物类型
+  */
+  Film= 0x80,
+  Environment= 0x90,
+  Water= 0x100,
+  Prop= 0x110,
+  Building= 0x120,
+  CliffTerrain= 0x130
   }
 
 /**
@@ -145,6 +163,24 @@ const typeToString = (type: Type) => {
             return "特殊";
         case Type.Item:
             return "物品";
+        case Type.TreeDestructible:
+            return "树/可破坏物";
+        case Type.Pathblocker:
+            return "路径/视线阻断器";
+        case Type.BridgeSlope:
+            return "桥/斜坡";
+        case Type.Film:
+            return "电影";
+        case Type.Environment:
+            return "环境";
+        case Type.Water:
+            return "水";
+        case Type.Prop:
+            return "道具";
+        case Type.Building:
+            return "建筑";
+        case Type.CliffTerrain:
+            return "悬崖/地形";
         default:
             return "";
     }
@@ -401,9 +437,8 @@ const unitHuman:Format = {
     "hrrh": { code: "hrrh", name: "信使(高等精灵)(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhef": { code: "nhef", name: "高等精灵(女性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhem": { code: "nhem", name: "高等精灵(男性)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    // key值必须唯一
-    // "nhem": { code: "hbep", name: "血精灵牧师(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
-    // "nhem": { code: "hbes", name: "血精灵女巫(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "hbep": { code: "hbep", name: "血精灵牧师(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
+    "hbes": { code: "hbes", name: "血精灵女巫(1.32)", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nhea": { code: "nhea", name: "弓箭手", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nmed": { code: "nmed", name: "麦迪文", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
     "nser": { code: "nser", name: "希雷诺斯/西里诺克斯", tip: "", kind: Kind.Unit, race: Race.Human, type: Type.Unit },
@@ -2597,23 +2632,144 @@ const unitHuman:Format = {
 
 
   const technologyHuman:Format = {
-    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhme": { code: "", name: "钢铁铸剑", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhra": { code: "", name: "黑火药", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhaa": { code: "", name: "炮兵(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhar": { code: "", name: "钢铁装甲", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhmi": { code: "", name: "黄金(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhac": { code: "", name: "改良石工技术", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhss": { code: "", name: "控制魔法", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhde": { code: "", name: "防御", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhan": { code: "", name: "坐骑作战训练", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhpt": { code: "", name: "牧师专家级训练", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhst": { code: "", name: "女巫专家级训练", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhla": { code: "", name: "镶钉皮甲", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhri": { code: "", name: "长管火枪", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhlh": { code: "", name: "改良伐木技术", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhse": { code: "", name: "魔法岗哨", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhsr": { code: "", name: "散射(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhgb": { code: "", name: "飞行器炸弹", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhhb": { code: "", name: "风暴战锤", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhss": { code: "", name: "控制魔法", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhfs": { code: "", name: "破片榴弹", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhrt": { code: "", name: "火箭弹幕", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhfc": { code: "", name: "对空炮机", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhcd": { code: "", name: "迷雾之云", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhsb": { code: "", name: "裂甲之刃(1.29)", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
+    "Rhpm": { code: "", name: "背包", tip: "", kind: Kind.Technology, race: Race.Human, type: Type.Unit },
   }
 
   const technologyOrc:Format = {
-    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rome": { code: "", name: "精钢近战武器", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rora": { code: "", name: "精钢远程武器", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Roaa": { code: "", name: "火炮(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Roar": { code: "", name: "精钢护甲", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rwdm": { code: "", name: "战鼓伤害强化", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Ropg": { code: "", name: "掠夺", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Robs": { code: "", name: "野蛮之力", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rows": { code: "", name: "粉碎伤害强化", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Roen": { code: "", name: "诱捕", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rovs": { code: "", name: "毒矛", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rowd": { code: "", name: "巫医专家级训练", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rost": { code: "", name: "萨满祭司专家级训练", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rosp": { code: "", name: "尖刺障碍", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rorb": { code: "", name: "加强型防御", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rotr": { code: "", name: "巨魔再生", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rolf": { code: "", name: "火油瓶", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Rowt": { code: "", name: "灵魂行者专家级训练", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Robk": { code: "", name: "狂战士升级", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Robf": { code: "", name: "燃油", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
+    "Ropm": { code: "", name: "背包", tip: "", kind: Kind.Technology, race: Race.Orc, type: Type.Unit },
   }
 
   const technologyNightElf:Format = {
-    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Resm": { code: "", name: "月之力量", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Resw": { code: "", name: "野性力量", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Rema": { code: "", name: "月之护甲", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Rerh": { code: "", name: "强化外皮", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Reuv": { code: "", name: "夜视能力", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Renb": { code: "", name: "自然祝福", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Resc": { code: "", name: "哨兵", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Remg": { code: "", name: "升级月刃", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Reib": { code: "", name: "强弓", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Remk": { code: "", name: "箭术", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Redt": { code: "", name: "猛禽德鲁伊专家级训练", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Redc": { code: "", name: "利爪德鲁伊专家级训练", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Resi": { code: "", name: "驱除魔法", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Recb": { code: "", name: "腐蚀吐息", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Reht": { code: "", name: "角鹰兽训练", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Repd": { code: "", name: "不明科技(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Reeb": { code: "", name: "利爪之印", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Reec": { code: "", name: "猛禽之印", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Rehs": { code: "", name: "硬化体肤", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Rers": { code: "", name: "抗性体肤", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Rews": { code: "", name: "月井之春", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Repb": { code: "", name: "锐锋之刃", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
+    "Repm": { code: "", name: "背包", tip: "", kind: Kind.Technology, race: Race.NightElf, type: Type.Unit },
   }
 
   const technologyUndead:Format = {
-    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rume": { code: "", name: "邪恶力量", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rura": { code: "", name: "生物攻击", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruar": { code: "", name: "邪恶护甲", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruac": { code: "", name: "食尸", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rugf": { code: "", name: "食尸鬼狂暴", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruwb": { code: "", name: "蛛网", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruab": { code: "", name: "不明科技(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rusf": { code: "", name: "石像形态", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rune": { code: "", name: "通灵师/男巫专家级训练", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruba": { code: "", name: "女妖专家级训练", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rump": { code: "", name: "不明科技(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rufb": { code: "", name: "冰冻吐息", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rusl": { code: "", name: "骷髅持久术", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rusm": { code: "", name: "骷髅精通", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruex": { code: "", name: "发掘尸体", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rurs": { code: "", name: "牺牲(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Ruax": { code: "", name: "不明科技(编辑器无此科技)", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rucr": { code: "", name: "生物甲壳", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rupc": { code: "", name: "疾病之云", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rusp": { code: "", name: "毁灭者形态", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rubu": { code: "", name: "钻地", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+    "Rupm": { code: "", name: "背包", tip: "", kind: Kind.Technology, race: Race.Undead, type: Type.Unit },
+  }
+
+  const technologyNaga:Format = {
+    "Rnam": { code: "", name: "珊瑚鳞甲", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
+    "Rnat": { code: "", name: "珊瑚锋刃", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
+    "Rnsi": { code: "", name: "驱除魔法", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
+    "Rnen": { code: "", name: "诱捕", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
+    "Rnsb": { code: "", name: "潜水", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
+    "Rnsw": { code: "", name: "纳迦海妖专家级训练", tip: "", kind: Kind.Technology, race: Race.Naga, type: Type.Unit },
   }
 
   const technologyNeutral:Format = {
-    //"": { code: "", name: "", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
+    "Roch": { code: "", name: "混乱", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
+    "Rguv": { code: "", name: "夜视雕文(升级)", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
+    "Rgfo": { code: "", name: "强固雕文(升级1)", tip: "", kind: Kind.Technology, race: Race.Neutral, type: Type.Unit },
+  }
+
+  const destructible:Format = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.TreeDestructible },
+    "YTlb": { code: "", name: "视线阻断器", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTlc": { code: "", name: "视线阻断器(大)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTfb": { code: "", name: "视线阻断器(全部)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTfc": { code: "", name: "视线阻断器(全部)(大)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTpb": { code: "", name: "视线阻断器(地面)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTpc": { code: "", name: "视线阻断器(地面)(大)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTab": { code: "", name: "视线阻断器(空中)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    "YTac": { code: "", name: "视线阻断器(空中)(大)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.Pathblocker },
+    //"": { code: "", name: "", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type.BridgeSlope },
+    //改天有空补
+  }
+
+  const decoration:Format = {
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.Film },
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.Environment },
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.Water },
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.Prop },
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.Building },
+    //"": { code: "", name: "", tip: "", kind: Kind.Decoration, race: Race.Special, type: Type.CliffTerrain },
+    //预留，请有能者补之
   }
 
   const MarkCode = {
@@ -2642,6 +2798,8 @@ const unitHuman:Format = {
     ...technologyNightElf,
     ...technologyUndead,
     ...technologyNeutral,
+    ...destructible,
+    ...decoration,
   }
   
   const MarkCodes = [...Object.values(unitHuman),
@@ -2668,8 +2826,9 @@ const unitHuman:Format = {
     ...Object.values(technologyOrc),
     ...Object.values(technologyNightElf),
     ...Object.values(technologyUndead),
-    ...Object.values(technologyNeutral)];
-
+    ...Object.values(technologyNeutral),
+    ...Object.values(destructible),
+    ...Object.values(decoration)];
   export {
     MarkCode, Kind, Race, Type, kindToString, raceToString, typeToString, MarkCodes
   }
