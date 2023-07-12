@@ -333,7 +333,7 @@
 - 增加物编默认提示
 - 移除ObjectEditor.j提示
 
-## 1.8.5
+## 1.8.6
 - 增加配置文件strings提示
 ```json
 {
@@ -355,3 +355,7 @@
     ]
 }
 ```
+- 移除jass.excludes配置项
+- 增加mark悬浮提示
+- 增加outline textmacro和define显示
+- 修复textmacro不工作的问题

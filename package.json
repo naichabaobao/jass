@@ -52,7 +52,7 @@
         },
         "jass.ObjectEditor": {
           "type": "string",
-          "description": "自定义ObjectEditor.j(reboot)"
+          "description": "(Deprecation) 自定义ObjectEditor.j(reboot)"
         },
         "jass.includes": {
           "type": "array",
@@ -78,7 +78,7 @@
           "items": {
             "type": "string"
           },
-          "description": "(Test) Ignore unneeded directories or files"
+          "description": "(Deprecation) Ignore unneeded directories or files"
         },
         "jass.cjass.dependents": {
           "type": "array",
