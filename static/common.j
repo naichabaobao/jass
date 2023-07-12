@@ -5355,8 +5355,9 @@ native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction
 // 清空触发器动作
 // 排泄需使用删除触发器动作 TriggerRemoveAction，而非清空
 native TriggerClearActions takes trigger whichTrigger returns nothing
-// 等待动作(指定时间)
+// 等待实际时间(指定时间)
 native TriggerSleepAction takes real timeout returns nothing
+// 等到指定音效结束前N秒（指定时间）
 // 弃用函数 @deprecated
 native TriggerWaitForSound takes sound s, real offset returns nothing
 // 判断触发器条件是否满足
