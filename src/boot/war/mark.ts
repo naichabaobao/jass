@@ -90,6 +90,10 @@ enum Kind {
      * 特殊
      */
     Special= 0x70,
+    /**
+     * 中立
+     */
+    Neutral = 0x80,
   }
 
   /**
@@ -113,6 +117,8 @@ enum Kind {
             return "中立敌对";
         case Race.NeutralPassive:
             return "中立被动";
+        case Race.Neutral:
+            return "中立";
         case Race.Special:
             return "特殊";
         default:
@@ -1462,7 +1468,7 @@ const unitHuman:Format = {
     "Aemk": { code: "Aemk", name: "箭术(图标)(1.32)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Sbr2": { code: "Sbr2", name: "不明技能(用于熊德变身)(可选的)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
     "Sra2": { code: "Sra2", name: "不明技能(用于鸟德变身)(可选的)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
-    "Atol": { code: "Atol", name: "不明技能(标注为生命之树升级)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
+    // "Atol": { code: "Atol", name: "不明技能(标注为生命之树升级)", tip: "", kind: Kind.Ability, race: Race.NightElf, type: Type.Unit },
   }
 
   const abilityUndead:Format = {
@@ -2988,13 +2994,13 @@ const unitHuman:Format = {
     "RW09": { code: "RW09", name: "宽板条木质桥(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "RW11": { code: "RW11", name: "宽板条木质桥(对角2)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "RW10": { code: "RW10", name: "宽板条木质桥(水平)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
-    "YT20": { code: "YT20", name: "宽石质桥(垂直)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
+    // "YT20": { code: "YT20", name: "宽石质桥(垂直)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "YT44": { code: "YT44", name: "宽石质桥(垂直)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "YT45": { code: "YT45", name: "宽石质桥(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
-    "YT21": { code: "YT21", name: "宽石质桥(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
-    "YT23": { code: "YT23", name: "宽石质桥(对角2)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
+    // "YT21": { code: "YT21", name: "宽石质桥(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
+    // "YT23": { code: "YT23", name: "宽石质桥(对角2)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "YT47": { code: "YT47", name: "宽石质桥(对角2)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
-    "YT22": { code: "YT22", name: "宽石质桥(水平)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
+    // "YT22": { code: "YT22", name: "宽石质桥(水平)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "YT46": { code: "YT46", name: "宽石质桥(水平)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "EB08": { code: "EB08", name: "宽精灵桥(垂直)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
     "EB09": { code: "EB09", name: "宽精灵桥(对角1)", tip: "", kind: Kind.Destructible, race: Race.Special, type: Type. BridgeSlope },
