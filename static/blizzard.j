@@ -3483,7 +3483,7 @@ function GetSoundIsPlayingBJ takes sound soundHandle returns boolean
 endfunction
 
 
-// 等待声音结束
+// 等到指定音效结束前N秒（指定时间）
 function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
     call TriggerWaitForSound( soundHandle, offset )
 endfunction
