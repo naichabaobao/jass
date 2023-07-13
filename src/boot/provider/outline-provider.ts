@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { DataGetter, parseContent } from "./data";
 import { Program } from "../jass/ast";
+import { Options } from "./options";
 
 function genSymbols(program:Program) {
     
@@ -279,7 +280,8 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
             program = new DataGetter().get(document.uri.fsPath);
         }
 
-        console.log(program);
+        console.log("Options.workspaceConfigFilePath", Options.workspaceConfigFilePath);
+        
         if (program) {
             
             console.info("begin get symbols!");

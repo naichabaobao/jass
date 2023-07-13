@@ -13,12 +13,13 @@ import { AllKeywords, Keywords } from "../jass/keyword";
 import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition} from "./tool";
-import data, { ConsumerMarkCode, DataGetter } from "./data";
+import data, { DataGetter } from "./data";
 import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
 import { Document, lexically } from "../check/mark";
 import { kindToString, MarkCodes, raceToString, typeToString } from "../war/mark";
+import { ConfigPovider, PluginDefaultConfig } from "./config/config";
 
 
 
@@ -647,7 +648,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
 
 
         
-        ConsumerMarkCode.instance(document.uri).getPresets().forEach(preset => {
+        [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].forEach(preset => {
          const originCodeValue = `'${preset.code}'`;
            const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
  
@@ -707,7 +708,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
 
 
         
-        ConsumerMarkCode.instance(document.uri).getstrings().forEach(str => {
+        [...ConfigPovider.instance().getstrings(), ...(PluginDefaultConfig.strings ?? [])].forEach(str => {
           let item: vscode.CompletionItem;
           if (typeof(str) == "string") {
             item = new vscode.CompletionItem(`"${str}"`, vscode.CompletionItemKind.Value);

@@ -148,9 +148,23 @@ class Options {
     return path.resolve(__dirname, "../../../static/pjass-latest.exe")
   }
   public static get pjassTempPath():string {
-    return path.resolve(__dirname, "../../../static/temp")
+    return path
+    
+    .resolve(__dirname, "../../../static/temp")
   }
-  
+ 
+  // 插件配置文件路径
+  public static get pluginConfigFilePath() {
+    return path.relative(__dirname, "../../../static/jass.config.json");
+  }
+
+  // 工作目录配置文件路径
+  public static get workspaceConfigFilePath() {
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+      return path.resolve(vscode.workspace.workspaceFolders[0].uri.fsPath, "./jass.config.json");
+    }
+  }
+
 }
 
 export {

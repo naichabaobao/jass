@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { Types } from "./types";
 import { AllKeywords } from '../jass/keyword';
 import { Options } from './options';
-import data, { ConsumerMarkCode, DataGetter } from "./data";
+import data, { DataGetter } from "./data";
 import { compare } from '../tool';
 import { convertPosition } from './tool';
 import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine, Declaration, Type } from '../jass/ast';
@@ -15,6 +15,7 @@ import { getTypeDesc } from './type-desc';
 import { tokenize } from '../jass/tokens';
 import { Document, lexically } from '../check/mark';
 import { MarkCodes } from '../war/mark';
+import { ConfigPovider, PluginDefaultConfig } from './config/config';
 
 type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine|Type;
 
@@ -367,7 +368,7 @@ class MarkHoverProvider implements vscode.HoverProvider {
           hovers.push(ms);
         }
 
-        const comsumerTargetMark = ConsumerMarkCode.instance(document.uri).getPresets().find(preset => `'${preset.code}'` == markValue);
+        const comsumerTargetMark = [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].find(preset => `'${preset.code}'` == markValue);
        
 
         if (comsumerTargetMark) {
