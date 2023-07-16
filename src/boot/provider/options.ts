@@ -150,12 +150,12 @@ class Options {
   public static get pjassTempPath():string {
     return path
     
-    .resolve(__dirname, "../../../static/temp")
+    .resolve(__dirname, "../../../static/temp");
   }
  
   // 插件配置文件路径
   public static get pluginConfigFilePath() {
-    return path.relative(__dirname, "../../../static/jass.config.json");
+    return path.resolve(__dirname, "../../../static/jass.config.json");
   }
 
   // 工作目录配置文件路径

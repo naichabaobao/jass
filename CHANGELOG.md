@@ -359,6 +359,6 @@
 - 增加outline textmacro和define显示
 - 修复textmacro不工作的问题
 
-## 1.8.6
+## 1.8.7
 - 内置jass.config.json文件，用于插件提供提示
 - 代码优化和整理

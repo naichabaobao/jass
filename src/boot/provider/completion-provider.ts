@@ -706,8 +706,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
         
         
 
-
-        
         [...ConfigPovider.instance().getstrings(), ...(PluginDefaultConfig.strings ?? [])].forEach(str => {
           let item: vscode.CompletionItem;
           if (typeof(str) == "string") {
