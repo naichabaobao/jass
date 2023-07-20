@@ -147,11 +147,11 @@ native DebugS               takes string str                            returns 
     native SetGroupsFlee        takes boolean state                         returns nothing
     // 启用/禁用 慢速采矿（每次采集1金）
     native SetSlowChopping      takes boolean state                         returns nothing
-    // 允许/禁止 变更主基地
-    // 理论上是在非出生点/初始矿之外的其他矿点建造基地，并将其作为新主基地
+    // 允许/禁止 基地变换
+    // 选择新基地，并将其作为采矿和撤退点
     native SetCaptainChanges    takes boolean allow                         returns nothing
-    // 启用/禁用 聪明的炮火
-    // 优先攻击攻城类型/低血量单位等
+    // 启用/禁用 聪明的炮火/主动攻城
+    // 攻击类型为攻城的单位会优先攻击敌方建筑，同时AI也会尝试优先攻击敌方攻击类型为攻城的单位
     native SetSmartArtillery    takes boolean state                         returns nothing
     // 设置防守单位被杀后，AI的补充次数
     native SetReplacementCount  takes integer qty                           returns nothing
