@@ -1254,6 +1254,13 @@ const unitHuman:Format = {
     "ndh4": { code: "ndh4", name: "先知洞穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
   }
 
+    "ANpi": { code: "ANpi", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "Apiv": { code: "Apiv", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+    "Apig": { code: "Apig", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
+
+
+
+
   //*******************************************************************技能 */
   const abilityHuman:Format = {
     "Sch4": { code: "Sch4", name: "保持原位(坦克)", tip: "吞噬货物使单位能够容纳别的单位，可以配合装载类技能和卸载类技能的使用。", kind: Kind.Ability, race: Race.Human, type: Type.Unit },
