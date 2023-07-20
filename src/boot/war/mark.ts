@@ -1254,12 +1254,6 @@ const unitHuman:Format = {
     "ndh4": { code: "ndh4", name: "先知洞穴", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
   }
 
-    "ANpi": { code: "ANpi", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "Apiv": { code: "Apiv", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-    "Apig": { code: "Apig", name: "", tip: "", kind: Kind.Unit, race: Race.NeutralPassive, type: Type.Special },
-
-
-
 
   //*******************************************************************技能 */
   const abilityHuman:Format = {
@@ -1798,6 +1792,9 @@ const unitHuman:Format = {
     "ANdb": { code: "ANdb", name: "醉拳", tip: "给予一定的概率来躲避来自敌人的攻击和<ANdb,DataA1>%的概率来施放额外的攻击伤害。|n|n|cffffcc00等级 1|r - <ANdb,DataD1,%>%的概率躲避攻击，施放<ANdb,DataB1>倍于普通伤害的攻击。|n|cffffcc00等级 2|r - <ANdb,DataD2,%>%的概率躲避攻击，施放<ANdb,DataB2>倍于普通伤害的攻击。|n|cffffcc00等级 3|r - <ANdb,DataD3,%>%的概率躲避攻击，施放<ANdb,DataB3>倍于普通伤害的攻击。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "Acdb": { code: "Acdb", name: "醉拳(陈)", tip: "给予一定的概率来躲避攻击和<Acdb,DataA1>%的概率来对敌人造成额外的伤害。|n|n|cffffcc00等级 1|r -<Acdb,DataD1,%>%的概率来躲避攻击，<Acdb,DataB1>倍于常规攻击的额外伤害。|n|cffffcc00等级 2|r -<Acdb,DataD2,%>%的概率来躲避攻击，<Acdb,DataB2>倍于常规攻击的额外伤害。|n|cffffcc00等级 3|r -<Acdb,DataD3,%>%的概率来躲避攻击，<Acdb,DataB3>倍于常规攻击的额外伤害。|n|cffffcc00等级 4|r -<Acdb,DataD4,%>%的概率来躲避攻击，<Acdb,DataB4>倍于常规攻击的额外伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
     "ANwk": { code: "ANwk", name: "疾风步(中立敌对)", tip: "允许熊猫人隐形，移动速度快<ANwk,DataB1,%>%。如果熊猫人攻击某单位它就会显形，这次攻击将会增加<ANwk,DataC1> 。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Hero },
+    "ANpi": { code: "ANpi", name: "永久献祭(中立敌对1)", tip: "灼烧周围的敌方单位，每秒造成<ANpi,DataA1>点伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Apig": { code: "Apig", name: "永久献祭(中立敌对2)", tip: "灼烧周围的敌方单位，每秒造成<Apig,DataA1>点伤害。", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
+    "Apiv": { code: "Apiv", name: "永久隐形", tip: "", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
     "Anit": { code: "Anit", name: "追踪术(编辑器无此技能)", tip: "", kind: Kind.Ability, race: Race.NeutralHostile, type: Type.Unit },
   }
 
