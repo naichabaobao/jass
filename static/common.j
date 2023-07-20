@@ -4616,13 +4616,15 @@ native GroupClear takes group whichGroup returns nothing
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
-// 将指定单位类型的单位加入单位组
+// 将指定名称的单位加入单位组
+// 使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-// 将指定单位类型的单位加入单位组，同时指定添加单位的数量上限
+// 将指定名称的单位加入单位组，同时指定添加单位的数量上限
+// 使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
@@ -5517,13 +5519,13 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // Unit API
 // Facing arguments are specified in degrees
 
-// 新建单位(指定坐标) [R]
+// 新建单位(指定单位类型及坐标) [R]
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
-// 新建单位(指定坐标) [R]
+// 新建单位(指定单位名称及坐标) [R]
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
-// 新建单位(指定点) [R]
+// 新建单位(指定单位类型及点) [R]
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
-// 新建单位(指定点) [R]
+// 新建单位(指定单位名称及点) [R]
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
@@ -5765,7 +5767,7 @@ constant native GetOwningPlayer takes unit whichUnit returns player
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 获取指定单位名字
+// 获取指定单位名称
 constant native GetUnitName takes unit whichUnit returns string
 // 获取指定单位 占用的人口数量(单个)
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
@@ -6077,7 +6079,7 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家指定单位类型的数量
+// 获取玩家指定名称的单位数量
 // @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
@@ -7649,7 +7651,7 @@ native BlzGetItemExtendedTooltip takes item whichItem returns string
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
 // 获取指定物品图标
 native BlzGetItemIconPath takes item whichItem returns string
-// 设置指定单位名字
+// 设置指定单位名称
 native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
