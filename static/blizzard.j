@@ -9674,7 +9674,7 @@ function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, locat
 endfunction
 
 
-// 获取技能名字
+// 获取技能名称
 function GetAbilityName takes integer abilcode returns string
     return GetObjectName(abilcode)
 endfunction
