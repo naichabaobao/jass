@@ -1360,6 +1360,744 @@
     // 1.32+原生UI/框架
     // 源：https://www.hiveworkshop.com/threads/ui-reading-a-fdf.315850/
 
+
+    // FDF(框架定义)
+
+
+    "presets": ["FDF(框架定义) 字母模式"],
+    "string": ["AlphaMode"],
+    "excludes": [""],
+    // 例
+    // "ADD"  添加
+    // "ALPHAKEY"  字母键
+
+    "presets": ["FDF(框架定义) 锚点"],
+    "string": ["Anchor"],
+    "excludes": [""],
+    // 例
+    // BOTTOMLEFT, -0.256, 0  左下角
+    // BOTTOMRIGHT, 0, 0  右下角
+    // TOPLEFT, 0.0, -0.003  左上角
+    // TOPRIGHT, -0.0914, -0.003125  右上角
+
+    "presets": ["FDF(框架定义) 背景"],
+    "string": ["BackdropBackground"],
+    "excludes": [""],
+    // 例
+    // "EscMenuBackground"  Esc菜单背景
+    // "EscMenuBlankBackground"  Esc菜单空白背景
+    // "EscMenuEditBoxBackground"  Esc菜单输入框背景
+    // "MultiboardBackground"  多面板背景
+    // "MultiboardMinimizeButtonDisabled"  禁用多面板最小化按钮
+    // "EscMenuButtonBackground"  Esc菜单按钮背景
+    // "EscMenuButtonDisabledPushedBackground"  禁用Esc菜单按钮背景(按下时)
+    // "EscMenuCheckBoxPushedBackground"  Esc菜单复选框背景(按下时)
+    // "HeroAgilityIcon"  英雄敏捷图标
+    // "HeroIntelligenceIcon"  英雄智力图标
+    // "QuestDialogCompletedBackground"  任务完成对话框背景
+    // "UI\Widgets\BattleNet\bnet-inputbox-back.blp"  输入框按钮背景
+    // "UI\Widgets\BattleNet\bnet-mainmenu-clans-disabled.blp"  禁用战队主菜单
+
+    "presets": ["FDF(框架定义) 背景插入"],
+    "string": ["BackdropBackgroundInsets"],
+    "excludes": [""],
+    // 例
+    // 0.0 0.0 0.01 0.0
+    // 0.0 0.01 0.0 0.0
+    // 0.0025 0.0025 0.0025 0.0025
+    // 0.003 0.003 0.003 0.003
+
+    "presets": ["FDF(框架定义) 背景大小"],
+    "string": ["BackdropBackgroundSize"],
+    "excludes": [""],
+    // 例
+    // 0.128
+
+    "presets": ["FDF(框架定义) 背景混合"],
+    "string": ["BackdropBlendAll"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景底部文件"],
+    "string": ["BackdropBottomFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\HeavyBorderBottom.blp"  加粗底边
+    // "UI\Widgets\LightBorderBottom.blp"  高亮底边
+    // "UI\Widgets\ButtonCorners.blp"  按钮边框样式(怀疑是圆角方角)
+    // "UI\Widgets\LightBorderCorners.blp"  高亮边框
+
+    "presets": ["FDF(框架定义) 背景边框文件"],
+    "string": ["BackdropCornerFile"],
+    "excludes": [""],
+    // 例
+    // "BL|BR|B"
+    // "UL|UR|T"
+
+    "presets": ["FDF(框架定义) 背景边框标志"],
+    "string": ["BackdropCornerFlags"],
+    "excludes": [""],
+    // 例
+    // 0.0125,0.006,0.008,0.0155
+
+    "presets": ["FDF(框架定义) 背景边框尺寸"],
+    "string": ["BackdropCornerSize"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景边框文件"],
+    "string": ["BackdropEdgeFile"],
+    "excludes": [""],
+    // 例
+    // "EscMenuBorder"  ESC菜单边框
+    // "EscMenuEditBoxBorder"  ESC菜单输入框边框
+    // "EscMenuButtonBorder"  ESC菜单按钮边框
+    // "CinematicBorder"  电影边框
+    // "EscMenuButtonDisabledPushedBorder"  禁用Esc菜单按钮边框(按下时)
+    // "EscMenuButtonPushedBorder"  Esc菜单按钮边框(按下时)
+    // "UI\Glues\ScoreScreen\scorescreen-buttonbackground.blp"  得分屏按钮背景
+    // "UI\Widgets\BattleNet\bnet-dialoguebox-border.blp"  对话框边框
+    // "UI\widgets\BattleNet\bnet-tooltip-border.blp"  提示工具边框
+    // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+    // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-DisabledDown.blp"  黏合屏按钮1背景框(禁用按下)
+    // "UI\Widgets\Glues\GlueScreen-Button1-BorderedBackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+    // "UI\Widgets\Glues\GlueScreen-Button2-BackdropBorder-Disabled.blp"  黏合按钮2背景框(禁用)
+
+    "presets": ["FDF(框架定义) 背景半侧文件"],
+    "string": ["BackdropHalfSides"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景左侧文件"],
+    "string": ["BackdropLeftFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\ButtonLeft.blp"  左按钮
+
+    "presets": ["FDF(框架定义) 背景镜像"],
+    "string": ["BackdropMirrored"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景右侧文件"],
+    "string": ["BackdropRightFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\HeavyBorderRight.blp"  加粗右边框
+
+    "presets": ["FDF(框架定义) 背景平铺"],
+    "string": ["BackdropTileBackground"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景顶部文件"],
+    "string": ["BackdropTopFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\ButtonTop.blp"  顶部按钮
+
+    "presets": ["FDF(框架定义) 背景艺术"],
+    "string": ["BackgroundArt"],
+    "excludes": [""],
+    // 例
+    // "UI\Glues\BattleNet\BattlenetLoginGlue\BattlenetLoginGlue.mdl"  战网登录
+    // "UI\Glues\BattleNet\BattleNetTeamLevelBar\BattleNetTeamLevelBar.mdl"  战网战队等级栏
+
+    "presets": ["FDF(框架定义) 栏纹理"],
+    "string": ["BarTexture"],
+    "excludes": [""],
+    // 例
+    // "SimpleBuildTimeIndicator"  简易建造时间指示器
+
+    "presets": ["FDF(框架定义) 按钮文本偏移(按下时)"],
+    "string": ["ButtonPushedTextOffset"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明)
+    // -0.0015f -0.0015f
+    // 0.001 -0.001
+
+    "presets": ["FDF(框架定义) 按钮文本"],
+    "string": ["ButtonText"],
+    "excludes": [""],
+    // 例
+    // "AddFriendButtonText"  添加好友按钮文本
+    // "AdvancedOptionsButtonText"  高级设置按钮文本
+
+    "presets": ["FDF(框架定义) 聊天框边框尺寸"],
+    "string": ["ChatDisplayBorderSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 聊天框输入框"],
+    "string": ["ChatDisplayEditBox"],
+    "excludes": [""],
+    // 例
+    // 变量类型为字符串,如 "BattleNetChatDisplayEditBoxTemplate"  战网聊天框输入框模板
+
+    "presets": ["FDF(框架定义) 聊天框高亮"],
+    "string": ["ChatDisplayLineHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 聊天框滚动条"],
+    "string": ["ChatDisplayScrollBar"],
+    "excludes": [""],
+    // 例
+    // 变量类型为字符串,如 "BattleNetChatDisplayScrollBarTemplate"  战网聊天框滚动条模板
+
+    "presets": ["FDF(框架定义) 复选框选中高亮"],
+    "string": ["CheckBoxCheckHighlight"],
+    "excludes": [""],
+    // 例
+    // "BattleNetRadioButtonHighlightTemplate"  战网单选按钮高亮模板
+    // "EscMenuRadioButtonHighlightTemplate"  菜单单选按钮高亮模板
+
+    "presets": ["FDF(框架定义) 禁用复选框选中高亮"],
+    "string": ["CheckBoxDisabledCheckHighlight"],
+    "excludes": [""],
+    // 例
+    // "BattleNetDisabledRadioButtonHighlightTemplate"  禁用战网单选按钮选中高亮模板
+    // "EscMenuDisabledCheckHighlightTemplate"  禁用菜单单选按钮选中高亮模板
+
+    "presets": ["FDF(框架定义) 选中纹理"],
+    "string": ["CheckedTexture"],
+    "excludes": [""],
+    // 例
+    // "ReplayCheckBoxCheck"  录像复选框选中
+
+    "presets": ["FDF(框架定义) 控制背景"],
+    "string": ["ControlBackdrop"],
+    "excludes": [""],
+    // 例
+    // "ActionMenuBackdrop"  活动菜单背景
+    // "AdvancedPopupMenuBackdrop"  高级弹出菜单背景
+
+    "presets": ["FDF(框架定义) 禁用控制背景"],
+    "string": ["ControlDisabledBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetCheckBoxDisabledBackdrop"  禁用战网复选框背景
+    // "BattleNetPopupMenuDisabledBackdropTemplate"  禁用战网弹出菜单背景
+
+    "presets": ["FDF(框架定义) 禁用控制背景(按下时)"],
+    "string": ["ControlDisabledPushedBackdrop"],
+    "excludes": [""],
+
+
+    "presets": ["FDF(框架定义) 控制焦点高亮"],
+    "string": ["ControlFocusHighlight"],
+    "excludes": [""],
+    // 例
+    // "CampaignCameraButtonFocusHighlightTemplate"  战役镜头按钮焦点高亮模板
+    // "IconicButtonFocusHighlightTemplate"  图标按钮焦点高亮模板
+
+
+    "presets": ["FDF(框架定义) 控制鼠标悬停高亮"],
+    "string": ["ControlMouseOverHighlight"],
+    "excludes": [""],
+    // 例
+    // "BorderedButtonMouseOverHighlightTemplate"  背景按钮鼠标悬停高亮模板
+    // "ButtonMouseOverHighlightTemplate"  按钮鼠标悬停高亮模板
+
+    "presets": ["FDF(框架定义) 控制背景(按下时)"],
+    "string": ["ControlPushedBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetRadioButtonPushedBackdrop"  战网单选按钮背景(按下时)
+    // "BorderedButtonPushedBackdropTemplate"  背景按钮背景模板(按下时)
+
+    "presets": ["FDF(框架定义) 控制快捷键"],
+    "string": ["ControlShortcutKey"],
+    "excludes": [""],
+    // 例
+    // "BNET_LADDER_SHORTCUT"
+    // "BNET_PASSWORD_RECOVERY_SHORTCUT"
+
+    "presets": ["FDF(框架定义) 控制尺寸"],
+    "string": ["ControlStyle"],
+    "excludes": [""],
+    // 例
+    // "AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER"  自动跟踪|焦点高亮|鼠标悬停高亮
+    // "AUTOTRACK|HIGHLIGHTONMOUSEOVER"  自动跟踪|鼠标悬停高亮
+    // "AUTOTRACK"  自动跟踪
+
+    "presets": ["FDF(框架定义) 装饰文件名称"],
+    "string": ["DecorateFileNames"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 对话框背景"],
+    "string": ["DialogBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetDialogBackdropTemplate"  战网对话框背景模板
+    // "CustomFilterDialogBackdrop"  自定义对话框背景
+
+    "presets": ["FDF(框架定义) 禁用状态提示"],
+    "string": ["DisabledText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonDisabledTextTemplate" "ALLIES"  左上方默认按纽栏按钮禁用状态提示模板-盟友
+    // "UpperButtonBarButtonDisabledTextTemplate" "CHAT"  左上方默认按纽栏按钮禁用状态提示模板-聊天
+
+    "presets": ["FDF(框架定义) 禁用状态纹理"],
+    "string": ["DisabledTexture"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonDisabledBackground"  左上方默认按纽栏按钮禁用状态背景
+
+    "presets": ["FDF(框架定义) 输入框尺寸"],
+    "string": ["EditBorderSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.009
+
+    "presets": ["FDF(框架定义) 输入框光标颜色"],
+    "string": ["EditCursorColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色实数组,如 1.0 1.0 1.0
+
+    "presets": ["FDF(框架定义) 输入框文本控件"],
+    "string": ["EditTextFrame"],
+    "excludes": [""],
+    // 例
+    // "AccountNameEditBoxText"  账户名输入框文本
+
+    "presets": ["FDF(框架定义) 文件"],
+    "string": ["File"],
+    "excludes": [""],
+    // 例
+    // "ConsoleTexture01"  控制台纹理
+    // "ConsoleTexture03"  控制台纹理
+    // "ConsoleTexture04"  控制台纹理
+    // "ConsoleTexture05"  控制台纹理
+    // "ConsoleTexture06"  控制台纹理
+    // "GoldIcon"  金矿图标
+    // "HeroStrengthIcon"  英雄力量图标
+    // "LumberIcon"  木材图标
+    // "SimpleBuildTimeIndicatorBorder"  简易建造时间指示器
+
+    "presets": ["FDF(框架定义) 字体(似乎包含字号)"],
+    "string": ["Font"],
+    "excludes": [""],
+    // 例
+    // "InfoPanelTextFont", 0.0085  信息面板字体
+    // "InfoPanelTextFont",0.01  信息面板字体
+    // "MasterFont",0.008  大师字体
+    // "MasterFont",0.01  大师字体
+
+    "presets": ["FDF(框架定义) 字体颜色"],
+    "string": ["FontColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+
+    "presets": ["FDF(框架定义) 字体禁用状态颜色"],
+    "string": ["FontDisabledColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.5 0.5 0.5 1.0
+
+    "presets": ["FDF(框架定义) 字体标识(限制输入字符数或文本类型)"],
+    "string": ["FontFlags"],
+    "excludes": [""],
+    // 例
+    // "FIXEDSIZE"  固定长度
+    // "PASSWORDFIELD"  密码类型(输入任意字符都显示成 **)
+
+    "presets": ["FDF(框架定义) 字体高亮颜色"],
+    "string": ["FontHighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 1.0 1.0 1.0 1.0
+
+    "presets": ["FDF(框架定义) 字体(两端)对齐"],
+    "string": ["FontJustificationH"],
+    "excludes": [""],
+    // 例
+    // JUSTIFYCENTER  居中对齐
+    // JUSTIFYLEFT  左对齐
+    // JUSTIFYRIGHT  右对齐
+
+    "presets": ["FDF(框架定义) 字体两端边距"],
+    "string": ["FontJustificationOffset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为左右两端边距实数组,如
+    // 0.0 -0.001
+    // 0.0 -0.002
+    // 0.0 0.0
+    // 0.01 0.0
+    // 0.01 0.001
+
+    "presets": ["FDF(框架定义) 字体(垂直)对齐"],
+    "string": ["FontJustificationV"],
+    "excludes": [""],
+    // 例
+    // JUSTIFYTOP  顶部对齐
+    // JUSTIFYMIDDLE  中部对齐
+    // JUSTIFYBOTTOM  底部对齐
+
+    "presets": ["FDF(框架定义) 字体阴影颜色"],
+    "string": ["FontShadowColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.0 0.0 0.0 0.9
+
+    "presets": ["FDF(框架定义) 字体阴影偏移"],
+    "string": ["FontShadowOffset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为 X Y 双向偏移量实数组,如 0.001 -0.001
+
+    "presets": ["FDF(框架定义) 控件"],
+    "string": ["Frame"],
+    "excludes": [""],
+    // 例
+    // "GLUEBUTTON"  黏合按钮
+    // "HeroSelectorButton"  英雄选择按钮
+
+    "presets": ["FDF(框架定义) 控件字体(似乎包含字号)"],
+    "string": ["FrameFont"],
+    "excludes": [""],
+    // 例
+    // "EscMenuTextFont", 0.011, ""  ESC菜单文本字体
+    // "InfoPanelTextFont", 0.011, "",  信息面板字体
+    // "InfoPanelTextFont", 0.013, "",  信息面板字体
+    // "MasterFont", 0.007, "",  大师字体
+    // "MasterFont", 0.01, "",  大师字体
+    // "MasterFont", 0.011, "",  大师字体
+    // "MasterFont", 0.01171, "",  大师字体
+
+    "presets": ["FDF(框架定义) 高度"],
+    "string": ["Height"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明),如 0.024,0.48f
+
+    "presets": ["FDF(框架定义) 高亮字母文件"],
+    "string": ["HighlightAlphaFile"],
+    "excludes": [""],
+    // 例
+    // "EscMenuButtonMouseOverHighlight"  ESC菜单按钮鼠标悬停高亮
+    // "EscMenuCheckBoxCheckHighlight"  ESC菜单复选框选中高亮
+    // "EscMenuDisabledRadioButtonSelectedHighlight"  禁用ESC菜单单选按钮选中高亮
+    // "UI\Glues\ScoreScreen\scorescreen-tab-hilight.blp"  得分屏选项卡高亮
+    // "UI\Widgets\Glues\GlueScreen-Button-KeyboardHighlight.blp"  得分屏按钮按键高亮
+    // "UI\Widgets\Glues\GlueScreen-Checkbox-Check.blp"  得分屏检查栏选中
+    // "UI\Widgets\Glues\GlueScreen-Checkbox-CheckDisabled.blp"  禁用得分屏检查栏选中
+    // "UI\Widgets\Glues\GlueScreen-RadioButton-ButtonDisabled.blp"  禁用得分屏单选按钮
+
+    "presets": ["FDF(框架定义) 高亮字母模式"],
+    "string": ["HighlightAlphaMode"],
+    "excludes": [""],
+    // 例
+    // "ADD"  添加
+    // "BLEND"  混合
+
+    "presets": ["FDF(框架定义) 高亮颜色"],
+    "string": ["HighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如
+    // 0.0 0.0 1.0 0.1
+    // 1.0 0.0 0.0 0.2
+
+    "presets": ["FDF(框架定义) 高亮文本"],
+    "string": ["HighlightText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonHighlightTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮高亮文本提示模板-关键词 盟友
+    // "UpperButtonBarButtonHighlightTextTemplate" "KEY_CHAT"  左上方默认按纽栏按钮高亮文本提示模板-关键词 聊天
+
+    "presets": ["FDF(框架定义) 高亮类型"],
+    "string": ["HighlightType"],
+    "excludes": [""],
+    // 例
+    // "FILETEXTURE"  文件纹理
+    // "SHADE"  遮罩
+
+    "presets": ["FDF(框架定义) 包含文件"],
+    "string": ["IncludeFile"],
+    "excludes": [""],
+    // 例
+    // "UI\FrameDef\UI\InfoPanelTemplates.fdf"  信息面板模板文件
+
+    "presets": ["FDF(框架定义) 层级(图层)"],
+    "string": ["Layer"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 层级样式(图层样式)"],
+    "string": ["LayerStyle"],
+    "excludes": [""],
+    // 例
+    // "NOSHADING"  无遮蔽
+    // "IGNORETRACKEVENTS"  忽略可追溯事件
+    // "NOSHADING|IGNORETRACKEVENTS"  无遮蔽|忽略可追溯事件
+
+    "presets": ["FDF(框架定义) 列表边框"],
+    "string": ["ListBoxBorder"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 列表滚动条边框"],
+    "string": ["ListBoxScrollBar"],
+    "excludes": [""],
+    // 例
+    // "StandardListBoxScrollBarTemplate"  标准列表滚动条模板
+
+    "presets": ["FDF(框架定义) 菜单边框"],
+    "string": ["MenuBorder"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.009
+
+    "presets": ["FDF(框架定义) 菜单项目"],
+    "string": ["MenuItem"],
+    "excludes": [""],
+    // 例
+    // "NORMAL", -2  普通(-2)
+    // "WINDOW_MODE_WINDOWED", -2  跟随系统(-2)
+
+    "presets": ["FDF(框架定义) 菜单项目高度"],
+    "string": ["MenuItemHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.0082, 0.011
+
+    "presets": ["FDF(框架定义) 菜单文本高亮颜色"],
+    "string": ["MenuTextHighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+
+    "presets": ["FDF(框架定义) 普通文本"],
+    "string": ["NormalText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮文本模板-关键词 盟友
+    // "UpperButtonBarButtonTextTemplate" "KEY_MENU"  左上方默认按纽栏按钮文本模板-关键词 菜单
+
+    "presets": ["FDF(框架定义) 普通纹理"],
+    "string": ["NormalTexture"],
+    "excludes": [""],
+    // 例
+    // "ReplayCheckBoxNormal"  普通录像复选框
+
+    "presets": ["FDF(框架定义) 弹出指示符"],
+    "string": ["PopupArrowFrame"],
+    "excludes": [""],
+    // 例
+    // "CampaignPopupMenuArrow"  战役弹出菜单指示符
+    // "CustomPopupMenuArrow"  自定义弹出菜单指示符
+
+    "presets": ["FDF(框架定义) 弹出按钮插入"],
+    "string": ["PopupButtonInset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01, 0.015
+
+    "presets": ["FDF(框架定义) 弹出按钮"],
+    "string": ["PopupMenuFrame"],
+    "excludes": [""],
+    // 例
+    // "TeamMemberRaceMenuMenu3"  队伍成员种族菜单
+    // "TextureQualityPopupMenuMenu"  纹理材质弹出菜单
+
+    "presets": ["FDF(框架定义) 弹出(菜单)标题"],
+    "string": ["PopupTitleFrame"],
+    "excludes": [""],
+    // 例
+    // "EscOptionsLightsPopupMenuTitle"  ESC设置弹出菜单常亮标题
+    // "PopupMenuTitle"  弹出菜单标题
+    // "ReplayVisionMenuTitle"  录像查看菜单标题
+    // "TeamMemberPopupMenuTitle"  队伍成员弹出菜单标题
+
+    "presets": ["FDF(框架定义) 纹理(按下时)"],
+    "string": ["PushedTexture"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonPushedBackground"  顶部菜单按钮背景(按下时)
+
+    "presets": ["FDF(框架定义) 滚动条下滚动按钮"],
+
+    "string": ["ScrollBarDecButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "EscMenuScrollBarDecButton"  滚动条下滚动按钮
+
+    "presets": ["FDF(框架定义) 滚动条上滚动按钮"],
+    "string": ["ScrollBarIncButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "EscMenuScrollBarIncButton"  滚动条上滚动按钮
+
+    "presets": ["FDF(框架定义) 设置所有锚点"],
+    "string": ["SetAllPoints"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 设置锚点"],
+    "string": ["SetPoint"],
+    "excludes": [""],
+    // 例
+    // 几种变量组合，如
+    // BOTTOM, "BuildTimeIndicator", TOP, 0.0, 0.00325  建造时间指示器
+    // BOTTOM, "ChatDialog", BOTTOM, 0.0, 0.03  聊天对话框
+    // BOTTOMLEFT, "AllyHeader", BOTTOMRIGHT, 0.004, 0.0  表头
+    // BOTTOMLEFT, "BattleNetChatPanel", BOTTOMLEFT, 0.01125, 0.02125  战网聊天面板
+    // BOTTOMRIGHT, "QuestListItem", BOTTOMRIGHT, -0.003, 0  任务列表项目
+    // BOTTOMRIGHT, "AllianceDialog", BOTTOM, -0.003, 0.03  盟友对话框
+    // CENTER, "GameSaveSplashDialog", CENTER, 0.0, 0.0  游戏保存启动画面对话框
+    // CENTER, "IconBackdrop4", BOTTOMRIGHT, -0.007625, 0.006875  图标背景
+    // LEFT, "AllianceAcceptButton", RIGHT, 0.005, 0.0  盟友接受按钮
+    // LEFT, "AlliedVictoryCheckBox", RIGHT, 0.01, 0.0  联盟胜利复选框
+    // RIGHT, "ChannelEnterButton", LEFT, -0.02, 0.0  绑定端口按钮
+    // RIGHT, "ChatDialog", TOPRIGHT, -0.031, -0.0765  聊天对话框
+    // TOP, "AnonSearchTitle", BOTTOM, 0.0, -0.005  立即搜索标题
+    // TOP, "AuthorLabel", BOTTOM, 0.0, -0.004  作者商标
+    // TOPLEFT, "LeaderboardTitle", BOTTOMLEFT, -0.02f, -0.002  排行榜标题
+    // TOPLEFT,"WindowModeBackdrop",BOTTOMLEFT, 0.0, 0.01375  跟随系统模式背景
+    // TOPRIGHT, "AdvancedOptionsPane", TOPRIGHT, -0.004, -0.03  高级设置框
+
+
+    "presets": ["FDF(框架定义) 滑块初始值"],
+    "string": ["SliderInitialValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0, 1
+
+    "presets": ["FDF(框架定义) 轮播图水平布局"],
+    "string": ["SliderLayoutHorizontal"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 轮播图垂直布局"],
+    "string": ["SliderLayoutVertical"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 滑块最大值"],
+    "string": ["SliderMaxValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 2, 4
+
+    "presets": ["FDF(框架定义) 滑块最小值"],
+    "string": ["SliderMinValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0
+
+    "presets": ["FDF(框架定义) 滑块滑动距离(格数)"],
+    "string": ["SliderStepSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 1
+
+    "presets": ["FDF(框架定义) 滑块拇指按钮"],
+    "string": ["SliderThumbButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "BattleNetThumbButton"  战网滑块拇指按钮
+    // "EscMenuScrollThumbButton"  ESC菜单滑块拇指按钮
+    // "StandardThumbButton"  标准滑块拇指按钮
+
+    "presets": ["FDF(框架定义) 字串符"],
+    "string": ["String"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
+
+    "presets": ["FDF(框架定义) 字串符列表"],
+    "string": ["StringList"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 选项卡焦点(默认值)"],
+    "string": ["TabFocusDefault"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 选项卡焦点-下一个"],
+    "string": ["TabFocusNext"],
+    "excludes": [""],
+    // 例
+    // "AddProfileButton"  添加配置文件按钮
+    // "BackButton"  返回按钮
+
+    "presets": ["FDF(框架定义) 选项卡焦点-推送"],
+    "string": ["TabFocusPush"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 贴图坐标"],
+    "string": ["TexCoord"],
+    "excludes": [""],
+    // 例
+    // 0, 0.33984375, 0, 0.125
+    // 0, 1, 0.4140625, 1
+    // 0.0, 0.6640625, 0.25, 0.421875
+    // 0.0, 0.6640625, 0.75, 0.921875
+
+    "presets": ["FDF(框架定义) 文本"],
+    "string": ["Text"],
+    "excludes": [""],
+    // 例
+    // "30"
+
+    "presets": ["FDF(框架定义) 文本区域插入"],
+    "string": ["TextAreaInset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.005, 0.0
+
+    "presets": ["FDF(框架定义) 文本区域行间距"],
+    "string": ["TextAreaLineGap"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.001, 0.0015
+
+    "presets": ["FDF(框架定义) 文本区域行高度"],
+    "string": ["TextAreaLineHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.011, 0.015
+
+    "presets": ["FDF(框架定义) 文本区域最大行数"],
+    "string": ["TextAreaMaxLines"],
+    "excludes": [""],
+    // 例
+    // 变量类型为整数,如 128, 32
+
+    "presets": ["FDF(框架定义) 文本区域滚动条"],
+    "string": ["TextAreaScrollBar"],
+    "excludes": [""],
+    // 例
+    // "ChatScrollBar"  聊天滚动条
+
+    "presets": ["FDF(框架定义)文本长度"],
+    "string": ["TextLength"],
+    "excludes": [""],
+    // 例
+    // 变量类型为整数,如 8
+
+    "presets": ["FDF(框架定义) 纹理 - 继承于父类 ResourceIconTemplate 资源图标模板"],
+    "string": ["Texture"],
+    "excludes": [""],
+    // 例
+    // "InfoPanelIconAllyFoodIcon"  信息面板图标-盟友人口图标
+
+    "presets": ["FDF(框架定义) 使用活动上下文"],
+    "string": ["UseActiveContext"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 高亮显示"],
+    "string": ["UseHighlight"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
+
+    "presets": ["FDF(框架定义) 宽度"],
+    "string": ["Width"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明),如 0.24, 0.417f
+
+
     
     // 框架类型
 
@@ -2832,8 +3570,8 @@
     "excludes": [""],
     "presets": ["颜色值 紫罗兰色 - 注意开头添加|，结尾添加|r，三色值：138, 43, 226"],
     "string": ["Cff8a2be2"],
-    "excludes": [""],
+    "excludes": [""]
 
-    
+
 }
 
