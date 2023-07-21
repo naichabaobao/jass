@@ -63,6 +63,7 @@ function configFileToObject(jsonData: string): ConfigFileOption {
         }
     }
 
+
     return option;
 }
 
@@ -185,14 +186,10 @@ export class ConfigPovider {
         return this._;
     }
 
-
-    public static get pluginConfigObject() {
-        return configFileToObject(fs.readFileSync(Options.pluginConfigFilePath).toString("utf-8"));
-    }
-
 }
 
 /**
  * 插件默认的配置对象,静态的
  */
-export const PluginDefaultConfig: ConfigFileOption = ConfigPovider.pluginConfigObject;
+export const PluginDefaultConfig: ConfigFileOption = configFileToObject(fs.readFileSync(Options.pluginConfigFilePath).toString("utf-8"));
+

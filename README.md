@@ -53,6 +53,7 @@ endlibrary
 ### 1.6.12
 ##### 2022年6月13日
 ###### 新的配置项exclude
+###### 已经失效，请使用jass.config.json {"excludes": []}配置
 ![exclude-dome](https://user-images.githubusercontent.com/38098031/188805922-077ff428-6317-40d0-83e9-2229ba9d3a67.png)
 
 

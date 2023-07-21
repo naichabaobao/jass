@@ -272,7 +272,6 @@ async function getCurrentDocumentProgram(document: vscode.TextDocument):Promise<
  */
 class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
-        console.info("outline");
         let program = new DataGetter().get(document.uri.fsPath);
         if (!program) {
             parseContent(document.uri.fsPath, document.getText());
@@ -280,13 +279,10 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
             program = new DataGetter().get(document.uri.fsPath);
         }
 
-        console.log("Options.workspaceConfigFilePath", Options.workspaceConfigFilePath);
         
         if (program) {
             
-            console.info("begin get symbols!");
             const ss = genSymbols(program);
-            console.info("outline end");
             return ss;
         }
 
