@@ -2483,7 +2483,7 @@ globals
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
-	// 技能字串符域 名字 ('anam')
+	// 技能字串符域 名称 ('anam')
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
 	// 技能字串符域 图标(关闭) ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
@@ -4112,7 +4112,7 @@ globals
         // 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
 
-	// 单位字串符域 文本 - 名字 ('unam')
+	// 单位字串符域 文本 - 名称 ('unam')
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
 	// 单位字串符域 文本 - 称谓(英雄类单位) ('upro')
 	constant unitstringfield UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
@@ -5440,7 +5440,7 @@ native ShowDestructable takes destructable d, boolean flag returns nothing
 native GetDestructableOccluderHeight takes destructable d returns real
 // 设置指定可破坏物的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 获取指定可破坏物名字
+// 获取指定可破坏物名称
 native GetDestructableName takes destructable d returns string
 // 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
@@ -5955,7 +5955,7 @@ native IssueInstantTargetOrder takes unit whichUnit, string order, widget target
 // @param order 技能ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
-// @param unitToBuild 建筑物的系统名字字符串，可在 common.ai 文件找到
+// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
 // @param unitId 单位类型，可在 记录物编的文件 找到
@@ -6994,7 +6994,7 @@ native MultiboardSetItemValue takes multiboarditem mbi, string val returns nothi
 native MultiboardSetItemValueColor takes multiboarditem mbi, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置多面板指定项目宽度 [R]
 native MultiboardSetItemWidth takes multiboarditem mbi, real width returns nothing
-// 设置多面板指定项目图标 [R]
+// 设置多面板指定项目图标（指定图标文件） [R]
 native MultiboardSetItemIcon takes multiboarditem mbi, string iconFileName returns nothing
 
 // meant to unequivocally suspend display of existing and
@@ -7079,7 +7079,7 @@ native CameraSetSmoothingFactor takes real factor returns nothing
 native CameraSetFocalDistance takes real distance returns nothing
 // 设置镜头景深比例
 native CameraSetDepthOfFieldScale takes real scale returns nothing
-// 设置滤镜文本内容
+// 设置滤镜文本内容（从指定文件获取）
 native SetCineFilterTexture takes string filename returns nothing
 // 设置滤镜混合模式
 native SetCineFilterBlendMode takes blendmode whichMode returns nothing
@@ -7633,7 +7633,7 @@ native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
 // 设置指定单位最大法力值
 native BlzSetUnitMaxMana takes unit whichUnit, integer mana returns nothing
-// 设置指定物品名字
+// 设置指定物品名称
 native BlzSetItemName takes item whichItem, string name returns nothing
 // 设置指定物品介绍
 native BlzSetItemDescription takes item whichItem, string description returns nothing
@@ -7874,7 +7874,7 @@ native BlzFrameSetAllPoints takes framehandle frame, framehandle relative return
 native BlzFrameSetVisible takes framehandle frame, boolean visible returns nothing
 // 查询Frame是否可见
 native BlzFrameIsVisible takes framehandle frame returns boolean
-// 获取frame类型名称(指定名字)
+// 获取frame类型名称(指定名称)
 native BlzGetFrameByName takes string name, integer createContext returns framehandle
 // 获取Frame名称(指定Frame类型名)
 native BlzFrameGetName takes framehandle frame returns string
