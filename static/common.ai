@@ -46,32 +46,32 @@ native DebugS               takes string str                            returns 
     // 获取指定单位/建筑/科技类型的训练/建造/研究时间
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
-    // 获取拥有的金矿数
+    // 获取拥有的金矿数量
     // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵/暗夜无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地附近返回的第一座矿，如果返回的非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
     native GetMinesOwned        takes nothing                               returns integer
-    // 获取拥有的所有金矿的金钱数量，并返回第一座矿的金钱数
+    // 获取拥有的所有金矿的未采金钱数量，并返回第一座矿的金钱数
     // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
-    // 有金矿的基地编号，如果多个基地都有金矿，则返回最小编号
-    // 只检查主城，如果亡灵开矿不造主城，AI会视为无基地
+    // 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号
+    // 可能只检查主城，如果亡灵开矿不造主城，会被视为无基地
     // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
     native TownWithMine         takes nothing                               returns integer
     // 查询指定编号的基地是否有金矿
     // @param townid 基地编号，-1为不限
     native TownHasMine          takes integer townid                        returns boolean
-    // 指定编号的基地是否拥有城镇（一、二或三本任意基地）
+    // 查询指定编号的基地是否拥有城镇（一、二或三本任意基地）
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型当前升级的等级（如攻防默认有3级，大师级科技默认有2级）
+    // 获取指定科技类型当前升级的等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/获得时为0
     native GetUpgradeLevel      takes integer id                            returns integer
     // 获取升级指定科技需要消耗的金钱数量，id即科技类型
     native GetUpgradeGoldCost   takes integer id                            returns integer
     // 升级指定科技需要消耗的木材数量，id即科技类型
     native GetUpgradeWoodCost   takes integer id                            returns integer
-    // 获取下一个扩张点
+    // 获取下一个扩张点，可能返回-1
     native GetNextExpansion     takes nothing                               returns integer
     // 获取大型攻击目标
     // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
@@ -178,12 +178,12 @@ native DebugS               takes string str                            returns 
     // 开始获取敌人主基地
     // 使用 WaitGetEnemyBase 停止获取，使用 GetEnemyBase 捕获获取到的单位
     native StartGetEnemyBase    takes nothing                               returns nothing
-    // 判断是否获取到敌人主基地
+    // 查询是否已获取到敌人主基地
     // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 判断下一个扩张点是否存在具有威胁的单位（只检测中立敌对的单位）
+    // 查询当前拟扩张点是否存在威胁性单位（只查询中立敌对玩家的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
@@ -193,13 +193,13 @@ native DebugS               takes string str                            returns 
     native GetExpansionY        takes nothing                               returns integer
     // 设置集合点
     native SetStagePoint        takes real x, real y                        returns nothing
-    // 发布攻击组攻击命令（指定目标）
+    // 发布攻击组攻击命令（指定目标/单位）
     native AttackMoveKill       takes unit target                           returns nothing
     // 发布攻击组攻击命令（指定坐标）
     native AttackMoveXY         takes integer x, integer y                  returns nothing
-    // 在指定坐标卸载单位/空投
+    // 在指定坐标卸载全部单位（空投）
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
-    // 建议不要对飞艇类单位发送忽略防守命令，忽略后AI不会自动控制飞艇卸载
+    // 建议不要忽略飞艇类单位的警戒点，否则AI不会自动控制飞艇装卸
     native LoadZepWave          takes integer x, integer y                  returns nothing
     // 发布自杀式攻击命令（指定玩家），返回false时代表未执行
     // 理论上是一路打到指定玩家的开始点
@@ -220,17 +220,17 @@ native DebugS               takes string str                            returns 
     // 清理后AI可能会交换多个基地之间的农民，比如让A矿的农民去B矿工作，反之亦然
     native ClearHarvestAI       takes nothing                               returns nothing
     // 分配指定数量的工人在指定基地采集金矿
-    // 如果金矿和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达金矿，但其采集完成返回时自动会停在岸边，就像它忘记自己可以游泳一样
-    // @param town 0为主基地，大于0则是对应每个分基地
+    // 如果金矿和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达金矿，但其采集完成返回时自动会停在岸边驻足良久才继续返回或永久驻足，就像它忘记自己可以游泳一样
+    // @param town 0为第一个有矿的基地，大于0则是对应每个分基地
     native HarvestGold          takes integer town, integer peons           returns nothing
     // 分配指定数量的工人在指定基地采集木材
     // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
-    // @param town 0为主基地，大于0则是对应每个分基地
+    // @param town 0为第一个有矿的基地，大于0则是对应每个分基地
     native HarvestWood          takes integer town, integer peons           returns nothing
-    // 获取开分基地的工人，系统会随机返回一个工人给AI，但可能返回null
+    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
     native GetExpansionPeon     takes nothing                               returns unit
-    // 停止聚集，在初始化时自动调用，且必须调用（默认自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
+    // 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
     native StopGathering        takes nothing                               returns nothing
     // 在指定坐标增加指定类型的防守单位
     native AddGuardPost         takes integer id, real x, real y            returns nothing
@@ -248,9 +248,9 @@ native DebugS               takes string str                            returns 
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 运输/传送攻击队长到指定坐标
+    // 运输/传送攻击队长到指定坐标，可能队长会因此使用回本卷轴或群体传送
     native TeleportCaptain      takes real x, real y                        returns nothing
-    // 清除攻击队长当前的攻击目标
+    // 清除攻击队长当前的攻击目标，清除后队长会在一瞬间停止攻击，然后重新获取攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
     // 发布攻击队长攻击命令（指定坐标）
     // 可配合 DisablePathing 控制是否允许攻击队长在路上战斗（移动攻击）
