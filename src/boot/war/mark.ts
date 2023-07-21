@@ -960,7 +960,7 @@ const unitHuman:Format = {
     "nnwr": { code: "nnwr", name: "蛛网怪预言者", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nnwq": { code: "nnwq", name: "蛛网怪女皇", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nogr": { code: "nogr", name: "食人魔战士", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
-    "nomg": { code: "nomg", name: "食人魔意法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
+    "nomg": { code: "nomg", name: "食人魔法师", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nogm": { code: "nogm", name: "食人魔拳手", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nogl": { code: "nogl", name: "食人魔首领", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
     "nowb": { code: "nowb", name: "迅猛野兽", tip: "", kind: Kind.Unit, race: Race.NeutralHostile, type: Type.Unit },
