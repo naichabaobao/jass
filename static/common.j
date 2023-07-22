@@ -4501,7 +4501,7 @@ constant native GetStartLocationX takes integer whichStartLocation returns real
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定出生点
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
@@ -4595,7 +4595,7 @@ native GetExpiredTimer takes nothing returns timer
 //
 
 // 创建单位组 [R]
-// 会生成单位组，用完请注意排泄
+// 会创建单位组，用完请注意排泄
 native CreateGroup takes nothing returns group
 // 删除单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
@@ -4724,10 +4724,10 @@ native ForForce takes force whichForce, code callback returns nothing
 // Region and Location API
 
 // 转换坐标成矩形区域
-// 会生成矩形区域，用完请注意排泄
+// 会创建矩形区域，用完请注意排泄
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
 // 转换点成矩形区域
-// 会生成矩形区域，用完请注意排泄
+// 会创建矩形区域，用完请注意排泄
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
@@ -4773,7 +4773,7 @@ native RegionClearCell takes region whichRegion, real x, real y returns nothing
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 转换坐标成点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
@@ -4800,7 +4800,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 // Returns full map bounds, including unplayable borders, in world coordinates
 
 // 获取完整地图区域(包括不可玩的边界)
-// 会生成区域，用完请注意排泄
+// 会创建区域，用完请注意排泄
 native GetWorldBounds takes nothing returns rect
 
 
@@ -5185,7 +5185,7 @@ constant native GetOrderPointX takes nothing returns real
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
 // 事件响应 获取命令目标点(对应发布命令(指定点)等事件)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
@@ -5219,7 +5219,7 @@ constant native GetSpellAbilityId takes nothing returns integer
 // 事件响应 获取被释放的技能
 constant native GetSpellAbility takes nothing returns ability
 // 事件响应 获取被释放技能的目标(点)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
 // 事件响应 获取被释放技能的目标(点 X 坐标)
 constant native GetSpellTargetX takes nothing returns real
@@ -5752,7 +5752,7 @@ constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetUnitLoc takes unit whichUnit returns location
 // 获取指定单位朝向
 constant native GetUnitFacing takes unit whichUnit returns real
@@ -5783,7 +5783,7 @@ constant native GetFoodUsed takes integer unitId returns integer
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位集结点(指向点)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 // 建筑的旗子，集结技能
 constant native GetUnitRallyPoint takes unit whichUnit returns location
 // 获取指定单位集结点(指向单位)，未指向单位时返回null
@@ -7049,7 +7049,7 @@ native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField 
 // 设置指定镜头的坐标
 native CameraSetupSetDestPosition takes camerasetup whichSetup, real x, real y, real duration returns nothing
 // 获取指定镜头的目标点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native CameraSetupGetDestPositionLoc takes camerasetup whichSetup returns location
 // 获取指定镜头的 X 坐标
 native CameraSetupGetDestPositionX takes camerasetup whichSetup returns real
@@ -7133,7 +7133,7 @@ constant native GetCameraTargetPositionY takes nothing returns real
 // 获取当前镜头目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
 // 获取当前镜头目标点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetCameraTargetPositionLoc takes nothing returns location
 // 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
@@ -7142,7 +7142,7 @@ constant native GetCameraEyePositionY takes nothing returns real
 // 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
 // 获取当前镜头的观察位置
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetCameraEyePositionLoc takes nothing returns location
 
 
@@ -7576,7 +7576,7 @@ native BlzGetTriggerPlayerMouseX takes nothing returns real
 // 玩家鼠标触发位置 - Y 坐标
 native BlzGetTriggerPlayerMouseY takes nothing returns real
 // 玩家鼠标触发位置 - 点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 玩家鼠标按键类型
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype
