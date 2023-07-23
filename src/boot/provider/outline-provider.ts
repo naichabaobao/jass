@@ -282,8 +282,8 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
         
         if (program) {
             
-            const ss = genSymbols(program);
-            return ss;
+            const symbols = genSymbols(program);
+            return symbols;
         }
 
         return undefined;
@@ -291,4 +291,4 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     
 }
 
-vscode.languages.registerDocumentSymbolProvider("jass", new DocumentSymbolProvider())
+vscode.languages.registerDocumentSymbolProvider("jass", new DocumentSymbolProvider());

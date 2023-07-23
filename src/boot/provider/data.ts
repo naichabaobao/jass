@@ -230,7 +230,6 @@ parsePath(Options.commonJPath);
 parsePath(Options.blizzardJPath);
 parsePath(Options.dzApiJPath);
 parsePath(Options.commonAiPath);
-parsePath(Options.ObjectEditorJPath);
 
 parsePath(...Options.includes);
 parsePath(...Options.workspaces);

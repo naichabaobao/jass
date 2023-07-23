@@ -24,9 +24,9 @@ class Options {
   public static get dzApiJPath() : string {
     return this.isUsableJFile(this.configuration["dzapi"] as string) ? this.configuration["dzapi"] as string : path.resolve(__dirname, "../../../static/DzAPI.j");
   }
-  public static get ObjectEditorJPath() : string {
-    return this.isUsableJFile(this.configuration["ObjectEditor"] as string) ? this.configuration["ObjectEditor"] as string : path.resolve(__dirname, "../../../static/ObjectEditor.j");
-  }
+  // public static get ObjectEditorJPath() : string {
+  //   return this.isUsableJFile(this.configuration["ObjectEditor"] as string) ? this.configuration["ObjectEditor"] as string : path.resolve(__dirname, "../../../static/ObjectEditor.j");
+  // }
 
   private static isUsableJFile(filePath: string) {
       return isUsableFile(filePath) && isJFile(filePath);
