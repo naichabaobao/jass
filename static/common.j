@@ -2483,7 +2483,7 @@ globals
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
-	// 技能字串符域 名字 ('anam')
+	// 技能字串符域 名称 ('anam')
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
 	// 技能字串符域 图标(关闭) ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
@@ -4112,7 +4112,7 @@ globals
         // 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
 
-	// 单位字串符域 文本 - 名字 ('unam')
+	// 单位字串符域 文本 - 名称 ('unam')
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
 	// 单位字串符域 文本 - 称谓(英雄类单位) ('upro')
 	constant unitstringfield UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
@@ -4501,7 +4501,7 @@ constant native GetStartLocationX takes integer whichStartLocation returns real
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定出生点
 // 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
@@ -4595,7 +4595,7 @@ native GetExpiredTimer takes nothing returns timer
 //
 
 // 创建单位组 [R]
-// 会生成单位组，用完请注意排泄
+// 会创建单位组，用完请注意排泄
 native CreateGroup takes nothing returns group
 // 删除单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
@@ -4616,15 +4616,15 @@ native GroupClear takes group whichGroup returns nothing
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
-// 将指定名称的单位加入单位组
-// 使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// 将指定单位名称的单位加入单位组
+// @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-// 将指定名称的单位加入单位组，同时指定添加单位的数量上限
-// 使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
+// @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 过滤，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
@@ -4724,10 +4724,10 @@ native ForForce takes force whichForce, code callback returns nothing
 // Region and Location API
 
 // 转换坐标成矩形区域
-// 会生成矩形区域，用完请注意排泄
+// 会创建矩形区域，用完请注意排泄
 native Rect takes real minx, real miny, real maxx, real maxy returns rect
 // 转换点成矩形区域
-// 会生成矩形区域，用完请注意排泄
+// 会创建矩形区域，用完请注意排泄
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
@@ -4773,7 +4773,7 @@ native RegionClearCell takes region whichRegion, real x, real y returns nothing
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 转换坐标成点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
@@ -4800,7 +4800,7 @@ native IsLocationInRegion takes region whichRegion, location whichLocation retur
 // Returns full map bounds, including unplayable borders, in world coordinates
 
 // 获取完整地图区域(包括不可玩的边界)
-// 会生成区域，用完请注意排泄
+// 会创建区域，用完请注意排泄
 native GetWorldBounds takes nothing returns rect
 
 
@@ -5185,7 +5185,7 @@ constant native GetOrderPointX takes nothing returns real
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointY takes nothing returns real
 // 事件响应 获取命令目标点(对应发布命令(指定点)等事件)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
@@ -5219,7 +5219,7 @@ constant native GetSpellAbilityId takes nothing returns integer
 // 事件响应 获取被释放的技能
 constant native GetSpellAbility takes nothing returns ability
 // 事件响应 获取被释放技能的目标(点)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetSpellTargetLoc takes nothing returns location
 // 事件响应 获取被释放技能的目标(点 X 坐标)
 constant native GetSpellTargetX takes nothing returns real
@@ -5440,7 +5440,7 @@ native ShowDestructable takes destructable d, boolean flag returns nothing
 native GetDestructableOccluderHeight takes destructable d returns real
 // 设置指定可破坏物的闭塞高度
 native SetDestructableOccluderHeight takes destructable d, real height returns nothing
-// 获取指定可破坏物名字
+// 获取指定可破坏物名称
 native GetDestructableName takes destructable d returns string
 // 获取触发的可破坏物
 constant native GetTriggerDestructable takes nothing returns destructable
@@ -5522,10 +5522,12 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // 新建单位(指定单位类型及坐标) [R]
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
 // 新建单位(指定单位名称及坐标) [R]
+// @param unitname 单位名称，不区分大小写
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定单位类型及点) [R]
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
 // 新建单位(指定单位名称及点) [R]
+// @param unitname 单位名称，不区分大小写
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
@@ -5750,7 +5752,7 @@ constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位所在 Y 轴坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetUnitLoc takes unit whichUnit returns location
 // 获取指定单位朝向
 constant native GetUnitFacing takes unit whichUnit returns real
@@ -5767,7 +5769,7 @@ constant native GetOwningPlayer takes unit whichUnit returns player
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 获取指定单位名称
+// 获取指定单位名字
 constant native GetUnitName takes unit whichUnit returns string
 // 获取指定单位 占用的人口数量(单个)
 constant native GetUnitFoodUsed takes unit whichUnit returns integer
@@ -5781,7 +5783,7 @@ constant native GetFoodUsed takes integer unitId returns integer
 native SetUnitUseFood takes unit whichUnit, boolean useFood returns nothing
 
 // 获取指定单位集结点(指向点)
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 // 建筑的旗子，集结技能
 constant native GetUnitRallyPoint takes unit whichUnit returns location
 // 获取指定单位集结点(指向单位)，未指向单位时返回null
@@ -5955,7 +5957,7 @@ native IssueInstantTargetOrder takes unit whichUnit, string order, widget target
 // @param order 技能ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
-// @param unitToBuild 建筑物的系统名字字符串，可在 common.ai 文件找到
+// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
 // @param unitId 单位类型，可在 记录物编的文件 找到
@@ -6079,7 +6081,8 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家指定名称的单位数量
+// 获取玩家指定单位名称的单位数量
+// @param unitname 单位名称，不区分大小写
 // @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
@@ -6994,7 +6997,7 @@ native MultiboardSetItemValue takes multiboarditem mbi, string val returns nothi
 native MultiboardSetItemValueColor takes multiboarditem mbi, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置多面板指定项目宽度 [R]
 native MultiboardSetItemWidth takes multiboarditem mbi, real width returns nothing
-// 设置多面板指定项目图标 [R]
+// 设置多面板指定项目图标（指定图标文件） [R]
 native MultiboardSetItemIcon takes multiboarditem mbi, string iconFileName returns nothing
 
 // meant to unequivocally suspend display of existing and
@@ -7046,7 +7049,7 @@ native CameraSetupGetField takes camerasetup whichSetup, camerafield whichField 
 // 设置指定镜头的坐标
 native CameraSetupSetDestPosition takes camerasetup whichSetup, real x, real y, real duration returns nothing
 // 获取指定镜头的目标点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native CameraSetupGetDestPositionLoc takes camerasetup whichSetup returns location
 // 获取指定镜头的 X 坐标
 native CameraSetupGetDestPositionX takes camerasetup whichSetup returns real
@@ -7079,7 +7082,7 @@ native CameraSetSmoothingFactor takes real factor returns nothing
 native CameraSetFocalDistance takes real distance returns nothing
 // 设置镜头景深比例
 native CameraSetDepthOfFieldScale takes real scale returns nothing
-// 设置滤镜文本内容
+// 设置滤镜文本内容（从指定文件获取）
 native SetCineFilterTexture takes string filename returns nothing
 // 设置滤镜混合模式
 native SetCineFilterBlendMode takes blendmode whichMode returns nothing
@@ -7130,7 +7133,7 @@ constant native GetCameraTargetPositionY takes nothing returns real
 // 获取当前镜头目标的 Z 坐标
 constant native GetCameraTargetPositionZ takes nothing returns real
 // 获取当前镜头目标点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetCameraTargetPositionLoc takes nothing returns location
 // 获取当前镜头观察位置的 X 坐标
 constant native GetCameraEyePositionX takes nothing returns real
@@ -7139,7 +7142,7 @@ constant native GetCameraEyePositionY takes nothing returns real
 // 获取当前镜头观察位置的 Z 坐标
 constant native GetCameraEyePositionZ takes nothing returns real
 // 获取当前镜头的观察位置
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 constant native GetCameraEyePositionLoc takes nothing returns location
 
 
@@ -7573,7 +7576,7 @@ native BlzGetTriggerPlayerMouseX takes nothing returns real
 // 玩家鼠标触发位置 - Y 坐标
 native BlzGetTriggerPlayerMouseY takes nothing returns real
 // 玩家鼠标触发位置 - 点
-// 会生成点，用完请注意排泄
+// 会创建点，用完请注意排泄
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 玩家鼠标按键类型
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype
@@ -7633,7 +7636,7 @@ native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
 // 设置指定单位最大法力值
 native BlzSetUnitMaxMana takes unit whichUnit, integer mana returns nothing
-// 设置指定物品名字
+// 设置指定物品名称
 native BlzSetItemName takes item whichItem, string name returns nothing
 // 设置指定物品介绍
 native BlzSetItemDescription takes item whichItem, string description returns nothing
@@ -7651,7 +7654,7 @@ native BlzGetItemExtendedTooltip takes item whichItem returns string
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
 // 获取指定物品图标
 native BlzGetItemIconPath takes item whichItem returns string
-// 设置指定单位名称
+// 设置指定单位名字
 native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
@@ -7874,7 +7877,7 @@ native BlzFrameSetAllPoints takes framehandle frame, framehandle relative return
 native BlzFrameSetVisible takes framehandle frame, boolean visible returns nothing
 // 查询Frame是否可见
 native BlzFrameIsVisible takes framehandle frame returns boolean
-// 获取frame类型名称(指定名字)
+// 获取frame类型名称(指定名称)
 native BlzGetFrameByName takes string name, integer createContext returns framehandle
 // 获取Frame名称(指定Frame类型名)
 native BlzFrameGetName takes framehandle frame returns string

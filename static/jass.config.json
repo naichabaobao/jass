@@ -1127,7 +1127,7 @@
     "excludes": [""],
     "presets": ["技能命令串 采集(黄金和木材)(技能面板)"],
     "string": ["instant4"],
-    "excludes": [""]
+    "excludes": [""],
 
     
     //  补充单位/物品/技能/科技名
@@ -1353,7 +1353,2225 @@
     "excludes": [""],
     "presets": ["英雄技能 点金术(炼金术士)"],
     "string": ["TRANSMUTE"],
+    "excludes": [""],
+
+
+    //fdf (Frame 定义文件)/UI
+    // 1.32+原生UI/框架
+    // 源：https://www.hiveworkshop.com/threads/ui-reading-a-fdf.315850/
+
+
+    // FDF(框架定义)
+
+
+    "presets": ["FDF(框架定义) 字母模式"],
+    "string": ["AlphaMode"],
+    "excludes": [""],
+    // 例
+    // "ADD"  添加
+    // "ALPHAKEY"  字母键
+
+    "presets": ["FDF(框架定义) 锚点"],
+    "string": ["Anchor"],
+    "excludes": [""],
+    // 例
+    // BOTTOMLEFT, -0.256, 0  左下角
+    // BOTTOMRIGHT, 0, 0  右下角
+    // TOPLEFT, 0.0, -0.003  左上角
+    // TOPRIGHT, -0.0914, -0.003125  右上角
+
+    "presets": ["FDF(框架定义) 背景"],
+    "string": ["BackdropBackground"],
+    "excludes": [""],
+    // 例
+    // "EscMenuBackground"  Esc菜单背景
+    // "EscMenuBlankBackground"  Esc菜单空白背景
+    // "EscMenuEditBoxBackground"  Esc菜单输入框背景
+    // "MultiboardBackground"  多面板背景
+    // "MultiboardMinimizeButtonDisabled"  禁用多面板最小化按钮
+    // "EscMenuButtonBackground"  Esc菜单按钮背景
+    // "EscMenuButtonDisabledPushedBackground"  禁用Esc菜单按钮背景(按下时)
+    // "EscMenuCheckBoxPushedBackground"  Esc菜单复选框背景(按下时)
+    // "HeroAgilityIcon"  英雄敏捷图标
+    // "HeroIntelligenceIcon"  英雄智力图标
+    // "QuestDialogCompletedBackground"  任务完成对话框背景
+    // "UI\Widgets\BattleNet\bnet-inputbox-back.blp"  输入框按钮背景
+    // "UI\Widgets\BattleNet\bnet-mainmenu-clans-disabled.blp"  禁用战队主菜单
+
+    "presets": ["FDF(框架定义) 背景插入"],
+    "string": ["BackdropBackgroundInsets"],
+    "excludes": [""],
+    // 例
+    // 0.0 0.0 0.01 0.0
+    // 0.0 0.01 0.0 0.0
+    // 0.0025 0.0025 0.0025 0.0025
+    // 0.003 0.003 0.003 0.003
+
+    "presets": ["FDF(框架定义) 背景大小"],
+    "string": ["BackdropBackgroundSize"],
+    "excludes": [""],
+    // 例
+    // 0.128
+
+    "presets": ["FDF(框架定义) 背景混合"],
+    "string": ["BackdropBlendAll"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景底部文件"],
+    "string": ["BackdropBottomFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\HeavyBorderBottom.blp"  加粗底边
+    // "UI\Widgets\LightBorderBottom.blp"  高亮底边
+    // "UI\Widgets\ButtonCorners.blp"  按钮边框样式(怀疑是圆角方角)
+    // "UI\Widgets\LightBorderCorners.blp"  高亮边框
+
+    "presets": ["FDF(框架定义) 背景边框文件"],
+    "string": ["BackdropCornerFile"],
+    "excludes": [""],
+    // 例
+    // "BL|BR|B"
+    // "UL|UR|T"
+
+    "presets": ["FDF(框架定义) 背景边框标志"],
+    "string": ["BackdropCornerFlags"],
+    "excludes": [""],
+    // 例
+    // 0.0125,0.006,0.008,0.0155
+
+    "presets": ["FDF(框架定义) 背景边框尺寸"],
+    "string": ["BackdropCornerSize"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景边框文件"],
+    "string": ["BackdropEdgeFile"],
+    "excludes": [""],
+    // 例
+    // "EscMenuBorder"  ESC菜单边框
+    // "EscMenuEditBoxBorder"  ESC菜单输入框边框
+    // "EscMenuButtonBorder"  ESC菜单按钮边框
+    // "CinematicBorder"  电影边框
+    // "EscMenuButtonDisabledPushedBorder"  禁用Esc菜单按钮边框(按下时)
+    // "EscMenuButtonPushedBorder"  Esc菜单按钮边框(按下时)
+    // "UI\Glues\ScoreScreen\scorescreen-buttonbackground.blp"  得分屏按钮背景
+    // "UI\Widgets\BattleNet\bnet-dialoguebox-border.blp"  对话框边框
+    // "UI\widgets\BattleNet\bnet-tooltip-border.blp"  提示工具边框
+    // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+    // "UI\Widgets\Glues\GlueScreen-Button1-BackdropBorder-DisabledDown.blp"  黏合屏按钮1背景框(禁用按下)
+    // "UI\Widgets\Glues\GlueScreen-Button1-BorderedBackdropBorder-Disabled.blp"  黏合屏按钮1背景框(禁用)
+    // "UI\Widgets\Glues\GlueScreen-Button2-BackdropBorder-Disabled.blp"  黏合按钮2背景框(禁用)
+
+    "presets": ["FDF(框架定义) 背景半侧文件"],
+    "string": ["BackdropHalfSides"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景左侧文件"],
+    "string": ["BackdropLeftFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\ButtonLeft.blp"  左按钮
+
+    "presets": ["FDF(框架定义) 背景镜像"],
+    "string": ["BackdropMirrored"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景右侧文件"],
+    "string": ["BackdropRightFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\HeavyBorderRight.blp"  加粗右边框
+
+    "presets": ["FDF(框架定义) 背景平铺"],
+    "string": ["BackdropTileBackground"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 背景顶部文件"],
+    "string": ["BackdropTopFile"],
+    "excludes": [""],
+    // 例
+    // "UI\Widgets\ButtonTop.blp"  顶部按钮
+
+    "presets": ["FDF(框架定义) 背景艺术"],
+    "string": ["BackgroundArt"],
+    "excludes": [""],
+    // 例
+    // "UI\Glues\BattleNet\BattlenetLoginGlue\BattlenetLoginGlue.mdl"  战网登录
+    // "UI\Glues\BattleNet\BattleNetTeamLevelBar\BattleNetTeamLevelBar.mdl"  战网战队等级栏
+
+    "presets": ["FDF(框架定义) 栏纹理"],
+    "string": ["BarTexture"],
+    "excludes": [""],
+    // 例
+    // "SimpleBuildTimeIndicator"  简易建造时间指示器
+
+    "presets": ["FDF(框架定义) 按钮文本偏移(按下时)"],
+    "string": ["ButtonPushedTextOffset"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明)
+    // -0.0015f -0.0015f
+    // 0.001 -0.001
+
+    "presets": ["FDF(框架定义) 按钮文本"],
+    "string": ["ButtonText"],
+    "excludes": [""],
+    // 例
+    // "AddFriendButtonText"  添加好友按钮文本
+    // "AdvancedOptionsButtonText"  高级设置按钮文本
+
+    "presets": ["FDF(框架定义) 聊天框边框尺寸"],
+    "string": ["ChatDisplayBorderSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 聊天框输入框"],
+    "string": ["ChatDisplayEditBox"],
+    "excludes": [""],
+    // 例
+    // 变量类型为字符串,如 "BattleNetChatDisplayEditBoxTemplate"  战网聊天框输入框模板
+
+    "presets": ["FDF(框架定义) 聊天框高亮"],
+    "string": ["ChatDisplayLineHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 聊天框滚动条"],
+    "string": ["ChatDisplayScrollBar"],
+    "excludes": [""],
+    // 例
+    // 变量类型为字符串,如 "BattleNetChatDisplayScrollBarTemplate"  战网聊天框滚动条模板
+
+    "presets": ["FDF(框架定义) 复选框选中高亮"],
+    "string": ["CheckBoxCheckHighlight"],
+    "excludes": [""],
+    // 例
+    // "BattleNetRadioButtonHighlightTemplate"  战网单选按钮高亮模板
+    // "EscMenuRadioButtonHighlightTemplate"  菜单单选按钮高亮模板
+
+    "presets": ["FDF(框架定义) 禁用复选框选中高亮"],
+    "string": ["CheckBoxDisabledCheckHighlight"],
+    "excludes": [""],
+    // 例
+    // "BattleNetDisabledRadioButtonHighlightTemplate"  禁用战网单选按钮选中高亮模板
+    // "EscMenuDisabledCheckHighlightTemplate"  禁用菜单单选按钮选中高亮模板
+
+    "presets": ["FDF(框架定义) 选中纹理"],
+    "string": ["CheckedTexture"],
+    "excludes": [""],
+    // 例
+    // "ReplayCheckBoxCheck"  录像复选框选中
+
+    "presets": ["FDF(框架定义) 控制背景"],
+    "string": ["ControlBackdrop"],
+    "excludes": [""],
+    // 例
+    // "ActionMenuBackdrop"  活动菜单背景
+    // "AdvancedPopupMenuBackdrop"  高级弹出菜单背景
+
+    "presets": ["FDF(框架定义) 禁用控制背景"],
+    "string": ["ControlDisabledBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetCheckBoxDisabledBackdrop"  禁用战网复选框背景
+    // "BattleNetPopupMenuDisabledBackdropTemplate"  禁用战网弹出菜单背景
+
+    "presets": ["FDF(框架定义) 禁用控制背景(按下时)"],
+    "string": ["ControlDisabledPushedBackdrop"],
+    "excludes": [""],
+
+
+    "presets": ["FDF(框架定义) 控制焦点高亮"],
+    "string": ["ControlFocusHighlight"],
+    "excludes": [""],
+    // 例
+    // "CampaignCameraButtonFocusHighlightTemplate"  战役镜头按钮焦点高亮模板
+    // "IconicButtonFocusHighlightTemplate"  图标按钮焦点高亮模板
+
+
+    "presets": ["FDF(框架定义) 控制鼠标悬停高亮"],
+    "string": ["ControlMouseOverHighlight"],
+    "excludes": [""],
+    // 例
+    // "BorderedButtonMouseOverHighlightTemplate"  背景按钮鼠标悬停高亮模板
+    // "ButtonMouseOverHighlightTemplate"  按钮鼠标悬停高亮模板
+
+    "presets": ["FDF(框架定义) 控制背景(按下时)"],
+    "string": ["ControlPushedBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetRadioButtonPushedBackdrop"  战网单选按钮背景(按下时)
+    // "BorderedButtonPushedBackdropTemplate"  背景按钮背景模板(按下时)
+
+    "presets": ["FDF(框架定义) 控制快捷键"],
+    "string": ["ControlShortcutKey"],
+    "excludes": [""],
+    // 例
+    // "BNET_LADDER_SHORTCUT"
+    // "BNET_PASSWORD_RECOVERY_SHORTCUT"
+
+    "presets": ["FDF(框架定义) 控制尺寸"],
+    "string": ["ControlStyle"],
+    "excludes": [""],
+    // 例
+    // "AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER"  自动跟踪|焦点高亮|鼠标悬停高亮
+    // "AUTOTRACK|HIGHLIGHTONMOUSEOVER"  自动跟踪|鼠标悬停高亮
+    // "AUTOTRACK"  自动跟踪
+
+    "presets": ["FDF(框架定义) 装饰文件名称"],
+    "string": ["DecorateFileNames"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 对话框背景"],
+    "string": ["DialogBackdrop"],
+    "excludes": [""],
+    // 例
+    // "BattleNetDialogBackdropTemplate"  战网对话框背景模板
+    // "CustomFilterDialogBackdrop"  自定义对话框背景
+
+    "presets": ["FDF(框架定义) 禁用状态提示"],
+    "string": ["DisabledText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonDisabledTextTemplate" "ALLIES"  左上方默认按纽栏按钮禁用状态提示模板-盟友
+    // "UpperButtonBarButtonDisabledTextTemplate" "CHAT"  左上方默认按纽栏按钮禁用状态提示模板-聊天
+
+    "presets": ["FDF(框架定义) 禁用状态纹理"],
+    "string": ["DisabledTexture"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonDisabledBackground"  左上方默认按纽栏按钮禁用状态背景
+
+    "presets": ["FDF(框架定义) 输入框尺寸"],
+    "string": ["EditBorderSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.009
+
+    "presets": ["FDF(框架定义) 输入框光标颜色"],
+    "string": ["EditCursorColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色实数组,如 1.0 1.0 1.0
+
+    "presets": ["FDF(框架定义) 输入框文本控件"],
+    "string": ["EditTextFrame"],
+    "excludes": [""],
+    // 例
+    // "AccountNameEditBoxText"  账户名输入框文本
+
+    "presets": ["FDF(框架定义) 文件"],
+    "string": ["File"],
+    "excludes": [""],
+    // 例
+    // "ConsoleTexture01"  控制台纹理
+    // "ConsoleTexture03"  控制台纹理
+    // "ConsoleTexture04"  控制台纹理
+    // "ConsoleTexture05"  控制台纹理
+    // "ConsoleTexture06"  控制台纹理
+    // "GoldIcon"  金矿图标
+    // "HeroStrengthIcon"  英雄力量图标
+    // "LumberIcon"  木材图标
+    // "SimpleBuildTimeIndicatorBorder"  简易建造时间指示器
+
+    "presets": ["FDF(框架定义) 字体(似乎包含字号)"],
+    "string": ["Font"],
+    "excludes": [""],
+    // 例
+    // "InfoPanelTextFont", 0.0085  信息面板字体
+    // "InfoPanelTextFont",0.01  信息面板字体
+    // "MasterFont",0.008  大师字体
+    // "MasterFont",0.01  大师字体
+
+    "presets": ["FDF(框架定义) 字体颜色"],
+    "string": ["FontColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+
+    "presets": ["FDF(框架定义) 字体禁用状态颜色"],
+    "string": ["FontDisabledColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.5 0.5 0.5 1.0
+
+    "presets": ["FDF(框架定义) 字体标识(限制输入字符数或文本类型)"],
+    "string": ["FontFlags"],
+    "excludes": [""],
+    // 例
+    // "FIXEDSIZE"  固定长度
+    // "PASSWORDFIELD"  密码类型(输入任意字符都显示成 **)
+
+    "presets": ["FDF(框架定义) 字体高亮颜色"],
+    "string": ["FontHighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 1.0 1.0 1.0 1.0
+
+    "presets": ["FDF(框架定义) 字体(两端)对齐"],
+    "string": ["FontJustificationH"],
+    "excludes": [""],
+    // 例
+    // JUSTIFYCENTER  居中对齐
+    // JUSTIFYLEFT  左对齐
+    // JUSTIFYRIGHT  右对齐
+
+    "presets": ["FDF(框架定义) 字体两端边距"],
+    "string": ["FontJustificationOffset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为左右两端边距实数组,如
+    // 0.0 -0.001
+    // 0.0 -0.002
+    // 0.0 0.0
+    // 0.01 0.0
+    // 0.01 0.001
+
+    "presets": ["FDF(框架定义) 字体(垂直)对齐"],
+    "string": ["FontJustificationV"],
+    "excludes": [""],
+    // 例
+    // JUSTIFYTOP  顶部对齐
+    // JUSTIFYMIDDLE  中部对齐
+    // JUSTIFYBOTTOM  底部对齐
+
+    "presets": ["FDF(框架定义) 字体阴影颜色"],
+    "string": ["FontShadowColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.0 0.0 0.0 0.9
+
+    "presets": ["FDF(框架定义) 字体阴影偏移"],
+    "string": ["FontShadowOffset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为 X Y 双向偏移量实数组,如 0.001 -0.001
+
+    "presets": ["FDF(框架定义) 控件"],
+    "string": ["Frame"],
+    "excludes": [""],
+    // 例
+    // "GLUEBUTTON"  黏合按钮
+    // "HeroSelectorButton"  英雄选择按钮
+
+    "presets": ["FDF(框架定义) 控件字体(似乎包含字号)"],
+    "string": ["FrameFont"],
+    "excludes": [""],
+    // 例
+    // "EscMenuTextFont", 0.011, ""  ESC菜单文本字体
+    // "InfoPanelTextFont", 0.011, "",  信息面板字体
+    // "InfoPanelTextFont", 0.013, "",  信息面板字体
+    // "MasterFont", 0.007, "",  大师字体
+    // "MasterFont", 0.01, "",  大师字体
+    // "MasterFont", 0.011, "",  大师字体
+    // "MasterFont", 0.01171, "",  大师字体
+
+    "presets": ["FDF(框架定义) 高度"],
+    "string": ["Height"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明),如 0.024,0.48f
+
+    "presets": ["FDF(框架定义) 高亮字母文件"],
+    "string": ["HighlightAlphaFile"],
+    "excludes": [""],
+    // 例
+    // "EscMenuButtonMouseOverHighlight"  ESC菜单按钮鼠标悬停高亮
+    // "EscMenuCheckBoxCheckHighlight"  ESC菜单复选框选中高亮
+    // "EscMenuDisabledRadioButtonSelectedHighlight"  禁用ESC菜单单选按钮选中高亮
+    // "UI\Glues\ScoreScreen\scorescreen-tab-hilight.blp"  得分屏选项卡高亮
+    // "UI\Widgets\Glues\GlueScreen-Button-KeyboardHighlight.blp"  得分屏按钮按键高亮
+    // "UI\Widgets\Glues\GlueScreen-Checkbox-Check.blp"  得分屏检查栏选中
+    // "UI\Widgets\Glues\GlueScreen-Checkbox-CheckDisabled.blp"  禁用得分屏检查栏选中
+    // "UI\Widgets\Glues\GlueScreen-RadioButton-ButtonDisabled.blp"  禁用得分屏单选按钮
+
+    "presets": ["FDF(框架定义) 高亮字母模式"],
+    "string": ["HighlightAlphaMode"],
+    "excludes": [""],
+    // 例
+    // "ADD"  添加
+    // "BLEND"  混合
+
+    "presets": ["FDF(框架定义) 高亮颜色"],
+    "string": ["HighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如
+    // 0.0 0.0 1.0 0.1
+    // 1.0 0.0 0.0 0.2
+
+    "presets": ["FDF(框架定义) 高亮文本"],
+    "string": ["HighlightText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonHighlightTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮高亮文本提示模板-关键词 盟友
+    // "UpperButtonBarButtonHighlightTextTemplate" "KEY_CHAT"  左上方默认按纽栏按钮高亮文本提示模板-关键词 聊天
+
+    "presets": ["FDF(框架定义) 高亮类型"],
+    "string": ["HighlightType"],
+    "excludes": [""],
+    // 例
+    // "FILETEXTURE"  文件纹理
+    // "SHADE"  遮罩
+
+    "presets": ["FDF(框架定义) 包含文件"],
+    "string": ["IncludeFile"],
+    "excludes": [""],
+    // 例
+    // "UI\FrameDef\UI\InfoPanelTemplates.fdf"  信息面板模板文件
+
+    "presets": ["FDF(框架定义) 层级(图层)"],
+    "string": ["Layer"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 层级样式(图层样式)"],
+    "string": ["LayerStyle"],
+    "excludes": [""],
+    // 例
+    // "NOSHADING"  无遮蔽
+    // "IGNORETRACKEVENTS"  忽略可追溯事件
+    // "NOSHADING|IGNORETRACKEVENTS"  无遮蔽|忽略可追溯事件
+
+    "presets": ["FDF(框架定义) 列表边框"],
+    "string": ["ListBoxBorder"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01
+
+    "presets": ["FDF(框架定义) 列表滚动条边框"],
+    "string": ["ListBoxScrollBar"],
+    "excludes": [""],
+    // 例
+    // "StandardListBoxScrollBarTemplate"  标准列表滚动条模板
+
+    "presets": ["FDF(框架定义) 菜单边框"],
+    "string": ["MenuBorder"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.009
+
+    "presets": ["FDF(框架定义) 菜单项目"],
+    "string": ["MenuItem"],
+    "excludes": [""],
+    // 例
+    // "NORMAL", -2  普通(-2)
+    // "WINDOW_MODE_WINDOWED", -2  跟随系统(-2)
+
+    "presets": ["FDF(框架定义) 菜单项目高度"],
+    "string": ["MenuItemHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.0082, 0.011
+
+    "presets": ["FDF(框架定义) 菜单文本高亮颜色"],
+    "string": ["MenuTextHighlightColor"],
+    "excludes": [""],
+    // 例
+    // 变量类型为红绿蓝三色+透明度实数组,如 0.99 0.827 0.0705 1.0
+
+    "presets": ["FDF(框架定义) 普通文本"],
+    "string": ["NormalText"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonTextTemplate" "KEY_ALLIES"  左上方默认按纽栏按钮文本模板-关键词 盟友
+    // "UpperButtonBarButtonTextTemplate" "KEY_MENU"  左上方默认按纽栏按钮文本模板-关键词 菜单
+
+    "presets": ["FDF(框架定义) 普通纹理"],
+    "string": ["NormalTexture"],
+    "excludes": [""],
+    // 例
+    // "ReplayCheckBoxNormal"  普通录像复选框
+
+    "presets": ["FDF(框架定义) 弹出指示符"],
+    "string": ["PopupArrowFrame"],
+    "excludes": [""],
+    // 例
+    // "CampaignPopupMenuArrow"  战役弹出菜单指示符
+    // "CustomPopupMenuArrow"  自定义弹出菜单指示符
+
+    "presets": ["FDF(框架定义) 弹出按钮插入"],
+    "string": ["PopupButtonInset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.01, 0.015
+
+    "presets": ["FDF(框架定义) 弹出按钮"],
+    "string": ["PopupMenuFrame"],
+    "excludes": [""],
+    // 例
+    // "TeamMemberRaceMenuMenu3"  队伍成员种族菜单
+    // "TextureQualityPopupMenuMenu"  纹理材质弹出菜单
+
+    "presets": ["FDF(框架定义) 弹出(菜单)标题"],
+    "string": ["PopupTitleFrame"],
+    "excludes": [""],
+    // 例
+    // "EscOptionsLightsPopupMenuTitle"  ESC设置弹出菜单常亮标题
+    // "PopupMenuTitle"  弹出菜单标题
+    // "ReplayVisionMenuTitle"  录像查看菜单标题
+    // "TeamMemberPopupMenuTitle"  队伍成员弹出菜单标题
+
+    "presets": ["FDF(框架定义) 纹理(按下时)"],
+    "string": ["PushedTexture"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonPushedBackground"  顶部菜单按钮背景(按下时)
+
+    "presets": ["FDF(框架定义) 滚动条下滚动按钮"],
+
+    "string": ["ScrollBarDecButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "EscMenuScrollBarDecButton"  滚动条下滚动按钮
+
+    "presets": ["FDF(框架定义) 滚动条上滚动按钮"],
+    "string": ["ScrollBarIncButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "EscMenuScrollBarIncButton"  滚动条上滚动按钮
+
+    "presets": ["FDF(框架定义) 设置所有锚点"],
+    "string": ["SetAllPoints"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 设置锚点"],
+    "string": ["SetPoint"],
+    "excludes": [""],
+    // 例
+    // 几种变量组合，如
+    // BOTTOM, "BuildTimeIndicator", TOP, 0.0, 0.00325  建造时间指示器
+    // BOTTOM, "ChatDialog", BOTTOM, 0.0, 0.03  聊天对话框
+    // BOTTOMLEFT, "AllyHeader", BOTTOMRIGHT, 0.004, 0.0  表头
+    // BOTTOMLEFT, "BattleNetChatPanel", BOTTOMLEFT, 0.01125, 0.02125  战网聊天面板
+    // BOTTOMRIGHT, "QuestListItem", BOTTOMRIGHT, -0.003, 0  任务列表项目
+    // BOTTOMRIGHT, "AllianceDialog", BOTTOM, -0.003, 0.03  盟友对话框
+    // CENTER, "GameSaveSplashDialog", CENTER, 0.0, 0.0  游戏保存启动画面对话框
+    // CENTER, "IconBackdrop4", BOTTOMRIGHT, -0.007625, 0.006875  图标背景
+    // LEFT, "AllianceAcceptButton", RIGHT, 0.005, 0.0  盟友接受按钮
+    // LEFT, "AlliedVictoryCheckBox", RIGHT, 0.01, 0.0  联盟胜利复选框
+    // RIGHT, "ChannelEnterButton", LEFT, -0.02, 0.0  绑定端口按钮
+    // RIGHT, "ChatDialog", TOPRIGHT, -0.031, -0.0765  聊天对话框
+    // TOP, "AnonSearchTitle", BOTTOM, 0.0, -0.005  立即搜索标题
+    // TOP, "AuthorLabel", BOTTOM, 0.0, -0.004  作者商标
+    // TOPLEFT, "LeaderboardTitle", BOTTOMLEFT, -0.02f, -0.002  排行榜标题
+    // TOPLEFT,"WindowModeBackdrop",BOTTOMLEFT, 0.0, 0.01375  跟随系统模式背景
+    // TOPRIGHT, "AdvancedOptionsPane", TOPRIGHT, -0.004, -0.03  高级设置框
+
+
+    "presets": ["FDF(框架定义) 滑块初始值"],
+    "string": ["SliderInitialValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0, 1
+
+    "presets": ["FDF(框架定义) 轮播图水平布局"],
+    "string": ["SliderLayoutHorizontal"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 轮播图垂直布局"],
+    "string": ["SliderLayoutVertical"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 滑块最大值"],
+    "string": ["SliderMaxValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 2, 4
+
+    "presets": ["FDF(框架定义) 滑块最小值"],
+    "string": ["SliderMinValue"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0
+
+    "presets": ["FDF(框架定义) 滑块滑动距离(格数)"],
+    "string": ["SliderStepSize"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 1
+
+    "presets": ["FDF(框架定义) 滑块拇指按钮"],
+    "string": ["SliderThumbButtonFrame"],
+    "excludes": [""],
+    // 例
+    // "BattleNetThumbButton"  战网滑块拇指按钮
+    // "EscMenuScrollThumbButton"  ESC菜单滑块拇指按钮
+    // "StandardThumbButton"  标准滑块拇指按钮
+
+    "presets": ["FDF(框架定义) 字串符"],
+    "string": ["String"],
+    "excludes": [""],
+    // 例
+    // "UpperButtonBarButtonTextTemplate"  弹出按钮栏按钮文本模板
+
+    "presets": ["FDF(框架定义) 字串符列表"],
+    "string": ["StringList"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 选项卡焦点(默认值)"],
+    "string": ["TabFocusDefault"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 选项卡焦点-下一个"],
+    "string": ["TabFocusNext"],
+    "excludes": [""],
+    // 例
+    // "AddProfileButton"  添加配置文件按钮
+    // "BackButton"  返回按钮
+
+    "presets": ["FDF(框架定义) 选项卡焦点-推送"],
+    "string": ["TabFocusPush"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 贴图坐标"],
+    "string": ["TexCoord"],
+    "excludes": [""],
+    // 例
+    // 0, 0.33984375, 0, 0.125
+    // 0, 1, 0.4140625, 1
+    // 0.0, 0.6640625, 0.25, 0.421875
+    // 0.0, 0.6640625, 0.75, 0.921875
+
+    "presets": ["FDF(框架定义) 文本"],
+    "string": ["Text"],
+    "excludes": [""],
+    // 例
+    // "30"
+
+    "presets": ["FDF(框架定义) 文本区域插入"],
+    "string": ["TextAreaInset"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.005, 0.0
+
+    "presets": ["FDF(框架定义) 文本区域行间距"],
+    "string": ["TextAreaLineGap"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.001, 0.0015
+
+    "presets": ["FDF(框架定义) 文本区域行高度"],
+    "string": ["TextAreaLineHeight"],
+    "excludes": [""],
+    // 例
+    // 变量类型为实数,如 0.011, 0.015
+
+    "presets": ["FDF(框架定义) 文本区域最大行数"],
+    "string": ["TextAreaMaxLines"],
+    "excludes": [""],
+    // 例
+    // 变量类型为整数,如 128, 32
+
+    "presets": ["FDF(框架定义) 文本区域滚动条"],
+    "string": ["TextAreaScrollBar"],
+    "excludes": [""],
+    // 例
+    // "ChatScrollBar"  聊天滚动条
+
+    "presets": ["FDF(框架定义)文本长度"],
+    "string": ["TextLength"],
+    "excludes": [""],
+    // 例
+    // 变量类型为整数,如 8
+
+    "presets": ["FDF(框架定义) 纹理 - 继承于父类 ResourceIconTemplate 资源图标模板"],
+    "string": ["Texture"],
+    "excludes": [""],
+    // 例
+    // "InfoPanelIconAllyFoodIcon"  信息面板图标-盟友人口图标
+
+    "presets": ["FDF(框架定义) 使用活动上下文"],
+    "string": ["UseActiveContext"],
+    "excludes": [""],
+
+    "presets": ["FDF(框架定义) 高亮显示"],
+    "string": ["UseHighlight"],
+    "excludes": [""],
+    // 例
+    // "UpperMenuButtonHighlight"  弹出菜单按钮高亮显示
+
+    "presets": ["FDF(框架定义) 宽度"],
+    "string": ["Width"],
+    "excludes": [""],
+    // 例
+    // 支持变量实数和带f的实数(f意义不明),如 0.24, 0.417f
+
+
+    
+    // 框架类型
+
+
+    "excludes": [""],
+    "presets": ["框架类型 背景"],
+    "string": ["BACKDROP"],
+    "excludes": [""],
+    "presets": ["框架类型 按钮"],
+    "string": ["BUTTON"],
+    "excludes": [""],
+    "presets": ["框架类型 聊天显示框"],
+    "string": ["CHATDISPLAY"],
+    "excludes": [""],
+    "presets": ["框架类型 复选框"],
+    "string": ["CHECKBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 控制"],
+    "string": ["CONTROL"],
+    "excludes": [""],
+    "presets": ["框架类型 对话框"],
+    "string": ["DIALOG"],
+    "excludes": [""],
+    "presets": ["框架类型 输入框"],
+    "string": ["EDITBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 框架"],
+    "string": ["FRAME"],
+    "excludes": [""],
+    "presets": ["框架类型 黏合按钮"],
+    "string": ["GLUEBUTTON"],
+    "excludes": [""],
+    "presets": ["框架类型 黏合复选框"],
+    "string": ["GLUECHECKBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 黏合输入框"],
+    "string": ["GLUEEDITBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 黏合弹出菜单"],
+    "string": ["GLUEPOPUPMENU"],
+    "excludes": [""],
+    "presets": ["框架类型 黏合文本按钮"],
+    "string": ["GLUETEXTBUTTON"],
+    "excludes": [""],
+    "presets": ["框架类型 高亮显示"],
+    "string": ["HIGHLIGHT"],
+    "excludes": [""],
+    "presets": ["框架类型 列表框"],
+    "string": ["LISTBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 菜单"],
+    "string": ["MENU"],
+    "excludes": [""],
+    "presets": ["框架类型 模型"],
+    "string": ["MODEL"],
+    "excludes": [""],
+    "presets": ["框架类型 弹出菜单"],
+    "string": ["POPUPMENU"],
+    "excludes": [""],
+    "presets": ["框架类型 滚动条"],
+    "string": ["SCROLLBAR"],
+    "excludes": [""],
+    "presets": ["框架类型 简易按钮"],
+    "string": ["SIMPLEBUTTON"],
+    "excludes": [""],
+    "presets": ["框架类型 简易复选框"],
+    "string": ["SIMPLECHECKBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 简易框架"],
+    "string": ["SIMPLEFRAME"],
+    "excludes": [""],
+    "presets": ["框架类型 简易状态栏"],
+    "string": ["SIMPLESTATUSBAR"],
+    "excludes": [""],
+    "presets": ["框架类型 聊天框"],
+    "string": ["SLASHCHATBOX"],
+    "excludes": [""],
+    "presets": ["框架类型 滑块"],
+    "string": ["SLIDER"],
+    "excludes": [""],
+    "presets": ["框架类型 精灵图"],
+    "string": ["SPRITE"],
+    "excludes": [""],
+    "presets": ["框架类型 文本"],
+    "string": ["TEXT"],
+    "excludes": [""],
+    "presets": ["框架类型 文本区域"],
+    "string": ["TEXTAREA"],
+    "excludes": [""],
+    "presets": ["框架类型 文本按钮"],
+    "string": ["TEXTBUTTON"],
+    "excludes": [""],
+    "presets": ["框架类型 限时文本"],
+    "string": ["TIMERTEXT"],
+    "excludes": [""],
+
+    
+
+    // 电影滤镜纹理
+
+
+    "presets": ["电影滤镜纹理 白色迷雾 - blp文件，需文件名带后缀"],
+    "string": ["White_mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 黑色迷雾 - blp文件，需文件名带后缀"],
+    "string": ["Black_mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 薄雾滤镜 - blp文件，需文件名带后缀"],
+    "string": ["HazeFilter_mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 地面迷雾 - blp文件，需文件名带后缀"],
+    "string": ["GroundFog_mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 薄雾和迷雾 - blp文件，需文件名带后缀"],
+    "string": ["HazeAndFogFilter_Mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 对角线消减 - blp文件，需文件名带后缀"],
+    "string": ["DiagonalSlash_mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 梦境(边框模糊) - blp文件，需文件名带后缀"],
+    "string": ["DreamFilter_Mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 冰 - blp文件，需文件名带后缀"],
+    "string": ["IceFilter_Mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 范围 - blp文件，需文件名带后缀"],
+    "string": ["Scope_Mask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 兵!(字图) - blp文件，需文件名带后缀"],
+    "string": ["SpecialPowMask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 溅泼声!(字图) - blp文件，需文件名带后缀"],
+    "string": ["SpecialSplatMask.blp"],
+    "excludes": [""],
+    "presets": ["电影滤镜纹理 幼年熊猫!(字图) - blp文件，需文件名带后缀"],
+    "string": ["Panda-n-Cub.blp"],
+    "excludes": [""],
+
+    
+    // 天气特效类型
+
+
+    "presets": ["天气特效类型 白杨谷大雨"],
+    "string": ["RAhr"],
+    "excludes":[""],
+    "presets": ["天气特效类型 白杨谷小雨"],
+    "string": ["RAlr"],
+    "excludes":[""],
+    "presets": ["天气特效类型 达拉然之盾"],
+    "string": ["MEds"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 蓝雾(厚)"],
+    "string": ["FDbh"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 蓝雾(薄)"],
+    "string": ["FDbl"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 绿雾(厚)"],
+    "string": ["FDgh"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 绿雾(薄)"],
+    "string": ["FDgl"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 红雾(厚)"],
+    "string": ["FDrh"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 红雾(薄)"],
+    "string": ["FDrl"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 白雾(厚)"],
+    "string": ["FDwh"],
+    "excludes":[""],
+    "presets": ["天气特效类型 地下城/地牢 白雾(薄)"],
+    "string": ["FDwl"],
+    "excludes":[""],
+    "presets": ["天气特效类型 洛丹伦大雨"],
+    "string": ["RLhr"],
+    "excludes":[""],
+    "presets": ["天气特效类型 洛丹伦小雨"],
+    "string": ["RLlr"],
+    "excludes":[""],
+    "presets": ["天气特效类型 诺森德的暴风雪"],
+    "string": ["SNbs"],
+    "excludes":[""],
+    "presets": ["天气特效类型 诺森德大雪"],
+    "string": ["SNhs"],
+    "excludes":[""],
+    "presets": ["天气特效类型 诺森德小雪"],
+    "string": ["SNls"],
+    "excludes":[""],
+    "presets": ["天气特效类型 边缘之地大风"],
+    "string": ["WOcw"],
+    "excludes":[""],
+    "presets": ["天气特效类型 边缘之地的风"],
+    "string": ["WOlw"],
+    "excludes":[""],
+    "presets": ["天气特效类型 日光"],
+    "string": ["LRaa"],
+    "excludes":[""],
+    "presets": ["天气特效类型 月光"],
+    "string": ["LRma"],
+    "excludes":[""],
+    "presets": ["天气特效类型 大风"],
+    "string": ["WNcw"],
+    "excludes":[""],
+    
+
+    // 闪电类型
+
+
+    "presets": ["闪电类型 闪电链 - 主"],
+    "string": ["CLPB"],
+    "excludes": [""],
+    "presets": ["闪电类型 闪电链 - 次"],
+    "string": ["CLSB"],
+    "excludes": [""],
+    "presets": ["闪电类型 汲取"],
+    "string": ["DRAB"],
+    "excludes": [""],
+    "presets": ["闪电类型 生命汲取"],
+    "string": ["DRAL"],
+    "excludes": [""],
+    "presets": ["闪电类型 魔法汲取"],
+    "string": ["DRAM"],
+    "excludes": [""],
+    "presets": ["闪电类型 死亡之指"],
+    "string": ["AFOD"],
+    "excludes": [""],
+    "presets": ["闪电类型 叉状闪电"],
+    "string": ["FORK"],
+    "excludes": [""],
+    "presets": ["闪电类型 医疗波 - 主"],
+    "string": ["HWPB"],
+    "excludes": [""],
+    "presets": ["闪电类型 医疗波 - 次"],
+    "string": ["HWSB"],
+    "excludes": [""],
+    "presets": ["闪电类型 闪电攻击"],
+    "string": ["CHIM"],
+    "excludes": [""],
+    "presets": ["闪电类型 魔法镣铐"],
+    "string": ["LEAS"],
+    "excludes": [""],
+    "presets": ["闪电类型 法力燃烧"],
+    "string": ["MBUR"],
+    "excludes": [""],
+    "presets": ["闪电类型 魔力之焰"],
+    "string": ["MFPB"],
+    "excludes": [""],
+    "presets": ["闪电类型 灵魂锁链"],
+    "string": ["SPLK"],
+    "excludes": [""],
+
+
+    // 地形设置
+
+
+    "presets": ["地形设置 洛丹伦(夏)"],
+    "string": ["LORDAERON_SUMMER"],
+    "excludes": [""],
+    "presets": ["地形设置 洛丹伦(秋)"],
+    "string": ["LORDAERON_FALL"],
+    "excludes": [""],
+    "presets": ["地形设置 洛丹伦(冬)"],
+    "string": ["LORDAERON_WINTER"],
+    "excludes": [""],
+    "presets": ["地形设置 贫瘠之地"],
+    "string": ["BARRENS"],
+    "excludes": [""],
+    "presets": ["地形设置 白杨谷"],
+    "string": ["ASHENVALE"],
+    "excludes": [""],
+    "presets": ["地形设置 费尔伍德"],
+    "string": ["FELWOOD"],
+    "excludes": [""],
+    "presets": ["地形设置 诺森德"],
+    "string": ["NORTHREND"],
+    "excludes": [""],
+    "presets": ["地形设置 城邦"],
+    "string": ["CITYSCAPE"],
+    "excludes": [""],
+    "presets": ["地形设置 村庄"],
+    "string": ["VILLAGE"],
+    "excludes": [""],
+    "presets": ["地形设置 村庄(秋)"],
+    "string": ["VILLAGEFALL"],
+    "excludes": [""],
+    "presets": ["地形设置 地下城/地牢"],
+    "string": ["DUNGEON"],
+    "excludes": [""],
+    "presets": ["地形设置 地底"],
+    "string": ["DUNGEON2"],
+    "excludes": [""],
+    "presets": ["地形设置 达拉然"],
+    "string": ["DALARAN"],
+    "excludes": [""],
+    "presets": ["地形设置 达拉然遗迹"],
+    "string": ["DALARANRUINS"],
+    "excludes": [""],
+    "presets": ["地形设置 沉沦的遗迹"],
+    "string": ["RUINS"],
+    "excludes": [""],
+    "presets": ["地形设置 冰封王座"],
+    "string": ["ICECROWN"],
+    "excludes": [""],
+    "presets": ["地形设置 边缘之地"],
+    "string": ["OUTLAND"],
+    "excludes": [""],
+    "presets": ["地形设置 黑色城堡"],
+    "string": ["BLACKCITADEL"],
+    "excludes": [""],
+    "presets": ["地形设置 所有"],
+    "string": ["ALL"],
+    "excludes": [""],
+
+
+    // 地表纹理
+
+
+    "presets": ["地表纹理 洛丹伦(夏) - 泥地"],
+    "string": ["Ldrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 烂泥地"],
+    "string": ["Ldro"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 泥草地"],
+    "string": ["Ldrg"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 岩石"],
+    "string": ["Lrok"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 草地"],
+    "string": ["Lgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 黑暗草地"],
+    "string": ["Lgrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 泥地"],
+    "string": ["Fdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 烂泥地"],
+    "string": ["Fdro"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 泥草地"],
+    "string": ["Fdrg"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 岩石"],
+    "string": ["Frok"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 草地"],
+    "string": ["Fgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 黑暗草地"],
+    "string": ["Fgrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 泥地"],
+    "string": ["Wdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 烂泥地"],
+    "string": ["Wdro"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 雪草地"],
+    "string": ["Wsng"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 岩石"],
+    "string": ["Wrok"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 草地"],
+    "string": ["Wgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 雪地"],
+    "string": ["Wsnw"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 泥地"],
+    "string": ["Bdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 烂泥地"],
+    "string": ["Bdrh"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 鹅卵石"],
+    "string": ["Bdrr"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 泥草地"],
+    "string": ["Bdrg"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 沙漠"],
+    "string": ["Bdsr"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 黑暗沙漠"],
+    "string": ["Bdsd"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 岩石"],
+    "string": ["Bflr"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 草地"],
+    "string": ["Bgrr"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 泥地"],
+    "string": ["Adrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 烂泥地"],
+    "string": ["Adrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 草地"],
+    "string": ["Agrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 岩石"],
+    "string": ["Arck"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 长草"],
+    "string": ["Agrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 藤蔓"],
+    "string": ["Avin"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 泥草地"],
+    "string": ["Adrg"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 树叶"],
+    "string": ["Alvd"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 泥地"],
+    "string": ["Cdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 烂泥地"],
+    "string": ["Cdrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 毒沼"],
+    "string": ["Cpos"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 岩石"],
+    "string": ["Crck"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 藤蔓"],
+    "string": ["Cvin"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 草地"],
+    "string": ["Cgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 树叶"],
+    "string": ["Clvg"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 泥地"],
+    "string": ["Ndrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 暗黑泥地"],
+    "string": ["Ndrd"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 岩石"],
+    "string": ["Nrck"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 草地"],
+    "string": ["Ngrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 冰"],
+    "string": ["Nice"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 雪地"],
+    "string": ["Nsnw"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德 - 雪岩地"],
+    "string": ["Nsnr"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 泥地"],
+    "string": ["Ydrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 烂泥地"],
+    "string": ["Ydtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 黑大理石"],
+    "string": ["Yblm"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 砖"],
+    "string": ["Ybtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 方形地砖"],
+    "string": ["Ysqd"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 圆形地砖"],
+    "string": ["Yrtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 草地"],
+    "string": ["Ygsb"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 修剪的草地"],
+    "string": ["Yhdg"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 白大理石"],
+    "string": ["Ywmb"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 泥地"],
+    "string": ["Vdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 烂泥地"],
+    "string": ["Vdrr"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 庄稼"],
+    "string": ["Vcrp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 卵石路"],
+    "string": ["Vcbp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 碎石路"],
+    "string": ["Vstp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 矮草"],
+    "string": ["Vgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 岩石"],
+    "string": ["Vrck"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 长草"],
+    "string": ["Vgrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 泥地"],
+    "string": ["Qdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 烂泥地"],
+    "string": ["Qdrr"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 庄稼"],
+    "string": ["Qcrp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 卵石路"],
+    "string": ["Qcbp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 碎石路"],
+    "string": ["Qstp"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 矮草"],
+    "string": ["Qgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 岩石"],
+    "string": ["Qrck"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 长草"],
+    "string": ["Qgrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 泥地"],
+    "string": ["Xdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 烂泥地"],
+    "string": ["Xdtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 黑大理石"],
+    "string": ["Xblm"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 砖块"],
+    "string": ["Xbtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 方形地砖"],
+    "string": ["Xsqd"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 圆形地砖"],
+    "string": ["Xrtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 草地"],
+    "string": ["Xgsb"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 修剪的草地"],
+    "string": ["Xhdg"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 白大理石"],
+    "string": ["Xwmb"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 泥地"],
+    "string": ["Ddrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 砖"],
+    "string": ["Dbrk"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 红色石头"],
+    "string": ["Drds"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 熔岩裂缝"],
+    "string": ["Dlvc"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 熔岩"],
+    "string": ["Dlav"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 黑暗岩石"],
+    "string": ["Ddkr"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 灰色石头"],
+    "string": ["Dgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城/地牢 - 方形地砖"],
+    "string": ["Dsqd"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 泥地"],
+    "string": ["Gdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 砖"],
+    "string": ["Gbrk"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 红色石头"],
+    "string": ["Grds"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 熔岩裂缝"],
+    "string": ["Glvc"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 熔岩"],
+    "string": ["Glav"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 黑暗岩石"],
+    "string": ["Gdkr"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 灰色石头"],
+    "string": ["Ggrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 方形地砖"],
+    "string": ["Gsqd"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 泥地"],
+    "string": ["Zdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 烂泥地"],
+    "string": ["Zdtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 泥草地"],
+    "string": ["Zdrg"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 碎砖"],
+    "string": ["Zbks"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 沙地"],
+    "string": ["Zsan"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 大砖块"],
+    "string": ["Zbkl"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 圆形地砖"],
+    "string": ["Ztil"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 草地"],
+    "string": ["Zgrs"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 黑暗草地"],
+    "string": ["Zvin"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 泥地"],
+    "string": ["Idrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 烂泥地"],
+    "string": ["Idtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 黑暗冰"],
+    "string": ["Idki"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 黑砖块"],
+    "string": ["Ibkb"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 刻字砖块"],
+    "string": ["Irbk"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 砖铺"],
+    "string": ["Itbk"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 冰"],
+    "string": ["Iice"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 黑方块"],
+    "string": ["Ibsq"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 雪地"],
+    "string": ["Isnw"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 泥地"],
+    "string": ["Odrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 轻泥地"],
+    "string": ["Odtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 烂泥地"],
+    "string": ["Osmb"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 干裂土地"],
+    "string": ["Ofst"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 平石头"],
+    "string": ["Olgb"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 岩石"],
+    "string": ["Orok"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 轻石头"],
+    "string": ["Ofsl"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地 - 深谷"],
+    "string": ["Oaby"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 泥地"],
+    "string": ["Kdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 轻泥地"],
+    "string": ["Kfsl"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 烂泥地"],
+    "string": ["Kdtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 平石头"],
+    "string": ["Kfst"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 碎砖"],
+    "string": ["Ksmb"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 大砖块"],
+    "string": ["Klgb"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 方形地砖"],
+    "string": ["Ksqt"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 黑砖块"],
+    "string": ["Kdkt"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 泥地"],
+    "string": ["Jdrt"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 烂泥地"],
+    "string": ["Jdtr"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 黑大理石"],
+    "string": ["Jblm"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 砖块"],
+    "string": ["Jbtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 方形地砖"],
+    "string": ["Jsqd"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 圆形地砖"],
+    "string": ["Jrtl"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 草地"],
+    "string": ["Jgsb"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 修剪的草地"],
+    "string": ["Jhdg"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 白大理石"],
+    "string": ["Jwmb"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 泥土悬崖"],
+    "string": ["cAc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 白杨谷 - 草地悬崖"],
+    "string": ["cAc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 沙地悬崖"],
+    "string": ["cBc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 贫瘠之地 - 草地悬崖"],
+    "string": ["cBc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 泥土悬崖"],
+    "string": ["cKc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 黑色城堡 - 砖砌墙壁"],
+    "string": ["cKc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 泥土悬崖"],
+    "string": ["cYc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 城邦 - 方砖墙壁"],
+    "string": ["cYc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 泥土悬崖"],
+    "string": ["cXc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然 - 方砖墙壁"],
+    "string": ["cXc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 泥土悬崖"],
+    "string": ["cJc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 达拉然遗迹 - 方砖墙壁"],
+    "string": ["cJc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城 - 天然墙壁"],
+    "string": ["cDc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 地下城 - 石砖墙壁"],
+    "string": ["cDc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 泥土悬崖"],
+    "string": ["cCc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 费尔伍德 - 草地悬崖"],
+    "string": ["cCc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 石砌墙壁"],
+    "string": ["cIc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 冰封王座 - 雪地悬崖"],
+    "string": ["cIc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 泥土悬崖"],
+    "string": ["cFc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(秋) - 草地悬崖"],
+    "string": ["cFc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 泥土悬崖"],
+    "string": ["cLc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(夏) - 草地悬崖"],
+    "string": ["cLc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 草地悬崖"],
+    "string": ["cWc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 洛丹伦(冬) - 雪地悬崖"],
+    "string": ["cWc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德- 泥土悬崖"],
+    "string": ["cNc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 诺森德- 雪地悬崖"],
+    "string": ["cNc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地- 深渊"],
+    "string": ["cOc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 边缘之地- 泥土悬崖"],
+    "string": ["cOc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 泥土悬崖"],
+    "string": ["cZc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 沉沦的遗迹 - 石砌墙壁"],
+    "string": ["cZc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 天然墙壁"],
+    "string": ["cGc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 地底 - 砖砌墙壁"],
+    "string": ["cGc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 泥土悬崖"],
+    "string": ["cVc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄 - 厚草地悬崖"],
+    "string": ["cVc1"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 泥土悬崖"],
+    "string": ["cQc2"],
+    "excludes": [""],
+    "presets": ["地表纹理 村庄(秋) - 厚草地悬崖"],
+    "string": ["cQc1"],
+    "excludes": [""],
+
+
+    // 地形形状/刷子类型
+
+
+    "presets": ["地形形状/刷子类型 圆形"],
+    "string": ["CIRCLE"],
+    "excludes": [""],
+    "presets": ["地形形状/刷子类型 方形"],
+    "string": ["SQUARE"],
+    "excludes": [""],
+
+
+    // 图像类型
+
+
+    "presets": ["图像类型 阴影"],
+    "string": ["SHADOW"],
+    "excludes": [""],
+    "presets": ["图像类型 选择"],
+    "string": ["SELECTION"],
+    "excludes": [""],
+    "presets": ["图像类型 指示器"],
+    "string": ["INDICATOR"],
+    "excludes": [""],
+    "presets": ["图像类型 闭塞标志"],
+    "string": ["OCCLUSIONMARK"],
+    "excludes": [""],
+    "presets": ["图像类型 地面纹理变化"],
+    "string": ["UBERSPLAT"],
+    "excludes": [""],
+    "presets": ["图像类型 最顶端"],
+    "string": ["LAST"],
+    "excludes": [""],
+
+
+    // 地表纹理变化
+
+
+    "presets": ["地表纹理变化 测试"],
+    "string": ["TEST"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 洛丹伦(夏)泥地小"],
+    "string": ["LSDS"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 洛丹伦(夏)泥地中"],
+    "string": ["LSDM"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 洛丹伦(夏)泥地大"],
+    "string": ["LSDL"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类弹坑"],
+    "string": ["HCRT"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族金矿"],
+    "string": ["UDSU"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 中立城市小建筑(死亡)"],
+    "string": ["DNCS"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 群体传送"],
+    "string": ["HMTP"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 回城卷轴"],
+    "string": ["SCTP"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 召唤护身符"],
+    "string": ["AMRC"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 黑暗转换"],
+    "string": ["DRKC"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族小建筑(死亡)"],
+    "string": ["DOSB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族中建筑(死亡)"],
+    "string": ["DOMB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族大建筑(死亡)"],
+    "string": ["DOLB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类小建筑(死亡)"],
+    "string": ["DHSB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类中建筑(死亡)"],
+    "string": ["DHMB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类大建筑(死亡)"],
+    "string": ["DHLB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族小建筑(死亡)"],
+    "string": ["DUSB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族中建筑(死亡)"],
+    "string": ["DUMB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族大建筑(死亡)"],
+    "string": ["DULB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵小古树(死亡)"],
+    "string": ["DNSB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵中古树(死亡)"],
+    "string": ["DNMB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵小古迹(死亡)"],
+    "string": ["DNSA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵中古迹(死亡)"],
+    "string": ["DNMA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类小建筑"],
+    "string": ["HSMA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类中建筑"],
+    "string": ["HMED"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 人类大建筑"],
+    "string": ["HLAR"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族小建筑"],
+    "string": ["OSMA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族中建筑"],
+    "string": ["OMED"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族大建筑"],
+    "string": ["OLAR"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族建筑"],
+    "string": ["USMA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族建筑"],
+    "string": ["UMED"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 不死族建筑"],
+    "string": ["ULAR"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵小古树"],
+    "string": ["ESMA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵中古树"],
+    "string": ["EMDA"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵小建筑"],
+    "string": ["ESMB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 暗夜精灵中建筑"],
+    "string": ["EMDB"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 城镇大厅"],
+    "string": ["HTOW"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 城堡"],
+    "string": ["HCAS"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 金矿"],
+    "string": ["NGOL"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 雷霆一击"],
+    "string": ["THND"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 恶魔之门"],
+    "string": ["NDGS"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 荆棘之盾"],
+    "string": ["CLTS"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 烈焰风暴1"],
+    "string": ["HFS1"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 烈焰风暴2"],
+    "string": ["HFS2"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 兽族地洞"],
+    "string": ["USBR"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 娜迦族大建筑"],
+    "string": ["NLAR"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 娜迦族中建筑"],
+    "string": ["NMED"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 黑暗之门(面向西南)"],
+    "string": ["DPSW"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 黑暗之门(面向东南)"],
+    "string": ["DPSE"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 火山"],
+    "string": ["NVOL"],
+    "excludes": [""],
+    "presets": ["地表纹理变化 火山口"],
+    "string": ["NVCR"],
+    "excludes": [""],
+
+
+    // 主题音乐
+
+
+    "presets": ["主题音乐 阿尔塞斯的主题曲"],
+    "string": ["ARTHAS"],
+    "excludes": [""],
+    "presets": ["主题音乐 血精灵的主题曲"],
+    "string": ["BLOODELF"],
+    "excludes": [""],
+    "presets": ["主题音乐 伙伴的友谊"],
+    "string": ["COMRADESHIP"],
+    "excludes": [""],
+    "presets": ["主题音乐 制作人员"],
+    "string": ["CREDITS"],
+    "excludes": [""],
+    "presets": ["主题音乐 黑暗代言人"],
+    "string": ["DARKAGENTS"],
+    "excludes": [""],
+    "presets": ["主题音乐 黑暗胜利"],
+    "string": ["DARKVICTORY"],
+    "excludes": [""],
+    "presets": ["主题音乐 毁灭"],
+    "string": ["DOOM"],
+    "excludes": [""],
+    "presets": ["主题音乐 英雄胜利"],
+    "string": ["HEROIC_VICTORY"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族1"],
+    "string": ["HUMAN1"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族2"],
+    "string": ["HUMAN2"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族3"],
+    "string": ["HUMAN3"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族X1"],
+    "string": ["HUMANX1"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族失败"],
+    "string": ["DEFEAT_HUMAN"],
+    "excludes": [""],
+    "presets": ["主题音乐 人族胜利"],
+    "string": ["VICTORY_HUMAN"],
+    "excludes": [""],
+    "presets": ["主题音乐 尤迪安的主题曲"],
+    "string": ["ILLIDAN"],
+    "excludes": [""],
+    "presets": ["主题音乐 巫妖王的主题曲"],
+    "string": ["LICHKING"],
+    "excludes": [""],
+    "presets": ["主题音乐 主要场景"],
+    "string": ["MAINSCREEN"],
+    "excludes": [""],
+    "presets": ["主题音乐 主要场景X"],
+    "string": ["MAINSCREENX"],
+    "excludes": [""],
+    "presets": ["主题音乐 娜迦的主题曲"],
+    "string": ["NAGA"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族1"],
+    "string": ["NIGHTELF1"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族2"],
+    "string": ["NIGHTELF2"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族3"],
+    "string": ["NIGHTELF3"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族X1"],
+    "string": ["NIGHTELFX1"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族失败"],
+    "string": ["DEFEAT_NIGHTELF"],
+    "excludes": [""],
+    "presets": ["主题音乐 暗夜精灵族胜利"],
+    "string": ["VICTORY_NIGHTELF"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族1"],
+    "string": ["ORC1"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族2"],
+    "string": ["ORC2"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族3"],
+    "string": ["ORC3"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族X1"],
+    "string": ["ORCX1"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族失败"],
+    "string": ["DEFEAT_ORC"],
+    "excludes": [""],
+    "presets": ["主题音乐 半兽人的主题曲"],
+    "string": ["ORC_THEME"],
+    "excludes": [""],
+    "presets": ["主题音乐 兽族胜利"],
+    "string": ["VICTORY_ORC"],
+    "excludes": [""],
+    "presets": ["主题音乐 追击"],
+    "string": ["PURSUIT"],
+    "excludes": [""],
+    "presets": ["主题音乐 神秘哀伤"],
+    "string": ["SADMYSTERY"],
+    "excludes": [""],
+    "presets": ["主题音乐 紧张"],
+    "string": ["TENSION"],
+    "excludes": [""],
+    "presets": ["主题音乐 悲剧降临"],
+    "string": ["TRAGICCONFRONTATION"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族1"],
+    "string": ["UNDEAD1"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族2"],
+    "string": ["UNDEAD2"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族3"],
+    "string": ["UNDEAD3"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族 X1"],
+    "string": ["UNDEADX1"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族失败"],
+    "string": ["DEFEAT_UNDEAD"],
+    "excludes": [""],
+    "presets": ["主题音乐 不死族胜利"],
+    "string": ["VICTORY_UNDEAD"],
+    "excludes": [""],
+
+
+    // 白天环境音效
+
+    "presets": ["白天环境音效 白杨谷"],
+     "string": ["AshenvaleDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 贫瘠之地"],
+     "string": ["BarrensDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 黑色城堡 - 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O"],
+     "string": ["BlackCitadelDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 城邦"],
+     "string": ["CityScapeDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 达拉然"],
+     "string": ["DalaranDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 达拉然遗迹"],
+     "string": ["DalaranRuinsDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 地下城/地牢"],
+     "string": ["DungeonDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 费尔伍德"],
+     "string": ["FelwoodDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 冰封王座"],
+     "string": ["IceCrownDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 洛丹伦(秋)"],
+     "string": ["LordaeronFallDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 洛丹伦(夏)"],
+     "string": ["LordaeronSummerDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 洛丹伦(冬)"],
+     "string": ["LordaeronWinterDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 诺森德"],
+     "string": ["NorthrendDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 沉沦的遗迹"],
+     "string": ["SunkenRuinsDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 村庄"],
+     "string": ["VillageDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 村庄(秋)"],
+     "string": ["VillageFallDay"],
+    "excludes": [""],
+    "presets": ["白天环境音效 地底"],
+     "string": ["DungeonCaveDay"],
+    "excludes": [""],
+
+
+    // 夜晚环境音效
+
+
+    "presets": ["夜晚环境音效 白杨谷"],
+     "string": ["AshenvaleNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 贫瘠之地"],
+     "string": ["BarrensNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 黑色城堡 - 黑色城堡有两个，分别是 WESTRING_AMBIENTTHEMENIGHT_K WESTRING_AMBIENTTHEMENIGHT_O"],
+     "string": ["BlackCitadelNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 城邦"],
+     "string": ["CityScapeNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 达拉然"],
+     "string": ["DalaranNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 达拉然遗迹"],
+     "string": ["DalaranRuinsNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 地下城/地牢"],
+     "string": ["DungeonNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 费尔伍德"],
+     "string": ["FelwoodNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 冰封王座"],
+     "string": ["IceCrownNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 洛丹伦(秋)"],
+     "string": ["LordaeronFallNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 洛丹伦(夏)"],
+     "string": ["LordaeronSummerNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 洛丹伦(冬)"],
+     "string": ["LordaeronWinterNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 诺森德"],
+     "string": ["NorthrendNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 沉沦的遗迹"],
+     "string": ["SunkenRuinsNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 村庄"],
+     "string": ["VillageNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 村庄(秋)"],
+     "string": ["VillageFallNight"],
+    "excludes": [""],
+    "presets": ["夜晚环境音效 地底"],
+     "string": ["DungeonCaveNight"],
+    "excludes": [""],
+    
+
+    // 天空盒子模型名称
+    
+    "presets": ["天空盒子模型文件名 暴风雪的天空 - mdl格式，需文件名带后缀"],
+    "string": ["BlizzardSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 达拉然的天空 - mdl格式，需文件名带后缀"],
+    "string": ["DalaranSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 费尔伍德的天空 - mdl格式，需文件名带后缀"],
+    "string": ["FelwoodSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 迷雾的天空 - mdl格式，需文件名带后缀"],
+    "string": ["FoggedSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 一般的天空 - mdl格式，需文件名带后缀"],
+    "string": ["SkyLight.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的秋天的天空 - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronFallSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的夏天的天空 - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronSummerSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天 - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSky.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天空 (亮绿色) - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSkyBrightGreen.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天空 (粉红色) - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSkyPink.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天空 (紫色) - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSkyPurple.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天空 (红色) - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSkyRed.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 洛丹伦的冬天的天空 (黄色) - mdl格式，需文件名带后缀"],
+    "string": ["LordaeronWinterSkyYellow.mdl"],
+    "excludes": [""],
+    "presets": ["天空盒子模型文件名 边缘之地的天空 - mdl格式，需文件名带后缀"],
+    "string": ["Outland_Sky.mdl"],
+    "excludes": [""],
+
+
+    //  颜色值
+
+
+    "presets": ["颜色值 红色（玩家1配色） - 注意开头添加|，结尾添加|r，三色值： 255, 3, 3"],
+    "string": ["CffFF0000"],
+    "excludes": [""],
+    "presets": ["颜色值 蓝色（玩家2配色） - 注意开头添加|，结尾添加|r，三色值：0, 66, 255"],
+    "string": ["Cff0064FF"],
+    "excludes": [""],
+    "presets": ["颜色值 青色（玩家3配色） - 注意开头添加|，结尾添加|r，三色值：28, 230, 185"],
+    "string": ["Cff1BE7BA"],
+    "excludes": [""],
+    "presets": ["颜色值 紫色（玩家4配色） - 注意开头添加|，结尾添加|r，三色值：84, 0, 129"],
+    "string": ["Cff550081"],
+    "excludes": [""],
+    "presets": ["颜色值 黄色（玩家5配色） - 注意开头添加|，结尾添加|r，三色值：255, 252, 0"],
+    "string": ["CffFFFC00"],
+    "excludes": [""],
+    "presets": ["颜色值 橙色（玩家6配色） - 注意开头添加|，结尾添加|r，三色值：254, 138, 14"],
+    "string": ["CffFF8A0D"],
+    "excludes": [""],
+    "presets": ["颜色值 绿色（玩家7配色） - 注意开头添加|，结尾添加|r，三色值：32, 192, 0"],
+    "string": ["Cff21BF00"],
+    "excludes": [""],
+    "presets": ["颜色值 粉色（玩家8配色） - 注意开头添加|，结尾添加|r，三色值：229, 91, 176"],
+    "string": ["CffE45CAF"],
+    "excludes": [""],
+    "presets": ["颜色值 深灰色（玩家9配色） - 注意开头添加|，结尾添加|r，三色值：149, 150, 151"],
+    "string": ["Cff949696"],
+    "excludes": [""],
+    "presets": ["颜色值 深蓝色（玩家10配色） - 注意开头添加|，结尾添加|r，三色值：126, 191, 241"],
+    "string": ["Cff7EBFF1"],
+    "excludes": [""],
+    "presets": ["颜色值 浅绿色（玩家11配色） - 注意开头添加|，结尾添加|r，三色值：16, 98, 70"],
+    "string": ["Cff106247"],
+    "excludes": [""],
+    "presets": ["颜色值 棕色（玩家12配色） - 注意开头添加|，结尾添加|r，三色值：78, 42, 3"],
+    "string": ["Cff4F2B05"],
+    "excludes": [""],
+    "presets": ["颜色值 褐红色（玩家13配色） - 注意开头添加|，结尾添加|r，三色值：155, 0, 0"],
+    "string": ["Cff9C0000"],
+    "excludes": [""],
+    "presets": ["颜色值 深蓝色（玩家14配色） - 注意开头添加|，结尾添加|r，三色值：0, 0, 195"],
+    "string": ["Cff0000C3"],
+    "excludes": [""],
+    "presets": ["颜色值 蓝绿色（玩家15配色） - 注意开头添加|，结尾添加|r，三色值：0, 234, 255"],
+    "string": ["Cff00EBFF"],
+    "excludes": [""],
+    "presets": ["颜色值 紫罗兰色（玩家16配色） - 注意开头添加|，结尾添加|r，三色值：190, 0, 254"],
+    "string": ["CffBD00FF"],
+    "excludes": [""],
+    "presets": ["颜色值 小麦色（玩家17配色） - 注意开头添加|，结尾添加|r，三色值：235, 205, 135"],
+    "string": ["CffECCD87"],
+    "excludes": [""],
+    "presets": ["颜色值 桃色（玩家18配色） - 注意开头添加|，结尾添加|r，三色值：248, 164, 139"],
+    "string": ["CffF7A58B"],
+    "excludes": [""],
+    "presets": ["颜色值 薄荷色（玩家19配色） - 注意开头添加|，结尾添加|r，三色值：191, 255, 128"],
+    "string": ["CffBFFF81"],
+    "excludes": [""],
+    "presets": ["颜色值 淡紫色（玩家20配色） - 注意开头添加|，结尾添加|r，三色值：220, 185, 235"],
+    "string": ["CffDBB9EB"],
+    "excludes": [""],
+    "presets": ["颜色值 煤焦油色（玩家21配色） - 注意开头添加|，结尾添加|r，三色值：80, 79, 85"],
+    "string": ["Cff4F5055"],
+    "excludes": [""],
+    "presets": ["颜色值 雪白色（玩家22配色） - 注意开头添加|，结尾添加|r，三色值：235, 240, 255"],
+    "string": ["CffECF0FF"],
+    "excludes": [""],
+    "presets": ["颜色值 祖母绿色（玩家23配色） - 注意开头添加|，结尾添加|r，三色值：0, 120, 30"],
+    "string": ["Cff00781E"],
+    "excludes": [""],
+    "presets": ["颜色值 花生色（玩家24配色） - 注意开头添加|，结尾添加|r，三色值：164, 111, 51"],
+    "string": ["CffA57033"],
+    "excludes": [""],
+    "presets": ["颜色值 黑棕色（中立敌对玩家配色） - 注意开头添加|，结尾添加|r，三色值：50, 50, 50"],
+    "string": ["Cff323232"],
+    "excludes": [""],
+    "presets": ["颜色值 黑色 - 注意开头添加|，结尾添加|r，三色值：0, 0, 0"],
+    "string": ["Cff000000"],
+    "excludes": [""],
+    "presets": ["颜色值 象牙黑色 - 注意开头添加|，结尾添加|r，三色值：41, 36, 33"],
+    "string": ["Cff292421"],
+    "excludes": [""],
+    "presets": ["颜色值 白色 - 注意开头添加|，结尾添加|r，三色值：255, 255, 255"],
+    "string": ["Cffffffff"],
+    "excludes": [""],
+    "presets": ["颜色值 淡灰色 - 注意开头添加|，结尾添加|r，三色值：220, 220, 220"],
+    "string": ["Cffdcdcdc"],
+    "excludes": [""],
+    "presets": ["颜色值 深灰色 - 注意开头添加|，结尾添加|r，三色值：169, 169, 169"],
+    "string": ["Cffa9a9a9"],
+    "excludes": [""],
+    "presets": ["颜色值 金色 - 注意开头添加|，结尾添加|r，三色值：255, 215, 0"],
+    "string": ["Cffffd700"],
+    "excludes": [""],
+    "presets": ["颜色值 道奇蓝色 - 注意开头添加|，结尾添加|r，三色值：30, 144, 255"],
+    "string": ["Cff1e90ff"],
+    "excludes": [""],
+    "presets": ["颜色值 孔雀蓝色 - 注意开头添加|，结尾添加|r，三色值：51, 161, 201"],
+    "string": ["Cff33a1c9"],
+    "excludes": [""],
+    "presets": ["颜色值 嫩绿色 - 注意开头添加|，结尾添加|r，三色值：0, 255, 127"],
+    "string": ["Cff00ff7f"],
+    "excludes": [""],
+    "presets": ["颜色值 翠绿色 - 注意开头添加|，结尾添加|r，三色值：0, 201, 87"],
+    "string": ["Cff00c957"],
+    "excludes": [""],
+    "presets": ["颜色值 土耳其玉色 - 注意开头添加|，结尾添加|r，三色值：0, 199, 140"],
+    "string": ["Cff00c78c"],
+    "excludes": [""],
+    "presets": ["颜色值 碧绿色 - 注意开头添加|，结尾添加|r，三色值：127, 255, 212"],
+    "string": ["Cff7fffd4"],
+    "excludes": [""],
+    "presets": ["颜色值 靛青色 - 注意开头添加|，结尾添加|r，三色值：8, 46, 84"],
+    "string": ["Cff082e54"],
+    "excludes": [""],
+    "presets": ["颜色值 番茄红色 - 注意开头添加|，结尾添加|r，三色值：255, 99, 71"],
+    "string": ["Cffff6347"],
+    "excludes": [""],
+    "presets": ["颜色值 桔色 - 注意开头添加|，结尾添加|r，三色值：255, 69, 0"],
+    "string": ["Cffff4500"],
+    "excludes": [""],
+    "presets": ["颜色值 珊瑚色 - 注意开头添加|，结尾添加|r，三色值：225, 127, 80"],
+    "string": ["Cffe17f50"],
+    "excludes": [""],
+    "presets": ["颜色值 玫瑰红色 - 注意开头添加|，结尾添加|r，三色值：188, 143, 143"],
+    "string": ["Cffbc8f8f"],
+    "excludes": [""],
+    "presets": ["颜色值 肉色 - 注意开头添加|，结尾添加|r，三色值：255, 125, 64"],
+    "string": ["Cffff7d40"],
+    "excludes": [""],
+    "presets": ["颜色值 湖紫色 - 注意开头添加|，结尾添加|r，三色值：153, 51, 250"],
+    "string": ["Cff9933fa"],
+    "excludes": [""],
+    "presets": ["颜色值 紫罗兰色 - 注意开头添加|，结尾添加|r，三色值：138, 43, 226"],
+    "string": ["Cff8a2be2"],
     "excludes": [""]
+
 
 }
 
