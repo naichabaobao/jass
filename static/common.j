@@ -5541,7 +5541,7 @@ native RemoveUnit takes unit whichUnit returns nothing
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]
-// @param whichUnitState 可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
+// @param whichUnitState 单位属性，可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置指定单位所在 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
