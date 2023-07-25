@@ -5016,7 +5016,7 @@ function ExplodeUnitBJ takes unit whichUnit returns nothing
 endfunction
 
 
-// 获取运输单位
+// 获取运输/载具单位
 // 飞艇/船/被缠绕的金矿等
 function GetTransportUnitBJ takes nothing returns unit
     return GetTransportUnit()
@@ -5029,13 +5029,13 @@ function GetLoadedUnitBJ takes nothing returns unit
 endfunction
 
 
-// 查询单位是否已被装载
+// 查询单位当前是否被指定运输/载具单位装载
 function IsUnitInTransportBJ takes unit whichUnit, unit whichTransport returns boolean
     return IsUnitInTransport(whichUnit, whichTransport)
 endfunction
 
 
-// 查询单位是否正被装载
+// 查询单位当前是否被装载
 function IsUnitLoadedBJ takes unit whichUnit returns boolean
     return IsUnitLoaded(whichUnit)
 endfunction
