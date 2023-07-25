@@ -3933,7 +3933,7 @@ globals
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
 	// 物品整数域 颜色通道(alpha) ('ical')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
-        // 物品实数域 模型缩放 ('isca')
+	// 物品实数域 模型缩放 ('isca')
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
 	// 物品布尔值域 持有者死亡时掉落 ('idrp')
 	constant itembooleanfield ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
@@ -3945,11 +3945,11 @@ globals
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
 	// 物品布尔值域 拾取时自动使用 ('ipow')
 	constant itembooleanfield ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
-        // 物品布尔值域 可以出售给商店 ('ipaw')
+	// 物品布尔值域 可以出售给商店 ('ipaw')
 	constant itembooleanfield ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
-        // 物品布尔值域 主动使用 ('iusa')
+	// 物品布尔值域 主动使用 ('iusa')
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
-        // 物品字符串域 使用模型 ('ifil')
+	// 物品字符串域 使用模型 ('ifil')
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
 	
 	// Unit
@@ -4618,41 +4618,41 @@ native BlzGroupGetSize takes group whichGroup returns integer
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
 // @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
 // @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定矩形区域的的单位加入单位组
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将指定圆形范围的单位添加到单位组(指定圆心坐标)
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家选择的单位添加到单位组
-// @param filter 过滤，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
@@ -4874,11 +4874,11 @@ native Not takes boolexpr operand returns boolexpr
 native Condition takes code func returns conditionfunc
 // 销毁条件方法
 native DestroyCondition takes conditionfunc c returns nothing
-// 过滤表达式
+// 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
 // 使用后需要使用(DestroyFilter)排泄，并set null，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
-// 销毁过滤表达式
+// 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
 // 销毁条件表达式
 native DestroyBoolExpr takes boolexpr e returns nothing
@@ -4927,7 +4927,7 @@ native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameE
 constant native GetWinningPlayer takes nothing returns player
 
 
-// 触发器登记单位进入不规则区域事件(可指定过滤) [R]
+// 触发器登记单位进入不规则区域事件(可指定条件表达式) [R]
 native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 
 // 事件响应 获取触发的不规则区域 [R](对应进入不规则区域等事件)
@@ -4937,7 +4937,7 @@ constant native GetTriggeringRegion takes nothing returns region
 // EVENT_GAME_ENTER_REGION
 constant native GetEnteringUnit takes nothing returns unit
 
-// 触发器登记单位离开不规则区域事件(可指定过滤) [R](对应离开不规则区域等事件)
+// 触发器登记单位离开不规则区域事件(可指定条件表达式) [R](对应离开不规则区域等事件)
 // EVENT_GAME_LEAVE_REGION
 native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
 // 事件响应 获取正在离开的单位(对应离开不规则区域等事件)
@@ -5342,12 +5342,12 @@ constant native GetEventTargetUnit takes nothing returns unit
 // 触发器登记范围内单位事件
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
-// 添加触发器限制条件
+// 添加触发器条件方法（指定条件表达式）
 native TriggerAddCondition takes trigger whichTrigger, boolexpr condition returns triggercondition
-// 删除触发器限制条件
+// 删除触发器条件方法
 native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
-// 清空触发器限制条件
-// 排泄需使用删除触发器条件 TriggerRemoveCondition，而非清空
+// 清空触发器条件方法
+// 排泄需使用删除触发器条件方法 TriggerRemoveCondition，而非清空
 native TriggerClearConditions takes trigger whichTrigger returns nothing
 
 // 添加触发器动作
@@ -5381,9 +5381,9 @@ native TriggerSyncReady takes nothing returns nothing
 native GetWidgetLife takes widget whichWidget returns real
 // 设置指定单位/物品/可破坏物生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取指定单位/物品/可破坏物所在 X 轴坐标
+// 获取指定单位/物品/可破坏物所在 X 坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取指定单位/物品/可破坏物所在 Y 轴坐标
+// 获取指定单位/物品/可破坏物所在 Y 坐标
 native GetWidgetY takes widget whichWidget returns real
 // 获取触发单位/物品/可破坏物
 constant native GetTriggerWidget takes nothing returns widget
@@ -5409,13 +5409,13 @@ native KillDestructable takes destructable d returns nothing
 native SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
 // 查询指定可破坏物是否可见
 native IsDestructableInvulnerable takes destructable d returns boolean
-// 选取指定区域(filter可附带过滤)的可破坏物执行指定动作(actionFunc可指定动作)
+// 选取指定区域(filter可附带条件表达式)的可破坏物执行指定动作(actionFunc可指定动作)
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取指定可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
-// 获取指定可破坏物所在 X 轴坐标 [R]
+// 获取指定可破坏物所在 X 坐标 [R]
 native GetDestructableX takes destructable d returns real
-// 获取指定可破坏物所在 Y 轴坐标 [R]
+// 获取指定可破坏物所在 Y 坐标 [R]
 native GetDestructableY takes destructable d returns real
 // 设置指定可破坏物生命值
 native SetDestructableLife takes destructable d, real life returns nothing
@@ -5495,7 +5495,7 @@ native IsItemIdSellable takes integer itemId returns boolean
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
-// @param filter过滤
+// @param filter条件表达式
 // @param actionFunc动作
 native EnumItemsInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取指定物品等级
