@@ -4568,7 +4568,7 @@ native GetPlayerName takes player whichPlayer returns string
 
 // 新建计时器 [R]
 native CreateTimer takes nothing returns timer
-// 删除指定计时器 [R]
+// 销毁指定计时器 [R]
 native DestroyTimer takes timer whichTimer returns nothing
 // 开始计时器(计时) [C]
 // @param whichTimer 计时器
@@ -4597,7 +4597,7 @@ native GetExpiredTimer takes nothing returns timer
 // 创建单位组 [R]
 // 会创建单位组，用完请注意排泄
 native CreateGroup takes nothing returns group
-// 删除单位组 [R]
+// 销毁单位组 [R]
 native DestroyGroup takes group whichGroup returns nothing
 // 将指定单位添加到单位组中 [R]
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
@@ -4610,7 +4610,7 @@ native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integ
 // @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
-// 排泄需要使用删除单位组 DestroyGroup，而非清空
+// 排泄需要使用销毁单位组 DestroyGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
 native BlzGroupGetSize takes group whichGroup returns integer
@@ -6171,7 +6171,7 @@ native CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, r
 native CreateFogModifierRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
 // 新建可见度修正器(圆形范围) [R]
 native CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-// 删除指定可见度修正器
+// 销毁指定可见度修正器
 native DestroyFogModifier takes fogmodifier whichFogModifier returns nothing
 // 启用指定可见度修正器
 native FogModifierStart takes fogmodifier whichFogModifier returns nothing
@@ -6269,10 +6269,10 @@ native DoNotSaveReplay takes nothing returns nothing
 
 // 新建对话框 [R]
 native DialogCreate takes nothing returns dialog
-// 删除指定对话框 [R]
+// 销毁指定对话框 [R]
 native DialogDestroy takes dialog whichDialog returns nothing
 // 清空指定对话框
-// 排泄需使用删除对话框 DialogDestroy，而非清空
+// 排泄需使用对话框 DialogDestroy，而非清空
 native DialogClear takes dialog whichDialog returns nothing
 // 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
@@ -6585,7 +6585,7 @@ native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
 native CreateUnitPool takes nothing returns unitpool
-// 删除单位池 [R]
+// 销毁单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
 // 添加指定单位类型到指定单位池 [R]
 native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight returns nothing
@@ -6597,7 +6597,7 @@ native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, 
 
 // 新建物品池 [R]
 native CreateItemPool takes nothing returns itempool
-// 删除指定物品池 [R]
+// 销毁指定物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
 // 添加指定物品类型到指定物品池 [R]
 native ItemPoolAddItemType takes itempool whichItemPool, integer itemId, real weight returns nothing
@@ -6861,7 +6861,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 
 // 新建排行榜 [R]
 native CreateLeaderboard takes nothing returns leaderboard
-// 删除排行榜
+// 销毁排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
 
 // 显示/隐藏 排行榜[R]
@@ -6884,7 +6884,7 @@ native LeaderboardRemoveItem takes leaderboard lb, integer index returns nothing
 // 移除排行榜指定玩家
 native LeaderboardRemovePlayerItem takes leaderboard lb, player p returns nothing
 // 清空排行榜 [R]
-// 排泄需使用删除排行榜 DestroyLeaderboard，而非清空
+// 排泄需使用销毁排行榜 DestroyLeaderboard，而非清空
 native LeaderboardClear takes leaderboard lb returns nothing
 // 设置排行榜按分值排序(真为升序，假为降序)
 native LeaderboardSortItemsByValue takes leaderboard lb, boolean ascending returns nothing
@@ -6935,7 +6935,7 @@ native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, int
 
 // 新建多面板 [R]
 native CreateMultiboard takes nothing returns multiboard
-// 删除指定多面板
+// 销毁指定多面板
 native DestroyMultiboard takes multiboard lb returns nothing
 
 // 显示/隐藏 多面板 [R]
@@ -6948,7 +6948,7 @@ native MultiboardMinimize takes multiboard lb, boolean minimize returns nothing
 // 查询多面板是否最小化
 native IsMultiboardMinimized takes multiboard lb returns boolean
 // 清空多面板
-// 排泄需使用删除多面板 DestroyMultiboard，而非清空
+// 排泄需使用销毁多面板 DestroyMultiboard，而非清空
 native MultiboardClear takes multiboard lb returns nothing
 
 // 设置多面板标题
@@ -7340,7 +7340,7 @@ native AddSpecialEffect takes string modelName, real x, real y returns effect
 native AddSpecialEffectLoc takes string modelName, location where returns effect
 // 新建特效(绑定到单位/物品/可破坏物) [R]
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
-// 删除指定特效
+// 销毁指定特效
 native DestroyEffect takes effect whichEffect returns nothing
 // 新建特效(按字串符指定技能，绑定到坐标)
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
@@ -7361,7 +7361,7 @@ native AddLightning takes string codeName, boolean checkVisibility, real x1, rea
 // 新建闪电特效(指定Z轴) [R]
 // @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
-// 删除指定闪电特效
+// 销毁指定闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
 // 移动闪电特效
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
@@ -7416,7 +7416,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 // 新建图像 [R]
 // @param imageType 图像类型，具体类型可在 记录物编的文件 找到
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
-// 删除指定图像
+// 销毁指定图像
 native DestroyImage takes image whichImage returns nothing
 // 显示/隐藏 图像[R]
 native ShowImage takes image whichImage, boolean flag returns nothing
@@ -7448,7 +7448,7 @@ native SetImageType takes image whichImage, integer imageType returns nothing
 // @param forcePaused 是否禁用暂停状态
 // @param noBirthTime 是否启用出生动画
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-// 删除指定地表纹理
+// 销毁指定地表纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
 // 重置地表纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
@@ -8028,7 +8028,7 @@ native CreateCommandButtonEffect takes integer abilityId, string order returns c
 native CreateUpgradeCommandButtonEffect takes integer whichUprgade returns commandbuttoneffect
 // 创建学习技能按钮特效
 native CreateLearnCommandButtonEffect takes integer abilityId returns commandbuttoneffect
-// 删除指定按钮特效
+// 销毁指定按钮特效
 native DestroyCommandButtonEffect takes commandbuttoneffect whichEffect returns nothing
 
 // Bit Operations
