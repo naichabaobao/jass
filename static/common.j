@@ -4784,7 +4784,7 @@ native GetLocationX takes location whichLocation returns real
 // 获取点 Y 坐标
 native GetLocationY takes location whichLocation returns real
 
-// 获取点 Z 轴高度(异步) [R]
+// 获取点 Z 坐标（高度）(异步) [R]
 // This function is asynchronous. The values it returns are not guaranteed synchronous between each player.
 //  If you attempt to use it in a synchronous manner, it may cause a desync.
 native GetLocationZ takes location whichLocation returns real
@@ -4870,9 +4870,9 @@ native And takes boolexpr operandA, boolexpr operandB returns boolexpr
 native Or takes boolexpr operandA, boolexpr operandB returns boolexpr
 // 不是/否
 native Not takes boolexpr operand returns boolexpr
-// 限制条件表达式
+// 条件方法
 native Condition takes code func returns conditionfunc
-// 销毁条件表达式
+// 销毁条件方法
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤表达式
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
