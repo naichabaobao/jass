@@ -4697,7 +4697,7 @@ native FirstOfGroup takes group whichGroup returns unit
 
 // 新建玩家组 [R]
 native CreateForce takes nothing returns force
-// 删除指定玩家组 [R]
+// 销毁指定玩家组 [R]
 native DestroyForce takes force whichForce returns nothing
 // 添加玩家到玩家组 [R]
 native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
@@ -4706,7 +4706,7 @@ native ForceRemovePlayer takes force whichForce, player whichPlayer returns noth
 // 查询玩家是否在玩家组内
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清空玩家组
-// 排泄需使用删除玩家组 DestroyForce，而非清空
+// 排泄需使用销毁玩家组 DestroyForce，而非清空
 native ForceClear takes force whichForce returns nothing
 // 匹配玩家组(指定条件表达式)
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
