@@ -2798,7 +2798,7 @@ function AddLightningLoc takes string codeName, location where1, location where2
 endfunction
 
 
-// 删除闪电效果
+// 销毁闪电效果
 function DestroyLightningBJ takes lightning whichBolt returns boolean
     return DestroyLightning(whichBolt)
 endfunction
@@ -3637,7 +3637,7 @@ endfunction
 //endfunction
 
 
-// 删除特效
+// 销毁特效
 function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
@@ -6848,7 +6848,7 @@ function CreateQuestBJ takes integer questType, string title, string description
 endfunction
 
 
-// 删除任务
+// 销毁任务
 function DestroyQuestBJ takes quest whichQuest returns nothing
     call DestroyQuest(whichQuest)
 endfunction
@@ -6931,7 +6931,7 @@ function CreateDefeatConditionBJ takes string description returns defeatconditio
 endfunction
 
 
-// 删除任务失败条件
+// 销毁任务失败条件
 function DestroyDefeatConditionBJ takes defeatcondition whichCondition returns nothing
     call DestroyDefeatCondition(whichCondition)
 endfunction
@@ -7087,7 +7087,7 @@ function CreateTimerDialogBJ takes timer t, string title returns timerdialog
 endfunction
 
 
-// 删除计时器窗口
+// 销毁计时器窗口
 function DestroyTimerDialogBJ takes timerdialog td returns nothing
     call DestroyTimerDialog(td)
 endfunction
@@ -7252,7 +7252,7 @@ function CreateLeaderboardBJ takes force toForce, string label returns leaderboa
 endfunction
 
 
-// 删除排行榜
+// 销毁排行榜
 function DestroyLeaderboardBJ takes leaderboard lb returns nothing
     call DestroyLeaderboard(lb)
 endfunction
@@ -7366,7 +7366,7 @@ function CreateMultiboardBJ takes integer cols, integer rows, string title retur
 endfunction
 
 
-// 删除多面板
+// 销毁多面板
 function DestroyMultiboardBJ takes multiboard mb returns nothing
     call DestroyMultiboard(mb)
 endfunction
