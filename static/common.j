@@ -5103,7 +5103,7 @@ constant native GetSummoningUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
-// 事件响应 获取运输单位(对应装载单位等事件)
+// 事件响应 获取运输/载具单位(对应装载单位等事件)
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
@@ -5833,10 +5833,10 @@ constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, r
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
-// 查询指定单位是否被另一指定单位装载
+// 查询指定单位当前是否被指定运输/载具单位装载
 // 可用于查询单位被哪艘（座）船/飞艇/被缠绕的金矿装载（每个载具逐一检查）
 constant native IsUnitInTransport takes unit whichUnit, unit whichTransport returns boolean
-// 查询指定单位是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
+// 查询指定单位当前是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
 // 查询指定单位类型是否为英雄
