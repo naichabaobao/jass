@@ -4157,7 +4157,7 @@ function RandomItemInRectBJEnum takes nothing returns nothing
 endfunction
 
 
-// 随机选取指定区域的匹配物品（可指定过滤）
+// 随机选取指定区域的匹配物品（可指定条件表达式）
 // Picks a random item from within a rect, matching a condition
 function RandomItemInRectBJ takes rect r, boolexpr filter returns item
     set bj_itemRandomConsidered = 0
@@ -5294,7 +5294,7 @@ function RandomDestructableInRectBJEnum takes nothing returns nothing
 endfunction
 
 
-// 随机选取矩形区域满足过滤的可破坏物
+// 随机选取矩形区域满足条件表达式的可破坏物
 // Picks a random destructable from within a rect, matching a condition
 function RandomDestructableInRectBJ takes rect r, boolexpr filter returns destructable
     set bj_destRandomConsidered = 0
@@ -5312,7 +5312,7 @@ function RandomDestructableInRectSimpleBJ takes rect r returns destructable
 endfunction
 
 
-// 随机选取圆形范围满足过滤的可破坏物
+// 随机选取圆形范围满足条件表达式的可破坏物
 // Enumerates within a rect, with a filter to narrow the enumeration down
 // objects within a circular area.
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
@@ -5805,7 +5805,7 @@ function EnumUnitsSelected takes player whichPlayer, boolexpr enumFilter, code e
 endfunction
 
 
-// 选取矩形区域内所有单位（可指定过滤）
+// 选取矩形区域内所有单位（可指定条件表达式）
 // 会创建单位组，用完请注意排泄
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5883,7 +5883,7 @@ function GetUnitsOfTypeIdAll takes integer unitid returns group
 endfunction
 
 
-// 选取玩家拥有的单位（可指定过滤），并以单位组形式返回
+// 选取玩家拥有的单位（可指定条件表达式），并以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5981,7 +5981,7 @@ function GetPlayersEnemies takes player whichPlayer returns force
 endfunction
 
 
-// 获取选取玩家匹配的玩家组（可指定过滤）
+// 获取选取玩家匹配的玩家组（可指定条件表达式）
 function GetPlayersMatching takes boolexpr filter returns force
     local force f = CreateForce()
     call ForceEnumPlayers(f, filter)
@@ -8713,7 +8713,7 @@ function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer mi
 endfunction
 
 
-// <1.24> 保存 触发条件 到哈希表
+// <1.24> 保存 触发条件方法 到哈希表
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
@@ -9013,7 +9013,7 @@ function LoadTriggerHandleBJ takes integer key, integer missionKey, hashtable ta
 endfunction
 
 
-// <1.24> 从哈希表提取触发条件
+// <1.24> 从哈希表提取触发条件方法
 function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, hashtable table returns triggercondition
     return LoadTriggerConditionHandle(table, missionKey, key)
 endfunction
