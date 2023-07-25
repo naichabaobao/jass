@@ -8713,7 +8713,7 @@ function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer mi
 endfunction
 
 
-// <1.24> 保存 触发条件方法 到哈希表
+// <1.24> 保存 触发条件 到哈希表
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
@@ -9013,7 +9013,7 @@ function LoadTriggerHandleBJ takes integer key, integer missionKey, hashtable ta
 endfunction
 
 
-// <1.24> 从哈希表提取触发条件方法
+// <1.24> 从哈希表提取触发条件
 function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, hashtable table returns triggercondition
     return LoadTriggerConditionHandle(table, missionKey, key)
 endfunction
