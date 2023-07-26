@@ -5456,9 +5456,9 @@ native RemoveItem takes item whichItem returns nothing
 native GetItemPlayer takes item whichItem returns player
 // 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
-// 获取指定物品所在 X 轴坐标 [R]
+// 获取指定物品所在 X 坐标 [R]
 native GetItemX takes item i returns real
-// 获取指定物品所在 Y 轴坐标 [R]
+// 获取指定物品所在 Y 坐标 [R]
 native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
