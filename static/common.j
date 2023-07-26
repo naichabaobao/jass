@@ -507,7 +507,7 @@ globals
  constant boolean FALSE = false
 	// 真 true
 	constant boolean TRUE = true
-	// 数组最大值，默认值32768
+	// 数组上限，默认值32768
 	// 注：1.28及以下版本的默认值是8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家(玩家16/28)
