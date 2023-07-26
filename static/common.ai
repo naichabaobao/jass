@@ -20,7 +20,7 @@ native DebugS               takes string str                            returns 
     native DoAiScriptDebug      takes nothing                               returns boolean
     // 获取当前脚本控制的AI玩家（非中立玩家）编号
     // 在1.29及以上版本中，返回的是0 ~ 23任意一个整数，以下则是0 ~ 11
-    // 注：编号从0开始，级玩家1编号为0
+    // 注：编号从0开始，即玩家1编号为0
     native GetAiPlayer          takes nothing                               returns integer
     // 获取升级英雄的单位类型
     // 英雄升级技能相关函数 
@@ -49,11 +49,11 @@ native DebugS               takes string str                            returns 
     // 获取拥有的金矿数量
     // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果AI开始点有多个未被其他玩家占据的矿，可能会导致亡灵/暗夜无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地附近返回的第一座矿，如果返回的非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
-    // 亡灵和暗夜的采矿问题在1.36版本有一定缓解，但并未完全修复，专门给于玩家多矿开局的地图仍会出现问题，但某些在低版本会出现此问题的官方地图，在1.36却正常
+    // 亡灵和暗夜的采矿问题在1.36版本有一定缓解，但并未完全修复，专门给予玩家多矿开局的地图仍会出现问题，而某些在低版本会出现此问题的官方地图，在1.36却正常，因为低版本该函数获取附近金矿的距离至少有2200，高版本似乎只有1500
     native GetMinesOwned        takes nothing                               returns integer
     // 获取拥有的所有金矿的未采金钱数量，并返回第一座矿的金钱数
     // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
-    // 如果开始点有多个金矿，且金钱数不同，会导致统计值偏差
+    // 如果开始点有多个金矿，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
     // 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号
     // 可能只检查主城，如果亡灵开矿不造主城，会被视为无基地
@@ -82,7 +82,7 @@ native DebugS               takes string str                            returns 
     // 获取敌人攻击组强度
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
-    // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻
+    // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻（似乎同时会发送小地图信号告知真人玩家）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
     native GetAllianceTarget    takes nothing                               returns unit
@@ -90,7 +90,7 @@ native DebugS               takes string str                            returns 
     // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
     // 取消指定单位建造/训练
-    // 因单词为反召唤，怀疑可用于建造完成时卖建筑（亡灵）
+    // 因单词为反召唤，怀疑可用于卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
     // @param peon 指定工人单位
