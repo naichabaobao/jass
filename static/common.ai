@@ -146,10 +146,10 @@ native DebugS               takes string str                            returns 
     native SetUnitsFlee         takes boolean state                         returns nothing
     // 允许/禁止 攻击组逃跑
     native SetGroupsFlee        takes boolean state                         returns nothing
-    // 启用/禁用 慢速采矿（每次采集1金）
+    // 启用/禁用 慢速采矿（每次采1金）
     native SetSlowChopping      takes boolean state                         returns nothing
     // 允许/禁止 基地变换
-    // 选择新基地，并将其作为采矿和撤退点
+    // 允许时AI可以选择新基地，并将其作为采矿和撤退点
     native SetCaptainChanges    takes boolean allow                         returns nothing
     // 启用/禁用 聪明的炮火/主动攻城
     // 攻击类型为攻城的单位会优先攻击敌方建筑，同时AI也会尝试优先攻击敌方攻击类型为攻城的单位
@@ -188,15 +188,15 @@ native DebugS               takes string str                            returns 
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
-    // 获取扩张点的 X 轴坐标
+    // 获取扩张点的 X 坐标
     native GetExpansionX        takes nothing                               returns integer
-    // 获取扩张点的 Y 轴坐标
+    // 获取扩张点的 Y 坐标
     native GetExpansionY        takes nothing                               returns integer
-    // 设置集合点
+    // 设置（军队）集合点
     native SetStagePoint        takes real x, real y                        returns nothing
-    // 发布攻击组攻击命令（指定目标/单位）
+    // 发布攻击组移动攻击命令（指定单位）
     native AttackMoveKill       takes unit target                           returns nothing
-    // 发布攻击组攻击命令（指定坐标）
+    // 发布攻击组移动攻击命令（指定坐标）
     native AttackMoveXY         takes integer x, integer y                  returns nothing
     // 在指定坐标卸载全部单位（空投）
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
