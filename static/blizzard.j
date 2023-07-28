@@ -12,9 +12,9 @@ globals
     constant real      bj_PI                            = 3.14159
     // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
-    // 单元尺寸，默认128.0
+    // 单元尺寸（游戏内量测地表面积的单位），默认128.0
     constant real      bj_CELLWIDTH                     = 128.0
-    // 悬崖高度，默认128.0
+    // 悬崖高度（升降台默认升/降一层的高度），默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
     // （建筑）单位默认朝向，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
@@ -75,28 +75,28 @@ globals
 
     // Game constants
 
-    // 最大物品栏格子数，默认6
+    // 物品栏格子上限，默认6
     constant integer   bj_MAX_INVENTORY                 =  6
-    // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
+    // 玩家上限（包含12/24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
-    // 中立受害玩家（玩家14）
+    // 中立受害玩家（玩家14/26）
     constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
-    // 中立特殊玩家（玩家15）
+    // 中立特殊玩家（玩家15/27）
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
-    // 最大玩家槽数（包含所有中立玩家，共16/28位）
+    // 玩家槽上限（包含所有中立玩家，共16/28位）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
-    // 最大尸体数，默认25
+    // 尸体数量上限，默认25
     constant integer   bj_MAX_SKELETONS                 =  25
-    // 最大物品库存，默认11
+    // （商店）物品库存上限，默认11
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
-    // 最大单位库存，默认11
+    // （商店）单位库存上限，默认11
     constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
-    // 最大物品等级，默认10级
+    // 物品等级上限，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
 
     // Auto Save constants
 
-    // 保留的最大（自动）存档数量，默认5
+    // （自动）存档保留数量上限，默认5
     // 怀疑超过会自动替换，但按理说这种设置不应在此
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
@@ -159,10 +159,10 @@ globals
     constant real      bj_STOCK_RESTOCK_INITIAL_DELAY   = 120
     // 库存补充间隔，默认30
     constant real      bj_STOCK_RESTOCK_INTERVAL        = 30
-    // 库存最大补充次数，默认20
+    // 库存补充次数上限，默认20
     constant integer   bj_STOCK_MAX_ITERATIONS          = 20
 
-    // 最大事件注册数，默认64
+    // 事件注册数量上限，默认64
     // 单个“dest dies in region”事件注册的最大事件数。
     // Max events registered by a single "dest dies in region" event.
     constant integer   bj_MAX_DEST_IN_REGION_EVENTS     = 64
@@ -796,7 +796,7 @@ globals
 
     // Corpse creation settings
 
-    // 尸体最大死亡时间，默认8.00
+    // 尸体死亡时间上限，默认8.00
     constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
 
     // Corpse creation styles
@@ -863,9 +863,9 @@ globals
     integer            bj_forLoopBIndexEnd         = 0
     // 玩家检查是否完成，自动检查，检查完成后自动变为真，用于开局系统自动检查所有玩家槽是电脑（不论是否具备AI）还是真人
     boolean            bj_slotControlReady         = false
-    // 玩家槽是否可用，每位玩家配一个，系统在开局时自动设置
+    // 玩家槽可用标识，每位玩家配一个，系统在开局时自动设置
     boolean array      bj_slotControlUsed
-    // 标识当前玩家槽的玩家是电脑还是真人，每位玩家配一个
+    // 玩家槽玩家类型标识（电脑/真人），每位玩家配一个
     mapcontrol array   bj_slotControl
 
     // Game started detection vars
