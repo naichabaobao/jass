@@ -4244,7 +4244,7 @@ function UnitId2StringBJ takes integer unitId returns string
 endfunction
 
 
-// 转换为命令串成命令ID
+// 转换为命令字符串成命令ID
 function String2OrderIdBJ takes string orderIdString returns integer
     local integer orderId
     
@@ -4265,7 +4265,7 @@ function String2OrderIdBJ takes string orderIdString returns integer
 endfunction
 
 
-// 转换命令ID成命令串
+// 转换命令ID成命令字符串
 function OrderId2StringBJ takes integer orderId returns string
     local string orderString
 
