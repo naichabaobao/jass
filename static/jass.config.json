@@ -2156,11 +2156,11 @@
             },
             {
                 "content": "String",
-                "descript": "FDF(框架定义) 字串符"
+                "descript": "FDF(框架定义) 字符串"
             },
             {
                 "content": "StringList",
-                "descript": "FDF(框架定义) 字串符列表"
+                "descript": "FDF(框架定义) 字符串列表"
             },
             {
                 "content": "TabFocusDefault",
