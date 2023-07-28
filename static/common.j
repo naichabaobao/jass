@@ -458,7 +458,7 @@ constant native AbilityId2String takes integer abilityId returns string
 
 // Looks up the "name" field for any object (unit, item, ability)
 
-// 获取对象(单位、物品、技能等任何对象)名称(字串符) [C]
+// 获取对象(单位、物品、技能等任何对象)名称(字符串) [C]
 // 获取的名称为英语，非本地语言
 // 在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
@@ -2483,15 +2483,15 @@ globals
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
-	// 技能字串符域 名称 ('anam')
+	// 技能字符串域 名称 ('anam')
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
-	// 技能字串符域 图标(关闭) ('auar')
+	// 技能字符串域 图标(关闭) ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
-	// 技能字串符域 图标(研究) ('arar')
+	// 技能字符串域 图标(研究) ('arar')
 	constant abilitystringfield ABILITY_SF_ICON_RESEARCH = ConvertAbilityStringField('arar')
-	// 技能字串符域 音效 ('aefs')
+	// 技能字符串域 音效 ('aefs')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
-	// 技能字串符域 音效(循环) ('aefl')
+	// 技能字符串域 音效(循环) ('aefl')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
 	
     // 技能随等级改变的整数域 魔法消耗 ('amcs')
@@ -3821,91 +3821,91 @@ globals
     // 技能随等级改变的布尔值域 附加杀敌奖励 ('Ntm4')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
 	
-	// 技能随等级改变的字串符域 图标 - 普通 ('aart')
+	// 技能随等级改变的字符串域 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
-	// 技能随等级改变的字串符域 效果 - 施法者 ('acat')
+	// 技能随等级改变的字符串域 效果 - 施法者 ('acat')
 	constant abilitystringlevelfield ABILITY_SLF_CASTER = ConvertAbilityStringLevelField('acat')
-	// 技能随等级改变的字串符域 效果 - 目标 ('atat')
+	// 技能随等级改变的字符串域 效果 - 目标 ('atat')
 	constant abilitystringlevelfield ABILITY_SLF_TARGET = ConvertAbilityStringLevelField('atat')
-	// 技能随等级改变的字串符域 效果 - 特殊 ('asat')
+	// 技能随等级改变的字符串域 效果 - 特殊 ('asat')
 	constant abilitystringlevelfield ABILITY_SLF_SPECIAL = ConvertAbilityStringLevelField('asat')
-	// 技能随等级改变的字串符域 效果 - 目标点 ('aeat')
+	// 技能随等级改变的字符串域 效果 - 目标点 ('aeat')
 	constant abilitystringlevelfield ABILITY_SLF_EFFECT = ConvertAbilityStringLevelField('aeat')
-	// 技能随等级改变的字串符域 效果 - 区域 ('aaea')
+	// 技能随等级改变的字符串域 效果 - 区域 ('aaea')
 	constant abilitystringlevelfield ABILITY_SLF_AREA_EFFECT = ConvertAbilityStringLevelField('aaea')
-	// 技能随等级改变的字串符域 效果 - 闪电效果 ('alig')
+	// 技能随等级改变的字符串域 效果 - 闪电效果 ('alig')
 	constant abilitystringlevelfield ABILITY_SLF_LIGHTNING_EFFECTS = ConvertAbilityStringLevelField('alig')
-	// 技能随等级改变的字串符域 效果 - 投射物图像 ('amat')
+	// 技能随等级改变的字符串域 效果 - 投射物图像 ('amat')
 	constant abilitystringlevelfield ABILITY_SLF_MISSILE_ART = ConvertAbilityStringLevelField('amat')
-	// 技能随等级改变的字串符域 提示工具 - 学习 ('aret')
+	// 技能随等级改变的字符串域 提示工具 - 学习 ('aret')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN = ConvertAbilityStringLevelField('aret')
-	// 技能随等级改变的字串符域 提示工具 - 学习 - 扩展 ('arut')
+	// 技能随等级改变的字符串域 提示工具 - 学习 - 扩展 ('arut')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN_EXTENDED = ConvertAbilityStringLevelField('arut')
-	// 技能随等级改变的字串符域 提示工具 - 普通 ('atp1')
+	// 技能随等级改变的字符串域 提示工具 - 普通 ('atp1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL = ConvertAbilityStringLevelField('atp1')
-	// 技能随等级改变的字串符域 提示工具 - 关闭 ('aut1')
+	// 技能随等级改变的字符串域 提示工具 - 关闭 ('aut1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF = ConvertAbilityStringLevelField('aut1')
-	// 技能随等级改变的字串符域 提示工具 - 普通 - 扩展 ('aub1')
+	// 技能随等级改变的字符串域 提示工具 - 普通 - 扩展 ('aub1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED = ConvertAbilityStringLevelField('aub1')
-	// 技能随等级改变的字串符域 提示工具 - 关闭 - 扩展 ('auu1')
+	// 技能随等级改变的字符串域 提示工具 - 关闭 - 扩展 ('auu1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED = ConvertAbilityStringLevelField('auu1')
-	// 技能随等级改变的字串符域 普通形态单位 ('Eme1')
+	// 技能随等级改变的字符串域 普通形态单位 ('Eme1')
 	constant abilitystringlevelfield ABILITY_SLF_NORMAL_FORM_UNIT_EME1 = ConvertAbilityStringLevelField('Eme1')
-	// 技能随等级改变的字串符域 召唤单位类型 ('Ndp1')
+	// 技能随等级改变的字符串域 召唤单位类型 ('Ndp1')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWNED_UNITS = ConvertAbilityStringLevelField('Ndp1')
-	// 技能随等级改变的字串符域 关联技能 ('Nrc1')
+	// 技能随等级改变的字符串域 关联技能 ('Nrc1')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_FOR_UNIT_CREATION = ConvertAbilityStringLevelField('Nrc1')
-	// 技能随等级改变的字串符域 普通形态单位 ('Mil1')
+	// 技能随等级改变的字符串域 普通形态单位 ('Mil1')
 	constant abilitystringlevelfield ABILITY_SLF_NORMAL_FORM_UNIT_MIL1 = ConvertAbilityStringLevelField('Mil1')
-	// 技能随等级改变的字串符域 变化形态单位 ('Mil2')
+	// 技能随等级改变的字符串域 变化形态单位 ('Mil2')
 	constant abilitystringlevelfield ABILITY_SLF_ALTERNATE_FORM_UNIT_MIL2 = ConvertAbilityStringLevelField('Mil2')
-	// 技能随等级改变的字串符域 基础命令ID ('Ans5')
+	// 技能随等级改变的字符串域 基础命令ID ('Ans5')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_ANS5 = ConvertAbilityStringLevelField('Ans5')
-	// 技能随等级改变的字串符域 变形单位 - 地面 ('Ply2')
+	// 技能随等级改变的字符串域 变形单位 - 地面 ('Ply2')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_GROUND = ConvertAbilityStringLevelField('Ply2')
-	// 技能随等级改变的字串符域 变形单位 - 空中 ('Ply3')
+	// 技能随等级改变的字符串域 变形单位 - 空中 ('Ply3')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_AIR = ConvertAbilityStringLevelField('Ply3')
-	// 技能随等级改变的字串符域 变形单位 - 两栖 ('Ply4')
+	// 技能随等级改变的字符串域 变形单位 - 两栖 ('Ply4')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_AMPHIBIOUS = ConvertAbilityStringLevelField('Ply4')
-	// 技能随等级改变的字串符域 变形单位 - 水中 ('Ply5')
+	// 技能随等级改变的字符串域 变形单位 - 水中 ('Ply5')
 	constant abilitystringlevelfield ABILITY_SLF_MORPH_UNITS_WATER = ConvertAbilityStringLevelField('Ply5')
-	// 技能随等级改变的字串符域 单位召唤类型1 ('Rai3')
+	// 技能随等级改变的字符串域 单位召唤类型1 ('Rai3')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_ONE = ConvertAbilityStringLevelField('Rai3')
-	// 技能随等级改变的字串符域 单位召唤类型2 ('Rai4')
+	// 技能随等级改变的字符串域 单位召唤类型2 ('Rai4')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_TWO = ConvertAbilityStringLevelField('Rai4')
-	// 技能随等级改变的字串符域 单位类型 ('Sod2')
+	// 技能随等级改变的字符串域 单位类型 ('Sod2')
 	constant abilitystringlevelfield ABILITY_SLF_UNIT_TYPE_SOD2 = ConvertAbilityStringLevelField('Sod2')
-	// 技能随等级改变的字串符域 召唤单位类型1 ('Ist1')
+	// 技能随等级改变的字符串域 召唤单位类型1 ('Ist1')
 	constant abilitystringlevelfield ABILITY_SLF_SUMMON_1_UNIT_TYPE = ConvertAbilityStringLevelField('Ist1')
-	// 技能随等级改变的字串符域 召唤单位类型2 ('Ist2')
+	// 技能随等级改变的字符串域 召唤单位类型2 ('Ist2')
 	constant abilitystringlevelfield ABILITY_SLF_SUMMON_2_UNIT_TYPE = ConvertAbilityStringLevelField('Ist2')
-	// 技能随等级改变的字串符域 允许转换种族 ('Ndc1')
+	// 技能随等级改变的字符串域 允许转换种族 ('Ndc1')
 	constant abilitystringlevelfield ABILITY_SLF_RACE_TO_CONVERT = ConvertAbilityStringLevelField('Ndc1')
-	// 技能随等级改变的字串符域 辅助单位类型 ('coa1')
+	// 技能随等级改变的字符串域 辅助单位类型 ('coa1')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE = ConvertAbilityStringLevelField('coa1')
-	// 技能随等级改变的字串符域 辅助单位类型1 ('dcp1')
+	// 技能随等级改变的字符串域 辅助单位类型1 ('dcp1')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE_ONE = ConvertAbilityStringLevelField('dcp1')
-	// 技能随等级改变的字串符域 辅助单位类型2 ('dcp2')
+	// 技能随等级改变的字符串域 辅助单位类型2 ('dcp2')
 	constant abilitystringlevelfield ABILITY_SLF_PARTNER_UNIT_TYPE_TWO = ConvertAbilityStringLevelField('dcp2')
-	// 技能随等级改变的字串符域 要求单位类型 ('tpi1')
+	// 技能随等级改变的字符串域 要求单位类型 ('tpi1')
 	constant abilitystringlevelfield ABILITY_SLF_REQUIRED_UNIT_TYPE = ConvertAbilityStringLevelField('tpi1')
-	// 技能随等级改变的字串符域 转换单位类型 ('tpi2')
+	// 技能随等级改变的字符串域 转换单位类型 ('tpi2')
 	constant abilitystringlevelfield ABILITY_SLF_CONVERTED_UNIT_TYPE = ConvertAbilityStringLevelField('tpi2')
-	// 技能随等级改变的字串符域 法术列表 ('spb1')
+	// 技能随等级改变的字符串域 法术列表 ('spb1')
 	constant abilitystringlevelfield ABILITY_SLF_SPELL_LIST = ConvertAbilityStringLevelField('spb1')
-	// 技能随等级改变的字串符域 基础命令ID ('spb5')
+	// 技能随等级改变的字符串域 基础命令ID ('spb5')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_SPB5 = ConvertAbilityStringLevelField('spb5')
-	// 技能随等级改变的字串符域 基础命令ID ('spb6')
+	// 技能随等级改变的字符串域 基础命令ID ('spb6')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_NCL6 = ConvertAbilityStringLevelField('Ncl6')
-	// 技能随等级改变的字串符域 技能升级1 ('Neg3')
+	// 技能随等级改变的字符串域 技能升级1 ('Neg3')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_1 = ConvertAbilityStringLevelField('Neg3')
-	// 技能随等级改变的字串符域 技能升级2 ('Neg4')
+	// 技能随等级改变的字符串域 技能升级2 ('Neg4')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_2 = ConvertAbilityStringLevelField('Neg4')
-	// 技能随等级改变的字串符域 技能升级3 ('Neg5')
+	// 技能随等级改变的字符串域 技能升级3 ('Neg5')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
-	// 技能随等级改变的字串符域 技能升级4 ('Neg6')
+	// 技能随等级改变的字符串域 技能升级4 ('Neg6')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
-	// 技能随等级改变的字串符域 生产单位类型 ('Nsy2')
+	// 技能随等级改变的字符串域 生产单位类型 ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
 	
 	// Item
@@ -4112,13 +4112,13 @@ globals
         // 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
 
-	// 单位字串符域 文本 - 名称 ('unam')
+	// 单位字符串域 文本 - 名称 ('unam')
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
-	// 单位字串符域 文本 - 称谓(英雄类单位) ('upro')
+	// 单位字符串域 文本 - 称谓(英雄类单位) ('upro')
 	constant unitstringfield UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
-	// 单位字串符域 美术 - 建筑地表纹理 ('uubs')
+	// 单位字符串域 美术 - 建筑地表纹理 ('uubs')
 	constant unitstringfield UNIT_SF_GROUND_TEXTURE = ConvertUnitStringField('uubs')
-	// 单位字串符域 美术 - 阴影图像(单位) ('ushu')
+	// 单位字符串域 美术 - 阴影图像(单位) ('ushu')
 	constant unitstringfield UNIT_SF_SHADOW_IMAGE_UNIT = ConvertUnitStringField('ushu')
 	
 	// Unit Weapon
@@ -4174,7 +4174,7 @@ globals
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACKS_ENABLED = ConvertUnitWeaponBooleanField('uaen')
 	// 单位武器布尔值域 战斗 - 攻击1 - 射弹自导允许 ('umh1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
-	// 单位武器字串符域 战斗 - 攻击1 - 投射物图像 ('ua1m')
+	// 单位武器字符串域 战斗 - 攻击1 - 投射物图像 ('ua1m')
 	constant unitweaponstringfield UNIT_WEAPON_SF_ATTACK_PROJECTILE_ART = ConvertUnitWeaponStringField('ua1m')
 	
 	// Move Type
@@ -4387,7 +4387,7 @@ native R2S takes real r returns string
 // 转换实数成字符串
 //@param precision 保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
-// 转换字串符成整数
+// 转换字符串成整数
 native S2I takes string s returns integer
 // 转换字符串成实数
 native S2R takes string s returns real
@@ -4396,18 +4396,18 @@ native S2R takes string s returns real
 // @param h 任意handle子类型, 常用于hashtable key
 native GetHandleId takes handle h returns integer
 // 截取字符串 [R]
-// @param source "hello world"
+// @param source 源内容
 // @param start 开始位置,下标为0
 // @param end 结束位置,需要的字符串长度
 native SubString takes string source, integer start, integer end returns string
-// 获取字串符长度
+// 获取字符串长度
 native StringLength takes string s returns integer
-// 转换字串符英文的大小写
+// 转换字符串英文的大小写
 native StringCase takes string source, boolean upper returns string
 // 转换字符串成哈希码
 native StringHash takes string s returns integer
 
-// 获取外部字串符的译文 [R]
+// 获取外部字符串的译文 [R]
 // 从Globalstrings.fdf文件获取查询内容对应的翻译文本，不同语言返回不同的值
 // 当字符串不存在时(是当前版本不存在查询的字符串本身，不是字符串已存在但没有翻译文本)，会原封不动返回查询内容(英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等)，可利用其得知游戏大致版本号(如1.27，1.30等)
 // 不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
@@ -5248,14 +5248,14 @@ native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPl
 
 
 // 事件响应 获取输入的聊天字符(对应玩家输入聊天信息等事件)
-// 返回实际输入的字串符，如需完全匹配，则返回指定的字串符
+// 返回实际输入的字符串，如需完全匹配，则返回指定的字符串
 // EVENT_PLAYER_CHAT
 // returns the actual string they typed in ( same as what you registered for
 // if you required exact match )
 constant native GetEventPlayerChatString takes nothing returns string
 
 // 获取匹配的聊天字符(对应玩家输入聊天信息等事件)
-// 返回指定的字串符
+// 返回指定的字符串
 // EVENT_PLAYER_CHAT
 // returns the string that you registered for
 constant native GetEventPlayerChatStringMatched takes nothing returns string
@@ -6562,7 +6562,7 @@ native RemoveSavedInteger takes hashtable table, integer parentKey, integer chil
 native RemoveSavedReal takes hashtable table, integer parentKey, integer childKey returns nothing
 // <1.24> 删除指定哈希表的指定位置记录的布尔值
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的字串符
+// <1.24> 删除指定哈希表的指定位置记录的字符串
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
 // <1.24> 删除指定哈希表的指定位置记录的句柄
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
@@ -6689,7 +6689,7 @@ native CreateMinimapIconAtLoc takes location where, integer red, integer green, 
 // 创建小地图(任务)图标(指定坐标)
 // @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
-// 获取皮肤管理器的本地路径(指定字串符)
+// 获取皮肤管理器的本地路径(指定字符串)
 // 应该不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native SkinManagerGetLocalPath takes string key returns string
 // 销毁小地图(任务)图标
@@ -7342,17 +7342,17 @@ native AddSpecialEffectLoc takes string modelName, location where returns effect
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
 // 销毁指定特效
 native DestroyEffect takes effect whichEffect returns nothing
-// 新建特效(按字串符指定技能，绑定到坐标)
+// 新建特效(按字符串指定技能，绑定到坐标)
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
-// 新建特效(按字串符指定技能，绑定到点)
+// 新建特效(按字符串指定技能，绑定到点)
 native AddSpellEffectLoc takes string abilityString, effecttype t, location where returns effect
 // 按ID新建特效(按ID指定技能，绑定到坐标) [R]
 native AddSpellEffectById takes integer abilityId, effecttype t, real x, real y returns effect
 // 新建特效(按ID指定技能，绑定到点) [R]
 native AddSpellEffectByIdLoc takes integer abilityId, effecttype t, location where returns effect
-// 新建特效(按字串符指定攻击点，绑定到单位/物品/可破坏物) [R]
+// 新建特效(按字符串指定攻击点，绑定到单位/物品/可破坏物) [R]
 native AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect
-// 按ID新建特效(按字串符指定攻击点，绑定到单位/物品/可破坏物) [R]
+// 按ID新建特效(按字符串指定攻击点，绑定到单位/物品/可破坏物) [R]
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电特效 [R]
@@ -7377,11 +7377,11 @@ native GetLightningColorG takes lightning whichBolt returns real
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取技能特效路径(指定技能字串符和索引)
+// 获取技能特效路径(指定技能字符串和索引)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
 // 获取技能特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取技能音效路径(指定技能字串符和声音类型)
+// 获取技能音效路径(指定技能字符串和声音类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
 // 获取技能音效路径(指定技能ID和声音类型)
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
@@ -8015,9 +8015,9 @@ native BlzGetAbilityId takes ability whichAbility returns integer
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
-// 转换四字符码成字串符
+// 转换四字符码成字符串
 // native BlzFourCC2S                                 takes integer value returns string
-// 转换字串符成四字符码
+// 转换字符串成四字符码
 // native BlzS2FourCC                                 takes string value returns integer
 
 // 设置单位朝向(角度)
