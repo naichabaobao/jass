@@ -442,9 +442,9 @@ constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
 // 转换整数成路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
-// 转换命令串成命令ID
+// 转换命令字符串成命令ID
 constant native OrderId takes string orderIdString returns integer
-// 转换命令ID成命令串
+// 转换命令ID成命令字符串
 constant native OrderId2String takes integer orderId returns string
 // 转换单位类型字符串成单位类型
 constant native UnitId takes string unitIdString returns integer
@@ -4656,28 +4656,28 @@ native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichL
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native GroupImmediateOrder takes group whichGroup, string order returns boolean
 // 按ID发布(单位组)命令(无目标)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native GroupImmediateOrderById takes group whichGroup, integer order returns boolean
 // 发布(单位组)命令(指定坐标) [R]
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native GroupPointOrder takes group whichGroup, string order, real x, real y returns boolean
 // 发布(单位组)命令(指定点)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native GroupPointOrderLoc takes group whichGroup, string order, location whichLocation returns boolean
 // 按ID发布(单位组)命令(指定坐标)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native GroupPointOrderById takes group whichGroup, integer order, real x, real y returns boolean
 // 按ID发布(单位组)命令(指定点)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native GroupPointOrderByIdLoc takes group whichGroup, integer order, location whichLocation returns boolean
 // 发布(单位组)命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native GroupTargetOrder takes group whichGroup, string order, widget targetWidget returns boolean
 // 按ID发布(单位组)命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native GroupTargetOrderById takes group whichGroup, integer order, widget targetWidget returns boolean
 
 // This will be difficult to support with potentially disjoint, cell-based regions
@@ -5921,40 +5921,40 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // 按ID发布命令(无目标)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssueTargetOrder takes unit whichUnit, string order, widget targetWidget returns boolean
 // 按ID发布命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 发布即时命令(指定坐标)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssueInstantPointOrder takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定点)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 发布即时命令(指定单位/物品/可破坏物)
-// @param order 技能命令串可在 记录物编的文件 找到
+// @param order 技能命令字符串可在 记录物编的文件 找到
 native IssueInstantTargetOrder takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
 // 按ID发布即时命令(指定单位/物品/可破坏物)
-// @param order 技能ID可在 记录物编的文件 找到
+// @param order 技能命令ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
 // @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 文件找到
