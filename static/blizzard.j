@@ -724,7 +724,7 @@ globals
 	constant integer   bj_GAMECACHE_REAL                    = 2
 	// 游戏缓存类型 - 单位
 	constant integer   bj_GAMECACHE_UNIT                    = 3
-	// 游戏缓存类型 - 字串符
+	// 游戏缓存类型 - 字符串
 	constant integer   bj_GAMECACHE_STRING                  = 4
 	
 	// Hashtable value types
@@ -735,7 +735,7 @@ globals
 	constant integer   bj_HASHTABLE_INTEGER                 = 1
 	// 哈希表类型 - 实数
 	constant integer   bj_HASHTABLE_REAL                    = 2
-	// 哈希表类型 - 字串符
+	// 哈希表类型 - 字符串
 	constant integer   bj_HASHTABLE_STRING                  = 3
 	// 哈希表类型 - 句柄
 	constant integer   bj_HASHTABLE_HANDLE                  = 4
@@ -1265,7 +1265,7 @@ endglobals
 
 
 // 显示Debug消息[C]
-// @param msg 消息字串符
+// @param msg 消息字符串
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -1860,7 +1860,7 @@ function CommentString takes string commentString returns nothing
 endfunction
 
 
-// 获取外部字串符的译文
+// 获取外部字符串的译文
 // This function returns the input string, converting it from the localized text, if necessary
 function StringIdentity takes string theString returns string
     return GetLocalizedString(theString)
@@ -8631,7 +8631,7 @@ function StoreBooleanBJ takes boolean value, string key, string missionKey, game
 endfunction
 
 
-// 存储 字串符 到游戏缓存
+// 存储 字符串 到游戏缓存
 function StoreStringBJ takes string value, string key, string missionKey, gamecache cache returns boolean
     return StoreString(cache, missionKey, key, value)
 endfunction
@@ -8918,7 +8918,7 @@ function GetStoredBooleanBJ takes string key, string missionKey, gamecache cache
 endfunction
 
 
-// 从游戏缓读取字串符
+// 从游戏缓读取字符串
 function GetStoredStringBJ takes string key, string missionKey, gamecache cache returns string
     local string s
 
@@ -12132,7 +12132,7 @@ function BlzSetAbilityRealFieldBJ takes ability whichAbility, abilityrealfield w
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealField(whichAbility, whichField, value)
 endfunction
 
-// 设置技能字串符域
+// 设置技能字符串域
 function BlzSetAbilityStringFieldBJ takes ability whichAbility, abilitystringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringField(whichAbility, whichField, value)
 endfunction
@@ -12152,7 +12152,7 @@ function BlzSetAbilityRealLevelFieldBJ takes ability whichAbility, abilityrealle
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelField(whichAbility, whichField, level, value)
 endfunction
 
-// 设置技能随等级改变的字串符域
+// 设置技能随等级改变的字符串域
 function BlzSetAbilityStringLevelFieldBJ takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelField(whichAbility, whichField, level, value)
 endfunction
@@ -12172,7 +12172,7 @@ function BlzSetAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityr
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelArrayField(whichAbility, whichField, level, index, value)
 endfunction
 
-// 设置技能随等级改变的字串符数组域
+// 设置技能随等级改变的字符串数组域
 function BlzSetAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelArrayField(whichAbility, whichField, level, index, value)
 endfunction
@@ -12192,7 +12192,7 @@ function BlzAddAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityr
     set bj_lastInstObjFuncSuccessful = BlzAddAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 endfunction
 
-// 添加技能随等级改变的字串符数组域
+// 添加技能随等级改变的字符串数组域
 function BlzAddAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzAddAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 endfunction
@@ -12212,7 +12212,7 @@ function BlzRemoveAbilityRealLevelArrayFieldBJ takes ability whichAbility, abili
     set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 endfunction
 
-// 移除技能随等级改变的字串符数组域
+// 移除技能随等级改变的字符串数组域
 function BlzRemoveAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 endfunction
@@ -12244,7 +12244,7 @@ function BlzSetItemRealFieldBJ takes item whichItem, itemrealfield whichField, r
     set bj_lastInstObjFuncSuccessful = BlzSetItemRealField(whichItem, whichField, value)
 endfunction
 
-// 设置物品字串符域
+// 设置物品字符串域
 function BlzSetItemStringFieldBJ takes item whichItem, itemstringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetItemStringField(whichItem, whichField, value)
 endfunction
@@ -12267,7 +12267,7 @@ function BlzSetUnitRealFieldBJ takes unit whichUnit, unitrealfield whichField, r
     set bj_lastInstObjFuncSuccessful = BlzSetUnitRealField(whichUnit, whichField, value)
 endfunction
 
-// 设置单位字串符域
+// 设置单位字符串域
 function BlzSetUnitStringFieldBJ takes unit whichUnit, unitstringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitStringField(whichUnit, whichField, value)
 endfunction
@@ -12289,7 +12289,7 @@ function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield w
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器字串符域
+// 设置武器字符串域
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
