@@ -5705,24 +5705,24 @@ native GetUnitPointValueByType takes integer unitType returns integer
 // 设置单位附加值(指定单位类型)
 native SetUnitPointValueByType takes integer unitType, integer newPointValue returns nothing
 
-// 创建物品(指定物品) [R]
+// 创建物品(指定单位和物品) [R]
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
-// 创建物品(指定物品类型)
+// 创建物品(指定单位和物品类型)
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
-// 把物品移动到指定物品栏格数(指定物品类型) [R]
+// 把物品移动到指定物品栏格数(指定单位和物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除指定物品
+// 删除指定物品（指定单位）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 删除物品(指定物品栏格数)
+// 删除物品(指定单位和物品栏格数)
 // 不论哪个物品在该格中，都会被删除
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
-// 获取单位持有物品(指定物品栏格数)
+// 获取单位持有的物品(指定物品栏格数)
 // @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取已存档物品的物品栏格数（指定单位）
