@@ -5689,7 +5689,7 @@ function GroupAddGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupAddGroupDest, GetEnumUnit())
 endfunction
 
-// 往 destGroup单位组 添加 sourceGroup单位组 的单位
+// 将 sourceGroup单位组 的单位添加到 destGroup单位组
 function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5711,7 +5711,7 @@ function GroupRemoveGroupEnum takes nothing returns nothing
     call GroupRemoveUnit(bj_groupRemoveGroupDest, GetEnumUnit())
 endfunction
 
-// 从 destGroup单位组 中移除 sourceGroup单位组 的单位
+// 将 sourceGroup单位组 的单位移出 destGroup单位组
 function GroupRemoveGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
