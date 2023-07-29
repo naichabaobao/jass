@@ -4603,10 +4603,10 @@ native DestroyGroup takes group whichGroup returns nothing
 native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
 // 将指定单位移出单位组 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
-// 往 addGroup单位组 添加 whichGroup单位组 的单位 [快速]
+// 将 whichGroup单位组 的单位添加到 addGroup单位组 [快速]
 // @version 1.33
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
-// 从 removeGroup单位组 中移除 whichGroup单位组 的单位 [快速]
+// 将 whichGroup单位组 的单位移出 removeGroup单位组 [快速]
 // @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
