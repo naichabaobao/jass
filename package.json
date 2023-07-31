@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "keywords": [
     "jass",
     "vjass",
@@ -73,13 +73,6 @@
           "default": false,
           "description": "(Test) Support lua, Cooperate with 'jass.lua.dependents' consumption"
         },
-        "jass.excludes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "(Deprecation) Ignore unneeded directories or files"
-        },
         "jass.cjass.dependents": {
           "type": "array",
           "items": {
@@ -101,11 +94,6 @@
           "type": "boolean",
           "default": false,
           "description": "only jass model,It is not recommended to use when diagnostic is on"
-        },
-        "jass.diagnostic": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) Check jass syntax only"
         },
         "jass.formatv2": {
           "type": "boolean",

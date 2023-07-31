@@ -396,6 +396,118 @@ class MarkHoverProvider implements vscode.HoverProvider {
 
 }
 
+
+class StringHoverProvider implements vscode.HoverProvider {
+
+  // 规定标识符长度
+  private _maxLength = 526;
+
+  private isNumber = function (val: string) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if (regPos.test(val) || regNeg.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+
+    const key = document.getText(document.getWordRangeAtPosition(position));
+
+    if (key.length > this._maxLength) {
+      return null;
+    }
+
+    if (this.isNumber(key)) {
+      return null;
+    }
+
+    if (AllKeywords.includes(key)) {
+      return null;
+    }
+
+    // const type = Types.find(type => type === key);
+    // if (type) {
+    //   const markdownString = new vscode.MarkdownString().appendCodeblock(type);
+    //   markdownString.appendText("\n");
+    //   markdownString.appendText(getTypeDesc(type));
+    //   return new vscode.Hover(markdownString);
+    // }
+    console.info("string hover:" + key);
+
+    const fsPath = document.uri.fsPath;
+    // parseContent(fsPath, document.getText());
+
+    const hovers: vscode.MarkdownString[] = [];
+
+    if (Options.isSupportString) {
+
+      const str = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
+        return mark.isString() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
+      });
+      
+
+      
+      if (str) {
+        const strValue = str.value();
+        
+        console.log("strValue:" + strValue);
+
+        const targetMark = MarkCodes.find(markCode => `"${markCode.code}"` == strValue)
+
+        // if (targetMark) {
+        //   const ms = new vscode.MarkdownString();
+        //   ms.appendMarkdown(`***${targetMark.name}***`);
+        //   ms.appendText("\n");
+        //   ms.appendMarkdown(targetMark.tip);
+        //   ms.appendText("\n");
+        //   ms.appendCodeblock(`"${targetMark.code}"`);
+
+        //   ms.appendMarkdown("***@type***(" + (targetMark.type ? targetMark.type : "未知") + ")")
+        //   ms.appendMarkdown("  \n")
+        //   ms.appendMarkdown("***@race***(" + (targetMark.race ? targetMark.race : "未知") + ")")
+        //   ms.appendMarkdown("  \n")
+        //   ms.appendMarkdown("***@kind***(" + (targetMark.kind ? targetMark.kind : "未知") + ")");
+        //   hovers.push(ms);
+        // }
+
+        const comsumerTargetMark = [...ConfigPovider.instance().getstrings(), ...PluginDefaultConfig.strings ?? []].find(preset => typeof preset == "string" ? `"${preset}"` == strValue : `"${preset.content}"` == strValue);
+       
+
+        if (comsumerTargetMark) {
+          const ms = new vscode.MarkdownString();
+          if (typeof comsumerTargetMark == "string") {
+            ms.appendMarkdown(`***${comsumerTargetMark}***`);
+
+            ms.appendText("\n");
+            ms.appendCodeblock(`"${comsumerTargetMark}"`);
+          } else {
+            ms.appendMarkdown(`***${comsumerTargetMark.content}***`);
+            if (comsumerTargetMark.descript) {
+              ms.appendText("\n");
+              ms.appendMarkdown(comsumerTargetMark.descript);
+            }
+
+            ms.appendText("\n");
+            ms.appendCodeblock(`"${comsumerTargetMark.content}"`);
+          }
+
+          hovers.push(ms);
+        }
+      }
+
+
+    }
+
+    return new vscode.Hover([...hovers]);
+  }
+
+}
+
 vscode.languages.registerHoverProvider("jass", new HoverProvider());
 
 vscode.languages.registerHoverProvider("jass", new MarkHoverProvider());
+
+vscode.languages.registerHoverProvider("jass", new StringHoverProvider());
