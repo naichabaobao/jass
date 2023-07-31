@@ -12,9 +12,9 @@ globals
     constant real      bj_PI                            = 3.14159
     // 底数，默认2.71828
     constant real      bj_E                             = 2.71828
-    // 单元尺寸，默认128.0
+    // 单元尺寸（游戏内量测地表面积的单位），默认128.0
     constant real      bj_CELLWIDTH                     = 128.0
-    // 悬崖高度，默认128.0
+    // 悬崖高度（升降台默认升/降一层的高度），默认128.0
     constant real      bj_CLIFFHEIGHT                   = 128.0
     // （建筑）单位默认朝向，默认270.0
     constant real      bj_UNIT_FACING                   = 270.0
@@ -75,28 +75,28 @@ globals
 
     // Game constants
 
-    // 最大物品栏格子数，默认6
+    // 物品栏格子上限，默认6
     constant integer   bj_MAX_INVENTORY                 =  6
-    // 最大玩家数（包含12或24位玩家和中立敌对玩家，共13/25位）
+    // 玩家上限（包含12/24位玩家和中立敌对玩家，共13/25位）
     constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
-    // 中立受害玩家（玩家14）
+    // 中立受害玩家（玩家14/26）
     constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
-    // 中立特殊玩家（玩家15）
+    // 中立特殊玩家（玩家15/27）
     constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
-    // 最大玩家槽数（包含所有中立玩家，共16/28位）
+    // 玩家槽上限（包含所有中立玩家，共16/28位）
     constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
-    // 最大尸体数，默认25
+    // 尸体数量上限，默认25
     constant integer   bj_MAX_SKELETONS                 =  25
-    // 最大物品库存，默认11
+    // （商店）物品库存上限，默认11
     constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
-    // 最大单位库存，默认11
+    // （商店）单位库存上限，默认11
     constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
-    // 最大物品等级，默认10级
+    // 物品等级上限，默认10级
     constant integer   bj_MAX_ITEM_LEVEL                =  10
 
     // Auto Save constants
 
-    // 保留的最大（自动）存档数量，默认5
+    // （自动）存档保留数量上限，默认5
     // 怀疑超过会自动替换，但按理说这种设置不应在此
     constant integer   bj_MAX_CHECKPOINTS               =  5
 
@@ -159,10 +159,10 @@ globals
     constant real      bj_STOCK_RESTOCK_INITIAL_DELAY   = 120
     // 库存补充间隔，默认30
     constant real      bj_STOCK_RESTOCK_INTERVAL        = 30
-    // 库存最大补充次数，默认20
+    // 库存补充次数上限，默认20
     constant integer   bj_STOCK_MAX_ITERATIONS          = 20
 
-    // 最大事件注册数，默认64
+    // 事件注册数量上限，默认64
     // 单个“dest dies in region”事件注册的最大事件数。
     // Max events registered by a single "dest dies in region" event.
     constant integer   bj_MAX_DEST_IN_REGION_EVENTS     = 64
@@ -724,7 +724,7 @@ globals
 	constant integer   bj_GAMECACHE_REAL                    = 2
 	// 游戏缓存类型 - 单位
 	constant integer   bj_GAMECACHE_UNIT                    = 3
-	// 游戏缓存类型 - 字串符
+	// 游戏缓存类型 - 字符串
 	constant integer   bj_GAMECACHE_STRING                  = 4
 	
 	// Hashtable value types
@@ -735,7 +735,7 @@ globals
 	constant integer   bj_HASHTABLE_INTEGER                 = 1
 	// 哈希表类型 - 实数
 	constant integer   bj_HASHTABLE_REAL                    = 2
-	// 哈希表类型 - 字串符
+	// 哈希表类型 - 字符串
 	constant integer   bj_HASHTABLE_STRING                  = 3
 	// 哈希表类型 - 句柄
 	constant integer   bj_HASHTABLE_HANDLE                  = 4
@@ -796,7 +796,7 @@ globals
 
     // Corpse creation settings
 
-    // 尸体最大死亡时间，默认8.00
+    // 尸体死亡时间上限，默认8.00
     constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
 
     // Corpse creation styles
@@ -863,9 +863,9 @@ globals
     integer            bj_forLoopBIndexEnd         = 0
     // 玩家检查是否完成，自动检查，检查完成后自动变为真，用于开局系统自动检查所有玩家槽是电脑（不论是否具备AI）还是真人
     boolean            bj_slotControlReady         = false
-    // 玩家槽是否可用，每位玩家配一个，系统在开局时自动设置
+    // 玩家槽可用标识，每位玩家配一个，系统在开局时自动设置
     boolean array      bj_slotControlUsed
-    // 标识当前玩家槽的玩家是电脑还是真人，每位玩家配一个
+    // 玩家槽玩家类型标识（电脑/真人），每位玩家配一个
     mapcontrol array   bj_slotControl
 
     // Game started detection vars
@@ -1265,7 +1265,7 @@ endglobals
 
 
 // 显示Debug消息[C]
-// @param msg 消息字串符
+// @param msg 消息字符串
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -1860,7 +1860,7 @@ function CommentString takes string commentString returns nothing
 endfunction
 
 
-// 获取外部字串符的译文
+// 获取外部字符串的译文
 // This function returns the input string, converting it from the localized text, if necessary
 function StringIdentity takes string theString returns string
     return GetLocalizedString(theString)
@@ -2798,7 +2798,7 @@ function AddLightningLoc takes string codeName, location where1, location where2
 endfunction
 
 
-// 删除闪电效果
+// 销毁闪电效果
 function DestroyLightningBJ takes lightning whichBolt returns boolean
     return DestroyLightning(whichBolt)
 endfunction
@@ -3637,7 +3637,7 @@ endfunction
 //endfunction
 
 
-// 删除特效
+// 销毁特效
 function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
@@ -4157,7 +4157,7 @@ function RandomItemInRectBJEnum takes nothing returns nothing
 endfunction
 
 
-// 随机选取指定区域的匹配物品（可指定过滤）
+// 随机选取指定区域的匹配物品（可指定条件表达式）
 // Picks a random item from within a rect, matching a condition
 function RandomItemInRectBJ takes rect r, boolexpr filter returns item
     set bj_itemRandomConsidered = 0
@@ -4244,7 +4244,7 @@ function UnitId2StringBJ takes integer unitId returns string
 endfunction
 
 
-// 转换为命令串成命令ID
+// 转换为命令字符串成命令ID
 function String2OrderIdBJ takes string orderIdString returns integer
     local integer orderId
     
@@ -4265,7 +4265,7 @@ function String2OrderIdBJ takes string orderIdString returns integer
 endfunction
 
 
-// 转换命令ID成命令串
+// 转换命令ID成命令字符串
 function OrderId2StringBJ takes integer orderId returns string
     local string orderString
 
@@ -5016,7 +5016,7 @@ function ExplodeUnitBJ takes unit whichUnit returns nothing
 endfunction
 
 
-// 获取运输单位
+// 获取运输/载具单位
 // 飞艇/船/被缠绕的金矿等
 function GetTransportUnitBJ takes nothing returns unit
     return GetTransportUnit()
@@ -5029,13 +5029,13 @@ function GetLoadedUnitBJ takes nothing returns unit
 endfunction
 
 
-// 查询单位是否已被装载
+// 查询单位当前是否被指定运输/载具单位装载
 function IsUnitInTransportBJ takes unit whichUnit, unit whichTransport returns boolean
     return IsUnitInTransport(whichUnit, whichTransport)
 endfunction
 
 
-// 查询单位是否正被装载
+// 查询单位当前是否被装载
 function IsUnitLoadedBJ takes unit whichUnit returns boolean
     return IsUnitLoaded(whichUnit)
 endfunction
@@ -5294,7 +5294,7 @@ function RandomDestructableInRectBJEnum takes nothing returns nothing
 endfunction
 
 
-// 随机选取矩形区域满足过滤的可破坏物
+// 随机选取矩形区域满足条件表达式的可破坏物
 // Picks a random destructable from within a rect, matching a condition
 function RandomDestructableInRectBJ takes rect r, boolexpr filter returns destructable
     set bj_destRandomConsidered = 0
@@ -5312,7 +5312,7 @@ function RandomDestructableInRectSimpleBJ takes rect r returns destructable
 endfunction
 
 
-// 随机选取圆形范围满足过滤的可破坏物
+// 随机选取圆形范围满足条件表达式的可破坏物
 // Enumerates within a rect, with a filter to narrow the enumeration down
 // objects within a circular area.
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
@@ -5689,7 +5689,7 @@ function GroupAddGroupEnum takes nothing returns nothing
     call GroupAddUnit(bj_groupAddGroupDest, GetEnumUnit())
 endfunction
 
-// 往 destGroup单位组 添加 sourceGroup单位组 的单位
+// 将 sourceGroup单位组 的单位添加到 destGroup单位组
 function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5711,7 +5711,7 @@ function GroupRemoveGroupEnum takes nothing returns nothing
     call GroupRemoveUnit(bj_groupRemoveGroupDest, GetEnumUnit())
 endfunction
 
-// 从 destGroup单位组 中移除 sourceGroup单位组 的单位
+// 将 sourceGroup单位组 的单位移出 destGroup单位组
 function GroupRemoveGroup takes group sourceGroup, group destGroup returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -5805,7 +5805,7 @@ function EnumUnitsSelected takes player whichPlayer, boolexpr enumFilter, code e
 endfunction
 
 
-// 选取矩形区域内所有单位（可指定过滤）
+// 选取矩形区域内所有单位（可指定条件表达式）
 // 会创建单位组，用完请注意排泄
 function GetUnitsInRectMatching takes rect r, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5883,7 +5883,7 @@ function GetUnitsOfTypeIdAll takes integer unitid returns group
 endfunction
 
 
-// 选取玩家拥有的单位（可指定过滤），并以单位组形式返回
+// 选取玩家拥有的单位（可指定条件表达式），并以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfPlayerMatching takes player whichPlayer, boolexpr filter returns group
     local group g = CreateGroup()
@@ -5981,7 +5981,7 @@ function GetPlayersEnemies takes player whichPlayer returns force
 endfunction
 
 
-// 获取选取玩家匹配的玩家组（可指定过滤）
+// 获取选取玩家匹配的玩家组（可指定条件表达式）
 function GetPlayersMatching takes boolexpr filter returns force
     local force f = CreateForce()
     call ForceEnumPlayers(f, filter)
@@ -6848,7 +6848,7 @@ function CreateQuestBJ takes integer questType, string title, string description
 endfunction
 
 
-// 删除任务
+// 销毁任务
 function DestroyQuestBJ takes quest whichQuest returns nothing
     call DestroyQuest(whichQuest)
 endfunction
@@ -6931,7 +6931,7 @@ function CreateDefeatConditionBJ takes string description returns defeatconditio
 endfunction
 
 
-// 删除任务失败条件
+// 销毁任务失败条件
 function DestroyDefeatConditionBJ takes defeatcondition whichCondition returns nothing
     call DestroyDefeatCondition(whichCondition)
 endfunction
@@ -7087,7 +7087,7 @@ function CreateTimerDialogBJ takes timer t, string title returns timerdialog
 endfunction
 
 
-// 删除计时器窗口
+// 销毁计时器窗口
 function DestroyTimerDialogBJ takes timerdialog td returns nothing
     call DestroyTimerDialog(td)
 endfunction
@@ -7252,7 +7252,7 @@ function CreateLeaderboardBJ takes force toForce, string label returns leaderboa
 endfunction
 
 
-// 删除排行榜
+// 销毁排行榜
 function DestroyLeaderboardBJ takes leaderboard lb returns nothing
     call DestroyLeaderboard(lb)
 endfunction
@@ -7366,7 +7366,7 @@ function CreateMultiboardBJ takes integer cols, integer rows, string title retur
 endfunction
 
 
-// 删除多面板
+// 销毁多面板
 function DestroyMultiboardBJ takes multiboard mb returns nothing
     call DestroyMultiboard(mb)
 endfunction
@@ -8631,7 +8631,7 @@ function StoreBooleanBJ takes boolean value, string key, string missionKey, game
 endfunction
 
 
-// 存储 字串符 到游戏缓存
+// 存储 字符串 到游戏缓存
 function StoreStringBJ takes string value, string key, string missionKey, gamecache cache returns boolean
     return StoreString(cache, missionKey, key, value)
 endfunction
@@ -8918,7 +8918,7 @@ function GetStoredBooleanBJ takes string key, string missionKey, gamecache cache
 endfunction
 
 
-// 从游戏缓读取字串符
+// 从游戏缓读取字符串
 function GetStoredStringBJ takes string key, string missionKey, gamecache cache returns string
     local string s
 
@@ -12132,7 +12132,7 @@ function BlzSetAbilityRealFieldBJ takes ability whichAbility, abilityrealfield w
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealField(whichAbility, whichField, value)
 endfunction
 
-// 设置技能字串符域
+// 设置技能字符串域
 function BlzSetAbilityStringFieldBJ takes ability whichAbility, abilitystringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringField(whichAbility, whichField, value)
 endfunction
@@ -12152,7 +12152,7 @@ function BlzSetAbilityRealLevelFieldBJ takes ability whichAbility, abilityrealle
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelField(whichAbility, whichField, level, value)
 endfunction
 
-// 设置技能随等级改变的字串符域
+// 设置技能随等级改变的字符串域
 function BlzSetAbilityStringLevelFieldBJ takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelField(whichAbility, whichField, level, value)
 endfunction
@@ -12172,7 +12172,7 @@ function BlzSetAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityr
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelArrayField(whichAbility, whichField, level, index, value)
 endfunction
 
-// 设置技能随等级改变的字串符数组域
+// 设置技能随等级改变的字符串数组域
 function BlzSetAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelArrayField(whichAbility, whichField, level, index, value)
 endfunction
@@ -12192,7 +12192,7 @@ function BlzAddAbilityRealLevelArrayFieldBJ takes ability whichAbility, abilityr
     set bj_lastInstObjFuncSuccessful = BlzAddAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 endfunction
 
-// 添加技能随等级改变的字串符数组域
+// 添加技能随等级改变的字符串数组域
 function BlzAddAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzAddAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 endfunction
@@ -12212,7 +12212,7 @@ function BlzRemoveAbilityRealLevelArrayFieldBJ takes ability whichAbility, abili
     set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 endfunction
 
-// 移除技能随等级改变的字串符数组域
+// 移除技能随等级改变的字符串数组域
 function BlzRemoveAbilityStringLevelArrayFieldBJ takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzRemoveAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 endfunction
@@ -12244,7 +12244,7 @@ function BlzSetItemRealFieldBJ takes item whichItem, itemrealfield whichField, r
     set bj_lastInstObjFuncSuccessful = BlzSetItemRealField(whichItem, whichField, value)
 endfunction
 
-// 设置物品字串符域
+// 设置物品字符串域
 function BlzSetItemStringFieldBJ takes item whichItem, itemstringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetItemStringField(whichItem, whichField, value)
 endfunction
@@ -12267,7 +12267,7 @@ function BlzSetUnitRealFieldBJ takes unit whichUnit, unitrealfield whichField, r
     set bj_lastInstObjFuncSuccessful = BlzSetUnitRealField(whichUnit, whichField, value)
 endfunction
 
-// 设置单位字串符域
+// 设置单位字符串域
 function BlzSetUnitStringFieldBJ takes unit whichUnit, unitstringfield whichField, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitStringField(whichUnit, whichField, value)
 endfunction
@@ -12289,7 +12289,7 @@ function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield w
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器字串符域
+// 设置武器字符串域
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
