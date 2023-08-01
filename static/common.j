@@ -121,7 +121,7 @@ type camerafield extends handle
 type camerasetup extends handle
 // 玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）
 type playercolor extends handle
-// 出生点
+// 游戏出生点放置方式
 type placement extends handle
 // 出生点分布优先权
 type startlocprio extends handle
@@ -312,7 +312,7 @@ constant native ConvertLimitOp takes integer i returns limitop
 constant native ConvertUnitType takes integer i returns unittype
 // 转换整数成游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
-// 转换整数成出生点
+// 转换整数成游戏出生点放置方式
 constant native ConvertPlacement takes integer i returns placement
 // 转换整数成出生点分布优先权
 constant native ConvertStartLocPrio takes integer i returns startlocprio
@@ -996,13 +996,13 @@ globals
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
 	// 地图参数 - 地图转换（加载新地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
-	// 地图参数 - 随机玩家出生点
+	// 出生点放置方式 - 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
-	// 地图参数 - 固定玩家出生点
+	// 出生点放置方式 - 固定玩家出生点
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
-	// 地图参数 - 使用地图设置的玩家出生点
+	// 出生点放置方式 - 使用地图设置的玩家出生点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 地图参数 - 同队出生点相邻
+	// 出生点放置方式 - 同队出生点相邻
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
 	// 出生点分布优先权-低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
@@ -4461,7 +4461,7 @@ native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, 
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
 // 设置地图参数
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
-// 设置游戏放置(指定放置类型)
+// 设置游戏出生点放置方式(指定出生点放置方式)
 native SetGamePlacement takes placement whichPlacementType returns nothing
 // 设定游戏速度
 native SetGameSpeed takes gamespeed whichspeed returns nothing
@@ -4483,7 +4483,7 @@ native IsGameTypeSupported takes gametype whichGameType returns boolean
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数/地图选项是否开启(指定参数)
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
-// 获取障碍设置(最大生命值百分比限制，攻击百分比限制，复活时间限制)
+// 获取游戏出生点放置方式
 constant native GetGamePlacement takes nothing returns placement
 // 获取游戏速度
 constant native GetGameSpeed takes nothing returns gamespeed
