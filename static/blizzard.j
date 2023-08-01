@@ -150,8 +150,8 @@ globals
     // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
-    // Delay between a creep's death and the time it may drop an item.
     // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
+    // Delay between a creep's death and the time it may drop an item.
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
@@ -945,9 +945,9 @@ globals
     // 市场相关变量 物品分类布尔值数组 人造
     boolean array      bj_stockAllowedArtifact
     // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
-    // bj_stockPickedItemLevel = bj_stockAllowedPermanent[Level]
-    // bj_stockPickedItemLevel = bj_stockAllowedCharged[Level]
-    // bj_stockPickedItemLevel = bj_stockAllowedArtifact[Level]
+    // bj_stockAllowedPermanent[Level]
+    // bj_stockAllowedCharged[Level]
+    // bj_stockAllowedArtifact[Level]
     integer            bj_stockPickedItemLevel     = 0
     // 市场相关变量 物品分类
     itemtype           bj_stockPickedItemType
