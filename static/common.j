@@ -121,7 +121,7 @@ type camerafield extends handle
 type camerasetup extends handle
 // 玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）
 type playercolor extends handle
-// 游戏出生点放置方式
+// 出生点放置方式
 type placement extends handle
 // 出生点分布优先权
 type startlocprio extends handle
@@ -312,7 +312,7 @@ constant native ConvertLimitOp takes integer i returns limitop
 constant native ConvertUnitType takes integer i returns unittype
 // 转换整数成游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
-// 转换整数成游戏出生点放置方式
+// 转换整数成出生点放置方式
 constant native ConvertPlacement takes integer i returns placement
 // 转换整数成出生点分布优先权
 constant native ConvertStartLocPrio takes integer i returns startlocprio
