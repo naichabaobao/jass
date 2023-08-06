@@ -1,7 +1,7 @@
 
 const map = new Map<string,string>([
   
-  ["boolean", "布尔值"],
+  ["boolean", "布尔值，数组变量的初始值为否"],
   ["integer", "整数"],
   ["real", "实数"],
   ["string", "字符串"],
