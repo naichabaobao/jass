@@ -1226,21 +1226,22 @@ globals
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
-    // 初始化过滤 单位类型为金矿（中立金矿）的单位，默认值为空
+
+    // 初始条件表达式 单位类型为金矿（中立金矿）的单位，默认值为空
     boolexpr           filterIssueHauntOrderAtLocBJ      = null
-    // 初始化过滤 匹配的可破坏物是否离指定点小于某距离，默认值为空
+    // 初始条件表达式 匹配的可破坏物是否离指定点小于某距离，默认值为空
     boolexpr           filterEnumDestructablesInCircleBJ = null
-    // 初始化过滤 匹配指定玩家在指定区域的单位，默认值为空
+    // 初始条件表达式 匹配指定玩家在指定区域的单位，默认值为空
     boolexpr           filterGetUnitsInRectOfPlayer      = null
-    // 初始化过滤 匹配的单位类型，默认值为空
+    // 初始条件表达式 匹配的单位类型，默认值为空
     boolexpr           filterGetUnitsOfTypeIdAll         = null
-    // 初始化过滤 匹配玩家拥有的单位类型，默认值为空
+    // 初始条件表达式 匹配玩家拥有的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
-    // 初始化过滤 匹配的英雄单位（首发英雄），默认值为空
+    // 初始条件表达式 匹配的英雄单位（首发英雄），默认值为空
     // 用于对战初始化
     boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
-    // 初始化过滤 匹配玩家拥有且存活的单位类型，默认值为空
+    // 初始条件表达式 匹配玩家拥有且存活的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterLivingPlayerUnitsOfTypeId   = null
 
@@ -9359,7 +9360,7 @@ function GetPlayerStartLocationY takes player whichPlayer returns real
 endfunction
 
 
-// 获取玩家的初始位置
+// 获取玩家出生点
 // 会创建点，用完请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
@@ -9813,7 +9814,7 @@ function MeleeTrainedUnitIsHeroBJFilter takes nothing returns boolean
 endfunction
 
 
-// 创建初始物品（指定单位）
+// 创建（英雄）初始物品（指定单位）
 // 物品为回城卷轴
 // 该程序会自动判断已创建初始物品的次数，确保不会超限
 // The first N heroes trained or hired for each player start off with a
@@ -10409,7 +10410,7 @@ function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startL
     endif
 endfunction
 
-// 创建对战初始单位
+// 创建对战初始单位（默认四大种族）
 function MeleeStartingUnits takes nothing returns nothing
     local integer  index
     local player   indexPlayer
