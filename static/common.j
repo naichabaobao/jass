@@ -462,39 +462,39 @@ constant native AbilityId2String takes integer abilityId returns string
 // 获取的名称为英语，非本地语言
 // 在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数量，不包括中立玩家
+// 获取玩家数量上限，不包括中立玩家
 // 1.28及以下：12
 // 1.29及以上：24
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家的玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
-// 获取最大玩家槽数量，包括中立玩家
+// 获取玩家槽数量上限，包括中立玩家
 // 1.28及以下：16
 // 1.29及以上：28
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家的玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
