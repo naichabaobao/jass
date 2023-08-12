@@ -143,7 +143,7 @@ globals
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     // 暴露持续时间，默认20.00
-    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间
+    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统会暴露玩家位置，此为暴露的持续时间
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
     // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
