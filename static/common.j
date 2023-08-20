@@ -4494,20 +4494,20 @@ constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
 // 获取指定编号出生点 X 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家编号无关
 constant native GetStartLocationX takes integer whichStartLocation returns real
 // 获取指定编号出生点 Y 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家编号无关
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定编号出生点，以点形式返回
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家编号无关
 // 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
 // 设置指定玩家所在队伍
 native SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing
-// 设置指定玩家出生点
+// 设置指定玩家出生点编号
 native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // forces player to have the specified start loc and marks the start loc as occupied
 // which removes it from consideration for subsequently placed players
@@ -4515,7 +4515,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 //   use random placement for any unplaced players etc )
 // use random placement for any unplaced players etc )
 
-// 设置指定玩家出生点(默认用于按玩家组设置玩家出生点触发器)
+// 设置指定玩家出点编号(默认用于按玩家组设置玩家出生点触发器)
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 设置指定玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
@@ -4528,7 +4528,7 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
-// 设置指定玩家种族可选
+// 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
 // 设置指定玩家控制者类型
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
@@ -4558,7 +4558,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家优先种族是否指定种族
-// 在情节–玩家设置指定的种族，如果未指定(设为可选)，则取房间玩家自主选择的种族，使用随机时应该返回否
+// 在情节–玩家设置指定的种族（如未设置固定出生点，指定种族不会生效），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
