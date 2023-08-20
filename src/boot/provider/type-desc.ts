@@ -1,7 +1,7 @@
 
 const map = new Map<string,string>([
   
-  ["boolean", "布尔值"],
+  ["boolean", "布尔值，数组变量的初始值为否"],
   ["integer", "整数"],
   ["real", "实数"],
   ["string", "字符串"],
@@ -64,7 +64,7 @@ const map = new Map<string,string>([
   ["camerafield", "镜头属性"],
   ["camerasetup", "镜头"],
   ["playercolor", "玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）"],
-  ["placement", "出生点"],
+  ["placement", "出生点放置方式"],
   ["startlocprio", "出生点分布优先权"],
   ["raritycontrol", "罕见动画控制"],
   ["blendmode", "混合模型"],

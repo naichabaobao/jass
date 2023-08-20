@@ -121,7 +121,7 @@ type camerafield extends handle
 type camerasetup extends handle
 // 玩家颜色（1.28及以下共12种，1.29及以上共24种，不含中立玩家颜色）
 type playercolor extends handle
-// 出生点
+// 出生点放置方式
 type placement extends handle
 // 出生点分布优先权
 type startlocprio extends handle
@@ -312,7 +312,7 @@ constant native ConvertLimitOp takes integer i returns limitop
 constant native ConvertUnitType takes integer i returns unittype
 // 转换整数成游戏速度
 constant native ConvertGameSpeed takes integer i returns gamespeed
-// 转换整数成出生点
+// 转换整数成出生点放置方式
 constant native ConvertPlacement takes integer i returns placement
 // 转换整数成出生点分布优先权
 constant native ConvertStartLocPrio takes integer i returns startlocprio
@@ -462,39 +462,39 @@ constant native AbilityId2String takes integer abilityId returns string
 // 获取的名称为英语，非本地语言
 // 在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
-// 获取最大的玩家数量，不包括中立玩家
+// 获取玩家数量上限，不包括中立玩家
 // 1.28及以下：12
 // 1.29及以上：24
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家的玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
-// 获取最大玩家槽数量，包括中立玩家
+// 获取玩家槽数量上限，包括中立玩家
 // 1.28及以下：16
 // 1.29及以上：28
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家的玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家的玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
 // 注：编号从0开始，即玩家1编号是0
-// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
+// 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
@@ -996,13 +996,13 @@ globals
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
 	// 地图参数 - 地图转换（加载新地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
-	// 地图参数 - 随机玩家出生点
+	// 出生点放置方式 - 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
-	// 地图参数 - 固定玩家出生点
+	// 出生点放置方式 - 固定玩家出生点
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
-	// 地图参数 - 使用地图设置的玩家出生点
+	// 出生点放置方式 - 使用地图设置的玩家出生点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 地图参数 - 同队出生点相邻
+	// 出生点放置方式 - 同队出生点相邻
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
 	// 出生点分布优先权-低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
@@ -4461,7 +4461,7 @@ native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, 
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
 // 设置地图参数
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
-// 设置游戏放置(指定放置类型)
+// 设置游戏出生点放置方式(指定出生点放置方式)
 native SetGamePlacement takes placement whichPlacementType returns nothing
 // 设定游戏速度
 native SetGameSpeed takes gamespeed whichspeed returns nothing
@@ -4483,7 +4483,7 @@ native IsGameTypeSupported takes gametype whichGameType returns boolean
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数/地图选项是否开启(指定参数)
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
-// 获取障碍设置(最大生命值百分比限制，攻击百分比限制，复活时间限制)
+// 获取游戏出生点放置方式
 constant native GetGamePlacement takes nothing returns placement
 // 获取游戏速度
 constant native GetGameSpeed takes nothing returns gamespeed
@@ -4493,14 +4493,14 @@ constant native GetGameDifficulty takes nothing returns gamedifficulty
 constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
-// 获取指定出生点 X 轴坐标
-// 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
+// 获取指定编号出生点 X 坐标
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
 constant native GetStartLocationX takes integer whichStartLocation returns real
-// 获取指定出生点 Y 轴坐标
-// 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
+// 获取指定编号出生点 Y 坐标
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
 constant native GetStartLocationY takes integer whichStartLocation returns real
-// 获取指定出生点
-// 理论上带入0~11/23的玩家编号即可返回指定玩家的出生点
+// 获取指定编号出生点，以点形式返回
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
 // 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
@@ -4541,7 +4541,8 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 
 // 获取指定玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
-// 获取指定玩家出生点
+// 获取指定玩家出生点编号
+// 带入0~11/23玩家编号即可返回该玩家出生点。在未固定出生点时，出生点编号和玩家编号未必相等
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor

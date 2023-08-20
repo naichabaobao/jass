@@ -63,7 +63,7 @@ globals
     // 伤害障碍 - 普通，默认90.00
     constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
     // 伤害障碍 - 困难，默认50.00
-	constant real      bj_HANDICAPRE	VIVE_NOTHARD        = 50.00
+	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
     // 游戏开局阈值，默认0.01
     constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
     // 迷雾等待最小间隔，默认0.10
@@ -143,15 +143,15 @@ globals
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
     constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
     // 暴露持续时间，默认20.00
-    // 失去全部基地，暴露倒计时结束，玩家依旧没有造基地，显示玩家位置的持续时间
+    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统会暴露玩家位置，此为暴露的持续时间
     constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
     // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
     // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
     constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
 
-    // Delay between a creep's death and the time it may drop an item.
     // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
+    // Delay between a creep's death and the time it may drop an item.
     constant real      bj_CREEP_ITEM_DELAY              = 0.50
 
     // Timing settings for Marketplace inventories.
@@ -945,9 +945,9 @@ globals
     // 市场相关变量 物品分类布尔值数组 人造
     boolean array      bj_stockAllowedArtifact
     // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
-    // bj_stockPickedItemLevel = bj_stockAllowedPermanent[Level]
-    // bj_stockPickedItemLevel = bj_stockAllowedCharged[Level]
-    // bj_stockPickedItemLevel = bj_stockAllowedArtifact[Level]
+    // bj_stockAllowedPermanent[Level]
+    // bj_stockAllowedCharged[Level]
+    // bj_stockAllowedArtifact[Level]
     integer            bj_stockPickedItemLevel     = 0
     // 市场相关变量 物品分类
     itemtype           bj_stockPickedItemType
@@ -1226,21 +1226,22 @@ globals
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
-    // 初始化过滤 单位类型为金矿（中立金矿）的单位，默认值为空
+
+    // 初始条件表达式 单位类型为金矿（中立金矿）的单位，默认值为空
     boolexpr           filterIssueHauntOrderAtLocBJ      = null
-    // 初始化过滤 匹配的可破坏物是否离指定点小于某距离，默认值为空
+    // 初始条件表达式 匹配的可破坏物是否离指定点小于某距离，默认值为空
     boolexpr           filterEnumDestructablesInCircleBJ = null
-    // 初始化过滤 匹配指定玩家在指定区域的单位，默认值为空
+    // 初始条件表达式 匹配指定玩家在指定区域的单位，默认值为空
     boolexpr           filterGetUnitsInRectOfPlayer      = null
-    // 初始化过滤 匹配的单位类型，默认值为空
+    // 初始条件表达式 匹配的单位类型，默认值为空
     boolexpr           filterGetUnitsOfTypeIdAll         = null
-    // 初始化过滤 匹配玩家拥有的单位类型，默认值为空
+    // 初始条件表达式 匹配玩家拥有的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
-    // 初始化过滤 匹配的英雄单位（首发英雄），默认值为空
+    // 初始条件表达式 匹配的英雄单位（首发英雄），默认值为空
     // 用于对战初始化
     boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
-    // 初始化过滤 匹配玩家拥有且存活的单位类型，默认值为空
+    // 初始条件表达式 匹配玩家拥有且存活的单位类型，默认值为空
     // 用于对战初始化
     boolexpr           filterLivingPlayerUnitsOfTypeId   = null
 
@@ -9359,7 +9360,7 @@ function GetPlayerStartLocationY takes player whichPlayer returns real
 endfunction
 
 
-// 获取玩家的初始位置
+// 获取玩家出生点
 // 会创建点，用完请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
@@ -9813,7 +9814,7 @@ function MeleeTrainedUnitIsHeroBJFilter takes nothing returns boolean
 endfunction
 
 
-// 创建初始物品（指定单位）
+// 创建（英雄）初始物品（指定单位）
 // 物品为回城卷轴
 // 该程序会自动判断已创建初始物品的次数，确保不会超限
 // The first N heroes trained or hired for each player start off with a
@@ -10409,7 +10410,7 @@ function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startL
     endif
 endfunction
 
-// 创建对战初始单位
+// 创建对战初始单位（默认四大种族）
 function MeleeStartingUnits takes nothing returns nothing
     local integer  index
     local player   indexPlayer
