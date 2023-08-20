@@ -1017,9 +1017,9 @@ native DebugS               takes string str                            returns 
     
         // 弓箭手（高等精灵）
         constant integer HIGH_ARCHER        = 'nhea'
-        // 组/船长
+        // 队/船长
         constant integer HIGH_FOOTMAN       = 'hcth'
-        // 组/船长
+        // 队/船长
         constant integer HIGH_FOOTMEN       =  HIGH_FOOTMAN
         // 剑士（高等精灵）
         constant integer HIGH_SWORDMAN      = 'hhes'
