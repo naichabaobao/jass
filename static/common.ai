@@ -47,13 +47,14 @@ native DebugS               takes string str                            returns 
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数量
-    // 对亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
-    // 如果AI开始点有多个未被其他玩家占据的矿（仅对中立被动玩家的金矿有效），可能会导致亡灵/暗夜无法正常采矿，因为HarvestGold（0，n）指向到的是该函数在指定基地附近返回的第一座矿，如果返回的非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
-    // 亡灵和暗夜的采矿问题在1.36版本有所缓解，但并未完全修复，专门给予玩家多矿开局或多玩家出生点挨得太近的地图仍有问题，而某些低版本有此问题的地图在1.36正常，疑似低版本该函数获取附近金矿的距离至少有2200，高版本似乎只有1500
+    // 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
+    // 如果AI出生点有多座未被其他玩家占据的中立被动玩家金矿（如多矿开局或金矿距离过近的图），会导致亡灵/暗夜采矿异常
+    // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
+    // 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
     native GetMinesOwned        takes nothing                               returns integer
     // 获取拥有的所有金矿的未采金钱数量，并返回第一座矿的金钱数
-    // 对亡灵/暗夜也是检查所有金矿，而不是只查闹鬼金矿/被缠绕的金矿
-    // 如果开始点有多个金矿，会导致统计值偏差
+    // 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
+    // 如果出生点有多个金矿，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
     // 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号
     // 可能只检查主城，如果亡灵开矿不造主城，会被视为无基地
@@ -118,10 +119,10 @@ native DebugS               takes string str                            returns 
     native ConvertUnits         takes integer qty, integer id               returns boolean
     
     // 启用战役AI
-    // 仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管，或在游戏内启用未使用的玩家槽运行AI无效
+    // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
     native SetCampaignAI        takes nothing                               returns nothing
     // 启用对战AI
-    // 仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管，或在游戏内启用未使用的玩家槽运行AI无效
+    // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
     native SetMeleeAI           takes nothing                               returns nothing
     // 允许/禁止 优先攻击英雄
     native SetTargetHeroes      takes boolean state                         returns nothing
@@ -165,7 +166,7 @@ native DebugS               takes string str                            returns 
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
-    // 未被编入的单位类型不会跟随进攻，只会留在开始点
+    // 未被编入的单位类型不会跟随进攻，只会留在出生点
     // 似乎攻击组会在这些单位类型中挑选一名类型为英雄的单位担任
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防御组
@@ -173,8 +174,8 @@ native DebugS               takes string str                            returns 
     
     // 获取指定等级范围内的中立敌对玩家控制的单位
     // 在1.29及以上版本中，中立敌对玩家为玩家24，在以下版本则为12
-    // @param min~max 获取的最小至最高等级，利用数值区间可让AI在不同的发展阶段攻击不同等级的野怪营地
-    // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取
+    // @param min~max 等级下限及上限，合理利用数值区间可让AI在不同的发展阶段攻击不同等级的野怪营地
+    // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取，对空力量不足时不要获取飞行野怪
     native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
     // 开始获取敌人主基地
     // 使用 WaitGetEnemyBase 停止获取，使用 GetEnemyBase 捕获获取到的单位
@@ -184,7 +185,7 @@ native DebugS               takes string str                            returns 
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 查询当前拟扩张点是否存在威胁性单位（只查询中立敌对玩家的单位）
+    // 查询当前拟扩张点是否存在威胁性单位（中立敌对玩家的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
@@ -202,13 +203,13 @@ native DebugS               takes string str                            returns 
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
     // 建议不要忽略飞艇类单位的警戒点，否则AI不会自动控制飞艇装卸
     native LoadZepWave          takes integer x, integer y                  returns nothing
-    // 发布自杀式攻击命令（指定玩家），返回false时代表未执行
-    // 理论上是一路打到指定玩家的开始点
+    // 发布自杀式攻击命令（指定玩家），返回false代表未执行
+    // 理论上是一路打到指定玩家的出生点
     // 暴雪用于战役AI
     // @param check_full 怀疑是 是否检查攻击组满血
     native SuicidePlayer        takes player id, boolean check_full         returns boolean
-    // 发布自杀式攻击命令（指定玩家单位），返回false时代表未执行
-    // 和SuicidePlayer的区别怀疑是 只要攻击到该玩家任意单位即可，无需一路打到玩家开始点
+    // 发布自杀式攻击命令（指定玩家单位），返回false代表未执行
+    // 和SuicidePlayer的区别怀疑是 只要攻击到该玩家任意单位即可，无需一路打到玩家出生点
     // 暴雪用于战役AI
     // @param check_full 怀疑是 是否检查攻击组满血
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
@@ -296,7 +297,7 @@ native DebugS               takes string str                            returns 
     // @param pid 玩家编号
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始线程
-    // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加之前请检查已调用的默认线程数量）
+    // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加前请检查已调用的默认线程数量）
     // 线程之间共享全局变量，但在一条线程运行到读取变量时，变量可能已在几秒前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（等待期间不执行任何代码）
@@ -555,9 +556,9 @@ native DebugS               takes string str                            returns 
     
         // special orc heroes
     
-        // 格罗玛什·地狱咆哮
+        // 格罗玛什·地狱咆哮（普通形态）
         constant integer GROM               = 'Ogrh'
-        // 萨尔
+        // 萨尔（骑狼）
         constant integer THRALL             = 'Othr'
     
         // orc hero abilities
@@ -1330,12 +1331,16 @@ native DebugS               takes string str                            returns 
         // 攻击敌人基地延迟（按次计），攻城单位准备完毕后，简单难度需要循环3次后才攻击，中等难度需要循环3次后才攻击，困难/疯狂需要循环0次后才攻击，攻击后置零
         integer exp_seen                = 0
         // 默认人口建筑单位类型
+        // 建议在自己的脚本中重新赋值
         integer racial_farm             = 'hhou'
         // 首发英雄单位类型
+        // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
         integer hero_id                 = 'Hamg'
         // 二发英雄单位类型
+        // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
         integer hero_id2                = 'Hmkg'
         // 三发英雄单位类型
+        // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
         integer hero_id3                = 'Hpal'
         // 技能数组
         integer array skill
@@ -1468,9 +1473,9 @@ native DebugS               takes string str                            returns 
     //============================================================================
 
     // 标准AI初始化程序，运行后AI将已对战模式开始工作，可指定3条线程并使其开始运行
-    // @param heroes 默认用于英雄学习技能
-    // @param peons 可指定自定义线程
-    // @param attacks 可指定自定义线程
+    // @param heroes 默认用于英雄学习技能线程，可自定义
+    // @param peons 默认用于工人采集分配线程，可自定义
+    // @param attacks 默认用于攻击线程，可自定义
     function StandardAI takes code heroes, code peons, code attacks returns nothing
     
         local boolean isNewbie = (MeleeDifficulty() == MELEE_NEWBIE)
@@ -1512,6 +1517,7 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
+
     // 对比整数，取最大值
     function Max takes integer A, integer B returns integer
         if A > B then
@@ -1520,10 +1526,12 @@ native DebugS               takes string str                            returns 
             return B
         endif
     endfunction
+
     // 设置运输状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
     function SetZepNextWave takes nothing returns nothing
         set zep_next_wave = true
     endfunction
+
     // 自杀倒计时（等待），当指定的时间小于等于0及触发器有命令传入时会结束等待
     function SuicideSleep takes integer seconds returns nothing
         set sleep_seconds = sleep_seconds - seconds
