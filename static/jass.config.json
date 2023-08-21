@@ -2,7 +2,7 @@
 {
     "presets": [],
     "strings": [
-                    {
+            {
                 "content": "peasant",
                 "descript": "技能命令串 返回工作(农民单点发起)(民兵变回农民)"
             },
@@ -2481,6 +2481,46 @@
             {
                 "content": "SPLK",
                 "descript": "闪电类型 灵魂锁链"
+            },
+            {
+                "content": "birth",
+                "descript": "可破坏物动画 出现"
+            },
+            {
+                "content": "birth second",
+                "descript": "可破坏物动画 出现（二）"
+            },
+            {
+                "content": "birth third",
+                "descript": "可破坏物动画 出现（三）"
+            },
+            {
+                "content": "stand",
+                "descript": "可破坏物动画 站立/常规动画"
+            },
+            {
+                "content": "stand second",
+                "descript": "可破坏物动画 站立/常规动画（二）"
+            },
+            {
+                "content": "stand third",
+                "descript": "可破坏物动画 站立/常规动画（三）"
+            },
+            {
+                "content": "death",
+                "descript": "可破坏物动画 死亡"
+            },
+            {
+                "content": "death second",
+                "descript": "可破坏物动画 死亡（二）"
+            },
+            {
+                "content": "death third",
+                "descript": "可破坏物动画 死亡（三）"
+            },
+            {
+                "content": "death alternate",
+                "descript": "可破坏物动画 死亡（候选/四）"
             },
             {
                 "content": "LORDAERON_SUMMER",
