@@ -1,0 +1,617 @@
+globals
+
+    //通用AI全局变量
+
+    // 开局基础战术标识，默认为开，兵力未达规模前都按此战术进行训练和建造，达标后才关闭
+    //人族不升本就是该跳出模式要求过于严苛
+    boolean basic_opening       = true
+
+    //首英雄存在标识，当首英雄数量大于0时为真
+    boolean b_hero1_done        = false
+    //二发英雄存在标识，当二发英雄数量大于0时为真
+    boolean b_hero2_done        = false
+    //三发英雄存在标识，当三发英雄数量大于0时为真
+    boolean b_hero3_done        = false
+    //当前祭坛数量
+    integer c_altar_done        = 0
+    //当前可用人口数，统计所有主城及人口建筑提供的人口数，含建造中
+    integer c_food_made         = 0
+    //当前已使用人口数
+    integer c_food_used         = 0
+    //当前黄金数
+    integer c_gold              = 0
+    //当前拥有金矿的未采集金钱数
+    integer c_gold_owned        = 0
+    //当前首英雄数量，不含训练/复活中
+    integer c_hero1_done        = 0
+    //当前二发英雄数量，不含训练/复活中
+    integer c_hero2_done        = 0
+    //当前三发英雄数量，不含训练/复活中
+    integer c_hero3_done        = 0
+    //当前拥有金矿数
+    integer c_mines             = 0
+    //当前拥有飞艇数量
+    integer c_zep               = 0
+
+    //攻击波次，用于控制AI攻击节奏，会自动循环赋值
+    //AI编辑器导出脚本的变量
+    integer attackWave          = 1
+    //下次攻击延迟
+    //AI编辑器导出脚本的变量
+    integer nextDelay           = 0
+    //参与攻击的采金工人数量
+    //AI编辑器导出脚本的变量
+    integer awGold              = 0
+    //参与攻击的采木工人数量
+    //AI编辑器导出脚本的变量
+    integer awWood              = 0
+
+
+    //人族AI全局变量
+
+    //骑士训练标识，为真时会训练骑士及研究动物作战训练
+    boolean b_knights_ok        = false
+
+    //当前神秘之塔数量，含建造中
+    integer c_arcane            = 0
+    //当前狮鹫笼数量，不含建造中
+    integer c_aviary_done       = 0
+    //当前破法者数量，不含建造中
+    integer c_breaker_done      = 0
+    //当前城堡（人族三本基地）数量，不含建造中
+    //同时统计城镇大厅（人族一本基地），主城（人族二本基地）的数量，不含建造中
+    integer c_castle_done       = 0
+    //当前人族步兵数量，不含建造中
+    integer c_footman_done      = 0
+    //当前狮鹫骑士数量，不含建造中
+    integer c_gryphon_done      = 0
+    //当前矮人直升机数量，不含建造中
+    integer c_gyro_done         = 0
+    //当前城镇大厅（人族一本基地）数量，含建造中
+    //同时统计主城（人族二本基地），城堡（人族三本基地）的数量，含建造中
+    integer c_hall              = 0
+    //当前城镇大厅（人族一本基地）数量，不含建造中
+    //同时统计主城（人族二本基地），城堡（人族三本基地）的数量，不含建造中
+    integer c_hall_done         = 0
+    //当前龙鹰骑士数量，不含建造中
+    integer c_hawk_done         = 0
+    //当前人族农场数量，含建造中
+    integer c_house             = 0
+    //当前人族农场数量，不含建造中
+    integer c_house_done        = 0
+    //当前主城（人族二本基地）数量，不含建造中
+    //同时统计城镇大厅（人族一本基地），城堡（人族三本基地）的数量，不含建造中
+    integer c_keep_done         = 0
+    //当前骑士数量，不含建造中
+    integer c_knight_done       = 0
+    //当前伐木场数量，不含建造中
+    integer c_mill_done         = 0
+    //当前矮人迫击炮数量，不含建造中
+    integer c_mortar_done       = 0
+    //当前农民数量，不含建造中
+    integer c_peasant_done      = 0
+    //当前牧师数量，不含建造中
+    integer c_priest_done       = 0
+    //当前矮人火枪手数量，不含建造中
+    integer c_rifleman_done     = 0
+    //当前神秘圣地数量，不含建造中
+    integer c_sanctum_done      = 0
+    //当前铁匠铺数量，不含建造中
+    integer c_smith_done        = 0
+    //当前女巫数量，不含建造中
+    integer c_sorceress_done    = 0
+    //当前坦克数量，不含建造中
+    integer c_tank_done         = 0
+    //当前哨塔数量，含建造中
+    //同时统计防御塔、炮塔的数量，含建造中
+    integer c_watch             = 0
+    //当前哨塔数量，不含建造中
+    //同时统计防御塔、炮塔的数量，不含建造中
+    integer c_watch_done        = 0
+    //当前车间数量，不含建造中
+    integer c_workshop_done     = 0
+
+
+    //兽族AI全局变量
+
+    //当前兵营（兽族）数量，不含建造中
+    integer c_barracks_done     = 0
+    //当前蝙蝠骑士数量，含建造中
+    integer c_batrider          = 0
+    //当前蝙蝠骑士数量，不含建造中
+    integer c_batrider_done     = 0
+    //当前兽栏数量，不含建造中
+    integer c_bestiary_done     = 0
+    //当前兽人地洞数量，含建造中
+    integer c_burrow            = 0
+    //当前兽人地洞数量，不含建造中
+    integer c_burrow_done       = 0
+    //当前投石车数量，含建造中
+    integer c_cat               = 0
+    //当前投石车数量，不含建造中
+    integer c_cat_done          = 0
+    //当前巫医数量，含建造中
+    integer c_doc               = 0
+    //当前巫医数量，不含建造中
+    integer c_doc_done          = 0
+    //当前战争磨坊数量，不含建造中
+    integer c_forge_done        = 0
+    //当前堡垒（兽族三本基地）数量，不含建造中
+    //同时统计大厅（兽族一本基地），据点（兽族二本基地）的数量，不含建造中
+    integer c_fortress_done     = 0
+    //当前大厅（兽族一本基地）数量，含建造中
+    //同时统计据点（兽族二本基地），堡垒（兽族三本基地）的数量，含建造中
+    integer c_great_hall        = 0
+    //当前大厅（兽族一本基地）数量，不含建造中
+    //同时统计据点（兽族二本基地），堡垒（兽族三本基地）的数量，不含建造中
+    integer c_great_hall_done   = 0
+    //当前兽族步兵数量，含建造中
+    integer c_grunt             = 0
+    //当前兽族步兵数量，不含建造中
+    integer c_grunt_done        = 0
+    //当前猎头者数量，含建造中
+    //该变量并未赋予新值，属于BUG，正常还应同时统计狂战士的数量
+    integer c_hunter            = 0
+    //当前猎头者数量，不含建造中
+    //同时统计狂战士的数量
+    integer c_hunter_done       = 0
+    //当前科多兽数量，含建造中
+    integer c_kodo              = 0
+    //当前科多兽数量，不含建造中
+    integer c_kodo_done         = 0
+    //当前灵魂小屋数量，不含建造中
+    integer c_lodge_done        = 0
+    //当前苦工数量，不含建造中
+    integer c_peon_done         = 0
+    //当前狼骑兵数量，含建造中
+    integer c_raider            = 0
+    //当前狼骑兵数量，不含建造中
+    integer c_raider_done       = 0
+    //当前萨满数量，含建造中
+    integer c_shaman            = 0
+    //当前萨满数量，不含建造中
+    integer c_shaman_done       = 0
+    //当前据点（兽族二本基地）数量，不含建造中
+    //同时统计大厅（兽族一本基地），堡垒（兽族三本基地）的数量，不含建造中
+    integer c_stronghold_done   = 0
+    //当前灵魂行者数量，含建造中
+    //同时统计灵魂行者（虚无形态）的数量
+    integer c_swalker           = 0
+    //当前灵魂行者数量，不含建造中
+    //同时统计灵魂行者（虚无形态）的数量
+    integer c_swalker_done      = 0
+    //当前牛头人数量，含建造中
+    integer c_tauren            = 0
+    //当前牛头人数量，不含建造中
+    integer c_tauren_done       = 0
+    //当前牛头人图腾数量，不含建造中
+    integer c_totem_done        = 0
+    //当前巫毒小屋数量，不含建造中
+    integer c_voodoo_done       = 0
+    //当前驭风者（风骑士）数量，含建造中
+    integer c_wyvern            = 0
+    //当前驭风者（风骑士）数量，不含建造中
+    integer c_wyvern_done       = 0
+
+
+    //亡灵AI全局变量
+
+    //当前用于攻击的食尸鬼数量
+    integer AG                  = 0 // attacking ghouls
+    //当前用于采木的食尸鬼数量
+    integer WG                  = 0 // wood ghouls
+    //当前憎恶数量，含建造中
+    integer c_abom              = 0
+    //当前憎恶数量，不含建造中
+    integer c_abom_done         = 0
+    //当前侍僧数量，含建造中
+    integer c_acolyte           = 0
+    //当前女妖数量，含建造中
+    integer c_banshee           = 0
+    //当前女妖数量，不含建造中
+    integer c_banshee_done      = 0
+    //当前埋骨地数量，不含建造中
+    integer c_boneyard_done     = 0
+    //当前黑色城堡数量，不含建造中
+    //并未同时统计浮空城/大墓、亡者大厅的数量，疑似BUG
+    integer c_citadel_done      = 0
+    //当前地穴恶魔（蜘蛛）数量，含建造中
+    integer c_fiend             = 0
+    //当前地穴恶魔（蜘蛛）数量，不含建造中
+    integer c_fiend_done        = 0
+    //当前石像鬼数量，含建造中
+    //同时统计石像鬼石像形态的数量
+    integer c_garg              = 0
+    //当前石像鬼数量，不含建造中
+    //同时统计石像鬼石像形态的数量
+    integer c_garg_done         = 0
+    //当前食尸鬼数量，不含建造中
+    integer c_ghoul_done        = 0
+    //当前坟场数量，不含建造中
+    integer c_grave_done        = 0
+    //当前亡者大厅数量，不含建造中
+    //同时统计浮空城/大墓、黑色城堡的数量，不含建造中
+    integer c_halls_done        = 0
+    //当前浮空城/大墓地数量，含建造中
+    //同时统计亡者大厅、黑色城堡的数量，含建造中
+    integer c_neclis            = 0
+    //当前浮空城/大墓地数量，不含建造中
+    //同时统计亡者大厅、黑色城堡的数量，不含建造中
+    integer c_neclis_done       = 0
+    //当前通灵师（亡灵男巫）数量，含建造中
+    integer c_necro             = 0
+    //当前通灵师（亡灵男巫）数量，不含建造中
+    integer c_necro_done        = 0
+    //当前屠宰场数量，不含建造中
+    integer c_slaughter_done    = 0
+    //当前毁灭者数量，不含建造中
+    integer c_sphinx_done       = 0
+    //当前幽魂之塔数量，不含建造中
+    integer c_spirit_done       = 0
+    //当前黑曜石雕像数量，含建造中
+    integer c_statue            = 0
+    //当前黑曜石雕像数量，不含建造中
+    integer c_statue_done       = 0
+    //当前诅咒神殿数量，不含建造中
+    integer c_temple_done       = 0
+    //当前遗物陵墓数量，不含建造中
+    integer c_tomb_done         = 0
+    //当前闹鬼金矿数量，含建造中
+    integer c_undead_mines      = 0
+    //当前清道夫（绞肉车）数量，含建造中
+    integer c_wagon             = 0
+    //当前清道夫（绞肉车）数量，含建造中
+    integer c_wagon_done        = 0
+    //当前拥有蛛网科技的地穴恶魔（蜘蛛）数量，含建造中
+    //蛛网研究完成前都是0
+    integer c_web_fiend_done    = 0
+    //当前木材数（用于处理亡灵采木食尸鬼数量）
+    integer c_wood              = 0
+    //当前冰霜巨龙数量，不含建造中
+    integer c_wyrm_done         = 0
+    //当前通灵塔数量，含建造中
+    //同时统计幽魂之塔、蛛魔之塔（冰塔）的数量，含建造中
+    integer c_zig               = 0
+    //当前通灵塔数量，不含建造中
+    //同时统计幽魂之塔、蛛魔之塔（冰塔）的数量，不含建造中
+    integer c_zig_done          = 0
+
+
+    //暗夜AI全局变量
+
+    //暗夜攻击波次
+    integer wave                = 0
+    //腐蚀吐息已研究标识
+    boolean b_acid_breath       = false
+    //当前弓箭手数量，含建造中
+    integer c_archer            = 0
+    //当前弓箭手数量，不含建造中
+    integer c_archer_done       = 0
+    //当前投刃车数量，含建造中
+    integer c_ballista          = 0
+    //当前投刃车数量，不含建造中
+    integer c_ballista_done     = 0
+    //当前熊德数量，含建造中
+    //同时统计人形和熊形的数量，含建造中
+    integer c_bear              = 0
+    //当前熊德数量，不含建造中
+    //同时统计人形和熊形的数量，不含建造中
+    integer c_bear_done         = 0
+    //当前奇美拉数量，含建造中
+    integer c_chimaera          = 0
+    //当前奇美拉数量，不含建造中
+    integer c_chimaera_done     = 0
+    //当前精灵龙数量，不含建造中
+    integer c_dragon_done       = 0
+    //当前树妖（小鹿）数量，含建造中
+    integer c_dryad             = 0
+    //当前树妖（小鹿）数量，不含建造中
+    integer c_dryad_done        = 0
+    //当前猎手大厅数量，不含建造中
+    integer c_hunt_hall_done    = 0
+    //当前女猎手数量，含建造中
+    integer c_huntress          = 0
+    //当前女猎手数量，不含建造中
+    integer c_huntress_done     = 0
+    //当前知识古树数量，不含建造中
+    integer c_lore_done         = 0
+    //当前被缠绕的金矿数量，不含建造中
+    integer c_mines_done        = 0
+    //当前月亮井数量，含建造中
+    integer c_moon_well         = 0
+    //当前月亮井数量，不含建造中
+    integer c_moon_well_done    = 0
+    //当前山岭巨人数量，含建造中
+    integer c_mtn_giant         = 0
+    //当前山岭巨人数量，不含建造中
+    integer c_mtn_giant_done    = 0
+    //当前奇美拉栖木数量，不含建造中
+    integer c_roost_done        = 0
+    //当前鸟德数量，含建造中
+    //同时统计人形和鸦形的数量，含建造中
+    integer c_talon             = 0
+    //当前鸟德数量，不含建造中
+    //同时统计人形和鸦形的数量，不含建造中
+    integer c_talon_done        = 0
+    //当前纪元之树（暗夜二本）数量，不含建造中
+    //同时统计生命之树（暗夜一本），永恒之树（暗夜三本）的数量，不含建造中
+    integer c_tree_ages_done    = 0
+    //当前永恒之树（暗夜三本）数量，不含建造中
+    //同时统计生命之树（暗夜一本），纪元之树（暗夜二本）的数量，不含建造中
+    integer c_tree_etern_done   = 0
+    //当前生命之树（暗夜一本）数量，含建造中
+    //同时统计纪元之树（暗夜二本），永恒之树（暗夜三本）的数量，含建造中
+    integer c_tree_life         = 0
+    //当前生命之树（暗夜一本）数量，不含建造中
+    //同时统计纪元之树（暗夜二本），永恒之树（暗夜三本）的数量，不含建造中
+    integer c_tree_life_done    = 0
+    //当前战争古树数量，不含建造中
+    integer c_war_done          = 0
+    //当前风之古树数量，不含建造中
+    integer c_wind_done         = 0
+    //当前小精灵数量，不含建造中
+    integer c_wisp_done         = 0
+    //当前奇迹古树数量，不含建造中
+    integer c_wonders_done      = 0
+
+endglobals
+
+
+//获取触发编辑器最后发送的命令
+//AI编辑器导出脚本的功能
+function CheckLastCommand takes boolean pop returns integer
+    local integer cmd = GetLastCommand()
+    if (pop) then
+        call PopLastCommand(  )
+    endif
+    return cmd
+endfunction
+
+//获取触发编辑器最后发送命令的数据
+//AI编辑器导出脚本的功能
+function CheckLastCommandData takes boolean pop returns integer
+    local integer data = GetLastData()
+    if (pop) then
+        call PopLastCommand(  )
+    endif
+    return data
+endfunction
+
+//获取可用人口数
+//AI编辑器导出脚本的功能
+function TotalFoodProduced takes nothing returns integer
+    return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_FOOD_CAP)
+endfunction
+
+//查询是否需要开矿
+//AI编辑器导出脚本的功能
+function ExpansionNeeded takes nothing returns boolean
+    return take_exp
+endfunction
+
+//建造分矿
+//AI编辑器导出脚本的功能
+function BuildExpansion takes integer hallID, integer mineID returns nothing
+    if (HallsCompleted(hallID)) then
+        call SetBuildExpa( TownCount(hallID) + 1, mineID )
+    endif
+endfunction
+
+//查询攻击波次
+//AI编辑器导出脚本的功能
+function CurrentAttackWave takes nothing returns integer
+    return attackWave
+endfunction
+
+
+//--------------------------------------------------------------------------------------------------
+//  set_skills
+//--------------------------------------------------------------------------------------------------
+
+//设置英雄技能数组
+//设置各英雄按不同顺序出场时的学习技能顺序
+//AI编辑器导出脚本的功能
+function SetHero takes integer order, integer heroid returns nothing
+endfunction
+
+//设置英雄出场顺序方案
+//AI编辑器导出脚本的功能
+function SelectHeroes takes nothing returns nothing
+endfunction
+
+//设置英雄升级后学习技能
+//AI编辑器导出脚本的功能
+function ChooseHeroSkill takes nothing returns integer
+endfunction
+
+//设置英雄技能数组
+//设置本族四英雄按不同顺序出场时的学习技能顺序
+function set_skills takes nothing returns nothing
+
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  setup_force
+//--------------------------------------------------------------------------------------------------
+
+//重置攻击组数组长度
+//AI编辑器导出脚本的功能
+function ResetAttackUnits takes nothing returns nothing
+    set awGold = 0
+    set awWood = 0
+    call InitAssaultGroup(  )
+endfunction
+
+//添加单位类型及数量到攻击组
+//AI编辑器导出脚本的功能
+function AddAttackUnit takes integer minQty, integer maxQty, integer unitID returns nothing
+
+endfunction
+
+
+//获取最小攻击攻击组准备情况
+//首英雄数量等于0和攻击波次大于1视为未准备完成
+//AI编辑器导出脚本的功能
+function HaveMinimumAttackers takes nothing returns boolean
+
+endfunction
+
+//设置攻击组进攻单位类型及数量
+//将AI编辑器设置的各攻击组单位类型依次添加到攻击组（调用添加单位类型及数量到攻击组）
+//AI编辑器导出脚本的功能
+function PrepareAttackGroup takes integer groupID returns nothing
+endfunction
+
+//准备攻击组
+//按AI编辑器设置的各攻击波次准备攻击组（调用设置攻击组进攻单位类型及数量）
+//AI编辑器导出脚本的功能
+function PrepareForces takes nothing returns nothing
+endfunction
+
+//攻击波次延迟
+//AI编辑器导出脚本的功能
+function AttackWaveDelay takes integer inWave returns nothing
+endfunction
+
+//更新攻击波次
+//AI编辑器导出脚本的功能
+function AttackWaveUpdate takes nothing returns nothing
+endfunction
+
+
+//攻击目标
+//根据协同攻击确定是否告知盟友目标
+//AI编辑器导出脚本的功能
+function AttackTarget takes unit target, boolean addAlliance returns nothing
+endfunction
+
+//获取攻击目标
+//根据AI编辑器设置的攻击目标及优先级自动获取目标
+//AI编辑器导出脚本的功能
+function LaunchAttack takes nothing returns nothing
+endfunction
+
+//攻击线程
+//AI编辑器导出脚本的功能
+function AttackAssignment takes nothing returns nothing
+endfunction
+
+
+//设置攻击组
+//往攻击组添加单位类型及数量
+function setup_force takes nothing returns nothing
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  force_level
+//--------------------------------------------------------------------------------------------------
+
+//设置等级（计算当前兵力强度）
+function force_level takes nothing returns integer
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  attack_sequence
+//--------------------------------------------------------------------------------------------------
+
+//组建攻击组，设置攻击模式，调用对战攻击循环
+//简单难度在完成一轮调用后会等待60秒
+function attack_sequence takes nothing returns nothing
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  init_vars
+//--------------------------------------------------------------------------------------------------
+
+//刷新条件，重新判断所有预设条件
+//AI编辑器导出脚本的功能
+function UpdateConditions takes nothing returns nothing
+endfunction
+
+
+//刷新变量，重新统计所有变量（各兵种、建筑数量）
+function init_vars takes nothing returns nothing
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  set_vars
+//--------------------------------------------------------------------------------------------------
+
+
+//设置变量线程
+//亡灵在此计算采木和攻击食尸鬼数量
+function set_vars takes nothing returns nothing
+    loop
+        call init_vars()
+        call Sleep(1)
+    endloop
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  do_upgrades
+//--------------------------------------------------------------------------------------------------
+
+//升级科技线程
+function do_upgrades takes nothing returns nothing
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  build_sequence
+//--------------------------------------------------------------------------------------------------
+
+//训练/建造序列
+//建造顺序按AI编辑器设置
+//AI编辑器导出脚本的功能
+function BuildPriorities takes nothing returns nothing
+endfunction
+
+
+//训练/建造线程
+//同时控制基础模式
+//兽族这里没写训练三英雄的代码，导致不出三英雄
+function build_sequence takes nothing returns nothing
+
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//  peon_assignment
+//--------------------------------------------------------------------------------------------------
+
+//工人采集序列，控制各基地采矿及采木工人数量
+//采集安排按AI编辑器设置
+//AI编辑器导出脚本的功能
+function HarvestPriorities takes nothing returns nothing
+endfunction
+
+
+//工人采集线程，控制各基地采矿及采木工人数量
+function peon_assignment takes nothing returns nothing
+
+endfunction
+
+//工人采集及建造线程
+//不断循环，循环调用训练/建造序列和工人采集序列
+//AI编辑器导出脚本的功能
+function WorkerAssignment takes nothing returns nothing
+endfunction
+
+//--------------------------------------------------------------------------------------------------
+//	main
+//--------------------------------------------------------------------------------------------------
+
+//初始化设置（只运行一次），开局时按AI编辑器设置初始化各选项状态
+//AI编辑器导出脚本的功能
+function InitOptions takes nothing returns nothing
+endfunction
+
+//主程序（只运行一次），开局时运行，拉起各线程
+//可用于参数赋值，如设置AI名字、设置各选项等
+function main takes nothing returns nothing
+
+endfunction
