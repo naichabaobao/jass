@@ -167,6 +167,12 @@ globals
     //玩家标识，用于标记敌方玩家
     //部分官方战役AI脚本的变量
     constant integer GREEN          = 10
+    //玩家标识，用于标记敌方玩家
+    //部分官方战役AI脚本的变量
+    constant player purple          = null
+    //玩家标识，用于标记敌方玩家
+    //部分官方战役AI脚本的变量
+    constant player green          = null
     //玩家标识，用于标记敌方玩家的编号
     //部分官方战役AI脚本的变量
     constant integer ILLIDAN_SLOT   = 11
@@ -299,6 +305,215 @@ globals
     //命令类型 接收防御点 Y 坐标，从触发器命令获取
     //部分官方战役AI脚本的变量
     constant integer CAPT_Y         = 5
+    //伊利丹主城 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ILLIDAN_TOWN_X     = 0
+    //伊利丹主城 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ILLIDAN_TOWN_Y     = 0
+    //伊利丹防御点 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ILLIDAN_DEF_X      = 0
+    //伊利丹防御点 Y 坐标（）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ILLIDAN_DEF_Y      = 0
+    //攻击点 X 坐标
+    //部分官方战役AI脚本的变量
+    constant integer OFFSET_X           = 0
+    //攻击点 Y 坐标
+    //部分官方战役AI脚本的变量
+    constant integer OFFSET_Y           = 0
+    //飞蛇（娜迦族）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_COUATL2       = 'n000'
+    //深海鱼人掠夺者（娜迦族）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_REAVER2       = 'n001'
+    //纳迦皇家卫兵
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_ROYAL2        = 'n002'
+    //纳迦侍从
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_MYRMIDON2     = 'n003'
+    //毒鳍龙
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_SNAP_DRAGON2  = 'n004'
+    //龙龟（娜迦族）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_TURTLE2       = 'n005'
+    //纳迦海妖
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NAGA_SIREN2        = 'n007'
+    //进攻组飞蛇（娜迦族）数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_COUATL      = 0
+    //进攻组毒鳍龙数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_SNAP_DRAGON = 1
+    //进攻组深海鱼人掠夺者（娜迦族）数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_REAVER      = 2
+    //进攻组纳迦侍从数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_MYRMIDON    = 3
+    //进攻组纳迦海妖数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_SIREN       = 4
+    //进攻组龙龟（娜迦族）数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_TURTLE      = 5
+    //进攻组纳迦皇家卫兵数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_ROYAL       = 6
+    //进攻组单位类型数组长度上限下标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer BUCKET_END         = 7
+    //1号界碑 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_1_X       =  1
+    //1号界碑 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_1_Y       =  2
+    //2号界碑 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_2_X       =  3
+    //2号界碑 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_2_Y       =  4
+    //3号界碑 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_3_X       =  5
+    //3号界碑 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_3_Y       =  6
+    //4号界碑 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_4_X       =  7
+    //4号界碑 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SET_TOWN_4_Y       =  8
+    //工人筑城信号，用于告知AI界碑已占领，需要建造主城
+    //从触发器获取信号
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer PEONS_LOST         =  9
+    //界碑丢失信号，用于告知AI界碑已丢失
+    //从触发器获取信号
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SLOT_LOST          = 10
+    //守卫界碑信号，用于告知AI界碑正被敌方占领，需要守卫
+    //从触发器获取信号
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SLOT_GAINED        = 11
+    //占领界碑中信号，用于告知AI界碑正在占领
+    //从触发器获取信号
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer SLOT_STEPPED_ON    = 12
+    //占领界碑信号，用于告知AI界碑已被占领
+    //从触发器获取信号
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer STARTUP_CMDS       = 12
+    //普通/迅捷攻击
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean NORMAL_ATTACK      = true
+    //携带工人攻击
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean PEON_ATTACK        = false
+    //界碑控制标识 未被控制
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NO_CONTROL         = 1
+    //界碑控制标识 被伊利丹控制
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ILLIDAN_CONTROL    = 2
+    //界碑控制标识 被阿尔萨斯控制
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer ARTHAS_CONTROL     = 3
+    //无法执行攻击
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer NOT_POSSIBLE       = 1
+    //初始界碑，该变量未使用
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer START_SLOT         = 2
+    //第一波攻击
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean first_attack                = true
+    //行动状态
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer action_state                = SLOT_LOST
+    //下一个界碑
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer next_slot                   = -1
+    //攻击时间间隔
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer attack_delay                = 1
+    //攻击组数组长度上限
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer attack_index                = 0
+    //伊利丹需要复活标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean rebuild_Illidan             = true
+    //正在占领界碑标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean stepped_on                  = false
+    //自杀进攻模式标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean suicide_mode                = false
+    //自杀进攻已运行标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean did_suicide                 = false
+    //自超时失败标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean timeout_failure             = false
+    //界碑 X 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array town_x
+    //界碑 Y 坐标
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array town_y
+    //工人死亡标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean array peons_lost
+    //界碑已占领标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant boolean array slot_owned
+    //界碑占领者标识
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array slot_control
+    //伊利丹攻击延迟模式0
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array Illidan0
+    //伊利丹攻击延迟模式1
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array Illidan1
+    //伊利丹攻击延迟模式2
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array Illidan2
+    //伊利丹攻击延迟模式3
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array Illidan3
+    //攻击组最小数量（指定单位类型）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array attack_min_COPs
+    //攻击组最大数量（指定单位类型）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array attack_max_COPs
+    //攻击组单位数量（与进入战役时选的难度挂钩）
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array attack_qty
+    //攻击组单位类型
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array attack_bucket
+    //攻击组额外单位数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array bucket_qty
+    //攻击组额外单位类型
+    //官方战役冰封王座关卡AI脚本的变量
+    constant integer array bucket_unitid
+    //敌方人口平衡因素，按此参数调整攻击组单位数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant real array food_factor
+    //敌方冰霜巨龙数量平衡因素，按此参数调整攻击组单位数量
+    //官方战役冰封王座关卡AI脚本的变量
+    constant real dragon_factor
 
 
     //人族AI全局变量
@@ -595,6 +810,13 @@ globals
     //官方演示AI脚本变量
     constant integer array assault_item
 
+    //龙鹰骑士（不享有乌云科技）
+    //部分官方战役AI脚本的变量
+    constant integer NO_CLOUD_HAWK  = 'h000'
+    //龙鹰骑士
+    //部分官方战役AI脚本的变量
+    constant integer CLOUD_HAWK     = HUMAN_DRAGON_HAWK
+
 
     //兽族AI全局变量
 
@@ -787,6 +1009,7 @@ globals
     //当前通灵塔数量，不含建造中
     //同时统计幽魂之塔、蛛魔之塔（冰塔）的数量，不含建造中
     constant integer c_zig_done          = 0
+
 
     //拥有亡者大厅标识，一、二、三本主城数量（不含建造中）之和大于0时为真
     //混乱之治AI脚本变量
@@ -1087,6 +1310,15 @@ endfunction
 function do_cheats takes nothing returns nothing
 endfunction
 
+//循环获取触发编辑器最后发送命令的数据
+//部分官方战役AI脚本的功能
+function message_loop takes nothing returns nothing
+endfunction
+
+//获取初始命令
+//部分官方战役AI脚本的功能
+function get_start_commands takes nothing returns nothing
+endfunction
 
 //等待暴力攻击
 //默认用于获取触发器发送的暴力攻击命令
@@ -1165,14 +1397,10 @@ endfunction
 //  setup_force and attack_sequence
 //--------------------------------------------------------------------------------------------------
 
+
 //查询攻击波次
 //AI编辑器导出AI脚本的功能
 function CurrentAttackWave takes nothing returns integer
-endfunction
-
-//设置攻击组数组长度
-//部分官方战役AI脚本的功能
-function declare_unit takes integer unitid returns nothing
 endfunction
 
 
@@ -1222,9 +1450,47 @@ endfunction
 function set_assault takes integer qty, integer id returns nothing
 endfunction
 
+
+
 //准备攻击组
 //官方演示AI脚本的功能
 function setup_assault takes nothing returns nothing
+endfunction
+
+//添加额外单位到单位组
+//部分官方战役AI脚本的功能
+function extra_attackers takes nothing returns nothing
+endfunction
+
+//设置攻击组规模（按进入战役时选择的难度）
+//部分官方战役AI脚本的功能
+function set_attack_group takes integer min_COPs, integer max_COPs, integer normal, integer hard, integer idx returns nothing
+endfunction
+
+//攻击波次延迟判断（按进入战役时选择的难度）
+//部分官方战役AI脚本的功能
+function wave_time takes integer norm, integer hard returns integer
+endfunction
+
+
+//游戏平衡因素判断（按进入战役时选择的难度），用于调整攻击组强度
+//部分官方战役AI脚本的功能
+function balance_factor takes real norm, real hard returns real
+endfunction
+
+//游戏平衡信息，用于调整攻击组强度
+//部分官方战役AI脚本的功能
+function balance_info takes nothing returns nothing
+endfunction
+
+//储存单位类型信息
+//部分官方战役AI脚本的功能
+function unit_info takes nothing returns nothing
+endfunction
+
+//设置攻击组数组长度
+//部分官方战役AI脚本的功能
+function declare_unit takes integer unitid returns nothing
 endfunction
 
 //添加单位类型及数量到自杀攻击组
@@ -1300,10 +1566,54 @@ endfunction
 //往攻击组添加单位类型及数量
 //冰封王座AI脚本的功能
 function setup_force takes nothing returns nothing
-
 endfunction
 
 
+//攻击组攻击目标坐标
+//部分官方战役AI脚本的功能
+function attack_move takes integer dx, integer dy returns nothing
+endfunction
+
+//攻击组回家
+//部分官方战役AI脚本的功能
+function send_captain_home takes nothing returns nothing
+endfunction
+
+//设置攻击间隔
+//部分官方战役AI脚本的功能
+function set_attack_rate takes nothing returns nothing
+endfunction
+
+//获取下次进攻点
+//冰封王座争夺界碑
+//部分官方战役AI脚本的功能
+function pick_next_slot takes nothing returns nothing
+endfunction
+
+//伊利丹数量统计，会统计变形前后的伊利丹，以判断英雄是否存活
+//部分官方战役AI脚本的功能
+function Illidan_count takes boolean onlyDone returns integer
+endfunction
+
+//伊利丹攻击
+//部分官方战役AI脚本的功能
+function Illidan_attack takes boolean normal_attack returns nothing
+endfunction
+
+//设置伊利丹攻击组序列
+//部分官方战役AI脚本的功能
+function set_Illidan_force takes nothing returns nothing
+endfunction
+
+//伊利丹攻击组攻击完成判断
+//部分官方战役AI脚本的功能
+function let_Illidan_die takes nothing returns nothing
+endfunction
+
+//伊利丹攻击组组建线程
+//部分官方战役AI脚本的功能
+function Illidan_force takes nothing returns nothing
+endfunction
 
 //组建攻击组，设置攻击模式，调用对战攻击循环
 //简单难度在完成一轮调用后会等待60秒
@@ -1393,6 +1703,12 @@ endfunction
 //刷新变量，重新统计存活玩家及是否可对其进行暴力攻击
 //部分官方战役AI脚本的功能
 function init_arrays takes nothing returns nothing
+endfunction
+
+//刷新界碑控制者
+//冰封王座争夺界碑
+//部分官方战役AI脚本的功能
+function slots_controlled takes integer who returns integer
 endfunction
 
 //--------------------------------------------------------------------------------------------------
@@ -1541,15 +1857,26 @@ endfunction
 function build_loop takes nothing returns nothing
 endfunction
 
-//建造一个序列
+//建造/训练单位并进行自杀式攻击
+//部分官方战役AI脚本的功能
+function after_sword takes nothing returns nothing
+endfunction
+
+//测试建造/训练单位，当触发器有命令传来时测试成功
+//部分官方战役AI脚本的功能
+function test_sword takes nothing returns nothing
+endfunction
+
+//建造/训练一个单位
 //部分官方战役AI脚本的功能
 function send_one takes integer unitid, integer seconds returns nothing
 endfunction
 
-//批量建造序列
+//批量建造/训练单位
 //部分官方战役AI脚本的功能
 function send_group takes integer qty, integer unitid returns nothing
 endfunction
+
 
 //建造序列
 //部分官方战役AI脚本的功能
