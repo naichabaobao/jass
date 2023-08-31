@@ -5571,7 +5571,7 @@ native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns 
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置指定单位采集范围
+// 设置指定单位警界范围，默认值为500且无需特意设置
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
