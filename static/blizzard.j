@@ -1315,7 +1315,8 @@ function RAbsBJ takes real a returns real
 endfunction
 
 
-// 取正负标记(实数)，输入值大于等于0返回 1.0，小于0返回 -1.0
+// 取正负标记(实数)
+// 输入值大于等于0返回 1.0，小于0返回 -1.0
 function RSignBJ takes real a returns real
     if (a >= 0.0) then
         return 1.0
@@ -1355,7 +1356,8 @@ function IAbsBJ takes integer a returns integer
 endfunction
 
 
-// 取正负标记(整数)，输入数值大于等于0返回 1，小于0返回 -1
+// 取正负标记(整数)
+// 输入数值大于等于0返回 1，小于0返回 -1
 function ISignBJ takes integer a returns integer
     if (a >= 0) then
         return 1
@@ -1564,7 +1566,6 @@ endfunction
 
 // 运行触发器(检查条件)
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
-
 function TriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
         if not (TriggerEvaluate(trig)) then
@@ -1592,8 +1593,7 @@ endfunction
 
 
 // 检查触发器队列
-// Debug - Display the contents of the trigger queue (as either null or "x"
-// for each entry).
+// Debug - Display the contents of the trigger queue (as either null or "x" for each entry).
 function QueuedTriggerCheck takes nothing returns nothing
     local string s = "TrigQueue Check "
     local integer i
@@ -1677,8 +1677,7 @@ endfunction
 
 
 // 增加触发器到触发器队列
-// Queues a trigger to be executed, assuring that such triggers are not
-// executed at the same time.
+// Queues a trigger to be executed, assuring that such triggers are not executed at the same time.
 function QueuedTriggerAddBJ takes trigger trig, boolean checkConditions returns boolean
     // Make sure our queue isn't full.  If it is, return failure.
     if (bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS) then
@@ -1828,7 +1827,7 @@ function PolledWait takes real duration returns nothing
 endfunction
 
 // 根据布尔值获取整数
-// flag为是时返回valueA，反之返回valueB
+// flag为真时返回valueA，反之返回valueB
 function IntegerTertiaryOp takes boolean flag, integer valueA, integer valueB returns integer
     if flag then
         return valueA
@@ -1861,7 +1860,7 @@ function CommentString takes string commentString returns nothing
 endfunction
 
 
-// 获取外部字符串的译文
+// 获取外部字符串的译文，返回值随本地语言变化
 // This function returns the input string, converting it from the localized text, if necessary
 function StringIdentity takes string theString returns string
     return GetLocalizedString(theString)
@@ -1976,7 +1975,7 @@ endfunction
 //***************************************************************************
 
 
-// 获取当前镜头设置
+// 获取当前镜头属性
 function GetCurrentCameraSetup takes nothing returns camerasetup
     local camerasetup theCam = CreateCameraSetup()
     local real duration = 0
