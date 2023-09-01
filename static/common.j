@@ -4348,7 +4348,7 @@ native Cos takes real radians returns real
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
-// Expect values between -1 and 1...returns 0 for invalid input
+// y 应在 -1 and 1 之间...无效输入时 returns 0
 native Asin takes real y returns real
 // 反余弦(弧度) [R]
 native Acos takes real x returns real
@@ -4357,17 +4357,17 @@ native Acos takes real x returns real
 native Atan takes real x returns real
 
 // 反正切(Y:X)(弧度) [R]
-// Returns 0 if x and y are both 0
+// x == 0 and y == 0 , Returns 0
 native Atan2 takes real y, real x returns real
 
 // 平方根
-// Returns 0 if x <= 0
+// x <= 0 , Returns 0 
 native SquareRoot takes real x returns real
 
 // 求幂
 // computes x to the y power
-// y == 0.0             => 1
-// x ==0.0 and y < 0    => 0
+// y == 0.0            ， Returns 1
+// x == 0.0 and y < 0  ， Returns 0
 native Pow takes real x, real power returns real
 // 四舍五入
 constant native MathRound takes real r returns integer
@@ -4378,7 +4378,8 @@ constant native MathRound takes real r returns integer
 // 转换整数成实数
 native I2R takes integer i returns real
 // 转换实数成整数(大于0时向下取整，小于0时向上取整)
-// 7.x返回7， -7.x返回-7
+// 7.x Returns  7
+//-7.x Returns -7
 native R2I takes real r returns integer
 // 转换整数成字符串
 native I2S takes integer i returns string
