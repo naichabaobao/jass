@@ -5,58 +5,110 @@
 
 globals
     // Debug-cheat globals
-    constant real     bj_DEBUG_CAMFIELD_SPEED     = 0
-    constant string   bj_DEBUG_CHAT_GIMME         = "gimme"
-    constant string   bj_DEBUG_CHAT_DEMO          = "demo"
-    constant string   bj_DEBUG_CHAT_TELEPORT      = "teleport"
-    constant string   bj_DEBUG_CHAT_TELEPORT2     = "ttt"
-    constant string   bj_DEBUG_CHAT_UNITINFO      = "unitinfo"
-    constant string   bj_DEBUG_CHAT_UNITINFO2     = "ui"
-    constant string   bj_DEBUG_CHAT_CAMINFO       = "caminfo"
-    constant string   bj_DEBUG_CHAT_CAMINFO2      = "ci"
-    constant string   bj_DEBUG_CHAT_CAMDIST       = "camdist"
-    constant string   bj_DEBUG_CHAT_CAMFARZ       = "camfarz"
-    constant string   bj_DEBUG_CHAT_CAMAOA        = "camaoa"
-    constant string   bj_DEBUG_CHAT_CAMFOV        = "camfov"
-    constant string   bj_DEBUG_CHAT_CAMROLL       = "camroll"
-    constant string   bj_DEBUG_CHAT_CAMROT        = "camrot"
-    constant string   bj_DEBUG_CHAT_CAMRESET      = "camreset"
-    constant string   bj_DEBUG_CHAT_CLONE         = "clone"
-    constant string   bj_DEBUG_CHAT_DISPEL        = "dispel"
-    constant string   bj_DEBUG_CHAT_GOTOX         = "gotox"
-    constant string   bj_DEBUG_CHAT_GOTOY         = "gotoy"
-    constant string   bj_DEBUG_CHAT_GOTOXY        = "gotoxy"
-    constant string   bj_DEBUG_CHAT_GOTOUNIT      = "gotounit"
-    constant string   bj_DEBUG_CHAT_BLACKMASK     = "blackmask"
-    constant string   bj_DEBUG_CHAT_BLACKMASK2    = "bm"
-    constant string   bj_DEBUG_CHAT_DIFFICULTY    = "difficulty"
-    constant string   bj_DEBUG_CHAT_FINGEROFDEATH = "fingerofdeath"
 
+    //DeBug作弊设置镜头属性时镜头移动的持续时间，默认为0
+    constant real     bj_DEBUG_CAMFIELD_SPEED     = 0
+    //作弊码，gimme，给所有玩家增加5000黄金/木材
+    constant string   bj_DEBUG_CHAT_GIMME         = "gimme"
+    //作弊码，demo，展示玩家属性多面板
+    constant string   bj_DEBUG_CHAT_DEMO          = "demo"
+    //作弊码，teleport，立即移动触发玩家选取单位到当前镜头位置
+    constant string   bj_DEBUG_CHAT_TELEPORT      = "teleport"
+    //作弊码，ttt，立即移动触发玩家选取单位到当前镜头位置
+    constant string   bj_DEBUG_CHAT_TELEPORT2     = "ttt"
+    //作弊码，unitinfo，通报触发玩家选取单位的参数
+    constant string   bj_DEBUG_CHAT_UNITINFO      = "unitinfo"
+    //作弊码，ui，通报触发玩家选取单位的参数
+    constant string   bj_DEBUG_CHAT_UNITINFO2     = "ui"
+    //作弊码，caminfo，通报触发玩家的镜头参数
+    constant string   bj_DEBUG_CHAT_CAMINFO       = "caminfo"
+    //作弊码，ci，通报触发玩家的镜头参数
+    constant string   bj_DEBUG_CHAT_CAMINFO2      = "ci"
+    //作弊码，camdist，设置镜头的镜头距离(距离到目标)
+    constant string   bj_DEBUG_CHAT_CAMDIST       = "camdist"
+    //作弊码，camfarz，设置镜头的远景截断距离(远景裁剪)
+    constant string   bj_DEBUG_CHAT_CAMFARZ       = "camfarz"
+    //作弊码，camaoa，设置镜头的 X 轴旋转角度（水平/攻击角度）
+    constant string   bj_DEBUG_CHAT_CAMAOA        = "camaoa"
+    //作弊码，camfov，设置镜头的镜头区域(观察区域)
+    constant string   bj_DEBUG_CHAT_CAMFOV        = "camfov"
+    //作弊码，camroll，设置镜头的 Y 轴旋转角度(滚动)
+    constant string   bj_DEBUG_CHAT_CAMROLL       = "camroll"
+    //作弊码，camrot，设置镜头的 Z 轴旋转角度（旋转）
+    constant string   bj_DEBUG_CHAT_CAMROT        = "camrot"
+    //作弊码，camreset，重置镜头并恢复控制权
+    constant string   bj_DEBUG_CHAT_CAMRESET      = "camreset"
+    //作弊码，clone，复制玩家选取单位
+    constant string   bj_DEBUG_CHAT_CLONE         = "clone"
+    //作弊码，dispel，驱散玩家选取单位拥有的所有魔法效果
+    constant string   bj_DEBUG_CHAT_DISPEL        = "dispel"
+    //作弊码，gotox，移动镜头到聊天信息输入的 X 坐标，Y 坐标不变
+    constant string   bj_DEBUG_CHAT_GOTOX         = "gotox"
+    //作弊码，gotoy，移动镜头到聊天信息输入的 Y 坐标，X 坐标不变
+    constant string   bj_DEBUG_CHAT_GOTOY         = "gotoy"
+    //作弊码，，移动镜头到聊天信息输入的坐标
+    constant string   bj_DEBUG_CHAT_GOTOXY        = "gotoxy"
+    //作弊码，gotounit，设置镜头到触发玩家选取单位的位置
+    constant string   bj_DEBUG_CHAT_GOTOUNIT      = "gotounit"
+    //作弊码，blackmask，全图启用黑色阴影
+    constant string   bj_DEBUG_CHAT_BLACKMASK     = "blackmask"
+    //作弊码，bm，全图启用黑色阴影
+    constant string   bj_DEBUG_CHAT_BLACKMASK2    = "bm"
+    //作弊码，difficulty，通报游戏难度
+    constant string   bj_DEBUG_CHAT_DIFFICULTY    = "difficulty"
+    //作弊码，fingerofdeath，死亡之指状态及通报
+    constant string   bj_DEBUG_CHAT_FINGEROFDEATH = "fingerofdeath"
+    //作弊触发器 给所有玩家增加5000黄金/木材
     trigger           bj_debugGimmeTrig
+    //作弊触发器 展示演示玩家属性多面板
     trigger           bj_debugDemoTrig
+    //作弊触发器 立即移动触发玩家选取单位到当前镜头位置
     trigger           bj_debugTeleportTrig
+    //作弊触发器 通报触发玩家选取单位的参数
     trigger           bj_debugUnitInfoTrig
+    //作弊触发器 通报触发玩家的镜头参数
     trigger           bj_debugCamInfoTrig
+    //作弊触发器 设置镜头的镜头距离(距离到目标)
     trigger           bj_debugCamDistTrig
+    //作弊触发器 设置镜头的远景截断距离(远景裁剪)
     trigger           bj_debugCamFarzTrig
+    //作弊触发器 设置镜头的 X 轴旋转角度（水平/攻击角度）
     trigger           bj_debugCamAoaTrig
+    //作弊触发器 设置镜头的镜头区域(观察区域)
     trigger           bj_debugCamFovTrig
+    //作弊触发器 设置镜头的 Y 轴旋转角度(滚动)
     trigger           bj_debugCamRollTrig
+    //作弊触发器 设置镜头的 Z 轴旋转角度（旋转）
     trigger           bj_debugCamRotTrig
+    //作弊触发器 重置镜头并恢复控制权
     trigger           bj_debugCamResetTrig
+    //作弊触发器 复制玩家选取单位
     trigger           bj_debugCloneTrig
+    //作弊触发器 驱散玩家选取单位拥有的所有魔法效果
     trigger           bj_debugDispelTrig
+    //作弊触发器 移动镜头到聊天信息输入的 X 坐标，Y 坐标不变
     trigger           bj_debugGotoXTrig
+    //作弊触发器 移动镜头到聊天信息输入的 Y 坐标，X 坐标不变
     trigger           bj_debugGotoYTrig
+    //作弊触发器 移动镜头到聊天信息输入坐标
     trigger           bj_debugGotoXYTrig
+    //作弊触发器 设置镜头到触发玩家选取单位的位置
     trigger           bj_debugGotoUnitTrig
+    //作弊触发器 全图启用黑色阴影
     trigger           bj_debug_BlackMaskTrig
+    //作弊触发器 通报游戏难度
     trigger           bj_debugDifficultyTrig
+    //作弊触发器 死亡之指状态及通报
     trigger  array    bj_debugFingerOfDeathTrig
+    //作弊触发器 死亡之指触发器动作--立即杀死单位
     trigger  array    bj_debugToolOfDeathTrig
+    //死亡之指触发器启用标识 
     boolean  array    bj_debugFingerOfDeathEnabled
+    //玩家选取单位的 X 坐标
     real              bj_debugGotoUnitX = 0
+    //玩家选取单位的 Y 坐标
     real              bj_debugGotoUnitY = 0
+    //玩家选取单位的数量
     integer           bj_debugGotoUnits = 0
 endglobals
 
@@ -69,6 +121,8 @@ endglobals
 //***************************************************************************
 
 //===========================================================================
+
+//给所有玩家增加5000黄金/木材触发器动作
 function DebugGimmeEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call DisplayTextToPlayer(thePlayer, 0, 0, "Player "+I2S(GetPlayerId(GetTriggerPlayer())+1)+" cheated: Give 5000 gold and 5000 lumber to all players")
@@ -77,11 +131,15 @@ function DebugGimmeEnum takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//给所有玩家增加5000黄金/木材
 function DebugGimme takes nothing returns nothing
     call ForForce(bj_FORCE_ALL_PLAYERS, function DebugGimmeEnum)
 endfunction
 
 //===========================================================================
+
+//展示演示玩家属性多面板设置所有玩家黄金/木材为0触发器动作
 function DebugDemoEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call SetPlayerState(thePlayer, PLAYER_STATE_RESOURCE_GOLD, 0)
@@ -89,6 +147,9 @@ function DebugDemoEnum takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//展示演示玩家属性多面板
+//会设置所有玩家黄金/木材为0
 function DebugDemo takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
     local integer gold = GetRandomInt(750, 1500)
@@ -110,12 +171,16 @@ function DebugDemo takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//立即移动触发玩家选取单位到当前镜头位置触发器动作
 function DebugTeleportEnum takes nothing returns nothing
     local unit u = GetEnumUnit()
     call SetUnitPosition(u, GetCameraTargetPositionX(), GetCameraTargetPositionY())
 endfunction
 
 //===========================================================================
+
+//立即移动触发玩家选取单位到当前镜头位置
 function DebugTeleport takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -124,6 +189,8 @@ function DebugTeleport takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//字符串比较，当 expr 为真时返回 a，否则返回b
 function TertiaryStringOp takes boolean expr, string a, string b returns string
     if (expr) then
         return a
@@ -133,8 +200,10 @@ function TertiaryStringOp takes boolean expr, string a, string b returns string
 endfunction
 
 //===========================================================================
-// Convert a integer id value into a 4-letter id code.
 //
+
+//转换类型为4字码
+// Convert a integer id value into a 4-letter id code.
 function DebugIdInteger2IdString takes integer value returns string
     local string charMap = ".................................!.#$%&'()*+,-./0123456789:;<=>.@ABCDEFGHIJKLMNOPQRSTUVWXYZ[.]^_`abcdefghijklmnopqrstuvwxyz{|}~................................................................................................................................."
     local string result = ""
@@ -155,6 +224,9 @@ function DebugIdInteger2IdString takes integer value returns string
 endfunction
 
 //===========================================================================
+
+//通报触发玩家选取单位的参数触发器动作
+//单位的所属，类型，名字，X Y 坐标，朝向，类型详情（是否英雄、死亡、建筑、地面单位、飞行单位、可攻击地面、可攻击飞行、近战攻击、远程攻击、召唤物）
 function DebugUnitInfoEnum takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
     local unit   theUnit   = GetEnumUnit()
@@ -180,6 +252,8 @@ function DebugUnitInfoEnum takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//通报触发玩家选取单位的参数
 function DebugUnitInfo takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -188,6 +262,9 @@ function DebugUnitInfo takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//通报触发玩家的镜头参数
+//镜头 X Y Z 坐标，镜头距离(距离到目标)值，远景截断距离(远景裁剪)值，镜头区域(观察区域)值，X 轴旋转角度（水平/攻击角度）值，Y 轴旋转角度(滚动)值，Z 轴旋转角度（旋转）值
 function DebugCamInfo takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
     local string message
@@ -207,6 +284,8 @@ function DebugCamInfo takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//设置镜头参数触发器动作
 function DebugCamField takes camerafield whichField, integer cheatLength, real defaultValue returns nothing
     local string param        = SubString(GetEventPlayerChatString(), cheatLength, 50)
     local real   value        = S2R(param)
@@ -227,48 +306,67 @@ function DebugCamField takes camerafield whichField, integer cheatLength, real d
 endfunction
 
 //===========================================================================
+
+//设置镜头的镜头距离(距离到目标)
 function DebugCamDist takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_TARGET_DISTANCE, 7, 1600)
 endfunction
 
 //===========================================================================
+
+//设置镜头的远景截断距离(远景裁剪)
 function DebugCamFarZ takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_FARZ, 7, 4000)
 endfunction
 
 //===========================================================================
+
+//设置镜头的镜头区域(观察区域)
 function DebugCamFOV takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_FIELD_OF_VIEW, 6, 65)
 endfunction
 
 //===========================================================================
+
+//设置镜头的 X 轴旋转角度（水平/攻击角度）
 function DebugCamAOA takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_ANGLE_OF_ATTACK, 6, 310)
 endfunction
 
 //===========================================================================
+
+//设置镜头的 Y 轴旋转角度(滚动)
 function DebugCamRoll takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_ROLL, 7, 0)
 endfunction
 
 //===========================================================================
+
+//设置镜头的 Z 轴旋转角度（旋转）
 function DebugCamRot takes nothing returns nothing
     call DebugCamField(CAMERA_FIELD_ROTATION, 6, 90)
 endfunction
 
 //===========================================================================
+
+//重置镜头并恢复控制权
 function DebugCamReset takes nothing returns nothing
     call ResetToGameCamera(0)
     call EnableUserControl(true)
 endfunction
 
 //===========================================================================
+
+//复制玩家选取单位触发器动作
 function DebugCloneUnitEnum takes nothing returns nothing
     local unit u = GetEnumUnit()
     call CreateUnit(GetOwningPlayer(u), GetUnitTypeId(u), GetUnitX(u), GetUnitY(u), GetUnitFacing(u))
 endfunction
 
 //===========================================================================
+
+//复制玩家选取单位
+//在所有选取单位的当前位置，为触发玩家创建一个类型、朝向，玩家所属相同的新单位
 function DebugCloneUnit takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -277,11 +375,15 @@ function DebugCloneUnit takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//驱散玩家选取单位拥有的所有魔法效果触发器动作
 function DebugDispelUnitEnum takes nothing returns nothing
     call UnitRemoveBuffs(GetEnumUnit(), true, true)
 endfunction
 
 //===========================================================================
+
+//驱散玩家选取单位拥有的所有魔法效果
 function DebugDispelUnit takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -290,6 +392,8 @@ function DebugDispelUnit takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//移动镜头到聊天信息输入的 X 坐标，Y 坐标不变
 function DebugGotoX takes nothing returns nothing
     local string chatString = GetEventPlayerChatString()
 
@@ -299,6 +403,8 @@ function DebugGotoX takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//移动镜头到聊天信息输入的 Y 坐标，X 坐标不变
 function DebugGotoY takes nothing returns nothing
     local string chatString = GetEventPlayerChatString()
 
@@ -308,6 +414,8 @@ function DebugGotoY takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//移动镜头到聊天信息输入的坐标
 function DebugGotoXY takes nothing returns nothing
     local string chatString = GetEventPlayerChatString()
     local integer index
@@ -337,6 +445,8 @@ function DebugGotoXY takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//计算触发玩家的选取单位设置坐标
 function DebugGotoUnitEnum takes nothing returns nothing
     local unit u = GetEnumUnit()
 
@@ -346,6 +456,9 @@ function DebugGotoUnitEnum takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//设置镜头到触发玩家选取单位的位置
+//位置的 X Y 坐标分别取该玩家所有选取单位 X Y 坐标的平均值
 function DebugGotoUnit takes nothing returns nothing
     local group g = CreateGroup()
 
@@ -365,11 +478,15 @@ function DebugGotoUnit takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//全图启用黑色阴影
 function DebugBlackMask takes nothing returns nothing
     call SetFogStateRect(GetTriggerPlayer(), FOG_OF_WAR_MASKED, GetWorldBounds(), true)
 endfunction
 
 //===========================================================================
+
+//通报游戏难度
 function DebugDifficulty takes nothing returns nothing
     local player         thePlayer = GetTriggerPlayer()
     local gamedifficulty theDiff   = GetGameDifficulty()
@@ -386,11 +503,15 @@ function DebugDifficulty takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//死亡之指触发器动作--立即杀死单位
 function DebugToolOfDeath takes nothing returns nothing
     call KillUnit(GetTriggerUnit())
 endfunction
 
 //===========================================================================
+
+//启用/禁用 死亡之指状态及通报
 function DebugToggleFingerOfDeath takes nothing returns nothing
     local integer index = GetPlayerId(GetTriggerPlayer())
     if (bj_debugFingerOfDeathEnabled[index]) then
@@ -404,6 +525,8 @@ function DebugToggleFingerOfDeath takes nothing returns nothing
 endfunction
 
 //===========================================================================
+
+//初始化作弊触发器
 function InitDebugTriggers takes nothing returns boolean
     local player  indexPlayer
     local integer index
