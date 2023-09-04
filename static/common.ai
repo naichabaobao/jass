@@ -213,7 +213,7 @@ native DebugS               takes string str                            returns 
     // 暴雪用于战役AI
     // @param check_full 怀疑是 是否检查攻击组满血
     native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-    // 查询攻击组是否正在战斗
+    // 查询攻击组战斗状态，带入真时查询是否在战斗，带入假时查询是否不在战斗
     native CaptainInCombat      takes boolean attack_captain                returns boolean
     // 查询指定单位是否有防御塔保护
     native IsTowered            takes unit target                           returns boolean
