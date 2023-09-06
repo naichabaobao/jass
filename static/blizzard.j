@@ -766,11 +766,11 @@ globals
 
     // Minimap ping styles
 
-    // 小地图信号样式 - 简易
+    // 小地图提示样式 - 简易
     constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
-    // 小地图信号样式 - 闪烁
+    // 小地图提示样式 - 闪烁
     constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
-    // 小地图信号样式 - 警告
+    // 小地图提示样式 - 警告
     constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
 	
     // Campaign Minimap icon styles
@@ -907,7 +907,7 @@ globals
 
     // Triggered sounds
 
-    // 音效 小地图信号声音
+    // 音效 小地图提示声音
     //sound              bj_pingMinimapSound         = null
     // 音效 可营救音效
     sound              bj_rescueSound              = null
@@ -7775,7 +7775,7 @@ function ShowInterfaceForceOff takes force whichForce, real fadeDuration returns
     endif
 endfunction
 
-// 发送小地图信号（指定坐标，指定玩家组）触发器动作
+// 发送小地图提示（指定坐标，指定玩家组）触发器动作
 function PingMinimapForForce takes force whichForce, real x, real y, real duration returns nothing
     if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7785,12 +7785,12 @@ function PingMinimapForForce takes force whichForce, real x, real y, real durati
 endfunction
 
 
-// 发送小地图信号（指定点，指定玩家组）
+// 发送小地图提示（指定点，指定玩家组）
 function PingMinimapLocForForce takes force whichForce, location loc, real duration returns nothing
     call PingMinimapForForce(whichForce, GetLocationX(loc), GetLocationY(loc), duration)
 endfunction
 
-// 发送小地图信号（指定坐标，指定玩家）
+// 发送小地图提示（指定坐标，指定玩家）
 function PingMinimapForPlayer takes player whichPlayer, real x, real y, real duration returns nothing
     if (GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7799,12 +7799,12 @@ function PingMinimapForPlayer takes player whichPlayer, real x, real y, real dur
     endif
 endfunction
 
-// 发送小地图信号（指定点，指定玩家）
+// 发送小地图提示（指定点，指定玩家）
 function PingMinimapLocForPlayer takes player whichPlayer, location loc, real duration returns nothing
     call PingMinimapForPlayer(whichPlayer, GetLocationX(loc), GetLocationY(loc), duration)
 endfunction
 
-// 发送小地图信号颜色（指定坐标，指定颜色，指定玩家组）
+// 发送小地图提示颜色（指定坐标，指定颜色，指定玩家组）
 function PingMinimapForForceEx takes force whichForce, real x, real y, real duration, integer style, real red, real green, real blue returns nothing
     local integer red255   = PercentTo255(red)
     local integer green255 = PercentTo255(green)
@@ -7833,8 +7833,8 @@ function PingMinimapForForceEx takes force whichForce, real x, real y, real dura
 endfunction
 
 
-// 发送小地图信号颜色（指定点，指定颜色，指定玩家组）
-// @param style 小地图信号样式，[bj_MINIMAPPINGSTYLE_SIMPLE,bj_MINIMAPPINGSTYLE_FLASHY,bj_MINIMAPPINGSTYLE_ATTACK]
+// 发送小地图提示颜色（指定点，指定颜色，指定玩家组）
+// @param style 小地图提示样式，[bj_MINIMAPPINGSTYLE_SIMPLE,bj_MINIMAPPINGSTYLE_FLASHY,bj_MINIMAPPINGSTYLE_ATTACK]
 function PingMinimapLocForForceEx takes force whichForce, location loc, real duration, integer style, real red, real green, real blue returns nothing
     call PingMinimapForForceEx(whichForce, GetLocationX(loc), GetLocationY(loc), duration, style, red, green, blue)
 endfunction
@@ -7949,7 +7949,7 @@ function WaitTransmissionDuration takes sound soundHandle, integer timeType, rea
     endif
 endfunction
 
-// 设置电影场景并在指定坐标发送小地图信号
+// 设置电影场景并在指定坐标发送小地图提示
 function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real x, real y, sound soundHandle, string unitName, string message, real duration returns nothing
     call SetCinematicSceneBJ(soundHandle, unitId, color, unitName, message, duration + bj_TRANSMISSION_PORT_HANGTIME, duration)
 
@@ -8032,7 +8032,7 @@ function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer sp
     return true
 endfunction
 
-// 设置电影场景并在指定点发送小地图信号（指定玩家组内的指定玩家）
+// 设置电影场景并在指定点发送小地图提示（指定玩家组内的指定玩家）
 function PlayDialogueFromSpeakerTypeEx takes force toForce, player fromPlayer, integer speakerType, location loc, sound soundHandle, integer timeType, real timeVal, boolean wait returns boolean
     call TryInitCinematicBehaviorBJ()
 
