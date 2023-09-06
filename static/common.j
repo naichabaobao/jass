@@ -6686,9 +6686,11 @@ native PauseGame takes boolean flag returns nothing
 native UnitAddIndicator takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
 // 添加闪动指示器(指定单位/物品/可破坏物)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
-// 发送小地图信号(所有玩家可见) [R]
+// 发送小地图提示(所有玩家可见) [R]
+// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
 native PingMinimap takes real x, real y, real duration returns nothing
-// 发送小地图信号(指定颜色)(所有玩家可见) [R]
+// 发送小地图提示(指定颜色)(所有玩家可见) [R]
+// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图(任务)图标(指定单位)
 // @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
