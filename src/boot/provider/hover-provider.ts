@@ -3,18 +3,13 @@
 
 import * as vscode from 'vscode';
 
-
-import { Types } from "./types";
 import { AllKeywords } from '../jass/keyword';
 import { Options } from './options';
 import data, { DataGetter } from "./data";
 import { compare } from '../tool';
 import { convertPosition } from './tool';
 import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine, Declaration, Type } from '../jass/ast';
-import { getTypeDesc } from './type-desc';
-import { tokenize } from '../jass/tokens';
 import { Document, lexically } from '../check/mark';
-import { MarkCodes } from '../war/mark';
 import { ConfigPovider, PluginDefaultConfig } from './config/config';
 
 type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine|Type;
@@ -350,24 +345,6 @@ class MarkHoverProvider implements vscode.HoverProvider {
       if (mark) {
         const markValue = mark.value();
         
-        const targetMark = MarkCodes.find(markCode => `'${markCode.code}'` == markValue)
-
-        if (targetMark) {
-          const ms = new vscode.MarkdownString();
-          ms.appendMarkdown(`***${targetMark.name}***`);
-          ms.appendText("\n");
-          ms.appendMarkdown(targetMark.tip);
-          ms.appendText("\n");
-          ms.appendCodeblock(`'${targetMark.code}'`);
-
-          ms.appendMarkdown("***@type***(" + (targetMark.type ? targetMark.type : "未知") + ")")
-          ms.appendMarkdown("  \n")
-          ms.appendMarkdown("***@race***(" + (targetMark.race ? targetMark.race : "未知") + ")")
-          ms.appendMarkdown("  \n")
-          ms.appendMarkdown("***@kind***(" + (targetMark.kind ? targetMark.kind : "未知") + ")");
-          hovers.push(ms);
-        }
-
         const comsumerTargetMark = [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].find(preset => `'${preset.code}'` == markValue);
        
 
@@ -452,26 +429,6 @@ class StringHoverProvider implements vscode.HoverProvider {
       
       if (str) {
         const strValue = str.value();
-        
-        console.log("strValue:" + strValue);
-
-        const targetMark = MarkCodes.find(markCode => `"${markCode.code}"` == strValue)
-
-        // if (targetMark) {
-        //   const ms = new vscode.MarkdownString();
-        //   ms.appendMarkdown(`***${targetMark.name}***`);
-        //   ms.appendText("\n");
-        //   ms.appendMarkdown(targetMark.tip);
-        //   ms.appendText("\n");
-        //   ms.appendCodeblock(`"${targetMark.code}"`);
-
-        //   ms.appendMarkdown("***@type***(" + (targetMark.type ? targetMark.type : "未知") + ")")
-        //   ms.appendMarkdown("  \n")
-        //   ms.appendMarkdown("***@race***(" + (targetMark.race ? targetMark.race : "未知") + ")")
-        //   ms.appendMarkdown("  \n")
-        //   ms.appendMarkdown("***@kind***(" + (targetMark.kind ? targetMark.kind : "未知") + ")");
-        //   hovers.push(ms);
-        // }
 
         const comsumerTargetMark = [...ConfigPovider.instance().getstrings(), ...PluginDefaultConfig.strings ?? []].find(preset => typeof preset == "string" ? `"${preset}"` == strValue : `"${preset.content}"` == strValue);
        

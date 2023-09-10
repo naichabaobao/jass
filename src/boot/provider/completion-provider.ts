@@ -18,7 +18,6 @@ import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Dec
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
 import { Document, lexically } from "../check/mark";
-import { kindToString, MarkCodes, raceToString, typeToString } from "../war/mark";
 import { ConfigPovider, PluginDefaultConfig } from "./config/config";
 
 
@@ -616,37 +615,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
       
       if (mark) {
         const markValue = mark.value();
-        
-        
-        for (let index = 0; index < MarkCodes.length; index++) {
-          const markCode = MarkCodes[index];
-          if (markCode.code == "") {
-            continue;
-          }
-          const originCodeValue = `'${markCode.code}'`;
-          const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
-
-          const ms = new vscode.MarkdownString()
-          .appendCodeblock(originCodeValue)
-          .appendMarkdown(markCode.tip)
-          .appendMarkdown("  \n")
-          .appendMarkdown("***@type***(" + typeToString(markCode.type) + ")")
-          .appendMarkdown("  \n")
-          .appendMarkdown("***@race***(" + raceToString(markCode.race) + ")")
-          .appendMarkdown("  \n")
-          .appendMarkdown("***@kind***(" + kindToString(markCode.kind) + ")");
-          item.detail = markCode.name;
-          item.documentation = ms;
-
-          item.filterText = originCodeValue;
-          // console.log(item.filterText);
-          
-          item.range = new vscode.Range(position.line, mark.loc.start.position,position.line, mark.loc.end.position);
-
-          items.push(item);
-        }
-
-
         
         [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].forEach(preset => {
          const originCodeValue = `'${preset.code}'`;
