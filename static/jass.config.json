@@ -2,7 +2,7 @@
 {
     "presets": [],
     "strings": [
-                    {
+            {
                 "content": "peasant",
                 "descript": "技能命令串 返回工作(农民单点发起)(民兵变回农民)"
             },
@@ -252,7 +252,7 @@
             },
             {
                 "content": "channel",
-                "descript": "技能命令串 通魔"
+                "descript": "技能命令串 通魔/引导（1.32+）"
             },
             {
                 "content": "charm",
@@ -2481,6 +2481,94 @@
             {
                 "content": "SPLK",
                 "descript": "闪电类型 灵魂锁链"
+            },
+            {
+                "content": "birth",
+                "descript": "可破坏物动画 创建/出生"
+            },
+            {
+                "content": "birth second",
+                "descript": "可破坏物动画 创建/出生（二）"
+            },
+            {
+                "content": "birth third",
+                "descript": "可破坏物动画 创建/出生（三）"
+            },
+            {
+                "content": "stand",
+                "descript": "可破坏物动画 站立/常规动画"
+            },
+            {
+                "content": "stand second",
+                "descript": "可破坏物动画 站立/常规动画（二）"
+            },
+            {
+                "content": "stand third",
+                "descript": "可破坏物动画 站立/常规动画（三）"
+            },
+            {
+                "content": "stand - 1",
+                "descript": "可破坏物动画 站立/常规动画（1）"
+            },
+            {
+                "content": "stand - 2",
+                "descript": "可破坏物动画 站立/常规动画（2）"
+            },
+            {
+                "content": "stand - 3",
+                "descript": "可破坏物动画 站立/常规动画（3）"
+            },
+              {
+                "content": "stand 2",
+                "descript": "可破坏物动画 站立/常规动画（2）"
+            },
+            {
+                "content": "stand 3",
+                "descript": "可破坏物动画 站立/常规动画（3）"
+            },
+            {
+                "content": "stand hit",
+                "descript": "可破坏物动画 站立/常规时被攻击/采集"
+            },
+            {
+                "content": "stand portrait",
+                "descript": "可破坏物动画 站立/常规时肖像（被选择显示的头像）动作"
+            },
+            {
+                "content": "stand work",
+                "descript": "可破坏物动画 站立/常规时工作状态"
+            },
+            {
+                "content": "walk",
+                "descript": "可破坏物动画 摆动"
+            },
+            {
+                "content": "walk - 2",
+                "descript": "可破坏物动画 摆动（2）"
+            },
+            {
+                "content": "death",
+                "descript": "可破坏物动画 死亡"
+            },
+            {
+                "content": "death second",
+                "descript": "可破坏物动画 死亡（二）"
+            },
+            {
+                "content": "death third",
+                "descript": "可破坏物动画 死亡（三）"
+            },
+            {
+                "content": "death alternate",
+                "descript": "可破坏物动画 死亡（候选/四）"
+            },
+            {
+                "content": "decay",
+                "descript": "可破坏物动画 腐烂"
+            },
+            {
+                "content": "spell eattree",
+                "descript": "可破坏物动画 （树木）被吃/被拔起"
             },
             {
                 "content": "LORDAERON_SUMMER",

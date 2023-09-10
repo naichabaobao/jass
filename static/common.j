@@ -1561,7 +1561,7 @@ globals
 	
 	// 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
-    // 小于 或 等于
+	// 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
 	// 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
@@ -1621,7 +1621,7 @@ globals
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
 	// 单位类型 被变形
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
-	// 单位类型 被催眠
+	// 单位类型 被催眠，夜晚睡觉也属于被催眠
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
 	// 单位类型 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
@@ -4348,7 +4348,7 @@ native Cos takes real radians returns real
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
-// Expect values between -1 and 1...returns 0 for invalid input
+// y 应在 -1 and 1 之间...无效输入时 returns 0
 native Asin takes real y returns real
 // 反余弦(弧度) [R]
 native Acos takes real x returns real
@@ -4357,17 +4357,17 @@ native Acos takes real x returns real
 native Atan takes real x returns real
 
 // 反正切(Y:X)(弧度) [R]
-// Returns 0 if x and y are both 0
+// x == 0 and y == 0 , Returns 0
 native Atan2 takes real y, real x returns real
 
 // 平方根
-// Returns 0 if x <= 0
+// x <= 0 , Returns 0 
 native SquareRoot takes real x returns real
 
 // 求幂
 // computes x to the y power
-// y == 0.0             => 1
-// x ==0.0 and y < 0    => 0
+// y == 0.0            ， Returns 1
+// x == 0.0 and y < 0  ， Returns 0
 native Pow takes real x, real power returns real
 // 四舍五入
 constant native MathRound takes real r returns integer
@@ -4378,7 +4378,8 @@ constant native MathRound takes real r returns integer
 // 转换整数成实数
 native I2R takes integer i returns real
 // 转换实数成整数(大于0时向下取整，小于0时向上取整)
-// 7.x返回7， -7.x返回-7
+// 7.x Returns  7
+//-7.x Returns -7
 native R2I takes real r returns integer
 // 转换整数成字符串
 native I2S takes integer i returns string
@@ -4494,20 +4495,20 @@ constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
 // 获取指定编号出生点 X 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationX takes integer whichStartLocation returns real
 // 获取指定编号出生点 Y 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定编号出生点，以点形式返回
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家无关
+// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 // 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
 
 // 设置指定玩家所在队伍
 native SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing
-// 设置指定玩家出生点
+// 设置指定玩家出生点编号
 native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // forces player to have the specified start loc and marks the start loc as occupied
 // which removes it from consideration for subsequently placed players
@@ -4515,7 +4516,7 @@ native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex re
 //   use random placement for any unplaced players etc )
 // use random placement for any unplaced players etc )
 
-// 设置指定玩家出生点(默认用于按玩家组设置玩家出生点触发器)
+// 设置指定玩家出点编号(默认用于按玩家组设置玩家出生点触发器)
 native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // 设置指定玩家颜色 [R]
 native SetPlayerColor takes player whichPlayer, playercolor color returns nothing
@@ -4524,11 +4525,12 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // 设置指定玩家税率 [R]
 // @param sourcePlayer 纳税玩家
 // @param otherPlayer 收税玩家
-// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
+// @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
+// @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
-// 设置指定玩家种族可选
+// 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
 // 设置指定玩家控制者类型
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
@@ -4542,11 +4544,11 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 // 获取指定玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
 // 获取指定玩家出生点编号
-// 带入0~11/23玩家编号即可返回该玩家出生点。在未固定出生点时，出生点编号和玩家编号未必相等
+// 带入0~11/23玩家编号即可返回该玩家出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
-// 查询指定玩家是否可选
+// 查询指定玩家（种族）是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
 // 查询指定玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
@@ -4555,10 +4557,10 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取指定玩家税率 [R]
 // @param sourcePlayer 纳税玩家
 // @param otherPlayer 收税玩家
-// @param whichResource 黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
+// @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家优先种族是否指定种族
-// 在情节–玩家设置指定的种族，如果未指定(设为可选)，则取房间玩家自主选择的种族，使用随机时应该返回否
+// 在情节–玩家设置指定的种族（如未设置固定出生点，指定种族不会生效），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -4614,18 +4616,20 @@ native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns
 // 排泄需要使用销毁单位组 DestroyGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
+// @version 1.33
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
+// @version 1.33
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
-// @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
-// @param unitname 单位名称，不区分大小写，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
@@ -4712,7 +4716,7 @@ native ForceClear takes force whichForce returns nothing
 // 匹配玩家组(指定条件表达式)
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
 // 在指定的玩家组中匹配玩家(指定匹配的数量)
-// @param countLimit 玩家数量
+// @param countLimit 匹配的玩家数量上限
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
 // 在指定玩家组中匹配盟友
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
@@ -4969,15 +4973,19 @@ constant native GetClickedButton takes nothing returns button
 constant native GetClickedDialog takes nothing returns dialog
 
 // 事件响应 获取锦标赛剩余时间(对应锦标赛完成等事件)
+// @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
 // 事件响应 获取锦标赛结束规则(对应锦标赛完成等事件)
+// @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowRule takes nothing returns integer
 // 事件响应 获取锦标赛结束玩家(对应锦标赛完成等事件)
+// @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowPlayer takes nothing returns player
 // 事件响应 获取锦标赛得分(对应锦标赛完成等事件)
+// @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentScore takes player whichPlayer returns integer
 
@@ -5275,7 +5283,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 constant native GetTriggerUnit takes nothing returns unit
 
 // 触发器登记单位状态事件
-// @param whichState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
+// @param whichState 单位状态 [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
 
 // 事件响应 获取单位状态(对应设置单位状态等事件)
@@ -5523,12 +5531,12 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // 新建单位(指定单位类型及坐标) [R]
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
 // 新建单位(指定单位名称及坐标) [R]
-// @param unitname 单位名称，不区分大小写
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定单位类型及点) [R]
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
 // 新建单位(指定单位名称及点) [R]
-// @param unitname 单位名称，不区分大小写
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
@@ -5564,7 +5572,7 @@ native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns 
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
-// 设置指定单位采集范围
+// 设置指定单位警界范围，默认值为500且无需特意设置
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -5665,7 +5673,7 @@ native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
 // 查询指定英雄是否可获取经验值
 native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
-// 当英雄拥有不能叠加的技能时，此命令似乎无效，比如牛头捡了一个提供坚韧光环的物品（物编未作任何修改），因为他此时已拥有了坚韧光环（物品技能），在发布该指令后，他可能不会学习他本身的坚韧光环（测试时用的不是技能四字编码，而是变量）
+// 当英雄拥有不能叠加的技能时，此命令似乎无效，比如牛头捡了提供坚韧光环的物品（物编未作任何修改），因为他此时已拥有了坚韧光环（物品技能），在发布该指令后，他可能不会学习他本身的坚韧光环（测试时用的不是技能四字编码，而是变量）
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
 // 获取指定单位技能等级 [R] 
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
@@ -5748,9 +5756,9 @@ native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y ret
 // 发布使用物品命令(指定单位)
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 获取指定单位所在 X 轴坐标 [R]
+// 获取指定单位所在 X 坐标 [R]
 constant native GetUnitX takes unit whichUnit returns real
-// 获取指定单位所在 Y 轴坐标 [R]
+// 获取指定单位所在 Y 坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
 // 会创建点，用完请注意排泄
@@ -5761,8 +5769,8 @@ constant native GetUnitFacing takes unit whichUnit returns real
 constant native GetUnitMoveSpeed takes unit whichUnit returns real
 // 获取指定单位移动速度 (默认值)
 constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
-// 获取指定单位指定属性值，如当前生命值/魔法值，最大生命/魔法值 [R]
-// @param whichUnitState [UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
+// 获取指定单位指定状态值，如当前生命值/魔法值，最大生命/魔法值 [R]
+// @param whichUnitState 单位状态[UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
 // 获取指定单位所属玩家
 constant native GetOwningPlayer takes unit whichUnit returns player
@@ -5795,7 +5803,7 @@ constant native GetUnitRallyUnit takes unit whichUnit returns unit
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
 // 查询指定单位是否在指定的单位组中
-// 怀疑底层是个循环，逐个检查该单位组的单位，所以在检查多个单位的循环内使用该指令时，若该单位组本身的单位也不少，游戏可能会爆卡，不建议在循环内使用此指令
+// 在判断单位组的循环内使用时，若用于循环退出条件判断，可能会导致游戏爆卡
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
 // 查询指定单位是否指定玩家组中任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
@@ -5830,7 +5838,7 @@ constant native IsUnitInRangeXY takes unit whichUnit, real x, real y, real dista
 // 查询指定单位是否在指定点范围内 [R]
 constant native IsUnitInRangeLoc takes unit whichUnit, location whichLocation, real distance returns boolean
 // 查询指定单位是否隐藏
-// 隐藏的单位反隐也看不到，但其碰撞体积仍可按设置工作
+// 隐藏的单位不受反隐影响，但其碰撞体积仍可按设置工作
 constant native IsUnitHidden takes unit whichUnit returns boolean
 // 查询指定单位是否镜像
 constant native IsUnitIllusion takes unit whichUnit returns boolean
@@ -5842,7 +5850,7 @@ constant native IsUnitLoaded takes unit whichUnit returns boolean
 
 // 查询指定单位类型是否为英雄
 constant native IsHeroUnitId takes integer unitId returns boolean
-// 查询指定单位类型是否与指定类型匹配
+// 查询指定单位类型是否与指定类型相同
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
 // 设置指定单位和指定玩家的共享视野状态(共享或不共享) [R]
@@ -5890,7 +5898,7 @@ native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration re
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
 // 查询指定单位忽略报警开关状态
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
-// 重设指定单位(所有)技能冷却时间 Cooldown
+// 重设指定单位(所有)技能冷却时间
 native UnitResetCooldown takes unit whichUnit returns nothing
 // 设置指定建筑建造进度(百分比)
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
@@ -5958,7 +5966,7 @@ native IssueInstantTargetOrder takes unit whichUnit, string order, widget target
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
-// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 文件找到
+// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 和 jass.config.json 文件找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
 // @param unitId 单位类型，可在 记录物编的文件 找到
@@ -6047,11 +6055,10 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // Player API
 
 // 根据编号查询玩家
-// @param number 玩家编号
-// 编号是从0开始的，即玩家1编号为0
+// @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断
+// 通常用于异步判断，可同时返回多位玩家
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
@@ -6077,13 +6084,13 @@ constant native IsLocationMaskedToPlayer takes location whichLocation, player wh
 // 获取玩家的种族
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
-// 编号是从0开始的，即玩家1编号为0
+// 编号从0开始，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
 // 获取玩家指定单位类型的数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量
-// @param unitname 单位名称，不区分大小写
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
 // @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
@@ -6138,7 +6145,7 @@ native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean fla
 // 允许/禁用 技能(指定玩家) [R]
 native SetPlayerAbilityAvailable takes player whichPlayer, integer abilid, boolean avail returns nothing
 
-// 设置玩家状态
+// 设置玩家状态（指定数值）
 native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
 // 踢除玩家
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
@@ -6202,7 +6209,7 @@ native RestartGame takes boolean doScoreScreen returns nothing
 // 重新读档(当前存档或最新的检查点(自动)存档)
 native ReloadGame takes nothing returns nothing
 // 设置战役菜单种族
-// @deprecated ("此方法不建议使用,应使用SetCampaignMenuRaceEx代替")
+// @deprecated "此方法不建议使用,应使用SetCampaignMenuRaceEx代替"
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 native SetCampaignMenuRace takes race r returns nothing
@@ -6585,6 +6592,7 @@ native GetRandomInt takes integer lowBound, integer highBound returns integer
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
+// 使用完毕后注意排泄
 native CreateUnitPool takes nothing returns unitpool
 // 销毁单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
@@ -6597,6 +6605,7 @@ native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns n
 native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
 
 // 新建物品池 [R]
+// 使用完毕后注意排泄
 native CreateItemPool takes nothing returns itempool
 // 销毁指定物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
@@ -6677,9 +6686,11 @@ native PauseGame takes boolean flag returns nothing
 native UnitAddIndicator takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
 // 添加闪动指示器(指定单位/物品/可破坏物)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
-// 发送小地图信号(所有玩家可见) [R]
+// 发送小地图提示(所有玩家可见) [R]
+// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
 native PingMinimap takes real x, real y, real duration returns nothing
-// 发送小地图信号(指定颜色)(所有玩家可见) [R]
+// 发送小地图提示(指定颜色)(所有玩家可见) [R]
+// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图(任务)图标(指定单位)
 // @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
@@ -7157,7 +7168,7 @@ native CreateSound takes string fileName, boolean looping, boolean is3D, boolean
 native CreateSoundFilenameWithLabel takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string SLKEntryName returns sound
 // 创建音效(指定名字)
 native CreateSoundFromLabel takes string soundLabel, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate returns sound
-// 创建MIDI音效
+// 创建MIDI音效(指定名字)
 native CreateMIDISound takes string soundLabel, integer fadeInRate, integer fadeOutRate returns sound
 // 设置音效参数(指定名字)
 native SetSoundParamsFromLabel takes sound soundHandle, string soundLabel returns nothing
@@ -7503,7 +7514,7 @@ native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
 native PauseCompAI takes player p, boolean pause returns nothing
 // 获取指定玩家的 AI难度
-// 编号是从0开始的，即玩家1编号为0
+// 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
 // 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
@@ -7625,9 +7636,9 @@ native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
 // 获取技能图标位置 - Y (启用自动施法)
 native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
-// 设置技能图标位置 - X(启用自动施法)
+// 设置技能图标位置 - X (启用自动施法)
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
-// 设置技能图标位置 - Y(启用自动施法)
+// 设置技能图标位置 - Y (启用自动施法)
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
@@ -7800,7 +7811,7 @@ native RequestExtraStringData takes integer dataType, player whichPlayer, string
 // 获取额外的实数数据
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
-// 获取单位 Z 轴高度
+// 获取单位 Z 坐标
 native BlzGetUnitZ takes unit whichUnit returns real
 // 开启/关闭 选择和选择圈
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
@@ -8235,12 +8246,15 @@ native BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralSt
 native BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
 // 获取指定单位当前命令数量
+// @version 1.33
 // returns the number of orders the unit currently has queued up
 native BlzGetUnitOrderCount takes unit whichUnit returns integer
 // 停止指定单位所有命令或只清除命令队列
+// @version 1.33
 // clears either all orders or only queued up orders
 native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing
 // 停止指定单位当前的命令，并可选择清除命令队列
+// @version 1.33
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
