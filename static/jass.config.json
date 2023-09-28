@@ -21779,6 +21779,10 @@
             "descript": "技能命令串 右键点击"
         },
         {
+            "content": "smart variant",
+            "descript": "技能命令串 右键点击(2)"
+        },
+        {
             "content": "soulburn",
             "descript": "技能命令串 灵魂燃烧"
         },
