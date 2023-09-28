@@ -250,7 +250,7 @@ native DebugS               takes string str                            returns 
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 运输/传送攻击组到指定坐标，可能组会因此使用回本卷轴或群体传送
+    // 运输/传送攻击组到指定坐标，似乎不能让AI使用回本卷轴或群体传送
     native TeleportCaptain      takes real x, real y                        returns nothing
     // 清除攻击组当前的攻击目标，清除后组会在一瞬间停止攻击，然后重新获取攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
