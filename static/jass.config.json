@@ -21315,6 +21315,14 @@
             "descript": "技能命令串 保持原位(技能面板)"
         },
         {
+            "content": "cancel structure",
+            "descript": "技能命令串 取消建造"
+        },
+         {
+            "content": "upgrade of structure",
+            "descript": "技能命令串 取消建筑物正在研究的科技升级"
+        },
+        {
             "content": "holybolt",
             "descript": "技能命令串 神圣之光"
         },
@@ -22185,6 +22193,10 @@
         {
             "content": "instant4",
             "descript": "技能命令串 采集(黄金和木材)(技能面板)"
+        },
+        {
+            "content": "getitem",
+            "descript": "技能命令串 给予物品"
         },
         {
             "content": "MOON_PRIESTESS",
