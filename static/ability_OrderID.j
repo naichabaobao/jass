@@ -1078,7 +1078,7 @@
 
     //未知
 
-    // 技能命令ID 未知(物品技能)
+    // 技能命令ID 未知
     constant integer 852280
     // 技能命令ID 未知
     constant integer 851992
@@ -1096,8 +1096,6 @@
     constant integer 852059
     // 技能命令ID 未知
     constant integer 851989
-    // 技能命令ID 未知
-    constant integer 
     // 技能命令ID 未知
     constant integer 852291
     // 技能命令ID 未知
