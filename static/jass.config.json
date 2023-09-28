@@ -6802,7 +6802,7 @@
         },
         {
             "code": "Atdp",
-            "name": "卸下驾驶员",
+            "name": "卸载驾驶员",
             "descript": "",
             "kind": "技能",
             "race": "人族",
@@ -7122,7 +7122,7 @@
         },
         {
             "code": "AHbn",
-            "name": "驱散",
+            "name": "放逐(血法)",
             "descript": "使一个非机械单位的重量变轻，并通过 <AHbn,DataA1,%>% 在较短时期降低其移动速度。 变轻的单位不能攻击，但是他们能够施放魔法，几个魔法可以形成更强大的攻击。 |n|n|cffffcc00等级 1|r - <AHbn,Cost1> 魔法, 持续 <AHbn,Dur1> 秒。 |n|cffffcc00等级 2|r - <AHbn,Cost2> 魔法, 持续 <AHbn,Dur2> 秒。 |n|cffffcc00等级 3|r - <AHbn,Cost3> 魔法, 持续 <AHbn,Dur3> 秒。",
             "kind": "技能",
             "race": "人族",
@@ -7577,6 +7577,14 @@
             "type": "单位"
         },
         {
+            "code": "Aliq",
+            "name": "火油瓶",
+            "descript": "",
+            "kind": "技能",
+            "race": "兽族",
+            "type": "单位"
+        },
+        {
             "code": "Achl",
             "name": "装载(混乱货舱装载)",
             "descript": "",
@@ -7642,7 +7650,7 @@
         },
         {
             "code": "AOae",
-            "name": "耐久光环",
+            "name": "耐久/坚韧光环",
             "descript": "能增加周围单位的移动速度和攻击速度。|n|n|cffffcc00等级 1|r - 提高<AOae,DataA1,%>%的移动速度和<AOae,DataB1,%>%的攻击速度。|n|cffffcc00等级 2|r - 提高<AOae,DataA2,%>%的移动速度和<AOae,DataB2,%>%的攻击速度。|n|cffffcc00等级 3|r - 提高<AOae,DataA3,%>%的移动速度和<AOae,DataB3,%>%的攻击速度。",
             "kind": "技能",
             "race": "兽族",
@@ -7650,7 +7658,7 @@
         },
         {
             "code": "AOr2",
-            "name": "耐久光环(凯恩)",
+            "name": "耐久/坚韧光环(凯恩)",
             "descript": "增加周围单位的移动和攻击速度。|n|n|cffffcc00等级 1|r - <AOr2,DataA1,%>%的移动速度和<AOr2,DataB1,%>%的攻击速度。|n|cffffcc00等级 2|r - <AOr2,DataA2,%>%的移动速度和<AOr2,DataB2,%>%的攻击速度。|n|cffffcc00等级 3|r - <AOr2,DataA3,%>%的移动速度和<AOr2,DataB3,%>%的攻击速度。|n|cffffcc00等级 4|r - <AOr2,DataA4,%>%的移动速度和<AOr2,DataB4,%>%的攻击速度。",
             "kind": "技能",
             "race": "兽族",
@@ -7780,6 +7788,14 @@
             "code": "AOr3",
             "name": "重生(凯恩)",
             "descript": "当被杀害的时候，酋长会自动复活。|n|n|cffffcc00等级 1|r - <AOr3,Cool1>秒的魔法施放间隔时间。|n|cffffcc00等级 2|r - <AOr3,Cool2>秒的魔法施放间隔时间。",
+            "kind": "技能",
+            "race": "兽族",
+            "type": "英雄"
+        },
+        {
+            "code": "AOac",
+            "name": "命令/统御光环",
+            "descript": "",
             "kind": "技能",
             "race": "兽族",
             "type": "英雄"
@@ -8178,8 +8194,8 @@
         },
         {
             "code": "Aetl",
-            "name": "虚无状态",
-            "descript": "处于虚无形态的单位不能攻击，但是能施放魔法，敌方的魔法能对其造成额外的伤害。",
+            "name": "虚灵",
+            "descript": "处于虚灵形态的单位不能攻击，但是能施放魔法，敌方的魔法能对其造成额外的伤害。",
             "kind": "技能",
             "race": "暗夜精灵",
             "type": "单位"
@@ -8474,7 +8490,7 @@
         },
         {
             "code": "Ahrl",
-            "name": "采集(采集木材)",
+            "name": "采集(食尸鬼采集木材)",
             "descript": "从树上采集所需的木材。",
             "kind": "技能",
             "race": "不死族",
@@ -8596,6 +8612,14 @@
             "code": "Afak",
             "name": "毁灭之球",
             "descript": "增加破坏者<Afak,DataA1>点的攻击力并让其攻击具有范围伤害效果。",
+            "kind": "技能",
+            "race": "不死族",
+            "type": "单位"
+        },
+        {
+            "code": "Aapl",
+            "name": "疾病光环",
+            "descript": "",
             "kind": "技能",
             "race": "不死族",
             "type": "单位"
@@ -8786,7 +8810,7 @@
         },
         {
             "code": "Agho",
-            "name": "幽灵",
+            "name": "幽魂",
             "descript": "",
             "kind": "技能",
             "race": "不死族",
@@ -8794,8 +8818,16 @@
         },
         {
             "code": "Aeth",
-            "name": "幽灵(可见的)",
+            "name": "幽魂(可见的)",
             "descript": "",
+            "kind": "技能",
+            "race": "不死族",
+            "type": "单位"
+        },
+        {
+            "code": "Auuf",
+            "name": "邪恶狂潮",
+            "descript": "献祭目标友方亡灵单位，使周围的所有非机械单位获得邪恶狂热，攻击速度提高<Auuf,DataA1,%>%，但每秒会消耗<Auuf,DataB1>点生命值。|n持续<Auuf,Dur1>秒。",
             "kind": "技能",
             "race": "不死族",
             "type": "单位"
@@ -9062,6 +9094,22 @@
             "descript": "",
             "kind": "技能",
             "race": "人族",
+            "type": "单位"
+        },
+        {
+            "code": "AGbu",
+            "name": "建造菜单(娜迦)",
+            "descript": "",
+            "kind": "技能",
+            "race": "中立敌对",
+            "type": "单位"
+        },
+        {
+            "code": "Amou",
+            "name": "骑乘",
+            "descript": "",
+            "kind": "技能",
+            "race": "中立敌对",
             "type": "单位"
         },
         {
@@ -9865,6 +9913,14 @@
             "type": "单位"
         },
         {
+            "code": "AAsp",
+            "name": "收费",
+            "descript": "",
+            "kind": "技能",
+            "race": "中立敌对",
+            "type": "单位"
+        },
+        {
             "code": "ACfa",
             "name": "霜冻护甲(中立敌对)",
             "descript": "霜冻护甲能增加目标单位<ACfa,DataB1>点的护甲防御，攻击该单位的近战型敌人也会在<ACfa,Dur1>秒内减速。|n持续<ACfa,DataA1>秒。",
@@ -10386,7 +10442,7 @@
         },
         {
             "code": "ANde",
-            "name": "粉碎",
+            "name": "粉碎(地精修补匠)",
             "descript": "使得对于建筑物的攻击加<ANde,DataB1>倍的伤害。",
             "kind": "技能",
             "race": "中立敌对",
@@ -10993,6 +11049,14 @@
             "type": "单位"
         },
         {
+            "code": "Aawa",
+            "name": "立即复活英雄",
+            "descript": ",使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。",
+            "kind": "技能",
+            "race": "中立被动",
+            "type": "单位"
+        },
+        {
             "code": "Aasl",
             "name": "减速光环(龙卷风)",
             "descript": "被该光环影响的单位在获得光环效果时会受到0点伤害。多个减速光环的buff可以叠加",
@@ -11070,6 +11134,30 @@
             "descript": "从扭曲的地狱召唤能量。",
             "kind": "技能",
             "race": "中立被动",
+            "type": "单位"
+        },
+        {
+            "code": "Ahar",
+            "name": "采集(黄金和木材)",
+            "descript": "从金矿中开采黄金，从树木上采集木材。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aneu",
+            "name": "选择英雄",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aall",
+            "name": "共享商店，联盟建筑。",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
             "type": "单位"
         },
         {
@@ -11210,7 +11298,7 @@
         },
         {
             "code": "Aste",
-            "name": "盜取",
+            "name": "窃取",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -11362,7 +11450,47 @@
         },
         {
             "code": "AItp",
-            "name": "回城卷轴物品",
+            "name": "回城卷轴(物品)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIte",
+            "name": "回城卷轴(物品)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIte",
+            "name": "具有隐形效果的物品(物品)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "APai",
+            "name": "未知(物品)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "Adet",
+            "name": "未知(物品)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "ANsu",
+            "name": "未知(物品)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -12209,6 +12337,22 @@
             "type": "物品"
         },
         {
+            "code": "AImi",
+            "name": "能提高生命值的物品",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AImn",
+            "name": "能提高魔法值的物品",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
             "code": "AIsm",
             "name": "能增加力量的物品",
             "descript": "",
@@ -12226,7 +12370,63 @@
         },
         {
             "code": "AIam",
-            "name": "能增加敏捷度的物品",
+            "name": "能增加敏捷的物品",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIgl",
+            "name": "某种视野雕文技能",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIca",
+            "name": "某种范围性治疗(恢复性技能)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "Aaab",
+            "name": "分裂刀刃",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "Aaab",
+            "name": "分裂刀刃",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIvm",
+            "name": "主属性切换(1.36测试服的贵族圆环技能)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIrg",
+            "name": "某种恢复性技能",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
+            "code": "AIdd",
+            "name": "防御",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -12234,7 +12434,7 @@
         },
         {
             "code": "AIgm",
-            "name": "能增加敏捷度的物品(+2)",
+            "name": "能增加敏捷的物品(+2)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -12480,6 +12680,15 @@
             "race": "特殊",
             "type": "物品"
         },
+        {
+            "code": "AIma",
+            "name": "回复魔法(非范围性)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "物品"
+        },
+
         {
             "code": "AIpz",
             "name": "企鹅叫",
@@ -14226,8 +14435,8 @@
         },
         {
             "code": "tret",
-            "name": "再训练之书",
-            "descript": "取消英雄所学的所有魔法，让英雄能重新选择技能。",
+            "name": "再训练之书/重修之书",
+            "descript": "让英雄忘掉已学习的所有技能，允许其学习其他技能。",
             "kind": "物品",
             "race": "特殊",
             "type": "物品"
@@ -15369,17 +15578,17 @@
             "type": "物品"
         },
         {
-            "code": "iotw",
-            "name": "野性神像(1.32)",
-            "descript": "召唤一头熊怪追踪者为你而战。|n持续<AIut,Dur1>秒。",
+            "code": "ritd",
+            "name": "仪式匕首(1.30)",
+            "descript": "|cff87ceeb非战斗消耗品|r|n献祭一个友方亡灵单位，在<AIg2,Dur1>秒内为其周围的所有友方非机械单位恢复<AIg2,DataA1>点生命值。|n可使用<ritd,uses>次。",
             "kind": "物品",
             "race": "特殊",
             "type": "物品"
         },
         {
-            "code": "ritd",
-            "name": "仪式匕首(1.30)",
-            "descript": "|cff87ceeb非战斗消耗品|r|n献祭一个友方亡灵单位，在<AIg2,Dur1>秒内为其周围的所有友方非机械单位恢复<AIg2,DataA1>点生命值。|n可使用<ritd,uses>次。",
+            "code": "iotw",
+            "name": "野性神像(1.32)",
+            "descript": "召唤一头熊怪追踪者为你而战。|n持续<AIut,Dur1>秒。",
             "kind": "物品",
             "race": "特殊",
             "type": "物品"
@@ -20687,7 +20896,7 @@
             "descript": "技能命令串 返回工作(农民单点发起)(民兵变回农民)"
         },
         {
-            "content": "submerga",
+            "content": "submerge",
             "descript": "技能命令串 潜水(娜迦)"
         },
         {
@@ -20767,20 +20976,12 @@
             "descript": "技能命令串 属性加成(黄点技能)"
         },
         {
-            "content": "auraunholy",
-            "descript": "技能命令串 邪恶光环"
-        },
-        {
-            "content": "auravampiric",
-            "descript": "技能命令串 吸血光环"
-        },
-        {
             "content": "autodispel",
             "descript": "技能命令串 驱逐魔法(小鹿)"
         },
         {
             "content": "autodispeloff",
-            "descript": "技能命令串 取消驱逐(小鹿)"
+            "descript": "技能命令串 取消驱逐激活状态(小鹿)"
         },
         {
             "content": "autodispelon",
@@ -20816,7 +21017,7 @@
         },
         {
             "content": "banish",
-            "descript": "技能命令串 虚无(血法)"
+            "descript": "技能命令串 放逐(血法)"
         },
         {
             "content": "barkskin",
@@ -20824,15 +21025,15 @@
         },
         {
             "content": "barkskinoff",
-            "descript": "技能命令串 激活硬化皮肤"
+            "descript": "技能命令串 取消硬化皮肤激活状态"
         },
         {
             "content": "barkskinon",
-            "descript": "技能命令串 取消硬化皮肤"
+            "descript": "技能命令串 激活硬化皮肤"
         },
         {
             "content": "battleroar",
-            "descript": "技能命令串 战斗咆哮"
+            "descript": "技能命令串 战争咆哮"
         },
         {
             "content": "battlestations",
@@ -20852,7 +21053,7 @@
         },
         {
             "content": "blackarrowoff",
-            "descript": "技能命令串 取消黑暗之箭"
+            "descript": "技能命令串 取消黑暗之箭激活状态"
         },
         {
             "content": "blackarrowon",
@@ -20876,7 +21077,7 @@
         },
         {
             "content": "bloodlustoff",
-            "descript": "技能命令串 取消嗜血术"
+            "descript": "技能命令串 取消嗜血术激活状态"
         },
         {
             "content": "bloodluston",
@@ -20916,7 +21117,7 @@
         },
         {
             "content": "carrionscarabsoff",
-            "descript": "技能命令串 取消腐尸甲虫"
+            "descript": "技能命令串 取消腐尸甲虫激活状态"
         },
         {
             "content": "carrionscarabson",
@@ -20988,7 +21189,7 @@
         },
         {
             "content": "creephealoff",
-            "descript": "技能命令串 取消治疗(中立)"
+            "descript": "技能命令串 取消治疗激活状态(中立)"
         },
         {
             "content": "creephealon",
@@ -21012,7 +21213,7 @@
         },
         {
             "content": "curseoff",
-            "descript": "技能命令串 解除诅咒"
+            "descript": "技能命令串 取消诅咒激活状态"
         },
         {
             "content": "curseon",
@@ -21076,7 +21277,7 @@
         },
         {
             "content": "disassociate",
-            "descript": "技能命令串 分离"
+            "descript": "技能命令串 (角鹰骑士)卸载"
         },
         {
             "content": "disenchant",
@@ -21136,7 +21337,7 @@
         },
         {
             "content": "ensnareon",
-            "descript": "技能命令串 取消诱捕(网,非蛛网)"
+            "descript": "技能命令串 取消诱捕激活状态(网,非蛛网)"
         },
         {
             "content": "entangle",
@@ -21151,12 +21352,16 @@
             "descript": "技能命令串 纠缠须根"
         },
         {
+            "content": "ethereal",
+            "descript": "技能命令串 虚灵"
+        },
+        {
             "content": "etherealform",
-            "descript": "技能命令串 虚无状态(白牛转换形态技能)"
+            "descript": "技能命令串 激活幽魂(可见)"
         },
         {
             "content": "unetherealform",
-            "descript": "技能命令串 取消虚无状态(白牛转换形态技能)"
+            "descript": "技能命令串 取消幽魂(可见)"
         },
         {
             "content": "uncorporealform",
@@ -21176,7 +21381,7 @@
         },
         {
             "content": "faeriefireoff",
-            "descript": "技能命令串 取消精灵之火"
+            "descript": "技能命令串 取消精灵之火激活状态"
         },
         {
             "content": "faeriefireon",
@@ -21219,12 +21424,20 @@
             "descript": "技能命令串 毁灭之球(毁灭者)"
         },
         {
+            "content": "unholyfrenzyaoe",
+            "descript": "技能命令串 邪恶狂潮"
+        },
+        {
+            "content": "ritualdagger",
+            "descript": "技能命令串 仪式匕首(物品)(1.30+)"
+        },
+        {
             "content": "flare",
             "descript": "技能命令串 照明弹"
         },
         {
             "content": "forceboard",
-            "descript": "技能命令串 全部登船"
+            "descript": "技能命令串 全部装载"
         },
         {
             "content": "forceofnature",
@@ -21232,7 +21445,7 @@
         },
         {
             "content": "forkedlightning",
-            "descript": "技能命令串 火土风暴"
+            "descript": "技能命令串 叉状闪电"
         },
         {
             "content": "freezingbreath",
@@ -21244,7 +21457,7 @@
         },
         {
             "content": "frenzyoff",
-            "descript": "技能命令串 取消狂热"
+            "descript": "技能命令串 取消狂热激活状态"
         },
         {
             "content": "frenzyon",
@@ -21256,7 +21469,7 @@
         },
         {
             "content": "frostarmoroff",
-            "descript": "技能命令串 取消霜冻护甲"
+            "descript": "技能命令串 取消霜冻护甲激活状态"
         },
         {
             "content": "frostarmoron",
@@ -21296,7 +21509,7 @@
         },
         {
             "content": "healoff",
-            "descript": "技能命令串 取消治疗(人族牧师)"
+            "descript": "技能命令串 取消治疗激活状态(人族牧师)"
         },
         {
             "content": "healon",
@@ -21348,7 +21561,7 @@
         },
         {
             "content": "incineratearrowoff",
-            "descript": "技能命令串 取消燃灰(箭矢)"
+            "descript": "技能命令串 取消燃灰激活状态(箭矢)"
         },
         {
             "content": "incineratearrowon",
@@ -21364,7 +21577,7 @@
         },
         {
             "content": "innerfireoff",
-            "descript": "技能命令串 取消心灵之火(人族牧师)"
+            "descript": "技能命令串 取消心灵之火激活状态(人族牧师)"
         },
         {
             "content": "innerfireon",
@@ -21372,7 +21585,7 @@
         },
         {
             "content": "instant",
-            "descript": "技能命令串 召唤骷髅(无目标)"
+            "descript": "技能命令串 复活死尸(无目标)"
         },
         {
             "content": "invisibility",
@@ -21407,16 +21620,16 @@
             "descript": "技能命令串 木材交换黄金"
         },
         {
+            "content": "magicleash",
+            "descript": "技能命令串 空中锁镣"
+        },
+        {
             "content": "magicdefense",
             "descript": "技能命令串 激活魔法防御"
         },
         {
-            "content": "magicleash",
-            "descript": "技能命令串 空中锁链"
-        },
-        {
             "content": "magicundefense",
-            "descript": "技能命令串 取消魔法防御"
+            "descript": "技能命令串 取消魔法防御激活状态"
         },
         {
             "content": "manaburn",
@@ -21432,7 +21645,7 @@
         },
         {
             "content": "manashieldoff",
-            "descript": "技能命令串 取消魔法盾"
+            "descript": "技能命令串 取消魔法盾激活状态"
         },
         {
             "content": "manashieldon",
@@ -21500,7 +21713,7 @@
         },
         {
             "content": "neutralinteract",
-            "descript": "技能命令串 选择英雄"
+            "descript": "技能命令串 选择英雄/共享商店，联盟建筑"
         },
         {
             "content": "neutralspell",
@@ -21520,7 +21733,7 @@
         },
         {
             "content": "parasiteoff",
-            "descript": "技能命令串 取消寄生虫(娜迦)"
+            "descript": "技能命令串 取消寄生虫激活状态(娜迦)"
         },
         {
             "content": "parasiteon",
@@ -21540,7 +21753,7 @@
         },
         {
             "content": "phaseshiftoff",
-            "descript": "技能命令串 取消相位移动(精灵龙)"
+            "descript": "技能命令串 取消相位移动激活状态(精灵龙)"
         },
         {
             "content": "phaseshifton",
@@ -21588,7 +21801,7 @@
         },
         {
             "content": "raisedeadoff",
-            "descript": "技能命令串 取消召唤骷髅(亡灵男巫)"
+            "descript": "技能命令串 取消召唤骷髅激活状态(亡灵男巫)"
         },
         {
             "content": "raisedeadon",
@@ -21600,7 +21813,7 @@
         },
         {
             "content": "rechargeoff",
-            "descript": "技能命令串 取消补充(月井之春)"
+            "descript": "技能命令串 取消补充激活状态(月井之春)"
         },
         {
             "content": "rechargeon",
@@ -21616,7 +21829,7 @@
         },
         {
             "content": "renewoff",
-            "descript": "技能命令串 取消修理(暗夜精灵族)"
+            "descript": "技能命令串 取消修理激活状态(暗夜精灵族)"
         },
         {
             "content": "renewon",
@@ -21628,7 +21841,7 @@
         },
         {
             "content": "repairoff",
-            "descript": "技能命令串 取消修理(人族、兽族、娜迦族、达拉内尔族(破碎者))"
+            "descript": "技能命令串 取消修理激活状态(人族、兽族、娜迦族、达拉内尔族(破碎者))"
         },
         {
             "content": "repairon",
@@ -21644,7 +21857,7 @@
         },
         {
             "content": "replenishlifeoff",
-            "descript": "技能命令串 取消枯萎精髓(十胜石雕像)"
+            "descript": "技能命令串 取消枯萎精髓激活状态(十胜石雕像)"
         },
         {
             "content": "replenishlifeon",
@@ -21656,7 +21869,7 @@
         },
         {
             "content": "replenishmanaoff",
-            "descript": "技能命令串 取消灵魂触摸(十胜石雕像)"
+            "descript": "技能命令串 取消灵魂触摸激活状态(十胜石雕像)"
         },
         {
             "content": "replenishmanaon",
@@ -21664,7 +21877,7 @@
         },
         {
             "content": "replenishoff",
-            "descript": "技能命令串 取消枯萎精髓及灵魂触摸(十胜石雕像)"
+            "descript": "技能命令串 取消枯萎精髓及灵魂触摸激活状态(十胜石雕像)"
         },
         {
             "content": "replenishon",
@@ -21684,7 +21897,7 @@
         },
         {
             "content": "restorationoff",
-            "descript": "技能命令串 取消修理(不死灵族)"
+            "descript": "技能命令串 取消修理激活状态(不死灵族)"
         },
         {
             "content": "restorationon",
@@ -21724,7 +21937,7 @@
         },
         {
             "content": "sanctuary",
-            "descript": "技能命令串 避难"
+            "descript": "技能命令串 避难权杖(物品技能)"
         },
         {
             "content": "scout",
@@ -21736,7 +21949,7 @@
         },
         {
             "content": "selfdestructoff",
-            "descript": "技能命令串 取消卡布恩(自爆工兵)"
+            "descript": "技能命令串 取消卡布恩激活状态(自爆工兵)"
         },
         {
             "content": "selfdestructon",
@@ -21776,7 +21989,7 @@
         },
         {
             "content": "slowoff",
-            "descript": "技能命令串 取消减速(人族女巫)"
+            "descript": "技能命令串 取消减速激活状态(人族女巫)"
         },
         {
             "content": "slowon",
@@ -21812,7 +22025,7 @@
         },
         {
             "content": "spellstealoff",
-            "descript": "技能命令串 取消魔法盗取"
+            "descript": "技能命令串 取消魔法盗取激活状态"
         },
         {
             "content": "spellstealon",
@@ -21832,7 +22045,7 @@
         },
         {
             "content": "spirittroll",
-            "descript": "技能命令串 灵魂巨魔"
+            "descript": "技能命令串 召唤猎头者(物品技能)"
         },
         {
             "content": "spiritwolf",
@@ -21856,7 +22069,7 @@
         },
         {
             "content": "steal",
-            "descript": "技能命令串 盗取(物品技能)"
+            "descript": "技能命令串 窃取(物品技能)"
         },
         {
             "content": "stomp",
@@ -21888,15 +22101,15 @@
         },
         {
             "content": "tankdroppilot",
-            "descript": "技能命令串 空投坦克"
+            "descript": "技能命令串 卸载驾驶员(坦克)"
         },
         {
             "content": "tankloadpilot",
-            "descript": "技能命令串 挂载坦克"
+            "descript": "技能命令串 装载驾驶员(坦克)"
         },
         {
             "content": "tankpilot",
-            "descript": "技能命令串 挂载坦克形态(tankpilot)"
+            "descript": "技能命令串 驾驶员(坦克)(tankpilot)"
         },
         {
             "content": "taunt",
@@ -21948,7 +22161,7 @@
         },
         {
             "content": "uncoldarrows",
-            "descript": "技能命令串 取消霜冻之箭"
+            "descript": "技能命令串 取消霜冻之箭激活状态"
         },
         {
             "content": "undeadbuild",
@@ -21956,19 +22169,19 @@
         },
         {
             "content": "undefend",
-            "descript": "技能命令串 取消防御"
+            "descript": "技能命令串 取消防御激活状态"
         },
         {
             "content": "undivineshield",
-            "descript": "技能命令串 取消神圣护甲"
+            "descript": "技能命令串 取消神圣护甲激活状态"
         },
         {
             "content": "unflamingarrows",
-            "descript": "技能命令串 取消灼热之箭"
+            "descript": "技能命令串 取消灼热之箭激活状态"
         },
         {
             "content": "unflamingattack",
-            "descript": "技能命令串 取消毁灭之球(毁灭者)"
+            "descript": "技能命令串 取消毁灭之球激活状态(毁灭者)"
         },
         {
             "content": "unholyfrenzy",
@@ -21980,7 +22193,7 @@
         },
         {
             "content": "unimmolation",
-            "descript": "技能命令串 解除献祭(恶魔猎手)"
+            "descript": "技能命令串 取消献祭激活状态(恶魔猎手)"
         },
         {
             "content": "load",
@@ -22008,7 +22221,7 @@
         },
         {
             "content": "unpoisonarrows",
-            "descript": "技能命令串 取消毒箭"
+            "descript": "技能命令串 取消毒箭激活状态"
         },
         {
             "content": "ravenform",
@@ -22048,7 +22261,7 @@
         },
         {
             "content": "unsummon",
-            "descript": "技能命令串 反召唤(物品技能)(侍僧卖建筑)(单位技能&物品技能)"
+            "descript": "技能命令串 反召唤建筑(物品技能)(侍僧卖建筑)(单位技能&物品技能)"
         },
         {
             "content": "unwindwalk",
@@ -22064,7 +22277,7 @@
         },
         {
             "content": "vengeanceoff",
-            "descript": "技能命令串 取消复仇之魂"
+            "descript": "技能命令串 取消复仇之魂激活状态"
         },
         {
             "content": "vengeanceon",
@@ -22096,7 +22309,7 @@
         },
         {
             "content": "weboff",
-            "descript": "技能命令串 取消蛛网"
+            "descript": "技能命令串 取消蛛网激活状态"
         },
         {
             "content": "webon",
