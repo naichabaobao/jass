@@ -94,6 +94,10 @@ class Options {
   public static get isSupportMark() {
     return this.configuration["support"]["mark"] as boolean;
   }
+  // 是否需要显示number
+  public static get isSupportNumber() {
+    return this.configuration["support"]["number"] as boolean;
+  }
   // 是否需要显示string
   public static get isSupportString() {
     return this.configuration["support"]["string"] as boolean;

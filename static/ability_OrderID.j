@@ -1,4 +1,5 @@
-    // 技能命令ID
+globals
+        // 技能命令ID
 
 
     // 中立技能
@@ -1476,3 +1477,5 @@
     constant integer 852649
     // 技能命令ID 未知
     constant integer 852650
+
+endglobals

@@ -92,24 +92,30 @@ export {
 /**
  * 插件启动管理所有文件上下文
  */
-class Context {
-	private static context:Context
+export class Context {
 
-	public static instance() {
-		if (!this.context){
-			this.context = new Context();
-		}
-		return this.context;
-	}
+	public filePath:string = "";
+
 }
 
 export class Node implements Rangebel  { 
 
-	public constructor() {
+	/**
+	 * 必须传递上下文
+	 * @param context 
+	 */
+	public constructor(context:Context) {
+		// 当开始构造时
+		this.context = context;
+	}
 
+	public getContext():Context {
+		return this.context;
 	}
 
 	public readonly loc: Range = Range.default(); 
+
+	protected readonly context:Context;
 
 	/**
 	 * 父类节点
@@ -132,8 +138,6 @@ export class Node implements Rangebel  {
 	 * 仅保存第一个子节点
 	 */
 	protected firstChild:Node|null = null;
-
-	protected context:Context = Context.instance();
 
 	public getParent() :Node|null {
 		return this.parent;
@@ -312,6 +316,14 @@ export class Node implements Rangebel  {
 		}
 
 	}
+
+	public getBefor():Node|null {
+		return this.befor;
+	}
+
+	public getAfter():Node|null {
+		return this.after;
+	}
 }
 
 type ParamAnnotation = {
@@ -321,11 +333,14 @@ type ParamAnnotation = {
 
 class Declaration extends Node implements Descript {
 
-	/**
-	 * 来源文件
-	 * @depreated 存在资源浪费
-	 */
-	public source: string = "";
+	protected constructor(context:Context) {
+		super(context);
+	}
+
+	// 临时
+	public get source():string {
+		return this.context.filePath;
+	}
 
 	public readonly lineComments: LineComment[] = [];
 
@@ -366,6 +381,10 @@ class Declaration extends Node implements Descript {
 
 class TextMacroDefine extends Declaration {
 	
+	public constructor(context:Context) {
+		super(context);
+	}
+
 	public id:Identifier = null as any;
 	public value: string = "";
 
@@ -450,8 +469,8 @@ class Take extends Node {
 	public nameToken: Token | null = null;
 	public name: string;
 
-	constructor(type: string, name: string) {
-		super();
+	constructor(context:Context, type: string, name: string) {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -470,8 +489,8 @@ class Native extends Declaration implements Desc, Descript {
 	private constant = false;
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "", takes: Take[] = [], returns: string = "nothing") {
-		super();
+	constructor(context:Context, name: string = "", takes: Take[] = [], returns: string = "nothing") {
+		super(context);
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
@@ -555,8 +574,8 @@ class Global extends Declaration implements Desc, Descript, Option {
 
 	public size: number = 0;
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -599,8 +618,8 @@ class Local extends Declaration implements  Desc, Descript, Option {
 
 	public size: number = 0;
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -643,8 +662,8 @@ class Member extends Declaration implements Desc, Descript, Option {
 	public nameToken: Token | null = null;
 	public modifier: "default" | "static" | "stub" = "default";
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -672,8 +691,8 @@ class Interface extends Declaration implements  Descript, Option {
 	public loc: Range = Range.default();
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "") {
-		super();
+	constructor(context:Context, name: string = "") {
+		super(context);
 		this.name = name;
 	}
 
@@ -716,8 +735,8 @@ class Library extends Declaration implements  Descript, Option {
 	public readonly globals: Global[] = [];
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "") {
-		super();
+	constructor(context:Context, name: string = "") {
+		super(context);
 		this.name = name;
 	}
 
@@ -815,6 +834,10 @@ class Identifier extends Range {
 
 class DefineMacro extends Declaration implements  Descript, Option  {
 
+	public constructor(context:Context) {
+		super(context);
+	}
+
 	public readonly keys: Identifier[] = [];
 	public readonly takes: string[] = [];
 
@@ -903,8 +926,8 @@ export function runTextMacroReplace(runTextMacro:RunTextMacro, textMacros:TextMa
 export class BaseType extends Declaration {
 	public readonly name:string;
 
-	constructor(baseType:string) {
-		super();
+	constructor(context:Context, baseType:string) {
+		super(context);
 		this.name = baseType;
 	}
 
@@ -913,20 +936,23 @@ export class BaseType extends Declaration {
 	}
 }
 
-export const BooleanBaseType = new BaseType("boolean");
-export const IntegerBaseType = new BaseType("integer");
-export const RealBaseType = new BaseType("real");
-export const StringBaseType = new BaseType("string");
-export const CodeBaseType = new BaseType("code");
-export const HandleBaseType = new BaseType("handle");
+export const baseTypeContext = new Context();
+baseTypeContext.filePath = "blizzard";
+
+export const BooleanBaseType = new BaseType(baseTypeContext, "boolean");
+export const IntegerBaseType = new BaseType(baseTypeContext, "integer");
+export const RealBaseType = new BaseType(baseTypeContext, "real");
+export const StringBaseType = new BaseType(baseTypeContext, "string");
+export const CodeBaseType = new BaseType(baseTypeContext, "code");
+export const HandleBaseType = new BaseType(baseTypeContext, "handle");
 
 export class Type  extends BaseType {
 	public ext:Type|BaseType;
 
 	public static readonly types:Type[] = [];
 
-	constructor(name:string, ext: Type|BaseType = HandleBaseType) {
-		super(name);
+	constructor(context:Context, name:string, ext: Type|BaseType = HandleBaseType) {
+		super(context, name);
 		this.ext = ext;
 
 		Type.push(this);
@@ -957,8 +983,9 @@ export class Type  extends BaseType {
 class Program extends Declaration {
 
 
-	constructor() {
-		super();
+
+	constructor(context:Context, ) {
+		super(context);
 	}
 
 	/**
@@ -1199,16 +1226,6 @@ export {
 };
 
 
-if (true) {
 
-	const rootNode = new Node();
-
-	rootNode.append(new Node,)
-	rootNode.prepend(new Node,)
-	rootNode.append(new Node,)
-
-	console.log(rootNode.getSiblings());
-	
-}
 
 

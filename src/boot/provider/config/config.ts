@@ -62,7 +62,20 @@ function configFileToObject(jsonData: string): ConfigFileOption {
             option.excludes = excludes;
         }
     }
+    if (configObject.numbers) {
+        if (Array.isArray(configObject.numbers)) { // 确保传进来的是数组
+            const numbers = (<Array<any>>(configObject.numbers)).filter(function (num): boolean {
+                return num.value && num.descript && Number.isSafeInteger(num.value) && typeof num.descript == "string";
+            }).map<NumberOption>(num => {
+                return {
+                    value: (num.value) as number,
+                    descript: (num.descript) as string
+                };
+            });
 
+            option.numbers = numbers;
+        }
+    }
 
     return option;
 }
@@ -85,10 +98,16 @@ interface StringOption {
     descript?: string;
 };
 
+interface NumberOption {
+    value: number;
+    descript: string;
+};
+
 interface ConfigFileOption {
     presets?: PresetOption[];
     strings?: (StringOption | string)[];
     excludes?: string[];
+    numbers?: NumberOption[];
 }
 
 export class ConfigPovider {
@@ -122,7 +141,7 @@ export class ConfigPovider {
         if (workspacePath) {
 
             if (fs.existsSync(workspacePath)) {
-                const configObject = JSON.parse(fs.readFileSync(workspacePath).toString("utf-8"));
+                // const configObject = JSON.parse(fs.readFileSync(workspacePath).toString("utf-8"));
                 option = configFileToObject(fs.readFileSync(workspacePath).toString("utf-8"));
             } else {
                 vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
@@ -165,6 +184,12 @@ export class ConfigPovider {
         this.parse();
         this.watch();
         return this.result?.excludes ?? [];
+    }
+
+    public getNumbers(): NumberOption[] {
+        this.parse();
+        this.watch();
+        return this.result?.numbers ?? [];
     }
 
     // 配置文件发生改变时,把excludes配置的文件从数据中移除

@@ -114,6 +114,11 @@
           "type": "boolean",
           "default": true,
           "description": "String prompt support"
+        },
+        "jass.support.number": {
+          "type": "boolean",
+          "default": false,
+          "description": "(Deprecation) number prompt support"
         }
       }
     },

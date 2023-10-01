@@ -718,3 +718,38 @@ vscode.languages.registerCompletionItemProvider("jass", new class StringCompleti
 */
 
 
+/**
+ * 提示数字
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class NumberCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+    
+    if (Options.isSupportNumber) {
+
+      [...ConfigPovider.instance().getNumbers(), ...PluginDefaultConfig.numbers ?? []].forEach(num => {
+        const originCodeValue = `${num.value}`;
+        const item = new vscode.CompletionItem(originCodeValue, vscode.CompletionItemKind.Property);
+
+        const ms = new vscode.MarkdownString()
+        .appendCodeblock(`integer ${originCodeValue}`)
+        .appendMarkdown(num.descript)
+        .appendMarkdown("\n\n~整形常量~");
+        item.detail = `integer ${originCodeValue}`;
+        item.documentation = ms;
+
+        item.filterText = originCodeValue;
+
+        items.push(item);
+         
+     });
+
+
+    }
+    return items;
+  }
+
+}(), "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+
