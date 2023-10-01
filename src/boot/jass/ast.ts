@@ -22,7 +22,9 @@ class Range {
 	public start: Position;
 	public end: Position;
 
-	constructor(start: Position = new Position(), end: Position = new Position()) {
+
+
+	public constructor(start: Position = new Position(), end: Position = new Position()) {
 		this.start = start;
 		this.end = end;
 	}
@@ -87,11 +89,229 @@ export {
 };
 
 
+/**
+ * 插件启动管理所有文件上下文
+ */
+class Context {
+	private static context:Context
 
-
+	public static instance() {
+		if (!this.context){
+			this.context = new Context();
+		}
+		return this.context;
+	}
+}
 
 export class Node implements Rangebel  { 
+
+	public constructor() {
+
+	}
+
 	public readonly loc: Range = Range.default(); 
+
+	/**
+	 * 父类节点
+	 */
+	protected parent:Node|null = null;
+	/**
+	 * 前节点
+	 */
+	protected befor:Node|null = null;
+	/**
+	 * 后节点
+	 */
+	protected after:Node|null = null;
+
+	/**
+	 * 子节点
+	 */
+	// protected readonly childrens:Node[] = [];
+	/**
+	 * 仅保存第一个子节点
+	 */
+	protected firstChild:Node|null = null;
+
+	protected context:Context = Context.instance();
+
+	public getParent() :Node|null {
+		return this.parent;
+	}
+
+	/**
+	 * 获取兄弟节点
+	 * @returns 
+	 */
+	public getSiblings():Node[] {
+		const nodes:Node[] = [this];
+
+		/**
+		 * 递归向前看是否存在上一个节点,有则向前插入
+		 * @param node 
+		 */
+		const pushBackBefor = (node:Node) =>  {
+			console.log("pushBackBefor");
+			nodes.splice(0, 0, node);
+			if (node.befor) {
+				pushBackBefor(node.befor);
+			}
+		}
+
+		if (this.befor) {
+			pushBackBefor(this.befor);
+		}
+		/**
+		 * 递归向后看是否存在上一个节点,有则向后插入
+		 * @param node 
+		 */
+		const pushAfter = (node:Node) =>  {
+			
+			
+			nodes.push(node);
+			if (node.after) {
+				pushAfter(node.after);
+			}
+		}
+
+		if (this.after) {
+			pushAfter(this.after);
+		}
+
+		
+		
+		return nodes;
+	}
+
+	public getChildrens():Node[] {
+		if (this.firstChild) {
+			return this.firstChild.getSiblings();
+		} else return [];
+	}
+
+	/**
+	 * 设置节点的父节点等于this的父节点
+	 * @param node 
+	 */
+	private setSiblingParent(node:Node) {
+		node.parent = this.parent;
+	}
+
+	/**
+	 * 设置子节点的父节点等于this
+	 * @param node 
+	 */
+	private setchildParent(node:Node) {
+		node.parent = this;
+	}
+
+	/**
+	 * 往前插入一个几点
+	 */
+	public prepend(node:Node) {
+		node.remove();
+		/**
+		 * 往前递归直到前节点为空时设置前节点为node
+		 */
+		const beforPrepend = (_node:Node) => {
+			if (_node.befor) {
+				beforPrepend(_node.befor);
+			} else {
+				_node.befor = node;
+				
+				// 插入的node后节点从新绑定
+				node.after = _node;
+			}
+		}
+
+		beforPrepend(this);
+
+		this.setSiblingParent(node);
+	}
+
+	/**
+	 * 把节点移除,并解除当前节点的关系
+	 */
+	public remove() {
+		if (this.befor) {
+			if (this.after) { // 当节点前后节点都有时,前节点的后节点等于你的后节点，后节点的前节点等于你的前节点，并把你的前后节点关系清空
+				this.befor.after = this.after;
+				this.after.befor = this.befor;
+				this.befor = null;
+				this.after = null;
+
+				
+			} else { // 意味着节点是最后一个,清空前节点的后节点,清空你的前节点
+				this.befor.after = null;
+
+				this.befor = null
+			}
+		} else { // 首个节点
+			if (this.after) { // 无前有后，把后节点的前节点清空，把你的后节点清空
+				this.after.befor = null;
+
+				this.befor = null;
+			}
+		}
+
+		this.parent = null;
+	}
+
+	/**
+	 * 往后插入一个几点
+	 */
+	public append(node:Node) {
+
+		node.remove();
+
+		/**
+		 * 往后递归直到前节点为空时设置后节点为node
+		 */
+		const afterAppend = (_node:Node) => {
+			if (_node.after) {
+				afterAppend(_node.after);
+			} else {
+				_node.after = node;
+				node.befor = _node;
+			}
+		}
+
+		afterAppend(this);
+
+		this.setSiblingParent(node);
+	}
+
+	/**
+	 * 插入子节点
+	 */
+	public appendChild(node:Node) {
+		
+		node.remove();
+
+		if (this.firstChild) {
+			this.firstChild.append(node);
+		} else {
+			this.firstChild = node;
+			this.setchildParent(node);
+		}
+
+	}
+
+	/**
+	 * 往前插入子节点
+	 */
+	public prependChild(node:Node) {
+	
+		node.remove();
+
+		if (this.firstChild) {
+			this.firstChild.prepend(node);
+		} else {
+			this.firstChild = node;
+			this.setchildParent(node);
+		}
+
+	}
 }
 
 type ParamAnnotation = {
@@ -978,5 +1198,17 @@ export {
 	AstNode, Declaration, Program, TextMacroDefine
 };
 
+
+if (true) {
+
+	const rootNode = new Node();
+
+	rootNode.append(new Node,)
+	rootNode.prepend(new Node,)
+	rootNode.append(new Node,)
+
+	console.log(rootNode.getSiblings());
+	
+}
 
 
