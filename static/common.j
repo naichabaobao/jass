@@ -101,7 +101,7 @@ type gamedifficulty extends handle
 type gametype extends handle
 // 地图参数（部分参数初始值源自房间的玩家设置和高级选项设置）
 type mapflag extends handle
-// 游戏可见性
+// 地图可见性
 type mapvisibility extends handle
 // 地图设置
 type mapsetting extends handle
