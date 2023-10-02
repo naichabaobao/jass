@@ -6190,13 +6190,13 @@ function DialogDisplayBJ takes boolean flag, dialog whichDialog, player whichPla
 endfunction
 
 
-// 设置 对话框标题
+// 设置对话框标题
 function DialogSetMessageBJ takes dialog whichDialog, string message returns nothing
     call DialogSetMessage(whichDialog, message)
 endfunction
 
 
-// 创建对话按钮
+// 添加对话按钮
 function DialogAddButtonBJ takes dialog whichDialog, string buttonText returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,0)
     return bj_lastCreatedButton
@@ -6221,13 +6221,13 @@ function GetLastCreatedButtonBJ takes nothing returns button
 endfunction
 
 
-// 事件响应: 单击对话框按钮
+// 获取被单击对话框按钮
 function GetClickedButtonBJ takes nothing returns button
     return GetClickedButton()
 endfunction
 
 
-// 事件响应 - 单击对话框
+// 获取被单击的对话框
 function GetClickedDialogBJ takes nothing returns dialog
     return GetClickedDialog()
 endfunction
