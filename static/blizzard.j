@@ -6184,7 +6184,7 @@ endfunction
 //***************************************************************************
 
 
-// 显示/隐藏 对话框
+// 显示/隐藏 对话框（指定玩家）
 function DialogDisplayBJ takes boolean flag, dialog whichDialog, player whichPlayer returns nothing
     call DialogDisplay(whichPlayer, whichDialog, flag)
 endfunction
@@ -6196,13 +6196,15 @@ function DialogSetMessageBJ takes dialog whichDialog, string message returns not
 endfunction
 
 
-// 添加对话按钮
+// 添加对话框按钮
+// 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 function DialogAddButtonBJ takes dialog whichDialog, string buttonText returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,0)
     return bj_lastCreatedButton
 endfunction
 
 // 添加对话框按钮(指定快捷键) [R]
+// 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 function DialogAddButtonWithHotkeyBJ takes dialog whichDialog, string buttonText, integer hotkey returns button
     set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,hotkey)
     return bj_lastCreatedButton
