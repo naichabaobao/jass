@@ -6285,10 +6285,11 @@ native DialogClear takes dialog whichDialog returns nothing
 // 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
 // 添加指定对话框按钮 [R]
+// 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
 // 添加退出游戏按钮(指定对话框) [R]
 native DialogAddQuitButton takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
-// 显示/隐藏 对话框[R]
+// 显示/隐藏 对话框（指定玩家）[R]
 native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag returns nothing
 
 // Creates a new or reads in an existing game cache file stored
