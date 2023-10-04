@@ -4392,7 +4392,7 @@ native R2SW takes real r, integer width, integer precision returns string
 native S2I takes string s returns integer
 // 转换字符串成实数
 native S2R takes string s returns real
-// 获取句柄ID    
+// 获取句柄ID
 // tips:一般用于hashtable key
 // @param h 任意handle子类型
 native GetHandleId takes handle h returns integer
