@@ -29,13 +29,17 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取AI玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 不统计该单位的等价单位
     native GetUnitCount         takes integer unitid                        returns integer
     // 获取指定玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取AI玩家指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
+    // 获取指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
+    // 不统计该单位的等价单位
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应类型的单位数
+    // 不统计该单位的等价单位
     // @param tn 基地编号，-1为不限
     // @param dn 是否包含训练/建造/研究中的单位/建筑/科技
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
@@ -80,12 +84,13 @@ native DebugS               takes string str                            returns 
     native GetMegaTarget        takes nothing                               returns unit
     // 获取指定玩家正在训练/建造的单位
     native GetBuilding          takes player p                              returns unit
-    // 获取敌人强度
+    // 获取敌人强度，似乎是全部敌人强度之和
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
     // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻（似乎同时会发送小地图信号告知真人玩家）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
+    // 用于夸脚本协同
     native GetAllianceTarget    takes nothing                               returns unit
     // 训练/建造/研究指定单位/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
@@ -99,7 +104,7 @@ native DebugS               takes string str                            returns 
     native SetExpansion         takes unit peon, integer id                 returns boolean
     // 升级指定科技
     native SetUpgrade           takes integer id                            returns boolean
-    // 设置英雄升级技能函数
+    // 设置英雄升级技能线程
     native SetHeroLevels        takes code func                             returns nothing
     // 是否设置新英雄
     // 意义不明，可能和英雄升级技能函数有关
