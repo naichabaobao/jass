@@ -6048,17 +6048,17 @@ native SetUnitTypeSlots takes unit whichUnit, integer slots returns nothing
 
 // 获取指定单位自定义值
 native GetUnitUserData takes unit whichUnit returns integer
-// 设置指定单位自定义数据
+// 设置指定单位自定义值
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 
 // Player API
 
-// 根据编号查询玩家
+// 查询玩家（指定编号）
 // @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断，可同时返回多位玩家
+// 通常用于异步判断，可同时返回多位玩家，包含AI玩家、裁判和观战者
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
@@ -6081,12 +6081,12 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 获取玩家的种族
+// 获取玩家种族
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
-// 获取玩家指定单位类型的数量
+// 获取玩家单位总数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量
@@ -6094,14 +6094,14 @@ constant native GetPlayerUnitCount takes player whichPlayer, boolean includeInco
 // @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获取玩家的建筑数量
+// 获取玩家的建筑总数量
 // @param includeIncomplete 是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
 // 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家的联盟类型是否是指定类型
+// 查询玩家与玩家的联盟类型是否指定类型
 // @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
