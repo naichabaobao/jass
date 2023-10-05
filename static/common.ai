@@ -298,6 +298,7 @@ native DebugS               takes string str                            returns 
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始线程
     // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加前请检查已调用的默认线程数量）
+    // 线程类似一条独立运行的功能，如果其内部没有无限循环或循环可以随意退出，则该线程运行完后会失效，因此一般官方的线程都是无限循环的
     // 变量支持跨线程使用，但在一条线程运行到读取变量时，该变量可能已在之前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（等待期间不执行任何代码）
