@@ -7417,7 +7417,7 @@ native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
 // @param terrainType 地表纹理，具体类型可在 记录物编的文件 找到
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
-// 查询路径类型状态是否关闭(指定坐标) [R]
+// 查询路径类型是否指定类型(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
 // 设置路径类型状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
