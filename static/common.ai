@@ -82,7 +82,7 @@ native DebugS               takes string str                            returns 
     // 获取大型攻击目标
     // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
-    // 获取指定玩家正在训练/建造的单位
+    // 获取指定玩家最后建造的建筑
     native GetBuilding          takes player p                              returns unit
     // 获取敌人强度，似乎是全部敌人强度之和
     native GetEnemyPower        takes nothing                               returns integer
@@ -171,8 +171,7 @@ native DebugS               takes string str                            returns 
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
-    // 未被编入的单位类型不会跟随进攻，只会留在出生点
-    // 似乎攻击组会在这些单位类型中挑选一名类型为英雄的单位担任
+    // 未被编入的单位类型不会跟随进攻，只会留在出生点，建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防御组
     native AddDefenders         takes integer qty, integer id               returns boolean
@@ -189,20 +188,25 @@ native DebugS               takes string str                            returns 
     // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
+    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 查询当前拟扩张点是否存在威胁性单位（中立敌对玩家的单位）
+    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
     // 获取扩张点的 X 坐标
+    // 使用前必须已初始化过 CreateCaptains
     native GetExpansionX        takes nothing                               returns integer
     // 获取扩张点的 Y 坐标
+    // 使用前必须已初始化过 CreateCaptains
     native GetExpansionY        takes nothing                               returns integer
     // 设置（军队）集合点
     native SetStagePoint        takes real x, real y                        returns nothing
     // 发布攻击组移动攻击命令（指定单位）
+    // 当攻击组到达目标点，若未发现敌人或途中被击败且尚有单位幸存，攻击组将返回基地
     native AttackMoveKill       takes unit target                           returns nothing
     // 发布攻击组移动攻击命令（指定坐标）
+    // 当攻击组到达目标点，若未发现敌人或途中被击败且尚有单位幸存，攻击组将返回基地
     native AttackMoveXY         takes integer x, integer y                  returns nothing
     // 在指定坐标卸载全部单位（空投）
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
@@ -236,16 +240,18 @@ native DebugS               takes string str                            returns 
     native HarvestWood          takes integer town, integer peons           returns nothing
     // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
+    // 使用前必须已初始化过 CreateCaptains
     native GetExpansionPeon     takes nothing                               returns unit
     // 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
     native StopGathering        takes nothing                               returns nothing
     // 在指定坐标增加指定类型的防守单位
+    // 单位死亡后，AI会自动填补新防守单位，但每个点默认只增加3次，超过3次可使用 FillGuardPosts 补充 或 使用 SetReplacementCount 设置新上限
     native AddGuardPost         takes integer id, real x, real y            returns nothing
     // 填补防守岗位（即时），当一个单位被杀后，AI会立即训练一个同类型单位填补其空位
     native FillGuardPosts       takes nothing                               returns nothing
     // 返回防守岗位
     native ReturnGuardPosts     takes nothing                               returns nothing
-    // 创建攻击组
+    // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
     native CreateCaptains       takes nothing                               returns nothing
     // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
@@ -323,7 +329,7 @@ native DebugS               takes string str                            returns 
     native SetAmphibious        takes nothing                               returns nothing
     
     // 获取命令类型
-    // 可通过BJ发送，未发送时获取的类型是0
+    // 可通过BJ发送命令，未发送时获取的类型是0，获取后命令序列增加1，请用 PopLastCommand 减少序列，完成排泄
     // 暴雪用于打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
     native CommandsWaiting      takes nothing                               returns integer
     // 获取最新的命令类型
@@ -335,6 +341,7 @@ native DebugS               takes string str                            returns 
     // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
     // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
+    // 当排泄用，用完命令就调用
     native PopLastCommand       takes nothing                               returns nothing
     // 获取对战难度
     native MeleeDifficulty      takes nothing                               returns integer
