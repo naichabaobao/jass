@@ -55,7 +55,7 @@ const map = new Map<string,string>([
   ["gamedifficulty", "游戏难度（用于战役地图）"],
   ["gametype", "游戏类型"],
   ["mapflag", "地图参数（部分参数初始值源自房间的玩家设置和高级选项设置）"],
-  ["mapvisibility", "游戏可见性"],
+  ["mapvisibility", "地图可见性"],
   ["mapsetting", "地图设置"],
   ["mapdensity", "地图密度"],
   ["mapcontrol", "玩家控制者类型"],

@@ -101,7 +101,7 @@ type gamedifficulty extends handle
 type gametype extends handle
 // 地图参数（部分参数初始值源自房间的玩家设置和高级选项设置）
 type mapflag extends handle
-// 游戏可见性
+// 地图可见性
 type mapvisibility extends handle
 // 地图设置
 type mapsetting extends handle
@@ -3963,23 +3963,23 @@ globals
 	constant unitintegerfield UNIT_IF_LOOPING_FADE_IN_RATE = ConvertUnitIntegerField('ulfi')
 	// 单位整数域 声音 - 循环淡出率 ('ulfo')
 	constant unitintegerfield UNIT_IF_LOOPING_FADE_OUT_RATE = ConvertUnitIntegerField('ulfo')
-	// 单位整数域 状态 - 英雄 - 敏捷 ('uagc')
+	// 单位整数域 状态 - 英雄 - 敏捷（属性） ('uagc')
 	constant unitintegerfield UNIT_IF_AGILITY = ConvertUnitIntegerField('uagc')
-	// 单位整数域 状态 - 英雄 - 智力 ('uinc')
+	// 单位整数域 状态 - 英雄 - 智力（属性） ('uinc')
 	constant unitintegerfield UNIT_IF_INTELLIGENCE = ConvertUnitIntegerField('uinc')
-	// 单位整数域 状态 - 英雄 - 力量 ('ustc')
+	// 单位整数域 状态 - 英雄 - 力量（属性） ('ustc')
 	constant unitintegerfield UNIT_IF_STRENGTH = ConvertUnitIntegerField('ustc')
-	// 单位整数域 状态 - 英雄 - 敏捷(固有成长值，不含增益) ('uagm')
+	// 单位整数域 状态 - 英雄 - （当前）敏捷(不含增益) ('uagm')
 	constant unitintegerfield UNIT_IF_AGILITY_PERMANENT = ConvertUnitIntegerField('uagm')
-	// 单位整数域 状态 - 英雄 - 智力(固有成长值，不含增益) ('uinm')
+	// 单位整数域 状态 - 英雄 - （当前）智力(不含增益) ('uinm')
 	constant unitintegerfield UNIT_IF_INTELLIGENCE_PERMANENT = ConvertUnitIntegerField('uinm')
-	// 单位整数域 状态 - 英雄 - 力量(固有成长值，不含增益) ('ustm')
+	// 单位整数域 状态 - 英雄 - （当前）力量(不含增益) ('ustm')
 	constant unitintegerfield UNIT_IF_STRENGTH_PERMANENT = ConvertUnitIntegerField('ustm')
-	// 单位整数域 状态 - 英雄 - 敏捷(固有成长值 及 增益) ('uagb')
+	// 单位整数域 状态 - 英雄 - （当前）敏捷(含增益) ('uagb')
 	constant unitintegerfield UNIT_IF_AGILITY_WITH_BONUS = ConvertUnitIntegerField('uagb')
-	// 单位整数域 状态 - 英雄 - 智力(固有成长值 及 增益) ('uinb')
+	// 单位整数域 状态 - 英雄 - （当前）智力(含增益) ('uinb')
 	constant unitintegerfield UNIT_IF_INTELLIGENCE_WITH_BONUS = ConvertUnitIntegerField('uinb')
-	// 单位整数域 状态 - 英雄 - 力量(固有成长值 及 增益) ('ustb')
+	// 单位整数域 状态 - 英雄 - （当前）力量(含增益) ('ustb')
 	constant unitintegerfield UNIT_IF_STRENGTH_WITH_BONUS = ConvertUnitIntegerField('ustb')
 	// 单位整数域 状态 - 黄金奖励 - 骰子数量 ('ubdi')
 	constant unitintegerfield UNIT_IF_GOLD_BOUNTY_AWARDED_NUMBER_OF_DICE = ConvertUnitIntegerField('ubdi')
@@ -3993,7 +3993,7 @@ globals
 	constant unitintegerfield UNIT_IF_LUMBER_BOUNTY_AWARDED_BASE = ConvertUnitIntegerField('ulba')
 	// 单位整数域 状态 - 木材奖励 - 骰子面数 ('ulbs')
 	constant unitintegerfield UNIT_IF_LUMBER_BOUNTY_AWARDED_SIDES_PER_DIE = ConvertUnitIntegerField('ulbs')
-	// 单位整数域 状态 - 等级 ('ulev')
+	// 单位整数域 状态 - （单位）等级 ('ulev')
 	constant unitintegerfield UNIT_IF_LEVEL = ConvertUnitIntegerField('ulev')
 	// 单位整数域 状态 - 队形排列 ('ufor')
 	constant unitintegerfield UNIT_IF_FORMATION_RANK = ConvertUnitIntegerField('ufor')
@@ -4009,7 +4009,7 @@ globals
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_BLUE = ConvertUnitIntegerField('uclb')
 	// 单位整数域 美术 - 颜色通道(alpha) ('ucal')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_ALPHA = ConvertUnitIntegerField('ucal')
-	// 单位整数域 移动 - 类型 ('umvt')
+	// 单位整数域 移动 - （移动）类型 ('umvt')
 	constant unitintegerfield UNIT_IF_MOVE_TYPE = ConvertUnitIntegerField('umvt')
 	// 单位整数域 战斗 - 作为目标类型 ('utar')
 	constant unitintegerfield UNIT_IF_TARGETED_AS = ConvertUnitIntegerField('utar')
@@ -4019,18 +4019,18 @@ globals
 	constant unitintegerfield UNIT_IF_HIT_POINTS_REGENERATION_TYPE = ConvertUnitIntegerField('uhrt')
 	// 单位整数域 路径 - 放置不允许(建筑物专属) ('upar')
 	constant unitintegerfield UNIT_IF_PLACEMENT_PREVENTED_BY = ConvertUnitIntegerField('upar')
-	// 单位整数域 状态 - 英雄 - 主要属性 ('upra')
+	// 单位整数域 状态 - 英雄 - 主属性 ('upra')
 	constant unitintegerfield UNIT_IF_PRIMARY_ATTRIBUTE = ConvertUnitIntegerField('upra')
 	
-	// 单位实数域 状态 - 英雄 - 每等级提升力量 ('ustp')
+	// 单位实数域 状态 - 英雄 - 每等级提升力量（成长值） ('ustp')
 	constant unitrealfield UNIT_RF_STRENGTH_PER_LEVEL = ConvertUnitRealField('ustp')
-	// 单位实数域 状态 - 英雄 - 每等级提升敏捷 ('uagp')
+	// 单位实数域 状态 - 英雄 - 每等级提升敏捷（成长值） ('uagp')
 	constant unitrealfield UNIT_RF_AGILITY_PER_LEVEL = ConvertUnitRealField('uagp')
-	// 单位实数域 状态 - 英雄 - 每等级提升智力 ('uinp')
+	// 单位实数域 状态 - 英雄 - 每等级提升智力（成长值） ('uinp')
 	constant unitrealfield UNIT_RF_INTELLIGENCE_PER_LEVEL = ConvertUnitRealField('uinp')
-	// 单位实数域 状态 - 生命恢复 ('uhpr')
+	// 单位实数域 状态 - （每秒）生命恢复（值） ('uhpr')
 	constant unitrealfield UNIT_RF_HIT_POINTS_REGENERATION_RATE = ConvertUnitRealField('uhpr')
-	// 单位实数域 状态 - 魔法回复 ('umpr')
+	// 单位实数域 状态 - （每秒）魔法回复（值） ('umpr')
 	constant unitrealfield UNIT_RF_MANA_REGENERATION = ConvertUnitRealField('umpr')
 	// 单位实数域 美术 - 死亡时间(秒)
 	constant unitrealfield UNIT_RF_DEATH_TIME = ConvertUnitRealField('udtm')
@@ -4392,7 +4392,7 @@ native R2SW takes real r, integer width, integer precision returns string
 native S2I takes string s returns integer
 // 转换字符串成实数
 native S2R takes string s returns real
-// 获取句柄ID    
+// 获取句柄ID
 // tips:一般用于hashtable key
 // @param h 任意handle子类型
 native GetHandleId takes handle h returns integer
@@ -6048,17 +6048,17 @@ native SetUnitTypeSlots takes unit whichUnit, integer slots returns nothing
 
 // 获取指定单位自定义值
 native GetUnitUserData takes unit whichUnit returns integer
-// 设置指定单位自定义数据
+// 设置指定单位自定义值
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
 
 // Player API
 
-// 根据编号查询玩家
+// 查询玩家（指定编号）
 // @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断，可同时返回多位玩家
+// 通常用于异步判断，可同时返回多位玩家，包含AI玩家、裁判和观战者
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
@@ -6081,12 +6081,12 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 获取玩家的种族
+// 获取玩家种族
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
-// 获取玩家指定单位类型的数量
+// 获取玩家单位总数量
 // @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量
@@ -6094,14 +6094,14 @@ constant native GetPlayerUnitCount takes player whichPlayer, boolean includeInco
 // @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获取玩家的建筑数量
+// 获取玩家的建筑总数量
 // @param includeIncomplete 是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
 // 获取玩家得分
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
-// 玩家与玩家的联盟类型是否是指定类型
+// 查询玩家与玩家的联盟类型是否指定类型
 // @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
@@ -6285,10 +6285,11 @@ native DialogClear takes dialog whichDialog returns nothing
 // 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
 // 添加指定对话框按钮 [R]
+// 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
 // 添加退出游戏按钮(指定对话框) [R]
 native DialogAddQuitButton takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
-// 显示/隐藏 对话框[R]
+// 显示/隐藏 对话框（指定玩家）[R]
 native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag returns nothing
 
 // Creates a new or reads in an existing game cache file stored
@@ -7416,7 +7417,7 @@ native GetTerrainVariance takes real x, real y returns integer
 // 设置地形类型(指定坐标) [R]
 // @param terrainType 地表纹理，具体类型可在 记录物编的文件 找到
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
-// 查询路径类型状态是否关闭(指定坐标) [R]
+// 查询路径类型是否指定类型(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
 // 设置路径类型状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
@@ -7494,9 +7495,15 @@ native IsPointBlighted takes real x, real y returns boolean
 // Doodad API
 //
 
-// 播放圆形范围内地表装饰物动画 [R]
+// 播放圆形范围内指定类型的地表装饰物动画 [R]
+// @param nearestOnly 是否只播放最接近范围内装饰物
+// @param animName 动画名称
+// @param animRandom 是否随机播放
 native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
-// 播放矩形区域内地表装饰物动画 [R]
+// 播放矩形区域内指定类型的地表装饰物动画 [R]
+// @param nearestOnly 是否只播放最接近范围内装饰物
+// @param animName 动画名称
+// @param animRandom 是否随机播放
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
 
 
@@ -7505,32 +7512,38 @@ native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, b
 
 // 启用对战 AI 脚本
 // 只对游戏初始化时控制者类型为电脑的玩家生效
+// 对战和战役的区别不明，暴雪已经区分了对战和战役脚本，脚本本身调用了不同的代码，因此对脚本本身应该没有影响
 native StartMeleeAI takes player num, string script returns nothing
 // 启用战役 AI 脚本
 // 只对游戏初始化时控制者类型为电脑的玩家生效
+// 对战和战役的区别不明，暴雪已经区分了对战和战役脚本，脚本本身调用了不同的代码，因此对脚本本身应该没有影响
 native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
 // 用于AI脚本文件通信，脚本需有对应代码监控命令并执行，否则无效
 native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
 native PauseCompAI takes player p, boolean pause returns nothing
-// 获取指定玩家的 AI难度
+// 获取指定AI玩家的难度（只对AI玩家生效）
 // 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
 // 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 建筑的自动攻击、训练和研究，小精灵自爆不受影响
+// 这些单位仍受代码控制，只是AI几乎不控制
 native RemoveGuardPosition takes unit hUnit returns nothing
 // 恢复单位的防守职责
 native RecycleGuardPosition takes unit hUnit returns nothing
 // 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 建筑的自动攻击、训练和研究，小精灵自爆不受影响
+// 这些单位仍受代码控制，只是AI几乎不控制
 native RemoveAllGuardPositions takes player num returns nothing
 
 
 // 作弊码
 native Cheat takes string cheatStr returns nothing
-// 查询游戏是否无法胜利 [R]
+// 查询游戏是否无法胜利（输入了作弊） [R]
 native IsNoVictoryCheat takes nothing returns boolean
-// 查询游戏是否无法失败 [R]
+// 查询游戏是否无法失败（输入了作弊） [R]
 native IsNoDefeatCheat takes nothing returns boolean
 
 // 预载文件
@@ -7567,7 +7580,7 @@ native Preloader takes string filename returns nothing
 //Machinima API
 
 
-// 显示/隐藏 电影面板，包含标题栏、字幕及头像框体
+// 显示/隐藏 电影面板，包括标题栏、字幕及头像框体
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
@@ -7811,8 +7824,8 @@ native RequestExtraBooleanData takes integer dataType, player whichPlayer, strin
 native RequestExtraStringData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
 // 获取额外的实数数据
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
-// Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
 // 获取单位 Z 坐标
+// Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
 native BlzGetUnitZ takes unit whichUnit returns real
 // 开启/关闭 选择和选择圈
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
@@ -8124,7 +8137,7 @@ native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, ability
 // Item 
 
 // 获取物品技能(指定索引)
-// @param index 索引
+// @param index 索引，物品有多个技能时需按顺序指定索引
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
 // 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability

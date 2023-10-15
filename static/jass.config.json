@@ -8610,7 +8610,7 @@
         },
         {
             "code": "Afak",
-            "name": "毁灭之球",
+            "name": "毁灭之球/毁灭宝珠",
             "descript": "增加破坏者<Afak,DataA1>点的攻击力并让其攻击具有范围伤害效果。",
             "kind": "技能",
             "race": "不死族",
@@ -11402,7 +11402,7 @@
         },
         {
             "code": "ANbs",
-            "name": "黑暗之球",
+            "name": "黑蚀箭",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -11522,7 +11522,7 @@
         },
         {
             "code": "AIsb",
-            "name": "减速之球",
+            "name": "攻击减速加成(基尔加丹宝珠)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13466,7 +13466,7 @@
         },
         {
             "code": "odef",
-            "name": "黑暗之球",
+            "name": "黑暗之球/黑暗宝珠",
             "descript": "增加英雄<AIdf,DataA1>点的攻击力。英雄的攻击也会在攻击空中单位的时候具有远程能力，而且如果一下子就杀死敌方某个单位的话，那么还会出现一个为你作战的黑暗之奴。黑暗之奴持续<ANbs,DataC1>秒。",
             "kind": "物品",
             "race": "特殊",
@@ -14226,7 +14226,7 @@
         },
         {
             "code": "ofro",
-            "name": "霜冻之球",
+            "name": "霜冻之球/冰霜宝珠",
             "descript": "能让英雄的攻击带有<AIob,DataA1>点的冷冻伤害。而且这种攻击在攻击空中单位的时候会变成远程攻击，还能在<AIob,Dur1>秒内减慢敌人的进攻和移动速度。",
             "kind": "物品",
             "race": "特殊",
@@ -14874,7 +14874,7 @@
         },
         {
             "code": "oven",
-            "name": "毒液之球",
+            "name": "毒液之球毒液宝珠",
             "descript": "增加英雄<AIpb,DataA1>点的攻击力。英雄的攻击也会在攻击空中单位的时候具有远程能力并能在<Apo2,Dur1>秒内对目标造成中毒效果。",
             "kind": "物品",
             "race": "特殊",
@@ -14898,7 +14898,7 @@
         },
         {
             "code": "ocor",
-            "name": "腐蚀之球",
+            "name": "腐蚀之球/腐蚀宝珠",
             "descript": "增加英雄<AIcb,DataA1>点的攻击力。英雄的攻击在攻击空中单位的时候也变为远程，而且能在<AIcb,Dur1>秒内削弱敌人的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -14946,15 +14946,23 @@
         },
         {
             "code": "ofir",
-            "name": "火焰之球",
+            "name": "火焰之球/火焰宝珠",
             "descript": "能让英雄的攻击带有<AIfb,DataA1>点的火焰伤害，而且英雄的攻击在攻击空中单位的时候会变成远程攻击，还有一定的溅射效果。",
             "kind": "物品",
             "race": "特殊",
             "type": "物品"
         },
         {
+            "code": "ofr2",
+            "name": "火焰之球/火焰宝珠",
+            "descript": "携带时英雄的攻击附加<AIf2,DataA1>点额外伤害。英雄在攻击空中单位时会变成远程攻击，并且攻击能使敌人受到的治疗和生命恢复效果降低35%，持续<AIf2,Dur1>秒。",
+            "kind": "物品",
+            "race": "特殊",
+            "type": "物品"
+        },
+        {
             "code": "gldo",
-            "name": "基尔加丹之球",
+            "name": "基尔加丹之球/基尔加丹宝珠",
             "descript": "让英雄的攻击带有<AIgd,DataA1>点的火焰伤害。而且英雄在攻击空中单位的时候会变成远程攻击，还有一定的溅射效果。",
             "kind": "物品",
             "race": "特殊",
@@ -14962,7 +14970,7 @@
         },
         {
             "code": "oslo",
-            "name": "减速之球",
+            "name": "减速之球/减速宝珠",
             "descript": "增加英雄<AIsb,DataA1>点的攻击力。英雄的攻击在攻击空中单位的时候也变为远程攻击并能在<AIos,Dur1>秒内减慢敌方单位 <AIos,DataA1,%>%的攻击速度和<AIos,DataB1,%>%的移动速度。",
             "kind": "物品",
             "race": "特殊",
@@ -15042,7 +15050,7 @@
         },
         {
             "code": "cosl",
-            "name": "灵魂之球",
+            "name": "灵魂之球/天界灵魂宝珠",
             "descript": "|cffff8c00神器|r|n能将阵亡的<AIrx,DataA1>个非英雄单位复活。|n|cffffcc00历史|r|n|cffffdead这个神器由古代的泰坦巨人所造。神灵的灵魂之球从上天带来了伟大的力量来复活那些在战场上英雄牺牲的勇士。|r",
             "kind": "物品",
             "race": "特殊",
@@ -15146,7 +15154,7 @@
         },
         {
             "code": "olig",
-            "name": "闪电之球",
+            "name": "闪电之球/闪电宝珠",
             "descript": "能增加英雄<AIlb,DataA1>点的攻击力。也使得英雄的攻击在攻击空中单位的时候会变为远程攻击，还能驱逐魔法和在<AIlp,Dur1>秒内减慢敌人的移动速度。|n|cffffcc00对召唤出来的单位能造成 <AIlp,DataC1>点的伤害。",
             "kind": "物品",
             "race": "特殊",
@@ -15154,8 +15162,8 @@
         },
         {
             "code": "oli2",
-            "name": "闪电之球",
-            "descript": "能增加英雄<AIlb,DataA1>点的攻击力。也使得英雄的攻击在攻击空中单位的时候会变为远程攻击，还能驱逐魔法和在<AIlp,Dur1>秒内减慢敌人的移动速度。|n|cffffcc00对召唤出来的单位能造成 <AIpg,DataC1>点的伤害。",
+            "name": "闪电之球/闪电宝珠",
+            "descript": "携带时英雄的攻击附加<AIlb,DataA1>点额外伤害。英雄在攻击空中单位时会变成远程攻击，并有一定几率驱散魔法和使敌人移动速度降低至原先的1/<AIlp,DataA1>；敌人会在<AIlp,Dur1>秒内逐渐恢复移动速度。|n|cffffcc00对召唤单位造成<AIlp,DataC1>点额外伤害。",
             "kind": "物品",
             "race": "特殊",
             "type": "物品"
@@ -15426,7 +15434,7 @@
         },
         {
             "code": "sor1",
-            "name": "影子之球+1",
+            "name": "影子之球+1/暗影宝珠+1",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你1点的攻击力。",
             "kind": "物品",
             "race": "特殊",
@@ -15434,7 +15442,7 @@
         },
         {
             "code": "sora",
-            "name": "影子之球+10",
+            "name": "影子之球+10/暗影宝珠+10",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你10点的攻击力和3点的护甲，并能加快生命值恢复速度。",
             "kind": "物品",
             "race": "特殊",
@@ -15442,7 +15450,7 @@
         },
         {
             "code": "sor2",
-            "name": "影子之球+2",
+            "name": "影子之球+2/暗影宝珠+2",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你2点的攻击力。",
             "kind": "物品",
             "race": "特殊",
@@ -15450,7 +15458,7 @@
         },
         {
             "code": "sor3",
-            "name": "影子之球+3",
+            "name": "影子之球+3/暗影宝珠+3",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你3点的攻击力。",
             "kind": "物品",
             "race": "特殊",
@@ -15458,7 +15466,7 @@
         },
         {
             "code": "sor4",
-            "name": "影子之球+4",
+            "name": "影子之球+4/暗影宝珠+4",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你4点的攻击力和1点的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -15466,7 +15474,7 @@
         },
         {
             "code": "sor5",
-            "name": "影子之球+5",
+            "name": "影子之球+5/暗影宝珠+5",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你5点的攻击力和1点的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -15474,7 +15482,7 @@
         },
         {
             "code": "sor6",
-            "name": "影子之球+6",
+            "name": "影子之球+6/暗影宝珠+6",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你6点的攻击力和1点的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -15482,7 +15490,7 @@
         },
         {
             "code": "sor7",
-            "name": "影子之球+7",
+            "name": "影子之球+7/暗影宝珠+7",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你7点的攻击力和2点的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -15490,7 +15498,7 @@
         },
         {
             "code": "sor8",
-            "name": "影子之球+8",
+            "name": "影子之球+8/暗影宝珠+8",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你8点的攻击力和2点的护甲。",
             "kind": "物品",
             "race": "特殊",
@@ -15498,7 +15506,7 @@
         },
         {
             "code": "sor9",
-            "name": "影子之球+9",
+            "name": "影子之球+9/暗影宝珠+9",
             "descript": "这个宝物被注入了兽族古代影子议会的力量，从而能增加你9点的攻击力和2点的护甲，并能加快生命值恢复速度。",
             "kind": "物品",
             "race": "特殊",
@@ -22409,302 +22417,6 @@
         {
             "content": "getitem",
             "descript": "技能命令串 给予物品"
-        },
-        {
-            "content": "MOON_PRIESTESS",
-            "descript": "英雄 月之女祭司"
-        },
-        {
-            "content": "BEAST_MASTER",
-            "descript": "英雄 兽王"
-        },
-        {
-            "content": "DARK_RANGER",
-            "descript": "英雄 黑暗游侠"
-        },
-        {
-            "content": "NEUTRAL_PIT_LORD",
-            "descript": "英雄 深渊领主"
-        },
-        {
-            "content": "BREW_MASTER",
-            "descript": "英雄 酒仙(熊猫)"
-        },
-        {
-            "content": "GOBLIN_TINKER",
-            "descript": "英雄 修补匠"
-        },
-        {
-            "content": "FIRELORD",
-            "descript": "英雄 火焰领主"
-        },
-        {
-            "content": "ALCHEMIST",
-            "descript": "英雄 炼金术士"
-        },
-        {
-            "content": "UPG_SUN_BLADE",
-            "descript": "科技 裂甲之刃"
-        },
-        {
-            "content": "HEALING_POTION",
-            "descript": "物品 治疗药水"
-        },
-        {
-            "content": "MANA_POTION",
-            "descript": "物品 法力药水"
-        },
-        {
-            "content": "TOWN_PORTAL",
-            "descript": "物品 城镇传送卷轴/回城卷轴"
-        },
-        {
-            "content": "IVORY_TOWER",
-            "descript": "物品 象牙塔"
-        },
-        {
-            "content": "ORB_OF_FIRE",
-            "descript": "物品 火焰宝珠"
-        },
-        {
-            "content": "ORB_OF_FIRE_N",
-            "descript": "物品 火焰宝珠"
-        },
-        {
-            "content": "STAFF_OF_SANCTUARY",
-            "descript": "物品 庇护法杖/避难权杖"
-        },
-        {
-            "content": "HEALING_SALVE",
-            "descript": "物品 治疗药膏"
-        },
-        {
-            "content": "SCROLL_OF_SPEED",
-            "descript": "物品 速度卷轴"
-        },
-        {
-            "content": "ORB_OF_LIGHTNING",
-            "descript": "物品 闪电宝珠"
-        },
-        {
-            "content": "ORB_OF_LIGHTNING_N",
-            "descript": "物品 闪电宝珠"
-        },
-        {
-            "content": "TINY_GREAT_HALL",
-            "descript": "物品 迷你大厅(兽族)"
-        },
-        {
-            "content": "ROD_OF_NECROMANCY",
-            "descript": "物品 通灵魔棒(骷髅杖)"
-        },
-        {
-            "content": "SACRIFICIAL_SKULL",
-            "descript": "物品 献祭之颅(制造腐地)"
-        },
-        {
-            "content": "DUST_OF_APPEARANCE",
-            "descript": "物品 显影之尘"
-        },
-        {
-            "content": "ORB_OF_CORRUPTION",
-            "descript": "物品 腐蚀宝珠"
-        },
-        {
-            "content": "SCROLL_OF_HEALING",
-            "descript": "物品 治疗卷轴"
-        },
-        {
-            "content": "MOONSTONE",
-            "descript": "物品 月亮石"
-        },
-        {
-            "content": "STAFF_OF_PRESERVATION",
-            "descript": "物品 保存法杖"
-        },
-        {
-            "content": "ORB_OF_VENOM",
-            "descript": "物品 毒液宝珠"
-        },
-        {
-            "content": "ANTI_MAGIC_POTION",
-            "descript": "物品 反魔法药剂"
-        },
-        {
-            "content": "RITUAL_DAGGER",
-            "descript": "物品 仪式匕首"
-        },
-        {
-            "content": "CIRCLET_OF_NOBILITY",
-            "descript": "物品 贵族头环"
-        },
-        {
-            "content": "PERIAPT_OF_VITALITY",
-            "descript": "物品 法力护身符"
-        },
-        {
-            "content": "BOOTS_OF_SPEED",
-            "descript": "物品 速度之靴"
-        },
-        {
-            "content": "M_DUST_OF_APPEARANCE",
-            "descript": "物品 显影之尘"
-        },
-        {
-            "content": "M_SCROLL_OF_HEALING",
-            "descript": "物品 治疗卷轴"
-        },
-        {
-            "content": "SCROLL_OF_PROTECTION",
-            "descript": "物品 保护卷轴"
-        },
-        {
-            "content": "M_TOWN_PORTAL",
-            "descript": "物品 城镇传送卷轴/回城卷轴"
-        },
-        {
-            "content": "POTION_OF_INVISIBILITY",
-            "descript": "物品 隐形药水"
-        },
-        {
-            "content": "TOME_OF_RETRAINING",
-            "descript": "物品 重修之书"
-        },
-        {
-            "content": "STAFF_OF_TELEPORTATION",
-            "descript": "物品 传送法杖"
-        },
-        {
-            "content": "POTION_OF_LESSER_INVULNERBILITY",
-            "descript": "物品 次级无敌药水"
-        },
-        {
-            "content": "FORKLIGHTNING",
-            "descript": "英雄技能 叉状闪电(娜迦海巫)"
-        },
-        {
-            "content": "FROSTARROWS",
-            "descript": "英雄技能 冰霜箭(娜迦海巫)"
-        },
-        {
-            "content": "MANASHIELD",
-            "descript": "英雄技能 法力护盾(娜迦海巫)"
-        },
-        {
-            "content": "TORNADO",
-            "descript": "英雄技能 龙卷风(娜迦海巫)"
-        },
-        {
-            "content": "BEAR",
-            "descript": "英雄技能 召唤巨熊(兽王)"
-        },
-        {
-            "content": "QUILBEAST",
-            "descript": "英雄技能 召唤豪猪(兽王)"
-        },
-        {
-            "content": "HAWK",
-            "descript": "英雄技能 召唤战鹰(兽王)"
-        },
-        {
-            "content": "STAMPEDE",
-            "descript": "英雄技能 群兽奔腾(兽王)"
-        },
-        {
-            "content": "SILENCE",
-            "descript": "英雄技能 沉默(黑暗游侠)"
-        },
-        {
-            "content": "BLACKARROW",
-            "descript": "英雄技能 黑蚀箭(黑暗游侠)"
-        },
-        {
-            "content": "DRAIN",
-            "descript": "英雄技能 生命吸取(黑暗游侠)"
-        },
-        {
-            "content": "CHARM",
-            "descript": "英雄技能 蛊惑(黑暗游侠)"
-        },
-        {
-            "content": "RAINOFFIRE",
-            "descript": "英雄技能 火焰之雨(深渊领主)"
-        },
-        {
-            "content": "HOWL",
-            "descript": "英雄技能 恐惧嚎叫(深渊领主)"
-        },
-        {
-            "content": "CLEAVING",
-            "descript": "英雄技能 顺劈斩(深渊领主)"
-        },
-        {
-            "content": "DOOM",
-            "descript": "英雄技能 末日降临(深渊领主)"
-        },
-        {
-            "content": "BOF",
-            "descript": "英雄技能 火焰之息(熊猫)"
-        },
-        {
-            "content": "HAZE",
-            "descript": "英雄技能 酩酊酒雾(熊猫)"
-        },
-        {
-            "content": "BRAWLER",
-            "descript": "英雄技能 醉拳(熊猫)"
-        },
-        {
-            "content": "SEF",
-            "descript": "英雄技能 风火雷电(熊猫)"
-        },
-        {
-            "content": "POCKETFACTORY",
-            "descript": "英雄技能 口袋工厂(修补匠)"
-        },
-        {
-            "content": "ROCKETS",
-            "descript": "英雄技能 集束火箭(修补匠)"
-        },
-        {
-            "content": "UPGRADE",
-            "descript": "英雄技能 工程学升级(修补匠)"
-        },
-        {
-            "content": "ROBOGOBLIN",
-            "descript": "英雄技能 机械地基(修补匠)"
-        },
-        {
-            "content": "SOUL_BURN",
-            "descript": "英雄技能 灵魂燃烧(火焰领主)"
-        },
-        {
-            "content": "SUMMON_LAVASPAWN",
-            "descript": "英雄技能 召唤熔岩爪牙(火焰领主)"
-        },
-        {
-            "content": "INCINERATE",
-            "descript": "英雄技能 焚身化骨(箭矢)(火焰领主)"
-        },
-        {
-            "content": "VOLCANO",
-            "descript": "英雄技能 火山爆发(火焰领主)"
-        },
-        {
-            "content": "HEALING_SPRAY",
-            "descript": "英雄技能 治疗喷雾(炼金术士)"
-        },
-        {
-            "content": "ACID_BOMB",
-            "descript": "英雄技能 酸性炸弹(炼金术士)"
-        },
-        {
-            "content": "CHEMICAL_RAGE",
-            "descript": "英雄技能 化学狂暴(炼金术士)"
-        },
-        {
-            "content": "TRANSMUTE",
-            "descript": "英雄技能 点金术(炼金术士)"
         },
         {
             "content": "AlphaMode",
