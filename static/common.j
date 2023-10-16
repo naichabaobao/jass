@@ -1162,55 +1162,55 @@ globals
         // AI难度 - 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
-	// 玩家积分 - 训练单位数量 player score values
+	// 玩家得分 - 训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-        // 玩家积分 - 消灭单位数量
+        // 玩家得分 - 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
-	// 玩家积分 - 已建造建筑数量
+	// 玩家得分 - 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
-	// 玩家积分 - 被毁建筑数量
+	// 玩家得分 - 被毁建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_RAZED = ConvertPlayerScore(3)
-	// 玩家积分 - 科技百分比
+	// 玩家得分 - 科技百分比
 	constant playerscore PLAYER_SCORE_TECH_PERCENT = ConvertPlayerScore(4)
-	// 玩家积分 - 最大可用人口数量
+	// 玩家得分 - 最大可用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXPROD = ConvertPlayerScore(5)
-	// 玩家积分 - 最大使用人口数量
+	// 玩家得分 - 最大使用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXUSED = ConvertPlayerScore(6)
-	// 玩家积分 - 杀死英雄数量
+	// 玩家得分 - 杀死英雄数量
 	constant playerscore PLAYER_SCORE_HEROES_KILLED = ConvertPlayerScore(7)
-	// 玩家积分 - 获得物品数量
+	// 玩家得分 - 获得物品数量
 	constant playerscore PLAYER_SCORE_ITEMS_GAINED = ConvertPlayerScore(8)
-	// 玩家积分 - 购买雇佣兵数量
+	// 玩家得分 - 购买雇佣兵数量
 	constant playerscore PLAYER_SCORE_MERCS_HIRED = ConvertPlayerScore(9)
-	// 玩家积分 - 采集到的黄金数量(全部)
+	// 玩家得分 - 采集到的黄金数量(全部)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_TOTAL = ConvertPlayerScore(10)
-	// 玩家积分 - 采集到的黄金数量(维修费生效期间采集的)
+	// 玩家得分 - 采集到的黄金数量(维修费生效期间采集的)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
-	// 玩家积分 - 由于维修费而损失的黄金数量
+	// 玩家得分 - 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
-	// 玩家积分 - 由于税而损失的黄金数量
+	// 玩家得分 - 由于税而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
-	// 玩家积分 - 给予盟友的黄金数量
+	// 玩家得分 - 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
-	// 玩家积分 - 从盟友那收到的黄金数量
+	// 玩家得分 - 从盟友那收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
-	// 玩家积分 - 采集到的木材数量
+	// 玩家得分 - 采集到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
-	// 玩家积分 - 由于维修费而损失的木材数量
+	// 玩家得分 - 由于维修费而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_UPKEEP = ConvertPlayerScore(17)
-	// 玩家积分 - 由于税而损失的木材数量
+	// 玩家得分 - 由于税而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
-	// 玩家积分 - 给予盟友的木材数量
+	// 玩家得分 - 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
-	// 玩家积分 - 从盟友那收到的木材数量
+	// 玩家得分 - 从盟友那收到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_RECEIVED = ConvertPlayerScore(20)
-	// 玩家积分 - 总的单位得分
+	// 玩家得分 - 总的单位得分
 	constant playerscore PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
-	// 玩家积分 - 总的英雄得分
+	// 玩家得分 - 总的英雄得分
 	constant playerscore PLAYER_SCORE_HERO_TOTAL = ConvertPlayerScore(22)
-	// 玩家积分 - 总的资源得分
+	// 玩家得分 - 总的资源得分
 	constant playerscore PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
-	// 玩家积分 - 总的整体得分
+	// 玩家得分 - 总的整体得分
 	constant playerscore PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 	
 	
@@ -6058,7 +6058,7 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断，可同时返回多位玩家，包含AI玩家、裁判和观战者
+// 通常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
@@ -6086,15 +6086,15 @@ constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
-// 获取玩家单位总数量
-// @param includeIncomplete 是否仅包含已完成训练/建造/研究的单位/建筑/科技
+// 获取玩家单位总数量（不含建筑、隐藏/阵亡单位）
+// @param includeIncomplete 是否仅包含已完成训练的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家指定单位名称的单位数量
+// 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
-// @param includeIncomplete 是否仅包含已完成训练/建造的单位/建筑
+// @param includeIncomplete 是否仅包含已完成训练的单位
 // @param includeUpgrades 是否仅包含已完成研究的科技
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获取玩家的建筑总数量
+// 获取玩家的建筑总数量（不含隐藏/阵亡单位）
 // @param includeIncomplete 是否仅包含已完成建造的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
