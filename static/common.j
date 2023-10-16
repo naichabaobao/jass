@@ -97,7 +97,7 @@ type unittype extends handle
 type gamespeed extends handle
 // 游戏难度（用于战役地图）
 type gamedifficulty extends handle
-// 游戏队伍类型
+// 游戏（队伍）类型
 type gametype extends handle
 // 地图参数（部分参数初始值源自房间的玩家设置和高级选项设置）
 type mapflag extends handle
@@ -318,7 +318,7 @@ constant native ConvertPlacement takes integer i returns placement
 constant native ConvertStartLocPrio takes integer i returns startlocprio
 // 转换整数成游戏难度
 constant native ConvertGameDifficulty takes integer i returns gamedifficulty
-// 转换整数成游戏队伍类型
+// 转换整数成游戏（队伍）类型
 constant native ConvertGameType takes integer i returns gametype
 // 转换整数成地图参数
 constant native ConvertMapFlag takes integer i returns mapflag
@@ -942,21 +942,21 @@ globals
 	// 玩家控制者类型 没有玩家
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
-	// 游戏队伍类型 - 对战
+	// 游戏（队伍）类型 - 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
-	// 游戏队伍类型 - 自由竞赛/混战
+	// 游戏（队伍）类型 - 自由竞赛/混战
 	constant gametype GAME_TYPE_FFA = ConvertGameType(2)
-	// 游戏队伍类型 - 使用地图设置
+	// 游戏（队伍）类型 - 使用地图设置
 	constant gametype GAME_TYPE_USE_MAP_SETTINGS = ConvertGameType(4)
-	// 游戏队伍类型 - 官方地图设置
+	// 游戏（队伍）类型 - 官方地图设置
 	constant gametype GAME_TYPE_BLIZ = ConvertGameType(8)
-	// 游戏队伍类型 - 1 V 1
+	// 游戏（队伍）类型 - 1 V 1
 	constant gametype GAME_TYPE_ONE_ON_ONE = ConvertGameType(16)
-	// 游戏队伍类型 - 2支队伍竞赛
+	// 游戏（队伍）类型 - 2支队伍竞赛
 	constant gametype GAME_TYPE_TWO_TEAM_PLAY = ConvertGameType(32)
-	// 游戏队伍类型 - 3支队伍竞赛
+	// 游戏（队伍）类型 - 3支队伍竞赛
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
-	// 游戏队伍类型 - 4支队伍竞赛
+	// 游戏（队伍）类型 - 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
 	// 地图参数 - 隐藏地形
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
@@ -4458,7 +4458,7 @@ native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCo
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
 // @param priority 出生点分布优先权系数
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
-// 设置游戏队伍类型支持状态
+// 设置游戏（队伍）类型支持状态
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
 // 设置地图参数
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
@@ -4478,9 +4478,9 @@ native GetTeams takes nothing returns integer
 // 获取玩家数量
 native GetPlayers takes nothing returns integer
 
-// 查询是否支持指定的游戏队伍类型
+// 查询是否支持指定的游戏（队伍）类型
 native IsGameTypeSupported takes gametype whichGameType returns boolean
-// 获取选择的游戏队伍类型
+// 获取选择的游戏（队伍）类型
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数/地图选项是否开启(指定参数)
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
