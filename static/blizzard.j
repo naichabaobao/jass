@@ -11574,8 +11574,8 @@ function OneOnOneInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(2)
 endfunction
 
-// 初始化玩家队伍（按游戏类型）
-// 游戏类型包含1V1、2支队伍、3支队伍、4支队伍、FFA、混战
+// 初始化玩家队伍（按游戏（队伍）类型）
+// 支持识别1V1、2支队伍、3支队伍、4支队伍、FFA、混战
 // 仅是开局后补设标识，并不是真正初始化队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function InitGenericPlayerSlots takes nothing returns nothing
     local gametype gType = GetGameTypeSelected()
