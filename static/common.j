@@ -508,19 +508,17 @@ globals
 	// 真 true
 	constant boolean TRUE = true
 	// 数组上限，默认值32768
-	// 注：1.28及以下版本的默认值是8192
+	// 1.28及以下版本默认值为8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
-	// 中立被动玩家(玩家16/28)
-	// 1.28及以下：中立敌对(玩家13)，中立受害(玩家14)，中立特殊(玩家15)，中立被动(玩家16)
-	// 1.29及以上：中立敌对(玩家25)，中立受害(玩家26)，中立特殊(玩家27)，中立被动(玩家28)
-	// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
-	// 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如果打开了)，中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中(如果运行了)这些单位也会消失
+	// 中立被动玩家，1.28及以下是玩家16，1.29及以上是玩家28
+	// 中立敌对(玩家13/25)，中立受害(玩家14/26)，中立特殊(玩家15/27)
+	// 随地图12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值自动适配，反之亦然
+	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
-	// 中立敌对玩家(玩家13/25)
-	// 1.28及以下：中立敌对(玩家13)，中立受害(玩家14)，中立特殊(玩家15)，中立被动(玩家16)
-	// 1.29及以上：中立敌对(玩家25)，中立受害(玩家26)，中立特殊(玩家27)，中立被动(玩家28)
-	// 随版本12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，或反之，该值都会自动适配
-	// 注意：在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如果打开了)，中立玩家的单位会全部消失，需要手动在物体管理器重新设置所属玩家，否则在游戏中(如果运行了)这些单位也会消失
+	// 中立敌对玩家，1.28及以下是玩家13，1.29及以上是玩家25
+	// 中立受害(玩家14/26)，中立特殊(玩家15/27)，中立被动(玩家16/28)
+	// 随地图12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值自动适配，反之亦然
+	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 玩家颜色 红色
 	// 代码：|CffFF0000|r , 三色值： 255, 3, 3
@@ -1188,7 +1186,7 @@ globals
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
 	// 玩家得分 - 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
-	// 玩家得分 - 由于税而损失的黄金数量
+	// 玩家得分 - 由于纳税损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
 	// 玩家得分 - 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
@@ -1198,7 +1196,7 @@ globals
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
 	// 玩家得分 - 由于维修费而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_UPKEEP = ConvertPlayerScore(17)
-	// 玩家得分 - 由于税而损失的木材数量
+	// 玩家得分 - 由于纳税损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
 	// 玩家得分 - 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
@@ -1462,9 +1460,9 @@ globals
 	
 	// 游戏事件 游戏加装完毕
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
-	// 游戏事件 锦标赛即将完成
+	// 游戏事件 比赛即将完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
-	// 游戏事件 锦标赛完成
+	// 游戏事件 比赛完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
 	// 游戏事件 存档
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
@@ -4272,7 +4270,7 @@ globals
 	// Regeneration Type
 	// Regeneration Type
 	
-	// 生命恢复类型 无
+	// 生命恢复类型 无（不会恢复）
  constant regentype REGENERATION_TYPE_NONE = ConvertRegenType(0)
 	// 生命恢复类型 总是
 	constant regentype REGENERATION_TYPE_ALWAYS = ConvertRegenType(1)
@@ -4782,7 +4780,7 @@ native RegionClearCellAtLoc takes region whichRegion, location whichLocation ret
 native Location takes real x, real y returns location
 // 清除点 [R]
 native RemoveLocation takes location whichLocation returns nothing
-// 移动点 [R]
+// 移动点（到指定坐标） [R]
 native MoveLocation takes location whichLocation, real newX, real newY returns nothing
 // 获取点 X 坐标
 native GetLocationX takes location whichLocation returns real
@@ -4853,13 +4851,13 @@ constant native GetFilterPlayer takes nothing returns player
 // 获取选取的玩家
 constant native GetEnumPlayer takes nothing returns player
 
-// 获取当前触发器
+// 获取（当前被）触发的触发器
 constant native GetTriggeringTrigger takes nothing returns trigger
 // 获取触发器事件ID
 constant native GetTriggerEventId takes nothing returns eventid
-// 获取触发器赋值统计
+// 获取触发器赋值次数
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
-// 获取触发器运行次数统计
+// 获取触发器运行次数
 constant native GetTriggerExecCount takes trigger whichTrigger returns integer
 
 // 运行函数 [R]
@@ -4873,7 +4871,7 @@ native ExecuteFunc takes string funcName returns nothing
 native And takes boolexpr operandA, boolexpr operandB returns boolexpr
 // 或
 native Or takes boolexpr operandA, boolexpr operandB returns boolexpr
-// 不是/否
+// 否/非
 native Not takes boolexpr operand returns boolexpr
 // 条件方法
 native Condition takes code func returns conditionfunc
@@ -4972,19 +4970,19 @@ constant native GetClickedButton takes nothing returns button
 // EVENT_DIALOG_BUTTON_CLICK
 constant native GetClickedDialog takes nothing returns dialog
 
-// 事件响应 获取锦标赛剩余时间(对应锦标赛完成等事件)
+// 事件响应 获取比赛剩余时间(对应比赛完成等事件)
 // @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
-// 事件响应 获取锦标赛结束规则(对应锦标赛完成等事件)
+// 事件响应 获取比赛结束规则(对应比赛完成等事件)
 // @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowRule takes nothing returns integer
-// 事件响应 获取锦标赛结束玩家(对应锦标赛完成等事件)
+// 事件响应 获取比赛结束玩家(对应比赛完成等事件)
 // @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowPlayer takes nothing returns player
-// 事件响应 获取锦标赛得分(对应锦标赛完成等事件)
+// 事件响应 获取比赛得分(对应比赛完成等事件)
 // @version 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentScore takes player whichPlayer returns integer
@@ -5443,7 +5441,7 @@ native SetDestructableAnimation takes destructable d, string whichAnimation retu
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
-// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
+// 隐藏后反隐也看不到，但其碰撞体积和移动类型仍可生效
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -6861,9 +6859,9 @@ native TimerDialogSetTimeColor takes timerdialog whichDialog, integer red, integ
 native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor returns nothing
 // 显示/隐藏 计时器窗口(所有玩家) [R]
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
-// 判断计时器窗口是否显示
+// 查询计时器窗口是否显示
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
-// 修改计时器窗口的倒计时
+// 设置计时器窗口倒计时
 // 可创建另一个计时器(隐藏)，在其倒计时结束后，修改本窗口的倒计时，从而实现正向计时
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
@@ -6953,7 +6951,7 @@ native DestroyMultiboard takes multiboard lb returns nothing
 
 // 显示/隐藏 多面板 [R]
 native MultiboardDisplay takes multiboard lb, boolean show returns nothing
-// 查询多面板是否已显示
+// 查询多面板是否显示
 native IsMultiboardDisplayed takes multiboard lb returns boolean
 
 // 最大/最小化 多面板 [R]
@@ -7282,7 +7280,6 @@ native SetSoundFacialAnimationGroupLabel takes sound soundHandle, string groupLa
 // 设置对白的面部动画文件路径
 native SetSoundFacialAnimationSetFilepath takes sound soundHandle, string animationSetFilepath returns boolean
 
-//Subtitle support that is attached to the soundHandle rather than as disperate data with the legacy UI
 
 // 设置对白的演员ID
 // Subtitle support that is attached to the soundHandle rather than as disperate data with the legacy UI
@@ -7404,7 +7401,7 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 //
 
 // 获取地形悬崖高度(指定坐标) [R]
-// 深水区为0，浅水区为1，平原为2，之后每层+1
+// 深水区为0，浅水区为1，平原为2，每升高一层+1，每降低一层-1
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
@@ -7519,7 +7516,7 @@ native StartMeleeAI takes player num, string script returns nothing
 // 对战和战役的区别不明，暴雪已经区分了对战和战役脚本，脚本本身调用了不同的代码，因此对脚本本身应该没有影响
 native StartCampaignAI takes player num, string script returns nothing
 // 发送 AI 命令
-// 用于AI脚本文件通信，脚本需有对应代码监控命令并执行，否则无效
+// 同AI脚本单向通信，脚本需有对应代码监控命令并执行，否则无效
 native CommandAI takes player num, integer command, integer data returns nothing
 // 暂停/恢复 AI脚本运行 [R]
 native PauseCompAI takes player p, boolean pause returns nothing
@@ -7676,7 +7673,7 @@ native BlzGetItemTooltip takes item whichItem returns string
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
 // 获取指定物品扩展提示信息
 native BlzGetItemExtendedTooltip takes item whichItem returns string
-// 设置指定物品图标路径
+// 设置指定物品图标
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
 // 获取指定物品图标
 native BlzGetItemIconPath takes item whichItem returns string
@@ -7708,7 +7705,7 @@ native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex return
 // 设置指定单位攻击间隔
 // @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
-// 设置指定特效颜色(指定玩家)
+// 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
 // 设置指定特效颜色(指定颜色)
 native BlzSetSpecialEffectColor takes effect whichEffect, integer r, integer g, integer b returns nothing
@@ -7740,11 +7737,11 @@ native BlzSetSpecialEffectY takes effect whichEffect, real y returns nothing
 native BlzSetSpecialEffectZ takes effect whichEffect, real z returns nothing
 // 设置指定特效位置(指定点)
 native BlzSetSpecialEffectPositionLoc takes effect whichEffect, location loc returns nothing
-// 获取指定特效位置 - X
+// 获取指定特效位置 - X 坐标
 native BlzGetLocalSpecialEffectX takes effect whichEffect returns real
-// 获取指定特效位置 - Y
+// 获取指定特效位置 - Y 坐标
 native BlzGetLocalSpecialEffectY takes effect whichEffect returns real
-// 获取指定特效位置 - Z
+// 获取指定特效位置 - Z 坐标
 native BlzGetLocalSpecialEffectZ takes effect whichEffect returns real
 // 清除指定特效所有子动画
 native BlzSpecialEffectClearSubAnimations takes effect whichEffect returns nothing
@@ -7992,7 +7989,7 @@ native BlzGetTriggerFrameEvent takes nothing returns frameeventtype
 native BlzGetTriggerFrameValue takes nothing returns real
 // 获取触发的Frame/框架(UI)文本
 native BlzGetTriggerFrameText takes nothing returns string
-// 玩家同步事件
+// 注册玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
 native BlzSendSyncData takes string prefix, string data returns boolean
@@ -8000,7 +7997,7 @@ native BlzSendSyncData takes string prefix, string data returns boolean
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
-// 玩家键盘事件
+// 注册玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
 // 获取触发的按键
 native BlzGetTriggerPlayerKey takes nothing returns oskeytype
@@ -8143,7 +8140,7 @@ native BlzGetItemAbilityByIndex takes item whichItem, integer index returns abil
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
 // 物品添加技能
 native BlzItemAddAbility takes item whichItem, integer abilCode returns boolean
-// 物品的布尔值域
+// 获取物品布尔值域
 native BlzGetItemBooleanField takes item whichItem, itembooleanfield whichField returns boolean
 // 获取物品整数域
 native BlzGetItemIntegerField takes item whichItem, itemintegerfield whichField returns integer
@@ -8159,7 +8156,7 @@ native BlzSetItemIntegerField takes item whichItem, itemintegerfield whichField,
 native BlzSetItemRealField takes item whichItem, itemrealfield whichField, real value returns boolean
 // 设置物品字符串域
 native BlzSetItemStringField takes item whichItem, itemstringfield whichField, string value returns boolean
-// 移除物品技能
+// 物品删除技能
 native BlzItemRemoveAbility takes item whichItem, integer abilCode returns boolean
 
 // Unit 
