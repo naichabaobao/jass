@@ -903,8 +903,8 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NECROS         = 'Rune'
         // 科技 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 科技 不明科技（不死族）（编辑器无此科技'Rump'）
-        constant integer UPG_MEAT_WAGON     = 'Rump'
+        // 科技 背包（不死族）（编辑器有误，原文'Rump'）
+        constant integer UPG_MEAT_WAGON     = 'Rupm'
         // 科技 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
         // 科技 骷髅持久术
