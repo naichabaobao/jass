@@ -517,7 +517,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_GOLD           = 'Rhmi'
         // 科技 改良石工技术
         constant integer UPG_MASONRY        = 'Rhac'
-        // 科技 控制魔法
+        // 科技 照明弹
         constant integer UPG_SIGHT          = 'Rhss'
         // 科技 防御
         constant integer UPG_DEFEND         = 'Rhde'
