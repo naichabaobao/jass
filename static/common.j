@@ -4359,7 +4359,7 @@ native Atan takes real x returns real
 native Atan2 takes real y, real x returns real
 
 // 平方根
-// x <= 0 , Returns 0 
+// x <= 0 , 返回 0 
 native SquareRoot takes real x returns real
 
 // 求幂
@@ -4391,7 +4391,7 @@ native S2I takes string s returns integer
 // 转换字符串成实数
 native S2R takes string s returns real
 // 获取句柄ID
-// tips:一般用于hashtable key
+// tips:一般用于哈希表键值（hashtable key）
 // @param h 任意handle子类型
 native GetHandleId takes handle h returns integer
 // 截取字符串 [R]
@@ -4611,7 +4611,7 @@ native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integ
 // @version 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
-// 排泄需要使用销毁单位组 DestroyGroup，而非清空
+// 排泄需使用销毁单位组 DestroyGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
 // @version 1.33
@@ -4879,7 +4879,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 使用后需要使用(DestroyFilter)排泄，并set null，因此不建议在AI脚本中使用
+// 使用后需(用DestroyFilter)排泄，并set null，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
@@ -6592,7 +6592,7 @@ native GetRandomInt takes integer lowBound, integer highBound returns integer
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
-// 使用完毕后注意排泄
+// 使用完请注意注意排泄
 native CreateUnitPool takes nothing returns unitpool
 // 销毁单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
@@ -6605,7 +6605,7 @@ native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns n
 native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
 
 // 新建物品池 [R]
-// 使用完毕后注意排泄
+// 使用完请注意排泄
 native CreateItemPool takes nothing returns itempool
 // 销毁指定物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
