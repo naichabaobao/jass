@@ -903,7 +903,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NECROS         = 'Rune'
         // 科技 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 科技 背包（不死族）（编辑器有误，原文'Rump'）
+        // 科技 背包（不死族）（原文'Rump'有误）
         constant integer UPG_MEAT_WAGON     = 'Rupm'
         // 科技 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
@@ -1134,7 +1134,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_CHIM_ACID      = 'Recb'
         // 科技 角鹰兽训练
         constant integer UPG_HIPPO_TAME     = 'Reht'
-        // 科技  锐锋之刃（投刃车）（原文有误，写成了'Repd'）
+        // 科技  锐锋之刃（投刃车）（原文'Repd'有误）
         constant integer UPG_BOLT           = 'Repb'
         // 科技 利爪之印
         constant integer UPG_MARK_CLAW      = 'Reeb'
