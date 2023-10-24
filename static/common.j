@@ -1300,11 +1300,11 @@ globals
 	// 玩家单位事件 建造完成
 	constant playerunitevent EVENT_PLAYER_UNIT_CONSTRUCT_FINISH = ConvertPlayerUnitEvent(28)
 	
-	// 玩家单位事件 开始升级科技
+	// 玩家单位事件 开始研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_START = ConvertPlayerUnitEvent(29)
-	// 玩家单位事件 取消升级科技
+	// 玩家单位事件 取消研究科技
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_CANCEL = ConvertPlayerUnitEvent(30)
-	// 玩家单位事件 升级科技完成
+	// 玩家单位事件 完成科技研究
 	constant playerunitevent EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
 	
 	// 玩家单位事件 开始训练单位
@@ -1391,11 +1391,11 @@ globals
 	constant unitevent EVENT_UNIT_CONSTRUCT_CANCEL = ConvertUnitEvent(64)
 	// 单位事件 完成建造
 	constant unitevent EVENT_UNIT_CONSTRUCT_FINISH = ConvertUnitEvent(65)
-	// 单位事件 开始升级科技
+	// 单位事件 开始研究科技
 	constant unitevent EVENT_UNIT_UPGRADE_START = ConvertUnitEvent(66)
-	// 单位事件 取消升级科技
+	// 单位事件 取消研究科技
 	constant unitevent EVENT_UNIT_UPGRADE_CANCEL = ConvertUnitEvent(67)
-	// 单位事件 完成升级科技
+	// 单位事件 完成研究科技
 	constant unitevent EVENT_UNIT_UPGRADE_FINISH = ConvertUnitEvent(68)
 	
 	// Events which involve the specified unit performing               
@@ -4955,7 +4955,7 @@ native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable 
 // 触发器登记点击命令按钮事件
 // EVENT_COMMAND_BUTTON_CLICK
 native TriggerRegisterCommandEvent takes trigger whichTrigger, integer whichAbility, string order returns event
-// 触发器登记科技升级命令事件
+// 触发器登记研究科技命令事件
 native TriggerRegisterUpgradeCommandEvent takes trigger whichTrigger, integer whichUpgrade returns event
 
 // 事件响应 获取触发的可追踪物 [R](对应鼠标点击可追踪物及鼠标移动到可追踪物事件)
@@ -5900,7 +5900,7 @@ native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
 native UnitResetCooldown takes unit whichUnit returns nothing
 // 设置指定建筑建造进度(百分比)
 native UnitSetConstructionProgress takes unit whichUnit, integer constructionPercentage returns nothing
-// 设置指定科技升级进度(百分比)
+// 设置指定科技研究进度(百分比)
 native UnitSetUpgradeProgress takes unit whichUnit, integer upgradePercentage returns nothing
 // 暂停/恢复 指定单位限时生命 [R]
 native UnitPauseTimedLife takes unit whichUnit, boolean flag returns nothing
@@ -6128,6 +6128,7 @@ constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid
 // 增加指定玩家指定科技的等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 // 设置指定玩家指定科技的等级
+// 降级可用 BlzDecPlayerTechResearched
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
 // 查询指定玩家指定科技是否已研究
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
