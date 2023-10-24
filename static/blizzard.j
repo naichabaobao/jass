@@ -8434,6 +8434,7 @@ endfunction
 
 
 // 设置指定玩家指定科技当前等级
+// 降级可添加自定义代码 BlzDecPlayerTechResearched
 function SetPlayerTechResearchedSwap takes integer techid, integer levels, player whichPlayer returns nothing
     call SetPlayerTechResearched(whichPlayer, techid, levels)
 endfunction
