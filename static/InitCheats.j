@@ -4,6 +4,6 @@
 
 
 globals
-    //初始化作弊脚本
+    // 作弊脚本初始化标识
     constant boolean  icj_initCheats = InitDebugTriggers()
 endglobals
