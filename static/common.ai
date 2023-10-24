@@ -29,25 +29,25 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定的单位类型数量，含训练/建造/升级中及训练/建造/升级完成
     // 不统计该单位的等价单位
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定玩家指定的单位类型数量，含训练/建造/升级中及训练/建造/升级完成
     // 不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
+    // 获取指定的单位类型数量，仅统计已训练/建造/升级完成
     // 不统计该单位的等价单位
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应类型的单位数
     // 不统计该单位的等价单位
     // @param tn 基地编号，-1为不限
-    // @param dn 是否包含训练/建造/研究中的单位/建筑/科技
+    // @param dn 是否包含训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
     // 获取指定单位/建筑类型的单位造价（金钱）
     native GetUnitGoldCost      takes integer unitid                        returns integer
     // 获取指定单位/建筑类型的单位造价（木材）
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑/科技类型的训练/建造/研究时间（以秒为单位）
+    // 获取指定单位/建筑类型的训练/建造/升级时间（以秒为单位）
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数量
@@ -56,7 +56,7 @@ native DebugS               takes string str                            returns 
     // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
     // 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
     native GetMinesOwned        takes nothing                               returns integer
-    // 获取拥有的所有金矿的未采金钱数量，并返回所有矿的金钱数
+    // 获取拥有的所有金矿未采集金钱数量之和
     // 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果AI出生点有多个金矿，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
@@ -71,11 +71,11 @@ native DebugS               takes string str                            returns 
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型当前升级的等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/获得时为0
+    // 获取指定科技类型当前升级的等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 获取升级指定科技需要消耗的金钱数量，id即科技类型
+    // 获取升级指定科技需要消耗的金钱数量（指定科技类型）
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 升级指定科技需要消耗的木材数量，id即科技类型
+    // 升级指定科技需要消耗的木材数量（指定科技类型）
     native GetUpgradeWoodCost   takes integer id                            returns integer
     // 获取下一个扩张点的编号，可能返回-1
     native GetNextExpansion     takes nothing                               returns integer
@@ -92,17 +92,17 @@ native DebugS               takes string str                            returns 
     // 获取盟友当前的攻击目标
     // 用于夸脚本协同
     native GetAllianceTarget    takes nothing                               returns unit
-    // 训练/建造/研究指定单位/科技(指定数量,单位类型,基地)
+    // 训练/建造/升级/研究指定单位/建筑/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 取消指定单位建造/训练
+    // 取消指定单位/建筑的训练/建造/升级
     // 因单词为反召唤，怀疑可用于卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
     // @param peon 指定工人单位
     // @param id 建造的城镇单位类型
     native SetExpansion         takes unit peon, integer id                 returns boolean
-    // 升级指定科技
+    // 研究指定科技
     native SetUpgrade           takes integer id                            returns boolean
     // 设置英雄升级技能线程
     native SetHeroLevels        takes code func                             returns nothing
@@ -112,13 +112,13 @@ native DebugS               takes string str                            returns 
     // 购买地精飞艇
     // 运行后AI会自动前往地精实验室并自动购买地精飞艇
     native PurchaseZeppelin     takes nothing                               returns nothing
-    // 训练/建造/研究指定数量的合体单位类型
+    // 训练/建造指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
     // @param a 单位类型一
     // @param b 单位类型二
     // @param make 一和二合体而成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-    // 训练/建造/研究指定数量的变形单位类型
+    // 训练/建造指定数量的变形单位类型
     // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
