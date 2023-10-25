@@ -907,9 +907,9 @@ native DebugS               takes string str                            returns 
         constant integer UPG_MEAT_WAGON     = 'Rupm'
         // 科技 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
-        // 科技 骷髅持久术
+        // 科技 骷髅持久术/骨质增强术
         constant integer UPG_SKEL_LIFE      = 'Rusl'
-        // 科技 骷髅精通
+        // 科技 骷髅精通/骷髅法术
         constant integer UPG_SKEL_MASTERY   = 'Rusm'
         // 科技 发掘尸体
         constant integer UPG_EXHUME         = 'Ruex'
