@@ -6128,7 +6128,7 @@ constant native GetPlayerTechMaxAllowed takes player whichPlayer, integer techid
 // 增加指定玩家指定科技的等级
 constant native AddPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 // 设置指定玩家指定科技的等级
-// 降级可用 BlzDecPlayerTechResearched
+// 科技不能倒退，降级可用 BlzDecPlayerTechResearched
 constant native SetPlayerTechResearched takes player whichPlayer, integer techid, integer setToLevel returns nothing
 // 查询指定玩家指定科技是否已研究
 constant native GetPlayerTechResearched takes player whichPlayer, integer techid, boolean specificonly returns boolean
@@ -7783,6 +7783,7 @@ native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer l
 // 获取单位技能冷却时间
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
 // 获取单位技能的剩余冷却时间
+// 可获取单位拥有物品的技能剩余冷却时间，单位拥有未使用或拥有但不可用（如科技未研究）或未拥有或被动技能返回0
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
 // 设置单位结束技能冷却
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
