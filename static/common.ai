@@ -238,7 +238,7 @@ native DebugS               takes string str                            returns 
     // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
     // @param town 0为第一个有矿的基地，大于0则是对应每个分基地
     native HarvestWood          takes integer town, integer peons           returns nothing
-    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null，但后续似乎还是同一名工人，即使该单位已死亡，建议自写代码辅助替换死亡单位
+    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null，也可能返回已死亡单位，建议自写代码辅助替换死亡单位
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
     // 使用前必须已初始化过 CreateCaptains
     native GetExpansionPeon     takes nothing                               returns unit
