@@ -29,14 +29,14 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取指定的单位类型数量，含训练/升级中及训练/升级完成
-    // 不含建筑，不统计该单位的等价单位，升级指单位自我训练成新单位（比如毁灭）
+    // 获取指定的单位类型数量，含训练中及训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定的单位类型数量，含训练/升级中及训练/升级完成
-    // 不含建筑，不统计该单位的等价单位，升级指单位自我训练成新单位（比如毁灭）
+    // 获取指定玩家指定的单位类型数量，含训练中及训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取指定的单位类型数量，仅统计已训练/升级完成
-    // 不含建筑，不统计该单位的等价单位，升级指单位自我训练成新单位（比如毁灭）
+    // 获取指定的单位类型数量，仅统计已训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应类型的单位数
     // 不统计该单位的等价单位
@@ -71,11 +71,11 @@ native DebugS               takes string str                            returns 
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型当前升级的等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
+    // 获取指定科技类型的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 获取升级指定科技需要消耗的金钱数量（指定科技类型）
+    // 获取研究指定科技需要消耗的金钱数量（指定科技类型）
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 升级指定科技需要消耗的木材数量（指定科技类型）
+    // 获取研究指定科技需要消耗的木材数量（指定科技类型）
     native GetUpgradeWoodCost   takes integer id                            returns integer
     // 获取下一个扩张点的编号，可能返回-1
     native GetNextExpansion     takes nothing                               returns integer
@@ -1798,7 +1798,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 研究/升级指定科技
+    // 研究指定科技
     // 简单难度AI默认不执行
     function SetBuildUpgr takes integer qty, integer unitid returns nothing
         if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
@@ -1808,7 +1808,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 研究/升级指定科技
+    // 研究指定科技
     // @param easy 简单AI的等级
     // @param med 中等AI的等级
     // @param hard 疯狂AI的等级
@@ -1831,7 +1831,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 开始升级科技
+    // 开始研究科技
     // @param level 科技等级
     // @param upgid 科技类型
     function StartUpgrade takes integer level, integer upgid returns boolean
