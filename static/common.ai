@@ -515,7 +515,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ARMOR          = 'Rhar'
         // 科技 黄金（人族）（编辑器无此科技 'Rhmi'）
         constant integer UPG_GOLD           = 'Rhmi'
-        // 科技 改良石工技术
+        // 科技 改良石工技术/加强型石工技术
         constant integer UPG_MASONRY        = 'Rhac'
         // 科技 照明弹
         constant integer UPG_SIGHT          = 'Rhss'
@@ -531,7 +531,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_LEATHER        = 'Rhla'
         // 科技 长管火枪
         constant integer UPG_GUN_RANGE      = 'Rhri'
-        // 科技 改良伐木技术
+        // 科技 改良伐木技术/改进型伐木效率
         constant integer UPG_WOOD           = 'Rhlh'
         // 科技 魔法岗哨
         constant integer UPG_SENTINEL       = 'Rhse'
