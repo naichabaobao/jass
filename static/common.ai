@@ -1110,7 +1110,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_STR_WILD       = 'Resw'
         // 科技 月之护甲
         constant integer UPG_MOON_ARMOR     = 'Rema'
-        // 科技 强化外皮
+        // 科技 强化外皮/加强隐藏
         constant integer UPG_HIDES          = 'Rerh'
         // 科技 夜视能力
         constant integer UPG_ULTRAVISION    = 'Reuv'
@@ -1120,9 +1120,9 @@ native DebugS               takes string str                            returns 
         constant integer UPG_SCOUT          = 'Resc'
         // 科技 升级月刃
         constant integer UPG_GLAIVE         = 'Remg'
-        // 科技 强弓
+        // 科技 强弓/硬弓
         constant integer UPG_BOWS           = 'Reib'
-        // 科技 箭术
+        // 科技 箭术/射击术
         constant integer UPG_MARKSMAN       = 'Remk'
         // 科技 猛禽德鲁伊专家级训练
         constant integer UPG_DRUID_TALON    = 'Redt'
@@ -1130,19 +1130,19 @@ native DebugS               takes string str                            returns 
         constant integer UPG_DRUID_CLAW     = 'Redc'
         // 科技 驱除魔法（暗夜精灵族）
         constant integer UPG_ABOLISH        = 'Resi'
-        // 科技 腐蚀吐息
+        // 科技 腐蚀吐息/腐蚀喷吐
         constant integer UPG_CHIM_ACID      = 'Recb'
-        // 科技 角鹰兽训练
+        // 科技 角鹰兽训练/驯服角鹰兽
         constant integer UPG_HIPPO_TAME     = 'Reht'
-        // 科技  锐锋之刃（投刃车）（原文'Repd'有误）
+        // 科技 锐锋之刃（投刃车）（原文'Repd'有误）
         constant integer UPG_BOLT           = 'Repb'
-        // 科技 利爪之印
+        // 科技 利爪之印/利爪之痕
         constant integer UPG_MARK_CLAW      = 'Reeb'
-        // 科技 猛禽之印
+        // 科技 猛禽之印/猛禽之痕
         constant integer UPG_MARK_TALON     = 'Reec'
-        // 科技 硬化体肤
+        // 科技 硬化体肤/硬化皮肤
         constant integer UPG_HARD_SKIN      = 'Rehs'
-        // 科技 抗性体肤
+        // 科技 抗性体肤/抗性皮肤
         constant integer UPG_RESIST_SKIN    = 'Rers'
         // 科技 月井之春
         constant integer UPG_WELL_SPRING    = 'Rews'
