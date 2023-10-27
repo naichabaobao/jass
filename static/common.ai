@@ -547,7 +547,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_FRAGS          = 'Rhfs'
         // 科技 火箭弹幕
         constant integer UPG_TANK           = 'Rhrt'
-        // 科技 对空炮机
+        // 科技 对空炮机/高射炮火
         constant integer UPG_FLAK           = 'Rhfc'
         // 科技 迷雾之云
         constant integer UPG_CLOUD          = 'Rhcd'
