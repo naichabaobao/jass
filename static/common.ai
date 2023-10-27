@@ -683,7 +683,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
         // 科技 掠夺
         constant integer UPG_ORC_PILLAGE    = 'Ropg'
-        // 科技 野蛮之力
+        // 科技 野蛮之力/狂暴力量
         constant integer UPG_ORC_BERSERK    = 'Robs'
         // 科技 粉碎伤害强化
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
