@@ -543,7 +543,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_HAMMERS        = 'Rhhb'
         // 科技 控制魔法
         constant integer UPG_CONT_MAGIC     = 'Rhss'
-        // 科技 破片榴弹
+        // 科技 破片榴弹/碎片攻击
         constant integer UPG_FRAGS          = 'Rhfs'
         // 科技 火箭弹幕
         constant integer UPG_TANK           = 'Rhrt'
