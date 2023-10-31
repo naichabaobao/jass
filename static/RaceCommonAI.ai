@@ -1266,6 +1266,12 @@ globals
     constant integer FIRELORD
     // 英雄 炼金术士
     constant integer ALCHEMIST
+    // 英雄 炼金术士(变形 1级）
+    constant integer ALCHEMIST_M1
+    // 英雄 炼金术士(变形 2级）
+    constant integer ALCHEMIST_M2
+    // 英雄 炼金术士(变形 3级）
+    constant integer ALCHEMIST_M3
     // 科技 裂甲之刃
     constant integer UPG_SUN_BLADE
     // 物品 治疗药水
