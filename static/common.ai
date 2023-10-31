@@ -837,6 +837,8 @@ native DebugS               takes string str                            returns 
         constant integer NECRO              = 'unec'
         // 骷髅战士
         constant integer SKEL_WARRIOR       = 'uske'
+        // 骷髅法师
+        constant integer SKEL_MAGE          = 'uskm'
         // 影魔（阴影）
         constant integer SHADE              = 'ushd'
         // 邪灵空艇
@@ -847,7 +849,17 @@ native DebugS               takes string str                            returns 
         constant integer OBS_STATUE         =  OBSIDIAN_STATUE
         // 毁灭者
         constant integer BLK_SPHINX         = 'ubsp'
-    
+        // 腐尸甲虫（1级）
+        constant integer CARRIONSCARAB1     = 'ucs1'
+        // 腐尸甲虫（2级）
+        constant integer CARRIONSCARAB2    = 'ucs2'
+        // 钻地的腐尸甲虫（2级）
+        constant integer CARRIONSCARABBURROWED2   = 'ucsB'
+        // 腐尸甲虫（3级）
+        constant integer CARRIONSCARAB3    = 'ucs3'
+        // 钻地的腐尸甲虫（3级）
+        constant integer CARRIONSCARABBURROWED3   = 'ucsC'
+
         // undead buildings
     
         // 闹鬼金矿
