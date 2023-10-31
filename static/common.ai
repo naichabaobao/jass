@@ -821,6 +821,8 @@ native DebugS               takes string str                            returns 
         constant integer PIT_FIEND          = 'ucry'
         // 地穴恶魔
         constant integer CRYPT_FIEND        =  PIT_FIEND
+        // 钻地的地穴恶魔
+        constant integer BURROWED_FIEND     = 'ucrm'
         // 冰霜巨龙
         constant integer FROST_WYRM         = 'ufro'
         // 石像鬼
