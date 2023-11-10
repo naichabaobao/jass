@@ -4117,13 +4117,13 @@ function IsItemHiddenBJ takes item whichItem returns boolean
 endfunction
 
 
-// 获取随机物品（所有类别），默认用于市场/集市随机出售物品
+// 获取随机物品（所有类型），默认用于市场/集市随机出售物品
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 获取随机物品（指定类别），默认用于市场/集市随机出售物品
+// 获取随机物品（指定类型），默认用于市场/集市随机出售物品
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
@@ -4986,13 +4986,13 @@ function UnitAddAbilityBJ takes integer abilityId, unit whichUnit returns boolea
 endfunction
 
 
-// 删除单位类别
+// 删除单位类型
 function UnitRemoveTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitRemoveType(whichUnit, whichType)
 endfunction
 
 
-// 添加单位类别
+// 添加单位类型
 function UnitAddTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitAddType(whichUnit, whichType)
 endfunction
