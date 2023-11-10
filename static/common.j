@@ -5846,18 +5846,18 @@ constant native IsUnitInTransport takes unit whichUnit, unit whichTransport retu
 // 查询指定单位当前是否被装载(进入被缠绕的金矿、运输飞艇、运输船都属于装载)
 constant native IsUnitLoaded takes unit whichUnit returns boolean
 
-// 查询指定单位类型是否为英雄
+// 查询指定单位ID（四字码）是否为英雄
 constant native IsHeroUnitId takes integer unitId returns boolean
-// 查询指定单位类型是否与指定类型相同
+// 查询指定单位ID（四字码）是否为指定单位类型
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
 // 设置指定单位和指定玩家的共享视野状态(共享或不共享) [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
 // 设置指定尸体腐烂状态(正常腐烂或暂停腐烂) [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加类别到指定单位 [R]
+// 添加类型到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除指定单位的类别 [R]
+// 删除指定单位的类型 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
 // 添加技能到指定单位 [R]
