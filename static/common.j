@@ -6596,9 +6596,9 @@ native GetRandomReal takes real lowBound, real highBound returns real
 native CreateUnitPool takes nothing returns unitpool
 // 销毁单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
-// 添加指定单位类型到指定单位池 [R]
+// 添加指定单位类型到指定单位池（指定单位类型ID） [R]
 native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight returns nothing
-// 删除指定单位池的指定单位类型 [R]
+// 删除指定单位池的指定单位类型（指定单位类型ID） [R]
 native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns nothing
 // 随机创建单位池的单位(指定单位所属玩家)(指定坐标) [R]
 // 默认用于创建随机中立敌对单位
