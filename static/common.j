@@ -5801,7 +5801,7 @@ constant native GetUnitRallyUnit takes unit whichUnit returns unit
 constant native GetUnitRallyDestructable takes unit whichUnit returns destructable
 
 // 查询指定单位是否在指定的单位组中
-// 在判断单位组的循环内使用时，若用于循环退出条件判断，可能会导致游戏爆卡
+// 在判断单位组的循环内使用时，可能导致游戏爆卡
 constant native IsUnitInGroup takes unit whichUnit, group whichGroup returns boolean
 // 查询指定单位是否指定玩家组中任意玩家的单位
 constant native IsUnitInForce takes unit whichUnit, force whichForce returns boolean
