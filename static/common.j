@@ -6059,8 +6059,10 @@ constant native Player takes integer number returns player
 // 通常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
+// 中立被动玩家是所有非中立玩家的盟友
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
+// 中立敌对玩家是所有非中立玩家的敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
