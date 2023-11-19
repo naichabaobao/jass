@@ -5811,9 +5811,9 @@ constant native IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer ret
 constant native IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位的所属玩家与指定玩家是否敌对关系
 constant native IsUnitEnemy takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位对指定玩家是否可见
+// 查询指定单位是否对指定玩家可见（未使用反隐的情况下）
 constant native IsUnitVisible takes unit whichUnit, player whichPlayer returns boolean
-// 查询指定单位能否被指定玩家侦测到（可被反隐看到）
+// 查询指定单位能否已被指定玩家反隐侦测到
 constant native IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否对指定玩家不可见（未使用反隐的情况下）
 constant native IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean
