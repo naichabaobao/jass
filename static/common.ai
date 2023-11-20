@@ -316,7 +316,7 @@ native DebugS               takes string str                            returns 
     native Sleep                takes real seconds                          returns nothing
     // 查询指定单位是否存活
     native UnitAlive            takes unit id                               returns boolean
-    // 查询指定单位是否可见（不可见单位需要反隐）
+    // 查询指定单位是否不可见（隐身）
     native UnitInvis            takes unit id                               returns boolean
     // 查询攻击组已忽略的指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
