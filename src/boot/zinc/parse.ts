@@ -62,7 +62,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				// const text = comment.value.replace("//", "");
 				// texts.push(text);
 				const lineComment: LineComment = new LineComment(comment.value);
-				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end.position)));
 			} else {
 				break;
 			}
@@ -78,7 +78,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				// const text = comment.value.replace("//", "");
 				// texts.push(text);
 				const lineComment: LineComment = new LineComment(comment.value);
-				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end.position)));
 				lineComments.push(lineComment);
 			} else {
 				break;
@@ -307,7 +307,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 						local.type = ms[0].type;
 						local.loc.start = ms[0].loc.start;
 					}
-					local.loc.end = new Position(token.line, token.end);
+					local.loc.end = new Position(token.line, token.end.position);
 					return local;
 				}));
 			} else if (token.isOp() && token.value == "=") {
@@ -383,10 +383,10 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 					bodyField--;
 				} else {
 					if (type == "func") {
-						(<Func>func).loc.end = new Position(token.line, token.end);
+						(<Func>func).loc.end = new Position(token.line, token.end.position);
 						resetFunc();
 					} else {
-						(<Method>method).loc.end = new Position(token.line, token.end);
+						(<Method>method).loc.end = new Position(token.line, token.end.position);
 						resetMethod();
 					}
 					return;
@@ -440,7 +440,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
 						(<Take>take).nameToken = token;
-						(<Take>take).loc.end = new Position(token.line, token.end);
+						(<Take>take).loc.end = new Position(token.line, token.end.position);
 						(<Func>func).takes.push((<Take>take));
 						functionState = 3;
 					} else {
@@ -518,7 +518,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
 						(<Take>take).nameToken = token;
-						(<Take>take).loc.end = new Position(token.line, token.end);
+						(<Take>take).loc.end = new Position(token.line, token.end.position);
 						(<Method>method).takes.push((<Take>take));
 						methodState = 4;
 					} else {
@@ -558,7 +558,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				// }));
 				// members = [];
 				if (member) {
-					member.loc.end = new Position(token.line, token.end);
+					member.loc.end = new Position(token.line, token.end.position);
 					(<Struct>struct).members.push(member);
 				}
 				resetMember();
@@ -672,7 +672,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				}
 			} else if (globalState == 2) {
 				if (token.isOp() && token.value == ";") {
-					(<Global>global).loc.end = new Position(token.line, token.end);
+					(<Global>global).loc.end = new Position(token.line, token.end.position);
 					pushGlobal();
 					reset("global");
 				} else if (token.isOp() && token.value == "=") {
@@ -715,7 +715,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				}
 			} else if (globalState == 5) {
 				if (token.isOp() && token.value == ";") {
-					(<Global>global).loc.end = new Position(token.line, token.end);
+					(<Global>global).loc.end = new Position(token.line, token.end.position);
 					pushGlobal();
 					reset("global");
 				} else {
@@ -734,7 +734,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 					g.isConstant = (<Global>global).isConstant;
 					g.loc.start = new Position(token.line, token.position);
 					g.name = token.value;
-					g.loc.end = new Position(token.line, token.end);
+					g.loc.end = new Position(token.line, token.end.position);
 					globals.push(g);
 					g.lineComments.push(...findLineComments(token.line));
 					globalState = 2;
@@ -775,7 +775,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 			} else if (token.isId() && token.value == "constant") {
 				isConstant = true;
 			}  else if (token.isOp() && token.value == "}") {
-				(<Struct>struct).loc.end = new Position(token.line, token.end);
+				(<Struct>struct).loc.end = new Position(token.line, token.end.position);
 				resetStruct();
 			} else { // member type
 				// 解析struct成员类型，区别于其他解析方式，当类型找到了不会马上push到struct中，而是等到见到 ';' 后才push进去
@@ -825,7 +825,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 		const pushError = (message:string) => {
 			const err = new JassError(message);
 			err.loc.start = new Position(token.line, token.position);
-			err.loc.end = new Position(token.line, token.end);
+			err.loc.end = new Position(token.line, token.end.position);
 			program.errors.push(err);
 		};
 
@@ -883,7 +883,7 @@ function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = fals
 				} else if (modifierTypes.length > 0 && token.isOp() && token.value == "}") {
 					modifierTypes.pop();
 				} else if (token.isOp() && token.value == "}") {
-					(<Library>library).loc.end = new Position(token.line, token.end);
+					(<Library>library).loc.end = new Position(token.line, token.end.position);
 					resetLibrary();
 				} else {
 					parseGlobal();

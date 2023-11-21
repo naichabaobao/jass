@@ -2,9 +2,7 @@
 import { Token, tokenize } from "./tokens";
 
 import * as path from "path";
-import { getFileContent, isSpace, isUsableFile } from "../tool";
-import { lines } from "./tool";
-import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
+import { ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 
 
 class Position {
@@ -19,14 +17,37 @@ class Position {
 }
 
 class Range {
-	public start: Position;
-	public end: Position;
+	private _start: Position;
+	private _end: Position;
 
+	
+	public get start() : Position {
+		return this._start;
+	}
 
+	
+	public get end() : Position {
+		return this._end;
+	}
+	
+	
+	public set start(start : Position) {
+		this._start = start;
+		if (this.end.line < start.line) {
+			this._end = this._start;
+		} else if (this.end.line == start.line && this.end.position < start.position) {
+			this._end.position = this._start.position;
+		}
+	}
+
+	public set end(end : Position) {
+		this._end = end;
+	}
+	
 
 	public constructor(start: Position = new Position(), end: Position = new Position()) {
-		this.start = start;
-		this.end = end;
+		this._start = start;
+		this._end = end;
 	}
 
 	public static default () :Range {
@@ -426,7 +447,7 @@ class TextMacroDefine extends Declaration {
 				str += token.value;
 			}
 	
-			storeIndex = token.end;
+			storeIndex = token.end.position;
 		});
 	
 		return str;

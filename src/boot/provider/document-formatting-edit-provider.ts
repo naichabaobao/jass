@@ -1,25 +1,31 @@
 import * as vscode from "vscode";
-import { Tokenize, tokenize, Tokenizer } from "../jass/tokens";
+import { Token, tokenize } from "../jass/tokens";
 import { Options } from "./options";
 
 // Symbols that require spaces
 const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{", "}", "!=", "==", "->"];
 
-function reduceTokens(content: string, handle: (token: Tokenize, previousToken:Tokenize|null, isStart: boolean) => void) {
-  let preToken: Tokenize | null = null;
-  Tokenizer.build(content, (token) => {
+function reduceTokens(content: string, handle: (token: Token, previousToken:Token|null, isStart: boolean) => void) {
+  let preToken: Token | null = null;
+  const tokens = tokenize(content);
+
+  tokens.forEach((token, index, ts) => {
+    if (preToken) {
       handle(token, preToken, preToken === null || preToken.end.line !== token.start.line);
       preToken = token;
+    } else {
+      preToken = token;
+    }
   });
 }
 
 interface FormatOption {
   // 条件成立时返回textEdits
-  is: (token: Tokenize, previousToken: Tokenize|null, isStart: boolean) => boolean;
-  textEdits: (token: Tokenize, previousToken: Tokenize|null, isStart: boolean) => vscode.TextEdit[];
+  is: (token: Token, previousToken: Token|null, isStart: boolean) => boolean;
+  textEdits: (token: Token, previousToken: Token|null, isStart: boolean) => vscode.TextEdit[];
 }
 
-function isValue(token: Tokenize) {
+function isValue(token: Token) {
   return ["id", "string", "int", "hex", "dollar_hex", "octal", "real", "mark"].includes(token.type);
 }
 
@@ -93,7 +99,7 @@ const formatOptions: FormatOption[] = [
     is: (token, previousToken, isStart) => {
       let compare: boolean = false;
 
-      if (token.type == "id" || token.type == "string" || token.type == "int" || token.type == "hex" || token.type == "dollar_hex" || token.type == "octal" || token.type == "real" || token.type == "mark") {
+      if (token.type == "id" || token.type == "string" || token.type == "int" ||/* token.type == "hex" || token.type == "dollar_hex" || token.type == "octal" || */token.type == "real" || token.type == "mark") {
         if (previousToken) {
           if (previousToken.type == "op") {
             if (previousToken.value == "(" || previousToken.value == "[" || previousToken.value == ".") {
@@ -131,7 +137,7 @@ const formatOptions: FormatOption[] = [
         }
         else if (token.value == "(" || token.value == ")" || token.value == "[" || token.value == "]" || token.value == ".") {
           if (previousToken) {
-            if (previousToken.type == "id" || previousToken.type == "string" || previousToken.type == "int" || previousToken.type == "hex" || previousToken.type == "dollar_hex" || previousToken.type == "octal" || previousToken.type == "real" || previousToken.type == "mark") {
+            if (previousToken.type == "id" || previousToken.type == "string" || previousToken.type == "int" ||/* previousToken.type == "hex" || previousToken.type == "dollar_hex" || previousToken.type == "octal" ||*/ previousToken.type == "real" || previousToken.type == "mark") {
               if (token.start.line == previousToken.end.line && token.start.position - previousToken.end.position != 0) {
                 compare = true;
               }
@@ -229,9 +235,9 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
           // If the current location is the symbol specified by needaddspaceops
           // Judge whether a space should be added to the relationship between the current symbol and the previous symbol
           if (currentValue.isOp() && NeedAddSpaceOps.includes(currentValue.value) && (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark() || previousValue.value == ")" || previousValue.value == "]")) {
-            if (currentValue.position - previousValue.end != 1) {
+            if (currentValue.position - previousValue.end.position != 1) {
               textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end),
+                new vscode.Position(lineText.lineNumber, previousValue.end.position),
                 new vscode.Position(lineText.lineNumber, currentValue.position)
               ), " "));
             }
@@ -239,24 +245,24 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
           // If the current position is non symbolic and preceded by a symbol
           (currentValue.isId() || currentValue.isInt() || currentValue.isReal() || currentValue.isString() || currentValue.isMark() || currentValue.value == "(" || currentValue.value == "[") &&
            previousValue.isOp() && NeedAddSpaceOps.includes(previousValue.value)) {
-            if (currentValue.position - previousValue.end != 1) {
+            if (currentValue.position - previousValue.end.position != 1) {
               textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end),
+                new vscode.Position(lineText.lineNumber, previousValue.end.position),
                 new vscode.Position(lineText.lineNumber, currentValue.position)
               ), " "));
             }
           // Between two identifiers
           } else if (currentValue.isId() && previousValue.isId()) {
-            if (currentValue.position - previousValue.end != 1) {
+            if (currentValue.position - previousValue.end.position != 1) {
               textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end),
+                new vscode.Position(lineText.lineNumber, previousValue.end.position),
                 new vscode.Position(lineText.lineNumber, currentValue.position)
               ), " "));
             }
           } else if (previousValue.isOp() && previousValue.value == ",") { // Add only one space to the right of the symbol
-            if (currentValue.position - previousValue.end != 1) {
+            if (currentValue.position - previousValue.end.position != 1) {
               textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end),
+                new vscode.Position(lineText.lineNumber, previousValue.end.position),
                 new vscode.Position(lineText.lineNumber, currentValue.position)
               ), " "));
             }

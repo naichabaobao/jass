@@ -46,12 +46,12 @@ vscode.languages.registerRenameProvider("jass", new class RenameProvider impleme
 		if (func) {
 			const work = new vscode.WorkspaceEdit();
 			if (func.nameToken) {
-				work.replace(document.uri, new vscode.Range(func.nameToken.line, func.nameToken.position, func.nameToken.line, func.nameToken.end), newName);
+				work.replace(document.uri, new vscode.Range(func.nameToken.line, func.nameToken.position, func.nameToken.line, func.nameToken.end.position), newName);
 			}
 			program.functions.forEach((func) => {
 				func.tokens.forEach((token) => {
 					if (token.isId() && token.value == key) {
-						const range = new vscode.Range(token.line, token.position, token.line, token.end);
+						const range = new vscode.Range(token.line, token.position, token.line, token.end.position);
 						work.replace(document.uri, range, newName);
 					}
 				});
@@ -65,12 +65,12 @@ vscode.languages.registerRenameProvider("jass", new class RenameProvider impleme
 		if (global) {
 			const work = new vscode.WorkspaceEdit();
 			if (global.nameToken) {
-				work.replace(document.uri, new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end), newName);
+				work.replace(document.uri, new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end.position), newName);
 			}
 			program.functions.forEach((func) => {
 				func.tokens.forEach((token) => {
 					if (token.isId() && token.value == key) {
-						const range = new vscode.Range(token.line, token.position, token.line, token.end);
+						const range = new vscode.Range(token.line, token.position, token.line, token.end.position);
 						work.replace(document.uri, range, newName);
 					}
 				});
@@ -90,13 +90,13 @@ vscode.languages.registerRenameProvider("jass", new class RenameProvider impleme
 				const work = new vscode.WorkspaceEdit();
 				func.takes.forEach((take) => {
 					if (take.name == key && take.nameToken) {
-						const range = new vscode.Range(take.nameToken.line, take.nameToken.position, take.nameToken.line, take.nameToken.end);
+						const range = new vscode.Range(take.nameToken.line, take.nameToken.position, take.nameToken.line, take.nameToken.end.position);
 						work.replace(document.uri, range, newName);
 					}
 				});
 				func.tokens.forEach((token) => {
 					if (token.isId() && token.value == key) {
-						const range = new vscode.Range(token.line, token.position, token.line, token.end);
+						const range = new vscode.Range(token.line, token.position, token.line, token.end.position);
 						work.replace(document.uri, range, newName);
 					}
 				});

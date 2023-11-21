@@ -3,7 +3,7 @@ import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
 import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine, Type, Context, baseTypeContext } from "./ast";
-import { Token,  tokenize, Tokenizer } from "./tokens";
+import { Token,  tokenize } from "./tokens";
 
 
 /**
@@ -223,7 +223,7 @@ function parseType(lineText: ReplaceableLineText):Type|undefined {
 
     
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     let type : Type|undefined;
@@ -250,7 +250,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
 
     
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     
@@ -303,7 +303,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
                 } else if (token.isId()) {
                     if (take) {
                         take.name = token.value;
-                        take.loc.end = new Position(token.line, token.end);
+                        take.loc.end = new Position(token.line, token.end.position);
                         take.nameToken = token;
                         state = 2;
                     }
@@ -359,7 +359,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
 function parseLibrary(lineText: ReplaceableLineText, library: Library) {
 
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -404,7 +404,7 @@ function parseLibrary(lineText: ReplaceableLineText, library: Library) {
 
 function parseLineComment(lineText: ReplaceableLineText, lineComment: LineComment) {
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     const lineCommentToken = tokens.find((token) => token.isComment());
@@ -412,14 +412,14 @@ function parseLineComment(lineText: ReplaceableLineText, lineComment: LineCommen
         // const lineComment = new LineComment(lineCommentToken.value);
         lineComment.setText(lineText.replaceText());
         lineComment.loc.start = new Position(lineText.lineNumber(), lineCommentToken.position);
-        lineComment.loc.end = new Position(lineText.lineNumber(), lineCommentToken.end);
+        lineComment.loc.end = new Position(lineText.lineNumber(), lineCommentToken.end.position);
     }
 }
 
 function parseGlobal(lineText: ReplaceableLineText, global: Global) {
     
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     let index = 0;
@@ -461,7 +461,7 @@ function parseGlobal(lineText: ReplaceableLineText, global: Global) {
 
 function parseStruct(lineText: ReplaceableLineText, struct: Struct) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     const structIndex = tokens.findIndex((token) => token.isId() && token.value == "struct");
@@ -492,7 +492,7 @@ function parseStruct(lineText: ReplaceableLineText, struct: Struct) {
 
 function parseLocal(lineText: ReplaceableLineText, local: Local) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -522,7 +522,7 @@ function parseLocal(lineText: ReplaceableLineText, local: Local) {
 
 function parseMember(lineText: ReplaceableLineText, member: Member) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -725,7 +725,7 @@ class ReplaceableLineText extends LineText {
                 str += token.value;
             }
     
-            storeIndex = token.end;
+            storeIndex = token.end.position;
         });
     
         return str;
@@ -1458,7 +1458,7 @@ class Parser {
                 if (children instanceof ReplaceableLineText) {
                     const replaceText = children.replaceText()
                     const lineTextTokens = tokenize(replaceText).map((token) => {
-                        token.line = children.lineNumber();
+                        token.start.line = children.lineNumber();
                         return token;
                     });
                     tokens.push(...lineTextTokens);
@@ -1514,7 +1514,7 @@ function parseCjass(context:Context, content: string) {
                         defineMacro = new DefineMacro(context);
                         const id = new Identifier(token.value);
                         id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end);
+                        id.end = new Position(token.line, token.end.position);
                         defineMacro.keys.push(id);
                         state = 2;
                     } else if (token.isOp() && token.value == "<") {
@@ -1534,7 +1534,7 @@ function parseCjass(context:Context, content: string) {
                     if (token.isId()) {
                         const id = new Identifier(token.value);
                         id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end);
+                        id.end = new Position(token.line, token.end.position);
                         defineMacro.keys.push(id);
                     } else if (token.isOp() && token.value == ">") {
                         state = 4;
@@ -1657,7 +1657,7 @@ export function findIncludes(content:string) {
     const includes:Include[] = [];
     lineTexts.forEach((lineText) => {
         if (/^\s*#include\b/.test(lineText.getText())) {
-            const tokens = Tokenizer.get(lineText.getText());
+            const tokens = tokenize(lineText.getText());
             if (tokens.length >= 2 && tokens[1].type == "string") {
                 const filePath = tokens[1].value;
                 const include = new Include(filePath);
