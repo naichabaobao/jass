@@ -9,104 +9,104 @@ globals
     // Misc constants
 
     // 圆周率 π，默认3.14159
-    constant real      bj_PI                            = 3.14159
+    constant real bj_PI = 3.14159
     // 底数，默认2.71828
-    constant real      bj_E                             = 2.71828
+    constant real bj_E = 2.71828
     // 单元尺寸（游戏内量测地表面积的单位），默认128.0
-    constant real      bj_CELLWIDTH                     = 128.0
+    constant real bj_CELLWIDTH = 128.0
     // 悬崖高度（升降台默认升/降一层的高度），默认128.0
-    constant real      bj_CLIFFHEIGHT                   = 128.0
+    constant real bj_CLIFFHEIGHT = 128.0
     // （建筑）单位默认朝向，默认270.0
-    constant real      bj_UNIT_FACING                   = 270.0
+    constant real bj_UNIT_FACING = 270.0
     // 弧度转换成角度
-    constant real      bj_RADTODEG                      = 180.0/bj_PI
+    constant real bj_RADTODEG = 180.0 / bj_PI
     // 角度转换成弧度
-    constant real      bj_DEGTORAD                      = bj_PI/180.0
+    constant real bj_DEGTORAD = bj_PI / 180.0
     // 文本显示延时 - 任务，默认20.00
-    constant real      bj_TEXT_DELAY_QUEST              = 20.00
+    constant real bj_TEXT_DELAY_QUEST = 20.00
     // 文本显示延时 - 任务更新，默认20.00
-    constant real      bj_TEXT_DELAY_QUESTUPDATE        = 20.00
+    constant real bj_TEXT_DELAY_QUESTUPDATE = 20.00
     // 文本显示延时 - 任务完成，默认20.00
-    constant real      bj_TEXT_DELAY_QUESTDONE          = 20.00
+    constant real bj_TEXT_DELAY_QUESTDONE = 20.00
     // 文本显示延时 - 任务失败，默认20.00
-    constant real      bj_TEXT_DELAY_QUESTFAILED        = 20.00
+    constant real bj_TEXT_DELAY_QUESTFAILED = 20.00
     // 文本显示延时 - 任务要求，默认20.00
-    constant real      bj_TEXT_DELAY_QUESTREQUIREMENT   = 20.00
+    constant real bj_TEXT_DELAY_QUESTREQUIREMENT = 20.00
     // 文本显示延时 - 失败消息，默认20.00
-    constant real      bj_TEXT_DELAY_MISSIONFAILED      = 20.00
+    constant real bj_TEXT_DELAY_MISSIONFAILED = 20.00
     // 文本显示延时 - 常驻提示，默认12.00
-    constant real      bj_TEXT_DELAY_ALWAYSHINT         = 12.00
+    constant real bj_TEXT_DELAY_ALWAYSHINT = 12.00
     // 文本显示延时 - 提示，默认12.00
-    constant real      bj_TEXT_DELAY_HINT               = 12.00
+    constant real bj_TEXT_DELAY_HINT = 12.00
     // 文本显示延时 - 秘密，默认10.00
-    constant real      bj_TEXT_DELAY_SECRET             = 10.00
+    constant real bj_TEXT_DELAY_SECRET = 10.00
     // 文本显示延时 - 有新单位可购买，默认15.00
-    constant real      bj_TEXT_DELAY_UNITACQUIRED       = 15.00
+    constant real bj_TEXT_DELAY_UNITACQUIRED = 15.00
     // 文本显示延时 - 有新单位可用，默认10.00
-    constant real      bj_TEXT_DELAY_UNITAVAILABLE      = 10.00
+    constant real bj_TEXT_DELAY_UNITAVAILABLE = 10.00
     // 文本显示延时 - 有新物品可购买，默认10.00
-    constant real      bj_TEXT_DELAY_ITEMACQUIRED       = 10.00
+    constant real bj_TEXT_DELAY_ITEMACQUIRED = 10.00
     // 文本显示延时 - 警告，默认12.00
-    constant real      bj_TEXT_DELAY_WARNING            = 12.00
+    constant real bj_TEXT_DELAY_WARNING = 12.00
     // 任务延时 - 任务，默认5.00
-    constant real      bj_QUEUE_DELAY_QUEST             =  5.00
+    constant real bj_QUEUE_DELAY_QUEST = 5.00
     // 任务延时 - 任务提示，默认5.00
-    constant real      bj_QUEUE_DELAY_HINT              =  5.00
+    constant real bj_QUEUE_DELAY_HINT = 5.00
     // 任务延时 - 任务秘密，默认3.00
-    constant real      bj_QUEUE_DELAY_SECRET            =  3.00
+    constant real bj_QUEUE_DELAY_SECRET = 3.00
     // 生命障碍 - 简单，默认60.00
-    constant real      bj_HANDICAP_EASY                 = 60.00
+    constant real bj_HANDICAP_EASY = 60.00
     // 生命障碍 - 普通，默认90.00
-    constant real      bj_HANDICAP_NORMAL               = 90.00
+    constant real bj_HANDICAP_NORMAL = 90.00
     // 伤害障碍 - 简单，默认50.00
-    constant real      bj_HANDICAPDAMAGE_EASY           = 50.00
+    constant real bj_HANDICAPDAMAGE_EASY = 50.00
     // 伤害障碍 - 普通，默认90.00
-    constant real      bj_HANDICAPDAMAGE_NORMAL         = 90.00
+    constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
     // 伤害障碍 - 困难，默认50.00
-	constant real      bj_HANDICAPREVIVE_NOTHARD        = 50.00
+	constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
-    constant real      bj_GAME_STARTED_THRESHOLD        =  0.01
+    constant real bj_GAME_STARTED_THRESHOLD = 0.01
     // 迷雾等待最小间隔，默认0.10
-    constant real      bj_WAIT_FOR_COND_MIN_INTERVAL    =  0.10
+    constant real bj_WAIT_FOR_COND_MIN_INTERVAL = 0.10
     // 轮询间隔（游戏时间），默认0.10
-    constant real      bj_POLLED_WAIT_INTERVAL          =  0.10
+    constant real bj_POLLED_WAIT_INTERVAL = 0.10
     // 轮询跳过阈值（游戏时间），默认2.00
-    constant real      bj_POLLED_WAIT_SKIP_THRESHOLD    =  2.00
+    constant real bj_POLLED_WAIT_SKIP_THRESHOLD = 2.00
 
     // Game constants
 
     // 物品栏格子上限，默认6
-    constant integer   bj_MAX_INVENTORY                 =  6
+    constant integer bj_MAX_INVENTORY = 6
     // 玩家上限（包含12/24位玩家和中立敌对玩家，共13/25位）
-    constant integer   bj_MAX_PLAYERS                   =  GetBJMaxPlayers()
+    constant integer bj_MAX_PLAYERS = GetBJMaxPlayers()
     // 中立受害玩家（玩家14/26）
-    constant integer   bj_PLAYER_NEUTRAL_VICTIM         =  GetBJPlayerNeutralVictim()
+    constant integer bj_PLAYER_NEUTRAL_VICTIM = GetBJPlayerNeutralVictim()
     // 中立特殊玩家（玩家15/27）
-    constant integer   bj_PLAYER_NEUTRAL_EXTRA          =  GetBJPlayerNeutralExtra()
+    constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
     // 玩家槽上限（包含所有中立玩家，共16/28位）
-    constant integer   bj_MAX_PLAYER_SLOTS              =  GetBJMaxPlayerSlots()
+    constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
     // 尸体数量上限，默认25
-    constant integer   bj_MAX_SKELETONS                 =  25
+    constant integer bj_MAX_SKELETONS = 25
     // （商店）物品库存上限，默认11
-    constant integer   bj_MAX_STOCK_ITEM_SLOTS          =  11
+    constant integer bj_MAX_STOCK_ITEM_SLOTS = 11
     // （商店）单位库存上限，默认11
-    constant integer   bj_MAX_STOCK_UNIT_SLOTS          =  11
+    constant integer bj_MAX_STOCK_UNIT_SLOTS = 11
     // 物品等级上限，默认10级
-    constant integer   bj_MAX_ITEM_LEVEL                =  10
+    constant integer bj_MAX_ITEM_LEVEL = 10
 
     // Auto Save constants
 
     // （自动）存档保留数量上限，默认5
     // 怀疑超过会自动替换，但按理说这种设置不应在此
-    constant integer   bj_MAX_CHECKPOINTS               =  5
+    constant integer bj_MAX_CHECKPOINTS = 5
 
     // Ideally these would be looked up from Units/MiscData.txt,
     // but there is currently no script functionality exposed to do that
 
     // 黎明时间（鸡啼），默认早上6点整（6.00）
-    constant real      bj_TOD_DAWN                      = 6.00
+    constant real bj_TOD_DAWN = 6.00
     // 入夜时间（狼嚎），默认晚上18点整（18.00）
-    constant real      bj_TOD_DUSK                      = 18.00
+    constant real bj_TOD_DUSK = 18.00
 
     // Melee game settings:
     //   - Starting Time of Day (TOD)
@@ -118,718 +118,718 @@ globals
     //   - Distance from start loc to search for nearby mines
 
     // 初始时间，默认早上8点整（8.00）
-    constant real      bj_MELEE_STARTING_TOD            = 8.00
+    constant real bj_MELEE_STARTING_TOD = 8.00
     // 混乱之治版本初始黄金数量，默认750
-    constant integer   bj_MELEE_STARTING_GOLD_V0        = 750
+    constant integer bj_MELEE_STARTING_GOLD_V0 = 750
     // 冰封王座版本初始黄金数量，默认500
-    constant integer   bj_MELEE_STARTING_GOLD_V1        = 500
+    constant integer bj_MELEE_STARTING_GOLD_V1 = 500
     // 混乱之治版本初始木材数量，默认200
-    constant integer   bj_MELEE_STARTING_LUMBER_V0      = 200
+    constant integer bj_MELEE_STARTING_LUMBER_V0 = 200
     // 冰封王座版本初始木材数量，默认150
-    constant integer   bj_MELEE_STARTING_LUMBER_V1      = 150
+    constant integer bj_MELEE_STARTING_LUMBER_V1 = 150
     // 使用随机英雄时创建的英雄数量，默认1个
-    constant integer   bj_MELEE_STARTING_HERO_TOKENS    = 1
+    constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
     // 英雄数量上限，默认3个
-    constant integer   bj_MELEE_HERO_LIMIT              = 3
+    constant integer bj_MELEE_HERO_LIMIT = 3
     // 每类英雄数量上限，默认1个
-    constant integer   bj_MELEE_HERO_TYPE_LIMIT         = 1
+    constant integer bj_MELEE_HERO_TYPE_LIMIT = 1
     // 金矿搜索距离，默认2000
     // 主要用于开局创建亡灵/精灵主矿
-    constant real      bj_MELEE_MINE_SEARCH_RADIUS      = 2000
+    constant real bj_MELEE_MINE_SEARCH_RADIUS = 2000
     // 清除出生点中立敌对单位的范围，默认1500
     // 开局清除出生点的野怪时，要删除出生点多少范围内的野怪
-    constant real      bj_MELEE_CLEAR_UNITS_RADIUS      = 1500
+    constant real bj_MELEE_CLEAR_UNITS_RADIUS = 1500
     // 暴露倒计时，默认120.00
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
-    constant real      bj_MELEE_CRIPPLE_TIMEOUT         = 120.00
+    constant real bj_MELEE_CRIPPLE_TIMEOUT = 120.00
     // 暴露持续时间，默认20.00
     // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统会暴露玩家位置，此为暴露的持续时间
-    constant real      bj_MELEE_CRIPPLE_MSG_DURATION    = 20.00
+    constant real bj_MELEE_CRIPPLE_MSG_DURATION = 20.00
     // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
-    constant integer   bj_MELEE_MAX_TWINKED_HEROES_V0   = 3
+    constant integer bj_MELEE_MAX_TWINKED_HEROES_V0 = 3
     // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
-    constant integer   bj_MELEE_MAX_TWINKED_HEROES_V1   = 1
+    constant integer bj_MELEE_MAX_TWINKED_HEROES_V1 = 1
 
     // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
     // Delay between a creep's death and the time it may drop an item.
-    constant real      bj_CREEP_ITEM_DELAY              = 0.50
+    constant real bj_CREEP_ITEM_DELAY = 0.50
 
     // Timing settings for Marketplace inventories.
     // 初始库存补充延时（开局后，过多久才可购买/雇佣），默认120
-    constant real      bj_STOCK_RESTOCK_INITIAL_DELAY   = 120
+    constant real bj_STOCK_RESTOCK_INITIAL_DELAY = 120
     // 库存补充间隔，默认30
-    constant real      bj_STOCK_RESTOCK_INTERVAL        = 30
+    constant real bj_STOCK_RESTOCK_INTERVAL = 30
     // 库存补充次数上限，默认20
-    constant integer   bj_STOCK_MAX_ITERATIONS          = 20
+    constant integer bj_STOCK_MAX_ITERATIONS = 20
 
     // 事件注册数量上限，默认64
     // 单个“dest dies in region”事件注册的最大事件数。
     // Max events registered by a single "dest dies in region" event.
-    constant integer   bj_MAX_DEST_IN_REGION_EVENTS     = 64
+    constant integer bj_MAX_DEST_IN_REGION_EVENTS = 64
 
     // Camera settings
 
     // 镜头最小截断距离（远景裁剪），默认100
-    constant integer   bj_CAMERA_MIN_FARZ               = 100
+    constant integer bj_CAMERA_MIN_FARZ = 100
     // 镜头默认距离（距离到目标），默认1650
-    constant integer   bj_CAMERA_DEFAULT_DISTANCE       = 1650
+    constant integer bj_CAMERA_DEFAULT_DISTANCE = 1650
     // 镜头默认截断距离（远景裁剪），默认5000
-    constant integer   bj_CAMERA_DEFAULT_FARZ           = 5000
+    constant integer bj_CAMERA_DEFAULT_FARZ = 5000
     // 镜头默认水平/攻击角度（X 轴旋转角度），默认304
-    constant integer   bj_CAMERA_DEFAULT_AOA            = 304
+    constant integer bj_CAMERA_DEFAULT_AOA = 304
     // 默认镜头（观察区域），默认70
-    constant integer   bj_CAMERA_DEFAULT_FOV            = 70
+    constant integer bj_CAMERA_DEFAULT_FOV = 70
     // 镜头默认滚动（Y 轴旋转角度），默认0
-    constant integer   bj_CAMERA_DEFAULT_ROLL           = 0
+    constant integer bj_CAMERA_DEFAULT_ROLL = 0
     // 镜头默认高度位移值（Z 轴旋转角度），默认90
-    constant integer   bj_CAMERA_DEFAULT_ROTATION       = 90
+    constant integer bj_CAMERA_DEFAULT_ROTATION = 90
 
     // 营救（所属玩家变更）延时，默认2.00
     // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
-    constant real      bj_RESCUE_PING_TIME              = 2.00
+    constant real bj_RESCUE_PING_TIME = 2.00
 
     // Transmission behavior settings
 
     // 常规声音持续时间，默认5.00
-    constant real      bj_NOTHING_SOUND_DURATION        = 5.00
+    constant real bj_NOTHING_SOUND_DURATION = 5.00
     // 单位消息延迟，默认1.00
-    constant real      bj_TRANSMISSION_PING_TIME        = 1.00
+    constant real bj_TRANSMISSION_PING_TIME = 1.00
     // 单位消息闪动指示器颜色（红），默认255
-    constant integer   bj_TRANSMISSION_IND_RED          = 255
+    constant integer bj_TRANSMISSION_IND_RED = 255
     // 单位消息闪动指示器颜色（蓝），默认255
-    constant integer   bj_TRANSMISSION_IND_BLUE         = 255
+    constant integer bj_TRANSMISSION_IND_BLUE = 255
     // 单位消息闪动指示器颜色（绿），默认255
-    constant integer   bj_TRANSMISSION_IND_GREEN        = 255
+    constant integer bj_TRANSMISSION_IND_GREEN = 255
     // 单位消息闪动指示器颜色（alpha），默认255
-    constant integer   bj_TRANSMISSION_IND_ALPHA        = 255
+    constant integer bj_TRANSMISSION_IND_ALPHA = 255
     // 单位消息画像悬空时间，默认1.50
-    constant real      bj_TRANSMISSION_PORT_HANGTIME    = 1.50
+    constant real bj_TRANSMISSION_PORT_HANGTIME = 1.50
 
     // 电影模式转换时间，默认0.50 Cinematic mode settings
-    constant real      bj_CINEMODE_INTERFACEFADE        = 0.50
+    constant real bj_CINEMODE_INTERFACEFADE = 0.50
     // 游戏默认速度，默认正常
-    constant gamespeed bj_CINEMODE_GAMESPEED            = MAP_SPEED_NORMAL
+    constant gamespeed bj_CINEMODE_GAMESPEED = MAP_SPEED_NORMAL
 
     // Cinematic mode volume levels
 
     // 电影模式默认音量 单位移动声音，默认0.40
-    constant real      bj_CINEMODE_VOLUME_UNITMOVEMENT  = 0.40
+    constant real bj_CINEMODE_VOLUME_UNITMOVEMENT = 0.40
     // 电影模式默认音量 单位回应声音，默认0.00
-    constant real      bj_CINEMODE_VOLUME_UNITSOUNDS    = 0.00
+    constant real bj_CINEMODE_VOLUME_UNITSOUNDS = 0.00
     // 电影模式默认音量 战斗声音，默认0.40
-    constant real      bj_CINEMODE_VOLUME_COMBAT        = 0.40
+    constant real bj_CINEMODE_VOLUME_COMBAT = 0.40
     // 电影模式默认音量 动画和法术声音，默认0.40
-    constant real      bj_CINEMODE_VOLUME_SPELLS        = 0.40
+    constant real bj_CINEMODE_VOLUME_SPELLS = 0.40
     // 电影模式默认音量 用户界面（UI）声音，默认0.00
-    constant real      bj_CINEMODE_VOLUME_UI            = 0.00
+    constant real bj_CINEMODE_VOLUME_UI = 0.00
     // 电影模式默认音量 音乐，默认0.55
-    constant real      bj_CINEMODE_VOLUME_MUSIC         = 0.55
+    constant real bj_CINEMODE_VOLUME_MUSIC = 0.55
     // 电影模式默认音量 场景配音，默认1.00
-    constant real      bj_CINEMODE_VOLUME_AMBIENTSOUNDS = 1.00
+    constant real bj_CINEMODE_VOLUME_AMBIENTSOUNDS = 1.00
     // 电影模式默认音量 火焰声音，默认0.60
-    constant real      bj_CINEMODE_VOLUME_FIRE          = 0.60
+    constant real bj_CINEMODE_VOLUME_FIRE = 0.60
 
     // Speech mode volume levels
 
     // 所有频道默认音量 单位移动声音，默认0.25
-    constant real      bj_SPEECH_VOLUME_UNITMOVEMENT    = 0.25
+    constant real bj_SPEECH_VOLUME_UNITMOVEMENT = 0.25
     // 所有频道默认音量 单位回应声音，默认0.00
-    constant real      bj_SPEECH_VOLUME_UNITSOUNDS      = 0.00
+    constant real bj_SPEECH_VOLUME_UNITSOUNDS = 0.00
     // 所有频道默认音量 战斗声音，默认0.25
-    constant real      bj_SPEECH_VOLUME_COMBAT          = 0.25
+    constant real bj_SPEECH_VOLUME_COMBAT = 0.25
     // 所有频道默认音量 动画和法术声音，默认0.25
-    constant real      bj_SPEECH_VOLUME_SPELLS          = 0.25
+    constant real bj_SPEECH_VOLUME_SPELLS = 0.25
     // 所有频道默认音量 用户界面（UI）声音，默认0.00
-    constant real      bj_SPEECH_VOLUME_UI              = 0.00
+    constant real bj_SPEECH_VOLUME_UI = 0.00
     // 所有频道默认音量 音乐，默认0.55
-    constant real      bj_SPEECH_VOLUME_MUSIC           = 0.55
+    constant real bj_SPEECH_VOLUME_MUSIC = 0.55
     // 所有频道默认音量 场景配音，默认1.00
-    constant real      bj_SPEECH_VOLUME_AMBIENTSOUNDS   = 1.00
+    constant real bj_SPEECH_VOLUME_AMBIENTSOUNDS = 1.00
     // 所有频道默认音量 火焰声音，默认0.60
-    constant real      bj_SPEECH_VOLUME_FIRE            = 0.60
+    constant real bj_SPEECH_VOLUME_FIRE = 0.60
 
     // Smart pan settings
 
     // 必要时平移镜头的距离限制，默认500
     // 超过该值但不超过 bj_SMARTPAN_TRESHOLD_SNAP 时，使用限定的时间平移，低于该值时不平移
-    constant real      bj_SMARTPAN_TRESHOLD_PAN         = 500
+    constant real bj_SMARTPAN_TRESHOLD_PAN = 500
     // 必要时平移镜头的距离限制，默认3500
     // 平移距离超过该值时，立即完成平移（限定的时间被替换为0秒）
-    constant real      bj_SMARTPAN_TRESHOLD_SNAP        = 3500
+    constant real bj_SMARTPAN_TRESHOLD_SNAP = 3500
 
     // QueuedTriggerExecute settings
 
     // 最大触发器队列，默认100
-    constant integer   bj_MAX_QUEUED_TRIGGERS           = 100
+    constant integer bj_MAX_QUEUED_TRIGGERS = 100
     // 触发器队列超时时间，默认180.00
-    constant real      bj_QUEUED_TRIGGER_TIMEOUT        = 180.00
+    constant real bj_QUEUED_TRIGGER_TIMEOUT = 180.00
 
     // Campaign indexing constants
 
     // 战役过场电影索引 - 混乱之治教程战役（0）
-    constant integer   bj_CAMPAIGN_INDEX_T        = 0
+    constant integer bj_CAMPAIGN_INDEX_T = 0
     // 战役过场电影索引 - 混乱之治人族战役（1）
-    constant integer   bj_CAMPAIGN_INDEX_H        = 1
+    constant integer bj_CAMPAIGN_INDEX_H = 1
     // 战役过场电影索引 - 混乱之治兽族战役（2）
-    constant integer   bj_CAMPAIGN_INDEX_U        = 2
+    constant integer bj_CAMPAIGN_INDEX_U = 2
     // 战役过场电影索引 - 混乱之治不死族战役（3）
-    constant integer   bj_CAMPAIGN_INDEX_O        = 3
+    constant integer bj_CAMPAIGN_INDEX_O = 3
     // 战役过场电影索引 - 混乱之治暗夜精灵族战役（4）
-    constant integer   bj_CAMPAIGN_INDEX_N        = 4
+    constant integer bj_CAMPAIGN_INDEX_N = 4
     // 战役过场电影索引 - 冰封王座暗夜精灵族战役（5）
-    constant integer   bj_CAMPAIGN_INDEX_XN       = 5
+    constant integer bj_CAMPAIGN_INDEX_XN = 5
     // 战役过场电影索引 - 冰封王座人族战役（6）
-    constant integer   bj_CAMPAIGN_INDEX_XH       = 6
+    constant integer bj_CAMPAIGN_INDEX_XH = 6
     // 战役过场电影索引 - 冰封王座不死族战役（7）
-    constant integer   bj_CAMPAIGN_INDEX_XU       = 7
+    constant integer bj_CAMPAIGN_INDEX_XU = 7
     // 战役过场电影索引 - 冰封王座兽族战役（8）
-    constant integer   bj_CAMPAIGN_INDEX_XO       = 8
+    constant integer bj_CAMPAIGN_INDEX_XO = 8
 
     // Campaign offset constants (for mission indexing)
 
     // 战役关卡索引 - 混乱之治教程战役（0）
-    constant integer   bj_CAMPAIGN_OFFSET_T       = 0
+    constant integer bj_CAMPAIGN_OFFSET_T = 0
     // 战役关卡索引 - 混乱之治人族战役（1）
-    constant integer   bj_CAMPAIGN_OFFSET_H       = 1
+    constant integer bj_CAMPAIGN_OFFSET_H = 1
     // 战役关卡索引 - 混乱之治不死族战役（2）
-    constant integer   bj_CAMPAIGN_OFFSET_U       = 2
+    constant integer bj_CAMPAIGN_OFFSET_U = 2
     // 战役关卡索引 - 混乱之治兽族战役（3）
-    constant integer   bj_CAMPAIGN_OFFSET_O       = 3
+    constant integer bj_CAMPAIGN_OFFSET_O = 3
     // 战役关卡索引 - 冰封王座暗夜精灵族战役（4）
-    constant integer   bj_CAMPAIGN_OFFSET_N       = 4
+    constant integer bj_CAMPAIGN_OFFSET_N = 4
     // 战役关卡索引 - 冰封王座暗夜精灵族战役（5）
-    constant integer   bj_CAMPAIGN_OFFSET_XN      = 5
+    constant integer bj_CAMPAIGN_OFFSET_XN = 5
     // 战役关卡索引 - 冰封王座人族战役（6）
-    constant integer   bj_CAMPAIGN_OFFSET_XH      = 6
+    constant integer bj_CAMPAIGN_OFFSET_XH = 6
     // 战役关卡索引 - 冰封王座不死族战役（7）
-    constant integer   bj_CAMPAIGN_OFFSET_XU      = 7
+    constant integer bj_CAMPAIGN_OFFSET_XU = 7
     // 战役关卡索引 - 冰封王座兽族战役（8）
-    constant integer   bj_CAMPAIGN_OFFSET_XO      = 8
+    constant integer bj_CAMPAIGN_OFFSET_XO = 8
 
     // Mission indexing constants
     // Tutorial
 
     // 战役关卡 - 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_T00       = bj_CAMPAIGN_OFFSET_T * 1000 + 0
+    constant integer bj_MISSION_INDEX_T00 = bj_CAMPAIGN_OFFSET_T * 1000 + 0
     // 战役关卡 - 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_T01       = bj_CAMPAIGN_OFFSET_T * 1000 + 1
+    constant integer bj_MISSION_INDEX_T01 = bj_CAMPAIGN_OFFSET_T * 1000 + 1
     // 战役关卡 - 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_T02       = bj_CAMPAIGN_OFFSET_T * 1000 + 2
+    constant integer bj_MISSION_INDEX_T02 = bj_CAMPAIGN_OFFSET_T * 1000 + 2
     // 战役关卡 - 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_T03       = bj_CAMPAIGN_OFFSET_T * 1000 + 3
+    constant integer bj_MISSION_INDEX_T03 = bj_CAMPAIGN_OFFSET_T * 1000 + 3
     // 战役关卡 - 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_T04       = bj_CAMPAIGN_OFFSET_T * 1000 + 4
+    constant integer bj_MISSION_INDEX_T04 = bj_CAMPAIGN_OFFSET_T * 1000 + 4
     // Human
 
     // 战役关卡 - 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_H00       = bj_CAMPAIGN_OFFSET_H * 1000 + 0
+    constant integer bj_MISSION_INDEX_H00 = bj_CAMPAIGN_OFFSET_H * 1000 + 0
     // 战役关卡 - 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_H01       = bj_CAMPAIGN_OFFSET_H * 1000 + 1
+    constant integer bj_MISSION_INDEX_H01 = bj_CAMPAIGN_OFFSET_H * 1000 + 1
     // 战役关卡 - 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_H02       = bj_CAMPAIGN_OFFSET_H * 1000 + 2
+    constant integer bj_MISSION_INDEX_H02 = bj_CAMPAIGN_OFFSET_H * 1000 + 2
     // 战役关卡 - 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_H03       = bj_CAMPAIGN_OFFSET_H * 1000 + 3
+    constant integer bj_MISSION_INDEX_H03 = bj_CAMPAIGN_OFFSET_H * 1000 + 3
     // 战役关卡 - 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_H04       = bj_CAMPAIGN_OFFSET_H * 1000 + 4
+    constant integer bj_MISSION_INDEX_H04 = bj_CAMPAIGN_OFFSET_H * 1000 + 4
     // 战役关卡 - 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_H05       = bj_CAMPAIGN_OFFSET_H * 1000 + 5
+    constant integer bj_MISSION_INDEX_H05 = bj_CAMPAIGN_OFFSET_H * 1000 + 5
     // 战役关卡 - 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_H06       = bj_CAMPAIGN_OFFSET_H * 1000 + 6
+    constant integer bj_MISSION_INDEX_H06 = bj_CAMPAIGN_OFFSET_H * 1000 + 6
     // 战役关卡 - 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_H07       = bj_CAMPAIGN_OFFSET_H * 1000 + 7
+    constant integer bj_MISSION_INDEX_H07 = bj_CAMPAIGN_OFFSET_H * 1000 + 7
     // 战役关卡 - 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_H08       = bj_CAMPAIGN_OFFSET_H * 1000 + 8
+    constant integer bj_MISSION_INDEX_H08 = bj_CAMPAIGN_OFFSET_H * 1000 + 8
     // 战役关卡 - 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_H09       = bj_CAMPAIGN_OFFSET_H * 1000 + 9
+    constant integer bj_MISSION_INDEX_H09 = bj_CAMPAIGN_OFFSET_H * 1000 + 9
     // 战役关卡 - 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
-    constant integer   bj_MISSION_INDEX_H10       = bj_CAMPAIGN_OFFSET_H * 1000 + 10
+    constant integer bj_MISSION_INDEX_H10 = bj_CAMPAIGN_OFFSET_H * 1000 + 10
     // 战役关卡 - 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
-    constant integer   bj_MISSION_INDEX_H11       = bj_CAMPAIGN_OFFSET_H * 1000 + 11
+    constant integer bj_MISSION_INDEX_H11 = bj_CAMPAIGN_OFFSET_H * 1000 + 11
     // Undead
 
     // 战役关卡 - 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_U00       = bj_CAMPAIGN_OFFSET_U * 1000 + 0
+    constant integer bj_MISSION_INDEX_U00 = bj_CAMPAIGN_OFFSET_U * 1000 + 0
     // 战役关卡 - 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_U01       = bj_CAMPAIGN_OFFSET_U * 1000 + 1
+    constant integer bj_MISSION_INDEX_U01 = bj_CAMPAIGN_OFFSET_U * 1000 + 1
     // 战役关卡 - 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_U02       = bj_CAMPAIGN_OFFSET_U * 1000 + 2
+    constant integer bj_MISSION_INDEX_U02 = bj_CAMPAIGN_OFFSET_U * 1000 + 2
     // 战役关卡 - 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_U03       = bj_CAMPAIGN_OFFSET_U * 1000 + 3
+    constant integer bj_MISSION_INDEX_U03 = bj_CAMPAIGN_OFFSET_U * 1000 + 3
     // 战役关卡 - 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_U05       = bj_CAMPAIGN_OFFSET_U * 1000 + 4
+    constant integer bj_MISSION_INDEX_U05 = bj_CAMPAIGN_OFFSET_U * 1000 + 4
     // 战役关卡 - 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_U07       = bj_CAMPAIGN_OFFSET_U * 1000 + 5
+    constant integer bj_MISSION_INDEX_U07 = bj_CAMPAIGN_OFFSET_U * 1000 + 5
     // 战役关卡 - 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_U08       = bj_CAMPAIGN_OFFSET_U * 1000 + 6
+    constant integer bj_MISSION_INDEX_U08 = bj_CAMPAIGN_OFFSET_U * 1000 + 6
     // 战役关卡 - 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_U09       = bj_CAMPAIGN_OFFSET_U * 1000 + 7
+    constant integer bj_MISSION_INDEX_U09 = bj_CAMPAIGN_OFFSET_U * 1000 + 7
     // 战役关卡 - 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_U10       = bj_CAMPAIGN_OFFSET_U * 1000 + 8
+    constant integer bj_MISSION_INDEX_U10 = bj_CAMPAIGN_OFFSET_U * 1000 + 8
     // 战役关卡 - 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_U11       = bj_CAMPAIGN_OFFSET_U * 1000 + 9
+    constant integer bj_MISSION_INDEX_U11 = bj_CAMPAIGN_OFFSET_U * 1000 + 9
     // Orc
 
     // 战役关卡 - 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_O00       = bj_CAMPAIGN_OFFSET_O * 1000 + 0
+    constant integer bj_MISSION_INDEX_O00 = bj_CAMPAIGN_OFFSET_O * 1000 + 0
     // 战役关卡 - 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_O01       = bj_CAMPAIGN_OFFSET_O * 1000 + 1
+    constant integer bj_MISSION_INDEX_O01 = bj_CAMPAIGN_OFFSET_O * 1000 + 1
     // 战役关卡 - 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_O02       = bj_CAMPAIGN_OFFSET_O * 1000 + 2
+    constant integer bj_MISSION_INDEX_O02 = bj_CAMPAIGN_OFFSET_O * 1000 + 2
     // 战役关卡 - 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_O03       = bj_CAMPAIGN_OFFSET_O * 1000 + 3
+    constant integer bj_MISSION_INDEX_O03 = bj_CAMPAIGN_OFFSET_O * 1000 + 3
     // 战役关卡 - 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_O04       = bj_CAMPAIGN_OFFSET_O * 1000 + 4
+    constant integer bj_MISSION_INDEX_O04 = bj_CAMPAIGN_OFFSET_O * 1000 + 4
     // 战役关卡 - 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_O05       = bj_CAMPAIGN_OFFSET_O * 1000 + 5
+    constant integer bj_MISSION_INDEX_O05 = bj_CAMPAIGN_OFFSET_O * 1000 + 5
     // 战役关卡 - 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_O06       = bj_CAMPAIGN_OFFSET_O * 1000 + 6
+    constant integer bj_MISSION_INDEX_O06 = bj_CAMPAIGN_OFFSET_O * 1000 + 6
     // 战役关卡 - 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_O07       = bj_CAMPAIGN_OFFSET_O * 1000 + 7
+    constant integer bj_MISSION_INDEX_O07 = bj_CAMPAIGN_OFFSET_O * 1000 + 7
     // 战役关卡 - 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_O08       = bj_CAMPAIGN_OFFSET_O * 1000 + 8
+    constant integer bj_MISSION_INDEX_O08 = bj_CAMPAIGN_OFFSET_O * 1000 + 8
     // 战役关卡 - 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_O09       = bj_CAMPAIGN_OFFSET_O * 1000 + 9
+    constant integer bj_MISSION_INDEX_O09 = bj_CAMPAIGN_OFFSET_O * 1000 + 9
     // 战役关卡 - 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
-    constant integer   bj_MISSION_INDEX_O10       = bj_CAMPAIGN_OFFSET_O * 1000 + 10
+    constant integer bj_MISSION_INDEX_O10 = bj_CAMPAIGN_OFFSET_O * 1000 + 10
     // Night Elf
 
     // 战役关卡 - 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_N00       = bj_CAMPAIGN_OFFSET_N * 1000 + 0
+    constant integer bj_MISSION_INDEX_N00 = bj_CAMPAIGN_OFFSET_N * 1000 + 0
     // 战役关卡 - 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_N01       = bj_CAMPAIGN_OFFSET_N * 1000 + 1
+    constant integer bj_MISSION_INDEX_N01 = bj_CAMPAIGN_OFFSET_N * 1000 + 1
     // 战役关卡 - 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_N02       = bj_CAMPAIGN_OFFSET_N * 1000 + 2
+    constant integer bj_MISSION_INDEX_N02 = bj_CAMPAIGN_OFFSET_N * 1000 + 2
     // 战役关卡 - 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_N03       = bj_CAMPAIGN_OFFSET_N * 1000 + 3
+    constant integer bj_MISSION_INDEX_N03 = bj_CAMPAIGN_OFFSET_N * 1000 + 3
     // 战役关卡 - 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_N04       = bj_CAMPAIGN_OFFSET_N * 1000 + 4
+    constant integer bj_MISSION_INDEX_N04 = bj_CAMPAIGN_OFFSET_N * 1000 + 4
     // 战役关卡 - 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_N05       = bj_CAMPAIGN_OFFSET_N * 1000 + 5
+    constant integer bj_MISSION_INDEX_N05 = bj_CAMPAIGN_OFFSET_N * 1000 + 5
     // 战役关卡 - 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_N06       = bj_CAMPAIGN_OFFSET_N * 1000 + 6
+    constant integer bj_MISSION_INDEX_N06 = bj_CAMPAIGN_OFFSET_N * 1000 + 6
     // 战役关卡 - 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_N07       = bj_CAMPAIGN_OFFSET_N * 1000 + 7
+    constant integer bj_MISSION_INDEX_N07 = bj_CAMPAIGN_OFFSET_N * 1000 + 7
     // 战役关卡 - 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_N08       = bj_CAMPAIGN_OFFSET_N * 1000 + 8
+    constant integer bj_MISSION_INDEX_N08 = bj_CAMPAIGN_OFFSET_N * 1000 + 8
     // 战役关卡 - 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_N09       = bj_CAMPAIGN_OFFSET_N * 1000 + 9
+    constant integer bj_MISSION_INDEX_N09 = bj_CAMPAIGN_OFFSET_N * 1000 + 9
     // Expansion Night Elf
 
     // 战役关卡 - 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_XN00       = bj_CAMPAIGN_OFFSET_XN * 1000 + 0
+    constant integer bj_MISSION_INDEX_XN00 = bj_CAMPAIGN_OFFSET_XN * 1000 + 0
     // 战役关卡 - 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_XN01       = bj_CAMPAIGN_OFFSET_XN * 1000 + 1
+    constant integer bj_MISSION_INDEX_XN01 = bj_CAMPAIGN_OFFSET_XN * 1000 + 1
     // 战役关卡 - 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_XN02       = bj_CAMPAIGN_OFFSET_XN * 1000 + 2
+    constant integer bj_MISSION_INDEX_XN02 = bj_CAMPAIGN_OFFSET_XN * 1000 + 2
     // 战役关卡 - 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_XN03       = bj_CAMPAIGN_OFFSET_XN * 1000 + 3
+    constant integer bj_MISSION_INDEX_XN03 = bj_CAMPAIGN_OFFSET_XN * 1000 + 3
     // 战役关卡 - 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_XN04       = bj_CAMPAIGN_OFFSET_XN * 1000 + 4
+    constant integer bj_MISSION_INDEX_XN04 = bj_CAMPAIGN_OFFSET_XN * 1000 + 4
     // 战役关卡 - 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_XN05       = bj_CAMPAIGN_OFFSET_XN * 1000 + 5
+    constant integer bj_MISSION_INDEX_XN05 = bj_CAMPAIGN_OFFSET_XN * 1000 + 5
     // 战役关卡 - 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_XN06       = bj_CAMPAIGN_OFFSET_XN * 1000 + 6
+    constant integer bj_MISSION_INDEX_XN06 = bj_CAMPAIGN_OFFSET_XN * 1000 + 6
     // 战役关卡 - 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_XN07       = bj_CAMPAIGN_OFFSET_XN * 1000 + 7
+    constant integer bj_MISSION_INDEX_XN07 = bj_CAMPAIGN_OFFSET_XN * 1000 + 7
     // 战役关卡 - 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_XN08       = bj_CAMPAIGN_OFFSET_XN * 1000 + 8
+    constant integer bj_MISSION_INDEX_XN08 = bj_CAMPAIGN_OFFSET_XN * 1000 + 8
     // 战役关卡 - 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_XN09       = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
+    constant integer bj_MISSION_INDEX_XN09 = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
     // 战役关卡 - 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
-    constant integer   bj_MISSION_INDEX_XN10       = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
+    constant integer bj_MISSION_INDEX_XN10 = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
     // Expansion Human
 
     // 战役关卡 - 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_XH00       = bj_CAMPAIGN_OFFSET_XH * 1000 + 0
+    constant integer bj_MISSION_INDEX_XH00 = bj_CAMPAIGN_OFFSET_XH * 1000 + 0
     // 战役关卡 - 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_XH01       = bj_CAMPAIGN_OFFSET_XH * 1000 + 1
+    constant integer bj_MISSION_INDEX_XH01 = bj_CAMPAIGN_OFFSET_XH * 1000 + 1
     // 战役关卡 - 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_XH02       = bj_CAMPAIGN_OFFSET_XH * 1000 + 2
+    constant integer bj_MISSION_INDEX_XH02 = bj_CAMPAIGN_OFFSET_XH * 1000 + 2
     // 战役关卡 - 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_XH03       = bj_CAMPAIGN_OFFSET_XH * 1000 + 3
+    constant integer bj_MISSION_INDEX_XH03 = bj_CAMPAIGN_OFFSET_XH * 1000 + 3
     // 战役关卡 - 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_XH04       = bj_CAMPAIGN_OFFSET_XH * 1000 + 4
+    constant integer bj_MISSION_INDEX_XH04 = bj_CAMPAIGN_OFFSET_XH * 1000 + 4
     // 战役关卡 - 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_XH05       = bj_CAMPAIGN_OFFSET_XH * 1000 + 5
+    constant integer bj_MISSION_INDEX_XH05 = bj_CAMPAIGN_OFFSET_XH * 1000 + 5
     // 战役关卡 - 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_XH06       = bj_CAMPAIGN_OFFSET_XH * 1000 + 6
+    constant integer bj_MISSION_INDEX_XH06 = bj_CAMPAIGN_OFFSET_XH * 1000 + 6
     // 战役关卡 - 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_XH07       = bj_CAMPAIGN_OFFSET_XH * 1000 + 7
+    constant integer bj_MISSION_INDEX_XH07 = bj_CAMPAIGN_OFFSET_XH * 1000 + 7
     // 战役关卡 - 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_XH08       = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
+    constant integer bj_MISSION_INDEX_XH08 = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
     // 战役关卡 - 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_XH09       = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
+    constant integer bj_MISSION_INDEX_XH09 = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
     // Expansion Undead
 
     // 战役关卡 - 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_XU00       = bj_CAMPAIGN_OFFSET_XU * 1000 + 0
+    constant integer bj_MISSION_INDEX_XU00 = bj_CAMPAIGN_OFFSET_XU * 1000 + 0
     // 战役关卡 - 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_XU01       = bj_CAMPAIGN_OFFSET_XU * 1000 + 1
+    constant integer bj_MISSION_INDEX_XU01 = bj_CAMPAIGN_OFFSET_XU * 1000 + 1
     // 战役关卡 - 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_XU02       = bj_CAMPAIGN_OFFSET_XU * 1000 + 2
+    constant integer bj_MISSION_INDEX_XU02 = bj_CAMPAIGN_OFFSET_XU * 1000 + 2
     // 战役关卡 - 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_XU03       = bj_CAMPAIGN_OFFSET_XU * 1000 + 3
+    constant integer bj_MISSION_INDEX_XU03 = bj_CAMPAIGN_OFFSET_XU * 1000 + 3
     // 战役关卡 - 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
-    constant integer   bj_MISSION_INDEX_XU04       = bj_CAMPAIGN_OFFSET_XU * 1000 + 4
+    constant integer bj_MISSION_INDEX_XU04 = bj_CAMPAIGN_OFFSET_XU * 1000 + 4
     // 战役关卡 - 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
-    constant integer   bj_MISSION_INDEX_XU05       = bj_CAMPAIGN_OFFSET_XU * 1000 + 5
+    constant integer bj_MISSION_INDEX_XU05 = bj_CAMPAIGN_OFFSET_XU * 1000 + 5
     // 战役关卡 - 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
-    constant integer   bj_MISSION_INDEX_XU06       = bj_CAMPAIGN_OFFSET_XU * 1000 + 6
+    constant integer bj_MISSION_INDEX_XU06 = bj_CAMPAIGN_OFFSET_XU * 1000 + 6
     // 战役关卡 - 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
-    constant integer   bj_MISSION_INDEX_XU07       = bj_CAMPAIGN_OFFSET_XU * 1000 + 7
+    constant integer bj_MISSION_INDEX_XU07 = bj_CAMPAIGN_OFFSET_XU * 1000 + 7
     // 战役关卡 - 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
-    constant integer   bj_MISSION_INDEX_XU08       = bj_CAMPAIGN_OFFSET_XU * 1000 + 8
+    constant integer bj_MISSION_INDEX_XU08 = bj_CAMPAIGN_OFFSET_XU * 1000 + 8
     // 战役关卡 - 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
-    constant integer   bj_MISSION_INDEX_XU09       = bj_CAMPAIGN_OFFSET_XU * 1000 + 9
+    constant integer bj_MISSION_INDEX_XU09 = bj_CAMPAIGN_OFFSET_XU * 1000 + 9
     // 战役关卡 - 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
-    constant integer   bj_MISSION_INDEX_XU10       = bj_CAMPAIGN_OFFSET_XU * 1000 + 10
+    constant integer bj_MISSION_INDEX_XU10 = bj_CAMPAIGN_OFFSET_XU * 1000 + 10
     // 战役关卡 - 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
-    constant integer   bj_MISSION_INDEX_XU11       = bj_CAMPAIGN_OFFSET_XU * 1000 + 11
+    constant integer bj_MISSION_INDEX_XU11 = bj_CAMPAIGN_OFFSET_XU * 1000 + 11
     // 战役关卡 - 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
-    constant integer   bj_MISSION_INDEX_XU12       = bj_CAMPAIGN_OFFSET_XU * 1000 + 12
+    constant integer bj_MISSION_INDEX_XU12 = bj_CAMPAIGN_OFFSET_XU * 1000 + 12
     // 战役关卡 - 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
-    constant integer   bj_MISSION_INDEX_XU13       = bj_CAMPAIGN_OFFSET_XU * 1000 + 13
+    constant integer bj_MISSION_INDEX_XU13 = bj_CAMPAIGN_OFFSET_XU * 1000 + 13
     // Expansion Orc
 
     // 战役关卡 - 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
-    constant integer   bj_MISSION_INDEX_XO00       = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
+    constant integer bj_MISSION_INDEX_XO00 = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
     // 战役关卡 - 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
-    constant integer   bj_MISSION_INDEX_XO01       = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
+    constant integer bj_MISSION_INDEX_XO01 = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
     // 战役关卡 - 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
-    constant integer   bj_MISSION_INDEX_XO02       = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
+    constant integer bj_MISSION_INDEX_XO02 = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
     // 战役关卡 - 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
-    constant integer   bj_MISSION_INDEX_XO03       = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
+    constant integer bj_MISSION_INDEX_XO03 = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
     // Cinematic indexing constants
 
     // 战役过场电影名称 - 教程（0）
-    constant integer   bj_CINEMATICINDEX_TOP      = 0
+    constant integer bj_CINEMATICINDEX_TOP = 0
     // 战役过场电影名称 - 人族开场（1）
-    constant integer   bj_CINEMATICINDEX_HOP      = 1
+    constant integer bj_CINEMATICINDEX_HOP = 1
     // 战役过场电影名称 - 人族结尾（2）
-    constant integer   bj_CINEMATICINDEX_HED      = 2
+    constant integer bj_CINEMATICINDEX_HED = 2
     // 战役过场电影名称 - 兽族开场（3）
-    constant integer   bj_CINEMATICINDEX_OOP      = 3
+    constant integer bj_CINEMATICINDEX_OOP = 3
     // 战役过场电影名称 - 兽族结尾（4）
-    constant integer   bj_CINEMATICINDEX_OED      = 4
+    constant integer bj_CINEMATICINDEX_OED = 4
     // 战役过场电影名称 - 不死族开场（5）
-    constant integer   bj_CINEMATICINDEX_UOP      = 5
+    constant integer bj_CINEMATICINDEX_UOP = 5
     // 战役过场电影名称 - 不死族结尾（6）
-    constant integer   bj_CINEMATICINDEX_UED      = 6
+    constant integer bj_CINEMATICINDEX_UED = 6
     // 战役过场电影名称 - 暗夜精灵族开场（7）
-    constant integer   bj_CINEMATICINDEX_NOP      = 7
+    constant integer bj_CINEMATICINDEX_NOP = 7
     // 战役过场电影名称 - 暗夜精灵族结尾（8）
-    constant integer   bj_CINEMATICINDEX_NED      = 8
+    constant integer bj_CINEMATICINDEX_NED = 8
     // 战役过场电影名称 - 冰封王座开场（9）
-    constant integer   bj_CINEMATICINDEX_XOP      = 9
+    constant integer bj_CINEMATICINDEX_XOP = 9
     // 战役过场电影名称 - 冰封王座结尾（10）
-    constant integer   bj_CINEMATICINDEX_XED      = 10
+    constant integer bj_CINEMATICINDEX_XED = 10
 
     // Alliance settings
 
     // 联盟设置 - 相互敌对
-    constant integer   bj_ALLIANCE_UNALLIED        = 0
+    constant integer bj_ALLIANCE_UNALLIED = 0
     // 联盟设置 - 相互敌对但共享视野
-    constant integer   bj_ALLIANCE_UNALLIED_VISION = 1
+    constant integer bj_ALLIANCE_UNALLIED_VISION = 1
     // 联盟设置 - 相互结盟
-    constant integer   bj_ALLIANCE_ALLIED          = 2
+    constant integer bj_ALLIANCE_ALLIED = 2
     // 联盟设置 - 相互结盟且共享视野
-    constant integer   bj_ALLIANCE_ALLIED_VISION   = 3
+    constant integer bj_ALLIANCE_ALLIED_VISION = 3
     // 联盟设置 - 相互结盟并共享视野和部分单位
-    constant integer   bj_ALLIANCE_ALLIED_UNITS    = 4
+    constant integer bj_ALLIANCE_ALLIED_UNITS = 4
     // 联盟设置 - 相互结盟并共享视野和所有单位
-    constant integer   bj_ALLIANCE_ALLIED_ADVUNITS = 5
+    constant integer bj_ALLIANCE_ALLIED_ADVUNITS = 5
     // 联盟设置 - 相互中立
-    constant integer   bj_ALLIANCE_NEUTRAL         = 6
+    constant integer bj_ALLIANCE_NEUTRAL = 6
     // 联盟设置 - 相互中立但共享视野
-    constant integer   bj_ALLIANCE_NEUTRAL_VISION  = 7
+    constant integer bj_ALLIANCE_NEUTRAL_VISION = 7
 
     // Keyboard Event Types
 
     // 键盘事件  按下按键
-    constant integer   bj_KEYEVENTTYPE_DEPRESS     = 0
+    constant integer bj_KEYEVENTTYPE_DEPRESS = 0
     // 键盘事件  松开按键
-    constant integer   bj_KEYEVENTTYPE_RELEASE     = 1
+    constant integer bj_KEYEVENTTYPE_RELEASE = 1
 
     // Keyboard Event Keys
 
     // 键盘按键事件 方向键（左）
-    constant integer   bj_KEYEVENTKEY_LEFT         = 0
+    constant integer bj_KEYEVENTKEY_LEFT = 0
     // 键盘按键事件 方向键（右）
-    constant integer   bj_KEYEVENTKEY_RIGHT        = 1
+    constant integer bj_KEYEVENTKEY_RIGHT = 1
     // 键盘按键事件 方向键（上）
-    constant integer   bj_KEYEVENTKEY_DOWN         = 2
+    constant integer bj_KEYEVENTKEY_DOWN = 2
     // 键盘按键事件 方向键（下）
-    constant integer   bj_KEYEVENTKEY_UP           = 3
+    constant integer bj_KEYEVENTKEY_UP = 3
 
     // Mouse Event Types
 
     // 鼠标事件  按下
-    constant integer   bj_MOUSEEVENTTYPE_DOWN     = 0
+    constant integer bj_MOUSEEVENTTYPE_DOWN = 0
     // 鼠标事件  松开
-    constant integer   bj_MOUSEEVENTTYPE_UP       = 1
+    constant integer bj_MOUSEEVENTTYPE_UP = 1
     // 鼠标事件  移动
-    constant integer   bj_MOUSEEVENTTYPE_MOVE     = 2
+    constant integer bj_MOUSEEVENTTYPE_MOVE = 2
 
     // Transmission timing methods
 
     // 传输时间方法 - 时间类型 - 增加
-    constant integer   bj_TIMETYPE_ADD             = 0
+    constant integer bj_TIMETYPE_ADD = 0
     // 传输时间方法 - 时间类型 - 设为（指定值）
-    constant integer   bj_TIMETYPE_SET             = 1
+    constant integer bj_TIMETYPE_SET = 1
     // 传输时间方法 - 时间类型 - 减少
-    constant integer   bj_TIMETYPE_SUB             = 2
+    constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
 
     // 镜头界限调整 - 扩张
-    constant integer   bj_CAMERABOUNDS_ADJUST_ADD  = 0
+    constant integer bj_CAMERABOUNDS_ADJUST_ADD = 0
     // 镜头界限调整 - 收缩
-    constant integer   bj_CAMERABOUNDS_ADJUST_SUB  = 1
+    constant integer bj_CAMERABOUNDS_ADJUST_SUB = 1
 
     // Quest creation states
 
     // 任务类型（创建任务时设置） 主要/主线任务
-    constant integer   bj_QUESTTYPE_REQ_DISCOVERED   = 0
+    constant integer bj_QUESTTYPE_REQ_DISCOVERED = 0
     // 任务类型（创建任务时设置） 主要/主线任务（未发现）
-    constant integer   bj_QUESTTYPE_REQ_UNDISCOVERED = 1
+    constant integer bj_QUESTTYPE_REQ_UNDISCOVERED = 1
     // 任务类型（创建任务时设置） 可选/支线任务
-    constant integer   bj_QUESTTYPE_OPT_DISCOVERED   = 2
+    constant integer bj_QUESTTYPE_OPT_DISCOVERED = 2
     // 任务类型（创建任务时设置） 可选/支线任务（未发现）
-    constant integer   bj_QUESTTYPE_OPT_UNDISCOVERED = 3
+    constant integer bj_QUESTTYPE_OPT_UNDISCOVERED = 3
 
     // Quest message types
 
     // 任务信息类型 发现任务
-    constant integer   bj_QUESTMESSAGE_DISCOVERED    = 0
+    constant integer bj_QUESTMESSAGE_DISCOVERED = 0
     // 任务信息类型 任务更新
-    constant integer   bj_QUESTMESSAGE_UPDATED       = 1
+    constant integer bj_QUESTMESSAGE_UPDATED = 1
     // 任务信息类型 任务完成
-    constant integer   bj_QUESTMESSAGE_COMPLETED     = 2
+    constant integer bj_QUESTMESSAGE_COMPLETED = 2
     // 任务信息类型 任务失败
-    constant integer   bj_QUESTMESSAGE_FAILED        = 3
+    constant integer bj_QUESTMESSAGE_FAILED = 3
     // 任务信息类型 任务要求
-    constant integer   bj_QUESTMESSAGE_REQUIREMENT   = 4
+    constant integer bj_QUESTMESSAGE_REQUIREMENT = 4
     // 任务信息类型 任务失败
-    constant integer   bj_QUESTMESSAGE_MISSIONFAILED = 5
+    constant integer bj_QUESTMESSAGE_MISSIONFAILED = 5
     // 任务信息类型 提示
-    constant integer   bj_QUESTMESSAGE_ALWAYSHINT    = 6
+    constant integer bj_QUESTMESSAGE_ALWAYSHINT = 6
     // 任务信息类型 简单提示
-    constant integer   bj_QUESTMESSAGE_HINT          = 7
+    constant integer bj_QUESTMESSAGE_HINT = 7
     // 任务信息类型 秘密
-    constant integer   bj_QUESTMESSAGE_SECRET        = 8
+    constant integer bj_QUESTMESSAGE_SECRET = 8
     // 任务信息类型 获得新单位
-    constant integer   bj_QUESTMESSAGE_UNITACQUIRED  = 9
+    constant integer bj_QUESTMESSAGE_UNITACQUIRED = 9
     // 任务信息类型 新单位可用（新获得单位的介绍）
-    constant integer   bj_QUESTMESSAGE_UNITAVAILABLE = 10
+    constant integer bj_QUESTMESSAGE_UNITAVAILABLE = 10
     // 任务信息类型 获得新物品
-    constant integer   bj_QUESTMESSAGE_ITEMACQUIRED  = 11
+    constant integer bj_QUESTMESSAGE_ITEMACQUIRED = 11
     // 任务信息类型 警告
-    constant integer   bj_QUESTMESSAGE_WARNING       = 12
+    constant integer bj_QUESTMESSAGE_WARNING = 12
 
     // Leaderboard sorting methods
 
     // 排行榜排序类型 - 按分值排序
-    constant integer   bj_SORTTYPE_SORTBYVALUE     = 0
+    constant integer bj_SORTTYPE_SORTBYVALUE = 0
     // 排行榜排序类型 - 按玩家排序
-    constant integer   bj_SORTTYPE_SORTBYPLAYER    = 1
+    constant integer bj_SORTTYPE_SORTBYPLAYER = 1
     // 排行榜排序类型 - 按文本排序
-    constant integer   bj_SORTTYPE_SORTBYLABEL     = 2
+    constant integer bj_SORTTYPE_SORTBYLABEL = 2
 
     // Cinematic fade filter methods
 
     // 电影淡化 - 淡入
-    constant integer   bj_CINEFADETYPE_FADEIN      = 0
+    constant integer bj_CINEFADETYPE_FADEIN = 0
     // 电影淡化 - 淡出
-    constant integer   bj_CINEFADETYPE_FADEOUT     = 1
+    constant integer bj_CINEFADETYPE_FADEOUT = 1
     // 电影淡化 - 淡出并淡入（一并使用）
-    constant integer   bj_CINEFADETYPE_FADEOUTIN   = 2
+    constant integer bj_CINEFADETYPE_FADEOUTIN = 2
 
     // Buff removal methods
 
     // BUFF属性 - 按类别删除BUFF 肯定（正面BUFF）
-    constant integer   bj_REMOVEBUFFS_POSITIVE     = 0
+    constant integer bj_REMOVEBUFFS_POSITIVE = 0
     // BUFF属性 - 按类别删除BUFF 否定（负面BUFF）
-    constant integer   bj_REMOVEBUFFS_NEGATIVE     = 1
+    constant integer bj_REMOVEBUFFS_NEGATIVE = 1
     // BUFF属性 - 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
-    constant integer   bj_REMOVEBUFFS_ALL          = 2
+    constant integer bj_REMOVEBUFFS_ALL = 2
     // BUFF属性 - 按类别删除BUFF 除终止计时器外的全部
-    constant integer   bj_REMOVEBUFFS_NONTLIFE     = 3
+    constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
 
     // BUFF属性 - 极性 肯定（正面BUFF）
-    constant integer   bj_BUFF_POLARITY_POSITIVE   = 0
+    constant integer bj_BUFF_POLARITY_POSITIVE = 0
     // BUFF属性 - 极性 否定（负面BUFF）
-    constant integer   bj_BUFF_POLARITY_NEGATIVE   = 1
+    constant integer bj_BUFF_POLARITY_NEGATIVE = 1
     // BUFF属性 - 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
-    constant integer   bj_BUFF_POLARITY_EITHER     = 2
+    constant integer bj_BUFF_POLARITY_EITHER = 2
 
     // Buff properties - resist type
 
     // BUFF属性 魔法BUFF
-    constant integer   bj_BUFF_RESIST_MAGIC        = 0
+    constant integer bj_BUFF_RESIST_MAGIC = 0
     // BUFF属性 物理BUFF
-    constant integer   bj_BUFF_RESIST_PHYSICAL     = 1
+    constant integer bj_BUFF_RESIST_PHYSICAL = 1
     // BUFF属性 物理BUFF 或 魔法BUFF
-    constant integer   bj_BUFF_RESIST_EITHER       = 2
+    constant integer bj_BUFF_RESIST_EITHER = 2
     // BUFF属性 物理BUFF 和 魔法BUFF
-    constant integer   bj_BUFF_RESIST_BOTH         = 3
+    constant integer bj_BUFF_RESIST_BOTH = 3
 
     // Hero stats
 
     // 英雄数值统计 力量值
-    constant integer   bj_HEROSTAT_STR             = 0
+    constant integer bj_HEROSTAT_STR = 0
     // 英雄数值统计 敏捷值
-    constant integer   bj_HEROSTAT_AGI             = 1
+    constant integer bj_HEROSTAT_AGI = 1
     // 英雄数值统计 智力值
-    constant integer   bj_HEROSTAT_INT             = 2
+    constant integer bj_HEROSTAT_INT = 2
 
     // Hero skill point modification methods
 
     // 英雄技能点 - 增加
-    constant integer   bj_MODIFYMETHOD_ADD    = 0
+    constant integer bj_MODIFYMETHOD_ADD = 0
     // 英雄技能点 - 减少
-    constant integer   bj_MODIFYMETHOD_SUB    = 1
+    constant integer bj_MODIFYMETHOD_SUB = 1
     // 英雄技能点 - 设为（指定值）
-    constant integer   bj_MODIFYMETHOD_SET    = 2
+    constant integer bj_MODIFYMETHOD_SET = 2
 
     // Unit state adjustment methods (for replaced units)
 
     // 替换单位时，新单位生命值和魔法值为 旧单位 的值
-    constant integer   bj_UNIT_STATE_METHOD_ABSOLUTE = 0
+    constant integer bj_UNIT_STATE_METHOD_ABSOLUTE = 0
     // 替换单位时，新单位生命值和魔法值为 旧单位相关物 的值
-    constant integer   bj_UNIT_STATE_METHOD_RELATIVE = 1
+    constant integer bj_UNIT_STATE_METHOD_RELATIVE = 1
     // 替换单位时，新单位生命值和魔法值为 新单位的默认值
-    constant integer   bj_UNIT_STATE_METHOD_DEFAULTS = 2
+    constant integer bj_UNIT_STATE_METHOD_DEFAULTS = 2
     // 替换单位时，新单位生命值和魔法值为 使用新单位的最大值
-    constant integer   bj_UNIT_STATE_METHOD_MAXIMUM  = 3
+    constant integer bj_UNIT_STATE_METHOD_MAXIMUM = 3
 
     // Gate operations
 
     // 操作可破坏物 - 关闭门
-    constant integer   bj_GATEOPERATION_CLOSE      = 0
+    constant integer bj_GATEOPERATION_CLOSE = 0
     // 操作可破坏物 - 开启门
-    constant integer   bj_GATEOPERATION_OPEN       = 1
+    constant integer bj_GATEOPERATION_OPEN = 1
     // 操作可破坏物 - 摧毁门
-    constant integer   bj_GATEOPERATION_DESTROY    = 2
+    constant integer bj_GATEOPERATION_DESTROY = 2
 
 	// Game cache value types
 
 	// 游戏缓存类型 - 布尔值
-	constant integer   bj_GAMECACHE_BOOLEAN                 = 0
+	constant integer bj_GAMECACHE_BOOLEAN = 0
 	// 游戏缓存类型 - 整数
-	constant integer   bj_GAMECACHE_INTEGER                 = 1
+	constant integer bj_GAMECACHE_INTEGER = 1
 	// 游戏缓存类型 - 实数
-	constant integer   bj_GAMECACHE_REAL                    = 2
+	constant integer bj_GAMECACHE_REAL = 2
 	// 游戏缓存类型 - 单位
-	constant integer   bj_GAMECACHE_UNIT                    = 3
+	constant integer bj_GAMECACHE_UNIT = 3
 	// 游戏缓存类型 - 字符串
-	constant integer   bj_GAMECACHE_STRING                  = 4
+	constant integer bj_GAMECACHE_STRING = 4
 	
 	// Hashtable value types
 
 	// 哈希表类型 - 布尔值
-	constant integer   bj_HASHTABLE_BOOLEAN                 = 0
+	constant integer bj_HASHTABLE_BOOLEAN = 0
 	// 哈希表类型 - 整数
-	constant integer   bj_HASHTABLE_INTEGER                 = 1
+	constant integer bj_HASHTABLE_INTEGER = 1
 	// 哈希表类型 - 实数
-	constant integer   bj_HASHTABLE_REAL                    = 2
+	constant integer bj_HASHTABLE_REAL = 2
 	// 哈希表类型 - 字符串
-	constant integer   bj_HASHTABLE_STRING                  = 3
+	constant integer bj_HASHTABLE_STRING = 3
 	// 哈希表类型 - 句柄
-	constant integer   bj_HASHTABLE_HANDLE                  = 4
+	constant integer bj_HASHTABLE_HANDLE = 4
 
     // Item status types
 
     // 物品状态 隐藏的
-    constant integer   bj_ITEM_STATUS_HIDDEN       = 0
+    constant integer bj_ITEM_STATUS_HIDDEN = 0
     // 物品状态 拥有的
-    constant integer   bj_ITEM_STATUS_OWNED        = 1
+    constant integer bj_ITEM_STATUS_OWNED = 1
     // 物品状态 无敌的
-    constant integer   bj_ITEM_STATUS_INVULNERABLE = 2
+    constant integer bj_ITEM_STATUS_INVULNERABLE = 2
     // 物品状态 力量提升的
-    constant integer   bj_ITEM_STATUS_POWERUP      = 3
+    constant integer bj_ITEM_STATUS_POWERUP = 3
     // 物品状态 可出售的
-    constant integer   bj_ITEM_STATUS_SELLABLE     = 4
+    constant integer bj_ITEM_STATUS_SELLABLE = 4
     // 物品状态 可以被抵押掉的
-    constant integer   bj_ITEM_STATUS_PAWNABLE     = 5
+    constant integer bj_ITEM_STATUS_PAWNABLE = 5
 
     // Itemcode status types
 
     // 物品类型 力量提升的
-    constant integer   bj_ITEMCODE_STATUS_POWERUP  = 0
+    constant integer bj_ITEMCODE_STATUS_POWERUP = 0
     // 物品类型 可出售的
-    constant integer   bj_ITEMCODE_STATUS_SELLABLE = 1
+    constant integer bj_ITEMCODE_STATUS_SELLABLE = 1
     // 物品类型 可以被抵押掉的
-    constant integer   bj_ITEMCODE_STATUS_PAWNABLE = 2
+    constant integer bj_ITEMCODE_STATUS_PAWNABLE = 2
 
     // Minimap ping styles
 
     // 小地图提示样式 - 简易
-    constant integer   bj_MINIMAPPINGSTYLE_SIMPLE  = 0
+    constant integer bj_MINIMAPPINGSTYLE_SIMPLE = 0
     // 小地图提示样式 - 闪烁
-    constant integer   bj_MINIMAPPINGSTYLE_FLASHY  = 1
+    constant integer bj_MINIMAPPINGSTYLE_FLASHY = 1
     // 小地图提示样式 - 警告
-    constant integer   bj_MINIMAPPINGSTYLE_ATTACK  = 2
+    constant integer bj_MINIMAPPINGSTYLE_ATTACK = 2
 	
     // Campaign Minimap icon styles
 
     // 小地图（任务）图标样式 主任务图标（普通）
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY			= 0
+    constant integer bj_CAMPPINGSTYLE_PRIMARY = 0
     // 小地图（任务）图标样式 主任务图标（绿色）
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY_GREEN   = 1
+    constant integer bj_CAMPPINGSTYLE_PRIMARY_GREEN = 1
     // 小地图（任务）图标样式 主任务图标（红色）
-    constant integer   bj_CAMPPINGSTYLE_PRIMARY_RED     = 2
+    constant integer bj_CAMPPINGSTYLE_PRIMARY_RED = 2
     // 小地图（任务）图标样式 任务奖励图标
-    constant integer   bj_CAMPPINGSTYLE_BONUS			= 3
+    constant integer bj_CAMPPINGSTYLE_BONUS = 3
     // 小地图（任务）图标样式 任务交付图标
-    constant integer   bj_CAMPPINGSTYLE_TURNIN			= 4
+    constant integer bj_CAMPPINGSTYLE_TURNIN = 4
     // 小地图（任务）图标样式 任务BOSS图标
-	constant integer   bj_CAMPPINGSTYLE_BOSS			= 5
+	constant integer bj_CAMPPINGSTYLE_BOSS = 5
     // 小地图（任务）图标样式 友方占领图标
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
+	constant integer bj_CAMPPINGSTYLE_CONTROL_ALLY	= 6
     // 小地图（任务）图标样式 中立图标（无人占领）
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
+	constant integer bj_CAMPPINGSTYLE_CONTROL_NEUTRAL	= 7
     // 小地图（任务）图标样式 敌方占领图标
-	constant integer   bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
+	constant integer bj_CAMPPINGSTYLE_CONTROL_ENEMY	= 8
 
     // Corpse creation settings
 
     // 尸体死亡时间上限，默认8.00
-    constant real      bj_CORPSE_MAX_DEATH_TIME    = 8.00
+    constant real bj_CORPSE_MAX_DEATH_TIME = 8.00
 
     // Corpse creation styles
 
     // 尸体类型 - 骨头
-    constant integer   bj_CORPSETYPE_FLESH         = 0
+    constant integer bj_CORPSETYPE_FLESH = 0
     // 尸体类型 - 血肉
-    constant integer   bj_CORPSETYPE_BONE          = 1
+    constant integer bj_CORPSETYPE_BONE = 1
 
     // Elevator pathing-blocker destructable code
 
     // 升降台墙 物编代码 'DTep'
     // 可在物编的 可破坏物 分类下找到
-    constant integer   bj_ELEVATOR_BLOCKER_CODE    = 'DTep'
+    constant integer bj_ELEVATOR_BLOCKER_CODE = 'DTep'
     // 升降台1 物编代码 'DTrf'
     // 可在物编的 可破坏物 分类下找到
-    constant integer   bj_ELEVATOR_CODE01          = 'DTrf'
+    constant integer bj_ELEVATOR_CODE01 = 'DTrf'
     // 升降台2 物编代码 'DTrx'
     // 可在物编的 可破坏物 分类下找到
-    constant integer   bj_ELEVATOR_CODE02          = 'DTrx'
+    constant integer bj_ELEVATOR_CODE02 = 'DTrx'
 
     // Elevator wall codes
 
     // 升降台墙壁 所有墙
-    constant integer   bj_ELEVATOR_WALL_TYPE_ALL        = 0
+    constant integer bj_ELEVATOR_WALL_TYPE_ALL = 0
     // 升降台墙壁 东墙
-    constant integer   bj_ELEVATOR_WALL_TYPE_EAST       = 1
+    constant integer bj_ELEVATOR_WALL_TYPE_EAST = 1
     // 升降台墙壁 北墙
-    constant integer   bj_ELEVATOR_WALL_TYPE_NORTH      = 2
+    constant integer bj_ELEVATOR_WALL_TYPE_NORTH = 2
     // 升降台墙壁 南墙
-    constant integer   bj_ELEVATOR_WALL_TYPE_SOUTH      = 3
+    constant integer bj_ELEVATOR_WALL_TYPE_SOUTH = 3
     // 升降台墙壁 西墙
-    constant integer   bj_ELEVATOR_WALL_TYPE_WEST       = 4
+    constant integer bj_ELEVATOR_WALL_TYPE_WEST = 4
 
     //-----------------------------------------------------------------------
     // Variables
@@ -837,423 +837,423 @@ globals
     // Force predefs
 
     // 玩家组（所有玩家）
-    force              bj_FORCE_ALL_PLAYERS        = null
+    force bj_FORCE_ALL_PLAYERS = null
     // 玩家组（数组）
-    force array        bj_FORCE_PLAYER
+    force array bj_FORCE_PLAYER
     // 给予首发英雄初始物品的数量
     // 游戏初始化时会根据游戏版本自动设置
-    integer            bj_MELEE_MAX_TWINKED_HEROES = 0
+    integer bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
 
     // 区域 - 玩家可用地图区域
-    rect               bj_mapInitialPlayableArea   = null
+    rect bj_mapInitialPlayableArea = null
     // 区域 - 镜头范围区域
-    rect               bj_mapInitialCameraBounds   = null
+    rect bj_mapInitialCameraBounds = null
 
     // Utility function vars
 
     // 循环A索引
-    integer            bj_forLoopAIndex            = 0
+    integer bj_forLoopAIndex = 0
     // 循环A索引
-    integer            bj_forLoopBIndex            = 0
+    integer bj_forLoopBIndex = 0
     // 循环A索引结束值
-    integer            bj_forLoopAIndexEnd         = 0
+    integer bj_forLoopAIndexEnd = 0
     // 循环A索引结束值
-    integer            bj_forLoopBIndexEnd         = 0
+    integer bj_forLoopBIndexEnd = 0
     // 玩家检查是否完成，自动检查，检查完成后自动变为真，用于开局系统自动检查所有玩家槽是电脑（不论是否具备AI）还是真人
-    boolean            bj_slotControlReady         = false
+    boolean bj_slotControlReady = false
     // 玩家槽可用标识，每位玩家配一个，系统在开局时自动设置
-    boolean array      bj_slotControlUsed
+    boolean array bj_slotControlUsed
     // 玩家槽玩家类型标识（电脑/真人），每位玩家配一个
-    mapcontrol array   bj_slotControl
+    mapcontrol array bj_slotControl
 
     // Game started detection vars
 
     // 开局计时器
-    timer              bj_gameStartedTimer         = null
+    timer bj_gameStartedTimer = null
     // 游戏开始标识，默认为未开始（false）
-    boolean            bj_gameStarted              = false
+    boolean bj_gameStarted = false
     // 开局音量控制计时器
-    timer              bj_volumeGroupsTimer        = CreateTimer()
+    timer bj_volumeGroupsTimer = CreateTimer()
 
     // Singleplayer check
 
     // 单机标识（只有一位人类玩家），默认为否（false）
-    boolean            bj_isSinglePlayer           = false
+    boolean bj_isSinglePlayer = false
 
     // Day/Night Cycle vars
 
     // 昼夜参数 白天音效触发器
-    trigger            bj_dncSoundsDay             = null
+    trigger bj_dncSoundsDay = null
     // 昼夜参数 夜晚音效触发器
-    trigger            bj_dncSoundsNight           = null
+    trigger bj_dncSoundsNight = null
     // 昼夜参数 白天环境音效
-    sound              bj_dayAmbientSound          = null
+    sound bj_dayAmbientSound = null
     // 昼夜参数 夜晚环境音效
-    sound              bj_nightAmbientSound        = null
+    sound bj_nightAmbientSound = null
     // 昼夜参数 黎明声音触发器
-    trigger            bj_dncSoundsDawn            = null
+    trigger bj_dncSoundsDawn = null
     // 昼夜参数 黄昏声音触发器
-    trigger            bj_dncSoundsDusk            = null
+    trigger bj_dncSoundsDusk = null
     // 昼夜参数 黎明声效
-    sound              bj_dawnSound                = null
+    sound bj_dawnSound = null
     // 昼夜参数 黄昏声效
-    sound              bj_duskSound                = null
+    sound bj_duskSound = null
     // 昼夜参数 黎明/黄昏声效启用标识，默认启用（true）
-    boolean            bj_useDawnDuskSounds        = true
+    boolean bj_useDawnDuskSounds = true
     // 昼夜参数 昼夜交替启用标识，默认启用（false）
-    boolean            bj_dncIsDaytime             = false
+    boolean bj_dncIsDaytime = false
 
     // Triggered sounds
 
     // 音效 小地图提示声音
     //sound              bj_pingMinimapSound         = null
     // 音效 可营救音效
-    sound              bj_rescueSound              = null
+    sound bj_rescueSound = null
     // 音效 发现任务音效
-    sound              bj_questDiscoveredSound     = null
+    sound bj_questDiscoveredSound = null
     // 音效 任务更新音效
-    sound              bj_questUpdatedSound        = null
+    sound bj_questUpdatedSound = null
     // 音效 任务完成音效
-    sound              bj_questCompletedSound      = null
+    sound bj_questCompletedSound = null
     // 音效 任务失败音效
-    sound              bj_questFailedSound         = null
+    sound bj_questFailedSound = null
     // 音效 任务提示音效
-    sound              bj_questHintSound           = null
+    sound bj_questHintSound = null
     // 音效 发现任务秘密音效
-    sound              bj_questSecretSound         = null
+    sound bj_questSecretSound = null
     // 音效 获得新任务物品音效
-    sound              bj_questItemAcquiredSound   = null
+    sound bj_questItemAcquiredSound = null
     // 音效 任务警告音效
-    sound              bj_questWarningSound        = null
+    sound bj_questWarningSound = null
     // 音效 胜利对话框音效
-    sound              bj_victoryDialogSound       = null
+    sound bj_victoryDialogSound = null
     // 音效 失败对话框音效
-    sound              bj_defeatDialogSound        = null
+    sound bj_defeatDialogSound = null
 
     // Marketplace vars
 
     // 市场相关变量 任意单位/物品被出售后扣除库存触发器
-    trigger            bj_stockItemPurchased       = null
+    trigger bj_stockItemPurchased = null
     // 市场相关变量 物品更新计时器
-    timer              bj_stockUpdateTimer         = null
+    timer bj_stockUpdateTimer = null
     // 市场相关变量 物品分类布尔值数组 永久
-    boolean array      bj_stockAllowedPermanent
+    boolean array bj_stockAllowedPermanent
     // 市场相关变量 物品分类布尔值数组 可充
-    boolean array      bj_stockAllowedCharged
+    boolean array bj_stockAllowedCharged
     // 市场相关变量 物品分类布尔值数组 人造
-    boolean array      bj_stockAllowedArtifact
+    boolean array bj_stockAllowedArtifact
     // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
     // bj_stockAllowedPermanent[Level]
     // bj_stockAllowedCharged[Level]
     // bj_stockAllowedArtifact[Level]
-    integer            bj_stockPickedItemLevel     = 0
+    integer bj_stockPickedItemLevel = 0
     // 市场相关变量 物品分类
-    itemtype           bj_stockPickedItemType
+    itemtype bj_stockPickedItemType
 
     // Melee vars
 
     // 可见性触发器
-    trigger            bj_meleeVisibilityTrained   = null
+    trigger bj_meleeVisibilityTrained = null
     // 可见性标识，默认可见（true）
-    boolean            bj_meleeVisibilityIsDay     = true
+    boolean bj_meleeVisibilityIsDay = true
     // 已给予首发英雄初始物品标识，默认未给予（false）
-    boolean            bj_meleeGrantHeroItems      = false
+    boolean bj_meleeGrantHeroItems = false
     // 距离玩家出生点最近的金矿所在的点
-    location           bj_meleeNearestMineToLoc    = null
+    location bj_meleeNearestMineToLoc = null
     // 距离玩家出生点最近的金矿
-    unit               bj_meleeNearestMine         = null
+    unit bj_meleeNearestMine = null
     // 距离玩家出生点最近的金矿的距离，默认值0.00
-    real               bj_meleeNearestMineDist     = 0.00
+    real bj_meleeNearestMineDist = 0.00
     // 游戏结束标识，默认未结束（false）
-    boolean            bj_meleeGameOver            = false
+    boolean bj_meleeGameOver = false
     // 游戏失败标识，每位玩家配一个（数组）
-    boolean array      bj_meleeDefeated
+    boolean array bj_meleeDefeated
     // 游戏胜利标识，每位玩家配一个（数组）
-    boolean array      bj_meleeVictoried
+    boolean array bj_meleeVictoried
     // 创建初始单位触发器动作为亡灵种族创建的食尸鬼，每位玩家配一个（数组）
-    unit array         bj_ghoul
+    unit array bj_ghoul
     // 玩家即将暴露计时器，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时器
-    timer array        bj_crippledTimer
+    timer array bj_crippledTimer
     // 玩家即将暴露计时器计时窗口，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，否则会暴露，这是提示的计时窗口
-    timerdialog array  bj_crippledTimerWindows
+    timerdialog array bj_crippledTimerWindows
     // 玩家即将暴露标识，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，失去所有基地会变为真
-    boolean array      bj_playerIsCrippled
+    boolean array bj_playerIsCrippled
     // 玩家暴露标识，每位玩家配一个（数组）
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果计时完成没有造，变为真
-    boolean array      bj_playerIsExposed
+    boolean array bj_playerIsExposed
     // 玩家暴露计时器显示标识，默认未显示（false）
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时器
-    boolean            bj_finishSoonAllExposed     = false
+    boolean bj_finishSoonAllExposed = false
     // 玩家即将暴露计时器计时窗口
     // 失去所有基地时，系统会提示要在限定内造一个基地，如果没造，这是暴露时间的计时窗口
-    timerdialog        bj_finishSoonTimerDialog    = null
+    timerdialog bj_finishSoonTimerDialog = null
     // 首发英雄初始物品创建数量，每位玩家配一个（数组）
     // 用于记录已经给首发创建了多少个初始物品
-    integer array      bj_meleeTwinkedHeroes
+    integer array bj_meleeTwinkedHeroes
 
     // Rescue behavior vars
 
     // 营救触发器
-    trigger            bj_rescueUnitBehavior       = null
+    trigger bj_rescueUnitBehavior = null
     // 被营救后改变单位的颜色标识，默认允许改变（true）
-    boolean            bj_rescueChangeColorUnit    = true
+    boolean bj_rescueChangeColorUnit = true
     // 被营救后改变建筑的颜色标识，默认允许改变（true
-    boolean            bj_rescueChangeColorBldg    = true
+    boolean bj_rescueChangeColorBldg = true
 
     // Transmission vars
 
     // 电影场景结束计时器
-    timer              bj_cineSceneEndingTimer     = null
+    timer bj_cineSceneEndingTimer = null
     // 最后播放的电影场景声音
-    sound              bj_cineSceneLastSound       = null
+    sound bj_cineSceneLastSound = null
     // 跳过电影场景触发器
-    trigger            bj_cineSceneBeingSkipped    = null
+    trigger bj_cineSceneBeingSkipped = null
 
     // Cinematic mode vars
 
     // 电影模式设置 默认速度
-    gamespeed          bj_cineModePriorSpeed       = MAP_SPEED_NORMAL
+    gamespeed bj_cineModePriorSpeed = MAP_SPEED_NORMAL
     // 电影模式设置 迷雾状态，默认禁用（false）
-    boolean            bj_cineModePriorFogSetting  = false
+    boolean bj_cineModePriorFogSetting = false
     // 电影模式设置 黑色阴影状态，默认禁用（false）
-    boolean            bj_cineModePriorMaskSetting = false
+    boolean bj_cineModePriorMaskSetting = false
     // 电影模式设置 电影准备状态，默认未准备完成（false）
-    boolean            bj_cineModeAlreadyIn        = false
+    boolean bj_cineModeAlreadyIn = false
     // 电影模式设置 黎明/昏黄状态，默认禁用（false）
-    boolean            bj_cineModePriorDawnDusk    = false
+    boolean bj_cineModePriorDawnDusk = false
     // 电影模式设置 保存速度，默认值0，游戏初始化后取随机数0~1000000
-    integer            bj_cineModeSavedSeed        = 0
+    integer bj_cineModeSavedSeed = 0
 
     // Cinematic fade vars
 
     // 电影淡入淡出滤镜 淡化计时器
-    timer              bj_cineFadeFinishTimer      = null
+    timer bj_cineFadeFinishTimer = null
     // 电影淡入淡出滤镜 继续淡化计时器
-    timer              bj_cineFadeContinueTimer    = null
+    timer bj_cineFadeContinueTimer = null
     // 电影淡入淡出滤镜 继续淡化（红）
-    real               bj_cineFadeContinueRed      = 0
+    real bj_cineFadeContinueRed = 0
     // 电影淡入淡出滤镜 继续淡化（绿）
-    real               bj_cineFadeContinueGreen    = 0
+    real bj_cineFadeContinueGreen = 0
     // 电影淡入淡出滤镜 继续淡化（蓝）
-    real               bj_cineFadeContinueBlue     = 0
+    real bj_cineFadeContinueBlue = 0
     // 电影淡入淡出滤镜 透明度
-    real               bj_cineFadeContinueTrans    = 0
+    real bj_cineFadeContinueTrans = 0
     // 电影淡入淡出滤镜 转化时间
-    real               bj_cineFadeContinueDuration = 0
+    real bj_cineFadeContinueDuration = 0
     // 电影淡入淡出滤镜 使用图片（图片路径）
-    string             bj_cineFadeContinueTex      = ""
+    string bj_cineFadeContinueTex = ""
 
     // QueuedTriggerExecute vars
 
     // 触发器队列执行次数统计
-    integer            bj_queuedExecTotal          = 0
+    integer bj_queuedExecTotal = 0
     // 触发器队列执行触发器数组
-    trigger array      bj_queuedExecTriggers
+    trigger array bj_queuedExecTriggers
     // 触发器队列执行布尔值数组 用于登记当前触发器是否使用了条件
-    boolean array      bj_queuedExecUseConds
+    boolean array bj_queuedExecUseConds
     // 触发器队列执行计时器
-    timer              bj_queuedExecTimeoutTimer   = CreateTimer()
+    timer bj_queuedExecTimeoutTimer = CreateTimer()
     // 触发器队列执行超时触发器
-    trigger            bj_queuedExecTimeout        = null
+    trigger bj_queuedExecTimeout = null
 
     // Helper vars (for Filter and Enum funcs)
 
     // 可破坏物死亡/毁坏事件触发器 统计死亡/毁坏的可破坏物数量
-    integer            bj_destInRegionDiesCount    = 0
+    integer bj_destInRegionDiesCount = 0
     // 可破坏物死亡/毁坏事件触发器 选取区域内的死亡/毁坏的可破坏物
-    trigger            bj_destInRegionDiesTrig     = null
+    trigger bj_destInRegionDiesTrig = null
     // 单位组内单位数量
-    integer            bj_groupCountUnits          = 0
+    integer bj_groupCountUnits = 0
     // 玩家组内的玩家数量
-    integer            bj_forceCountPlayers        = 0
+    integer bj_forceCountPlayers = 0
     // 获取单位组中指定类型的单位，指定的单位类型
-    integer            bj_groupEnumTypeId          = 0
+    integer bj_groupEnumTypeId = 0
     // 获取玩家在指定矩形区域中的单位，指定的玩家
-    player             bj_groupEnumOwningPlayer    = null
+    player bj_groupEnumOwningPlayer = null
     // 指代往 A单位组 添加 B单位组 单位完成后，需要销毁的单位组
-    group              bj_groupAddGroupDest        = null
+    group bj_groupAddGroupDest = null
     // 指代 A单位组 移除 B单位组 单位完成后，需要销毁的单位组
-    group              bj_groupRemoveGroupDest     = null
+    group bj_groupRemoveGroupDest = null
     // 获取单位组中随机单位，统计单位组内的单位数量
-    integer            bj_groupRandomConsidered    = 0
+    integer bj_groupRandomConsidered = 0
     // 获取单位组随机单位返回的单位
-    unit               bj_groupRandomCurrentPick   = null
+    unit bj_groupRandomCurrentPick = null
     // 最后创建且需要销毁的单位组
-    group              bj_groupLastCreatedDest     = null
+    group bj_groupLastCreatedDest = null
     // 随机选取单位组中的单位，返回的新单位组
-    group              bj_randomSubGroupGroup      = null
+    group bj_randomSubGroupGroup = null
     // 随机选取单位组中的单位，指定的单位数量
-    integer            bj_randomSubGroupWant       = 0
+    integer bj_randomSubGroupWant = 0
     // 随机选取单位组中的单位，原单位组的单位数量
-    integer            bj_randomSubGroupTotal      = 0
+    integer bj_randomSubGroupTotal = 0
     // 随机选取单位组中的单位，指定的单位数量 与 原单位组的单位数量 的比例
     // bj_randomSubGroupChance = I2R(bj_randomSubGroupWant) / I2R(bj_randomSubGroupTotal)
-    real               bj_randomSubGroupChance     = 0
+    real bj_randomSubGroupChance = 0
     // 随机选取矩形区域的可破坏物，区域内的可破坏物数量
-    integer            bj_destRandomConsidered     = 0
+    integer bj_destRandomConsidered = 0
     // 随机选取矩形区域的可破坏物，选取的可破坏物
-    destructable       bj_destRandomCurrentPick    = null
+    destructable bj_destRandomCurrentPick = null
     // 可破坏物 升降台墙
-    destructable       bj_elevatorWallBlocker      = null
+    destructable bj_elevatorWallBlocker = null
     // 可破坏物 相邻的升降台
-    destructable       bj_elevatorNeighbor         = null
+    destructable bj_elevatorNeighbor = null
     // 随机选取的区域中的物品，区域内的物品数量
-    integer            bj_itemRandomConsidered     = 0
+    integer bj_itemRandomConsidered = 0
     // 随机选取的区域中的物品，选取的物品
-    item               bj_itemRandomCurrentPick    = null
+    item bj_itemRandomCurrentPick = null
     // 随机获取玩家组中的玩家，玩家组的玩家数量
-    integer            bj_forceRandomConsidered    = 0
+    integer bj_forceRandomConsidered = 0
     // 随机获取玩家组中的玩家，选取的玩家
-    player             bj_forceRandomCurrentPick   = null
+    player bj_forceRandomCurrentPick = null
     // 可营救单位
-    unit               bj_makeUnitRescuableUnit    = null
+    unit bj_makeUnitRescuableUnit = null
     // 可营救单位已创建标识，默认为真（true）
-    boolean            bj_makeUnitRescuableFlag    = true
+    boolean bj_makeUnitRescuableFlag = true
     // 暂停/恢复 所有单位标识，默认为真（true）
-    boolean            bj_pauseAllUnitsFlag        = true
+    boolean bj_pauseAllUnitsFlag = true
     // 可破坏物中心点
-    location           bj_enumDestructableCenter   = null
+    location bj_enumDestructableCenter = null
     // 可破坏物半径（范围）
-    real               bj_enumDestructableRadius   = 0
+    real bj_enumDestructableRadius = 0
     // 设置玩家颜色
-    playercolor        bj_setPlayerTargetColor     = null
+    playercolor bj_setPlayerTargetColor = null
     // 单位组选择的单位已死亡标识，默认为已死亡（true）
-    boolean            bj_isUnitGroupDeadResult    = true
+    boolean bj_isUnitGroupDeadResult = true
     // 单位组为空标识，默认为真（true）
-    boolean            bj_isUnitGroupEmptyResult   = true
+    boolean bj_isUnitGroupEmptyResult = true
     // 单位组选取的单位在区域内标识，默认为真（true）
-    boolean            bj_isUnitGroupInRectResult  = true
+    boolean bj_isUnitGroupInRectResult = true
     // 判断 单位组选取的单位是否在区域内 使用的区域
-    rect               bj_isUnitGroupInRectRect    = null
+    rect bj_isUnitGroupInRectRect = null
     // 游戏结束时展示得分屏标识，默认为不允许（false）
-    boolean            bj_changeLevelShowScores    = false
+    boolean bj_changeLevelShowScores = false
     // 下一张地图的名字（用于战役）
-    string             bj_changeLevelMapName       = null
+    string bj_changeLevelMapName = null
     // 暂停衰变延迟血肉单位组
     // 用于对战初始化的血肉和尸体腐烂
-    group              bj_suspendDecayFleshGroup   = CreateGroup()
+    group bj_suspendDecayFleshGroup = CreateGroup()
     // 暂停衰变延迟尸体单位组
     // 用于对战初始化的血肉和尸体腐烂
-    group              bj_suspendDecayBoneGroup    = CreateGroup()
+    group bj_suspendDecayBoneGroup = CreateGroup()
     // 暂停衰变延迟计时器
     // 用于对战初始化的血肉和尸体腐烂
-    timer              bj_delayedSuspendDecayTimer = CreateTimer()
+    timer bj_delayedSuspendDecayTimer = CreateTimer()
     // 暂停衰变延迟触发器
     // 用于对战初始化的血肉和尸体腐烂
-    trigger            bj_delayedSuspendDecayTrig  = null
+    trigger bj_delayedSuspendDecayTrig = null
     // 匹配玩家拥有且存活的单位类型总数量
-    integer            bj_livingPlayerUnitsTypeId  = 0
+    integer bj_livingPlayerUnitsTypeId = 0
     // 最后死亡的单位/物品/可破坏物
-    widget             bj_lastDyingWidget          = null
+    widget bj_lastDyingWidget = null
 
     // Random distribution vars
 
     // 随机分布数
-    integer            bj_randDistCount            = 0
+    integer bj_randDistCount = 0
     // 随机分布ID（数组）
-    integer array      bj_randDistID
+    integer array bj_randDistID
     // 随机分布几率（数组）
-    integer array      bj_randDistChance
+    integer array bj_randDistChance
 
     // Last X'd vars
 
     // 最后创建的单位
-    unit               bj_lastCreatedUnit          = null
+    unit bj_lastCreatedUnit = null
     // 最后创建的物品
-    item               bj_lastCreatedItem          = null
+    item bj_lastCreatedItem = null
     // 最后删除的物品
-    item               bj_lastRemovedItem          = null
+    item bj_lastRemovedItem = null
     // 最后创建的闹鬼金矿
-    unit               bj_lastHauntedGoldMine      = null
+    unit bj_lastHauntedGoldMine = null
     // 最后创建的可破坏物
-    destructable       bj_lastCreatedDestructable  = null
+    destructable bj_lastCreatedDestructable = null
     // 最后创建的单位组
-    group              bj_lastCreatedGroup         = CreateGroup()
+    group bj_lastCreatedGroup = CreateGroup()
     // 最后创建的可见度修正器
-    fogmodifier        bj_lastCreatedFogModifier   = null
+    fogmodifier bj_lastCreatedFogModifier = null
     // 最后创建的特效
-    effect             bj_lastCreatedEffect        = null
+    effect bj_lastCreatedEffect = null
     // 最后创建的天气特效
-    weathereffect      bj_lastCreatedWeatherEffect = null
+    weathereffect bj_lastCreatedWeatherEffect = null
     // 最后创建的地形变化
     terraindeformation bj_lastCreatedTerrainDeformation = null
     // 最后创建的任务
-    quest              bj_lastCreatedQuest         = null
+    quest bj_lastCreatedQuest = null
     // 最后创建的任务要求
-    questitem          bj_lastCreatedQuestItem     = null
+    questitem bj_lastCreatedQuestItem = null
     // 最后创建的任务失败条件
-    defeatcondition    bj_lastCreatedDefeatCondition = null
+    defeatcondition bj_lastCreatedDefeatCondition = null
     // 最后启用的计时器
-    timer              bj_lastStartedTimer         = CreateTimer()
+    timer bj_lastStartedTimer = CreateTimer()
     // 最后创建的计时器窗口
-    timerdialog        bj_lastCreatedTimerDialog   = null
+    timerdialog bj_lastCreatedTimerDialog = null
     // 最后创建的排行榜
-    leaderboard        bj_lastCreatedLeaderboard   = null
+    leaderboard bj_lastCreatedLeaderboard = null
     // 最后创建的多面板
-    multiboard         bj_lastCreatedMultiboard    = null
+    multiboard bj_lastCreatedMultiboard = null
     // 最后播放的声音
-    sound              bj_lastPlayedSound          = null
+    sound bj_lastPlayedSound = null
     // 最后播放的音乐
-    string             bj_lastPlayedMusic          = ""
+    string bj_lastPlayedMusic = ""
     // 最后传输消息的持续时间
-    real               bj_lastTransmissionDuration = 0
+    real bj_lastTransmissionDuration = 0
     // 最后创建的游戏缓存
-    gamecache          bj_lastCreatedGameCache     = null
+    gamecache bj_lastCreatedGameCache = null
     // 最后创建的哈希表
-    hashtable          bj_lastCreatedHashtable     = null
+    hashtable bj_lastCreatedHashtable = null
     // 最后被装载的单位（被飞艇、船、被缠绕的金矿等装载的单位）
-    unit               bj_lastLoadedUnit           = null
+    unit bj_lastLoadedUnit = null
     // 最后创建的按钮
-    button             bj_lastCreatedButton        = null
+    button bj_lastCreatedButton = null
     // 最后替换的单位
-    unit               bj_lastReplacedUnit         = null
+    unit bj_lastReplacedUnit = null
     // 最后创建的文本
-    texttag            bj_lastCreatedTextTag       = null
+    texttag bj_lastCreatedTextTag = null
     // 最后创建的闪电效果
-    lightning          bj_lastCreatedLightning     = null
+    lightning bj_lastCreatedLightning = null
     // 最后创建的图像
-    image              bj_lastCreatedImage         = null
+    image bj_lastCreatedImage = null
     // 最后创建的地面纹理变化
-    ubersplat          bj_lastCreatedUbersplat     = null
+    ubersplat bj_lastCreatedUbersplat = null
     // 最后创建的小地图（任务）图标
-    minimapicon        bj_lastCreatedMinimapIcon   = null
+    minimapicon bj_lastCreatedMinimapIcon = null
     // 最后创建的按钮特效
 	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
 
     // Filter function vars
 
     // 初始条件表达式 单位类型为金矿（中立金矿）的单位，默认值为空
-    boolexpr           filterIssueHauntOrderAtLocBJ      = null
+    boolexpr filterIssueHauntOrderAtLocBJ = null
     // 初始条件表达式 匹配的可破坏物是否离指定点小于某距离，默认值为空
-    boolexpr           filterEnumDestructablesInCircleBJ = null
+    boolexpr filterEnumDestructablesInCircleBJ = null
     // 初始条件表达式 匹配指定玩家在指定区域的单位，默认值为空
-    boolexpr           filterGetUnitsInRectOfPlayer      = null
+    boolexpr filterGetUnitsInRectOfPlayer = null
     // 初始条件表达式 匹配的单位类型，默认值为空
-    boolexpr           filterGetUnitsOfTypeIdAll         = null
+    boolexpr filterGetUnitsOfTypeIdAll = null
     // 初始条件表达式 匹配玩家拥有的单位类型，默认值为空
     // 用于对战初始化
-    boolexpr           filterGetUnitsOfPlayerAndTypeId   = null
+    boolexpr filterGetUnitsOfPlayerAndTypeId = null
     // 初始条件表达式 匹配的英雄单位（首发英雄），默认值为空
     // 用于对战初始化
-    boolexpr           filterMeleeTrainedUnitIsHeroBJ    = null
+    boolexpr filterMeleeTrainedUnitIsHeroBJ = null
     // 初始条件表达式 匹配玩家拥有且存活的单位类型，默认值为空
     // 用于对战初始化
-    boolexpr           filterLivingPlayerUnitsOfTypeId   = null
+    boolexpr filterLivingPlayerUnitsOfTypeId = null
 
     // Memory cleanup vars
 
     // 需要清理单位组标识，默认不需要（false）
-    boolean            bj_wantDestroyGroup         = false
+    boolean bj_wantDestroyGroup = false
 
     // Instanced Operation Results
 
     // 最后的值域操作结果标识/实例函数调用结果标识，默认成功（true）
-    boolean            bj_lastInstObjFuncSuccessful = true
+    boolean bj_lastInstObjFuncSuccessful = true
 endglobals
 
 
@@ -1270,7 +1270,7 @@ endglobals
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
-        call DisplayTimedTextToPlayer(Player(i),0,0,60,msg)
+        call DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)
         set i = i + 1
         exitwhen i == bj_MAX_PLAYERS
     endloop
@@ -1287,7 +1287,7 @@ endfunction
 
 // 取最小值(比对实数)
 function RMinBJ takes real a, real b returns real
-    if (a < b) then
+    if(a < b) then
         return a
     else
         return b
@@ -1297,7 +1297,7 @@ endfunction
 
 // 取最大值(比对实数)
 function RMaxBJ takes real a, real b returns real
-    if (a < b) then
+    if(a < b) then
         return b
     else
         return a
@@ -1307,10 +1307,10 @@ endfunction
 
 // 取绝对值(实数)
 function RAbsBJ takes real a returns real
-    if (a >= 0) then
+    if(a >= 0) then
         return a
     else
-        return -a
+        return - a
     endif
 endfunction
 
@@ -1318,17 +1318,17 @@ endfunction
 // 取正负标记(实数)
 // 输入值大于等于0返回 1.0，小于0返回 -1.0
 function RSignBJ takes real a returns real
-    if (a >= 0.0) then
+    if(a >= 0.0) then
         return 1.0
     else
-        return -1.0
+        return - 1.0
     endif
 endfunction
 
 
 // 取最小值(比对整数)
 function IMinBJ takes integer a, integer b returns integer
-    if (a < b) then
+    if(a < b) then
         return a
     else
         return b
@@ -1338,7 +1338,7 @@ endfunction
 
 // 取最大值(比对整数)
 function IMaxBJ takes integer a, integer b returns integer
-    if (a < b) then
+    if(a < b) then
         return b
     else
         return a
@@ -1348,10 +1348,10 @@ endfunction
 
 // 取绝对值(整数)
 function IAbsBJ takes integer a returns integer
-    if (a >= 0) then
+    if(a >= 0) then
         return a
     else
-        return -a
+        return - a
     endif
 endfunction
 
@@ -1359,10 +1359,10 @@ endfunction
 // 取正负标记(整数)
 // 输入数值大于等于0返回 1，小于0返回 -1
 function ISignBJ takes integer a returns integer
-    if (a >= 0) then
+    if(a >= 0) then
         return 1
     else
-        return -1
+        return - 1
     endif
 endfunction
 
@@ -1463,7 +1463,7 @@ function ModuloInteger takes integer dividend, integer divisor returns integer
     // If the dividend was negative, the above modulus calculation will
     // be negative, but within (-divisor..0).  We can add (divisor) to
     // shift this result into the desired range of (0..divisor).
-    if (modulus < 0) then
+    if(modulus < 0) then
         set modulus = modulus + divisor
     endif
 
@@ -1480,7 +1480,7 @@ function ModuloReal takes real dividend, real divisor returns real
     // If the dividend was negative, the above modulus calculation will
     // be negative, but within (-divisor..0).  We can add (divisor) to
     // shift this result into the desired range of (0..divisor).
-    if (modulus < 0) then
+    if(modulus < 0) then
         set modulus = modulus + divisor
     endif
 
@@ -1498,7 +1498,7 @@ endfunction
 // 区域位移
 // 会创建区域，用完请注意排泄
 function OffsetRectBJ takes rect r, real dx, real dy returns rect
-    return Rect( GetRectMinX(r) + dx, GetRectMinY(r) + dy, GetRectMaxX(r) + dx, GetRectMaxY(r) + dy )
+    return Rect(GetRectMinX(r) + dx, GetRectMinY(r) + dy, GetRectMaxX(r) + dx, GetRectMaxY(r) + dy)
 endfunction
 
 
@@ -1508,15 +1508,15 @@ endfunction
 // @param width 宽
 // @param height 高
 function RectFromCenterSizeBJ takes location center, real width, real height returns rect
-    local real x = GetLocationX( center )
-    local real y = GetLocationY( center )
-    return Rect( x - width*0.5, y - height*0.5, x + width*0.5, y + height*0.5 )
+    local real x = GetLocationX(center)
+    local real y = GetLocationY(center)
+    return Rect(x - width * 0.5, y - height * 0.5, x + width * 0.5, y + height * 0.5)
 endfunction
 
 
 // 查询坐标是否在矩形内
 function RectContainsCoords takes rect r, real x, real y returns boolean
-    return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
+    return(GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r))
 endfunction
 
 
@@ -1534,11 +1534,11 @@ endfunction
 
 // 物品是否在区域内
 function RectContainsItem takes item whichItem, rect r returns boolean
-    if (whichItem == null) then
+    if(whichItem == null) then
         return false
     endif
 
-    if (IsItemOwned(whichItem)) then
+    if(IsItemOwned(whichItem)) then
         return false
     endif
 
@@ -1568,7 +1568,7 @@ endfunction
 // Runs the trigger's actions if the trigger's conditions evaluate to true.
 function TriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
-        if not (TriggerEvaluate(trig)) then
+        if not(TriggerEvaluate(trig)) then
             return false
         endif
     endif
@@ -1583,7 +1583,7 @@ endfunction
 // Since the trigger executes normally, its conditions are still evaluated.
 function PostTriggerExecuteBJ takes trigger trig, boolean checkConditions returns boolean
     if checkConditions then
-        if not (TriggerEvaluate(trig)) then
+        if not(TriggerEvaluate(trig)) then
             return false
         endif
     endif
@@ -1602,7 +1602,7 @@ function QueuedTriggerCheck takes nothing returns nothing
     loop
         exitwhen i >= bj_queuedExecTotal
         set s = s + "q[" + I2S(i) + "]="
-        if (bj_queuedExecTriggers[i] == null) then
+        if(bj_queuedExecTriggers [ i ] == null) then
             set s = s + "null "
         else
             set s = s + "x "
@@ -1610,7 +1610,7 @@ function QueuedTriggerCheck takes nothing returns nothing
         set i = i + 1
     endloop
     set s = s + "(" + I2S(bj_queuedExecTotal) + " total)"
-    call DisplayTimedTextToPlayer(GetLocalPlayer(),0,0,600,s)
+    call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 600, s)
 endfunction
 
 
@@ -1619,15 +1619,15 @@ endfunction
 // trigger within the queue if it is found, or -1 if it is not found.
 function QueuedTriggerGetIndex takes trigger trig returns integer
     // Determine which, if any, of the queued triggers is being removed.
-    local integer index     = 0
+    local integer index = 0
     loop
         exitwhen index >= bj_queuedExecTotal
-        if (bj_queuedExecTriggers[index] == trig) then
+        if(bj_queuedExecTriggers [ index ] == trig) then
             return index
         endif
         set index = index + 1
     endloop
-    return -1
+    return - 1
 endfunction
 
 
@@ -1639,7 +1639,7 @@ function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
     local integer index
 
     // If the to-be-removed index is out of range, fail.
-    if (trigIndex >= bj_queuedExecTotal) then
+    if(trigIndex >= bj_queuedExecTotal) then
         return false
     endif
 
@@ -1648,8 +1648,8 @@ function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
     set index = trigIndex
     loop
         exitwhen index >= bj_queuedExecTotal
-        set bj_queuedExecTriggers[index] = bj_queuedExecTriggers[index + 1]
-        set bj_queuedExecUseConds[index] = bj_queuedExecUseConds[index + 1]
+        set bj_queuedExecTriggers [ index ] = bj_queuedExecTriggers [ index + 1 ]
+        set bj_queuedExecUseConds [ index ] = bj_queuedExecUseConds [ index + 1 ]
         set index = index + 1
     endloop
     return true
@@ -1664,7 +1664,7 @@ function QueuedTriggerAttemptExec takes nothing returns boolean
     loop
         exitwhen bj_queuedExecTotal == 0
 
-        if TriggerExecuteBJ(bj_queuedExecTriggers[0], bj_queuedExecUseConds[0]) then
+        if TriggerExecuteBJ(bj_queuedExecTriggers [ 0 ], bj_queuedExecUseConds [ 0 ]) then
             // Timeout the queue if it sits at the front of the queue for too long.
             call TimerStart(bj_queuedExecTimeoutTimer, bj_QUEUED_TRIGGER_TIMEOUT, false, null)
             return true
@@ -1680,17 +1680,17 @@ endfunction
 // Queues a trigger to be executed, assuring that such triggers are not executed at the same time.
 function QueuedTriggerAddBJ takes trigger trig, boolean checkConditions returns boolean
     // Make sure our queue isn't full.  If it is, return failure.
-    if (bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS) then
+    if(bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS) then
         return false
     endif
 
     // Add the trigger to an array of to-be-executed triggers.
-    set bj_queuedExecTriggers[bj_queuedExecTotal] = trig
-    set bj_queuedExecUseConds[bj_queuedExecTotal] = checkConditions
+    set bj_queuedExecTriggers [ bj_queuedExecTotal ] = trig
+    set bj_queuedExecUseConds [ bj_queuedExecTotal ] = checkConditions
     set bj_queuedExecTotal = bj_queuedExecTotal + 1
 
     // If this is the only trigger in the queue, run it.
-    if (bj_queuedExecTotal == 1) then
+    if(bj_queuedExecTotal == 1) then
         call QueuedTriggerAttemptExec()
     endif
     return true
@@ -1707,7 +1707,7 @@ function QueuedTriggerRemoveBJ takes trigger trig returns nothing
 
     // Find the trigger's index.
     set trigIndex = QueuedTriggerGetIndex(trig)
-    if (trigIndex == -1) then
+    if(trigIndex == - 1) then
         return
     endif
 
@@ -1715,7 +1715,7 @@ function QueuedTriggerRemoveBJ takes trigger trig returns nothing
     call QueuedTriggerRemoveByIndex(trigIndex)
 
     // If we just axed the currently running trigger, run the next one.
-    if (trigIndex == 0) then
+    if(trigIndex == 0) then
         call PauseTimer(bj_queuedExecTimeoutTimer)
         call QueuedTriggerAttemptExec()
     endif
@@ -1729,7 +1729,7 @@ function QueuedTriggerDoneBJ takes nothing returns nothing
     local integer index
 
     // Make sure there's something on the queue to remove.
-    if (bj_queuedExecTotal <= 0) then
+    if(bj_queuedExecTotal <= 0) then
         return
     endif
 
@@ -1771,7 +1771,7 @@ endfunction
 
 // 查询触发器是否在队列中
 function IsTriggerQueuedBJ takes trigger trig returns boolean
-    return QueuedTriggerGetIndex(trig) != -1
+    return QueuedTriggerGetIndex(trig) != - 1
 endfunction
 
 
@@ -1804,9 +1804,9 @@ endfunction
 // and polling until the timer expires.
 function PolledWait takes real duration returns nothing
     local timer t
-    local real  timeRemaining
+    local real timeRemaining
 
-    if (duration > 0) then
+    if(duration > 0) then
         set t = CreateTimer()
         call TimerStart(t, duration, false, null)
         loop
@@ -1816,7 +1816,7 @@ function PolledWait takes real duration returns nothing
             // If we have a bit of time left, skip past 10% of the remaining
             // duration instead of checking every interval, to minimize the
             // polling on long waits.
-            if (timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD) then
+            if(timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD) then
                 call TriggerSleepAction(0.1 * timeRemaining)
             else
                 call TriggerSleepAction(bj_POLLED_WAIT_INTERVAL)
@@ -1894,9 +1894,9 @@ function PercentToInt takes real percentage, integer max returns integer
     local real realpercent = percentage * I2R(max) * 0.01
     local integer result = MathRound(realpercent)
 
-    if (result < 0) then
+    if(result < 0) then
         set result = 0
-    elseif (result > max) then
+    elseif(result > max) then
         set result = max
     endif
 
@@ -1980,15 +1980,15 @@ function GetCurrentCameraSetup takes nothing returns camerasetup
     local camerasetup theCam = CreateCameraSetup()
     local real duration = 0
     call CameraSetupSetField(theCam, CAMERA_FIELD_TARGET_DISTANCE, GetCameraField(CAMERA_FIELD_TARGET_DISTANCE), duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_FARZ,            GetCameraField(CAMERA_FIELD_FARZ),            duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_ZOFFSET,         GetCameraField(CAMERA_FIELD_ZOFFSET),         duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_FARZ, GetCameraField(CAMERA_FIELD_FARZ), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_ZOFFSET, GetCameraField(CAMERA_FIELD_ZOFFSET), duration)
     call CameraSetupSetField(theCam, CAMERA_FIELD_ANGLE_OF_ATTACK, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK), duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_FIELD_OF_VIEW,   bj_RADTODEG * GetCameraField(CAMERA_FIELD_FIELD_OF_VIEW),   duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_ROLL,            bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROLL),            duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_ROTATION,        bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROTATION),        duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_PITCH,     bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_PITCH),     duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_YAW,       bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_YAW),       duration)
-    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_ROLL,      bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_ROLL),      duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_FIELD_OF_VIEW, bj_RADTODEG * GetCameraField(CAMERA_FIELD_FIELD_OF_VIEW), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_ROLL, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROLL), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_ROTATION, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROTATION), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_PITCH, bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_PITCH), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_YAW, bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_YAW), duration)
+    call CameraSetupSetField(theCam, CAMERA_FIELD_LOCAL_ROLL, bj_RADTODEG * GetCameraField(CAMERA_FIELD_LOCAL_ROLL), duration)
     call CameraSetupSetDestPosition(theCam, GetCameraTargetPositionX(), GetCameraTargetPositionY(), duration)
     return theCam
 endfunction
@@ -1996,7 +1996,7 @@ endfunction
 
 // 应用镜头 (限时)
 function CameraSetupApplyForPlayer takes boolean doPan, camerasetup whichSetup, player whichPlayer, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call CameraSetupApplyForceDuration(whichSetup, doPan, duration)
     endif
@@ -2004,7 +2004,7 @@ endfunction
 
 // 设置镜头平滑持续时间
 function CameraSetupApplyForPlayerSmooth takes boolean doPan, camerasetup whichSetup, player whichPlayer, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call BlzCameraSetupApplyForceDurationSmooth(whichSetup, doPan, forcedDuration, easeInDuration, easeOutDuration, smoothFactor)
     endif
@@ -2019,7 +2019,7 @@ endfunction
 
 // 设定镜头属性 (限时)
 function SetCameraFieldForPlayer takes player whichPlayer, camerafield whichField, real value, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraField(whichField, value, duration)
     endif
@@ -2028,7 +2028,7 @@ endfunction
 
 // 锁定镜头目标到单位
 function SetCameraTargetControllerNoZForPlayer takes player whichPlayer, unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraTargetController(whichUnit, xoffset, yoffset, inheritOrientation)
     endif
@@ -2037,7 +2037,7 @@ endfunction
 
 // 设置玩家的镜头位置（指定坐标）
 function SetCameraPositionForPlayer takes player whichPlayer, real x, real y returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraPosition(x, y)
     endif
@@ -2046,7 +2046,7 @@ endfunction
 
 // 设置玩家的镜头位置（指定点）
 function SetCameraPositionLocForPlayer takes player whichPlayer, location loc returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraPosition(GetLocationX(loc), GetLocationY(loc))
     endif
@@ -2055,7 +2055,7 @@ endfunction
 
 // 旋转镜头 (限时)
 function RotateCameraAroundLocBJ takes real degrees, location loc, player whichPlayer, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraRotateMode(GetLocationX(loc), GetLocationY(loc), bj_DEGTORAD * degrees, duration)
     endif
@@ -2064,7 +2064,7 @@ endfunction
 
 // 平移镜头（指定坐标）
 function PanCameraToForPlayer takes player whichPlayer, real x, real y returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PanCameraTo(x, y)
     endif
@@ -2073,7 +2073,7 @@ endfunction
 
 // 平移镜头（指定点）
 function PanCameraToLocForPlayer takes player whichPlayer, location loc returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PanCameraTo(GetLocationX(loc), GetLocationY(loc))
     endif
@@ -2082,7 +2082,7 @@ endfunction
 
 // 平移镜头（定时）
 function PanCameraToTimedForPlayer takes player whichPlayer, real x, real y, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PanCameraToTimed(x, y, duration)
     endif
@@ -2091,7 +2091,7 @@ endfunction
 
 // 平移镜头 (限时)
 function PanCameraToTimedLocForPlayer takes player whichPlayer, location loc, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
     endif
@@ -2100,7 +2100,7 @@ endfunction
 
 // 在指定高度平移镜头 (限时)
 function PanCameraToTimedLocWithZForPlayer takes player whichPlayer, location loc, real zOffset, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PanCameraToTimedWithZ(GetLocationX(loc), GetLocationY(loc), zOffset, duration)
     endif
@@ -2111,14 +2111,14 @@ endfunction
 function SmartCameraPanBJ takes player whichPlayer, location loc, real duration returns nothing
     local real dist
 	local location cameraLoc = GetCameraTargetPositionLoc()
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
         set dist = DistanceBetweenPoints(loc, cameraLoc)
-        if (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+        if(dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
             // If the user is too far away, snap the camera.
             call PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), 0)
-        elseif (dist >= bj_SMARTPAN_TRESHOLD_PAN) then
+        elseif(dist >= bj_SMARTPAN_TRESHOLD_PAN) then
             // If the user is moderately close, pan the camera.
             call PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
         else
@@ -2131,7 +2131,7 @@ endfunction
 
 // 播放电影镜头
 function SetCinematicCameraForPlayer takes player whichPlayer, string cameraModelFile returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCinematicCamera(cameraModelFile)
     endif
@@ -2140,7 +2140,7 @@ endfunction
 
 // 重置镜头到游戏默认状态（限时）（指定玩家）
 function ResetToGameCameraForPlayer takes player whichPlayer, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ResetToGameCamera(duration)
     endif
@@ -2151,7 +2151,7 @@ endfunction
 // @param magnitude 摇晃幅度
 // @param velocity 摇晃速率
 function CameraSetSourceNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call CameraSetSourceNoise(magnitude, velocity)
     endif
@@ -2162,7 +2162,7 @@ endfunction
 // @param magnitude 摇晃幅度
 // @param velocity 摇晃速率
 function CameraSetTargetNoiseForPlayer takes player whichPlayer, real magnitude, real velocity returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call CameraSetTargetNoise(magnitude, velocity)
     endif
@@ -2173,23 +2173,23 @@ endfunction
 // @param magnitude 摇晃幅度
 function CameraSetEQNoiseForPlayer takes player whichPlayer, real magnitude returns nothing
     local real richter = magnitude
-    if (richter > 5.0) then
+    if(richter > 5.0) then
         set richter = 5.0
     endif
-    if (richter < 2.0) then
+    if(richter < 2.0) then
         set richter = 2.0
     endif
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
-        call CameraSetTargetNoiseEx(magnitude*2.0, magnitude*Pow(10,richter),true)
-        call CameraSetSourceNoiseEx(magnitude*2.0, magnitude*Pow(10,richter),true)
+        call CameraSetTargetNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
+        call CameraSetSourceNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
     endif
 endfunction
 
 
 // 停止 摇摆/摇晃 镜头
 function CameraClearNoiseForPlayer takes player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call CameraSetSourceNoise(0, 0)
         call CameraSetTargetNoise(0, 0)
@@ -2244,7 +2244,7 @@ endfunction
 
 // 设置镜头范围
 function SetCameraBoundsToRectForPlayerBJ takes player whichPlayer, rect r returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraBoundsToRect(r)
     endif
@@ -2259,10 +2259,10 @@ function AdjustCameraBoundsBJ takes integer adjustMethod, real dxWest, real dxEa
     local real maxY = 0
     local real scale = 0
 
-    if (adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD) then
+    if(adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD) then
         set scale = 1
-    elseif (adjustMethod == bj_CAMERABOUNDS_ADJUST_SUB) then
-        set scale = -1
+    elseif(adjustMethod == bj_CAMERABOUNDS_ADJUST_SUB) then
+        set scale = - 1
     else
         // Unrecognized adjustment method - ignore the request.
         return
@@ -2275,11 +2275,11 @@ function AdjustCameraBoundsBJ takes integer adjustMethod, real dxWest, real dxEa
     set maxY = GetCameraBoundMaxY() + scale * dyNorth
 
     // Make sure the camera bounds are still valid.
-    if (maxX < minX) then
+    if(maxX < minX) then
         set minX = (minX + maxX) * 0.5
         set maxX = minX
     endif
-    if (maxY < minY) then
+    if(maxY < minY) then
         set minY = (minY + maxY) * 0.5
         set maxY = minY
     endif
@@ -2292,7 +2292,7 @@ endfunction
 // 扩展/收缩 可用镜头区域（指定玩家）
 // @param adjustMethod 扩展/收缩
 function AdjustCameraBoundsForPlayerBJ takes integer adjustMethod, player whichPlayer, real dxWest, real dxEast, real dyNorth, real dySouth returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call AdjustCameraBoundsBJ(adjustMethod, dxWest, dxEast, dyNorth, dySouth)
     endif
@@ -2301,7 +2301,7 @@ endfunction
 
 // 设置镜头空格键转向坐标（指定玩家） (快速)
 function SetCameraQuickPositionForPlayer takes player whichPlayer, real x, real y returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraQuickPosition(x, y)
     endif
@@ -2310,7 +2310,7 @@ endfunction
 
 // 设置镜头空格键转向点（指定玩家） (快速)
 function SetCameraQuickPositionLocForPlayer takes player whichPlayer, location loc returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraQuickPosition(GetLocationX(loc), GetLocationY(loc))
     endif
@@ -2324,7 +2324,7 @@ endfunction
 
 // 停止播放镜头
 function StopCameraForPlayerBJ takes player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call StopCamera()
     endif
@@ -2333,7 +2333,7 @@ endfunction
 
 // 锁定镜头方向到单位
 function SetCameraOrientControllerForPlayerBJ takes player whichPlayer, unit whichUnit, real xoffset, real yoffset returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraOrientController(whichUnit, xoffset, yoffset)
     endif
@@ -2362,7 +2362,7 @@ endfunction
 
 // 为玩家组显示文本消息(自动计时)
 function DisplayTextToForce takes force toForce, string message returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call DisplayTextToPlayer(GetLocalPlayer(), 0, 0, message)
     endif
@@ -2371,7 +2371,7 @@ endfunction
 
 // 为玩家组显示文本消息(指定时间)
 function DisplayTimedTextToForce takes force toForce, real duration, string message returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, duration, message)
     endif
@@ -2380,7 +2380,7 @@ endfunction
 
 // 清空文本信息
 function ClearTextMessagesBJ takes force toForce returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ClearTextMessages()
     endif
@@ -2392,7 +2392,7 @@ endfunction
 
 // 截取字符串
 function SubStringBJ takes string source, integer start, integer end returns string
-    return SubString(source, start-1, end)
+    return SubString(source, start - 1, end)
 endfunction  
   
 // 获取句柄整数地址
@@ -2464,29 +2464,29 @@ endfunction
 
 // 玩家按下方向键事件
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
-    if (keType == bj_KEYEVENTTYPE_DEPRESS) then
+    if(keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
-        if (keKey == bj_KEYEVENTKEY_LEFT) then
+        if(keKey == bj_KEYEVENTKEY_LEFT) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_DOWN)
-        elseif (keKey == bj_KEYEVENTKEY_RIGHT) then
+        elseif(keKey == bj_KEYEVENTKEY_RIGHT) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_DOWN)
-        elseif (keKey == bj_KEYEVENTKEY_DOWN) then
+        elseif(keKey == bj_KEYEVENTKEY_DOWN) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_DOWN)
-        elseif (keKey == bj_KEYEVENTKEY_UP) then
+        elseif(keKey == bj_KEYEVENTKEY_UP) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_DOWN)
         else
             // Unrecognized key - ignore the request and return failure.
             return null
         endif
-    elseif (keType == bj_KEYEVENTTYPE_RELEASE) then
+    elseif(keType == bj_KEYEVENTTYPE_RELEASE) then
         // Release event - find out what key
-        if (keKey == bj_KEYEVENTKEY_LEFT) then
+        if(keKey == bj_KEYEVENTKEY_LEFT) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_UP)
-        elseif (keKey == bj_KEYEVENTKEY_RIGHT) then
+        elseif(keKey == bj_KEYEVENTKEY_RIGHT) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_UP)
-        elseif (keKey == bj_KEYEVENTKEY_DOWN) then
+        elseif(keKey == bj_KEYEVENTKEY_DOWN) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_UP)
-        elseif (keKey == bj_KEYEVENTKEY_UP) then
+        elseif(keKey == bj_KEYEVENTKEY_UP) then
             return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_UP)
         else
             // Unrecognized key - ignore the request and return failure.
@@ -2500,18 +2500,18 @@ endfunction
 
 // 玩家按下鼠标事件
 function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
-     if (meType == bj_MOUSEEVENTTYPE_DOWN) then
+    if(meType == bj_MOUSEEVENTTYPE_DOWN) then
         // Mouse down event
         return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_DOWN)
-    elseif (meType == bj_MOUSEEVENTTYPE_UP) then
+    elseif(meType == bj_MOUSEEVENTTYPE_UP) then
         // Mouse up event
         return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_UP)
-    elseif (meType == bj_MOUSEEVENTTYPE_MOVE) then
+    elseif(meType == bj_MOUSEEVENTTYPE_MOVE) then
         // Mouse move event
         return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_MOUSE_MOVE)
     else
         // Unrecognized type - ignore the request and return failure.
-         return null
+        return null
     endif
 endfunction
 
@@ -2662,7 +2662,7 @@ endfunction
 // 矩形区域内可破坏物死亡事件动作
 function RegisterDestDeathInRegionEnum takes nothing returns nothing
     set bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
-    if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
+    if(bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
         call TriggerRegisterDeathEvent(bj_destInRegionDiesTrig, GetEnumDestructable())
     endif
 endfunction
@@ -2727,7 +2727,7 @@ function TerrainDeformationRippleBJ takes real duration, boolean limitNeg, locat
     local real timeWave
     local real radiusRatio
 
-    if (endRadius <= 0 or waveWidth <= 0 or wavePeriod <= 0) then
+    if(endRadius <= 0 or waveWidth <= 0 or wavePeriod <= 0) then
         return null
     endif
 
@@ -2754,7 +2754,7 @@ function TerrainDeformationWaveBJ takes real duration, location source, location
     local real speed
 
     set distance = DistanceBetweenPoints(source, target)
-    if (distance == 0 or duration <= 0) then
+    if(distance == 0 or duration <= 0) then
         return null
     endif
 
@@ -2897,7 +2897,7 @@ endfunction
 
 // 设置 水面 颜色
 function SetWaterBaseColorBJ takes real red, real green, real blue, real transparency returns nothing
-    call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -3033,7 +3033,7 @@ endfunction
 
 // 设置图像颜色
 function SetImageColorBJ takes image whichImage, real red, real green, real blue, real alpha returns nothing
-    call SetImageColor(whichImage, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-alpha))
+    call SetImageColor(whichImage, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - alpha))
 endfunction
 
 
@@ -3048,7 +3048,7 @@ endfunction
 // @param forcePaused 是否禁用暂停状态
 // @param noBirthTime 是否启用出生动画
 function CreateUbersplatBJ takes location where, string name, real red, real green, real blue, real alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-    set bj_lastCreatedUbersplat = CreateUbersplat(GetLocationX(where), GetLocationY(where), name, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-alpha), forcePaused, noBirthTime)
+    set bj_lastCreatedUbersplat = CreateUbersplat(GetLocationX(where), GetLocationY(where), name, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - alpha), forcePaused, noBirthTime)
     return bj_lastCreatedUbersplat
 endfunction
 
@@ -3090,131 +3090,131 @@ endfunction
 // 创建小地图（任务）图标（指定单位和样式）
 function CampaignMinimapIconUnitBJ takes unit whichUnit, integer style returns nothing
 	local integer	red
-	local integer 	green
-	local integer 	blue
-	local string 	path
-	if ( style == bj_CAMPPINGSTYLE_PRIMARY ) then
+	local integer green
+	local integer blue
+	local string path
+	if(style == bj_CAMPPINGSTYLE_PRIMARY) then
 		// green
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_GREEN ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_PRIMARY_GREEN) then
 		// green
-		set red 	= 0
-		set green 	= 255
+		set red = 0
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_RED ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_PRIMARY_RED) then
 		// green
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_BONUS ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_BONUS) then
 		// yellow
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectiveBonus" )
-	elseif ( style == bj_CAMPPINGSTYLE_TURNIN ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectiveBonus")
+	elseif(style == bj_CAMPPINGSTYLE_TURNIN) then
 		// yellow
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestTurnIn" )
-	elseif ( style == bj_CAMPPINGSTYLE_BOSS ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestTurnIn")
+	elseif(style == bj_CAMPPINGSTYLE_BOSS) then
 		// red
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestBoss" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ALLY ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestBoss")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_ALLY) then
 		// green
-		set red 	= 0
-		set green 	= 255
+		set red = 0
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL) then
 		// white
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 255
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ENEMY ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_ENEMY) then
 		// red
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
 	endif
-	call CreateMinimapIconOnUnitBJ( whichUnit, red, green, blue, path, FOG_OF_WAR_MASKED )
-    call SetMinimapIconOrphanDestroy( bj_lastCreatedMinimapIcon, true )
+	call CreateMinimapIconOnUnitBJ(whichUnit, red, green, blue, path, FOG_OF_WAR_MASKED)
+    call SetMinimapIconOrphanDestroy(bj_lastCreatedMinimapIcon, true)
 endfunction
 
 
 // 创建小地图（任务）图标（指定点和样式）
 function CampaignMinimapIconLocBJ takes location where, integer style returns nothing
 	local integer	red
-	local integer 	green
-	local integer 	blue
-	local string 	path
-	if ( style == bj_CAMPPINGSTYLE_PRIMARY ) then
+	local integer green
+	local integer blue
+	local string path
+	if(style == bj_CAMPPINGSTYLE_PRIMARY) then
 		// green (different from the unit version)
-		set red 	= 0
-		set green 	= 255
+		set red = 0
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_GREEN ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_PRIMARY_GREEN) then
 		// green (different from the unit version)
-		set red 	= 0
-		set green 	= 255
+		set red = 0
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_PRIMARY_RED ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_PRIMARY_RED) then
 		// green (different from the unit version)
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectivePrimary" )
-	elseif ( style == bj_CAMPPINGSTYLE_BONUS ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectivePrimary")
+	elseif(style == bj_CAMPPINGSTYLE_BONUS) then
 		// yellow
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestObjectiveBonus" )
-	elseif ( style == bj_CAMPPINGSTYLE_TURNIN ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestObjectiveBonus")
+	elseif(style == bj_CAMPPINGSTYLE_TURNIN) then
 		// yellow
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestTurnIn" )
-	elseif ( style == bj_CAMPPINGSTYLE_BOSS ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestTurnIn")
+	elseif(style == bj_CAMPPINGSTYLE_BOSS) then
 		// red
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestBoss" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ALLY ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestBoss")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_ALLY) then
 		// green
-		set red 	= 0
-		set green 	= 255
+		set red = 0
+		set green = 255
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_NEUTRAL) then
 		// white
-		set red 	= 255
-		set green 	= 255
+		set red = 255
+		set green = 255
 		set blue	= 255
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
-	elseif ( style == bj_CAMPPINGSTYLE_CONTROL_ENEMY ) then
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
+	elseif(style == bj_CAMPPINGSTYLE_CONTROL_ENEMY) then
 		// red
-		set red 	= 255
-		set green 	= 0
+		set red = 255
+		set green = 0
 		set blue	= 0
-		set path	= SkinManagerGetLocalPath( "MinimapQuestControlPoint" )
+		set path	= SkinManagerGetLocalPath("MinimapQuestControlPoint")
 	endif
-	call CreateMinimapIconAtLocBJ( where, red, green, blue, path, FOG_OF_WAR_MASKED )
+	call CreateMinimapIconAtLocBJ(where, red, green, blue, path, FOG_OF_WAR_MASKED)
 endfunction
 
 
@@ -3228,7 +3228,7 @@ endfunction
 // 播放声音
 function PlaySoundBJ takes sound soundHandle returns nothing
     set bj_lastPlayedSound = soundHandle
-    if (soundHandle != null) then
+    if(soundHandle != null) then
         call StartSound(soundHandle)
     endif
 endfunction
@@ -3380,7 +3380,7 @@ endfunction
 
 // 获取声音持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real
-    if (soundHandle == null) then
+    if(soundHandle == null) then
         return bj_NOTHING_SOUND_DURATION
     else
         return I2R(GetSoundDuration(soundHandle)) * 0.001
@@ -3414,14 +3414,14 @@ endfunction
 
 // 设置电影所有频道音量环境(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT,  bj_CINEMODE_VOLUME_UNITMOVEMENT)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS,    bj_CINEMODE_VOLUME_UNITSOUNDS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT,        bj_CINEMODE_VOLUME_COMBAT)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS,        bj_CINEMODE_VOLUME_SPELLS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI,            bj_CINEMODE_VOLUME_UI)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC,         bj_CINEMODE_VOLUME_MUSIC)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT, bj_CINEMODE_VOLUME_COMBAT)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS, bj_CINEMODE_VOLUME_SPELLS)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI, bj_CINEMODE_VOLUME_UI)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC, bj_CINEMODE_VOLUME_MUSIC)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_AMBIENTSOUNDS, bj_CINEMODE_VOLUME_AMBIENTSOUNDS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE,          bj_CINEMODE_VOLUME_FIRE)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE, bj_CINEMODE_VOLUME_FIRE)
 endfunction
 
 
@@ -3438,14 +3438,14 @@ endfunction
 
 // 设置所有频道发言音量环境为默认值(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT,  bj_SPEECH_VOLUME_UNITMOVEMENT)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS,    bj_SPEECH_VOLUME_UNITSOUNDS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT,        bj_SPEECH_VOLUME_COMBAT)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS,        bj_SPEECH_VOLUME_SPELLS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI,            bj_SPEECH_VOLUME_UI)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC,         bj_SPEECH_VOLUME_MUSIC)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_SPEECH_VOLUME_UNITMOVEMENT)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_SPEECH_VOLUME_UNITSOUNDS)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT, bj_SPEECH_VOLUME_COMBAT)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS, bj_SPEECH_VOLUME_SPELLS)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI, bj_SPEECH_VOLUME_UI)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC, bj_SPEECH_VOLUME_MUSIC)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_AMBIENTSOUNDS, bj_SPEECH_VOLUME_AMBIENTSOUNDS)
-    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE,          bj_SPEECH_VOLUME_FIRE)
+    call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE, bj_SPEECH_VOLUME_FIRE)
 endfunction
 
 
@@ -3485,7 +3485,7 @@ endfunction
 
 // 等到指定音效结束前N秒（指定时间）
 function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
-    call TriggerWaitForSound( soundHandle, offset )
+    call TriggerWaitForSound(soundHandle, offset)
 endfunction
 
 
@@ -3523,7 +3523,7 @@ endfunction
 
 // 为指定玩家播放声音
 function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle returns nothing
-    if (whichPlayer == GetLocalPlayer()) then
+    if(whichPlayer == GetLocalPlayer()) then
         call StartSound(soundHandle)
     endif
 endfunction
@@ -3531,7 +3531,7 @@ endfunction
 
 // 设置玩家声音频道音量
 function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup vgroup, real scale returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         call VolumeGroupSetVolume(vgroup, scale)
     endif
 endfunction
@@ -3562,7 +3562,7 @@ function SetAmbientDaySound takes string inLabel returns nothing
     local real ToD
 
     // Stop old sound, if necessary
-    if (bj_dayAmbientSound != null) then
+    if(bj_dayAmbientSound != null) then
         call StopSound(bj_dayAmbientSound, true, true)
     endif
 
@@ -3571,7 +3571,7 @@ function SetAmbientDaySound takes string inLabel returns nothing
 
     // Start the sound if necessary, based on current time
     set ToD = GetTimeOfDay()
-    if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) then
+    if(ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) then
         call StartSound(bj_dayAmbientSound)
     endif
 endfunction
@@ -3582,7 +3582,7 @@ function SetAmbientNightSound takes string inLabel returns nothing
     local real ToD
 
     // Stop old sound, if necessary
-    if (bj_nightAmbientSound != null) then
+    if(bj_nightAmbientSound != null) then
         call StopSound(bj_nightAmbientSound, true, true)
     endif
 
@@ -3591,7 +3591,7 @@ function SetAmbientNightSound takes string inLabel returns nothing
 
     // Start the sound if necessary, based on current time
     set ToD = GetTimeOfDay()
-    if (ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) then
+    if(ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) then
         call StartSound(bj_nightAmbientSound)
     endif
 endfunction
@@ -3690,13 +3690,13 @@ endfunction
 function CreateBuildCommandButtonEffectBJ takes integer unitId returns commandbuttoneffect
 	local race r = GetPlayerRace(GetLocalPlayer())
 	local integer abilityId
-	if (r == RACE_HUMAN) then
+	if(r == RACE_HUMAN) then
         set abilityId = 'AHbu'
-    elseif (r == RACE_ORC) then
+    elseif(r == RACE_ORC) then
         set abilityId = 'AObu'
-    elseif (r == RACE_UNDEAD) then
+    elseif(r == RACE_UNDEAD) then
         set abilityId = 'AUbu'
-    elseif (r == RACE_NIGHTELF) then
+    elseif(r == RACE_NIGHTELF) then
         set abilityId = 'AEbu'
     else
         set abilityId = 'ANbu'
@@ -3747,9 +3747,9 @@ endfunction
 function SetHeroLevelBJ takes unit whichHero, integer newLevel, boolean showEyeCandy returns nothing
     local integer oldLevel = GetHeroLevel(whichHero)
 
-    if (newLevel > oldLevel) then
+    if(newLevel > oldLevel) then
         call SetHeroLevel(whichHero, newLevel, showEyeCandy)
-    elseif (newLevel < oldLevel) then
+    elseif(newLevel < oldLevel) then
         call UnitStripHeroLevel(whichHero, oldLevel - newLevel)
     else
         // No change in level - ignore the request.
@@ -3783,7 +3783,7 @@ endfunction
 
 // 判断单位是否拥有 魔法特效（Buff）
 function UnitHasBuffBJ takes unit whichUnit, integer buffcode returns boolean
-    return (GetUnitAbilityLevel(whichUnit, buffcode) > 0)
+    return(GetUnitAbilityLevel(whichUnit, buffcode) > 0)
 endfunction
 
 
@@ -3822,7 +3822,7 @@ endfunction
 // 删除物品（指定物品栏位置）
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
-    set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot-1)
+    set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
     return bj_lastRemovedItem
 endfunction
 
@@ -3912,11 +3912,11 @@ endfunction
 
 // 获取英雄属性值，获取失败会返回0
 function GetHeroStatBJ takes integer whichStat, unit whichHero, boolean includeBonuses returns integer
-    if (whichStat == bj_HEROSTAT_STR) then
+    if(whichStat == bj_HEROSTAT_STR) then
         return GetHeroStr(whichHero, includeBonuses)
-    elseif (whichStat == bj_HEROSTAT_AGI) then
+    elseif(whichStat == bj_HEROSTAT_AGI) then
         return GetHeroAgi(whichHero, includeBonuses)
-    elseif (whichStat == bj_HEROSTAT_INT) then
+    elseif(whichStat == bj_HEROSTAT_INT) then
         return GetHeroInt(whichHero, includeBonuses)
     else
         // Unrecognized hero stat - return 0
@@ -3928,15 +3928,15 @@ endfunction
 // 设置英雄属性值
 function SetHeroStat takes unit whichHero, integer whichStat, integer value returns nothing
     // Ignore requests for negative hero stats.
-    if (value <= 0) then
+    if(value <= 0) then
         return
     endif
 
-    if (whichStat == bj_HEROSTAT_STR) then
+    if(whichStat == bj_HEROSTAT_STR) then
         call SetHeroStr(whichHero, value, true)
-    elseif (whichStat == bj_HEROSTAT_AGI) then
+    elseif(whichStat == bj_HEROSTAT_AGI) then
         call SetHeroAgi(whichHero, value, true)
-    elseif (whichStat == bj_HEROSTAT_INT) then
+    elseif(whichStat == bj_HEROSTAT_INT) then
         call SetHeroInt(whichHero, value, true)
     else
         // Unrecognized hero stat - ignore the request.
@@ -3946,11 +3946,11 @@ endfunction
 
 // 修改英雄属性
 function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyMethod, integer value returns nothing
-    if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+    if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         call SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) + value)
-    elseif (modifyMethod == bj_MODIFYMETHOD_SUB) then
+    elseif(modifyMethod == bj_MODIFYMETHOD_SUB) then
         call SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) - value)
-    elseif (modifyMethod == bj_MODIFYMETHOD_SET) then
+    elseif(modifyMethod == bj_MODIFYMETHOD_SET) then
         call SetHeroStat(whichHero, whichStat, value)
     else
         // Unrecognized modification method - ignore the request.
@@ -3960,11 +3960,11 @@ endfunction
 
 // 修改英雄技能点数，修改失败会返回 false
 function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integer value returns boolean
-    if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+    if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         return UnitModifySkillPoints(whichHero, value)
-    elseif (modifyMethod == bj_MODIFYMETHOD_SUB) then
-        return UnitModifySkillPoints(whichHero, -value)
-    elseif (modifyMethod == bj_MODIFYMETHOD_SET) then
+    elseif(modifyMethod == bj_MODIFYMETHOD_SUB) then
+        return UnitModifySkillPoints(whichHero, - value)
+    elseif(modifyMethod == bj_MODIFYMETHOD_SET) then
         return UnitModifySkillPoints(whichHero, value - GetHeroSkillPoints(whichHero))
     else
         // Unrecognized modification method - ignore the request and return failure.
@@ -3987,7 +3987,7 @@ endfunction
 
 // 发布移动物品命令（指定物品栏格数）
 function UnitDropItemSlotBJ takes unit whichUnit, item whichItem, integer slot returns boolean
-    return UnitDropItemSlot(whichUnit, whichItem, slot-1)
+    return UnitDropItemSlot(whichUnit, whichItem, slot - 1)
 endfunction
 
 
@@ -4014,7 +4014,7 @@ endfunction
 // 获取英雄携带的物品（指定物品格）
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitItemInSlotBJ takes unit whichUnit, integer itemSlot returns item
-    return UnitItemInSlot(whichUnit, itemSlot-1)
+    return UnitItemInSlot(whichUnit, itemSlot - 1)
 endfunction
 
 
@@ -4022,12 +4022,12 @@ endfunction
 // Translates 0-based slot indices to 1-based slot indices.
 function GetInventoryIndexOfItemTypeBJ takes unit whichUnit, integer itemId returns integer
     local integer index
-    local item    indexItem
+    local item indexItem
 
     set index = 0
     loop
         set indexItem = UnitItemInSlot(whichUnit, index)
-        if (indexItem != null) and (GetItemTypeId(indexItem) == itemId) then
+        if(indexItem != null) and(GetItemTypeId(indexItem) == itemId) then
             return index + 1
         endif
 
@@ -4042,7 +4042,7 @@ endfunction
 function GetItemOfTypeFromUnitBJ takes unit whichUnit, integer itemId returns item
     local integer index = GetInventoryIndexOfItemTypeBJ(whichUnit, itemId)
 
-    if (index == 0) then
+    if(index == 0) then
         return null
     else
         return UnitItemInSlot(whichUnit, index - 1)
@@ -4063,7 +4063,7 @@ function UnitInventoryCount takes unit whichUnit returns integer
     local integer count = 0
 
     loop
-        if (UnitItemInSlot(whichUnit, index) != null) then
+        if(UnitItemInSlot(whichUnit, index) != null) then
             set count = count + 1
         endif
 
@@ -4151,7 +4151,7 @@ endfunction
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 function RandomItemInRectBJEnum takes nothing returns nothing
     set bj_itemRandomConsidered = bj_itemRandomConsidered + 1
-    if (GetRandomInt(1, bj_itemRandomConsidered) == 1) then
+    if(GetRandomInt(1, bj_itemRandomConsidered) == 1) then
         set bj_itemRandomCurrentPick = GetEnumItem()
     endif
 endfunction
@@ -4177,17 +4177,17 @@ endfunction
 
 // 物品状态检查（指定物品）
 function CheckItemStatus takes item whichItem, integer status returns boolean
-    if (status == bj_ITEM_STATUS_HIDDEN) then
+    if(status == bj_ITEM_STATUS_HIDDEN) then
         return not IsItemVisible(whichItem)
-    elseif (status == bj_ITEM_STATUS_OWNED) then
+    elseif(status == bj_ITEM_STATUS_OWNED) then
         return IsItemOwned(whichItem)
-    elseif (status == bj_ITEM_STATUS_INVULNERABLE) then
+    elseif(status == bj_ITEM_STATUS_INVULNERABLE) then
         return IsItemInvulnerable(whichItem)
-    elseif (status == bj_ITEM_STATUS_POWERUP) then
+    elseif(status == bj_ITEM_STATUS_POWERUP) then
         return IsItemPowerup(whichItem)
-    elseif (status == bj_ITEM_STATUS_SELLABLE) then
+    elseif(status == bj_ITEM_STATUS_SELLABLE) then
         return IsItemSellable(whichItem)
-    elseif (status == bj_ITEM_STATUS_PAWNABLE) then
+    elseif(status == bj_ITEM_STATUS_PAWNABLE) then
         return IsItemPawnable(whichItem)
     else
         // Unrecognized status - return false
@@ -4198,11 +4198,11 @@ endfunction
 
 // 物品状态检查（指定类型）
 function CheckItemcodeStatus takes integer itemId, integer status returns boolean
-    if (status == bj_ITEMCODE_STATUS_POWERUP) then
+    if(status == bj_ITEMCODE_STATUS_POWERUP) then
         return IsItemIdPowerup(itemId)
-    elseif (status == bj_ITEMCODE_STATUS_SELLABLE) then
+    elseif(status == bj_ITEMCODE_STATUS_SELLABLE) then
         return IsItemIdSellable(itemId)
-    elseif (status == bj_ITEMCODE_STATUS_PAWNABLE) then
+    elseif(status == bj_ITEMCODE_STATUS_PAWNABLE) then
         return IsItemIdPawnable(itemId)
     else
         // Unrecognized status - return false
@@ -4235,7 +4235,7 @@ endfunction
 function UnitId2StringBJ takes integer unitId returns string
     local string unitString = UnitId2String(unitId)
 
-    if (unitString != null) then
+    if(unitString != null) then
         return unitString
     endif
 
@@ -4250,13 +4250,13 @@ function String2OrderIdBJ takes string orderIdString returns integer
     
     // Check to see if it's a generic order.
     set orderId = OrderId(orderIdString)
-    if (orderId != 0) then
+    if(orderId != 0) then
         return orderId
     endif
 
     // Check to see if it's a (train) unit order.
     set orderId = UnitId(orderIdString)
-    if (orderId != 0) then
+    if(orderId != 0) then
         return orderId
     endif
 
@@ -4271,13 +4271,13 @@ function OrderId2StringBJ takes integer orderId returns string
 
     // Check to see if it's a generic order.
     set orderString = OrderId2String(orderId)
-    if (orderString != null) then
+    if(orderString != null) then
         return orderString
     endif
 
     // Check to see if it's a (train) unit order.
     set orderString = UnitId2String(orderId)
-    if (orderString != null) then
+    if(orderString != null) then
         return orderString
     endif
 
@@ -4300,7 +4300,7 @@ endfunction
 
 // 创建单位(指定点及朝向)
 function CreateUnitAtLocSaveLast takes player id, integer unitid, location loc, real face returns unit
-    if (unitid == 'ugol') then
+    if(unitid == 'ugol') then
         set bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
     else
         set bj_lastCreatedUnit = CreateUnitAtLoc(id, unitid, loc, face)
@@ -4368,7 +4368,7 @@ endfunction
 function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
-    if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+    if(GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
         call SetUnitTimeScale(enumUnit, 0.0001)
     endif
 endfunction
@@ -4378,7 +4378,7 @@ endfunction
 function DelayedSuspendDecayBoneEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
-    if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+    if(GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
         call UnitSuspendDecay(enumUnit, true)
         call SetUnitTimeScale(enumUnit, 0.0001)
     endif
@@ -4392,7 +4392,7 @@ endfunction
 function DelayedSuspendDecayFleshEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
-    if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+    if(GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
         call UnitSuspendDecay(enumUnit, true)
         call SetUnitTimeScale(enumUnit, 10.0)
         call SetUnitAnimation(enumUnit, "decay flesh")
@@ -4442,10 +4442,10 @@ function CreatePermanentCorpseLocBJ takes integer style, integer unitid, player 
     set bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), facing)
     call SetUnitBlendTime(bj_lastCreatedUnit, 0)
 
-    if (style == bj_CORPSETYPE_FLESH) then
+    if(style == bj_CORPSETYPE_FLESH) then
         call SetUnitAnimation(bj_lastCreatedUnit, "decay flesh")
         call GroupAddUnit(bj_suspendDecayFleshGroup, bj_lastCreatedUnit)
-    elseif (style == bj_CORPSETYPE_BONE) then
+    elseif(style == bj_CORPSETYPE_BONE) then
         call SetUnitAnimation(bj_lastCreatedUnit, "decay bone")
         call GroupAddUnit(bj_suspendDecayBoneGroup, bj_lastCreatedUnit)
     else
@@ -4466,11 +4466,11 @@ endfunction
 
 // 获取指定单位指定属性（以百分比形式返回）
 function GetUnitStatePercent takes unit whichUnit, unitstate whichState, unitstate whichMaxState returns real
-    local real value    = GetUnitState(whichUnit, whichState)
+    local real value = GetUnitState(whichUnit, whichState)
     local real maxValue = GetUnitState(whichUnit, whichMaxState)
 
     // Return 0 for null units.
-    if (whichUnit == null) or (maxValue == 0) then
+    if(whichUnit == null) or(maxValue == 0) then
         return 0.0
     endif
 
@@ -4499,13 +4499,13 @@ endfunction
 
 // 选择单位组中的匹配单位
 function SelectGroupBJEnum takes nothing returns nothing
-    call SelectUnit( GetEnumUnit(), true )
+    call SelectUnit(GetEnumUnit(), true)
 endfunction
 
 // 选择单位组
 function SelectGroupBJ takes group g returns nothing
     call ClearSelection()
-    call ForGroup( g, function SelectGroupBJEnum )
+    call ForGroup(g, function SelectGroupBJEnum)
 endfunction
 
 
@@ -4523,7 +4523,7 @@ endfunction
 
 // 取消选择单位（指定玩家）
 function ClearSelectionForPlayer takes player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ClearSelection()
     endif
@@ -4532,7 +4532,7 @@ endfunction
 
 // 取消选择单位（指定单位和玩家）
 function SelectUnitForPlayerSingle takes unit whichUnit, player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ClearSelection()
         call SelectUnit(whichUnit, true)
@@ -4542,17 +4542,17 @@ endfunction
 
 // 取消选择单位（指定单位组和玩家）
 function SelectGroupForPlayerBJ takes group g, player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ClearSelection()
-        call ForGroup( g, function SelectGroupBJEnum )
+        call ForGroup(g, function SelectGroupBJEnum)
     endif
 endfunction
 
 
 // 选择单位（指定单位和玩家）
 function SelectUnitAddForPlayer takes unit whichUnit, player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SelectUnit(whichUnit, true)
     endif
@@ -4561,7 +4561,7 @@ endfunction
 
 // 取消选择单位（指定单位和玩家）
 function SelectUnitRemoveForPlayer takes unit whichUnit, player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SelectUnit(whichUnit, false)
     endif
@@ -4570,25 +4570,25 @@ endfunction
 
 // 设置单位生命值 (数值)
 function SetUnitLifeBJ takes unit whichUnit, real newValue returns nothing
-    call SetUnitState(whichUnit, UNIT_STATE_LIFE, RMaxBJ(0,newValue))
+    call SetUnitState(whichUnit, UNIT_STATE_LIFE, RMaxBJ(0, newValue))
 endfunction
 
 
 // 设置单位魔法值 (数值)
 function SetUnitManaBJ takes unit whichUnit, real newValue returns nothing
-    call SetUnitState(whichUnit, UNIT_STATE_MANA, RMaxBJ(0,newValue))
+    call SetUnitState(whichUnit, UNIT_STATE_MANA, RMaxBJ(0, newValue))
 endfunction
 
 
 // 设置单位生命值 (百分比)
 function SetUnitLifePercentBJ takes unit whichUnit, real percent returns nothing
-    call SetUnitState(whichUnit, UNIT_STATE_LIFE, GetUnitState(whichUnit, UNIT_STATE_MAX_LIFE) * RMaxBJ(0,percent) * 0.01)
+    call SetUnitState(whichUnit, UNIT_STATE_LIFE, GetUnitState(whichUnit, UNIT_STATE_MAX_LIFE) * RMaxBJ(0, percent) * 0.01)
 endfunction
 
 
 // 设置单位魔法值 (百分比)
 function SetUnitManaPercentBJ takes unit whichUnit, real percent returns nothing
-    call SetUnitState(whichUnit, UNIT_STATE_MANA, GetUnitState(whichUnit, UNIT_STATE_MAX_MANA) * RMaxBJ(0,percent) * 0.01)
+    call SetUnitState(whichUnit, UNIT_STATE_MANA, GetUnitState(whichUnit, UNIT_STATE_MAX_MANA) * RMaxBJ(0, percent) * 0.01)
 endfunction
 
 
@@ -4625,7 +4625,7 @@ function IsUnitGroupDeadBJ takes group g returns boolean
     call ForGroup(g, function IsUnitGroupDeadBJEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(g)
     endif
     return bj_isUnitGroupDeadResult
@@ -4651,7 +4651,7 @@ function IsUnitGroupEmptyBJ takes group g returns boolean
     call ForGroup(g, function IsUnitGroupEmptyBJEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(g)
     endif
     return bj_isUnitGroupEmptyResult
@@ -4693,7 +4693,7 @@ endfunction
 // 显示单位
 function ShowUnitShow takes unit whichUnit returns nothing
     // Prevent dead heroes from being unhidden.
-    if (IsUnitType(whichUnit, UNIT_TYPE_HERO) and IsUnitDeadBJ(whichUnit)) then
+    if(IsUnitType(whichUnit, UNIT_TYPE_HERO) and IsUnitDeadBJ(whichUnit)) then
         return
     endif
 
@@ -4712,12 +4712,12 @@ function IssueHauntOrderAtLocBJ takes unit whichPeon, location loc returns boole
 
     // Search for a gold mine within a 1-cell radius of the specified location.
     set g = CreateGroup()
-    call GroupEnumUnitsInRangeOfLoc(g, loc, 2*bj_CELLWIDTH, filterIssueHauntOrderAtLocBJ)
+    call GroupEnumUnitsInRangeOfLoc(g, loc, 2 * bj_CELLWIDTH, filterIssueHauntOrderAtLocBJ)
     set goldMine = FirstOfGroup(g)
     call DestroyGroup(g)
 
     // If no mine was found, abort the request.
-    if (goldMine == null) then
+    if(goldMine == null) then
         return false
     endif
 
@@ -4728,7 +4728,7 @@ endfunction
 
 // 按ID发布建造建筑命令（指定点）
 function IssueBuildOrderByIdLocBJ takes unit whichPeon, integer unitId, location loc returns boolean
-    if (unitId == 'ugol') then
+    if(unitId == 'ugol') then
         return IssueHauntOrderAtLocBJ(whichPeon, loc)
     else
         return IssueBuildOrderById(whichPeon, unitId, GetLocationX(loc), GetLocationY(loc))
@@ -4775,9 +4775,9 @@ endfunction
 // 设置单位转向角度
 function SetUnitPropWindowBJ takes unit whichUnit, real propWindow returns nothing
     local real angle = propWindow
-    if (angle <= 0) then
+    if(angle <= 0) then
         set angle = 1
-    elseif (angle >= 360) then
+    elseif(angle >= 360) then
         set angle = 359
     endif
     set angle = angle * bj_DEGTORAD
@@ -4852,7 +4852,7 @@ function EnableCreepSleepBJ takes boolean enable returns nothing
     call SetPlayerState(Player(PLAYER_NEUTRAL_AGGRESSIVE), PLAYER_STATE_NO_CREEP_SLEEP, IntegerTertiaryOp(enable, 0, 1))
 
     // If we're disabling, attempt to wake any already-sleeping creeps.
-    if (not enable) then
+    if(not enable) then
         call WakePlayerUnits(Player(PLAYER_NEUTRAL_AGGRESSIVE))
     endif
 endfunction
@@ -4872,31 +4872,31 @@ endfunction
 
 // 暂停所有单位 Pause all units 
 function PauseAllUnitsBJEnum takes nothing returns nothing
-    call PauseUnit( GetEnumUnit(), bj_pauseAllUnitsFlag )
+    call PauseUnit(GetEnumUnit(), bj_pauseAllUnitsFlag)
 endfunction
 
 
 // 暂停/恢复 所有单位 Pause all units 
 function PauseAllUnitsBJ takes boolean pause returns nothing
     local integer index
-    local player  indexPlayer
-    local group   g
+    local player indexPlayer
+    local group g
 
     set bj_pauseAllUnitsFlag = pause
     set g = CreateGroup()
     set index = 0
     loop
-        set indexPlayer = Player( index )
+        set indexPlayer = Player(index)
 
         // If this is a computer slot, pause/resume the AI.
-        if (GetPlayerController( indexPlayer ) == MAP_CONTROL_COMPUTER) then
-            call PauseCompAI( indexPlayer, pause )
+        if(GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+            call PauseCompAI(indexPlayer, pause)
         endif
 
         // Enumerate and unpause every unit owned by the player.
-        call GroupEnumUnitsOfPlayer( g, indexPlayer, null )
-        call ForGroup( g, function PauseAllUnitsBJEnum )
-        call GroupClear( g )
+        call GroupEnumUnitsOfPlayer(g, indexPlayer, null)
+        call ForGroup(g, function PauseAllUnitsBJEnum)
+        call GroupClear(g)
 
         set index = index + 1
         exitwhen index == bj_MAX_PLAYER_SLOTS
@@ -4938,13 +4938,13 @@ endfunction
 
 // 删除 指定单位魔法效果（BUFF）
 function UnitRemoveBuffsBJ takes integer buffType, unit whichUnit returns nothing
-    if (buffType == bj_REMOVEBUFFS_POSITIVE) then
+    if(buffType == bj_REMOVEBUFFS_POSITIVE) then
         call UnitRemoveBuffs(whichUnit, true, false)
-    elseif (buffType == bj_REMOVEBUFFS_NEGATIVE) then
+    elseif(buffType == bj_REMOVEBUFFS_NEGATIVE) then
         call UnitRemoveBuffs(whichUnit, false, true)
-    elseif (buffType == bj_REMOVEBUFFS_ALL) then
+    elseif(buffType == bj_REMOVEBUFFS_ALL) then
         call UnitRemoveBuffs(whichUnit, true, true)
-    elseif (buffType == bj_REMOVEBUFFS_NONTLIFE) then
+    elseif(buffType == bj_REMOVEBUFFS_NONTLIFE) then
         call UnitRemoveBuffsEx(whichUnit, true, true, false, false, false, true, false)
     else
         // Unrecognized dispel type - ignore the request.
@@ -4954,10 +4954,10 @@ endfunction
 
 // 删除指定单位拥有的 魔法效果（BUFF） (按类型)
 function UnitRemoveBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns nothing
-    local boolean bPos   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
-    local boolean bNeg   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
-    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC)
-    local boolean bPhys  = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL)
+    local boolean bPos = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
+    local boolean bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
+    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
+    local boolean bPhys = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
 
     call UnitRemoveBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 endfunction
@@ -4965,10 +4965,10 @@ endfunction
 
 // 获取指定单位拥有的 魔法效果（BUFF） 的数量
 function UnitCountBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns integer
-    local boolean bPos   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
-    local boolean bNeg   = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
-    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC)
-    local boolean bPhys  = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL)
+    local boolean bPos = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
+    local boolean bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
+    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
+    local boolean bPhys = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
 
     return UnitCountBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 endfunction
@@ -5051,15 +5051,15 @@ endfunction
 // This attempts to replace a unit with a new unit type by creating a new
 // unit of the desired type using the old unit's location, facing, etc.
 function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStateMethod returns unit
-    local unit    oldUnit = whichUnit
-    local unit    newUnit
+    local unit oldUnit = whichUnit
+    local unit newUnit
     local boolean wasHidden
     local integer index
-    local item    indexItem
-    local real    oldRatio
+    local item indexItem
+    local real oldRatio
 
     // If we have bogus data, don't attempt the replace.
-    if (oldUnit == null) then
+    if(oldUnit == null) then
         set bj_lastReplacedUnit = oldUnit
         return oldUnit
     endif
@@ -5069,35 +5069,35 @@ function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStat
     call ShowUnit(oldUnit, false)
 
     // Create the replacement unit.
-    if (newUnitId == 'ugol') then
+    if(newUnitId == 'ugol') then
         set newUnit = CreateBlightedGoldmine(GetOwningPlayer(oldUnit), GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
     else
         set newUnit = CreateUnit(GetOwningPlayer(oldUnit), newUnitId, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
     endif
 
     // Set the unit's life and mana according to the requested method.
-    if (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+    if(unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
         // Set the replacement's current/max life ratio to that of the old unit.
         // If both units have mana, do the same for mana.
-        if (GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
+        if(GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
             set oldRatio = GetUnitState(oldUnit, UNIT_STATE_LIFE) / GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE)
             call SetUnitState(newUnit, UNIT_STATE_LIFE, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
         endif
 
-        if (GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0) and (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+        if(GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0) and(GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
             set oldRatio = GetUnitState(oldUnit, UNIT_STATE_MANA) / GetUnitState(oldUnit, UNIT_STATE_MAX_MANA)
             call SetUnitState(newUnit, UNIT_STATE_MANA, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
         endif
-    elseif (unitStateMethod == bj_UNIT_STATE_METHOD_ABSOLUTE) then
+    elseif(unitStateMethod == bj_UNIT_STATE_METHOD_ABSOLUTE) then
         // Set the replacement's current life to that of the old unit.
         // If the new unit has mana, do the same for mana.
         call SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(oldUnit, UNIT_STATE_LIFE))
-        if (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+        if(GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
             call SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(oldUnit, UNIT_STATE_MANA))
         endif
-    elseif (unitStateMethod == bj_UNIT_STATE_METHOD_DEFAULTS) then
+    elseif(unitStateMethod == bj_UNIT_STATE_METHOD_DEFAULTS) then
         // The newly created unit should already have default life and mana.
-    elseif (unitStateMethod == bj_UNIT_STATE_METHOD_MAXIMUM) then
+    elseif(unitStateMethod == bj_UNIT_STATE_METHOD_MAXIMUM) then
         // Use max life and mana.
         call SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
         call SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
@@ -5110,13 +5110,13 @@ function ReplaceUnitBJ takes unit whichUnit, integer newUnitId, integer unitStat
     call SetResourceAmount(newUnit, GetResourceAmount(oldUnit))
 
     // If both the old and new units are heroes, handle their hero info.
-    if (IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO)) then
+    if(IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO)) then
         call SetHeroXP(newUnit, GetHeroXP(oldUnit), false)
 
         set index = 0
         loop
             set indexItem = UnitItemInSlot(oldUnit, index)
-            if (indexItem != null) then
+            if(indexItem != null) then
                 call UnitRemoveItem(oldUnit, indexItem)
                 call UnitAddItem(newUnit, indexItem)
             endif
@@ -5288,7 +5288,7 @@ endfunction
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 function RandomDestructableInRectBJEnum takes nothing returns nothing
     set bj_destRandomConsidered = bj_destRandomConsidered + 1
-    if (GetRandomInt(1,bj_destRandomConsidered) == 1) then
+    if(GetRandomInt(1, bj_destRandomConsidered) == 1) then
         set bj_destRandomCurrentPick = GetEnumDestructable()
     endif
 endfunction
@@ -5318,7 +5318,7 @@ endfunction
 function EnumDestructablesInCircleBJ takes real radius, location loc, code actionFunc returns nothing
     local rect r
 
-    if (radius >= 0) then
+    if(radius >= 0) then
         set bj_enumDestructableCenter = loc
         set bj_enumDestructableRadius = radius
         set r = GetRectFromCircleBJ(loc, radius)
@@ -5342,18 +5342,18 @@ endfunction
 
 // 打开/关闭/破坏 门
 function ModifyGateBJ takes integer gateOperation, destructable d returns nothing
-    if (gateOperation == bj_GATEOPERATION_CLOSE) then
-        if (GetDestructableLife(d) <= 0) then
+    if(gateOperation == bj_GATEOPERATION_CLOSE) then
+        if(GetDestructableLife(d) <= 0) then
             call DestructableRestoreLife(d, GetDestructableMaxLife(d), true)
         endif
         call SetDestructableAnimation(d, "stand")
-    elseif (gateOperation == bj_GATEOPERATION_OPEN) then
-        if (GetDestructableLife(d) > 0) then
+    elseif(gateOperation == bj_GATEOPERATION_OPEN) then
+        if(GetDestructableLife(d) > 0) then
             call KillDestructable(d)
         endif
         call SetDestructableAnimation(d, "death alternate")
-    elseif (gateOperation == bj_GATEOPERATION_DESTROY) then
-        if (GetDestructableLife(d) > 0) then
+    elseif(gateOperation == bj_GATEOPERATION_DESTROY) then
+        if(GetDestructableLife(d) > 0) then
             call KillDestructable(d)
         endif
         call SetDestructableAnimation(d, "death")
@@ -5369,7 +5369,7 @@ function GetElevatorHeight takes destructable d returns integer
     local integer height
 
     set height = 1 + R2I(GetDestructableOccluderHeight(d) / bj_CLIFFHEIGHT)
-    if (height < 1) or (height > 3) then
+    if(height < 1) or(height > 3) then
         set height = 1
     endif
     return height
@@ -5392,35 +5392,35 @@ function ChangeElevatorHeight takes destructable d, integer newHeight returns no
     set oldHeight = GetElevatorHeight(d)
 
     // Set the elevator's occlusion height.
-    call SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT*(newHeight-1))
+    call SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT * (newHeight - 1))
 
-    if (newHeight == 1) then
-        if (oldHeight == 2) then
+    if(newHeight == 1) then
+        if(oldHeight == 2) then
             call SetDestructableAnimation(d, "birth")
             call QueueDestructableAnimation(d, "stand")
-        elseif (oldHeight == 3) then
+        elseif(oldHeight == 3) then
             call SetDestructableAnimation(d, "birth third")
             call QueueDestructableAnimation(d, "stand")
         else
             // Unrecognized old height - snap to new height.
             call SetDestructableAnimation(d, "stand")
         endif
-    elseif (newHeight == 2) then
-        if (oldHeight == 1) then
+    elseif(newHeight == 2) then
+        if(oldHeight == 1) then
             call SetDestructableAnimation(d, "death")
             call QueueDestructableAnimation(d, "stand second")
-        elseif (oldHeight == 3) then
+        elseif(oldHeight == 3) then
             call SetDestructableAnimation(d, "birth second")
             call QueueDestructableAnimation(d, "stand second")
         else
             // Unrecognized old height - snap to new height.
             call SetDestructableAnimation(d, "stand second")
         endif
-    elseif (newHeight == 3) then
-        if (oldHeight == 1) then
+    elseif(newHeight == 3) then
+        if(oldHeight == 1) then
             call SetDestructableAnimation(d, "death third")
             call QueueDestructableAnimation(d, "stand third")
-        elseif (oldHeight == 2) then
+        elseif(oldHeight == 2) then
             call SetDestructableAnimation(d, "death second")
             call QueueDestructableAnimation(d, "stand third")
         else
@@ -5455,7 +5455,7 @@ endfunction
 // encourage them to find locations where they can peacefully coexist with
 // pathing restrictions and live happy, fruitful lives.
 function NudgeObjectsInRect takes rect nudgeArea returns nothing
-    local group        g
+    local group g
 
     set g = CreateGroup()
     call GroupEnumUnitsInRect(g, nudgeArea, null)
@@ -5467,10 +5467,10 @@ endfunction
 
 // 获取附近的升降台
 function NearbyElevatorExistsEnum takes nothing returns nothing
-    local destructable d     = GetEnumDestructable()
-    local integer      dType = GetDestructableTypeId(d)
+    local destructable d = GetEnumDestructable()
+    local integer dType = GetDestructableTypeId(d)
 
-    if (dType == bj_ELEVATOR_CODE01) or (dType == bj_ELEVATOR_CODE02) then
+    if(dType == bj_ELEVATOR_CODE01) or(dType == bj_ELEVATOR_CODE02) then
         set bj_elevatorNeighbor = d
     endif
 endfunction
@@ -5501,10 +5501,10 @@ endfunction
 // the pathing blocker in the first place, if it does not yet exist).
 function ChangeElevatorWallBlocker takes real x, real y, real facing, boolean open returns nothing
     local destructable blocker = null
-    local real         findThreshold = 32
-    local real         nudgeLength   = 4.25 * bj_CELLWIDTH
-    local real         nudgeWidth    = 1.25 * bj_CELLWIDTH
-    local rect         r
+    local real findThreshold = 32
+    local real nudgeLength = 4.25 * bj_CELLWIDTH
+    local real nudgeWidth = 1.25 * bj_CELLWIDTH
+    local rect r
 
     // Search for the pathing blocker within the general area.
     set r = Rect(x - findThreshold, y - findThreshold, x + findThreshold, y + findThreshold)
@@ -5514,33 +5514,33 @@ function ChangeElevatorWallBlocker takes real x, real y, real facing, boolean op
     set blocker = bj_elevatorWallBlocker
 
     // Ensure that the blocker exists.
-    if (blocker == null) then
+    if(blocker == null) then
         set blocker = CreateDeadDestructable(bj_ELEVATOR_BLOCKER_CODE, x, y, facing, 1, 0)
-    elseif (GetDestructableTypeId(blocker) != bj_ELEVATOR_BLOCKER_CODE) then
+    elseif(GetDestructableTypeId(blocker) != bj_ELEVATOR_BLOCKER_CODE) then
         // If a different destructible exists in the blocker's spot, ignore
         // the request.  (Two destructibles cannot occupy the same location
         // on the map, so we cannot create an elevator blocker here.)
         return
     endif
 
-    if (open) then
+    if(open) then
         // Ensure that the blocker is dead.
-        if (GetDestructableLife(blocker) > 0) then
+        if(GetDestructableLife(blocker) > 0) then
             call KillDestructable(blocker)
         endif
     else
         // Ensure that the blocker is alive.
-        if (GetDestructableLife(blocker) <= 0) then
+        if(GetDestructableLife(blocker) <= 0) then
             call DestructableRestoreLife(blocker, GetDestructableMaxLife(blocker), false)
         endif
 
         // Nudge any objects standing in the blocker's way.
-        if (facing == 0) then
-            set r = Rect(x - nudgeWidth/2, y - nudgeLength/2, x + nudgeWidth/2, y + nudgeLength/2)
+        if(facing == 0) then
+            set r = Rect(x - nudgeWidth / 2, y - nudgeLength / 2, x + nudgeWidth / 2, y + nudgeLength / 2)
             call NudgeObjectsInRect(r)
             call RemoveRect(r)
-        elseif (facing == 90) then
-            set r = Rect(x - nudgeLength/2, y - nudgeWidth/2, x + nudgeLength/2, y + nudgeWidth/2)
+        elseif(facing == 90) then
+            set r = Rect(x - nudgeLength / 2, y - nudgeWidth / 2, x + nudgeLength / 2, y + nudgeWidth / 2)
             call NudgeObjectsInRect(r)
             call RemoveRect(r)
         else
@@ -5557,26 +5557,26 @@ function ChangeElevatorWalls takes boolean open, integer walls, destructable d r
     local real distToBlocker = 192
     local real distToNeighbor = 256
 
-    if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_EAST) then
-        if (not NearbyElevatorExists(x + distToNeighbor, y)) then
+    if(walls == bj_ELEVATOR_WALL_TYPE_ALL) or(walls == bj_ELEVATOR_WALL_TYPE_EAST) then
+        if(not NearbyElevatorExists(x + distToNeighbor, y)) then
             call ChangeElevatorWallBlocker(x + distToBlocker, y, 0, open)
         endif
     endif
 
-    if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_NORTH) then
-        if (not NearbyElevatorExists(x, y + distToNeighbor)) then
+    if(walls == bj_ELEVATOR_WALL_TYPE_ALL) or(walls == bj_ELEVATOR_WALL_TYPE_NORTH) then
+        if(not NearbyElevatorExists(x, y + distToNeighbor)) then
             call ChangeElevatorWallBlocker(x, y + distToBlocker, 90, open)
         endif
     endif
 
-    if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_SOUTH) then
-        if (not NearbyElevatorExists(x, y - distToNeighbor)) then
+    if(walls == bj_ELEVATOR_WALL_TYPE_ALL) or(walls == bj_ELEVATOR_WALL_TYPE_SOUTH) then
+        if(not NearbyElevatorExists(x, y - distToNeighbor)) then
             call ChangeElevatorWallBlocker(x, y - distToBlocker, 90, open)
         endif
     endif
 
-    if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_WEST) then
-        if (not NearbyElevatorExists(x - distToNeighbor, y)) then
+    if(walls == bj_ELEVATOR_WALL_TYPE_ALL) or(walls == bj_ELEVATOR_WALL_TYPE_WEST) then
+        if(not NearbyElevatorExists(x - distToNeighbor, y)) then
             call ChangeElevatorWallBlocker(x - distToBlocker, y, 0, open)
         endif
     endif
@@ -5632,7 +5632,7 @@ endfunction
 
 // 按下 UI 键
 function ForceUIKeyBJ takes player whichPlayer, string key returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ForceUIKey(key)
     endif
@@ -5641,7 +5641,7 @@ endfunction
 
 // 取消 UI 键
 function ForceUICancelBJ takes player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ForceUICancel()
     endif
@@ -5666,7 +5666,7 @@ function ForGroupBJ takes group whichGroup, code callback returns nothing
     call ForGroup(whichGroup, callback)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(whichGroup)
     endif
 endfunction
@@ -5700,7 +5700,7 @@ function GroupAddGroup takes group sourceGroup, group destGroup returns nothing
     call ForGroup(sourceGroup, function GroupAddGroupEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(sourceGroup)
     endif
 endfunction
@@ -5722,7 +5722,7 @@ function GroupRemoveGroup takes group sourceGroup, group destGroup returns nothi
     call ForGroup(sourceGroup, function GroupRemoveGroupEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(sourceGroup)
     endif
 endfunction
@@ -5747,7 +5747,7 @@ endfunction
 // the number of units considered thusfar (including the current consideration).
 function GroupPickRandomUnitEnum takes nothing returns nothing
     set bj_groupRandomConsidered = bj_groupRandomConsidered + 1
-    if (GetRandomInt(1,bj_groupRandomConsidered) == 1) then
+    if(GetRandomInt(1, bj_groupRandomConsidered) == 1) then
         set bj_groupRandomCurrentPick = GetEnumUnit()
     endif
 endfunction
@@ -5767,7 +5767,7 @@ function GroupPickRandomUnit takes group whichGroup returns unit
     call ForGroup(whichGroup, function GroupPickRandomUnitEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(whichGroup)
     endif
     return bj_groupRandomCurrentPick
@@ -5778,7 +5778,7 @@ endfunction
 // See GroupPickRandomUnitEnum for the details of this algorithm.
 function ForcePickRandomPlayerEnum takes nothing returns nothing
     set bj_forceRandomConsidered = bj_forceRandomConsidered + 1
-    if (GetRandomInt(1,bj_forceRandomConsidered) == 1) then
+    if(GetRandomInt(1, bj_forceRandomConsidered) == 1) then
         set bj_forceRandomCurrentPick = GetEnumPlayer()
     endif
 endfunction
@@ -5863,8 +5863,8 @@ endfunction
 // 获取指定单位类型，并以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfTypeIdAll takes integer unitid returns group
-    local group   result = CreateGroup()
-    local group   g      = CreateGroup()
+    local group result = CreateGroup()
+    local group g = CreateGroup()
     local integer index
 
     set index = 0
@@ -5946,7 +5946,7 @@ endfunction
 function GetPlayersByMapControl takes mapcontrol whichControl returns force
     local force f = CreateForce()
     local integer playerIndex
-    local player  indexPlayer
+    local player indexPlayer
 
     set playerIndex = 0
     loop
@@ -6006,7 +6006,7 @@ function CountUnitsInGroup takes group g returns integer
     call ForGroup(g, function CountUnitsInGroupEnum)
 
     // If the user wants the group destroyed, do so now.
-    if (wantDestroy) then
+    if(wantDestroy) then
         call DestroyGroup(g)
     endif
     return bj_groupCountUnits
@@ -6028,8 +6028,8 @@ endfunction
 
 // 在单位组中随机选取 N 个单位
 function GetRandomSubGroupEnum takes nothing returns nothing
-    if (bj_randomSubGroupWant > 0) then
-        if (bj_randomSubGroupWant >= bj_randomSubGroupTotal) or (GetRandomReal(0,1) < bj_randomSubGroupChance) then
+    if(bj_randomSubGroupWant > 0) then
+        if(bj_randomSubGroupWant >= bj_randomSubGroupTotal) or(GetRandomReal(0, 1) < bj_randomSubGroupChance) then
             // We either need every remaining unit, or the unit passed its chance check.
             call GroupAddUnit(bj_randomSubGroupGroup, GetEnumUnit())
             set bj_randomSubGroupWant = bj_randomSubGroupWant - 1
@@ -6046,10 +6046,10 @@ function GetRandomSubGroup takes integer count, group sourceGroup returns group
     local group g = CreateGroup()
 
     set bj_randomSubGroupGroup = g
-    set bj_randomSubGroupWant  = count
+    set bj_randomSubGroupWant = count
     set bj_randomSubGroupTotal = CountUnitsInGroup(sourceGroup)
 
-    if (bj_randomSubGroupWant <= 0 or bj_randomSubGroupTotal <= 0) then
+    if(bj_randomSubGroupWant <= 0 or bj_randomSubGroupTotal <= 0) then
         return g
     endif
 
@@ -6110,25 +6110,25 @@ endfunction
 // is reversed so as to be displayed as transparency, and all four parameters
 // are treated as percentages rather than bytes.
 function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
-    call SetUnitVertexColor(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call SetUnitVertexColor(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 闪动指示器（指定单位）
 function UnitAddIndicatorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
-    call AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 闪动指示器（指定可破坏物）
 function DestructableAddIndicatorBJ takes destructable whichDestructable, real red, real green, real blue, real transparency returns nothing
-    call AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 闪动指示器（指定物品）
 function ItemAddIndicatorBJ takes item whichItem, real red, real green, real blue, real transparency returns nothing
-    call AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -6199,14 +6199,14 @@ endfunction
 // 添加对话框按钮
 // 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 function DialogAddButtonBJ takes dialog whichDialog, string buttonText returns button
-    set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,0)
+    set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText, 0)
     return bj_lastCreatedButton
 endfunction
 
 // 添加对话框按钮(指定快捷键) [R]
 // 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 function DialogAddButtonWithHotkeyBJ takes dialog whichDialog, string buttonText, integer hotkey returns button
-    set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText,hotkey)
+    set bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText, hotkey)
     return bj_lastCreatedButton
 endfunction
 
@@ -6246,7 +6246,7 @@ endfunction
 // 设置联盟详细状态
 function SetPlayerAllianceBJ takes player sourcePlayer, alliancetype whichAllianceSetting, boolean value, player otherPlayer returns nothing
     // Prevent players from attempting to ally with themselves.
-    if (sourcePlayer == otherPlayer) then
+    if(sourcePlayer == otherPlayer) then
         return
     endif
 
@@ -6258,10 +6258,10 @@ endfunction
 // 同时设置被动联盟（互不侵略）、帮助请求、响应帮助请求、共享经验值、盟友魔法锁定
 // Set all flags used by the in-game "Ally" checkbox.
 function SetPlayerAllianceStateAllyBJ takes player sourcePlayer, player otherPlayer, boolean flag returns nothing
-    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE,       flag)
-    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_HELP_REQUEST,  flag)
+    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, flag)
+    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_HELP_REQUEST, flag)
     call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_HELP_RESPONSE, flag)
-    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_XP,     flag)
+    call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_XP, flag)
     call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_SPELLS, flag)
 endfunction
 
@@ -6291,52 +6291,52 @@ endfunction
 // 设置联盟状态
 function SetPlayerAllianceStateBJ takes player sourcePlayer, player otherPlayer, integer allianceState returns nothing
     // Prevent players from attempting to ally with themselves.
-    if (sourcePlayer == otherPlayer) then
+    if(sourcePlayer == otherPlayer) then
         return
     endif
 
     if allianceState == bj_ALLIANCE_UNALLIED then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
     elseif allianceState == bj_ALLIANCE_UNALLIED_VISION then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
     elseif allianceState == bj_ALLIANCE_ALLIED then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
     elseif allianceState == bj_ALLIANCE_ALLIED_VISION then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
     elseif allianceState == bj_ALLIANCE_ALLIED_UNITS then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
     elseif allianceState == bj_ALLIANCE_ALLIED_ADVUNITS then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, true  )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, true)
     elseif allianceState == bj_ALLIANCE_NEUTRAL then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
-        call SetPlayerAlliance( sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true)
     elseif allianceState == bj_ALLIANCE_NEUTRAL_VISION then
-        call SetPlayerAllianceStateAllyBJ(        sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateVisionBJ(      sourcePlayer, otherPlayer, true  )
-        call SetPlayerAllianceStateControlBJ(     sourcePlayer, otherPlayer, false )
-        call SetPlayerAllianceStateFullControlBJ( sourcePlayer, otherPlayer, false )
-        call SetPlayerAlliance( sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true )
+        call SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+        call SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
+        call SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true)
     else
         // Unrecognized alliance state - ignore the request.
     endif
@@ -6352,10 +6352,10 @@ function SetForceAllianceStateBJ takes force sourceForce, force targetForce, int
     set sourceIndex = 0
     loop
 
-        if (sourceForce==bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(sourceIndex), sourceForce)) then
+        if(sourceForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(sourceIndex), sourceForce)) then
             set targetIndex = 0
             loop
-                if (targetForce==bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(targetIndex), targetForce)) then
+                if(targetForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(targetIndex), targetForce)) then
                     call SetPlayerAllianceStateBJ(Player(sourceIndex), Player(targetIndex), allianceState)
                 endif
 
@@ -6374,7 +6374,7 @@ endfunction
 // Test to see if two players are co-allied (allied with each other).
 function PlayersAreCoAllied takes player playerA, player playerB returns boolean
     // Players are considered to be allied with themselves.
-    if (playerA == playerB) then
+    if(playerA == playerB) then
         return true
     endif
 
@@ -6392,13 +6392,13 @@ endfunction
 // with all AI players of its allies.
 function ShareEverythingWithTeamAI takes player whichPlayer returns nothing
     local integer playerIndex
-    local player  indexPlayer
+    local player indexPlayer
 
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer != indexPlayer) then
-            if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+        if(PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer != indexPlayer) then
+            if(GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
                 call SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
                 call SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
                 call SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, true)
@@ -6416,12 +6416,12 @@ endfunction
 // Force (whichPlayer) to share vision and advanced unit control with all of his/her allies.
 function ShareEverythingWithTeam takes player whichPlayer returns nothing
     local integer playerIndex
-    local player  indexPlayer
+    local player indexPlayer
 
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer != indexPlayer) then
+        if(PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer != indexPlayer) then
             call SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
             call SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
             call SetPlayerAlliance(indexPlayer, whichPlayer, ALLIANCE_SHARED_CONTROL, true)
@@ -6473,7 +6473,7 @@ endfunction
 // 设置指定玩家所有单位移交给中立被动玩家控制
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
-    local group   playerUnits = CreateGroup()
+    local group playerUnits = CreateGroup()
     call CachePlayerHeroData(whichPlayer)
     call GroupEnumUnitsOfPlayer(playerUnits, whichPlayer, null)
     call ForGroup(playerUnits, function MakeUnitsPassiveForPlayerEnum)
@@ -6485,7 +6485,7 @@ endfunction
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForTeam takes player whichPlayer returns nothing
     local integer playerIndex
-    local player  indexPlayer
+    local player indexPlayer
 
     set playerIndex = 0
     loop
@@ -6502,99 +6502,99 @@ endfunction
 // 允许胜利和失败（使用普通对战胜败判定）
 // Determine whether or not victory/defeat is disabled via cheat codes.
 function AllowVictoryDefeat takes playergameresult gameResult returns boolean
-    if (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+    if(gameResult == PLAYER_GAME_RESULT_VICTORY) then
         return not IsNoVictoryCheat()
     endif
-    if (gameResult == PLAYER_GAME_RESULT_DEFEAT) then
+    if(gameResult == PLAYER_GAME_RESULT_DEFEAT) then
         return not IsNoDefeatCheat()
     endif
-    if (gameResult == PLAYER_GAME_RESULT_NEUTRAL) then
-        return (not IsNoVictoryCheat()) and (not IsNoDefeatCheat())
+    if(gameResult == PLAYER_GAME_RESULT_NEUTRAL) then
+        return(not IsNoVictoryCheat()) and(not IsNoDefeatCheat())
     endif
     return true
 endfunction
 
 // 退出游戏
 function EndGameBJ takes nothing returns nothing
-    call EndGame( true )
+    call EndGame(true)
 endfunction
 
 // 显示对战胜利对话框
 function MeleeVictoryDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
-    local dialog  d = DialogCreate()
+    local dialog d = DialogCreate()
     local string formatString
 
     // Display "player was victorious" or "player has left the game" message
-    if (leftGame) then
-        set formatString = GetLocalizedString( "PLAYER_LEFT_GAME" )
+    if(leftGame) then
+        set formatString = GetLocalizedString("PLAYER_LEFT_GAME")
     else
-        set formatString = GetLocalizedString( "PLAYER_VICTORIOUS" )
+        set formatString = GetLocalizedString("PLAYER_VICTORIOUS")
     endif
 
     call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, formatString)
 
-    call DialogSetMessage( d, GetLocalizedString( "GAMEOVER_VICTORY_MSG" ) )
-    call DialogAddButton( d, GetLocalizedString( "GAMEOVER_CONTINUE_GAME" ), GetLocalizedHotkey("GAMEOVER_CONTINUE_GAME") )
+    call DialogSetMessage(d, GetLocalizedString("GAMEOVER_VICTORY_MSG"))
+    call DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE_GAME"), GetLocalizedHotkey("GAMEOVER_CONTINUE_GAME"))
 
     set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddQuitButton( d, true, GetLocalizedString( "GAMEOVER_QUIT_GAME" ), GetLocalizedHotkey("GAMEOVER_QUIT_GAME") ) )
+    call TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_QUIT_GAME"), GetLocalizedHotkey("GAMEOVER_QUIT_GAME")))
 
-    call DialogDisplay( whichPlayer, d, true )
-    call StartSoundForPlayerBJ( whichPlayer, bj_victoryDialogSound )
+    call DialogDisplay(whichPlayer, d, true)
+    call StartSoundForPlayerBJ(whichPlayer, bj_victoryDialogSound)
 endfunction
 
 // 显示对战失败对话框
 function MeleeDefeatDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
-    local dialog  d = DialogCreate()
+    local dialog d = DialogCreate()
     local string formatString
 
     // Display "player was defeated" or "player has left the game" message
-    if (leftGame) then
-        set formatString = GetLocalizedString( "PLAYER_LEFT_GAME" )
+    if(leftGame) then
+        set formatString = GetLocalizedString("PLAYER_LEFT_GAME")
     else
-        set formatString = GetLocalizedString( "PLAYER_DEFEATED" )
+        set formatString = GetLocalizedString("PLAYER_DEFEATED")
     endif
 
     call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, formatString)
 
-    call DialogSetMessage( d, GetLocalizedString( "GAMEOVER_DEFEAT_MSG" ) )
+    call DialogSetMessage(d, GetLocalizedString("GAMEOVER_DEFEAT_MSG"))
 
     // Only show the continue button if the game is not over and observers on death are allowed
-    if (not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH)) then
-        call DialogAddButton( d, GetLocalizedString( "GAMEOVER_CONTINUE_OBSERVING" ), GetLocalizedHotkey("GAMEOVER_CONTINUE_OBSERVING") )
+    if(not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH)) then
+        call DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE_OBSERVING"), GetLocalizedHotkey("GAMEOVER_CONTINUE_OBSERVING"))
     endif
 
     set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddQuitButton( d, true, GetLocalizedString( "GAMEOVER_QUIT_GAME" ), GetLocalizedHotkey("GAMEOVER_QUIT_GAME") ) )
+    call TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_QUIT_GAME"), GetLocalizedHotkey("GAMEOVER_QUIT_GAME")))
 
-    call DialogDisplay( whichPlayer, d, true )
-    call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
+    call DialogDisplay(whichPlayer, d, true)
+    call StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 endfunction
 
 // 显示游戏结束对话框
 function GameOverDialogBJ takes player whichPlayer, boolean leftGame returns nothing
     local trigger t = CreateTrigger()
-    local dialog  d = DialogCreate()
-    local string  s
+    local dialog d = DialogCreate()
+    local string s
 
     // Display "player left the game" message
-    call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString( "PLAYER_LEFT_GAME" ))
+    call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_LEFT_GAME"))
 
-    if (GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
-        set s = GetLocalizedString( "GAMEOVER_DISCONNECTED" )
+    if(GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
+        set s = GetLocalizedString("GAMEOVER_DISCONNECTED")
     else
-        set s = GetLocalizedString( "GAMEOVER_GAME_OVER" )
+        set s = GetLocalizedString("GAMEOVER_GAME_OVER")
     endif
 
-    call DialogSetMessage( d, s )
+    call DialogSetMessage(d, s)
 
     set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddQuitButton( d, true, GetLocalizedString( "GAMEOVER_OK" ), GetLocalizedHotkey("GAMEOVER_OK") ) )
+    call TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_OK"), GetLocalizedHotkey("GAMEOVER_OK")))
 
-    call DialogDisplay( whichPlayer, d, true )
-    call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
+    call DialogDisplay(whichPlayer, d, true)
+    call StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 endfunction
 
 // 剔除玩家并保留单位
@@ -6603,13 +6603,13 @@ function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult 
 
         call RemovePlayer(whichPlayer, gameResult)
 
-        if( gameResult == PLAYER_GAME_RESULT_VICTORY ) then
-            call MeleeVictoryDialogBJ( whichPlayer, leftGame )
+        if(gameResult == PLAYER_GAME_RESULT_VICTORY) then
+            call MeleeVictoryDialogBJ(whichPlayer, leftGame)
             return
-        elseif( gameResult == PLAYER_GAME_RESULT_DEFEAT ) then
-            call MeleeDefeatDialogBJ( whichPlayer, leftGame )
+        elseif(gameResult == PLAYER_GAME_RESULT_DEFEAT) then
+            call MeleeDefeatDialogBJ(whichPlayer, leftGame)
         else
-            call GameOverDialogBJ( whichPlayer, leftGame )
+            call GameOverDialogBJ(whichPlayer, leftGame)
         endif
 
     endif
@@ -6619,69 +6619,69 @@ endfunction
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call 
-	( false )
+        (false)
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
 
-    if (bj_changeLevelMapName == null) then
-        call EndGame( bj_changeLevelShowScores )
+    if(bj_changeLevelMapName == null) then
+        call EndGame(bj_changeLevelShowScores)
     else
-        call ChangeLevel( bj_changeLevelMapName, bj_changeLevelShowScores )
+        call ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
     endif
 endfunction
 
 // 游戏胜利对话框事件-退出
 function CustomVictoryQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
-        call PauseGame( false )
+        call PauseGame(false)
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
 
-    call EndGame( bj_changeLevelShowScores )
+    call EndGame(bj_changeLevelShowScores)
 endfunction
 
 // 游戏胜利，显示对话框-继续&退出
 function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     local trigger t = CreateTrigger()
-    local dialog  d = DialogCreate()
+    local dialog d = DialogCreate()
 
-    call DialogSetMessage( d, GetLocalizedString( "GAMEOVER_VICTORY_MSG" ) )
-
-    set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_CONTINUE" ), GetLocalizedHotkey("GAMEOVER_CONTINUE") ) )
-    call TriggerAddAction( t, function CustomVictoryOkBJ )
+    call DialogSetMessage(d, GetLocalizedString("GAMEOVER_VICTORY_MSG"))
 
     set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_QUIT_MISSION" ), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION") ) )
-    call TriggerAddAction( t, function CustomVictoryQuitBJ )
+    call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE"), GetLocalizedHotkey("GAMEOVER_CONTINUE")))
+    call TriggerAddAction(t, function CustomVictoryOkBJ)
 
-    if (GetLocalPlayer() == whichPlayer) then
-        call EnableUserControl( true )
+    set t = CreateTrigger()
+    call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
+    call TriggerAddAction(t, function CustomVictoryQuitBJ)
+
+    if(GetLocalPlayer() == whichPlayer) then
+        call EnableUserControl(true)
         if bj_isSinglePlayer then
-            call PauseGame( true )
+            call PauseGame(true)
         endif
         call EnableUserUI(false)
     endif
 
-    call DialogDisplay( whichPlayer, d, true )
-    call VolumeGroupSetVolumeForPlayerBJ( whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0 )
-    call StartSoundForPlayerBJ( whichPlayer, bj_victoryDialogSound )
+    call DialogDisplay(whichPlayer, d, true)
+    call VolumeGroupSetVolumeForPlayerBJ(whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0)
+    call StartSoundForPlayerBJ(whichPlayer, bj_victoryDialogSound)
 endfunction
 
 // 游戏胜利，跳过选择，直接进入下一关或退出
 function CustomVictorySkipBJ takes player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         if bj_isSinglePlayer then
             // Bump the difficulty back up to the default.
             call SetGameDifficulty(GetDefaultDifficulty())
         endif
 
-        if (bj_changeLevelMapName == null) then
-            call EndGame( bj_changeLevelShowScores )
+        if(bj_changeLevelMapName == null) then
+            call EndGame(bj_changeLevelShowScores)
         else
-            call ChangeLevel( bj_changeLevelMapName, bj_changeLevelShowScores )
+            call ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
         endif
     endif
 endfunction
@@ -6689,20 +6689,20 @@ endfunction
 
 // 游戏胜利
 function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean showScores returns nothing
-    if AllowVictoryDefeat( PLAYER_GAME_RESULT_VICTORY ) then
-        call RemovePlayer( whichPlayer, PLAYER_GAME_RESULT_VICTORY )
+    if AllowVictoryDefeat(PLAYER_GAME_RESULT_VICTORY) then
+        call RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_VICTORY)
 
         if not bj_isSinglePlayer then
-            call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString( "PLAYER_VICTORIOUS" ) )
+            call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_VICTORIOUS"))
         endif
 
         // UI only needs to be displayed to users.
-        if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
+        if(GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
             set bj_changeLevelShowScores = showScores
             if showDialog then
-                call CustomVictoryDialogBJ( whichPlayer )
+                call CustomVictoryDialogBJ(whichPlayer)
             else
-                call CustomVictorySkipBJ( whichPlayer )
+                call CustomVictorySkipBJ(whichPlayer)
             endif
         endif
     endif
@@ -6710,100 +6710,100 @@ endfunction
 
 // 游戏失败对话框按钮事件，重新开始
 function CustomDefeatRestartBJ takes nothing returns nothing
-    call PauseGame( false )
-    call RestartGame( true )
+    call PauseGame(false)
+    call RestartGame(true)
 endfunction
 
 // 游戏失败对话框按钮事件，选择难度并重新开始
 function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     local gamedifficulty diff = GetGameDifficulty()
 
-    call PauseGame( false )
+    call PauseGame(false)
 
     // Knock the difficulty down, if possible.
-    if (diff == MAP_DIFFICULTY_EASY) then
+    if(diff == MAP_DIFFICULTY_EASY) then
         // Sorry, but it doesn't get any easier than this.
-    elseif (diff == MAP_DIFFICULTY_NORMAL) then
+    elseif(diff == MAP_DIFFICULTY_NORMAL) then
         call SetGameDifficulty(MAP_DIFFICULTY_EASY)
-    elseif (diff == MAP_DIFFICULTY_HARD) then
+    elseif(diff == MAP_DIFFICULTY_HARD) then
         call SetGameDifficulty(MAP_DIFFICULTY_NORMAL)
     else
         // Unrecognized difficulty
     endif
 
-    call RestartGame( true )
+    call RestartGame(true)
 endfunction
 
 // 游戏失败对话框按钮事件-选择存档
 function CustomDefeatLoadBJ takes nothing returns nothing
-    call PauseGame( false )
+    call PauseGame(false)
     call DisplayLoadDialog()
 endfunction
 
 // 游戏失败对话框按钮事件-退出游戏
 function CustomDefeatQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
-        call PauseGame( false )
+        call PauseGame(false)
     endif
 
     // Bump the difficulty back up to the default.
     call SetGameDifficulty(GetDefaultDifficulty())
-    call EndGame( true )
+    call EndGame(true)
 endfunction
 
 // 游戏失败对话框-重新开始&选择难度&退出
 function CustomDefeatDialogBJ takes player whichPlayer, string message returns nothing
     local trigger t = CreateTrigger()
-    local dialog  d = DialogCreate()
+    local dialog d = DialogCreate()
 
-    call DialogSetMessage( d, message )
+    call DialogSetMessage(d, message)
 
     if bj_isSinglePlayer then
         set t = CreateTrigger()
-        call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_RESTART" ), GetLocalizedHotkey("GAMEOVER_RESTART") ) )
-        call TriggerAddAction( t, function CustomDefeatRestartBJ )
+        call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_RESTART"), GetLocalizedHotkey("GAMEOVER_RESTART")))
+        call TriggerAddAction(t, function CustomDefeatRestartBJ)
 
-        if (GetGameDifficulty() != MAP_DIFFICULTY_EASY) then
+        if(GetGameDifficulty() != MAP_DIFFICULTY_EASY) then
             set t = CreateTrigger()
-            call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_REDUCE_DIFFICULTY" ), GetLocalizedHotkey("GAMEOVER_REDUCE_DIFFICULTY") ) )
-            call TriggerAddAction( t, function CustomDefeatReduceDifficultyBJ )
+            call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_REDUCE_DIFFICULTY"), GetLocalizedHotkey("GAMEOVER_REDUCE_DIFFICULTY")))
+            call TriggerAddAction(t, function CustomDefeatReduceDifficultyBJ)
         endif
 
         set t = CreateTrigger()
-        call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_LOAD" ), GetLocalizedHotkey("GAMEOVER_LOAD") ) )
-        call TriggerAddAction( t, function CustomDefeatLoadBJ )
+        call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_LOAD"), GetLocalizedHotkey("GAMEOVER_LOAD")))
+        call TriggerAddAction(t, function CustomDefeatLoadBJ)
     endif
 
     set t = CreateTrigger()
-    call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_QUIT_MISSION" ), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION") ) )
-    call TriggerAddAction( t, function CustomDefeatQuitBJ )
+    call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
+    call TriggerAddAction(t, function CustomDefeatQuitBJ)
 
-    if (GetLocalPlayer() == whichPlayer) then
-        call EnableUserControl( true )
+    if(GetLocalPlayer() == whichPlayer) then
+        call EnableUserControl(true)
         if bj_isSinglePlayer then
-            call PauseGame( true )
+            call PauseGame(true)
         endif
         call EnableUserUI(false)
     endif
 
-    call DialogDisplay( whichPlayer, d, true )
-    call VolumeGroupSetVolumeForPlayerBJ( whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0 )
-    call StartSoundForPlayerBJ( whichPlayer, bj_defeatDialogSound )
+    call DialogDisplay(whichPlayer, d, true)
+    call VolumeGroupSetVolumeForPlayerBJ(whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0)
+    call StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 endfunction
 
 
 // 游戏失败
 function CustomDefeatBJ takes player whichPlayer, string message returns nothing
-    if AllowVictoryDefeat( PLAYER_GAME_RESULT_DEFEAT ) then
-        call RemovePlayer( whichPlayer, PLAYER_GAME_RESULT_DEFEAT )
+    if AllowVictoryDefeat(PLAYER_GAME_RESULT_DEFEAT) then
+        call RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_DEFEAT)
 
         if not bj_isSinglePlayer then
-            call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString( "PLAYER_DEFEATED" ) )
+            call DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_DEFEATED"))
         endif
 
         // UI only needs to be displayed to users.
-        if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
-            call CustomDefeatDialogBJ( whichPlayer, message )
+        if(GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
+            call CustomDefeatDialogBJ(whichPlayer, message)
         endif
     endif
 endfunction
@@ -6811,7 +6811,7 @@ endfunction
 
 // 设置下一张/关地图，用于战役
 function SetNextLevelBJ takes string nextLevel returns nothing
-    if (nextLevel == "") then
+    if(nextLevel == "") then
         set bj_changeLevelMapName = null
     else
         set bj_changeLevelMapName = nextLevel
@@ -6836,8 +6836,8 @@ endfunction
 
 // 创建任务
 function CreateQuestBJ takes integer questType, string title, string description, string iconPath returns quest
-    local boolean required   = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
-    local boolean discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED)
+    local boolean required = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
+    local boolean discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_OPT_DISCOVERED)
 
     set bj_lastCreatedQuest = CreateQuest()
     call QuestSetTitle(bj_lastCreatedQuest, title)
@@ -6959,72 +6959,72 @@ endfunction
 
 // 显示任务消息
 function QuestMessageBJ takes force f, integer messageType, string message returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), f)) then
+    if(IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
-        if (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+        if(messageType == bj_QUESTMESSAGE_DISCOVERED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, message)
             call StartSound(bj_questDiscoveredSound)
             call FlashQuestDialogButton()
 
-        elseif (messageType == bj_QUESTMESSAGE_UPDATED) then
+        elseif(messageType == bj_QUESTMESSAGE_UPDATED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, message)
             call StartSound(bj_questUpdatedSound)
             call FlashQuestDialogButton()
 
-        elseif (messageType == bj_QUESTMESSAGE_COMPLETED) then
+        elseif(messageType == bj_QUESTMESSAGE_COMPLETED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, message)
             call StartSound(bj_questCompletedSound)
             call FlashQuestDialogButton()
 
-        elseif (messageType == bj_QUESTMESSAGE_FAILED) then
+        elseif(messageType == bj_QUESTMESSAGE_FAILED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, message)
             call StartSound(bj_questFailedSound)
             call FlashQuestDialogButton()
 
-        elseif (messageType == bj_QUESTMESSAGE_REQUIREMENT) then
+        elseif(messageType == bj_QUESTMESSAGE_REQUIREMENT) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTREQUIREMENT, message)
 
-        elseif (messageType == bj_QUESTMESSAGE_MISSIONFAILED) then
+        elseif(messageType == bj_QUESTMESSAGE_MISSIONFAILED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, message)
             call StartSound(bj_questFailedSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_HINT) then
+        elseif(messageType == bj_QUESTMESSAGE_HINT) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, message)
             call StartSound(bj_questHintSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_ALWAYSHINT) then
+        elseif(messageType == bj_QUESTMESSAGE_ALWAYSHINT) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, message)
             call StartSound(bj_questHintSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_SECRET) then
+        elseif(messageType == bj_QUESTMESSAGE_SECRET) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, message)
             call StartSound(bj_questSecretSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_UNITACQUIRED) then
+        elseif(messageType == bj_QUESTMESSAGE_UNITACQUIRED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, message)
             call StartSound(bj_questHintSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_UNITAVAILABLE) then
+        elseif(messageType == bj_QUESTMESSAGE_UNITAVAILABLE) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, message)
             call StartSound(bj_questHintSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_ITEMACQUIRED) then
+        elseif(messageType == bj_QUESTMESSAGE_ITEMACQUIRED) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, message)
             call StartSound(bj_questItemAcquiredSound)
 
-        elseif (messageType == bj_QUESTMESSAGE_WARNING) then
+        elseif(messageType == bj_QUESTMESSAGE_WARNING) then
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, " ")
             call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, message)
             call StartSound(bj_questWarningSound)
@@ -7103,13 +7103,13 @@ endfunction
 
 // 设置计时器标题颜色
 function TimerDialogSetTitleColorBJ takes timerdialog td, real red, real green, real blue, real transparency returns nothing
-    call TimerDialogSetTitleColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call TimerDialogSetTitleColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 设置计时器窗口时间颜色
 function TimerDialogSetTimeColorBJ takes timerdialog td, real red, real green, real blue, real transparency returns nothing
-    call TimerDialogSetTimeColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call TimerDialogSetTimeColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -7121,7 +7121,7 @@ endfunction
 
 // 显示/隐藏 计时器窗口为玩家
 function TimerDialogDisplayForPlayerBJ takes boolean show, timerdialog td, player whichPlayer returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call TimerDialogDisplay(td, show)
     endif
@@ -7151,7 +7151,7 @@ endfunction
 function LeaderboardResizeBJ takes leaderboard lb returns nothing
     local integer size = LeaderboardGetItemCount(lb)
 
-    if (LeaderboardGetLabelText(lb) == "") then
+    if(LeaderboardGetLabelText(lb) == "") then
         set size = size - 1
     endif
     call LeaderboardSetSizeByItemCount(lb, size)
@@ -7178,25 +7178,25 @@ endfunction
 
 // 设置排行榜玩家名字颜色
 function LeaderboardSetPlayerItemLabelColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
-    call LeaderboardSetItemLabelColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call LeaderboardSetItemLabelColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 设置排行榜玩家分值颜色
 function LeaderboardSetPlayerItemValueColorBJ takes player whichPlayer, leaderboard lb, real red, real green, real blue, real transparency returns nothing
-    call LeaderboardSetItemValueColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call LeaderboardSetItemValueColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 设置排行榜文字颜色
 function LeaderboardSetLabelColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
-    call LeaderboardSetLabelColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call LeaderboardSetLabelColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
 // 设置排行榜分值颜色
 function LeaderboardSetValueColorBJ takes leaderboard lb, real red, real green, real blue, real transparency returns nothing
-    call LeaderboardSetValueColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call LeaderboardSetValueColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -7230,7 +7230,7 @@ endfunction
 // 设置玩家组登上排行榜 
 function ForceSetLeaderboardBJ takes leaderboard lb, force toForce returns nothing
     local integer index
-    local player  indexPlayer
+    local player indexPlayer
 
     set index = 0
     loop
@@ -7271,7 +7271,7 @@ endfunction
 // @param label指定玩家在榜上的名字
 // @param value指定玩家在榜上的分数
 function LeaderboardAddItemBJ takes player whichPlayer, leaderboard lb, string label, integer value returns nothing
-    if (LeaderboardHasPlayerItem(lb, whichPlayer)) then
+    if(LeaderboardHasPlayerItem(lb, whichPlayer)) then
         call LeaderboardRemovePlayerItem(lb, whichPlayer)
     endif
     call LeaderboardAddItem(lb, label, value, whichPlayer)
@@ -7289,11 +7289,11 @@ endfunction
 
 // 设置排行榜排序类型
 function LeaderboardSortItemsBJ takes leaderboard lb, integer sortType, boolean ascending returns nothing
-    if (sortType == bj_SORTTYPE_SORTBYVALUE) then
+    if(sortType == bj_SORTTYPE_SORTBYVALUE) then
         call LeaderboardSortItemsByValue(lb, ascending)
-    elseif (sortType == bj_SORTTYPE_SORTBYPLAYER) then
+    elseif(sortType == bj_SORTTYPE_SORTBYPLAYER) then
         call LeaderboardSortItemsByPlayer(lb, ascending)
-    elseif (sortType == bj_SORTTYPE_SORTBYLABEL) then
+    elseif(sortType == bj_SORTTYPE_SORTBYLABEL) then
         call LeaderboardSortItemsByLabel(lb, ascending)
     else
         // Unrecognized sort type - ignore the request.
@@ -7322,12 +7322,12 @@ endfunction
 // The position parameter is expected in the range of 1..16.
 function LeaderboardGetIndexedPlayerBJ takes integer position, leaderboard lb returns player
     local integer index
-    local player  indexPlayer
+    local player indexPlayer
 
     set index = 0
     loop
         set indexPlayer = Player(index)
-        if (LeaderboardGetPlayerIndex(lb, indexPlayer) == position - 1) then
+        if(LeaderboardGetPlayerIndex(lb, indexPlayer) == position - 1) then
             return indexPlayer
         endif
 
@@ -7394,7 +7394,7 @@ endfunction
 
 // 设置多面板标题颜色
 function MultiboardSetTitleTextColorBJ takes multiboard mb, real red, real green, real blue, real transparency returns nothing
-    call MultiboardSetTitleTextColor(mb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call MultiboardSetTitleTextColor(mb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -7418,7 +7418,7 @@ function MultiboardSetItemStyleBJ takes multiboard mb, integer col, integer row,
         exitwhen curRow > numRows
 
         // Apply setting to the requested row, or all rows (if row is 0)
-        if (row == 0 or row == curRow) then
+        if(row == 0 or row == curRow) then
             // Loop over columns, using 1-based index
             set curCol = 0
             loop
@@ -7426,7 +7426,7 @@ function MultiboardSetItemStyleBJ takes multiboard mb, integer col, integer row,
                 exitwhen curCol > numCols
 
                 // Apply setting to the requested column, or all columns (if col is 0)
-                if (col == 0 or col == curCol) then
+                if(col == 0 or col == curCol) then
                     set mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
                     call MultiboardSetItemStyle(mbitem, showValue, showIcon)
                     call MultiboardReleaseItem(mbitem)
@@ -7451,7 +7451,7 @@ function MultiboardSetItemValueBJ takes multiboard mb, integer col, integer row,
         exitwhen curRow > numRows
 
         // Apply setting to the requested row, or all rows (if row is 0)
-        if (row == 0 or row == curRow) then
+        if(row == 0 or row == curRow) then
             // Loop over columns, using 1-based index
             set curCol = 0
             loop
@@ -7459,7 +7459,7 @@ function MultiboardSetItemValueBJ takes multiboard mb, integer col, integer row,
                 exitwhen curCol > numCols
 
                 // Apply setting to the requested column, or all columns (if col is 0)
-                if (col == 0 or col == curCol) then
+                if(col == 0 or col == curCol) then
                     set mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
                     call MultiboardSetItemValue(mbitem, val)
                     call MultiboardReleaseItem(mbitem)
@@ -7484,7 +7484,7 @@ function MultiboardSetItemColorBJ takes multiboard mb, integer col, integer row,
         exitwhen curRow > numRows
 
         // Apply setting to the requested row, or all rows (if row is 0)
-        if (row == 0 or row == curRow) then
+        if(row == 0 or row == curRow) then
             // Loop over columns, using 1-based index
             set curCol = 0
             loop
@@ -7492,9 +7492,9 @@ function MultiboardSetItemColorBJ takes multiboard mb, integer col, integer row,
                 exitwhen curCol > numCols
 
                 // Apply setting to the requested column, or all columns (if col is 0)
-                if (col == 0 or col == curCol) then
+                if(col == 0 or col == curCol) then
                     set mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
-                    call MultiboardSetItemValueColor(mbitem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+                    call MultiboardSetItemValueColor(mbitem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
                     call MultiboardReleaseItem(mbitem)
                 endif
             endloop
@@ -7517,7 +7517,7 @@ function MultiboardSetItemWidthBJ takes multiboard mb, integer col, integer row,
         exitwhen curRow > numRows
 
         // Apply setting to the requested row, or all rows (if row is 0)
-        if (row == 0 or row == curRow) then
+        if(row == 0 or row == curRow) then
             // Loop over columns, using 1-based index
             set curCol = 0
             loop
@@ -7525,9 +7525,9 @@ function MultiboardSetItemWidthBJ takes multiboard mb, integer col, integer row,
                 exitwhen curCol > numCols
 
                 // Apply setting to the requested column, or all columns (if col is 0)
-                if (col == 0 or col == curCol) then
+                if(col == 0 or col == curCol) then
                     set mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
-                    call MultiboardSetItemWidth(mbitem, width/100.0)
+                    call MultiboardSetItemWidth(mbitem, width / 100.0)
                     call MultiboardReleaseItem(mbitem)
                 endif
             endloop
@@ -7550,7 +7550,7 @@ function MultiboardSetItemIconBJ takes multiboard mb, integer col, integer row, 
         exitwhen curRow > numRows
 
         // Apply setting to the requested row, or all rows (if row is 0)
-        if (row == 0 or row == curRow) then
+        if(row == 0 or row == curRow) then
             // Loop over columns, using 1-based index
             set curCol = 0
             loop
@@ -7558,7 +7558,7 @@ function MultiboardSetItemIconBJ takes multiboard mb, integer col, integer row, 
                 exitwhen curCol > numCols
 
                 // Apply setting to the requested column, or all columns (if col is 0)
-                if (col == 0 or col == curCol) then
+                if(col == 0 or col == curCol) then
                     set mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
                     call MultiboardSetItemIcon(mbitem, iconFileName)
                     call MultiboardReleaseItem(mbitem)
@@ -7599,7 +7599,7 @@ endfunction
 // @param blue 蓝色（输入的是百分比）
 // @param transparency 透明度（建议为0，越大越透明）
 function SetTextTagColorBJ takes texttag tt, real red, real green, real blue, real transparency returns nothing
-    call SetTextTagColor(tt, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+    call SetTextTagColor(tt, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
@@ -7708,7 +7708,7 @@ endfunction
 
 // 显示/隐藏 漂浮文字
 function ShowTextTagForceBJ takes boolean show, texttag tt, force whichForce returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetTextTagVisibility(tt, show)
     endif
@@ -7743,7 +7743,7 @@ endfunction
 
 // 授予用户控制权
 function SetUserControlForceOn takes force whichForce returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call EnableUserControl(true)
     endif
@@ -7753,7 +7753,7 @@ endfunction
 // 禁止用户控制权（使用后被禁玩家的鼠标消失，除 ALT + F4 和 切换桌面 外，其余游戏快捷键不响应）
 // 对AI无效
 function SetUserControlForceOff takes force whichForce returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call EnableUserControl(false)
     endif
@@ -7762,7 +7762,7 @@ endfunction
 
 // 开启信箱模式（显示（所有玩家）的游戏UI，淡入宽屏UI），指定淡入持续时间
 function ShowInterfaceForceOn takes force whichForce, real fadeDuration returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ShowInterface(true, fadeDuration)
     endif
@@ -7771,7 +7771,7 @@ endfunction
 
 // 关闭信箱模式（隐藏（所有玩家）的宽屏UI，淡入游戏UI），指定淡入持续时间
 function ShowInterfaceForceOff takes force whichForce, real fadeDuration returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ShowInterface(false, fadeDuration)
     endif
@@ -7779,7 +7779,7 @@ endfunction
 
 // 发送小地图提示（指定坐标，指定玩家组）触发器动作
 function PingMinimapForForce takes force whichForce, real x, real y, real duration returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PingMinimap(x, y, duration)
         //call StartSound(bj_pingMinimapSound)
@@ -7794,7 +7794,7 @@ endfunction
 
 // 发送小地图提示（指定坐标，指定玩家）
 function PingMinimapForPlayer takes player whichPlayer, real x, real y, real duration returns nothing
-    if (GetLocalPlayer() == whichPlayer) then
+    if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call PingMinimap(x, y, duration)
         //call StartSound(bj_pingMinimapSound)
@@ -7808,23 +7808,23 @@ endfunction
 
 // 发送小地图提示颜色（指定坐标，指定颜色，指定玩家组）
 function PingMinimapForForceEx takes force whichForce, real x, real y, real duration, integer style, real red, real green, real blue returns nothing
-    local integer red255   = PercentTo255(red)
+    local integer red255 = PercentTo255(red)
     local integer green255 = PercentTo255(green)
-    local integer blue255  = PercentTo255(blue)
+    local integer blue255 = PercentTo255(blue)
 
-    if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
         // Prevent 100% red simple and flashy pings, as they become "attack" pings.
-        if (red255 == 255) and (green255 == 0) and (blue255 == 0) then
+        if(red255 == 255) and(green255 == 0) and(blue255 == 0) then
             set red255 = 254
         endif
 
-        if (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+        if(style == bj_MINIMAPPINGSTYLE_SIMPLE) then
             call PingMinimapEx(x, y, duration, red255, green255, blue255, false)
-        elseif (style == bj_MINIMAPPINGSTYLE_FLASHY) then
+        elseif(style == bj_MINIMAPPINGSTYLE_FLASHY) then
             call PingMinimapEx(x, y, duration, red255, green255, blue255, true)
-        elseif (style == bj_MINIMAPPINGSTYLE_ATTACK) then
+        elseif(style == bj_MINIMAPPINGSTYLE_ATTACK) then
             call PingMinimapEx(x, y, duration, 255, 0, 0, false)
         else
             // Unrecognized ping style - ignore the request.
@@ -7844,7 +7844,7 @@ endfunction
 
 // 允许/禁止 边界染色（指定玩家组）
 function EnableWorldFogBoundaryBJ takes boolean enable, force f returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), f)) then
+    if(IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call EnableWorldFogBoundary(enable)
     endif
@@ -7853,7 +7853,7 @@ endfunction
 
 // 允许/禁止 闭塞（指定玩家组）
 function EnableOcclusionBJ takes boolean enable, force f returns nothing
-    if (IsPlayerInForce(GetLocalPlayer(), f)) then
+    if(IsPlayerInForce(GetLocalPlayer(), f)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call EnableOcclusion(enable)
     endif
@@ -7884,7 +7884,7 @@ endfunction
 function TryInitCinematicBehaviorBJ takes nothing returns nothing
     local integer index
 
-    if (bj_cineSceneBeingSkipped == null) then
+    if(bj_cineSceneBeingSkipped == null) then
         set bj_cineSceneBeingSkipped = CreateTrigger()
         set index = 0
         loop
@@ -7907,11 +7907,11 @@ endfunction
 function GetTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns real
     local real duration
 
-    if (timeType == bj_TIMETYPE_ADD) then
+    if(timeType == bj_TIMETYPE_ADD) then
         set duration = GetSoundDurationBJ(soundHandle) + timeVal
-    elseif (timeType == bj_TIMETYPE_SET) then
+    elseif(timeType == bj_TIMETYPE_SET) then
         set duration = timeVal
-    elseif (timeType == bj_TIMETYPE_SUB) then
+    elseif(timeType == bj_TIMETYPE_SUB) then
         set duration = GetSoundDurationBJ(soundHandle) - timeVal
     else
         // Unrecognized timeType - ignore timeVal.
@@ -7919,7 +7919,7 @@ function GetTransmissionDuration takes sound soundHandle, integer timeType, real
     endif
 
     // Make sure we have a non-negative duration.
-    if (duration < 0) then
+    if(duration < 0) then
         set duration = 0
     endif
     return duration
@@ -7927,20 +7927,20 @@ endfunction
 
 // 等待信息播放完成（指定传输时间方法）
 function WaitTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns nothing
-    if (timeType == bj_TIMETYPE_SET) then
+    if(timeType == bj_TIMETYPE_SET) then
         // If we have a static duration wait, just perform the wait.
         call TriggerSleepAction(timeVal)
 
-    elseif (soundHandle == null) then
+    elseif(soundHandle == null) then
         // If the sound does not exist, perform a default length wait.
         call TriggerSleepAction(bj_NOTHING_SOUND_DURATION)
 
-    elseif (timeType == bj_TIMETYPE_SUB) then
+    elseif(timeType == bj_TIMETYPE_SUB) then
         // If the transmission is cutting off the sound, wait for the sound
         // to be mostly finished.
         call WaitForSoundBJ(soundHandle, timeVal)
 
-    elseif (timeType == bj_TIMETYPE_ADD) then
+    elseif(timeType == bj_TIMETYPE_ADD) then
         // If the transmission is extending beyond the sound's length, wait
         // for it to finish, and then wait the additional time.
         call WaitForSoundBJ(soundHandle, 0)
@@ -7955,7 +7955,7 @@ endfunction
 function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real x, real y, sound soundHandle, string unitName, string message, real duration returns nothing
     call SetCinematicSceneBJ(soundHandle, unitId, color, unitName, message, duration + bj_TRANSMISSION_PORT_HANGTIME, duration)
 
-    if (unitId != 0) then
+    if(unitId != 0) then
         call PingMinimap(x, y, bj_TRANSMISSION_PING_TIME)
         //call SetCameraQuickPosition(x, y)
     endif
@@ -7982,21 +7982,21 @@ function TransmissionFromUnitWithNameBJ takes force toForce, unit whichUnit, str
     set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
     set bj_lastPlayedSound = soundHandle
 
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
-        if (whichUnit == null) then
+        if(whichUnit == null) then
             // If the unit reference is invalid, send the transmission from the center of the map with no portrait.
             call DoTransmissionBasicsXYBJ(0, PLAYER_COLOR_RED, 0, 0, soundHandle, unitName, message, bj_lastTransmissionDuration)
         else
             call DoTransmissionBasicsXYBJ(GetUnitTypeId(whichUnit), GetPlayerColor(GetOwningPlayer(whichUnit)), GetUnitX(whichUnit), GetUnitY(whichUnit), soundHandle, unitName, message, bj_lastTransmissionDuration)
-            if (not IsUnitHidden(whichUnit)) then
+            if(not IsUnitHidden(whichUnit)) then
                 call UnitAddIndicator(whichUnit, bj_TRANSMISSION_IND_RED, bj_TRANSMISSION_IND_BLUE, bj_TRANSMISSION_IND_GREEN, bj_TRANSMISSION_IND_ALPHA)
             endif
         endif
     endif
 
-    if wait and (bj_lastTransmissionDuration > 0) then
+    if wait and(bj_lastTransmissionDuration > 0) then
         // call TriggerSleepAction(bj_lastTransmissionDuration)
         call WaitTransmissionDuration(soundHandle, timeType, timeVal)
     endif
@@ -8008,7 +8008,7 @@ function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer sp
     //Make sure that the runtime unit type and the parameter are the same,
     //otherwise the offline animations will not match and will fail
     if GetUnitTypeId(speaker) != speakerType then
-        debug call BJDebugMsg(("Attempted to play FacialAnimation with the wrong speaker UnitType - Param: " + I2S(speakerType) + " Runtime: " +  I2S(GetUnitTypeId(speaker))))
+        debug call BJDebugMsg(("Attempted to play FacialAnimation with the wrong speaker UnitType - Param: " + I2S(speakerType) + " Runtime: " + I2S(GetUnitTypeId(speaker))))
         //return false
     endif
 
@@ -8022,11 +8022,11 @@ function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer sp
     set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
     set bj_lastPlayedSound = soundHandle
 
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         call SetCinematicSceneBJ(soundHandle, speakerType, GetPlayerColor(GetOwningPlayer(speaker)), GetLocalizedString(GetDialogueSpeakerNameKey(soundHandle)), GetLocalizedString(GetDialogueTextKey(soundHandle)), bj_lastTransmissionDuration + bj_TRANSMISSION_PORT_HANGTIME, bj_lastTransmissionDuration)
     endif
 
-    if wait and (bj_lastTransmissionDuration > 0) then
+    if wait and(bj_lastTransmissionDuration > 0) then
         // call TriggerSleepAction(bj_lastTransmissionDuration)
         call WaitTransmissionDuration(soundHandle, timeType, timeVal)
     endif
@@ -8044,14 +8044,14 @@ function PlayDialogueFromSpeakerTypeEx takes force toForce, player fromPlayer, i
     set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
     set bj_lastPlayedSound = soundHandle
 
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         call SetCinematicSceneBJ(soundHandle, speakerType, GetPlayerColor(fromPlayer), GetLocalizedString(GetDialogueSpeakerNameKey(soundHandle)), GetLocalizedString(GetDialogueTextKey(soundHandle)), bj_lastTransmissionDuration + bj_TRANSMISSION_PORT_HANGTIME, bj_lastTransmissionDuration)
         if(speakerType != 0) then
             call PingMinimap(GetLocationX(loc), GetLocationY(loc), bj_TRANSMISSION_PING_TIME)
         endif
     endif
 
-    if wait and (bj_lastTransmissionDuration > 0) then
+    if wait and(bj_lastTransmissionDuration > 0) then
         // call TriggerSleepAction(bj_lastTransmissionDuration)
         call WaitTransmissionDuration(soundHandle, timeType, timeVal)
     endif
@@ -8072,13 +8072,13 @@ function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlay
     set bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
     set bj_lastPlayedSound = soundHandle
 
-    if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+    if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
         call DoTransmissionBasicsXYBJ(unitId, GetPlayerColor(fromPlayer), GetLocationX(loc), GetLocationY(loc), soundHandle, unitName, message, bj_lastTransmissionDuration)
     endif
 
-    if wait and (bj_lastTransmissionDuration > 0) then
+    if wait and(bj_lastTransmissionDuration > 0) then
         // call TriggerSleepAction(bj_lastTransmissionDuration)
         call WaitTransmissionDuration(soundHandle, timeType, timeVal)
     endif
@@ -8128,13 +8128,13 @@ endfunction
 // 注意：某些影响会作用于所有玩家
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
     // If the game hasn't started yet, perform interface fades immediately
-    if (not bj_gameStarted) then
+    if(not bj_gameStarted) then
         set interfaceFadeTime = 0
     endif
 
-    if (cineMode) then
+    if(cineMode) then
         // Save the UI state so that we can restore it later.
-        if (not bj_cineModeAlreadyIn) then
+        if(not bj_cineModeAlreadyIn) then
             call SetCinematicAudio(true)
             set bj_cineModeAlreadyIn = true
             set bj_cineModePriorSpeed = GetGameSpeed()
@@ -8145,7 +8145,7 @@ function CinematicModeExBJ takes boolean cineMode, force forForce, real interfac
         endif
 
         // Perform local changes
-        if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+        if(IsPlayerInForce(GetLocalPlayer(), forForce)) then
             // Use only local code (no net traffic) within this block to avoid desyncs.
             call ClearTextMessages()
             call ShowInterface(false, interfaceFadeTime)
@@ -8169,7 +8169,7 @@ function CinematicModeExBJ takes boolean cineMode, force forForce, real interfac
         call SetCinematicAudio(false)
 
         // Perform local changes
-        if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+        if(IsPlayerInForce(GetLocalPlayer(), forForce)) then
             // Use only local code (no net traffic) within this block to avoid desyncs.
             call ShowInterface(true, interfaceFadeTime)
             call EnableUserControl(true)
@@ -8212,7 +8212,7 @@ endfunction
 
 // 电影 淡出滤镜
 function CinematicFadeCommonBJ takes real red, real green, real blue, real duration, string tex, real startTrans, real endTrans returns nothing
-    if (duration == 0) then
+    if(duration == 0) then
         // If the fade is instant, use the same starting and ending values,
         // so that we effectively do a set rather than a fade.
         set startTrans = endTrans
@@ -8223,8 +8223,8 @@ function CinematicFadeCommonBJ takes real red, real green, real blue, real durat
     call SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
     call SetCineFilterStartUV(0, 0, 1, 1)
     call SetCineFilterEndUV(0, 0, 1, 1)
-    call SetCineFilterStartColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-startTrans))
-    call SetCineFilterEndColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-endTrans))
+    call SetCineFilterStartColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - startTrans))
+    call SetCineFilterEndColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - endTrans))
     call SetCineFilterDuration(duration)
     call DisplayCineFilter(true)
 endfunction
@@ -8267,11 +8267,11 @@ endfunction
 
 // 电影 中断淡出滤镜
 function AbortCinematicFadeBJ takes nothing returns nothing
-    if (bj_cineFadeContinueTimer != null) then
+    if(bj_cineFadeContinueTimer != null) then
         call DestroyTimer(bj_cineFadeContinueTimer)
     endif
 
-    if (bj_cineFadeFinishTimer != null) then
+    if(bj_cineFadeFinishTimer != null) then
         call DestroyTimer(bj_cineFadeFinishTimer)
     endif
 endfunction
@@ -8279,18 +8279,18 @@ endfunction
 
 // 电影 淡入淡出滤镜
 function CinematicFadeBJ takes integer fadetype, real duration, string tex, real red, real green, real blue, real trans returns nothing
-    if (fadetype == bj_CINEFADETYPE_FADEOUT) then
+    if(fadetype == bj_CINEFADETYPE_FADEOUT) then
         // Fade out to the requested color.
         call AbortCinematicFadeBJ()
         call CinematicFadeCommonBJ(red, green, blue, duration, tex, 100, trans)
-    elseif (fadetype == bj_CINEFADETYPE_FADEIN) then
+    elseif(fadetype == bj_CINEFADETYPE_FADEIN) then
         // Fade in from the requested color.
         call AbortCinematicFadeBJ()
         call CinematicFadeCommonBJ(red, green, blue, duration, tex, trans, 100)
         call FinishCinematicFadeAfterBJ(duration)
-    elseif (fadetype == bj_CINEFADETYPE_FADEOUTIN) then
+    elseif(fadetype == bj_CINEFADETYPE_FADEOUTIN) then
         // Fade out to the requested color, and then fade back in from it.
-        if (duration > 0) then
+        if(duration > 0) then
             call AbortCinematicFadeBJ()
             call CinematicFadeCommonBJ(red, green, blue, duration * 0.5, tex, 100, trans)
             call ContinueCinematicFadeAfterBJ(duration * 0.5, red, green, blue, trans, tex)
@@ -8315,8 +8315,8 @@ function CinematicFilterGenericBJ takes real duration, blendmode bmode, string t
     call SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
     call SetCineFilterStartUV(0, 0, 1, 1)
     call SetCineFilterEndUV(0, 0, 1, 1)
-    call SetCineFilterStartColor(PercentTo255(red0), PercentTo255(green0), PercentTo255(blue0), PercentTo255(100.0-trans0))
-    call SetCineFilterEndColor(PercentTo255(red1), PercentTo255(green1), PercentTo255(blue1), PercentTo255(100.0-trans1))
+    call SetCineFilterStartColor(PercentTo255(red0), PercentTo255(green0), PercentTo255(blue0), PercentTo255(100.0 - trans0))
+    call SetCineFilterEndColor(PercentTo255(red1), PercentTo255(green1), PercentTo255(blue1), PercentTo255(100.0 - trans1))
     call SetCineFilterDuration(duration)
     call DisplayCineFilter(true)
 endfunction
@@ -8335,7 +8335,7 @@ endfunction
 // including a rescue sound, flashing selection circle, ownership change,
 // and optionally a unit color change.
 function RescueUnitBJ takes unit whichUnit, player rescuer, boolean changeColor returns nothing
-    if IsUnitDeadBJ(whichUnit) or (GetOwningPlayer(whichUnit) == rescuer) then
+    if IsUnitDeadBJ(whichUnit) or(GetOwningPlayer(whichUnit) == rescuer) then
         return
     endif
 
@@ -8364,7 +8364,7 @@ endfunction
 function TryInitRescuableTriggersBJ takes nothing returns nothing
     local integer index
 
-    if (bj_rescueUnitBehavior == null) then
+    if(bj_rescueUnitBehavior == null) then
         set bj_rescueUnitBehavior = CreateTrigger()
         set index = 0
         loop
@@ -8415,7 +8415,7 @@ function InitRescuableBehaviorBJ takes nothing returns nothing
     loop
         // If at least one player slot is "Rescuable"-controlled, init the
         // rescue behavior triggers.
-        if (GetPlayerController(Player(index)) == MAP_CONTROL_RESCUABLE) then
+        if(GetPlayerController(Player(index)) == MAP_CONTROL_RESCUABLE) then
             call TryInitRescuableTriggersBJ()
             return
         endif
@@ -8479,23 +8479,23 @@ endfunction
 
 // 设置读图背景（根据战役关卡设置）
 function SetCampaignMenuRaceBJ takes integer campaignNumber returns nothing
-    if (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+    if(campaignNumber == bj_CAMPAIGN_INDEX_T) then
         call SetCampaignMenuRace(RACE_OTHER)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_H) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_H) then
         call SetCampaignMenuRace(RACE_HUMAN)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_U) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_U) then
         call SetCampaignMenuRace(RACE_UNDEAD)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_O) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_O) then
         call SetCampaignMenuRace(RACE_ORC)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_N) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_N) then
         call SetCampaignMenuRace(RACE_NIGHTELF)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XN) then
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XN)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XH) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XH) then
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XH)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XU) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XU) then
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XU)
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XO) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XO) then
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XO)
     else
         // Unrecognized campaign - ignore the request
@@ -8521,17 +8521,17 @@ endfunction
 function SetCampaignAvailableBJ takes boolean available, integer campaignNumber returns nothing
     local integer campaignOffset
 
-    if (campaignNumber == bj_CAMPAIGN_INDEX_H) then
+    if(campaignNumber == bj_CAMPAIGN_INDEX_H) then
         call SetTutorialCleared(true)
     endif
 
-    if (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+    if(campaignNumber == bj_CAMPAIGN_INDEX_XN) then
         set campaignOffset = bj_CAMPAIGN_OFFSET_XN
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XH) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XH) then
         set campaignOffset = bj_CAMPAIGN_OFFSET_XH
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XU) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XU) then
         set campaignOffset = bj_CAMPAIGN_OFFSET_XU
-    elseif (campaignNumber == bj_CAMPAIGN_INDEX_XO) then
+    elseif(campaignNumber == bj_CAMPAIGN_INDEX_XO) then
         set campaignOffset = bj_CAMPAIGN_OFFSET_XO
     else
         set campaignOffset = campaignNumber
@@ -8545,39 +8545,39 @@ endfunction
 
 // 允许/禁止 过场电影
 function SetCinematicAvailableBJ takes boolean available, integer cinematicIndex returns nothing
-    if ( cinematicIndex == bj_CINEMATICINDEX_TOP ) then
-        call SetOpCinematicAvailable( bj_CAMPAIGN_INDEX_T, available )
-        call PlayCinematic( "TutorialOp" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_HOP) then
-        call SetOpCinematicAvailable( bj_CAMPAIGN_INDEX_H, available )
-        call PlayCinematic( "HumanOp" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_HED) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_H, available )
-        call PlayCinematic( "HumanEd" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_OOP) then
-        call SetOpCinematicAvailable( bj_CAMPAIGN_INDEX_O, available )
-        call PlayCinematic( "OrcOp" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_OED) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_O, available )
-        call PlayCinematic( "OrcEd" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_UOP) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_U, available )
-        call PlayCinematic( "UndeadOp" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_UED) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_U, available )
-        call PlayCinematic( "UndeadEd" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_NOP) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_N, available )
-        call PlayCinematic( "NightElfOp" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_NED) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_N, available )
-        call PlayCinematic( "NightElfEd" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_XOP) then
-        call SetOpCinematicAvailable( bj_CAMPAIGN_OFFSET_XN, available )
+    if(cinematicIndex == bj_CINEMATICINDEX_TOP) then
+        call SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_T, available)
+        call PlayCinematic("TutorialOp")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_HOP) then
+        call SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
+        call PlayCinematic("HumanOp")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_HED) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
+        call PlayCinematic("HumanEd")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_OOP) then
+        call SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
+        call PlayCinematic("OrcOp")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_OED) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
+        call PlayCinematic("OrcEd")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_UOP) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
+        call PlayCinematic("UndeadOp")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_UED) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
+        call PlayCinematic("UndeadEd")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_NOP) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
+        call PlayCinematic("NightElfOp")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_NED) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
+        call PlayCinematic("NightElfEd")
+    elseif(cinematicIndex == bj_CINEMATICINDEX_XOP) then
+        call SetOpCinematicAvailable(bj_CAMPAIGN_OFFSET_XN, available)
         // call PlayCinematic( "IntroX" )
-    elseif (cinematicIndex == bj_CINEMATICINDEX_XED) then
-        call SetEdCinematicAvailable( bj_CAMPAIGN_OFFSET_XU, available )
-        call PlayCinematic( "OutroX" )
+    elseif(cinematicIndex == bj_CINEMATICINDEX_XED) then
+        call SetEdCinematicAvailable(bj_CAMPAIGN_OFFSET_XU, available)
+        call PlayCinematic("OutroX")
     else
         // Unrecognized cinematic - ignore the request.
     endif
@@ -8927,7 +8927,7 @@ function GetStoredStringBJ takes string key, string missionKey, gamecache cache 
 
     //call SyncStoredString(cache, missionKey, key)
     set s = GetStoredString(cache, missionKey, key)
-    if (s == null) then
+    if(s == null) then
         return ""
     else
         return s
@@ -8962,7 +8962,7 @@ function LoadStringBJ takes integer key, integer missionKey, hashtable table ret
 
     //call SyncStoredString(table, missionKey, key)
     set s = LoadStr(table, missionKey, key)
-    if (s == null) then
+    if(s == null) then
         return ""
     else
         return s
@@ -9250,15 +9250,15 @@ endfunction
 
 // 判断游戏缓存是否存有数据
 function HaveStoredValue takes string key, integer valueType, string missionKey, gamecache cache returns boolean
-    if (valueType == bj_GAMECACHE_BOOLEAN) then
+    if(valueType == bj_GAMECACHE_BOOLEAN) then
         return HaveStoredBoolean(cache, missionKey, key)
-    elseif (valueType == bj_GAMECACHE_INTEGER) then
+    elseif(valueType == bj_GAMECACHE_INTEGER) then
         return HaveStoredInteger(cache, missionKey, key)
-    elseif (valueType == bj_GAMECACHE_REAL) then
+    elseif(valueType == bj_GAMECACHE_REAL) then
         return HaveStoredReal(cache, missionKey, key)
-    elseif (valueType == bj_GAMECACHE_UNIT) then
+    elseif(valueType == bj_GAMECACHE_UNIT) then
         return HaveStoredUnit(cache, missionKey, key)
-    elseif (valueType == bj_GAMECACHE_STRING) then
+    elseif(valueType == bj_GAMECACHE_STRING) then
         return HaveStoredString(cache, missionKey, key)
     else
         // Unrecognized value type - ignore the request.
@@ -9269,15 +9269,15 @@ endfunction
 
 // <1.24> 判断哈希表是否存有数据
 function HaveSavedValue takes integer key, integer valueType, integer missionKey, hashtable table returns boolean
-    if (valueType == bj_HASHTABLE_BOOLEAN) then
+    if(valueType == bj_HASHTABLE_BOOLEAN) then
         return HaveSavedBoolean(table, missionKey, key)
-    elseif (valueType == bj_HASHTABLE_INTEGER) then
+    elseif(valueType == bj_HASHTABLE_INTEGER) then
         return HaveSavedInteger(table, missionKey, key)
-    elseif (valueType == bj_HASHTABLE_REAL) then
+    elseif(valueType == bj_HASHTABLE_REAL) then
         return HaveSavedReal(table, missionKey, key)
-    elseif (valueType == bj_HASHTABLE_STRING) then
+    elseif(valueType == bj_HASHTABLE_STRING) then
         return HaveSavedString(table, missionKey, key)
-    elseif (valueType == bj_HASHTABLE_HANDLE) then
+    elseif(valueType == bj_HASHTABLE_HANDLE) then
         return HaveSavedHandle(table, missionKey, key)
     else
         // Unrecognized value type - ignore the request.
@@ -9383,7 +9383,7 @@ endfunction
 // 获取淡出时间（整数）
 // @param seconds 不为0时返回 128 / R2I(seconds) ，为0时返回10000
 function GetFadeFromSeconds takes real seconds returns integer
-    if (seconds != 0) then
+    if(seconds != 0) then
         return 128 / R2I(seconds)
     endif
     return 10000
@@ -9392,7 +9392,7 @@ endfunction
 // 获取淡出时间（实数）
 // @param seconds 不为0时返回 128.00 / R2I(seconds) ，为0时返回10000.00
 function GetFadeFromSecondsAsReal takes real seconds returns real
-    if (seconds != 0) then
+    if(seconds != 0) then
         return 128.00 / seconds
     endif
     return 10000.00
@@ -9408,10 +9408,10 @@ endfunction
 function AdjustPlayerStateBJ takes integer delta, player whichPlayer, playerstate whichPlayerState returns nothing
     // If the change was positive, apply the difference to the player's
     // gathered resources property as well.
-    if (delta > 0) then
-        if (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
+    if(delta > 0) then
+        if(whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
             call AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_GOLD_GATHERED, delta)
-        elseif (whichPlayerState == PLAYER_STATE_RESOURCE_LUMBER) then
+        elseif(whichPlayerState == PLAYER_STATE_RESOURCE_LUMBER) then
             call AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_LUMBER_GATHERED, delta)
         endif
     endif
@@ -9489,10 +9489,10 @@ endfunction
 // 替换指定金矿为指定玩家的不死族金矿
 // Replaces a gold mine with a blighted gold mine for the given player.
 function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer returns unit
-    local real    mineX
-    local real    mineY
+    local real mineX
+    local real mineY
     local integer mineGold
-    local unit    newMine
+    local unit newMine
 
     // Make sure we're replacing a Gold Mine and not some other type of unit.
     if GetUnitTypeId(goldMine) != 'ngol' then
@@ -9500,8 +9500,8 @@ function BlightGoldMineForPlayerBJ takes unit goldMine, player whichPlayer retur
     endif
 
     // Save the Gold Mine's properties and remove it.
-    set mineX    = GetUnitX(goldMine)
-    set mineY    = GetUnitY(goldMine)
+    set mineX = GetUnitX(goldMine)
+    set mineY = GetUnitY(goldMine)
     set mineGold = GetResourceAmount(goldMine)
     call RemoveUnit(goldMine)
 
@@ -9554,7 +9554,7 @@ endfunction
 // 设置训练/建造单位可用性
 function SetPlayerUnitAvailableBJ takes integer unitId, boolean allowed, player whichPlayer returns nothing
     if allowed then
-        call SetPlayerTechMaxAllowed(whichPlayer, unitId, -1)
+        call SetPlayerTechMaxAllowed(whichPlayer, unitId, - 1)
     else
         call SetPlayerTechMaxAllowed(whichPlayer, unitId, 0)
     endif
@@ -9574,12 +9574,12 @@ endfunction
 
 // 发布命令（指定单位）
 function IssueTargetOrderBJ takes unit whichUnit, string order, widget targetWidget returns boolean
-    return IssueTargetOrder( whichUnit, order, targetWidget )
+    return IssueTargetOrder(whichUnit, order, targetWidget)
 endfunction
 
 // 发布命令（指定点）
 function IssuePointOrderLocBJ takes unit whichUnit, string order, location whichLocation returns boolean
-    return IssuePointOrderLoc( whichUnit, order, whichLocation )
+    return IssuePointOrderLoc(whichUnit, order, whichLocation)
 endfunction
 
 
@@ -9587,32 +9587,32 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 function IssueTargetDestructableOrder takes unit whichUnit, string order, widget targetWidget returns boolean
-    return IssueTargetOrder( whichUnit, order, targetWidget )
+    return IssueTargetOrder(whichUnit, order, targetWidget)
 endfunction
 
 // 发布命令（指定物品）
 function IssueTargetItemOrder takes unit whichUnit, string order, widget targetWidget returns boolean
-    return IssueTargetOrder( whichUnit, order, targetWidget )
+    return IssueTargetOrder(whichUnit, order, targetWidget)
 endfunction
 
 // 发布命令（无目标）
 function IssueImmediateOrderBJ takes unit whichUnit, string order returns boolean
-    return IssueImmediateOrder( whichUnit, order )
+    return IssueImmediateOrder(whichUnit, order)
 endfunction
 
 // 发布（单位组）命令（指定单位）
 function GroupTargetOrderBJ takes group whichGroup, string order, widget targetWidget returns boolean
-    return GroupTargetOrder( whichGroup, order, targetWidget )
+    return GroupTargetOrder(whichGroup, order, targetWidget)
 endfunction
 
 // 发布（单位组）命令（指定点）
 function GroupPointOrderLocBJ takes group whichGroup, string order, location whichLocation returns boolean
-    return GroupPointOrderLoc( whichGroup, order, whichLocation )
+    return GroupPointOrderLoc(whichGroup, order, whichLocation)
 endfunction
 
 // 发布（单位组）命令（无目标）
 function GroupImmediateOrderBJ takes group whichGroup, string order returns boolean
-    return GroupImmediateOrder( whichGroup, order )
+    return GroupImmediateOrder(whichGroup, order)
 endfunction
 
 
@@ -9620,12 +9620,12 @@ endfunction
 // Two distinct trigger actions can't share the same function name, so this
 // dummy function simply mimics the behavior of an existing call.
 function GroupTargetDestructableOrder takes group whichGroup, string order, widget targetWidget returns boolean
-    return GroupTargetOrder( whichGroup, order, targetWidget )
+    return GroupTargetOrder(whichGroup, order, targetWidget)
 endfunction
 
 // 发布（单位组）命令（指定物品）
 function GroupTargetItemOrder takes group whichGroup, string order, widget targetWidget returns boolean
-    return GroupTargetOrder( whichGroup, order, targetWidget )
+    return GroupTargetOrder(whichGroup, order, targetWidget)
 endfunction
 
 
@@ -9711,13 +9711,13 @@ endfunction
 // 设置初始资源
 function MeleeStartingResources takes nothing returns nothing
     local integer index
-    local player  indexPlayer
+    local player indexPlayer
     local version v
     local integer startingGold
     local integer startingLumber
 
     set v = VersionGet()
-    if (v == VERSION_REIGN_OF_CHAOS) then
+    if(v == VERSION_REIGN_OF_CHAOS) then
         set startingGold = bj_MELEE_STARTING_GOLD_V0
         set startingLumber = bj_MELEE_STARTING_LUMBER_V0
     else
@@ -9729,7 +9729,7 @@ function MeleeStartingResources takes nothing returns nothing
     set index = 0
     loop
         set indexPlayer = Player(index)
-        if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+        if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
             call SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_GOLD, startingGold)
             call SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_LUMBER, startingLumber)
         endif
@@ -9752,7 +9752,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
     local integer oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId)
 
     // A value of -1 is used to indicate no limit, so check for that as well.
-    if (oldMax < 0 or oldMax > limit) then
+    if(oldMax < 0 or oldMax > limit) then
         call SetPlayerTechMaxAllowed(whichPlayer, techId, limit)
     endif
 endfunction
@@ -9823,12 +9823,12 @@ endfunction
 // standard set of items.  This is currently:
 //   - 1x Scroll of Town Portal
 function MeleeGrantItemsToHero takes unit whichUnit returns nothing
-    local integer owner   = GetPlayerId(GetOwningPlayer(whichUnit))
+    local integer owner = GetPlayerId(GetOwningPlayer(whichUnit))
 
     // If we haven't twinked N heroes for this player yet, twink away.
-    if (bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
+    if(bj_meleeTwinkedHeroes [ owner ] < bj_MELEE_MAX_TWINKED_HEROES) then
         call UnitAddItemById(whichUnit, 'stwp')
-        set bj_meleeTwinkedHeroes[owner] = bj_meleeTwinkedHeroes[owner] + 1
+        set bj_meleeTwinkedHeroes [ owner ] = bj_meleeTwinkedHeroes [ owner ] + 1
     endif
 endfunction
 
@@ -9854,7 +9854,7 @@ function MeleeGrantHeroItems takes nothing returns nothing
     // Initialize the twinked hero counts.
     set index = 0
     loop
-        set bj_meleeTwinkedHeroes[index] = 0
+        set bj_meleeTwinkedHeroes [ index ] = 0
 
         set index = index + 1
         exitwhen index == bj_MAX_PLAYER_SLOTS
@@ -9894,13 +9894,13 @@ endfunction
 // 删除当前出生点多余单位
 // 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑类单位
 function MeleeClearExcessUnit takes nothing returns nothing
-    local unit    theUnit = GetEnumUnit()
-    local integer owner   = GetPlayerId(GetOwningPlayer(theUnit))
+    local unit theUnit = GetEnumUnit()
+    local integer owner = GetPlayerId(GetOwningPlayer(theUnit))
 
-    if (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
+    if(owner == PLAYER_NEUTRAL_AGGRESSIVE) then
         // Remove any Neutral Hostile units from the area.
         call RemoveUnit(GetEnumUnit())
-    elseif (owner == PLAYER_NEUTRAL_PASSIVE) then
+    elseif(owner == PLAYER_NEUTRAL_PASSIVE) then
         // Remove non-structure Neutral Passive units from the area.
         if not IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
             call RemoveUnit(GetEnumUnit())
@@ -9922,16 +9922,16 @@ endfunction
 // 删除所有玩家出生点多余单位
 function MeleeClearExcessUnits takes nothing returns nothing
     local integer index
-    local real    locX
-    local real    locY
-    local player  indexPlayer
+    local real locX
+    local real locY
+    local player indexPlayer
 
     set index = 0
     loop
         set indexPlayer = Player(index)
 
         // If the player slot is being used, clear any nearby creeps.
-        if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+        if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
             set locX = GetStartLocationX(GetPlayerStartLocation(indexPlayer))
             set locY = GetStartLocationY(GetPlayerStartLocation(indexPlayer))
 
@@ -9957,13 +9957,13 @@ function MeleeEnumFindNearestMine takes nothing returns nothing
     local real dist
     local location unitLoc
 
-    if (GetUnitTypeId(enumUnit) == 'ngol') then
+    if(GetUnitTypeId(enumUnit) == 'ngol') then
         set unitLoc = GetUnitLoc(enumUnit)
         set dist = DistanceBetweenPoints(unitLoc, bj_meleeNearestMineToLoc)
         call RemoveLocation(unitLoc)
 
         // If this is our first mine, or the closest thusfar, use it instead.
-        if (bj_meleeNearestMineDist < 0) or (dist < bj_meleeNearestMineDist) then
+        if(bj_meleeNearestMineDist < 0) or(dist < bj_meleeNearestMineDist) then
             set bj_meleeNearestMine = enumUnit
             set bj_meleeNearestMineDist = dist
         endif
@@ -9976,7 +9976,7 @@ function MeleeFindNearestMine takes location src, real range returns unit
     local group nearbyMines
 
     set bj_meleeNearestMine = null
-    set bj_meleeNearestMineDist = -1
+    set bj_meleeNearestMineDist = - 1
     set bj_meleeNearestMineToLoc = src
 
     set nearbyMines = CreateGroup()
@@ -9990,17 +9990,17 @@ endfunction
 // 创建随机英雄
 // 进入游戏前在高级勾选 使用随机英雄
 function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id3, integer id4, location loc returns unit
-    local unit    hero = null
+    local unit hero = null
     local integer roll
     local integer pick
     local version v
 
     // The selection of heroes is dependant on the game version.
     set v = VersionGet()
-    if (v == VERSION_REIGN_OF_CHAOS) then
-        set roll = GetRandomInt(1,3)
+    if(v == VERSION_REIGN_OF_CHAOS) then
+        set roll = GetRandomInt(1, 3)
     else
-        set roll = GetRandomInt(1,4)
+        set roll = GetRandomInt(1, 4)
     endif
 
     // Translate the roll into a unitid.
@@ -10039,9 +10039,9 @@ endfunction
 // 取区间值
 // val在minVal~maxVal之外时，若小于minVal，则返回minVal，若大于maxVal，则返回maxVal，在区间内时返回val
 function MeleeGetNearestValueWithin takes real val, real minVal, real maxVal returns real
-    if (val < minVal) then
+    if(val < minVal) then
         return minVal
-    elseif (val > maxVal) then
+    elseif(val > maxVal) then
         return maxVal
     else
         return val
@@ -10066,21 +10066,21 @@ endfunction
 // 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsHuman takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
-    local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
-    local real     unitSpacing   = 64.00
-    local unit     nearestMine
+    local boolean useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
+    local real unitSpacing = 64.00
+    local unit nearestMine
     local location nearMineLoc
     local location heroLoc
-    local real     peonX
-    local real     peonY
-    local unit     townHall = null
+    local real peonX
+    local real peonY
+    local unit townHall = null
 
-    if (doPreload) then
-        call Preloader( "scripts\\HumanMelee.pld" )
+    if(doPreload) then
+        call Preloader("scripts\\HumanMelee.pld")
     endif
 
     set nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-    if (nearestMine != null) then
+    if(nearestMine != null) then
         // Spawn Town Hall at the start location.
         set townHall = CreateUnitAtLoc(whichPlayer, 'htow', startLoc, bj_UNIT_FACING)
         
@@ -10113,12 +10113,12 @@ function MeleeStartingUnitsHuman takes player whichPlayer, location startLoc, bo
         set heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
     endif
 
-    if (townHall != null) then
+    if(townHall != null) then
         call UnitAddAbilityBJ('Amic', townHall)
         call UnitMakeAbilityPermanentBJ(true, 'Amic', townHall)
     endif
 
-    if (doHeroes) then
+    if(doHeroes) then
         // If the "Random Hero" option is set, start the player with a random hero.
         // Otherwise, give them a "free hero" token.
         if useRandomHero then
@@ -10128,7 +10128,7 @@ function MeleeStartingUnitsHuman takes player whichPlayer, location startLoc, bo
         endif
     endif
 
-    if (doCamera) then
+    if(doCamera) then
         // Center the camera on the initial Peasants.
         call SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
         call SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -10144,20 +10144,20 @@ endfunction
 // 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
-    local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
-    local real     unitSpacing   = 64.00
-    local unit     nearestMine
+    local boolean useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
+    local real unitSpacing = 64.00
+    local unit nearestMine
     local location nearMineLoc
     local location heroLoc
-    local real     peonX
-    local real     peonY
+    local real peonX
+    local real peonY
 
-    if (doPreload) then
-        call Preloader( "scripts\\OrcMelee.pld" )
+    if(doPreload) then
+        call Preloader("scripts\\OrcMelee.pld")
     endif
 
     set nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-    if (nearestMine != null) then
+    if(nearestMine != null) then
         // Spawn Great Hall at the start location.
         call CreateUnitAtLoc(whichPlayer, 'ogre', startLoc, bj_UNIT_FACING)
         
@@ -10190,7 +10190,7 @@ function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, bool
         set heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
     endif
 
-    if (doHeroes) then
+    if(doHeroes) then
         // If the "Random Hero" option is set, start the player with a random hero.
         // Otherwise, give them a "free hero" token.
         if useRandomHero then
@@ -10200,7 +10200,7 @@ function MeleeStartingUnitsOrc takes player whichPlayer, location startLoc, bool
         endif
     endif
 
-    if (doCamera) then
+    if(doCamera) then
         // Center the camera on the initial Peons.
         call SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
         call SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -10219,23 +10219,23 @@ endfunction
 // 创建点 - 玩家出生点
 // 默认包含3个农民，1个食尸鬼，一个一本基地，一座闹鬼金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
-    local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
-    local real     unitSpacing   = 64.00
-    local unit     nearestMine
+    local boolean useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
+    local real unitSpacing = 64.00
+    local unit nearestMine
     local location nearMineLoc
     local location nearTownLoc
     local location heroLoc
-    local real     peonX
-    local real     peonY
-    local real     ghoulX
-    local real     ghoulY
+    local real peonX
+    local real peonY
+    local real ghoulX
+    local real ghoulY
 
-    if (doPreload) then
-        call Preloader( "scripts\\UndeadMelee.pld" )
+    if(doPreload) then
+        call Preloader("scripts\\UndeadMelee.pld")
     endif
 
     set nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-    if (nearestMine != null) then
+    if(nearestMine != null) then
         // Spawn Necropolis at the start location.
         call CreateUnitAtLoc(whichPlayer, 'unpl', startLoc, bj_UNIT_FACING)
         
@@ -10246,7 +10246,7 @@ function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, b
         set nearTownLoc = MeleeGetProjectedLoc(startLoc, GetUnitLoc(nearestMine), 288, 0)
         set ghoulX = GetLocationX(nearTownLoc)
         set ghoulY = GetLocationY(nearTownLoc)
-        set bj_ghoul[GetPlayerId(whichPlayer)] = CreateUnit(whichPlayer, 'ugho', ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
+        set bj_ghoul [ GetPlayerId(whichPlayer) ] = CreateUnit(whichPlayer, 'ugho', ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
 
         // Spawn Acolytes near the mine.
         set nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
@@ -10257,7 +10257,7 @@ function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, b
         call CreateUnit(whichPlayer, 'uaco', peonX - 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
 
         // Create a patch of blight around the gold mine.
-        call SetBlightLoc(whichPlayer,nearMineLoc, 768, true)
+        call SetBlightLoc(whichPlayer, nearMineLoc, 768, true)
 
         // Set random hero spawn point to be off to the side of the start location.
         set heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
@@ -10274,13 +10274,13 @@ function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, b
         call CreateUnit(whichPlayer, 'ugho', peonX + 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 
         // Create a patch of blight around the start location.
-        call SetBlightLoc(whichPlayer,startLoc, 768, true)
+        call SetBlightLoc(whichPlayer, startLoc, 768, true)
 
         // Set random hero spawn point to be just south of the start location.
         set heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
     endif
 
-    if (doHeroes) then
+    if(doHeroes) then
         // If the "Random Hero" option is set, start the player with a random hero.
         // Otherwise, give them a "free hero" token.
         if useRandomHero then
@@ -10290,7 +10290,7 @@ function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, b
         endif
     endif
 
-    if (doCamera) then
+    if(doCamera) then
         // Center the camera on the initial Acolytes.
         call SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
         call SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -10306,24 +10306,24 @@ endfunction
 // 创建点 - 玩家出生点
 // 默认包含5个农民，一个一本基地，一座被缠绕的金矿（如果附近有金矿），若启用随机英雄会随机创建1个英雄
 function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
-    local boolean  useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
-    local real     unitSpacing   = 64.00
-    local real     minTreeDist   = 3.50 * bj_CELLWIDTH
-    local real     minWispDist   = 1.75 * bj_CELLWIDTH
-    local unit     nearestMine
+    local boolean useRandomHero = IsMapFlagSet(MAP_RANDOM_HERO)
+    local real unitSpacing = 64.00
+    local real minTreeDist = 3.50 * bj_CELLWIDTH
+    local real minWispDist = 1.75 * bj_CELLWIDTH
+    local unit nearestMine
     local location nearMineLoc
     local location wispLoc
     local location heroLoc
-    local real     peonX
-    local real     peonY
-    local unit     tree
+    local real peonX
+    local real peonY
+    local unit tree
 
-    if (doPreload) then
-        call Preloader( "scripts\\NightElfMelee.pld" )
+    if(doPreload) then
+        call Preloader("scripts\\NightElfMelee.pld")
     endif
 
     set nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-    if (nearestMine != null) then
+    if(nearestMine != null) then
         // Spawn Tree of Life near the mine and have it entangle the mine.
         // Project the Tree's coordinates from the gold mine, and then snap
         // the X and Y values to within minTreeDist of the Gold Mine.
@@ -10362,7 +10362,7 @@ function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc,
         set heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
     endif
 
-    if (doHeroes) then
+    if(doHeroes) then
         // If the "Random Hero" option is set, start the player with a random hero.
         // Otherwise, give them a "free hero" token.
         if useRandomHero then
@@ -10372,7 +10372,7 @@ function MeleeStartingUnitsNightElf takes player whichPlayer, location startLoc,
         endif
     endif
 
-    if (doCamera) then
+    if(doCamera) then
         // Center the camera on the initial Wisps.
         call SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
         call SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -10390,22 +10390,22 @@ endfunction
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
-    if (doPreload) then
+    if(doPreload) then
     endif
 
     set index = 0
     loop
-        call CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal(-256, 256), GetLocationY(startLoc) + GetRandomReal(-256, 256), GetRandomReal(0, 360))
+        call CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal(- 256, 256), GetLocationY(startLoc) + GetRandomReal(- 256, 256), GetRandomReal(0, 360))
         set index = index + 1
         exitwhen index == 12
     endloop
 
-    if (doHeroes) then
+    if(doHeroes) then
         // Give them a "free hero" token, out of pity.
         call SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
     endif
 
-    if (doCamera) then
+    if(doCamera) then
         // Center the camera on the initial sheep.
         call SetCameraPositionLocForPlayer(whichPlayer, startLoc)
         call SetCameraQuickPositionLocForPlayer(whichPlayer, startLoc)
@@ -10414,28 +10414,28 @@ endfunction
 
 // 创建对战初始单位（默认四大种族）
 function MeleeStartingUnits takes nothing returns nothing
-    local integer  index
-    local player   indexPlayer
+    local integer index
+    local player indexPlayer
     local location indexStartLoc
-    local race     indexRace
+    local race indexRace
 
-    call Preloader( "scripts\\SharedMelee.pld" )
+    call Preloader("scripts\\SharedMelee.pld")
 
     set index = 0
     loop
         set indexPlayer = Player(index)
-        if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+        if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
             set indexStartLoc = GetStartLocationLoc(GetPlayerStartLocation(indexPlayer))
             set indexRace = GetPlayerRace(indexPlayer)
 
             // Create initial race-specific starting units
-            if (indexRace == RACE_HUMAN) then
+            if(indexRace == RACE_HUMAN) then
                 call MeleeStartingUnitsHuman(indexPlayer, indexStartLoc, true, true, true)
-            elseif (indexRace == RACE_ORC) then
+            elseif(indexRace == RACE_ORC) then
                 call MeleeStartingUnitsOrc(indexPlayer, indexStartLoc, true, true, true)
-            elseif (indexRace == RACE_UNDEAD) then
+            elseif(indexRace == RACE_UNDEAD) then
                 call MeleeStartingUnitsUndead(indexPlayer, indexStartLoc, true, true, true)
-            elseif (indexRace == RACE_NIGHTELF) then
+            elseif(indexRace == RACE_NIGHTELF) then
                 call MeleeStartingUnitsNightElf(indexPlayer, indexStartLoc, true, true, true)
             else
                 call MeleeStartingUnitsUnknownRace(indexPlayer, indexStartLoc, true, true, true)
@@ -10453,13 +10453,13 @@ endfunction
 // 默认只支持创建4大对战种族的初始单位，其他种族无效
 function MeleeStartingUnitsForPlayer takes race whichRace, player whichPlayer, location loc, boolean doHeroes returns nothing
     // Create initial race-specific starting units
-    if (whichRace == RACE_HUMAN) then
+    if(whichRace == RACE_HUMAN) then
         call MeleeStartingUnitsHuman(whichPlayer, loc, doHeroes, false, false)
-    elseif (whichRace == RACE_ORC) then
+    elseif(whichRace == RACE_ORC) then
         call MeleeStartingUnitsOrc(whichPlayer, loc, doHeroes, false, false)
-    elseif (whichRace == RACE_UNDEAD) then
+    elseif(whichRace == RACE_UNDEAD) then
         call MeleeStartingUnitsUndead(whichPlayer, loc, doHeroes, false, false)
-    elseif (whichRace == RACE_NIGHTELF) then
+    elseif(whichRace == RACE_NIGHTELF) then
         call MeleeStartingUnitsNightElf(whichPlayer, loc, doHeroes, false, false)
     else
         // Unrecognized race - ignore the request.
@@ -10481,25 +10481,25 @@ function PickMeleeAI takes player num, string s1, string s2, string s3 returns n
 
     // easy difficulty never uses any custom AI scripts
     // that are designed to be a bit more challenging
-        if GetAIDifficulty(num) == AI_DIFFICULTY_NEWBIE then
-        call StartMeleeAI(num,s1)
+    if GetAIDifficulty(num) == AI_DIFFICULTY_NEWBIE then
+        call StartMeleeAI(num, s1)
         return
     endif
 
     if s2 == null then
         set pick = 1
     elseif s3 == null then
-        set pick = GetRandomInt(1,2)
+        set pick = GetRandomInt(1, 2)
     else
-        set pick = GetRandomInt(1,3)
+        set pick = GetRandomInt(1, 3)
     endif
 
     if pick == 1 then
-        call StartMeleeAI(num,s1)
+        call StartMeleeAI(num, s1)
     elseif pick == 2 then
-        call StartMeleeAI(num,s2)
+        call StartMeleeAI(num, s2)
     else
-        call StartMeleeAI(num,s3)
+        call StartMeleeAI(num, s3)
     endif
 endfunction
 
@@ -10507,24 +10507,24 @@ endfunction
 // 运行对战 AI
 function MeleeStartingAI takes nothing returns nothing
     local integer index
-    local player  indexPlayer
-    local race    indexRace
+    local player indexPlayer
+    local race indexRace
 
     set index = 0
     loop
         set indexPlayer = Player(index)
-        if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+        if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
             set indexRace = GetPlayerRace(indexPlayer)
-            if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+            if(GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
                 // Run a race-specific melee AI script.
-                if (indexRace == RACE_HUMAN) then
+                if(indexRace == RACE_HUMAN) then
                     call PickMeleeAI(indexPlayer, "human.ai", null, null)
-                elseif (indexRace == RACE_ORC) then
+                elseif(indexRace == RACE_ORC) then
                     call PickMeleeAI(indexPlayer, "orc.ai", null, null)
-                elseif (indexRace == RACE_UNDEAD) then
+                elseif(indexRace == RACE_UNDEAD) then
                     call PickMeleeAI(indexPlayer, "undead.ai", null, null)
-                    call RecycleGuardPosition(bj_ghoul[index])
-                elseif (indexRace == RACE_NIGHTELF) then
+                    call RecycleGuardPosition(bj_ghoul [ index ])
+                elseif(indexRace == RACE_NIGHTELF) then
                     call PickMeleeAI(indexPlayer, "elf.ai", null, null)
                 else
                     // Unrecognized race.
@@ -10540,7 +10540,7 @@ endfunction
 
 // 锁定单位防守职责
 function LockGuardPosition takes unit targ returns nothing
-    call SetUnitCreepGuard(targ,true)
+    call SetUnitCreepGuard(targ, true)
 endfunction
 
 
@@ -10556,25 +10556,25 @@ function MeleePlayerIsOpponent takes integer playerIndex, integer opponentIndex 
     local player theOpponent = Player(opponentIndex)
 
     // The player himself is not an opponent.
-    if (playerIndex == opponentIndex) then
+    if(playerIndex == opponentIndex) then
         return false
     endif
 
     // Unused player slots are not opponents.
-    if (GetPlayerSlotState(theOpponent) != PLAYER_SLOT_STATE_PLAYING) then
+    if(GetPlayerSlotState(theOpponent) != PLAYER_SLOT_STATE_PLAYING) then
         return false
     endif
 
     // Players who are already defeated are not opponents.
-    if (bj_meleeDefeated[opponentIndex]) then
+    if(bj_meleeDefeated [ opponentIndex ]) then
         return false
     endif
 
     // Allied players with allied victory set are not opponents.
     if GetPlayerAlliance(thePlayer, theOpponent, ALLIANCE_PASSIVE) then
         if GetPlayerAlliance(theOpponent, thePlayer, ALLIANCE_PASSIVE) then
-            if (GetPlayerState(thePlayer, PLAYER_STATE_ALLIED_VICTORY) == 1) then
-                if (GetPlayerState(theOpponent, PLAYER_STATE_ALLIED_VICTORY) == 1) then
+            if(GetPlayerState(thePlayer, PLAYER_STATE_ALLIED_VICTORY) == 1) then
+                if(GetPlayerState(theOpponent, PLAYER_STATE_ALLIED_VICTORY) == 1) then
                     return false
                 endif
             endif
@@ -10589,9 +10589,9 @@ endfunction
 
 // 统计所有盟友（包括玩家自己）拥有的建筑数量
 function MeleeGetAllyStructureCount takes player whichPlayer returns integer
-    local integer    playerIndex
-    local integer    buildingCount
-    local player     indexPlayer
+    local integer playerIndex
+    local integer buildingCount
+    local player indexPlayer
 
     // Count the number of buildings controlled by all not-yet-defeated co-allies.
     set buildingCount = 0
@@ -10601,7 +10601,7 @@ function MeleeGetAllyStructureCount takes player whichPlayer returns integer
 
         // uncomment to cause defeat even if you have control of ally structures, but yours have been nixed
         //if (PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex]) then
-        if (PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+        if(PlayersAreCoAllied(whichPlayer, indexPlayer)) then
             set buildingCount = buildingCount + GetPlayerStructureCount(indexPlayer, true)
         endif
             
@@ -10619,14 +10619,14 @@ endfunction
 function MeleeGetAllyCount takes player whichPlayer returns integer
     local integer playerIndex
     local integer playerCount
-    local player  indexPlayer
+    local player indexPlayer
 
     // Count the number of not-yet-defeated co-allies.
     set playerCount = 0
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex] and (whichPlayer != indexPlayer) then
+        if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated [ playerIndex ] and(whichPlayer != indexPlayer) then
             set playerCount = playerCount + 1
         endif
 
@@ -10643,16 +10643,16 @@ endfunction
 // structures currently upgrading or under construction.
 // Key structures: Town Hall, Great Hall, Tree of Life, Necropolis
 function MeleeGetAllyKeyStructureCount takes player whichPlayer returns integer
-    local integer    playerIndex
-    local player     indexPlayer
-    local integer    keyStructs
+    local integer playerIndex
+    local player indexPlayer
+    local integer keyStructs
 
     // Count the number of buildings controlled by all not-yet-defeated co-allies.
     set keyStructs = 0
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if (PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+        if(PlayersAreCoAllied(whichPlayer, indexPlayer)) then
             set keyStructs = keyStructs + BlzGetPlayerTownHallCount(indexPlayer)
         endif
             
@@ -10685,8 +10685,8 @@ function MeleeDoVictoryEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     local integer playerIndex = GetPlayerId(thePlayer)
 
-    if (not bj_meleeVictoried[playerIndex]) then
-        set bj_meleeVictoried[playerIndex] = true
+    if(not bj_meleeVictoried [ playerIndex ]) then
+        set bj_meleeVictoried [ playerIndex ] = true
         call CachePlayerHeroData(thePlayer)
         call RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_VICTORY, false)
     endif
@@ -10698,7 +10698,7 @@ endfunction
 // 失败玩家触发器动作
 // 创建失败对话框
 function MeleeDoDefeat takes player whichPlayer returns nothing
-    set bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
+    set bj_meleeDefeated [ GetPlayerId(whichPlayer) ] = true
     call RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, false)
 endfunction
 
@@ -10721,10 +10721,10 @@ endfunction
 
 // 玩家离开游戏触发器动作
 function MeleeDoLeave takes player whichPlayer returns nothing
-    if (GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
-        call GameOverDialogBJ( whichPlayer, true )
+    if(GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
+        call GameOverDialogBJ(whichPlayer, true)
     else
-        set bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
+        set bj_meleeDefeated [ GetPlayerId(whichPlayer) ] = true
         call RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, true)
     endif
 endfunction
@@ -10734,15 +10734,15 @@ endfunction
 
 // 游戏结束时移除所有裁判及观察者
 function MeleeRemoveObservers takes nothing returns nothing
-    local integer    playerIndex
-    local player     indexPlayer
+    local integer playerIndex
+    local player indexPlayer
 
     // Give all observers the game over dialog
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
 
-        if (IsPlayerObserver(indexPlayer)) then
+        if(IsPlayerObserver(indexPlayer)) then
             call RemovePlayerPreserveUnitsBJ(indexPlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
         endif
 
@@ -10758,15 +10758,15 @@ endfunction
 // remaining players.  If even one player is not allied towards another,
 // everyone must be denied victory.
 function MeleeCheckForVictors takes nothing returns force
-    local integer    playerIndex
-    local integer    opponentIndex
-    local force      opponentlessPlayers = CreateForce()
-    local boolean    gameOver = false
+    local integer playerIndex
+    local integer opponentIndex
+    local force opponentlessPlayers = CreateForce()
+    local boolean gameOver = false
 
     // Check to see if any players have opponents remaining.
     set playerIndex = 0
     loop
-        if (not bj_meleeDefeated[playerIndex]) then
+        if(not bj_meleeDefeated [ playerIndex ]) then
             // Determine whether or not this player has any remaining opponents.
             set opponentIndex = 0
             loop
@@ -10799,21 +10799,21 @@ endfunction
 // （在任意玩家失败时）检查所有玩家的游戏结果（胜利/失败）
 // Test each player to determine if anyone has been defeated.
 function MeleeCheckForLosersAndVictors takes nothing returns nothing
-    local integer    playerIndex
-    local player     indexPlayer
-    local force      defeatedPlayers = CreateForce()
-    local force      victoriousPlayers
-    local boolean    gameOver = false
+    local integer playerIndex
+    local player indexPlayer
+    local force defeatedPlayers = CreateForce()
+    local force victoriousPlayers
+    local boolean gameOver = false
 
     // If the game is already over, do nothing
-    if (bj_meleeGameOver) then
+    if(bj_meleeGameOver) then
         return
     endif
 
     // If the game was disconnected then it is over, in this case we
     // don't want to report results for anyone as they will most likely
     // conflict with the actual game results
-    if (GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
+    if(GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
         set bj_meleeGameOver = true
         return
     endif
@@ -10823,9 +10823,9 @@ function MeleeCheckForLosersAndVictors takes nothing returns nothing
     loop
         set indexPlayer = Player(playerIndex)
 
-        if (not bj_meleeDefeated[playerIndex] and not bj_meleeVictoried[playerIndex]) then
+        if(not bj_meleeDefeated [ playerIndex ] and not bj_meleeVictoried [ playerIndex ]) then
             //call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, "Player"+I2S(playerIndex)+" has "+I2S(MeleeGetAllyStructureCount(indexPlayer))+" ally buildings.")
-            if (MeleeGetAllyStructureCount(indexPlayer) <= 0) then
+            if(MeleeGetAllyStructureCount(indexPlayer) <= 0) then
 
                 // Keep track of each defeated player so that we can give
                 // them a defeat later.
@@ -10833,7 +10833,7 @@ function MeleeCheckForLosersAndVictors takes nothing returns nothing
 
                 // Set their defeated flag now so MeleeCheckForVictors
                 // can detect victors.
-                set bj_meleeDefeated[playerIndex] = true
+                set bj_meleeDefeated [ playerIndex ] = true
             endif
         endif
             
@@ -10851,7 +10851,7 @@ function MeleeCheckForLosersAndVictors takes nothing returns nothing
     call ForForce(victoriousPlayers, function MeleeDoVictoryEnum)
 
     // If the game is over we should remove all observers
-    if (bj_meleeGameOver) then
+    if(bj_meleeGameOver) then
         call MeleeRemoveObservers()
     endif
 endfunction
@@ -10863,13 +10863,13 @@ endfunction
 function MeleeGetCrippledWarningMessage takes player whichPlayer returns string
     local race r = GetPlayerRace(whichPlayer)
 
-    if (r == RACE_HUMAN) then
+    if(r == RACE_HUMAN) then
         return GetLocalizedString("CRIPPLE_WARNING_HUMAN")
-    elseif (r == RACE_ORC) then
+    elseif(r == RACE_ORC) then
         return GetLocalizedString("CRIPPLE_WARNING_ORC")
-    elseif (r == RACE_NIGHTELF) then
+    elseif(r == RACE_NIGHTELF) then
         return GetLocalizedString("CRIPPLE_WARNING_NIGHTELF")
-    elseif (r == RACE_UNDEAD) then
+    elseif(r == RACE_UNDEAD) then
         return GetLocalizedString("CRIPPLE_WARNING_UNDEAD")
     else
         // Unrecognized Race
@@ -10884,13 +10884,13 @@ endfunction
 function MeleeGetCrippledTimerMessage takes player whichPlayer returns string
     local race r = GetPlayerRace(whichPlayer)
 
-    if (r == RACE_HUMAN) then
+    if(r == RACE_HUMAN) then
         return GetLocalizedString("CRIPPLE_TIMER_HUMAN")
-    elseif (r == RACE_ORC) then
+    elseif(r == RACE_ORC) then
         return GetLocalizedString("CRIPPLE_TIMER_ORC")
-    elseif (r == RACE_NIGHTELF) then
+    elseif(r == RACE_NIGHTELF) then
         return GetLocalizedString("CRIPPLE_TIMER_NIGHTELF")
-    elseif (r == RACE_UNDEAD) then
+    elseif(r == RACE_UNDEAD) then
         return GetLocalizedString("CRIPPLE_TIMER_UNDEAD")
     else
         // Unrecognized Race
@@ -10909,24 +10909,24 @@ endfunction
 // 设置指定玩家是否暴露位置（出生点）
 function MeleeExposePlayer takes player whichPlayer, boolean expose returns nothing
     local integer playerIndex
-    local player  indexPlayer
-    local force   toExposeTo = CreateForce()
+    local player indexPlayer
+    local force toExposeTo = CreateForce()
 
-    call CripplePlayer( whichPlayer, toExposeTo, false )
+    call CripplePlayer(whichPlayer, toExposeTo, false)
 
-    set bj_playerIsExposed[GetPlayerId(whichPlayer)] = expose
+    set bj_playerIsExposed [ GetPlayerId(whichPlayer) ] = expose
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if (not PlayersAreCoAllied(whichPlayer, indexPlayer)) then
-            call ForceAddPlayer( toExposeTo, indexPlayer )
+        if(not PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+            call ForceAddPlayer(toExposeTo, indexPlayer)
         endif
 
         set playerIndex = playerIndex + 1
         exitwhen playerIndex == bj_MAX_PLAYERS
     endloop
 
-    call CripplePlayer( whichPlayer, toExposeTo, expose )
+    call CripplePlayer(whichPlayer, toExposeTo, expose)
     call DestroyForce(toExposeTo)
 endfunction
 
@@ -10934,25 +10934,25 @@ endfunction
 // 默认在对战模式胜负判定规则下运行
 function MeleeExposeAllPlayers takes nothing returns nothing
     local integer playerIndex
-    local player  indexPlayer
+    local player indexPlayer
     local integer playerIndex2
-    local player  indexPlayer2
-    local force   toExposeTo = CreateForce()
+    local player indexPlayer2
+    local force toExposeTo = CreateForce()
 
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
 
-        call ForceClear( toExposeTo )
-        call CripplePlayer( indexPlayer, toExposeTo, false )
+        call ForceClear(toExposeTo)
+        call CripplePlayer(indexPlayer, toExposeTo, false)
 
         set playerIndex2 = 0
         loop
             set indexPlayer2 = Player(playerIndex2)
 
             if playerIndex != playerIndex2 then
-                if (not PlayersAreCoAllied(indexPlayer, indexPlayer2)) then
-                    call ForceAddPlayer( toExposeTo, indexPlayer2 )
+                if(not PlayersAreCoAllied(indexPlayer, indexPlayer2)) then
+                    call ForceAddPlayer(toExposeTo, indexPlayer2)
                 endif
             endif
 
@@ -10960,41 +10960,41 @@ function MeleeExposeAllPlayers takes nothing returns nothing
             exitwhen playerIndex2 == bj_MAX_PLAYERS
         endloop
 
-        call CripplePlayer( indexPlayer, toExposeTo, true )
+        call CripplePlayer(indexPlayer, toExposeTo, true)
 
         set playerIndex = playerIndex + 1
         exitwhen playerIndex == bj_MAX_PLAYERS
     endloop
 
-    call DestroyForce( toExposeTo )
+    call DestroyForce(toExposeTo)
 endfunction
 
 // 暴露计时器倒计时结束
 function MeleeCrippledPlayerTimeout takes nothing returns nothing
     local timer expiredTimer = GetExpiredTimer()
     local integer playerIndex
-    local player  exposedPlayer
+    local player exposedPlayer
 
     // Determine which player's timer expired.
     set playerIndex = 0
     loop
-        if (bj_crippledTimer[playerIndex] == expiredTimer) then
+        if(bj_crippledTimer [ playerIndex ] == expiredTimer) then
             exitwhen true
         endif
 
         set playerIndex = playerIndex + 1
         exitwhen playerIndex == bj_MAX_PLAYERS
     endloop
-    if (playerIndex == bj_MAX_PLAYERS) then
+    if(playerIndex == bj_MAX_PLAYERS) then
         return
     endif
     set exposedPlayer = Player(playerIndex)
 
-    if (GetLocalPlayer() == exposedPlayer) then
+    if(GetLocalPlayer() == exposedPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
         // Hide the timer window for this player.
-        call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
+        call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
     endif
 
     // Display a text message to all players, explaining the exposure.
@@ -11007,22 +11007,22 @@ endfunction
 // 玩家是否没有基地
 // 用于对战胜负判断和暴露提示
 function MeleePlayerIsCrippled takes player whichPlayer returns boolean
-    local integer playerStructures  = GetPlayerStructureCount(whichPlayer, true)
+    local integer playerStructures = GetPlayerStructureCount(whichPlayer, true)
     local integer playerKeyStructures = BlzGetPlayerTownHallCount(whichPlayer)
 
     // Dead players are not considered to be crippled.
-    return (playerStructures > 0) and (playerKeyStructures <= 0)
+    return(playerStructures > 0) and(playerKeyStructures <= 0)
 endfunction
 
 
 // 检查玩家残余单位
 // Test each player to determine if anyone has become crippled.
 function MeleeCheckForCrippledPlayers takes nothing returns nothing
-    local integer    playerIndex
-    local player     indexPlayer
-    local force      crippledPlayers = CreateForce()
-    local boolean    isNowCrippled
-    local race       indexRace
+    local integer playerIndex
+    local player indexPlayer
+    local force crippledPlayers = CreateForce()
+    local boolean isNowCrippled
+    local race indexRace
 
     // The "finish soon" exposure of all players overrides any "crippled" exposure
     if bj_finishSoonAllExposed then
@@ -11035,37 +11035,37 @@ function MeleeCheckForCrippledPlayers takes nothing returns nothing
         set indexPlayer = Player(playerIndex)
         set isNowCrippled = MeleePlayerIsCrippled(indexPlayer)
 
-        if (not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
+        if(not bj_playerIsCrippled [ playerIndex ] and isNowCrippled) then
 
             // Player became crippled; start their cripple timer.
-            set bj_playerIsCrippled[playerIndex] = true
-            call TimerStart(bj_crippledTimer[playerIndex], bj_MELEE_CRIPPLE_TIMEOUT, false, function MeleeCrippledPlayerTimeout)
+            set bj_playerIsCrippled [ playerIndex ] = true
+            call TimerStart(bj_crippledTimer [ playerIndex ], bj_MELEE_CRIPPLE_TIMEOUT, false, function MeleeCrippledPlayerTimeout)
 
-            if (GetLocalPlayer() == indexPlayer) then
+            if(GetLocalPlayer() == indexPlayer) then
                 // Use only local code (no net traffic) within this block to avoid desyncs.
 
                 // Show the timer window.
-                call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], true)
+                call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], true)
 
                 // Display a warning message.
                 call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, MeleeGetCrippledWarningMessage(indexPlayer))
             endif
 
-        elseif (bj_playerIsCrippled[playerIndex] and not isNowCrippled) then
+        elseif(bj_playerIsCrippled [ playerIndex ] and not isNowCrippled) then
 
             // Player became uncrippled; stop their cripple timer.
-            set bj_playerIsCrippled[playerIndex] = false
-            call PauseTimer(bj_crippledTimer[playerIndex])
+            set bj_playerIsCrippled [ playerIndex ] = false
+            call PauseTimer(bj_crippledTimer [ playerIndex ])
 
-            if (GetLocalPlayer() == indexPlayer) then
+            if(GetLocalPlayer() == indexPlayer) then
                 // Use only local code (no net traffic) within this block to avoid desyncs.
 
                 // Hide the timer window for this player.
-                call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
+                call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
 
                 // Display a confirmation message if the player's team is still alive.
-                if (MeleeGetAllyStructureCount(indexPlayer) > 0) then
-                    if (bj_playerIsExposed[playerIndex]) then
+                if(MeleeGetAllyStructureCount(indexPlayer) > 0) then
+                    if(bj_playerIsExposed [ playerIndex ]) then
                         call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNREVEALED"))
                     else
                         call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNCRIPPLED"))
@@ -11091,7 +11091,7 @@ function MeleeCheckLostUnit takes unit lostUnit returns nothing
     local player lostUnitOwner = GetOwningPlayer(lostUnit)
 
     // We only need to check for mortality if this was the last building.
-    if (GetPlayerStructureCount(lostUnitOwner, true) <= 0) then
+    if(GetPlayerStructureCount(lostUnitOwner, true) <= 0) then
         call MeleeCheckForLosersAndVictors()
     endif
 
@@ -11109,7 +11109,7 @@ function MeleeCheckAddedUnit takes unit addedUnit returns nothing
     local player addedUnitOwner = GetOwningPlayer(addedUnit)
 
     // If the player was crippled, this unit may have uncrippled him/her.
-    if (bj_playerIsCrippled[GetPlayerId(addedUnitOwner)]) then
+    if(bj_playerIsCrippled [ GetPlayerId(addedUnitOwner) ]) then
         call MeleeCheckForCrippledPlayers()
     endif
 endfunction
@@ -11123,7 +11123,7 @@ endfunction
 // 检查是否需要添加残余单位（单位死亡触发）
 // 残余单位：判断玩家当前是否有任意单位存活
 function MeleeTriggerActionUnitDeath takes nothing returns nothing
-    if (IsUnitType(GetDyingUnit(), UNIT_TYPE_STRUCTURE)) then
+    if(IsUnitType(GetDyingUnit(), UNIT_TYPE_STRUCTURE)) then
         call MeleeCheckLostUnit(GetDyingUnit())
     endif
 endfunction
@@ -11139,18 +11139,18 @@ function MeleeTriggerActionPlayerDefeated takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
     call CachePlayerHeroData(thePlayer)
 
-    if (MeleeGetAllyCount(thePlayer) > 0) then
+    if(MeleeGetAllyCount(thePlayer) > 0) then
         // If at least one ally is still alive and kicking, share units with
         // them and proceed with death.
         call ShareEverythingWithTeam(thePlayer)
-        if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+        if(not bj_meleeDefeated [ GetPlayerId(thePlayer) ]) then
             call MeleeDoDefeat(thePlayer)
         endif
     else
         // If no living allies remain, swap all units and buildings over to
         // neutral_passive and proceed with death.
         call MakeUnitsPassiveForTeam(thePlayer)
-        if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+        if(not bj_meleeDefeated [ GetPlayerId(thePlayer) ]) then
             call MeleeDoDefeat(thePlayer)
         endif
     endif
@@ -11162,7 +11162,7 @@ function MeleeTriggerActionPlayerLeft takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
 
     // Just show game over for observers when they leave
-    if (IsPlayerObserver(thePlayer)) then
+    if(IsPlayerObserver(thePlayer)) then
         call RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
         return
     endif
@@ -11172,7 +11172,7 @@ function MeleeTriggerActionPlayerLeft takes nothing returns nothing
     // This is the same as defeat except the player generates the message 
     // "player left the game" as opposed to "player was defeated".
 
-    if (MeleeGetAllyCount(thePlayer) > 0) then
+    if(MeleeGetAllyCount(thePlayer) > 0) then
         // If at least one ally is still alive and kicking, share units with
         // them and proceed with death.
         call ShareEverythingWithTeam(thePlayer)
@@ -11195,9 +11195,9 @@ endfunction
 // 比赛即将结束（暴露提示）
 function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
     // Note: We may get this trigger multiple times
-    local integer    playerIndex
-    local player     indexPlayer
-    local real       timeRemaining = GetTournamentFinishSoonTimeRemaining()
+    local integer playerIndex
+    local player indexPlayer
+    local real timeRemaining = GetTournamentFinishSoonTimeRemaining()
 
     if not bj_finishSoonAllExposed then
         set bj_finishSoonAllExposed = true
@@ -11206,16 +11206,16 @@ function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
         set playerIndex = 0
         loop
             set indexPlayer = Player(playerIndex)
-            if bj_playerIsCrippled[playerIndex] then
+            if bj_playerIsCrippled [ playerIndex ] then
                 // Uncripple the player
-                set bj_playerIsCrippled[playerIndex] = false
-                call PauseTimer(bj_crippledTimer[playerIndex])
+                set bj_playerIsCrippled [ playerIndex ] = false
+                call PauseTimer(bj_crippledTimer [ playerIndex ])
 
-                if (GetLocalPlayer() == indexPlayer) then
+                if(GetLocalPlayer() == indexPlayer) then
                     // Use only local code (no net traffic) within this block to avoid desyncs.
 
                     // Hide the timer window.
-                    call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
+                    call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
                 endif
 
             endif
@@ -11237,40 +11237,40 @@ endfunction
 function MeleeWasUserPlayer takes player whichPlayer returns boolean
     local playerslotstate slotState
 
-    if (GetPlayerController(whichPlayer) != MAP_CONTROL_USER) then
+    if(GetPlayerController(whichPlayer) != MAP_CONTROL_USER) then
         return false
     endif
 
     set slotState = GetPlayerSlotState(whichPlayer)
 
-    return (slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
+    return(slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
 endfunction
 
 // 根据比赛结束规则判断所有队伍胜负
 function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     local integer array playerScore
     local integer array teamScore
-    local force array   teamForce
-    local integer       teamCount
-    local integer       index
-    local player        indexPlayer
-    local integer       index2
-    local player        indexPlayer2
-    local integer       bestTeam
-    local integer       bestScore
-    local boolean       draw
+    local force array teamForce
+    local integer teamCount
+    local integer index
+    local player indexPlayer
+    local integer index2
+    local player indexPlayer2
+    local integer bestTeam
+    local integer bestScore
+    local boolean draw
 
     // Compute individual player scores
     set index = 0
     loop
         set indexPlayer = Player(index)
         if MeleeWasUserPlayer(indexPlayer) then
-            set playerScore[index] = GetTournamentScore(indexPlayer)
-            if playerScore[index] <= 0 then
-                set playerScore[index] = 1
+            set playerScore [ index ] = GetTournamentScore(indexPlayer)
+            if playerScore [ index ] <= 0 then
+                set playerScore [ index ] = 1
             endif
         else
-            set playerScore[index] = 0
+            set playerScore [ index ] = 0
         endif
         set index = index + 1
         exitwhen index == bj_MAX_PLAYERS
@@ -11280,21 +11280,21 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     set teamCount = 0
     set index = 0
     loop
-        if playerScore[index] != 0 then
+        if playerScore [ index ] != 0 then
             set indexPlayer = Player(index)
 
-            set teamScore[teamCount] = 0
-            set teamForce[teamCount] = CreateForce()
+            set teamScore [ teamCount ] = 0
+            set teamForce [ teamCount ] = CreateForce()
 
             set index2 = index
             loop
-                if playerScore[index2] != 0 then
+                if playerScore [ index2 ] != 0 then
                     set indexPlayer2 = Player(index2)
 
                     if PlayersAreCoAllied(indexPlayer, indexPlayer2) then
-                        set teamScore[teamCount] = teamScore[teamCount] + playerScore[index2]
-                        call ForceAddPlayer(teamForce[teamCount], indexPlayer2)
-                        set playerScore[index2] = 0
+                        set teamScore [ teamCount ] = teamScore [ teamCount ] + playerScore [ index2 ]
+                        call ForceAddPlayer(teamForce [ teamCount ], indexPlayer2)
+                        set playerScore [ index2 ] = 0
                     endif
                 endif
 
@@ -11316,13 +11316,13 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     if teamCount != 0 then
 
         // Find best team score
-        set bestTeam = -1
-        set bestScore = -1
+        set bestTeam = - 1
+        set bestScore = - 1
         set index = 0
         loop
-            if teamScore[index] > bestScore then
+            if teamScore [ index ] > bestScore then
                 set bestTeam = index
-                set bestScore = teamScore[index]
+                set bestScore = teamScore [ index ]
             endif
 
             set index = index + 1
@@ -11336,7 +11336,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
         set index = 0
         loop
             if index != bestTeam then
-                if bestScore < (multiplier * teamScore[index]) then
+                if bestScore < (multiplier * teamScore [ index ]) then
                     set draw = true
                 endif
             endif
@@ -11349,7 +11349,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             // Give draw to all players on all teams
             set index = 0
             loop
-                call ForForce(teamForce[index], function MeleeDoDrawEnum)
+                call ForForce(teamForce [ index ], function MeleeDoDrawEnum)
 
                 set index = index + 1
                 exitwhen index == teamCount
@@ -11359,7 +11359,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             set index = 0
             loop
                 if index != bestTeam then
-                    call ForForce(teamForce[index], function MeleeDoDefeatEnum)
+                    call ForForce(teamForce [ index ], function MeleeDoDefeatEnum)
                 endif
 
                 set index = index + 1
@@ -11367,7 +11367,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             endloop
 
             // Give victory to all players on the best team
-            call ForForce(teamForce[bestTeam], function MeleeDoVictoryEnum)
+            call ForForce(teamForce [ bestTeam ], function MeleeDoVictoryEnum)
         endif
     endif
 
@@ -11382,7 +11382,7 @@ function MeleeTriggerTournamentFinishNow takes nothing returns nothing
         return
     endif
 
-    if (rule == 1) then
+    if(rule == 1) then
         // Finals games
         call MeleeTournamentFinishNowRuleA(1)
     else
@@ -11398,9 +11398,9 @@ endfunction
 
 // 胜利/失败条件
 function MeleeInitVictoryDefeat takes nothing returns nothing
-    local trigger    trig
-    local integer    index
-    local player     indexPlayer
+    local trigger trig
+    local integer index
+    local player indexPlayer
 
     // Create a timer window for the "finish soon" timeout period, it has no timer
     // because it is driven by real time (outside of the game state to avoid desyncs)
@@ -11422,16 +11422,16 @@ function MeleeInitVictoryDefeat takes nothing returns nothing
         set indexPlayer = Player(index)
 
         // Make sure this player slot is playing.
-        if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
-            set bj_meleeDefeated[index] = false
-            set bj_meleeVictoried[index] = false
+        if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+            set bj_meleeDefeated [ index ] = false
+            set bj_meleeVictoried [ index ] = false
 
             // Create a timer and timer window in case the player is crippled.
-            set bj_playerIsCrippled[index] = false
-            set bj_playerIsExposed[index] = false
-            set bj_crippledTimer[index] = CreateTimer()
-            set bj_crippledTimerWindows[index] = CreateTimerDialog(bj_crippledTimer[index])
-            call TimerDialogSetTitle(bj_crippledTimerWindows[index], MeleeGetCrippledTimerMessage(indexPlayer))
+            set bj_playerIsCrippled [ index ] = false
+            set bj_playerIsExposed [ index ] = false
+            set bj_crippledTimer [ index ] = CreateTimer()
+            set bj_crippledTimerWindows [ index ] = CreateTimerDialog(bj_crippledTimer [ index ])
+            call TimerDialogSetTitle(bj_crippledTimerWindows [ index ], MeleeGetCrippledTimerMessage(indexPlayer))
 
             // Set a trigger to fire whenever a building is cancelled for this player.
             set trig = CreateTrigger()
@@ -11464,11 +11464,11 @@ function MeleeInitVictoryDefeat takes nothing returns nothing
             call TriggerRegisterPlayerStateEvent(trig, indexPlayer, PLAYER_STATE_ALLIED_VICTORY, EQUAL, 1)
             call TriggerAddAction(trig, function MeleeTriggerActionAllianceChange)
         else
-            set bj_meleeDefeated[index] = true
-            set bj_meleeVictoried[index] = false
+            set bj_meleeDefeated [ index ] = true
+            set bj_meleeVictoried [ index ] = false
 
             // Handle leave events for observers
-            if (IsPlayerObserver(indexPlayer)) then
+            if(IsPlayerObserver(indexPlayer)) then
                 // Set a trigger to fire whenever this player leaves
                 set trig = CreateTrigger()
                 call TriggerRegisterPlayerEvent(trig, indexPlayer, EVENT_PLAYER_LEAVE)
@@ -11497,11 +11497,11 @@ endfunction
 function CheckInitPlayerSlotAvailability takes nothing returns nothing
     local integer index
 
-    if (not bj_slotControlReady) then
+    if(not bj_slotControlReady) then
         set index = 0
         loop
-            set bj_slotControlUsed[index] = false
-            set bj_slotControl[index] = MAP_CONTROL_USER
+            set bj_slotControlUsed [ index ] = false
+            set bj_slotControl [ index ] = MAP_CONTROL_USER
             set index = index + 1
             exitwhen index == bj_MAX_PLAYERS
         endloop
@@ -11515,8 +11515,8 @@ function SetPlayerSlotAvailable takes player whichPlayer, mapcontrol control ret
     local integer playerIndex = GetPlayerId(whichPlayer)
 
     call CheckInitPlayerSlotAvailability()
-    set bj_slotControlUsed[playerIndex] = true
-    set bj_slotControl[playerIndex] = control
+    set bj_slotControlUsed [ playerIndex ] = true
+    set bj_slotControl [ playerIndex ] = control
 endfunction
 
 
@@ -11531,7 +11531,7 @@ endfunction
 // 仅是开局后补设标识，并不是真正设置队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function TeamInitPlayerSlots takes integer teamCount returns nothing
     local integer index
-    local player  indexPlayer
+    local player indexPlayer
     local integer team
 
     call SetTeams(teamCount)
@@ -11540,11 +11540,11 @@ function TeamInitPlayerSlots takes integer teamCount returns nothing
     set index = 0
     set team = 0
     loop
-        if (bj_slotControlUsed[index]) then
+        if(bj_slotControlUsed [ index ]) then
             set indexPlayer = Player(index)
-            call SetPlayerTeam( indexPlayer, team )
+            call SetPlayerTeam(indexPlayer, team)
             set team = team + 1
-            if (team >= teamCount) then
+            if(team >= teamCount) then
                 set team = 0
             endif
         endif
@@ -11581,19 +11581,19 @@ endfunction
 function InitGenericPlayerSlots takes nothing returns nothing
     local gametype gType = GetGameTypeSelected()
 
-    if (gType == GAME_TYPE_MELEE) then
+    if(gType == GAME_TYPE_MELEE) then
         call MeleeInitPlayerSlots()
-    elseif (gType == GAME_TYPE_FFA) then
+    elseif(gType == GAME_TYPE_FFA) then
         call FFAInitPlayerSlots()
-    elseif (gType == GAME_TYPE_USE_MAP_SETTINGS) then
+    elseif(gType == GAME_TYPE_USE_MAP_SETTINGS) then
         // Do nothing; the map-specific script handles this.
-    elseif (gType == GAME_TYPE_ONE_ON_ONE) then
+    elseif(gType == GAME_TYPE_ONE_ON_ONE) then
         call OneOnOneInitPlayerSlots()
-    elseif (gType == GAME_TYPE_TWO_TEAM_PLAY) then
+    elseif(gType == GAME_TYPE_TWO_TEAM_PLAY) then
         call TeamInitPlayerSlots(2)
-    elseif (gType == GAME_TYPE_THREE_TEAM_PLAY) then
+    elseif(gType == GAME_TYPE_THREE_TEAM_PLAY) then
         call TeamInitPlayerSlots(3)
-    elseif (gType == GAME_TYPE_FOUR_TEAM_PLAY) then
+    elseif(gType == GAME_TYPE_FOUR_TEAM_PLAY) then
         call TeamInitPlayerSlots(4)
     else
         // Unrecognized Game Type
@@ -11626,7 +11626,7 @@ endfunction
 function SetDNCSoundsDay takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
-    if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) and not bj_dncIsDaytime then
+    if(ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) and not bj_dncIsDaytime then
         set bj_dncIsDaytime = true
 
         // change ambient sounds
@@ -11639,7 +11639,7 @@ endfunction
 function SetDNCSoundsNight takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
-    if (ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) and bj_dncIsDaytime then
+    if(ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) and bj_dncIsDaytime then
         set bj_dncIsDaytime = false
 
         // change ambient sounds
@@ -11665,12 +11665,12 @@ function InitDNCSounds takes nothing returns nothing
 
     // Set up triggers to respond to changes from day to night or vice-versa.
     set bj_dncSoundsDay = CreateTrigger()
-    call TriggerRegisterGameStateEvent(bj_dncSoundsDay,   GAME_STATE_TIME_OF_DAY, GREATER_THAN_OR_EQUAL, bj_TOD_DAWN)
-    call TriggerRegisterGameStateEvent(bj_dncSoundsDay,   GAME_STATE_TIME_OF_DAY, LESS_THAN,             bj_TOD_DUSK)
+    call TriggerRegisterGameStateEvent(bj_dncSoundsDay, GAME_STATE_TIME_OF_DAY, GREATER_THAN_OR_EQUAL, bj_TOD_DAWN)
+    call TriggerRegisterGameStateEvent(bj_dncSoundsDay, GAME_STATE_TIME_OF_DAY, LESS_THAN, bj_TOD_DUSK)
     call TriggerAddAction(bj_dncSoundsDay, function SetDNCSoundsDay)
 
     set bj_dncSoundsNight = CreateTrigger()
-    call TriggerRegisterGameStateEvent(bj_dncSoundsNight, GAME_STATE_TIME_OF_DAY, LESS_THAN,             bj_TOD_DAWN)
+    call TriggerRegisterGameStateEvent(bj_dncSoundsNight, GAME_STATE_TIME_OF_DAY, LESS_THAN, bj_TOD_DAWN)
     call TriggerRegisterGameStateEvent(bj_dncSoundsNight, GAME_STATE_TIME_OF_DAY, GREATER_THAN_OR_EQUAL, bj_TOD_DUSK)
     call TriggerAddAction(bj_dncSoundsNight, function SetDNCSoundsNight)
 endfunction
@@ -11694,8 +11694,8 @@ function InitBlizzardGlobals takes nothing returns nothing
     set index = 0
     loop
         exitwhen index == bj_MAX_PLAYER_SLOTS
-        set bj_FORCE_PLAYER[index] = CreateForce()
-        call ForceAddPlayer(bj_FORCE_PLAYER[index], Player(index))
+        set bj_FORCE_PLAYER [ index ] = CreateForce()
+        call ForceAddPlayer(bj_FORCE_PLAYER [ index ], Player(index))
         set index = index + 1
     endloop
 
@@ -11711,8 +11711,8 @@ function InitBlizzardGlobals takes nothing returns nothing
     set index = 0
     loop
         exitwhen index >= bj_MAX_QUEUED_TRIGGERS
-        set bj_queuedExecTriggers[index] = null
-        set bj_queuedExecUseConds[index] = false
+        set bj_queuedExecTriggers [ index ] = null
+        set bj_queuedExecUseConds [ index ] = false
         set index = index + 1
     endloop
 
@@ -11722,7 +11722,7 @@ function InitBlizzardGlobals takes nothing returns nothing
     set index = 0
     loop
         exitwhen index >= bj_MAX_PLAYERS
-        if (GetPlayerController(Player(index)) == MAP_CONTROL_USER and GetPlayerSlotState(Player(index)) == PLAYER_SLOT_STATE_PLAYING) then
+        if(GetPlayerController(Player(index)) == MAP_CONTROL_USER and GetPlayerSlotState(Player(index)) == PLAYER_SLOT_STATE_PLAYING) then
             set userControlledPlayers = userControlledPlayers + 1
         endif
         set index = index + 1
@@ -11748,7 +11748,7 @@ function InitBlizzardGlobals takes nothing returns nothing
 
     // Init version-specific data
     set v = VersionGet()
-    if (v == VERSION_REIGN_OF_CHAOS) then
+    if(v == VERSION_REIGN_OF_CHAOS) then
         set bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V0
     else
         set bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V1
@@ -11764,7 +11764,7 @@ endfunction
 
 // 初始地图范围
 function InitMapRects takes nothing returns nothing
-    set bj_mapInitialPlayableArea = Rect(GetCameraBoundMinX()-GetCameraMargin(CAMERA_MARGIN_LEFT), GetCameraBoundMinY()-GetCameraMargin(CAMERA_MARGIN_BOTTOM), GetCameraBoundMaxX()+GetCameraMargin(CAMERA_MARGIN_RIGHT), GetCameraBoundMaxY()+GetCameraMargin(CAMERA_MARGIN_TOP))
+    set bj_mapInitialPlayableArea = Rect(GetCameraBoundMinX() - GetCameraMargin(CAMERA_MARGIN_LEFT), GetCameraBoundMinY() - GetCameraMargin(CAMERA_MARGIN_BOTTOM), GetCameraBoundMaxX() + GetCameraMargin(CAMERA_MARGIN_RIGHT), GetCameraBoundMaxY() + GetCameraMargin(CAMERA_MARGIN_TOP))
     set bj_mapInitialCameraBounds = GetCurrentCameraBoundsMapRectBJ()
 endfunction
 
@@ -11778,12 +11778,12 @@ function InitSummonableCaps takes nothing returns nothing
         // upgraded units
         // Note: Only do this if the corresponding upgrade is not yet researched
         // Barrage - Siege Engines
-        if (not GetPlayerTechResearched(Player(index), 'Rhrt', true)) then
+        if(not GetPlayerTechResearched(Player(index), 'Rhrt', true)) then
             call SetPlayerTechMaxAllowed(Player(index), 'hrtt', 0)
         endif
 
         // Berserker Upgrade - Troll Berserkers
-        if (not GetPlayerTechResearched(Player(index), 'Robk', true)) then
+        if(not GetPlayerTechResearched(Player(index), 'Robk', true)) then
             call SetPlayerTechMaxAllowed(Player(index), 'otbk', 0)
         endif
 
@@ -11799,16 +11799,16 @@ endfunction
 // 更新市场物品可用性限制
 // Update the per-class stock limits.
 function UpdateStockAvailability takes item whichItem returns nothing
-    local itemtype iType  = GetItemType(whichItem)
-    local integer  iLevel = GetItemLevel(whichItem)
+    local itemtype iType = GetItemType(whichItem)
+    local integer iLevel = GetItemLevel(whichItem)
 
     // Update allowed type/level combinations.
-    if (iType == ITEM_TYPE_PERMANENT) then
-        set bj_stockAllowedPermanent[iLevel] = true
-    elseif (iType == ITEM_TYPE_CHARGED) then
-        set bj_stockAllowedCharged[iLevel] = true
-    elseif (iType == ITEM_TYPE_ARTIFACT) then
-        set bj_stockAllowedArtifact[iLevel] = true
+    if(iType == ITEM_TYPE_PERMANENT) then
+        set bj_stockAllowedPermanent [ iLevel ] = true
+    elseif(iType == ITEM_TYPE_CHARGED) then
+        set bj_stockAllowedCharged [ iLevel ] = true
+    elseif(iType == ITEM_TYPE_ARTIFACT) then
+        set bj_stockAllowedArtifact [ iLevel ] = true
     else
         // Not interested in this item type - ignore the item.
     endif
@@ -11828,7 +11828,7 @@ function UpdateEachStockBuildingEnum takes nothing returns nothing
         // If we get hung up on an entire class/level combo of unsellable
         // items, or a very unlucky series of random numbers, give up.
         set iteration = iteration + 1
-        if (iteration > bj_STOCK_MAX_ITERATIONS) then
+        if(iteration > bj_STOCK_MAX_ITERATIONS) then
             return
         endif
     endloop
@@ -11852,32 +11852,32 @@ endfunction
 // 更新商店物品库存触发器
 // Update stock inventory.
 function PerformStockUpdates takes nothing returns nothing
-    local integer  pickedItemId
+    local integer pickedItemId
     local itemtype pickedItemType
-    local integer  pickedItemLevel = 0
-    local integer  allowedCombinations = 0
-    local integer  iLevel
+    local integer pickedItemLevel = 0
+    local integer allowedCombinations = 0
+    local integer iLevel
 
     // Give each type/level combination a chance of being picked.
     set iLevel = 1
     loop
-        if (bj_stockAllowedPermanent[iLevel]) then
+        if(bj_stockAllowedPermanent [ iLevel ]) then
             set allowedCombinations = allowedCombinations + 1
-            if (GetRandomInt(1, allowedCombinations) == 1) then
+            if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_PERMANENT
                 set pickedItemLevel = iLevel
             endif
         endif
-        if (bj_stockAllowedCharged[iLevel]) then
+        if(bj_stockAllowedCharged [ iLevel ]) then
             set allowedCombinations = allowedCombinations + 1
-            if (GetRandomInt(1, allowedCombinations) == 1) then
+            if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_CHARGED
                 set pickedItemLevel = iLevel
             endif
         endif
-        if (bj_stockAllowedArtifact[iLevel]) then
+        if(bj_stockAllowedArtifact [ iLevel ]) then
             set allowedCombinations = allowedCombinations + 1
-            if (GetRandomInt(1, allowedCombinations) == 1) then
+            if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_ARTIFACT
                 set pickedItemLevel = iLevel
             endif
@@ -11888,7 +11888,7 @@ function PerformStockUpdates takes nothing returns nothing
     endloop
 
     // Make sure we found a valid item type to add.
-    if (allowedCombinations == 0) then
+    if(allowedCombinations == 0) then
         return
     endif
 
@@ -11915,9 +11915,9 @@ function InitNeutralBuildings takes nothing returns nothing
     // Chart of allowed stock items.
     set iLevel = 0
     loop
-        set bj_stockAllowedPermanent[iLevel] = false
-        set bj_stockAllowedCharged[iLevel] = false
-        set bj_stockAllowedArtifact[iLevel] = false
+        set bj_stockAllowedPermanent [ iLevel ] = false
+        set bj_stockAllowedCharged [ iLevel ] = false
+        set bj_stockAllowedArtifact [ iLevel ] = false
         set iLevel = iLevel + 1
         exitwhen iLevel > bj_MAX_ITEM_LEVEL
     endloop
@@ -11993,8 +11993,8 @@ endfunction
 
 // 添加随机分布数
 function RandomDistAddItem takes integer inID, integer inChance returns nothing
-    set bj_randDistID[bj_randDistCount] = inID
-    set bj_randDistChance[bj_randDistCount] = inChance
+    set bj_randDistID [ bj_randDistCount ] = inID
+    set bj_randDistChance [ bj_randDistCount ] = inChance
     set bj_randDistCount = bj_randDistCount + 1
 endfunction
 
@@ -12003,18 +12003,18 @@ function RandomDistChoose takes nothing returns integer
     local integer sum = 0
     local integer chance = 0
     local integer index
-    local integer foundID = -1
+    local integer foundID = - 1
     local boolean done
 
     // No items?
-    if (bj_randDistCount == 0) then
-        return -1
+    if(bj_randDistCount == 0) then
+        return - 1
     endif
 
     // Find sum of all chances
     set index = 0
     loop
-        set sum = sum + bj_randDistChance[index]
+        set sum = sum + bj_randDistChance [ index ]
 
         set index = index + 1
         exitwhen index == bj_randDistCount
@@ -12028,15 +12028,15 @@ function RandomDistChoose takes nothing returns integer
     set sum = 0
     set done = false
     loop
-        set sum = sum + bj_randDistChance[index]
+        set sum = sum + bj_randDistChance [ index ]
 
-        if (chance <= sum) then
-            set foundID = bj_randDistID[index]
+        if(chance <= sum) then
+            set foundID = bj_randDistID [ index ]
             set done = true
         endif
 
         set index = index + 1
-        if (index == bj_randDistCount) then
+        if(index == bj_randDistCount) then
             set done = true
         endif
 
@@ -12070,7 +12070,7 @@ function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real unitY
     local item droppedItem
 
-    if (inItemID == -1) then
+    if(inItemID == - 1) then
         return null
     endif
 
@@ -12097,7 +12097,7 @@ function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real widgetX
     local real widgetY
 
-    if (inItemID == -1) then
+    if(inItemID == - 1) then
         return null
     endif
 

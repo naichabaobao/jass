@@ -98,7 +98,7 @@
         "jass.formatv2": {
           "type": "boolean",
           "default": false,
-          "description": "Open new version format"
+          "description": "(Deprecation) Open new version format"
         },
         "jass.info-style": {
           "type": "boolean",
