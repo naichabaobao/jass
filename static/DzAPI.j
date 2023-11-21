@@ -280,12 +280,12 @@ native DzFrameSetSize takes integer frame, real w, real h returns nothing
 native DzCreateFrameByTagName takes string frameType, string name, integer parent, string template, integer id returns integer
 // 设置颜色（支持SimpleStatusBar）
 native DzFrameSetVertexColor takes integer frame, integer color returns nothing
-// 不明觉厉
+// 自动重置原生UI
 native DzOriginalUIAutoResetPoint takes boolean enable returns nothing
-//  设置优先级 [NEW]
+// 设置优先级 [NEW]
 // @param priority 当两个frame重叠时,值大的覆盖值少的, 正常情况是后创建的覆盖前创建的
 native DzFrameSetPriority takes integer frame, integer priority returns nothing
-//  设置父窗口 [NEW]
+// 设置父窗口 [NEW]
 native DzFrameSetParent takes integer frame, integer parent returns nothing
 // 设置字体 [NEW]
 // 修改字体大小
@@ -293,12 +293,12 @@ native DzFrameSetParent takes integer frame, integer parent returns nothing
 // @param height 字体大小
 // @param flag 加粗、斜体或者加粗+斜体
 native DzFrameSetFont takes integer frame, string fileName, real height, integer flag returns nothing
-//  获取 Frame 的 高度 [NEW]
+// 获取 Frame 的 高度 [NEW]
 native DzFrameGetHeight takes integer frame returns real
-//  设置对齐方式 [NEW] 
+// 设置对齐方式 [NEW] 
 // @param align 对齐方式 [0:左|1:中|2:右]
 native DzFrameSetTextAlignment takes integer frame, integer align returns nothing
-//  获取 Frame 的 Parent [NEW]
+// 获取 Frame 的 Parent [NEW]
 native DzFrameGetParent takes integer frame returns integer
 // 设置内存大小（废物函数）
 native DzSetMemory takes integer frame,real r returns nothing

@@ -4117,13 +4117,13 @@ function IsItemHiddenBJ takes item whichItem returns boolean
 endfunction
 
 
-// 获取随机物品（所有类别），默认用于市场/集市随机出售物品
+// 获取随机物品（所有类型），默认用于市场/集市随机出售物品
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 获取随机物品（指定类别），默认用于市场/集市随机出售物品
+// 获取随机物品（指定类型），默认用于市场/集市随机出售物品
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
@@ -4986,13 +4986,13 @@ function UnitAddAbilityBJ takes integer abilityId, unit whichUnit returns boolea
 endfunction
 
 
-// 删除单位类别
+// 删除单位类型
 function UnitRemoveTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitRemoveType(whichUnit, whichType)
 endfunction
 
 
-// 添加单位类别
+// 添加单位类型
 function UnitAddTypeBJ takes unittype whichType, unit whichUnit returns boolean
     return UnitAddType(whichUnit, whichType)
 endfunction
@@ -8434,6 +8434,7 @@ endfunction
 
 
 // 设置指定玩家指定科技当前等级
+// 科技不能倒退，降级可添加自定义代码 BlzDecPlayerTechResearched
 function SetPlayerTechResearchedSwap takes integer techid, integer levels, player whichPlayer returns nothing
     call SetPlayerTechResearched(whichPlayer, techid, levels)
 endfunction
@@ -11191,7 +11192,7 @@ function MeleeTriggerActionAllianceChange takes nothing returns nothing
     call MeleeCheckForCrippledPlayers()
 endfunction
 
-// 锦标赛即将结束（暴露提示）
+// 比赛即将结束（暴露提示）
 function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
     // Note: We may get this trigger multiple times
     local integer    playerIndex
@@ -11245,7 +11246,7 @@ function MeleeWasUserPlayer takes player whichPlayer returns boolean
     return (slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
 endfunction
 
-// 判断锦标赛结束规则
+// 根据比赛结束规则判断所有队伍胜负
 function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     local integer array playerScore
     local integer array teamScore
@@ -11372,7 +11373,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
 
 endfunction
 
-// 锦标赛结束
+// 比赛结束
 function MeleeTriggerTournamentFinishNow takes nothing returns nothing
     local integer rule = GetTournamentFinishNowRule()
 
@@ -11509,6 +11510,7 @@ function CheckInitPlayerSlotAvailability takes nothing returns nothing
 endfunction
 
 // 设置玩家槽可用性
+// 仅是开局后补设标识，并不是真正设置插槽，插槽地图编辑时已设置，非固定电脑的插槽又在房间中经过了二次启闭和填充玩家
 function SetPlayerSlotAvailable takes player whichPlayer, mapcontrol control returns nothing
     local integer playerIndex = GetPlayerId(whichPlayer)
 
@@ -11526,6 +11528,7 @@ endfunction
 //***************************************************************************
 
 // 设置玩家队伍（指定队伍数量）
+// 仅是开局后补设标识，并不是真正设置队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function TeamInitPlayerSlots takes integer teamCount returns nothing
     local integer index
     local player  indexPlayer
@@ -11552,16 +11555,19 @@ function TeamInitPlayerSlots takes integer teamCount returns nothing
 endfunction
 
 // 设置玩家队伍（混战）
+// 仅是开局后补设标识，并不是真正设置队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function MeleeInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(bj_MAX_PLAYERS)
 endfunction
 
 // 设置玩家队伍（FFA）
+// 仅是开局后补设标识，并不是真正设置队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function FFAInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(bj_MAX_PLAYERS)
 endfunction
 
 // 设置玩家队伍（1V1）
+// 仅是开局后补设标识，并不是真正设置队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function OneOnOneInitPlayerSlots takes nothing returns nothing
     // Limit the game to 2 players.
     call SetTeams(2)
@@ -11569,8 +11575,9 @@ function OneOnOneInitPlayerSlots takes nothing returns nothing
     call TeamInitPlayerSlots(2)
 endfunction
 
-// 初始化玩家队伍（按游戏类型）
-// 游戏类型包含1V1、2支队伍、3支队伍、4支队伍、FFA、混战
+// 初始化玩家队伍（按游戏（队伍）类型）
+// 支持识别1V1、2支队伍、3支队伍、4支队伍、FFA、混战
+// 仅是开局后补设标识，并不是真正初始化队伍，插槽地图编辑时已设置，允许自由设置的地图又在房间中经过了二次设置
 function InitGenericPlayerSlots takes nothing returns nothing
     local gametype gType = GetGameTypeSelected()
 
