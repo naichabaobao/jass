@@ -177,17 +177,58 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       indentChar = "\t";
     }
     
+    const allIs = (str:string, char:string):boolean => {
+      for (let index = 0; index < str.length; index++) {
+        const c = str.charAt(index);
+        if (c !== char) {
+          return false;
+        }
+      }
+      return true;
+    }
+    // 在interface中没有结束标记
+    let inInterface:boolean = false;
     for (let line = 0; line < document.lineCount; line++) {
       const lineText = document.lineAt(line);
       const text = (lineText.text || '').split(/\/\/[^!]/)[0]; // 去除注释，避免注释导致换行, 但是保留 //! 注释
 
-      if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text) || /^.*\{[\s\t]*$/.test(text)) {
+      const notsise = () => {
+        if (lineText.firstNonWhitespaceCharacterIndex == indent) {
+          if (options.insertSpaces) {
+            return allIs(lineText.text.substring(0, lineText.firstNonWhitespaceCharacterIndex), " ");
+          } else {
+            return allIs(lineText.text.substring(0, lineText.firstNonWhitespaceCharacterIndex), "\t");
+          }
+        }
+        return false;
+      }
+
+      if (/^\s*interface\b/.test(text)) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
-          } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
+          } else if (lineText.firstNonWhitespaceCharacterIndex != indent || notsise()) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
         indent++;
+        inInterface = true;
+      }else if (indent > 0 && /^\s*endinterface\b/.test(text)) {
+        indent--;
+        if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
+          textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
+        } else if (lineText.firstNonWhitespaceCharacterIndex != indent || notsise()) {
+          textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
+        }
+        inInterface = false;
+      }
+      else if (/^\s*(library|scope|struct|interface|globals|(?:(?:private|public)\s+)?(?:static\s+)?function(?<!\s+interface\b)|(?:(?:private|public)\s+)?(?:static\s+)?method|(?:static\s+)?if|loop|while|for|module|\/\/!\s+(?:zinc|textmacro|nov[Jj]ass|inject))\b/.test(text) || /^.*\{[\s\t]*$/.test(text)) {
+        if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
+            textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
+          } else if (lineText.firstNonWhitespaceCharacterIndex != indent || notsise()) {
+            textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
+        }
+        if (!inInterface) {
+          indent++;
+        }
         // if (/}\s*$/.test(text)) {
         //   indent--;
         // }
@@ -199,24 +240,26 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
           }
         }
       } else if (indent > 0 && /^\s*(?:(endlibrary|endscope|endstruct|endinterface|endglobals|endfunction|endmethod|endif|endloop|endmodule|\/\/!\s+(?:endzinc|endtextmacro|endnov[Jj]ass|endinject))\b|})/.test(text)) {
-        indent--;
+        if (!inInterface) {
+          indent--;
+        }
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
-        } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
+        } else if (lineText.firstNonWhitespaceCharacterIndex != indent || notsise()) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
       } else if (/^\s*(else|elseif)\b/.test(text)) {
         if (indent > 0) {
           if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent - 1 == 0) {
             textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
-          } else if (lineText.firstNonWhitespaceCharacterIndex != indent - 1) {
+          } else if (lineText.firstNonWhitespaceCharacterIndex != indent - 1 || notsise()) {
             textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent - 1, indentChar)));
           }
         }
       } else if (!lineText.isEmptyOrWhitespace) {
         if (lineText.firstNonWhitespaceCharacterIndex > 0 && indent == 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex)));
-        } else if (lineText.firstNonWhitespaceCharacterIndex != indent) {
+        } else if (lineText.firstNonWhitespaceCharacterIndex != indent || notsise()) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(lineText.lineNumber, 0, lineText.lineNumber, lineText.firstNonWhitespaceCharacterIndex), genString(indent, indentChar)));
         }
       }
