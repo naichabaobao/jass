@@ -4557,8 +4557,8 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // @param otherPlayer 收税玩家
 // @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
-// 查询指定玩家优先种族是否指定种族
-// 在情节–玩家设置指定的种族（如未设置固定出生点，指定种族不会生效），则取房间玩家自主选择的种族，使用随机时应该返回否
+// 查询指定玩家预设种族是否指定种族
+// 在情节–玩家设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
