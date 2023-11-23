@@ -5721,7 +5721,7 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数(指定单位和物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除指定物品（指定单位）
+// 删除物品（指定单位）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 删除物品(指定单位和物品栏格数)
 // 不论哪个物品在该格中，都会被删除
