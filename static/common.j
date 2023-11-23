@@ -1364,7 +1364,7 @@ globals
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 单位事件 单位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-        // 单位事件 单位(尸体)开始腐烂
+	// 单位事件 单位(尸体)开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
 	// 单位事件 单位可侦测（可被反隐看到）
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
@@ -5851,18 +5851,18 @@ constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位ID（四字码）是否为指定单位类型
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
-// 设置指定单位和指定玩家的共享视野状态(共享或不共享) [R]
+// 允许/禁止 指定单位和指定玩家共享视野 [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 设置指定尸体腐烂状态(正常腐烂或暂停腐烂) [R]
+// 暂停/恢复 指定尸体腐烂 [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加类型到指定单位 [R]
+// 添加指定单位类型到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除指定单位的类型 [R]
+// 删除指定单位的指定单位类型 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 添加技能到指定单位 [R]
+// 添加指定技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除指定单位技能 [R]
+// 删除指定单位的指定技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
 // 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
