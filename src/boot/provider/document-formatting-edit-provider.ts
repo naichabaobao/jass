@@ -151,6 +151,13 @@ const formatOptions: FormatOption[] = [
   },
 ];
 
+// 是否支持 ++ -- . 调用
+const isSpecialDBOp = () => {
+  return !Options.isOnlyJass && Options.isSupportCjass || Options.isSupportLua;
+};
+
+
+
 /**
  * 默认会认为已闭合
  * zinc {} 必须换行才能识别
@@ -218,6 +225,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     // 文本格式化
     if (!Options.isFormatv2) {
       console.time("format1");
+
       for (let line = 0; line < document.lineCount; line++) {
         const lineText = document.lineAt(line);
         if (lineText.isEmptyOrWhitespace) {

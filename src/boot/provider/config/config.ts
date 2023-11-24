@@ -125,7 +125,7 @@ export class ConfigPovider {
                 const configObject = JSON.parse(fs.readFileSync(workspacePath).toString("utf-8"));
                 option = configFileToObject(fs.readFileSync(workspacePath).toString("utf-8"));
             } else {
-                vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你物遍");
+                vscode.window.showInformationMessage("你可以创建'jass.config.json'在你的根目录中,定义你的物遍");
             }
         }
         return option;
@@ -133,7 +133,7 @@ export class ConfigPovider {
 
     private isWatch: boolean = false;
 
-    watch() {
+    private watch() {
         if (!this.isWatch) {
             if (Options.workspaceConfigFilePath) {
                 if (fs.existsSync(Options.workspaceConfigFilePath)) {
