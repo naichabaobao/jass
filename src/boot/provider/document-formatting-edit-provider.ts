@@ -167,7 +167,7 @@ const formatOptions: FormatOption[] = [
 
 // 是否支持 ++ -- . 调用
 const isSpecialDBOp = () => {
-  return !Options.isOnlyJass && Options.isSupportCjass || Options.isSupportLua;
+  return !Options.isOnlyJass || Options.isSupportCjass || Options.isSupportLua;
 };
 
 
@@ -349,7 +349,24 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
                   new vscode.Position(lineText.lineNumber, currentValue.position)
                 )));
               }
-            } else if (currentValue.value == "-" && previousValue.value == "-") { // Add only one space to the right of the symbol
+            } 
+            else if (isSpecialDBOp() && currentValue.value == ".") { // Add only one space to the right of the symbol
+              if (currentValue.start.position - previousValue.end.position > 0) {
+                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
+                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
+                  new vscode.Position(lineText.lineNumber, currentValue.position)
+                )));
+              }
+            }
+            else if (isSpecialDBOp() && previousValue.value == ".") { // Add only one space to the right of the symbol
+              if (currentValue.start.position - previousValue.end.position > 0) {
+                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
+                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
+                  new vscode.Position(lineText.lineNumber, currentValue.position)
+                )));
+              }
+            } 
+            else if (isSpecialDBOp() && ((currentValue.value == "-" && previousValue.value == "-") || (currentValue.value == "+" && previousValue.value == "+"))) { // Add only one space to the right of the symbol
               if (currentValue.start.position - previousValue.end.position > 1) {
                 textEdits.push(vscode.TextEdit.replace(new vscode.Range(
                   new vscode.Position(lineText.lineNumber, previousValue.end.position),
@@ -371,9 +388,20 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
                 )));
               }
             } else if (
-              (previousValue.value == "-" && list[currentIndex - 2] && list[currentIndex - 2].value == "-")
-              ||
-              (currentValue.value == "-" && list[currentIndex + 1] && list[currentIndex + 1].value == "-")
+              isSpecialDBOp() && 
+              (
+                (
+                  (previousValue.value == "-" && list[currentIndex - 2] && list[currentIndex - 2].value == "-")
+                  ||
+                  (currentValue.value == "-" && list[currentIndex + 1] && list[currentIndex + 1].value == "-")
+                )
+                ||
+                (
+                  (previousValue.value == "+" && list[currentIndex - 2] && list[currentIndex - 2].value == "+")
+                  ||
+                  (currentValue.value == "+" && list[currentIndex + 1] && list[currentIndex + 1].value == "+")
+                )
+              )
             ) { // 前面为--时  或  后面为--时
               if (currentValue.start.position - previousValue.end.position > 0) {
                 textEdits.push(vscode.TextEdit.delete(new vscode.Range(
