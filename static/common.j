@@ -5556,7 +5556,7 @@ native SetUnitX takes unit whichUnit, real newX returns nothing
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
-// 移动指定单位(立刻)(指定点)
+// 移动指定单位(立即)(指定点)
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
 // 设置指定单位朝向 [R]
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
