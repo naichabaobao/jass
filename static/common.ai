@@ -29,21 +29,25 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取AI玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定的单位类型数量，含训练中及训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定的单位类型数量/科技等级，含训练/建造/研究中及已训练/建造/研究完成
+    // 获取指定玩家指定的单位类型数量，含训练中及训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取AI玩家指定的单位类型数量/科技等级，仅统计已训练/建造/研究完成
+    // 获取指定的单位类型数量，仅统计已训练完成
+    // 不含建筑，不统计该单位的等价单位
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应类型的单位数
+    // 不统计该单位的等价单位
     // @param tn 基地编号，-1为不限
-    // @param dn 是否包含训练/建造/研究中的单位/建筑/科技
+    // @param dn 是否包含训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
     // 获取指定单位/建筑类型的单位造价（金钱）
     native GetUnitGoldCost      takes integer unitid                        returns integer
     // 获取指定单位/建筑类型的单位造价（木材）
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑/科技类型的训练/建造/研究时间（以秒为单位）
+    // 获取指定单位/建筑类型的训练/建造/升级时间（以秒为单位）
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数量
@@ -52,7 +56,7 @@ native DebugS               takes string str                            returns 
     // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
     // 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
     native GetMinesOwned        takes nothing                               returns integer
-    // 获取拥有的所有金矿的未采金钱数量，并返回所有矿的金钱数
+    // 获取拥有的所有金矿未采集金钱数量之和
     // 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
     // 如果AI出生点有多个金矿，会导致统计值偏差
     native GetGoldOwned         takes nothing                               returns integer
@@ -67,39 +71,40 @@ native DebugS               takes string str                            returns 
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型当前升级的等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/获得时为0
+    // 获取指定科技类型的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 获取升级指定科技需要消耗的金钱数量，id即科技类型
+    // 获取研究指定科技需要消耗的金钱数量（指定科技类型）
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 升级指定科技需要消耗的木材数量，id即科技类型
+    // 获取研究指定科技需要消耗的木材数量（指定科技类型）
     native GetUpgradeWoodCost   takes integer id                            returns integer
     // 获取下一个扩张点的编号，可能返回-1
     native GetNextExpansion     takes nothing                               returns integer
     // 获取大型攻击目标
     // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
-    // 获取指定玩家正在训练/建造的单位
+    // 获取指定玩家最后建造的建筑
     native GetBuilding          takes player p                              returns unit
-    // 获取敌人强度
+    // 获取敌人强度，似乎是全部敌人强度之和
     native GetEnemyPower        takes nothing                               returns integer
     // 设置盟友当前的攻击目标（仅对AI盟友生效）
     // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻（似乎同时会发送小地图信号告知真人玩家）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
+    // 用于夸脚本协同
     native GetAllianceTarget    takes nothing                               returns unit
-    // 训练/建造/研究指定单位/科技(指定数量,单位类型,基地)
+    // 训练/建造/升级/研究指定单位/建筑/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
     native SetProduce           takes integer qty, integer id, integer town returns boolean
-    // 取消指定单位建造/训练
+    // 取消指定单位/建筑的训练/建造/升级
     // 因单词为反召唤，怀疑可用于卖建筑（亡灵）
     native Unsummon             takes unit unitid                           returns nothing
     // 建造扩张点/分基地
     // @param peon 指定工人单位
     // @param id 建造的城镇单位类型
     native SetExpansion         takes unit peon, integer id                 returns boolean
-    // 升级指定科技
+    // 研究指定科技
     native SetUpgrade           takes integer id                            returns boolean
-    // 设置英雄升级技能函数
+    // 设置英雄升级技能线程
     native SetHeroLevels        takes code func                             returns nothing
     // 是否设置新英雄
     // 意义不明，可能和英雄升级技能函数有关
@@ -107,13 +112,13 @@ native DebugS               takes string str                            returns 
     // 购买地精飞艇
     // 运行后AI会自动前往地精实验室并自动购买地精飞艇
     native PurchaseZeppelin     takes nothing                               returns nothing
-    // 训练/建造/研究指定数量的合体单位类型
+    // 训练指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
     // @param a 单位类型一
     // @param b 单位类型二
     // @param make 一和二合体而成的单位类型
     native MergeUnits           takes integer qty, integer a, integer b, integer make returns boolean
-    // 训练/建造/研究指定数量的变形单位类型
+    // 训练指定数量的变形单位类型
     // 此变形不是英雄/熊德/鸟德/白牛/猎头/坦克的变身/升级，而是十胜石雕像和毁灭者这种额外付费的个体变形
     // 运行后AI会训练变形前单位并变形，直到数量达标
     native ConvertUnits         takes integer qty, integer id               returns boolean
@@ -166,8 +171,7 @@ native DebugS               takes string str                            returns 
     // 初始化攻击组
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
-    // 未被编入的单位类型不会跟随进攻，只会留在出生点
-    // 似乎攻击组会在这些单位类型中挑选一名类型为英雄的单位担任
+    // 未被编入的单位类型不会跟随进攻，只会留在出生点，建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防御组
     native AddDefenders         takes integer qty, integer id               returns boolean
@@ -184,20 +188,25 @@ native DebugS               takes string str                            returns 
     // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
+    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位
     native GetEnemyBase         takes nothing                               returns unit
-    // 查询当前拟扩张点是否存在威胁性单位（中立敌对玩家的单位）
+    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位）
     native GetExpansionFoe      takes nothing                               returns unit
     // 获取敌人分基地
     native GetEnemyExpansion    takes nothing                               returns unit
     // 获取扩张点的 X 坐标
+    // 使用前必须已初始化 CreateCaptains
     native GetExpansionX        takes nothing                               returns integer
     // 获取扩张点的 Y 坐标
+    // 使用前必须已初始化 CreateCaptains
     native GetExpansionY        takes nothing                               returns integer
     // 设置（军队）集合点
     native SetStagePoint        takes real x, real y                        returns nothing
     // 发布攻击组移动攻击命令（指定单位）
+    // 当攻击组到达目标点，若未发现敌人或途中被击败且尚有单位幸存，攻击组将返回基地
     native AttackMoveKill       takes unit target                           returns nothing
     // 发布攻击组移动攻击命令（指定坐标）
+    // 当攻击组到达目标点，若未发现敌人或途中被击败且尚有单位幸存，攻击组将返回基地
     native AttackMoveXY         takes integer x, integer y                  returns nothing
     // 在指定坐标卸载全部单位（空投）
     // 只对飞艇类单位的 卸载 技能生效，且AI无需任何辅助代码就能自己控制好飞艇的装卸（运输船不行）
@@ -229,18 +238,20 @@ native DebugS               takes string str                            returns 
     // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
     // @param town 0为第一个有矿的基地，大于0则是对应每个分基地
     native HarvestWood          takes integer town, integer peons           returns nothing
-    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null
+    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
+    // 使用前必须已初始化 CreateCaptains
     native GetExpansionPeon     takes nothing                               returns unit
     // 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
     native StopGathering        takes nothing                               returns nothing
     // 在指定坐标增加指定类型的防守单位
+    // 单位死亡后，AI会自动填补新防守单位，但每个点默认只增加3次，超过3次可使用 FillGuardPosts 补充 或 使用 SetReplacementCount 设置新上限
     native AddGuardPost         takes integer id, real x, real y            returns nothing
     // 填补防守岗位（即时），当一个单位被杀后，AI会立即训练一个同类型单位填补其空位
     native FillGuardPosts       takes nothing                               returns nothing
     // 返回防守岗位
     native ReturnGuardPosts     takes nothing                               returns nothing
-    // 创建攻击组
+    // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
     native CreateCaptains       takes nothing                               returns nothing
     // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
     // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
@@ -250,7 +261,7 @@ native DebugS               takes string str                            returns 
     native ResetCaptainLocs     takes nothing                               returns nothing
     // 转移基地到指定坐标
     native ShiftTownSpot        takes real x, real y                        returns nothing
-    // 运输/传送攻击组到指定坐标，可能组会因此使用回本卷轴或群体传送
+    // 运输/传送攻击组到指定坐标，似乎不能让AI使用回本卷轴或群体传送
     native TeleportCaptain      takes real x, real y                        returns nothing
     // 清除攻击组当前的攻击目标，清除后组会在一瞬间停止攻击，然后重新获取攻击目标
     native ClearCaptainTargets  takes nothing                               returns nothing
@@ -298,13 +309,14 @@ native DebugS               takes string str                            returns 
     native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
     // 开始线程
     // AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加前请检查已调用的默认线程数量）
+    // 线程类似一条独立运行的功能，如果其内部没有无限循环或循环可以随意退出，则该线程运行完后会失效，因此一般官方的线程都是无限循环的
     // 变量支持跨线程使用，但在一条线程运行到读取变量时，该变量可能已在之前被另一个线程改写，于是造成滞后的假象
     native StartThread          takes code func                             returns nothing
     // 等待指定时间，按秒计时（等待期间不执行任何代码）
     native Sleep                takes real seconds                          returns nothing
     // 查询指定单位是否存活
     native UnitAlive            takes unit id                               returns boolean
-    // 查询指定单位是否可见（不可见单位需要反隐）
+    // 查询指定单位是否不可见（隐身）
     native UnitInvis            takes unit id                               returns boolean
     // 查询攻击组已忽略的指定类型单位的数量
     native IgnoredUnits         takes integer unitid                        returns integer
@@ -317,7 +329,7 @@ native DebugS               takes string str                            returns 
     native SetAmphibious        takes nothing                               returns nothing
     
     // 获取命令类型
-    // 可通过BJ发送，未发送时获取的类型是0
+    // 可通过BJ发送命令，未发送时获取的类型是0，获取后命令序列增加1，请用 PopLastCommand 减少序列，完成排泄
     // 暴雪用于打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
     native CommandsWaiting      takes nothing                               returns integer
     // 获取最新的命令类型
@@ -329,6 +341,7 @@ native DebugS               takes string str                            returns 
     // 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
     native GetLastData          takes nothing                               returns integer
     // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
+    // 当排泄用，用完命令就调用
     native PopLastCommand       takes nothing                               returns nothing
     // 获取对战难度
     native MeleeDifficulty      takes nothing                               returns integer
@@ -502,9 +515,9 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ARMOR          = 'Rhar'
         // 科技 黄金（人族）（编辑器无此科技 'Rhmi'）
         constant integer UPG_GOLD           = 'Rhmi'
-        // 科技 改良石工技术
+        // 科技 改良石工技术/加强型石工技术
         constant integer UPG_MASONRY        = 'Rhac'
-        // 科技 控制魔法
+        // 科技 照明弹
         constant integer UPG_SIGHT          = 'Rhss'
         // 科技 防御
         constant integer UPG_DEFEND         = 'Rhde'
@@ -518,7 +531,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_LEATHER        = 'Rhla'
         // 科技 长管火枪
         constant integer UPG_GUN_RANGE      = 'Rhri'
-        // 科技 改良伐木技术
+        // 科技 改良伐木技术/改进型伐木效率
         constant integer UPG_WOOD           = 'Rhlh'
         // 科技 魔法岗哨
         constant integer UPG_SENTINEL       = 'Rhse'
@@ -530,11 +543,11 @@ native DebugS               takes string str                            returns 
         constant integer UPG_HAMMERS        = 'Rhhb'
         // 科技 控制魔法
         constant integer UPG_CONT_MAGIC     = 'Rhss'
-        // 科技 破片榴弹
+        // 科技 破片榴弹/碎片攻击
         constant integer UPG_FRAGS          = 'Rhfs'
         // 科技 火箭弹幕
         constant integer UPG_TANK           = 'Rhrt'
-        // 科技 对空炮机
+        // 科技 对空炮机/高射炮火
         constant integer UPG_FLAK           = 'Rhfc'
         // 科技 迷雾之云
         constant integer UPG_CLOUD          = 'Rhcd'
@@ -670,7 +683,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
         // 科技 掠夺
         constant integer UPG_ORC_PILLAGE    = 'Ropg'
-        // 科技 野蛮之力
+        // 科技 野蛮之力/狂暴力量
         constant integer UPG_ORC_BERSERK    = 'Robs'
         // 科技 粉碎伤害强化
         constant integer UPG_ORC_PULVERIZE  = 'Rows'
@@ -808,6 +821,8 @@ native DebugS               takes string str                            returns 
         constant integer PIT_FIEND          = 'ucry'
         // 地穴恶魔
         constant integer CRYPT_FIEND        =  PIT_FIEND
+        // 钻地的地穴恶魔
+        constant integer BURROWED_FIEND     = 'ucrm'
         // 冰霜巨龙
         constant integer FROST_WYRM         = 'ufro'
         // 石像鬼
@@ -822,6 +837,8 @@ native DebugS               takes string str                            returns 
         constant integer NECRO              = 'unec'
         // 骷髅战士
         constant integer SKEL_WARRIOR       = 'uske'
+        // 骷髅法师
+        constant integer SKEL_MAGE          = 'uskm'
         // 影魔（阴影）
         constant integer SHADE              = 'ushd'
         // 邪灵空艇
@@ -832,7 +849,17 @@ native DebugS               takes string str                            returns 
         constant integer OBS_STATUE         =  OBSIDIAN_STATUE
         // 毁灭者
         constant integer BLK_SPHINX         = 'ubsp'
-    
+        // 腐尸甲虫（1级）
+        constant integer CARRIONSCARAB1     = 'ucs1'
+        // 腐尸甲虫（2级）
+        constant integer CARRIONSCARAB2    = 'ucs2'
+        // 钻地的腐尸甲虫（2级）
+        constant integer CARRIONSCARABBURROWED2   = 'ucsB'
+        // 腐尸甲虫（3级）
+        constant integer CARRIONSCARAB3    = 'ucs3'
+        // 钻地的腐尸甲虫（3级）
+        constant integer CARRIONSCARABBURROWED3   = 'ucsC'
+
         // undead buildings
     
         // 闹鬼金矿
@@ -890,13 +917,13 @@ native DebugS               takes string str                            returns 
         constant integer UPG_NECROS         = 'Rune'
         // 科技 女妖专家级训练
         constant integer UPG_BANSHEE        = 'Ruba'
-        // 科技 不明科技（不死族）（编辑器无此科技'Rump'）
-        constant integer UPG_MEAT_WAGON     = 'Rump'
+        // 科技 背包（不死族）（原文'Rump'有误）
+        constant integer UPG_MEAT_WAGON     = 'Rupm'
         // 科技 冰冻吐息
         constant integer UPG_WYRM_BREATH    = 'Rufb'
-        // 科技 骷髅持久术
+        // 科技 骷髅持久术/骨质增强术
         constant integer UPG_SKEL_LIFE      = 'Rusl'
-        // 科技 骷髅精通
+        // 科技 骷髅精通/骷髅法术
         constant integer UPG_SKEL_MASTERY   = 'Rusm'
         // 科技 发掘尸体
         constant integer UPG_EXHUME         = 'Ruex'
@@ -1097,7 +1124,7 @@ native DebugS               takes string str                            returns 
         constant integer UPG_STR_WILD       = 'Resw'
         // 科技 月之护甲
         constant integer UPG_MOON_ARMOR     = 'Rema'
-        // 科技 强化外皮
+        // 科技 强化外皮/加强隐藏
         constant integer UPG_HIDES          = 'Rerh'
         // 科技 夜视能力
         constant integer UPG_ULTRAVISION    = 'Reuv'
@@ -1107,9 +1134,9 @@ native DebugS               takes string str                            returns 
         constant integer UPG_SCOUT          = 'Resc'
         // 科技 升级月刃
         constant integer UPG_GLAIVE         = 'Remg'
-        // 科技 强弓
+        // 科技 强弓/硬弓
         constant integer UPG_BOWS           = 'Reib'
-        // 科技 箭术
+        // 科技 箭术/射击术
         constant integer UPG_MARKSMAN       = 'Remk'
         // 科技 猛禽德鲁伊专家级训练
         constant integer UPG_DRUID_TALON    = 'Redt'
@@ -1117,19 +1144,19 @@ native DebugS               takes string str                            returns 
         constant integer UPG_DRUID_CLAW     = 'Redc'
         // 科技 驱除魔法（暗夜精灵族）
         constant integer UPG_ABOLISH        = 'Resi'
-        // 科技 腐蚀吐息
+        // 科技 腐蚀吐息/腐蚀喷吐
         constant integer UPG_CHIM_ACID      = 'Recb'
-        // 科技 角鹰兽训练
+        // 科技 角鹰兽训练/驯服角鹰兽
         constant integer UPG_HIPPO_TAME     = 'Reht'
-        // 科技 不明科技（暗夜精灵族）（编辑器无此科技'Repd'）
-        constant integer UPG_BOLT           = 'Repd'
-        // 科技 利爪之印
+        // 科技 锐锋之刃（投刃车）（原文'Repd'有误）
+        constant integer UPG_BOLT           = 'Repb'
+        // 科技 利爪之印/利爪之痕
         constant integer UPG_MARK_CLAW      = 'Reeb'
-        // 科技 猛禽之印
+        // 科技 猛禽之印/猛禽之痕
         constant integer UPG_MARK_TALON     = 'Reec'
-        // 科技 硬化体肤
+        // 科技 硬化体肤/硬化皮肤
         constant integer UPG_HARD_SKIN      = 'Rehs'
-        // 科技 抗性体肤
+        // 科技 抗性体肤/抗性皮肤
         constant integer UPG_RESIST_SKIN    = 'Rers'
         // 科技 月井之春
         constant integer UPG_WELL_SPRING    = 'Rews'
@@ -1785,7 +1812,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 研究/升级指定科技
+    // 研究指定科技
     // 简单难度AI默认不执行
     function SetBuildUpgr takes integer qty, integer unitid returns nothing
         if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
@@ -1795,7 +1822,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 研究/升级指定科技
+    // 研究指定科技
     // @param easy 简单AI的等级
     // @param med 中等AI的等级
     // @param hard 疯狂AI的等级
@@ -1818,7 +1845,7 @@ native DebugS               takes string str                            returns 
     
     //============================================================================
 
-    // 开始升级科技
+    // 开始研究科技
     // @param level 科技等级
     // @param upgid 科技类型
     function StartUpgrade takes integer level, integer upgid returns boolean

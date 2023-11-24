@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { Tokenizer } from "./jass/tokens";
+import { tokenize } from "./jass/tokens";
 
 const letterRegExp = new RegExp(/[a-zA-Z]/);
 const numberRegExp = new RegExp(/\d/);
@@ -527,7 +527,7 @@ function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|strin
 function getPositionKey(document: vscode.TextDocument, position: vscode.Position) {
 	const text = document.lineAt(position).text.substring(0, position.character);
 	
-	const tokens = Tokenizer.get(text);
+	const tokens = tokenize(text);
     let key:string|null = null;
     const keys: string[] = [];
     let argc = 0;

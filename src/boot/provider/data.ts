@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 
 import { compare, getFileContent, isJFile, isLuaFile, isUsableFile, isZincFile} from "../tool";
 
-import {Program, Native, Declaration, Func, Library, Struct, DefineMacro} from "../jass/ast";
+import {Program, Native, Declaration, Func, Library, Struct, DefineMacro, Context} from "../jass/ast";
 
 import { parseCj, parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
@@ -81,85 +81,18 @@ export const cjassDataMap = new DataMap();
 export const luaDataMap = new Map<string, Chunk>();
 
 
-/**
- * 
- * @deprecated 遍历太多
- * @param filePath 
- * @param program 
- */
-function setSource(filePath: string, program: Program) {
 
-  function set<T extends Declaration>(n: T) {
-    if (n instanceof Program) {
-      n.natives.forEach(x => {
-        x.source = filePath;
-      });
-      n.functions.forEach(x => {
-        x.source = filePath;
-      });
-      n.globals.forEach(x => {
-        x.source = filePath;
-      });
-      n.structs.forEach(x => {
-        x.source = filePath;
-      });
-      n.librarys.forEach(x => {
-        x.source = filePath;
-      });
-    } else if (n instanceof Func) {
-      n.getGlobals().forEach(x => {
-        x.source = filePath;
-      });
-      n.locals.forEach(x => {
-        x.source = filePath;
-      });
-    } else if (n instanceof Library) {
-      n.functions.forEach(x => {
-        x.source = filePath;
-      });
-      n.globals.forEach(x => {
-        x.source = filePath;
-      });
-      n.structs.forEach(x => {
-        x.source = filePath;
-      });
-    } else if (n instanceof Struct) {
-      n.members.forEach(x => {
-        x.source = filePath;
-      });
-      n.methods.forEach(x => {
-        x.source = filePath;
-      });
-    }
-  }
-  /*
-  [program, program.globals, program.functions, program.natives, program.librarys, program.structs,
-     program.librarys.map((lib) => lib.globals).flat(),
-     program.librarys.map((lib) => lib.functions).flat(),
-     program.librarys.map((lib) => lib.structs).flat(),
-     program.structs.map((struct) => struct.members).flat(),
-     program.structs.map((struct) => struct.methods).flat(),
-     program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.members).flat(),
-     program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat(),
-     program.functions.map((func) => func.getGlobals()).flat(),
-     program.librarys.map((lib) => lib.functions).flat().map((func) => func.getGlobals()).flat(),
-     program.librarys.map((lib) => lib.functions).flat().map((func) => func.locals).flat(),
-     program.functions.flat().map((func) => func.locals).flat(),
-     program.librarys.map((lib) => lib.structs).flat().map((struct) => struct.methods).flat().map((method) => method.locals).flat(),
-    ].flat().forEach(x => {
-      x.source = filePath;
-    });*/
-}
 
 function parseContent(filePath: string, content: string) {
 
   if (isExclude(filePath, ConfigPovider.instance().getExcludes())) {    
     return;
   }
+  const context = new Context();
+  context.filePath = path.resolve(filePath);
   if (isZincFile(filePath)) {
-    const program = parse(content, true);
-    setSource(filePath, program);
-    program.source = filePath;
+    const program = parse(context, content, true);
+
     zincDataMap.put(filePath, program);
   } else if (isLuaFile(filePath)) {
     try {
@@ -168,20 +101,16 @@ function parseContent(filePath: string, content: string) {
     } catch(error) {
     } 
   } else {
-    const parser = new Parser(content);
+    const parser = new Parser(context, content);
     if (Options.supportZinc) {
       const program = parser.zincing();
-      setSource(filePath, program);
       zincDataMap.put(filePath, program);
     }
     if (Options.isSupportCjass) {
-      const program = parseCj(content);
-      setSource(filePath, program);
+      const program = parseCj(context, content);
       cjassDataMap.put(filePath, program);
     }
     const program = parser.parsing();
-    program.source = filePath;
-    setSource(filePath, program);
     dataMap.put(filePath, program);
   }
 }
@@ -277,8 +206,11 @@ const defineMacros: DefineMacro[] = [];
 Options.cjassDependents.forEach((filePath) => {
   if (isUsableFile(filePath)) {
     if (isJFile(filePath)) {
+      const context = new Context();
+      context.filePath = path.resolve(filePath);
+
       const content = getFileContent(filePath);
-      const dms = parseCjass(content);
+      const dms = parseCjass(context, content);
       defineMacros.push(...dms);
     }
   }

@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "keywords": [
     "jass",
     "vjass",
@@ -98,7 +98,7 @@
         "jass.formatv2": {
           "type": "boolean",
           "default": false,
-          "description": "Open new version format"
+          "description": "(Deprecation) Open new version format"
         },
         "jass.info-style": {
           "type": "boolean",
@@ -114,6 +114,11 @@
           "type": "boolean",
           "default": true,
           "description": "String prompt support"
+        },
+        "jass.support.number": {
+          "type": "boolean",
+          "default": false,
+          "description": "(Deprecation) number prompt support"
         }
       }
     },

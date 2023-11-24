@@ -11,7 +11,7 @@ function genSymbols(program:Program) {
         const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
         let selectRange:vscode.Range;
         if (global.nameToken) {
-            selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end);
+            selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end.position);
         } else {
             selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
         }
@@ -63,7 +63,7 @@ function genSymbols(program:Program) {
         const range = new vscode.Range(native.loc.start.line, native.loc.start.position, native.loc.end.line, native.loc.end.position);
         let selectRange:vscode.Range;
         if (native.nameToken) {
-            selectRange = new vscode.Range(native.nameToken.line, native.nameToken.position, native.nameToken.line, native.nameToken.end);
+            selectRange = new vscode.Range(native.nameToken.line, native.nameToken.position, native.nameToken.line, native.nameToken.end.position);
         } else {
             selectRange = new vscode.Range(native.loc.start.line, native.loc.start.position, native.loc.end.line, native.loc.end.position);
         }
@@ -80,7 +80,7 @@ function genSymbols(program:Program) {
             const range = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
             let selectRange:vscode.Range;
             if (method.nameToken) {
-                selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end);
+                selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end.position);
             } else {
                 selectRange = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
             }
@@ -91,7 +91,7 @@ function genSymbols(program:Program) {
                 const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                 let selectRange:vscode.Range;
                 if (local.nameToken) {
-                    selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end);
+                    selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end.position);
                 } else {
                     selectRange = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                 }
@@ -102,7 +102,7 @@ function genSymbols(program:Program) {
             const range = new vscode.Range(member.loc.start.line, member.loc.start.position, member.loc.end.line, member.loc.end.position);
             let selectRange:vscode.Range;
             if (member.nameToken) {
-                selectRange = new vscode.Range(member.nameToken.line, member.nameToken.position, member.nameToken.line, member.nameToken.end);
+                selectRange = new vscode.Range(member.nameToken.line, member.nameToken.position, member.nameToken.line, member.nameToken.end.position);
             } else {
                 selectRange = new vscode.Range(member.loc.start.line, member.loc.start.position, member.loc.end.line, member.loc.end.position);
             }
@@ -120,7 +120,7 @@ function genSymbols(program:Program) {
             const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
             let selectRange:vscode.Range;
             if (global.nameToken) {
-                selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end);
+                selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end.position);
             } else {
                 selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
             }
@@ -139,7 +139,7 @@ function genSymbols(program:Program) {
             const range = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
             let selectRange:vscode.Range;
             if (func.nameToken) {
-                selectRange = new vscode.Range(func.nameToken.line, func.nameToken.position, func.nameToken.line, func.nameToken.end);
+                selectRange = new vscode.Range(func.nameToken.line, func.nameToken.position, func.nameToken.line, func.nameToken.end.position);
             } else {
                 selectRange = new vscode.Range(func.loc.start.line, func.loc.start.position, func.loc.end.line, func.loc.end.position);
             }
@@ -150,7 +150,7 @@ function genSymbols(program:Program) {
                 const range = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
                 let selectRange:vscode.Range;
                 if (global.nameToken) {
-                    selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end);
+                    selectRange = new vscode.Range(global.nameToken.line, global.nameToken.position, global.nameToken.line, global.nameToken.end.position);
                 } else {
                     selectRange = new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position);
                 }
@@ -169,7 +169,7 @@ function genSymbols(program:Program) {
                 const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                 let selectRange:vscode.Range;
                 if (local.nameToken) {
-                    selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end);
+                    selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end.position);
                 } else {
                     selectRange = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                 }
@@ -180,7 +180,7 @@ function genSymbols(program:Program) {
             const range = new vscode.Range(native.loc.start.line, native.loc.start.position, native.loc.end.line, native.loc.end.position);
             let selectRange:vscode.Range;
             if (native.nameToken) {
-                selectRange = new vscode.Range(native.nameToken.line, native.nameToken.position, native.nameToken.line, native.nameToken.end);
+                selectRange = new vscode.Range(native.nameToken.line, native.nameToken.position, native.nameToken.line, native.nameToken.end.position);
             } else {
                 selectRange = new vscode.Range(native.loc.start.line, native.loc.start.position, native.loc.end.line, native.loc.end.position);
             }
@@ -197,7 +197,7 @@ function genSymbols(program:Program) {
                 const range = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
                 let selectRange:vscode.Range;
                 if (method.nameToken) {
-                    selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end);
+                    selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end.position);
                 } else {
                     selectRange = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
                 }
@@ -208,7 +208,7 @@ function genSymbols(program:Program) {
                     const range = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                     let selectRange:vscode.Range;
                     if (local.nameToken) {
-                        selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end);
+                        selectRange = new vscode.Range(local.nameToken.line, local.nameToken.position, local.nameToken.line, local.nameToken.end.position);
                     } else {
                         selectRange = new vscode.Range(local.loc.start.line, local.loc.start.position, local.loc.end.line, local.loc.end.position);
                     }
@@ -219,7 +219,7 @@ function genSymbols(program:Program) {
                 const range = new vscode.Range(member.loc.start.line, member.loc.start.position, member.loc.end.line, member.loc.end.position);
                 let selectRange:vscode.Range;
                 if (member.nameToken) {
-                    selectRange = new vscode.Range(member.nameToken.line, member.nameToken.position, member.nameToken.line, member.nameToken.end);
+                    selectRange = new vscode.Range(member.nameToken.line, member.nameToken.position, member.nameToken.line, member.nameToken.end.position);
                 } else {
                     selectRange = new vscode.Range(member.loc.start.line, member.loc.start.position, member.loc.end.line, member.loc.end.position);
                 }

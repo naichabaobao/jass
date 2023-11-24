@@ -2,8 +2,8 @@ import { canCjassReturn } from "../jass/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine, Type } from "./ast";
-import { Token,  tokenize, Tokenizer } from "./tokens";
+import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine, Type, Context, baseTypeContext } from "./ast";
+import { Token,  tokenize } from "./tokens";
 
 
 /**
@@ -223,13 +223,13 @@ function parseType(lineText: ReplaceableLineText):Type|undefined {
 
     
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     let type : Type|undefined;
     if (tokens.length >= 2) {
         if (tokens[0].isId() && tokens[0].value == "type" && tokens[1].isId()) {
-            type = new Type(tokens[1].value);
+            type = new Type(baseTypeContext, tokens[1].value);
             if (tokens.length >= 4) {
                 if (tokens[2].isId() && tokens[2].value == "extends" && tokens[3].isId()) {
                     const extName:string = tokens[3].value;
@@ -250,7 +250,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
 
     
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     
@@ -291,7 +291,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
                     if (token.value == "nothing") {
                         break;
                     }
-                    take = new Take(token.value, "");
+                    take = new Take(func.getContext(), token.value, "");
                     take.type = token.value;
                     take.loc.start = new Position(token.line, token.position);
                     func.takes.push(take);
@@ -303,7 +303,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
                 } else if (token.isId()) {
                     if (take) {
                         take.name = token.value;
-                        take.loc.end = new Position(token.line, token.end);
+                        take.loc.end = new Position(token.line, token.end.position);
                         take.nameToken = token;
                         state = 2;
                     }
@@ -359,7 +359,7 @@ function parseFunction(lineText: ReplaceableLineText, func: (Func | Native | Met
 function parseLibrary(lineText: ReplaceableLineText, library: Library) {
 
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -404,7 +404,7 @@ function parseLibrary(lineText: ReplaceableLineText, library: Library) {
 
 function parseLineComment(lineText: ReplaceableLineText, lineComment: LineComment) {
     const tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     const lineCommentToken = tokens.find((token) => token.isComment());
@@ -412,14 +412,14 @@ function parseLineComment(lineText: ReplaceableLineText, lineComment: LineCommen
         // const lineComment = new LineComment(lineCommentToken.value);
         lineComment.setText(lineText.replaceText());
         lineComment.loc.start = new Position(lineText.lineNumber(), lineCommentToken.position);
-        lineComment.loc.end = new Position(lineText.lineNumber(), lineCommentToken.end);
+        lineComment.loc.end = new Position(lineText.lineNumber(), lineCommentToken.end.position);
     }
 }
 
 function parseGlobal(lineText: ReplaceableLineText, global: Global) {
     
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     let index = 0;
@@ -461,7 +461,7 @@ function parseGlobal(lineText: ReplaceableLineText, global: Global) {
 
 function parseStruct(lineText: ReplaceableLineText, struct: Struct) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
     const structIndex = tokens.findIndex((token) => token.isId() && token.value == "struct");
@@ -492,7 +492,7 @@ function parseStruct(lineText: ReplaceableLineText, struct: Struct) {
 
 function parseLocal(lineText: ReplaceableLineText, local: Local) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -522,7 +522,7 @@ function parseLocal(lineText: ReplaceableLineText, local: Local) {
 
 function parseMember(lineText: ReplaceableLineText, member: Member) {
     let tokens = tokenize(lineText.replaceText()).map((token) => {
-        token.line = lineText.lineNumber();
+        token.start.line = lineText.lineNumber();
         return token;
     });
 
@@ -725,7 +725,7 @@ class ReplaceableLineText extends LineText {
                 str += token.value;
             }
     
-            storeIndex = token.end;
+            storeIndex = token.end.position;
         });
     
         return str;
@@ -870,10 +870,17 @@ class RunTextMacro extends Range {
  */
 class Parser {
 
-    private jassProgram: Program = new Program();
+    private readonly context:Context;
+    private jassProgram: Program;
     // private zincProgram: Program = new Program();
 
-    constructor(content: string, config?: ParserConfig) {
+    private get _context() {
+        return this.context;
+    }
+
+    constructor(context:Context, content: string, config?: ParserConfig) {
+        this.context = context;
+        this.jassProgram = new Program(this.context);
         // 移除了多行注释的新文本
         const newContent = replaceBlockComment(content);
         // this.lineTexts = lines(newContent);
@@ -945,7 +952,7 @@ class Parser {
                 const result = /^(?<prefixSpace>\s*)#define(?<namePrefixSpace>\s+)(?<name>[\$_a-zA-Z\d]+)(?:(?<valuePrefixSpace>\s+)(?<value>.+))?\\?/.exec(lineText.getText());
 
                 if (result && result.groups) {
-                    const define = new TextMacroDefine();
+                    const define = new TextMacroDefine(this._context);
                     const prefixSpaceLength = result.groups["prefixSpace"].length;
                     define.loc.start = new Position(lineText.lineNumber(), prefixSpaceLength);
                     
@@ -1217,7 +1224,7 @@ class Parser {
 
     public parsing(): Program {
 
-        function handleGlobalsBlock(block: Block, globals: Global[]) {
+        const handleGlobalsBlock = (block: Block, globals: Global[]) => {
             const lineComments: LineComment[] = [];
             block.childrens.forEach((x) => {
                 if (x instanceof ReplaceableLineText) {
@@ -1226,7 +1233,7 @@ class Parser {
                         parseLineComment(x, lineComment);
                         lineComments.push(lineComment);
                     } else if (isGlobalStart(x)) {
-                        const global = new Global();
+                        const global = new Global(this._context);
                         parseGlobal(x, global);
                         global.lineComments.push(...lineComments);
                         globals.push(global);
@@ -1248,8 +1255,8 @@ class Parser {
             }
 
         }
-        function handleNativeBlock(lineText: ReplaceableLineText, natives: Native[], lineComments: LineComment[]) {
-            const native = new Native();
+        const handleNativeBlock = (lineText: ReplaceableLineText, natives: Native[], lineComments: LineComment[]) => {
+            const native = new Native(this._context);
 
             native.loc.from(lineText);
 
@@ -1258,8 +1265,8 @@ class Parser {
             natives.push(native);
 
         }
-        function handleFunctionBlock(block: Block, functions: Func[], lineComments: LineComment[]) {
-            const func = new Func();
+        const handleFunctionBlock = (block: Block, functions: Func[], lineComments: LineComment[]) => {
+            const func = new Func(this._context);
 
             func.loc.from(block);
             
@@ -1273,8 +1280,8 @@ class Parser {
                 globals: func.getGlobals()
             });
         }
-        function handleMethodsBlock(block: Block, functions: Method[], lineComments: LineComment[]) {
-            const method = new Method();
+        const handleMethodsBlock = (block: Block, functions: Method[], lineComments: LineComment[]) => {
+            const method = new Method(this._context);
 
             method.loc.from(block);
 
@@ -1287,13 +1294,13 @@ class Parser {
                 locals: method.locals
             });
         }
-        function handleFunctionBody(blocks: (Block|ReplaceableLineText)[], collect: {
+        const handleFunctionBody = (blocks: (Block|ReplaceableLineText)[], collect: {
             locals?: Local[]|null,
             globals?: Global[]|null
         } = {
             locals: null,
             globals: null
-        }) {
+        }) => {
             const lineComments: LineComment[] = [];
             blocks.forEach((x) => {
                 if (x instanceof ReplaceableLineText) {
@@ -1302,7 +1309,7 @@ class Parser {
                         parseLineComment(x, lineComment);
                         lineComments.push(lineComment);
                     } else if (collect.locals && isLocalStart(x)) {
-                        const local = new Local();
+                        const local = new Local(this._context);
                         parseLocal(x, local);
                         collect.locals.push(local);
                         lineComments.length = 0;
@@ -1317,13 +1324,13 @@ class Parser {
                 }
             });
         }
-        function handleStructBody(blocks: (Block|ReplaceableLineText)[], collect: {
+        const handleStructBody = (blocks: (Block|ReplaceableLineText)[], collect: {
             members?: Member[]|null,
             methods?: Method[]|null
         } = {
             members: null,
             methods: null
-        }) {
+        }) => {
             const lineComments: LineComment[] = [];
             blocks.forEach((x) => {
                 if (x instanceof ReplaceableLineText) {
@@ -1332,7 +1339,7 @@ class Parser {
                         parseLineComment(x, lineComment);
                         lineComments.push(lineComment);
                     } else if (collect.members && isMemberStart(x)) {
-                        const member = new Member();
+                        const member = new Member(this._context);
                         parseMember(x, member);
                         collect.members.push(member);
                         member.lineComments.push(...lineComments);
@@ -1348,8 +1355,8 @@ class Parser {
                 }
             });
         }
-        function handleLibraryBlock(block: Block, librarys: Library[], lineComments: LineComment[]) {
-            const library = new Library();
+        const handleLibraryBlock = (block: Block, librarys: Library[], lineComments: LineComment[]) => {
+            const library = new Library(this._context);
 
             library.loc.from(block);
 
@@ -1366,8 +1373,8 @@ class Parser {
             });
             
         }
-        function handleStructBlock(block: Block, structs: Struct[], lineComments: LineComment[]) {
-            const struct = new Struct();
+        const handleStructBlock = (block: Block, structs: Struct[], lineComments: LineComment[]) => {
+            const struct = new Struct(this._context);
 
             struct.loc.from(block);
 
@@ -1451,7 +1458,7 @@ class Parser {
                 if (children instanceof ReplaceableLineText) {
                     const replaceText = children.replaceText()
                     const lineTextTokens = tokenize(replaceText).map((token) => {
-                        token.line = children.lineNumber();
+                        token.start.line = children.lineNumber();
                         return token;
                     });
                     tokens.push(...lineTextTokens);
@@ -1459,7 +1466,7 @@ class Parser {
             });
         });
 
-        const zincProgram = parseZinc(tokens, true);
+        const zincProgram = parseZinc(this.context, tokens, true);
 
         return zincProgram;
     }
@@ -1486,14 +1493,14 @@ function isUnefMacroStart(text: LineText) {
     return /^\s*#undef\b/.test(text.getText());
 }
 
-function parseCjass(content: string) {
+function parseCjass(context:Context, content: string) {
     const newContent = replaceBlockComment(content);
 
     const lineTexts = lines(newContent);
 
     const defineMacros:DefineMacro[] = [];
 
-    let defineMacro:DefineMacro = new DefineMacro();
+    let defineMacro:DefineMacro = new DefineMacro(context);
     let inDefine = false; 
     let state = 0;
     let field = 0;
@@ -1504,14 +1511,14 @@ function parseCjass(content: string) {
             const parseMacro = (condition: boolean) => {
                 if (condition && state == 0) {
                     if (token.isId()) {
-                        defineMacro = new DefineMacro();
+                        defineMacro = new DefineMacro(context);
                         const id = new Identifier(token.value);
                         id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end);
+                        id.end = new Position(token.line, token.end.position);
                         defineMacro.keys.push(id);
                         state = 2;
                     } else if (token.isOp() && token.value == "<") {
-                        defineMacro = new DefineMacro();
+                        defineMacro = new DefineMacro(context);
                         state = 3;
                     }
                 } else if (state == 2) {
@@ -1527,7 +1534,7 @@ function parseCjass(content: string) {
                     if (token.isId()) {
                         const id = new Identifier(token.value);
                         id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end);
+                        id.end = new Position(token.line, token.end.position);
                         defineMacro.keys.push(id);
                     } else if (token.isOp() && token.value == ">") {
                         state = 4;
@@ -1595,12 +1602,12 @@ function parseCjass(content: string) {
  * @deprecated 不知道内部实现不建议使用
  * @param content 
  */
-function parseCj(content: string): Program {
+function parseCj(context:Context, content: string): Program {
     const newContent = replaceBlockComment(content);
     const lineTexts = lines(newContent);
 
     const cjassFuncRegExp = new RegExp(/^\s*(?:(?<tag>private|public)\s+)?(?<returns>[a-zA-Z][a-zA-Z\d_]*)\s+(?<name>[a-zA-Z][a-zA-Z\d_]*)\s*\(/);
-    const program = new Program();
+    const program = new Program(context);
     lineTexts.forEach((lineText) => {
         // const result = cjassFuncRegExp.exec(lineText.getText());
         const result = lineText.getText().match(cjassFuncRegExp);
@@ -1611,11 +1618,11 @@ function parseCj(content: string): Program {
             takeStrings.forEach((takeString: string) => {                
                 const takeResult = takeString.match(/(?<type>[a-zA-Z][a-zA-Z\d_]*)\s+(?<name>[a-zA-Z][a-zA-Z\d_]*)/);
                 if (takeResult && takeResult.groups) {
-                    const take = new Take(takeResult.groups["type"], takeResult.groups["name"]);
+                    const take = new Take(context, takeResult.groups["type"], takeResult.groups["name"]);
                     takes.push(take)
                 }
             });
-            const func = new Func(result.groups["name"], takes, result.groups["returns"]);
+            const func = new Func(context, result.groups["name"], takes, result.groups["returns"]);
             func.tag = result.groups["tag"] as 'default' || 'default';
             func.loc.from(lineText);
             program.functions.push(func);
@@ -1650,7 +1657,7 @@ export function findIncludes(content:string) {
     const includes:Include[] = [];
     lineTexts.forEach((lineText) => {
         if (/^\s*#include\b/.test(lineText.getText())) {
-            const tokens = Tokenizer.get(lineText.getText());
+            const tokens = tokenize(lineText.getText());
             if (tokens.length >= 2 && tokens[1].type == "string") {
                 const filePath = tokens[1].value;
                 const include = new Include(filePath);
@@ -1664,7 +1671,7 @@ export function findIncludes(content:string) {
 }
 
 if (false) {
-    const program = new Parser(`
+    const program = new Parser(new Context(), `
     type bbb
     type aaaaaaa extends bbb
     #define fn function
@@ -1675,7 +1682,6 @@ if (false) {
     console.log(program.defines);
     console.log(program.functions);
     console.log(program.types);
-    console.log(program.source);
     
 }
 

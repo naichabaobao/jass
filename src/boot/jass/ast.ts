@@ -2,9 +2,7 @@
 import { Token, tokenize } from "./tokens";
 
 import * as path from "path";
-import { getFileContent, isSpace, isUsableFile } from "../tool";
-import { lines } from "./tool";
-import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
+import { ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 
 
 class Position {
@@ -19,12 +17,37 @@ class Position {
 }
 
 class Range {
-	public start: Position;
-	public end: Position;
+	private _start: Position;
+	private _end: Position;
 
-	constructor(start: Position = new Position(), end: Position = new Position()) {
-		this.start = start;
-		this.end = end;
+	
+	public get start() : Position {
+		return this._start;
+	}
+
+	
+	public get end() : Position {
+		return this._end;
+	}
+	
+	
+	public set start(start : Position) {
+		this._start = start;
+		if (this.end.line < start.line) {
+			this._end = this._start;
+		} else if (this.end.line == start.line && this.end.position < start.position) {
+			this._end.position = this._start.position;
+		}
+	}
+
+	public set end(end : Position) {
+		this._end = end;
+	}
+	
+
+	public constructor(start: Position = new Position(), end: Position = new Position()) {
+		this._start = start;
+		this._end = end;
 	}
 
 	public static default () :Range {
@@ -87,11 +110,241 @@ export {
 };
 
 
+/**
+ * 插件启动管理所有文件上下文
+ */
+export class Context {
 
+	public filePath:string = "";
 
+}
 
 export class Node implements Rangebel  { 
+
+	/**
+	 * 必须传递上下文
+	 * @param context 
+	 */
+	public constructor(context:Context) {
+		// 当开始构造时
+		this.context = context;
+	}
+
+	public getContext():Context {
+		return this.context;
+	}
+
 	public readonly loc: Range = Range.default(); 
+
+	protected readonly context:Context;
+
+	/**
+	 * 父类节点
+	 */
+	protected parent:Node|null = null;
+	/**
+	 * 前节点
+	 */
+	protected befor:Node|null = null;
+	/**
+	 * 后节点
+	 */
+	protected after:Node|null = null;
+
+	/**
+	 * 子节点
+	 */
+	// protected readonly childrens:Node[] = [];
+	/**
+	 * 仅保存第一个子节点
+	 */
+	protected firstChild:Node|null = null;
+
+	public getParent() :Node|null {
+		return this.parent;
+	}
+
+	/**
+	 * 获取兄弟节点
+	 * @returns 
+	 */
+	public getSiblings():Node[] {
+		const nodes:Node[] = [this];
+
+		/**
+		 * 递归向前看是否存在上一个节点,有则向前插入
+		 * @param node 
+		 */
+		const pushBackBefor = (node:Node) =>  {
+			console.log("pushBackBefor");
+			nodes.splice(0, 0, node);
+			if (node.befor) {
+				pushBackBefor(node.befor);
+			}
+		}
+
+		if (this.befor) {
+			pushBackBefor(this.befor);
+		}
+		/**
+		 * 递归向后看是否存在上一个节点,有则向后插入
+		 * @param node 
+		 */
+		const pushAfter = (node:Node) =>  {
+			
+			
+			nodes.push(node);
+			if (node.after) {
+				pushAfter(node.after);
+			}
+		}
+
+		if (this.after) {
+			pushAfter(this.after);
+		}
+
+		
+		
+		return nodes;
+	}
+
+	public getChildrens():Node[] {
+		if (this.firstChild) {
+			return this.firstChild.getSiblings();
+		} else return [];
+	}
+
+	/**
+	 * 设置节点的父节点等于this的父节点
+	 * @param node 
+	 */
+	private setSiblingParent(node:Node) {
+		node.parent = this.parent;
+	}
+
+	/**
+	 * 设置子节点的父节点等于this
+	 * @param node 
+	 */
+	private setchildParent(node:Node) {
+		node.parent = this;
+	}
+
+	/**
+	 * 往前插入一个几点
+	 */
+	public prepend(node:Node) {
+		node.remove();
+		/**
+		 * 往前递归直到前节点为空时设置前节点为node
+		 */
+		const beforPrepend = (_node:Node) => {
+			if (_node.befor) {
+				beforPrepend(_node.befor);
+			} else {
+				_node.befor = node;
+				
+				// 插入的node后节点从新绑定
+				node.after = _node;
+			}
+		}
+
+		beforPrepend(this);
+
+		this.setSiblingParent(node);
+	}
+
+	/**
+	 * 把节点移除,并解除当前节点的关系
+	 */
+	public remove() {
+		if (this.befor) {
+			if (this.after) { // 当节点前后节点都有时,前节点的后节点等于你的后节点，后节点的前节点等于你的前节点，并把你的前后节点关系清空
+				this.befor.after = this.after;
+				this.after.befor = this.befor;
+				this.befor = null;
+				this.after = null;
+
+				
+			} else { // 意味着节点是最后一个,清空前节点的后节点,清空你的前节点
+				this.befor.after = null;
+
+				this.befor = null
+			}
+		} else { // 首个节点
+			if (this.after) { // 无前有后，把后节点的前节点清空，把你的后节点清空
+				this.after.befor = null;
+
+				this.befor = null;
+			}
+		}
+
+		this.parent = null;
+	}
+
+	/**
+	 * 往后插入一个几点
+	 */
+	public append(node:Node) {
+
+		node.remove();
+
+		/**
+		 * 往后递归直到前节点为空时设置后节点为node
+		 */
+		const afterAppend = (_node:Node) => {
+			if (_node.after) {
+				afterAppend(_node.after);
+			} else {
+				_node.after = node;
+				node.befor = _node;
+			}
+		}
+
+		afterAppend(this);
+
+		this.setSiblingParent(node);
+	}
+
+	/**
+	 * 插入子节点
+	 */
+	public appendChild(node:Node) {
+		
+		node.remove();
+
+		if (this.firstChild) {
+			this.firstChild.append(node);
+		} else {
+			this.firstChild = node;
+			this.setchildParent(node);
+		}
+
+	}
+
+	/**
+	 * 往前插入子节点
+	 */
+	public prependChild(node:Node) {
+	
+		node.remove();
+
+		if (this.firstChild) {
+			this.firstChild.prepend(node);
+		} else {
+			this.firstChild = node;
+			this.setchildParent(node);
+		}
+
+	}
+
+	public getBefor():Node|null {
+		return this.befor;
+	}
+
+	public getAfter():Node|null {
+		return this.after;
+	}
 }
 
 type ParamAnnotation = {
@@ -101,11 +354,14 @@ type ParamAnnotation = {
 
 class Declaration extends Node implements Descript {
 
-	/**
-	 * 来源文件
-	 * @depreated 存在资源浪费
-	 */
-	public source: string = "";
+	protected constructor(context:Context) {
+		super(context);
+	}
+
+	// 临时
+	public get source():string {
+		return this.context.filePath;
+	}
 
 	public readonly lineComments: LineComment[] = [];
 
@@ -146,6 +402,10 @@ class Declaration extends Node implements Descript {
 
 class TextMacroDefine extends Declaration {
 	
+	public constructor(context:Context) {
+		super(context);
+	}
+
 	public id:Identifier = null as any;
 	public value: string = "";
 
@@ -187,7 +447,7 @@ class TextMacroDefine extends Declaration {
 				str += token.value;
 			}
 	
-			storeIndex = token.end;
+			storeIndex = token.end.position;
 		});
 	
 		return str;
@@ -230,8 +490,8 @@ class Take extends Node {
 	public nameToken: Token | null = null;
 	public name: string;
 
-	constructor(type: string, name: string) {
-		super();
+	constructor(context:Context, type: string, name: string) {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -250,8 +510,8 @@ class Native extends Declaration implements Desc, Descript {
 	private constant = false;
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "", takes: Take[] = [], returns: string = "nothing") {
-		super();
+	constructor(context:Context, name: string = "", takes: Take[] = [], returns: string = "nothing") {
+		super(context);
 		this.name = name;
 		this.takes = takes;
 		this.returns = returns;
@@ -335,8 +595,8 @@ class Global extends Declaration implements Desc, Descript, Option {
 
 	public size: number = 0;
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -379,8 +639,8 @@ class Local extends Declaration implements  Desc, Descript, Option {
 
 	public size: number = 0;
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -423,8 +683,8 @@ class Member extends Declaration implements Desc, Descript, Option {
 	public nameToken: Token | null = null;
 	public modifier: "default" | "static" | "stub" = "default";
 
-	constructor(type: string = "", name: string = "") {
-		super();
+	constructor(context:Context, type: string = "", name: string = "") {
+		super(context);
 		this.type = type;
 		this.name = name;
 	}
@@ -452,8 +712,8 @@ class Interface extends Declaration implements  Descript, Option {
 	public loc: Range = Range.default();
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "") {
-		super();
+	constructor(context:Context, name: string = "") {
+		super(context);
 		this.name = name;
 	}
 
@@ -496,8 +756,8 @@ class Library extends Declaration implements  Descript, Option {
 	public readonly globals: Global[] = [];
 	public readonly lineComments: LineComment[] = [];
 
-	constructor(name: string = "") {
-		super();
+	constructor(context:Context, name: string = "") {
+		super(context);
 		this.name = name;
 	}
 
@@ -595,6 +855,10 @@ class Identifier extends Range {
 
 class DefineMacro extends Declaration implements  Descript, Option  {
 
+	public constructor(context:Context) {
+		super(context);
+	}
+
 	public readonly keys: Identifier[] = [];
 	public readonly takes: string[] = [];
 
@@ -683,8 +947,8 @@ export function runTextMacroReplace(runTextMacro:RunTextMacro, textMacros:TextMa
 export class BaseType extends Declaration {
 	public readonly name:string;
 
-	constructor(baseType:string) {
-		super();
+	constructor(context:Context, baseType:string) {
+		super(context);
 		this.name = baseType;
 	}
 
@@ -693,20 +957,23 @@ export class BaseType extends Declaration {
 	}
 }
 
-export const BooleanBaseType = new BaseType("boolean");
-export const IntegerBaseType = new BaseType("integer");
-export const RealBaseType = new BaseType("real");
-export const StringBaseType = new BaseType("string");
-export const CodeBaseType = new BaseType("code");
-export const HandleBaseType = new BaseType("handle");
+export const baseTypeContext = new Context();
+baseTypeContext.filePath = "blizzard";
+
+export const BooleanBaseType = new BaseType(baseTypeContext, "boolean");
+export const IntegerBaseType = new BaseType(baseTypeContext, "integer");
+export const RealBaseType = new BaseType(baseTypeContext, "real");
+export const StringBaseType = new BaseType(baseTypeContext, "string");
+export const CodeBaseType = new BaseType(baseTypeContext, "code");
+export const HandleBaseType = new BaseType(baseTypeContext, "handle");
 
 export class Type  extends BaseType {
 	public ext:Type|BaseType;
 
 	public static readonly types:Type[] = [];
 
-	constructor(name:string, ext: Type|BaseType = HandleBaseType) {
-		super(name);
+	constructor(context:Context, name:string, ext: Type|BaseType = HandleBaseType) {
+		super(context, name);
 		this.ext = ext;
 
 		Type.push(this);
@@ -737,8 +1004,9 @@ export class Type  extends BaseType {
 class Program extends Declaration {
 
 
-	constructor() {
-		super();
+
+	constructor(context:Context, ) {
+		super(context);
 	}
 
 	/**
@@ -977,6 +1245,8 @@ class Program extends Declaration {
 export {
 	AstNode, Declaration, Program, TextMacroDefine
 };
+
+
 
 
 

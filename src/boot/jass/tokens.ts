@@ -6,18 +6,28 @@ import { Position, Range } from "./ast";
 
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "block_comment" | "comment" | "macro";
 
-class Token {
+// class Tokenize extends Range{
+// 	type: string;
+// 	value: string;
+
+// 	constructor(type: string, value: string, start?: Position, end?: Position) {
+// 		super(start, end);
+// 		this.type = type;
+// 		this.value = value;
+// 	}
+
+// }
+
+class Token  extends Range{
 	public type: TokenType;
 	public value: string;
-	public line: number;
-	public position: number;
+	public get line(): number {return this.start.line};
+	public get position(): number {return this.start.position};
 
 	constructor(type: TokenType, value: string, line: number, position: number) {
+		super(new Position(line, position), new Position(line, position + value.length))
 		this.type = type;
 		this.value = value;
-		this.line = line;
-		this.position = position;
-		this.end = this.position + this.value.length;
 	}
 
 	public isId() {
@@ -55,15 +65,13 @@ class Token {
 		return this.isOp() && this.value == "\n";
 	}
 
-	public end: number;
-
 }
 
 
 
 
 /**
- * @deprecated 此方法实现时带有主观判断token的好坏，以致无法在后续开发获取更细化的信息，后续将从新实现 Tokenizer 类替换掉
+ * 恢复使用，运行速度快，虽然实现只支持比较早期的jass而没考虑到其他情况，在特殊情况下可能并不适用，但是快
  * @param content 
  * @returns 
  */
@@ -418,23 +426,27 @@ function tokens(content: string) {
 	return tokens;
 }
 
+/**
+ * @deprecated 太慢啦
+ */
 type TokenizerHandleFunction = (token:Tokenize) => void;
 
 /**
  * 一个新的Token,使用更统一的Range,type的类型更松散
+ * 与Token整合,Token
+ * @deprecated 太慢啦
  */
-class Tokenize extends Range{
-	type: string;
-	value: string;
+class Tokenize extends Token{
 
 	constructor(type: string, value: string, start?: Position, end?: Position) {
-		super(start, end);
-		this.type = type;
-		this.value = value;
+		super(<TokenType>type, value, start?.line ?? 0, start?.position ?? 0);
 	}
 
 }
 
+/**
+ * @deprecated 太慢啦
+ */
 interface TokenizeDefine {
 	/**
 	 * first成功跳转状态
@@ -445,6 +457,9 @@ interface TokenizeDefine {
 	tokenType: string;
 }
 
+/**
+ * @deprecated 太慢啦
+ */
 class TokenizeDefineStruct implements TokenizeDefine{
 	public constructor(state: number, tokenType: string, first:(state: number, char: string) => boolean, follow:(char: string) => boolean) {
 		this.state = state;
@@ -458,11 +473,17 @@ class TokenizeDefineStruct implements TokenizeDefine{
 	public readonly tokenType: string;
 }
 
+/**
+ * @deprecated 太慢啦
+ */
 interface TokenizeTypeDefine {
 	tokenType: string;
 	state: number;
 }
 
+/**
+ * @deprecated 太慢啦
+ */
 class TokenizerBuild {
 	private content: string;
 	private eventMap: Map<string, TokenizerHandleFunction|Array<TokenizerHandleFunction>> = new Map();
@@ -554,6 +575,9 @@ export { Token, TokenType, tokens, tokenize };
 
 
 const defaultState: number = 0;
+/**
+ * @deprecated 太慢啦
+ */
 enum DefaultState {
 	default = defaultState,
 	div = 1,
@@ -596,7 +620,9 @@ enum DefaultState {
 	lua_end = 40,
 	what = 41
 };
-
+/**
+ * @deprecated 太慢啦
+ */
 class Tokenizer {
 
 	private constructor() { }
@@ -711,6 +737,7 @@ class Tokenizer {
 	}
 }
 
+/*
 export {
 	Tokenize,
 	TokenizerBuild,
@@ -720,7 +747,7 @@ export {
 	TokenizerHandleFunction,
 	Tokenizer
 };
-
+*/
 if (false) {
 	const content = `
 	_$$_

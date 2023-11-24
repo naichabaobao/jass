@@ -1,5 +1,5 @@
 
-import { Position, Range } from "../jass/ast";
+import { Context, Position, Range } from "../jass/ast";
 import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError, LineComment} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 
@@ -49,7 +49,7 @@ class ModifierBodyType {
  * @param isZincFile 是否后缀为.zn，当前版本临时定义，后续参数增加后去除
  * @returns 
  */
-function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
+function parseByTokens(context:Context,tokens:Token[], isZincFile:boolean = false) {
 
 	
 	
@@ -62,7 +62,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				// const text = comment.value.replace("//", "");
 				// texts.push(text);
 				const lineComment: LineComment = new LineComment(comment.value);
-				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end.position)));
 			} else {
 				break;
 			}
@@ -78,7 +78,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				// const text = comment.value.replace("//", "");
 				// texts.push(text);
 				const lineComment: LineComment = new LineComment(comment.value);
-				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end)));
+				lineComment.loc.setRange(new Range(new Position(comment.line, comment.position), new Position(comment.line, comment.end.position)));
 				lineComments.push(lineComment);
 			} else {
 				break;
@@ -102,7 +102,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		return (isZincFile || inZinc) && !token.isBlockComment() && !token.isNewLine();
 	});
 
-	const program = new Program();
+	const program = new Program(context);
 
 
 	let inLibrary = false;
@@ -307,7 +307,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 						local.type = ms[0].type;
 						local.loc.start = ms[0].loc.start;
 					}
-					local.loc.end = new Position(token.line, token.end);
+					local.loc.end = new Position(token.line, token.end.position);
 					return local;
 				}));
 			} else if (token.isOp() && token.value == "=") {
@@ -315,7 +315,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			} else if (localState == 0) {
 				if (token.isId()) {
 					resetLocal();
-					const local = new Local(token.value, "");
+					const local = new Local(context, token.value, "");
 					local.option.style = "zinc";
 					local.type = token.value;
 					local.loc.start = new Position(token.line, token.position);
@@ -333,7 +333,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 						lastLocal().text = matchText(token.line);
 						lastLocal().lineComments.push(...findLineComments(token.line));
 					} else {
-						const local = new Local("", token.value);
+						const local = new Local(context, "", token.value);
 						local.option.style = "zinc";
 						local.nameToken = token;
 						local.text = matchText(token.line);
@@ -383,10 +383,10 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					bodyField--;
 				} else {
 					if (type == "func") {
-						(<Func>func).loc.end = new Position(token.line, token.end);
+						(<Func>func).loc.end = new Position(token.line, token.end.position);
 						resetFunc();
 					} else {
-						(<Method>method).loc.end = new Position(token.line, token.end);
+						(<Method>method).loc.end = new Position(token.line, token.end.position);
 						resetMethod();
 					}
 					return;
@@ -428,7 +428,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					if (token.isOp() && token.value == ",") {
 						
 					} else if (token.isId()) {
-						take = new Take(token.value, "");
+						take = new Take(context, token.value, "");
 						take.loc.start = new Position(token.line, token.position);
 						functionState = 2;
 					} else {
@@ -440,7 +440,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
 						(<Take>take).nameToken = token;
-						(<Take>take).loc.end = new Position(token.line, token.end);
+						(<Take>take).loc.end = new Position(token.line, token.end.position);
 						(<Func>func).takes.push((<Take>take));
 						functionState = 3;
 					} else {
@@ -506,7 +506,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					if (token.isOp() && token.value == ",") {
 						
 					} else if (token.isId()) {
-						take = new Take(token.value, "");
+						take = new Take(context, token.value, "");
 						take.loc.start = new Position(token.line, token.position);
 						methodState = 3;
 					} else {
@@ -518,7 +518,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					} else if (token.isId()) {
 						(<Take>take).name = token.value;
 						(<Take>take).nameToken = token;
-						(<Take>take).loc.end = new Position(token.line, token.end);
+						(<Take>take).loc.end = new Position(token.line, token.end.position);
 						(<Method>method).takes.push((<Take>take));
 						methodState = 4;
 					} else {
@@ -558,7 +558,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				// }));
 				// members = [];
 				if (member) {
-					member.loc.end = new Position(token.line, token.end);
+					member.loc.end = new Position(token.line, token.end.position);
 					(<Struct>struct).members.push(member);
 				}
 				resetMember();
@@ -567,7 +567,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			} else if (memberState == 0) {
 				if (token.isId()) {
 					resetMember();
-					member = new Member(token.value, "");
+					member = new Member(context, token.value, "");
 					member.option.style = "zinc";
 					member.type = token.value;
 					member.isStatic = isStatic;
@@ -647,7 +647,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			if (globalState == 0) {
 				if (token.isId()) {
 					reset("global");
-					global = new Global(token.value, "");
+					global = new Global(context, token.value, "");
 					global.option.style = "zinc";
 					global.isConstant = isConstant;
 					if (modifierType) {
@@ -672,7 +672,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				}
 			} else if (globalState == 2) {
 				if (token.isOp() && token.value == ";") {
-					(<Global>global).loc.end = new Position(token.line, token.end);
+					(<Global>global).loc.end = new Position(token.line, token.end.position);
 					pushGlobal();
 					reset("global");
 				} else if (token.isOp() && token.value == "=") {
@@ -715,7 +715,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				}
 			} else if (globalState == 5) {
 				if (token.isOp() && token.value == ";") {
-					(<Global>global).loc.end = new Position(token.line, token.end);
+					(<Global>global).loc.end = new Position(token.line, token.end.position);
 					pushGlobal();
 					reset("global");
 				} else {
@@ -728,13 +728,13 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				}
 			} else if (globalState == 7) {
 				if (token.isId()) {
-					const g:Global = new Global((<Global>global).type, "");
+					const g:Global = new Global(context, (<Global>global).type, "");
 					g.option.style = "zinc";
 					g.tag = (<Global>global).tag;
 					g.isConstant = (<Global>global).isConstant;
 					g.loc.start = new Position(token.line, token.position);
 					g.name = token.value;
-					g.loc.end = new Position(token.line, token.end);
+					g.loc.end = new Position(token.line, token.end.position);
 					globals.push(g);
 					g.lineComments.push(...findLineComments(token.line));
 					globalState = 2;
@@ -747,7 +747,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		const parseStructBody = () => {
 			if (token.isId() && token.value == "method") {
 				resetMethod();
-				method = new Method("");
+				method = new Method(context, "");
 				method.option.style = "zinc";
 				method.text = matchText(token.line);
 				method.lineComments.push(...findLineComments(token.line));
@@ -775,7 +775,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			} else if (token.isId() && token.value == "constant") {
 				isConstant = true;
 			}  else if (token.isOp() && token.value == "}") {
-				(<Struct>struct).loc.end = new Position(token.line, token.end);
+				(<Struct>struct).loc.end = new Position(token.line, token.end.position);
 				resetStruct();
 			} else { // member type
 				// 解析struct成员类型，区别于其他解析方式，当类型找到了不会马上push到struct中，而是等到见到 ';' 后才push进去
@@ -825,7 +825,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 		const pushError = (message:string) => {
 			const err = new JassError(message);
 			err.loc.start = new Position(token.line, token.position);
-			err.loc.end = new Position(token.line, token.end);
+			err.loc.end = new Position(token.line, token.end.position);
 			program.errors.push(err);
 		};
 
@@ -833,7 +833,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			resetLibrary();
 			inLibrary = true;
 			libraryState = 0;
-			library = new Library("");
+			library = new Library(context, "");
 			library.lineComments.push(...findLineComments(token.line));
 			library.option.style = "zinc";
 			library.loc.start = new Position(token.line, token.position);
@@ -842,7 +842,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 			if (inLibraryStart) {
 				if (token.isId() && token.value == "struct") {
 					resetStruct();
-					struct = new Struct("");
+					struct = new Struct(context, "");
 					struct.option.style = "zinc";
 					struct.text = matchText(token.line);
 					struct.lineComments.push(...findLineComments(token.line));
@@ -860,7 +860,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 					parseFunction();
 				} else if (token.isId() && token.value == "function") { // 这个if理应在 else if (inFunction) 前，但因为可能在function body块中方法参数存在function function_name会导致错误
 					resetFunc();
-					func = new Func("");
+					func = new Func(context, "");
 					func.option.style = "zinc";
 					func.text = matchText(token.line);
 					func.lineComments.push(...findLineComments(token.line));
@@ -883,7 +883,7 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 				} else if (modifierTypes.length > 0 && token.isOp() && token.value == "}") {
 					modifierTypes.pop();
 				} else if (token.isOp() && token.value == "}") {
-					(<Library>library).loc.end = new Position(token.line, token.end);
+					(<Library>library).loc.end = new Position(token.line, token.end.position);
 					resetLibrary();
 				} else {
 					parseGlobal();
@@ -935,16 +935,16 @@ function parseByTokens(tokens:Token[], isZincFile:boolean = false) {
 
 }
 
-function parse(content:string, isZincFile:boolean = false) {
+function parse(context:Context, content:string, isZincFile:boolean = false) {
 	let ts = tokenize(content);
-	return parseByTokens(ts, isZincFile);
+	return parseByTokens(context, ts, isZincFile);
 }
 
-function parseZincBlock (content:string) {
+function parseZincBlock (context:Context, content:string) {
 	// 确保换行符
 	content = content.replace(/\r\n/g, "\n");
 	
-	return parse(retainZincBlock(content));
+	return parse(context, retainZincBlock(content));
 
 }
 
@@ -960,32 +960,7 @@ export {
 };
 
 
-if (false) {
-	const testString = JSON.stringify(parse(`
-	//! zinc
-	  library library_name requires require_librarys ,,-,cccccc ccc, ccc {
-		public {
-			struct a {
-				public {
-					// 奶茶
-					private static integer a[2],
-					// 宝宝
-					b = 12 , 17;
-	
-					integer c;
-	
-					method operator [] () {}
-				}
-			}
-			function assasa(integer ass) {
-				int aaa[3], hahah;
-			}
-		} 
-	  }
-	//! endzinc
-	`).librarys, null, 2);
-	console.log(testString);
-}
+
 
 /*
 parseZincBlock(`//! zinc

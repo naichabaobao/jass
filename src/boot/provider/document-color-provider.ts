@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { Tokenizer } from '../jass/tokens';
 import { jassIntegerToNumber } from '../tool';
+import { tokenize } from '../jass/tokens';
 
 /// 颜色提供
 const convertInt2Hex = (int: number) => {
@@ -18,7 +18,7 @@ const color2JColorCode = (color: vscode.Color) => {
   return "00000000"
 }
 
-const DzColorReg = new RegExp(/(?:DzGetColor|BlzConvertColor)\(\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*\)/, "g")
+const DzColorReg = new RegExp(/(?:(?:DzGetColor)|(?:BlzConvertColor))\(\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*\)/, "g")
 
 class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
@@ -53,7 +53,7 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
         if (DzColorReg.test(lineText)) {
           console.log(lineText);
           
-          const result = /(?:DzGetColor|BlzConvertColor)\(\s*(?<a>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<r>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<g>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<b>[\dA-Fa-fxX\$'\.]+)\s*\)/g.exec(lineText);
+          const result = /(?:(?:DzGetColor)|(?:BlzConvertColor))\(\s*(?<a>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<r>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<g>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<b>[\dA-Fa-fxX\$'\.]+)\s*\)/g.exec(lineText);
           
           if (result && result.groups) {
               const aStr = result.groups["a"];
@@ -64,10 +64,10 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
               
               console.log(result ,result.index, result.length, result.input);
               
-              const aToken = Tokenizer.get(aStr);
-              const rToken = Tokenizer.get(rStr);
-              const gToken = Tokenizer.get(gStr);
-              const bToken = Tokenizer.get(bStr);
+              const aToken = tokenize(aStr);
+              const rToken = tokenize(rStr);
+              const gToken = tokenize(gStr);
+              const bToken = tokenize(bStr);
               
               
               if (!(aToken.length == 1 && rToken.length == 1 && gToken.length == 1 && bToken.length == 1)) { // 确保只有一个token

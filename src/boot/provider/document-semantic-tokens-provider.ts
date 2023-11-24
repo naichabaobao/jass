@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { Func, Struct } from "../jass/ast";
-import { Tokenizer } from "../jass/tokens";
+import { Struct } from "../jass/ast";
+import { tokenize } from "../jass/tokens";
 import { DataGetter } from "./data";
 
 /*
@@ -85,7 +85,7 @@ vscode.languages.registerDocumentSemanticTokensProvider("jass", new class Docume
         });
         const structNames:string[] = structs.map((struct) => struct.name);
 
-        const tokens = Tokenizer.get(content);
+        const tokens = tokenize(content);
         tokens.forEach((token) => {
             if (token.type == "id") {
                 if (structNames.includes(token.value)) {
