@@ -4363,8 +4363,8 @@ native Atan2 takes real y, real x returns real
 native SquareRoot takes real x returns real
 
 // 求幂
-// y == 0.0           ， 返回 1
-// x == 0.0 且 y < 0  ， 返回 0
+// y == 0.0          ， 返回 1
+// x == 0.0 且 y < 0 ， 返回 0
 // computes x to the y power
 native Pow takes real x, real power returns real
 // 四舍五入
@@ -4436,29 +4436,29 @@ native SetPlayers takes integer playercount returns nothing
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
 // 设置默认出生点(指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
-// 设置出生点优先权(指定点)
+// 设置出生点分布优先权(指定点)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置出生点优先权系数
-// @param whichStartLoc 第一出生点
+// 设置出生点分布优先权（相对于第一出生点）
+// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
 // @param prioSlotIndex 玩家槽
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority 优先权系数
+// @param priority 出生点分布优先权
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
-// 获取出生点优先权(指定玩家槽)
+// 获取出生点分布优先权(指定玩家槽)
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
-// 获取出生点优先权系数(指定玩家槽)
+// 获取出生点分布优先权系数(指定玩家槽)
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
 // 设置敌人出生点(指定玩家槽)
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置敌人出生点优先权系数
-// @param whichStartLoc 第一出生点
+// 设置敌人出生点分布优先权（相对于第一出生点）
+// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
 // @param prioSlotIndex 玩家槽
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority 出生点分布优先权系数
+// @param priority 出生点分布优先权
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏（队伍）类型支持状态
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
-// 设置地图参数
+// 设置地图参数（指定参数类型）
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
 // 设置游戏出生点放置方式(指定出生点放置方式)
 native SetGamePlacement takes placement whichPlacementType returns nothing
