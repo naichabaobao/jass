@@ -369,7 +369,7 @@
 - 移除废置的配置项
 
 ## 1.8.9
-- 构建了中文区最完善的技能命令串和技能命令ID，技能命令ID可在 /static/ability_OrderID.j 文件查询
+- 构建了中文区最完善的技能命令串和技能命令ID，技能命令ID可在 /static/jass.config.json 文件查询
 - 优化代码
 - 新增jass.config.jass numbers,可以提示整形
 ```json
