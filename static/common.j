@@ -5441,7 +5441,7 @@ native SetDestructableAnimation takes destructable d, string whichAnimation retu
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
-// 隐藏后反隐也看不到，但其碰撞体积和移动类型仍可生效
+// 隐藏后反隐也看不到，但其碰撞体积仍可生效
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -5459,7 +5459,7 @@ constant native GetTriggerDestructable takes nothing returns destructable
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除指定物品
 native RemoveItem takes item whichItem returns nothing
-// 获取指定物品所属
+// 获取指定物品的所属玩家
 native GetItemPlayer takes item whichItem returns player
 // 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
@@ -5475,7 +5475,7 @@ native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 native SetItemDroppable takes item i, boolean flag returns nothing
 // 允许/禁止 指定物品被贩卖/出售
 native SetItemPawnable takes item i, boolean flag returns nothing
-// 设置指定物品所属
+// 设置指定物品的所属玩家
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
 // 设置指定物品 无敌/可攻击
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
