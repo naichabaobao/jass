@@ -2522,7 +2522,7 @@
         },
         {
             "code": "ubsp",
-            "name": "破坏者",
+            "name": "破坏者/毁灭者",
             "descript": "巨大飞行单位，必须吞噬魔法才能保持其自己的魔法能量。特别擅长于伤害敌人的魔法单位和聚集在一起的敌军。具有魔法免疫，吞噬魔法，吸收魔法和毁灭之球技能。能攻击地面和空中单位。",
             "kind": "单位",
             "race": "不死族",
@@ -9930,7 +9930,7 @@
         },
         {
             "code": "ACf2",
-            "name": "霜冻护甲(自动施放) (中立敌对)",
+            "name": "霜冻护甲(自动施放)(中立敌对)",
             "descript": "霜冻护甲能增加目标单位<ACfa,DataB1>点的护甲防御，攻击该单位的近战型敌人也会在<ACfa,Dur1>秒内减速。|n持续<ACfa,DataA1>秒。",
             "kind": "技能",
             "race": "中立敌对",
@@ -11106,7 +11106,7 @@
         },
         {
             "code": "ACfu",
-            "name": "霜冻护甲(自动施放) (中立敌对)",
+            "name": "霜冻护甲(自动施放)(中立敌对)",
             "descript": "霜冻护甲能增加目标单位<ACfu,DataB1>点的护甲防御，攻击该单位的近战型敌人也会在<ACfu,Dur1>秒内减速。|n持续<ACfu,DataA1>秒。",
             "kind": "技能",
             "race": "中立被动",
@@ -11137,9 +11137,289 @@
             "type": "单位"
         },
         {
+            "code": "Aiun",
+            "name": "单位物品栏(亡灵)",
+            "descript": "允许该单位为英雄携带物品，但物品无法从该单位的物品栏中直接使用。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aihn",
+            "name": "单位物品栏(人类)",
+            "descript": "允许该单位为英雄携带物品，但物品无法从该单位的物品栏中直接使用。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aion",
+            "name": "单位物品栏(兽人)",
+            "descript": "允许该单位为英雄携带物品，但物品无法从该单位的物品栏中直接使用。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aoen",
+            "name": "单位物品栏(暗夜精灵)",
+            "descript": "允许该单位为英雄携带物品，但物品无法从该单位的物品栏中直接使用。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "AInv",
+            "name": "物品栏(英雄)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Abdt",
+            "name": "地洞侦测(飞行单位、已废弃)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Amin",
+            "name": "地雷 - 爆炸(地精地雷)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Arng",
+            "name": "复仇",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Amnx",
+            "name": "死亡时造成范围伤害(地精地雷)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Amnz",
+            "name": "死亡时造成范围伤害(大地雷)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aaad",
+            "name": "死亡时造成范围伤害(工兵)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Apoi",
+            "name": "毒刺",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Adtg",
+            "name": "真视(中立1)",
+            "descript": "暴露周围的隐形单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "ANtr",
+            "name": "真视(中立2)",
+            "descript": "暴露周围的隐形单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Adri",
+            "name": "全部卸载(被缠绕的金矿)",
+            "descript": "卸载全部单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Abdl",
+            "name": "荒芜驱散 大",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Abds",
+            "name": "荒芜驱散 小",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Aloa",
+            "name": "装载(地精飞艇)",
+            "descript": "装载目标友方地面单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Slo3",
+            "name": "装载(船)",
+            "descript": "装载目标友方地面单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Sch3",
+            "name": "货舱(地精飞艇)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Sch5",
+            "name": "货舱(船)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Achd",
+            "name": "货舱死亡(中立敌对)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Arlm",
+            "name": "返送木材",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Argd",
+            "name": "返送黄金",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Argl",
+            "name": "返送黄金和木材",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Ane2",
+            "name": "选择单位",
+            "descript": "选择单位/取消选择单位",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },  
+        {
+            "code": "Aneu",
+            "name": "选择英雄",
+            "descript": "选择英雄/取消选择英雄",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },  
+        {
+            "code": "ANha",
+            "name": "返送资源/采集(中立)",
+            "descript": "将携带的资源返送到最近的潮汐神殿。/从金矿中开采黄金，从树木上采集木材。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },  
+        {
+            "code": "Agld",
+            "name": "金矿技能",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },  
+        {
+            "code": "ARal",
+            "name": "集结",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },  
+        {
+            "code": "APai",
+            "name": "未知",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Avul",
+            "name": "无敌(中立)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Awan",
+            "name": "游荡(中立)",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "awrp",
+            "name": "传送门技能",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
             "code": "Ahar",
             "name": "采集(黄金和木材)",
             "descript": "从金矿中开采黄金，从树木上采集木材。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Arev",
+            "name": "复活英雄",
+            "descript": "",
             "kind": "技能",
             "race": "特殊",
             "type": "单位"
@@ -11153,9 +11433,41 @@
             "type": "单位"
         },
         {
+            "code": "Asud",
+            "name": "出售单位",
+            "descript": "允许出售单位。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Asid",
+            "name": "出售物品",
+            "descript": "允许出售物品。",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Apit",
+            "name": "商店购买物品",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
             "code": "Aall",
             "name": "共享商店，联盟建筑。",
             "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Apmf",
+            "name": "凤凰烈焰",
+            "descript": "灼烧周围的敌方飞行单位，每秒造成<Apmf,DataA1>点伤害。",
             "kind": "技能",
             "race": "特殊",
             "type": "单位"
@@ -11250,7 +11562,7 @@
         },
         {
             "code": "AIlp",
-            "name": "带有净化效果的物品(1) (法球施放)",
+            "name": "带有净化效果的物品(1)(法球施放)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -11594,7 +11906,7 @@
         },
         {
             "code": "AIgo",
-            "name": "金箱子",
+            "name": "金箱子/一箱黄金",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -11842,7 +12154,7 @@
         },
         {
             "code": "AIlu",
-            "name": "木材堆",
+            "name": "木材堆/一捆木材",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13002,7 +13314,7 @@
         },
         {
             "code": "AItg",
-            "name": "增加攻击力的物品 (+1)",
+            "name": "增加攻击力的物品(+1)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13010,7 +13322,7 @@
         },
         {
             "code": "AItn",
-            "name": "增加攻击力的物品 (+10)",
+            "name": "增加攻击力的物品(+10)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13018,7 +13330,7 @@
         },
         {
             "code": "AItc",
-            "name": "增加攻击力的物品 (+12)",
+            "name": "增加攻击力的物品(+12)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13026,7 +13338,7 @@
         },
         {
             "code": "AItf",
-            "name": "增加攻击力的物品 (+15)",
+            "name": "增加攻击力的物品(+15)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13034,7 +13346,7 @@
         },
         {
             "code": "AIth",
-            "name": "增加攻击力的物品 (+2)",
+            "name": "增加攻击力的物品(+2)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13042,7 +13354,7 @@
         },
         {
             "code": "AItx",
-            "name": "增加攻击力的物品 (+20)",
+            "name": "增加攻击力的物品(+20)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13050,7 +13362,7 @@
         },
         {
             "code": "AIat",
-            "name": "增加攻击力的物品 (+3)",
+            "name": "增加攻击力的物品(+3)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13058,7 +13370,7 @@
         },
         {
             "code": "AIti",
-            "name": "增加攻击力的物品 (+4)",
+            "name": "增加攻击力的物品(+4)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13066,7 +13378,7 @@
         },
         {
             "code": "AItj",
-            "name": "增加攻击力的物品 (+5)(在1.36中为+4,技能名称和说明未修改)",
+            "name": "增加攻击力的物品(+5)(在1.36中为+4,技能名称和说明未修改)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13074,7 +13386,7 @@
         },
         {
             "code": "AIt6",
-            "name": "增加攻击力的物品 (+6)",
+            "name": "增加攻击力的物品(+6)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13082,7 +13394,7 @@
         },
         {
             "code": "AItk",
-            "name": "增加攻击力的物品 (+7)",
+            "name": "增加攻击力的物品(+7)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13090,7 +13402,7 @@
         },
         {
             "code": "AItl",
-            "name": "增加攻击力的物品 (+8)",
+            "name": "增加攻击力的物品(+8)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13098,7 +13410,7 @@
         },
         {
             "code": "AIt9",
-            "name": "增加攻击力的物品 (+9)(在1.36中为+8,技能名称和说明未修改)",
+            "name": "增加攻击力的物品(+9)(在1.36中为+8,技能名称和说明未修改)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13106,7 +13418,7 @@
         },
         {
             "code": "AIsh",
-            "name": "召唤巨魔猎头者 (物品)",
+            "name": "召唤巨魔猎头者(物品)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -13122,7 +13434,7 @@
         },
         {
             "code": "AIhw",
-            "name": "治疗守卫 (物品)",
+            "name": "治疗守卫(物品)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -15938,7 +16250,7 @@
         },
         {
             "code": "Xfla",
-            "name": "照明弹 (效果)(区域效果)",
+            "name": "照明弹(效果)(区域效果)",
             "descript": "",
             "kind": "状态效果",
             "race": "人族",
@@ -21284,7 +21596,7 @@
         },
         {
             "content": "disassociate",
-            "descript": "技能命令串 (角鹰骑士)卸载"
+            "descript": "技能命令串(角鹰骑士)卸载"
         },
         {
             "content": "disenchant",
@@ -22304,7 +22616,7 @@
         },
         {
             "content": "waterelemental",
-            "descript": "技能命令串 (召唤)水元素"
+            "descript": "技能命令串(召唤)水元素"
         },
         {
             "content": "wateryminion",
@@ -23188,7 +23500,7 @@
         },
         {
             "content": "spell eattree",
-            "descript": "可破坏物动画 （树木）被吃/被拔起"
+            "descript": "可破坏物动画(树木）被吃/被拔起"
         },
         {
             "content": "LORDAERON_SUMMER",
@@ -25406,7 +25718,7 @@
             "descript": "技能命令ID 登船\r\n"
         },
         {
-            "value": 85044,
+            "value": 852044,
             "descript": "技能命令ID 全部登船\r\n"
         },
         {
@@ -25699,7 +26011,7 @@
         },
         {
             "value": 852240,
-            "descript": "技能命令ID (角鹰骑士)卸载(disassociate)\r\n"
+            "descript": "技能命令ID(角鹰骑士)卸载(disassociate)\r\n"
         },
         {
             "value": 852470,
@@ -26531,7 +26843,7 @@
         },
         {
             "value": 852097,
-            "descript": "技能命令ID (召唤)水元素\r\n"
+            "descript": "技能命令ID(召唤)水元素\r\n"
         },
         {
             "value": 852474,
@@ -26630,7 +26942,7 @@
             "descript": "技能命令ID 未知\r\n"
         },
         {
-            "value": 85045,
+            "value": 852045,
             "descript": "技能命令ID 未知\r\n"
         },
         {
