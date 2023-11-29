@@ -7996,10 +7996,13 @@ native BlzGetTriggerFrameText takes nothing returns string
 // 注册玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
+// 支持AI脚本向触发器同步
 native BlzSendSyncData takes string prefix, string data returns boolean
 // 获取同步的前缀
+// 支持AI脚本向触发器同步
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
+// 支持AI脚本向触发器同步
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
@@ -8035,16 +8038,16 @@ native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
 // 获取单位技能(指定技能索引)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
-// 获取技能ID
+// 获取技能ID（指定技能）
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 显示聊天信息
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
-// 转换四字符码成字符串
+// 转换四字符码成字符串（未启用）
 // native BlzFourCC2S                                 takes integer value returns string
-// 转换字符串成四字符码
+// 转换字符串成四字符码（未启用）
 // native BlzS2FourCC                                 takes string value returns integer
 
 // 设置单位朝向(角度)
