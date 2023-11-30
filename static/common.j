@@ -1364,7 +1364,7 @@ globals
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 单位事件 单位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
-        // 单位事件 单位(尸体)开始腐烂
+	// 单位事件 单位(尸体)开始腐烂
 	constant unitevent EVENT_UNIT_DECAY = ConvertUnitEvent(54)
 	// 单位事件 单位可侦测（可被反隐看到）
 	constant unitevent EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
@@ -4363,8 +4363,8 @@ native Atan2 takes real y, real x returns real
 native SquareRoot takes real x returns real
 
 // 求幂
-// y == 0.0           ， 返回 1
-// x == 0.0 且 y < 0  ， 返回 0
+// y == 0.0          ， 返回 1
+// x == 0.0 且 y < 0 ， 返回 0
 // computes x to the y power
 native Pow takes real x, real power returns real
 // 四舍五入
@@ -4436,29 +4436,29 @@ native SetPlayers takes integer playercount returns nothing
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
 // 设置默认出生点(指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
-// 设置出生点优先权(指定点)
+// 设置出生点分布优先权(指定点)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置出生点优先权系数
-// @param whichStartLoc 第一出生点
+// 设置出生点分布优先权（相对于第一出生点）
+// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
 // @param prioSlotIndex 玩家槽
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority 优先权系数
+// @param priority 出生点分布优先权
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
-// 获取出生点优先权(指定玩家槽)
+// 获取出生点分布优先权(指定玩家槽)
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
-// 获取出生点优先权系数(指定玩家槽)
+// 获取出生点分布优先权系数(指定玩家槽)
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
 // 设置敌人出生点(指定玩家槽)
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置敌人出生点优先权系数
-// @param whichStartLoc 第一出生点
+// 设置敌人出生点分布优先权（相对于第一出生点）
+// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
 // @param prioSlotIndex 玩家槽
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
-// @param priority 出生点分布优先权系数
+// @param priority 出生点分布优先权
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏（队伍）类型支持状态
 native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
-// 设置地图参数
+// 设置地图参数（指定参数类型）
 native SetMapFlag takes mapflag whichMapFlag, boolean value returns nothing
 // 设置游戏出生点放置方式(指定出生点放置方式)
 native SetGamePlacement takes placement whichPlacementType returns nothing
@@ -4557,8 +4557,8 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // @param otherPlayer 收税玩家
 // @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
-// 查询指定玩家优先种族是否指定种族
-// 在情节–玩家设置指定的种族（如未设置固定出生点，指定种族不会生效），则取房间玩家自主选择的种族，使用随机时应该返回否
+// 查询指定玩家预设种族是否指定种族
+// 在情节–玩家设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -5441,7 +5441,7 @@ native SetDestructableAnimation takes destructable d, string whichAnimation retu
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
 // 显示/隐藏 指定可破坏物[R]
-// 隐藏后反隐也看不到，但其碰撞体积和移动类型仍可生效
+// 隐藏后反隐也看不到，但其碰撞体积仍可生效
 native ShowDestructable takes destructable d, boolean flag returns nothing
 // 获取指定可破坏物闭塞高度
 native GetDestructableOccluderHeight takes destructable d returns real
@@ -5459,7 +5459,7 @@ constant native GetTriggerDestructable takes nothing returns destructable
 native CreateItem takes integer itemid, real x, real y returns item
 // 删除指定物品
 native RemoveItem takes item whichItem returns nothing
-// 获取指定物品所属
+// 获取指定物品的所属玩家
 native GetItemPlayer takes item whichItem returns player
 // 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
@@ -5475,7 +5475,7 @@ native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 native SetItemDroppable takes item i, boolean flag returns nothing
 // 允许/禁止 指定物品被贩卖/出售
 native SetItemPawnable takes item i, boolean flag returns nothing
-// 设置指定物品所属
+// 设置指定物品的所属玩家
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
 // 设置指定物品 无敌/可攻击
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
@@ -5556,7 +5556,7 @@ native SetUnitX takes unit whichUnit, real newX returns nothing
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
-// 移动指定单位(立刻)(指定点)
+// 移动指定单位(立即)(指定点)
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
 // 设置指定单位朝向 [R]
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
@@ -5721,7 +5721,7 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数(指定单位和物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除指定物品（指定单位）
+// 删除物品（指定单位）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 删除物品(指定单位和物品栏格数)
 // 不论哪个物品在该格中，都会被删除
@@ -5851,18 +5851,18 @@ constant native IsHeroUnitId takes integer unitId returns boolean
 // 查询指定单位ID（四字码）是否为指定单位类型
 constant native IsUnitIdType takes integer unitId, unittype whichUnitType returns boolean
 
-// 设置指定单位和指定玩家的共享视野状态(共享或不共享) [R]
+// 允许/禁止 指定单位和指定玩家共享视野 [R]
 native UnitShareVision takes unit whichUnit, player whichPlayer, boolean share returns nothing
-// 设置指定尸体腐烂状态(正常腐烂或暂停腐烂) [R]
+// 暂停/恢复 指定尸体腐烂 [R]
 native UnitSuspendDecay takes unit whichUnit, boolean suspend returns nothing
-// 添加类型到指定单位 [R]
+// 添加指定单位类型到指定单位 [R]
 native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
-// 删除指定单位的类型 [R]
+// 删除指定单位的指定单位类型 [R]
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
-// 添加技能到指定单位 [R]
+// 添加指定技能到指定单位 [R]
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
-// 删除指定单位技能 [R]
+// 删除指定单位的指定技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
 // 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
