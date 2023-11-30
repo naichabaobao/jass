@@ -24,6 +24,18 @@ class Options {
   public static get dzApiJPath() : string {
     return this.isUsableJFile(this.configuration["dzapi"] as string) ? this.configuration["dzapi"] as string : path.resolve(__dirname, "../../../static/DzAPI.j");
   }
+  public static get cheatsJPath() : string {
+    return this.isUsableJFile(this.configuration["cheats"] as string) ? this.configuration["cheats"] as string : path.resolve(__dirname, "../../../static/Cheats.j");
+  }
+  public static get initcheatsJPath() : string {
+    return this.isUsableJFile(this.configuration["initcheats"] as string) ? this.configuration["initcheats"] as string : path.resolve(__dirname, "../../../static/InitCheats.j");
+  }
+  public static get aiscriptsAiPath() : string {
+    return this.isUsableJFile(this.configuration["aiscripts_ai"] as string) ? this.configuration["aiscripts_ai"] as string : path.resolve(__dirname, "../../../static/AIScripts.ai");
+  }
+  public static get war3mapJPath() : string {
+    return this.isUsableJFile(this.configuration["war3map"] as string) ? this.configuration["war3map"] as string : path.resolve(__dirname, "../../../static/war3map.j");
+  }
   // public static get ObjectEditorJPath() : string {
   //   return this.isUsableJFile(this.configuration["ObjectEditor"] as string) ? this.configuration["ObjectEditor"] as string : path.resolve(__dirname, "../../../static/ObjectEditor.j");
   // }
