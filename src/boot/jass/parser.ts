@@ -5,7 +5,16 @@ import { parseZinc } from "../zinc/parse";
 import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, TextMacroDefine, Type, Context, baseTypeContext } from "./ast";
 import { Token,  tokenize } from "./tokens";
 
+// import { jassParse } from "./step-parser";
+// if (true) {
+//     jassParse(new Context(), `
+//     /*
+    
+//     */
 
+//     function <? baba ?> ccc
+//     `);
+// }
 /**
  * 替换块注释为空白文本
  * @param content 
@@ -887,7 +896,7 @@ class Parser {
 
         
         let lineTexts:LineText[] = lines(newContent);
-        const containDefineObject = this.prehandleDefine(lineTexts);
+        const containDefineObject = this.prehandleDefine(context, lineTexts);
         lineTexts = containDefineObject.lineTexts;
         const defines = containDefineObject.defines;
         
@@ -936,7 +945,7 @@ class Parser {
         return this.jassProgram.textMacros;
     }
 
-    private prehandleDefine(lineTexts:LineText[]): {
+    private prehandleDefine(context:Context, lineTexts:LineText[]): {
         defines: Array<TextMacroDefine>,
         lineTexts: Array<LineText>
     } {
@@ -956,10 +965,10 @@ class Parser {
                     const prefixSpaceLength = result.groups["prefixSpace"].length;
                     define.loc.start = new Position(lineText.lineNumber(), prefixSpaceLength);
                     
-                    const id = new Identifier(result.groups["name"]);
+                    const id = new Identifier(context, result.groups["name"]);
                     const namePrefixSpaceLength = result.groups["namePrefixSpace"].length;
-                    id.start = new Position(lineText.lineNumber(), prefixSpaceLength + 7 + namePrefixSpaceLength)
-                    id.end = new Position(lineText.lineNumber(), prefixSpaceLength + 7 + namePrefixSpaceLength + id.name.length)
+                    id.loc.start = new Position(lineText.lineNumber(), prefixSpaceLength + 7 + namePrefixSpaceLength)
+                    id.loc.end = new Position(lineText.lineNumber(), prefixSpaceLength + 7 + namePrefixSpaceLength + id.name.length)
 
                     define.id = id;
 
@@ -1512,9 +1521,9 @@ function parseCjass(context:Context, content: string) {
                 if (condition && state == 0) {
                     if (token.isId()) {
                         defineMacro = new DefineMacro(context);
-                        const id = new Identifier(token.value);
-                        id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end.position);
+                        const id = new Identifier(context, token.value);
+                        id.loc.start = new Position(token.start.line, token.start.position);
+                        id.loc.end = new Position(token.end.line, token.end.position);
                         defineMacro.keys.push(id);
                         state = 2;
                     } else if (token.isOp() && token.value == "<") {
@@ -1532,9 +1541,9 @@ function parseCjass(context:Context, content: string) {
                     }
                 } else if (state == 3) {
                     if (token.isId()) {
-                        const id = new Identifier(token.value);
-                        id.start = new Position(token.line, token.position);
-                        id.end = new Position(token.line, token.end.position);
+                        const id = new Identifier(context,token.value);
+                        id.loc.start = new Position(token.start.line, token.start.position);
+                        id.loc.end = new Position(token.end.line, token.end.position);
                         defineMacro.keys.push(id);
                     } else if (token.isOp() && token.value == ">") {
                         state = 4;

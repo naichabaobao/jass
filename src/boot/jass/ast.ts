@@ -3,6 +3,7 @@ import { Token, tokenize } from "./tokens";
 
 import * as path from "path";
 import { ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
+import { isSpace } from "../tool";
 
 
 class Position {
@@ -109,7 +110,25 @@ export {
 	Desc
 };
 
+/**
+ * 代替LineText表达在文档中为多行但实际中应视为单行的类
+ */
+export class MergeToken extends Range{
+    public readonly tokens:Token[] = [];
 
+    constructor() {
+        super()
+    }
+
+    public get start() : Position {
+		return new Position(this.tokens[0]?.start.line ?? 0, this.tokens[0]?.start.position ?? 0);
+	}
+
+	
+	public get end() : Position {
+		return new Position(this.tokens[this.tokens.length - 1]?.end.line ?? 0, this.tokens[this.tokens.length - 1]?.end.position ?? 0);
+	}
+}
 /**
  * 插件启动管理所有文件上下文
  */
@@ -117,6 +136,31 @@ export class Context {
 
 	public filePath:string = "";
 
+	public content:string = "";
+	public nonBlockCommentContent:string = "";
+
+	public lineTexts:LineText[] = [];
+	/**
+	 * 已经移除define行的linetexts
+	 */
+	public nonDefineLineTexts:LineText[] = [];
+
+	private defineMap:Map<string, Define> = new Map();
+    xTokens: (MergeToken | Token)[] = [];
+
+	public get defines():Define[] {
+		return [...this.defineMap.values()];
+	}
+
+	public addDefine(define:Define) {
+		this.defineMap.set(define.name, define);
+	};
+	public deleteDefine(defineName:string) {
+		this.defineMap.delete(defineName);
+	}
+	public getDefine(defineName:string) {
+		return this.defineMap.get(defineName);
+	}
 }
 
 export class Node implements Rangebel  { 
@@ -399,6 +443,73 @@ class Declaration extends Node implements Descript {
 
 }
 
+/**
+ * new
+ */
+export class Define extends Declaration {
+	
+	public constructor(context:Context) {
+		super(context);
+	}
+
+	/**
+	 * 必须不为null
+	 */
+	public id:Identifier = null as any;
+	/**
+	 * 原生值
+	 * 使用getValue获取替换的值
+	 */
+	public value: string = "";
+
+	public getValue() : string {
+		return this.tokensToString(tokenize(this.value), this.context.defines);
+	}
+
+	private pushSpace(origin:string, count: number, char: string): string {
+        for (let index = 0; index < count; index++) {
+            origin += char;
+        }
+        return origin;
+    }
+	private tokensToString(tokens:Token[], defines: Define[]) {
+		let str = "";
+		let storeIndex = 0;
+	
+		tokens.forEach((token, index, ts) => {
+            // str.padEnd(index - storeIndex, " ")
+            str = this.pushSpace(str, token.position - storeIndex, " ");
+	
+			if (token.isId()) {
+				const finedIndex = defines.findIndex((define) => define.id && define.id.name == token.value);
+				if (finedIndex != -1) {
+					str += defines[finedIndex].getValue();
+				} else {
+					str += token.value;
+				}
+			} else {
+				str += token.value;
+			}
+	
+			storeIndex = token.end.position;
+		});
+	
+		return str;
+	}
+
+	public get origin(): string {
+		let origin = `#define ${this.id.name}`;
+		if (this.value) {
+			origin += " " + this.value;
+		}
+		return origin;
+
+	}
+
+	public get name() : string {
+		return this.id.name;
+	}
+}
 
 class TextMacroDefine extends Declaration {
 	
@@ -843,12 +954,23 @@ class BlockComment extends LineComment {
 
 }
 
-class Identifier extends Range {
-	public name: string;
+class Identifier extends Node {
+	private _name: string;
 
-	constructor(name: string = "") {
-		super();
-		this.name = name;
+	constructor(context:Context, name: string = "") {
+		super(context);
+		this._name = name;
+	}
+
+	public get name():string {
+		return this.name;
+	}
+
+	/**
+	 * 宏替换掉的值
+	 */
+	public get value():string {
+		return this.context.getDefine(this._name)?.value ?? this._name;
 	}
 
 }
@@ -1245,6 +1367,96 @@ class Program extends Declaration {
 export {
 	AstNode, Declaration, Program, TextMacroDefine
 };
+
+/**
+ * 新的linetext
+ */
+export class LineText extends Node {
+
+    private text: string;
+
+    constructor(context:Context, text: string) {
+        super(context);
+        this.text = text;
+    }
+
+    // 是否空行
+    public isEmpty(): boolean {
+        return this.text.trimStart() === "";
+    }
+
+    private replaceTextByRegExp(text:string, defines:Define[]) {
+        defines.forEach(define => {
+			if (define.value.trimStart() != "") {
+				text = text.replace(new RegExp(`\\b${define.name}\\b`, "g"), define.value);
+			}
+        });
+        return text;
+    }
+
+	private toTokens() {
+		return tokenize(this.text);
+	}
+
+	public get tokens():Token[] {
+		return this.toTokens();
+	}
+
+    // 宏替换后的字符串
+    private replaceText(): string {
+        // return this.tokensToString(this.tokens, this.defines);
+        return this.replaceTextByRegExp(this.text, this.context.defines);
+    }
+
+    public getText(rel?:boolean): string {
+        // return rel ? this.replaceText() : this.text;
+        return this.text;
+    }
+
+    public setText(text: string): void {
+        this.text = text;
+    }
+
+    public lineNumber(): number {
+        return this.loc.start.line;
+    }
+
+    // 第一个字符下标
+    public firstCharacterIndex(): number {
+        let index = 0;
+        for (; index < this.text.length; index++) {
+            const char = this.text[index];
+            if (!isSpace(char)) {
+                return index;
+            }
+        }
+        return index;
+    }
+
+    public length(): number {
+        return this.text.length;
+    }
+
+    public clone(): LineText {
+        return Object.assign(new LineText(this.context, this.getText()), this);
+    }
+
+}
+
+export class Block extends Node {
+	public readonly name:string;
+	public readonly lineTexts:LineText[] = [];
+
+	constructor(context:Context, blockName: string, ...lineTexts:LineText[]) {
+        super(context);
+
+		this.name = blockName;
+
+		if (lineTexts) {
+			this.lineTexts = lineTexts;
+		}
+    }
+}
 
 
 
