@@ -1157,12 +1157,12 @@ globals
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
 	// AI难度 - 普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-        // AI难度 - 困难
+	// AI难度 - 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
 	// 玩家得分 - 训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-        // 玩家得分 - 消灭单位数量
+	// 玩家得分 - 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
 	// 玩家得分 - 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
@@ -1522,7 +1522,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 	// 玩家单位事件 停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-        // 玩家单位事件 抵押(卖)物品
+	// 玩家单位事件 抵押(卖)物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位事件 堆叠物品
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
@@ -1650,7 +1650,8 @@ globals
 	// 物品分类 任何
 	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
 	
-	// 弃用事件， Deprecated, should use ITEM_TYPE_POWERUP
+	// 弃用物品分类，应改用力量提升分类
+	// Deprecated, should use ITEM_TYPE_POWERUP
  constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
 	
