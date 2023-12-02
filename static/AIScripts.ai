@@ -14,7 +14,7 @@ globals
     constant boolean b_hero2_done        = false
     // 三发英雄存在标识，当三发英雄数量大于0时为真
     constant boolean b_hero3_done        = false
-    // 当前祭坛数量
+    // 当前祭坛数量，不含建造中
     constant integer c_altar_done        = 0
     // 当前可用人口数，统计所有主城及人口建筑提供的人口数，含建造中
     constant integer c_food_made         = 0
@@ -22,7 +22,7 @@ globals
     constant integer c_food_used         = 0
     // 当前黄金数
     constant integer c_gold              = 0
-    // 当前拥有金矿的未采集金钱数
+    // 当前拥有的金矿未采集金钱数之和
     constant integer c_gold_owned        = 0
     // 当前首英雄数量，不含训练/复活中
     constant integer c_hero1_done        = 0
