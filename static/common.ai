@@ -107,7 +107,7 @@ native DebugS               takes string str                            returns 
     // 设置英雄升级技能线程
     native SetHeroLevels        takes code func                             returns nothing
     // 是否设置新英雄
-    // 意义不明，可能和英雄升级技能函数有关
+    // 意义不明，可能和英雄升级技能函数有关，暴雪对战AI默认设否
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
     // 运行后AI会自动前往地精实验室并自动购买地精飞艇
@@ -1084,7 +1084,7 @@ native DebugS               takes string str                            returns 
         constant integer ANCIENT_PROTECT    = 'etrp'
         // 长者祭坛
         constant integer ELF_ALTAR          = 'eate'
-        // 熊窝（暗夜精灵族）（编辑器无此单位 ）
+        // 熊窝（暗夜精灵族）（编辑器无此单位）
         constant integer BEAR_DEN           = 'edol'
         // 奇美拉栖木
         constant integer CHIMAERA_ROOST     = 'edos'
