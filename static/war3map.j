@@ -192,7 +192,7 @@ endfunction
 //===========================================================================
 
 // 地图全局定义
-// 设置地图昼夜及天气效果、设置天气及昼夜各种音效、设置背景音乐、创建地图初始单位及默认单位掉落、唤起对战初始化触发器、唤起全局变量设置触发器、唤起自定义触发器、运行初始化触发
+// 设置地图昼夜及天气效果、设置天气及昼夜各种音效、设置背景音乐、创建地图初始单位及掉落、唤起对战初始化触发器、唤起全局变量设置触发器、唤起自定义触发器、运行初始化触发
 function main takes nothing returns nothing
     local weathereffect we
     call SetDayNightModels( "Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl" )
