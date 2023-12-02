@@ -77,12 +77,12 @@ native DebugS               takes string str                            returns 
     native GetUpgradeGoldCost   takes integer id                            returns integer
     // 获取研究指定科技需要消耗的木材数量（指定科技类型）
     native GetUpgradeWoodCost   takes integer id                            returns integer
-    // 获取下一个扩张点的编号，可能返回-1
+    // 获取下一个扩张点的编号（可能返回-1，视为获取失败）
     native GetNextExpansion     takes nothing                               returns integer
-    // 获取大型攻击目标
+    // 获取大型攻击目标（可能返回null）
     // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
-    // 获取指定玩家最后建造的建筑
+    // 获取指定玩家正在建造的建筑
     native GetBuilding          takes player p                              returns unit
     // 获取敌人强度，似乎是全部敌人强度之和
     native GetEnemyPower        takes nothing                               returns integer
@@ -169,11 +169,13 @@ native DebugS               takes string str                            returns 
     // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位）
     native RemoveSiege          takes nothing                               returns nothing
     // 初始化攻击组
+    // 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
-    // 未被编入的单位类型不会跟随进攻，只会留在出生点，建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
+    // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防御组
+    // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
     native AddDefenders         takes integer qty, integer id               returns boolean
     
     // 获取指定等级范围内的中立敌对玩家控制的单位
@@ -188,11 +190,11 @@ native DebugS               takes string str                            returns 
     // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
-    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位
+    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位（可能返回null）
     native GetEnemyBase         takes nothing                               returns unit
-    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位）
+    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
     native GetExpansionFoe      takes nothing                               returns unit
-    // 获取敌人分基地
+    // 获取敌人分基地（可能返回null）
     native GetEnemyExpansion    takes nothing                               returns unit
     // 获取扩张点的 X 坐标
     // 使用前必须已初始化 CreateCaptains
@@ -240,7 +242,7 @@ native DebugS               takes string str                            returns 
     // @param town 0为第一个有矿的基地，大于0则是对应每个分基地，小于0时可能被视为0
     // @param peons 分配的工人数量，小于0时视为0
     native HarvestWood          takes integer town, integer peons           returns nothing
-    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
+    // 获取开分基地的工人，系统会随机返回一个工人单位给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
     // 使用前必须已初始化 CreateCaptains
     native GetExpansionPeon     takes nothing                               returns unit
