@@ -44,7 +44,7 @@ endfunction
 //===========================================================================
 
 // 创建地图初始单位-中立敌对（默认为野怪等）
-// 同时会设置单位颜色和默认掉落物品（如有）
+// 同时会设置单位皮肤（1.32＋）、对战颜色和默认掉落物品（如有）
 // 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
 function CreateNeutralHostile takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_AGGRESSIVE)
@@ -58,7 +58,7 @@ endfunction
 //===========================================================================
 
 // 创建地图初始单位-中立被动建筑（默认为金矿、商店、酒馆等）
-// 同时会设置单位颜色和默认掉落物品（如有）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
 // 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
 function CreateNeutralPassiveBuildings takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_PASSIVE)
@@ -72,7 +72,7 @@ endfunction
 //===========================================================================
 
 // 创建地图初始单位-中立被动单位（默认为小动物、野怪的房子等）
-// 同时会设置单位颜色和默认掉落物品（如有）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
 // 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
 function CreateNeutralPassive takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_PASSIVE)
@@ -86,7 +86,7 @@ endfunction
 //===========================================================================
 
 // 创建地图初始单位-玩家建筑（默认无单位）
-// 同时会设置单位颜色和默认掉落物品（如有）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
 // 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
 function CreatePlayerBuildings takes nothing returns nothing
 endfunction
@@ -94,7 +94,7 @@ endfunction
 //===========================================================================
 
 // 创建地图初始单位-玩家单位（默认无单位）
-// 同时会设置单位颜色和默认掉落物品（如有）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
 // 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
 function CreatePlayerUnits takes nothing returns nothing
 endfunction
@@ -164,14 +164,14 @@ endfunction
 //*
 //***************************************************************************
 
-// 初始化玩家插槽状态（即地图编辑器的玩家设置）
+// 初始化玩家插槽状态（按地图编辑器玩家设置）
 // 设置玩家出生点位、玩家颜色、默认种族、种族可选性、默认控制者类型
 function InitCustomPlayerSlots takes nothing returns nothing
 
 
 endfunction
 
-// 初始化玩家自定义队伍（即地图编辑器的玩家队伍设置）
+// 初始化玩家自定义队伍（按地图编辑器玩家队伍设置）
 function InitCustomTeams takes nothing returns nothing
     // Force: TRIGSTR_002
 
