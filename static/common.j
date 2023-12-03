@@ -127,7 +127,7 @@ type placement extends handle
 type startlocprio extends handle
 // 罕见动画控制
 type raritycontrol extends handle
-// 混合模型
+// 混合模式
 type blendmode extends handle
 // 纹理贴图标志
 type texmapflags extends handle
@@ -1557,17 +1557,17 @@ globals
 	// player state, game state, and unit state events
 	// ( do NOT change the order of these... )
 	
-	// 小于
+	// 比较算符 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
-	// 小于 或 等于
+	// 比较算符 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
-	// 等于
+	// 比较算符 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
-	// 大于 或 等于
+	// 比较算符 大于 或 等于
 	constant limitop GREATER_THAN_OR_EQUAL = ConvertLimitOp(3)
-	// 大于
+	// 比较算符 大于
 	constant limitop GREATER_THAN = ConvertLimitOp(4)
-	// 不等于
+	// 比较算符 不等于
 	constant limitop NOT_EQUAL = ConvertLimitOp(5)
 	
 	
@@ -1679,19 +1679,19 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合方式 无混合物，有两个无混合
+	// 混合模式 无混合，有两个无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
-	// 混合方式 无视混合物
+	// 混合模式 无视混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合方式 关键的alpha混合物
+	// 混合模式 关键的alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
-	// 混合方式 普通混合物
+	// 混合模式 普通混合
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合方式 附加的混合物
+	// 混合模式 附加的混合
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合方式 调整的混合物
+	// 混合模式 调整的混合
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合方式 调整的2倍混合物
+	// 混合模式 调整的2倍混合
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
 	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
