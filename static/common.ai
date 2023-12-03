@@ -29,25 +29,25 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取指定的单位类型数量，含训练中及训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定单位的数量，含训练中及训练完成（指定单位ID）
+    // 不统计该单位的等价单位
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定的单位类型数量，含训练中及训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定玩家指定单位的数量，含训练中及训练完成（指定单位ID）
+    // 不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取指定的单位类型数量，仅统计已训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定单位的数量，仅统计已训练完成（指定单位ID）
+    // 不统计该单位的等价单位
     native GetUnitCountDone     takes integer unitid                        returns integer
-    // 获取指定基地对应类型的单位数
+    // 获取指定基地对应单位的数量（指定单位ID）
     // 不统计该单位的等价单位
     // @param tn 基地编号，-1为不限
     // @param dn 是否包含训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-    // 获取指定单位/建筑类型的单位造价（金钱）
+    // 获取指定单位/建筑的单位造价（金钱）（指定单位ID）
     native GetUnitGoldCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑类型的单位造价（木材）
+    // 获取指定单位/建筑的单位造价（木材）（指定单位ID）
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑类型的训练/建造/升级时间（以秒为单位）
+    // 获取指定单位/建筑的训练/建造/升级时间（以秒为单位）（指定单位ID）
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数量
@@ -71,11 +71,11 @@ native DebugS               takes string str                            returns 
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
+    // 获取指定科技的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0（指定科技ID）
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 获取研究指定科技需要消耗的金钱数量（指定科技类型）
+    // 获取研究指定科技需要消耗的金钱数量（指定科技ID）
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 获取研究指定科技需要消耗的木材数量（指定科技类型）
+    // 获取研究指定科技需要消耗的木材数量（指定科技ID）
     native GetUpgradeWoodCost   takes integer id                            returns integer
     // 获取下一个扩张点的编号（可能返回-1，视为获取失败）
     native GetNextExpansion     takes nothing                               returns integer
