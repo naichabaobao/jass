@@ -67,7 +67,7 @@ const map = new Map<string,string>([
   ["placement", "出生点放置方式"],
   ["startlocprio", "出生点分布优先权"],
   ["raritycontrol", "罕见动画控制"],
-  ["blendmode", "混合模型"],
+  ["blendmode", "混合模式"],
   ["texmapflags", "纹理贴图标志"],
   ["effect", "特效"],
   ["effecttype", "特效类型"],
