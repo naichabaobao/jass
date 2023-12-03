@@ -853,16 +853,6 @@ native DebugS               takes string str                            returns 
         constant integer OBS_STATUE         =  OBSIDIAN_STATUE
         // 毁灭者
         constant integer BLK_SPHINX         = 'ubsp'
-        // 腐尸甲虫（1级）
-        constant integer CARRIONSCARAB1     = 'ucs1'
-        // 腐尸甲虫（2级）
-        constant integer CARRIONSCARAB2    = 'ucs2'
-        // 钻地的腐尸甲虫（2级）
-        constant integer CARRIONSCARABBURROWED2   = 'ucsB'
-        // 腐尸甲虫（3级）
-        constant integer CARRIONSCARAB3    = 'ucs3'
-        // 钻地的腐尸甲虫（3级）
-        constant integer CARRIONSCARABBURROWED3   = 'ucsC'
 
         // undead buildings
     
