@@ -5990,12 +5990,12 @@ function GetPlayersMatching takes boolexpr filter returns force
 endfunction
 
 
-// 单位组的单位数
+// 单位组的单位数量加一
 function CountUnitsInGroupEnum takes nothing returns nothing
     set bj_groupCountUnits = bj_groupCountUnits + 1
 endfunction
 
-// 获取单位组的单位数
+// 统计单位组的单位数量
 function CountUnitsInGroup takes group g returns integer
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
