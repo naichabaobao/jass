@@ -29,19 +29,19 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取指定单位的数量，含训练中及训练完成（指定单位ID）
-    // 不含该单位的等价单位，不含死亡单位
+    // 获取指定单位的数量，含复活/训练中及训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，含复活中的英雄
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定单位的数量，含训练中及训练完成（指定单位ID）
-    // 不统计该单位的等价单位
+    // 获取指定玩家指定单位的数量，含复活/训练中及训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，含复活中的英雄
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取指定单位的数量，仅统计已训练完成（指定单位ID）
-    // 不含该单位的等价单位，不含死亡单位
+    // 获取指定单位的数量，仅统计已复活/训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，不含复活中的英雄
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应单位的数量（指定单位ID）
-    // 不含该单位的等价单位，不含死亡单位
+    // 不含该单位的等价单位，不含死亡单位及英雄，按 dn 确定是否包含复活中的英雄
     // @param tn 基地编号，-1为不限
-    // @param dn 是否包含训练/建造/升级中的单位/建筑
+    // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
     // 获取指定单位/建筑的单位造价（金钱）（指定单位ID）
     native GetUnitGoldCost      takes integer unitid                        returns integer
