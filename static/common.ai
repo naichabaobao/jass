@@ -30,16 +30,16 @@ native DebugS               takes string str                            returns 
     native GetHeroLevelAI       takes nothing                               returns integer
     
     // 获取指定单位的数量，含训练中及训练完成（指定单位ID）
-    // 不统计该单位的等价单位
+    // 不含该单位的等价单位，不含死亡单位
     native GetUnitCount         takes integer unitid                        returns integer
     // 获取指定玩家指定单位的数量，含训练中及训练完成（指定单位ID）
     // 不统计该单位的等价单位
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
     // 获取指定单位的数量，仅统计已训练完成（指定单位ID）
-    // 不统计该单位的等价单位
+    // 不含该单位的等价单位，不含死亡单位
     native GetUnitCountDone     takes integer unitid                        returns integer
     // 获取指定基地对应单位的数量（指定单位ID）
-    // 不统计该单位的等价单位
+    // 不含该单位的等价单位，不含死亡单位
     // @param tn 基地编号，-1为不限
     // @param dn 是否包含训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
