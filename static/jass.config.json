@@ -1835,7 +1835,7 @@
         {
             "code": "Ewar",
             "name": "守望者",
-            "descript": "灵巧型英雄，能在战场上来去自如，能学习到闪烁, 刀阵旋风, 暗影突袭和复仇之魂这四项技能。能攻击地面单位。",
+            "descript": "灵巧型英雄，能在战场上来去自如，能学习到闪现, 刀阵旋风, 暗影突袭和复仇之魂这四项技能。能攻击地面单位。",
             "kind": "单位",
             "race": "暗夜精灵",
             "type": "英雄"
@@ -2163,7 +2163,7 @@
         {
             "code": "Ewrd",
             "name": "玛维",
-            "descript": "灵巧型英雄，能在战场上来去自如，能学习到闪烁、刀阵旋风、暗影突袭和复仇之魂这四项技能。能攻击地面单位。",
+            "descript": "灵巧型英雄，能在战场上来去自如，能学习到闪现、刀阵旋风、暗影突袭和复仇之魂这四项技能。能攻击地面单位。",
             "kind": "单位",
             "race": "暗夜精灵",
             "type": "英雄"
@@ -8378,7 +8378,7 @@
         },
         {
             "code": "AEbl",
-            "name": "闪烁",
+            "name": "闪现",
             "descript": "能让守望者瞬间移动一段距离，从而逃离战场或者快速加入战斗。|n|n|cffffcc00等级 1|r -<AEbl,Cool1>秒魔法施放间隔时间，消耗<AEbl,Cost1>点魔法。|n|cffffcc00等级 2|r -<AEbl,Cool2>秒魔法施放间隔时间，消耗<AEbl,Cost2>点魔法。|n|cffffcc00等级 3|r -<AEbl,Cool3>秒魔法施放间隔时间，消耗<AEbl,Cost3>点魔法。",
             "kind": "技能",
             "race": "暗夜精灵",
@@ -8386,7 +8386,7 @@
         },
         {
             "code": "ANbl",
-            "name": "闪烁(中立)",
+            "name": "闪现(中立)",
             "descript": "",
             "kind": "技能",
             "race": "暗夜精灵",
@@ -10931,7 +10931,7 @@
         {
             "code": "ANsg",
             "name": "召唤熊",
-            "descript": "召唤一头威力强大的熊来攻击你的敌人。|n持续<ANsg,Dur1>秒。|n|n|cffffcc00等级 1|r - <ngz1,realHP>点生命值，<ngz1,mindmg1>到<ngz1,maxdmg1>点攻击力。|n|n|cffffcc00等级 2|r - <ngz2,realHP>点生命值，<ngz2,mindmg1>到<ngz2,maxdmg1>点攻击力，具有重击技能。|n|n|cffffcc00等级 3|r - <ngz3,realHP>点生命值，<ngz3,mindmg1>到<ngz3,maxdmg1>点攻击力，具有重击和闪烁的技能。",
+            "descript": "召唤一头威力强大的熊来攻击你的敌人。|n持续<ANsg,Dur1>秒。|n|n|cffffcc00等级 1|r - <ngz1,realHP>点生命值，<ngz1,mindmg1>到<ngz1,maxdmg1>点攻击力。|n|n|cffffcc00等级 2|r - <ngz2,realHP>点生命值，<ngz2,mindmg1>到<ngz2,maxdmg1>点攻击力，具有重击技能。|n|n|cffffcc00等级 3|r - <ngz3,realHP>点生命值，<ngz3,mindmg1>到<ngz3,maxdmg1>点攻击力，具有重击和闪现的技能。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "英雄"
@@ -13090,7 +13090,7 @@
         },
         {
             "code": "AIbk",
-            "name": "闪烁(物品版)",
+            "name": "闪现(物品版)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -21403,7 +21403,7 @@
         },
         {
             "content": "blink",
-            "descript": "技能命令串 闪烁(物品版)(英雄技能&物品技能)"
+            "descript": "技能命令串 闪现(物品版)(英雄技能&物品技能)"
         },
         {
             "content": "blizzard",
@@ -25378,7 +25378,7 @@
         },
         {
             "value": 852525,
-            "descript": "技能命令ID 闪烁(物品版)(英雄技能&物品技能)\r\n"
+            "descript": "技能命令ID 闪现(物品版)(英雄技能&物品技能)\r\n"
         },
         {
             "value": 852564,
