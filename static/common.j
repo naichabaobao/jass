@@ -127,7 +127,7 @@ type placement extends handle
 type startlocprio extends handle
 // 罕见动画控制
 type raritycontrol extends handle
-// 混合模型
+// 混合模式
 type blendmode extends handle
 // 纹理贴图标志
 type texmapflags extends handle
@@ -511,13 +511,13 @@ globals
 	// 1.28及以下版本默认值为8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家，1.28及以下是玩家16，1.29及以上是玩家28
-	// 中立敌对(玩家13/25)，中立受害(玩家14/26)，中立特殊(玩家15/27)
-	// 随地图12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值自动适配，反之亦然
+	// 其他：中立敌对(玩家13/25)，中立受害(玩家14/26)，中立特殊(玩家15/27)
+	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 	// 中立敌对玩家，1.28及以下是玩家13，1.29及以上是玩家25
-	// 中立受害(玩家14/26)，中立特殊(玩家15/27)，中立被动(玩家16/28)
-	// 随地图12/24人自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值自动适配，反之亦然
+	// 其他：中立受害(玩家14/26)，中立特殊(玩家15/27)，中立被动(玩家16/28)
+	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
 	// 玩家颜色 红色
@@ -1157,12 +1157,12 @@ globals
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
 	// AI难度 - 普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-        // AI难度 - 困难
+	// AI难度 - 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
 	// 玩家得分 - 训练单位数量 player score values
  constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-        // 玩家得分 - 消灭单位数量
+	// 玩家得分 - 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
 	// 玩家得分 - 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
@@ -1522,7 +1522,7 @@ globals
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 	// 玩家单位事件 停止施放技能
  constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
-        // 玩家单位事件 抵押(卖)物品
+	// 玩家单位事件 抵押(卖)物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位事件 堆叠物品
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
@@ -1557,17 +1557,17 @@ globals
 	// player state, game state, and unit state events
 	// ( do NOT change the order of these... )
 	
-	// 小于
+	// 比较算符 小于
  constant limitop LESS_THAN = ConvertLimitOp(0)
-	// 小于 或 等于
+	// 比较算符 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
-	// 等于
+	// 比较算符 等于
 	constant limitop EQUAL = ConvertLimitOp(2)
-	// 大于 或 等于
+	// 比较算符 大于 或 等于
 	constant limitop GREATER_THAN_OR_EQUAL = ConvertLimitOp(3)
-	// 大于
+	// 比较算符 大于
 	constant limitop GREATER_THAN = ConvertLimitOp(4)
-	// 不等于
+	// 比较算符 不等于
 	constant limitop NOT_EQUAL = ConvertLimitOp(5)
 	
 	
@@ -1650,7 +1650,8 @@ globals
 	// 物品分类 任何
 	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
 	
-	// 弃用事件， Deprecated, should use ITEM_TYPE_POWERUP
+	// 弃用物品分类，应改用力量提升分类
+	// Deprecated, should use ITEM_TYPE_POWERUP
  constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
 	
@@ -1678,19 +1679,19 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合方式 无混合物，有两个无混合
+	// 混合模式 无混合，有两个无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
-	// 混合方式 无视混合物
+	// 混合模式 无视混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合方式 关键的alpha混合物
+	// 混合模式 关键的alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
-	// 混合方式 普通混合物
+	// 混合模式 普通混合
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合方式 附加的混合物
+	// 混合模式 附加的混合
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合方式 调整的混合物
+	// 混合模式 调整的混合
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合方式 调整的2倍混合物
+	// 混合模式 调整的2倍混合
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
 	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
@@ -4105,9 +4106,9 @@ globals
 	constant unitbooleanfield UNIT_BF_HIDE_MINIMAP_DISPLAY = ConvertUnitBooleanField('uhom')
 	// 单位布尔值域 美术 - 缩放投射物 ('uscb')
 	constant unitbooleanfield UNIT_BF_SCALE_PROJECTILES = ConvertUnitBooleanField('uscb')
-        // 单位布尔值域 美术 - 选择圈在水面上 ('usew')
+	// 单位布尔值域 美术 - 选择圈在水面上 ('usew')
 	constant unitbooleanfield UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
-        // 单位布尔值域 美术 - 深水区有阴影 ('ushr')
+	// 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
 
 	// 单位字符串域 文本 - 名称 ('unam')
@@ -4254,17 +4255,17 @@ globals
 	// Armor Type
 	// Armor Type
 	
-        // 装甲类型 没有/未知
+	// 装甲类型 没有/未知
  constant armortype ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
-        // 装甲类型 肉体
+	// 装甲类型 肉体
 	constant armortype ARMOR_TYPE_FLESH = ConvertArmorType(1)
-        // 装甲类型 金属
+	// 装甲类型 金属
 	constant armortype ARMOR_TYPE_METAL = ConvertArmorType(2)
-        // 装甲类型 木头
+	// 装甲类型 木头
 	constant armortype ARMOR_TYPE_WOOD = ConvertArmorType(3)
-        // 装甲类型 气态
+	// 装甲类型 气态
 	constant armortype ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
-        // 装甲类型 石头
+	// 装甲类型 石头
 	constant armortype ARMOR_TYPE_STONE = ConvertArmorType(5)
 	
 	// Regeneration Type
@@ -6086,16 +6087,16 @@ constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
 constant native GetPlayerId takes player whichPlayer returns integer
-// 获取玩家单位总数量（不含建筑、隐藏/阵亡单位）
-// @param includeIncomplete 是否仅包含已完成训练的单位
+// 获取玩家单位总数量（不含建筑、隐藏/阵亡单位，不确定是否包含等价物）
+// @param includeIncomplete 是否包含训练中/复活中的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
-// 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
-// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
-// @param includeIncomplete 是否仅包含已完成训练的单位
-// @param includeUpgrades 是否仅包含已完成研究的科技
+// 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位，不确定是否包含等价物）
+// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts 文件找到训练中/建造中/复活中
+// @param includeIncomplete 是否包含训练中/复活中的单位
+// @param includeUpgrades 是否包含科技（可能是包含研究后变成的单位，如猎头）
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-// 获取玩家的建筑总数量（不含隐藏/阵亡单位）
-// @param includeIncomplete 是否仅包含已完成建造的建筑
+// 获取玩家的建筑总数量（不含隐藏/阵亡单位，不确定是否包含等价物）
+// @param includeIncomplete 是否包含建造中的建筑
 constant native GetPlayerStructureCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定状态
 constant native GetPlayerState takes player whichPlayer, playerstate whichPlayerState returns integer
@@ -7996,10 +7997,13 @@ native BlzGetTriggerFrameText takes nothing returns string
 // 注册玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
+// 支持AI脚本向触发器同步
 native BlzSendSyncData takes string prefix, string data returns boolean
 // 获取同步的前缀
+// 支持AI脚本向触发器同步
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
+// 支持AI脚本向触发器同步
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
@@ -8035,16 +8039,16 @@ native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
 // 获取单位技能(指定技能索引)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
-// 获取技能ID
+// 获取技能ID（指定技能）
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 显示聊天信息
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
-// 转换四字符码成字符串
+// 转换四字符码成字符串（未启用）
 // native BlzFourCC2S                                 takes integer value returns string
-// 转换字符串成四字符码
+// 转换字符串成四字符码（未启用）
 // native BlzS2FourCC                                 takes string value returns integer
 
 // 设置单位朝向(角度)

@@ -29,25 +29,25 @@ native DebugS               takes string str                            returns 
     // 英雄升级技能相关函数 
     native GetHeroLevelAI       takes nothing                               returns integer
     
-    // 获取指定的单位类型数量，含训练中及训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定单位的数量，含复活/训练中及训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，含复活中的英雄
     native GetUnitCount         takes integer unitid                        returns integer
-    // 获取指定玩家指定的单位类型数量，含训练中及训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定玩家指定单位的数量，含复活/训练中及训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，含复活中的英雄
     native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
-    // 获取指定的单位类型数量，仅统计已训练完成
-    // 不含建筑，不统计该单位的等价单位
+    // 获取指定单位的数量，仅统计已复活/训练完成（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，不含复活中的英雄
     native GetUnitCountDone     takes integer unitid                        returns integer
-    // 获取指定基地对应类型的单位数
-    // 不统计该单位的等价单位
+    // 获取指定基地对应单位的数量（指定单位ID）
+    // 不含该单位的等价单位，不含死亡单位及英雄，按 dn 确定是否包含复活中的英雄
     // @param tn 基地编号，-1为不限
-    // @param dn 是否包含训练/建造/升级中的单位/建筑
+    // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
     native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-    // 获取指定单位/建筑类型的单位造价（金钱）
+    // 获取指定单位/建筑的单位造价（金钱）（指定单位ID）
     native GetUnitGoldCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑类型的单位造价（木材）
+    // 获取指定单位/建筑的单位造价（木材）（指定单位ID）
     native GetUnitWoodCost      takes integer unitid                        returns integer
-    // 获取指定单位/建筑类型的训练/建造/升级时间（以秒为单位）
+    // 获取指定单位/建筑的训练/建造/升级时间（以秒为单位）（指定单位ID）
     native GetUnitBuildTime     takes integer unitid                        returns integer
     
     // 获取拥有的金矿数量
@@ -71,18 +71,18 @@ native DebugS               takes string str                            returns 
     // @param townid 基地编号，-1为不限
     native TownHasHall          takes integer townid                        returns boolean
     
-    // 获取指定科技类型的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0
+    // 获取指定科技的当前等级（如攻防默认最大3级，大师级科技默认最大2级），未研究/未获得时为0（指定科技ID）
     native GetUpgradeLevel      takes integer id                            returns integer
-    // 获取研究指定科技需要消耗的金钱数量（指定科技类型）
+    // 获取研究指定科技需要消耗的金钱数量（指定科技ID）
     native GetUpgradeGoldCost   takes integer id                            returns integer
-    // 获取研究指定科技需要消耗的木材数量（指定科技类型）
+    // 获取研究指定科技需要消耗的木材数量（指定科技ID）
     native GetUpgradeWoodCost   takes integer id                            returns integer
-    // 获取下一个扩张点的编号，可能返回-1
+    // 获取下一个扩张点的编号（可能返回-1，视为获取失败）
     native GetNextExpansion     takes nothing                               returns integer
-    // 获取大型攻击目标
+    // 获取大型攻击目标（可能返回null）
     // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
     native GetMegaTarget        takes nothing                               returns unit
-    // 获取指定玩家最后建造的建筑
+    // 获取指定玩家正在建造的建筑
     native GetBuilding          takes player p                              returns unit
     // 获取敌人强度，似乎是全部敌人强度之和
     native GetEnemyPower        takes nothing                               returns integer
@@ -90,7 +90,7 @@ native DebugS               takes string str                            returns 
     // 运行后会将指定目标告知盟友，AI盟友可跨脚本获取该目标，如果有配合攻击代码，则可协同进攻（似乎同时会发送小地图信号告知真人玩家）
     native SetAllianceTarget    takes unit id                               returns nothing
     // 获取盟友当前的攻击目标
-    // 用于夸脚本协同
+    // 用于跨脚本协同
     native GetAllianceTarget    takes nothing                               returns unit
     // 训练/建造/升级/研究指定单位/建筑/科技(指定数量,单位类型,基地)
     // @param town 基地编号，-1为不限
@@ -102,15 +102,15 @@ native DebugS               takes string str                            returns 
     // @param peon 指定工人单位
     // @param id 建造的城镇单位类型
     native SetExpansion         takes unit peon, integer id                 returns boolean
-    // 研究指定科技
+    // 研究指定科技（指定科技ID）
     native SetUpgrade           takes integer id                            returns boolean
     // 设置英雄升级技能线程
     native SetHeroLevels        takes code func                             returns nothing
     // 是否设置新英雄
-    // 意义不明，可能和英雄升级技能函数有关
+    // 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
     native SetNewHeroes         takes boolean state                         returns nothing
     // 购买地精飞艇
-    // 运行后AI会自动前往地精实验室并自动购买地精飞艇
+    // 运行后AI会在到达地精实验室时自动购买地精飞艇
     native PurchaseZeppelin     takes nothing                               returns nothing
     // 训练指定数量的合体单位类型
     // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
@@ -158,7 +158,7 @@ native DebugS               takes string str                            returns 
     // 允许时AI可以选择新基地，并将其作为采矿和撤退点
     native SetCaptainChanges    takes boolean allow                         returns nothing
     // 启用/禁用 聪明的炮火/主动攻城
-    // 攻击类型为攻城的单位会优先攻击敌方建筑，同时AI也会尝试优先攻击敌方攻击类型为攻城的单位
+    // 攻击类型为攻城的单位会优先攻击敌方建筑，同时也会尝试优先攻击敌方攻击类型为攻城的单位
     native SetSmartArtillery    takes boolean state                         returns nothing
     // 设置防守单位被杀后，AI的补充次数
     native SetReplacementCount  takes integer qty                           returns nothing
@@ -169,11 +169,13 @@ native DebugS               takes string str                            returns 
     // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位）
     native RemoveSiege          takes nothing                               returns nothing
     // 初始化攻击组
+    // 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
     native InitAssault          takes nothing                               returns nothing
     // 增加指定数量的指定单位类型到攻击组
-    // 未被编入的单位类型不会跟随进攻，只会留在出生点，建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
+    // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
     native AddAssault           takes integer qty, integer id               returns boolean
     // 增加指定数量的指定单位类型到防御组
+    // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
     native AddDefenders         takes integer qty, integer id               returns boolean
     
     // 获取指定等级范围内的中立敌对玩家控制的单位
@@ -188,11 +190,11 @@ native DebugS               takes string str                            returns 
     // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
     native WaitGetEnemyBase     takes nothing                               returns boolean
     // 获取敌人主基地的单位
-    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位
+    // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位（可能返回null）
     native GetEnemyBase         takes nothing                               returns unit
-    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位）
+    // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
     native GetExpansionFoe      takes nothing                               returns unit
-    // 获取敌人分基地
+    // 获取敌人分基地（可能返回null）
     native GetEnemyExpansion    takes nothing                               returns unit
     // 获取扩张点的 X 坐标
     // 使用前必须已初始化 CreateCaptains
@@ -240,7 +242,7 @@ native DebugS               takes string str                            returns 
     // @param town 0为第一个有矿的基地，大于0则是对应每个分基地，小于0时可能被视为0
     // @param peons 分配的工人数量，小于0时视为0
     native HarvestWood          takes integer town, integer peons           returns nothing
-    // 获取开分基地的工人，系统会随机返回一个工人给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
+    // 获取开分基地的工人，系统会随机返回一个工人单位给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
     // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
     // 使用前必须已初始化 CreateCaptains
     native GetExpansionPeon     takes nothing                               returns unit
@@ -851,16 +853,6 @@ native DebugS               takes string str                            returns 
         constant integer OBS_STATUE         =  OBSIDIAN_STATUE
         // 毁灭者
         constant integer BLK_SPHINX         = 'ubsp'
-        // 腐尸甲虫（1级）
-        constant integer CARRIONSCARAB1     = 'ucs1'
-        // 腐尸甲虫（2级）
-        constant integer CARRIONSCARAB2    = 'ucs2'
-        // 钻地的腐尸甲虫（2级）
-        constant integer CARRIONSCARABBURROWED2   = 'ucsB'
-        // 腐尸甲虫（3级）
-        constant integer CARRIONSCARAB3    = 'ucs3'
-        // 钻地的腐尸甲虫（3级）
-        constant integer CARRIONSCARABBURROWED3   = 'ucsC'
 
         // undead buildings
     
@@ -1082,7 +1074,7 @@ native DebugS               takes string str                            returns 
         constant integer ANCIENT_PROTECT    = 'etrp'
         // 长者祭坛
         constant integer ELF_ALTAR          = 'eate'
-        // 熊窝（暗夜精灵族）（编辑器无此单位 ）
+        // 熊窝（暗夜精灵族）（编辑器无此单位）
         constant integer BEAR_DEN           = 'edol'
         // 奇美拉栖木
         constant integer CHIMAERA_ROOST     = 'edos'
