@@ -4437,7 +4437,7 @@ native SetPlayers takes integer playercount returns nothing
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
 // 设置默认出生点(指定出生点编号绑定到指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
-// 设置出生点分布优先权(指定点)
+// 设置出生点分布编号(指定玩家槽)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
 // 设置出生点分布优先权（指定出生点编号）
 // @param whichStartLoc 指定出生点编号（按地图设置的各玩家开始点）
@@ -4571,7 +4571,7 @@ native GetPlayerName takes player whichPlayer returns string
 
 // 新建计时器 [R]
 native CreateTimer takes nothing returns timer
-// 销毁指定计时器 [R]
+// 销毁计时器 [R]
 native DestroyTimer takes timer whichTimer returns nothing
 // 开始计时器(计时) [C]
 // @param whichTimer 计时器
@@ -4702,7 +4702,7 @@ native FirstOfGroup takes group whichGroup returns unit
 
 // 新建玩家组 [R]
 native CreateForce takes nothing returns force
-// 销毁指定玩家组 [R]
+// 销毁玩家组 [R]
 native DestroyForce takes force whichForce returns nothing
 // 添加玩家到玩家组 [R]
 native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
@@ -4760,7 +4760,7 @@ native GetRectMaxY takes rect whichRect returns real
 
 // 新建不规则区域 [R]
 native CreateRegion takes nothing returns region
-// 删除指定不规则区域 [R]
+// 删除不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
 // 在指定不规则区域添加矩形区域  [R]
@@ -5410,7 +5410,7 @@ native CreateDestructableZ takes integer objectid, real x, real y, real z, real 
 native CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
 // 新建可破坏物(毁坏的，如砍伐完的树，毁坏的门/柱) [R](指定类型、X坐标，Y坐标，朝向度，尺寸，样式)
 native CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-// 删除指定可破坏物
+// 删除可破坏物
 native RemoveDestructable takes destructable d returns nothing
 // 杀死指定可破坏物(变成 毁坏的)
 native KillDestructable takes destructable d returns nothing
@@ -5459,7 +5459,7 @@ constant native GetTriggerDestructable takes nothing returns destructable
 
 // 创建物品(指定坐标)
 native CreateItem takes integer itemid, real x, real y returns item
-// 删除指定物品
+// 删除物品
 native RemoveItem takes item whichItem returns nothing
 // 获取指定物品的所属玩家
 native GetItemPlayer takes item whichItem returns player
@@ -5541,9 +5541,9 @@ native CreateUnitAtLocByName takes player id, string unitname, location whichLoc
 // 新建尸体 [R]
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
 
-// 杀死指定单位
+// 杀死单位
 native KillUnit takes unit whichUnit returns nothing
-// 删除指定单位
+// 删除单位
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
@@ -5621,7 +5621,7 @@ native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, r
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
 
-// 锁定指定单位身体朝向
+// 设置指定单位身体朝向
 native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
 // 重置指定单位身体朝向
 native ResetUnitLookAt takes unit whichUnit returns nothing
@@ -6111,7 +6111,7 @@ constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer,
 constant native GetPlayerHandicap takes player whichPlayer returns real
 // 获取玩家经验获得率 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 获取玩家复活时间
+// 获取玩家额外的复活时间
 // 玩家障碍，额外的复活时间
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
@@ -6120,7 +6120,7 @@ constant native GetPlayerHandicapDamage takes player whichPlayer returns real
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
 // 设置玩家经验获得率 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家复活时间
+// 设置玩家额外的复活时间
 // 玩家障碍、额外的复活时间
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
@@ -6167,7 +6167,7 @@ native SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect wh
 native SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
 // 设置迷雾状态(圆形范围)(指定点) [R]
 native SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
-// 启用/禁用黑色阴影 [R]
+// 启用/禁用 黑色阴影 [R]
 native FogMaskEnable takes boolean enable returns nothing
 // 查询黑色阴影是否启用
 native IsFogMaskEnabled takes nothing returns boolean
@@ -7000,9 +7000,9 @@ native MultiboardSetItemsIcon takes multiboard lb, string iconPath returns nothi
 
 // funcs for modifying individual items
 
-// 多面板项目 [R]
+// 获取多面板项目 [R]
 native MultiboardGetItem takes multiboard lb, integer row, integer column returns multiboarditem
-// 删除指定多面板项目 [R]
+// 删除多面板项目 [R]
 native MultiboardReleaseItem takes multiboarditem mbi returns nothing
 
 // 设置多面板指定项目显示风格 [R]
@@ -7302,7 +7302,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 
 // 新建天气效果 [R]
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
-// 删除指定天气效果
+// 删除天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
 // 打开/关闭 天气效果
 native EnableWeatherEffect takes weathereffect whichEffect, boolean enable returns nothing
@@ -7355,7 +7355,7 @@ native AddSpecialEffect takes string modelName, real x, real y returns effect
 native AddSpecialEffectLoc takes string modelName, location where returns effect
 // 新建特效(绑定到单位/物品/可破坏物) [R]
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
-// 销毁指定特效
+// 销毁特效
 native DestroyEffect takes effect whichEffect returns nothing
 // 新建特效(按字符串指定技能，绑定到坐标)
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
@@ -7376,7 +7376,7 @@ native AddLightning takes string codeName, boolean checkVisibility, real x1, rea
 // 新建闪电特效(指定Z轴) [R]
 // @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
-// 销毁指定闪电特效
+// 销毁闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
 // 移动闪电特效
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
@@ -7431,7 +7431,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 // 新建图像 [R]
 // @param imageType 图像类型，具体类型可在 记录物编的文件 找到
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
-// 销毁指定图像
+// 销毁图像
 native DestroyImage takes image whichImage returns nothing
 // 显示/隐藏 图像[R]
 native ShowImage takes image whichImage, boolean flag returns nothing
@@ -7463,7 +7463,7 @@ native SetImageType takes image whichImage, integer imageType returns nothing
 // @param forcePaused 是否禁用暂停状态
 // @param noBirthTime 是否启用出生动画
 native CreateUbersplat takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-// 销毁指定地表纹理
+// 销毁地表纹理
 native DestroyUbersplat takes ubersplat whichSplat returns nothing
 // 重置地表纹理
 native ResetUbersplat takes ubersplat whichSplat returns nothing
@@ -7897,7 +7897,7 @@ native BlzFrameSetPoint takes framehandle frame, framepointtype point, framehand
 // @param x X 轴偏移量
 // @param y Y 轴偏移量
 native BlzFrameSetAbsPoint takes framehandle frame, framepointtype point, real x, real y returns nothing
-// 清空指定Frame锚点
+// 清空Frame锚点
 native BlzFrameClearAllPoints takes framehandle frame returns nothing
 // 设置全部锚点(指定Frame)
 // @param relative 锚点
@@ -8060,7 +8060,7 @@ native CreateCommandButtonEffect takes integer abilityId, string order returns c
 native CreateUpgradeCommandButtonEffect takes integer whichUprgade returns commandbuttoneffect
 // 创建学习技能按钮特效
 native CreateLearnCommandButtonEffect takes integer abilityId returns commandbuttoneffect
-// 销毁指定按钮特效
+// 销毁按钮特效
 native DestroyCommandButtonEffect takes commandbuttoneffect whichEffect returns nothing
 
 // Bit Operations
@@ -8165,7 +8165,7 @@ native BlzSetItemIntegerField takes item whichItem, itemintegerfield whichField,
 native BlzSetItemRealField takes item whichItem, itemrealfield whichField, real value returns boolean
 // 设置物品字符串域
 native BlzSetItemStringField takes item whichItem, itemstringfield whichField, string value returns boolean
-// 物品删除技能
+// 删除物品技能
 native BlzItemRemoveAbility takes item whichItem, integer abilCode returns boolean
 
 // Unit 
