@@ -4433,28 +4433,29 @@ native SetMapDescription takes string description returns nothing
 native SetTeams takes integer teamcount returns nothing
 // 设置玩家数量，需在设置玩家颜色前使用
 native SetPlayers takes integer playercount returns nothing
-// 设置默认出生点(指定坐标)
+// 设置默认出生点(指定出生点编号绑定到指定坐标)
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
-// 设置默认出生点(指定点)
+// 设置默认出生点(指定出生点编号绑定到指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
 // 设置出生点分布优先权(指定点)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置出生点分布优先权（相对于第一出生点）
-// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
+// 设置出生点分布优先权（指定出生点编号）
+// @param whichStartLoc 指定出生点编号（按地图设置的各玩家开始点）
 // @param prioSlotIndex 玩家槽
 // @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
 // @param priority 出生点分布优先权
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 获取出生点分布优先权(指定玩家槽)
+// 以数值形式返回
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
-// 获取出生点分布优先权系数(指定玩家槽)
+// 获取出生点分布优先权(指定玩家槽)
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
 // 设置敌人出生点(指定玩家槽)
 native SetEnemyStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
-// 设置敌人出生点分布优先权（相对于第一出生点）
-// @param whichStartLoc 第一出生点（地图设置的玩家开始点）
+// 设置敌人出生点分布优先权（相对于指定出生点）
+// @param whichStartLoc 指定出生点编号（按地图设置的各玩家开始点）
 // @param prioSlotIndex 玩家槽
-// @param otherStartLocIndex 其他出生点(仅在允许玩家变更出生点时有效)
+// @param otherStartLocIndex 其他出生点编号(仅在允许玩家变更出生点时有效)
 // @param priority 出生点分布优先权
 native SetEnemyStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 设置游戏（队伍）类型支持状态
