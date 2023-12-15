@@ -1775,25 +1775,25 @@ function IsTriggerQueuedBJ takes trigger trig returns boolean
 endfunction
 
 
-// 循环整数 A
+// 循环 A
 function GetForLoopIndexA takes nothing returns integer
     return bj_forLoopAIndex
 endfunction
 
 
-// 设置循环索引 A
+// 设置循环 A 索引
 function SetForLoopIndexA takes integer newIndex returns nothing
     set bj_forLoopAIndex = newIndex
 endfunction
 
 
-// 循环整数 B
+// 循环 B
 function GetForLoopIndexB takes nothing returns integer
     return bj_forLoopBIndex
 endfunction
 
 
-// 设置循环索引 B
+// 设置循环 B 索引
 function SetForLoopIndexB takes integer newIndex returns nothing
     set bj_forLoopBIndex = newIndex
 endfunction
@@ -1910,25 +1910,25 @@ function PercentTo255 takes real percentage returns integer
 endfunction
 
 
-// 获取游戏当前的时间
+// 获取游戏当前的时间（夜晚白昼，24小时制，精确到分）
 function GetTimeOfDay takes nothing returns real
     return GetFloatGameState(GAME_STATE_TIME_OF_DAY)
 endfunction
 
 
-// 设置游戏的时间
+// 设置游戏的时间（夜晚白昼，24小时制，精确到分）
 function SetTimeOfDay takes real whatTime returns nothing
     call SetFloatGameState(GAME_STATE_TIME_OF_DAY, whatTime)
 endfunction
 
 
-// 设置时间流逝速度
+// 设置时间流逝速度（夜晚白昼）
 function SetTimeOfDayScalePercentBJ takes real scalePercent returns nothing
     call SetTimeOfDayScale(scalePercent * 0.01)
 endfunction
 
 
-// 获取游戏时间流逝速度
+// 获取游戏时间流逝速度（夜晚白昼）
 function GetTimeOfDayScalePercentBJ takes nothing returns real
     return GetTimeOfDayScale() * 100
 endfunction
@@ -1942,13 +1942,13 @@ function PlaySound takes string soundName returns nothing
 endfunction
 
 
-// 比对两个点是否是同一个
+// 比对两个点的X和Y坐标的值是否相同
 function CompareLocationsBJ takes location A, location B returns boolean
     return GetLocationX(A) == GetLocationX(B) and GetLocationY(A) == GetLocationY(B)
 endfunction
 
 
-// 比对两个矩形是否是同一个
+// 比对两个矩形四个坐标点的值是否相同
 function CompareRectsBJ takes rect A, rect B returns boolean
     return GetRectMinX(A) == GetRectMinX(B) and GetRectMinY(A) == GetRectMinY(B) and GetRectMaxX(A) == GetRectMaxX(B) and GetRectMaxY(A) == GetRectMaxY(B)
 endfunction
@@ -2791,7 +2791,7 @@ function GetLastCreatedTerrainDeformation takes nothing returns terraindeformati
 endfunction
 
 
-// 创建闪电效果于指定点
+// 创建闪电效果（指定点）
 function AddLightningLoc takes string codeName, location where1, location where2 returns lightning
     set bj_lastCreatedLightning = AddLightningEx(codeName, true, GetLocationX(where1), GetLocationY(where1), GetLocationZ(where1), GetLocationX(where2), GetLocationY(where2), GetLocationZ(where2))
     return bj_lastCreatedLightning
@@ -3281,13 +3281,13 @@ function SetSoundConeAnglesBJ takes sound soundHandle, real inside, real outside
 endfunction
 
 
-// 终止声音
+// 播放完成时终止声音（不再循环）
 function KillSoundWhenDoneBJ takes sound soundHandle returns nothing
     call KillSoundWhenDone(soundHandle)
 endfunction
 
 
-// 在指定点播放声音（音源位置）
+// 设置音源位置并播放声音（指定点）
 function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, location loc, real z returns nothing
     call SetSoundPositionLocBJ(soundHandle, loc, z)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3295,7 +3295,7 @@ function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, locatio
 endfunction
 
 
-// 在指定单位播放声音（音源位置）
+// 设置音源位置并播放声音（指定单位）
 function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whichUnit returns nothing
     call AttachSoundToUnitBJ(soundHandle, whichUnit)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3337,19 +3337,19 @@ function PlayThematicMusicBJ takes string musicName returns nothing
 endfunction
 
 
-// 播放主题音乐(指定跳到的时间帧)
+// 播放主题音乐(指定开始的时间帧)
 function PlayThematicMusicExBJ takes string musicName, real startingOffset returns nothing
     call PlayThematicMusicEx(musicName, R2I(startingOffset * 1000))
 endfunction
 
 
-// 跳越音乐主题音乐
+// 停止主题音乐（指定结束的时间帧）
 function SetThematicMusicOffsetBJ takes real newOffset returns nothing
     call SetThematicMusicPlayPosition(R2I(newOffset * 1000))
 endfunction
 
 
-// 停放主题音乐
+// 停止主题音乐
 function EndThematicMusicBJ takes nothing returns nothing
     call EndThematicMusic()
 endfunction
@@ -3406,7 +3406,7 @@ function GetLastPlayedMusic takes nothing returns string
 endfunction
 
 
-// 设置音量
+// 设置音量（指定频道）
 function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns nothing
     call VolumeGroupSetVolume(vgroup, percent * 0.01)
 endfunction
