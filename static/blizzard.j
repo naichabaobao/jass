@@ -9530,7 +9530,7 @@ function IsPointBlightedBJ takes location where returns boolean
 endfunction
 
 
-// 设置玩家颜色
+// 设置玩家颜色动作
 function SetPlayerColorBJEnum takes nothing returns nothing
     call SetUnitColor(GetEnumUnit(), bj_setPlayerTargetColor)
 endfunction
