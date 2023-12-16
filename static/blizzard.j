@@ -9892,7 +9892,7 @@ endfunction
 //***************************************************************************
 
 // 删除当前出生点多余单位
-// 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑类单位
+// 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑单位
 function MeleeClearExcessUnit takes nothing returns nothing
     local unit theUnit = GetEnumUnit()
     local integer owner = GetPlayerId(GetOwningPlayer(theUnit))
