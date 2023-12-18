@@ -4881,7 +4881,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 使用后需(用DestroyFilter)排泄，并set null，因此不建议在AI脚本中使用
+// 使用后需用DestroyFilter排泄，并set null，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
@@ -6280,10 +6280,10 @@ native DoNotSaveReplay takes nothing returns nothing
 
 // 新建对话框 [R]
 native DialogCreate takes nothing returns dialog
-// 销毁指定对话框 [R]
+// 销毁对话框 [R]
 native DialogDestroy takes dialog whichDialog returns nothing
 // 清空指定对话框
-// 排泄需使用对话框 DialogDestroy，而非清空
+// 排泄需使用销毁对话框 DialogDestroy，而非清空
 native DialogClear takes dialog whichDialog returns nothing
 // 设置指定对话框标题
 native DialogSetMessage takes dialog whichDialog, string messageText returns nothing
@@ -6596,7 +6596,7 @@ native GetRandomInt takes integer lowBound, integer highBound returns integer
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
-// 使用完请注意注意排泄
+// 使用完请注意排泄
 native CreateUnitPool takes nothing returns unitpool
 // 销毁单位池 [R]
 native DestroyUnitPool takes unitpool whichPool returns nothing
@@ -6611,7 +6611,7 @@ native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, 
 // 新建物品池 [R]
 // 使用完请注意排泄
 native CreateItemPool takes nothing returns itempool
-// 销毁指定物品池 [R]
+// 销毁物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
 // 添加指定物品类型到指定物品池 [R]
 native ItemPoolAddItemType takes itempool whichItemPool, integer itemId, real weight returns nothing
@@ -6950,8 +6950,9 @@ native LeaderboardSetItemValueColor takes leaderboard lb, integer whichItem, int
 // Create a multiboard object
 
 // 新建多面板 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateMultiboard takes nothing returns multiboard
-// 销毁指定多面板
+// 销毁多面板
 native DestroyMultiboard takes multiboard lb returns nothing
 
 // 显示/隐藏 多面板 [R]
