@@ -1434,13 +1434,13 @@ function PolarProjectionBJ takes location source, real dist, real angle returns 
 endfunction
 
 
-// 获取随机角度（0~360，可以取非整数）
+// 获取随机角度（0~360，实数）
 function GetRandomDirectionDeg takes nothing returns real
     return GetRandomReal(0, 360)
 endfunction
 
 
-// 获取随机实数（0~100，可以取非整数）
+// 获取随机实数（0~100）
 function GetRandomPercentageBJ takes nothing returns real
     return GetRandomReal(0, 100)
 endfunction
@@ -1532,7 +1532,7 @@ function RectContainsUnit takes rect r, unit whichUnit returns boolean
 endfunction
 
 
-// 物品是否在区域内
+// 查询物品是否在区域内
 function RectContainsItem takes item whichItem, rect r returns boolean
     if(whichItem == null) then
         return false
@@ -1775,7 +1775,7 @@ function IsTriggerQueuedBJ takes trigger trig returns boolean
 endfunction
 
 
-// 循环 A
+// 获取循环 A 索引
 function GetForLoopIndexA takes nothing returns integer
     return bj_forLoopAIndex
 endfunction
@@ -1787,7 +1787,7 @@ function SetForLoopIndexA takes integer newIndex returns nothing
 endfunction
 
 
-// 循环 B
+// 获取循环 B 索引
 function GetForLoopIndexB takes nothing returns integer
     return bj_forLoopBIndex
 endfunction
