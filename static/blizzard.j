@@ -6223,13 +6223,13 @@ function GetLastCreatedButtonBJ takes nothing returns button
 endfunction
 
 
-// 获取被单击对话框按钮
+// 获取被点击对话框按钮
 function GetClickedButtonBJ takes nothing returns button
     return GetClickedButton()
 endfunction
 
 
-// 获取被单击的对话框
+// 获取被点击的对话框
 function GetClickedDialogBJ takes nothing returns dialog
     return GetClickedDialog()
 endfunction
