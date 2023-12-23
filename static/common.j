@@ -6718,7 +6718,7 @@ native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean d
 native EnableOcclusion takes boolean flag returns nothing
 // 设置介绍文本
 native SetIntroShotText takes string introText returns nothing
-// 设置介绍文本路径
+// 设置介绍模型路径
 native SetIntroShotModel takes string introModelPath returns nothing
 // 允许/禁止 边界染色(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
