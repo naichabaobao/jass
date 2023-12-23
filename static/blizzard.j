@@ -3495,7 +3495,7 @@ function SetMapMusicIndexedBJ takes string musicName, integer index returns noth
 endfunction
 
 
-// 设置地图音乐 (使用随机音乐)
+// 设置地图背景音乐 (使用随机音乐)
 function SetMapMusicRandomBJ takes string musicName returns nothing
     call SetMapMusic(musicName, true, 0)
 endfunction
@@ -3507,7 +3507,7 @@ function ClearMapMusicBJ takes nothing returns nothing
 endfunction
 
 
-// 添加/删除 穿越区域的3D声音
+// 添加/删除 穿越区域的3D音效
 function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns nothing
     local real width = GetRectMaxX(r) - GetRectMinX(r)
     local real height = GetRectMaxY(r) - GetRectMinY(r)
