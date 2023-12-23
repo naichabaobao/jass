@@ -5925,8 +5925,8 @@ function GetUnitsSelectedAll takes player whichPlayer returns group
 endfunction
 
 
-// 将玩家添加到玩家组
-// 以玩家组形式返回
+// 获取以指定玩家新建的玩家组
+// 将指定玩家加入新创建的专属玩家组，并以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -5941,7 +5941,7 @@ function GetPlayersAll takes nothing returns force
 endfunction
 
 
-// 所有指定控制类型的玩家
+// 获取所有指定控制类型的玩家
 // 以玩家组形式返回
 function GetPlayersByMapControl takes mapcontrol whichControl returns force
     local force f = CreateForce()
@@ -6088,7 +6088,7 @@ endfunction
 //***************************************************************************
 
 
-// 重置指定单位动画为 "stand"
+// 重置指定单位动画为站立 － "stand"
 function ResetUnitAnimation takes unit whichUnit returns nothing
     call SetUnitAnimation(whichUnit, "stand")
 endfunction
@@ -6114,19 +6114,19 @@ function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real b
 endfunction
 
 
-// 闪动指示器（指定单位）
+// 添加指示器（指定单位）
 function UnitAddIndicatorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 闪动指示器（指定可破坏物）
+// 添加指示器（指定可破坏物）
 function DestructableAddIndicatorBJ takes destructable whichDestructable, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 闪动指示器（指定物品）
+// 添加指示器（指定物品）
 function ItemAddIndicatorBJ takes item whichItem, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
@@ -9758,7 +9758,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
 endfunction
 
 
-// 设置英雄数量限制
+// 设置（所有玩家的）英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
 function MeleeStartingHeroLimit takes nothing returns nothing
     local integer index
 
@@ -9988,7 +9988,7 @@ function MeleeFindNearestMine takes location src, real range returns unit
 endfunction
 
 // 创建随机英雄
-// 进入游戏前在高级勾选 使用随机英雄
+// 进入游戏前在高级勾选 使用随机英雄 后，对战地图自动在游戏初始化时触发
 function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id3, integer id4, location loc returns unit
     local unit hero = null
     local integer roll
@@ -10026,7 +10026,7 @@ function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id
 endfunction
 
 
-// 极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
+// 获取极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
 // 会创建点，用完请注意排泄
 // Returns a location which is (distance) away from (src) in the direction of (targ).
 function MeleeGetProjectedLoc takes location src, location targ, real distance, real deltaAngle returns location
@@ -10048,7 +10048,7 @@ function MeleeGetNearestValueWithin takes real val, real minVal, real maxVal ret
     endif
 endfunction
 
-// 取区域内的点（不影响输入点）
+// 获取区域内的点（不影响输入点）
 // 当输入点在区域内时，会返回一个相同坐标的新点，当输入点在区域外时，会返回距离输入点最近的区域边界上的新点
 // 会创建点，用完请注意排泄
 function MeleeGetLocWithinRect takes location src, rect r returns location
@@ -10386,7 +10386,7 @@ endfunction
 // 创建初始单位 - 未知种族
 // 创建点 - 玩家出生点
 // 默认包含12只绵羊，是的，12只绵羊（'nshe'）
-// 如果是1.29或以上版本，建议手动改为24只，这属于官方BUG
+// 在1.29或以上版本，建议手动改为24只，此为官方BUG
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
@@ -10474,8 +10474,8 @@ endfunction
 //*
 //***************************************************************************
 
-// 选择并运行对战AI，用于多个AI脚本时随机分配不同的AI
-// @param s1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
+// 选择并运行对战AI，用于一个种族有多个AI脚本时随机分配不同的脚本
+// @param s1~s3 不同的AI脚本文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
 
