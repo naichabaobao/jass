@@ -7225,7 +7225,7 @@ native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut 
 // 仅在使用了3D音效才有效
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
-// 设置背景音乐列表 [R]
+// 设置地图背景音乐 [R]
 // 禁用音乐时没有任何效果
 // Music Interface. Note that if music is disabled, these calls do nothing
 native SetMapMusic takes string musicName, boolean random, integer index returns nothing
