@@ -4579,7 +4579,7 @@ native DestroyTimer takes timer whichTimer returns nothing
 // @param periodic 是否循环
 // @param handlerFunc 到期后运行的函数
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
-// 获取计时器经过的时间//已倒计的时间
+// 获取计时器经过的时间/已倒计的时间
 native TimerGetElapsed takes timer whichTimer returns real
 // 获取计时器剩余时间
 native TimerGetRemaining takes timer whichTimer returns real
@@ -6339,7 +6339,7 @@ native HaveStoredUnit takes gamecache cache, string missionKey, string key retur
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
 // 清空指定游戏缓存 [C]
-// 清空指定游戏缓存下所有类别
+// 清空指定游戏缓存下所有类别，清空后无需新建缓存，仍可沿用
 native FlushGameCache takes gamecache cache returns nothing
 // 清空指定游戏缓存（指定类别）
 // 仅清空指定缓存的指定类别
@@ -6577,10 +6577,11 @@ native RemoveSavedBoolean takes hashtable table, integer parentKey, integer chil
 // <1.24> 删除指定哈希表的指定位置记录的字符串
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
 // <1.24> 删除指定哈希表的指定位置记录的句柄
+// 删除后，在写入新内容前读取该位置，句柄返回null
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
-// 清空整张表
+// 清空整张表，清空后无需新建表，仍可沿用
 native FlushParentHashtable takes hashtable table returns nothing
 // <1.24> 清空指定哈希表（指定主索引） [C]
 // 仅清空指定索引
