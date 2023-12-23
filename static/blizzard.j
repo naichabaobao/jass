@@ -3489,19 +3489,19 @@ function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
 endfunction
 
 
-// 设置音乐列表 (使用指定音乐开始)
+// 设置地图音乐(使用指定音乐)
 function SetMapMusicIndexedBJ takes string musicName, integer index returns nothing
     call SetMapMusic(musicName, false, index)
 endfunction
 
 
-// 设定音乐列表 (使用随机音乐开始)
+// 设置地图音乐 (使用随机音乐)
 function SetMapMusicRandomBJ takes string musicName returns nothing
     call SetMapMusic(musicName, true, 0)
 endfunction
 
 
-// 清空音乐列表
+// 清空地图背景音乐
 function ClearMapMusicBJ takes nothing returns nothing
     call ClearMapMusic()
 endfunction
