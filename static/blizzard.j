@@ -7835,7 +7835,7 @@ function PingMinimapForForceEx takes force whichForce, real x, real y, real dura
 endfunction
 
 
-// 发送小地图提示颜色（指定点，指定颜色，指定玩家组）
+// 发送小地图提示（指定点，指定颜色，指定玩家组）
 // @param style 小地图提示样式，[bj_MINIMAPPINGSTYLE_SIMPLE,bj_MINIMAPPINGSTYLE_FLASHY,bj_MINIMAPPINGSTYLE_ATTACK]
 function PingMinimapLocForForceEx takes force whichForce, location loc, real duration, integer style, real red, real green, real blue returns nothing
     call PingMinimapForForceEx(whichForce, GetLocationX(loc), GetLocationY(loc), duration, style, red, green, blue)
@@ -7962,7 +7962,7 @@ function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real 
 endfunction
 
 
-// 播放单位消息
+// 播放单位消息（指定单位使用的名称）
 // Display a text message to a Player Group with an accompanying sound,
 // portrait, speech indicator, and all that good stuff.
 //   - Query duration of sound
