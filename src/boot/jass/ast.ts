@@ -6,6 +6,7 @@ import { ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 import { isSpace } from "../tool";
 
 
+
 class Position {
 	public line: number;
 	public position: number;
@@ -136,31 +137,16 @@ export class Context {
 
 	public filePath:string = "";
 
-	public content:string = "";
-	public nonBlockCommentContent:string = "";
+	// public content:string = "";
+	// public nonBlockCommentContent:string = "";
 
-	public lineTexts:LineText[] = [];
-	/**
-	 * 已经移除define行的linetexts
-	 */
-	public nonDefineLineTexts:LineText[] = [];
+	// public lineTexts:LineText[] = [];
+	// /**
+	//  * 已经移除define行的linetexts
+	//  */
+	// public nonDefineLineTexts:LineText[] = [];
 
-	private defineMap:Map<string, Define> = new Map();
-    xTokens: (MergeToken | Token)[] = [];
 
-	public get defines():Define[] {
-		return [...this.defineMap.values()];
-	}
-
-	public addDefine(define:Define) {
-		this.defineMap.set(define.name, define);
-	};
-	public deleteDefine(defineName:string) {
-		this.defineMap.delete(defineName);
-	}
-	public getDefine(defineName:string) {
-		return this.defineMap.get(defineName);
-	}
 }
 
 export class Node implements Rangebel  { 
@@ -462,41 +448,7 @@ export class Define extends Declaration {
 	 */
 	public value: string = "";
 
-	public getValue() : string {
-		return this.tokensToString(tokenize(this.value), this.context.defines);
-	}
-
-	private pushSpace(origin:string, count: number, char: string): string {
-        for (let index = 0; index < count; index++) {
-            origin += char;
-        }
-        return origin;
-    }
-	private tokensToString(tokens:Token[], defines: Define[]) {
-		let str = "";
-		let storeIndex = 0;
 	
-		tokens.forEach((token, index, ts) => {
-            // str.padEnd(index - storeIndex, " ")
-            str = this.pushSpace(str, token.position - storeIndex, " ");
-	
-			if (token.isId()) {
-				const finedIndex = defines.findIndex((define) => define.id && define.id.name == token.value);
-				if (finedIndex != -1) {
-					str += defines[finedIndex].getValue();
-				} else {
-					str += token.value;
-				}
-			} else {
-				str += token.value;
-			}
-	
-			storeIndex = token.end.position;
-		});
-	
-		return str;
-	}
-
 	public get origin(): string {
 		let origin = `#define ${this.id.name}`;
 		if (this.value) {
@@ -506,11 +458,33 @@ export class Define extends Declaration {
 
 	}
 
-	public get name() : string {
+	public name() : string {
 		return this.id.name;
 	}
 }
 
+export class GlobalObject {
+    public static readonly DEFINES: Define[] = [];
+  
+    public static addDefine(...defines: Define[]) {
+      defines.forEach(define => {
+        const defineIndex = this.DEFINES.findIndex(_define => _define.name() == define.name());
+        if (defineIndex == -1) {
+          this.DEFINES.push(define);
+        }
+      });
+    };
+    public static deleteDefine(defineName: string) {
+      const defineIndex = this.DEFINES.findIndex(_define => _define.name() == defineName);
+      if (defineIndex != -1) {
+        this.DEFINES.splice(defineIndex, 1);
+      }
+    }
+    public static getDefine(defineName: string) {
+      return this.DEFINES.find(_define => _define.name() == defineName);
+    }
+  }
+/*
 class TextMacroDefine extends Declaration {
 	
 	public constructor(context:Context) {
@@ -577,7 +551,7 @@ class TextMacroDefine extends Declaration {
 		return this.id.name;
 	}
 }
-
+*/
 type ModifierType = "private" | "public" | "default";
 
 /**
@@ -955,22 +929,11 @@ class BlockComment extends LineComment {
 }
 
 class Identifier extends Node {
-	private _name: string;
+	public readonly name: string;
 
 	constructor(context:Context, name: string = "") {
 		super(context);
-		this._name = name;
-	}
-
-	public get name():string {
-		return this.name;
-	}
-
-	/**
-	 * 宏替换掉的值
-	 */
-	public get value():string {
-		return this.context.getDefine(this._name)?.value ?? this._name;
+		this.name = name;
 	}
 
 }
@@ -1131,10 +1094,7 @@ class Program extends Declaration {
 		super(context);
 	}
 
-	/**
-	 * @deprecated 使用source字段代替
-	 */
-	public filePath: string = "";
+
 
 	public readonly types: Type[] = [];
 	public readonly natives: Native[] = [];
@@ -1145,7 +1105,7 @@ class Program extends Declaration {
 	public readonly librarys: Library[] = [];
 	public readonly structs: Struct[] = [];
 
-	public readonly defines:TextMacroDefine[] = [];
+	// public readonly defines:TextMacroDefine[] = [];
 	public readonly textMacros: TextMacro[] = [];
 	public runTextMacros: RunTextMacro[] = [];
 
@@ -1365,7 +1325,7 @@ class Program extends Declaration {
 }
 
 export {
-	AstNode, Declaration, Program, TextMacroDefine
+	AstNode, Declaration, Program
 };
 
 /**
@@ -1385,14 +1345,6 @@ export class LineText extends Node {
         return this.text.trimStart() === "";
     }
 
-    private replaceTextByRegExp(text:string, defines:Define[]) {
-        defines.forEach(define => {
-			if (define.value.trimStart() != "") {
-				text = text.replace(new RegExp(`\\b${define.name}\\b`, "g"), define.value);
-			}
-        });
-        return text;
-    }
 
 	private toTokens() {
 		return tokenize(this.text);
@@ -1402,12 +1354,13 @@ export class LineText extends Node {
 		return this.toTokens();
 	}
 
-    // 宏替换后的字符串
-    private replaceText(): string {
-        // return this.tokensToString(this.tokens, this.defines);
-        return this.replaceTextByRegExp(this.text, this.context.defines);
-    }
 
+
+	/**
+	 * 
+	 * @param rel 没用,勿用
+	 * @returns 
+	 */
     public getText(rel?:boolean): string {
         // return rel ? this.replaceText() : this.text;
         return this.text;
@@ -1437,9 +1390,9 @@ export class LineText extends Node {
         return this.text.length;
     }
 
-    public clone(): LineText {
-        return Object.assign(new LineText(this.context, this.getText()), this);
-    }
+    // public clone(): LineText {
+    //     return Object.assign(new LineText(this.context, this.getText()), this);
+    // }
 
 }
 

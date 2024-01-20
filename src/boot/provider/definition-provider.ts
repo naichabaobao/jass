@@ -5,18 +5,18 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from '../jass/keyword';
 import { Types } from './types';
-import { Func, Library, Local, Member, Method, Node, Program, Range, Rangebel, Take } from "../jass/ast";
+import { Func, GlobalObject, Library, Local, Member, Method, Node, Program, Range, Rangebel, Take } from "../jass/ast";
 import data, { DataGetter, parseContent } from "./data";
-import { Global, Native, Struct} from '../jass/ast';
+import { Global, Native, Struct } from '../jass/ast';
 import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
 import { tokenize } from '../jass/tokens';
-import { TextMacroDefine, } from '../jass/ast';
+// import { TextMacroDefine, } from '../jass/ast';
 
 // type T =  keyof Rangebel;
 
-const toVsPosition = <A extends Node>(any:  A) => {
+const toVsPosition = <A extends Node>(any: A) => {
   const range = new vscode.Range(any.loc.start.line, any.loc.start.position, any.loc.end.line, any.loc.end.position);
   return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
@@ -63,7 +63,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
     new DataGetter().forEach((program, filePath) => {
       const isCurrent = compare(fsPath, filePath);
-      
+
       if (!Options.isOnlyJass) {
         program.getNameLibrary(key).forEach(library => {
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(library));
@@ -99,7 +99,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
         locations.push(location);
       });
-    
+
       if (isCurrent) {
 
         const findedFunc = program.getPositionFunction(convertPosition(position));
@@ -108,36 +108,44 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
             locations.push(location);
           });
-    
+
           findedFunc.locals.filter(local => local.name == key).forEach(local => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
             locations.push(location);
           });
         }
-        
+
         const findedMethod = program.getPositionMethod(convertPosition(position));
         if (findedMethod) {
           findedMethod.takes.filter(take => take.name == key).forEach((take, index) => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
             locations.push(location);
           });
-    
+
           findedMethod.locals.filter(local => local.name == key).forEach(local => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
             locations.push(location);
           });
         }
 
-        const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
-        if (findedDefineIndex != -1) {
-          const findedDefine = program.defines[findedDefineIndex];
-          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(findedDefine));
-          locations.push(location);
-        }
+
 
 
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
+
+    // define 定义
+    const allDefines = GlobalObject.DEFINES;
+    if (allDefines) {
+      const findedDefineIndex = allDefines.findIndex(define => define.id.name == key);
+      // const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
+      if (findedDefineIndex != -1) {
+        const findedDefine = allDefines[findedDefineIndex];
+        const location = new vscode.Location(vscode.Uri.file(findedDefine.getContext().filePath), toVsPosition(findedDefine));
+        locations.push(location);
+      }
+
+    }
 
     return locations;
   }
