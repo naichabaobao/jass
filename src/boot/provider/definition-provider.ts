@@ -5,8 +5,8 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from '../jass/keyword';
 import { Types } from './types';
-import { Func, GlobalObject, Library, Local, Member, Method, Node, Program, Range, Rangebel, Take } from "../jass/ast";
-import data, { DataGetter, parseContent } from "./data";
+import { Func, GlobalObject, Library, Local, Member, Method, Node, Position, Program, Range, Rangebel, Take } from "../jass/ast";
+import data, { DataGetter, ObjectEditGlobals, parseContent } from "./data";
 import { Global, Native, Struct } from '../jass/ast';
 import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
@@ -205,3 +205,45 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
   }
 
 }());
+
+// markcode跳转
+class MarkCodeDefinitionProvider implements vscode.DefinitionProvider {
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+    if (!Options.isSupportMark) {
+      return;
+    }
+
+    const text = document.lineAt(position).text;
+    const ts = tokenize(text);
+    const targetToken = ts.find(x => x.contains(new Position(0, position.character)));
+    
+    if (!targetToken) {
+      return;
+    }
+
+    if (!targetToken.isMark()) {
+      return;
+    }
+
+    // 必然是markcode
+    const key = targetToken.value.replace(/'/g, "");
+
+    const targetGlobals = ObjectEditGlobals.filter(global => global.name == key);
+    
+    if (targetGlobals.length == 0) {
+      return;
+    }
+    const locations = new Array<vscode.Location>();
+
+    targetGlobals.forEach(global => {
+      const location = new vscode.Location(vscode.Uri.file(global.getContext().filePath), new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position));
+      locations.push(location);
+    });
+
+    return locations;
+  }
+
+}
+
+vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
+

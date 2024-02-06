@@ -80,8 +80,17 @@ export const zincDataMap = new DataMap();
 export const cjassDataMap = new DataMap();
 export const luaDataMap = new Map<string, Chunk>();
 
+// 必须存在
+const ObjectEditPaht = path.resolve(__dirname, "../../../static/ObjectEdit.j");
+// 包含markcode数据,不会被插件提示，只会在跳转的特殊有效
+export const ObjectEditGlobals = (() => {
+  const context = new Context();
+  context.filePath = ObjectEditPaht;
+  const parser = new Parser(context, getFileContent(ObjectEditPaht));
 
-
+  const program = parser.parsing();
+  return program.globals;
+})();
 
 function parseContent(filePath: string, content: string) {
 
@@ -120,7 +129,6 @@ function parsePath(...filePaths: string[]) {
 
 
   const excludeFiles = filePaths;
-  const parseds: Parser[] = [];
   excludeFiles.forEach(filePath => {
     const content = getFileContent(filePath);
 
