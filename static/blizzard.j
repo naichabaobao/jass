@@ -1434,13 +1434,13 @@ function PolarProjectionBJ takes location source, real dist, real angle returns 
 endfunction
 
 
-// 获取随机角度（0~360，可以取非整数）
+// 获取随机角度（0~360，实数）
 function GetRandomDirectionDeg takes nothing returns real
     return GetRandomReal(0, 360)
 endfunction
 
 
-// 获取随机实数（0~100，可以取非整数）
+// 获取随机实数（0~100）
 function GetRandomPercentageBJ takes nothing returns real
     return GetRandomReal(0, 100)
 endfunction
@@ -1532,7 +1532,7 @@ function RectContainsUnit takes rect r, unit whichUnit returns boolean
 endfunction
 
 
-// 物品是否在区域内
+// 查询物品是否在区域内
 function RectContainsItem takes item whichItem, rect r returns boolean
     if(whichItem == null) then
         return false
@@ -1775,25 +1775,25 @@ function IsTriggerQueuedBJ takes trigger trig returns boolean
 endfunction
 
 
-// 循环整数 A
+// 获取循环 A 索引
 function GetForLoopIndexA takes nothing returns integer
     return bj_forLoopAIndex
 endfunction
 
 
-// 设置循环索引 A
+// 设置循环 A 索引
 function SetForLoopIndexA takes integer newIndex returns nothing
     set bj_forLoopAIndex = newIndex
 endfunction
 
 
-// 循环整数 B
+// 获取循环 B 索引
 function GetForLoopIndexB takes nothing returns integer
     return bj_forLoopBIndex
 endfunction
 
 
-// 设置循环索引 B
+// 设置循环 B 索引
 function SetForLoopIndexB takes integer newIndex returns nothing
     set bj_forLoopBIndex = newIndex
 endfunction
@@ -1910,25 +1910,25 @@ function PercentTo255 takes real percentage returns integer
 endfunction
 
 
-// 获取游戏当前的时间
+// 获取游戏当前的时间（夜晚白昼，24小时制，精确到分）
 function GetTimeOfDay takes nothing returns real
     return GetFloatGameState(GAME_STATE_TIME_OF_DAY)
 endfunction
 
 
-// 设置游戏的时间
+// 设置游戏的时间（夜晚白昼，24小时制，精确到分）
 function SetTimeOfDay takes real whatTime returns nothing
     call SetFloatGameState(GAME_STATE_TIME_OF_DAY, whatTime)
 endfunction
 
 
-// 设置时间流逝速度
+// 设置时间流逝速度（夜晚白昼）
 function SetTimeOfDayScalePercentBJ takes real scalePercent returns nothing
     call SetTimeOfDayScale(scalePercent * 0.01)
 endfunction
 
 
-// 获取游戏时间流逝速度
+// 获取游戏时间流逝速度（夜晚白昼）
 function GetTimeOfDayScalePercentBJ takes nothing returns real
     return GetTimeOfDayScale() * 100
 endfunction
@@ -1942,13 +1942,13 @@ function PlaySound takes string soundName returns nothing
 endfunction
 
 
-// 比对两个点是否是同一个
+// 比对两个点的X和Y坐标的值是否相同
 function CompareLocationsBJ takes location A, location B returns boolean
     return GetLocationX(A) == GetLocationX(B) and GetLocationY(A) == GetLocationY(B)
 endfunction
 
 
-// 比对两个矩形是否是同一个
+// 比对两个矩形四个坐标点的值是否相同
 function CompareRectsBJ takes rect A, rect B returns boolean
     return GetRectMinX(A) == GetRectMinX(B) and GetRectMinY(A) == GetRectMinY(B) and GetRectMaxX(A) == GetRectMaxX(B) and GetRectMaxY(A) == GetRectMaxY(B)
 endfunction
@@ -2791,7 +2791,7 @@ function GetLastCreatedTerrainDeformation takes nothing returns terraindeformati
 endfunction
 
 
-// 创建闪电效果于指定点
+// 创建闪电效果（指定点）
 function AddLightningLoc takes string codeName, location where1, location where2 returns lightning
     set bj_lastCreatedLightning = AddLightningEx(codeName, true, GetLocationX(where1), GetLocationY(where1), GetLocationZ(where1), GetLocationX(where2), GetLocationY(where2), GetLocationZ(where2))
     return bj_lastCreatedLightning
@@ -3281,13 +3281,13 @@ function SetSoundConeAnglesBJ takes sound soundHandle, real inside, real outside
 endfunction
 
 
-// 终止声音
+// 播放完成时终止声音（不再循环）
 function KillSoundWhenDoneBJ takes sound soundHandle returns nothing
     call KillSoundWhenDone(soundHandle)
 endfunction
 
 
-// 在指定点播放声音（音源位置）
+// 设置音源位置并播放声音（指定点）
 function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, location loc, real z returns nothing
     call SetSoundPositionLocBJ(soundHandle, loc, z)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3295,7 +3295,7 @@ function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, locatio
 endfunction
 
 
-// 在指定单位播放声音（音源位置）
+// 设置音源位置并播放声音（指定单位）
 function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whichUnit returns nothing
     call AttachSoundToUnitBJ(soundHandle, whichUnit)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3337,19 +3337,19 @@ function PlayThematicMusicBJ takes string musicName returns nothing
 endfunction
 
 
-// 播放主题音乐(指定跳到的时间帧)
+// 播放主题音乐(指定开始的时间帧)
 function PlayThematicMusicExBJ takes string musicName, real startingOffset returns nothing
     call PlayThematicMusicEx(musicName, R2I(startingOffset * 1000))
 endfunction
 
 
-// 跳越音乐主题音乐
+// 停止主题音乐（指定结束的时间帧）
 function SetThematicMusicOffsetBJ takes real newOffset returns nothing
     call SetThematicMusicPlayPosition(R2I(newOffset * 1000))
 endfunction
 
 
-// 停放主题音乐
+// 停止主题音乐
 function EndThematicMusicBJ takes nothing returns nothing
     call EndThematicMusic()
 endfunction
@@ -3406,7 +3406,7 @@ function GetLastPlayedMusic takes nothing returns string
 endfunction
 
 
-// 设置音量
+// 设置音量（指定频道）
 function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns nothing
     call VolumeGroupSetVolume(vgroup, percent * 0.01)
 endfunction
@@ -3489,25 +3489,25 @@ function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
 endfunction
 
 
-// 设置音乐列表 (使用指定音乐开始)
+// 设置地图音乐(使用指定音乐)
 function SetMapMusicIndexedBJ takes string musicName, integer index returns nothing
     call SetMapMusic(musicName, false, index)
 endfunction
 
 
-// 设定音乐列表 (使用随机音乐开始)
+// 设置地图背景音乐 (使用随机音乐)
 function SetMapMusicRandomBJ takes string musicName returns nothing
     call SetMapMusic(musicName, true, 0)
 endfunction
 
 
-// 清空音乐列表
+// 清空地图背景音乐
 function ClearMapMusicBJ takes nothing returns nothing
     call ClearMapMusic()
 endfunction
 
 
-// 添加/删除 穿越区域的3D声音
+// 添加/删除 穿越区域的3D音效
 function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns nothing
     local real width = GetRectMaxX(r) - GetRectMinX(r)
     local real height = GetRectMaxY(r) - GetRectMinY(r)
@@ -5925,8 +5925,8 @@ function GetUnitsSelectedAll takes player whichPlayer returns group
 endfunction
 
 
-// 将玩家添加到玩家组
-// 以玩家组形式返回
+// 获取以指定玩家新建的玩家组
+// 将指定玩家加入新创建的专属玩家组，并以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -5941,7 +5941,7 @@ function GetPlayersAll takes nothing returns force
 endfunction
 
 
-// 所有指定控制类型的玩家
+// 获取所有指定控制类型的玩家
 // 以玩家组形式返回
 function GetPlayersByMapControl takes mapcontrol whichControl returns force
     local force f = CreateForce()
@@ -5990,12 +5990,12 @@ function GetPlayersMatching takes boolexpr filter returns force
 endfunction
 
 
-// 单位组的单位数
+// 单位组的单位数量加一
 function CountUnitsInGroupEnum takes nothing returns nothing
     set bj_groupCountUnits = bj_groupCountUnits + 1
 endfunction
 
-// 获取单位组的单位数
+// 统计单位组的单位数量
 function CountUnitsInGroup takes group g returns integer
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.
@@ -6088,7 +6088,7 @@ endfunction
 //***************************************************************************
 
 
-// 重置指定单位动画为 "stand"
+// 重置指定单位动画为站立 － "stand"
 function ResetUnitAnimation takes unit whichUnit returns nothing
     call SetUnitAnimation(whichUnit, "stand")
 endfunction
@@ -6114,19 +6114,19 @@ function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real b
 endfunction
 
 
-// 闪动指示器（指定单位）
+// 添加指示器（指定单位）
 function UnitAddIndicatorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 闪动指示器（指定可破坏物）
+// 添加指示器（指定可破坏物）
 function DestructableAddIndicatorBJ takes destructable whichDestructable, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 闪动指示器（指定物品）
+// 添加指示器（指定物品）
 function ItemAddIndicatorBJ takes item whichItem, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
@@ -6223,13 +6223,13 @@ function GetLastCreatedButtonBJ takes nothing returns button
 endfunction
 
 
-// 获取被单击对话框按钮
+// 获取被点击对话框按钮
 function GetClickedButtonBJ takes nothing returns button
     return GetClickedButton()
 endfunction
 
 
-// 获取被单击的对话框
+// 获取被点击的对话框
 function GetClickedDialogBJ takes nothing returns dialog
     return GetClickedDialog()
 endfunction
@@ -7835,7 +7835,7 @@ function PingMinimapForForceEx takes force whichForce, real x, real y, real dura
 endfunction
 
 
-// 发送小地图提示颜色（指定点，指定颜色，指定玩家组）
+// 发送小地图提示（指定点，指定颜色，指定玩家组）
 // @param style 小地图提示样式，[bj_MINIMAPPINGSTYLE_SIMPLE,bj_MINIMAPPINGSTYLE_FLASHY,bj_MINIMAPPINGSTYLE_ATTACK]
 function PingMinimapLocForForceEx takes force whichForce, location loc, real duration, integer style, real red, real green, real blue returns nothing
     call PingMinimapForForceEx(whichForce, GetLocationX(loc), GetLocationY(loc), duration, style, red, green, blue)
@@ -7962,7 +7962,7 @@ function DoTransmissionBasicsXYBJ takes integer unitId, playercolor color, real 
 endfunction
 
 
-// 播放单位消息
+// 播放单位消息（指定单位使用的名称）
 // Display a text message to a Player Group with an accompanying sound,
 // portrait, speech indicator, and all that good stuff.
 //   - Query duration of sound
@@ -9530,7 +9530,7 @@ function IsPointBlightedBJ takes location where returns boolean
 endfunction
 
 
-// 设置玩家颜色
+// 设置玩家颜色动作
 function SetPlayerColorBJEnum takes nothing returns nothing
     call SetUnitColor(GetEnumUnit(), bj_setPlayerTargetColor)
 endfunction
@@ -9758,7 +9758,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
 endfunction
 
 
-// 设置英雄数量限制
+// 设置（所有玩家的）英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
 function MeleeStartingHeroLimit takes nothing returns nothing
     local integer index
 
@@ -9891,8 +9891,8 @@ endfunction
 //*
 //***************************************************************************
 
-// 删除当前出生点多余单位
-// 多余单位是指中立敌对玩家的单位 或 中立被动玩家的非建筑类单位
+// 删除当前出生点中立生物
+// 中立敌对玩家 或 中立被动玩家的非建筑类型的单位，含守卫
 function MeleeClearExcessUnit takes nothing returns nothing
     local unit theUnit = GetEnumUnit()
     local integer owner = GetPlayerId(GetOwningPlayer(theUnit))
@@ -9988,7 +9988,7 @@ function MeleeFindNearestMine takes location src, real range returns unit
 endfunction
 
 // 创建随机英雄
-// 进入游戏前在高级勾选 使用随机英雄
+// 进入游戏前在高级勾选 使用随机英雄 后，对战地图自动在游戏初始化时触发
 function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id3, integer id4, location loc returns unit
     local unit hero = null
     local integer roll
@@ -10026,7 +10026,7 @@ function MeleeRandomHeroLoc takes player p, integer id1, integer id2, integer id
 endfunction
 
 
-// 极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
+// 获取极坐标位移点，点src 沿 点src 到 点targ 的方向位移distance ，附带偏移量 deltaAngle
 // 会创建点，用完请注意排泄
 // Returns a location which is (distance) away from (src) in the direction of (targ).
 function MeleeGetProjectedLoc takes location src, location targ, real distance, real deltaAngle returns location
@@ -10048,7 +10048,7 @@ function MeleeGetNearestValueWithin takes real val, real minVal, real maxVal ret
     endif
 endfunction
 
-// 取区域内的点（不影响输入点）
+// 获取区域内的点（不影响输入点）
 // 当输入点在区域内时，会返回一个相同坐标的新点，当输入点在区域外时，会返回距离输入点最近的区域边界上的新点
 // 会创建点，用完请注意排泄
 function MeleeGetLocWithinRect takes location src, rect r returns location
@@ -10386,7 +10386,7 @@ endfunction
 // 创建初始单位 - 未知种族
 // 创建点 - 玩家出生点
 // 默认包含12只绵羊，是的，12只绵羊（'nshe'）
-// 如果是1.29或以上版本，建议手动改为24只，这属于官方BUG
+// 在1.29或以上版本，建议手动改为24只，此为官方BUG
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
@@ -10474,8 +10474,8 @@ endfunction
 //*
 //***************************************************************************
 
-// 选择并运行对战AI，用于多个AI脚本时随机分配不同的AI
-// @param s1~s3 不同的AI文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
+// 选择并运行对战AI，用于一个种族有多个AI脚本时随机分配不同的脚本
+// @param s1~s3 不同的AI脚本文件，系统默认只有s1，当s2或s3不为null时，非新手电脑有几率（随机）使用
 function PickMeleeAI takes player num, string s1, string s2, string s3 returns nothing
     local integer pick
 

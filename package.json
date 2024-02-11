@@ -50,10 +50,26 @@
           "type": "string",
           "description": "自定义dzapi.j(reboot)"
         },
-        "jass.ObjectEditor": {
+        "jass.cheats": {
           "type": "string",
-          "description": "(Deprecation) 自定义ObjectEditor.j(reboot)"
+          "description": "自定义Cheats.j(reboot)"
         },
+        "jass.initcheats": {
+          "type": "string",
+          "description": "自定义InitCheats.j(reboot)"
+        },
+        "jass.aiscripts_ai": {
+          "type": "string",
+          "description": "自定义AIScripts_ai(reboot)"
+        },
+        "jass.war3map": {
+          "type": "string",
+          "description": "自定义war3map.j(reboot)"
+        },
+        //"jass.ObjectEditor": {
+          //"type": "string",
+          //"description": "(Deprecation) 自定义ObjectEditor.j(reboot)"
+        //},
         "jass.includes": {
           "type": "array",
           "items": {
