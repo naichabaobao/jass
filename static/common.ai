@@ -1363,13 +1363,18 @@ globals
     // 三发英雄单位类型
     // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
     integer hero_id3                = 'Hpal'
-    // 技能数组
+    // 英雄技能学习顺序数组
+    // 记录地图所有英雄的所有技能，以及所有学习顺序编组，一个英雄可以有多组顺序，每局游戏默认只选择一种顺序，以制造随机的假象
+    // 书写时请注意规避跳级设置和工程升级技能的技能替换，否则可能不学技能，一个技能不学，后面都将无法学习
     integer array skill
     // 首发英雄技能数组
+    // 记录对战使用的技能学习顺序下各级对应的技能，一经选择，若无代码干预，本局游戏将一直按此顺序学习
     integer array skills1
     // 二发英雄技能数组
+    // 记录对战使用的技能学习顺序下各级对应的技能，一经选择，若无代码干预，本局游戏将一直按此顺序学习
     integer array skills2
     // 三发英雄技能数组
+    // 记录对战使用的技能学习顺序下各级对应的技能，一经选择，若无代码干预，本局游戏将一直按此顺序学习
     integer array skills3
     // 最大英雄等级，默认为0，会在英雄升级后自动调整，上限由平衡常数决定
     integer max_hero_level          = 0
@@ -1407,35 +1412,39 @@ globals
     integer min_creeps              = -1
     // 最大野怪（中立敌对玩家单位）等级，默认-1
     integer max_creeps              = -1
-    // 是否允许AI开设第一座基地，以采集黄金/木材
+    // 是否允许AI开设第一座基地
     boolean harvest_town1           = true
-    // 是否允许AI开设第二座基地，以采集黄金/木材
+    // 是否允许AI开设第二座基地
     boolean harvest_town2           = true
-    // 是否允许AI开设第三座基地，以采集黄金/木材
+    // 是否允许AI开设第三座基地
     boolean harvest_town3           = true
-    // 战役人口建筑建造模式
+    // 是否启用战役人口建筑建造模式，默认为是
+    // 官方仅在战役功能中使用
     boolean do_campaign_farms       = true
-    // 二发英雄是否存在
+    // 二发英雄是否存在，默认为否
     boolean two_heroes              = false
-    // 是否允许获取飞行野怪（中立敌对玩家单位），默认不允许
+    // 是否允许获取飞行野怪（中立敌对玩家单位），默认为否
     boolean allow_air_creeps        = false
-    // 是否攻击分矿的野怪（中立敌对玩家单位），默认允许
+    // 是否攻击分矿的野怪（中立敌对玩家单位），默认为否
+    // 攻击线程会自动设置
     boolean take_exp                = false
-    // 多用于退出自杀等待
+    // 多用于退出自杀等待，默认为否
     boolean allow_signal_abort      = false
-    // 是否已完成飞艇购买
+    // 是否已完成飞艇购买，默认为是
     boolean ready_for_zeppelin      = true
     // 是否允许购买飞艇，默认为否
     boolean get_zeppelin            = false
-    // 是否建造战役进攻单位
+    // 是否建造战役进攻单位，默认为是
+    // 官方仅在战役功能中使用
     boolean build_campaign_attackers = true
-    // 用于开发调试
+    // 开发调试开关，默认为否
     boolean do_debug_cheats         = false
-    // 是否在游戏中显示 Trace 文本（开启后可用于调试，只需要调用对应的 Trace 发送指定文本即可）
+    // 是否在游戏中显示 Trace 文本，默认为是
+    // 开启后可用于调试，只需要调用对应的 Trace 发送指定文本即可
     boolean trace_on                = true
-    // 是否允许飞艇空投
+    // 是否允许飞艇空投，默认为否
     boolean zep_next_wave           = false
-    // 是否允许攻击组组建超时
+    // 是否允许攻击组组建超时，默认为是
     boolean form_group_timeouts     = true
 endglobals
 
