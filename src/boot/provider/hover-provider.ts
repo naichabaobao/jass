@@ -8,11 +8,11 @@ import { Options } from './options';
 import data, { DataGetter } from "./data";
 import { compare } from '../tool';
 import { convertPosition } from './tool';
-import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, TextMacroDefine, Declaration, Type } from '../jass/ast';
+import { Func, Global, Library, Local, Member, Method, Take, Native, Struct, Declaration, Type, Define, GlobalObject } from '../jass/ast';
 import { Document, lexically } from '../check/mark';
 import { ConfigPovider, PluginDefaultConfig } from './config/config';
 
-type Decl = Native|Func|Method|Library|Struct|Member|Global|Local|TextMacroDefine|Type;
+type Decl = Native | Func | Method | Library | Struct | Member | Global | Local | Define | Type;
 
 function toHoverlo(de: Decl, isCurrent: boolean, filePath: string) {
   const ms = new vscode.MarkdownString();
@@ -91,9 +91,31 @@ class HoverProvider implements vscode.HoverProvider {
 
     const hovers: vscode.MarkdownString[] = [];
 
+    // define hover
+    const allDefines = GlobalObject.DEFINES;
+    if (allDefines) {
+      const findedDefineIndex = allDefines.findIndex(define => define.id.name == key);
+      // const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
+      if (findedDefineIndex != -1) {
+        const findedDefine = allDefines[findedDefineIndex];
+
+        const ms = new vscode.MarkdownString();
+        
+        if (compare(fsPath, findedDefine.getContext().filePath)) {
+          ms.appendText("\n(当前文件)");
+        } else {
+          ms.appendText(`\n(${findedDefine.getContext().filePath})`);
+        }
+        ms.appendText("\n");
+        ms.appendCodeblock(findedDefine.origin);
+
+        hovers.push(ms);
+      }
+    }
+
     new DataGetter().forEach((program, filePath) => {
       const isCurrent = compare(fsPath, filePath);
-      
+
       if (!Options.isOnlyJass) {
         program.getNameLibrary(key).forEach(library => {
           const ms = toHoverlo(library, isCurrent, filePath);
@@ -111,7 +133,7 @@ class HoverProvider implements vscode.HoverProvider {
           const ms = toHoverlo(member, isCurrent, filePath);
           hovers.push(ms);
         });
-        
+
       }
       program.getNameType(key).forEach(type => {
         const ms = toHoverlo(type, isCurrent, filePath);
@@ -129,7 +151,9 @@ class HoverProvider implements vscode.HoverProvider {
         const ms = toHoverlo(func, isCurrent, filePath);
         hovers.push(ms);
       });
-    
+
+
+
       if (isCurrent) {
 
         const findedFunc = program.getPositionFunction(convertPosition(position));
@@ -152,7 +176,7 @@ class HoverProvider implements vscode.HoverProvider {
             ms.appendCodeblock(take.origin);
             hovers.push(ms);
           });
-    
+
           findedFunc.locals.filter(local => local.name == key).forEach(func => {
             const ms = toHoverlo(func, isCurrent, fsPath);
             hovers.push(ms);
@@ -160,7 +184,7 @@ class HoverProvider implements vscode.HoverProvider {
 
 
         }
-        
+
         const findedMethod = program.getPositionMethod(convertPosition(position));
         if (findedMethod) {
           findedMethod.takes.filter(take => take.name == key).forEach((take, index) => {
@@ -181,24 +205,17 @@ class HoverProvider implements vscode.HoverProvider {
             ms.appendCodeblock(take.origin);
             hovers.push(ms);
           });
-    
+
           findedMethod.locals.filter(local => local.name == key).forEach(func => {
             const ms = toHoverlo(func, isCurrent, fsPath);
             hovers.push(ms);
           });
         }
 
-        const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
-        if (findedDefineIndex != -1) {
-          const findedDefine = program.defines[findedDefineIndex];
-          const ms = toHoverlo(findedDefine, isCurrent, fsPath);
-          hovers.push(ms);
-        }
-
         const text = program.findRunTextMacroText(key);
-        if(text) {
+        if (text) {
           const ms = new vscode.MarkdownString();
-          
+
           ms.appendCodeblock(text);
           hovers.push(ms);
         }
@@ -339,14 +356,14 @@ class MarkHoverProvider implements vscode.HoverProvider {
       const mark = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
         return mark.isMark() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
       });
-      
 
-      
+
+
       if (mark) {
         const markValue = mark.value();
-        
+
         const comsumerTargetMark = [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].find(preset => `'${preset.code}'` == markValue);
-       
+
 
         if (comsumerTargetMark) {
           const ms = new vscode.MarkdownString();
@@ -424,14 +441,14 @@ class StringHoverProvider implements vscode.HoverProvider {
       const str = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
         return mark.isString() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
       });
-      
 
-      
+
+
       if (str) {
         const strValue = str.value();
 
         const comsumerTargetMark = [...ConfigPovider.instance().getstrings(), ...PluginDefaultConfig.strings ?? []].find(preset => typeof preset == "string" ? `"${preset}"` == strValue : `"${preset.content}"` == strValue);
-       
+
 
         if (comsumerTargetMark) {
           const ms = new vscode.MarkdownString();

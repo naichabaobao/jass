@@ -3,9 +3,9 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { compare, getFileContent, isJFile, isLuaFile, isUsableFile, isZincFile} from "../tool";
+import { compare, getFileContent, isJFile, isLuaFile, isUsableFile, isZincFile } from "../tool";
 
-import {Program, Native, Declaration, Func, Library, Struct, DefineMacro, Context} from "../jass/ast";
+import { Program, Native, Declaration, Func, Library, Struct, DefineMacro, Context, Define } from "../jass/ast";
 
 import { parseCj, parseCjass, Parser } from "../jass/parser";
 import { parse } from "../zinc/parse";
@@ -18,9 +18,9 @@ import { ConfigPovider } from "./config/config";
 
 class DataMap {
 
-  private map:Map<string, Program> = new Map();
+  private map: Map<string, Program> = new Map();
 
-  private generateKey(originFilePath:string):string {
+  private generateKey(originFilePath: string): string {
     return path.resolve(originFilePath);
     // const parsed = path.parse(originFilePath);
     // return `${parsed.base}-${parsed.dir}-${parsed.name}-${parsed.ext}`;
@@ -58,7 +58,7 @@ class DataMap {
   public keys() {
     // return this.pairs.map((pair) => pair.key);
     return [...this.map.keys()];
-    
+
   }
 
   public values() {
@@ -66,7 +66,7 @@ class DataMap {
     return [...this.map.values()];
   }
 
-  public forEach(callback: (key:string, value:Program) => void) {
+  public forEach(callback: (key: string, value: Program) => void) {
     // this.pairs.forEach((pair) => callback(pair.key, pair.value));
     this.map.forEach((value, key, index) => {
       callback(key, value);
@@ -80,16 +80,26 @@ export const zincDataMap = new DataMap();
 export const cjassDataMap = new DataMap();
 export const luaDataMap = new Map<string, Chunk>();
 
+// 必须存在
+const ObjectEditPaht = path.resolve(__dirname, "../../../static/ObjectEdit.j");
+// 包含markcode数据,不会被插件提示，只会在跳转的特殊有效
+export const ObjectEditGlobals = (() => {
+  const context = new Context();
+  context.filePath = ObjectEditPaht;
+  const parser = new Parser(context, getFileContent(ObjectEditPaht));
 
-
+  const program = parser.parsing();
+  return program.globals;
+})();
 
 function parseContent(filePath: string, content: string) {
 
-  if (isExclude(filePath, ConfigPovider.instance().getExcludes())) {    
+  if (isExclude(filePath, ConfigPovider.instance().getExcludes())) {
     return;
   }
   const context = new Context();
   context.filePath = path.resolve(filePath);
+  context.filePath = filePath;
   if (isZincFile(filePath)) {
     const program = parse(context, content, true);
 
@@ -98,8 +108,8 @@ function parseContent(filePath: string, content: string) {
     try {
       let parser = new LuaParser(content);
       luaDataMap.set(filePath, parser.parsing());
-    } catch(error) {
-    } 
+    } catch (error) {
+    }
   } else {
     const parser = new Parser(context, content);
     if (Options.supportZinc) {
@@ -116,10 +126,9 @@ function parseContent(filePath: string, content: string) {
 }
 
 function parsePath(...filePaths: string[]) {
-  
+
 
   const excludeFiles = filePaths;
-  const parseds:Parser[] = [];
   excludeFiles.forEach(filePath => {
     const content = getFileContent(filePath);
 
@@ -127,7 +136,7 @@ function parsePath(...filePaths: string[]) {
   })
   excludeFiles.forEach((filePath) => {
     const content = getFileContent(filePath);
-  
+
     parseContent(filePath, content);
   });
 }
@@ -136,12 +145,12 @@ vscode.workspace.onDidChangeConfiguration((event) => {
   parsePath(Options.commonJPath);
 });
 
-function isExclude(sourcePath:string, excludes: string[]):boolean {
+function isExclude(sourcePath: string, excludes: string[]): boolean {
   const sourceParsed = path.parse(sourcePath.replace(/\\/g, "/"));
   return excludes.filter(excludePath => fs.existsSync(excludePath)).some(excludePath => {
     const excludeParsed = path.parse(excludePath);
     return fs.statSync(excludePath).isDirectory() ? path.relative(sourceParsed.dir, excludePath) == "" || /\.\.$/.test(path.relative(sourceParsed.dir, excludePath)) : path.relative(excludeParsed.dir, sourceParsed.dir) == "" && sourceParsed.base == excludeParsed.base;
-  });  
+  });
 }
 
 /**
@@ -301,7 +310,7 @@ class Data {
    * @param position 
    * @returns 
    */
-  public static fieldFunction(document: vscode.TextDocument, position: vscode.Position):Func|undefined {
+  public static fieldFunction(document: vscode.TextDocument, position: vscode.Position): Func | undefined {
     const program = dataMap.get(document.uri.fsPath);
     if (program) {
       const func = program.functions.find((func) => {
@@ -329,7 +338,7 @@ console.info(Options.workspaces)
 console.info(Options.includes)
 
 class DataGetter {
-  constructor() {}
+  constructor() { }
   forEach(callback: (program: Program, fsPath: string) => void, containZinc: boolean = true, containCJass: boolean = false) {
     dataMap.forEach((key, value) => {
       callback(value, key);
@@ -350,15 +359,15 @@ class DataGetter {
     }
   }
 
-  public get(key: string): Program|undefined {
+  public get(key: string): Program | undefined {
     return dataMap.get(key);
   }
-  public zinc(key: string): Program|undefined {
+  public zinc(key: string): Program | undefined {
     return zincDataMap.get(key);
   }
 }
 class LuaDataGetter {
-  constructor() {}
+  constructor() { }
   forEach(callback: (root: Chunk, fsPath: string) => void) {
     if (Options.isSupportLua) {
       luaDataMap.forEach((value, key) => {
@@ -366,7 +375,7 @@ class LuaDataGetter {
       })
     }
   }
-  public get(key: string): Chunk|undefined {
+  public get(key: string): Chunk | undefined {
     return luaDataMap.get(key);
   }
 }
@@ -384,8 +393,8 @@ function parseData(fsPath: string, content: string) {
   }, 500);
 }
 
-let lastPath: string|null = null;
-let preParsed: NodeJS.Timeout|null = null;
+let lastPath: string | null = null;
+let preParsed: NodeJS.Timeout | null = null;
 
 // 当文件被改变时,把改变后的文件从新解析,如果连续输入则会把上一次的取消掉只执行最后一次
 vscode.workspace.onDidChangeTextDocument((event) => {
@@ -399,8 +408,12 @@ vscode.workspace.onDidChangeTextDocument((event) => {
 
   lastPath = fsPath;
   preParsed = parseData(fsPath, document.getText());
-  
+
 });
+
+
+
+
 
 
 

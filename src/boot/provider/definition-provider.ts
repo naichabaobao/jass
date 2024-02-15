@@ -5,18 +5,18 @@ import * as vscode from 'vscode';
 
 import { AllKeywords } from '../jass/keyword';
 import { Types } from './types';
-import { Func, Library, Local, Member, Method, Node, Program, Range, Rangebel, Take } from "../jass/ast";
-import data, { DataGetter, parseContent } from "./data";
-import { Global, Native, Struct} from '../jass/ast';
+import { Func, GlobalObject, Library, Local, Member, Method, Node, Position, Program, Range, Rangebel, Take } from "../jass/ast";
+import data, { DataGetter, ObjectEditGlobals, parseContent } from "./data";
+import { Global, Native, Struct } from '../jass/ast';
 import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
 import { convertPosition, fieldFunctions } from './tool';
 import { tokenize } from '../jass/tokens';
-import { TextMacroDefine, } from '../jass/ast';
+// import { TextMacroDefine, } from '../jass/ast';
 
 // type T =  keyof Rangebel;
 
-const toVsPosition = <A extends Node>(any:  A) => {
+const toVsPosition = <A extends Node>(any: A) => {
   const range = new vscode.Range(any.loc.start.line, any.loc.start.position, any.loc.end.line, any.loc.end.position);
   return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
 };
@@ -63,7 +63,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
     new DataGetter().forEach((program, filePath) => {
       const isCurrent = compare(fsPath, filePath);
-      
+
       if (!Options.isOnlyJass) {
         program.getNameLibrary(key).forEach(library => {
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(library));
@@ -99,7 +99,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(func));
         locations.push(location);
       });
-    
+
       if (isCurrent) {
 
         const findedFunc = program.getPositionFunction(convertPosition(position));
@@ -108,36 +108,44 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
             locations.push(location);
           });
-    
+
           findedFunc.locals.filter(local => local.name == key).forEach(local => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
             locations.push(location);
           });
         }
-        
+
         const findedMethod = program.getPositionMethod(convertPosition(position));
         if (findedMethod) {
           findedMethod.takes.filter(take => take.name == key).forEach((take, index) => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(take));
             locations.push(location);
           });
-    
+
           findedMethod.locals.filter(local => local.name == key).forEach(local => {
             const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(local));
             locations.push(location);
           });
         }
 
-        const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
-        if (findedDefineIndex != -1) {
-          const findedDefine = program.defines[findedDefineIndex];
-          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(findedDefine));
-          locations.push(location);
-        }
+
 
 
       }
     }, !Options.isOnlyJass && Options.supportZinc, !Options.isOnlyJass && Options.isSupportCjass);
+
+    // define 定义
+    const allDefines = GlobalObject.DEFINES;
+    if (allDefines) {
+      const findedDefineIndex = allDefines.findIndex(define => define.id.name == key);
+      // const findedDefineIndex = program.defines.findIndex(define => define.id.name == key);
+      if (findedDefineIndex != -1) {
+        const findedDefine = allDefines[findedDefineIndex];
+        const location = new vscode.Location(vscode.Uri.file(findedDefine.getContext().filePath), toVsPosition(findedDefine));
+        locations.push(location);
+      }
+
+    }
 
     return locations;
   }
@@ -197,3 +205,45 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
   }
 
 }());
+
+// markcode跳转
+class MarkCodeDefinitionProvider implements vscode.DefinitionProvider {
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+    if (!Options.isSupportMark) {
+      return;
+    }
+
+    const text = document.lineAt(position).text;
+    const ts = tokenize(text);
+    const targetToken = ts.find(x => x.contains(new Position(0, position.character)));
+    
+    if (!targetToken) {
+      return;
+    }
+
+    if (!targetToken.isMark()) {
+      return;
+    }
+
+    // 必然是markcode
+    const key = targetToken.value.replace(/'/g, "");
+
+    const targetGlobals = ObjectEditGlobals.filter(global => global.name == key);
+    
+    if (targetGlobals.length == 0) {
+      return;
+    }
+    const locations = new Array<vscode.Location>();
+
+    targetGlobals.forEach(global => {
+      const location = new vscode.Location(vscode.Uri.file(global.getContext().filePath), new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position));
+      locations.push(location);
+    });
+
+    return locations;
+  }
+
+}
+
+vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
+

@@ -371,7 +371,7 @@
 ## 1.8.9
 - 构建了中文区最完善的技能命令串和技能命令ID，技能命令ID可在 /static/jass.config.json 文件查询
 - 优化代码
-- 新增jass.config.jass numbers,可以提示整形
+- 新增jass.config.jass numbers,可以提示整型
 ```json
 {
     numbers: [
@@ -392,3 +392,8 @@
 - 新增局部格式化功能
 - 修复负数错误格式化问题
 - 修复[]格式化问题
+
+## 1.8.13
+- 修复多行注释格式化问题
+- #define可以全局定义并引用
+- 重构代码,修复一个#define爆内存问题

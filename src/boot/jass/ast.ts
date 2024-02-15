@@ -3,6 +3,8 @@ import { Token, tokenize } from "./tokens";
 
 import * as path from "path";
 import { ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
+import { isSpace } from "../tool";
+
 
 
 class Position {
@@ -109,13 +111,41 @@ export {
 	Desc
 };
 
+/**
+ * 代替LineText表达在文档中为多行但实际中应视为单行的类
+ */
+export class MergeToken extends Range{
+    public readonly tokens:Token[] = [];
 
+    constructor() {
+        super()
+    }
+
+    public get start() : Position {
+		return new Position(this.tokens[0]?.start.line ?? 0, this.tokens[0]?.start.position ?? 0);
+	}
+
+	
+	public get end() : Position {
+		return new Position(this.tokens[this.tokens.length - 1]?.end.line ?? 0, this.tokens[this.tokens.length - 1]?.end.position ?? 0);
+	}
+}
 /**
  * 插件启动管理所有文件上下文
  */
 export class Context {
 
 	public filePath:string = "";
+
+	// public content:string = "";
+	// public nonBlockCommentContent:string = "";
+
+	// public lineTexts:LineText[] = [];
+	// /**
+	//  * 已经移除define行的linetexts
+	//  */
+	// public nonDefineLineTexts:LineText[] = [];
+
 
 }
 
@@ -399,7 +429,62 @@ class Declaration extends Node implements Descript {
 
 }
 
+/**
+ * new
+ */
+export class Define extends Declaration {
+	
+	public constructor(context:Context) {
+		super(context);
+	}
 
+	/**
+	 * 必须不为null
+	 */
+	public id:Identifier = null as any;
+	/**
+	 * 原生值
+	 * 使用getValue获取替换的值
+	 */
+	public value: string = "";
+
+	
+	public get origin(): string {
+		let origin = `#define ${this.id.name}`;
+		if (this.value) {
+			origin += " " + this.value;
+		}
+		return origin;
+
+	}
+
+	public name() : string {
+		return this.id.name;
+	}
+}
+
+export class GlobalObject {
+    public static readonly DEFINES: Define[] = [];
+  
+    public static addDefine(...defines: Define[]) {
+      defines.forEach(define => {
+        const defineIndex = this.DEFINES.findIndex(_define => _define.name() == define.name());
+        if (defineIndex == -1) {
+          this.DEFINES.push(define);
+        }
+      });
+    };
+    public static deleteDefine(defineName: string) {
+      const defineIndex = this.DEFINES.findIndex(_define => _define.name() == defineName);
+      if (defineIndex != -1) {
+        this.DEFINES.splice(defineIndex, 1);
+      }
+    }
+    public static getDefine(defineName: string) {
+      return this.DEFINES.find(_define => _define.name() == defineName);
+    }
+  }
+/*
 class TextMacroDefine extends Declaration {
 	
 	public constructor(context:Context) {
@@ -466,7 +551,7 @@ class TextMacroDefine extends Declaration {
 		return this.id.name;
 	}
 }
-
+*/
 type ModifierType = "private" | "public" | "default";
 
 /**
@@ -843,11 +928,11 @@ class BlockComment extends LineComment {
 
 }
 
-class Identifier extends Range {
-	public name: string;
+class Identifier extends Node {
+	public readonly name: string;
 
-	constructor(name: string = "") {
-		super();
+	constructor(context:Context, name: string = "") {
+		super(context);
 		this.name = name;
 	}
 
@@ -1009,10 +1094,7 @@ class Program extends Declaration {
 		super(context);
 	}
 
-	/**
-	 * @deprecated 使用source字段代替
-	 */
-	public filePath: string = "";
+
 
 	public readonly types: Type[] = [];
 	public readonly natives: Native[] = [];
@@ -1023,7 +1105,7 @@ class Program extends Declaration {
 	public readonly librarys: Library[] = [];
 	public readonly structs: Struct[] = [];
 
-	public readonly defines:TextMacroDefine[] = [];
+	// public readonly defines:TextMacroDefine[] = [];
 	public readonly textMacros: TextMacro[] = [];
 	public runTextMacros: RunTextMacro[] = [];
 
@@ -1243,8 +1325,91 @@ class Program extends Declaration {
 }
 
 export {
-	AstNode, Declaration, Program, TextMacroDefine
+	AstNode, Declaration, Program
 };
+
+/**
+ * 新的linetext
+ */
+export class LineText extends Node {
+
+    private text: string;
+
+    constructor(context:Context, text: string) {
+        super(context);
+        this.text = text;
+    }
+
+    // 是否空行
+    public isEmpty(): boolean {
+        return this.text.trimStart() === "";
+    }
+
+
+	private toTokens() {
+		return tokenize(this.text);
+	}
+
+	public get tokens():Token[] {
+		return this.toTokens();
+	}
+
+
+
+	/**
+	 * 
+	 * @param rel 没用,勿用
+	 * @returns 
+	 */
+    public getText(rel?:boolean): string {
+        // return rel ? this.replaceText() : this.text;
+        return this.text;
+    }
+
+    public setText(text: string): void {
+        this.text = text;
+    }
+
+    public lineNumber(): number {
+        return this.loc.start.line;
+    }
+
+    // 第一个字符下标
+    public firstCharacterIndex(): number {
+        let index = 0;
+        for (; index < this.text.length; index++) {
+            const char = this.text[index];
+            if (!isSpace(char)) {
+                return index;
+            }
+        }
+        return index;
+    }
+
+    public length(): number {
+        return this.text.length;
+    }
+
+    // public clone(): LineText {
+    //     return Object.assign(new LineText(this.context, this.getText()), this);
+    // }
+
+}
+
+export class Block extends Node {
+	public readonly name:string;
+	public readonly lineTexts:LineText[] = [];
+
+	constructor(context:Context, blockName: string, ...lineTexts:LineText[]) {
+        super(context);
+
+		this.name = blockName;
+
+		if (lineTexts) {
+			this.lineTexts = lineTexts;
+		}
+    }
+}
 
 
 

@@ -1,5 +1,5 @@
 import { isNewLine } from "../tool";
-import { Position } from "./ast";
+import { Context, Position } from "./ast";
 import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
 
 
@@ -80,14 +80,14 @@ import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser
 	return chars.join("");
 }
 
-function linesByIndexOf(content: string): LineText[] {
+function linesByIndexOf(context:Context, content: string): LineText[] {
     const LineTexts: LineText[] = [];
 
     for (let index = 0; index < content.length;) {
         const newLineIndex = content.indexOf("\n", index);
         const fieldText = content.substring(index, newLineIndex == -1 ? content.length : newLineIndex + 1);
 
-        LineTexts.push(new LineText(fieldText));
+        LineTexts.push(new LineText(context, fieldText));
 
         if (newLineIndex == -1) {
             break;
@@ -99,35 +99,35 @@ function linesByIndexOf(content: string): LineText[] {
     return LineTexts;
 }
 
-function linesBySplit(content: string): LineText[] {
-    const ls = content.split("\n");
+// function linesBySplit(content: string): LineText[] {
+//     const ls = content.split("\n");
 
-    const last = ls.pop();
+//     const last = ls.pop();
 
-    const lineTexts = ls.map(x => new LineText(x + "\n"));
+//     const lineTexts = ls.map(x => new LineText(x + "\n"));
 
-    if (last) {
-        lineTexts.push(new LineText(last));
-    }
+//     if (last) {
+//         lineTexts.push(new LineText(last));
+//     }
 
-    return lineTexts;
-}
+//     return lineTexts;
+// }
 
 /**
  * 
  * @param content 
  * @returns 
  */
-function lines(content: string): LineText[] {
+function lines(context:Context, content: string): LineText[] {
     // const funcs = [linesByIndexOf, linesBySplit];
     // return funcs[Math.floor(Math.random() * funcs.length)](content).map((lineText, index) => {
     //     lineText.start = new Position(index, 0);
     //     lineText.end = new Position(index, lineText.text.length);
     //     return lineText;
     // });
-    return linesByIndexOf(content).map((lineText, index) => {
-        lineText.start = new Position(index, 0);
-        lineText.end = new Position(index, lineText.getText().length);
+    return linesByIndexOf(context, content).map((lineText, index) => {
+        lineText.loc.start = new Position(index, 0);
+        lineText.loc.end = new Position(index, lineText.getText().length);
         return lineText;
     });
 }

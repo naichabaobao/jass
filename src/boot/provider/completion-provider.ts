@@ -14,7 +14,7 @@ import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition} from "./tool";
 import data, { DataGetter } from "./data";
-import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type } from "../jass/ast";
+import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type, GlobalObject } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
 import { Document, lexically } from "../check/mark";
@@ -274,14 +274,7 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
       code: type.origin
     })
   }));
-  // define 提示
-  items.push(...program.defines.map(define => {
-    return completionItem(define.id.name, {
-      code: define.origin,
-      source: program.source,
-      kind: vscode.CompletionItemKind.Module
-    });
-  }));
+
 
   if (isCurrent && position) {
     const findedFunc = program.getPositionFunction(convertPosition(position));
@@ -342,6 +335,18 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
     const fsPath = document.uri.fsPath;
 
     items.push(...keywordItems);
+
+    // define 提示
+    GlobalObject.DEFINES.forEach(define => {
+      console.log(define);
+      
+      items.push(completionItem(define.id.name, {
+        code: define.origin,
+        source: define.getContext().filePath,
+        kind: vscode.CompletionItemKind.Module
+      }));
+    });
+
 
     new DataGetter().forEach((program, filePath) => {
       items.push(...getItems(program, filePath, compare(fsPath, filePath), position))

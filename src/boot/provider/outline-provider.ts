@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { DataGetter, parseContent } from "./data";
-import { Program } from "../jass/ast";
+import { GlobalObject, Program } from "../jass/ast";
 import { Options } from "./options";
 
 function genSymbols(program:Program) {
@@ -233,11 +233,7 @@ function genSymbols(program:Program) {
         symbols.push(new vscode.DocumentSymbol(type.name, type.getContents().join(" "), vscode.SymbolKind.Object, range, selectRange));
     });
     
-    program.defines.forEach(define => {
-        const range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
-        let selectRange:vscode.Range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
-        symbols.push(new vscode.DocumentSymbol(define.name, define.value, vscode.SymbolKind.Key, range, selectRange));
-    });
+
     program.textMacros.forEach(textMacro => {
         const range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
         let selectRange:vscode.Range = new vscode.Range(textMacro.start.line, textMacro.start.position, textMacro.end.line, textMacro.end.position);
@@ -283,6 +279,13 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
         if (program) {
             
             const symbols = genSymbols(program);
+
+            GlobalObject.DEFINES.filter(define => define.getContext().filePath == document.uri.fsPath).forEach(define => {
+                const range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
+                let selectRange:vscode.Range = new vscode.Range(define.loc.start.line, define.loc.start.position, define.loc.end.line, define.loc.end.position);
+                symbols.push(new vscode.DocumentSymbol(define.name(), define.value, vscode.SymbolKind.Key, range, selectRange));
+            });
+
             return symbols;
         }
 

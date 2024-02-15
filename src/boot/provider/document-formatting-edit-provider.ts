@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import { Token, tokenize } from "../jass/tokens";
 import { Options } from "./options";
-import { Range } from "../jass/ast";
+import {  LineText, Range } from "../jass/ast";
+import { lines, removeComment } from "../jass/tool";
+import { DataGetter } from "./data";
 
 // Symbols that require spaces
 const NeedAddSpaceOps = ["=", ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "+=", "-=", "/=", "*=", "++", "--", "&&", "||", "{", "}", "!=", "==", "->"];
@@ -211,12 +213,24 @@ function conversionTokenStructure(tokens:Token[]):(Token|LRESpecialConstruct)[] 
   return results;
 }
 
-function formatLineText(lineText:vscode.TextLine) {
+function formatLineText(lineText:vscode.TextLine|LineText) {
   const textEdits = new Array<vscode.TextEdit>();
-  if (lineText.isEmptyOrWhitespace) {
+  const isEmptyOrWhitespace = () => {
+    if (lineText instanceof LineText) return lineText.isEmpty();
+    else return lineText.isEmptyOrWhitespace;
+  }
+  if (isEmptyOrWhitespace()) {
     return textEdits;
   }
-  const text = lineText.text;
+  const getText = () => {
+    if (lineText instanceof LineText) return lineText.getText();
+    else return lineText.text;
+  }
+  const lineNumber = (lineText:vscode.TextLine|LineText) => {
+    if (lineText instanceof LineText) return lineText.lineNumber();
+    else return lineText.lineNumber;
+  }
+  const text = getText();
   const ts = tokenize(text);
   const specialTokens = conversionTokenStructure(ts);
   specialTokens.reduce((previousValue, currentValue, currentIndex, list) => {
@@ -232,61 +246,61 @@ function formatLineText(lineText:vscode.TextLine) {
       if (currentValue.value == ",") { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       }
       else if (previousValue.value == "-" && (!list[currentIndex - 2] || (list[currentIndex - 2] && list[currentIndex - 2] instanceof Token && !isValue(<Token>list[currentIndex - 2])))) { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       }
       else if (isSpecialDBOp() && currentValue.value == ".") { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       }
       else if (isSpecialDBOp() && previousValue.value == ".") { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       } 
       else if (isSpecialDBOp() && ((currentValue.value == "-" && previousValue.value == "-") || (currentValue.value == "+" && previousValue.value == "+"))) { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           ), " "));
         }
       } else if (currentValue.value == "(" && previousValue.isId()) {
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       } else if (currentValue.value == "[" && previousValue.isId()) {
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       } else if (previousValue.value == "(" || currentValue.value == ")" || previousValue.value == "[" || currentValue.value == "]") {
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       } else if (
@@ -307,50 +321,50 @@ function formatLineText(lineText:vscode.TextLine) {
       ) { // 前面为--时  或  后面为--时
         if (currentValue.start.position - previousValue.end.position > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
       } else if (currentValue.isOp()) {
         if (currentValue.position - previousValue.end.position != 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           ), " "));
         }
       } else {
         if (currentValue.position - previousValue.end.position != 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-            new vscode.Position(lineText.lineNumber, previousValue.end.position),
-            new vscode.Position(lineText.lineNumber, currentValue.position)
+            new vscode.Position(lineNumber(lineText), previousValue.end.position),
+            new vscode.Position(lineNumber(lineText), currentValue.position)
           ), " "));
         }
       }
     }else if (currentValue instanceof Token) { // 自身不是特殊结构 前面是
       if (currentValue.start.position - previousValue.end.position != 1) {
         textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-          new vscode.Position(lineText.lineNumber, previousValue.end.position),
-          new vscode.Position(lineText.lineNumber, currentValue.start.position)
+          new vscode.Position(lineNumber(lineText), previousValue.end.position),
+          new vscode.Position(lineNumber(lineText), currentValue.start.position)
         ), " "));
       }
     } else if (currentValue instanceof LRESpecialConstruct) {// 自身是特殊结构 前面随意
       if (currentValue.start.position - previousValue.end.position != 1) {
         textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-          new vscode.Position(lineText.lineNumber, previousValue.end.position),
-          new vscode.Position(lineText.lineNumber, currentValue.start.position)
+          new vscode.Position(lineNumber(lineText), previousValue.end.position),
+          new vscode.Position(lineNumber(lineText), currentValue.start.position)
         ), " "));
       }
       if (currentValue.token2.start.position - currentValue.token1.end.position > 0) {
         textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-          new vscode.Position(lineText.lineNumber, currentValue.token1.end.position),
-          new vscode.Position(lineText.lineNumber, currentValue.token2.start.position)
+          new vscode.Position(lineNumber(lineText), currentValue.token1.end.position),
+          new vscode.Position(lineNumber(lineText), currentValue.token2.start.position)
         )));
 
       }
       if (currentValue.token3.start.position - currentValue.token2.end.position > 0) {
         textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-          new vscode.Position(lineText.lineNumber, currentValue.token2.end.position),
-          new vscode.Position(lineText.lineNumber, currentValue.token3.start.position)
+          new vscode.Position(lineNumber(lineText), currentValue.token2.end.position),
+          new vscode.Position(lineNumber(lineText), currentValue.token3.start.position)
         )));
       }
     }
@@ -390,6 +404,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       }
       return true;
     }
+
     // 在interface中没有结束标记
     let inInterface:boolean = false;
     for (let line = 0; line < document.lineCount; line++) {
@@ -473,157 +488,17 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     if (!Options.isFormatv2) { // 版本1
       console.time("format1");
 
-      for (let line = 0; line < document.lineCount; line++) {
-        const lineText = document.lineAt(line);
+      const nonBlockCommentContent = removeComment(document.getText(), false);
+      const lineTexts = lines(new DataGetter().get(document.uri.fsPath)?.getContext()!, nonBlockCommentContent);
+
+      for (let line = 0; line < lineTexts.length; line++) {
+        const lineText = /*document.lineAt(line);*/lineTexts[line];
 
         textEdits.push(...formatLineText(lineText));
 
         continue;
 
-        if (lineText.isEmptyOrWhitespace) {
-          continue;
-        }
-        const text = lineText.text;
-        const ts = tokenize(text);
-        const specialTokens = conversionTokenStructure(ts);
-        specialTokens.reduce((previousValue, currentValue, currentIndex, list) => {
-          if (previousValue instanceof Token && currentValue instanceof Token) {
-            // If the current location is the symbol specified by needaddspaceops
-            // Judge whether a space should be added to the relationship between the current symbol and the previous symbol
-            // if (currentValue.isOp() && previousValue.isOp() && array[currentIndex + 1]?.isOp() && currentValue.value == "]" && previousValue.value == "[" && array[currentIndex + 1]?.value == "=") { // 特殊情况 譬如 method operation []= 这种情况  当前位置在 ']'
-            //   console.log("特殊情况");
-              
-            // }
-            // else 
-            // if (currentValue.isOp()/* && NeedAddSpaceOps.includes(currentValue.value) */&& (previousValue.isId() || previousValue.isInt() || previousValue.isReal() || previousValue.isString() || previousValue.isMark() || previousValue.value == ")" || previousValue.value == "]")) {
-            if (currentValue.value == ",") { // Add only one space to the right of the symbol
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            }
-            else if (previousValue.value == "-" && (!list[currentIndex - 2] || (list[currentIndex - 2] && list[currentIndex - 2] instanceof Token && !isValue(<Token>list[currentIndex - 2])))) { // Add only one space to the right of the symbol
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            }
-            else if (isSpecialDBOp() && currentValue.value == ".") { // Add only one space to the right of the symbol
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            }
-            else if (isSpecialDBOp() && previousValue.value == ".") { // Add only one space to the right of the symbol
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            } 
-            else if (isSpecialDBOp() && ((currentValue.value == "-" && previousValue.value == "-") || (currentValue.value == "+" && previousValue.value == "+"))) { // Add only one space to the right of the symbol
-              if (currentValue.start.position - previousValue.end.position > 1) {
-                textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                ), " "));
-              }
-            } else if (currentValue.value == "(" && previousValue.isId()) {
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            } else if (currentValue.value == "[" && previousValue.isId()) {
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            } else if (previousValue.value == "(" || currentValue.value == ")" || previousValue.value == "[" || currentValue.value == "]") {
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            } else if (
-              isSpecialDBOp() && 
-              (
-                (
-                  (previousValue.value == "-" && list[currentIndex - 2] && list[currentIndex - 2].value == "-")
-                  ||
-                  (currentValue.value == "-" && list[currentIndex + 1] && list[currentIndex + 1].value == "-")
-                )
-                ||
-                (
-                  (previousValue.value == "+" && list[currentIndex - 2] && list[currentIndex - 2].value == "+")
-                  ||
-                  (currentValue.value == "+" && list[currentIndex + 1] && list[currentIndex + 1].value == "+")
-                )
-              )
-            ) { // 前面为--时  或  后面为--时
-              if (currentValue.start.position - previousValue.end.position > 0) {
-                textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                )));
-              }
-            } else if (currentValue.isOp()) {
-              if (currentValue.position - previousValue.end.position != 1) {
-                textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                ), " "));
-              }
-            } else {
-              if (currentValue.position - previousValue.end.position != 1) {
-                textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                  new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                  new vscode.Position(lineText.lineNumber, currentValue.position)
-                ), " "));
-              }
-            }
-          }else if (currentValue instanceof Token) { // 自身不是特殊结构 前面是
-            if (currentValue.start.position - previousValue.end.position != 1) {
-              textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                new vscode.Position(lineText.lineNumber, currentValue.start.position)
-              ), " "));
-            }
-          } else if (currentValue instanceof LRESpecialConstruct) {// 自身是特殊结构 前面随意
-            if (currentValue.start.position - previousValue.end.position != 1) {
-              textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, previousValue.end.position),
-                new vscode.Position(lineText.lineNumber, currentValue.start.position)
-              ), " "));
-            }
-            if (currentValue.token2.start.position - currentValue.token1.end.position > 0) {
-              textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, currentValue.token1.end.position),
-                new vscode.Position(lineText.lineNumber, currentValue.token2.start.position)
-              )));
-
-            }
-            if (currentValue.token3.start.position - currentValue.token2.end.position > 0) {
-              textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-                new vscode.Position(lineText.lineNumber, currentValue.token2.end.position),
-                new vscode.Position(lineText.lineNumber, currentValue.token3.start.position)
-              )));
-            }
-          }
-
-          return currentValue;
-        })
+        
       }
       console.timeEnd("format1");
     } else {
