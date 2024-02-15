@@ -1415,39 +1415,42 @@ globals
     integer min_creeps              = -1
     // 最大野怪（中立敌对玩家单位）等级，默认-1
     integer max_creeps              = -1
-    // 是否允许AI开设第一座基地
+    // 允许AI开设第一座基地标识，默认为是
     boolean harvest_town1           = true
-    // 是否允许AI开设第二座基地
+    // 允许AI开设第二座基地标识，默认为是
     boolean harvest_town2           = true
-    // 是否允许AI开设第三座基地
+    // 允许AI开设第三座基地标识，默认为是
     boolean harvest_town3           = true
-    // 是否启用战役人口建筑建造模式，默认为是
-    // 官方仅在战役功能中使用
+    // 战役人口建筑建造模式标识，默认为是
+    // 官方仅在战役功能中使用，未使用时无影响
     boolean do_campaign_farms       = true
-    // 二发英雄是否存在，默认为否
+    // 二发英雄已训练标识，默认为否
     boolean two_heroes              = false
-    // 是否允许获取飞行野怪（中立敌对玩家单位），默认为否
-    boolean allow_air_creeps        = false
-    // 是否攻击分矿的野怪（中立敌对玩家单位），默认为否
+    // 允许获取飞行野怪（中立敌对玩家单位）标识，默认为否
     // 攻击线程会自动设置
+    boolean allow_air_creeps        = false
+    // 攻击分矿的野怪（中立敌对玩家单位）标识，默认为否
+    // 开矿功能和攻击线程会自动设置
     boolean take_exp                = false
-    // 多用于退出自杀等待，默认为否
+    // 允许忽略信号标识，默认为否
+    // 官方多用于退出自杀等待，且与接受到指定触发器命令同时使用
     boolean allow_signal_abort      = false
-    // 是否已完成飞艇购买，默认为是
+    // 已完成飞艇购买标识，默认为真
+    // 攻击线程会自动设置
     boolean ready_for_zeppelin      = true
-    // 是否允许购买飞艇，默认为否
+    // 允许购买飞艇标识，默认为否
     boolean get_zeppelin            = false
-    // 是否建造战役进攻单位，默认为是
+    // 建造战役进攻单位标识，默认为真
     // 官方仅在战役功能中使用
     boolean build_campaign_attackers = true
-    // 开发调试开关，默认为否
+    // 开发调试开关，默认为关
     boolean do_debug_cheats         = false
-    // 是否在游戏中显示 Trace 文本，默认为是
-    // 开启后可用于调试，只需要调用对应的 Trace 发送指定文本即可
+    // 显示 Trace 文本标识，默认为是
+    // 开启时可用于调试，只需要调用对应的 Trace 发送指定文本即可
     boolean trace_on                = true
-    // 是否允许飞艇空投，默认为否
+    // 允许飞艇空投标识，默认为否
     boolean zep_next_wave           = false
-    // 是否允许攻击组组建超时，默认为是
+    // 允许攻击组组建超时标识，默认为是
     boolean form_group_timeouts     = true
 endglobals
 
