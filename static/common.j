@@ -4690,6 +4690,7 @@ native GroupTargetOrderById takes group whichGroup, integer order, widget target
 native ForGroup takes group whichGroup, code callback returns nothing
 // 获取单位组中第一个单位
 // 在单位组内单位未发生变化时(添加或移除单位)，单位的排序不会发生变化，即每次获取的都是同一个单位
+// 当单位组内某个单位因死亡或删除后被系统自动置null后，排在该单位之后的单位无法在使用该命令获取，建议清空单位组并重新选取单位
 native FirstOfGroup takes group whichGroup returns unit
 
 
