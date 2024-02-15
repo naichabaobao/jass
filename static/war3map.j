@@ -43,9 +43,9 @@ endfunction
 
 //===========================================================================
 
-// 创建地图初始单位-中立敌对（默认为野怪等）
-// 同时会设置单位皮肤（1.32＋）、对战颜色和默认掉落物品（如有）
-// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
+// 创建地形编辑器放置的单位-中立敌对玩家单位及建筑（即野怪，不含触发器或自定义代码创建的单位）
+// 同时会设置单位皮肤（1.32＋）、对战颜色和掉落物品（如有）
+// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置（按地形编辑器的掉落设置）
 function CreateNeutralHostile takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_AGGRESSIVE)
     local unit u
@@ -57,9 +57,9 @@ endfunction
 
 //===========================================================================
 
-// 创建地图初始单位-中立被动建筑（默认为金矿、商店、酒馆等）
-// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
-// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
+// 创建地形编辑器放置的单位-中立被动玩家建筑（如金矿、商店、酒馆等，不含触发器或自定义代码创建的建筑）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和掉落物品（如有）
+// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置（按地形编辑器的掉落设置）
 function CreateNeutralPassiveBuildings takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_PASSIVE)
     local unit u
@@ -71,9 +71,9 @@ endfunction
 
 //===========================================================================
 
-// 创建地图初始单位-中立被动单位（默认为小动物、野怪的房子等）
-// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
-// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
+// 创建地形编辑器放置的单位-中立被动玩家单位（如小动物、野怪的房子等，不含触发器或自定义代码创建的单位）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和掉落物品（如有）
+// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置（按地形编辑器的掉落设置）
 function CreateNeutralPassive takes nothing returns nothing
     local player p = Player(PLAYER_NEUTRAL_PASSIVE)
     local unit u
@@ -85,24 +85,24 @@ endfunction
 
 //===========================================================================
 
-// 创建地图初始单位-玩家建筑（默认无单位）
-// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
-// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
+// 创建地形编辑器放置的单位-非中立玩家建筑（不含触发器或自定义代码创建的建筑，默认无建筑）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和掉落物品（如有）
+// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置（按地形编辑器的掉落设置）
 function CreatePlayerBuildings takes nothing returns nothing
 endfunction
 
 //===========================================================================
 
-// 创建地图初始单位-玩家单位（默认无单位）
-// 同时会设置单位皮肤（1.32＋）、队伍颜色和默认掉落物品（如有）
-// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置
+// 创建地形编辑器放置的单位–非中立玩家单位（不含触发器或自定义代码创建的单位，默认无单位）
+// 同时会设置单位皮肤（1.32＋）、队伍颜色和掉落物品（如有）
+// 掉落会以 UnitXXXXXX_DropItems 命名的触发器动作设置（按地形编辑器的掉落设置）
 function CreatePlayerUnits takes nothing returns nothing
 endfunction
 
 //===========================================================================
 
-// 初始化地图单位
-// 唤起创建中立被动建筑、创建玩家建筑、创建中立敌对单位、创建中立被动单位、创建玩家单位5个触发器
+// 初始化地形编辑器放置的单位/建筑及掉落物品（不含触发器或自定义代码创建单位和建筑，物品按地形编辑器的掉落设置）
+// 包括中立敌对玩家单位及建筑、中立被动玩家建筑、中立被动玩家单位、非中立玩家建筑、非中立玩家单位
 function CreateAllUnits takes nothing returns nothing
     call CreateNeutralPassiveBuildings(  )
     call CreatePlayerBuildings(  )
