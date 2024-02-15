@@ -4374,15 +4374,14 @@ constant native MathRound takes real r returns integer
 // 转换整数成实数
 native I2R takes integer i returns real
 // 转换实数成整数(大于0时向下取整，小于0时向上取整)
-// 7.x 返回  7
-//-7.x 返回 -7
+// 7.x 返回 7，-7.x 返回 -7
 native R2I takes real r returns integer
 // 转换整数成字符串
 native I2S takes integer i returns string
 // 转换实数成字符串
 native R2S takes real r returns string
 // 转换实数成字符串
-//@param precision 保留的小数位数
+// @param precision 保留的小数位数
 native R2SW takes real r, integer width, integer precision returns string
 // 转换字符串成整数
 native S2I takes string s returns integer
@@ -4587,7 +4586,7 @@ native PauseTimer takes timer whichTimer returns nothing
 // 恢复计时器(计时) [R]
 native ResumeTimer takes timer whichTimer returns nothing
 // 获取到期的计时器
-// 与TimerStart一同使用
+// 与 TimerStart 一同使用
 native GetExpiredTimer takes nothing returns timer
 
 
@@ -4646,12 +4645,12 @@ native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
-// @deprecated
+// @deprecated 弃用函数
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
-// @deprecated
+// @deprecated 弃用函数
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家选择的单位添加到单位组
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
@@ -5366,14 +5365,14 @@ native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待实际时间(指定时间)
 native TriggerSleepAction takes real timeout returns nothing
 // 等到指定音效结束前N秒（指定时间）
-// 弃用函数 @deprecated
+// @deprecated 弃用函数
 native TriggerWaitForSound takes sound s, real offset returns nothing
 // 判断触发器条件是否满足
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 native TriggerExecute takes trigger whichTrigger returns nothing
 // 等待运行触发器 (忽略条件)
-// @deprecated
+// @deprecated 弃用函数
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
 native TriggerSyncStart takes nothing returns nothing
@@ -6209,7 +6208,7 @@ native RestartGame takes boolean doScoreScreen returns nothing
 // 重新读档(当前存档或最新的检查点(自动)存档)
 native ReloadGame takes nothing returns nothing
 // 设置战役菜单种族
-// @deprecated "此方法不建议使用,应使用SetCampaignMenuRaceEx代替"
+// @deprecated 弃用函数，"此方法不建议使用,应使用SetCampaignMenuRaceEx代替"
 // %%% SetCampaignMenuRace is deprecated.  It must remain to support
 // old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 native SetCampaignMenuRace takes race r returns nothing
@@ -6219,7 +6218,7 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 native ForceCampaignSelectScreen takes nothing returns nothing
 
 // 加载存档(手动选择存档)
-// @param doScoreScreen 是否跳过得分屏
+// @param doScoreScreen （游戏结束后）是否跳过得分屏，常用于战役地图
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
@@ -6810,10 +6809,10 @@ native QuestSetCompleted takes quest whichQuest, boolean completed returns nothi
 native QuestSetDiscovered takes quest whichQuest, boolean discovered returns nothing
 // 设置任务是否失败
 native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
-// 开启/关闭 任务 [R]
+// 开启/关闭 指定任务 [R]
 native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
-// 查询任务是否必须完成
+// 查询任务是否必须完成（主线任务）
 native IsQuestRequired takes quest whichQuest returns boolean
 // 查询任务是否已完成
 native IsQuestCompleted takes quest whichQuest returns boolean
