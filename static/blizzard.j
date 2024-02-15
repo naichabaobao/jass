@@ -48,11 +48,11 @@ globals
     constant real bj_TEXT_DELAY_ITEMACQUIRED = 10.00
     // 文本显示延时 - 警告，默认12.00
     constant real bj_TEXT_DELAY_WARNING = 12.00
-    // 任务延时 - 任务，默认5.00
+    // 任务显示延时 - 探索，默认5.00
     constant real bj_QUEUE_DELAY_QUEST = 5.00
-    // 任务延时 - 任务提示，默认5.00
+    // 任务显示延时 - 提示，默认5.00
     constant real bj_QUEUE_DELAY_HINT = 5.00
-    // 任务延时 - 任务秘密，默认3.00
+    // 任务显示延时 - 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
     // 生命障碍 - 简单，默认60.00
     constant real bj_HANDICAP_EASY = 60.00
