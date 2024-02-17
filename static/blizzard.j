@@ -6387,7 +6387,7 @@ function PlayersAreCoAllied takes player playerA, player playerB returns boolean
     return false
 endfunction
 
-// 设置AI玩家向盟友共享视野与单位控制权
+// 设置AI玩家向AI盟友共享视野与单位控制权
 // Force (whichPlayer) AI player to share vision and advanced unit control 
 // with all AI players of its allies.
 function ShareEverythingWithTeamAI takes player whichPlayer returns nothing
