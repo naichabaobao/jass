@@ -1506,19 +1506,19 @@ globals
 	// 玩家单位事件 出售单位
 	constant playerunitevent EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
 	// 玩家单位事件 变更所属
- constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
- constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
 	// 玩家单位事件 准备施放技能 (前摇开始)
- constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
 	// 玩家单位事件 开始施放技能(前摇结束)
- constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
 	// 玩家单位事件 发动技能效果(后摇开始)
- constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
 	// 玩家单位事件 释放技能結束 (后摇结束)
- constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 	// 玩家单位事件 停止施放技能
- constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
 	// 玩家单位事件 抵押(卖)物品
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位事件 堆叠物品
@@ -5149,7 +5149,7 @@ constant native GetManipulatingUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatedItem takes nothing returns item
-	
+
 
 // 事件响应 获取被拾取物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
