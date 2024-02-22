@@ -245,5 +245,18 @@ class MarkCodeDefinitionProvider implements vscode.DefinitionProvider {
 
 }
 
-vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
+// vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
+
+
+// vscode.languages.registerDocumentLinkProvider("jass", new class A implements vscode.DocumentLinkProvider {
+//   provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink[]> {
+//     const a = new vscode.DocumentLink(new vscode.Range(0,0, 0, 10), document.uri);
+//     a.tooltip = "jobnobb";
+//     return [a];
+//   }
+//   // resolveDocumentLink?(link: vscode.DocumentLink, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink> {
+//   //   throw new Error('Method not implemented.');
+//   // }
+  
+// }())
 

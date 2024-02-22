@@ -31,6 +31,7 @@ import { DataGetter } from './data';
 import { Options } from './options';
 import { Document } from '../check/mark';
 import { flow } from '../check/ast';
+import { checkAll } from '../../extern/anomaly';
 
 const diagnosticCollection = vscode.languages.createDiagnosticCollection("jass");
 
@@ -99,9 +100,17 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 				const range = new vscode.Range(new vscode.Position(err.loc.start.line, err.loc.start.position), new vscode.Position(err.loc.end.line, err.loc.end.position));
 				diagnostics.push(new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error));
 			});
-			diagnosticCollection.set(document.uri, diagnostics);
-
 			
+
+			checkAll(document.getText()).forEach(obj => {
+				
+				const range = new vscode.Range(new vscode.Position(obj.line.line, 0), new vscode.Position(obj.line.line, obj.line.end));
+				obj.errors.forEach(error => {				
+					diagnostics.push(new vscode.Diagnostic(range, error.message, vscode.DiagnosticSeverity.Error));
+				})
+			});
+
+			diagnosticCollection.set(document.uri, diagnostics);
 		}
 	}
 });

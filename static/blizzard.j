@@ -1,7 +1,7 @@
 
 // Blizzard.j ( define Jass2 functions that need to be in every map script )
 
-
+ 
 globals
     //-----------------------------------------------------------------------
     // Constants
@@ -6618,8 +6618,6 @@ endfunction
 // 游戏胜利对话框事件-继续
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
-        call 
-        (false)
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif

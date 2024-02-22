@@ -66,10 +66,6 @@
           "type": "string",
           "description": "自定义war3map.j(reboot)"
         },
-        //"jass.ObjectEditor": {
-          //"type": "string",
-          //"description": "(Deprecation) 自定义ObjectEditor.j(reboot)"
-        //},
         "jass.includes": {
           "type": "array",
           "items": {
@@ -135,6 +131,11 @@
           "type": "boolean",
           "default": false,
           "description": "(Deprecation) number prompt support"
+        },
+        "jass.diagnostic": {
+          "type": "boolean",
+          "default": false,
+          "description": "(Test) diagnostic support"
         }
       }
     },
@@ -168,11 +169,14 @@
       }
     ],
     "documentFormattingProvider": true,
-    "enableProposedApi": false
+    "enableProposedApi": false,
+    "codeLensProvider": {
+      "resolveProvider": "true"
+    }
   },
-  "capabilities" : {
-    "documentSymbolProvider" : "true",
-    "workspaceSymbolProvider" : "true"
+  "capabilities": {
+    "documentSymbolProvider": "true",
+    "workspaceSymbolProvider": "true"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -187,6 +191,7 @@
     "test:dev": "tsc && node ./out/test/test.js"
   },
   "devDependencies": {
+    "@babel/parser": "^7.23.9",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
@@ -199,6 +204,9 @@
     "url": "https://github.com/naichabaobao/jass/issues"
   },
   "dependencies": {
+    "@babel/parser": "^7.23.9",
+    "@babel/types": "^7.23.9",
+    "babel": "^6.23.0",
     "glob": "^7.1.1"
   },
   "author": "家猫hoo",
