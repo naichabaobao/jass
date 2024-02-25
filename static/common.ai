@@ -276,9 +276,11 @@ native CaptainAttack        takes real x, real y                        returns 
 native CaptainVsUnits       takes player id                             returns nothing
 // 发布攻击组攻击命令（指定玩家）
 native CaptainVsPlayer      takes player id                             returns nothing
-// 发布攻击组回家命令
+// 发布攻击组回家命令（实际是发送移动/AI移动命令）
+// 家大概率是指出生点
 native CaptainGoHome        takes nothing                               returns nothing
 // 查询攻击组是否在家
+// 家大概率是指出生点
 native CaptainIsHome        takes nothing                               returns boolean
 // 查询攻击组是否满血
 native CaptainIsFull        takes nothing                               returns boolean
