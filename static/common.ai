@@ -923,7 +923,7 @@ globals
     constant integer UPG_EXHUME         = 'Ruex'
     // 科技 牺牲（不死族）（测试版内容，正式版无此科技 'Rurs'）
     constant integer UPG_SACRIFICE      = 'Rurs'
-    // 科技 疑似憎恶自爆（不死族）（测试版内容，正式版无此科技 'Ruax'）
+    // 科技 尸爆（不死族）（测试版内容，正式版无此科技 'Ruax'）
     constant integer UPG_ABOM_EXPL      = 'Ruax'
     // 科技 生物甲壳
     constant integer UPG_CR_ARMOR       = 'Rucr'
