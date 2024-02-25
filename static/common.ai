@@ -478,9 +478,9 @@ globals
     constant integer CANNON_TOWER       = 'hctw'
     // 城堡（人族三本基地）
     constant integer CASTLE             = 'hcas'
-    // 圣塔（人族）（编辑器无此单位 'htws'）
+    // 心灵圣所（人族）（早期测试版内容，正式版无此单位 'htws'）
     constant integer CHURCH             = 'htws'
-    // 圣塔（人族）（编辑器无此单位 'htws'）
+    // 心灵圣所（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer MAGE_TOWER         =  CHURCH
     // 防御塔（人族）
     constant integer GUARD_TOWER        = 'hgtw'
@@ -513,11 +513,11 @@ globals
     constant integer UPG_MELEE          = 'Rhme'
     // 科技 黑火药
     constant integer UPG_RANGED         = 'Rhra'
-    // 科技 炮兵（人族）（编辑器无此科技 'Rhaa'）
+    // 科技 炮兵（人族）（测试版内容，正式版无此科技 'Rhaa'）
     constant integer UPG_ARTILLERY      = 'Rhaa'
     // 科技 钢铁装甲
     constant integer UPG_ARMOR          = 'Rhar'
-    // 科技 黄金（人族）（编辑器无此科技 'Rhmi'）
+    // 科技 黄金（人族）（测试版内容，正式版无此科技 'Rhmi'）
     constant integer UPG_GOLD           = 'Rhmi'
     // 科技 改良石工技术/加强型石工技术
     constant integer UPG_MASONRY        = 'Rhac'
@@ -539,7 +539,7 @@ globals
     constant integer UPG_WOOD           = 'Rhlh'
     // 科技 魔法岗哨
     constant integer UPG_SENTINEL       = 'Rhse'
-    // 科技 散射（人族）（编辑器无此科技 'Rhsr'）
+    // 科技 散射（人族）（测试版内容，正式版无此科技 'Rhsr'）
     constant integer UPG_SCATTER        = 'Rhsr'
     // 科技 飞行器炸弹
     constant integer UPG_BOMBS          = 'Rhgb'
@@ -615,7 +615,7 @@ globals
 
     // orc units
 
-    // 兽族步兵（编辑器无此单位 'oang'）
+    // 兽族步兵（测试版内容，正式版无此单位 'oang'）
     constant integer GUARDIAN           = 'oang'
     // 投石车
     constant integer CATAPULT           = 'ocat'
@@ -679,7 +679,7 @@ globals
     constant integer UPG_ORC_MELEE      = 'Rome'
     // 科技 精钢远程武器
     constant integer UPG_ORC_RANGED     = 'Rora'
-    // 科技 火炮（兽族）（编辑器无此科技 'Roaa'）
+    // 科技 火炮（兽族）（测试版内容，正式版无此科技 'Roaa'）
     constant integer UPG_ORC_ARTILLERY  = 'Roaa'
     // 科技 精钢护甲
     constant integer UPG_ORC_ARMOR      = 'Roar'
@@ -862,7 +862,7 @@ globals
     constant integer UNDEAD_ALTAR       = 'uaod'
     // 埋骨地
     constant integer BONEYARD           = 'ubon'
-    // 某种尖塔（不死族）（编辑器无此单位 'ugsp'）
+    // 某种尖塔（不死族）（测试版内容，正式版无此单位 'ugsp'）
     constant integer GARG_SPIRE         = 'ugsp'
     // 浮空城（大墓地）
     constant integer NECROPOLIS_1       = 'unpl'    // normal
@@ -903,7 +903,7 @@ globals
     constant integer UPG_GHOUL_FRENZY   = 'Rugf'
     // 科技 蛛网
     constant integer UPG_FIEND_WEB      = 'Ruwb'
-    // 科技 疑似与憎恶相关（不死族）（编辑器无此科技'Ruab'）
+    // 科技 疑似与憎恶相关（不死族）（测试版内容，正式版无此科技 'Ruab'）
     constant integer UPG_ABOM           = 'Ruab'
     // 科技 石像形态
     constant integer UPG_STONE_FORM     = 'Rusf'
@@ -921,9 +921,9 @@ globals
     constant integer UPG_SKEL_MASTERY   = 'Rusm'
     // 科技 发掘尸体
     constant integer UPG_EXHUME         = 'Ruex'
-    // 科技 牺牲（不死族）（编辑器无此科技'Rurs'）
+    // 科技 牺牲（不死族）（测试版内容，正式版无此科技 'Rurs'）
     constant integer UPG_SACRIFICE      = 'Rurs'
-    // 科技 疑似憎恶自爆（不死族）（编辑器无此科技'Ruax'）
+    // 科技 疑似憎恶自爆（不死族）（测试版内容，正式版无此科技 'Ruax'）
     constant integer UPG_ABOM_EXPL      = 'Ruax'
     // 科技 生物甲壳
     constant integer UPG_CR_ARMOR       = 'Rucr'
@@ -1074,7 +1074,7 @@ globals
     constant integer ANCIENT_PROTECT    = 'etrp'
     // 长者祭坛
     constant integer ELF_ALTAR          = 'eate'
-    // 熊窝（暗夜精灵族）（编辑器无此单位）
+    // 熊窝（暗夜精灵族）（测试版内容，正式版无此单位 'edol'）
     constant integer BEAR_DEN           = 'edol'
     // 奇美拉栖木
     constant integer CHIMAERA_ROOST     = 'edos'
