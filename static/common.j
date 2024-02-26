@@ -1272,14 +1272,14 @@ globals
 	
 	
 	// 玩家单位事件 单位被攻击
- constant playerunitevent EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
 	// 玩家单位事件 单位被营救
- constant playerunitevent EVENT_PLAYER_UNIT_RESCUED = ConvertPlayerUnitEvent(19)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_RESCUED = ConvertPlayerUnitEvent(19)
 	
 	// 玩家单位事件 单位死亡
- constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
 	// 玩家单位事件 单位(尸体)开始腐烂
- constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
+ 	constant playerunitevent EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
 	// 玩家单位事件 单位可侦测（可被反隐看到）
 	constant playerunitevent EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
 	// 玩家单位事件 单位被隐藏
@@ -1433,7 +1433,7 @@ globals
 	constant unitevent EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
 	// 单位事件 掉落物品
 	constant unitevent EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
-	// 单位事件 拾取物品
+	// 单位事件 获得/拾取物品
 	constant unitevent EVENT_UNIT_PICKUP_ITEM = ConvertUnitEvent(86)
 	// 单位事件 使用物品
 	constant unitevent EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
