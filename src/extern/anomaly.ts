@@ -1,6 +1,9 @@
-import { parse, parseExpression } from "@babel/parser"
+// import { parse, parseExpression } from "@babel/parser"
 import { tokenize } from "../boot/jass/tokens";
 import { Position, Range } from "../boot/jass/ast";
+
+// const {parse, parseExpression} = require("./index")
+import { parse, parseExpression } from "./index";
 
 function parseExpressionPlus(content: string) {
     const replaceContent = content.replace(/\band\b/g, "&&").replace(/\bor\b/g, "||").replace(/\bnot\b/g, " ! ");
@@ -781,6 +784,7 @@ function checkLocal(content: string): ErrorMessage[] {
                 });
             }
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Error local expression {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -824,6 +828,7 @@ function checkGlobal(content: string): ErrorMessage[] {
                 });
             }
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Error global expression {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -863,6 +868,7 @@ function checkSet(content: string): ErrorMessage[] {
         }
         if (result.groups["indexExpr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["indexExpr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Set expression index expression error {${result.groups!["indexExpr"].trim()}}, ${error.reasonCode}!`
@@ -876,6 +882,7 @@ function checkSet(content: string): ErrorMessage[] {
         }
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Set expression  error {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -908,6 +915,7 @@ function checkIf(content: string): ErrorMessage[] {
     if (result && result.groups) {
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `If conditional expression is incorrect {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -940,6 +948,7 @@ function checkElseIf(content: string): ErrorMessage[] {
     if (result && result.groups) {
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `If conditional expression is incorrect {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -972,6 +981,7 @@ function checkExitwhen(content: string): ErrorMessage[] {
     if (result && result.groups) {
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Exitwhen conditional expression is incorrect {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -1007,6 +1017,7 @@ function checkCall(content: string): ErrorMessage[] {
     if (result && result.groups) {
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Function call error {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`
@@ -1038,6 +1049,7 @@ function checkReturn(content: string): ErrorMessage[] {
     if (result && result.groups) {
         if (result.groups["expr"]) {
             try {
+                // @ts-ignore
                 parseExpressionPlus(result.groups["expr"].trim()).errors.forEach(error => {
                     errorMessages.push({
                         message: `Return error {${result.groups!["expr"].trim()}}, ${error.reasonCode}!`

@@ -1,13 +1,1 @@
-.vscode/**
-.vscode-test/**
-out/test/**
-out/temp/**
-# node_modules
-
-.gitignore
-**/tslint.json
-**/*.map
-**/*.ts
-
 *.vsix
-*.json

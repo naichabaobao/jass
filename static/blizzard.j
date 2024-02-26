@@ -6621,7 +6621,7 @@ function CustomVictoryOkBJ takes nothing returns nothing
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
-
+ 
     if(bj_changeLevelMapName == null) then
         call EndGame(bj_changeLevelShowScores)
     else

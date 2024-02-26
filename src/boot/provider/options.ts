@@ -2,7 +2,8 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import { isAiFile, isJFile, isUsableFile, readIgnoreRules, resolvePaths } from "../tool";
-import { glob } from "glob";
+
+var glob = require("glob");
 
 
 

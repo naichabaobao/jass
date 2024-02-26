@@ -245,7 +245,7 @@ class MarkCodeDefinitionProvider implements vscode.DefinitionProvider {
 
 }
 
-// vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
+vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
 
 
 // vscode.languages.registerDocumentLinkProvider("jass", new class A implements vscode.DocumentLinkProvider {
