@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.13",
+  "version": "1.8.15",
   "keywords": [
     "jass",
     "vjass",
@@ -12,7 +12,7 @@
     "warcraft"
   ],
   "engines": {
-    "vscode": "^1.49.3"
+    "vscode": "^1.63.1"
   },
   "markdown": "github",
   "categories": [
@@ -186,6 +186,7 @@
     "test": "node ./out/test/runTest.js",
     "build": "vsce package",
     "publish": "vsce publish",
+    "publish-nd": "vsce publish  --no-dependencies",
     "temp": "tsc && node ./out/boot/jass/tokens.js",
     "temp2": "tsc && node ./out/boot/jass/evaluator.js",
     "test:dev": "tsc && node ./out/test/test.js"
@@ -195,9 +196,10 @@
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
-    "@types/vscode": "^1.49.3",
+    "@types/vscode": "^1.63.1",
     "tslint": "^5.20.0",
     "typescript": "^4.9.4",
+    "vsce": "^2.15.0",
     "vscode-test": "^1.2.2"
   },
   "bugs": {
@@ -206,6 +208,7 @@
   "dependencies": {
     "@babel/parser": "^7.23.9",
     "@babel/types": "^7.23.9",
+    "@typescript-eslint/parser": "^7.1.0",
     "babel": "^6.23.0",
     "glob": "^7.1.1"
   },
