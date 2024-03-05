@@ -504,7 +504,7 @@ globals
 	
 	
 	// 假 false
- constant boolean FALSE = false
+	constant boolean FALSE = false
 	// 真 true
 	constant boolean TRUE = true
 	// 数组上限，默认值32768
@@ -937,81 +937,81 @@ globals
 	// 玩家控制者类型 没有玩家
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
-	// 游戏（队伍）类型 - 对战
+	// 游戏（队伍）类型 对战
 	constant gametype GAME_TYPE_MELEE = ConvertGameType(1)
-	// 游戏（队伍）类型 - 自由竞赛/混战
+	// 游戏（队伍）类型 自由竞赛/混战
 	constant gametype GAME_TYPE_FFA = ConvertGameType(2)
-	// 游戏（队伍）类型 - 使用地图设置
+	// 游戏（队伍）类型 使用地图设置
 	constant gametype GAME_TYPE_USE_MAP_SETTINGS = ConvertGameType(4)
-	// 游戏（队伍）类型 - 官方地图设置
+	// 游戏（队伍）类型 官方地图设置
 	constant gametype GAME_TYPE_BLIZ = ConvertGameType(8)
-	// 游戏（队伍）类型 - 1 V 1
+	// 游戏（队伍）类型 1 V 1
 	constant gametype GAME_TYPE_ONE_ON_ONE = ConvertGameType(16)
-	// 游戏（队伍）类型 - 2支队伍竞赛
+	// 游戏（队伍）类型 2支队伍竞赛
 	constant gametype GAME_TYPE_TWO_TEAM_PLAY = ConvertGameType(32)
-	// 游戏（队伍）类型 - 3支队伍竞赛
+	// 游戏（队伍）类型 3支队伍竞赛
 	constant gametype GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
-	// 游戏（队伍）类型 - 4支队伍竞赛
+	// 游戏（队伍）类型 4支队伍竞赛
 	constant gametype GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
-	// 地图参数 - 隐藏地形
+	// 地图参数 隐藏地形
 	constant mapflag MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
-	// 地图参数 - 已探索地图/可见地形
+	// 地图参数 已探索地图/可见地形
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
-	// 地图参数 - 始终可见
+	// 地图参数 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图参数 - 使用生命障碍
+	// 地图参数 使用生命障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
-	// 地图参数 - 裁判/观战者
+	// 地图参数 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
-	// 地图参数 - 战败后成为观战者
+	// 地图参数 战败后成为观战者
 	constant mapflag MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
-	// 地图参数 - 固定玩家颜色
+	// 地图参数 固定玩家颜色
 	constant mapflag MAP_FIXED_COLORS = ConvertMapFlag(128)
-	// 地图参数 - 锁定交易资源（禁止交易）
+	// 地图参数 锁定交易资源（禁止交易）
 	constant mapflag MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
-	// 地图参数 - 限制盟友资源交易
+	// 地图参数 限制盟友资源交易
 	constant mapflag MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
-	// 地图参数 - 锁定联盟设置（禁止更改）
+	// 地图参数 锁定联盟设置（禁止更改）
 	constant mapflag MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
-	// 地图参数 - 隐藏联盟类型变更
+	// 地图参数 隐藏联盟类型变更
 	constant mapflag MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
-	// 地图参数 - 作弊码
+	// 地图参数 作弊码
 	constant mapflag MAP_CHEATS = ConvertMapFlag(4096)
-	// 地图参数 - 隐藏作弊码
+	// 地图参数 隐藏作弊码
 	constant mapflag MAP_CHEATS_HIDDEN = ConvertMapFlag(8192)
-	// 地图参数 - 锁定游戏速度
+	// 地图参数 锁定游戏速度
 	constant mapflag MAP_LOCK_SPEED = ConvertMapFlag(8192 * 2)
-	// 地图参数 - 禁止随机游戏速度
+	// 地图参数 禁止随机游戏速度
 	constant mapflag MAP_LOCK_RANDOM_SEED = ConvertMapFlag(8192 * 4)
-	// 地图参数 - 共享高级控制
+	// 地图参数 共享高级控制
 	constant mapflag MAP_SHARED_ADVANCED_CONTROL = ConvertMapFlag(8192 * 8)
-	// 地图参数 - 使用随机英雄
+	// 地图参数 使用随机英雄
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
-	// 地图参数 - 使用随机种族
+	// 地图参数 使用随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 - 地图转换（加载新地图）
+	// 地图参数 地图转换（加载新地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
-	// 出生点放置方式 - 随机玩家出生点
+	// 出生点放置方式 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
-	// 出生点放置方式 - 固定玩家出生点
+	// 出生点放置方式 固定玩家出生点
 	constant placement MAP_PLACEMENT_FIXED = ConvertPlacement(1)   // player 0 in start loc 0...
-	// 出生点放置方式 - 使用地图设置的玩家出生点
+	// 出生点放置方式 使用地图设置的玩家出生点
 	constant placement MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2)   // whatever was specified by the script
-	// 出生点放置方式 - 同队出生点相邻
+	// 出生点放置方式 同队出生点相邻
 	constant placement MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3)   // random with allies next to each other
-	// 出生点分布优先权-低
+	// 出生点分布优先权 低
 	constant startlocprio MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
-	// 出生点分布优先权-高
+	// 出生点分布优先权 高
 	constant startlocprio MAP_LOC_PRIO_HIGH = ConvertStartLocPrio(1)
-	// 出生点分布优先权-无
+	// 出生点分布优先权 无
 	constant startlocprio MAP_LOC_PRIO_NOT = ConvertStartLocPrio(2)
-	// 地图密度 - 无密度
+	// 地图密度 无密度
 	constant mapdensity MAP_DENSITY_NONE = ConvertMapDensity(0)
-	// 地图密度 - 低密度
+	// 地图密度 低密度
 	constant mapdensity MAP_DENSITY_LIGHT = ConvertMapDensity(1)
-	// 地图密度 - 中等密度
+	// 地图密度 中等密度
 	constant mapdensity MAP_DENSITY_MEDIUM = ConvertMapDensity(2)
-	// 地图密度 - 高密度
+	// 地图密度 高密度
 	constant mapdensity MAP_DENSITY_HEAVY = ConvertMapDensity(3)
 	
 	// 游戏难度 简单
@@ -1043,7 +1043,7 @@ globals
 	// Sound Constants
 	
 	// 声音频道 单位移动声音
- constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
+	constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
 	// 声音频道 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
 	// 声音频道 战斗声音
@@ -1090,56 +1090,56 @@ globals
 	// For use with TriggerRegister<X>StateEvent
 	//
 	
-	// 游戏整点状态 - 神圣干涉
+	// 游戏整点状态 神圣干涉
 	constant igamestate GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
-	// 游戏整点状态 - 断开连接
+	// 游戏整点状态 断开连接
 	constant igamestate GAME_STATE_DISCONNECTED = ConvertIGameState(1)
-	// 游戏浮点状态 - 当前时间
+	// 游戏浮点状态 当前时间
 	constant fgamestate GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
-	// 玩家状态 - 游戏得分
+	// 玩家状态 游戏得分
 	constant playerstate PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
 	
 	// current resource levels
 	
-	// 玩家状态 - 现有黄金量
+	// 玩家状态 现有黄金量
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
-	// 玩家状态 - 现有木材量
+	// 玩家状态 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家状态 - 剩余可用英雄数
+	// 玩家状态 剩余可用英雄数
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
-	// 玩家状态 - 可用人口数(默认为人口建筑提供的数量)
+	// 玩家状态 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
-	// 玩家状态 - 已使用人口数
+	// 玩家状态 已使用人口数
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
-	// 玩家状态 - 最大人口上限(平衡常数或触发限制的最大数量)，默认为100
+	// 玩家状态 最大人口上限(平衡常数或触发限制的最大数量)，默认为100
 	constant playerstate PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
-	// 玩家状态 - 给予奖励
+	// 玩家状态 给予奖励
 	constant playerstate PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
-	// 玩家状态 - 联盟胜利
+	// 玩家状态 联盟胜利
 	constant playerstate PLAYER_STATE_ALLIED_VICTORY = ConvertPlayerState(8)
-	// 玩家状态 - 放置
+	// 玩家状态 放置
 	constant playerstate PLAYER_STATE_PLACED = ConvertPlayerState(9)
-	// 玩家状态 - 战败后成为观战者
+	// 玩家状态 战败后成为观战者
 	constant playerstate PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
-	// 玩家状态 - 裁判或观战者
+	// 玩家状态 裁判或观战者
 	constant playerstate PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
-	// 玩家状态 - 不可跟随
+	// 玩家状态 不可跟随
 	constant playerstate PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
 	
 	// taxation rate for each resource
 	
-	// 玩家状态 - 黄金维修费率
+	// 玩家状态 黄金维修费率
 	constant playerstate PLAYER_STATE_GOLD_UPKEEP_RATE = ConvertPlayerState(13)
-	// 玩家状态 - 木材维修费率
+	// 玩家状态 木材维修费率
 	constant playerstate PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
 	
 	// cumulative resources collected by the player during the mission
 	
-	// 玩家状态 - 总金钱采集量
+	// 玩家状态 总金钱采集量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态 - 总木材采集量
+	// 玩家状态 总木材采集量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
-	// 玩家状态 - 中立敌对玩家单位睡眠
+	// 玩家状态 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
 	
 	// 单位状态 单位当前生命值
@@ -1150,62 +1150,62 @@ globals
 	constant unitstate UNIT_STATE_MANA = ConvertUnitState(2)
 	// 单位状态 单位最大法力值
 	constant unitstate UNIT_STATE_MAX_MANA = ConvertUnitState(3)
-	// AI难度 - 简单
+	// AI难度 简单
 	constant aidifficulty AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
-	// AI难度 - 普通
+	// AI难度 普通
 	constant aidifficulty AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
-	// AI难度 - 困难
+	// AI难度 困难
 	constant aidifficulty AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
 	
-	// 玩家得分 - 训练单位数量 player score values
- constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
-	// 玩家得分 - 消灭单位数量
+	// 玩家得分 训练单位数量 player score values
+	constant playerscore PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
+	// 玩家得分 消灭单位数量
 	constant playerscore PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
-	// 玩家得分 - 已建造建筑数量
+	// 玩家得分 已建造建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
-	// 玩家得分 - 被毁建筑数量
+	// 玩家得分 被毁建筑数量
 	constant playerscore PLAYER_SCORE_STRUCT_RAZED = ConvertPlayerScore(3)
-	// 玩家得分 - 科技百分比
+	// 玩家得分 科技百分比
 	constant playerscore PLAYER_SCORE_TECH_PERCENT = ConvertPlayerScore(4)
-	// 玩家得分 - 最大可用人口数量
+	// 玩家得分 最大可用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXPROD = ConvertPlayerScore(5)
-	// 玩家得分 - 最大使用人口数量
+	// 玩家得分 最大使用人口数量
 	constant playerscore PLAYER_SCORE_FOOD_MAXUSED = ConvertPlayerScore(6)
-	// 玩家得分 - 杀死英雄数量
+	// 玩家得分 杀死英雄数量
 	constant playerscore PLAYER_SCORE_HEROES_KILLED = ConvertPlayerScore(7)
-	// 玩家得分 - 获得物品数量
+	// 玩家得分 获得物品数量
 	constant playerscore PLAYER_SCORE_ITEMS_GAINED = ConvertPlayerScore(8)
-	// 玩家得分 - 购买雇佣兵数量
+	// 玩家得分 购买雇佣兵数量
 	constant playerscore PLAYER_SCORE_MERCS_HIRED = ConvertPlayerScore(9)
-	// 玩家得分 - 采集到的黄金数量(全部)
+	// 玩家得分 采集到的黄金数量(全部)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_TOTAL = ConvertPlayerScore(10)
-	// 玩家得分 - 采集到的黄金数量(维修费生效期间采集的)
+	// 玩家得分 采集到的黄金数量(维修费生效期间采集的)
 	constant playerscore PLAYER_SCORE_GOLD_MINED_UPKEEP = ConvertPlayerScore(11)
-	// 玩家得分 - 由于维修费而损失的黄金数量
+	// 玩家得分 由于维修费而损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_UPKEEP = ConvertPlayerScore(12)
-	// 玩家得分 - 由于纳税损失的黄金数量
+	// 玩家得分 由于纳税损失的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_LOST_TAX = ConvertPlayerScore(13)
-	// 玩家得分 - 给予盟友的黄金数量
+	// 玩家得分 给予盟友的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_GIVEN = ConvertPlayerScore(14)
-	// 玩家得分 - 从盟友那收到的黄金数量
+	// 玩家得分 从盟友那收到的黄金数量
 	constant playerscore PLAYER_SCORE_GOLD_RECEIVED = ConvertPlayerScore(15)
-	// 玩家得分 - 采集到的木材数量
+	// 玩家得分 采集到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_TOTAL = ConvertPlayerScore(16)
-	// 玩家得分 - 由于维修费而损失的木材数量
+	// 玩家得分 由于维修费而损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_UPKEEP = ConvertPlayerScore(17)
-	// 玩家得分 - 由于纳税损失的木材数量
+	// 玩家得分 由于纳税损失的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_LOST_TAX = ConvertPlayerScore(18)
-	// 玩家得分 - 给予盟友的木材数量
+	// 玩家得分 给予盟友的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_GIVEN = ConvertPlayerScore(19)
-	// 玩家得分 - 从盟友那收到的木材数量
+	// 玩家得分 从盟友那收到的木材数量
 	constant playerscore PLAYER_SCORE_LUMBER_RECEIVED = ConvertPlayerScore(20)
-	// 玩家得分 - 总的单位得分
+	// 玩家得分 总的单位得分
 	constant playerscore PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
-	// 玩家得分 - 总的英雄得分
+	// 玩家得分 总的英雄得分
 	constant playerscore PLAYER_SCORE_HERO_TOTAL = ConvertPlayerScore(22)
-	// 玩家得分 - 总的资源得分
+	// 玩家得分 总的资源得分
 	constant playerscore PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
-	// 玩家得分 - 总的整体得分
+	// 玩家得分 总的整体得分
 	constant playerscore PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 	
 	
@@ -1253,7 +1253,7 @@ globals
 	// For use with TriggerRegisterPlayerEvent
 	
 	// 玩家事件 玩家状态变更
- constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
+	constant playerevent EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
 	// 玩家事件 玩家联盟类型变更
 	constant playerevent EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
 	// 玩家事件 玩家失败
@@ -1555,7 +1555,7 @@ globals
 	// ( do NOT change the order of these... )
 	
 	// 比较算符 小于
- constant limitop LESS_THAN = ConvertLimitOp(0)
+	constant limitop LESS_THAN = ConvertLimitOp(0)
 	// 比较算符 小于 或 等于
 	constant limitop LESS_THAN_OR_EQUAL = ConvertLimitOp(1)
 	// 比较算符 等于
@@ -1649,7 +1649,7 @@ globals
 	
 	// 弃用物品分类，应改用力量提升分类
 	// Deprecated, should use ITEM_TYPE_POWERUP
- constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
+	constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
 	
 	
 	// Animatable Camera Fields
@@ -1747,7 +1747,7 @@ globals
 	// Custom UI API constants
 	
 	// 原生UI 游戏UI(必要，没有它，什么都不显示)
- constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
+	constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
 	// 原生UI 技能按钮(含移动/停止/巡逻/攻击，共12格)
 	// 每次选择单位时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
@@ -2443,7 +2443,7 @@ globals
 	// Ability
 	
 	// 技能整数域 技能按钮位置 X 坐标(常规状态) ('abpx')
- constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
+	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
 	// 技能整数域 技能按钮位置 Y 坐标(常规状态) ('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
 	// 技能整数域 技能按钮位置 X 坐标(激活状态) ('aubx')
