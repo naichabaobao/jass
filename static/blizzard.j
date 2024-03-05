@@ -22,47 +22,47 @@ globals
     constant real bj_RADTODEG = 180.0 / bj_PI
     // 角度转换成弧度
     constant real bj_DEGTORAD = bj_PI / 180.0
-    // 文本显示延时 - 任务，默认20.00
+    // 文本显示延时 任务，默认20.00
     constant real bj_TEXT_DELAY_QUEST = 20.00
-    // 文本显示延时 - 任务更新，默认20.00
+    // 文本显示延时 任务更新，默认20.00
     constant real bj_TEXT_DELAY_QUESTUPDATE = 20.00
-    // 文本显示延时 - 任务完成，默认20.00
+    // 文本显示延时 任务完成，默认20.00
     constant real bj_TEXT_DELAY_QUESTDONE = 20.00
-    // 文本显示延时 - 任务失败，默认20.00
+    // 文本显示延时 任务失败，默认20.00
     constant real bj_TEXT_DELAY_QUESTFAILED = 20.00
-    // 文本显示延时 - 任务要求，默认20.00
+    // 文本显示延时 任务要求，默认20.00
     constant real bj_TEXT_DELAY_QUESTREQUIREMENT = 20.00
-    // 文本显示延时 - 失败消息，默认20.00
+    // 文本显示延时 失败消息，默认20.00
     constant real bj_TEXT_DELAY_MISSIONFAILED = 20.00
-    // 文本显示延时 - 常驻提示，默认12.00
+    // 文本显示延时 常驻提示，默认12.00
     constant real bj_TEXT_DELAY_ALWAYSHINT = 12.00
-    // 文本显示延时 - 提示，默认12.00
+    // 文本显示延时 提示，默认12.00
     constant real bj_TEXT_DELAY_HINT = 12.00
-    // 文本显示延时 - 秘密，默认10.00
+    // 文本显示延时 秘密，默认10.00
     constant real bj_TEXT_DELAY_SECRET = 10.00
-    // 文本显示延时 - 有新单位可购买，默认15.00
+    // 文本显示延时 有新单位可购买，默认15.00
     constant real bj_TEXT_DELAY_UNITACQUIRED = 15.00
-    // 文本显示延时 - 有新单位可用，默认10.00
+    // 文本显示延时 有新单位可用，默认10.00
     constant real bj_TEXT_DELAY_UNITAVAILABLE = 10.00
-    // 文本显示延时 - 有新物品可购买，默认10.00
+    // 文本显示延时 有新物品可购买，默认10.00
     constant real bj_TEXT_DELAY_ITEMACQUIRED = 10.00
-    // 文本显示延时 - 警告，默认12.00
+    // 文本显示延时 警告，默认12.00
     constant real bj_TEXT_DELAY_WARNING = 12.00
-    // 任务显示延时 - 探索，默认5.00
+    // 任务显示延时 探索，默认5.00
     constant real bj_QUEUE_DELAY_QUEST = 5.00
-    // 任务显示延时 - 提示，默认5.00
+    // 任务显示延时 提示，默认5.00
     constant real bj_QUEUE_DELAY_HINT = 5.00
-    // 任务显示延时 - 秘密，默认3.00
+    // 任务显示延时 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
-    // 生命障碍 - 简单，默认60.00
+    // 生命障碍 简单，默认60.00
     constant real bj_HANDICAP_EASY = 60.00
-    // 生命障碍 - 普通，默认90.00
+    // 生命障碍 普通，默认90.00
     constant real bj_HANDICAP_NORMAL = 90.00
-    // 伤害障碍 - 简单，默认50.00
+    // 伤害障碍 简单，默认50.00
     constant real bj_HANDICAPDAMAGE_EASY = 50.00
-    // 伤害障碍 - 普通，默认90.00
+    // 伤害障碍 普通，默认90.00
     constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
-    // 伤害障碍 - 困难，默认50.00
+    // 伤害障碍 困难，默认50.00
     constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
@@ -266,282 +266,282 @@ globals
 
     // Campaign indexing constants
 
-    // 战役过场电影索引 - 混乱之治教程战役（0）
+    // 战役过场电影索引 混乱之治教程战役（0）
     constant integer bj_CAMPAIGN_INDEX_T = 0
-    // 战役过场电影索引 - 混乱之治人族战役（1）
+    // 战役过场电影索引 混乱之治人族战役（1）
     constant integer bj_CAMPAIGN_INDEX_H = 1
-    // 战役过场电影索引 - 混乱之治兽族战役（2）
+    // 战役过场电影索引 混乱之治兽族战役（2）
     constant integer bj_CAMPAIGN_INDEX_U = 2
-    // 战役过场电影索引 - 混乱之治不死族战役（3）
+    // 战役过场电影索引 混乱之治不死族战役（3）
     constant integer bj_CAMPAIGN_INDEX_O = 3
-    // 战役过场电影索引 - 混乱之治暗夜精灵族战役（4）
+    // 战役过场电影索引 混乱之治暗夜精灵族战役（4）
     constant integer bj_CAMPAIGN_INDEX_N = 4
-    // 战役过场电影索引 - 冰封王座暗夜精灵族战役（5）
+    // 战役过场电影索引 冰封王座暗夜精灵族战役（5）
     constant integer bj_CAMPAIGN_INDEX_XN = 5
-    // 战役过场电影索引 - 冰封王座人族战役（6）
+    // 战役过场电影索引 冰封王座人族战役（6）
     constant integer bj_CAMPAIGN_INDEX_XH = 6
-    // 战役过场电影索引 - 冰封王座不死族战役（7）
+    // 战役过场电影索引 冰封王座不死族战役（7）
     constant integer bj_CAMPAIGN_INDEX_XU = 7
-    // 战役过场电影索引 - 冰封王座兽族战役（8）
+    // 战役过场电影索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_INDEX_XO = 8
 
     // Campaign offset constants (for mission indexing)
 
-    // 战役关卡索引 - 混乱之治教程战役（0）
+    // 战役关卡索引 混乱之治教程战役（0）
     constant integer bj_CAMPAIGN_OFFSET_T = 0
-    // 战役关卡索引 - 混乱之治人族战役（1）
+    // 战役关卡索引 混乱之治人族战役（1）
     constant integer bj_CAMPAIGN_OFFSET_H = 1
-    // 战役关卡索引 - 混乱之治不死族战役（2）
+    // 战役关卡索引 混乱之治不死族战役（2）
     constant integer bj_CAMPAIGN_OFFSET_U = 2
-    // 战役关卡索引 - 混乱之治兽族战役（3）
+    // 战役关卡索引 混乱之治兽族战役（3）
     constant integer bj_CAMPAIGN_OFFSET_O = 3
-    // 战役关卡索引 - 冰封王座暗夜精灵族战役（4）
+    // 战役关卡索引 冰封王座暗夜精灵族战役（4）
     constant integer bj_CAMPAIGN_OFFSET_N = 4
-    // 战役关卡索引 - 冰封王座暗夜精灵族战役（5）
+    // 战役关卡索引 冰封王座暗夜精灵族战役（5）
     constant integer bj_CAMPAIGN_OFFSET_XN = 5
-    // 战役关卡索引 - 冰封王座人族战役（6）
+    // 战役关卡索引 冰封王座人族战役（6）
     constant integer bj_CAMPAIGN_OFFSET_XH = 6
-    // 战役关卡索引 - 冰封王座不死族战役（7）
+    // 战役关卡索引 冰封王座不死族战役（7）
     constant integer bj_CAMPAIGN_OFFSET_XU = 7
-    // 战役关卡索引 - 冰封王座兽族战役（8）
+    // 战役关卡索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_OFFSET_XO = 8
 
     // Mission indexing constants
     // Tutorial
 
-    // 战役关卡 - 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
+    // 战役关卡 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
     constant integer bj_MISSION_INDEX_T00 = bj_CAMPAIGN_OFFSET_T * 1000 + 0
-    // 战役关卡 - 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
+    // 战役关卡 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
     constant integer bj_MISSION_INDEX_T01 = bj_CAMPAIGN_OFFSET_T * 1000 + 1
-    // 战役关卡 - 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
+    // 战役关卡 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
     constant integer bj_MISSION_INDEX_T02 = bj_CAMPAIGN_OFFSET_T * 1000 + 2
-    // 战役关卡 - 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
+    // 战役关卡 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
     constant integer bj_MISSION_INDEX_T03 = bj_CAMPAIGN_OFFSET_T * 1000 + 3
-    // 战役关卡 - 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
+    // 战役关卡 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
     constant integer bj_MISSION_INDEX_T04 = bj_CAMPAIGN_OFFSET_T * 1000 + 4
     // Human
 
-    // 战役关卡 - 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
+    // 战役关卡 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
     constant integer bj_MISSION_INDEX_H00 = bj_CAMPAIGN_OFFSET_H * 1000 + 0
-    // 战役关卡 - 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
+    // 战役关卡 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
     constant integer bj_MISSION_INDEX_H01 = bj_CAMPAIGN_OFFSET_H * 1000 + 1
-    // 战役关卡 - 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
+    // 战役关卡 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
     constant integer bj_MISSION_INDEX_H02 = bj_CAMPAIGN_OFFSET_H * 1000 + 2
-    // 战役关卡 - 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
+    // 战役关卡 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
     constant integer bj_MISSION_INDEX_H03 = bj_CAMPAIGN_OFFSET_H * 1000 + 3
-    // 战役关卡 - 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
+    // 战役关卡 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
     constant integer bj_MISSION_INDEX_H04 = bj_CAMPAIGN_OFFSET_H * 1000 + 4
-    // 战役关卡 - 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
+    // 战役关卡 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
     constant integer bj_MISSION_INDEX_H05 = bj_CAMPAIGN_OFFSET_H * 1000 + 5
-    // 战役关卡 - 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
+    // 战役关卡 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
     constant integer bj_MISSION_INDEX_H06 = bj_CAMPAIGN_OFFSET_H * 1000 + 6
-    // 战役关卡 - 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
+    // 战役关卡 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
     constant integer bj_MISSION_INDEX_H07 = bj_CAMPAIGN_OFFSET_H * 1000 + 7
-    // 战役关卡 - 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
+    // 战役关卡 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
     constant integer bj_MISSION_INDEX_H08 = bj_CAMPAIGN_OFFSET_H * 1000 + 8
-    // 战役关卡 - 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
+    // 战役关卡 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
     constant integer bj_MISSION_INDEX_H09 = bj_CAMPAIGN_OFFSET_H * 1000 + 9
-    // 战役关卡 - 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
+    // 战役关卡 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
     constant integer bj_MISSION_INDEX_H10 = bj_CAMPAIGN_OFFSET_H * 1000 + 10
-    // 战役关卡 - 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
+    // 战役关卡 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
     constant integer bj_MISSION_INDEX_H11 = bj_CAMPAIGN_OFFSET_H * 1000 + 11
     // Undead
 
-    // 战役关卡 - 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
+    // 战役关卡 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
     constant integer bj_MISSION_INDEX_U00 = bj_CAMPAIGN_OFFSET_U * 1000 + 0
-    // 战役关卡 - 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
+    // 战役关卡 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
     constant integer bj_MISSION_INDEX_U01 = bj_CAMPAIGN_OFFSET_U * 1000 + 1
-    // 战役关卡 - 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
+    // 战役关卡 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
     constant integer bj_MISSION_INDEX_U02 = bj_CAMPAIGN_OFFSET_U * 1000 + 2
-    // 战役关卡 - 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
+    // 战役关卡 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
     constant integer bj_MISSION_INDEX_U03 = bj_CAMPAIGN_OFFSET_U * 1000 + 3
-    // 战役关卡 - 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
+    // 战役关卡 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
     constant integer bj_MISSION_INDEX_U05 = bj_CAMPAIGN_OFFSET_U * 1000 + 4
-    // 战役关卡 - 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
+    // 战役关卡 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
     constant integer bj_MISSION_INDEX_U07 = bj_CAMPAIGN_OFFSET_U * 1000 + 5
-    // 战役关卡 - 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
+    // 战役关卡 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
     constant integer bj_MISSION_INDEX_U08 = bj_CAMPAIGN_OFFSET_U * 1000 + 6
-    // 战役关卡 - 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
+    // 战役关卡 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
     constant integer bj_MISSION_INDEX_U09 = bj_CAMPAIGN_OFFSET_U * 1000 + 7
-    // 战役关卡 - 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
+    // 战役关卡 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
     constant integer bj_MISSION_INDEX_U10 = bj_CAMPAIGN_OFFSET_U * 1000 + 8
-    // 战役关卡 - 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
+    // 战役关卡 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
     constant integer bj_MISSION_INDEX_U11 = bj_CAMPAIGN_OFFSET_U * 1000 + 9
     // Orc
 
-    // 战役关卡 - 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
+    // 战役关卡 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
     constant integer bj_MISSION_INDEX_O00 = bj_CAMPAIGN_OFFSET_O * 1000 + 0
-    // 战役关卡 - 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
+    // 战役关卡 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
     constant integer bj_MISSION_INDEX_O01 = bj_CAMPAIGN_OFFSET_O * 1000 + 1
-    // 战役关卡 - 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
+    // 战役关卡 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
     constant integer bj_MISSION_INDEX_O02 = bj_CAMPAIGN_OFFSET_O * 1000 + 2
-    // 战役关卡 - 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
+    // 战役关卡 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
     constant integer bj_MISSION_INDEX_O03 = bj_CAMPAIGN_OFFSET_O * 1000 + 3
-    // 战役关卡 - 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
+    // 战役关卡 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
     constant integer bj_MISSION_INDEX_O04 = bj_CAMPAIGN_OFFSET_O * 1000 + 4
-    // 战役关卡 - 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
+    // 战役关卡 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
     constant integer bj_MISSION_INDEX_O05 = bj_CAMPAIGN_OFFSET_O * 1000 + 5
-    // 战役关卡 - 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
+    // 战役关卡 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
     constant integer bj_MISSION_INDEX_O06 = bj_CAMPAIGN_OFFSET_O * 1000 + 6
-    // 战役关卡 - 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
+    // 战役关卡 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
     constant integer bj_MISSION_INDEX_O07 = bj_CAMPAIGN_OFFSET_O * 1000 + 7
-    // 战役关卡 - 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
+    // 战役关卡 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
     constant integer bj_MISSION_INDEX_O08 = bj_CAMPAIGN_OFFSET_O * 1000 + 8
-    // 战役关卡 - 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
+    // 战役关卡 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
     constant integer bj_MISSION_INDEX_O09 = bj_CAMPAIGN_OFFSET_O * 1000 + 9
-    // 战役关卡 - 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
+    // 战役关卡 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
     constant integer bj_MISSION_INDEX_O10 = bj_CAMPAIGN_OFFSET_O * 1000 + 10
     // Night Elf
 
-    // 战役关卡 - 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
+    // 战役关卡 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
     constant integer bj_MISSION_INDEX_N00 = bj_CAMPAIGN_OFFSET_N * 1000 + 0
-    // 战役关卡 - 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
+    // 战役关卡 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
     constant integer bj_MISSION_INDEX_N01 = bj_CAMPAIGN_OFFSET_N * 1000 + 1
-    // 战役关卡 - 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
+    // 战役关卡 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
     constant integer bj_MISSION_INDEX_N02 = bj_CAMPAIGN_OFFSET_N * 1000 + 2
-    // 战役关卡 - 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
+    // 战役关卡 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
     constant integer bj_MISSION_INDEX_N03 = bj_CAMPAIGN_OFFSET_N * 1000 + 3
-    // 战役关卡 - 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
+    // 战役关卡 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
     constant integer bj_MISSION_INDEX_N04 = bj_CAMPAIGN_OFFSET_N * 1000 + 4
-    // 战役关卡 - 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
+    // 战役关卡 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
     constant integer bj_MISSION_INDEX_N05 = bj_CAMPAIGN_OFFSET_N * 1000 + 5
-    // 战役关卡 - 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
+    // 战役关卡 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
     constant integer bj_MISSION_INDEX_N06 = bj_CAMPAIGN_OFFSET_N * 1000 + 6
-    // 战役关卡 - 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
+    // 战役关卡 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
     constant integer bj_MISSION_INDEX_N07 = bj_CAMPAIGN_OFFSET_N * 1000 + 7
-    // 战役关卡 - 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
+    // 战役关卡 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
     constant integer bj_MISSION_INDEX_N08 = bj_CAMPAIGN_OFFSET_N * 1000 + 8
-    // 战役关卡 - 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
+    // 战役关卡 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
     constant integer bj_MISSION_INDEX_N09 = bj_CAMPAIGN_OFFSET_N * 1000 + 9
     // Expansion Night Elf
 
-    // 战役关卡 - 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
+    // 战役关卡 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
     constant integer bj_MISSION_INDEX_XN00 = bj_CAMPAIGN_OFFSET_XN * 1000 + 0
-    // 战役关卡 - 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
+    // 战役关卡 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
     constant integer bj_MISSION_INDEX_XN01 = bj_CAMPAIGN_OFFSET_XN * 1000 + 1
-    // 战役关卡 - 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
+    // 战役关卡 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
     constant integer bj_MISSION_INDEX_XN02 = bj_CAMPAIGN_OFFSET_XN * 1000 + 2
-    // 战役关卡 - 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
+    // 战役关卡 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
     constant integer bj_MISSION_INDEX_XN03 = bj_CAMPAIGN_OFFSET_XN * 1000 + 3
-    // 战役关卡 - 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
+    // 战役关卡 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
     constant integer bj_MISSION_INDEX_XN04 = bj_CAMPAIGN_OFFSET_XN * 1000 + 4
-    // 战役关卡 - 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
+    // 战役关卡 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
     constant integer bj_MISSION_INDEX_XN05 = bj_CAMPAIGN_OFFSET_XN * 1000 + 5
-    // 战役关卡 - 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
+    // 战役关卡 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
     constant integer bj_MISSION_INDEX_XN06 = bj_CAMPAIGN_OFFSET_XN * 1000 + 6
-    // 战役关卡 - 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
+    // 战役关卡 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
     constant integer bj_MISSION_INDEX_XN07 = bj_CAMPAIGN_OFFSET_XN * 1000 + 7
-    // 战役关卡 - 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
+    // 战役关卡 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
     constant integer bj_MISSION_INDEX_XN08 = bj_CAMPAIGN_OFFSET_XN * 1000 + 8
-    // 战役关卡 - 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
+    // 战役关卡 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
     constant integer bj_MISSION_INDEX_XN09 = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
-    // 战役关卡 - 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
+    // 战役关卡 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
     constant integer bj_MISSION_INDEX_XN10 = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
     // Expansion Human
 
-    // 战役关卡 - 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
+    // 战役关卡 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
     constant integer bj_MISSION_INDEX_XH00 = bj_CAMPAIGN_OFFSET_XH * 1000 + 0
-    // 战役关卡 - 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
+    // 战役关卡 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
     constant integer bj_MISSION_INDEX_XH01 = bj_CAMPAIGN_OFFSET_XH * 1000 + 1
-    // 战役关卡 - 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
+    // 战役关卡 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
     constant integer bj_MISSION_INDEX_XH02 = bj_CAMPAIGN_OFFSET_XH * 1000 + 2
-    // 战役关卡 - 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
+    // 战役关卡 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
     constant integer bj_MISSION_INDEX_XH03 = bj_CAMPAIGN_OFFSET_XH * 1000 + 3
-    // 战役关卡 - 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
+    // 战役关卡 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
     constant integer bj_MISSION_INDEX_XH04 = bj_CAMPAIGN_OFFSET_XH * 1000 + 4
-    // 战役关卡 - 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
+    // 战役关卡 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
     constant integer bj_MISSION_INDEX_XH05 = bj_CAMPAIGN_OFFSET_XH * 1000 + 5
-    // 战役关卡 - 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
+    // 战役关卡 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
     constant integer bj_MISSION_INDEX_XH06 = bj_CAMPAIGN_OFFSET_XH * 1000 + 6
-    // 战役关卡 - 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
+    // 战役关卡 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
     constant integer bj_MISSION_INDEX_XH07 = bj_CAMPAIGN_OFFSET_XH * 1000 + 7
-    // 战役关卡 - 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
+    // 战役关卡 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
     constant integer bj_MISSION_INDEX_XH08 = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
-    // 战役关卡 - 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
+    // 战役关卡 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
     constant integer bj_MISSION_INDEX_XH09 = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
     // Expansion Undead
 
-    // 战役关卡 - 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
+    // 战役关卡 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
     constant integer bj_MISSION_INDEX_XU00 = bj_CAMPAIGN_OFFSET_XU * 1000 + 0
-    // 战役关卡 - 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
+    // 战役关卡 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
     constant integer bj_MISSION_INDEX_XU01 = bj_CAMPAIGN_OFFSET_XU * 1000 + 1
-    // 战役关卡 - 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
+    // 战役关卡 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
     constant integer bj_MISSION_INDEX_XU02 = bj_CAMPAIGN_OFFSET_XU * 1000 + 2
-    // 战役关卡 - 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
+    // 战役关卡 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
     constant integer bj_MISSION_INDEX_XU03 = bj_CAMPAIGN_OFFSET_XU * 1000 + 3
-    // 战役关卡 - 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
+    // 战役关卡 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
     constant integer bj_MISSION_INDEX_XU04 = bj_CAMPAIGN_OFFSET_XU * 1000 + 4
-    // 战役关卡 - 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
+    // 战役关卡 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
     constant integer bj_MISSION_INDEX_XU05 = bj_CAMPAIGN_OFFSET_XU * 1000 + 5
-    // 战役关卡 - 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
+    // 战役关卡 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
     constant integer bj_MISSION_INDEX_XU06 = bj_CAMPAIGN_OFFSET_XU * 1000 + 6
-    // 战役关卡 - 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
+    // 战役关卡 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
     constant integer bj_MISSION_INDEX_XU07 = bj_CAMPAIGN_OFFSET_XU * 1000 + 7
-    // 战役关卡 - 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
+    // 战役关卡 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
     constant integer bj_MISSION_INDEX_XU08 = bj_CAMPAIGN_OFFSET_XU * 1000 + 8
-    // 战役关卡 - 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
+    // 战役关卡 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
     constant integer bj_MISSION_INDEX_XU09 = bj_CAMPAIGN_OFFSET_XU * 1000 + 9
-    // 战役关卡 - 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
+    // 战役关卡 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
     constant integer bj_MISSION_INDEX_XU10 = bj_CAMPAIGN_OFFSET_XU * 1000 + 10
-    // 战役关卡 - 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
+    // 战役关卡 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
     constant integer bj_MISSION_INDEX_XU11 = bj_CAMPAIGN_OFFSET_XU * 1000 + 11
-    // 战役关卡 - 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
+    // 战役关卡 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
     constant integer bj_MISSION_INDEX_XU12 = bj_CAMPAIGN_OFFSET_XU * 1000 + 12
-    // 战役关卡 - 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
+    // 战役关卡 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
     constant integer bj_MISSION_INDEX_XU13 = bj_CAMPAIGN_OFFSET_XU * 1000 + 13
     // Expansion Orc
 
-    // 战役关卡 - 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
+    // 战役关卡 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
     constant integer bj_MISSION_INDEX_XO00 = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
-    // 战役关卡 - 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
+    // 战役关卡 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
     constant integer bj_MISSION_INDEX_XO01 = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
-    // 战役关卡 - 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
+    // 战役关卡 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
     constant integer bj_MISSION_INDEX_XO02 = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
-    // 战役关卡 - 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
+    // 战役关卡 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
     constant integer bj_MISSION_INDEX_XO03 = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
     // Cinematic indexing constants
 
-    // 战役过场电影名称 - 教程（0）
+    // 战役过场电影名称 教程（0）
     constant integer bj_CINEMATICINDEX_TOP = 0
-    // 战役过场电影名称 - 人族开场（1）
+    // 战役过场电影名称 人族开场（1）
     constant integer bj_CINEMATICINDEX_HOP = 1
-    // 战役过场电影名称 - 人族结尾（2）
+    // 战役过场电影名称 人族结尾（2）
     constant integer bj_CINEMATICINDEX_HED = 2
-    // 战役过场电影名称 - 兽族开场（3）
+    // 战役过场电影名称 兽族开场（3）
     constant integer bj_CINEMATICINDEX_OOP = 3
-    // 战役过场电影名称 - 兽族结尾（4）
+    // 战役过场电影名称 兽族结尾（4）
     constant integer bj_CINEMATICINDEX_OED = 4
-    // 战役过场电影名称 - 不死族开场（5）
+    // 战役过场电影名称 不死族开场（5）
     constant integer bj_CINEMATICINDEX_UOP = 5
-    // 战役过场电影名称 - 不死族结尾（6）
+    // 战役过场电影名称 不死族结尾（6）
     constant integer bj_CINEMATICINDEX_UED = 6
-    // 战役过场电影名称 - 暗夜精灵族开场（7）
+    // 战役过场电影名称 暗夜精灵族开场（7）
     constant integer bj_CINEMATICINDEX_NOP = 7
-    // 战役过场电影名称 - 暗夜精灵族结尾（8）
+    // 战役过场电影名称 暗夜精灵族结尾（8）
     constant integer bj_CINEMATICINDEX_NED = 8
-    // 战役过场电影名称 - 冰封王座开场（9）
+    // 战役过场电影名称 冰封王座开场（9）
     constant integer bj_CINEMATICINDEX_XOP = 9
-    // 战役过场电影名称 - 冰封王座结尾（10）
+    // 战役过场电影名称 冰封王座结尾（10）
     constant integer bj_CINEMATICINDEX_XED = 10
 
     // Alliance settings
 
-    // 联盟设置 - 相互敌对
+    // 联盟设置 相互敌对
     constant integer bj_ALLIANCE_UNALLIED = 0
-    // 联盟设置 - 相互敌对但共享视野
+    // 联盟设置 相互敌对但共享视野
     constant integer bj_ALLIANCE_UNALLIED_VISION = 1
-    // 联盟设置 - 相互结盟
+    // 联盟设置 相互结盟
     constant integer bj_ALLIANCE_ALLIED = 2
-    // 联盟设置 - 相互结盟且共享视野
+    // 联盟设置 相互结盟且共享视野
     constant integer bj_ALLIANCE_ALLIED_VISION = 3
-    // 联盟设置 - 相互结盟并共享视野和部分单位
+    // 联盟设置 相互结盟并共享视野和部分单位
     constant integer bj_ALLIANCE_ALLIED_UNITS = 4
-    // 联盟设置 - 相互结盟并共享视野和所有单位
+    // 联盟设置 相互结盟并共享视野和所有单位
     constant integer bj_ALLIANCE_ALLIED_ADVUNITS = 5
-    // 联盟设置 - 相互中立
+    // 联盟设置 相互中立
     constant integer bj_ALLIANCE_NEUTRAL = 6
-    // 联盟设置 - 相互中立但共享视野
+    // 联盟设置 相互中立但共享视野
     constant integer bj_ALLIANCE_NEUTRAL_VISION = 7
 
     // Keyboard Event Types
@@ -573,18 +573,18 @@ globals
 
     // Transmission timing methods
 
-    // 传输时间方法 - 时间类型 - 增加
+    // 传输时间方法 时间类型 - 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 传输时间方法 - 时间类型 - 设为（指定值）
+    // 传输时间方法 时间类型 - 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 传输时间方法 - 时间类型 - 减少
+    // 传输时间方法 时间类型 - 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
 
-    // 镜头界限调整 - 扩张
+    // 镜头界限调整 扩张
     constant integer bj_CAMERABOUNDS_ADJUST_ADD = 0
-    // 镜头界限调整 - 收缩
+    // 镜头界限调整 收缩
     constant integer bj_CAMERABOUNDS_ADJUST_SUB = 1
 
     // Quest creation states
@@ -629,40 +629,40 @@ globals
 
     // Leaderboard sorting methods
 
-    // 排行榜排序类型 - 按分值排序
+    // 排行榜排序类型 按分值排序
     constant integer bj_SORTTYPE_SORTBYVALUE = 0
-    // 排行榜排序类型 - 按玩家排序
+    // 排行榜排序类型 按玩家排序
     constant integer bj_SORTTYPE_SORTBYPLAYER = 1
-    // 排行榜排序类型 - 按文本排序
+    // 排行榜排序类型 按文本排序
     constant integer bj_SORTTYPE_SORTBYLABEL = 2
 
     // Cinematic fade filter methods
 
-    // 电影淡化 - 淡入
+    // 电影淡化 淡入
     constant integer bj_CINEFADETYPE_FADEIN = 0
-    // 电影淡化 - 淡出
+    // 电影淡化 淡出
     constant integer bj_CINEFADETYPE_FADEOUT = 1
-    // 电影淡化 - 淡出并淡入（一并使用）
+    // 电影淡化 淡出并淡入（一并使用）
     constant integer bj_CINEFADETYPE_FADEOUTIN = 2
 
     // Buff removal methods
 
-    // BUFF属性 - 按类别删除BUFF 肯定（正面BUFF）
+    // BUFF属性 按类别删除BUFF 肯定（正面BUFF）
     constant integer bj_REMOVEBUFFS_POSITIVE = 0
-    // BUFF属性 - 按类别删除BUFF 否定（负面BUFF）
+    // BUFF属性 按类别删除BUFF 否定（负面BUFF）
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
-    // BUFF属性 - 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
+    // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 - 按类别删除BUFF 除终止计时器外的全部
+    // BUFF属性 按类别删除BUFF 除终止计时器外的全部
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
 
-    // BUFF属性 - 极性 肯定（正面BUFF）
+    // BUFF属性 极性 肯定（正面BUFF）
     constant integer bj_BUFF_POLARITY_POSITIVE = 0
-    // BUFF属性 - 极性 否定（负面BUFF）
+    // BUFF属性 极性 否定（负面BUFF）
     constant integer bj_BUFF_POLARITY_NEGATIVE = 1
-    // BUFF属性 - 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
+    // BUFF属性 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
     constant integer bj_BUFF_POLARITY_EITHER = 2
 
     // Buff properties - resist type
@@ -687,11 +687,11 @@ globals
 
     // Hero skill point modification methods
 
-    // 英雄技能点 - 增加
+    // 英雄技能点 增加
     constant integer bj_MODIFYMETHOD_ADD = 0
-    // 英雄技能点 - 减少
+    // 英雄技能点 减少
     constant integer bj_MODIFYMETHOD_SUB = 1
-    // 英雄技能点 - 设为（指定值）
+    // 英雄技能点 设为（指定值）
     constant integer bj_MODIFYMETHOD_SET = 2
 
     // Unit state adjustment methods (for replaced units)
@@ -707,37 +707,37 @@ globals
 
     // Gate operations
 
-    // 操作可破坏物 - 关闭门
+    // 操作可破坏物 关闭门
     constant integer bj_GATEOPERATION_CLOSE = 0
-    // 操作可破坏物 - 开启门
+    // 操作可破坏物 开启门
     constant integer bj_GATEOPERATION_OPEN = 1
-    // 操作可破坏物 - 摧毁门
+    // 操作可破坏物 摧毁门
     constant integer bj_GATEOPERATION_DESTROY = 2
 
 	// Game cache value types
 
-	// 游戏缓存类型 - 布尔值
+	// 游戏缓存类型 布尔值
 	constant integer bj_GAMECACHE_BOOLEAN = 0
-	// 游戏缓存类型 - 整数
+	// 游戏缓存类型 整数
 	constant integer bj_GAMECACHE_INTEGER = 1
-	// 游戏缓存类型 - 实数
+	// 游戏缓存类型 实数
 	constant integer bj_GAMECACHE_REAL = 2
-	// 游戏缓存类型 - 单位
+	// 游戏缓存类型 单位
 	constant integer bj_GAMECACHE_UNIT = 3
-	// 游戏缓存类型 - 字符串
+	// 游戏缓存类型 字符串
 	constant integer bj_GAMECACHE_STRING = 4
 	
 	// Hashtable value types
 
-	// 哈希表类型 - 布尔值
+	// 哈希表类型 布尔值
 	constant integer bj_HASHTABLE_BOOLEAN = 0
-	// 哈希表类型 - 整数
+	// 哈希表类型 整数
 	constant integer bj_HASHTABLE_INTEGER = 1
-	// 哈希表类型 - 实数
+	// 哈希表类型 实数
 	constant integer bj_HASHTABLE_REAL = 2
-	// 哈希表类型 - 字符串
+	// 哈希表类型 字符串
 	constant integer bj_HASHTABLE_STRING = 3
-	// 哈希表类型 - 句柄
+	// 哈希表类型 句柄
 	constant integer bj_HASHTABLE_HANDLE = 4
 
     // Item status types
@@ -766,11 +766,11 @@ globals
 
     // Minimap ping styles
 
-    // 小地图提示样式 - 简易
+    // 小地图提示样式 简易
     constant integer bj_MINIMAPPINGSTYLE_SIMPLE = 0
-    // 小地图提示样式 - 闪烁
+    // 小地图提示样式 闪烁
     constant integer bj_MINIMAPPINGSTYLE_FLASHY = 1
-    // 小地图提示样式 - 警告
+    // 小地图提示样式 警告
     constant integer bj_MINIMAPPINGSTYLE_ATTACK = 2
 	
     // Campaign Minimap icon styles
@@ -801,9 +801,9 @@ globals
 
     // Corpse creation styles
 
-    // 尸体类型 - 骨头
+    // 尸体类型 骨头
     constant integer bj_CORPSETYPE_FLESH = 0
-    // 尸体类型 - 血肉
+    // 尸体类型 血肉
     constant integer bj_CORPSETYPE_BONE = 1
 
     // Elevator pathing-blocker destructable code
@@ -846,9 +846,9 @@ globals
 
     // Map area rects
 
-    // 区域 - 玩家可用地图区域
+    // 区域 玩家可用地图区域
     rect bj_mapInitialPlayableArea = null
-    // 区域 - 镜头范围区域
+    // 区域 镜头范围区域
     rect bj_mapInitialCameraBounds = null
 
     // Utility function vars
