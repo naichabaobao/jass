@@ -4878,7 +4878,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 用后请注意排泄(使用DestroyFilter，并set null)，因此不建议在AI脚本中使用
+// 用完请注意排泄(使用DestroyFilter，并set null)，不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
