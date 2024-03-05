@@ -63,7 +63,7 @@ globals
     // 伤害障碍 - 普通，默认90.00
     constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
     // 伤害障碍 - 困难，默认50.00
-	constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
+    constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
     // 迷雾等待最小间隔，默认0.10
