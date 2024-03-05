@@ -3281,7 +3281,7 @@ function SetSoundConeAnglesBJ takes sound soundHandle, real inside, real outside
 endfunction
 
 
-// 播放完成时终止声音（不再循环）
+// 播放完成时关闭声音（不再循环）
 function KillSoundWhenDoneBJ takes sound soundHandle returns nothing
     call KillSoundWhenDone(soundHandle)
 endfunction
@@ -3501,7 +3501,7 @@ function SetMapMusicRandomBJ takes string musicName returns nothing
 endfunction
 
 
-// 清空地图背景音乐
+// 清除地图背景音乐
 function ClearMapMusicBJ takes nothing returns nothing
     call ClearMapMusic()
 endfunction
