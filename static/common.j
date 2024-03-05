@@ -4878,7 +4878,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 使用后需用DestroyFilter排泄，并set null，因此不建议在AI脚本中使用
+// 用后请注意排泄(使用DestroyFilter，并set null)，因此不建议在AI脚本中使用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
@@ -7211,14 +7211,14 @@ native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 // 播放音效
 // 仅在使用了3D音效才有效
 native StartSound takes sound soundHandle returns nothing
-// 播放音效(指定是否淡入)
+// 播放声音(指定是否淡入)
 // 仅在使用了3D音效才有效
 // @version 1.33
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
-// 停止播放音效(指定是否淡出)
+// 停止播放声音(指定是否淡出)
 // 仅在使用了3D音效才有效
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
-// 播放完成时关闭音效
+// 播放完成时关闭声音
 // 仅在使用了3D音效才有效
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
@@ -7265,7 +7265,7 @@ native GetSoundDuration takes sound soundHandle returns integer
 // 设置声音文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
-// 设置所有频道音量 [R]
+// 设置指定频道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
 // 重置所有频道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
