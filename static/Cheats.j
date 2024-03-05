@@ -140,7 +140,7 @@ endfunction
 
 //===========================================================================
 
-// 展示演示玩家属性多面板设置所有玩家黄金/木材为0触发器动作
+// 展示演示玩家属性多面板 - 设置所有玩家黄金/木材为0触发器动作
 function DebugDemoEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call SetPlayerState(thePlayer, PLAYER_STATE_RESOURCE_GOLD, 0)
@@ -203,7 +203,7 @@ endfunction
 //===========================================================================
 // 
 
-// 转换类型为4字码
+// 转换类型为4字码（以字符串形式返回）
 // Convert a integer id value into a 4-letter id code.
 function DebugIdInteger2IdString takes integer value returns string
     local string charMap = ".................................!.#$%&'()*+,-./0123456789:;<=>.@ABCDEFGHIJKLMNOPQRSTUVWXYZ[.]^_`abcdefghijklmnopqrstuvwxyz{|}~................................................................................................................................."
