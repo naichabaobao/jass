@@ -1779,8 +1779,8 @@ endfunction
 
 //============================================================================
 
-// 继续训练/建造/研究指定类型的单位/科技
-// 如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
+// 继续训练/建造/研究指定类型的单位/建筑/科技
+// 若当前训练/建造/研究中的该类型单位/建筑/科技数量大于等于指定数量，则不建造
 function SetBuildNext takes integer qty, integer unitid returns nothing
     local integer has = GetUnitCount(unitid)
     if has >= qty then
