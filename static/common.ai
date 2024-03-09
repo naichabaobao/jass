@@ -3501,7 +3501,7 @@ endfunction
 //============================================================================
 
 // 升级后自动学习技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
-// 该代码在1.30中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
+// 该代码在1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
 function SkillArrays takes nothing returns integer
     local integer level = GetHeroLevelAI()
 
