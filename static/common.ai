@@ -314,9 +314,9 @@ native SuicideUnit          takes integer count, integer unitid         returns 
 // @param pid 玩家编号
 native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
 // 开始线程
-// AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加前请检查已调用的默认线程数量）
-// 线程类似一条独立运行的功能，如果其内部没有无限循环或循环可以随意退出，则该线程运行完后会失效，因此一般官方的线程都是无限循环的
+// AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，添加前请检查已启用的线程数量）
 // 变量支持跨线程使用，但在一条线程运行到读取变量时，该变量可能已在之前被另一个线程改写，于是造成滞后的假象
+// @param func 线程运行的功能，如果功能内部未设置无限循环或循环会被退出，则线程运行完后会失效，因此官方线程一般都是无限循环的，common.ai内可调用写在AI脚本文件中的功能，两者无需上下文关系
 native StartThread          takes code func                             returns nothing
 // 等待指定时间，按秒计时（等待期间不执行任何代码）
 native Sleep                takes real seconds                          returns nothing
