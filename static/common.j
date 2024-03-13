@@ -5860,6 +5860,7 @@ native UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean
 native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean
 
 // 添加指定技能到指定单位 [R]
+// 添加的技能默认为非永久性，会在单位变身恢复时消失，若要不消失，需设置技能永久性 UnitMakeAbilityPermanent
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
 // 删除指定单位的指定技能 [R]
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
