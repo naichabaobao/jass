@@ -7191,36 +7191,32 @@ native SetSoundPitch takes sound soundHandle, real pitch returns nothing
 native SetSoundPlayPosition takes sound soundHandle, integer millisecs returns nothing
 
 // 设置3D音效衰减范围
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 // these calls are only valid if the sound was created with 3d enabled
 native SetSoundDistances takes sound soundHandle, real minDist, real maxDist returns nothing
 // 设置3D音效音锥角度
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 native SetSoundConeAngles takes sound soundHandle, real inside, real outside, integer outsideVolume returns nothing
 // 设置3D音效音锥朝向
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 native SetSoundConeOrientation takes sound soundHandle, real x, real y, real z returns nothing
 // 设置3D音效位置(指定坐标) [R]
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 native SetSoundPosition takes sound soundHandle, real x, real y, real z returns nothing
 // 设置3D音效播放速度
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns nothing
 // 设置3D音效位置(指定单位)
-// 仅在使用了3D音效才有效
+// 仅在使用3D音效时生效
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 // 播放音效
-// 仅在使用了3D音效才有效
 native StartSound takes sound soundHandle returns nothing
 // 播放声音(指定是否淡入)
-// 仅在使用了3D音效才有效
 // @version 1.33
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
 // 停止播放声音(指定是否淡出)
-// 仅在使用了3D音效才有效
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
 // 播放完成时关闭声音
-// 仅在使用了3D音效才有效
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
 // 设置地图背景音乐 [R]
