@@ -459,7 +459,7 @@ constant native AbilityId2String takes integer abilityId returns string
 // Looks up the "name" field for any object (unit, item, ability)
 
 // 获取对象(单位、物品、技能等任何对象)名称(字符串) [C]
-// 获取的名称为英语，非本地语言
+// 名称为英语，未本地化
 // 在AI脚本返回值为 null
 constant native GetObjectName takes integer objectId returns string
 // 获取玩家数量上限，不包括中立玩家
