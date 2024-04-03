@@ -82,7 +82,8 @@ native GetNextExpansion     takes nothing                               returns 
 // 获取大型攻击目标（可能返回null）
 // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
 native GetMegaTarget        takes nothing                               returns unit
-// 获取指定玩家的建筑，包括中立玩家（可能返回null）
+// 获取指定玩家最后建造的建筑，包括中立玩家（可能返回null）
+// 若未给中立玩家建造和创建单位的触发/代码，则获取地图编辑器最后放置的建筑（死亡被清理后会按顺序自动向前获取）
 native GetBuilding          takes player p                              returns unit
 // 获取敌人强度，似乎是全部敌人强度之和
 native GetEnemyPower        takes nothing                               returns integer
