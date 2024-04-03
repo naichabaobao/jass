@@ -52,7 +52,7 @@ native GetUnitBuildTime     takes integer unitid                        returns 
 
 // 获取拥有的金矿数量
 // 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
-// 如果AI出生点有多座未被其他玩家占据的中立被动玩家金矿（如多矿开局或金矿距离过近的图），会导致亡灵/暗夜采矿异常
+// 如果AI出生点有多座未被其他玩家占据的中立被动玩家金矿（如多矿开局或金矿距离过近的图），可能导致亡灵/暗夜采矿异常，且此时该返回值未必准确
 // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
 // 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
 native GetMinesOwned        takes nothing                               returns integer
@@ -82,7 +82,8 @@ native GetNextExpansion     takes nothing                               returns 
 // 获取大型攻击目标（可能返回null）
 // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
 native GetMegaTarget        takes nothing                               returns unit
-// 获取指定玩家正在建造的建筑
+// 获取指定玩家最后建造/创建的建筑，支持中立玩家（可能返回null）
+// 若中立玩家不能建造/创建建筑，则获取地图编辑器最后放置的建筑（该建筑死亡被清理后应该会按放置顺序自动向前获取）
 native GetBuilding          takes player p                              returns unit
 // 获取敌人强度，似乎是全部敌人强度之和
 native GetEnemyPower        takes nothing                               returns integer
@@ -276,9 +277,11 @@ native CaptainAttack        takes real x, real y                        returns 
 native CaptainVsUnits       takes player id                             returns nothing
 // 发布攻击组攻击命令（指定玩家）
 native CaptainVsPlayer      takes player id                             returns nothing
-// 发布攻击组回家命令
+// 发布攻击组回家命令（实际是发送移动/AI移动命令）
+// 家大概率是指出生点
 native CaptainGoHome        takes nothing                               returns nothing
 // 查询攻击组是否在家
+// 家大概率是指出生点
 native CaptainIsHome        takes nothing                               returns boolean
 // 查询攻击组是否满血
 native CaptainIsFull        takes nothing                               returns boolean
@@ -312,9 +315,9 @@ native SuicideUnit          takes integer count, integer unitid         returns 
 // @param pid 玩家编号
 native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
 // 开始线程
-// AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，自行添加前请检查已调用的默认线程数量）
-// 线程类似一条独立运行的功能，如果其内部没有无限循环或循环可以随意退出，则该线程运行完后会失效，因此一般官方的线程都是无限循环的
+// AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，添加前请检查已启用的线程数量）
 // 变量支持跨线程使用，但在一条线程运行到读取变量时，该变量可能已在之前被另一个线程改写，于是造成滞后的假象
+// @param func 线程运行的功能，如果功能内部未设置无限循环或循环会被退出，则线程运行完后会失效，因此官方线程一般都是无限循环的，common.ai内可调用写在AI脚本文件中的功能，两者无需上下文关系
 native StartThread          takes code func                             returns nothing
 // 等待指定时间，按秒计时（等待期间不执行任何代码）
 native Sleep                takes real seconds                          returns nothing
@@ -478,9 +481,9 @@ globals
     constant integer CANNON_TOWER       = 'hctw'
     // 城堡（人族三本基地）
     constant integer CASTLE             = 'hcas'
-    // 圣塔（人族）（编辑器无此单位 'htws'）
+    // 心灵圣所/法术塔（人族）（早期测试版内容，正式版无此单位 'htws'）
     constant integer CHURCH             = 'htws'
-    // 圣塔（人族）（编辑器无此单位 'htws'）
+    // 心灵圣所/法术塔（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer MAGE_TOWER         =  CHURCH
     // 防御塔（人族）
     constant integer GUARD_TOWER        = 'hgtw'
@@ -513,11 +516,11 @@ globals
     constant integer UPG_MELEE          = 'Rhme'
     // 科技 黑火药
     constant integer UPG_RANGED         = 'Rhra'
-    // 科技 炮兵（人族）（编辑器无此科技 'Rhaa'）
+    // 科技 炮兵（人族）（测试版内容，正式版无此科技 'Rhaa'）
     constant integer UPG_ARTILLERY      = 'Rhaa'
     // 科技 钢铁装甲
     constant integer UPG_ARMOR          = 'Rhar'
-    // 科技 黄金（人族）（编辑器无此科技 'Rhmi'）
+    // 科技 改良型采矿技术/改进型采矿效率（人族）（测试版内容，正式版无此科技 'Rhmi'）
     constant integer UPG_GOLD           = 'Rhmi'
     // 科技 改良石工技术/加强型石工技术
     constant integer UPG_MASONRY        = 'Rhac'
@@ -539,7 +542,7 @@ globals
     constant integer UPG_WOOD           = 'Rhlh'
     // 科技 魔法岗哨
     constant integer UPG_SENTINEL       = 'Rhse'
-    // 科技 散射（人族）（编辑器无此科技 'Rhsr'）
+    // 科技 散射（人族）（测试版内容，正式版无此科技 'Rhsr'）
     constant integer UPG_SCATTER        = 'Rhsr'
     // 科技 飞行器炸弹
     constant integer UPG_BOMBS          = 'Rhgb'
@@ -615,7 +618,7 @@ globals
 
     // orc units
 
-    // 兽族步兵（编辑器无此单位 'oang'）
+    // 兽族步兵（测试版内容，正式版无此单位 'oang'）
     constant integer GUARDIAN           = 'oang'
     // 投石车
     constant integer CATAPULT           = 'ocat'
@@ -679,7 +682,7 @@ globals
     constant integer UPG_ORC_MELEE      = 'Rome'
     // 科技 精钢远程武器
     constant integer UPG_ORC_RANGED     = 'Rora'
-    // 科技 火炮（兽族）（编辑器无此科技 'Roaa'）
+    // 科技 炮兵（兽族）（测试版内容，正式版无此科技 'Roaa'）
     constant integer UPG_ORC_ARTILLERY  = 'Roaa'
     // 科技 精钢护甲
     constant integer UPG_ORC_ARMOR      = 'Roar'
@@ -862,7 +865,7 @@ globals
     constant integer UNDEAD_ALTAR       = 'uaod'
     // 埋骨地
     constant integer BONEYARD           = 'ubon'
-    // 某种尖塔（不死族）（编辑器无此单位 'ugsp'）
+    // 石像鬼尖塔（不死族）（测试版内容，正式版无此单位 'ugsp'）
     constant integer GARG_SPIRE         = 'ugsp'
     // 浮空城（大墓地）
     constant integer NECROPOLIS_1       = 'unpl'    // normal
@@ -903,7 +906,7 @@ globals
     constant integer UPG_GHOUL_FRENZY   = 'Rugf'
     // 科技 蛛网
     constant integer UPG_FIEND_WEB      = 'Ruwb'
-    // 科技 疑似与憎恶相关（不死族）（编辑器无此科技'Ruab'）
+    // 科技 疑似与两个食尸鬼合成一个憎恶相关（不死族）（测试版内容，正式版无此科技 'Ruab'）
     constant integer UPG_ABOM           = 'Ruab'
     // 科技 石像形态
     constant integer UPG_STONE_FORM     = 'Rusf'
@@ -921,9 +924,9 @@ globals
     constant integer UPG_SKEL_MASTERY   = 'Rusm'
     // 科技 发掘尸体
     constant integer UPG_EXHUME         = 'Ruex'
-    // 科技 牺牲（不死族）（编辑器无此科技'Rurs'）
+    // 科技 牺牲（不死族）（测试版内容，正式版无此科技 'Rurs'）
     constant integer UPG_SACRIFICE      = 'Rurs'
-    // 科技 疑似憎恶自爆（不死族）（编辑器无此科技'Ruax'）
+    // 科技 尸爆（不死族）（测试版内容，正式版无此科技 'Ruax'）
     constant integer UPG_ABOM_EXPL      = 'Ruax'
     // 科技 生物甲壳
     constant integer UPG_CR_ARMOR       = 'Rucr'
@@ -1074,7 +1077,7 @@ globals
     constant integer ANCIENT_PROTECT    = 'etrp'
     // 长者祭坛
     constant integer ELF_ALTAR          = 'eate'
-    // 熊窝（暗夜精灵族）（编辑器无此单位）
+    // 熊窝（暗夜精灵族）（测试版内容，正式版无此单位 'edol'）
     constant integer BEAR_DEN           = 'edol'
     // 奇美拉栖木
     constant integer CHIMAERA_ROOST     = 'edos'
@@ -1363,15 +1366,23 @@ globals
     // 三发英雄单位类型
     // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
     integer hero_id3                = 'Hpal'
-    // 技能数组
+    // 英雄技能学习顺序数组
+    // 记录地图所有英雄的所有技能，以及所有学习顺序编组，一个英雄可以有多组顺序，每局游戏默认只选择一种顺序，以制造随机的假象
+    // 需规避跳级和工程升级技能的技能替换，否则可能不学技能，某级技能不学，后面都将无法自动学习，且每局游戏使用该组合时都会如此
     integer array skill
     // 首发英雄技能数组
+    // 记录每局游戏的技能学习顺序下各级的技能，从 英雄技能学习顺序数组 [skill] 中选取一组
+    // 若其他干预，每局游戏将一直按选择顺序自动学习，若有干预，可能无法继续学习
     integer array skills1
     // 二发英雄技能数组
+    // 记录每局游戏的技能学习顺序下各级的技能，从 英雄技能学习顺序数组 [skill] 中选取一组
+    // 若其他干预，每局游戏将一直按选择顺序自动学习，若有干预，可能无法继续学习
     integer array skills2
     // 三发英雄技能数组
+    // 记录每局游戏的技能学习顺序下各级的技能，从 英雄技能学习顺序数组 [skill] 中选取一组
+    // 若其他干预，每局游戏将一直按选择顺序自动学习，若有干预，可能无法继续学习
     integer array skills3
-    // 最大英雄等级，默认为0，会在英雄升级后自动调整，上限由平衡常数决定
+    // 最大英雄等级，默认为0，会在英雄升级后自动调整，默认上限由平衡常数决定
     integer max_hero_level          = 0
     // 攻击组数组 单位数量，每种单位使用1个引索
     integer array harass_qty
@@ -1407,35 +1418,42 @@ globals
     integer min_creeps              = -1
     // 最大野怪（中立敌对玩家单位）等级，默认-1
     integer max_creeps              = -1
-    // 是否允许AI开设第一座基地，以采集黄金/木材
+    // 允许AI开设第一座基地标识，默认为是
     boolean harvest_town1           = true
-    // 是否允许AI开设第二座基地，以采集黄金/木材
+    // 允许AI开设第二座基地标识，默认为是
     boolean harvest_town2           = true
-    // 是否允许AI开设第三座基地，以采集黄金/木材
+    // 允许AI开设第三座基地标识，默认为是
     boolean harvest_town3           = true
-    // 战役人口建筑建造模式
+    // 战役人口建筑建造模式标识，默认为是
+    // 官方仅在战役功能中使用，未使用时无影响
     boolean do_campaign_farms       = true
-    // 二发英雄是否存在
+    // 二发英雄已训练标识，默认为否
     boolean two_heroes              = false
-    // 是否允许获取飞行野怪（中立敌对玩家单位），默认不允许
+    // 允许获取飞行野怪（中立敌对玩家单位）标识，默认为否
+    // 攻击线程会自动设置
     boolean allow_air_creeps        = false
-    // 是否攻击分矿的野怪（中立敌对玩家单位），默认允许
+    // 攻击分矿的野怪（中立敌对玩家单位）标识，默认为否
+    // 开矿功能和攻击线程会自动设置
     boolean take_exp                = false
-    // 多用于退出自杀等待
+    // 允许忽略信号标识，默认为否
+    // 官方多用于退出自杀等待，且与接受到指定触发器命令同时使用
     boolean allow_signal_abort      = false
-    // 是否已完成飞艇购买
+    // 已完成飞艇购买标识，默认为真
+    // 攻击线程会自动设置
     boolean ready_for_zeppelin      = true
-    // 是否允许购买飞艇，默认为否
+    // 允许购买飞艇标识，默认为否
     boolean get_zeppelin            = false
-    // 是否建造战役进攻单位
+    // 建造战役进攻单位标识，默认为真
+    // 官方仅在战役功能中使用
     boolean build_campaign_attackers = true
-    // 用于开发调试
+    // 开发调试开关，默认为关
     boolean do_debug_cheats         = false
-    // 是否在游戏中显示 Trace 文本（开启后可用于调试，只需要调用对应的 Trace 发送指定文本即可）
+    // 显示 Trace 文本标识，默认为是
+    // 开启时可用于调试，只需要调用对应的 Trace 发送指定文本即可
     boolean trace_on                = true
-    // 是否允许飞艇空投
+    // 允许飞艇空投标识，默认为否
     boolean zep_next_wave           = false
-    // 是否允许攻击组组建超时
+    // 允许攻击组组建超时标识，默认为是
     boolean form_group_timeouts     = true
 endglobals
 
@@ -1762,8 +1780,8 @@ endfunction
 
 //============================================================================
 
-// 继续训练/建造/研究指定类型的单位/科技
-// 如果当前训练/建造/研究指定/研究中的该类型单位/科技数量大于等于指定数量，则不建造
+// 继续训练/建造/研究指定类型的单位/建筑/科技
+// 若当前训练/建造/研究中的该类型单位/建筑/科技数量大于等于指定数量，则不建造
 function SetBuildNext takes integer qty, integer unitid returns nothing
     local integer has = GetUnitCount(unitid)
     if has >= qty then
@@ -3484,7 +3502,7 @@ endfunction
 //============================================================================
 
 // 升级后自动学习技能线程，让英雄升级后根据 SetSkillArray 的顺序自动学习技能
-// 该代码在1.30中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
+// 该代码在1.31中因官方BUG无法运行，需要手动使用触发或魔改该代码修正
 function SkillArrays takes nothing returns integer
     local integer level = GetHeroLevelAI()
 
