@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es5",
+		"module": "CommonJS",
+		"target": "ES6",
 		"outDir": "out",
 		"lib": [
 			// "ES2015.Iterable",
@@ -17,16 +17,16 @@
 		"downlevelIteration": true, // 允许展开迭代器
 		"strictPropertyInitialization": true,
 		"allowJs": true,
-    	"checkJs": false
+    	"checkJs": false,
+		
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
 		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
 	},
 	"exclude": [
-		"node_modules",
+		// "node_modules",
 		".vscode-test",
-		"./out",
-		"*.d.ts"
+		"./out"
 	]
 }

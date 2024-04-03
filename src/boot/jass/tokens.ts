@@ -19,6 +19,9 @@ type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "b
 // }
 
 class Token  extends Range{
+	public startPosition = 0;
+	public endPosition = 0;
+
 	public type: TokenType;
 	public value: string;
 	public get line(): number {return this.start.line};
@@ -90,7 +93,11 @@ function tokens(content: string) {
 	}
 	const pushToken = (type: TokenType) => {
 		const value = values.join("");
-		tokens.push(new Token(type, value, lineNumber, position - value.length + 1)); // 因为position还未向前，所以要+1
+		const token = new Token(type, value, lineNumber, position - value.length + 1);
+		token.startPosition = index;
+		token.endPosition = index + token.value.length;
+
+		tokens.push(token); // 因为position还未向前，所以要+1
 		values.length = 0;
 		if (state != 0) {
 			state = 0;
@@ -101,7 +108,8 @@ function tokens(content: string) {
 	}
 
 	// +-*/\"|&>=!<;,()[]{}
-	for (let index = 0; index < content.length; index++) {
+	var index = 0
+	for (; index < content.length; index++) {
 		const char = content[index];
 		const nextChar = next(index);
 
