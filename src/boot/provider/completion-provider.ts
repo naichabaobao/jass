@@ -14,7 +14,7 @@ import { Options } from "./options";
 import { compare, isJFile,isZincFile,isLuaFile, isAiFile } from "../tool";
 import { convertPosition} from "./tool";
 import data, { DataGetter } from "./data";
-import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type, GlobalObject } from "../jass/ast";
+import { Global, Local, Library, Take, Func, Native, Struct, Method, Member, Declaration, Program, Type, GlobalObject, Interface } from "../jass/ast";
 import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
 import { Document, lexically } from "../check/mark";
@@ -244,6 +244,17 @@ function structToCompletionItem(struct: Struct, option?: CompletionItemOption) :
     deprecated: struct.hasDeprecated()
   });
 }
+function interfaceToCompletionItem(struct: Interface, option?: CompletionItemOption) :vscode.CompletionItem {
+  return completionItem(struct.name, {
+    kind: option?.kind ?? vscode.CompletionItemKind.Interface,
+    source: option?.source ?? struct.source,
+    code: option?.code ?? struct.origin,
+    documentation: option?.documentation ?? struct.getContents(),
+    orderString: option?.orderString,
+    detial: option?.detial ?? struct.name,
+    deprecated: struct.hasDeprecated()
+  });
+}
 
 function toItems<T extends Declaration>(handle: (decl: T, option?: CompletionItemOption) => vscode.CompletionItem, option?: CompletionItemOption, ...datas: T[]):vscode.CompletionItem[] {
   return datas.map(x => handle(x, option));
@@ -255,6 +266,7 @@ function getItems(program: Program, filePath: string, isCurrent: boolean = false
   if (!Options.isOnlyJass) {
     items.push(...toItems<Library>(libraryToCompletionItem, undefined, ...program.allLibrarys(isCurrent)));
     items.push(...toItems<Struct>(structToCompletionItem, undefined, ...program.allStructs(isCurrent)));
+    items.push(...toItems<Interface>(interfaceToCompletionItem, undefined, ...program.allInterfaces(isCurrent)));
     items.push(...toItems<Method>(methodToCompletionItem, undefined, ...program.allMethods(isCurrent)));
     items.push(...toItems<Member>(memberToCompletionItem, undefined, ...program.allMembers(isCurrent)));
     

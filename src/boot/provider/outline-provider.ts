@@ -109,6 +109,25 @@ function genSymbols(program:Program) {
             structSymbol.children.push(new vscode.DocumentSymbol(member.name, member.getContents().join(" "), vscode.SymbolKind.EnumMember, range, selectRange));
         });
     });
+    program.interfaces.forEach((inter) => {
+        const range = new vscode.Range(inter.loc.start.line, inter.loc.start.position, inter.loc.end.line, inter.loc.end.position);
+        let selectRange:vscode.Range;
+        selectRange = new vscode.Range(inter.loc.start.line, inter.loc.start.position, inter.loc.end.line, inter.loc.end.position);
+        const interfaceSymbol = new vscode.DocumentSymbol(inter.name, inter.getContents().join(" "), vscode.SymbolKind.Interface, range, selectRange)
+        symbols.push(interfaceSymbol);
+
+        inter.methods.forEach((method) => {
+            const range = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
+            let selectRange:vscode.Range;
+            if (method.nameToken) {
+                selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end.position);
+            } else {
+                selectRange = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
+            }
+            const methodSymbol = new vscode.DocumentSymbol(method.name, method.getContents().join(" "), vscode.SymbolKind.Method, range, selectRange);
+            interfaceSymbol.children.push(methodSymbol);
+        });
+    });
     program.librarys.forEach((library) => {
         const range = new vscode.Range(library.loc.start.line, library.loc.start.position, library.loc.end.line, library.loc.end.position);
         let selectRange:vscode.Range;
@@ -224,6 +243,25 @@ function genSymbols(program:Program) {
                     selectRange = new vscode.Range(member.loc.start.line, member.loc.start.position, member.loc.end.line, member.loc.end.position);
                 }
                 structSymbol.children.push(new vscode.DocumentSymbol(member.name, member.getContents().join(" "), vscode.SymbolKind.EnumMember, range, selectRange));
+            });
+        });
+        library.interfaces.forEach((inter) => {
+            const range = new vscode.Range(inter.loc.start.line, inter.loc.start.position, inter.loc.end.line, inter.loc.end.position);
+            let selectRange:vscode.Range;
+            selectRange = new vscode.Range(inter.loc.start.line, inter.loc.start.position, inter.loc.end.line, inter.loc.end.position);
+            const interfaceSymbol = new vscode.DocumentSymbol(inter.name, inter.getContents().join(" "), vscode.SymbolKind.Interface, range, selectRange)
+            librarySymbol.children.push(interfaceSymbol);
+    
+            inter.methods.forEach((method) => {
+                const range = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
+                let selectRange:vscode.Range;
+                if (method.nameToken) {
+                    selectRange = new vscode.Range(method.nameToken.line, method.nameToken.position, method.nameToken.line, method.nameToken.end.position);
+                } else {
+                    selectRange = new vscode.Range(method.loc.start.line, method.loc.start.position, method.loc.end.line, method.loc.end.position);
+                }
+                const methodSymbol = new vscode.DocumentSymbol(method.name, method.getContents().join(" "), vscode.SymbolKind.Method, range, selectRange);
+                interfaceSymbol.children.push(methodSymbol);
             });
         });
     });

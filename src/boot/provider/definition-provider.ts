@@ -69,6 +69,10 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(library));
           locations.push(location);
         });
+        program.getNameInterface(key).forEach(inter => {
+          const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(inter));
+          locations.push(location);
+        });
         program.getNameStruct(key).forEach(struct => {
           const location = new vscode.Location(vscode.Uri.file(filePath), toVsPosition(struct));
           locations.push(location);
