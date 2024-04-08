@@ -17,13 +17,13 @@ globals
     constant string   bj_DEBUG_CHAT_TELEPORT      = "teleport"
     // 作弊码，ttt，立即移动触发玩家选取单位到当前镜头位置
     constant string   bj_DEBUG_CHAT_TELEPORT2     = "ttt"
-    // 作弊码，unitinfo，通报触发玩家选取单位的参数
+    // 作弊码，unitinfo，播报触发玩家选取单位的参数
     constant string   bj_DEBUG_CHAT_UNITINFO      = "unitinfo"
-    // 作弊码，ui，通报触发玩家选取单位的参数
+    // 作弊码，ui，播报触发玩家选取单位的参数
     constant string   bj_DEBUG_CHAT_UNITINFO2     = "ui"
-    // 作弊码，caminfo，通报触发玩家的镜头参数
+    // 作弊码，caminfo，播报触发玩家的镜头参数
     constant string   bj_DEBUG_CHAT_CAMINFO       = "caminfo"
-    // 作弊码，ci，通报触发玩家的镜头参数
+    // 作弊码，ci，播报触发玩家的镜头参数
     constant string   bj_DEBUG_CHAT_CAMINFO2      = "ci"
     // 作弊码，camdist，设置镜头的镜头距离(距离到目标)
     constant string   bj_DEBUG_CHAT_CAMDIST       = "camdist"
@@ -55,9 +55,9 @@ globals
     constant string   bj_DEBUG_CHAT_BLACKMASK     = "blackmask"
     // 作弊码，bm，全图启用黑色阴影
     constant string   bj_DEBUG_CHAT_BLACKMASK2    = "bm"
-    // 作弊码，difficulty，通报游戏难度
+    // 作弊码，difficulty，播报游戏难度
     constant string   bj_DEBUG_CHAT_DIFFICULTY    = "difficulty"
-    // 作弊码，fingerofdeath，死亡之指状态及通报
+    // 作弊码，fingerofdeath，死亡之指状态及播报
     constant string   bj_DEBUG_CHAT_FINGEROFDEATH = "fingerofdeath"
     // 作弊触发器 给所有玩家增加5000黄金/木材
     trigger           bj_debugGimmeTrig
@@ -65,9 +65,9 @@ globals
     trigger           bj_debugDemoTrig
     // 作弊触发器 立即移动触发玩家选取单位到当前镜头位置
     trigger           bj_debugTeleportTrig
-    // 作弊触发器 通报触发玩家选取单位的参数
+    // 作弊触发器 播报触发玩家选取单位的参数
     trigger           bj_debugUnitInfoTrig
-    // 作弊触发器 通报触发玩家的镜头参数
+    // 作弊触发器 播报触发玩家的镜头参数
     trigger           bj_debugCamInfoTrig
     // 作弊触发器 设置镜头的镜头距离(距离到目标)
     trigger           bj_debugCamDistTrig
@@ -97,9 +97,9 @@ globals
     trigger           bj_debugGotoUnitTrig
     // 作弊触发器 全图启用黑色阴影
     trigger           bj_debug_BlackMaskTrig
-    // 作弊触发器 通报游戏难度
+    // 作弊触发器 播报游戏难度
     trigger           bj_debugDifficultyTrig
-    // 作弊触发器 死亡之指状态及通报
+    // 作弊触发器 死亡之指状态及播报
     trigger  array    bj_debugFingerOfDeathTrig
     // 作弊触发器 死亡之指触发器动作--立即杀死单位
     trigger  array    bj_debugToolOfDeathTrig
@@ -140,7 +140,7 @@ endfunction
 
 //===========================================================================
 
-// 展示演示玩家属性多面板设置所有玩家黄金/木材为0触发器动作
+// 展示演示玩家属性多面板 - 设置所有玩家黄金/木材为0触发器动作
 function DebugDemoEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call SetPlayerState(thePlayer, PLAYER_STATE_RESOURCE_GOLD, 0)
@@ -203,7 +203,7 @@ endfunction
 //===========================================================================
 // 
 
-// 转换类型为4字码
+// 转换类型为4字码（以字符串形式返回）
 // Convert a integer id value into a 4-letter id code.
 function DebugIdInteger2IdString takes integer value returns string
     local string charMap = ".................................!.#$%&'()*+,-./0123456789:;<=>.@ABCDEFGHIJKLMNOPQRSTUVWXYZ[.]^_`abcdefghijklmnopqrstuvwxyz{|}~................................................................................................................................."
@@ -226,7 +226,7 @@ endfunction
 
 //===========================================================================
 
-// 通报触发玩家选取单位的参数触发器动作
+// 播报触发玩家选取单位的参数触发器动作
 // 单位的所属，类型，名字，X Y 坐标，朝向，类型详情（是否英雄、死亡、建筑、地面单位、飞行单位、可攻击地面、可攻击飞行、近战攻击、远程攻击、召唤物）
 function DebugUnitInfoEnum takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
@@ -254,7 +254,7 @@ endfunction
 
 //===========================================================================
 
-// 通报触发玩家选取单位的参数
+// 播报触发玩家选取单位的参数
 function DebugUnitInfo takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
@@ -264,7 +264,7 @@ endfunction
 
 //===========================================================================
 
-// 通报触发玩家的镜头参数
+// 播报触发玩家的镜头参数
 // 镜头 X Y Z 坐标，镜头距离(距离到目标)值，远景截断距离(远景裁剪)值，镜头区域(观察区域)值，X 轴旋转角度（水平/攻击角度）值，Y 轴旋转角度(滚动)值，Z 轴旋转角度（旋转）值
 function DebugCamInfo takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
@@ -447,7 +447,7 @@ endfunction
 
 //===========================================================================
 
-// 计算触发玩家的选取单位设置坐标
+// 计算触发玩家的选取单位位置坐标
 function DebugGotoUnitEnum takes nothing returns nothing
     local unit u = GetEnumUnit()
 
@@ -487,7 +487,7 @@ endfunction
 
 //===========================================================================
 
-// 通报游戏难度
+// 播报游戏难度
 function DebugDifficulty takes nothing returns nothing
     local player         thePlayer = GetTriggerPlayer()
     local gamedifficulty theDiff   = GetGameDifficulty()
@@ -512,7 +512,7 @@ endfunction
 
 //===========================================================================
 
-// 启用/禁用 死亡之指状态及通报
+// 启用/禁用 死亡之指状态及播报
 function DebugToggleFingerOfDeath takes nothing returns nothing
     local integer index = GetPlayerId(GetTriggerPlayer())
     if (bj_debugFingerOfDeathEnabled[index]) then
