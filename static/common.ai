@@ -26,20 +26,20 @@ native GetAiPlayer          takes nothing                               returns 
 // 英雄升级技能相关函数 
 native GetHeroId            takes nothing                               returns integer
 // 获取升级英雄的等级
-// 英雄升级技能相关函数 
+// 英雄自动学习技能函数 
 native GetHeroLevelAI       takes nothing                               returns integer
 
 // 获取指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetUnitCount         takes integer unitid                        returns integer
 // 获取指定玩家指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
 // 获取指定单位的数量，仅统计已复活/训练/建造/升级完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetUnitCountDone     takes integer unitid                        returns integer
 // 获取指定基地对应单位的数量（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄，按 dn 确定是否包含复活中的英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 // @param tn 基地编号，-1为不限
 // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
@@ -1835,9 +1835,9 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// @param easy 简单AI的等级
-// @param med 中等AI的等级
-// @param hard 疯狂AI的等级
+// @param easy 简单AI的科技等级
+// @param med 中等AI的科技等级
+// @param hard 疯狂AI的科技等级
 function SetBuildUpgrEx takes integer easy, integer med, integer hard, integer unitid returns nothing
     if difficulty == EASY then
         call SetBuildAll(BUILD_UPGRADE,easy,unitid,-1)
@@ -1884,7 +1884,7 @@ endfunction
 //============================================================================
 
 // 建造/训练指定单位类型
-// 当金大于1000，木大于500时造两个，否则造一个，默认用于建造工厂（造兵建筑）
+// 当金大于1000且木大于500时造两个，否则造一个，默认用于建造工厂（造兵建筑）
 function BuildFactory takes integer unitid returns nothing
     if GetGold() > 1000 and GetWood() > 500 then
         call SetBuildUnit( 2, unitid )
@@ -1895,7 +1895,7 @@ endfunction
 
 //============================================================================
 
-// 判断指定单位类型的数量（含建造/训练中）是否等于该单位类型总数量（不含建造/训练中），默认用于检测城镇类型的单位（基地）
+// 判断指定单位类型的数量（含建造/训练中）是否等于该单位类型总数量（不含建造/训练中），默认用于检测城镇类型的单位（是否有正在建造的基地）
 function HallsCompleted takes integer unitid returns boolean
     return GetUnitCount(unitid) == GetUnitCountDone(unitid) 
 endfunction
@@ -1915,7 +1915,7 @@ endfunction
 //============================================================================
 
 // 获取指定单位类型的数量
-// @param only_done 是否包含建造/训练中的单位
+// @param only_done 是否包含复活/建造/训练中的单位
 // @param townid 基地编号，-1为不限
 function GetUnitCountEx takes integer unitid, boolean only_done, integer townid returns integer
     if townid == -1 then
@@ -1998,14 +1998,14 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，包含建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含建造/训练中，不限基地
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
 // 默认用于统计城镇类型的单位（基地）
 function TownCount takes integer base returns integer
     return TownCountEx(base,false,-1)
@@ -2032,7 +2032,7 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型数量，不否包含建造/训练中
+// 统计指定单位类型数量，不否包含复活/建造/训练中
 // 默认用于统计城镇类型的单位（基地）
 // @param base 指定单位类型
 // @param townid 基地编号，-1为不限
@@ -2074,7 +2074,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（不包含建造/训练中）数量达到指定数量，达到之前一直循环等待
+// 等待指定的单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
@@ -2166,7 +2166,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（包含建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
+// 等待指定的单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
 // @param towns 指定数量
 // @param townid 基地单位类型
 function WaitForTown takes integer towns, integer townid returns nothing
