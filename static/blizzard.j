@@ -3800,7 +3800,7 @@ endfunction
 
 
 // 创建物品（指定单位）触发器
-// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
+// 若单位没有物品栏或物品栏已满，将会创建在单位位置
 function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns item
     // Create the item at the hero's feet first, and then give it to him.
     // This is to ensure that the item will be left at the hero's feet if
@@ -3958,7 +3958,7 @@ function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyM
 endfunction
 
 
-// 修改英雄技能点数，修改失败会返回 false
+// 修改英雄技能点数，修改失败会返回假
 function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integer value returns boolean
     if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         return UnitModifySkillPoints(whichHero, value)
@@ -4613,7 +4613,7 @@ endfunction
 
 
 // 查询单位组的单位是否已死亡
-// 单位组内没有存活单位时返回true
+// 单位组内没有存活单位时返回真
 // Returns true if every unit of the group is dead.
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
@@ -4667,8 +4667,8 @@ endfunction
 
 
 
-// 查询单位组中的单位是否在指定区域内
-// 全都在区域内才返回是，任意一个单位不在区域内时返回否
+// 查询单位组中的单位是否都在指定区域内
+// 任意单位不在区域内时返回否
 // Returns true if every unit of the group is within the given rect.
 function IsUnitGroupInRectBJ takes group g, rect r returns boolean
     set bj_isUnitGroupInRectResult = true
@@ -4700,7 +4700,7 @@ function ShowUnitShow takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, true)
 endfunction
 
-// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
+// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件
 function IssueHauntOrderAtLocBJFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == 'ngol'
 endfunction
@@ -8445,7 +8445,7 @@ function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, play
 endfunction
 
 
-// 设置英雄的训练数量上限
+// 设置指定玩家的英雄训练数量上限
 function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 endfunction
