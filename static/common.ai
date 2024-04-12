@@ -141,13 +141,14 @@ native SetDefendPlayer      takes boolean state                         returns 
 // 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
 native SetHeroesFlee        takes boolean state                         returns nothing
 // 允许/禁止 英雄购买物品
-// 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品
+// 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品，过于贴近商店时会自动卖出一件优先级最低的物品
 native SetHeroesBuyItems    takes boolean state                         returns nothing
 // 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
 native SetWatchMegaTargets  takes boolean state                         returns nothing
 // 启用/禁用 受伤单位（血量50%以下）不编入攻击组
 native SetIgnoreInjured     takes boolean state                         returns nothing
 // 允许/禁止 英雄拾取物品
+// 物品栏已满时，自动物品优先级最低的物品
 native SetHeroesTakeItems   takes boolean state                         returns nothing
 // 允许/禁止 单位逃跑
 native SetUnitsFlee         takes boolean state                         returns nothing
