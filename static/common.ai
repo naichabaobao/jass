@@ -23,7 +23,7 @@ native DoAiScriptDebug      takes nothing                               returns 
 // 注：编号从0开始，即玩家1编号为0
 native GetAiPlayer          takes nothing                               returns integer
 // 获取升级英雄的单位类型
-// 英雄升级技能相关函数 
+// 英雄自动学习技能函数
 native GetHeroId            takes nothing                               returns integer
 // 获取升级英雄的等级
 // 英雄自动学习技能函数 
