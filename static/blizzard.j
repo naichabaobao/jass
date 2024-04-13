@@ -5591,7 +5591,7 @@ endfunction
 //***************************************************************************
 
 
-// 打开/关闭 传送门
+// 激活/关闭 传送门
 function WaygateActivateBJ takes boolean activate, unit waygate returns nothing
     call WaygateActivate(waygate, activate)
 endfunction
@@ -5616,7 +5616,7 @@ function WaygateGetDestinationLocBJ takes unit waygate returns location
 endfunction
 
 
-// 启用/禁用 单位的小地图特殊图标
+// 启用/禁用 小地图特殊图标（指定单位）
 function UnitSetUsesAltIconBJ takes boolean flag, unit whichUnit returns nothing
     call UnitSetUsesAltIcon(whichUnit, flag)
 endfunction
@@ -5734,7 +5734,7 @@ function ForceAddPlayerSimple takes player whichPlayer, force whichForce returns
 endfunction
 
 
-// 删除玩家到玩家组
+// 将玩家移出玩家组
 function ForceRemovePlayerSimple takes player whichPlayer, force whichForce returns nothing
     call ForceRemovePlayer(whichForce, whichPlayer)
 endfunction
@@ -5900,12 +5900,12 @@ function GetUnitsOfPlayerAll takes player whichPlayer returns group
 endfunction
 
 
-// 选取玩家的指定单位类型，并以单位组形式返回触发器动作
+// 选取玩家的指定单位类型，以单位组形式返回触发器动作
 function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
-// 选取玩家的指定单位类型，并以单位组形式返回
+// 选取玩家的指定单位类型，以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
@@ -5926,7 +5926,7 @@ endfunction
 
 
 // 获取以指定玩家新建的玩家组
-// 将指定玩家加入新创建的专属玩家组，并以玩家组形式返回
+// 将指定玩家加入新创建的专属玩家组，以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -6012,7 +6012,7 @@ function CountUnitsInGroup takes group g returns integer
     return bj_groupCountUnits
 endfunction
 
-// 玩家组中的玩家数量
+// 玩家组中的玩家数量加一
 function CountPlayersInForceEnum takes nothing returns nothing
     set bj_forceCountPlayers = bj_forceCountPlayers + 1
 endfunction
@@ -6288,7 +6288,7 @@ function SetPlayerAllianceStateFullControlBJ takes player sourcePlayer, player o
 endfunction
 
 
-// 设置联盟状态
+// 设置两位指定玩家的联盟状态
 function SetPlayerAllianceStateBJ takes player sourcePlayer, player otherPlayer, integer allianceState returns nothing
     // Prevent players from attempting to ally with themselves.
     if(sourcePlayer == otherPlayer) then
