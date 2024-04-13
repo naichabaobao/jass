@@ -4544,7 +4544,7 @@ native GetPlayerTeam takes player whichPlayer returns integer
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
-// 查询指定玩家（种族）是否可选
+// 查询指定玩家是否可选
 native GetPlayerSelectable takes player whichPlayer returns boolean
 // 查询指定玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
