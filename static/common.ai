@@ -3036,7 +3036,7 @@ function AttackMoveKillA takes unit target returns nothing
 endfunction
 
 //============================================================================
-// 攻击小型中立敌对玩家（打野）
+// 攻击中立敌对玩家低等级目标（打野）
 function MinorCreepAttack takes nothing returns nothing
     local unit target = GetMinorCreep()
     call SetAllianceTarget(target)
@@ -3045,7 +3045,7 @@ function MinorCreepAttack takes nothing returns nothing
 endfunction
 
 //============================================================================
-// 攻击大型中立敌对玩家（打野）
+// 攻击中立敌对玩家高等级目标（打野）
 function MajorCreepAttack takes nothing returns nothing
     local unit target = GetMajorCreep()
     call SetAllianceTarget(target)
@@ -3055,7 +3055,7 @@ endfunction
 
 //============================================================================
 
-// 攻击中立敌对玩家（打野）
+// 攻击中立敌对玩家等级合适目标（打野）
 // 根据当前的min_creeps、max_creeps，allow_air_creeps获取野怪
 function CreepAttackEx takes nothing returns nothing
     local unit target = GetCreepCamp(min_creeps,max_creeps,allow_air_creeps)
@@ -3066,7 +3066,7 @@ endfunction
 
 //============================================================================
 
-// 攻击任意玩家
+// 随机攻击玩家基地
 function AnyPlayerAttack takes nothing returns nothing
     local unit hall
 
