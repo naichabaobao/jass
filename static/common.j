@@ -4286,7 +4286,7 @@ globals
  constant unitcategory UNIT_CATEGORY_GIANT = ConvertUnitCategory(1)
 	// 单位类别 不死族
 	constant unitcategory UNIT_CATEGORY_UNDEAD = ConvertUnitCategory(2)
-	// 单位类别 召唤生物
+	// 单位类别 召唤物
 	constant unitcategory UNIT_CATEGORY_SUMMONED = ConvertUnitCategory(4)
 	// 单位类别 机械类
 	constant unitcategory UNIT_CATEGORY_MECHANICAL = ConvertUnitCategory(8)
@@ -4365,7 +4365,7 @@ native SquareRoot takes real x returns real
 // x == 0.0 且 y < 0 ， 返回 0
 // computes x to the y power
 native Pow takes real x, real power returns real
-// 四舍五入
+// 小数位四舍五入
 constant native MathRound takes real r returns integer
 
 
@@ -4408,7 +4408,7 @@ native StringHash takes string s returns integer
 // 当字符串不存在时(是当前版本不存在查询的字符串本身，不是字符串已存在但没有翻译文本)，会原封不动返回查询内容(英语也附带翻译，该翻译文本仅首字母大写，但所有字符串都是大写且使用下划线替代空格，故翻译文本和字符串绝对不会相等)，可利用其得知游戏大致版本号(如1.27，1.30等)
 // 不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
 native GetLocalizedString takes string source returns string
-// 获取本地热键
+// 获取本地快捷键
 // 理论上不能在AI脚本使用
 native GetLocalizedHotkey takes string source returns integer
 
@@ -4497,7 +4497,7 @@ constant native GetStartLocationX takes integer whichStartLocation returns real
 // 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定编号出生点，以点形式返回
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23会返回该编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 // 会创建点，用完请注意排泄
 constant native GetStartLocationLoc takes integer whichStartLocation returns location
 
@@ -4540,7 +4540,7 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 // 获取指定玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
 // 获取指定玩家出生点编号
-// 带入0~11/23玩家编号即可返回该玩家出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23玩家编号会返回该玩家出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
