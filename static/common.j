@@ -7624,9 +7624,9 @@ native BlzGetAbilityActivatedTooltip takes integer abilCode, integer level retur
 native BlzGetAbilityExtendedTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息(自动施法启用)
 native BlzGetAbilityActivatedExtendedTooltip takes integer abilCode, integer level returns string
-// 获取技能提示信息(学习)
+// 获取技能提示信息(学习文本)
 native BlzGetAbilityResearchTooltip takes integer abilCode, integer level returns string
-// 获取技能扩展提示信息(学习)
+// 获取技能扩展提示信息(学习文本)
 native BlzGetAbilityResearchExtendedTooltip takes integer abilCode, integer level returns string
 // 设置技能图标
 native BlzSetAbilityIcon takes integer abilCode, string iconPath returns nothing
@@ -7654,7 +7654,7 @@ native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns noth
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
-// 设置最大生命值
+// 设置指定单位最大生命值
 native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
 // 获取指定单位最大魔法值
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
