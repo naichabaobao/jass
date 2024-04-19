@@ -7634,13 +7634,13 @@ function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset retu
 endfunction
 
 
-// 允许/禁止 漂浮文字暂停状态
+// 允许/禁止 漂浮文字暂停
 function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagSuspended(tt, flag)
 endfunction
 
 
-// 允许/禁止 漂浮文字永久（显示）状态
+// 允许/禁止 漂浮文字永久（显示）
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
