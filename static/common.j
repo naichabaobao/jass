@@ -6755,9 +6755,9 @@ native SetTextTagColor takes texttag t, integer red, integer green, integer blue
 native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
 // 显示/隐藏 漂浮文字 (所有玩家) [R]
 native SetTextTagVisibility takes texttag t, boolean flag returns nothing
-// 允许/禁止 漂浮文本暂停状态
+// 允许/禁止 漂浮文本暂停
 native SetTextTagSuspended takes texttag t, boolean flag returns nothing
-// 允许/禁止 漂浮文本永久(显示)状态
+// 允许/禁止 漂浮文本永久(显示)
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
 // 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
@@ -6773,9 +6773,9 @@ native SetReservedLocalHeroButtons takes integer reserved returns nothing
 native GetAllyColorFilterState takes nothing returns integer
 // 设置联盟颜色过滤状态
 native SetAllyColorFilterState takes integer state returns nothing
-// 判断小地图是否显示中立敌对单位营地图标
+// 获取小地图中立敌对单位营地图标显示状态
 native GetCreepCampFilterState takes nothing returns boolean
-// 显示/隐藏 小地图中立敌对单位营地图标(是否在小地图显示中立敌对玩家的单位)
+// 显示/隐藏 小地图中立敌对单位营地图标(小地图野怪红黄绿点)
 native SetCreepCampFilterState takes boolean state returns nothing
 // 启用/禁用 小地图按钮
 native EnableMinimapFilterButtons takes boolean enableAlly, boolean enableCreep returns nothing
