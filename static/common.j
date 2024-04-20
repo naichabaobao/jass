@@ -1751,7 +1751,7 @@ globals
 	// 原生UI 技能按钮(含移动/停止/巡逻/攻击，共12格)
 	// 每次选择单位时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
-	// 原生UI 英雄栏(F1、F2按钮对应的英雄头像所在区域)
+	// 原生UI 英雄栏(F1、F2按钮对应的英雄头像区域)
 	// 所有 HERO_BUTTONS 的父类，由 HeroButtons 控制可见性
 	constant originframetype ORIGIN_FRAME_HERO_BAR = ConvertOriginFrameType(2)
 	// 原生UI 英雄头像(F1、F2...屏幕左侧的自己/共享控制盟友的英雄头像按钮)
@@ -4556,7 +4556,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家预设种族是否指定种族
-// 在情节–玩家设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
+// 若情节–玩家未设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -5248,7 +5248,7 @@ native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichP
 constant native GetEventPlayerState takes nothing returns playerstate
 
 // 触发器登记玩家输入聊天信息事件
-// @param chatMessageToDetect输入的聊天信息，需使用""框住
+// @param chatMessageToDetect输入的聊天信息
 // @param exactMatchOnly输入的聊天信息是否需要完全匹配
 native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
 
@@ -5387,9 +5387,9 @@ native TriggerSyncReady takes nothing returns nothing
 native GetWidgetLife takes widget whichWidget returns real
 // 设置指定单位/物品/可破坏物生命值
 native SetWidgetLife takes widget whichWidget, real newLife returns nothing
-// 获取指定单位/物品/可破坏物所在 X 坐标
+// 获取指定单位/物品/可破坏物 X 坐标
 native GetWidgetX takes widget whichWidget returns real
-// 获取指定单位/物品/可破坏物所在 Y 坐标
+// 获取指定单位/物品/可破坏物 Y 坐标
 native GetWidgetY takes widget whichWidget returns real
 // 获取触发单位/物品/可破坏物
 constant native GetTriggerWidget takes nothing returns widget
@@ -5419,9 +5419,9 @@ native IsDestructableInvulnerable takes destructable d returns boolean
 native EnumDestructablesInRect takes rect r, boolexpr filter, code actionFunc returns nothing
 // 获取指定可破坏物的类型
 native GetDestructableTypeId takes destructable d returns integer
-// 获取指定可破坏物所在 X 坐标 [R]
+// 获取指定可破坏物 X 坐标 [R]
 native GetDestructableX takes destructable d returns real
-// 获取指定可破坏物所在 Y 坐标 [R]
+// 获取指定可破坏物 Y 坐标 [R]
 native GetDestructableY takes destructable d returns real
 // 设置指定可破坏物生命值
 native SetDestructableLife takes destructable d, real life returns nothing
@@ -5462,9 +5462,9 @@ native RemoveItem takes item whichItem returns nothing
 native GetItemPlayer takes item whichItem returns player
 // 获取指定物品物品类型(4字编码)
 native GetItemTypeId takes item i returns integer
-// 获取指定物品所在 X 坐标 [R]
+// 获取指定物品 X 坐标 [R]
 native GetItemX takes item i returns real
-// 获取指定物品所在 Y 坐标 [R]
+// 获取指定物品 Y 坐标 [R]
 native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
@@ -5540,7 +5540,7 @@ native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, re
 
 // 杀死单位
 native KillUnit takes unit whichUnit returns nothing
-// 删除单位
+// 删除单位，删除不会留下尸体
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
@@ -5549,9 +5549,9 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // 设置指定单位属性 [R]
 // @param whichUnitState 单位属性，可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-// 设置指定单位所在 X 坐标 [R]
+// 设置指定单位 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
-// 设置指定单位所在 Y 坐标 [R]
+// 设置指定单位 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
@@ -5753,9 +5753,9 @@ native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y ret
 // 发布使用物品命令(指定单位)
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
-// 获取指定单位所在 X 坐标 [R]
+// 获取指定单位 X 坐标 [R]
 constant native GetUnitX takes unit whichUnit returns real
-// 获取指定单位所在 Y 坐标 [R]
+// 获取指定单位 Y 坐标 [R]
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
 // 会创建点，用完请注意排泄
