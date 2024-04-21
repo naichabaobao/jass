@@ -5643,6 +5643,8 @@ native GetHeroAgi takes unit whichHero, boolean includeBonuses returns integer
 native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
 // 降低指定英雄等级 [R]
+// @param howManyLevels 降级数
+// 降级时会忘记技能
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
 // 获取指定英雄经验值
@@ -5653,11 +5655,15 @@ native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy re
 // 获取指定英雄未使用的技能点数
 native GetHeroSkillPoints takes unit whichHero returns integer
 // 设置指定英雄未使用的技能点数 [R]
+// 给与技能点数超过技能可学习等级时，额外的点数无效，拥有额外技能点数时仍遵循技能学习等级及跳级学习限制
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
 // 增加指定英雄经验值 [R]
+// @param showEyeCandy 因此升级时是否显示升级动画
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置指定英雄等级
+// @param showEyeCandy 是否显示升级动画，该设置对降级无效
+// 降级时会忘记技能
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 获取指定英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
