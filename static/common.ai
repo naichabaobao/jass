@@ -186,13 +186,13 @@ native AddDefenders         takes integer qty, integer id               returns 
 // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取，对空力量不足时不要获取飞行野怪
 native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
 // 开始获取敌人主基地
-// 使用 WaitGetEnemyBase 停止获取，使用 GetEnemyBase 捕获获取到的单位
+// 使用 WaitGetEnemyBase 判断是否获取完成，使用 GetEnemyBase 捕获获取到的单位
 native StartGetEnemyBase    takes nothing                               returns nothing
-// 查询是否已获取到敌人主基地
+// 查询是否仍在获取敌人主基地
 // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
 native WaitGetEnemyBase     takes nothing                               returns boolean
 // 获取敌人主基地的单位
-// 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位（可能返回null）
+// 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
 // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
 native GetExpansionFoe      takes nothing                               returns unit
