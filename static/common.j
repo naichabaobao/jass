@@ -466,6 +466,7 @@ constant native GetObjectName takes integer objectId returns string
 // 1.28及以下：12
 // 1.29及以上：24
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
+// @version 1.29
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家的玩家编号
 // 1.28及以下：13
