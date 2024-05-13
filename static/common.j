@@ -4713,12 +4713,12 @@ native BlzForceHasPlayer takes force whichForce, player whichPlayer returns bool
 native ForceClear takes force whichForce returns nothing
 // 匹配玩家组(指定条件表达式)
 native ForceEnumPlayers takes force whichForce, boolexpr filter returns nothing
-// 在指定的玩家组中匹配玩家(指定匹配的数量)
+// 在指定的玩家组中匹配玩家(指定匹配的玩家数量)
 // @param countLimit 匹配的玩家数量上限
 native ForceEnumPlayersCounted takes force whichForce, boolexpr filter, integer countLimit returns nothing
-// 在指定玩家组中匹配盟友
+// 在指定玩家组中匹配指定玩家的盟友
 native ForceEnumAllies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-// 在指定玩家组中匹配敌人
+// 在指定玩家组中匹配指定玩家的敌人
 native ForceEnumEnemies takes force whichForce, player whichPlayer, boolexpr filter returns nothing
 // 选取指定玩家组(的所有玩家)做动作(单个动作)
 native ForForce takes force whichForce, code callback returns nothing
