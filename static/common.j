@@ -5670,7 +5670,7 @@ native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy re
 constant native GetHeroLevel takes unit whichHero returns integer
 // 获取指定单位等级
 constant native GetUnitLevel takes unit whichUnit returns integer
-// 获取指定英雄名字
+// 获取指定英雄称谓
 native GetHeroProperName takes unit whichHero returns string
 // 允许/禁止 指定英雄获取经验值 [R]
 native SuspendHeroXP takes unit whichHero, boolean flag returns nothing
