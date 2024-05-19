@@ -5670,7 +5670,7 @@ native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy re
 constant native GetHeroLevel takes unit whichHero returns integer
 // 获取指定单位等级
 constant native GetUnitLevel takes unit whichUnit returns integer
-// 获取指定英雄称谓
+// 获取指定英雄（本地化语言的）称谓
 // 在AI脚本中默认返回null
 native GetHeroProperName takes unit whichHero returns string
 // 允许/禁止 指定英雄获取经验值 [R]
@@ -5783,7 +5783,7 @@ constant native GetOwningPlayer takes unit whichUnit returns player
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
 constant native GetUnitRace takes unit whichUnit returns race
-// 获取指定单位名字
+// 获取指定单位（本地化语言的）名字
 // 在AI脚本中默认返回null
 constant native GetUnitName takes unit whichUnit returns string
 // 获取指定单位 占用的人口数量(单个)
