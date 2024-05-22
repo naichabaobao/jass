@@ -23,23 +23,23 @@ native DoAiScriptDebug      takes nothing                               returns 
 // 注：编号从0开始，即玩家1编号为0
 native GetAiPlayer          takes nothing                               returns integer
 // 获取升级英雄的单位类型
-// 英雄升级技能相关函数 
+// 英雄自动学习技能函数
 native GetHeroId            takes nothing                               returns integer
 // 获取升级英雄的等级
-// 英雄升级技能相关函数 
+// 英雄自动学习技能函数 
 native GetHeroLevelAI       takes nothing                               returns integer
 
 // 获取指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetUnitCount         takes integer unitid                        returns integer
 // 获取指定玩家指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
 // 获取指定单位的数量，仅统计已复活/训练/建造/升级完成（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 native GetUnitCountDone     takes integer unitid                        returns integer
 // 获取指定基地对应单位的数量（指定单位ID）
-// 不含该单位的等价单位，不含死亡单位及英雄，按 dn 确定是否包含复活中的英雄
+// 不含英雄、已死亡单位及该单位的等价单位
 // @param tn 基地编号，-1为不限
 // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
@@ -141,13 +141,14 @@ native SetDefendPlayer      takes boolean state                         returns 
 // 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
 native SetHeroesFlee        takes boolean state                         returns nothing
 // 允许/禁止 英雄购买物品
-// 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品
+// 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品，过于贴近商店时会自动卖出一件优先级最低的物品
 native SetHeroesBuyItems    takes boolean state                         returns nothing
 // 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
 native SetWatchMegaTargets  takes boolean state                         returns nothing
 // 启用/禁用 受伤单位（血量50%以下）不编入攻击组
 native SetIgnoreInjured     takes boolean state                         returns nothing
 // 允许/禁止 英雄拾取物品
+// 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品
 native SetHeroesTakeItems   takes boolean state                         returns nothing
 // 允许/禁止 单位逃跑
 native SetUnitsFlee         takes boolean state                         returns nothing
@@ -185,13 +186,13 @@ native AddDefenders         takes integer qty, integer id               returns 
 // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取，对空力量不足时不要获取飞行野怪
 native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
 // 开始获取敌人主基地
-// 使用 WaitGetEnemyBase 停止获取，使用 GetEnemyBase 捕获获取到的单位
+// 使用 WaitGetEnemyBase 判断是否获取完成，使用 GetEnemyBase 捕获获取到的单位
 native StartGetEnemyBase    takes nothing                               returns nothing
-// 查询是否已获取到敌人主基地
+// 查询是否仍在获取敌人主基地
 // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
 native WaitGetEnemyBase     takes nothing                               returns boolean
 // 获取敌人主基地的单位
-// 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否完成获取，才能使用该函数获取本次得到的单位（可能返回null）
+// 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
 // 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
 native GetExpansionFoe      takes nothing                               returns unit
@@ -1835,9 +1836,9 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// @param easy 简单AI的等级
-// @param med 中等AI的等级
-// @param hard 疯狂AI的等级
+// @param easy 简单AI的科技等级
+// @param med 中等AI的科技等级
+// @param hard 疯狂AI的科技等级
 function SetBuildUpgrEx takes integer easy, integer med, integer hard, integer unitid returns nothing
     if difficulty == EASY then
         call SetBuildAll(BUILD_UPGRADE,easy,unitid,-1)
@@ -1884,7 +1885,7 @@ endfunction
 //============================================================================
 
 // 建造/训练指定单位类型
-// 当金大于1000，木大于500时造两个，否则造一个，默认用于建造工厂（造兵建筑）
+// 当金大于1000且木大于500时造两个，否则造一个，默认用于建造工厂（造兵建筑）
 function BuildFactory takes integer unitid returns nothing
     if GetGold() > 1000 and GetWood() > 500 then
         call SetBuildUnit( 2, unitid )
@@ -1895,7 +1896,7 @@ endfunction
 
 //============================================================================
 
-// 判断指定单位类型的数量（含建造/训练中）是否等于该单位类型总数量（不含建造/训练中），默认用于检测城镇类型的单位（基地）
+// 判断指定单位类型的数量（含建造/训练中）是否等于该单位类型总数量（不含建造/训练中），默认用于检测城镇类型的单位（是否有正在建造的基地）
 function HallsCompleted takes integer unitid returns boolean
     return GetUnitCount(unitid) == GetUnitCountDone(unitid) 
 endfunction
@@ -1915,7 +1916,7 @@ endfunction
 //============================================================================
 
 // 获取指定单位类型的数量
-// @param only_done 是否包含建造/训练中的单位
+// @param only_done 是否包含复活/建造/训练中的单位
 // @param townid 基地编号，-1为不限
 function GetUnitCountEx takes integer unitid, boolean only_done, integer townid returns integer
     if townid == -1 then
@@ -1998,14 +1999,14 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，包含建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含建造/训练中，不限基地
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
 // 默认用于统计城镇类型的单位（基地）
 function TownCount takes integer base returns integer
     return TownCountEx(base,false,-1)
@@ -2032,7 +2033,7 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型数量，不否包含建造/训练中
+// 统计指定单位类型数量，不否包含复活/建造/训练中
 // 默认用于统计城镇类型的单位（基地）
 // @param base 指定单位类型
 // @param townid 基地编号，-1为不限
@@ -2074,7 +2075,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（不包含建造/训练中）数量达到指定数量，达到之前一直循环等待
+// 等待指定的单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
@@ -2166,7 +2167,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（包含建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
+// 等待指定的单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
 // @param towns 指定数量
 // @param townid 基地单位类型
 function WaitForTown takes integer towns, integer townid returns nothing
@@ -3035,7 +3036,7 @@ function AttackMoveKillA takes unit target returns nothing
 endfunction
 
 //============================================================================
-// 攻击小型中立敌对玩家（打野）
+// 攻击中立敌对玩家低等级目标（打野）
 function MinorCreepAttack takes nothing returns nothing
     local unit target = GetMinorCreep()
     call SetAllianceTarget(target)
@@ -3044,7 +3045,7 @@ function MinorCreepAttack takes nothing returns nothing
 endfunction
 
 //============================================================================
-// 攻击大型中立敌对玩家（打野）
+// 攻击中立敌对玩家高等级目标（打野）
 function MajorCreepAttack takes nothing returns nothing
     local unit target = GetMajorCreep()
     call SetAllianceTarget(target)
@@ -3054,7 +3055,7 @@ endfunction
 
 //============================================================================
 
-// 攻击中立敌对玩家（打野）
+// 攻击中立敌对玩家等级合适目标（打野）
 // 根据当前的min_creeps、max_creeps，allow_air_creeps获取野怪
 function CreepAttackEx takes nothing returns nothing
     local unit target = GetCreepCamp(min_creeps,max_creeps,allow_air_creeps)
@@ -3065,7 +3066,7 @@ endfunction
 
 //============================================================================
 
-// 攻击任意玩家
+// 随机攻击玩家基地
 function AnyPlayerAttack takes nothing returns nothing
     local unit hall
 

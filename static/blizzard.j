@@ -3800,7 +3800,7 @@ endfunction
 
 
 // 创建物品（指定单位）触发器
-// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
+// 若单位没有物品栏或物品栏已满，将会创建在单位位置
 function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns item
     // Create the item at the hero's feet first, and then give it to him.
     // This is to ensure that the item will be left at the hero's feet if
@@ -3958,7 +3958,7 @@ function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyM
 endfunction
 
 
-// 修改英雄技能点数，修改失败会返回 false
+// 修改英雄技能点数，修改失败会返回假
 function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integer value returns boolean
     if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         return UnitModifySkillPoints(whichHero, value)
@@ -4613,7 +4613,7 @@ endfunction
 
 
 // 查询单位组的单位是否已死亡
-// 单位组内没有存活单位时返回true
+// 单位组内没有存活单位时返回真
 // Returns true if every unit of the group is dead.
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
@@ -4667,8 +4667,8 @@ endfunction
 
 
 
-// 查询单位组中的单位是否在指定区域内
-// 全都在区域内才返回是，任意一个单位不在区域内时返回否
+// 查询单位组中的单位是否都在指定区域内
+// 任意单位不在区域内时返回否
 // Returns true if every unit of the group is within the given rect.
 function IsUnitGroupInRectBJ takes group g, rect r returns boolean
     set bj_isUnitGroupInRectResult = true
@@ -4700,7 +4700,7 @@ function ShowUnitShow takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, true)
 endfunction
 
-// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
+// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件
 function IssueHauntOrderAtLocBJFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == 'ngol'
 endfunction
@@ -5591,7 +5591,7 @@ endfunction
 //***************************************************************************
 
 
-// 打开/关闭 传送门
+// 激活/关闭 传送门
 function WaygateActivateBJ takes boolean activate, unit waygate returns nothing
     call WaygateActivate(waygate, activate)
 endfunction
@@ -5616,7 +5616,7 @@ function WaygateGetDestinationLocBJ takes unit waygate returns location
 endfunction
 
 
-// 启用/禁用 单位的小地图特殊图标
+// 启用/禁用 小地图特殊图标（指定单位）
 function UnitSetUsesAltIconBJ takes boolean flag, unit whichUnit returns nothing
     call UnitSetUsesAltIcon(whichUnit, flag)
 endfunction
@@ -5734,7 +5734,7 @@ function ForceAddPlayerSimple takes player whichPlayer, force whichForce returns
 endfunction
 
 
-// 删除玩家到玩家组
+// 将玩家移出玩家组
 function ForceRemovePlayerSimple takes player whichPlayer, force whichForce returns nothing
     call ForceRemovePlayer(whichForce, whichPlayer)
 endfunction
@@ -5900,12 +5900,12 @@ function GetUnitsOfPlayerAll takes player whichPlayer returns group
 endfunction
 
 
-// 选取玩家的指定单位类型，并以单位组形式返回触发器动作
+// 选取玩家的指定单位类型，以单位组形式返回触发器动作
 function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
-// 选取玩家的指定单位类型，并以单位组形式返回
+// 选取玩家的指定单位类型，以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
@@ -5926,7 +5926,7 @@ endfunction
 
 
 // 获取以指定玩家新建的玩家组
-// 将指定玩家加入新创建的专属玩家组，并以玩家组形式返回
+// 将指定玩家加入新创建的专属玩家组，以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -6012,7 +6012,7 @@ function CountUnitsInGroup takes group g returns integer
     return bj_groupCountUnits
 endfunction
 
-// 玩家组中的玩家数量
+// 玩家组中的玩家数量加一
 function CountPlayersInForceEnum takes nothing returns nothing
     set bj_forceCountPlayers = bj_forceCountPlayers + 1
 endfunction
@@ -6288,7 +6288,7 @@ function SetPlayerAllianceStateFullControlBJ takes player sourcePlayer, player o
 endfunction
 
 
-// 设置联盟状态
+// 设置两位指定玩家的联盟状态
 function SetPlayerAllianceStateBJ takes player sourcePlayer, player otherPlayer, integer allianceState returns nothing
     // Prevent players from attempting to ally with themselves.
     if(sourcePlayer == otherPlayer) then
@@ -7634,13 +7634,13 @@ function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset retu
 endfunction
 
 
-// 允许/禁止 漂浮文字暂停状态
+// 允许/禁止 漂浮文字暂停
 function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagSuspended(tt, flag)
 endfunction
 
 
-// 允许/禁止 漂浮文字永久（显示）状态
+// 允许/禁止 漂浮文字永久（显示）
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
@@ -8445,7 +8445,7 @@ function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, play
 endfunction
 
 
-// 设置英雄的训练数量上限
+// 设置指定玩家的英雄训练数量上限
 function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 endfunction
