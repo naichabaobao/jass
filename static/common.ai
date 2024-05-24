@@ -2048,8 +2048,8 @@ endfunction
 
 // 根据人口占用情况训练指定单位类型
 // @param food 建议使用当前已使用的人口数
-// @param use1 单位类型1占用的人口数（单个）
-// @param use2 单位类型占用的人口数（单个）
+// @param use1 单位类型1占用的人口数（单个），用做分子，必须大于0
+// @param use2 单位类型占用的人口数（单个），用做分子，必须大于0
 // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
 // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
 function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
