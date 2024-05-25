@@ -2024,8 +2024,8 @@ endfunction
 
 //============================================================================
 
-// 升级科技
-// @param baseid 指定科技类型
+// 升级指定科技
+// @param baseid 科技类型
 // @param newid 升级等级
 function UpgradeAll takes integer baseid, integer newid returns nothing
     call SetBuildUnit( TownCountDone(baseid), newid )
@@ -2075,7 +2075,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
+// 等待指定单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
@@ -2167,7 +2167,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
+// 等待指定单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
 // @param towns 指定数量
 // @param townid 基地单位类型
 function WaitForTown takes integer towns, integer townid returns nothing
@@ -2296,7 +2296,7 @@ endfunction
 
 //============================================================================
 
-// 在原基础上增加初始波次的等待时间
+// 增加初始波次等待时间
 function AddSleepSeconds takes integer seconds returns nothing
     set sleep_seconds = sleep_seconds + seconds
 endfunction
@@ -2422,7 +2422,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到对战攻击组
+// 将指定类型单位添加到对战攻击组
 function SetMeleeGroup takes integer unitid returns nothing
     if unitid == hero_id then
         call SetAssaultGroup(1,9,unitid)
@@ -2433,7 +2433,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到防御组，默认用于战役
+// 将指定类型单位添加到防御组，默认用于战役
 function CampaignDefender takes integer level, integer qty, integer unitid returns nothing
     if qty > 0 and difficulty >= level then
         set defense_qty[defense_length] = qty
@@ -2446,7 +2446,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到防御组，默认用于战役
+// 将指定类型单位添加到防御组，默认用于战役
 // @param easy 简单AI添加的数量
 // @param med 中等AI添加的数量
 // @param hard 疯狂AI添加的数量
@@ -2462,7 +2462,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到战役攻击组，默认用于战役
+// 将指定类型单位添加到战役攻击组，默认用于战役
 // @param level AI难度，会与当前AI的难度进行比对，输入值必须大于等于当前AI难度时才会添加
 function CampaignAttacker takes integer level, integer qty, integer unitid returns nothing
     if qty > 0 and difficulty >= level then 
@@ -2472,7 +2472,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到攻击组，默认用于战役
+// 将指定类型单位添加到攻击组，默认用于战役
 // @param easy 简单AI添加的数量
 // @param med 中等AI添加的数量
 // @param hard 疯狂AI添加的数量
@@ -2489,7 +2489,7 @@ endfunction
 //============================================================================
 
 // 等待攻击组完成组建，即给AI一定的时间补充兵力
-// @param testReady 攻击组准备情况，为真时需要攻击组准备满50，为假时准备0即可
+// @param testReady 攻击组准备情况，为真时需要攻击组准备百分比满50，为假时准备百分比0即可
 // @param seconds 最长等待时间
 function FormGroup takes integer seconds, boolean testReady returns nothing
     local integer index
@@ -2636,7 +2636,7 @@ endfunction
 //============================================================================
 
 // 战斗等待
-// 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束等待
+// 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时退出外层循环，两层循环都退出时结束等待
 function SleepInCombat takes nothing returns nothing
     local integer count = 0
     debug call Trace("SleepInCombat\n")
