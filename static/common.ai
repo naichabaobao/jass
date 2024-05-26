@@ -194,7 +194,8 @@ native WaitGetEnemyBase     takes nothing                               returns 
 // 获取敌人主基地的单位
 // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
-// 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
+// 查询当前拟扩张点附近的敌方单位（敌方玩家或中立敌对玩家的单位）
+// 可能返回null
 native GetExpansionFoe      takes nothing                               returns unit
 // 获取敌人分基地（可能返回null）
 native GetEnemyExpansion    takes nothing                               returns unit
