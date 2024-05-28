@@ -47,10 +47,10 @@ globals
     // 参与攻击的采木工人数量
     // AI编辑器导出AI脚本的变量
     constant integer awWood              = 0
-    // 当前触发器发送的命令
+    // 触发器最后发送的命令
     // AI编辑器导出AI脚本及部分官方战役AI脚本的变量
     constant integer command
-    // 当前触发器发送命令的数据
+    // 触发器最后发送命令的数据
     // AI编辑器导出AI脚本及部分官方战役AI脚本的变量
     constant integer command_data
 
@@ -83,57 +83,57 @@ globals
     // 进攻间隔时间，用于困难难度，默认4分钟
     // 部分官方战役AI脚本的变量
     constant integer hard_delay  = M4          // hard delay
-    // 进攻间隔时间，用于困难且接受到开局信号后难度，默认3分钟
+    // 进攻间隔时间，用于困难且接受到开局信号后启用，默认3分钟
     // 部分官方战役AI脚本的变量
     constant integer fast_delay  = M3          // hard delay after final signal
-    // X 坐标，记录触发器发送的点 X 坐标
+    // 触发器发送的点 X 坐标
     // 部分官方战役AI脚本的变量
     constant integer SET_X = 1
-    // Y 坐标，记录触发器发送的点 Y 坐标
+    // 触发器发送的点 Y 坐标
     // 部分官方战役AI脚本的变量
     constant integer SET_Y = 2
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player user = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player USER = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player User = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player ZOMBIES = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player orcs = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player humans = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player elf = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player undead = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player jaina = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player kel = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player attacked = null
     // 作弊启用标识
@@ -154,31 +154,31 @@ globals
     // 攻击状态 取消暴力攻击
     // 部分官方战役AI脚本的变量
     constant integer CLEAR_AGRO     = 5     // data = player ID
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer USER           = 0
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer BLUE           = 1
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer GRAY           = 8
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer LIGHT_BLUE     = 9
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer GREEN          = 10
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant player purple          = null
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant player green          = null
-    // 玩家标识，用于标记敌方玩家的编号
+    // 玩家标识，标记敌方玩家的编号
     // 部分官方战役AI脚本的变量
     constant integer ILLIDAN_SLOT   = 11
-    // 玩家标识，用于标记AI自己的玩家编号
+    // 玩家标识，标记AI自己的玩家编号
     // 部分官方战役AI脚本的变量
     constant integer slot                    = 0
     // 允许建造标识
@@ -220,7 +220,7 @@ globals
     // 玩家存活标识
     // 部分官方战役AI脚本的变量
     constant boolean array alive
-    // 需要对玩家进行暴力攻击标识
+    // 需对玩家进行暴力攻击标识
     // 部分官方战役AI脚本的变量
     constant boolean array needs_agro
     // 目标点 X 坐标
