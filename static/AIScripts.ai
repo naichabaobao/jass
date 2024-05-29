@@ -181,10 +181,10 @@ globals
     // 玩家标识，标记AI自己的玩家编号
     // 部分官方战役AI脚本的变量
     constant integer slot                    = 0
-    // 允许建造标识
+    // 允许建造标识，默认禁止
     // 部分官方战役AI脚本的变量
     constant boolean gate_open               = false
-    // 允许自杀攻击标识
+    // 允许自杀攻击标识，默认允许
     // 部分官方战役AI脚本的变量
     constant boolean suicide_off             = true
     // 自杀攻击组数组
@@ -196,13 +196,13 @@ globals
     // 自杀攻击组数组下标
     // 部分官方战役AI脚本的变量
     constant integer next_declare            = 0
-    // 暴力攻击强度标识 简单（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 简单（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer EASY_AGRO      = 120
-    // 暴力攻击强度标识 普通（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 普通（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer NORMAL_AGRO    = 120
-    // 暴力攻击强度标识 困难（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 困难（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer HARD_AGRO      = 120
     // 暴力攻击目标玩家的编号
@@ -316,7 +316,7 @@ globals
     // 伊利丹防御点 X 坐标
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer ILLIDAN_DEF_X      = 0
-    // 伊利丹防御点 Y 坐标（）
+    // 伊利丹防御点 Y 坐标
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer ILLIDAN_DEF_Y      = 0
     // 攻击点 X 坐标
@@ -325,25 +325,25 @@ globals
     // 攻击点 Y 坐标
     // 部分官方战役AI脚本的变量
     constant integer OFFSET_Y           = 0
-    // 飞蛇（娜迦族）
+    // 飞蛇（娜迦族）（'n000'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_COUATL2       = 'n000'
-    // 深海鱼人掠夺者（娜迦族）
+    // 深海鱼人掠夺者（娜迦族）（'n001'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_REAVER2       = 'n001'
-    // 纳迦皇家卫兵
+    // 纳迦皇家卫兵（'n002'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_ROYAL2        = 'n002'
-    // 纳迦侍从
+    // 纳迦侍从（'n003'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_MYRMIDON2     = 'n003'
-    // 毒鳍龙
+    // 毒鳍龙（'n004'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_SNAP_DRAGON2  = 'n004'
-    // 龙龟（娜迦族）
+    // 龙龟（娜迦族）（'n005'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_TURTLE2       = 'n005'
-    // 纳迦海妖
+    // 纳迦海妖（'n007'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_SIREN2        = 'n007'
     // 进攻组飞蛇（娜迦族）数量
