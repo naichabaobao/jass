@@ -1284,6 +1284,8 @@ globals
     constant integer CARRIONSCARAB3
     // 单位 钻地的腐尸甲虫（3级）
     constant integer CARRIONSCARABBURROWED3
+    // 单位 钻地的地穴恶魔
+    constant integer BURROWED_FIEND
     // 科技 裂甲之刃
     constant integer UPG_SUN_BLADE
     // 物品 治疗药水
