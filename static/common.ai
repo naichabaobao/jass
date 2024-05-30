@@ -704,7 +704,7 @@ globals
     constant integer UPG_ORC_DOCS       = 'Rowd'
     // 科技 萨满祭司专家/大师级训练
     constant integer UPG_ORC_SHAMAN     = 'Rost'
-    // 科技 尖刺障碍/中级尖刺障碍
+    // 科技 尖刺障碍/中级尖刺障碍/高级尖刺障碍
     constant integer UPG_ORC_SPIKES     = 'Rosp'
     // 科技 加强型防御
     constant integer UPG_ORC_BURROWS    = 'Rorb'
