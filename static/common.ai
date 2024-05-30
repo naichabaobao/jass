@@ -532,9 +532,9 @@ globals
     constant integer UPG_DEFEND         = 'Rhde'
     // 科技 坐骑作战训练
     constant integer UPG_BREEDING       = 'Rhan'
-    // 科技 牧师专家级训练
+    // 科技 牧师专家/大师级训练
     constant integer UPG_PRAYING        = 'Rhpt'
-    // 科技 女巫专家级训练
+    // 科技 女巫专家/大师级训练
     constant integer UPG_SORCERY        = 'Rhst'
     // 科技 镶钉皮甲
     constant integer UPG_LEATHER        = 'Rhla'
@@ -700,9 +700,9 @@ globals
     constant integer UPG_ORC_ENSNARE    = 'Roen'
     // 科技 毒矛（兽族）
     constant integer UPG_ORC_VENOM      = 'Rovs'
-    // 科技 巫医专家级训练
+    // 科技 巫医专家/大师级训练
     constant integer UPG_ORC_DOCS       = 'Rowd'
-    // 科技 萨满祭司专家级训练
+    // 科技 萨满祭司专家/大师级训练
     constant integer UPG_ORC_SHAMAN     = 'Rost'
     // 科技 尖刺障碍
     constant integer UPG_ORC_SPIKES     = 'Rosp'
@@ -712,7 +712,7 @@ globals
     constant integer UPG_ORC_REGEN      = 'Rotr'
     // 科技 火油瓶（兽族）
     constant integer UPG_ORC_FIRE       = 'Rolf'
-    // 科技 灵魂行者专家级训练
+    // 科技 灵魂行者专家/大师级训练
     constant integer UPG_ORC_SWALKER    = 'Rowt'
     // 科技 狂战士升级
     constant integer UPG_ORC_BERSERKER  = 'Robk'
@@ -912,9 +912,9 @@ globals
     constant integer UPG_ABOM           = 'Ruab'
     // 科技 石像形态
     constant integer UPG_STONE_FORM     = 'Rusf'
-    // 科技 通灵师/亡灵男巫专家级训练
+    // 科技 通灵师/亡灵男巫专家/大师级训练
     constant integer UPG_NECROS         = 'Rune'
-    // 科技 女妖专家级训练
+    // 科技 女妖专家/大师级训练
     constant integer UPG_BANSHEE        = 'Ruba'
     // 科技 背包（不死族）（原文'Rump'有误）
     constant integer UPG_MEAT_WAGON     = 'Rupm'
@@ -1137,9 +1137,9 @@ globals
     constant integer UPG_BOWS           = 'Reib'
     // 科技 箭术/射击术
     constant integer UPG_MARKSMAN       = 'Remk'
-    // 科技 猛禽德鲁伊专家级训练
+    // 科技 猛禽德鲁伊专家/大师级训练
     constant integer UPG_DRUID_TALON    = 'Redt'
-    // 科技 利爪德鲁伊专家级训练
+    // 科技 利爪德鲁伊专家/大师级训练
     constant integer UPG_DRUID_CLAW     = 'Redc'
     // 科技 驱除魔法（暗夜精灵族）
     constant integer UPG_ABOLISH        = 'Resi'
@@ -1262,7 +1262,7 @@ globals
     constant integer UPG_NAGA_ATTACK    = 'Rnat'
     // 科技 驱除魔法（娜迦族）
     constant integer UPG_NAGA_ABOLISH   = 'Rnsi'
-    // 科技 纳迦海妖专家级训练
+    // 科技 纳迦海妖专家/大师级训练
     constant integer UPG_SIREN          = 'Rnsw'
     // 科技 诱捕（娜迦族）
     constant integer UPG_NAGA_ENSNARE   = 'Rnen'
