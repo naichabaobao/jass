@@ -483,9 +483,9 @@ globals
     constant integer CANNON_TOWER       = 'hctw'
     // 城堡（人族三本基地）
     constant integer CASTLE             = 'hcas'
-    // 心灵圣所/法术塔（人族）（早期测试版内容，正式版无此单位 'htws'）
+    // 心灵圣所（法术塔）（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer CHURCH             = 'htws'
-    // 心灵圣所/法术塔（人族）（测试版内容，正式版无此单位 'htws'）
+    // 心灵圣所（法术塔）（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer MAGE_TOWER         =  CHURCH
     // 防御塔（人族）
     constant integer GUARD_TOWER        = 'hgtw'
