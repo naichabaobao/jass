@@ -111,7 +111,7 @@ native SetHeroLevels        takes code func                             returns 
 // 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
 native SetNewHeroes         takes boolean state                         returns nothing
 // 购买地精飞艇
-// 运行后AI会自动购买地精飞艇，实测不运行此函数AI也会自动购买飞艇
+// 运行后AI会自动购买地精飞艇，实测不运行此函数AI也会自动购买飞艇（不论飞艇在何处出售（支持改图），只要达到购买范围且有足够的资源及可用人口（1.36.2飞艇占用人口）即可购买）
 native PurchaseZeppelin     takes nothing                               returns nothing
 // 训练指定数量的合体单位类型
 // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
