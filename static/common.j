@@ -8048,7 +8048,8 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 // 获取技能ID（指定技能）
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
-// 显示聊天信息
+// 模拟玩家在聊天框发送聊天信息
+// @param whichPlayer 发出消息的玩家
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
