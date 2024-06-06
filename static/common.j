@@ -8050,6 +8050,7 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 模拟玩家在聊天框发送聊天信息
 // @param whichPlayer 发出消息的玩家
+// @param recipient 频道，0为所有人，1为盟友，2为观战者，大于等于3为私聊
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
