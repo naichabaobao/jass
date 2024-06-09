@@ -7985,7 +7985,7 @@ native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, tex
 // 获取Frame子组件数量
 // @version 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件 
+// 获取Frame子组件
 // @version 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
