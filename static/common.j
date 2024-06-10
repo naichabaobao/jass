@@ -7534,15 +7534,15 @@ native PauseCompAI takes player p, boolean pause returns nothing
 // 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
-// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveGuardPosition takes unit hUnit returns nothing
 // 恢复单位的防守职责
 native RecycleGuardPosition takes unit hUnit returns nothing
-// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveAllGuardPositions takes player num returns nothing
 
 
