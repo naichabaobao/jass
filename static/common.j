@@ -6590,7 +6590,7 @@ native RemoveSavedHandle takes hashtable table, integer parentKey, integer child
 // <1.24> 清空指定哈希表 [C]
 // 清空整张表，清空后无需新建表，仍可复用
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表（指定主索引） [C]
+// <1.24> 清空指定哈希表的指定主索引 [C]
 // 仅清空指定主索引
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
