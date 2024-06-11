@@ -6859,6 +6859,7 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 // Timer Dialog API
 
 // 新建计时器窗口 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateTimerDialog takes timer t returns timerdialog
 // 销毁计时器窗口
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
@@ -6884,6 +6885,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 
 // 新建排行榜 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateLeaderboard takes nothing returns leaderboard
 // 销毁排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
@@ -7874,11 +7876,13 @@ native BlzLoadTOCFile takes string TOCFile returns boolean
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param priority 层级(图层)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
 // @param typeName 框架类型
@@ -7886,6 +7890,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // @param framehandle 可使用BlzGetOriginFrame获取原生UI，也可输入任意框架
 // @param inherits 父类框架(模板)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 销毁指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
