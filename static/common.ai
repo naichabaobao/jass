@@ -199,10 +199,10 @@ native GetEnemyBase         takes nothing                               returns 
 native GetExpansionFoe      takes nothing                               returns unit
 // 获取敌人分基地（可能返回null）
 native GetEnemyExpansion    takes nothing                               returns unit
-// 获取扩张点的 X 坐标
+// 获取扩张点的 X 坐标（返回-1即获取失败）
 // 使用前必须已初始化 CreateCaptains
 native GetExpansionX        takes nothing                               returns integer
-// 获取扩张点的 Y 坐标
+// 获取扩张点的 Y 坐标（返回-1即获取失败）
 // 使用前必须已初始化 CreateCaptains
 native GetExpansionY        takes nothing                               returns integer
 // 设置（军队）集合点
