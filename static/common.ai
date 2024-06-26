@@ -77,7 +77,7 @@ native GetUpgradeLevel      takes integer id                            returns 
 native GetUpgradeGoldCost   takes integer id                            returns integer
 // 获取研究指定科技需要消耗的木材数量（指定科技ID）
 native GetUpgradeWoodCost   takes integer id                            returns integer
-// 获取下一个扩张点的编号（可能返回-1，视为获取失败）
+// 获取下一个扩张点的编号（返回-1即获取失败）
 native GetNextExpansion     takes nothing                               returns integer
 // 获取大型攻击目标（可能返回null）
 // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
