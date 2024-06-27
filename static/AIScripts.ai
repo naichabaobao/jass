@@ -83,7 +83,7 @@ globals
     // 进攻间隔时间，用于困难难度，默认4分钟
     // 部分官方战役AI脚本的变量
     constant integer hard_delay  = M4          // hard delay
-    // 进攻间隔时间，用于困难且接受到开局信号后启用，默认3分钟
+    // 进攻间隔时间，困难难度在接收到开局信号后启用，默认3分钟
     // 部分官方战役AI脚本的变量
     constant integer fast_delay  = M3          // hard delay after final signal
     // 触发器发送的点 X 坐标
