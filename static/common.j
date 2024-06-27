@@ -6590,7 +6590,7 @@ native RemoveSavedHandle takes hashtable table, integer parentKey, integer child
 // <1.24> 清空指定哈希表 [C]
 // 清空整张表，清空后无需新建表，仍可复用
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表（指定主索引） [C]
+// <1.24> 清空指定哈希表的指定主索引 [C]
 // 仅清空指定主索引
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
@@ -6859,6 +6859,7 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 // Timer Dialog API
 
 // 新建计时器窗口 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateTimerDialog takes timer t returns timerdialog
 // 销毁计时器窗口
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
@@ -6884,6 +6885,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 
 // 新建排行榜 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateLeaderboard takes nothing returns leaderboard
 // 销毁排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
@@ -7534,15 +7536,15 @@ native PauseCompAI takes player p, boolean pause returns nothing
 // 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
-// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveGuardPosition takes unit hUnit returns nothing
 // 恢复单位的防守职责
 native RecycleGuardPosition takes unit hUnit returns nothing
-// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveAllGuardPositions takes player num returns nothing
 
 
@@ -7874,11 +7876,13 @@ native BlzLoadTOCFile takes string TOCFile returns boolean
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param priority 层级(图层)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
 // @param typeName 框架类型
@@ -7886,6 +7890,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // @param framehandle 可使用BlzGetOriginFrame获取原生UI，也可输入任意框架
 // @param inherits 父类框架(模板)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 销毁指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
@@ -7985,7 +7990,7 @@ native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, tex
 // 获取Frame子组件数量
 // @version 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件 
+// 获取Frame子组件
 // @version 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
@@ -8048,7 +8053,9 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 // 获取技能ID（指定技能）
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
-// 显示聊天信息
+// 模拟玩家在聊天框发送聊天信息
+// @param whichPlayer 发出消息的玩家
+// @param recipient 频道，0为所有人，1为盟友，2为观战者，大于等于3为私聊
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing

@@ -7079,7 +7079,7 @@ function GetLastCreatedTimerBJ takes nothing returns timer
 endfunction
 
 
-// 创建计时器窗口
+// 创建计时器窗口（指定窗口标题）
 function CreateTimerDialogBJ takes timer t, string title returns timerdialog
     set bj_lastCreatedTimerDialog = CreateTimerDialog(t)
     call TimerDialogSetTitle(bj_lastCreatedTimerDialog, title)
