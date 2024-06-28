@@ -6000,14 +6000,14 @@ native GetUnitCurrentOrder takes unit whichUnit returns integer
 native SetResourceAmount takes unit whichUnit, integer amount returns nothing
 // 增加指定金矿储金量(指定增量)
 native AddResourceAmount takes unit whichUnit, integer amount returns nothing
-// 获取指定金矿当前储金量
+// 获取指定金矿储金量
 native GetResourceAmount takes unit whichUnit returns integer
 
 // 获取传送门目的地 X 坐标
 native WaygateGetDestinationX takes unit waygate returns real
 // 获取传送门目的地 Y 坐标
 native WaygateGetDestinationY takes unit waygate returns real
-// 设置传送门目的坐标 [R]
+// 设置传送门目的地坐标 [R]
 native WaygateSetDestination takes unit waygate, real x, real y returns nothing
 // 设置传送门激活状态
 native WaygateActivate takes unit waygate, boolean activate returns nothing
