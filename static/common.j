@@ -2769,7 +2769,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_BEASTS_PER_SECOND = ConvertAbilityIntegerLevelField('Nst1')
 	 // 技能随等级改变的整数域 目标类型 ('Ncl2')
 	constant abilityintegerlevelfield ABILITY_ILF_TARGET_TYPE = ConvertAbilityIntegerLevelField('Ncl2')
-	 // 技能随等级改变的整数域 选项 ('Ncl3')
+	 // 技能随等级改变的整数域 通魔选项 ('Ncl3')
 	constant abilityintegerlevelfield ABILITY_ILF_OPTIONS = ConvertAbilityIntegerLevelField('Ncl3')
 	 // 技能随等级改变的整数域 护甲减少 ('Nab3')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_NAB3 = ConvertAbilityIntegerLevelField('Nab3')
