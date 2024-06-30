@@ -2,11 +2,11 @@
 //  $Id: common.ai,v 1.66.2.1 2003/05/09 09:17:04 abond Exp $
 //==================================================================================================
 
-// 显示指定文本
+// 显示调试文本
 native DebugS               takes string str                            returns nothing
-// 显示指定文本，带1个整数
+// 显示调试文本，带1个整数
 native DebugFI              takes string str, integer val               returns nothing
-// 显示指定文本，带1个单位类型（整数）
+// 显示调试文本，带1个单位类型（整数）
 native DebugUnitID          takes string str, integer val               returns nothing
 // 给指定玩家显示指定文本
 native DisplayText          takes integer p, string str                 returns nothing
