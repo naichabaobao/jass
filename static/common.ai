@@ -524,7 +524,7 @@ globals
     constant integer UPG_ARMOR          = 'Rhar'
     // 科技 改良型采矿技术/改进型采矿效率（人族）（测试版内容，正式版无此科技 'Rhmi'）
     constant integer UPG_GOLD           = 'Rhmi'
-    // 科技 改良石工技术/加强型石工技术
+    // 科技 改良石工技术/高级石工技术/灌魔石工技术
     constant integer UPG_MASONRY        = 'Rhac'
     // 科技 照明弹
     constant integer UPG_SIGHT          = 'Rhss'
@@ -684,7 +684,7 @@ globals
     constant integer UPG_ORC_MELEE      = 'Rome'
     // 科技 精钢远程武器/瑟银远程武器/奥金远程武器
     constant integer UPG_ORC_RANGED     = 'Rora'
-    // 科技 炮兵（兽族）（测试版内容，正式版无此科技 'Roaa'）
+    // 科技 火炮（兽族）（测试版内容，正式版无此科技 'Roaa'）
     constant integer UPG_ORC_ARTILLERY  = 'Roaa'
     // 科技 精钢护甲/瑟银护甲/奥金护甲
     constant integer UPG_ORC_ARMOR      = 'Roar'
