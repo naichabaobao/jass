@@ -522,7 +522,7 @@ globals
     constant integer UPG_ARTILLERY      = 'Rhaa'
     // 科技 钢铁装甲/精钢装甲/秘银装甲
     constant integer UPG_ARMOR          = 'Rhar'
-    // 科技 改良型采矿技术/改进型采矿效率（人族）（测试版内容，正式版无此科技 'Rhmi'）
+    // 科技 改良采矿技术/高级采矿技术（人族）（测试版内容，正式版无此科技 'Rhmi'）
     constant integer UPG_GOLD           = 'Rhmi'
     // 科技 改良石工技术/高级石工技术/灌魔石工技术
     constant integer UPG_MASONRY        = 'Rhac'
