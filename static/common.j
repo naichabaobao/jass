@@ -5729,6 +5729,7 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 丢弃物品到当前位置（指定单位和指定物品）
+// 包括不可丢弃的物品
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 丢弃物品到当前位置(指定单位和物品栏格数)
 // 不论该格是何物品（包括不可丢弃的物品），都会被丢弃
