@@ -6700,19 +6700,19 @@ native UnitAddIndicator takes unit whichUnit, integer red, integer green, intege
 // 添加闪动指示器(指定单位/物品/可破坏物)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
 // 发送小地图提示(所有玩家可见) [R]
-// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
+// 类似单位建造/训练/研究完成的提示，而非盟友之间通信的叹号
 native PingMinimap takes real x, real y, real duration returns nothing
-// 发送小地图提示(指定颜色)(所有玩家可见) [R]
-// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
+// 发送小地图提示(指定颜色及是否启用额外特效)(所有玩家可见) [R]
+// 类似单位建造/训练/研究完成的提示，而非盟友之间通信的叹号
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图(任务)图标(指定单位)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图(任务)图标(指定点)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图(任务)图标(指定坐标)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径(指定字符串)
 // 应该不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
@@ -6721,7 +6721,7 @@ native SkinManagerGetLocalPath takes string key returns string
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
 // 显示/隐藏 小地图(任务)图标
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 设置小地图(任务)图标在指定布尔值满足时自我销毁
+// 设置小地图(任务)图标在指定条件满足时自动销毁
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
@@ -6729,7 +6729,7 @@ native EnableOcclusion takes boolean flag returns nothing
 native SetIntroShotText takes string introText returns nothing
 // 设置介绍模型路径
 native SetIntroShotModel takes string introModelPath returns nothing
-// 允许/禁止 边界染色(所有玩家) [R]
+// 允许/禁止 地图边界迷雾渲染(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
 // 调用电影模式(所有玩家)
 native PlayModelCinematic takes string modelName returns nothing
@@ -6743,7 +6743,7 @@ native ForceUICancel takes nothing returns nothing
 native DisplayLoadDialog takes nothing returns nothing
 // 设置小地图(任务)图标
 native SetAltMinimapIcon takes string iconPath returns nothing
-// 禁用 重新开始任务按钮
+// 禁用重新开始任务按钮
 native DisableRestartMission takes boolean flag returns nothing
 
 // 新建漂浮文字 [R]
