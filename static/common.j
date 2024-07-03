@@ -4766,13 +4766,13 @@ native RegionAddRect takes region whichRegion, rect r returns nothing
 // 移除指定不规则区域的矩形区域  [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
-// 在指定不规则区域添加坐标 [R]
+// 在指定不规则区域指定坐标添加单元格 [R]
 native RegionAddCell takes region whichRegion, real x, real y returns nothing
-// 在指定不规则区域添加点 [R]
+// 在指定不规则区域指定点添加单元格 [R]
 native RegionAddCellAtLoc takes region whichRegion, location whichLocation returns nothing
-// 移除指定不规则区域的坐标 [R]
+// 清理指定不规则区域指定坐标的单元格 [R]
 native RegionClearCell takes region whichRegion, real x, real y returns nothing
-// 移除指定不规则区域的点 [R]
+// 清理指定不规则区域指定点的单元格 [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 转换坐标成点
