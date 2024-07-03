@@ -5728,10 +5728,10 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数(指定单位和物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除物品（指定单位）
+// 丢弃物品到当前位置（指定单位和指定物品）
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 删除物品(指定单位和物品栏格数)
-// 不论哪个物品在该格中，都会被删除
+// 丢弃物品到当前位置(指定单位和物品栏格数)
+// 不论该格是何物品（包括不可丢弃的物品），都会被丢弃
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
