@@ -33,7 +33,7 @@ const map = new Map<string,string>([
   ["itempool", "物品池"],
   ["race", "种族"],
   ["alliancetype", "联盟类型"],
-  ["racepreference", "优先种族"],
+  ["racepreference", "预设种族"],
   ["gamestate", "游戏状态"],
   ["igamestate", "游戏整点状态"],
   ["fgamestate", "游戏浮点状态"],
