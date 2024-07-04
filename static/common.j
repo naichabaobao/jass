@@ -167,7 +167,7 @@ type trackable extends agent
 type gamecache extends agent
 // 版本（混乱之治 或 冰封王座）
 type version extends handle
-// 物品类型
+// 物品分类
 type itemtype extends handle
 // 文本标签
 type texttag extends handle
@@ -350,7 +350,7 @@ constant native ConvertFogState takes integer i returns fogstate
 constant native ConvertEffectType takes integer i returns effecttype
 // 转换整数成版本
 constant native ConvertVersion takes integer i returns version
-// 转换整数成物品类型
+// 转换整数成物品分类
 constant native ConvertItemType takes integer i returns itemtype
 // 转换整数成攻击类型
 constant native ConvertAttackType takes integer i returns attacktype
@@ -5473,7 +5473,7 @@ native SetItemPosition takes item i, real x, real y returns nothing
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 // 允许/禁止 指定物品被丢弃
 native SetItemDroppable takes item i, boolean flag returns nothing
-// 允许/禁止 指定物品被贩卖/出售
+// 允许/禁止 指定物品被抵押
 native SetItemPawnable takes item i, boolean flag returns nothing
 // 设置指定物品的所属玩家
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
@@ -5492,13 +5492,13 @@ native IsItemOwned takes item whichItem returns boolean
 native IsItemPowerup takes item whichItem returns boolean
 // 查询指定物品是否可在市场随机出售 [R]
 native IsItemSellable takes item whichItem returns boolean
-// 查询指定物品是否可被抵押/出售 [R]
+// 查询指定物品是否可被抵押 [R]
 native IsItemPawnable takes item whichItem returns boolean
-// 查询指定物品是否拾取时自动使用
+// 查询指定物品类型是否拾取时自动使用
 native IsItemIdPowerup takes integer itemId returns boolean
-// 查询指定物品是否可以被市场出售
+// 查询指定物品类型是否可以被市场出售
 native IsItemIdSellable takes integer itemId returns boolean
-// 查询指定物品是否可以被抵押
+// 查询指定物品类型是否可以被抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
@@ -5513,7 +5513,7 @@ native GetItemType takes item whichItem returns itemtype
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 获取指定物品名称
 constant native GetItemName takes item whichItem returns string
-// 获取指定物品数量
+// 获取指定物品使用次数
 native GetItemCharges takes item whichItem returns integer
 // 设置指定物品使用次数
 native SetItemCharges takes item whichItem, integer charges returns nothing
@@ -6622,9 +6622,9 @@ native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, 
 native CreateItemPool takes nothing returns itempool
 // 销毁物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
-// 添加指定物品类型到指定物品池 [R]
+// 添加指定物品分类到指定物品池 [R]
 native ItemPoolAddItemType takes itempool whichItemPool, integer itemId, real weight returns nothing
-// 删除指定物品池的指定物品类型 [R]
+// 删除指定物品池的指定物品分类 [R]
 native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId returns nothing
 // 随机创建物品池的物品(指定坐标) [R]
 // 默认用于创建随机掉落物品
@@ -6641,8 +6641,8 @@ native ChooseRandomNPBuilding takes nothing returns integer
 // 随机选择物品-所有等级
 // 默认用于市场随机出售物品
 native ChooseRandomItem takes integer level returns integer
-// 随机选择物品-指定等级
-// 默认用于市场随机出售物品
+// 随机选择物品分类-指定等级
+// 默认用于市场随机出售物品分类
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
 // 设置随机种子
 // 默认用于统一电影播放效果
