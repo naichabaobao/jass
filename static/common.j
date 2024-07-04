@@ -54,7 +54,7 @@ type itempool extends handle
 type race extends handle
 // 联盟类型
 type alliancetype extends handle
-// 优先种族
+// 预设种族
 type racepreference extends handle
 // 游戏状态
 type gamestate extends handle
@@ -278,7 +278,7 @@ type commandbuttoneffect extends handle
 constant native ConvertRace takes integer i returns race
 // 转换整数成联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
-// 转换整数成优先种族
+// 转换整数成预设种族
 constant native ConvertRacePref takes integer i returns racepreference
 // 转换整数成游戏整点状态
 constant native ConvertIGameState takes integer i returns igamestate
@@ -909,19 +909,19 @@ globals
 	
 	// Map Setup Constants
 	
-	// 预设玩家种族 人类
+	// 预设种族 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	// 预设玩家种族 兽人
+	// 预设种族 兽人
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	// 预设玩家种族 暗夜精灵
+	// 预设种族 暗夜精灵
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	// 预设玩家种族 天灾亡灵/不死
+	// 预设种族 天灾亡灵/不死
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
-	// 预设玩家种族 恶魔
+	// 预设种族 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
-	// 预设玩家种族 随机
+	// 预设种族 随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
-	// 预设玩家种族 用户可选择
+	// 预设种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
@@ -4525,7 +4525,7 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 // @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
-// 设置指定玩家种族
+// 设置指定玩家预设种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
