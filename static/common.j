@@ -113,7 +113,7 @@ type mapcontrol extends handle
 type minimapicon extends handle
 // 玩家槽状态
 type playerslotstate extends handle
-// 声音频道
+// 声道
 type volumegroup extends handle
 // 镜头属性
 type camerafield extends handle
@@ -334,7 +334,7 @@ constant native ConvertMapControl takes integer i returns mapcontrol
 constant native ConvertPlayerColor takes integer i returns playercolor
 // 转换整数成玩家槽状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
-// 转换整数成声音频道
+// 转换整数成声道
 constant native ConvertVolumeGroup takes integer i returns volumegroup
 // 转换整数成镜头属性
 constant native ConvertCameraField takes integer i returns camerafield
@@ -1043,44 +1043,44 @@ globals
 	
 	// Sound Constants
 	
-	// 声音频道 单位移动声音
+	// 声道 单位移动声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-	// 声音频道 单位回应声音
+	// 声道 单位回应声音
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
-	// 声音频道 战斗声音
+	// 声道 战斗声音
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
-	// 声音频道 动画和法术声音
+	// 声道 动画和法术声音
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
-	// 声音频道 用户界面(UI)声音
+	// 声道 用户界面(UI)声音
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
-	// 声音频道 音乐
+	// 声道 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
-	// 声音频道 场景配音
+	// 声道 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
-	// 声音频道 火焰声音
+	// 声道 火焰声音
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
 	
-	// 声音频道 背景声
+	// 声道 背景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
-	// 声音频道 场景声
+	// 声道 场景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
-	// 声音频道 音乐
+	// 声道 音乐
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
-	// 声音频道 对话声
+	// 声道 对话声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
-	// 声音频道 声音特效1
+	// 声道 声音特效1
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
-	// 声音频道 声音特效2
+	// 声道 声音特效2
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
-	// 声音频道 声音特效3
+	// 声道 声音特效3
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
@@ -7274,9 +7274,9 @@ native GetSoundDuration takes sound soundHandle returns integer
 // 设置声音文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
-// 设置指定频道音量 [R]
+// 设置指定声道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
-// 重置所有频道音量 [R]
+// 重置所有声道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
 // 判断声音是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
