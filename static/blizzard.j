@@ -3813,6 +3813,7 @@ endfunction
 
 // 丢弃物品（指定单位）
 // 包括不可丢弃的物品
+// 会设置bj_lastRemovedItem
 function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns nothing
     set bj_lastRemovedItem = whichItem
     call UnitRemoveItem(whichHero, whichItem)
@@ -3822,6 +3823,7 @@ endfunction
 
 // 丢弃物品（指定单位指定物品栏格子）
 // 包括不可丢弃的物品
+// 会设置bj_lastRemovedItem
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
@@ -3976,12 +3978,14 @@ endfunction
 
 
 // 发布丢弃物品命令（指定坐标）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
 
 
 // 发布丢弃物品命令（指定点）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -3994,6 +3998,7 @@ endfunction
 
 
 // 发布丢弃物品命令（指定目标单位/物品/可破坏物）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemTargetBJ takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitDropItemTarget(whichUnit, whichItem, target)
 endfunction
