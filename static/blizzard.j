@@ -757,11 +757,11 @@ globals
 
     // Itemcode status types
 
-    // 物品类型 力量提升的
+    // 物品类型状态 力量提升的
     constant integer bj_ITEMCODE_STATUS_POWERUP = 0
-    // 物品类型 可出售的
+    // 物品类型状态 可出售的
     constant integer bj_ITEMCODE_STATUS_SELLABLE = 1
-    // 物品类型 可以被抵押掉的
+    // 物品类型状态 可以被抵押掉的
     constant integer bj_ITEMCODE_STATUS_PAWNABLE = 2
 
     // Minimap ping styles
@@ -944,7 +944,7 @@ globals
     boolean array bj_stockAllowedCharged
     // 市场相关变量 物品分类布尔值数组 人造
     boolean array bj_stockAllowedArtifact
-    // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
+    // 市场相关变量 物品等级 用于获取各物品分类布尔值数组检查到的值
     // bj_stockAllowedPermanent[Level]
     // bj_stockAllowedCharged[Level]
     // bj_stockAllowedArtifact[Level]
@@ -3811,7 +3811,8 @@ function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns ite
 endfunction
 
 
-// 删除物品
+// 丢弃物品（指定单位）
+// 包括不可丢弃的物品
 function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns nothing
     set bj_lastRemovedItem = whichItem
     call UnitRemoveItem(whichHero, whichItem)
@@ -3819,7 +3820,8 @@ endfunction
 
 
 
-// 删除物品（指定物品栏位置）
+// 丢弃物品（指定单位指定物品栏格子）
+// 包括不可丢弃的物品
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
@@ -3840,7 +3842,7 @@ function GetLastCreatedItem takes nothing returns item
 endfunction
 
 
-// 获取最后删除的物品
+// 获取最后丢弃的物品
 function GetLastRemovedItem takes nothing returns item
     return bj_lastRemovedItem
 endfunction
@@ -4117,13 +4119,13 @@ function IsItemHiddenBJ takes item whichItem returns boolean
 endfunction
 
 
-// 获取随机物品（所有类型），默认用于市场/集市随机出售物品
+// 获取随机物品，默认用于市场/集市随机出售物品
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 获取随机物品（指定类型），默认用于市场/集市随机出售物品
+// 获取随机物品（指定分类），默认用于市场/集市随机出售物品
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
@@ -4196,7 +4198,7 @@ function CheckItemStatus takes item whichItem, integer status returns boolean
 endfunction
 
 
-// 物品状态检查（指定类型）
+// 物品类型状态检查（指定类型）
 function CheckItemcodeStatus takes integer itemId, integer status returns boolean
     if(status == bj_ITEMCODE_STATUS_POWERUP) then
         return IsItemIdPowerup(itemId)
@@ -12060,7 +12062,7 @@ endfunction
 //***************************************************************************
 
 // 创建指定物品（指定单位）
-// 默认用于但为死亡后掉落物品
+// 默认用于单位死亡后掉落物品
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y
