@@ -3406,13 +3406,13 @@ function GetLastPlayedMusic takes nothing returns string
 endfunction
 
 
-// 设置音量（指定频道）
+// 设置音量（指定声道）
 function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns nothing
     call VolumeGroupSetVolume(vgroup, percent * 0.01)
 endfunction
 
 
-// 设置电影所有频道音量环境(立即)
+// 设置电影所有声道音量环境(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
@@ -3425,7 +3425,7 @@ function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道音量为电影模式
+// 设置所有声道音量为电影模式
 function SetCineModeVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3436,7 +3436,7 @@ function SetCineModeVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道发言音量环境为默认值(立即)
+// 设置所有声道发言音量环境为默认值(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_SPEECH_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_SPEECH_VOLUME_UNITSOUNDS)
@@ -3449,7 +3449,7 @@ function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道发言模式
+// 设置所有声道发言模式
 function SetSpeechVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3460,13 +3460,13 @@ function SetSpeechVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 重置所有频道音量(立即)
+// 重置所有声道音量(立即)
 function VolumeGroupResetImmediateBJ takes nothing returns nothing
     call VolumeGroupReset()
 endfunction
 
 
-// 重置所有通道音量为预设值
+// 重置所有声道音量为预设值
 function VolumeGroupResetBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3529,7 +3529,7 @@ function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle retur
 endfunction
 
 
-// 设置玩家声音频道音量
+// 设置玩家声道音量
 function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup vgroup, real scale returns nothing
     if(GetLocalPlayer() == whichPlayer) then
         call VolumeGroupSetVolume(vgroup, scale)
