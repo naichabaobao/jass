@@ -22,37 +22,37 @@ globals
     constant real bj_RADTODEG = 180.0 / bj_PI
     // 角度转换成弧度
     constant real bj_DEGTORAD = bj_PI / 180.0
-    // 文本显示延时 任务，默认20.00
+    // 文本显示持续时间 任务，默认20.00
     constant real bj_TEXT_DELAY_QUEST = 20.00
-    // 文本显示延时 任务更新，默认20.00
+    // 文本显示持续时间 任务更新，默认20.00
     constant real bj_TEXT_DELAY_QUESTUPDATE = 20.00
-    // 文本显示延时 任务完成，默认20.00
+    // 文本显示持续时间 任务完成，默认20.00
     constant real bj_TEXT_DELAY_QUESTDONE = 20.00
-    // 文本显示延时 任务失败，默认20.00
+    // 文本显示持续时间 任务失败，默认20.00
     constant real bj_TEXT_DELAY_QUESTFAILED = 20.00
-    // 文本显示延时 任务要求，默认20.00
+    // 文本显示持续时间 任务要求，默认20.00
     constant real bj_TEXT_DELAY_QUESTREQUIREMENT = 20.00
-    // 文本显示延时 失败消息，默认20.00
+    // 文本显示持续时间 失败消息，默认20.00
     constant real bj_TEXT_DELAY_MISSIONFAILED = 20.00
-    // 文本显示延时 常驻提示，默认12.00
+    // 文本显示持续时间 常驻提示，默认12.00
     constant real bj_TEXT_DELAY_ALWAYSHINT = 12.00
-    // 文本显示延时 提示，默认12.00
+    // 文本显示持续时间 提示，默认12.00
     constant real bj_TEXT_DELAY_HINT = 12.00
-    // 文本显示延时 秘密，默认10.00
+    // 文本显示持续时间 秘密，默认10.00
     constant real bj_TEXT_DELAY_SECRET = 10.00
-    // 文本显示延时 有新单位可购买，默认15.00
+    // 文本显示持续时间 有新单位可购买，默认15.00
     constant real bj_TEXT_DELAY_UNITACQUIRED = 15.00
-    // 文本显示延时 有新单位可用，默认10.00
+    // 文本显示持续时间 有新单位可用，默认10.00
     constant real bj_TEXT_DELAY_UNITAVAILABLE = 10.00
-    // 文本显示延时 有新物品可购买，默认10.00
+    // 文本显示持续时间 有新物品可购买，默认10.00
     constant real bj_TEXT_DELAY_ITEMACQUIRED = 10.00
-    // 文本显示延时 警告，默认12.00
+    // 文本显示持续时间 警告，默认12.00
     constant real bj_TEXT_DELAY_WARNING = 12.00
-    // 任务显示延时 探索，默认5.00
+    // 任务显示持续时间 探索，默认5.00
     constant real bj_QUEUE_DELAY_QUEST = 5.00
-    // 任务显示延时 提示，默认5.00
+    // 任务显示持续时间 提示，默认5.00
     constant real bj_QUEUE_DELAY_HINT = 5.00
-    // 任务显示延时 秘密，默认3.00
+    // 任务显示持续时间 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
     // 生命障碍 简单，默认60.00
     constant real bj_HANDICAP_EASY = 60.00
@@ -130,11 +130,13 @@ globals
     // 使用随机英雄时创建的英雄数量，默认1个
     constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
     // 英雄数量上限，默认3个
+    // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_LIMIT = 3
     // 每类英雄数量上限，默认1个
+    // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_TYPE_LIMIT = 1
     // 金矿搜索距离，默认2000
-    // 主要用于开局创建亡灵/精灵主矿
+    // 主要用于开局创建亡灵/精灵矿盖
     constant real bj_MELEE_MINE_SEARCH_RADIUS = 2000
     // 清除出生点中立敌对单位的范围，默认1500
     // 开局清除出生点的野怪时，要删除出生点多少范围内的野怪
@@ -143,7 +145,7 @@ globals
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
     constant real bj_MELEE_CRIPPLE_TIMEOUT = 120.00
     // 暴露持续时间，默认20.00
-    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统会暴露玩家位置，此为暴露的持续时间
+    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统暴露玩家位置的持续时间
     constant real bj_MELEE_CRIPPLE_MSG_DURATION = 20.00
     // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer bj_MELEE_MAX_TWINKED_HEROES_V0 = 3
@@ -155,7 +157,7 @@ globals
     constant real bj_CREEP_ITEM_DELAY = 0.50
 
     // Timing settings for Marketplace inventories.
-    // 初始库存补充延时（开局后，过多久才可购买/雇佣），默认120
+    // 初始物品库存补充延时（开局后，过多久才可购买/雇佣），默认120
     constant real bj_STOCK_RESTOCK_INITIAL_DELAY = 120
     // 库存补充间隔，默认30
     constant real bj_STOCK_RESTOCK_INTERVAL = 30
