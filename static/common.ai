@@ -1466,7 +1466,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本
+// 显示当前AI玩家调试追踪，带1个指定文本
 function Trace takes string message returns nothing
     if trace_on then
         call DisplayText(GetAiPlayer(),message)
@@ -1475,7 +1475,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，1个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，1个整数
 function TraceI takes string message, integer val returns nothing
     if trace_on then
         call DisplayTextI(GetAiPlayer(),message,val)
@@ -1484,7 +1484,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，2个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，2个整数
 function TraceII takes string message, integer v1, integer v2 returns nothing
     if trace_on then
         call DisplayTextII(GetAiPlayer(),message,v1,v2)
@@ -1493,7 +1493,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，3个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，3个整数
 function TraceIII takes string message, integer v1, integer v2, integer v3 returns nothing
     if trace_on then
         call DisplayTextIII(GetAiPlayer(),message,v1,v2,v3)
@@ -1566,7 +1566,7 @@ function Max takes integer A, integer B returns integer
     endif
 endfunction
 
-// 设置运输状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
+// 设置运输状态开启，用于飞艇空投，但AI本身会使用飞艇，无需调用该功能
 function SetZepNextWave takes nothing returns nothing
     set zep_next_wave = true
 endfunction
@@ -1590,7 +1590,7 @@ endfunction
 
 //============================================================================
 
-// 等待信号，等待从触发器发送的命令，若无发送，不会执行下一步
+// 等待触发器命令信号，收到信号前不会执行下一步
 function WaitForSignal takes nothing returns integer
     local integer cmd
     local boolean display = false //xxx
@@ -1679,14 +1679,14 @@ endfunction
 
 //============================================================================
 
-// 查询当前AI玩家的黄金数
+// 查询当前AI玩家黄金数量
 function GetGold takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_GOLD)
 endfunction
 
 //============================================================================
 
-// 查询当前AI玩家的木材数
+// 查询当前AI玩家木材数量
 function GetWood takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_LUMBER)
 endfunction
@@ -1902,7 +1902,7 @@ endfunction
 
 //============================================================================
 
-// 在指定分基地建造指定单位类型，一般用于在分矿造塔或其他建筑
+// 在指定分基地建造指定单位类型，一般用于在分矿造塔或其他建筑（分基地有矿才会造）
 // 训练单位无需使用此函数，AI会使用所有建筑训练，不论其在哪个基地，使用该函数建造/训练的单位会被登记为：制造于该分基地
 // @param townid 基地编号，-1为不限
 // @param qty 指定数量
