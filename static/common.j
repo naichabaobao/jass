@@ -4823,7 +4823,7 @@ native DisableTrigger takes trigger whichTrigger returns nothing
 // 查询触发器是否打开
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
-// 挂起触发器
+// 挂起/释放 触发器
 native TriggerWaitOnSleeps takes trigger whichTrigger, boolean flag returns nothing
 // 查询触发器是否挂起
 native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
@@ -4843,7 +4843,7 @@ constant native GetFilterItem takes nothing returns item
 // 获取选取的物品
 constant native GetEnumItem takes nothing returns item
 
-// 解析标签 tags
+// 解析标签（tags）
 constant native ParseTags takes string taggedString returns string
 
 // 获取匹配的玩家
@@ -4855,7 +4855,7 @@ constant native GetEnumPlayer takes nothing returns player
 constant native GetTriggeringTrigger takes nothing returns trigger
 // 获取触发器事件ID
 constant native GetTriggerEventId takes nothing returns eventid
-// 获取触发器赋值次数
+// 获取触发器条件数量
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
 // 获取触发器运行次数
 constant native GetTriggerExecCount takes trigger whichTrigger returns integer
