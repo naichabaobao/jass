@@ -719,19 +719,19 @@ globals
     // 水元素
     // 官方演示AI脚本变量
     constant integer elemental   = 'hwat'
-    // 科技 钢铁铸剑
+    // 科技 钢铁铸剑/精钢铸剑/秘银铸剑
     // 官方演示AI脚本变量
     constant integer Uweapons    = 'Rhme'
-    // 科技 黑火药
+    // 科技 黑火药/精炼火药/灌魔火药
     // 官方演示AI脚本变量
     constant integer Uranged     = 'Rhra'
     // 科技 炮兵（编辑器无此科技）
     // 官方演示AI脚本变量
     constant integer Uartillery  = 'Rhaa'
-    // 科技 钢铁装甲
+    // 科技 钢铁装甲/精钢装甲/秘银装甲
     // 官方演示AI脚本变量
     constant integer Uarmor      = 'Rhar'
-    // 科技 改良石工技术
+    // 科技 改良石工技术/高级石工技术/灌魔石工技术
     // 官方演示AI脚本变量
     constant integer Ubldgs      = 'Rhac'
     // 科技 控制魔法
@@ -1026,7 +1026,7 @@ globals
     // 混乱之治AI脚本变量
     constant boolean melee       = false
     // 拥有远程单位标识，蜘蛛及石像鬼数量（不含建造中）都大于0时为真
-    // 石像鬼统计石像鬼石像形态的数量
+    // 拥有统计石像鬼石像形态标识
     // 混乱之治AI脚本变量
     constant boolean ranged      = false
     // 拥有憎恶标识，憎恶数量（不含建造中）大于0时为真
