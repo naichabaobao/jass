@@ -9970,7 +9970,7 @@
         },
         {
             "code": "ACsp",
-            "name": "睡眠",
+            "name": "睡眠（编辑器无此技能）",
             "descript": "",
             "kind": "技能",
             "race": "中立敌对",
@@ -10883,7 +10883,7 @@
         {
             "code": "ACs7",
             "name": "野兽幽魂",
-            "descript": "召唤出<ACs7",
+            "descript": "召唤<ACs7,DataB1>头幽灵狼为先知而战。|n持续<ACs7,Dur1>秒。|n|n|cffffcc001级|r - <osw1,realHP>点生命值，<osw1,mindmg1>-<osw1,maxdmg1>点攻击力。|n|cffffcc002级|r - <osw2,realHP>点生命值，<osw2,mindmg1>-<osw2,maxdmg1>点攻击力，且具有致命一击技能。|n|cffffcc003级|r - <osw3,realHP>点生命值，<osw3,mindmg1>-<osw3,maxdmg1>点攻击力，且具有致命一击和隐形技能。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "英雄"
@@ -11059,7 +11059,7 @@
         {
             "code": "Aawa",
             "name": "立即复活英雄",
-            "descript": ",使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。",
+            "descript": "",
             "kind": "技能",
             "race": "中立被动",
             "type": "单位"
