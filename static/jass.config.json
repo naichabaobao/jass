@@ -6891,7 +6891,7 @@
         {
             "code": "Amls",
             "name": "空中锁镣",
-            "descript": "以魔力禁锢一个目标敌空中单位，使其不能移动或攻击，并每秒受到<Amls,DataA1>伤害力。|n持续<Amls,Dur1>秒。",
+            "descript": "以魔力禁锢一个敌军空中单位，使其不能移动或攻击，并每秒受到<Amls,DataA1>伤害力。|n持续<Amls,Dur1>秒。",
             "kind": "技能",
             "race": "人族",
             "type": "单位"
