@@ -1043,21 +1043,21 @@ globals
 	
 	// Sound Constants
 	
-	// 声道 单位移动声音
+	// 声道 单位移动音效
 	constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-	// 声道 单位回应声音
+	// 声道 单位响应音效
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
-	// 声道 战斗声音
+	// 声道 战斗音效
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
-	// 声道 动画和法术声音
+	// 声道 动画和法术音效
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
-	// 声道 用户界面(UI)声音
+	// 声道 用户界面(UI)音效
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
 	// 声道 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
 	// 声道 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
-	// 声道 火焰声音
+	// 声道 火焰音效
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
