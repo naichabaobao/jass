@@ -40,7 +40,7 @@ type region extends agent
 type rect extends agent
 // 条件表达式
 type boolexpr extends agent
-// 声音
+// 音效
 type sound extends agent
 // 条件方法
 type conditionfunc extends boolexpr
@@ -177,7 +177,7 @@ type attacktype extends handle
 type damagetype extends handle
 // 武器类型
 type weapontype extends handle
-// 声音类型
+// 音效类型
 type soundtype extends handle
 // 闪电效果
 type lightning extends handle
@@ -358,7 +358,7 @@ constant native ConvertAttackType takes integer i returns attacktype
 constant native ConvertDamageType takes integer i returns damagetype
 // 转换整数成武器类型
 constant native ConvertWeaponType takes integer i returns weapontype
-// 转换整数成声音类型
+// 转换整数成音效类型
 constant native ConvertSoundType takes integer i returns soundtype
 // 转换整数成路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
@@ -1074,13 +1074,13 @@ globals
 	// 声道 对话声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
-	// 声道 声音特效1
+	// 声道 音效1
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
-	// 声道 声音特效2
+	// 声道 音效2
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
-	// 声道 声音特效3
+	// 声道 音效3
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
@@ -1739,9 +1739,9 @@ globals
 	constant effecttype EFFECT_TYPE_MISSILE = ConvertEffectType(5)
 	// 特效类型 闪电特效
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
-	// 声音类型 特效
+	// 音效类型 特效
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
-	// 声音类型 循环特效
+	// 音效类型 循环特效
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
 	
@@ -5926,7 +5926,7 @@ native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种战斗声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 // 发布伤害目标（单位/物品/可破坏物）命令（指定单位） [R]
 // @param amount 伤害量
@@ -5934,7 +5934,7 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种战斗声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
@@ -7223,12 +7223,12 @@ native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns 
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 // 播放音效
 native StartSound takes sound soundHandle returns nothing
-// 播放声音(指定是否淡入)
+// 播放音效(指定是否淡入)
 // @version 1.33
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
-// 停止播放声音(指定是否淡出)
+// 停止播放音效(指定是否淡出)
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
-// 播放完成时关闭声音
+// 播放完成时关闭音效
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
 // 设置地图背景音乐 [R]
@@ -7266,21 +7266,21 @@ native SetMusicPlayPosition takes integer millisecs returns nothing
 native SetThematicMusicVolume takes integer volume returns nothing
 // 设置主题音乐播放时间点 [R]
 native SetThematicMusicPlayPosition takes integer millisecs returns nothing
-// 设置声音持续时间
+// 设置音效持续时间
 // other music and sound calls
 native SetSoundDuration takes sound soundHandle, integer duration returns nothing
-// 获取声音持续时间
+// 获取音效持续时间
 native GetSoundDuration takes sound soundHandle returns integer
-// 设置声音文件持续时间
+// 设置音乐文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
 // 设置指定声道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
 // 重置所有声道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
-// 判断声音是否播放
+// 判断音效是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
-// 判断声音是否加载
+// 判断音效是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
 // 注册矩形区域3D音效
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
@@ -7404,9 +7404,9 @@ native SetLightningColor takes lightning whichBolt, real r, real g, real b, real
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
 // 获取技能特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取技能音效路径(指定技能字符串和声音类型)
+// 获取技能音效路径(指定技能字符串和音效类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
-// 获取技能音效路径(指定技能ID和声音类型)
+// 获取技能音效路径(指定技能ID和音效类型)
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
