@@ -3254,7 +3254,7 @@ function SetSoundOffsetBJ takes real newOffset, sound soundHandle returns nothin
 endfunction
 
 
-// 设置声音距离
+// 设置声效切断距离
 function SetSoundDistanceCutoffBJ takes sound soundHandle, real cutoff returns nothing
     call SetSoundDistanceCutoff(soundHandle, cutoff)
 endfunction
@@ -3266,13 +3266,13 @@ function SetSoundPitchBJ takes sound soundHandle, real pitch returns nothing
 endfunction
 
 
-// 设置3D声音位置
+// 设置3D声效位置
 function SetSoundPositionLocBJ takes sound soundHandle, location loc, real z returns nothing
     call SetSoundPosition(soundHandle, GetLocationX(loc), GetLocationY(loc), z)
 endfunction
 
 
-// 捆绑3D声音到单位
+// 捆绑3D声效到单位
 function AttachSoundToUnitBJ takes sound soundHandle, unit whichUnit returns nothing
     call AttachSoundToUnit(soundHandle, whichUnit)
 endfunction
