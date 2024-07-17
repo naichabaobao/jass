@@ -233,21 +233,21 @@ globals
 
     // Speech mode volume levels
 
-    // 所有频道默认音量 单位移动声音，默认0.25
+    // 所有声道默认音量 单位移动声音，默认0.25
     constant real bj_SPEECH_VOLUME_UNITMOVEMENT = 0.25
-    // 所有频道默认音量 单位回应声音，默认0.00
+    // 所有声道默认音量 单位回应声音，默认0.00
     constant real bj_SPEECH_VOLUME_UNITSOUNDS = 0.00
-    // 所有频道默认音量 战斗声音，默认0.25
+    // 所有声道默认音量 战斗声音，默认0.25
     constant real bj_SPEECH_VOLUME_COMBAT = 0.25
-    // 所有频道默认音量 动画和法术声音，默认0.25
+    // 所有声道默认音量 动画和法术声音，默认0.25
     constant real bj_SPEECH_VOLUME_SPELLS = 0.25
-    // 所有频道默认音量 用户界面（UI）声音，默认0.00
+    // 所有声道默认音量 用户界面（UI）声音，默认0.00
     constant real bj_SPEECH_VOLUME_UI = 0.00
-    // 所有频道默认音量 音乐，默认0.55
+    // 所有声道默认音量 音乐，默认0.55
     constant real bj_SPEECH_VOLUME_MUSIC = 0.55
-    // 所有频道默认音量 场景配音，默认1.00
+    // 所有声道默认音量 场景配音，默认1.00
     constant real bj_SPEECH_VOLUME_AMBIENTSOUNDS = 1.00
-    // 所有频道默认音量 火焰声音，默认0.60
+    // 所有声道默认音量 火焰声音，默认0.60
     constant real bj_SPEECH_VOLUME_FIRE = 0.60
 
     // Smart pan settings
