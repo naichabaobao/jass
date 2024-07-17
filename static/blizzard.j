@@ -192,7 +192,7 @@ globals
 
     // Transmission behavior settings
 
-    // 常规声音持续时间，默认5.00
+    // 常规音效持续时间，默认5.00
     constant real bj_NOTHING_SOUND_DURATION = 5.00
     // 单位消息延迟，默认1.00
     constant real bj_TRANSMISSION_PING_TIME = 1.00
@@ -214,40 +214,40 @@ globals
 
     // Cinematic mode volume levels
 
-    // 电影模式默认音量 单位移动声音，默认0.40
+    // 电影模式默认音量 单位移动音效，默认0.40
     constant real bj_CINEMODE_VOLUME_UNITMOVEMENT = 0.40
-    // 电影模式默认音量 单位回应声音，默认0.00
+    // 电影模式默认音量 单位响应音效，默认0.00
     constant real bj_CINEMODE_VOLUME_UNITSOUNDS = 0.00
-    // 电影模式默认音量 战斗声音，默认0.40
+    // 电影模式默认音量 战斗音效，默认0.40
     constant real bj_CINEMODE_VOLUME_COMBAT = 0.40
-    // 电影模式默认音量 动画和法术声音，默认0.40
+    // 电影模式默认音量 动画和法术音效，默认0.40
     constant real bj_CINEMODE_VOLUME_SPELLS = 0.40
-    // 电影模式默认音量 用户界面（UI）声音，默认0.00
+    // 电影模式默认音量 用户界面（UI）音效，默认0.00
     constant real bj_CINEMODE_VOLUME_UI = 0.00
     // 电影模式默认音量 音乐，默认0.55
     constant real bj_CINEMODE_VOLUME_MUSIC = 0.55
     // 电影模式默认音量 场景配音，默认1.00
     constant real bj_CINEMODE_VOLUME_AMBIENTSOUNDS = 1.00
-    // 电影模式默认音量 火焰声音，默认0.60
+    // 电影模式默认音量 火焰音效，默认0.60
     constant real bj_CINEMODE_VOLUME_FIRE = 0.60
 
     // Speech mode volume levels
 
-    // 所有声道默认音量 单位移动声音，默认0.25
+    // 所有声道默认音量 单位移动音效，默认0.25
     constant real bj_SPEECH_VOLUME_UNITMOVEMENT = 0.25
-    // 所有声道默认音量 单位回应声音，默认0.00
+    // 所有声道默认音量 单位响应音效，默认0.00
     constant real bj_SPEECH_VOLUME_UNITSOUNDS = 0.00
-    // 所有声道默认音量 战斗声音，默认0.25
+    // 所有声道默认音量 战斗音效，默认0.25
     constant real bj_SPEECH_VOLUME_COMBAT = 0.25
-    // 所有声道默认音量 动画和法术声音，默认0.25
+    // 所有声道默认音量 动画和法术音效，默认0.25
     constant real bj_SPEECH_VOLUME_SPELLS = 0.25
-    // 所有声道默认音量 用户界面（UI）声音，默认0.00
+    // 所有声道默认音量 用户界面（UI）音效，默认0.00
     constant real bj_SPEECH_VOLUME_UI = 0.00
     // 所有声道默认音量 音乐，默认0.55
     constant real bj_SPEECH_VOLUME_MUSIC = 0.55
     // 所有声道默认音量 场景配音，默认1.00
     constant real bj_SPEECH_VOLUME_AMBIENTSOUNDS = 1.00
-    // 所有声道默认音量 火焰声音，默认0.60
+    // 所有声道默认音量 火焰音效，默认0.60
     constant real bj_SPEECH_VOLUME_FIRE = 0.60
 
     // Smart pan settings
@@ -894,9 +894,9 @@ globals
     sound bj_dayAmbientSound = null
     // 昼夜参数 夜晚环境音效
     sound bj_nightAmbientSound = null
-    // 昼夜参数 黎明声音触发器
+    // 昼夜参数 黎明音效触发器
     trigger bj_dncSoundsDawn = null
-    // 昼夜参数 黄昏声音触发器
+    // 昼夜参数 黄昏音效触发器
     trigger bj_dncSoundsDusk = null
     // 昼夜参数 黎明声效
     sound bj_dawnSound = null
@@ -909,7 +909,7 @@ globals
 
     // Triggered sounds
 
-    // 音效 小地图提示声音
+    // 音效 小地图提示音效
     //sound              bj_pingMinimapSound         = null
     // 音效 可营救音效
     sound bj_rescueSound = null
@@ -1198,7 +1198,7 @@ globals
     leaderboard bj_lastCreatedLeaderboard = null
     // 最后创建的多面板
     multiboard bj_lastCreatedMultiboard = null
-    // 最后播放的声音
+    // 最后播放的音效
     sound bj_lastPlayedSound = null
     // 最后播放的音乐
     string bj_lastPlayedMusic = ""
@@ -1936,7 +1936,7 @@ function GetTimeOfDayScalePercentBJ takes nothing returns real
 endfunction
 
 
-// 播放声音
+// 播放音效
 function PlaySound takes string soundName returns nothing
     local sound soundHandle = CreateSound(soundName, false, false, true, 12700, 12700, "")
     call StartSound(soundHandle)
@@ -2848,13 +2848,13 @@ function GetLastCreatedLightningBJ takes nothing returns lightning
 endfunction
 
 
-// 获取技能音效路径（指定技能、声音类型和索引）
+// 获取技能音效路径（指定技能、音效类型和索引）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
 
 
-// 获取技能音效路径（指定技能和声音类型）
+// 获取技能音效路径（指定技能和音效类型）
 function GetAbilitySoundBJ takes integer abilcode, soundtype t returns string
     return GetAbilitySoundById(abilcode, t)
 endfunction
@@ -3227,7 +3227,7 @@ endfunction
 //***************************************************************************
 
 
-// 播放声音
+// 播放音效
 function PlaySoundBJ takes sound soundHandle returns nothing
     set bj_lastPlayedSound = soundHandle
     if(soundHandle != null) then
@@ -3236,19 +3236,19 @@ function PlaySoundBJ takes sound soundHandle returns nothing
 endfunction
 
 
-// 停止播放声音
+// 停止播放音效
 function StopSoundBJ takes sound soundHandle, boolean fadeOut returns nothing
     call StopSound(soundHandle, false, fadeOut)
 endfunction
 
 
-// 设置声音音量
+// 设置音效音量
 function SetSoundVolumeBJ takes sound soundHandle, real volumePercent returns nothing
     call SetSoundVolume(soundHandle, PercentToInt(volumePercent, 127))
 endfunction
 
 
-// 播放声音（指定跳到的时间帧）
+// 播放音效（指定跳到的时间帧）
 function SetSoundOffsetBJ takes real newOffset, sound soundHandle returns nothing
     call SetSoundPlayPosition(soundHandle, R2I(newOffset * 1000))
 endfunction
@@ -3260,7 +3260,7 @@ function SetSoundDistanceCutoffBJ takes sound soundHandle, real cutoff returns n
 endfunction
 
 
-// 设置声音定调
+// 设置音效播放速率
 function SetSoundPitchBJ takes sound soundHandle, real pitch returns nothing
     call SetSoundPitch(soundHandle, pitch)
 endfunction
@@ -3283,13 +3283,13 @@ function SetSoundConeAnglesBJ takes sound soundHandle, real inside, real outside
 endfunction
 
 
-// 播放完成时关闭声音（不再循环）
+// 播放完成时关闭音效（不再循环）
 function KillSoundWhenDoneBJ takes sound soundHandle returns nothing
     call KillSoundWhenDone(soundHandle)
 endfunction
 
 
-// 设置音源位置并播放声音（指定点）
+// 设置音源位置并播放音效（指定点）
 function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, location loc, real z returns nothing
     call SetSoundPositionLocBJ(soundHandle, loc, z)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3297,7 +3297,7 @@ function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, locatio
 endfunction
 
 
-// 设置音源位置并播放声音（指定单位）
+// 设置音源位置并播放音效（指定单位）
 function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whichUnit returns nothing
     call AttachSoundToUnitBJ(soundHandle, whichUnit)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3305,7 +3305,7 @@ function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whi
 endfunction
 
 
-// 播放声音（有等待时间）
+// 播放音效（有等待时间）
 function PlaySoundFromOffsetBJ takes sound soundHandle, real volumePercent, real startingOffset returns nothing
     call SetSoundVolumeBJ(soundHandle, volumePercent)
     call PlaySoundBJ(soundHandle)
@@ -3380,7 +3380,7 @@ function SetThematicMusicVolumeBJ takes real volumePercent returns nothing
 endfunction
 
 
-// 获取声音持续时间
+// 获取音效持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real
     if(soundHandle == null) then
         return bj_NOTHING_SOUND_DURATION
@@ -3396,7 +3396,7 @@ function GetSoundFileDurationBJ takes string musicFileName returns real
 endfunction
 
 
-// 获取最后播放的声音
+// 获取最后播放的音效
 function GetLastPlayedSound takes nothing returns sound
     return bj_lastPlayedSound
 endfunction
@@ -3414,7 +3414,7 @@ function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns n
 endfunction
 
 
-// 设置电影所有声道音量环境(立即)
+// 设置电影所有声道音量(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
@@ -3479,7 +3479,7 @@ function VolumeGroupResetBJ takes nothing returns nothing
 endfunction
 
 
-// 判断声音是否已在加载/播放
+// 判断音效是否已在加载/播放
 function GetSoundIsPlayingBJ takes sound soundHandle returns boolean
     return GetSoundIsLoading(soundHandle) or GetSoundIsPlaying(soundHandle)
 endfunction
@@ -3523,7 +3523,7 @@ function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns 
 endfunction
 
 
-// 为指定玩家播放声音
+// 为指定玩家播放音效
 function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle returns nothing
     if(whichPlayer == GetLocalPlayer()) then
         call StartSound(soundHandle)
@@ -3539,13 +3539,13 @@ function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup v
 endfunction
 
 
-// 启用/禁用 黎明/黄昏 声音
+// 启用/禁用 黎明/黄昏 音效
 function EnableDawnDusk takes boolean flag returns nothing
     set bj_useDawnDuskSounds = flag
 endfunction
 
 
-// 查询是否启用了 黎明/黄昏 声音
+// 查询是否启用了 黎明/黄昏 音效
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -7876,7 +7876,7 @@ endfunction
 //***************************************************************************
 
 
-// 结束电影场景并停止播放声音
+// 结束电影场景并停止播放音效
 // If cancelled, stop the sound and end the cinematic scene.
 function CancelCineSceneBJ takes nothing returns nothing
     call StopSoundBJ(bj_cineSceneLastSound, true)
@@ -7904,14 +7904,14 @@ function TryInitCinematicBehaviorBJ takes nothing returns nothing
     endif
 endfunction
 
-// 设置电影场景并播放声音
+// 设置电影场景并播放音效
 function SetCinematicSceneBJ takes sound soundHandle, integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
     set bj_cineSceneLastSound = soundHandle
     call SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
     call PlaySoundBJ(soundHandle)
 endfunction
 
-// 获取声音持续时间
+// 获取音效持续时间
 function GetTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns real
     local real duration
 
@@ -11616,21 +11616,21 @@ endfunction
 //*
 //***************************************************************************
 
-// 设置黎明声音
+// 设置黎明音效
 function SetDNCSoundsDawn takes nothing returns nothing
     if bj_useDawnDuskSounds then
         call StartSound(bj_dawnSound)
     endif
 endfunction
 
-// 设置黄昏声音
+// 设置黄昏音效
 function SetDNCSoundsDusk takes nothing returns nothing
     if bj_useDawnDuskSounds then
         call StartSound(bj_duskSound)
     endif
 endfunction
 
-// 设置白天声音
+// 设置白天音效
 function SetDNCSoundsDay takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
@@ -11643,7 +11643,7 @@ function SetDNCSoundsDay takes nothing returns nothing
     endif
 endfunction
 
-// 设置夜晚声音
+// 设置夜晚音效
 function SetDNCSoundsNight takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
@@ -11656,7 +11656,7 @@ function SetDNCSoundsNight takes nothing returns nothing
     endif
 endfunction
 
-// 初始化声音设置
+// 初始化音效设置
 function InitDNCSounds takes nothing returns nothing
     // Create sounds to be played at dawn and dusk.
     set bj_dawnSound = CreateSoundFromLabel("RoosterSound", false, false, false, 10000, 10000)
