@@ -3815,6 +3815,7 @@ endfunction
 
 // 丢弃物品（指定单位）
 // 包括不可丢弃的物品
+// 单位死亡或删除后，也能正常丢弃
 // 会设置bj_lastRemovedItem
 function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns nothing
     set bj_lastRemovedItem = whichItem
@@ -3825,6 +3826,7 @@ endfunction
 
 // 丢弃物品（指定单位指定物品栏格子）
 // 包括不可丢弃的物品
+// 单位死亡或删除后，也能正常丢弃
 // 会设置bj_lastRemovedItem
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
