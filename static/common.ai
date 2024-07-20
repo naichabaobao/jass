@@ -2074,7 +2074,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
+// 等待指定单位类型（不包含复活/建造/训练中，统计等价物）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
