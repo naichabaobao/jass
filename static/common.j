@@ -4345,7 +4345,7 @@ native Cos takes real radians returns real
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
-// y 应在 -1 到 1 之间...无效输入时返回 0
+// y 应在 -1 到 1 之间...输入无效时返回 0
 native Asin takes real y returns real
 // 反余弦(弧度) [R]
 native Acos takes real x returns real
@@ -5730,7 +5730,7 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 丢弃物品到当前位置（指定单位和指定物品）
 // 包括不可丢弃的物品
-// 单位死亡或删除后，也能正常丢弃
+// 单位死亡或删除后，也会正常丢弃
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 丢弃物品到当前位置(指定单位和物品栏格数)
 // 不论该格是何物品（包括不可丢弃的物品），都会被丢弃
@@ -7876,21 +7876,21 @@ native BlzConvertColor takes integer a, integer r, integer g, integer b returns 
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param priority 层级(图层)
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
 // @param typeName 框架类型
 // @param name 可输入任意名称
-// @param framehandle 可使用BlzGetOriginFrame获取原生UI，也可输入任意框架
+// @param framehandle 可使用BlzGetOriginFrame获取原生UI，可输入任意框架
 // @param inherits 父类框架(模板)
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
