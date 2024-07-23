@@ -85,7 +85,7 @@ globals
     constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
     // 玩家槽上限（包含所有中立玩家，共16/28位）
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
-    // 尸体数量上限，默认25
+    // （召唤）骷髅战士（'uske'）数量上限，默认25
     constant integer bj_MAX_SKELETONS = 25
     // （商店）物品库存上限，默认11
     constant integer bj_MAX_STOCK_ITEM_SLOTS = 11
@@ -156,8 +156,8 @@ globals
     // Delay between a creep's death and the time it may drop an item.
     constant real bj_CREEP_ITEM_DELAY = 0.50
 
-    // Timing settings for Marketplace inventories.
     // 初始物品库存补充延时（开局后，过多久才可购买/雇佣），默认120
+    // Timing settings for Marketplace inventories.
     constant real bj_STOCK_RESTOCK_INITIAL_DELAY = 120
     // 库存补充间隔，默认30
     constant real bj_STOCK_RESTOCK_INTERVAL = 30
@@ -187,7 +187,7 @@ globals
     constant integer bj_CAMERA_DEFAULT_ROTATION = 90
 
     // 营救（所属玩家变更）延时，默认2.00
-    // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
+    // 疑似中立可营救单位在被可营救后变更队伍的延迟
     constant real bj_RESCUE_PING_TIME = 2.00
 
     // Transmission behavior settings
@@ -575,11 +575,11 @@ globals
 
     // Transmission timing methods
 
-    // 传输时间方法 时间类型 - 增加
+    // 消息持续时间类型 时间类型 - 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 传输时间方法 时间类型 - 设为（指定值）
+    // 消息持续时间类型 时间类型 - 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 传输时间方法 时间类型 - 减少
+    // 消息持续时间类型 时间类型 - 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
@@ -1202,7 +1202,7 @@ globals
     sound bj_lastPlayedSound = null
     // 最后播放的音乐
     string bj_lastPlayedMusic = ""
-    // 最后传输消息的持续时间
+    // 最后播放消息的持续时间
     real bj_lastTransmissionDuration = 0
     // 最后创建的游戏缓存
     gamecache bj_lastCreatedGameCache = null
@@ -1267,8 +1267,8 @@ endglobals
 //***************************************************************************
 
 
-// 显示Debug消息[C]
-// @param msg 消息字符串
+// 显示Debug信息[C]
+// @param msg 信息内容
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -2362,7 +2362,7 @@ endfunction
 //***************************************************************************
 
 
-// 为玩家组显示文本消息(自动计时)
+// 为玩家组显示文本(自动计时)
 function DisplayTextToForce takes force toForce, string message returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2371,7 +2371,7 @@ function DisplayTextToForce takes force toForce, string message returns nothing
 endfunction
 
 
-// 为玩家组显示文本消息(指定时间)
+// 为玩家组显示文本(指定时间)
 function DisplayTimedTextToForce takes force toForce, real duration, string message returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7935,7 +7935,7 @@ function GetTransmissionDuration takes sound soundHandle, integer timeType, real
     return duration
 endfunction
 
-// 等待信息播放完成（指定传输时间方法）
+// 等待信息播放完成（指定消息持续时间类型）
 function WaitTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns nothing
     if(timeType == bj_TIMETYPE_SET) then
         // If we have a static duration wait, just perform the wait.
@@ -8096,7 +8096,7 @@ function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlay
 endfunction
 
 
-// 获取最后播放的单位消息的持续时间
+// 获取最后播放的单位消息持续时间
 function GetLastTransmissionDurationBJ takes nothing returns real
     return bj_lastTransmissionDuration
 endfunction
