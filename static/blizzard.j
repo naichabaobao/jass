@@ -9309,7 +9309,7 @@ endfunction
 
 
 // 创建战役检查点（自动）存档
-// @param doCheckpointHint 是否显示自动存档消息
+// @param doCheckpointHint 是否显示自动存档提示
 // Placeholder function for auto save feature
 function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint returns nothing
 	call SaveGameCheckpoint(mapSaveName, doCheckpointHint)
