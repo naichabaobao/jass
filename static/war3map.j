@@ -33,8 +33,6 @@ endfunction
 //*
 //***************************************************************************
 
-
-
 //***************************************************************************
 //*
 //*  Unit Creation
@@ -52,7 +50,6 @@ function CreateNeutralHostile takes nothing returns nothing
     local integer unitID
     local trigger t
     local real life
-
 endfunction
 
 //===========================================================================
@@ -66,7 +63,6 @@ function CreateNeutralPassiveBuildings takes nothing returns nothing
     local integer unitID
     local trigger t
     local real life
-
 endfunction
 
 //===========================================================================
@@ -80,7 +76,6 @@ function CreateNeutralPassive takes nothing returns nothing
     local integer unitID
     local trigger t
     local real life
-
 endfunction
 
 //===========================================================================
@@ -167,20 +162,15 @@ endfunction
 // 初始化玩家插槽状态（按地图编辑器玩家设置）
 // 设置玩家出生点位、玩家颜色、默认种族、种族可选性、默认控制者类型
 function InitCustomPlayerSlots takes nothing returns nothing
-
-
 endfunction
 
 // 初始化玩家自定义队伍（按地图编辑器玩家队伍设置）
 function InitCustomTeams takes nothing returns nothing
     // Force: TRIGSTR_002
-
 endfunction
 
 // 设置盟友出生点优先权（盟友出生点相邻）
 function InitAllyPriorities takes nothing returns nothing
-
-
 endfunction
 
 //***************************************************************************
@@ -207,7 +197,6 @@ function main takes nothing returns nothing
     call InitGlobals(  )
     call InitCustomTriggers(  )
     call RunInitializationTriggers(  )
-
 endfunction
 
 //***************************************************************************
@@ -224,12 +213,8 @@ function config takes nothing returns nothing
     call SetPlayers( 2 )
     call SetTeams( 2 )
     call SetGamePlacement( MAP_PLACEMENT_TEAMS_TOGETHER )
-
-
     // Player setup
     call InitCustomPlayerSlots(  )
-
     call InitGenericPlayerSlots(  )
     call InitAllyPriorities(  )
 endfunction
-
