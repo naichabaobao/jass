@@ -7,9 +7,9 @@
 globals
     // Debug-cheat globals
 
-    // DeBug作弊设置镜头属性时镜头移动的持续时间，默认为0
+    // DeBug作弊设置镜头属性时镜头移动的持续时间，默认0
     constant real     bj_DEBUG_CAMFIELD_SPEED     = 0
-    // 作弊码，gimme，给所有玩家增加5000黄金/木材
+    // 作弊码，gimme，给所有玩家增加5000黄金及木材
     constant string   bj_DEBUG_CHAT_GIMME         = "gimme"
     // 作弊码，demo，展示玩家属性多面板
     constant string   bj_DEBUG_CHAT_DEMO          = "demo"
@@ -123,7 +123,7 @@ endglobals
 
 //===========================================================================
 
-// 给所有玩家增加5000黄金/木材触发器动作
+// 给所有玩家增加5000黄金及木材触发器动作
 function DebugGimmeEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call DisplayTextToPlayer(thePlayer, 0, 0, "Player "+I2S(GetPlayerId(GetTriggerPlayer())+1)+" cheated: Give 5000 gold and 5000 lumber to all players")
@@ -133,14 +133,14 @@ endfunction
 
 //===========================================================================
 
-// 给所有玩家增加5000黄金/木材
+// 给所有玩家增加5000黄金及木材
 function DebugGimme takes nothing returns nothing
     call ForForce(bj_FORCE_ALL_PLAYERS, function DebugGimmeEnum)
 endfunction
 
 //===========================================================================
 
-// 展示演示玩家属性多面板 - 设置所有玩家黄金/木材为0触发器动作
+// 展示演示玩家属性多面板 - 设置所有玩家黄金及木材为0触发器动作
 function DebugDemoEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     call SetPlayerState(thePlayer, PLAYER_STATE_RESOURCE_GOLD, 0)
@@ -150,7 +150,7 @@ endfunction
 //===========================================================================
 
 // 展示演示玩家属性多面板
-// 会设置所有玩家黄金/木材为0
+// 会设置所有玩家黄金及木材为0
 function DebugDemo takes nothing returns nothing
     local player thePlayer = GetTriggerPlayer()
     local integer gold = GetRandomInt(750, 1500)
@@ -255,6 +255,7 @@ endfunction
 //===========================================================================
 
 // 播报触发玩家选取单位的参数
+// 单位的所属，类型，名字，X Y 坐标，朝向，类型详情（是否英雄、死亡、建筑、地面单位、飞行单位、可攻击地面、可攻击飞行、近战攻击、远程攻击、召唤物）
 function DebugUnitInfo takes nothing returns nothing
     local group g = CreateGroup()
     call SyncSelections()
