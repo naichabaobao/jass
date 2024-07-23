@@ -1026,7 +1026,7 @@ globals
     // 混乱之治AI脚本变量
     constant boolean melee       = false
     // 拥有远程单位标识，蜘蛛及石像鬼数量（不含建造中）都大于0时为真
-    // 拥有统计石像鬼石像形态标识
+    // 拥有石像鬼石像形态标识
     // 混乱之治AI脚本变量
     constant boolean ranged      = false
     // 拥有憎恶标识，憎恶数量（不含建造中）大于0时为真
