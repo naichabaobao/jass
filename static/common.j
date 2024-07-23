@@ -40,7 +40,7 @@ type region extends agent
 type rect extends agent
 // 条件表达式
 type boolexpr extends agent
-// 声音
+// 音效
 type sound extends agent
 // 条件方法
 type conditionfunc extends boolexpr
@@ -54,7 +54,7 @@ type itempool extends handle
 type race extends handle
 // 联盟类型
 type alliancetype extends handle
-// 优先种族
+// 预设种族
 type racepreference extends handle
 // 游戏状态
 type gamestate extends handle
@@ -113,7 +113,7 @@ type mapcontrol extends handle
 type minimapicon extends handle
 // 玩家槽状态
 type playerslotstate extends handle
-// 声音频道
+// 声道
 type volumegroup extends handle
 // 镜头属性
 type camerafield extends handle
@@ -167,7 +167,7 @@ type trackable extends agent
 type gamecache extends agent
 // 版本（混乱之治 或 冰封王座）
 type version extends handle
-// 物品类型
+// 物品分类
 type itemtype extends handle
 // 文本标签
 type texttag extends handle
@@ -177,7 +177,7 @@ type attacktype extends handle
 type damagetype extends handle
 // 武器类型
 type weapontype extends handle
-// 声音类型
+// 音效类型
 type soundtype extends handle
 // 闪电效果
 type lightning extends handle
@@ -278,7 +278,7 @@ type commandbuttoneffect extends handle
 constant native ConvertRace takes integer i returns race
 // 转换整数成联盟类型
 constant native ConvertAllianceType takes integer i returns alliancetype
-// 转换整数成优先种族
+// 转换整数成预设种族
 constant native ConvertRacePref takes integer i returns racepreference
 // 转换整数成游戏整点状态
 constant native ConvertIGameState takes integer i returns igamestate
@@ -334,7 +334,7 @@ constant native ConvertMapControl takes integer i returns mapcontrol
 constant native ConvertPlayerColor takes integer i returns playercolor
 // 转换整数成玩家槽状态
 constant native ConvertPlayerSlotState takes integer i returns playerslotstate
-// 转换整数成声音频道
+// 转换整数成声道
 constant native ConvertVolumeGroup takes integer i returns volumegroup
 // 转换整数成镜头属性
 constant native ConvertCameraField takes integer i returns camerafield
@@ -350,7 +350,7 @@ constant native ConvertFogState takes integer i returns fogstate
 constant native ConvertEffectType takes integer i returns effecttype
 // 转换整数成版本
 constant native ConvertVersion takes integer i returns version
-// 转换整数成物品类型
+// 转换整数成物品分类
 constant native ConvertItemType takes integer i returns itemtype
 // 转换整数成攻击类型
 constant native ConvertAttackType takes integer i returns attacktype
@@ -358,7 +358,7 @@ constant native ConvertAttackType takes integer i returns attacktype
 constant native ConvertDamageType takes integer i returns damagetype
 // 转换整数成武器类型
 constant native ConvertWeaponType takes integer i returns weapontype
-// 转换整数成声音类型
+// 转换整数成音效类型
 constant native ConvertSoundType takes integer i returns soundtype
 // 转换整数成路径类型
 constant native ConvertPathingType takes integer i returns pathingtype
@@ -909,19 +909,19 @@ globals
 	
 	// Map Setup Constants
 	
-	// 预设玩家种族 人类
+	// 预设种族 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
-	// 预设玩家种族 兽人
+	// 预设种族 兽人
 	constant racepreference RACE_PREF_ORC = ConvertRacePref(2)
-	// 预设玩家种族 暗夜精灵
+	// 预设种族 暗夜精灵
 	constant racepreference RACE_PREF_NIGHTELF = ConvertRacePref(4)
-	// 预设玩家种族 天灾亡灵/不死
+	// 预设种族 天灾亡灵/不死
 	constant racepreference RACE_PREF_UNDEAD = ConvertRacePref(8)
-	// 预设玩家种族 恶魔
+	// 预设种族 恶魔
 	constant racepreference RACE_PREF_DEMON = ConvertRacePref(16)
-	// 预设玩家种族 随机
+	// 预设种族 随机
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
-	// 预设玩家种族 用户可选择
+	// 预设种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
 	// 玩家控制者类型 用户
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
@@ -1043,44 +1043,44 @@ globals
 	
 	// Sound Constants
 	
-	// 声音频道 单位移动声音
+	// 声道 单位移动音效
 	constant volumegroup SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
-	// 声音频道 单位回应声音
+	// 声道 单位响应音效
 	constant volumegroup SOUND_VOLUMEGROUP_UNITSOUNDS = ConvertVolumeGroup(1)
-	// 声音频道 战斗声音
+	// 声道 战斗音效
 	constant volumegroup SOUND_VOLUMEGROUP_COMBAT = ConvertVolumeGroup(2)
-	// 声音频道 动画和法术声音
+	// 声道 动画和法术音效
 	constant volumegroup SOUND_VOLUMEGROUP_SPELLS = ConvertVolumeGroup(3)
-	// 声音频道 用户界面(UI)声音
+	// 声道 用户界面(UI)音效
 	constant volumegroup SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
-	// 声音频道 音乐
+	// 声道 音乐
 	constant volumegroup SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
-	// 声音频道 场景配音
+	// 声道 场景配音
 	constant volumegroup SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
-	// 声音频道 火焰声音
+	// 声道 火焰音效
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
 	
-	// 声音频道 背景声
+	// 声道 背景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
-	// 声音频道 场景声
+	// 声道 场景声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
-	// 声音频道 音乐
+	// 声道 音乐
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
-	// 声音频道 对话声
+	// 声道 对话声
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
-	// 声音频道 声音特效1
+	// 声道 音效1
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
-	// 声音频道 声音特效2
+	// 声道 音效2
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
-	// 声音频道 声音特效3
+	// 声道 音效3
 	// @version 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
@@ -1739,9 +1739,9 @@ globals
 	constant effecttype EFFECT_TYPE_MISSILE = ConvertEffectType(5)
 	// 特效类型 闪电特效
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
-	// 声音类型 特效
+	// 音效类型 特效
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
-	// 声音类型 循环特效
+	// 音效类型 循环特效
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
 	
@@ -2769,7 +2769,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_BEASTS_PER_SECOND = ConvertAbilityIntegerLevelField('Nst1')
 	 // 技能随等级改变的整数域 目标类型 ('Ncl2')
 	constant abilityintegerlevelfield ABILITY_ILF_TARGET_TYPE = ConvertAbilityIntegerLevelField('Ncl2')
-	 // 技能随等级改变的整数域 选项 ('Ncl3')
+	 // 技能随等级改变的整数域 通魔选项 ('Ncl3')
 	constant abilityintegerlevelfield ABILITY_ILF_OPTIONS = ConvertAbilityIntegerLevelField('Ncl3')
 	 // 技能随等级改变的整数域 护甲减少 ('Nab3')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_NAB3 = ConvertAbilityIntegerLevelField('Nab3')
@@ -4525,7 +4525,7 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // @param whichResource 税收类型，黄金或木材[PLAYER_STATE_RESOURCE_GOLD，PLAYER_STATE_RESOURCE_LUMBER]
 // @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
-// 设置指定玩家种族
+// 设置指定玩家预设种族
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
@@ -4766,13 +4766,13 @@ native RegionAddRect takes region whichRegion, rect r returns nothing
 // 移除指定不规则区域的矩形区域  [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
-// 在指定不规则区域添加坐标 [R]
+// 在指定不规则区域指定坐标添加单元格 [R]
 native RegionAddCell takes region whichRegion, real x, real y returns nothing
-// 在指定不规则区域添加点 [R]
+// 在指定不规则区域指定点添加单元格 [R]
 native RegionAddCellAtLoc takes region whichRegion, location whichLocation returns nothing
-// 移除指定不规则区域的坐标 [R]
+// 清理指定不规则区域指定坐标的单元格 [R]
 native RegionClearCell takes region whichRegion, real x, real y returns nothing
-// 移除指定不规则区域的点 [R]
+// 清理指定不规则区域指定点的单元格 [R]
 native RegionClearCellAtLoc takes region whichRegion, location whichLocation returns nothing
 
 // 转换坐标成点
@@ -4823,7 +4823,7 @@ native DisableTrigger takes trigger whichTrigger returns nothing
 // 查询触发器是否打开
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
-// 挂起触发器
+// 挂起/释放 触发器
 native TriggerWaitOnSleeps takes trigger whichTrigger, boolean flag returns nothing
 // 查询触发器是否挂起
 native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
@@ -4843,7 +4843,7 @@ constant native GetFilterItem takes nothing returns item
 // 获取选取的物品
 constant native GetEnumItem takes nothing returns item
 
-// 解析标签 tags
+// 解析标签（tags）
 constant native ParseTags takes string taggedString returns string
 
 // 获取匹配的玩家
@@ -4855,7 +4855,7 @@ constant native GetEnumPlayer takes nothing returns player
 constant native GetTriggeringTrigger takes nothing returns trigger
 // 获取触发器事件ID
 constant native GetTriggerEventId takes nothing returns eventid
-// 获取触发器赋值次数
+// 获取触发器条件数量
 constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
 // 获取触发器运行次数
 constant native GetTriggerExecCount takes trigger whichTrigger returns integer
@@ -5473,7 +5473,7 @@ native SetItemPosition takes item i, real x, real y returns nothing
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 // 允许/禁止 指定物品被丢弃
 native SetItemDroppable takes item i, boolean flag returns nothing
-// 允许/禁止 指定物品被贩卖/出售
+// 允许/禁止 指定物品被抵押
 native SetItemPawnable takes item i, boolean flag returns nothing
 // 设置指定物品的所属玩家
 native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeColor returns nothing
@@ -5492,13 +5492,13 @@ native IsItemOwned takes item whichItem returns boolean
 native IsItemPowerup takes item whichItem returns boolean
 // 查询指定物品是否可在市场随机出售 [R]
 native IsItemSellable takes item whichItem returns boolean
-// 查询指定物品是否可被抵押/出售 [R]
+// 查询指定物品是否可被抵押 [R]
 native IsItemPawnable takes item whichItem returns boolean
-// 查询指定物品是否拾取时自动使用
+// 查询指定物品类型是否拾取时自动使用
 native IsItemIdPowerup takes integer itemId returns boolean
-// 查询指定物品是否可以被市场出售
+// 查询指定物品类型是否可以被市场出售
 native IsItemIdSellable takes integer itemId returns boolean
-// 查询指定物品是否可以被抵押
+// 查询指定物品类型是否可以被抵押
 native IsItemIdPawnable takes integer itemId returns boolean
 // 选取区域内所有物品做动作
 // @param r区域
@@ -5513,7 +5513,7 @@ native GetItemType takes item whichItem returns itemtype
 native SetItemDropID takes item whichItem, integer unitId returns nothing
 // 获取指定物品名称
 constant native GetItemName takes item whichItem returns string
-// 获取指定物品数量
+// 获取指定物品使用次数
 native GetItemCharges takes item whichItem returns integer
 // 设置指定物品使用次数
 native SetItemCharges takes item whichItem, integer charges returns nothing
@@ -5728,10 +5728,13 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 // 把物品移动到指定物品栏格数(指定单位和物品类型) [R]
 // @param itemSlot 物品栏格数：0-5
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-// 删除物品（指定单位）
+// 丢弃物品到当前位置（指定单位和指定物品）
+// 包括不可丢弃的物品
+// 单位死亡或删除后，也能正常丢弃
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
-// 删除物品(指定单位和物品栏格数)
-// 不论哪个物品在该格中，都会被删除
+// 丢弃物品到当前位置(指定单位和物品栏格数)
+// 不论该格是何物品（包括不可丢弃的物品），都会被丢弃
+// 单位死亡或删除后，也能正常丢弃
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 查询单位是否持有指定物品
@@ -5925,7 +5928,7 @@ native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种战斗声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 // 发布伤害目标（单位/物品/可破坏物）命令（指定单位） [R]
 // @param amount 伤害量
@@ -5933,7 +5936,7 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种战斗声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
@@ -6000,14 +6003,14 @@ native GetUnitCurrentOrder takes unit whichUnit returns integer
 native SetResourceAmount takes unit whichUnit, integer amount returns nothing
 // 增加指定金矿储金量(指定增量)
 native AddResourceAmount takes unit whichUnit, integer amount returns nothing
-// 获取指定金矿当前储金量
+// 获取指定金矿储金量
 native GetResourceAmount takes unit whichUnit returns integer
 
 // 获取传送门目的地 X 坐标
 native WaygateGetDestinationX takes unit waygate returns real
 // 获取传送门目的地 Y 坐标
 native WaygateGetDestinationY takes unit waygate returns real
-// 设置传送门目的坐标 [R]
+// 设置传送门目的地坐标 [R]
 native WaygateSetDestination takes unit waygate, real x, real y returns nothing
 // 设置传送门激活状态
 native WaygateActivate takes unit waygate, boolean activate returns nothing
@@ -6590,7 +6593,7 @@ native RemoveSavedHandle takes hashtable table, integer parentKey, integer child
 // <1.24> 清空指定哈希表 [C]
 // 清空整张表，清空后无需新建表，仍可复用
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表（指定主索引） [C]
+// <1.24> 清空指定哈希表的指定主索引 [C]
 // 仅清空指定主索引
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
@@ -6621,9 +6624,9 @@ native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, 
 native CreateItemPool takes nothing returns itempool
 // 销毁物品池 [R]
 native DestroyItemPool takes itempool whichItemPool returns nothing
-// 添加指定物品类型到指定物品池 [R]
+// 添加指定物品分类到指定物品池 [R]
 native ItemPoolAddItemType takes itempool whichItemPool, integer itemId, real weight returns nothing
-// 删除指定物品池的指定物品类型 [R]
+// 删除指定物品池的指定物品分类 [R]
 native ItemPoolRemoveItemType takes itempool whichItemPool, integer itemId returns nothing
 // 随机创建物品池的物品(指定坐标) [R]
 // 默认用于创建随机掉落物品
@@ -6640,8 +6643,8 @@ native ChooseRandomNPBuilding takes nothing returns integer
 // 随机选择物品-所有等级
 // 默认用于市场随机出售物品
 native ChooseRandomItem takes integer level returns integer
-// 随机选择物品-指定等级
-// 默认用于市场随机出售物品
+// 随机选择物品分类-指定等级
+// 默认用于市场随机出售物品分类
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
 // 设置随机种子
 // 默认用于统一电影播放效果
@@ -6699,19 +6702,19 @@ native UnitAddIndicator takes unit whichUnit, integer red, integer green, intege
 // 添加闪动指示器(指定单位/物品/可破坏物)
 native AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
 // 发送小地图提示(所有玩家可见) [R]
-// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
+// 类似单位建造/训练/研究完成的提示，而非盟友之间通信的叹号
 native PingMinimap takes real x, real y, real duration returns nothing
-// 发送小地图提示(指定颜色)(所有玩家可见) [R]
-// 类似单位建造/训练完成的提示，而非盟友之间通信的叹号
+// 发送小地图提示(指定颜色及是否启用额外特效)(所有玩家可见) [R]
+// 类似单位建造/训练/研究完成的提示，而非盟友之间通信的叹号
 native PingMinimapEx takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
 // 创建小地图(任务)图标(指定单位)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图(任务)图标(指定点)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 创建小地图(任务)图标(指定坐标)
-// @param fogstate 迷雾内状态(可见/战争迷雾/黑色阴影)
+// @param fogstate 迷雾状态(可见/战争迷雾/黑色阴影)
 native CreateMinimapIcon takes real x, real y, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon
 // 获取皮肤管理器的本地路径(指定字符串)
 // 应该不能在AI脚本使用，因为脚本无法获取外部内容，只返回 null
@@ -6720,7 +6723,7 @@ native SkinManagerGetLocalPath takes string key returns string
 native DestroyMinimapIcon takes minimapicon pingId returns nothing
 // 显示/隐藏 小地图(任务)图标
 native SetMinimapIconVisible takes minimapicon whichMinimapIcon, boolean visible returns nothing
-// 设置小地图(任务)图标在指定布尔值满足时自我销毁
+// 设置小地图(任务)图标在指定条件满足时自动销毁
 native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean doDestroy returns nothing
 // 允许/禁止 闭塞(所有玩家) [R]
 native EnableOcclusion takes boolean flag returns nothing
@@ -6728,7 +6731,7 @@ native EnableOcclusion takes boolean flag returns nothing
 native SetIntroShotText takes string introText returns nothing
 // 设置介绍模型路径
 native SetIntroShotModel takes string introModelPath returns nothing
-// 允许/禁止 边界染色(所有玩家) [R]
+// 允许/禁止 地图边界迷雾渲染(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
 // 调用电影模式(所有玩家)
 native PlayModelCinematic takes string modelName returns nothing
@@ -6742,7 +6745,7 @@ native ForceUICancel takes nothing returns nothing
 native DisplayLoadDialog takes nothing returns nothing
 // 设置小地图(任务)图标
 native SetAltMinimapIcon takes string iconPath returns nothing
-// 禁用 重新开始任务按钮
+// 禁用重新开始任务按钮
 native DisableRestartMission takes boolean flag returns nothing
 
 // 新建漂浮文字 [R]
@@ -6859,6 +6862,7 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 // Timer Dialog API
 
 // 新建计时器窗口 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateTimerDialog takes timer t returns timerdialog
 // 销毁计时器窗口
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
@@ -6884,6 +6888,7 @@ native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeR
 // Create a leaderboard object
 
 // 新建排行榜 [R]
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native CreateLeaderboard takes nothing returns leaderboard
 // 销毁排行榜
 native DestroyLeaderboard takes leaderboard lb returns nothing
@@ -7220,12 +7225,12 @@ native SetSoundVelocity takes sound soundHandle, real x, real y, real z returns 
 native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 // 播放音效
 native StartSound takes sound soundHandle returns nothing
-// 播放声音(指定是否淡入)
+// 播放音效(指定是否淡入)
 // @version 1.33
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
-// 停止播放声音(指定是否淡出)
+// 停止播放音效(指定是否淡出)
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
-// 播放完成时关闭声音
+// 播放完成时关闭音效
 native KillSoundWhenDone takes sound soundHandle returns nothing
 
 // 设置地图背景音乐 [R]
@@ -7263,21 +7268,21 @@ native SetMusicPlayPosition takes integer millisecs returns nothing
 native SetThematicMusicVolume takes integer volume returns nothing
 // 设置主题音乐播放时间点 [R]
 native SetThematicMusicPlayPosition takes integer millisecs returns nothing
-// 设置声音持续时间
+// 设置音效持续时间
 // other music and sound calls
 native SetSoundDuration takes sound soundHandle, integer duration returns nothing
-// 获取声音持续时间
+// 获取音效持续时间
 native GetSoundDuration takes sound soundHandle returns integer
-// 设置声音文件持续时间
+// 设置音乐文件持续时间
 native GetSoundFileDuration takes string musicFileName returns integer
 
-// 设置指定频道音量 [R]
+// 设置指定声道音量 [R]
 native VolumeGroupSetVolume takes volumegroup vgroup, real scale returns nothing
-// 重置所有频道音量 [R]
+// 重置所有声道音量 [R]
 native VolumeGroupReset takes nothing returns nothing
-// 判断声音是否播放
+// 判断音效是否播放
 native GetSoundIsPlaying takes sound soundHandle returns boolean
-// 判断声音是否加载
+// 判断音效是否加载
 native GetSoundIsLoading takes sound soundHandle returns boolean
 // 注册矩形区域3D音效
 native RegisterStackedSound takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
@@ -7401,9 +7406,9 @@ native SetLightningColor takes lightning whichBolt, real r, real g, real b, real
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
 // 获取技能特效路径(指定技能ID和索引)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
-// 获取技能音效路径(指定技能字符串和声音类型)
+// 获取技能音效路径(指定技能字符串和音效类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
-// 获取技能音效路径(指定技能ID和声音类型)
+// 获取技能音效路径(指定技能ID和音效类型)
 native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 
 
@@ -7534,15 +7539,15 @@ native PauseCompAI takes player p, boolean pause returns nothing
 // 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
-// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveGuardPosition takes unit hUnit returns nothing
 // 恢复单位的防守职责
 native RecycleGuardPosition takes unit hUnit returns nothing
-// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复
+// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
 // 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 这些单位仍受代码控制，只是AI几乎不控制
+// 单位仍受代码控制
 native RemoveAllGuardPositions takes player num returns nothing
 
 
@@ -7874,11 +7879,13 @@ native BlzLoadTOCFile takes string TOCFile returns boolean
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param priority 层级(图层)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
 // @param typeName 框架类型
@@ -7886,6 +7893,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // @param framehandle 可使用BlzGetOriginFrame获取原生UI，也可输入任意框架
 // @param inherits 父类框架(模板)
 // @param createContext 索引，一般默认为0
+// 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 销毁指定Frame
 native BlzDestroyFrame takes framehandle frame returns nothing
@@ -7985,7 +7993,7 @@ native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, tex
 // 获取Frame子组件数量
 // @version 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件 
+// 获取Frame子组件
 // @version 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
@@ -8048,7 +8056,9 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 // 获取技能ID（指定技能）
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
-// 显示聊天信息
+// 模拟玩家在聊天框发送聊天信息
+// @param whichPlayer 发出消息的玩家
+// @param recipient 频道，0为所有人，1为盟友，2为观战者，大于等于3为私聊
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing

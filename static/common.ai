@@ -2,11 +2,11 @@
 //  $Id: common.ai,v 1.66.2.1 2003/05/09 09:17:04 abond Exp $
 //==================================================================================================
 
-// 显示指定文本
+// 显示调试文本
 native DebugS               takes string str                            returns nothing
-// 显示指定文本，带1个整数
+// 显示调试文本，带1个整数
 native DebugFI              takes string str, integer val               returns nothing
-// 显示指定文本，带1个单位类型（整数）
+// 显示调试文本，带1个单位类型（整数）
 native DebugUnitID          takes string str, integer val               returns nothing
 // 给指定玩家显示指定文本
 native DisplayText          takes integer p, string str                 returns nothing
@@ -77,7 +77,7 @@ native GetUpgradeLevel      takes integer id                            returns 
 native GetUpgradeGoldCost   takes integer id                            returns integer
 // 获取研究指定科技需要消耗的木材数量（指定科技ID）
 native GetUpgradeWoodCost   takes integer id                            returns integer
-// 获取下一个扩张点的编号（可能返回-1，视为获取失败）
+// 获取下一个扩张点的编号（返回-1即获取失败）
 native GetNextExpansion     takes nothing                               returns integer
 // 获取大型攻击目标（可能返回null）
 // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
@@ -111,7 +111,7 @@ native SetHeroLevels        takes code func                             returns 
 // 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
 native SetNewHeroes         takes boolean state                         returns nothing
 // 购买地精飞艇
-// 运行后AI会在到达地精实验室时自动购买地精飞艇
+// 运行后AI会自动购买地精飞艇，实测不运行此函数AI也会自动购买飞艇（不论飞艇在何处出售（支持改图），只要达到购买范围且有足够的资源及可用人口（1.36.2飞艇占用人口）即可购买）
 native PurchaseZeppelin     takes nothing                               returns nothing
 // 训练指定数量的合体单位类型
 // 运行后AI会分别训练a和b并合体，直到make数量达标，如角鹰兽和弓箭手合体
@@ -194,14 +194,15 @@ native WaitGetEnemyBase     takes nothing                               returns 
 // 获取敌人主基地的单位
 // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
-// 查询当前拟扩张点附近的敌方单位（普通玩家或中立敌对玩家的单位，可能返回null）
+// 查询当前拟扩张点附近的敌方单位（敌方玩家或中立敌对玩家的单位）
+// 可能返回null
 native GetExpansionFoe      takes nothing                               returns unit
 // 获取敌人分基地（可能返回null）
 native GetEnemyExpansion    takes nothing                               returns unit
-// 获取扩张点的 X 坐标
+// 获取扩张点的 X 坐标（返回-1即获取失败）
 // 使用前必须已初始化 CreateCaptains
 native GetExpansionX        takes nothing                               returns integer
-// 获取扩张点的 Y 坐标
+// 获取扩张点的 Y 坐标（返回-1即获取失败）
 // 使用前必须已初始化 CreateCaptains
 native GetExpansionY        takes nothing                               returns integer
 // 设置（军队）集合点
@@ -482,9 +483,9 @@ globals
     constant integer CANNON_TOWER       = 'hctw'
     // 城堡（人族三本基地）
     constant integer CASTLE             = 'hcas'
-    // 心灵圣所/法术塔（人族）（早期测试版内容，正式版无此单位 'htws'）
+    // 心灵圣所（法术塔）（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer CHURCH             = 'htws'
-    // 心灵圣所/法术塔（人族）（测试版内容，正式版无此单位 'htws'）
+    // 心灵圣所（法术塔）（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer MAGE_TOWER         =  CHURCH
     // 防御塔（人族）
     constant integer GUARD_TOWER        = 'hgtw'
@@ -513,17 +514,17 @@ globals
 
     // human upgrades
 
-    // 科技 钢铁铸剑
+    // 科技 钢铁铸剑/精钢铸剑/秘银铸剑
     constant integer UPG_MELEE          = 'Rhme'
-    // 科技 黑火药
+    // 科技 黑火药/精炼火药/灌魔火药
     constant integer UPG_RANGED         = 'Rhra'
     // 科技 炮兵（人族）（测试版内容，正式版无此科技 'Rhaa'）
     constant integer UPG_ARTILLERY      = 'Rhaa'
-    // 科技 钢铁装甲
+    // 科技 钢铁装甲/精钢装甲/秘银装甲
     constant integer UPG_ARMOR          = 'Rhar'
-    // 科技 改良型采矿技术/改进型采矿效率（人族）（测试版内容，正式版无此科技 'Rhmi'）
+    // 科技 改良采矿技术/高级采矿技术（人族）（测试版内容，正式版无此科技 'Rhmi'）
     constant integer UPG_GOLD           = 'Rhmi'
-    // 科技 改良石工技术/加强型石工技术
+    // 科技 改良石工技术/高级石工技术/灌魔石工技术
     constant integer UPG_MASONRY        = 'Rhac'
     // 科技 照明弹
     constant integer UPG_SIGHT          = 'Rhss'
@@ -531,15 +532,15 @@ globals
     constant integer UPG_DEFEND         = 'Rhde'
     // 科技 坐骑作战训练
     constant integer UPG_BREEDING       = 'Rhan'
-    // 科技 牧师专家级训练
+    // 科技 牧师专家/大师级训练
     constant integer UPG_PRAYING        = 'Rhpt'
-    // 科技 女巫专家级训练
+    // 科技 女巫专家/大师级训练
     constant integer UPG_SORCERY        = 'Rhst'
-    // 科技 镶钉皮甲
+    // 科技 镶钉皮甲/强化皮甲/龙皮护甲
     constant integer UPG_LEATHER        = 'Rhla'
     // 科技 长管火枪
     constant integer UPG_GUN_RANGE      = 'Rhri'
-    // 科技 改良伐木技术/改进型伐木效率
+    // 科技 改良伐木技术（改进型伐木效率）/高级伐木技术（高级改进型伐木效率）
     constant integer UPG_WOOD           = 'Rhlh'
     // 科技 魔法岗哨
     constant integer UPG_SENTINEL       = 'Rhse'
@@ -551,11 +552,11 @@ globals
     constant integer UPG_HAMMERS        = 'Rhhb'
     // 科技 控制魔法
     constant integer UPG_CONT_MAGIC     = 'Rhss'
-    // 科技 破片榴弹/碎片攻击
+    // 科技 破片榴弹（碎片攻击）
     constant integer UPG_FRAGS          = 'Rhfs'
     // 科技 火箭弹幕
     constant integer UPG_TANK           = 'Rhrt'
-    // 科技 对空炮机/高射炮火
+    // 科技 对空炮机（高射炮火）
     constant integer UPG_FLAK           = 'Rhfc'
     // 科技 迷雾之云
     constant integer UPG_CLOUD          = 'Rhcd'
@@ -679,19 +680,19 @@ globals
 
     // orc upgrades
 
-    // 科技 精钢近战武器
+    // 科技 精钢近战武器/瑟银近战武器/奥金近战武器
     constant integer UPG_ORC_MELEE      = 'Rome'
-    // 科技 精钢远程武器
+    // 科技 精钢远程武器/瑟银远程武器/奥金远程武器
     constant integer UPG_ORC_RANGED     = 'Rora'
-    // 科技 炮兵（兽族）（测试版内容，正式版无此科技 'Roaa'）
+    // 科技 火炮（兽族）（测试版内容，正式版无此科技 'Roaa'）
     constant integer UPG_ORC_ARTILLERY  = 'Roaa'
-    // 科技 精钢护甲
+    // 科技 精钢护甲/瑟银护甲/奥金护甲
     constant integer UPG_ORC_ARMOR      = 'Roar'
     // 科技 战鼓伤害强化
     constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
     // 科技 掠夺
     constant integer UPG_ORC_PILLAGE    = 'Ropg'
-    // 科技 野蛮之力/狂暴力量
+    // 科技 野蛮之力（狂暴力量）
     constant integer UPG_ORC_BERSERK    = 'Robs'
     // 科技 粉碎伤害强化
     constant integer UPG_ORC_PULVERIZE  = 'Rows'
@@ -699,11 +700,11 @@ globals
     constant integer UPG_ORC_ENSNARE    = 'Roen'
     // 科技 毒矛（兽族）
     constant integer UPG_ORC_VENOM      = 'Rovs'
-    // 科技 巫医专家级训练
+    // 科技 巫医专家/大师级训练
     constant integer UPG_ORC_DOCS       = 'Rowd'
-    // 科技 萨满祭司专家级训练
+    // 科技 萨满祭司专家/大师级训练
     constant integer UPG_ORC_SHAMAN     = 'Rost'
-    // 科技 尖刺障碍
+    // 科技 尖刺障碍/中级尖刺障碍/高级尖刺障碍
     constant integer UPG_ORC_SPIKES     = 'Rosp'
     // 科技 加强型防御
     constant integer UPG_ORC_BURROWS    = 'Rorb'
@@ -711,7 +712,7 @@ globals
     constant integer UPG_ORC_REGEN      = 'Rotr'
     // 科技 火油瓶（兽族）
     constant integer UPG_ORC_FIRE       = 'Rolf'
-    // 科技 灵魂行者专家级训练
+    // 科技 灵魂行者专家/大师级训练
     constant integer UPG_ORC_SWALKER    = 'Rowt'
     // 科技 狂战士升级
     constant integer UPG_ORC_BERSERKER  = 'Robk'
@@ -829,8 +830,6 @@ globals
     constant integer PIT_FIEND          = 'ucry'
     // 地穴恶魔
     constant integer CRYPT_FIEND        =  PIT_FIEND
-    // 钻地的地穴恶魔
-    constant integer BURROWED_FIEND     = 'ucrm'
     // 冰霜巨龙
     constant integer FROST_WYRM         = 'ufro'
     // 石像鬼
@@ -895,11 +894,11 @@ globals
 
     // undead upgrades
 
-    // 科技 邪恶力量
+    // 科技 邪恶力量/中级邪恶力量/高级邪恶力量
     constant integer UPG_UNHOLY_STR     = 'Rume'
-    // 科技 生物攻击
+    // 科技 生物攻击/中级生物攻击/高级生物攻击
     constant integer UPG_CR_ATTACK      = 'Rura'
-    // 科技 邪恶护甲
+    // 科技 邪恶护甲/中级邪恶护甲/高级邪恶护甲
     constant integer UPG_UNHOLY_ARMOR   = 'Ruar'
     // 科技 食尸
     constant integer UPG_CANNIBALIZE    = 'Ruac'
@@ -911,17 +910,17 @@ globals
     constant integer UPG_ABOM           = 'Ruab'
     // 科技 石像形态
     constant integer UPG_STONE_FORM     = 'Rusf'
-    // 科技 通灵师/亡灵男巫专家级训练
+    // 科技 通灵师/亡灵男巫专家/大师级训练
     constant integer UPG_NECROS         = 'Rune'
-    // 科技 女妖专家级训练
+    // 科技 女妖专家/大师级训练
     constant integer UPG_BANSHEE        = 'Ruba'
     // 科技 背包（不死族）（原文'Rump'有误）
     constant integer UPG_MEAT_WAGON     = 'Rupm'
     // 科技 冰冻吐息
     constant integer UPG_WYRM_BREATH    = 'Rufb'
-    // 科技 骷髅持久术/骨质增强术
+    // 科技 骷髅持久术（骨质增强术）
     constant integer UPG_SKEL_LIFE      = 'Rusl'
-    // 科技 骷髅精通/骷髅法术
+    // 科技 骷髅精通（骷髅法术）
     constant integer UPG_SKEL_MASTERY   = 'Rusm'
     // 科技 发掘尸体
     constant integer UPG_EXHUME         = 'Ruex'
@@ -929,7 +928,7 @@ globals
     constant integer UPG_SACRIFICE      = 'Rurs'
     // 科技 尸爆（不死族）（测试版内容，正式版无此科技 'Ruax'）
     constant integer UPG_ABOM_EXPL      = 'Ruax'
-    // 科技 生物甲壳
+    // 科技 生物甲壳/中级生物甲壳/高级生物甲壳
     constant integer UPG_CR_ARMOR       = 'Rucr'
     // 科技 疾病之云
     constant integer UPG_PLAGUE         = 'Rupc'
@@ -1116,13 +1115,13 @@ globals
 
     // elf upgrades
 
-    // 科技 月之力量
+    // 科技 月之力量/中级月之力量/高级月之力量
     constant integer UPG_STR_MOON       = 'Resm'
-    // 科技 野性力量
+    // 科技 野性力量/中级野性力量/高级野性力量
     constant integer UPG_STR_WILD       = 'Resw'
-    // 科技 月之护甲
+    // 科技 月之护甲/中级月之护甲/高级月之护甲
     constant integer UPG_MOON_ARMOR     = 'Rema'
-    // 科技 强化外皮/加强隐藏
+    // 科技 强化外皮（加强隐藏）/中级强化外皮/高级强化外皮
     constant integer UPG_HIDES          = 'Rerh'
     // 科技 夜视能力
     constant integer UPG_ULTRAVISION    = 'Reuv'
@@ -1132,29 +1131,29 @@ globals
     constant integer UPG_SCOUT          = 'Resc'
     // 科技 升级月刃
     constant integer UPG_GLAIVE         = 'Remg'
-    // 科技 强弓/硬弓
+    // 科技 强弓（硬弓）
     constant integer UPG_BOWS           = 'Reib'
-    // 科技 箭术/射击术
+    // 科技 箭术（射击术）
     constant integer UPG_MARKSMAN       = 'Remk'
-    // 科技 猛禽德鲁伊专家级训练
+    // 科技 猛禽德鲁伊专家/大师级训练
     constant integer UPG_DRUID_TALON    = 'Redt'
-    // 科技 利爪德鲁伊专家级训练
+    // 科技 利爪德鲁伊专家/大师级训练
     constant integer UPG_DRUID_CLAW     = 'Redc'
     // 科技 驱除魔法（暗夜精灵族）
     constant integer UPG_ABOLISH        = 'Resi'
-    // 科技 腐蚀吐息/腐蚀喷吐
+    // 科技 腐蚀吐息（腐蚀喷吐）
     constant integer UPG_CHIM_ACID      = 'Recb'
-    // 科技 角鹰兽训练/驯服角鹰兽
+    // 科技 角鹰兽训练（驯服角鹰兽）
     constant integer UPG_HIPPO_TAME     = 'Reht'
     // 科技 锐锋之刃（投刃车）（原文'Repd'有误）
     constant integer UPG_BOLT           = 'Repb'
-    // 科技 利爪之印/利爪之痕
+    // 科技 利爪之印（利爪之痕）
     constant integer UPG_MARK_CLAW      = 'Reeb'
-    // 科技 猛禽之印/猛禽之痕
+    // 科技 猛禽之印（猛禽之痕）
     constant integer UPG_MARK_TALON     = 'Reec'
-    // 科技 硬化体肤/硬化皮肤
+    // 科技 硬化体肤（硬化皮肤）
     constant integer UPG_HARD_SKIN      = 'Rehs'
-    // 科技 抗性体肤/抗性皮肤
+    // 科技 抗性体肤（抗性皮肤）
     constant integer UPG_RESIST_SKIN    = 'Rers'
     // 科技 月井之春
     constant integer UPG_WELL_SPRING    = 'Rews'
@@ -1255,13 +1254,13 @@ globals
 
     // naga upgrades
 
-    // 科技 珊瑚鳞甲
+    // 科技 珊瑚鳞甲/壳质鳞甲/刺脊鳞甲
     constant integer UPG_NAGA_ARMOR     = 'Rnam'
-    // 科技 珊瑚锋刃
+    // 科技 珊瑚锋刃/壳质锋刃/刺脊锋刃
     constant integer UPG_NAGA_ATTACK    = 'Rnat'
     // 科技 驱除魔法（娜迦族）
     constant integer UPG_NAGA_ABOLISH   = 'Rnsi'
-    // 科技 纳迦海妖专家级训练
+    // 科技 纳迦海妖专家/大师级训练
     constant integer UPG_SIREN          = 'Rnsw'
     // 科技 诱捕（娜迦族）
     constant integer UPG_NAGA_ENSNARE   = 'Rnen'
@@ -1467,7 +1466,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本
+// 显示当前AI玩家调试追踪，带1个指定文本
 function Trace takes string message returns nothing
     if trace_on then
         call DisplayText(GetAiPlayer(),message)
@@ -1476,7 +1475,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，1个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，1个整数
 function TraceI takes string message, integer val returns nothing
     if trace_on then
         call DisplayTextI(GetAiPlayer(),message,val)
@@ -1485,7 +1484,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，2个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，2个整数
 function TraceII takes string message, integer v1, integer v2 returns nothing
     if trace_on then
         call DisplayTextII(GetAiPlayer(),message,v1,v2)
@@ -1494,7 +1493,7 @@ endfunction
 
 //============================================================================
 
-// 显示文本，带1个指定文本，3个整数
+// 显示当前AI玩家调试追踪，带1个指定文本，3个整数
 function TraceIII takes string message, integer v1, integer v2, integer v3 returns nothing
     if trace_on then
         call DisplayTextIII(GetAiPlayer(),message,v1,v2,v3)
@@ -1567,7 +1566,7 @@ function Max takes integer A, integer B returns integer
     endif
 endfunction
 
-// 设置运输状态开启，用于飞艇空投，但鉴于AI本身会使用飞艇，无需使用该程序
+// 设置运输状态开启，用于飞艇空投，但AI本身会使用飞艇，无需调用该功能
 function SetZepNextWave takes nothing returns nothing
     set zep_next_wave = true
 endfunction
@@ -1591,7 +1590,7 @@ endfunction
 
 //============================================================================
 
-// 等待信号，等待从触发器发送的命令，若无发送，不会执行下一步
+// 等待触发器命令信号，收到信号前不会执行下一步
 function WaitForSignal takes nothing returns integer
     local integer cmd
     local boolean display = false //xxx
@@ -1680,14 +1679,14 @@ endfunction
 
 //============================================================================
 
-// 查询当前AI玩家的黄金数
+// 查询当前AI玩家黄金数量
 function GetGold takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_GOLD)
 endfunction
 
 //============================================================================
 
-// 查询当前AI玩家的木材数
+// 查询当前AI玩家木材数量
 function GetWood takes nothing returns integer
     return GetPlayerState(ai_player,PLAYER_STATE_RESOURCE_LUMBER)
 endfunction
@@ -1903,7 +1902,7 @@ endfunction
 
 //============================================================================
 
-// 在指定分基地建造指定单位类型，一般用于在分矿造塔或其他建筑
+// 在指定分基地建造指定单位类型，一般用于在分矿造塔或其他建筑（分基地有矿才会造）
 // 训练单位无需使用此函数，AI会使用所有建筑训练，不论其在哪个基地，使用该函数建造/训练的单位会被登记为：制造于该分基地
 // @param townid 基地编号，-1为不限
 // @param qty 指定数量
@@ -2024,8 +2023,8 @@ endfunction
 
 //============================================================================
 
-// 升级科技
-// @param baseid 指定科技类型
+// 升级指定科技
+// @param baseid 科技类型
 // @param newid 升级等级
 function UpgradeAll takes integer baseid, integer newid returns nothing
     call SetBuildUnit( TownCountDone(baseid), newid )
@@ -2048,8 +2047,8 @@ endfunction
 
 // 根据人口占用情况训练指定单位类型
 // @param food 建议使用当前已使用的人口数
-// @param use1 单位类型1占用的人口数（单个）
-// @param use2 单位类型占用的人口数（单个）
+// @param use1 单位类型1占用的人口数（单个），用做分母，必须大于0
+// @param use2 单位类型占用的人口数（单个），用做分母，必须大于0
 // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
 // @param weak 当 strong 为假且 weak 为真时，训练（(food - use2 * TownCount(id2)) / use1）个id1
 function FoodPool takes integer food, boolean weak, integer id1, integer use1, boolean strong, integer id2, integer use2 returns nothing
@@ -2075,7 +2074,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（不包含复活/建造/训练中）数量达到指定数量，达到之前一直循环等待
+// 等待指定单位类型（不包含复活/建造/训练中，统计等价物）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
@@ -2167,7 +2166,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定的单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
+// 等待指定单位类型（包含复活/建造/训练中）数量大于或等于指定数量，满足条件前循环等待，若120秒后仍未满足，自动退出
 // @param towns 指定数量
 // @param townid 基地单位类型
 function WaitForTown takes integer towns, integer townid returns nothing
@@ -2296,7 +2295,7 @@ endfunction
 
 //============================================================================
 
-// 在原基础上增加初始波次的等待时间
+// 增加初始波次等待时间
 function AddSleepSeconds takes integer seconds returns nothing
     set sleep_seconds = sleep_seconds + seconds
 endfunction
@@ -2422,7 +2421,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到对战攻击组
+// 将指定类型单位添加到对战攻击组
 function SetMeleeGroup takes integer unitid returns nothing
     if unitid == hero_id then
         call SetAssaultGroup(1,9,unitid)
@@ -2433,7 +2432,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到防御组，默认用于战役
+// 将指定类型单位添加到防御组，默认用于战役
 function CampaignDefender takes integer level, integer qty, integer unitid returns nothing
     if qty > 0 and difficulty >= level then
         set defense_qty[defense_length] = qty
@@ -2446,7 +2445,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到防御组，默认用于战役
+// 将指定类型单位添加到防御组，默认用于战役
 // @param easy 简单AI添加的数量
 // @param med 中等AI添加的数量
 // @param hard 疯狂AI添加的数量
@@ -2462,7 +2461,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到战役攻击组，默认用于战役
+// 将指定类型单位添加到战役攻击组，默认用于战役
 // @param level AI难度，会与当前AI的难度进行比对，输入值必须大于等于当前AI难度时才会添加
 function CampaignAttacker takes integer level, integer qty, integer unitid returns nothing
     if qty > 0 and difficulty >= level then 
@@ -2472,7 +2471,7 @@ endfunction
 
 //============================================================================
 
-// 将指定类型的单位添加到攻击组，默认用于战役
+// 将指定类型单位添加到攻击组，默认用于战役
 // @param easy 简单AI添加的数量
 // @param med 中等AI添加的数量
 // @param hard 疯狂AI添加的数量
@@ -2489,7 +2488,7 @@ endfunction
 //============================================================================
 
 // 等待攻击组完成组建，即给AI一定的时间补充兵力
-// @param testReady 攻击组准备情况，为真时需要攻击组准备满50，为假时准备0即可
+// @param testReady 攻击组准备情况，为真时需要攻击组准备百分比满50，为假时准备百分比0即可
 // @param seconds 最长等待时间
 function FormGroup takes integer seconds, boolean testReady returns nothing
     local integer index
@@ -2636,7 +2635,7 @@ endfunction
 //============================================================================
 
 // 战斗等待
-// 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时，退出外层循环，两层循环都退出时，结束等待
+// 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时退出外层循环，两层循环都退出时结束等待
 function SleepInCombat takes nothing returns nothing
     local integer count = 0
     debug call Trace("SleepInCombat\n")

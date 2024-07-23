@@ -47,10 +47,10 @@ globals
     // 参与攻击的采木工人数量
     // AI编辑器导出AI脚本的变量
     constant integer awWood              = 0
-    // 当前触发器发送的命令
+    // 触发器最后发送的命令
     // AI编辑器导出AI脚本及部分官方战役AI脚本的变量
     constant integer command
-    // 当前触发器发送命令的数据
+    // 触发器最后发送命令的数据
     // AI编辑器导出AI脚本及部分官方战役AI脚本的变量
     constant integer command_data
 
@@ -83,57 +83,57 @@ globals
     // 进攻间隔时间，用于困难难度，默认4分钟
     // 部分官方战役AI脚本的变量
     constant integer hard_delay  = M4          // hard delay
-    // 进攻间隔时间，用于困难且接受到开局信号后难度，默认3分钟
+    // 进攻间隔时间，困难难度在接收到开局信号后启用，默认3分钟
     // 部分官方战役AI脚本的变量
     constant integer fast_delay  = M3          // hard delay after final signal
-    // X 坐标，记录触发器发送的点 X 坐标
+    // 触发器发送的点 X 坐标
     // 部分官方战役AI脚本的变量
     constant integer SET_X = 1
-    // Y 坐标，记录触发器发送的点 Y 坐标
+    // 触发器发送的点 Y 坐标
     // 部分官方战役AI脚本的变量
     constant integer SET_Y = 2
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player user = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player USER = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player User = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player ZOMBIES = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player orcs = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player humans = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player elf = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player undead = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player jaina = null
     // 玩家变量
-    // 用于记录战役的其他AI玩家，以便AI精准攻击敌人
+    // 标记战役的其他AI玩家，以便AI精准攻击敌人
     // 部分官方战役AI脚本的变量
     constant player kel = null
     // 玩家变量
-    // 用于记录战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
+    // 标记战役的真人玩家，以便AI精准攻击敌人（防止战役给玩家设置了AI盟友）
     // 部分官方战役AI脚本的变量
     constant player attacked = null
     // 作弊启用标识
@@ -154,37 +154,37 @@ globals
     // 攻击状态 取消暴力攻击
     // 部分官方战役AI脚本的变量
     constant integer CLEAR_AGRO     = 5     // data = player ID
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer USER           = 0
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer BLUE           = 1
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer GRAY           = 8
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer LIGHT_BLUE     = 9
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant integer GREEN          = 10
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant player purple          = null
-    // 玩家标识，用于标记敌方玩家
+    // 玩家标识，标记敌方玩家
     // 部分官方战役AI脚本的变量
     constant player green          = null
-    // 玩家标识，用于标记敌方玩家的编号
+    // 玩家标识，标记敌方玩家的编号
     // 部分官方战役AI脚本的变量
     constant integer ILLIDAN_SLOT   = 11
-    // 玩家标识，用于标记AI自己的玩家编号
+    // 玩家标识，标记AI自己的玩家编号
     // 部分官方战役AI脚本的变量
     constant integer slot                    = 0
-    // 允许建造标识
+    // 允许建造标识，默认禁止
     // 部分官方战役AI脚本的变量
     constant boolean gate_open               = false
-    // 允许自杀攻击标识
+    // 允许自杀攻击标识，默认允许
     // 部分官方战役AI脚本的变量
     constant boolean suicide_off             = true
     // 自杀攻击组数组
@@ -196,13 +196,13 @@ globals
     // 自杀攻击组数组下标
     // 部分官方战役AI脚本的变量
     constant integer next_declare            = 0
-    // 暴力攻击强度标识 简单（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 简单（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer EASY_AGRO      = 120
-    // 暴力攻击强度标识 普通（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 普通（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer NORMAL_AGRO    = 120
-    // 暴力攻击强度标识 困难（与进入战役时选的难度挂钩）
+    // 暴力攻击强度 困难（与进入战役时选的难度挂钩）
     // 部分官方战役AI脚本的变量
     constant integer HARD_AGRO      = 120
     // 暴力攻击目标玩家的编号
@@ -220,7 +220,7 @@ globals
     // 玩家存活标识
     // 部分官方战役AI脚本的变量
     constant boolean array alive
-    // 需要对玩家进行暴力攻击标识
+    // 需对玩家进行暴力攻击标识
     // 部分官方战役AI脚本的变量
     constant boolean array needs_agro
     // 目标点 X 坐标
@@ -316,7 +316,7 @@ globals
     // 伊利丹防御点 X 坐标
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer ILLIDAN_DEF_X      = 0
-    // 伊利丹防御点 Y 坐标（）
+    // 伊利丹防御点 Y 坐标
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer ILLIDAN_DEF_Y      = 0
     // 攻击点 X 坐标
@@ -325,25 +325,25 @@ globals
     // 攻击点 Y 坐标
     // 部分官方战役AI脚本的变量
     constant integer OFFSET_Y           = 0
-    // 飞蛇（娜迦族）
+    // 飞蛇（娜迦族）（'n000'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_COUATL2       = 'n000'
-    // 深海鱼人掠夺者（娜迦族）
+    // 深海鱼人掠夺者（娜迦族）（'n001'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_REAVER2       = 'n001'
-    // 纳迦皇家卫兵
+    // 纳迦皇家卫兵（'n002'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_ROYAL2        = 'n002'
-    // 纳迦侍从
+    // 纳迦侍从（'n003'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_MYRMIDON2     = 'n003'
-    // 毒鳍龙
+    // 毒鳍龙（'n004'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_SNAP_DRAGON2  = 'n004'
-    // 龙龟（娜迦族）
+    // 龙龟（娜迦族）（'n005'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_TURTLE2       = 'n005'
-    // 纳迦海妖
+    // 纳迦海妖（'n007'）
     // 官方战役冰封王座关卡AI脚本的变量
     constant integer NAGA_SIREN2        = 'n007'
     // 进攻组飞蛇（娜迦族）数量
@@ -719,19 +719,19 @@ globals
     // 水元素
     // 官方演示AI脚本变量
     constant integer elemental   = 'hwat'
-    // 科技 钢铁铸剑
+    // 科技 钢铁铸剑/精钢铸剑/秘银铸剑
     // 官方演示AI脚本变量
     constant integer Uweapons    = 'Rhme'
-    // 科技 黑火药
+    // 科技 黑火药/精炼火药/灌魔火药
     // 官方演示AI脚本变量
     constant integer Uranged     = 'Rhra'
     // 科技 炮兵（编辑器无此科技）
     // 官方演示AI脚本变量
     constant integer Uartillery  = 'Rhaa'
-    // 科技 钢铁装甲
+    // 科技 钢铁装甲/精钢装甲/秘银装甲
     // 官方演示AI脚本变量
     constant integer Uarmor      = 'Rhar'
-    // 科技 改良石工技术
+    // 科技 改良石工技术/高级石工技术/灌魔石工技术
     // 官方演示AI脚本变量
     constant integer Ubldgs      = 'Rhac'
     // 科技 控制魔法
@@ -1026,7 +1026,7 @@ globals
     // 混乱之治AI脚本变量
     constant boolean melee       = false
     // 拥有远程单位标识，蜘蛛及石像鬼数量（不含建造中）都大于0时为真
-    // 石像鬼统计石像鬼石像形态的数量
+    // 拥有统计石像鬼石像形态标识
     // 混乱之治AI脚本变量
     constant boolean ranged      = false
     // 拥有憎恶标识，憎恶数量（不含建造中）大于0时为真
@@ -1253,164 +1253,247 @@ globals
     // 物编别名补充
 
     // 英雄 月之女祭司
+    // 补充内容，不可直接使用
     constant integer MOON_PRIESTESS
     // 英雄 兽王
+    // 补充内容，不可直接使用
     constant integer BEAST_MASTER
     // 英雄 黑暗游侠
+    // 补充内容，不可直接使用
     constant integer DARK_RANGER
     // 英雄 深渊领主
+    // 补充内容，不可直接使用
     constant integer NEUTRAL_PIT_LORD
     // 英雄 酒仙(熊猫)
+    // 补充内容，不可直接使用
     constant integer BREW_MASTER
     // 英雄 修补匠
+    // 补充内容，不可直接使用
     constant integer GOBLIN_TINKER
     // 英雄 火焰领主
+    // 补充内容，不可直接使用
     constant integer FIRELORD
     // 英雄 炼金术士
+    // 补充内容，不可直接使用
     constant integer ALCHEMIST
     // 英雄 炼金术士(变形 1级）
+    // 补充内容，不可直接使用
     constant integer ALCHEMIST_M1
     // 英雄 炼金术士(变形 2级）
+    // 补充内容，不可直接使用
     constant integer ALCHEMIST_M2
     // 英雄 炼金术士(变形 3级）
+    // 补充内容，不可直接使用
     constant integer ALCHEMIST_M3
     // 单位 腐尸甲虫（1级）
+    // 补充内容，不可直接使用
     constant integer CARRIONSCARAB1
     // 单位 腐尸甲虫（2级）
+    // 补充内容，不可直接使用
     constant integer CARRIONSCARAB2
     // 单位 钻地的腐尸甲虫（2级）
+    // 补充内容，不可直接使用
     constant integer CARRIONSCARABBURROWED2
     // 单位 腐尸甲虫（3级）
+    // 补充内容，不可直接使用
     constant integer CARRIONSCARAB3
     // 单位 钻地的腐尸甲虫（3级）
+    // 补充内容，不可直接使用
     constant integer CARRIONSCARABBURROWED3
+    // 单位 钻地的地穴恶魔
+    // 补充内容，不可直接使用
+    constant integer BURROWED_FIEND
     // 科技 裂甲之刃
+    // 补充内容，不可直接使用
     constant integer UPG_SUN_BLADE
     // 物品 治疗药水
+    // 补充内容，不可直接使用
     constant integer HEALING_POTION
     // 物品 法力药水
+    // 补充内容，不可直接使用
     constant integer MANA_POTION
     // 物品 城镇传送卷轴/回城卷轴
+    // 补充内容，不可直接使用
     constant integer TOWN_PORTAL
     // 物品 象牙塔
+    // 补充内容，不可直接使用
     constant integer IVORY_TOWER
     // 物品 火焰宝珠
+    // 补充内容，不可直接使用
     constant integer ORB_OF_FIRE
     // 物品 庇护法杖/避难权杖
+    // 补充内容，不可直接使用
     constant integer STAFF_OF_SANCTUARY
     // 物品 治疗药膏
+    // 补充内容，不可直接使用
     constant integer HEALING_SALVE
     // 物品 速度卷轴
+    // 补充内容，不可直接使用
     constant integer SCROLL_OF_SPEED
     // 物品 闪电宝珠
+    // 补充内容，不可直接使用
     constant integer ORB_OF_LIGHTNING
     // 物品 迷你大厅(兽族)
+    // 补充内容，不可直接使用
     constant integer TINY_GREAT_HALL
     // 物品 通灵魔棒(骷髅法杖)
+    // 补充内容，不可直接使用
     constant integer ROD_OF_NECROMANCY
     // 物品 献祭之颅(制造腐地)
+    // 补充内容，不可直接使用
     constant integer SACRIFICIAL_SKULL
     // 物品 显影之尘
+    // 补充内容，不可直接使用
     constant integer DUST_OF_APPEARANCE
     // 物品 腐蚀宝珠
+    // 补充内容，不可直接使用
     constant integer ORB_OF_CORRUPTION
     // 物品 治疗卷轴
+    // 补充内容，不可直接使用
     constant integer SCROLL_OF_HEALING
     // 物品 月亮石
+    // 补充内容，不可直接使用
     constant integer MOONSTONE
     // 物品 保存法杖
+    // 补充内容，不可直接使用
     constant integer STAFF_OF_PRESERVATION
     // 物品 毒液宝珠
+    // 补充内容，不可直接使用
     constant integer ORB_OF_VENOM
     // 物品 反魔法药剂
+    // 补充内容，不可直接使用
     constant integer ANTI_MAGIC_POTION
     // 物品 仪式匕首
+    // 补充内容，不可直接使用
     constant integer RITUAL_DAGGER
     // 物品 贵族头环
+    // 补充内容，不可直接使用
     constant integer CIRCLET_OF_NOBILITY
     // 物品 法力护身符
+    // 补充内容，不可直接使用
     constant integer PERIAPT_OF_VITALITY
     // 物品 速度之靴
+    // 补充内容，不可直接使用
     constant integer BOOTS_OF_SPEED
     // 物品 显影之尘
+    // 补充内容，不可直接使用
     constant integer M_DUST_OF_APPEARANCE
     // 物品 治疗卷轴
+    // 补充内容，不可直接使用
     constant integer M_SCROLL_OF_HEALING
     // 物品 保护卷轴
+    // 补充内容，不可直接使用
     constant integer SCROLL_OF_PROTECTION
     // 物品 城镇传送卷轴/回城卷轴
+    // 补充内容，不可直接使用
     constant integer M_TOWN_PORTAL
     // 物品 隐形药水
+    // 补充内容，不可直接使用
     constant integer POTION_OF_INVISIBILITY
     // 物品 重修之书
+    // 补充内容，不可直接使用
     constant integer TOME_OF_RETRAINING
     // 物品 传送法杖
+    // 补充内容，不可直接使用
     constant integer STAFF_OF_TELEPORTATION
     // 物品 次级无敌药水
+    // 补充内容，不可直接使用
     constant integer POTION_OF_LESSER_INVULNERBILITY
     // 英雄技能 叉状闪电(娜迦海巫)
+    // 补充内容，不可直接使用
     constant integer FORKLIGHTNING
     // 英雄技能 冰霜箭(娜迦海巫)
+    // 补充内容，不可直接使用
     constant integer FROSTARROWS
     // 英雄技能 法力护盾(娜迦海巫)
+    // 补充内容，不可直接使用
     constant integer MANASHIELD
     // 英雄技能 龙卷风(娜迦海巫)
+    // 补充内容，不可直接使用
     constant integer TORNADO
     // 英雄技能 召唤巨熊(兽王)
+    // 补充内容，不可直接使用
     constant integer BEAR
     // 英雄技能 召唤豪猪(兽王)
+    // 补充内容，不可直接使用
     constant integer QUILBEAST
     // 英雄技能 召唤战鹰(兽王)
+    // 补充内容，不可直接使用
     constant integer HAWK
     // 英雄技能 群兽奔腾(兽王)
+    // 补充内容，不可直接使用
     constant integer STAMPEDE
     // 英雄技能 沉默(黑暗游侠)
+    // 补充内容，不可直接使用
     constant integer SILENCE
     // 英雄技能 黑蚀箭(黑暗游侠)
+    // 补充内容，不可直接使用
     constant integer BLACKARROW
     // 英雄技能 生命吸取(黑暗游侠)
+    // 补充内容，不可直接使用
     constant integer DRAIN
     // 英雄技能 蛊惑(黑暗游侠)
+    // 补充内容，不可直接使用
     constant integer CHARM
     // 英雄技能 火焰之雨(深渊领主)
+    // 补充内容，不可直接使用
     constant integer RAINOFFIRE
     // 英雄技能 恐惧嚎叫(深渊领主)
+    // 补充内容，不可直接使用
     constant integer HOWL
     // 英雄技能 顺劈斩(深渊领主)
+    // 补充内容，不可直接使用
     constant integer CLEAVING
     // 英雄技能 末日降临(深渊领主)
+    // 补充内容，不可直接使用
     constant integer DOOM
     // 英雄技能 火焰之息(熊猫)
+    // 补充内容，不可直接使用
     constant integer BOF
     // 英雄技能 酩酊酒雾(熊猫)
+    // 补充内容，不可直接使用
     constant integer HAZE
     // 英雄技能 醉拳(熊猫)
+    // 补充内容，不可直接使用
     constant integer BRAWLER
     // 英雄技能 风火雷电(熊猫)
+    // 补充内容，不可直接使用
     constant integer SEF
     // 英雄技能 口袋工厂(修补匠)
+    // 补充内容，不可直接使用
     constant integer POCKETFACTORY
     // 英雄技能 集束火箭(修补匠)
+    // 补充内容，不可直接使用
     constant integer ROCKETS
     // 英雄技能 工程升级(修补匠)
+    // 补充内容，不可直接使用
     constant integer UPGRADE
     // 英雄技能 机械地基(修补匠)
+    // 补充内容，不可直接使用
     constant integer ROBOGOBLIN
     // 英雄技能 灵魂燃烧(火焰领主)
+    // 补充内容，不可直接使用
     constant integer SOUL_BURN
     // 英雄技能 召唤熔岩爪牙(火焰领主)
+    // 补充内容，不可直接使用
     constant integer SUMMON_LAVASPAWN
     // 英雄技能 焚身化骨(箭矢)(火焰领主)
+    // 补充内容，不可直接使用
     constant integer INCINERATE
     // 英雄技能 火山爆发(火焰领主)
+    // 补充内容，不可直接使用
     constant integer VOLCANO
     // 英雄技能 治疗喷雾(炼金术士)
+    // 补充内容，不可直接使用
     constant integer HEALING_SPRAY
     // 英雄技能 酸性炸弹(炼金术士)
+    // 补充内容，不可直接使用
     constant integer ACID_BOMB
     // 英雄技能 化学狂暴(炼金术士)
+    // 补充内容，不可直接使用
     constant integer CHEMICAL_RAGE
     // 英雄技能 点金术(炼金术士)
+    // 补充内容，不可直接使用
     constant integer TRANSMUTE
 
 endglobals
