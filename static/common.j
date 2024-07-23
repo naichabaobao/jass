@@ -3727,7 +3727,7 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_RAISED_UNITS_ARE_INVULNERABLE = ConvertAbilityBooleanLevelField('Hre2')
 	// 技能随等级改变的布尔值域 按百分比回复 ('Oar2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENTAGE_OAR2 = ConvertAbilityBooleanLevelField('Oar2')
-	// 技能随等级改变的布尔值域 召唤非空闲单位 ('Btl2')
+	// 技能随等级改变的布尔值域 召集非空闲单位 ('Btl2')
 	constant abilitybooleanlevelfield ABILITY_BLF_SUMMON_BUSY_UNITS = ConvertAbilityBooleanLevelField('Btl2')
 	// 技能随等级改变的布尔值域 创建荒芜地表 ('Bli2')
 	constant abilitybooleanlevelfield ABILITY_BLF_CREATES_BLIGHT = ConvertAbilityBooleanLevelField('Bli2')
