@@ -1784,7 +1784,7 @@ globals
 	constant originframetype ORIGIN_FRAME_CHAT_MSG = ConvertOriginFrameType(13)
 	// 原生UI 单位信息显示框
 	constant originframetype ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
-	// 原生UI 顶部信息显示框(持续显示的变更警告消息，显示在昼夜时钟下方)
+	// 原生UI 顶部信息显示框(持续显示的变更警告，显示在昼夜时钟下方)
 	constant originframetype ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
 	// 原生UI 头像(主选单位的模型视图)
 	// 模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域，其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
@@ -6247,7 +6247,7 @@ native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 // 游戏检查点(自动)存档
-// @param showWindow 是否显示自动存档消息
+// @param showWindow 是否显示自动存档提示
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
@@ -6661,11 +6661,11 @@ native ResetTerrainFog takes nothing returns nothing
 native SetUnitFog takes real a, real b, real c, real d, real e returns nothing
 // 设置地形迷雾 [R]
 native SetTerrainFogEx takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
-// 对指定玩家显示文本消息(自动限时) [R]
+// 对指定玩家显示文本(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
-// 对指定玩家显示文本消息(指定时间) [R]
+// 对指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
-// 从指定玩家显示文本消息(指定时间) [R]
+// 从指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
@@ -8057,7 +8057,7 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 模拟玩家在聊天框发送聊天信息
-// @param whichPlayer 发出消息的玩家
+// @param whichPlayer 发信息的玩家
 // @param recipient 频道，0为所有人，1为盟友，2为观战者，大于等于3为私聊
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
