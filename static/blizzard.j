@@ -18,9 +18,9 @@ globals
     constant real bj_CLIFFHEIGHT = 128.0
     // （建筑）单位默认朝向，默认270.0
     constant real bj_UNIT_FACING = 270.0
-    // 弧度转换成角度
+    // 弧角转换系数（弧度转换成角度）
     constant real bj_RADTODEG = 180.0 / bj_PI
-    // 角度转换成弧度
+    // 角弧转换系数（角度转换成弧度）
     constant real bj_DEGTORAD = bj_PI / 180.0
     // 文本显示持续时间 任务，默认20.00
     constant real bj_TEXT_DELAY_QUEST = 20.00
