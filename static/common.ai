@@ -338,7 +338,7 @@ native DisablePathing       takes nothing                               returns 
 native SetAmphibious        takes nothing                               returns nothing
 
 // 获取命令类型
-// 可通过BJ发送命令，未发送时获取的类型是0，获取后命令序列增加1，请用 PopLastCommand 减少序列，完成排泄
+// 可通过BJ发送命令，未发送时获取的类型是0，获取后命令队列增加1，请用 PopLastCommand 减少队列，完成排泄
 // 暴雪用于打破循环，exitwhen CommandsWaiting() != 0，比如电影结束后，BJ发送1给AI，这就实现了游戏初始化时运行AI，但电影结束前AI不进攻，只发展
 native CommandsWaiting      takes nothing                               returns integer
 // 获取最新的命令类型
@@ -1759,7 +1759,7 @@ endfunction
 //============================================================================
 
 // 设置建造序列
-// 每次运行建造/训练都会被统一引导到此写入建造先后的排序，等 建造线程 建造/训练/研究，当 build_length 重置时，之前的建造/训练/研究队列清空
+// 每次运行建造/训练都会被统一引导到此写入建造先后的排序，等 建造线程 建造/训练/研究，当 build_length 重置时，之前的建造/训练/研究序列清空
 // @param town 基地编号，-1为不限
 function SetBuildAll takes integer t, integer qty, integer unitid, integer town returns nothing
     if qty > 0 then
@@ -2222,7 +2222,7 @@ endfunction
 
 //============================================================================
 
-// 建造核心循环，负责执行队列中全部建造/训练/研究
+// 建造核心循环，负责执行序列中全部建造/训练/研究
 function OneBuildLoop takes nothing returns nothing
     local integer index = 0
     local integer qty
