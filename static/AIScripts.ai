@@ -647,106 +647,106 @@ globals
     // 科技指数
     // 官方演示AI脚本变量
     constant integer total_stones
-    // 国王祭坛
+    // 国王祭坛（'halt'）
     // 官方演示AI脚本变量
     constant integer altar       = 'halt'
-    // 神秘圣地
+    // 神秘圣地（'hars'）
     // 官方演示AI脚本变量
     constant integer sanctum     = 'hars'
-    // 车间
+    // 车间（'harm'）
     // 官方演示AI脚本变量
     constant integer armory      = 'harm'
-    // 兵营（人族）
+    // 兵营（人族）（'hbar'）
     // 官方演示AI脚本变量
     constant integer garrison    = 'hbar'
-    // 农场
+    // 农场（'hhou'）
     // 官方演示AI脚本变量
     constant integer house       = 'hhou'
-    // 城镇大厅（人族一本基地）
+    // 城镇大厅（人族一本基地）（'htow'）
     // 官方演示AI脚本变量
     constant integer town_hall   = 'htow'
-    // 铁匠铺
+    // 铁匠铺（'hbla'）
     // 官方演示AI脚本变量
     constant integer smith       = 'hbla'
-    // 城堡（人族三本基地）
+    // 城堡（人族三本基地）（'hcas'）
     // 官方演示AI脚本变量
     constant integer castle      = 'hcas'
-    // 炮塔
+    // 炮塔（'hctw'）
     // 官方演示AI脚本变量
     constant integer cannon      = 'hctw'
-    // 防御塔
+    // 防御塔（'hgtw'）
     // 官方演示AI脚本变量
     constant integer guard       = 'hgtw'
-    // 主城（人族二本基地）
+    // 主城（人族二本基地）（'hkee'）
     // 官方演示AI脚本变量
     constant integer keep        = 'hkee'
-    // 教堂（人族）（编辑器无此单位）
+    // 教堂（人族）（编辑器无此单位）（'htws'）
     // 官方演示AI脚本变量
     constant integer church      = 'htws'
-    // 伐木场
+    // 伐木场（'hlum'）
     // 官方演示AI脚本变量
     constant integer mill        = 'hlum'
-    // 农民
+    // 农民（'hpea'）
     // 官方演示AI脚本变量
     constant integer peon        = 'hpea'
-    // 步兵（人族）
+    // 步兵（人族）（'hfoo'）
     // 官方演示AI脚本变量
     constant integer footman     = 'hfoo'
-    // 巨蛇（人族）（编辑器无此单位）
+    // 巨蛇（人族）（编辑器无此单位）（'hegr'）
     // 官方演示AI脚本变量
     constant integer serpent     = 'hegr'
-    // 矮人飞行器
+    // 矮人飞行器（'hgyr'）
     // 官方演示AI脚本变量
     constant integer copter      = 'hgyr'
-    // 骑士
+    // 骑士（'hkni'）
     // 官方演示AI脚本变量
     constant integer knight      = 'hkni'
-    // 牧师
+    // 牧师（'hmpr'）
     // 官方演示AI脚本变量
     constant integer priest      = 'hmpr'
-    // 矮人迫击炮
+    // 矮人迫击炮（'hmtm'）
     // 官方演示AI脚本变量
     constant integer mortar      = 'hmtm'
-    // 矮人火枪炮
+    // 矮人火枪手（'hrif'）
     // 官方演示AI脚本变量
     constant integer rifle       = 'hrif'
-    // 女巫
+    // 女巫（'hsor'）
     // 官方演示AI脚本变量
     constant integer caster      = 'hsor'
-    // 坦克（人族）（编辑器无此单位）
+    // 坦克（人族）（编辑器无此单位）（'hstt'）
     // 官方演示AI脚本变量
     constant integer tank        = 'hstt'
-    // 水元素
+    // 水元素（'hwat'）
     // 官方演示AI脚本变量
     constant integer elemental   = 'hwat'
-    // 科技 钢铁铸剑/精钢铸剑/秘银铸剑
+    // 科技 钢铁铸剑/精钢铸剑/秘银铸剑（'Rhme'）
     // 官方演示AI脚本变量
     constant integer Uweapons    = 'Rhme'
-    // 科技 黑火药/精炼火药/灌魔火药
+    // 科技 黑火药/精炼火药/灌魔火药（'Rhra'）
     // 官方演示AI脚本变量
     constant integer Uranged     = 'Rhra'
-    // 科技 炮兵（编辑器无此科技）
+    // 科技 炮兵（编辑器无此科技）（'Rhaa'）
     // 官方演示AI脚本变量
     constant integer Uartillery  = 'Rhaa'
-    // 科技 钢铁装甲/精钢装甲/秘银装甲
+    // 科技 钢铁装甲/精钢装甲/秘银装甲（'Rhar'）
     // 官方演示AI脚本变量
     constant integer Uarmor      = 'Rhar'
-    // 科技 改良石工技术/高级石工技术/灌魔石工技术
+    // 科技 改良石工技术/高级石工技术/灌魔石工技术（'Rhac'）
     // 官方演示AI脚本变量
     constant integer Ubldgs      = 'Rhac'
-    // 科技 控制魔法
+    // 科技 控制魔法（'Rhss'）
     // 官方演示AI脚本变量
     constant integer Usight      = 'Rhss'
-    // 圣骑士
+    // 圣骑士（'Hpal'）
     // 官方演示AI脚本变量
     constant integer paladin     = 'Hpal'
-    // 大法师
+    // 大法师（'Hamg'）
     // 官方演示AI脚本变量
     constant integer king        = 'Hamg'
-    // 山丘之王
+    // 山丘之王（'Hmkg'）
     // 官方演示AI脚本变量
     constant integer mage        = 'Hmkg'
-    // 游侠（人族英雄）（编辑器无此单位）
+    // 游侠（人族英雄）（编辑器无此单位）（'Hran'）
     // 官方演示AI脚本变量
     constant integer ranger      = 'Hran'
     // 攻击状态 结束攻击
@@ -812,7 +812,7 @@ globals
     // 官方演示AI脚本变量
     constant integer array assault_item
 
-    // 龙鹰骑士（不享有乌云科技）
+    // 龙鹰骑士（不享有乌云科技）（'h000'）
     // 部分官方战役AI脚本的变量
     constant integer NO_CLOUD_HAWK  = 'h000'
     // 龙鹰骑士
@@ -1197,55 +1197,55 @@ globals
 
     // 恶魔AI脚本全局变量
 
-    // 狂暴守卫
+    // 狂暴守卫（'nfgu'）
     // 部分官方战役AI脚本的变量
     constant integer FEL_GUARD      = 'nfgu'
-    // 血恶魔
+    // 血恶魔（'nfgb'）
     // 部分官方战役AI脚本的变量
     constant integer BLOODFIEND     = 'nfgb'
-    // 狂暴野兽
+    // 狂暴野兽（'npfl'）
     // 部分官方战役AI脚本的变量
     constant integer FEL_BEAST      = 'npfl'
-    // 虚无行者长老
+    // 虚无行者长老（'nvde'）
     // 部分官方战役AI脚本的变量
     constant integer ELDER_VOID     = 'nvde'
-    // 巨大虚无行者长老
+    // 巨大虚无行者长老（'nvdg'）
     // 部分官方战役AI脚本的变量
     constant integer GREATER_VOID   = 'nvdg'
-    // 虚空/耐瑟蜉蝣
+    // 虚空幼龙/耐瑟蜉蝣（'nndk'）
     // 部分官方战役AI脚本的变量
     constant integer NETHER_DRAKE   = 'nndk'
-    // 虚空/耐瑟幼龙
+    // 虚空巨龙/耐瑟幼龙（'nnht'）
     // 部分官方战役AI脚本的变量
     constant integer NETHER_HATCH   = 'nnht'
-    // 领主
+    // 领主（'nfov'）
     // 部分官方战役AI脚本的变量
     constant integer OVERLORD       = 'nfov'
-    // 艾瑞达男巫
+    // 艾瑞达男巫（'ners'）
     // 部分官方战役AI脚本的变量
     constant integer SORCEROR       = 'ners' // lvl 3 abolish
-    // 艾瑞达信魔者
+    // 艾瑞达信魔者（'nerd'）
     // 部分官方战役AI脚本的变量
     constant integer DIABOLIST      = 'nerd' // lvl 6 curse, firebolt, parasite
-    // 狂暴洗劫者
+    // 狂暴洗劫者（'npfm'）
     // 部分官方战役AI脚本的变量
     constant integer FEL_RAVAGER    = 'npfm'
-    // 艾瑞达法师
+    // 艾瑞达法师（'nerw'）
     // 部分官方战役AI脚本的变量
     constant integer ERE_WARLOCK    = 'nerw'
-    // 虚空/耐瑟龙
+    // 虚空/耐瑟龙（'nndr'）
     // 部分官方战役AI脚本的变量
     constant integer NETHER_DRAGON  = 'nndr'
-    // 恶男
+    // 恶男（'ndqv'）
     // 部分官方战役AI脚本的变量
     constant integer TORMENTOR      = 'ndqv'
-    // 恶妇
+    // 恶妇（'ndqt'）
     // 部分官方战役AI脚本的变量
     constant integer TEMPTRESS      = 'ndqt'
-    // 痛苦少女
+    // 痛苦少女（'ndqp'）
     // 部分官方战役AI脚本的变量
     constant integer MAIDEN         = 'ndqp'
-    // 苦难女王
+    // 苦难女王（'ndqs'）
     // 部分官方战役AI脚本的变量
     constant integer QUEEN          = 'ndqs'
 
@@ -1523,7 +1523,6 @@ function CheckLastCommandData takes boolean pop returns integer
     return data
 endfunction
 
-
 // 获取触发编辑器最后发送命令的数据
 // 部分官方战役AI脚本的功能
 function get_command takes nothing returns nothing
@@ -1541,7 +1540,7 @@ function ExpansionNeeded takes nothing returns boolean
     return take_exp
 endfunction
 
-// 建造分矿
+// 建造分矿（仅写入建筑序列，不是直接建造）
 // AI编辑器导出AI脚本的功能
 function BuildExpansion takes integer hallID, integer mineID returns nothing
     if (HallsCompleted(hallID)) then
@@ -1564,7 +1563,7 @@ endfunction
 function message_loop takes nothing returns nothing
 endfunction
 
-// 获取初始命令
+// 获取初始化命令
 // 部分官方战役AI脚本的功能
 function get_start_commands takes nothing returns nothing
 endfunction
@@ -1623,7 +1622,6 @@ endfunction
 function set_skills takes nothing returns nothing
 endfunction
 
-
 // 获取英雄等级对应的技能
 // 官方演示AI脚本及部分官方战役AI脚本的功能
 function hero_levels takes nothing returns integer
@@ -1635,7 +1633,6 @@ endfunction
 function heroes takes nothing returns integer
 endfunction
 
-
 // 设置英雄技能（按等级）
 // 仅AI有英雄时存在
 // 部分官方战役AI脚本的功能
@@ -1646,12 +1643,10 @@ endfunction
 //  setup_force and attack_sequence
 // --------------------------------------------------------------------------------------------------
 
-
 // 查询攻击波次
 // AI编辑器导出AI脚本的功能
 function CurrentAttackWave takes nothing returns integer
 endfunction
-
 
 // 重置攻击组数组长度
 // AI编辑器导出AI脚本的功能
@@ -1663,12 +1658,10 @@ endfunction
 function AddAttackUnit takes integer minQty, integer maxQty, integer unitID returns nothing
 endfunction
 
-
 // 获取最小攻击攻击组准备情况
 // 首英雄数量等于0和攻击波次大于1视为未准备完成
 // AI编辑器导出AI脚本的功能
 function HaveMinimumAttackers takes nothing returns boolean
-
 endfunction
 
 // 设置攻击组进攻单位类型及数量
@@ -1693,13 +1686,10 @@ endfunction
 function AttackWaveUpdate takes nothing returns nothing
 endfunction
 
-
 // 添加单位类型及数量到攻击组
 // 官方演示AI脚本的功能
 function set_assault takes integer qty, integer id returns nothing
 endfunction
-
-
 
 // 准备攻击组
 // 官方演示AI脚本的功能
@@ -1787,7 +1777,6 @@ endfunction
 function next_alive takes nothing returns nothing
 endfunction
 
-
 // 攻击序列
 // 部分官方战役AI脚本的功能
 function assaults takes nothing returns nothing
@@ -1810,13 +1799,11 @@ endfunction
 function AttackAssignment takes nothing returns nothing
 endfunction
 
-
 // 设置攻击组
 // 往攻击组添加单位类型及数量
 // 冰封王座AI脚本的功能
 function setup_force takes nothing returns nothing
 endfunction
-
 
 // 攻击组攻击目标坐标
 // 部分官方战役AI脚本的功能
@@ -1868,14 +1855,12 @@ endfunction
 // 简单难度在完成一轮调用后会等待60秒
 // 冰封王座AI脚本的功能
 function attack_sequence takes nothing returns nothing
-
 endfunction
 
 // 组建圣骑士攻击组
 // 官方演示AI脚本的功能
 function paladin_assault takes nothing returns nothing
 endfunction
-
 
 // 攻击序列
 // 官方演示AI脚本的功能
@@ -1912,7 +1897,6 @@ endfunction
 function assault_wave takes nothing returns nothing
 endfunction
 
-
 // 攻击线程
 // 部分官方战役AI脚本的功能
 function wave_loop takes nothing returns nothing
@@ -1924,10 +1908,7 @@ endfunction
 // 设置等级（计算当前兵力强度）
 // 冰封王座AI脚本的功能
 function force_level takes nothing returns integer
-
 endfunction
-
-
 
 // --------------------------------------------------------------------------------------------------
 //  init_vars
@@ -1937,7 +1918,6 @@ endfunction
 // AI编辑器导出AI脚本的功能
 function UpdateConditions takes nothing returns nothing
 endfunction
-
 
 // 刷新条件，重新判断所有预设条件
 // 混乱之治AI脚本的功能
@@ -1964,14 +1944,11 @@ endfunction
 //  set_vars
 // --------------------------------------------------------------------------------------------------
 
-
 // 设置变量线程
 // 亡灵在此计算采木和攻击食尸鬼数量
 // 冰封王座AI脚本的功能
 function set_vars takes nothing returns nothing
-
 endfunction
-
 
 // --------------------------------------------------------------------------------------------------
 //  do_upgrades
@@ -2000,7 +1977,6 @@ endfunction
 // --------------------------------------------------------------------------------------------------
 //  build_sequence
 // --------------------------------------------------------------------------------------------------
-
 
 // 训练/建造序列
 // 建造顺序按AI编辑器设置
@@ -2037,22 +2013,19 @@ endfunction
 function undead_mine takes integer townid returns nothing
 endfunction
 
-
 // 训练/建造线程
 // 同时控制基础模式
 // 兽族这里没写训练三英雄的代码，导致不出三英雄
 // 冰封王座AI脚本的功能
 function build_sequence takes nothing returns nothing
-
 endfunction
 
-// 添加建造队列的单位类型到建造数组
+// 添加建造序列的单位类型到建造数组
 // 官方演示AI脚本的功能
 function set_build takes integer qty, integer id returns nothing
 endfunction
 
-
-// 添加建造队列的科技类型到建造数组
+// 添加建造序列的科技类型到建造数组
 // 官方演示AI脚本的功能
 function set_upgrd takes integer qty, integer id returns nothing
 endfunction
@@ -2095,7 +2068,6 @@ endfunction
 function run_build_sequence takes nothing returns boolean
 endfunction
 
-
 // 建造序列
 // 官方演示AI脚本的功能
 function set_build_units takes boolean fplayer returns nothing
@@ -2126,7 +2098,6 @@ endfunction
 function send_group takes integer qty, integer unitid returns nothing
 endfunction
 
-
 // 建造序列
 // 部分官方战役AI脚本的功能
 function send takes integer unitid, integer seconds returns nothing
@@ -2155,7 +2126,6 @@ endfunction
 // 部分官方战役AI脚本的功能
 function gate4_normal takes nothing returns nothing
 endfunction
-
 
 // 计时建造线程，1号玩家，困难（与进入战役时选的难度挂钩）
 // 每等待一段时间造几个单位
@@ -2216,11 +2186,9 @@ endfunction
 function harvest_gold takes integer townid returns nothing
 endfunction
 
-
 // 工人采集线程，控制各基地采矿及采木工人数量
 // 冰封王座AI脚本的功能
 function peon_assignment takes nothing returns nothing
-
 endfunction
 
 // 工人采集及建造线程
@@ -2228,7 +2196,6 @@ endfunction
 // AI编辑器导出AI脚本的功能
 function WorkerAssignment takes nothing returns nothing
 endfunction
-
 
 // 食尸鬼采集线程
 // 部分官方战役AI脚本的功能
@@ -2247,5 +2214,4 @@ endfunction
 // 主程序（只运行一次），开局时运行，拉起各线程
 // 可用于参数赋值，如设置AI名字、设置各选项等
 function main takes nothing returns nothing
-
 endfunction
