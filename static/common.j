@@ -5904,9 +5904,9 @@ native UnitWakeUp takes unit whichUnit returns nothing
 // 设置指定单位限时生命 [R]
 // @param buffId 魔法效果(buff)类型，只支持 'BTLF','BUan','Bapl','BEfn','Bhwd','BHwe','Brai'
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
-// 设置指定单位忽略报警状态
+// 设置指定单位忽略报警
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-// 查询指定单位忽略报警开关状态
+// 查询指定单位是否忽略报警
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
 // 重设指定单位(所有)技能冷却时间
 native UnitResetCooldown takes unit whichUnit returns nothing
