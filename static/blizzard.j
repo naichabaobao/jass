@@ -4869,13 +4869,13 @@ function EnableCreepSleepBJ takes boolean enable returns nothing
 endfunction
 
 
-// 允许/禁止 单位发出警报
+// 允许/禁止 单位发出报警
 function UnitGenerateAlarms takes unit whichUnit, boolean generate returns boolean
     return UnitIgnoreAlarm(whichUnit, not generate)
 endfunction
 
 
-// 查询单位是否发出警报
+// 查询单位是否忽略报警
 function DoesUnitGenerateAlarms takes unit whichUnit returns boolean
     return not UnitIgnoreAlarmToggled(whichUnit)
 endfunction
