@@ -614,9 +614,9 @@ globals
     constant integer bj_QUESTMESSAGE_REQUIREMENT = 4
     // 任务信息类型 任务失败
     constant integer bj_QUESTMESSAGE_MISSIONFAILED = 5
-    // 任务信息类型 提示
+    // 任务信息类型 常驻提示
     constant integer bj_QUESTMESSAGE_ALWAYSHINT = 6
-    // 任务信息类型 简单提示
+    // 任务信息类型 提示
     constant integer bj_QUESTMESSAGE_HINT = 7
     // 任务信息类型 秘密
     constant integer bj_QUESTMESSAGE_SECRET = 8
@@ -655,7 +655,7 @@ globals
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
     // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 按类别删除BUFF 除终止计时器外的全部
+    // BUFF属性 按类别删除BUFF 除生命计时器外的全部BUFF
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
@@ -1004,7 +1004,7 @@ globals
     trigger bj_rescueUnitBehavior = null
     // 被营救后改变单位的颜色标识，默认允许改变（true）
     boolean bj_rescueChangeColorUnit = true
-    // 被营救后改变建筑的颜色标识，默认允许改变（true
+    // 被营救后改变建筑的颜色标识，默认允许改变（true）
     boolean bj_rescueChangeColorBldg = true
 
     // Transmission vars
@@ -1018,7 +1018,7 @@ globals
 
     // Cinematic mode vars
 
-    // 电影模式设置 默认速度
+    // 电影模式设置 默认速度，默认普通
     gamespeed bj_cineModePriorSpeed = MAP_SPEED_NORMAL
     // 电影模式设置 迷雾状态，默认禁用（false）
     boolean bj_cineModePriorFogSetting = false
@@ -1056,7 +1056,7 @@ globals
     integer bj_queuedExecTotal = 0
     // 触发器队列执行触发器数组
     trigger array bj_queuedExecTriggers
-    // 触发器队列执行布尔值数组 用于登记当前触发器是否使用了条件
+    // 触发器队列执行布尔值数组，用于登记当前触发器是否使用了条件
     boolean array bj_queuedExecUseConds
     // 触发器队列执行计时器
     timer bj_queuedExecTimeoutTimer = CreateTimer()
@@ -1130,7 +1130,7 @@ globals
     boolean bj_isUnitGroupEmptyResult = true
     // 单位组选取的单位在区域内标识，默认为真（true）
     boolean bj_isUnitGroupInRectResult = true
-    // 判断 单位组选取的单位是否在区域内 使用的区域
+    // 单位组区域，用于判断单位组选取的单位是否在指定区域内
     rect bj_isUnitGroupInRectRect = null
     // 游戏结束时展示得分屏标识，默认为不允许（false）
     boolean bj_changeLevelShowScores = false
@@ -1267,8 +1267,8 @@ endglobals
 //***************************************************************************
 
 
-// 显示Debug信息[C]
-// @param msg 信息内容
+// 显示Debug文本[C]
+// @param msg 文本内容
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -1506,7 +1506,7 @@ endfunction
 
 // 转换点成区域
 // 会创建区域，用完请注意排泄
-// @param center 中心点位置
+// @param center 区域中心点位置
 // @param width 宽
 // @param height 高
 function RectFromCenterSizeBJ takes location center, real width, real height returns rect
@@ -1888,10 +1888,10 @@ endfunction
 // Converts a percentage (real, 0..100) into a scaled integer (0..max),
 // clipping the result to 0..max in case the input is invalid.
 
-// 取最大值的百分比值
-// R2I(max * percentage)
-// @param percentage 0-100区间
-// @param max 0-Finite
+// 取值的百分比（整数）
+// R2I(max * percentage)，结果为负数时返回0，结果超过max时返回max
+// @param percentage 0~100区间
+// @param max 0~有限
 function PercentToInt takes real percentage, integer max returns integer
     local real realpercent = percentage * I2R(max) * 0.01
     local integer result = MathRound(realpercent)
@@ -1906,7 +1906,7 @@ function PercentToInt takes real percentage, integer max returns integer
 endfunction
 
 
-// 转换百分比成小数，(0-1)转(0-255)
+// 转换百分比成小数，(0~1)转(0~255)
 function PercentTo255 takes real percentage returns integer
     return PercentToInt(percentage, 255)
 endfunction
