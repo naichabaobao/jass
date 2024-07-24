@@ -798,7 +798,7 @@ globals
 
     // Corpse creation settings
 
-    // 尸体死亡时间上限，默认8.00
+    // 尸体腐烂时间上限，默认8.00
     constant real bj_CORPSE_MAX_DEATH_TIME = 8.00
 
     // Corpse creation styles
