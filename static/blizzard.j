@@ -16,7 +16,7 @@ globals
     constant real bj_CELLWIDTH = 128.0
     // 悬崖高度（升降台默认升/降一层的高度），默认128.0
     constant real bj_CLIFFHEIGHT = 128.0
-    // （建筑）单位默认朝向，默认270.0
+    // 单位默认朝向，默认270.0
     constant real bj_UNIT_FACING = 270.0
     // 弧角转换系数（弧度转换成角度）
     constant real bj_RADTODEG = 180.0 / bj_PI
@@ -1267,7 +1267,7 @@ endglobals
 //***************************************************************************
 
 
-// 显示Debug文本[C]
+// 显示调试文本[C]
 // @param msg 文本内容
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
