@@ -2812,25 +2812,25 @@ function MoveLightningLoc takes lightning whichBolt, location where1, location w
 endfunction
 
 
-// 获取闪电的Alpha通道颜色
+// 获取闪电的Alpha色值
 function GetLightningColorABJ takes lightning whichBolt returns real
     return GetLightningColorA(whichBolt)
 endfunction
 
 
-// 获取闪电的红色通道颜色
+// 获取闪电的红色值
 function GetLightningColorRBJ takes lightning whichBolt returns real
     return GetLightningColorR(whichBolt)
 endfunction
 
 
-// 获取闪电的绿色通道颜色
+// 获取闪电的绿色值
 function GetLightningColorGBJ takes lightning whichBolt returns real
     return GetLightningColorG(whichBolt)
 endfunction
 
 
-// 获取闪电的蓝色通道颜色
+// 获取闪电的蓝色值
 function GetLightningColorBBJ takes lightning whichBolt returns real
     return GetLightningColorB(whichBolt)
 endfunction
