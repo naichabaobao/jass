@@ -7192,7 +7192,7 @@ native CreateMIDISound takes string soundLabel, integer fadeInRate, integer fade
 native SetSoundParamsFromLabel takes sound soundHandle, string soundLabel returns nothing
 // 设置音效截断距离
 native SetSoundDistanceCutoff takes sound soundHandle, real cutoff returns nothing
-// 设置音效播放通道
+// 设置音效播放频道
 native SetSoundChannel takes sound soundHandle, integer channel returns nothing
 // 设置音效播放音量 [R]
 native SetSoundVolume takes sound soundHandle, integer volume returns nothing
@@ -7392,13 +7392,13 @@ native DestroyLightning takes lightning whichBolt returns boolean
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电特效(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
-// 获取闪电特效 A通道颜色值
+// 获取闪电特效 Alpha色值
 native GetLightningColorA takes lightning whichBolt returns real
-// 获取闪电特效 R通道颜色值
+// 获取闪电特效 红色值
 native GetLightningColorR takes lightning whichBolt returns real
-// 获取闪电特效 G通道颜色值
+// 获取闪电特效 绿色值
 native GetLightningColorG takes lightning whichBolt returns real
-// 获取闪电特效 B通道颜色值
+// 获取闪电特效 蓝色值
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
