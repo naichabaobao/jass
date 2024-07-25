@@ -11778,7 +11778,7 @@ function InitMapRects takes nothing returns nothing
     set bj_mapInitialCameraBounds = GetCurrentCameraBoundsMapRectBJ()
 endfunction
 
-// 初始化单位升级类科技等级上限（升级后会改变训练/召唤的单位类型的科技）
+// 初始化升级类科技单位的数量上限（升级后会改变训练/召唤的单位类型的科技）
 // 默认针对：坦克的火箭弹幕、狂战士升级、骷髅战士
 function InitSummonableCaps takes nothing returns nothing
     local integer index
