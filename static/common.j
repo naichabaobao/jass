@@ -6251,13 +6251,17 @@ native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
-// 设置游戏浮点值(指定浮点游戏状态)
+// 设置游戏浮点状态值(指定游戏浮点状态)
+// 支持 GAME_STATE_TIME_OF_DAY
 native SetFloatGameState takes fgamestate whichFloatGameState, real value returns nothing
-// 获取游戏浮点值(指定浮点游戏状态)
+// 获取游戏浮点状态值(指定游戏浮点状态)
+// 支持 GAME_STATE_TIME_OF_DAY
 constant native GetFloatGameState takes fgamestate whichFloatGameState returns real
-// 设置游戏整点值(指定整点游戏状态)
+// 设置游戏整点状态值(指定游戏整点状态)
+// 支持 GAME_STATE_DIVINE_INTERVENTION，GAME_STATE_DISCONNECTED
 native SetIntegerGameState takes igamestate whichIntegerGameState, integer value returns nothing
-// 获取游戏整点值(指定整点游戏状态)
+// 获取游戏整点状态值(指定游戏整点状态)
+// 支持 GAME_STATE_DIVINE_INTERVENTION，GAME_STATE_DISCONNECTED
 constant native GetIntegerGameState takes igamestate whichIntegerGameState returns integer
 
 
