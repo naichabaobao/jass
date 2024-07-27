@@ -6914,7 +6914,7 @@
         },
         {
             "code": "AHbu",
-            "name": "建造人族",
+            "name": "建造(人族)",
             "descript": "",
             "kind": "技能",
             "race": "人族",
@@ -11507,6 +11507,14 @@
         {
             "code": "Aall",
             "name": "共享商店，联盟建筑。",
+            "descript": "",
+            "kind": "技能",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "ANbu",
+            "name": "建造（未知种族）（物编无此技能）",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
