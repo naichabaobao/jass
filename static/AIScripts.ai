@@ -517,6 +517,32 @@ globals
     // 官方战役冰封王座关卡AI脚本的变量
     constant real dragon_factor
 
+    // 阿卡玛
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer AKAMA          = 'Naka' // hero
+
+    // 德莱尼工人
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DPEON          = 'ndrl'
+    // 德莱尼投石车
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DCATAPULT      = 'ncat'
+    // 火蜥蜴
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DSALAMANDER    = 'ndsa' // lvl 4, ranged
+    // 德莱尼守备官追猎者
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DSTALKER       = 'ndrt' // lvl 5, assassin unit
+    // 德莱尼守备官
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DVINDICATOR    = 'ndrn' // lvl 5, heavy melee
+    // 德莱尼先驱
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DHARBINGER     = 'ndrh' // lvl 4, bloodlust, dispel
+    // 德莱尼先知
+    // 官方战役冰封王座关卡AI脚本的变量
+    constant integer DSEER          = 'ndrs' // lvl 6, healwave, brilliance,slow
+
 
     // 人族AI全局变量
 
