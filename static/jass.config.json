@@ -16044,7 +16044,7 @@
             "code": "BHbd",
             "name": "暴风雪",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16052,7 +16052,7 @@
             "code": "BHbz",
             "name": "暴风雪(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16060,7 +16060,7 @@
             "code": "BHab",
             "name": "辉煌光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16068,7 +16068,7 @@
             "code": "Bdtm",
             "name": "汲取魔法值(目标)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16076,7 +16076,7 @@
             "code": "Bdcm",
             "name": "汲取魔法值(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16084,7 +16084,7 @@
             "code": "Bdtl",
             "name": "汲取生命值(目标)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16092,7 +16092,7 @@
             "code": "Bdcl",
             "name": "汲取生命值(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16100,7 +16100,7 @@
             "code": "Bdtb",
             "name": "汲职生命值和魔法值(目标)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16108,7 +16108,7 @@
             "code": "Bdcb",
             "name": "汲取生命值和魔法值(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16116,7 +16116,7 @@
             "code": "BHtc",
             "name": "雷霆一击",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16124,31 +16124,31 @@
             "code": "BHfs",
             "name": "烈焰风暴",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "BHbn",
-            "name": "驱散",
+            "name": "驱散（放逐）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "BHds",
-            "name": "神圣护甲",
+            "name": "神圣护甲（圣盾术）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "BHwe",
-            "name": "冰元素",
+            "name": "水元素",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16156,39 +16156,39 @@
             "code": "BHav",
             "name": "天神下凡",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "Bdbm",
-            "name": "吸取魔法",
+            "name": "吸取魔法（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Bdbl",
-            "name": "吸取生命",
+            "name": "吸取生命（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Bdbb",
-            "name": "吸取生命值和魔法值",
+            "name": "吸取生命值和魔法值（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "BHad",
-            "name": "专注光环",
+            "name": "专注光环（虔诚光环）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16196,15 +16196,15 @@
             "code": "Bply",
             "name": "变形术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Bpxf",
-            "name": "凤凰火焰",
+            "name": "凤凰火焰（凤凰烈焰）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16212,7 +16212,7 @@
             "code": "Bphx",
             "name": "火凤凰",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16220,7 +16220,7 @@
             "code": "Bslo",
             "name": "减速术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16228,7 +16228,7 @@
             "code": "Bmlt",
             "name": "空中锁镣",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16236,7 +16236,7 @@
             "code": "Bmlc",
             "name": "空中锁镣(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16244,7 +16244,7 @@
             "code": "Bcmg",
             "name": "控制魔法",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16252,7 +16252,7 @@
             "code": "Bmil",
             "name": "民兵",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16260,7 +16260,7 @@
             "code": "Bclf",
             "name": "迷雾之云/乌云技能",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16268,7 +16268,7 @@
             "code": "Binf",
             "name": "心灵之火",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16276,7 +16276,7 @@
             "code": "Bhea",
             "name": "治疗术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16284,7 +16284,7 @@
             "code": "Bivs",
             "name": "隐形术(额外的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16292,7 +16292,7 @@
             "code": "Binv",
             "name": "隐形术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16300,7 +16300,7 @@
             "code": "BHtb",
             "name": "风暴之锤",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
@@ -16308,63 +16308,63 @@
             "code": "BHbh",
             "name": "猛击",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "XHbz",
-            "name": "暴风雪(效果)(区域效果)",
+            "name": "暴风雪(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "XHfs",
-            "name": "烈焰风暴(效果)(区域效果)",
+            "name": "烈焰风暴(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "英雄"
         },
         {
             "code": "Xclf",
-            "name": "迷雾之云(效果)(区域效果)",
+            "name": "迷雾之云(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Xfla",
-            "name": "照明弹(效果)(区域效果)",
+            "name": "照明弹(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Xfhl",
-            "name": "建筑物伤害-人族 大(区域效果)",
+            "name": "建筑物伤害-人族 大",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Xfhs",
-            "name": "健筑物伤害-人族 小(区域效果)",
+            "name": "健筑物伤害-人族 小",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "单位"
         },
         {
             "code": "Xfhm",
-            "name": "建筑物伤害-人族 中(区域效果)",
+            "name": "建筑物伤害-人族 中",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "人族",
             "type": "单位"
         },
@@ -16372,7 +16372,7 @@
             "code": "Bbof",
             "name": "燃油",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16380,7 +16380,7 @@
             "code": "Bbsk",
             "name": "狂暴",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16388,7 +16388,7 @@
             "code": "Bspl",
             "name": "灵魂链接",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16396,7 +16396,7 @@
             "code": "BOhx",
             "name": "妖术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16404,7 +16404,7 @@
             "code": "BOwd",
             "name": "结界",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16412,7 +16412,7 @@
             "code": "BOvd",
             "name": "巫毒狂舞",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16420,7 +16420,7 @@
             "code": "Beng",
             "name": "诱捕(地面的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16428,7 +16428,7 @@
             "code": "Bena",
             "name": "诱捕(空中的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16436,7 +16436,7 @@
             "code": "Bdvv",
             "name": "吞噬",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16444,7 +16444,7 @@
             "code": "Bprg",
             "name": "净化",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16452,7 +16452,7 @@
             "code": "Blsh",
             "name": "闪电之盾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16460,7 +16460,7 @@
             "code": "Bblo",
             "name": "嗜血",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16468,7 +16468,7 @@
             "code": "Beye",
             "name": "警戒结界",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16476,15 +16476,15 @@
             "code": "Bstt",
             "name": "静滞陷阱",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "Bsta",
-            "name": "静滞陷阱",
+            "name": "静滞陷阱（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16492,7 +16492,7 @@
             "code": "Bhwd",
             "name": "治疗结界",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16500,31 +16500,7 @@
             "code": "Boar",
             "name": "治疗结界光环",
             "descript": "",
-            "kind": "状态效果",
-            "race": "兽族",
-            "type": "单位"
-        },
-        {
-            "code": "Bpoi",
-            "name": "毒素(不叠加)",
-            "descript": "",
-            "kind": "状态效果",
-            "race": "兽族",
-            "type": "单位"
-        },
-        {
-            "code": "Bpsd",
-            "name": "毒素(叠加)",
-            "descript": "",
-            "kind": "状态效果",
-            "race": "兽族",
-            "type": "单位"
-        },
-        {
-            "code": "Bpsi",
-            "name": "毒素(信息)",
-            "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16532,7 +16508,7 @@
             "code": "Bakb",
             "name": "战鼓",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16540,7 +16516,7 @@
             "code": "BOwk",
             "name": "疾风步",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16548,7 +16524,7 @@
             "code": "BOmi",
             "name": "镜像",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16556,7 +16532,7 @@
             "code": "BOsf",
             "name": "野性之魂",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16564,7 +16540,7 @@
             "code": "BOeq",
             "name": "地震术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16572,7 +16548,7 @@
             "code": "BOae",
             "name": "坚韧光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16580,7 +16556,7 @@
             "code": "BOws",
             "name": "战争践踏",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16588,7 +16564,7 @@
             "code": "BOea",
             "name": "地震术(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16596,7 +16572,7 @@
             "code": "BOsh",
             "name": "震荡波(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16604,7 +16580,7 @@
             "code": "BOvc",
             "name": "巫毒狂舞(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16612,7 +16588,7 @@
             "code": "BOww",
             "name": "剑刃风暴(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "英雄"
         },
@@ -16620,7 +16596,7 @@
             "code": "Bdig",
             "name": "吞噬(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16628,7 +16604,7 @@
             "code": "Bens",
             "name": "诱捕(一般的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16636,7 +16612,7 @@
             "code": "Bliq",
             "name": "火油瓶",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16644,79 +16620,87 @@
             "code": "Blsa",
             "name": "闪电之盾(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
+            "race": "兽族",
+            "type": "单位"
+        },
+        {
+            "code": "Barm",
+            "name": "法力恢复光环",
+            "descript": "",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "BIpb",
-            "name": "剧毒(不叠加)",
+            "name": "剧毒(不叠加)（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "BIpd",
-            "name": "剧毒(叠加)",
+            "name": "剧毒(叠加)（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "BIpi",
-            "name": "剧毒(信息)",
+            "name": "剧毒(信息)（物编无此效果）",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "XOeq",
-            "name": "地震术(效果)(区域效果)",
+            "name": "地震术(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "XOre",
-            "name": "重生(效果)(区域效果)",
+            "name": "重生(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "英雄"
         },
         {
             "code": "Xbof",
-            "name": "燃油(效果)(区域效果)",
+            "name": "燃油(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "Xfos",
-            "name": "建筑伤害 – 兽人 小(区域效果)",
+            "name": "建筑伤害 – 兽人 小",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "Xfom",
-            "name": "建筑伤害 – 兽人 中(区域效果)",
+            "name": "建筑伤害 – 兽人 中",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "单位"
         },
         {
             "code": "Xfol",
-            "name": "建筑伤害 – 兽人 大(区域效果)",
+            "name": "建筑伤害 – 兽人 大",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "兽族",
             "type": "单位"
         },
@@ -16724,7 +16708,7 @@
             "code": "Bvng",
             "name": "复仇之魂",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16732,7 +16716,7 @@
             "code": "Bmfl",
             "name": "法力闪耀",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16740,7 +16724,7 @@
             "code": "Bmfa",
             "name": "法力闪耀(额外的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16748,7 +16732,7 @@
             "code": "Bpsh",
             "name": "相位变换",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16756,7 +16740,7 @@
             "code": "Btau",
             "name": "嘲讽",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16764,7 +16748,7 @@
             "code": "BEsh",
             "name": "暗影突袭",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16772,7 +16756,7 @@
             "code": "BEsi",
             "name": "暗影突袭",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16780,7 +16764,7 @@
             "code": "BEsv",
             "name": "复仇",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16788,7 +16772,7 @@
             "code": "Bspo",
             "name": "减速毒药(不叠加)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16796,7 +16780,7 @@
             "code": "Bssd",
             "name": "减速毒药(叠加)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16804,7 +16788,7 @@
             "code": "Bcor",
             "name": "腐蚀吐息",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16812,7 +16796,7 @@
             "code": "BEim",
             "name": "献祭",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16820,7 +16804,7 @@
             "code": "BEme",
             "name": "恶魔变形",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16828,7 +16812,7 @@
             "code": "BEer",
             "name": "纠缠根须",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16836,7 +16820,7 @@
             "code": "BEfn",
             "name": "自然之力",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16844,7 +16828,7 @@
             "code": "BEah",
             "name": "荆棘光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16852,7 +16836,7 @@
             "code": "BEst",
             "name": "斥候",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16860,7 +16844,7 @@
             "code": "BEar",
             "name": "强击光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16868,7 +16852,7 @@
             "code": "Bfae",
             "name": "精灵之火",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16876,7 +16860,7 @@
             "code": "Bcyc",
             "name": "飓风术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16884,7 +16868,7 @@
             "code": "Bcy2",
             "name": "飓风术(额外的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16892,7 +16876,7 @@
             "code": "Brej",
             "name": "回春术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16900,7 +16884,7 @@
             "code": "Broa",
             "name": "咆哮",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16908,7 +16892,7 @@
             "code": "BEia",
             "name": "献祭(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16916,7 +16900,7 @@
             "code": "Beat",
             "name": "吃树",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16924,7 +16908,7 @@
             "code": "Bgra",
             "name": "战棍",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16932,7 +16916,7 @@
             "code": "Bssi",
             "name": "减速毒药(信息)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16940,7 +16924,7 @@
             "code": "Bbar",
             "name": "树皮术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -16948,7 +16932,7 @@
             "code": "AEsd",
             "name": "星辰坠落(目标)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16956,7 +16940,7 @@
             "code": "AEtr",
             "name": "宁静(目标)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
@@ -16964,55 +16948,55 @@
             "code": "Bult",
             "name": "夜视能力",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
         {
             "code": "XEsf",
-            "name": "星辰坠落(效果)(区域效果)",
+            "name": "星辰坠落(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
         {
             "code": "XEtq",
-            "name": "宁静(效果)(区域效果)",
+            "name": "宁静(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "英雄"
         },
         {
             "code": "XEsn",
-            "name": "哨兵(效果)(区域效果)",
+            "name": "哨兵(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
         {
             "code": "Xfns",
-            "name": "建筑伤害 - 暗夜精灵 小(区域效果)",
+            "name": "建筑伤害 - 暗夜精灵 小",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
         {
             "code": "Xfnm",
-            "name": "建筑伤害 - 暗夜精灵 中(区域效果)",
+            "name": "建筑伤害 - 暗夜精灵 中",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
         {
             "code": "Xfnl",
-            "name": "建筑伤害 - 暗夜精灵 大(区域效果)",
+            "name": "建筑伤害 - 暗夜精灵 大",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "暗夜精灵",
             "type": "单位"
         },
@@ -17020,7 +17004,7 @@
             "code": "Brpb",
             "name": "补充",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17028,7 +17012,7 @@
             "code": "Brpl",
             "name": "荒芜精华",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17036,7 +17020,7 @@
             "code": "Brpm",
             "name": "灵魂之触",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17044,7 +17028,7 @@
             "code": "Babr",
             "name": "荒芜光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17052,7 +17036,7 @@
             "code": "BUim",
             "name": "穿刺",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17060,7 +17044,7 @@
             "code": "BUcb",
             "name": "腐尸甲虫",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17068,7 +17052,7 @@
             "code": "BUlo",
             "name": "蝗虫",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17076,7 +17060,7 @@
             "code": "Buns",
             "name": "反召唤",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17084,7 +17068,7 @@
             "code": "Bspa",
             "name": "小蜘蛛",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17092,7 +17076,7 @@
             "code": "Bweb",
             "name": "蛛网(地面)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17100,7 +17084,7 @@
             "code": "Bwea",
             "name": "蛛网(空中)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17108,7 +17092,7 @@
             "code": "Bapl",
             "name": "疾病云雾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17116,7 +17100,7 @@
             "code": "Bfrz",
             "name": "冰冻吐息",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17124,7 +17108,7 @@
             "code": "Brai",
             "name": "骷髅奴仆/复活死尸",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17132,7 +17116,7 @@
             "code": "Buhf",
             "name": "邪恶狂热",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17140,7 +17124,7 @@
             "code": "Bams",
             "name": "反魔法护罩",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17148,7 +17132,7 @@
             "code": "Bam2",
             "name": "反魔法护罩(额外的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17156,7 +17140,7 @@
             "code": "Bpos",
             "name": "占据",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17164,7 +17148,7 @@
             "code": "BUau",
             "name": "邪恶光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17172,7 +17156,7 @@
             "code": "BUan",
             "name": "亡者再临/操纵死尸",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17180,7 +17164,7 @@
             "code": "BUsl",
             "name": "沉睡",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17188,7 +17172,7 @@
             "code": "BUav",
             "name": "吸血光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17196,7 +17180,7 @@
             "code": "BUfa",
             "name": "霜甲术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17204,7 +17188,7 @@
             "code": "BUdd",
             "name": "枯萎凋零",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17212,7 +17196,7 @@
             "code": "Bcrs",
             "name": "诅咒",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17220,7 +17204,7 @@
             "code": "Bcri",
             "name": "残废术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17228,7 +17212,7 @@
             "code": "BUcs",
             "name": "腐臭蝠群(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17236,7 +17220,7 @@
             "code": "BUsp",
             "name": "沉睡(暂停)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17244,7 +17228,7 @@
             "code": "BUst",
             "name": "沉睡(昏迷)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17252,7 +17236,7 @@
             "code": "BUts",
             "name": "尖刺甲壳",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17260,7 +17244,7 @@
             "code": "Bplg",
             "name": "疾病之云",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17268,7 +17252,7 @@
             "code": "BUad",
             "name": "亡者再临(额外的)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "英雄"
         },
@@ -17276,7 +17260,7 @@
             "code": "Bpoc",
             "name": "占据(施法者)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17284,39 +17268,39 @@
             "code": "Batp",
             "name": "优先攻击(1.32.9)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "不死族",
             "type": "单位"
         },
         {
             "code": "XUdd",
-            "name": "枯萎凋零(效果)(区域效果)",
+            "name": "枯萎凋零(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "不死族",
             "type": "英雄"
         },
         {
             "code": "Xfus",
-            "name": "建筑伤害 – 亡灵 小(区域效果)",
+            "name": "建筑伤害 – 亡灵 小",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "不死族",
             "type": "单位"
         },
         {
             "code": "Xfum",
-            "name": "建筑伤害 – 亡灵 中(区域效果)",
+            "name": "建筑伤害 – 亡灵 中",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "不死族",
             "type": "单位"
         },
         {
             "code": "Xful",
-            "name": "建筑伤害 – 亡灵 大(区域效果)",
+            "name": "建筑伤害 – 亡灵 大",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "不死族",
             "type": "单位"
         },
@@ -17324,7 +17308,7 @@
             "code": "BNhe",
             "name": "中立治疗术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17332,7 +17316,7 @@
             "code": "BNpi",
             "name": "永久献祭(中立敌对1)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17340,7 +17324,31 @@
             "code": "Bpig",
             "name": "永久献祭(中立敌对2)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Bpoi",
+            "name": "毒素(不叠加)",
+            "descript": "",
+            "kind": "魔法效果",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Bpsd",
+            "name": "毒素(叠加)",
+            "descript": "",
+            "kind": "魔法效果",
+            "race": "特殊",
+            "type": "单位"
+        },
+        {
+            "code": "Bpsi",
+            "name": "毒素(信息)",
+            "descript": "",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17348,7 +17356,7 @@
             "code": "BNsl",
             "name": "灵魂保存",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17356,7 +17364,7 @@
             "code": "BNst",
             "name": "群兽奔腾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17364,7 +17372,7 @@
             "code": "BNrf",
             "name": "火焰之雨(范围)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17372,7 +17380,7 @@
             "code": "Bfre",
             "name": "冰冻",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17380,7 +17388,7 @@
             "code": "Bsha",
             "name": "共享视野",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17388,7 +17396,7 @@
             "code": "Btdg",
             "name": "龙卷风伤害",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17396,7 +17404,7 @@
             "code": "Btsa",
             "name": "龙卷风旋转(范围)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17404,7 +17412,7 @@
             "code": "ANmd",
             "name": "季风",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17412,7 +17420,7 @@
             "code": "BNva",
             "name": "火山爆发(范围)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17420,7 +17428,7 @@
             "code": "BNic",
             "name": "焚身化骨",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17428,7 +17436,7 @@
             "code": "BNso",
             "name": "灵魂燃烧",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17436,7 +17444,7 @@
             "code": "BNlm",
             "name": "熔岩爪牙",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17444,7 +17452,7 @@
             "code": "BNfy",
             "name": "口袋工厂",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17452,7 +17460,7 @@
             "code": "BNcs",
             "name": "集束火箭",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17460,7 +17468,7 @@
             "code": "BNeg",
             "name": "工程学升级",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17468,7 +17476,7 @@
             "code": "BNcg",
             "name": "发条地精",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17476,7 +17484,7 @@
             "code": "BNhs",
             "name": "治疗喷雾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17484,7 +17492,7 @@
             "code": "BNab",
             "name": "酸液炸弹",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17492,7 +17500,7 @@
             "code": "BNcr",
             "name": "化学狂暴",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17500,7 +17508,7 @@
             "code": "BNtm",
             "name": "点金术",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17508,7 +17516,7 @@
             "code": "BNms",
             "name": "法力护盾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17516,7 +17524,7 @@
             "code": "BNrd",
             "name": "火焰之雨",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17524,7 +17532,7 @@
             "code": "BHca",
             "name": "寒冰箭矢",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17532,7 +17540,7 @@
             "code": "Bcsd",
             "name": "寒冰箭矢(叠加)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17540,7 +17548,7 @@
             "code": "Bcsi",
             "name": "寒冰箭矢(信息)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17548,7 +17556,7 @@
             "code": "BNht",
             "name": "恐惧嚎叫",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17556,7 +17564,7 @@
             "code": "BNdo",
             "name": "末日降临",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17564,7 +17572,7 @@
             "code": "BNdi",
             "name": "末日降临(奴仆)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17572,7 +17580,7 @@
             "code": "BNef",
             "name": "熊猫人元素之灵(该效果不会出现本体和分身上)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17580,7 +17588,7 @@
             "code": "BNsg",
             "name": "巨熊",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17588,7 +17596,7 @@
             "code": "BNsq",
             "name": "豪猪",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17596,7 +17604,7 @@
             "code": "BNsw",
             "name": "战鹰",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17604,7 +17612,7 @@
             "code": "BNmr",
             "name": "心智腐烂",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17612,7 +17620,7 @@
             "code": "BNbf",
             "name": "火焰之息",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17620,7 +17628,7 @@
             "code": "BNdh",
             "name": "酩酊酒雾",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17628,7 +17636,7 @@
             "code": "BNsi",
             "name": "沉默",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17636,7 +17644,7 @@
             "code": "BNba",
             "name": "黑蚀箭",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17644,7 +17652,7 @@
             "code": "BNdm",
             "name": "黑暗奴仆",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17652,7 +17660,7 @@
             "code": "BNmo",
             "name": "季风",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17660,7 +17668,7 @@
             "code": "BNwm",
             "name": "水栖奴仆",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17668,7 +17676,7 @@
             "code": "Basl",
             "name": "龙卷风(减速光环)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17676,7 +17684,7 @@
             "code": "Btsp",
             "name": "龙卷风旋转(自动施放飓风)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17684,7 +17692,7 @@
             "code": "BNto",
             "name": "龙卷风(时间化生命)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17692,7 +17700,7 @@
             "code": "BNdc",
             "name": "黑暗转换",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17700,7 +17708,7 @@
             "code": "BNsp",
             "name": "灵魂保存",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17708,7 +17716,7 @@
             "code": "Bchd",
             "name": "眩晕",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17716,7 +17724,7 @@
             "code": "BNin",
             "name": "地狱火",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17724,7 +17732,7 @@
             "code": "Bfzy",
             "name": "狂乱",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17732,7 +17740,7 @@
             "code": "Boac",
             "name": "统御光环",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17740,15 +17748,7 @@
             "code": "BTLF",
             "name": "限时生命",
             "descript": "",
-            "kind": "状态效果",
-            "race": "特殊",
-            "type": "单位"
-        },
-        {
-            "code": "Barm",
-            "name": "法力恢复光环",
-            "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17756,7 +17756,7 @@
             "code": "BCbf",
             "name": "冰霜吐息",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17764,7 +17764,7 @@
             "code": "BCtc",
             "name": "砸击",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17772,7 +17772,7 @@
             "code": "BNbr",
             "name": "战斗咆哮",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17780,7 +17780,7 @@
             "code": "BNpm",
             "name": "寄生虫",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17788,7 +17788,7 @@
             "code": "BNpa",
             "name": "寄生虫",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17796,7 +17796,7 @@
             "code": "Bdet",
             "name": "被（反隐）侦测到",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17804,7 +17804,7 @@
             "code": "Bvul",
             "name": "无敌",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17812,7 +17812,7 @@
             "code": "Bspe",
             "name": "速度加成",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17820,7 +17820,7 @@
             "code": "Bfro",
             "name": "减速",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17828,7 +17828,7 @@
             "code": "BSTN",
             "name": "昏迷",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
@@ -17836,87 +17836,87 @@
             "code": "BPSE",
             "name": "昏迷(暂停)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "魔法效果",
             "race": "特殊",
             "type": "单位"
         },
         {
             "code": "Xbli",
-            "name": "荒芜(效果)(区域效果)",
+            "name": "荒芜(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "单位"
         },
         {
             "code": "Xbdt",
-            "name": "暴露(效果)(区域效果)",
+            "name": "暴露(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "单位"
         },
         {
             "code": "Xdis",
-            "name": "英雄消散(效果)(区域效果)",
+            "name": "英雄消散(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XErc",
-            "name": "混乱之雨(效果)(区域效果)",
+            "name": "混乱之雨(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XErf",
-            "name": "火焰之雨(效果)(区域效果)",
+            "name": "火焰之雨(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XIct",
-            "name": "改变一天的时间(物品)(区域效果)",
+            "name": "改变一天的时间(物品)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "单位"
         },
         {
             "code": "XNmo",
-            "name": "季风(效果)(区域效果)",
+            "name": "季风(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XNvc",
-            "name": "火山爆发(效果)(区域效果)",
+            "name": "火山爆发(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XNcs",
-            "name": "集束火箭(效果)(区域效果)",
+            "name": "集束火箭(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
         {
             "code": "XNhs",
-            "name": "治疗喷雾(效果)(区域效果)",
+            "name": "治疗喷雾(效果)",
             "descript": "",
-            "kind": "状态效果",
+            "kind": "区域效果",
             "race": "特殊",
             "type": "英雄"
         },
@@ -17926,7 +17926,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhra",
@@ -17934,7 +17934,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhaa",
@@ -17942,7 +17942,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhar",
@@ -17950,7 +17950,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhmi",
@@ -17958,7 +17958,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhac",
@@ -17966,7 +17966,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhss",
@@ -17974,7 +17974,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhde",
@@ -17982,7 +17982,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhan",
@@ -17990,7 +17990,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhpt",
@@ -17998,7 +17998,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhst",
@@ -18006,7 +18006,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhla",
@@ -18014,7 +18014,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhri",
@@ -18022,7 +18022,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhlh",
@@ -18030,7 +18030,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhse",
@@ -18038,7 +18038,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhsr",
@@ -18046,7 +18046,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhgb",
@@ -18054,7 +18054,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhhb",
@@ -18062,7 +18062,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhfs",
@@ -18070,7 +18070,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhrt",
@@ -18078,7 +18078,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhfc",
@@ -18086,7 +18086,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhcd",
@@ -18094,7 +18094,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhsb",
@@ -18102,7 +18102,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rhpm",
@@ -18110,7 +18110,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "人族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rome",
@@ -18118,7 +18118,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rora",
@@ -18126,7 +18126,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Roaa",
@@ -18134,7 +18134,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Roar",
@@ -18142,7 +18142,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rwdm",
@@ -18150,7 +18150,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ropg",
@@ -18158,7 +18158,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Robs",
@@ -18166,7 +18166,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rows",
@@ -18174,7 +18174,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Roen",
@@ -18182,7 +18182,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rovs",
@@ -18190,7 +18190,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rowd",
@@ -18198,7 +18198,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rost",
@@ -18206,7 +18206,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rosp",
@@ -18214,7 +18214,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rorb",
@@ -18222,7 +18222,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rotr",
@@ -18230,7 +18230,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rolf",
@@ -18238,7 +18238,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rowt",
@@ -18246,7 +18246,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Robk",
@@ -18254,7 +18254,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Robf",
@@ -18262,7 +18262,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ropm",
@@ -18270,7 +18270,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "兽族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Resm",
@@ -18278,7 +18278,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Resw",
@@ -18286,7 +18286,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rema",
@@ -18294,7 +18294,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rerh",
@@ -18302,7 +18302,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Reuv",
@@ -18310,7 +18310,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Renb",
@@ -18318,7 +18318,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Resc",
@@ -18326,7 +18326,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Remg",
@@ -18334,7 +18334,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Reib",
@@ -18342,7 +18342,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Remk",
@@ -18350,7 +18350,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Redt",
@@ -18358,7 +18358,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Redc",
@@ -18366,7 +18366,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Resi",
@@ -18374,7 +18374,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Recb",
@@ -18382,7 +18382,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Reht",
@@ -18390,7 +18390,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Repd",
@@ -18398,7 +18398,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Reeb",
@@ -18406,7 +18406,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Reec",
@@ -18414,7 +18414,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rehs",
@@ -18422,7 +18422,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rers",
@@ -18430,7 +18430,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rews",
@@ -18438,7 +18438,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Repb",
@@ -18446,7 +18446,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Repm",
@@ -18454,7 +18454,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rume",
@@ -18462,7 +18462,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rura",
@@ -18470,7 +18470,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruar",
@@ -18478,7 +18478,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruac",
@@ -18486,7 +18486,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rugf",
@@ -18494,7 +18494,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruwb",
@@ -18502,7 +18502,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruab",
@@ -18510,7 +18510,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rusf",
@@ -18518,7 +18518,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rune",
@@ -18526,7 +18526,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruba",
@@ -18534,7 +18534,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rump",
@@ -18542,7 +18542,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rufb",
@@ -18550,7 +18550,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rusl",
@@ -18558,7 +18558,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rusm",
@@ -18566,7 +18566,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruex",
@@ -18574,7 +18574,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rurs",
@@ -18582,7 +18582,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Ruax",
@@ -18590,7 +18590,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rucr",
@@ -18598,7 +18598,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rupc",
@@ -18606,7 +18606,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rusp",
@@ -18614,7 +18614,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rubu",
@@ -18622,7 +18622,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rupm",
@@ -18630,7 +18630,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "不死族",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rnam",
@@ -18638,7 +18638,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "娜迦",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rnat",
@@ -18646,7 +18646,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "娜迦",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rnsi",
@@ -18654,7 +18654,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "娜迦",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rnsw",
@@ -18662,7 +18662,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "娜迦",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rnen",
@@ -18670,7 +18670,15 @@
             "descript": "",
             "kind": "科技树",
             "race": "娜迦",
-            "type": "单位"
+            "type": "标准科技"
+        },
+        {
+            "code": "Rnsb",
+            "name": "潜水",
+            "descript": "",
+            "kind": "科技树",
+            "race": "娜迦",
+            "type": "标准科技"
         },
         {
             "code": "Roch",
@@ -18678,7 +18686,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "中立",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rguv",
@@ -18686,7 +18694,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "中立",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "Rgfo",
@@ -18694,7 +18702,7 @@
             "descript": "",
             "kind": "科技树",
             "race": "中立",
-            "type": "单位"
+            "type": "标准科技"
         },
         {
             "code": "DTrf",
