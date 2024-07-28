@@ -8227,13 +8227,14 @@ native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield w
 
 // Skin
 
-// 获取单位皮肤
+// 获取单位皮肤ID
 native BlzGetUnitSkin takes unit whichUnit returns integer
-// 获取物品皮肤
+// 获取物品皮肤ID
 native BlzGetItemSkin takes item whichItem returns integer
-// 获取可破坏物皮肤
+// 获取可破坏物皮肤ID
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
 // 设置单位皮肤
+// 对镜像及幻象无效
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 // 设置物品皮肤
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
