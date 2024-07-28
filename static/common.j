@@ -6353,7 +6353,7 @@ native HaveStoredUnit takes gamecache cache, string missionKey, string key retur
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
 // 清空指定游戏缓存 [C]
-// 清空指定游戏缓存下所有类别，清空后需新建缓存
+// 清空指定游戏缓存下所有类别，清空缓存后变量不会变为null且需新建缓存
 native FlushGameCache takes gamecache cache returns nothing
 // 清空指定游戏缓存（指定类别）
 // 仅清空指定缓存的指定类别，清空后无需新建缓存
@@ -6595,7 +6595,7 @@ native RemoveSavedString takes hashtable table, integer parentKey, integer child
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
-// 清空整张表，清空后需新建表
+// 清空整张表，清空后表变量不会变为null且需新建表
 native FlushParentHashtable takes hashtable table returns nothing
 // <1.24> 清空指定哈希表的指定主索引 [C]
 // 仅清空指定主索引，清空后无需新建表
