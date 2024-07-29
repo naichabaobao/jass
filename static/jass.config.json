@@ -13585,14 +13585,6 @@
             "type": "物品"
         },
         {
-            "code": "BIpv",
-            "name": "吸血药水",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
             "code": "BImo",
             "name": "怪兽诱饵",
             "descript": "",
@@ -13691,14 +13683,6 @@
         {
             "code": "Btrv",
             "name": "传送 - 暴露",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIhm",
-            "name": "治疗减免(降低目标单位的生命恢复速度)",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
