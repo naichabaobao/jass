@@ -13561,54 +13561,6 @@
             "type": "物品"
         },
         {
-            "code": "Bmec",
-            "name": "机械小动物",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BNss",
-            "name": "法术护盾",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BNsa",
-            "name": "庇护",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BImo",
-            "name": "怪兽诱饵",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIrm",
-            "name": "明澈药水(持续恢复)",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIrl",
-            "name": "再生(持续恢复)",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
             "code": "AIfc",
             "name": "飞毯",
             "descript": "",
@@ -13619,70 +13571,6 @@
         {
             "code": "AIml",
             "name": "生命值加成",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIcb",
-            "name": "腐蚀",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIsv",
-            "name": "盗取灵魂",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIil",
-            "name": "幻象",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "Bdef",
-            "name": "保护卷轴",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIrb",
-            "name": "重生(这个单位已经重生过了)",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIsh",
-            "name": "猎头者之灵",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "BIwb",
-            "name": "蛛网",
-            "descript": "",
-            "kind": "技能",
-            "race": "特殊",
-            "type": "物品"
-        },
-        {
-            "code": "Btrv",
-            "name": "传送 - 暴露",
             "descript": "",
             "kind": "技能",
             "race": "特殊",
@@ -16028,1881 +15916,2059 @@
             "code": "BHbd",
             "name": "暴风雪",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHbz",
             "name": "暴风雪(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHab",
             "name": "辉煌光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bdtm",
             "name": "汲取魔法值(目标)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdcm",
             "name": "汲取魔法值(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdtl",
             "name": "汲取生命值(目标)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdcl",
             "name": "汲取生命值(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdtb",
             "name": "汲职生命值和魔法值(目标)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdcb",
             "name": "汲取生命值和魔法值(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BHtc",
             "name": "雷霆一击",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHfs",
             "name": "烈焰风暴",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHbn",
             "name": "驱散（放逐）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHds",
             "name": "神圣护甲（圣盾术）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHwe",
             "name": "水元素",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHav",
             "name": "天神下凡",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bdbm",
             "name": "吸取魔法（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdbl",
             "name": "吸取生命（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdbb",
             "name": "吸取生命值和魔法值（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BHad",
             "name": "专注光环（虔诚光环）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bply",
             "name": "变形术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpxf",
             "name": "凤凰火焰（凤凰烈焰）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bphx",
             "name": "火凤凰",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bslo",
             "name": "减速术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bmlt",
             "name": "空中锁镣",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bmlc",
             "name": "空中锁镣(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcmg",
             "name": "控制魔法",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bmil",
             "name": "民兵",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bclf",
             "name": "迷雾之云/乌云技能",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Binf",
             "name": "心灵之火",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bhea",
             "name": "治疗术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bivs",
             "name": "隐形术(额外的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Binv",
             "name": "隐形术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BHtb",
             "name": "风暴之锤",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHbh",
             "name": "猛击",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XHbz",
             "name": "暴风雪(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XHfs",
             "name": "烈焰风暴(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "人族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Xclf",
             "name": "迷雾之云(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfla",
             "name": "照明弹(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfhl",
             "name": "建筑物伤害-人族 大",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfhs",
             "name": "健筑物伤害-人族 小",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfhm",
             "name": "建筑物伤害-人族 中",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "人族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bbof",
             "name": "燃油",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bbsk",
             "name": "狂暴",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bspl",
             "name": "灵魂链接",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BOhx",
             "name": "妖术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOwd",
             "name": "结界",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BOvd",
             "name": "巫毒狂舞",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Beng",
             "name": "诱捕(地面的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bena",
             "name": "诱捕(空中的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdvv",
             "name": "吞噬",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bprg",
             "name": "净化",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Blsh",
             "name": "闪电之盾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bblo",
             "name": "嗜血",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Beye",
             "name": "警戒结界",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bstt",
             "name": "静滞陷阱",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bsta",
             "name": "静滞陷阱（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bhwd",
             "name": "治疗结界",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Boar",
             "name": "治疗结界光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bakb",
             "name": "战鼓",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BOwk",
             "name": "疾风步",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOmi",
             "name": "镜像",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOsf",
             "name": "野性之魂",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOeq",
             "name": "地震术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOae",
             "name": "坚韧光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOws",
             "name": "战争践踏",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOea",
             "name": "地震术(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOsh",
             "name": "震荡波(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOvc",
             "name": "巫毒狂舞(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BOww",
             "name": "剑刃风暴(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bdig",
             "name": "吞噬(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bens",
             "name": "诱捕(一般的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bliq",
             "name": "火油瓶",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Blsa",
             "name": "闪电之盾(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Barm",
             "name": "法力恢复光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BIpb",
             "name": "剧毒(不叠加)（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BIpd",
             "name": "剧毒(叠加)（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BIpi",
             "name": "剧毒(信息)（物编无此效果）",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "XOeq",
             "name": "地震术(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "XOre",
             "name": "重生(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "兽族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Xbof",
             "name": "燃油(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfos",
             "name": "建筑伤害 – 兽人 小",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfom",
             "name": "建筑伤害 – 兽人 中",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfol",
             "name": "建筑伤害 – 兽人 大",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "兽族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bvng",
             "name": "复仇之魂",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bmfl",
             "name": "法力闪耀",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bmfa",
             "name": "法力闪耀(额外的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpsh",
             "name": "相位变换",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Btau",
             "name": "嘲讽",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
+        {
+            "code": "Bps1",
+            "name": "未知",
+            "descript": "",
+            "kind": "魔法效果（单位）",
+            "race": "暗夜精灵",
+            "type": "魔法效果"
+        },
+
         {
             "code": "BEsh",
             "name": "暗影突袭",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEsi",
             "name": "暗影突袭",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEsv",
             "name": "复仇",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bspo",
             "name": "减速毒药(不叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bssd",
             "name": "减速毒药(叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcor",
             "name": "腐蚀吐息",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BEim",
             "name": "献祭",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEme",
             "name": "恶魔变形",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEer",
             "name": "纠缠根须",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEfn",
             "name": "自然之力",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEah",
             "name": "荆棘光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BEst",
             "name": "斥候",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BEar",
             "name": "强击光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bfae",
             "name": "精灵之火",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcyc",
             "name": "飓风术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcy2",
             "name": "飓风术(额外的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Brej",
             "name": "回春术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Broa",
             "name": "咆哮",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BEia",
             "name": "献祭(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Beat",
             "name": "吃树",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bgra",
             "name": "战棍",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bssi",
             "name": "减速毒药(信息)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bbar",
             "name": "树皮术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "AEsd",
             "name": "星辰坠落(目标)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "AEtr",
             "name": "宁静(目标)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bult",
             "name": "夜视能力",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "XEsf",
             "name": "星辰坠落(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XEtq",
             "name": "宁静(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "暗夜精灵",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XEsn",
             "name": "哨兵(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfns",
             "name": "建筑伤害 - 暗夜精灵 小",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfnm",
             "name": "建筑伤害 - 暗夜精灵 中",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfnl",
             "name": "建筑伤害 - 暗夜精灵 大",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "暗夜精灵",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Brpb",
             "name": "补充",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Brpl",
             "name": "荒芜精华",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
+        },
+        {
+            "code": "BUtt",
+            "name": "未知（尖刺甲壳相关）",
+            "descript": "",
+            "kind": "魔法效果（英雄）",
+            "race": "不死族",
+            "type": "魔法效果"
         },
         {
             "code": "Brpm",
             "name": "灵魂之触",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Babr",
             "name": "荒芜光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BUim",
             "name": "穿刺",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUcb",
             "name": "腐尸甲虫",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUlo",
             "name": "蝗虫",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Buns",
             "name": "反召唤",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bspa",
             "name": "小蜘蛛",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bweb",
             "name": "蛛网(地面)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bwea",
             "name": "蛛网(空中)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bapl",
             "name": "疾病云雾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bfrz",
             "name": "冰冻吐息",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Brai",
             "name": "骷髅奴仆/复活死尸",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Buhf",
             "name": "邪恶狂热",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bams",
             "name": "反魔法护罩",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bam2",
             "name": "反魔法护罩(额外的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpos",
             "name": "占据",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BUau",
             "name": "邪恶光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUan",
             "name": "亡者再临/操纵死尸",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUsl",
             "name": "沉睡",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUav",
             "name": "吸血光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUfa",
             "name": "霜甲术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUdd",
             "name": "枯萎凋零",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcrs",
             "name": "诅咒",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bcri",
             "name": "残废术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BUcs",
             "name": "腐臭蝠群(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUsp",
             "name": "沉睡(暂停)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUst",
             "name": "沉睡(昏迷)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BUts",
             "name": "尖刺甲壳",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bplg",
             "name": "疾病之云",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BUad",
             "name": "亡者再临(额外的)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bpoc",
             "name": "占据(施法者)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Batp",
             "name": "优先攻击(1.32.9)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "XUdd",
             "name": "枯萎凋零(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "不死族",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Xfus",
             "name": "建筑伤害 – 亡灵 小",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xfum",
             "name": "建筑伤害 – 亡灵 中",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xful",
             "name": "建筑伤害 – 亡灵 大",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "不死族",
-            "type": "单位"
+            "type": "魔法效果"
+        },
+        {
+            "code": "BNvc",
+            "name": "火山爆发",
+            "descript": "",
+            "kind": "魔法效果（英雄）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BFig",
+            "name": "召唤单位",
+            "descript": "召唤单位会受到驱散类法术造成的额外伤害。",
+            "kind": "魔法效果（英雄）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIpv",
+            "name": "吸血药水",
+            "descript": "该英雄使用了吸血药水，攻击力提高并且攻击能吸取生命。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIrm",
+            "name": "明澈药水",
+            "descript": "该单位喝下了明澈药水，法力值将持续恢复。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+
+        {
+            "code": "BImo",
+            "name": "怪兽诱饵",
+            "descript": "周围的中立生物将被引诱到该诱饵的位置。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIrg",
+            "name": "回春术",
+            "descript": "该单位将持续恢复生命值和法力值。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIrl",
+            "name": "再生",
+            "descript": "该单位拥有再生效果，生命值将持续恢复。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIcb",
+            "name": "腐蚀",
+            "descript": "该单位被腐蚀宝珠击中，护甲暂时降低。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIsv",
+            "name": "盗取灵魂",
+            "descript": "这是一个英雄的灵魂。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIil",
+            "name": "幻象",
+            "descript": "该单位是幻象，会从敌人的攻击中受到额外伤害。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "Bdef",
+            "name": "保护卷轴",
+            "descript": "该单位受到保护卷轴的影响，护甲暂时提高。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIrb",
+            "name": "重生",
+            "descript": "这个单位已经重生过了。",
+            "kind": "魔法效果（神符）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIsh",
+            "name": "猎头者之灵",
+            "descript": "",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIwb",
+            "name": "物品 - 蛛网",
+            "descript": "",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "Btrv",
+            "name": "传送 - 暴露",
+            "descript": "",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIhm",
+            "name": "治疗减免",
+            "descript": "该单位的生命恢复速度降低。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
+        },
+        {
+            "code": "BIcf",
+            "name": "烈焰披风",
+            "descript": "该单位拥有烈焰披风，周围的敌方地面单位将持续受到伤害。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
         },
         {
             "code": "BNhe",
             "name": "中立治疗术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNpi",
             "name": "永久献祭(中立敌对1)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpig",
             "name": "永久献祭(中立敌对2)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpoi",
             "name": "毒素(不叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpsd",
             "name": "毒素(叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bpsi",
             "name": "毒素(信息)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNsl",
             "name": "灵魂保存",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNst",
             "name": "群兽奔腾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNrf",
             "name": "火焰之雨(范围)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bfre",
             "name": "冰冻",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bsha",
             "name": "共享视野",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
+        },
+        {
+            "code": "BNss",
+            "name": "法术护盾",
+            "descript": "可以抵挡法术的护盾。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
         },
         {
             "code": "Btdg",
             "name": "龙卷风伤害",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Btsa",
             "name": "龙卷风旋转(范围)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "ANmd",
             "name": "季风",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNva",
             "name": "火山爆发(范围)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNic",
             "name": "焚身化骨",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNso",
             "name": "灵魂燃烧",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNlm",
             "name": "熔岩爪牙",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNfy",
             "name": "口袋工厂",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNcs",
             "name": "集束火箭",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNeg",
             "name": "工程学升级",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNcg",
             "name": "发条地精",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNhs",
             "name": "治疗喷雾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNab",
             "name": "酸液炸弹",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNcr",
             "name": "化学狂暴",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNtm",
             "name": "点金术",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNms",
             "name": "法力护盾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNrd",
             "name": "火焰之雨",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BHca",
-            "name": "寒冰箭矢",
+            "name": "寒冰箭矢(不叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bcsd",
             "name": "寒冰箭矢(叠加)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Bcsi",
             "name": "寒冰箭矢(信息)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNht",
             "name": "恐惧嚎叫",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
+        },
+        {
+            "code": "Bshs",
+            "name": "影眼魔杖",
+            "descript": "该单位被影眼魔杖击中，会暴露在敌方玩家的视野中。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
         },
         {
             "code": "BNdo",
             "name": "末日降临",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNdi",
             "name": "末日降临(奴仆)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNef",
             "name": "熊猫人元素之灵(该效果不会出现本体和分身上)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNsg",
             "name": "巨熊",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNsq",
             "name": "豪猪",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNsw",
             "name": "战鹰",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNmr",
             "name": "心智腐烂",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNbf",
             "name": "火焰之息",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNdh",
             "name": "酩酊酒雾",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNsi",
             "name": "沉默",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNba",
             "name": "黑蚀箭",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNdm",
             "name": "黑暗奴仆",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNmo",
             "name": "季风",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNwm",
             "name": "水栖奴仆",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Basl",
             "name": "龙卷风(减速光环)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Btsp",
             "name": "龙卷风旋转(自动施放飓风)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNto",
             "name": "龙卷风(时间化生命)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "BNdc",
             "name": "黑暗转换",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNsp",
             "name": "灵魂保存",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bchd",
             "name": "眩晕",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNin",
             "name": "地狱火",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bfzy",
             "name": "狂乱",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Boac",
             "name": "统御光环",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BTLF",
             "name": "限时生命",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BCbf",
             "name": "冰霜吐息",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BCtc",
             "name": "砸击",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNbr",
             "name": "战斗咆哮",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNpm",
             "name": "寄生虫",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BNpa",
             "name": "寄生虫",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bdet",
             "name": "被（反隐）侦测到",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bvul",
             "name": "无敌",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
+        },
+        {
+            "code": "Bmec",
+            "name": "机械小动物",
+            "descript": "召唤单位会受到驱散类法术的伤害。",
+            "kind": "魔法效果（物品）",
+            "race": "特殊",
+            "type": "魔法效果"
         },
         {
             "code": "Bspe",
             "name": "速度加成",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Bfro",
             "name": "减速",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BSTN",
             "name": "昏迷",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "BPSE",
             "name": "昏迷(暂停)",
             "descript": "",
-            "kind": "魔法效果",
+            "kind": "魔法效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xbli",
             "name": "荒芜(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xbdt",
             "name": "暴露(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "Xdis",
             "name": "英雄消散(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XErc",
             "name": "混乱之雨(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XErf",
             "name": "火焰之雨(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XIct",
             "name": "改变一天的时间(物品)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（单位）",
             "race": "特殊",
-            "type": "单位"
+            "type": "魔法效果"
         },
         {
             "code": "XNmo",
             "name": "季风(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XNvc",
             "name": "火山爆发(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XNcs",
             "name": "集束火箭(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "XNhs",
             "name": "治疗喷雾(效果)",
             "descript": "",
-            "kind": "区域效果",
+            "kind": "区域效果（英雄）",
             "race": "特殊",
-            "type": "英雄"
+            "type": "魔法效果"
         },
         {
             "code": "Rhme",
