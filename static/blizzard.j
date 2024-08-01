@@ -12293,22 +12293,22 @@ endfunction
 
 // Unit Weapon
 
-// 设置武器布尔值域
+// 设置单位武器布尔值域
 function BlzSetUnitWeaponBooleanFieldBJ takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器整数域
+// 设置单位武器整数域
 function BlzSetUnitWeaponIntegerFieldBJ takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器实数域
+// 设置单位武器实数域
 function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器字符串域
+// 设置单位武器字符串域
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
