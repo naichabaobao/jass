@@ -95,7 +95,7 @@ type unittype extends handle
 
 // 游戏速度
 type gamespeed extends handle
-// 游戏难度（用于战役地图）
+// 游戏难度（用于战役，在进入战役前或任务失败后设置）
 type gamedifficulty extends handle
 // 游戏（队伍）类型
 type gametype extends handle
@@ -239,13 +239,13 @@ type unitrealfield extends handle
 type unitbooleanfield extends handle
 // 单位字符串域
 type unitstringfield extends handle
-// 攻击整数域
+// 单位武器整数域
 type unitweaponintegerfield extends handle
-// 攻击实数域
+// 单位武器实数域
 type unitweaponrealfield extends handle
-// 攻击布尔值域
+// 单位武器布尔值域
 type unitweaponbooleanfield extends handle
-// 攻击字符串域
+// 单位武器字符串域
 type unitweaponstringfield extends handle
 // 物品整数域
 type itemintegerfield extends handle
@@ -410,13 +410,13 @@ constant native ConvertUnitRealField takes integer i returns unitrealfield
 constant native ConvertUnitBooleanField takes integer i returns unitbooleanfield
 // 转换整数成单位字符串域
 constant native ConvertUnitStringField takes integer i returns unitstringfield
-// 转换整数成攻击整数域
+// 转换整数成单位武器整数域
 constant native ConvertUnitWeaponIntegerField takes integer i returns unitweaponintegerfield
-// 转换整数成攻击实数域
+// 转换整数成单位武器实数域
 constant native ConvertUnitWeaponRealField takes integer i returns unitweaponrealfield
-// 转换整数成攻击布尔值域
+// 转换整数成单位武器布尔值域
 constant native ConvertUnitWeaponBooleanField takes integer i returns unitweaponbooleanfield
-// 转换整数成攻击字符串域
+// 转换整数成单位武器字符串域
 constant native ConvertUnitWeaponStringField takes integer i returns unitweaponstringfield
 // 转换整数成物品整数域
 constant native ConvertItemIntegerField takes integer i returns itemintegerfield
