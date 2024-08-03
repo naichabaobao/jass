@@ -9099,7 +9099,7 @@
         {
             "code": "AUav",
             "name": "吸血光环",
-            "descript": "能对敌人进行一轮冰冻攻击，对其造成一定伤害并使其减速。|n|n|cffffcc00等级 1|r -<AUfn,DataB1>点常规伤害，<AUfn,DataA1>点新星伤害。|n|cffffcc00等级 2|r -<AUfn,DataB2>点常规伤害，<AUfn,DataA2>点新星伤害。|n|cffffcc00等级 3|r -<AUfn,DataB3>点常规伤害，<AUfn,DataA3>点新星伤害。",
+            "descript": "周围的友方近战单位在攻击敌方单位时可以获得生命值。 |n|n|cffffcc001级|r - 获得攻击伤害<AUav,DataA1,%>%的生命值。 |n|cffffcc002级|r - 获得攻击伤害<AUav,DataA2,%>%的生命值。 |n|cffffcc003级|r - 获得攻击伤害<AUav,DataA3,%>%的生命值。",
             "kind": "技能",
             "race": "不死族",
             "type": "英雄"
@@ -9627,7 +9627,7 @@
         {
             "code": "ACcy",
             "name": "飓风(中立敌对)",
-            "descript": "将目标单位投掷到空中，使其不能移动，攻击和施放任何的魔法技能。而且其他单位也不能在这期间攻击它。|n持续<ACc1,Dur1>秒。",
+            "descript": "将目标单位投掷到空中，使其不能移动，攻击和施放任何的魔法技能。而且其他单位也不能在这期间攻击它。|n持续<ACcy,Dur1>秒。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -9859,7 +9859,7 @@
         {
             "code": "ACd2",
             "name": "驱逐魔法(中立敌对2)",
-            "descript": "驱散敌人身上的正面效果魔法和友军单位身上的负面效果魔法。|n|cffffcc00对召唤出来的单位造成<ACdm,DataB1>点的伤害。|r",
+            "descript": "驱散敌人身上的正面效果魔法和友军单位身上的负面效果魔法。|n|cffffcc00对召唤出来的单位造成<ACd2,DataB1>点的伤害。|r",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -9867,7 +9867,7 @@
         {
             "code": "Adsm",
             "name": "驱逐魔法(中立敌对)",
-            "descript": "驱散敌人身上的正面效果魔法和友军单位身上的负面效果魔法。|n|cffffcc00对召唤出来的单位造成<ACdm,DataB1>点的伤害。|r",
+            "descript": "驱散敌人身上的正面效果魔法和友军单位身上的负面效果魔法。|n|cffffcc00对召唤出来的单位造成<Adsm,DataB1>点的伤害。|r",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10003,7 +10003,7 @@
         {
             "code": "ACf2",
             "name": "霜冻护甲(自动施放)(中立敌对)",
-            "descript": "霜冻护甲能增加目标单位<ACfa,DataB1>点的护甲防御，攻击该单位的近战型敌人也会在<ACfa,Dur1>秒内减速。|n持续<ACfa,DataA1>秒。",
+            "descript": "霜冻护甲能增加目标单位<ACf2,DataB1>点的护甲防御，攻击该单位的近战型敌人也会在<ACf2,Dur1>秒内减速。|n持续<ACf2,DataA1>秒。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10099,7 +10099,7 @@
         {
             "code": "ACdv",
             "name": "吞噬(中立敌对)",
-            "descript": "吞噬某个敌方单位，对其造成每秒<Advc,DataB1>点的伤害。如果吞噬者在咀嚼目标单位的过程中被杀，那么被吞噬的单位会从其口中跳出来。",
+            "descript": "吞噬某个敌方单位，对其造成每秒<ACdv,DataB1>点的伤害。如果吞噬者在咀嚼目标单位的过程中被杀，那么被吞噬的单位会从其口中跳出来。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10107,7 +10107,7 @@
         {
             "code": "ACde",
             "name": "吞噬魔法(中立敌对)",
-            "descript": "吸收一定范围内所有单位身上的魔法效果。每个单位给予破坏者<Advm,DataA1>点的生命值和<Advm,DataB1>点魔法值。|n|cffffcc00对召唤出来的单位造成<Advm,DataE1>点的伤害。|r",
+            "descript": "吸收一定范围内所有单位身上的魔法效果。每个单位给予破坏者<ACde,DataA1>点的生命值和<Advm,DataB1>点魔法值。|n|cffffcc00对召唤出来的单位造成<ACde,DataE1>点的伤害。|r",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10187,7 +10187,7 @@
         {
             "code": "ACuf",
             "name": "邪恶狂热(中立敌对)",
-            "descript": "增加目标单位<Auhf,DataA1,%>%的攻击速度，但是每秒也会消耗目标<ACuf,DataB1>点的生命值。|n持续<ACuf,Dur1>秒。",
+            "descript": "增加目标单位<ACuf,DataA1,%>%的攻击速度，但是每秒也会消耗目标<ACuf,DataB1>点的生命值。|n持续<ACuf,Dur1>秒。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10339,7 +10339,7 @@
         {
             "code": "AChw",
             "name": "治疗守卫(中立敌对)",
-            "descript": "召唤出一个不能移动的治疗守卫。能以每秒<Aoar,DataA1,%>%的速度来恢复周围非机械单位的生命值。|n持续<AChw,Dur1>秒。",
+            "descript": "召唤出一个不能移动的治疗守卫。能以每秒<AChw,DataA1,%>%的速度来恢复周围非机械单位的生命值。|n持续<AChw,Dur1>秒。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "单位"
@@ -10499,7 +10499,7 @@
         {
             "code": "AEpa",
             "name": "毒箭",
-            "descript": "通过附加的火焰伤害来增加女祭司的攻击力。|n|n|cffffcc00等级 1|r -增加<AHfa,DataA1>点伤害。|n|cffffcc00等级 2|r –增加 <AHfa,DataA2>点伤害。 |n|cffffcc00等级 3|r – 增加<AHfa,DataA3>点伤害。",
+            "descript": "通过附加的火焰伤害来增加女祭司的攻击力。|n|n|cffffcc00等级 1|r -增加<AEpa,DataA1>点伤害。|n|cffffcc00等级 2|r –增加 <AEpa,DataA2>点伤害。 |n|cffffcc00等级 3|r – 增加<AEpa,DataA3>点伤害。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "英雄"
@@ -11123,7 +11123,7 @@
         {
             "code": "Aawa",
             "name": "立即复活英雄",
-            "descript": ",使它每秒受到<ANpa,DataA1>的伤害，持续<ANpa,Dur1>秒。如果命中单位在寄生虫仍有效果的时候死亡，一个战士将会从尸体上诞生。",
+            "descript": "",
             "kind": "技能",
             "race": "中立被动",
             "type": "单位"
@@ -11171,7 +11171,7 @@
         {
             "code": "Andm",
             "name": "驱逐魔法",
-            "descript": "能去除敌方单位身上那些有利的魔法效果和友军单位身上那些不利的魔法效果。|n|cffffcc00对召唤单位造成<Aadm,DataB1>点伤害。|r",
+            "descript": "能去除敌方单位身上那些有利的魔法效果和友军单位身上那些不利的魔法效果。|n|cffffcc00对召唤单位造成<Andm,DataB1>点伤害。|r",
             "kind": "技能",
             "race": "中立被动",
             "type": "单位"
@@ -11195,7 +11195,7 @@
         {
             "code": "ANen",
             "name": "诱捕",
-            "descript": "能将一个目标空中单位固定在地面上，使其在<Aens,Dur1>秒内不能移动。被诱捕的空中单位可以当作地面单位进行攻击。",
+            "descript": "能将一个目标空中单位固定在地面上，使其在<ANen,Dur1>秒内不能移动。被诱捕的空中单位可以当作地面单位进行攻击。",
             "kind": "技能",
             "race": "中立被动",
             "type": "单位"
