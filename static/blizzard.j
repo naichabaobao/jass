@@ -16,11 +16,11 @@ globals
     constant real bj_CELLWIDTH = 128.0
     // 悬崖高度（升降台默认升/降一层的高度），默认128.0
     constant real bj_CLIFFHEIGHT = 128.0
-    // （建筑）单位默认朝向，默认270.0
+    // 单位默认朝向，默认270.0
     constant real bj_UNIT_FACING = 270.0
-    // 弧度转换成角度
+    // 弧角转换系数（弧度转换成角度）
     constant real bj_RADTODEG = 180.0 / bj_PI
-    // 角度转换成弧度
+    // 角弧转换系数（角度转换成弧度）
     constant real bj_DEGTORAD = bj_PI / 180.0
     // 文本显示持续时间 任务，默认20.00
     constant real bj_TEXT_DELAY_QUEST = 20.00
@@ -85,7 +85,7 @@ globals
     constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
     // 玩家槽上限（包含所有中立玩家，共16/28位）
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
-    // 尸体数量上限，默认25
+    // （召唤）骷髅战士（'uske'）数量上限，默认25
     constant integer bj_MAX_SKELETONS = 25
     // （商店）物品库存上限，默认11
     constant integer bj_MAX_STOCK_ITEM_SLOTS = 11
@@ -156,8 +156,8 @@ globals
     // Delay between a creep's death and the time it may drop an item.
     constant real bj_CREEP_ITEM_DELAY = 0.50
 
-    // Timing settings for Marketplace inventories.
     // 初始物品库存补充延时（开局后，过多久才可购买/雇佣），默认120
+    // Timing settings for Marketplace inventories.
     constant real bj_STOCK_RESTOCK_INITIAL_DELAY = 120
     // 库存补充间隔，默认30
     constant real bj_STOCK_RESTOCK_INTERVAL = 30
@@ -187,7 +187,7 @@ globals
     constant integer bj_CAMERA_DEFAULT_ROTATION = 90
 
     // 营救（所属玩家变更）延时，默认2.00
-    // 怀疑是中立可营救单位在被可营救后变更队伍的延迟
+    // 疑似中立可营救单位在被可营救后变更队伍的延迟
     constant real bj_RESCUE_PING_TIME = 2.00
 
     // Transmission behavior settings
@@ -575,11 +575,11 @@ globals
 
     // Transmission timing methods
 
-    // 传输时间方法 时间类型 - 增加
+    // 消息持续时间类型 时间类型 - 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 传输时间方法 时间类型 - 设为（指定值）
+    // 消息持续时间类型 时间类型 - 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 传输时间方法 时间类型 - 减少
+    // 消息持续时间类型 时间类型 - 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
@@ -614,9 +614,9 @@ globals
     constant integer bj_QUESTMESSAGE_REQUIREMENT = 4
     // 任务信息类型 任务失败
     constant integer bj_QUESTMESSAGE_MISSIONFAILED = 5
-    // 任务信息类型 提示
+    // 任务信息类型 常驻提示
     constant integer bj_QUESTMESSAGE_ALWAYSHINT = 6
-    // 任务信息类型 简单提示
+    // 任务信息类型 提示
     constant integer bj_QUESTMESSAGE_HINT = 7
     // 任务信息类型 秘密
     constant integer bj_QUESTMESSAGE_SECRET = 8
@@ -655,7 +655,7 @@ globals
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
     // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 按类别删除BUFF 除终止计时器外的全部
+    // BUFF属性 按类别删除BUFF 除生命计时器外的全部BUFF
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
@@ -798,7 +798,7 @@ globals
 
     // Corpse creation settings
 
-    // 尸体死亡时间上限，默认8.00
+    // 尸体腐烂时间上限，默认8.00
     constant real bj_CORPSE_MAX_DEATH_TIME = 8.00
 
     // Corpse creation styles
@@ -1004,7 +1004,7 @@ globals
     trigger bj_rescueUnitBehavior = null
     // 被营救后改变单位的颜色标识，默认允许改变（true）
     boolean bj_rescueChangeColorUnit = true
-    // 被营救后改变建筑的颜色标识，默认允许改变（true
+    // 被营救后改变建筑的颜色标识，默认允许改变（true）
     boolean bj_rescueChangeColorBldg = true
 
     // Transmission vars
@@ -1018,7 +1018,7 @@ globals
 
     // Cinematic mode vars
 
-    // 电影模式设置 默认速度
+    // 电影模式设置 默认速度，默认普通
     gamespeed bj_cineModePriorSpeed = MAP_SPEED_NORMAL
     // 电影模式设置 迷雾状态，默认禁用（false）
     boolean bj_cineModePriorFogSetting = false
@@ -1056,7 +1056,7 @@ globals
     integer bj_queuedExecTotal = 0
     // 触发器队列执行触发器数组
     trigger array bj_queuedExecTriggers
-    // 触发器队列执行布尔值数组 用于登记当前触发器是否使用了条件
+    // 触发器队列执行布尔值数组，用于登记当前触发器是否使用了条件
     boolean array bj_queuedExecUseConds
     // 触发器队列执行计时器
     timer bj_queuedExecTimeoutTimer = CreateTimer()
@@ -1130,7 +1130,7 @@ globals
     boolean bj_isUnitGroupEmptyResult = true
     // 单位组选取的单位在区域内标识，默认为真（true）
     boolean bj_isUnitGroupInRectResult = true
-    // 判断 单位组选取的单位是否在区域内 使用的区域
+    // 单位组区域，用于判断单位组选取的单位是否在指定区域内
     rect bj_isUnitGroupInRectRect = null
     // 游戏结束时展示得分屏标识，默认为不允许（false）
     boolean bj_changeLevelShowScores = false
@@ -1202,7 +1202,7 @@ globals
     sound bj_lastPlayedSound = null
     // 最后播放的音乐
     string bj_lastPlayedMusic = ""
-    // 最后传输消息的持续时间
+    // 最后播放消息的持续时间
     real bj_lastTransmissionDuration = 0
     // 最后创建的游戏缓存
     gamecache bj_lastCreatedGameCache = null
@@ -1267,8 +1267,8 @@ endglobals
 //***************************************************************************
 
 
-// 显示Debug消息[C]
-// @param msg 消息字符串
+// 显示调试文本[C]
+// @param msg 文本内容
 function BJDebugMsg takes string msg returns nothing
     local integer i = 0
     loop
@@ -1506,7 +1506,7 @@ endfunction
 
 // 转换点成区域
 // 会创建区域，用完请注意排泄
-// @param center 中心点位置
+// @param center 区域中心点位置
 // @param width 宽
 // @param height 高
 function RectFromCenterSizeBJ takes location center, real width, real height returns rect
@@ -1888,10 +1888,10 @@ endfunction
 // Converts a percentage (real, 0..100) into a scaled integer (0..max),
 // clipping the result to 0..max in case the input is invalid.
 
-// 取最大值的百分比值
-// R2I(max * percentage)
-// @param percentage 0-100区间
-// @param max 0-Finite
+// 取值的百分比（整数）
+// R2I(max * percentage)，结果为负数时返回0，结果超过max时返回max
+// @param percentage 0~100区间
+// @param max 0~有限
 function PercentToInt takes real percentage, integer max returns integer
     local real realpercent = percentage * I2R(max) * 0.01
     local integer result = MathRound(realpercent)
@@ -1906,7 +1906,7 @@ function PercentToInt takes real percentage, integer max returns integer
 endfunction
 
 
-// 转换百分比成小数，(0-1)转(0-255)
+// 转换百分比成小数，(0~1)转(0~255)
 function PercentTo255 takes real percentage returns integer
     return PercentToInt(percentage, 255)
 endfunction
@@ -2362,7 +2362,7 @@ endfunction
 //***************************************************************************
 
 
-// 为玩家组显示文本消息(自动计时)
+// 为玩家组显示文本(自动计时)
 function DisplayTextToForce takes force toForce, string message returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2371,7 +2371,7 @@ function DisplayTextToForce takes force toForce, string message returns nothing
 endfunction
 
 
-// 为玩家组显示文本消息(指定时间)
+// 为玩家组显示文本(指定时间)
 function DisplayTimedTextToForce takes force toForce, real duration, string message returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), toForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -2812,25 +2812,25 @@ function MoveLightningLoc takes lightning whichBolt, location where1, location w
 endfunction
 
 
-// 获取闪电的Alpha通道颜色
+// 获取闪电的Alpha色值
 function GetLightningColorABJ takes lightning whichBolt returns real
     return GetLightningColorA(whichBolt)
 endfunction
 
 
-// 获取闪电的红色通道颜色
+// 获取闪电的红色值
 function GetLightningColorRBJ takes lightning whichBolt returns real
     return GetLightningColorR(whichBolt)
 endfunction
 
 
-// 获取闪电的绿色通道颜色
+// 获取闪电的绿色值
 function GetLightningColorGBJ takes lightning whichBolt returns real
     return GetLightningColorG(whichBolt)
 endfunction
 
 
-// 获取闪电的蓝色通道颜色
+// 获取闪电的蓝色值
 function GetLightningColorBBJ takes lightning whichBolt returns real
     return GetLightningColorB(whichBolt)
 endfunction
@@ -4869,13 +4869,13 @@ function EnableCreepSleepBJ takes boolean enable returns nothing
 endfunction
 
 
-// 允许/禁止 单位发出警报
+// 允许/禁止 单位发出报警
 function UnitGenerateAlarms takes unit whichUnit, boolean generate returns boolean
     return UnitIgnoreAlarm(whichUnit, not generate)
 endfunction
 
 
-// 查询单位是否发出警报
+// 查询单位是否忽略报警
 function DoesUnitGenerateAlarms takes unit whichUnit returns boolean
     return not UnitIgnoreAlarmToggled(whichUnit)
 endfunction
@@ -7935,7 +7935,7 @@ function GetTransmissionDuration takes sound soundHandle, integer timeType, real
     return duration
 endfunction
 
-// 等待信息播放完成（指定传输时间方法）
+// 等待信息播放完成（指定消息持续时间类型）
 function WaitTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns nothing
     if(timeType == bj_TIMETYPE_SET) then
         // If we have a static duration wait, just perform the wait.
@@ -8096,7 +8096,7 @@ function TransmissionFromUnitTypeWithNameBJ takes force toForce, player fromPlay
 endfunction
 
 
-// 获取最后播放的单位消息的持续时间
+// 获取最后播放的单位消息持续时间
 function GetLastTransmissionDurationBJ takes nothing returns real
     return bj_lastTransmissionDuration
 endfunction
@@ -9309,7 +9309,7 @@ endfunction
 
 
 // 创建战役检查点（自动）存档
-// @param doCheckpointHint 是否显示自动存档消息
+// @param doCheckpointHint 是否显示自动存档提示
 // Placeholder function for auto save feature
 function SaveGameCheckPointBJ takes string mapSaveName, boolean doCheckpointHint returns nothing
 	call SaveGameCheckpoint(mapSaveName, doCheckpointHint)
@@ -11778,7 +11778,7 @@ function InitMapRects takes nothing returns nothing
     set bj_mapInitialCameraBounds = GetCurrentCameraBoundsMapRectBJ()
 endfunction
 
-// 初始化单位升级类科技等级上限（升级后会改变训练/召唤的单位类型的科技）
+// 初始化升级类科技单位的数量上限（升级后会改变训练/召唤的单位类型的科技）
 // 默认针对：坦克的火箭弹幕、狂战士升级、骷髅战士
 function InitSummonableCaps takes nothing returns nothing
     local integer index
@@ -12293,22 +12293,22 @@ endfunction
 
 // Unit Weapon
 
-// 设置武器布尔值域
+// 设置单位武器布尔值域
 function BlzSetUnitWeaponBooleanFieldBJ takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器整数域
+// 设置单位武器整数域
 function BlzSetUnitWeaponIntegerFieldBJ takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器实数域
+// 设置单位武器实数域
 function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
-// 设置武器字符串域
+// 设置单位武器字符串域
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
