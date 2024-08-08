@@ -5242,7 +5242,7 @@
         },
         {
             "code": "ncfs",
-            "name": "水奴",
+            "name": "水栖奴仆(1级)",
             "descript": "",
             "kind": "单位",
             "race": "中立敌对",
@@ -5250,7 +5250,7 @@
         },
         {
             "code": "ntws",
-            "name": "水奴",
+            "name": "水栖奴仆(2级)",
             "descript": "",
             "kind": "单位",
             "race": "中立敌对",
@@ -5258,7 +5258,7 @@
         },
         {
             "code": "nsns",
-            "name": "水奴",
+            "name": "水栖奴仆(3级)",
             "descript": "",
             "kind": "单位",
             "race": "中立敌对",
@@ -7042,14 +7042,14 @@
         },
         {
             "code": "AHta",
-            "name": "显示",
+            "name": "显示（暴露）",
             "descript": "在地图上显示一块区域。|n探测到隐形的单位。|n持续<AHta,Dur1>秒。",
             "kind": "技能",
             "race": "人族",
             "type": "单位"
         },
         {
-            "code": "attu",
+            "code": "Attu",
             "name": "塔楼",
             "descript": "",
             "kind": "技能",
@@ -10906,8 +10906,8 @@
         },
         {
             "code": "ANwm",
-            "name": "水奴",
-            "descript": "",
+            "name": "水栖奴仆",
+            "descript": "召唤<ANwm,DataA1>个奴仆去执行主人的意愿。|n持续<ANwm,Dur1>秒。",
             "kind": "技能",
             "race": "中立敌对",
             "type": "英雄"
@@ -11139,7 +11139,7 @@
         {
             "code": "Atdg",
             "name": "建筑物破坏光环(龙卷风)",
-            "descript": "造成法术攻击，力量伤害(魔法伤害)",
+            "descript": "",
             "kind": "技能",
             "race": "中立被动",
             "type": "单位"
@@ -11473,7 +11473,7 @@
             "type": "单位"
         },
         {
-            "code": "awrp",
+            "code": "Awrp",
             "name": "传送门技能",
             "descript": "",
             "kind": "技能",
