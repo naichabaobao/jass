@@ -4033,7 +4033,7 @@ globals
 	constant unitrealfield UNIT_RF_HIT_POINTS_REGENERATION_RATE = ConvertUnitRealField('uhpr')
 	// 单位实数域 状态 - （每秒）魔法回复（值） ('umpr')
 	constant unitrealfield UNIT_RF_MANA_REGENERATION = ConvertUnitRealField('umpr')
-	// 单位实数域 美术 - 死亡时间(秒)
+	// 单位实数域 美术 - 死亡时间(秒) ('udtm')
 	constant unitrealfield UNIT_RF_DEATH_TIME = ConvertUnitRealField('udtm')
 	// 单位实数域 移动 - 飞行高度 ('ufyh')
 	constant unitrealfield UNIT_RF_FLY_HEIGHT = ConvertUnitRealField('ufyh')
