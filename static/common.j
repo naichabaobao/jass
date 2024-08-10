@@ -4088,9 +4088,9 @@ globals
 	// 单位实数域 战斗 - 最小攻击范围 ('uamn')
 	constant unitrealfield UNIT_RF_MINIMUM_ATTACK_RANGE = ConvertUnitRealField('uamn')
 
-	// 单位布尔值域 战斗 - 死亡 - 飞升（死亡后无尸体）(非死亡类型) ('urai')
+	// 单位布尔值域 战斗 - 死亡 - 灵魂飞升（死亡后无尸体）(非死亡类型) ('urai')
 	constant unitbooleanfield UNIT_BF_RAISABLE = ConvertUnitBooleanField('urai')
-	// 单位布尔值域 战斗 - 死亡 - 腐烂（死亡后有尸体）(非死亡类型) ('udec')
+	// 单位布尔值域 战斗 - 死亡 - 尸体腐烂（死亡后有尸体）(非死亡类型) ('udec')
 	constant unitbooleanfield UNIT_BF_ADECYABLE = ConvertUnitBooleanField('udec')
 	// 单位布尔值域 状态 - 是一个建筑 ('ubdg')
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
