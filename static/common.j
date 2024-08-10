@@ -2471,16 +2471,20 @@ globals
 	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk')
 
 	// 技能布尔值域 技能状态-英雄技能 ('aher')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_HERO_ABILITY = ConvertAbilityBooleanField('aher') // Get only
 	// 技能布尔值域 技能状态-物品技能 ('aite')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
 	// 技能布尔值域 技能状态-检查依赖 ('achd')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
 
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
 	// 技能字符串域 名称 ('anam')
+        // （仅能获取）
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
 	// 技能字符串域 图标(关闭) ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
@@ -2543,7 +2547,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_DEV3 = ConvertAbilityIntegerLevelField('Dev3')
 	 // 技能随等级改变的整数域 最大目标中立等级 ('Dev1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_CREEP_LEVEL_DEV1 = ConvertAbilityIntegerLevelField('Dev1')
-	 // 技能随等级改变的整数域 采集黄金数/间隔 ('Fae1')
+	 // 技能随等级改变的整数域 采集黄金数/间隔 ('Egm1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_PER_INTERVAL_EGM1 = ConvertAbilityIntegerLevelField('Egm1')
 	 // 技能随等级改变的整数域 防御减少 ('Fae1')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_REDUCTION = ConvertAbilityIntegerLevelField('Fae1')
