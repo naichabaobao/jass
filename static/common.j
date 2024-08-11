@@ -7447,7 +7447,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
-// @param imageType 图像类型，具体类型可在 记录物编的文件 找到
+// @param imageType 图像类型（阴影、选择、指示器、闭塞标志、地面纹理变化、最顶端）
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 销毁图像
 native DestroyImage takes image whichImage returns nothing
