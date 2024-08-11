@@ -7392,7 +7392,7 @@ native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget ta
 // @param codeName 闪电类型(闪电链 - 主 - "CLPB"、闪电链 - 次 - "CLSB"、汲取 - "DRAB"、生命汲取 - "DRAL"、魔法汲取 - "DRAM"、死亡之指 - "AFOD"、叉状闪电 - "FORK"、医疗波 - 主 - "HWPB"、医疗波 - 次 - "HWSB"、闪电攻击 - "CHIM"、魔法镣铐 - "LEAS"、法力燃烧 - "MBUR"、魔力之焰 - "MFPB"、灵魂锁链 - "SPLK")
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电特效(指定Z轴) [R]
-// @param codeName 闪电类型(闪电链 - 主、闪电链 - 次、汲取、生命汲取、魔法汲取、死亡之指、叉状闪电、医疗波 - 主、医疗波 - 次、闪电攻击、魔法镣铐、法力燃烧、魔力之焰、灵魂锁链)
+// @param codeName 闪电类型(闪电链 - 主 - "CLPB"、闪电链 - 次 - "CLSB"、汲取 - "DRAB"、生命汲取 - "DRAL"、魔法汲取 - "DRAM"、死亡之指 - "AFOD"、叉状闪电 - "FORK"、医疗波 - 主 - "HWPB"、医疗波 - 次 - "HWSB"、闪电攻击 - "CHIM"、魔法镣铐 - "LEAS"、法力燃烧 - "MBUR"、魔力之焰 - "MFPB"、灵魂锁链 - "SPLK")
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 销毁闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
