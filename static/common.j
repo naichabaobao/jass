@@ -7389,7 +7389,7 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电特效 [R]
-// @param codeName 闪电类型(闪电链 - 主、闪电链 - 次、汲取、生命汲取、魔法汲取、死亡之指、叉状闪电、医疗波 - 主、医疗波 - 次、闪电攻击、魔法镣铐、法力燃烧、魔力之焰、灵魂锁链)
+// @param codeName 闪电类型(闪电链 - 主 - "CLPB"、闪电链 - 次 - "CLSB"、汲取 - "DRAB"、生命汲取 - "DRAL"、魔法汲取 - "DRAM"、死亡之指 - "AFOD"、叉状闪电 - "FORK"、医疗波 - 主 - "HWPB"、医疗波 - 次 - "HWSB"、闪电攻击 - "CHIM"、魔法镣铐 - "LEAS"、法力燃烧 - "MBUR"、魔力之焰 - "MFPB"、灵魂锁链 - "SPLK")
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电特效(指定Z轴) [R]
 // @param codeName 闪电类型(闪电链 - 主、闪电链 - 次、汲取、生命汲取、魔法汲取、死亡之指、叉状闪电、医疗波 - 主、医疗波 - 次、闪电攻击、魔法镣铐、法力燃烧、魔力之焰、灵魂锁链)
@@ -7447,7 +7447,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
-// @param imageType 图像类型（阴影、选择、指示器、闭塞标志、地面纹理变化、最顶端）
+// @param imageType 图像类型（阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 销毁图像
 native DestroyImage takes image whichImage returns nothing
