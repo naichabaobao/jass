@@ -7319,6 +7319,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 //
 
 // 新建天气效果 [R]
+// @param effectID 天气特效类型，可在 jass.config.json 找到
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
 // 删除天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
@@ -7447,7 +7448,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
-// @param imageType 图像类型（阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
+// @param imageType 图像类型，可输入 0~5（阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 销毁图像
 native DestroyImage takes image whichImage returns nothing
@@ -7468,7 +7469,7 @@ native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
 // @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
-// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 记录物编的文件 找到
+// @param imageType 图像类型，可输入 0~5（对应阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
