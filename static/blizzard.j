@@ -898,11 +898,11 @@ globals
     trigger bj_dncSoundsDawn = null
     // 昼夜参数 黄昏音效触发器
     trigger bj_dncSoundsDusk = null
-    // 昼夜参数 黎明声效
+    // 昼夜参数 黎明音效
     sound bj_dawnSound = null
-    // 昼夜参数 黄昏声效
+    // 昼夜参数 黄昏音效
     sound bj_duskSound = null
-    // 昼夜参数 黎明/黄昏声效启用标识，默认启用（true）
+    // 昼夜参数 黎明/黄昏音效启用标识，默认启用（true）
     boolean bj_useDawnDuskSounds = true
     // 昼夜参数 昼夜交替启用标识，默认启用（false）
     boolean bj_dncIsDaytime = false
@@ -1011,7 +1011,7 @@ globals
 
     // 电影场景结束计时器
     timer bj_cineSceneEndingTimer = null
-    // 最后播放的电影场景声音
+    // 最后播放的电影场景音效
     sound bj_cineSceneLastSound = null
     // 跳过电影场景触发器
     trigger bj_cineSceneBeingSkipped = null
@@ -3254,7 +3254,7 @@ function SetSoundOffsetBJ takes real newOffset, sound soundHandle returns nothin
 endfunction
 
 
-// 设置声效切断距离
+// 设置音效切断距离
 function SetSoundDistanceCutoffBJ takes sound soundHandle, real cutoff returns nothing
     call SetSoundDistanceCutoff(soundHandle, cutoff)
 endfunction
@@ -3266,13 +3266,13 @@ function SetSoundPitchBJ takes sound soundHandle, real pitch returns nothing
 endfunction
 
 
-// 设置3D声效位置
+// 设置3D音效位置
 function SetSoundPositionLocBJ takes sound soundHandle, location loc, real z returns nothing
     call SetSoundPosition(soundHandle, GetLocationX(loc), GetLocationY(loc), z)
 endfunction
 
 
-// 捆绑3D声效到单位
+// 捆绑3D音效到单位
 function AttachSoundToUnitBJ takes sound soundHandle, unit whichUnit returns nothing
     call AttachSoundToUnit(soundHandle, whichUnit)
 endfunction
