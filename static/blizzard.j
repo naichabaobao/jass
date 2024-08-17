@@ -9408,7 +9408,7 @@ function GetFadeFromSecondsAsReal takes real seconds returns real
     return 10000.00
 endfunction
 
-// 设置玩家状态
+// 设置玩家状态（增加玩家属性值）
 function AdjustPlayerStateSimpleBJ takes player whichPlayer, playerstate whichPlayerState, integer delta returns nothing
     call SetPlayerState(whichPlayer, whichPlayerState, GetPlayerState(whichPlayer, whichPlayerState) + delta)
 endfunction
@@ -9647,19 +9647,19 @@ endfunction
 
 // Rally point setting
 
-// 设置 聚集点（指定点）
+// 设置 集结点（指定点）
 function SetUnitRallyPoint takes unit whichUnit, location targPos returns nothing
     call IssuePointOrderLocBJ(whichUnit, "setrally", targPos)
 endfunction
 
 
-// 设置 聚集点（指定单位）
+// 设置 集结点（指定单位）
 function SetUnitRallyUnit takes unit whichUnit, unit targUnit returns nothing
     call IssueTargetOrder(whichUnit, "setrally", targUnit)
 endfunction
 
 
-// 设置 聚集点（指定可破坏物）
+// 设置 集结点（指定可破坏物）
 function SetUnitRallyDestructable takes unit whichUnit, destructable targDest returns nothing
     call IssueTargetOrder(whichUnit, "setrally", targDest)
 endfunction
@@ -9675,13 +9675,13 @@ function SaveDyingWidget takes nothing returns nothing
 endfunction
 
 
-// 创建/删除 荒芜地表（不死族）在指定矩形区域
+// 创建/删除 荒芜地表（不死族）（指定矩形区域）
 function SetBlightRectBJ takes boolean addBlight, player whichPlayer, rect r returns nothing
     call SetBlightRect(whichPlayer, r, addBlight)
 endfunction
 
 
-// 创建/删除 荒芜地表（不死族）在指定圆形范围
+// 创建/删除 荒芜地表（不死族）（指定圆形范围）
 function SetBlightRadiusLocBJ takes boolean addBlight, player whichPlayer, location loc, real radius returns nothing
     call SetBlightLoc(whichPlayer, loc, radius, addBlight)
 endfunction
@@ -9700,7 +9700,7 @@ endfunction
 //***************************************************************************
 
 
-// 设置对战的时间
+// 设置初始时间
 function MeleeStartingVisibility takes nothing returns nothing
     // Start by setting the ToD.
     call SetFloatGameState(GAME_STATE_TIME_OF_DAY, bj_MELEE_STARTING_TOD)
