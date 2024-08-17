@@ -14,7 +14,7 @@ globals
     constant real bj_E = 2.71828
     // 单元尺寸（游戏内量测地表面积的单位），默认128.0
     constant real bj_CELLWIDTH = 128.0
-    // 悬崖高度（升降台默认升/降一层的高度），默认128.0
+    // 悬崖高度（升降台升/降一层的高度），默认128.0
     constant real bj_CLIFFHEIGHT = 128.0
     // 单位默认朝向，默认270.0
     constant real bj_UNIT_FACING = 270.0
@@ -103,9 +103,9 @@ globals
     // Ideally these would be looked up from Units/MiscData.txt,
     // but there is currently no script functionality exposed to do that
 
-    // 黎明时间（鸡啼），默认早上6点整（6.00）
+    // 黎明时间（鸡啼），默认6点整（6.00），24时制
     constant real bj_TOD_DAWN = 6.00
-    // 入夜时间（狼嚎），默认晚上18点整（18.00）
+    // 入夜时间（狼嚎），默认18点整（18.00），24时制
     constant real bj_TOD_DUSK = 18.00
 
     // Melee game settings:
@@ -117,7 +117,7 @@ globals
     //   - Max heroes allowed per hero type
     //   - Distance from start loc to search for nearby mines
 
-    // 初始时间，默认早上8点整（8.00）
+    // 初始时间，默认8点整（8.00），24时制
     constant real bj_MELEE_STARTING_TOD = 8.00
     // 混乱之治版本初始黄金数量，默认750
     constant integer bj_MELEE_STARTING_GOLD_V0 = 750
@@ -127,12 +127,12 @@ globals
     constant integer bj_MELEE_STARTING_LUMBER_V0 = 200
     // 冰封王座版本初始木材数量，默认150
     constant integer bj_MELEE_STARTING_LUMBER_V1 = 150
-    // 使用随机英雄时创建的英雄数量，默认1个
+    // 使用随机英雄时创建的英雄数量，默认1
     constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
-    // 英雄数量上限，默认3个
+    // 英雄数量上限，默认3
     // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_LIMIT = 3
-    // 每类英雄数量上限，默认1个
+    // 每种英雄数量上限，默认1
     // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_TYPE_LIMIT = 1
     // 金矿搜索距离，默认2000
@@ -147,9 +147,9 @@ globals
     // 暴露持续时间，默认20.00
     // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统暴露玩家位置的持续时间
     constant real bj_MELEE_CRIPPLE_MSG_DURATION = 20.00
-    // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
+    // 混乱之治版本英雄初始物品创建次数，默认3，即前3发英雄都给
     constant integer bj_MELEE_MAX_TWINKED_HEROES_V0 = 3
-    // 冰封王座版本英雄初始物品创建次数，默认1次，即只给首发英雄
+    // 冰封王座版本英雄初始物品创建次数，默认1，即只给首发英雄
     constant integer bj_MELEE_MAX_TWINKED_HEROES_V1 = 1
 
     // 物品掉落延时（从单位死亡到掉落物品出现的时间间隔），默认0.50
@@ -207,7 +207,7 @@ globals
     // 单位消息画像悬空时间，默认1.50
     constant real bj_TRANSMISSION_PORT_HANGTIME = 1.50
 
-    // 电影模式转换时间，默认0.50 Cinematic mode settings
+    // 电影模式转换时间，默认0.50，Cinematic mode settings
     constant real bj_CINEMODE_INTERFACEFADE = 0.50
     // 游戏默认速度，默认正常
     constant gamespeed bj_CINEMODE_GAMESPEED = MAP_SPEED_NORMAL
@@ -559,9 +559,9 @@ globals
     constant integer bj_KEYEVENTKEY_LEFT = 0
     // 键盘按键事件 方向键（右）
     constant integer bj_KEYEVENTKEY_RIGHT = 1
-    // 键盘按键事件 方向键（上）
-    constant integer bj_KEYEVENTKEY_DOWN = 2
     // 键盘按键事件 方向键（下）
+    constant integer bj_KEYEVENTKEY_DOWN = 2
+    // 键盘按键事件 方向键（上）
     constant integer bj_KEYEVENTKEY_UP = 3
 
     // Mouse Event Types
