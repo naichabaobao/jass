@@ -6626,7 +6626,7 @@ function RemovePlayerPreserveUnitsBJ takes player whichPlayer, playergameresult 
     endif
 endfunction
 
-// 游戏胜利对话框事件-继续
+// 游戏胜利对话框事件-继续（自定义地图）
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
 
@@ -6641,7 +6641,7 @@ function CustomVictoryOkBJ takes nothing returns nothing
     endif
 endfunction
 
-// 游戏胜利对话框事件-退出
+// 游戏胜利对话框事件-退出（自定义地图）
 function CustomVictoryQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame(false)
@@ -6652,7 +6652,7 @@ function CustomVictoryQuitBJ takes nothing returns nothing
     call EndGame(bj_changeLevelShowScores)
 endfunction
 
-// 游戏胜利，显示对话框-继续&退出
+// 游戏胜利，显示对话框-继续&退出（自定义地图）
 function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     local trigger t = CreateTrigger()
     local dialog d = DialogCreate()
@@ -6680,7 +6680,7 @@ function CustomVictoryDialogBJ takes player whichPlayer returns nothing
     call StartSoundForPlayerBJ(whichPlayer, bj_victoryDialogSound)
 endfunction
 
-// 游戏胜利，跳过选择，直接进入下一关或退出
+// 游戏胜利，跳过选择，直接进入下一关或退出（自定义地图）
 function CustomVictorySkipBJ takes player whichPlayer returns nothing
     if(GetLocalPlayer() == whichPlayer) then
         if bj_isSinglePlayer then
@@ -6697,7 +6697,7 @@ function CustomVictorySkipBJ takes player whichPlayer returns nothing
 endfunction
 
 
-// 游戏胜利
+// 游戏胜利（自定义地图）
 function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean showScores returns nothing
     if AllowVictoryDefeat(PLAYER_GAME_RESULT_VICTORY) then
         call RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_VICTORY)
@@ -6718,13 +6718,13 @@ function CustomVictoryBJ takes player whichPlayer, boolean showDialog, boolean s
     endif
 endfunction
 
-// 游戏失败对话框按钮事件，重新开始
+// 游戏失败对话框按钮事件，重新开始（自定义地图）
 function CustomDefeatRestartBJ takes nothing returns nothing
     call PauseGame(false)
     call RestartGame(true)
 endfunction
 
-// 游戏失败对话框按钮事件，选择难度并重新开始
+// 游戏失败对话框按钮事件，选择难度并重新开始（自定义地图）
 function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     local gamedifficulty diff = GetGameDifficulty()
 
@@ -6744,13 +6744,13 @@ function CustomDefeatReduceDifficultyBJ takes nothing returns nothing
     call RestartGame(true)
 endfunction
 
-// 游戏失败对话框按钮事件-选择存档
+// 游戏失败对话框按钮事件-选择存档（自定义地图）
 function CustomDefeatLoadBJ takes nothing returns nothing
     call PauseGame(false)
     call DisplayLoadDialog()
 endfunction
 
-// 游戏失败对话框按钮事件-退出游戏
+// 游戏失败对话框按钮事件-退出游戏（自定义地图）
 function CustomDefeatQuitBJ takes nothing returns nothing
     if bj_isSinglePlayer then
         call PauseGame(false)
@@ -6761,7 +6761,7 @@ function CustomDefeatQuitBJ takes nothing returns nothing
     call EndGame(true)
 endfunction
 
-// 游戏失败对话框-重新开始&选择难度&退出
+// 游戏失败对话框-重新开始&选择难度&退出（自定义地图）
 function CustomDefeatDialogBJ takes player whichPlayer, string message returns nothing
     local trigger t = CreateTrigger()
     local dialog d = DialogCreate()
@@ -6802,7 +6802,7 @@ function CustomDefeatDialogBJ takes player whichPlayer, string message returns n
 endfunction
 
 
-// 游戏失败
+// 游戏失败（自定义地图）
 function CustomDefeatBJ takes player whichPlayer, string message returns nothing
     if AllowVictoryDefeat(PLAYER_GAME_RESULT_DEFEAT) then
         call RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_DEFEAT)
