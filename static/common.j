@@ -6215,13 +6215,16 @@ native VersionCompatible takes version whichVersion returns boolean
 native VersionSupported takes version whichVersion returns boolean
 
 // 结束游戏
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native EndGame takes boolean doScoreScreen returns nothing
 
 // Async only!
 
 // 切换关卡 [R]
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
 // 重新开始游戏(当前关卡)
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native RestartGame takes boolean doScoreScreen returns nothing
 // 重新读档(当前存档或最新的检查点(自动)存档)
 native ReloadGame takes nothing returns nothing
@@ -6236,7 +6239,7 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 native ForceCampaignSelectScreen takes nothing returns nothing
 
 // 加载存档(手动选择存档)
-// @param doScoreScreen （游戏结束后）是否跳过得分屏，常用于战役地图
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
@@ -6308,7 +6311,8 @@ native DialogSetMessage takes dialog whichDialog, string messageText returns not
 // 添加指定对话框按钮 [R]
 // 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
-// 添加退出游戏按钮(指定对话框) [R]
+// 添加退出游戏按钮(指定对话框)，可设置按钮文案及快捷键 [R]
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native DialogAddQuitButton takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
 // 显示/隐藏 对话框（指定玩家）[R]
 native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag returns nothing
