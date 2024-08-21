@@ -1617,7 +1617,7 @@ globals
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
 	// 单位类型 被变形
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
-	// 单位类型 被催眠，夜晚睡觉也属于被催眠
+	// 单位类型 被催眠，夜晚睡眠也属于被催眠
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
 	// 单位类型 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
