@@ -4815,19 +4815,19 @@ function SetUnitBlendTimeBJ takes unit whichUnit, real blendTime returns nothing
 endfunction
 
 
-// 设置单位主采集范围
+// 设置单位警戒范围
 function SetUnitAcquireRangeBJ takes unit whichUnit, real acquireRange returns nothing
     call SetUnitAcquireRange(whichUnit, acquireRange)
 endfunction
 
 
-// 设置单位(晚上)睡觉
+// 设置单位(晚上)睡眠
 function UnitSetCanSleepBJ takes unit whichUnit, boolean canSleep returns nothing
     call UnitAddSleep(whichUnit, canSleep)
 endfunction
 
 
-// 查询单位晚上是否睡觉
+// 查询单位晚上是否睡眠
 function UnitCanSleepBJ takes unit whichUnit returns boolean
     return UnitCanSleep(whichUnit)
 endfunction
@@ -4839,17 +4839,17 @@ function UnitWakeUpBJ takes unit whichUnit returns nothing
 endfunction
 
 
-// 查询单位是否正在睡觉
+// 查询单位是否正在睡眠
 function UnitIsSleepingBJ takes unit whichUnit returns boolean
     return UnitIsSleeping(whichUnit)
 endfunction
 
-// 唤醒单位（指定玩家）触发器动作
+// 唤醒指定玩家所有单位触发器动作
 function WakePlayerUnitsEnum takes nothing returns nothing
     call UnitWakeUp(GetEnumUnit())
 endfunction
 
-// 唤醒单位（指定玩家）
+// 唤醒指定玩家所有单位
 function WakePlayerUnits takes player whichPlayer returns nothing
     local group g = CreateGroup()
     call GroupEnumUnitsOfPlayer(g, whichPlayer, null)
