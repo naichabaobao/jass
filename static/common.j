@@ -5762,10 +5762,13 @@ native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot retur
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 发布使用物品命令(无目标)
+// 可能只返回false，不论执行成败
 native UnitUseItem takes unit whichUnit, item whichItem returns boolean
 // 发布使用物品命令(指定坐标)
+// 可能只返回false，不论执行成败
 native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 发布使用物品命令(指定单位)
+// 可能只返回false，不论执行成败
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 获取指定单位 X 坐标 [R]
@@ -5950,15 +5953,19 @@ native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
+// 可能只返回false，不论执行成败
 // @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
+// 可能只返回false，不论执行成败
 // @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
+// 可能只返回false，不论执行成败
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
+// 可能只返回false，不论执行成败
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
