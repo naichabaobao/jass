@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { isAiFile, isJFile, isUsableFile, readIgnoreRules, resolvePaths } from "../tool";
 
-var glob = require("glob");
+import {glob} from "glob";
 
 
 
@@ -13,6 +13,10 @@ class Options {
     return vscode.workspace.getConfiguration("jass");
   }
 
+  public static get staticPaths() {
+    const staticPathDir = path.resolve(__dirname, "../../../static");
+    return resolvePaths([staticPathDir]);
+  }
   public static get commonJPath() : string {
     return this.isUsableJFile(this.configuration["common_j"] as string) ? this.configuration["common_j"] as string : path.resolve(__dirname, "../../../static/common.j");
   }

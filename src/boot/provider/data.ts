@@ -164,14 +164,8 @@ function exclude(sourcePaths: string[], excludes: string[]): string[] {
     return !isExclude(p, excludes);
   });
 }
-parsePath(Options.commonJPath);
-parsePath(Options.blizzardJPath);
-parsePath(Options.dzApiJPath);
-parsePath(Options.commonAiPath);
 
-parsePath(...Options.includes);
-parsePath(...Options.workspaces);
-parsePath(...Options.luaDependents);
+
 
 function startWatch() {
 
@@ -411,6 +405,12 @@ vscode.workspace.onDidChangeTextDocument((event) => {
 
 });
 
+
+
+parsePath(...Options.staticPaths);
+parsePath(...Options.includes);
+parsePath(...Options.workspaces);
+parsePath(...Options.luaDependents);
 
 
 

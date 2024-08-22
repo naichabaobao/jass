@@ -1,10 +1,10 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "CommonJS",
 		"target": "ES6",
 		"outDir": "out",
-		"lib": [ "esnext"],
+		"lib": [ "ES2019"],
 		"sourceMap": false,
 		"rootDir": "src",
 		"strict": true,   /* enable all strict type-checking options */

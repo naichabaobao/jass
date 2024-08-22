@@ -1,0 +1,38 @@
+function nishibushi takes nothing returns nothing
+    
+endfunction
+
+
+
+        "jass.common_j": {
+          "type": "string",
+          "description": "自定义common.j(reboot)\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
+        },
+        "jass.blizzard": {
+          "type": "string",
+          "description": "自定义blizzard.j(reboot)"
+        },
+        "jass.common_ai": {
+          "type": "string",
+          "description": "自定义common.j(reboot)"
+        },
+        "jass.dzapi": {
+          "type": "string",
+          "description": "自定义dzapi.j(reboot)"
+        },
+        "jass.cheats": {
+          "type": "string",
+          "description": "自定义Cheats.j(reboot)"
+        },
+        "jass.initcheats": {
+          "type": "string",
+          "description": "自定义InitCheats.j(reboot)"
+        },
+        "jass.aiscripts_ai": {
+          "type": "string",
+          "description": "自定义AIScripts_ai(reboot)"
+        },
+        "jass.war3map": {
+          "type": "string",
+          "description": "自定义war3map.j(reboot)"
+        },

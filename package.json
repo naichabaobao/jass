@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.16",
+  "version": "1.8.17",
   "keywords": [
     "jass",
     "vjass",
@@ -12,7 +12,7 @@
     "warcraft"
   ],
   "engines": {
-    "vscode": "^1.49.3"
+    "vscode": "^1.63.0"
   },
   "markdown": "github",
   "categories": [
@@ -34,38 +34,6 @@
       "type": "object",
       "title": "Jass",
       "properties": {
-        "jass.common_j": {
-          "type": "string",
-          "description": "自定义common.j(reboot)\n(Customize common.j, using the common.j provided by the plug-in by default when not set)"
-        },
-        "jass.blizzard": {
-          "type": "string",
-          "description": "自定义blizzard.j(reboot)"
-        },
-        "jass.common_ai": {
-          "type": "string",
-          "description": "自定义common.j(reboot)"
-        },
-        "jass.dzapi": {
-          "type": "string",
-          "description": "自定义dzapi.j(reboot)"
-        },
-        "jass.cheats": {
-          "type": "string",
-          "description": "自定义Cheats.j(reboot)"
-        },
-        "jass.initcheats": {
-          "type": "string",
-          "description": "自定义InitCheats.j(reboot)"
-        },
-        "jass.aiscripts_ai": {
-          "type": "string",
-          "description": "自定义AIScripts_ai(reboot)"
-        },
-        "jass.war3map": {
-          "type": "string",
-          "description": "自定义war3map.j(reboot)"
-        },
         "jass.includes": {
           "type": "array",
           "items": {
@@ -192,25 +160,19 @@
     "test:dev": "tsc && node ./out/test/test.js"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.7",
-    "@types/vscode": "^1.49.3",
     "@vscode/vsce": "^2.24.0",
     "tslint": "^5.20.0",
-    "typescript": "^3.7.4",
+    "typescript": "^4.9.4",
     "vscode-test": "^1.2.2"
   },
   "bugs": {
     "url": "https://github.com/naichabaobao/jass/issues"
   },
   "dependencies": {
-    "@types/glob": "^8.1.0",
+    "@types/glob": "^7.1.1", 
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
-    "@types/vscode": "^1.49.3",
-    "tslint": "^5.20.0",
-    "typescript": "^4.9.4",
-    "vscode-test": "^1.2.2"
+    "@types/vscode": "^1.49.3"
   },
   "author": "家猫hoo",
   "license": "GPL"

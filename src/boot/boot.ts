@@ -1,6 +1,5 @@
-import("glob");
 
-import("./provider/data");
+import ("./provider/data");
 import("./provider/document-formatting-edit-provider");
 import("./provider/folding-range-provider");
 import("./provider/document-color-provider");

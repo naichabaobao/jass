@@ -503,6 +503,25 @@ function getFileContent(filePath: string):string {
 	}).toString();
   }
 
+/*
+console.time("parseInt")
+for (let index = 0; index < 0xffff; index++) {
+    const id = "abcd";
+    parseInt("0x" + id.charCodeAt(0).toString(16) + id.charCodeAt(1).toString(16) + id.charCodeAt(2).toString(16) + id.charCodeAt(3).toString(16));
+}
+console.timeEnd("parseInt")
+15.64ms
+
+console.time("<<")
+for (let index = 0; index < 0xffff; index++) {
+    const id = "abcd";
+    (id.charCodeAt(0) << 24) + (id.charCodeAt(1) << 16) + (id.charCodeAt(2) << 8) + id.charCodeAt(3);
+}
+console.timeEnd("<<")
+1.95ms
+*/
+
+
 // 将jass integer字符串转为number
 function jassIntegerToNumber(type: "int"|"hex"|"mark"|"dollar_hex"|"octal"|string, jassIntegerString: string):(number|null) {
 	if (type == "int" || type == "hex" || type == "octal") {
