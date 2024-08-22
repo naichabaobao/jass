@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as readline from "readline";
 import * as vscode from "vscode";
+import { lines } from "../jass/tool";
 
 function isEmptyString(text: string) {
     return text.trim().length == 0;
@@ -13,6 +14,78 @@ function firstNonWhitespaceCharacterIndexString(text: string) {
     }
     return 0;
 }
+function linesByIndexOf(content: string) {
+    const LineTexts: string[] = [];
+
+    for (let index = 0; index < content.length;) {
+        const newLineIndex = content.indexOf("\n", index);
+        const fieldText = content.substring(index, newLineIndex == -1 ? content.length : newLineIndex + 1);
+
+        LineTexts.push(fieldText);
+
+        if (newLineIndex == -1) {
+            break;
+        } else {
+            index = newLineIndex + 1;
+        }
+    }
+
+    return LineTexts;
+}
+function linesBySplit(content: string) {
+    const ls = content.split("\n");
+
+    const last = ls.pop();
+
+    const lineTexts = ls.map(x => x + "\n");
+
+    if (last) {
+        lineTexts.push(last);
+    }
+
+    return lineTexts;
+}
+function linesByMatch(content: string) {
+    const result = content.match(/[^\n\r]+/g);
+
+    return result ? [...result] : [];
+}
+let CS = 1;
+console.time("linesByIndexOf")
+for (let index = 0; index < CS; index++) {
+    const s = linesByIndexOf(`\n\n\n
+    123 
+        456
+            789
+    `)
+    
+    
+}
+console.timeEnd("linesByIndexOf")
+
+
+console.time("linesBySplit")
+for (let index = 0; index < CS; index++) {
+    const s = linesBySplit(`\n\n\n
+    123 
+        456
+            789
+    `)
+    console.log(s);
+}
+console.timeEnd("linesBySplit")
+console.time("linesByMatch")
+for (let index = 0; index < CS; index++) {
+    const s = linesByMatch(`\n\n\n
+    123 
+        456
+            789
+    `)
+    console.log(s);
+    
+}
+console.timeEnd("linesByMatch")
+
 
 class Position {
     private _line: number;
@@ -331,9 +404,9 @@ class Document {
      * @param position 
      * @returns 
      */
-    offsetAt(position: vscode.Position): number {
+    offsetAt(position: Position): number {
         let index = 0;
-        const prelines = this.lines.slice(0, position.line - 1);
+        const prelines = this.lines.slice(0, position.line);
         prelines.forEach(line => {
             index += line.text.length;
         });
@@ -357,8 +430,11 @@ class Document {
     }
 
 }
-
-new Document("E:/projects/jass/static/AIScripts.ai")
+setTimeout(() => {
+    console.log(new Document("E:/projects/jass/static/AIScripts.ai").lines)
+    console.log(new Document("E:/projects/jass/static/AIScripts.ai").offsetAt(new Position(1, 2)));
+}, 1200);
+;
 
 
 class Token extends Range {
