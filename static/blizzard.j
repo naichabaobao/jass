@@ -22,48 +22,48 @@ globals
     constant real bj_RADTODEG = 180.0 / bj_PI
     // 角度转换成弧度
     constant real bj_DEGTORAD = bj_PI / 180.0
-    // 文本显示延时 - 任务，默认20.00
+    // 文本显示持续时间 任务，默认20.00
     constant real bj_TEXT_DELAY_QUEST = 20.00
-    // 文本显示延时 - 任务更新，默认20.00
+    // 文本显示持续时间 任务更新，默认20.00
     constant real bj_TEXT_DELAY_QUESTUPDATE = 20.00
-    // 文本显示延时 - 任务完成，默认20.00
+    // 文本显示持续时间 任务完成，默认20.00
     constant real bj_TEXT_DELAY_QUESTDONE = 20.00
-    // 文本显示延时 - 任务失败，默认20.00
+    // 文本显示持续时间 任务失败，默认20.00
     constant real bj_TEXT_DELAY_QUESTFAILED = 20.00
-    // 文本显示延时 - 任务要求，默认20.00
+    // 文本显示持续时间 任务要求，默认20.00
     constant real bj_TEXT_DELAY_QUESTREQUIREMENT = 20.00
-    // 文本显示延时 - 失败消息，默认20.00
+    // 文本显示持续时间 失败消息，默认20.00
     constant real bj_TEXT_DELAY_MISSIONFAILED = 20.00
-    // 文本显示延时 - 常驻提示，默认12.00
+    // 文本显示持续时间 常驻提示，默认12.00
     constant real bj_TEXT_DELAY_ALWAYSHINT = 12.00
-    // 文本显示延时 - 提示，默认12.00
+    // 文本显示持续时间 提示，默认12.00
     constant real bj_TEXT_DELAY_HINT = 12.00
-    // 文本显示延时 - 秘密，默认10.00
+    // 文本显示持续时间 秘密，默认10.00
     constant real bj_TEXT_DELAY_SECRET = 10.00
-    // 文本显示延时 - 有新单位可购买，默认15.00
+    // 文本显示持续时间 有新单位可购买，默认15.00
     constant real bj_TEXT_DELAY_UNITACQUIRED = 15.00
-    // 文本显示延时 - 有新单位可用，默认10.00
+    // 文本显示持续时间 有新单位可用，默认10.00
     constant real bj_TEXT_DELAY_UNITAVAILABLE = 10.00
-    // 文本显示延时 - 有新物品可购买，默认10.00
+    // 文本显示持续时间 有新物品可购买，默认10.00
     constant real bj_TEXT_DELAY_ITEMACQUIRED = 10.00
-    // 文本显示延时 - 警告，默认12.00
+    // 文本显示持续时间 警告，默认12.00
     constant real bj_TEXT_DELAY_WARNING = 12.00
-    // 任务延时 - 任务，默认5.00
+    // 任务显示持续时间 探索，默认5.00
     constant real bj_QUEUE_DELAY_QUEST = 5.00
-    // 任务延时 - 任务提示，默认5.00
+    // 任务显示持续时间 提示，默认5.00
     constant real bj_QUEUE_DELAY_HINT = 5.00
-    // 任务延时 - 任务秘密，默认3.00
+    // 任务显示持续时间 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
-    // 生命障碍 - 简单，默认60.00
+    // 生命障碍 简单，默认60.00
     constant real bj_HANDICAP_EASY = 60.00
-    // 生命障碍 - 普通，默认90.00
+    // 生命障碍 普通，默认90.00
     constant real bj_HANDICAP_NORMAL = 90.00
-    // 伤害障碍 - 简单，默认50.00
+    // 伤害障碍 简单，默认50.00
     constant real bj_HANDICAPDAMAGE_EASY = 50.00
-    // 伤害障碍 - 普通，默认90.00
+    // 伤害障碍 普通，默认90.00
     constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
-    // 伤害障碍 - 困难，默认50.00
-	constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
+    // 伤害障碍 困难，默认50.00
+    constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
     // 迷雾等待最小间隔，默认0.10
@@ -130,11 +130,13 @@ globals
     // 使用随机英雄时创建的英雄数量，默认1个
     constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
     // 英雄数量上限，默认3个
+    // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_LIMIT = 3
     // 每类英雄数量上限，默认1个
+    // 官方只处理了对战24个英雄
     constant integer bj_MELEE_HERO_TYPE_LIMIT = 1
     // 金矿搜索距离，默认2000
-    // 主要用于开局创建亡灵/精灵主矿
+    // 主要用于开局创建亡灵/精灵矿盖
     constant real bj_MELEE_MINE_SEARCH_RADIUS = 2000
     // 清除出生点中立敌对单位的范围，默认1500
     // 开局清除出生点的野怪时，要删除出生点多少范围内的野怪
@@ -143,7 +145,7 @@ globals
     // 失去全部基地时，在暴露位置前，留给玩家造基地的时间
     constant real bj_MELEE_CRIPPLE_TIMEOUT = 120.00
     // 暴露持续时间，默认20.00
-    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统会暴露玩家位置，此为暴露的持续时间
+    // 失去全部基地，且暴露倒计时结束后玩家仍未造基地，系统暴露玩家位置的持续时间
     constant real bj_MELEE_CRIPPLE_MSG_DURATION = 20.00
     // 混乱之治版本英雄初始物品创建次数，默认3次，即前3发英雄都给
     constant integer bj_MELEE_MAX_TWINKED_HEROES_V0 = 3
@@ -155,7 +157,7 @@ globals
     constant real bj_CREEP_ITEM_DELAY = 0.50
 
     // Timing settings for Marketplace inventories.
-    // 初始库存补充延时（开局后，过多久才可购买/雇佣），默认120
+    // 初始物品库存补充延时（开局后，过多久才可购买/雇佣），默认120
     constant real bj_STOCK_RESTOCK_INITIAL_DELAY = 120
     // 库存补充间隔，默认30
     constant real bj_STOCK_RESTOCK_INTERVAL = 30
@@ -190,7 +192,7 @@ globals
 
     // Transmission behavior settings
 
-    // 常规声音持续时间，默认5.00
+    // 常规音效持续时间，默认5.00
     constant real bj_NOTHING_SOUND_DURATION = 5.00
     // 单位消息延迟，默认1.00
     constant real bj_TRANSMISSION_PING_TIME = 1.00
@@ -212,40 +214,40 @@ globals
 
     // Cinematic mode volume levels
 
-    // 电影模式默认音量 单位移动声音，默认0.40
+    // 电影模式默认音量 单位移动音效，默认0.40
     constant real bj_CINEMODE_VOLUME_UNITMOVEMENT = 0.40
-    // 电影模式默认音量 单位回应声音，默认0.00
+    // 电影模式默认音量 单位响应音效，默认0.00
     constant real bj_CINEMODE_VOLUME_UNITSOUNDS = 0.00
-    // 电影模式默认音量 战斗声音，默认0.40
+    // 电影模式默认音量 战斗音效，默认0.40
     constant real bj_CINEMODE_VOLUME_COMBAT = 0.40
-    // 电影模式默认音量 动画和法术声音，默认0.40
+    // 电影模式默认音量 动画和法术音效，默认0.40
     constant real bj_CINEMODE_VOLUME_SPELLS = 0.40
-    // 电影模式默认音量 用户界面（UI）声音，默认0.00
+    // 电影模式默认音量 用户界面（UI）音效，默认0.00
     constant real bj_CINEMODE_VOLUME_UI = 0.00
     // 电影模式默认音量 音乐，默认0.55
     constant real bj_CINEMODE_VOLUME_MUSIC = 0.55
     // 电影模式默认音量 场景配音，默认1.00
     constant real bj_CINEMODE_VOLUME_AMBIENTSOUNDS = 1.00
-    // 电影模式默认音量 火焰声音，默认0.60
+    // 电影模式默认音量 火焰音效，默认0.60
     constant real bj_CINEMODE_VOLUME_FIRE = 0.60
 
     // Speech mode volume levels
 
-    // 所有频道默认音量 单位移动声音，默认0.25
+    // 所有声道默认音量 单位移动音效，默认0.25
     constant real bj_SPEECH_VOLUME_UNITMOVEMENT = 0.25
-    // 所有频道默认音量 单位回应声音，默认0.00
+    // 所有声道默认音量 单位响应音效，默认0.00
     constant real bj_SPEECH_VOLUME_UNITSOUNDS = 0.00
-    // 所有频道默认音量 战斗声音，默认0.25
+    // 所有声道默认音量 战斗音效，默认0.25
     constant real bj_SPEECH_VOLUME_COMBAT = 0.25
-    // 所有频道默认音量 动画和法术声音，默认0.25
+    // 所有声道默认音量 动画和法术音效，默认0.25
     constant real bj_SPEECH_VOLUME_SPELLS = 0.25
-    // 所有频道默认音量 用户界面（UI）声音，默认0.00
+    // 所有声道默认音量 用户界面（UI）音效，默认0.00
     constant real bj_SPEECH_VOLUME_UI = 0.00
-    // 所有频道默认音量 音乐，默认0.55
+    // 所有声道默认音量 音乐，默认0.55
     constant real bj_SPEECH_VOLUME_MUSIC = 0.55
-    // 所有频道默认音量 场景配音，默认1.00
+    // 所有声道默认音量 场景配音，默认1.00
     constant real bj_SPEECH_VOLUME_AMBIENTSOUNDS = 1.00
-    // 所有频道默认音量 火焰声音，默认0.60
+    // 所有声道默认音量 火焰音效，默认0.60
     constant real bj_SPEECH_VOLUME_FIRE = 0.60
 
     // Smart pan settings
@@ -266,282 +268,282 @@ globals
 
     // Campaign indexing constants
 
-    // 战役过场电影索引 - 混乱之治教程战役（0）
+    // 战役过场电影索引 混乱之治教程战役（0）
     constant integer bj_CAMPAIGN_INDEX_T = 0
-    // 战役过场电影索引 - 混乱之治人族战役（1）
+    // 战役过场电影索引 混乱之治人族战役（1）
     constant integer bj_CAMPAIGN_INDEX_H = 1
-    // 战役过场电影索引 - 混乱之治兽族战役（2）
+    // 战役过场电影索引 混乱之治兽族战役（2）
     constant integer bj_CAMPAIGN_INDEX_U = 2
-    // 战役过场电影索引 - 混乱之治不死族战役（3）
+    // 战役过场电影索引 混乱之治不死族战役（3）
     constant integer bj_CAMPAIGN_INDEX_O = 3
-    // 战役过场电影索引 - 混乱之治暗夜精灵族战役（4）
+    // 战役过场电影索引 混乱之治暗夜精灵族战役（4）
     constant integer bj_CAMPAIGN_INDEX_N = 4
-    // 战役过场电影索引 - 冰封王座暗夜精灵族战役（5）
+    // 战役过场电影索引 冰封王座暗夜精灵族战役（5）
     constant integer bj_CAMPAIGN_INDEX_XN = 5
-    // 战役过场电影索引 - 冰封王座人族战役（6）
+    // 战役过场电影索引 冰封王座人族战役（6）
     constant integer bj_CAMPAIGN_INDEX_XH = 6
-    // 战役过场电影索引 - 冰封王座不死族战役（7）
+    // 战役过场电影索引 冰封王座不死族战役（7）
     constant integer bj_CAMPAIGN_INDEX_XU = 7
-    // 战役过场电影索引 - 冰封王座兽族战役（8）
+    // 战役过场电影索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_INDEX_XO = 8
 
     // Campaign offset constants (for mission indexing)
 
-    // 战役关卡索引 - 混乱之治教程战役（0）
+    // 战役关卡索引 混乱之治教程战役（0）
     constant integer bj_CAMPAIGN_OFFSET_T = 0
-    // 战役关卡索引 - 混乱之治人族战役（1）
+    // 战役关卡索引 混乱之治人族战役（1）
     constant integer bj_CAMPAIGN_OFFSET_H = 1
-    // 战役关卡索引 - 混乱之治不死族战役（2）
+    // 战役关卡索引 混乱之治不死族战役（2）
     constant integer bj_CAMPAIGN_OFFSET_U = 2
-    // 战役关卡索引 - 混乱之治兽族战役（3）
+    // 战役关卡索引 混乱之治兽族战役（3）
     constant integer bj_CAMPAIGN_OFFSET_O = 3
-    // 战役关卡索引 - 冰封王座暗夜精灵族战役（4）
+    // 战役关卡索引 冰封王座暗夜精灵族战役（4）
     constant integer bj_CAMPAIGN_OFFSET_N = 4
-    // 战役关卡索引 - 冰封王座暗夜精灵族战役（5）
+    // 战役关卡索引 冰封王座暗夜精灵族战役（5）
     constant integer bj_CAMPAIGN_OFFSET_XN = 5
-    // 战役关卡索引 - 冰封王座人族战役（6）
+    // 战役关卡索引 冰封王座人族战役（6）
     constant integer bj_CAMPAIGN_OFFSET_XH = 6
-    // 战役关卡索引 - 冰封王座不死族战役（7）
+    // 战役关卡索引 冰封王座不死族战役（7）
     constant integer bj_CAMPAIGN_OFFSET_XU = 7
-    // 战役关卡索引 - 冰封王座兽族战役（8）
+    // 战役关卡索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_OFFSET_XO = 8
 
     // Mission indexing constants
     // Tutorial
 
-    // 战役关卡 - 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
+    // 战役关卡 混乱之治教程战役00（bj_CAMPAIGN_OFFSET_T * 1000 + 0）
     constant integer bj_MISSION_INDEX_T00 = bj_CAMPAIGN_OFFSET_T * 1000 + 0
-    // 战役关卡 - 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
+    // 战役关卡 混乱之治教程战役01（bj_CAMPAIGN_OFFSET_T * 1000 + 1）
     constant integer bj_MISSION_INDEX_T01 = bj_CAMPAIGN_OFFSET_T * 1000 + 1
-    // 战役关卡 - 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
+    // 战役关卡 混乱之治教程战役02（bj_CAMPAIGN_OFFSET_T * 1000 + 2）
     constant integer bj_MISSION_INDEX_T02 = bj_CAMPAIGN_OFFSET_T * 1000 + 2
-    // 战役关卡 - 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
+    // 战役关卡 混乱之治教程战役03（bj_CAMPAIGN_OFFSET_T * 1000 + 3）
     constant integer bj_MISSION_INDEX_T03 = bj_CAMPAIGN_OFFSET_T * 1000 + 3
-    // 战役关卡 - 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
+    // 战役关卡 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
     constant integer bj_MISSION_INDEX_T04 = bj_CAMPAIGN_OFFSET_T * 1000 + 4
     // Human
 
-    // 战役关卡 - 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
+    // 战役关卡 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
     constant integer bj_MISSION_INDEX_H00 = bj_CAMPAIGN_OFFSET_H * 1000 + 0
-    // 战役关卡 - 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
+    // 战役关卡 混乱之治人族战役02（bj_CAMPAIGN_OFFSET_H * 1000 + 1）
     constant integer bj_MISSION_INDEX_H01 = bj_CAMPAIGN_OFFSET_H * 1000 + 1
-    // 战役关卡 - 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
+    // 战役关卡 混乱之治人族战役02 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 2）
     constant integer bj_MISSION_INDEX_H02 = bj_CAMPAIGN_OFFSET_H * 1000 + 2
-    // 战役关卡 - 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
+    // 战役关卡 混乱之治人族战役03（bj_CAMPAIGN_OFFSET_H * 1000 + 3）
     constant integer bj_MISSION_INDEX_H03 = bj_CAMPAIGN_OFFSET_H * 1000 + 3
-    // 战役关卡 - 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
+    // 战役关卡 混乱之治人族战役04（bj_CAMPAIGN_OFFSET_H * 1000 + 4）
     constant integer bj_MISSION_INDEX_H04 = bj_CAMPAIGN_OFFSET_H * 1000 + 4
-    // 战役关卡 - 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
+    // 战役关卡 混乱之治人族战役05（bj_CAMPAIGN_OFFSET_H * 1000 + 5）
     constant integer bj_MISSION_INDEX_H05 = bj_CAMPAIGN_OFFSET_H * 1000 + 5
-    // 战役关卡 - 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
+    // 战役关卡 混乱之治人族战役05 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 6）
     constant integer bj_MISSION_INDEX_H06 = bj_CAMPAIGN_OFFSET_H * 1000 + 6
-    // 战役关卡 - 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
+    // 战役关卡 混乱之治人族战役06（bj_CAMPAIGN_OFFSET_H * 1000 + 7）
     constant integer bj_MISSION_INDEX_H07 = bj_CAMPAIGN_OFFSET_H * 1000 + 7
-    // 战役关卡 - 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
+    // 战役关卡 混乱之治人族战役06 插曲（bj_CAMPAIGN_OFFSET_H * 1000 + 8）
     constant integer bj_MISSION_INDEX_H08 = bj_CAMPAIGN_OFFSET_H * 1000 + 8
-    // 战役关卡 - 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
+    // 战役关卡 混乱之治人族战役07（bj_CAMPAIGN_OFFSET_H * 1000 + 9）
     constant integer bj_MISSION_INDEX_H09 = bj_CAMPAIGN_OFFSET_H * 1000 + 9
-    // 战役关卡 - 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
+    // 战役关卡 混乱之治人族战役08（bj_CAMPAIGN_OFFSET_H * 1000 + 10）
     constant integer bj_MISSION_INDEX_H10 = bj_CAMPAIGN_OFFSET_H * 1000 + 10
-    // 战役关卡 - 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
+    // 战役关卡 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
     constant integer bj_MISSION_INDEX_H11 = bj_CAMPAIGN_OFFSET_H * 1000 + 11
     // Undead
 
-    // 战役关卡 - 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
+    // 战役关卡 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
     constant integer bj_MISSION_INDEX_U00 = bj_CAMPAIGN_OFFSET_U * 1000 + 0
-    // 战役关卡 - 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
+    // 战役关卡 混乱之治不死族战役02（bj_CAMPAIGN_OFFSET_U * 1000 + 1）
     constant integer bj_MISSION_INDEX_U01 = bj_CAMPAIGN_OFFSET_U * 1000 + 1
-    // 战役关卡 - 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
+    // 战役关卡 混乱之治不死族战役02 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 2）
     constant integer bj_MISSION_INDEX_U02 = bj_CAMPAIGN_OFFSET_U * 1000 + 2
-    // 战役关卡 - 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
+    // 战役关卡 混乱之治不死族战役03（bj_CAMPAIGN_OFFSET_U * 1000 + 3）
     constant integer bj_MISSION_INDEX_U03 = bj_CAMPAIGN_OFFSET_U * 1000 + 3
-    // 战役关卡 - 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
+    // 战役关卡 混乱之治不死族战役04（bj_CAMPAIGN_OFFSET_U * 1000 + 4）
     constant integer bj_MISSION_INDEX_U05 = bj_CAMPAIGN_OFFSET_U * 1000 + 4
-    // 战役关卡 - 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
+    // 战役关卡 混乱之治不死族战役05（bj_CAMPAIGN_OFFSET_U * 1000 + 5）
     constant integer bj_MISSION_INDEX_U07 = bj_CAMPAIGN_OFFSET_U * 1000 + 5
-    // 战役关卡 - 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
+    // 战役关卡 混乱之治不死族战役05 插曲（bj_CAMPAIGN_OFFSET_U * 1000 + 6）
     constant integer bj_MISSION_INDEX_U08 = bj_CAMPAIGN_OFFSET_U * 1000 + 6
-    // 战役关卡 - 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
+    // 战役关卡 混乱之治不死族战役06（bj_CAMPAIGN_OFFSET_U * 1000 + 7）
     constant integer bj_MISSION_INDEX_U09 = bj_CAMPAIGN_OFFSET_U * 1000 + 7
-    // 战役关卡 - 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
+    // 战役关卡 混乱之治不死族战役07（bj_CAMPAIGN_OFFSET_U * 1000 + 8）
     constant integer bj_MISSION_INDEX_U10 = bj_CAMPAIGN_OFFSET_U * 1000 + 8
-    // 战役关卡 - 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
+    // 战役关卡 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
     constant integer bj_MISSION_INDEX_U11 = bj_CAMPAIGN_OFFSET_U * 1000 + 9
     // Orc
 
-    // 战役关卡 - 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
+    // 战役关卡 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
     constant integer bj_MISSION_INDEX_O00 = bj_CAMPAIGN_OFFSET_O * 1000 + 0
-    // 战役关卡 - 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
+    // 战役关卡 混乱之治兽族战役02（bj_CAMPAIGN_OFFSET_O * 1000 + 1）
     constant integer bj_MISSION_INDEX_O01 = bj_CAMPAIGN_OFFSET_O * 1000 + 1
-    // 战役关卡 - 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
+    // 战役关卡 混乱之治兽族战役03（bj_CAMPAIGN_OFFSET_O * 1000 + 2）
     constant integer bj_MISSION_INDEX_O02 = bj_CAMPAIGN_OFFSET_O * 1000 + 2
-    // 战役关卡 - 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
+    // 战役关卡 混乱之治兽族战役04（bj_CAMPAIGN_OFFSET_O * 1000 + 3）
     constant integer bj_MISSION_INDEX_O03 = bj_CAMPAIGN_OFFSET_O * 1000 + 3
-    // 战役关卡 - 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
+    // 战役关卡 混乱之治兽族战役04 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 4）
     constant integer bj_MISSION_INDEX_O04 = bj_CAMPAIGN_OFFSET_O * 1000 + 4
-    // 战役关卡 - 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
+    // 战役关卡 混乱之治兽族战役05（bj_CAMPAIGN_OFFSET_O * 1000 + 5）
     constant integer bj_MISSION_INDEX_O05 = bj_CAMPAIGN_OFFSET_O * 1000 + 5
-    // 战役关卡 - 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
+    // 战役关卡 混乱之治兽族战役06（bj_CAMPAIGN_OFFSET_O * 1000 + 6）
     constant integer bj_MISSION_INDEX_O06 = bj_CAMPAIGN_OFFSET_O * 1000 + 6
-    // 战役关卡 - 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
+    // 战役关卡 混乱之治兽族战役07（bj_CAMPAIGN_OFFSET_O * 1000 + 7）
     constant integer bj_MISSION_INDEX_O07 = bj_CAMPAIGN_OFFSET_O * 1000 + 7
-    // 战役关卡 - 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
+    // 战役关卡 混乱之治兽族战役07 插曲（bj_CAMPAIGN_OFFSET_O * 1000 + 8）
     constant integer bj_MISSION_INDEX_O08 = bj_CAMPAIGN_OFFSET_O * 1000 + 8
-    // 战役关卡 - 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
+    // 战役关卡 混乱之治兽族战役08（bj_CAMPAIGN_OFFSET_O * 1000 + 9）
     constant integer bj_MISSION_INDEX_O09 = bj_CAMPAIGN_OFFSET_O * 1000 + 9
-    // 战役关卡 - 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
+    // 战役关卡 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
     constant integer bj_MISSION_INDEX_O10 = bj_CAMPAIGN_OFFSET_O * 1000 + 10
     // Night Elf
 
-    // 战役关卡 - 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
+    // 战役关卡 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
     constant integer bj_MISSION_INDEX_N00 = bj_CAMPAIGN_OFFSET_N * 1000 + 0
-    // 战役关卡 - 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
+    // 战役关卡 混乱之治暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_N * 1000 + 1）
     constant integer bj_MISSION_INDEX_N01 = bj_CAMPAIGN_OFFSET_N * 1000 + 1
-    // 战役关卡 - 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
+    // 战役关卡 混乱之治暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_N * 1000 + 2）
     constant integer bj_MISSION_INDEX_N02 = bj_CAMPAIGN_OFFSET_N * 1000 + 2
-    // 战役关卡 - 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
+    // 战役关卡 混乱之治暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_N * 1000 + 3）
     constant integer bj_MISSION_INDEX_N03 = bj_CAMPAIGN_OFFSET_N * 1000 + 3
-    // 战役关卡 - 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
+    // 战役关卡 混乱之治暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_N * 1000 + 4）
     constant integer bj_MISSION_INDEX_N04 = bj_CAMPAIGN_OFFSET_N * 1000 + 4
-    // 战役关卡 - 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
+    // 战役关卡 混乱之治暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_N * 1000 + 5）
     constant integer bj_MISSION_INDEX_N05 = bj_CAMPAIGN_OFFSET_N * 1000 + 5
-    // 战役关卡 - 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
+    // 战役关卡 混乱之治暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_N * 1000 + 6）
     constant integer bj_MISSION_INDEX_N06 = bj_CAMPAIGN_OFFSET_N * 1000 + 6
-    // 战役关卡 - 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
+    // 战役关卡 混乱之治暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_N * 1000 + 7）
     constant integer bj_MISSION_INDEX_N07 = bj_CAMPAIGN_OFFSET_N * 1000 + 7
-    // 战役关卡 - 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
+    // 战役关卡 混乱之治暗夜精灵族战役07 结局（bj_CAMPAIGN_OFFSET_N * 1000 + 8）
     constant integer bj_MISSION_INDEX_N08 = bj_CAMPAIGN_OFFSET_N * 1000 + 8
-    // 战役关卡 - 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
+    // 战役关卡 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
     constant integer bj_MISSION_INDEX_N09 = bj_CAMPAIGN_OFFSET_N * 1000 + 9
     // Expansion Night Elf
 
-    // 战役关卡 - 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
+    // 战役关卡 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
     constant integer bj_MISSION_INDEX_XN00 = bj_CAMPAIGN_OFFSET_XN * 1000 + 0
-    // 战役关卡 - 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
+    // 战役关卡 冰封王座暗夜精灵族战役02（bj_CAMPAIGN_OFFSET_XN * 1000 + 1）
     constant integer bj_MISSION_INDEX_XN01 = bj_CAMPAIGN_OFFSET_XN * 1000 + 1
-    // 战役关卡 - 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
+    // 战役关卡 冰封王座暗夜精灵族战役03（bj_CAMPAIGN_OFFSET_XN * 1000 + 2）
     constant integer bj_MISSION_INDEX_XN02 = bj_CAMPAIGN_OFFSET_XN * 1000 + 2
-    // 战役关卡 - 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
+    // 战役关卡 冰封王座暗夜精灵族战役04（bj_CAMPAIGN_OFFSET_XN * 1000 + 3）
     constant integer bj_MISSION_INDEX_XN03 = bj_CAMPAIGN_OFFSET_XN * 1000 + 3
-    // 战役关卡 - 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
+    // 战役关卡 冰封王座暗夜精灵族战役04 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 4）
     constant integer bj_MISSION_INDEX_XN04 = bj_CAMPAIGN_OFFSET_XN * 1000 + 4
-    // 战役关卡 - 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
+    // 战役关卡 冰封王座暗夜精灵族战役05（bj_CAMPAIGN_OFFSET_XN * 1000 + 5）
     constant integer bj_MISSION_INDEX_XN05 = bj_CAMPAIGN_OFFSET_XN * 1000 + 5
-    // 战役关卡 - 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
+    // 战役关卡 冰封王座暗夜精灵族战役06（bj_CAMPAIGN_OFFSET_XN * 1000 + 6）
     constant integer bj_MISSION_INDEX_XN06 = bj_CAMPAIGN_OFFSET_XN * 1000 + 6
-    // 战役关卡 - 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
+    // 战役关卡 冰封王座暗夜精灵族战役06 插曲（bj_CAMPAIGN_OFFSET_XN * 1000 + 7）
     constant integer bj_MISSION_INDEX_XN07 = bj_CAMPAIGN_OFFSET_XN * 1000 + 7
-    // 战役关卡 - 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
+    // 战役关卡 冰封王座暗夜精灵族战役07（bj_CAMPAIGN_OFFSET_XN * 1000 + 8）
     constant integer bj_MISSION_INDEX_XN08 = bj_CAMPAIGN_OFFSET_XN * 1000 + 8
-    // 战役关卡 - 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
+    // 战役关卡 冰封王座暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_XN * 1000 + 9）
     constant integer bj_MISSION_INDEX_XN09 = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
-    // 战役关卡 - 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
+    // 战役关卡 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
     constant integer bj_MISSION_INDEX_XN10 = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
     // Expansion Human
 
-    // 战役关卡 - 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
+    // 战役关卡 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
     constant integer bj_MISSION_INDEX_XH00 = bj_CAMPAIGN_OFFSET_XH * 1000 + 0
-    // 战役关卡 - 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
+    // 战役关卡 冰封王座人族战役02（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 1）
     constant integer bj_MISSION_INDEX_XH01 = bj_CAMPAIGN_OFFSET_XH * 1000 + 1
-    // 战役关卡 - 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
+    // 战役关卡 冰封王座人族战役03（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 2）
     constant integer bj_MISSION_INDEX_XH02 = bj_CAMPAIGN_OFFSET_XH * 1000 + 2
-    // 战役关卡 - 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
+    // 战役关卡 冰封王座人族战役03 秘密关卡（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 3）
     constant integer bj_MISSION_INDEX_XH03 = bj_CAMPAIGN_OFFSET_XH * 1000 + 3
-    // 战役关卡 - 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
+    // 战役关卡 冰封王座人族战役03 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 4）
     constant integer bj_MISSION_INDEX_XH04 = bj_CAMPAIGN_OFFSET_XH * 1000 + 4
-    // 战役关卡 - 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
+    // 战役关卡 冰封王座人族战役04（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 5）
     constant integer bj_MISSION_INDEX_XH05 = bj_CAMPAIGN_OFFSET_XH * 1000 + 5
-    // 战役关卡 - 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
+    // 战役关卡 冰封王座人族战役04 插曲（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 6）
     constant integer bj_MISSION_INDEX_XH06 = bj_CAMPAIGN_OFFSET_XH * 1000 + 6
-    // 战役关卡 - 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
+    // 战役关卡 冰封王座人族战役05（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 7）
     constant integer bj_MISSION_INDEX_XH07 = bj_CAMPAIGN_OFFSET_XH * 1000 + 7
-    // 战役关卡 - 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
+    // 战役关卡 冰封王座人族战役06（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 8）
     constant integer bj_MISSION_INDEX_XH08 = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
-    // 战役关卡 - 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
+    // 战役关卡 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
     constant integer bj_MISSION_INDEX_XH09 = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
     // Expansion Undead
 
-    // 战役关卡 - 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
+    // 战役关卡 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
     constant integer bj_MISSION_INDEX_XU00 = bj_CAMPAIGN_OFFSET_XU * 1000 + 0
-    // 战役关卡 - 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
+    // 战役关卡 冰封王座不死族战役01 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 1）
     constant integer bj_MISSION_INDEX_XU01 = bj_CAMPAIGN_OFFSET_XU * 1000 + 1
-    // 战役关卡 - 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
+    // 战役关卡 冰封王座不死族战役02（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 2）
     constant integer bj_MISSION_INDEX_XU02 = bj_CAMPAIGN_OFFSET_XU * 1000 + 2
-    // 战役关卡 - 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
+    // 战役关卡 冰封王座不死族战役02 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 3）
     constant integer bj_MISSION_INDEX_XU03 = bj_CAMPAIGN_OFFSET_XU * 1000 + 3
-    // 战役关卡 - 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
+    // 战役关卡 冰封王座不死族战役03（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 4）
     constant integer bj_MISSION_INDEX_XU04 = bj_CAMPAIGN_OFFSET_XU * 1000 + 4
-    // 战役关卡 - 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
+    // 战役关卡 冰封王座不死族战役04（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 5）
     constant integer bj_MISSION_INDEX_XU05 = bj_CAMPAIGN_OFFSET_XU * 1000 + 5
-    // 战役关卡 - 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
+    // 战役关卡 冰封王座不死族战役05（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 6）
     constant integer bj_MISSION_INDEX_XU06 = bj_CAMPAIGN_OFFSET_XU * 1000 + 6
-    // 战役关卡 - 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
+    // 战役关卡 冰封王座不死族战役06（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 7）
     constant integer bj_MISSION_INDEX_XU07 = bj_CAMPAIGN_OFFSET_XU * 1000 + 7
-    // 战役关卡 - 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
+    // 战役关卡 冰封王座不死族战役07a（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 8）
     constant integer bj_MISSION_INDEX_XU08 = bj_CAMPAIGN_OFFSET_XU * 1000 + 8
-    // 战役关卡 - 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
+    // 战役关卡 冰封王座不死族战役07b（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 9）
     constant integer bj_MISSION_INDEX_XU09 = bj_CAMPAIGN_OFFSET_XU * 1000 + 9
-    // 战役关卡 - 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
+    // 战役关卡 冰封王座不死族战役07c（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 10）
     constant integer bj_MISSION_INDEX_XU10 = bj_CAMPAIGN_OFFSET_XU * 1000 + 10
-    // 战役关卡 - 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
+    // 战役关卡 冰封王座不死族战役07 插曲（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 11）
     constant integer bj_MISSION_INDEX_XU11 = bj_CAMPAIGN_OFFSET_XU * 1000 + 11
-    // 战役关卡 - 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
+    // 战役关卡 冰封王座不死族战役08（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 12）
     constant integer bj_MISSION_INDEX_XU12 = bj_CAMPAIGN_OFFSET_XU * 1000 + 12
-    // 战役关卡 - 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
+    // 战役关卡 冰封王座不死族战役08 结局（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 13）
     constant integer bj_MISSION_INDEX_XU13 = bj_CAMPAIGN_OFFSET_XU * 1000 + 13
     // Expansion Orc
 
-    // 战役关卡 - 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
+    // 战役关卡 冰封王座兽族（额外战役）01（bj_CAMPAIGN_OFFSET_XO * 1000 + 0）
     constant integer bj_MISSION_INDEX_XO00 = bj_CAMPAIGN_OFFSET_XO * 1000 + 0
-    // 战役关卡 - 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
+    // 战役关卡 冰封王座兽族（额外战役）02（bj_CAMPAIGN_OFFSET_XO * 1000 + 1）
     constant integer bj_MISSION_INDEX_XO01 = bj_CAMPAIGN_OFFSET_XO * 1000 + 1
-    // 战役关卡 - 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
+    // 战役关卡 冰封王座兽族（额外战役）03（bj_CAMPAIGN_OFFSET_XO * 1000 + 2）
     constant integer bj_MISSION_INDEX_XO02 = bj_CAMPAIGN_OFFSET_XO * 1000 + 2
-    // 战役关卡 - 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
+    // 战役关卡 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
     constant integer bj_MISSION_INDEX_XO03 = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
     // Cinematic indexing constants
 
-    // 战役过场电影名称 - 教程（0）
+    // 战役过场电影名称 教程（0）
     constant integer bj_CINEMATICINDEX_TOP = 0
-    // 战役过场电影名称 - 人族开场（1）
+    // 战役过场电影名称 人族开场（1）
     constant integer bj_CINEMATICINDEX_HOP = 1
-    // 战役过场电影名称 - 人族结尾（2）
+    // 战役过场电影名称 人族结尾（2）
     constant integer bj_CINEMATICINDEX_HED = 2
-    // 战役过场电影名称 - 兽族开场（3）
+    // 战役过场电影名称 兽族开场（3）
     constant integer bj_CINEMATICINDEX_OOP = 3
-    // 战役过场电影名称 - 兽族结尾（4）
+    // 战役过场电影名称 兽族结尾（4）
     constant integer bj_CINEMATICINDEX_OED = 4
-    // 战役过场电影名称 - 不死族开场（5）
+    // 战役过场电影名称 不死族开场（5）
     constant integer bj_CINEMATICINDEX_UOP = 5
-    // 战役过场电影名称 - 不死族结尾（6）
+    // 战役过场电影名称 不死族结尾（6）
     constant integer bj_CINEMATICINDEX_UED = 6
-    // 战役过场电影名称 - 暗夜精灵族开场（7）
+    // 战役过场电影名称 暗夜精灵族开场（7）
     constant integer bj_CINEMATICINDEX_NOP = 7
-    // 战役过场电影名称 - 暗夜精灵族结尾（8）
+    // 战役过场电影名称 暗夜精灵族结尾（8）
     constant integer bj_CINEMATICINDEX_NED = 8
-    // 战役过场电影名称 - 冰封王座开场（9）
+    // 战役过场电影名称 冰封王座开场（9）
     constant integer bj_CINEMATICINDEX_XOP = 9
-    // 战役过场电影名称 - 冰封王座结尾（10）
+    // 战役过场电影名称 冰封王座结尾（10）
     constant integer bj_CINEMATICINDEX_XED = 10
 
     // Alliance settings
 
-    // 联盟设置 - 相互敌对
+    // 联盟设置 相互敌对
     constant integer bj_ALLIANCE_UNALLIED = 0
-    // 联盟设置 - 相互敌对但共享视野
+    // 联盟设置 相互敌对但共享视野
     constant integer bj_ALLIANCE_UNALLIED_VISION = 1
-    // 联盟设置 - 相互结盟
+    // 联盟设置 相互结盟
     constant integer bj_ALLIANCE_ALLIED = 2
-    // 联盟设置 - 相互结盟且共享视野
+    // 联盟设置 相互结盟且共享视野
     constant integer bj_ALLIANCE_ALLIED_VISION = 3
-    // 联盟设置 - 相互结盟并共享视野和部分单位
+    // 联盟设置 相互结盟并共享视野和部分单位
     constant integer bj_ALLIANCE_ALLIED_UNITS = 4
-    // 联盟设置 - 相互结盟并共享视野和所有单位
+    // 联盟设置 相互结盟并共享视野和所有单位
     constant integer bj_ALLIANCE_ALLIED_ADVUNITS = 5
-    // 联盟设置 - 相互中立
+    // 联盟设置 相互中立
     constant integer bj_ALLIANCE_NEUTRAL = 6
-    // 联盟设置 - 相互中立但共享视野
+    // 联盟设置 相互中立但共享视野
     constant integer bj_ALLIANCE_NEUTRAL_VISION = 7
 
     // Keyboard Event Types
@@ -573,18 +575,18 @@ globals
 
     // Transmission timing methods
 
-    // 传输时间方法 - 时间类型 - 增加
+    // 传输时间方法 时间类型 - 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 传输时间方法 - 时间类型 - 设为（指定值）
+    // 传输时间方法 时间类型 - 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 传输时间方法 - 时间类型 - 减少
+    // 传输时间方法 时间类型 - 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
 
-    // 镜头界限调整 - 扩张
+    // 镜头界限调整 扩张
     constant integer bj_CAMERABOUNDS_ADJUST_ADD = 0
-    // 镜头界限调整 - 收缩
+    // 镜头界限调整 收缩
     constant integer bj_CAMERABOUNDS_ADJUST_SUB = 1
 
     // Quest creation states
@@ -629,40 +631,40 @@ globals
 
     // Leaderboard sorting methods
 
-    // 排行榜排序类型 - 按分值排序
+    // 排行榜排序类型 按分值排序
     constant integer bj_SORTTYPE_SORTBYVALUE = 0
-    // 排行榜排序类型 - 按玩家排序
+    // 排行榜排序类型 按玩家排序
     constant integer bj_SORTTYPE_SORTBYPLAYER = 1
-    // 排行榜排序类型 - 按文本排序
+    // 排行榜排序类型 按文本排序
     constant integer bj_SORTTYPE_SORTBYLABEL = 2
 
     // Cinematic fade filter methods
 
-    // 电影淡化 - 淡入
+    // 电影淡化 淡入
     constant integer bj_CINEFADETYPE_FADEIN = 0
-    // 电影淡化 - 淡出
+    // 电影淡化 淡出
     constant integer bj_CINEFADETYPE_FADEOUT = 1
-    // 电影淡化 - 淡出并淡入（一并使用）
+    // 电影淡化 淡出并淡入（一并使用）
     constant integer bj_CINEFADETYPE_FADEOUTIN = 2
 
     // Buff removal methods
 
-    // BUFF属性 - 按类别删除BUFF 肯定（正面BUFF）
+    // BUFF属性 按类别删除BUFF 肯定（正面BUFF）
     constant integer bj_REMOVEBUFFS_POSITIVE = 0
-    // BUFF属性 - 按类别删除BUFF 否定（负面BUFF）
+    // BUFF属性 按类别删除BUFF 否定（负面BUFF）
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
-    // BUFF属性 - 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
+    // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 - 按类别删除BUFF 除终止计时器外的全部
+    // BUFF属性 按类别删除BUFF 除终止计时器外的全部
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
 
-    // BUFF属性 - 极性 肯定（正面BUFF）
+    // BUFF属性 极性 肯定（正面BUFF）
     constant integer bj_BUFF_POLARITY_POSITIVE = 0
-    // BUFF属性 - 极性 否定（负面BUFF）
+    // BUFF属性 极性 否定（负面BUFF）
     constant integer bj_BUFF_POLARITY_NEGATIVE = 1
-    // BUFF属性 - 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
+    // BUFF属性 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
     constant integer bj_BUFF_POLARITY_EITHER = 2
 
     // Buff properties - resist type
@@ -687,11 +689,11 @@ globals
 
     // Hero skill point modification methods
 
-    // 英雄技能点 - 增加
+    // 英雄技能点 增加
     constant integer bj_MODIFYMETHOD_ADD = 0
-    // 英雄技能点 - 减少
+    // 英雄技能点 减少
     constant integer bj_MODIFYMETHOD_SUB = 1
-    // 英雄技能点 - 设为（指定值）
+    // 英雄技能点 设为（指定值）
     constant integer bj_MODIFYMETHOD_SET = 2
 
     // Unit state adjustment methods (for replaced units)
@@ -707,37 +709,37 @@ globals
 
     // Gate operations
 
-    // 操作可破坏物 - 关闭门
+    // 操作可破坏物 关闭门
     constant integer bj_GATEOPERATION_CLOSE = 0
-    // 操作可破坏物 - 开启门
+    // 操作可破坏物 开启门
     constant integer bj_GATEOPERATION_OPEN = 1
-    // 操作可破坏物 - 摧毁门
+    // 操作可破坏物 摧毁门
     constant integer bj_GATEOPERATION_DESTROY = 2
 
 	// Game cache value types
 
-	// 游戏缓存类型 - 布尔值
+	// 游戏缓存类型 布尔值
 	constant integer bj_GAMECACHE_BOOLEAN = 0
-	// 游戏缓存类型 - 整数
+	// 游戏缓存类型 整数
 	constant integer bj_GAMECACHE_INTEGER = 1
-	// 游戏缓存类型 - 实数
+	// 游戏缓存类型 实数
 	constant integer bj_GAMECACHE_REAL = 2
-	// 游戏缓存类型 - 单位
+	// 游戏缓存类型 单位
 	constant integer bj_GAMECACHE_UNIT = 3
-	// 游戏缓存类型 - 字符串
+	// 游戏缓存类型 字符串
 	constant integer bj_GAMECACHE_STRING = 4
 	
 	// Hashtable value types
 
-	// 哈希表类型 - 布尔值
+	// 哈希表类型 布尔值
 	constant integer bj_HASHTABLE_BOOLEAN = 0
-	// 哈希表类型 - 整数
+	// 哈希表类型 整数
 	constant integer bj_HASHTABLE_INTEGER = 1
-	// 哈希表类型 - 实数
+	// 哈希表类型 实数
 	constant integer bj_HASHTABLE_REAL = 2
-	// 哈希表类型 - 字符串
+	// 哈希表类型 字符串
 	constant integer bj_HASHTABLE_STRING = 3
-	// 哈希表类型 - 句柄
+	// 哈希表类型 句柄
 	constant integer bj_HASHTABLE_HANDLE = 4
 
     // Item status types
@@ -757,20 +759,20 @@ globals
 
     // Itemcode status types
 
-    // 物品类型 力量提升的
+    // 物品类型状态 力量提升的
     constant integer bj_ITEMCODE_STATUS_POWERUP = 0
-    // 物品类型 可出售的
+    // 物品类型状态 可出售的
     constant integer bj_ITEMCODE_STATUS_SELLABLE = 1
-    // 物品类型 可以被抵押掉的
+    // 物品类型状态 可以被抵押掉的
     constant integer bj_ITEMCODE_STATUS_PAWNABLE = 2
 
     // Minimap ping styles
 
-    // 小地图提示样式 - 简易
+    // 小地图提示样式 简易
     constant integer bj_MINIMAPPINGSTYLE_SIMPLE = 0
-    // 小地图提示样式 - 闪烁
+    // 小地图提示样式 闪烁
     constant integer bj_MINIMAPPINGSTYLE_FLASHY = 1
-    // 小地图提示样式 - 警告
+    // 小地图提示样式 警告
     constant integer bj_MINIMAPPINGSTYLE_ATTACK = 2
 	
     // Campaign Minimap icon styles
@@ -801,9 +803,9 @@ globals
 
     // Corpse creation styles
 
-    // 尸体类型 - 骨头
+    // 尸体类型 骨头
     constant integer bj_CORPSETYPE_FLESH = 0
-    // 尸体类型 - 血肉
+    // 尸体类型 血肉
     constant integer bj_CORPSETYPE_BONE = 1
 
     // Elevator pathing-blocker destructable code
@@ -846,9 +848,9 @@ globals
 
     // Map area rects
 
-    // 区域 - 玩家可用地图区域
+    // 区域 玩家可用地图区域
     rect bj_mapInitialPlayableArea = null
-    // 区域 - 镜头范围区域
+    // 区域 镜头范围区域
     rect bj_mapInitialCameraBounds = null
 
     // Utility function vars
@@ -892,9 +894,9 @@ globals
     sound bj_dayAmbientSound = null
     // 昼夜参数 夜晚环境音效
     sound bj_nightAmbientSound = null
-    // 昼夜参数 黎明声音触发器
+    // 昼夜参数 黎明音效触发器
     trigger bj_dncSoundsDawn = null
-    // 昼夜参数 黄昏声音触发器
+    // 昼夜参数 黄昏音效触发器
     trigger bj_dncSoundsDusk = null
     // 昼夜参数 黎明声效
     sound bj_dawnSound = null
@@ -907,7 +909,7 @@ globals
 
     // Triggered sounds
 
-    // 音效 小地图提示声音
+    // 音效 小地图提示音效
     //sound              bj_pingMinimapSound         = null
     // 音效 可营救音效
     sound bj_rescueSound = null
@@ -944,7 +946,7 @@ globals
     boolean array bj_stockAllowedCharged
     // 市场相关变量 物品分类布尔值数组 人造
     boolean array bj_stockAllowedArtifact
-    // 市场相关变量 物品等级 用于获取各物品分类尔值数组检查到的值
+    // 市场相关变量 物品等级 用于获取各物品分类布尔值数组检查到的值
     // bj_stockAllowedPermanent[Level]
     // bj_stockAllowedCharged[Level]
     // bj_stockAllowedArtifact[Level]
@@ -1196,7 +1198,7 @@ globals
     leaderboard bj_lastCreatedLeaderboard = null
     // 最后创建的多面板
     multiboard bj_lastCreatedMultiboard = null
-    // 最后播放的声音
+    // 最后播放的音效
     sound bj_lastPlayedSound = null
     // 最后播放的音乐
     string bj_lastPlayedMusic = ""
@@ -1934,7 +1936,7 @@ function GetTimeOfDayScalePercentBJ takes nothing returns real
 endfunction
 
 
-// 播放声音
+// 播放音效
 function PlaySound takes string soundName returns nothing
     local sound soundHandle = CreateSound(soundName, false, false, true, 12700, 12700, "")
     call StartSound(soundHandle)
@@ -2846,13 +2848,13 @@ function GetLastCreatedLightningBJ takes nothing returns lightning
 endfunction
 
 
-// 获取技能音效路径（指定技能、声音类型和索引）
+// 获取技能音效路径（指定技能、音效类型和索引）
 function GetAbilityEffectBJ takes integer abilcode, effecttype t, integer index returns string
     return GetAbilityEffectById(abilcode, t, index)
 endfunction
 
 
-// 获取技能音效路径（指定技能和声音类型）
+// 获取技能音效路径（指定技能和音效类型）
 function GetAbilitySoundBJ takes integer abilcode, soundtype t returns string
     return GetAbilitySoundById(abilcode, t)
 endfunction
@@ -3225,7 +3227,7 @@ endfunction
 //***************************************************************************
 
 
-// 播放声音
+// 播放音效
 function PlaySoundBJ takes sound soundHandle returns nothing
     set bj_lastPlayedSound = soundHandle
     if(soundHandle != null) then
@@ -3234,43 +3236,43 @@ function PlaySoundBJ takes sound soundHandle returns nothing
 endfunction
 
 
-// 停止播放声音
+// 停止播放音效
 function StopSoundBJ takes sound soundHandle, boolean fadeOut returns nothing
     call StopSound(soundHandle, false, fadeOut)
 endfunction
 
 
-// 设置声音音量
+// 设置音效音量
 function SetSoundVolumeBJ takes sound soundHandle, real volumePercent returns nothing
     call SetSoundVolume(soundHandle, PercentToInt(volumePercent, 127))
 endfunction
 
 
-// 播放声音（指定跳到的时间帧）
+// 播放音效（指定跳到的时间帧）
 function SetSoundOffsetBJ takes real newOffset, sound soundHandle returns nothing
     call SetSoundPlayPosition(soundHandle, R2I(newOffset * 1000))
 endfunction
 
 
-// 设置声音距离
+// 设置声效切断距离
 function SetSoundDistanceCutoffBJ takes sound soundHandle, real cutoff returns nothing
     call SetSoundDistanceCutoff(soundHandle, cutoff)
 endfunction
 
 
-// 设置声音定调
+// 设置音效播放速率
 function SetSoundPitchBJ takes sound soundHandle, real pitch returns nothing
     call SetSoundPitch(soundHandle, pitch)
 endfunction
 
 
-// 设置3D声音位置
+// 设置3D声效位置
 function SetSoundPositionLocBJ takes sound soundHandle, location loc, real z returns nothing
     call SetSoundPosition(soundHandle, GetLocationX(loc), GetLocationY(loc), z)
 endfunction
 
 
-// 捆绑3D声音到单位
+// 捆绑3D声效到单位
 function AttachSoundToUnitBJ takes sound soundHandle, unit whichUnit returns nothing
     call AttachSoundToUnit(soundHandle, whichUnit)
 endfunction
@@ -3281,13 +3283,13 @@ function SetSoundConeAnglesBJ takes sound soundHandle, real inside, real outside
 endfunction
 
 
-// 播放完成时终止声音（不再循环）
+// 播放完成时关闭音效（不再循环）
 function KillSoundWhenDoneBJ takes sound soundHandle returns nothing
     call KillSoundWhenDone(soundHandle)
 endfunction
 
 
-// 设置音源位置并播放声音（指定点）
+// 设置音源位置并播放音效（指定点）
 function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, location loc, real z returns nothing
     call SetSoundPositionLocBJ(soundHandle, loc, z)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3295,7 +3297,7 @@ function PlaySoundAtPointBJ takes sound soundHandle, real volumePercent, locatio
 endfunction
 
 
-// 设置音源位置并播放声音（指定单位）
+// 设置音源位置并播放音效（指定单位）
 function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whichUnit returns nothing
     call AttachSoundToUnitBJ(soundHandle, whichUnit)
     call SetSoundVolumeBJ(soundHandle, volumePercent)
@@ -3303,7 +3305,7 @@ function PlaySoundOnUnitBJ takes sound soundHandle, real volumePercent, unit whi
 endfunction
 
 
-// 播放声音（有等待时间）
+// 播放音效（有等待时间）
 function PlaySoundFromOffsetBJ takes sound soundHandle, real volumePercent, real startingOffset returns nothing
     call SetSoundVolumeBJ(soundHandle, volumePercent)
     call PlaySoundBJ(soundHandle)
@@ -3378,7 +3380,7 @@ function SetThematicMusicVolumeBJ takes real volumePercent returns nothing
 endfunction
 
 
-// 获取声音持续时间
+// 获取音效持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real
     if(soundHandle == null) then
         return bj_NOTHING_SOUND_DURATION
@@ -3394,7 +3396,7 @@ function GetSoundFileDurationBJ takes string musicFileName returns real
 endfunction
 
 
-// 获取最后播放的声音
+// 获取最后播放的音效
 function GetLastPlayedSound takes nothing returns sound
     return bj_lastPlayedSound
 endfunction
@@ -3406,13 +3408,13 @@ function GetLastPlayedMusic takes nothing returns string
 endfunction
 
 
-// 设置音量（指定频道）
+// 设置音量（指定声道）
 function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns nothing
     call VolumeGroupSetVolume(vgroup, percent * 0.01)
 endfunction
 
 
-// 设置电影所有频道音量环境(立即)
+// 设置电影所有声道音量(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
@@ -3425,7 +3427,7 @@ function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道音量为电影模式
+// 设置所有声道音量为电影模式
 function SetCineModeVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3436,7 +3438,7 @@ function SetCineModeVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道发言音量环境为默认值(立即)
+// 设置所有声道发言音量环境为默认值(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_SPEECH_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_SPEECH_VOLUME_UNITSOUNDS)
@@ -3449,7 +3451,7 @@ function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有频道发言模式
+// 设置所有声道发言模式
 function SetSpeechVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3460,13 +3462,13 @@ function SetSpeechVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 重置所有频道音量(立即)
+// 重置所有声道音量(立即)
 function VolumeGroupResetImmediateBJ takes nothing returns nothing
     call VolumeGroupReset()
 endfunction
 
 
-// 重置所有通道音量为预设值
+// 重置所有声道音量为预设值
 function VolumeGroupResetBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3477,7 +3479,7 @@ function VolumeGroupResetBJ takes nothing returns nothing
 endfunction
 
 
-// 判断声音是否已在加载/播放
+// 判断音效是否已在加载/播放
 function GetSoundIsPlayingBJ takes sound soundHandle returns boolean
     return GetSoundIsLoading(soundHandle) or GetSoundIsPlaying(soundHandle)
 endfunction
@@ -3501,7 +3503,7 @@ function SetMapMusicRandomBJ takes string musicName returns nothing
 endfunction
 
 
-// 清空地图背景音乐
+// 清除地图背景音乐
 function ClearMapMusicBJ takes nothing returns nothing
     call ClearMapMusic()
 endfunction
@@ -3521,7 +3523,7 @@ function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns 
 endfunction
 
 
-// 为指定玩家播放声音
+// 为指定玩家播放音效
 function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle returns nothing
     if(whichPlayer == GetLocalPlayer()) then
         call StartSound(soundHandle)
@@ -3529,7 +3531,7 @@ function StartSoundForPlayerBJ takes player whichPlayer, sound soundHandle retur
 endfunction
 
 
-// 设置玩家声音频道音量
+// 设置玩家声道音量
 function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup vgroup, real scale returns nothing
     if(GetLocalPlayer() == whichPlayer) then
         call VolumeGroupSetVolume(vgroup, scale)
@@ -3537,13 +3539,13 @@ function VolumeGroupSetVolumeForPlayerBJ takes player whichPlayer, volumegroup v
 endfunction
 
 
-// 启用/禁用 黎明/黄昏 声音
+// 启用/禁用 黎明/黄昏 音效
 function EnableDawnDusk takes boolean flag returns nothing
     set bj_useDawnDuskSounds = flag
 endfunction
 
 
-// 查询是否启用了 黎明/黄昏 声音
+// 查询是否启用了 黎明/黄昏 音效
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -3800,7 +3802,7 @@ endfunction
 
 
 // 创建物品（指定单位）触发器
-// 如果单位没有物品栏或物品栏已满，将会创建在单位位置
+// 若单位没有物品栏或物品栏已满，将会创建在单位位置
 function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns item
     // Create the item at the hero's feet first, and then give it to him.
     // This is to ensure that the item will be left at the hero's feet if
@@ -3811,7 +3813,10 @@ function UnitAddItemByIdSwapped takes integer itemId, unit whichHero returns ite
 endfunction
 
 
-// 删除物品
+// 丢弃物品（指定单位）
+// 包括不可丢弃的物品
+// 单位死亡或删除后，也能正常丢弃
+// 会设置bj_lastRemovedItem
 function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns nothing
     set bj_lastRemovedItem = whichItem
     call UnitRemoveItem(whichHero, whichItem)
@@ -3819,7 +3824,10 @@ endfunction
 
 
 
-// 删除物品（指定物品栏位置）
+// 丢弃物品（指定单位指定物品栏格子）
+// 包括不可丢弃的物品
+// 单位死亡或删除后，也能正常丢弃
+// 会设置bj_lastRemovedItem
 // Translates 0-based slot indices to 1-based slot indices.
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
@@ -3840,7 +3848,7 @@ function GetLastCreatedItem takes nothing returns item
 endfunction
 
 
-// 获取最后删除的物品
+// 获取最后丢弃的物品
 function GetLastRemovedItem takes nothing returns item
     return bj_lastRemovedItem
 endfunction
@@ -3958,7 +3966,7 @@ function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyM
 endfunction
 
 
-// 修改英雄技能点数，修改失败会返回 false
+// 修改英雄技能点数，修改失败会返回假
 function ModifyHeroSkillPoints takes unit whichHero, integer modifyMethod, integer value returns boolean
     if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         return UnitModifySkillPoints(whichHero, value)
@@ -3974,12 +3982,14 @@ endfunction
 
 
 // 发布丢弃物品命令（指定坐标）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemPointBJ takes unit whichUnit, item whichItem, real x, real y returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, x, y)
 endfunction
 
 
 // 发布丢弃物品命令（指定点）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemPointLoc takes unit whichUnit, item whichItem, location loc returns boolean
     return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
 endfunction
@@ -3992,6 +4002,7 @@ endfunction
 
 
 // 发布丢弃物品命令（指定目标单位/物品/可破坏物）
+// 不会设置bj_lastRemovedItem
 function UnitDropItemTargetBJ takes unit whichUnit, item whichItem, widget target returns boolean
     return UnitDropItemTarget(whichUnit, whichItem, target)
 endfunction
@@ -4117,13 +4128,13 @@ function IsItemHiddenBJ takes item whichItem returns boolean
 endfunction
 
 
-// 获取随机物品（所有类型），默认用于市场/集市随机出售物品
+// 获取随机物品，默认用于市场/集市随机出售物品
 function ChooseRandomItemBJ takes integer level returns integer
     return ChooseRandomItem(level)
 endfunction
 
 
-// 获取随机物品（指定类型），默认用于市场/集市随机出售物品
+// 获取随机物品（指定分类），默认用于市场/集市随机出售物品
 function ChooseRandomItemExBJ takes integer level, itemtype whichType returns integer
     return ChooseRandomItemEx(whichType, level)
 endfunction
@@ -4196,7 +4207,7 @@ function CheckItemStatus takes item whichItem, integer status returns boolean
 endfunction
 
 
-// 物品状态检查（指定类型）
+// 物品类型状态检查（指定类型）
 function CheckItemcodeStatus takes integer itemId, integer status returns boolean
     if(status == bj_ITEMCODE_STATUS_POWERUP) then
         return IsItemIdPowerup(itemId)
@@ -4613,7 +4624,7 @@ endfunction
 
 
 // 查询单位组的单位是否已死亡
-// 单位组内没有存活单位时返回true
+// 单位组内没有存活单位时返回真
 // Returns true if every unit of the group is dead.
 function IsUnitGroupDeadBJ takes group g returns boolean
     // If the user wants the group destroyed, remember that fact and clear
@@ -4667,8 +4678,8 @@ endfunction
 
 
 
-// 查询单位组中的单位是否在指定区域内
-// 全都在区域内才返回是，任意一个单位不在区域内时返回否
+// 查询单位组中的单位是否都在指定区域内
+// 任意单位不在区域内时返回否
 // Returns true if every unit of the group is within the given rect.
 function IsUnitGroupInRectBJ takes group g, rect r returns boolean
     set bj_isUnitGroupInRectResult = true
@@ -4700,7 +4711,7 @@ function ShowUnitShow takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, true)
 endfunction
 
-// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件（匹配金矿）
+// 发布建造闹鬼金矿命令（指定农民及金矿）触发器条件
 function IssueHauntOrderAtLocBJFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == 'ngol'
 endfunction
@@ -5591,7 +5602,7 @@ endfunction
 //***************************************************************************
 
 
-// 打开/关闭 传送门
+// 激活/关闭 传送门
 function WaygateActivateBJ takes boolean activate, unit waygate returns nothing
     call WaygateActivate(waygate, activate)
 endfunction
@@ -5616,7 +5627,7 @@ function WaygateGetDestinationLocBJ takes unit waygate returns location
 endfunction
 
 
-// 启用/禁用 单位的小地图特殊图标
+// 启用/禁用 小地图特殊图标（指定单位）
 function UnitSetUsesAltIconBJ takes boolean flag, unit whichUnit returns nothing
     call UnitSetUsesAltIcon(whichUnit, flag)
 endfunction
@@ -5734,7 +5745,7 @@ function ForceAddPlayerSimple takes player whichPlayer, force whichForce returns
 endfunction
 
 
-// 删除玩家到玩家组
+// 将玩家移出玩家组
 function ForceRemovePlayerSimple takes player whichPlayer, force whichForce returns nothing
     call ForceRemovePlayer(whichForce, whichPlayer)
 endfunction
@@ -5900,12 +5911,12 @@ function GetUnitsOfPlayerAll takes player whichPlayer returns group
 endfunction
 
 
-// 选取玩家的指定单位类型，并以单位组形式返回触发器动作
+// 选取玩家的指定单位类型，以单位组形式返回触发器动作
 function GetUnitsOfPlayerAndTypeIdFilter takes nothing returns boolean
     return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
 endfunction
 
-// 选取玩家的指定单位类型，并以单位组形式返回
+// 选取玩家的指定单位类型，以单位组形式返回
 // 会创建单位组，用完请注意排泄
 function GetUnitsOfPlayerAndTypeId takes player whichPlayer, integer unitid returns group
     local group g = CreateGroup()
@@ -5926,7 +5937,7 @@ endfunction
 
 
 // 获取以指定玩家新建的玩家组
-// 将指定玩家加入新创建的专属玩家组，并以玩家组形式返回
+// 将指定玩家加入新创建的专属玩家组，以玩家组形式返回
 function GetForceOfPlayer takes player whichPlayer returns force
     local force f = CreateForce()
     call ForceAddPlayer(f, whichPlayer)
@@ -6012,7 +6023,7 @@ function CountUnitsInGroup takes group g returns integer
     return bj_groupCountUnits
 endfunction
 
-// 玩家组中的玩家数量
+// 玩家组中的玩家数量加一
 function CountPlayersInForceEnum takes nothing returns nothing
     set bj_forceCountPlayers = bj_forceCountPlayers + 1
 endfunction
@@ -6288,7 +6299,7 @@ function SetPlayerAllianceStateFullControlBJ takes player sourcePlayer, player o
 endfunction
 
 
-// 设置联盟状态
+// 设置两位指定玩家的联盟状态
 function SetPlayerAllianceStateBJ takes player sourcePlayer, player otherPlayer, integer allianceState returns nothing
     // Prevent players from attempting to ally with themselves.
     if(sourcePlayer == otherPlayer) then
@@ -6387,7 +6398,7 @@ function PlayersAreCoAllied takes player playerA, player playerB returns boolean
     return false
 endfunction
 
-// 设置AI玩家向盟友共享视野与单位控制权
+// 设置AI玩家向AI盟友共享视野与单位控制权
 // Force (whichPlayer) AI player to share vision and advanced unit control 
 // with all AI players of its allies.
 function ShareEverythingWithTeamAI takes player whichPlayer returns nothing
@@ -6618,6 +6629,7 @@ endfunction
 // 游戏胜利对话框事件-继续
 function CustomVictoryOkBJ takes nothing returns nothing
     if bj_isSinglePlayer then
+
         // Bump the difficulty back up to the default.
         call SetGameDifficulty(GetDefaultDifficulty())
     endif
@@ -7078,7 +7090,7 @@ function GetLastCreatedTimerBJ takes nothing returns timer
 endfunction
 
 
-// 创建计时器窗口
+// 创建计时器窗口（指定窗口标题）
 function CreateTimerDialogBJ takes timer t, string title returns timerdialog
     set bj_lastCreatedTimerDialog = CreateTimerDialog(t)
     call TimerDialogSetTitle(bj_lastCreatedTimerDialog, title)
@@ -7633,13 +7645,13 @@ function SetTextTagPosUnitBJ takes texttag tt, unit whichUnit, real zOffset retu
 endfunction
 
 
-// 允许/禁止 漂浮文字暂停状态
+// 允许/禁止 漂浮文字暂停
 function SetTextTagSuspendedBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagSuspended(tt, flag)
 endfunction
 
 
-// 允许/禁止 漂浮文字永久（显示）状态
+// 允许/禁止 漂浮文字永久（显示）
 function SetTextTagPermanentBJ takes texttag tt, boolean flag returns nothing
     call SetTextTagPermanent(tt, flag)
 endfunction
@@ -7866,7 +7878,7 @@ endfunction
 //***************************************************************************
 
 
-// 结束电影场景并停止播放声音
+// 结束电影场景并停止播放音效
 // If cancelled, stop the sound and end the cinematic scene.
 function CancelCineSceneBJ takes nothing returns nothing
     call StopSoundBJ(bj_cineSceneLastSound, true)
@@ -7894,14 +7906,14 @@ function TryInitCinematicBehaviorBJ takes nothing returns nothing
     endif
 endfunction
 
-// 设置电影场景并播放声音
+// 设置电影场景并播放音效
 function SetCinematicSceneBJ takes sound soundHandle, integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
     set bj_cineSceneLastSound = soundHandle
     call SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
     call PlaySoundBJ(soundHandle)
 endfunction
 
-// 获取声音持续时间
+// 获取音效持续时间
 function GetTransmissionDuration takes sound soundHandle, integer timeType, real timeVal returns real
     local real duration
 
@@ -8444,7 +8456,7 @@ function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, play
 endfunction
 
 
-// 设置英雄的训练数量上限
+// 设置指定玩家的英雄训练数量上限
 function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 endfunction
@@ -11606,21 +11618,21 @@ endfunction
 //*
 //***************************************************************************
 
-// 设置黎明声音
+// 设置黎明音效
 function SetDNCSoundsDawn takes nothing returns nothing
     if bj_useDawnDuskSounds then
         call StartSound(bj_dawnSound)
     endif
 endfunction
 
-// 设置黄昏声音
+// 设置黄昏音效
 function SetDNCSoundsDusk takes nothing returns nothing
     if bj_useDawnDuskSounds then
         call StartSound(bj_duskSound)
     endif
 endfunction
 
-// 设置白天声音
+// 设置白天音效
 function SetDNCSoundsDay takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
@@ -11633,7 +11645,7 @@ function SetDNCSoundsDay takes nothing returns nothing
     endif
 endfunction
 
-// 设置夜晚声音
+// 设置夜晚音效
 function SetDNCSoundsNight takes nothing returns nothing
     local real ToD = GetTimeOfDay()
 
@@ -11646,7 +11658,7 @@ function SetDNCSoundsNight takes nothing returns nothing
     endif
 endfunction
 
-// 初始化声音设置
+// 初始化音效设置
 function InitDNCSounds takes nothing returns nothing
     // Create sounds to be played at dawn and dusk.
     set bj_dawnSound = CreateSoundFromLabel("RoosterSound", false, false, false, 10000, 10000)
@@ -12059,7 +12071,7 @@ endfunction
 //***************************************************************************
 
 // 创建指定物品（指定单位）
-// 默认用于但为死亡后掉落物品
+// 默认用于单位死亡后掉落物品
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y

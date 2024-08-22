@@ -647,9 +647,22 @@ class Func extends Native implements Rangebel, Option {
 
 }
 
-class Method extends Func implements Rangebel {
+class DefineMethod extends Func implements Rangebel {
 	public tag: ModifierType = "default";
 	public modifier: "default" | "static" | "stub" = "default";
+
+	public get origin(): string {
+		if (this.option.style == "vjass") {
+			return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"}`;
+		} else if (this.option.style == "zinc") {
+			return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"}`;
+		}
+		return `${this.tag}${this.modifier == "default" ? "" : " " + this.modifier} method ${this.name} (${this.takes.map(take => take.origin).join(", ")}) -> ${this.returns ? this.returns : "nothing"}`;
+	}
+
+}
+
+class Method extends DefineMethod implements Rangebel {
 
 	public isOperator: boolean = false;
 
@@ -804,18 +817,22 @@ class Interface extends Declaration implements  Descript, Option {
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
-			return `${this.tag == "default" ? "" : this.tag + " "}interface ${this.name} endstruct`;
+			return `${this.tag == "default" ? "" : this.tag + " "}interface ${this.name} endinterface`;
 		} else if (this.option.style == "zinc") {
 			return `${this.tag == "default" ? "" : this.tag + " "}interface ${this.name} {}`;
 		}
 		return `interface ${this.name}`;
 	}
+
+	
+	
 }
 
 class Struct extends Interface {
 	public text: string = "";
 	// vjass只支持单继承
 	public extends: string[] = [];
+
 
 	public get origin(): string {
 		if (this.option.style == "vjass") {
@@ -836,6 +853,7 @@ class Library extends Declaration implements  Descript, Option {
 	public requires: string[] = [];
 	public loc: Range = Range.default();
 	public readonly structs: Struct[] = [];
+	public readonly interfaces: Interface[] = [];
 	public readonly natives: Native[] = [];
 	public readonly functions: Func[] = [];
 	public readonly globals: Global[] = [];
@@ -985,7 +1003,8 @@ export {
 	LineComment,
 	BlockComment,
 	DefineMacro,
-	Identifier
+	Identifier,
+	DefineMethod
 };
 
 
@@ -1104,6 +1123,7 @@ class Program extends Declaration {
 	public readonly globals: Global[] = [];
 	public readonly librarys: Library[] = [];
 	public readonly structs: Struct[] = [];
+	public readonly interfaces: Interface[] = [];
 
 	// public readonly defines:TextMacroDefine[] = [];
 	public readonly textMacros: TextMacro[] = [];
@@ -1219,6 +1239,14 @@ class Program extends Declaration {
 		}
 		return structs;
 	}
+	public allInterfaces(containPrivate: boolean = false) {
+		let interfaces =  [...this.interfaces, ...this.librarys.map((library) => library.interfaces).flat()];
+		if (!containPrivate) {
+			interfaces = interfaces.filter((struct) => struct.tag != "private");
+			interfaces = interfaces.filter((struct) => !struct.hasPrivate());
+		}
+		return interfaces;
+	}
 	public allLibrarys(containPrivate: boolean = false) {
 		let librarys =  this.librarys;
 		if (!containPrivate) {
@@ -1239,7 +1267,7 @@ class Program extends Declaration {
 	}
 
 	public allMethods(containPrivate: boolean = false) {
-		let methods:Array<Method> = this.allStructs(containPrivate).map((struct) => struct.methods).flat();
+		let methods:Array<Method> = [...this.allStructs(containPrivate).map((struct) => struct.methods).flat(), ...this.allInterfaces(containPrivate).map((inter) => inter.methods).flat()];
 
 		if (!containPrivate) {
 			methods = methods.filter((func) => (<Method>func).tag != "private");
@@ -1282,6 +1310,10 @@ class Program extends Declaration {
 	public getNameStruct(name: string):(Struct)[] {
 		const structs = this.allStructs(true).filter((struct) => struct.name == name);
 		return structs;
+	}
+	public getNameInterface(name: string):(Interface)[] {
+		const interfaces = this.allInterfaces(true).filter((inter) => inter.name == name);
+		return interfaces;
 	}
 	public getNameMethod(name: string):(Method)[] {
 		const methods = this.allMethods(true).filter((method) => method.name == name);

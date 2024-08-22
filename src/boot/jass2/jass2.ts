@@ -430,10 +430,10 @@ class Document {
     }
 
 }
-setTimeout(() => {
-    console.log(new Document("E:/projects/jass/static/AIScripts.ai").lines)
-    console.log(new Document("E:/projects/jass/static/AIScripts.ai").offsetAt(new Position(1, 2)));
-}, 1200);
+// setTimeout(() => {
+//     console.log(new Document("E:/projects/jass/static/AIScripts.ai").lines)
+//     console.log(new Document("E:/projects/jass/static/AIScripts.ai").offsetAt(new Position(1, 2)));
+// }, 1200);
 ;
 
 

@@ -36,7 +36,7 @@ class Options {
     return this.isUsableJFile(this.configuration["initcheats"] as string) ? this.configuration["initcheats"] as string : path.resolve(__dirname, "../../../static/InitCheats.j");
   }
   public static get aiscriptsAiPath() : string {
-    return this.isUsableJFile(this.configuration["aiscripts_ai"] as string) ? this.configuration["aiscripts_ai"] as string : path.resolve(__dirname, "../../../static/AIScripts.ai");
+    return this.isUsableAiFile(this.configuration["aiscripts_ai"] as string) ? this.configuration["aiscripts_ai"] as string : path.resolve(__dirname, "../../../static/AIScripts.ai");
   }
   public static get war3mapJPath() : string {
     return this.isUsableJFile(this.configuration["war3map"] as string) ? this.configuration["war3map"] as string : path.resolve(__dirname, "../../../static/war3map.j");

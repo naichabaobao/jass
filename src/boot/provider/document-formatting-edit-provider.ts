@@ -274,7 +274,10 @@ function formatLineText(lineText:vscode.TextLine|LineText) {
             new vscode.Position(lineNumber(lineText), currentValue.position)
           )));
         }
-      } 
+      }
+      else if (Options.isSupportLua && ((currentValue.value == "?" && previousValue.value == "<" && currentValue.start.position - previousValue.end.position == 0) || (currentValue.value == ">" && previousValue.value == "?"  && currentValue.start.position - previousValue.end.position == 0))) {
+        
+      }
       else if (isSpecialDBOp() && ((currentValue.value == "-" && previousValue.value == "-") || (currentValue.value == "+" && previousValue.value == "+"))) { // Add only one space to the right of the symbol
         if (currentValue.start.position - previousValue.end.position > 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
