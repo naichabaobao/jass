@@ -6105,18 +6105,18 @@ function ResetUnitAnimation takes unit whichUnit returns nothing
 endfunction
 
 
-// 设置指定单位动画速度
+// 设置指定单位动画播放速度(按倍数)
 function SetUnitTimeScalePercent takes unit whichUnit, real percentScale returns nothing
     call SetUnitTimeScale(whichUnit, percentScale * 0.01)
 endfunction
 
 
-// 设置指定单位尺寸
+// 设置指定单位尺寸(按倍数)
 function SetUnitScalePercent takes unit whichUnit, real percentScaleX, real percentScaleY, real percentScaleZ returns nothing
     call SetUnitScale(whichUnit, percentScaleX * 0.01, percentScaleY * 0.01, percentScaleZ * 0.01)
 endfunction
 
-// 设置指定单位颜色
+// 设置指定单位顶点颜色
 // This version differs from the common.j interface in that the alpha value
 // is reversed so as to be displayed as transparency, and all four parameters
 // are treated as percentages rather than bytes.
@@ -6125,19 +6125,19 @@ function SetUnitVertexColorBJ takes unit whichUnit, real red, real green, real b
 endfunction
 
 
-// 添加指示器（指定单位）
+// 添加闪动指示器（指定单位）
 function UnitAddIndicatorBJ takes unit whichUnit, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 添加指示器（指定可破坏物）
+// 添加闪动指示器（指定可破坏物）
 function DestructableAddIndicatorBJ takes destructable whichDestructable, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
 
-// 添加指示器（指定物品）
+// 添加闪动指示器（指定物品）
 function ItemAddIndicatorBJ takes item whichItem, real red, real green, real blue, real transparency returns nothing
     call AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
