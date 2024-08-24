@@ -9,55 +9,80 @@ globals
 
     // DeBug作弊设置镜头属性时镜头移动的持续时间，默认0
     constant real     bj_DEBUG_CAMFIELD_SPEED     = 0
-    // 作弊码，gimme，给所有玩家增加5000黄金及木材
+    // DeBug作弊码 给所有玩家增加5000黄金及木材
+    // 输入 gimme 触发
     constant string   bj_DEBUG_CHAT_GIMME         = "gimme"
-    // 作弊码，demo，展示玩家属性多面板
+    // DeBug作弊码 展示玩家属性多面板
+    // 输入 demo 触发
     constant string   bj_DEBUG_CHAT_DEMO          = "demo"
-    // 作弊码，teleport，立即移动触发玩家选取单位到当前镜头位置
+    // DeBug作弊码 立即移动触发玩家选取单位到当前镜头位置
+    // 输入 teleport 触发
     constant string   bj_DEBUG_CHAT_TELEPORT      = "teleport"
-    // 作弊码，ttt，立即移动触发玩家选取单位到当前镜头位置
+    // DeBug作弊码 立即移动触发玩家选取单位到当前镜头位置
+    // 输入 ttt 触发
     constant string   bj_DEBUG_CHAT_TELEPORT2     = "ttt"
-    // 作弊码，unitinfo，播报触发玩家选取单位的参数
+    // DeBug作弊码 播报触发玩家选取单位的参数
+    // 输入 unitinfo 触发
     constant string   bj_DEBUG_CHAT_UNITINFO      = "unitinfo"
-    // 作弊码，ui，播报触发玩家选取单位的参数
+    // DeBug作弊码 播报触发玩家选取单位的参数
+    // 输入 ui 触发
     constant string   bj_DEBUG_CHAT_UNITINFO2     = "ui"
-    // 作弊码，caminfo，播报触发玩家的镜头参数
+    // DeBug作弊码 播报触发玩家的镜头参数
+    // 输入 caminfo 触发
     constant string   bj_DEBUG_CHAT_CAMINFO       = "caminfo"
-    // 作弊码，ci，播报触发玩家的镜头参数
+    // DeBug作弊码 播报触发玩家的镜头参数
+    // 输入 ci 触发
     constant string   bj_DEBUG_CHAT_CAMINFO2      = "ci"
-    // 作弊码，camdist，设置镜头的镜头距离(距离到目标)
+    // DeBug作弊码 设置镜头的镜头距离(距离到目标)
+    // 输入 camdist 触发
     constant string   bj_DEBUG_CHAT_CAMDIST       = "camdist"
-    // 作弊码，camfarz，设置镜头的远景截断距离(远景裁剪)
+    // DeBug作弊码 设置镜头的远景截断距离(远景裁剪)
+    // 输入 camfarz 触发
     constant string   bj_DEBUG_CHAT_CAMFARZ       = "camfarz"
-    // 作弊码，camaoa，设置镜头的 X 轴旋转角度（水平/攻击角度）
+    // DeBug作弊码 设置镜头的 X 轴旋转角度（水平/攻击角度）
+    // 输入 camaoa 触发
     constant string   bj_DEBUG_CHAT_CAMAOA        = "camaoa"
-    // 作弊码，camfov，设置镜头的镜头区域(观察区域)
+    // DeBug作弊码 设置镜头的镜头区域(观察区域)
+    // 输入 camfov 触发
     constant string   bj_DEBUG_CHAT_CAMFOV        = "camfov"
-    // 作弊码，camroll，设置镜头的 Y 轴旋转角度(滚动)
+    // DeBug作弊码 设置镜头的 Y 轴旋转角度(滚动)
+    // 输入 camroll 触发
     constant string   bj_DEBUG_CHAT_CAMROLL       = "camroll"
-    // 作弊码，camrot，设置镜头的 Z 轴旋转角度（旋转）
+    // DeBug作弊码 设置镜头的 Z 轴旋转角度（旋转）
+    // 输入 camrot 触发
     constant string   bj_DEBUG_CHAT_CAMROT        = "camrot"
-    // 作弊码，camreset，重置镜头并恢复控制权
+    // DeBug作弊码 重置镜头并恢复控制权
+    // 输入 camreset 触发
     constant string   bj_DEBUG_CHAT_CAMRESET      = "camreset"
-    // 作弊码，clone，复制玩家选取单位
+    // DeBug作弊码 复制玩家选取单位
+    // 输入 clone 触发
     constant string   bj_DEBUG_CHAT_CLONE         = "clone"
-    // 作弊码，dispel，驱散玩家选取单位拥有的所有魔法效果
+    // DeBug作弊码 驱散玩家选取单位拥有的所有魔法效果
+    // 输入 dispel 触发
     constant string   bj_DEBUG_CHAT_DISPEL        = "dispel"
-    // 作弊码，gotox，移动镜头到聊天信息输入的 X 坐标，Y 坐标不变
+    // DeBug作弊码 移动镜头到聊天信息输入的 X 坐标，Y 坐标不变
+    // 输入 gotox 触发
     constant string   bj_DEBUG_CHAT_GOTOX         = "gotox"
-    // 作弊码，gotoy，移动镜头到聊天信息输入的 Y 坐标，X 坐标不变
+    // DeBug作弊码 移动镜头到聊天信息输入的 Y 坐标，X 坐标不变
+    // 输入 gotoy 触发
     constant string   bj_DEBUG_CHAT_GOTOY         = "gotoy"
-    // 作弊码，，移动镜头到聊天信息输入的坐标
+    // DeBug作弊码 移动镜头到聊天信息输入的坐标
+    // 输入 gotoxy 触发
     constant string   bj_DEBUG_CHAT_GOTOXY        = "gotoxy"
-    // 作弊码，gotounit，设置镜头到触发玩家选取单位的位置
+    // DeBug作弊码 设置镜头到触发玩家选取单位的位置
+    // 输入 gotounit 触发
     constant string   bj_DEBUG_CHAT_GOTOUNIT      = "gotounit"
-    // 作弊码，blackmask，全图启用黑色阴影
+    // DeBug作弊码 全图启用黑色阴影
+    // 输入 blackmask 触发
     constant string   bj_DEBUG_CHAT_BLACKMASK     = "blackmask"
-    // 作弊码，bm，全图启用黑色阴影
+    // DeBug作弊码 全图启用黑色阴影
+    // 输入 bm 触发
     constant string   bj_DEBUG_CHAT_BLACKMASK2    = "bm"
-    // 作弊码，difficulty，播报游戏难度
+    // DeBug作弊码 播报游戏难度
+    // 输入 difficulty 触发
     constant string   bj_DEBUG_CHAT_DIFFICULTY    = "difficulty"
-    // 作弊码，fingerofdeath，死亡之指状态及播报
+    // DeBug作弊码 死亡之指状态及播报
+    // 输入 fingerofdeath 触发
     constant string   bj_DEBUG_CHAT_FINGEROFDEATH = "fingerofdeath"
     // 作弊触发器 给所有玩家增加5000黄金/木材
     trigger           bj_debugGimmeTrig
@@ -99,11 +124,11 @@ globals
     trigger           bj_debug_BlackMaskTrig
     // 作弊触发器 播报游戏难度
     trigger           bj_debugDifficultyTrig
-    // 作弊触发器 死亡之指状态及播报
+    // 作弊触发器 死亡之指状态及播报，每位玩家一个
     trigger  array    bj_debugFingerOfDeathTrig
-    // 作弊触发器 死亡之指触发器动作--立即杀死单位
+    // 作弊触发器 死亡之指触发器动作--立即杀死单位，每位玩家一个
     trigger  array    bj_debugToolOfDeathTrig
-    // 死亡之指触发器启用标识 
+    // 死亡之指触发器启用标识，每位玩家一个
     boolean  array    bj_debugFingerOfDeathEnabled
     // 玩家选取单位的 X 坐标
     real              bj_debugGotoUnitX = 0
