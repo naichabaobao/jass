@@ -1321,7 +1321,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位事件 发布命令(指定点)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-	// 玩家单位事件 发布命令(指定单位)
+	// 玩家单位事件 发布命令(指定目标，可以是单位、物品、可破坏物)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
