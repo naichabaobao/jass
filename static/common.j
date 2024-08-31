@@ -5200,16 +5200,16 @@ constant native GetOrderPointY takes nothing returns real
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 事件响应 获取命令目标(物品)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(物品)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 事件响应 获取命令目标(单位)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
