@@ -2434,13 +2434,13 @@ function TriggerRegisterTimerExpireEventBJ takes trigger trig, timer t returns e
 endfunction
 
 
-// 玩家指定单位事件
+// 触发器登记玩家单位事件（简易版）
 function TriggerRegisterPlayerUnitEventSimple takes trigger trig, player whichPlayer, playerunitevent whichEvent returns event
     return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, whichEvent, null)
 endfunction
 
 
-// 任意单位事件
+// 触发器登记玩家单位事件（登记所有玩家）
 function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent whichEvent returns nothing
     local integer index
 
@@ -2454,7 +2454,8 @@ function TriggerRegisterAnyUnitEventBJ takes trigger trig, playerunitevent which
 endfunction
 
 
-// 玩家选择单位事件
+// 触发器登记玩家选择单位事件
+// @param selected 选择/取消选择
 function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichPlayer, boolean selected returns event
     if selected then
         return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_SELECTED, null)
@@ -2464,7 +2465,7 @@ function TriggerRegisterPlayerSelectionEventBJ takes trigger trig, player whichP
 endfunction
 
 
-// 玩家按下方向键事件
+// 触发器登记玩家按下方向键事件
 function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
     if(keType == bj_KEYEVENTTYPE_DEPRESS) then
         // Depress event - find out what key
@@ -2500,7 +2501,7 @@ function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer,
     endif
 endfunction
 
-// 玩家按下鼠标事件
+// 触发器登记玩家按下鼠标事件
 function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlayer, integer meType returns event
     if(meType == bj_MOUSEEVENTTYPE_DOWN) then
         // Mouse down event
