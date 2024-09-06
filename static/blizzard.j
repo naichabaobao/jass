@@ -2395,8 +2395,8 @@ endfunction
 // 截取字符串
 function SubStringBJ takes string source, integer start, integer end returns string
     return SubString(source, start - 1, end)
-endfunction  
-  
+endfunction
+
 // 获取句柄整数地址
 function GetHandleIdBJ takes handle h returns integer
     return GetHandleId(h)
