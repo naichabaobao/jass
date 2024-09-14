@@ -4386,7 +4386,7 @@ function DelayedSuspendDecayStopAnimEnum takes nothing returns nothing
 endfunction
 
 
-// 设置延迟并停止尸体腐烂
+// 设置尸体延迟并停止腐烂
 function DelayedSuspendDecayBoneEnum takes nothing returns nothing
     local unit enumUnit = GetEnumUnit()
 
@@ -4471,12 +4471,12 @@ function CreatePermanentCorpseLocBJ takes integer style, integer unitid, player 
 endfunction
 
 
-// 获取指定单位指定属性
+// 获取指定单位的指定属性
 function GetUnitStateSwap takes unitstate whichState, unit whichUnit returns real
     return GetUnitState(whichUnit, whichState)
 endfunction
 
-// 获取指定单位指定属性（以百分比形式返回）
+// 获取指定单位的指定属性（以百分比形式返回）
 function GetUnitStatePercent takes unit whichUnit, unitstate whichState, unitstate whichMaxState returns real
     local real value = GetUnitState(whichUnit, whichState)
     local real maxValue = GetUnitState(whichUnit, whichMaxState)
