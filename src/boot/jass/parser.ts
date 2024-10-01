@@ -718,9 +718,10 @@ class ReplaceableLineText extends LineText {
     }
 
     private replaceTextByRegExp(text: string) {
-        GlobalObject.DEFINES.forEach(define => {
-            text = text.replace(new RegExp(`\\b${define.name()}\\b`, "g"), define.value);
-        });
+        // 不再替换define 2024923
+        // GlobalObject.DEFINES.forEach(define => {
+        //     text = text.replace(new RegExp(`\\b${define.name()}\\b`, "g"), define.value);
+        // });
         return text;
     }
 

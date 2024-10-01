@@ -369,7 +369,7 @@ class MarkHoverProvider implements vscode.HoverProvider {
           const ms = new vscode.MarkdownString();
           ms.appendMarkdown(`***${comsumerTargetMark.name}***`);
           ms.appendText("\n");
-          ms.appendMarkdown(comsumerTargetMark.descript);
+          ms.appendMarkdown(comsumerTargetMark?.descript ?? "");
           ms.appendText("\n");
           ms.appendCodeblock(`'${comsumerTargetMark.code}'`);
 

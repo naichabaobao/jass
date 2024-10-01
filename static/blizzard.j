@@ -3378,7 +3378,7 @@ endfunction
 function SetThematicMusicVolumeBJ takes real volumePercent returns nothing
     call SetThematicMusicVolume(PercentToInt(volumePercent, 127))
 endfunction
-
+ab
 
 // 获取音效持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real

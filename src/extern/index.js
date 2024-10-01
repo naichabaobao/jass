@@ -6991,11 +6991,7 @@ class TypeScriptScopeHandler extends ScopeHandler {
     super.checkLocalExport(id);
   }
 }
-<<<<<<< HEAD
 const getOwn$1 = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
-=======
-const getOwn$1 = (object, key) => hasOwnProperty.call(object, key) && object[key];
->>>>>>> 28bd2e27034a6bfed968b5d20b22715a3be56717
 const unwrapParenthesizedExpression = node => {
   return node.type === "ParenthesizedExpression" ? unwrapParenthesizedExpression(node.expression) : node;
 };
@@ -7374,11 +7370,7 @@ class LValParser extends NodeUtils {
     return true;
   }
 }
-<<<<<<< HEAD
 const getOwn = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
-=======
-const getOwn = (object, key) => hasOwnProperty.call(object, key) && object[key];
->>>>>>> 28bd2e27034a6bfed968b5d20b22715a3be56717
 function nonNull(x) {
   if (x == null) {
     throw new Error(`Unexpected ${x} value.`);
@@ -7608,11 +7600,7 @@ var typescript = superClass => class TypeScriptParserMixin extends superClass {
         modified[modifier] = true;
         enforceOrder(startLoc, modifier, "in", "out");
       } else {
-<<<<<<< HEAD
         if (Object.hasOwnProperty.call(modified, modifier)) {
-=======
-        if (hasOwnProperty.call(modified, modifier)) {
->>>>>>> 28bd2e27034a6bfed968b5d20b22715a3be56717
           this.raise(TSErrors.DuplicateModifier, startLoc, {
             modifier
           });
@@ -7710,19 +7698,6 @@ var typescript = superClass => class TypeScriptParserMixin extends superClass {
       this.raise(TSErrors.UnsupportedImportTypeArgument, this.state.startLoc);
     }
     node.argument = super.parseExprAtom();
-<<<<<<< HEAD
-=======
-    if (this.hasPlugin("importAttributes") || this.hasPlugin("importAssertions")) {
-      node.options = null;
-    }
-    if (this.eat(12)) {
-      this.expectImportAttributesPlugin();
-      if (!this.match(11)) {
-        node.options = super.parseMaybeAssignAllowIn();
-        this.eat(12);
-      }
-    }
->>>>>>> 28bd2e27034a6bfed968b5d20b22715a3be56717
     this.expect(11);
     if (this.eat(16)) {
       node.qualifier = this.tsParseEntityName();
@@ -14002,11 +13977,8 @@ function getParserClass(pluginsFromOptions) {
 exports.parse = parse;
 exports.parseExpression = parseExpression;
 exports.tokTypes = tokTypes;
-<<<<<<< HEAD
 
 export {
   parse, parseExpression
 };
-=======
->>>>>>> 28bd2e27034a6bfed968b5d20b22715a3be56717
 //# sourceMappingURL=index.js.map

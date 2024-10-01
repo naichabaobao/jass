@@ -82,9 +82,9 @@ function configFileToObject(jsonData: string): ConfigFileOption {
 
 // "Xfla": { code: "", name: "照明弹 (效果)", tip: "", kind: Kind.Buff, race: Race.Human, type: Type.Unit },
 interface PresetOption {
-    code: string,
-    name: string,
-    descript: string,
+    code?: string,
+    name?: string,
+    descript?: string,
     // 种类
     kind?: string,
     // 种类
@@ -94,19 +94,20 @@ interface PresetOption {
 }
 
 interface StringOption {
-    content: string;
+    content?: string;
     descript?: string;
 };
 
 interface NumberOption {
-    value: number;
-    descript: string;
+    value?: number;
+    descript?: string;
 };
 
 interface ConfigFileOption {
     presets?: PresetOption[];
     strings?: (StringOption | string)[];
     excludes?: string[];
+    includes?: string[];
     numbers?: NumberOption[];
 }
 
@@ -218,3 +219,6 @@ export class ConfigPovider {
  */
 export const PluginDefaultConfig: ConfigFileOption = configFileToObject(fs.readFileSync(Options.pluginConfigFilePath).toString("utf-8"));
 
+
+
+export const JassConfigJson:ConfigFileOption = JSON.parse(fs.readFileSync(Options.pluginConfigFilePath).toString("utf-8"));

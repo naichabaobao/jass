@@ -101,3 +101,78 @@ for (let index = 0; index < 500000; index++) {
 }
 console.timeEnd("start-index-2")
  */
+
+/*
+分行
+function linesByIndexOf(content: string) {
+    const LineTexts: string[] = [];
+
+    for (let index = 0; index < content.length;) {
+        const newLineIndex = content.indexOf("\n", index);
+        const fieldText = content.substring(index, newLineIndex == -1 ? content.length : newLineIndex + 1);
+
+        LineTexts.push(fieldText);
+
+        if (newLineIndex == -1) {
+            break;
+        } else {
+            index = newLineIndex + 1;
+        }
+    }
+
+    return LineTexts;
+}
+function linesBySplit(content: string) {
+    const ls = content.split("\n");
+
+    const last = ls.pop();
+
+    const lineTexts = ls.map(x => x + "\n");
+
+    if (last) {
+        lineTexts.push(last);
+    }
+
+    return lineTexts;
+}
+function linesByMatch(content: string) {
+    const result = content.match(/[^\n\r]+/g);
+
+    return result ? [...result] : [];
+}
+let CS = 1;
+console.time("linesByIndexOf")
+for (let index = 0; index < CS; index++) {
+    const s = linesByIndexOf(`\n\n\n
+    123 
+        456
+            789
+    `)
+    
+    
+}
+console.timeEnd("linesByIndexOf")
+
+
+console.time("linesBySplit")
+for (let index = 0; index < CS; index++) {
+    const s = linesBySplit(`\n\n\n
+    123 
+        456
+            789
+    `)
+    console.log(s);
+}
+console.timeEnd("linesBySplit")
+console.time("linesByMatch")
+for (let index = 0; index < CS; index++) {
+    const s = linesByMatch(`\n\n\n
+    123 
+        456
+            789
+    `)
+    console.log(s);
+    
+}
+console.timeEnd("linesByMatch")
+*/

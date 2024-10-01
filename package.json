@@ -39,7 +39,7 @@
           "items": {
             "type": "string"
           },
-          "description": "包含路徑或文件(如：ydwe，japi等,需要重启),插件會找到.j | .ai | .zn\n(Contains a path or file (such as ydwe, japi, etc.) that the plug-in will find .j | .ai | .zn)"
+          "description": "无效,请使用jass.config.json {\"includes\": [\"./includeDirOrFilePath\", \"C:/absoluteDirOrFilePath\"]}"
         },
         "jass.lua.dependents": {
           "type": "array",
@@ -83,7 +83,7 @@
         "jass.info-style": {
           "type": "boolean",
           "default": false,
-          "description": "(Test) Styles with more information"
+          "description": "(Deprecation) Styles with more information"
         },
         "jass.support.mark": {
           "type": "boolean",

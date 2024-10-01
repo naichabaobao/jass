@@ -39,7 +39,6 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
     const key = document.getText(document.getWordRangeAtPosition(position));
-    console.log(key);
     if (key.length > this._maxLength) {
       return null;
     }

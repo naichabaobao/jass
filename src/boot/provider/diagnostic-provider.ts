@@ -22,103 +22,107 @@ pjass -nosemanticerror Enable semantic error reporting
 pjass -                Read from standard input (may appear in a list)
 */
 
-import { execSync } from 'child_process';
-import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
-import { Method, Native, Func } from '../jass/ast';
-import { isAiFile, isJFile } from '../tool';
-import { DataGetter } from './data';
 import { Options } from './options';
-import { Document } from '../check/mark';
-import { flow } from '../check/ast';
-import { checkAll } from '../../extern/anomaly';
+import { Token, TokenType } from '../jass/tokenizer-common';
+import { tokenize_for_jass } from '../jass/tokenizer-jass';
+import { isAiFile, isJFile } from '../tool';
 
-const diagnosticCollection = vscode.languages.createDiagnosticCollection("jass");
+const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
+const error = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Error);
+	diagnostics.push(diagnostic);
+};
+const warning = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Warning);
+	diagnostics.push(diagnostic);
+};
+const hint = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Hint);
+	diagnostics.push(diagnostic);
+};
 
-const toVsPosition = (any: De) => {
-	const range = new vscode.Range(any.loc.start.line, any.loc.start.position, any.loc.end.line, any.loc.end.position);
-	return range ?? new vscode.Position(any.loc.start.line, any.loc.start.position);
-  };
-  
-type De = Native|Func|Method;
 
-/**
- * 检查function内部,其他无视
- */
-vscode.workspace.onDidSaveTextDocument((document) => {
-	const fsPath = document.uri.fsPath;
-	if (isJFile(fsPath) || isAiFile(fsPath)) {
-		if (Options.isJassDiagnostic) {
-	
-			diagnosticCollection.delete(document.uri);
-			/*
-			const program = new DataGetter().get(fsPath);
-			if (program) {
-				const diagnostics:vscode.Diagnostic[] = [];
-				program.errors.map(err => {
-					const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
-					const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
-					return diagnostic;
-				});
-				program.functions.filter(func => !func.hasIgnore()).forEach(func => {
-					fs.writeFileSync(Options.pjassTempPath, document.getText(toVsPosition(func)), {
-						encoding: "utf8"
-					});
-	
-					let cmd = execSync(`"${Options.pjassPath}" +nosemanticerror "${Options.commonJPath}" "${Options.commonAiPath}" "${Options.blizzardJPath}" "${Options.pjassTempPath}"&`).toString("utf8");
-					const comLines = cmd.split("\n");
-					for (let index = 0; index < comLines.length; index++) {
-						const comLine = comLines[index];
-						if (comLine.startsWith("Parse successful:")) {
-							continue;
-						} else if (comLine.startsWith("Parse failed:")) {
-							continue;
-						} else if (comLine.includes("failed with")) {
-							continue;
-						} else {
-							const result = /:(?<line>\d+):\s*(?<message>(\w+\s*)*)/.exec(comLine);
-							if (result && result.groups) {
-								let line = parseInt(result.groups["line"]) - 1 + func.loc.start.line;
-								let message = result.groups["message"];
-								
-								const range = new vscode.Range(line, document.lineAt(line).firstNonWhitespaceCharacterIndex, line, document.lineAt(line).text.length);
-								diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error));
-								diagnosticCollection.set(document.uri, diagnostics);
-	
-							}
-						}
-					}
-	
-				});
-	
-			}
-			*/
-			const dc = new Document(document.uri.fsPath, document.getText());
-			flow(dc);
-			const diagnostics:vscode.Diagnostic[] = [];
-			dc.errors.forEach(err => {
-				const range = new vscode.Range(new vscode.Position(err.loc.start.line, err.loc.start.position), new vscode.Position(err.loc.end.line, err.loc.end.position));
-				diagnostics.push(new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error));
-			});
-			
-
-			checkAll(document.getText()).forEach(obj => {
-				
-				const range = new vscode.Range(new vscode.Position(obj.line.line, 0), new vscode.Position(obj.line.line, obj.line.end));
-				obj.errors.forEach(error => {				
-					diagnostics.push(new vscode.Diagnostic(range, error.message, vscode.DiagnosticSeverity.Error));
-				})
-			});
-
-			diagnosticCollection.set(document.uri, diagnostics);
-		}
+const find_file_error_for_jass = (document: vscode.TextDocument) => {
+	console.time("find_file_error_for_jass");
+	if (!Options.isJassDiagnostic) {
+		diagnostic_collection_for_jass.clear();
+		return;
 	}
+	if (!Options.isOnlyJass) {
+		diagnostic_collection_for_jass.clear();
+		return;
+	}
+	const path_format = path.parse(document.uri.fsPath);
+	if (!(path_format.ext == ".j" || path_format.ext == ".jass" || path_format.dir == ".ai")) {
+		return;
+	}
+
+	const diagnostics:vscode.Diagnostic[] = [];
+
+	const tokens = tokenize_for_jass(document.getText());
+	tokens.forEach(token => {
+		let temp:string;
+		const text = () => {
+			if (!temp) {
+				temp = token.getText();
+			}
+			return temp;
+		};
+		if (token.type == TokenType.Unkown) {
+			error(diagnostics, token, `lexical error,unkown token '${text().substring(0, 100)}'!`);
+		} else if (!token.is_complete) {
+			if (token.type == TokenType.String) {
+				error(diagnostics, token, `string need package in "...",error string '${text().substring(0, 100)}'!`);
+			} else if (token.type == TokenType.Mark) {
+				error(diagnostics, token, `integer identifier mark format is 'A' or 'AAAA',error integer identifier mark '${text().substring(0, 100)}'!`);
+			} else if (token.type == TokenType.Integer) {
+				error(diagnostics, token, `error integer expression '${text().substring(0, 100)}'!`);
+			} else {
+				error(diagnostics, token, `error expression '${text().substring(0, 100)}'!`);
+			}
+		} else if (token.type == TokenType.Identifier) {
+			if (text().startsWith("_")) {
+				warning(diagnostics, token, `identifier start with '_' is illegal in jass language, check your code '${text().substring(0, 100)}'!`);
+			} else if (/^\d/.test(text())) {
+				error(diagnostics, token, `illegal identifier '${text().substring(0, 100)}'!`);
+			}
+		} else if (token.type == TokenType.Real) {
+			if (text().startsWith(".") || text().endsWith(".")) {
+				hint(diagnostics, token, `you should complete the floating point number!`);
+			} else if (/(?:^0{2,}\.\d+)|(?:^\d+\.0{2,})/.test(text())) {
+				hint(diagnostics, token, `suggest omitting repetitive parts`);
+			}
+		} else if (token.type == TokenType.Integer) {
+			if (/^0{2,}/.test(text())) {
+				hint(diagnostics, token, `not conducive to performance`);
+			} else if (text().startsWith("0x") && text().length > 10) {
+				error(diagnostics, token, `out of range '${text()}'!`);
+			} else if (text().startsWith("$") && text().length > 9) {
+				error(diagnostics, token, `out of range '${text()}'!`);
+			}
+		}
+	});
+
+	diagnostic_collection_for_jass.set(document.uri, diagnostics);
+	console.timeEnd("find_file_error_for_jass");
+}
+
+
+vscode.workspace.onDidChangeTextDocument((event:vscode.TextDocumentChangeEvent) => {
+	// const document = event.document;
+	find_file_error_for_jass(event.document);
+});
+
+vscode.workspace.onDidSaveTextDocument((document) => {
+	find_file_error_for_jass(document);
 });
 
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach((filePath) => {
 		if (isJFile(filePath.fsPath) || isAiFile(filePath.fsPath)) {
-			diagnosticCollection.delete(filePath);
+			diagnostic_collection_for_jass.delete(filePath);
 		}
 	});
 });
@@ -126,35 +130,17 @@ vscode.workspace.onDidDeleteFiles((event) => {
 vscode.workspace.onDidRenameFiles((event) => {
 	event.files.forEach((filePath) => {
 		if (isJFile(filePath.oldUri.fsPath) || isAiFile(filePath.oldUri.fsPath)) {
-			const diagnostics = diagnosticCollection.get(filePath.oldUri);
-			diagnosticCollection.delete(filePath.oldUri);
-			diagnosticCollection.set(filePath.newUri, diagnostics);
+			const diagnostics = diagnostic_collection_for_jass.get(filePath.oldUri);
+			diagnostic_collection_for_jass.delete(filePath.oldUri);
+			diagnostic_collection_for_jass.set(filePath.newUri, diagnostics);
 		}
 	});
 });
 
-// 参数个数检测, 不要了
-
-// vscode.workspace.onDidSaveTextDocument((document) => {
-// 	if (Options.isOnlyJass && Options.isJassDiagnostic) {
-// 		const program = parse(document.getText(), {
-// 			needParseLocal: true,
-// 			needParseInitExpr: true,
-// 			needParseNative: true
-// 		});
-// 		diagnosticCollection.clear();
-// 		const diagnostics = program.errors.map(err => {
-// 			const range = new vscode.Range(err.loc.start.line, err.loc.start.position, err.loc.end.line, err.loc.end.position);
-// 			const diagnostic = new vscode.Diagnostic(range, err.message, vscode.DiagnosticSeverity.Error);
-// 			return diagnostic;
-// 		});
-// 		diagnosticCollection.set(document.uri, diagnostics);
-// 	}
-// });
 
 vscode.workspace.onDidChangeConfiguration((event) => {
 	if (!Options.isOnlyJass || !Options.isJassDiagnostic) {
-		diagnosticCollection.clear();
+		diagnostic_collection_for_jass.clear();
 	}
 });
 

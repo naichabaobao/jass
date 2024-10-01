@@ -639,7 +639,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletion
  
            const ms = new vscode.MarkdownString()
            .appendCodeblock(originCodeValue)
-           .appendMarkdown(preset.descript)
+           .appendMarkdown(preset?.descript ?? "")
            .appendMarkdown("  \n")
            .appendMarkdown("***@type***(" + (preset.type ? preset.type : "未知") + ")")
            .appendMarkdown("  \n")
@@ -751,7 +751,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class NumberCompleti
 
         const ms = new vscode.MarkdownString()
         .appendCodeblock(`integer ${originCodeValue}`)
-        .appendMarkdown(num.descript)
+        .appendMarkdown(num?.descript ?? "")
         .appendMarkdown("\n\n~整形常量~");
         item.detail = `integer ${originCodeValue}`;
         item.documentation = ms;

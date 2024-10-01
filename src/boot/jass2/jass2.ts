@@ -3,18 +3,27 @@ import * as path from "path";
 import * as readline from "readline";
 import * as vscode from "vscode";
 import { lines } from "../jass/tool";
+import { getFileContent } from "../tool";
 
-function isEmptyString(text: string) {
+class native {
+    static readFileContent(filePath: string): string {
+        return fs.readFileSync(filePath, {
+            encoding: "utf8"
+        }).toString();
+    }
+}
+
+function isEmptyString(text: string): boolean {
     return text.trim().length == 0;
 }
-function firstNonWhitespaceCharacterIndexString(text: string) {
+function firstNonWhitespaceCharacterIndexString(text: string): number {
     const result = /^\s*(?:\b|$)/.exec(text);
     if (result) {
         return result[0].length;
     }
     return 0;
 }
-function linesByIndexOf(content: string) {
+function toLines(content: string): string[] {
     const LineTexts: string[] = [];
 
     for (let index = 0; index < content.length;) {
@@ -32,59 +41,6 @@ function linesByIndexOf(content: string) {
 
     return LineTexts;
 }
-function linesBySplit(content: string) {
-    const ls = content.split("\n");
-
-    const last = ls.pop();
-
-    const lineTexts = ls.map(x => x + "\n");
-
-    if (last) {
-        lineTexts.push(last);
-    }
-
-    return lineTexts;
-}
-function linesByMatch(content: string) {
-    const result = content.match(/[^\n\r]+/g);
-
-    return result ? [...result] : [];
-}
-let CS = 1;
-console.time("linesByIndexOf")
-for (let index = 0; index < CS; index++) {
-    const s = linesByIndexOf(`\n\n\n
-    123 
-        456
-            789
-    `)
-    
-    
-}
-console.timeEnd("linesByIndexOf")
-
-
-console.time("linesBySplit")
-for (let index = 0; index < CS; index++) {
-    const s = linesBySplit(`\n\n\n
-    123 
-        456
-            789
-    `)
-    console.log(s);
-}
-console.timeEnd("linesBySplit")
-console.time("linesByMatch")
-for (let index = 0; index < CS; index++) {
-    const s = linesByMatch(`\n\n\n
-    123 
-        456
-            789
-    `)
-    console.log(s);
-    
-}
-console.timeEnd("linesByMatch")
 
 
 class Position {
@@ -365,11 +321,11 @@ class Document {
     readonly fileName: string;
     readonly languageId: string = "";
     // 无用项
-    readonly version: "1.2"|"1.24"|"1.27"|"1.29"|"1.3+" = "1.3+";
-    
+    readonly version: "1.2" | "1.24" | "1.27" | "1.29" | "1.3+" = "1.3+";
+
     readonly lineCount: number;
-    
-    private readonly lines:TextLine[] = [];
+
+    private readonly lines: TextLine[] = [];
     constructor(filePath: string) {
         this.uri = new Uri(filePath);
         this.fileName = this.uri.name;
@@ -381,22 +337,14 @@ class Document {
             this.languageId = "zinc";
         }
 
-        const stream = fs.createReadStream(filePath);
-        const streamInterface = readline.createInterface({
-            input: stream,
-            crlfDelay: Infinity,
-        });
+        const content = native.readFileContent(filePath);
+        const lines = toLines(content);
+        this.lines = lines.map((text, index) => new TextLine(index, text));
 
-        let index = 0;
-        streamInterface.on("line", (input) => {
-            this.lines.push(new TextLine(index, input));
-            index++;
-        });
-
-        this.lineCount = index;
+        this.lineCount = this.lines.length;
     }
 
-    lineAt(line: number|Position): TextLine {
+    lineAt(line: number | Position): TextLine {
         return this.lines[typeof line == "number" ? line : line.line];
     }
     /**
@@ -410,11 +358,20 @@ class Document {
         prelines.forEach(line => {
             index += line.text.length;
         });
-        index += position.character;
+        index += this.validatePosition(position).character;
         return index;
     }
-    positionAt(offset: number): vscode.Position {
-        throw new Error("Method not implemented.");
+    positionAt(offset: number): Position {
+        let index = 0;
+        for (void 0; index < this.lines.length; void 0) {
+            const line = this.lines[index];
+            offset -= line.text.length
+            if (offset < 0) {
+                return new Position(line.range.start.line, Math.abs(offset));
+            }
+            index++;
+        }
+        return this.lines[index].range.end;
     }
     getText(range?: vscode.Range | undefined): string {
         throw new Error("Method not implemented.");
@@ -425,15 +382,18 @@ class Document {
     validateRange(range: vscode.Range): vscode.Range {
         throw new Error("Method not implemented.");
     }
-    validatePosition(position: vscode.Position): vscode.Position {
-        throw new Error("Method not implemented.");
+    validatePosition(position: Position): Position {
+        const targetLine = this.lineAt(position.line);
+        return targetLine.rangeIncludingLineBreak.contains(position) ? position : targetLine.rangeIncludingLineBreak.end;
     }
 
 }
-// setTimeout(() => {
-//     console.log(new Document("E:/projects/jass/static/AIScripts.ai").lines)
-//     console.log(new Document("E:/projects/jass/static/AIScripts.ai").offsetAt(new Position(1, 2)));
-// }, 1200);
+
+
+setTimeout(() => {
+    // console.log(new Document("E:/projects/jass/static/AIScripts.ai").lines)
+    console.log(new Document("E:/projects/jass/static/AIScripts.ai").offsetAt(new Position(1, 20)));
+}, 1200);
 ;
 
 

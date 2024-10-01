@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 
-import("./boot/boot");
+import {boot} from "./boot/boot";
 
 
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     // // 注册一个命令处理程序
     // context.subscriptions.push(vscode.commands.registerCommand('extension.showMessage', (message) => {
     //     vscode.window.showInformationMessage(message);
@@ -27,6 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
     //         return [new vscode.CodeLens(range, command)];
     //     }
     // }));
+    await boot();
 }
 
 export function deactivate() {}
