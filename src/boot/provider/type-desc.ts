@@ -107,7 +107,7 @@ const map = new Map<string,string>([
   ["hashtable", "哈希表"],
   ["framehandle", "框架/UI"],
   ["originframetype", "原生框架/原生UI类型"],
-  ["framepointtype", "框架/UI锚点类型"],
+  ["framepointtype", "框架/UI相对锚点类型"],
   ["textaligntype", "文本对齐方式"],
   ["frameeventtype", "框架/UI事件类型"],
   ["oskeytype", "键盘按键类型"],
