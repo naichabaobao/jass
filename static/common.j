@@ -95,7 +95,7 @@ type unittype extends handle
 
 // 游戏速度
 type gamespeed extends handle
-// 游戏难度（用于战役地图）
+// 游戏难度（用于战役，在进入战役前或任务失败后设置）
 type gamedifficulty extends handle
 // 游戏（队伍）类型
 type gametype extends handle
@@ -197,15 +197,15 @@ type ubersplat extends handle
 type hashtable extends 
 // 框架/UI
 type framehandle extends handle
-// 框架/UI锚点类型
+// 原生框架/UI类型
 type originframetype extends handle
-// 框架/原生UI相对锚点类型
+// 框架/UI相对锚点类型
 type framepointtype extends handle
-// 文本高亮类型
+// 文本对齐方式
 type textaligntype extends handle
 // 框架/UI事件类型
 type frameeventtype extends handle
-// 按键类型
+// 键盘按键类型
 type oskeytype extends handle
 // 技能整数域
 type abilityintegerfield extends handle
@@ -239,13 +239,13 @@ type unitrealfield extends handle
 type unitbooleanfield extends handle
 // 单位字符串域
 type unitstringfield extends handle
-// 攻击整数域
+// 单位武器整数域
 type unitweaponintegerfield extends handle
-// 攻击实数域
+// 单位武器实数域
 type unitweaponrealfield extends handle
-// 攻击布尔值域
+// 单位武器布尔值域
 type unitweaponbooleanfield extends handle
-// 攻击字符串域
+// 单位武器字符串域
 type unitweaponstringfield extends handle
 // 物品整数域
 type itemintegerfield extends handle
@@ -368,15 +368,15 @@ constant native ConvertMouseButtonType takes integer i returns mousebuttontype
 constant native ConvertAnimType takes integer i returns animtype
 // 转换整数成子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
-// 转换整数成原生框架(原生UI)类型
+// 转换整数成原生框架/原生UI类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// 转换整数成原生框架/原生UI相对锚点
+// 转换整数成框架/UI相对锚点类型
 constant native ConvertFramePointType takes integer i returns framepointtype
-// 转换整数成文本对齐类型
+// 转换整数成文本对齐方式
 constant native ConvertTextAlignType takes integer i returns textaligntype
 // 转换整数成框架/UI事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
-// 转换整数成按键类型
+// 转换整数成键盘按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
 // 转换整数成技能整数域
 constant native ConvertAbilityIntegerField takes integer i returns abilityintegerfield
@@ -410,13 +410,13 @@ constant native ConvertUnitRealField takes integer i returns unitrealfield
 constant native ConvertUnitBooleanField takes integer i returns unitbooleanfield
 // 转换整数成单位字符串域
 constant native ConvertUnitStringField takes integer i returns unitstringfield
-// 转换整数成攻击整数域
+// 转换整数成单位武器整数域
 constant native ConvertUnitWeaponIntegerField takes integer i returns unitweaponintegerfield
-// 转换整数成攻击实数域
+// 转换整数成单位武器实数域
 constant native ConvertUnitWeaponRealField takes integer i returns unitweaponrealfield
-// 转换整数成攻击布尔值域
+// 转换整数成单位武器布尔值域
 constant native ConvertUnitWeaponBooleanField takes integer i returns unitweaponbooleanfield
-// 转换整数成攻击字符串域
+// 转换整数成单位武器字符串域
 constant native ConvertUnitWeaponStringField takes integer i returns unitweaponstringfield
 // 转换整数成物品整数域
 constant native ConvertItemIntegerField takes integer i returns itemintegerfield
@@ -1321,7 +1321,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 	// 玩家单位事件 发布命令(指定点)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
-	// 玩家单位事件 发布命令(指定单位)
+	// 玩家单位事件 发布命令(指定目标，可以是单位、物品、可破坏物)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 	// 玩家单位事件 发布命令(指定单位)
 	constant playerunitevent EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40)    // for compat
@@ -1617,7 +1617,7 @@ globals
 	constant unittype UNIT_TYPE_POISONED = ConvertUnitType(21)
 	// 单位类型 被变形
 	constant unittype UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
-	// 单位类型 被催眠，夜晚睡觉也属于被催眠
+	// 单位类型 被催眠，夜晚睡眠也属于被催眠
 	constant unittype UNIT_TYPE_SLEEPING = ConvertUnitType(23)
 	// 单位类型 有抗性皮肤
 	constant unittype UNIT_TYPE_RESISTANT = ConvertUnitType(24)
@@ -1784,7 +1784,7 @@ globals
 	constant originframetype ORIGIN_FRAME_CHAT_MSG = ConvertOriginFrameType(13)
 	// 原生UI 单位信息显示框
 	constant originframetype ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
-	// 原生UI 顶部信息显示框(持续显示的变更警告消息，显示在昼夜时钟下方)
+	// 原生UI 顶部信息显示框(持续显示的变更警告，显示在昼夜时钟下方)
 	constant originframetype ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
 	// 原生UI 头像(主选单位的模型视图)
 	// 模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域，其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
@@ -1870,103 +1870,103 @@ globals
 	
 	// OS Key constants
 	
-	// 键盘 退格键
+	// 键盘按键 退格键
 	// @version 1.33
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
-	// 键盘 TAB 键
+	// 键盘按键 TAB 键
 	// @version 1.33
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
-	// 键盘 CLEAR 键(Num Lock关闭时的数字键盘5)
+	// 键盘按键 CLEAR 键(Num Lock关闭时的数字键盘5)
 	// @version 1.33
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
-	// 键盘 回车键
+	// 键盘按键 回车键
 	// @version 1.33
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
-	// 键盘 SHIFT 键
+	// 键盘按键 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
-	// 键盘 ctrl 键
+	// 键盘按键 ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
-	// 键盘 ALT 键
+	// 键盘按键 ALT 键
 	// @version 1.33
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
-	// 键盘 PAUSE (暂停)键
+	// 键盘按键 PAUSE (暂停)键
 	// @version 1.33
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
-	// 键盘 CAPS LOCK 键
+	// 键盘按键 CAPS LOCK 键
 	// @version 1.33
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
-	// 键盘 KANA 键，仅用于日语键盘
+	// 键盘按键 KANA 键，仅用于日语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
-	// 键盘 HANGUL 键，仅用于朝鲜/韩语键盘
+	// 键盘按键 HANGUL 键，仅用于朝鲜/韩语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
-	// 键盘 JUNJA 键，仅用于特定语言输入法
+	// 键盘按键 JUNJA 键，仅用于特定语言输入法
 	// @version 1.33
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
-	// 键盘 FINAL键，仅用于特定语言输入法
+	// 键盘按键 FINAL键，仅用于特定语言输入法
 	// @version 1.33
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
-	// 键盘 HANJA 键，仅用于朝鲜/韩语键盘
+	// 键盘按键 HANJA 键，仅用于朝鲜/韩语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
-	// 键盘 KANJI 键，仅用于日语键盘
+	// 键盘按键 KANJI 键，仅用于日语键盘
 	// @version 1.33
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
-	// 键盘 ESC 键
+	// 键盘按键 ESC 键
 	// @version 1.33
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
-	// 键盘 Caps lock 键(开启状态)
+	// 键盘按键 Caps lock 键(开启状态)
 	// @version 1.33
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
-	// 键盘 Caps lock 键(关闭状态)
+	// 键盘按键 Caps lock 键(关闭状态)
 	// @version 1.33
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
-	// 键盘 ACCEPT 键
+	// 键盘按键 ACCEPT 键
 	// @version 1.33
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
-	// 键盘 变更模式键
+	// 键盘按键 变更模式键
 	// @version 1.33
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
-	// 键盘 空格键
+	// 键盘按键 空格键
 	// @version 1.33
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
-	// 键盘 向上翻页键
+	// 键盘按键 向上翻页键
 	// @version 1.33
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
-	// 键盘 向下翻页键
+	// 键盘按键 向下翻页键
 	// @version 1.33
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
-	// 键盘 结束键
+	// 键盘按键 结束键
 	// @version 1.33
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
-	// 键盘 HOME 键
+	// 键盘按键 HOME 键
 	// @version 1.33
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
-	// 键盘 方向键 左
+	// 键盘按键 方向键 左
 	// @version 1.33
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
-	// 键盘 方向键 上
+	// 键盘按键 方向键 上
 	// @version 1.33
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
-	// 键盘 方向键 右
+	// 键盘按键 方向键 右
 	// @version 1.33
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
-	// 键盘 方向键 下
+	// 键盘按键 方向键 下
 	// @version 1.33
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
-	// 键盘 选择键(右SHIFT)
+	// 键盘按键 选择键(右SHIFT)
 	// @version 1.33
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
-	// 键盘 PRINT 键
+	// 键盘按键 PRINT 键
 	// @version 1.33
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
-	// 键盘 EXECUTE 键
+	// 键盘按键 EXECUTE 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
-	// 键盘 截图键
+	// 键盘按键 截图键
 	// @version 1.33
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
 	//建盘 INSERT键
@@ -1975,465 +1975,465 @@ globals
 	//建盘 DELETE键
 	// @version 1.33
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
-	// 键盘 帮助键(F1)
+	// 键盘按键 帮助键(F1)
 	// @version 1.33
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
-	// 键盘 0键(非小/数字键盘)
+	// 键盘按键 0键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
-	// 键盘 1键(非小/数字键盘)
+	// 键盘按键 1键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
-	// 键盘 2键(非小/数字键盘)
+	// 键盘按键 2键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
-	// 键盘 3键(非小/数字键盘)
+	// 键盘按键 3键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
-	// 键盘 4键(非小/数字键盘)
+	// 键盘按键 4键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
-	// 键盘 5键(非小/数字键盘)
+	// 键盘按键 5键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
-	// 键盘 6键(非小/数字键盘)
+	// 键盘按键 6键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
-	// 键盘 7键(非小/数字键盘)
+	// 键盘按键 7键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
-	// 键盘 8键(非小/数字键盘)
+	// 键盘按键 8键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
-	// 键盘 9键(非小/数字键盘)
+	// 键盘按键 9键(非小/数字键盘)
 	// @version 1.33
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
-	// 键盘 A键
+	// 键盘按键 A键
 	// @version 1.33
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
-	// 键盘 B键
+	// 键盘按键 B键
 	// @version 1.33
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
-	// 键盘 C键
+	// 键盘按键 C键
 	// @version 1.33
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
-	// 键盘 D键
+	// 键盘按键 D键
 	// @version 1.33
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
-	// 键盘 E键
+	// 键盘按键 E键
 	// @version 1.33
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
-	// 键盘 F键
+	// 键盘按键 F键
 	// @version 1.33
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
-	// 键盘 G键
+	// 键盘按键 G键
 	// @version 1.33
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
-	// 键盘 H键
+	// 键盘按键 H键
 	// @version 1.33
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
-	// 键盘 I键
+	// 键盘按键 I键
 	// @version 1.33
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
-	// 键盘 J键
+	// 键盘按键 J键
 	// @version 1.33
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
-	// 键盘 K键
+	// 键盘按键 K键
 	// @version 1.33
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
-	// 键盘 L键
+	// 键盘按键 L键
 	// @version 1.33
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
-	// 键盘 M键
+	// 键盘按键 M键
 	// @version 1.33
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
-	// 键盘 N键
+	// 键盘按键 N键
 	// @version 1.33
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
-	// 键盘 O键
+	// 键盘按键 O键
 	// @version 1.33
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
-	// 键盘 P键
+	// 键盘按键 P键
 	// @version 1.33
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
-	// 键盘 Q键
+	// 键盘按键 Q键
 	// @version 1.33
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
-	// 键盘 R键
+	// 键盘按键 R键
 	// @version 1.33
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
-	// 键盘 S键
+	// 键盘按键 S键
 	// @version 1.33
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
-	// 键盘 T键
+	// 键盘按键 T键
 	// @version 1.33
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
-	// 键盘 U键
+	// 键盘按键 U键
 	// @version 1.33
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
-	// 键盘 V键
+	// 键盘按键 V键
 	// @version 1.33
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
-	// 键盘 W键
+	// 键盘按键 W键
 	// @version 1.33
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
-	// 键盘 X键
+	// 键盘按键 X键
 	// @version 1.33
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
-	// 键盘 Y键
+	// 键盘按键 Y键
 	// @version 1.33
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
-	// 键盘 Z键
+	// 键盘按键 Z键
 	// @version 1.33
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
-	// 键盘 LMETA 键
+	// 键盘按键 LMETA 键
 	// @version 1.33
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
-	// 键盘 RMETA 键
+	// 键盘按键 RMETA 键
 	// @version 1.33
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
-	// 键盘 APPS 键
+	// 键盘按键 APPS 键
 	// @version 1.33
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
-	// 键盘 休眠键
+	// 键盘按键 休眠键
 	// @version 1.33
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
-	// 小/数字键盘 0键
+	// 小/数字键盘按键 0键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
-	// 小/数字键盘 1键
+	// 小/数字键盘按键 1键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
-	// 小/数字键盘 2键
+	// 小/数字键盘按键 2键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
-	// 小/数字键盘 3键
+	// 小/数字键盘按键 3键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
-	// 小/数字键盘 4键
+	// 小/数字键盘按键 4键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
-	// 小/数字键盘 5键
+	// 小/数字键盘按键 5键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
-	// 小/数字键盘 6键
+	// 小/数字键盘按键 6键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
-	// 小/数字键盘 7键
+	// 小/数字键盘按键 7键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
-	// 小/数字键盘 8键
+	// 小/数字键盘按键 8键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
-	// 小/数字键盘 9键
+	// 小/数字键盘按键 9键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
-	// 小/数字键盘 乘号键
+	// 小/数字键盘按键 乘号键
 	// @version 1.33
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
-	// 小/数字键盘 加号键
+	// 小/数字键盘按键 加号键
 	// @version 1.33
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
-	// 小/数字键盘 分离键/分隔符键
+	// 小/数字键盘按键 分离键/分隔符键
 	// @version 1.33
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
-	// 小/数字键盘 减号键
+	// 小/数字键盘按键 减号键
 	// @version 1.33
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
-	// 小/数字键盘 小数点键
+	// 小/数字键盘按键 小数点键
 	// @version 1.33
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
-	// 小/数字键盘 除号键
+	// 小/数字键盘按键 除号键
 	// @version 1.33
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
-	// 键盘 F1键
+	// 键盘按键 F1键
 	// @version 1.33
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
-	// 键盘 F2键
+	// 键盘按键 F2键
 	// @version 1.33
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
-	// 键盘 F3键
+	// 键盘按键 F3键
 	// @version 1.33
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
-	// 键盘 F4键
+	// 键盘按键 F4键
 	// @version 1.33
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
-	// 键盘 F5键
+	// 键盘按键 F5键
 	// @version 1.33
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
-	// 键盘 F6键
+	// 键盘按键 F6键
 	// @version 1.33
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
-	// 键盘 F7键
+	// 键盘按键 F7键
 	// @version 1.33
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
-	// 键盘 F8键
+	// 键盘按键 F8键
 	// @version 1.33
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
-	// 键盘 F9键
+	// 键盘按键 F9键
 	// @version 1.33
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
-	// 键盘 F10键
+	// 键盘按键 F10键
 	// @version 1.33
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
-	// 键盘 F11键
+	// 键盘按键 F11键
 	// @version 1.33
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
-	// 键盘 F12键
+	// 键盘按键 F12键
 	// @version 1.33
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
-	// 键盘 F13键
+	// 键盘按键 F13键
 	// @version 1.33
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
-	// 键盘 F14键
+	// 键盘按键 F14键
 	// @version 1.33
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
-	// 键盘 F15键
+	// 键盘按键 F15键
 	// @version 1.33
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
-	// 键盘 F16键
+	// 键盘按键 F16键
 	// @version 1.33
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
-	// 键盘 F17键
+	// 键盘按键 F17键
 	// @version 1.33
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
-	// 键盘 F18键
+	// 键盘按键 F18键
 	// @version 1.33
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
-	// 键盘 F19键
+	// 键盘按键 F19键
 	// @version 1.33
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
-	// 键盘 F20键
+	// 键盘按键 F20键
 	// @version 1.33
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
-	// 键盘 F21键
+	// 键盘按键 F21键
 	// @version 1.33
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
-	// 键盘 F22键
+	// 键盘按键 F22键
 	// @version 1.33
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
-	// 键盘 F23键
+	// 键盘按键 F23键
 	// @version 1.33
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
-	// 键盘 F24键
+	// 键盘按键 F24键
 	// @version 1.33
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
-	// 小/数字键盘 开关键
+	// 小/数字键盘按键 开关键
 	// @version 1.33
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
-	// 键盘 SCROLL LOCK键
+	// 键盘按键 SCROLL LOCK键
 	// @version 1.33
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
-	// 小/数字键盘 等号键(OEM 键)
+	// 小/数字键盘按键 等号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
-	// 键盘 字典键(OEM 键)
+	// 键盘按键 字典键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
-	// 键盘 取消注册 Word 键(OEM 键)
+	// 键盘按键 取消注册 Word 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
-	// 键盘 注册 Word 键(OEM 键)
+	// 键盘按键 注册 Word 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
-	// 键盘 左 OYAYUBI 键(OEM 键)
+	// 键盘按键 左 OYAYUBI 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
-	// 键盘 右 OYAYUBI 键(OEM 键)
+	// 键盘按键 右 OYAYUBI 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
-	// 键盘 左 SHIFT 键
+	// 键盘按键 左 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
-	// 键盘 右 SHIFT 键
+	// 键盘按键 右 SHIFT 键
 	// @version 1.33
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
-	// 键盘 左 Ctrl 键
+	// 键盘按键 左 Ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
-	// 键盘 右 Ctrl 键
+	// 键盘按键 右 Ctrl 键
 	// @version 1.33
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
-	// 键盘 左 Alt 键
+	// 键盘按键 左 Alt 键
 	// @version 1.33
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
-	// 键盘 右 Alt 键
+	// 键盘按键 右 Alt 键
 	// @version 1.33
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
-	// 键盘 浏览器后退键
+	// 键盘按键 浏览器后退键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
-	// 键盘 浏览器前进键
+	// 键盘按键 浏览器前进键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
-	// 键盘 浏览器刷新键
+	// 键盘按键 浏览器刷新键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
-	// 键盘 浏览器停止键
+	// 键盘按键 浏览器停止键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
-	// 键盘 浏览器搜索键
+	// 键盘按键 浏览器搜索键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
-	// 键盘 浏览器收藏键
+	// 键盘按键 浏览器收藏键
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
-	// 键盘 浏览器“开始”和“主页”键
+	// 键盘按键 浏览器“开始”和“主页”键
 	// @version 1.33
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
-	// 键盘 静音键
+	// 键盘按键 静音键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
-	// 键盘 减小音量键
+	// 键盘按键 减小音量键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
-	// 键盘 增大音量键
+	// 键盘按键 增大音量键
 	// @version 1.33
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
-	// 键盘 下一曲键
+	// 键盘按键 下一曲键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
-	// 键盘 上一曲键
+	// 键盘按键 上一曲键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
-	// 键盘 停止播放键
+	// 键盘按键 停止播放键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
-	// 键盘 暂停播放键
+	// 键盘按键 暂停播放键
 	// @version 1.33
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
-	// 键盘 打开邮箱键
+	// 键盘按键 打开邮箱键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
-	// 键盘 选择媒体键
+	// 键盘按键 选择媒体键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
-	// 键盘 启动应用程序1键
+	// 键盘按键 启动应用程序1键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
-	// 键盘 启动应用程序2键
+	// 键盘按键 启动应用程序2键
 	// @version 1.33
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
-	// 小/数字键盘 1键(OEM 键)
+	// 小/数字键盘按键 1键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
-	// 键盘 加号键(OEM 键)
+	// 键盘按键 加号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
-	// 键盘 逗号键(OEM 键)
+	// 键盘按键 逗号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
-	// 键盘 减号键(OEM 键)
+	// 键盘按键 减号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
-	// 键盘 句号键(OEM 键)
+	// 键盘按键 句号键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
-	// 小/数字键盘 2键(OEM 键)
+	// 小/数字键盘按键 2键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
-	// 小/数字键盘 3键(OEM 键)
+	// 小/数字键盘按键 3键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
-	// 小/数字键盘 4键(OEM 键)
+	// 小/数字键盘按键 4键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
-	// 小/数字键盘 5键(OEM 键)
+	// 小/数字键盘按键 5键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
-	// 小/数字键盘 6键(OEM 键)
+	// 小/数字键盘按键 6键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
-	// 小/数字键盘 7键(OEM 键)
+	// 小/数字键盘按键 7键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
-	// 小/数字键盘 8键(OEM 键)
+	// 小/数字键盘按键 8键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
-	// 键盘 AX 键(OEM 键)
+	// 键盘按键 AX 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
-	// 键盘 102 键(OEM 键)
+	// 键盘按键 102 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
-	// 键盘  Ico帮助键
+	// 键盘按键  Ico帮助键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
-	// 键盘  Ico00 键
+	// 键盘按键  Ico00 键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
-	// 键盘 Process 键
+	// 键盘按键 Process 键
 	// @version 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	// 键盘 IcoClr 键
+	// 键盘按键 IcoClr 键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
-	// 键盘 格式化键(OEM 键)
+	// 键盘按键 格式化键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
-	// 键盘 重置键(OEM 键)
+	// 键盘按键 重置键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	// 键盘 ATTN 键(OEM 键)
+	// 键盘按键 ATTN 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
-	// 键盘 PA1 键(OEM 键)
+	// 键盘按键 PA1 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
-	// 键盘 PA2 键(OEM 键)
+	// 键盘按键 PA2 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	// 键盘 ATTN 键(OEM 键)
+	// 键盘按键 ATTN 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
-	// 键盘 WSCTRL 键(OEM 键，似乎是联想杀毒软件定制按键)
+	// 键盘按键 WSCTRL 键(OEM 键，似乎是联想杀毒软件定制按键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	// 键盘 ATTN 键(OEM 键)
+	// 键盘按键 ATTN 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
-	// 键盘 ATTN 键(OEM 键)
+	// 键盘按键 ATTN 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
-	// 键盘 完成键(OEM 键)
+	// 键盘按键 完成键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
-	// 键盘 复制键(OEM 键)
+	// 键盘按键 复制键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
-	// 键盘 自动键(OEM 键)
+	// 键盘按键 自动键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
-	// 键盘 ENLW 键(OEM 键)
+	// 键盘按键 ENLW 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
-	// 键盘 BACKTAB 键(OEM 键)
+	// 键盘按键 BACKTAB 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
-	// 键盘 ATTN 键
+	// 键盘按键 ATTN 键
 	// @version 1.33
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
-	// 键盘 CRSEL 键
+	// 键盘按键 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	// 键盘 CRSEL 键
+	// 键盘按键 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	// 键盘 CRSEL 键
+	// 键盘按键 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
-	// 键盘 播放键
+	// 键盘按键 播放键
 	// @version 1.33
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
-	// 键盘 缩放键
+	// 键盘按键 缩放键
 	// @version 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	// 键盘 留待将来使用的常数键
+	// 键盘按键 留待将来使用的常数键
 	// @version 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
-	// 键盘 PA1 键
+	// 键盘按键 PA1 键
 	// @version 1.33
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
-	// 键盘 清理键(OEM 键)
+	// 键盘按键 清理键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
@@ -2471,16 +2471,20 @@ globals
 	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk')
 
 	// 技能布尔值域 技能状态-英雄技能 ('aher')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_HERO_ABILITY = ConvertAbilityBooleanField('aher') // Get only
 	// 技能布尔值域 技能状态-物品技能 ('aite')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
 	// 技能布尔值域 技能状态-检查依赖 ('achd')
+        // （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
 
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
 	// 技能字符串域 名称 ('anam')
+        // （仅能获取）
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
 	// 技能字符串域 图标(关闭) ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
@@ -2543,7 +2547,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_CREEP_LEVEL_DEV3 = ConvertAbilityIntegerLevelField('Dev3')
 	 // 技能随等级改变的整数域 最大目标中立等级 ('Dev1')
 	constant abilityintegerlevelfield ABILITY_ILF_MAX_CREEP_LEVEL_DEV1 = ConvertAbilityIntegerLevelField('Dev1')
-	 // 技能随等级改变的整数域 采集黄金数/间隔 ('Fae1')
+	 // 技能随等级改变的整数域 采集黄金数/间隔 ('Egm1')
 	constant abilityintegerlevelfield ABILITY_ILF_GOLD_PER_INTERVAL_EGM1 = ConvertAbilityIntegerLevelField('Egm1')
 	 // 技能随等级改变的整数域 防御减少 ('Fae1')
 	constant abilityintegerlevelfield ABILITY_ILF_DEFENSE_REDUCTION = ConvertAbilityIntegerLevelField('Fae1')
@@ -2930,7 +2934,7 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_MAX_MANA_DRAINED = ConvertAbilityRealLevelField('Emb1')
 	// 技能随等级改变的实数域 数字显示延迟 ('Emb2')
 	constant abilityreallevelfield ABILITY_RLF_BOLT_DELAY = ConvertAbilityRealLevelField('Emb2')
-	// 技能随等级改变的实数域 数字显示持续时间 ('Emb3')
+	// 技能随等级改变的实数域 数字显示时间 ('Emb3')
 	constant abilityreallevelfield ABILITY_RLF_BOLT_LIFETIME = ConvertAbilityRealLevelField('Emb3')
 	// 技能随等级改变的实数域 高度调整时间 ('Eme3')
 	constant abilityreallevelfield ABILITY_RLF_ALTITUDE_ADJUSTMENT_DURATION = ConvertAbilityRealLevelField('Eme3')
@@ -3504,7 +3508,7 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_HERO_DAMAGE_PER_MANA_POINT = ConvertAbilityRealLevelField('mfl2')
 	// 技能随等级改变的实数域 单位 - 最大伤害 ('mfl3')
 	constant abilityreallevelfield ABILITY_RLF_UNIT_MAXIMUM_DAMAGE = ConvertAbilityRealLevelField('mfl3')
-	// 技能随等级改变的实数域 英雄 - 最大伤害 ('mfl3')
+	// 技能随等级改变的实数域 英雄 - 最大伤害 ('mfl4')
 	constant abilityreallevelfield ABILITY_RLF_HERO_MAXIMUM_DAMAGE = ConvertAbilityRealLevelField('mfl4')
 	// 技能随等级改变的实数域 护甲增加 ('mfl5')
 	constant abilityreallevelfield ABILITY_RLF_DAMAGE_COOLDOWN = ConvertAbilityRealLevelField('mfl5')
@@ -3727,7 +3731,7 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_RAISED_UNITS_ARE_INVULNERABLE = ConvertAbilityBooleanLevelField('Hre2')
 	// 技能随等级改变的布尔值域 按百分比回复 ('Oar2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENTAGE_OAR2 = ConvertAbilityBooleanLevelField('Oar2')
-	// 技能随等级改变的布尔值域 召唤非空闲单位 ('Btl2')
+	// 技能随等级改变的布尔值域 召集非空闲单位 ('Btl2')
 	constant abilitybooleanlevelfield ABILITY_BLF_SUMMON_BUSY_UNITS = ConvertAbilityBooleanLevelField('Btl2')
 	// 技能随等级改变的布尔值域 创建荒芜地表 ('Bli2')
 	constant abilitybooleanlevelfield ABILITY_BLF_CREATES_BLIGHT = ConvertAbilityBooleanLevelField('Bli2')
@@ -3892,17 +3896,17 @@ globals
 	constant abilitystringlevelfield ABILITY_SLF_SPELL_LIST = ConvertAbilityStringLevelField('spb1')
 	// 技能随等级改变的字符串域 基础命令ID ('spb5')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_SPB5 = ConvertAbilityStringLevelField('spb5')
-	// 技能随等级改变的字符串域 基础命令ID ('spb6')
+	// 技能随等级改变的字符串域 基础命令ID ('Ncl6')
 	constant abilitystringlevelfield ABILITY_SLF_BASE_ORDER_ID_NCL6 = ConvertAbilityStringLevelField('Ncl6')
-	// 技能随等级改变的字符串域 技能升级1 ('Neg3')
+	// 技能随等级改变的字符串域 技能升级 1 ('Neg3')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_1 = ConvertAbilityStringLevelField('Neg3')
-	// 技能随等级改变的字符串域 技能升级2 ('Neg4')
+	// 技能随等级改变的字符串域 技能升级 2 ('Neg4')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_2 = ConvertAbilityStringLevelField('Neg4')
-	// 技能随等级改变的字符串域 技能升级3 ('Neg5')
+	// 技能随等级改变的字符串域 技能升级 3 ('Neg5')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
-	// 技能随等级改变的字符串域 技能升级4 ('Neg6')
+	// 技能随等级改变的字符串域 技能升级 4 ('Neg6')
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
-	// 技能随等级改变的字符串域 生产单位类型 ('Nsy2')
+	// 技能随等级改变的字符串域 生产单位ID ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
 	
 	// Item
@@ -3922,13 +3926,13 @@ globals
 	constant itemintegerfield ITEM_IF_PRIORITY = ConvertItemIntegerField('ipri')
 	// 物品整数域 装甲类型(本头/气态/石头/肉体/金属) ('iarm')
 	constant itemintegerfield ITEM_IF_ARMOR_TYPE = ConvertItemIntegerField('iarm')
-	// 物品整数域 颜色通道(红) ('iclr')
+	// 物品整数域 颜色值(红) ('iclr')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_RED = ConvertItemIntegerField('iclr')
-	// 物品整数域 颜色通道(绿) ('iclg')
+	// 物品整数域 颜色值(绿) ('iclg')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_GREEN = ConvertItemIntegerField('iclg')
-	// 物品整数域 颜色通道(蓝) ('iclb')
+	// 物品整数域 颜色值(蓝) ('iclb')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
-	// 物品整数域 颜色通道(alpha) ('ical')
+	// 物品整数域 颜色值(alpha) ('ical')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
 	// 物品实数域 模型缩放 ('isca')
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
@@ -3936,7 +3940,7 @@ globals
 	constant itembooleanfield ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
 	// 物品布尔值域 可以丢弃 ('idro')
 	constant itembooleanfield ITEM_BF_CAN_BE_DROPPED = ConvertItemBooleanField('idro')
-	// 物品布尔值域 使用完消失 ('iper')
+	// 物品布尔值域 使用完会消失 ('iper')
 	constant itembooleanfield ITEM_BF_PERISHABLE = ConvertItemBooleanField('iper')
 	// 物品布尔值域 可作为随机物品 ('iprn')
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
@@ -3990,7 +3994,7 @@ globals
 	constant unitintegerfield UNIT_IF_LUMBER_BOUNTY_AWARDED_BASE = ConvertUnitIntegerField('ulba')
 	// 单位整数域 状态 - 木材奖励 - 骰子面数 ('ulbs')
 	constant unitintegerfield UNIT_IF_LUMBER_BOUNTY_AWARDED_SIDES_PER_DIE = ConvertUnitIntegerField('ulbs')
-	// 单位整数域 状态 - （单位）等级 ('ulev')
+	// 单位整数域 状态 - 等级 ('ulev')
 	constant unitintegerfield UNIT_IF_LEVEL = ConvertUnitIntegerField('ulev')
 	// 单位整数域 状态 - 队形排列 ('ufor')
 	constant unitintegerfield UNIT_IF_FORMATION_RANK = ConvertUnitIntegerField('ufor')
@@ -3998,15 +4002,15 @@ globals
 	constant unitintegerfield UNIT_IF_ORIENTATION_INTERPOLATION = ConvertUnitIntegerField('uori')
 	// 单位整数域 美术 - 高度变化- 采样点数量 ('uept')
 	constant unitintegerfield UNIT_IF_ELEVATION_SAMPLE_POINTS = ConvertUnitIntegerField('uept')
-	// 单位整数域 美术 - 颜色通道(红) ('uclr')
+	// 单位整数域 美术 - 颜色值(红) ('uclr')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_RED = ConvertUnitIntegerField('uclr')
-	// 单位整数域 美术 - 颜色通道(绿) ('uclg')
+	// 单位整数域 美术 - 颜色值(绿) ('uclg')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_GREEN = ConvertUnitIntegerField('uclg')
-	// 单位整数域 美术 - 颜色通道(蓝) ('uclb')
+	// 单位整数域 美术 - 颜色值(蓝) ('uclb')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_BLUE = ConvertUnitIntegerField('uclb')
-	// 单位整数域 美术 - 颜色通道(alpha) ('ucal')
+	// 单位整数域 美术 - 颜色值(alpha) ('ucal')
 	constant unitintegerfield UNIT_IF_TINTING_COLOR_ALPHA = ConvertUnitIntegerField('ucal')
-	// 单位整数域 移动 - （移动）类型 ('umvt')
+	// 单位整数域 移动 - 类型 ('umvt')
 	constant unitintegerfield UNIT_IF_MOVE_TYPE = ConvertUnitIntegerField('umvt')
 	// 单位整数域 战斗 - 作为目标类型 ('utar')
 	constant unitintegerfield UNIT_IF_TARGETED_AS = ConvertUnitIntegerField('utar')
@@ -4029,7 +4033,7 @@ globals
 	constant unitrealfield UNIT_RF_HIT_POINTS_REGENERATION_RATE = ConvertUnitRealField('uhpr')
 	// 单位实数域 状态 - （每秒）魔法回复（值） ('umpr')
 	constant unitrealfield UNIT_RF_MANA_REGENERATION = ConvertUnitRealField('umpr')
-	// 单位实数域 美术 - 死亡时间(秒)
+	// 单位实数域 美术 - 死亡时间(秒) ('udtm')
 	constant unitrealfield UNIT_RF_DEATH_TIME = ConvertUnitRealField('udtm')
 	// 单位实数域 移动 - 飞行高度 ('ufyh')
 	constant unitrealfield UNIT_RF_FLY_HEIGHT = ConvertUnitRealField('ufyh')
@@ -4084,13 +4088,13 @@ globals
 	// 单位实数域 战斗 - 最小攻击范围 ('uamn')
 	constant unitrealfield UNIT_RF_MINIMUM_ATTACK_RANGE = ConvertUnitRealField('uamn')
 
-	// 单位布尔值域 可提高的(ChatGPT说这是 是否允许复活) ('urai')
+	// 单位布尔值域 战斗 - 死亡 - 灵魂飞升（死亡后无尸体）(非死亡类型) ('urai')
 	constant unitbooleanfield UNIT_BF_RAISABLE = ConvertUnitBooleanField('urai')
-	// 单位布尔值域 战斗 - 死亡 - 可腐朽的(非死亡类型) ('udec')
+	// 单位布尔值域 战斗 - 死亡 - 尸体腐烂（死亡后有尸体）(非死亡类型) ('udec')
 	constant unitbooleanfield UNIT_BF_ADECYABLE = ConvertUnitBooleanField('udec')
 	// 单位布尔值域 状态 - 是一个建筑 ('ubdg')
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
-	// 单位布尔值域 美术 - 不可见区域显示单位(ChatGPT说这是 扩展视野) ('ulos')
+	// 单位布尔值域 美术 - 不可见区域显示单位 ('ulos')
 	constant unitbooleanfield UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
 	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记 ('unbm')
 	constant unitbooleanfield UNIT_BF_NEUTRAL_BUILDING_SHOWS_MINIMAP_ICON = ConvertUnitBooleanField('unbm')
@@ -4111,7 +4115,7 @@ globals
 
 	// 单位字符串域 文本 - 名称 ('unam')
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
-	// 单位字符串域 文本 - 称谓(英雄类单位) ('upro')
+	// 单位字符串域 文本 - 称谓(英雄独占) ('upro')
 	constant unitstringfield UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
 	// 单位字符串域 美术 - 建筑地表纹理 ('uubs')
 	constant unitstringfield UNIT_SF_GROUND_TEXTURE = ConvertUnitStringField('uubs')
@@ -4312,9 +4316,9 @@ globals
 	
 	// 放置要求 地面可通行
  constant pathingflag PATHING_FLAG_UNWALKABLE = ConvertPathingFlag(2)
-	// 放置要求 空中单位可通行
+	// 放置要求 空中可通行
 	constant pathingflag PATHING_FLAG_UNFLYABLE = ConvertPathingFlag(4)
-	// 放置要求 可建造地面
+	// 放置要求 可建造
 	constant pathingflag PATHING_FLAG_UNBUILDABLE = ConvertPathingFlag(8)
 	// 放置要求 工人可采集
 	constant pathingflag PATHING_FLAG_UNPEONHARVEST = ConvertPathingFlag(16)
@@ -4322,7 +4326,7 @@ globals
 	constant pathingflag PATHING_FLAG_BLIGHTED = ConvertPathingFlag(32)
 	// 放置要求 海面可通行
 	constant pathingflag PATHING_FLAG_UNFLOATABLE = ConvertPathingFlag(64)
-	// 放置要求 两栖单位可通行
+	// 放置要求 两栖可通行
 	constant pathingflag PATHING_FLAG_UNAMPHIBIOUS = ConvertPathingFlag(128)
 	// 放置要求 物品可通行
 	constant pathingflag PATHING_FLAG_UNITEMPLACABLE = ConvertPathingFlag(256)
@@ -4345,7 +4349,7 @@ native Cos takes real radians returns real
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
-// y 应在 -1 到 1 之间...无效输入时返回 0
+// y 应在 -1 到 1 之间...输入无效时返回 0
 native Asin takes real y returns real
 // 反余弦(弧度) [R]
 native Acos takes real x returns real
@@ -5196,16 +5200,16 @@ constant native GetOrderPointY takes nothing returns real
 // EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 constant native GetOrderPointLoc takes nothing returns location
 
-// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位/物品/可破坏物)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTarget takes nothing returns widget
-// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(可破坏物)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetDestructable takes nothing returns destructable
-// 事件响应 获取命令目标(物品)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(物品)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetItem takes nothing returns item
-// 事件响应 获取命令目标(单位)(对应发布命令(指定目标)等事件)
+// 事件响应 获取命令目标(单位)(对应发布命令(指定目标，可以是单位、物品、可破坏物)等事件)
 // EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 constant native GetOrderTargetUnit takes nothing returns unit
 
@@ -5730,7 +5734,7 @@ native UnitAddItemById takes unit whichUnit, integer itemId returns item
 native UnitAddItemToSlotById takes unit whichUnit, integer itemId, integer itemSlot returns boolean
 // 丢弃物品到当前位置（指定单位和指定物品）
 // 包括不可丢弃的物品
-// 单位死亡或删除后，也能正常丢弃
+// 单位死亡或删除后，也会正常丢弃
 native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 丢弃物品到当前位置(指定单位和物品栏格数)
 // 不论该格是何物品（包括不可丢弃的物品），都会被丢弃
@@ -5758,10 +5762,13 @@ native UnitDropItemSlot takes unit whichUnit, item whichItem, integer slot retur
 native UnitDropItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 发布使用物品命令(无目标)
+// 可能只返回false，不论执行成败
 native UnitUseItem takes unit whichUnit, item whichItem returns boolean
 // 发布使用物品命令(指定坐标)
+// 可能只返回false，不论执行成败
 native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
 // 发布使用物品命令(指定单位)
+// 可能只返回false，不论执行成败
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 获取指定单位 X 坐标 [R]
@@ -5904,9 +5911,9 @@ native UnitWakeUp takes unit whichUnit returns nothing
 // 设置指定单位限时生命 [R]
 // @param buffId 魔法效果(buff)类型，只支持 'BTLF','BUan','Bapl','BEfn','Bhwd','BHwe','Brai'
 native UnitApplyTimedLife takes unit whichUnit, integer buffId, real duration returns nothing
-// 设置指定单位忽略报警状态
+// 设置指定单位忽略报警
 native UnitIgnoreAlarm takes unit whichUnit, boolean flag returns boolean
-// 查询指定单位忽略报警开关状态
+// 查询指定单位是否忽略报警
 native UnitIgnoreAlarmToggled takes unit whichUnit returns boolean
 // 重设指定单位(所有)技能冷却时间
 native UnitResetCooldown takes unit whichUnit returns nothing
@@ -5946,15 +5953,19 @@ native IssueImmediateOrder takes unit whichUnit, string order returns boolean
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 发布命令(指定坐标)
+// 可能只返回false，不论执行成败
 // @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrder takes unit whichUnit, string order, real x, real y returns boolean
 // 发布命令(指定点)
+// 可能只返回false，不论执行成败
 // @param order 技能命令字符串可在 记录物编的文件 找到
 native IssuePointOrderLoc takes unit whichUnit, string order, location whichLocation returns boolean
 // 按ID发布命令(指定坐标)
+// 可能只返回false，不论执行成败
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 按ID发布命令(指定点)
+// 可能只返回false，不论执行成败
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssuePointOrderByIdLoc takes unit whichUnit, integer order, location whichLocation returns boolean
 // 发布命令(指定单位/物品/可破坏物)
@@ -6211,13 +6222,16 @@ native VersionCompatible takes version whichVersion returns boolean
 native VersionSupported takes version whichVersion returns boolean
 
 // 结束游戏
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native EndGame takes boolean doScoreScreen returns nothing
 
 // Async only!
 
 // 切换关卡 [R]
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native ChangeLevel takes string newLevel, boolean doScoreScreen returns nothing
 // 重新开始游戏(当前关卡)
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native RestartGame takes boolean doScoreScreen returns nothing
 // 重新读档(当前存档或最新的检查点(自动)存档)
 native ReloadGame takes nothing returns nothing
@@ -6232,7 +6246,7 @@ native SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
 native ForceCampaignSelectScreen takes nothing returns nothing
 
 // 加载存档(手动选择存档)
-// @param doScoreScreen （游戏结束后）是否跳过得分屏，常用于战役地图
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native LoadGame takes string saveFileName, boolean doScoreScreen returns nothing
 // 手动存档 [R]
 native SaveGame takes string saveFileName returns nothing
@@ -6247,17 +6261,21 @@ native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 // 游戏检查点(自动)存档
-// @param showWindow 是否显示自动存档消息
+// @param showWindow 是否显示自动存档提示
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
 native SyncSelections takes nothing returns nothing
-// 设置游戏浮点值(指定浮点游戏状态)
+// 设置游戏浮点状态值(指定游戏浮点状态)
+// 支持 GAME_STATE_TIME_OF_DAY
 native SetFloatGameState takes fgamestate whichFloatGameState, real value returns nothing
-// 获取游戏浮点值(指定浮点游戏状态)
+// 获取游戏浮点状态值(指定游戏浮点状态)
+// 支持 GAME_STATE_TIME_OF_DAY
 constant native GetFloatGameState takes fgamestate whichFloatGameState returns real
-// 设置游戏整点值(指定整点游戏状态)
+// 设置游戏整点状态值(指定游戏整点状态)
+// 支持 GAME_STATE_DIVINE_INTERVENTION，GAME_STATE_DISCONNECTED
 native SetIntegerGameState takes igamestate whichIntegerGameState, integer value returns nothing
-// 获取游戏整点值(指定整点游戏状态)
+// 获取游戏整点状态值(指定游戏整点状态)
+// 支持 GAME_STATE_DIVINE_INTERVENTION，GAME_STATE_DISCONNECTED
 constant native GetIntegerGameState takes igamestate whichIntegerGameState returns integer
 
 
@@ -6300,7 +6318,8 @@ native DialogSetMessage takes dialog whichDialog, string messageText returns not
 // 添加指定对话框按钮 [R]
 // 即使按钮内容是用全局变量写入，按钮内容也不会随变量变化，添加时已经写死，除非清空重新添加按钮
 native DialogAddButton takes dialog whichDialog, string buttonText, integer hotkey returns button
-// 添加退出游戏按钮(指定对话框) [R]
+// 添加退出游戏按钮(指定对话框)，可设置按钮文案及快捷键 [R]
+// @param doScoreScreen （游戏结束后）是否显示得分屏，常用于战役地图
 native DialogAddQuitButton takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
 // 显示/隐藏 对话框（指定玩家）[R]
 native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag returns nothing
@@ -6349,10 +6368,10 @@ native HaveStoredUnit takes gamecache cache, string missionKey, string key retur
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
 // 清空指定游戏缓存 [C]
-// 清空指定游戏缓存下所有类别，清空后无需新建缓存，仍可复用
+// 清空指定游戏缓存下所有类别，清空缓存后变量不会变为null且需新建缓存
 native FlushGameCache takes gamecache cache returns nothing
 // 清空指定游戏缓存（指定类别）
-// 仅清空指定缓存的指定类别
+// 仅清空指定缓存的指定类别，清空后无需新建缓存
 native FlushStoredMission takes gamecache cache, string missionKey returns nothing
 // 清空指定游戏缓存存储值（整数类别）
 native FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing
@@ -6591,10 +6610,10 @@ native RemoveSavedString takes hashtable table, integer parentKey, integer child
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // <1.24> 清空指定哈希表 [C]
-// 清空整张表，清空后无需新建表，仍可复用
+// 清空整张表，清空后表变量不会变为null且需新建表
 native FlushParentHashtable takes hashtable table returns nothing
 // <1.24> 清空指定哈希表的指定主索引 [C]
-// 仅清空指定主索引
+// 仅清空指定主索引，清空后无需新建表
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
@@ -6661,11 +6680,11 @@ native ResetTerrainFog takes nothing returns nothing
 native SetUnitFog takes real a, real b, real c, real d, real e returns nothing
 // 设置地形迷雾 [R]
 native SetTerrainFogEx takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
-// 对指定玩家显示文本消息(自动限时) [R]
+// 对指定玩家显示文本(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
-// 对指定玩家显示文本消息(指定时间) [R]
+// 对指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
-// 从指定玩家显示文本消息(指定时间) [R]
+// 从指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
 // 清空文本信息(所有玩家) [R]
 native ClearTextMessages takes nothing returns nothing
@@ -7192,7 +7211,7 @@ native CreateMIDISound takes string soundLabel, integer fadeInRate, integer fade
 native SetSoundParamsFromLabel takes sound soundHandle, string soundLabel returns nothing
 // 设置音效截断距离
 native SetSoundDistanceCutoff takes sound soundHandle, real cutoff returns nothing
-// 设置音效播放通道
+// 设置音效播放频道
 native SetSoundChannel takes sound soundHandle, integer channel returns nothing
 // 设置音效播放音量 [R]
 native SetSoundVolume takes sound soundHandle, integer volume returns nothing
@@ -7311,6 +7330,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 //
 
 // 新建天气效果 [R]
+// @param effectID 天气特效类型，可在 jass.config.json 找到
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
 // 删除天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
@@ -7381,10 +7401,10 @@ native AddSpellEffectTarget takes string modelName, effecttype t, widget targetW
 native AddSpellEffectTargetById takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
 
 // 新建闪电特效 [R]
-// @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
+// @param codeName 闪电类型(闪电链 - 主 - "CLPB"、闪电链 - 次 - "CLSB"、汲取 - "DRAB"、生命汲取 - "DRAL"、魔法汲取 - "DRAM"、死亡之指 - "AFOD"、叉状闪电 - "FORK"、医疗波 - 主 - "HWPB"、医疗波 - 次 - "HWSB"、闪电攻击 - "CHIM"、魔法镣铐 - "LEAS"、法力燃烧 - "MBUR"、魔力之焰 - "MFPB"、灵魂锁链 - "SPLK")
 native AddLightning takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
 // 新建闪电特效(指定Z轴) [R]
-// @param codeName 闪电类型，具体类型可在 记录物编的文件 找到
+// @param codeName 闪电类型(闪电链 - 主 - "CLPB"、闪电链 - 次 - "CLSB"、汲取 - "DRAB"、生命汲取 - "DRAL"、魔法汲取 - "DRAM"、死亡之指 - "AFOD"、叉状闪电 - "FORK"、医疗波 - 主 - "HWPB"、医疗波 - 次 - "HWSB"、闪电攻击 - "CHIM"、魔法镣铐 - "LEAS"、法力燃烧 - "MBUR"、魔力之焰 - "MFPB"、灵魂锁链 - "SPLK")
 native AddLightningEx takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
 // 销毁闪电特效
 native DestroyLightning takes lightning whichBolt returns boolean
@@ -7392,13 +7412,13 @@ native DestroyLightning takes lightning whichBolt returns boolean
 native MoveLightning takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
 // 移动闪电特效(指定坐标) [R]
 native MoveLightningEx takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
-// 获取闪电特效 A通道颜色值
+// 获取闪电特效 Alpha色值
 native GetLightningColorA takes lightning whichBolt returns real
-// 获取闪电特效 R通道颜色值
+// 获取闪电特效 红色值
 native GetLightningColorR takes lightning whichBolt returns real
-// 获取闪电特效 G通道颜色值
+// 获取闪电特效 绿色值
 native GetLightningColorG takes lightning whichBolt returns real
-// 获取闪电特效 B通道颜色值
+// 获取闪电特效 蓝色值
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
@@ -7439,7 +7459,7 @@ native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag retu
 //
 
 // 新建图像 [R]
-// @param imageType 图像类型，具体类型可在 记录物编的文件 找到
+// @param imageType 图像类型，可输入 0~5（阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
 native CreateImage takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
 // 销毁图像
 native DestroyImage takes image whichImage returns nothing
@@ -7460,7 +7480,7 @@ native SetImageRenderAlways takes image whichImage, boolean flag returns nothing
 // @param useWaterAlpha 允许(使用)/禁止(不使用) 水透明通道
 native SetImageAboveWater takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
 // 设置图像类型
-// @param imageType 图像类型，可输入 0~5,对应[阴影,选择,指示器,闭塞标志,地表纹理变化,最顶端]，更多类型可在 记录物编的文件 找到
+// @param imageType 图像类型，可输入 0~5（对应阴影 - SHADOW、选择 - SELECTION、指示器 - INDICATOR、闭塞标志 - OCCLUSIONMARK、地面纹理变化 - UBERSPLAT、最顶端 - LAST）
 native SetImageType takes image whichImage, integer imageType returns nothing
 
 
@@ -7876,21 +7896,21 @@ native BlzConvertColor takes integer a, integer r, integer g, integer b returns 
 native BlzLoadTOCFile takes string TOCFile returns boolean
 // 创建Frame
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param priority 层级(图层)
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，也可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
 // @param typeName 框架类型
 // @param name 可输入任意名称
-// @param framehandle 可使用BlzGetOriginFrame获取原生UI，也可输入任意框架
+// @param framehandle 可使用BlzGetOriginFrame获取原生UI，可输入任意框架
 // @param inherits 父类框架(模板)
 // @param createContext 索引，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
@@ -8057,7 +8077,7 @@ native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns abil
 // @version 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 模拟玩家在聊天框发送聊天信息
-// @param whichPlayer 发出消息的玩家
+// @param whichPlayer 发信息的玩家
 // @param recipient 频道，0为所有人，1为盟友，2为观战者，大于等于3为私聊
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
@@ -8223,13 +8243,14 @@ native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield w
 
 // Skin
 
-// 获取单位皮肤
+// 获取单位皮肤ID
 native BlzGetUnitSkin takes unit whichUnit returns integer
-// 获取物品皮肤
+// 获取物品皮肤ID
 native BlzGetItemSkin takes item whichItem returns integer
-// 获取可破坏物皮肤
+// 获取可破坏物皮肤ID
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
 // 设置单位皮肤
+// 对镜像及幻象无效
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 // 设置物品皮肤
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
