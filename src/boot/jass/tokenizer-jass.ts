@@ -1,4 +1,4 @@
-import { Context, Document, Token, TokenHandleResult, TokenType, symbol_state } from "./tokenizer-common";
+import { Context, Document, Token, TokenHandleResult, TokenType, symbol_state, tokenize } from "./tokenizer-common";
 
 class StateType {
   public static Nil:number = symbol_state("");
@@ -18,7 +18,7 @@ class StateType {
   public static Real:number = symbol_state(".");
   public static $:number = symbol_state("$");
 }
-function token_handle(context:Context, line:number, character:number, position:number, char: string, next_char: string, state: number, length: number):TokenHandleResult|undefined {
+export function token_handle(context:Context, line:number, character:number, position:number, char: string, next_char: string, state: number, length: number):TokenHandleResult|undefined {
   const has_next = () => {
     return !!next_char;
   };
@@ -446,37 +446,8 @@ function token_handle(context:Context, line:number, character:number, position:n
       return undefined
   }
 }
-export function tokenize_for_jass(content: string) {
-  const document = new Document(content);
-  const context = new Context(document);
-  let line:number = 0;;
-  let character:number = 0;
-  let state: number = symbol_state("");
-  let length: number = 0;
-  const tokens:Token[] = [];
-  for (let index = 0; index < content.length; index++) {
-    const char = content.charAt(index);
-    const next_char = content.charAt(index + 1);
-    const new_state = token_handle(context, line, character, index, char, next_char, state, length);
 
 
-    // substate = new_state.substate;
-    if (char == "\n") {
-      line++;
-      character = 0;
-    } else {
-      character++;
-    }
-
-    if (new_state?.state !== undefined) {
-      state = new_state.state;
-    }
-    if (new_state?.length !== undefined) {
-      length = new_state.length;
-    }
-    if (new_state?.token) {
-      tokens.push(new_state.token);
-    }
-  }
-  return tokens;
+export function tokenize_for_jass(content:string) {
+  return tokenize(content, token_handle);
 }

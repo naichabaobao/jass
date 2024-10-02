@@ -31,15 +31,15 @@ import { isAiFile, isJFile } from '../tool';
 
 const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
 const error = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
-	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Error);
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Error);
 	diagnostics.push(diagnostic);
 };
 const warning = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
-	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Warning);
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Warning);
 	diagnostics.push(diagnostic);
 };
 const hint = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
-	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.line, token.character, token.line, token.end), message, vscode.DiagnosticSeverity.Hint);
+	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Hint);
 	diagnostics.push(diagnostic);
 };
 
@@ -61,7 +61,7 @@ const find_file_error_for_jass = (document: vscode.TextDocument) => {
 
 	const diagnostics:vscode.Diagnostic[] = [];
 
-	const tokens = tokenize_for_jass(document.getText());
+	const tokens = tokenize_for_jass(document.getText()).tokens;
 	tokens.forEach(token => {
 		let temp:string;
 		const text = () => {

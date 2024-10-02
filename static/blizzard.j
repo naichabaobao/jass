@@ -9671,7 +9671,7 @@ endfunction
 // This function is added as an action to all destructable drop triggers,
 // so that a widget drop may be differentiated from a unit drop.
 function SaveDyingWidget takes nothing returns nothing
-    set bj_lastDyingWidget = GetTriggereWidgt()
+    set bj_lastDyingWidget = GetTriggerWidget()
 endfunction
 
 
