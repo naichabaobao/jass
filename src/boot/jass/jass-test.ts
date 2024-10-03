@@ -6,6 +6,9 @@ import { execSync } from "child_process";
 import { mkdirSync, unlinkSync, writeFileSync } from "fs";
 import { tokenize_for_vjass } from "./tokenizer-vjass";
 import { Token } from "./tokenizer-common";
+import { Global, parse } from "./parser-vjass";
+import { Parser } from "./parser";
+import { Context } from "./ast";
 
 // 词法解析速度与内存暂用测试
 if (false) {
@@ -51,37 +54,77 @@ if (true) {
         
         console.log(` ${token.type} ${token.is_complete ? "true" : "false"} '${token.getText()}'`);
     }
-
-    let content:string = `[ ] = /*
-    
-    */
-    2.3
-    function
-    debugsaod刚爬到`;
-    content = readFileContent(resolve(cwd(), "./static/common.j"))
-    tokenize_for_vjass(content).tokens.slice(0, 5).map(t => printToken(t))
-
-    const document = tokenize_for_vjass(content);
-    console.time("line_tokens")
-    for (let index = 0; index < document.lineCount; index++) {
-        const line = document.lineTokens(index);
-        // const line = document.tokens.slice(500, 1000);
-        // tokens(line.text)
-        // console.log(line
+    const printTokens = (tokens:Token[]|undefined) => {
         
+        tokens?.forEach(token => {
+            printToken(token);
+        });
     }
-    console.timeEnd("line_tokens")
-    console.log("=======================");
+
+    // let content:string = `#aaa bbb ofjsapf
+    // #define java b\tab  a\\
+    // fsao\fpos \\
+    // fsaf
+    // #define asdsa3
+    // //!`;
+    // // content = readFileContent(resolve(cwd(), "./static/common.j"))
+    // tokenize_for_vjass(content).tokens.slice(0, 5).map(t => printToken(t))
+
     
-    console.log(tokenize_for_vjass(content).lineAt(0));
-    tokenize_for_vjass(content).lineTokens(0).forEach(t => printToken(t))
-    // console.log(tokenize_for_vjass(content).lineTokens(0));
+
+    // const document = tokenize_for_vjass(content);
+    // console.time("line_tokens")
+    // for (let index = 0; index < document.lineCount; index++) {
+    //     const line = document.lineTokens(index);
+    //     // const line = document.tokens.slice(500, 1000);
+    //     // tokens(line.text)
+    //     // console.log(line
+        
+    // }
+    // console.timeEnd("line_tokens")
+    // console.log("=======================");
     
-    // console.log(document.line_token_indexs);
+    // console.log(tokenize_for_vjass(content).lineAt(0));
+    // tokenize_for_vjass(content).lineTokens(0).forEach(t => printToken(t))
+    // // console.log(tokenize_for_vjass(content).lineTokens(0));
     
-    console.time("find_line_tokens")
-    console.log(tokenize_for_vjass(content).lineTokens(1200))
-    console.timeEnd("find_line_tokens")
+    // // console.log(document.line_token_indexs);
+    
+    // console.time("find_line_tokens")
+    // console.log(tokenize_for_vjass(content).lineAt(1200))
+    // console.timeEnd("find_line_tokens")
+    // console.time("preprocessing");
+    // textmacro(document);
+    // console.timeEnd("preprocessing");
+
+    // const filePath = resolve(cwd(), "./static/blizzard.j");
+    console.time("kk")
+    const filePath = "C:/Users/Administrator/Desktop/ff/test3.j";
+    // const filePath = resolve(cwd(), "./static/common.j");
+    const filePath2 = "C:/Users/Administrator/Desktop/ff/test.j";
+    parse(filePath)
+    console.timeEnd("kk");
+
+    console.time("kk2")
+    new Parser(new Context(), readFileContent(filePath)).parsing()
+    console.timeEnd("kk2");
+
+    // printTokens(Global.get(filePath)?.tokens);
+    // console.log(Global.get(filePath)?.tokens.length);
+
+    // const document = Global.get(filePath)!;
+    // let step = 0;
+    // let step2 = 0;
+    // document.loop((document, line) => {
+    //     console.log("func1", line, document.lineAt(line).text);
+        
+    // }, (document, run_text_macro, macro, line) => {
+    //     console.log("func2", line, document.lineAt(line).text, macro.line_at(line, run_text_macro.param_values()), );
+    //     printTokens(macro.line_tokens(line, run_text_macro.param_values()))
+    // })
+    // printTokens(Global.get(filePath2)?.tokens);
+    // console.log(Global.get(filePath2))
+    
 }
 
 if (false) {

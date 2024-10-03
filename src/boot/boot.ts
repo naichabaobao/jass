@@ -1,7 +1,9 @@
 // import * as FileManager from "./provider/file-manager"
+
+
 async function boot() {
     // await import ("./provider/file-manager");
-    await import ("./provider/data");
+    await import("./provider/data");
     await import("./provider/document-formatting-edit-provider");
     await import("./provider/folding-range-provider");
     await import("./provider/document-color-provider");
@@ -18,6 +20,6 @@ async function boot() {
     await import("./provider/reverse-lookup-document-symbol-provider");
 }
 
-export{
+export {
     boot
 };

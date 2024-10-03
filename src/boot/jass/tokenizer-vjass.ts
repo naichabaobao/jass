@@ -1,5 +1,5 @@
 
-import { Context, Document, Position, Token, TokenHandleResult, TokenType, symbol_state, tokenize } from "./tokenizer-common";
+import { Document, Position, Token, TokenHandleResult, TokenType, symbol_state, tokenize } from "./tokenizer-common";
 
 
 
@@ -44,7 +44,7 @@ class StateType {
     public static Bracket: number = symbol_state("[]");
     public static BracketEq: number = symbol_state("[]=");
 }
-export function token_handle(context: Context, line: number, character: number, position: number, char: string, next_char: string, state: number, length: number): TokenHandleResult | undefined {
+export function token_handle(document:Document, line: number, character: number, position: number, char: string, next_char: string, state: number, length: number): TokenHandleResult | undefined {
     const has_next = () => {
         return !!next_char;
     };
@@ -59,12 +59,12 @@ export function token_handle(context: Context, line: number, character: number, 
     };
     const new_token = (type: string, is_complete: boolean = true) => {
         if (type == VjassTokenType.BlockComment) {
-            const token = new Token(context, line, character - length, position - length, length + 1, type, is_complete);
+            const token = new Token(document, line, character - length, position - length, length + 1, type, is_complete);
             token.start = new Position();
             token.end = new Position();
             return token;
         }
-        return new Token(context, line, character - length, position - length, length + 1, type, is_complete);
+        return new Token(document, line, character - length, position - length, length + 1, type, is_complete);
     };
     switch (state) {
         case StateType.Nil:
@@ -634,8 +634,11 @@ export function token_handle(context: Context, line: number, character: number, 
 //     return document;
 //   }
 
-export function tokenize_for_vjass(content:string) {
-    return tokenize(content, token_handle);
+export function tokenize_for_vjass(document:Document) {
+    return tokenize(document, token_handle);
+  }
+export function tokenize_for_vjass_by_content(content: string) {
+    return tokenize(new Document("", content), token_handle).tokens;
   }
 
 

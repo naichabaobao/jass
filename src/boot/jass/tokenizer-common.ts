@@ -1,3 +1,5 @@
+import { Macro } from "./preproces";
+import { Import, RunTextMacro, TextMacro } from "./textmacro";
 
 export function symbol_state(char: string): number {
     let id = 0x00000000;
@@ -104,8 +106,15 @@ export class Document {
     public readonly content: string;
     public readonly tokens:Token[] = [];
     public readonly lineCount:number = 0;
+    public readonly imports: Import[] = [];
+    public readonly macros: Macro[] = [];
+    public readonly text_macros: TextMacro[] = [];
+    public readonly run_text_macros: RunTextMacro[] = [];
+
+    public readonly filePath: string;
   
-    public constructor(content: string) {
+    public constructor(filePath: string, content: string) {
+      this.filePath = filePath;
       this.content = content;
     }
 
@@ -118,8 +127,8 @@ export class Document {
       // const textLine2 = new TextLine(line, this.content.split("\n")[line]);
       // console.timeEnd("line2")
       // console.log(textLine2)
-      const index = this.line_points.findIndex(x => x.line == line);
-      return new TextLine(line, index != -1 ? this.content.substring(this.line_points[index].position, this.line_points[index + 1]?.position) : "");
+      // const index = this.line_points.findIndex(x => x.line == line);
+      return new TextLine(line, this.line_points[line] ? this.content.substring(this.line_points[line].position, this.line_points[line + 1]?.position) : "");
     }
 
     /**
@@ -178,16 +187,89 @@ export class Document {
       count: number,
     }[]= [];
 
+    /**
+     * 指示import文本替换怎遍历
+     */
+    public line_import_indexs: {
+      line:number,
+      is_import: boolean,
+      index: number
+    } [] = [];
+    /**
+     * textmacro 指示
+     */
+    public line_run_text_macro_indexs: {
+      line:number,
+      is_run_text_macro: boolean,
+      index: number
+    } [] = [];
+    /**
+     * textmacro 指示
+     */
+    public line_text_macro_indexs: {
+      line:number,
+      /**
+       * -1 error
+       * 0 normal
+       * 1 textmacro header
+       * 2 textmacro end
+       * 3 textmacro body
+       */
+      text_macro_tag: -1|0|1|2|3,
+      /**
+       * 指向 只有text_macro_tag==1有效
+       */
+      index: number
+    } [] = [];
+    /**
+     * textmacro 指示
+     */
+    public macro_indexs: {
+      line:number,
+      is_macro:boolean,
+      index: number
+    } [] = [];
 
-  }
-
-export  class Context {
-    document: Document;
-  
-    constructor(document: Document) {
-      this.document = document;
+    public is_macro_line(line:number):boolean {
+      return this.macro_indexs[line]?.is_macro ?? false;
     }
+    /**
+     * 判断行是不是import行
+     * @param line 
+     */
+    public is_import_line(line:number):boolean {
+      return this.line_import_indexs[line]?.is_import ?? false;
+    }
+
+    public is_run_text_macro_line(line:number):boolean {
+      return this.line_run_text_macro_indexs[line]?.is_run_text_macro ?? false;
+    }
+
+    public is_text_macro_line(line:number):boolean {
+      return this.line_text_macro_indexs[line]?.text_macro_tag != 0 ?? false;
+    }
+
+    public loop(callback:(document:Document, lineNumber: number) => void, run_callback:(document: Document, run_text_macro:RunTextMacro, text_macro: TextMacro, lineNumber: number) => void, start_line:number = 0, length:number = this.lineCount) {
+      for (let index = start_line; index < length; index++) {
+        if (this.is_macro_line(index)) {
+          continue;
+        } else if (this.is_run_text_macro_line(index)) {
+          const run_text_macro_index = this.line_run_text_macro_indexs[index].index;
+          const run_text_macro = this.run_text_macros[run_text_macro_index];
+          if (run_text_macro) {
+            run_text_macro.loop(run_callback);
+          }
+        } else if (this.is_text_macro_line(index)) {
+          continue;
+        } else {
+          callback(this, index);
+        }
+      }
+    }
+
   }
+
+
   
   export class TokenType {
     static Conment = "Conment";
@@ -200,7 +282,7 @@ export  class Context {
     static Unkown = "Unkown";
   };
   export class Token extends Range {
-    public readonly context: Context;
+    public readonly document: Document;
     public readonly line:number;
     public readonly character:number;
     public readonly position:number;
@@ -211,9 +293,9 @@ export  class Context {
     // public readonly type_name: string;
     
   
-    public constructor(context: Context, line:number, character:number, position:number, length: number, type:string, is_complete:boolean = true) {
+    public constructor(document:Document, line:number, character:number, position:number, length: number, type:string, is_complete:boolean = true) {
       super(new Position(line, character), new Position(line, character + length));
-      this.context = context;
+      this.document = document;
       this.line = line;
       this.character = character;
       this.position = position;
@@ -241,7 +323,7 @@ export  class Context {
     }
   
     public getText(): string {
-      return this.context.document.content.substring(this.position, this.position + this.length);
+      return this.document.content.substring(this.position, this.position + this.length);
     }
   
     public isValue():boolean {
@@ -270,7 +352,9 @@ export  class Context {
     // }
     
     
-    
+    public clone():Token {
+      return Object.assign({}, this) as Token;
+    }
   }
 
 export  interface TokenHandleResult {
@@ -280,14 +364,13 @@ export  interface TokenHandleResult {
   }
 
 
-  export function tokenize(content: string, call: (context:Context, line:number, character:number, position:number, char: string, next_char: string, state: number, length: number) => TokenHandleResult|undefined) {
-    const document = new Document(content);
-    const context = new Context(document);
+  export function tokenize(document:Document, call: (document:Document, line:number, character:number, position:number, char: string, next_char: string, state: number, length: number) => TokenHandleResult|undefined) {
     let line:number = 0;;
     let character:number = 0;
     let state: number = symbol_state("");
     let length: number = 0;
     const tokens:Token[] = [];
+    const content = document.content;
     // @ts-expect-error
     document.line_points.push({
       line: 0,
@@ -305,7 +388,7 @@ export  interface TokenHandleResult {
       const char = content.charAt(index);
       const next_char = content.charAt(index + 1);
       // const new_state = is_only_jass ? jass_token.token_handle(context, line, character, index, char, next_char, state, length) : vjass_token.token_handle(context, line, character, index, char, next_char, state, length);
-      const new_state = call(context, line, character, index, char, next_char, state, length);
+      const new_state = call(document, line, character, index, char, next_char, state, length);
   
       // substate = new_state.substate;
       if (char == "\n") {
