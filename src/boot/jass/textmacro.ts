@@ -32,13 +32,13 @@ export class RunTextMacro extends Range {
         return this.params().map(param => {
             if (param.startsWith("\"")) {
                 if (param.endsWith("\"")) {
-                    return param.substring(1, param.length - 2);
+                    return param.substring(1, param.length - 1);
                 } else {
                     return param.substring(1);
                 }
             } else {
                 if (param.endsWith("\"")) {
-                    return param.substring(0, param.length - 2);
+                    return param.substring(0, param.length - 1);
                 } else {
                     return param;
                 }
@@ -138,20 +138,19 @@ export class TextMacro extends Range {
         }
     }
 
-    public line_at(line:number, params: string[] = []): TextLine {
+    public lineAt(line:number, params: string[] = []): TextLine {
         let text = this.document.lineAt(line).text;
         this.takes().forEach((take, index) => {
             
             const param = params[index];
-            console.log("take", take, param);
             if (param) {
                 text = text.replace(new RegExp(`\\$${take}\\$`, "g"), param);
             }
         });
         return new TextLine(line, text);
     }
-    public line_tokens(line:number, params: string[] = []): Token[] {
-        const text_line = this.line_at(line, params);
+    public lineTokens(line:number, params: string[] = []): Token[] {
+        const text_line = this.lineAt(line, params);
         return tokenize_for_vjass_by_content(text_line.text);
     }
 }

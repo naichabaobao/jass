@@ -1,3 +1,4 @@
+import { Node } from "./parser-vjass";
 import { Macro } from "./preproces";
 import { Import, RunTextMacro, TextMacro } from "./textmacro";
 
@@ -166,6 +167,8 @@ export class Document {
       }
       return this.tokens.slice(token_index_cache.index, token_index_cache.index + token_index_cache.count);
     }
+
+    public root_node:Node|null = null;
 
     /**
      * 记录每个分行的点，使用这种方法只需消耗一点内存有几百倍的性能提升

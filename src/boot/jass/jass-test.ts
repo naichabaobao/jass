@@ -110,7 +110,18 @@ if (true) {
     console.timeEnd("kk2");
 
     // printTokens(Global.get(filePath)?.tokens);
-    // console.log(Global.get(filePath)?.tokens.length);
+    console.log(Global.get(filePath)?.root_node?.children);
+    Global.get(filePath)?.root_node?.children.forEach(node => {
+        if (node.start_line?.document.is_text_macro_line(node.start_line.line)) {
+
+        }
+        console.log(node.start_line?.text_line().text, node.start_line?.line);
+        node.body.forEach(b => {
+            console.log(b.text_line().text, b.line);
+            
+        })
+        console.log(node.end_line?.text_line().text, node.end_line?.line);
+    });
 
     // const document = Global.get(filePath)!;
     // let step = 0;
@@ -125,6 +136,7 @@ if (true) {
     // printTokens(Global.get(filePath2)?.tokens);
     // console.log(Global.get(filePath2))
     
+    // node ./out/boot/jass/jass-test.js
 }
 
 if (false) {
