@@ -206,7 +206,6 @@ export class Node implements Rangebel  {
 		 * @param node 
 		 */
 		const pushBackBefor = (node:Node) =>  {
-			console.log("pushBackBefor");
 			nodes.splice(0, 0, node);
 			if (node.befor) {
 				pushBackBefor(node.befor);

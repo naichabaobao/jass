@@ -4,12 +4,12 @@ import { Document, Position, Token, TokenHandleResult, TokenType, symbol_state, 
 
 
 
-export class VjassTokenType extends TokenType {
-    static BlockComment = "BlockComment";
-};
+// export class TokenType extends TokenType {
+//     static BlockComment = "BlockComment";
+// };
 
 // class VjassToken extends Token {
-//     // public type: VjassTokenType;
+//     // public type: TokenType;
 
 //     public constructor(context: Context, line: number, character: number, position: number, length: number, type: string, is_complete: boolean = true) {
 //         super(context, line, character, position, length, type, is_complete);
@@ -58,7 +58,7 @@ export function token_handle(document:Document, line: number, character: number,
         return false;
     };
     const new_token = (type: string, is_complete: boolean = true) => {
-        if (type == VjassTokenType.BlockComment) {
+        if (type == TokenType.BlockComment) {
             const token = new Token(document, line, character - length, position - length, length + 1, type, is_complete);
             token.start = new Position();
             token.end = new Position();
@@ -76,14 +76,14 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
             } else if (char == "\"") {
                 if (!has_next() || is_match("\n")) {
                     return {
-                        token: new_token(VjassTokenType.String, false),
+                        token: new_token(TokenType.String, false),
                         length: 0
                     }
                 } else {
@@ -95,7 +95,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else if (char == "'") {
                 if (!has_next() || is_match("\n")) {
                     return {
-                        token: new_token(VjassTokenType.Mark, false),
+                        token: new_token(TokenType.Mark, false),
                         length: 0
                     }
                 } else {
@@ -127,7 +127,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Integer),
+                        token: new_token(TokenType.Integer),
                         length: 0
                     }
                 }
@@ -149,7 +149,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Unkown),
+                        token: new_token(TokenType.Unkown),
                         length: 0
                     }
                 }
@@ -161,7 +161,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Identifier),
+                        token: new_token(TokenType.Identifier),
                         length: 0
                     }
                 }
@@ -173,7 +173,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
@@ -185,7 +185,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
@@ -197,7 +197,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
@@ -209,7 +209,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Unkown),
+                        token: new_token(TokenType.Unkown),
                         length: 0
                     }
                 }
@@ -221,14 +221,14 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
                 
             } else if (char == "(" || char == ")" || char == "]" || char == "," || char == "+" || char == "-" || char == "*" || char == "%" || char == "{" || char == "}") {
                 return {
-                    token: new_token(VjassTokenType.Operator),
+                    token: new_token(TokenType.Operator),
                     length: 0
                 }
             } else if (char == ".") {
@@ -239,7 +239,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Operator),
+                        token: new_token(TokenType.Operator),
                         length: 0
                     }
                 }
@@ -251,7 +251,7 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 } else {
                     return {
-                        token: new_token(VjassTokenType.Unkown),
+                        token: new_token(TokenType.Unkown),
                         length: 0
                     }
                 }
@@ -261,13 +261,13 @@ export function token_handle(document:Document, line: number, character: number,
             if (char == "/") {
                 if (is_match("\n")) {
                     return {
-                        token: new_token(VjassTokenType.Conment),
+                        token: new_token(TokenType.Conment),
                         state: StateType.Nil,
                         length: 0
                     }
                 } else if (!has_next()) {
                     return {
-                        token: new_token(VjassTokenType.Conment),
+                        token: new_token(TokenType.Conment),
                         state: StateType.Nil,
                         length: 0
                     }
@@ -280,7 +280,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else { // /*
                 if (!has_next()) {
                     return {
-                        token: new_token(VjassTokenType.BlockComment, false),
+                        token: new_token(TokenType.BlockComment, false),
                         state: StateType.Nil,
                         length: 0
                     }
@@ -295,7 +295,7 @@ export function token_handle(document:Document, line: number, character: number,
         case StateType.Comment:
             if (is_match("\n")) {
                 return {
-                    token: new_token(VjassTokenType.Conment),
+                    token: new_token(TokenType.Conment),
                     state: StateType.Nil,
                     length: 0
                 }
@@ -305,7 +305,7 @@ export function token_handle(document:Document, line: number, character: number,
                 }
             } else {
                 return {
-                    token: new_token(VjassTokenType.Conment),
+                    token: new_token(TokenType.Conment),
                     state: StateType.Nil,
                     length: 0
                 }
@@ -315,7 +315,7 @@ export function token_handle(document:Document, line: number, character: number,
             if (char == "\"") {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.String),
+                    token: new_token(TokenType.String),
                     length: 0
                 }
             } else if (char == "\\") {
@@ -326,7 +326,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else if (!has_next() || is_match("\n")) {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.String, false),
+                    token: new_token(TokenType.String, false),
                     length: 0
                 }
             } else {
@@ -339,7 +339,7 @@ export function token_handle(document:Document, line: number, character: number,
             if (!has_next() || is_match("\n")) {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.String, false),
+                    token: new_token(TokenType.String, false),
                     length: 0
                 }
             } else {
@@ -352,28 +352,28 @@ export function token_handle(document:Document, line: number, character: number,
         case StateType.Gt:
             return {
                 state: StateType.Nil,
-                token: new_token(VjassTokenType.Operator),
+                token: new_token(TokenType.Operator),
                 length: 0
             }
             break;
         case StateType.It:
             return {
                 state: StateType.Nil,
-                token: new_token(VjassTokenType.Operator),
+                token: new_token(TokenType.Operator),
                 length: 0
             }
             break;
         case StateType.Eq:
             return {
                 state: StateType.Nil,
-                token: new_token(VjassTokenType.Operator),
+                token: new_token(TokenType.Operator),
                 length: 0
             }
             break;
         case StateType.Not:
             return {
                 state: StateType.Nil,
-                token: new_token(VjassTokenType.Operator),
+                token: new_token(TokenType.Operator),
                 length: 0
             }
             break;
@@ -381,13 +381,13 @@ export function token_handle(document:Document, line: number, character: number,
             if (char == "\'") {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Mark, length > 1),
+                    token: new_token(TokenType.Mark, length > 1),
                     length: 0
                 }
             } else if (!has_next() || is_match("\n")) {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Mark, false),
+                    token: new_token(TokenType.Mark, false),
                     length: 0
                 }
             } else {
@@ -415,7 +415,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Integer, false),
+                    token: new_token(TokenType.Integer, false),
                     length: 0
                 }
             }
@@ -438,7 +438,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Integer),
+                    token: new_token(TokenType.Integer),
                     length: 0
                 }
             }
@@ -458,7 +458,7 @@ export function token_handle(document:Document, line: number, character: number,
             else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Identifier),
+                    token: new_token(TokenType.Identifier),
                     length: 0
                 }
             }
@@ -471,7 +471,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Unkown),
+                    token: new_token(TokenType.Unkown),
                     length: 0
                 }
             }
@@ -484,7 +484,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Real),
+                    token: new_token(TokenType.Real),
                     length: 0
                 }
             }
@@ -503,7 +503,7 @@ export function token_handle(document:Document, line: number, character: number,
             } else {
                 return {
                     state: StateType.Nil,
-                    token: new_token(VjassTokenType.Integer),
+                    token: new_token(TokenType.Integer),
                     length: 0
                 }
             }
@@ -511,11 +511,11 @@ export function token_handle(document:Document, line: number, character: number,
         case StateType.BlockComment:
             if (!has_next()) {
                 return {
-                    token: new_token(VjassTokenType.BlockComment, false),
+                    token: new_token(TokenType.BlockComment, false),
                     state: StateType.Nil,
                     length: 0
                 }
-            } else if (is_match("*")) {
+            } else if (char == "*") {
                 return {
                     state: StateType.BlockCommentPre,
                     length: length + 1
@@ -529,15 +529,15 @@ export function token_handle(document:Document, line: number, character: number,
         case StateType.BlockCommentPre:
             if (!has_next()) {
                 return {
-                    token: new_token(VjassTokenType.BlockComment, false),
+                    token: new_token(TokenType.BlockComment, false),
                     state: StateType.Nil,
                     length: 0
                 }
-            } else if (is_match("*")) {
+            } else if (char == "*") {
                 return {
                     length: length + 1
                 }
-            } else if (is_match("/")) {
+            } else if (char == "/") {
                 return {
                     state: StateType.BlockCommentEnd,
                     length: length + 1
@@ -551,7 +551,7 @@ export function token_handle(document:Document, line: number, character: number,
             break;
         case StateType.BlockCommentEnd:
             return {
-                token: new_token(VjassTokenType.BlockComment),
+                token: new_token(TokenType.BlockComment),
                 state: StateType.Nil,
                 length: 0
             }
@@ -564,14 +564,14 @@ export function token_handle(document:Document, line: number, character: number,
                 }
             } else {
                 return {
-                    token: new_token(VjassTokenType.Operator),
+                    token: new_token(TokenType.Operator),
                     state: StateType.Nil,
                     length: 0
                 }
             }
         case StateType.BracketEq:
             return {
-                token: new_token(VjassTokenType.Operator),
+                token: new_token(TokenType.Operator),
                 state: StateType.Nil,
                 length: 0
             }

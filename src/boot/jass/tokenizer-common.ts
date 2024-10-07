@@ -270,6 +270,12 @@ export class Document {
       }
     }
 
+
+    token_errors: {token:Token, message: string, charge?: number}[] = [];
+    public add_token_error(token:Token, message: string) {
+        this.token_errors.push({token, message});
+    }
+
   }
 
 
@@ -283,6 +289,7 @@ export class Document {
     static String = "String";
     static Mark = "Mark";
     static Unkown = "Unkown";
+    static BlockComment = "BlockComment";
   };
   export class Token extends Range {
     public readonly document: Document;
@@ -358,6 +365,18 @@ export class Document {
     public clone():Token {
       return Object.assign({}, this) as Token;
     }
+
+    
+    public get is_block_comment() : boolean {
+      return this.type == TokenType.BlockComment;
+    }
+    public get is_comment() : boolean {
+      return this.type == TokenType.Conment;
+    }
+    public get is_identifier() : boolean {
+      return this.type == TokenType.Identifier;
+    }
+    
   }
 
 export  interface TokenHandleResult {

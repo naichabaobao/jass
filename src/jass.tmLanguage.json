@@ -308,7 +308,7 @@
           "repository": {
             "zinc-keyword": {
               "name": "keyword",
-              "match": "\\b(library|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|delegate|this)\\b"
+              "match": "\\b(library|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|delegate|this|library_once)\\b"
             },
             "zinc-keyword-control": {
               "name": "keyword.control",
@@ -318,7 +318,7 @@
         },
         "keyword": {
           "name": "keyword",
-          "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|allocate|deallocate)\\b"
+          "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|allocate|deallocate|library_once)\\b"
         },
         "object": {
           "patterns": [
