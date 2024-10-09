@@ -49,28 +49,6 @@ export class Context {
 export const Global = new Context();
 
 //#region 解析
-type RuleFunc = (token: Token, success_callback?: (token: Token) => void) => boolean;
-
-interface RuleDefine {
-    condition: (token: Token) => boolean;
-    callback?: (token: Token) => void;
-};
-function parse_header(line_text: ExpendLineText, rules: RuleDefine[]) {
-    const tokens = line_text.tokens();
-
-    for (let index = 0; index < tokens.length; index++) {
-        const token = tokens[index];
-        const rule = rules[index];
-
-        if (rule.condition(token)) {
-            if (rule.callback) {
-                rule.callback(token);
-            }
-        } else {
-            break;
-        }
-    }
-}
 
 export class Library {
     public is_library_once: boolean = false;
@@ -461,6 +439,15 @@ export class Method {
     public takes: Take[]|null = null;
     public returns: string|null = null;
     public defaults: string|null = null;
+
+    public to_string():string {
+        const visible_string = this.visible ? this.visible + " " : "";
+        const modifier_string = this.modifier ? this.modifier + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier + " " : "";
+        const name_string = this.name ? this.name + " " : "";
+        const takes_string = this.takes ? (this.takes.length == 0 ? this.takes.map(take => `${take.type ? take.type : ""} ${take.name ? take.name : ""}`).join(",") : "nothing") : "nothing ";
+        return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns${name_string}`;
+    }
 }
 function parse_method(document: Document, line_text: ExpendLineText) {
     const method = new Method();
@@ -655,7 +642,6 @@ function parse_function(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        console.log(text);
         
         if (state == 0) {
             if (text == "function") {
@@ -826,6 +812,780 @@ function parse_function(document: Document, line_text: ExpendLineText) {
 
     return func;
 }
+export class Gloabls {
+}
+
+function parse_globals(document: Document, line_text: ExpendLineText) {
+    const globals = new Gloabls();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "globals") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return globals;
+}
+
+class If {
+    // 无用项
+    condition: null = null;
+}
+class Loop {}
+
+function parse_if(document: Document, line_text: ExpendLineText) {
+    const ifs = new If();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "if") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == "then") {
+                state = 2;
+            } else {
+
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return ifs;
+}
+function parse_loop(document: Document, line_text: ExpendLineText) {
+    const loop = new Loop();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "loop") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return loop;
+}
+
+export class Comment {
+    comment:Token|null = null;
+}
+
+export function parse_line_comment(document: Document, line_text: ExpendLineText) {
+    const comment = new Comment();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (token.is_comment) {
+                comment.comment = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return comment;
+}
+
+export class Empty {
+}
+export function parse_line_empty(document: Document, line_text: ExpendLineText) {
+    return new Empty();
+}
+
+export class GlobalVariable {
+    public visible:"public"|"private"|null = null;
+    public modifier:"static"|"stub"|null = null;
+    public qualifier:"constant"|null = null;
+
+    type: Token|null = null;
+    name: Token|null = null;
+
+    public is_array:boolean = false;
+
+    public to_string():string {
+        const visible_string = this.visible ? this.visible + " " : "";
+        const modifier_string = this.modifier ? this.modifier + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier + " " : "";
+        const type_string = this.type ? this.type.getText() + " " : "";
+        const array_string = this.is_array ? "array " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+    }
+}
+
+export class Member extends GlobalVariable {
+}
+export class Local extends GlobalVariable {
+}
+export class Set {
+    name:Token|null = null;
+}
+export class Call {
+}
+export class Ret {
+}
+export class Native extends Func {
+}
+
+export function parse_line_local(document: Document, line_text: ExpendLineText) {
+    const local = new Local();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "local") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                local.type = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "array") {
+                local.is_array = true;
+                state = 3;
+            } else if (token.is_identifier) {
+                local.name = token;
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (token.is_identifier) {
+                local.name = token;
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+
+        }
+    }
+
+    return local;
+}
+export function parse_line_set(document: Document, line_text: ExpendLineText) {
+    const set = new Set();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "set") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                set.name = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        }
+    }
+
+    return set;
+}
+export function parse_line_call(document: Document, line_text: ExpendLineText) {
+    const call = new Call();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "call") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        }
+    }
+
+    return call;
+}
+export function parse_line_return(document: Document, line_text: ExpendLineText) {
+    const ret = new Ret();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "return") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+export class ExitWhen {
+
+}
+export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
+    const ret = new ExitWhen();
+
+    return ret;
+}
+export class ElseIf {
+
+}
+export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
+    const ret = new ElseIf();
+
+    return ret;
+}
+export class Else {
+
+}
+export function parse_line_else(document: Document, line_text: ExpendLineText) {
+    const ret = new Else();
+
+    return ret;
+}
+
+function parse_line_native(document: Document, line_text: ExpendLineText) {
+    const native = new Native();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "function") {
+                state = 1;
+            } else if (text == "private") {
+                native.visible = "private";
+                state = 2;
+            } else if (text == "public") {
+                native.visible = "public";
+                state = 2;
+            } else if (text == "static") {
+                native.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                native.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                native.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                native.name = text;
+                state = 5;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "function") {
+                state = 1;
+            } else if (text == "static") {
+                native.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                native.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                native.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (text == "function") {
+                state = 1;
+            } else if (text == "constant") {
+                native.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            if (text == "function") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 5) {
+            if (text == "takes") {
+                state = 6;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 6) {
+            if (text == "nothing") {
+                native.takes = null;
+                state = 11;
+            } else if (token.is_identifier) {
+                const take = new Take();
+                take.type = text;
+                if (!native.takes) {
+                    native.takes = [];
+                }
+                native.takes.push(take);
+                state = 7;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 7) {
+            if (token.is_identifier) {
+                const takes = native.takes;
+                if (takes) {
+                    const take = takes[takes.length - 1];
+                    take.name = text;
+                }
+                state = 8;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 8) {
+            if (text == "returns") {
+                state = 12;
+            } else if (text == ",") {
+                state = 9;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 9) {
+            if (token.is_identifier) {
+                const take = new Take();
+                take.type = text;
+                if (!native.takes) {
+                    native.takes = [];
+                }
+                native.takes.push(take);
+                state = 10;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 10) {
+            if (token.is_identifier) {
+                const takes = native.takes;
+                if (takes) {
+                    const take = takes[takes.length - 1];
+                    take.name = text;
+                }
+                state = 8;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 11) {
+            if (text == "returns") {
+                state = 12;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 12) {
+            if (token.is_identifier) {
+                native.returns = text;
+                state = 13;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 13) {
+            if (text == "defaults") {
+                state = 14;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 14) {
+            if (token.is_identifier) {
+                native.defaults = text;
+                state = 15;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return native;
+}
+function parse_line_method(document: Document, line_text: ExpendLineText) {
+    const method = new Method();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "method") {
+                state = 1;
+            } else if (text == "private") {
+                method.visible = "private";
+                state = 2;
+            } else if (text == "public") {
+                method.visible = "public";
+                state = 2;
+            } else if (text == "static") {
+                method.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                method.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                method.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                method.name = text;
+                state = 5;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "method") {
+                state = 1;
+            } else if (text == "static") {
+                method.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                method.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                method.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (text == "method") {
+                state = 1;
+            } else if (text == "constant") {
+                method.qualifier = "constant";
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            if (text == "method") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 5) {
+            if (text == "takes") {
+                state = 6;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 6) {
+            if (text == "nothing") {
+                method.takes = null;
+                state = 11;
+            } else if (token.is_identifier) {
+                const take = new Take();
+                take.type = text;
+                if (!method.takes) {
+                    method.takes = [];
+                }
+                method.takes.push(take);
+                state = 7;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 7) {
+            if (token.is_identifier) {
+                const takes = method.takes;
+                if (takes) {
+                    const take = takes[takes.length - 1];
+                    take.name = text;
+                }
+                state = 8;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 8) {
+            if (text == "returns") {
+                state = 12;
+            } else if (text == ",") {
+                state = 9;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 9) {
+            if (token.is_identifier) {
+                const take = new Take();
+                take.type = text;
+                if (!method.takes) {
+                    method.takes = [];
+                }
+                method.takes.push(take);
+                state = 10;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 10) {
+            if (token.is_identifier) {
+                const takes = method.takes;
+                if (takes) {
+                    const take = takes[takes.length - 1];
+                    take.name = text;
+                }
+                state = 8;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 11) {
+            if (text == "returns") {
+                state = 12;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 12) {
+            if (token.is_identifier) {
+                method.returns = text;
+                state = 13;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 13) {
+            if (text == "defaults") {
+                state = 14;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 14) {
+            if (token.is_identifier) {
+                method.defaults = text;
+                state = 15;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return method;
+}
+function parse_line_member(document: Document, line_text: ExpendLineText) {
+    const member = new Member();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "private") {
+                member.visible = "private";
+                state = 2;
+            } else if (text == "public") {
+                member.visible = "public";
+                state = 2;
+            } else if (text == "static") {
+                member.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                member.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                member.qualifier = "constant";
+                state = 4;
+            } else if (token.is_identifier) {
+                member.type = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == "array") {
+                member.is_array = true;
+                state = 6;
+            } else if (token.is_identifier) {
+                member.name = token;
+                state = 5;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "static") {
+                member.modifier = "static";
+                state = 3;
+            } else if (text == "stub") {
+                member.modifier = "stub";
+                state = 3;
+            } else if (text == "constant") {
+                member.qualifier = "constant";
+                state = 4;
+            } else if (token.is_identifier) {
+                member.type = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (text == "constant") {
+                member.qualifier = "constant";
+                state = 4;
+            } else if (token.is_identifier) {
+                member.type = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            if (token.is_identifier) {
+                member.type = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 5) {
+            // =
+        } else if (state == 6) {
+            if (token.is_identifier) {
+                member.name = token;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        }
+    }
+
+    return member;
+}
+
+export class Other {}
 
 
 
@@ -837,7 +1597,6 @@ function parse_node(document: Document) {
     const nodes = root_node.children;
 
     const for_node = (node: Node) => {
-        console.log(node.type, node.start_line?.line);
 
         // 解析头
         if (node.type == "library") {
@@ -857,33 +1616,93 @@ function parse_node(document: Document) {
         }
         else if (node.type == "struct") {
             const struct = parse_struct(document, node.start_line!);
-            console.log(struct, document.token_errors);
-            console.log(node.parent?.parent?.type);
             
             node.data = struct;
         }
         else if (node.type == "method") {
             const method = parse_method(document, node.start_line!);
-            console.log(method, node.parent?.type);
             
             node.data = method;
         }
         else if (node.type == "func") {
-            
             const func = parse_function(document, node.start_line!);
-            console.log(func, node.parent?.type);
             
             node.data = func;
+        } else if (node.type == "globals") {
+            const globals = parse_globals(document, node.start_line!);
+
+            node.data = globals;
+        } else if (node.type == "if") {
+            const ifs = parse_if(document, node.start_line!);
+
+            node.data = ifs;
+        } else if (node.type == "loop") {
+            const loop = parse_loop(document, node.start_line!);
+
+            node.data = loop;
         }
+
+        node.body.forEach(value => {
+            if (value.type == "empty") {
+                const empty = parse_line_empty(document, value.line);
+                node.body_datas.push(empty);
+            } else if (value.type == "comment") {
+                const comment = parse_line_comment(document, value.line);
+
+                node.body_datas.push(comment);
+            } else if (value.type == "local") {
+                const local = parse_line_local(document, value.line);
+
+                node.body_datas.push(local);
+            } else if (value.type == "set") {
+                const set = parse_line_set(document, value.line);
+
+                node.body_datas.push(set);
+            } else if (value.type == "call") {
+                const call = parse_line_call(document, value.line);
+
+                node.body_datas.push(call);
+            } else if (value.type == "return") {
+                const ret = parse_line_return(document, value.line);
+
+                node.body_datas.push(ret);
+            } else if (value.type == "native") {
+                const native = parse_line_native(document, value.line);
+
+                node.body_datas.push(native);
+            } else if (value.type == "method") {
+                const method = parse_line_method(document, value.line);
+
+                node.body_datas.push(method);
+            } else if (value.type == "member") {
+                const member = parse_line_member(document, value.line);
+                
+                node.body_datas.push(member);
+            } else if (value.type == "exitwhen") {
+                const exitwhen = parse_line_exitwhen(document, value.line);
+                
+                node.body_datas.push(exitwhen);
+            } else if (value.type == "elseif") {
+                const elseif = parse_line_else_if(document, value.line);
+                
+                node.body_datas.push(elseif);
+            } else if (value.type == "else") {
+                const el = parse_line_else(document, value.line);
+                
+                node.body_datas.push(el);
+            } else if (value.type == "other") {
+                node.body_datas.push(new Other());
+            }
+            console.log(value.type, value.line.line);
+            
+        });
 
         node.children.forEach(child => {
             for_node(child);
         });
     };
 
-    nodes.forEach(node => {
-        for_node(node);
-    });
+    for_node(root_node);
 }
 
 //#endregion
@@ -925,9 +1744,14 @@ export class Node {
 
     public type: NodeType;
     public parent: Node | null = null;
-    public body: ExpendLineText[] = [];
+    public body: {
+        type: "local"|"set"|"call"|"return"|"comment"|"empty"|"other"|"member"|"native"|"method"|"exitwhen"|"elseif"|"else",
+        line: ExpendLineText
+    }[] = [];
     public start_line: ExpendLineText | null = null;
     public end_line: ExpendLineText | null = null;
+
+    public body_datas: any[] = [];
 
     public readonly children: Node[] = [];
 
@@ -965,6 +1789,18 @@ const structPair = new Pair("struct", new RegExp(/^\s*(?:(?<visible>public|priva
 const methodPair = new Pair("method", new RegExp(/^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?method\b/), new RegExp(/^\s*endmethod\b/));
 const ifPair = new Pair("if", new RegExp(/^\s*if\b/), new RegExp(/^\s*endif\b/));
 const loopPair = new Pair("loop", new RegExp(/^\s*loop\b/), new RegExp(/^\s*endloop\b/));
+
+const localRegExp = /^\s*local\b/;
+const setRegExp = /^\s*set\b/;
+const callRegExp = /^\s*call\b/;
+const returnRegExp = /^\s*return\b/;
+const exitwhenRegExp = /^\s*exitwhen\b/;
+const elseifRegExp = /^\s*elseif\b/;
+const elseRegExp = /^\s*else\b/;
+const nativeRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?native\b/;
+const memberRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?[a-zA-Z0-9_]+\b/;
+const methodRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?method\b/;
+
 
 const pairs = [
     zincPair,
@@ -1022,8 +1858,128 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
                 node.end_line = new ExpendLineText(document, line, run_text_macro, macro);
                 node_stack.pop(); // 闭合
             } else { // 非关键行
-                node.body.push(new ExpendLineText(document, line, run_text_macro, macro));
+                const e_line = new ExpendLineText(document, line, run_text_macro, macro);
+                if (nativeRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "native",
+                        line: e_line
+                    });
+                } else if (localRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "local",
+                        line: e_line
+                    });
+                } else if (setRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "set",
+                        line: e_line
+                    });
+                } else if (callRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "call",
+                        line: e_line
+                    });
+                } else if (returnRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "return",
+                        line: e_line
+                    });
+                } else if (e_line.tokens().length == 0) {
+                    node.body.push({
+                        type: "empty",
+                        line: e_line
+                    });
+                } else if (e_line.tokens()[0].is_comment) {
+                    node.body.push({
+                        type: "comment",
+                        line: e_line
+                    });
+                } else if (methodRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "method",
+                        line: e_line
+                    });
+                } else if (exitwhenRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "exitwhen",
+                        line: e_line
+                    });
+                } else if (elseifRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "elseif",
+                        line: e_line
+                    });
+                } else if (elseRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "else",
+                        line: e_line
+                    });
+                } else if (memberRegExp.test(text_line.text)) {
+                    node.body.push({
+                        type: "member",
+                        line: e_line
+                    });
+                } else {
+                    node.body.push({
+                        type: "other",
+                        line: e_line
+                    });
+                }
             }
+        } else {
+            const e_line = new ExpendLineText(document, line, run_text_macro, macro);
+            if (nativeRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "native",
+                    line: e_line
+                });
+            } else if (memberRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "member",
+                    line: e_line
+                });
+            } else if (localRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "local",
+                    line: e_line
+                });
+            } else if (setRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "set",
+                    line: e_line
+                });
+            } else if (callRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "call",
+                    line: e_line
+                });
+            } else if (returnRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "return",
+                    line: e_line
+                });
+            } else if (e_line.tokens().length == 0) {
+                root_node.body.push({
+                    type: "empty",
+                    line: e_line
+                });
+            } else if (e_line.tokens()[0].is_comment) {
+                root_node.body.push({
+                    type: "comment",
+                    line: e_line
+                });
+            } else if (methodRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "method",
+                    line: e_line
+                });
+            } else {
+                root_node.body.push({
+                    type: "other",
+                    line: e_line
+                });
+            }
+
         }
         return false;
     };
