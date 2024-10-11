@@ -1460,7 +1460,7 @@ endfunction
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
 // Examples:  18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
 function ModuloInteger takes integer dividend, integer divisor returns integer
-    local integer modulus = dividend - (dividend / divisor) * divisor
+    local integer modulus = dividend -(dividend / divisor) * divisor
 
     // If the dividend was negative, the above modulus calculation will
     // be negative, but within (-divisor..0).  We can add (divisor) to
@@ -1604,7 +1604,7 @@ function QueuedTriggerCheck takes nothing returns nothing
     loop
         exitwhen i >= bj_queuedExecTotal
         set s = s + "q[" + I2S(i) + "]="
-        if(bj_queuedExecTriggers [ i ] == null) then
+        if(bj_queuedExecTriggers[i] == null) then
             set s = s + "null "
         else
             set s = s + "x "
@@ -1624,7 +1624,7 @@ function QueuedTriggerGetIndex takes trigger trig returns integer
     local integer index = 0
     loop
         exitwhen index >= bj_queuedExecTotal
-        if(bj_queuedExecTriggers [ index ] == trig) then
+        if(bj_queuedExecTriggers[index] == trig) then
             return index
         endif
         set index = index + 1
@@ -1650,8 +1650,8 @@ function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
     set index = trigIndex
     loop
         exitwhen index >= bj_queuedExecTotal
-        set bj_queuedExecTriggers [ index ] = bj_queuedExecTriggers [ index + 1 ]
-        set bj_queuedExecUseConds [ index ] = bj_queuedExecUseConds [ index + 1 ]
+        set bj_queuedExecTriggers[index] = bj_queuedExecTriggers[index + 1 ]
+        set bj_queuedExecUseConds[index] = bj_queuedExecUseConds[index + 1 ]
         set index = index + 1
     endloop
     return true
@@ -1666,7 +1666,7 @@ function QueuedTriggerAttemptExec takes nothing returns boolean
     loop
         exitwhen bj_queuedExecTotal == 0
 
-        if TriggerExecuteBJ(bj_queuedExecTriggers [ 0 ], bj_queuedExecUseConds [ 0 ]) then
+        if TriggerExecuteBJ(bj_queuedExecTriggers[0], bj_queuedExecUseConds[0]) then
             // Timeout the queue if it sits at the front of the queue for too long.
             call TimerStart(bj_queuedExecTimeoutTimer, bj_QUEUED_TRIGGER_TIMEOUT, false, null)
             return true
@@ -1687,8 +1687,8 @@ function QueuedTriggerAddBJ takes trigger trig, boolean checkConditions returns 
     endif
 
     // Add the trigger to an array of to-be-executed triggers.
-    set bj_queuedExecTriggers [ bj_queuedExecTotal ] = trig
-    set bj_queuedExecUseConds [ bj_queuedExecTotal ] = checkConditions
+    set bj_queuedExecTriggers[bj_queuedExecTotal] = trig
+    set bj_queuedExecUseConds[bj_queuedExecTotal] = checkConditions
     set bj_queuedExecTotal = bj_queuedExecTotal + 1
 
     // If this is the only trigger in the queue, run it.
@@ -2278,11 +2278,11 @@ function AdjustCameraBoundsBJ takes integer adjustMethod, real dxWest, real dxEa
 
     // Make sure the camera bounds are still valid.
     if(maxX < minX) then
-        set minX = (minX + maxX) * 0.5
+        set minX =(minX + maxX) * 0.5
         set maxX = minX
     endif
     if(maxY < minY) then
-        set minY = (minY + maxY) * 0.5
+        set minY =(minY + maxY) * 0.5
         set maxY = minY
     endif
 
@@ -2761,8 +2761,8 @@ function TerrainDeformationWaveBJ takes real duration, location source, location
         return null
     endif
 
-    set dirX = (GetLocationX(target) - GetLocationX(source)) / distance
-    set dirY = (GetLocationY(target) - GetLocationY(source)) / distance
+    set dirX =(GetLocationX(target) - GetLocationX(source)) / distance
+    set dirY =(GetLocationY(target) - GetLocationY(source)) / distance
     set speed = distance / duration
 
     set bj_lastCreatedTerrainDeformation = TerrainDeformWave(GetLocationX(source), GetLocationY(source), dirX, dirY, distance, speed, radius, depth, R2I(trailDelay * 1000), 1)
@@ -4966,10 +4966,10 @@ endfunction
 
 // 删除指定单位拥有的 魔法效果（BUFF） (按类型)
 function UnitRemoveBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns nothing
-    local boolean bPos = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
-    local boolean bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
-    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
-    local boolean bPhys = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
+    local boolean bPos =(polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
+    local boolean bNeg =(polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
+    local boolean bMagic =(resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
+    local boolean bPhys =(resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
 
     call UnitRemoveBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 endfunction
@@ -4977,10 +4977,10 @@ endfunction
 
 // 获取指定单位拥有的 魔法效果（BUFF） 的数量
 function UnitCountBuffsExBJ takes integer polarity, integer resist, unit whichUnit, boolean bTLife, boolean bAura returns integer
-    local boolean bPos = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
-    local boolean bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
-    local boolean bMagic = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
-    local boolean bPhys = (resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
+    local boolean bPos =(polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_POSITIVE)
+    local boolean bNeg =(polarity == bj_BUFF_POLARITY_EITHER) or(polarity == bj_BUFF_POLARITY_NEGATIVE)
+    local boolean bMagic =(resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_MAGIC)
+    local boolean bPhys =(resist == bj_BUFF_RESIST_BOTH) or(resist == bj_BUFF_RESIST_PHYSICAL)
 
     return UnitCountBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 endfunction
@@ -5404,7 +5404,7 @@ function ChangeElevatorHeight takes destructable d, integer newHeight returns no
     set oldHeight = GetElevatorHeight(d)
 
     // Set the elevator's occlusion height.
-    call SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT * (newHeight - 1))
+    call SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT *(newHeight - 1))
 
     if(newHeight == 1) then
         if(oldHeight == 2) then
@@ -6847,8 +6847,8 @@ endfunction
 
 // 创建任务
 function CreateQuestBJ takes integer questType, string title, string description, string iconPath returns quest
-    local boolean required = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
-    local boolean discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_OPT_DISCOVERED)
+    local boolean required =(questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
+    local boolean discovered =(questType == bj_QUESTTYPE_REQ_DISCOVERED) or(questType == bj_QUESTTYPE_OPT_DISCOVERED)
 
     set bj_lastCreatedQuest = CreateQuest()
     call QuestSetTitle(bj_lastCreatedQuest, title)
@@ -9837,9 +9837,9 @@ function MeleeGrantItemsToHero takes unit whichUnit returns nothing
     local integer owner = GetPlayerId(GetOwningPlayer(whichUnit))
 
     // If we haven't twinked N heroes for this player yet, twink away.
-    if(bj_meleeTwinkedHeroes [ owner ] < bj_MELEE_MAX_TWINKED_HEROES) then
+    if(bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
         call UnitAddItemById(whichUnit, 'stwp')
-        set bj_meleeTwinkedHeroes [ owner ] = bj_meleeTwinkedHeroes [ owner ] + 1
+        set bj_meleeTwinkedHeroes[owner] = bj_meleeTwinkedHeroes[owner] + 1
     endif
 endfunction
 
@@ -9865,7 +9865,7 @@ function MeleeGrantHeroItems takes nothing returns nothing
     // Initialize the twinked hero counts.
     set index = 0
     loop
-        set bj_meleeTwinkedHeroes [ index ] = 0
+        set bj_meleeTwinkedHeroes[index] = 0
 
         set index = index + 1
         exitwhen index == bj_MAX_PLAYER_SLOTS
@@ -10257,7 +10257,7 @@ function MeleeStartingUnitsUndead takes player whichPlayer, location startLoc, b
         set nearTownLoc = MeleeGetProjectedLoc(startLoc, GetUnitLoc(nearestMine), 288, 0)
         set ghoulX = GetLocationX(nearTownLoc)
         set ghoulY = GetLocationY(nearTownLoc)
-        set bj_ghoul [ GetPlayerId(whichPlayer) ] = CreateUnit(whichPlayer, 'ugho', ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
+        set bj_ghoul[GetPlayerId(whichPlayer) ] = CreateUnit(whichPlayer, 'ugho', ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
 
         // Spawn Acolytes near the mine.
         set nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
@@ -10406,7 +10406,7 @@ function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startL
 
     set index = 0
     loop
-        call CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal(- 256, 256), GetLocationY(startLoc) + GetRandomReal(- 256, 256), GetRandomReal(0, 360))
+        call CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal( - 256, 256), GetLocationY(startLoc) + GetRandomReal( - 256, 256), GetRandomReal(0, 360))
         set index = index + 1
         exitwhen index == 12
     endloop
@@ -10534,7 +10534,7 @@ function MeleeStartingAI takes nothing returns nothing
                     call PickMeleeAI(indexPlayer, "orc.ai", null, null)
                 elseif(indexRace == RACE_UNDEAD) then
                     call PickMeleeAI(indexPlayer, "undead.ai", null, null)
-                    call RecycleGuardPosition(bj_ghoul [ index ])
+                    call RecycleGuardPosition(bj_ghoul[index])
                 elseif(indexRace == RACE_NIGHTELF) then
                     call PickMeleeAI(indexPlayer, "elf.ai", null, null)
                 else
@@ -10577,7 +10577,7 @@ function MeleePlayerIsOpponent takes integer playerIndex, integer opponentIndex 
     endif
 
     // Players who are already defeated are not opponents.
-    if(bj_meleeDefeated [ opponentIndex ]) then
+    if(bj_meleeDefeated[opponentIndex]) then
         return false
     endif
 
@@ -10637,7 +10637,7 @@ function MeleeGetAllyCount takes player whichPlayer returns integer
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
-        if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated [ playerIndex ] and(whichPlayer != indexPlayer) then
+        if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex] and(whichPlayer != indexPlayer) then
             set playerCount = playerCount + 1
         endif
 
@@ -10696,8 +10696,8 @@ function MeleeDoVictoryEnum takes nothing returns nothing
     local player thePlayer = GetEnumPlayer()
     local integer playerIndex = GetPlayerId(thePlayer)
 
-    if(not bj_meleeVictoried [ playerIndex ]) then
-        set bj_meleeVictoried [ playerIndex ] = true
+    if(not bj_meleeVictoried[playerIndex]) then
+        set bj_meleeVictoried[playerIndex] = true
         call CachePlayerHeroData(thePlayer)
         call RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_VICTORY, false)
     endif
@@ -10709,7 +10709,7 @@ endfunction
 // 失败玩家触发器动作
 // 创建失败对话框
 function MeleeDoDefeat takes player whichPlayer returns nothing
-    set bj_meleeDefeated [ GetPlayerId(whichPlayer) ] = true
+    set bj_meleeDefeated[GetPlayerId(whichPlayer) ] = true
     call RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, false)
 endfunction
 
@@ -10735,7 +10735,7 @@ function MeleeDoLeave takes player whichPlayer returns nothing
     if(GetIntegerGameState(GAME_STATE_DISCONNECTED) != 0) then
         call GameOverDialogBJ(whichPlayer, true)
     else
-        set bj_meleeDefeated [ GetPlayerId(whichPlayer) ] = true
+        set bj_meleeDefeated[GetPlayerId(whichPlayer) ] = true
         call RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, true)
     endif
 endfunction
@@ -10777,7 +10777,7 @@ function MeleeCheckForVictors takes nothing returns force
     // Check to see if any players have opponents remaining.
     set playerIndex = 0
     loop
-        if(not bj_meleeDefeated [ playerIndex ]) then
+        if(not bj_meleeDefeated[playerIndex]) then
             // Determine whether or not this player has any remaining opponents.
             set opponentIndex = 0
             loop
@@ -10834,7 +10834,7 @@ function MeleeCheckForLosersAndVictors takes nothing returns nothing
     loop
         set indexPlayer = Player(playerIndex)
 
-        if(not bj_meleeDefeated [ playerIndex ] and not bj_meleeVictoried [ playerIndex ]) then
+        if(not bj_meleeDefeated[playerIndex] and not bj_meleeVictoried[playerIndex]) then
             //call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, "Player"+I2S(playerIndex)+" has "+I2S(MeleeGetAllyStructureCount(indexPlayer))+" ally buildings.")
             if(MeleeGetAllyStructureCount(indexPlayer) <= 0) then
 
@@ -10844,7 +10844,7 @@ function MeleeCheckForLosersAndVictors takes nothing returns nothing
 
                 // Set their defeated flag now so MeleeCheckForVictors
                 // can detect victors.
-                set bj_meleeDefeated [ playerIndex ] = true
+                set bj_meleeDefeated[playerIndex] = true
             endif
         endif
             
@@ -10925,7 +10925,7 @@ function MeleeExposePlayer takes player whichPlayer, boolean expose returns noth
 
     call CripplePlayer(whichPlayer, toExposeTo, false)
 
-    set bj_playerIsExposed [ GetPlayerId(whichPlayer) ] = expose
+    set bj_playerIsExposed[GetPlayerId(whichPlayer) ] = expose
     set playerIndex = 0
     loop
         set indexPlayer = Player(playerIndex)
@@ -10989,7 +10989,7 @@ function MeleeCrippledPlayerTimeout takes nothing returns nothing
     // Determine which player's timer expired.
     set playerIndex = 0
     loop
-        if(bj_crippledTimer [ playerIndex ] == expiredTimer) then
+        if(bj_crippledTimer[playerIndex] == expiredTimer) then
             exitwhen true
         endif
 
@@ -11005,7 +11005,7 @@ function MeleeCrippledPlayerTimeout takes nothing returns nothing
         // Use only local code (no net traffic) within this block to avoid desyncs.
 
         // Hide the timer window for this player.
-        call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
+        call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
     endif
 
     // Display a text message to all players, explaining the exposure.
@@ -11046,37 +11046,37 @@ function MeleeCheckForCrippledPlayers takes nothing returns nothing
         set indexPlayer = Player(playerIndex)
         set isNowCrippled = MeleePlayerIsCrippled(indexPlayer)
 
-        if(not bj_playerIsCrippled [ playerIndex ] and isNowCrippled) then
+        if(not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
 
             // Player became crippled; start their cripple timer.
-            set bj_playerIsCrippled [ playerIndex ] = true
-            call TimerStart(bj_crippledTimer [ playerIndex ], bj_MELEE_CRIPPLE_TIMEOUT, false, function MeleeCrippledPlayerTimeout)
+            set bj_playerIsCrippled[playerIndex] = true
+            call TimerStart(bj_crippledTimer[playerIndex], bj_MELEE_CRIPPLE_TIMEOUT, false, function MeleeCrippledPlayerTimeout)
 
             if(GetLocalPlayer() == indexPlayer) then
                 // Use only local code (no net traffic) within this block to avoid desyncs.
 
                 // Show the timer window.
-                call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], true)
+                call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], true)
 
                 // Display a warning message.
                 call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, MeleeGetCrippledWarningMessage(indexPlayer))
             endif
 
-        elseif(bj_playerIsCrippled [ playerIndex ] and not isNowCrippled) then
+        elseif(bj_playerIsCrippled[playerIndex] and not isNowCrippled) then
 
             // Player became uncrippled; stop their cripple timer.
-            set bj_playerIsCrippled [ playerIndex ] = false
-            call PauseTimer(bj_crippledTimer [ playerIndex ])
+            set bj_playerIsCrippled[playerIndex] = false
+            call PauseTimer(bj_crippledTimer[playerIndex])
 
             if(GetLocalPlayer() == indexPlayer) then
                 // Use only local code (no net traffic) within this block to avoid desyncs.
 
                 // Hide the timer window for this player.
-                call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
+                call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
 
                 // Display a confirmation message if the player's team is still alive.
                 if(MeleeGetAllyStructureCount(indexPlayer) > 0) then
-                    if(bj_playerIsExposed [ playerIndex ]) then
+                    if(bj_playerIsExposed[playerIndex]) then
                         call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNREVEALED"))
                     else
                         call DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNCRIPPLED"))
@@ -11120,7 +11120,7 @@ function MeleeCheckAddedUnit takes unit addedUnit returns nothing
     local player addedUnitOwner = GetOwningPlayer(addedUnit)
 
     // If the player was crippled, this unit may have uncrippled him/her.
-    if(bj_playerIsCrippled [ GetPlayerId(addedUnitOwner) ]) then
+    if(bj_playerIsCrippled[GetPlayerId(addedUnitOwner) ]) then
         call MeleeCheckForCrippledPlayers()
     endif
 endfunction
@@ -11154,14 +11154,14 @@ function MeleeTriggerActionPlayerDefeated takes nothing returns nothing
         // If at least one ally is still alive and kicking, share units with
         // them and proceed with death.
         call ShareEverythingWithTeam(thePlayer)
-        if(not bj_meleeDefeated [ GetPlayerId(thePlayer) ]) then
+        if(not bj_meleeDefeated[GetPlayerId(thePlayer) ]) then
             call MeleeDoDefeat(thePlayer)
         endif
     else
         // If no living allies remain, swap all units and buildings over to
         // neutral_passive and proceed with death.
         call MakeUnitsPassiveForTeam(thePlayer)
-        if(not bj_meleeDefeated [ GetPlayerId(thePlayer) ]) then
+        if(not bj_meleeDefeated[GetPlayerId(thePlayer) ]) then
             call MeleeDoDefeat(thePlayer)
         endif
     endif
@@ -11217,16 +11217,16 @@ function MeleeTriggerTournamentFinishSoon takes nothing returns nothing
         set playerIndex = 0
         loop
             set indexPlayer = Player(playerIndex)
-            if bj_playerIsCrippled [ playerIndex ] then
+            if bj_playerIsCrippled[playerIndex] then
                 // Uncripple the player
-                set bj_playerIsCrippled [ playerIndex ] = false
-                call PauseTimer(bj_crippledTimer [ playerIndex ])
+                set bj_playerIsCrippled[playerIndex] = false
+                call PauseTimer(bj_crippledTimer[playerIndex])
 
                 if(GetLocalPlayer() == indexPlayer) then
                     // Use only local code (no net traffic) within this block to avoid desyncs.
 
                     // Hide the timer window.
-                    call TimerDialogDisplay(bj_crippledTimerWindows [ playerIndex ], false)
+                    call TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
                 endif
 
             endif
@@ -11276,12 +11276,12 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     loop
         set indexPlayer = Player(index)
         if MeleeWasUserPlayer(indexPlayer) then
-            set playerScore [ index ] = GetTournamentScore(indexPlayer)
-            if playerScore [ index ] <= 0 then
-                set playerScore [ index ] = 1
+            set playerScore[index] = GetTournamentScore(indexPlayer)
+            if playerScore[index] <= 0 then
+                set playerScore[index] = 1
             endif
         else
-            set playerScore [ index ] = 0
+            set playerScore[index] = 0
         endif
         set index = index + 1
         exitwhen index == bj_MAX_PLAYERS
@@ -11291,21 +11291,21 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
     set teamCount = 0
     set index = 0
     loop
-        if playerScore [ index ] != 0 then
+        if playerScore[index] != 0 then
             set indexPlayer = Player(index)
 
-            set teamScore [ teamCount ] = 0
-            set teamForce [ teamCount ] = CreateForce()
+            set teamScore[teamCount] = 0
+            set teamForce[teamCount] = CreateForce()
 
             set index2 = index
             loop
-                if playerScore [ index2 ] != 0 then
+                if playerScore[index2] != 0 then
                     set indexPlayer2 = Player(index2)
 
                     if PlayersAreCoAllied(indexPlayer, indexPlayer2) then
-                        set teamScore [ teamCount ] = teamScore [ teamCount ] + playerScore [ index2 ]
-                        call ForceAddPlayer(teamForce [ teamCount ], indexPlayer2)
-                        set playerScore [ index2 ] = 0
+                        set teamScore[teamCount] = teamScore[teamCount] + playerScore[index2 ]
+                        call ForceAddPlayer(teamForce[teamCount], indexPlayer2)
+                        set playerScore[index2] = 0
                     endif
                 endif
 
@@ -11331,9 +11331,9 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
         set bestScore = - 1
         set index = 0
         loop
-            if teamScore [ index ] > bestScore then
+            if teamScore[index] > bestScore then
                 set bestTeam = index
-                set bestScore = teamScore [ index ]
+                set bestScore = teamScore[index ]
             endif
 
             set index = index + 1
@@ -11347,7 +11347,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
         set index = 0
         loop
             if index != bestTeam then
-                if bestScore < (multiplier * teamScore [ index ]) then
+                if bestScore <(multiplier * teamScore[index]) then
                     set draw = true
                 endif
             endif
@@ -11360,7 +11360,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             // Give draw to all players on all teams
             set index = 0
             loop
-                call ForForce(teamForce [ index ], function MeleeDoDrawEnum)
+                call ForForce(teamForce[index], function MeleeDoDrawEnum)
 
                 set index = index + 1
                 exitwhen index == teamCount
@@ -11370,7 +11370,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             set index = 0
             loop
                 if index != bestTeam then
-                    call ForForce(teamForce [ index ], function MeleeDoDefeatEnum)
+                    call ForForce(teamForce[index], function MeleeDoDefeatEnum)
                 endif
 
                 set index = index + 1
@@ -11378,7 +11378,7 @@ function MeleeTournamentFinishNowRuleA takes integer multiplier returns nothing
             endloop
 
             // Give victory to all players on the best team
-            call ForForce(teamForce [ bestTeam ], function MeleeDoVictoryEnum)
+            call ForForce(teamForce[bestTeam], function MeleeDoVictoryEnum)
         endif
     endif
 
@@ -11434,15 +11434,15 @@ function MeleeInitVictoryDefeat takes nothing returns nothing
 
         // Make sure this player slot is playing.
         if(GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
-            set bj_meleeDefeated [ index ] = false
-            set bj_meleeVictoried [ index ] = false
+            set bj_meleeDefeated[index] = false
+            set bj_meleeVictoried[index] = false
 
             // Create a timer and timer window in case the player is crippled.
-            set bj_playerIsCrippled [ index ] = false
-            set bj_playerIsExposed [ index ] = false
-            set bj_crippledTimer [ index ] = CreateTimer()
-            set bj_crippledTimerWindows [ index ] = CreateTimerDialog(bj_crippledTimer [ index ])
-            call TimerDialogSetTitle(bj_crippledTimerWindows [ index ], MeleeGetCrippledTimerMessage(indexPlayer))
+            set bj_playerIsCrippled[index] = false
+            set bj_playerIsExposed[index] = false
+            set bj_crippledTimer[index] = CreateTimer()
+            set bj_crippledTimerWindows[index] = CreateTimerDialog(bj_crippledTimer[index])
+            call TimerDialogSetTitle(bj_crippledTimerWindows[index], MeleeGetCrippledTimerMessage(indexPlayer))
 
             // Set a trigger to fire whenever a building is cancelled for this player.
             set trig = CreateTrigger()
@@ -11475,8 +11475,8 @@ function MeleeInitVictoryDefeat takes nothing returns nothing
             call TriggerRegisterPlayerStateEvent(trig, indexPlayer, PLAYER_STATE_ALLIED_VICTORY, EQUAL, 1)
             call TriggerAddAction(trig, function MeleeTriggerActionAllianceChange)
         else
-            set bj_meleeDefeated [ index ] = true
-            set bj_meleeVictoried [ index ] = false
+            set bj_meleeDefeated[index] = true
+            set bj_meleeVictoried[index] = false
 
             // Handle leave events for observers
             if(IsPlayerObserver(indexPlayer)) then
@@ -11511,8 +11511,8 @@ function CheckInitPlayerSlotAvailability takes nothing returns nothing
     if(not bj_slotControlReady) then
         set index = 0
         loop
-            set bj_slotControlUsed [ index ] = false
-            set bj_slotControl [ index ] = MAP_CONTROL_USER
+            set bj_slotControlUsed[index] = false
+            set bj_slotControl[index] = MAP_CONTROL_USER
             set index = index + 1
             exitwhen index == bj_MAX_PLAYERS
         endloop
@@ -11526,8 +11526,8 @@ function SetPlayerSlotAvailable takes player whichPlayer, mapcontrol control ret
     local integer playerIndex = GetPlayerId(whichPlayer)
 
     call CheckInitPlayerSlotAvailability()
-    set bj_slotControlUsed [ playerIndex ] = true
-    set bj_slotControl [ playerIndex ] = control
+    set bj_slotControlUsed[playerIndex] = true
+    set bj_slotControl[playerIndex] = control
 endfunction
 
 
@@ -11551,7 +11551,7 @@ function TeamInitPlayerSlots takes integer teamCount returns nothing
     set index = 0
     set team = 0
     loop
-        if(bj_slotControlUsed [ index ]) then
+        if(bj_slotControlUsed[index]) then
             set indexPlayer = Player(index)
             call SetPlayerTeam(indexPlayer, team)
             set team = team + 1
@@ -11705,8 +11705,8 @@ function InitBlizzardGlobals takes nothing returns nothing
     set index = 0
     loop
         exitwhen index == bj_MAX_PLAYER_SLOTS
-        set bj_FORCE_PLAYER [ index ] = CreateForce()
-        call ForceAddPlayer(bj_FORCE_PLAYER [ index ], Player(index))
+        set bj_FORCE_PLAYER[index] = CreateForce()
+        call ForceAddPlayer(bj_FORCE_PLAYER[index], Player(index))
         set index = index + 1
     endloop
 
@@ -11722,8 +11722,8 @@ function InitBlizzardGlobals takes nothing returns nothing
     set index = 0
     loop
         exitwhen index >= bj_MAX_QUEUED_TRIGGERS
-        set bj_queuedExecTriggers [ index ] = null
-        set bj_queuedExecUseConds [ index ] = false
+        set bj_queuedExecTriggers[index] = null
+        set bj_queuedExecUseConds[index] = false
         set index = index + 1
     endloop
 
@@ -11738,7 +11738,7 @@ function InitBlizzardGlobals takes nothing returns nothing
         endif
         set index = index + 1
     endloop
-    set bj_isSinglePlayer = (userControlledPlayers == 1)
+    set bj_isSinglePlayer =(userControlledPlayers == 1)
 
     // Init sounds
     //set bj_pingMinimapSound = CreateSoundFromLabel("AutoCastButtonClick", false, false, false, 10000, 10000)
@@ -11815,11 +11815,11 @@ function UpdateStockAvailability takes item whichItem returns nothing
 
     // Update allowed type/level combinations.
     if(iType == ITEM_TYPE_PERMANENT) then
-        set bj_stockAllowedPermanent [ iLevel ] = true
+        set bj_stockAllowedPermanent[iLevel] = true
     elseif(iType == ITEM_TYPE_CHARGED) then
-        set bj_stockAllowedCharged [ iLevel ] = true
+        set bj_stockAllowedCharged[iLevel] = true
     elseif(iType == ITEM_TYPE_ARTIFACT) then
-        set bj_stockAllowedArtifact [ iLevel ] = true
+        set bj_stockAllowedArtifact[iLevel] = true
     else
         // Not interested in this item type - ignore the item.
     endif
@@ -11872,21 +11872,21 @@ function PerformStockUpdates takes nothing returns nothing
     // Give each type/level combination a chance of being picked.
     set iLevel = 1
     loop
-        if(bj_stockAllowedPermanent [ iLevel ]) then
+        if(bj_stockAllowedPermanent[iLevel]) then
             set allowedCombinations = allowedCombinations + 1
             if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_PERMANENT
                 set pickedItemLevel = iLevel
             endif
         endif
-        if(bj_stockAllowedCharged [ iLevel ]) then
+        if(bj_stockAllowedCharged[iLevel]) then
             set allowedCombinations = allowedCombinations + 1
             if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_CHARGED
                 set pickedItemLevel = iLevel
             endif
         endif
-        if(bj_stockAllowedArtifact [ iLevel ]) then
+        if(bj_stockAllowedArtifact[iLevel]) then
             set allowedCombinations = allowedCombinations + 1
             if(GetRandomInt(1, allowedCombinations) == 1) then
                 set pickedItemType = ITEM_TYPE_ARTIFACT
@@ -11926,9 +11926,9 @@ function InitNeutralBuildings takes nothing returns nothing
     // Chart of allowed stock items.
     set iLevel = 0
     loop
-        set bj_stockAllowedPermanent [ iLevel ] = false
-        set bj_stockAllowedCharged [ iLevel ] = false
-        set bj_stockAllowedArtifact [ iLevel ] = false
+        set bj_stockAllowedPermanent[iLevel] = false
+        set bj_stockAllowedCharged[iLevel] = false
+        set bj_stockAllowedArtifact[iLevel] = false
         set iLevel = iLevel + 1
         exitwhen iLevel > bj_MAX_ITEM_LEVEL
     endloop
@@ -12004,8 +12004,8 @@ endfunction
 
 // 添加随机分布数
 function RandomDistAddItem takes integer inID, integer inChance returns nothing
-    set bj_randDistID [ bj_randDistCount ] = inID
-    set bj_randDistChance [ bj_randDistCount ] = inChance
+    set bj_randDistID[bj_randDistCount] = inID
+    set bj_randDistChance[bj_randDistCount] = inChance
     set bj_randDistCount = bj_randDistCount + 1
 endfunction
 
@@ -12025,7 +12025,7 @@ function RandomDistChoose takes nothing returns integer
     // Find sum of all chances
     set index = 0
     loop
-        set sum = sum + bj_randDistChance [ index ]
+        set sum = sum + bj_randDistChance[index ]
 
         set index = index + 1
         exitwhen index == bj_randDistCount
@@ -12039,10 +12039,10 @@ function RandomDistChoose takes nothing returns integer
     set sum = 0
     set done = false
     loop
-        set sum = sum + bj_randDistChance [ index ]
+        set sum = sum + bj_randDistChance[index ]
 
         if(chance <= sum) then
-            set foundID = bj_randDistID [ index ]
+            set foundID = bj_randDistID[index ]
             set done = true
         endif
 

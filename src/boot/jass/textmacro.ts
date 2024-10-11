@@ -151,7 +151,13 @@ export class TextMacro extends Range {
     }
     public lineTokens(line:number, params: string[] = []): Token[] {
         const text_line = this.lineAt(line, params);
-        return tokenize_for_vjass_by_content(text_line.text);
+        return tokenize_for_vjass_by_content(text_line.text).map(toekn => {
+            // @ts-expect-error
+            toekn.line = line;
+            toekn.start.line = line;
+            toekn.end.line = line;
+            return toekn;
+        });
     }
 }
 

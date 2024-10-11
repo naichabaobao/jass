@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.17",
+  "version": "1.8.18",
   "keywords": [
     "jass",
     "vjass",
@@ -34,13 +34,6 @@
       "type": "object",
       "title": "Jass",
       "properties": {
-        "jass.includes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "无效,请使用jass.config.json {\"includes\": [\"./includeDirOrFilePath\", \"C:/absoluteDirOrFilePath\"]}"
-        },
         "jass.lua.dependents": {
           "type": "array",
           "items": {
@@ -75,11 +68,6 @@
           "default": false,
           "description": "only jass model,It is not recommended to use when diagnostic is on"
         },
-        "jass.formatv2": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) Open new version format"
-        },
         "jass.info-style": {
           "type": "boolean",
           "default": false,
@@ -102,8 +90,8 @@
         },
         "jass.diagnostic": {
           "type": "boolean",
-          "default": false,
-          "description": "(Test) diagnostic support"
+          "default": true,
+          "description": "(Test) diagnostic support,does not support including Lua, Zinc, and pre-processing code"
         }
       }
     },

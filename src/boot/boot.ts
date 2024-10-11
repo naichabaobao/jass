@@ -2,6 +2,7 @@
 
 
 async function boot() {
+    await import("./provider/data-enter");
     // await import ("./provider/file-manager");
     await import("./provider/data");
     await import("./provider/document-formatting-edit-provider");

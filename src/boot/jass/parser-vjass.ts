@@ -1,15 +1,18 @@
+import * as path from "path";
 import * as fs from "fs";
 import { preprocessing } from "./preproces";
-import { Document, TextLine, Token, TokenType, tokenize } from "./tokenizer-common";
+import { Document, TextLine, Token, TokenType } from "./tokenizer-common";
 import { tokenize_for_vjass } from "./tokenizer-vjass";
 import { RunTextMacro, TextMacro, parse_import, parse_runtextmacro, parse_textmacro } from "./textmacro";
+import { find_node_error, find_token_error } from "./token-error";
 
 export class Context {
     private keys: string[] = [];
     private documents: Document[] = [];
     private handle_key(key: string): string {
-        const handle_key = key.replace(/\\+/g, "/");
-        return handle_key;
+        // const handle_key = key.replace(/\\+/g, "/");
+        const parsed = path.parse(key);
+        return path.resolve(parsed.dir, parsed.base);
     }
     public set(key: string, value: Document) {
         const handle_key = this.handle_key(key);
@@ -17,6 +20,8 @@ export class Context {
         if (index == -1) {
             this.keys.push(handle_key);
             this.documents.push(value);
+        } else {
+            this.documents[index] = value;
         }
     }
     private indexOf(key: string): number {
@@ -387,7 +392,7 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 2) {
-            if (text == "interface") {
+            if (text == "struct") {
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -969,6 +974,10 @@ export class Local extends GlobalVariable {
 export class Set {
     name:Token|null = null;
 }
+export class Type {
+    name:Token|null = null;
+    extends:Token|null = null;
+}
 export class Call {
 }
 export class Ret {
@@ -1125,6 +1134,52 @@ export class Else {
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
     const ret = new Else();
+
+    return ret;
+}
+export function parse_line_type(document: Document, line_text: ExpendLineText) {
+    const ret = new Type();
+    const tokens = line_text.tokens();
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "type") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                ret.name = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "extends") {
+                state = 3;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (token.is_identifier) {
+                ret.extends = token;
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        }
+    }
 
     return ret;
 }
@@ -1690,10 +1745,13 @@ function parse_node(document: Document) {
                 const el = parse_line_else(document, value.line);
                 
                 node.body_datas.push(el);
+            } else if (value.type == "type") {
+                const el = parse_line_type(document, value.line);
+                
+                node.body_datas.push(el);
             } else if (value.type == "other") {
                 node.body_datas.push(new Other());
             }
-            console.log(value.type, value.line.line);
             
         });
 
@@ -1745,7 +1803,7 @@ export class Node {
     public type: NodeType;
     public parent: Node | null = null;
     public body: {
-        type: "local"|"set"|"call"|"return"|"comment"|"empty"|"other"|"member"|"native"|"method"|"exitwhen"|"elseif"|"else",
+        type: "local"|"set"|"call"|"return"|"comment"|"empty"|"other"|"member"|"native"|"method"|"exitwhen"|"elseif"|"else"|"type",
         line: ExpendLineText
     }[] = [];
     public start_line: ExpendLineText | null = null;
@@ -1800,6 +1858,7 @@ const elseRegExp = /^\s*else\b/;
 const nativeRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?native\b/;
 const memberRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?[a-zA-Z0-9_]+\b/;
 const methodRegExp = /^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?method\b/;
+const typeRegExp = /^\s*type\b/;
 
 
 const pairs = [
@@ -1859,71 +1918,83 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
                 node_stack.pop(); // 闭合
             } else { // 非关键行
                 const e_line = new ExpendLineText(document, line, run_text_macro, macro);
-                if (nativeRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "native",
-                        line: e_line
-                    });
-                } else if (localRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "local",
-                        line: e_line
-                    });
-                } else if (setRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "set",
-                        line: e_line
-                    });
-                } else if (callRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "call",
-                        line: e_line
-                    });
-                } else if (returnRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "return",
-                        line: e_line
-                    });
-                } else if (e_line.tokens().length == 0) {
-                    node.body.push({
-                        type: "empty",
-                        line: e_line
-                    });
-                } else if (e_line.tokens()[0].is_comment) {
-                    node.body.push({
-                        type: "comment",
-                        line: e_line
-                    });
-                } else if (methodRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "method",
-                        line: e_line
-                    });
-                } else if (exitwhenRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "exitwhen",
-                        line: e_line
-                    });
-                } else if (elseifRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "elseif",
-                        line: e_line
-                    });
-                } else if (elseRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "else",
-                        line: e_line
-                    });
-                } else if (memberRegExp.test(text_line.text)) {
-                    node.body.push({
-                        type: "member",
-                        line: e_line
-                    });
-                } else {
+                if (node.type == "zinc") {
                     node.body.push({
                         type: "other",
                         line: e_line
                     });
+                } else {
+                    if (nativeRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "native",
+                            line: e_line
+                        });
+                    } else if (localRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "local",
+                            line: e_line
+                        });
+                    } else if (setRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "set",
+                            line: e_line
+                        });
+                    } else if (callRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "call",
+                            line: e_line
+                        });
+                    } else if (returnRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "return",
+                            line: e_line
+                        });
+                    } else if (e_line.tokens().length == 0) {
+                        node.body.push({
+                            type: "empty",
+                            line: e_line
+                        });
+                    } else if (e_line.tokens()[0].is_comment) {
+                        node.body.push({
+                            type: "comment",
+                            line: e_line
+                        });
+                    } else if (methodRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "method",
+                            line: e_line
+                        });
+                    } else if (exitwhenRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "exitwhen",
+                            line: e_line
+                        });
+                    } else if (elseifRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "elseif",
+                            line: e_line
+                        });
+                    } else if (elseRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "else",
+                            line: e_line
+                        });
+                    } else if (typeRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "type",
+                            line: e_line
+                        });
+                    } else if (memberRegExp.test(text_line.text)) {
+                        node.body.push({
+                            type: "member",
+                            line: e_line
+                        });
+                    } else {
+                        node.body.push({
+                            type: "other",
+                            line: e_line
+                        });
+                    }
                 }
             }
         } else {
@@ -1931,11 +2002,6 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
             if (nativeRegExp.test(text_line.text)) {
                 root_node.body.push({
                     type: "native",
-                    line: e_line
-                });
-            } else if (memberRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "member",
                     line: e_line
                 });
             } else if (localRegExp.test(text_line.text)) {
@@ -1973,6 +2039,31 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
                     type: "method",
                     line: e_line
                 });
+            } else if (exitwhenRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "exitwhen",
+                    line: e_line
+                });
+            } else if (elseifRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "elseif",
+                    line: e_line
+                });
+            } else if (elseRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "else",
+                    line: e_line
+                });
+            } else if (typeRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "type",
+                    line: e_line
+                });
+            } else if (memberRegExp.test(text_line.text)) {
+                root_node.body.push({
+                    type: "member",
+                    line: e_line
+                });
             } else {
                 root_node.body.push({
                     type: "other",
@@ -2008,20 +2099,25 @@ function slice_layer(document: Document) {
 
 //#endregion
 
-export function parse(filePath: string) {
-    const content: string = fs.readFileSync(filePath, { encoding: "utf-8" });
+export function parse(filePath: string, i_content?: string) {
+    const content: string = i_content ? i_content : fs.readFileSync(filePath, { encoding: "utf-8" });
     const document = new Document(filePath, content);
     tokenize_for_vjass(document);
+
+    
 
     preprocessing(document);
 
     parse_import(document);
     parse_textmacro(document);
     parse_runtextmacro(document);
+    find_token_error(document);
     Global.set(filePath, document);
 
 
     slice_layer(document);
     parse_node(document);
+
+    find_node_error(document);
 }
 

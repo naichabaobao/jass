@@ -9,6 +9,7 @@ import { Token } from "./tokenizer-common";
 import { Global, parse } from "./parser-vjass";
 import { Parser } from "./parser";
 import { Context } from "./ast";
+import { Options } from "../provider/options";
 
 // 词法解析速度与内存暂用测试
 if (false) {
@@ -21,7 +22,7 @@ if (false) {
 
     console.time("tokenize_for_vjass")
     console.log("tokenize_for_vjass before", mb(process.memoryUsage().heapUsed));
-    tokenize_for_vjass(content)
+    // tokenize_for_vjass(content)
     console.log("tokenize_for_vjass after", mb(process.memoryUsage().heapUsed));
     // console.log(tokenize_for_vjass(content).map(x => `${x.type} ${x.is_complete ? "true" : "false"} '${x.getText()}'`));
     console.timeEnd("tokenize_for_vjass")
@@ -49,7 +50,7 @@ tokens: 112.222ms
 */
 
 // tokenize_for_vjass方法功能测试
-if (true) {
+if (false) {
     const printToken = (token:Token) => {
         
         console.log(` ${token.type} ${token.is_complete ? "true" : "false"} '${token.getText()}'`);
@@ -105,6 +106,9 @@ if (true) {
     parse(filePath)
     console.timeEnd("kk");
 
+
+    
+
     // console.time("kk2")
     // new Parser(new Context(), readFileContent(filePath)).parsing()
     // console.timeEnd("kk2");
@@ -114,8 +118,7 @@ if (true) {
     // Global.get(filePath)?.root_node?.children.forEach(node => {
     //     if (node.start_line?.document.is_text_macro_line(node.start_line.line)) {
 
-    //     }
-    //     console.log(node.start_line?.text_line().text, node.start_line?.line);
+    //     }    //     console.log(node.start_line?.text_line().text, node.start_line?.line);
     //     node.body.forEach(b => {
     //         console.log(b.text_line().text, b.line);
             

@@ -275,6 +275,27 @@ export class Document {
     public add_token_error(token:Token, message: string) {
         this.token_errors.push({token, message});
     }
+    node_errors: {node:Node, message: string, charge?: number}[] = [];
+    public add_node_error(node:Node, message: string) {
+        this.node_errors.push({node, message});
+    }
+
+    public foreach(callback: (node:Node) => void) {
+      const fallback = (node:Node) => {
+        if (node.type == "zinc") {
+          return;
+        }
+        callback(node);
+        if (node.children.length > 0) {
+          node.children.forEach(child_node => {
+            fallback(child_node);
+          });
+        }
+      }
+      if (this.root_node) {
+        fallback(this.root_node);
+      }
+    }
 
   }
 

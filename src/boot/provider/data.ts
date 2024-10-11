@@ -412,6 +412,11 @@ parsePath(...Options.includes);
 parsePath(...Options.workspaces);
 parsePath(...Options.luaDependents);
 
+(async () => {
+  console.log(await vscode.workspace.findFiles("jass.config.json"));
+})()
+
+
 
 
 
