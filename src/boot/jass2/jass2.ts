@@ -1,9 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as readline from "readline";
 import * as vscode from "vscode";
-import { lines } from "../jass/tool";
-import { getFileContent } from "../tool";
 
 class native {
     static readFileContent(filePath: string): string {

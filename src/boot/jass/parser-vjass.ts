@@ -57,8 +57,8 @@ export const Global = new Context();
 
 export class Library {
     public is_library_once: boolean = false;
-    public name: string | null = null;
-    public initializer: string | null = null;
+    public name: Token | null = null;
+    public initializer: Token | null = null;
     public requires: string[] = [];
     public is_optional: boolean = false;
 }
@@ -85,7 +85,7 @@ function parse_library(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                library.name = text;
+                library.name = token;
                 state = 2;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -102,7 +102,7 @@ function parse_library(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 3) {
             if (token.is_identifier) {
-                library.initializer = text;
+                library.initializer = token;
                 state = 4;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -247,7 +247,7 @@ function parse_library(document: Document, line_text: ExpendLineText) {
 }
 
 export class Scope {
-    public name: string | null = null;
+    public name: Token | null = null;
 }
 function parse_scope(document: Document, line_text: ExpendLineText) {
     const scope = new Scope();
@@ -268,7 +268,7 @@ function parse_scope(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                scope.name = text;
+                scope.name = token;
                 state = 2;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -284,7 +284,7 @@ function parse_scope(document: Document, line_text: ExpendLineText) {
 
 export class Interface {
     public visible:"public"|"private"|null = null;
-    public name: string | null = null;
+    public name: Token | null = null;
     public extends: string[]|null = null;
 }
 function parse_interface(document: Document, line_text: ExpendLineText) {
@@ -312,7 +312,7 @@ function parse_interface(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                inter.name = text;
+                inter.name = token;
                 state = 3;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -385,7 +385,7 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                struct.name = text;
+                struct.name = token;
                 state = 3;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -440,7 +440,7 @@ export class Method {
     public visible:"public"|"private"|null = null;
     public modifier:"static"|"stub"|null = null;
     public qualifier:"constant"|null = null;
-    public name: string | null = null;
+    public name: Token | null = null;
     public takes: Take[]|null = null;
     public returns: string|null = null;
     public defaults: string|null = null;
@@ -488,7 +488,7 @@ function parse_method(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                method.name = text;
+                method.name = token;
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -672,7 +672,7 @@ function parse_function(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                func.name = text;
+                func.name = token;
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -817,11 +817,11 @@ function parse_function(document: Document, line_text: ExpendLineText) {
 
     return func;
 }
-export class Gloabls {
+export class Globals {
 }
 
 function parse_globals(document: Document, line_text: ExpendLineText) {
-    const globals = new Gloabls();
+    const globals = new Globals();
     const tokens = line_text.tokens();
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
@@ -846,11 +846,11 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
     return globals;
 }
 
-class If {
+export class If {
     // 无用项
     condition: null = null;
 }
-class Loop {}
+export class Loop {}
 
 function parse_if(document: Document, line_text: ExpendLineText) {
     const ifs = new If();
@@ -1219,7 +1219,7 @@ function parse_line_native(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                native.name = text;
+                native.name = token;
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -1399,7 +1399,7 @@ function parse_line_method(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 1) {
             if (token.is_identifier) {
-                method.name = text;
+                method.name = token;
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -1797,6 +1797,9 @@ class ExpendLineText {
 }
 
 type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | null;
+
+
+type DataType = Library|Struct|Interface|Method|Func|Globals|Scope|If|Loop;
 export class Node {
     public data: any;
 

@@ -1,10 +1,4 @@
 import * as vscode from "vscode";
-import { Token, tokenize } from "../jass/tokens";
-import { Options } from "./options";
-import {  LineText, Range } from "../jass/ast";
-import { lines, removeComment } from "../jass/tool";
-import { DataGetter } from "./data";
-import { interfaces } from "mocha";
 import { Global } from "../jass/parser-vjass";
 import * as common from "../jass/tokenizer-common"
 
