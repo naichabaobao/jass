@@ -4366,8 +4366,8 @@ native Atan2 takes real y, real x returns real
 native SquareRoot takes real x returns real
 
 // 求幂
-// y == 0.0          ， 返回 1
-// x == 0.0 且 y < 0 ， 返回 0
+// power == 0.0          ， 返回 1
+// x == 0.0 且 power < 0 ， 返回 0
 // computes x to the y power
 native Pow takes real x, real power returns real
 // 小数位四舍五入
