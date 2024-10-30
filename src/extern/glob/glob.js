@@ -40,8 +40,9 @@
 
 module.exports = glob
 
-var rp = require('fs.realpath')
-var minimatch = require('minimatch')
+// var rp = require('fs.realpath')
+var rp = require("fs").realpath;
+var minimatch = require('./minimatch')
 var Minimatch = minimatch.Minimatch
 var inherits = require('inherits')
 var EE = require('events').EventEmitter

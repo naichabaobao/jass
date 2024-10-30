@@ -2,14 +2,16 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import { isAiFile, isJFile, isUsableFile, readIgnoreRules, resolvePaths } from "../tool";
+// import glob = require("../../extern/glob/glob");
+// import glob = require("../../extern/js/glob/dist/commonjs/index");
 
-import {glob} from "glob";
+// import {glob} from "glob";
 
 
 
 class Options {
 
-  public static get configuration() : vscode.WorkspaceConfiguration {
+  public static get configuration(): vscode.WorkspaceConfiguration {
     return vscode.workspace.getConfiguration("jass");
   }
 
@@ -17,28 +19,28 @@ class Options {
     const staticPathDir = path.resolve(__dirname, "../../../static");
     return resolvePaths([staticPathDir]);
   }
-  public static get commonJPath() : string {
+  public static get commonJPath(): string {
     return this.isUsableJFile(this.configuration["common_j"] as string) ? this.configuration["common_j"] as string : path.resolve(__dirname, "../../../static/common.j");
   }
-  public static get blizzardJPath() : string {
+  public static get blizzardJPath(): string {
     return this.isUsableJFile(this.configuration["blizzard"] as string) ? this.configuration["blizzard"] as string : path.resolve(__dirname, "../../../static/blizzard.j");
   }
-  public static get commonAiPath() : string {
+  public static get commonAiPath(): string {
     return this.isUsableAiFile(this.configuration["common_ai"] as string) ? this.configuration["common_ai"] as string : path.resolve(__dirname, "../../../static/common.ai");
   }
-  public static get dzApiJPath() : string {
+  public static get dzApiJPath(): string {
     return this.isUsableJFile(this.configuration["dzapi"] as string) ? this.configuration["dzapi"] as string : path.resolve(__dirname, "../../../static/DzAPI.j");
   }
-  public static get cheatsJPath() : string {
+  public static get cheatsJPath(): string {
     return this.isUsableJFile(this.configuration["cheats"] as string) ? this.configuration["cheats"] as string : path.resolve(__dirname, "../../../static/Cheats.j");
   }
-  public static get initcheatsJPath() : string {
+  public static get initcheatsJPath(): string {
     return this.isUsableJFile(this.configuration["initcheats"] as string) ? this.configuration["initcheats"] as string : path.resolve(__dirname, "../../../static/InitCheats.j");
   }
-  public static get aiscriptsAiPath() : string {
+  public static get aiscriptsAiPath(): string {
     return this.isUsableAiFile(this.configuration["aiscripts_ai"] as string) ? this.configuration["aiscripts_ai"] as string : path.resolve(__dirname, "../../../static/AIScripts.ai");
   }
-  public static get war3mapJPath() : string {
+  public static get war3mapJPath(): string {
     return this.isUsableJFile(this.configuration["war3map"] as string) ? this.configuration["war3map"] as string : path.resolve(__dirname, "../../../static/war3map.j");
   }
   // public static get ObjectEditorJPath() : string {
@@ -46,13 +48,13 @@ class Options {
   // }
 
   private static isUsableJFile(filePath: string) {
-      return isUsableFile(filePath) && isJFile(filePath);
+    return isUsableFile(filePath) && isJFile(filePath);
   }
 
   private static isUsableAiFile(filePath: string) {
     return isUsableFile(filePath) && isAiFile(filePath);
   }
-  
+
   public static get includes() {
     const includes = this.configuration["includes"] as Array<string>;
     return resolvePaths(includes);
@@ -74,7 +76,7 @@ class Options {
     return this.configuration["support"]["cjass"] as boolean;
   }
 
-  
+
   public static get supportZinc() {
     return this.configuration["support"]["zinc"] as boolean;
   }
@@ -118,54 +120,67 @@ class Options {
   // 大于该值则使用缓存
   private static triggerCount = 20
 
-  public static get workspaces():string[] {
-    // console.log('read space')
+
+  /**
+   * @deprecated 使用include_paths()
+   */
+  public static get workspaces(): string[] {
     if (vscode.workspace.workspaceFolders) {
-      const lastUpdate = this.lastWorkspacesUpdate
-      const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
-      if (usingCache){
-        return this.workspacesCache
-      }
       // console.time('read space')
-      this.workspacesCache = vscode.workspace.workspaceFolders.map((floder) => {
-        const options = {
-            cwd: floder.uri.fsPath,
-            ignore: readIgnoreRules(
-                path.resolve(floder.uri.fsPath, ".jassignore")
-            ),
-        };
-        // console.log(options)
-        return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
-            .map((pattern) => glob.sync(pattern, options))
-            .flat()
-            .map((file) => path.resolve(floder.uri.fsPath, file));
-      }).flat();
-      // console.timeEnd('read space')
-      this.lastWorkspacesUpdate = Date.now()
-      return this.workspacesCache
+      const root_path = vscode.workspace.workspaceFolders.map(floder => floder.uri.fsPath);
+      return resolvePaths(root_path);
     }
     return [];
   }
+  // public static get workspaces():string[] {
+  //   // console.log('read space')
+  //   if (vscode.workspace.workspaceFolders) {
+  //     const lastUpdate = this.lastWorkspacesUpdate
+  //     const usingCache = this.workspacesCache.length > this.triggerCount && Date.now() - lastUpdate < 1000 * 1 // 1秒
+  //     if (usingCache){
+  //       return this.workspacesCache
+  //     }
+  //     // console.time('read space')
+  //     this.workspacesCache = vscode.workspace.workspaceFolders.map((floder) => {
+  //       const jass_ignore_path = path.resolve(floder.uri.fsPath, ".jassignore");
+  //       const options = {
+  //           cwd: floder.uri.fsPath,
+  //           ignore: readIgnoreRules(
+  //               path.resolve(floder.uri.fsPath, ".jassignore")
+  //           ),
+  //       };
+  //       // console.log(options)
+  //       return ["**/*.j", "**/*.jass", "**/*.ai", "**/*.zn", "**/*.lua"]
+  //           .map((pattern) => glob.sync(pattern, options))
+  //           .flat()
+  //           .map((file) => path.resolve(floder.uri.fsPath, file));
+  //     }).flat();
+  //     // console.timeEnd('read space')
+  //     this.lastWorkspacesUpdate = Date.now()
+  //     return this.workspacesCache
+  //   }
+  //   return [];
+  // }
 
   /**
    * 返回支持的所有路径
    */
-  public static get paths():string[] {
-    return [...this.includes, ...this.workspaces];
-  }
+  // public static get paths():string[] {
+  //   return [...this.includes, ...this.workspaces];
+  // }
 
   /**
    * @deprecated 不用了
    */
-  public static get pjassPath():string {
+  public static get pjassPath(): string {
     return path.resolve(__dirname, "../../../static/pjass-latest.exe")
   }
-  public static get pjassTempPath():string {
+  public static get pjassTempPath(): string {
     return path
-    
-    .resolve(__dirname, "../../../static/temp");
+
+      .resolve(__dirname, "../../../static/temp");
   }
- 
+
   // 插件配置文件路径
   public static get pluginConfigFilePath() {
     return path.resolve(__dirname, "../../../static/jass.config.json");

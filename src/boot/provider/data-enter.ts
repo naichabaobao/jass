@@ -108,7 +108,7 @@ vscode.workspace.onDidRenameFiles((event) => {
 			parse(file_path);
 		}
 	});
-	console.log("include_paths()" + include_paths().length);
+	console.log("include_paths()" + include_paths());
 	
 	include_paths().forEach(file_path => {
 		const p = path.parse(file_path);

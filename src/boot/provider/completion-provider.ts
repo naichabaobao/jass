@@ -350,7 +350,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class JassComplation
 
     // define 提示
     GlobalObject.DEFINES.forEach(define => {
-      console.log(define);
       
       items.push(completionItem(define.id.name, {
         code: define.origin,
@@ -561,8 +560,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items:vscode.CompletionItem[] = [];
-
-    Options.paths
 
     const lineText = document.lineAt(position);
     const lineContent = lineText.text;

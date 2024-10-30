@@ -12,6 +12,7 @@ import { parse } from "../zinc/parse";
 import { convertPosition } from "./tool";
 import { Chunk, LuaParser } from "../lua/parser";
 import { ConfigPovider } from "./config/config";
+import { include_paths } from "./data-enter";
 
 
 
@@ -409,7 +410,7 @@ vscode.workspace.onDidChangeTextDocument((event) => {
 
 parsePath(...Options.staticPaths);
 parsePath(...Options.includes);
-parsePath(...Options.workspaces);
+parsePath(...include_paths());
 parsePath(...Options.luaDependents);
 
 
