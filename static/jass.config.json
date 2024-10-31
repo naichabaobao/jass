@@ -1123,7 +1123,7 @@
         {
             "code": "Obla",
             "name": "剑圣",
-            "descript": "一种较为灵活的英雄，特别擅长于一对一。能学习到镜像，疾步风，致命一击和剑刃风暴这四种技能。能攻击地面单位。",
+            "descript": "一种较为灵活的英雄，特别擅长于一对一。能学习到镜像，疾风步，致命一击和剑刃风暴这四种技能。能攻击地面单位。",
             "kind": "单位",
             "race": "兽族",
             "type": "英雄"
@@ -7698,7 +7698,7 @@
         },
         {
             "code": "AOwk",
-            "name": "疾步风",
+            "name": "疾风步",
             "descript": "使得剑圣在一定时间内隐形并加快移动速度，如果此时进行攻击的话，那么就不再隐形但会造成更多的伤害。|n|n|cffffcc00等级 1|r -消耗<AOwk,Cost1>点魔法，加快<AOwk,DataB1,%>%的移动速度，增加<AOwk,DataC1>点的伤害，持续<AOwk,Dur1>秒。|n|cffffcc00等级 2|r -消耗<AOwk,Cost2>点魔法，加快<AOwk,DataB2,%>%的移动速度，增加<AOwk,DataC2>点的伤害，持续<AOwk,Dur2>秒。|n|cffffcc00等级 3|r -消耗<AOwk,Cost3>点魔法，加快<AOwk,DataB3,%>%的移动速度，增加<AOwk,DataC3>点的伤害，持续<AOwk,Dur3>秒。",
             "kind": "技能",
             "race": "兽族",
