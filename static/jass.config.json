@@ -8481,7 +8481,7 @@
             "type": "英雄"
         },
         {
-            "code": "AEfa",
+            "code": "AHfa",
             "name": "灼热之箭",
             "descript": "通过附加的火焰伤害来增加女祭司的攻击力。|n|n|cffffcc00等级 1|r - 增加<AHfa,DataA1>点的伤害。|n|cffffcc00等级 2|r - 增加<AHfa,DataA2>点的伤害。|n|cffffcc00等级 3|r - 增加<AHfa,DataA3>点的伤害。",
             "kind": "技能",
