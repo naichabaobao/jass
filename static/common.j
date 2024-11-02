@@ -6748,13 +6748,13 @@ native SetMinimapIconOrphanDestroy takes minimapicon whichMinimapIcon, boolean d
 native EnableOcclusion takes boolean flag returns nothing
 // 设置介绍文本
 native SetIntroShotText takes string introText returns nothing
-// 设置介绍模型路径
+// 设置介绍模型（指定路径）
 native SetIntroShotModel takes string introModelPath returns nothing
 // 允许/禁止 地图边界迷雾渲染(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
-// 调用电影模式(所有玩家)
+// 播放指定电影(所有玩家)（按模型名称）
 native PlayModelCinematic takes string modelName returns nothing
-// 调用电影(所有玩家)
+// 播放指定电影(所有玩家)（按电影名称）
 native PlayCinematic takes string movieName returns nothing
 // 强制玩家按下特定UI键
 native ForceUIKey takes string key returns nothing
@@ -6788,7 +6788,7 @@ native SetTextTagVelocity takes texttag t, real xvel, real yvel returns nothing
 native SetTextTagVisibility takes texttag t, boolean flag returns nothing
 // 允许/禁止 漂浮文本暂停
 native SetTextTagSuspended takes texttag t, boolean flag returns nothing
-// 允许/禁止 漂浮文本永久(显示)
+// 允许/禁止 漂浮文本永久显示
 native SetTextTagPermanent takes texttag t, boolean flag returns nothing
 // 设置漂浮文字已存在时间
 native SetTextTagAge takes texttag t, real age returns nothing
@@ -6819,7 +6819,7 @@ native EnableSelect takes boolean state, boolean ui returns nothing
 
 // Trackable API
 
-// 创建可追踪物 [R]
+// 创建可追踪物（指定坐标及朝向） [R]
 native CreateTrackable takes string trackableModelPath, real x, real y, real facing returns trackable
 
 // Quest API
@@ -6830,11 +6830,11 @@ native CreateQuest takes nothing returns quest
 native DestroyQuest takes quest whichQuest returns nothing
 // 设置任务标题
 native QuestSetTitle takes quest whichQuest, string title returns nothing
-// 设置任务介绍
+// 设置任务说明
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-// 设置任务是否必须完成(主线或支线任务)
+// 设置任务是否必须完成(区分主线或支线任务)
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
 // 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
@@ -6856,21 +6856,21 @@ native IsQuestFailed takes quest whichQuest returns boolean
 // 查询任务是否已开启/已激活
 native IsQuestEnabled takes quest whichQuest returns boolean
 
-// 创建任务要求
+// 创建任务完成条件
 native QuestCreateItem takes quest whichQuest returns questitem
-// 设置任务要求文本
+// 设置任务完成条件说明
 native QuestItemSetDescription takes questitem whichQuestItem, string description returns nothing
-// 设置任务要求完成/未完成
+// 设置任务完成条件完成/未完成
 native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed returns nothing
 
-// 查询任务要求是否已完成
+// 查询任务完成条件是否已完成
 native IsQuestItemCompleted takes questitem whichQuestItem returns boolean
 
 // 创建任务失败条件
 native CreateDefeatCondition takes nothing returns defeatcondition
 // 销毁任务失败条件
 native DestroyDefeatCondition takes defeatcondition whichCondition returns nothing
-// 设置任务失败条件描述
+// 设置任务失败条件说明
 native DefeatConditionSetDescription takes defeatcondition whichCondition, string description returns nothing
 // 闪动任务按钮
 native FlashQuestDialogButton takes nothing returns nothing
