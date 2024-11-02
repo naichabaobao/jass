@@ -744,17 +744,17 @@ globals
 
     // Item status types
 
-    // 物品状态 隐藏的
+    // 物品状态 隐藏
     constant integer bj_ITEM_STATUS_HIDDEN = 0
-    // 物品状态 拥有的
+    // 物品状态 被拥有
     constant integer bj_ITEM_STATUS_OWNED = 1
-    // 物品状态 无敌的
+    // 物品状态 无敌
     constant integer bj_ITEM_STATUS_INVULNERABLE = 2
     // 物品状态 力量提升的
     constant integer bj_ITEM_STATUS_POWERUP = 3
     // 物品状态 可出售的
     constant integer bj_ITEM_STATUS_SELLABLE = 4
-    // 物品状态 可以被抵押掉的
+    // 物品状态 可以被抵押的
     constant integer bj_ITEM_STATUS_PAWNABLE = 5
 
     // Itemcode status types
