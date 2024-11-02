@@ -6752,7 +6752,7 @@ native SetIntroShotText takes string introText returns nothing
 native SetIntroShotModel takes string introModelPath returns nothing
 // 允许/禁止 地图边界迷雾渲染(所有玩家) [R]
 native EnableWorldFogBoundary takes boolean b returns nothing
-// 播放指定电影(所有玩家)（按模型名称）
+// 播放指定电影(所有玩家)（按模式名称）
 native PlayModelCinematic takes string modelName returns nothing
 // 播放指定电影(所有玩家)（按电影名称）
 native PlayCinematic takes string movieName returns nothing
