@@ -5,7 +5,7 @@ globals
     // 通用AI全局变量
 
     // 开局基础战术标识，默认为开，兵力未达规模前都按此战术进行训练和建造，达标后才关闭
-    // 人族不升本就是该跳出模式要求过于严苛
+    // 人族不升本就是该跳出模式条件过于严苛
     constant boolean basic_opening       = true
 
     // 首英雄存在标识，当首英雄数量大于0时为真
@@ -30,7 +30,7 @@ globals
     constant integer c_hero2_done        = 0
     // 当前三发英雄数量，不含训练/复活中
     constant integer c_hero3_done        = 0
-    // 当前拥有金矿数
+    // 当前拥有金矿数量
     constant integer c_mines             = 0
     // 当前拥有飞艇数量
     constant integer c_zep               = 0
