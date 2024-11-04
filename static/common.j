@@ -1456,7 +1456,7 @@ globals
 	    
 	// For use with TriggerRegisterGameEvent
 	
-	// 游戏事件 游戏加装完毕
+	// 游戏事件 游戏加载完毕
 	constant gameevent EVENT_GAME_LOADED = ConvertGameEvent(256)
 	// 游戏事件 比赛即将完成
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
@@ -1802,7 +1802,7 @@ globals
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR = ConvertOriginFrameType(21)
 	// 原生UI 魔法效果(BUFF)状态栏标题(单位当前拥有光环的显示区域的标题)，默认文本是 Status:(状态：)
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL = ConvertOriginFrameType(22)
-	
+
 	// 框架相对锚点(UI) 左上
 	constant framepointtype FRAMEPOINT_TOPLEFT = ConvertFramePointType(0)
 	// 框架相对锚点(UI) 上
@@ -4447,7 +4447,7 @@ native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount r
 // @param priority 出生点分布优先权
 native SetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
 // 获取出生点分布优先权(指定玩家槽)
-// 以数值形式返回
+// 以整数形式返回
 native GetStartLocPrioSlot takes integer whichStartLoc, integer prioSlotIndex returns integer
 // 获取出生点分布优先权(指定玩家槽)
 native GetStartLocPrio takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
