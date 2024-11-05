@@ -1,27 +1,35 @@
-[貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
-[gitee源碼](https://gitee.com/naichabaobao/jass)
-[GitHub源碼](https://github.com/naichabaobao/jass)
-[Q群,點擊加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=j4VO5JOZy4x2zX9qRXWpG9mTs0lZq0_A&authKey=V1Vz47EJpB%2BkkZQ2bSKEIPBCpAqBJTQ%2Bg3wty9x0BtrvAp16ZkIWhDdF0p56rcq%2B&noverify=0&group_code=786204376)
-
-***vscode最低版本1.63***
-
-***common.j 為1.33***
 
 
-### 使用步骤
-1. 下载安装 visual studio  Code
-2. visual studio  Code   安装 Jass插件
-3. WE触发器    自定义脚本区    #include  "c://dir/any.j"
 
+
+
+
+<!-- ![冰封王座巫妖王](https://t13.baidu.com/it/u=2708679913,2610909064&fm=224&app=112&f=JPEG?w=500&h=251) -->
+![冰封王座巫妖王](https://github.com/naichabaobao/jass/blob/f7ff28fd7a52ea9b532afecd23aa5a024a57c1c4/static/jass.png)
 
 
 --------------------------------------------------------
+# Usage
+
+## Install & Init
+
+* Open your terminal and run
+
+1. 
+```sh
+git clone https://github.com/naichabaobao/jass.git
+npm install
+```
+
+2. open vscode |**Run and Debug**|
+3. click |**测试jass插件**| or click **F5**
+4. open '**.j**' or '**.jass**' ext file in new window
+
+## Example Code
 
 ```cpp
 #include  "c://dir/any.j" // WE触发器    自定义脚本区
 ```
-
->any.j
 
 ```
 //以下为外部引用触发器的格式
@@ -42,34 +50,20 @@ library Main initializer MainEvent
   endfunction
 endlibrary
 ```
+
+## Statement
+
+- ***vscode version 1.63***
+- ***common.j version 1.33***
+
+## Link
+[貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
+[GitHub源碼](https://github.com/naichabaobao/jass)
+[Q群,點擊加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=j4VO5JOZy4x2zX9qRXWpG9mTs0lZq0_A&authKey=V1Vz47EJpB%2BkkZQ2bSKEIPBCpAqBJTQ%2Bg3wty9x0BtrvAp16ZkIWhDdF0p56rcq%2B&noverify=0&group_code=786204376)
+
 --------------------------------------------------------
 
-### 1.6.7
-##### 2022年6月5日
-###### include宏路径提示
-![include-dome](https://user-images.githubusercontent.com/38098031/188805957-823950f9-c4c7-4f03-87c1-9d29cf41003e.png)
-
-
-### 1.6.12
-##### 2022年6月13日
-###### 新的配置项exclude
-###### 已经失效，请使用jass.config.json {"excludes": []}配置
-![exclude-dome](https://user-images.githubusercontent.com/38098031/188805922-077ff428-6317-40d0-83e9-2229ba9d3a67.png)
-
-
-### 1.6.1
-![comment-param](https://user-images.githubusercontent.com/38098031/188806025-26f0eb38-88d3-45ac-9bcc-6fdb338fbbbb.png)
-
-
-### 1.6.15
-##### 2022年7月28日
-###### dzGetColor颜色
-![dzGetColor](https://user-images.githubusercontent.com/38098031/188805851-21f793a6-c5e4-4f2c-89eb-a18383352df9.png)
-
-
---------------------------------------------------------------
-
-***请我喝奶茶***
+### **请我喝奶茶**
 ![loveme](https://user-images.githubusercontent.com/38098031/190127376-c47656c3-8b28-4ff2-a242-78bb28a3652e.png)
 
 ![一起出份力赞助我开发吧！爱你哟](https://user-images.githubusercontent.com/38098031/189883735-7bbdb474-259a-4bc7-8a6b-09707aa013a4.png)
