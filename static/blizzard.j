@@ -744,26 +744,26 @@ globals
 
     // Item status types
 
-    // 物品状态 隐藏的
+    // 物品状态 隐藏
     constant integer bj_ITEM_STATUS_HIDDEN = 0
-    // 物品状态 拥有的
+    // 物品状态 被拥有
     constant integer bj_ITEM_STATUS_OWNED = 1
-    // 物品状态 无敌的
+    // 物品状态 无敌
     constant integer bj_ITEM_STATUS_INVULNERABLE = 2
-    // 物品状态 力量提升的
+    // 物品状态 力量提升
     constant integer bj_ITEM_STATUS_POWERUP = 3
-    // 物品状态 可出售的
+    // 物品状态 可出售
     constant integer bj_ITEM_STATUS_SELLABLE = 4
-    // 物品状态 可以被抵押掉的
+    // 物品状态 可以被抵押
     constant integer bj_ITEM_STATUS_PAWNABLE = 5
 
     // Itemcode status types
 
-    // 物品类型状态 力量提升的
+    // 物品类型状态 力量提升
     constant integer bj_ITEMCODE_STATUS_POWERUP = 0
-    // 物品类型状态 可出售的
+    // 物品类型状态 可出售
     constant integer bj_ITEMCODE_STATUS_SELLABLE = 1
-    // 物品类型状态 可以被抵押掉的
+    // 物品类型状态 可以被抵押掉
     constant integer bj_ITEMCODE_STATUS_PAWNABLE = 2
 
     // Minimap ping styles
@@ -772,7 +772,7 @@ globals
     constant integer bj_MINIMAPPINGSTYLE_SIMPLE = 0
     // 小地图提示样式 闪烁
     constant integer bj_MINIMAPPINGSTYLE_FLASHY = 1
-    // 小地图提示样式 警告
+    // 小地图提示样式 攻击警告
     constant integer bj_MINIMAPPINGSTYLE_ATTACK = 2
 	
     // Campaign Minimap icon styles
@@ -2650,7 +2650,7 @@ function TriggerRegisterCommonCommandEventBJ takes trigger trig, string order re
 endfunction
 
 
-// 读取进度事件
+// 游戏加载事件
 function TriggerRegisterGameLoadedEventBJ takes trigger trig returns event
     return TriggerRegisterGameEvent(trig, EVENT_GAME_LOADED)
 endfunction

@@ -30,16 +30,16 @@ native GetHeroId            takes nothing                               returns 
 native GetHeroLevelAI       takes nothing                               returns integer
 
 // 获取指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含英雄、已死亡单位及该单位的等价单位
+// 不含已死亡单位及该单位的等价单位
 native GetUnitCount         takes integer unitid                        returns integer
 // 获取指定玩家指定单位的数量，含复活/训练/建造/升级中及已完成（指定单位ID）
-// 不含英雄、已死亡单位及该单位的等价单位
+// 不含已死亡单位及该单位的等价单位
 native GetPlayerUnitTypeCount takes player p, integer unitid            returns integer
 // 获取指定单位的数量，仅统计已复活/训练/建造/升级完成（指定单位ID）
-// 不含英雄、已死亡单位及该单位的等价单位
+// 不含已死亡单位及该单位的等价单位
 native GetUnitCountDone     takes integer unitid                        returns integer
 // 获取指定基地对应单位的数量（指定单位ID）
-// 不含英雄、已死亡单位及该单位的等价单位
+// 不含已死亡单位及该单位的等价单位
 // @param tn 基地编号，-1为不限
 // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
@@ -50,14 +50,14 @@ native GetUnitWoodCost      takes integer unitid                        returns 
 // 获取指定单位/建筑的训练/建造/升级时间（以秒为单位）（指定单位ID）
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
-// 获取拥有的金矿数量
-// 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
+// 获取拥有的金矿数量，似乎最多只能探测到5个
+// 亡灵/暗夜可能会检查出生点附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿（与制图时放置顺序有关）
 // 如果AI出生点有多座未被其他玩家占据的中立被动玩家金矿（如多矿开局或金矿距离过近的图），可能导致亡灵/暗夜采矿异常，且此时该返回值未必准确
 // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
 // 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
 native GetMinesOwned        takes nothing                               returns integer
 // 获取拥有的所有金矿未采集金钱数量之和
-// 亡灵/暗夜是检查所有玩家自己和附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿
+// 亡灵/暗夜可能会检查出生点附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿（与制图时放置顺序有关）
 // 如果AI出生点有多个金矿，会导致统计值偏差
 native GetGoldOwned         takes nothing                               returns integer
 // 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号
@@ -1931,7 +1931,7 @@ endfunction
 
 //============================================================================
 
-// 获取指定单位类型的数量，默认用于等价物单位，如城镇/变形单位这一类升级/变形后还当同一种单位统计的单位类型
+// 获取指定单位类型的数量，默认用于等价单位，如城镇/变形单位这一类升级/变形后还当同一种单位统计的单位类型
 // 例如，统计一本城镇时，会统计一、二、三城镇的数量，统计熊德时，会统计熊德（人形）和熊德（熊形）的数量
 // @param only_done 是否包含建造/训练中的单位
 // @param townid 基地编号，-1为不限
@@ -1998,14 +1998,14 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
+// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地
 // 默认用于统计城镇类型的单位（基地）
 function TownCount takes integer base returns integer
     return TownCountEx(base,false,-1)
@@ -2032,7 +2032,7 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型数量，不否包含复活/建造/训练中
+// 统计指定单位类型数量，包含复活/建造/训练中
 // 默认用于统计城镇类型的单位（基地）
 // @param base 指定单位类型
 // @param townid 基地编号，-1为不限
@@ -2074,7 +2074,7 @@ endfunction
 
 //============================================================================
 
-// 等待指定单位类型（不包含复活/建造/训练中，统计等价物）数量达到指定数量，达到之前一直循环等待
+// 等待指定单位类型（不包含复活/建造/训练中，统计等价单位）数量达到指定数量，达到之前一直循环等待
 function WaitForUnits takes integer unitid, integer qty returns nothing
     loop
         exitwhen TownCountDone(unitid) == qty
@@ -3323,7 +3323,7 @@ endfunction
 //============================================================================
 
 // 获取当前AI玩家人口建筑提供的人口数
-// 公式：已建造完成的人口建筑数量（默认单位类型为racial_farm）*该建筑提供的人口数 + 已完成的城镇数量（单位类型用base指定）*该建筑提供的人口数
+// 公式：人口建筑数量（默认单位类型为racial_farm，含建造中）*该建筑提供的人口数 + 城镇及其等价单位数量（单位类型用base指定，含建造中）*该建筑提供的人口数
 function FoodAvail takes integer base returns integer
     return GetFoodMade(racial_farm) * TownCount(racial_farm) + GetFoodMade(base) * TownCount(base)
 endfunction
