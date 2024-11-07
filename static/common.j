@@ -451,7 +451,7 @@ constant native UnitId takes string unitIdString returns integer
 // 转换单位类型成单位类型字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 转换技能ID字符串成技能ID   Not currently working correctly...
+// 转换技能ID字符串成技能ID，当前未能正确生效   Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
 // 转换技能ID成技能ID字符串
 constant native AbilityId2String takes integer abilityId returns string
@@ -468,13 +468,13 @@ constant native GetObjectName takes integer objectId returns string
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 // @version 1.29
 constant native GetBJMaxPlayers takes nothing returns integer
-// 获取中立受害玩家的玩家编号
+// 获取中立受害玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
 // 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
-// 获取中立特殊玩家的玩家编号
+// 获取中立特殊玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
 // 注：编号从0开始，即玩家1编号是0
@@ -485,13 +485,13 @@ constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 1.29及以上：28
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayerSlots takes nothing returns integer
-// 获取玩家中立被动玩家的玩家编号
+// 获取玩家中立被动玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
 // 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
-// 获取玩家中立敌对玩家的玩家编号
+// 获取玩家中立敌对玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
 // 注：编号从0开始，即玩家1编号是0
@@ -504,20 +504,20 @@ globals
 	// Game Constants
 	
 	
-	// 假 false
+	// 假 - false
 	constant boolean FALSE = false
-	// 真 true
+	// 真 - true
 	constant boolean TRUE = true
 	// 数组上限，默认值32768
 	// 1.28及以下版本默认值为8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
-	// 中立被动玩家，1.28及以下是玩家16，1.29及以上是玩家28
-	// 其他：中立敌对(玩家13/25)，中立受害(玩家14/26)，中立特殊(玩家15/27)
-	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
+	// 中立被动玩家编号(15/27，以1.29区分)
+	// 其他：中立敌对(12/24)，中立受害(13/25)，中立特殊(14/26)
+	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是15
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
-	// 中立敌对玩家，1.28及以下是玩家13，1.29及以上是玩家25
-	// 其他：中立受害(玩家14/26)，中立特殊(玩家15/27)，中立被动(玩家16/28)
+	// 中立敌对玩家编号(12/24，以1.29区分)
+	// 其他：中立受害(13/25)，中立特殊(14/26)，中立被动(15/27)
 	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
