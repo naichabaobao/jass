@@ -6171,7 +6171,7 @@ native SetPlayerAbilityAvailable takes player whichPlayer, integer abilid, boole
 
 // 设置玩家状态（指定数值）
 native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
-// 踢除玩家
+// 移除玩家（指定游戏结果）
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
 
 // 缓存玩家数据
