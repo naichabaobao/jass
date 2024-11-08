@@ -971,8 +971,16 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
+
+class MenberReference {
+    current: Token|null = null;
+    parent: MenberReference|null = null;
+    child: MenberReference|null = null;
+}
+
 export class Set {
     name:Token|null = null;
+    ref: MenberReference|null = null;
 }
 export class Type {
     name:Token|null = null;
@@ -1036,6 +1044,54 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
 
     return local;
 }
+
+
+
+
+function parse_line_field_reference2(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let root_ref:MenberReference|null = null;
+    let parent_ref:MenberReference|null = null;
+    for (; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+
+        if (token.is_identifier) {
+            const current_ref = new MenberReference();
+            if (root_ref == null) {
+                root_ref = current_ref;
+            }
+            current_ref.current = token;
+            if (parent_ref) {
+                current_ref.parent = parent_ref;
+                parent_ref.child = current_ref;
+            }
+            parent_ref = current_ref;
+            if (next_token && next_token.getText() == ".") {
+                index++;
+            } else {
+                break;
+            }
+        } else {
+            document.add_token_error(token, `incorrect member name reference '${text}'`);
+            break;
+        }
+        if (state == 0) {
+        }
+        
+    }
+
+    return {
+        ref: root_ref,
+        index
+    }
+}
+
 export function parse_line_set(document: Document, line_text: ExpendLineText) {
     const set = new Set();
     const tokens = line_text.tokens();
@@ -1055,12 +1111,17 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            if (token.is_identifier) {
-                set.name = token;
-                state = 2;
+            const ref = new MenberReference();
+            
+            const result = parse_line_field_reference2(document, tokens, index);
+            set.ref = result.ref;
+            index = result.index;
+            state = 2;
+        } else if (state == 2) {
+            if (text == "=") {
+                state = 3;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
-                break;
             }
         }
     }
@@ -2122,5 +2183,16 @@ export function parse(filePath: string, i_content?: string) {
     parse_node(document);
 
     find_node_error(document);
+}
+
+if (true) {
+    parse("a/b", `
+        function a takes nothing returns nothing
+        set aaa. 999 = 1
+        endfunction 
+        kkk
+    `)
+    console.log(Global.get("a/b"));
+    
 }
 
