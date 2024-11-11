@@ -4554,6 +4554,7 @@ native GetPlayerSelectable takes player whichPlayer returns boolean
 // 查询指定玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
 // 查询指定玩家槽状态
+// 裁判的状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取指定玩家税率 [R]
 // @param sourcePlayer 纳税玩家
@@ -6090,6 +6091,7 @@ constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer retur
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
 // 查询指定玩家是否裁判或观战者 [R]
+// 裁判或观战者的状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
 constant native IsPlayerObserver takes player whichPlayer returns boolean
 // 查询指定坐标在指定玩家视野中，是否可见
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
