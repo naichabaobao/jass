@@ -8227,28 +8227,37 @@ native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, s
 // Unit Weapon
 
 // 获取单位武器布尔值域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
 // 获取单位武器整数域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer
 // 获取单位武器实数域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real
 // 获取单位武器字符串域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string
 // 设置单位武器布尔值域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean
 // 设置单位武器整数域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// @param value 攻击力值，会叠加
+// 不支持攻击模式2
 native BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean
 // 设置单位武器实数域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean
 // 设置单位武器字符串域
-// @param index 武器引索，0和1，对应攻击1和2
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
 
 // Skin
