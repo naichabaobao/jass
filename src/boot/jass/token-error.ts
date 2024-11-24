@@ -40,7 +40,10 @@ export function find_token_error(document:Document) {
 export function find_node_error(document:Document) {
 	document.foreach((node) => {
 		if (!node.end_line) {
-			document.add_node_error(node, `end tag not found`);
+			// 避免根节点未闭合
+			if (node.parent != null) {
+				document.add_node_error(node, `end tag not found`);
+			}
 		}
 	});
 }

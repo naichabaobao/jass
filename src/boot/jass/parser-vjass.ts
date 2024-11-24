@@ -971,8 +971,146 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
+type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|CExpr;
+export class Expr {
+    public convert_to_binary_expr(F: UnaryExpr) {
+        const expr = new BinaryExpr();
+        expr.left = <any>this;
+        expr.right = F.value;
+        expr.op = F.op;
+        return expr;
+    }
+}
+export class Value {
+    public value:Token|null = null;
+    public convert_to_binary_expr(F: UnaryExpr) {
+        const expr = new BinaryExpr();
+        expr.left = this;
+        expr.right = F.value;
+        expr.op = F.op;
+        return expr;
+    }
+}
+
+export class BinaryExpr extends Expr {
+    left: Zoom|null = null;
+    right: Zoom|null = null;
+    op: Token|null = null;
+    
+
+}
+export class UnaryExpr extends Expr {
+    op: Token|null = null;
+    value: Zoom|null = null;
+
+    public convert_to_binary_expr(F: UnaryExpr) {
+        const expr = new BinaryExpr();
+        expr.left = this;
+        expr.right = F.value;
+        expr.op = F.op;
+        return expr;
+    }
+
+}
+export class IndexExpr {
+    expr: Zoom|null = null;
+}
+export class CExpr extends Expr {
+    expr: Zoom|null = null;
+}
+export class MenberReference {
+    current: Token|null = null;
+    parent: MenberReference|null = null;
+    child: MenberReference|null = null;
+
+    index_expr:IndexExpr|null = null;
+
+    public to_string() {
+        let name = "";
+        if (this.current) {
+            name += this.current.getText();
+            if (this.child) {
+                name += ".";
+                name += this.child.to_string();
+            }
+        }
+        if (this.index_expr) {
+            name += `[]`;
+        }
+        return name;
+    }
+}
+
+export class VariableName extends Expr {
+    public names:Token[] = [];
+
+    index_expr:IndexExpr|null = null;
+
+    // public to_string() {
+    //     let name = "";
+    //     if (this.current) {
+    //         name += this.current.getText();
+    //         if (this.child) {
+    //             name += ".";
+    //             name += this.child.to_string();
+    //         }
+    //     }
+    //     if (this.index_expr) {
+    //         name += `[]`;
+    //     }
+    //     return name;
+    // }
+
+    public to_string() {
+        let name = this.names.map(token => token.getText()).join(".");
+        if (this.index_expr) {
+            name += "[]";
+        }
+        return name;
+    }
+
+    
+    public get is_index_expr() : boolean {
+        return this.index_expr != null;
+    }
+
+    
+    
+}
+export class Params {
+    public args:(Zoom|null)[] = [];
+}
+export class VariableCall extends VariableName {
+    public params:Params|null = null;
+
+    // public to_string() {
+    //     let name = "";
+    //     if (this.current) {
+    //         name += this.current.getText();
+    //         if (this.child) {
+    //             name += ".";
+    //             name += this.child.to_string();
+    //         }
+    //     }
+    //     if (this.index_expr) {
+    //         name += `[]`;
+    //     }
+    //     return name;
+    // }
+
+    public static from(var_name:VariableName) {
+        const self = new VariableCall();
+        self.names = [...var_name.names];
+        self.index_expr = var_name.index_expr;
+
+        return self;
+    }
+}
+
+
 export class Set {
     name:Token|null = null;
+    ref: VariableName|VariableCall|null = null;
 }
 export class Type {
     name:Token|null = null;
@@ -1036,6 +1174,726 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
 
     return local;
 }
+
+class Expr_ {
+    expr:Zoom|null = null;
+    op: Token|null = null;
+
+    public to_expr(right_value: Zoom|null) {
+        const expr = new BinaryExpr();
+        expr.left = this.expr;
+        expr.op = this.op;
+        expr.right = right_value;
+
+        return expr;
+    }
+}
+
+
+const is_op = (token:Token) => {
+    const text = token.getText();
+    return text == "+" || text == "-" || text == "*" || text == "/" || text == "%" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=";
+};
+const is_unary_op = (token:Token) => {
+    const text = token.getText();
+    return text == "+" || text == "-" || text == "not" || text == "!";
+};
+
+function parse_line_unary_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let zoom:Zoom|Expr_|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            let result!: {
+                index: number,
+                expr:Zoom|null,
+            };
+            if (token.is_identifier) {
+                if (text == "function") {
+
+                } else if (text == "not") {
+
+                } else {
+                    result = parse_line_name_or_caller(document, tokens, index);
+                    index = result.index;
+
+                }
+            } else if (token.is_value()) {
+                const value = new Value();
+                value.value = token;
+
+                result = {
+                    index: index + 1,
+                    expr: value,
+                };
+
+                index = result.index;
+            } else if (is_op(token)) {
+
+            }
+
+            if (zoom) {
+                if (zoom instanceof Expr_) {
+                    zoom = (<Expr_>zoom).to_expr(result.expr);
+                } else {
+                    document.add_token_error(token, `missing operator`);
+                    break;
+                }
+            } else {
+                zoom = result.expr;
+            }
+
+            if (next_token) {
+                state = 1;
+            } else {
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            if (is_op(token)) {
+                if (zoom) {
+                    if (zoom instanceof Expr_) {
+                        document.add_token_error(token, `operators cannot operate on operators`);
+                        break;
+                    } else {
+                        const expr = new Expr_();
+                        expr.expr = zoom;
+                        expr.op = token;
+
+                        zoom = expr;
+
+                        state = 0;
+                    }
+                    state = 0;
+                } else {
+                    document.add_token_error(token, `missing left value`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `not jass support operator`);
+                break;
+            }
+        }
+    }
+
+    return {
+        index,
+        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
+    }
+}
+function parse_line_function_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let zoom:Zoom|Expr_|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            let result!: {
+                index: number,
+                expr:Zoom|null,
+            };
+            if (token.is_identifier) {
+                if (text == "function") {
+
+                } else if (text == "not") {
+
+                } else {
+                    result = parse_line_name_or_caller(document, tokens, index);
+                    index = result.index;
+
+                }
+            } else if (token.is_value()) {
+                const value = new Value();
+                value.value = token;
+
+                result = {
+                    index: index + 1,
+                    expr: value,
+                };
+
+                index = result.index;
+            } else if (is_op(token)) {
+
+            }
+
+            if (zoom) {
+                if (zoom instanceof Expr_) {
+                    zoom = (<Expr_>zoom).to_expr(result.expr);
+                } else {
+                    document.add_token_error(token, `missing operator`);
+                    break;
+                }
+            } else {
+                zoom = result.expr;
+            }
+
+            if (next_token) {
+                state = 1;
+            } else {
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            if (is_op(token)) {
+                if (zoom) {
+                    if (zoom instanceof Expr_) {
+                        document.add_token_error(token, `operators cannot operate on operators`);
+                        break;
+                    } else {
+                        const expr = new Expr_();
+                        expr.expr = zoom;
+                        expr.op = token;
+
+                        zoom = expr;
+
+                        state = 0;
+                    }
+                    state = 0;
+                } else {
+                    document.add_token_error(token, `missing left value`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `not jass support operator`);
+                break;
+            }
+        }
+    }
+
+    return {
+        index,
+        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
+    }
+}
+function parse_line_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let zoom:Zoom|Expr_|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            let result!: {
+                index: number,
+                expr:Zoom|null,
+            };
+            if (token.is_identifier) {
+                if (text == "function") {
+                    result = parse_line_function_expr(document, tokens, index);
+                    index = result.index;
+                } else if (text == "not") {
+                    result = parse_line_unary_expr(document, tokens, index);
+                    index = result.index;
+                } else {
+                    result = parse_line_name_or_caller(document, tokens, index);
+                    index = result.index;
+
+                }
+            } else if (token.is_value()) {
+                const value = new Value();
+                value.value = token;
+
+                result = {
+                    index: index + 1,
+                    expr: value,
+                };
+
+                index = result.index;
+            } else if (is_unary_op(token)) {
+                result = parse_line_unary_expr(document, tokens, index);
+                index = result.index;
+            } else {
+                break;
+            }
+
+            if (zoom) {
+                if (zoom instanceof Expr_) {
+                    zoom = (<Expr_>zoom).to_expr(result.expr);
+                } else {
+                    document.add_token_error(token, `missing operator`);
+                    break;
+                }
+            } else {
+                zoom = result.expr;
+            }
+
+            if (next_token && is_op(next_token)) {
+                state = 1;
+            } else {
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            if (zoom) {
+                if (zoom instanceof Expr_) {
+                    document.add_token_error(token, `operators cannot operate on operators`);
+                    break;
+                } else {
+                    const expr = new Expr_();
+                    expr.expr = zoom;
+                    expr.op = token;
+
+                    zoom = expr;
+
+                    state = 0;
+                }
+                state = 0;
+            } else {
+                document.add_token_error(token, `missing left value`);
+                break;
+            }
+            // if (is_op(token)) {
+            // } else {
+            //     document.add_token_error(token, `not jass support operator`);
+            //     break;
+            // }
+        }
+    }
+
+    return {
+        index,
+        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
+    }
+}
+
+function parse_line_call_params(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let params:Params|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            index++;
+
+            if (text == "(") {
+                if (params == null) {
+                    params = new Params();
+                }
+
+                state = 1;
+            } else {
+                document.add_token_error(token, `'('`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == ")") {
+                index++;
+
+                break;
+            } else {
+                const result = parse_line_expr(document, tokens, index);
+                // params!.expr = result.expr;
+                params!.args.push(result.expr);
+                index = result.index;
+                state = 2;
+            }
+        } else if (state == 2) {
+            index++;
+            if (text == ")") {
+                break;
+            } else if (text == ",") {
+                state = 3;
+            } else {
+                document.add_token_error(token, `',' or ')'`);
+            }
+        } else if (state == 3) {
+            const result = parse_line_expr(document, tokens, index);
+            params!.args.push(result.expr);
+            index = result.index;
+
+            state = 2;
+        }
+    }
+
+    return {
+        index,
+        expr: params
+    }
+}
+/**
+ *     |---------|
+ * 获取 [...exprs] 之间的tokens给parse_line_expr解析
+ * @param document 
+ * @param tokens 
+ * @param offset_index 
+ */
+function parse_line_index_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let index_expr:IndexExpr|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            index++;
+
+            if (text == "[") {
+                if (index_expr == null) {
+                    index_expr = new IndexExpr();
+                }
+
+
+                state = 1;
+            } else {
+                document.add_token_error(token, `'['`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == "]") {
+                index++;
+
+                document.add_token_error(token, `missing index expression`);
+
+                break;
+            } else {
+                const result = parse_line_expr(document, tokens, index);
+                index_expr!.expr = result.expr;
+                index = result.index;
+                state = 2;
+            }
+        } else if (state == 2) {
+            index++;
+            if (text == "]") {
+            } else {
+                document.add_token_error(token, `']'`);
+            }
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: index_expr
+    }
+}
+
+function parse_line_caller(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let variable:VariableCall|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        if (state == 0) {
+            const result = parse_line_name(document, tokens, index);
+
+            index = result.index;
+            if (result.expr) {
+                variable = VariableCall.from(result.expr);
+                state = 1;
+            } else {
+                document.add_token_error(token, `error function name`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_call_params(document, tokens, index);
+            index = result.index;
+            if (result.expr) {
+                variable!.params = result.expr;
+            } else {
+                document.add_token_error(token, `error function params list`);
+            }
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: variable
+    }
+    for (; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            if (token.is_identifier) {
+                variable.names.push(token);
+
+                if (next_token) {
+                    if (next_token.getText() == ".") {
+                        state = 1;
+                    } else if (next_token.getText() == "[") {
+                        state = 2;
+                    } else if (next_token.getText() == "(") {
+                        state = 3;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `error identifier '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (next_token) {
+                state = 0;
+            } else {
+                document.add_token_error(token, `incorrect member name reference '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_barket_expr(document, tokens, index);
+            index = result.index;
+            variable!.index_expr = result.expr;
+            break;
+        } else if (state == 3) {
+            const variable_temp = variable;
+            variable = new VariableCall();
+            variable.names = variable_temp.names;
+            variable.index_expr = variable_temp.index_expr;
+
+            const result = parse_line_params(document, tokens, index);
+            index = result.index;
+            (<VariableCall>variable).params = result.params;
+            break;
+        }
+        // if (token.is_identifier) {
+        //     const current_ref = new MenberReference();
+        //     if (root_ref == null) {
+        //         root_ref = current_ref;
+        //     }
+        //     current_ref.current = token;
+        //     if (parent_ref) {
+        //         current_ref.parent = parent_ref;
+        //         parent_ref.child = current_ref;
+        //     }
+        //     parent_ref = current_ref;
+        //     if (next_token && next_token.getText() == ".") {
+        //         index++;
+        //     }if (next_token && next_token.getText() == "[") {
+        //         const result = parse_line_barket_expr(document, tokens, index);
+        //         index = result.index;
+        //         current_ref.index_expr = result.expr;
+        //         break;
+        //     } else {
+        //         break;
+        //     }
+        // } else {
+        //     document.add_token_error(token, `incorrect member name reference '${text}'`);
+        //     break;
+        // }
+        
+    }
+
+    return {
+        expr: variable,
+        index
+    }
+}
+function parse_line_name(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let variable:VariableName|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            index++;
+
+            if (token.is_identifier) {
+                if (variable == null) {
+                    variable = new VariableName();
+                }
+
+                variable.names.push(token);
+
+
+                if (next_token) {
+                    if (next_token.getText() == ".") {
+                        state = 1;
+                    } else if (next_token.getText() == "[") {
+                        state = 2;
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `error member name '${text}'`);
+                break; 
+            }
+        } else if (state == 1) {
+            index++;
+
+            if (next_token) {
+                state = 0;
+            } else {
+                document.add_token_error(token, `incorrect member name reference '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_index_expr(document, tokens, index);
+            variable!.index_expr = result.expr;
+            index = result.index;
+        }
+    }
+
+    return {
+        index,
+        expr: variable
+    }
+    for (; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            if (token.is_identifier) {
+                variable.names.push(token);
+
+                if (next_token) {
+                    if (next_token.getText() == ".") {
+                        state = 1;
+                    } else if (next_token.getText() == "[") {
+                        state = 2;
+                    } else if (next_token.getText() == "(") {
+                        state = 3;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `error identifier '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (next_token) {
+                state = 0;
+            } else {
+                document.add_token_error(token, `incorrect member name reference '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_barket_expr(document, tokens, index);
+            index = result.index;
+            variable!.index_expr = result.expr;
+            break;
+        } else if (state == 3) {
+            const variable_temp = variable;
+            variable = new VariableCall();
+            variable.names = variable_temp.names;
+            variable.index_expr = variable_temp.index_expr;
+
+            const result = parse_line_params(document, tokens, index);
+            index = result.index;
+            (<VariableCall>variable).params = result.params;
+            break;
+        }
+        // if (token.is_identifier) {
+        //     const current_ref = new MenberReference();
+        //     if (root_ref == null) {
+        //         root_ref = current_ref;
+        //     }
+        //     current_ref.current = token;
+        //     if (parent_ref) {
+        //         current_ref.parent = parent_ref;
+        //         parent_ref.child = current_ref;
+        //     }
+        //     parent_ref = current_ref;
+        //     if (next_token && next_token.getText() == ".") {
+        //         index++;
+        //     }if (next_token && next_token.getText() == "[") {
+        //         const result = parse_line_barket_expr(document, tokens, index);
+        //         index = result.index;
+        //         current_ref.index_expr = result.expr;
+        //         break;
+        //     } else {
+        //         break;
+        //     }
+        // } else {
+        //     document.add_token_error(token, `incorrect member name reference '${text}'`);
+        //     break;
+        // }
+        
+    }
+
+    return {
+        expr: variable,
+        index
+    }
+}
+function parse_line_name_or_caller(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let variable:VariableCall|VariableName|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            const result = parse_line_name(document, tokens, index);
+
+            index = result.index;
+            variable = result.expr;
+            if (variable) {
+                if (next_token) {
+                    state = 1;
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `error name`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_call_params(document, tokens, index);
+            index = result.index;
+            if (result.expr) {
+                variable = VariableCall.from(<VariableName>variable);
+                (<VariableCall>variable).params = result.expr;
+            } else {
+                document.add_token_error(token, `error args`);
+            }
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: variable
+    };
+}
+
 export function parse_line_set(document: Document, line_text: ExpendLineText) {
     const set = new Set();
     const tokens = line_text.tokens();
@@ -1055,12 +1913,17 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            if (token.is_identifier) {
-                set.name = token;
-                state = 2;
+            const ref = new MenberReference();
+            
+            const result = parse_line_name(document, tokens, index);
+            set.ref = result.expr;
+            index = result.index;
+            state = 2;
+        } else if (state == 2) {
+            if (text == "=") {
+                state = 3;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
-                break;
             }
         }
     }
@@ -2122,5 +2985,28 @@ export function parse(filePath: string, i_content?: string) {
     parse_node(document);
 
     find_node_error(document);
+}
+
+if (true) {
+    parse("a/b", `
+        function a takes nothing returns nothing
+        set aaa = 3+3
+3+3
+a(b(),4, 3+3)
+        endfunction 
+        kkk
+        `)
+    // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
+    const document = Global.get("a/b");
+    const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
+    console.log(s, s.ref);
+    // @ts-ignore
+    const expr = parse_line_expr(!document, document?.lineTokens(4), 0);
+    // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
+    console.log(document?.token_errors.map(err => err.message));
+    // @ts-ignore
+    console.log(expr.expr);
+    // console.log(.ref?.to_string());
+    
 }
 

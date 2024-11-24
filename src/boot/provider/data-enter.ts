@@ -12,11 +12,11 @@ export function jass_config_json_path() {
 	return jass_config_json_path;
 }
 export function jass_config_json_excludes() {
-	const config_path = jass_config_json_path()
+	const config_path = jass_config_json_path();
 	const exclude_paths:string[] = [];
 	if (fs.existsSync(config_path)) {
-		const config_content = fs.readFileSync(config_path, {encoding: "utf-8"});
 		try {
+			const config_content = fs.readFileSync(config_path, {encoding: "utf-8"});
 			const config_json = JSON.parse(config_content);
 			const excludes = config_json["excludes"];
 			if (Array.isArray(excludes)) {

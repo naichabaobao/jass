@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { DataGetter, parseContent } from "./data";
 import { GlobalObject, Program } from "../jass/ast";
 import { Options } from "./options";
-import { Func, Global, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type } from "../jass/parser-vjass";
+import { Func, Global, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type, Set, MenberReference, VariableName, VariableCall } from "../jass/parser-vjass";
 import { Token } from "../jass/tokenizer-common";
 
 function genSymbols(program: Program) {
@@ -465,6 +465,22 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                 } else if (body_line_data instanceof Type) {
                     name_token = body_line_data.name;
                     kind = vscode.SymbolKind.Class;
+                } else if (body_line_data instanceof Set) {
+                    if (body_line_data.ref) {
+                        // let name = "";
+                        const range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
+                        let selectRange = range;
+                        if (body_line_data.ref.names.length > 0) {
+                            selectRange.with(new vscode.Position(body_line_data.ref.names[0].start.line, body_line_data.ref.names[0].start.position), new vscode.Position(body_line_data.ref.names[body_line_data.ref.names.length - 1].end.line, body_line_data.ref.names[body_line_data.ref.names.length - 1].end.position));
+                        }
+                        const symbol = new vscode.DocumentSymbol(body_line_data.ref.to_string(), "set", vscode.SymbolKind.Variable, range, selectRange);
+                        if (parent) {
+                            parent.children.push(symbol)
+                        } else {
+                            symbols.push(symbol);
+                            // return symbol;
+                        }
+                    }
                 }
                 if (tokens.length > 0) {
                     range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
