@@ -2653,7 +2653,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_BONUS_DICE = ConvertAbilityIntegerLevelField('Idic')
 	 // 技能随等级改变的整数域 目标防御降低 ('Iarp')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_IARP = ConvertAbilityIntegerLevelField('Iarp')
-	 // 技能随等级改变的整数域 允许攻击索引 ('Iob5')
+	 // 技能随等级改变的整数域 允许攻击引索 ('Iob5')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5 = ConvertAbilityIntegerLevelField('Iob5')
 	 // 技能随等级改变的整数域 等级提升 ('Ilev')
 	constant abilityintegerlevelfield ABILITY_ILF_LEVELS_GAINED = ConvertAbilityIntegerLevelField('Ilev')
@@ -2751,9 +2751,9 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_MINIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb3')
 	 // 技能随等级改变的整数域 最大法术数量 ('spb4')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb4')
-	 // 技能随等级改变的整数域 禁止攻击索引 ('gra3')
+	 // 技能随等级改变的整数域 禁止攻击引索 ('gra3')
 	constant abilityintegerlevelfield ABILITY_ILF_DISABLED_ATTACK_INDEX = ConvertAbilityIntegerLevelField('gra3')
-	 // 技能随等级改变的整数域 允许攻击索引 ('gra4')
+	 // 技能随等级改变的整数域 允许攻击引索 ('gra4')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4 = ConvertAbilityIntegerLevelField('gra4')
 	 // 技能随等级改变的整数域 最大攻击次数 ('gra5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_ATTACKS = ConvertAbilityIntegerLevelField('gra5')
@@ -6614,8 +6614,8 @@ native RemoveSavedHandle takes hashtable table, integer parentKey, integer child
 // <1.24> 清空指定哈希表 [C]
 // 清空整张表，清空后表变量不会变为null且需新建表
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表的指定主索引 [C]
-// 仅清空指定主索引，清空后无需新建表
+// <1.24> 清空指定哈希表的指定主引索 [C]
+// 仅清空指定主引索，清空后无需新建表
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
@@ -7424,9 +7424,9 @@ native GetLightningColorG takes lightning whichBolt returns real
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取技能特效路径(指定技能字符串和索引)
+// 获取技能特效路径(指定技能字符串和引索)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
-// 获取技能特效路径(指定技能ID和索引)
+// 获取技能特效路径(指定技能ID和引索)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
 // 获取技能音效路径(指定技能字符串和音效类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
@@ -7719,28 +7719,28 @@ native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子数量
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
@@ -7900,13 +7900,13 @@ native BlzLoadTOCFile takes string TOCFile returns boolean
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param priority 层级(图层)
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
@@ -7914,7 +7914,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // @param name 可输入任意名称
 // @param framehandle 可使用BlzGetOriginFrame获取原生UI，可输入任意框架
 // @param inherits 父类框架(模板)
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 销毁指定Frame
@@ -8073,7 +8073,7 @@ native BlzSetSpecialEffectMatrixScale takes effect whichEffect, real x, real y, 
 native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 // 获取单位技能(指定技能ID)
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
-// 获取单位技能(指定技能索引)
+// 获取单位技能(指定技能引索)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
 // 获取技能ID（指定技能）
 // @version 1.33
@@ -8179,8 +8179,8 @@ native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, ability
 
 // Item 
 
-// 获取物品技能(指定索引)
-// @param index 索引，物品有多个技能时需按顺序指定索引
+// 获取物品技能(指定引索)
+// @param index 引索，物品有多个技能时需按顺序指定引索
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
 // 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
@@ -8227,20 +8227,28 @@ native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, s
 // Unit Weapon
 
 // 获取单位武器布尔值域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
 // 获取单位武器整数域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer
 // 获取单位武器实数域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real
 // 获取单位武器字符串域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string
 // 设置单位武器布尔值域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean
 // 设置单位武器整数域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean
 // 设置单位武器实数域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean
 // 设置单位武器字符串域
+// @param index 武器引索，0和1，对应攻击1和2
 native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
 
 // Skin
