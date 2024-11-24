@@ -357,7 +357,7 @@ export class Document {
       return this.document.content.substring(this.position, this.position + this.length);
     }
   
-    public isValue():boolean {
+    public is_value():boolean {
       return this.type == TokenType.Integer || this.type == TokenType.Real || this.type == TokenType.String || this.type == TokenType.Mark;
     }
   
@@ -396,6 +396,9 @@ export class Document {
     }
     public get is_identifier() : boolean {
       return this.type == TokenType.Identifier;
+    }
+    public get is_operator() : boolean {
+      return this.type == TokenType.Operator;
     }
     
   }
