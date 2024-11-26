@@ -4167,7 +4167,7 @@ globals
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_MEDIUM_DAMAGE = ConvertUnitWeaponRealField('ua1h')
 	// 单位武器实数域 战斗 - 攻击1 - 小伤害范围 ('ua1q')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_SMALL_DAMAGE = ConvertUnitWeaponRealField('ua1q')
-	// 单位武器实数域 战斗 - 攻击1 - 投射物图像 ('ua1r')
+	// 单位武器实数域 战斗 - 攻击1 - 攻击范围 ('ua1r')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_RANGE = ConvertUnitWeaponRealField('ua1r')
 	// 单位武器布尔值域 战斗 - 攻击1 - 显示UI ('uwu1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_SHOW_UI = ConvertUnitWeaponBooleanField('uwu1')
