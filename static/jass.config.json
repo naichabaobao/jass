@@ -21425,6 +21425,7040 @@
             "kind": "可破坏物",
             "race": "特殊",
             "type": "桥/斜坡"
+        },
+        {
+          "code": 'abpx',
+          "name": 技能按钮位置 X 坐标常规状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'abpy',
+          "name": 技能按钮位置 Y 坐标常规状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aubx',
+          "name": 技能按钮位置 X 坐标激活状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'auby',
+          "name": 技能按钮位置 Y 坐标激活状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'arpx',
+          "name": 技能按钮位置 X 坐标研究状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'arpy',
+          "name": 技能按钮位置 Y 坐标研究状态,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'amsp',
+          "name": 技能弹道速度,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'atac',
+          "name": 技能目标附加,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'acac',
+          "name": 技能施法单位附加,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'apri',
+          "name": 技能优先权,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'alev',
+          "name": 技能等级,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'arlv',
+          "name": 技能需求等级,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'alsk',
+          "name": 技能学习等级需求,
+          "descript": "",
+          "kind": 技能整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aher',
+          "name": 技能状态-英雄技能,
+          "descript": "",
+          "kind": 技能布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aite',
+          "name": 技能状态-物品技能,
+          "descript": "",
+          "kind": 技能布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'achd',
+          "name": 技能状态-检查依赖,
+          "descript": "",
+          "kind": 技能布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'amac',
+          "name": 弹道曲率,
+          "descript": "",
+          "kind": 技能实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'anam',
+          "name": 名称,
+          "descript": "",
+          "kind": 技能字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'auar',
+          "name": 图标关闭,
+          "descript": "",
+          "kind": 技能字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'arar',
+          "name": 图标研究,
+          "descript": "",
+          "kind": 技能字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aefs',
+          "name": 音效,
+          "descript": "",
+          "kind": 技能字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aefl',
+          "name": 音效循环,
+          "descript": "",
+          "kind": 技能字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'amcs',
+          "name": 魔法消耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz1',
+          "name": 波次数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz3',
+          "name": 碎片数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hmt1',
+          "name": 传送单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hwe2',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Omi1',
+          "name": 镜像数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uan1',
+          "name": 复活死尸数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eme2',
+          "name": 变化参数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nrg5',
+          "name": 力量奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nrg6',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocl2',
+          "name": 最大目标数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ofs1',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osf2',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efn1',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hre1',
+          "name": 复活单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hca4',
+          "name": 叠加参数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndp2',
+          "name": 最小单位数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndp3',
+          "name": 最大单位数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nrc2',
+          "name": 创建单位数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ams3',
+          "name": 护盾生命值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ams4',
+          "name": 魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bgm1',
+          "name": 采集黄金数/间隔,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bgm3',
+          "name": 最大矿工数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Car1',
+          "name": 装载容量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dev3',
+          "name": 最大目标中立等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dev1',
+          "name": 最大目标中立等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Egm1',
+          "name": 采集黄金数/间隔,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Fae1',
+          "name": 防御减少,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Fla1',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Fla3',
+          "name": 闪光弹数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gld1',
+          "name": 最大黄金数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gld3',
+          "name": 最大矿工容量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gyd1',
+          "name": 最大尸体数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Har1',
+          "name": 对树伤害,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Har2',
+          "name": 单次采集最大木材容量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Har3',
+          "name": 单次采集最大黄金容量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Inf2',
+          "name": 防御增加,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neu2',
+          "name": 选择单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndt1',
+          "name": 黄金消耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndt2',
+          "name": 木材消耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndt3',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poi4',
+          "name": 叠加类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poa5',
+          "name": 叠加类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ply1',
+          "name": 最大目标中立生物等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Pos1',
+          "name": 最大目标中立生物等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg1',
+          "name": 移动速度更新次数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg2',
+          "name": 攻击速度更新次数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg6',
+          "name": 魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rai1',
+          "name": 单位召唤数量1,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rai2',
+          "name": 单位召唤数量1,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucb5',
+          "name": 最大召唤数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rej3',
+          "name": 选项完整时可用,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rpb5',
+          "name": 最多消耗魔法倍数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": ,
+          "name": 最多可影响到的单位数量'Rpb6',
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa2',
+          "name": 防御增加,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa7',
+          "name": 最大单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roo1',
+          "name": 扎根攻击模式,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roo2',
+          "name": 拔起攻击模式,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roo4',
+          "name": 拔起防御模式,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sal2',
+          "name": 积聚等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esn4',
+          "name": 猫头鹰数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Spo4',
+          "name": 叠加类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sod1',
+          "name": 单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Spa1',
+          "name": 蜘蛛数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wha2',
+          "name": 间隔时间,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iagi',
+          "name": 敏捷奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iint',
+          "name": 智力奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Istr',
+          "name": 力量奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iatt',
+          "name": 攻击奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idef',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Isn1',
+          "name": 召唤单位数量1,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Isn2',
+          "name": 召唤单位数量2,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ixpg',
+          "name": 取得经验值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ihpg',
+          "name": 生命值恢复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Impg',
+          "name": 魔法值恢复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ihp2',
+          "name": 治疗生命值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Imp2',
+          "name": 魔法值获取,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idic',
+          "name": 攻击奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iarp',
+          "name": 目标防御降低,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iob5',
+          "name": 允许攻击索引,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ilev',
+          "name": 等级提升,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ilif',
+          "name": 增加最大生命值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iman',
+          "name": 增加最大魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Igol',
+          "name": 获得金钱,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ilum',
+          "name": 获得木材,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ifa1',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Icre',
+          "name": 最大目标中立生物等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Imvb',
+          "name": 移动速度奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ihpr',
+          "name": 每秒生命恢复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Isib',
+          "name": 视野范围奖励,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Icfd',
+          "name": 伤害/间隔,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Icfm',
+          "name": 每秒消耗魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Icfx',
+          "name": 额外魔法需求,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idet',
+          "name": 侦察范围,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idim',
+          "name": 每个单位魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idid',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Irec',
+          "name": 最大单位数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ircd',
+          "name": 重生延迟,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irc2',
+          "name": 生命值回复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irc3',
+          "name": 魔法值回复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ihps',
+          "name": 生命值回复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Imps',
+          "name": 魔法值回复,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Itpm',
+          "name": 最大单位数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cad1',
+          "name": 复活死尸数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wrs3',
+          "name": 地形变形持续时间毫秒,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uds1',
+          "name": 传送单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Det1',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsp1',
+          "name": 每次建造的金钱消耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsp2',
+          "name": 每次使用的木材消耗,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsp3',
+          "name": 侦察类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uls1',
+          "name": 蝗虫群数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uls3',
+          "name": 每个目标最大蝗虫数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nba2',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nch1',
+          "name": 最大目标中立生物等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsi1',
+          "name": 禁止类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efk3',
+          "name": 最大目标数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esv1',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'exh1',
+          "name": 最大尸体数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'inv1',
+          "name": 物品容量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spl2',
+          "name": 最大目标数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irl3',
+          "name": 选项完整时可用,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'idc3',
+          "name": 最大驱散单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'imo1',
+          "name": 陷阱数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ict1',
+          "name": 设置游戏时间 - 时,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ict2',
+          "name": 设置游戏时间 - 分,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mec1',
+          "name": 创建单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spb3',
+          "name": 最小法术数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spb4',
+          "name": 最大法术数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'gra3',
+          "name": 禁止攻击索引,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'gra4',
+          "name": 允许攻击索引,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'gra5',
+          "name": 最大攻击次数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Npr1',
+          "name": 建筑类型允许,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsa1',
+          "name": 建筑类型允许,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iaa1',
+          "name": 攻击增加,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Npa5',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Igl1',
+          "name": 科技升级等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndo2',
+          "name": 召唤单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nst1',
+          "name": 每秒野怪数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl2',
+          "name": 目标类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl3',
+          "name": 通魔选项,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab3',
+          "name": 护甲减少,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nhs6',
+          "name": 医疗波次,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ntm3',
+          "name": 最大目标中立生物等级,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs3',
+          "name": 导弹数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nlm3',
+          "name": 分裂所需攻击次数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nlm6',
+          "name": 分裂代数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc1',
+          "name": 岩石数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc2',
+          "name": 波数,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tau1',
+          "name": 影响敌方数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tau2',
+          "name": 影响友军数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tau3',
+          "name": 最大单位数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tau4',
+          "name": 增加数量,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hwe1',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uin4',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osf1',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efnu',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nbau',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ntou',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esvu',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nef1',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndou',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Emeu',
+          "name": 变化形态单位,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Aplu',
+          "name": 疾病守卫单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Btl1',
+          "name": 允许单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cha1',
+          "name": 替换单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ent1',
+          "name": 新单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gydu',
+          "name": 尸体单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Loa1',
+          "name": 允许单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Raiu',
+          "name": 单位类型限制检查,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Stau',
+          "name": 守卫单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iobu',
+          "name": 效果技能,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndc2',
+          "name": 变化单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsl1',
+          "name": 可被保存单位（保存灵魂技能）,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Chl1',
+          "name": 允许单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ulsu',
+          "name": 蝗虫单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'coau',
+          "name": 合成单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'exhu',
+          "name": 尸体单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'hwdu',
+          "name": 守卫单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'imou',
+          "name": 陷阱单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ipmu',
+          "name": 单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsyu',
+          "name": 工厂单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfyu',
+          "name": 生产单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvcu',
+          "name": 可破坏物ID,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iglu',
+          "name": 科技类型,
+          "descript": "",
+          "kind": 技能随等级改变的整数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'acas',
+          "name": 魔法释放时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'adur',
+          "name": 持续时间 - 普通,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ahdu',
+          "name": 持续时间 - 英雄,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'acdn',
+          "name": 魔法释放时间间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aare',
+          "name": 影响区域,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aran',
+          "name": 施法距离,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz2',
+          "name": 每波伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz4',
+          "name": 建筑伤害参数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz5',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbz6',
+          "name": 每波最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hab1',
+          "name": 魔法回复加快,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hmt2',
+          "name": 魔法施放延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oww1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oww2',
+          "name": 魔法伤害减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr1',
+          "name": 致命一击几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr2',
+          "name": 伤害倍数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr3',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr4',
+          "name": 闪避几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Omi2',
+          "name": 施加伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Omi3',
+          "name": 所受伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Omi4',
+          "name": 技能延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Owk1',
+          "name": 转变时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Owk2',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Owk3',
+          "name": 加成伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udc1',
+          "name": 治疗数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udp1',
+          "name": 每点生命转换为魔法,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udp2',
+          "name": 每点生命转换为生命,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uau1',
+          "name": 移动速率增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uau2',
+          "name": 生命回复增加,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eev1',
+          "name": 闪避几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eim1',
+          "name": 伤害/间隔时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eim2',
+          "name": 每秒魔法消耗,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eim3',
+          "name": 启动魔法需求,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Emb1',
+          "name": 魔法燃烧值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Emb2',
+          "name": 数字显示延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Emb3',
+          "name": 数字显示时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eme3',
+          "name": 高度调整时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eme4',
+          "name": 着陆延迟时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eme5',
+          "name": 变形生命值奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncr5',
+          "name": 移动速度奖励(仅限信息面板),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncr6',
+          "name": 攻击速度奖励(仅限信息面板),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ave5',
+          "name": 每秒生命回复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Usl1',
+          "name": 无敌时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uav1',
+          "name": 近战伤害偷取(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucs1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucs2',
+          "name": 最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucs3',
+          "name": 距离,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucs4',
+          "name": 最终区域范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uin1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uin2',
+          "name": 单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uin3',
+          "name": 碰撞延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocl1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocl3',
+          "name": 单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oeq1',
+          "name": 效果延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oeq2',
+          "name": 每秒对建筑伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oeq3',
+          "name": 单位减速(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oeq4',
+          "name": 最终区域范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eer1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eah1',
+          "name": 近战伤害反弹,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Etq1',
+          "name": 治疗生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Etq2',
+          "name": 治疗间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Etq3',
+          "name": 建筑伤害参数(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Etq4',
+          "name": 初始完成CD,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udd1',
+          "name": 每秒损耗生命百分比,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udd2',
+          "name": 建筑伤害参数(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ufa1',
+          "name": 护甲持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ufa2',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ufn1',
+          "name": 范围目标伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ufn2',
+          "name": 特定目标伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfa1',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esf1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esf2',
+          "name": 伤害间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esf3',
+          "name": 建筑伤害参数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ear1',
+          "name": 伤害奖励(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hav1',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hav2',
+          "name": 生命值奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hav3',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hav4',
+          "name": 魔法伤害减少(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbh1',
+          "name": 重击几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbh2',
+          "name": 伤害倍数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbh3',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbh4',
+          "name": 未命中率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Htb1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Htc1',
+          "name": 范围伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Htc2',
+          "name": 指定目标伤害(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Htc3',
+          "name": 移动速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Htc4',
+          "name": 攻击速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Had1',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hhb1',
+          "name": 治疗数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hca1',
+          "name": 附加伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hca2',
+          "name": 移动速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hca3',
+          "name": 攻击速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oae1',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oae2',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ore1',
+          "name": 重生延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osh1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osh2',
+          "name": 最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osh3',
+          "name": 距离,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Osh4',
+          "name": 最终区域范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfd1',
+          "name": 效果延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfd2',
+          "name": 效果持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfd3',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ams1',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ams2',
+          "name": 魔法伤害减少(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Apl1',
+          "name": 疾病效果持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Apl2',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Apl3',
+          "name": 疾病守卫持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oar1',
+          "name": 每秒生命恢复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Akb1',
+          "name": 攻击伤害增加,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Adm1',
+          "name": 目标魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Adm2',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bli1',
+          "name": 扩张范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bgm2',
+          "name": 采集间隔时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bgm4',
+          "name": 采集环形半径,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Blo1',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Blo2',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Blo3',
+          "name": 模型放大比例,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Can1',
+          "name": 每秒恢复生命,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Can2',
+          "name": 最大恢复生命,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dev2',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Chd1',
+          "name": 移动速度更新次数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Chd2',
+          "name": 攻击速度更新次数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Chd3',
+          "name": 对召唤单位伤害(无效),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cri1',
+          "name": 移动速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cri2',
+          "name": 攻击速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cri3',
+          "name": 伤害减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Crs1',
+          "name": 未命中率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dda1',
+          "name": 全伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dda2',
+          "name": 全伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dda3',
+          "name": 部分伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dda4',
+          "name": 部分伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sds1',
+          "name": 建筑伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uco5',
+          "name": 最大攻击伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uco6',
+          "name": 移动速度奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def1',
+          "name": 所受穿刺伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def2',
+          "name": 伤害倍乘(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def3',
+          "name": 移动速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def4',
+          "name": 攻击速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def5',
+          "name": 所受魔法伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def6',
+          "name": 反弹几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def7',
+          "name": 接受反弹攻击伤害(穿刺),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Def8',
+          "name": 接受反弹攻击伤害(魔法),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eat1',
+          "name": 技能延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eat2',
+          "name": 吞食延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eat3',
+          "name": 总恢复生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ens1',
+          "name": 空中单位坠落时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ens2',
+          "name": 空中单位高度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ens3',
+          "name": 近战攻击范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Egm2',
+          "name": 间隔时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Fla2',
+          "name": 效果延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gld2',
+          "name": 采矿持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gyd2',
+          "name": 墓碑范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gyd3',
+          "name": 尸体范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hea1',
+          "name": 治疗生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Inf1',
+          "name": 攻击增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Inf3',
+          "name": 自动施法范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Inf4',
+          "name": 生命恢复速度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Lit1',
+          "name": 效果延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Lit2',
+          "name": 效果持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Lsh1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mbt1',
+          "name": 恢复每点魔法所需魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mbt2',
+          "name": 恢复每点生命所需魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mbt3',
+          "name": 自动施法魔法要求,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mbt4',
+          "name": 水面高度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Min1',
+          "name": 激活延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Min2',
+          "name": 转换时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neu1',
+          "name": 激活范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Arm1',
+          "name": 每秒恢复值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poi1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poi2',
+          "name": 攻击速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poi3',
+          "name": 移动速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poa1',
+          "name": 额外伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poa2',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poa3',
+          "name": 攻击速度系数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Poa4',
+          "name": 移动速度系数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Pos2',
+          "name": 施法时所受伤害值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'War1',
+          "name": 施放几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'War2',
+          "name": 附加伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'War3',
+          "name": 全伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'War4',
+          "name": 半伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg3',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg4',
+          "name": 单位麻痹时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Prg5',
+          "name": 英雄麻痹时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rej1',
+          "name": 生命值恢复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rej2',
+          "name": 魔法值恢复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rpb3',
+          "name": 最小生命需求,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rpb4',
+          "name": 最小魔法需求,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rep1',
+          "name": 修理费用比率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rep2',
+          "name": 修理时间比率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rep3',
+          "name": 快速建造费用比率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rep4',
+          "name": 快速建造时间比率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rep5',
+          "name": 海上修理范围提升,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa1',
+          "name": 攻击增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa3',
+          "name": 生命恢复速度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa4',
+          "name": 魔法再生,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nbr1',
+          "name": 攻击增加,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sal1',
+          "name": 掠夺比率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esn1',
+          "name": 飞行视野范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esn2',
+          "name": 盘踞视野范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esn3',
+          "name": 盘踞高度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esn5',
+          "name": 猫头鹰的持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Shm1',
+          "name": 淡化转换时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Shm2',
+          "name": 昼夜交替转换时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Shm3',
+          "name": 行动转换时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Slo1',
+          "name": 降低移动速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Slo2',
+          "name": 降低攻击速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Spo1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Spo2',
+          "name": 降低移动速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Spo3',
+          "name": 降低攻击速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sta1',
+          "name": 激活延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sta2',
+          "name": 侦察范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sta3',
+          "name": 爆炸范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sta4',
+          "name": 眩晕持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uhf1',
+          "name": 攻击速度奖励(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uhf2',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wha1',
+          "name": 每个间隔周期内采集的木材数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wha3',
+          "name": 附着点高度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wrp1',
+          "name": 传送区域宽度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wrp2',
+          "name": 传送区域高度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ivam',
+          "name": 攻击偷取生命(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idam',
+          "name": 附加伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iob2',
+          "name": 击中单位几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iob3',
+          "name": 击中英雄几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iob4',
+          "name": 击中召唤物几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idel',
+          "name": 目标效果延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iild',
+          "name": 施加伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Iilw',
+          "name": 受到伤害倍数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Imrp',
+          "name": 魔法回复奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ispi',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Idps',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cac1',
+          "name": 攻击速度增加(%) ,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cor1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Isx1',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wrs1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Wrs2',
+          "name": 地形变形幅度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ctc1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ctc2',
+          "name": 指定目标伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ctc3',
+          "name": 移动速度减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ctc4',
+          "name": 攻击速度减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ctb1',
+          "name": 伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uds2',
+          "name": 魔法施放延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dtn1',
+          "name": 范围目标魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Dtn2',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ivs1',
+          "name": 转变时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nmr1',
+          "name": 每秒魔法消耗,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ssk1',
+          "name": 减少伤害几率(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ssk2',
+          "name": 最小伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ssk3',
+          "name": 忽略伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs1',
+          "name": 全伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs2',
+          "name": 全伤害间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs3',
+          "name": 半伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs4',
+          "name": 半伤害间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs5',
+          "name": 建筑伤害因素(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hfs6',
+          "name": 最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nms1',
+          "name": 每点魔法抵消的伤害值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nms2',
+          "name": 伤害吸收(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uim1',
+          "name": 波距离,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uim2',
+          "name": 波持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uim3',
+          "name": 施加伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uim4',
+          "name": 空中停留时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uls2',
+          "name": 单位施放间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uls4',
+          "name": 生命偷取参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uls5',
+          "name": 生命偷取极限,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uts1',
+          "name": 近战伤害反弹,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uts2',
+          "name": 所受近战伤害(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uts3',
+          "name": 防御奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nba1',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nba3',
+          "name": 召唤单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cmg2',
+          "name": 召唤单位每点生命需要的魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Cmg3',
+          "name": 增加当前生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr1',
+          "name": 生命值汲取,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr2',
+          "name": 魔法值汲取,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr3',
+          "name": 汲取间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr4',
+          "name": 每秒传输的生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr5',
+          "name": 每秒传输的魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr6',
+          "name": 生命值奖励参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr7',
+          "name": 生命值奖励衰减,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr8',
+          "name": 魔法值奖励参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndr9',
+          "name": 魔法值奖励衰减,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsi2',
+          "name": 未命中率(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsi3',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsi4',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tdg1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tdg2',
+          "name": 中范围半径,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tdg3',
+          "name": 中范围每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tdg4',
+          "name": 小范围半径,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tdg5',
+          "name": 小范围每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tsp1',
+          "name": 空中时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tsp2',
+          "name": 最小间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nbf5',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ebl1',
+          "name": 最大范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ebl2',
+          "name": 最小范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efk1',
+          "name": 目标伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efk2',
+          "name": 最大输出伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Efk4',
+          "name": 最大速度调整,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esh1',
+          "name": 持续伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esh2',
+          "name": 移动速度系数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esh3',
+          "name": 攻击速度减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esh4',
+          "name": 速度衰减幅度,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Esh5',
+          "name": 初始伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'abs1',
+          "name": 最大生命吸收,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'abs2',
+          "name": 最大魔法吸收,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'bsk1',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'bsk2',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'bsk3',
+          "name": 所受伤害增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm1',
+          "name": 每个单位给予生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm2',
+          "name": 每个单位给予魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm3',
+          "name": 每个Buff给予生命值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm4',
+          "name": 每个Buff给予魔法值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm5',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fak1',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fak2',
+          "name": 中伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fak3',
+          "name": 小伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fak4',
+          "name": 全伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fak5',
+          "name": 中伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'liq1',
+          "name": 额外每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'liq2',
+          "name": 移动速度减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'liq3',
+          "name": 攻击速度减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mim1',
+          "name": 魔法伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl1',
+          "name": 单位 - 每点魔法造成的伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl2',
+          "name": 英雄 - 每点魔法造成的伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl3',
+          "name": 单位 - 最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl4',
+          "name": 英雄 - 最大伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl5',
+          "name": 护甲增加,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spl1',
+          "name": 分布伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irl1',
+          "name": 生命回复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irl2',
+          "name": 魔法回复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'idc1',
+          "name": 每个单位魔法损耗,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'idc2',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'imo2',
+          "name": 激活延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'imo3',
+          "name": 引诱间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'isr1',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'isr2',
+          "name": 魔法伤害减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ipv1',
+          "name": 伤害奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ipv2',
+          "name": 生命偷取值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ast1',
+          "name": 生命回复参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ast2',
+          "name": 魔法回复参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'gra1',
+          "name": 附加延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'gra2',
+          "name": 移除延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsa2',
+          "name": 英雄回复延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsa3',
+          "name": 单位回复延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsa4',
+          "name": 魔法伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsa5',
+          "name": 每秒生命恢复,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ixs1',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ixs2',
+          "name": 魔法伤害减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Npa6',
+          "name": 召唤单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nse1',
+          "name": 护盾CD间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndo1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndo3',
+          "name": 召唤单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'flk1',
+          "name": 小伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'flk2',
+          "name": 中伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'flk3',
+          "name": 全伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'flk4',
+          "name": 中伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'flk5',
+          "name": 小伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbn1',
+          "name": 移动速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbn2',
+          "name": 攻击速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fbk1',
+          "name": 最大损耗魔法 -单位,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fbk2',
+          "name": 伤害比率 -单位,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fbk3',
+          "name": 最大损耗魔法 - 英雄,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fbk4',
+          "name": 伤害比率 - 英雄,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'fbk5',
+          "name": 对召唤单位伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'nca1',
+          "name": 分裂伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'pxf1',
+          "name": 初始伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'pxf2',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mls1',
+          "name": 每秒伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nst2',
+          "name": 野兽碰撞范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nst3',
+          "name": 伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nst4',
+          "name": 伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nst5',
+          "name": 伤害延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl1',
+          "name": 施法持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl4',
+          "name": 技能持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab1',
+          "name": 移动速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab2',
+          "name": 攻击速度增加(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab4',
+          "name": 目标持续伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab5',
+          "name": 范围持续伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nab6',
+          "name": 伤害间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ntm1',
+          "name": 黄金奖励参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ntm2',
+          "name": 木材奖励参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg1',
+          "name": 移动速度奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg2',
+          "name": 攻击奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs1',
+          "name": 伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs2',
+          "name": 伤害间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs4',
+          "name": 最高输出伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs5',
+          "name": 建筑物伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncs6',
+          "name": 技能持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsy1',
+          "name": 生产单位间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsy3',
+          "name": 生产单位持续时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsy4',
+          "name": 产生单位位移,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsy5',
+          "name": 约束范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfy1',
+          "name": 生产单位间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nfy2',
+          "name": 约束范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nde1',
+          "name": 粉碎几率,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nde2',
+          "name": 伤害倍乘(建筑物),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nde3',
+          "name": 伤害倍乘(单位),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nde4',
+          "name": 伤害倍乘(英雄),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic1',
+          "name": 燃灰伤害值奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic2',
+          "name": 死亡伤害 - 全伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic3',
+          "name": 死亡伤害 - 全伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic4',
+          "name": 死亡伤害 - 半伤害,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic5',
+          "name": 死亡伤害 - 半伤害范围,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nic6',
+          "name": 死亡伤害 - 延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nso1',
+          "name": 伤害值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nso2',
+          "name": 伤害周期,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nso3',
+          "name": 攻击减少,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nso4',
+          "name": 移动速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nso5',
+          "name": 攻击速度减少(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nlm2',
+          "name": 分裂延迟,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nlm4',
+          "name": 最大生命值参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nlm5',
+          "name": 分裂生命周期奖励,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc3',
+          "name": 波间隔时间,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc4',
+          "name": 建筑伤害参数(%),
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc5',
+          "name": 全伤害数值,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nvc6',
+          "name": 半伤害参数,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Tau5',
+          "name": 增量间隔,
+          "descript": "",
+          "kind": 技能随等级改变的实数域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hab2',
+          "name": 百分比奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hmt3',
+          "name": 传送单位聚集,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr5',
+          "name": 不会丢失,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ocr6',
+          "name": 排除物品伤害,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Owk4',
+          "name": 加成伤害,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uan3',
+          "name": 继承升级,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udp3',
+          "name": 魔法数值转换,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udp4',
+          "name": 生命数值转换,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Udp5',
+          "name": 目标存活,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Uau3',
+          "name": 百分比奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eah2',
+          "name": 按百分比反弹,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ear2',
+          "name": 近战奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ear3',
+          "name": 远程奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ear4',
+          "name": 使用指定数值奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hbh5',
+          "name": 不会丢失,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Had2',
+          "name": 百分比奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hds1',
+          "name": 可以取消,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Hre2',
+          "name": 复活单位是无敌的,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Oar2',
+          "name": 按百分比回复,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Btl2',
+          "name": 召集非空闲单位,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Bli2',
+          "name": 创建荒芜地表,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sds6',
+          "name": 尸体爆炸,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Fae2',
+          "name": 总是自动施放,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mbt5',
+          "name": 只能在夜间回复,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neu3',
+          "name": 显示选择单位按钮,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neu4',
+          "name": 显示单位指示器,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ans6',
+          "name": 向技能拥有者收费,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Arm2',
+          "name": 按百分比回复,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Pos3',
+          "name": 目标无敌,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Pos4',
+          "name": 目标魔法免疫,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ucb6',
+          "name": 施法者死亡时杀死召唤单位,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rej4',
+          "name": 只能对自己施放,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rtn1',
+          "name": 接受黄金,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rtn2',
+          "name": 接受木材,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa5',
+          "name": 影响敌方数量,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roa6',
+          "name": 影响友方数量,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Roo3',
+          "name": 扎根可转向,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Slo3',
+          "name": 总是自动施放,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ihid',
+          "name": 隐藏按钮,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Itp2',
+          "name": 传送单位聚集,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eth1',
+          "name": 对变形效果免疫,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eth2',
+          "name": 不妨碍建造,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gho1',
+          "name": 自动获取攻击目标,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gho2',
+          "name": 对变形效果免疫,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Gho3',
+          "name": 不妨碍建造,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ssk4',
+          "name": 远程伤害加成,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ssk5',
+          "name": 近战伤害加成,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'coa2',
+          "name": 向目标靠拢,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'cyc1',
+          "name": 可以被驱散,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dvm6',
+          "name": 忽略友军的增益魔法效果,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'inv2',
+          "name": 死亡掉落物品,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'inv3',
+          "name": 可以使用物品,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'inv4',
+          "name": 可以取得物品,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'inv5',
+          "name": 可以丢弃物品,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'liq4',
+          "name": 修理允许,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'mfl6',
+          "name": 仅溅射伤害有魔法单位,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irl4',
+          "name": 只对自己施放,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'irl5',
+          "name": 被攻击时驱散效果,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ipv3',
+          "name": 使用原始值,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spb2',
+          "name": 共享法术CD间隔,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'sla1',
+          "name": 睡眠一次,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'sla2',
+          "name": 允许任意玩家,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl5',
+          "name": 使其他技能无效,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ntm4',
+          "name": 附加杀敌奖励,
+          "descript": "",
+          "kind": 技能随等级改变的布尔值域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aart',
+          "name": 图标 - 普通,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'acat',
+          "name": 效果 - 施法者,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'atat',
+          "name": 效果 - 目标,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'asat',
+          "name": 效果 - 特殊,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aeat',
+          "name": 效果 - 目标点,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aaea',
+          "name": 效果 - 区域,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'alig',
+          "name": 效果 - 闪电效果,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'amat',
+          "name": 效果 - 投射物图像,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aret',
+          "name": 提示工具 - 学习,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'arut',
+          "name": 提示工具 - 学习 - 扩展,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'atp1',
+          "name": 提示工具 - 普通,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aut1',
+          "name": 提示工具 - 关闭,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'aub1',
+          "name": 提示工具 - 普通 - 扩展,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'auu1',
+          "name": 提示工具 - 关闭 - 扩展,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Eme1',
+          "name": 普通形态单位,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndp1',
+          "name": 召唤单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nrc1',
+          "name": 关联技能,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mil1',
+          "name": 普通形态单位,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Mil2',
+          "name": 变化形态单位,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ans5',
+          "name": 基础命令ID,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ply2',
+          "name": 变形单位 - 地面,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ply3',
+          "name": 变形单位 - 空中,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ply4',
+          "name": 变形单位 - 两栖,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ply5',
+          "name": 变形单位 - 水中,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rai3',
+          "name": 单位召唤类型1,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Rai4',
+          "name": 单位召唤类型2,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Sod2',
+          "name": 单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ist1',
+          "name": 召唤单位类型1,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ist2',
+          "name": 召唤单位类型2,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ndc1',
+          "name": 允许转换种族,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'coa1',
+          "name": 辅助单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dcp1',
+          "name": 辅助单位类型1,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'dcp2',
+          "name": 辅助单位类型2,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'tpi1',
+          "name": 要求单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'tpi2',
+          "name": 转换单位类型,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spb1',
+          "name": 法术列表,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'spb5',
+          "name": 基础命令ID,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Ncl6',
+          "name": 基础命令ID,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg3',
+          "name": 技能升级 1,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg4',
+          "name": 技能升级 2,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg5',
+          "name": 技能升级 3,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Neg6',
+          "name": 技能升级 4,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'Nsy2',
+          "name": 生产单位ID,
+          "descript": "",
+          "kind": 技能随等级改变的字符串域,
+          "race": "特殊",
+          "type": "物编-技能"
+        },
+        {
+          "code": 'ilev',
+          "name": 等级,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iuse',
+          "name": 使用次数,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'icid',
+          "name": CD间隔组,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ihtp',
+          "name": 最大生命值,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ihpc',
+          "name": 生命值,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipri',
+          "name": 优先权,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iarm',
+          "name": 装甲类型(本头/气态/石头/肉体/金属),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclr',
+          "name": 颜色值(红),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclg',
+          "name": 颜色值(绿),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclb',
+          "name": 颜色值(蓝),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ical',
+          "name": 颜色值(alpha),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isca',
+          "name": 模型缩放,
+          "descript": "",
+          "kind": 物品实数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'idrp',
+          "name": 持有者死亡时掉落,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'idro',
+          "name": 可以丢弃,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iper',
+          "name": 使用完会消失,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iprn',
+          "name": 可作为随机物品,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipow',
+          "name": 拾取时自动使用,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipaw',
+          "name": 可以出售给商店,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iusa',
+          "name": 主动使用,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ifil',
+          "name": 使用模型,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        
+        
+        {
+          "code": 'udty',
+          "name": 战斗 - 防御类型(普通/小型/中型/大型/城墙/英雄/神圣/无装甲),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uarm',
+          "name": 战斗 - 装甲类型(木头/气态/石头/肉体/金属),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulfi',
+          "name": 声音 - 循环淡入率,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulfo',
+          "name": 声音 - 循环淡出率,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uagc',
+          "name": 状态 - 英雄 - 敏捷（属性）,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uinc',
+          "name": 状态 - 英雄 - 智力（属性）,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ustc',
+          "name": 状态 - 英雄 - 力量（属性）,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uagm',
+          "name": 状态 - 英雄 - （当前）敏捷(不含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uinm',
+          "name": 状态 - 英雄 - （当前）智力(不含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ustm',
+          "name": 状态 - 英雄 - （当前）力量(不含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uagb',
+          "name": 状态 - 英雄 - （当前）敏捷(含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uinb',
+          "name": 状态 - 英雄 - （当前）智力(含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ustb',
+          "name": 状态 - 英雄 - （当前）力量(含增益),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubdi',
+          "name": 状态 - 黄金奖励 - 骰子数量,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubba',
+          "name": 状态 - 黄金奖励 - 基础值,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubsi',
+          "name": 状态 - 黄金奖励 - 骰子面数,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulbd',
+          "name": 状态 - 木材奖励 - 骰子数量,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulba',
+          "name": 状态 - 木材奖励 - 基础值,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulbs',
+          "name": 状态 - 木材奖励 - 骰子面数,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulev',
+          "name": 状态 - 等级,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ufor',
+          "name": 状态 - 队形排列,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uori',
+          "name": 美术 - 动画 - 转向补正,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uept',
+          "name": 美术 - 高度变化- 采样点数量,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uclr',
+          "name": 美术 - 颜色值(红),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uclg',
+          "name": 美术 - 颜色值(绿),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uclb',
+          "name": 美术 - 颜色值(蓝),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ucal',
+          "name": 美术 - 颜色值(alpha),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umvt',
+          "name": 移动 - 类型,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'utar',
+          "name": 战斗 - 作为目标类型,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uaen',
+          "name": 战斗 - 允许攻击模式,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'utyp',
+          "name": 状态 -单位类别,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhrt',
+          "name": 状态 - 生命恢复类型,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'upar',
+          "name": 路径 - 放置不允许(建筑物专属),
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'upra',
+          "name": 状态 - 英雄 - 主属性,
+          "descript": "",
+          "kind": 单位整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ustp',
+          "name": 状态 - 英雄 - 每等级提升力量（成长值）,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uagp',
+          "name": 状态 - 英雄 - 每等级提升敏捷（成长值）,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uinp',
+          "name": 状态 - 英雄 - 每等级提升智力（成长值）,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhpr',
+          "name": 状态 - （每秒）生命恢复（值）,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umpr',
+          "name": 状态 - （每秒）魔法回复（值）,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udtm',
+          "name": 美术 - 死亡时间(秒),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ufyh',
+          "name": 移动 - 飞行高度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umvr',
+          "name": 移动 - 转身速度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uerd',
+          "name": 美术 - 高度变化- 采样范围,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ufrd',
+          "name": 美术 - 迷雾- 采样范围,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umxp',
+          "name": 美术 - X 轴最大旋转角度(度数),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umxr',
+          "name": 美术 - Y 轴最大旋转角度(度数),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usca',
+          "name": 美术 - 模型缩放,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'urun',
+          "name": 动画 - 跑步速度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ussc',
+          "name": 美术 - 选择缩放,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uslz',
+          "name": 美术 - 选择圈高度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushh',
+          "name": 美术 - 阴影图像 - 高度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushw',
+          "name": 美术 - 阴影图像 - 宽度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushx',
+          "name": 美术 - 阴影图像 - X 轴偏移,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushy',
+          "name": 美术 - 阴影图像 - Y 轴偏移,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uwal',
+          "name": 美术 - 动画 - 行走速度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udfc',
+          "name": 战斗 - 防御(不是基础防御),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usir',
+          "name": 状态 - 视野范围,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'upri',
+          "name": 状态 - 编队优先权,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umvc',
+          "name": 移动 - 速度(不是基础速度),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uocc',
+          "name": 美术 - 闭塞高度,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhpc',
+          "name": 状态 - 生命值(不是最大生命值),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umpc',
+          "name": 状态 - 魔法值(不是最大魔法值),
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uacq',
+          "name": 战斗 - 主动攻击范围,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ucbs',
+          "name": 美术 - 动画 - 魔法施放回复,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ucpt',
+          "name": 美术 - 动画 - 魔法施放点,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uamn',
+          "name": 战斗 - 最小攻击范围,
+          "descript": "",
+          "kind": 单位实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'urai',
+          "name": 战斗 - 死亡 - 灵魂飞升（死亡后无尸体）(非死亡类型),
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udec',
+          "name": 战斗 - 死亡 - 尸体腐烂（死亡后有尸体）(非死亡类型),
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubdg',
+          "name": 状态 - 是一个建筑,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ulos',
+          "name": 美术 - 不可见区域显示单位,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'unbm',
+          "name": 状态 - 中立建筑 - 显示小地图标记,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhhb',
+          "name": 状态 - 英雄 - 隐藏英雄栏图标,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhhm',
+          "name": 状态 - 英雄 - 隐藏小地图英雄显示,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhhd',
+          "name": 状态 - 英雄 - 隐藏英雄死亡信息,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhom',
+          "name": 状态 - 隐藏小地图显示,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uscb',
+          "name": 美术 - 缩放投射物,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usew',
+          "name": 美术 - 选择圈在水面上,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushr',
+          "name": 美术 - 深水区有阴影,
+          "descript": "",
+          "kind": 单位布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'unam',
+          "name": 文本 - 名称,
+          "descript": "",
+          "kind": 单位字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'upro',
+          "name": 文本 - 称谓(英雄独占),
+          "descript": "",
+          "kind": 单位字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uubs',
+          "name": 美术 - 建筑地表纹理,
+          "descript": "",
+          "kind": 单位字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ushu',
+          "name": 美术 - 阴影图像(单位),
+          "descript": "",
+          "kind": 单位字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1d',
+          "name": 战斗 - 攻击1 - 伤害骰子数量,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1b',
+          "name": 战斗 - 攻击1 - 基础伤害,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1s',
+          "name": 战斗 - 攻击1 - 伤害骰子面数,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'utc1',
+          "name": 战斗 - 攻击1 - 最大目标数,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1t',
+          "name": 战斗 - 攻击1 - 攻击类型,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ucs1',
+          "name": 战斗 - 攻击1 - 武器声音,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1p',
+          "name": 战斗 - 攻击1 - 范围影响目标,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1g',
+          "name": 战斗 - 攻击1 - 目标允许,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubs1',
+          "name": 战斗 - 攻击1 - 动画回复点,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udp1',
+          "name": 战斗 - 攻击1 - 动画伤害点,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1c',
+          "name": 战斗 - 攻击1 - 攻击间隔,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udl1',
+          "name": 战斗 - 攻击1 - 伤害衰减参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhd1',
+          "name": 战斗 - 攻击1 - 中伤害参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uqd1',
+          "name": 战斗 - 攻击1 - 小伤害参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usd1',
+          "name": 战斗 - 攻击1 - 穿透伤害距离,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usr1',
+          "name": 战斗 - 攻击1 - 穿透伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1z',
+          "name": 战斗 - 攻击1 - 弹射速率,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uma1',
+          "name": 战斗 - 攻击1 - 弹射弧度,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1f',
+          "name": 战斗 - 攻击1 - 全伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1h',
+          "name": 战斗 - 攻击1 - 中伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1q',
+          "name": 战斗 - 攻击1 - 小伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1r',
+          "name": 战斗 - 攻击1 - 攻击范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uwu1',
+          "name": 战斗 - 攻击1 - 显示UI,
+          "descript": "",
+          "kind": 单位武器布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umh1',
+          "name": 战斗 - 攻击1 - 射弹自导允许,
+          "descript": "",
+          "kind": 单位武器布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua1m',
+          "name": 战斗 - 攻击1 - 投射物图像,
+          "descript": "",
+          "kind": 单位武器字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2d',
+          "name": 战斗 - 攻击2- 伤害骰子数量,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2b',
+          "name": 战斗 - 攻击2- 基础伤害,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2s',
+          "name": 战斗 - 攻击2- 伤害骰子面数,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'utc2',
+          "name": 战斗 - 攻击2- 最大目标数,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2t',
+          "name": 战斗 - 攻击2- 攻击类型,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ucs2',
+          "name": 战斗 - 攻击2- 武器声音,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2p',
+          "name": 战斗 - 攻击2- 范围影响目标,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2g',
+          "name": 战斗 - 攻击2- 目标允许,
+          "descript": "",
+          "kind": 单位武器整数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ubs2',
+          "name": 战斗 - 攻击2- 动画回复点,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udp2',
+          "name": 战斗 - 攻击2- 动画伤害点,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2c',
+          "name": 战斗 - 攻击2- 攻击间隔,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'udl2',
+          "name": 战斗 - 攻击2- 伤害衰减参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uhd2',
+          "name": 战斗 - 攻击2- 中伤害参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uqd2',
+          "name": 战斗 - 攻击2- 小伤害参数,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usd2',
+          "name": 战斗 - 攻击2- 穿透伤害距离,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'usr2',
+          "name": 战斗 - 攻击2- 穿透伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2z',
+          "name": 战斗 - 攻击2- 弹射速率,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uma2',
+          "name": 战斗 - 攻击2- 弹射弧度,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2f',
+          "name": 战斗 - 攻击2- 全伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2h',
+          "name": 战斗 - 攻击2- 中伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2q',
+          "name": 战斗 - 攻击2- 小伤害范围,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2m',
+          "name": 战斗 - 攻击2- 投射物图像,
+          "descript": "",
+          "kind": 单位武器实数域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'uwu2',
+          "name": 战斗 - 攻击2- 显示UI,
+          "descript": "",
+          "kind": 单位武器布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'umh2',
+          "name": 战斗 - 攻击2- 射弹自导允许,
+          "descript": "",
+          "kind": 单位武器布尔值域,
+          "race": "特殊",
+          "type": "物编-单位"
+        },
+        {
+          "code": 'ua2m',
+          "name": 战斗 - 攻击2- 投射物图像,
+          "descript": "",
+          "kind": 单位武器字符串域,
+          "race": "特殊",
+          "type": "物编-单位"
         }
     ],
     "strings": [
