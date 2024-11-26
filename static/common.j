@@ -8086,6 +8086,7 @@ native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 // 转换四字符码成字符串（未启用）
 // native BlzFourCC2S                                 takes integer value returns string
+
 // 转换字符串成四字符码（未启用）
 // native BlzS2FourCC                                 takes string value returns integer
 
@@ -8268,6 +8269,7 @@ native BlzGetUnitSkin takes unit whichUnit returns integer
 native BlzGetItemSkin takes item whichItem returns integer
 // 获取可破坏物皮肤ID(未启用)
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
+
 // 设置单位皮肤
 // 对镜像及幻象无效
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
@@ -8275,6 +8277,7 @@ native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
 // 设置可破坏物皮肤(未启用)
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
+
 // 创建物品(指定皮肤)(指定坐标)
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
 // 创建单位(指定皮肤)(指定坐标)
