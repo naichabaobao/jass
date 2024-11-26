@@ -4171,7 +4171,8 @@ globals
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_RANGE = ConvertUnitWeaponRealField('ua1r')
 	// 单位武器布尔值域 战斗 - 攻击1 - 显示UI ('uwu1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_SHOW_UI = ConvertUnitWeaponBooleanField('uwu1')
-	// 单位武器布尔值域 战斗 - 攻击1 - 允许攻击模式 ('uaen')
+	// 单位武器布尔值域 战斗 - 允许攻击模式 ('uaen')
+	// 此处有误，应该为整数域，支持输入0~3
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACKS_ENABLED = ConvertUnitWeaponBooleanField('uaen')
 	// 单位武器布尔值域 战斗 - 攻击1 - 射弹自导允许 ('umh1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
