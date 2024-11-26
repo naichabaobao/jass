@@ -1109,14 +1109,15 @@ export class VariableCall extends VariableName {
 
 
 export class Set {
-    name:Token|null = null;
-    ref: VariableName|VariableCall|null = null;
+    name: VariableName|null = null;
+    init: Zoom|null = null;
 }
 export class Type {
     name:Token|null = null;
     extends:Token|null = null;
 }
 export class Call {
+    ref: VariableCall|null = null;
 }
 export class Ret {
 }
@@ -1518,7 +1519,6 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
                 
                 state = 1;
             } else {
-                console.log(text, "]]]]asdsd");
                 document.add_token_error(token, `'['`);
                 break;
             }
@@ -1593,7 +1593,6 @@ function parse_line_name(document: Document, tokens:Token[], offset_index: numbe
     let index = offset_index;
     let state = 0;
     let variable:VariableName|null = null;
-    console.log(document, ";;;;");
     
     while(index < tokens.length) {
         const token = tokens[index];
@@ -1703,14 +1702,18 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
     const set = new Set();
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "set") {
                 state = 1;
             } else {
@@ -1718,18 +1721,24 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            const ref = new MenberReference();
-            
             const result = parse_line_name(document, tokens, index);
-            set.ref = result.expr;
+            set.name = result.expr;
             index = result.index;
-            state = 2;
-        } else if (state == 2) {
-            if (text == "=") {
-                state = 3;
+            if (tokens[index] && tokens[index].getText() == "=") {
+                state = 2;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `Assignment symbol '=' not found`);
+                break;
             }
+        } else if (state == 2) { // =
+            index++;
+            state = 3;
+        } else if (state == 3) {
+            const result = parse_line_expr(document, tokens, index);
+            set.init = result.expr;
+            index = result.index;
+
+            break;
         }
     }
 
@@ -1739,20 +1748,31 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
     const call = new Call();
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "call") {
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 1) {
+            const result = parse_line_caller(document, tokens, index);
+            call.ref = result.expr;
+            index = result.index;
+            
+            break;
         }
     }
 
@@ -2795,22 +2815,24 @@ export function parse(filePath: string, i_content?: string) {
 if (true) {
     parse("a/b", `
         function a takes nothing returns nothing
-        // set aaa = 3+3
-// 3+3
-a.b.c.[k(3+3, "47")](b(),4, 3+3,-/**/3)
+         set aaa.bbb[5] = 3+3
+call a.c(4820, 0x255, $dfsha)
+a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
         endfunction 
         kkk
         `)
     // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
     const document = Global.get("a/b");
     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-    console.log(s, s.ref);
+    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
+    console.log(c, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     // @ts-ignore
-    const expr = parse_line_expr(document, document?.lineTokens(4), 0);
+    // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
-    console.log(document?.token_errors.map(err => err.message));
+    // console.log(document?.token_errors.map(err => err.message));
     // @ts-ignore
-    console.log(expr.expr);
+    // console.log(expr.expr);
     // console.log(.ref?.to_string());
     
 }
