@@ -5,7 +5,8 @@
 
 
 <!-- ![冰封王座巫妖王](https://t13.baidu.com/it/u=2708679913,2610909064&fm=224&app=112&f=JPEG?w=500&h=251) -->
-![冰封王座巫妖王](https://github.com/naichabaobao/jass/blob/f7ff28fd7a52ea9b532afecd23aa5a024a57c1c4/static/jass.png)
+<!-- ![冰封王座巫妖王](https://github.com/naichabaobao/jass/blob/f7ff28fd7a52ea9b532afecd23aa5a024a57c1c4/static/jass.png) -->
+![冰封王座巫妖王](https://github.com/naichabaobao/jass/blob/master/static/images/blizzard-nova.jpg?raw=true)
 
 
 --------------------------------------------------------

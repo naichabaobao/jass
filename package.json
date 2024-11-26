@@ -145,7 +145,7 @@
     "publish": "vsce publish --no-dependencies",
     "temp": "tsc && node ./out/boot/jass/tokens.js",
     "temp2": "tsc && node ./out/boot/jass/evaluator.js",
-    "test:dev": "tsc && node ./out/test/test.js"
+    "test:dev": "node ./out/boot/jass/parser-vjass.js"
   },
   "devDependencies": {
     "@vscode/vsce": "^2.24.0",
