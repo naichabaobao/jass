@@ -971,7 +971,7 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
-type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|CExpr;
+type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|PriorityExpr;
 export class Expr {
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -1015,7 +1015,7 @@ export class UnaryExpr extends Expr {
 export class IndexExpr {
     expr: Zoom|null = null;
 }
-export class CExpr extends Expr {
+export class PriorityExpr extends Expr {
     expr: Zoom|null = null;
 }
 export class MenberReference {
@@ -1334,6 +1334,58 @@ function parse_line_function_expr(document: Document, tokens:Token[], offset_ind
     }
 }
 
+function parse_line_priority_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let expr:PriorityExpr|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            index++;
+
+            if (text == "(") {
+                if (expr == null) {
+                    expr = new PriorityExpr();
+                }
+
+                state = 1;
+            } else {
+                document.add_token_error(token, `the priority expression should start with '(', but what was actually found was '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == ")") {
+                index++;
+                document.add_token_error(token, `the expression cannot be empty`);
+                break;
+            } else {
+                const result = parse_line_expr(document, tokens, index);
+                // params!.expr = result.expr;
+                expr!.expr = result.expr;
+                index = result.index;
+                state = 2;
+            }
+        } else if (state == 2) {
+            index++;
+            if (text == ")") {
+            } else {
+                document.add_token_error(token, `priority expression not found ')' End token`);
+            }
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: expr
+    }
+}
 function parse_line_expr(document: Document, tokens:Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
@@ -1374,6 +1426,9 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
                 index = result.index;
             } else if (is_unary_op(token)) {
                 result = parse_line_unary_expr(document, tokens, index);
+                index = result.index;
+            } else if (text == "(") {
+                result = parse_line_priority_expr(document, tokens, index);
                 index = result.index;
             } else {
                 break;
@@ -2816,7 +2871,7 @@ if (true) {
     parse("a/b", `
         function a takes nothing returns nothing
          set aaa.bbb[5] = 3+3
-call a.c(4820, 0x255, $dfsha)
+call a.c((452 * ("" + ']]])))')), 0x255, $dfsha)
 a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
         endfunction 
         kkk
@@ -2826,7 +2881,7 @@ a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
     console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
-    console.log(c, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     // @ts-ignore
     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
