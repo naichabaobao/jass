@@ -4049,7 +4049,7 @@ globals
 	constant unitrealfield UNIT_RF_MAXIMUM_ROLL_ANGLE_DEGREES = ConvertUnitRealField('umxr')
 	// 单位实数域 美术 - 模型缩放 ('usca')
 	constant unitrealfield UNIT_RF_SCALING_VALUE = ConvertUnitRealField('usca')
-	// 单位实数域 动画 - 跑步速度 ('urun')
+	// 单位实数域 美术 - 动画 - 跑步速度 ('urun')
 	constant unitrealfield UNIT_RF_ANIMATION_RUN_SPEED = ConvertUnitRealField('urun')
 	// 单位实数域 美术 - 选择缩放 ('ussc')
 	constant unitrealfield UNIT_RF_SELECTION_SCALE = ConvertUnitRealField('ussc')
