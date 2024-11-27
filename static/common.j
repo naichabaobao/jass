@@ -4020,7 +4020,7 @@ globals
 	constant unitintegerfield UNIT_IF_HIT_POINTS_REGENERATION_TYPE = ConvertUnitIntegerField('uhrt')
 	// 单位整数域 路径 - 放置不允许(建筑物独占) ('upar')
 	constant unitintegerfield UNIT_IF_PLACEMENT_PREVENTED_BY = ConvertUnitIntegerField('upar')
-	// 单位整数域 状态 - 英雄 - 主属性 ('upra')
+	// 单位整数域 状态 - 英雄 - 主要属性 ('upra')
 	constant unitintegerfield UNIT_IF_PRIMARY_ATTRIBUTE = ConvertUnitIntegerField('upra')
 	
 	// 单位实数域 状态 - 英雄 - 每等级提升力量（成长值） ('ustp')
