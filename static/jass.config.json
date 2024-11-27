@@ -27243,168 +27243,6 @@
           "type": "物编-技能"
         },
         {
-          "code": 'ilev',
-          "name": 等级,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iuse',
-          "name": 使用次数,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'icid',
-          "name": CD间隔组,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ihtp',
-          "name": 最大生命值,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ihpc',
-          "name": 生命值,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ipri',
-          "name": 优先权,
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iarm',
-          "name": 装甲类型(本头/气态/石头/肉体/金属),
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iclr',
-          "name": 颜色值(红),
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iclg',
-          "name": 颜色值(绿),
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iclb',
-          "name": 颜色值(蓝),
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ical',
-          "name": 颜色值(alpha),
-          "descript": "",
-          "kind": 物品整数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'isca',
-          "name": 模型缩放,
-          "descript": "",
-          "kind": 物品实数域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'idrp',
-          "name": 持有者死亡时掉落,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'idro',
-          "name": 可以丢弃,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iper',
-          "name": 使用完会消失,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iprn',
-          "name": 可作为随机物品,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ipow',
-          "name": 拾取时自动使用,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ipaw',
-          "name": 可以出售给商店,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'iusa',
-          "name": 主动使用,
-          "descript": "",
-          "kind": 物品布尔值域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        {
-          "code": 'ifil',
-          "name": 使用模型,
-          "descript": "",
-          "kind": 物品字符串域,
-          "race": "特殊",
-          "type": "物编-物品"
-        },
-        
-        
-        {
           "code": 'udty',
           "name": 战斗 - 防御类型(普通/小型/中型/大型/城墙/英雄/神圣/无装甲),
           "descript": "",
@@ -29485,6 +29323,534 @@
           "race": "特殊",
           "type": "物编-单位"
         }
+        {
+          "code": 'ilev',
+          "name": 状态 - 等级,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iuse',
+          "name": 状态 - 使用次数,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'icid',
+          "name": 状态 - CD间隔组,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ihtp',
+          "name": 状态 - 最大生命值,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ihpc',
+          "name": 状态 - 生命值,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipri',
+          "name": 状态 - 优先权,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iarm',
+          "name": 战斗 - 装甲类型(本头/气态/石头/肉体/金属),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclr',
+          "name": 美术 - 颜色值(红),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclg',
+          "name": 美术 - 颜色值(绿),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iclb',
+          "name": 美术 - 颜色值(蓝),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ical',
+          "name": 美术 - 颜色值(alpha),
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isca',
+          "name": 美术 - 模型缩放,
+          "descript": "",
+          "kind": 物品实数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'idrp',
+          "name": 状态 - 持有者死亡时掉落,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'idro',
+          "name": 状态 - 可以丢弃,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iper',
+          "name": 状态 - 使用完会消失,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iprn',
+          "name": 状态 - 可作为随机物品,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipow',
+          "name": 状态 - 拾取时自动使用,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ipaw',
+          "name": 状态 - 可以出售给商店,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iusa',
+          "name": 状态 - 主动使用,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ifil',
+          "name": 美术 - 使用模型,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iabi',
+          "name": 技能 - 技能,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'utip',
+          "name": 文本 - 提示工具 - 基础,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'utub',
+          "name": 文本 - 提示工具 - 扩展,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'uhot',
+          "name": 文本 - 热键,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ides',
+          "name": 文本 - 说明,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isel',
+          "name": 状态 - 可以由商店出售,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iicd',
+          "name": 状态 - 无视CD间隔组,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ista',
+          "name": 状态 - 最大叠加数,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isto',
+          "name": 状态 - 最大库存数,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'imor',
+          "name": 状态 - 有效的物品转换目标,
+          "descript": "",
+          "kind": 物品布尔值域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ilum',
+          "name": 状态 - 木材消耗,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'icla',
+          "name": 状态 - 物品分类,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ilvo',
+          "name": 状态 - 等级（旧版）,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isst',
+          "name": 状态 - 购买开始时间,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'istr',
+          "name": 状态 - 购买时间间隔,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isit',
+          "name": 状态 - 跳过初始化CD,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'igol',
+          "name": 状态 - 黄金消耗,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ureq',
+          "name": 科技树 - 需求,
+          "descript": "",
+          "kind": 物品字符串数组域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'urqa',
+          "name": 科技树 - 需求值,
+          "descript": "",
+          "kind": 物品整数数组域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ubpx',
+          "name": 美术 - 按钮位置（X）,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ubpy',
+          "name": 美术 - 按钮位置（Y）,
+          "descript": "",
+          "kind": 物品整数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iico',
+          "name": 美术 - 界面图标,
+          "descript": "",
+          "kind": 物品字符串域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'issc',
+          "name": 美术 - 选择圈大小（编辑器）,
+          "descript": "",
+          "kind": 物品实数域,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+          {
+          "code": 'iabi',
+          "name": 技能 - 技能,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'utip',
+          "name": 文本 - 提示工具 - 基础,
+          "descript": "",
+          "kind": 物品字符串域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'utub',
+          "name": 文本 - 提示工具 - 扩展,
+          "descript": "",
+          "kind": 物品字符串域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'uhot',
+          "name": 文本 - 热键,
+          "descript": "",
+          "kind": 物品字符串域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ides',
+          "name": 文本 - 说明,
+          "descript": "",
+          "kind": 物品字符串域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isel',
+          "name": 状态 - 可以由商店出售,
+          "descript": "",
+          "kind": 物品布尔值域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iicd',
+          "name": 状态 - 无视CD间隔组,
+          "descript": "",
+          "kind": 物品布尔值域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ista',
+          "name": 状态 - 最大叠加数,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isto',
+          "name": 状态 - 最大库存数,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'imor',
+          "name": 状态 - 有效的物品转换目标,
+          "descript": "",
+          "kind": 物品布尔值域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ilum',
+          "name": 状态 - 木材消耗,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'icla',
+          "name": 状态 - 物品分类,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ilvo',
+          "name": 状态 - 等级（旧版）,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isst',
+          "name": 状态 - 购买开始时间,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'istr',
+          "name": 状态 - 购买时间间隔,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'isit',
+          "name": 状态 - 跳过初始化CD,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'igol',
+          "name": 状态 - 黄金消耗,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ureq',
+          "name": 科技树 - 需求,
+          "descript": "",
+          "kind": 物品字符串数组域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'urqa',
+          "name": 科技树 - 需求值,
+          "descript": "",
+          "kind": 物品整数数组域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ubpx',
+          "name": 美术 - 按钮位置（X）,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'ubpy',
+          "name": 美术 - 按钮位置（Y）,
+          "descript": "",
+          "kind": 物品整数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'iico',
+          "name": 美术 - 界面图标,
+          "descript": "",
+          "kind": 物品字符串域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
+        {
+          "code": 'issc',
+          "name": 美术 - 选择圈大小（编辑器）,
+          "descript": "",
+          "kind": 物品实数域，不能直接使用,
+          "race": "特殊",
+          "type": "物编-物品"
+        },
     ],
     "strings": [
         {
