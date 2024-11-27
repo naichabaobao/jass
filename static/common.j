@@ -4096,7 +4096,7 @@ globals
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
 	// 单位布尔值域 美术 - 不可见区域显示单位 ('ulos')
 	constant unitbooleanfield UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
-	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记 ('unbm')
+	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记（建筑物专属） ('unbm')
 	constant unitbooleanfield UNIT_BF_NEUTRAL_BUILDING_SHOWS_MINIMAP_ICON = ConvertUnitBooleanField('unbm')
 	// 单位布尔值域 状态 - 英雄 - 隐藏英雄栏图标 ('uhhb')
 	constant unitbooleanfield UNIT_BF_HERO_HIDE_HERO_INTERFACE_ICON = ConvertUnitBooleanField('uhhb')
