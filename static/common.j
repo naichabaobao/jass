@@ -3838,9 +3838,9 @@ globals
 	constant abilitystringlevelfield ABILITY_SLF_LIGHTNING_EFFECTS = ConvertAbilityStringLevelField('alig')
 	// 技能随等级改变的字符串域 美术 - 效果 - 投射物图像 ('amat')
 	constant abilitystringlevelfield ABILITY_SLF_MISSILE_ART = ConvertAbilityStringLevelField('amat')
-	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习          "name": "文本 - 提示工具 - 学习（英雄技能独占）", ('aret')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习（英雄技能独占） ('aret')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN = ConvertAbilityStringLevelField('aret')
-	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习 - 扩展          "name": "文本 - 提示工具 - 学习（英雄技能独占）", ('arut')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习 - 扩展（英雄技能独占） ('arut')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN_EXTENDED = ConvertAbilityStringLevelField('arut')
 	// 技能随等级改变的字符串域 文本 - 提示工具 - 普通 ('atp1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL = ConvertAbilityStringLevelField('atp1')
@@ -7720,28 +7720,36 @@ native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子数量
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
-// @param weaponIndex 武器引索，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
