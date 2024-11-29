@@ -2443,17 +2443,17 @@ globals
 	
 	// Ability
 	
-	// 技能整数域 技能按钮位置 X 坐标(常规状态) ('abpx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(激活) ('abpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
-	// 技能整数域 技能按钮位置 Y 坐标(常规状态) ('abpy')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(激活) ('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
-	// 技能整数域 技能按钮位置 X 坐标(激活状态) ('aubx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(关闭) ('aubx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_X = ConvertAbilityIntegerField('aubx')
-	// 技能整数域 技能按钮位置 Y 坐标(激活状态) ('auby')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(关闭) ('auby')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y = ConvertAbilityIntegerField('auby')
-	// 技能整数域 技能按钮位置 X 坐标(研究状态) ('arpx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(研究) ('arpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_X = ConvertAbilityIntegerField('arpx')
-	// 技能整数域 技能按钮位置 Y 坐标(研究状态) ('arpy')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(研究) ('arpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_Y = ConvertAbilityIntegerField('arpy')
 	// 技能整数域 技能弹道速度 ('amsp')
 	constant abilityintegerfield ABILITY_IF_MISSILE_SPEED = ConvertAbilityIntegerField('amsp')
@@ -2483,16 +2483,16 @@ globals
 	// 技能实数域 弹道曲率 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
-	// 技能字符串域 名称 ('anam')
+	// 技能字符串域 文本 - 名字 ('anam')
 	// （仅能获取）
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
-	// 技能字符串域 图标(关闭) ('auar')
+	// 技能字符串域 美术 - 图标 - 关闭 ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
-	// 技能字符串域 图标(研究) ('arar')
+	// 技能字符串域 美术 - 图标 - 研究('arar')
 	constant abilitystringfield ABILITY_SF_ICON_RESEARCH = ConvertAbilityStringField('arar')
-	// 技能字符串域 音效 ('aefs')
+	// 技能字符串域 声音 - 音效 ('aefs')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
-	// 技能字符串域 音效(循环) ('aefl')
+	// 技能字符串域 声音 - 音效(循环) ('aefl')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
 	
 	// 技能随等级改变的整数域 魔法消耗 ('amcs')
