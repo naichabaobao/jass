@@ -929,11 +929,13 @@ globals
 	// 玩家控制者类型 电脑
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
-	// 玩家控制者类型 中立可营救
+	// 玩家控制者类型 可营救
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
-	// 玩家控制者类型 中立被动
+	// 玩家控制者类型 中立
+	// 玩家13+/25+
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
 	// 玩家控制者类型 中立敌对
+	// 玩家13/25
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
 	// 玩家控制者类型 没有玩家
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
