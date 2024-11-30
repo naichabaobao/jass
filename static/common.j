@@ -6083,18 +6083,19 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
+// 常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
+// 使用不当可能引起玩家掉线
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 // 中立被动玩家是所有非中立玩家的盟友
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
-// 中立敌对玩家是所有非中立玩家的敌人
+// 中立敌对玩家和中立受害玩家是所有非中立玩家的敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
 // 查询指定玩家是否裁判或观战者 [R]
-// 裁判或观战者的状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
+// 裁判或观战者的游戏状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
 constant native IsPlayerObserver takes player whichPlayer returns boolean
 // 查询指定坐标在指定玩家视野中，是否可见
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
@@ -6109,7 +6110,8 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 获取玩家种族，返回值[RACE_NIGHTELF,RACE_HUMAN,RACE_ORC,RACE_UNDEAD]
+// 获取玩家种族
+// 返回值[RACE_NIGHTELF,RACE_HUMAN,RACE_ORC,RACE_UNDEAD]
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
@@ -6118,7 +6120,7 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // @param includeIncomplete 是否包含训练中/复活中的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
-// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts 文件找到训练中/建造中/复活中
+// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到训练中/建造中/复活中
 // @param includeIncomplete 是否包含训练中/复活中的单位
 // @param includeUpgrades 是否包含科技（可能是包含研究后变成的单位，如猎头）
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
