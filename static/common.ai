@@ -97,7 +97,7 @@ native GetAllianceTarget    takes nothing                               returns 
 // @param town 基地编号，-1为不限
 native SetProduce           takes integer qty, integer id, integer town returns boolean
 // 取消指定单位/建筑的训练/建造/升级
-// 因单词为反召唤，怀疑可用于卖建筑（亡灵）
+// 可用于卖建筑（亡灵）
 native Unsummon             takes unit unitid                           returns nothing
 // 建造扩张点/分基地
 // @param peon 指定工人单位
