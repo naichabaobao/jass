@@ -848,22 +848,27 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
 
 export class If {
     // 无用项
-    condition: null = null;
+    expr: Zoom|null = null;
 }
 export class Loop {}
 
 function parse_if(document: Document, line_text: ExpendLineText) {
     const ifs = new If();
+
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "if") {
                 state = 1;
             } else {
@@ -871,14 +876,31 @@ function parse_if(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            if (text == "then") {
-                state = 2;
-            } else {
+            const result = parse_line_expr(document, tokens, index);
+            ifs.expr = result.expr;
+            index = result.index;
 
+            state = 2;
+        } else if (state == 2) {
+            index++;
+            
+            if (text == "then") {
+                state = 3;
             }
-        } else {
+            else {
+                document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
+            }
+        } else if (state == 3) {
+            index++;
             document.add_token_error(token, `error token '${text}'`);
         }
+        console.log(state, "if");
+        console.log(text == "then",text, "text == ");
+        
+    }
+
+    if (state != 3) {
+        document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
     }
 
     return ifs;
@@ -1120,6 +1142,7 @@ export class Call {
     ref: VariableCall|null = null;
 }
 export class Ret {
+    expr: Zoom|null = null;
 }
 export class Native extends Func {
 }
@@ -1477,7 +1500,6 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
             // }
         }
     }
-
     return {
         index,
         expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
@@ -1724,7 +1746,7 @@ function parse_line_name_or_caller(document: Document, tokens:Token[], offset_in
             index = result.index;
             variable = result.expr;
             if (variable) {
-                if (next_token) {
+                if (next_token && next_token.getText() == "(") {
                     state = 1;
                 } else {
                     break;
@@ -1837,35 +1859,81 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
     const ret = new Ret();
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "return") {
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 1) {
+            const result = parse_line_expr(document, tokens, index);
+            ret.expr = result.expr;
+            index = result.index;
+
+            state = 2;
+        } else if (state == 2) { // =
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
 
     return ret;
 }
 export class ExitWhen {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
     const ret = new ExitWhen();
+    const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0;
+    
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index];
+        
+        if (state == 0) {
+            index++;
+            if (text == "exitwhen") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_expr(document, tokens, index);
+            ret.expr = result.expr;
+            index = result.index;
+            
+            state = 2;
+        } else if (state == 2) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+        console.log("buzouzheli?", text, state);
+    }
 
     return ret;
 }
 export class ElseIf {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
     const ret = new ElseIf();
@@ -1873,7 +1941,7 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
     return ret;
 }
 export class Else {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
     const ret = new Else();
@@ -2871,8 +2939,10 @@ if (true) {
     parse("a/b", `
         function a takes nothing returns nothing
          set aaa.bbb[5] = 3+3
-call a.c((452 * ("" + ']]])))')), 0x255, $dfsha)
-a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
+call a.c()
+call a()
+if 5== a then
+endif
         endfunction 
         kkk
         `)
@@ -2882,6 +2952,10 @@ a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
     console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    const d = (<Ret>Global.get("a/b")?.root_node?.children[0].children[0].data);
+    console.log(d);
+    
+    console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     // @ts-ignore
     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
