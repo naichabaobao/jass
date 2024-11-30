@@ -1512,7 +1512,7 @@ globals
  	constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
  	constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家单位事件 准备施放技能 (前摇开始)
+	// 玩家单位事件 准备施放技能(前摇开始)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
 	// 玩家单位事件 开始施放技能(前摇结束)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
