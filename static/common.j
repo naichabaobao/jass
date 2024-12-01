@@ -937,7 +937,7 @@ globals
 	// 玩家控制者类型 中立敌对
 	// 玩家13/25
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
-	// 玩家控制者类型 没有玩家
+	// 玩家控制者类型 没有玩家(玩家和电脑都没有)
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏（队伍）类型 对战
