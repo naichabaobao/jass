@@ -4499,10 +4499,10 @@ constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
 // 获取指定编号出生点 X 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationX takes integer whichStartLocation returns real
 // 获取指定编号出生点 Y 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定编号出生点，以点形式返回
 // 带入0~11/23会返回该编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
@@ -4548,7 +4548,7 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 // 获取指定玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
 // 获取指定玩家出生点编号
-// 带入0~11/23玩家编号会返回该玩家出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 返回0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
