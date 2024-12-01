@@ -894,8 +894,6 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-        console.log(state, "if");
-        console.log(text == "then",text, "text == ");
         
     }
 
@@ -993,7 +991,12 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
-type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|PriorityExpr;
+type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|PriorityExpr|FunctionExpr;
+
+export interface ExprTrict {
+    to_string():string;
+}
+
 export class Expr {
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -1002,8 +1005,11 @@ export class Expr {
         expr.op = F.op;
         return expr;
     }
+
+
 }
-export class Value {
+export class Value implements ExprTrict {
+
     public value:Token|null = null;
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -1012,16 +1018,36 @@ export class Value {
         expr.op = F.op;
         return expr;
     }
+
+    to_string(): string {
+        let expr = "unkown";
+        if (this.value) {
+            expr = this.value.getText();
+        }
+        return expr;
+    }
 }
 
-export class BinaryExpr extends Expr {
+export class BinaryExpr extends Expr implements ExprTrict {
     left: Zoom|null = null;
     right: Zoom|null = null;
     op: Token|null = null;
     
-
+    to_string(): string {
+        let expr = "unkown";
+        if (this.left) {
+            expr = this.left.to_string();
+        }
+        if (this.op) {
+            expr += ` ${this.op.getText()} `;
+        }
+        if (this.right) {
+            expr = this.right.to_string();
+        }
+        return expr;
+    }
 }
-export class UnaryExpr extends Expr {
+export class UnaryExpr extends Expr implements ExprTrict {
     op: Token|null = null;
     value: Zoom|null = null;
 
@@ -1033,12 +1059,36 @@ export class UnaryExpr extends Expr {
         return expr;
     }
 
+    to_string(): string {
+        let expr = "unkown";
+        if (this.op) {
+            expr = this.op.getText();
+        }
+        if (this.value) {
+            expr = this.value.to_string();
+        }
+        return expr;
+    }
 }
-export class IndexExpr {
+export class IndexExpr implements ExprTrict {
     expr: Zoom|null = null;
+
+    to_string(): string {
+        if (this.expr) {
+            return `[${this.expr.to_string()}]`;
+        }
+        return "[unkown]";
+    }
 }
-export class PriorityExpr extends Expr {
+export class PriorityExpr extends Expr implements ExprTrict {
     expr: Zoom|null = null;
+
+    to_string(): string {
+        if (this.expr) {
+            return `(${this.expr.to_string()})`;
+        }
+        return "unkown";
+    }
 }
 export class MenberReference {
     current: Token|null = null;
@@ -1063,7 +1113,7 @@ export class MenberReference {
     }
 }
 
-export class VariableName extends Expr {
+export class VariableName extends Expr implements ExprTrict {
     public names:Token[] = [];
 
     index_expr:IndexExpr|null = null;
@@ -1086,7 +1136,7 @@ export class VariableName extends Expr {
     public to_string() {
         let name = this.names.map(token => token.getText()).join(".");
         if (this.index_expr) {
-            name += "[]";
+            name += this.index_expr.to_string();
         }
         return name;
     }
@@ -1099,10 +1149,31 @@ export class VariableName extends Expr {
     
     
 }
-export class Params {
-    public args:(Zoom|null)[] = [];
+export class FunctionExpr implements ExprTrict {
+    name: VariableName|null = null;
+
+    public to_string() {
+        if (this.name) {
+            return `function ${this.name.to_string()}`;
+        }
+        return "function unkown";
+    }
 }
-export class VariableCall extends VariableName {
+export class Params implements ExprTrict {
+    public args:(Zoom|null)[] = [];
+
+    public to_string() {
+        let name = this.args.map(arg => {
+            if (arg) {
+                return arg.to_string();
+            } else {
+                return "(unkown)";
+            }
+        }).join(", ");
+        return `(${name})`;
+    }
+}
+export class VariableCall extends VariableName implements ExprTrict {
     public params:Params|null = null;
 
     // public to_string() {
@@ -1127,12 +1198,39 @@ export class VariableCall extends VariableName {
 
         return self;
     }
+
+    public to_string() {
+        let name = super.to_string();
+        if (this.params) {
+            name += this.params.to_string();
+        } else {
+            name += "()";
+        }
+        return name;
+    }
 }
 
 
 export class Set {
     name: VariableName|null = null;
     init: Zoom|null = null;
+
+    public to_string():string {
+        let name = "";
+        if (this.name) {
+            name += this.name.to_string();
+            // if (this.name.index_expr) {
+            //     if (this.name.index_expr) {
+            //         name += this.name.index_expr.to_string();
+            //     }
+            // }
+        }
+        let init = "unkown";
+        if (this.init) {
+            init = this.init.to_string();
+        }
+        return `set ${name} = ${init}`
+    }
 }
 export class Type {
     name:Token|null = null;
@@ -1269,7 +1367,7 @@ function parse_line_unary_expr(document: Document, tokens:Token[], offset_index:
 function parse_line_function_expr(document: Document, tokens:Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let zoom:Zoom|Expr_|null = null;
+    let zoom:FunctionExpr|null = new FunctionExpr;
     while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -1279,81 +1377,28 @@ function parse_line_function_expr(document: Document, tokens:Token[], offset_ind
         const text = token.getText();
         const next_token = tokens[index + 1];
         if (state == 0) {
-            let result!: {
-                index: number,
-                expr:Zoom|null,
-            };
-            if (token.is_identifier) {
-                if (text == "function") {
-
-                } else if (text == "not") {
-
-                } else {
-                    result = parse_line_name_or_caller(document, tokens, index);
-                    index = result.index;
-
-                }
-            } else if (token.is_value()) {
-                const value = new Value();
-                value.value = token;
-
-                result = {
-                    index: index + 1,
-                    expr: value,
-                };
-
-                index = result.index;
-            } else if (is_op(token)) {
-
-            }
-
-            if (zoom) {
-                if (zoom instanceof Expr_) {
-                    zoom = (<Expr_>zoom).to_expr(result.expr);
-                } else {
-                    document.add_token_error(token, `missing operator`);
-                    break;
-                }
-            } else {
-                zoom = result.expr;
-            }
-
-            if (next_token) {
+            index++;
+            if (text == "function") {
                 state = 1;
             } else {
+                document.add_token_error(token, `function references need to start with the 'function' keyword`);
                 break;
             }
         } else if (state == 1) {
-            index++;
-            if (is_op(token)) {
-                if (zoom) {
-                    if (zoom instanceof Expr_) {
-                        document.add_token_error(token, `operators cannot operate on operators`);
-                        break;
-                    } else {
-                        const expr = new Expr_();
-                        expr.expr = zoom;
-                        expr.op = token;
-
-                        zoom = expr;
-
-                        state = 0;
-                    }
-                    state = 0;
-                } else {
-                    document.add_token_error(token, `missing left value`);
-                    break;
-                }
+            const result = parse_line_name(document, tokens, index);
+            index = result.index;
+            if (result.expr) {
+                zoom.name = result.expr;
             } else {
-                document.add_token_error(token, `not jass support operator`);
-                break;
+                document.add_token_error(token, `no function reference found`);
             }
+            break;
         }
     }
 
     return {
         index,
-        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
+        expr: zoom
     }
 }
 
@@ -1468,7 +1513,7 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
                 zoom = result.expr;
             }
 
-            if (next_token && is_op(next_token)) {
+            if (tokens[index] && is_op(tokens[index])) {
                 state = 1;
             } else {
                 break;
@@ -1927,7 +1972,6 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-        console.log("buzouzheli?", text, state);
     }
 
     return ret;
@@ -2935,7 +2979,7 @@ export function parse(filePath: string, i_content?: string) {
     find_node_error(document);
 }
 
-if (true) {
+if (false) {
     parse("a/b", `
         function a takes nothing returns nothing
          set aaa.bbb[5] = 3+3
@@ -2951,6 +2995,7 @@ endif
     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
     console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
+    // @ts-ignore
     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     const d = (<Ret>Global.get("a/b")?.root_node?.children[0].children[0].data);
     console.log(d);

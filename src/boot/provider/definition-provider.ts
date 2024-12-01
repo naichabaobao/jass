@@ -4,13 +4,11 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { AllKeywords } from '../jass/keyword';
-import { Types } from './types';
-import { Func, GlobalObject, Library, Local, Member, Method, Node, Position, Program, Range, Rangebel, Take } from "../jass/ast";
-import data, { DataGetter, ObjectEditGlobals, parseContent } from "./data";
-import { Global, Native, Struct } from '../jass/ast';
+import {GlobalObject, Node, Position } from "../jass/ast";
+import { DataGetter, ObjectEditGlobals } from "./data";
 import { Options } from './options';
 import { compare, isAiFile, isJFile, isLuaFile, isZincFile } from '../tool';
-import { convertPosition, fieldFunctions } from './tool';
+import { convertPosition } from './tool';
 import { tokenize } from '../jass/tokens';
 // import { TextMacroDefine, } from '../jass/ast';
 
