@@ -1044,7 +1044,7 @@ export class BinaryExpr extends Expr implements ExprTrict {
         if (this.right) {
             expr = this.right.to_string();
         }
-        return expr;
+        return `${this.left?.to_string() ?? "unkown"} ${this.op?.getText() ?? "unkown"} ${this.right?.to_string() ?? "unkown"}`;
     }
 }
 export class UnaryExpr extends Expr implements ExprTrict {
@@ -1060,24 +1060,14 @@ export class UnaryExpr extends Expr implements ExprTrict {
     }
 
     to_string(): string {
-        let expr = "unkown";
-        if (this.op) {
-            expr = this.op.getText();
-        }
-        if (this.value) {
-            expr = this.value.to_string();
-        }
-        return expr;
+        return `${this.op?.getText() ?? "+"}${this.value?.to_string() ?? "unkown"}`;
     }
 }
 export class IndexExpr implements ExprTrict {
     expr: Zoom|null = null;
 
     to_string(): string {
-        if (this.expr) {
-            return `[${this.expr.to_string()}]`;
-        }
-        return "[unkown]";
+        return `[${this.expr?.to_string() ?? "unkown"}]`;
     }
 }
 export class PriorityExpr extends Expr implements ExprTrict {
@@ -1314,7 +1304,7 @@ class Expr_ {
 
 const is_op = (token:Token) => {
     const text = token.getText();
-    return text == "+" || text == "-" || text == "*" || text == "/" || text == "%" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=";
+    return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%";
 };
 const is_unary_op = (token:Token) => {
     const text = token.getText();
@@ -1791,7 +1781,7 @@ function parse_line_name_or_caller(document: Document, tokens:Token[], offset_in
             index = result.index;
             variable = result.expr;
             if (variable) {
-                if (next_token && next_token.getText() == "(") {
+                if (tokens[index] && tokens[index].getText() == "(") {
                     state = 1;
                 } else {
                     break;
@@ -1860,7 +1850,10 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             set.init = result.expr;
             index = result.index;
 
-            break;
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
 
@@ -2979,10 +2972,10 @@ export function parse(filePath: string, i_content?: string) {
     find_node_error(document);
 }
 
-if (false) {
+if (true) {
     parse("a/b", `
         function a takes nothing returns nothing
-         set aaa.bbb[5] = 3+3
+         set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
 call a.c()
 call a()
 if 5== a then
@@ -2993,7 +2986,7 @@ endif
     // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
     const document = Global.get("a/b");
     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`), s.to_string());
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
     // @ts-ignore
     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
