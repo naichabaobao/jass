@@ -466,14 +466,14 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                     name_token = body_line_data.name;
                     kind = vscode.SymbolKind.Class;
                 } else if (body_line_data instanceof Set) {
-                    if (body_line_data.ref) {
+                    if (body_line_data.name) {
                         // let name = "";
                         const range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
                         let selectRange = range;
-                        if (body_line_data.ref.names.length > 0) {
-                            selectRange.with(new vscode.Position(body_line_data.ref.names[0].start.line, body_line_data.ref.names[0].start.position), new vscode.Position(body_line_data.ref.names[body_line_data.ref.names.length - 1].end.line, body_line_data.ref.names[body_line_data.ref.names.length - 1].end.position));
+                        if (body_line_data.name.names.length > 0) {
+                            selectRange.with(new vscode.Position(body_line_data.name.names[0].start.line, body_line_data.name.names[0].start.position), new vscode.Position(body_line_data.name.names[body_line_data.name.names.length - 1].end.line, body_line_data.name.names[body_line_data.name.names.length - 1].end.position));
                         }
-                        const symbol = new vscode.DocumentSymbol(body_line_data.ref.to_string(), "set", vscode.SymbolKind.Variable, range, selectRange);
+                        const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), "set", vscode.SymbolKind.Variable, range, selectRange);
                         if (parent) {
                             parent.children.push(symbol)
                         } else {

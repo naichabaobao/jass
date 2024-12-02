@@ -848,22 +848,27 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
 
 export class If {
     // 无用项
-    condition: null = null;
+    expr: Zoom|null = null;
 }
 export class Loop {}
 
 function parse_if(document: Document, line_text: ExpendLineText) {
     const ifs = new If();
+
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "if") {
                 state = 1;
             } else {
@@ -871,14 +876,29 @@ function parse_if(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            if (text == "then") {
-                state = 2;
-            } else {
+            const result = parse_line_expr(document, tokens, index);
+            ifs.expr = result.expr;
+            index = result.index;
 
+            state = 2;
+        } else if (state == 2) {
+            index++;
+            
+            if (text == "then") {
+                state = 3;
             }
-        } else {
+            else {
+                document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
+            }
+        } else if (state == 3) {
+            index++;
             document.add_token_error(token, `error token '${text}'`);
         }
+        
+    }
+
+    if (state != 3) {
+        document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
     }
 
     return ifs;
@@ -971,7 +991,12 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
-type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|CExpr;
+type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|PriorityExpr|FunctionExpr;
+
+export interface ExprTrict {
+    to_string():string;
+}
+
 export class Expr {
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -980,8 +1005,11 @@ export class Expr {
         expr.op = F.op;
         return expr;
     }
+
+
 }
-export class Value {
+export class Value implements ExprTrict {
+
     public value:Token|null = null;
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -990,16 +1018,36 @@ export class Value {
         expr.op = F.op;
         return expr;
     }
+
+    to_string(): string {
+        let expr = "unkown";
+        if (this.value) {
+            expr = this.value.getText();
+        }
+        return expr;
+    }
 }
 
-export class BinaryExpr extends Expr {
+export class BinaryExpr extends Expr implements ExprTrict {
     left: Zoom|null = null;
     right: Zoom|null = null;
     op: Token|null = null;
     
-
+    to_string(): string {
+        let expr = "unkown";
+        if (this.left) {
+            expr = this.left.to_string();
+        }
+        if (this.op) {
+            expr += ` ${this.op.getText()} `;
+        }
+        if (this.right) {
+            expr = this.right.to_string();
+        }
+        return `${this.left?.to_string() ?? "unkown"} ${this.op?.getText() ?? "unkown"} ${this.right?.to_string() ?? "unkown"}`;
+    }
 }
-export class UnaryExpr extends Expr {
+export class UnaryExpr extends Expr implements ExprTrict {
     op: Token|null = null;
     value: Zoom|null = null;
 
@@ -1011,12 +1059,26 @@ export class UnaryExpr extends Expr {
         return expr;
     }
 
+    to_string(): string {
+        return `${this.op?.getText() ?? "+"}${this.value?.to_string() ?? "unkown"}`;
+    }
 }
-export class IndexExpr {
+export class IndexExpr implements ExprTrict {
     expr: Zoom|null = null;
+
+    to_string(): string {
+        return `[${this.expr?.to_string() ?? "unkown"}]`;
+    }
 }
-export class CExpr extends Expr {
+export class PriorityExpr extends Expr implements ExprTrict {
     expr: Zoom|null = null;
+
+    to_string(): string {
+        if (this.expr) {
+            return `(${this.expr.to_string()})`;
+        }
+        return "unkown";
+    }
 }
 export class MenberReference {
     current: Token|null = null;
@@ -1041,7 +1103,7 @@ export class MenberReference {
     }
 }
 
-export class VariableName extends Expr {
+export class VariableName extends Expr implements ExprTrict {
     public names:Token[] = [];
 
     index_expr:IndexExpr|null = null;
@@ -1064,7 +1126,7 @@ export class VariableName extends Expr {
     public to_string() {
         let name = this.names.map(token => token.getText()).join(".");
         if (this.index_expr) {
-            name += "[]";
+            name += this.index_expr.to_string();
         }
         return name;
     }
@@ -1077,10 +1139,31 @@ export class VariableName extends Expr {
     
     
 }
-export class Params {
-    public args:(Zoom|null)[] = [];
+export class FunctionExpr implements ExprTrict {
+    name: VariableName|null = null;
+
+    public to_string() {
+        if (this.name) {
+            return `function ${this.name.to_string()}`;
+        }
+        return "function unkown";
+    }
 }
-export class VariableCall extends VariableName {
+export class Params implements ExprTrict {
+    public args:(Zoom|null)[] = [];
+
+    public to_string() {
+        let name = this.args.map(arg => {
+            if (arg) {
+                return arg.to_string();
+            } else {
+                return "(unkown)";
+            }
+        }).join(", ");
+        return `(${name})`;
+    }
+}
+export class VariableCall extends VariableName implements ExprTrict {
     public params:Params|null = null;
 
     // public to_string() {
@@ -1105,12 +1188,39 @@ export class VariableCall extends VariableName {
 
         return self;
     }
+
+    public to_string() {
+        let name = super.to_string();
+        if (this.params) {
+            name += this.params.to_string();
+        } else {
+            name += "()";
+        }
+        return name;
+    }
 }
 
 
 export class Set {
     name: VariableName|null = null;
     init: Zoom|null = null;
+
+    public to_string():string {
+        let name = "";
+        if (this.name) {
+            name += this.name.to_string();
+            // if (this.name.index_expr) {
+            //     if (this.name.index_expr) {
+            //         name += this.name.index_expr.to_string();
+            //     }
+            // }
+        }
+        let init = "unkown";
+        if (this.init) {
+            init = this.init.to_string();
+        }
+        return `set ${name} = ${init}`
+    }
 }
 export class Type {
     name:Token|null = null;
@@ -1120,6 +1230,7 @@ export class Call {
     ref: VariableCall|null = null;
 }
 export class Ret {
+    expr: Zoom|null = null;
 }
 export class Native extends Func {
 }
@@ -1193,7 +1304,7 @@ class Expr_ {
 
 const is_op = (token:Token) => {
     const text = token.getText();
-    return text == "+" || text == "-" || text == "*" || text == "/" || text == "%" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=";
+    return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%";
 };
 const is_unary_op = (token:Token) => {
     const text = token.getText();
@@ -1246,7 +1357,7 @@ function parse_line_unary_expr(document: Document, tokens:Token[], offset_index:
 function parse_line_function_expr(document: Document, tokens:Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let zoom:Zoom|Expr_|null = null;
+    let zoom:FunctionExpr|null = new FunctionExpr;
     while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -1256,84 +1367,83 @@ function parse_line_function_expr(document: Document, tokens:Token[], offset_ind
         const text = token.getText();
         const next_token = tokens[index + 1];
         if (state == 0) {
-            let result!: {
-                index: number,
-                expr:Zoom|null,
-            };
-            if (token.is_identifier) {
-                if (text == "function") {
-
-                } else if (text == "not") {
-
-                } else {
-                    result = parse_line_name_or_caller(document, tokens, index);
-                    index = result.index;
-
-                }
-            } else if (token.is_value()) {
-                const value = new Value();
-                value.value = token;
-
-                result = {
-                    index: index + 1,
-                    expr: value,
-                };
-
-                index = result.index;
-            } else if (is_op(token)) {
-
-            }
-
-            if (zoom) {
-                if (zoom instanceof Expr_) {
-                    zoom = (<Expr_>zoom).to_expr(result.expr);
-                } else {
-                    document.add_token_error(token, `missing operator`);
-                    break;
-                }
-            } else {
-                zoom = result.expr;
-            }
-
-            if (next_token) {
+            index++;
+            if (text == "function") {
                 state = 1;
             } else {
+                document.add_token_error(token, `function references need to start with the 'function' keyword`);
                 break;
             }
         } else if (state == 1) {
-            index++;
-            if (is_op(token)) {
-                if (zoom) {
-                    if (zoom instanceof Expr_) {
-                        document.add_token_error(token, `operators cannot operate on operators`);
-                        break;
-                    } else {
-                        const expr = new Expr_();
-                        expr.expr = zoom;
-                        expr.op = token;
-
-                        zoom = expr;
-
-                        state = 0;
-                    }
-                    state = 0;
-                } else {
-                    document.add_token_error(token, `missing left value`);
-                    break;
-                }
+            const result = parse_line_name(document, tokens, index);
+            index = result.index;
+            if (result.expr) {
+                zoom.name = result.expr;
             } else {
-                document.add_token_error(token, `not jass support operator`);
-                break;
+                document.add_token_error(token, `no function reference found`);
             }
+            break;
         }
     }
 
     return {
         index,
-        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
+        expr: zoom
     }
 }
 
+function parse_line_priority_expr(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let expr:PriorityExpr|null = null;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index + 1];
+        if (state == 0) {
+            index++;
+
+            if (text == "(") {
+                if (expr == null) {
+                    expr = new PriorityExpr();
+                }
+
+                state = 1;
+            } else {
+                document.add_token_error(token, `the priority expression should start with '(', but what was actually found was '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == ")") {
+                index++;
+                document.add_token_error(token, `the expression cannot be empty`);
+                break;
+            } else {
+                const result = parse_line_expr(document, tokens, index);
+                // params!.expr = result.expr;
+                expr!.expr = result.expr;
+                index = result.index;
+                state = 2;
+            }
+        } else if (state == 2) {
+            index++;
+            if (text == ")") {
+            } else {
+                document.add_token_error(token, `priority expression not found ')' End token`);
+            }
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: expr
+    }
+}
 function parse_line_expr(document: Document, tokens:Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
@@ -1375,6 +1485,9 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
             } else if (is_unary_op(token)) {
                 result = parse_line_unary_expr(document, tokens, index);
                 index = result.index;
+            } else if (text == "(") {
+                result = parse_line_priority_expr(document, tokens, index);
+                index = result.index;
             } else {
                 break;
             }
@@ -1390,7 +1503,7 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
                 zoom = result.expr;
             }
 
-            if (next_token && is_op(next_token)) {
+            if (tokens[index] && is_op(tokens[index])) {
                 state = 1;
             } else {
                 break;
@@ -1422,7 +1535,6 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
             // }
         }
     }
-
     return {
         index,
         expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
@@ -1669,7 +1781,7 @@ function parse_line_name_or_caller(document: Document, tokens:Token[], offset_in
             index = result.index;
             variable = result.expr;
             if (variable) {
-                if (next_token) {
+                if (tokens[index] && tokens[index].getText() == "(") {
                     state = 1;
                 } else {
                     break;
@@ -1738,7 +1850,10 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             set.init = result.expr;
             index = result.index;
 
-            break;
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
 
@@ -1782,35 +1897,80 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
     const ret = new Ret();
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+        const next_token = tokens[index];
         
         if (state == 0) {
+            index++;
             if (text == "return") {
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 1) {
+            const result = parse_line_expr(document, tokens, index);
+            ret.expr = result.expr;
+            index = result.index;
+
+            state = 2;
+        } else if (state == 2) { // =
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
 
     return ret;
 }
 export class ExitWhen {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
     const ret = new ExitWhen();
+    const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0;
+    
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        const next_token = tokens[index];
+        
+        if (state == 0) {
+            index++;
+            if (text == "exitwhen") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_expr(document, tokens, index);
+            ret.expr = result.expr;
+            index = result.index;
+            
+            state = 2;
+        } else if (state == 2) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
 
     return ret;
 }
 export class ElseIf {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
     const ret = new ElseIf();
@@ -1818,7 +1978,7 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
     return ret;
 }
 export class Else {
-
+    expr:Zoom|null = null;
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
     const ret = new Else();
@@ -2815,18 +2975,25 @@ export function parse(filePath: string, i_content?: string) {
 if (true) {
     parse("a/b", `
         function a takes nothing returns nothing
-         set aaa.bbb[5] = 3+3
-call a.c(4820, 0x255, $dfsha)
-a.b[k(this.functi(8, "", '5555', aaa))](b(),4, 3+3,-/**/3)
+         set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
+call a.c()
+call a()
+if 5== a then
+endif
         endfunction 
         kkk
         `)
     // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
     const document = Global.get("a/b");
     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`), s.to_string());
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
-    console.log(c, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    // @ts-ignore
+    console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+    const d = (<Ret>Global.get("a/b")?.root_node?.children[0].children[0].data);
+    console.log(d);
+    
+    console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     // @ts-ignore
     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
