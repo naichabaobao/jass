@@ -77,13 +77,13 @@ globals
 
     // 物品栏格子上限，默认6
     constant integer bj_MAX_INVENTORY = 6
-    // 玩家上限（包含12/24位玩家和中立敌对玩家，共13/25位）
+    // 玩家数量上限（12/24，不含中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYERS = GetBJMaxPlayers()
-    // 中立受害玩家（玩家14/26）
+    // 中立受害玩家编号（14/26，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_VICTIM = GetBJPlayerNeutralVictim()
-    // 中立特殊玩家（玩家15/27）
+    // 中立特殊玩家编号（15/27，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
-    // 玩家槽上限（包含所有中立玩家，共16/28位）
+    // 玩家槽数量上限（共16/28位，包含所有中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
     // （召唤）骷髅战士（'uske'）数量上限，默认25
     constant integer bj_MAX_SKELETONS = 25
@@ -12295,21 +12295,30 @@ endfunction
 // Unit Weapon
 
 // 设置单位武器布尔值域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 function BlzSetUnitWeaponBooleanFieldBJ takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value)
 endfunction
 
 // 设置单位武器整数域
+// @param index 武器引索，似乎只有输入1才有效
+// @param value 攻击力值，不断叠加
+// 不支持攻击模式2
 function BlzSetUnitWeaponIntegerFieldBJ takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value)
 endfunction
 
 // 设置单位武器实数域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 function BlzSetUnitWeaponRealFieldBJ takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponRealField(whichUnit, whichField, index, value)
 endfunction
 
 // 设置单位武器字符串域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
