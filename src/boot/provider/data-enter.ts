@@ -5,6 +5,8 @@ import * as vscode from 'vscode';
 import { Options } from './options';
 import { Global, parse } from '../jass/parser-vjass';
 
+import {Subject, merge} from "../../extern/rxjs/index.js";
+import { bufferCount, bufferTime, concatAll, debounceTime, delay, distinct, distinctUntilChanged, switchMap } from '../../extern/rxjs/operators';
 
 export function jass_config_json_path() {
 	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
@@ -71,14 +73,36 @@ export function include_paths() {
 }
 
 
+const parse_map = new Map<string, Promise<void>>();
+class Payload {
+	public readonly key:string;
+	public readonly content:string;
 
+	constructor(key:string, content:string) {
+		this.key = key;
+		this.content = content;
+	}
+}
+
+// 保存着rxjs对象，每个文档都会独立创建
+const update_map = new Map<string, Subject>();
 vscode.workspace.onDidChangeTextDocument((event:vscode.TextDocumentChangeEvent) => {
 	// const document = event.document;
-	if (is_not_in_excludes(event.document.uri.fsPath)) {
-		parse(event.document.uri.fsPath, event.document.getText());
+	// if (is_not_in_excludes(event.document.uri.fsPath)) {
+	// 	if (parse_map.has(event.document.fileName)) {
+	// 		parse_map.get(event.document.fileName)?.
+	// 	}
+	// 	parse(event.document.uri.fsPath, event.document.getText());
 		
+	// }
+	if (!update_map.has(event.document.uri.fsPath)) {
+		const subject = new Subject();
+		subject.pipe(debounceTime(2000)).subscribe((data: Payload) => {
+			parse(data.key, data.content);
+		});
+		update_map.set(event.document.uri.fsPath, subject);
 	}
-	
+	update_map.get(event.document.uri.fsPath)?.next(new Payload(event.document.uri.fsPath, event.document.getText()));
 });
 
 vscode.workspace.onDidSaveTextDocument((document) => {
@@ -90,6 +114,9 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach(uri => {
 		Global.delete(uri.fsPath);
+
+		update_map.get(uri.fsPath)?.complete();
+		update_map.delete(uri.fsPath);
 	});
 });
 
@@ -97,6 +124,11 @@ vscode.workspace.onDidRenameFiles((event) => {
 	event.files.forEach((uri) => {
 		Global.delete(uri.oldUri.fsPath);
 		parse(uri.newUri.fsPath);
+
+		if (update_map.has(uri.oldUri.fsPath)) {
+			update_map.set(uri.newUri.fsPath, update_map.get(uri.oldUri.fsPath)!);
+			update_map.delete(uri.oldUri.fsPath);
+		}
 	});
 });
 

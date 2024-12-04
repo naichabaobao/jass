@@ -2972,7 +2972,7 @@ export function parse(filePath: string, i_content?: string) {
     find_node_error(document);
 }
 
-if (true) {
+if (false) {
     parse("a/b", `
         function a takes nothing returns nothing
          set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
