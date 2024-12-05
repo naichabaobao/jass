@@ -74,8 +74,6 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 
 const subject = new Subject();
 subject.subscribe((document:vscode.TextDocument) => {
-	console.log("执行错误查找");
-	
 	find_file_error_for_vjass(document);
 });
 
