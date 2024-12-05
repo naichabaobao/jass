@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.23",
+  "version": "1.8.25",
   "keywords": [
     "jass",
     "vjass",
@@ -143,6 +143,7 @@
     "test": "node ./out/test/runTest.js",
     "build": "vsce package --no-dependencies",
     "publish": "vsce publish --no-dependencies",
+    "prepublish": "vsce publish --pre-release --no-dependencies",
     "temp": "tsc && node ./out/boot/jass/tokens.js",
     "temp2": "tsc && node ./out/boot/jass/evaluator.js",
     "test:dev": "node ./out/boot/jass/parser-vjass.js"

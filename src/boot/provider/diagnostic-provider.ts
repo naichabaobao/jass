@@ -28,6 +28,7 @@ import { Options } from './options';
 import { Token, TokenType } from '../jass/tokenizer-common';
 import { isAiFile, isJFile } from '../tool';
 import { Global, Node } from '../jass/parser-vjass';
+import { AsyncSubject, Subject } from '../../extern/rxjs';
 
 const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
 const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: string) => {
@@ -41,80 +42,9 @@ const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: strin
 		}
 	}
 };
-const warning = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
-	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Warning);
-	diagnostics.push(diagnostic);
-};
-const hint = (diagnostics:vscode.Diagnostic[], token:Token, message: string) => {
-	const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Hint);
-	diagnostics.push(diagnostic);
-};
 
 
-const find_file_error_for_jass = (document: vscode.TextDocument) => {
-	console.time("find_file_error_for_jass");
-	if (!Options.isJassDiagnostic) {
-		diagnostic_collection_for_jass.clear();
-		return;
-	}
-	if (!Options.isOnlyJass) {
-		diagnostic_collection_for_jass.clear();
-		return;
-	}
-	const path_format = path.parse(document.uri.fsPath);
-	if (!(path_format.ext == ".j" || path_format.ext == ".jass" || path_format.dir == ".ai")) {
-		return;
-	}
 
-	const diagnostics:vscode.Diagnostic[] = [];
-
-	const tokens = Global.get(document.uri.fsPath)?.tokens;
-	tokens?.forEach(token => {
-		let temp:string;
-		const text = () => {
-			if (!temp) {
-				temp = token.getText();
-			}
-			return temp;
-		};
-		if (token.type == TokenType.Unkown) {
-			error(diagnostics, token, `lexical error,unkown token '${text().substring(0, 100)}'!`);
-		} else if (!token.is_complete) {
-			if (token.type == TokenType.String) {
-				error(diagnostics, token, `string need package in "...",error string '${text().substring(0, 100)}'!`);
-			} else if (token.type == TokenType.Mark) {
-				error(diagnostics, token, `integer identifier mark format is 'A' or 'AAAA',error integer identifier mark '${text().substring(0, 100)}'!`);
-			} else if (token.type == TokenType.Integer) {
-				error(diagnostics, token, `error integer expression '${text().substring(0, 100)}'!`);
-			} else {
-				error(diagnostics, token, `error expression '${text().substring(0, 100)}'!`);
-			}
-		} else if (token.type == TokenType.Identifier) {
-			if (text().startsWith("_")) {
-				warning(diagnostics, token, `identifier start with '_' is illegal in jass language, check your code '${text().substring(0, 100)}'!`);
-			} else if (/^\d/.test(text())) {
-				error(diagnostics, token, `illegal identifier '${text().substring(0, 100)}'!`);
-			}
-		} else if (token.type == TokenType.Real) {
-			if (text().startsWith(".") || text().endsWith(".")) {
-				hint(diagnostics, token, `you should complete the floating point number!`);
-			} else if (/(?:^0{2,}\.\d+)|(?:^\d+\.0{2,})/.test(text())) {
-				hint(diagnostics, token, `suggest omitting repetitive parts`);
-			}
-		} else if (token.type == TokenType.Integer) {
-			if (/^0{2,}/.test(text())) {
-				hint(diagnostics, token, `not conducive to performance`);
-			} else if (text().startsWith("0x") && text().length > 10) {
-				error(diagnostics, token, `out of range '${text()}'!`);
-			} else if (text().startsWith("$") && text().length > 9) {
-				error(diagnostics, token, `out of range '${text()}'!`);
-			}
-		}
-	});
-
-	diagnostic_collection_for_jass.set(document.uri, diagnostics);
-	console.timeEnd("find_file_error_for_jass");
-}
 const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 	console.time("find_file_error_for_vjass");
 	const path_format = path.parse(document.uri.path);
@@ -131,7 +61,6 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 	doc?.token_errors.forEach(err => {
 		error(diagnostics, err.token, err.message);
 	});
-	console.log(doc?.node_errors);
 	
 	doc?.node_errors.forEach(err => {
 		error(diagnostics, err.node, err.message);
@@ -143,11 +72,28 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 	console.timeEnd("find_file_error_for_vjass");
 }
 
-
-
-
-vscode.workspace.onDidSaveTextDocument((document) => {
+const subject = new Subject();
+subject.subscribe((document:vscode.TextDocument) => {
+	console.log("执行错误查找");
+	
 	find_file_error_for_vjass(document);
+});
+
+export function find_error(document:vscode.TextDocument) {
+	subject.next(document);
+}
+
+export function releace_diagnosticor() {
+	diagnostic_collection_for_jass.dispose();
+	subject.complete();
+}
+
+// vscode.workspace.onDidSaveTextDocument((document) => {
+// 	find_file_error_for_vjass(document);
+// });
+
+vscode.workspace.onDidOpenTextDocument((document) => {
+	find_error(document);
 });
 
 vscode.workspace.onDidDeleteFiles((event) => {

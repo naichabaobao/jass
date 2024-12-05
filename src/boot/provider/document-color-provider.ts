@@ -51,7 +51,6 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
         let lineText = document.lineAt(i).text
         
         if (DzColorReg.test(lineText)) {
-          console.log(lineText);
           
           const result = /(?:(?:DzGetColor)|(?:BlzConvertColor))\(\s*(?<a>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<r>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<g>[\dA-Fa-fxX\$'\.]+)\s*,\s*(?<b>[\dA-Fa-fxX\$'\.]+)\s*\)/g.exec(lineText);
           
@@ -62,7 +61,6 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
               const bStr = result.groups["b"];
     
               
-              console.log(result ,result.index, result.length, result.input);
               
               const aToken = tokenize(aStr);
               const rToken = tokenize(rStr);
@@ -73,7 +71,6 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
               if (!(aToken.length == 1 && rToken.length == 1 && gToken.length == 1 && bToken.length == 1)) { // 确保只有一个token
                 continue;
               }
-              console.log(aToken, rToken, gToken, bToken);
               const types = ["int", "hex", "mark", "dollar_hex", "octal"];
               if (types.includes(aToken[0].type) && types.includes(rToken[0].type) && types.includes(gToken[0].type) && types.includes(bToken[0].type)) {
     
@@ -85,9 +82,7 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
                 if (aValue == null || rValue == null || gValue == null || bValue == null) {
                   continue;
                 }
-                console.log(aValue, rValue, gValue, bValue);
                 const range = new vscode.Range(i, result.index, i, result.index + result[0].length);
-                console.log(range);
                 const colorInfo = new vscode.ColorInformation(range, new vscode.Color(rValue / 255, gValue / 255, bValue / 255, aValue / 255));
                 
                 

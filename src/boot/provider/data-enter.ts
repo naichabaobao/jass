@@ -5,8 +5,9 @@ import * as vscode from 'vscode';
 import { Options } from './options';
 import { Global, parse } from '../jass/parser-vjass';
 
-import {Subject, merge} from "../../extern/rxjs/index.js";
-import { bufferCount, bufferTime, concatAll, debounceTime, delay, distinct, distinctUntilChanged, switchMap } from '../../extern/rxjs/operators';
+import {Subject} from "../../extern/rxjs/index.js";
+import { debounceTime, } from '../../extern/rxjs/operators';
+import { find_error } from './diagnostic-provider';
 
 export function jass_config_json_path() {
 	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
@@ -73,7 +74,6 @@ export function include_paths() {
 }
 
 
-const parse_map = new Map<string, Promise<void>>();
 class Payload {
 	public readonly key:string;
 	public readonly content:string;
@@ -97,8 +97,10 @@ vscode.workspace.onDidChangeTextDocument((event:vscode.TextDocumentChangeEvent) 
 	// }
 	if (!update_map.has(event.document.uri.fsPath)) {
 		const subject = new Subject();
-		subject.pipe(debounceTime(2000)).subscribe((data: Payload) => {
+		const delay_time = event.document.lineCount <= 100 ? 100 : event.document.lineCount <= 1000 ? 300 : event.document.lineCount <= 6000 ? 1000 : 2000;
+		subject.pipe(debounceTime(delay_time)).subscribe((data: Payload) => {
 			parse(data.key, data.content);
+			find_error(event.document);
 		});
 		update_map.set(event.document.uri.fsPath, subject);
 	}

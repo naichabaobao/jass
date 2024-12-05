@@ -84,7 +84,6 @@ class HoverProvider implements vscode.HoverProvider {
     //   markdownString.appendText(getTypeDesc(type));
     //   return new vscode.Hover(markdownString);
     // }
-    console.info(key);
 
     const fsPath = document.uri.fsPath;
     // parseContent(fsPath, document.getText());
@@ -344,7 +343,6 @@ class MarkHoverProvider implements vscode.HoverProvider {
     //   markdownString.appendText(getTypeDesc(type));
     //   return new vscode.Hover(markdownString);
     // }
-    console.info(key);
 
     const fsPath = document.uri.fsPath;
     // parseContent(fsPath, document.getText());
@@ -429,7 +427,6 @@ class StringHoverProvider implements vscode.HoverProvider {
     //   markdownString.appendText(getTypeDesc(type));
     //   return new vscode.Hover(markdownString);
     // }
-    console.info("string hover:" + key);
 
     const fsPath = document.uri.fsPath;
     // parseContent(fsPath, document.getText());
