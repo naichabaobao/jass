@@ -847,7 +847,6 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
 }
 
 export class If {
-    // 无用项
     expr: Zoom|null = null;
 }
 export class Loop {}
@@ -973,6 +972,8 @@ export class GlobalVariable {
 
     type: Token|null = null;
     name: Token|null = null;
+
+    expr: Zoom|null = null;
 
     public is_array:boolean = false;
 
@@ -1238,52 +1239,105 @@ export class Native extends Func {
 export function parse_line_local(document: Document, line_text: ExpendLineText) {
     const local = new Local();
     const tokens = line_text.tokens();
+    let index = 0;
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let unary_expr:UnaryExpr|null = null;
+    while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
-        
         if (state == 0) {
+            index++;
+
             if (text == "local") {
-                state = 1;
+                if (tokens[index]) {
+                    if (tokens[index].is_identifier) {
+                        state = 1;
+                    } else {
+                        document.add_token_error(tokens[index], `error type`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `incomplete local expression`);
+                    break;
+                }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
         } else if (state == 1) {
-            if (token.is_identifier) {
-                local.type = token;
-                state = 2;
+            index++;
+            local.type = token;
+            
+            if (tokens[index]) {
+                if (tokens[index].is_identifier) {
+                    if (tokens[index].getText() == "array") {
+                        state = 3;
+                    } else {
+                        state = 2;
+                    }
+                } else {
+                    document.add_token_error(tokens[index], `wrong identifier name`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `local name not declared`);
                 break;
             }
         } else if (state == 2) {
-            if (text == "array") {
-                local.is_array = true;
-                state = 3;
-            } else if (token.is_identifier) {
-                local.name = token;
-                state = 4;
+            index++;
+            local.name = token;
+
+            if (tokens[index]) {
+                if (tokens[index].getText() == "=") {
+                    state = 4;
+                } else {
+                    document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
                 break;
             }
         } else if (state == 3) {
-            if (token.is_identifier) {
-                local.name = token;
-                state = 4;
+            index++;
+            local.is_array = true;
+            
+            if (tokens[index]) {
+                if (tokens[index].is_identifier) {
+                    state = 2;
+                } else {
+                    document.add_token_error(tokens[index], `wrong identifier name`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `local name not declared`);
                 break;
             }
+        } else if (state == 4) {
+            index++;
 
+            if (tokens[index]) {
+                state = 5;
+            } else {
+                console.log("fjaspfjpsfsp");
+                
+                document.add_token_error(token, `initialization expression not found`);
+                break;
+            }
+        } else if (state == 5) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            local.expr = result.expr;
+
+            state = 6;
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
-
     return local;
 }
 
