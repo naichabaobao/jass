@@ -451,7 +451,7 @@ constant native UnitId takes string unitIdString returns integer
 // 转换单位类型成单位类型字符串
 constant native UnitId2String takes integer unitId returns string
 
-// 转换技能ID字符串成技能ID   Not currently working correctly...
+// 转换技能ID字符串成技能ID，当前未能正确生效   Not currently working correctly...
 constant native AbilityId takes string abilityIdString returns integer
 // 转换技能ID成技能ID字符串
 constant native AbilityId2String takes integer abilityId returns string
@@ -468,13 +468,13 @@ constant native GetObjectName takes integer objectId returns string
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 // @version 1.29
 constant native GetBJMaxPlayers takes nothing returns integer
-// 获取中立受害玩家的玩家编号
+// 获取中立受害玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
 // 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
-// 获取中立特殊玩家的玩家编号
+// 获取中立特殊玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
 // 注：编号从0开始，即玩家1编号是0
@@ -485,13 +485,13 @@ constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 1.29及以上：28
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetBJMaxPlayerSlots takes nothing returns integer
-// 获取玩家中立被动玩家的玩家编号
+// 获取玩家中立被动玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
 // 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 constant native GetPlayerNeutralPassive takes nothing returns integer
-// 获取玩家中立敌对玩家的玩家编号
+// 获取玩家中立敌对玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
 // 注：编号从0开始，即玩家1编号是0
@@ -504,20 +504,20 @@ globals
 	// Game Constants
 	
 	
-	// 假 false
+	// 假(false)
 	constant boolean FALSE = false
-	// 真 true
+	// 真(true)
 	constant boolean TRUE = true
 	// 数组上限，默认值32768
 	// 1.28及以下版本默认值为8192
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
-	// 中立被动玩家，1.28及以下是玩家16，1.29及以上是玩家28
-	// 其他：中立敌对(玩家13/25)，中立受害(玩家14/26)，中立特殊(玩家15/27)
-	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
+	// 中立被动玩家编号(15/27，以1.29区分)
+	// 其他玩家编号：中立敌对(12/24)，中立受害(13/25)，中立特殊(14/26)
+	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是15
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
-	// 中立敌对玩家，1.28及以下是玩家13，1.29及以上是玩家25
-	// 其他：中立受害(玩家14/26)，中立特殊(玩家15/27)，中立被动(玩家16/28)
+	// 中立敌对玩家编号(12/24，以1.29区分)
+	// 其他玩家编号：中立受害(13/25)，中立特殊(14/26)，中立被动(15/27)
 	// 不随地图12/24人自动变化（以保存地图的编辑器版本为准），即在1.29或以上版本运行低版本编辑器制作的地图时，该值仍是12
 	// 在低版本编辑器打开1.29或以上版本编辑器保存的地图时(如能打开)，中立玩家的单位会全部消失，需手动在物体管理器重设所属玩家，否则在游戏中(如能运行)这些单位也会消失
 	constant integer PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
@@ -929,13 +929,15 @@ globals
 	// 玩家控制者类型 电脑
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_COMPUTER = ConvertMapControl(1)
-	// 玩家控制者类型 中立可营救
+	// 玩家控制者类型 可营救
 	constant mapcontrol MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
-	// 玩家控制者类型 中立被动
+	// 玩家控制者类型 中立
+	// 玩家13+/25+
 	constant mapcontrol MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
 	// 玩家控制者类型 中立敌对
+	// 玩家13/25
 	constant mapcontrol MAP_CONTROL_CREEP = ConvertMapControl(4)
-	// 玩家控制者类型 没有玩家
+	// 玩家控制者类型 没有玩家(玩家和电脑都没有)
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_NONE = ConvertMapControl(5)
 	// 游戏（队伍）类型 对战
@@ -1510,7 +1512,7 @@ globals
  	constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
  	constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家单位事件 准备施放技能 (前摇开始)
+	// 玩家单位事件 准备施放技能(前摇开始)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
 	// 玩家单位事件 开始施放技能(前摇结束)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
@@ -2443,56 +2445,56 @@ globals
 	
 	// Ability
 	
-	// 技能整数域 技能按钮位置 X 坐标(常规状态) ('abpx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(激活) ('abpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
-	// 技能整数域 技能按钮位置 Y 坐标(常规状态) ('abpy')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(激活) ('abpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
-	// 技能整数域 技能按钮位置 X 坐标(激活状态) ('aubx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(关闭) ('aubx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_X = ConvertAbilityIntegerField('aubx')
-	// 技能整数域 技能按钮位置 Y 坐标(激活状态) ('auby')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(关闭) ('auby')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y = ConvertAbilityIntegerField('auby')
-	// 技能整数域 技能按钮位置 X 坐标(研究状态) ('arpx')
+	// 技能整数域 美术 - （技能）按钮位置 X 坐标(研究/学习) （英雄技能独占）('arpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_X = ConvertAbilityIntegerField('arpx')
-	// 技能整数域 技能按钮位置 Y 坐标(研究状态) ('arpy')
+	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(研究/学习)（英雄技能独占） ('arpy')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_RESEARCH_Y = ConvertAbilityIntegerField('arpy')
-	// 技能整数域 技能弹道速度 ('amsp')
+	// 技能整数域 美术 - 效果 - 射弹速度 ('amsp')
 	constant abilityintegerfield ABILITY_IF_MISSILE_SPEED = ConvertAbilityIntegerField('amsp')
-	// 技能整数域 技能目标附加 ('atac')
+	// 技能整数域 美术 - 效果 - 目标 - 附加数量 ('atac')
 	constant abilityintegerfield ABILITY_IF_TARGET_ATTACHMENTS = ConvertAbilityIntegerField('atac')
-	// 技能整数域 技能施法单位附加 ('acac')
+	// 技能整数域 美术 - 效果 - 施法者 - 附加数量 ('acac')
 	constant abilityintegerfield ABILITY_IF_CASTER_ATTACHMENTS = ConvertAbilityIntegerField('acac')
-	// 技能整数域 技能优先权 ('apri')
+	// 技能整数域 状态 - 魔法盗取优先权 ('apri')
 	constant abilityintegerfield ABILITY_IF_PRIORITY = ConvertAbilityIntegerField('apri')
-	// 技能整数域 技能等级 ('alev')
+	// 技能整数域 状态 - 等级 ('alev')
 	constant abilityintegerfield ABILITY_IF_LEVELS = ConvertAbilityIntegerField('alev')
-	// 技能整数域 技能需求等级 ('arlv')
+	// 技能整数域 状态 - 等级要求 ('arlv')
 	constant abilityintegerfield ABILITY_IF_REQUIRED_LEVEL = ConvertAbilityIntegerField('arlv')
-	// 技能整数域 技能学习等级需求 ('alsk')
+	// 技能整数域 状态 - 跳级要求 ('alsk')
 	constant abilityintegerfield ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk')
 
-	// 技能布尔值域 技能状态-英雄技能 ('aher')
-        // （仅能获取）
+	// 技能布尔值域 状态 - 英雄技能 ('aher')
+	// （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_HERO_ABILITY = ConvertAbilityBooleanField('aher') // Get only
-	// 技能布尔值域 技能状态-物品技能 ('aite')
-        // （仅能获取）
+	// 技能布尔值域 状态 - 物品技能 ('aite')
+	// （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
-	// 技能布尔值域 技能状态-检查依赖 ('achd')
-        // （仅能获取）
+	// 技能布尔值域 科技树 - 检查等价所属 ('achd')
+	// （仅能获取）
 	constant abilitybooleanfield ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
 
-	// 技能实数域 弹道曲率 ('amac')
+	// 技能实数域 美术 - 效果 - 射弹弧度 ('amac')
 	constant abilityrealfield ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
 
-	// 技能字符串域 名称 ('anam')
-        // （仅能获取）
+	// 技能字符串域 文本 - 名字 ('anam')
+	// （仅能获取）
 	constant abilitystringfield ABILITY_SF_NAME = ConvertAbilityStringField('anam') // Get Only
-	// 技能字符串域 图标(关闭) ('auar')
+	// 技能字符串域 美术 - 图标 - 关闭 ('auar')
 	constant abilitystringfield ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
-	// 技能字符串域 图标(研究) ('arar')
+	// 技能字符串域 美术 - 图标 - 学习（英雄技能独占）('arar')
 	constant abilitystringfield ABILITY_SF_ICON_RESEARCH = ConvertAbilityStringField('arar')
-	// 技能字符串域 音效 ('aefs')
+	// 技能字符串域 声音 - 音效 ('aefs')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
-	// 技能字符串域 音效(循环) ('aefl')
+	// 技能字符串域 声音 - 音效(循环) ('aefl')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
 	
 	// 技能随等级改变的整数域 魔法消耗 ('amcs')
@@ -2653,7 +2655,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_BONUS_DICE = ConvertAbilityIntegerLevelField('Idic')
 	 // 技能随等级改变的整数域 目标防御降低 ('Iarp')
 	constant abilityintegerlevelfield ABILITY_ILF_ARMOR_PENALTY_IARP = ConvertAbilityIntegerLevelField('Iarp')
-	 // 技能随等级改变的整数域 允许攻击索引 ('Iob5')
+	 // 技能随等级改变的整数域 允许攻击引索 ('Iob5')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5 = ConvertAbilityIntegerLevelField('Iob5')
 	 // 技能随等级改变的整数域 等级提升 ('Ilev')
 	constant abilityintegerlevelfield ABILITY_ILF_LEVELS_GAINED = ConvertAbilityIntegerLevelField('Ilev')
@@ -2751,9 +2753,9 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_MINIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb3')
 	 // 技能随等级改变的整数域 最大法术数量 ('spb4')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_SPELLS = ConvertAbilityIntegerLevelField('spb4')
-	 // 技能随等级改变的整数域 禁止攻击索引 ('gra3')
+	 // 技能随等级改变的整数域 禁止攻击引索 ('gra3')
 	constant abilityintegerlevelfield ABILITY_ILF_DISABLED_ATTACK_INDEX = ConvertAbilityIntegerLevelField('gra3')
-	 // 技能随等级改变的整数域 允许攻击索引 ('gra4')
+	 // 技能随等级改变的整数域 允许攻击引索 ('gra4')
 	constant abilityintegerlevelfield ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4 = ConvertAbilityIntegerLevelField('gra4')
 	 // 技能随等级改变的整数域 最大攻击次数 ('gra5')
 	constant abilityintegerlevelfield ABILITY_ILF_MAXIMUM_ATTACKS = ConvertAbilityIntegerLevelField('gra5')
@@ -3822,33 +3824,33 @@ globals
 	// 技能随等级改变的布尔值域 附加杀敌奖励 ('Ntm4')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
 	
-	// 技能随等级改变的字符串域 图标 - 普通 ('aart')
+	// 技能随等级改变的字符串域 美术 - 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
-	// 技能随等级改变的字符串域 效果 - 施法者 ('acat')
+	// 技能随等级改变的字符串域 美术 - 效果 - 施法者 ('acat')
 	constant abilitystringlevelfield ABILITY_SLF_CASTER = ConvertAbilityStringLevelField('acat')
-	// 技能随等级改变的字符串域 效果 - 目标 ('atat')
+	// 技能随等级改变的字符串域 美术 - 效果 - 目标 ('atat')
 	constant abilitystringlevelfield ABILITY_SLF_TARGET = ConvertAbilityStringLevelField('atat')
-	// 技能随等级改变的字符串域 效果 - 特殊 ('asat')
+	// 技能随等级改变的字符串域 美术 - 效果 - 特殊 ('asat')
 	constant abilitystringlevelfield ABILITY_SLF_SPECIAL = ConvertAbilityStringLevelField('asat')
-	// 技能随等级改变的字符串域 效果 - 目标点 ('aeat')
+	// 技能随等级改变的字符串域 美术 - 效果 - 目标点 ('aeat')
 	constant abilitystringlevelfield ABILITY_SLF_EFFECT = ConvertAbilityStringLevelField('aeat')
-	// 技能随等级改变的字符串域 效果 - 区域 ('aaea')
+	// 技能随等级改变的字符串域 美术 - 效果 - 区域 ('aaea')
 	constant abilitystringlevelfield ABILITY_SLF_AREA_EFFECT = ConvertAbilityStringLevelField('aaea')
-	// 技能随等级改变的字符串域 效果 - 闪电效果 ('alig')
+	// 技能随等级改变的字符串域 美术 - 效果 - 闪电效果 ('alig')
 	constant abilitystringlevelfield ABILITY_SLF_LIGHTNING_EFFECTS = ConvertAbilityStringLevelField('alig')
-	// 技能随等级改变的字符串域 效果 - 投射物图像 ('amat')
+	// 技能随等级改变的字符串域 美术 - 效果 - 投射物图像 ('amat')
 	constant abilitystringlevelfield ABILITY_SLF_MISSILE_ART = ConvertAbilityStringLevelField('amat')
-	// 技能随等级改变的字符串域 提示工具 - 学习 ('aret')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习（英雄技能独占） ('aret')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN = ConvertAbilityStringLevelField('aret')
-	// 技能随等级改变的字符串域 提示工具 - 学习 - 扩展 ('arut')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 学习 - 扩展（英雄技能独占） ('arut')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_LEARN_EXTENDED = ConvertAbilityStringLevelField('arut')
-	// 技能随等级改变的字符串域 提示工具 - 普通 ('atp1')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 普通 ('atp1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL = ConvertAbilityStringLevelField('atp1')
-	// 技能随等级改变的字符串域 提示工具 - 关闭 ('aut1')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 关闭 ('aut1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF = ConvertAbilityStringLevelField('aut1')
-	// 技能随等级改变的字符串域 提示工具 - 普通 - 扩展 ('aub1')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 普通 - 扩展 ('aub1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED = ConvertAbilityStringLevelField('aub1')
-	// 技能随等级改变的字符串域 提示工具 - 关闭 - 扩展 ('auu1')
+	// 技能随等级改变的字符串域 文本 - 提示工具 - 关闭 - 扩展 ('auu1')
 	constant abilitystringlevelfield ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED = ConvertAbilityStringLevelField('auu1')
 	// 技能随等级改变的字符串域 普通形态单位 ('Eme1')
 	constant abilitystringlevelfield ABILITY_SLF_NORMAL_FORM_UNIT_EME1 = ConvertAbilityStringLevelField('Eme1')
@@ -3912,45 +3914,45 @@ globals
 	// Item
 	// Item
 	
-	// 物品整数域 等级 ('ilev')
+	// 物品整数域 状态 - 等级 ('ilev')
  constant itemintegerfield ITEM_IF_LEVEL = ConvertItemIntegerField('ilev')
-	// 物品整数域 使用次数 ('iuse')
+	// 物品整数域 状态 - 使用次数 ('iuse')
 	constant itemintegerfield ITEM_IF_NUMBER_OF_CHARGES = ConvertItemIntegerField('iuse')
-	// 物品整数域 CD间隔组 ('icid')
+	// 物品整数域 状态 - CD间隔组 ('icid')
 	constant itemintegerfield ITEM_IF_COOLDOWN_GROUP = ConvertItemIntegerField('icid')
-	// 物品整数域 最大生命值 ('ihtp')
+	// 物品整数域 状态 - 最大生命值 ('ihtp')
 	constant itemintegerfield ITEM_IF_MAX_HIT_POINTS = ConvertItemIntegerField('ihtp')
-	// 物品整数域 生命值 ('ihpc')
+	// 物品整数域 状态 - 生命值 ('ihpc')
 	constant itemintegerfield ITEM_IF_HIT_POINTS = ConvertItemIntegerField('ihpc')
-	// 物品整数域 优先权 ('ipri')
+	// 物品整数域 状态 - 优先权 ('ipri')
 	constant itemintegerfield ITEM_IF_PRIORITY = ConvertItemIntegerField('ipri')
-	// 物品整数域 装甲类型(本头/气态/石头/肉体/金属) ('iarm')
+	// 物品整数域 战斗 - 装甲类型(本头/气态/石头/肉体/金属) ('iarm')
 	constant itemintegerfield ITEM_IF_ARMOR_TYPE = ConvertItemIntegerField('iarm')
-	// 物品整数域 颜色值(红) ('iclr')
+	// 物品整数域 美术 - 颜色值(红) ('iclr')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_RED = ConvertItemIntegerField('iclr')
-	// 物品整数域 颜色值(绿) ('iclg')
+	// 物品整数域 美术 - 颜色值(绿) ('iclg')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_GREEN = ConvertItemIntegerField('iclg')
-	// 物品整数域 颜色值(蓝) ('iclb')
+	// 物品整数域 美术 - 颜色值(蓝) ('iclb')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
-	// 物品整数域 颜色值(alpha) ('ical')
+	// 物品整数域 美术 - 颜色值(alpha) ('ical')
 	constant itemintegerfield ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
-	// 物品实数域 模型缩放 ('isca')
+	// 物品实数域 美术 - 模型缩放 ('isca')
 	constant itemrealfield ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
-	// 物品布尔值域 持有者死亡时掉落 ('idrp')
+	// 物品布尔值域 状态 - 持有者死亡时掉落 ('idrp')
 	constant itembooleanfield ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
-	// 物品布尔值域 可以丢弃 ('idro')
+	// 物品布尔值域 状态 - 可以丢弃 ('idro')
 	constant itembooleanfield ITEM_BF_CAN_BE_DROPPED = ConvertItemBooleanField('idro')
-	// 物品布尔值域 使用完会消失 ('iper')
+	// 物品布尔值域 状态 - 使用完会消失 ('iper')
 	constant itembooleanfield ITEM_BF_PERISHABLE = ConvertItemBooleanField('iper')
-	// 物品布尔值域 可作为随机物品 ('iprn')
+	// 物品布尔值域 状态 - 可作为随机物品 ('iprn')
 	constant itembooleanfield ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
-	// 物品布尔值域 拾取时自动使用 ('ipow')
+	// 物品布尔值域 状态 - 拾取时自动使用 ('ipow')
 	constant itembooleanfield ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
-	// 物品布尔值域 可以出售给商店 ('ipaw')
+	// 物品布尔值域 状态 - 可以出售给商店 ('ipaw')
 	constant itembooleanfield ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
-	// 物品布尔值域 主动使用 ('iusa')
+	// 物品布尔值域 状态 - 主动使用 ('iusa')
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
-	// 物品字符串域 使用模型 ('ifil')
+	// 物品字符串域 美术 - 使用模型 ('ifil')
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
 	
 	// Unit
@@ -4018,9 +4020,9 @@ globals
 	constant unitintegerfield UNIT_IF_UNIT_CLASSIFICATION = ConvertUnitIntegerField('utyp')
 	// 单位整数域 状态 - 生命恢复类型 ('uhrt')
 	constant unitintegerfield UNIT_IF_HIT_POINTS_REGENERATION_TYPE = ConvertUnitIntegerField('uhrt')
-	// 单位整数域 路径 - 放置不允许(建筑物专属) ('upar')
+	// 单位整数域 路径 - 放置不允许(建筑物独占) ('upar')
 	constant unitintegerfield UNIT_IF_PLACEMENT_PREVENTED_BY = ConvertUnitIntegerField('upar')
-	// 单位整数域 状态 - 英雄 - 主属性 ('upra')
+	// 单位整数域 状态 - 英雄 - 主要属性 ('upra')
 	constant unitintegerfield UNIT_IF_PRIMARY_ATTRIBUTE = ConvertUnitIntegerField('upra')
 	
 	// 单位实数域 状态 - 英雄 - 每等级提升力量（成长值） ('ustp')
@@ -4041,7 +4043,7 @@ globals
 	constant unitrealfield UNIT_RF_TURN_RATE = ConvertUnitRealField('umvr')
 	// 单位实数域 美术 - 高度变化- 采样范围 ('uerd')
 	constant unitrealfield UNIT_RF_ELEVATION_SAMPLE_RADIUS = ConvertUnitRealField('uerd')
-	// 单位实数域 美术 - 迷雾- 采样范围 ('ufrd')
+	// 单位实数域 美术 - 战争迷雾- 采样范围 ('ufrd')
 	constant unitrealfield UNIT_RF_FOG_OF_WAR_SAMPLE_RADIUS = ConvertUnitRealField('ufrd')
 	// 单位实数域 美术 - X 轴最大旋转角度(度数) ('umxp')
 	constant unitrealfield UNIT_RF_MAXIMUM_PITCH_ANGLE_DEGREES = ConvertUnitRealField('umxp')
@@ -4049,7 +4051,7 @@ globals
 	constant unitrealfield UNIT_RF_MAXIMUM_ROLL_ANGLE_DEGREES = ConvertUnitRealField('umxr')
 	// 单位实数域 美术 - 模型缩放 ('usca')
 	constant unitrealfield UNIT_RF_SCALING_VALUE = ConvertUnitRealField('usca')
-	// 单位实数域 动画 - 跑步速度 ('urun')
+	// 单位实数域 美术 - 动画 - 跑步速度 ('urun')
 	constant unitrealfield UNIT_RF_ANIMATION_RUN_SPEED = ConvertUnitRealField('urun')
 	// 单位实数域 美术 - 选择缩放 ('ussc')
 	constant unitrealfield UNIT_RF_SELECTION_SCALE = ConvertUnitRealField('ussc')
@@ -4096,7 +4098,7 @@ globals
 	constant unitbooleanfield UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
 	// 单位布尔值域 美术 - 不可见区域显示单位 ('ulos')
 	constant unitbooleanfield UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
-	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记 ('unbm')
+	// 单位布尔值域 状态 - 中立建筑 - 显示小地图标记（建筑物独占） ('unbm')
 	constant unitbooleanfield UNIT_BF_NEUTRAL_BUILDING_SHOWS_MINIMAP_ICON = ConvertUnitBooleanField('unbm')
 	// 单位布尔值域 状态 - 英雄 - 隐藏英雄栏图标 ('uhhb')
 	constant unitbooleanfield UNIT_BF_HERO_HIDE_HERO_INTERFACE_ICON = ConvertUnitBooleanField('uhhb')
@@ -4157,9 +4159,9 @@ globals
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_DAMAGE_SPILL_DISTANCE = ConvertUnitWeaponRealField('usd1')
 	// 单位武器实数域 战斗 - 攻击1 - 穿透伤害范围 ('usr1')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_DAMAGE_SPILL_RADIUS = ConvertUnitWeaponRealField('usr1')
-	// 单位武器实数域 战斗 - 攻击1 - 弹道速率 ('ua1z')
+	// 单位武器实数域 战斗 - 攻击1 - 弹射速率 ('ua1z')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_PROJECTILE_SPEED = ConvertUnitWeaponRealField('ua1z')
-	// 单位武器实数域 战斗 - 攻击1 - 弹道弧度 ('uma1')
+	// 单位武器实数域 战斗 - 攻击1 - 弹射弧度 ('uma1')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_PROJECTILE_ARC = ConvertUnitWeaponRealField('uma1')
 	// 单位武器实数域 战斗 - 攻击1 - 全伤害范围 ('ua1f')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_FULL_DAMAGE = ConvertUnitWeaponRealField('ua1f')
@@ -4167,11 +4169,12 @@ globals
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_MEDIUM_DAMAGE = ConvertUnitWeaponRealField('ua1h')
 	// 单位武器实数域 战斗 - 攻击1 - 小伤害范围 ('ua1q')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_SMALL_DAMAGE = ConvertUnitWeaponRealField('ua1q')
-	// 单位武器实数域 战斗 - 攻击1 - 投射物图像 ('ua1r')
+	// 单位武器实数域 战斗 - 攻击1 - 攻击范围 ('ua1r')
 	constant unitweaponrealfield UNIT_WEAPON_RF_ATTACK_RANGE = ConvertUnitWeaponRealField('ua1r')
 	// 单位武器布尔值域 战斗 - 攻击1 - 显示UI ('uwu1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_SHOW_UI = ConvertUnitWeaponBooleanField('uwu1')
-	// 单位武器布尔值域 战斗 - 攻击1 - 允许攻击模式 ('uaen')
+	// 单位武器布尔值域 战斗 - 允许攻击模式 ('uaen')
+	// 此处有误，应该为整数域，支持输入0~3
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACKS_ENABLED = ConvertUnitWeaponBooleanField('uaen')
 	// 单位武器布尔值域 战斗 - 攻击1 - 射弹自导允许 ('umh1')
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
@@ -4496,10 +4499,10 @@ constant native GetResourceDensity takes nothing returns mapdensity
 // 获取单位密度
 constant native GetCreatureDensity takes nothing returns mapdensity
 // 获取指定编号出生点 X 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationX takes integer whichStartLocation returns real
 // 获取指定编号出生点 Y 坐标
-// 带入0~11/23即可返回指定编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 带入0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 constant native GetStartLocationY takes integer whichStartLocation returns real
 // 获取指定编号出生点，以点形式返回
 // 带入0~11/23会返回该编号的出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
@@ -4545,7 +4548,7 @@ native SetPlayerOnScoreScreen takes player whichPlayer, boolean flag returns not
 // 获取指定玩家所在队伍的编号
 native GetPlayerTeam takes player whichPlayer returns integer
 // 获取指定玩家出生点编号
-// 带入0~11/23玩家编号会返回该玩家出生点。在未固定出生点时，出生点编号和玩家不会按编号对应
+// 返回0~11/23。在未固定出生点时，出生点编号和玩家不会按编号对应
 native GetPlayerStartLocation takes player whichPlayer returns integer
 // 获取指定玩家颜色
 native GetPlayerColor takes player whichPlayer returns playercolor
@@ -4554,6 +4557,7 @@ native GetPlayerSelectable takes player whichPlayer returns boolean
 // 查询指定玩家控制者类型
 native GetPlayerController takes player whichPlayer returns mapcontrol
 // 查询指定玩家槽状态
+// 裁判的状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
 native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 // 获取指定玩家税率 [R]
 // @param sourcePlayer 纳税玩家
@@ -6079,17 +6083,19 @@ native SetUnitUserData takes unit whichUnit, integer data returns nothing
 // @param number 玩家编号，编号从0开始，即玩家1编号为0
 constant native Player takes integer number returns player
 // 获取本地玩家 [R]
-// 通常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
+// 常用于异步判断，同时返回多位玩家，包含AI玩家、裁判和观战者
+// 使用不当可能引起玩家掉线
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 // 中立被动玩家是所有非中立玩家的盟友
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
-// 中立敌对玩家是所有非中立玩家的敌人
+// 中立敌对玩家和中立受害玩家是所有非中立玩家的敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
 // 查询指定玩家是否裁判或观战者 [R]
+// 裁判或观战者的游戏状态为已离开游戏 PLAYER_SLOT_STATE_LEFT
 constant native IsPlayerObserver takes player whichPlayer returns boolean
 // 查询指定坐标在指定玩家视野中，是否可见
 constant native IsVisibleToPlayer takes real x, real y, player whichPlayer returns boolean
@@ -6104,7 +6110,8 @@ constant native IsMaskedToPlayer takes real x, real y, player whichPlayer return
 // 查询指定点在指定玩家视野中，是否被黑色阴影遮挡
 constant native IsLocationMaskedToPlayer takes location whichLocation, player whichPlayer returns boolean
 
-// 获取玩家种族，返回值[RACE_NIGHTELF,RACE_HUMAN,RACE_ORC,RACE_UNDEAD]
+// 获取玩家种族
+// 返回值[RACE_NIGHTELF,RACE_HUMAN,RACE_ORC,RACE_UNDEAD]
 constant native GetPlayerRace takes player whichPlayer returns race
 // 获取玩家编号 [R]
 // 编号从0开始，即玩家1编号为0
@@ -6113,7 +6120,7 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // @param includeIncomplete 是否包含训练中/复活中的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
-// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts 文件找到训练中/建造中/复活中
+// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到训练中/建造中/复活中
 // @param includeIncomplete 是否包含训练中/复活中的单位
 // @param includeUpgrades 是否包含科技（可能是包含研究后变成的单位，如猎头）
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
@@ -6171,7 +6178,7 @@ native SetPlayerAbilityAvailable takes player whichPlayer, integer abilid, boole
 
 // 设置玩家状态（指定数值）
 native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
-// 踢除玩家
+// 移除玩家（指定游戏结果）
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
 
 // 缓存玩家数据
@@ -6612,8 +6619,8 @@ native RemoveSavedHandle takes hashtable table, integer parentKey, integer child
 // <1.24> 清空指定哈希表 [C]
 // 清空整张表，清空后表变量不会变为null且需新建表
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表的指定主索引 [C]
-// 仅清空指定主索引，清空后无需新建表
+// <1.24> 清空指定哈希表的指定主引索 [C]
+// 仅清空指定主引索，清空后无需新建表
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
@@ -7422,9 +7429,9 @@ native GetLightningColorG takes lightning whichBolt returns real
 native GetLightningColorB takes lightning whichBolt returns real
 // 设置闪电特效颜色
 native SetLightningColor takes lightning whichBolt, real r, real g, real b, real a returns boolean
-// 获取技能特效路径(指定技能字符串和索引)
+// 获取技能特效路径(指定技能字符串和引索)
 native GetAbilityEffect takes string abilityString, effecttype t, integer index returns string
-// 获取技能特效路径(指定技能ID和索引)
+// 获取技能特效路径(指定技能ID和引索)
 native GetAbilityEffectById takes integer abilityId, effecttype t, integer index returns string
 // 获取技能音效路径(指定技能字符串和音效类型)
 native GetAbilitySound takes string abilityString, soundtype t returns string
@@ -7717,28 +7724,36 @@ native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子数量
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
-// @param weaponIndex 武器索引，输入0~1(攻击1或攻击2，理论上可以输入2来设置全部)
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
@@ -7898,13 +7913,13 @@ native BlzLoadTOCFile takes string TOCFile returns boolean
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
 // @param priority 层级(图层)
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
 // 创建简易Frame
 // @param name 可输入任意名称
 // @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
 // 创建Frame(指定框架类型)
@@ -7912,7 +7927,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // @param name 可输入任意名称
 // @param framehandle 可使用BlzGetOriginFrame获取原生UI，可输入任意框架
 // @param inherits 父类框架(模板)
-// @param createContext 索引，一般默认为0
+// @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
 // 销毁指定Frame
@@ -8071,7 +8086,7 @@ native BlzSetSpecialEffectMatrixScale takes effect whichEffect, real x, real y, 
 native BlzResetSpecialEffectMatrix takes effect whichEffect returns nothing
 // 获取单位技能(指定技能ID)
 native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
-// 获取单位技能(指定技能索引)
+// 获取单位技能(指定技能引索)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
 // 获取技能ID（指定技能）
 // @version 1.33
@@ -8084,6 +8099,7 @@ native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
 // 转换四字符码成字符串（未启用）
 // native BlzFourCC2S                                 takes integer value returns string
+
 // 转换字符串成四字符码（未启用）
 // native BlzS2FourCC                                 takes string value returns integer
 
@@ -8177,8 +8193,8 @@ native BlzRemoveAbilityStringLevelArrayField takes ability whichAbility, ability
 
 // Item 
 
-// 获取物品技能(指定索引)
-// @param index 索引，物品有多个技能时需按顺序指定索引
+// 获取物品技能(指定引索)
+// @param index 引索，物品有多个技能时需按顺序指定引索
 native BlzGetItemAbilityByIndex takes item whichItem, integer index returns ability
 // 获取物品技能
 native BlzGetItemAbility takes item whichItem, integer abilCode returns ability
@@ -8225,20 +8241,37 @@ native BlzSetUnitStringField takes unit whichUnit, unitstringfield whichField, s
 // Unit Weapon
 
 // 获取单位武器布尔值域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
 // 获取单位武器整数域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer
 // 获取单位武器实数域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real
 // 获取单位武器字符串域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string
 // 设置单位武器布尔值域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean
 // 设置单位武器整数域
+// @param index 武器引索，似乎只有输入1才有效
+// @param value 攻击力值，会叠加
+// 不支持攻击模式2
 native BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean
 // 设置单位武器实数域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean
 // 设置单位武器字符串域
+// @param index 武器引索，似乎只有输入1才有效
+// 不支持攻击模式2
 native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
 
 // Skin
@@ -8247,15 +8280,17 @@ native BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield w
 native BlzGetUnitSkin takes unit whichUnit returns integer
 // 获取物品皮肤ID
 native BlzGetItemSkin takes item whichItem returns integer
-// 获取可破坏物皮肤ID
+// 获取可破坏物皮肤ID(未启用)
 // native BlzGetDestructableSkin                         takes destructable whichDestructable returns integer
+
 // 设置单位皮肤
 // 对镜像及幻象无效
 native BlzSetUnitSkin takes unit whichUnit, integer skinId returns nothing
 // 设置物品皮肤
 native BlzSetItemSkin takes item whichItem, integer skinId returns nothing
-// 设置可破坏物皮肤
+// 设置可破坏物皮肤(未启用)
 // native BlzSetDestructableSkin                         takes destructable whichDestructable, integer skinId returns nothing
+
 // 创建物品(指定皮肤)(指定坐标)
 native BlzCreateItemWithSkin takes integer itemid, real x, real y, integer skinId returns item
 // 创建单位(指定皮肤)(指定坐标)

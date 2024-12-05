@@ -97,7 +97,7 @@ native GetAllianceTarget    takes nothing                               returns 
 // @param town 基地编号，-1为不限
 native SetProduce           takes integer qty, integer id, integer town returns boolean
 // 取消指定单位/建筑的训练/建造/升级
-// 因单词为反召唤，怀疑可用于卖建筑（亡灵）
+// 可用于卖建筑（亡灵）
 native Unsummon             takes unit unitid                           returns nothing
 // 建造扩张点/分基地
 // @param peon 指定工人单位
@@ -280,10 +280,10 @@ native CaptainVsUnits       takes player id                             returns 
 // 发布攻击组攻击命令（指定玩家）
 native CaptainVsPlayer      takes player id                             returns nothing
 // 发布攻击组回家命令（实际是发送移动/AI移动命令）
-// 家大概率是指出生点
+// SetCaptainHome 设置的点
 native CaptainGoHome        takes nothing                               returns nothing
 // 查询攻击组是否在家
-// 家大概率是指出生点
+// SetCaptainHome 设置的点
 native CaptainIsHome        takes nothing                               returns boolean
 // 查询攻击组是否满血
 native CaptainIsFull        takes nothing                               returns boolean
