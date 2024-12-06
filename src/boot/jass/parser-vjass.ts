@@ -1639,7 +1639,7 @@ function parse_line_call_params(document: Document, tokens:Token[], offset_index
             } else if (text == ",") {
                 state = 3;
             } else {
-                document.add_token_error(token, `',' or ')'`);
+                document.add_token_error(token, `needs ',' or ')'`);
             }
         } else if (state == 3) {
             const result = parse_line_expr(document, tokens, index);
@@ -1864,6 +1864,18 @@ function parse_line_name_or_caller(document: Document, tokens:Token[], offset_in
     };
 }
 
+function get_next_token(tokens:Token[], i: number):Token|null {
+    for (let index = i; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        } else {
+            return token;
+        }
+    }
+    return null;
+}
+
 export function parse_line_set(document: Document, line_text: ExpendLineText) {
     const set = new Set();
     const tokens = line_text.tokens();
@@ -1876,30 +1888,55 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        const next_token = tokens[index];
         
         if (state == 0) {
             index++;
             if (text == "set") {
                 state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.is_identifier) {
+                        state = 1;
+                    } else if (next_token.getText() == "=") {
+                        state = 2;
+                    } else {
+                        state = 4;
+                    }
+                } else {
+                    document.add_token_error(token, `incomplete set expression`);
+                    break;
+                }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
-        } else if (state == 1) {
+        } else if (state == 1) { // name
             const result = parse_line_name(document, tokens, index);
             set.name = result.expr;
             index = result.index;
-            if (tokens[index] && tokens[index].getText() == "=") {
-                state = 2;
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "=") {
+                    state = 2;
+                } else {
+                    document.add_token_error(token, `assignment symbol '=' not found`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `Assignment symbol '=' not found`);
+                document.add_token_error(token, `assignment symbol '=' not found`);
                 break;
             }
         } else if (state == 2) { // =
             index++;
-            state = 3;
-        } else if (state == 3) {
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 3;
+            } else {
+                document.add_token_error(token, `not assigned a value to the set syntax`);
+                break;
+            }
+        } else if (state == 3) { // expr
             const result = parse_line_expr(document, tokens, index);
             set.init = result.expr;
             index = result.index;
