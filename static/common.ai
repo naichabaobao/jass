@@ -1825,7 +1825,7 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// 简单难度AI默认不执行
+// 简单难度AI默认只升一级
 function SetBuildUpgr takes integer qty, integer unitid returns nothing
     if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
         call SetBuildAll(BUILD_UPGRADE,qty,unitid,-1)
@@ -1932,7 +1932,7 @@ endfunction
 //============================================================================
 
 // 获取指定单位类型的数量，默认用于等价单位，如城镇/变形单位这一类升级/变形后还当同一种单位统计的单位类型
-// 例如，统计一本城镇时，会统计一、二、三城镇的数量，统计熊德时，会统计熊德（人形）和熊德（熊形）的数量
+// 统计一本城镇时，会统计一、二、三城镇的数量，统计熊德时，会统计熊德（人形）和熊德（熊形）的数量
 // @param only_done 是否包含建造/训练中的单位
 // @param townid 基地编号，-1为不限
 function TownCountEx takes integer unitid, boolean only_done, integer townid returns integer
@@ -1998,7 +1998,8 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
+// 默认用于统计城镇类型的单位（基地）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
