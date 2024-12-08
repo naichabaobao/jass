@@ -4769,9 +4769,9 @@ native CreateRegion takes nothing returns region
 // 删除不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
-// 在指定不规则区域添加矩形区域  [R]
+// 在指定不规则区域添加矩形区域 [R]
 native RegionAddRect takes region whichRegion, rect r returns nothing
-// 移除指定不规则区域的矩形区域  [R]
+// 移除指定不规则区域的矩形区域 [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
 // 在指定不规则区域指定坐标添加单元格 [R]
