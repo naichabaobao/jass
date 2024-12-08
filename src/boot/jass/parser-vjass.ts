@@ -992,7 +992,7 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
-type Zoom = BinaryExpr|UnaryExpr|Value|VariableCall|VariableName|PriorityExpr|FunctionExpr;
+type Zoom = BinaryExpr|UnaryExpr|Value|VariableName|PriorityExpr|FunctionExpr;
 
 export interface ExprTrict {
     to_string():string;
@@ -1103,41 +1103,143 @@ export class MenberReference {
         return name;
     }
 }
-
-export class VariableName extends Expr implements ExprTrict {
-    public names:Token[] = [];
-
-    index_expr:IndexExpr|null = null;
-
-    // public to_string() {
-    //     let name = "";
-    //     if (this.current) {
-    //         name += this.current.getText();
-    //         if (this.child) {
-    //             name += ".";
-    //             name += this.child.to_string();
-    //         }
-    //     }
-    //     if (this.index_expr) {
-    //         name += `[]`;
-    //     }
-    //     return name;
-    // }
+export class Id  implements ExprTrict {
+    public expr:Token|null = null;
 
     public to_string() {
-        let name = this.names.map(token => token.getText()).join(".");
-        if (this.index_expr) {
-            name += this.index_expr.to_string();
+        if (this.expr) {
+            return this.expr.getText();
+        } else {
+            return "unkown";
         }
-        return name;
     }
 
-    
-    public get is_index_expr() : boolean {
-        return this.index_expr != null;
+    public to<T extends Params|IndexExpr|null>(v:T) {
+        if (v instanceof Params) {
+            const caller = new Caller();
+            caller.name = this;
+            caller.params = v;
+            return caller;
+        } else if (v instanceof IndexExpr){
+            const expr = new IdIndex();
+            expr.name = this;
+            expr.index_expr = v;
+            return expr;
+        } else {
+            return this as Id;
+        }
+    }
+}
+export class Caller implements ExprTrict {
+    public name: Id|null = null;
+    public params:Params|null = null;
+
+    public to_string():string {
+        if (this.name) {
+            if (this.params) {
+                return `${this.name.to_string()}${this.params.to_string()}`;
+            } else {
+                return `${this.name.to_string()}'('missing')'`;
+            }
+        } else {
+            return "unkown";
+        }
     }
 
-    
+}
+export class IdIndex implements ExprTrict{
+    public name: Id|null = null;
+    public index_expr:IndexExpr|null = null;
+
+    public to_string() {
+        if (this.name) {
+            if (this.index_expr) {
+                return `${this.name.to_string()}${this.index_expr.to_string()}`;
+            } else {
+                return `${this.name.to_string()}'['missing']'`;
+            }
+        } else {
+            return "unkown";
+        }
+    }
+}
+export class VariableName extends Expr implements ExprTrict {
+    public names:(Id|Caller|IdIndex|null)[] = [];
+
+
+
+    public to_string() {
+        if (this.names.length > 0) {
+            return this.names.map(name => name ? name.to_string() : " ").join(".");
+        } else {
+            return "unkown";
+        }
+    }
+
+    public get_start_line_number():number {
+        if (this.names.length > 0) {
+            const ref = this.names[0];
+            if (ref instanceof Id) {
+                return ref.expr?.start.line ?? 0;
+            } else if (ref instanceof Caller) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else if (ref instanceof IdIndex) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    public get_end_line_number():number {
+        if (this.names.length > 0) {
+            const ref = this.names[this.names.length - 1];
+            if (ref instanceof Id) {
+                return ref.expr?.start.line ?? 0;
+            } else if (ref instanceof Caller) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else if (ref instanceof IdIndex) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    public get_start_line_position():number {
+        if (this.names.length > 0) {
+            const ref = this.names[0];
+            if (ref instanceof Id) {
+                return ref.expr?.start.position ?? 0;
+            } else if (ref instanceof Caller) {
+                return ref.name?.expr?.start.position ?? 0;
+            } else if (ref instanceof IdIndex) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    public get_end_line_position():number {
+        if (this.names.length > 0) {
+            const ref = this.names[this.names.length - 1];
+            if (ref instanceof Id) {
+                return ref.expr?.start.position ?? 0;
+            } else if (ref instanceof Caller) {
+                return ref.name?.expr?.start.position ?? 0;
+            } else if (ref instanceof IdIndex) {
+                return ref.name?.expr?.start.line ?? 0;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
     
 }
 export class FunctionExpr implements ExprTrict {
@@ -1164,42 +1266,42 @@ export class Params implements ExprTrict {
         return `(${name})`;
     }
 }
-export class VariableCall extends VariableName implements ExprTrict {
-    public params:Params|null = null;
+// export class VariableCall extends VariableName implements ExprTrict {
+//     public params:Params|null = null;
 
-    // public to_string() {
-    //     let name = "";
-    //     if (this.current) {
-    //         name += this.current.getText();
-    //         if (this.child) {
-    //             name += ".";
-    //             name += this.child.to_string();
-    //         }
-    //     }
-    //     if (this.index_expr) {
-    //         name += `[]`;
-    //     }
-    //     return name;
-    // }
+//     // public to_string() {
+//     //     let name = "";
+//     //     if (this.current) {
+//     //         name += this.current.getText();
+//     //         if (this.child) {
+//     //             name += ".";
+//     //             name += this.child.to_string();
+//     //         }
+//     //     }
+//     //     if (this.index_expr) {
+//     //         name += `[]`;
+//     //     }
+//     //     return name;
+//     // }
 
-    public static from(var_name:VariableName) {
-        const self = new VariableCall();
-        self.names = [...var_name.names];
-        self.index_expr = var_name.index_expr;
+//     public static from(var_name:VariableName) {
+//         const self = new VariableCall();
+//         self.names = [...var_name.names];
+//         self.index_expr = var_name.index_expr;
 
-        return self;
-    }
+//         return self;
+//     }
 
-    public to_string() {
-        let name = super.to_string();
-        if (this.params) {
-            name += this.params.to_string();
-        } else {
-            name += "()";
-        }
-        return name;
-    }
-}
+//     public to_string() {
+//         let name = super.to_string() as string;
+//         if (this.params) {
+//             name += this.params.to_string();
+//         } else {
+//             name += "()";
+//         }
+//         return name;
+//     }
+// }
 
 
 export class Set {
@@ -1228,7 +1330,7 @@ export class Type {
     extends:Token|null = null;
 }
 export class Call {
-    ref: VariableCall|null = null;
+    ref: VariableName|null = null;
 }
 export class Ret {
     expr: Zoom|null = null;
@@ -1429,7 +1531,7 @@ function parse_line_function_expr(document: Document, tokens:Token[], offset_ind
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_name(document, tokens, index);
+            const result = parse_line_name_reference(document, tokens, index);
             index = result.index;
             if (result.expr) {
                 zoom.name = result.expr;
@@ -1523,7 +1625,7 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
                     result = parse_line_unary_expr(document, tokens, index);
                     index = result.index;
                 } else {
-                    result = parse_line_name_or_caller(document, tokens, index);
+                    result = parse_line_name_reference(document, tokens, index);
                     index = result.index;
                 }
             } else if (token.is_value()) {
@@ -1717,72 +1819,154 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
     }
 }
 
-function parse_line_caller(document: Document, tokens:Token[], offset_index: number) {
-    let index = offset_index;
-    let state = 0;
-    let variable:VariableCall|null = null;
-    while(index < tokens.length) {
-        const token = tokens[index];
-        if (token.is_block_comment || token.is_comment) {
-            index++;
-            continue;
-        }
-        if (state == 0) {
-            const result = parse_line_name(document, tokens, index);
+// function parse_line_caller(document: Document, tokens:Token[], offset_index: number) {
+//     let index = offset_index;
+//     let state = 0;
+//     let variable:VariableCall|null = null;
+//     while(index < tokens.length) {
+//         const token = tokens[index];
+//         if (token.is_block_comment || token.is_comment) {
+//             index++;
+//             continue;
+//         }
+//         if (state == 0) {
+//             const result = parse_line_name(document, tokens, index);
 
-            index = result.index;
-            if (result.expr) {
-                variable = VariableCall.from(result.expr);
-                state = 1;
-            } else {
-                document.add_token_error(token, `error function name`);
-                break;
-            }
-        } else if (state == 1) {
-            const result = parse_line_call_params(document, tokens, index);
-            index = result.index;
-            if (result.expr) {
-                variable!.params = result.expr;
-            } else {
-                document.add_token_error(token, `error function params list`);
-            }
-            break;
-        }
-    }
+//             index = result.index;
+//             if (result.expr) {
+//                 variable = VariableCall.from(result.expr);
+//                 state = 1;
+//             } else {
+//                 document.add_token_error(token, `error function name`);
+//                 break;
+//             }
+//         } else if (state == 1) {
+//             const result = parse_line_call_params(document, tokens, index);
+//             index = result.index;
+//             if (result.expr) {
+//                 variable!.params = result.expr;
+//             } else {
+//                 document.add_token_error(token, `error function params list`);
+//             }
+//             break;
+//         }
+//     }
 
-    return {
-        index,
-        expr: variable
-    }
-}
-function parse_line_name(document: Document, tokens:Token[], offset_index: number) {
-    let index = offset_index;
-    let state = 0;
-    let variable:VariableName|null = null;
+//     return {
+//         index,
+//         expr: variable
+//     }
+// }
+// function parse_line_name(document: Document, tokens:Token[], offset_index: number) {
+//     let index = offset_index;
+//     let state = 0;
+//     let variable:VariableName|null = null;
     
+//     while(index < tokens.length) {
+//         const token = tokens[index];
+//         if (token.is_block_comment || token.is_comment) {
+//             index++;
+//             continue;
+//         }
+//         const text = token.getText();
+//         const next_token = tokens[index + 1];
+//         if (state == 0) {
+//             index++;
+            
+//             if (variable == null) {
+//                 variable = new VariableName();
+//             }
+            
+//             const result = parse_line_name_reference(document, tokens, index);
+//             index = result.index;
+//             if (result.expr) {
+//                 if (result.expr instanceof VariableCall) {
+//                     variable.names.push(result.expr);
+//                 } else {
+//                     variable.names.push(...result.expr.names);
+//                 }
+                
+//                 const next_token = get_next_token(tokens, index);
+//                 if (next_token) {
+//                     if (next_token.getText() == ".") {
+//                         state = 1;
+//                     } else if (next_token.getText() == "[") {
+//                         state = 2;
+//                     } else {
+//                         break;
+//                     }
+//                 } else {
+//                     break;
+//                 }
+//             } else {
+//                 document.add_token_error(token, `error member name '${text}'`);
+//                 break; 
+//             }
+
+
+
+//             // if (next_token) {
+//             //     if (next_token.getText() == ".") {
+//             //         state = 1;
+//             //     } else if (next_token.getText() == "[") {
+//             //         state = 2;
+//             //     } else {
+//             //         break;
+//             //     }
+//             // } else {
+//             //     break;
+//             // }
+//             // if (token.is_identifier) {
+//             // } else {
+//             //     document.add_token_error(token, `error member name '${text}'`);
+//             //     break; 
+//             // }
+//         } else if (state == 1) {
+//             index++;
+
+//             if (next_token && next_token.is_identifier) {
+//                 state = 0;
+//             } else {
+//                 document.add_token_error(token, `incorrect member name reference '${text}'`);
+//                 break;
+//             }
+//         } else if (state == 2) {
+//             const result = parse_line_index_expr(document, tokens, index);
+//             variable!.index_expr = result.expr;
+//             index = result.index;
+
+//             break;
+//         }
+//     }
+
+//     return {
+//         index,
+//         expr: variable
+//     };
+// }
+function parse_line_id(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let variable:Id|Caller|IdIndex|null = null;
     while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
             continue;
         }
-        const text = token.getText();
-        const next_token = tokens[index + 1];
         if (state == 0) {
             index++;
-
             if (token.is_identifier) {
-                if (variable == null) {
-                    variable = new VariableName();
-                }
-
-                variable.names.push(token);
-
-
+                variable = new Id();
+                variable.expr = token;
+                
+                const next_token = get_next_token(tokens, index);
                 if (next_token) {
-                    if (next_token.getText() == ".") {
+                    const next_token_text = next_token.getText();
+
+                    if (next_token_text == "(") {
                         state = 1;
-                    } else if (next_token.getText() == "[") {
+                    } else if (next_token_text == "[") {
                         state = 2;
                     } else {
                         break;
@@ -1791,70 +1975,76 @@ function parse_line_name(document: Document, tokens:Token[], offset_index: numbe
                     break;
                 }
             } else {
-                document.add_token_error(token, `error member name '${text}'`);
-                break; 
-            }
-        } else if (state == 1) {
-            index++;
-
-            if (next_token && next_token.is_identifier) {
-                state = 0;
-            } else {
-                document.add_token_error(token, `incorrect member name reference '${text}'`);
-                break;
-            }
-        } else if (state == 2) {
-            const result = parse_line_index_expr(document, tokens, index);
-            variable!.index_expr = result.expr;
-            index = result.index;
-
-            break;
-        }
-    }
-
-    return {
-        index,
-        expr: variable
-    };
-}
-function parse_line_name_or_caller(document: Document, tokens:Token[], offset_index: number) {
-    let index = offset_index;
-    let state = 0;
-    let variable:VariableCall|VariableName|null = null;
-    while(index < tokens.length) {
-        const token = tokens[index];
-        if (token.is_block_comment || token.is_comment) {
-            index++;
-            continue;
-        }
-        const text = token.getText();
-        const next_token = tokens[index + 1];
-        if (state == 0) {
-            const result = parse_line_name(document, tokens, index);
-
-            index = result.index;
-            variable = result.expr;
-            if (variable) {
-                if (tokens[index] && tokens[index].getText() == "(") {
-                    state = 1;
-                } else {
-                    break;
-                }
-            } else {
-                document.add_token_error(token, `error name`);
+                document.add_token_error(token, `error identifier '${token.getText()}'`);
                 break;
             }
         } else if (state == 1) {
             const result = parse_line_call_params(document, tokens, index);
             index = result.index;
-            variable = VariableCall.from(<VariableName>variable);
-            (<VariableCall>variable).params = result.expr;
+            variable = (<Id>variable).to(result.expr);
             // 如果方法没有参数列表,一般不用，因为程序解析不到相应符号会添加相应的错误提示
             // if (result.expr) {
             // } else {
             //     document.add_token_error(token, `error args`);
             // }
             break;
+        } else if (state == 2) {
+            const result = parse_line_index_expr(document, tokens, index);
+            index = result.index;
+            variable = (<Id>variable).to(result.expr);
+            break;
+        }
+    }
+
+    return {
+        index,
+        expr: variable
+    };
+}
+function parse_line_name_reference(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let variable:VariableName = new VariableName();
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        if (state == 0) {
+            const result = parse_line_id(document, tokens, index);
+
+            index = result.index;
+            variable.names.push(result.expr);
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+
+                if (next_token_text == ".") {
+                    state = 1;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+
+        } else if (state == 1) { // '.'操作符
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.is_identifier) {
+                    state = 0;
+                } else {
+                    document.add_token_error(token, `no sub identifier reference found`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `error identifier '${token.getText()}'`);
+                break;
+            }
         }
     }
 
@@ -1864,6 +2054,7 @@ function parse_line_name_or_caller(document: Document, tokens:Token[], offset_in
     };
 }
 
+// 跳过注释向前获取下一个token
 function get_next_token(tokens:Token[], i: number):Token|null {
     for (let index = i; index < tokens.length; index++) {
         const token = tokens[index];
@@ -1911,7 +2102,7 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) { // name
-            const result = parse_line_name(document, tokens, index);
+            const result = parse_line_name_reference(document, tokens, index);
             set.name = result.expr;
             index = result.index;
             const next_token = get_next_token(tokens, index);
@@ -1974,7 +2165,7 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_caller(document, tokens, index);
+            const result = parse_line_name_reference(document, tokens, index);
             call.ref = result.expr;
             index = result.index;
             
