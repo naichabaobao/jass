@@ -8033,7 +8033,7 @@ native BlzFrameGetChildrenCount takes framehandle frame returns integer
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
-// frame/框架(UI)事件
+// 注册frame/框架(UI)事件
 native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
 // 获取frame/框架(UI)触发事件
 native BlzGetTriggerFrame takes nothing returns framehandle
@@ -8049,10 +8049,10 @@ native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whic
 // 支持AI脚本向触发器同步
 native BlzSendSyncData takes string prefix, string data returns boolean
 // 获取同步的前缀
-// 支持AI脚本向触发器同步
+// 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
-// 支持AI脚本向触发器同步
+// 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
@@ -8072,9 +8072,9 @@ native BlzGetLocalClientWidth takes nothing returns integer
 native BlzGetLocalClientHeight takes nothing returns integer
 // 获取本地客户端是否激活
 native BlzIsLocalClientActive takes nothing returns boolean
-// 获取鼠标锁定的单位
+// 获取鼠标聚焦的单位
 native BlzGetMouseFocusUnit takes nothing returns unit
-// 设置小地图图标
+// 设置小地图图标贴图
 native BlzChangeMinimapTerrainTex takes string texFile returns boolean
 // 获取(游戏当前使用的本地化)语言
 native BlzGetLocale takes nothing returns string
