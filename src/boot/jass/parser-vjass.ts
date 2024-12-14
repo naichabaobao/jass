@@ -433,384 +433,392 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
 
 
 export class Take {
-    public type: string|null = null;
-    public name: string|null = null;
+    public type: Token|null = null;
+    public name: Token|null = null;
 }
 export class Method {
-    public visible:"public"|"private"|null = null;
-    public modifier:"static"|"stub"|null = null;
-    public qualifier:"constant"|null = null;
+    public visible:Token|null = null;
+    public modifier:Token|null = null;
+    public qualifier:Token|null = null;
     public name: Token | null = null;
     public takes: Take[]|null = null;
-    public returns: string|null = null;
+    public returns: Token|null = null;
     public defaults: string|null = null;
 
     public to_string():string {
-        const visible_string = this.visible ? this.visible + " " : "";
-        const modifier_string = this.modifier ? this.modifier + " " : "";
-        const qualifier_string = this.qualifier ? this.qualifier + " " : "";
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
         const name_string = this.name ? this.name + " " : "";
         const takes_string = this.takes ? (this.takes.length == 0 ? this.takes.map(take => `${take.type ? take.type : ""} ${take.name ? take.name : ""}`).join(",") : "nothing") : "nothing ";
         return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns${name_string}`;
     }
-}
-function parse_method(document: Document, line_text: ExpendLineText) {
-    const method = new Method();
-    const tokens = line_text.tokens();
-    let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
-        const token = tokens[index];
-        if (token.is_block_comment || token.is_comment) {
-            continue;
-        }
-        const text = token.getText();
-        if (state == 0) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "private") {
-                method.visible = "private";
-                state = 2;
-            } else if (text == "public") {
-                method.visible = "public";
-                state = 2;
-            } else if (text == "static") {
-                method.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                method.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 1) {
-            if (token.is_identifier) {
-                method.name = token;
-                state = 5;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 2) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "static") {
-                method.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                method.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 4) {
-            if (text == "method") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 5) {
-            if (text == "takes") {
-                state = 6;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 6) {
-            if (text == "nothing") {
-                method.takes = null;
-                state = 11;
-            } else if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!method.takes) {
-                    method.takes = [];
+
+    with<T extends Modifier|Takes|Returns>(v:T) {
+        if (v instanceof Modifier) {
+            this.visible = v.visible;
+            this.modifier = v.modifier;
+            this.qualifier = v.qualifier;
+        } else if (v instanceof Takes) {
+            if (v.takes.length > 0) {
+                if (this.takes == null) {
+                    this.takes = [];
                 }
-                method.takes.push(take);
-                state = 7;
+                this.takes.push(...v.takes);
             } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
+                this.takes = null;
             }
-        } else if (state == 7) {
-            if (token.is_identifier) {
-                const takes = method.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 8) {
-            if (text == "returns") {
-                state = 12;
-            } else if (text == ",") {
-                state = 9;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 9) {
-            if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!method.takes) {
-                    method.takes = [];
-                }
-                method.takes.push(take);
-                state = 10;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 10) {
-            if (token.is_identifier) {
-                const takes = method.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 11) {
-            if (text == "returns") {
-                state = 12;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 12) {
-            if (token.is_identifier) {
-                method.returns = text;
-                state = 13;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 13) {
-            if (text == "defaults") {
-                state = 14;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 14) {
-            if (token.is_identifier) {
-                method.defaults = text;
-                state = 15;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
+        } else if (v instanceof Returns) {
+            this.returns = v.expr;
         }
     }
-
-    return method;
+}
+function parse_method(document: Document, line_text: ExpendLineText) {
+    return parse_function(document, line_text, "method") as Method;
 }
 
 export class Func extends Method {
 }
 
-function parse_function(document: Document, line_text: ExpendLineText) {
-    const func = new Func();
-    const tokens = line_text.tokens();
+/**       
+ * 解析参数类型与标识符
+ *         |-------|
+ * [takes] type name
+ * @param document 
+ * @param tokens 
+ * @param offset_index 
+ * @returns 
+ */
+function parse_line_function_takes_statement(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let take:Take = new Take();
+    while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+            if (token.is_identifier) {
+                take.type = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "returns") {
+                        document.add_token_error(token, `undeclared parameter identifier`);
+                        break;
+                    } else if (next_token_text == ",") {
+                        document.add_token_error(token, `undeclared parameter identifier`);
+                        break;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `parameter declaration not found`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `incorrect parameter type declaration '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            
+            if (token.is_identifier) {
+                take.name = token;
+            } else {
+                document.add_token_error(token, `wrong parameter identifier '${text}'`);
+            }
+            break;
+        }
+    }
+    return {
+        index,
+        expr: take
+    }
+}
+
+class Takes {
+    takes:Take[] = [];
+}
+function parse_line_function_takes(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let takes:Takes = new Takes();
+    // 匹配第一个'nothing'关键字
+    let is_first = true;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+            if (text == "takes") {
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == "returns") {
+                        document.add_token_error(token, `non parametric declaration requires the use of the keyword 'nothing'`);
+                        break;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `parameter declaration not found`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `parameter declaration requires' takes'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (is_first && text == "nothing") {
+                index++;
+                break
+            } else {
+                const result = parse_line_function_takes_statement(document, tokens, index);
+                index = result.index;
+                takes.takes.push(result.expr);
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "returns") {
+                        break;
+                    } else if (next_token_text == ",") {
+                        state = 2;
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (is_first) {
+                is_first = false;
+            }
+        } else if (state == 2) { // ','
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "returns") {
+                    break;
+                } else if (next_token_text == ",") {
+                    document.add_token_error(token, `empty parameter declaration`);
+                    state = 2;
+                } else {
+                    state = 1;
+                }
+            } else {
+                document.add_token_error(token, `incomplete take parameter declaration`);
+                break;
+            }
+        }
+    }
+    return {
+        index,
+        expr: takes
+    }
+}
+class Modifier {
+    // [public, private]
+    public visible:Token|null = null;
+    // [static, stub]
+    public modifier:Token|null = null;
+    // [constant]
+    public qualifier:Token|null = null;
+}
+function parse_line_modifier(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let modifier:Modifier = new Modifier();
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            if (text == "private" || text == "public") {
+                index++;
+                modifier.visible = token;
+            } else if (text == "static" || text == "stub") {
+                index++;
+                modifier.modifier = token;
+            } else if (text == "constant") {
+                index++;
+                modifier.qualifier = token;
+            } else {
+                break;
+            }
+        }
+    }
+    return {
+        index,
+        expr: modifier
+    }
+}
+class Returns {
+    expr:Token|null = null;
+}
+function parse_line_returns(document: Document, tokens:Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let returns:Returns = new Returns();
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+
+            if (text == "returns") {
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `no declaration return type displayed`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'returns'`);
+                break; 
+            }
+        } else if (state == 1) {
+            index++;
+            returns.expr = token;
+
+            if (!token.is_identifier) {
+                document.add_token_error(token, `wrong return type`);
+            }
+
+            break;
+        }
+    }
+    return {
+        index,
+        expr: returns
+    }
+}
+
+
+function parse_function(document: Document, line_text: ExpendLineText, type: "function"|"method"|"native" = "function") {
+    const func:Func|Method|Native = type == "function" ? new Func() : type == "method" ? new Method : new Native();
+    const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0;
+    const keyword = type;
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
         
         if (state == 0) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "private") {
-                func.visible = "private";
-                state = 2;
-            } else if (text == "public") {
-                func.visible = "public";
-                state = 2;
-            } else if (text == "static") {
-                func.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                func.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                func.qualifier = "constant";
-                state = 4;
+            const result = parse_line_modifier(document, tokens, index);
+            index = result.index;
+            func.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == keyword) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `error ${keyword}`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing keyword ${keyword}`);
                 break;
             }
         } else if (state == 1) {
-            if (token.is_identifier) {
-                func.name = token;
-                state = 5;
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "takes") {
+                    document.add_token_error(token, `missing ${keyword} name`);
+                    state = 3;
+                } else if (next_token.is_identifier) {
+                    state = 2;
+                } else {
+                    document.add_token_error(next_token, `wrong ${keyword} name '${next_token_text}'`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing ${keyword} name`);
                 break;
             }
         } else if (state == 2) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "static") {
-                func.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                func.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                func.qualifier = "constant";
-                state = 4;
+            index++;
+            func.name = token;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "takes") {
+                    state = 3;
+                } else if (next_token_text == "returns") {
+                    document.add_token_error(next_token, `missing keyword 'returns'`);
+                    state = 4;
+                } else if (next_token_text == "defaults") {
+                    document.add_token_error(next_token, `missing keyword 'defaults'`);
+                    state = 5;
+                } else {
+                    document.add_token_error(next_token, `missing keyword 'takes'`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing keyword 'takes'`);
                 break;
             }
         } else if (state == 3) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "constant") {
-                func.qualifier = "constant";
-                state = 4;
+            const result = parse_line_function_takes(document, tokens, index);
+            index = result.index;
+            func.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "returns") {
+                    state = 4;
+                } else if (next_token_text == "defaults") {
+                    document.add_token_error(next_token, `missing keyword 'defaults'`);
+                    state = 5;
+                } else {
+                    document.add_token_error(next_token, `missing keyword 'returns'`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing keyword 'returns'`);
                 break;
             }
         } else if (state == 4) {
-            if (text == "function") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
+            const result = parse_line_returns(document, tokens, index);
+            index = result.index;
+            func.with(result.expr);
+            
+            state = 5;
         } else if (state == 5) {
-            if (text == "takes") {
-                state = 6;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 6) {
-            if (text == "nothing") {
-                func.takes = null;
-                state = 11;
-            } else if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!func.takes) {
-                    func.takes = [];
-                }
-                func.takes.push(take);
-                state = 7;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 7) {
-            if (token.is_identifier) {
-                const takes = func.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 8) {
-            if (text == "returns") {
-                state = 12;
-            } else if (text == ",") {
-                state = 9;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 9) {
-            if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!func.takes) {
-                    func.takes = [];
-                }
-                func.takes.push(take);
-                state = 10;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 10) {
-            if (token.is_identifier) {
-                const takes = func.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 11) {
-            if (text == "returns") {
-                state = 12;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 12) {
-            if (token.is_identifier) {
-                func.returns = text;
-                state = 13;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 13) {
-            if (text == "defaults") {
-                state = 14;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 14) {
-            if (token.is_identifier) {
-                func.defaults = text;
-                state = 15;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else {
+            index++;
             document.add_token_error(token, `error token '${text}'`);
         }
     }
@@ -972,6 +980,7 @@ export class GlobalVariable {
 
     type: Token|null = null;
     name: Token|null = null;
+    array_token: Token|null = null;
 
     expr: Zoom|null = null;
 
@@ -985,6 +994,14 @@ export class GlobalVariable {
         const array_string = this.is_array ? "array " : "";
         const name_string = this.name ? this.name.getText() + " " : "";
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+    }
+
+    public with(statement:Statement) {
+        this.type = statement.type;
+        this.name = statement.name;
+        this.array_token = statement.array_token;
+        this.is_array = this.array_token != null;
+        this.expr = statement.expr;
     }
 }
 
@@ -1338,6 +1355,29 @@ export class Ret {
 export class Native extends Func {
 }
 
+export function parse_line_global(document: Document, line_text: ExpendLineText) {
+    const global = new GlobalVariable();
+    const tokens = line_text.tokens();
+    let index = 0;
+    let state = 0;
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            
+        } else if (state == 1) {
+            const result = parse_line_statement(document, tokens, index);
+            index = result.index;
+            global.with(result.expr);
+            break;
+        }
+    }
+    return global;
+}
 export function parse_line_local(document: Document, line_text: ExpendLineText) {
     const local = new Local();
     const tokens = line_text.tokens();
@@ -1355,11 +1395,12 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
             index++;
 
             if (text == "local") {
-                if (tokens[index]) {
-                    if (tokens[index].is_identifier) {
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.is_identifier) {
                         state = 1;
                     } else {
-                        document.add_token_error(tokens[index], `error type`);
+                        document.add_token_error(next_token, `error type`);
                         break;
                     }
                 } else {
@@ -1371,73 +1412,10 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
                 break;
             }
         } else if (state == 1) {
-            index++;
-            local.type = token;
-            
-            if (tokens[index]) {
-                if (tokens[index].is_identifier) {
-                    if (tokens[index].getText() == "array") {
-                        state = 3;
-                    } else {
-                        state = 2;
-                    }
-                } else {
-                    document.add_token_error(tokens[index], `wrong identifier name`);
-                    break;
-                }
-            } else {
-                document.add_token_error(token, `local name not declared`);
-                break;
-            }
-        } else if (state == 2) {
-            index++;
-            local.name = token;
-
-            if (tokens[index]) {
-                if (tokens[index].getText() == "=") {
-                    state = 4;
-                } else {
-                    document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
-                    break;
-                }
-            } else {
-                break;
-            }
-        } else if (state == 3) {
-            index++;
-            local.is_array = true;
-            
-            if (tokens[index]) {
-                if (tokens[index].is_identifier) {
-                    state = 2;
-                } else {
-                    document.add_token_error(tokens[index], `wrong identifier name`);
-                    break;
-                }
-            } else {
-                document.add_token_error(token, `local name not declared`);
-                break;
-            }
-        } else if (state == 4) {
-            index++;
-
-            if (tokens[index]) {
-                state = 5;
-            } else {
-                console.log("fjaspfjpsfsp");
-                
-                document.add_token_error(token, `initialization expression not found`);
-                break;
-            }
-        } else if (state == 5) {
-            const result = parse_line_expr(document, tokens, index);
+            const result = parse_line_statement(document, tokens, index);
             index = result.index;
-            local.expr = result.expr;
-
-            state = 6;
-        } else if (state == 6) {
-            index++;
-            document.add_token_error(token, `error token '${text}'`);
+            local.with(result.expr);
+            break;
         }
     }
     return local;
@@ -2067,6 +2045,120 @@ function get_next_token(tokens:Token[], i: number):Token|null {
     return null;
 }
 
+class Statement {
+
+    type: Token|null = null;
+    name: Token|null = null;
+    
+    expr: Zoom|null = null;
+
+    array_token: Token|null = null;
+
+    public is_array:boolean = false;
+
+    public to_string():string {
+        const type_string = this.type ? this.type.getText() + " " : "unkown_type ";
+        const array_string = this.is_array ? "array " : "";
+        const name_string = this.name ? this.name.getText() + " " : "unkown_name ";
+        return `${type_string}${array_string}${name_string}`;
+    }
+}
+
+/**
+ * 
+ * type [array] name [=] init
+ * @param document 
+ * @param tokens 
+ * @param offset_index 
+ * @returns 
+ */
+export function parse_line_statement(document: Document, tokens:Token[], offset_index: number) {
+    const statement = new Statement();
+    let index = offset_index;
+    let state = 1;
+
+    while(index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 1) {
+            index++;
+            statement.type = token;
+            
+            if (tokens[index]) {
+                if (tokens[index].is_identifier) {
+                    if (tokens[index].getText() == "array") {
+                        state = 3;
+                    } else {
+                        state = 2;
+                    }
+                } else {
+                    document.add_token_error(tokens[index], `wrong identifier name`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `name not declared`);
+                break;
+            }
+        } else if (state == 2) {
+            index++;
+            statement.name = token;
+
+            if (tokens[index]) {
+                if (tokens[index].getText() == "=") {
+                    state = 4;
+                } else {
+                    document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
+                    break;
+                }
+            } else {
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+            statement.array_token = token;
+            statement.is_array = true;
+            
+            if (tokens[index]) {
+                if (tokens[index].is_identifier) {
+                    state = 2;
+                } else {
+                    document.add_token_error(tokens[index], `wrong identifier name`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `local name not declared`);
+                break;
+            }
+        } else if (state == 4) {
+            index++;
+
+            if (tokens[index]) {
+                state = 5;
+            } else {
+                document.add_token_error(token, `initialization expression not found`);
+                break;
+            }
+        } else if (state == 5) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            statement.expr = result.expr;
+
+            state = 6;
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+    return {
+        expr: statement,
+        index,
+    };
+}
+
 export function parse_line_set(document: Document, line_text: ExpendLineText) {
     const set = new Set();
     const tokens = line_text.tokens();
@@ -2315,364 +2407,10 @@ export function parse_line_type(document: Document, line_text: ExpendLineText) {
 }
 
 function parse_line_native(document: Document, line_text: ExpendLineText) {
-    const native = new Native();
-    const tokens = line_text.tokens();
-    let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
-        const token = tokens[index];
-        if (token.is_block_comment || token.is_comment) {
-            continue;
-        }
-        const text = token.getText();
-        
-        if (state == 0) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "private") {
-                native.visible = "private";
-                state = 2;
-            } else if (text == "public") {
-                native.visible = "public";
-                state = 2;
-            } else if (text == "static") {
-                native.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                native.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                native.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 1) {
-            if (token.is_identifier) {
-                native.name = token;
-                state = 5;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 2) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "static") {
-                native.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                native.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                native.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "function") {
-                state = 1;
-            } else if (text == "constant") {
-                native.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 4) {
-            if (text == "function") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 5) {
-            if (text == "takes") {
-                state = 6;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 6) {
-            if (text == "nothing") {
-                native.takes = null;
-                state = 11;
-            } else if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!native.takes) {
-                    native.takes = [];
-                }
-                native.takes.push(take);
-                state = 7;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 7) {
-            if (token.is_identifier) {
-                const takes = native.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 8) {
-            if (text == "returns") {
-                state = 12;
-            } else if (text == ",") {
-                state = 9;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 9) {
-            if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!native.takes) {
-                    native.takes = [];
-                }
-                native.takes.push(take);
-                state = 10;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 10) {
-            if (token.is_identifier) {
-                const takes = native.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 11) {
-            if (text == "returns") {
-                state = 12;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 12) {
-            if (token.is_identifier) {
-                native.returns = text;
-                state = 13;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 13) {
-            if (text == "defaults") {
-                state = 14;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 14) {
-            if (token.is_identifier) {
-                native.defaults = text;
-                state = 15;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
-        }
-    }
-
-    return native;
+    return parse_function(document, line_text, "native") as Native;
 }
 function parse_line_method(document: Document, line_text: ExpendLineText) {
-    const method = new Method();
-    const tokens = line_text.tokens();
-    let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
-        const token = tokens[index];
-        if (token.is_block_comment || token.is_comment) {
-            continue;
-        }
-        const text = token.getText();
-        
-        if (state == 0) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "private") {
-                method.visible = "private";
-                state = 2;
-            } else if (text == "public") {
-                method.visible = "public";
-                state = 2;
-            } else if (text == "static") {
-                method.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                method.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 1) {
-            if (token.is_identifier) {
-                method.name = token;
-                state = 5;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 2) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "static") {
-                method.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                method.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "method") {
-                state = 1;
-            } else if (text == "constant") {
-                method.qualifier = "constant";
-                state = 4;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 4) {
-            if (text == "method") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 5) {
-            if (text == "takes") {
-                state = 6;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 6) {
-            if (text == "nothing") {
-                method.takes = null;
-                state = 11;
-            } else if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!method.takes) {
-                    method.takes = [];
-                }
-                method.takes.push(take);
-                state = 7;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 7) {
-            if (token.is_identifier) {
-                const takes = method.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 8) {
-            if (text == "returns") {
-                state = 12;
-            } else if (text == ",") {
-                state = 9;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 9) {
-            if (token.is_identifier) {
-                const take = new Take();
-                take.type = text;
-                if (!method.takes) {
-                    method.takes = [];
-                }
-                method.takes.push(take);
-                state = 10;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 10) {
-            if (token.is_identifier) {
-                const takes = method.takes;
-                if (takes) {
-                    const take = takes[takes.length - 1];
-                    take.name = text;
-                }
-                state = 8;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 11) {
-            if (text == "returns") {
-                state = 12;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 12) {
-            if (token.is_identifier) {
-                method.returns = text;
-                state = 13;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 13) {
-            if (text == "defaults") {
-                state = 14;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 14) {
-            if (token.is_identifier) {
-                method.defaults = text;
-                state = 15;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
-        }
-    }
-
-    return method;
+    return parse_function(document, line_text, "method") as Method;
 }
 function parse_line_member(document: Document, line_text: ExpendLineText) {
     const member = new Member();
