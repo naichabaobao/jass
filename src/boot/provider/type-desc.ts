@@ -109,7 +109,7 @@ const map = new Map<string,string>([
   ["originframetype", "原生框架/原生UI/原生控件 类型"],
   ["framepointtype", "框架/UI/控件 相对锚点类型"],
   ["textaligntype", "文本对齐方式"],
-  ["frameeventtype", "框架/UI控件 事件类型"],
+  ["frameeventtype", "框架/UI/控件 事件类型"],
   ["oskeytype", "键盘按键类型"],
   ["abilityintegerfield", "技能整数域"],
   ["abilityrealfield", "技能实数域"],
