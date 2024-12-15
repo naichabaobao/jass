@@ -974,9 +974,12 @@ export function parse_line_empty(document: Document, line_text: ExpendLineText) 
 }
 
 export class GlobalVariable {
-    public visible:"public"|"private"|null = null;
-    public modifier:"static"|"stub"|null = null;
-    public qualifier:"constant"|null = null;
+    // [public, private]
+    public visible:Token|null = null;
+    // [static, stub]
+    public modifier:Token|null = null;
+    // [constant]
+    public qualifier:Token|null = null;
 
     type: Token|null = null;
     name: Token|null = null;
@@ -987,21 +990,27 @@ export class GlobalVariable {
     public is_array:boolean = false;
 
     public to_string():string {
-        const visible_string = this.visible ? this.visible + " " : "";
-        const modifier_string = this.modifier ? this.modifier + " " : "";
-        const qualifier_string = this.qualifier ? this.qualifier + " " : "";
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
         const type_string = this.type ? this.type.getText() + " " : "";
         const array_string = this.is_array ? "array " : "";
         const name_string = this.name ? this.name.getText() + " " : "";
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
     }
 
-    public with(statement:Statement) {
-        this.type = statement.type;
-        this.name = statement.name;
-        this.array_token = statement.array_token;
-        this.is_array = this.array_token != null;
-        this.expr = statement.expr;
+    public with(statement:Statement|Modifier) {
+        if (statement instanceof Statement) {
+            this.type = statement.type;
+            this.name = statement.name;
+            this.array_token = statement.array_token;
+            this.is_array = this.array_token != null;
+            this.expr = statement.expr;
+        } else if (statement instanceof Modifier) {
+            this.visible = statement.visible;
+            this.modifier = statement.modifier;
+            this.qualifier = statement.qualifier;
+        }
     }
 }
 
@@ -1368,7 +1377,17 @@ export function parse_line_global(document: Document, line_text: ExpendLineText)
         }
         const text = token.getText();
         if (state == 0) {
-            
+            const result = parse_line_modifier(document, tokens, index);
+            index = result.index;
+            global.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 1
+            } else {
+                document.add_token_error(token, `error global variable`);
+                break;
+            }
         } else if (state == 1) {
             const result = parse_line_statement(document, tokens, index);
             index = result.index;
@@ -2415,93 +2434,32 @@ function parse_line_method(document: Document, line_text: ExpendLineText) {
 function parse_line_member(document: Document, line_text: ExpendLineText) {
     const member = new Member();
     const tokens = line_text.tokens();
+    let index = 0;
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    while(index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
-        
         if (state == 0) {
-            if (text == "private") {
-                member.visible = "private";
-                state = 2;
-            } else if (text == "public") {
-                member.visible = "public";
-                state = 2;
-            } else if (text == "static") {
-                member.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                member.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                member.qualifier = "constant";
-                state = 4;
-            } else if (token.is_identifier) {
-                member.type = token;
-                state = 1;
+            const result = parse_line_modifier(document, tokens, index);
+            index = result.index;
+            member.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 1
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `error global variable`);
                 break;
             }
         } else if (state == 1) {
-            if (text == "array") {
-                member.is_array = true;
-                state = 6;
-            } else if (token.is_identifier) {
-                member.name = token;
-                state = 5;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 2) {
-            if (text == "static") {
-                member.modifier = "static";
-                state = 3;
-            } else if (text == "stub") {
-                member.modifier = "stub";
-                state = 3;
-            } else if (text == "constant") {
-                member.qualifier = "constant";
-                state = 4;
-            } else if (token.is_identifier) {
-                member.type = token;
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "constant") {
-                member.qualifier = "constant";
-                state = 4;
-            } else if (token.is_identifier) {
-                member.type = token;
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 4) {
-            if (token.is_identifier) {
-                member.type = token;
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 5) {
-            // =
-        } else if (state == 6) {
-            if (token.is_identifier) {
-                member.name = token;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
+            const result = parse_line_statement(document, tokens, index);
+            index = result.index;
+            member.with(result.expr);
+            break;
         }
     }
 

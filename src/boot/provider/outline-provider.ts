@@ -399,11 +399,11 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                                 kind = vscode.SymbolKind.Array;
                             } else if (node.data instanceof Member) {
                                 name_token = node.data.name;
-                                if (node.data.qualifier == "constant") {
+                                if (node.data.qualifier?.getText() == "constant") {
                                     kind = vscode.SymbolKind.Constant;
                                 } else if (node.data.is_array) {
                                     kind = vscode.SymbolKind.Array;
-                                } else if (node.data.modifier == "static") {
+                                } else if (node.data.modifier?.getText() == "static") {
                                     kind = vscode.SymbolKind.Property;
                                 } else {
                                     kind = vscode.SymbolKind.EnumMember;
@@ -440,14 +440,31 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
 
                 if (body_line_data instanceof Member) {
                     name_token = body_line_data.name;
-                    if (body_line_data.qualifier == "constant") {
+                    if (body_line_data.qualifier && body_line_data.qualifier.getText() == "constant") {
                         kind = vscode.SymbolKind.Constant;
                     } else if (body_line_data.is_array) {
                         kind = vscode.SymbolKind.Array;
-                    } else if (body_line_data.modifier == "static") {
+                    } else if (body_line_data.modifier && body_line_data.modifier.getText() == "static") {
                         kind = vscode.SymbolKind.Property;
                     } else {
                         kind = vscode.SymbolKind.EnumMember;
+                    }
+
+                    if (body_line_data.name) {
+                        // let name = "";
+                        const start_line = body_line.line.line;
+                        const start_position = 0;
+                        const end_line = body_line.line.line;
+                        const end_position = tokens[tokens.length - 1].end.position;
+                        const range = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
+                        let selectRange = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
+                        const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), body_line.type, kind, range, selectRange);
+                        if (parent) {
+                            parent.children.push(symbol)
+                        } else {
+                            symbols.push(symbol);
+                            // return symbol;
+                        }
                     }
                 } else if (body_line_data instanceof Local) {
                     name_token = body_line_data.name;
@@ -487,6 +504,7 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                             // return symbol;
                         }
                     }
+                } else {
                 }
                 if (tokens.length > 0) {
                     range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
