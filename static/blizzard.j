@@ -8134,7 +8134,7 @@ endfunction
 //   - Fix the random seed to a set value
 //   - Reset the camera smoothing factor
 
-// 切换影片模式(指定玩家组)
+// 切换到电影模式(指定玩家组)
 // @param interfaceFadeTime 淡出时间
 // 注意：某些影响会作用于所有玩家
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
