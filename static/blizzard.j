@@ -6493,7 +6493,7 @@ function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 设置盟友玩家的单位全部移交给中立被动玩家控制
+// 设置玩家及其盟友玩家的单位全部移交给中立被动玩家控制
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForTeam takes player whichPlayer returns nothing
     local integer playerIndex
