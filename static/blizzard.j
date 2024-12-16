@@ -9719,7 +9719,7 @@ endfunction
 //***************************************************************************
 
 
-// 设置初始资源
+// 设置对战初始资源
 function MeleeStartingResources takes nothing returns nothing
     local integer index
     local player indexPlayer
@@ -9758,7 +9758,8 @@ endfunction
 //*
 //***************************************************************************
 
-// 设置玩家科技上限
+// 下调玩家科技等级上限
+// 等级上限小于0时无效
 function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, integer limit returns nothing
     local integer oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId)
 
@@ -9769,7 +9770,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
 endfunction
 
 
-// 设置（所有玩家的）英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
+// 设置（所有玩家的）对战英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
 function MeleeStartingHeroLimit takes nothing returns nothing
     local integer index
 
