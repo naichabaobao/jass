@@ -11601,6 +11601,14 @@
         "type": "单位"
       },
       {
+        "code": "Aque",
+        "name": "训练单位（物编无此技能）",
+        "descript": "",
+        "kind": "技能",
+        "race": "特殊",
+        "type": "单位"
+      },
+      {
         "code": "Apmf",
         "name": "凤凰烈焰",
         "descript": "灼烧周围的敌方飞行单位，每秒造成<Apmf,DataA1>点伤害。",
