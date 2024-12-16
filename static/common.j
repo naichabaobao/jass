@@ -6182,7 +6182,7 @@ native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, in
 // 移除玩家（指定游戏结果）
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
 
-// 缓存玩家英雄数据（默认在战败移交单位给中立玩家前缓存，这样才能在计分屏展示）
+// 缓存玩家英雄数据（默认在胜利移除/战败移交单位给中立玩家前缓存，这样才能在计分屏展示）
 // Used to store hero level data for the scorescreen
 // before units are moved to neutral passive in melee games
 native CachePlayerHeroData takes player whichPlayer returns nothing
