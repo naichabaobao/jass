@@ -4487,6 +4487,7 @@ native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 获取选择的游戏（队伍）类型
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数/地图选项是否开启(指定参数)
+// 部分参数支持在创建游戏时设置
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取游戏出生点放置方式
 constant native GetGamePlacement takes nothing returns placement
