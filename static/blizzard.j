@@ -11016,7 +11016,7 @@ function MeleeCrippledPlayerTimeout takes nothing returns nothing
     call MeleeExposePlayer(exposedPlayer, true)
 endfunction
 
-// 玩家是否没有建筑或基地（任意等级）
+// 玩家是否没有建筑或基地（所有等级之和）
 // 用于对战胜负判断和暴露提示
 function MeleePlayerIsCrippled takes player whichPlayer returns boolean
     local integer playerStructures = GetPlayerStructureCount(whichPlayer, true)
