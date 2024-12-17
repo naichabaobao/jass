@@ -1607,7 +1607,7 @@ globals
 	constant unittype UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
 	// 单位类型 工人
 	constant unittype UNIT_TYPE_PEON = ConvertUnitType(16)
-	// 单位类型 自爆型
+	// 单位类型 自爆型/自爆工兵
 	constant unittype UNIT_TYPE_SAPPER = ConvertUnitType(17)
 	// 单位类型 城镇
 	constant unittype UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
