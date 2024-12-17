@@ -6360,25 +6360,25 @@ native StoreBoolean takes gamecache cache, string missionKey, string key, boolea
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
 // 存储字符串到缓游戏存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
-// 同步游戏缓存存储值（整数类别）
+// 同步游戏缓存存储值（整数）
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（实数类别）
+// 同步游戏缓存存储值（实数）
 native SyncStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（布尔值类别）
+// 同步游戏缓存存储值（布尔值）
 native SyncStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（单位类别）
+// 同步游戏缓存存储值（单位）
 native SyncStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（字符串类别）
+// 同步游戏缓存存储值（字符串）
 native SyncStoredString takes gamecache cache, string missionKey, string key returns nothing
-// 查询游戏缓存是否有存储值（整数类别）
+// 查询游戏缓存是否有存储值（整数）
 native HaveStoredInteger takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（实数类别）
+// 查询游戏缓存是否有存储值（实数）
 native HaveStoredReal takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（布尔值类别）
+// 查询游戏缓存是否有存储值（布尔值）
 native HaveStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（单位类别）
+// 查询游戏缓存是否有存储值（单位）
 native HaveStoredUnit takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（字符串类别）
+// 查询游戏缓存是否有存储值（字符串）
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
 // 清空指定游戏缓存 [C]
@@ -6387,29 +6387,29 @@ native FlushGameCache takes gamecache cache returns nothing
 // 清空指定游戏缓存（指定类别）
 // 仅清空指定缓存的指定类别，清空后无需新建缓存
 native FlushStoredMission takes gamecache cache, string missionKey returns nothing
-// 清空指定游戏缓存存储值（整数类别）
+// 清空指定游戏缓存存储值（整数）
 native FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（实数类别）
+// 清空指定游戏缓存存储值（实数）
 native FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（布尔值类别）
+// 清空指定游戏缓存存储值（布尔值）
 native FlushStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（单位类别）
+// 清空指定游戏缓存存储值（单位）
 native FlushStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（字符串类别）
+// 清空指定游戏缓存存储值（字符串）
 native FlushStoredString takes gamecache cache, string missionKey, string key returns nothing
 
 // Will return 0 if the specified value's data is not found in the cache
 
-// 从游戏缓存读取存储值（整数类别） [C]
+// 从游戏缓存读取存储值（整数） [C]
 // 无数据时返回0
 native GetStoredInteger takes gamecache cache, string missionKey, string key returns integer
-// 从游戏缓存读取存储值（实数类别） [C]
+// 从游戏缓存读取存储值（实数） [C]
 // 无数据时返回0.00
 native GetStoredReal takes gamecache cache, string missionKey, string key returns real
-// 从游戏缓存读取存储值（布尔值类别）[R]
+// 从游戏缓存读取存储值（布尔值）[R]
 // 无数据时返回false
 native GetStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 从游戏缓存读取存储值（字符串类别） [C]
+// 从游戏缓存读取存储值（字符串） [C]
 // 无数据时返回null
 native GetStoredString takes gamecache cache, string missionKey, string key returns string
 // 重新存储单位到游戏缓存 (指定朝向角度)
