@@ -872,14 +872,25 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        const next_token = tokens[index];
         
         if (state == 0) {
             index++;
             if (text == "if") {
-                state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "then") {
+                        document.add_token_error(next_token, `missing boolean expression`);
+                        state = 2;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing keyword 'if'`);
                 break;
             }
         } else if (state == 1) {
@@ -887,7 +898,13 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             ifs.expr = result.expr;
             index = result.index;
 
-            state = 2;
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 2;
+            } else {
+                document.add_token_error(token, `missing keyword 'then'`);
+                break;
+            }
         } else if (state == 2) {
             index++;
             
@@ -895,17 +912,14 @@ function parse_if(document: Document, line_text: ExpendLineText) {
                 state = 3;
             }
             else {
-                document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
+                document.add_token_error(token, `'if' statement needs to end with the keyword 'then'`);
+                break;
             }
         } else if (state == 3) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
         
-    }
-
-    if (state != 3) {
-        document.add_token_error(tokens[0], `'if' statement needs to end with the keyword 'then'`);
     }
 
     return ifs;
@@ -2368,6 +2382,66 @@ export class ElseIf {
 export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
     const ret = new ElseIf();
 
+    const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            index++;
+            if (text == "elseif") {
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "then") {
+                        document.add_token_error(next_token, `missing boolean expression`);
+                        state = 2;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `error elseif expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'elseif'`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_expr(document, tokens, index);
+            ret.expr = result.expr;
+            index = result.index;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 2;
+            } else {
+                document.add_token_error(token, `missing keyword 'then'`);
+                break;
+            }
+        } else if (state == 2) {
+            index++;
+            
+            if (text == "then") {
+                state = 3;
+            }
+            else {
+                document.add_token_error(token, `'elseif' statement needs to end with the keyword 'then'`);
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+        
+    }
+
     return ret;
 }
 export class Else {
@@ -2375,6 +2449,32 @@ export class Else {
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
     const ret = new Else();
+
+    const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            index++;
+            if (text == "else") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `missing keyword 'else'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+        
+    }
 
     return ret;
 }
@@ -2501,16 +2601,16 @@ function parse_node(document: Document) {
             node.data = struct;
         }
         else if (node.type == "method") {
-            const method = parse_method(document, node.start_line!);
+            const method = parse_method(document, node.start_line!); // ok
             
             node.data = method;
         }
         else if (node.type == "func") {
-            const func = parse_function(document, node.start_line!);
+            const func = parse_function(document, node.start_line!); // ok
             
             node.data = func;
         } else if (node.type == "globals") {
-            const globals = parse_globals(document, node.start_line!);
+            const globals = parse_globals(document, node.start_line!); // ok
 
             node.data = globals;
         } else if (node.type == "if") {
