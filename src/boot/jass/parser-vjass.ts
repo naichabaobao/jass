@@ -54,105 +54,282 @@ export class Context {
 export const Global = new Context();
 
 //#region 解析
+export class LibraryRef {
+    public optional: Token | null = null;
+    public name: Token | null = null;
 
-export class Library {
+    
+    public get is_optional() : boolean {
+        return this.optional !== null;
+    }
+    
+}
+export class Library implements ExprTrict{
+
     public is_library_once: boolean = false;
     public name: Token | null = null;
     public initializer: Token | null = null;
-    public requires: string[] = [];
-    public is_optional: boolean = false;
+    public requires: LibraryRef[] = [];
+
+    to_string(): string {
+        return `${this.is_library_once ? "library_once" : "library"} ${this.name ? this.name.getText() : "(unkown)"}${this.initializer ? " initializer " + this.initializer.getText() : ""}${this.requires.length > 0 ? " requires " + this.requires.map(x => {
+            return `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unkown)"}`;
+        }).join(", ") : ""}`;
+    }
 }
 function parse_library(document: Document, line_text: ExpendLineText) {
     const library = new Library();
+
     const tokens = line_text.tokens();
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0;
+    let optional:LibraryRef|null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
+
         if (state == 0) {
-            if (text == "library") {
-                library.is_library_once = false;
-                state = 1;
-            } else if (text == "library_once") {
-                library.is_library_once = true;
-                state = 1;
+            index++;
+            if (text == "library" || text == "library_once") {
+                library.is_library_once = text == "library_once";
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `library name is undefined`);
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing keyword 'library'`);
                 break;
             }
         } else if (state == 1) {
+            index++;
+
             if (token.is_identifier) {
                 library.name = token;
-                state = 2;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "initializer") {
+                        state = 2;
+                    } else if (next_token_text == "requires" || next_token_text == "uses" || next_token_text == "needs") {
+                        state = 4;
+                    } else {
+                        state = 8;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal library identifier`);
                 break;
             }
-        } else if (state == 2) {
-            if (text == "initializer") {
+
+
+        } else if (state == 2) { // initializer
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
                 state = 3;
-            } else if (text == "requires" || text == "uses" || text == "needs") {
-                state = 5;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `initializer function not found`);
                 break;
             }
         } else if (state == 3) {
+            index++;
+
             if (token.is_identifier) {
                 library.initializer = token;
-                state = 4;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "requires" || next_token_text == "uses" || next_token_text == "needs") {
+                        state = 4;
+                    } else {
+                        document.add_token_error(token, `missing keyword 'requires'、'uses' or 'needs'`);
+                        break;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal initializer function identifier`);
                 break;
             }
-        } else if (state == 4) {
-            if (text == "requires" || text == "uses" || text == "needs") {
-                state = 5;
+        } else if (state == 4) { // requires
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "optional") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `requires library names not found`);
                 break;
             }
         } else if (state == 5) {
-            if (text == "optional") {
-                library.is_optional = true;
-                state = 6;
-            } else if (token.is_identifier) {
-                library.requires.push(text);
-                state = 7;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 6) {
+            index++;
+
             if (token.is_identifier) {
-                library.requires.push(text);
-                state = 7;
+                if (optional == null) {
+                    optional = new LibraryRef();
+                } else {
+                }
+                optional.name = token;
+
+                library.requires.push(optional);
+                optional = null;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == ",") {
+                        state = 7;
+                    } else {
+                        state = 8;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal initializer function identifier`);
                 break;
             }
-        } else if (state == 7) {
-            if (text == ",") {
-                state = 8;
+        } else if (state == 6) { // optional
+            index++;
+            
+            optional = new LibraryRef();
+            optional.optional = token;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token && next_token.is_identifier) {
+                state = 5;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `missing library reference library name`);
+                break;
+            }
+        } else if (state == 7) { // ,
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token && next_token.is_identifier) {
+                if (next_token.getText() == "optional") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
+            } else {
+                document.add_token_error(token, `missing library reference library name`);
                 break;
             }
         } else if (state == 8) {
-            if (token.is_identifier) {
-                library.requires.push(text);
-                state = 7;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else {
+            index++;
+
             document.add_token_error(token, `error token '${text}'`);
         }
     }
+
+    // const tokens = line_text.tokens();
+    // let state = 0;
+    // for (let index = 0; index < tokens.length; index++) {
+    //     const token = tokens[index];
+    //     if (token.is_block_comment || token.is_comment) {
+    //         continue;
+    //     }
+    //     const text = token.getText();
+    //     if (state == 0) {
+    //         if (text == "library") {
+    //             library.is_library_once = false;
+    //             state = 1;
+    //         } else if (text == "library_once") {
+    //             library.is_library_once = true;
+    //             state = 1;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 1) {
+    //         if (token.is_identifier) {
+    //             library.name = token;
+    //             state = 2;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 2) {
+    //         if (text == "initializer") {
+    //             state = 3;
+    //         } else if (text == "requires" || text == "uses" || text == "needs") {
+    //             state = 5;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 3) {
+    //         if (token.is_identifier) {
+    //             library.initializer = token;
+    //             state = 4;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 4) {
+    //         if (text == "requires" || text == "uses" || text == "needs") {
+    //             state = 5;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 5) {
+    //         if (text == "optional") {
+    //             library.is_optional = true;
+    //             state = 6;
+    //         } else if (token.is_identifier) {
+    //             library.requires.push(text);
+    //             state = 7;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 6) {
+    //         if (token.is_identifier) {
+    //             library.requires.push(text);
+    //             state = 7;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 7) {
+    //         if (text == ",") {
+    //             state = 8;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else if (state == 8) {
+    //         if (token.is_identifier) {
+    //             library.requires.push(text);
+    //             state = 7;
+    //         } else {
+    //             document.add_token_error(token, `error token '${text}'`);
+    //             break;
+    //         }
+    //     } else {
+    //         document.add_token_error(token, `error token '${text}'`);
+    //     }
+    // }
 
     return library;
 
@@ -283,9 +460,9 @@ function parse_scope(document: Document, line_text: ExpendLineText) {
 }
 
 export class Interface {
-    public visible:"public"|"private"|null = null;
+    public visible: "public" | "private" | null = null;
     public name: Token | null = null;
-    public extends: string[]|null = null;
+    public extends: string[] | null = null;
 }
 function parse_interface(document: Document, line_text: ExpendLineText) {
     const inter = new Interface();
@@ -358,7 +535,7 @@ function parse_interface(document: Document, line_text: ExpendLineText) {
     return inter;
 }
 
-export class Struct extends Interface {   
+export class Struct extends Interface {
 }
 function parse_struct(document: Document, line_text: ExpendLineText) {
     const struct = new Struct();
@@ -433,19 +610,19 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
 
 
 export class Take {
-    public type: Token|null = null;
-    public name: Token|null = null;
+    public type: Token | null = null;
+    public name: Token | null = null;
 }
 export class Method {
-    public visible:Token|null = null;
-    public modifier:Token|null = null;
-    public qualifier:Token|null = null;
+    public visible: Token | null = null;
+    public modifier: Token | null = null;
+    public qualifier: Token | null = null;
     public name: Token | null = null;
-    public takes: Take[]|null = null;
-    public returns: Token|null = null;
-    public defaults: string|null = null;
+    public takes: Take[] | null = null;
+    public returns: Token | null = null;
+    public defaults: string | null = null;
 
-    public to_string():string {
+    public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
         const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
@@ -454,7 +631,7 @@ export class Method {
         return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns${name_string}`;
     }
 
-    with<T extends Modifier|Takes|Returns>(v:T) {
+    with<T extends Modifier | Takes | Returns>(v: T) {
         if (v instanceof Modifier) {
             this.visible = v.visible;
             this.modifier = v.modifier;
@@ -489,11 +666,11 @@ export class Func extends Method {
  * @param offset_index 
  * @returns 
  */
-function parse_line_function_takes_statement(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_function_takes_statement(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let take:Take = new Take();
-    while(index < tokens.length) {
+    let take: Take = new Take();
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -527,7 +704,7 @@ function parse_line_function_takes_statement(document: Document, tokens:Token[],
             }
         } else if (state == 1) {
             index++;
-            
+
             if (token.is_identifier) {
                 take.name = token;
             } else {
@@ -543,15 +720,15 @@ function parse_line_function_takes_statement(document: Document, tokens:Token[],
 }
 
 class Takes {
-    takes:Take[] = [];
+    takes: Take[] = [];
 }
-function parse_line_function_takes(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_function_takes(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let takes:Takes = new Takes();
+    let takes: Takes = new Takes();
     // 匹配第一个'nothing'关键字
     let is_first = true;
-    while(index < tokens.length) {
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -631,17 +808,17 @@ function parse_line_function_takes(document: Document, tokens:Token[], offset_in
 }
 class Modifier {
     // [public, private]
-    public visible:Token|null = null;
+    public visible: Token | null = null;
     // [static, stub]
-    public modifier:Token|null = null;
+    public modifier: Token | null = null;
     // [constant]
-    public qualifier:Token|null = null;
+    public qualifier: Token | null = null;
 }
-function parse_line_modifier(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_modifier(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let modifier:Modifier = new Modifier();
-    while(index < tokens.length) {
+    let modifier: Modifier = new Modifier();
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -669,13 +846,13 @@ function parse_line_modifier(document: Document, tokens:Token[], offset_index: n
     }
 }
 class Returns {
-    expr:Token|null = null;
+    expr: Token | null = null;
 }
-function parse_line_returns(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_returns(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let returns:Returns = new Returns();
-    while(index < tokens.length) {
+    let returns: Returns = new Returns();
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -696,7 +873,7 @@ function parse_line_returns(document: Document, tokens:Token[], offset_index: nu
                 }
             } else {
                 document.add_token_error(token, `missing keyword 'returns'`);
-                break; 
+                break;
             }
         } else if (state == 1) {
             index++;
@@ -716,8 +893,8 @@ function parse_line_returns(document: Document, tokens:Token[], offset_index: nu
 }
 
 
-function parse_function(document: Document, line_text: ExpendLineText, type: "function"|"method"|"native" = "function") {
-    const func:Func|Method|Native = type == "function" ? new Func() : type == "method" ? new Method : new Native();
+function parse_function(document: Document, line_text: ExpendLineText, type: "function" | "method" | "native" = "function") {
+    const func: Func | Method | Native = type == "function" ? new Func() : type == "method" ? new Method : new Native();
     const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
@@ -729,7 +906,7 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             const result = parse_line_modifier(document, tokens, index);
             index = result.index;
@@ -750,7 +927,7 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
             }
         } else if (state == 1) {
             index++;
-            
+
             const next_token = get_next_token(tokens, index);
             if (next_token) {
                 const next_token_text = next_token.getText();
@@ -770,7 +947,7 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
         } else if (state == 2) {
             index++;
             func.name = token;
-            
+
             const next_token = get_next_token(tokens, index);
             if (next_token) {
                 const next_token_text = next_token.getText();
@@ -815,7 +992,7 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
             const result = parse_line_returns(document, tokens, index);
             index = result.index;
             func.with(result.expr);
-            
+
             state = 5;
         } else if (state == 5) {
             index++;
@@ -838,7 +1015,7 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             if (text == "globals") {
                 state = 1;
@@ -855,9 +1032,9 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
 }
 
 export class If {
-    expr: Zoom|null = null;
+    expr: Zoom | null = null;
 }
-export class Loop {}
+export class Loop { }
 
 function parse_if(document: Document, line_text: ExpendLineText) {
     const ifs = new If();
@@ -872,7 +1049,7 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             index++;
             if (text == "if") {
@@ -907,7 +1084,7 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 2) {
             index++;
-            
+
             if (text == "then") {
                 state = 3;
             }
@@ -919,7 +1096,7 @@ function parse_if(document: Document, line_text: ExpendLineText) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-        
+
     }
 
     return ifs;
@@ -934,7 +1111,7 @@ function parse_loop(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             if (text == "loop") {
                 state = 1;
@@ -951,7 +1128,7 @@ function parse_loop(document: Document, line_text: ExpendLineText) {
 }
 
 export class Comment {
-    comment:Token|null = null;
+    comment: Token | null = null;
 }
 
 export function parse_line_comment(document: Document, line_text: ExpendLineText) {
@@ -964,7 +1141,7 @@ export function parse_line_comment(document: Document, line_text: ExpendLineText
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             if (token.is_comment) {
                 comment.comment = token;
@@ -989,21 +1166,21 @@ export function parse_line_empty(document: Document, line_text: ExpendLineText) 
 
 export class GlobalVariable {
     // [public, private]
-    public visible:Token|null = null;
+    public visible: Token | null = null;
     // [static, stub]
-    public modifier:Token|null = null;
+    public modifier: Token | null = null;
     // [constant]
-    public qualifier:Token|null = null;
+    public qualifier: Token | null = null;
 
-    type: Token|null = null;
-    name: Token|null = null;
-    array_token: Token|null = null;
+    type: Token | null = null;
+    name: Token | null = null;
+    array_token: Token | null = null;
 
-    expr: Zoom|null = null;
+    expr: Zoom | null = null;
 
-    public is_array:boolean = false;
+    public is_array: boolean = false;
 
-    public to_string():string {
+    public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
         const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
@@ -1013,7 +1190,7 @@ export class GlobalVariable {
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
     }
 
-    public with(statement:Statement|Modifier) {
+    public with(statement: Statement | Modifier) {
         if (statement instanceof Statement) {
             this.type = statement.type;
             this.name = statement.name;
@@ -1032,10 +1209,10 @@ export class Member extends GlobalVariable {
 }
 export class Local extends GlobalVariable {
 }
-type Zoom = BinaryExpr|UnaryExpr|Value|VariableName|PriorityExpr|FunctionExpr;
+type Zoom = BinaryExpr | UnaryExpr | Value | VariableName | PriorityExpr | FunctionExpr;
 
 export interface ExprTrict {
-    to_string():string;
+    to_string(): string;
 }
 
 export class Expr {
@@ -1051,7 +1228,7 @@ export class Expr {
 }
 export class Value implements ExprTrict {
 
-    public value:Token|null = null;
+    public value: Token | null = null;
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
         expr.left = this;
@@ -1070,10 +1247,10 @@ export class Value implements ExprTrict {
 }
 
 export class BinaryExpr extends Expr implements ExprTrict {
-    left: Zoom|null = null;
-    right: Zoom|null = null;
-    op: Token|null = null;
-    
+    left: Zoom | null = null;
+    right: Zoom | null = null;
+    op: Token | null = null;
+
     to_string(): string {
         let expr = "unkown";
         if (this.left) {
@@ -1089,8 +1266,8 @@ export class BinaryExpr extends Expr implements ExprTrict {
     }
 }
 export class UnaryExpr extends Expr implements ExprTrict {
-    op: Token|null = null;
-    value: Zoom|null = null;
+    op: Token | null = null;
+    value: Zoom | null = null;
 
     public convert_to_binary_expr(F: UnaryExpr) {
         const expr = new BinaryExpr();
@@ -1105,14 +1282,14 @@ export class UnaryExpr extends Expr implements ExprTrict {
     }
 }
 export class IndexExpr implements ExprTrict {
-    expr: Zoom|null = null;
+    expr: Zoom | null = null;
 
     to_string(): string {
         return `[${this.expr?.to_string() ?? "unkown"}]`;
     }
 }
 export class PriorityExpr extends Expr implements ExprTrict {
-    expr: Zoom|null = null;
+    expr: Zoom | null = null;
 
     to_string(): string {
         if (this.expr) {
@@ -1122,11 +1299,11 @@ export class PriorityExpr extends Expr implements ExprTrict {
     }
 }
 export class MenberReference {
-    current: Token|null = null;
-    parent: MenberReference|null = null;
-    child: MenberReference|null = null;
+    current: Token | null = null;
+    parent: MenberReference | null = null;
+    child: MenberReference | null = null;
 
-    index_expr:IndexExpr|null = null;
+    index_expr: IndexExpr | null = null;
 
     public to_string() {
         let name = "";
@@ -1143,8 +1320,8 @@ export class MenberReference {
         return name;
     }
 }
-export class Id  implements ExprTrict {
-    public expr:Token|null = null;
+export class Id implements ExprTrict {
+    public expr: Token | null = null;
 
     public to_string() {
         if (this.expr) {
@@ -1154,13 +1331,13 @@ export class Id  implements ExprTrict {
         }
     }
 
-    public to<T extends Params|IndexExpr|null>(v:T) {
+    public to<T extends Params | IndexExpr | null>(v: T) {
         if (v instanceof Params) {
             const caller = new Caller();
             caller.name = this;
             caller.params = v;
             return caller;
-        } else if (v instanceof IndexExpr){
+        } else if (v instanceof IndexExpr) {
             const expr = new IdIndex();
             expr.name = this;
             expr.index_expr = v;
@@ -1171,10 +1348,10 @@ export class Id  implements ExprTrict {
     }
 }
 export class Caller implements ExprTrict {
-    public name: Id|null = null;
-    public params:Params|null = null;
+    public name: Id | null = null;
+    public params: Params | null = null;
 
-    public to_string():string {
+    public to_string(): string {
         if (this.name) {
             if (this.params) {
                 return `${this.name.to_string()}${this.params.to_string()}`;
@@ -1187,9 +1364,9 @@ export class Caller implements ExprTrict {
     }
 
 }
-export class IdIndex implements ExprTrict{
-    public name: Id|null = null;
-    public index_expr:IndexExpr|null = null;
+export class IdIndex implements ExprTrict {
+    public name: Id | null = null;
+    public index_expr: IndexExpr | null = null;
 
     public to_string() {
         if (this.name) {
@@ -1204,7 +1381,7 @@ export class IdIndex implements ExprTrict{
     }
 }
 export class VariableName extends Expr implements ExprTrict {
-    public names:(Id|Caller|IdIndex|null)[] = [];
+    public names: (Id | Caller | IdIndex | null)[] = [];
 
 
 
@@ -1216,7 +1393,7 @@ export class VariableName extends Expr implements ExprTrict {
         }
     }
 
-    public get_start_line_number():number {
+    public get_start_line_number(): number {
         if (this.names.length > 0) {
             const ref = this.names[0];
             if (ref instanceof Id) {
@@ -1232,7 +1409,7 @@ export class VariableName extends Expr implements ExprTrict {
             return 0;
         }
     }
-    public get_end_line_number():number {
+    public get_end_line_number(): number {
         if (this.names.length > 0) {
             const ref = this.names[this.names.length - 1];
             if (ref instanceof Id) {
@@ -1248,7 +1425,7 @@ export class VariableName extends Expr implements ExprTrict {
             return 0;
         }
     }
-    public get_start_line_position():number {
+    public get_start_line_position(): number {
         if (this.names.length > 0) {
             const ref = this.names[0];
             if (ref instanceof Id) {
@@ -1264,7 +1441,7 @@ export class VariableName extends Expr implements ExprTrict {
             return 0;
         }
     }
-    public get_end_line_position():number {
+    public get_end_line_position(): number {
         if (this.names.length > 0) {
             const ref = this.names[this.names.length - 1];
             if (ref instanceof Id) {
@@ -1280,10 +1457,10 @@ export class VariableName extends Expr implements ExprTrict {
             return 0;
         }
     }
-    
+
 }
 export class FunctionExpr implements ExprTrict {
-    name: VariableName|null = null;
+    name: VariableName | null = null;
 
     public to_string() {
         if (this.name) {
@@ -1293,7 +1470,7 @@ export class FunctionExpr implements ExprTrict {
     }
 }
 export class Params implements ExprTrict {
-    public args:(Zoom|null)[] = [];
+    public args: (Zoom | null)[] = [];
 
     public to_string() {
         let name = this.args.map(arg => {
@@ -1345,10 +1522,10 @@ export class Params implements ExprTrict {
 
 
 export class Set {
-    name: VariableName|null = null;
-    init: Zoom|null = null;
+    name: VariableName | null = null;
+    init: Zoom | null = null;
 
-    public to_string():string {
+    public to_string(): string {
         let name = "";
         if (this.name) {
             name += this.name.to_string();
@@ -1366,14 +1543,14 @@ export class Set {
     }
 }
 export class Type {
-    name:Token|null = null;
-    extends:Token|null = null;
+    name: Token | null = null;
+    extends: Token | null = null;
 }
 export class Call {
-    ref: VariableName|null = null;
+    ref: VariableName | null = null;
 }
 export class Ret {
-    expr: Zoom|null = null;
+    expr: Zoom | null = null;
 }
 export class Native extends Func {
 }
@@ -1383,7 +1560,7 @@ export function parse_line_global(document: Document, line_text: ExpendLineText)
     const tokens = line_text.tokens();
     let index = 0;
     let state = 0;
-    while(index < tokens.length) {
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1416,8 +1593,8 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
     const tokens = line_text.tokens();
     let index = 0;
     let state = 0;
-    let unary_expr:UnaryExpr|null = null;
-    while(index < tokens.length) {
+    let unary_expr: UnaryExpr | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1455,10 +1632,10 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
 }
 
 class Expr_ {
-    expr:Zoom|null = null;
-    op: Token|null = null;
+    expr: Zoom | null = null;
+    op: Token | null = null;
 
-    public to_expr(right_value: Zoom|null) {
+    public to_expr(right_value: Zoom | null) {
         const expr = new BinaryExpr();
         expr.left = this.expr;
         expr.op = this.op;
@@ -1469,20 +1646,20 @@ class Expr_ {
 }
 
 
-const is_op = (token:Token) => {
+const is_op = (token: Token) => {
     const text = token.getText();
     return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%";
 };
-const is_unary_op = (token:Token) => {
+const is_unary_op = (token: Token) => {
     const text = token.getText();
     return text == "+" || text == "-" || text == "not" || text == "!";
 };
 
-function parse_line_unary_expr(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_unary_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let unary_expr:UnaryExpr|null = null;
-    while(index < tokens.length) {
+    let unary_expr: UnaryExpr | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1511,7 +1688,7 @@ function parse_line_unary_expr(document: Document, tokens:Token[], offset_index:
             const result = parse_line_expr(document, tokens, index);
             index = result.index;
             unary_expr!.value = result.expr;
-            
+
             break;
         }
     }
@@ -1521,11 +1698,11 @@ function parse_line_unary_expr(document: Document, tokens:Token[], offset_index:
         expr: unary_expr
     };
 }
-function parse_line_function_expr(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_function_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let zoom:FunctionExpr|null = new FunctionExpr;
-    while(index < tokens.length) {
+    let zoom: FunctionExpr | null = new FunctionExpr;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1559,11 +1736,11 @@ function parse_line_function_expr(document: Document, tokens:Token[], offset_ind
     }
 }
 
-function parse_line_priority_expr(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_priority_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let expr:PriorityExpr|null = null;
-    while(index < tokens.length) {
+    let expr: PriorityExpr | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1611,11 +1788,11 @@ function parse_line_priority_expr(document: Document, tokens:Token[], offset_ind
         expr: expr
     }
 }
-function parse_line_expr(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let zoom:Zoom|Expr_|null = null;
-    while(index < tokens.length) {
+    let zoom: Zoom | Expr_ | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1626,7 +1803,7 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
         if (state == 0) {
             let result!: {
                 index: number,
-                expr:Zoom|null,
+                expr: Zoom | null,
             };
             if (token.is_identifier) {
                 if (text == "function") {
@@ -1708,11 +1885,11 @@ function parse_line_expr(document: Document, tokens:Token[], offset_index: numbe
     }
 }
 
-function parse_line_call_params(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_call_params(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let params:Params|null = null;
-    while(index < tokens.length) {
+    let params: Params | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1775,11 +1952,11 @@ function parse_line_call_params(document: Document, tokens:Token[], offset_index
  * @param tokens 
  * @param offset_index 
  */
-function parse_line_index_expr(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let index_expr:IndexExpr|null = null;
-    while(index < tokens.length) {
+    let index_expr: IndexExpr | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1789,13 +1966,13 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
         const next_token = tokens[index + 1];
         if (state == 0) {
             index++;
-            
+
             if (text == "[") {
                 if (index_expr == null) {
                     index_expr = new IndexExpr();
                 }
-                
-                
+
+
                 state = 1;
             } else {
                 document.add_token_error(token, `'['`);
@@ -1872,7 +2049,7 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
 //     let index = offset_index;
 //     let state = 0;
 //     let variable:VariableName|null = null;
-    
+
 //     while(index < tokens.length) {
 //         const token = tokens[index];
 //         if (token.is_block_comment || token.is_comment) {
@@ -1883,11 +2060,11 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
 //         const next_token = tokens[index + 1];
 //         if (state == 0) {
 //             index++;
-            
+
 //             if (variable == null) {
 //                 variable = new VariableName();
 //             }
-            
+
 //             const result = parse_line_name_reference(document, tokens, index);
 //             index = result.index;
 //             if (result.expr) {
@@ -1896,7 +2073,7 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
 //                 } else {
 //                     variable.names.push(...result.expr.names);
 //                 }
-                
+
 //                 const next_token = get_next_token(tokens, index);
 //                 if (next_token) {
 //                     if (next_token.getText() == ".") {
@@ -1955,11 +2132,11 @@ function parse_line_index_expr(document: Document, tokens:Token[], offset_index:
 //         expr: variable
 //     };
 // }
-function parse_line_id(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_id(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let variable:Id|Caller|IdIndex|null = null;
-    while(index < tokens.length) {
+    let variable: Id | Caller | IdIndex | null = null;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -1970,7 +2147,7 @@ function parse_line_id(document: Document, tokens:Token[], offset_index: number)
             if (token.is_identifier) {
                 variable = new Id();
                 variable.expr = token;
-                
+
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     const next_token_text = next_token.getText();
@@ -2012,11 +2189,11 @@ function parse_line_id(document: Document, tokens:Token[], offset_index: number)
         expr: variable
     };
 }
-function parse_line_name_reference(document: Document, tokens:Token[], offset_index: number) {
+function parse_line_name_reference(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let variable:VariableName = new VariableName();
-    while(index < tokens.length) {
+    let variable: VariableName = new VariableName();
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -2027,7 +2204,7 @@ function parse_line_name_reference(document: Document, tokens:Token[], offset_in
 
             index = result.index;
             variable.names.push(result.expr);
-            
+
             const next_token = get_next_token(tokens, index);
             if (next_token) {
                 const next_token_text = next_token.getText();
@@ -2066,7 +2243,7 @@ function parse_line_name_reference(document: Document, tokens:Token[], offset_in
 }
 
 // 跳过注释向前获取下一个token
-function get_next_token(tokens:Token[], i: number):Token|null {
+function get_next_token(tokens: Token[], i: number): Token | null {
     for (let index = i; index < tokens.length; index++) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -2080,16 +2257,16 @@ function get_next_token(tokens:Token[], i: number):Token|null {
 
 class Statement {
 
-    type: Token|null = null;
-    name: Token|null = null;
-    
-    expr: Zoom|null = null;
+    type: Token | null = null;
+    name: Token | null = null;
 
-    array_token: Token|null = null;
+    expr: Zoom | null = null;
 
-    public is_array:boolean = false;
+    array_token: Token | null = null;
 
-    public to_string():string {
+    public is_array: boolean = false;
+
+    public to_string(): string {
         const type_string = this.type ? this.type.getText() + " " : "unkown_type ";
         const array_string = this.is_array ? "array " : "";
         const name_string = this.name ? this.name.getText() + " " : "unkown_name ";
@@ -2105,12 +2282,12 @@ class Statement {
  * @param offset_index 
  * @returns 
  */
-export function parse_line_statement(document: Document, tokens:Token[], offset_index: number) {
+export function parse_line_statement(document: Document, tokens: Token[], offset_index: number) {
     const statement = new Statement();
     let index = offset_index;
     let state = 1;
 
-    while(index < tokens.length) {
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -2120,7 +2297,7 @@ export function parse_line_statement(document: Document, tokens:Token[], offset_
         if (state == 1) {
             index++;
             statement.type = token;
-            
+
             if (tokens[index]) {
                 if (tokens[index].is_identifier) {
                     if (tokens[index].getText() == "array") {
@@ -2154,7 +2331,7 @@ export function parse_line_statement(document: Document, tokens:Token[], offset_
             index++;
             statement.array_token = token;
             statement.is_array = true;
-            
+
             if (tokens[index]) {
                 if (tokens[index].is_identifier) {
                     state = 2;
@@ -2204,7 +2381,7 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             index++;
             if (text == "set") {
@@ -2244,7 +2421,7 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             }
         } else if (state == 2) { // =
             index++;
-            
+
             const next_token = get_next_token(tokens, index);
             if (next_token) {
                 state = 3;
@@ -2279,7 +2456,7 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
         }
         const text = token.getText();
         const next_token = tokens[index];
-        
+
         if (state == 0) {
             index++;
             if (text == "call") {
@@ -2293,8 +2470,11 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
             const result = parse_line_name_reference(document, tokens, index);
             call.ref = result.expr;
             index = result.index;
-            
-            break;
+
+            state = 2;
+        } else if (state == 2) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
         }
     }
 
@@ -2313,7 +2493,7 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
         }
         const text = token.getText();
         const next_token = tokens[index];
-        
+
         if (state == 0) {
             index++;
             if (text == "return") {
@@ -2328,7 +2508,7 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
             index = result.index;
 
             state = 2;
-        } else if (state == 2) { // =
+        } else if (state == 2) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
@@ -2337,14 +2517,14 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
     return ret;
 }
 export class ExitWhen {
-    expr:Zoom|null = null;
+    expr: Zoom | null = null;
 }
 export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
     const ret = new ExitWhen();
     const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
-    
+
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -2353,7 +2533,7 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
         }
         const text = token.getText();
         const next_token = tokens[index];
-        
+
         if (state == 0) {
             index++;
             if (text == "exitwhen") {
@@ -2366,7 +2546,7 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
             const result = parse_line_expr(document, tokens, index);
             ret.expr = result.expr;
             index = result.index;
-            
+
             state = 2;
         } else if (state == 2) {
             index++;
@@ -2377,7 +2557,7 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
     return ret;
 }
 export class ElseIf {
-    expr:Zoom|null = null;
+    expr: Zoom | null = null;
 }
 export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
     const ret = new ElseIf();
@@ -2392,7 +2572,7 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             index++;
             if (text == "elseif") {
@@ -2427,7 +2607,7 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
             }
         } else if (state == 2) {
             index++;
-            
+
             if (text == "then") {
                 state = 3;
             }
@@ -2439,13 +2619,13 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-        
+
     }
 
     return ret;
 }
 export class Else {
-    expr:Zoom|null = null;
+    expr: Zoom | null = null;
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
     const ret = new Else();
@@ -2460,7 +2640,7 @@ export function parse_line_else(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             index++;
             if (text == "else") {
@@ -2473,7 +2653,7 @@ export function parse_line_else(document: Document, line_text: ExpendLineText) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-        
+
     }
 
     return ret;
@@ -2488,7 +2668,7 @@ export function parse_line_type(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        
+
         if (state == 0) {
             if (text == "type") {
                 state = 1;
@@ -2536,7 +2716,7 @@ function parse_line_member(document: Document, line_text: ExpendLineText) {
     const tokens = line_text.tokens();
     let index = 0;
     let state = 0;
-    while(index < tokens.length) {
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
@@ -2566,7 +2746,7 @@ function parse_line_member(document: Document, line_text: ExpendLineText) {
     return member;
 }
 
-export class Other {}
+export class Other { }
 
 
 
@@ -2587,27 +2767,27 @@ function parse_node(document: Document) {
         }
         else if (node.type == "scope") {
             const scope = parse_scope(document, node.start_line!);
-            
+
             node.data = scope;
         }
         else if (node.type == "interface") {
             const inter = parse_interface(document, node.start_line!);
-            
+
             node.data = inter;
         }
         else if (node.type == "struct") {
             const struct = parse_struct(document, node.start_line!);
-            
+
             node.data = struct;
         }
         else if (node.type == "method") {
             const method = parse_method(document, node.start_line!); // ok
-            
+
             node.data = method;
         }
         else if (node.type == "func") {
             const func = parse_function(document, node.start_line!); // ok
-            
+
             node.data = func;
         } else if (node.type == "globals") {
             const globals = parse_globals(document, node.start_line!); // ok
@@ -2657,28 +2837,28 @@ function parse_node(document: Document) {
                 node.body_datas.push(method);
             } else if (value.type == "member") {
                 const member = parse_line_member(document, value.line);
-                
+
                 node.body_datas.push(member);
             } else if (value.type == "exitwhen") {
                 const exitwhen = parse_line_exitwhen(document, value.line);
-                
+
                 node.body_datas.push(exitwhen);
             } else if (value.type == "elseif") {
                 const elseif = parse_line_else_if(document, value.line);
-                
+
                 node.body_datas.push(elseif);
             } else if (value.type == "else") {
                 const el = parse_line_else(document, value.line);
-                
+
                 node.body_datas.push(el);
             } else if (value.type == "type") {
                 const el = parse_line_type(document, value.line);
-                
+
                 node.body_datas.push(el);
             } else if (value.type == "other") {
                 node.body_datas.push(new Other());
             }
-            
+
         });
 
         node.children.forEach(child => {
@@ -2725,14 +2905,14 @@ class ExpendLineText {
 type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | null;
 
 
-type DataType = Library|Struct|Interface|Method|Func|Globals|Scope|If|Loop;
+type DataType = Library | Struct | Interface | Method | Func | Globals | Scope | If | Loop;
 export class Node {
     public data: any;
 
     public type: NodeType;
     public parent: Node | null = null;
     public body: {
-        type: "local"|"set"|"call"|"return"|"comment"|"empty"|"other"|"member"|"native"|"method"|"exitwhen"|"elseif"|"else"|"type",
+        type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type",
         line: ExpendLineText
     }[] = [];
     public start_line: ExpendLineText | null = null;
@@ -2804,7 +2984,7 @@ const pairs = [
 ];
 const non_method_pairs = pairs.filter(pair => pair.type != "method");
 
-const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | undefined, macro: TextMacro | undefined, line: number, node_stack: Node[], root_node: Node, in_interface:boolean) => {
+const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | undefined, macro: TextMacro | undefined, line: number, node_stack: Node[], root_node: Node, in_interface: boolean) => {
 
     const last_node = () => {
         return node_stack[node_stack.length - 1];
@@ -3033,7 +3213,7 @@ export function parse(filePath: string, i_content?: string) {
     const document = new Document(filePath, content);
     tokenize_for_vjass(document);
 
-    
+
 
     preprocessing(document);
 
@@ -3070,7 +3250,7 @@ endif
     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     const d = (<Ret>Global.get("a/b")?.root_node?.children[0].children[0].data);
     console.log(d);
-    
+
     console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
     // @ts-ignore
     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
@@ -3079,6 +3259,6 @@ endif
     // @ts-ignore
     // console.log(expr.expr);
     // console.log(.ref?.to_string());
-    
+
 }
 

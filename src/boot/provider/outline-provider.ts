@@ -412,7 +412,17 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                                 name_token = tokens[0];
                                 kind = vscode.SymbolKind.Key;
                             }
-                            if (name_token) {
+                            if (node.data.to_string) {
+                                let selectRange: vscode.Range = new vscode.Range(node.start_line.line, 0, node.end_line?.line ?? node.start_line.line, 0);
+                                symbol = new vscode.DocumentSymbol(node.data.to_string(), detail, kind, range, selectRange);
+                                if (parent) {
+                                    parent.children.push(symbol)
+                                } else {
+                                    symbols.push(symbol);
+                                    // return symbol;
+                                }
+                            }
+                            else if (name_token) {
                                 let selectRange: vscode.Range = new vscode.Range(name_token.line, name_token.start.position, name_token.line, name_token.end.position);
                                 symbol = new vscode.DocumentSymbol(name_token.getText(), detail, kind, range, selectRange);
                                 if (parent) {
