@@ -353,19 +353,22 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
             //     }
             // }
             if (node.type) {
+                const range = new vscode.Range(node.start_line?.line ?? 0, 0, node.end_line?.line ?? (node.start_line?.line ?? 0), 0);
+                let selectRange: vscode.Range  = range;
+
                 detail = node.type;
                 if (node.start_line) {
                     const tokens = node.start_line.tokens();
                     if (tokens.length > 0) {
-                        let range: vscode.Range | null = null;
-                        if (node.end_line) {
-                            const end_tokens = node.end_line.tokens();
-                            range = new vscode.Range(tokens[0].line, tokens[0].character, node.end_line.line, 0);
-                        } else if (node.body.length > 0) {
-                            const last_body_line = node.body[node.body.length - 1];
-                            const end_tokens = last_body_line.line.tokens();
-                            range = new vscode.Range(tokens[0].line, tokens[0].character, last_body_line.line.line, 0);
-                        }
+                        // let range: vscode.Range | null = null;
+                        // if (node.end_line) {
+                        //     const end_tokens = node.end_line.tokens();
+                        //     range = new vscode.Range(tokens[0].line, tokens[0].character, node.end_line.line, 0);
+                        // } else if (node.body.length > 0) {
+                        //     const last_body_line = node.body[node.body.length - 1];
+                        //     const end_tokens = last_body_line.line.tokens();
+                        //     range = new vscode.Range(tokens[0].line, tokens[0].character, last_body_line.line.line, 0);
+                        // }
                         if (range) {
                             let name_token: Token | null = null;
                             let kind: vscode.SymbolKind = vscode.SymbolKind.Key;
@@ -413,7 +416,7 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                                 kind = vscode.SymbolKind.Key;
                             }
                             if (node.data.to_string) {
-                                let selectRange: vscode.Range = new vscode.Range(node.start_line.line, 0, node.end_line?.line ?? node.start_line.line, 0);
+                                // let selectRange: vscode.Range = new vscode.Range(node.start_line.line, 0, node.end_line?.line ?? node.start_line.line, 0);
                                 symbol = new vscode.DocumentSymbol(node.data.to_string(), detail, kind, range, selectRange);
                                 if (parent) {
                                     parent.children.push(symbol)
@@ -444,8 +447,8 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
 
                 let name_token: Token | null = null;
                 let kind: vscode.SymbolKind = vscode.SymbolKind.Key;
-                let range: vscode.Range | null = null;
-                let selectRange: vscode.Range | null = null;
+                const range = new vscode.Range(body_line.line.line, 0, body_line.line.line, body_line.line.text_line().text.length);
+                let selectRange: vscode.Range  = new vscode.Range(body_line.line.line, 0, body_line.line.line, body_line.line.text_line().text.length);
                 const tokens = body_line.line.tokens();
 
                 if (body_line_data instanceof Member) {
@@ -462,12 +465,12 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
 
                     if (body_line_data.name) {
                         // let name = "";
-                        const start_line = body_line.line.line;
-                        const start_position = 0;
-                        const end_line = body_line.line.line;
-                        const end_position = tokens[tokens.length - 1].end.position;
-                        const range = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
-                        let selectRange = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
+                        // const start_line = body_line.line.line;
+                        // const start_position = 0;
+                        // const end_line = body_line.line.line;
+                        // const end_position = tokens[tokens.length - 1].end.position;
+                        // const range = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
+                        // let selectRange = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
                         const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), body_line.type, kind, range, selectRange);
                         if (parent) {
                             parent.children.push(symbol)
@@ -495,17 +498,17 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                 } else if (body_line_data instanceof Set) {
                     if (body_line_data.name) {
                         // let name = "";
-                        const range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
-                        let selectRange = range;
-                        if (body_line_data.name.names.length > 0) {
-                            const start = body_line_data.name;
-                            const end = body_line_data.name;
-                            const start_line = start.get_start_line_number();
-                            const start_position = start.get_start_line_position();
-                            const end_line = end.get_end_line_number();
-                            const end_position = end.get_end_line_position();
-                            selectRange.with(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
-                        }
+                        // const range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
+                        // let selectRange = range;
+                        // if (body_line_data.name.names.length > 0) {
+                        //     const start = body_line_data.name;
+                        //     const end = body_line_data.name;
+                        //     const start_line = start.get_start_line_number();
+                        //     const start_position = start.get_start_line_position();
+                        //     const end_line = end.get_end_line_number();
+                        //     const end_position = end.get_end_line_position();
+                        //     selectRange.with(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
+                        // }
                         const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), "set", vscode.SymbolKind.Variable, range, selectRange);
                         if (parent) {
                             parent.children.push(symbol)
@@ -516,9 +519,9 @@ class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
                     }
                 } else {
                 }
-                if (tokens.length > 0) {
-                    range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
-                }
+                // if (tokens.length > 0) {
+                //     range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
+                // }
                 if (name_token) {
                     selectRange = new vscode.Range(name_token.line, name_token.start.position, name_token.line, name_token.end.position);
                 }

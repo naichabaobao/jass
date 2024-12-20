@@ -386,7 +386,7 @@ export class Document {
   /**
    * 指示import文本替换怎遍历
    */
-  public line_import_indexs: {
+  private line_import_indexs: {
     line: number,
     is_import: boolean,
     index: number
@@ -394,7 +394,7 @@ export class Document {
   /**
    * textmacro 指示
    */
-  public line_run_text_macro_indexs: {
+  private line_run_text_macro_indexs: {
     line: number,
     is_run_text_macro: boolean,
     index: number
@@ -402,7 +402,7 @@ export class Document {
   /**
    * textmacro 指示
    */
-  public line_text_macro_indexs: {
+  private line_text_macro_indexs: {
     line: number,
     /**
      * -1 error

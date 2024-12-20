@@ -527,6 +527,12 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
 export class Take {
     public type: Token | null = null;
     public name: Token | null = null;
+
+    public to_string(): string {
+        const type_string = this.type ? this.type.getText() : "(unkown_type)";
+        const name_string = this.name ? this.name.getText() : "(unkown_name)";
+        return `${type_string} ${name_string}`;
+    }
 }
 export class Method extends NodeAst {
     public visible: Token | null = null;
@@ -541,9 +547,10 @@ export class Method extends NodeAst {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
         const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
-        const name_string = this.name ? this.name + " " : "";
-        const takes_string = this.takes ? (this.takes.length == 0 ? this.takes.map(take => `${take.type ? take.type : ""} ${take.name ? take.name : ""}`).join(",") : "nothing") : "nothing ";
-        return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns${name_string}`;
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+        const returns_string = this.returns ? this.returns.getText() : "nothing";
+        return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns ${returns_string}`;
     }
 
     with<T extends Modifier | Takes | Returns>(v: T) {
@@ -570,6 +577,16 @@ function parse_method(document: Document, line_text: ExpendLineText) {
 }
 
 export class Func extends Method {
+
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+        const returns_string = this.returns ? this.returns.getText() : "nothing";
+        return `${visible_string}${modifier_string}${qualifier_string}function ${name_string}takes ${takes_string} returns ${returns_string}`;
+    }
 }
 
 /**       
@@ -1468,6 +1485,15 @@ export class Return extends NodeAst {
     expr: Zoom | null = null;
 }
 export class Native extends Func {
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+        const returns_string = this.returns ? this.returns.getText() : "nothing";
+        return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
+    }
 }
 
 export function parse_line_global(document: Document, line_text: ExpendLineText) {
@@ -2666,6 +2692,7 @@ export class Other extends NodeAst { }
 
 
 export function parse_node(document: Document) {
+    // @ts-ignore
     const root_node = document.root_node;
     if (!root_node) {
         return;
@@ -3116,7 +3143,7 @@ export function slice_layer(document: Document) {
     }, (document, run_text_macro, macro, line) => {
         in_interface = slice_layer_handle(document, run_text_macro, macro, line, node_stack, root_node, in_interface).in_interface;
     });
-
+    // @ts-ignore
     document.root_node = root_node;
 
 }
@@ -3148,35 +3175,35 @@ export function parse(filePath: string, i_content?: string) {
 }
 
 if (false) {
-    parse("a/b", `
-        function a takes nothing returns nothing
-         set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
-call a.c()
-call a()
-if 5== a then
-endif
-        endfunction 
-        kkk
-        `)
-    // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-    const document = Global.get("a/b");
-    const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-    console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`), s.to_string());
-    const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
-    // @ts-ignore
-    console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
-    const d = (<Return>Global.get("a/b")?.root_node?.children[0].children[0].data);
-    console.log(d);
+//     parse("a/b", `
+//         function a takes nothing returns nothing
+//          set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
+// call a.c()
+// call a()
+// if 5== a then
+// endif
+//         endfunction 
+//         kkk
+//         `)
+//     // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
+//     const document = Global.get("a/b");
+//     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
+//     console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`), s.to_string());
+//     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
+//     // @ts-ignore
+//     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+//     const d = (<Return>Global.get("a/b")?.root_node?.children[0].children[0].data);
+//     console.log(d);
 
-    console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
-    // @ts-ignore
-    // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
-    // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
-    // console.log(document?.token_errors.map(err => err.message));
-    // @ts-ignore
-    // console.log(expr.expr);
-    // console.log(.ref?.to_string());
-    console.log(document?.program);
+//     console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
+//     // @ts-ignore
+//     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
+//     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
+//     // console.log(document?.token_errors.map(err => err.message));
+//     // @ts-ignore
+//     // console.log(expr.expr);
+//     // console.log(.ref?.to_string());
+//     console.log(document?.program);
     
 
 }
