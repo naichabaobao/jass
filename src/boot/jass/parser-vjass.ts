@@ -1,10 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { preprocessing } from "./preproces";
-import { Document, TextLine, Token, TokenType } from "./tokenizer-common";
-import { tokenize_for_vjass } from "./tokenizer-vjass";
-import { RunTextMacro, TextMacro, parse_import, parse_runtextmacro, parse_textmacro } from "./textmacro";
-import { find_node_error, find_token_error } from "./token-error";
+import { Document, RunTextMacro, TextLine, TextMacro, Token} from "./tokenizer-common";
 
 export class Context {
     private keys: string[] = [];
@@ -64,7 +60,16 @@ export class LibraryRef {
     }
     
 }
-export class Library implements ExprTrict{
+
+
+export class NodeAst {
+    public parent:NodeAst|null = null;
+    public previous:NodeAst|null = null;
+    public next:NodeAst|null = null;
+    public children:NodeAst[] = [];
+}
+
+export class Library extends NodeAst implements ExprTrict{
 
     public is_library_once: boolean = false;
     public name: Token | null = null;
@@ -241,96 +246,6 @@ function parse_library(document: Document, line_text: ExpendLineText) {
         }
     }
 
-    // const tokens = line_text.tokens();
-    // let state = 0;
-    // for (let index = 0; index < tokens.length; index++) {
-    //     const token = tokens[index];
-    //     if (token.is_block_comment || token.is_comment) {
-    //         continue;
-    //     }
-    //     const text = token.getText();
-    //     if (state == 0) {
-    //         if (text == "library") {
-    //             library.is_library_once = false;
-    //             state = 1;
-    //         } else if (text == "library_once") {
-    //             library.is_library_once = true;
-    //             state = 1;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 1) {
-    //         if (token.is_identifier) {
-    //             library.name = token;
-    //             state = 2;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 2) {
-    //         if (text == "initializer") {
-    //             state = 3;
-    //         } else if (text == "requires" || text == "uses" || text == "needs") {
-    //             state = 5;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 3) {
-    //         if (token.is_identifier) {
-    //             library.initializer = token;
-    //             state = 4;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 4) {
-    //         if (text == "requires" || text == "uses" || text == "needs") {
-    //             state = 5;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 5) {
-    //         if (text == "optional") {
-    //             library.is_optional = true;
-    //             state = 6;
-    //         } else if (token.is_identifier) {
-    //             library.requires.push(text);
-    //             state = 7;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 6) {
-    //         if (token.is_identifier) {
-    //             library.requires.push(text);
-    //             state = 7;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 7) {
-    //         if (text == ",") {
-    //             state = 8;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else if (state == 8) {
-    //         if (token.is_identifier) {
-    //             library.requires.push(text);
-    //             state = 7;
-    //         } else {
-    //             document.add_token_error(token, `error token '${text}'`);
-    //             break;
-    //         }
-    //     } else {
-    //         document.add_token_error(token, `error token '${text}'`);
-    //     }
-    // }
-
     return library;
 
     // let index = 0;
@@ -423,7 +338,7 @@ function parse_library(document: Document, line_text: ExpendLineText) {
     return library;
 }
 
-export class Scope {
+export class Scope extends NodeAst {
     public name: Token | null = null;
 }
 function parse_scope(document: Document, line_text: ExpendLineText) {
@@ -459,7 +374,7 @@ function parse_scope(document: Document, line_text: ExpendLineText) {
     return scope;
 }
 
-export class Interface {
+export class Interface extends NodeAst {
     public visible: "public" | "private" | null = null;
     public name: Token | null = null;
     public extends: string[] | null = null;
@@ -613,7 +528,7 @@ export class Take {
     public type: Token | null = null;
     public name: Token | null = null;
 }
-export class Method {
+export class Method extends NodeAst {
     public visible: Token | null = null;
     public modifier: Token | null = null;
     public qualifier: Token | null = null;
@@ -1002,7 +917,7 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
 
     return func;
 }
-export class Globals {
+export class Globals extends NodeAst {
 }
 
 function parse_globals(document: Document, line_text: ExpendLineText) {
@@ -1031,10 +946,10 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
     return globals;
 }
 
-export class If {
+export class If extends NodeAst {
     expr: Zoom | null = null;
 }
-export class Loop { }
+export class Loop extends NodeAst { }
 
 function parse_if(document: Document, line_text: ExpendLineText) {
     const ifs = new If();
@@ -1127,7 +1042,7 @@ function parse_loop(document: Document, line_text: ExpendLineText) {
     return loop;
 }
 
-export class Comment {
+export class Comment extends NodeAst {
     comment: Token | null = null;
 }
 
@@ -1158,13 +1073,13 @@ export function parse_line_comment(document: Document, line_text: ExpendLineText
     return comment;
 }
 
-export class Empty {
+export class Empty extends NodeAst {
 }
 export function parse_line_empty(document: Document, line_text: ExpendLineText) {
     return new Empty();
 }
 
-export class GlobalVariable {
+export class GlobalVariable extends NodeAst {
     // [public, private]
     public visible: Token | null = null;
     // [static, stub]
@@ -1347,7 +1262,7 @@ export class Id implements ExprTrict {
         }
     }
 }
-export class Caller implements ExprTrict {
+export class Caller extends NodeAst implements ExprTrict {
     public name: Id | null = null;
     public params: Params | null = null;
 
@@ -1521,7 +1436,7 @@ export class Params implements ExprTrict {
 // }
 
 
-export class Set {
+export class Set extends NodeAst {
     name: VariableName | null = null;
     init: Zoom | null = null;
 
@@ -1542,14 +1457,14 @@ export class Set {
         return `set ${name} = ${init}`
     }
 }
-export class Type {
+export class Type extends NodeAst {
     name: Token | null = null;
     extends: Token | null = null;
 }
 export class Call {
     ref: VariableName | null = null;
 }
-export class Ret {
+export class Return extends NodeAst {
     expr: Zoom | null = null;
 }
 export class Native extends Func {
@@ -2481,7 +2396,7 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
     return call;
 }
 export function parse_line_return(document: Document, line_text: ExpendLineText) {
-    const ret = new Ret();
+    const ret = new Return();
     const tokens = line_text.tokens();
     let state = 0;
     let index = 0
@@ -2516,7 +2431,7 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
 
     return ret;
 }
-export class ExitWhen {
+export class ExitWhen extends NodeAst {
     expr: Zoom | null = null;
 }
 export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
@@ -2556,7 +2471,7 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
 
     return ret;
 }
-export class ElseIf {
+export class ElseIf extends NodeAst {
     expr: Zoom | null = null;
 }
 export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
@@ -2624,7 +2539,7 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
 
     return ret;
 }
-export class Else {
+export class Else extends NodeAst {
     expr: Zoom | null = null;
 }
 export function parse_line_else(document: Document, line_text: ExpendLineText) {
@@ -2746,11 +2661,11 @@ function parse_line_member(document: Document, line_text: ExpendLineText) {
     return member;
 }
 
-export class Other { }
+export class Other extends NodeAst { }
 
 
 
-function parse_node(document: Document) {
+export function parse_node(document: Document) {
     const root_node = document.root_node;
     if (!root_node) {
         return;
@@ -3191,7 +3106,7 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
         in_interface
     };
 }
-function slice_layer(document: Document) {
+export function slice_layer(document: Document) {
     const node_stack: Node[] = [];
     const root_node = new Node(null);
     let in_interface = false;
@@ -3211,23 +3126,25 @@ function slice_layer(document: Document) {
 export function parse(filePath: string, i_content?: string) {
     const content: string = i_content ? i_content : fs.readFileSync(filePath, { encoding: "utf-8" });
     const document = new Document(filePath, content);
-    tokenize_for_vjass(document);
+    // tokenize_for_vjass(document);
 
 
 
-    preprocessing(document);
+    // preprocessing(document);
 
-    parse_import(document);
-    parse_textmacro(document);
-    parse_runtextmacro(document);
-    find_token_error(document);
-    Global.set(filePath, document);
+    // parse_import(document);
+    // parse_textmacro(document);
+    // parse_runtextmacro(document);
+    // find_token_error(document);
+    // Global.set(filePath, document);
 
 
-    slice_layer(document);
-    parse_node(document);
+    // slice_layer(document);
+    // parse_node(document);
 
-    find_node_error(document);
+    // find_node_error(document);
+
+    return document;
 }
 
 if (false) {
@@ -3248,7 +3165,7 @@ endif
     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
     // @ts-ignore
     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
-    const d = (<Ret>Global.get("a/b")?.root_node?.children[0].children[0].data);
+    const d = (<Return>Global.get("a/b")?.root_node?.children[0].children[0].data);
     console.log(d);
 
     console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
@@ -3259,6 +3176,8 @@ endif
     // @ts-ignore
     // console.log(expr.expr);
     // console.log(.ref?.to_string());
+    console.log(document?.program);
+    
 
 }
 

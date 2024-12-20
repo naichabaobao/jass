@@ -1,8 +1,16 @@
 
-import { Document, Position, Token, TokenHandleResult, TokenType, symbol_state, tokenize } from "./tokenizer-common";
+import { Document, Position, Token, TokenHandleResult, TokenType, tokenize } from "./tokenizer-common";
 
 
-
+function symbol_state(char: string): number {
+    let id = 0x00000000;
+    for (let index = 0; index < char.length; index++) {
+      const new_id = char.charCodeAt(index);
+      // id &= new_id;
+      id += new_id;
+    }
+    return id;
+  }
 
 // export class TokenType extends TokenType {
 //     static BlockComment = "BlockComment";
