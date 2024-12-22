@@ -27,7 +27,7 @@ import * as vscode from 'vscode';
 import { Options } from './options';
 import { Token, TokenType } from '../jass/tokenizer-common';
 import { isAiFile, isJFile } from '../tool';
-import { Global, Node } from '../jass/parser-vjass';
+import { GlobalContext, Node } from '../jass/parser-vjass';
 import { AsyncSubject, Subject } from '../../extern/rxjs';
 
 const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
@@ -56,7 +56,7 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 
 	const diagnostics:vscode.Diagnostic[] = [];
 
-	const doc = Global.get(document.fileName);
+	const doc = GlobalContext.get(document.fileName);
 	
 	doc?.token_errors.forEach(err => {
 		error(diagnostics, err.token, err.message);

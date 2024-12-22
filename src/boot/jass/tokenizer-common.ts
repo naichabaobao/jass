@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Global, Node, NodeAst, parse, parse_node, slice_layer } from "./parser-vjass";
+import { Func, GlobalContext, Method, Native, Node, NodeAst, parse, parse_node, slice_layer } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 
 
@@ -136,10 +136,10 @@ export class Import extends Range {
 
   public get document(): Document | undefined {
     if (this.is_legal) {
-      if (!Global.has(this.abs_path!)) {
+      if (!GlobalContext.has(this.abs_path!)) {
         parse(this.abs_path!);
       }
-      return Global.get(this.abs_path!);
+      return GlobalContext.get(this.abs_path!);
     }
     return;
   }
@@ -243,7 +243,7 @@ export class RunTextMacro extends Range {
 
   public loop(callback: (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => void) {
     // 找到对应textmacro
-    const text_macro = Global.getAllTextMacros().find(macro => {
+    const text_macro = GlobalContext.getAllTextMacros().find(macro => {
       return macro.name != null && macro.name == this.name
     });
 
@@ -307,7 +307,7 @@ export class Document {
     if (this.root_node) {
       this.program = this.expand_node(this.root_node);
     }
-    Global.set(filePath, this);
+    GlobalContext.set(filePath, this);
   }
 
   public program: NodeAst | null = null;
@@ -756,10 +756,10 @@ export class Document {
    * 
    * @param node 
    */
-  private expand_node<T extends NodeAst>(node: Node) {
-    const object: T = node.data ?? new NodeAst();
+  private expand_node(node: Node): NodeAst {
+    const object: NodeAst = node.data ?? new NodeAst();
     if (node.parent) {
-      const parent: T = node.parent.data;
+      const parent:  NodeAst = node.parent.data;
       object.parent = parent;
       const index = node.parent.children.indexOf(node);
       if (index != -1) {
@@ -772,8 +772,43 @@ export class Document {
     node.children.forEach(child => {
       object.children.push(this.expand_node(child));
     });
+
     return object;
   }
+
+  private for_program_handle(node: NodeAst, callback: (node: NodeAst) => void) {
+    callback(node);
+    node.children.forEach((child) => {
+      this.for_program_handle(child, callback);
+    });
+  }
+  private for_program(callback: (node:NodeAst) => void):void {
+    if (this.program) {
+      this.for_program_handle(this.program, callback);
+    }
+  }
+
+  public get_function(function_name: string):(Func|Method|Native)[] {
+    const objects:(Func|Method|Native)[] = [];
+    this.for_program((node) => {
+      if (node instanceof Func || node instanceof Native) {
+        if (node.name?.getText() == function_name) {
+          objects.push(node);
+        }
+      } else if (node instanceof Method) {
+
+      }
+    });
+    return objects;
+  }
+
+  /**
+   * 将program跟节点对象下面所有解析的节点分类存储
+   */
+  private classification() {
+
+  }
+
 }
 
 

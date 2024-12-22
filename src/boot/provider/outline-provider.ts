@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { DataGetter, parseContent } from "./data";
 import { GlobalObject, Program } from "../jass/ast";
 import { Options } from "./options";
-import { Func, Global, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type, Set } from "../jass/parser-vjass";
+import { Func, GlobalContext, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type, Set } from "../jass/parser-vjass";
 import { Token } from "../jass/tokenizer-common";
 
 function genSymbols(program: Program) {
@@ -337,7 +337,7 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
 class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
     provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
         const symbols: vscode.DocumentSymbol[] = [];
-        let doc = Global.get(document.fileName);
+        let doc = GlobalContext.get(document.fileName);
         if (!doc) {
             return;
         }

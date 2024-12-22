@@ -6,7 +6,7 @@ import { execSync } from "child_process";
 import { mkdirSync, unlinkSync, writeFileSync } from "fs";
 import { tokenize_for_vjass } from "./tokenizer-vjass";
 import { Token } from "./tokenizer-common";
-import { Global, parse } from "./parser-vjass";
+import { GlobalContext, parse } from "./parser-vjass";
 import { Parser } from "./parser";
 import { Context } from "./ast";
 import { Options } from "../provider/options";

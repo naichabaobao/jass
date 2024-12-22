@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Global } from "../jass/parser-vjass";
+import { GlobalContext } from "../jass/parser-vjass";
 import * as common from "../jass/tokenizer-common"
 
 
@@ -230,7 +230,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
     }
 
     console.time("格式化");
-    const doc = Global.get(document.uri.fsPath);
+    const doc = GlobalContext.get(document.uri.fsPath);
     
     if (doc) {
       for (let line = 0; line < doc.lineCount; line++) {
@@ -256,7 +256,7 @@ vscode.languages.registerOnTypeFormattingEditProvider("jass", new  class TypeFor
     const formats = new Array<vscode.TextEdit>();
     
     console.time("auto format line");
-    const doc = Global.get(document.uri.fsPath);
+    const doc = GlobalContext.get(document.uri.fsPath);
     
     if (doc) {
       

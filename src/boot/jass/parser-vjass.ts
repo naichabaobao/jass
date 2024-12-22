@@ -47,7 +47,7 @@ export class Context {
     }
 }
 
-export const Global = new Context();
+export const GlobalContext = new Context();
 
 //#region 解析
 export class LibraryRef {
@@ -62,11 +62,12 @@ export class LibraryRef {
 }
 
 
+
 export class NodeAst {
-    public parent:NodeAst|null = null;
-    public previous:NodeAst|null = null;
-    public next:NodeAst|null = null;
-    public children:NodeAst[] = [];
+    public parent: NodeAst|null = null;
+    public previous: NodeAst|null = null;
+    public next: NodeAst|null = null;
+    public children:Array< NodeAst> = [];
 }
 
 export class Library extends NodeAst implements ExprTrict{

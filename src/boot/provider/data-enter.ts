@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as vscode from 'vscode';
 import { Options } from './options';
-import { Global, parse } from '../jass/parser-vjass';
+import { GlobalContext, parse } from '../jass/parser-vjass';
 
 import {Subject} from "../../extern/rxjs/index.js";
 import { debounceTime, } from '../../extern/rxjs/operators';
@@ -45,7 +45,7 @@ vscode.workspace.onDidChangeConfiguration((event) => {
 	excludes = jass_config_json_excludes();
 
 	excludes.forEach(file_path => {
-		Global.delete(file_path);
+		GlobalContext.delete(file_path);
 	});
 });
 
@@ -115,7 +115,7 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach(uri => {
-		Global.delete(uri.fsPath);
+		GlobalContext.delete(uri.fsPath);
 
 		update_map.get(uri.fsPath)?.complete();
 		update_map.delete(uri.fsPath);
@@ -124,7 +124,7 @@ vscode.workspace.onDidDeleteFiles((event) => {
 
 vscode.workspace.onDidRenameFiles((event) => {
 	event.files.forEach((uri) => {
-		Global.delete(uri.oldUri.fsPath);
+		GlobalContext.delete(uri.oldUri.fsPath);
 		parse(uri.newUri.fsPath);
 
 		if (update_map.has(uri.oldUri.fsPath)) {

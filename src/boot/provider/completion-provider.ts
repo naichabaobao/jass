@@ -19,6 +19,7 @@ import { Token, tokenize } from "../jass/tokens";
 import { getKeywordDescription } from "./keyword-desc";
 import { Document, lexically } from "../check/mark";
 import { ConfigPovider, PluginDefaultConfig } from "./config/config";
+import { GlobalContext } from "../jass/parser-vjass";
 
 
 
@@ -759,11 +760,31 @@ vscode.languages.registerCompletionItemProvider("jass", new class NumberCompleti
          
      });
 
+    const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
+    console.log(funcs);
+    
 
     }
     return items;
   }
 
 }(), "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+/**
+ * 提示数字
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class NumberCompletionItemProvider1 implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
+    
+    const items:vscode.CompletionItem[] = [];
+
+
+    const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
+    console.log(funcs);
+    
+
+    return items;
+  }
+
+}());
 
 
