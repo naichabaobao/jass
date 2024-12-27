@@ -992,7 +992,7 @@ globals
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
 	// 地图参数 使用随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 地图转换（加载新地图）
+	// 地图参数 地图转换（重载地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
 	// 出生点放置方式 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
