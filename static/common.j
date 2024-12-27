@@ -4437,9 +4437,9 @@ native SetMapDescription takes string description returns nothing
 native SetTeams takes integer teamcount returns nothing
 // 设置玩家数量，需在设置玩家颜色前使用
 native SetPlayers takes integer playercount returns nothing
-// 设置默认出生点(指定出生点编号绑定到指定坐标)
+// 设置出生点(指定出生点编号绑定到指定坐标)
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
-// 设置默认出生点(指定出生点编号绑定到指定点)
+// 设置出生点(指定出生点编号绑定到指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
 // 设置出生点分布编号(指定玩家槽)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
