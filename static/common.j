@@ -4514,6 +4514,7 @@ constant native GetStartLocationLoc takes integer whichStartLocation returns loc
 // 设置指定玩家所在队伍
 native SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing
 // 设置指定玩家出生点编号
+// @param startLocIndex 玩家出生点编号，带入0~11/23
 native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // forces player to have the specified start loc and marks the start loc as occupied
 // which removes it from consideration for subsequently placed players
