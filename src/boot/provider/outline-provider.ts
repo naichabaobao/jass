@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { DataGetter, parseContent } from "./data";
 import { GlobalObject, Program } from "../jass/ast";
 import { Options } from "./options";
-import { Func, GlobalContext, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type, Set } from "../jass/parser-vjass";
+import { Func, GlobalContext, Native, Method, Node, Member, Globals, Struct, Interface, Library, Scope, If, Loop, Local, Type, Set, NodeAst, GlobalVariable } from "../jass/parser-vjass";
 import { Token } from "../jass/tokenizer-common";
 
 function genSymbols(program: Program) {
@@ -333,222 +333,146 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     }
 
 }
+class Wrap {
+    ast:NodeAst;
+    symbol: vscode.DocumentSymbol;
 
+    constructor(ast:NodeAst, symbol: vscode.DocumentSymbol) {
+        this.ast = ast;
+        this.symbol = symbol;
+    }
+
+    public equals(ast: NodeAst):boolean {
+        return this.ast === ast; // && this.symbol.range.isEqual(wrap.symbol.range);
+    }
+}
+class Stack {
+    private wraps:Wrap[] = [];
+
+    public index_of(ast: NodeAst) {
+        const index = this.wraps.findIndex(x => {
+            return x.equals(ast);
+        });
+        return index;
+    }
+
+    public has(ast: NodeAst) {
+        return this.index_of(ast) != -1;
+    }
+
+    public add(wrap: Wrap) {
+        if (!this.has(wrap.ast)) {
+            this.wraps.push(wrap);
+        }
+    }
+
+    public delete(ast: NodeAst) {
+        const index = this.index_of(ast);
+        if (index != -1) {
+            this.wraps.splice(index, 1);
+        }
+    }
+
+    public get(ast: NodeAst):Wrap|undefined {
+        const index = this.index_of(ast);
+        return this.wraps[index];
+    }
+}
 class DocumentSymbolExprProvider implements vscode.DocumentSymbolProvider {
     provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken) {
         const symbols: vscode.DocumentSymbol[] = [];
         let doc = GlobalContext.get(document.fileName);
-        if (!doc) {
+        if (!!!doc) {
             return;
         }
-
-
-        const handle = (parent: vscode.DocumentSymbol | null, node: Node) => {
-            // let name: string = "";
-            let detail: string = "";
-            let symbol: vscode.DocumentSymbol | null = null;
-            // if (node.data) {
-            //     if ("name" in node.data) {
-            //         name = node.data.name;
-            //     }
-            // }
-            if (node.type) {
-                const range = new vscode.Range(node.start_line?.line ?? 0, 0, node.end_line?.line ?? (node.start_line?.line ?? 0), 0);
-                let selectRange: vscode.Range  = range;
-
-                detail = node.type;
-                if (node.start_line) {
-                    const tokens = node.start_line.tokens();
-                    if (tokens.length > 0) {
-                        // let range: vscode.Range | null = null;
-                        // if (node.end_line) {
-                        //     const end_tokens = node.end_line.tokens();
-                        //     range = new vscode.Range(tokens[0].line, tokens[0].character, node.end_line.line, 0);
-                        // } else if (node.body.length > 0) {
-                        //     const last_body_line = node.body[node.body.length - 1];
-                        //     const end_tokens = last_body_line.line.tokens();
-                        //     range = new vscode.Range(tokens[0].line, tokens[0].character, last_body_line.line.line, 0);
-                        // }
-                        if (range) {
-                            let name_token: Token | null = null;
-                            let kind: vscode.SymbolKind = vscode.SymbolKind.Key;
-                            if (node.data instanceof Func || node.data instanceof Native || node.data instanceof Method) {
-                                name_token = node.data.name;
-                                if (node.parent && node.parent.data instanceof Library && node.parent.data.initializer && node.parent.data.initializer.getText() == node.data.name?.getText()) {
-                                    kind = vscode.SymbolKind.Event;
-                                } else {
-                                    kind = vscode.SymbolKind.Function;
-                                }
-                            } else if (node.data instanceof Globals) {
-                                name_token = tokens[0];
-                                kind = vscode.SymbolKind.Package;
-                            } else if (node.data instanceof Interface) {
-                                name_token = node.data.name;
-                                kind = vscode.SymbolKind.Interface;
-                            } else if (node.data instanceof Struct) {
-                                name_token = node.data.name;
-                                kind = vscode.SymbolKind.Class;
-                            } else if (node.data instanceof Library) {
-                                name_token = node.data.name;
-                                kind = vscode.SymbolKind.Namespace;
-                            } else if (node.data instanceof Scope) {
-                                name_token = node.data.name;
-                                kind = vscode.SymbolKind.Namespace;
-                            } else if (node.data instanceof If) {
-                                name_token = tokens[0];
-                                kind = vscode.SymbolKind.Boolean;
-                            } else if (node.data instanceof Loop) {
-                                name_token = tokens[0];
-                                kind = vscode.SymbolKind.Array;
-                            } else if (node.data instanceof Member) {
-                                name_token = node.data.name;
-                                if (node.data.qualifier?.getText() == "constant") {
-                                    kind = vscode.SymbolKind.Constant;
-                                } else if (node.data.is_array) {
-                                    kind = vscode.SymbolKind.Array;
-                                } else if (node.data.modifier?.getText() == "static") {
-                                    kind = vscode.SymbolKind.Property;
-                                } else {
-                                    kind = vscode.SymbolKind.EnumMember;
-                                }
-                            } else {
-                                name_token = tokens[0];
-                                kind = vscode.SymbolKind.Key;
-                            }
-                            if (node.data.to_string) {
-                                // let selectRange: vscode.Range = new vscode.Range(node.start_line.line, 0, node.end_line?.line ?? node.start_line.line, 0);
-                                symbol = new vscode.DocumentSymbol(node.data.to_string(), detail, kind, range, selectRange);
-                                if (parent) {
-                                    parent.children.push(symbol)
-                                } else {
-                                    symbols.push(symbol);
-                                    // return symbol;
-                                }
-                            }
-                            else if (name_token) {
-                                let selectRange: vscode.Range = new vscode.Range(name_token.line, name_token.start.position, name_token.line, name_token.end.position);
-                                symbol = new vscode.DocumentSymbol(name_token.getText(), detail, kind, range, selectRange);
-                                if (parent) {
-                                    parent.children.push(symbol)
-                                } else {
-                                    symbols.push(symbol);
-                                    // return symbol;
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            // 行成员
-            node.body.forEach((body_line, index) => {
-                const body_line_data = node.body_datas[index];
-
-                let name_token: Token | null = null;
-                let kind: vscode.SymbolKind = vscode.SymbolKind.Key;
-                const range = new vscode.Range(body_line.line.line, 0, body_line.line.line, body_line.line.text_line().text.length);
-                let selectRange: vscode.Range  = new vscode.Range(body_line.line.line, 0, body_line.line.line, body_line.line.text_line().text.length);
-                const tokens = body_line.line.tokens();
-
-                if (body_line_data instanceof Member) {
-                    name_token = body_line_data.name;
-                    if (body_line_data.qualifier && body_line_data.qualifier.getText() == "constant") {
-                        kind = vscode.SymbolKind.Constant;
-                    } else if (body_line_data.is_array) {
-                        kind = vscode.SymbolKind.Array;
-                    } else if (body_line_data.modifier && body_line_data.modifier.getText() == "static") {
-                        kind = vscode.SymbolKind.Property;
-                    } else {
-                        kind = vscode.SymbolKind.EnumMember;
-                    }
-
-                    if (body_line_data.name) {
-                        // let name = "";
-                        // const start_line = body_line.line.line;
-                        // const start_position = 0;
-                        // const end_line = body_line.line.line;
-                        // const end_position = tokens[tokens.length - 1].end.position;
-                        // const range = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
-                        // let selectRange = new vscode.Range(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
-                        const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), body_line.type, kind, range, selectRange);
-                        if (parent) {
-                            parent.children.push(symbol)
-                        } else {
-                            symbols.push(symbol);
-                            // return symbol;
-                        }
-                    }
-                } else if (body_line_data instanceof Local) {
-                    name_token = body_line_data.name;
-                    if (body_line_data.is_array) {
-                        kind = vscode.SymbolKind.Array;
-                    } else {
-                        kind = vscode.SymbolKind.Variable;
-                    }
-                } else if (body_line_data instanceof Native) {
-                    name_token = body_line_data.name;
-                    kind = vscode.SymbolKind.Function;
-                } else if (body_line_data instanceof Method) {
-                    name_token = body_line_data.name;
-                    kind = vscode.SymbolKind.Method;
-                } else if (body_line_data instanceof Type) {
-                    name_token = body_line_data.name;
-                    kind = vscode.SymbolKind.Class;
-                } else if (body_line_data instanceof Set) {
-                    if (body_line_data.name) {
-                        // let name = "";
-                        // const range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
-                        // let selectRange = range;
-                        // if (body_line_data.name.names.length > 0) {
-                        //     const start = body_line_data.name;
-                        //     const end = body_line_data.name;
-                        //     const start_line = start.get_start_line_number();
-                        //     const start_position = start.get_start_line_position();
-                        //     const end_line = end.get_end_line_number();
-                        //     const end_position = end.get_end_line_position();
-                        //     selectRange.with(new vscode.Position(start_line, start_position), new vscode.Position(end_line, end_position));
-                        // }
-                        const symbol = new vscode.DocumentSymbol(body_line_data.to_string(), "set", vscode.SymbolKind.Variable, range, selectRange);
-                        if (parent) {
-                            parent.children.push(symbol)
-                        } else {
-                            symbols.push(symbol);
-                            // return symbol;
-                        }
-                    }
+        console.log(doc.locals.length);
+        const stack: Stack = new Stack();
+        const push = (node: NodeAst, symbol: vscode.DocumentSymbol) => {
+            if (node.parent) {
+                const wrap = stack.get(node.parent);
+                if (wrap) {
+                    wrap.symbol.children.push(symbol);
                 } else {
+                    symbols.push(symbol);
                 }
-                // if (tokens.length > 0) {
-                //     range = new vscode.Range(tokens[0].line, tokens[0].character, tokens[tokens.length - 1].line, tokens[tokens.length - 1].end.position);
-                // }
-                if (name_token) {
-                    selectRange = new vscode.Range(name_token.line, name_token.start.position, name_token.line, name_token.end.position);
-                }
-
-                if (name_token && range && selectRange) {
-
-                    const symbol = new vscode.DocumentSymbol(name_token.getText(), body_line.type, kind, range, selectRange);
-                    if (parent) {
-                        parent.children.push(symbol)
-                    } else {
-                        symbols.push(symbol);
-                        // return symbol;
-                    }
-                }
-            });
-
-            node.children.forEach(child_node => {
-                handle(symbol, child_node);
-            });
-        };
-        try {
-
-            handle(null, doc.root_node!);
-        } catch (error) {
-            console.error(error);
-
+            } else {
+                symbols.push(symbol);
+            }
+            if (node.children.length > 0) {
+                stack.add(new Wrap(node, symbol));
+            }
         }
+        doc.every((node) => {
+            const range = new vscode.Range(node.start.line, node.start.position, node.end.line, node.end.position);
+            let selectRange: vscode.Range  = range;
+            if (node instanceof Local) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "local", vscode.SymbolKind.Variable, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof GlobalVariable) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "global variable", node.is_array ? vscode.SymbolKind.Array : node.qualifier ? vscode.SymbolKind.Constant : vscode.SymbolKind.Variable, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof If) {
+                const symbol = new vscode.DocumentSymbol("if", "if", vscode.SymbolKind.Field, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Loop) {
+                const symbol = new vscode.DocumentSymbol("loop", "loop", vscode.SymbolKind.Field, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Method) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "method", vscode.SymbolKind.Function, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Func) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "function", vscode.SymbolKind.Function, range, selectRange);
+                
+
+                push(node, symbol);
+            } else if (node instanceof Native) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "native", vscode.SymbolKind.Function, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Library) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "library", vscode.SymbolKind.Namespace, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Struct) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "struct", vscode.SymbolKind.Class, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Interface) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "interface", vscode.SymbolKind.Interface, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Globals) {
+                const symbol = new vscode.DocumentSymbol("globals", "globals", vscode.SymbolKind.Field, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Type) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "type", vscode.SymbolKind.Class, range, selectRange);
+
+                push(node, symbol);
+            } else if (node instanceof Scope) {
+                const symbol = new vscode.DocumentSymbol(node.name?.getText() ?? "(unkown)", "scope", vscode.SymbolKind.Namespace, range, selectRange);
+
+                push(node, symbol);
+            }
+          });
+        // doc.functions.forEach(func => {
+        //     const range = new vscode.Range(func.start.line, func.start.position, func.end.line, func.end.position);
+        //     let selectRange: vscode.Range  = range;
+        //     const symbol = new vscode.DocumentSymbol(func.name?.getText() ?? "(unkown)", "function", vscode.SymbolKind.Function, range, selectRange);
+        //     symbols.push(symbol);
+        // });
+
+        doc.text_macros.forEach((text_macro) => {
+            const range = new vscode.Range(text_macro.start.line, 0, text_macro.end.line, 0);
+            let selectRange: vscode.Range  = range;
+            const symbol = new vscode.DocumentSymbol(doc!.lineAt(text_macro.start_line).text, "textmacro", vscode.SymbolKind.Field, range, selectRange);
+            symbols.push(symbol);
+        });
 
         return symbols;
     }

@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Func, GlobalContext, Method, Native, Node, NodeAst, parse, parse_node, slice_layer } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Method, Native, NodeAst, Other, Scope, Set, Struct, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 
 
@@ -271,6 +271,53 @@ const TextMacroRegExp = /\/\/!\s+textmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?:ta
 const RunTextMacroStartWithRegExp = /\/\/!\s+runtextmacro\b/;
 const RunTextMacroRegExp = /\/\/!\s+runtextmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?<param_body>\(\s*(?<params>.+)\s*\))?/;
 
+class Segment {
+  parent: Block|null = null;
+
+  // 用于接收解析后的对象
+  public data:any;
+
+  type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type";
+
+  constructor(type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type", tokens:Token[]) {
+    this.type = type;
+    this.tokens = tokens;
+  }
+
+  tokens:Token[] = [];
+}
+class Block {
+  parent: Block|null = null;
+  children: (Block|Segment)[] = [];
+
+  // 用于接收解析后的对象
+  public data:any;
+
+  type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop";
+  constructor(type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", start_tokens:Token[]) {
+    this.type = type;
+
+    this.start_tokens = start_tokens;
+  }
+
+  start_tokens:Token[] = [];
+  end_tokens:Token[] = [];
+
+  public last_block():Block {
+    if (this.children.length > 0) {
+      const blocks:Block[] = this.children.filter((x) => {
+        return x instanceof Block;
+      })as Block[];
+      if (blocks.length > 0) {
+        return (blocks[blocks.length - 1]).last_block();
+      } else {
+        return this;
+      }
+    } else {
+      return this;
+    }
+  }
+}
 
 export class Document {
   public readonly content: string;
@@ -295,19 +342,31 @@ export class Document {
 
     this.parse_import();
     this.parse_textmacro();
+
+    GlobalContext.set(filePath, this);
+
     this.parse_runtextmacro();
     this.find_token_error();
 
 
-    slice_layer(this);
-    parse_node(this);
+    this.object_list = this.slice_layer();
+    this.parse_node();
+    // this.find_node_error();
+    
+    
+    if (this.object_list) {
+      const root_node = new NodeAst(this);
+      this.object_list.forEach(x => {
+        root_node.children.push(this.expand_node(x));
+      });
+      this.program = root_node;
 
-    this.find_node_error();
-
-    if (this.root_node) {
-      this.program = this.expand_node(this.root_node);
+      this.classification();
+      
     }
-    GlobalContext.set(filePath, this);
+
+    // 不需要的对象，设置为null
+    // this.root_node = null;
   }
 
   public program: NodeAst | null = null;
@@ -361,7 +420,7 @@ export class Document {
     return this.tokens.slice(token_index_cache.index, token_index_cache.index + token_index_cache.count);
   }
 
-  public root_node: Node | null = null;
+  // public root_node: Node | null = null;
 
   /**
    * 记录每个分行的点，使用这种方法只需消耗一点内存有几百倍的性能提升
@@ -468,27 +527,27 @@ export class Document {
   public add_token_error(token: Token, message: string) {
     this.token_errors.push({ token, message });
   }
-  node_errors: { node: Node, message: string, charge?: number }[] = [];
-  public add_node_error(node: Node, message: string) {
-    this.node_errors.push({ node, message });
-  }
+  // node_errors: { node: Node, message: string, charge?: number }[] = [];
+  // public add_node_error(node: Node, message: string) {
+  //   this.node_errors.push({ node, message });
+  // }
 
-  public foreach(callback: (node: Node) => void) {
-    const fallback = (node: Node) => {
-      if (node.type == "zinc") {
-        return;
-      }
-      callback(node);
-      if (node.children.length > 0) {
-        node.children.forEach(child_node => {
-          fallback(child_node);
-        });
-      }
-    }
-    if (this.root_node) {
-      fallback(this.root_node);
-    }
-  }
+  // public foreach(callback: (node: Node) => void) {
+  //   const fallback = (node: Node) => {
+  //     if (node.type == "zinc") {
+  //       return;
+  //     }
+  //     callback(node);
+  //     if (node.children.length > 0) {
+  //       node.children.forEach(child_node => {
+  //         fallback(child_node);
+  //       });
+  //     }
+  //   }
+  //   if (this.root_node) {
+  //     fallback(this.root_node);
+  //   }
+  // }
 
   private preprocessing() {
     // const macros:Macro[] = [];
@@ -583,8 +642,6 @@ export class Document {
       }
     }
   }
-
-
 
 
 
@@ -739,16 +796,320 @@ export class Document {
           handle(macro.lineTokens(line, run_text_macro.param_values()));
       });
   }
-  private find_node_error() {
-    this.foreach((node) => {
-      if (!node.end_line) {
-        // 避免根节点未闭合
-        if (node.parent != null) {
-          this.add_node_error(node, `end tag not found`);
+  // private find_node_error() {
+  //   this.foreach((node) => {
+  //     if (!node.end_line) {
+  //       // 避免根节点未闭合
+  //       if (node.parent != null) {
+  //         this.add_node_error(node, `end tag not found`);
+  //       }
+  //     }
+  //   });
+  // }
+
+  // private for_line(line:number, tokens: Token[]) {
+
+  // }
+
+  private is_start_with(tokens: Token[], keyword: string|((token:Token) => boolean), excute_string: string[] = ["debug"]):boolean {
+    for (let index = 0; index < tokens.length; index++) {
+      const token = tokens[index];
+      if (token.is_block_comment) {
+        continue;
+      } else if (excute_string.includes(token.getText())) {
+        continue;
+      } else if (typeof keyword == "string" ? token.getText() == keyword : keyword(token)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+  /**
+   * 文档最根部的对象
+   * 根据每一行分层
+   */
+  private object_list:(Block|Segment)[] = [];
+  private slice_layer() {
+    const blocks:Block[] = [];
+    const list:(Block|Segment)[] = [];
+    const last_block = () => {
+      return blocks[blocks.length - 1];
+    }
+
+    let in_interface = false;
+    const handle_one_line = (tokens: Token[]) => {
+      const handle = () => {
+        const push_block_to = (block:Block) => {
+          if (blocks.length > 0) {
+            block.parent = blocks[blocks.length - 1];
+            blocks[blocks.length - 1].children.push(block);
+          } else {
+            list.push(block);
+          }
+          blocks.push(block);
+        };
+        const push_segment_to = (segment:Segment) => {
+          if (blocks.length > 0) {
+            segment.parent = blocks[blocks.length - 1];
+            blocks[blocks.length - 1].children.push(segment);
+          } else {
+            list.push(segment);
+          }
+        };
+        if (this.is_start_with(tokens, "function", ["debug", "private", "public"])) {
+          push_block_to(new Block("func", tokens));
+        } else if (this.is_start_with(tokens, "method", ["debug", "private", "public", "static", "stub"])) {
+          if (in_interface) {
+            push_segment_to(new Segment("method", tokens));
+          } else {
+            push_block_to(new Block("method", tokens));
+          }
+        } else if (this.is_start_with(tokens, "struct", ["debug", "private", "public"])) {
+          push_block_to(new Block("struct", tokens));
+        } else if (this.is_start_with(tokens, "interface", ["debug", "private", "public"])) {
+          push_block_to(new Block("interface", tokens));
+          in_interface = true;
+        } else if (this.is_start_with(tokens, "library", ["debug", "private", "public"])) {
+          push_block_to(new Block("library", tokens));
+        } else if (this.is_start_with(tokens, "globals")) {
+          push_block_to(new Block("globals", tokens));
+        } else if (this.is_start_with(tokens, "scope", ["debug", "private", "public"])) {
+          push_block_to(new Block("scope", tokens));
+        } else if (this.is_start_with(tokens, "if", ["debug", "static"])) {
+          push_block_to(new Block("if", tokens));
+        } else if (this.is_start_with(tokens, "loop")) {
+          push_block_to(new Block("loop", tokens));
+        } else if (this.is_start_with(tokens, "zinc")) {
+          push_block_to(new Block("zinc", tokens));
+        } 
+        // "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type"
+        else if (this.is_start_with(tokens, "local")) {
+          push_segment_to(new Segment("local", tokens));
+        } else if (this.is_start_with(tokens, "set")) {
+          push_segment_to(new Segment("set", tokens));
+        } else if (this.is_start_with(tokens, "call")) {
+          push_segment_to(new Segment("call", tokens));
+        } else if (this.is_start_with(tokens, "return")) {
+          push_segment_to(new Segment("return", tokens));
+        } else if (this.is_start_with(tokens, "native",  ["debug", "private", "public", "static", "stub", "constant"])) {
+          push_segment_to(new Segment("native", tokens));
+        } else if (this.is_start_with(tokens, "exitwhen")) {
+          push_segment_to(new Segment("exitwhen", tokens));
+        } else if (this.is_start_with(tokens, "elseif")) {
+          push_segment_to(new Segment("elseif", tokens));
+        } else if (this.is_start_with(tokens, "else")) {
+          push_segment_to(new Segment("else", tokens));
+        } else if (this.is_start_with(tokens, "type")) {
+          push_segment_to(new Segment("type", tokens));
+        } else if (this.is_start_with(tokens, (t) => t.is_identifier)) {
+          push_segment_to(new Segment("member", tokens));
+        } else if (this.is_start_with(tokens, (t) => t.is_comment)) {
+          push_segment_to(new Segment("comment", tokens));
+        } else if (this.is_start_with(tokens, (t) => !!t)) {
+          push_segment_to(new Segment("other", tokens));
+        }
+      };
+      /*
+      if (blocks.length > 0) {
+        const block = last_block();
+        const around = (type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", keyword: string) => {
+          if (block.type == type) {
+            if (this.is_start_with(tokens, keyword)) {
+              if (keyword == "endinterface") {
+                in_interface = false;
+              }
+              block.end_tokens = tokens;
+              blocks.pop();
+            } else {
+              handle();
+            }
+          } else {
+            return around;
+          }
+          around("library", "endlibrary")?.call(this, "func", "endfunction")?.call(this, "globals", "endglobals")?.call(this, "if", "endif")?.call(this, "interface", "endinterface")?.call(this, "loop", "endloop")?.call(this, "method", "endmethod")?.call(this, "scope", "endscope")?.call(this, "struct", "endstruct")?.call(this, "zinc", "endzinc");
+        }
+      } else {
+        handle();
+      }
+      */
+      if (blocks.length > 0) {
+        const last_block = blocks[blocks.length - 1];
+        if (last_block.type == "func" && this.is_start_with(tokens, "endfunction")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "globals" && this.is_start_with(tokens, "endglobals")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "if" && this.is_start_with(tokens, "endif")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "loop" && this.is_start_with(tokens, "endloop")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "interface" && this.is_start_with(tokens, "endinterface")) {
+          in_interface = false;
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "method" && this.is_start_with(tokens, "endmethod")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "library" && this.is_start_with(tokens, "endlibrary")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "globals" && this.is_start_with(tokens, "endglobals")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "scope" && this.is_start_with(tokens, "endscope")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "struct" && this.is_start_with(tokens, "endendstruct")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else if (last_block.type == "zinc" && this.is_start_with(tokens, "endzinc")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
+        } else {
+          handle();
+        }
+      } else {
+        handle();
+      }
+
+    };
+    // 遍历行
+    this.loop((document, line) => {
+      const tokens = document.lineTokens(line);
+      handle_one_line(tokens);
+      
+    }, (document, run_text_macro, macro, line) => {
+      const tokens = macro.lineTokens(line, run_text_macro.param_values());
+      handle_one_line(tokens);
+    });
+
+    return list;
+  }
+
+
+  /**
+   * 根据program_list内部tokens分别解析
+   */
+  private parse_node() {
+    const handle_on_object = (node: Block | Segment) => {
+      if (node instanceof Block) {
+        if (node.type == "library") {
+          const library = parse_library(this, node.start_tokens);
+          library.end_tag = parse_line_end_tag(this, node.end_tokens, library, "endlibrary");
+
+          node.data = library;
+        }
+        else if (node.type == "scope") {
+            const scope = parse_scope(this, node.start_tokens);
+            scope.end_tag = parse_line_end_tag(this, node.end_tokens, scope, "endscope");
+            node.data = scope;
+        }
+        else if (node.type == "interface") {
+            const inter = parse_interface(this, node.start_tokens);
+            inter.end_tag = parse_line_end_tag(this, node.end_tokens, inter, "endinterface");
+            node.data = inter;
+        }
+        else if (node.type == "struct") {
+            const struct = parse_struct(this, node.start_tokens);
+            struct.end_tag = parse_line_end_tag(this, node.end_tokens, struct, "endstruct");
+            node.data = struct;
+        }
+        else if (node.type == "method") {
+            const method = parse_method(this, node.start_tokens); // ok
+            method.end_tag = parse_line_end_tag(this, node.end_tokens, method, "endmethod");
+            node.data = method;
+        }
+        else if (node.type == "func") {
+            const func = parse_function(this, node.start_tokens); // ok
+            func.end_tag = parse_line_end_tag(this, node.end_tokens, func, "endfunction");
+            node.data = func;
+        } else if (node.type == "globals") {
+            const globals = parse_globals(this, node.start_tokens); // ok
+            globals.end_tag = parse_line_end_tag(this, node.end_tokens, globals, "endglobals");
+            node.data = globals;
+        } else if (node.type == "if") {
+            const ifs = parse_if(this, node.start_tokens);
+            ifs.end_tag = parse_line_end_tag(this, node.end_tokens, ifs, "endif");
+            node.data = ifs;
+        } else if (node.type == "loop") {
+            const loop = parse_loop(this, node.start_tokens);
+            loop.end_tag = parse_line_end_tag(this, node.end_tokens, loop, "endloop");
+            node.data = loop;
+        }
+
+        node.children.forEach(child => {
+          handle_on_object(child);
+        });
+      } else {
+        if (node.type == "empty") {
+          ;;
+        } else if (node.type == "comment") {
+            const comment = parse_line_comment(this, node.tokens);
+
+            node.data = comment;
+        } else if (node.type == "local") {
+            const local = parse_line_local(this, node.tokens);
+
+            node.data = local;
+        } else if (node.type == "set") {
+            const set = parse_line_set(this, node.tokens);
+
+            node.data = set;
+        } else if (node.type == "call") {
+            const call = parse_line_call(this, node.tokens);
+
+            node.data = call;
+        } else if (node.type == "return") {
+            const ret = parse_line_return(this, node.tokens);
+          
+          
+            node.data = ret;
+        } else if (node.type == "native") {
+            const native = parse_line_native(this, node.tokens);
+
+            node.data = native;
+        } else if (node.type == "method") {
+            const method = parse_line_method(this, node.tokens);
+
+            node.data = method;
+        } else if (node.type == "member") {
+            const member = parse_line_member(this, node.tokens);
+
+            node.data = member;
+        } else if (node.type == "exitwhen") {
+            const exitwhen = parse_line_exitwhen(this, node.tokens);
+
+            node.data = exitwhen;
+        } else if (node.type == "elseif") {
+            const elseif = parse_line_else_if(this, node.tokens);
+
+            node.data = elseif;
+        } else if (node.type == "else") {
+            const el = parse_line_else(this, node.tokens);
+
+            node.data = el;
+        } else if (node.type == "type") {
+            const el = parse_line_type(this, node.tokens);
+
+            node.data = el;
+        } else if (node.type == "other") {
+            const other = new Other(this);
+            other.start_token = node.tokens[0];
+            other.end_token = node.tokens[node.tokens.length - 1];
+            node.data = other;
         }
       }
+    }
+    this.object_list.forEach(node => {
+      handle_on_object(node);
     });
-  }
+}
+
 
   // 对外接口
 
@@ -756,8 +1117,8 @@ export class Document {
    * 
    * @param node 
    */
-  private expand_node(node: Node): NodeAst {
-    const object: NodeAst = node.data ?? new NodeAst();
+  private expand_node(node:(Block|Segment)): NodeAst {
+    const object: NodeAst = node.data ?? new NodeAst(this);
     if (node.parent) {
       const parent:  NodeAst = node.parent.data;
       object.parent = parent;
@@ -769,9 +1130,12 @@ export class Document {
         object.next = next;
       }
     }
-    node.children.forEach(child => {
-      object.children.push(this.expand_node(child));
-    });
+    if (node instanceof Block) {
+      
+      node.children.forEach(child => {
+        object.children.push(this.expand_node(child));
+      });
+    }
 
     return object;
   }
@@ -782,31 +1146,70 @@ export class Document {
       this.for_program_handle(child, callback);
     });
   }
-  private for_program(callback: (node:NodeAst) => void):void {
+  public every(callback: (node:NodeAst) => void):void {
     if (this.program) {
       this.for_program_handle(this.program, callback);
     }
   }
 
-  public get_function(function_name: string):(Func|Method|Native)[] {
-    const objects:(Func|Method|Native)[] = [];
-    this.for_program((node) => {
-      if (node instanceof Func || node instanceof Native) {
-        if (node.name?.getText() == function_name) {
-          objects.push(node);
-        }
-      } else if (node instanceof Method) {
+  public natives:Native[] = [];
+  public functions:Func[] = [];
+  public methods:Method[] = [];
+  public librarys:Library[] = [];
+  public scopes:Scope[] = [];
+  public structs:Struct[] = [];
+  public globals:Globals[] = [];
+  public types:Type[] = [];
+  public interfaces:Interface[] = [];
+  public global_variables:GlobalVariable[] = [];
+  public ifs:If[] = [];
+  public loops:Loop[] = [];
+  public locals:Local[] = [];
+  public sets:Set[] = [];
+  public calls:Call[] = [];
+  public comments:Comment[] = [];
 
-      }
-    });
-    return objects;
-  }
+
 
   /**
    * 将program跟节点对象下面所有解析的节点分类存储
    */
   private classification() {
-
+    this.every((node) => {
+      if (node instanceof Func) {
+        this.functions.push(node);
+      } else if (node instanceof Comment) {
+        this.comments.push(node);
+      } else if (node instanceof Call) {
+        this.calls.push(node);
+      } else if (node instanceof Set) {
+        this.sets.push(node);
+      } else if (node instanceof Local) {
+        this.locals.push(node);
+      } else if (node instanceof GlobalVariable) {
+        this.global_variables.push(node);
+      } else if (node instanceof If) {
+        this.ifs.push(node);
+      } else if (node instanceof Loop) {
+        this.loops.push(node);
+      } else if (node instanceof Native) {
+        this.natives.push(node);
+      } else if (node instanceof Library) {
+        this.librarys.push(node);
+      } else if (node instanceof Struct) {
+        this.structs.push(node);
+      } else if (node instanceof Method) {
+        this.methods.push(node);
+      } else if (node instanceof Interface) {
+        this.interfaces.push(node);
+      } else if (node instanceof Globals) {
+        this.globals.push(node);
+      } else if (node instanceof Type) {
+        this.types.push(node);
+      } else if (node instanceof Scope) {
+        this.scopes.push(node);
+      }
+    });
   }
 
 }
@@ -824,6 +1227,12 @@ export class TokenType {
   static Unkown = "Unkown";
   static BlockComment = "BlockComment";
 };
+
+interface ReplaceableEntity {
+  name: string;
+  value: string;
+}
+
 export class Token extends Range {
   public readonly document: Document;
   public readonly line: number;

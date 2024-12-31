@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Document, RunTextMacro, TextLine, TextMacro, Token} from "./tokenizer-common";
+import { Document, Position, Range, RunTextMacro, TextLine, TextMacro, Token} from "./tokenizer-common";
 
 export class Context {
     private keys: string[] = [];
@@ -63,11 +63,42 @@ export class LibraryRef {
 
 
 
-export class NodeAst {
+export class NodeAst extends Range {
+    private document:Document;
     public parent: NodeAst|null = null;
     public previous: NodeAst|null = null;
     public next: NodeAst|null = null;
     public children:Array< NodeAst> = [];
+
+    public end_tag:Token|null = null;
+
+    constructor(document:Document) {
+        super();
+        this.document = document;
+    }
+    public get start(): Position {
+        if (this.start_token) {
+            return this.start_token.start;
+        } else {
+            return new Position(0, 0);
+        }
+    }
+    public get end(): Position {
+        if (this.end_tag) {
+            return this.end_tag.end;
+        } else if (this.end_token) {
+            return this.end_token.end;
+        } else if (this.children.length > 0) {
+            return this.children[this.children.length - 1].end;
+        } else if (this.next) {
+            return this.next.start;
+        } else {
+            return new Position(0, 0);
+        }
+    }
+
+    public start_token:Token|null = null;
+    public end_token:Token|null = null;
 }
 
 export class Library extends NodeAst implements ExprTrict{
@@ -83,10 +114,10 @@ export class Library extends NodeAst implements ExprTrict{
         }).join(", ") : ""}`;
     }
 }
-function parse_library(document: Document, line_text: ExpendLineText) {
-    const library = new Library();
+export function parse_library(document: Document, tokens: Token[]) {
+    const library = new Library(document);
 
-    const tokens = line_text.tokens();
+    // const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
     let optional:LibraryRef|null = null;
@@ -102,6 +133,8 @@ function parse_library(document: Document, line_text: ExpendLineText) {
             index++;
             if (text == "library" || text == "library_once") {
                 library.is_library_once = text == "library_once";
+
+                library.start_token = token;
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
@@ -342,9 +375,9 @@ function parse_library(document: Document, line_text: ExpendLineText) {
 export class Scope extends NodeAst {
     public name: Token | null = null;
 }
-function parse_scope(document: Document, line_text: ExpendLineText) {
-    const scope = new Scope();
-    const tokens = line_text.tokens();
+export function parse_scope(document: Document, tokens: Token[]) {
+    const scope = new Scope(document);
+    // const tokens = line_text.tokens();
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -354,6 +387,8 @@ function parse_scope(document: Document, line_text: ExpendLineText) {
         const text = token.getText();
         if (state == 0) {
             if (text == "scope") {
+                scope.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -380,9 +415,9 @@ export class Interface extends NodeAst {
     public name: Token | null = null;
     public extends: string[] | null = null;
 }
-function parse_interface(document: Document, line_text: ExpendLineText) {
-    const inter = new Interface();
-    const tokens = line_text.tokens();
+export function parse_interface(document: Document, tokens: Token[]) {
+    const inter = new Interface(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -392,6 +427,8 @@ function parse_interface(document: Document, line_text: ExpendLineText) {
         const text = token.getText();
         if (state == 0) {
             if (text == "interface") {
+                inter.start_token = token;
+
                 state = 1;
             } else if (text == "private") {
                 inter.visible = "private";
@@ -453,9 +490,9 @@ function parse_interface(document: Document, line_text: ExpendLineText) {
 
 export class Struct extends Interface {
 }
-function parse_struct(document: Document, line_text: ExpendLineText) {
-    const struct = new Struct();
-    const tokens = line_text.tokens();
+export function parse_struct(document: Document, tokens: Token[]) {
+    const struct = new Struct(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -465,6 +502,8 @@ function parse_struct(document: Document, line_text: ExpendLineText) {
         const text = token.getText();
         if (state == 0) {
             if (text == "struct") {
+                struct.start_token = token;
+
                 state = 1;
             } else if (text == "private") {
                 struct.visible = "private";
@@ -535,7 +574,57 @@ export class Take {
         return `${type_string} ${name_string}`;
     }
 }
-export class Method extends NodeAst {
+export class Native extends NodeAst {
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+        const returns_string = this.returns ? this.returns.getText() : "nothing";
+        return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
+    }
+
+    public visible: Token | null = null;
+    public modifier: Token | null = null;
+    public qualifier: Token | null = null;
+    public name: Token | null = null;
+    public takes: Take[] | null = null;
+    public returns: Token | null = null;
+    public defaults: string | null = null;
+
+    with<T extends Modifier | Takes | Returns>(v: T) {
+        if (v instanceof Modifier) {
+            this.visible = v.visible;
+            this.modifier = v.modifier;
+            this.qualifier = v.qualifier;
+        } else if (v instanceof Takes) {
+            if (v.takes.length > 0) {
+                if (this.takes == null) {
+                    this.takes = [];
+                }
+                this.takes.push(...v.takes);
+            } else {
+                this.takes = null;
+            }
+        } else if (v instanceof Returns) {
+            this.returns = v.expr;
+        }
+    }
+}
+export class Func extends Native {
+
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+        const returns_string = this.returns ? this.returns.getText() : "nothing";
+        return `${visible_string}${modifier_string}${qualifier_string}function ${name_string}takes ${takes_string} returns ${returns_string}`;
+    }
+}
+export class Method extends Func {
     public visible: Token | null = null;
     public modifier: Token | null = null;
     public qualifier: Token | null = null;
@@ -573,22 +662,11 @@ export class Method extends NodeAst {
         }
     }
 }
-function parse_method(document: Document, line_text: ExpendLineText) {
-    return parse_function(document, line_text, "method") as Method;
+export function parse_method(document: Document, tokens: Token[]) {
+    return parse_function(document, tokens, "method") as Method;
 }
 
-export class Func extends Method {
 
-    public to_string(): string {
-        const visible_string = this.visible ? this.visible.getText() + " " : "";
-        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
-        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
-        const name_string = this.name ? this.name.getText() + " " : "";
-        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
-        const returns_string = this.returns ? this.returns.getText() : "nothing";
-        return `${visible_string}${modifier_string}${qualifier_string}function ${name_string}takes ${takes_string} returns ${returns_string}`;
-    }
-}
 
 /**       
  * 解析参数类型与标识符
@@ -826,9 +904,9 @@ function parse_line_returns(document: Document, tokens: Token[], offset_index: n
 }
 
 
-function parse_function(document: Document, line_text: ExpendLineText, type: "function" | "method" | "native" = "function") {
-    const func: Func | Method | Native = type == "function" ? new Func() : type == "method" ? new Method : new Native();
-    const tokens = line_text.tokens();
+export function parse_function(document: Document, tokens: Token[], type: "function" | "method" | "native" = "function") {
+    const func: Func | Method | Native = type == "function" ? new Func(document) : type == "method" ? new Method(document) : new Native(document);
+
     let state = 0;
     let index = 0;
     const keyword = type;
@@ -860,6 +938,8 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
             }
         } else if (state == 1) {
             index++;
+
+            func.start_token = token;
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -938,9 +1018,9 @@ function parse_function(document: Document, line_text: ExpendLineText, type: "fu
 export class Globals extends NodeAst {
 }
 
-function parse_globals(document: Document, line_text: ExpendLineText) {
-    const globals = new Globals();
-    const tokens = line_text.tokens();
+export function parse_globals(document: Document, tokens: Token[]) {
+    const globals = new Globals(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -951,6 +1031,8 @@ function parse_globals(document: Document, line_text: ExpendLineText) {
 
         if (state == 0) {
             if (text == "globals") {
+                globals.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -969,10 +1051,9 @@ export class If extends NodeAst {
 }
 export class Loop extends NodeAst { }
 
-function parse_if(document: Document, line_text: ExpendLineText) {
-    const ifs = new If();
+export function parse_if(document: Document, tokens: Token[]) {
+    const ifs = new If(document);
 
-    const tokens = line_text.tokens();
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -986,6 +1067,8 @@ function parse_if(document: Document, line_text: ExpendLineText) {
         if (state == 0) {
             index++;
             if (text == "if") {
+                ifs.start_token = token;
+
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     const next_token_text = next_token.getText();
@@ -1034,9 +1117,9 @@ function parse_if(document: Document, line_text: ExpendLineText) {
 
     return ifs;
 }
-function parse_loop(document: Document, line_text: ExpendLineText) {
-    const loop = new Loop();
-    const tokens = line_text.tokens();
+export function parse_loop(document: Document, tokens: Token[]) {
+    const loop = new Loop(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -1047,6 +1130,8 @@ function parse_loop(document: Document, line_text: ExpendLineText) {
 
         if (state == 0) {
             if (text == "loop") {
+                loop.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -1064,9 +1149,9 @@ export class Comment extends NodeAst {
     comment: Token | null = null;
 }
 
-export function parse_line_comment(document: Document, line_text: ExpendLineText) {
-    const comment = new Comment();
-    const tokens = line_text.tokens();
+export function parse_line_comment(document: Document, tokens: Token[]) {
+    const comment = new Comment(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -1078,6 +1163,9 @@ export function parse_line_comment(document: Document, line_text: ExpendLineText
         if (state == 0) {
             if (token.is_comment) {
                 comment.comment = token;
+
+                comment.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -1091,11 +1179,8 @@ export function parse_line_comment(document: Document, line_text: ExpendLineText
     return comment;
 }
 
-export class Empty extends NodeAst {
-}
-export function parse_line_empty(document: Document, line_text: ExpendLineText) {
-    return new Empty();
-}
+
+
 
 export class GlobalVariable extends NodeAst {
     // [public, private]
@@ -1264,7 +1349,7 @@ export class Id implements ExprTrict {
         }
     }
 
-    public to<T extends Params | IndexExpr | null>(v: T) {
+    public to<T extends Params | IndexExpr | null>(document:Document, v: T) {
         if (v instanceof Params) {
             const caller = new Caller();
             caller.name = this;
@@ -1280,7 +1365,7 @@ export class Id implements ExprTrict {
         }
     }
 }
-export class Caller extends NodeAst implements ExprTrict {
+class Caller implements ExprTrict {
     public name: Id | null = null;
     public params: Params | null = null;
 
@@ -1479,27 +1564,17 @@ export class Type extends NodeAst {
     name: Token | null = null;
     extends: Token | null = null;
 }
-export class Call {
+export class Call extends NodeAst {
     ref: VariableName | null = null;
 }
 export class Return extends NodeAst {
     expr: Zoom | null = null;
 }
-export class Native extends Func {
-    public to_string(): string {
-        const visible_string = this.visible ? this.visible.getText() + " " : "";
-        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
-        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
-        const name_string = this.name ? this.name.getText() + " " : "";
-        const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
-        const returns_string = this.returns ? this.returns.getText() : "nothing";
-        return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
-    }
-}
 
-export function parse_line_global(document: Document, line_text: ExpendLineText) {
-    const global = new GlobalVariable();
-    const tokens = line_text.tokens();
+
+export function parse_line_global(document: Document, tokens: Token[]) {
+    const global = new GlobalVariable(document);
+
     let index = 0;
     let state = 0;
     while (index < tokens.length) {
@@ -1530,9 +1605,9 @@ export function parse_line_global(document: Document, line_text: ExpendLineText)
     }
     return global;
 }
-export function parse_line_local(document: Document, line_text: ExpendLineText) {
-    const local = new Local();
-    const tokens = line_text.tokens();
+export function parse_line_local(document: Document, tokens: Token[]) {
+    const local = new Local(document);
+
     let index = 0;
     let state = 0;
     let unary_expr: UnaryExpr | null = null;
@@ -1547,6 +1622,8 @@ export function parse_line_local(document: Document, line_text: ExpendLineText) 
             index++;
 
             if (text == "local") {
+                local.start_token = token;
+
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     if (next_token.is_identifier) {
@@ -2111,7 +2188,7 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
         } else if (state == 1) {
             const result = parse_line_call_params(document, tokens, index);
             index = result.index;
-            variable = (<Id>variable).to(result.expr);
+            variable = (<Id>variable).to(document, result.expr);
             // 如果方法没有参数列表,一般不用，因为程序解析不到相应符号会添加相应的错误提示
             // if (result.expr) {
             // } else {
@@ -2121,7 +2198,7 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
         } else if (state == 2) {
             const result = parse_line_index_expr(document, tokens, index);
             index = result.index;
-            variable = (<Id>variable).to(result.expr);
+            variable = (<Id>variable).to(document, result.expr);
             break;
         }
     }
@@ -2237,6 +2314,7 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
         }
         const text = token.getText();
         if (state == 1) {
+
             index++;
             statement.type = token;
 
@@ -2311,9 +2389,9 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
     };
 }
 
-export function parse_line_set(document: Document, line_text: ExpendLineText) {
-    const set = new Set();
-    const tokens = line_text.tokens();
+export function parse_line_set(document: Document, tokens: Token[]) {
+    const set = new Set(document);
+
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -2328,6 +2406,8 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
             index++;
             if (text == "set") {
                 state = 1;
+                set.start_token = token;
+
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     if (next_token.is_identifier) {
@@ -2385,9 +2465,9 @@ export function parse_line_set(document: Document, line_text: ExpendLineText) {
 
     return set;
 }
-export function parse_line_call(document: Document, line_text: ExpendLineText) {
-    const call = new Call();
-    const tokens = line_text.tokens();
+export function parse_line_call(document: Document, tokens: Token[]) {
+    const call = new Call(document);
+
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -2397,11 +2477,11 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
             continue;
         }
         const text = token.getText();
-        const next_token = tokens[index];
 
         if (state == 0) {
             index++;
             if (text == "call") {
+                call.start_token = token;
 
                 state = 1;
             } else {
@@ -2422,9 +2502,9 @@ export function parse_line_call(document: Document, line_text: ExpendLineText) {
 
     return call;
 }
-export function parse_line_return(document: Document, line_text: ExpendLineText) {
-    const ret = new Return();
-    const tokens = line_text.tokens();
+export function parse_line_return(document: Document, tokens: Token[]) {
+    const ret = new Return(document);
+
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -2434,11 +2514,12 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
             continue;
         }
         const text = token.getText();
-        const next_token = tokens[index];
 
         if (state == 0) {
             index++;
             if (text == "return") {
+                ret.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -2461,9 +2542,9 @@ export function parse_line_return(document: Document, line_text: ExpendLineText)
 export class ExitWhen extends NodeAst {
     expr: Zoom | null = null;
 }
-export function parse_line_exitwhen(document: Document, line_text: ExpendLineText) {
-    const ret = new ExitWhen();
-    const tokens = line_text.tokens();
+export function parse_line_exitwhen(document: Document, tokens: Token[]) {
+    const ret = new ExitWhen(document);
+
     let state = 0;
     let index = 0;
 
@@ -2479,6 +2560,8 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
         if (state == 0) {
             index++;
             if (text == "exitwhen") {
+                ret.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -2501,10 +2584,9 @@ export function parse_line_exitwhen(document: Document, line_text: ExpendLineTex
 export class ElseIf extends NodeAst {
     expr: Zoom | null = null;
 }
-export function parse_line_else_if(document: Document, line_text: ExpendLineText) {
-    const ret = new ElseIf();
+export function parse_line_else_if(document: Document, tokens: Token[]) {
+    const ret = new ElseIf(document);
 
-    const tokens = line_text.tokens();
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -2518,6 +2600,8 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
         if (state == 0) {
             index++;
             if (text == "elseif") {
+                ret.start_token = token;
+
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     const next_token_text = next_token.getText();
@@ -2569,10 +2653,9 @@ export function parse_line_else_if(document: Document, line_text: ExpendLineText
 export class Else extends NodeAst {
     expr: Zoom | null = null;
 }
-export function parse_line_else(document: Document, line_text: ExpendLineText) {
-    const ret = new Else();
+export function parse_line_else(document: Document, tokens: Token[]) {
+    const ret = new Else(document);
 
-    const tokens = line_text.tokens();
     let state = 0;
     let index = 0
     while (index < tokens.length) {
@@ -2586,6 +2669,8 @@ export function parse_line_else(document: Document, line_text: ExpendLineText) {
         if (state == 0) {
             index++;
             if (text == "else") {
+                ret.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `missing keyword 'else'`);
@@ -2600,9 +2685,9 @@ export function parse_line_else(document: Document, line_text: ExpendLineText) {
 
     return ret;
 }
-export function parse_line_type(document: Document, line_text: ExpendLineText) {
-    const ret = new Type();
-    const tokens = line_text.tokens();
+export function parse_line_type(document: Document, tokens: Token[]) {
+    const ret = new Type(document);
+
     let state = 0;
     for (let index = 0; index < tokens.length; index++) {
         const token = tokens[index];
@@ -2613,6 +2698,8 @@ export function parse_line_type(document: Document, line_text: ExpendLineText) {
 
         if (state == 0) {
             if (text == "type") {
+                ret.start_token = token;
+
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -2647,15 +2734,15 @@ export function parse_line_type(document: Document, line_text: ExpendLineText) {
     return ret;
 }
 
-function parse_line_native(document: Document, line_text: ExpendLineText) {
-    return parse_function(document, line_text, "native") as Native;
+export function parse_line_native(document: Document, tokens: Token[]) {
+    return parse_function(document, tokens, "native") as Native;
 }
-function parse_line_method(document: Document, line_text: ExpendLineText) {
-    return parse_function(document, line_text, "method") as Method;
+export function parse_line_method(document: Document, tokens: Token[]) {
+    return parse_function(document, tokens, "method") as Method;
 }
-function parse_line_member(document: Document, line_text: ExpendLineText) {
-    const member = new Member();
-    const tokens = line_text.tokens();
+export function parse_line_member(document: Document, tokens: Token[]) {
+    const member = new Member(document);
+
     let index = 0;
     let state = 0;
     while (index < tokens.length) {
@@ -2672,7 +2759,9 @@ function parse_line_member(document: Document, line_text: ExpendLineText) {
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
-                state = 1
+                member.start_token = next_token;
+
+                state = 1;
             } else {
                 document.add_token_error(token, `error global variable`);
                 break;
@@ -2690,8 +2779,38 @@ function parse_line_member(document: Document, line_text: ExpendLineText) {
 
 export class Other extends NodeAst { }
 
+export function parse_line_end_tag(document: Document, tokens:Token[], object: NodeAst, end_tag: string) {
+    let token:Token|null = null;
 
+    let state = 0;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
 
+        if (state == 0) {
+            index++;
+            if (text == end_tag) {
+                state = 1;
+                object.end_token = token;
+            } else {
+                document.add_token_error(token, `missing end tag keyword '${end_tag}'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+        }
+
+    }
+
+    return token;
+}
+/*
 export function parse_node(document: Document) {
     // @ts-ignore
     const root_node = document.root_node;
@@ -2705,51 +2824,51 @@ export function parse_node(document: Document) {
         // 解析头
         if (node.type == "library") {
             const library = parse_library(document, node.start_line!);
+            library.end_tag = parse_line_end_tag(document, node.end_line, library, "endlibrary");
 
             node.data = library;
         }
         else if (node.type == "scope") {
             const scope = parse_scope(document, node.start_line!);
-
+            scope.end_tag = parse_line_end_tag(document, node.end_line, scope, "endscope");
             node.data = scope;
         }
         else if (node.type == "interface") {
             const inter = parse_interface(document, node.start_line!);
-
+            inter.end_tag = parse_line_end_tag(document, node.end_line, inter, "endinterface");
             node.data = inter;
         }
         else if (node.type == "struct") {
             const struct = parse_struct(document, node.start_line!);
-
+            struct.end_tag = parse_line_end_tag(document, node.end_line, struct, "endstruct");
             node.data = struct;
         }
         else if (node.type == "method") {
             const method = parse_method(document, node.start_line!); // ok
-
+            method.end_tag = parse_line_end_tag(document, node.end_line, method, "endmethod");
             node.data = method;
         }
         else if (node.type == "func") {
             const func = parse_function(document, node.start_line!); // ok
-
+            func.end_tag = parse_line_end_tag(document, node.end_line, func, "endfunction");
             node.data = func;
         } else if (node.type == "globals") {
             const globals = parse_globals(document, node.start_line!); // ok
-
+            globals.end_tag = parse_line_end_tag(document, node.end_line, globals, "endglobals");
             node.data = globals;
         } else if (node.type == "if") {
             const ifs = parse_if(document, node.start_line!);
-
+            ifs.end_tag = parse_line_end_tag(document, node.end_line, ifs, "endif");
             node.data = ifs;
         } else if (node.type == "loop") {
             const loop = parse_loop(document, node.start_line!);
-
+            loop.end_tag = parse_line_end_tag(document, node.end_line, loop, "endloop");
             node.data = loop;
         }
 
         node.body.forEach(value => {
             if (value.type == "empty") {
-                const empty = parse_line_empty(document, value.line);
-                node.body_datas.push(empty);
+                ;;
             } else if (value.type == "comment") {
                 const comment = parse_line_comment(document, value.line);
 
@@ -2799,7 +2918,10 @@ export function parse_node(document: Document) {
 
                 node.body_datas.push(el);
             } else if (value.type == "other") {
-                node.body_datas.push(new Other());
+                const other = new Other(document);
+                const tokens = value.line.tokens();
+                other.start_token = tokens[tokens.length - 1];
+                node.body_datas.push(other);
             }
 
         });
@@ -2811,7 +2933,7 @@ export function parse_node(document: Document) {
 
     for_node(root_node);
 }
-
+*/
 //#endregion
 
 //#region 展开
@@ -2849,11 +2971,15 @@ type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" 
 
 
 type DataType = Library | Struct | Interface | Method | Func | Globals | Scope | If | Loop;
+
+
 export class Node {
     public data: any;
+    public readonly children: (Node)[] = [];
 
     public type: NodeType;
     public parent: Node | null = null;
+
     public body: {
         type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type",
         line: ExpendLineText
@@ -2861,9 +2987,7 @@ export class Node {
     public start_line: ExpendLineText | null = null;
     public end_line: ExpendLineText | null = null;
 
-    public body_datas: any[] = [];
 
-    public readonly children: Node[] = [];
 
     constructor(type: NodeType) {
         this.type = type;
@@ -3138,6 +3262,7 @@ export function slice_layer(document: Document) {
     const node_stack: Node[] = [];
     const root_node = new Node(null);
     let in_interface = false;
+    // 遍历行
     document.loop((document, line) => {
         in_interface = slice_layer_handle(document, undefined, undefined, line, node_stack, root_node, in_interface).in_interface;
 

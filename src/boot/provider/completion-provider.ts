@@ -760,8 +760,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class NumberCompleti
          
      });
 
-    const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
-    console.log(funcs);
+    // const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
+    // console.log(funcs);
     
 
     }
@@ -778,8 +778,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class NumberCompleti
     const items:vscode.CompletionItem[] = [];
 
 
-    const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
-    console.log(funcs);
+    // const funcs =  GlobalContext.get(document.uri.fsPath)?.get_function("function_name");
+    // console.log(funcs);
     
 
     return items;

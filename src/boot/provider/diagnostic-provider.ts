@@ -46,7 +46,7 @@ const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: strin
 
 
 const find_file_error_for_vjass = (document: vscode.TextDocument) => {
-	console.time("find_file_error_for_vjass");
+
 	const path_format = path.parse(document.uri.path);
 	if (!(path_format.ext == ".j" || path_format.ext == ".jass" || path_format.ext == ".ai")) {
 		return;
@@ -62,14 +62,14 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 		error(diagnostics, err.token, err.message);
 	});
 	
-	doc?.node_errors.forEach(err => {
-		error(diagnostics, err.node, err.message);
-	});
+	// doc?.node_errors.forEach(err => {
+	// 	error(diagnostics, err.node, err.message);
+	// });
 
 
 	diagnostic_collection_for_jass.set(document.uri, diagnostics);
 	
-	console.timeEnd("find_file_error_for_vjass");
+
 }
 
 const subject = new Subject();
