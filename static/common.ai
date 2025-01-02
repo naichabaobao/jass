@@ -2978,6 +2978,7 @@ endfunction
 //============================================================================
 
 // 战斗（循环发送发布攻击组进攻命令（指定目标）），直至攻击目标死亡或攻击组阵亡/撤退
+// @param reform 战斗过程中是否自动重建攻击组
 function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
     loop
         exitwhen CaptainRetreating()
