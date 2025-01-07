@@ -5655,7 +5655,7 @@ native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
 // 降低指定英雄等级 [R]
 // @param howManyLevels 降级数
-// 降级时会忘记技能
+// 降级时到0或以下时技能会变为未学习状态
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
 // 获取指定英雄经验值
@@ -5674,7 +5674,7 @@ native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta retur
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置指定英雄等级
 // @param showEyeCandy 是否显示升级动画，该设置对降级无效
-// 降级时会忘记技能
+// 降级时到0或以下时技能会变为未学习状态
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 获取指定英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
