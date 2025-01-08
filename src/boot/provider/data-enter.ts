@@ -8,6 +8,7 @@ import { GlobalContext, parse } from '../jass/parser-vjass';
 import {Subject} from "../../extern/rxjs/index.js";
 import { debounceTime, } from '../../extern/rxjs/operators';
 import { find_error } from './diagnostic-provider';
+import { change_document_item, delete_document_item, init_document_item, rename_document_item } from './completion-provider-ex';
 
 export function jass_config_json_path() {
 	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
@@ -99,8 +100,12 @@ vscode.workspace.onDidChangeTextDocument((event:vscode.TextDocumentChangeEvent) 
 		const subject = new Subject();
 		const delay_time = event.document.lineCount <= 100 ? 100 : event.document.lineCount <= 1000 ? 300 : event.document.lineCount <= 6000 ? 1000 : 2000;
 		subject.pipe(debounceTime(delay_time)).subscribe((data: Payload) => {
+			// 改变后逻辑
 			parse(data.key, data.content);
+
 			find_error(event.document);
+
+			change_document_item(event.document);
 		});
 		update_map.set(event.document.uri.fsPath, subject);
 	}
@@ -116,6 +121,7 @@ vscode.workspace.onDidSaveTextDocument((document) => {
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach(uri => {
 		GlobalContext.delete(uri.fsPath);
+		delete_document_item(uri.fsPath);
 
 		update_map.get(uri.fsPath)?.complete();
 		update_map.delete(uri.fsPath);
@@ -127,11 +133,17 @@ vscode.workspace.onDidRenameFiles((event) => {
 		GlobalContext.delete(uri.oldUri.fsPath);
 		parse(uri.newUri.fsPath);
 
+		rename_document_item(uri.oldUri.fsPath, uri.newUri.fsPath);
+
 		if (update_map.has(uri.oldUri.fsPath)) {
 			update_map.set(uri.newUri.fsPath, update_map.get(uri.oldUri.fsPath)!);
 			update_map.delete(uri.oldUri.fsPath);
 		}
 	});
+});
+
+vscode.workspace.onDidOpenTextDocument(event => {
+
 });
 
 (() => {
@@ -140,6 +152,7 @@ vscode.workspace.onDidRenameFiles((event) => {
 		const p = path.parse(file_path);
 		if (p.ext == ".j" || p.ext == ".jass" || p.ext == ".ai") {
 			parse(file_path);
+			init_document_item(file_path);
 		}
 	});
 	console.log("include_paths()" + include_paths());
@@ -148,6 +161,7 @@ vscode.workspace.onDidRenameFiles((event) => {
 		const p = path.parse(file_path);
 		if (p.ext == ".j" || p.ext == ".jass" || p.ext == ".ai") {
 			parse(file_path);
+			init_document_item(file_path);
 		}
 	});
 	console.timeEnd("init all file parse");

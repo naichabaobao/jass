@@ -3,8 +3,8 @@ import * as fs from "fs";
 import { Document, Position, Range, RunTextMacro, TextLine, TextMacro, Token} from "./tokenizer-common";
 
 export class Context {
-    private keys: string[] = [];
-    private documents: Document[] = [];
+    private _keys: string[] = [];
+    private _documents: Document[] = [];
     private handle_key(key: string): string {
         // const handle_key = key.replace(/\\+/g, "/");
         const parsed = path.parse(key);
@@ -12,16 +12,16 @@ export class Context {
     }
     public set(key: string, value: Document) {
         const handle_key = this.handle_key(key);
-        const index = this.keys.indexOf(handle_key);
+        const index = this._keys.indexOf(handle_key);
         if (index == -1) {
-            this.keys.push(handle_key);
-            this.documents.push(value);
+            this._keys.push(handle_key);
+            this._documents.push(value);
         } else {
-            this.documents[index] = value;
+            this._documents[index] = value;
         }
     }
     private indexOf(key: string): number {
-        return this.keys.indexOf(this.handle_key(key));
+        return this._keys.indexOf(this.handle_key(key));
     }
     public has(key: string): boolean {
         return this.indexOf(key) != -1;
@@ -30,21 +30,26 @@ export class Context {
     public get(key: string): Document | undefined {
         if (this.has(key)) {
             const index = this.indexOf(key);
-            return this.documents[index];
+            return this._documents[index];
         }
         return;
     }
     public delete(key: string) {
         const index = this.indexOf(key);
         if (index != -1) {
-            this.keys.splice(index, 1);
-            this.documents.splice(index, 1);
+            this._keys.splice(index, 1);
+            this._documents.splice(index, 1);
         }
     }
 
     public getAllTextMacros() {
-        return this.documents.map(document => document.text_macros).flat();
+        return this._documents.map(document => document.text_macros).flat();
     }
+
+    public get kays():string[] {
+        return this._keys;
+    }
+
 }
 
 export const GlobalContext = new Context();
@@ -64,7 +69,7 @@ export class LibraryRef {
 
 
 export class NodeAst extends Range {
-    private document:Document;
+    public readonly document:Document;
     public parent: NodeAst|null = null;
     public previous: NodeAst|null = null;
     public next: NodeAst|null = null;
@@ -99,6 +104,57 @@ export class NodeAst extends Range {
 
     public start_token:Token|null = null;
     public end_token:Token|null = null;
+
+    public get description():string[] {
+        const descs:string[] = [];
+
+        const previous_by_previous = (node: NodeAst) => {
+            if (node.previous && node.previous instanceof Comment) {
+                // 反向插入
+                if (!node.previous.is_deprecated && !node.previous.is_param) {
+                    descs.splice(0, 0, node.previous.content);
+                }
+
+                previous_by_previous(node.previous);
+            }
+        };
+        previous_by_previous(this);
+
+        return descs;
+    }
+
+    public get is_deprecated():boolean {
+        let is = false;
+        const previous_by_previous = (node: NodeAst) => {
+            if (node.previous && node.previous instanceof Comment) {
+                // 反向插入
+                if (is) {
+                    return;
+                } else if (node.previous.is_deprecated) {
+                    is = true;
+                }
+
+                previous_by_previous(node.previous);
+            }
+        };
+        previous_by_previous(this)
+        return is;
+    }
+
+    public get comments():Comment[] {
+        const comments:Comment[] = [];
+
+        const previous_by_previous = (node: NodeAst) => {
+            if (node.previous && node.previous instanceof Comment) {
+                comments.splice(0, 0, node.previous);
+
+                previous_by_previous(node.previous);
+            }
+        };
+        previous_by_previous(this);
+
+        return comments;
+    }
 }
 
 export class Library extends NodeAst implements ExprTrict{
@@ -414,6 +470,17 @@ export class Interface extends NodeAst {
     public visible: "public" | "private" | null = null;
     public name: Token | null = null;
     public extends: string[] | null = null;
+
+    public get is_private():boolean {
+        return !!this.visible && this.visible == "private";
+    }
+    public get is_public():boolean {
+        return !this.is_private;
+    }
+
+    to_string():string {
+        return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends" + this.extends.join(", ") : ""}`
+    }
 }
 export function parse_interface(document: Document, tokens: Token[]) {
     const inter = new Interface(document);
@@ -489,6 +556,12 @@ export function parse_interface(document: Document, tokens: Token[]) {
 }
 
 export class Struct extends Interface {
+
+
+    to_string():string {
+        return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends" + this.extends.join(", ") : ""}`
+    }
+
 }
 export function parse_struct(document: Document, tokens: Token[]) {
     const struct = new Struct(document);
@@ -573,6 +646,34 @@ export class Take {
         const name_string = this.name ? this.name.getText() : "(unkown_name)";
         return `${type_string} ${name_string}`;
     }
+
+    belong:Func|Native|Method;
+
+    constructor(belong:Func|Native|Method) {
+        this.belong = belong;
+    }
+
+    public get desciprtion():ParamDescription|null {
+        const desc = this.belong.get_param_descriptions().find(desc => {
+            return desc.name === this.name?.getText();
+        });
+        if (desc) {
+            return desc;
+        } else {
+            return null;
+        }
+    }
+
+}
+
+class ParamDescription {
+    name: string;
+    content: string;
+
+    constructor(name: string, content: string = "") {
+        this.name = name;
+        this.content = content;
+    }
 }
 export class Native extends NodeAst {
     public to_string(): string {
@@ -585,8 +686,17 @@ export class Native extends NodeAst {
         return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
     }
 
+    /**
+     * [private, public]
+     */
     public visible: Token | null = null;
+    /**
+     * [static, stub]
+     */
     public modifier: Token | null = null;
+    /**
+     * [constant]
+     */
     public qualifier: Token | null = null;
     public name: Token | null = null;
     public takes: Take[] | null = null;
@@ -610,6 +720,37 @@ export class Native extends NodeAst {
         } else if (v instanceof Returns) {
             this.returns = v.expr;
         }
+    }
+
+    public get is_private():boolean {
+        return !!this.visible && this.visible.getText() == "private";
+    }
+    public get is_public():boolean {
+        return !this.is_private;
+    }
+
+    public get is_static():boolean {
+        return !!this.modifier && this.modifier.getText() == "static";
+    }
+    public get is_stub():boolean {
+        return !!this.modifier && this.modifier.getText() == "stub";
+    }
+    public get is_constant():boolean {
+        return !!this.qualifier && this.qualifier.getText() == "constant";
+    }
+
+    public get_param_descriptions() {
+        const param_descs: ParamDescription[] = [];
+        this.comments.forEach(comment => {
+            if (comment.is_param) {
+                const result = /^\/\/\s*@[pP]arams?\s+(?<name>[\$_a-zA-Z0-9]+)\s+(?<content>.*)/.exec(comment.comment!.getText());
+                if (result && result.groups) {
+                    param_descs.push(new ParamDescription(result.groups["name"], result.groups["content"]));
+                }
+            }
+        });
+
+        return param_descs;
     }
 }
 export class Func extends Native {
@@ -677,10 +818,10 @@ export function parse_method(document: Document, tokens: Token[]) {
  * @param offset_index 
  * @returns 
  */
-function parse_line_function_takes_statement(document: Document, tokens: Token[], offset_index: number) {
+function parse_line_function_takes_statement(document: Document, tokens: Token[], offset_index: number, func: Func | Method | Native) {
     let index = offset_index;
     let state = 0;
-    let take: Take = new Take();
+    let take: Take = new Take(func);
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -733,7 +874,7 @@ function parse_line_function_takes_statement(document: Document, tokens: Token[]
 class Takes {
     takes: Take[] = [];
 }
-function parse_line_function_takes(document: Document, tokens: Token[], offset_index: number) {
+function parse_line_function_takes(document: Document, tokens: Token[], offset_index: number, func: Func | Method | Native) {
     let index = offset_index;
     let state = 0;
     let takes: Takes = new Takes();
@@ -770,7 +911,7 @@ function parse_line_function_takes(document: Document, tokens: Token[], offset_i
                 index++;
                 break
             } else {
-                const result = parse_line_function_takes_statement(document, tokens, index);
+                const result = parse_line_function_takes_statement(document, tokens, index, func);
                 index = result.index;
                 takes.takes.push(result.expr);
 
@@ -981,7 +1122,7 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
                 break;
             }
         } else if (state == 3) {
-            const result = parse_line_function_takes(document, tokens, index);
+            const result = parse_line_function_takes(document, tokens, index, func);
             index = result.index;
             func.with(result.expr);
 
@@ -1147,6 +1288,28 @@ export function parse_loop(document: Document, tokens: Token[]) {
 
 export class Comment extends NodeAst {
     comment: Token | null = null;
+
+    public get content():string {
+        if (this.comment) {
+            const text = this.comment.getText().replace(/^\/\//, "");
+            return text;
+        }
+        return "";
+    }
+
+    public get is_deprecated():boolean {
+        if (this.comment) {
+            return /^\/\/\s*@[dD]eprecated\b/.test(this.comment.getText());
+        }
+        return false;
+    }
+
+    public get is_param():boolean {
+        if (this.comment) {
+            return /^\/\/\s*@[pP]arams?\b/.test(this.comment.getText());
+        }
+        return false;
+    }
 }
 
 export function parse_line_comment(document: Document, tokens: Token[]) {
@@ -2797,6 +2960,8 @@ export function parse_line_end_tag(document: Document, tokens:Token[], object: N
             if (text == end_tag) {
                 state = 1;
                 object.end_token = token;
+
+                object.end_tag = token;
             } else {
                 document.add_token_error(token, `missing end tag keyword '${end_tag}'`);
                 break;

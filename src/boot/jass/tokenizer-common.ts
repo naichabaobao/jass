@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Method, Native, NodeAst, Other, Scope, Set, Struct, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 
 
@@ -367,6 +367,8 @@ export class Document {
 
     // 不需要的对象，设置为null
     // this.root_node = null;
+
+    this.end_tag_error();
   }
 
   public program: NodeAst | null = null;
@@ -1000,45 +1002,45 @@ export class Document {
       if (node instanceof Block) {
         if (node.type == "library") {
           const library = parse_library(this, node.start_tokens);
-          library.end_tag = parse_line_end_tag(this, node.end_tokens, library, "endlibrary");
+          parse_line_end_tag(this, node.end_tokens, library, "endlibrary");
 
           node.data = library;
         }
         else if (node.type == "scope") {
             const scope = parse_scope(this, node.start_tokens);
-            scope.end_tag = parse_line_end_tag(this, node.end_tokens, scope, "endscope");
+            parse_line_end_tag(this, node.end_tokens, scope, "endscope");
             node.data = scope;
         }
         else if (node.type == "interface") {
             const inter = parse_interface(this, node.start_tokens);
-            inter.end_tag = parse_line_end_tag(this, node.end_tokens, inter, "endinterface");
+            parse_line_end_tag(this, node.end_tokens, inter, "endinterface");
             node.data = inter;
         }
         else if (node.type == "struct") {
             const struct = parse_struct(this, node.start_tokens);
-            struct.end_tag = parse_line_end_tag(this, node.end_tokens, struct, "endstruct");
+            parse_line_end_tag(this, node.end_tokens, struct, "endstruct");
             node.data = struct;
         }
         else if (node.type == "method") {
             const method = parse_method(this, node.start_tokens); // ok
-            method.end_tag = parse_line_end_tag(this, node.end_tokens, method, "endmethod");
+            parse_line_end_tag(this, node.end_tokens, method, "endmethod");
             node.data = method;
         }
         else if (node.type == "func") {
             const func = parse_function(this, node.start_tokens); // ok
-            func.end_tag = parse_line_end_tag(this, node.end_tokens, func, "endfunction");
+            parse_line_end_tag(this, node.end_tokens, func, "endfunction");
             node.data = func;
         } else if (node.type == "globals") {
             const globals = parse_globals(this, node.start_tokens); // ok
-            globals.end_tag = parse_line_end_tag(this, node.end_tokens, globals, "endglobals");
+            parse_line_end_tag(this, node.end_tokens, globals, "endglobals");
             node.data = globals;
         } else if (node.type == "if") {
             const ifs = parse_if(this, node.start_tokens);
-            ifs.end_tag = parse_line_end_tag(this, node.end_tokens, ifs, "endif");
+            parse_line_end_tag(this, node.end_tokens, ifs, "endif");
             node.data = ifs;
         } else if (node.type == "loop") {
             const loop = parse_loop(this, node.start_tokens);
-            loop.end_tag = parse_line_end_tag(this, node.end_tokens, loop, "endloop");
+            parse_line_end_tag(this, node.end_tokens, loop, "endloop");
             node.data = loop;
         }
 
@@ -1129,6 +1131,14 @@ export class Document {
         const next = node.parent.children[index + 1]?.data ?? null;
         object.next = next;
       }
+    } else {
+      const index = this.object_list.indexOf(node);
+      if (index != -1) {
+        const previous = this.object_list[index - 1]?.data ?? null;
+        object.previous = previous;
+        const next = this.object_list[index + 1]?.data ?? null;
+        object.next = next;
+      }
     }
     if (node instanceof Block) {
       
@@ -1168,6 +1178,7 @@ export class Document {
   public sets:Set[] = [];
   public calls:Call[] = [];
   public comments:Comment[] = [];
+  public members:Member[] = [];
 
 
 
@@ -1196,6 +1207,8 @@ export class Document {
         this.natives.push(node);
       } else if (node instanceof Library) {
         this.librarys.push(node);
+      } else if (node instanceof Member) {
+        this.members.push(node);
       } else if (node instanceof Struct) {
         this.structs.push(node);
       } else if (node instanceof Method) {
@@ -1208,6 +1221,44 @@ export class Document {
         this.types.push(node);
       } else if (node instanceof Scope) {
         this.scopes.push(node);
+      }
+    });
+  }
+
+  private end_tag_error() {
+    const non_end_tag_and_push_error = (object: Func|If|Loop|Library|Method|Struct|Interface|Globals|Scope) => {
+      if (object.end_tag === null && !(object instanceof Method && object.parent instanceof Interface)) {
+        if (object.start_token) {
+          this.add_token_error(object.start_token, `statement block missing end tag`);
+        } 
+      }
+    }
+    this.every((node) => {
+      if (node instanceof Func) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Comment) {
+      } else if (node instanceof Call) {
+      } else if (node instanceof Set) {
+      } else if (node instanceof Local) {
+      } else if (node instanceof GlobalVariable) {
+      } else if (node instanceof If) {
+        this.ifs.push(node);
+      } else if (node instanceof Loop) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Native) {
+      } else if (node instanceof Library) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Struct) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Method) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Interface) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Globals) {
+        non_end_tag_and_push_error(node);
+      } else if (node instanceof Type) {
+      } else if (node instanceof Scope) {
+        non_end_tag_and_push_error(node);
       }
     });
   }
