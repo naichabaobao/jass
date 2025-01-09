@@ -5661,6 +5661,7 @@ native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns bo
 // 获取指定英雄经验值
 native GetHeroXP takes unit whichHero returns integer
 // 设置指定英雄经验值
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
 native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
 // 获取指定英雄未使用的技能点数
@@ -5670,10 +5671,10 @@ native GetHeroSkillPoints takes unit whichHero returns integer
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
 // 增加指定英雄经验值 [R]
-// @param showEyeCandy 因此升级时是否显示升级动画
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置指定英雄等级
-// @param showEyeCandy 是否显示升级动画，该设置对降级无效
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
 // 降级时到0或以下时技能会变为未学习状态
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 获取指定英雄等级
