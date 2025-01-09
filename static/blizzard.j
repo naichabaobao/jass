@@ -79,9 +79,9 @@ globals
     constant integer bj_MAX_INVENTORY = 6
     // 玩家数量上限（12/24，不含中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYERS = GetBJMaxPlayers()
-    // 中立受害玩家编号（14/26，以1.29区分）
+    // 中立受害玩家编号（13/25，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_VICTIM = GetBJPlayerNeutralVictim()
-    // 中立特殊玩家编号（15/27，以1.29区分）
+    // 中立特殊玩家编号（14/26，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
     // 玩家槽数量上限（共16/28位，包含所有中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
