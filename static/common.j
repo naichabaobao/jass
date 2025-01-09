@@ -5099,13 +5099,13 @@ constant native GetResearchingUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearched takes nothing returns integer
 
-// 事件响应 获取完成训练单位的单位类型(对应开始/完成/取消训练单位等事件)
+// 事件响应 获取训练单位的单位类型(对应开始/完成/取消训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnitType takes nothing returns integer
 
-// 事件响应 获取完成训练单位的单位(对应完成训练单位等事件)
+// 事件响应 获取训练的单位(对应完成训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
