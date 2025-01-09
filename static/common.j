@@ -5132,7 +5132,7 @@ constant native GetLoadedUnit takes nothing returns unit
 // 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售单位(对应出售单位等事件)
+// 事件响应 获取被出售/雇佣单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
 // 事件响应 获取购买单位(对应出售单位等事件)
