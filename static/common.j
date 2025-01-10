@@ -1108,7 +1108,7 @@ globals
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
 	// 玩家状态 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家状态 剩余可用英雄数
+	// 玩家状态 剩余可用英雄数量(默认为1，设置成其他值对英雄数量限制无效果)
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
 	// 玩家状态 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
