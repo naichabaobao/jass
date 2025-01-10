@@ -127,7 +127,7 @@ globals
     constant integer bj_MELEE_STARTING_LUMBER_V0 = 200
     // 冰封王座版本初始木材数量，默认150
     constant integer bj_MELEE_STARTING_LUMBER_V1 = 150
-    // 使用随机英雄时创建的英雄数量，默认1
+    // 游戏开始英雄数量，默认1
     constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
     // 英雄数量上限，默认3
     // 官方只处理了对战24个英雄
