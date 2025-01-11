@@ -8457,7 +8457,8 @@ function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, play
 endfunction
 
 
-// 设置指定玩家的英雄训练数量上限
+// 设置指定玩家的英雄训练/购买数量上限
+// 似乎设置后修改无效
 function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 endfunction
