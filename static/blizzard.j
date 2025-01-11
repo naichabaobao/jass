@@ -87,9 +87,9 @@ globals
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
     // （召唤）骷髅战士（'uske'）数量上限，默认25
     constant integer bj_MAX_SKELETONS = 25
-    // （商店）物品库存上限，默认11
+    // （商店）物品库存上限，默认11（因为要规避选择英雄技能占位）
     constant integer bj_MAX_STOCK_ITEM_SLOTS = 11
-    // （商店）单位库存上限，默认11
+    // （商店）单位库存上限，默认11（因为要规避选择英雄技能占位）
     constant integer bj_MAX_STOCK_UNIT_SLOTS = 11
     // 物品等级上限，默认10级
     constant integer bj_MAX_ITEM_LEVEL = 10
