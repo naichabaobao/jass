@@ -1522,6 +1522,13 @@ globals
     // 补充内容，不可直接使用
     constant integer TRANSMUTE
 
+    // 单位名称 市场/市集
+    constant string marketplace
+    // 单位名称 地精飞艇
+    constant string goblinzeppelin
+    // 单位名称 金矿
+    constant string goldmine
+
 endglobals
 
 
