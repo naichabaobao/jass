@@ -31454,11 +31454,11 @@
       },
       {
         "content": "autoharvestgold",
-        "descript": "技能命令串 自动采集黄金"
+        "descript": "技能命令串 自动采集附近金矿"
       },
       {
         "content": "autoharvestlumber",
-        "descript": "技能命令串 自动采集木材"
+        "descript": "技能命令串 自动采集附近木材"
       },
       {
         "content": "avatar",
