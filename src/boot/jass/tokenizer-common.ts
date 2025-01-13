@@ -1226,6 +1226,10 @@ export class Document {
   }
 
   private end_tag_error() {
+    /**
+     * 判断是否闭合并添加错误信息
+     * @param object 
+     */
     const non_end_tag_and_push_error = (object: Func|If|Loop|Library|Method|Struct|Interface|Globals|Scope) => {
       if (object.end_tag === null && !(object instanceof Method && object.parent instanceof Interface)) {
         if (object.start_token) {

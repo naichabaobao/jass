@@ -31,7 +31,7 @@ class TakeCompletionItem extends vscode.CompletionItem {
 }
 
 class CompletionItemDocument {
-  public readonly document:vscode.TextDocument;
+  // public readonly document:vscode.TextDocument;
   public readonly program:vjass.Document;
 
   public readonly native_items:PackageCompletionItem<vjass_ast.Native>[];
@@ -46,8 +46,8 @@ class CompletionItemDocument {
   public readonly scope_items:PackageCompletionItem<vjass_ast.Scope>[];
   // public readonly take_items:TakeCompletionItem[];
 
-  constructor(document:vscode.TextDocument, program:vjass.Document) {
-    this.document = document;
+  constructor(program:vjass.Document) {
+    // this.document = document;
     this.program = program;
 
     this.native_items = this.program.natives.map(node => CompletionItemDocument.native_to_item(node));
@@ -345,92 +345,6 @@ function get_names(doc:vjass.Document, document: vscode.TextDocument, position :
   return keys.reverse();
 }
 
-const function_or_native_or_mathod_to_item = (func:vjass_ast.Func|vjass_ast.Native|vjass_ast.Method) => {
-  const item = new vscode.CompletionItem(func.name?.getText() ?? "(unkown)", vscode.CompletionItemKind.Function);
-  item.detail = `${func.name?.getText() ?? "(unkown)"} >_${func.document.filePath}`;
-  
-  const ms = new vscode.MarkdownString();
-  ms.baseUri = vscode.Uri.file(func.document.filePath);
-  ms.appendCodeblock(func.to_string());
-
-  if (func.name?.getText() == "function_name22" ||func.name?.getText() ==  "function_name4856") {
-    console.log(func, func.get_param_descriptions(), func.comments);
-
-  }
-  
-  func.description.forEach(desc => {
-    ms.appendMarkdown(desc);
-    ms.appendText("\n");
-  });
-  func.takes?.forEach(take => {
-    const desc = take.desciprtion;
-    if (desc) {
-      ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
-    }
-  });
-  item.documentation = ms;
-
-  if (func.is_deprecated) {
-    item.tags = [vscode.CompletionItemTag.Deprecated];
-  }
-
-  if (func.is_constant) {
-    item.sortText = "@constant";
-  }
-  if (func.is_static) {
-    item.sortText = "@static";
-    item.label = `static ${func.name?.getText() ?? "(unkown)"}`;
-    item.insertText = func.name?.getText() ?? "(unkown)";
-  }
-
-  return item;
-};
-const struct_to_item = (struct:vjass_ast.Struct) => {
-  const item = new vscode.CompletionItem(struct.name?.getText() ?? "(unkown)", vscode.CompletionItemKind.Struct);
-  item.detail = `${struct.name?.getText() ?? "(unkown)"} >_${struct.document.filePath}`;
-  
-  const ms = new vscode.MarkdownString();
-  ms.baseUri = vscode.Uri.file(struct.document.filePath);
-  ms.appendCodeblock(struct.to_string());
-
-  
-  struct.description.forEach(desc => {
-    ms.appendMarkdown(desc);
-    ms.appendText("\n");
-  });
-  item.documentation = ms;
-
-  if (struct.is_deprecated) {
-    item.tags = [vscode.CompletionItemTag.Deprecated];
-  }
-
-  return item;
-};
-
-// function generate_item_by_document(document?:vjass.Document) {
-//   const items:PackageCompletionItem[] = [];
-
-//   if (!document) {
-//     return items;
-//   }
-
-
-  
-//   document.functions.filter(func => func.is_public).forEach(func => {
-//     items.push(function_or_native_or_mathod_to_item(func));
-//   });
-//   document.natives.filter(func => func.is_public).forEach(func => {
-//     items.push(function_or_native_or_mathod_to_item(func));
-//   });
-//   document.structs.filter(struct => struct.is_public).forEach(struct => {
-//     items.push(struct_to_item(struct));
-//   });
-//   // document.methods.forEach(func => {
-//   //   items.push(function_or_native_or_mathod_to_item(func));
-//   // });
-
-//   return items;
-// }
 
 const equals = (oldkey:string, key: string) => {
   const this_info = path.parse(oldkey);
@@ -486,21 +400,21 @@ class Manage {
       if (index == -1) {
         // this.wraps.push(new Wrap(document.uri.fsPath, generate_item_by_document(GlobalContext.get(document.uri.fsPath))));
   
-        this.wraps.push(new Wrap(document.uri.fsPath, new CompletionItemDocument(document, program)));
+        this.wraps.push(new Wrap(document.uri.fsPath, new CompletionItemDocument(program)));
       } else {
-        this.wraps[index].document = new CompletionItemDocument(document, program);
+        this.wraps[index].document = new CompletionItemDocument(program);
       }
     }
   }
   add(key: string) {
     const index = this.index_of(key);
     const program = GlobalContext.get(key);
-    const document = vscode.workspace.textDocuments.find(document => equals_file_path(document.uri.fsPath, key));
-    if (program && document) {
+    // const document = vscode.workspace.textDocuments.find(document => equals_file_path(document.uri.fsPath, key));
+    if (program) {
       if (index == -1) {
-        this.wraps.push(new Wrap(key, new CompletionItemDocument(document, program)));
+        this.wraps.push(new Wrap(key, new CompletionItemDocument(program)));
       } else {
-        this.wraps[index].document = new CompletionItemDocument(document, program);
+        this.wraps[index].document = new CompletionItemDocument(program);
       }
       // if (index == -1) {
       //   this.wraps.push(new Wrap(key, generate_item_by_document(GlobalContext.get(key))));
@@ -594,6 +508,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         items.push(...wrap.document.interface_items);
         items.push(...wrap.document.library_items);
         items.push(...wrap.document.scope_items);
+        items.push(...wrap.document.method_items);
+        items.push(...wrap.document.membere_items);
         const target_position = new vjass.Position(position.line, position.character);
         const takes:vjass_ast.Take[] = [];
         const push_take = (function_items:PackageCompletionItem<vjass_ast.Func>[]) => {
@@ -623,48 +539,58 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         push_take(wrap.document.function_items);
         push_local(wrap.document.local_items);
 
-        const names = get_names(wrap.document.program, document, position);
-        const structs:vjass_ast.Struct[] = [];
-        const push_struct = (struct:vjass_ast.Struct) => {
-          const index = structs.findIndex(x => {
-            return x === struct;
-          });
-          if (index === -1) {
-            structs.push(struct);
-          }
-        }
-        if (names.length > 0) {
-          const first_name = names.shift();
-          if (first_name) {
-            if (typeof first_name == "string") {
-              takes.forEach((take) => {
-                if (take.name && take.type && take.name.getText() == first_name) {
-                  GlobalContext.get_strcut_by_name(take.type.getText()).forEach(struct => push_struct(struct));
-                }
-              });
-              locals.forEach((local) => {
-                if (local.name && local.type && local.name.getText() == first_name) {
-                  GlobalContext.get_strcut_by_name(local.type.getText()).forEach(struct => push_struct(struct));
-                }
-              });
-              GlobalContext.get_strcut_by_name(first_name).forEach(struct => push_struct(struct));
-            }
-          }
-        }
+        // const names = get_names(wrap.document.program, document, position);
+        // const structs:vjass_ast.Struct[] = [];
+        // const push_struct = (struct:vjass_ast.Struct) => {
+        //   const index = structs.findIndex(x => {
+        //     return x === struct;
+        //   });
+        //   if (index === -1) {
+        //     structs.push(struct);
+        //   }
+        // }
+        // if (names.length > 0) {
+        //   const first_name = names.shift();
+        //   if (first_name) {
+        //     if (typeof first_name == "string") {
+        //       takes.forEach((take) => {
+        //         if (take.name && take.type && take.name.getText() == first_name) {
+        //           GlobalContext.get_strcut_by_name(take.type.getText()).forEach(struct => push_struct(struct));
+        //         }
+        //       });
+        //       locals.forEach((local) => {
+        //         if (local.name && local.type && local.name.getText() == first_name) {
+        //           GlobalContext.get_strcut_by_name(local.type.getText()).forEach(struct => push_struct(struct));
+        //         }
+        //       });
+        //       GlobalContext.get_strcut_by_name(first_name).forEach(struct => push_struct(struct));
+        //     }
+        //   }
+        // }
 
-        structs.forEach(struct => {
-          struct.children.forEach(child => {
-            if (child instanceof vjass_ast.Method) {
-              items.push(CompletionItemDocument.method_to_item(child));
-            }
-          });
-        });
+        // structs.forEach(struct => {
+        //   console.log(struct.name?.getText(), );
+          
+        //   struct.children.forEach((child, index) => {
+        //     if (child instanceof vjass_ast.Method) {
+        //       items.push(CompletionItemDocument.method_to_item(child));
+        //       console.log(child.name?.getText(), index);
+              
+        //     }
+        //   });
+        // });
         
 
       } else {
         items.push(...wrap.document.native_items.filter(x => x.data.is_public));
         items.push(...wrap.document.function_items.filter(x => x.data.is_public));
         items.push(...wrap.document.global_variable_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.struct_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.interface_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.library_items);
+        items.push(...wrap.document.scope_items);
+        items.push(...wrap.document.method_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.membere_items.filter(x => x.data.is_public));
       }
     });
     return items;
@@ -678,6 +604,6 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   //     return item;
   // }
 
-}(), ".");
+}());
 
 
