@@ -147,7 +147,7 @@ endfunction
 
 //=========================================================================== 
 
-// 运行对战初始化触发器（无视条件） 
+// 运行初始化触发器（无视条件） 
 function RunInitializationTriggers takes nothing returns nothing 
     call ConditionalTriggerExecute(gg_trg_Melee_Initialization) 
 endfunction 
