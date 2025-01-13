@@ -260,103 +260,8 @@ class CompletionItemDocument {
   }
 }
 
-class FuncString {
-  public readonly key:string;
-  constructor(key:string) {
-    this.key = key;
-  }
-}
-function get_names(doc:vjass.Document, document: vscode.TextDocument, position :vscode.Position):(string|FuncString)[] {
-  const keys:(string|FuncString)[] = [];
-  const tokens = doc.lineTokens(position.line);
-
-  let index = 0;
-  for (; index < tokens.length; ) {
-    const token = tokens[index];
-    if (token.end.position >= position.character) {
-      break;
-    } else {
-      index++;
-    }
-  }
-  const slice_tokens = tokens.slice(0, index);
-  let state = 0;
-  let layer = 0;
-  
-  for (let index = slice_tokens.length - 1; index >= 0; index--) {
-    const token = slice_tokens[index];
-    if (token.is_block_comment) {
-      continue;
-    }
-    const text = token.getText();
-    if (state == 0) {
-      if (token.is_identifier) {
-        if (keys.length == 0) {
-          state = 1;
-          continue;
-        } else {
-          keys.push(text);
-          state = 1;
-        }
-      } else if (text == ".") {
-        state = 2;
-      } else if (text == ")") {
-        layer++;
-        state = 3;
-      } else {
-        break;
-      }
-    } else if (state == 1) {
-      if (text == ".") {
-        state = 2;
-      } else {
-        break;
-      }
-    } else if (state == 2) {
-      if (token.is_identifier) {
-        keys.push(text);
-        state = 1;
-      } else if (text == ")") {
-        layer++;
-        state = 3;
-      } else {
-        break;
-      }
-    } else if (state == 3) {
-      if (text == "(") {
-        layer--;
-        if (layer <= 0) {
-          state = 4;
-        }
-      } else if (text == ")") {
-        layer++;
-      } else {
-        continue;
-      }
-    } else if (state == 4) {
-      if (token.is_identifier) {
-        keys.push(new FuncString(token.getText()));
-        state = 1;
-      } else {
-        break;
-      }
-    }
-  }
-  return keys.reverse();
-}
 
 
-const equals = (oldkey:string, key: string) => {
-  const this_info = path.parse(oldkey);
-  const other_info = path.parse(key);
-  return this_info.dir == other_info.dir && this_info.base == other_info.base;
-}
-
-const equals_file_path = (key: string, file_name:string):boolean => {
-  const this_info = path.parse(file_name);
-  const other_info = path.parse(key);
-  return this_info.dir == other_info.dir && this_info.base == other_info.base;
-}
 
 class Wrap {
   public key: string;
@@ -512,7 +417,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         items.push(...wrap.document.membere_items);
         const target_position = new vjass.Position(position.line, position.character);
         const takes:vjass_ast.Take[] = [];
-        const push_take = (function_items:PackageCompletionItem<vjass_ast.Func>[]) => {
+        const push_take = (function_items:PackageCompletionItem<vjass_ast.Func|vjass_ast.Method>[]) => {
           function_items.filter(x => {
             return x.data.contains(target_position);
           }).forEach(data => {
@@ -536,6 +441,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
           });
         };
 
+        push_take(wrap.document.method_items);
         push_take(wrap.document.function_items);
         push_local(wrap.document.local_items);
 
@@ -596,14 +502,106 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     return items;
   }
 
-  // resolveCompletionItem(item: vscode.CompletionItem, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem> {
-  //     if (item.filterText != "private") {
-  //       return;
-  //     }
-
-  //     return item;
-  // }
 
 }());
 
 
+/*
+class FuncString {
+  public readonly key:string;
+  constructor(key:string) {
+    this.key = key;
+  }
+}
+function get_names(doc:vjass.Document, document: vscode.TextDocument, position :vscode.Position):(string|FuncString)[] {
+  const keys:(string|FuncString)[] = [];
+  const tokens = doc.lineTokens(position.line);
+
+  let index = 0;
+  for (; index < tokens.length; ) {
+    const token = tokens[index];
+    if (token.end.position >= position.character) {
+      break;
+    } else {
+      index++;
+    }
+  }
+  const slice_tokens = tokens.slice(0, index);
+  let state = 0;
+  let layer = 0;
+  
+  for (let index = slice_tokens.length - 1; index >= 0; index--) {
+    const token = slice_tokens[index];
+    if (token.is_block_comment) {
+      continue;
+    }
+    const text = token.getText();
+    if (state == 0) {
+      if (token.is_identifier) {
+        if (keys.length == 0) {
+          state = 1;
+          continue;
+        } else {
+          keys.push(text);
+          state = 1;
+        }
+      } else if (text == ".") {
+        state = 2;
+      } else if (text == ")") {
+        layer++;
+        state = 3;
+      } else {
+        break;
+      }
+    } else if (state == 1) {
+      if (text == ".") {
+        state = 2;
+      } else {
+        break;
+      }
+    } else if (state == 2) {
+      if (token.is_identifier) {
+        keys.push(text);
+        state = 1;
+      } else if (text == ")") {
+        layer++;
+        state = 3;
+      } else {
+        break;
+      }
+    } else if (state == 3) {
+      if (text == "(") {
+        layer--;
+        if (layer <= 0) {
+          state = 4;
+        }
+      } else if (text == ")") {
+        layer++;
+      } else {
+        continue;
+      }
+    } else if (state == 4) {
+      if (token.is_identifier) {
+        keys.push(new FuncString(token.getText()));
+        state = 1;
+      } else {
+        break;
+      }
+    }
+  }
+  return keys.reverse();
+}
+
+
+const equals = (oldkey:string, key: string) => {
+  const this_info = path.parse(oldkey);
+  const other_info = path.parse(key);
+  return this_info.dir == other_info.dir && this_info.base == other_info.base;
+}
+
+const equals_file_path = (key: string, file_name:string):boolean => {
+  const this_info = path.parse(file_name);
+  const other_info = path.parse(key);
+  return this_info.dir == other_info.dir && this_info.base == other_info.base;
+}
+*/
