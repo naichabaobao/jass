@@ -50,6 +50,16 @@ export class Context {
         return this._keys;
     }
 
+    public get_strcut_by_name(name: string):Struct[] {
+        const structs:Struct[] = [];
+
+        this._documents.forEach(document => {
+            structs.push(...document.get_struct_by_name(name));
+        });
+
+        return structs;
+    }
+
 }
 
 export const GlobalContext = new Context();
@@ -100,6 +110,10 @@ export class NodeAst extends Range {
         } else {
             return new Position(0, 0);
         }
+    }
+
+    public contains(positionOrRange: Range | Position): boolean {
+        return new Range(this.start, this.end).contains(positionOrRange);
     }
 
     public start_token:Token|null = null;
@@ -412,7 +426,7 @@ export function parse_library(document: Document, tokens: Token[]) {
     //     if (state == 0) {
     //         if (text == ",") {
     //             state = 1;
-    //         } else {
+    //         } else {ScopeLibrary
     //             break;
     //         }
     //     } else if (state == 1) {
@@ -430,6 +444,10 @@ export function parse_library(document: Document, tokens: Token[]) {
 
 export class Scope extends NodeAst {
     public name: Token | null = null;
+
+    to_string(): string {
+        return `scope ${this.name ? this.name.getText() : "(unkown)"}`;
+    }
 }
 export function parse_scope(document: Document, tokens: Token[]) {
     const scope = new Scope(document);
@@ -1360,6 +1378,18 @@ export class GlobalVariable extends NodeAst {
     expr: Zoom | null = null;
 
     public is_array: boolean = false;
+
+    
+    public get is_constant() : boolean {
+        return this.qualifier !== null && this.qualifier.getText() == "constant";
+    }
+    public get is_private():boolean {
+        return !!this.visible && this.visible.getText() == "private";
+    }
+    public get is_public():boolean {
+        return !this.is_private;
+    }
+    
 
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";

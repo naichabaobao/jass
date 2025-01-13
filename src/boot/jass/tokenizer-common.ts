@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 
 
@@ -966,7 +966,7 @@ export class Document {
         } else if (last_block.type == "scope" && this.is_start_with(tokens, "endscope")) {
           last_block.end_tokens = tokens;
           blocks.pop();
-        } else if (last_block.type == "struct" && this.is_start_with(tokens, "endendstruct")) {
+        } else if (last_block.type == "struct" && this.is_start_with(tokens, "endstruct")) {
           last_block.end_tokens = tokens;
           blocks.pop();
         } else if (last_block.type == "zinc" && this.is_start_with(tokens, "endzinc")) {
@@ -1263,6 +1263,39 @@ export class Document {
     });
   }
 
+
+  // public get_object_by_names(names:string[]):NodeAst[] {
+  //   const function_takes:Take[] = this.functions.map(func => func.takes).flat().filter(x => !!x) as Take[];
+  //   const mathod_takes:Take[] = this.methods.map(func => func.takes).flat().filter(x => !!x) as Take[];
+  //   const objects:(NodeAst|Take)[] = [...this.structs, ...this.locals, ...function_takes, ...mathod_takes];
+  //   const names2 = [...names];
+  //   const shift_and_handing = () => {
+  //     if (names2.length > 0) {
+  //       const name = names2.shift();
+  //       objects.filter(object => {
+  //         if (object instanceof Struct && object.name && object.name.getText() == name) {
+  //           return true;
+  //         } else if (object instanceof Local && object.name && object.name.getText() == name) {
+  //           return true;
+  //         } else if (object instanceof Take && object.name && object.name.getText() == name) {
+  //           return true;
+  //         }
+  //         return false;
+  //       });
+  //     }
+  //   };
+  // }
+  public get_struct_by_name(name: string):Struct[] {
+    const structs:Struct[] = [];
+
+    this.structs.forEach(struct => {
+      if (struct.name && struct.name.getText() === name) {
+        structs.push(struct);
+      }
+    });
+
+    return structs;
+  }
 }
 
 
