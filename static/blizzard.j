@@ -7817,7 +7817,7 @@ function PingMinimapLocForPlayer takes player whichPlayer, location loc, real du
     call PingMinimapForPlayer(whichPlayer, GetLocationX(loc), GetLocationY(loc), duration)
 endfunction
 
-// 发送小地图提示颜色（指定坐标，指定颜色，指定玩家组）
+// 发送小地图提示（指定坐标，指定颜色，指定玩家组）
 function PingMinimapForForceEx takes force whichForce, real x, real y, real duration, integer style, real red, real green, real blue returns nothing
     local integer red255 = PercentTo255(red)
     local integer green255 = PercentTo255(green)
