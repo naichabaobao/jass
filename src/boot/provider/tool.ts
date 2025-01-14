@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Position } from '../jass/ast';
 import { tokens } from '../jass/tokens';
 import { Options } from './options';
-import data from "./data";
+
 import { compare } from '../tool';
 
 class Key {
@@ -88,42 +88,10 @@ const convertPosition = (position: vscode.Position): Position => {
 	return new Position(position.line, position.character);
 };
 
-/**
- * 获取当前位置可提示的所有方法
- * @param fsPath 当前文件的路径
- * @param position 当前cursor的位置
- * @returns 
- */
-const fieldFunctions = (fsPath: string, position: vscode.Position) => {
-	const funcs = data.functions();
 
-	if (!Options.isOnlyJass) {
-	  const requires: string[] = [];
-	  data.librarys().forEach((library) => {
-		if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-			funcs.push(...library.functions);
-		} else {
-			funcs.push(...library.functions.filter((func) => func.tag != "private"));
-		}
-	  });
-
-	  if (Options.supportZinc) {
-		data.zincLibrarys().forEach((library) => {
-			if (compare(library.source, fsPath) && library.loc.contains(convertPosition(position))) {
-				funcs.push(...library.functions);
-			} else {
-				funcs.push(...library.functions.filter((func) => func.tag != "private"));
-			}
-		});
-	  }
-	}
-	
-	return funcs;
-  };
 
 export {
 	Key,
 	functionKey,
-	convertPosition,
-	fieldFunctions
+	convertPosition
 };

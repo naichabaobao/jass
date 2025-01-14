@@ -60,6 +60,16 @@ export class Context {
         return structs;
     }
 
+    public get_function_set_by_name(name: string):(Func|Native|Method)[] {
+        const funcs:(Func|Native|Method)[] = [];
+
+        this._documents.forEach(document => {
+            funcs.push(...document.get_function_set_by_name(name));
+        });
+
+        return funcs;
+    }
+
 }
 
 export const GlobalContext = new Context();

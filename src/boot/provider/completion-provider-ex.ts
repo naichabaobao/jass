@@ -82,6 +82,7 @@ class CompletionItemDocument {
       const desc = take.desciprtion;
       if (desc) {
         ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
+        ms.appendText("\n");
       }
     });
     item.documentation = ms;

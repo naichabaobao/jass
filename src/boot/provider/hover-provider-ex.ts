@@ -109,6 +109,7 @@ class HoverDocument {
       const desc = take.desciprtion;
       if (desc) {
         ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
+        ms.appendText("\n");
       }
     });
     const item = new PackageHover(object, ms, new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));

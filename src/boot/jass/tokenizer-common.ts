@@ -320,6 +320,7 @@ class Block {
 }
 
 export class Document {
+
   public readonly content: string;
   public readonly tokens: Token[] = [];
   public readonly lineCount: number = 0;
@@ -1300,6 +1301,28 @@ export class Document {
 
     return structs;
   }
+
+  public get_function_set_by_name(name: string):(Func|Native|Method)[] {
+    const funcs:(Func|Native|Method)[] = [];
+
+    this.natives.forEach(native => {
+      if (native.name && native.name.getText() === name) {
+        funcs.push(native);
+      }
+    });
+    this.functions.forEach(func => {
+      if (func.name && func.name.getText() === name) {
+        funcs.push(func);
+      }
+    });
+    this.methods.forEach(method => {
+      if (method.name && method.name.getText() === name) {
+        funcs.push(method);
+      }
+    });
+
+    return funcs;
+}
 }
 
 
