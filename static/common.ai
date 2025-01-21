@@ -105,7 +105,7 @@ native Unsummon             takes unit unitid                           returns 
 native SetExpansion         takes unit peon, integer id                 returns boolean
 // 研究指定科技（指定科技ID）
 native SetUpgrade           takes integer id                            returns boolean
-// 设置英雄升级技能线程
+// 设置英雄升级技能程序（似乎不是进程）
 native SetHeroLevels        takes code func                             returns nothing
 // 是否设置新英雄
 // 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
