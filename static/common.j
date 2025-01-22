@@ -6345,7 +6345,7 @@ native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag 
 // in the current campaign profile dir
 //
 
-// 读取所有游戏缓存（从本地硬盘）
+// 从本地硬盘读取游戏缓存（用于继承战役管卡数据，仅对单机有效）
 native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
