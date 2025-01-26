@@ -181,6 +181,15 @@ export class NodeAst extends Range {
     }
 }
 
+export class ZincNode extends NodeAst {
+
+    a:string = "";
+    constructor (document: Document) {
+        super(document)
+    }
+
+}
+
 export class Library extends NodeAst implements ExprTrict{
 
     public is_library_once: boolean = false;

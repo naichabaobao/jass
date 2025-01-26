@@ -2,6 +2,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
+import { parse_zinc } from "./zinc";
 
 
 
@@ -271,6 +272,10 @@ const TextMacroRegExp = /\/\/!\s+textmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?:ta
 const RunTextMacroStartWithRegExp = /\/\/!\s+runtextmacro\b/;
 const RunTextMacroRegExp = /\/\/!\s+runtextmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?<param_body>\(\s*(?<params>.+)\s*\))?/;
 
+const ZincStartWithRegExp = new RegExp(/^\/\/!\s+zinc\b/);
+const ZincEndWithRegExp = new RegExp(/^\/\/!\s+endzinc\b/);
+
+
 class Segment {
   parent: Block|null = null;
 
@@ -317,6 +322,11 @@ class Block {
       return this;
     }
   }
+
+  /**
+   * 用于保存zinc block内部的token
+   */
+  public readonly tokens:Token[] = [];
 }
 
 export class Document {
@@ -861,6 +871,13 @@ export class Document {
             list.push(segment);
           }
         };
+        const push_tokens_to_zinc_block = (tokens:Token[]) => {
+          if (blocks.length > 0) {
+            if (blocks[blocks.length - 1].type == "zinc") {
+              blocks[blocks.length - 1].tokens.push(...tokens);
+            }
+          }
+        };
         if (this.is_start_with(tokens, "function", ["debug", "private", "public"])) {
           push_block_to(new Block("func", tokens));
         } else if (this.is_start_with(tokens, "method", ["debug", "private", "public", "static", "stub"])) {
@@ -884,9 +901,11 @@ export class Document {
           push_block_to(new Block("if", tokens));
         } else if (this.is_start_with(tokens, "loop")) {
           push_block_to(new Block("loop", tokens));
-        } else if (this.is_start_with(tokens, "zinc")) {
+        } else if (this.is_start_with(tokens, (token) => ZincStartWithRegExp.test(token.getText()), [])) {
           push_block_to(new Block("zinc", tokens));
-        } 
+        } else if (last_block() && last_block().type == "zinc") {
+          push_tokens_to_zinc_block(tokens);
+        }
         // "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type"
         else if (this.is_start_with(tokens, "local")) {
           push_segment_to(new Segment("local", tokens));
@@ -914,29 +933,7 @@ export class Document {
           push_segment_to(new Segment("other", tokens));
         }
       };
-      /*
-      if (blocks.length > 0) {
-        const block = last_block();
-        const around = (type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", keyword: string) => {
-          if (block.type == type) {
-            if (this.is_start_with(tokens, keyword)) {
-              if (keyword == "endinterface") {
-                in_interface = false;
-              }
-              block.end_tokens = tokens;
-              blocks.pop();
-            } else {
-              handle();
-            }
-          } else {
-            return around;
-          }
-          around("library", "endlibrary")?.call(this, "func", "endfunction")?.call(this, "globals", "endglobals")?.call(this, "if", "endif")?.call(this, "interface", "endinterface")?.call(this, "loop", "endloop")?.call(this, "method", "endmethod")?.call(this, "scope", "endscope")?.call(this, "struct", "endstruct")?.call(this, "zinc", "endzinc");
-        }
-      } else {
-        handle();
-      }
-      */
+
       if (blocks.length > 0) {
         const last_block = blocks[blocks.length - 1];
         if (last_block.type == "func" && this.is_start_with(tokens, "endfunction")) {
@@ -970,7 +967,7 @@ export class Document {
         } else if (last_block.type == "struct" && this.is_start_with(tokens, "endstruct")) {
           last_block.end_tokens = tokens;
           blocks.pop();
-        } else if (last_block.type == "zinc" && this.is_start_with(tokens, "endzinc")) {
+        } else if (last_block.type == "zinc" && this.is_start_with(tokens, (token) => ZincEndWithRegExp.test(token.getText()))) {
           last_block.end_tokens = tokens;
           blocks.pop();
         } else {
@@ -997,6 +994,7 @@ export class Document {
 
   /**
    * 根据program_list内部tokens分别解析
+   * 对分层后的数据解析
    */
   private parse_node() {
     const handle_on_object = (node: Block | Segment) => {
@@ -1043,6 +1041,9 @@ export class Document {
             const loop = parse_loop(this, node.start_tokens);
             parse_line_end_tag(this, node.end_tokens, loop, "endloop");
             node.data = loop;
+        } else if (node.type == "zinc") { // 特殊处理，node.data 没用
+          console.log(node.tokens);
+          parse_zinc(this, node.tokens);
         }
 
         node.children.forEach(child => {
