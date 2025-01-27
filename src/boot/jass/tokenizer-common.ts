@@ -1042,7 +1042,6 @@ export class Document {
             parse_line_end_tag(this, node.end_tokens, loop, "endloop");
             node.data = loop;
         } else if (node.type == "zinc") { // 特殊处理，node.data 没用
-          console.log(node.tokens);
           parse_zinc(this, node.tokens);
         }
 

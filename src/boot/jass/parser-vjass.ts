@@ -183,7 +183,6 @@ export class NodeAst extends Range {
 
 export class ZincNode extends NodeAst {
 
-    a:string = "";
     constructor (document: Document) {
         super(document)
     }
