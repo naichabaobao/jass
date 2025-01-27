@@ -3476,7 +3476,7 @@ export function slice_layer(document: Document) {
     const root_node = new Node(null);
     let in_interface = false;
     // 遍历行
-    document.loop((document, line) => {
+    document.loop_uncontain_macro((document, line) => {
         in_interface = slice_layer_handle(document, undefined, undefined, line, node_stack, root_node, in_interface).in_interface;
 
     }, (document, run_text_macro, macro, line) => {

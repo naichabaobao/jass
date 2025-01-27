@@ -254,7 +254,77 @@ export class RunTextMacro extends Range {
         callback(document, this, text_macro, lineNumber);
       });
     }
+
+    return !!text_macro;
   }
+}
+
+class CanDisconnectedRange {
+  private _start_line: number = 0;
+  private _end_line: number = 0;
+
+  
+  public set start_line(v : number) {
+    this._start_line = v;
+    if (this._end_line < v) {
+      this._end_line = v;
+    }
+  }
+
+  
+  public get start_line() : number {
+    return this._start_line;
+  }
+
+  public set end_line(v : number) {
+    if (v >= this._start_line) {
+      this._end_line = v;
+    }
+  }
+
+  
+  public get end_line() : number {
+    return this._end_line;
+  }
+}
+interface VjassZincRuntextmacroTempObjectLine {
+  real_line_number:number;
+  mapping_line_number:number;
+  /**
+   * 0 = 正常行
+   * 1 zinc 头
+   * 2 zinc 尾
+   * 3 zinc 体
+   */
+  type: 0|1|2|3;
+}
+interface  VjassZincBlockTempObjectLine {
+  index:number;
+  real_line_number:number;
+  mapping_line_number:number;
+  /**
+   * 0 = 正常行
+   * 1 zinc 头
+   * 2 zinc 尾
+   * 3 zinc 体
+   */
+  type: 0|1|2|3;
+  display: VjassZincRuntextmacroTempObjectLine[]
+}
+/**
+ * 1. 可以拿到内部tokens
+ * 2. 可以被vjass解析时忽略
+ * 3. 可以作为outline识别对象
+ */
+class VjassZincBlockTempObject extends CanDisconnectedRange {
+  /**
+   * 包含的行
+   * 不包括 //! zinc 跟 //! endzinc
+   */
+  public readonly include_lines: number[] = [];
+
+  
+  
 }
 
 
@@ -298,8 +368,8 @@ class Block {
   // 用于接收解析后的对象
   public data:any;
 
-  type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop";
-  constructor(type: "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", start_tokens:Token[]) {
+  type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop";
+  constructor(type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", start_tokens:Token[]) {
     this.type = type;
 
     this.start_tokens = start_tokens;
@@ -359,6 +429,10 @@ export class Document {
     this.parse_runtextmacro();
     this.find_token_error();
 
+    this.find_zinc_block();
+    // console.log(this.zinc_indexs.map(x => `line:${x.index} display:${x.type > 0 ? x.display.map(s => `${s.type}`).join(",") : ""} type:${x.type}`).join("\n"));
+    console.log(this.filePath, this.zinc_indexs.length, this.lineCount);
+    
 
     this.object_list = this.slice_layer();
     this.parse_node();
@@ -380,6 +454,8 @@ export class Document {
     // this.root_node = null;
 
     this.end_tag_error();
+
+    this.object_list.length = 0;
   }
 
   public program: NodeAst | null = null;
@@ -435,6 +511,8 @@ export class Document {
 
   // public root_node: Node | null = null;
 
+  private zinc_indexs:VjassZincBlockTempObjectLine[] = [];
+
   /**
    * 记录每个分行的点，使用这种方法只需消耗一点内存有几百倍的性能提升
    * @private 不要修改，有词法解析时写入
@@ -469,6 +547,9 @@ export class Document {
   private line_run_text_macro_indexs: {
     line: number,
     is_run_text_macro: boolean,
+    /**
+     * 只想runtextmacro对象数组下标
+     */
     index: number
   }[] = [];
   /**
@@ -517,17 +598,39 @@ export class Document {
     return this.line_text_macro_indexs[line]?.text_macro_tag != 0 ?? false;
   }
 
-  public loop(callback: (document: Document, lineNumber: number) => void, run_callback: (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => void, start_line: number = 0, length: number = this.lineCount) {
+  public is_zinc_block_line(line: number, virtual_line:number): boolean {
+    if (this.is_run_text_macro_line(line)) {
+      return this.zinc_indexs[line] && (this.zinc_indexs[line].display.find(x => x.real_line_number == line && x.mapping_line_number == virtual_line)?.type ?? 0) > 0;
+    } else {
+      return this.zinc_indexs[line] && this.zinc_indexs[line].type > 0;
+    }
+  }
+
+
+  /**
+   * 
+   * @param callback 
+   * @param run_callback 
+   * @param start_line 
+   * @param length 
+   */
+  public loop_uncontain_macro(callback: (document: Document, lineNumber: number) => void, run_callback: (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => void, start_line: number = 0, length: number = this.lineCount) {
     for (let index = start_line; index < length; index++) {
-      if (this.is_macro_line(index)) {
+      if (this.is_macro_line(index)) { // 宏定义
         continue;
-      } else if (this.is_run_text_macro_line(index)) {
+      } else if (this.is_run_text_macro_line(index)) { // 运行文本宏
         const run_text_macro_index = this.line_run_text_macro_indexs[index].index;
         const run_text_macro = this.run_text_macros[run_text_macro_index];
         if (run_text_macro) {
-          run_text_macro.loop(run_callback);
+          run_text_macro.loop( (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => {
+            if (!this.is_zinc_block_line(index, lineNumber)) { // 保证zinc代码块不会遍历
+              run_callback(document, run_text_macro, text_macro, lineNumber);
+            }
+          });
         }
-      } else if (this.is_text_macro_line(index)) {
+      } else if (this.is_text_macro_line(index)) { // 文本宏
+        continue;
+      } else if (this.is_import_line(index)) { // vjass import 语句
         continue;
       } else {
         callback(this, index);
@@ -803,7 +906,7 @@ export class Document {
         }
       });
     };
-    this.loop((document, line) => {
+    this.loop_uncontain_macro((document, line) => {
           handle(document.lineTokens(line));
       }, (document, run_text_macro, macro, line) => {
           handle(macro.lineTokens(line, run_text_macro.param_values()));
@@ -839,9 +942,90 @@ export class Document {
     }
     return false;
   }
+
+  private find_zinc_block() {
+    let in_zinc = false;
+    for (let index = 0; index < this.lineCount; index++) {
+      this.zinc_indexs.push({
+        index,
+        type: 0,
+        real_line_number: index,
+        mapping_line_number: index,
+        display: []
+      });
+      if (this.is_macro_line(index) || this.is_text_macro_line(index) || this.is_import_line(index)) {
+        this.zinc_indexs[index].type = 0;
+      } else if (this.is_run_text_macro_line(index)) { // 运行文本宏
+        const run_text_macro_index = this.line_run_text_macro_indexs[index].index;
+        const run_text_macro = this.run_text_macros[run_text_macro_index];
+        const zinc_index = this.zinc_indexs[index];
+        zinc_index.type = in_zinc ? 3 : 0;
+        if (run_text_macro) {
+          run_text_macro.loop( (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, text_macro_line_number: number) => {
+            const tokens = text_macro.lineTokens(text_macro_line_number, run_text_macro.param_values());
+            if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
+              if (in_zinc) {
+                this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+              }
+              in_zinc = true;
+              zinc_index.display.push({
+                real_line_number: index,
+                mapping_line_number: text_macro_line_number,
+                type: 1
+              });
+            } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
+              if (!in_zinc) {
+                this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
+              }
+              in_zinc = false;
+              zinc_index.display.push({
+                real_line_number: index,
+                mapping_line_number: text_macro_line_number,
+                type: 2
+              });
+            } else if (in_zinc) {
+              zinc_index.display.push({
+                real_line_number: index,
+                mapping_line_number: text_macro_line_number,
+                type: 3
+              });
+            } else {
+              zinc_index.display.push({
+                real_line_number: index,
+                mapping_line_number: text_macro_line_number,
+                type: 0
+              });
+            }
+            
+          });
+        }
+      } else {
+        const tokens = this.lineTokens(index);
+        if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
+          if (in_zinc) {
+            this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+          }
+          in_zinc = true;
+          this.zinc_indexs[index].type = 1;
+        } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
+          if (!in_zinc) {
+            this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
+          }
+          in_zinc = false;
+          this.zinc_indexs[index].type = 2;
+        } else if (in_zinc) {
+          this.zinc_indexs[index].type = 3;
+        } else {
+          this.zinc_indexs[index].type = 0;
+        }
+      }
+    }
+  }
+
   /**
    * 文档最根部的对象
    * 根据每一行分层
+   * @deprecated 后续改成局部,目前能正常运行,但会跟着document导致内存占用，因为解析完后就没用了
    */
   private object_list:(Block|Segment)[] = [];
   private slice_layer() {
@@ -871,13 +1055,6 @@ export class Document {
             list.push(segment);
           }
         };
-        const push_tokens_to_zinc_block = (tokens:Token[]) => {
-          if (blocks.length > 0) {
-            if (blocks[blocks.length - 1].type == "zinc") {
-              blocks[blocks.length - 1].tokens.push(...tokens);
-            }
-          }
-        };
         if (this.is_start_with(tokens, "function", ["debug", "private", "public"])) {
           push_block_to(new Block("func", tokens));
         } else if (this.is_start_with(tokens, "method", ["debug", "private", "public", "static", "stub"])) {
@@ -901,10 +1078,6 @@ export class Document {
           push_block_to(new Block("if", tokens));
         } else if (this.is_start_with(tokens, "loop")) {
           push_block_to(new Block("loop", tokens));
-        } else if (this.is_start_with(tokens, (token) => ZincStartWithRegExp.test(token.getText()), [])) {
-          push_block_to(new Block("zinc", tokens));
-        } else if (last_block() && last_block().type == "zinc") {
-          push_tokens_to_zinc_block(tokens);
         }
         // "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type"
         else if (this.is_start_with(tokens, "local")) {
@@ -967,9 +1140,6 @@ export class Document {
         } else if (last_block.type == "struct" && this.is_start_with(tokens, "endstruct")) {
           last_block.end_tokens = tokens;
           blocks.pop();
-        } else if (last_block.type == "zinc" && this.is_start_with(tokens, (token) => ZincEndWithRegExp.test(token.getText()))) {
-          last_block.end_tokens = tokens;
-          blocks.pop();
         } else {
           handle();
         }
@@ -979,7 +1149,7 @@ export class Document {
 
     };
     // 遍历行
-    this.loop((document, line) => {
+    this.loop_uncontain_macro((document, line) => {
       const tokens = document.lineTokens(line);
       handle_one_line(tokens);
       
@@ -1041,8 +1211,6 @@ export class Document {
             const loop = parse_loop(this, node.start_tokens);
             parse_line_end_tag(this, node.end_tokens, loop, "endloop");
             node.data = loop;
-        } else if (node.type == "zinc") { // 特殊处理，node.data 没用
-          parse_zinc(this, node.tokens);
         }
 
         node.children.forEach(child => {

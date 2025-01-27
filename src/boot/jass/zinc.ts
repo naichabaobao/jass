@@ -45,12 +45,19 @@ function parse_zinc_object(document:Document, zinc_object:ZincBlock|ZincSegement
     return obj;
 }
 
-
+/**
+ * 
+ * @param tokens 
+ * @param keyword 
+ * @param excute_string 
+ * @returns 
+ */
 function is_start_with(tokens: Token[], keyword: string|((token:Token) => boolean)|(string|((token:Token, index: number, tokens: Token[]) => boolean))[], excute_string: string[] = []):boolean {
     const first_index = tokens.findIndex(token => !token.is_block_comment && !excute_string.includes(token.getText()));
     if (first_index == -1) {
         return false;
     }
+    
     const first_token = tokens[first_index];
     if (typeof keyword == "string") {
         return first_token.getText() == keyword;
@@ -90,7 +97,7 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
     } else if (zinc_object instanceof ZincSegement) {
         if (is_start_with(zinc_object.tokens, "return")) {
             zinc_object.type = "return";
-        } else if (is_start_with(zinc_object.tokens, "method", ["public", "private"])) {
+        } else if (is_start_with(zinc_object.tokens, ["public", "method"]) || is_start_with(zinc_object.tokens, ["private", "method"])) {
             zinc_object.type = "method";
         } else if (is_start_with(zinc_object.tokens, "break")) {
             zinc_object.type = "break";
