@@ -179,6 +179,123 @@ export class NodeAst extends Range {
 
         return comments;
     }
+
+    public add_node<T extends NodeAst>(node:T) {
+        const previous = this.children[this.children.length - 1] ?? null;
+
+        this.children.push(node);
+        node.previous = previous;
+
+        if (previous) {
+            previous.next = node;
+        }
+
+        node.parent = this;
+    }
+}
+
+export namespace zinc {
+    export class Break extends NodeAst {
+        public token:Token|null = null;
+
+        constructor(document: Document) {
+            super(document);
+        }
+    
+        public to_string(): string {
+            return this.token?.getText() ?? "";
+        }
+    }
+
+    export class Call extends NodeAst {
+        ref: VariableName | null = null;
+    
+        constructor(document: Document) {
+            super(document);
+        }
+
+        to_string():string {
+            return `${this.ref?.to_string() ?? "()"}`;
+        }
+    }
+
+    export class Set extends NodeAst {
+        name: VariableName | null = null;
+        init: Zoom | null = null;
+    
+        public to_string(): string {
+            let name = "";
+            if (this.name) {
+                name += this.name.to_string();
+                // if (this.name.index_expr) {
+                //     if (this.name.index_expr) {
+                //         name += this.name.index_expr.to_string();
+                //     }
+                // }
+            }
+            let init = "unkown";
+            if (this.init) {
+                init = this.init.to_string();
+            }
+            return `${name} = ${init}`
+        }
+    }
+    export class GlobalVariable extends NodeAst {
+        // [public, private]
+        public visible: Token | null = null;
+        // [static, stub]
+        public modifier: Token | null = null;
+        // [constant]
+        public qualifier: Token | null = null;
+    
+        type: Token | null = null;
+        name: Token | null = null;
+        array_token: Token | null = null;
+    
+        expr: Zoom | null = null;
+    
+        public is_array: boolean = false;
+    
+        
+        public get is_constant() : boolean {
+            return this.qualifier !== null && this.qualifier.getText() == "constant";
+        }
+        public get is_private():boolean {
+            return !!this.visible && this.visible.getText() == "private";
+        }
+        public get is_public():boolean {
+            return !this.is_private;
+        }
+        
+    
+        public to_string(): string {
+            const visible_string = this.visible ? this.visible.getText() + " " : "";
+            const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+            const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+            const type_string = this.type ? this.type.getText() + " " : "";
+            const array_string = this.is_array ? "array " : "";
+            const name_string = this.name ? this.name.getText() + " " : "";
+            return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+        }
+    
+        public with(statement: Statement | Modifier) {
+            if (statement instanceof Statement) {
+                this.type = statement.type;
+                this.name = statement.name;
+                this.array_token = statement.array_token;
+                this.is_array = this.array_token != null;
+                this.expr = statement.expr;
+            } else if (statement instanceof Modifier) {
+                this.visible = statement.visible;
+                this.modifier = statement.modifier;
+                this.qualifier = statement.qualifier;
+            }
+        }
+    }
+    
+    export class Member extends zinc.GlobalVariable {
+    }
+    
 }
 
 export class ZincNode extends NodeAst {
@@ -1002,7 +1119,7 @@ class Modifier {
     // [constant]
     public qualifier: Token | null = null;
 }
-function parse_line_modifier(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_modifier(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
     let modifier: Modifier = new Modifier();
@@ -1777,6 +1894,14 @@ export class Type extends NodeAst {
 }
 export class Call extends NodeAst {
     ref: VariableName | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
+
+    to_string():string {
+        return `call ${this.ref?.to_string() ?? "()"}`;
+    }
 }
 export class Return extends NodeAst {
     expr: Zoom | null = null;
@@ -2018,7 +2143,7 @@ function parse_line_priority_expr(document: Document, tokens: Token[], offset_in
         expr: expr
     }
 }
-function parse_line_expr(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
     let zoom: Zoom | Expr_ | null = null;
@@ -2419,7 +2544,7 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
         expr: variable
     };
 }
-function parse_line_name_reference(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_name_reference(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
     let variable: VariableName = new VariableName();
@@ -2485,7 +2610,7 @@ function get_next_token(tokens: Token[], i: number): Token | null {
     return null;
 }
 
-class Statement {
+export class Statement {
 
     type: Token | null = null;
     name: Token | null = null;

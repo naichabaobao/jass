@@ -45,9 +45,9 @@ const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: strin
 
 
 
-const find_file_error_for_vjass = (document: vscode.TextDocument) => {
+const find_file_error_for_vjass = (document_or_filepath:vscode.TextDocument|string) => {
 
-	const path_format = path.parse(document.uri.path);
+	const path_format = path.parse(typeof document_or_filepath == "string" ? document_or_filepath : document_or_filepath.uri.path);
 	if (!(path_format.ext == ".j" || path_format.ext == ".jass" || path_format.ext == ".ai")) {
 		return;
 	}
@@ -56,7 +56,7 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 
 	const diagnostics:vscode.Diagnostic[] = [];
 
-	const doc = GlobalContext.get(document.fileName);
+	const doc = GlobalContext.get(typeof document_or_filepath == "string" ? document_or_filepath : document_or_filepath.fileName);
 	
 	doc?.token_errors.forEach(err => {
 		error(diagnostics, err.token, err.message);
@@ -67,18 +67,18 @@ const find_file_error_for_vjass = (document: vscode.TextDocument) => {
 	// });
 
 
-	diagnostic_collection_for_jass.set(document.uri, diagnostics);
+	diagnostic_collection_for_jass.set(typeof document_or_filepath == "string" ? vscode.Uri.file(document_or_filepath) : document_or_filepath.uri, diagnostics);
 	
 
 }
 
 const subject = new Subject();
-subject.subscribe((document:vscode.TextDocument) => {
-	find_file_error_for_vjass(document);
+subject.subscribe((document_or_filepath:vscode.TextDocument|string) => {
+	find_file_error_for_vjass(document_or_filepath);
 });
 
-export function find_error(document:vscode.TextDocument) {
-	subject.next(document);
+export function find_error(document_or_filepath:vscode.TextDocument|string) {
+	subject.next(document_or_filepath);
 }
 
 export function releace_diagnosticor() {

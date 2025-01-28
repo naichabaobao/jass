@@ -181,6 +181,9 @@ vscode.workspace.onDidOpenTextDocument(event => {
 		const p = path.parse(file_path);
 		if (p.ext == ".j" || p.ext == ".jass" || p.ext == ".ai") {
 			parse(file_path);
+
+			find_error(file_path);
+
 			init_document_item(file_path);
 			init_document_hover(file_path);
 			init_document_difinition(file_path);

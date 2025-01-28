@@ -300,7 +300,13 @@ interface VjassZincRuntextmacroTempObjectLine {
 }
 interface  VjassZincBlockTempObjectLine {
   index:number;
+  /**
+   * @deprecated
+   */
   real_line_number:number;
+  /**
+   * @deprecated
+   */
   mapping_line_number:number;
   /**
    * 0 = 正常行
@@ -316,14 +322,14 @@ interface  VjassZincBlockTempObjectLine {
  * 2. 可以被vjass解析时忽略
  * 3. 可以作为outline识别对象
  */
-class VjassZincBlockTempObject extends CanDisconnectedRange {
+class BuiltZincBlock extends CanDisconnectedRange {
+  public start_token:Token|null = null;
+  public end_token:Token|null = null;
+  
   /**
-   * 包含的行
    * 不包括 //! zinc 跟 //! endzinc
    */
-  public readonly include_lines: number[] = [];
-
-  
+  public readonly tokens:Token[] = [];
   
 }
 
@@ -430,8 +436,8 @@ export class Document {
     this.find_token_error();
 
     this.find_zinc_block();
-    // console.log(this.zinc_indexs.map(x => `line:${x.index} display:${x.type > 0 ? x.display.map(s => `${s.type}`).join(",") : ""} type:${x.type}`).join("\n"));
-    console.log(this.filePath, this.zinc_indexs.length, this.lineCount);
+    this.parse_zinc_block();
+
     
 
     this.object_list = this.slice_layer();
@@ -945,6 +951,7 @@ export class Document {
 
   private find_zinc_block() {
     let in_zinc = false;
+    let zinc_block:BuiltZincBlock|null = null;
     for (let index = 0; index < this.lineCount; index++) {
       this.zinc_indexs.push({
         index,
@@ -965,25 +972,42 @@ export class Document {
             const tokens = text_macro.lineTokens(text_macro_line_number, run_text_macro.param_values());
             if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
               if (in_zinc) {
-                this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+                // this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+                if (zinc_block) {
+                  this.built_in_zincs.push(zinc_block);
+                }
               }
               in_zinc = true;
+              zinc_block = new BuiltZincBlock();
+              zinc_block.start_token = tokens[0];
+              this.built_in_zincs.push(zinc_block);
+
               zinc_index.display.push({
                 real_line_number: index,
                 mapping_line_number: text_macro_line_number,
                 type: 1
               });
             } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
-              if (!in_zinc) {
+              if (in_zinc) {
+                if (zinc_block) {
+                  zinc_block.end_token = tokens[0];
+                }
+              } else {
                 this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
               }
               in_zinc = false;
+              zinc_block = null;
+
               zinc_index.display.push({
                 real_line_number: index,
                 mapping_line_number: text_macro_line_number,
                 type: 2
               });
             } else if (in_zinc) {
+              if (zinc_block) {
+                zinc_block.tokens.push(...tokens);
+              }
+
               zinc_index.display.push({
                 real_line_number: index,
                 mapping_line_number: text_macro_line_number,
@@ -1003,23 +1027,49 @@ export class Document {
         const tokens = this.lineTokens(index);
         if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
           if (in_zinc) {
-            this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+            // this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
+            if (zinc_block) {
+              this.built_in_zincs.push(zinc_block);
+            }
           }
           in_zinc = true;
+          zinc_block = new BuiltZincBlock();
+          zinc_block.start_token = tokens[0];
+          this.built_in_zincs.push(zinc_block);
+
           this.zinc_indexs[index].type = 1;
         } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
-          if (!in_zinc) {
+          if (in_zinc) {
+            if (zinc_block) {
+              zinc_block.end_token = tokens[0];
+            }
+          } else {
             this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
           }
           in_zinc = false;
+          zinc_block = null;
+
           this.zinc_indexs[index].type = 2;
         } else if (in_zinc) {
           this.zinc_indexs[index].type = 3;
+
+          if (zinc_block) {
+            zinc_block.tokens.push(...tokens);
+          }
         } else {
           this.zinc_indexs[index].type = 0;
         }
       }
     }
+  }
+
+  private parse_zinc_block() {
+    this.built_in_zincs.forEach(block => {
+      const node = parse_zinc(this, block.tokens);
+
+      console.log(node);
+      
+    });
   }
 
   /**
@@ -1331,25 +1381,25 @@ export class Document {
     }
   }
 
-  public natives:Native[] = [];
-  public functions:Func[] = [];
-  public methods:Method[] = [];
-  public librarys:Library[] = [];
-  public scopes:Scope[] = [];
-  public structs:Struct[] = [];
-  public globals:Globals[] = [];
-  public types:Type[] = [];
-  public interfaces:Interface[] = [];
-  public global_variables:GlobalVariable[] = [];
-  public ifs:If[] = [];
-  public loops:Loop[] = [];
-  public locals:Local[] = [];
-  public sets:Set[] = [];
-  public calls:Call[] = [];
-  public comments:Comment[] = [];
-  public members:Member[] = [];
+  public readonly natives:Native[] = [];
+  public readonly functions:Func[] = [];
+  public readonly methods:Method[] = [];
+  public readonly librarys:Library[] = [];
+  public readonly scopes:Scope[] = [];
+  public readonly structs:Struct[] = [];
+  public readonly globals:Globals[] = [];
+  public readonly types:Type[] = [];
+  public readonly interfaces:Interface[] = [];
+  public readonly global_variables:GlobalVariable[] = [];
+  public readonly ifs:If[] = [];
+  public readonly loops:Loop[] = [];
+  public readonly locals:Local[] = [];
+  public readonly sets:Set[] = [];
+  public readonly calls:Call[] = [];
+  public readonly comments:Comment[] = [];
+  public readonly members:Member[] = [];
 
-
+  public readonly built_in_zincs:BuiltZincBlock[] = [];
 
   /**
    * 将program跟节点对象下面所有解析的节点分类存储
@@ -1395,6 +1445,15 @@ export class Document {
   }
 
   private end_tag_error() {
+    // 把zinc块未闭合错误找出来
+    this.built_in_zincs.forEach(block => {
+      if (block.end_token === null) {
+        if (block.start_token) {
+          this.add_token_error(block.start_token, `zinc block missing end tag`);
+        }
+      }
+    });
+
     /**
      * 判断是否闭合并添加错误信息
      * @param object 
