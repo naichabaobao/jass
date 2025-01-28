@@ -1,5 +1,5 @@
 import { Document, Token } from "./tokenizer-common";
-import { NodeAst, Statement, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
+import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
 
 
 
@@ -649,6 +649,571 @@ export function parse_segement_member(document: Document, tokens: Token[]) {
     return mems.length > 1 ? mems : mem;
 }
 
+export function parse_block_library(document: Document, tokens: Token[]) {
+    const library = new zinc.Library(document);
+
+    // const tokens = line_text.tokens();
+    let state = 0;
+    let index = 0;
+    let optional:LibraryRequire|null = null;
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == 0) {
+            index++;
+            if (text == "library") {
+                library.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `library name is undefined`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'library'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            if (token.is_identifier) {
+                library.name = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "requires" || next_token_text == "uses" || next_token_text == "needs") {
+                        state = 4;
+                    } else {
+                        state = 8;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `illegal library identifier`);
+                break;
+            }
+
+
+        } else if (state == 4) { // requires
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "optional") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
+            } else {
+                document.add_token_error(token, `requires library names not found`);
+                break;
+            }
+        } else if (state == 5) {
+            index++;
+
+            if (token.is_identifier) {
+                if (optional == null) {
+                    optional = new LibraryRequire();
+                } else {
+                }
+                optional.name = token;
+
+                library.requires.push(optional);
+                optional = null;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == ",") {
+                        state = 7;
+                    } else {
+                        state = 8;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `illegal initializer function identifier`);
+                break;
+            }
+        } else if (state == 6) { // optional
+            index++;
+            
+            optional = new LibraryRequire();
+            optional.optional = token;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token && next_token.is_identifier) {
+                state = 5;
+            } else {
+                document.add_token_error(token, `missing library reference library name`);
+                break;
+            }
+        } else if (state == 7) { // ,
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token && next_token.is_identifier) {
+                if (next_token.getText() == "optional") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
+            } else {
+                document.add_token_error(token, `missing library reference library name`);
+                break;
+            }
+        } else if (state == 8) {
+            index++;
+
+            document.add_token_error(token, `library syntax error token '${text}'`);
+
+            break;
+        }
+    }
+
+    return library;
+}
+
+export function parse_block_interface(document: Document, tokens: Token[]) {
+    const inter = new zinc.Interface(document);
+
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            if (text == "interface") {
+                inter.start_token = token;
+
+                state = 1;
+            } else if (text == "private") {
+                inter.visible = token;
+                state = 2;
+            } else if (text == "public") {
+                inter.visible = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                inter.name = token;
+                state = 3;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "interface") {
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (text == "extends") {
+                state = 4;
+                if (!inter.extends) {
+                    inter.extends = [];
+                }
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            if (token.is_identifier) {
+                inter.extends!.push(token);
+                state = 5;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 5) {
+            if (text == ",") {
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+            break;
+        }
+    }
+
+    return inter;
+}
+export function parse_block_struct(document: Document, tokens: Token[]) {
+    const struct = new zinc.Struct(document);
+
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            if (text == "struct") {
+                struct.start_token = token;
+
+                state = 1;
+            } else if (text == "private") {
+                struct.visible = token;
+                state = 2;
+            } else if (text == "public") {
+                struct.visible = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                struct.name = token;
+                state = 3;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (text == "struct") {
+                struct.start_token = token;
+
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            if (text == "extends") {
+                state = 4;
+                if (!struct.extends) {
+                    struct.extends = [];
+                }
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            if (token.is_identifier) {
+                struct.extends!.push(token);
+                state = 5;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 5) {
+            if (text == ",") {
+                state = 4;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+            break;
+        }
+    }
+
+    return struct;
+}
+/**       
+ * 解析参数类型与标识符
+ *         |-------|
+ * [takes] type name
+ * @param document 
+ * @param tokens 
+ * @param offset_index 
+ * @returns 
+ */
+function parse_line_function_takes_statement(document: Document, tokens: Token[], offset_index: number, func: zinc.Func | zinc.Method) {
+    let index = offset_index;
+    let state = 0;
+    let take: Take = new Take(func);
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+            if (token.is_identifier) {
+                take.type = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == ",") {
+                        document.add_token_error(token, `undeclared parameter identifier`);
+                        break;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `parameter declaration not found`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `incorrect parameter type declaration '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            if (token.is_identifier) {
+                take.name = token;
+            } else {
+                document.add_token_error(token, `wrong parameter identifier '${text}'`);
+            }
+            break;
+        }
+    }
+    return {
+        index,
+        expr: take
+    }
+}
+function parse_line_function_takes(document: Document, tokens: Token[], offset_index: number, func: zinc.Func | zinc.Method) {
+    let index = offset_index;
+    let state = 0;
+    let takes: Takes = new Takes();
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+            if (text == "(") {
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == ")") {
+                        state = 3;
+                    } else {
+                        state = 1;
+                    }
+                } else {
+                    document.add_token_error(token, `parameter declaration not found`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `parameter definition incorrect`);
+                break;
+            }
+        } else if (state == 1) {
+            const result = parse_line_function_takes_statement(document, tokens, index, func);
+            index = result.index;
+            takes.takes.push(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ",") {
+                    state = 2;
+                } else if (next_token_text == ")") {
+                    state = 3;
+                } else {
+                    document.add_token_error(token, `parameter definition incorrect`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `parameter definition incorrect`);
+                break;
+            }
+        } else if (state == 2) { // ','
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ",") {
+                    document.add_token_error(token, `empty parameter declaration`);
+                    state = 2;
+                } else {
+                    state = 1;
+                }
+            } else {
+                document.add_token_error(token, `incomplete take parameter declaration`);
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+            break;
+        }
+    }
+    return {
+        index,
+        expr: takes
+    }
+}
+function parse_line_returns(document: Document, tokens: Token[], offset_index: number) {
+    let index = offset_index;
+    let state = 0;
+    let returns: Returns = new Returns();
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        if (state == 0) {
+            index++;
+
+            if (text == "->") {
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `no declaration return type displayed`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword '->'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+            returns.expr = token;
+
+            if (!token.is_identifier) {
+                document.add_token_error(token, `wrong return type`);
+            }
+
+            break;
+        }
+    }
+    return {
+        index,
+        expr: returns
+    }
+}
+export function parse_block_function(document: Document, tokens: Token[], type: "function" | "method" = "function") {
+    const func: zinc.Func | zinc.Method  = type == "function" ? new zinc.Func(document) : new zinc.Method(document);
+
+    let state = 0;
+    let index = 0;
+    const keyword = type;
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == 0) {
+            const result = parse_line_modifier(document, tokens, index);
+            index = result.index;
+            func.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == keyword) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `error ${keyword}`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword ${keyword}`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            func.start_token = token;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "(") {
+                    document.add_token_error(token, `missing ${keyword} name`);
+                    state = 3;
+                } else if (next_token.is_identifier) {
+                    state = 2;
+                } else {
+                    document.add_token_error(next_token, `wrong ${keyword} name '${next_token_text}'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing ${keyword} name`);
+                break;
+            }
+        } else if (state == 2) {
+            index++;
+            func.name = token;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "(") {
+                    state = 3;
+                } else {
+                    document.add_token_error(next_token, `missing takes '(...)'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing takes '(...)'`);
+                break;
+            }
+        } else if (state == 3) {
+            const result = parse_line_function_takes(document, tokens, index, func);
+            index = result.index;
+            func.with(result.expr);
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "->") {
+                    state = 4;
+                } else {
+                    console.log(next_token.getText());
+                    
+                    document.add_token_error(next_token, `missing keyword '->'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword '->'`);
+                break;
+            }
+        } else if (state == 4) {
+            const result = parse_line_returns(document, tokens, index);
+            index = result.index;
+            func.with(result.expr);
+
+            state = 5;
+        } else if (state == 5) {
+            index++;
+            document.add_token_error(token, `error token '${text}'`);
+
+            break;
+        }
+    }
+
+    return func;
+}
 
 function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_objects: (ZincBlock | ZincSegement | ZincComment)[]) {
     const handing = <T extends NodeAst>(object: ZincBlock | ZincSegement | ZincComment, parent_node: T) => {
@@ -684,9 +1249,24 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 
             }
         } else if (object instanceof ZincBlock) {
+            let node:any|null = null;
             if (object.type == "library") {
-                const node = parse_library(document, object.tokens);
+                node = parse_block_library(document, object.tokens);
                 parent_node.add_node(node);
+            } else if (object.type == "struct") {
+                node = parse_block_struct(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "interface") {
+                node = parse_block_interface(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "func") {
+                node = parse_block_function(document, object.tokens);
+                parent_node.add_node(node);
+            }
+            if (node) {
+                object.children.forEach(child => {
+                    handing(child, node);
+                });
             }
         }
     };

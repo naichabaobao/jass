@@ -75,7 +75,7 @@ export class Context {
 export const GlobalContext = new Context();
 
 //#region 解析
-export class LibraryRef {
+export class LibraryRequire {
     public optional: Token | null = null;
     public name: Token | null = null;
 
@@ -291,11 +291,150 @@ export namespace zinc {
                 this.qualifier = statement.qualifier;
             }
         }
+        
     }
     
     export class Member extends zinc.GlobalVariable {
     }
+    export class Library extends NodeAst{
+        public name: Token | null = null;
+        public requires: LibraryRequire[] = [];
     
+        to_string(): string {
+            return `library ${this.name ? this.name.getText() : "(unkown)"}${this.requires.length > 0 ? " requires " + this.requires.map(x => {
+                return `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unkown)"}`;
+            }).join(", ") : ""}`;
+        }
+    }
+    export class Interface extends NodeAst {
+        public visible: Token | null = null;
+        public name: Token | null = null;
+        public extends: Token[] | null = null;
+    
+        public get is_private():boolean {
+            return !!this.visible && this.visible.getText() == "private";
+        }
+        public get is_public():boolean {
+            return !this.is_private;
+        }
+    
+        to_string():string {
+            return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+        }
+    }
+    export class Struct extends Interface {
+        to_string():string {
+            return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+        }
+    }
+    export class Func extends NodeAst {
+        public to_string(): string {
+            const visible_string = this.visible ? this.visible.getText() + " " : "";
+            const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+            const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+            const name_string = this.name ? this.name.getText() + " " : "";
+            const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+            const returns_string = this.returns ? this.returns.getText() : "nothing";
+            return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
+        }
+    
+        /**
+         * [private, public]
+         */
+        public visible: Token | null = null;
+        /**
+         * [static, stub]
+         */
+        public modifier: Token | null = null;
+        /**
+         * [constant]
+         */
+        public qualifier: Token | null = null;
+        public name: Token | null = null;
+        public takes: Take[] | null = null;
+        public returns: Token | null = null;
+        public defaults: string | null = null;
+    
+        with<T extends Modifier | Takes | Returns>(v: T) {
+            if (v instanceof Modifier) {
+                this.visible = v.visible;
+                this.modifier = v.modifier;
+                this.qualifier = v.qualifier;
+            } else if (v instanceof Takes) {
+                if (v.takes.length > 0) {
+                    if (this.takes == null) {
+                        this.takes = [];
+                    }
+                    this.takes.push(...v.takes);
+                } else {
+                    this.takes = null;
+                }
+            } else if (v instanceof Returns) {
+                this.returns = v.expr;
+            }
+        }
+    
+        public get is_private():boolean {
+            return !!this.visible && this.visible.getText() == "private";
+        }
+        public get is_public():boolean {
+            return !this.is_private;
+        }
+    
+        public get is_static():boolean {
+            return !!this.modifier && this.modifier.getText() == "static";
+        }
+        public get is_stub():boolean {
+            return !!this.modifier && this.modifier.getText() == "stub";
+        }
+        public get is_constant():boolean {
+            return !!this.qualifier && this.qualifier.getText() == "constant";
+        }
+    
+        public get_param_descriptions() {
+            const param_descs: ParamDescription[] = [];
+            this.comments.forEach(comment => {
+                if (comment.is_param) {
+                    const result = /^\/\/\s*@[pP]arams?\s+(?<name>[\$_a-zA-Z0-9]+)\s+(?<content>.*)/.exec(comment.comment!.getText());
+                    if (result && result.groups) {
+                        param_descs.push(new ParamDescription(result.groups["name"], result.groups["content"]));
+                    }
+                }
+            });
+    
+            return param_descs;
+        }
+    }
+    export class Method extends Func {
+        public to_string(): string {
+            const visible_string = this.visible ? this.visible.getText() + " " : "";
+            const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+            const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+            const name_string = this.name ? this.name.getText() + " " : "";
+            const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
+            const returns_string = this.returns ? this.returns.getText() : "nothing";
+            return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns ${returns_string}`;
+        }
+    
+        with<T extends Modifier | Takes | Returns>(v: T) {
+            if (v instanceof Modifier) {
+                this.visible = v.visible;
+                this.modifier = v.modifier;
+                this.qualifier = v.qualifier;
+            } else if (v instanceof Takes) {
+                if (v.takes.length > 0) {
+                    if (this.takes == null) {
+                        this.takes = [];
+                    }
+                    this.takes.push(...v.takes);
+                } else {
+                    this.takes = null;
+                }
+            } else if (v instanceof Returns) {
+                this.returns = v.expr;
+            }
+        }
+    }
 }
 
 export class ZincNode extends NodeAst {
@@ -311,7 +450,7 @@ export class Library extends NodeAst implements ExprTrict{
     public is_library_once: boolean = false;
     public name: Token | null = null;
     public initializer: Token | null = null;
-    public requires: LibraryRef[] = [];
+    public requires: LibraryRequire[] = [];
 
     to_string(): string {
         return `${this.is_library_once ? "library_once" : "library"} ${this.name ? this.name.getText() : "(unkown)"}${this.initializer ? " initializer " + this.initializer.getText() : ""}${this.requires.length > 0 ? " requires " + this.requires.map(x => {
@@ -325,7 +464,7 @@ export function parse_library(document: Document, tokens: Token[]) {
     // const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
-    let optional:LibraryRef|null = null;
+    let optional:LibraryRequire|null = null;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -428,7 +567,7 @@ export function parse_library(document: Document, tokens: Token[]) {
 
             if (token.is_identifier) {
                 if (optional == null) {
-                    optional = new LibraryRef();
+                    optional = new LibraryRequire();
                 } else {
                 }
                 optional.name = token;
@@ -454,7 +593,7 @@ export function parse_library(document: Document, tokens: Token[]) {
         } else if (state == 6) { // optional
             index++;
             
-            optional = new LibraryRef();
+            optional = new LibraryRequire();
             optional.optional = token;
 
             const next_token = get_next_token(tokens, index);
@@ -632,7 +771,7 @@ export class Interface extends NodeAst {
     }
 
     to_string():string {
-        return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends" + this.extends.join(", ") : ""}`
+        return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
     }
 }
 export function parse_interface(document: Document, tokens: Token[]) {
@@ -712,7 +851,7 @@ export class Struct extends Interface {
 
 
     to_string():string {
-        return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends" + this.extends.join(", ") : ""}`
+        return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
     }
 
 }
@@ -1024,7 +1163,7 @@ function parse_line_function_takes_statement(document: Document, tokens: Token[]
     }
 }
 
-class Takes {
+export class Takes {
     takes: Take[] = [];
 }
 function parse_line_function_takes(document: Document, tokens: Token[], offset_index: number, func: Func | Method | Native) {
@@ -1150,7 +1289,7 @@ export function parse_line_modifier(document: Document, tokens: Token[], offset_
         expr: modifier
     }
 }
-class Returns {
+export class Returns {
     expr: Token | null = null;
 }
 function parse_line_returns(document: Document, tokens: Token[], offset_index: number) {
