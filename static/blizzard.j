@@ -79,17 +79,17 @@ globals
     constant integer bj_MAX_INVENTORY = 6
     // 玩家数量上限（12/24，不含中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYERS = GetBJMaxPlayers()
-    // 中立受害玩家编号（14/26，以1.29区分）
+    // 中立受害玩家编号（13/25，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_VICTIM = GetBJPlayerNeutralVictim()
-    // 中立特殊玩家编号（15/27，以1.29区分）
+    // 中立特殊玩家编号（14/26，以1.29区分）
     constant integer bj_PLAYER_NEUTRAL_EXTRA = GetBJPlayerNeutralExtra()
     // 玩家槽数量上限（共16/28位，包含所有中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYER_SLOTS = GetBJMaxPlayerSlots()
     // （召唤）骷髅战士（'uske'）数量上限，默认25
     constant integer bj_MAX_SKELETONS = 25
-    // （商店）物品库存上限，默认11
+    // （商店）物品库存上限，默认11（因为要规避选择英雄技能占位）
     constant integer bj_MAX_STOCK_ITEM_SLOTS = 11
-    // （商店）单位库存上限，默认11
+    // （商店）单位库存上限，默认11（因为要规避选择英雄技能占位）
     constant integer bj_MAX_STOCK_UNIT_SLOTS = 11
     // 物品等级上限，默认10级
     constant integer bj_MAX_ITEM_LEVEL = 10
@@ -127,7 +127,7 @@ globals
     constant integer bj_MELEE_STARTING_LUMBER_V0 = 200
     // 冰封王座版本初始木材数量，默认150
     constant integer bj_MELEE_STARTING_LUMBER_V1 = 150
-    // 使用随机英雄时创建的英雄数量，默认1
+    // 对战游戏开始英雄数量，默认1
     constant integer bj_MELEE_STARTING_HERO_TOKENS = 1
     // 英雄数量上限，默认3
     // 官方只处理了对战24个英雄
@@ -6493,7 +6493,7 @@ function MakeUnitsPassiveForPlayer takes player whichPlayer returns nothing
 endfunction
 
 
-// 设置盟友玩家的单位全部移交给中立被动玩家控制
+// 设置玩家及其盟友玩家的单位全部移交给中立被动玩家控制
 // Change ownership for every unit of (whichPlayer)'s team to neutral passive.
 function MakeUnitsPassiveForTeam takes player whichPlayer returns nothing
     local integer playerIndex
@@ -7817,7 +7817,7 @@ function PingMinimapLocForPlayer takes player whichPlayer, location loc, real du
     call PingMinimapForPlayer(whichPlayer, GetLocationX(loc), GetLocationY(loc), duration)
 endfunction
 
-// 发送小地图提示颜色（指定坐标，指定颜色，指定玩家组）
+// 发送小地图提示（指定坐标，指定颜色，指定玩家组）
 function PingMinimapForForceEx takes force whichForce, real x, real y, real duration, integer style, real red, real green, real blue returns nothing
     local integer red255 = PercentTo255(red)
     local integer green255 = PercentTo255(green)
@@ -8134,7 +8134,7 @@ endfunction
 //   - Fix the random seed to a set value
 //   - Reset the camera smoothing factor
 
-// 切换影片模式(指定玩家组)
+// 切换到电影模式(指定玩家组)
 // @param interfaceFadeTime 淡出时间
 // 注意：某些影响会作用于所有玩家
 function CinematicModeExBJ takes boolean cineMode, force forForce, real interfaceFadeTime returns nothing
@@ -8457,7 +8457,8 @@ function SetPlayerTechMaxAllowedSwap takes integer techid, integer maximum, play
 endfunction
 
 
-// 设置指定玩家的英雄训练数量上限
+// 设置指定玩家的英雄训练/购买数量上限
+// 似乎设置后修改无效
 function SetPlayerMaxHeroesAllowed takes integer maximum, player whichPlayer returns nothing
     call SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 endfunction
@@ -9719,7 +9720,7 @@ endfunction
 //***************************************************************************
 
 
-// 设置初始资源
+// 设置对战初始资源
 function MeleeStartingResources takes nothing returns nothing
     local integer index
     local player indexPlayer
@@ -9758,7 +9759,8 @@ endfunction
 //*
 //***************************************************************************
 
-// 设置玩家科技上限
+// 下调玩家科技等级上限
+// 等级上限小于0时无效
 function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, integer limit returns nothing
     local integer oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId)
 
@@ -9769,7 +9771,7 @@ function ReducePlayerTechMaxAllowed takes player whichPlayer, integer techId, in
 endfunction
 
 
-// 设置（所有玩家的）英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
+// 设置（所有玩家的）对战英雄数量限制（每种最多同时训练1个）（默认只针对24种对战英雄）
 function MeleeStartingHeroLimit takes nothing returns nothing
     local integer index
 
@@ -11015,7 +11017,7 @@ function MeleeCrippledPlayerTimeout takes nothing returns nothing
     call MeleeExposePlayer(exposedPlayer, true)
 endfunction
 
-// 玩家是否没有基地
+// 玩家是否没有建筑或基地（所有等级之和）
 // 用于对战胜负判断和暴露提示
 function MeleePlayerIsCrippled takes player whichPlayer returns boolean
     local integer playerStructures = GetPlayerStructureCount(whichPlayer, true)

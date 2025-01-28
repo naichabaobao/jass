@@ -54,7 +54,7 @@ native GetUnitBuildTime     takes integer unitid                        returns 
 // 亡灵/暗夜可能会检查出生点附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿（与制图时放置顺序有关）
 // 如果AI出生点有多座未被其他玩家占据的中立被动玩家金矿（如多矿开局或金矿距离过近的图），可能导致亡灵/暗夜采矿异常，且此时该返回值未必准确
 // 因为HarvestGold（0，n）指向的是该函数在指定基地附近返回的第一座矿，当返回非闹鬼金矿/被缠绕的金矿，侍僧/小精灵就无法采矿
-// 该问题在1.36版本有所缓解，但并未完全修复，疑似低版本该函数获取附近金矿的距离至少有2200，高版本却只有1500
+// 该问题在1.36版本似乎有所缓解，但并未完全修复，疑似获取附近金矿的距离至少2500
 native GetMinesOwned        takes nothing                               returns integer
 // 获取拥有的所有金矿未采集金钱数量之和
 // 亡灵/暗夜可能会检查出生点附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿（与制图时放置顺序有关）
@@ -105,7 +105,7 @@ native Unsummon             takes unit unitid                           returns 
 native SetExpansion         takes unit peon, integer id                 returns boolean
 // 研究指定科技（指定科技ID）
 native SetUpgrade           takes integer id                            returns boolean
-// 设置英雄升级技能线程
+// 设置英雄升级技能程序（似乎不是进程）
 native SetHeroLevels        takes code func                             returns nothing
 // 是否设置新英雄
 // 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
@@ -1355,19 +1355,19 @@ globals
     // 攻击敌人基地延迟（按次计），攻城单位准备完毕后，简单难度需要循环3次后才攻击，中等难度需要循环3次后才攻击，困难/疯狂需要循环0次后才攻击，攻击后置零
     integer exp_seen                = 0
     // 默认人口建筑单位类型
-    // 建议在自己的脚本中重新赋值
+    // 自制脚本需重新赋值
     integer racial_farm             = 'hhou'
     // 首发英雄单位类型
-    // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
+    // 使用非四族默认英雄时，自制脚本需重新赋值
     integer hero_id                 = 'Hamg'
     // 二发英雄单位类型
-    // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
+    // 使用非四族默认英雄时，自制脚本需重新赋值
     integer hero_id2                = 'Hmkg'
     // 三发英雄单位类型
-    // 使用非四族默认英雄时，建议在自己的脚本中重新赋值
+    // 使用非四族默认英雄时，自制脚本需重新赋值
     integer hero_id3                = 'Hpal'
     // 英雄技能学习顺序数组
-    // 记录地图所有英雄的所有技能，以及所有学习顺序编组，一个英雄可以有多组顺序，每局游戏默认只选择一种顺序，以制造随机的假象
+    // 记录所有英雄的所有技能，以及所有学习顺序编组，一个英雄可以有多组顺序，系统每局游戏随机选一种顺序，以制造随机的假象
     // 需规避跳级和工程升级技能的技能替换，否则可能不学技能，某级技能不学，后面都将无法自动学习，且每局游戏使用该组合时都会如此
     integer array skill
     // 首发英雄技能数组
@@ -1825,7 +1825,7 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// 简单难度AI默认不执行
+// 简单难度AI默认只升一级
 function SetBuildUpgr takes integer qty, integer unitid returns nothing
     if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
         call SetBuildAll(BUILD_UPGRADE,qty,unitid,-1)
@@ -1915,7 +1915,7 @@ endfunction
 //============================================================================
 
 // 获取指定单位类型的数量
-// @param only_done 是否包含复活/建造/训练中的单位
+// @param only_done 是否只包含复活/建造/训练完成的单位
 // @param townid 基地编号，-1为不限
 function GetUnitCountEx takes integer unitid, boolean only_done, integer townid returns integer
     if townid == -1 then
@@ -1932,8 +1932,8 @@ endfunction
 //============================================================================
 
 // 获取指定单位类型的数量，默认用于等价单位，如城镇/变形单位这一类升级/变形后还当同一种单位统计的单位类型
-// 例如，统计一本城镇时，会统计一、二、三城镇的数量，统计熊德时，会统计熊德（人形）和熊德（熊形）的数量
-// @param only_done 是否包含建造/训练中的单位
+// 统计一本城镇时，会统计一、二、三城镇的数量，统计熊德时，会统计熊德（人形）和熊德（熊形）的数量
+// @param only_done 是否只包含建造/训练完成的单位
 // @param townid 基地编号，-1为不限
 function TownCountEx takes integer unitid, boolean only_done, integer townid returns integer
 
@@ -1998,7 +1998,8 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地，默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
+// 默认用于统计城镇类型的单位（基地）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
@@ -2046,7 +2047,7 @@ endfunction
 //============================================================================
 
 // 根据人口占用情况训练指定单位类型
-// @param food 建议使用当前已使用的人口数
+// @param food 建议传参当前已使用的人口数
 // @param use1 单位类型1占用的人口数（单个），用做分母，必须大于0
 // @param use2 单位类型占用的人口数（单个），用做分母，必须大于0
 // @param strong 当 strong 为真时，不论 weak 如何，训练（（food - use1 * TownCount(id1)) / use2）个id2
@@ -2977,6 +2978,7 @@ endfunction
 //============================================================================
 
 // 战斗（循环发送发布攻击组进攻命令（指定目标）），直至攻击目标死亡或攻击组阵亡/撤退
+// @param reform 战斗过程中是否自动重建攻击组
 function CommonSleepUntilTargetDead takes unit target, boolean reform returns nothing
     loop
         exitwhen CaptainRetreating()

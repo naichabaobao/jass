@@ -195,15 +195,15 @@ type image extends handle
 type ubersplat extends handle
 // 哈希表
 type hashtable extends 
-// 框架/UI
+// UI框架/控件句柄
 type framehandle extends handle
-// 原生框架/UI类型
+// 原生 UI框架/控件句柄 类型
 type originframetype extends handle
-// 框架/UI相对锚点类型
+// UI框架/控件句柄 相对锚点类型
 type framepointtype extends handle
 // 文本对齐方式
 type textaligntype extends handle
-// 框架/UI事件类型
+// UI框架/控件句柄 事件类型
 type frameeventtype extends handle
 // 键盘按键类型
 type oskeytype extends handle
@@ -368,13 +368,13 @@ constant native ConvertMouseButtonType takes integer i returns mousebuttontype
 constant native ConvertAnimType takes integer i returns animtype
 // 转换整数成子动画类型
 constant native ConvertSubAnimType takes integer i returns subanimtype
-// 转换整数成原生框架/原生UI类型
+// 转换整数成原生UI框架/控件句柄 类型
 constant native ConvertOriginFrameType takes integer i returns originframetype
-// 转换整数成框架/UI相对锚点类型
+// 转换整数成UI框架/控件句柄 相对锚点类型
 constant native ConvertFramePointType takes integer i returns framepointtype
 // 转换整数成文本对齐方式
 constant native ConvertTextAlignType takes integer i returns textaligntype
-// 转换整数成框架/UI事件类型
+// 转换整数成UI框架/控件句柄 事件类型
 constant native ConvertFrameEventType takes integer i returns frameeventtype
 // 转换整数成键盘按键类型
 constant native ConvertOsKeyType takes integer i returns oskeytype
@@ -992,7 +992,7 @@ globals
 	constant mapflag MAP_RANDOM_HERO = ConvertMapFlag(8192 * 16)
 	// 地图参数 使用随机种族
 	constant mapflag MAP_RANDOM_RACES = ConvertMapFlag(8192 * 32)
-	// 地图参数 地图转换（加载新地图）
+	// 地图参数 地图转换（重载地图）
 	constant mapflag MAP_RELOADED = ConvertMapFlag(8192 * 64)
 	// 出生点放置方式 随机玩家出生点
 	constant placement MAP_PLACEMENT_RANDOM = ConvertPlacement(0)   // random among all slots
@@ -1108,7 +1108,8 @@ globals
 	constant playerstate PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
 	// 玩家状态 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
-	// 玩家状态 剩余可用英雄数
+	// 玩家状态 剩余可用英雄数量，默认为1
+	//自行设置成其他值对英雄数量限制无效果，修改暴雪官方代码设置成其他值无法创建游戏
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
 	// 玩家状态 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
@@ -1331,7 +1332,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
 	// 玩家单位事件 英雄学习技能
 	constant playerunitevent EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
-	// 玩家单位事件 英雄可复活/阵亡
+	// 玩家单位事件 英雄变成可复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
 	// 玩家单位事件 英雄开始复活
 	constant playerunitevent EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
@@ -1466,10 +1467,10 @@ globals
 	constant gameevent EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
 	// 游戏事件 存档
 	constant gameevent EVENT_GAME_SAVE = ConvertGameEvent(259)
-	// 游戏事件 控件(自定义UI)
+	// 游戏事件 自定义UI(UI框架/控件句柄)
 	constant gameevent EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
-	
-	
+
+
 	// For use with TriggerRegisterPlayerEvent
 	
 	// 玩家事件 按下 左方向键
@@ -1607,7 +1608,7 @@ globals
 	constant unittype UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
 	// 单位类型 工人
 	constant unittype UNIT_TYPE_PEON = ConvertUnitType(16)
-	// 单位类型 自爆工兵
+	// 单位类型 自爆型/自爆工兵
 	constant unittype UNIT_TYPE_SAPPER = ConvertUnitType(17)
 	// 单位类型 城镇
 	constant unittype UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
@@ -1749,79 +1750,79 @@ globals
 	
 	// Custom UI API constants
 	
-	// 原生UI 游戏UI(必要，没有它，什么都不显示)
+	// 原生 UI框架/控件句柄 游戏UI(必要，没有它，什么都不显示)
 	constant originframetype ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
-	// 原生UI 技能按钮(含移动/停止/巡逻/攻击，共12格)
+	// 原生 UI框架/控件句柄 技能按钮(含移动/停止/巡逻/攻击，共12格)
 	// 每次选择单位时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
-	// 原生UI 英雄栏(F1、F2按钮对应的英雄头像区域)
+	// 原生 UI框架/控件句柄 英雄栏(F1、F2按钮对应的英雄头像区域)
 	// 所有 HERO_BUTTONS 的父类，由 HeroButtons 控制可见性
 	constant originframetype ORIGIN_FRAME_HERO_BAR = ConvertOriginFrameType(2)
-	// 原生UI 英雄头像(F1、F2...屏幕左侧的自己/共享控制盟友的英雄头像按钮)
+	// 原生 UI框架/控件句柄 英雄头像(F1、F2...屏幕左侧的自己/共享控制盟友的英雄头像按钮)
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON = ConvertOriginFrameType(3)
-	// 原生UI 英雄头像下的血量条，与 HeroButtons 关联
+	// 原生 UI框架/控件句柄 英雄头像下的血量条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_HP_BAR = ConvertOriginFrameType(4)
-	// 原生UI 英雄头像下的魔法条，与 HeroButtons 关联
+	// 原生 UI框架/控件句柄 英雄头像下的魔法条，与 HeroButtons 关联
 	constant originframetype ORIGIN_FRAME_HERO_MANA_BAR = ConvertOriginFrameType(5)
-	// 原生UI 英雄获得新技能点时，英雄按钮发出的光
+	// 原生 UI框架/控件句柄 英雄获得新技能点时，英雄按钮发出的光
 	// 与 HeroButtons 关联。当英雄新技能点时，即使所有原生UI都被隐藏，闪光也会出现
 	constant originframetype ORIGIN_FRAME_HERO_BUTTON_INDICATOR = ConvertOriginFrameType(6)
-	// 原生UI 物品栏格按钮(共6格)
+	// 原生 UI框架/控件句柄 物品栏格按钮(共6格)
 	// 当其父级可见时，每次选择物品时它会重新出现/更新
 	constant originframetype ORIGIN_FRAME_ITEM_BUTTON = ConvertOriginFrameType(7)
-	// 原生UI 小地图
+	// 原生 UI框架/控件句柄 小地图
 	// 使用该类型并不能直接兼容1.36新观战者模式带来的小地图位置变化(使控件位置自动随小地图位置变化)
 	constant originframetype ORIGIN_FRAME_MINIMAP = ConvertOriginFrameType(8)
-	// 原生UI 小地图按钮
+	// 原生 UI框架/控件句柄 小地图按钮
 	// 0是顶部按钮，到底部的共4个按钮(发送信号、显示/隐藏地形、切换敌友/玩家颜色、显示中立敌对单位营地、编队方式)
 	constant originframetype ORIGIN_FRAME_MINIMAP_BUTTON = ConvertOriginFrameType(9)
-	// 原生UI 系统按钮
+	// 原生 UI框架/控件句柄 系统按钮
 	// 菜单，盟友，日志/聊天，任务
 	constant originframetype ORIGIN_FRAME_SYSTEM_BUTTON = ConvertOriginFrameType(10)
-	// 原生UI 提示工具
+	// 原生 UI框架/控件句柄 提示工具
 	constant originframetype ORIGIN_FRAME_TOOLTIP = ConvertOriginFrameType(11)
-	// 原生UI 扩展提示工具
+	// 原生 UI框架/控件句柄 扩展提示工具
 	constant originframetype ORIGIN_FRAME_UBERTOOLTIP = ConvertOriginFrameType(12)
-	// 原生UI 聊天信息显示框(玩家聊天信息)
+	// 原生 UI框架/控件句柄 聊天信息显示框(玩家聊天信息)
 	constant originframetype ORIGIN_FRAME_CHAT_MSG = ConvertOriginFrameType(13)
-	// 原生UI 单位信息显示框
+	// 原生 UI框架/控件句柄 单位信息显示框
 	constant originframetype ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
-	// 原生UI 顶部信息显示框(持续显示的变更警告，显示在昼夜时钟下方)
+	// 原生 UI框架/控件句柄 顶部信息显示框(持续显示的变更警告，显示在昼夜时钟下方)
 	constant originframetype ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
-	// 原生UI 头像(主选单位的模型视图)
+	// 原生 UI框架/控件句柄 头像(主选单位的模型视图)
 	// 模型肖像区域，攻击力左边，看到单位头和嘴巴那块区域，其使用了特殊的协调系统,0在左下角绝对位置，这使得它很难与其他框架一起使用(不像其他4:3)
 	constant originframetype ORIGIN_FRAME_PORTRAIT = ConvertOriginFrameType(16)
-	// 原生UI 世界UI
+	// 原生 UI框架/控件句柄 世界UI
 	// 游戏区域、单位、物品、特效、雾...游戏每个对象都显示在这
 	constant originframetype ORIGIN_FRAME_WORLD_FRAME = ConvertOriginFrameType(17)
-	// 原生UI 简易UI(父级)
+	// 原生 UI框架/控件句柄 简易UI(父级)
 	constant originframetype ORIGIN_FRAME_SIMPLE_UI_PARENT = ConvertOriginFrameType(18)
-	// 原生UI 头像(主选单位的模型视图)(ORIGIN_FRAME_PORTRAIT)下方的生命值文字
+	// 原生 UI框架/控件句柄 头像(主选单位的模型视图)(ORIGIN_FRAME_PORTRAIT)下方的生命值文字
 	constant originframetype ORIGIN_FRAME_PORTRAIT_HP_TEXT = ConvertOriginFrameType(19)
-	// 原生UI 头像(主选单位的模型视图)(ORIGIN_FRAME_PORTRAIT)下方的魔法值文字
+	// 原生 UI框架/控件句柄 头像(主选单位的模型视图)(ORIGIN_FRAME_PORTRAIT)下方的魔法值文字
 	constant originframetype ORIGIN_FRAME_PORTRAIT_MANA_TEXT = ConvertOriginFrameType(20)
-	// 原生UI 魔法效果(BUFF)状态栏(单位当前拥有光环的显示区域)，尺寸固定，最多显示8个BUFF
+	// 原生 UI框架/控件句柄 魔法效果(BUFF)状态栏(单位当前拥有光环的显示区域)，尺寸固定，最多显示8个BUFF
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR = ConvertOriginFrameType(21)
-	// 原生UI 魔法效果(BUFF)状态栏标题(单位当前拥有光环的显示区域的标题)，默认文本是 Status:(状态：)
+	// 原生 UI框架/控件句柄 魔法效果(BUFF)状态栏标题(单位当前拥有光环的显示区域的标题)，默认文本是 Status:(状态：)
 	constant originframetype ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL = ConvertOriginFrameType(22)
 
-	// 框架相对锚点(UI) 左上
+	// UI框架/控件句柄 相对锚点类型 左上
 	constant framepointtype FRAMEPOINT_TOPLEFT = ConvertFramePointType(0)
-	// 框架相对锚点(UI) 上
+	// UI框架/控件句柄 相对锚点类型 上
 	constant framepointtype FRAMEPOINT_TOP = ConvertFramePointType(1)
-	// 框架相对锚点(UI) 右上
+	// UI框架/控件句柄 相对锚点类型 右上
 	constant framepointtype FRAMEPOINT_TOPRIGHT = ConvertFramePointType(2)
-	// 框架相对锚点(UI) 左
+	// UI框架/控件句柄 相对锚点类型 左
 	constant framepointtype FRAMEPOINT_LEFT = ConvertFramePointType(3)
-	// 框架相对锚点(UI) 中
+	// UI框架/控件句柄 相对锚点类型 中
 	constant framepointtype FRAMEPOINT_CENTER = ConvertFramePointType(4)
-	// 框架相对锚点(UI) 右
+	// UI框架/控件句柄 相对锚点类型 右
 	constant framepointtype FRAMEPOINT_RIGHT = ConvertFramePointType(5)
-	// 框架相对锚点(UI) 左下
+	// UI框架/控件句柄 相对锚点类型 左下
 	constant framepointtype FRAMEPOINT_BOTTOMLEFT = ConvertFramePointType(6)
-	// 框架相对锚点(UI) 下
+	// UI框架/控件句柄 相对锚点类型 下
 	constant framepointtype FRAMEPOINT_BOTTOM = ConvertFramePointType(7)
-	// 框架相对锚点(UI) 右下
+	// UI框架/控件句柄 相对锚点类型 右下
 	constant framepointtype FRAMEPOINT_BOTTOMRIGHT = ConvertFramePointType(8)
 	// 文本对齐方式 顶部对齐
 	constant textaligntype TEXT_JUSTIFY_TOP = ConvertTextAlignType(0)
@@ -1835,38 +1836,38 @@ globals
 	constant textaligntype TEXT_JUSTIFY_CENTER = ConvertTextAlignType(4)
 	// 文本对齐方式 右侧对齐
 	constant textaligntype TEXT_JUSTIFY_RIGHT = ConvertTextAlignType(5)
-	// 框架(UI)事件类型 控制点击
+	// UI框架/控件句柄 事件类型 控制点击
 	// 可能是键盘和鼠标按下(因该事件发生在鼠标松开之前，可能不含鼠标松开)
 	constant frameeventtype FRAMEEVENT_CONTROL_CLICK = ConvertFrameEventType(1)
-	// 框架(UI)事件类型 鼠标移入
+	// UI框架/控件句柄 事件类型 鼠标移入
 	constant frameeventtype FRAMEEVENT_MOUSE_ENTER = ConvertFrameEventType(2)
-	// 框架(UI)事件类型 鼠标移出
+	// UI框架/控件句柄 事件类型 鼠标移出
 	constant frameeventtype FRAMEEVENT_MOUSE_LEAVE = ConvertFrameEventType(3)
-	// 框架(UI)事件类型 鼠标松开
+	// UI框架/控件句柄 事件类型 鼠标松开
 	constant frameeventtype FRAMEEVENT_MOUSE_UP = ConvertFrameEventType(4)
-	// 框架(UI)事件类型 鼠标按下
+	// UI框架/控件句柄 事件类型 鼠标按下
 	constant frameeventtype FRAMEEVENT_MOUSE_DOWN = ConvertFrameEventType(5)
-	// 框架(UI)事件类型 鼠标滚轴滚动
+	// UI框架/控件句柄 事件类型 鼠标滚轴滚动
 	constant frameeventtype FRAMEEVENT_MOUSE_WHEEL = ConvertFrameEventType(6)
-	// 框架(UI)事件类型 复选框-选中
+	// UI框架/控件句柄 事件类型 复选框-选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_CHECKED = ConvertFrameEventType(7)
-	// 框架(UI)事件类型 复选框-未选中
+	// UI框架/控件句柄 事件类型 复选框-未选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_UNCHECKED = ConvertFrameEventType(8)
-	// 框架(UI)事件类型 输入框-文本变化
+	// UI框架/控件句柄 事件类型 输入框-文本变化
 	constant frameeventtype FRAMEEVENT_EDITBOX_TEXT_CHANGED = ConvertFrameEventType(9)
-	// 框架(UI)事件类型 弹出菜单按钮变化
+	// UI框架/控件句柄 事件类型 弹出菜单按钮变化
 	constant frameeventtype FRAMEEVENT_POPUPMENU_ITEM_CHANGED = ConvertFrameEventType(10)
-	// 框架(UI)事件类型 鼠标双击
+	// UI框架/控件句柄 事件类型 鼠标双击
 	constant frameeventtype FRAMEEVENT_MOUSE_DOUBLECLICK = ConvertFrameEventType(11)
-	// 框架(UI)事件类型 独立元素动画更新
+	// UI框架/控件句柄 事件类型 独立元素动画更新
 	constant frameeventtype FRAMEEVENT_SPRITE_ANIM_UPDATE = ConvertFrameEventType(12)
-	// 框架(UI)事件类型 滑块数值变化
+	// UI框架/控件句柄 事件类型 滑块数值变化
 	constant frameeventtype FRAMEEVENT_SLIDER_VALUE_CHANGED = ConvertFrameEventType(13)
-	// 框架(UI)事件类型 对话框-点击取消
+	// UI框架/控件句柄 事件类型 对话框-点击取消
 	constant frameeventtype FRAMEEVENT_DIALOG_CANCEL = ConvertFrameEventType(14)
-	// 框架(UI)事件类型 对话框-点击接受
+	// UI框架/控件句柄 事件类型 对话框-点击接受
 	constant frameeventtype FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
-	// 框架(UI)事件类型 输入框-文本输入
+	// UI框架/控件句柄 事件类型 输入框-文本输入
 	constant frameeventtype FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
 	
 	
@@ -4437,9 +4438,9 @@ native SetMapDescription takes string description returns nothing
 native SetTeams takes integer teamcount returns nothing
 // 设置玩家数量，需在设置玩家颜色前使用
 native SetPlayers takes integer playercount returns nothing
-// 设置默认出生点(指定出生点编号绑定到指定坐标)
+// 设置出生点(指定出生点编号绑定到指定坐标)
 native DefineStartLocation takes integer whichStartLoc, real x, real y returns nothing
-// 设置默认出生点(指定出生点编号绑定到指定点)
+// 设置出生点(指定出生点编号绑定到指定点)
 native DefineStartLocationLoc takes integer whichStartLoc, location whichLocation returns nothing
 // 设置出生点分布编号(指定玩家槽)
 native SetStartLocPrioCount takes integer whichStartLoc, integer prioSlotCount returns nothing
@@ -4487,6 +4488,7 @@ native IsGameTypeSupported takes gametype whichGameType returns boolean
 // 获取选择的游戏（队伍）类型
 native GetGameTypeSelected takes nothing returns gametype
 // 查询地图参数/地图选项是否开启(指定参数)
+// 部分参数支持在创建游戏时设置
 native IsMapFlagSet takes mapflag whichMapFlag returns boolean
 // 获取游戏出生点放置方式
 constant native GetGamePlacement takes nothing returns placement
@@ -4513,6 +4515,7 @@ constant native GetStartLocationLoc takes integer whichStartLocation returns loc
 // 设置指定玩家所在队伍
 native SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing
 // 设置指定玩家出生点编号
+// @param startLocIndex 玩家出生点编号，带入0~11/23
 native SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing
 // forces player to have the specified start loc and marks the start loc as occupied
 // which removes it from consideration for subsequently placed players
@@ -4769,9 +4772,9 @@ native CreateRegion takes nothing returns region
 // 删除不规则区域 [R]
 native RemoveRegion takes region whichRegion returns nothing
 
-// 在指定不规则区域添加矩形区域  [R]
+// 在指定不规则区域添加矩形区域 [R]
 native RegionAddRect takes region whichRegion, rect r returns nothing
-// 移除指定不规则区域的矩形区域  [R]
+// 移除指定不规则区域的矩形区域 [R]
 native RegionClearRect takes region whichRegion, rect r returns nothing
 
 // 在指定不规则区域指定坐标添加单元格 [R]
@@ -5097,7 +5100,7 @@ constant native GetResearchingUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_RESEARCH_FINISH
 constant native GetResearched takes nothing returns integer
 
-// 事件响应 获取训练的单位类型(对应开始/完成/取消训练单位等事件)
+// 事件响应 获取训练单位的单位类型(对应开始/完成/取消训练单位等事件)
 // EVENT_PLAYER_UNIT_TRAIN_START
 // EVENT_PLAYER_UNIT_TRAIN_CANCEL
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
@@ -5130,7 +5133,7 @@ constant native GetLoadedUnit takes nothing returns unit
 // 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售单位(对应出售单位等事件)
+// 事件响应 获取被出售/雇佣单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
 // 事件响应 获取购买单位(对应出售单位等事件)
@@ -5653,12 +5656,13 @@ native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
 // 降低指定英雄等级 [R]
 // @param howManyLevels 降级数
-// 降级时会忘记技能
+// 降级时到0或以下时技能会变为未学习状态
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
 // 获取指定英雄经验值
 native GetHeroXP takes unit whichHero returns integer
 // 设置指定英雄经验值
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
 native SetHeroXP takes unit whichHero, integer newXpVal, boolean showEyeCandy returns nothing
 
 // 获取指定英雄未使用的技能点数
@@ -5668,11 +5672,11 @@ native GetHeroSkillPoints takes unit whichHero returns integer
 native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta returns boolean
 
 // 增加指定英雄经验值 [R]
-// @param showEyeCandy 因此升级时是否显示升级动画
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置指定英雄等级
-// @param showEyeCandy 是否显示升级动画，该设置对降级无效
-// 降级时会忘记技能
+// @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
+// 降级时到0或以下时技能会变为未学习状态
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 获取指定英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
@@ -6169,7 +6173,7 @@ constant native GetPlayerTechCount takes player whichPlayer, integer techid, boo
 
 // 设置指定单位所属玩家
 native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
-// 暴露玩家位置(出生点)
+// 对指定玩家组暴露指定玩家位置(出生点)
 // 默认用于对战模式胜负判定规则
 native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
 
@@ -6181,7 +6185,7 @@ native SetPlayerState takes player whichPlayer, playerstate whichPlayerState, in
 // 移除玩家（指定游戏结果）
 native RemovePlayer takes player whichPlayer, playergameresult gameResult returns nothing
 
-// 缓存玩家数据
+// 缓存玩家英雄数据（默认在胜利移除/战败移交单位给中立玩家前缓存，这样才能在计分屏展示）
 // Used to store hero level data for the scorescreen
 // before units are moved to neutral passive in melee games
 native CachePlayerHeroData takes player whichPlayer returns nothing
@@ -6221,11 +6225,17 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 
 // Game API
 
-// 获取当前获取版本(版本指混乱之治或冰封王座，并非补丁号)
+// 获取当前获取版本
+// VERSION_REIGN_OF_CHAOS 混乱之治
+// VERSION_FROZEN_THRONE 冰封王座
 native VersionGet takes nothing returns version
-// 当前游戏版本是否指定版本(版本指混乱之治或冰封王座，并非补丁号)
+// 当前游戏版本是否指定版本
+// VERSION_REIGN_OF_CHAOS 混乱之治
+// VERSION_FROZEN_THRONE 冰封王座
 native VersionCompatible takes version whichVersion returns boolean
-// 当前版本是否支持指定版本(版本指混乱之治或冰封王座，并非补丁号)
+// 当前版本是否支持指定版本
+// VERSION_REIGN_OF_CHAOS 混乱之治
+// VERSION_FROZEN_THRONE 冰封王座
 native VersionSupported takes version whichVersion returns boolean
 
 // 结束游戏
@@ -6335,7 +6345,7 @@ native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag 
 // in the current campaign profile dir
 //
 
-// 读取所有游戏缓存（从本地硬盘）
+// 从本地硬盘读取游戏缓存（用于继承战役管卡数据，仅对单机有效）
 native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
@@ -6353,25 +6363,25 @@ native StoreBoolean takes gamecache cache, string missionKey, string key, boolea
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
 // 存储字符串到缓游戏存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
-// 同步游戏缓存存储值（整数类别）
+// 同步游戏缓存存储值（整数）
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（实数类别）
+// 同步游戏缓存存储值（实数）
 native SyncStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（布尔值类别）
+// 同步游戏缓存存储值（布尔值）
 native SyncStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（单位类别）
+// 同步游戏缓存存储值（单位）
 native SyncStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 同步游戏缓存存储值（字符串类别）
+// 同步游戏缓存存储值（字符串）
 native SyncStoredString takes gamecache cache, string missionKey, string key returns nothing
-// 查询游戏缓存是否有存储值（整数类别）
+// 查询游戏缓存是否有存储值（整数）
 native HaveStoredInteger takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（实数类别）
+// 查询游戏缓存是否有存储值（实数）
 native HaveStoredReal takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（布尔值类别）
+// 查询游戏缓存是否有存储值（布尔值）
 native HaveStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（单位类别）
+// 查询游戏缓存是否有存储值（单位）
 native HaveStoredUnit takes gamecache cache, string missionKey, string key returns boolean
-// 查询游戏缓存是否有存储值（字符串类别）
+// 查询游戏缓存是否有存储值（字符串）
 native HaveStoredString takes gamecache cache, string missionKey, string key returns boolean
 
 // 清空指定游戏缓存 [C]
@@ -6380,29 +6390,29 @@ native FlushGameCache takes gamecache cache returns nothing
 // 清空指定游戏缓存（指定类别）
 // 仅清空指定缓存的指定类别，清空后无需新建缓存
 native FlushStoredMission takes gamecache cache, string missionKey returns nothing
-// 清空指定游戏缓存存储值（整数类别）
+// 清空指定游戏缓存存储值（整数）
 native FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（实数类别）
+// 清空指定游戏缓存存储值（实数）
 native FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（布尔值类别）
+// 清空指定游戏缓存存储值（布尔值）
 native FlushStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（单位类别）
+// 清空指定游戏缓存存储值（单位）
 native FlushStoredUnit takes gamecache cache, string missionKey, string key returns nothing
-// 清空指定游戏缓存存储值（字符串类别）
+// 清空指定游戏缓存存储值（字符串）
 native FlushStoredString takes gamecache cache, string missionKey, string key returns nothing
 
 // Will return 0 if the specified value's data is not found in the cache
 
-// 从游戏缓存读取存储值（整数类别） [C]
+// 从游戏缓存读取存储值（整数） [C]
 // 无数据时返回0
 native GetStoredInteger takes gamecache cache, string missionKey, string key returns integer
-// 从游戏缓存读取存储值（实数类别） [C]
+// 从游戏缓存读取存储值（实数） [C]
 // 无数据时返回0.00
 native GetStoredReal takes gamecache cache, string missionKey, string key returns real
-// 从游戏缓存读取存储值（布尔值类别）[R]
+// 从游戏缓存读取存储值（布尔值）[R]
 // 无数据时返回false
 native GetStoredBoolean takes gamecache cache, string missionKey, string key returns boolean
-// 从游戏缓存读取存储值（字符串类别） [C]
+// 从游戏缓存读取存储值（字符串） [C]
 // 无数据时返回null
 native GetStoredString takes gamecache cache, string missionKey, string key returns string
 // 重新存储单位到游戏缓存 (指定朝向角度)
@@ -6499,7 +6509,7 @@ native SaveFogModifierHandle takes hashtable table, integer parentKey, integer c
 native SaveAgentHandle takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
 // <1.24> 保存哈希表到哈希表 [C]
 native SaveHashtableHandle takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
-// <1.29> 保存框架(UI)到哈希表 [C]
+// <1.29> 保存UI框架/控件句柄到哈希表 [C]
 native SaveFrameHandle takes hashtable table, integer parentKey, integer childKey, framehandle whichFrameHandle returns boolean
 
 
@@ -6592,7 +6602,7 @@ native LoadFogStateHandle takes hashtable table, integer parentKey, integer chil
 native LoadFogModifierHandle takes hashtable table, integer parentKey, integer childKey returns fogmodifier
 // <1.24> 从哈希表提取哈希表 [C]
 native LoadHashtableHandle takes hashtable table, integer parentKey, integer childKey returns hashtable
-// <1.29> 从哈希表提取框架(UI)
+// <1.29> 从哈希表提取UI框架/控件句柄
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
 // <1.24> 查询指定哈希表的指定位置是否记录了整数
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
@@ -7898,41 +7908,41 @@ native BlzEndRecording takes nothing returns nothing
 // 显示/隐藏 指定单位队伍光晕
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
-// 获取原生框架(原生UI)
+// 获取 原生 UI框架/控件句柄
 native BlzGetOriginFrame takes originframetype frameType, integer index returns framehandle
-// 启用/禁用 原生框架(原生UI)自动重置位置
+// 启用/禁用 原生 UI框架/控件句柄 自动重置位置
 native BlzEnableUIAutoPosition takes boolean enable returns nothing
-// 显示/隐藏 原生框架(原生UI)
+// 显示/隐藏 原生 UI框架/控件句柄
 native BlzHideOriginFrames takes boolean enable returns nothing
-// 变换颜色，似乎对原生框架(原生UI)全局生效
+// 变换颜色，似乎对 原生 UI框架/控件句柄 全局生效
 native BlzConvertColor takes integer a, integer r, integer g, integer b returns integer
 // 加载toc文件
-// 该文件用于载入已列出的fdf(框架定义文件)
+// 该文件用于载入已列出的fdf(UI框架/控件句柄 定义文件)
 native BlzLoadTOCFile takes string TOCFile returns boolean
-// 创建Frame
+// 创建 原生 UI框架/控件句柄
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生 UI框架/控件句柄，可输入任意UI框架/控件句柄
 // @param priority 层级(图层)
 // @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrame takes string name, framehandle owner, integer priority, integer createContext returns framehandle
-// 创建简易Frame
+// 创建简易 原生 UI框架/控件句柄
 // @param name 可输入任意名称
-// @param owner 可使用BlzGetFrameByName获取原生UI，可输入任意框架
+// @param owner 可使用BlzGetFrameByName获取原生 UI框架/控件句柄，可输入任意UI框架/控件句柄
 // @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateSimpleFrame takes string name, framehandle owner, integer createContext returns framehandle
-// 创建Frame(指定框架类型)
-// @param typeName 框架类型
+// 创建 原生 UI框架/控件句柄(指定类型)
+// @param typeName UI框架/控件类型
 // @param name 可输入任意名称
-// @param framehandle 可使用BlzGetOriginFrame获取原生UI，可输入任意框架
-// @param inherits 父类框架(模板)
+// @param framehandle 可使用BlzGetOriginFrame获取原生 UI框架/控件句柄，可输入任意UI框架/控件句柄
+// @param inherits 父类UI框架/控件(模板)
 // @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
 native BlzCreateFrameByType takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
-// 销毁指定Frame
+// 销毁指定 原生 UI框架/控件句柄
 native BlzDestroyFrame takes framehandle frame returns nothing
-// 设置Frame的相对锚点(将 frame 的锚点 锚至 relative 的锚点)
+// 设置 原生 UI框架/控件句柄 相对锚点(将 frame 的锚点 锚至 relative 的锚点)
 // @param frame 控件本身
 // @param point 控件本身描点
 // @param relative 被锚定的控件
@@ -7940,108 +7950,108 @@ native BlzDestroyFrame takes framehandle frame returns nothing
 // @param x X 轴偏移量
 // @param y Y 轴偏移量
 native BlzFrameSetPoint takes framehandle frame, framepointtype point, framehandle relative, framepointtype relativePoint, real x, real y returns nothing
-// 设置Frame的绝对锚点
+// 设置 原生 UI框架/控件句柄 绝对锚点
 // @param point 绝对锚点
 // @param x X 轴偏移量
 // @param y Y 轴偏移量
 native BlzFrameSetAbsPoint takes framehandle frame, framepointtype point, real x, real y returns nothing
-// 清空Frame锚点
+// 清空 原生 UI框架/控件句柄 锚点
 native BlzFrameClearAllPoints takes framehandle frame returns nothing
-// 设置全部锚点(指定Frame)
+// 设置全部锚点(指定原生 UI框架/控件句柄)
 // @param relative 锚点
 native BlzFrameSetAllPoints takes framehandle frame, framehandle relative returns nothing
-// 显示/隐藏 Frame
+// 显示/隐藏 原生 UI框架/控件句柄
 native BlzFrameSetVisible takes framehandle frame, boolean visible returns nothing
-// 查询Frame是否可见
+// 查询 原生 UI框架/控件句柄 是否可见
 native BlzFrameIsVisible takes framehandle frame returns boolean
-// 获取frame类型名称(指定名称)
+// 获取 原生 UI框架/控件句柄 类型名称(指定名称)
 native BlzGetFrameByName takes string name, integer createContext returns framehandle
-// 获取Frame名称(指定Frame类型名)
+// 获取 原生 UI框架/控件句柄 名称(指定Frame类型名)
 native BlzFrameGetName takes framehandle frame returns string
-// 点击Frame
+// 点击 原生 UI框架/控件句柄
 native BlzFrameClick takes framehandle frame returns nothing
-// 设置Frame文本
+// 设置 原生 UI框架/控件句柄 文本
 native BlzFrameSetText takes framehandle frame, string text returns nothing
-// 获取Frame文本
+// 获取 原生 UI框架/控件句柄 文本
 native BlzFrameGetText takes framehandle frame returns string
-// 添加Frame文本
+// 添加 原生 UI框架/控件句柄 文本
 native BlzFrameAddText takes framehandle frame, string text returns nothing
-// 设置Frame文本最大长度
+// 设置 原生 UI框架/控件句柄 文本最大长度
 native BlzFrameSetTextSizeLimit takes framehandle frame, integer size returns nothing
-// 获取Frame文本最大长度
+// 获取 原生 UI框架/控件句柄 文本最大长度
 native BlzFrameGetTextSizeLimit takes framehandle frame returns integer
-// 设置Frame文本颜色
+// 设置 原生 UI框架/控件句柄 文本颜色
 native BlzFrameSetTextColor takes framehandle frame, integer color returns nothing
-// 设置Frame焦点
+// 设置 原生 UI框架/控件句柄 焦点
 native BlzFrameSetFocus takes framehandle frame, boolean flag returns nothing
-// 设置Frame模型文件
+// 设置 原生 UI框架/控件句柄 模型文件
 native BlzFrameSetModel takes framehandle frame, string modelFile, integer cameraIndex returns nothing
-// 启用/禁用 Frame
+// 启用/禁用 原生 UI框架/控件句柄
 native BlzFrameSetEnable takes framehandle frame, boolean enabled returns nothing
-// 查询Frame是否启用
+// 查询 原生 UI框架/控件句柄 是否启用
 native BlzFrameGetEnable takes framehandle frame returns boolean
-// 设置Frame透明度
+// 设置 原生 UI框架/控件句柄 透明度
 native BlzFrameSetAlpha takes framehandle frame, integer alpha returns nothing
-// 获取Frame透明度
+// 获取 原生 UI框架/控件句柄 透明度
 native BlzFrameGetAlpha takes framehandle frame returns integer
-// 设置Frame动画
+// 设置 原生 UI框架/控件句柄 动画
 native BlzFrameSetSpriteAnimate takes framehandle frame, integer primaryProp, integer flags returns nothing
-// 设置Frame贴图
+// 设置 原生 UI框架/控件句柄 贴图
 // @param texFile 是否平铺
 // @param flag 是否混合
 native BlzFrameSetTexture takes framehandle frame, string texFile, integer flag, boolean blend returns nothing
-// 缩放Frame
+// 缩放 原生 UI框架/控件句柄
 native BlzFrameSetScale takes framehandle frame, real scale returns nothing
-// 设置Frame提示工具
+// 设置 原生 UI框架/控件句柄 提示工具
 native BlzFrameSetTooltip takes framehandle frame, framehandle tooltip returns nothing
-// 允许/禁止 frame捕获鼠标(鼠标进入frame内部)
+// 允许/禁止 原生 UI框架/控件句柄 捕获鼠标(鼠标进入 原生 UI框架/控件句柄 内部)
 native BlzFrameCageMouse takes framehandle frame, boolean enable returns nothing
-// 设置frame数值
+// 设置 原生 UI框架/控件句柄 数值
 native BlzFrameSetValue takes framehandle frame, real value returns nothing
-// 获取frame数值
+// 获取 原生 UI框架/控件句柄 数值
 native BlzFrameGetValue takes framehandle frame returns real
-// 设置frame最小和最大值
+// 设置 原生 UI框架/控件句柄 最小和最大值
 native BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing
-// 设置frame的滚动梯级
+// 设置 原生 UI框架/控件句柄 滚动梯级
 native BlzFrameSetStepSize takes framehandle frame, real stepSize returns nothing
-// 设置Frame尺寸
+// 设置 原生 UI框架/控件句柄 尺寸
 native BlzFrameSetSize takes framehandle frame, real width, real height returns nothing
-// 设置Frame材质颜色
+// 设置 原生 UI框架/控件句柄 材质颜色
 native BlzFrameSetVertexColor takes framehandle frame, integer color returns nothing
-// 设置Frame层级(图层)
+// 设置 原生 UI框架/控件句柄 层级(图层)
 native BlzFrameSetLevel takes framehandle frame, integer level returns nothing
-// 设置父Frame
+// 设置 父原生 UI框架/控件句柄
 native BlzFrameSetParent takes framehandle frame, framehandle parent returns nothing
-// 获取父Frame
+// 获取 父原生 UI框架/控件句柄
 native BlzFrameGetParent takes framehandle frame returns framehandle
-// 获取Frame高度
+// 获取 原生 UI框架/控件句柄高度
 native BlzFrameGetHeight takes framehandle frame returns real
-// 获取Frame宽度
+// 获取 原生 UI框架/控件句柄宽度
 native BlzFrameGetWidth takes framehandle frame returns real
-// 设置frame字体
+// 设置 原生 UI框架/控件句柄字体
 native BlzFrameSetFont takes framehandle frame, string fileName, real height, integer flags returns nothing
-// 设置frame文字对齐方式
+// 设置 原生 UI框架/控件句柄文字对齐方式
 // @param vert 垂直对齐方式
 // @param horz 水平对齐方式
 native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, textaligntype horz returns nothing
 
-// 获取Frame子组件数量
+// 获取 原生 UI框架/控件句柄 子组件数量
 // @version 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
-// 获取Frame子组件
+// 获取 原生 UI框架/控件句柄 子组件
 // @version 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
-// frame/框架(UI)事件
+// 注册 原生 UI框架/控件句柄 事件
 native BlzTriggerRegisterFrameEvent takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
-// 获取frame/框架(UI)触发事件
+// 获取 原生 UI框架/控件句柄 触发事件
 native BlzGetTriggerFrame takes nothing returns framehandle
-// 获取frame/框架(UI)事件类型
+// 获取 UI框架/控件句柄 事件类型
 native BlzGetTriggerFrameEvent takes nothing returns frameeventtype
-// 获取触发的frame/框架(UI)值
+// 获取触发的 UI框架/控件句柄 值
 native BlzGetTriggerFrameValue takes nothing returns real
-// 获取触发的Frame/框架(UI)文本
+// 获取触发的 UI框架/控件句柄 文本
 native BlzGetTriggerFrameText takes nothing returns string
 // 注册玩家同步事件
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
@@ -8049,10 +8059,10 @@ native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whic
 // 支持AI脚本向触发器同步
 native BlzSendSyncData takes string prefix, string data returns boolean
 // 获取同步的前缀
-// 支持AI脚本向触发器同步
+// 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
-// 支持AI脚本向触发器同步
+// 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
 native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
@@ -8072,9 +8082,9 @@ native BlzGetLocalClientWidth takes nothing returns integer
 native BlzGetLocalClientHeight takes nothing returns integer
 // 获取本地客户端是否激活
 native BlzIsLocalClientActive takes nothing returns boolean
-// 获取鼠标锁定的单位
+// 获取鼠标聚焦的单位
 native BlzGetMouseFocusUnit takes nothing returns unit
-// 设置小地图图标
+// 设置小地图图标贴图
 native BlzChangeMinimapTerrainTex takes string texFile returns boolean
 // 获取(游戏当前使用的本地化)语言
 native BlzGetLocale takes nothing returns string
