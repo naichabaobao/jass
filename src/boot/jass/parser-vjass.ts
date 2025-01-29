@@ -435,6 +435,9 @@ export namespace zinc {
             }
         }
     }
+    export class If extends NodeAst {
+        expr: Zoom | null = null;
+    }
 }
 
 export class ZincNode extends NodeAst {

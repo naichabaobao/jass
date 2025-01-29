@@ -1065,10 +1065,7 @@ export class Document {
 
   private parse_zinc_block() {
     this.built_in_zincs.forEach(block => {
-      const node = parse_zinc(this, block.tokens);
-
-      console.log(node);
-      
+      const node = parse_zinc(this, block.tokens); 
     });
   }
 

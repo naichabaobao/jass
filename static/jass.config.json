@@ -1,4 +1,9 @@
 {
+    "deprecated": [
+      "准备废弃这临时方案",
+      "实现方式分别改成presets.j strings.j numbers.j",
+      "excludes不再支持"
+    ],
     "presets": [
       {
         "code": "hpea",

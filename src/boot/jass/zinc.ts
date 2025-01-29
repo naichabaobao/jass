@@ -139,7 +139,7 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
     }
 }
 /**
- * 
+ * 确认每个zinc block 和 segement 类型，供后面解析
  */
 function traverse_and_confirm_zinc_type(layer_objects: (ZincBlock | ZincSegement | ZincComment)[]) {
     const handing = (object: ZincBlock | ZincSegement | ZincComment) => {
@@ -152,6 +152,9 @@ function traverse_and_confirm_zinc_type(layer_objects: (ZincBlock | ZincSegement
 }
 
 class ZincData {
+    /**
+     * 保存解析出来的NodeAst对象
+     */
     public data: any = null;
     
 
@@ -1189,8 +1192,6 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
                 if (next_token_text == "->") {
                     state = 4;
                 } else {
-                    console.log(next_token.getText());
-                    
                     document.add_token_error(next_token, `missing keyword '->'`);
                     break;
                 }
@@ -1212,7 +1213,95 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
         }
     }
 
-    return func;
+    return func as zinc.Func;
+}
+
+export function parse_block_method(document: Document, tokens: Token[], type: "function" | "method" = "function") {
+    return parse_block_function(document, tokens, "method") as zinc.Method;
+}
+
+export function parse_block_if(document: Document, tokens: Token[]) {
+    const ifs = new zinc.If(document);
+
+    let state = 0;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == 0) {
+            index++;
+            if (text == "if") {
+                ifs.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "(") {
+                        state = 1;
+                    } else {
+                        document.add_token_error(next_token, `error if expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'if'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    document.add_token_error(next_token, `if expression missing condition`);
+                    state = 3;
+                } else {
+                    state = 2;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_expr(document, tokens, index);
+            ifs.expr = result.expr;
+            index = result.index;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    state = 3;
+                } else {
+                    document.add_token_error(next_token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error if token '${text}'`);
+            break;
+        }
+
+    }
+
+    return ifs;
 }
 
 function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_objects: (ZincBlock | ZincSegement | ZincComment)[]) {
@@ -1244,7 +1333,8 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                     parent_node.add_node(node);
                 }
             } else if (object.type == "method") {
-                
+                const node = parse_block_method(document, object.tokens);
+                parent_node.add_node(node);
             } else if (object.type == "other") {
                 
             }
@@ -1261,6 +1351,15 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
             } else if (object.type == "func") {
                 node = parse_block_function(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "method") {
+                node = parse_block_method(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "if") {
+                node = parse_block_if(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "for") {
+                node = parse_block_if(document, object.tokens);
                 parent_node.add_node(node);
             }
             if (node) {
@@ -1283,7 +1382,8 @@ export function parse_zinc(document:Document, tokens:Token[]) {
     traverse_and_confirm_zinc_type(layer_objects);
     
     parse_zinc_with_type(document, zinc_node, layer_objects);
-
+    console.log(zinc_node);
+    
     
     return zinc_node;
 }
