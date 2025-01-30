@@ -220,6 +220,7 @@ function zinc_slice_layer(tokens:Token[]) {
     // let text_macro:TextMacro|null = null;
     const stack: ZincBlock[] = [];
     let cache_tokens:Token[] = [];
+    let bluct:number = 0;
     const push_block = (block_or_segement: ZincBlock|ZincSegement|ZincComment) => {
         if (stack.length > 0) {
             stack[stack.length - 1].children.push(block_or_segement);
@@ -233,6 +234,7 @@ function zinc_slice_layer(tokens:Token[]) {
         }
         // 清空
         cache_tokens = [];
+        bluct = 0;
     }
     
     const drop_block = (token:Token) => {
@@ -255,7 +257,7 @@ function zinc_slice_layer(tokens:Token[]) {
                 push_block(block);
             } else if (stack.length > 0 && text == "}") {
                 drop_block(token);
-            } else if (text == ";") {
+            } else if (text == ";" && bluct == 0) {
                 const segement = new ZincSegement(cache_tokens, cache_tokens.length > 0 ? cache_tokens[0] : token, token);
                 push_block(segement);
             } else if (token.is_block_comment) {
@@ -269,6 +271,11 @@ function zinc_slice_layer(tokens:Token[]) {
                     continue;
                 }
             } else {
+                if (text == "(") {
+                    bluct++;
+                } else if (text == ")" && bluct > 0) {
+                    bluct--;
+                }
                 cache_tokens.push(token);
             }
         }
@@ -1303,6 +1310,124 @@ export function parse_block_if(document: Document, tokens: Token[]) {
 
     return ifs;
 }
+export function parse_block_for(document: Document, tokens: Token[]) {
+    let fors:zinc.For|zinc.CFor = new zinc.For(document);
+
+    let state = 0;
+    let index = 0;
+    const for_tokens:Token[] = [];
+    let for_start_index:number = -1, for_end_index:number = 0, deep = 0;
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == 0) {
+            index++;
+            if (text == "for") {
+                fors.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "(") {
+                        state = 1;
+                    } else {
+                        document.add_token_error(next_token, `error for expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error for expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'for'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    document.add_token_error(next_token, `for expression missing condition`);
+                    state = 3;
+                } else {
+                    state = 2;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 2) {
+            index++;
+            if (text == "(") {
+                deep++;
+            } else if (text == ")" && deep == 0) {
+                deep--;
+            }
+            for_tokens.push(token);
+            if (deep == 0) {
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == ")") {
+                        state = 3;
+                    }
+                }
+            }
+        } else if (state == 3) {
+            index++;
+
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error for token '${text}'`);
+            break;
+        }
+
+    }
+
+    if (for_tokens.length == 0) {
+        document.add_token_error(fors.start_token!, `for expression missing condition`);
+    } else {
+        // const objects: NodeAst[] = parse_zinc(document, for_tokens).children;
+        const layers = zinc_slice_layer(for_tokens).filter(x => {
+            if (x instanceof ZincSegement) {
+                return true;
+            } else if (x instanceof ZincComment){
+                return false;
+            } else {
+                document.add_token_error(fors.start_token!, `for expression unsupport block expression`);
+                return false;
+            }
+        }) as ZincSegement[];
+        traverse_and_confirm_zinc_type(layers);
+        if (layers.length == 0) {
+            document.add_token_error(fors.start_token!, `for expression missing condition`);
+        } else if (layers.length == 1) {
+            const zoom = parse_line_expr(document, layers[0].tokens, 0).expr;
+            fors.expr = zoom;
+        } else if (layers.length == 3) {
+            const statement1 = parse_segement_statement(document, layers[0].tokens, 0).expr;
+            const expr2 = parse_line_expr(document, layers[1].tokens, 0).expr;
+            const statement3 = parse_segement_statement(document, layers[2].tokens, 0).expr;
+
+            (fors as zinc.CFor).init_statement = statement1;
+            (fors as zinc.CFor).inc_statement = statement3;
+
+            fors = Object.assign(new zinc.CFor(document), fors);
+        } else {
+            document.add_token_error(fors.start_token!, `for condition expression is error`);
+        }
+    }
+
+    return fors;
+}
 
 function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_objects: (ZincBlock | ZincSegement | ZincComment)[]) {
     const handing = <T extends NodeAst>(object: ZincBlock | ZincSegement | ZincComment, parent_node: T) => {
@@ -1359,7 +1484,7 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 node = parse_block_if(document, object.tokens);
                 parent_node.add_node(node);
             } else if (object.type == "for") {
-                node = parse_block_if(document, object.tokens);
+                node = parse_block_for(document, object.tokens);
                 parent_node.add_node(node);
             }
             if (node) {

@@ -438,6 +438,14 @@ export namespace zinc {
     export class If extends NodeAst {
         expr: Zoom | null = null;
     }
+    export class For extends If {
+        expr: Zoom | null = null;
+    }
+    export class CFor extends For {
+        init_statement:Statement|null = null;
+        expr: Zoom | null = null;
+        inc_statement:Statement|null = null;
+    }
 }
 
 export class ZincNode extends NodeAst {
