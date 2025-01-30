@@ -438,13 +438,29 @@ export namespace zinc {
     export class If extends NodeAst {
         expr: Zoom | null = null;
     }
-    export class For extends If {
+    export class StaticIf extends If {
+        expr: Zoom | null = null;
+    }
+    export class ElseIf extends If {
+    }
+    export class Else extends NodeAst {
+    }
+    export class While extends If {
+        expr: Zoom | null = null;
+    }
+    export class For extends While {
         expr: Zoom | null = null;
     }
     export class CFor extends For {
         init_statement:Statement|null = null;
         expr: Zoom | null = null;
-        inc_statement:Statement|null = null;
+        inc_statement:zinc.Set|null = null;
+    }
+    export class Private extends NodeAst {
+    }
+    export class Public extends NodeAst {
+    }
+    export class Debug extends NodeAst {
     }
 }
 
@@ -2150,11 +2166,23 @@ class Expr_ {
     }
 }
 
-
+/**
+ * 
+ * @deprecated 直接使用token提供的is_binary_operator方法
+ * @param token 
+ * @returns 
+ */
 const is_op = (token: Token) => {
     const text = token.getText();
     return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%";
 };
+
+/**
+ * 
+ * @deprecated 直接使用token提供的is_unary_operator方法
+ * @param token 
+ * @returns 
+ */
 const is_unary_op = (token: Token) => {
     const text = token.getText();
     return text == "+" || text == "-" || text == "not" || text == "!";
@@ -2920,11 +2948,11 @@ export function parse_line_set(document: Document, tokens: Token[]) {
                 if (next_token.getText() == "=") {
                     state = 2;
                 } else {
-                    document.add_token_error(token, `assignment symbol '=' not found`);
+                    document.add_token_error(token, `assignment symbol  not found`);
                     break;
                 }
             } else {
-                document.add_token_error(token, `assignment symbol '=' not found`);
+                document.add_token_error(token, `assignment symbol  not found`);
                 break;
             }
         } else if (state == 2) { // =

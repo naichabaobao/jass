@@ -52,6 +52,10 @@ class StateType {
     public static Bracket: number = symbol_state("[]");
     public static BracketEq: number = symbol_state("[]=");
     public static ZincReturns: number = symbol_state("->");
+    public static SubAsignment: number = symbol_state("-=");
+    public static AddAsignment: number = symbol_state("+=");
+    public static MulAsignment: number = symbol_state("*=");
+    public static DivAsignment: number = symbol_state("/=");
 }
 export function token_handle(document:Document, line: number, character: number, position: number, char: string, next_char: string, state: number, length: number): TokenHandleResult | undefined {
     const has_next = () => {
@@ -81,6 +85,11 @@ export function token_handle(document:Document, line: number, character: number,
                 if (is_match("/", "*")) {
                     return {
                         state: StateType.Div,
+                        length: 1
+                    }
+                } else if (next_char == "=") {
+                    return {
+                        state: StateType.DivAsignment,
                         length: 1
                     }
                 } else {
@@ -235,10 +244,39 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 }
                 
+            } else if (char == "+") {
+                if (next_char == "=") {
+                    return {
+                        state: StateType.AddAsignment,
+                        length: 1
+                    }
+                } else {
+                    return {
+                        token: new_token(TokenType.Operator),
+                        length: 0
+                    }
+                }
             } else if (char == "-") {
                 if (next_char == ">") {
                     return {
                         state: StateType.ZincReturns,
+                        length: 1
+                    }
+                } else if (next_char == "=") {
+                    return {
+                        state: StateType.SubAsignment,
+                        length: 1
+                    }
+                } else {
+                    return {
+                        token: new_token(TokenType.Operator),
+                        length: 0
+                    }
+                }
+            } else if (char == "*") {
+                if (next_char == "=") {
+                    return {
+                        state: StateType.MulAsignment,
                         length: 1
                     }
                 } else {
@@ -392,6 +430,16 @@ export function token_handle(document:Document, line: number, character: number,
             }
             break;
         case StateType.ZincReturns:
+            return {
+                state: StateType.Nil,
+                token: new_token(TokenType.Operator),
+                length: 0
+            }
+            break;
+        case StateType.SubAsignment:
+        case StateType.AddAsignment:
+        case StateType.MulAsignment:
+        case StateType.DivAsignment:
             return {
                 state: StateType.Nil,
                 token: new_token(TokenType.Operator),
