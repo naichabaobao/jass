@@ -1,5 +1,5 @@
 import { Document, Token } from "./tokenizer-common";
-import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
+import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
 
 
 
@@ -851,21 +851,31 @@ export function parse_block_library(document: Document, tokens: Token[]) {
     return library;
 }
 
+
 export function parse_block_interface(document: Document, tokens: Token[]) {
     const inter = new zinc.Interface(document);
-
+    
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
         if (state == 0) {
+            index++;
             if (text == "interface") {
                 inter.start_token = token;
 
-                state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `interface name is undefined`);
+                    break;
+                }
             } else if (text == "private") {
                 inter.visible = token;
                 state = 2;
@@ -877,49 +887,160 @@ export function parse_block_interface(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
+            index++;
             if (token.is_identifier) {
                 inter.name = token;
-                state = 3;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "extends") {
+                        state = 3;
+                    } else if (next_token_text == "[") {
+                        state = 7;
+                    } else if (next_token_text == "[]") {
+                        state = 10;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal interface identifier '${text}'`);
                 break;
             }
         } else if (state == 2) {
+            index++;
             if (text == "interface") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "extends") {
-                state = 4;
-                if (!inter.extends) {
-                    inter.extends = [];
+                inter.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `interface name is undefined`);
+                    break;
                 }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 3) {
+            index++;
+  
+            
+            if (!inter.extends) {
+                inter.extends = [];
+            }
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 4;
+            } else {
+                document.add_token_error(token, `interface name without inheritance`);
+                break;
+            }
         } else if (state == 4) {
+            index++;
             if (token.is_identifier) {
                 inter.extends!.push(token);
-                state = 5;
+                
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == ",") {
+                        state = 5;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `inheriting illegal interface identifiers '${text}'`);
                 break;
             }
         } else if (state == 5) {
-            if (text == ",") {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
                 state = 4;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `interface name without inheritance`);
                 break;
             }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error interface token '${text}'`);
             break;
+        } else if (state == 7) { // [size] ===>  '['
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    // 赋值一个为null的Value对象表示不声明的结构数组
+                    inter.index_expr = new Value();
+                    state = 9;
+                } else {
+                    state = 8;
+                }
+            } else {
+                document.add_token_error(token, `no available definition for interface size`);
+                break;
+            }
+        } else if (state == 8) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            inter.index_expr = result.expr;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    state = 9;
+                } else {
+                    document.add_token_error(token, `missing token ']'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing token ']'`);
+                break;
+            }
+        } else if (state == 9) { // [size] ===>  ']'
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
+        } else if (state == 10) {
+            index++;
+
+            // 赋值一个为null的Value对象表示不声明的结构数组
+            inter.index_expr = new Value();
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
         }
+
+        
     }
 
     return inter;
@@ -928,17 +1049,26 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
     const struct = new zinc.Struct(document);
 
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
         if (state == 0) {
+            index++;
             if (text == "struct") {
                 struct.start_token = token;
 
-                state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `struct name is undefined`);
+                    break;
+                }
             } else if (text == "private") {
                 struct.visible = token;
                 state = 2;
@@ -950,52 +1080,161 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
+            index++;
             if (token.is_identifier) {
                 struct.name = token;
-                state = 3;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "extends") {
+                        state = 3;
+                    } else if (next_token_text == "[") {
+                        state = 7;
+                    } else if (next_token_text == "[]") {
+                        state = 10;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal struct identifier '${text}'`);
                 break;
             }
         } else if (state == 2) {
+            index++;
             if (text == "struct") {
                 struct.start_token = token;
 
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "extends") {
-                state = 4;
-                if (!struct.extends) {
-                    struct.extends = [];
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `struct name is undefined`);
+                    break;
                 }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 3) {
+            index++;
+  
+            
+            if (!struct.extends) {
+                struct.extends = [];
+            }
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 4;
+            } else {
+                document.add_token_error(token, `struct name without inheritance`);
+                break;
+            }
         } else if (state == 4) {
+            index++;
             if (token.is_identifier) {
                 struct.extends!.push(token);
-                state = 5;
+                
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == ",") {
+                        state = 5;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `inheriting illegal struct identifiers '${text}'`);
                 break;
             }
         } else if (state == 5) {
-            if (text == ",") {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
                 state = 4;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `struct name without inheritance`);
                 break;
             }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error struct token '${text}'`);
             break;
+        } else if (state == 7) { // [size] ===>  '['
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    // 赋值一个为null的Value对象表示不声明的结构数组
+                    struct.index_expr = new Value();
+                    state = 9;
+                } else {
+                    state = 8;
+                }
+            } else {
+                document.add_token_error(token, `no available definition for struct size`);
+                break;
+            }
+        } else if (state == 8) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            struct.index_expr = result.expr;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    state = 9;
+                } else {
+                    document.add_token_error(token, `missing token ']'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing token ']'`);
+                break;
+            }
+        } else if (state == 9) { // [size] ===>  ']'
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
+        } else if (state == 10) {
+            index++;
+
+            // 赋值一个为null的Value对象表示不声明的结构数组
+            struct.index_expr = new Value();
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
         }
+        
     }
+
 
     return struct;
 }
@@ -1690,7 +1929,7 @@ export function parse_block_for(document: Document, tokens: Token[]) {
             const zoom = parse_line_expr(document, layers[0].tokens, 0).expr;
             fors.expr = zoom;
         } else if (layers.length == 3) {
-            const statement1 = parse_segement_statement(document, layers[0].tokens, 0).expr;
+            const statement1 = parse_segement_set(document, layers[0].tokens);
             const expr2 = parse_line_expr(document, layers[1].tokens, 0).expr;
             const statement3 = parse_segement_set(document, layers[2].tokens);
 

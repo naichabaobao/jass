@@ -310,6 +310,8 @@ export namespace zinc {
         public visible: Token | null = null;
         public name: Token | null = null;
         public extends: Token[] | null = null;
+
+        public index_expr:Zoom|null = null;
     
         public get is_private():boolean {
             return !!this.visible && this.visible.getText() == "private";
@@ -320,6 +322,13 @@ export namespace zinc {
     
         to_string():string {
             return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+        }
+
+        /**
+         * 空定义结构size
+         */
+        get is_empty_size():boolean {
+            return !!this.index_expr && this.index_expr instanceof Value && this.index_expr === null;
         }
     }
     export class Struct extends Interface {
@@ -452,7 +461,7 @@ export namespace zinc {
         expr: Zoom | null = null;
     }
     export class CFor extends For {
-        init_statement:Statement|null = null;
+        init_statement:zinc.Set|null = null;
         expr: Zoom | null = null;
         inc_statement:zinc.Set|null = null;
     }
@@ -2332,7 +2341,6 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
             continue;
         }
         const text = token.getText();
-        const next_token = tokens[index + 1];
         if (state == 0) {
             let result!: {
                 index: number,
@@ -2359,7 +2367,7 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
                 };
 
                 index = result.index;
-            } else if (is_unary_op(token)) {
+            } else if (token.is_unary_operator) {
                 result = parse_line_unary_expr(document, tokens, index);
                 index = result.index;
             } else if (text == "(") {
@@ -2380,7 +2388,7 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
                 zoom = result.expr;
             }
 
-            if (tokens[index] && is_op(tokens[index])) {
+            if (tokens[index] && tokens[index].is_binary_operator) {
                 state = 1;
             } else {
                 break;
@@ -2485,7 +2493,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
  * @param tokens 
  * @param offset_index 
  */
-function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
     let index_expr: IndexExpr | null = null;
