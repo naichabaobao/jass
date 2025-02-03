@@ -81,6 +81,14 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
         ) {
             zinc_object.type = "interface";
         } else if (
+            is_start_with(zinc_object.tokens, ["private", "static", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["public", "static", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["private", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["public", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["method", "operator"])
+        ) {
+            zinc_object.type = "operator";
+        } else if (
             is_start_with(zinc_object.tokens, ["private", "static", "method"])
             || is_start_with(zinc_object.tokens, ["public", "static", "method"])
             || is_start_with(zinc_object.tokens, ["private", "method"])
@@ -96,6 +104,8 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
             zinc_object.type = "func";
         } else if (is_start_with(zinc_object.tokens, "if")) {
             zinc_object.type = "if";
+        } else if (is_start_with(zinc_object.tokens, ["static", "if"])) {
+            zinc_object.type = "staticif";
         } else if (is_start_with(zinc_object.tokens, ["else", "if"])) {
             zinc_object.type = "elseif";
         } else if (is_start_with(zinc_object.tokens, "else")) {
@@ -214,7 +224,7 @@ class ZincBlock extends ZincData{
     public parent:ZincBlock|null = null;
     children: (ZincBlock|ZincSegement|ZincComment)[] = [];
 
-    public type: "library" | "struct" | "interface" | "method" | "func" | "if" | "elseif" | "else" | "for" | "while" | "debug" | "private" | "public" | "other" = "other";
+    public type: "library" | "struct" | "interface" | "method" | "func" | "if" | "elseif" | "else" | "for" | "while" | "debug" | "private" | "public" | "staticif" | "operator" | "other" = "other";
 
     constructor(prefix_tokens:Token[], start_token:Token|null, end_token:Token|null) {
         super();
@@ -1494,6 +1504,8 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
                 const next_token_text = next_token.getText();
                 if (next_token_text == "->") {
                     state = 4;
+                } else if (next_token_text == "=") {
+                    state = 6;
                 } else {
                     document.add_token_error(next_token, `missing keyword '->'`);
                     break;
@@ -1507,12 +1519,37 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
             index = result.index;
             func.with(result.expr);
 
-            state = 5;
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "=") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
+            } else {
+                // 可以省略返回值声明
+                break;
+            }
         } else if (state == 5) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) { // defaults
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 7;
+            } else {
+                document.add_token_error(token, `missing defaults value`);
+                break;
+            }
+        } else if (state == 7) { // defaults
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            func.defaults = result.expr;
 
-            break;
+            state = 5;
         }
     }
 
@@ -1540,6 +1577,110 @@ export function parse_block_if(document: Document, tokens: Token[]) {
             index++;
             if (text == "if") {
                 ifs.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "(") {
+                        state = 1;
+                    } else {
+                        document.add_token_error(next_token, `error if expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'if'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    document.add_token_error(next_token, `if expression missing condition`);
+                    state = 3;
+                } else {
+                    state = 2;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_expr(document, tokens, index);
+            ifs.expr = result.expr;
+            index = result.index;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    state = 3;
+                } else {
+                    document.add_token_error(next_token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error if token '${text}'`);
+            break;
+        }
+
+    }
+
+    return ifs;
+}
+export function parse_block_static_if(document: Document, tokens: Token[]) {
+    const ifs = new zinc.StaticIf(document);
+
+    let state = -1;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == -1) {
+            index++;
+            if (text == "static") {
+                ifs.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "if") {
+                        state = 0;
+                    } else {
+                        document.add_token_error(next_token, `error if expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'static'`);
+                break;
+            }
+        } else if (state == 0) {
+            index++;
+            if (text == "if") {
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
@@ -2096,6 +2237,9 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
             } else if (object.type == "method") {
                 node = parse_block_method(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "staticif") {
+                node = parse_block_static_if(document, object.tokens);
                 parent_node.add_node(node);
             } else if (object.type == "if") {
                 node = parse_block_if(document, object.tokens);

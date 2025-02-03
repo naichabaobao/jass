@@ -50,8 +50,8 @@ export class Context {
         return this._keys;
     }
 
-    public get_strcut_by_name(name: string):Struct[] {
-        const structs:Struct[] = [];
+    public get_strcut_by_name(name: string):(Struct|zinc.Struct)[] {
+        const structs:(Struct|zinc.Struct)[] = [];
 
         this._documents.forEach(document => {
             structs.push(...document.get_struct_by_name(name));
@@ -60,8 +60,8 @@ export class Context {
         return structs;
     }
 
-    public get_function_set_by_name(name: string):(Func|Native|Method)[] {
-        const funcs:(Func|Native|Method)[] = [];
+    public get_function_set_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
+        const funcs:(Func|Native|Method|zinc.Func|zinc.Method)[] = [];
 
         this._documents.forEach(document => {
             funcs.push(...document.get_function_set_by_name(name));
@@ -362,7 +362,7 @@ export namespace zinc {
         public name: Token | null = null;
         public takes: Take[] | null = null;
         public returns: Token | null = null;
-        public defaults: string | null = null;
+        public defaults: Zoom | null = null;
     
         with<T extends Modifier | Takes | Returns>(v: T) {
             if (v instanceof Modifier) {
@@ -975,9 +975,9 @@ export class Take {
         return `${type_string} ${name_string}`;
     }
 
-    belong:Func|Native|Method;
+    belong:Func | Native | Method | zinc.Func | zinc.Method;
 
-    constructor(belong:Func|Native|Method) {
+    constructor(belong:Func|Native|Method|zinc.Func|zinc.Method) {
         this.belong = belong;
     }
 

@@ -35,14 +35,14 @@ class CompletionItemDocument {
   public readonly program:vjass.Document;
 
   public readonly native_items:PackageCompletionItem<vjass_ast.Native>[];
-  public readonly function_items:PackageCompletionItem<vjass_ast.Func>[];
-  public readonly struct_items:PackageCompletionItem<vjass_ast.Struct>[];
-  public readonly interface_items:PackageCompletionItem<vjass_ast.Interface>[];
-  public readonly method_items:PackageCompletionItem<vjass_ast.Method>[];
-  public readonly local_items:PackageCompletionItem<vjass_ast.Local>[];
-  public readonly global_variable_items:PackageCompletionItem<vjass_ast.GlobalVariable>[];
-  public readonly membere_items:PackageCompletionItem<vjass_ast.Member>[];
-  public readonly library_items:PackageCompletionItem<vjass_ast.Library>[];
+  public readonly function_items:PackageCompletionItem<vjass_ast.Func|vjass_ast.zinc.Func>[];
+  public readonly struct_items:PackageCompletionItem<vjass_ast.Struct|vjass_ast.zinc.Struct>[];
+  public readonly interface_items:PackageCompletionItem<vjass_ast.Interface|vjass_ast.zinc.Interface>[];
+  public readonly method_items:PackageCompletionItem<vjass_ast.Method|vjass_ast.zinc.Method>[];
+  public readonly local_items:PackageCompletionItem<vjass_ast.Local|vjass_ast.zinc.Member>[];
+  public readonly global_variable_items:PackageCompletionItem<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
+  public readonly membere_items:PackageCompletionItem<vjass_ast.Member|vjass_ast.zinc.Member>[];
+  public readonly library_items:PackageCompletionItem<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageCompletionItem<vjass_ast.Scope>[];
   // public readonly take_items:TakeCompletionItem[];
 
@@ -103,17 +103,19 @@ class CompletionItemDocument {
     return item;
   }
 
-  public static  function_to_item(func: vjass_ast.Func) {
-    return this.native_to_item(func) as PackageCompletionItem<vjass_ast.Func>;
+  public static  function_to_item(func: vjass_ast.Func|vjass_ast.zinc.Func) {
+    //@ts-ignore
+    return this.native_to_item(func) as PackageCompletionItem<vjass_ast.Func|vjass_ast.zinc.Func>;
   }
   
-  public static method_to_item(func: vjass_ast.Method) {
-    return this.native_to_item(func) as PackageCompletionItem<vjass_ast.Method>;
+  public static method_to_item(func: vjass_ast.Method|vjass_ast.zinc.Method) {
+    //@ts-ignore
+    return this.native_to_item(func) as PackageCompletionItem<vjass_ast.Method|vjass_ast.zinc.Method>;
   }
-  private interface_to_item(inter: vjass_ast.Interface) {
+  private interface_to_item(inter: (vjass_ast.Interface|vjass_ast.zinc.Interface)) {
     return this.struct_to_item(inter, vscode.CompletionItemKind.Interface) as PackageCompletionItem<vjass_ast.Interface>;
   }
-  private library_to_item(library: vjass_ast.Library) {
+  private library_to_item(library: vjass_ast.Library|vjass_ast.zinc.Library) {
     const item = new PackageCompletionItem(library, library.name?.getText() ?? "(unkown)", vscode.CompletionItemKind.Module);
     item.detail = `${library.name?.getText() ?? "(unkown)"} >_${library.document.filePath}`;
     
@@ -153,7 +155,7 @@ class CompletionItemDocument {
   
     return item;
   }
-  private struct_to_item(struct: vjass_ast.Struct, kind: vscode.CompletionItemKind  = vscode.CompletionItemKind.Struct) {
+  private struct_to_item(struct: (vjass_ast.Struct|vjass_ast.zinc.Struct), kind: vscode.CompletionItemKind  = vscode.CompletionItemKind.Struct) {
     const item = new PackageCompletionItem(struct, struct.name?.getText() ?? "(unkown)", kind);
     item.detail = `${struct.name?.getText() ?? "(unkown)"} >_${struct.document.filePath}`;
     
@@ -418,7 +420,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         items.push(...wrap.document.membere_items);
         const target_position = new vjass.Position(position.line, position.character);
         const takes:vjass_ast.Take[] = [];
-        const push_take = (function_items:PackageCompletionItem<vjass_ast.Func|vjass_ast.Method>[]) => {
+        const push_take = (function_items:PackageCompletionItem<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
           function_items.filter(x => {
             return x.data.contains(target_position);
           }).forEach(data => {

@@ -52,14 +52,14 @@ class LocationDocument {
   public readonly program:vjass.Document;
 
   public readonly native_items:PackageLocation<vjass_ast.Native>[];
-  public readonly function_items:PackageLocation<vjass_ast.Func>[];
-  public readonly struct_items:PackageLocation<vjass_ast.Struct>[];
-  public readonly interface_items:PackageLocation<vjass_ast.Interface>[];
-  public readonly method_items:PackageLocation<vjass_ast.Method>[];
-  public readonly local_items:PackageLocation<vjass_ast.Local>[];
-  public readonly global_variable_items:PackageLocation<vjass_ast.GlobalVariable>[];
-  public readonly membere_items:PackageLocation<vjass_ast.Member>[];
-  public readonly library_items:PackageLocation<vjass_ast.Library>[];
+  public readonly function_items:PackageLocation<vjass_ast.Func|vjass_ast.zinc.Func>[];
+  public readonly struct_items:PackageLocation<vjass_ast.Struct|vjass_ast.zinc.Struct>[];
+  public readonly interface_items:PackageLocation<vjass_ast.Interface|vjass_ast.zinc.Interface>[];
+  public readonly method_items:PackageLocation<vjass_ast.Method|vjass_ast.zinc.Method>[];
+  public readonly local_items:PackageLocation<vjass_ast.Local|vjass_ast.zinc.Member>[];
+  public readonly global_variable_items:PackageLocation<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
+  public readonly membere_items:PackageLocation<vjass_ast.Member|vjass_ast.zinc.Member>[];
+  public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageLocation<vjass_ast.Scope>[];
   // public readonly take_items:TakeCompletionItem[];
 
@@ -90,17 +90,19 @@ class LocationDocument {
     return item;
   }
 
-  public static  function_to_hover(func: vjass_ast.Func) {
-    return this.native_to_hover(func) as PackageLocation<vjass_ast.Func>;
+  public static  function_to_hover(func: vjass_ast.Func|vjass_ast.zinc.Func) {
+    // @ts-ignore
+    return this.native_to_hover(func) as PackageLocation<vjass_ast.Func|vjass_ast.zinc.Func>;
   }
   
-  public static method_to_hover(func: vjass_ast.Method) {
-    return this.native_to_hover(func) as PackageLocation<vjass_ast.Method>;
+  public static method_to_hover(func: vjass_ast.Method|vjass_ast.zinc.Method) {
+    // @ts-ignore
+    return this.native_to_hover(func) as PackageLocation<vjass_ast.Method|vjass_ast.zinc.Method>;
   }
-  private interface_to_hover(inter: vjass_ast.Interface) {
+  private interface_to_hover(inter: vjass_ast.Interface|vjass_ast.zinc.Interface) {
     return this.struct_to_hover(inter) as PackageLocation<vjass_ast.Interface>;
   }
-  private library_to_hover(object: vjass_ast.Library) {
+  private library_to_hover(object: vjass_ast.Library|vjass_ast.zinc.Library) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
@@ -110,22 +112,22 @@ class LocationDocument {
 
     return item;
   }
-  private struct_to_hover(object: vjass_ast.Struct) {
+  private struct_to_hover(object: vjass_ast.Struct|vjass_ast.zinc.Struct) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
   }
-  private local_to_hover(object: vjass_ast.Local) {
+  private local_to_hover(object: vjass_ast.Local|vjass_ast.zinc.Member) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
   }
-  private global_variable_to_hover(object: vjass_ast.GlobalVariable) {
+  private global_variable_to_hover(object: vjass_ast.GlobalVariable|vjass_ast.zinc.Member) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
   }
-  public static member_to_hover(object: vjass_ast.Member) {
+  public static member_to_hover(object: vjass_ast.Member|vjass_ast.zinc.Member) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
@@ -318,7 +320,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
         const target_position = new vjass.Position(position.line, position.character);
-        const push_take = (function_items:PackageLocation<vjass_ast.Func|vjass_ast.Method>[]) => {
+        const push_take = (function_items:PackageLocation<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
           function_items.filter(x => {
             return x.data.contains(target_position);
           }).forEach(data => {

@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
 
@@ -1063,9 +1063,11 @@ export class Document {
     }
   }
 
+  public readonly zinc_nodes:ZincNode[] = [];
   private parse_zinc_block() {
     this.built_in_zincs.forEach(block => {
       const node = parse_zinc(this, block.tokens); 
+      this.zinc_nodes.push(node);
     });
   }
 
@@ -1379,22 +1381,22 @@ export class Document {
   }
 
   public readonly natives:Native[] = [];
-  public readonly functions:Func[] = [];
-  public readonly methods:Method[] = [];
-  public readonly librarys:Library[] = [];
+  public readonly functions:(Func|zinc.Func)[] = [];
+  public readonly methods:(Method|zinc.Method)[] = [];
+  public readonly librarys:(Library|zinc.Library)[] = [];
   public readonly scopes:Scope[] = [];
-  public readonly structs:Struct[] = [];
+  public readonly structs:(Struct|zinc.Struct)[] = [];
   public readonly globals:Globals[] = [];
   public readonly types:Type[] = [];
-  public readonly interfaces:Interface[] = [];
-  public readonly global_variables:GlobalVariable[] = [];
-  public readonly ifs:If[] = [];
+  public readonly interfaces:(Interface|zinc.Interface)[] = [];
+  public readonly global_variables:(GlobalVariable|zinc.Member)[] = [];
+  public readonly ifs:(If|zinc.If)[] = [];
   public readonly loops:Loop[] = [];
-  public readonly locals:Local[] = [];
-  public readonly sets:Set[] = [];
-  public readonly calls:Call[] = [];
+  public readonly locals:(Local|zinc.Member)[] = [];
+  public readonly sets:(Set|zinc.Set)[] = [];
+  public readonly calls:(Call|zinc.Call)[] = [];
   public readonly comments:Comment[] = [];
-  public readonly members:Member[] = [];
+  public readonly members:(Member|zinc.Member)[] = [];
 
   public readonly built_in_zincs:BuiltZincBlock[] = [];
 
@@ -1438,6 +1440,42 @@ export class Document {
       } else if (node instanceof Scope) {
         this.scopes.push(node);
       }
+    });
+
+    this.zinc_nodes.forEach(child => {
+      this.for_program_handle(child, (node) => {
+        if (node instanceof zinc.Func) {
+          this.functions.push(node);
+        } else if (node instanceof Comment) {
+          this.comments.push(node);
+        } else if (node instanceof zinc.Call) {
+          this.calls.push(node);
+        } else if (node instanceof zinc.Set) {
+          this.sets.push(node);
+        } else if (node instanceof zinc.Member) {
+          if (node.parent) {
+            if (node.parent instanceof zinc.Method || node.parent instanceof zinc.Func) {
+              this.locals.push(node);
+            } else if (node.parent instanceof zinc.Library) {
+              this.global_variables.push(node);
+            } else if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) {
+              this.members.push(node);
+            }
+          }
+        } else if (node instanceof zinc.If) {
+          this.ifs.push(node);
+        } else if (node instanceof zinc.Library) {
+          this.librarys.push(node);
+        } else if (node instanceof zinc.Struct) {
+          this.structs.push(node);
+        } else if (node instanceof zinc.Method) {
+          this.methods.push(node);
+        } else if (node instanceof zinc.Interface) {
+          this.interfaces.push(node);
+        } else if (node instanceof Type) {
+          this.types.push(node);
+        }
+      });
     });
   }
 
@@ -1514,8 +1552,8 @@ export class Document {
   //     }
   //   };
   // }
-  public get_struct_by_name(name: string):Struct[] {
-    const structs:Struct[] = [];
+  public get_struct_by_name(name: string):(Struct|zinc.Struct)[] {
+    const structs:(Struct|zinc.Struct)[] = [];
 
     this.structs.forEach(struct => {
       if (struct.name && struct.name.getText() === name) {
@@ -1526,8 +1564,8 @@ export class Document {
     return structs;
   }
 
-  public get_function_set_by_name(name: string):(Func|Native|Method)[] {
-    const funcs:(Func|Native|Method)[] = [];
+  public get_function_set_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
+    const funcs:(Func|Native|Method|zinc.Func|zinc.Method)[] = [];
 
     this.natives.forEach(native => {
       if (native.name && native.name.getText() === name) {
