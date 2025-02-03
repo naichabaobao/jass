@@ -28,6 +28,13 @@ class PackageHover<T extends vjass_ast.NodeAst> extends vscode.Hover {
       || data instanceof vjass_ast.Member
       || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.Scope
+      || data instanceof vjass_ast.zinc.Library
+      || data instanceof vjass_ast.zinc.Struct
+      || data instanceof vjass_ast.zinc.Func
+      || data instanceof vjass_ast.zinc.Interface
+      || data instanceof vjass_ast.zinc.Method
+      || data instanceof vjass_ast.zinc.Member
+      || data instanceof vjass_ast.Type
       ) {
         if (data.name) {
           this.key = data.name.getText();

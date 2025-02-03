@@ -95,6 +95,9 @@ export class NodeAst extends Range {
     public next: NodeAst|null = null;
     public children:Array< NodeAst> = [];
 
+    /**
+     * @deprecated 目前用于表示vjass block结束
+     */
     public end_tag:Token|null = null;
 
     constructor(document:Document) {

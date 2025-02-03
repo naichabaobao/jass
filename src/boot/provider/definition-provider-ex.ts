@@ -28,6 +28,13 @@ class PackageLocation<T extends vjass_ast.NodeAst> extends vscode.Location {
       || data instanceof vjass_ast.Member
       || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.Scope
+      || data instanceof vjass_ast.zinc.Library
+      || data instanceof vjass_ast.zinc.Struct
+      || data instanceof vjass_ast.zinc.Func
+      || data instanceof vjass_ast.zinc.Interface
+      || data instanceof vjass_ast.zinc.Method
+      || data instanceof vjass_ast.zinc.Member
+      || data instanceof vjass_ast.Type
       ) {
         if (data.name) {
           this.key = data.name.getText();
@@ -316,7 +323,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       locations.push(...wrap.document.scope_items.filter(x => x.key == key));
       locations.push(...wrap.document.method_items.filter(x => x.key == key));
       locations.push(...wrap.document.membere_items.filter(x => x.key == key));
-      
+
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
         const target_position = new vjass.Position(position.line, position.character);
@@ -346,6 +353,11 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         push_take(wrap.document.function_items);
         push_take(wrap.document.method_items);
         push_local(wrap.document.local_items);
+
+        if (key === "GGG") {
+          console.log(wrap.document.library_items);
+          
+        }
       }
     });
 

@@ -2192,32 +2192,43 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
         if (object instanceof ZincComment) {
             const node = parse_line_comment(document, object.tokens);
             parent_node.add_node(node);
+            node.end_token = node.start_token;
         } else if (object instanceof ZincSegement) {
             if (object.type == "break") {
                 const node = parse_segement_break(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "return") {
                 const node = parse_line_return(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "type") {
                 const node = parse_line_type(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "call") {
                 const node = parse_segement_call(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "set") {
                 const node = parse_segement_set(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "member") {
                 const node = parse_segement_member(document, object.tokens);
                 if (Array.isArray(node)) {
-                    node.forEach(x => parent_node.add_node(x));
+                    node.forEach(x => {
+                        parent_node.add_node(x);
+                        x.end_token = object.end_token;
+                    });
                 } else {
                     parent_node.add_node(node);
+                    node.end_token = object.end_token;
                 }
             } else if (object.type == "method") {
                 const node = parse_block_method(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "other") {
                 
             }
@@ -2267,6 +2278,7 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
             }
             if (node) {
+                node.end_token = object.end_token;
                 object.children.forEach(child => {
                     handing(child, node);
                 });
@@ -2287,7 +2299,6 @@ export function parse_zinc(document:Document, tokens:Token[]) {
     traverse_and_confirm_zinc_type(layer_objects);
     
     parse_zinc_with_type(document, zinc_node, layer_objects);
-    console.log(zinc_node);
     
     
     return zinc_node;

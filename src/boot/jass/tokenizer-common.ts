@@ -604,12 +604,15 @@ export class Document {
     return this.line_text_macro_indexs[line]?.text_macro_tag != 0 ?? false;
   }
 
-  public is_zinc_block_line(line: number, virtual_line:number): boolean {
+  public is_zinc_block_line_by_virtual(line: number, virtual_line:number): boolean {
     if (this.is_run_text_macro_line(line)) {
       return this.zinc_indexs[line] && (this.zinc_indexs[line].display.find(x => x.real_line_number == line && x.mapping_line_number == virtual_line)?.type ?? 0) > 0;
     } else {
       return this.zinc_indexs[line] && this.zinc_indexs[line].type > 0;
     }
+  }
+  public is_zinc_block_line(line: number): boolean {
+    return this.zinc_indexs[line] && this.zinc_indexs[line].type > 0;
   }
 
 
@@ -629,7 +632,7 @@ export class Document {
         const run_text_macro = this.run_text_macros[run_text_macro_index];
         if (run_text_macro) {
           run_text_macro.loop( (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => {
-            if (!this.is_zinc_block_line(index, lineNumber)) { // 保证zinc代码块不会遍历
+            if (!this.is_zinc_block_line_by_virtual(index, lineNumber)) { // 保证zinc代码块不会遍历
               run_callback(document, run_text_macro, text_macro, lineNumber);
             }
           });
@@ -637,6 +640,8 @@ export class Document {
       } else if (this.is_text_macro_line(index)) { // 文本宏
         continue;
       } else if (this.is_import_line(index)) { // vjass import 语句
+        continue;
+      } else if (this.is_zinc_block_line(index)) { // vjass import 语句
         continue;
       } else {
         callback(this, index);
@@ -1464,7 +1469,7 @@ export class Document {
           }
         } else if (node instanceof zinc.If) {
           this.ifs.push(node);
-        } else if (node instanceof zinc.Library) {
+        } else if (node instanceof zinc.Library) {          
           this.librarys.push(node);
         } else if (node instanceof zinc.Struct) {
           this.structs.push(node);
