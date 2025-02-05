@@ -803,9 +803,9 @@ globals
 
     // Corpse creation styles
 
-    // 尸体类型 骨头
+    // 尸体类型 骨态
     constant integer bj_CORPSETYPE_FLESH = 0
-    // 尸体类型 血肉
+    // 尸体类型 肉态
     constant integer bj_CORPSETYPE_BONE = 1
 
     // Elevator pathing-blocker destructable code
