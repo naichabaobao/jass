@@ -5548,6 +5548,8 @@ native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, 
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
+// 不是所有单位都有尸体
+// 尸体从死亡开始（肉态）逐渐腐烂（骨态），拥有原单位最大生命值和最大魔法值，生命值为0，魔法值为物编设定的魔法初始值
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
 
 // 杀死单位
