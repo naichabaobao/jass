@@ -1713,10 +1713,8 @@ export class Token extends Range {
    * 二元运算符
    */
   public get is_binary_operator(): boolean {
-    return this.is_operator && (() => {
-      const text = this.getText();
-      return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%" || text == "&&" || text == "||";
-    })();
+    const text = this.getText();
+    return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%" || text == "&&" || text == "||";
   }
   /**
    * 一元运算符
