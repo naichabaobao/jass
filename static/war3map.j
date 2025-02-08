@@ -118,7 +118,7 @@ endfunction
 //===========================================================================
 
 // 对战触发器动作
-// 新建/对战地图默认8个动作
+// 对战地图默认8个动作
 function Trig_Melee_Initialization_Actions takes nothing returns nothing
     call MeleeStartingVisibility()
     call MeleeStartingHeroLimit()
