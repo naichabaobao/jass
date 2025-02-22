@@ -6814,7 +6814,7 @@ native SetTextTagAge takes texttag t, real age returns nothing
 // 设置漂浮文字清除时间(在指定生命周期后自动清除)
 // 可替代排泄
 native SetTextTagLifespan takes texttag t, real lifespan returns nothing
-// 设置漂浮文字消逝(淡出)时间
+// 设置漂浮文字消逝(淡化)时间
 native SetTextTagFadepoint takes texttag t, real fadepoint returns nothing
 
 // 保留英雄按钮(指定左上角英雄图标，F1~FN)
