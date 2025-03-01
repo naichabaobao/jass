@@ -1,8 +1,9 @@
 // import * as fs from 'fs';
 // import * as path from 'path';
 
-// import * as vscode from 'vscode';
-
+import * as vscode from 'vscode';
+import { GlobalContext } from '../jass/parser-vjass';
+import * as vjass_ast from "../jass/parser-vjass";
 // import { AllKeywords } from '../jass/keyword';
 // import {GlobalObject, Node, Position } from "../jass/ast";
 // import { DataGetter, ObjectEditGlobals } from "./data";
@@ -249,15 +250,81 @@
 // vscode.languages.registerDefinitionProvider("jass", new MarkCodeDefinitionProvider());
 
 
-// // vscode.languages.registerDocumentLinkProvider("jass", new class A implements vscode.DocumentLinkProvider {
-// //   provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink[]> {
-// //     const a = new vscode.DocumentLink(new vscode.Range(0,0, 0, 10), document.uri);
-// //     a.tooltip = "jobnobb";
-// //     return [a];
-// //   }
-// //   // resolveDocumentLink?(link: vscode.DocumentLink, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink> {
-// //   //   throw new Error('Method not implemented.');
-// //   // }
+// vscode.languages.registerDocumentLinkProvider("jass", new class A implements vscode.DocumentLinkProvider {
+//   provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink[]> {
+//         const locations = new Array<vscode.Location>();
+//         GlobalContext.keys.forEach(k => {
+//             const program = GlobalContext.get(k);
+//             if (program) {
+//               if (program.is_special) {
+//                 const value_node = program.program;
+//                 if (value_node) {
+//                   value_node.children.forEach(x => {
+                    
+//                     if (x instanceof vjass_ast.JassDetail) {
+//                       if (x.match_key(key)) {
+//                         const ms = new vscode.MarkdownString();
+//                         ms.baseUri = vscode.Uri.file(x.document.filePath);
+//                         ms.appendMarkdown(`**>_${x.document.filePath}**`);
+//                         ms.appendText("\n");
+//                         if (x.is_deprecated) {
+//                           ms.appendMarkdown(`---***${x.label}***---`);
+//                         } else {
+//                           ms.appendMarkdown(`***${x.label}***`);
+//                         }
+//                         ms.appendText("\n");
+//                         ms.appendCodeblock(x.label);
+//                         x.description.forEach(desc => {
+//                           ms.appendMarkdown(desc);
+//                           ms.appendText("\n");
+//                         });
+                      
+//                         hovers.push(ms);
+//                       }
+//                     }
+//                   });
+//                 }
+//               }
+//             }
+//           });
+//         targetGlobals.forEach(global => {
+//         const location = new vscode.Location(vscode.Uri.file(global.getContext().filePath), new vscode.Range(global.loc.start.line, global.loc.start.position, global.loc.end.line, global.loc.end.position));
+//         locations.push(location);
+//         });
+
+//         return locations;
+//   }
+//   // resolveDocumentLink?(link: vscode.DocumentLink, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentLink> {
+//   //   throw new Error('Method not implemented.');
+//   // }
   
-// // }())
+// }())
+
+vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
+    provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+        const key = document.getText(document.getWordRangeAtPosition(position));
+        const locations = new Array<vscode.Location>();
+        GlobalContext.keys.forEach(k => {
+            const program = GlobalContext.get(k);
+            if (program) {
+              if (program.is_special) {
+                const value_node = program.program;
+                if (value_node) {
+                  value_node.children.forEach(x => {
+                    
+                    if (x instanceof vjass_ast.JassDetail) {
+                      if (x.content == key) {
+                        const location = new vscode.Location(vscode.Uri.file(program.filePath), new vscode.Range(x.start.line, x.start.position, x.end.line, x.end.position));
+                        locations.push(location);
+                      }
+                    }
+                  });
+                }
+              }
+            }
+          });
+          return locations;
+    }
+
+}())
 

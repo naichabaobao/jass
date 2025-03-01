@@ -10,6 +10,8 @@ import * as fs from "fs";
 import * as vscode from "vscode";
 import { Token, tokenize } from "../jass/tokens";
 import { isAiFile, isJFile, isLuaFile, isZincFile } from "../tool";
+import { AllKeywords } from "../jass/keyword";
+import { GlobalContext } from "../jass/parser-vjass";
 
 // import { AllKeywords, Keywords } from "../jass/keyword";
 // import { Options } from "./options";
@@ -609,6 +611,25 @@ import { isAiFile, isJFile, isLuaFile, isZincFile } from "../tool";
     return items;
   }
 }(), "\"", "/", "\\");
+
+/**
+ * keyword 提示
+ */
+ vscode.languages.registerCompletionItemProvider("jass", new class KeywordCompletionItemProvider implements vscode.CompletionItemProvider {
+
+  private static keyword_completions:vscode.CompletionItem[] = (() => {
+    return AllKeywords.map(keyword => {
+      const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+      return item;
+    });
+  })();
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    return KeywordCompletionItemProvider.keyword_completions;
+  }
+}());
+
+
 
 
 

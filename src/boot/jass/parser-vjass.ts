@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Document, Position, Range, RunTextMacro, TextLine, TextMacro, Token} from "./tokenizer-common";
+import { Document, Position, Range, RunTextMacro, TextLine, TextMacro, Token, TokenType} from "./tokenizer-common";
 
 export class Context {
     private _keys: string[] = [];
@@ -46,7 +46,7 @@ export class Context {
         return this._documents.map(document => document.text_macros).flat();
     }
 
-    public get kays():string[] {
+    public get keys():string[] {
         return this._keys;
     }
 
@@ -197,6 +197,49 @@ export class NodeAst extends Range {
     }
 }
 
+export class JassDetail extends NodeAst {
+    private name: Token;
+
+    constructor(document: Document, name: Token) {
+        super(document);
+        this.name = name;
+        this.start_token = name;
+        this.end_token = name;
+    }
+
+    private cache:string|null = null;
+    public get label(): string {
+        if (this.cache == null) {
+            this.cache = this.name.getText();
+        }
+        return this.cache;
+    }
+
+    /**
+     * 
+     * @param key 不包含 '' "" 包裹的字符串
+     */
+    public match_key(key: string) {
+        if (this.name.type == TokenType.String) {
+            return this.label == `"${key}"`;
+        } else if (this.name.type == TokenType.Mark) {
+            return this.label == `'${key}'`;
+        } else {
+            return this.label == key; 
+        }
+    }
+
+    public get content():string {
+        if (this.name.type == TokenType.String) {
+            return this.label.replace(/^"/, "").replace(/"$/, "");
+        } else if (this.name.type == TokenType.Mark) {
+            return this.label.replace(/^'/, "").replace(/'$/, "");
+        } else {
+            return this.label; 
+        }
+    }
+}
+
 export namespace zinc {
     export class Break extends NodeAst {
         public token:Token|null = null;
@@ -258,6 +301,8 @@ export namespace zinc {
         expr: Zoom | null = null;
     
         public is_array: boolean = false;
+
+        public size_expr:IndexExpr|null = null;
     
         
         public get is_constant() : boolean {
@@ -276,9 +321,16 @@ export namespace zinc {
             const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
             const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
             const type_string = this.type ? this.type.getText() + " " : "";
-            const array_string = this.is_array ? "array " : "";
             const name_string = this.name ? this.name.getText() + " " : "";
-            return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+            if (this.array_token) {
+                const array_string = "array ";
+                return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+            } else if (this.size_expr) {
+                const array_string = this.size_expr.to_string();
+                return `${visible_string}${modifier_string}${qualifier_string}${type_string}${name_string}${array_string}`;
+            } else {
+                return `${visible_string}${modifier_string}${qualifier_string}${type_string}${name_string}`;
+            }
         }
     
         public with(statement: Statement | Modifier) {
@@ -288,6 +340,7 @@ export namespace zinc {
                 this.array_token = statement.array_token;
                 this.is_array = this.array_token != null;
                 this.expr = statement.expr;
+                this.size_expr = statement.size_expr;
             } else if (statement instanceof Modifier) {
                 this.visible = statement.visible;
                 this.modifier = statement.modifier;
@@ -1762,7 +1815,7 @@ export class Value implements ExprTrict {
     }
 
     to_string(): string {
-        let expr = "unkown";
+        let expr = "";
         if (this.value) {
             expr = this.value.getText();
         }
@@ -1809,7 +1862,7 @@ export class IndexExpr implements ExprTrict {
     expr: Zoom | null = null;
 
     to_string(): string {
-        return `[${this.expr?.to_string() ?? "unkown"}]`;
+        return `[${this.expr?.to_string() ?? "∞"}]`;
     }
 }
 export class PriorityExpr extends Expr implements ExprTrict {
@@ -2069,6 +2122,10 @@ export class Set extends NodeAst {
 export class Type extends NodeAst {
     name: Token | null = null;
     extends: Token | null = null;
+
+    to_string():string {
+        return `type ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.getText() : ""}`;
+    }
 }
 export class Call extends NodeAst {
     ref: VariableName | null = null;
@@ -2496,7 +2553,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
  * @param tokens 
  * @param offset_index 
  */
-export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number, need_index_expr:boolean = true) {
     let index = offset_index;
     let state = 0;
     let index_expr: IndexExpr | null = null;
@@ -2525,8 +2582,9 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
         } else if (state == 1) {
             if (text == "]") {
                 index++;
-
-                document.add_token_error(token, `missing index expression`);
+                if (need_index_expr) {
+                    document.add_token_error(token, `missing index expression`);
+                }
 
                 break;
             } else {
@@ -2809,6 +2867,8 @@ export class Statement {
     array_token: Token | null = null;
 
     public is_array: boolean = false;
+
+    public size_expr: IndexExpr | null = null;
 
     public to_string(): string {
         const type_string = this.type ? this.type.getText() + " " : "unkown_type ";

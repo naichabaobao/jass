@@ -354,10 +354,6 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
         push_take(wrap.document.method_items);
         push_local(wrap.document.local_items);
 
-        if (key === "GGG") {
-          console.log(wrap.document.library_items);
-          
-        }
       }
     });
 

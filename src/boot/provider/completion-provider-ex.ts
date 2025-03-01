@@ -44,11 +44,13 @@ class CompletionItemDocument {
   public readonly membere_items:PackageCompletionItem<vjass_ast.Member|vjass_ast.zinc.Member>[];
   public readonly library_items:PackageCompletionItem<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageCompletionItem<vjass_ast.Scope>[];
+  public readonly type_items:PackageCompletionItem<vjass_ast.Type>[];
   // public readonly take_items:TakeCompletionItem[];
 
   constructor(program:vjass.Document) {
     // this.document = document;
     this.program = program;
+    this.type_items = this.program.types.map(node => this.type_to_item(node));
 
     this.native_items = this.program.natives.map(node => CompletionItemDocument.native_to_item(node));
     this.function_items = this.program.functions.map(node => CompletionItemDocument.function_to_item(node));
@@ -170,6 +172,26 @@ class CompletionItemDocument {
     item.documentation = ms;
   
     if (struct.is_deprecated) {
+      item.tags = [vscode.CompletionItemTag.Deprecated];
+    }
+  
+    return item;
+  }
+  private type_to_item(type: vjass_ast.Type, kind: vscode.CompletionItemKind  = vscode.CompletionItemKind.Class) {
+    const item = new PackageCompletionItem(type, type.name?.getText() ?? "(unkown)", kind);
+    item.detail = `${type.name?.getText() ?? "(unkown)"} >_${type.document.filePath}`;
+    
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(type.document.filePath);
+    ms.appendCodeblock(type.to_string());
+    
+    type.description.forEach(desc => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+    item.documentation = ms;
+  
+    if (type.is_deprecated) {
       item.tags = [vscode.CompletionItemTag.Deprecated];
     }
   
@@ -404,7 +426,8 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
     const items:vscode.CompletionItem[] = [];
 
-    CompletionManage.wraps.forEach(wrap => {
+    CompletionManage.wraps.filter(x=>x.document.program.is_special == false).forEach(wrap => {
+      items.push(...wrap.document.type_items);
       // items.concat(...wrap.items);
       // items.push(...wrap.items);
       const is_current = wrap.equals(document.uri.fsPath);
@@ -508,6 +531,50 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
 
 }());
 
+/**
+ * special 提示
+ */
+vscode.languages.registerCompletionItemProvider("jass", new class KeywordCompletionItemProvider implements vscode.CompletionItemProvider {
+
+
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items:vscode.CompletionItem[] = [];
+
+    GlobalContext.keys.forEach(key => {
+      const program = GlobalContext.get(key);
+      if (program) {
+        if (program.is_special) {
+          const value_node = program.program;
+          if (value_node) {
+            value_node.children.forEach(x => {
+              
+              if (x instanceof vjass_ast.JassDetail) {
+                const item = new vscode.CompletionItem(x.label, vscode.CompletionItemKind.Value);
+                const ms = new vscode.MarkdownString();
+                ms.baseUri = vscode.Uri.file(x.document.filePath);
+                ms.appendCodeblock(x.label);
+                x.description.forEach(desc => {
+                  ms.appendMarkdown(desc);
+                  ms.appendText("\n");
+                });
+                item.documentation = ms;
+                item.detail = `${x.label} >_${x.document.filePath}`;
+              
+                if (x.is_deprecated) {
+                  item.tags = [vscode.CompletionItemTag.Deprecated];
+                }
+    
+                items.push(item);
+              }
+            });
+          }
+        }
+      }
+    });
+    return items;
+  }
+}(), "$", "\"", "'", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split(""));
 
 /*
 class FuncString {

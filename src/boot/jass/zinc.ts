@@ -471,6 +471,8 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
     return set;
 }
 
+
+
 /**
  * 
  * type [array] name [=] init
@@ -498,11 +500,7 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
 
             if (tokens[index]) {
                 if (tokens[index].is_identifier) {
-                    if (tokens[index].getText() == "array") {
-                        state = 3;
-                    } else {
-                        state = 2;
-                    }
+                    state = 2;
                 } else {
                     document.add_token_error(tokens[index], `wrong identifier name`);
                     break;
@@ -520,6 +518,8 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                     state = 4;
                 } else if (tokens[index].getText() == ",") {
                     break;
+                } else if (tokens[index].getText() == "[") {
+                    state = 3;
                 } else {
                     document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
                     break;
@@ -528,21 +528,29 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                 break;
             }
         } else if (state == 3) {
-            index++;
-            statement.array_token = token;
+            const result = parse_line_index_expr(document, tokens, index, false);
+            index = result.index;
+            statement.size_expr = result.expr;
+            
             statement.is_array = true;
 
+            // if (tokens[index]) {
+            //     if (tokens[index].is_identifier) {
+            //         state = 2;
+            //     } else {
+            //         document.add_token_error(tokens[index], `wrong identifier name`);
+            //         break;
+            //     }
+            // } else {
+            //     document.add_token_error(token, `name not declared`);
+            //     break;
+            // }
             if (tokens[index]) {
-                if (tokens[index].is_identifier) {
-                    state = 2;
-                } else {
-                    document.add_token_error(tokens[index], `wrong identifier name`);
+                if (tokens[index].getText() == ",") {
                     break;
                 }
-            } else {
-                document.add_token_error(token, `name not declared`);
-                break;
             }
+            state = 6;
         } else if (state == 4) {
             index++;
 
@@ -563,6 +571,16 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
             statement.expr = result.expr;
 
             break;
+        } else if (state == 6) {
+            index++;
+
+            document.add_token_error(token, `error statement array expression token '${token.getText()}'`);
+
+            if (tokens[index]) {
+                if (tokens[index].getText() == ",") {
+                    break;
+                }
+            }
         }
     }
     return {
@@ -707,6 +725,7 @@ export function parse_segement_member(document: Document, tokens: Token[]) {
             index = result.index;
             const other_member:zinc.Member = new zinc.Member(document);
             other_member.with(result.expr);
+            other_member.start_token = result.expr.name;
             mems.push(other_member);
             
             const next_token = get_next_token(tokens, index);

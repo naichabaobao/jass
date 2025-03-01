@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, JassDetail, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
 
@@ -417,15 +417,28 @@ export class Document {
 
   public readonly filePath: string;
 
+  public program: NodeAst | null = null;
+
+  public readonly is_special:boolean;
+
   public constructor(filePath: string, content: string) {
     this.filePath = filePath;
     this.content = content;
 
     tokenize_for_vjass(this);
 
-
-
+    const parsed = path.parse(filePath);
+    if (parsed.base == "presets.jass" || parsed.base == "numbers.jass" || parsed.base == "strings.jass") {
+      this.values();
+      this.is_special = true;
+      GlobalContext.set(filePath, this);
+      return;
+    } else {
+      this.is_special = false;
+    }
+    
     this.preprocessing();
+    
 
     this.parse_import();
     this.parse_textmacro();
@@ -464,7 +477,7 @@ export class Document {
     this.object_list.length = 0;
   }
 
-  public program: NodeAst | null = null;
+  
 
   public lineAt(line: number): TextLine {
     // console.time("line1")
@@ -676,6 +689,25 @@ export class Document {
   //   }
   // }
 
+  private values() {
+    
+    this.program = new NodeAst(this);
+    for (let index = 0; index < this.lineCount; index++) {
+      const tokens = this.lineTokens(index);
+      if (tokens.length == 0) {
+        continue;
+      } else if (tokens[0].is_comment) {
+        const comment = parse_line_comment(this, tokens);
+        this.program.add_node(comment);
+      } else if (tokens[0].is_value()) {
+        const value = new JassDetail(this, tokens[0]);
+        this.program.add_node(value);
+      } else {
+        this.add_token_error(tokens[0], "unsupported syntax, if you want to use JASS syntax, please change the file name");
+        continue;
+      }
+    }
+  }
   private preprocessing() {
     // const macros:Macro[] = [];
     let last_macro: Macro | null = null;
