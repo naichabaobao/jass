@@ -8,7 +8,7 @@ import { GlobalContext } from '../jass/parser-vjass';
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 
-function functionUnifiedFormat(native:vjass_ast.Func|vjass_ast.Native|vjass_ast.Method):string {
+function functionUnifiedFormat(native:vjass_ast.Func|vjass_ast.Native|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method):string {
   let keyword:string;
   if (native instanceof vjass_ast.Method) {
     keyword = "method";

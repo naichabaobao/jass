@@ -63,7 +63,7 @@ class RenameProvider implements vscode.RenameProvider {
 		if (program) {
 			
 			const target_position = new vjass.Position(position.line, position.character);
-			const push_take = (function_items: (vjass_ast.Func | vjass_ast.Method)[]) => {
+			const push_take = (function_items: (vjass_ast.Func | vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method)[]) => {
 				function_items.filter(x => {
 					return x.contains(target_position);
 				}).forEach(data => {

@@ -28,6 +28,13 @@ class PackageHover<T extends vjass_ast.NodeAst> extends vscode.Hover {
       || data instanceof vjass_ast.Member
       || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.Scope
+      || data instanceof vjass_ast.zinc.Library
+      || data instanceof vjass_ast.zinc.Struct
+      || data instanceof vjass_ast.zinc.Func
+      || data instanceof vjass_ast.zinc.Interface
+      || data instanceof vjass_ast.zinc.Method
+      || data instanceof vjass_ast.zinc.Member
+      || data instanceof vjass_ast.Type
       ) {
         if (data.name) {
           this.key = data.name.getText();
@@ -52,14 +59,14 @@ class HoverDocument {
   public readonly program:vjass.Document;
 
   public readonly native_items:PackageHover<vjass_ast.Native>[];
-  public readonly function_items:PackageHover<vjass_ast.Func>[];
-  public readonly struct_items:PackageHover<vjass_ast.Struct>[];
-  public readonly interface_items:PackageHover<vjass_ast.Interface>[];
-  public readonly method_items:PackageHover<vjass_ast.Method>[];
-  public readonly local_items:PackageHover<vjass_ast.Local>[];
-  public readonly global_variable_items:PackageHover<vjass_ast.GlobalVariable>[];
-  public readonly membere_items:PackageHover<vjass_ast.Member>[];
-  public readonly library_items:PackageHover<vjass_ast.Library>[];
+  public readonly function_items:PackageHover<vjass_ast.Func|vjass_ast.zinc.Func>[];
+  public readonly struct_items:PackageHover<vjass_ast.Struct|vjass_ast.zinc.Struct>[];
+  public readonly interface_items:PackageHover<vjass_ast.Interface|vjass_ast.zinc.Interface>[];
+  public readonly method_items:PackageHover<vjass_ast.Method|vjass_ast.zinc.Method>[];
+  public readonly local_items:PackageHover<vjass_ast.Local|vjass_ast.zinc.Member>[];
+  public readonly global_variable_items:PackageHover<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
+  public readonly membere_items:PackageHover<vjass_ast.Member|vjass_ast.zinc.Member>[];
+  public readonly library_items:PackageHover<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageHover<vjass_ast.Scope>[];
   // public readonly take_items:TakeCompletionItem[];
 
@@ -117,17 +124,19 @@ class HoverDocument {
     return item;
   }
 
-  public static  function_to_hover(func: vjass_ast.Func) {
-    return this.native_to_hover(func) as PackageHover<vjass_ast.Func>;
+  public static  function_to_hover(func: vjass_ast.Func|vjass_ast.zinc.Func) {
+    // @ts-ignore
+    return this.native_to_hover(func) as PackageHover<vjass_ast.Func|vjass_ast.zinc.Func>;
   }
   
-  public static method_to_hover(func: vjass_ast.Method) {
-    return this.native_to_hover(func) as PackageHover<vjass_ast.Method>;
+  public static method_to_hover(func: vjass_ast.Method|vjass_ast.zinc.Method) {
+    // @ts-ignore
+    return this.native_to_hover(func) as PackageHover<vjass_ast.Method|vjass_ast.zinc.Method>;
   }
-  private interface_to_hover(inter: vjass_ast.Interface) {
-    return this.struct_to_hover(inter) as PackageHover<vjass_ast.Interface>;
+  private interface_to_hover(inter: vjass_ast.Interface|vjass_ast.zinc.Interface) {
+    return this.struct_to_hover(inter) as PackageHover<vjass_ast.Interface|vjass_ast.zinc.Interface>;
   }
-  private library_to_hover(object: vjass_ast.Library) {
+  private library_to_hover(object: vjass_ast.Library|vjass_ast.zinc.Library) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -179,7 +188,7 @@ class HoverDocument {
 
     return item;
   }
-  private struct_to_hover(object: vjass_ast.Struct) {
+  private struct_to_hover(object: vjass_ast.Struct|vjass_ast.zinc.Struct) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -205,7 +214,7 @@ class HoverDocument {
 
     return item;
   }
-  private local_to_hover(object: vjass_ast.Local) {
+  private local_to_hover(object: vjass_ast.Local|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -231,7 +240,7 @@ class HoverDocument {
 
     return item;
   }
-  private global_variable_to_hover(object: vjass_ast.GlobalVariable) {
+  private global_variable_to_hover(object: vjass_ast.GlobalVariable|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -257,7 +266,7 @@ class HoverDocument {
 
     return item;
   }
-  public static member_to_hover(object: vjass_ast.Member) {
+  public static member_to_hover(object: vjass_ast.Member|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -497,7 +506,7 @@ class HoverProvider implements vscode.HoverProvider {
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
         const target_position = new vjass.Position(position.line, position.character);
-        const push_take = (function_items:PackageHover<vjass_ast.Func|vjass_ast.Method>[]) => {
+        const push_take = (function_items:PackageHover<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
           function_items.filter(x => {
             return x.data.contains(target_position);
           }).forEach(data => {

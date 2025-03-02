@@ -4,10 +4,14 @@
 //  */
 
 
-// import * as path from "path";
-// import * as fs from "fs";
+import * as path from "path";
+import * as fs from "fs";
 
-// import * as vscode from "vscode";
+import * as vscode from "vscode";
+import { Token, tokenize } from "../jass/tokens";
+import { isAiFile, isJFile, isLuaFile, isZincFile } from "../tool";
+import { AllKeywords } from "../jass/keyword";
+import { GlobalContext } from "../jass/parser-vjass";
 
 // import { AllKeywords, Keywords } from "../jass/keyword";
 // import { Options } from "./options";
@@ -554,67 +558,86 @@
 //   }
 // }());
 
-// /**
-//  * 文件路径提示
-//  */
-//  vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
+/**
+ * 文件路径提示
+ */
+ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
 
-//   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-//     const items:vscode.CompletionItem[] = [];
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const items:vscode.CompletionItem[] = [];
 
-//     const lineText = document.lineAt(position);
-//     const lineContent = lineText.text;
+    const lineText = document.lineAt(position);
+    const lineContent = lineText.text;
 
-//     const tokens = tokenize(lineContent);
+    const tokens = tokenize(lineContent);
 
-//     const currentFileDir = () => {
-//       return path.parse(document.uri.fsPath).dir;
-//     };
+    const currentFileDir = () => {
+      return path.parse(document.uri.fsPath).dir;
+    };
 
     
 
-//     const handlePath = (token:Token) => {
-//       if (token) {
-//         if (token.isString()) {
+    const handlePath = (token:Token) => {
+      if (token) {
+        if (token.isString()) {
 
-//           const strContent = token.value.substring(1, token.value.length - 1);
+          const strContent = token.value.substring(1, token.value.length - 1);
 
-//           const prefixContent = strContent.substring(0, position.character - token.position - 1);
+          const prefixContent = strContent.substring(0, position.character - token.position - 1);
 
-//           const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
-//           const stat = fs.statSync(realPath);
-//           if (stat.isDirectory()) {
-//             const paths = fs.readdirSync(realPath);
-//             paths.forEach((p) => {
-//               const filePath = path.resolve(realPath, p);
-//               if (fs.statSync(filePath).isDirectory()) {
-//                 items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.Folder));
-//               } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
-//                 items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
-//               }
-//             });
-//           }          
-//         }
-//       }
-//     }
+          const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+          const stat = fs.statSync(realPath);
+          if (stat.isDirectory()) {
+            const paths = fs.readdirSync(realPath);
+            paths.forEach((p) => {
+              const filePath = path.resolve(realPath, p);
+              if (fs.statSync(filePath).isDirectory()) {
+                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.Folder));
+              } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
+              }
+            });
+          }          
+        }
+      }
+    }
 
-//     if (tokens[0]) {
-//       if (tokens[0].isMacro() && tokens[0].value == "#include") {
-//         handlePath(tokens[1]);
-//       }
-//     }
+    if (tokens[0]) {
+      if (tokens[0].isMacro() && tokens[0].value == "#include") {
+        handlePath(tokens[1]);
+      }
+    }
 
-//     return items;
-//   }
-// }(), "\"", "/", "\\");
+    return items;
+  }
+}(), "\"", "/", "\\");
+
+/**
+ * keyword 提示
+ */
+ vscode.languages.registerCompletionItemProvider("jass", new class KeywordCompletionItemProvider implements vscode.CompletionItemProvider {
+
+  private static keyword_completions:vscode.CompletionItem[] = (() => {
+    return AllKeywords.map(keyword => {
+      const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+      return item;
+    });
+  })();
+
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    return KeywordCompletionItemProvider.keyword_completions;
+  }
+}());
 
 
 
 
 
-// /**
-//  * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
-//  */
+
+
+/**
+ * 提示魔兽默认的mark code，实现方式暂时性借用check文件中的代码，稳定后把check中的代码整合到jass文件中，随后移除check
+ */
 // vscode.languages.registerCompletionItemProvider("jass", new class MarkCompletionItemProvider implements vscode.CompletionItemProvider {
 //   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
     

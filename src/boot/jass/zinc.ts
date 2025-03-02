@@ -1,5 +1,5 @@
 import { Document, Token } from "./tokenizer-common";
-import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
+import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
 
 
 
@@ -81,6 +81,14 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
         ) {
             zinc_object.type = "interface";
         } else if (
+            is_start_with(zinc_object.tokens, ["private", "static", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["public", "static", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["private", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["public", "method", "operator"])
+            || is_start_with(zinc_object.tokens, ["method", "operator"])
+        ) {
+            zinc_object.type = "operator";
+        } else if (
             is_start_with(zinc_object.tokens, ["private", "static", "method"])
             || is_start_with(zinc_object.tokens, ["public", "static", "method"])
             || is_start_with(zinc_object.tokens, ["private", "method"])
@@ -96,6 +104,8 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
             zinc_object.type = "func";
         } else if (is_start_with(zinc_object.tokens, "if")) {
             zinc_object.type = "if";
+        } else if (is_start_with(zinc_object.tokens, ["static", "if"])) {
+            zinc_object.type = "staticif";
         } else if (is_start_with(zinc_object.tokens, ["else", "if"])) {
             zinc_object.type = "elseif";
         } else if (is_start_with(zinc_object.tokens, "else")) {
@@ -214,7 +224,7 @@ class ZincBlock extends ZincData{
     public parent:ZincBlock|null = null;
     children: (ZincBlock|ZincSegement|ZincComment)[] = [];
 
-    public type: "library" | "struct" | "interface" | "method" | "func" | "if" | "elseif" | "else" | "for" | "while" | "debug" | "private" | "public" | "other" = "other";
+    public type: "library" | "struct" | "interface" | "method" | "func" | "if" | "elseif" | "else" | "for" | "while" | "debug" | "private" | "public" | "staticif" | "operator" | "other" = "other";
 
     constructor(prefix_tokens:Token[], start_token:Token|null, end_token:Token|null) {
         super();
@@ -461,6 +471,8 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
     return set;
 }
 
+
+
 /**
  * 
  * type [array] name [=] init
@@ -488,11 +500,7 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
 
             if (tokens[index]) {
                 if (tokens[index].is_identifier) {
-                    if (tokens[index].getText() == "array") {
-                        state = 3;
-                    } else {
-                        state = 2;
-                    }
+                    state = 2;
                 } else {
                     document.add_token_error(tokens[index], `wrong identifier name`);
                     break;
@@ -510,6 +518,8 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                     state = 4;
                 } else if (tokens[index].getText() == ",") {
                     break;
+                } else if (tokens[index].getText() == "[") {
+                    state = 3;
                 } else {
                     document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
                     break;
@@ -518,21 +528,29 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                 break;
             }
         } else if (state == 3) {
-            index++;
-            statement.array_token = token;
+            const result = parse_line_index_expr(document, tokens, index, false);
+            index = result.index;
+            statement.size_expr = result.expr;
+            
             statement.is_array = true;
 
+            // if (tokens[index]) {
+            //     if (tokens[index].is_identifier) {
+            //         state = 2;
+            //     } else {
+            //         document.add_token_error(tokens[index], `wrong identifier name`);
+            //         break;
+            //     }
+            // } else {
+            //     document.add_token_error(token, `name not declared`);
+            //     break;
+            // }
             if (tokens[index]) {
-                if (tokens[index].is_identifier) {
-                    state = 2;
-                } else {
-                    document.add_token_error(tokens[index], `wrong identifier name`);
+                if (tokens[index].getText() == ",") {
                     break;
                 }
-            } else {
-                document.add_token_error(token, `name not declared`);
-                break;
             }
+            state = 6;
         } else if (state == 4) {
             index++;
 
@@ -553,6 +571,16 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
             statement.expr = result.expr;
 
             break;
+        } else if (state == 6) {
+            index++;
+
+            document.add_token_error(token, `error statement array expression token '${token.getText()}'`);
+
+            if (tokens[index]) {
+                if (tokens[index].getText() == ",") {
+                    break;
+                }
+            }
         }
     }
     return {
@@ -697,6 +725,7 @@ export function parse_segement_member(document: Document, tokens: Token[]) {
             index = result.index;
             const other_member:zinc.Member = new zinc.Member(document);
             other_member.with(result.expr);
+            other_member.start_token = result.expr.name;
             mems.push(other_member);
             
             const next_token = get_next_token(tokens, index);
@@ -851,21 +880,31 @@ export function parse_block_library(document: Document, tokens: Token[]) {
     return library;
 }
 
+
 export function parse_block_interface(document: Document, tokens: Token[]) {
     const inter = new zinc.Interface(document);
-
+    
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
         if (state == 0) {
+            index++;
             if (text == "interface") {
                 inter.start_token = token;
 
-                state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `interface name is undefined`);
+                    break;
+                }
             } else if (text == "private") {
                 inter.visible = token;
                 state = 2;
@@ -877,49 +916,160 @@ export function parse_block_interface(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
+            index++;
             if (token.is_identifier) {
                 inter.name = token;
-                state = 3;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "extends") {
+                        state = 3;
+                    } else if (next_token_text == "[") {
+                        state = 7;
+                    } else if (next_token_text == "[]") {
+                        state = 10;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal interface identifier '${text}'`);
                 break;
             }
         } else if (state == 2) {
+            index++;
             if (text == "interface") {
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "extends") {
-                state = 4;
-                if (!inter.extends) {
-                    inter.extends = [];
+                inter.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `interface name is undefined`);
+                    break;
                 }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 3) {
+            index++;
+  
+            
+            if (!inter.extends) {
+                inter.extends = [];
+            }
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 4;
+            } else {
+                document.add_token_error(token, `interface name without inheritance`);
+                break;
+            }
         } else if (state == 4) {
+            index++;
             if (token.is_identifier) {
                 inter.extends!.push(token);
-                state = 5;
+                
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == ",") {
+                        state = 5;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `inheriting illegal interface identifiers '${text}'`);
                 break;
             }
         } else if (state == 5) {
-            if (text == ",") {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
                 state = 4;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `interface name without inheritance`);
                 break;
             }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error interface token '${text}'`);
             break;
+        } else if (state == 7) { // [size] ===>  '['
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    // 赋值一个为null的Value对象表示不声明的结构数组
+                    inter.index_expr = new Value();
+                    state = 9;
+                } else {
+                    state = 8;
+                }
+            } else {
+                document.add_token_error(token, `no available definition for interface size`);
+                break;
+            }
+        } else if (state == 8) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            inter.index_expr = result.expr;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    state = 9;
+                } else {
+                    document.add_token_error(token, `missing token ']'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing token ']'`);
+                break;
+            }
+        } else if (state == 9) { // [size] ===>  ']'
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
+        } else if (state == 10) {
+            index++;
+
+            // 赋值一个为null的Value对象表示不声明的结构数组
+            inter.index_expr = new Value();
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
         }
+
+        
     }
 
     return inter;
@@ -928,17 +1078,26 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
     const struct = new zinc.Struct(document);
 
     let state = 0;
-    for (let index = 0; index < tokens.length; index++) {
+    let index = 0;
+    while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
+            index++;
             continue;
         }
         const text = token.getText();
         if (state == 0) {
+            index++;
             if (text == "struct") {
                 struct.start_token = token;
 
-                state = 1;
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `struct name is undefined`);
+                    break;
+                }
             } else if (text == "private") {
                 struct.visible = token;
                 state = 2;
@@ -950,52 +1109,161 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
+            index++;
             if (token.is_identifier) {
                 struct.name = token;
-                state = 3;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "extends") {
+                        state = 3;
+                    } else if (next_token_text == "[") {
+                        state = 7;
+                    } else if (next_token_text == "[]") {
+                        state = 10;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `illegal struct identifier '${text}'`);
                 break;
             }
         } else if (state == 2) {
+            index++;
             if (text == "struct") {
                 struct.start_token = token;
 
-                state = 1;
-            } else {
-                document.add_token_error(token, `error token '${text}'`);
-                break;
-            }
-        } else if (state == 3) {
-            if (text == "extends") {
-                state = 4;
-                if (!struct.extends) {
-                    struct.extends = [];
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    state = 1;
+                } else {
+                    document.add_token_error(token, `struct name is undefined`);
+                    break;
                 }
             } else {
                 document.add_token_error(token, `error token '${text}'`);
                 break;
             }
+        } else if (state == 3) {
+            index++;
+  
+            
+            if (!struct.extends) {
+                struct.extends = [];
+            }
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 4;
+            } else {
+                document.add_token_error(token, `struct name without inheritance`);
+                break;
+            }
         } else if (state == 4) {
+            index++;
             if (token.is_identifier) {
                 struct.extends!.push(token);
-                state = 5;
+                
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    if (next_token.getText() == ",") {
+                        state = 5;
+                    } else {
+                        state = 6;
+                    }
+                } else {
+                    break;
+                }
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `inheriting illegal struct identifiers '${text}'`);
                 break;
             }
         } else if (state == 5) {
-            if (text == ",") {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
                 state = 4;
             } else {
-                document.add_token_error(token, `error token '${text}'`);
+                document.add_token_error(token, `struct name without inheritance`);
                 break;
             }
-        } else {
-            document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) {
+            index++;
+            document.add_token_error(token, `error struct token '${text}'`);
             break;
+        } else if (state == 7) { // [size] ===>  '['
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    // 赋值一个为null的Value对象表示不声明的结构数组
+                    struct.index_expr = new Value();
+                    state = 9;
+                } else {
+                    state = 8;
+                }
+            } else {
+                document.add_token_error(token, `no available definition for struct size`);
+                break;
+            }
+        } else if (state == 8) {
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            struct.index_expr = result.expr;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "]") {
+                    state = 9;
+                } else {
+                    document.add_token_error(token, `missing token ']'`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing token ']'`);
+                break;
+            }
+        } else if (state == 9) { // [size] ===>  ']'
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
+        } else if (state == 10) {
+            index++;
+
+            // 赋值一个为null的Value对象表示不声明的结构数组
+            struct.index_expr = new Value();
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "extends") {
+                    state = 3;
+                } else {
+                    state = 6;
+                }
+            } else {
+                break;
+            }
         }
+        
     }
+
 
     return struct;
 }
@@ -1255,6 +1523,8 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
                 const next_token_text = next_token.getText();
                 if (next_token_text == "->") {
                     state = 4;
+                } else if (next_token_text == "=") {
+                    state = 6;
                 } else {
                     document.add_token_error(next_token, `missing keyword '->'`);
                     break;
@@ -1268,12 +1538,37 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
             index = result.index;
             func.with(result.expr);
 
-            state = 5;
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == "=") {
+                    state = 6;
+                } else {
+                    state = 5;
+                }
+            } else {
+                // 可以省略返回值声明
+                break;
+            }
         } else if (state == 5) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 6) { // defaults
+            index++;
+            
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                state = 7;
+            } else {
+                document.add_token_error(token, `missing defaults value`);
+                break;
+            }
+        } else if (state == 7) { // defaults
+            const result = parse_line_expr(document, tokens, index);
+            index = result.index;
+            func.defaults = result.expr;
 
-            break;
+            state = 5;
         }
     }
 
@@ -1301,6 +1596,110 @@ export function parse_block_if(document: Document, tokens: Token[]) {
             index++;
             if (text == "if") {
                 ifs.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "(") {
+                        state = 1;
+                    } else {
+                        document.add_token_error(next_token, `error if expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'if'`);
+                break;
+            }
+        } else if (state == 1) {
+            index++;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    document.add_token_error(next_token, `if expression missing condition`);
+                    state = 3;
+                } else {
+                    state = 2;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 2) {
+            const result = parse_line_expr(document, tokens, index);
+            ifs.expr = result.expr;
+            index = result.index;
+
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                const next_token_text = next_token.getText();
+                if (next_token_text == ")") {
+                    state = 3;
+                } else {
+                    document.add_token_error(next_token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing ')' token`);
+                break;
+            }
+        } else if (state == 3) {
+            index++;
+
+            state = 4;
+        } else if (state == 4) {
+            index++;
+            document.add_token_error(token, `error if token '${text}'`);
+            break;
+        }
+
+    }
+
+    return ifs;
+}
+export function parse_block_static_if(document: Document, tokens: Token[]) {
+    const ifs = new zinc.StaticIf(document);
+
+    let state = -1;
+    let index = 0
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == -1) {
+            index++;
+            if (text == "static") {
+                ifs.start_token = token;
+
+                const next_token = get_next_token(tokens, index);
+                if (next_token) {
+                    const next_token_text = next_token.getText();
+                    if (next_token_text == "if") {
+                        state = 0;
+                    } else {
+                        document.add_token_error(next_token, `error if expression`);
+                        break;
+                    }
+                } else {
+                    document.add_token_error(token, `error if expression`);
+                    break;
+                }
+            } else {
+                document.add_token_error(token, `missing keyword 'static'`);
+                break;
+            }
+        } else if (state == 0) {
+            index++;
+            if (text == "if") {
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
@@ -1690,7 +2089,7 @@ export function parse_block_for(document: Document, tokens: Token[]) {
             const zoom = parse_line_expr(document, layers[0].tokens, 0).expr;
             fors.expr = zoom;
         } else if (layers.length == 3) {
-            const statement1 = parse_segement_statement(document, layers[0].tokens, 0).expr;
+            const statement1 = parse_segement_set(document, layers[0].tokens);
             const expr2 = parse_line_expr(document, layers[1].tokens, 0).expr;
             const statement3 = parse_segement_set(document, layers[2].tokens);
 
@@ -1812,32 +2211,43 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
         if (object instanceof ZincComment) {
             const node = parse_line_comment(document, object.tokens);
             parent_node.add_node(node);
+            node.end_token = node.start_token;
         } else if (object instanceof ZincSegement) {
             if (object.type == "break") {
                 const node = parse_segement_break(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "return") {
                 const node = parse_line_return(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "type") {
                 const node = parse_line_type(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "call") {
                 const node = parse_segement_call(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "set") {
                 const node = parse_segement_set(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "member") {
                 const node = parse_segement_member(document, object.tokens);
                 if (Array.isArray(node)) {
-                    node.forEach(x => parent_node.add_node(x));
+                    node.forEach(x => {
+                        parent_node.add_node(x);
+                        x.end_token = object.end_token;
+                    });
                 } else {
                     parent_node.add_node(node);
+                    node.end_token = object.end_token;
                 }
             } else if (object.type == "method") {
                 const node = parse_block_method(document, object.tokens);
                 parent_node.add_node(node);
+                node.end_token = object.end_token;
             } else if (object.type == "other") {
                 
             }
@@ -1857,6 +2267,9 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
             } else if (object.type == "method") {
                 node = parse_block_method(document, object.tokens);
+                parent_node.add_node(node);
+            } else if (object.type == "staticif") {
+                node = parse_block_static_if(document, object.tokens);
                 parent_node.add_node(node);
             } else if (object.type == "if") {
                 node = parse_block_if(document, object.tokens);
@@ -1884,6 +2297,7 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
             }
             if (node) {
+                node.end_token = object.end_token;
                 object.children.forEach(child => {
                     handing(child, node);
                 });
@@ -1904,7 +2318,6 @@ export function parse_zinc(document:Document, tokens:Token[]) {
     traverse_and_confirm_zinc_type(layer_objects);
     
     parse_zinc_with_type(document, zinc_node, layer_objects);
-    console.log(zinc_node);
     
     
     return zinc_node;

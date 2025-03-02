@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { GlobalContext, NodeAst } from '../jass/parser-vjass';
 
 interface FoldingOption {
   start:string|RegExp;
@@ -13,61 +14,6 @@ const FoldingOptions:FoldingOption[] = [
     kind: vscode.FoldingRangeKind.Region
   },
   {
-    start: "^\\s*globals\\b",
-    end: "^\\s*endglobals\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*((private|public|static)\\s+)?function\\b",
-    end: "^\\s*endfunction\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*if\\b",
-    end: "^\\s*elseif\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*if\\b",
-    end: "^\\s*else\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*if\\b",
-    end: "^\\s*endif\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*else\\b",
-    end: "^\\s*endif\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*elseif\\b",
-    end: "^\\s*else\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*elseif\\b",
-    end: "^\\s*endif\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*elseif\\b",
-    end: "^\\s*elseif\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*loop\\b",
-    end: "^\\s*endloop\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*(?:library|library_once)\\b",
-    end: "^\\s*endlibrary\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
     start: "^\\s*/\\*",
     end: "^\\s*\\*/",
     kind: vscode.FoldingRangeKind.Comment
@@ -78,28 +24,8 @@ const FoldingOptions:FoldingOption[] = [
     kind: vscode.FoldingRangeKind.Comment
   },
   {
-    start: "^\\s*scope\\b",
-    end: "^\\s*endscope\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
     start: "^\\s*module\\b",
     end: "^\\s*endmodule\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*((private|public)\\s+)?struct\\b",
-    end: "^\\s*endstruct\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*((private|public)\\s+)?interface\\b",
-    end: "^\\s*endinterface\\b",
-    kind: vscode.FoldingRangeKind.Imports
-  },
-  {
-    start: "^\\s*((private|public|static|stub)\\s+)?method\\b",
-    end: "^\\s*endmethod\\b",
     kind: vscode.FoldingRangeKind.Imports
   },
   {
@@ -121,11 +47,6 @@ const FoldingOptions:FoldingOption[] = [
     start: "^\\s*//!\\s+inject\\b",
     end: "^\\s*//!\\s+endinject\\b",
     kind: vscode.FoldingRangeKind.Comment
-  },
-  {
-    start: "{\\s*$|{\\s*//.*$",
-    end: "^\\s*}",
-    kind: vscode.FoldingRangeKind.Imports
   }
 ];
 
@@ -224,3 +145,39 @@ class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 }
 
 vscode.languages.registerFoldingRangeProvider("jass", new FoldingRangeProvider);
+class ExFoldingRangeProvider implements vscode.FoldingRangeProvider {
+
+  provideFoldingRanges(document: vscode.TextDocument, context: vscode.FoldingContext, token: vscode.CancellationToken): vscode.ProviderResult<vscode.FoldingRange[]> {
+
+    const foldings = new Array<vscode.FoldingRange>();
+
+
+    const doc = GlobalContext.get(document.uri.fsPath);
+    if (doc) {
+      const handing = (node:NodeAst, layer_count:number = 0) => {
+        if (node.end.line - 1 > node.start.line) {
+          const folding = new vscode.FoldingRange(node.start.line, node.end.line - 1);
+          foldings.push(folding);
+        }
+        node.children.forEach(child => handing(child));
+      };
+      if (doc.program) {
+        doc.program.children.forEach(child => {
+          handing(child);
+        });
+      }
+      if (doc.zinc_nodes) {
+        doc.zinc_nodes.forEach(zinc_node => {
+          zinc_node.children.forEach(child => {
+            handing(child);
+          });
+        });
+      }
+    }
+
+    return foldings;
+  }
+
+}
+
+vscode.languages.registerFoldingRangeProvider("jass", new ExFoldingRangeProvider);

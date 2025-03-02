@@ -49,8 +49,8 @@ class StateType {
     public static BlockComment: number = symbol_state("/*");
     public static BlockCommentPre: number = symbol_state("/**");
     public static BlockCommentEnd: number = symbol_state("/**/");
-    public static Bracket: number = symbol_state("[]");
-    public static BracketEq: number = symbol_state("[]=");
+    // public static Bracket: number = symbol_state("[]");
+    // public static BracketEq: number = symbol_state("[]=");
     public static ZincReturns: number = symbol_state("->");
     public static SubAsignment: number = symbol_state("-=");
     public static AddAsignment: number = symbol_state("+=");
@@ -232,18 +232,21 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 }
             } else if (char == "[") {
-                if (is_match("]")) {
-                    return {
-                        state: StateType.Bracket,
-                        length: 1
-                    }
-                } else {
-                    return {
-                        token: new_token(TokenType.Operator),
-                        length: 0
-                    }
-                }
-                
+                // if (is_match("]")) {
+                //     return {
+                //         state: StateType.Bracket,
+                //         length: 1
+                //     }
+                // } else {
+                //     return {
+                //         token: new_token(TokenType.Operator),
+                //         length: 0
+                //     }
+                // }
+                return {
+                    token: new_token(TokenType.Operator),
+                    length: 0
+                };
             } else if (char == "+") {
                 if (next_char == "=") {
                     return {
@@ -632,27 +635,27 @@ export function token_handle(document:Document, line: number, character: number,
                 length: 0
             }
             break;
-        case StateType.Bracket:
-            if (is_match("=")) {
-                return {
-                    state: StateType.BracketEq,
-                    length: length + 1
-                }
-            } else {
-                return {
-                    token: new_token(TokenType.Operator),
-                    state: StateType.Nil,
-                    length: 0
-                }
-            }
-        case StateType.BracketEq:
-            return {
-                token: new_token(TokenType.Operator),
-                state: StateType.Nil,
-                length: 0
-            }
+        // case StateType.Bracket:
+        //     if (is_match("=")) {
+        //         return {
+        //             state: StateType.BracketEq,
+        //             length: length + 1
+        //         }
+        //     } else {
+        //         return {
+        //             token: new_token(TokenType.Operator),
+        //             state: StateType.Nil,
+        //             length: 0
+        //         }
+        //     }
+        // case StateType.BracketEq:
+        //     return {
+        //         token: new_token(TokenType.Operator),
+        //         state: StateType.Nil,
+        //         length: 0
+        //     }
 
-            break;
+        //     break;
 
         default:
             return undefined

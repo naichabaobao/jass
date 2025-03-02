@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.26",
+  "version": "1.8.29",
   "keywords": [
     "jass",
     "vjass",
@@ -39,54 +39,24 @@
           "items": {
             "type": "string"
           },
-          "description": "(Test) '.lua' file library"
+          "description": "(Deprecation) '.lua' file library"
         },
         "jass.support.lua": {
           "type": "boolean",
           "default": false,
-          "description": "(Test) Support lua, Cooperate with 'jass.lua.dependents' consumption"
+          "description": "(Deprecation) Support lua, Cooperate with 'jass.lua.dependents' consumption"
         },
         "jass.cjass.dependents": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "cjass standard library"
+          "description": "(Deprecation) cjass standard library"
         },
         "jass.support.cjass": {
           "type": "boolean",
           "default": false,
-          "description": "support cjass(not recommended)"
-        },
-        "jass.support.zinc": {
-          "type": "boolean",
-          "default": true,
-          "description": "support zinc\n(Whether to support Zinc)"
-        },
-        "jass.only": {
-          "type": "boolean",
-          "default": false,
-          "description": "only jass model,It is not recommended to use when diagnostic is on"
-        },
-        "jass.info-style": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) Styles with more information"
-        },
-        "jass.support.mark": {
-          "type": "boolean",
-          "default": true,
-          "description": "Provide default 'mark' prompts for Warcraft"
-        },
-        "jass.support.string": {
-          "type": "boolean",
-          "default": true,
-          "description": "String prompt support"
-        },
-        "jass.support.number": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) number prompt support"
+          "description": "(Deprecation) support cjass(not recommended)"
         },
         "jass.diagnostic": {
           "type": "boolean",
@@ -128,6 +98,8 @@
     "enableProposedApi": false,
     "codeLensProvider": {
       "resolveProvider": "true"
+    },
+    "menus": {
     }
   },
   "capabilities": {

@@ -1,9 +1,13 @@
 
 
 
-// import * as vscode from 'vscode';
+import * as vscode from 'vscode';
 
-// import { AllKeywords } from '../jass/keyword';
+
+
+import { AllKeywords } from '../jass/keyword';
+import { GlobalContext } from '../jass/parser-vjass';
+import * as vjass_ast from "../jass/parser-vjass";
 // import { Options } from './options';
 // import data, { DataGetter } from "./data";
 // import { compare } from '../tool';
@@ -305,88 +309,85 @@
 
 // }
 
-// class MarkHoverProvider implements vscode.HoverProvider {
+class MarkHoverProvider implements vscode.HoverProvider {
 
-//   // 规定标识符长度
-//   private _maxLength = 526;
+  // 规定标识符长度
+  private _maxLength = 526;
 
-//   private isNumber = function (val: string) {
-//     var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-//     var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-//     if (regPos.test(val) || regNeg.test(val)) {
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
+  private isNumber = function (val: string) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if (regPos.test(val) || regNeg.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-//   provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
 
-//     const key = document.getText(document.getWordRangeAtPosition(position));
+    const key = document.getText(document.getWordRangeAtPosition(position));
+    // /(?:'(?:\da-zA-Z)+')|(?:".+")|(?:\d+)|(?:.+)/
 
-//     if (key.length > this._maxLength) {
-//       return null;
-//     }
+    if (key.length > this._maxLength) {
+      return null;
+    }
+    if (AllKeywords.includes(key)) {
+      return null;
+    }
+    console.log(key, "hover");
+    
+    // const type = Types.find(type => type === key);
+    // if (type) {
+    //   const markdownString = new vscode.MarkdownString().appendCodeblock(type);
+    //   markdownString.appendText("\n");
+    //   markdownString.appendText(getTypeDesc(type));
+    //   return new vscode.Hover(markdownString);
+    // }
 
-//     if (this.isNumber(key)) {
-//       return null;
-//     }
+    const fsPath = document.uri.fsPath;
+    // parseContent(fsPath, document.getText());
 
-//     if (AllKeywords.includes(key)) {
-//       return null;
-//     }
+    const hovers: vscode.MarkdownString[] = [];
+    GlobalContext.keys.forEach(k => {
+        const program = GlobalContext.get(k);
+        if (program) {
+          if (program.is_special) {
+            const value_node = program.program;
+            if (value_node) {
+              value_node.children.forEach(x => {
+                
+                if (x instanceof vjass_ast.JassDetail) {
+                  if (x.match_key(key)) {
+                    const ms = new vscode.MarkdownString();
+                    ms.baseUri = vscode.Uri.file(x.document.filePath);
+                    ms.appendMarkdown(`**>_${x.document.filePath}**`);
+                    ms.appendText("\n");
+                    if (x.is_deprecated) {
+                      ms.appendMarkdown(`---***${x.label}***---`);
+                    } else {
+                      ms.appendMarkdown(`***${x.label}***`);
+                    }
+                    ms.appendText("\n");
+                    ms.appendCodeblock(x.label);
+                    x.description.forEach(desc => {
+                      ms.appendMarkdown(desc);
+                      ms.appendText("\n");
+                    });
+                  
+                    hovers.push(ms);
+                  }
+                }
+              });
+            }
+          }
+        }
+      });
 
-//     // const type = Types.find(type => type === key);
-//     // if (type) {
-//     //   const markdownString = new vscode.MarkdownString().appendCodeblock(type);
-//     //   markdownString.appendText("\n");
-//     //   markdownString.appendText(getTypeDesc(type));
-//     //   return new vscode.Hover(markdownString);
-//     // }
+    return new vscode.Hover([...hovers]);
+  }
 
-//     const fsPath = document.uri.fsPath;
-//     // parseContent(fsPath, document.getText());
-
-//     const hovers: vscode.MarkdownString[] = [];
-
-//     if (Options.isSupportMark) {
-
-//       const mark = lexically(new Document(document.uri.fsPath, document.lineAt(position.line).text)).find(mark => {
-//         return mark.isMark() && mark.loc.start.position <= position.character && mark.loc.end.position >= position.character;
-//       });
-
-
-
-//       if (mark) {
-//         const markValue = mark.value();
-
-//         const comsumerTargetMark = [...ConfigPovider.instance().getPresets(), ...PluginDefaultConfig.presets ?? []].find(preset => `'${preset.code}'` == markValue);
-
-
-//         if (comsumerTargetMark) {
-//           const ms = new vscode.MarkdownString();
-//           ms.appendMarkdown(`***${comsumerTargetMark.name}***`);
-//           ms.appendText("\n");
-//           ms.appendMarkdown(comsumerTargetMark?.descript ?? "");
-//           ms.appendText("\n");
-//           ms.appendCodeblock(`'${comsumerTargetMark.code}'`);
-
-//           ms.appendMarkdown("***@type***(" + (comsumerTargetMark.type ? comsumerTargetMark.type : "未知") + ")")
-//           ms.appendMarkdown("  \n")
-//           ms.appendMarkdown("***@race***(" + (comsumerTargetMark.race ? comsumerTargetMark.race : "未知") + ")")
-//           ms.appendMarkdown("  \n")
-//           ms.appendMarkdown("***@kind***(" + (comsumerTargetMark.kind ? comsumerTargetMark.kind : "未知") + ")");
-//           hovers.push(ms);
-//         }
-//       }
-
-
-//     }
-
-//     return new vscode.Hover([...hovers]);
-//   }
-
-// }
+}
 
 
 // class StringHoverProvider implements vscode.HoverProvider {
@@ -479,6 +480,6 @@
 
 // vscode.languages.registerHoverProvider("jass", new HoverProvider());
 
-// vscode.languages.registerHoverProvider("jass", new MarkHoverProvider());
+vscode.languages.registerHoverProvider("jass", new MarkHoverProvider());
 
 // vscode.languages.registerHoverProvider("jass", new StringHoverProvider());
