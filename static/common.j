@@ -4630,14 +4630,14 @@ native BlzGroupGetSize takes group whichGroup returns integer
 // @version 1.33
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
-// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
-// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
@@ -5540,12 +5540,12 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // 新建单位(指定单位类型及坐标) [R]
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
 // 新建单位(指定单位名称及坐标) [R]
-// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定单位类型及点) [R]
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
 // 新建单位(指定单位名称及点) [R]
-// @param unitname 单位名称，不区分大小写，可在 common.ai 和 jass.config.json 文件找到
+// @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 // 不是所有单位都有尸体
@@ -5997,7 +5997,7 @@ native IssueInstantTargetOrder takes unit whichUnit, string order, widget target
 // @param order 技能命令ID可在 记录物编的文件 找到
 native IssueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 发布建造命令(指定坐标) [R]
-// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 和 jass.config.json 文件找到
+// @param unitToBuild 建筑物的单位名称字符串，可在 common.ai 和 记录物编的文件 找到
 native IssueBuildOrder takes unit whichPeon, string unitToBuild, real x, real y returns boolean
 // 按ID发布建造命令(指定坐标) [R]
 // @param unitId 单位类型，可在 记录物编的文件 找到
