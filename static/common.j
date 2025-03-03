@@ -7349,7 +7349,7 @@ native GetDialogueTextKey takes sound soundHandle returns string
 //
 
 // 新建天气效果 [R]
-// @param effectID 天气特效类型，可在 jass.config.json 找到
+// @param effectID 天气特效类型，可在 记录物编的文件 找到
 native AddWeatherEffect takes rect where, integer effectID returns weathereffect
 // 删除天气效果
 native RemoveWeatherEffect takes weathereffect whichEffect returns nothing
