@@ -1744,7 +1744,7 @@ export class GlobalVariable extends NodeAst {
     expr: Zoom | null = null;
 
     public is_array: boolean = false;
-
+    public size_expr:IndexExpr|null = null;
     
     public get is_constant() : boolean {
         return this.qualifier !== null && this.qualifier.getText() == "constant";
@@ -1762,9 +1762,10 @@ export class GlobalVariable extends NodeAst {
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
         const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
         const type_string = this.type ? this.type.getText() + " " : "";
-        const array_string = this.is_array ? "array " : "";
         const name_string = this.name ? this.name.getText() + " " : "";
-        return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}`;
+        const array_string = this.array_token ?  "array " : "";
+        const size_string = this.size_expr ? this.size_expr.to_string() : "";
+        return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}${size_string}`;
     }
 
     public with(statement: Statement | Modifier) {
@@ -1773,6 +1774,7 @@ export class GlobalVariable extends NodeAst {
             this.name = statement.name;
             this.array_token = statement.array_token;
             this.is_array = this.array_token != null;
+            this.size_expr = statement.size_expr;
             this.expr = statement.expr;
         } else if (statement instanceof Modifier) {
             this.visible = statement.visible;
@@ -1783,8 +1785,28 @@ export class GlobalVariable extends NodeAst {
 }
 
 export class Member extends GlobalVariable {
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const type_string = this.type ? this.type.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const array_string = this.array_token ?  "array " : "";
+        const size_string = this.size_expr ? this.size_expr.to_string() : "";
+        return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}${size_string}`;
+    }
 }
 export class Local extends GlobalVariable {
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
+        const qualifier_string = this.qualifier ? this.qualifier.getText() + " " : "";
+        const type_string = this.type ? this.type.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() + " " : "";
+        const array_string = this.array_token ?  "array " : "";
+        const size_string = this.size_expr ? this.size_expr.to_string() : "";
+        return `${visible_string}${modifier_string}${qualifier_string}local ${type_string}${array_string}${name_string}${size_string}`;
+    }
 }
 type Zoom = BinaryExpr | UnaryExpr | Value | VariableName | PriorityExpr | FunctionExpr;
 
@@ -2925,6 +2947,8 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
             if (tokens[index]) {
                 if (tokens[index].getText() == "=") {
                     state = 4;
+                } else if (tokens[index].getText() == "[") {
+                    state = 7;
                 } else {
                     document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
                     break;
@@ -2966,6 +2990,20 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
         } else if (state == 6) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
+        } else if (state == 7) { // 数组size
+            const result = parse_line_index_expr(document, tokens, index, true);
+            index = result.index;
+            statement.size_expr = result.expr;
+            
+            if (statement.is_array == false) {
+                document.add_token_error(token, `declaring variable size requires the 'array' keyword`);
+            }
+            
+            state = 8;
+        } else if (state == 8) {
+            index++;
+            document.add_token_error(token, `array variable declaration cannot be initialized through assignment`);
+            break;
         }
     }
     return {
@@ -3748,10 +3786,17 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
                             line: e_line
                         });
                     } else if (memberRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "member",
-                            line: e_line
-                        });
+                        if (node.parent) {
+                            node.body.push({
+                                type: "member",
+                                line: e_line
+                            });
+                        } else {
+                            node.body.push({
+                                type: "other",
+                                line: e_line
+                            });
+                        }
                     } else {
                         node.body.push({
                             type: "other",
@@ -3823,8 +3868,12 @@ const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | u
                     line: e_line
                 });
             } else if (memberRegExp.test(text_line.text)) {
+                // root_node.body.push({
+                //     type: "member",
+                //     line: e_line
+                // });
                 root_node.body.push({
-                    type: "member",
+                    type: "other",
                     line: e_line
                 });
             } else {

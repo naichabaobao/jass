@@ -37,7 +37,7 @@
         "jass.lua.dependents": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "(Deprecation) string"
           },
           "description": "(Deprecation) '.lua' file library"
         },

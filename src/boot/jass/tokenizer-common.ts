@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, JassDetail, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, JassDetail, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
 
@@ -1335,9 +1335,15 @@ export class Document {
 
             node.data = method;
         } else if (node.type == "member") {
-            const member = parse_line_member(this, node.tokens);
-
-            node.data = member;
+            if (node.parent && node.parent.type == "globals") {
+              const member = parse_line_global(this, node.tokens);
+  
+              node.data = member;
+            } else {
+              const member = parse_line_member(this, node.tokens);
+  
+              node.data = member;
+            }
         } else if (node.type == "exitwhen") {
             const exitwhen = parse_line_exitwhen(this, node.tokens);
 
