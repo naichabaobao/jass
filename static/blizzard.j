@@ -66,7 +66,7 @@ globals
     constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
-    // 迷雾等待最小间隔，默认0.10
+    // 等待最小间隔，默认0.10
     constant real bj_WAIT_FOR_COND_MIN_INTERVAL = 0.10
     // 轮询间隔（游戏时间），默认0.10
     constant real bj_POLLED_WAIT_INTERVAL = 0.10
@@ -803,9 +803,9 @@ globals
 
     // Corpse creation styles
 
-    // 尸体类型 骨头
+    // 尸体类型 肉态
     constant integer bj_CORPSETYPE_FLESH = 0
-    // 尸体类型 血肉
+    // 尸体类型 骨态
     constant integer bj_CORPSETYPE_BONE = 1
 
     // Elevator pathing-blocker destructable code
