@@ -123,7 +123,7 @@ globals
     // 作弊触发器 全图启用黑色阴影
     trigger           bj_debug_BlackMaskTrig
     // 作弊触发器 播报游戏难度
-    trigger           bj_debugDifficultyTrig
+    trigger bj_debugDifficultyTrig
     // 作弊触发器 死亡之指状态及播报，每位玩家一个
     trigger  array    bj_debugFingerOfDeathTrig
     // 作弊触发器 死亡之指触发器动作--立即杀死单位，每位玩家一个
@@ -326,7 +326,7 @@ function DebugCamField takes camerafield whichField, integer cheatLength, real d
     if param == "" then
         set value = defaultValue
     endif
-    if (whichField == CAMERA_FIELD_FARZ) and (value <= bj_CAMERA_MIN_FARZ) then
+    if ((whichField == CAMERA_FIELD_FARZ) and (value <= bj_CAMERA_MIN_FARZ)) then
         return
     endif
     call SetCameraFieldForPlayer(GetTriggerPlayer(), whichField, value, bj_DEBUG_CAMFIELD_SPEED)
