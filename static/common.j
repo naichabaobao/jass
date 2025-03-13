@@ -194,7 +194,7 @@ type image extends handle
 // 地表纹理变化
 type ubersplat extends handle
 // 哈希表
-type hashtable extends 
+type hashtable extends agent
 // UI框架/控件句柄
 type framehandle extends handle
 // 原生 UI框架/控件句柄 类型
