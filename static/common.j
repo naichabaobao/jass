@@ -5557,7 +5557,7 @@ native KillUnit takes unit whichUnit returns nothing
 // 删除单位，删除不会留下尸体
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
-// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
+// 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]
