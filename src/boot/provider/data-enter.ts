@@ -13,6 +13,7 @@ import { find_error } from './diagnostic-provider';
 import { change_document_item, delete_document_item, init_document_item, rename_document_item } from './completion-provider-ex';
 import { change_document_hover, delete_document_hover, init_document_hover, rename_document_hover } from './hover-provider-ex';
 import { change_document_difinition, delete_document_difinition, init_document_difinition, rename_document_difinition } from './definition-provider-ex';
+import { change_type_hierarchy, delete_type_hierarchy, init_type_hierarchy, rename_type_hierarchy } from './type-hierarchy-provider';
 
 export function jass_config_json_path() {
 	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
@@ -112,6 +113,7 @@ vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent)
 			change_document_item(event.document);
 			change_document_hover(event.document);
 			change_document_difinition(event.document);
+			change_type_hierarchy(event.document.uri.fsPath);
 		});
 		update_map.set(event.document.uri.fsPath, subject);
 	}
@@ -130,6 +132,7 @@ vscode.workspace.onDidDeleteFiles((event) => {
 		delete_document_item(uri.fsPath);
 		delete_document_hover(uri.fsPath);
 		delete_document_difinition(uri.fsPath);
+		delete_type_hierarchy(uri.fsPath);
 
 		update_map.get(uri.fsPath)?.complete();
 		update_map.delete(uri.fsPath);
@@ -144,6 +147,7 @@ vscode.workspace.onDidRenameFiles((event) => {
 		rename_document_item(uri.oldUri.fsPath, uri.newUri.fsPath);
 		rename_document_hover(uri.oldUri.fsPath, uri.newUri.fsPath);
 		rename_document_difinition(uri.oldUri.fsPath, uri.newUri.fsPath);
+		rename_type_hierarchy(uri.oldUri.fsPath, uri.newUri.fsPath);
 
 		if (update_map.has(uri.oldUri.fsPath)) {
 			update_map.set(uri.newUri.fsPath, update_map.get(uri.oldUri.fsPath)!);
@@ -173,6 +177,7 @@ vscode.workspace.onDidOpenTextDocument(event => {
 			init_document_item(file_path);
 			init_document_hover(file_path);
 			init_document_difinition(file_path);
+			init_type_hierarchy(file_path);
 		}
 	});
 	// console.log("include_paths()" + include_paths());
@@ -187,6 +192,7 @@ vscode.workspace.onDidOpenTextDocument(event => {
 			init_document_item(file_path);
 			init_document_hover(file_path);
 			init_document_difinition(file_path);
+			init_type_hierarchy(file_path);
 		}
 	});
 	console.timeEnd("init all file parse");

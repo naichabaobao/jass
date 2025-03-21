@@ -1,4 +1,4 @@
-// import * as vscode from "vscode";
+import * as vscode from "vscode";
 // import { Struct } from "../jass/ast";
 // import { tokenize } from "../jass/tokens";
 // import { DataGetter } from "./data";
@@ -97,3 +97,5 @@
 //         return builder.build();
 //     }
 // }(), legend);
+
+
