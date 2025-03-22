@@ -54,10 +54,56 @@ export class Context {
         const structs:(Struct|zinc.Struct)[] = [];
 
         this._documents.forEach(document => {
-            structs.push(...document.get_struct_by_name(name));
+            structs.push(...document.structs.filter(struct => struct.name && struct.name.getText() == name));
         });
 
         return structs;
+    }
+    public get_interface_by_name(name: string):(Interface|zinc.Interface)[] {
+        const interfaces:(Interface|zinc.Interface)[] = [];
+
+        this._documents.forEach(document => {
+            interfaces.push(...document.interfaces.filter(inter => inter.name && inter.name.getText() == name));
+        });
+
+        return interfaces;
+    }
+    public get_strcut_by_extends_name(name: string):(Struct|zinc.Struct)[] {
+        const structs:(Struct|zinc.Struct)[] = [];
+
+        this._documents.forEach(document => {
+            structs.push(...document.structs.filter(struct => struct.extends && struct.extends.length > 0 && struct.extends.map(extends_type_token => extends_type_token.getText()).includes(name)));
+        });
+
+        return structs;
+    }
+    public get_interface_by_extends_name(name: string):(Interface|zinc.Interface)[] {
+        const interfaces:(Interface|zinc.Interface)[] = [];
+
+        this._documents.forEach(document => {
+            interfaces.push(...document.interfaces.filter(struct => struct.extends && struct.extends.length > 0 && struct.extends.map(extends_type_token => extends_type_token.getText()).includes(name)));
+        });
+
+        return interfaces;
+    }
+
+    public get_structs():(Struct|zinc.Struct)[] {
+        const structs:(Struct|zinc.Struct)[] = [];
+
+        this._documents.forEach(document => {
+            structs.push(...document.structs);
+        });
+
+        return structs;
+    }
+    public get_interfaces():(Interface|zinc.Interface)[] {
+        const objects:(Interface|zinc.Interface)[] = [];
+
+        this._documents.forEach(document => {
+            objects.push(...document.interfaces);
+        });
+
+        return objects;
     }
 
     public get_function_set_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
@@ -377,7 +423,7 @@ export namespace zinc {
         }
     
         to_string():string {
-            return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+            return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
 
         /**
@@ -389,7 +435,7 @@ export namespace zinc {
     }
     export class Struct extends Interface {
         to_string():string {
-            return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+            return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
     }
     export class Func extends NodeAst {
@@ -853,7 +899,7 @@ export function parse_scope(document: Document, tokens: Token[]) {
 export class Interface extends NodeAst {
     public visible: "public" | "private" | null = null;
     public name: Token | null = null;
-    public extends: string[] | null = null;
+    public extends: Token[] | null = null;
 
     public get is_private():boolean {
         return !!this.visible && this.visible == "private";
@@ -863,7 +909,7 @@ export class Interface extends NodeAst {
     }
 
     to_string():string {
-        return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+        return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
     }
 }
 export function parse_interface(document: Document, tokens: Token[]) {
@@ -918,7 +964,7 @@ export function parse_interface(document: Document, tokens: Token[]) {
             }
         } else if (state == 4) {
             if (token.is_identifier) {
-                inter.extends!.push(text);
+                inter.extends!.push(token);
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -943,7 +989,7 @@ export class Struct extends Interface {
 
 
     to_string():string {
-        return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.join(", ") : ""}`
+        return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
     }
 
 }
@@ -999,7 +1045,7 @@ export function parse_struct(document: Document, tokens: Token[]) {
             }
         } else if (state == 4) {
             if (token.is_identifier) {
-                struct.extends!.push(text);
+                struct.extends!.push(token);
                 state = 5;
             } else {
                 document.add_token_error(token, `error token '${text}'`);

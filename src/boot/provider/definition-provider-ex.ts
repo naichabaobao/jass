@@ -68,6 +68,7 @@ class LocationDocument {
   public readonly membere_items:PackageLocation<vjass_ast.Member|vjass_ast.zinc.Member>[];
   public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageLocation<vjass_ast.Scope>[];
+  public readonly types_items:PackageLocation<vjass_ast.Type>[];
   // public readonly take_items:TakeCompletionItem[];
 
   constructor(program:vjass.Document) {
@@ -84,6 +85,7 @@ class LocationDocument {
     this.membere_items = this.program.members.map(node => LocationDocument.member_to_hover(node));
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
+    this.types_items = this.program.types.map(node => this.type_to_hover(node));
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -105,6 +107,11 @@ class LocationDocument {
   public static method_to_hover(func: vjass_ast.Method|vjass_ast.zinc.Method) {
     // @ts-ignore
     return this.native_to_hover(func) as PackageLocation<vjass_ast.Method|vjass_ast.zinc.Method>;
+  }
+  private type_to_hover(type: vjass_ast.Type) {
+    const item = new PackageLocation(type, vscode.Uri.file(type.document.filePath), new vscode.Range(new vscode.Position(type.start.line, type.start.position), new vscode.Position(type.end.line, type.end.position)));
+
+    return item;
   }
   private interface_to_hover(inter: vjass_ast.Interface|vjass_ast.zinc.Interface) {
     return this.struct_to_hover(inter) as PackageLocation<vjass_ast.Interface>;
@@ -317,8 +324,6 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
       locations.push(...wrap.document.native_items.filter(x => x.key == key));
       locations.push(...wrap.document.function_items.filter(x => x.key == key));
       locations.push(...wrap.document.global_variable_items.filter(x => x.key == key));
-      locations.push(...wrap.document.struct_items.filter(x => x.key == key));
-      locations.push(...wrap.document.interface_items.filter(x => x.key == key));
       locations.push(...wrap.document.library_items.filter(x => x.key == key));
       locations.push(...wrap.document.scope_items.filter(x => x.key == key));
       locations.push(...wrap.document.method_items.filter(x => x.key == key));
@@ -362,6 +367,45 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
 }());
 
+vscode.languages.registerTypeDefinitionProvider("jass", new class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
+  private _maxLength = 255;
+
+  private isNumber = function (val: string) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if (regPos.test(val) || regNeg.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  provideTypeDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+    const key = document.getText(document.getWordRangeAtPosition(position));
+
+    if (key.length > this._maxLength) {
+      return null;
+    }
+
+    if (this.isNumber(key)) {
+      return null;
+    }
+
+    if (AllKeywords.includes(key)) {
+      return null;
+    }
+
+    
+    const locations:vscode.Location[] = [];
+    
+    LocationManage.wraps.forEach(wrap => {
+      locations.push(...wrap.document.struct_items.filter(x => x.key == key));
+      locations.push(...wrap.document.interface_items.filter(x => x.key == key));
+      locations.push(...wrap.document.types_items.filter(x => x.key == key));
+    });
+
+    return locations;
+  }
+} ());
 
 
 

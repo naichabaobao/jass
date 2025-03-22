@@ -1,3 +1,9 @@
+#### 1.8.30
+- 增加TypeHierarchyProvider支持,需求vscode>=1.6,提供类型层级支持
+- 增加类型定义跳转
+- 修复vjass数组定义
+- 修复zinc for循环解析报错问题
+
 #### 1.8.29
 - 修复vjass变量数组定义
 
