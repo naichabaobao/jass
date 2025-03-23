@@ -2315,6 +2315,7 @@ export function parse_zinc(document:Document, tokens:Token[]) {
 
     const layer_objects = zinc_slice_layer(tokens);
     
+    
     traverse_and_confirm_zinc_type(layer_objects);
     
     parse_zinc_with_type(document, zinc_node, layer_objects);
