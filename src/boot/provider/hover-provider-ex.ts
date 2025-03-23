@@ -79,7 +79,7 @@ class HoverDocument {
     this.struct_items = this.program.structs.map(node => this.struct_to_hover(node));
     this.interface_items = this.program.interfaces.map(node => this.interface_to_hover(node));
     this.method_items = this.program.methods.map(node => HoverDocument.method_to_hover(node));
-    this.local_items = this.program.locals.map(node => this.local_to_hover(node));
+    this.local_items = this.program.locals.map(node => HoverDocument.local_to_hover(node));
     this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
     this.membere_items = this.program.members.map(node => HoverDocument.member_to_hover(node));
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
@@ -214,7 +214,7 @@ class HoverDocument {
 
     return item;
   }
-  private local_to_hover(object: vjass_ast.Local|vjass_ast.zinc.Member) {
+  public static local_to_hover(object: vjass_ast.Local|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
@@ -506,32 +506,59 @@ class HoverProvider implements vscode.HoverProvider {
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
         const target_position = new vjass.Position(position.line, position.character);
-        const push_take = (function_items:PackageHover<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
-          function_items.filter(x => {
-            return x.data.contains(target_position);
-          }).forEach(data => {
-            if (data.data.takes) {
-              data.data.takes.forEach(take => {
-                if (take.name && take.name.getText() == key) {
-                  hovers2.push(HoverDocument.take_to_hover(take));
-                }
-              });
-            }
-          });
+
+        const find_contains_func_and_method = (): PackageHover<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>[] => {
+          return [...wrap.document.method_items, ...wrap.document.function_items].filter(object => object.data.contains(target_position));
         };
-        const push_local = (local_items:PackageHover<vjass_ast.Local>[]) => {
-          local_items.filter(x => {
-            return x.data.parent && (x.data.parent instanceof vjass_ast.Func || x.data.parent instanceof vjass_ast.Method) && x.data.parent.contains(target_position);
-          }).forEach(data => {
-            if (data.key == key) {
-              hovers2.push(data);
-            }
-          });
-        };
+        const funcs = find_contains_func_and_method();
+        const find_func_and_method_locals = (func: PackageHover<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>) => {
+          if (func.data instanceof vjass_ast.Func || func.data instanceof vjass_ast.Method) {
+            const locals = func.data.children.filter(child => child instanceof vjass_ast.Local) as vjass_ast.Local[];
+            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
+              hovers2.push(HoverDocument.local_to_hover(local));
+            });
+          } else {
+            const locals = func.data.children.filter(child => child instanceof vjass_ast.zinc.Member) as vjass_ast.zinc.Member[];
+            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
+              hovers2.push(HoverDocument.member_to_hover(local));
+            });
+          }
+        } 
+        funcs.forEach(func => {
+          if (func.data.takes) {
+            func.data.takes.filter(take => take.name && take.name.getText() == key).forEach(take => {
+              hovers2.push(HoverDocument.take_to_hover(take));
+            });
+          }
+          find_func_and_method_locals(func);
+        });
+
+        // const push_take = (function_items:PackageHover<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
+        //   function_items.filter(x => {
+        //     return x.data.contains(target_position);
+        //   }).forEach(data => {
+        //     if (data.data.takes) {
+        //       data.data.takes.forEach(take => {
+        //         if (take.name && take.name.getText() == key) {
+        //           hovers2.push(HoverDocument.take_to_hover(take));
+        //         }
+        //       });
+        //     }
+        //   });
+        // };
+        // const push_local = (local_items:PackageHover<vjass_ast.Local>[]) => {
+        //   local_items.filter(x => {
+        //     return x.data.parent && (x.data.parent instanceof vjass_ast.Func || x.data.parent instanceof vjass_ast.Method || x.data.parent instanceof vjass_ast.zinc.Func || x.data.parent instanceof vjass_ast.zinc.Method) && x.data.parent.contains(target_position);
+        //   }).forEach(data => {
+        //     if (data.key == key) {
+        //       hovers2.push(data);
+        //     }
+        //   });
+        // };
   
-        push_take(wrap.document.function_items);
-        push_take(wrap.document.method_items);
-        push_local(wrap.document.local_items);
+        // push_take(wrap.document.function_items);
+        // push_take(wrap.document.method_items);
+        // push_local(wrap.document.local_items);
       }
     });
 
