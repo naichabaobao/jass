@@ -3379,7 +3379,6 @@ endfunction
 function SetThematicMusicVolumeBJ takes real volumePercent returns nothing
     call SetThematicMusicVolume(PercentToInt(volumePercent, 127))
 endfunction
-ab
 
 // 获取音效持续时间
 function GetSoundDurationBJ takes sound soundHandle returns real
@@ -4697,6 +4696,7 @@ endfunction
 
 
 // 隐藏单位
+// 隐藏后仍可提供视野，但不能通过鼠标键盘控制
 function ShowUnitHide takes unit whichUnit returns nothing
     call ShowUnit(whichUnit, false)
 endfunction
@@ -7130,7 +7130,7 @@ function TimerDialogSetSpeedBJ takes timerdialog td, real speedMultFactor return
 endfunction
 
 
-// 显示/隐藏 计时器窗口为玩家
+// 显示/隐藏 计时器窗口（指定玩家）
 function TimerDialogDisplayForPlayerBJ takes boolean show, timerdialog td, player whichPlayer returns nothing
     if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
