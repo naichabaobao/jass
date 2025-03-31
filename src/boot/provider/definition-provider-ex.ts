@@ -154,6 +154,11 @@ class LocationDocument {
 
 
   }
+  public static define_to_hover(object: vjass.Macro) {
+    const item = new vscode.Location(vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.line_number, 0), new vscode.Position(object.line_number, object.length)));
+
+    return item;
+  }
 }
 class Wrap {
   public key: string;
@@ -321,6 +326,12 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     const locations:vscode.Location[] = [];
     
     LocationManage.wraps.forEach(wrap => {
+      locations.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
+        return LocationDocument.define_to_hover(macro);
+      }));
+
+
+
       locations.push(...wrap.document.native_items.filter(x => x.key == key));
       locations.push(...wrap.document.function_items.filter(x => x.key == key));
       locations.push(...wrap.document.global_variable_items.filter(x => x.key == key));

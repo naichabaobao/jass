@@ -384,7 +384,7 @@ export namespace zinc {
                 this.type = statement.type;
                 this.name = statement.name;
                 this.array_token = statement.array_token;
-                this.is_array = this.array_token != null;
+                this.is_array = statement.is_array;
                 this.expr = statement.expr;
                 this.size_expr = statement.size_expr;
             } else if (statement instanceof Modifier) {
@@ -1819,7 +1819,7 @@ export class GlobalVariable extends NodeAst {
             this.type = statement.type;
             this.name = statement.name;
             this.array_token = statement.array_token;
-            this.is_array = this.array_token != null;
+            this.is_array = statement.is_array;
             this.size_expr = statement.size_expr;
             this.expr = statement.expr;
         } else if (statement instanceof Modifier) {
@@ -2515,8 +2515,8 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
             } else {
                 zoom = result.expr;
             }
-
-            if (tokens[index] && tokens[index].is_binary_operator) {
+            const next_token = get_next_token(tokens, index);
+            if (next_token && next_token.is_binary_operator) {
                 state = 1;
             } else {
                 break;
@@ -2620,8 +2620,9 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
  * @param document 
  * @param tokens 
  * @param offset_index 
+ * @param need_index_expr 0 不需要 1 需要 -1 都可以
  */
-export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number, need_index_expr:boolean = true) {
+export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number, need_index_expr:0|1|-1 = -1) {
     let index = offset_index;
     let state = 0;
     let index_expr: IndexExpr | null = null;
@@ -2650,7 +2651,7 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
         } else if (state == 1) {
             if (text == "]") {
                 index++;
-                if (need_index_expr) {
+                if (need_index_expr == 1) {
                     document.add_token_error(token, `missing index expression`);
                 }
 
@@ -2660,6 +2661,10 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
                 index_expr!.expr = result.expr;
                 index = result.index;
                 state = 2;
+
+                if (need_index_expr == 0) {
+                    document.add_token_error(token, `unsupport index expression`);
+                }
             }
         } else if (state == 2) {
             index++;
@@ -2847,7 +2852,7 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
             // }
             break;
         } else if (state == 2) {
-            const result = parse_line_index_expr(document, tokens, index);
+            const result = parse_line_index_expr(document, tokens, index, 1);
             index = result.index;
             variable = (<Id>variable).to(document, result.expr);
             break;
@@ -2990,13 +2995,14 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
             index++;
             statement.name = token;
 
-            if (tokens[index]) {
-                if (tokens[index].getText() == "=") {
+            const next_token = get_next_token(tokens, index);
+            if (next_token) {
+                if (next_token.getText() == "=") {
                     state = 4;
-                } else if (tokens[index].getText() == "[") {
+                } else if (next_token.getText() == "[") {
                     state = 7;
                 } else {
-                    document.add_token_error(tokens[index], `expected token to be assigned a value of '=', but found '${text}'`);
+                    document.add_token_error(next_token, `expected token to be assigned a value of '=', but found '${text}'`);
                     break;
                 }
             } else {
@@ -3015,7 +3021,7 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
                     break;
                 }
             } else {
-                document.add_token_error(token, `local name not declared`);
+                document.add_token_error(token, `name not declared`);
                 break;
             }
         } else if (state == 4) {
@@ -3037,7 +3043,7 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
             index++;
             document.add_token_error(token, `error token '${text}'`);
         } else if (state == 7) { // 数组size
-            const result = parse_line_index_expr(document, tokens, index, true);
+            const result = parse_line_index_expr(document, tokens, index, 1);
             index = result.index;
             statement.size_expr = result.expr;
             

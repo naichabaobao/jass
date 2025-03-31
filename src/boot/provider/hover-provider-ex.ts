@@ -324,6 +324,25 @@ class HoverDocument {
 
 
   }
+  public static define_to_hover(object: vjass.Macro) {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(object.document.filePath);
+    ms.appendMarkdown("## " + object.key ?? "");
+    ms.appendText("\n");
+
+    ms.appendText(`>_${object.document.filePath}`);
+    ms.appendText("\n");
+
+    
+    ms.appendCodeblock(object.to_string());
+    
+    const item = new vscode.Hover(ms, new vscode.Range(new vscode.Position(object.line_number, 0), new vscode.Position(object.line_number, object.length)));
+
+    return item;
+
+
+
+  }
 }
 class Wrap {
   public key: string;
@@ -493,6 +512,11 @@ class HoverProvider implements vscode.HoverProvider {
     const hovers2:vscode.Hover[] = [];
     
     CompletionManage.wraps.forEach(wrap => {
+      hovers2.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
+        return HoverDocument.define_to_hover(macro);
+      }));
+
+
       hovers2.push(...wrap.document.native_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.function_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.global_variable_items.filter(x => x.key == key));

@@ -102,8 +102,20 @@ export class Macro {
   public key?: string;
   public value?: string;
 
-  constructor(type: string) {
+  public readonly line_number:number;
+  public readonly length:number;
+  public readonly document:Document;
+
+  constructor(document:Document, type: string, line_number:number, length: number) {
+    this.document = document;
     this.type = type;
+
+    this.line_number = line_number;
+    this.length = length;
+  }
+
+  to_string():string {
+    return `${this.type} ${this.key ? this.key : ""} ${this.value ? this.value : ""}`;
   }
 }
 
@@ -472,7 +484,7 @@ export class Document {
     // 不需要的对象，设置为null
     // this.root_node = null;
 
-    this.end_tag_error();
+    this.after_handing_error();
 
     this.object_list.length = 0;
   }
@@ -736,7 +748,7 @@ export class Document {
         if (text.trimStart().startsWith("#")) {
           const result = DefineRegExp.exec(text);
           if (result?.groups) {
-            const macro = new Macro(result.groups["type"]);// , new Position(textLine.lineNumber, text.indexOf("#")), new Position(textLine.lineNumber, text.length)
+            const macro = new Macro(this, result.groups["type"], index, textLine.text.length);// , new Position(textLine.lineNumber, text.indexOf("#")), new Position(textLine.lineNumber, text.length)
             this.macros.push(macro);
             if (result.groups["key"]) {
               macro.key = result.groups["key"];
@@ -1335,12 +1347,13 @@ export class Document {
 
             node.data = method;
         } else if (node.type == "member") {
-            if (node.parent && node.parent.type == "globals") {
+          if (node.parent && (node.parent.type == "struct" || node.parent.type == "interface")) {
+              
+            const member = parse_line_member(this, node.tokens);
+
+            node.data = member;
+          } else if (node.parent && node.parent.type == "globals") {
               const member = parse_line_global(this, node.tokens);
-  
-              node.data = member;
-            } else {
-              const member = parse_line_member(this, node.tokens);
   
               node.data = member;
             }
@@ -1417,6 +1430,10 @@ export class Document {
       this.for_program_handle(child, callback);
     });
   }
+  /**
+   * 遍历vjass
+   * @param callback 
+   */
   public every(callback: (node:NodeAst) => void):void {
     if (this.program) {
       this.for_program_handle(this.program, callback);
@@ -1458,6 +1475,8 @@ export class Document {
         this.sets.push(node);
       } else if (node instanceof Local) {
         this.locals.push(node);
+      } else if (node instanceof Member) {
+        this.members.push(node);
       } else if (node instanceof GlobalVariable) {
         this.global_variables.push(node);
       } else if (node instanceof If) {
@@ -1468,8 +1487,6 @@ export class Document {
         this.natives.push(node);
       } else if (node instanceof Library) {
         this.librarys.push(node);
-      } else if (node instanceof Member) {
-        this.members.push(node);
       } else if (node instanceof Struct) {
         this.structs.push(node);
       } else if (node instanceof Method) {
@@ -1522,7 +1539,7 @@ export class Document {
     });
   }
 
-  private end_tag_error() {
+  private after_handing_error() {
     // 把zinc块未闭合错误找出来
     this.built_in_zincs.forEach(block => {
       if (block.end_token === null) {
@@ -1530,6 +1547,20 @@ export class Document {
           this.add_token_error(block.start_token, `zinc block missing end tag`);
         }
       }
+      
+    });
+    this.zinc_nodes.forEach(child => {
+      this.for_program_handle(child, (node) => {
+        if (node instanceof zinc.Member) {
+          if (node.parent) {
+            if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) {
+              if (node.is_array && node.size_expr == null) {
+                this.add_token_error(node.array_token!, `expectat [size]`);
+              }
+            }
+          }
+        }
+      });
     });
 
     /**
@@ -1571,6 +1602,37 @@ export class Document {
         non_end_tag_and_push_error(node);
       }
     });
+
+    // console.log(this.global_variables.filter(m => m.name?.getText() == "bababs").map(m => m.to_string()).join("\n"));
+    // vjass 数组成员必须定义size
+    this.members.forEach(node => {
+      if (node.parent) {
+        if (node instanceof Member) {
+          if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+            if (node.is_array && node.size_expr == null) {
+              this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
+            }
+          }
+        } else {
+          if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+            if (node.size_expr == null || node.size_expr.expr == null) {
+              this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
+            }
+          }
+        }
+      }
+    });
+    // this.global_variables.forEach(node => {
+    //   if (node.parent) {
+    //     // console.log(node.is_array ,node.size_expr, node.to_string());
+    //     if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+          
+    //       if (node.is_array && node.size_expr == null) {
+    //         this.add_token_error(node.name!, `expectat [size]`);
+    //       }
+    //     }
+    //   }
+    // });
   }
 
 

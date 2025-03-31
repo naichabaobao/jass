@@ -283,6 +283,19 @@ class CompletionItemDocument {
 
     return item;
   }
+
+  public static define_to_item(type: vjass.Macro, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.User) {
+    const item = new vscode.CompletionItem(type.key ?? "", kind);
+    item.detail = `${type.key ?? ""} >_${type.document.filePath}`;
+
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(type.document.filePath);
+    ms.appendCodeblock(type.to_string());
+
+    item.documentation = ms;
+
+    return item;
+  }
 }
 
 
@@ -427,6 +440,9 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     const items: vscode.CompletionItem[] = [];
 
     CompletionManage.wraps.filter(x => x.document.program.is_special == false).forEach(wrap => {
+      items.push(...wrap.document.program.macros.map(macro => {
+        return CompletionItemDocument.define_to_item(macro);
+      }));
       items.push(...wrap.document.type_items);
       // items.concat(...wrap.items);
       // items.push(...wrap.items);
@@ -540,19 +556,19 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
           // });
 
 
-        } else {
-          items.push(...wrap.document.native_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.function_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.global_variable_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.struct_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.interface_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.library_items);
-    items.push(...wrap.document.scope_items);
-    items.push(...wrap.document.method_items.filter(x => x.data.is_public));
-    items.push(...wrap.document.membere_items.filter(x => x.data.is_public));
-  }
-});
-return items;
+      } else {
+        items.push(...wrap.document.native_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.function_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.global_variable_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.struct_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.interface_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.library_items);
+        items.push(...wrap.document.scope_items);
+        items.push(...wrap.document.method_items.filter(x => x.data.is_public));
+        items.push(...wrap.document.membere_items.filter(x => x.data.is_public));
+      }
+    });
+    return items;
   }
 
 

@@ -56,6 +56,8 @@ class StateType {
     public static AddAsignment: number = symbol_state("+=");
     public static MulAsignment: number = symbol_state("*=");
     public static DivAsignment: number = symbol_state("/=");
+    public static AndPrefix: number = symbol_state("&");
+    public static OrPrefix: number = symbol_state("|");
 }
 export function token_handle(document:Document, line: number, character: number, position: number, char: string, next_char: string, state: number, length: number): TokenHandleResult | undefined {
     const has_next = () => {
@@ -223,6 +225,30 @@ export function token_handle(document:Document, line: number, character: number,
                 if (is_match("=")) {
                     return {
                         state: StateType.Not,
+                        length: 1
+                    }
+                } else {
+                    return {
+                        token: new_token(TokenType.Unkown),
+                        length: 0
+                    }
+                }
+            } else if (char == "&") {
+                if (is_match("&")) {
+                    return {
+                        state: StateType.AndPrefix,
+                        length: 1
+                    }
+                } else {
+                    return {
+                        token: new_token(TokenType.Unkown),
+                        length: 0
+                    }
+                }
+            } else if (char == "|") {
+                if (is_match("|")) {
+                    return {
+                        state: StateType.OrPrefix,
                         length: 1
                     }
                 } else {
@@ -450,6 +476,20 @@ export function token_handle(document:Document, line: number, character: number,
             }
             break;
         case StateType.Not:
+            return {
+                state: StateType.Nil,
+                token: new_token(TokenType.Operator),
+                length: 0
+            }
+            break;
+        case StateType.AndPrefix:
+            return {
+                state: StateType.Nil,
+                token: new_token(TokenType.Operator),
+                length: 0
+            }
+            break;
+        case StateType.OrPrefix:
             return {
                 state: StateType.Nil,
                 token: new_token(TokenType.Operator),

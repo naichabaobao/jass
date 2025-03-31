@@ -481,7 +481,7 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
  * @param offset_index 
  * @returns 
  */
-export function parse_segement_statement(document: Document, tokens: Token[], offset_index: number) {
+export function parse_segement_statement(document: Document, tokens: Token[], offset_index: number, need_index_expr:0|1|-1 = -1) {
     const statement = new Statement();
     let index = offset_index;
     let state = 1;
@@ -528,7 +528,7 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                 break;
             }
         } else if (state == 3) {
-            const result = parse_line_index_expr(document, tokens, index, false);
+            const result = parse_line_index_expr(document, tokens, index, need_index_expr);
             index = result.index;
             statement.size_expr = result.expr;
             

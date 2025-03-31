@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.30",
+  "version": "1.8.31",
   "keywords": [
     "jass",
     "vjass",
@@ -61,7 +61,7 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": true,
-          "description": "(Test) diagnostic support,does not support including Lua, Zinc, and pre-processing code"
+          "description": "(Test) diagnostic support,does not support including Lua and pre-processing code"
         }
       }
     },
