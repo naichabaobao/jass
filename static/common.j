@@ -194,7 +194,7 @@ type image extends handle
 // 地表纹理变化
 type ubersplat extends handle
 // 哈希表
-type hashtable extends 
+type hashtable extends agent
 // UI框架/控件句柄
 type framehandle extends handle
 // 原生 UI框架/控件句柄 类型
@@ -1248,7 +1248,7 @@ globals
 	constant gameevent EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
 	// 游戏事件 鼠标移动到可追踪物
 	constant gameevent EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
-	// 游戏事件 显示技能
+	// 游戏事件 显示技能(英雄学习技能按钮被点击)
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
 	// 游戏事件 创建子菜单
 	constant gameevent EVENT_GAME_BUILD_SUBMENU = ConvertGameEvent(10)
@@ -5557,7 +5557,7 @@ native KillUnit takes unit whichUnit returns nothing
 // 删除单位，删除不会留下尸体
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
-// 隐藏后反隐也看不到，但其碰撞体积仍可按设置工作
+// 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
 native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]

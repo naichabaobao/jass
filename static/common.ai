@@ -80,7 +80,7 @@ native GetUpgradeWoodCost   takes integer id                            returns 
 // 获取下一个扩张点的编号（返回-1即获取失败）
 native GetNextExpansion     takes nothing                               returns integer
 // 获取大型攻击目标（可能返回null）
-// 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城 的单位类型，故猜测该单位是建筑或位于建筑群中
+// 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城的单位类型，故猜测该单位是建筑或位于建筑群中
 native GetMegaTarget        takes nothing                               returns unit
 // 获取指定玩家最后建造/创建的建筑，支持中立玩家（可能返回null）
 // 若中立玩家不能建造/创建建筑，则获取地图编辑器最后放置的建筑（该建筑死亡被清理后应该会按放置顺序自动向前获取）
@@ -108,7 +108,7 @@ native SetUpgrade           takes integer id                            returns 
 // 设置英雄升级技能程序（似乎不是进程）
 native SetHeroLevels        takes code func                             returns nothing
 // 是否设置新英雄
-// 意义不明，可能和英雄升级技能函数有关，暴雪战役AI默认设否，对战AI不设置
+// 可能和训练新英雄有关，用于战役控制英雄数量，暴雪战役AI默认设否，对战AI不设置
 native SetNewHeroes         takes boolean state                         returns nothing
 // 购买地精飞艇
 // 运行后AI会自动购买地精飞艇，实测不运行此函数AI也会自动购买飞艇（不论飞艇在何处出售（支持改图），只要达到购买范围且有足够的资源及可用人口（1.36.2飞艇占用人口）即可购买）
@@ -174,10 +174,10 @@ native RemoveSiege          takes nothing                               returns 
 // 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
 native InitAssault          takes nothing                               returns nothing
 // 增加指定数量的指定单位类型到攻击组
-// 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
+// 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在集结点
 native AddAssault           takes integer qty, integer id               returns boolean
 // 增加指定数量的指定单位类型到防御组
-// 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在出生点
+// 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在集结点
 native AddDefenders         takes integer qty, integer id               returns boolean
 
 // 获取指定等级范围内的中立敌对玩家控制的单位
@@ -200,10 +200,10 @@ native GetExpansionFoe      takes nothing                               returns 
 // 获取敌人分基地（可能返回null）
 native GetEnemyExpansion    takes nothing                               returns unit
 // 获取扩张点的 X 坐标（返回-1即获取失败）
-// 使用前必须已初始化 CreateCaptains
+// 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionX        takes nothing                               returns integer
 // 获取扩张点的 Y 坐标（返回-1即获取失败）
-// 使用前必须已初始化 CreateCaptains
+// 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionY        takes nothing                               returns integer
 // 设置（军队）集合点
 native SetStagePoint        takes real x, real y                        returns nothing
@@ -247,7 +247,7 @@ native HarvestGold          takes integer town, integer peons           returns 
 native HarvestWood          takes integer town, integer peons           returns nothing
 // 获取开分基地的工人，系统会随机返回一个工人单位给AI，可能返回null或已死亡单位，建议自写代码辅助获取替补单位
 // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
-// 使用前必须已初始化 CreateCaptains
+// 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionPeon     takes nothing                               returns unit
 // 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
 native StopGathering        takes nothing                               returns nothing
