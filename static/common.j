@@ -5694,7 +5694,7 @@ native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
 // 当英雄拥有不能叠加的技能时，此命令似乎无效，比如牛头捡了提供坚韧光环的物品（物编未作任何修改），因为他此时已拥有了坚韧光环（物品技能），在发布该指令后，他可能不会学习他本身的坚韧光环
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取指定单位技能等级 [R] 
+// 获取指定单位技能等级 [R]
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
