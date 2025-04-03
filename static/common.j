@@ -1248,7 +1248,7 @@ globals
 	constant gameevent EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
 	// 游戏事件 鼠标移动到可追踪物
 	constant gameevent EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
-	// 游戏事件 显示技能
+	// 游戏事件 显示技能(英雄学习技能按钮被点击)
 	constant gameevent EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
 	// 游戏事件 创建子菜单
 	constant gameevent EVENT_GAME_BUILD_SUBMENU = ConvertGameEvent(10)
