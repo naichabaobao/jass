@@ -77,7 +77,7 @@ native GetUpgradeLevel      takes integer id                            returns 
 native GetUpgradeGoldCost   takes integer id                            returns integer
 // 获取研究指定科技需要消耗的木材数量（指定科技ID）
 native GetUpgradeWoodCost   takes integer id                            returns integer
-// 获取下一个扩张点的编号（返回-1即获取失败）
+// 获取下一个扩张点的编号（获取失败时返回－1）
 native GetNextExpansion     takes nothing                               returns integer
 // 获取大型攻击目标（可能返回null）
 // 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城的单位类型，故猜测该单位是建筑或位于建筑群中
@@ -199,10 +199,10 @@ native GetEnemyBase         takes nothing                               returns 
 native GetExpansionFoe      takes nothing                               returns unit
 // 获取敌人分基地（可能返回null）
 native GetEnemyExpansion    takes nothing                               returns unit
-// 获取扩张点的 X 坐标（返回-1即获取失败）
+// 获取扩张点的 X 坐标（获取失败时返回－1）
 // 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionX        takes nothing                               returns integer
-// 获取扩张点的 Y 坐标（返回-1即获取失败）
+// 获取扩张点的 Y 坐标（获取失败时返回－1）
 // 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionY        takes nothing                               returns integer
 // 设置（军队）集合点
@@ -262,7 +262,7 @@ native ReturnGuardPosts     takes nothing                               returns 
 native CreateCaptains       takes nothing                               returns nothing
 // 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
 // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
-// @param which 攻击组、防守组或两组，即 1，2或3
+// @param which 攻击组为1，防守组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
 // 发布攻击组复位命令（回到 SetCaptainHome 的集结点）
 native ResetCaptainLocs     takes nothing                               returns nothing
@@ -1347,7 +1347,7 @@ globals
     // 用于计算当前木材数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少木
     integer total_wood              = 0
     // 黄金预存数，使用后AI会一直保留该数量的黄金不使用
-    // 该值默认为0，AI不会使用，需要自行赋值，在完成指定的训练/建造/研究后请即使清零，否则AI会一直保持这笔存款
+    // 该值默认为0，需自行赋值，在完成指定的训练/建造/研究后请手动清零，否则AI会一直保持这笔存款
     // 如果需要存木，请自行在 OneBuildLoop 添加
     integer gold_buffer             = 0 // usually for potion money
     // AI难度，该变量用于统一对地图难度、战难度和难度，便于书写和检索
@@ -3441,7 +3441,7 @@ endfunction
 //============================================================================
 
 // 运行战役AI，运行后开始运行战役基础线程
-// @param farms 指定人口建筑的单位类型（即指定racial_farm）
+// @param farms 指定人口建筑的单位类型（指定racial_farm）
 // @param heroes 指定英雄升级函数
 function CampaignAI takes integer farms, code heroes returns nothing
     if GetGameDifficulty() == MAP_DIFFICULTY_EASY then
