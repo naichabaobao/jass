@@ -162,7 +162,7 @@ native SetCaptainChanges    takes boolean allow                         returns 
 // 启用/禁用 聪明的炮火/主动攻城
 // 攻击类型为攻城的单位会优先攻击敌方建筑，同时也会尝试优先攻击敌方攻击类型为攻城的单位
 native SetSmartArtillery    takes boolean state                         returns nothing
-// 设置防守单位被杀后，AI的补充次数
+// 设置防御单位被杀后，AI的补充次数
 native SetReplacementCount  takes integer qty                           returns nothing
 // 允许/禁止 受伤单位回主基地或生命之泉疗伤
 native GroupTimedLife       takes boolean allow                         returns nothing
@@ -227,7 +227,8 @@ native SuicidePlayer        takes player id, boolean check_full         returns 
 // 暴雪用于战役AI
 // @param check_full 怀疑是 是否检查攻击组满血
 native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
-// 查询攻击组战斗状态，带入真时查询是否在战斗，带入假时查询是否不在战斗
+// 查询攻击组战斗状态
+// 带入真时查询攻击组是否在战斗，带入假时查询防御组是否在战斗
 native CaptainInCombat      takes boolean attack_captain                returns boolean
 // 查询指定单位是否有防御塔保护
 native IsTowered            takes unit target                           returns boolean
@@ -249,20 +250,20 @@ native HarvestWood          takes integer town, integer peons           returns 
 // 如果AI有盟友，返回null的概率似乎会增加，如果是暗夜，建议另行判断工人是否在金矿内（是否运输单位），因为AI不会操作其离开金矿
 // 使用前必须确保 CreateCaptains 已初始化
 native GetExpansionPeon     takes nothing                               returns unit
-// 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防守，否则只会在训练他们的建筑附近
+// 停止聚集，必须调用（默认初始化时自动调用，无需理会），调用后，被训练的单位才会进行防御，否则只会在训练他们的建筑附近
 native StopGathering        takes nothing                               returns nothing
-// 在指定坐标增加指定类型的防守单位
-// 单位死亡后，AI会自动填补新防守单位，但每个点默认只增加3次，超过3次可使用 FillGuardPosts 补充 或 使用 SetReplacementCount 设置新上限
+// 在指定坐标增加指定类型的防御单位
+// 单位死亡后，AI会自动填补新防御单位，但每个点默认只增加3次，超过3次可使用 FillGuardPosts 补充 或 使用 SetReplacementCount 设置新上限
 native AddGuardPost         takes integer id, real x, real y            returns nothing
-// 填补防守岗位（即时），当一个单位被杀后，AI会立即训练一个同类型单位填补其空位
+// 填补防御岗位（即时），当一个单位被杀后，AI会立即训练一个同类型单位填补其空位
 native FillGuardPosts       takes nothing                               returns nothing
-// 返回防守岗位
+// 返回防御岗位
 native ReturnGuardPosts     takes nothing                               returns nothing
 // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
 native CreateCaptains       takes nothing                               returns nothing
-// 设置指定组（攻击组、防守组、两组一起执行）回家后的集结坐标
+// 设置指定组（攻击组、防御组、两组一起执行）回家后的集结坐标
 // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
-// @param which 攻击组为1，防守组为2，两组为3
+// @param which 攻击组为1，防御组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
 // 发布攻击组复位命令（回到 SetCaptainHome 的集结点）
 native ResetCaptainLocs     takes nothing                               returns nothing
@@ -343,11 +344,11 @@ native SetAmphibious        takes nothing                               returns 
 native CommandsWaiting      takes nothing                               returns integer
 // 获取最新的命令类型
 // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
-// 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
+// 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防御命令，数据0 ~ N代表不同的防御点
 native GetLastCommand       takes nothing                               returns integer
 // 获取最新命令的数据，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
 // 可通过BJ发送，未发送时获取的数据是0，命令包含类型和数据
-// 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防守命令，数据0 ~ N代表不同的防御点
+// 需灵活运用，比如设定1类型为进攻命令，数据0 ~ N代表不同的攻击点，2类型为防御命令，数据0 ~ N代表不同的防御点
 native GetLastData          takes nothing                               returns integer
 // 将最新命令踢出队列，在AI脚本初始化期间发送无效，如有需要，请在初始化（运行AI脚本）前发送
 // 当排泄用，用完命令就调用
@@ -1735,7 +1736,7 @@ endfunction
 
 //============================================================================
 
-// 设置防守单位补充次数
+// 设置防御单位补充次数
 // @param easy 简单AI的补充次数
 // @param med 中等AI的补充次数
 // @param hard 疯狂AI的补充次数
