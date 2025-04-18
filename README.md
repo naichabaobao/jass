@@ -56,6 +56,7 @@ endlibrary
 
 - ***vscode version 1.63***
 - ***common.j version 1.33***
+- ***物编 code version 2.02***
 
 ## Link
 [貼吧](https://tieba.baidu.com/p/6235060595?pid=127236515130&cid=0&red_tag=2862340933#127236515130)
