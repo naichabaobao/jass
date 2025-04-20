@@ -6363,7 +6363,7 @@ native StoreReal takes gamecache cache, string missionKey, string key, real valu
 native StoreBoolean takes gamecache cache, string missionKey, string key, boolean value returns nothing
 // 存储单位到游戏缓存
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
-// 存储字符串到缓游戏存
+// 存储字符串到游戏缓存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
 // 同步游戏缓存存储值（整数）
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
