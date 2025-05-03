@@ -7238,7 +7238,7 @@ function LeaderboardHasPlayerItemBJ takes leaderboard lb, player whichPlayer ret
     return LeaderboardHasPlayerItem(lb, whichPlayer)
 endfunction
 
-// 设置玩家组登上排行榜 
+// 设置玩家组登上排行榜
 function ForceSetLeaderboardBJ takes leaderboard lb, force toForce returns nothing
     local integer index
     local player indexPlayer

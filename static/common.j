@@ -5694,7 +5694,7 @@ native IsSuspendedXP takes unit whichHero returns boolean
 // 发布学习技能命令(指定英雄)
 // 当英雄拥有不能叠加的技能时，此命令似乎无效，比如牛头捡了提供坚韧光环的物品（物编未作任何修改），因为他此时已拥有了坚韧光环（物品技能），在发布该指令后，他可能不会学习他本身的坚韧光环
 native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
-// 获取指定单位技能等级 [R] 
+// 获取指定单位技能等级 [R]
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
@@ -6363,7 +6363,7 @@ native StoreReal takes gamecache cache, string missionKey, string key, real valu
 native StoreBoolean takes gamecache cache, string missionKey, string key, boolean value returns nothing
 // 存储单位到游戏缓存
 native StoreUnit takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
-// 存储字符串到缓游戏存
+// 存储字符串到游戏缓存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
 // 同步游戏缓存存储值（整数）
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
@@ -7877,12 +7877,16 @@ native BlzSetEventWeaponType takes weapontype weaponType returns boolean
 // 判断是否攻击事件
 native BlzGetEventIsAttack takes nothing returns boolean
 // 获取额外的整数数据
+// 2.02已移除
 native RequestExtraIntegerData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
 // 获取额外的布尔值数据
+// 2.02已移除
 native RequestExtraBooleanData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns boolean
 // 获取额外的字符串数据
+// 2.02已移除
 native RequestExtraStringData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
 // 获取额外的实数数据
+// 2.02已移除
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // 获取单位 Z 坐标
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
