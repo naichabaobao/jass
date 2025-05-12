@@ -4147,7 +4147,7 @@ endfunction
 
 
 // 获取随机中立敌对单位类型(指定单位等级)
-// 只能获取当前地形设置下的中立敌对玩家单位，包括战役单位，当前地形设置没有对应等级的单位时返回0
+// 只能获取当前地形设置下的中立敌对玩家单位，包括战役单位，当前地形设置没有对应等级的单位时返回-1
 function ChooseRandomCreepBJ takes integer level returns integer
     return ChooseRandomCreep(level)
 endfunction
