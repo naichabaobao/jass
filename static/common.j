@@ -6674,7 +6674,7 @@ native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // 获取随机中立敌对玩家单位的单位类型(指定单位等级)
 // 默认用于地图初始化时创建随机中立敌对单位
-// 只能获取当前地形设置下的中立敌对玩家单位，包括战役单位
+// 只能获取当前地形设置下的中立敌对玩家单位，包括战役单位，当前地形设置没有对应等级的单位时返回0
 native ChooseRandomCreep takes integer level returns integer
 // 获取随机中立被动玩家建筑单位的单位类型
 // 默认用于地图初始化时创建随机中立被动单位(如商店、泉水等)
