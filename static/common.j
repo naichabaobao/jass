@@ -4641,25 +4641,25 @@ native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolex
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-// 将指定矩形区域的的单位加入单位组
+// 将指定矩形区域内的单位加入单位组
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
+// 将指定矩形区域内的单位加入单位组，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
