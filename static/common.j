@@ -4536,6 +4536,7 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家预设种族
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
@@ -4569,6 +4570,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家预设种族是否指定种族
 // 若情节–玩家未设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -5802,6 +5804,7 @@ constant native GetOwningPlayer takes unit whichUnit returns player
 // 获取指定单位类型(返回四字符码)
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
+// 返回值[RACE_HUMAN、RACE_ORC、RACE_UNDEAD、RACE_NIGHTELF、RACE_DEMON、RACE_OTHER]
 constant native GetUnitRace takes unit whichUnit returns race
 // 获取指定单位（本地化语言的）名字
 // 在AI脚本中默认返回null
@@ -5852,6 +5855,7 @@ constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns bo
 // 查询指定单位是否已被指定玩家选择
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否指定的种族
+// 返回值[RACE_HUMAN、RACE_ORC、RACE_UNDEAD、RACE_NIGHTELF、RACE_DEMON、RACE_OTHER]
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 查询指定单位是否指定的单位类型
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
