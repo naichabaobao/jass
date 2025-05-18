@@ -3414,7 +3414,7 @@ function VolumeGroupSetVolumeBJ takes volumegroup vgroup, real percent returns n
 endfunction
 
 
-// 设置电影所有声道音量(立即)
+// 设置电影所有声道音量动作(立即)
 function SetCineModeVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
@@ -3438,7 +3438,7 @@ function SetCineModeVolumeGroupsBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有声道发言音量环境为默认值(立即)
+// 设置所有声道发言音量环境到默认值动作(立即)
 function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_SPEECH_VOLUME_UNITMOVEMENT)
     call VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_SPEECH_VOLUME_UNITSOUNDS)
@@ -3451,7 +3451,8 @@ function SetSpeechVolumeGroupsImmediateBJ takes nothing returns nothing
 endfunction
 
 
-// 设置所有声道发言模式
+// 设置所有声道发言音量环境到默认值
+// bj_gameStarted 为假时延迟 bj_GAME_STARTED_THRESHOLD 秒
 function SetSpeechVolumeGroupsBJ takes nothing returns nothing
     // Delay the request if it occurs at map init.
     if bj_gameStarted then
@@ -3491,7 +3492,7 @@ function WaitForSoundBJ takes sound soundHandle, real offset returns nothing
 endfunction
 
 
-// 设置地图音乐(使用指定音乐)
+// 设置地图背景音乐(使用指定音乐)
 function SetMapMusicIndexedBJ takes string musicName, integer index returns nothing
     call SetMapMusic(musicName, false, index)
 endfunction
@@ -3509,7 +3510,7 @@ function ClearMapMusicBJ takes nothing returns nothing
 endfunction
 
 
-// 添加/删除 穿越区域的3D音效
+// 添加/删除 贯穿区域的3D音效
 function SetStackedSoundBJ takes boolean add, sound soundHandle, rect r returns nothing
     local real width = GetRectMaxX(r) - GetRectMinX(r)
     local real height = GetRectMaxY(r) - GetRectMinY(r)
@@ -3545,7 +3546,7 @@ function EnableDawnDusk takes boolean flag returns nothing
 endfunction
 
 
-// 查询是否启用了 黎明/黄昏 音效
+// 查询 黎明/黄昏 音效是否启用
 function IsDawnDuskEnabled takes nothing returns boolean
     return bj_useDawnDuskSounds
 endfunction
@@ -3872,47 +3873,53 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
 endfunction
 
 // 设置玩家伤害障碍
+// 玩家障碍，可用于降低输出，按输入值的百分之一生效
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 // 获取玩家伤害障碍
+// 玩家障碍，查询输出变化值
 function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
 
 // 设置玩家复活时间
-// 玩家障碍，额外的复活时间
+// 玩家障碍，可增加或降低额外的复活时间，按输入值的百分之一生效
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 // 获取玩家复活时间
-// 玩家障碍，额外的复活时间
+// 玩家障碍，查询额外的复活时间
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
 
 
 // 设置玩家英雄经验获得率
+// 玩家障碍，用于增减英雄升级速度，按输入值的百分之一生效
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
 // 获取玩家经验获得率
+// 玩家障碍，查询英雄获取经验值增减量
 function GetPlayerHandicapXPBJ takes player whichPlayer returns real
     return GetPlayerHandicapXP(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家生命百分比
+// 设置玩家生命值
+// 玩家障碍，用于增减玩家所有单位血量，按输入值的百分之一生效
 function SetPlayerHandicapBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家经验值上限
+// 获取玩家生命值
+// 玩家障碍，查询玩家单位生命值变化量
 function GetPlayerHandicapBJ takes player whichPlayer returns real
     return GetPlayerHandicap(whichPlayer) * 100
 endfunction
