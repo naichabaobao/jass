@@ -6145,21 +6145,19 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 获取玩家经验上限 [R]
+// 获取玩家生命值障碍 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 获取玩家经验获得率 [R]
+// 获取玩家经验获取障碍 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 获取玩家额外的复活时间
-// 玩家障碍，额外的复活时间
+// 获取玩家复活时间障碍
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置玩家经验上限 [R]
+// 设置玩家生命值障碍 [R]
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置玩家经验获得率 [R]
+// 设置玩家经验获取障碍 [R]
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家额外的复活时间
-// 玩家障碍、额外的复活时间
+// 设置玩家复活时间障碍
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
