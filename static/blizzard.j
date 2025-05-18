@@ -3873,59 +3873,55 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
 endfunction
 
 // 设置玩家伤害障碍
-// 玩家障碍，可用于降低输出，按输入值的百分之一生效
+// 可用于降低输出，按输入值的百分之一生效
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 // 获取玩家伤害障碍
-// 玩家障碍，查询输出变化值
 function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
 
-// 设置玩家复活时间
-// 玩家障碍，可增加或降低额外的复活时间，按输入值的百分之一生效
+// 设置玩家复活时间障碍
+// 可增加或降低复活时间，按输入值的百分之一生效
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家复活时间
-// 玩家障碍，查询额外的复活时间
+// 获取玩家复活时间障碍
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家英雄经验获得率
-// 玩家障碍，用于增减英雄升级速度，按输入值的百分之一生效
+// 设置玩家英雄经验获取障碍
+// 用于增减英雄升级速度，按输入值的百分之一生效
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家经验获得率
-// 玩家障碍，查询英雄获取经验值增减量
+// 获取玩家经验获取障碍
 function GetPlayerHandicapXPBJ takes player whichPlayer returns real
     return GetPlayerHandicapXP(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家生命值
-// 玩家障碍，用于增减玩家所有单位血量，按输入值的百分之一生效
+// 设置玩家生命值障碍
+// 用于增减玩家所有单位血量，按输入值的百分之一生效
 function SetPlayerHandicapBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家生命值
-// 玩家障碍，查询玩家单位生命值变化量
+// 获取玩家生命值障碍
 function GetPlayerHandicapBJ takes player whichPlayer returns real
     return GetPlayerHandicap(whichPlayer) * 100
 endfunction
 
 
-// 获取英雄属性值，获取失败会返回0
+// 获取英雄指定属性的值，获取失败会返回0
 function GetHeroStatBJ takes integer whichStat, unit whichHero, boolean includeBonuses returns integer
     if(whichStat == bj_HEROSTAT_STR) then
         return GetHeroStr(whichHero, includeBonuses)
@@ -3940,7 +3936,7 @@ function GetHeroStatBJ takes integer whichStat, unit whichHero, boolean includeB
 endfunction
 
 
-// 设置英雄属性值
+// 设置英雄指定属性的值(直接覆盖，输入值小于1时不执行)
 function SetHeroStat takes unit whichHero, integer whichStat, integer value returns nothing
     // Ignore requests for negative hero stats.
     if(value <= 0) then
@@ -3959,7 +3955,7 @@ function SetHeroStat takes unit whichHero, integer whichStat, integer value retu
 endfunction
 
 
-// 修改英雄属性
+// 修改英雄指定属性的值(在现有值上增减)
 function ModifyHeroStat takes integer whichStat, unit whichHero, integer modifyMethod, integer value returns nothing
     if(modifyMethod == bj_MODIFYMETHOD_ADD) then
         call SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) + value)
