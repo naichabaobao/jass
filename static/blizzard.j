@@ -3873,7 +3873,7 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
 endfunction
 
 // 设置玩家伤害障碍
-// 可用于降低输出，按输入值的百分之一生效
+// 增加或降低玩家所有单位血量，按输入值的百分之一生效
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
@@ -3884,7 +3884,7 @@ function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
 endfunction
 
 // 设置玩家复活时间障碍
-// 可增加或降低复活时间，按输入值的百分之一生效
+// 增加或降低玩家英雄复活时间，按输入值的百分之一生效
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
@@ -3895,8 +3895,8 @@ function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
 endfunction
 
 
-// 设置玩家英雄经验获取障碍
-// 用于增减英雄升级速度，按输入值的百分之一生效
+// 设置玩家经验获取障碍
+// 增加或降低玩家英雄经验获取值，按输入值的百分之一生效
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 endfunction
@@ -3909,7 +3909,7 @@ endfunction
 
 
 // 设置玩家生命值障碍
-// 用于增减玩家所有单位血量，按输入值的百分之一生效
+// 用增加或降低玩家所有单位/建筑血量，按输入值的百分之一生效
 function SetPlayerHandicapBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 endfunction
