@@ -3039,6 +3039,7 @@ function AttackMoveKillA takes unit target returns nothing
 endfunction
 
 //============================================================================
+
 // 攻击中立敌对玩家低等级目标（打野）
 function MinorCreepAttack takes nothing returns nothing
     local unit target = GetMinorCreep()
@@ -3048,6 +3049,7 @@ function MinorCreepAttack takes nothing returns nothing
 endfunction
 
 //============================================================================
+
 // 攻击中立敌对玩家高等级目标（打野）
 function MajorCreepAttack takes nothing returns nothing
     local unit target = GetMajorCreep()
