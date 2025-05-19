@@ -6154,12 +6154,16 @@ constant native GetPlayerHandicapReviveTime takes player whichPlayer returns rea
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
 // 设置玩家生命值障碍 [R]
+// 增加或降低玩家所有单位/建筑血量，标准为1
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
 // 设置玩家经验获取障碍 [R]
+// 增加或降低玩家英雄经验获取值，标准为1
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
 // 设置玩家复活时间障碍
+// 增加或降低玩家英雄复活时间，标准为1
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
+// 增加或降低输出，标准为1
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置指定玩家指定科技的等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
