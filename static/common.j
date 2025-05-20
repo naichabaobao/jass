@@ -4747,9 +4747,11 @@ native Rect takes real minx, real miny, real maxx, real maxy returns rect
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
-// 设置矩形区域(指定坐标) [R]
+// 设置矩形区域(边界)(指定坐标) [R]
+// 输入的矩形区域不能为空
 native SetRect takes rect whichRect, real minx, real miny, real maxx, real maxy returns nothing
-// 设置矩形区域(指定点) [R]
+// 设置矩形区域(边界)(指定点) [R]
+// 输入的矩形区域不能为空
 native SetRectFromLoc takes rect whichRect, location min, location max returns nothing
 // 移动矩形区域(指定坐标) [R]
 native MoveRectTo takes rect whichRect, real newCenterX, real newCenterY returns nothing
@@ -4829,11 +4831,11 @@ native CreateTrigger takes nothing returns trigger
 native DestroyTrigger takes trigger whichTrigger returns nothing
 // 重置触发器
 native ResetTrigger takes trigger whichTrigger returns nothing
-// 打开触发器
+// 开启触发器
 native EnableTrigger takes trigger whichTrigger returns nothing
 // 关闭触发器
 native DisableTrigger takes trigger whichTrigger returns nothing
-// 查询触发器是否打开
+// 查询触发器是否开启
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
 // 挂起/释放 触发器
@@ -4843,17 +4845,17 @@ native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
 
 // 获取匹配的单位
 constant native GetFilterUnit takes nothing returns unit
-// 获取选取的单位
+// 获取被选取的单位
 constant native GetEnumUnit takes nothing returns unit
 
 // 获取匹配的可破坏物
 constant native GetFilterDestructable takes nothing returns destructable
-// 获取选取的可破坏物
+// 获取被选取的可破坏物
 constant native GetEnumDestructable takes nothing returns destructable
 
 // 获取匹配的物品
 constant native GetFilterItem takes nothing returns item
-// 获取选取的物品
+// 获取被选取的物品
 constant native GetEnumItem takes nothing returns item
 
 // 解析标签（tags）
@@ -4861,7 +4863,7 @@ constant native ParseTags takes string taggedString returns string
 
 // 获取匹配的玩家
 constant native GetFilterPlayer takes nothing returns player
-// 获取选取的玩家
+// 获取被选取的玩家
 constant native GetEnumPlayer takes nothing returns player
 
 // 获取（当前被）触发的触发器
@@ -5112,14 +5114,14 @@ constant native GetTrainedUnitType takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取被侦测的单位(对应单位被侦测到等事件)（被反隐看到的单位）
+// 事件响应 获取被侦测到的单位(对应单位被侦测到等事件)（被反隐看到的单位）
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
 // 事件响应 获取正在召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummoningUnit takes nothing returns unit
-// 事件响应 获取被召唤单位(对应召唤单位等事件)
+// 事件响应 获取被召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
@@ -5127,7 +5129,7 @@ constant native GetSummonedUnit takes nothing returns unit
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
-// 事件响应 获取被装载单位(对应装载单位等事件)
+// 事件响应 获取被装载的单位(对应装载单位等事件)
 // 在飞艇/船内、在缠绕的金矿内的单位都可装载单位
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetLoadedUnit takes nothing returns unit
@@ -5135,21 +5137,21 @@ constant native GetLoadedUnit takes nothing returns unit
 // 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售/雇佣单位(对应出售单位等事件)
+// 事件响应 获取被出售/雇佣的单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
 // 事件响应 获取购买单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetBuyingUnit takes nothing returns unit
 
-// 事件响应 获取卖出的物品(对应出售物品等事件)
+// 事件响应 获取被卖出的物品(对应出售物品等事件)
 // EVENT_PLAYER_UNIT_SELL_ITEM
 constant native GetSoldItem takes nothing returns item
 
 // 事件响应 获取变更了所属(玩家)的单位(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnit takes nothing returns unit
-// 事件响应 获取变更所属单位的前一个所属(玩家)(对应变更单位所属等事件)
+// 事件响应 获取变更所属单位的上一个所属(玩家)(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
@@ -5165,7 +5167,7 @@ constant native GetManipulatingUnit takes nothing returns unit
 constant native GetManipulatedItem takes nothing returns item
 
 
-// 事件响应 获取被拾取物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
+// 事件响应 获取被拾取的物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 // @version 1.33
@@ -5556,7 +5558,8 @@ native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, re
 
 // 杀死单位
 native KillUnit takes unit whichUnit returns nothing
-// 删除单位，删除不会留下尸体
+// 删除单位
+// 不会留下尸体，不会杀死单位
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
