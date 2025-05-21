@@ -145,7 +145,7 @@ native SetHeroesFlee        takes boolean state                         returns 
 native SetHeroesBuyItems    takes boolean state                         returns nothing
 // 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
 native SetWatchMegaTargets  takes boolean state                         returns nothing
-// 启用/禁用 受伤单位（血量50%以下）不编入攻击组
+// 启用/禁用 忽略受伤单位（血量50%以下的单位不编入攻击组)
 native SetIgnoreInjured     takes boolean state                         returns nothing
 // 允许/禁止 英雄拾取物品
 // 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品
@@ -194,7 +194,7 @@ native WaitGetEnemyBase     takes nothing                               returns 
 // 获取敌人主基地的单位
 // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
-// 查询当前拟扩张点附近的敌方单位（敌方玩家或中立敌对玩家的单位）
+// 查询当前拟扩张点附近的敌方单位（主要是中立敌对玩家的单位，非中立敌对玩家不确定能否查到）
 // 可能返回null
 native GetExpansionFoe      takes nothing                               returns unit
 // 获取敌人分基地（可能返回null）
@@ -220,12 +220,12 @@ native LoadZepWave          takes integer x, integer y                  returns 
 // 发布自杀式攻击命令（指定玩家），返回false代表未执行
 // 理论上是一路打到指定玩家的出生点
 // 暴雪用于战役AI
-// @param check_full 怀疑是 是否检查攻击组满血
+// @param check_full 怀疑是 是否检查攻击组满单位
 native SuicidePlayer        takes player id, boolean check_full         returns boolean
 // 发布自杀式攻击命令（指定玩家单位），返回false代表未执行
 // 和SuicidePlayer的区别怀疑是 只要攻击到该玩家任意单位即可，无需一路打到玩家出生点
 // 暴雪用于战役AI
-// @param check_full 怀疑是 是否检查攻击组满血
+// @param check_full 怀疑是 是否检查攻击组满单位
 native SuicidePlayerUnits   takes player id, boolean check_full         returns boolean
 // 查询攻击组战斗状态（是否在战斗）
 // @param attack_captain 传 true 时查攻击组，传 false 时查防御组（或都查）
@@ -243,6 +243,7 @@ native ClearHarvestAI       takes nothing                               returns 
 native HarvestGold          takes integer town, integer peons           returns nothing
 // 分配指定数量的工人在指定基地采集木材
 // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
+// 暗夜和亡灵可能不会使用其他种族工人采木
 // @param town 0为第一个有矿的基地，大于0则是对应每个分基地，小于0时可能被视为0
 // @param peons 分配的工人数量，小于0时视为0
 native HarvestWood          takes integer town, integer peons           returns nothing
@@ -262,7 +263,7 @@ native ReturnGuardPosts     takes nothing                               returns 
 // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
 native CreateCaptains       takes nothing                               returns nothing
 // 设置指定组（攻击组、防御组、两组一起执行）回家后的集结坐标
-// AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标
+// AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标，怀疑运行后会对攻击组所有单位发送一次移动命令
 // @param which 攻击组为1，防御组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
 // 发布攻击组复位命令（回到 SetCaptainHome 的集结点）
@@ -286,7 +287,7 @@ native CaptainGoHome        takes nothing                               returns 
 // 查询攻击组是否在家
 // SetCaptainHome 设置的点
 native CaptainIsHome        takes nothing                               returns boolean
-// 查询攻击组是否满血
+// 查询攻击组是否满单位
 native CaptainIsFull        takes nothing                               returns boolean
 // 查询攻击组是否为空（未创建或已阵亡或已创建但不可用-比如控制权转移或被删除）
 native CaptainIsEmpty       takes nothing                               returns boolean
