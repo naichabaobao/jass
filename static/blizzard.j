@@ -7775,7 +7775,7 @@ function SetUserControlForceOff takes force whichForce returns nothing
 endfunction
 
 
-// 开启信箱模式（显示（所有玩家）的游戏UI，淡入宽屏UI），指定淡入持续时间
+// 开启信箱模式（隐藏游戏UI(所有玩家)，淡入宽屏UI），指定淡入持续时间
 function ShowInterfaceForceOn takes force whichForce, real fadeDuration returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
@@ -7784,7 +7784,7 @@ function ShowInterfaceForceOn takes force whichForce, real fadeDuration returns 
 endfunction
 
 
-// 关闭信箱模式（隐藏（所有玩家）的宽屏UI，淡入游戏UI），指定淡入持续时间
+// 关闭信箱模式（隐藏宽屏UI(所有玩家)，淡入游戏UI），指定淡入持续时间
 function ShowInterfaceForceOff takes force whichForce, real fadeDuration returns nothing
     if(IsPlayerInForce(GetLocalPlayer(), whichForce)) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
