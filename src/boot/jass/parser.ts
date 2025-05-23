@@ -2,7 +2,8 @@ import { canCjassReturn } from "../jass/keyword";
 import { isNewLine, isSpace } from "../tool";
 import { lines } from "./tool";
 import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Position, Range, Type, Context, baseTypeContext, LineText, Define, GlobalObject, DefineMethod, Interface } from "./ast";
+import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Type, Context, baseTypeContext, LineText, Define, GlobalObject, DefineMethod, Interface } from "./ast";
+import { Position, Range } from "./loc";
 import { Token, tokenize } from "./tokens";
 
 

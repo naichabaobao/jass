@@ -13,6 +13,7 @@ import { GlobalContext } from "../jass/parser-vjass";
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 import { Subject } from "../../extern/rxjs";
+import { Position } from "../jass/loc";
 
 
 class PackageCompletionItem<T extends vjass_ast.NodeAst> extends vscode.CompletionItem {
@@ -318,7 +319,7 @@ class Wrap {
 }
 class Manage {
   wraps: Wrap[] = [];
-  private readonly subject = new Subject();
+  private readonly subject = new Subject<vscode.TextDocument>();
 
   constructor() {
     this.subject.subscribe((document: vscode.TextDocument) => {
@@ -457,7 +458,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
         items.push(...wrap.document.scope_items);
         items.push(...wrap.document.method_items);
         items.push(...wrap.document.membere_items);
-        const target_position = new vjass.Position(position.line, position.character);
+        const target_position = new Position(position.line, position.character);
         // const takes: vjass_ast.Take[] = [];
         // const push_take = (function_items: PackageCompletionItem<vjass_ast.Func | vjass_ast.Method | vjass_ast.zinc.Func | vjass_ast.zinc.Method>[]) => {
         //   function_items.filter(x => {

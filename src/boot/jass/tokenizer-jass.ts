@@ -42,7 +42,7 @@ export function token_handle(document:Document, line:number, character:number, p
     return false;
   };
   const new_token = (type: string, is_complete: boolean = true) => {
-    return new Token(document, line, character - length, position - length, length + 1, type, is_complete);
+    return new Token(document.content.substring(position - length, length + 1), line, character - length, position - length, length + 1, type, is_complete);
   };
   switch (state) {
     case StateType.Nil:

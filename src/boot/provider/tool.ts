@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Position } from '../jass/ast';
+import { Position } from '../jass/loc';
 import { tokens } from '../jass/tokens';
 import { Options } from './options';
 

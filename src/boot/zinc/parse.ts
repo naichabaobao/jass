@@ -1,5 +1,5 @@
-
-import { Context, Position, Range } from "../jass/ast";
+import { Context } from "../jass/ast";
+import { Position, Range } from "../jass/loc";
 import {Program, Take, Library, Struct, Member, Global, Func, Local, Method, ModifierType, JassError, LineComment} from "../jass/ast";
 import {Token, tokenize} from "../jass/tokens";
 

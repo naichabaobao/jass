@@ -1,8 +1,7 @@
-
 import { resolve } from "path";
 import { cwd } from "process";
 import { getFileContent, is0_16, is0_7, is1_9, isLetter, isNewLine, isNotNewLine, isNumber, isSpace } from "../tool";
-import { Position, Range } from "./ast";
+import { Position, Range } from "./loc";
 
 type TokenType = "id" | "op" | "int" | "real" | "string" | "mark" | "error" | "block_comment" | "comment" | "macro";
 

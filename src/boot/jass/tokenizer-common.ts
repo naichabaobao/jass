@@ -3,6 +3,8 @@ import * as fs from "fs";
 import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, JassDetail, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
+import { Position, Range } from "./loc";
+import { AllKeywords } from "./keyword";
 
 
 
@@ -14,87 +16,6 @@ export class TextLine {
     this.lineNumber = lineNumber;
     this.text = text;
   }
-}
-
-export class Position {
-  public line: number;
-  public position: number;
-
-  constructor(line: number = 0, position: number = 0) {
-    this.line = line;
-    this.position = position;
-  }
-
-}
-
-export class Range {
-  private _start: Position;
-  private _end: Position;
-
-
-  public get start(): Position {
-    return this._start;
-  }
-
-
-  public get end(): Position {
-    return this._end;
-  }
-
-
-  public set start(start: Position) {
-    this._start = start;
-    if (this.end.line < start.line) {
-      this._end = this._start;
-    } else if (this.end.line == start.line && this.end.position < start.position) {
-      this._end.position = this._start.position;
-    }
-  }
-
-  public set end(end: Position) {
-    this._end = end;
-  }
-
-
-  public constructor(start: Position = new Position(), end: Position = new Position()) {
-    this._start = start;
-    this._end = end;
-  }
-
-  public static default(): Range {
-    return new Range(new Position(0, 0), new Position(0, 0))
-  }
-
-  /**
-   * @deprecated 使用from,更加贴近vscode方式
-   * @param range 
-   * @returns 
-   */
-  public setRange<T extends Range>(range: T) {
-    this.start = range.start;
-    this.end = range.end;
-    return this;
-  }
-
-  public contains(positionOrRange: Position | Range): boolean {
-    if (positionOrRange instanceof Position) {
-      return (this.start.line < positionOrRange.line || (this.start.line == positionOrRange.line && this.start.position < positionOrRange.position))
-        &&
-        (this.end.line > positionOrRange.line || (this.end.line == positionOrRange.line && this.end.position > positionOrRange.position));
-    } else {
-      return (this.start.line < positionOrRange.start.line || (this.start.line == positionOrRange.start.line && this.start.position < positionOrRange.start.position))
-        &&
-        (this.end.line > positionOrRange.end.line || (this.end.line == positionOrRange.end.line && this.end.position > positionOrRange.end.position));
-    }
-  }
-
-  public from<T extends Range>(range: T) {
-    this.start = range.start;
-    this.end = range.end;
-    return this;
-  }
-
-
 }
 
 export class Macro {
@@ -205,8 +126,8 @@ export class TextMacro extends Range {
     return tokenize_for_vjass_by_content(text_line.text).map(toekn => {
       // @ts-expect-error
       toekn.line = line;
-      toekn.start.line = line;
-      toekn.end.line = line;
+      // toekn.start.line = line;
+      // toekn.end.line = line;
       return toekn;
     });
   }
@@ -626,7 +547,7 @@ export class Document {
   }
 
   public is_text_macro_line(line: number): boolean {
-    return this.line_text_macro_indexs[line]?.text_macro_tag != 0 ?? false;
+    return (this.line_text_macro_indexs[line].text_macro_tag != 0);
   }
 
   public is_zinc_block_line_by_virtual(line: number, virtual_line:number): boolean {
@@ -787,7 +708,7 @@ export class Document {
         const token = tokens[0];
         const text = token.getText();
         const result = ImportRegExp.exec(text);
-        const vjass_import = new Import(this, token.start, token.end);
+        const vjass_import = new Import(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
         this.imports.push(vjass_import);
         if (result) {
           if (result.groups && result.groups["type"]) {
@@ -831,7 +752,7 @@ export class Document {
         const text = token.getText();
         const result = TextMacroRegExp.exec(text);
 
-        text_macro = new TextMacro(this, token.start, token.end);
+        text_macro = new TextMacro(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
         text_macro.start_line = index;
         text_macro.end_line = index;
         if (result && result.groups) {
@@ -894,7 +815,7 @@ export class Document {
           const token = tokens[0];
           const text = token.getText();
           const result = RunTextMacroRegExp.exec(text);
-          const run_text_macro = new RunTextMacro(this, token.start, token.end);
+          const run_text_macro = new RunTextMacro(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
           if (result && result.groups) {
             if (result.groups["name"]) {
 
@@ -1711,27 +1632,69 @@ interface ReplaceableEntity {
   value: string;
 }
 
-export class Token extends Range {
-  public readonly document: Document;
+export class StringCollection {
+  public static readonly StringMap:Map<number, string> = new Map();
+
+  private static _id:number = -1;
+  public static get_id() :number {
+    const id = StringCollection._id;
+    StringCollection._id--;
+    return id;
+  }
+}
+
+export class Token /*extends Range*/ {
+  // public readonly document: Document;
+  /**
+   * 当前行
+   */
   public readonly line: number;
+  /**
+   * 当前行的位置
+   */
   public readonly character: number;
+  /**
+   * 整个content的indexof
+   */
   public readonly position: number;
+  /**
+   * text文本长度
+   */
   public readonly length: number;
+  /**
+   * 类型
+   */
   public readonly type: string;
+  /**
+   * 是否完整
+   */
   public readonly is_complete: boolean;
   //@ts-ignore
   // public readonly type_name: string;
+  private text_or_index:number|string
 
 
-  public constructor(document: Document, line: number, character: number, position: number, length: number, type: string, is_complete: boolean = true) {
-    super(new Position(line, character), new Position(line, character + length));
-    this.document = document;
+  public constructor(text: string, line: number, character: number, position: number, length: number, type: string, is_complete: boolean = true) {
+    // super(new Position(line, character), new Position(line, character + length));
+    // this.document = document;
     this.line = line;
     this.character = character;
     this.position = position;
     this.length = length;
     this.type = type;
     this.is_complete = is_complete;
+
+    const text_index = AllKeywords.indexOf(text);
+    if (text_index != -1) {
+      this.text_or_index = text_index;
+    } else {
+      this.text_or_index = text;
+    }
+    // this.text_or_index = text;
+
+    // if (text.startsWith("globals")) {
+    //   console.log(`'${text}'`);
+    // }
 
     //   if (this.type == TokenType.Conment) {
     //     return "Comment";
@@ -1753,7 +1716,8 @@ export class Token extends Range {
   }
 
   public getText(): string {
-    return this.document.content.substring(this.position, this.position + this.length);
+    // return this.document.content.substring(this.position, this.position + this.length);
+    return typeof this.text_or_index == "number" ? AllKeywords[this.text_or_index] : this.text_or_index;
   }
 
   public is_value(): boolean {

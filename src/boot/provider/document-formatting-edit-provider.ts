@@ -38,13 +38,13 @@ function format_by_tokens(tokens:common.Token[]) {
         return;
       }
       if (current_token.getText() != previous_token.getText()) {
-        if (current_token.start.position - previous_token.end.position == 0) {
+        if (current_token.character - (previous_token.character + previous_token.length) == 0) {
           textEdits.push(vscode.TextEdit.insert(new vscode.Position(current_token.line, current_token.character), " "));
         }
-        else if (current_token.start.position - previous_token.end.position > 1) {
+        else if (current_token.character - (previous_token.character + previous_token.length) > 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-            new vscode.Position(current_token.line, previous_token.end.position),
-            new vscode.Position(current_token.line, current_token.start.position)
+            new vscode.Position(current_token.line, previous_token.character + previous_token.length),
+            new vscode.Position(current_token.line, current_token.character)
           ), " "));
         }
       }
@@ -54,13 +54,13 @@ function format_by_tokens(tokens:common.Token[]) {
         return;
       }
       if (current_token.getText() != next_token.getText()) {
-        if (next_token.start.position - current_token.end.position == 0) {
-          textEdits.push(vscode.TextEdit.insert(new vscode.Position(current_token.line, current_token.end.position), " "));  
+        if (next_token.character - (current_token.character + current_token.length) == 0) {
+          textEdits.push(vscode.TextEdit.insert(new vscode.Position(current_token.line, current_token.character + current_token.length), " "));  
         } 
-        else if (next_token.start.position - current_token.end.position > 1) {
+        else if (next_token.character - (current_token.character + current_token.length) > 1) {
           textEdits.push(vscode.TextEdit.replace(new vscode.Range(
-            new vscode.Position(current_token.line, current_token.end.position),
-            new vscode.Position(current_token.line, next_token.start.position)
+            new vscode.Position(current_token.line, current_token.character + current_token.length),
+            new vscode.Position(current_token.line, next_token.character)
           ), " "));
         }
       }
@@ -70,10 +70,10 @@ function format_by_tokens(tokens:common.Token[]) {
         return;
       }
       if (current_token.getText() != previous_token.getText()) {
-        if (current_token.start.position - previous_token.end.position > 0) {
+        if (current_token.character - (previous_token.character + previous_token.length) > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(current_token.line, previous_token.end.position),
-            new vscode.Position(current_token.line, current_token.start.position)
+            new vscode.Position(current_token.line, previous_token.character + previous_token.length),
+            new vscode.Position(current_token.line, current_token.character)
           )));
         }
       }
@@ -83,10 +83,10 @@ function format_by_tokens(tokens:common.Token[]) {
         return;
       }
       if (current_token.getText() != next_token.getText()) {
-        if (next_token.start.position - current_token.end.position > 0) {
+        if (next_token.character - (current_token.character + current_token.length) > 0) {
           textEdits.push(vscode.TextEdit.delete(new vscode.Range(
-            new vscode.Position(current_token.line, current_token.end.position),
-            new vscode.Position(current_token.line, next_token.start.position)
+            new vscode.Position(current_token.line, current_token.character + current_token.length),
+            new vscode.Position(current_token.line, next_token.character)
           )));
         }
       }

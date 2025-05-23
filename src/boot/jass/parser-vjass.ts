@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Document, Position, Range, RunTextMacro, TextLine, TextMacro, Token, TokenType} from "./tokenizer-common";
+import { Document, RunTextMacro, TextLine, TextMacro, Token, TokenType} from "./tokenizer-common";
+import { Position, Range } from "./loc";
 
 export class Context {
     private _keys: string[] = [];
@@ -135,33 +136,37 @@ export class LibraryRequire {
 
 
 export class NodeAst extends Range {
-    public readonly document:Document;
+    public readonly document: Document;
     public parent: NodeAst|null = null;
     public previous: NodeAst|null = null;
     public next: NodeAst|null = null;
-    public children:Array< NodeAst> = [];
+    public children: Array<NodeAst> = [];
+    public start_token: Token|null = null;
+    public end_token: Token|null = null;
 
     /**
      * @deprecated 目前用于表示vjass block结束
      */
-    public end_tag:Token|null = null;
+    public end_tag: Token|null = null;
 
-    constructor(document:Document) {
-        super();
+    constructor(document: Document) {
+        super(new Position(), new Position());
         this.document = document;
     }
+
     public get start(): Position {
         if (this.start_token) {
-            return this.start_token.start;
+            return new Position(this.start_token.line, this.start_token.character);
         } else {
             return new Position(0, 0);
         }
     }
+
     public get end(): Position {
         if (this.end_tag) {
-            return this.end_tag.end;
+            return new Position(this.end_tag.line, this.end_tag.character);
         } else if (this.end_token) {
-            return this.end_token.end;
+            return new Position(this.end_token.line, this.end_token.character);
         } else if (this.children.length > 0) {
             return this.children[this.children.length - 1].end;
         } else if (this.next) {
@@ -169,17 +174,15 @@ export class NodeAst extends Range {
         } else {
             return new Position(0, 0);
         }
+        return new Position();
     }
 
     public contains(positionOrRange: Range | Position): boolean {
         return new Range(this.start, this.end).contains(positionOrRange);
     }
 
-    public start_token:Token|null = null;
-    public end_token:Token|null = null;
-
-    public get description():string[] {
-        const descs:string[] = [];
+    public get description(): string[] {
+        const descs: string[] = [];
 
         const previous_by_previous = (node: NodeAst) => {
             if (node.previous && node.previous instanceof Comment) {
@@ -196,7 +199,7 @@ export class NodeAst extends Range {
         return descs;
     }
 
-    public get is_deprecated():boolean {
+    public get is_deprecated(): boolean {
         let is = false;
         const previous_by_previous = (node: NodeAst) => {
             if (node.previous && node.previous instanceof Comment) {
@@ -214,8 +217,8 @@ export class NodeAst extends Range {
         return is;
     }
 
-    public get comments():Comment[] {
-        const comments:Comment[] = [];
+    public get comments(): Comment[] {
+        const comments: Comment[] = [];
 
         const previous_by_previous = (node: NodeAst) => {
             if (node.previous && node.previous instanceof Comment) {
@@ -229,7 +232,7 @@ export class NodeAst extends Range {
         return comments;
     }
 
-    public add_node<T extends NodeAst>(node:T) {
+    public add_node<T extends NodeAst>(node: T) {
         const previous = this.children[this.children.length - 1] ?? null;
 
         this.children.push(node);
@@ -253,7 +256,7 @@ export class JassDetail extends NodeAst {
         this.end_token = name;
     }
 
-    private cache:string|null = null;
+    private cache: string|null = null;
     public get label(): string {
         if (this.cache == null) {
             this.cache = this.name.getText();
@@ -275,7 +278,7 @@ export class JassDetail extends NodeAst {
         }
     }
 
-    public get content():string {
+    public get content(): string {
         if (this.name.type == TokenType.String) {
             return this.label.replace(/^"/, "").replace(/"$/, "");
         } else if (this.name.type == TokenType.Mark) {
@@ -288,7 +291,7 @@ export class JassDetail extends NodeAst {
 
 export namespace zinc {
     export class Break extends NodeAst {
-        public token:Token|null = null;
+        public token: Token|null = null;
 
         constructor(document: Document) {
             super(document);
@@ -306,7 +309,7 @@ export namespace zinc {
             super(document);
         }
 
-        to_string():string {
+        to_string(): string {
             return `${this.ref?.to_string() ?? "()"}`;
         }
     }
@@ -348,16 +351,16 @@ export namespace zinc {
     
         public is_array: boolean = false;
 
-        public size_expr:IndexExpr|null = null;
+        public size_expr: IndexExpr|null = null;
     
         
         public get is_constant() : boolean {
             return this.qualifier !== null && this.qualifier.getText() == "constant";
         }
-        public get is_private():boolean {
+        public get is_private(): boolean {
             return !!this.visible && this.visible.getText() == "private";
         }
-        public get is_public():boolean {
+        public get is_public(): boolean {
             return !this.is_private;
         }
         
@@ -413,28 +416,28 @@ export namespace zinc {
         public name: Token | null = null;
         public extends: Token[] | null = null;
 
-        public index_expr:Zoom|null = null;
+        public index_expr: Zoom|null = null;
     
-        public get is_private():boolean {
+        public get is_private(): boolean {
             return !!this.visible && this.visible.getText() == "private";
         }
-        public get is_public():boolean {
+        public get is_public(): boolean {
             return !this.is_private;
         }
     
-        to_string():string {
+        to_string(): string {
             return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
 
         /**
          * 空定义结构size
          */
-        get is_empty_size():boolean {
+        get is_empty_size(): boolean {
             return !!this.index_expr && this.index_expr instanceof Value && this.index_expr === null;
         }
     }
     export class Struct extends Interface {
-        to_string():string {
+        to_string(): string {
             return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
     }
@@ -485,20 +488,20 @@ export namespace zinc {
             }
         }
     
-        public get is_private():boolean {
+        public get is_private(): boolean {
             return !!this.visible && this.visible.getText() == "private";
         }
-        public get is_public():boolean {
+        public get is_public(): boolean {
             return !this.is_private;
         }
     
-        public get is_static():boolean {
+        public get is_static(): boolean {
             return !!this.modifier && this.modifier.getText() == "static";
         }
-        public get is_stub():boolean {
+        public get is_stub(): boolean {
             return !!this.modifier && this.modifier.getText() == "stub";
         }
-        public get is_constant():boolean {
+        public get is_constant(): boolean {
             return !!this.qualifier && this.qualifier.getText() == "constant";
         }
     
@@ -563,9 +566,9 @@ export namespace zinc {
         expr: Zoom | null = null;
     }
     export class CFor extends For {
-        init_statement:zinc.Set|null = null;
+        init_statement: zinc.Set|null = null;
         expr: Zoom | null = null;
-        inc_statement:zinc.Set|null = null;
+        inc_statement: zinc.Set|null = null;
     }
     export class Private extends NodeAst {
     }
@@ -602,7 +605,7 @@ export function parse_library(document: Document, tokens: Token[]) {
     // const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
-    let optional:LibraryRequire|null = null;
+    let optional: LibraryRequire|null = null;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -901,14 +904,14 @@ export class Interface extends NodeAst {
     public name: Token | null = null;
     public extends: Token[] | null = null;
 
-    public get is_private():boolean {
+    public get is_private(): boolean {
         return !!this.visible && this.visible == "private";
     }
-    public get is_public():boolean {
+    public get is_public(): boolean {
         return !this.is_private;
     }
 
-    to_string():string {
+    to_string(): string {
         return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
     }
 }
@@ -988,7 +991,7 @@ export function parse_interface(document: Document, tokens: Token[]) {
 export class Struct extends Interface {
 
 
-    to_string():string {
+    to_string(): string {
         return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
     }
 
@@ -1077,13 +1080,13 @@ export class Take {
         return `${type_string} ${name_string}`;
     }
 
-    belong:Func | Native | Method | zinc.Func | zinc.Method;
+    belong: Func | Native | Method | zinc.Func | zinc.Method;
 
-    constructor(belong:Func|Native|Method|zinc.Func|zinc.Method) {
+    constructor(belong: Func | Native | Method | zinc.Func | zinc.Method) {
         this.belong = belong;
     }
 
-    public get desciprtion():ParamDescription|null {
+    public get desciprtion(): ParamDescription | null {
         const desc = this.belong.get_param_descriptions().find(desc => {
             return desc.name === this.name?.getText();
         });
@@ -1152,20 +1155,20 @@ export class Native extends NodeAst {
         }
     }
 
-    public get is_private():boolean {
+    public get is_private(): boolean {
         return !!this.visible && this.visible.getText() == "private";
     }
-    public get is_public():boolean {
+    public get is_public(): boolean {
         return !this.is_private;
     }
 
-    public get is_static():boolean {
+    public get is_static(): boolean {
         return !!this.modifier && this.modifier.getText() == "static";
     }
-    public get is_stub():boolean {
+    public get is_stub(): boolean {
         return !!this.modifier && this.modifier.getText() == "stub";
     }
-    public get is_constant():boolean {
+    public get is_constant(): boolean {
         return !!this.qualifier && this.qualifier.getText() == "constant";
     }
 
@@ -1719,7 +1722,7 @@ export function parse_loop(document: Document, tokens: Token[]) {
 export class Comment extends NodeAst {
     comment: Token | null = null;
 
-    public get content():string {
+    public get content(): string {
         if (this.comment) {
             const text = this.comment.getText().replace(/^\/\//, "");
             return text;
@@ -1727,14 +1730,14 @@ export class Comment extends NodeAst {
         return "";
     }
 
-    public get is_deprecated():boolean {
+    public get is_deprecated(): boolean {
         if (this.comment) {
             return /^\/\/\s*@[dD]eprecated\b/.test(this.comment.getText());
         }
         return false;
     }
 
-    public get is_param():boolean {
+    public get is_param(): boolean {
         if (this.comment) {
             return /^\/\/\s*@[pP]arams?\b/.test(this.comment.getText());
         }
@@ -1790,15 +1793,15 @@ export class GlobalVariable extends NodeAst {
     expr: Zoom | null = null;
 
     public is_array: boolean = false;
-    public size_expr:IndexExpr|null = null;
+    public size_expr: IndexExpr|null = null;
     
     public get is_constant() : boolean {
         return this.qualifier !== null && this.qualifier.getText() == "constant";
     }
-    public get is_private():boolean {
+    public get is_private(): boolean {
         return !!this.visible && this.visible.getText() == "private";
     }
-    public get is_public():boolean {
+    public get is_public(): boolean {
         return !this.is_private;
     }
     
@@ -1976,7 +1979,7 @@ export class Id implements ExprTrict {
         }
     }
 
-    public to<T extends Params | IndexExpr | null>(document:Document, v: T) {
+    public to<T extends Params | IndexExpr | null>(document: Document, v: T) {
         if (v instanceof Params) {
             const caller = new Caller();
             caller.name = this;
@@ -2042,11 +2045,11 @@ export class VariableName extends Expr implements ExprTrict {
         if (this.names.length > 0) {
             const ref = this.names[0];
             if (ref instanceof Id) {
-                return ref.expr?.start.line ?? 0;
+                return ref.expr?.line ?? 0;
             } else if (ref instanceof Caller) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else {
                 return 0;
             }
@@ -2058,11 +2061,11 @@ export class VariableName extends Expr implements ExprTrict {
         if (this.names.length > 0) {
             const ref = this.names[this.names.length - 1];
             if (ref instanceof Id) {
-                return ref.expr?.start.line ?? 0;
+                return ref.expr?.line ?? 0;
             } else if (ref instanceof Caller) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else {
                 return 0;
             }
@@ -2074,11 +2077,11 @@ export class VariableName extends Expr implements ExprTrict {
         if (this.names.length > 0) {
             const ref = this.names[0];
             if (ref instanceof Id) {
-                return ref.expr?.start.position ?? 0;
+                return ref.expr?.character ?? 0;
             } else if (ref instanceof Caller) {
-                return ref.name?.expr?.start.position ?? 0;
+                return ref.name?.expr?.character ?? 0;
             } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else {
                 return 0;
             }
@@ -2090,11 +2093,11 @@ export class VariableName extends Expr implements ExprTrict {
         if (this.names.length > 0) {
             const ref = this.names[this.names.length - 1];
             if (ref instanceof Id) {
-                return ref.expr?.start.position ?? 0;
+                return ref.expr?.character ?? 0;
             } else if (ref instanceof Caller) {
-                return ref.name?.expr?.start.position ?? 0;
+                return ref.name?.expr?.character ?? 0;
             } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.start.line ?? 0;
+                return ref.name?.expr?.line ?? 0;
             } else {
                 return 0;
             }
@@ -2129,7 +2132,7 @@ export class Params implements ExprTrict {
     }
 }
 // export class VariableCall extends VariableName implements ExprTrict {
-//     public params:Params|null = null;
+//     public params: Params|null = null;
 
 //     // public to_string() {
 //     //     let name = "";
@@ -2146,7 +2149,7 @@ export class Params implements ExprTrict {
 //     //     return name;
 //     // }
 
-//     public static from(var_name:VariableName) {
+//     public static from(var_name: VariableName) {
 //         const self = new VariableCall();
 //         self.names = [...var_name.names];
 //         self.index_expr = var_name.index_expr;
@@ -2191,7 +2194,7 @@ export class Type extends NodeAst {
     name: Token | null = null;
     extends: Token | null = null;
 
-    to_string():string {
+    to_string(): string {
         return `type ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.getText() : ""}`;
     }
 }
@@ -2202,7 +2205,7 @@ export class Call extends NodeAst {
         super(document);
     }
 
-    to_string():string {
+    to_string(): string {
         return `call ${this.ref?.to_string() ?? "()"}`;
     }
 }
@@ -2622,7 +2625,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
  * @param offset_index 
  * @param need_index_expr 0 不需要 1 需要 -1 都可以
  */
-export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number, need_index_expr:0|1|-1 = -1) {
+export function parse_line_index_expr(document: Document, tokens: Token[], offset_index: number, need_index_expr: 0 | 1 | -1 = -1) {
     let index = offset_index;
     let state = 0;
     let index_expr: IndexExpr | null = null;
@@ -2682,10 +2685,10 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
     }
 }
 
-// function parse_line_caller(document: Document, tokens:Token[], offset_index: number) {
+// function parse_line_caller(document: Document, tokens: Token[], offset_index: number) {
 //     let index = offset_index;
 //     let state = 0;
-//     let variable:VariableCall|null = null;
+//     let variable: VariableCall|null = null;
 //     while(index < tokens.length) {
 //         const token = tokens[index];
 //         if (token.is_block_comment || token.is_comment) {
@@ -2720,10 +2723,10 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
 //         expr: variable
 //     }
 // }
-// function parse_line_name(document: Document, tokens:Token[], offset_index: number) {
+// function parse_line_name(document: Document, tokens: Token[], offset_index: number) {
 //     let index = offset_index;
 //     let state = 0;
-//     let variable:VariableName|null = null;
+//     let variable: VariableName|null = null;
 
 //     while(index < tokens.length) {
 //         const token = tokens[index];
@@ -3454,8 +3457,8 @@ export function parse_line_member(document: Document, tokens: Token[]) {
 
 export class Other extends NodeAst { }
 
-export function parse_line_end_tag(document: Document, tokens:Token[], object: NodeAst, end_tag: string) {
-    let token:Token|null = null;
+export function parse_line_end_tag(document: Document, tokens: Token[], object: NodeAst, end_tag: string) {
+    let token: Token|null = null;
 
     let state = 0;
     let index = 0

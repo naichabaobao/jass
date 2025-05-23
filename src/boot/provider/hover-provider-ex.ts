@@ -10,6 +10,7 @@ import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 import { Subject } from "../../extern/rxjs";
 import { AllKeywords } from "../jass/keyword";
+import { Position } from "../jass/loc";
 
 class PackageHover<T extends vjass_ast.NodeAst> extends vscode.Hover {
   public readonly key: string;
@@ -94,7 +95,7 @@ class HoverDocument {
   public static  native_to_hover(object: vjass_ast.Native) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -139,7 +140,7 @@ class HoverDocument {
   private library_to_hover(object: vjass_ast.Library|vjass_ast.zinc.Library) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -165,7 +166,7 @@ class HoverDocument {
   private scope_to_hover(object: vjass_ast.Scope) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -191,7 +192,7 @@ class HoverDocument {
   private struct_to_hover(object: vjass_ast.Struct|vjass_ast.zinc.Struct) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -217,7 +218,7 @@ class HoverDocument {
   public static local_to_hover(object: vjass_ast.Local|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -243,7 +244,7 @@ class HoverDocument {
   private global_variable_to_hover(object: vjass_ast.GlobalVariable|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -269,7 +270,7 @@ class HoverDocument {
   public static member_to_hover(object: vjass_ast.Member|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -295,7 +296,7 @@ class HoverDocument {
   public static take_to_hover(object: vjass_ast.Take) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.belong.document.filePath);
-    ms.appendMarkdown("## " + object.name?.getText() ?? "(unkown)");
+    ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.belong.document.filePath}`);
@@ -327,7 +328,7 @@ class HoverDocument {
   public static define_to_hover(object: vjass.Macro) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
-    ms.appendMarkdown("## " + object.key ?? "");
+    ms.appendMarkdown("## " + (object.key || ""));
     ms.appendText("\n");
 
     ms.appendText(`>_${object.document.filePath}`);
@@ -361,7 +362,7 @@ class Wrap {
 }
 class Manage {
   wraps:Wrap[] = [];
-  private readonly subject = new Subject();
+  private readonly subject = new Subject<vscode.TextDocument>();
 
   constructor () {
     this.subject.subscribe((document:vscode.TextDocument) => {
@@ -529,7 +530,7 @@ class HoverProvider implements vscode.HoverProvider {
       
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
-        const target_position = new vjass.Position(position.line, position.character);
+        const target_position = new Position(position.line, position.character);
 
         const find_contains_func_and_method = (): PackageHover<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>[] => {
           return [...wrap.document.method_items, ...wrap.document.function_items].filter(object => object.data.contains(target_position));

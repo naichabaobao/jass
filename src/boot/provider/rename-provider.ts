@@ -5,6 +5,7 @@ import { GlobalContext } from "../jass/parser-vjass";
 
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
+import { Position } from "../jass/loc";
 
 const equals = (oldkey: string, key: string) => {
 	const this_info = path.parse(oldkey);
@@ -17,7 +18,10 @@ function function_change(edit: vscode.WorkspaceEdit, func: vjass_ast.Func, old_s
 	// const edit: vscode.WorkspaceEdit = new vscode.WorkspaceEdit();
 	func.takes?.forEach(take => {
 		if (take.name && take.name.getText() == old_str) {
-			const range = new vscode.Range(new vscode.Position(take.name.start.line, take.name.start.position), new vscode.Position(take.name.end.line, take.name.end.position));
+			const range = new vscode.Range(
+				new vscode.Position(take.name.line, take.name.character),
+				new vscode.Position(take.name.line, take.name.character + take.name.length)
+			);
 			edit.replace(vscode.Uri.file(func.document.filePath), range, new_str);
 		}
 	});
@@ -62,7 +66,7 @@ class RenameProvider implements vscode.RenameProvider {
 		const edit: vscode.WorkspaceEdit = new vscode.WorkspaceEdit();
 		if (program) {
 			
-			const target_position = new vjass.Position(position.line, position.character);
+			const target_position = new Position(position.line, position.character);
 			const push_take = (function_items: (vjass_ast.Func | vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method)[]) => {
 				function_items.filter(x => {
 					return x.contains(target_position);

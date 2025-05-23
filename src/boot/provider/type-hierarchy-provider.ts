@@ -84,7 +84,7 @@ class TypeHierarchyDocument {
   }
   class Manage {
     wraps:Wrap[] = [];
-    private readonly subject = new Subject();
+    private readonly subject = new Subject<string>();
   
     constructor () {
       this.subject.subscribe((file_path: string) => {

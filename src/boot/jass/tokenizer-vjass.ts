@@ -1,6 +1,5 @@
-
-import { Document, Position, Token, TokenHandleResult, TokenType, tokenize } from "./tokenizer-common";
-
+import { Document, Token, TokenHandleResult, TokenType, tokenize } from "./tokenizer-common";
+import { Position } from "./loc";
 
 function symbol_state(char: string): number {
     let id = 0x00000000;
@@ -74,12 +73,12 @@ export function token_handle(document:Document, line: number, character: number,
     };
     const new_token = (type: string, is_complete: boolean = true) => {
         if (type == TokenType.BlockComment) {
-            const token = new Token(document, line, character - length, position - length, length + 1, type, is_complete);
-            token.start = new Position();
-            token.end = new Position();
+            const token = new Token(document.content.substring(position - length, position + 1), line, character - length, position - length, length + 1, type, is_complete);
+            // token.start = new Position();
+            // token.end = new Position();
             return token;
         }
-        return new Token(document, line, character - length, position - length, length + 1, type, is_complete);
+        return new Token(document.content.substring(position - length, position + 1), line, character - length, position - length, length + 1, type, is_complete);
     };
     switch (state) {
         case StateType.Nil:

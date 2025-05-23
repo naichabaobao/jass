@@ -28,16 +28,29 @@ import { Options } from './options';
 import { Token, TokenType } from '../jass/tokenizer-common';
 import { isAiFile, isJFile } from '../tool';
 import { GlobalContext, Node } from '../jass/parser-vjass';
-import { AsyncSubject, Subject } from '../../extern/rxjs';
+import { Subject } from '../../extern/rxjs';
 
 const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
 const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: string) => {
 	if (token instanceof Token) {
-		const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start.line, token.start.position, token.end.line, token.end.position), message, vscode.DiagnosticSeverity.Error);
+		const startChar = Math.max(0, token.character);
+		const endChar = Math.max(0, token.character + token.length);
+		const diagnostic = new vscode.Diagnostic(
+			new vscode.Range(token.line, startChar, token.line, endChar),
+			message,
+			vscode.DiagnosticSeverity.Error
+		);
 		diagnostics.push(diagnostic);
 	} else {
 		if (token.start_line) {
-			const diagnostic = new vscode.Diagnostic(new vscode.Range(token.start_line.line, token.start_line.tokens()[0].start.position, token.start_line.line, token.start_line.tokens()[0].end.position), message, vscode.DiagnosticSeverity.Error);
+			const firstToken = token.start_line.tokens()[0];
+			const startChar = Math.max(0, firstToken.character);
+			const endChar = Math.max(0, firstToken.character + firstToken.length);
+			const diagnostic = new vscode.Diagnostic(
+				new vscode.Range(token.start_line.line, startChar, token.start_line.line, endChar),
+				message,
+				vscode.DiagnosticSeverity.Error
+			);
 			diagnostics.push(diagnostic);
 		}
 	}
@@ -72,7 +85,7 @@ const find_file_error_for_vjass = (document_or_filepath:vscode.TextDocument|stri
 
 }
 
-const subject = new Subject();
+const subject = new Subject<string | vscode.TextDocument>();
 subject.subscribe((document_or_filepath:vscode.TextDocument|string) => {
 	find_file_error_for_vjass(document_or_filepath);
 });

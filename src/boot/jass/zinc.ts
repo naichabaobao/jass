@@ -1,5 +1,6 @@
 import { Document, Token } from "./tokenizer-common";
 import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
+import { Position, Range } from "./loc";
 
 
 

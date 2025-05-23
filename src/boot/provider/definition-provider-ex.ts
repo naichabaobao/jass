@@ -10,6 +10,7 @@ import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 import { Subject } from "../../extern/rxjs";
 import { AllKeywords } from "../jass/keyword";
+import { Position } from "../jass/loc";
 
 class PackageLocation<T extends vjass_ast.NodeAst> extends vscode.Location {
   public readonly key: string;
@@ -147,7 +148,7 @@ class LocationDocument {
     return item;
   }
   public static take_to_hover(object: vjass_ast.Take) {
-    const item = new TakeLocation(object, vscode.Uri.file(object.belong.document.filePath), new vscode.Range(new vscode.Position(object.type?.start.line ?? 0, object.type?.start.position ?? 0), new vscode.Position(object.name?.end.line ?? 0, object.name?.end.position ?? 0)));
+    const item = new TakeLocation(object, vscode.Uri.file(object.belong.document.filePath), new vscode.Range(new vscode.Position(object.type?.line ?? 0, object.type?.character ?? 0), new vscode.Position(object.name?.line ?? 0, object.name?.character ?? 0)));
 
     return item;
 
@@ -177,7 +178,7 @@ class Wrap {
 }
 class Manage {
   wraps:Wrap[] = [];
-  private readonly subject = new Subject();
+  private readonly subject = new Subject<vscode.TextDocument>();
 
   constructor () {
     this.subject.subscribe((document:vscode.TextDocument) => {
@@ -342,7 +343,7 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
 
       const is_current = wrap.equals(document.uri.fsPath);
       if (is_current) {
-        const target_position = new vjass.Position(position.line, position.character);
+        const target_position = new Position(position.line, position.character);
 
         const find_contains_func_and_method = (): PackageLocation<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>[] => {
           return [...wrap.document.method_items, ...wrap.document.function_items].filter(object => object.data.contains(target_position));

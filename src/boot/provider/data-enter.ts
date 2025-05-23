@@ -7,8 +7,8 @@ import * as vscode from 'vscode';
 import { Options } from './options';
 import { GlobalContext, parse } from '../jass/parser-vjass';
 
-import { Subject } from "../../extern/rxjs/index.js";
-import { debounceTime, } from '../../extern/rxjs/operators';
+// import { Subject } from "../../extern/rxjs/index.js";
+import { debounceTime, Subject } from '../../extern/rxjs';
 import { find_error } from './diagnostic-provider';
 import { change_document_item, delete_document_item, init_document_item, rename_document_item } from './completion-provider-ex';
 import { change_document_hover, delete_document_hover, init_document_hover, rename_document_hover } from './hover-provider-ex';
@@ -91,7 +91,7 @@ class Payload {
 }
 
 // 保存着rxjs对象，每个文档都会独立创建
-const update_map = new Map<string, Subject>();
+const update_map = new Map<string, Subject<Payload>>();
 vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
 	// const document = event.document;
 	// if (is_not_in_excludes(event.document.uri.fsPath)) {
@@ -102,7 +102,7 @@ vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent)
 
 	// }
 	if (!update_map.has(event.document.uri.fsPath)) {
-		const subject = new Subject();
+		const subject = new Subject<Payload>();
 		const delay_time = event.document.lineCount <= 100 ? 100 : event.document.lineCount <= 1000 ? 300 : event.document.lineCount <= 6000 ? 1000 : 2000;
 		subject.pipe(debounceTime(delay_time)).subscribe((data: Payload) => {
 			// 改变后逻辑

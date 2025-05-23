@@ -1,6 +1,7 @@
 import { isNewLine } from "../tool";
-import { Context, Position } from "./ast";
+import { Context } from "./ast";
 import { LineText, ReplaceableLineText, RunTextMacro, TextMacro } from "./parser";
+import { Position } from "./loc";
 
 
 /**
