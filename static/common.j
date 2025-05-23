@@ -4908,7 +4908,7 @@ native DestroyBoolExpr takes boolexpr e returns nothing
 // 触发器登记变量事件
 native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
 
-// 获取触发器变量名
+// 获取触发器变量名（不可用）
 // EVENT_GAME_VARIABLE_LIMIT
 //constant native string GetTriggeringVariableName takes nothing returns string
 
@@ -4933,7 +4933,7 @@ native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 // 获取游戏状态(对应游戏状态设置等事件)
-//  EVENT_GAME_STATE_LIMIT
+// EVENT_GAME_STATE_LIMIT
 constant native GetEventGameState takes nothing returns gamestate
 
 // 触发器登记游戏事件
