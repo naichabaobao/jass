@@ -2367,7 +2367,7 @@ globals
 	// 键盘按键 Process 键
 	// @version 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	// 键盘按键 IcoClr 键
+	// 键盘按键 Ico清理键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
 	// 键盘按键 格式化键(OEM 键)
@@ -2376,7 +2376,7 @@ globals
 	// 键盘按键 重置键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 JUMP 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
 	// 键盘按键 PA1 键(OEM 键)
@@ -2385,13 +2385,13 @@ globals
 	// 键盘按键 PA2 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 PA3 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
 	// 键盘按键 WSCTRL 键(OEM 键，似乎是联想杀毒软件定制按键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 CUSEL 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
 	// 键盘按键 ATTN 键(OEM 键)
@@ -2418,10 +2418,10 @@ globals
 	// 键盘按键 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	// 键盘按键 CRSEL 键
+	// 键盘按键 EXSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	// 键盘按键 CRSEL 键
+	// 键盘按键 EREOF 键
 	// @version 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
 	// 键盘按键 播放键
@@ -2430,7 +2430,7 @@ globals
 	// 键盘按键 缩放键
 	// @version 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	// 键盘按键 留待将来使用的常数键
+	// 键盘按键 留待将来使用的常数键（NONAME）
 	// @version 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
 	// 键盘按键 PA1 键
