@@ -7225,7 +7225,7 @@ endfunction
 // 设置排行榜显示样式
 // @param showLabel是否显示文字
 // @param showNames是否显示标题
-// @param showValues是否显示分数
+// @param showValues是否显示分值
 // @param showIcons是否显示图标
 function LeaderboardSetStyleBJ takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
     call LeaderboardSetStyle(lb, showLabel, showNames, showValues, showIcons)
@@ -7284,7 +7284,7 @@ endfunction
 // 增加排行榜的玩家
 // @param lb指定玩家在榜上的排名（行数）
 // @param label指定玩家在榜上的名字
-// @param value指定玩家在榜上的分数
+// @param value指定玩家在榜上的分值
 function LeaderboardAddItemBJ takes player whichPlayer, leaderboard lb, string label, integer value returns nothing
     if(LeaderboardHasPlayerItem(lb, whichPlayer)) then
         call LeaderboardRemovePlayerItem(lb, whichPlayer)
