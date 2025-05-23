@@ -6953,7 +6953,7 @@ native LeaderboardSetSizeByItemCount takes leaderboard lb, integer count returns
 // 添加指定玩家到指定排行榜
 // @param lb 指定玩家在榜上的排名(行数)
 // @param label 指定玩家在榜上的名字
-// @param value 指定玩家在榜上的分数
+// @param value 指定玩家在榜上的分值
 // @param p 指定玩家
 native LeaderboardAddItem takes leaderboard lb, string label, integer value, player p returns nothing
 // 移除排行榜指定行
@@ -6996,7 +6996,7 @@ native LeaderboardSetItemLabel takes leaderboard lb, integer whichItem, string v
 // 设置排行榜玩家显示样式
 // @param whichItem 玩家在排行榜中的位置
 // @param showLabel 是否显示名字
-// @param showValue 是否显示分数
+// @param showValue 是否显示分值
 // @param showIcon 是否显示图标
 native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
 // 设置排行榜玩家名字颜色
