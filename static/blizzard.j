@@ -10492,8 +10492,7 @@ endfunction
 
 // 创建初始单位 - 未知种族
 // 创建点 - 玩家出生点
-// 默认包含12只绵羊，是的，12只绵羊（'nshe'）
-// 在1.29或以上版本，建议手动改为24只，此为官方BUG
+// 默认包含12只绵羊（'nshe'）
 function MeleeStartingUnitsUnknownRace takes player whichPlayer, location startLoc, boolean doHeroes, boolean doCamera, boolean doPreload returns nothing
     local integer index
 
