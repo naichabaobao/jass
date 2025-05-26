@@ -613,7 +613,7 @@ globals
 	constant race RACE_UNDEAD = ConvertRace(3)
 	// 种族 暗夜精灵
 	constant race RACE_NIGHTELF = ConvertRace(4)
-	// 种族 恶魔族
+	// 种族 恶魔
 	constant race RACE_DEMON = ConvertRace(5)
 	// 种族 其他
 	constant race RACE_OTHER = ConvertRace(7)
@@ -637,9 +637,9 @@ globals
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
 	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟类型 共享单位（控制）
+	// 联盟类型 共享单位（控制权）
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
-	// 联盟类型 完全共享单位控制
+	// 联盟类型 完全共享单位控制权
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
@@ -649,9 +649,9 @@ globals
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
 	// 游戏版本 冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
-	// 攻击类型 法术
-	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
 	// 攻击类型 普通
+	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
+	// 攻击类型 近战
 	constant attacktype ATTACK_TYPE_MELEE = ConvertAttackType(1)
 	// 攻击类型 穿刺
 	constant attacktype ATTACK_TYPE_PIERCE = ConvertAttackType(2)
