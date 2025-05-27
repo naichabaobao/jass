@@ -141,7 +141,7 @@ type weathereffect extends handle
 type terraindeformation extends handle
 // 迷雾状态
 type fogstate extends handle
-// 可见度修整器
+// 可见度修正器
 type fogmodifier extends agent
 // 对话框
 type dialog extends agent
