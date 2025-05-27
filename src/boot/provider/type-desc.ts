@@ -97,7 +97,7 @@
 //   ["texttag", "漂浮文字"],
 //   ["attacktype", "攻击类型"],
 //   ["damagetype", "伤害类型"],
-//   ["weapontype", "武器类型"],
+//   ["weapontype", "武器声音类型"],
 //   ["soundtype", "音效类型"],
 //   ["lightning", "闪电效果"],
 //   ["pathingtype", "路径类型"],
