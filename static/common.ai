@@ -43,9 +43,9 @@ native GetUnitCountDone     takes integer unitid                        returns 
 // @param tn 基地编号，-1为不限
 // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-// 获取指定单位/建筑的单位造价（金钱）（指定单位ID）
+// 获取指定单位/建筑的黄金消耗（不是修理黄金消耗）
 native GetUnitGoldCost      takes integer unitid                        returns integer
-// 获取指定单位/建筑的单位造价（木材）（指定单位ID）
+// 获取指定单位/建筑的木材消耗（不是修理木材消耗）
 native GetUnitWoodCost      takes integer unitid                        returns integer
 // 获取指定单位/建筑的训练/建造/升级时间（以秒为单位）（指定单位ID）
 native GetUnitBuildTime     takes integer unitid                        returns integer
