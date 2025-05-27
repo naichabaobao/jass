@@ -12106,6 +12106,7 @@ function RandomDistAddItem takes integer inID, integer inChance returns nothing
 endfunction
 
 // 获取随机分布数
+// 可能返回-1
 function RandomDistChoose takes nothing returns integer
     local integer sum = 0
     local integer chance = 0
@@ -12169,6 +12170,7 @@ endfunction
 
 // 创建指定物品（指定单位）
 // 默认用于单位死亡后掉落物品
+// 可能返回null
 function UnitDropItem takes unit inUnit, integer inItemID returns item
     local real x
     local real y
@@ -12197,6 +12199,7 @@ endfunction
 
 // 创建指定物品（指定目标单位/物品/可破坏物）
 // 默认用于目标死亡后掉落物品
+// 可能返回null
 function WidgetDropItem takes widget inWidget, integer inItemID returns item
     local real x
     local real y
