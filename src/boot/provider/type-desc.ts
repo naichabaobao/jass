@@ -80,7 +80,7 @@
 //   ["terrainshape", "地形形状/刷子类型"],
 //   ["terraintype", "地形类型"],
 //   ["fogstate", "迷雾状态"],
-//   ["fogmodifier", "可见度修整器"],
+//   ["fogmodifier", "可见度修正器"],
 //   ["dialog", "对话框"],
 //   ["button", "按钮"],
 //   ["quest", "任务"],
