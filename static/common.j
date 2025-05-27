@@ -175,7 +175,7 @@ type texttag extends handle
 type attacktype extends handle
 // 伤害类型
 type damagetype extends handle
-// 武器类型
+// 武器声音类型
 type weapontype extends handle
 // 音效类型
 type soundtype extends handle
@@ -356,7 +356,7 @@ constant native ConvertItemType takes integer i returns itemtype
 constant native ConvertAttackType takes integer i returns attacktype
 // 转换整数成伤害类型
 constant native ConvertDamageType takes integer i returns damagetype
-// 转换整数成武器类型
+// 转换整数成武器声音类型
 constant native ConvertWeaponType takes integer i returns weapontype
 // 转换整数成音效类型
 constant native ConvertSoundType takes integer i returns soundtype
@@ -709,53 +709,53 @@ globals
 	// 伤害类型 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
 	
-	// 武器声音 无
+	// 武器声音类型 无
 	constant weapontype WEAPON_TYPE_WHOKNOWS = ConvertWeaponType(0)
-	// 武器声音 金属轻砍
+	// 武器声音类型 金属轻砍
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_CHOP = ConvertWeaponType(1)
-	// 武器声音 金属中砍
+	// 武器声音类型 金属中砍
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_CHOP = ConvertWeaponType(2)
-	// 武器声音 金属重砍
+	// 武器声音类型 金属重砍
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_CHOP = ConvertWeaponType(3)
-	// 武器声音 金属轻切
+	// 武器声音类型 金属轻切
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_SLICE = ConvertWeaponType(4)
-	// 武器声音 金属中切
+	// 武器声音类型 金属中切
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_SLICE = ConvertWeaponType(5)
-	// 武器声音 金属重切
+	// 武器声音类型 金属重切
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_SLICE = ConvertWeaponType(6)
-	// 武器声音 金属中击
+	// 武器声音类型 金属中击
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_BASH = ConvertWeaponType(7)
-	// 武器声音 金属重击
+	// 武器声音类型 金属重击
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_BASH = ConvertWeaponType(8)
-	// 武器声音 金属中刺
+	// 武器声音类型 金属中刺
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_STAB = ConvertWeaponType(9)
-	// 武器声音 金属重刺
+	// 武器声音类型 金属重刺
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_STAB = ConvertWeaponType(10)
-	// 武器声音 木头轻切
+	// 武器声音类型 木头轻切
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_SLICE = ConvertWeaponType(11)
-	// 武器声音 木头中切
+	// 武器声音类型 木头中切
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_SLICE = ConvertWeaponType(12)
-	// 武器声音 木头重切
+	// 武器声音类型 木头重切
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_SLICE = ConvertWeaponType(13)
-	// 武器声音 木头轻击
+	// 武器声音类型 木头轻击
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_BASH = ConvertWeaponType(14)
-	// 武器声音 木头中击
+	// 武器声音类型 木头中击
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_BASH = ConvertWeaponType(15)
-	// 武器声音 木头重击
+	// 武器声音类型 木头重击
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_BASH = ConvertWeaponType(16)
-	// 武器声音 木头轻刺
+	// 武器声音类型 木头轻刺
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_STAB = ConvertWeaponType(17)
-	// 武器声音 木头中刺
+	// 武器声音类型 木头中刺
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_STAB = ConvertWeaponType(18)
-	// 武器声音 利爪轻切
+	// 武器声音类型 利爪轻切
 	constant weapontype WEAPON_TYPE_CLAW_LIGHT_SLICE = ConvertWeaponType(19)
-	// 武器声音 利爪中切
+	// 武器声音类型 利爪中切
 	constant weapontype WEAPON_TYPE_CLAW_MEDIUM_SLICE = ConvertWeaponType(20)
-	// 武器声音 利爪重切
+	// 武器声音类型 利爪重切
 	constant weapontype WEAPON_TYPE_CLAW_HEAVY_SLICE = ConvertWeaponType(21)
-	// 武器声音 斧头中砍
+	// 武器声音类型 斧头中砍
 	constant weapontype WEAPON_TYPE_AXE_MEDIUM_CHOP = ConvertWeaponType(22)
-	// 武器声音 岩石重击
+	// 武器声音类型 岩石重击
 	constant weapontype WEAPON_TYPE_ROCK_HEAVY_BASH = ConvertWeaponType(23)
 	// 路径类型 任何
 	constant pathingtype PATHING_TYPE_ANY = ConvertPathingType(0)
@@ -4138,7 +4138,7 @@ globals
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_MAXIMUM_NUMBER_OF_TARGETS = ConvertUnitWeaponIntegerField('utc1')
 	// 单位武器整数域 战斗 - 攻击1 - 攻击类型 ('ua1t')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_ATTACK_TYPE = ConvertUnitWeaponIntegerField('ua1t')
-	// 单位武器整数域 战斗 - 攻击1 - 武器声音 ('ucs1')
+	// 单位武器整数域 战斗 - 攻击1 - 武器声音类型 ('ucs1')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_WEAPON_SOUND = ConvertUnitWeaponIntegerField('ucs1')
 	// 单位武器整数域 战斗 - 攻击1 - 范围影响目标 ('ua1p')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_AREA_OF_EFFECT_TARGETS = ConvertUnitWeaponIntegerField('ua1p')
@@ -5952,7 +5952,7 @@ native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型(没有、近战、立即、炮火、炮火(穿透)、箭矢、箭矢(溅射)、箭矢(弹射)、箭矢(穿透))
+// @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 // 发布伤害目标（单位/物品/可破坏物）命令（指定单位） [R]
 // @param amount 伤害量
@@ -5960,7 +5960,7 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型(没有、近战、立即、炮火、炮火(穿透)、箭矢、箭矢(溅射)、箭矢(弹射)、箭矢(穿透))
+// @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
@@ -7976,13 +7976,13 @@ native BlzGetEventDamageTarget takes nothing returns unit
 native BlzGetEventAttackType takes nothing returns attacktype
 // 获取事件伤害类型
 native BlzGetEventDamageType takes nothing returns damagetype
-// 获取事件武器类型
+// 获取事件武器声音类型
 native BlzGetEventWeaponType takes nothing returns weapontype
 // 设置事件攻击类型
 native BlzSetEventAttackType takes attacktype attackType returns boolean
 // 设置事件伤害类型
 native BlzSetEventDamageType takes damagetype damageType returns boolean
-// 设置事件武器类型
+// 设置事件武器声音类型
 native BlzSetEventWeaponType takes weapontype weaponType returns boolean
 // 判断是否攻击事件
 native BlzGetEventIsAttack takes nothing returns boolean
