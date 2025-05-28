@@ -141,7 +141,7 @@ type weathereffect extends handle
 type terraindeformation extends handle
 // 迷雾状态
 type fogstate extends handle
-// 可见度修整器
+// 可见度修正器
 type fogmodifier extends agent
 // 对话框
 type dialog extends agent
@@ -175,7 +175,7 @@ type texttag extends handle
 type attacktype extends handle
 // 伤害类型
 type damagetype extends handle
-// 武器类型
+// 武器声音类型
 type weapontype extends handle
 // 音效类型
 type soundtype extends handle
@@ -356,7 +356,7 @@ constant native ConvertItemType takes integer i returns itemtype
 constant native ConvertAttackType takes integer i returns attacktype
 // 转换整数成伤害类型
 constant native ConvertDamageType takes integer i returns damagetype
-// 转换整数成武器类型
+// 转换整数成武器声音类型
 constant native ConvertWeaponType takes integer i returns weapontype
 // 转换整数成音效类型
 constant native ConvertSoundType takes integer i returns soundtype
@@ -613,7 +613,7 @@ globals
 	constant race RACE_UNDEAD = ConvertRace(3)
 	// 种族 暗夜精灵
 	constant race RACE_NIGHTELF = ConvertRace(4)
-	// 种族 恶魔族
+	// 种族 恶魔
 	constant race RACE_DEMON = ConvertRace(5)
 	// 种族 其他
 	constant race RACE_OTHER = ConvertRace(7)
@@ -637,9 +637,9 @@ globals
 	constant alliancetype ALLIANCE_SHARED_SPELLS = ConvertAllianceType(4)
 	// 联盟类型 共享视野
 	constant alliancetype ALLIANCE_SHARED_VISION = ConvertAllianceType(5)
-	// 联盟类型 共享单位（控制）
+	// 联盟类型 共享单位（控制权）
 	constant alliancetype ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
-	// 联盟类型 完全共享单位控制
+	// 联盟类型 完全共享单位控制权
 	constant alliancetype ALLIANCE_SHARED_ADVANCED_CONTROL = ConvertAllianceType(7)
 	// 联盟类型 可营救
 	constant alliancetype ALLIANCE_RESCUABLE = ConvertAllianceType(8)
@@ -649,9 +649,9 @@ globals
 	constant version VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
 	// 游戏版本 冰封王座
 	constant version VERSION_FROZEN_THRONE = ConvertVersion(1)
-	// 攻击类型 法术
-	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
 	// 攻击类型 普通
+	constant attacktype ATTACK_TYPE_NORMAL = ConvertAttackType(0)
+	// 攻击类型 近战
 	constant attacktype ATTACK_TYPE_MELEE = ConvertAttackType(1)
 	// 攻击类型 穿刺
 	constant attacktype ATTACK_TYPE_PIERCE = ConvertAttackType(2)
@@ -709,53 +709,53 @@ globals
 	// 伤害类型 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
 	
-	// 武器声音 无
+	// 武器声音类型 无
 	constant weapontype WEAPON_TYPE_WHOKNOWS = ConvertWeaponType(0)
-	// 武器声音 金属轻砍
+	// 武器声音类型 金属轻砍
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_CHOP = ConvertWeaponType(1)
-	// 武器声音 金属中砍
+	// 武器声音类型 金属中砍
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_CHOP = ConvertWeaponType(2)
-	// 武器声音 金属重砍
+	// 武器声音类型 金属重砍
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_CHOP = ConvertWeaponType(3)
-	// 武器声音 金属轻切
+	// 武器声音类型 金属轻切
 	constant weapontype WEAPON_TYPE_METAL_LIGHT_SLICE = ConvertWeaponType(4)
-	// 武器声音 金属中切
+	// 武器声音类型 金属中切
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_SLICE = ConvertWeaponType(5)
-	// 武器声音 金属重切
+	// 武器声音类型 金属重切
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_SLICE = ConvertWeaponType(6)
-	// 武器声音 金属中击
+	// 武器声音类型 金属中击
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_BASH = ConvertWeaponType(7)
-	// 武器声音 金属重击
+	// 武器声音类型 金属重击
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_BASH = ConvertWeaponType(8)
-	// 武器声音 金属中刺
+	// 武器声音类型 金属中刺
 	constant weapontype WEAPON_TYPE_METAL_MEDIUM_STAB = ConvertWeaponType(9)
-	// 武器声音 金属重刺
+	// 武器声音类型 金属重刺
 	constant weapontype WEAPON_TYPE_METAL_HEAVY_STAB = ConvertWeaponType(10)
-	// 武器声音 木头轻切
+	// 武器声音类型 木头轻切
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_SLICE = ConvertWeaponType(11)
-	// 武器声音 木头中切
+	// 武器声音类型 木头中切
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_SLICE = ConvertWeaponType(12)
-	// 武器声音 木头重切
+	// 武器声音类型 木头重切
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_SLICE = ConvertWeaponType(13)
-	// 武器声音 木头轻击
+	// 武器声音类型 木头轻击
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_BASH = ConvertWeaponType(14)
-	// 武器声音 木头中击
+	// 武器声音类型 木头中击
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_BASH = ConvertWeaponType(15)
-	// 武器声音 木头重击
+	// 武器声音类型 木头重击
 	constant weapontype WEAPON_TYPE_WOOD_HEAVY_BASH = ConvertWeaponType(16)
-	// 武器声音 木头轻刺
+	// 武器声音类型 木头轻刺
 	constant weapontype WEAPON_TYPE_WOOD_LIGHT_STAB = ConvertWeaponType(17)
-	// 武器声音 木头中刺
+	// 武器声音类型 木头中刺
 	constant weapontype WEAPON_TYPE_WOOD_MEDIUM_STAB = ConvertWeaponType(18)
-	// 武器声音 利爪轻切
+	// 武器声音类型 利爪轻切
 	constant weapontype WEAPON_TYPE_CLAW_LIGHT_SLICE = ConvertWeaponType(19)
-	// 武器声音 利爪中切
+	// 武器声音类型 利爪中切
 	constant weapontype WEAPON_TYPE_CLAW_MEDIUM_SLICE = ConvertWeaponType(20)
-	// 武器声音 利爪重切
+	// 武器声音类型 利爪重切
 	constant weapontype WEAPON_TYPE_CLAW_HEAVY_SLICE = ConvertWeaponType(21)
-	// 武器声音 斧头中砍
+	// 武器声音类型 斧头中砍
 	constant weapontype WEAPON_TYPE_AXE_MEDIUM_CHOP = ConvertWeaponType(22)
-	// 武器声音 岩石重击
+	// 武器声音类型 岩石重击
 	constant weapontype WEAPON_TYPE_ROCK_HEAVY_BASH = ConvertWeaponType(23)
 	// 路径类型 任何
 	constant pathingtype PATHING_TYPE_ANY = ConvertPathingType(0)
@@ -1139,9 +1139,9 @@ globals
 	
 	// cumulative resources collected by the player during the mission
 	
-	// 玩家状态 总金钱采集量
+	// 玩家状态 金钱采集总量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态 总木材采集量
+	// 玩家状态 木材采集总量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
 	// 玩家状态 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
@@ -2367,7 +2367,7 @@ globals
 	// 键盘按键 Process 键
 	// @version 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
-	// 键盘按键 IcoClr 键
+	// 键盘按键 Ico清理键
 	// @version 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
 	// 键盘按键 格式化键(OEM 键)
@@ -2376,7 +2376,7 @@ globals
 	// 键盘按键 重置键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 JUMP 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
 	// 键盘按键 PA1 键(OEM 键)
@@ -2385,13 +2385,13 @@ globals
 	// 键盘按键 PA2 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 PA3 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
 	// 键盘按键 WSCTRL 键(OEM 键，似乎是联想杀毒软件定制按键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
-	// 键盘按键 ATTN 键(OEM 键)
+	// 键盘按键 CUSEL 键(OEM 键)
 	// @version 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
 	// 键盘按键 ATTN 键(OEM 键)
@@ -2418,10 +2418,10 @@ globals
 	// 键盘按键 CRSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
-	// 键盘按键 CRSEL 键
+	// 键盘按键 EXSEL 键
 	// @version 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
-	// 键盘按键 CRSEL 键
+	// 键盘按键 EREOF 键
 	// @version 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
 	// 键盘按键 播放键
@@ -2430,7 +2430,7 @@ globals
 	// 键盘按键 缩放键
 	// @version 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
-	// 键盘按键 留待将来使用的常数键
+	// 键盘按键 留待将来使用的常数键（NONAME）
 	// @version 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
 	// 键盘按键 PA1 键
@@ -4138,7 +4138,7 @@ globals
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_MAXIMUM_NUMBER_OF_TARGETS = ConvertUnitWeaponIntegerField('utc1')
 	// 单位武器整数域 战斗 - 攻击1 - 攻击类型 ('ua1t')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_ATTACK_TYPE = ConvertUnitWeaponIntegerField('ua1t')
-	// 单位武器整数域 战斗 - 攻击1 - 武器声音 ('ucs1')
+	// 单位武器整数域 战斗 - 攻击1 - 武器声音类型 ('ucs1')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_WEAPON_SOUND = ConvertUnitWeaponIntegerField('ucs1')
 	// 单位武器整数域 战斗 - 攻击1 - 范围影响目标 ('ua1p')
 	constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_AREA_OF_EFFECT_TARGETS = ConvertUnitWeaponIntegerField('ua1p')
@@ -4536,6 +4536,7 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家预设种族
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
@@ -4569,6 +4570,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家预设种族是否指定种族
 // 若情节–玩家未设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -4641,25 +4643,25 @@ native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolex
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-// 将指定矩形区域的的单位加入单位组
+// 将指定矩形区域内的单位加入单位组
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
-// 将指定矩形区域的的单位加入单位组，同时指定添加单位的数量上限
+// 将指定矩形区域内的单位加入单位组，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-// 将指定圆形范围的单位添加到单位组(指定圆心坐标)
+// 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-// 【弃用】将指定圆形范围的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
+// 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
 // @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
@@ -4745,9 +4747,11 @@ native Rect takes real minx, real miny, real maxx, real maxy returns rect
 native RectFromLoc takes location min, location max returns rect
 // 删除矩形区域 [R]
 native RemoveRect takes rect whichRect returns nothing
-// 设置矩形区域(指定坐标) [R]
+// 设置矩形区域(边界)(指定坐标) [R]
+// 输入的矩形区域不能为空
 native SetRect takes rect whichRect, real minx, real miny, real maxx, real maxy returns nothing
-// 设置矩形区域(指定点) [R]
+// 设置矩形区域(边界)(指定点) [R]
+// 输入的矩形区域不能为空
 native SetRectFromLoc takes rect whichRect, location min, location max returns nothing
 // 移动矩形区域(指定坐标) [R]
 native MoveRectTo takes rect whichRect, real newCenterX, real newCenterY returns nothing
@@ -4827,11 +4831,11 @@ native CreateTrigger takes nothing returns trigger
 native DestroyTrigger takes trigger whichTrigger returns nothing
 // 重置触发器
 native ResetTrigger takes trigger whichTrigger returns nothing
-// 打开触发器
+// 开启触发器
 native EnableTrigger takes trigger whichTrigger returns nothing
 // 关闭触发器
 native DisableTrigger takes trigger whichTrigger returns nothing
-// 查询触发器是否打开
+// 查询触发器是否开启
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
 // 挂起/释放 触发器
@@ -4841,17 +4845,17 @@ native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
 
 // 获取匹配的单位
 constant native GetFilterUnit takes nothing returns unit
-// 获取选取的单位
+// 获取被选取的单位
 constant native GetEnumUnit takes nothing returns unit
 
 // 获取匹配的可破坏物
 constant native GetFilterDestructable takes nothing returns destructable
-// 获取选取的可破坏物
+// 获取被选取的可破坏物
 constant native GetEnumDestructable takes nothing returns destructable
 
 // 获取匹配的物品
 constant native GetFilterItem takes nothing returns item
-// 获取选取的物品
+// 获取被选取的物品
 constant native GetEnumItem takes nothing returns item
 
 // 解析标签（tags）
@@ -4859,7 +4863,7 @@ constant native ParseTags takes string taggedString returns string
 
 // 获取匹配的玩家
 constant native GetFilterPlayer takes nothing returns player
-// 获取选取的玩家
+// 获取被选取的玩家
 constant native GetEnumPlayer takes nothing returns player
 
 // 获取（当前被）触发的触发器
@@ -4904,7 +4908,7 @@ native DestroyBoolExpr takes boolexpr e returns nothing
 // 触发器登记变量事件
 native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
 
-// 获取触发器变量名
+// 获取触发器变量名（不可用）
 // EVENT_GAME_VARIABLE_LIMIT
 //constant native string GetTriggeringVariableName takes nothing returns string
 
@@ -4929,7 +4933,7 @@ native TriggerRegisterDialogEvent takes trigger whichTrigger, dialog whichDialog
 native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
 
 // 获取游戏状态(对应游戏状态设置等事件)
-//  EVENT_GAME_STATE_LIMIT
+// EVENT_GAME_STATE_LIMIT
 constant native GetEventGameState takes nothing returns gamestate
 
 // 触发器登记游戏事件
@@ -5110,14 +5114,14 @@ constant native GetTrainedUnitType takes nothing returns integer
 // EVENT_PLAYER_UNIT_TRAIN_FINISH
 constant native GetTrainedUnit takes nothing returns unit
 
-// 事件响应 获取被侦测的单位(对应单位被侦测到等事件)（被反隐看到的单位）
+// 事件响应 获取被侦测到的单位(对应单位被侦测到等事件)（被反隐看到的单位）
 // EVENT_PLAYER_UNIT_DETECTED
 constant native GetDetectedUnit takes nothing returns unit
 
 // 事件响应 获取正在召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummoningUnit takes nothing returns unit
-// 事件响应 获取被召唤单位(对应召唤单位等事件)
+// 事件响应 获取被召唤的单位(对应召唤单位等事件)
 // EVENT_PLAYER_UNIT_SUMMONED
 constant native GetSummonedUnit takes nothing returns unit
 
@@ -5125,7 +5129,7 @@ constant native GetSummonedUnit takes nothing returns unit
 // 飞艇/船/被缠绕的金矿等
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetTransportUnit takes nothing returns unit
-// 事件响应 获取被装载单位(对应装载单位等事件)
+// 事件响应 获取被装载的单位(对应装载单位等事件)
 // 在飞艇/船内、在缠绕的金矿内的单位都可装载单位
 // EVENT_PLAYER_UNIT_LOADED
 constant native GetLoadedUnit takes nothing returns unit
@@ -5133,21 +5137,21 @@ constant native GetLoadedUnit takes nothing returns unit
 // 事件响应 获取出售单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSellingUnit takes nothing returns unit
-// 事件响应 获取被出售/雇佣单位(对应出售单位等事件)
+// 事件响应 获取被出售/雇佣的单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetSoldUnit takes nothing returns unit
 // 事件响应 获取购买单位(对应出售单位等事件)
 // EVENT_PLAYER_UNIT_SELL
 constant native GetBuyingUnit takes nothing returns unit
 
-// 事件响应 获取卖出的物品(对应出售物品等事件)
+// 事件响应 获取被卖出的物品(对应出售物品等事件)
 // EVENT_PLAYER_UNIT_SELL_ITEM
 constant native GetSoldItem takes nothing returns item
 
 // 事件响应 获取变更了所属(玩家)的单位(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnit takes nothing returns unit
-// 事件响应 获取变更所属单位的前一个所属(玩家)(对应变更单位所属等事件)
+// 事件响应 获取变更所属单位的上一个所属(玩家)(对应变更单位所属等事件)
 // EVENT_PLAYER_UNIT_CHANGE_OWNER
 constant native GetChangingUnitPrevOwner takes nothing returns player
 
@@ -5163,7 +5167,7 @@ constant native GetManipulatingUnit takes nothing returns unit
 constant native GetManipulatedItem takes nothing returns item
 
 
-// 事件响应 获取被拾取物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
+// 事件响应 获取被拾取的物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
 // @version 1.33
@@ -5554,7 +5558,8 @@ native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, re
 
 // 杀死单位
 native KillUnit takes unit whichUnit returns nothing
-// 删除单位，删除不会留下尸体
+// 删除单位
+// 不会留下尸体，不会杀死单位
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
@@ -5802,6 +5807,7 @@ constant native GetOwningPlayer takes unit whichUnit returns player
 // 获取指定单位类型(返回四字符码)
 constant native GetUnitTypeId takes unit whichUnit returns integer
 // 获取指定单位种族
+// 返回值[RACE_HUMAN、RACE_ORC、RACE_UNDEAD、RACE_NIGHTELF、RACE_DEMON、RACE_OTHER]
 constant native GetUnitRace takes unit whichUnit returns race
 // 获取指定单位（本地化语言的）名字
 // 在AI脚本中默认返回null
@@ -5852,6 +5858,7 @@ constant native IsUnitMasked takes unit whichUnit, player whichPlayer returns bo
 // 查询指定单位是否已被指定玩家选择
 constant native IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean
 // 查询指定单位是否指定的种族
+// 返回值[RACE_HUMAN、RACE_ORC、RACE_UNDEAD、RACE_NIGHTELF、RACE_DEMON、RACE_OTHER]
 constant native IsUnitRace takes unit whichUnit, race whichRace returns boolean
 // 查询指定单位是否指定的单位类型
 constant native IsUnitType takes unit whichUnit, unittype whichUnitType returns boolean
@@ -5945,7 +5952,7 @@ native UnitSetUsesAltIcon takes unit whichUnit, boolean flag returns nothing
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 // 发布伤害目标（单位/物品/可破坏物）命令（指定单位） [R]
 // @param amount 伤害量
@@ -5953,7 +5960,7 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param ranged 是否远程攻击
 // @param attackType 攻击类型 [ATTACK_TYPE_NORMAL,ATTACK_TYPE_MELEE,ATTACK_TYPE_PIERCE,ATTACK_TYPE_SIEGE,ATTACK_TYPE_MAGIC,ATTACK_TYPE_CHAOS,ATTACK_TYPE_HERO]
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
-// @param weaponType 武器类型（造成伤害时发出哪种武器声音） [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
+// @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
 
 // 发布命令(无目标)
@@ -6141,23 +6148,25 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // @param whichAllianceSetting 联盟类型
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 获取玩家经验上限 [R]
+// 获取玩家生命值障碍 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 获取玩家经验获得率 [R]
+// 获取玩家经验获取障碍 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 获取玩家额外的复活时间
-// 玩家障碍，额外的复活时间
+// 获取玩家复活时间障碍
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
 // 获取玩家伤害障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置玩家经验上限 [R]
+// 设置玩家生命值障碍 [R]
+// 增加或降低玩家所有单位/建筑血量，标准为1
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置玩家经验获得率 [R]
+// 设置玩家经验获取障碍 [R]
+// 增加或降低玩家英雄经验获取值，标准为1
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家额外的复活时间
-// 玩家障碍、额外的复活时间
+// 设置玩家复活时间障碍
+// 增加或降低玩家英雄复活时间，标准为1
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
 // 设置玩家伤害障碍
+// 增加或降低输出，标准为1
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置指定玩家指定科技的等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
@@ -6422,217 +6431,317 @@ native GetStoredString takes gamecache cache, string missionKey, string key retu
 native RestoreUnit takes gamecache cache, string missionKey, string key, player forWhichPlayer, real x, real y, real facing returns unit
 
 
-// <1.24> 新建哈希表 [C]
+// 新建哈希表 [C]
+// @version 1.24
 native InitHashtable takes nothing returns hashtable
 
-// <1.24> 保存整数到哈希表 [C]
+// 保存整数到哈希表 [C]
+// @version 1.24
 native SaveInteger takes hashtable table, integer parentKey, integer childKey, integer value returns nothing
-// <1.24> 保存实数到哈希表 [C]
+// 保存实数到哈希表 [C]
+// @version 1.24
 native SaveReal takes hashtable table, integer parentKey, integer childKey, real value returns nothing
-// <1.24> 保存布尔值到哈希表 [C]
+// 保存布尔值到哈希表 [C]
+// @version 1.24
 native SaveBoolean takes hashtable table, integer parentKey, integer childKey, boolean value returns nothing
-// <1.24> 保存字符串到哈希表 [C]
+// 保存字符串到哈希表 [C]
+// @version 1.24
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
-// <1.24> 保存玩家到哈希表 [C]
+// 保存玩家到哈希表 [C]
+// @version 1.24
 native SavePlayerHandle takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
-// <1.24> 保存微件/实体(单位/物品/可破坏物)到哈希表 [C]
+// 保存微件/实体(单位/物品/可破坏物)到哈希表 [C]
+// @version 1.24
 native SaveWidgetHandle takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
-// <1.24> 保存可破坏物到哈希表 [C]
+// 保存可破坏物到哈希表 [C]
+// @version 1.24
 native SaveDestructableHandle takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
-// <1.24> 保存物品到哈希表 [C]
+// 保存物品到哈希表 [C]
+// @version 1.24
 native SaveItemHandle takes hashtable table, integer parentKey, integer childKey, item whichItem returns boolean
-// <1.24> 保存单位到哈希表 [C]
+// 保存单位到哈希表 [C]
+// @version 1.24
 native SaveUnitHandle takes hashtable table, integer parentKey, integer childKey, unit whichUnit returns boolean
-// <1.24> 保存技能到哈希表 [C]
+// 保存技能到哈希表 [C]
+// @version 1.24
 native SaveAbilityHandle takes hashtable table, integer parentKey, integer childKey, ability whichAbility returns boolean
-// <1.24> 保存计时器到哈希表 [C]
+// 保存计时器到哈希表 [C]
+// @version 1.24
 native SaveTimerHandle takes hashtable table, integer parentKey, integer childKey, timer whichTimer returns boolean
-// <1.24> 保存触发器到哈希表 [C]
+// 保存触发器到哈希表 [C]
+// @version 1.24
 native SaveTriggerHandle takes hashtable table, integer parentKey, integer childKey, trigger whichTrigger returns boolean
-// <1.24> 保存触发条件到哈希表 [C]
+// 保存触发条件到哈希表 [C]
+// @version 1.24
 native SaveTriggerConditionHandle takes hashtable table, integer parentKey, integer childKey, triggercondition whichTriggercondition returns boolean
-// <1.24> 保存触发器动作到哈希表 [C]
+// 保存触发器动作到哈希表 [C]
+// @version 1.24
 native SaveTriggerActionHandle takes hashtable table, integer parentKey, integer childKey, triggeraction whichTriggeraction returns boolean
-// <1.24> 保存触发事件到哈希表 [C]
+// 保存触发事件到哈希表 [C]
+// @version 1.24
 native SaveTriggerEventHandle takes hashtable table, integer parentKey, integer childKey, event whichEvent returns boolean
-// <1.24> 保存玩家组到哈希表 [C]
+// 保存玩家组到哈希表 [C]
+// @version 1.24
 native SaveForceHandle takes hashtable table, integer parentKey, integer childKey, force whichForce returns boolean
-// <1.24> 保存单位组到哈希表 [C]
+// 保存单位组到哈希表 [C]
+// @version 1.24
 native SaveGroupHandle takes hashtable table, integer parentKey, integer childKey, group whichGroup returns boolean
-// <1.24> 保存点到哈希表 [C]
+// 保存点到哈希表 [C]
+// @version 1.24
 native SaveLocationHandle takes hashtable table, integer parentKey, integer childKey, location whichLocation returns boolean
-// <1.24> 保存矩形区域到哈希表 [C]
+// 保存矩形区域到哈希表 [C]
+// @version 1.24
 native SaveRectHandle takes hashtable table, integer parentKey, integer childKey, rect whichRect returns boolean
-// <1.24> 保存条件表达式到哈希表 [C]
+// 保存条件表达式到哈希表 [C]
+// @version 1.24
 native SaveBooleanExprHandle takes hashtable table, integer parentKey, integer childKey, boolexpr whichBoolexpr returns boolean
-// <1.24> 保存音效到哈希表 [C]
+// 保存音效到哈希表 [C]
+// @version 1.24
 native SaveSoundHandle takes hashtable table, integer parentKey, integer childKey, sound whichSound returns boolean
-// <1.24> 保存特效到哈希表 [C]
+// 保存特效到哈希表 [C]
+// @version 1.24
 native SaveEffectHandle takes hashtable table, integer parentKey, integer childKey, effect whichEffect returns boolean
-// <1.24> 保存单位池到哈希表 [C]
+// 保存单位池到哈希表 [C]
+// @version 1.24
 native SaveUnitPoolHandle takes hashtable table, integer parentKey, integer childKey, unitpool whichUnitpool returns boolean
-// <1.24> 保存物品池到哈希表 [C]
+// 保存物品池到哈希表 [C]
+// @version 1.24
 native SaveItemPoolHandle takes hashtable table, integer parentKey, integer childKey, itempool whichItempool returns boolean
-// <1.24> 保存任务到哈希表 [C]
+// 保存任务到哈希表 [C]
+// @version 1.24
 native SaveQuestHandle takes hashtable table, integer parentKey, integer childKey, quest whichQuest returns boolean
-// <1.24> 保存任务要求到哈希表 [C]
+// 保存任务要求到哈希表 [C]
+// @version 1.24
 native SaveQuestItemHandle takes hashtable table, integer parentKey, integer childKey, questitem whichQuestitem returns boolean
-// <1.24> 保存任务失败条件到哈希表 [C]
+// 保存任务失败条件到哈希表 [C]
+// @version 1.24
 native SaveDefeatConditionHandle takes hashtable table, integer parentKey, integer childKey, defeatcondition whichDefeatcondition returns boolean
-// <1.24> 保存计时器窗口到哈希表 [C]
+// 保存计时器窗口到哈希表 [C]
+// @version 1.24
 native SaveTimerDialogHandle takes hashtable table, integer parentKey, integer childKey, timerdialog whichTimerdialog returns boolean
-// <1.24> 保存排行榜到哈希表 [C]
+// 保存排行榜到哈希表 [C]
+// @version 1.24
 native SaveLeaderboardHandle takes hashtable table, integer parentKey, integer childKey, leaderboard whichLeaderboard returns boolean
-// <1.24> 保存多面板到哈希表 [C]
+// 保存多面板到哈希表 [C]
+// @version 1.24
 native SaveMultiboardHandle takes hashtable table, integer parentKey, integer childKey, multiboard whichMultiboard returns boolean
-// <1.24> 保存多面板项目到哈希表 [C]
+// 保存多面板项目到哈希表 [C]
+// @version 1.24
 native SaveMultiboardItemHandle takes hashtable table, integer parentKey, integer childKey, multiboarditem whichMultiboarditem returns boolean
-// <1.24> 保存可追踪物到哈希表 [C]
+// 保存可追踪物到哈希表 [C]
+// @version 1.24
 native SaveTrackableHandle takes hashtable table, integer parentKey, integer childKey, trackable whichTrackable returns boolean
-// <1.24> 保存对话框到哈希表 [C]
+// 保存对话框到哈希表 [C]
+// @version 1.24
 native SaveDialogHandle takes hashtable table, integer parentKey, integer childKey, dialog whichDialog returns boolean
-// <1.24> 保存对话框按钮到哈希表 [C]
+// 保存对话框按钮到哈希表 [C]
+// @version 1.24
 native SaveButtonHandle takes hashtable table, integer parentKey, integer childKey, button whichButton returns boolean
-// <1.24> 保存漂浮文字到哈希表 [C]
+// 保存漂浮文字到哈希表 [C]
+// @version 1.24
 native SaveTextTagHandle takes hashtable table, integer parentKey, integer childKey, texttag whichTexttag returns boolean
-// <1.24> 保存闪电效果到哈希表 [C]
+// 保存闪电效果到哈希表 [C]
+// @version 1.24
 native SaveLightningHandle takes hashtable table, integer parentKey, integer childKey, lightning whichLightning returns boolean
-// <1.24> 保存图像到哈希表 [C]
+// 保存图像到哈希表 [C]
+// @version 1.24
 native SaveImageHandle takes hashtable table, integer parentKey, integer childKey, image whichImage returns boolean
-// <1.24> 保存地面纹理变化到哈希表 [C]
+// 保存地面纹理变化到哈希表 [C]
+// @version 1.24
 native SaveUbersplatHandle takes hashtable table, integer parentKey, integer childKey, ubersplat whichUbersplat returns boolean
-// <1.24> 保存不规则区域到哈希表 [C]
+// 保存不规则区域到哈希表 [C]
+// @version 1.24
 native SaveRegionHandle takes hashtable table, integer parentKey, integer childKey, region whichRegion returns boolean
-// <1.24> 保存迷雾状态到哈希表 [C]
+// 保存迷雾状态到哈希表 [C]
+// @version 1.24
 native SaveFogStateHandle takes hashtable table, integer parentKey, integer childKey, fogstate whichFogState returns boolean
-// <1.24> 保存可见度修正器到哈希表 [C]
+// 保存可见度修正器到哈希表 [C]
+// @version 1.24
 native SaveFogModifierHandle takes hashtable table, integer parentKey, integer childKey, fogmodifier whichFogModifier returns boolean
-// <1.24> 保存句柄到哈希表 [C]
+// 保存句柄到哈希表 [C]
+// @version 1.24
 native SaveAgentHandle takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
-// <1.24> 保存哈希表到哈希表 [C]
+// 保存哈希表到哈希表 [C]
+// @version 1.24
 native SaveHashtableHandle takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
-// <1.29> 保存UI框架/控件句柄到哈希表 [C]
+// 保存UI框架/控件句柄到哈希表 [C]
+// @version 1.29
 native SaveFrameHandle takes hashtable table, integer parentKey, integer childKey, framehandle whichFrameHandle returns boolean
 
 
-// <1.24> 从哈希表提取整数 [C]
+// 从哈希表提取整数 [C]
+// @version 1.24
 native LoadInteger takes hashtable table, integer parentKey, integer childKey returns integer
-// <1.24> 从哈希表提取实数 [C]
+// 从哈希表提取实数 [C]
+// @version 1.24
 native LoadReal takes hashtable table, integer parentKey, integer childKey returns real
-// <1.24> 从哈希表提取布尔值 [C]
+// 从哈希表提取布尔值 [C]
+// @version 1.24
 native LoadBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 从哈希表提取字符串 [C]
+// 从哈希表提取字符串 [C]
+// @version 1.24
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
-// <1.24> 从哈希表提取玩家 [C]
+// 从哈希表提取玩家 [C]
+// @version 1.24
 native LoadPlayerHandle takes hashtable table, integer parentKey, integer childKey returns player
-// <1.24> 从哈希表提取微件/实体(单位/物品/可破坏物)[C]
+// 从哈希表提取微件/实体(单位/物品/可破坏物)[C]
+// @version 1.24
 native LoadWidgetHandle takes hashtable table, integer parentKey, integer childKey returns widget
-// <1.24> 从哈希表提取可破坏物 [C]
+// 从哈希表提取可破坏物 [C]
+// @version 1.24
 native LoadDestructableHandle takes hashtable table, integer parentKey, integer childKey returns destructable
-// <1.24> 从哈希表提取物品 [C]
+// 从哈希表提取物品 [C]
+// @version 1.24
 native LoadItemHandle takes hashtable table, integer parentKey, integer childKey returns item
-// <1.24> 从哈希表提取单位 [C]
+// 从哈希表提取单位 [C]
+// @version 1.24
 native LoadUnitHandle takes hashtable table, integer parentKey, integer childKey returns unit
-// <1.24> 从哈希表提取技能 [C]
+// 从哈希表提取技能 [C]
+// @version 1.24
 native LoadAbilityHandle takes hashtable table, integer parentKey, integer childKey returns ability
-// <1.24> 从哈希表提取计时器 [C]
+// 从哈希表提取计时器 [C]
 // 若仍需继续使用该计时器，请勿排泄
+// @version 1.24
 native LoadTimerHandle takes hashtable table, integer parentKey, integer childKey returns timer
-// <1.24> 从哈希表提取触发器 [C]
+// 从哈希表提取触发器 [C]
+// @version 1.24
 native LoadTriggerHandle takes hashtable table, integer parentKey, integer childKey returns trigger
-// <1.24> 从哈希表提取触发条件 [C]
+// 从哈希表提取触发条件 [C]
+// @version 1.24
 native LoadTriggerConditionHandle	takes hashtable table, integer parentKey, integer childKey returns triggercondition
-// <1.24> 从哈希表提取触发动作 [C]
+// 从哈希表提取触发动作 [C]
+// @version 1.24
 native LoadTriggerActionHandle takes hashtable table, integer parentKey, integer childKey returns triggeraction
-// <1.24> 从哈希表提取触发事件 [C]
+// 从哈希表提取触发事件 [C]
+// @version 1.24
 native LoadTriggerEventHandle takes hashtable table, integer parentKey, integer childKey returns event
-// <1.24> 从哈希表提取玩家组 [C]
+// 从哈希表提取玩家组 [C]
+// @version 1.24
 native LoadForceHandle takes hashtable table, integer parentKey, integer childKey returns force
-// <1.24> 从哈希表提取单位组 [C]
+// 从哈希表提取单位组 [C]
 // 若仍需继续使用该单位组，请勿排泄
+// @version 1.24
 native LoadGroupHandle takes hashtable table, integer parentKey, integer childKey returns group
-// <1.24> 从哈希表提取点 [C]
+// 从哈希表提取点 [C]
 // 若仍需继续使用该点，请勿排泄
+// @version 1.24
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
-// <1.24> 从哈希表提取矩形区域 [C]
+// 从哈希表提取矩形区域 [C]
 // 若仍需继续使用该区域，请勿排泄
+// @version 1.24
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
-// <1.24> 从哈希表提取条件表达式 [C]
+// 从哈希表提取条件表达式 [C]
+// @version 1.24
 native LoadBooleanExprHandle takes hashtable table, integer parentKey, integer childKey returns boolexpr
-// <1.24> 从哈希表提取音效 [C]
+// 从哈希表提取音效 [C]
+// @version 1.24
 native LoadSoundHandle takes hashtable table, integer parentKey, integer childKey returns sound
-// <1.24> 从哈希表提取特效 [C]
+// 从哈希表提取特效 [C]
+// @version 1.24
 native LoadEffectHandle takes hashtable table, integer parentKey, integer childKey returns effect
-// <1.24> 从哈希表提取单位池 [C]
+// 从哈希表提取单位池 [C]
+// @version 1.24
 native LoadUnitPoolHandle takes hashtable table, integer parentKey, integer childKey returns unitpool
-// <1.24> 从哈希表提取物品池 [C]
+// 从哈希表提取物品池 [C]
+// @version 1.24
 native LoadItemPoolHandle takes hashtable table, integer parentKey, integer childKey returns itempool
-// <1.24> 从哈希表提取任务 [C]
+// 从哈希表提取任务 [C]
+// @version 1.24
 native LoadQuestHandle takes hashtable table, integer parentKey, integer childKey returns quest
-// <1.24> 从哈希表提取任务要求 [C]
+// 从哈希表提取任务要求 [C]
+// @version 1.24
 native LoadQuestItemHandle takes hashtable table, integer parentKey, integer childKey returns questitem
-// <1.24> 从哈希表提取任务失败条件 [C]
+// 从哈希表提取任务失败条件 [C]
+// @version 1.24
 native LoadDefeatConditionHandle	takes hashtable table, integer parentKey, integer childKey returns defeatcondition
-// <1.24> 从哈希表提取计时器窗口 [C]
+// 从哈希表提取计时器窗口 [C]
+// @version 1.24
 native LoadTimerDialogHandle takes hashtable table, integer parentKey, integer childKey returns timerdialog
-// <1.24> 从哈希表提取排行榜 [C]
+// 从哈希表提取排行榜 [C]
+// @version 1.24
 native LoadLeaderboardHandle takes hashtable table, integer parentKey, integer childKey returns leaderboard
-// <1.24> 从哈希表提取多面板 [C]
+// 从哈希表提取多面板 [C]
+// @version 1.24
 native LoadMultiboardHandle takes hashtable table, integer parentKey, integer childKey returns multiboard
-// <1.24> 从哈希表提取多面板项目 [C]
+// 从哈希表提取多面板项目 [C]
+// @version 1.24
 native LoadMultiboardItemHandle	takes hashtable table, integer parentKey, integer childKey returns multiboarditem
-// <1.24> 从哈希表提取可追踪物 [C]
+// 从哈希表提取可追踪物 [C]
+// @version 1.24
 native LoadTrackableHandle takes hashtable table, integer parentKey, integer childKey returns trackable
-// <1.24> 从哈希表提取对话框 [C]
+// 从哈希表提取对话框 [C]
+// @version 1.24
 native LoadDialogHandle takes hashtable table, integer parentKey, integer childKey returns dialog
-// <1.24> 从哈希表提取对话框按钮 [C]
+// 从哈希表提取对话框按钮 [C]
+// @version 1.24
 native LoadButtonHandle takes hashtable table, integer parentKey, integer childKey returns button
-// <1.24> 从哈希表提取漂浮文字 [C]
+// 从哈希表提取漂浮文字 [C]
+// @version 1.24
 native LoadTextTagHandle takes hashtable table, integer parentKey, integer childKey returns texttag
-// <1.24> 从哈希表提取闪电效果 [C]
+// 从哈希表提取闪电效果 [C]
+// @version 1.24
 native LoadLightningHandle takes hashtable table, integer parentKey, integer childKey returns lightning
-// <1.24> 从哈希表提取图象 [C]
+// 从哈希表提取图象 [C]
+// @version 1.24
 native LoadImageHandle takes hashtable table, integer parentKey, integer childKey returns image
-// <1.24> 从哈希表提取地面纹理变化 [C]
+// 从哈希表提取地面纹理变化 [C]
+// @version 1.24
 native LoadUbersplatHandle takes hashtable table, integer parentKey, integer childKey returns ubersplat
-// <1.24> 从哈希表提取不规则区域 [C]
+// 从哈希表提取不规则区域 [C]
 // 如仍需使用该区域，请勿排泄
+// @version 1.24
 native LoadRegionHandle takes hashtable table, integer parentKey, integer childKey returns region
-// <1.24> 从哈希表提取迷雾状态 [C]
+// 从哈希表提取迷雾状态 [C]
+// @version 1.24
 native LoadFogStateHandle takes hashtable table, integer parentKey, integer childKey returns fogstate
-// <1.24> 从哈希表提取可见度修正器 [C]
+// 从哈希表提取可见度修正器 [C]
+// @version 1.24
 native LoadFogModifierHandle takes hashtable table, integer parentKey, integer childKey returns fogmodifier
-// <1.24> 从哈希表提取哈希表 [C]
+// 从哈希表提取哈希表 [C]
+// @version 1.24
 native LoadHashtableHandle takes hashtable table, integer parentKey, integer childKey returns hashtable
-// <1.29> 从哈希表提取UI框架/控件句柄
+// 从哈希表提取UI框架/控件句柄
+// @version 1.29
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
-// <1.24> 查询指定哈希表的指定位置是否记录了整数
+// 查询指定哈希表的指定位置是否记录了整数
+// @version 1.24
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 查询指定哈希表的指定位置是否记录了实数
+// 查询指定哈希表的指定位置是否记录了实数
+// @version 1.24
 native HaveSavedReal takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 查询指定哈希表的指定位置是否记录了布尔值
+// 查询指定哈希表的指定位置是否记录了布尔值
+// @version 1.24
 native HaveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 查询指定哈希表的指定位置是否记录了字符串
+// 查询指定哈希表的指定位置是否记录了字符串
+// @version 1.24
 native HaveSavedString takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 查询指定哈希表的指定位置是否记录了句柄
+// 查询指定哈希表的指定位置是否记录了句柄
+// @version 1.24
 native HaveSavedHandle takes hashtable table, integer parentKey, integer childKey returns boolean
-// <1.24> 删除指定哈希表的指定位置记录的整数
+// 删除指定哈希表的指定位置记录的整数
+// @version 1.24
 native RemoveSavedInteger takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的实数
+// 删除指定哈希表的指定位置记录的实数
+// @version 1.24
 native RemoveSavedReal takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的布尔值
+// 删除指定哈希表的指定位置记录的布尔值
+// @version 1.24
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的字符串
+// 删除指定哈希表的指定位置记录的字符串
+// @version 1.24
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
-// <1.24> 删除指定哈希表的指定位置记录的句柄
+// 删除指定哈希表的指定位置记录的句柄
 // 删除后，在写入新内容前，查询该位置会返回null
+// @version 1.24
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
-// <1.24> 清空指定哈希表 [C]
+// 清空指定哈希表 [C]
 // 清空整张表，清空后表变量不会变为null且需新建表
+// @version 1.24
 native FlushParentHashtable takes hashtable table returns nothing
-// <1.24> 清空指定哈希表的指定主引索 [C]
+// 清空指定哈希表的指定主引索 [C]
 // 仅清空指定主引索，清空后无需新建表
+// @version 1.24
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
@@ -6674,6 +6783,7 @@ native PlaceRandomItem takes itempool whichItemPool, real x, real y returns item
 
 // 获取随机中立敌对玩家单位的单位类型(指定单位等级)
 // 默认用于地图初始化时创建随机中立敌对单位
+// 只能获取当前地形设置下的中立敌对玩家单位，包括战役单位，当前地形设置没有对应等级的单位时返回-1
 native ChooseRandomCreep takes integer level returns integer
 // 获取随机中立被动玩家建筑单位的单位类型
 // 默认用于地图初始化时创建随机中立被动单位(如商店、泉水等)
@@ -6943,7 +7053,7 @@ native LeaderboardSetSizeByItemCount takes leaderboard lb, integer count returns
 // 添加指定玩家到指定排行榜
 // @param lb 指定玩家在榜上的排名(行数)
 // @param label 指定玩家在榜上的名字
-// @param value 指定玩家在榜上的分数
+// @param value 指定玩家在榜上的分值
 // @param p 指定玩家
 native LeaderboardAddItem takes leaderboard lb, string label, integer value, player p returns nothing
 // 移除排行榜指定行
@@ -6986,7 +7096,7 @@ native LeaderboardSetItemLabel takes leaderboard lb, integer whichItem, string v
 // 设置排行榜玩家显示样式
 // @param whichItem 玩家在排行榜中的位置
 // @param showLabel 是否显示名字
-// @param showValue 是否显示分数
+// @param showValue 是否显示分值
 // @param showIcon 是否显示图标
 native LeaderboardSetItemStyle takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
 // 设置排行榜玩家名字颜色
@@ -7866,13 +7976,13 @@ native BlzGetEventDamageTarget takes nothing returns unit
 native BlzGetEventAttackType takes nothing returns attacktype
 // 获取事件伤害类型
 native BlzGetEventDamageType takes nothing returns damagetype
-// 获取事件武器类型
+// 获取事件武器声音类型
 native BlzGetEventWeaponType takes nothing returns weapontype
 // 设置事件攻击类型
 native BlzSetEventAttackType takes attacktype attackType returns boolean
 // 设置事件伤害类型
 native BlzSetEventDamageType takes damagetype damageType returns boolean
-// 设置事件武器类型
+// 设置事件武器声音类型
 native BlzSetEventWeaponType takes weapontype weaponType returns boolean
 // 判断是否攻击事件
 native BlzGetEventIsAttack takes nothing returns boolean
@@ -8352,15 +8462,15 @@ native BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralSt
 // @version 1.33
 native BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
-// 获取指定单位当前命令数量
+// 获取指定单位当前队列中的命令数量(该单位当前命令数量)
 // @version 1.33
 // returns the number of orders the unit currently has queued up
 native BlzGetUnitOrderCount takes unit whichUnit returns integer
-// 停止指定单位所有命令或只清除命令队列
+// 停止指定单位所有命令或只清除队列中命令
 // @version 1.33
 // clears either all orders or only queued up orders
 native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing
-// 停止指定单位当前的命令，并可选择清除命令队列
+// 停止指定单位当前的命令，并可选清除队列中命令
 // @version 1.33
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
