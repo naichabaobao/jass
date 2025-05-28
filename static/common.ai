@@ -47,7 +47,7 @@ native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns 
 native GetUnitGoldCost      takes integer unitid                        returns integer
 // 获取指定单位/建筑的木材消耗（不是修理木材消耗）
 native GetUnitWoodCost      takes integer unitid                        returns integer
-// 获取指定单位/建筑的建造时间（以秒为单位）（指定单位ID）
+// 获取指定单位/建筑的建造时间（以秒为单位）（不是修理时间）
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
 // 获取拥有的金矿数量，似乎最多只能探测到5个
