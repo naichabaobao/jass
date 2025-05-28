@@ -1139,9 +1139,9 @@ globals
 	
 	// cumulative resources collected by the player during the mission
 	
-	// 玩家状态 总金钱采集量
+	// 玩家状态 金钱采集总量
 	constant playerstate PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
-	// 玩家状态 总木材采集量
+	// 玩家状态 木材采集总量
 	constant playerstate PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
 	// 玩家状态 中立敌对玩家单位睡眠
 	constant playerstate PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
