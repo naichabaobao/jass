@@ -20,9 +20,6 @@
           "include": "#line-comment"
         },
         {
-          "include": "#macro"
-        },
-        {
           "include": "#lua"
         },
         {
@@ -93,49 +90,6 @@
           "name": "comment.line",
           "begin": "//",
           "end": "\\n"
-        },
-        "macro": {
-          "name": "comment.line.number-sign",
-          "begin": "#ifndef|#ifdef|#if|#define|#endif|#include|#else|#[a-zA-z]+",
-          "end": "(?<!\\s*\\\\)\\n",
-          "patterns": [
-            {
-              "include": "#block-comment"
-            },
-            {
-              "include": "#line-comment"
-            },
-            {
-              "include": "#lua"
-            },
-            {
-              "include": "#line-string"
-            },
-            {
-              "include": "#number"
-            },
-            {
-              "include": "#keyword"
-            },
-            {
-              "include": "#keyword-control"
-            },
-            {
-              "include": "#keyword-constant"
-            }, 
-            {
-              "include": "#base-type"
-            }, 
-            {
-              "include": "#type"
-            }, 
-            {
-              "include": "#function"
-            },
-            {
-              "include": "#id"
-            }
-          ]
         },
         "line-string": {
           "begin": "\"",

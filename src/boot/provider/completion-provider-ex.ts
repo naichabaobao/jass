@@ -41,7 +41,8 @@ class CompletionItemDocument {
   public readonly interface_items: PackageCompletionItem<vjass_ast.Interface | vjass_ast.zinc.Interface>[];
   public readonly method_items: PackageCompletionItem<vjass_ast.Method | vjass_ast.zinc.Method>[];
   public readonly local_items: PackageCompletionItem<vjass_ast.Local | vjass_ast.zinc.Member>[];
-  public readonly global_variable_items: PackageCompletionItem<vjass_ast.GlobalVariable | vjass_ast.zinc.Member>[];
+  // Commented out globals-related code
+  // public readonly global_variable_items: PackageCompletionItem<vjass_ast.GlobalVariable | vjass_ast.zinc.Member>[];
   public readonly membere_items: PackageCompletionItem<vjass_ast.Member | vjass_ast.zinc.Member>[];
   public readonly library_items: PackageCompletionItem<vjass_ast.Library | vjass_ast.zinc.Library>[];
   public readonly scope_items: PackageCompletionItem<vjass_ast.Scope>[];
@@ -59,7 +60,8 @@ class CompletionItemDocument {
     this.interface_items = this.program.interfaces.map(node => this.interface_to_item(node));
     this.method_items = this.program.methods.map(node => CompletionItemDocument.method_to_item(node));
     this.local_items = this.program.locals.map(node => CompletionItemDocument.local_to_item(node));
-    this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_item(node));
+    // Commented out globals-related code
+    // this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_item(node));
     this.membere_items = this.program.members.map(node => CompletionItemDocument.member_to_item(node));
     this.library_items = this.program.librarys.map(node => this.library_to_item(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_item(node));
@@ -218,6 +220,8 @@ class CompletionItemDocument {
 
     return item;
   }
+  // Commented out globals-related code
+  /*
   private global_variable_to_item(global: vjass_ast.GlobalVariable, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.Variable) {
     const item = new PackageCompletionItem(global, global.name?.getText() ?? "(unkown)", global.is_constant ? vscode.CompletionItemKind.Constant : kind);
     item.detail = `${global.name?.getText() ?? "(unkown)"} >_${global.document.filePath}`;
@@ -241,6 +245,7 @@ class CompletionItemDocument {
 
     return item;
   }
+  */
   public static member_to_item(global: vjass_ast.Member, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.EnumMember) {
     const item = new PackageCompletionItem(global, global.name?.getText() ?? "(unkown)", kind);
     item.detail = `${global.name?.getText() ?? "(unkown)"} >_${global.document.filePath}`;
@@ -441,9 +446,9 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     const items: vscode.CompletionItem[] = [];
 
     CompletionManage.wraps.filter(x => x.document.program.is_special == false).forEach(wrap => {
-      items.push(...wrap.document.program.macros.map(macro => {
-        return CompletionItemDocument.define_to_item(macro);
-      }));
+      // items.push(...wrap.document.program.macros.map(macro => {
+      //   return CompletionItemDocument.define_to_item(macro);
+      // }));
       items.push(...wrap.document.type_items);
       // items.concat(...wrap.items);
       // items.push(...wrap.items);
@@ -451,7 +456,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
       if (is_current) {
         items.push(...wrap.document.native_items);
         items.push(...wrap.document.function_items);
-        items.push(...wrap.document.global_variable_items);
+        // items.push(...wrap.document.global_variable_items);
         items.push(...wrap.document.struct_items);
         items.push(...wrap.document.interface_items);
         items.push(...wrap.document.library_items);
@@ -560,7 +565,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
       } else {
         items.push(...wrap.document.native_items.filter(x => x.data.is_public));
         items.push(...wrap.document.function_items.filter(x => x.data.is_public));
-        items.push(...wrap.document.global_variable_items.filter(x => x.data.is_public));
+        // items.push(...wrap.document.global_variable_items.filter(x => x.data.is_public));
         items.push(...wrap.document.struct_items.filter(x => x.data.is_public));
         items.push(...wrap.document.interface_items.filter(x => x.data.is_public));
         items.push(...wrap.document.library_items);

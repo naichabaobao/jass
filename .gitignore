@@ -6,3 +6,4 @@ src/test
 *.vsix
 *.log
 *.zip
+./test.j

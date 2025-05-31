@@ -72,13 +72,25 @@ export function token_handle(document:Document, line: number, character: number,
         return false;
     };
     const new_token = (type: string, is_complete: boolean = true) => {
-        if (type == TokenType.BlockComment) {
-            const token = new Token(document.content.substring(position - length, position + 1), line, character - length, position - length, length + 1, type, is_complete);
-            // token.start = new Position();
-            // token.end = new Position();
-            return token;
-        }
-        return new Token(document.content.substring(position - length, position + 1), line, character - length, position - length, length + 1, type, is_complete);
+        // Ensure position and length are valid
+        const startPos = Math.max(0, position - length);
+        const endPos = Math.min(document.content.length, position + 1);
+        
+        // Extract text safely
+        const text = document.content.substring(startPos, endPos);
+        
+        // Create token with safe position values
+        const token = new Token(
+            text,
+            line,
+            Math.max(0, character - length),
+            startPos,
+            endPos - startPos,
+            type,
+            is_complete
+        );
+        
+        return token;
     };
     switch (state) {
         case StateType.Nil:

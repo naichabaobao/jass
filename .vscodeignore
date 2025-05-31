@@ -2,3 +2,4 @@
 src
 ./tslint.json
 ./tsconfig.json
+./test.j

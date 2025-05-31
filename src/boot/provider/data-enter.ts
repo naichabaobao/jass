@@ -15,6 +15,47 @@ import { change_document_hover, delete_document_hover, init_document_hover, rena
 import { change_document_difinition, delete_document_difinition, init_document_difinition, rename_document_difinition } from './definition-provider-ex';
 import { change_type_hierarchy, delete_type_hierarchy, init_type_hierarchy, rename_type_hierarchy } from './type-hierarchy-provider';
 
+// Globals provider class
+class GlobalsProvider {
+	private globals: Map<string, any> = new Map();
+
+	constructor() {
+		this.initializeGlobals();
+	}
+
+	private initializeGlobals() {
+		GlobalContext.keys.forEach(key => {
+			const program = GlobalContext.get(key);
+			if (program) {
+				this.globals.set(key, program);
+			}
+		});
+	}
+
+	public getGlobal(key: string) {
+		return this.globals.get(key);
+	}
+
+	public getAllGlobals() {
+		return Array.from(this.globals.values());
+	}
+
+	public addGlobal(key: string, value: any) {
+		this.globals.set(key, value);
+	}
+
+	public removeGlobal(key: string) {
+		this.globals.delete(key);
+	}
+
+	public clearGlobals() {
+		this.globals.clear();
+	}
+}
+
+// Create a singleton instance
+export const globalsProvider = new GlobalsProvider();
+
 export function jass_config_json_path() {
 	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
 

@@ -1656,7 +1656,7 @@ export class Token /*extends Range*/ {
   /**
    * 整个content的indexof
    */
-  public readonly position: number;
+  public readonly index: number;
   /**
    * text文本长度
    */
@@ -1679,7 +1679,7 @@ export class Token /*extends Range*/ {
     // this.document = document;
     this.line = line;
     this.character = character;
-    this.position = position;
+    this.index = position;
     this.length = length;
     this.type = type;
     this.is_complete = is_complete;

@@ -65,7 +65,8 @@ class LocationDocument {
   public readonly interface_items:PackageLocation<vjass_ast.Interface|vjass_ast.zinc.Interface>[];
   public readonly method_items:PackageLocation<vjass_ast.Method|vjass_ast.zinc.Method>[];
   public readonly local_items:PackageLocation<vjass_ast.Local|vjass_ast.zinc.Member>[];
-  public readonly global_variable_items:PackageLocation<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
+  // Commented out globals-related code
+  // public readonly global_variable_items:PackageLocation<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
   public readonly membere_items:PackageLocation<vjass_ast.Member|vjass_ast.zinc.Member>[];
   public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageLocation<vjass_ast.Scope>[];
@@ -82,7 +83,8 @@ class LocationDocument {
     this.interface_items = this.program.interfaces.map(node => this.interface_to_hover(node));
     this.method_items = this.program.methods.map(node => LocationDocument.method_to_hover(node));
     this.local_items = this.program.locals.map(node => LocationDocument.local_to_hover(node));
-    this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
+    // Commented out globals-related code
+    // this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
     this.membere_items = this.program.members.map(node => LocationDocument.member_to_hover(node));
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
@@ -137,11 +139,14 @@ class LocationDocument {
 
     return item;
   }
+  // Commented out globals-related code
+  /*
   private global_variable_to_hover(object: vjass_ast.GlobalVariable|vjass_ast.zinc.Member) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
   }
+  */
   public static member_to_hover(object: vjass_ast.Member|vjass_ast.zinc.Member) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
@@ -327,15 +332,16 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     const locations:vscode.Location[] = [];
     
     LocationManage.wraps.forEach(wrap => {
-      locations.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
-        return LocationDocument.define_to_hover(macro);
-      }));
+      // locations.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
+      //   return LocationDocument.define_to_hover(macro);
+      // }));
 
 
 
       locations.push(...wrap.document.native_items.filter(x => x.key == key));
       locations.push(...wrap.document.function_items.filter(x => x.key == key));
-      locations.push(...wrap.document.global_variable_items.filter(x => x.key == key));
+      // Commented out globals-related code
+      // locations.push(...wrap.document.global_variable_items.filter(x => x.key == key));
       locations.push(...wrap.document.library_items.filter(x => x.key == key));
       locations.push(...wrap.document.scope_items.filter(x => x.key == key));
       locations.push(...wrap.document.method_items.filter(x => x.key == key));

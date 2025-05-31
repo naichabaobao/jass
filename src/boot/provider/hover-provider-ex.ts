@@ -65,7 +65,8 @@ class HoverDocument {
   public readonly interface_items:PackageHover<vjass_ast.Interface|vjass_ast.zinc.Interface>[];
   public readonly method_items:PackageHover<vjass_ast.Method|vjass_ast.zinc.Method>[];
   public readonly local_items:PackageHover<vjass_ast.Local|vjass_ast.zinc.Member>[];
-  public readonly global_variable_items:PackageHover<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
+  // Commented out globals-related code
+  // public readonly global_variable_items:PackageHover<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
   public readonly membere_items:PackageHover<vjass_ast.Member|vjass_ast.zinc.Member>[];
   public readonly library_items:PackageHover<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageHover<vjass_ast.Scope>[];
@@ -81,7 +82,8 @@ class HoverDocument {
     this.interface_items = this.program.interfaces.map(node => this.interface_to_hover(node));
     this.method_items = this.program.methods.map(node => HoverDocument.method_to_hover(node));
     this.local_items = this.program.locals.map(node => HoverDocument.local_to_hover(node));
-    this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
+    // Commented out globals-related code
+    // this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
     this.membere_items = this.program.members.map(node => HoverDocument.member_to_hover(node));
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
@@ -241,6 +243,8 @@ class HoverDocument {
 
     return item;
   }
+  // Commented out globals-related code
+  /*
   private global_variable_to_hover(object: vjass_ast.GlobalVariable|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
@@ -267,6 +271,7 @@ class HoverDocument {
 
     return item;
   }
+  */
   public static member_to_hover(object: vjass_ast.Member|vjass_ast.zinc.Member) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
@@ -513,14 +518,15 @@ class HoverProvider implements vscode.HoverProvider {
     const hovers2:vscode.Hover[] = [];
     
     CompletionManage.wraps.forEach(wrap => {
-      hovers2.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
-        return HoverDocument.define_to_hover(macro);
-      }));
+      // hovers2.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
+      //   return HoverDocument.define_to_hover(macro);
+      // }));
 
 
       hovers2.push(...wrap.document.native_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.function_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.global_variable_items.filter(x => x.key == key));
+      // Commented out globals-related code
+      // hovers2.push(...wrap.document.global_variable_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.struct_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.interface_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.library_items.filter(x => x.key == key));

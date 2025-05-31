@@ -216,5 +216,83 @@
     "body": "<?=${0:}?>",
     "description": "插入lua值",
     "scope": "source.jass"
+  },
+  "define": {
+    "prefix": "define",
+    "body": "#define ${1:MACRO_NAME} ${0:value}",
+    "description": "Define a macro",
+    "scope": "source.jass"
+  },
+  "define-func": {
+    "prefix": "define-func",
+    "body": "#define ${1:MACRO_NAME}(${2:param1}, ${3:param2}) ${0:value}",
+    "description": "Define a function-like macro",
+    "scope": "source.jass"
+  },
+  "ifdef": {
+    "prefix": "ifdef",
+    "body": "#ifdef ${1:MACRO_NAME}\n\t${0:}\n#endif",
+    "description": "If defined macro block",
+    "scope": "source.jass"
+  },
+  "ifndef": {
+    "prefix": "ifndef",
+    "body": "#ifndef ${1:MACRO_NAME}\n\t${0:}\n#endif",
+    "description": "If not defined macro block",
+    "scope": "source.jass"
+  },
+  "if-cond": {
+    "prefix": "if-cond",
+    "body": "#if ${1:condition}\n\t${0:}\n#endif",
+    "description": "If condition macro block",
+    "scope": "source.jass"
+  },
+  "elif": {
+    "prefix": "elif-cond",
+    "body": "#elif ${1:condition}\n\t${0:}",
+    "description": "Else if condition macro block",
+    "scope": "source.jass"
+  },
+  "else": {
+    "prefix": "else-cond",
+    "body": "#else\n\t${0:}",
+    "description": "Else condition macro block",
+    "scope": "source.jass"
+  },
+  "include": {
+    "prefix": "include",
+    "body": "#include \"${0:header.jass}\"",
+    "description": "Include header file",
+    "scope": "source.jass"
+  },
+  "include-system": {
+    "prefix": "include-system",
+    "body": "#include \"${0:header.jass}\"",
+    "description": "Include system header file",
+    "scope": "source.jass"
+  },
+  "pragma": {
+    "prefix": "pragma",
+    "body": "#pragma ${0:once}",
+    "description": "Pragma directive",
+    "scope": "source.jass"
+  },
+  "undef": {
+    "prefix": "undef",
+    "body": "#undef ${0:MACRO_NAME}",
+    "description": "Undefine a macro",
+    "scope": "source.jass"
+  },
+  "error": {
+    "prefix": "error",
+    "body": "#error \"${0:error message}\"",
+    "description": "Error directive",
+    "scope": "source.jass"
+  },
+  "warning": {
+    "prefix": "warning",
+    "body": "#warning \"${0:warning message}\"",
+    "description": "Warning directive",
+    "scope": "source.jass"
   }
 }
