@@ -56,41 +56,30 @@ npm install
 ### Zinc Hello World 示例
 
 ```jass
-// Zinc Hello World 示例
-library HelloWorld initializer Init {
-    // 英雄结构体
-    struct Hero {
-        private string name;
-        
-        // 构造函数
-        static method create takes string heroName returns thistype {
-            thistype this = Hero.allocate();
-            this.name = heroName;
-            return this;
+library Bottles99
+{
+    /* 99 Bottles of beer sample,
+        prints the lyrics at: http://99-bottles-of-beer.net/lyrics.html
+    */
+    function onInit()
+    {
+        string bot = "99 bottles";
+        integer i=99;
+        while (i>=0)
+        {
+            BJDebugMsg(bot+" of beer on the wall, "+bot+" of beer");
+            i=i-1;
+            if      (i== 1) bot = "1 bottle";
+            else if (i== 0) bot = "No more bottles";
+            else            bot = I2S(i)+" bottles";
+            //Lazyness = "No more" is always capitalized.
+
+            if(i>=0)
+            {
+                BJDebugMsg("Take one down and pass it around, "+bot+" of beer on the wall.\n");
+            }
         }
-        
-        // 获取英雄名称
-        method getName takes nothing returns string {
-            return this.name;
-        }
-        
-        // 析构函数
-        method onDestroy takes nothing returns nothing {
-            // 清理资源
-        }
-    }
-    
-    // 初始化函数
-    private function Init takes nothing returns nothing {
-        // 显示欢迎消息
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, "Hello from Zinc!");
-        
-        // 创建一个简单的结构体实例
-        Hero hero = Hero.create("Arthas");
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, "Created hero: " + hero.getName());
-        
-        // 清理资源
-        hero.destroy();
+        BJDebugMsg("Go to the store and buy some more, 99 bottles of beer on the wall.");
     }
 }
 ```
