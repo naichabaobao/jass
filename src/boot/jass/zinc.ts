@@ -482,7 +482,7 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
  * @param offset_index 
  * @returns 
  */
-export function parse_segement_statement(document: Document, tokens: Token[], offset_index: number, need_index_expr:0|1|-1 = -1) {
+export function parse_segement_statement(document: Document, tokens: Token[], offset_index: number, need_size_expr:boolean|null = null) {
     const statement = new Statement();
     let index = offset_index;
     let state = 1;
@@ -529,7 +529,7 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
                 break;
             }
         } else if (state == 3) {
-            const result = parse_line_index_expr(document, tokens, index, need_index_expr);
+            const result = parse_line_index_expr(document, tokens, index, need_size_expr === null ? -1 : need_size_expr ? 1 : 0);
             index = result.index;
             statement.size_expr = result.expr;
             
@@ -672,7 +672,7 @@ export function parse_segement_statement_by_type(document: Document, tokens: Tok
         index,
     };
 }
-export function parse_segement_member(document: Document, tokens: Token[]) {
+export function parse_segement_member(document: Document, tokens: Token[], parent_is_struct_or_interface: boolean = false) {
     const mem:zinc.Member = new zinc.Member(document);
     const mems:zinc.Member[] = [mem];
 
@@ -700,7 +700,7 @@ export function parse_segement_member(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
-            const result = parse_segement_statement(document, tokens, index);
+            const result = parse_segement_statement(document, tokens, index, parent_is_struct_or_interface ? mem.is_static ? false : true : null);
             index = result.index;
             mem.with(result.expr);
             mem.with(result.expr);
@@ -2235,7 +2235,7 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
                 node.end_token = object.end_token;
             } else if (object.type == "member") {
-                const node = parse_segement_member(document, object.tokens);
+                const node = parse_segement_member(document, object.tokens, parent_node instanceof ZincBlock && (parent_node.type == "struct" || parent_node.type == "interface"));
                 if (Array.isArray(node)) {
                     node.forEach(x => {
                         parent_node.add_node(x);

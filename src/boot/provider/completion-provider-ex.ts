@@ -16,7 +16,7 @@ import { Subject } from "../../extern/rxjs";
 import { Position } from "../jass/loc";
 
 
-class PackageCompletionItem<T extends vjass_ast.NodeAst> extends vscode.CompletionItem {
+class PackageCompletionItem<T extends vjass_ast.NodeAst | vjass_ast.zinc.Member> extends vscode.CompletionItem {
   public readonly data: T;
   constructor(data: T, label: string | vscode.CompletionItemLabel, kind?: vscode.CompletionItemKind | undefined) {
     super(label, kind);
@@ -47,6 +47,7 @@ class CompletionItemDocument {
   public readonly library_items: PackageCompletionItem<vjass_ast.Library | vjass_ast.zinc.Library>[];
   public readonly scope_items: PackageCompletionItem<vjass_ast.Scope>[];
   public readonly type_items: PackageCompletionItem<vjass_ast.Type>[];
+  public readonly define_items: vscode.CompletionItem[];
   // public readonly take_items:TakeCompletionItem[];
 
   constructor(program: vjass.Document) {
@@ -65,6 +66,7 @@ class CompletionItemDocument {
     this.membere_items = this.program.members.map(node => CompletionItemDocument.member_to_item(node));
     this.library_items = this.program.librarys.map(node => this.library_to_item(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_item(node));
+    this.define_items = this.program.macros.map(macro => CompletionItemDocument.define_to_item(macro));
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -200,7 +202,7 @@ class CompletionItemDocument {
 
     return item;
   }
-  public static local_to_item(local: vjass_ast.Local, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.Variable) {
+  public static local_to_item(local: vjass_ast.Local | vjass_ast.zinc.Member, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.Variable) {
     const item = new PackageCompletionItem(local, local.name?.getText() ?? "(unkown)", kind);
     item.detail = `${local.name?.getText() ?? "(unkown)"} >_${local.document.filePath}`;
 
@@ -246,7 +248,7 @@ class CompletionItemDocument {
     return item;
   }
   */
-  public static member_to_item(global: vjass_ast.Member, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.EnumMember) {
+  public static member_to_item(global: vjass_ast.Member | vjass_ast.zinc.Member, kind: vscode.CompletionItemKind = vscode.CompletionItemKind.EnumMember) {
     const item = new PackageCompletionItem(global, global.name?.getText() ?? "(unkown)", kind);
     item.detail = `${global.name?.getText() ?? "(unkown)"} >_${global.document.filePath}`;
 
@@ -446,9 +448,7 @@ vscode.languages.registerCompletionItemProvider("jass", new class CompletionItem
     const items: vscode.CompletionItem[] = [];
 
     CompletionManage.wraps.filter(x => x.document.program.is_special == false).forEach(wrap => {
-      // items.push(...wrap.document.program.macros.map(macro => {
-      //   return CompletionItemDocument.define_to_item(macro);
-      // }));
+      items.push(...wrap.document.define_items);
       items.push(...wrap.document.type_items);
       // items.concat(...wrap.items);
       // items.push(...wrap.items);

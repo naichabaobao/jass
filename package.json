@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.36",
+  "version": "1.8.37",
   "keywords": [
     "jass",
     "vjass",
@@ -113,7 +113,7 @@
     "pretest": "npm run compile",
     "package": "vsce package --no-dependencies --skip-duplicate",
     "publish": "vsce publish --no-dependencies --skip-duplicate",
-    "prepublish": "vsce publish --pre-release --no-dependencies"
+    "prepublish": "vsce publish --pre-release --no-dependencies --skip-duplicate"
   },
   "devDependencies": {
     "@vscode/vsce": "^2.24.0",

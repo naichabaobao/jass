@@ -1,5 +1,6 @@
 *.vsix
 src
-./tslint.json
-./tsconfig.json
-./test.j
+tslint.json
+tsconfig.json
+test.j
+*.temp

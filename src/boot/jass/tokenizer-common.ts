@@ -1470,19 +1470,19 @@ export class Document {
       }
       
     });
-    this.zinc_nodes.forEach(child => {
-      this.for_program_handle(child, (node) => {
-        if (node instanceof zinc.Member) {
-          if (node.parent) {
-            if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) {
-              if (node.is_array && node.size_expr == null) {
-                this.add_token_error(node.array_token!, `expectat [size]`);
-              }
-            }
-          }
-        }
-      });
-    });
+    // this.zinc_nodes.forEach(child => {
+    //   this.for_program_handle(child, (node) => {
+    //     if (node instanceof zinc.Member) {
+    //       if (node.parent) {
+    //         if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) {
+    //           if (node.is_array && node.size_expr == null) {
+    //             this.add_token_error(node.array_token!, `expectat [size]`);
+    //           }
+    //         }
+    //       }
+    //     }
+    //   });
+    // });
 
     /**
      * 判断是否闭合并添加错误信息
@@ -1526,23 +1526,23 @@ export class Document {
 
     // console.log(this.global_variables.filter(m => m.name?.getText() == "bababs").map(m => m.to_string()).join("\n"));
     // vjass 数组成员必须定义size
-    this.members.forEach(node => {
-      if (node.parent) {
-        if (node instanceof Member) {
-          if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
-            if (node.is_array && node.size_expr == null) {
-              this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
-            }
-          }
-        } else {
-          if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
-            if (node.size_expr == null || node.size_expr.expr == null) {
-              this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
-            }
-          }
-        }
-      }
-    });
+    // this.members.forEach(node => {
+    //   if (node.parent) {
+    //     if (node instanceof Member) {
+    //       if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+    //         if (node.is_array && node.size_expr == null) {
+    //           this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
+    //         }
+    //       }
+    //     } else {
+    //       if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+    //         if (node.size_expr == null || node.size_expr.expr == null) {
+    //           this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
     // this.global_variables.forEach(node => {
     //   if (node.parent) {
     //     // console.log(node.is_array ,node.size_expr, node.to_string());

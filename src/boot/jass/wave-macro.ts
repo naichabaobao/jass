@@ -58,6 +58,10 @@ export class WaveMacro {
             } else {
                 this._parameters = [];
             }
+        } else {
+            // 如果没有匹配到有效的宏名称，设置为空字符串
+            this._name = '';
+            this._parameters = [];
         }
     }
 
@@ -66,7 +70,7 @@ export class WaveMacro {
      * @returns 宏的名称
      */
     getName(): string {
-        return this._name;
+        return this._name || '';
     }
 
     /**
@@ -74,7 +78,7 @@ export class WaveMacro {
      * @returns 参数列表，如果不是带参数的宏则返回空数组
      */
     getParameters(): string[] {
-        return this._parameters;
+        return this._parameters || [];
     }
 
     /**
@@ -111,7 +115,7 @@ export class WaveMacro {
      * @returns 宏的原始代码字符串
      */
     getOriginalCode(): string {
-        return this.content;
+        return this.content || '';
     }
 
     /**
@@ -131,12 +135,18 @@ export class WaveMacro {
         
         // 添加宏名称和参数信息
         if (this.type === 'define') {
-            result += `${indentStr}  名称: ${this.getName()}\n`;
-            const params = this.getParameters();
-            if (params.length > 0) {
-                result += `${indentStr}  参数: ${params.join(', ')}\n`;
+            const name = this.getName();
+            if (name) {
+                result += `${indentStr}  名称: ${name}\n`;
+                const params = this.getParameters();
+                if (params.length > 0) {
+                    result += `${indentStr}  参数: ${params.join(', ')}\n`;
+                }
+                const value = this.getValue();
+                if (value) {
+                    result += `${indentStr}  值: ${value}\n`;
+                }
             }
-            result += `${indentStr}  值: ${this.getValue()}\n`;
         }
         
         // 添加子宏信息
@@ -161,7 +171,11 @@ export class WaveMacroError {
         // 错误信息
         public readonly message: string,
         // 错误所在的列位置
-        public readonly column: number
+        public readonly column: number,
+        // 错误的严重程度
+        public readonly severity: 'error' | 'warning' | 'info' = 'error',
+        // 错误代码
+        public readonly code?: string
     ) {}
 }
 
@@ -254,26 +268,63 @@ export function replace_wave_macro(content: string, definedMacros: Set<string> =
         let isMacro = false;
         let isMultiline = false;
         let macroContent = trimmedLine;
+        let currentIndex = i;
+        let currentLine = line;
+        let endColumn = line.length;
+
+        // 添加安全检查，防止无限循环
+        let multilineCount = 0;
+        const MAX_MULTILINE = 1000; // 设置一个合理的最大行数限制
+
+        // 处理多行宏（以\结尾的行）
+        while (currentLine.trimEnd().endsWith('\\') && currentIndex + 1 < lines.length && multilineCount < MAX_MULTILINE) {
+            isMultiline = true;
+            currentIndex++;
+            currentLine = lines[currentIndex];
+            if (!currentLine) {
+                errors.push(new WaveMacroError(
+                    i + 1,
+                    'Unexpected empty line in multiline macro',
+                    endColumn,
+                    'error',
+                    'EMPTY_LINE_IN_MACRO'
+                ));
+                break;
+            }
+            macroContent += '\n' + currentLine;
+            endColumn = currentLine.length;
+            multilineCount++;
+        }
+
+        // 如果超过最大行数限制，记录错误并继续处理
+        if (multilineCount >= MAX_MULTILINE) {
+            errors.push(new WaveMacroError(
+                i + 1,
+                'Macro definition too long (exceeds 1000 lines)',
+                line.indexOf('#'),
+                'error',
+                'MACRO_TOO_LONG'
+            ));
+            i = currentIndex;
+            continue;
+        }
+
         for (const { type, pattern } of macroPatterns) {
             if (pattern.test(line)) {
                 const startColumn = line.indexOf('#');
                 if (startColumn === -1) {
-                    errors.push(new WaveMacroError(i + 1, 'Invalid macro format', 0));
+                    errors.push(new WaveMacroError(
+                        i + 1,
+                        'Invalid macro format: missing #',
+                        0,
+                        'error',
+                        'INVALID_MACRO_FORMAT'
+                    ));
                     newLines.push(line);
                     i++;
                     continue;
                 }
-                let endColumn = line.length;
-                let currentLine = line;
-                let currentIndex = i;
-                // 处理多行宏（以\结尾的行）
-                while (currentLine.trimEnd().endsWith('\\') && currentIndex + 1 < lines.length) {
-                    isMultiline = true;
-                    currentIndex++;
-                    currentLine = lines[currentIndex];
-                    macroContent += '\n' + currentLine;
-                    endColumn = currentLine.length;
-                }
+
                 const macro = new WaveMacro(
                     type as any,
                     macroContent,
@@ -282,76 +333,104 @@ export function replace_wave_macro(content: string, definedMacros: Set<string> =
                     endColumn,
                     isMultiline
                 );
-                // 条件编译宏嵌套修正
-                if (type === 'if' || type === 'ifdef' || type === 'ifndef') {
-                    const condition = macroContent.substring(macroContent.indexOf(type) + type.length).trim();
-                    macro.isEnabled = evaluateCondition(condition, definedMacros);
-                    if (macroStack.length > 0) {
-                        const parent = macroStack[macroStack.length - 1];
-                        macro.parent = parent;
-                        parent.children.push(macro);
-                        if (!parent.isEnabled) macro.isEnabled = false;
-                    } else {
-                        rootMacros.push(macro);
-                    }
-                    macroStack.push(macro);
-                } else if (type === 'elif' || type === 'else') {
-                    if (macroStack.length === 0) {
-                        errors.push(new WaveMacroError(i + 1, `Unexpected ${type} without matching if`, startColumn));
-                    } else {
-                        // 弹出上一个分支（if/elif/else），但不弹出整个if块
-                        let parent = macroStack[macroStack.length - 1];
-                        while (parent && (parent.type === 'elif' || parent.type === 'else')) {
-                            macroStack.pop();
-                            parent = macroStack[macroStack.length - 1];
+
+                // 处理不同类型的宏
+                try {
+                    if (type === 'if' || type === 'ifdef' || type === 'ifndef') {
+                        const condition = macroContent.substring(macroContent.indexOf(type) + type.length).trim();
+                        if (!condition) {
+                            errors.push(new WaveMacroError(
+                                i + 1,
+                                `Missing condition in ${type} directive`,
+                                startColumn + type.length,
+                                'error',
+                                'MISSING_CONDITION'
+                            ));
                         }
-                        if (!parent || (parent.type !== 'if' && parent.type !== 'ifdef' && parent.type !== 'ifndef')) {
-                            errors.push(new WaveMacroError(i + 1, `Unexpected ${type} without matching if`, startColumn));
-                        } else {
+                        macro.isEnabled = evaluateCondition(condition, definedMacros);
+                        if (macroStack.length > 0) {
+                            const parent = macroStack[macroStack.length - 1];
                             macro.parent = parent;
                             parent.children.push(macro);
-                            if (type === 'elif') {
-                                const condition = macroContent.substring(macroContent.indexOf(type) + type.length).trim();
-                                macro.isEnabled = evaluateCondition(condition, definedMacros);
-                            } else {
+                            if (!parent.isEnabled) macro.isEnabled = false;
+                        } else {
+                            rootMacros.push(macro);
+                        }
+                        macroStack.push(macro);
+                    } else if (type === 'define') {
+                        const defineContent = macroContent.substring(macroContent.indexOf('define') + 6).trim();
+                        if (!defineContent) {
+                            errors.push(new WaveMacroError(
+                                i + 1,
+                                'Invalid #define: missing identifier',
+                                startColumn + 7,
+                                'error',
+                                'MISSING_MACRO_IDENTIFIER'
+                            ));
+                        } else {
+                            const [name] = defineContent.split(/\s+/);
+                            if (name) {
+                                if (definedMacros.has(name)) {
+                                    errors.push(new WaveMacroError(
+                                        i + 1,
+                                        `Macro '${name}' is already defined`,
+                                        startColumn + 7,
+                                        'warning',
+                                        'MACRO_REDEFINED'
+                                    ));
+                                }
+                                definedMacros.add(name);
                                 macro.isEnabled = true;
                             }
-                            // 让 elif/else 也入栈，便于后续 endif 统计
-                            macroStack.push(macro);
                         }
-                    }
-                } else if (type === 'endif') {
-                    if (macroStack.length === 0) {
-                        errors.push(new WaveMacroError(i + 1, 'Unexpected endif without matching if', startColumn));
-                    } else {
-                        // 弹出所有 elif/else，最后弹出 if/ifdef/ifndef
-                        let parent = macroStack.pop();
-                        while (parent && (parent.type === 'elif' || parent.type === 'else')) {
-                            parent = macroStack.pop();
+                    } else if (type === 'include') {
+                        const includeContent = macroContent.substring(macroContent.indexOf('include') + 7).trim();
+                        if (!includeContent) {
+                            errors.push(new WaveMacroError(
+                                i + 1,
+                                'Invalid #include: missing filename',
+                                startColumn + 8,
+                                'error',
+                                'MISSING_INCLUDE_FILE'
+                            ));
+                        } else if (!/^[<"].*[>"]$/.test(includeContent)) {
+                            errors.push(new WaveMacroError(
+                                i + 1,
+                                'Invalid #include: filename must be enclosed in <> or ""',
+                                startColumn + 8,
+                                'error',
+                                'INVALID_INCLUDE_FORMAT'
+                            ));
                         }
-                        macro.parent = parent;
-                        if (parent) parent.children.push(macro);
+                    } else if (type === 'error') {
+                        const errorContent = macroContent.substring(macroContent.indexOf('error') + 5).trim();
+                        errors.push(new WaveMacroError(
+                            i + 1,
+                            errorContent || 'Error directive',
+                            startColumn + 6,
+                            'error',
+                            'USER_ERROR'
+                        ));
+                    } else if (type === 'warning') {
+                        const warningContent = macroContent.substring(macroContent.indexOf('warning') + 7).trim();
+                        errors.push(new WaveMacroError(
+                            i + 1,
+                            warningContent || 'Warning directive',
+                            startColumn + 8,
+                            'warning',
+                            'USER_WARNING'
+                        ));
                     }
-                } else if (type === 'define') {
-                    const defineContent = macroContent.substring(macroContent.indexOf('define') + 6).trim();
-                    if (!defineContent) {
-                        errors.push(new WaveMacroError(i + 1, 'Invalid #define: missing identifier', startColumn));
-                    } else {
-                        const [name] = defineContent.split(/\s+/);
-                        if (name) definedMacros.add(name);
-                    }
-                } else if (type === 'undef') {
-                    const undefContent = macroContent.substring(macroContent.indexOf('undef') + 5).trim();
-                    if (undefContent) definedMacros.delete(undefContent);
-                } else if (type === 'include') {
-                    const includeContent = macroContent.substring(macroContent.indexOf('include') + 7).trim();
-                    if (!includeContent) {
-                        errors.push(new WaveMacroError(i + 1, 'Invalid #include: missing filename', startColumn));
-                    }
-                } else if (type === 'error') {
-                    const errorContent = macroContent.substring(macroContent.indexOf('error') + 5).trim();
-                    errors.push(new WaveMacroError(i + 1, errorContent || 'Error directive', startColumn));
+                } catch (error: any) {
+                    errors.push(new WaveMacroError(
+                        i + 1,
+                        `Error processing macro: ${error.message}`,
+                        startColumn,
+                        'error',
+                        'MACRO_PROCESSING_ERROR'
+                    ));
                 }
+
                 macros.push(macro);
                 for (let j = i; j <= currentIndex; j++) newLines.push('');
                 i = currentIndex;
@@ -369,8 +448,10 @@ export function replace_wave_macro(content: string, definedMacros: Set<string> =
         if (lastMacro) {
             errors.push(new WaveMacroError(
                 lastMacro.lineNumber,
-                'Unclosed if/ifdef/ifndef',
-                lastMacro.startColumn
+                `Unclosed ${lastMacro.type} block`,
+                lastMacro.startColumn,
+                'error',
+                'UNCLOSED_MACRO_BLOCK'
             ));
         }
     }

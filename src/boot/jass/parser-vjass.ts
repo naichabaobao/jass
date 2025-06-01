@@ -400,6 +400,9 @@ export namespace zinc {
     }
     
     export class Member extends zinc.GlobalVariable {
+        public get is_static(): boolean {
+            return !!this.modifier && this.modifier.getText() == "static";
+        }
     }
     export class Library extends NodeAst{
         public name: Token | null = null;
@@ -1804,6 +1807,14 @@ export class GlobalVariable extends NodeAst {
     public get is_public(): boolean {
         return !this.is_private;
     }
+
+    public get is_static(): boolean {
+        return this.modifier !== null && this.modifier.getText() == "static";
+    }
+
+    public get is_stub(): boolean {
+        return this.modifier !== null && this.modifier.getText() == "stub";
+    }
     
 
     public to_string(): string {
@@ -1995,7 +2006,7 @@ export class Id implements ExprTrict {
         }
     }
 }
-class Caller implements ExprTrict {
+export class Caller implements ExprTrict {
     public name: Id | null = null;
     public params: Params | null = null;
 
@@ -2239,7 +2250,7 @@ export function parse_line_global(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_statement(document, tokens, index);
+            const result = parse_line_statement(document, tokens, index, null);
             index = result.index;
             global.with(result.expr);
             break;
@@ -2283,7 +2294,7 @@ export function parse_line_local(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_statement(document, tokens, index);
+            const result = parse_line_statement(document, tokens, index, false);
             index = result.index;
             local.with(result.expr);
             break;
@@ -2550,6 +2561,9 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
             //     break;
             // }
         }
+    }
+    if (zoom instanceof Expr_) { // 报错:不完整的表达式
+        document.add_token_error(zoom.op!, `incomplete expression`);
     }
     return {
         index,
@@ -2962,7 +2976,7 @@ export class Statement {
  * @param offset_index 
  * @returns 
  */
-export function parse_line_statement(document: Document, tokens: Token[], offset_index: number) {
+export function parse_line_statement(document: Document, tokens: Token[], offset_index: number, need_size_expr: boolean|null = null) {
     const statement = new Statement();
     let index = offset_index;
     let state = 1;
@@ -3009,6 +3023,12 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
                     break;
                 }
             } else {
+                if (statement.is_array && need_size_expr === true) { // 报错:数组size未定义
+                    document.add_token_error(token, `array variable declaration requires a size expression`);
+                    break;
+                } else {
+                    break;
+                }
                 break;
             }
         } else if (state == 3) {
@@ -3046,7 +3066,7 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
             index++;
             document.add_token_error(token, `error token '${text}'`);
         } else if (state == 7) { // 数组size
-            const result = parse_line_index_expr(document, tokens, index, 1);
+            const result = parse_line_index_expr(document, tokens, index, need_size_expr === null ? -1 : need_size_expr ? 1 : 0);
             index = result.index;
             statement.size_expr = result.expr;
             
@@ -3445,9 +3465,15 @@ export function parse_line_member(document: Document, tokens: Token[]) {
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_statement(document, tokens, index);
+            const result = parse_line_statement(document, tokens, index, member.is_static ? false : true);
             index = result.index;
             member.with(result.expr);
+            if (member.is_static && member.size_expr) {
+                document.add_token_error(member.modifier!, `static member cannot have a size expression`);
+            }
+            // if (!member.is_static && (member.size_expr == null || member.size_expr.expr == null)) {
+            //     document.add_token_error(tokens[index], `member must have a size expression`);
+            // }
             break;
         }
     }
@@ -3464,7 +3490,7 @@ export function parse_line_end_tag(document: Document, tokens: Token[], object: 
     let index = 0
     while (index < tokens.length) {
         const token = tokens[index];
-        if (token.is_block_comment) {
+        if (token.is_comment || token.is_block_comment) {
             index++;
             continue;
         }

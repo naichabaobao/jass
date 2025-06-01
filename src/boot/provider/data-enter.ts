@@ -14,6 +14,7 @@ import { change_document_item, delete_document_item, init_document_item, rename_
 import { change_document_hover, delete_document_hover, init_document_hover, rename_document_hover } from './hover-provider-ex';
 import { change_document_difinition, delete_document_difinition, init_document_difinition, rename_document_difinition } from './definition-provider-ex';
 import { change_type_hierarchy, delete_type_hierarchy, init_type_hierarchy, rename_type_hierarchy } from './type-hierarchy-provider';
+// import { WaveProvider } from './wave-provider';
 
 // Globals provider class
 class GlobalsProvider {
@@ -132,20 +133,21 @@ class Payload {
 }
 
 // 保存着rxjs对象，每个文档都会独立创建
-const update_map = new Map<string, Subject<Payload>>();
-vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
-	// const document = event.document;
-	// if (is_not_in_excludes(event.document.uri.fsPath)) {
-	// 	if (parse_map.has(event.document.fileName)) {
-	// 		parse_map.get(event.document.fileName)?.
-	// 	}
-	// 	parse(event.document.uri.fsPath, event.document.getText());
+const update_map = new Map<string, Subject<{key: string, content: string}>>();
 
-	// }
+// 保存wave-provider实例
+// let waveProvider: WaveProvider | undefined;
+
+// 设置wave-provider实例
+// export function setWaveProvider(provider: WaveProvider) {
+// 	waveProvider = provider;
+// }
+
+vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
 	if (!update_map.has(event.document.uri.fsPath)) {
-		const subject = new Subject<Payload>();
+		const subject = new Subject<{key: string, content: string}>();
 		const delay_time = event.document.lineCount <= 100 ? 100 : event.document.lineCount <= 1000 ? 300 : event.document.lineCount <= 6000 ? 1000 : 2000;
-		subject.pipe(debounceTime(delay_time)).subscribe((data: Payload) => {
+		subject.pipe(debounceTime(delay_time)).subscribe((data: {key: string, content: string}) => {
 			// 改变后逻辑
 			parse(data.key, data.content);
 
@@ -155,10 +157,15 @@ vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent)
 			change_document_hover(event.document);
 			change_document_difinition(event.document);
 			change_type_hierarchy(event.document.uri.fsPath);
+
+			// 更新宏信息
+			// if (waveProvider) {
+			// 	waveProvider.updateMacros(event.document);
+			// }
 		});
 		update_map.set(event.document.uri.fsPath, subject);
 	}
-	update_map.get(event.document.uri.fsPath)?.next(new Payload(event.document.uri.fsPath, event.document.getText()));
+	update_map.get(event.document.uri.fsPath)?.next({key: event.document.uri.fsPath, content: event.document.getText()});
 });
 
 vscode.workspace.onDidSaveTextDocument((document) => {
@@ -219,9 +226,13 @@ vscode.workspace.onDidOpenTextDocument(event => {
 			init_document_hover(file_path);
 			init_document_difinition(file_path);
 			init_type_hierarchy(file_path);
+
+			// 初始化宏信息
+			// if (waveProvider) {
+			// 	waveProvider.updateMacros(file_path);
+			// }
 		}
 	});
-	// console.log("include_paths()" + include_paths());
 
 	include_paths().forEach(file_path => {
 		const p = path.parse(file_path);
@@ -234,6 +245,11 @@ vscode.workspace.onDidOpenTextDocument(event => {
 			init_document_hover(file_path);
 			init_document_difinition(file_path);
 			init_type_hierarchy(file_path);
+
+			// 初始化宏信息
+			// if (waveProvider) {
+			// 	waveProvider.updateMacros(file_path);
+			// }
 		}
 	});
 	console.timeEnd("init all file parse");

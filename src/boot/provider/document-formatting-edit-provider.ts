@@ -26,6 +26,12 @@ function unique<T>(arrays: T[], compare: (arrays:T[], item:T) => boolean) {
 
 function format_by_tokens(tokens:common.Token[]) {
   const textEdits = new Array<vscode.TextEdit>();
+  
+  // Skip empty lines
+  if (tokens.length === 0) {
+    return textEdits;
+  }
+
   for (let index = 0; index < tokens.length; index++) {
     const previous_token = tokens[index - 1];
     const current_token = tokens[index];
@@ -92,6 +98,12 @@ function format_by_tokens(tokens:common.Token[]) {
       }
     };
     const current_text = current_token.getText();
+    
+    // Skip comments
+    if (current_token.type === common.TokenType.Conment) {
+      continue;
+    }
+
     if (current_token.is_identifier) {
       if (previous_token.is_identifier) { 
         genBeforSpace();
@@ -108,7 +120,6 @@ function format_by_tokens(tokens:common.Token[]) {
     } else if (["(", "[", "."].includes(current_text)) {
       deleteBeforSpace();
       deleteAfterSpace();
-      
     } else if ([")", "]"].includes(current_text)) {
       if (previous_token && previous_token.type != common.TokenType.Operator) {
         deleteBeforSpace();
@@ -193,12 +204,7 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
         if (!inInterface) {
           indent++;
         }
-        // if (/}\s*$/.test(text)) {
-        //   indent--;
-        // }
         if (/^.*function\s+interface.*$/.test(text)){
-          // vjass 语法: function interface xxxx takes xxx returns xxx
-          // 定义回调接口时，下一行不需要换行
           if (indent > 0) {
             indent--;
           }
@@ -229,18 +235,15 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
       }
     }
 
-    console.time("格式化");
     const doc = GlobalContext.get(document.uri.fsPath);
     
     if (doc) {
       for (let line = 0; line < doc.lineCount; line++) {
         const tokens = doc.lineTokens(line);
-        
         const line_formats = format_by_tokens(tokens);
         formats.push(...line_formats);
       }
     }
-    console.timeEnd("格式化");
     
     return unique(formats, (tes, item) => {
       return tes.findIndex(x => x.range.isEqual(item.range) && x.newText == item.newText) == -1;
@@ -255,17 +258,13 @@ vscode.languages.registerOnTypeFormattingEditProvider("jass", new  class TypeFor
   provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, ch: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
     const formats = new Array<vscode.TextEdit>();
     
-    console.time("auto format line");
     const doc = GlobalContext.get(document.uri.fsPath);
     
     if (doc) {
-      
       const tokens = doc.lineTokens(position.line);
-      
       const line_formats = format_by_tokens(tokens);
       formats.push(...line_formats);
     }
-    console.timeEnd("auto format line");
 
     return formats;
   }

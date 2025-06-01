@@ -7,3 +7,4 @@ src/test
 *.log
 *.zip
 ./test.j
+*.temp

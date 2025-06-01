@@ -1,14 +1,16 @@
 import * as vscode from 'vscode';
-import { WaveMacro, replace_wave_macro } from '../jass/wave-macro';
+// import { WaveMacro, replace_wave_macro } from '../jass/wave-macro';
 import * as path from 'path';
 import * as fs from 'fs';
+// import { setWaveProvider, getDocumentSubject } from './data-enter';
+// import { Subject } from '../../extern/rxjs';
 
 /**
  * 宏提供器类，提供各种宏相关的功能
  */
 export class WaveProvider {
-    private macros: Map<string, WaveMacro[]> = new Map();
-    private documentMacros: Map<string, WaveMacro[]> = new Map();
+    // private macros: Map<string, WaveMacro[]> = new Map();
+    // private documentMacros: Map<string, WaveMacro[]> = new Map();
     private includePaths: string[] = [];
     private diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -21,109 +23,67 @@ export class WaveProvider {
      */
     private createDiagnosticCollection(): vscode.DiagnosticCollection {
         const collection = vscode.languages.createDiagnosticCollection('wave-macro');
-        
-        // 监听文档变化
-        vscode.workspace.onDidChangeTextDocument(event => {
-            this.updateDiagnostics(event.document, collection);
-        });
-
-        // 监听文档打开
-        vscode.workspace.onDidOpenTextDocument(document => {
-            this.updateDiagnostics(document, collection);
-        });
-
-        // 监听文档关闭
-        vscode.workspace.onDidCloseTextDocument(document => {
-            collection.delete(document.uri);
-        });
-
         return collection;
     }
 
     /**
      * 更新诊断信息
      */
-    private updateDiagnostics(document: vscode.TextDocument, collection: vscode.DiagnosticCollection): void {
-        const result = replace_wave_macro(document.getText());
+    private updateDiagnostics(document: vscode.TextDocument) {
         const diagnostics: vscode.Diagnostic[] = [];
+        const text = document.getText();
 
         // 处理宏错误
-        for (const error of result.errors) {
-            diagnostics.push(
-                new vscode.Diagnostic(
-                    new vscode.Range(
-                        error.line - 1,
-                        error.column,
-                        error.line - 1,
-                        error.column + 1
-                    ),
-                    error.message,
-                    vscode.DiagnosticSeverity.Error
-                )
-            );
-        }
+        // const macroErrors = this.findUnclosedMacros(text);
+        // diagnostics.push(...macroErrors.map(error => {
+        //     const range = new vscode.Range(
+        //         document.positionAt(error.start),
+        //         document.positionAt(error.end)
+        //     );
+        //     return new vscode.Diagnostic(
+        //         range,
+        //         error.message,
+        //         vscode.DiagnosticSeverity.Error
+        //     );
+        // }));
 
-        // 检查未闭合的条件编译块
-        const unclosedMacros = this.findUnclosedMacros(result.macros);
-        for (const macro of unclosedMacros) {
-            diagnostics.push(
-                new vscode.Diagnostic(
-                    new vscode.Range(
-                        macro.lineNumber - 1,
-                        macro.startColumn,
-                        macro.lineNumber - 1,
-                        macro.endColumn
-                    ),
-                    `Unclosed ${macro.type} block`,
-                    vscode.DiagnosticSeverity.Error
-                )
-            );
-        }
+        // // 处理重复定义的宏
+        // const duplicateMacros = this.findDuplicateMacros(document.uri.fsPath);
+        // diagnostics.push(...duplicateMacros.map(macro => {
+        //     const range = new vscode.Range(
+        //         document.positionAt(macro.start),
+        //         document.positionAt(macro.end)
+        //     );
+        //     return new vscode.Diagnostic(
+        //         range,
+        //         `重复定义的宏: ${macro.name}`,
+        //         vscode.DiagnosticSeverity.Warning
+        //     );
+        // }));
 
-        // 检查重复的宏定义
-        const duplicateMacros = this.findDuplicateMacros(result.macros);
-        for (const macro of duplicateMacros) {
-            diagnostics.push(
-                new vscode.Diagnostic(
-                    new vscode.Range(
-                        macro.lineNumber - 1,
-                        macro.startColumn,
-                        macro.lineNumber - 1,
-                        macro.endColumn
-                    ),
-                    `Duplicate macro definition: ${macro.getName()}`,
-                    vscode.DiagnosticSeverity.Warning
-                )
-            );
-        }
+        // // 处理未使用的宏
+        // const unusedMacros = this.findUnusedMacros(document.uri.fsPath);
+        // diagnostics.push(...unusedMacros.map(macro => {
+        //     const range = new vscode.Range(
+        //         document.positionAt(macro.start),
+        //         document.positionAt(macro.end)
+        //     );
+        //     return new vscode.Diagnostic(
+        //         range,
+        //         `未使用的宏: ${macro.name}`,
+        //         vscode.DiagnosticSeverity.Information
+        //     );
+        // }));
 
-        // 检查未使用的宏
-        const unusedMacros = this.findUnusedMacros(result.macros);
-        for (const macro of unusedMacros) {
-            diagnostics.push(
-                new vscode.Diagnostic(
-                    new vscode.Range(
-                        macro.lineNumber - 1,
-                        macro.startColumn,
-                        macro.lineNumber - 1,
-                        macro.endColumn
-                    ),
-                    `Unused macro: ${macro.getName()}`,
-                    vscode.DiagnosticSeverity.Information
-                )
-            );
-        }
-
-        // 更新诊断集合
-        collection.set(document.uri, diagnostics);
+        this.diagnosticCollection.set(document.uri, diagnostics);
     }
 
     /**
      * 查找未闭合的条件编译块
      */
-    private findUnclosedMacros(macros: WaveMacro[]): WaveMacro[] {
-        const unclosed: WaveMacro[] = [];
-        const stack: WaveMacro[] = [];
+    private findUnclosedMacros(macros: any[]): any[] {
+        const unclosed: any[] = [];
+        const stack: any[] = [];
 
         for (const macro of macros) {
             if (macro.type === 'if' || macro.type === 'ifdef' || macro.type === 'ifndef') {
@@ -145,9 +105,9 @@ export class WaveProvider {
     /**
      * 查找重复的宏定义
      */
-    private findDuplicateMacros(macros: WaveMacro[]): WaveMacro[] {
-        const duplicates: WaveMacro[] = [];
-        const definedMacros = new Map<string, WaveMacro>();
+    private findDuplicateMacros(macros: any[]): any[] {
+        const duplicates: any[] = [];
+        const definedMacros = new Map<string, any>();
 
         for (const macro of macros) {
             if (macro.type === 'define') {
@@ -166,9 +126,9 @@ export class WaveProvider {
     /**
      * 查找未使用的宏
      */
-    private findUnusedMacros(macros: WaveMacro[]): WaveMacro[] {
-        const unused: WaveMacro[] = [];
-        const definedMacros = new Map<string, WaveMacro>();
+    private findUnusedMacros(macros: any[]): any[] {
+        const unused: any[] = [];
+        const definedMacros = new Map<string, any>();
         const usedMacros = new Set<string>();
 
         // 收集所有定义的宏
@@ -250,12 +210,144 @@ export class WaveProvider {
     }
 
     /**
+     * 更新文档宏信息
+     */
+    private updateDocumentMacros(document: vscode.TextDocument) {
+        // const result = replace_wave_macro(document.getText());
+        // this.documentMacros.set(document.uri.toString(), result.macros);
+        this.updateDiagnostics(document);
+    }
+
+    /**
+     * 更新文档的宏信息（公共方法）
+     */
+    public updateMacros(document: vscode.TextDocument | string) {
+        try {
+            if (typeof document === 'string') {
+                // 如果是文件路径，直接读取文件内容
+                const content = fs.readFileSync(document, 'utf-8');
+                // const result = replace_wave_macro(content);
+                // this.documentMacros.set(document, result.macros);
+                
+                // 更新诊断信息
+                const diagnostics: vscode.Diagnostic[] = [];
+                
+                // // 处理宏错误
+                // for (const error of result.errors) {
+                //     diagnostics.push(
+                //         new vscode.Diagnostic(
+                //             new vscode.Range(
+                //                 error.line - 1,
+                //                 error.column,
+                //                 error.line - 1,
+                //                 error.column + 1
+                //             ),
+                //             error.message,
+                //             vscode.DiagnosticSeverity.Error
+                //         )
+                //     );
+                // }
+
+                // // 检查未闭合的条件编译块
+                // const unclosedMacros = this.findUnclosedMacros(result.macros);
+                // for (const macro of unclosedMacros) {
+                //     diagnostics.push(
+                //         new vscode.Diagnostic(
+                //             new vscode.Range(
+                //                 macro.lineNumber - 1,
+                //                 macro.startColumn,
+                //                 macro.lineNumber - 1,
+                //                 macro.endColumn
+                //             ),
+                //             `Unclosed ${macro.type} block`,
+                //             vscode.DiagnosticSeverity.Error
+                //         )
+                //     );
+                // }
+
+                // // 检查重复的宏定义
+                // const duplicateMacros = this.findDuplicateMacros(result.macros);
+                // for (const macro of duplicateMacros) {
+                //     diagnostics.push(
+                //         new vscode.Diagnostic(
+                //             new vscode.Range(
+                //                 macro.lineNumber - 1,
+                //                 macro.startColumn,
+                //                 macro.lineNumber - 1,
+                //                 macro.endColumn
+                //             ),
+                //             `Duplicate macro definition: ${macro.getName()}`,
+                //             vscode.DiagnosticSeverity.Warning
+                //         )
+                //     );
+                // }
+
+                // // 检查未使用的宏
+                // const unusedMacros = this.findUnusedMacros(result.macros);
+                // for (const macro of unusedMacros) {
+                //     diagnostics.push(
+                //         new vscode.Diagnostic(
+                //             new vscode.Range(
+                //                 macro.lineNumber - 1,
+                //                 macro.startColumn,
+                //                 macro.lineNumber - 1,
+                //                 macro.endColumn
+                //             ),
+                //             `Unused macro: ${macro.getName()}`,
+                //             vscode.DiagnosticSeverity.Information
+                //         )
+                //     );
+                // }
+
+                // 更新诊断集合
+                this.diagnosticCollection.set(vscode.Uri.file(document), diagnostics);
+            } else {
+                // 如果是文档对象，使用原有的更新逻辑
+                this.updateDocumentMacros(document);
+            }
+        } catch (error) {
+            console.error(`Failed to update macros for ${typeof document === 'string' ? document : document.uri.fsPath}:`, error);
+            // 清除诊断信息
+            if (typeof document === 'string') {
+                this.diagnosticCollection.set(vscode.Uri.file(document), []);
+            } else {
+                this.diagnosticCollection.set(document.uri, []);
+            }
+        }
+    }
+
+    /**
+     * 获取文档的宏信息
+     */
+    private getDocumentMacros(document: vscode.TextDocument): any[] {
+        // return this.documentMacros.get(document.uri.toString()) || [];
+        return [];
+    }
+
+    /**
      * 激活提供器
      */
     public activate(context: vscode.ExtensionContext) {
         // 创建诊断集合
         const diagnosticCollection = this.createDiagnosticCollection();
         context.subscriptions.push(diagnosticCollection);
+
+        // 设置WaveProvider实例
+        // setWaveProvider(this);
+
+        // 订阅文档变化事件
+        // const documents = vscode.workspace.textDocuments;
+        // for (const doc of documents) {
+        //     const subject = getDocumentSubject(doc.uri.fsPath);
+        //     if (subject) {
+        //         subject.subscribe((payload: {key: string, content: string}) => {
+        //             const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === payload.key);
+        //             if (document) {
+        //                 this.updateDocumentMacros(document);
+        //             }
+        //         });
+        //     }
+        // }
 
         // 注册各种功能
         context.subscriptions.push(
@@ -325,7 +417,7 @@ export class WaveProvider {
             vscode.languages.registerOnTypeFormattingEditProvider(
                 { scheme: 'file', language: 'jass' },
                 this.createOnTypeFormattingProvider(),
-                ';', '}', '\n'
+                '\n'
             ),
 
             // 引用查找
@@ -369,11 +461,6 @@ export class WaveProvider {
                 { scheme: 'file', language: 'jass' },
                 this.createColorProvider()
             ),
-
-            // 文档变化监听
-            vscode.workspace.onDidChangeTextDocument(this.onDocumentChange, this),
-            vscode.workspace.onDidOpenTextDocument(this.onDocumentOpen, this),
-            vscode.workspace.onDidCloseTextDocument(this.onDocumentClose, this),
 
             // 文档语义标记
             vscode.languages.registerDocumentSemanticTokensProvider(
@@ -592,53 +679,38 @@ export class WaveProvider {
     private createHoverProvider(): vscode.HoverProvider {
         return {
             provideHover: (document, position) => {
-                // 获取当前行的文本
-                const line = document.lineAt(position.line);
-                const lineText = line.text;
-                
-                // 检查是否在宏定义行
-                if (lineText.trim().startsWith('#')) {
-                    const macroContent = lineText.trim();
-                    const macroType = macroContent.split(/\s+/)[0].substring(1); // 移除 # 前缀
-                    
-                    // 创建悬停内容
+                const macros = this.getDocumentMacros(document);
+                const macro = macros.find(m => {
+                    const macroRange = new vscode.Range(
+                        m.lineNumber - 1,
+                        m.startColumn,
+                        m.lineNumber - 1 + (m.isMultiline ? m.getOriginalCode().split('\n').length : 1),
+                        m.endColumn
+                    );
+                    return macroRange.contains(position);
+                });
+
+                if (macro) {
                     const hoverContent = new vscode.MarkdownString();
                     hoverContent.appendMarkdown(`**>_** \`${document.uri.fsPath}\`\n\n`);
                     
-                    // 获取宏的详细信息
-                    const macros = this.getDocumentMacros(document);
-                    const macro = macros.find(m => m.lineNumber === position.line + 1);
+                    const codeDisplay = macro.isEnabled ? macro.getOriginalCode() : `~~${macro.getOriginalCode()}~~`;
+                    hoverContent.appendCodeblock(codeDisplay);
+                    hoverContent.appendMarkdown(`\n**Status**: ${macro.isEnabled ? 'Enabled' : 'Disabled'}\n\n`);
                     
-                    if (macro) {
-                        const codeDisplay = macro.isEnabled ? macro.getOriginalCode() : `~~${macro.getOriginalCode()}~~`;
-                        hoverContent.appendCodeblock(codeDisplay);
-                        hoverContent.appendMarkdown(`\n**Status**: ${macro.isEnabled ? 'Enabled' : 'Disabled'}\n\n`);
-                        
-                        // 如果是条件编译宏，添加条件信息
-                        if (macro.type === 'if' || macro.type === 'ifdef' || macro.type === 'ifndef') {
-                            const condition = macro.content.substring(macro.content.indexOf(macro.type) + macro.type.length).trim();
-                            hoverContent.appendMarkdown(`**Condition**: \`${condition}\`\n\n`);
-                        }
-                        
-                        // 如果是宏定义，添加定义信息
-                        if (macro.type === 'define') {
-                            const name = macro.getName();
-                            const params = macro.getParameters();
-                            const value = macro.getValue();
-                            
-                            hoverContent.appendMarkdown(`**Name**: \`${name}\`\n\n`);
-                            
-                            if (params.length > 0) {
-                                hoverContent.appendMarkdown(`**Parameters**: \`${params.join(', ')}\`\n\n`);
-                            }
-                            
-                            if (value) {
-                                hoverContent.appendMarkdown(`**Value**: \`${value}\`\n\n`);
-                            }
-                        }
-                    } else {
-                        // 如果没有找到宏，至少显示当前行的内容
-                        hoverContent.appendCodeblock(macroContent);
+                    // 添加宏的详细信息
+                    const name = macro.getName();
+                    const params = macro.getParameters();
+                    const value = macro.getValue();
+                    
+                    hoverContent.appendMarkdown(`**Name**: \`${name}\`\n\n`);
+                    
+                    if (params.length > 0) {
+                        hoverContent.appendMarkdown(`**Parameters**: \`${params.join(', ')}\`\n\n`);
+                    }
+                    
+                    if (value) {
+                        hoverContent.appendMarkdown(`**Value**: \`${value}\`\n\n`);
                     }
                     
                     // 设置悬停内容的支持
@@ -646,51 +718,6 @@ export class WaveProvider {
                     hoverContent.supportHtml = true;
                     
                     return new vscode.Hover(hoverContent);
-                }
-                
-                // 检查是否在宏使用处
-                const wordRange = document.getWordRangeAtPosition(position);
-                if (wordRange) {
-                    const word = document.getText(wordRange);
-                    const macros = this.getDocumentMacros(document);
-                    
-                    // 查找匹配的宏定义
-                    const macro = macros.find(m => {
-                        if (m.type === 'define') {
-                            return m.getName() === word;
-                        }
-                        return false;
-                    });
-                    
-                    if (macro) {
-                        const hoverContent = new vscode.MarkdownString();
-                        hoverContent.appendMarkdown(`**>_** \`${document.uri.fsPath}\`\n\n`);
-                        
-                        const codeDisplay = macro.isEnabled ? macro.getOriginalCode() : `~~${macro.getOriginalCode()}~~`;
-                        hoverContent.appendCodeblock(codeDisplay);
-                        hoverContent.appendMarkdown(`\n**Status**: ${macro.isEnabled ? 'Enabled' : 'Disabled'}\n\n`);
-                        
-                        // 添加宏的详细信息
-                        const name = macro.getName();
-                        const params = macro.getParameters();
-                        const value = macro.getValue();
-                        
-                        hoverContent.appendMarkdown(`**Name**: \`${name}\`\n\n`);
-                        
-                        if (params.length > 0) {
-                            hoverContent.appendMarkdown(`**Parameters**: \`${params.join(', ')}\`\n\n`);
-                        }
-                        
-                        if (value) {
-                            hoverContent.appendMarkdown(`**Value**: \`${value}\`\n\n`);
-                        }
-                        
-                        // 设置悬停内容的支持
-                        hoverContent.isTrusted = true;
-                        hoverContent.supportHtml = true;
-                        
-                        return new vscode.Hover(hoverContent);
-                    }
                 }
                 
                 return null;
@@ -710,7 +737,7 @@ export class WaveProvider {
                 // 为条件编译块创建折叠范围
                 for (const macro of macros) {
                     if (macro.type === 'if' || macro.type === 'ifdef' || macro.type === 'ifndef') {
-                        const endMacro = macro.children.find(child => child.type === 'endif');
+                        const endMacro = macro.children.find((child: { type: string }) => child.type === 'endif');
                         if (endMacro) {
                             ranges.push(
                                 new vscode.FoldingRange(
@@ -796,7 +823,7 @@ export class WaveProvider {
                             );
                             
                             // 添加参数信息
-                            signature.parameters = parameters.map(param => 
+                            signature.parameters = parameters.map((param: string) => 
                                 new vscode.ParameterInformation(param)
                             );
                             
@@ -918,7 +945,7 @@ export class WaveProvider {
     /**
      * 格式化单个宏
      */
-    private formatMacro(macro: WaveMacro): string {
+    private formatMacro(macro: any): string {
         const name = macro.getName();
         const params = macro.getParameters();
         const value = macro.getValue();
@@ -949,43 +976,6 @@ export class WaveProvider {
         }
 
         return formatted;
-    }
-
-    /**
-     * 处理文档变化
-     */
-    private onDocumentChange(event: vscode.TextDocumentChangeEvent) {
-        this.updateDocumentMacros(event.document);
-    }
-
-    /**
-     * 处理文档打开
-     */
-    private onDocumentOpen(document: vscode.TextDocument) {
-        this.updateDocumentMacros(document);
-    }
-
-    /**
-     * 处理文档关闭
-     */
-    private onDocumentClose(document: vscode.TextDocument) {
-        this.documentMacros.delete(document.uri.toString());
-    }
-
-    /**
-     * 更新文档宏信息
-     */
-    private updateDocumentMacros(document: vscode.TextDocument) {
-        const result = replace_wave_macro(document.getText());
-        this.documentMacros.set(document.uri.toString(), result.macros);
-        this.updateDiagnostics(document, this.diagnosticCollection);
-    }
-
-    /**
-     * 获取文档的宏信息
-     */
-    private getDocumentMacros(document: vscode.TextDocument): WaveMacro[] {
-        return this.documentMacros.get(document.uri.toString()) || [];
     }
 
     /**
@@ -1367,47 +1357,16 @@ export class WaveProvider {
         return {
             provideCodeActions: (document, range, context) => {
                 const actions: vscode.CodeAction[] = [];
-                const diagnostics = context.diagnostics;
                 const macros = this.getDocumentMacros(document);
-
-                // 处理诊断相关的快速修复
-                for (const diagnostic of diagnostics) {
-                    // 处理未闭合的条件编译块
-                    if (diagnostic.message.includes('Unclosed')) {
-                        const fixAction = new vscode.CodeAction('Add #endif', vscode.CodeActionKind.QuickFix);
-                        fixAction.diagnostics = [diagnostic];
-                        fixAction.isPreferred = true;
-                        fixAction.edit = new vscode.WorkspaceEdit();
-                        fixAction.edit.insert(document.uri, new vscode.Position(range.end.line + 1, 0), '#endif\n');
-                        actions.push(fixAction);
-                    }
-
-                    // 处理重复的宏定义
-                    if (diagnostic.message.includes('Duplicate macro definition')) {
-                        const fixAction = new vscode.CodeAction('Remove duplicate macro', vscode.CodeActionKind.QuickFix);
-                        fixAction.diagnostics = [diagnostic];
-                        fixAction.isPreferred = true;
-                        fixAction.edit = new vscode.WorkspaceEdit();
-                        fixAction.edit.delete(document.uri, range);
-                        actions.push(fixAction);
-                    }
-
-                    // 处理未使用的宏
-                    if (diagnostic.message.includes('Unused macro')) {
-                        const fixAction = new vscode.CodeAction('Remove unused macro', vscode.CodeActionKind.QuickFix);
-                        fixAction.diagnostics = [diagnostic];
-                        fixAction.isPreferred = true;
-                        fixAction.edit = new vscode.WorkspaceEdit();
-                        fixAction.edit.delete(document.uri, range);
-                        actions.push(fixAction);
-                    }
-                }
-
-                // 添加重构建议
-                const macro = macros.find(m => 
-                    m.lineNumber - 1 === range.start.line && 
-                    m.type === 'define'
-                );
+                const macro = macros.find(m => {
+                    const macroRange = new vscode.Range(
+                        m.lineNumber - 1,
+                        m.startColumn,
+                        m.lineNumber - 1 + (m.isMultiline ? m.getOriginalCode().split('\n').length : 1),
+                        m.endColumn
+                    );
+                    return macroRange.contains(range);
+                });
 
                 if (macro) {
                     // 添加重命名建议
@@ -1431,71 +1390,11 @@ export class WaveProvider {
                         title: 'Find all references'
                     };
                     actions.push(findRefsAction);
-
-                    // 添加格式化宏建议
-                    const formatAction = new vscode.CodeAction(
-                        'Format macro definition',
-                        vscode.CodeActionKind.Refactor
-                    );
-                    formatAction.edit = new vscode.WorkspaceEdit();
-                    formatAction.edit.replace(
-                        document.uri,
-                        range,
-                        this.formatMacro(macro)
-                    );
-                    actions.push(formatAction);
-
-                    // 添加转换为内联函数建议（如果宏是函数式的）
-                    if (macro.getParameters().length > 0) {
-                        const inlineAction = new vscode.CodeAction(
-                            'Convert to inline function',
-                            vscode.CodeActionKind.Refactor
-                        );
-                        inlineAction.edit = new vscode.WorkspaceEdit();
-                        const inlineFunction = this.convertMacroToInlineFunction(macro);
-                        inlineAction.edit.replace(document.uri, range, inlineFunction);
-                        actions.push(inlineAction);
-                    }
                 }
 
                 return actions;
             }
         };
-    }
-
-    /**
-     * 将宏转换为内联函数
-     */
-    private convertMacroToInlineFunction(macro: WaveMacro): string {
-        const name = macro.getName();
-        const params = macro.getParameters();
-        const value = macro.getValue();
-
-        // 构建内联函数
-        let inlineFunction = 'inline ';
-        
-        // 添加返回类型（尝试从值中推断）
-        if (value.includes('?')) {
-            inlineFunction += 'auto ';
-        } else {
-            inlineFunction += 'void ';
-        }
-
-        // 添加函数名和参数
-        inlineFunction += `${name}(${params.join(', ')}) {\n`;
-        inlineFunction += '    ';
-
-        // 添加函数体
-        if (value.includes('?')) {
-            // 处理三元运算符
-            inlineFunction += `return ${value};\n`;
-        } else {
-            inlineFunction += `${value};\n`;
-        }
-
-        inlineFunction += '}';
-
-        return inlineFunction;
     }
 
     /**
@@ -1654,27 +1553,7 @@ export class WaveProvider {
     private createOnTypeFormattingProvider(): vscode.OnTypeFormattingEditProvider {
         return {
             provideOnTypeFormattingEdits: (document, position, ch, options) => {
-                const edits: vscode.TextEdit[] = [];
-                const line = document.lineAt(position.line);
-                const text = line.text;
-
-                // 处理宏定义的格式化
-                if (text.trim().startsWith('#')) {
-                    if (ch === '\n') {
-                        // 处理多行宏的缩进
-                        const prevLine = document.lineAt(position.line - 1);
-                        if (prevLine.text.trimEnd().endsWith('\\')) {
-                            edits.push(
-                                vscode.TextEdit.insert(
-                                    position,
-                                    '    ' // 4 spaces indentation
-                                )
-                            );
-                        }
-                    }
-                }
-
-                return edits;
+                return [];
             }
         };
     }

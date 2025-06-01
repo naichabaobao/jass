@@ -70,6 +70,7 @@ class HoverDocument {
   public readonly membere_items:PackageHover<vjass_ast.Member|vjass_ast.zinc.Member>[];
   public readonly library_items:PackageHover<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageHover<vjass_ast.Scope>[];
+  public readonly define_items:vscode.Hover[];
   // public readonly take_items:TakeCompletionItem[];
 
   constructor(program:vjass.Document) {
@@ -87,6 +88,7 @@ class HoverDocument {
     this.membere_items = this.program.members.map(node => HoverDocument.member_to_hover(node));
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
+    this.define_items = this.program.macros.map(macro => HoverDocument.define_to_hover(macro));
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -518,10 +520,15 @@ class HoverProvider implements vscode.HoverProvider {
     const hovers2:vscode.Hover[] = [];
     
     CompletionManage.wraps.forEach(wrap => {
-      // hovers2.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
-      //   return HoverDocument.define_to_hover(macro);
-      // }));
-
+      hovers2.push(...wrap.document.define_items.filter(hover => {
+        if (hover instanceof vscode.Hover && hover.contents.length > 0) {
+          const content = hover.contents[0];
+          if (content instanceof vscode.MarkdownString) {
+            return content.value.includes(key);
+          }
+        }
+        return false;
+      }));
 
       hovers2.push(...wrap.document.native_items.filter(x => x.key == key));
       hovers2.push(...wrap.document.function_items.filter(x => x.key == key));

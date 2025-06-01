@@ -71,6 +71,7 @@ class LocationDocument {
   public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.zinc.Library>[];
   public readonly scope_items:PackageLocation<vjass_ast.Scope>[];
   public readonly types_items:PackageLocation<vjass_ast.Type>[];
+  public readonly define_items:vscode.Location[];
   // public readonly take_items:TakeCompletionItem[];
 
   constructor(program:vjass.Document) {
@@ -89,6 +90,7 @@ class LocationDocument {
     this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
     this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
     this.types_items = this.program.types.map(node => this.type_to_hover(node));
+    this.define_items = this.program.macros.map(macro => LocationDocument.define_to_hover(macro));
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -332,11 +334,10 @@ vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvi
     const locations:vscode.Location[] = [];
     
     LocationManage.wraps.forEach(wrap => {
-      // locations.push(...wrap.document.program.macros.filter(macro => macro.key && macro.key == key).map(macro => {
-      //   return LocationDocument.define_to_hover(macro);
-      // }));
-
-
+      locations.push(...wrap.document.define_items.filter(loc => {
+        const macro = wrap.document.program.macros.find(m => m.key === key);
+        return macro && loc.uri.fsPath === macro.document.filePath;
+      }));
 
       locations.push(...wrap.document.native_items.filter(x => x.key == key));
       locations.push(...wrap.document.function_items.filter(x => x.key == key));
