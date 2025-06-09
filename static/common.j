@@ -6240,11 +6240,11 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionGet takes nothing returns version
-// 当前游戏版本是否指定版本
+// 查询当前游戏版本是否指定版本
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionCompatible takes version whichVersion returns boolean
-// 当前版本是否支持指定版本
+// 查询当前版本是否支持指定版本
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionSupported takes version whichVersion returns boolean
@@ -6282,13 +6282,13 @@ native SaveGame takes string saveFileName returns nothing
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
 // 移除存档目录
 native RemoveSaveDirectory takes string sourceDirName returns boolean
-// 复制存档目录
+// 复制存档
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 查询存档是否存在
 native SaveGame takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
-// 游戏检查点(自动)存档
+// 检查点(自动)存档
 // @param showWindow 是否显示自动存档提示
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
