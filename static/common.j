@@ -1541,9 +1541,9 @@ globals
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
 	// 单位事件 开始施放技能 (前摇结束)
 	constant unitevent EVENT_UNIT_SPELL_CAST = ConvertUnitEvent(290)
-	// 单位事件 发动技能效果 (后摇开始)
+	// 单位事件 施放技能生效 (后摇开始)
 	constant unitevent EVENT_UNIT_SPELL_EFFECT = ConvertUnitEvent(291)
-	// 单位事件 发动技能结束 (后摇结束)
+	// 单位事件 施放技能结束 (后摇结束)
 	constant unitevent EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
 	// 单位事件 停止施放技能
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
