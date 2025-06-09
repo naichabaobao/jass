@@ -6285,7 +6285,7 @@ native RemoveSaveDirectory takes string sourceDirName returns boolean
 // 复制存档
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 查询存档是否存在
-native SaveGame takes string saveName returns boolean
+native SaveGameExists takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
 // 检查点(自动)存档
