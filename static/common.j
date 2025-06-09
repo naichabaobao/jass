@@ -1680,19 +1680,19 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合模式 无混合，有两个无混合
+	// 混合模式 无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
 	// 混合模式 无视混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合模式 关键的alpha混合
+	// 混合模式 关键alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
 	// 混合模式 普通混合
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合模式 附加的混合
+	// 混合模式 附加混合
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合模式 调整的混合
+	// 混合模式 调整混合
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合模式 调整的2倍混合
+	// 混合模式 调整混合（2倍）
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
 	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
@@ -1716,13 +1716,13 @@ globals
 	
 	// Camera Margin constants for use with GetCameraMargin
 	
-	// 镜头空白 左，似乎默认值恒为512
+	// 镜头空白 左，似乎返回的默认值恒为512
 	constant integer CAMERA_MARGIN_LEFT = 0
-	// 镜头空白 右，似乎默认值恒为512
+	// 镜头空白 右，似乎返回的默认值恒为512
 	constant integer CAMERA_MARGIN_RIGHT = 1
-	// 镜头空白 顶部，似乎默认值恒为256
+	// 镜头空白 顶部，似乎返回的默认值恒为256
 	constant integer CAMERA_MARGIN_TOP = 2
-	// 镜头空白 底部，似乎默认值恒为256
+	// 镜头空白 底部，似乎返回的默认值恒为256
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
@@ -1849,11 +1849,11 @@ globals
 	constant frameeventtype FRAMEEVENT_MOUSE_DOWN = ConvertFrameEventType(5)
 	// UI框架/控件句柄 事件类型 鼠标滚轴滚动
 	constant frameeventtype FRAMEEVENT_MOUSE_WHEEL = ConvertFrameEventType(6)
-	// UI框架/控件句柄 事件类型 复选框-选中
+	// UI框架/控件句柄 事件类型 复选框 选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_CHECKED = ConvertFrameEventType(7)
-	// UI框架/控件句柄 事件类型 复选框-未选中
+	// UI框架/控件句柄 事件类型 复选框 未选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_UNCHECKED = ConvertFrameEventType(8)
-	// UI框架/控件句柄 事件类型 输入框-文本变化
+	// UI框架/控件句柄 事件类型 输入框 文本变化
 	constant frameeventtype FRAMEEVENT_EDITBOX_TEXT_CHANGED = ConvertFrameEventType(9)
 	// UI框架/控件句柄 事件类型 弹出菜单按钮变化
 	constant frameeventtype FRAMEEVENT_POPUPMENU_ITEM_CHANGED = ConvertFrameEventType(10)
@@ -1863,11 +1863,11 @@ globals
 	constant frameeventtype FRAMEEVENT_SPRITE_ANIM_UPDATE = ConvertFrameEventType(12)
 	// UI框架/控件句柄 事件类型 滑块数值变化
 	constant frameeventtype FRAMEEVENT_SLIDER_VALUE_CHANGED = ConvertFrameEventType(13)
-	// UI框架/控件句柄 事件类型 对话框-点击取消
+	// UI框架/控件句柄 事件类型 对话框 点击取消
 	constant frameeventtype FRAMEEVENT_DIALOG_CANCEL = ConvertFrameEventType(14)
-	// UI框架/控件句柄 事件类型 对话框-点击接受
+	// UI框架/控件句柄 事件类型 对话框 点击接受
 	constant frameeventtype FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
-	// UI框架/控件句柄 事件类型 输入框-文本输入
+	// UI框架/控件句柄 事件类型 输入框 文本输入
 	constant frameeventtype FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
 	
 	
