@@ -1744,7 +1744,7 @@ globals
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
 	// 音效类型 特效
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
-	// 音效类型 循环特效
+	// 音效类型 特效(循环)
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
 	
