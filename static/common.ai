@@ -168,7 +168,7 @@ native SetReplacementCount  takes integer qty                           returns 
 native GroupTimedLife       takes boolean allow                         returns nothing
 // 从攻击组中移除受伤单位（血量50%以下）
 native RemoveInjuries       takes nothing                               returns nothing
-// 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位）
+// 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位，不确定攻击1还是攻击2，不确定是否包含升级/拔树后才攻城的单位）
 native RemoveSiege          takes nothing                               returns nothing
 // 初始化攻击组
 // 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
@@ -262,7 +262,7 @@ native FillGuardPosts       takes nothing                               returns 
 native ReturnGuardPosts     takes nothing                               returns nothing
 // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
 native CreateCaptains       takes nothing                               returns nothing
-// 设置指定组（攻击组、防御组、两组一起执行）回家后的集结坐标
+// 设置指定组回家后的集结坐标
 // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标，怀疑运行后会对攻击组所有单位发送一次移动命令
 // @param which 攻击组为1，防御组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
