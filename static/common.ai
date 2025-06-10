@@ -466,11 +466,11 @@ globals
 
     // special human units
 
-    // 血精灵牧师
+    // 血精灵牧师（测试版内容，正式版无此单位 'hbep'）
     constant integer BLOOD_PRIEST       = 'hbep'
-    // 血精灵女巫
+    // 血精灵女巫（测试版内容，正式版无此单位 'hbes'）
     constant integer BLOOD_SORCERESS    = 'hbes'
-    // 血精灵工人
+    // 工人(血精灵)
     constant integer BLOOD_PEASANT      = 'nhew'
 
     // human buildings
@@ -1012,7 +1012,7 @@ globals
 
     // 小精灵
     constant integer WISP               = 'ewsp'
-    // 弓箭手
+    // 弓箭手(暗夜精灵)
     constant integer ARCHER             = 'earc'
     // 猛禽德鲁伊(暗夜精灵形态)
     constant integer DRUID_TALON        = 'edot'
@@ -1043,15 +1043,15 @@ globals
 
     // special elf units
 
-    // 弓箭手（高等精灵）
+    // 弓箭手(高等精灵)
     constant integer HIGH_ARCHER        = 'nhea'
     // 队/船长
     constant integer HIGH_FOOTMAN       = 'hcth'
     // 队/船长
     constant integer HIGH_FOOTMEN       =  HIGH_FOOTMAN
-    // 剑士（高等精灵）
+    // 剑士(高等精灵)
     constant integer HIGH_SWORDMAN      = 'hhes'
-    // 龙鹰（高等精灵）
+    // 龙鹰(高等精灵)
     constant integer DRAGON_HAWK        = 'nws1'
     // 腐化的树人
     constant integer CORRUPT_TREANT     = 'nenc'
