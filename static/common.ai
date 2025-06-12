@@ -439,7 +439,7 @@ globals
     constant integer GRYPHON            = 'hgry'
     // 人族骑士/骑士
     constant integer KNIGHT             = 'hkni'
-    // 矮人迫机炮
+    // 矮人迫击炮
     constant integer MORTAR             = 'hmtm'
     // 农民
     constant integer PEASANT            = 'hpea'
