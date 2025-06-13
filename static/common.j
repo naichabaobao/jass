@@ -6101,9 +6101,11 @@ constant native Player takes integer number returns player
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 // 中立被动玩家是所有非中立玩家的盟友
+// 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
 // 中立敌对玩家和中立受害玩家是所有非中立玩家的敌人
+// 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
@@ -6146,6 +6148,7 @@ constant native GetPlayerState takes player whichPlayer, playerstate whichPlayer
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
 // 查询玩家与玩家的联盟类型是否指定类型
 // @param whichAllianceSetting 联盟类型
+// 玩家的联盟类型可以不同，A对B是共享视野，B对A是共享控制权
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
 // 获取玩家生命值障碍 [R]
