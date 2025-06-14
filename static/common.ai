@@ -2185,7 +2185,7 @@ endfunction
 
 //============================================================================
 
-// 开始建造分基地
+// 开始建造分基地(不是绝对成功)
 // @param qty 数量
 // @param hall 基地单位类型
 function StartExpansion takes integer qty, integer hall returns boolean
@@ -2266,7 +2266,8 @@ endfunction
 
 //============================================================================
 
-// 错位等待，时间为 (base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers())) 秒
+// 错位等待
+// 等待时间为 (base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers())) 秒
 function StaggerSleep takes real base, real spread returns nothing
     call Sleep(base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers()))
 endfunction
@@ -2285,28 +2286,28 @@ endfunction
 
 //============================================================================
 
-// 开始运行建造线程（建造/训练/升级 分矿、单位和科技）
+// 开始运行建造线程（建造/训练/升级 建筑、分矿、单位和科技）
 function StartBuildLoop takes nothing returns nothing
     call StartThread(function BuildLoop)
 endfunction
 
 //============================================================================
 
-// 设置初始波次的等待时间
+// 设置等待时间(默认用于首波攻击)
 function SetInitialWave takes integer seconds returns nothing
     set sleep_seconds = seconds
 endfunction
 
 //============================================================================
 
-// 增加初始波次等待时间
+// 增加等待时间
 function AddSleepSeconds takes integer seconds returns nothing
     set sleep_seconds = sleep_seconds + seconds
 endfunction
 
 //============================================================================
 
-// 永久等待（使用后不会退出，永久循环）
+// 永久等待（使用后当前线程将永久休眠，停止工作）
 function SleepForever takes nothing returns nothing
     call Trace("going to sleep forever\n") //xxx
     loop
@@ -2316,7 +2317,7 @@ endfunction
 
 //============================================================================
 
-// 开始游戏，运行后AI会开始建造/训练/升级 单位或科技
+// 开始游戏，运行后AI会开始建造/训练/升级 建筑、单位或科技
 function PlayGame takes nothing returns nothing
     call StartBuildLoop()
     call SleepForever()
@@ -2560,7 +2561,7 @@ endfunction
 
 //============================================================================
 
-// 获取指定单位/科技类型的建造/训练/研究时间，用于备战（补充兵力）
+// 获取指定建筑/单位/科技类型的建造/训练/研究时间，用于备战（补充兵力）
 function WavePrepare takes integer unitid returns integer
     return GetUnitBuildTime(unitid)
 endfunction
