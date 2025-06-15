@@ -6966,7 +6966,7 @@ native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-// 设置任务是否必须完成(区分主线或支线任务)
+// 设置任务是否必须完成(区分主线和支线)
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
 // 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
@@ -6977,7 +6977,7 @@ native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
 // 开启/关闭 指定任务 [R]
 native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
-// 查询任务是否必须完成（主线任务）
+// 查询任务是否必须完成（区分主线或支线任务）
 native IsQuestRequired takes quest whichQuest returns boolean
 // 查询任务是否已完成
 native IsQuestCompleted takes quest whichQuest returns boolean
@@ -6985,14 +6985,14 @@ native IsQuestCompleted takes quest whichQuest returns boolean
 native IsQuestDiscovered takes quest whichQuest returns boolean
 // 查询任务是否已失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 查询任务是否已开启/已激活
+// 查询任务是否已启用
 native IsQuestEnabled takes quest whichQuest returns boolean
 
 // 创建任务完成条件
 native QuestCreateItem takes quest whichQuest returns questitem
 // 设置任务完成条件说明
 native QuestItemSetDescription takes questitem whichQuestItem, string description returns nothing
-// 设置任务完成条件完成/未完成
+// 设置任务完成条件为完成/未完成
 native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed returns nothing
 
 // 查询任务完成条件是否已完成
