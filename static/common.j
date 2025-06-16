@@ -5392,8 +5392,10 @@ native TriggerExecute takes trigger whichTrigger returns nothing
 // @deprecated 弃用函数
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
+// 用于异步时统一数据
 native TriggerSyncStart takes nothing returns nothing
 // 触发器同步准备完成
+// 用于异步时统一数据
 native TriggerSyncReady takes nothing returns nothing
 
 
@@ -6378,14 +6380,19 @@ native StoreUnit takes gamecache cache, string missionKey, string key, unit whic
 // 存储字符串到游戏缓存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
 // 同步游戏缓存存储值（整数）
+// 用于异步时统一数据
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（实数）
+// 用于异步时统一数据
 native SyncStoredReal takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（布尔值）
+// 用于异步时统一数据
 native SyncStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（单位）
+// 用于异步时统一数据
 native SyncStoredUnit takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（字符串）
+// 用于异步时统一数据
 native SyncStoredString takes gamecache cache, string missionKey, string key returns nothing
 // 查询游戏缓存是否有存储值（整数）
 native HaveStoredInteger takes gamecache cache, string missionKey, string key returns boolean
@@ -8173,14 +8180,20 @@ native BlzGetTriggerFrameValue takes nothing returns real
 // 获取触发的 UI框架/控件句柄 文本
 native BlzGetTriggerFrameText takes nothing returns string
 // 注册玩家同步事件
+// 用于异步时统一数据
+// @param prefix 标签
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
+// 用于异步时统一数据
 // 支持AI脚本向触发器同步
+// @param prefix 标签
 native BlzSendSyncData takes string prefix, string data returns boolean
-// 获取同步的前缀
-// 支持获取AI脚本向触发器同步的数据
+// 获取同步的标签
+// 用于异步时统一数据
+// 支持获取AI脚本向触发器同步的标签
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
+// 用于异步时统一数据
 // 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
