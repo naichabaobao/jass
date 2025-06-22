@@ -4633,41 +4633,41 @@ native BlzGroupGetSize takes group whichGroup returns integer
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定矩形区域内的单位加入单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定矩形区域内的单位加入单位组，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家选择的单位添加到单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
@@ -4894,7 +4894,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 用完请注意排泄(使用DestroyFilter，并set null)，不建议在AI脚本中使用
+// 用完请注意排泄(使用DestroyFilter，并set null)，在AI脚本中不可用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
