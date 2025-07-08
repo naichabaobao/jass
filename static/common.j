@@ -1353,7 +1353,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
 	// 玩家单位事件 单位被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
-	// 玩家单位事件 单位造成伤害
+	// 玩家单位事件 单位即将被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGING = ConvertPlayerUnitEvent(315)
 	
 	
@@ -1361,7 +1361,7 @@ globals
 	
 	// 单位事件 单位受到伤害
 	constant unitevent EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
-	// 单位事件 单位造成伤害
+	// 单位事件 单位即将被伤害
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 单位事件 单位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
