@@ -4608,8 +4608,8 @@
 // 技能-暗夜精灵-单位
 'Adec'
 
-// Bouncing Missile Filter(弹射免疫)
-// 能阻止弹射类攻击在建筑之间弹射。
+// Bouncing Missile Filter(免疫弹射)
+// 能阻止弹射类攻击。
 // 技能-暗夜精灵-单位
 // @version 2.03
 'Amgi'
