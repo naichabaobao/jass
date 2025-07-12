@@ -79,8 +79,8 @@ native GetUpgradeGoldCost   takes integer id                            returns 
 native GetUpgradeWoodCost   takes integer id                            returns integer
 // 获取下一个扩张点的编号（获取失败时返回－1）
 native GetNextExpansion     takes nothing                               returns integer
-// 获取大型攻击目标（可能返回null）
-// 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城的单位类型，故猜测该单位是建筑或位于建筑群中
+// 获取敌人主基地目标单位（可能返回null）
+// 此时暴雪会往攻击组添加 默认攻击类型为攻城的单位类型
 native GetMegaTarget        takes nothing                               returns unit
 // 获取指定玩家最后建造/创建的建筑，支持中立玩家（可能返回null）
 // 若中立玩家不能建造/创建建筑，则获取地图编辑器最后放置的建筑（该建筑死亡被清理后应该会按放置顺序自动向前获取）
@@ -128,45 +128,46 @@ native ConvertUnits         takes integer qty, integer id               returns 
 // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
 native SetCampaignAI        takes nothing                               returns nothing
 // 启用对战AI
+// 相比战役，对战会使AI更有效和盟友一起进攻或防守
 // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
 native SetMeleeAI           takes nothing                               returns nothing
 // 允许/禁止 优先攻击英雄
 native SetTargetHeroes      takes boolean state                         returns nothing
-// 允许/禁止 工人维修建筑
+// 允许/禁止 修理建筑（工人自动维修建筑）
 native SetPeonsRepair       takes boolean state                         returns nothing
-// 启用/禁用 随机进攻路径
+// 启用/禁用 随即路径（增加选择目的地的随机性）
 native SetRandomPaths       takes boolean state                         returns nothing
-// 启用/禁用 保护真人盟友
+// 启用/禁用 保护用户（会试图保护受到攻击的真人盟友）
 native SetDefendPlayer      takes boolean state                         returns nothing
-// 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
+// 允许/禁止 英雄逃跑（英雄在受伤严重或遭受攻击时尝试逃跑）
 native SetHeroesFlee        takes boolean state                         returns nothing
 // 允许/禁止 英雄购买物品
 // 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品，过于贴近商店时会自动卖出一件优先级最低的物品
 native SetHeroesBuyItems    takes boolean state                         returns nothing
-// 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
+// 启用/禁用 没有怜悯（会在敌人较弱或弱势时进攻，对应目标类型为“敌人 - 主基地”类型）
 native SetWatchMegaTargets  takes boolean state                         returns nothing
-// 启用/禁用 忽略受伤单位（血量50%以下的单位不编入攻击组)
+// 启用/禁用 忽略受伤者（血量50%以下的单位不编入攻击组)
 native SetIgnoreInjured     takes boolean state                         returns nothing
-// 允许/禁止 英雄拾取物品
-// 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品
+// 允许/禁止 拾取物品（英雄会拾取路上遇到的有用物品）
+// 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品（即按优先级高低判断有用）
 native SetHeroesTakeItems   takes boolean state                         returns nothing
-// 允许/禁止 单位逃跑
+// 允许/禁止 单位逃跑（非英雄单位在受伤严重或遭受攻击时尝试逃跑）
 native SetUnitsFlee         takes boolean state                         returns nothing
-// 允许/禁止 攻击组逃跑
+// 允许/禁止 队伍逃跑（在对己方不利的情况下，队伍会放弃战斗逃离战场）
 native SetGroupsFlee        takes boolean state                         returns nothing
-// 启用/禁用 慢速采矿（每次采1金）
+// 启用/禁用 慢速采集（每次采1金）
 native SetSlowChopping      takes boolean state                         returns nothing
-// 允许/禁止 基地变换
-// 允许时AI可以选择新基地，并将其作为采矿和撤退点
+// 允许/禁止 基地更换
+// 允许时AI可以选择新基地，并将其作为采矿和部队撤退点
 native SetCaptainChanges    takes boolean allow                         returns nothing
 // 启用/禁用 聪明的炮火/主动攻城
 // 攻击类型为攻城的单位会优先攻击敌方建筑，同时也会尝试优先攻击敌方攻击类型为攻城的单位
 native SetSmartArtillery    takes boolean state                         returns nothing
 // 设置防御单位被杀后，AI的补充次数
 native SetReplacementCount  takes integer qty                           returns nothing
-// 允许/禁止 受伤单位回主基地或生命之泉疗伤
+// 允许/禁止 移除受伤者（周期性将受伤单位送到主基地或生命之泉疗伤）
 native GroupTimedLife       takes boolean allow                         returns nothing
-// 从攻击组中移除受伤单位（血量50%以下）
+// 从攻击组中移除受伤单位（血量50%以下的单位）
 native RemoveInjuries       takes nothing                               returns nothing
 // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位，不确定攻击模式1还是攻击模式2，不确定是否包含升级/拔树后才有攻城的单位）
 native RemoveSiege          takes nothing                               returns nothing
@@ -185,13 +186,13 @@ native AddDefenders         takes integer qty, integer id               returns 
 // @param min~max 等级下限及上限，合理利用数值区间可让AI在不同的发展阶段攻击不同等级的野怪营地
 // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取，对空力量不足时不要获取飞行野怪
 native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
-// 开始获取敌人主基地
+// 开始获取敌人任意基地
 // 使用 WaitGetEnemyBase 判断是否获取完成，使用 GetEnemyBase 捕获获取到的单位
 native StartGetEnemyBase    takes nothing                               returns nothing
-// 查询是否仍在获取敌人主基地
+// 查询是否仍在获取敌人任意基地
 // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
 native WaitGetEnemyBase     takes nothing                               returns boolean
-// 获取敌人主基地的单位
+// 获取敌人任意基地
 // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
 // 查询当前拟扩张点附近的敌方单位（主要是中立敌对玩家的单位，非中立敌对玩家不确定能否查到）
