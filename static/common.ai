@@ -263,11 +263,11 @@ native FillGuardPosts       takes nothing                               returns 
 native ReturnGuardPosts     takes nothing                               returns nothing
 // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
 native CreateCaptains       takes nothing                               returns nothing
-// 设置指定组回家后的集结坐标
+// 设置指定组的家坐标
 // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标，怀疑运行后会对攻击组所有单位发送一次移动命令
 // @param which 攻击组为1，防御组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
-// 发布攻击组复位命令（回到 SetCaptainHome 的集结点）
+// 发布攻击组复位命令（回到 SetCaptainHome 设置的点）
 native ResetCaptainLocs     takes nothing                               returns nothing
 // 转移基地到指定坐标
 native ShiftTownSpot        takes real x, real y                        returns nothing
