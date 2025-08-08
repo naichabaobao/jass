@@ -473,7 +473,7 @@ constant native GetBJMaxPlayers takes nothing returns integer
 // 1.29及以上：25
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
 // 编号从0开始，即玩家1编号是0
-// 中立受害玩家是所有非中立玩家和中立特殊玩家的敌人
+// 中立受害玩家是所有玩家的盟友，所有玩家是他的敌人
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家编号
 // 1.28及以下：14
@@ -6109,10 +6109,12 @@ constant native Player takes integer number returns player
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 // 中立被动玩家是所有非中立玩家的盟友
+// 中立受害玩家是所有玩家的盟友，所有玩家是他的敌人
 // 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
-// 中立敌对玩家、中立受害玩家和中立特殊玩家是所有非中立玩家的敌人
+// 中立敌对玩家中立特殊玩家是所有非中立玩家的敌人
+// 所有玩家是中立受害玩家的敌人
 // 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
@@ -8495,5 +8497,6 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
+
 
 
