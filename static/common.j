@@ -513,6 +513,7 @@ globals
 	constant boolean TRUE = true
 	// 数组上限，默认值32768
 	// 1.28及以下版本默认值为8192
+	// 超限时游戏会崩溃
 	constant integer JASS_MAX_ARRAY_SIZE = 32768
 	// 中立被动玩家编号(15/27，以1.29区分)
 	// 其他玩家编号：中立敌对(12/24)，中立受害(13/25)，中立特殊(14/26)
