@@ -43,11 +43,14 @@ native GetUnitCountDone     takes integer unitid                        returns 
 // @param tn 基地编号，-1为不限
 // @param dn 是否包含复活/训练/建造/升级中的单位/建筑
 native GetTownUnitCount     takes integer id, integer tn, boolean dn    returns integer
-// 获取指定单位/建筑的黄金消耗（不是修理黄金消耗）
+// 获取指定单位/建筑(物遍设定)的黄金消耗（不是修理黄金消耗）
+// 对首英雄和复活英雄的黄金消耗获取并不准确
 native GetUnitGoldCost      takes integer unitid                        returns integer
-// 获取指定单位/建筑的木材消耗（不是修理木材消耗）
+// 获取指定单位/建筑(物遍设定)的木材消耗（不是修理木材消耗）
+// 对首英雄和复活英雄的木材消耗并不准确
 native GetUnitWoodCost      takes integer unitid                        returns integer
-// 获取指定单位/建筑的建造时间（以秒为单位）（不是修理时间）
+// 获取指定单位/建筑(物遍设定)的建造时间（以秒为单位）（不是修理时间）
+// 对于复活英雄的建造时间并不准确
 native GetUnitBuildTime     takes integer unitid                        returns integer
 
 // 获取拥有的金矿数量，似乎最多只能探测到5个
@@ -60,8 +63,7 @@ native GetMinesOwned        takes nothing                               returns 
 // 亡灵/暗夜可能会检查出生点附近中立被动玩家的金矿，而不是只查闹鬼金矿/被缠绕的金矿（与制图时放置顺序有关）
 // 如果AI出生点有多个金矿，会导致统计值偏差
 native GetGoldOwned         takes nothing                               returns integer
-// 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号
-// 可能只检查主城，如果亡灵开矿不造主城，会被视为无基地
+// 获取有金矿基地的编号，如果多座基地都有金矿，则返回最小编号（最小可以是0）
 // 配合TownHasMine检查当前哪座基地有矿时，可以直接获取最小编号，并从该编号查起，避免分基地过多时的逐个查询
 native TownWithMine         takes nothing                               returns integer
 // 查询指定编号的基地是否有金矿
@@ -79,8 +81,8 @@ native GetUpgradeGoldCost   takes integer id                            returns 
 native GetUpgradeWoodCost   takes integer id                            returns integer
 // 获取下一个扩张点的编号（获取失败时返回－1）
 native GetNextExpansion     takes nothing                               returns integer
-// 获取大型攻击目标（可能返回null）
-// 因暴雪会往进攻大型目标的攻击组添加 默认攻击类型为攻城的单位类型，故猜测该单位是建筑或位于建筑群中
+// 获取敌人主基地目标单位（可能返回null）
+// 此时暴雪会往攻击组添加 默认攻击类型为攻城的单位类型
 native GetMegaTarget        takes nothing                               returns unit
 // 获取指定玩家最后建造/创建的建筑，支持中立玩家（可能返回null）
 // 若中立玩家不能建造/创建建筑，则获取地图编辑器最后放置的建筑（该建筑死亡被清理后应该会按放置顺序自动向前获取）
@@ -128,47 +130,48 @@ native ConvertUnits         takes integer qty, integer id               returns 
 // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
 native SetCampaignAI        takes nothing                               returns nothing
 // 启用对战AI
+// 相比战役，对战会使AI更有效和盟友一起进攻或防守
 // 在游戏内启用未使用的玩家槽运行AI无效，仅对开局时玩家控制类型为电脑的玩家生效，这意味着玩家掉线后AI无法托管
 native SetMeleeAI           takes nothing                               returns nothing
 // 允许/禁止 优先攻击英雄
 native SetTargetHeroes      takes boolean state                         returns nothing
-// 允许/禁止 工人维修建筑
+// 允许/禁止 修理建筑（工人自动维修建筑）
 native SetPeonsRepair       takes boolean state                         returns nothing
-// 启用/禁用 随机进攻路径
+// 启用/禁用 随即路径（增加选择目的地的随机性）
 native SetRandomPaths       takes boolean state                         returns nothing
-// 启用/禁用 保护真人盟友
+// 启用/禁用 保护用户（会试图保护受到攻击的真人盟友）
 native SetDefendPlayer      takes boolean state                         returns nothing
-// 允许/禁止 英雄在受伤严重或遭受攻击时尝试逃跑
+// 允许/禁止 英雄逃跑（英雄在受伤严重或遭受攻击时尝试逃跑）
 native SetHeroesFlee        takes boolean state                         returns nothing
 // 允许/禁止 英雄购买物品
 // 允许时AI会购买补给品补血补蓝，还会购买法球，甚至是回城卷轴等有用的消耗品，过于贴近商店时会自动卖出一件优先级最低的物品
 native SetHeroesBuyItems    takes boolean state                         returns nothing
-// 启用/禁用 没有怜悯（在敌人较弱或弱势时进攻）
+// 启用/禁用 没有怜悯（会在敌人较弱或弱势时进攻，对应目标类型为“敌人 - 主基地”类型）
 native SetWatchMegaTargets  takes boolean state                         returns nothing
-// 启用/禁用 忽略受伤单位（血量50%以下的单位不编入攻击组)
+// 启用/禁用 忽略受伤者（血量50%以下的单位不编入攻击组)
 native SetIgnoreInjured     takes boolean state                         returns nothing
-// 允许/禁止 英雄拾取物品
-// 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品
+// 允许/禁止 拾取物品（英雄会拾取路上遇到的有用物品）
+// 物品栏已满时，若拥有优先级比拾取物品更低的物品，则自动丢弃优先级最低的物品（即按优先级高低判断有用）
 native SetHeroesTakeItems   takes boolean state                         returns nothing
-// 允许/禁止 单位逃跑
+// 允许/禁止 单位逃跑（非英雄单位在受伤严重或遭受攻击时尝试逃跑）
 native SetUnitsFlee         takes boolean state                         returns nothing
-// 允许/禁止 攻击组逃跑
+// 允许/禁止 队伍逃跑（在对己方不利的情况下，队伍会放弃战斗逃离战场）
 native SetGroupsFlee        takes boolean state                         returns nothing
-// 启用/禁用 慢速采矿（每次采1金）
+// 启用/禁用 慢速采集（每次采1金）
 native SetSlowChopping      takes boolean state                         returns nothing
-// 允许/禁止 基地变换
-// 允许时AI可以选择新基地，并将其作为采矿和撤退点
+// 允许/禁止 基地更换
+// 允许时AI可以选择新基地，并将其作为采矿和部队撤退点
 native SetCaptainChanges    takes boolean allow                         returns nothing
 // 启用/禁用 聪明的炮火/主动攻城
 // 攻击类型为攻城的单位会优先攻击敌方建筑，同时也会尝试优先攻击敌方攻击类型为攻城的单位
 native SetSmartArtillery    takes boolean state                         returns nothing
 // 设置防御单位被杀后，AI的补充次数
 native SetReplacementCount  takes integer qty                           returns nothing
-// 允许/禁止 受伤单位回主基地或生命之泉疗伤
+// 允许/禁止 移除受伤者（周期性将受伤单位送到主基地或生命之泉疗伤）
 native GroupTimedLife       takes boolean allow                         returns nothing
-// 从攻击组中移除受伤单位（血量50%以下）
+// 从攻击组中移除受伤单位（血量50%以下的单位）
 native RemoveInjuries       takes nothing                               returns nothing
-// 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位）
+// 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位，不确定攻击模式1还是攻击模式2，不确定是否包含升级/拔树后才有攻城的单位）
 native RemoveSiege          takes nothing                               returns nothing
 // 初始化攻击组
 // 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
@@ -185,13 +188,13 @@ native AddDefenders         takes integer qty, integer id               returns 
 // @param min~max 等级下限及上限，合理利用数值区间可让AI在不同的发展阶段攻击不同等级的野怪营地
 // @param flyers_ok 为 ture 时获取飞行单位，为 false 时不获取，对空力量不足时不要获取飞行野怪
 native GetCreepCamp         takes integer min, integer max, boolean flyers_ok returns unit
-// 开始获取敌人主基地
+// 开始获取敌人任意基地
 // 使用 WaitGetEnemyBase 判断是否获取完成，使用 GetEnemyBase 捕获获取到的单位
 native StartGetEnemyBase    takes nothing                               returns nothing
-// 查询是否仍在获取敌人主基地
+// 查询是否仍在获取敌人任意基地
 // 使用 StartGetEnemyBase 开始获取，使用 GetEnemyBase 捕获获取到的单位
 native WaitGetEnemyBase     takes nothing                               returns boolean
-// 获取敌人主基地的单位
+// 获取敌人任意基地
 // 必须先调用 StartGetEnemyBase 开始获取，再调用 WaitGetEnemyBase 判断是否获取完成，才能使用该函数获取本次得到的单位（可能返回null）
 native GetEnemyBase         takes nothing                               returns unit
 // 查询当前拟扩张点附近的敌方单位（主要是中立敌对玩家的单位，非中立敌对玩家不确定能否查到）
@@ -262,11 +265,11 @@ native FillGuardPosts       takes nothing                               returns 
 native ReturnGuardPosts     takes nothing                               returns nothing
 // 创建攻击组，游戏开始时必须调用，否则无法调用进攻甚至会引起游戏崩溃
 native CreateCaptains       takes nothing                               returns nothing
-// 设置指定组（攻击组、防御组、两组一起执行）回家后的集结坐标
+// 设置指定组的家坐标
 // AI默认把单位聚在主基地的采矿路线上，应该就是这个坐标，怀疑运行后会对攻击组所有单位发送一次移动命令
 // @param which 攻击组为1，防御组为2，两组为3
 native SetCaptainHome       takes integer which, real x, real y         returns nothing
-// 发布攻击组复位命令（回到 SetCaptainHome 的集结点）
+// 发布攻击组复位命令（回到 SetCaptainHome 设置的点）
 native ResetCaptainLocs     takes nothing                               returns nothing
 // 转移基地到指定坐标
 native ShiftTownSpot        takes real x, real y                        returns nothing
@@ -319,7 +322,7 @@ native SuicideUnit          takes integer count, integer unitid         returns 
 // @param pid 玩家编号
 native SuicideUnitEx        takes integer ct, integer uid, integer pid  returns nothing
 // 开始线程
-// AI脚本最多可运行6条独立线程，且同时运行（包含默认线程，添加前请检查已启用的线程数量）
+// AI脚本最多可运行6条独立线程，且同时运行，超6条时启动新线程，上一条会失效（包含默认线程，添加前请检查已启用的线程数量）
 // 变量支持跨线程使用，但在一条线程运行到读取变量时，该变量可能已在之前被另一个线程改写，于是造成滞后的假象
 // @param func 线程运行的功能，如果功能内部未设置无限循环或循环会被退出，则线程运行完后会失效，因此官方线程一般都是无限循环的，common.ai内可调用写在AI脚本文件中的功能，两者无需上下文关系
 native StartThread          takes code func                             returns nothing
@@ -425,29 +428,29 @@ globals
 
     // human units
 
-    // 矮人直升机
+    // 矮人直升机/飞行器
     constant integer COPTER             = 'hgyr'
-    // 矮人直升机
+    // 矮人直升机/飞行器
     constant integer GYRO               =  COPTER
-    // 水元素
+    // 水元素(1级)
     constant integer ELEMENTAL          = 'hwat'
-    // 人族步兵
+    // 步兵(人族)
     constant integer FOOTMAN            = 'hfoo'
-    // 人族步兵
+    // 步兵(人族)
     constant integer FOOTMEN            =  FOOTMAN
     // 狮鹫骑士
     constant integer GRYPHON            = 'hgry'
-    // 人族骑士
+    // 人族骑士/骑士
     constant integer KNIGHT             = 'hkni'
-    // 矮人迫机炮
+    // 迫击炮小队
     constant integer MORTAR             = 'hmtm'
     // 农民
     constant integer PEASANT            = 'hpea'
     // 牧师
     constant integer PRIEST             = 'hmpr'
-    // 矮人火枪手
+    // 矮人火枪手/火枪手
     constant integer RIFLEMAN           = 'hrif'
-    // 矮人火枪手
+    // 矮人火枪手/火枪手
     constant integer RIFLEMEN           =  RIFLEMAN
     // 女巫
     constant integer SORCERESS          = 'hsor'
@@ -455,27 +458,27 @@ globals
     constant integer TANK               = 'hmtt'
     // 攻城坦克
     constant integer STEAM_TANK         =  TANK
-    // 攻城坦克（弹幕升级）
+    // 攻城坦克(火箭弹幕)
     constant integer ROCKET_TANK        = 'hrtt'
     // 民兵
     constant integer MILITIA            = 'hmil'
-    // 魔法破坏者（破法）
+    // 魔法破坏者/破法者
     constant integer SPELL_BREAKER      = 'hspt'
     // 龙鹰骑士
     constant integer HUMAN_DRAGON_HAWK  = 'hdhw'
 
     // special human units
 
-    // 血精灵牧师
+    // 血精灵牧师（测试版内容，正式版无此单位 'hbep'）
     constant integer BLOOD_PRIEST       = 'hbep'
-    // 血精灵女巫
+    // 血精灵女巫（测试版内容，正式版无此单位 'hbes'）
     constant integer BLOOD_SORCERESS    = 'hbes'
-    // 血精灵工人
+    // 工人(血精灵)
     constant integer BLOOD_PEASANT      = 'nhew'
 
     // human buildings
 
-    // 狮鹫笼
+    // 狮鹫笼/狮鹫巢
     constant integer AVIARY             = 'hgra'
     // 兵营（人族）
     constant integer BARRACKS           = 'hbar'
@@ -489,29 +492,29 @@ globals
     constant integer CHURCH             = 'htws'
     // 心灵圣所（法术塔）（人族）（测试版内容，正式版无此单位 'htws'）
     constant integer MAGE_TOWER         =  CHURCH
-    // 防御塔（人族）
+    // 防御塔/警戒塔（人族）
     constant integer GUARD_TOWER        = 'hgtw'
     // 农场
     constant integer HOUSE              = 'hhou'
-    // 国王祭坛
+    // 国王祭坛/列王祭坛
     constant integer HUMAN_ALTAR        = 'halt'
-    // 主城（人族二本基地）
+    // 主城/要塞（人族二本基地）
     constant integer KEEP               = 'hkee'
     // 伐木场
     constant integer LUMBER_MILL        = 'hlum'
-    // 神秘圣地
+    // 神秘圣地/奥秘圣殿
     constant integer SANCTUM            = 'hars'
-    // 神秘圣地
+    // 神秘圣地/奥秘圣殿
     constant integer ARCANE_SANCTUM     =  SANCTUM
-    // 城镇大厅（人族一本基地）
+    // 城镇大厅/议政厅（人族一本基地）
     constant integer TOWN_HALL          = 'htow'
     // 哨塔
     constant integer WATCH_TOWER        = 'hwtw'
     // 车间
     constant integer WORKSHOP           = 'harm'
-    // 神秘宝藏室
+    // 神秘宝藏室/奥秘宝库
     constant integer ARCANE_VAULT       = 'hvlt'
-    // 神秘之塔（人族）
+    // 神秘之塔/奥术塔（人族）
     constant integer ARCANE_TOWER       = 'hatw'
 
     // human upgrades
@@ -554,11 +557,11 @@ globals
     constant integer UPG_HAMMERS        = 'Rhhb'
     // 科技 控制魔法
     constant integer UPG_CONT_MAGIC     = 'Rhss'
-    // 科技 破片榴弹（碎片攻击）
+    // 科技 碎片攻击/破片榴弹
     constant integer UPG_FRAGS          = 'Rhfs'
     // 科技 火箭弹幕
     constant integer UPG_TANK           = 'Rhrt'
-    // 科技 对空炮机（高射炮火）
+    // 科技 高射炮火/对空炮机
     constant integer UPG_FLAK           = 'Rhfc'
     // 科技 迷雾之云
     constant integer UPG_CLOUD          = 'Rhcd'
@@ -626,9 +629,9 @@ globals
     constant integer GUARDIAN           = 'oang'
     // 投石车
     constant integer CATAPULT           = 'ocat'
-    // 巫医
+    // 巫医(兽族)
     constant integer WITCH_DOCTOR       = 'odoc'
-    // 兽族步兵
+    // 兽族步兵/兽人步兵
     constant integer GRUNT              = 'ogru'
     // 猎头者
     constant integer HEAD_HUNTER        = 'ohun'
@@ -671,7 +674,7 @@ globals
     constant integer LODGE              = 'osld'
     // 据点（兽人二本基地）
     constant integer STRONGHOLD         = 'ostr'
-    // 兽人地洞
+    // 兽族地洞/地洞
     constant integer BURROW             = 'otrb'
     // 牛头人图腾
     constant integer TOTEM              = 'otto'
@@ -694,7 +697,7 @@ globals
     constant integer UPG_ORC_WAR_DRUMS  = 'Rwdm'
     // 科技 掠夺
     constant integer UPG_ORC_PILLAGE    = 'Ropg'
-    // 科技 野蛮之力（狂暴力量）
+    // 科技 狂暴力量/野蛮之力
     constant integer UPG_ORC_BERSERK    = 'Robs'
     // 科技 粉碎伤害强化
     constant integer UPG_ORC_PULVERIZE  = 'Rows'
@@ -756,7 +759,7 @@ globals
     constant integer CHAOS_GROM         = 'Opgh'
     // 黑石氏族剑圣
     constant integer CHAOS_BLADEMASTER  = 'Nbbc'
-    // 邪兽人地洞
+    // 邪兽人地洞/邪地洞
     constant integer CHAOS_BURROW       = 'ocbw'
 
     //--------------------------------------------------------------------
@@ -805,9 +808,9 @@ globals
     constant integer FROST_NOVA         = 'AUfn'
     // 英雄技能 亡者再临（死骑）
     constant integer ANIM_DEAD          = 'AUan'
-    // 英雄技能 凋零/死亡缠绕（死骑）
+    // 英雄技能 死亡缠绕/凋零缠绕（死骑）
     constant integer DEATH_COIL         = 'AUdc'
-    // 英雄技能 天灾/死亡契约（死骑）
+    // 英雄技能 死亡契约/天灾契约（死骑）
     constant integer DEATH_PACT         = 'AUdp'
     // 英雄技能 邪恶光环（死骑）
     constant integer UNHOLY_AURA        = 'AUau'
@@ -840,7 +843,7 @@ globals
     constant integer GARGOYLE_MORPH     = 'ugrm'
     // 食尸鬼
     constant integer GHOUL              = 'ugho'
-    // 清道夫（绞肉机）
+    // 绞肉机/清道夫
     constant integer MEAT_WAGON         = 'umtw'
     // 通灵师（亡灵男巫）
     constant integer NECRO              = 'unec'
@@ -848,7 +851,7 @@ globals
     constant integer SKEL_WARRIOR       = 'uske'
     // 骷髅法师
     constant integer SKEL_MAGE          = 'uskm'
-    // 影魔（阴影）
+    // 阴影/影魔
     constant integer SHADE              = 'ushd'
     // 邪灵空艇
     constant integer UNDEAD_BARGE       = 'uarb'
@@ -869,7 +872,7 @@ globals
     constant integer BONEYARD           = 'ubon'
     // 石像鬼尖塔（不死族）（测试版内容，正式版无此单位 'ugsp'）
     constant integer GARG_SPIRE         = 'ugsp'
-    // 浮空城（大墓地）
+    // 大墓地/浮空城
     constant integer NECROPOLIS_1       = 'unpl'    // normal
     // 亡者大厅
     constant integer NECROPOLIS_2       = 'unp1'    // upgraded once
@@ -887,7 +890,7 @@ globals
     constant integer ZIGGURAT_1         = 'uzig'    // normal
     // 幽魂之塔
     constant integer ZIGGURAT_2         = 'uzg1'    // upgraded
-    // 蛛魔之塔（冰塔）
+    // 蛛网怪塔/蛛魔塔
     constant integer ZIGGURAT_FROST     = 'uzg2'    // frost tower
     // 坟场
     constant integer GRAVEYARD          = 'ugrv'
@@ -947,7 +950,7 @@ globals
 
     // 恶魔猎手
     constant integer DEMON_HUNTER       = 'Edem'
-    // 恶魔猎手（变身形态）
+    // 恶魔猎手（恶魔形态）
     constant integer DEMON_HUNTER_M     = 'Edmm'
     // 丛林守护者
     constant integer KEEPER             = 'Ekee'
@@ -962,7 +965,7 @@ globals
 
     // special elf heroes
 
-    // 希尔瓦娜斯
+    // 希尔瓦娜斯·风行者
     constant integer SYLVANUS           = 'Hvwd'
     // 塞纳留斯
     constant integer CENARIUS           = 'Ecen'
@@ -1012,19 +1015,19 @@ globals
 
     // 小精灵
     constant integer WISP               = 'ewsp'
-    // 弓箭手
+    // 弓箭手(暗夜精灵)
     constant integer ARCHER             = 'earc'
-    // 猛禽德鲁伊（鸟德）（人形）
+    // 猛禽德鲁伊(暗夜精灵形态)
     constant integer DRUID_TALON        = 'edot'
-    // 猛禽德鲁伊（鸟德）（鸦形）
+    // 猛禽德鲁伊(风暴之鸦形态)
     constant integer DRUID_TALON_M      = 'edtm'
     // 投刃车
     constant integer BALLISTA           = 'ebal'
-    // 利爪德鲁伊（熊德）（人形）
+    // 利爪德鲁伊(暗夜精灵形态)
     constant integer DRUID_CLAW         = 'edoc'
-    // 利爪德鲁伊（熊德）（熊形）
+    // 利爪德鲁伊(熊形态)
     constant integer DRUID_CLAW_M       = 'edcm'
-    // 树妖（小鹿）
+    // 树妖(小鹿)
     constant integer DRYAD              = 'edry'
     // 角鹰兽
     constant integer HIPPO              = 'ehip'
@@ -1043,15 +1046,15 @@ globals
 
     // special elf units
 
-    // 弓箭手（高等精灵）
+    // 弓箭手(高等精灵)
     constant integer HIGH_ARCHER        = 'nhea'
     // 队/船长
     constant integer HIGH_FOOTMAN       = 'hcth'
     // 队/船长
     constant integer HIGH_FOOTMEN       =  HIGH_FOOTMAN
-    // 剑士（高等精灵）
+    // 剑士(高等精灵)
     constant integer HIGH_SWORDMAN      = 'hhes'
-    // 龙鹰（高等精灵）
+    // 龙鹰(高等精灵)
     constant integer DRAGON_HAWK        = 'nws1'
     // 腐化的树人
     constant integer CORRUPT_TREANT     = 'nenc'
@@ -1124,7 +1127,7 @@ globals
     constant integer UPG_STR_WILD       = 'Resw'
     // 科技 月之护甲/中级月之护甲/高级月之护甲
     constant integer UPG_MOON_ARMOR     = 'Rema'
-    // 科技 强化外皮（加强隐藏）/中级强化外皮/高级强化外皮
+    // 科技 强化外皮/中级强化外皮/高级强化外皮
     constant integer UPG_HIDES          = 'Rerh'
     // 科技 夜视能力
     constant integer UPG_ULTRAVISION    = 'Reuv'
@@ -1134,29 +1137,29 @@ globals
     constant integer UPG_SCOUT          = 'Resc'
     // 科技 升级月刃
     constant integer UPG_GLAIVE         = 'Remg'
-    // 科技 强弓（硬弓）
+    // 科技 硬弓强弓
     constant integer UPG_BOWS           = 'Reib'
-    // 科技 箭术（射击术）
+    // 科技 射击术/箭术
     constant integer UPG_MARKSMAN       = 'Remk'
     // 科技 猛禽德鲁伊专家/大师级训练
     constant integer UPG_DRUID_TALON    = 'Redt'
     // 科技 利爪德鲁伊专家/大师级训练
     constant integer UPG_DRUID_CLAW     = 'Redc'
-    // 科技 驱除魔法（暗夜精灵族）
+    // 科技 驱除魔法（暗夜精灵）
     constant integer UPG_ABOLISH        = 'Resi'
-    // 科技 腐蚀吐息（腐蚀喷吐）
+    // 科技 腐蚀喷吐/腐蚀吐息
     constant integer UPG_CHIM_ACID      = 'Recb'
-    // 科技 角鹰兽训练（驯服角鹰兽）
+    // 科技 驯服角鹰兽/角鹰兽训练
     constant integer UPG_HIPPO_TAME     = 'Reht'
     // 科技 锐锋之刃（投刃车）（原文'Repd'有误）
     constant integer UPG_BOLT           = 'Repb'
-    // 科技 利爪之印（利爪之痕）
+    // 科技 利爪之痕/利爪之印
     constant integer UPG_MARK_CLAW      = 'Reeb'
-    // 科技 猛禽之印（猛禽之痕）
+    // 科技 猛禽之痕/猛禽之印
     constant integer UPG_MARK_TALON     = 'Reec'
-    // 科技 硬化体肤（硬化皮肤）
+    // 科技 硬化皮肤/硬化体肤
     constant integer UPG_HARD_SKIN      = 'Rehs'
-    // 科技 抗性体肤（抗性皮肤）
+    // 科技 抗性皮肤抗性体肤
     constant integer UPG_RESIST_SKIN    = 'Rers'
     // 科技 月井之春
     constant integer UPG_WELL_SPRING    = 'Rews'
@@ -2001,16 +2004,16 @@ endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地
-// 默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，不包含复活/建造/训练中，不限基地（通常用于判断建筑在哪个基地）
+// 仅统计该单位类型及其升级（如统计二本不含一本，统计猎头含大猎头，统计大猎头不含猎头）
 function TownCountDone takes integer base returns integer
     return TownCountEx(base,true,-1)
 endfunction
 
 //============================================================================
 
-// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地
-// 默认用于统计城镇类型的单位（基地）
+// 统计指定单位类型的数量，包含复活/建造/训练中，不限基地（通常用于判断建筑在哪个基地）
+// 仅统计该单位类型及其升级（如统计二本不含一本，统计猎头含大猎头，统计大猎头不含猎头）
 function TownCount takes integer base returns integer
     return TownCountEx(base,false,-1)
 endfunction
@@ -2185,7 +2188,7 @@ endfunction
 
 //============================================================================
 
-// 开始建造分基地
+// 开始建造分基地(不是绝对成功)
 // @param qty 数量
 // @param hall 基地单位类型
 function StartExpansion takes integer qty, integer hall returns boolean
@@ -2266,7 +2269,8 @@ endfunction
 
 //============================================================================
 
-// 错位等待，时间为 (base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers())) 秒
+// 错位等待
+// 等待时间为 (base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers())) 秒
 function StaggerSleep takes real base, real spread returns nothing
     call Sleep(base + spread * I2R(GetAiPlayer()) / I2R(GetPlayers()))
 endfunction
@@ -2285,28 +2289,28 @@ endfunction
 
 //============================================================================
 
-// 开始运行建造线程（建造/训练/升级 分矿、单位和科技）
+// 开始运行建造线程（建造/训练/升级 建筑、分矿、单位和科技）
 function StartBuildLoop takes nothing returns nothing
     call StartThread(function BuildLoop)
 endfunction
 
 //============================================================================
 
-// 设置初始波次的等待时间
+// 设置等待时间(默认用于首波攻击)
 function SetInitialWave takes integer seconds returns nothing
     set sleep_seconds = seconds
 endfunction
 
 //============================================================================
 
-// 增加初始波次等待时间
+// 增加等待时间
 function AddSleepSeconds takes integer seconds returns nothing
     set sleep_seconds = sleep_seconds + seconds
 endfunction
 
 //============================================================================
 
-// 永久等待（使用后不会退出，永久循环）
+// 永久等待（使用后当前线程将永久休眠，停止工作）
 function SleepForever takes nothing returns nothing
     call Trace("going to sleep forever\n") //xxx
     loop
@@ -2316,7 +2320,7 @@ endfunction
 
 //============================================================================
 
-// 开始游戏，运行后AI会开始建造/训练/升级 单位或科技
+// 开始游戏，运行后AI会开始建造/训练/升级 建筑、单位或科技
 function PlayGame takes nothing returns nothing
     call StartBuildLoop()
     call SleepForever()
@@ -2560,7 +2564,7 @@ endfunction
 
 //============================================================================
 
-// 获取指定单位/科技类型的建造/训练/研究时间，用于备战（补充兵力）
+// 获取指定建筑/单位/科技类型的建造/训练/研究时间，用于备战（补充兵力）
 function WavePrepare takes integer unitid returns integer
     return GetUnitBuildTime(unitid)
 endfunction

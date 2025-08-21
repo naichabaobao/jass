@@ -215,5 +215,6 @@ function config takes nothing returns nothing
     // Player setup
     call InitCustomPlayerSlots()
     call InitGenericPlayerSlots()
-    call InitAllyPriorities() 
-endfunction 
+    call InitAllyPriorities()
+endfunction
+
