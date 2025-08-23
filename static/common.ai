@@ -174,7 +174,7 @@ native RemoveInjuries       takes nothing                               returns 
 // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位，不确定攻击模式1还是攻击模式2，不确定是否包含升级/拔树后才有攻城的单位）
 native RemoveSiege          takes nothing                               returns nothing
 // 初始化攻击组
-// 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
+// 建议在游戏开始调用以初始化，并且组建攻击组前调用以重置
 native InitAssault          takes nothing                               returns nothing
 // 增加指定数量的指定单位类型到攻击组
 // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在集结点
