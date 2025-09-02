@@ -1104,7 +1104,7 @@ globals
     constant integer ELF_GUARD_TOWER    = 'negt'
     // 天怒塔
     constant integer HIGH_SKY           = 'negm'
-    // 地怒塔 
+    // 地怒塔
     constant integer HIGH_EARTH         = 'negf'
     // 高等精灵警戒塔
     constant integer HIGH_TOWER         = 'negt'
