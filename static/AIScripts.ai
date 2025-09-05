@@ -556,7 +556,7 @@ globals
     // 当前破法者数量，不含建造中
     constant integer c_breaker_done      = 0
     // 当前城堡（人族三本基地）数量，不含建造中
-    // 同时统计城镇大厅（人族一本基地），主城（人族二本基地）的数量，不含建造中
+    // 不统计城镇大厅（人族一本基地），主城（人族二本基地）的数量，不含建造中
     constant integer c_castle_done       = 0
     // 当前人族步兵数量，不含建造中
     constant integer c_footman_done      = 0
@@ -577,7 +577,7 @@ globals
     // 当前人族农场数量，不含建造中
     constant integer c_house_done        = 0
     // 当前主城（人族二本基地）数量，不含建造中
-    // 同时统计城镇大厅（人族一本基地），城堡（人族三本基地）的数量，不含建造中
+    // 同时统计城堡（人族三本基地）的数量，不含建造中
     constant integer c_keep_done         = 0
     // 当前骑士数量，不含建造中
     constant integer c_knight_done       = 0
@@ -871,7 +871,7 @@ globals
     // 当前战争磨坊数量，不含建造中
     constant integer c_forge_done        = 0
     // 当前堡垒（兽族三本基地）数量，不含建造中
-    // 同时统计大厅（兽族一本基地），据点（兽族二本基地）的数量，不含建造中
+    // 不统计大厅（兽族一本基地），据点（兽族二本基地）的数量，不含建造中
     constant integer c_fortress_done     = 0
     // 当前大厅（兽族一本基地）数量，含建造中
     // 同时统计据点（兽族二本基地），堡垒（兽族三本基地）的数量，含建造中
@@ -906,7 +906,7 @@ globals
     // 当前萨满数量，不含建造中
     constant integer c_shaman_done       = 0
     // 当前据点（兽族二本基地）数量，不含建造中
-    // 同时统计大厅（兽族一本基地），堡垒（兽族三本基地）的数量，不含建造中
+    // 同时统计堡垒（兽族三本基地）的数量，不含建造中
     constant integer c_stronghold_done   = 0
     // 当前灵魂行者数量，含建造中
     // 同时统计灵魂行者（虚无形态）的数量
@@ -975,7 +975,7 @@ globals
     // 当前埋骨地数量，不含建造中
     constant integer c_boneyard_done     = 0
     // 当前黑色城堡数量，不含建造中
-    // 并未同时统计浮空城/大墓、亡者大厅的数量，疑似BUG
+    // 不统计浮空城/大墓、亡者大厅的数量
     constant integer c_citadel_done      = 0
     // 当前地穴恶魔（蜘蛛）数量，含建造中
     constant integer c_fiend             = 0
@@ -992,7 +992,7 @@ globals
     // 当前坟场数量，不含建造中
     constant integer c_grave_done        = 0
     // 当前亡者大厅数量，不含建造中
-    // 同时统计浮空城/大墓、黑色城堡的数量，不含建造中
+    // 同时统计浮黑色城堡的数量，不含建造中
     constant integer c_halls_done        = 0
     // 当前浮空城/大墓地数量，含建造中
     // 同时统计亡者大厅、黑色城堡的数量，含建造中
@@ -1156,10 +1156,10 @@ globals
     // 同时统计人形和鸦形的数量，不含建造中
     constant integer c_talon_done        = 0
     // 当前纪元之树（暗夜二本）数量，不含建造中
-    // 同时统计生命之树（暗夜一本），永恒之树（暗夜三本）的数量，不含建造中
+    // 同时统计永恒之树（暗夜三本）的数量，不含建造中
     constant integer c_tree_ages_done    = 0
     // 当前永恒之树（暗夜三本）数量，不含建造中
-    // 同时统计生命之树（暗夜一本），纪元之树（暗夜二本）的数量，不含建造中
+    // 不统计生命之树（暗夜一本），纪元之树（暗夜二本）的数量，不含建造中
     constant integer c_tree_etern_done   = 0
     // 当前生命之树（暗夜一本）数量，含建造中
     // 同时统计纪元之树（暗夜二本），永恒之树（暗夜三本）的数量，含建造中
@@ -2248,3 +2248,4 @@ endfunction
 // 可用于参数赋值，如设置AI名字、设置各选项等
 function main takes nothing returns nothing
 endfunction
+
