@@ -8,11 +8,11 @@ globals
     // 人族不升本就是该跳出模式条件过于严苛
     constant boolean basic_opening       = true
 
-    // 首英雄存在标识，当首英雄数量大于0时为真
+    // 首英雄存在标识，当存活的首英雄数量大于0时为真
     constant boolean b_hero1_done        = false
-    // 二发英雄存在标识，当二发英雄数量大于0时为真
+    // 二发英雄存在标识，当存活的二发英雄数量大于0时为真
     constant boolean b_hero2_done        = false
-    // 三发英雄存在标识，当三发英雄数量大于0时为真
+    // 三发英雄存在标识，当存活的三发英雄数量大于0时为真
     constant boolean b_hero3_done        = false
     // 当前祭坛数量，不含建造中
     constant integer c_altar_done        = 0
@@ -2248,4 +2248,5 @@ endfunction
 // 可用于参数赋值，如设置AI名字、设置各选项等
 function main takes nothing returns nothing
 endfunction
+
 
