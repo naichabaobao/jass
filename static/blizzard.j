@@ -54,15 +54,15 @@ globals
     constant real bj_QUEUE_DELAY_HINT = 5.00
     // 任务显示持续时间 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
-    // 生命障碍 简单，默认60.00
+    // 生命(百分比)障碍 简单，默认60.00%
     constant real bj_HANDICAP_EASY = 60.00
-    // 生命障碍 普通，默认90.00
+    // 生命(百分比)障碍 普通，默认90.00%
     constant real bj_HANDICAP_NORMAL = 90.00
-    // 伤害障碍 简单，默认50.00
+    // 伤害(百分比)障碍 简单，默认50.00%
     constant real bj_HANDICAPDAMAGE_EASY = 50.00
-    // 伤害障碍 普通，默认90.00
+    // 伤害(百分比)障碍 普通，默认90.00%
     constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
-    // 伤害障碍 困难，默认50.00
+    // 伤害(百分比)障碍 困难，默认50.00%
     constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
@@ -3872,50 +3872,50 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
     call SuspendHeroXP(whichHero, not flag)
 endfunction
 
-// 设置玩家伤害障碍
-// 增加或降低玩家所有单位血量，按输入值的百分之一生效
+// 设置玩家伤害(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家伤害障碍
+// 获取玩家伤害(百分比)障碍
 function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
 
-// 设置玩家复活时间障碍
-// 增加或降低玩家英雄复活时间，按输入值的百分之一生效
+// 设置玩家复活时间(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家复活时间障碍
+// 获取玩家复活时间(百分比)障碍
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家经验获取障碍
-// 增加或降低玩家英雄经验获取值，按输入值的百分之一生效
+// 设置玩家经验获取(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家经验获取障碍
+// 获取玩家经验获取(百分比)障碍
 function GetPlayerHandicapXPBJ takes player whichPlayer returns real
     return GetPlayerHandicapXP(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家生命值障碍
-// 用增加或降低玩家所有单位/建筑血量，按输入值的百分之一生效
+// 设置玩家生命值(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家生命值障碍
+// 获取玩家生命值(百分比)障碍
 function GetPlayerHandicapBJ takes player whichPlayer returns real
     return GetPlayerHandicap(whichPlayer) * 100
 endfunction
@@ -12421,3 +12421,4 @@ endfunction
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
+
