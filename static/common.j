@@ -965,7 +965,7 @@ globals
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 	// 地图参数 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图参数 使用生命障碍
+	// 地图参数 使用生命(百分比)障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
 	// 地图参数 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
@@ -6161,25 +6161,25 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // 玩家的联盟类型可以不同，A对B是共享视野，B对A是共享控制权
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 获取玩家生命值障碍 [R]
+// 获取玩家生命值(百分比)障碍 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 获取玩家经验获取障碍 [R]
+// 获取玩家经验获取(百分比)障碍 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 获取玩家复活时间障碍
+// 获取玩家复活时间(百分比)障碍
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-// 获取玩家伤害障碍
+// 获取玩家伤害(百分比)障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置玩家生命值障碍 [R]
-// 增加或降低玩家所有单位/建筑血量，标准为1
+// 设置玩家生命值(百分比)障碍 [R]
+// 增加或降低玩家所有单位/建筑血量，标准为100.00%
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置玩家经验获取障碍 [R]
-// 增加或降低玩家英雄经验获取值，标准为1
+// 设置玩家经验获取(百分比)障碍 [R]
+// 增加或降低玩家英雄经验获取值，标准为100.00%
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家复活时间障碍
-// 增加或降低玩家英雄复活时间，标准为1
+// 设置玩家复活时间(百分比)障碍
+// 增加或降低玩家英雄复活时间，标准为100.00%
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-// 设置玩家伤害障碍
-// 增加或降低输出，标准为1
+// 设置玩家伤害(百分比)障碍
+// 增加或降低输出，标准为100.00%
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置指定玩家指定科技的等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
@@ -8497,6 +8497,7 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
+
 
 
 
