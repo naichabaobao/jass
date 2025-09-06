@@ -1348,9 +1348,11 @@ globals
     integer sleep_seconds
     // 黄金总计
     // 用于计算当前黄金数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少钱
+    // 得到负数时可能引发游戏崩溃
     integer total_gold              = 0
     // 木材总计
     // 用于计算当前木材数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少木
+    // 得到负数时可能引发游戏崩溃
     integer total_wood              = 0
     // 黄金预存数，使用后AI会一直保留该数量的黄金不使用
     // 该值默认为0，需自行赋值，在完成指定的训练/建造/研究后请手动清零，否则AI会一直保持这笔存款
@@ -3653,3 +3655,4 @@ function PickMeleeHero takes race raceid returns integer
 
     return hero_id
 endfunction
+
