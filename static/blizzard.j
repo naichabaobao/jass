@@ -1002,9 +1002,9 @@ globals
 
     // 营救触发器
     trigger bj_rescueUnitBehavior = null
-    // 被营救后改变单位的颜色标识，默认允许改变（true）
+    // 被营救后改变单位的玩家颜色，默认允许改变（true）
     boolean bj_rescueChangeColorUnit = true
-    // 被营救后改变建筑的颜色标识，默认允许改变（true）
+    // 被营救后改变建筑的玩家颜色，默认允许改变（true）
     boolean bj_rescueChangeColorBldg = true
 
     // Transmission vars
@@ -2898,7 +2898,7 @@ function SetTerrainPathableBJ takes location where, pathingtype t, boolean flag 
 endfunction
 
 
-// 设置 水面 颜色
+// 设置水面颜色
 function SetWaterBaseColorBJ takes real red, real green, real blue, real transparency returns nothing
     call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
@@ -8392,7 +8392,7 @@ function TryInitRescuableTriggersBJ takes nothing returns nothing
 endfunction
 
 
-// 设置可营救单位的颜色
+// 设置可营救单位的玩家颜色
 // Determines whether or not rescued units automatically change color upon
 // being rescued.
 function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
@@ -8400,7 +8400,7 @@ function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
 endfunction
 
 
-// 设置可营救建筑的颜色
+// 设置可营救建筑的玩家颜色
 // Determines whether or not rescued buildings automatically change color
 // upon being rescued.
 function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothing
