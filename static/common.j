@@ -5620,7 +5620,7 @@ native GetUnitDefaultPropWindow takes unit whichUnit returns real
 native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
 // 设置指定单位所属(指定玩家)
-// @param changeColor 是否改变队伍颜色
+// @param changeColor 是否改变玩家颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
