@@ -14,6 +14,8 @@ const ZincKeywords = unique([...Keywords, "for", "while", "library", "interface"
 
 const AllKeywords = unique([...Keywords, ...VjassKeywords, ...ZincKeywords]);
 
+const AllTokenTexts = unique([...Keywords, ...VjassKeywords, ...ZincKeywords, "false", "true", "null", "nothing"]);
+
 function isKeyword(keyword: string) {
   return JassKeywork.includes(keyword);
 }
@@ -27,5 +29,6 @@ export{
   AllKeywords,
   ZincKeywords,
   isKeyword,
-  canCjassReturn
+  canCjassReturn,
+  AllTokenTexts
 }

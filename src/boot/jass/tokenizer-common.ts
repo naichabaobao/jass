@@ -1,289 +1,89 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Interface, JassDetail, Library, Local, Loop, Member, Method, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_scope, parse_struct, zinc } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Implement, Interface, JassDetail, Library, Local, Loop, Member, Method, Module, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_implement, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_module, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
-import { Position, Range } from "./loc";
-import { AllKeywords } from "./keyword";
+import { AllTokenTexts } from "./keyword";
+import { removeComment } from "../vjass/comment";
+import { ErrorCollection, CheckValidationError, CheckErrorType } from "../vjass/simple-error";
+import { Define, Include, parseAndRemovePreprocessor } from "../vjass/preprocess";
+import { Import, parseAndRemoveImports } from "../vjass/vjass-import";
+import { parseAndRemoveTextMacros, TextMacro } from "../vjass/text-macro";
+import { parseAndRemoveRunTextMacros, RunTextMacro, RunTextMacroCollection } from "../vjass/run-text-macro";
+import { parseAndRemoveZincBlock, ZincBlock, ZincBlockCollection } from "../vjass/zinc-block";
 
 
 
-export class TextLine {
-  public readonly lineNumber: number;
-  public readonly text: string;
 
-  public constructor(lineNumber: number, text: string) {
-    this.lineNumber = lineNumber;
-    this.text = text;
-  }
-}
-
-export class Macro {
-  public readonly type: string;
-  public key?: string;
-  public value?: string;
-
-  public readonly line_number:number;
-  public readonly length:number;
-  public readonly document:Document;
-
-  constructor(document:Document, type: string, line_number:number, length: number) {
-    this.document = document;
-    this.type = type;
-
-    this.line_number = line_number;
-    this.length = length;
-  }
-
-  to_string():string {
-    return `${this.type} ${this.key ? this.key : ""} ${this.value ? this.value : ""}`;
-  }
-}
-
-export class Import extends Range {
-  public filePath: string | null = null;
-  public type: "jass" | "vjass" | "zinc" | null = null;
-  public readonly parent_document: Document;
-  constructor(parent_document: Document, start?: Position, end?: Position) {
-    super(start, end);
-
-    this.parent_document = parent_document;
-  }
-
-  /**
-   * 是否合法
-   */
-  public get is_legal(): boolean {
-    const abs_path = this.abs_path;
-    if (abs_path) {
-      return fs.existsSync(abs_path);
-    }
-    return false;
-  }
-
-  public get abs_path(): string | null {
-    if (!this.filePath) {
-      return null;
-    }
-    return path.isAbsolute(this.filePath) ? this.filePath : path.resolve(path.parse(this.parent_document.filePath).dir, this.filePath);
-  }
-
-  public get document(): Document | undefined {
-    if (this.is_legal) {
-      if (!GlobalContext.has(this.abs_path!)) {
-        parse(this.abs_path!);
-      }
-      return GlobalContext.get(this.abs_path!);
-    }
-    return;
-  }
-
-}
-
-export class TextMacro extends Range {
-  public name: string | null = null;
-  public takes_string: string | null = null;
-
-  public start_line: number = 0;
-  public end_line: number = 0;
-
-  public get line_number(): number {
-    return this.end_line - this.start_line;
-  }
-
-  public is_complete: boolean = false;
-
-  public readonly document: Document;
-
-  public constructor(document: Document, start?: Position, end?: Position) {
-    super(start, end);
-    this.document = document;
-  }
-
-  public takes(): string[] {
-    return this.takes_string?.split(",").map(take => take.trim()) ?? [];
-  }
-
-  public loop(callback: (document: Document, text_macro: TextMacro, lineNumber: number) => void) {
-    for (let index = this.start_line + 1; index < this.end_line; index++) {
-      callback(this.document, this, index);
-    }
-  }
-
-  public lineAt(line: number, params: string[] = []): TextLine {
-    let text = this.document.lineAt(line).text;
-    this.takes().forEach((take, index) => {
-
-      const param = params[index];
-      if (param) {
-        text = text.replace(new RegExp(`\\$${take}\\$`, "g"), param);
-      }
-    });
-    return new TextLine(line, text);
-  }
-  public lineTokens(line: number, params: string[] = []): Token[] {
-    const text_line = this.lineAt(line, params);
-    return tokenize_for_vjass_by_content(text_line.text).map(toekn => {
-      // @ts-expect-error
-      toekn.line = line;
-      // toekn.start.line = line;
-      // toekn.end.line = line;
-      return toekn;
-    });
-  }
-}
-
-export class RunTextMacro extends Range {
-  public name: string | null = null;
-  public param_string: string | null = null;
-  public param_body_string: string | null = null;
-  public readonly document: Document;
-
-  public constructor(document: Document, start?: Position, end?: Position) {
-    super(start, end);
-    this.document = document;
-  }
-
-  /**
-   * 是否合法
-   */
-  public get is_legal(): boolean {
-    if (this.name == null || this.name.trim() == "" || this.param_body_string == null) {
-      return false;
-    }
-    return true;
-  }
-
-  public params(): string[] {
-    return this.param_string?.split(",").map(param => param.trim()) ?? [];
-  }
-  public param_values(): string[] {
-    return this.params().map(param => {
-      if (param.startsWith("\"")) {
-        if (param.endsWith("\"")) {
-          return param.substring(1, param.length - 1);
-        } else {
-          return param.substring(1);
-        }
-      } else {
-        if (param.endsWith("\"")) {
-          return param.substring(0, param.length - 1);
-        } else {
-          return param;
-        }
-      }
-    }) ?? [];
-  }
-
-  public loop(callback: (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => void) {
-    // 找到对应textmacro
-    const text_macro = GlobalContext.getAllTextMacros().find(macro => {
-      return macro.name != null && macro.name == this.name
-    });
-
-
-    if (text_macro) {
-      text_macro.loop((document, text_macro, lineNumber) => {
-        callback(document, this, text_macro, lineNumber);
-      });
-    }
-
-    return !!text_macro;
-  }
-}
-
-class CanDisconnectedRange {
-  private _start_line: number = 0;
-  private _end_line: number = 0;
-
-  
-  public set start_line(v : number) {
-    this._start_line = v;
-    if (this._end_line < v) {
-      this._end_line = v;
-    }
-  }
-
-  
-  public get start_line() : number {
-    return this._start_line;
-  }
-
-  public set end_line(v : number) {
-    if (v >= this._start_line) {
-      this._end_line = v;
-    }
-  }
-
-  
-  public get end_line() : number {
-    return this._end_line;
-  }
-}
-interface VjassZincRuntextmacroTempObjectLine {
-  real_line_number:number;
-  mapping_line_number:number;
-  /**
-   * 0 = 正常行
-   * 1 zinc 头
-   * 2 zinc 尾
-   * 3 zinc 体
-   */
-  type: 0|1|2|3;
-}
-interface  VjassZincBlockTempObjectLine {
-  index:number;
-  /**
-   * @deprecated
-   */
-  real_line_number:number;
-  /**
-   * @deprecated
-   */
-  mapping_line_number:number;
-  /**
-   * 0 = 正常行
-   * 1 zinc 头
-   * 2 zinc 尾
-   * 3 zinc 体
-   */
-  type: 0|1|2|3;
-  display: VjassZincRuntextmacroTempObjectLine[]
-}
 /**
- * 1. 可以拿到内部tokens
- * 2. 可以被vjass解析时忽略
- * 3. 可以作为outline识别对象
+ * AST访问者接口
+ * 实现此接口以遍历AST树的不同节点类型（Visitor模式）
  */
-class BuiltZincBlock extends CanDisconnectedRange {
-  public start_token:Token|null = null;
-  public end_token:Token|null = null;
-  
-  /**
-   * 不包括 //! zinc 跟 //! endzinc
-   */
-  public readonly tokens:Token[] = [];
-  
+export interface ASTVisitor {
+  visitFunc?(node: Func | zinc.Func): void;
+  visitNative?(node: Native): void;
+  visitMethod?(node: Method | zinc.Method): void;
+  visitStruct?(node: Struct | zinc.Struct): void;
+  visitInterface?(node: Interface | zinc.Interface): void;
+  visitLibrary?(node: Library): void;
+  visitScope?(node: Scope): void;
+  visitGlobals?(node: Globals): void;
+  visitType?(node: Type): void;
+  visitLocal?(node: Local | zinc.Member): void;
+  visitMember?(node: Member | zinc.Member): void;
+  visitGlobalVariable?(node: GlobalVariable | zinc.Member): void;
+  visitIf?(node: If | zinc.If): void;
+  visitLoop?(node: Loop): void;
+  visitSet?(node: Set | zinc.Set): void;
+  visitCall?(node: Call | zinc.Call): void;
+  visitComment?(node: Comment): void;
+  visitModule?(node: any): void; // vJASS Module support
+  visitModuleImplementation?(node: any): void; // vJASS Module implementation support
+  visitOther?(node: NodeAst): void;
 }
 
-
-const DefineRegExp = /(?<type>#[a-zA-Z_$][a-zA-Z_0-9]*)(?:\s+(?<key>\b[a-zA-Z_$][a-zA-Z_0-9]*\b)(?:\s+(?<value>.+))?)?/;
-
-const ImportStartWithRegExp = /\/\/!\s+import\b/;
-const ImportRegExp = /\/\/!\s+import\b(?:\s+(?<type>jass|vjass|zinc))?/;
-const ImportPathRegExp = /"(?<file_path>.+?)"/;
-
-const TextMacroStartWithRegExp = /\/\/!\s+textmacro\b/;
-const EndTextMacroStartWithRegExp = /\/\/!\s+endtextmacro\b/;
-// const TextMacroRegExp = /\/\/!\s+textmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?:takes\s*(?<params>([a-zA-Z_0-9]+)(?:\s*,\s*[a-zA-Z_0-9]+)*))?/;
-const TextMacroRegExp = /\/\/!\s+textmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?:takes\s+(?<takes>.+))?/;
-
-const RunTextMacroStartWithRegExp = /\/\/!\s+runtextmacro\b/;
-const RunTextMacroRegExp = /\/\/!\s+runtextmacro(?:\s+(?<name>[a-zA-Z0-9_]+))?\s*(?<param_body>\(\s*(?<params>.+)\s*\))?/;
-
-const ZincStartWithRegExp = new RegExp(/^\/\/!\s+zinc\b/);
-const ZincEndWithRegExp = new RegExp(/^\/\/!\s+endzinc\b/);
-
+/**
+ * 类型定义查找器 - 使用ASTVisitor系统
+ * 用于查找Interface或Struct定义，替代废弃的GlobalContext方法
+ */
+class TypeDefinitionFinder implements ASTVisitor {
+  private targetName: string;
+  private foundType: Interface | zinc.Interface | Struct | zinc.Struct | null = null;
+  
+  constructor(name: string) {
+    this.targetName = name;
+  }
+  
+  private getNodeName(node: NodeAst): string {
+    if ('name' in node && node.name) {
+      const nameToken = node.name as any;
+      return typeof nameToken.getText === 'function' ? nameToken.getText() : '';
+    }
+    return '';
+  }
+  
+  visitStruct(node: Struct | zinc.Struct): void {
+    if (this.foundType) return; // 已经找到，停止搜索
+    
+    const name = this.getNodeName(node);
+    if (name === this.targetName) {
+      this.foundType = node;
+    }
+  }
+  
+  visitInterface(node: Interface | zinc.Interface): void {
+    if (this.foundType) return; // 已经找到，停止搜索
+    
+    const name = this.getNodeName(node);
+    if (name === this.targetName) {
+      this.foundType = node;
+    }
+  }
+  
+  getFoundType(): Interface | zinc.Interface | Struct | zinc.Struct | null {
+    return this.foundType;
+  }
+}
 
 class Segment {
   parent: Block|null = null;
@@ -291,9 +91,9 @@ class Segment {
   // 用于接收解析后的对象
   public data:any;
 
-  type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type";
+  type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type" | "implement";
 
-  constructor(type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type", tokens:Token[]) {
+  constructor(type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type" | "implement", tokens:Token[]) {
     this.type = type;
     this.tokens = tokens;
   }
@@ -307,8 +107,8 @@ class Block {
   // 用于接收解析后的对象
   public data:any;
 
-  type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop";
-  constructor(type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop", start_tokens:Token[]) {
+  type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | "module";
+  constructor(type: "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | "module", start_tokens:Token[]) {
     this.type = type;
 
     this.start_tokens = start_tokens;
@@ -338,122 +138,211 @@ class Block {
   public readonly tokens:Token[] = [];
 }
 
+/**
+ * Document 类 - JASS/vJASS 文档解析器
+ * 负责解析 JASS/vJASS 代码，生成 AST 树结构
+ */
 export class Document {
-
-  public readonly content: string;
+  // ==================== 核心属性 ====================
+  public readonly filePath: string;
+  public content: string;
   public readonly tokens: Token[] = [];
   public readonly lineCount: number = 0;
-  public readonly imports: Import[] = [];
-  public readonly macros: Macro[] = [];
-  public readonly text_macros: TextMacro[] = [];
-  public readonly run_text_macros: RunTextMacro[] = [];
+  public is_special: boolean = false;
 
-  public readonly filePath: string;
-
+  // ==================== AST 相关 ====================
   public program: NodeAst | null = null;
+  public readonly zincNodes: ZincNode[] = [];
 
-  public readonly is_special:boolean;
+  // ==================== 错误处理 ====================
+  public readonly errorCollection: ErrorCollection = {
+    errors: [],
+    warnings: [],
+    checkValidationErrors: []
+  };
 
+  // ==================== Check验证配置 ====================
+  private checkValidationConfig = {
+    enabled: true,
+    enablePerformanceLogging: false,
+    enableDetailedErrors: true,
+    skipNodes: new Set() as any, // 可以跳过特定节点类型的检查
+    maxExecutionTime: 100 // 单个check方法的最大执行时间(ms)
+  };
+
+  // ==================== Check验证统计 ====================
+  private checkValidationStats = {
+    totalNodesChecked: 0,
+    checkErrors: 0,
+    checkWarnings: 0,
+    checkExecutionTime: 0,
+    nodesWithCheckInterface: 0,
+    skippedNodes: 0
+  };
+
+  // ==================== 预处理器集合 ====================
+  private preprocessCollection: {
+    defines: Define[];
+    includes: Include[];
+      } = {
+    defines: [],
+    includes: []
+  };
+
+  private importsCollection: {
+    imports: Import[];
+  } = {
+    imports: []
+  };
+
+  private textMacroCollection: {
+    textMacros: TextMacro[];
+  } = {
+    textMacros: []
+  };
+
+  private runTextMacroCollection: RunTextMacroCollection = {
+    runTextMacros: [],
+    mixLineTexts: []
+  };
+
+  private zincBlockCollection: ZincBlockCollection = {
+    blocks: []
+  };
+
+  // ==================== 公共访问器 ====================
+  public get defines(): Define[] {
+    return this.preprocessCollection.defines;
+  }
+
+  public get includes(): Include[] {
+    return this.preprocessCollection.includes;
+  }
+
+  public get imports(): Import[] {
+    return this.importsCollection.imports;
+  }
+
+  public get textMacros(): TextMacro[] {
+    return this.textMacroCollection.textMacros;
+  }
+
+  public get runTextMacros(): RunTextMacro[] {
+    return this.runTextMacroCollection.runTextMacros;
+  }
+
+  public get zincBlocks(): ZincBlock[] {
+    return this.zincBlockCollection.blocks;
+  }
+
+  /**
+   * 构造函数 - 初始化文档解析器
+   * @param filePath 文件路径
+   * @param content 文件内容
+   */
   public constructor(filePath: string, content: string) {
     this.filePath = filePath;
     this.content = content;
-
+    
+    // 预处理阶段
+    this.preprocessContent();
+    
+    // 词法分析
     tokenize_for_vjass(this);
+    
+    // 特殊文件处理
+    if (this.isSpecialFile(filePath)) {
+      this.handleSpecialFile();
+      return;
+    }
+    
+    // 设置全局上下文
+    GlobalContext.set(filePath, this);
+    this.is_special = false;
+    
+    // 解析 Zinc 代码块
+    this.parseZincBlocks();
+    
+    // 构建 AST
+    this.buildAST();
+    
+    // 错误处理
+    this.after_handing_error();
+  }
 
+  /**
+   * 预处理内容 - 移除注释、宏、导入等
+   */
+  private preprocessContent(): void {
+    this.content = removeComment(this.content, this.errorCollection);
+    this.content = parseAndRemovePreprocessor(this.content, this.errorCollection, this.preprocessCollection);
+    this.content = parseAndRemoveImports(this.content, this.errorCollection, this.importsCollection);
+    this.content = parseAndRemoveTextMacros(this.content, this.errorCollection, this.textMacroCollection, this.filePath);
+    this.content = parseAndRemoveZincBlock(this.content, this.errorCollection, this.zincBlockCollection);
+    this.content = parseAndRemoveRunTextMacros(this.content, this.errorCollection, this.runTextMacroCollection);
+  }
+
+  /**
+   * 检查是否为特殊文件
+   * @param filePath 文件路径
+   * @returns 是否为特殊文件
+   */
+  private isSpecialFile(filePath: string): boolean {
     const parsed = path.parse(filePath);
-    if (parsed.base == "presets.jass" || parsed.base == "numbers.jass" || parsed.base == "strings.jass") {
+    return parsed.base === "presets.jass" || 
+           parsed.base === "numbers.jass" || 
+           parsed.base === "strings.jass";
+  }
+
+  /**
+   * 处理特殊文件
+   */
+  private handleSpecialFile(): void {
       this.values();
       this.is_special = true;
-      GlobalContext.set(filePath, this);
-      return;
-    } else {
-      this.is_special = false;
+    GlobalContext.set(this.filePath, this);
     }
-    
-    this.preprocessing();
-    
 
-    this.parse_import();
-    this.parse_textmacro();
-
-    GlobalContext.set(filePath, this);
-
-    this.parse_runtextmacro();
-    this.find_token_error();
-
-    this.find_zinc_block();
-    this.parse_zinc_block();
-
-    
-
-    this.object_list = this.slice_layer();
-    this.parse_node();
-    // this.find_node_error();
-    
-    
-    if (this.object_list) {
-      const root_node = new NodeAst(this);
-      this.object_list.forEach(x => {
-        root_node.children.push(this.expand_node(x));
+  /**
+   * 解析 Zinc 代码块
+   */
+  private parseZincBlocks(): void {
+    this.zincBlockCollection.blocks.forEach((block: ZincBlock) => {
+      const zincTokens = tokenize_for_vjass_by_content(block.code).map(token => {
+        // @ts-expect-error
+        token.line = block.startLine + 1 + token.line;
+        return token;
       });
-      this.program = root_node;
-
-      this.classification();
       
+      this.zincNodes.push(parse_zinc(this, zincTokens));
+    });
+  }
+
+  /**
+   * 构建 AST
+   */
+  private buildAST(): void {
+    const object_list = this.slice_layer();
+    
+
+    
+    if (object_list && object_list.length > 0) {
+      this.program = this.get_program(object_list);
     }
-
-    // 不需要的对象，设置为null
-    // this.root_node = null;
-
-    this.after_handing_error();
-
-    this.object_list.length = 0;
   }
 
   
 
-  public lineAt(line: number): TextLine {
-    // console.time("line1")
-    // const tokens = this.tokens.filter(token => token.start.line == line);
-    // const textLine = new TextLine(line, tokens.length > 0 ? this.content.substring(tokens[0].position, tokens[tokens.length - 1].position + tokens[tokens.length - 1].length) : "");
-    // console.timeEnd("line1")
-    // console.time("line2")
-    // const textLine2 = new TextLine(line, this.content.split("\n")[line]);
-    // console.timeEnd("line2")
-    // console.log(textLine2)
-    // const index = this.line_points.findIndex(x => x.line == line);
-    return new TextLine(line, this.line_points[line] ? this.content.substring(this.line_points[line].position, this.line_points[line + 1]?.position) : "");
-  }
 
+  // ==================== 公共方法 ====================
+  
   /**
-   * filter 或者 下标偏移遍历 都是可用的方式，filter最慢，下标偏移其次
-   * slice 实现方式依赖 this.line_token_indexs 缓存偏移量,牺牲一定内存几万行的文件可以在10ms内完成
-   * 
-   * @param line 
-   * @returns 
+   * 获取指定行的所有 Token
+   * 使用缓存索引提高性能，几万行文件可在10ms内完成
+   * @param line 行号
+   * @returns 该行的 Token 数组
    */
-  public lineTokens(line: number) {
-    // const finded_index = this.line_points.findIndex(x => x.line == line);
-    // if (finded_index == -1) {
-    //   return [];
-    // }
-    // // const last_index = this.line_points.map(p => ({line: p.line, index: p.index})).lastIndexOf({line, index: finded_index});
-    // const tokens:Token[] = [];
-    // if (finded_index == -1) {
-    //   return tokens;
-    // }
-    // for (let index = finded_index; index < this.tokens.length; index++) {
-    //   const token = this.tokens[index];
-    //   if (token.line == line) {
-    //     tokens.push(token);
-    //   } else if (token.line > line) {
-    //     break;
-    //   }
-    // }
-    // return tokens;
-    // return this.tokens.slice(finded_index, last_index);
-    // 太慢
-    // return this.tokens.filter(x => x.line == line);
+  public lineTokens(line: number): Token[] {
     const token_index_cache = this.line_token_indexs[line];
     if (!token_index_cache) {
       return [];
@@ -461,9 +350,8 @@ export class Document {
     return this.tokens.slice(token_index_cache.index, token_index_cache.index + token_index_cache.count);
   }
 
-  // public root_node: Node | null = null;
 
-  private zinc_indexs:VjassZincBlockTempObjectLine[] = [];
+  // private zinc_indexs:VjassZincBlockTempObjectLine[] = [];
 
   /**
    * 记录每个分行的点，使用这种方法只需消耗一点内存有几百倍的性能提升
@@ -485,142 +373,18 @@ export class Document {
     count: number,
   }[] = [];
 
-  /**
-   * 指示import文本替换怎遍历
-   */
-  private line_import_indexs: {
-    line: number,
-    is_import: boolean,
-    index: number
-  }[] = [];
-  /**
-   * textmacro 指示
-   */
-  private line_run_text_macro_indexs: {
-    line: number,
-    is_run_text_macro: boolean,
-    /**
-     * 只想runtextmacro对象数组下标
-     */
-    index: number
-  }[] = [];
-  /**
-   * textmacro 指示
-   */
-  private line_text_macro_indexs: {
-    line: number,
-    /**
-     * -1 error
-     * 0 normal
-     * 1 textmacro header
-     * 2 textmacro end
-     * 3 textmacro body
-     */
-    text_macro_tag: -1 | 0 | 1 | 2 | 3,
-    /**
-     * 指向 只有text_macro_tag==1有效
-     */
-    index: number
-  }[] = [];
-  /**
-   * 文本宏下标指引，用于#define
-   */
-  private macro_indexs: {
-    line: number,
-    is_macro: boolean,
-    index: number
-  }[] = [];
-
-  public is_macro_line(line: number): boolean {
-    return this.macro_indexs[line]?.is_macro ?? false;
-  }
-  /**
-   * 判断行是不是import行
-   * @param line 
-   */
-  public is_import_line(line: number): boolean {
-    return this.line_import_indexs[line]?.is_import ?? false;
-  }
-
-  public is_run_text_macro_line(line: number): boolean {
-    return this.line_run_text_macro_indexs[line]?.is_run_text_macro ?? false;
-  }
-
-  public is_text_macro_line(line: number): boolean {
-    return (this.line_text_macro_indexs[line].text_macro_tag != 0);
-  }
-
-  public is_zinc_block_line_by_virtual(line: number, virtual_line:number): boolean {
-    if (this.is_run_text_macro_line(line)) {
-      return this.zinc_indexs[line] && (this.zinc_indexs[line].display.find(x => x.real_line_number == line && x.mapping_line_number == virtual_line)?.type ?? 0) > 0;
-    } else {
-      return this.zinc_indexs[line] && this.zinc_indexs[line].type > 0;
-    }
-  }
-  public is_zinc_block_line(line: number): boolean {
-    return this.zinc_indexs[line] && this.zinc_indexs[line].type > 0;
-  }
-
+  // ==================== 错误处理 ====================
+  
+  public token_errors: { token: Token, message: string, charge?: number }[] = [];
 
   /**
-   * 
-   * @param callback 
-   * @param run_callback 
-   * @param start_line 
-   * @param length 
+   * 添加 Token 错误
+   * @param token 出错的 Token
+   * @param message 错误消息
    */
-  public loop_uncontain_macro(callback: (document: Document, lineNumber: number) => void, run_callback: (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => void, start_line: number = 0, length: number = this.lineCount) {
-    for (let index = start_line; index < length; index++) {
-      if (this.is_macro_line(index)) { // 宏定义
-        continue;
-      } else if (this.is_run_text_macro_line(index)) { // 运行文本宏
-        const run_text_macro_index = this.line_run_text_macro_indexs[index].index;
-        const run_text_macro = this.run_text_macros[run_text_macro_index];
-        if (run_text_macro) {
-          run_text_macro.loop( (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, lineNumber: number) => {
-            if (!this.is_zinc_block_line_by_virtual(index, lineNumber)) { // 保证zinc代码块不会遍历
-              run_callback(document, run_text_macro, text_macro, lineNumber);
-            }
-          });
-        }
-      } else if (this.is_text_macro_line(index)) { // 文本宏
-        continue;
-      } else if (this.is_import_line(index)) { // vjass import 语句
-        continue;
-      } else if (this.is_zinc_block_line(index)) { // vjass import 语句
-        continue;
-      } else {
-        callback(this, index);
-      }
-    }
-  }
-
-
-  token_errors: { token: Token, message: string, charge?: number }[] = [];
-  public add_token_error(token: Token, message: string) {
+  public add_token_error(token: Token, message: string): void {
     this.token_errors.push({ token, message });
   }
-  // node_errors: { node: Node, message: string, charge?: number }[] = [];
-  // public add_node_error(node: Node, message: string) {
-  //   this.node_errors.push({ node, message });
-  // }
-
-  // public foreach(callback: (node: Node) => void) {
-  //   const fallback = (node: Node) => {
-  //     if (node.type == "zinc") {
-  //       return;
-  //     }
-  //     callback(node);
-  //     if (node.children.length > 0) {
-  //       node.children.forEach(child_node => {
-  //         fallback(child_node);
-  //       });
-  //     }
-  //   }
-  //   if (this.root_node) {
-  //     fallback(this.root_node);
-  //   }
-  // }
 
   private values() {
     
@@ -641,215 +405,10 @@ export class Document {
       }
     }
   }
-  private preprocessing() {
-    // const macros:Macro[] = [];
-    let last_macro: Macro | null = null;
-    for (let index = 0; index < this.lineCount; index++) {
-      const textLine = this.lineAt(index);
-      const text = textLine.text.replace("\n", "");
-      if (last_macro) {
-        if (text.endsWith("\\")) {
-          last_macro.value += text.slice(0, text.length - 1);
-          this.macro_indexs.push({
-            line: index,
-            is_macro: true,
-            index: this.macros.length - 1
-          });
-        } else {
-          last_macro.value += text;
-          last_macro = null;
-
-          this.macro_indexs.push({
-            line: index,
-            is_macro: false,
-            index: -1
-          });
-        }
-      } else {
-        if (text.trimStart().startsWith("#")) {
-          const result = DefineRegExp.exec(text);
-          if (result?.groups) {
-            const macro = new Macro(this, result.groups["type"], index, textLine.text.length);// , new Position(textLine.lineNumber, text.indexOf("#")), new Position(textLine.lineNumber, text.length)
-            this.macros.push(macro);
-            if (result.groups["key"]) {
-              macro.key = result.groups["key"];
-            }
-            const value = result.groups["value"];
-            if (value) {
-              if (value.endsWith("\\")) {
-                macro.value = value.slice(0, value.length - 1);
-                last_macro = macro;
-              } else {
-                macro.value = value;
-              }
-            }
-          }
-          this.macro_indexs.push({
-            line: index,
-            is_macro: true,
-            index: this.macros.length - 1
-          });
-        } else {
-          this.macro_indexs.push({
-            line: index,
-            is_macro: false,
-            index: -1
-          });
-        }
-      }
-    }
-  }
-
-
-  private parse_import() {
-    for (let index = 0; index < this.lineCount; index++) {
-      const tokens = this.lineTokens(index);
-      if (tokens[0] && tokens[0].type == TokenType.Conment && tokens[0].getText().startsWith("//!") && ImportStartWithRegExp.test(tokens[0].getText())) {
-        const token = tokens[0];
-        const text = token.getText();
-        const result = ImportRegExp.exec(text);
-        const vjass_import = new Import(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
-        this.imports.push(vjass_import);
-        if (result) {
-          if (result.groups && result.groups["type"]) {
-            // @ts-expect-error
-            vjass_import.type = result.groups["type"];
-          }
-          const filePathResult = ImportPathRegExp.exec(text);
-          if (filePathResult && filePathResult.groups && filePathResult.groups["file_path"]) {
-            vjass_import.filePath = filePathResult.groups["file_path"];
-          }
-        }
-        this.line_import_indexs.push({
-          line: index,
-          is_import: true,
-          index: this.imports.length - 1
-        });
-      } else {
-        this.line_import_indexs.push({
-          line: index,
-          is_import: false,
-          index: -1
-        });
-      }
-    }
-  }
 
 
 
-  /**
-   * 找到范围并解析
-   * @param this 
-   */
-  private parse_textmacro() {
-    // const macros:Macro[] = [];
-    let text_macro: TextMacro | null = null;
-    for (let index = 0; index < this.lineCount; index++) {
-      const macro_index = this.macro_indexs[index];
-      const tokens = this.lineTokens(index);
-      if (tokens[0] && tokens[0].type == TokenType.Conment && tokens[0].getText().startsWith("//!") && TextMacroStartWithRegExp.test(tokens[0].getText())) {
-        const token = tokens[0];
-        const text = token.getText();
-        const result = TextMacroRegExp.exec(text);
 
-        text_macro = new TextMacro(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
-        text_macro.start_line = index;
-        text_macro.end_line = index;
-        if (result && result.groups) {
-          if (result.groups["name"]) {
-            text_macro.name = result.groups["name"];
-          }
-          if (result.groups["takes"]) {
-            text_macro.takes_string = result.groups["takes"];
-          }
-        }
-        this.text_macros.push(text_macro);
-        this.line_text_macro_indexs.push({
-          line: index,
-          text_macro_tag: 1,
-          index: this.text_macros.length - 1
-        });
-      } else if (tokens[0] && tokens[0].type == TokenType.Conment && tokens[0].getText().startsWith("//!") && EndTextMacroStartWithRegExp.test(tokens[0].getText())) {
-        if (text_macro) {
-          text_macro.is_complete = true;
-          this.line_text_macro_indexs.push({
-            line: index,
-            text_macro_tag: 2,
-            index: 0
-          });
-          text_macro.end_line = index;
-        } else {
-          // 错误
-          this.line_text_macro_indexs.push({
-            line: index,
-            text_macro_tag: -1,
-            index: 0
-          });
-        }
-        text_macro = null;
-
-      } else if (text_macro && macro_index.is_macro == false) {
-        this.line_text_macro_indexs.push({
-          line: index,
-          text_macro_tag: 3,
-          index: 0
-        });
-        text_macro.end_line = index;
-      } else {
-        this.line_text_macro_indexs.push({
-          line: index,
-          text_macro_tag: 0,
-          index: 0
-        });
-      }
-    }
-  }
-
-  private parse_runtextmacro() {
-    for (let index = 0; index < this.lineCount; index++) {
-      const text_macro_index = this.line_text_macro_indexs[index];
-      const import_index = this.line_import_indexs[index];
-      if (text_macro_index.text_macro_tag == 0 && import_index.is_import == false) { // 正常行
-        const tokens = this.lineTokens(index);
-        if (tokens[0] && tokens[0].type == TokenType.Conment && tokens[0].getText().startsWith("//!") && RunTextMacroStartWithRegExp.test(tokens[0].getText())) {
-          const token = tokens[0];
-          const text = token.getText();
-          const result = RunTextMacroRegExp.exec(text);
-          const run_text_macro = new RunTextMacro(this, new Position(token.line, token.character), new Position(token.line, token.character + token.length));
-          if (result && result.groups) {
-            if (result.groups["name"]) {
-
-              run_text_macro.name = result.groups["name"];
-            }
-            if (result.groups["param_body"]) {
-              run_text_macro.param_body_string = result.groups["param_body"];
-            }
-            if (result.groups["param_body"]) {
-              run_text_macro.param_string = result.groups["params"];
-            }
-          }
-          this.run_text_macros.push(run_text_macro);
-          this.line_run_text_macro_indexs.push({
-            line: index,
-            is_run_text_macro: true,
-            index: this.run_text_macros.length - 1
-          });
-        } else {
-          this.line_run_text_macro_indexs.push({
-            line: index,
-            is_run_text_macro: false,
-            index: -1
-          });
-        }
-      } else {
-        this.line_run_text_macro_indexs.push({
-          line: index,
-          is_run_text_macro: false,
-          index: -1
-        });
-      }
-    }
-  }
 
   private find_token_error() {
     const handle = (tokens:Token[]) => {
@@ -882,26 +441,7 @@ export class Document {
         }
       });
     };
-    this.loop_uncontain_macro((document, line) => {
-          handle(document.lineTokens(line));
-      }, (document, run_text_macro, macro, line) => {
-          handle(macro.lineTokens(line, run_text_macro.param_values()));
-      });
   }
-  // private find_node_error() {
-  //   this.foreach((node) => {
-  //     if (!node.end_line) {
-  //       // 避免根节点未闭合
-  //       if (node.parent != null) {
-  //         this.add_node_error(node, `end tag not found`);
-  //       }
-  //     }
-  //   });
-  // }
-
-  // private for_line(line:number, tokens: Token[]) {
-
-  // }
 
   private is_start_with(tokens: Token[], keyword: string|((token:Token) => boolean), excute_string: string[] = ["debug"]):boolean {
     for (let index = 0; index < tokens.length; index++) {
@@ -919,134 +459,13 @@ export class Document {
     return false;
   }
 
-  private find_zinc_block() {
-    let in_zinc = false;
-    let zinc_block:BuiltZincBlock|null = null;
-    for (let index = 0; index < this.lineCount; index++) {
-      this.zinc_indexs.push({
-        index,
-        type: 0,
-        real_line_number: index,
-        mapping_line_number: index,
-        display: []
-      });
-      if (this.is_macro_line(index) || this.is_text_macro_line(index) || this.is_import_line(index)) {
-        this.zinc_indexs[index].type = 0;
-      } else if (this.is_run_text_macro_line(index)) { // 运行文本宏
-        const run_text_macro_index = this.line_run_text_macro_indexs[index].index;
-        const run_text_macro = this.run_text_macros[run_text_macro_index];
-        const zinc_index = this.zinc_indexs[index];
-        zinc_index.type = in_zinc ? 3 : 0;
-        if (run_text_macro) {
-          run_text_macro.loop( (document: Document, run_text_macro: RunTextMacro, text_macro: TextMacro, text_macro_line_number: number) => {
-            const tokens = text_macro.lineTokens(text_macro_line_number, run_text_macro.param_values());
-            if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
-              if (in_zinc) {
-                // this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
-                if (zinc_block) {
-                  this.built_in_zincs.push(zinc_block);
-                }
-              }
-              in_zinc = true;
-              zinc_block = new BuiltZincBlock();
-              zinc_block.start_token = tokens[0];
-              this.built_in_zincs.push(zinc_block);
-
-              zinc_index.display.push({
-                real_line_number: index,
-                mapping_line_number: text_macro_line_number,
-                type: 1
-              });
-            } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
-              if (in_zinc) {
-                if (zinc_block) {
-                  zinc_block.end_token = tokens[0];
-                }
-              } else {
-                this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
-              }
-              in_zinc = false;
-              zinc_block = null;
-
-              zinc_index.display.push({
-                real_line_number: index,
-                mapping_line_number: text_macro_line_number,
-                type: 2
-              });
-            } else if (in_zinc) {
-              if (zinc_block) {
-                zinc_block.tokens.push(...tokens);
-              }
-
-              zinc_index.display.push({
-                real_line_number: index,
-                mapping_line_number: text_macro_line_number,
-                type: 3
-              });
-            } else {
-              zinc_index.display.push({
-                real_line_number: index,
-                mapping_line_number: text_macro_line_number,
-                type: 0
-              });
-            }
-            
-          });
-        }
-      } else {
-        const tokens = this.lineTokens(index);
-        if (tokens[0] && tokens[0].type == TokenType.Conment && ZincStartWithRegExp.test(tokens[0].getText())) {
-          if (in_zinc) {
-            // this.add_token_error(tokens[0], `zinc blocks '${tokens[0].getText()}' do not allow nesting`);
-            if (zinc_block) {
-              this.built_in_zincs.push(zinc_block);
-            }
-          }
-          in_zinc = true;
-          zinc_block = new BuiltZincBlock();
-          zinc_block.start_token = tokens[0];
-          this.built_in_zincs.push(zinc_block);
-
-          this.zinc_indexs[index].type = 1;
-        } else if (tokens[0] && tokens[0].type == TokenType.Conment && ZincEndWithRegExp.test(tokens[0].getText())) {
-          if (in_zinc) {
-            if (zinc_block) {
-              zinc_block.end_token = tokens[0];
-            }
-          } else {
-            this.add_token_error(tokens[0], `unexpected ${tokens[0].getText()}`);
-          }
-          in_zinc = false;
-          zinc_block = null;
-
-          this.zinc_indexs[index].type = 2;
-        } else if (in_zinc) {
-          this.zinc_indexs[index].type = 3;
-
-          if (zinc_block) {
-            zinc_block.tokens.push(...tokens);
-          }
-        } else {
-          this.zinc_indexs[index].type = 0;
-        }
-      }
-    }
-  }
-
   public readonly zinc_nodes:ZincNode[] = [];
-  private parse_zinc_block() {
-    this.built_in_zincs.forEach(block => {
-      const node = parse_zinc(this, block.tokens); 
-      this.zinc_nodes.push(node);
-    });
-  }
 
   /**
    * 文档最根部的对象
    * 根据每一行分层
    * @deprecated 后续改成局部,目前能正常运行,但会跟着document导致内存占用，因为解析完后就没用了
    */
-  private object_list:(Block|Segment)[] = [];
   private slice_layer() {
     const blocks:Block[] = [];
     const list:(Block|Segment)[] = [];
@@ -1097,6 +516,8 @@ export class Document {
           push_block_to(new Block("if", tokens));
         } else if (this.is_start_with(tokens, "loop")) {
           push_block_to(new Block("loop", tokens));
+        } else if (this.is_start_with(tokens, "module")) {
+          push_block_to(new Block("module", tokens));
         }
         // "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type"
         else if (this.is_start_with(tokens, "local")) {
@@ -1117,6 +538,8 @@ export class Document {
           push_segment_to(new Segment("else", tokens));
         } else if (this.is_start_with(tokens, "type")) {
           push_segment_to(new Segment("type", tokens));
+        } else if (this.is_start_with(tokens, "implement")) {
+          push_segment_to(new Segment("implement", tokens));
         } else if (this.is_start_with(tokens, (t) => t.is_identifier)) {
           push_segment_to(new Segment("member", tokens));
         } else if (this.is_start_with(tokens, (t) => t.is_comment)) {
@@ -1159,6 +582,9 @@ export class Document {
         } else if (last_block.type == "struct" && this.is_start_with(tokens, "endstruct")) {
           last_block.end_tokens = tokens;
           blocks.pop();
+        } else if (last_block.type == "module" && this.is_start_with(tokens, "endmodule")) {
+          last_block.end_tokens = tokens;
+          blocks.pop();
         } else {
           handle();
         }
@@ -1167,309 +593,638 @@ export class Document {
       }
 
     };
-    // 遍历行
-    this.loop_uncontain_macro((document, line) => {
-      const tokens = document.lineTokens(line);
-      handle_one_line(tokens);
-      
-    }, (document, run_text_macro, macro, line) => {
-      const tokens = macro.lineTokens(line, run_text_macro.param_values());
-      handle_one_line(tokens);
+
+    this.runTextMacroCollection.mixLineTexts.forEach((value: string | RunTextMacro, line: number) => {
+      if (value instanceof RunTextMacro) {
+        const textMacro = this.textMacros.find(x => x.name == value.name);
+        if (textMacro) {
+          const newContents = textMacro.body.map(body => {
+            textMacro.takes.forEach((take, paramIndex) => {
+              const paramValue = value.params[paramIndex] || "";
+              body = body.replace(new RegExp(`\\$${take}\\$`, "g"), paramValue);
+            });
+            return body;
+          });
+          newContents.forEach(content => {
+            // console.log("newContents", newContents);
+            handle_one_line(tokenize_for_vjass_by_content(content).map(token => {
+              // @ts-expect-error 强行改line
+              token.line = line;
+              return token;
+            }));
+          });
+        }
+      } else {
+        const tokens = this.lineTokens(line);
+        handle_one_line(tokens);
+      }
     });
 
     return list;
   }
 
+  /**
+   * 优化的解析程序方法 - 整合 parse_node、expand_node 和 get_program 的功能
+   * 使用迭代方式避免递归，提高性能
+   * @param object_list 需要解析的对象列表
+   * @returns 解析后的根节点
+   */
+  private get_program(object_list:(Block|Segment)[]) {
+    const root_node = new NodeAst(this);
+    
+    // 第一步：解析所有节点，创建 NodeAst 对象
+    this.parse_all_nodes(object_list);
+    
+    // 第二步：构建 AST 树结构（使用迭代避免递归）
+    this.build_ast_tree(object_list, root_node);
+    
+    return root_node;
+  }
 
   /**
-   * 根据program_list内部tokens分别解析
-   * 对分层后的数据解析
+   * 解析所有节点，创建对应的 NodeAst 对象
+   * 使用迭代方式遍历所有节点
+   * @param object_list 需要解析的对象列表
    */
-  private parse_node() {
-    const handle_on_object = (node: Block | Segment) => {
-      if (node instanceof Block) {
-        if (node.type == "library") {
-          const library = parse_library(this, node.start_tokens);
-          parse_line_end_tag(this, node.end_tokens, library, "endlibrary");
-
-          node.data = library;
-        }
-        else if (node.type == "scope") {
-            const scope = parse_scope(this, node.start_tokens);
-            parse_line_end_tag(this, node.end_tokens, scope, "endscope");
-            node.data = scope;
-        }
-        else if (node.type == "interface") {
-            const inter = parse_interface(this, node.start_tokens);
-            parse_line_end_tag(this, node.end_tokens, inter, "endinterface");
-            node.data = inter;
-        }
-        else if (node.type == "struct") {
-            const struct = parse_struct(this, node.start_tokens);
-            parse_line_end_tag(this, node.end_tokens, struct, "endstruct");
-            node.data = struct;
-        }
-        else if (node.type == "method") {
-            const method = parse_method(this, node.start_tokens); // ok
-            parse_line_end_tag(this, node.end_tokens, method, "endmethod");
-            node.data = method;
-        }
-        else if (node.type == "func") {
-            const func = parse_function(this, node.start_tokens); // ok
-            parse_line_end_tag(this, node.end_tokens, func, "endfunction");
-            node.data = func;
-        } else if (node.type == "globals") {
-            const globals = parse_globals(this, node.start_tokens); // ok
-            parse_line_end_tag(this, node.end_tokens, globals, "endglobals");
-            node.data = globals;
-        } else if (node.type == "if") {
-            const ifs = parse_if(this, node.start_tokens);
-            parse_line_end_tag(this, node.end_tokens, ifs, "endif");
-            node.data = ifs;
-        } else if (node.type == "loop") {
-            const loop = parse_loop(this, node.start_tokens);
-            parse_line_end_tag(this, node.end_tokens, loop, "endloop");
-            node.data = loop;
-        }
-
-        node.children.forEach(child => {
-          handle_on_object(child);
-        });
-      } else {
-        if (node.type == "empty") {
-          ;;
-        } else if (node.type == "comment") {
-            const comment = parse_line_comment(this, node.tokens);
-
-            node.data = comment;
-        } else if (node.type == "local") {
-            const local = parse_line_local(this, node.tokens);
-
-            node.data = local;
-        } else if (node.type == "set") {
-            const set = parse_line_set(this, node.tokens);
-
-            node.data = set;
-        } else if (node.type == "call") {
-            const call = parse_line_call(this, node.tokens);
-
-            node.data = call;
-        } else if (node.type == "return") {
-            const ret = parse_line_return(this, node.tokens);
-          
-          
-            node.data = ret;
-        } else if (node.type == "native") {
-            const native = parse_line_native(this, node.tokens);
-
-            node.data = native;
-        } else if (node.type == "method") {
-            const method = parse_line_method(this, node.tokens);
-
-            node.data = method;
-        } else if (node.type == "member") {
-          if (node.parent && (node.parent.type == "struct" || node.parent.type == "interface")) {
-              
-            const member = parse_line_member(this, node.tokens);
-
-            node.data = member;
-          } else if (node.parent && node.parent.type == "globals") {
-              const member = parse_line_global(this, node.tokens);
-  
-              node.data = member;
-            }
-        } else if (node.type == "exitwhen") {
-            const exitwhen = parse_line_exitwhen(this, node.tokens);
-
-            node.data = exitwhen;
-        } else if (node.type == "elseif") {
-            const elseif = parse_line_else_if(this, node.tokens);
-
-            node.data = elseif;
-        } else if (node.type == "else") {
-            const el = parse_line_else(this, node.tokens);
-
-            node.data = el;
-        } else if (node.type == "type") {
-            const el = parse_line_type(this, node.tokens);
-
-            node.data = el;
-        } else if (node.type == "other") {
-            const other = new Other(this);
-            other.start_token = node.tokens[0];
-            other.end_token = node.tokens[node.tokens.length - 1];
-            node.data = other;
-        }
-      }
-    }
-    this.object_list.forEach(node => {
-      handle_on_object(node);
-    });
-}
-
-
-  // 对外接口
-
-  /**
-   * 
-   * @param node 
-   */
-  private expand_node(node:(Block|Segment)): NodeAst {
-    const object: NodeAst = node.data ?? new NodeAst(this);
-    if (node.parent) {
-      const parent:  NodeAst = node.parent.data;
-      object.parent = parent;
-      const index = node.parent.children.indexOf(node);
-      if (index != -1) {
-        const previous = node.parent.children[index - 1]?.data ?? null;
-        object.previous = previous;
-        const next = node.parent.children[index + 1]?.data ?? null;
-        object.next = next;
-      }
-    } else {
-      const index = this.object_list.indexOf(node);
-      if (index != -1) {
-        const previous = this.object_list[index - 1]?.data ?? null;
-        object.previous = previous;
-        const next = this.object_list[index + 1]?.data ?? null;
-        object.next = next;
-      }
-    }
-    if (node instanceof Block) {
+  private parse_all_nodes(object_list:(Block|Segment)[]) {
+    const processing_stack: (Block|Segment)[] = [...object_list];
+    
+    while (processing_stack.length > 0) {
+      const node = processing_stack.pop()!;
       
-      node.children.forEach(child => {
-        object.children.push(this.expand_node(child));
-      });
-    }
-
-    return object;
-  }
-
-  private for_program_handle(node: NodeAst, callback: (node: NodeAst) => void) {
-    callback(node);
-    node.children.forEach((child) => {
-      this.for_program_handle(child, callback);
-    });
-  }
-  /**
-   * 遍历vjass
-   * @param callback 
-   */
-  public every(callback: (node:NodeAst) => void):void {
-    if (this.program) {
-      this.for_program_handle(this.program, callback);
+      // 解析当前节点
+      this.parse_single_node(node);
+      
+      // 如果是 Block 类型，将子节点添加到处理栈中
+      if (node instanceof Block) {
+        processing_stack.push(...node.children);
+      }
     }
   }
 
-  public readonly natives:Native[] = [];
-  public readonly functions:(Func|zinc.Func)[] = [];
-  public readonly methods:(Method|zinc.Method)[] = [];
-  public readonly librarys:(Library|zinc.Library)[] = [];
-  public readonly scopes:Scope[] = [];
-  public readonly structs:(Struct|zinc.Struct)[] = [];
-  public readonly globals:Globals[] = [];
-  public readonly types:Type[] = [];
-  public readonly interfaces:(Interface|zinc.Interface)[] = [];
-  public readonly global_variables:(GlobalVariable|zinc.Member)[] = [];
-  public readonly ifs:(If|zinc.If)[] = [];
-  public readonly loops:Loop[] = [];
-  public readonly locals:(Local|zinc.Member)[] = [];
-  public readonly sets:(Set|zinc.Set)[] = [];
-  public readonly calls:(Call|zinc.Call)[] = [];
-  public readonly comments:Comment[] = [];
-  public readonly members:(Member|zinc.Member)[] = [];
-
-  public readonly built_in_zincs:BuiltZincBlock[] = [];
+  /**
+   * 解析单个节点
+   * @param node 需要解析的节点
+   */
+  private parse_single_node(node: Block | Segment) {
+    if (node instanceof Block) {
+      // 解析 Block 类型的节点
+      this.parse_block_node(node);
+    } else {
+      // 解析 Segment 类型的节点
+      this.parse_segment_node(node);
+    }
+  }
 
   /**
-   * 将program跟节点对象下面所有解析的节点分类存储
+   * 解析 Block 类型的节点
+   * @param node Block 节点
    */
-  private classification() {
-    this.every((node) => {
-      if (node instanceof Func) {
-        this.functions.push(node);
-      } else if (node instanceof Comment) {
-        this.comments.push(node);
-      } else if (node instanceof Call) {
-        this.calls.push(node);
-      } else if (node instanceof Set) {
-        this.sets.push(node);
-      } else if (node instanceof Local) {
-        this.locals.push(node);
-      } else if (node instanceof Member) {
-        this.members.push(node);
-      } else if (node instanceof GlobalVariable) {
-        this.global_variables.push(node);
-      } else if (node instanceof If) {
-        this.ifs.push(node);
-      } else if (node instanceof Loop) {
-        this.loops.push(node);
-      } else if (node instanceof Native) {
-        this.natives.push(node);
-      } else if (node instanceof Library) {
-        this.librarys.push(node);
-      } else if (node instanceof Struct) {
-        this.structs.push(node);
-      } else if (node instanceof Method) {
-        this.methods.push(node);
-      } else if (node instanceof Interface) {
-        this.interfaces.push(node);
-      } else if (node instanceof Globals) {
-        this.globals.push(node);
-      } else if (node instanceof Type) {
-        this.types.push(node);
-      } else if (node instanceof Scope) {
-        this.scopes.push(node);
+  private parse_block_node(node: Block) {
+    const end_tag_map: { [key: string]: string } = {
+      "func": "endfunction",
+      "library": "endlibrary", 
+      "scope": "endscope",
+      "interface": "endinterface",
+      "struct": "endstruct",
+      "method": "endmethod",
+      "globals": "endglobals",
+      "if": "endif",
+      "loop": "endloop",
+      "module": "endmodule"
+    };
+
+    let ast_node: NodeAst;
+
+    // 根据节点类型创建对应的 AST 节点
+    switch (node.type) {
+      case "library":
+        ast_node = parse_library(this, node.start_tokens);
+        break;
+      case "scope":
+        ast_node = parse_scope(this, node.start_tokens);
+        break;
+      case "interface":
+        ast_node = parse_interface(this, node.start_tokens);
+        break;
+      case "struct":
+        ast_node = parse_struct(this, node.start_tokens);
+        break;
+      case "method":
+        ast_node = parse_method(this, node.start_tokens);
+        break;
+      case "func":
+        ast_node = parse_function(this, node.start_tokens);
+        break;
+      case "globals":
+        ast_node = parse_globals(this, node.start_tokens);
+        break;
+      case "if":
+        ast_node = parse_if(this, node.start_tokens);
+        break;
+      case "loop":
+        ast_node = parse_loop(this, node.start_tokens);
+        break;
+      case "module":
+        ast_node = parse_module(this, node.start_tokens);
+        break;
+      default:
+        ast_node = new NodeAst(this);
+        break;
+    }
+
+    // 解析 end 标签
+    const end_tag = end_tag_map[node.type];
+    if (end_tag && node.end_tokens && node.end_tokens.length > 0) {
+      parse_line_end_tag(this, node.end_tokens, ast_node, end_tag);
+    }
+
+    node.data = ast_node;
+  }
+
+  /**
+   * 解析 Segment 类型的节点
+   * @param node Segment 节点
+   */
+  private parse_segment_node(node: Segment) {
+    let ast_node: NodeAst;
+
+    switch (node.type) {
+      case "empty":
+        return; // 空节点不需要处理
+      case "comment":
+        ast_node = parse_line_comment(this, node.tokens);
+        break;
+      case "local":
+        ast_node = parse_line_local(this, node.tokens);
+        break;
+      case "set":
+        ast_node = parse_line_set(this, node.tokens);
+        break;
+      case "call":
+        ast_node = parse_line_call(this, node.tokens);
+        break;
+      case "return":
+        ast_node = parse_line_return(this, node.tokens);
+        break;
+      case "native":
+        ast_node = parse_line_native(this, node.tokens);
+        break;
+      case "method":
+        ast_node = parse_line_method(this, node.tokens);
+        break;
+      case "implement":
+        ast_node = parse_line_implement(this, node.tokens);
+        break;
+      case "member":
+        if (node.parent && (node.parent.type === "struct" || node.parent.type === "interface")) {
+          ast_node = parse_line_member(this, node.tokens);
+        } else if (node.parent && node.parent.type === "globals") {
+          ast_node = parse_line_global(this, node.tokens);
+        } else {
+          ast_node = new NodeAst(this);
+        }
+        break;
+      case "exitwhen":
+        ast_node = parse_line_exitwhen(this, node.tokens);
+        break;
+      case "elseif":
+        ast_node = parse_line_else_if(this, node.tokens);
+        break;
+      case "else":
+        ast_node = parse_line_else(this, node.tokens);
+        break;
+      case "type":
+        ast_node = parse_line_type(this, node.tokens);
+        break;
+
+      case "other":
+        ast_node = new Other(this);
+        ast_node.start_token = node.tokens[0];
+        ast_node.end_token = node.tokens[node.tokens.length - 1];
+        break;
+      default:
+        ast_node = new NodeAst(this);
+        break;
+    }
+
+    node.data = ast_node;
+  }
+
+  /**
+   * 构建 AST 树结构
+   * 使用迭代方式避免递归
+   * @param object_list 对象列表
+   * @param root_node 根节点
+   */
+  private build_ast_tree(object_list:(Block|Segment)[], root_node: NodeAst) {
+    // 为根级别的节点建立父子关系
+    object_list.forEach(node => {
+      if (node.data) {
+        root_node.addChild(node.data);
       }
     });
 
-    this.zinc_nodes.forEach(child => {
-      this.for_program_handle(child, (node) => {
-        if (node instanceof zinc.Func) {
-          this.functions.push(node);
-        } else if (node instanceof Comment) {
-          this.comments.push(node);
-        } else if (node instanceof zinc.Call) {
-          this.calls.push(node);
-        } else if (node instanceof zinc.Set) {
-          this.sets.push(node);
-        } else if (node instanceof zinc.Member) {
-          if (node.parent) {
-            if (node.parent instanceof zinc.Method || node.parent instanceof zinc.Func) {
-              this.locals.push(node);
-            } else if (node.parent instanceof zinc.Library) {
-              this.global_variables.push(node);
-            } else if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) {
-              this.members.push(node);
+    // 使用迭代方式建立所有子节点的父子关系
+    const build_stack: Array<{source: Block|Segment, target: NodeAst}> = [];
+    
+    // 初始化构建栈
+    object_list.forEach(node => {
+      if (node instanceof Block && node.data) {
+        build_stack.push({source: node, target: node.data});
+      }
+    });
+
+    while (build_stack.length > 0) {
+      const {source, target} = build_stack.pop()!;
+      
+      if (source instanceof Block) {
+        // 为当前节点的子节点建立父子关系
+        source.children.forEach(child => {
+          if (child.data) {
+            target.addChild(child.data);
+            
+            // 如果子节点也是 Block，添加到构建栈中继续处理
+            if (child instanceof Block) {
+              build_stack.push({source: child, target: child.data});
             }
           }
-        } else if (node instanceof zinc.If) {
-          this.ifs.push(node);
-        } else if (node instanceof zinc.Library) {          
-          this.librarys.push(node);
-        } else if (node instanceof zinc.Struct) {
-          this.structs.push(node);
-        } else if (node instanceof zinc.Method) {
-          this.methods.push(node);
-        } else if (node instanceof zinc.Interface) {
-          this.interfaces.push(node);
-        } else if (node instanceof Type) {
-          this.types.push(node);
-        }
-      });
+        });
+      }
+    }
+  }
+
+
+
+  // ==================== Visitor 系统 ====================
+  
+  /**
+   * 访问AST树（Visitor模式）
+   * @param visitor 访问者对象
+   */
+  public accept(visitor: ASTVisitor): void {
+    if (this.program) {
+      this.visitNode(this.program, visitor);
+    }
+    
+    // 访问zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, visitor);
+    });
+  }
+  
+  /**
+   * 递归访问节点
+   */
+  private visitNode(node: NodeAst, visitor: ASTVisitor): void {
+    // 根据节点类型调用相应的visitor方法
+    if (node instanceof Func || node instanceof zinc.Func) {
+      visitor.visitFunc?.(node);
+    } else if (node instanceof Native) {
+      visitor.visitNative?.(node);
+    } else if (node instanceof Method || node instanceof zinc.Method) {
+      visitor.visitMethod?.(node);
+    } else if (node instanceof Struct || node instanceof zinc.Struct) {
+      visitor.visitStruct?.(node);
+    } else if (node instanceof Interface || node instanceof zinc.Interface) {
+      visitor.visitInterface?.(node);
+    } else if (node instanceof Library) {
+      visitor.visitLibrary?.(node);
+    } else if (node instanceof Scope) {
+      visitor.visitScope?.(node);
+    } else if (node instanceof Globals) {
+      visitor.visitGlobals?.(node);
+    } else if (node instanceof Type) {
+      visitor.visitType?.(node);
+    } else if (node instanceof Local) {
+      visitor.visitLocal?.(node);
+    } else if (node instanceof Member || node instanceof zinc.Member) {
+      // 区分是member还是local还是global
+      const parent = node.parent;
+      if (parent instanceof Func || parent instanceof Method ||
+          parent instanceof zinc.Func || parent instanceof zinc.Method) {
+        visitor.visitLocal?.(node);
+      } else {
+        visitor.visitMember?.(node);
+      }
+    } else if (node instanceof GlobalVariable) {
+      visitor.visitGlobalVariable?.(node);
+    } else if (node instanceof If || node instanceof zinc.If) {
+      visitor.visitIf?.(node);
+    } else if (node instanceof Loop) {
+      visitor.visitLoop?.(node);
+    } else if (node instanceof Set || node instanceof zinc.Set) {
+      visitor.visitSet?.(node);
+    } else if (node instanceof Call || node instanceof zinc.Call) {
+      visitor.visitCall?.(node);
+    } else if (node instanceof Comment) {
+      visitor.visitComment?.(node);
+    } else if (node instanceof Module) {
+      visitor.visitModule?.(node);
+    // } else if (node instanceof VjassModule) {
+    //   visitor.visitModule?.(node);
+    // } else if (node instanceof VjassModuleImplementation) {
+    //   visitor.visitModuleImplementation?.(node);
+    } else {
+      visitor.visitOther?.(node);
+    }
+    
+    // 递归访问子节点
+    node.children.forEach(child => this.visitNode(child, visitor));
+  }
+  
+  /**
+   * @deprecated 使用 accept(visitor) 替代
+   * 遍历整个程序的 AST 节点
+   */
+  public every(callback: (node: NodeAst) => void): void {
+    this.accept({
+      visitFunc: callback,
+      visitNative: callback,
+      visitMethod: callback,
+      visitStruct: callback,
+      visitInterface: callback,
+      visitLibrary: callback,
+      visitScope: callback,
+      visitGlobals: callback,
+      visitType: callback,
+      visitLocal: callback,
+      visitMember: callback,
+      visitGlobalVariable: callback,
+      visitIf: callback,
+      visitLoop: callback,
+      visitSet: callback,
+      visitCall: callback,
+      visitComment: callback,
+      visitOther: callback
     });
   }
 
+  // ==================== 分类存储的 AST 节点 ====================
+  
+  /** @deprecated 占用过多内存，请避免直接使用此数组 */
+  // public readonly built_in_zincs: BuiltZincBlock[] = [];
+
+  // ==================== 分类方法 ====================
+  
+  /**
+   * @deprecated
+   * 将程序根节点下的所有解析节点分类存储到对应的数组中
+   * 提高后续查找和访问的效率
+   */
+
+  /**
+   * 错误和警告分析
+   */
   private after_handing_error() {
-    // 把zinc块未闭合错误找出来
-    this.built_in_zincs.forEach(block => {
-      if (block.end_token === null) {
-        if (block.start_token) {
-          this.add_token_error(block.start_token, `zinc block missing end tag`);
-        }
+    // 1. 检查zinc块未闭合
+    this.checkZincBlockClosure();
+    
+    // 2. 遍历AST树进行各种检查
+    if (this.program) {
+      this.analyzeASTTree(this.program);
+    }
+    
+    // 3. 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.analyzeASTTree(zincNode);
+    });
+  }
+  
+  /**
+   * 递归分析AST树
+   */
+  private analyzeASTTree(node: NodeAst): void {
+    // 1. 检查语句块闭合
+    this.checkNodeClosure(node);
+    
+    // 2. 检查非法嵌套
+    this.checkNodeNesting(node);
+    
+    // 3. 检查loop的exitwhen
+    this.checkNodeLoopExitwhen(node);
+    
+    // 4. 检查接口实现
+    this.checkInterfaceImplementation(node);
+    
+    // 5. 检查模块实现
+    this.checkModuleImplementation(node);
+    
+    // 6. 检查implement语句位置
+    this.checkImplementStatement(node);
+    
+    // 7. 检查类型匹配
+    this.checkTypeMatching(node);
+    
+    // 8. 调用节点的check方法（如果实现了Check接口）
+    this.checkNodeValidation(node);
+    
+    // 递归检查子节点
+    node.children.forEach(child => this.analyzeASTTree(child));
+  }
+  
+  /**
+   * 检查节点验证（调用Check接口）
+   */
+  private checkNodeValidation(node: NodeAst): void {
+    this.checkValidationStats.totalNodesChecked++;
+    
+    // 检查Check验证是否启用
+    if (!this.checkValidationConfig.enabled) {
+      return;
+    }
+    
+    // 检查节点是否实现了Check接口
+    if ('check' in node && typeof node.check === 'function') {
+      const nodeType = node.constructor.name;
+      
+      // 检查是否跳过此节点类型
+      if (this.checkValidationConfig.skipNodes.has(nodeType)) {
+        this.checkValidationStats.skippedNodes++;
+        return;
       }
       
-    });
+      this.checkValidationStats.nodesWithCheckInterface++;
+      
+      try {
+        const startTime = Date.now();
+        
+        // 调用check方法
+        node.check();
+        
+        // 记录验证成功
+        const duration = Date.now() - startTime;
+        this.checkValidationStats.checkExecutionTime += duration;
+        
+        // 性能日志记录
+        if (this.checkValidationConfig.enablePerformanceLogging && duration > 10) {
+          console.debug(`Check validation completed for ${nodeType} in ${duration}ms`);
+        }
+        
+        // 检查执行时间是否超时
+        if (duration > this.checkValidationConfig.maxExecutionTime) {
+          console.warn(`Check validation for ${nodeType} took ${duration}ms, exceeding threshold of ${this.checkValidationConfig.maxExecutionTime}ms`);
+        }
+        
+      } catch (error) {
+        // 如果check方法抛出异常，记录错误但不中断分析
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        
+        this.checkValidationStats.checkErrors++;
+        console.error(`Check validation failed for ${nodeType}:`, error);
+        
+        // 创建Check验证错误
+        const checkError: CheckValidationError = {
+          start: {
+            line: node.start.line,
+            position: node.start.position
+          },
+          end: {
+            line: node.end.line,
+            position: node.end.position
+          },
+          message: this.checkValidationConfig.enableDetailedErrors 
+            ? `Check validation error in ${nodeType}: ${errorMessage}`
+            : `Validation error: ${errorMessage}`,
+          nodeType: nodeType,
+          checkType: CheckErrorType.VALIDATION_ERROR,
+          severity: "error"
+        };
+        
+        // 添加到Check验证错误集合
+        if (this.errorCollection.checkValidationErrors) {
+          this.errorCollection.checkValidationErrors.push(checkError);
+        }
+        
+        // 同时添加到常规错误集合以保持兼容性
+        this.errorCollection.errors.push({
+          start: checkError.start,
+          end: checkError.end,
+          message: checkError.message
+        });
+      }
+    }
+  }
+
+  /**
+   * 获取Check验证统计信息
+   */
+  public getCheckValidationStats() {
+    return {
+      ...this.checkValidationStats,
+      averageExecutionTime: this.checkValidationStats.nodesWithCheckInterface > 0 
+        ? this.checkValidationStats.checkExecutionTime / this.checkValidationStats.nodesWithCheckInterface 
+        : 0,
+      checkInterfaceCoverage: this.checkValidationStats.totalNodesChecked > 0
+        ? (this.checkValidationStats.nodesWithCheckInterface / this.checkValidationStats.totalNodesChecked) * 100
+        : 0
+    };
+  }
+
+  /**
+   * 重置Check验证统计信息
+   */
+  public resetCheckValidationStats(): void {
+    this.checkValidationStats = {
+      totalNodesChecked: 0,
+      checkErrors: 0,
+      checkWarnings: 0,
+      checkExecutionTime: 0,
+      nodesWithCheckInterface: 0,
+      skippedNodes: 0
+    };
+  }
+
+  /**
+   * 获取Check验证配置
+   */
+  public getCheckValidationConfig() {
+    return { ...this.checkValidationConfig };
+  }
+
+  /**
+   * 更新Check验证配置
+   */
+  public updateCheckValidationConfig(config: Partial<typeof this.checkValidationConfig>): void {
+    Object.assign(this.checkValidationConfig, config);
+  }
+
+  /**
+   * 启用/禁用Check验证
+   */
+  public setCheckValidationEnabled(enabled: boolean): void {
+    this.checkValidationConfig.enabled = enabled;
+  }
+
+  /**
+   * 添加要跳过的节点类型
+   */
+  public addSkipNodeType(nodeType: string): void {
+    this.checkValidationConfig.skipNodes.add(nodeType);
+  }
+
+  /**
+   * 移除跳过的节点类型
+   */
+  public removeSkipNodeType(nodeType: string): void {
+    this.checkValidationConfig.skipNodes.delete(nodeType);
+  }
+
+  /**
+   * 检查implement语句位置
+   */
+  private checkImplementStatement(node: NodeAst): void {
+    if (node instanceof Implement) {
+      // 检查implement语句是否在struct或module内部
+      if (!this.isImplementInValidContext(node)) {
+        if (node.start_token) {
+          this.errorCollection.errors.push({
+            start: {
+              line: node.start_token.line,
+              position: node.start_token.character
+            },
+            end: {
+              line: node.start_token.line,
+              position: node.start_token.character + node.start_token.length
+            },
+            message: `'implement' statement can only be used inside struct or module`
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * 检查implement语句是否在有效的上下文中
+   */
+  private isImplementInValidContext(implement: Implement): boolean {
+    let current = implement.parent;
+    
+    while (current) {
+      if (current instanceof Struct || current instanceof Module || 
+          current instanceof zinc.Struct || current instanceof zinc.Interface) {
+        return true;
+      }
+      current = current.parent;
+    }
+    
+    return false;
+  }
+
+  /**
+   * 检查zinc块闭合
+   */
+  private checkZincBlockClosure(): void {
+    // this.built_in_zincs.forEach(block => {
+    //   if (block.end_token === null) {
+    //     if (block.start_token) {
+    //       this.add_token_error(
+    //         block.start_token, 
+    //         `zinc block starting at line ${block.start_token.line + 1} is missing closing tag '//! endzinc'`
+    //       );
+    //     }
+    //   }
+    // });
     // this.zinc_nodes.forEach(child => {
     //   this.for_program_handle(child, (node) => {
     //     if (node instanceof zinc.Member) {
@@ -1484,129 +1239,1263 @@ export class Document {
     //   });
     // });
 
-    /**
-     * 判断是否闭合并添加错误信息
-     * @param object 
-     */
-    const non_end_tag_and_push_error = (object: Func|If|Loop|Library|Method|Struct|Interface|Globals|Scope) => {
-      if (object.end_tag === null && !(object instanceof Method && object.parent instanceof Interface)) {
-        if (object.start_token) {
-          this.add_token_error(object.start_token, `statement block missing end tag`);
-        } 
+  }
+  
+  /**
+   * 检查单个节点的闭合
+   */
+  private checkNodeClosure(node: NodeAst): void {
+    // 接口中的方法声明不需要endmethod
+    if (node instanceof Method && node.parent instanceof Interface) {
+      return;
+    }
+    
+    const endTagMap: { [key: string]: { end: string, display: string } } = {
+      'Func': { end: 'endfunction', display: 'function' },
+      'Method': { end: 'endmethod', display: 'method' },
+      'Struct': { end: 'endstruct', display: 'struct' },
+      'Interface': { end: 'endinterface', display: 'interface' },
+      'Library': { end: 'endlibrary', display: 'library' },
+      'Scope': { end: 'endscope', display: 'scope' },
+      'Globals': { end: 'endglobals', display: 'globals' },
+      'If': { end: 'endif', display: 'if statement' },
+      'Loop': { end: 'endloop', display: 'loop' }
+    };
+    
+    const constructor_name = node.constructor.name;
+    const tagInfo = endTagMap[constructor_name];
+    
+    if (tagInfo && node.end_tag === null) {
+      if (node.start_token) {
+        const name = ('name' in node && node.name) ? ` '${(node.name as any).getText()}'` : '';
+        this.add_token_error(
+          node.start_token, 
+          `${tagInfo.display}${name} is missing closing tag '${tagInfo.end}'`
+        );
       }
     }
-    this.every((node) => {
-      if (node instanceof Func) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Comment) {
-      } else if (node instanceof Call) {
-      } else if (node instanceof Set) {
-      } else if (node instanceof Local) {
-      } else if (node instanceof GlobalVariable) {
-      } else if (node instanceof If) {
-        this.ifs.push(node);
-      } else if (node instanceof Loop) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Native) {
-      } else if (node instanceof Library) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Struct) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Method) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Interface) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Globals) {
-        non_end_tag_and_push_error(node);
-      } else if (node instanceof Type) {
-      } else if (node instanceof Scope) {
-        non_end_tag_and_push_error(node);
+  }
+  
+  /**
+   * 检查单个节点的嵌套规则
+   */
+  private checkNodeNesting(node: NodeAst): void {
+    if (!node.parent) return;
+    
+    const nodeType = node.constructor.name.toLowerCase();
+    const parentType = node.parent.constructor.name.toLowerCase();
+    
+    // library不能嵌套library
+    if (node instanceof Library && node.parent instanceof Library) {
+      if (node.start_token) {
+        const libName = ('name' in node && node.name) ? ` '${(node.name as any).getText()}'` : '';
+        const parentName = ('name' in node.parent && node.parent.name) ? ` '${(node.parent.name as any).getText()}'` : '';
+        this.add_token_error(
+          node.start_token, 
+          `library${libName} cannot be nested inside library${parentName}`
+        );
       }
-    });
-
-    // console.log(this.global_variables.filter(m => m.name?.getText() == "bababs").map(m => m.to_string()).join("\n"));
-    // vjass 数组成员必须定义size
-    // this.members.forEach(node => {
-    //   if (node.parent) {
-    //     if (node instanceof Member) {
-    //       if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
-    //         if (node.is_array && node.size_expr == null) {
-    //           this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
-    //         }
-    //       }
-    //     } else {
-    //       if (node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
-    //         if (node.size_expr == null || node.size_expr.expr == null) {
-    //           this.add_token_error(node.name ?? node.start_token!, `expectat [size]`);
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
-    // this.global_variables.forEach(node => {
-    //   if (node.parent) {
-    //     // console.log(node.is_array ,node.size_expr, node.to_string());
-    //     if (node.parent instanceof Struct || node.parent instanceof Interface) { //  || node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface
+    }
+    
+    // globals不能包含function/method/if/loop等
+    if (node.parent instanceof Globals) {
+      if (node instanceof Func || node instanceof Method || 
+          node instanceof If || node instanceof Loop ||
+          node instanceof zinc.Func || node instanceof zinc.Method) {
+        if (node.start_token) {
+          const name = ('name' in node && node.name) ? ` '${(node.name as any).getText()}'` : '';
+          this.add_token_error(
+            node.start_token, 
+            `${nodeType}${name} cannot be declared inside globals block (globals can only contain variable declarations and types)`
+          );
+        }
+      }
+    }
+    
+    // if/loop必须在function或method内部
+    if (node instanceof If || node instanceof Loop || 
+        node instanceof zinc.If) {
+      let hasValidParent = false;
+      let current: NodeAst | null = node.parent;
+      
+      while (current) {
+        if (current instanceof Func || current instanceof Method ||
+            current instanceof zinc.Func || current instanceof zinc.Method) {
+          hasValidParent = true;
+          break;
+        }
+        current = current.parent;
+      }
+      
+      if (!hasValidParent && node.start_token) {
+        this.add_token_error(
+          node.start_token, 
+          `${nodeType} statement must be inside a function or method body`
+        );
+      }
+    }
+    
+    // struct/interface不能嵌套
+    if ((node instanceof Struct || node instanceof Interface ||
+         node instanceof zinc.Struct || node instanceof zinc.Interface) &&
+        (node.parent instanceof Struct || node.parent instanceof Interface ||
+         node.parent instanceof zinc.Struct || node.parent instanceof zinc.Interface)) {
+      if (node.start_token) {
+        const name = ('name' in node && node.name) ? ` '${(node.name as any).getText()}'` : '';
+        const parentName = ('name' in node.parent && node.parent.name) ? ` '${(node.parent.name as any).getText()}'` : '';
+        this.add_token_error(
+          node.start_token, 
+          `${nodeType}${name} cannot be nested inside ${parentType}${parentName}`
+        );
+      }
+    }
+  }
+  
+  /**
+   * 检查单个loop节点是否包含exitwhen
+   */
+  private checkNodeLoopExitwhen(node: NodeAst): void {
+    if (!(node instanceof Loop)) return;
+    
+    let hasExitwhen = false;
+    
+    // 检查子节点是否有exitwhen
+    const checkChildren = (parent: NodeAst): void => {
+      for (const child of parent.children) {
+        // 找到exitwhen语句
+        if (child.start_token && child.start_token.getText() === 'exitwhen') {
+          hasExitwhen = true;
+          return;
+        }
+        // 递归检查（但不进入嵌套的loop）
+        if (!(child instanceof Loop)) {
+          checkChildren(child);
+        }
+      }
+    };
+    
+    checkChildren(node);
+    
+    if (!hasExitwhen && node.start_token) {
+      // 添加警告而不是错误
+      this.errorCollection.warnings.push({
+        start: {
+          line: node.start_token.line,
+          position: node.start_token.character
+        },
+        end: {
+          line: node.start_token.line,
+          position: node.start_token.character + node.start_token.length
+        },
+        message: `loop at line ${node.start_token.line + 1} does not contain 'exitwhen' statement (potential infinite loop)`
+      });
+    }
+  }
+  
+  /**
+   * 检查接口实现 - 确保struct实现了所有接口方法
+   * 
+   * 重要区分:
+   * - extends Interface: 必须实现接口的所有方法 ✓
+   * - extends Struct: 只是继承，不需要检查 ✗
+   */
+  private checkInterfaceImplementation(node: NodeAst): void {
+    // 只检查struct节点
+    if (!(node instanceof Struct) && !(node instanceof zinc.Struct) && !(node instanceof Interface) && !(node instanceof zinc.Interface)) {
+      return;
+    }
+    
+    // 检查是否extends
+    if (!node.extends || node.extends.length === 0) {
+      return;
+    }
+    
+    const structName = node.name ? node.name.getText() : '(unknown)';
+    
+    // 收集struct中的所有方法
+    const structMethods = new Map<string, Method | zinc.Method>();
+    for (const child of node.children) {
+      if (child instanceof Method || child instanceof zinc.Method) {
+        const methodName = child.name ? child.name.getText() : '';
+        if (methodName) {
+          structMethods.set(methodName, child);
+        }
+      }
+    }
+    
+    // 检查每个extends的类型
+    for (const extendToken of node.extends) {
+      const extendName = extendToken.getText();
+      
+      // ✅ 关键：区分是Interface还是Struct
+      const extendedNode = this.findTypeDefinition(extendName);
+      
+      // 只有extends Interface时才需要检查方法实现
+      if (!extendedNode || !(extendedNode instanceof Interface || extendedNode instanceof zinc.Interface)) {
+        continue; // 是Struct或未找到，跳过检查
+      }
+      
+      // 这是Interface，必须实现所有方法（包括继承链中的方法）
+      const allRequiredMethods = this.collectAllInterfaceMethods(extendedNode);
+      
+      for (const [methodName, methodNode] of allRequiredMethods) {
+        // 检查struct是否实现了这个方法
+        if (!structMethods.has(methodName)) {
+          // 未实现！报告错误
+          if (node.start_token) {
+            this.add_token_error(
+              node.start_token,
+              `struct '${structName}' does not implement method '${methodName}' from interface '${extendName}'`
+            );
+          }
+        }
+      }
+    }
+  }
+  
+  /**
+   * 收集接口及其继承链中的所有方法
+   * 递归遍历接口继承链，收集所有需要实现的方法
+   * 包含循环继承检测，防止无限递归
+   */
+  private collectAllInterfaceMethods(interfaceNode: Interface | zinc.Interface): Map<string, Method | zinc.Method> {
+    const allMethods = new Map<string, Method | zinc.Method>();
+    const visited: string[] = []; // 防止循环继承
+    const currentPath: string[] = []; // 当前继承路径，用于检测循环
+    
+    const collectMethods = (currentInterface: Interface | zinc.Interface) => {
+      const interfaceName = currentInterface.name ? currentInterface.name.getText() : '';
+      
+      // 检查循环继承：如果当前接口已经在当前路径中，说明存在循环
+      if (currentPath.indexOf(interfaceName) !== -1) {
+        // 报告循环继承错误
+        if (currentInterface.start_token) {
+          this.add_token_error(
+            currentInterface.start_token,
+            `Circular inheritance detected: interface '${interfaceName}' extends itself through the inheritance chain`
+          );
+        }
+        return; // 停止递归，避免无限循环
+      }
+      
+      // 检查是否已经访问过（避免重复处理）
+      if (visited.indexOf(interfaceName) !== -1) {
+        return;
+      }
+      
+      // 标记为已访问
+      visited.push(interfaceName);
+      currentPath.push(interfaceName);
+      
+      // 收集当前接口的直接方法
+      for (const child of currentInterface.children) {
+        if (child instanceof Method || child instanceof zinc.Method) {
+          const methodName = child.name ? child.name.getText() : '';
+          if (methodName && !allMethods.has(methodName)) {
+            allMethods.set(methodName, child);
+          }
+        }
+      }
+      
+      // 递归收集继承的接口方法
+      if (currentInterface.extends && currentInterface.extends.length > 0) {
+        for (const extendToken of currentInterface.extends) {
+          const extendName = extendToken.getText();
+          const extendedInterface = this.findTypeDefinition(extendName);
           
-    //       if (node.is_array && node.size_expr == null) {
-    //         this.add_token_error(node.name!, `expectat [size]`);
-    //       }
-    //     }
-    //   }
-    // });
+          if (extendedInterface && (extendedInterface instanceof Interface || extendedInterface instanceof zinc.Interface)) {
+            collectMethods(extendedInterface);
+          }
+        }
+      }
+      
+      // 从当前路径中移除当前接口（回溯）
+      currentPath.pop();
+    };
+    
+    collectMethods(interfaceNode);
+    return allMethods;
+  }
+  
+  /**
+   * 在全局上下文中查找类型定义（Interface或Struct）
+   * 返回找到的节点，用于区分是Interface还是Struct
+   * 注意：vJASS只有extends，没有implements，struct继承不需要实现方法
+   */
+  private findTypeDefinition(name: string): Interface | zinc.Interface | Struct | zinc.Struct | null {
+    // 使用ASTVisitor系统查找类型定义
+    const typeFinder = new TypeDefinitionFinder(name);
+    
+    // 遍历所有文档
+    for (const filePath of GlobalContext.keys) {
+      const doc = GlobalContext.get(filePath);
+      if (doc) {
+        doc.accept(typeFinder);
+        const found = typeFinder.getFoundType();
+        if (found) {
+          return found;
+        }
+      }
+    }
+    
+    return null; // 未找到
+  }
+  
+  // ==================== 模块系统 ====================
+  
+  /**
+   * 检查模块实现 - 确保struct正确实现了模块
+   * 包括模块方法注入和可选模块处理
+   */
+  private checkModuleImplementation(node: NodeAst): void {
+    // 只检查struct节点
+    if (!(node instanceof Struct) && !(node instanceof zinc.Struct)) {
+      return;
+    }
+    
+    const structName = node.name ? node.name.getText() : '(unknown)';
+    const implementedModules: string[] = []; // 防止重复实现
+    
+    // 收集struct中的所有方法
+    const structMethods = new Map<string, Method | zinc.Method>();
+    for (const child of node.children) {
+      if (child instanceof Method || child instanceof zinc.Method) {
+        const methodName = child.name ? child.name.getText() : '';
+        if (methodName) {
+          structMethods.set(methodName, child);
+        }
+      }
+    }
+    
+    // 检查模块实现
+    for (const child of node.children) {
+      if (child instanceof Implement) {
+        const moduleName = child.moduleName ? child.moduleName.getText() : '';
+        const isOptional = !!child.optional;
+        
+        if (!moduleName) {
+          continue;
+        }
+        
+        // 检查是否已经实现过这个模块
+        if (implementedModules.indexOf(moduleName) !== -1) {
+          // 重复实现，忽略
+          continue;
+        }
+        
+        // 查找模块定义
+        const module = this.findModuleDefinition(moduleName);
+        
+        if (!module) {
+          if (!isOptional) {
+            // 必需模块未找到，报告错误
+            if (child.moduleName) {
+              this.errorCollection.errors.push({
+                start: {
+                  line: child.moduleName.line,
+                  position: child.moduleName.character
+                },
+                end: {
+                  line: child.moduleName.line,
+                  position: child.moduleName.character + child.moduleName.length
+                },
+                message: `Module '${moduleName}' not found. Required module implementation failed.`
+              });
+            }
+          }
+          // 可选模块未找到，静默忽略
+          continue;
+        }
+        
+        // 标记为已实现
+        implementedModules.push(moduleName);
+        
+        // 检查模块方法实现
+        this.checkModuleMethods(module, structMethods, structName, moduleName);
+        
+        // 递归检查模块内部实现的模块
+        this.checkNestedModuleImplementations(module, implementedModules, structMethods, structName);
+      }
+    }
+  }
+  
+  /**
+   * 查找模块定义
+   */
+  private findModuleDefinition(name: string): Module | null {
+    // 使用GlobalContext的get_module_by_name方法
+    const modules = GlobalContext.get_module_by_name(name);
+    return modules.length > 0 ? modules[0] : null;
+  }
+  
+  /**
+   * 检查模块方法实现
+   */
+  private checkModuleMethods(
+    module: Module, 
+    structMethods: Map<string, Method | zinc.Method>, 
+    structName: string, 
+    moduleName: string
+  ): void {
+    for (const method of module.methods) {
+      const methodName = method.name ? method.name.getText() : '';
+      
+      if (!methodName) {
+        continue;
+      }
+      
+      // 检查struct是否实现了这个方法
+      if (!structMethods.has(methodName)) {
+        // 未实现！报告错误
+        if (module.name) {
+          this.errorCollection.errors.push({
+            start: {
+              line: module.name.line,
+              position: module.name.character
+            },
+            end: {
+              line: module.name.line,
+              position: module.name.character + module.name.length
+            },
+            message: `struct '${structName}' does not implement method '${methodName}' from module '${moduleName}'`
+          });
+        }
+      }
+    }
+  }
+  
+  /**
+   * 检查嵌套模块实现
+   */
+  private checkNestedModuleImplementations(
+    module: Module,
+    implementedModules: string[],
+    structMethods: Map<string, Method | zinc.Method>,
+    structName: string
+  ): void {
+    for (const implementation of module.implementations) {
+      const moduleName = implementation.moduleName ? implementation.moduleName.getText() : '';
+      const isOptional = !!implementation.optional;
+      
+      if (!moduleName || implementedModules.indexOf(moduleName) !== -1) {
+        continue;
+      }
+      
+      // 查找嵌套模块
+      const nestedModule = this.findModuleDefinition(moduleName);
+      
+      if (!nestedModule) {
+        if (!isOptional) {
+          // 必需嵌套模块未找到
+          if (implementation.moduleName) {
+            this.errorCollection.errors.push({
+              start: {
+                line: implementation.moduleName.line,
+                position: implementation.moduleName.character
+              },
+              end: {
+                line: implementation.moduleName.line,
+                position: implementation.moduleName.character + implementation.moduleName.length
+              },
+              message: `Nested module '${moduleName}' not found in module implementation.`
+            });
+          }
+        }
+        continue;
+      }
+      
+      // 标记为已实现
+      implementedModules.push(moduleName);
+      
+      // 检查嵌套模块方法
+      this.checkModuleMethods(nestedModule, structMethods, structName, moduleName);
+      
+      // 递归检查更深层的嵌套
+      this.checkNestedModuleImplementations(nestedModule, implementedModules, structMethods, structName);
+    }
   }
 
+  // ==================== 类型推断系统 ====================
+  
+  /**
+   * 推断表达式的类型
+   * 参考Clang的类型推断系统
+   */
+  private inferExpressionType(expr: any): string | null {
+    if (!expr) {
+      return null;
+    }
+    
+    // 1. Id - 标识符，查找变量类型
+    if ('expr' in expr && expr.expr instanceof Token) {
+      const token = expr.expr as Token;
+      const varType = this.findVariableType(token.getText());
+      return varType;
+    }
+    
+    // 2. Value - 字面量
+    if ('value' in expr && expr.value instanceof Token) {
+      const token = expr.value as Token;
+      const text = token.getText();
+      
+      // 判断字面量类型
+      if (token.type == TokenType.String) return 'string';
+      if (token.type == TokenType.Integer) return 'integer'; // fourcc
+      if (token.type == TokenType.Real) return 'real';
+      if (text === 'true' || text === 'false') return 'boolean';
+      if (text === 'null') return 'null';
+      
+      return null;
+    }
+    
+    // 3. Caller - 函数调用，查找返回类型
+    if ('name' in expr && expr.name && 'params' in expr) {
+      const funcName = this.extractIdentifierFromExpr(expr.name);
+      if (funcName) {
+        const returnType = this.findFunctionReturnType(funcName);
+        return returnType;
+      }
+    }
+    
+    // 4. BinaryExpr - 二元表达式
+    if ('left' in expr && 'right' in expr && 'op' in expr) {
+      const op = expr.op instanceof Token ? expr.op.getText() : '';
+      
+      // 比较运算符返回boolean
+      if (['==', '!=', '>', '<', '>=', '<=', 'and', 'or'].includes(op)) {
+        return 'boolean';
+      }
+      
+      // 算术运算符，推断左侧类型
+      const leftType = this.inferExpressionType(expr.left);
+      return leftType;
+    }
+    
+    // 5. UnaryExpr - 一元表达式
+    if ('unary' in expr && expr.unary) {
+      return this.inferExpressionType(expr.unary);
+    }
+    
+    // 6. MemberReference - 成员引用（this.field）
+    if ('names' in expr && Array.isArray(expr.names)) {
+      // 需要查找struct的成员类型
+      return null; // 暂时返回null
+    }
+    
+    return null;
+  }
+  
+  /**
+   * 从表达式中提取标识符名称
+   */
+  private extractIdentifierFromExpr(expr: any): string | null {
+    if ('expr' in expr && expr.expr instanceof Token) {
+      return expr.expr.getText();
+    }
+    return null;
+  }
+  
+  /**
+   * 查找变量类型
+   */
+  private findVariableType(varName: string): string | null {
+    if (!this.program) {
+      return null;
+    }
+    
+    // 在AST中查找变量定义
+    const findVar = (node: NodeAst): string | null => {
+      // Local变量
+      if (node instanceof Local && node.name && node.name.getText() === varName) {
+        return node.type ? node.type.getText() : null;
+      }
+      
+      // 全局变量
+      if (node instanceof GlobalVariable && node.name && node.name.getText() === varName) {
+        return node.type ? node.type.getText() : null;
+      }
+      
+      // Struct成员
+      if ((node instanceof Member || node instanceof zinc.Member) && 
+          node.name && node.name.getText() === varName) {
+        return node.type ? node.type.getText() : null;
+      }
+      
+      // 参数
+      if (node instanceof Func || node instanceof Method || node instanceof Native ||
+          node instanceof zinc.Func || node instanceof zinc.Method) {
+        if (node.takes) {
+          for (const take of node.takes) {
+            if (take.name && take.name.getText() === varName) {
+              return take.type ? take.type.getText() : null;
+            }
+          }
+        }
+      }
+      
+      // 递归查找
+      for (const child of node.children) {
+        const found = findVar(child);
+        if (found) {
+          return found;
+        }
+      }
+      
+      return null;
+    };
+    
+    return findVar(this.program);
+  }
+  
+  /**
+   * 查找函数返回类型
+   */
+  private findFunctionReturnType(funcName: string): string | null {
+    if (!this.program) {
+      return null;
+    }
+    
+    // 在AST中查找函数定义
+    const findFunc = (node: NodeAst): string | null => {
+      if ((node instanceof Func || node instanceof Native || node instanceof Method ||
+           node instanceof zinc.Func || node instanceof zinc.Method) &&
+          node.name && node.name.getText() === funcName) {
+        return node.returns ? node.returns.getText() : 'nothing';
+      }
+      
+      for (const child of node.children) {
+        const found = findFunc(child);
+        if (found) {
+          return found;
+        }
+      }
+      
+      return null;
+    };
+    
+    return findFunc(this.program);
+  }
+  
+  /**
+   * 检查类型匹配 - 表达式类型推断和错误分析
+   * 参考Clang的类型检查系统
+   */
+  private checkTypeMatching(node: NodeAst): void {
+    // 检查Set语句的类型匹配
+    if (node instanceof Set || node instanceof zinc.Set) {
+      this.checkSetTypeMatching(node);
+    }
+    
+    // 检查Local变量初始化的类型匹配
+    if (node instanceof Local) {
+      this.checkLocalTypeMatching(node);
+    }
+    
+    // 检查GlobalVariable初始化的类型匹配
+    if (node instanceof GlobalVariable) {
+      this.checkGlobalVariableTypeMatching(node);
+    }
+  }
+  
+  /**
+   * 检查Set语句的类型匹配
+   * set x = y + 1  ← x的类型 应该匹配 y+1的类型
+   */
+  private checkSetTypeMatching(node: Set | zinc.Set): void {
+    // 获取左侧变量名
+    if (!('name' in node) || !node.name) {
+      return;
+    }
+    
+    // 提取变量名（处理VariableName）
+    let varName: string | null = null;
+    if ('names' in node.name && Array.isArray(node.name.names)) {
+      const firstToken = node.name.names[0];
+      if (firstToken instanceof Token) {
+        varName = firstToken.getText();
+      }
+    }
+    
+    if (!varName) {
+      return;
+    }
+    
+    // 查找变量类型（左侧）
+    const leftType = this.findVariableType(varName);
+    if (!leftType) {
+      return; // 变量未找到，可能有其他错误
+    }
+    
+    // 推断右侧表达式类型
+    const rightType = this.inferExpressionType(('init' in node) ? node.init : null);
+    if (!rightType) {
+      return; // 无法推断类型
+    }
+    
+    // 类型检查
+    if (!this.isTypeCompatible(leftType, rightType)) {
+      // 类型不匹配！
+      if (node.start_token) {
+        this.errorCollection.warnings.push({
+          start: {
+            line: node.start_token.line,
+            position: node.start_token.character
+          },
+          end: {
+            line: node.end_token ? node.end_token.line : node.start_token.line,
+            position: node.end_token ? node.end_token.character : node.start_token.character + node.start_token.length
+          },
+          message: `Type mismatch: cannot assign '${rightType}' to '${leftType}' (variable '${varName}')`
+        });
+      }
+    }
+  }
+  
+  /**
+   * 检查Local变量初始化的类型匹配
+   * local integer x = "string"  ← 类型不匹配
+   */
+  private checkLocalTypeMatching(node: Local): void {
+    if (!node.type || !('expr' in node) || !node.expr) {
+      return;
+    }
+    
+    const varName = node.name ? node.name.getText() : '(unknown)';
+    const declaredType = node.type.getText();
+    const initType = this.inferExpressionType(node.expr);
+    
+    if (initType && !this.isTypeCompatible(declaredType, initType)) {
+      if (node.start_token) {
+        this.errorCollection.warnings.push({
+          start: {
+            line: node.start_token.line,
+            position: node.start_token.character
+          },
+          end: {
+            line: node.end_token ? node.end_token.line : node.start_token.line,
+            position: node.end_token ? node.end_token.character : node.start_token.character + node.start_token.length
+          },
+          message: `Type mismatch in local variable '${varName}': cannot initialize '${declaredType}' with '${initType}'`
+        });
+      }
+    }
+  }
+  
+  /**
+   * 检查全局变量初始化的类型匹配
+   */
+  private checkGlobalVariableTypeMatching(node: GlobalVariable): void {
+    if (!node.type || !('expr' in node) || !node.expr) {
+      return;
+    }
+    
+    const varName = node.name ? node.name.getText() : '(unknown)';
+    const declaredType = node.type.getText();
+    const initType = this.inferExpressionType(node.expr);
+    
+    if (initType && !this.isTypeCompatible(declaredType, initType)) {
+      if (node.start_token) {
+        this.errorCollection.warnings.push({
+          start: {
+            line: node.start_token.line,
+            position: node.start_token.character
+          },
+          end: {
+            line: node.end_token ? node.end_token.line : node.start_token.line,
+            position: node.end_token ? node.end_token.character : node.start_token.character + node.start_token.length
+          },
+          message: `Type mismatch in global variable '${varName}': cannot initialize '${declaredType}' with '${initType}'`
+        });
+      }
+    }
+  }
+  
+  /**
+   * 检查两个类型是否兼容
+   * 参考类型系统的兼容性规则
+   */
+  private isTypeCompatible(targetType: string, sourceType: string): boolean {
+    // 完全相同
+    if (targetType === sourceType) {
+      return true;
+    }
+    
+    // null可以赋值给handle类型
+    if (sourceType === 'null' && this.isHandleType(targetType)) {
+      return true;
+    }
+    
+    // integer可以自动转换为real
+    if (targetType === 'real' && sourceType === 'integer') {
+      return true;
+    }
+    
+    // handle类型的继承关系（简化处理）
+    if (this.isHandleType(targetType) && this.isHandleType(sourceType)) {
+      return true; // handle类型之间可以互相赋值
+    }
+    
+    return false;
+  }
+  
+  /**
+   * 判断是否是handle类型
+   */
+  private isHandleType(type: string): boolean {
+    // 基础handle类型
+    const handleTypes = ['handle', 'agent', 'event', 'player', 'widget', 
+                        'unit', 'destructable', 'item', 'ability', 'buff', 
+                        'force', 'group', 'trigger', 'triggercondition', 
+                        'triggeraction', 'timer', 'location', 'region', 
+                        'rect', 'boolexpr', 'sound', 'effect', 'unitpool', 
+                        'itempool', 'quest', 'questitem', 'defeatcondition', 
+                        'timerdialog', 'leaderboard', 'multiboard', 
+                        'multiboarditem', 'trackable', 'dialog', 'button', 
+                        'texttag', 'lightning', 'image', 'ubersplat', 
+                        'fogstate', 'fogmodifier', 'hashtable'];
+    
+    if (handleTypes.includes(type.toLowerCase())) {
+      return true;
+    }
+    
+    // 自定义的struct也是handle类型
+    const typeNode = this.findTypeDefinition(type);
+    if (typeNode instanceof Struct || typeNode instanceof zinc.Struct) {
+      return true;
+    }
+    
+    return false;
+  }
 
-  // public get_object_by_names(names:string[]):NodeAst[] {
-  //   const function_takes:Take[] = this.functions.map(func => func.takes).flat().filter(x => !!x) as Take[];
-  //   const mathod_takes:Take[] = this.methods.map(func => func.takes).flat().filter(x => !!x) as Take[];
-  //   const objects:(NodeAst|Take)[] = [...this.structs, ...this.locals, ...function_takes, ...mathod_takes];
-  //   const names2 = [...names];
-  //   const shift_and_handing = () => {
-  //     if (names2.length > 0) {
-  //       const name = names2.shift();
-  //       objects.filter(object => {
-  //         if (object instanceof Struct && object.name && object.name.getText() == name) {
-  //           return true;
-  //         } else if (object instanceof Local && object.name && object.name.getText() == name) {
-  //           return true;
-  //         } else if (object instanceof Take && object.name && object.name.getText() == name) {
-  //           return true;
-  //         }
-  //         return false;
-  //       });
-  //     }
-  //   };
-  // }
+  /**
+   * @deprecated
+   * @param name 
+   * @returns 
+   */
   public get_struct_by_name(name: string):(Struct|zinc.Struct)[] {
     const structs:(Struct|zinc.Struct)[] = [];
 
-    this.structs.forEach(struct => {
-      if (struct.name && struct.name.getText() === name) {
-        structs.push(struct);
-      }
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitStruct: (node) => {
+          if (node.name && node.name.getText() === name) {
+            structs.push(node);
+          }
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitStruct: (node) => {
+          if (node.name && node.name.getText() === name) {
+            structs.push(node);
+          }
+        }
+      });
     });
 
     return structs;
   }
 
+  public get_interface_by_name(name: string):(Interface|zinc.Interface)[] {
+    const interfaces:(Interface|zinc.Interface)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitInterface: (node) => {
+          if (node.name && node.name.getText() === name) {
+            interfaces.push(node);
+          }
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitInterface: (node) => {
+          if (node.name && node.name.getText() === name) {
+            interfaces.push(node);
+          }
+        }
+      });
+    });
+
+    return interfaces;
+  }
+
+  public get_struct_by_extends_name(name: string):(Struct|zinc.Struct)[] {
+    const structs:(Struct|zinc.Struct)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitStruct: (node) => {
+          if (node.extends && node.extends.length > 0 && node.extends.map(extends_type_token => extends_type_token.getText()).includes(name)) {
+            structs.push(node);
+          }
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitStruct: (node) => {
+          if (node.extends && node.extends.length > 0 && node.extends.map(extends_type_token => extends_type_token.getText()).includes(name)) {
+            structs.push(node);
+          }
+        }
+      });
+    });
+
+    return structs;
+  }
+
+  public get_interface_by_extends_name(name: string):(Interface|zinc.Interface)[] {
+    const interfaces:(Interface|zinc.Interface)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitInterface: (node) => {
+          if (node.extends && node.extends.length > 0 && node.extends.map(extends_type_token => extends_type_token.getText()).includes(name)) {
+            interfaces.push(node);
+          }
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitInterface: (node) => {
+          if (node.extends && node.extends.length > 0 && node.extends.map(extends_type_token => extends_type_token.getText()).includes(name)) {
+            interfaces.push(node);
+          }
+        }
+      });
+    });
+
+    return interfaces;
+  }
+
+  public get_all_structs():(Struct|zinc.Struct)[] {
+    const structs:(Struct|zinc.Struct)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitStruct: (node) => {
+          structs.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitStruct: (node) => {
+          structs.push(node);
+        }
+      });
+    });
+
+    return structs;
+  }
+
+  public get_all_interfaces():(Interface|zinc.Interface)[] {
+    const interfaces:(Interface|zinc.Interface)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitInterface: (node) => {
+          interfaces.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitInterface: (node) => {
+          interfaces.push(node);
+        }
+      });
+    });
+
+    return interfaces;
+  }
+
+  public get_all_functions():(Func|zinc.Func)[] {
+    const functions:(Func|zinc.Func)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitFunc: (node) => {
+          functions.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitFunc: (node) => {
+          functions.push(node);
+        }
+      });
+    });
+
+    return functions;
+  }
+
+  public get_all_natives():Native[] {
+    const natives:Native[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitNative: (node) => {
+          natives.push(node);
+        }
+      });
+    }
+
+    return natives;
+  }
+
+  public get_all_methods():(Method|zinc.Method)[] {
+    const methods:(Method|zinc.Method)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitMethod: (node) => {
+          methods.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitMethod: (node) => {
+          methods.push(node);
+        }
+      });
+    });
+
+    return methods;
+  }
+
+  public get_all_libraries():Library[] {
+    const libraries:Library[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitLibrary: (node) => {
+          libraries.push(node);
+        }
+      });
+    }
+
+    return libraries;
+  }
+
+  public get_all_scopes():Scope[] {
+    const scopes:Scope[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitScope: (node) => {
+          scopes.push(node);
+        }
+      });
+    }
+
+    return scopes;
+  }
+
+  public get_all_global_variables():(GlobalVariable|zinc.Member)[] {
+    const globals:(GlobalVariable|zinc.Member)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitGlobalVariable: (node) => {
+          globals.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitGlobalVariable: (node) => {
+          globals.push(node);
+        }
+      });
+    });
+
+    return globals;
+  }
+
+  public get_all_members():(Member|zinc.Member)[] {
+    const members:(Member|zinc.Member)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitMember: (node) => {
+          members.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitMember: (node) => {
+          members.push(node);
+        }
+      });
+    });
+
+    return members;
+  }
+
+  public get_all_locals():(Local|zinc.Member)[] {
+    const locals:(Local|zinc.Member)[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitLocal: (node) => {
+          locals.push(node);
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitLocal: (node) => {
+          locals.push(node);
+        }
+      });
+    });
+
+    return locals;
+  }
+
+  public get_all_types():Type[] {
+    const types:Type[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitType: (node) => {
+          types.push(node);
+        }
+      });
+    }
+
+    return types;
+  }
+
+  // 兼容性属性 - 使用getter方法
+  public get functions():(Func|zinc.Func)[] { return this.get_all_functions(); }
+  public get natives():Native[] { return this.get_all_natives(); }
+  public get methods():(Method|zinc.Method)[] { return this.get_all_methods(); }
+  public get structs():(Struct|zinc.Struct)[] { return this.get_all_structs(); }
+  public get interfaces():(Interface|zinc.Interface)[] { return this.get_all_interfaces(); }
+  public get librarys():Library[] { return this.get_all_libraries(); }
+  public get scopes():Scope[] { return this.get_all_scopes(); }
+  public get global_variables():(GlobalVariable|zinc.Member)[] { return this.get_all_global_variables(); }
+  public get members():(Member|zinc.Member)[] { return this.get_all_members(); }
+  public get locals():(Local|zinc.Member)[] { return this.get_all_locals(); }
+  public get types():Type[] { return this.get_all_types(); }
+  public get modules():Module[] { return this.get_all_modules(); }
+
+  public get_all_modules():Module[] {
+    const modules: Module[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitModule: (node) => {
+          modules.push(node);
+        }
+      });
+    }
+
+    return modules;
+  }
+
+  public get_module_by_name(name: string): Module[] {
+    const modules: Module[] = [];
+
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitModule: (node) => {
+          if (node.name && node.name.getText() === name) {
+            modules.push(node);
+          }
+        }
+      });
+    }
+
+    return modules;
+  }
+
   public get_function_set_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
     const funcs:(Func|Native|Method|zinc.Func|zinc.Method)[] = [];
 
-    this.natives.forEach(native => {
-      if (native.name && native.name.getText() === name) {
-        funcs.push(native);
-      }
-    });
-    this.functions.forEach(func => {
-      if (func.name && func.name.getText() === name) {
-        funcs.push(func);
-      }
-    });
-    this.methods.forEach(method => {
-      if (method.name && method.name.getText() === name) {
-        funcs.push(method);
-      }
+    // 使用visitor模式遍历AST树
+    if (this.program) {
+      this.visitNode(this.program, {
+        visitFunc: (node) => {
+          if (node.name && node.name.getText() === name) {
+            funcs.push(node);
+          }
+        },
+        visitNative: (node) => {
+          if (node.name && node.name.getText() === name) {
+            funcs.push(node);
+          }
+        },
+        visitMethod: (node) => {
+          if (node.name && node.name.getText() === name) {
+            funcs.push(node);
+          }
+        }
+      });
+    }
+
+    // 遍历zinc节点
+    this.zincNodes.forEach(zincNode => {
+      this.visitNode(zincNode, {
+        visitFunc: (node) => {
+          if (node.name && node.name.getText() === name) {
+            funcs.push(node);
+          }
+        },
+        visitMethod: (node) => {
+          if (node.name && node.name.getText() === name) {
+            funcs.push(node);
+          }
+        }
+      });
     });
 
     return funcs;
@@ -1625,12 +2514,8 @@ export class TokenType {
   static Mark = "Mark";
   static Unkown = "Unkown";
   static BlockComment = "BlockComment";
+  static EmbeddedToken = "EmbeddedToken";
 };
-
-interface ReplaceableEntity {
-  name: string;
-  value: string;
-}
 
 export class StringCollection {
   public static readonly StringMap:Map<number, string> = new Map();
@@ -1644,6 +2529,7 @@ export class StringCollection {
 }
 
 export class Token /*extends Range*/ {
+  private static textCache = new Map<number, string>();
   // public readonly document: Document;
   /**
    * 当前行
@@ -1684,8 +2570,9 @@ export class Token /*extends Range*/ {
     this.type = type;
     this.is_complete = is_complete;
 
-    const text_index = AllKeywords.indexOf(text);
+    const text_index = AllTokenTexts.indexOf(text);
     if (text_index != -1) {
+      // 转为负数，为负数时代表在AllTokenTexts中
       this.text_or_index = text_index;
     } else {
       this.text_or_index = text;
@@ -1717,11 +2604,15 @@ export class Token /*extends Range*/ {
 
   public getText(): string {
     // return this.document.content.substring(this.position, this.position + this.length);
-    return typeof this.text_or_index == "number" ? AllKeywords[this.text_or_index] : this.text_or_index;
+    if (typeof this.text_or_index == "number") {
+      return AllTokenTexts[this.text_or_index];
+    } else {
+      return this.text_or_index;  
+    }
   }
 
   public is_value(): boolean {
-    return this.type == TokenType.Integer || this.type == TokenType.Real || this.type == TokenType.String || this.type == TokenType.Mark;
+    return this.type == TokenType.Integer || this.type == TokenType.Real || this.type == TokenType.String || this.type == TokenType.Mark || this.type == TokenType.EmbeddedToken;
   }
 
 
@@ -1875,10 +2766,3 @@ export function tokenize(document: Document, call: (document: Document, line: nu
 
 
 
-// function slice_layer(document: any) {
-//   throw new Error("Function not implemented.");
-// }
-
-// function parse_node(document: any) {
-//   throw new Error("Function not implemented.");
-// }

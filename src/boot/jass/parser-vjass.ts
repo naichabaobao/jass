@@ -1,53 +1,91 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Document, RunTextMacro, TextLine, TextMacro, Token, TokenType} from "./tokenizer-common";
+import { Document,  Token, TokenType} from "./tokenizer-common";
 import { Position, Range } from "./loc";
+import { Check } from "./check";
+// import { VjassModule } from "../vjass/vjass-ast"; // 已删除vjass-ast.ts
 
+/**
+ * 全局上下文管理器 - 管理文档实例的存储和检索
+ */
 export class Context {
     private _keys: string[] = [];
     private _documents: Document[] = [];
+
+    /**
+     * 处理文件路径，标准化路径格式
+     * @param key 原始文件路径
+     * @returns 标准化后的文件路径
+     */
     private handle_key(key: string): string {
-        // const handle_key = key.replace(/\\+/g, "/");
         const parsed = path.parse(key);
         return path.resolve(parsed.dir, parsed.base);
     }
-    public set(key: string, value: Document) {
+
+    /**
+     * 设置文档实例
+     * @param key 文件路径
+     * @param value 文档实例
+     */
+    public set(key: string, value: Document): void {
         const handle_key = this.handle_key(key);
         const index = this._keys.indexOf(handle_key);
-        if (index == -1) {
+        if (index === -1) {
             this._keys.push(handle_key);
             this._documents.push(value);
         } else {
             this._documents[index] = value;
         }
     }
+
+    /**
+     * 获取键在数组中的索引
+     * @param key 文件路径
+     * @returns 索引位置，如果不存在返回 -1
+     */
     private indexOf(key: string): number {
         return this._keys.indexOf(this.handle_key(key));
     }
+
+    /**
+     * 检查是否存在指定的文档
+     * @param key 文件路径
+     * @returns 是否存在
+     */
     public has(key: string): boolean {
-        return this.indexOf(key) != -1;
+        return this.indexOf(key) !== -1;
     }
 
+    /**
+     * 获取文档实例
+     * @param key 文件路径
+     * @returns 文档实例，如果不存在返回 undefined
+     */
     public get(key: string): Document | undefined {
         if (this.has(key)) {
             const index = this.indexOf(key);
             return this._documents[index];
         }
-        return;
+        return undefined;
     }
-    public delete(key: string) {
+
+    /**
+     * 删除文档实例
+     * @param key 文件路径
+     */
+    public delete(key: string): void {
         const index = this.indexOf(key);
-        if (index != -1) {
+        if (index !== -1) {
             this._keys.splice(index, 1);
             this._documents.splice(index, 1);
         }
     }
 
-    public getAllTextMacros() {
-        return this._documents.map(document => document.text_macros).flat();
-    }
-
-    public get keys():string[] {
+    /**
+     * 获取所有键
+     * @returns 所有文件路径数组
+     */
+    public get keys(): string[] {
         return this._keys;
     }
 
@@ -55,7 +93,7 @@ export class Context {
         const structs:(Struct|zinc.Struct)[] = [];
 
         this._documents.forEach(document => {
-            structs.push(...document.structs.filter(struct => struct.name && struct.name.getText() == name));
+            structs.push(...document.get_struct_by_name(name));
         });
 
         return structs;
@@ -64,7 +102,7 @@ export class Context {
         const interfaces:(Interface|zinc.Interface)[] = [];
 
         this._documents.forEach(document => {
-            interfaces.push(...document.interfaces.filter(inter => inter.name && inter.name.getText() == name));
+            interfaces.push(...document.get_interface_by_name(name));
         });
 
         return interfaces;
@@ -73,7 +111,7 @@ export class Context {
         const structs:(Struct|zinc.Struct)[] = [];
 
         this._documents.forEach(document => {
-            structs.push(...document.structs.filter(struct => struct.extends && struct.extends.length > 0 && struct.extends.map(extends_type_token => extends_type_token.getText()).includes(name)));
+            structs.push(...document.get_struct_by_extends_name(name));
         });
 
         return structs;
@@ -82,7 +120,7 @@ export class Context {
         const interfaces:(Interface|zinc.Interface)[] = [];
 
         this._documents.forEach(document => {
-            interfaces.push(...document.interfaces.filter(struct => struct.extends && struct.extends.length > 0 && struct.extends.map(extends_type_token => extends_type_token.getText()).includes(name)));
+            interfaces.push(...document.get_interface_by_extends_name(name));
         });
 
         return interfaces;
@@ -92,7 +130,7 @@ export class Context {
         const structs:(Struct|zinc.Struct)[] = [];
 
         this._documents.forEach(document => {
-            structs.push(...document.structs);
+            structs.push(...document.get_all_structs());
         });
 
         return structs;
@@ -101,7 +139,7 @@ export class Context {
         const objects:(Interface|zinc.Interface)[] = [];
 
         this._documents.forEach(document => {
-            objects.push(...document.interfaces);
+            objects.push(...document.get_all_interfaces());
         });
 
         return objects;
@@ -117,37 +155,57 @@ export class Context {
         return funcs;
     }
 
+    public get_module_by_name(name: string): Module[] {
+        const modules: Module[] = [];
+
+        this._documents.forEach(document => {
+            modules.push(...document.get_module_by_name(name));
+        });
+
+        return modules;
+    }
+
 }
 
 export const GlobalContext = new Context();
 
 //#region 解析
+/**
+ * 库依赖项 - 表示库的依赖关系
+ */
 export class LibraryRequire {
     public optional: Token | null = null;
     public name: Token | null = null;
 
-    
-    public get is_optional() : boolean {
+    /**
+     * 检查是否为可选的依赖项
+     * @returns 是否为可选依赖
+     */
+    public get is_optional(): boolean {
         return this.optional !== null;
     }
-    
 }
 
 
 
+/**
+ * AST 节点基类 - 所有语法树节点的基类
+ * 提供节点关系管理和 Token 范围管理功能
+ */
 export class NodeAst extends Range {
     public readonly document: Document;
-    public parent: NodeAst|null = null;
-    public previous: NodeAst|null = null;
-    public next: NodeAst|null = null;
+    public parent: NodeAst | null = null;
+    public previous: NodeAst | null = null;
+    public next: NodeAst | null = null;
     public children: Array<NodeAst> = [];
-    public start_token: Token|null = null;
-    public end_token: Token|null = null;
+    public start_token: Token | null = null;
+    public end_token: Token | null = null;
 
     /**
-     * @deprecated 目前用于表示vjass block结束
+     * 结束标签token（用于闭合检查）
+     * 记录 endfunction、endstruct 等结束关键字的token
      */
-    public end_tag: Token|null = null;
+    public end_tag: Token | null = null;
 
     constructor(document: Document) {
         super(new Position(), new Position());
@@ -163,18 +221,13 @@ export class NodeAst extends Range {
     }
 
     public get end(): Position {
-        if (this.end_tag) {
-            return new Position(this.end_tag.line, this.end_tag.character);
-        } else if (this.end_token) {
+        if (this.end_token) {
             return new Position(this.end_token.line, this.end_token.character);
-        } else if (this.children.length > 0) {
-            return this.children[this.children.length - 1].end;
-        } else if (this.next) {
-            return this.next.start;
+        } else if (this.start_token) {
+            return new Position(this.start_token.line, this.start_token.character);
         } else {
             return new Position(0, 0);
         }
-        return new Position();
     }
 
     public contains(positionOrRange: Range | Position): boolean {
@@ -232,6 +285,10 @@ export class NodeAst extends Range {
         return comments;
     }
 
+    /**
+     * @deprecated 使用 addChild 代替
+     * @param node 
+     */
     public add_node<T extends NodeAst>(node: T) {
         const previous = this.children[this.children.length - 1] ?? null;
 
@@ -243,6 +300,136 @@ export class NodeAst extends Range {
         }
 
         node.parent = this;
+    }
+
+    public addChild<T extends NodeAst>(node: T) {
+        this.add_node(node);
+    }
+
+    /**
+     * 推送 Token，智能更新 start_token 和 end_token
+     * 不保存 Token，只更新位置信息
+     * @param token 要推送的 Token
+     */
+    public pushToken(token: Token): void {
+        if (!token) return;
+
+        // 检查是否是新 Token（避免重复处理）
+        if (this.isTokenAlreadyProcessed(token)) {
+            return;
+        }
+
+        // 更新 start_token（如果还没有设置或新 Token 更早）
+        if (!this.start_token || this.isTokenBefore(token, this.start_token)) {
+            this.start_token = token;
+        }
+
+        // 更新 end_token（如果新 Token 更晚）
+        if (!this.end_token || this.isTokenAfter(token, this.end_token)) {
+            this.end_token = token;
+        }
+
+        // 智能更新父节点的 Token 范围
+        this.updateParentTokenRange(token);
+    }
+
+    /**
+     * 检查 Token 是否已经被处理过
+     * @param token 要检查的 Token
+     * @returns 是否已处理
+     */
+    private isTokenAlreadyProcessed(token: Token): boolean {
+        // 如果 Token 的位置在当前的 start_token 和 end_token 范围内，可能已被处理
+        if (this.start_token && this.end_token) {
+            const tokenPos = new Position(token.line, token.character);
+            const startPos = new Position(this.start_token.line, this.start_token.character);
+            const endPos = new Position(this.end_token.line, this.end_token.character);
+            
+            // 如果 Token 在已有范围内，且不是边界 Token，则认为已处理
+            if (this.isPositionAfter(tokenPos, startPos) && this.isPositionBefore(tokenPos, endPos) && 
+                token !== this.start_token && token !== this.end_token) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查第一个位置是否在第二个位置之后
+     * @param pos1 第一个位置
+     * @param pos2 第二个位置
+     * @returns 是否在之后
+     */
+    private isPositionAfter(pos1: Position, pos2: Position): boolean {
+        if (pos1.line > pos2.line) return true;
+        if (pos1.line === pos2.line) {
+            return pos1.position > pos2.position;
+        }
+        return false;
+    }
+
+    /**
+     * 检查第一个位置是否在第二个位置之前
+     * @param pos1 第一个位置
+     * @param pos2 第二个位置
+     * @returns 是否在之前
+     */
+    private isPositionBefore(pos1: Position, pos2: Position): boolean {
+        if (pos1.line < pos2.line) return true;
+        if (pos1.line === pos2.line) {
+            return pos1.position < pos2.position;
+        }
+        return false;
+    }
+
+    /**
+     * 检查第一个 Token 是否在第二个 Token 之前
+     * @param token1 第一个 Token
+     * @param token2 第二个 Token
+     * @returns 是否在之前
+     */
+    private isTokenBefore(token1: Token, token2: Token): boolean {
+        if (token1.line < token2.line) return true;
+        if (token1.line === token2.line) {
+            return token1.character < token2.character;
+        }
+        return false;
+    }
+
+    /**
+     * 检查第一个 Token 是否在第二个 Token 之后
+     * @param token1 第一个 Token
+     * @param token2 第二个 Token
+     * @returns 是否在之后
+     */
+    private isTokenAfter(token1: Token, token2: Token): boolean {
+        if (token1.line > token2.line) return true;
+        if (token1.line === token2.line) {
+            return token1.character > token2.character;
+        }
+        return false;
+    }
+
+    /**
+     * 智能更新父节点的 Token 范围
+     * @param token 新添加的 Token
+     */
+    private updateParentTokenRange(token: Token): void {
+        let currentParent = this.parent;
+        
+        while (currentParent) {
+            // 如果父节点还没有 start_token，或者新 Token 更早，更新父节点的 start_token
+            if (!currentParent.start_token || this.isTokenBefore(token, currentParent.start_token)) {
+                currentParent.start_token = token;
+            }
+
+            // 如果父节点还没有 end_token，或者新 Token 更晚，更新父节点的 end_token
+            if (!currentParent.end_token || this.isTokenAfter(token, currentParent.end_token)) {
+                currentParent.end_token = token;
+            }
+
+            currentParent = currentParent.parent;
+        }
     }
 }
 
@@ -404,17 +591,7 @@ export namespace zinc {
             return !!this.modifier && this.modifier.getText() == "static";
         }
     }
-    export class Library extends NodeAst{
-        public name: Token | null = null;
-        public requires: LibraryRequire[] = [];
-    
-        to_string(): string {
-            return `library ${this.name ? this.name.getText() : "(unkown)"}${this.requires.length > 0 ? " requires " + this.requires.map(x => {
-                return `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unkown)"}`;
-            }).join(", ") : ""}`;
-        }
-    }
-    export class Interface extends NodeAst {
+    export class Interface extends NodeAst implements Check {
         public visible: Token | null = null;
         public name: Token | null = null;
         public extends: Token[] | null = null;
@@ -432,6 +609,47 @@ export namespace zinc {
             return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
 
+        check(): void {
+            // 检查interface名称
+            if (!this.name) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: "Interface name is required"
+                });
+            }
+
+            // 检查extends的接口是否存在
+            if (this.extends && this.extends.length > 0) {
+                for (const extendToken of this.extends) {
+                    const extendName = extendToken.getText();
+                    const allInterfaces = this.document.get_all_interfaces();
+                    
+                    const foundInterface = allInterfaces.find(i => i.name && i.name.getText() === extendName);
+                    
+                    if (!foundInterface) {
+                        this.document.errorCollection.errors.push({
+                            start: {
+                                line: extendToken.line,
+                                position: extendToken.character
+                            },
+                            end: {
+                                line: extendToken.line,
+                                position: extendToken.character + extendToken.length
+                            },
+                            message: `Extended interface '${extendName}' not found`
+                        });
+                    }
+                }
+            }
+        }
+
         /**
          * 空定义结构size
          */
@@ -439,12 +657,55 @@ export namespace zinc {
             return !!this.index_expr && this.index_expr instanceof Value && this.index_expr === null;
         }
     }
-    export class Struct extends Interface {
+    export class Struct extends Interface implements Check {
         to_string(): string {
             return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
+
+        check(): void {
+            // 检查struct名称
+            if (!this.name) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: "Struct name is required"
+                });
+            }
+
+            // 检查extends的类型是否存在
+            if (this.extends && this.extends.length > 0) {
+                for (const extendToken of this.extends) {
+                    const extendName = extendToken.getText();
+                    const allStructs = this.document.get_all_structs();
+                    const allInterfaces = this.document.get_all_interfaces();
+                    
+                    const foundStruct = allStructs.find(s => s.name && s.name.getText() === extendName);
+                    const foundInterface = allInterfaces.find(i => i.name && i.name.getText() === extendName);
+                    
+                    if (!foundStruct && !foundInterface) {
+                        this.document.errorCollection.errors.push({
+                            start: {
+                                line: extendToken.line,
+                                position: extendToken.character
+                            },
+                            end: {
+                                line: extendToken.line,
+                                position: extendToken.character + extendToken.length
+                            },
+                            message: `Extended type '${extendName}' not found`
+                        });
+                    }
+                }
+            }
+        }
     }
-    export class Func extends NodeAst {
+    export class Func extends NodeAst implements Check {
         public to_string(): string {
             const visible_string = this.visible ? this.visible.getText() + " " : "";
             const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -453,6 +714,123 @@ export namespace zinc {
             const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
             const returns_string = this.returns ? this.returns.getText() : "nothing";
             return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
+        }
+
+        check(): void {
+            // 检查function名称
+            if (!this.name) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: "Function name is required"
+                });
+            }
+
+            // 检查参数类型是否存在
+            if (this.takes && this.takes.length > 0) {
+                for (const take of this.takes) {
+                    if (take.type) {
+                        const typeName = take.type.getText();
+                        // 检查是否是基础类型或已定义的类型
+                        const basicTypes = ['integer', 'real', 'string', 'boolean', 'code', 'handle'];
+                        if (!basicTypes.includes(typeName.toLowerCase())) {
+                            const allStructs = this.document.get_all_structs();
+                            const allInterfaces = this.document.get_all_interfaces();
+                            const allTypes = this.document.get_all_types();
+                            
+                            const foundStruct = allStructs.find(s => s.name && s.name.getText() === typeName);
+                            const foundInterface = allInterfaces.find(i => i.name && i.name.getText() === typeName);
+                            const foundType = allTypes.find(t => t.name && t.name.getText() === typeName);
+                            
+                            if (!foundStruct && !foundInterface && !foundType) {
+                                this.document.errorCollection.errors.push({
+                                    start: {
+                                        line: take.type.line,
+                                        position: take.type.character
+                                    },
+                                    end: {
+                                        line: take.type.line,
+                                        position: take.type.character + take.type.length
+                                    },
+                                    message: `Parameter type '${typeName}' not found`
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 检查返回值类型
+            this.checkReturnType();
+        }
+
+        /**
+         * 检查函数的返回值类型
+         */
+        private checkReturnType(): void {
+            if (!this.returns) {
+                return; // 如果没有声明返回类型，跳过检查
+            }
+
+            const declaredReturnType = this.returns.getText().toLowerCase();
+            
+            // 检查函数体中是否有return语句
+            const hasReturnStatement = this.checkForReturnStatement(this);
+            
+            // 如果声明了非void返回类型，但函数体中没有return语句
+            if (declaredReturnType !== 'nothing' && !hasReturnStatement) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: `Function '${this.name?.getText() || 'unknown'}' declares return type '${declaredReturnType}' but has no return statement`
+                });
+            }
+
+            // 如果声明了void返回类型，但有return语句
+            if (declaredReturnType === 'nothing' && hasReturnStatement) {
+                this.document.errorCollection.warnings.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: `Function '${this.name?.getText() || 'unknown'}' declares return type 'nothing' but contains return statement`
+                });
+            }
+        }
+
+        /**
+         * 递归检查函数体中是否有return语句
+         */
+        private checkForReturnStatement(node: NodeAst): boolean {
+            // 检查当前节点是否是return语句
+            if (node.start_token && node.start_token.getText().toLowerCase() === 'return') {
+                return true;
+            }
+
+            // 递归检查子节点
+            for (const child of node.children) {
+                if (this.checkForReturnStatement(child)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     
         /**
@@ -522,7 +900,7 @@ export namespace zinc {
             return param_descs;
         }
     }
-    export class Method extends Func {
+    export class Method extends Func implements Check {
         public to_string(): string {
             const visible_string = this.visible ? this.visible.getText() + " " : "";
             const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -531,6 +909,27 @@ export namespace zinc {
             const takes_string = this.takes ? (this.takes.length > 0 ? this.takes.map(take => take.to_string()).join(",") : "nothing") : "nothing ";
             const returns_string = this.returns ? this.returns.getText() : "nothing";
             return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns ${returns_string}`;
+        }
+
+        check(): void {
+            // 先调用父类的check方法（包括返回值检查）
+            super.check();
+
+            // 检查method是否在struct或interface内部
+            if (!this.parent || (!(this.parent instanceof Struct) && !(this.parent instanceof Interface) && 
+                !(this.parent instanceof zinc.Struct) && !(this.parent instanceof zinc.Interface))) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character
+                    },
+                    end: {
+                        line: this.start_token!.line,
+                        position: this.start_token!.character + this.start_token!.length
+                    },
+                    message: "Method must be declared inside a struct or interface"
+                });
+            }
         }
     
         with<T extends Modifier | Takes | Returns>(v: T) {
@@ -589,26 +988,110 @@ export class ZincNode extends NodeAst {
 
 }
 
-export class Library extends NodeAst implements ExprTrict{
-
+/**
+ * 库节点 - 表示 JASS/vJASS 库定义
+ */
+export class Library extends NodeAst implements ExprTrict, Check {
     public is_library_once: boolean = false;
     public name: Token | null = null;
     public initializer: Token | null = null;
     public requires: LibraryRequire[] = [];
 
-    to_string(): string {
-        return `${this.is_library_once ? "library_once" : "library"} ${this.name ? this.name.getText() : "(unkown)"}${this.initializer ? " initializer " + this.initializer.getText() : ""}${this.requires.length > 0 ? " requires " + this.requires.map(x => {
-            return `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unkown)"}`;
-        }).join(", ") : ""}`;
+    /**
+     * 转换为字符串表示
+     * @returns 库的字符串表示
+     */
+    public to_string(): string {
+        const type = this.is_library_once ? "library_once" : "library";
+        const name = this.name ? this.name.getText() : "(unknown)";
+        const init = this.initializer ? ` initializer ${this.initializer.getText()}` : "";
+        const reqs = this.requires.length > 0 ? 
+            ` requires ${this.requires.map(x => 
+                `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unknown)"}`
+            ).join(", ")}` : "";
+        
+        return `${type} ${name}${init}${reqs}`;
+    }
+
+    /**
+     * 实现Check接口 - 验证Library节点
+     */
+    public check(): void {
+        // 检查library名称
+        if (!this.name) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: "Library name is required"
+            });
+        }
+
+        // 检查initializer函数是否存在
+        if (this.initializer) {
+            const initializerName = this.initializer.getText();
+            const allFunctions = this.document.get_all_functions();
+            const foundFunction = allFunctions.find(func => 
+                func.name && func.name.getText() === initializerName
+            );
+            
+            if (!foundFunction) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: this.initializer.line,
+                        position: this.initializer.character
+                    },
+                    end: {
+                        line: this.initializer.line,
+                        position: this.initializer.character + this.initializer.length
+                    },
+                    message: `Initializer function '${initializerName}' not found`
+                });
+            }
+        }
+
+        // 检查requires库是否存在
+        for (const req of this.requires) {
+            if (!req.name) continue;
+            
+            const requiredLibraryName = req.name.getText();
+            const allLibraries = this.document.get_all_libraries();
+            const foundLibrary = allLibraries.find(lib => 
+                lib.name && lib.name.getText() === requiredLibraryName
+            );
+            
+            if (!foundLibrary && !req.is_optional) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: req.name.line,
+                        position: req.name.character
+                    },
+                    end: {
+                        line: req.name.line,
+                        position: req.name.character + req.name.length
+                    },
+                    message: `Required library '${requiredLibraryName}' not found`
+                });
+            }
+        }
     }
 }
-export function parse_library(document: Document, tokens: Token[]) {
+/**
+ * 解析库定义
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的库节点
+ */
+export function parse_library(document: Document, tokens: Token[]): Library {
     const library = new Library(document);
-
-    // const tokens = line_text.tokens();
     let state = 0;
     let index = 0;
-    let optional: LibraryRequire|null = null;
+    let optional: LibraryRequire | null = null;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -860,11 +1343,28 @@ export function parse_library(document: Document, tokens: Token[]) {
     return library;
 }
 
-export class Scope extends NodeAst {
+export class Scope extends NodeAst implements Check {
     public name: Token | null = null;
 
     to_string(): string {
         return `scope ${this.name ? this.name.getText() : "(unkown)"}`;
+    }
+
+    public check(): void {
+        // 检查scope名称
+        if (!this.name) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: "Scope name is required"
+            });
+        }
     }
 }
 export function parse_scope(document: Document, tokens: Token[]) {
@@ -991,13 +1491,346 @@ export function parse_interface(document: Document, tokens: Token[]) {
     return inter;
 }
 
-export class Struct extends Interface {
-
+export class Struct extends Interface implements Check {
 
     to_string(): string {
         return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
     }
 
+
+
+    check(): void {
+        // 检查struct名称
+        if (!this.name) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: `struct name is required`
+            });
+            return;
+        }
+
+        const structName = this.name.getText();
+        
+        // 检查struct名称是否重复
+        const allStructs = this.document.get_all_structs();
+        const duplicateStructs = allStructs.filter(s => 
+            s !== this && 
+            s.name && 
+            s.name.getText() === structName
+        );
+        
+        if (duplicateStructs.length > 0) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.name.line,
+                    position: this.name.character
+                },
+                end: {
+                    line: this.name.line,
+                    position: this.name.character + this.name.length
+                },
+                message: `duplicate struct name '${structName}'`
+            });
+        }
+
+        // 检查extends的接口是否存在
+        if (this.extends && this.extends.length > 0) {
+            for (const extendToken of this.extends) {
+                const interfaceName = extendToken.getText();
+                const interfaces = this.document.get_all_interfaces();
+                const foundInterface = interfaces.find(i => 
+                    i.name && i.name.getText() === interfaceName
+                );
+                
+                if (!foundInterface) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: extendToken.line,
+                            position: extendToken.character
+                        },
+                        end: {
+                            line: extendToken.line,
+                            position: extendToken.character + extendToken.length
+                        },
+                        message: `interface '${interfaceName}' not found`
+                    });
+                }
+            }
+        }
+
+        // 检查struct内部的方法和成员
+        this.checkStructMembers();
+    }
+
+    /**
+     * 检查struct内部成员
+     */
+    private checkStructMembers(): void {
+        const methods: (Method | zinc.Method)[] = [];
+        const members: (Member | zinc.Member)[] = [];
+        
+        // 收集所有方法和成员
+        for (const child of this.children) {
+            if (child instanceof Method || child instanceof zinc.Method) {
+                methods.push(child);
+            } else if (child instanceof Member || child instanceof zinc.Member) {
+                members.push(child);
+            }
+        }
+
+        // 检查方法名称重复
+        const methodNames = new Map<string, (Method | zinc.Method)[]>();
+        for (const method of methods) {
+            if (method.name) {
+                const methodName = method.name.getText();
+                if (!methodNames.has(methodName)) {
+                    methodNames.set(methodName, []);
+                }
+                methodNames.get(methodName)!.push(method);
+            }
+        }
+
+        for (const [methodName, duplicateMethods] of methodNames) {
+            if (duplicateMethods.length > 1) {
+                for (const method of duplicateMethods) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: method.name!.line,
+                            position: method.name!.character
+                        },
+                        end: {
+                            line: method.name!.line,
+                            position: method.name!.character + method.name!.length
+                        },
+                        message: `duplicate method name '${methodName}' in struct`
+                    });
+                }
+            }
+        }
+
+        // 检查成员名称重复
+        const memberNames = new Map<string, (Member | zinc.Member)[]>();
+        for (const member of members) {
+            if (member.name) {
+                const memberName = member.name.getText();
+                if (!memberNames.has(memberName)) {
+                    memberNames.set(memberName, []);
+                }
+                memberNames.get(memberName)!.push(member);
+            }
+        }
+
+        for (const [memberName, duplicateMembers] of memberNames) {
+            if (duplicateMembers.length > 1) {
+                for (const member of duplicateMembers) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: member.name!.line,
+                            position: member.name!.character
+                        },
+                        end: {
+                            line: member.name!.line,
+                            position: member.name!.character + member.name!.length
+                        },
+                        message: `duplicate member name '${memberName}' in struct`
+                    });
+                }
+            }
+        }
+
+        // 检查成员和方法名称冲突
+        for (const [methodName] of methodNames) {
+            if (memberNames.has(methodName)) {
+                const conflictingMembers = memberNames.get(methodName)!;
+                for (const member of conflictingMembers) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: member.name!.line,
+                            position: member.name!.character
+                        },
+                        end: {
+                            line: member.name!.line,
+                            position: member.name!.character + member.name!.length
+                        },
+                        message: `member name '${methodName}' conflicts with method name`
+                    });
+                }
+            }
+        }
+    }
+}
+export class VjassModuleImplementation extends NodeAst {
+    public moduleName: Token | null = null;
+    public optional: Token | null = null;
+}
+
+export class Module extends NodeAst implements Check {
+    public name: Token | null = null;
+    public methods: (Method | zinc.Method)[] = [];
+    public implementations: VjassModuleImplementation[] = [];
+
+    to_string(): string {
+        return `module ${this.name ? this.name.getText() : "(unkown)"}`;
+    }
+
+    check(): void {
+        // 检查module名称
+        if (!this.name) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: `module name is required`
+            });
+            return;
+        }
+
+        const moduleName = this.name.getText();
+        
+        // 检查module名称是否重复
+        const allModules = this.document.get_all_modules();
+        const duplicateModules = allModules.filter(m => 
+            m !== this && 
+            m.name && 
+            m.name.getText() === moduleName
+        );
+        
+        if (duplicateModules.length > 0) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.name.line,
+                    position: this.name.character
+                },
+                end: {
+                    line: this.name.line,
+                    position: this.name.character + this.name.length
+                },
+                message: `duplicate module name '${moduleName}'`
+            });
+        }
+
+        // 检查module内部的方法和实现
+        this.checkModuleMembers();
+    }
+
+    /**
+     * 检查module内部成员
+     */
+    private checkModuleMembers(): void {
+        const methods: (Method | zinc.Method)[] = [];
+        const implementations: VjassModuleImplementation[] = [];
+        
+        // 收集所有方法和实现
+        for (const child of this.children) {
+            if (child instanceof Method || child instanceof zinc.Method) {
+                methods.push(child);
+            } else if (child instanceof VjassModuleImplementation) {
+                implementations.push(child);
+            }
+        }
+
+        // 检查方法名称重复
+        const methodNames = new Map<string, (Method | zinc.Method)[]>();
+        for (const method of methods) {
+            if (method.name) {
+                const methodName = method.name.getText();
+                if (!methodNames.has(methodName)) {
+                    methodNames.set(methodName, []);
+                }
+                methodNames.get(methodName)!.push(method);
+            }
+        }
+
+        for (const [methodName, duplicateMethods] of methodNames) {
+            if (duplicateMethods.length > 1) {
+                for (const method of duplicateMethods) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: method.name!.line,
+                            position: method.name!.character
+                        },
+                        end: {
+                            line: method.name!.line,
+                            position: method.name!.character + method.name!.length
+                        },
+                        message: `duplicate method name '${methodName}' in module`
+                    });
+                }
+            }
+        }
+
+        // 检查module实现
+        this.checkModuleImplementations(implementations);
+    }
+
+    /**
+     * 检查module实现
+     */
+    private checkModuleImplementations(implementations: VjassModuleImplementation[]): void {
+        const implementedModules = new globalThis.Set<string>();
+        
+        for (const implementation of implementations) {
+            if (!implementation.moduleName) {
+                continue;
+            }
+            
+            const moduleName = implementation.moduleName.getText();
+            
+            // 检查是否重复实现同一个module
+            if (implementedModules.has(moduleName)) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: implementation.moduleName.line,
+                        position: implementation.moduleName.character
+                    },
+                    end: {
+                        line: implementation.moduleName.line,
+                        position: implementation.moduleName.character + implementation.moduleName.length
+                    },
+                    message: `module '${moduleName}' is already implemented`
+                });
+                continue;
+            }
+            
+            implementedModules.add(moduleName);
+            
+            // 检查module是否存在（只对非optional的实现进行检查）
+            if (!implementation.optional) {
+                const allModules = this.document.get_all_modules();
+                const foundModule = allModules.find(m => 
+                    m !== this && 
+                    m.name && 
+                    m.name.getText() === moduleName
+                );
+                
+                if (!foundModule) {
+                    this.document.errorCollection.errors.push({
+                        start: {
+                            line: implementation.moduleName.line,
+                            position: implementation.moduleName.character
+                        },
+                        end: {
+                            line: implementation.moduleName.line,
+                            position: implementation.moduleName.character + implementation.moduleName.length
+                        },
+                        message: `module '${moduleName}' not found. Required module implementation failed.`
+                    });
+                }
+            }
+        }
+    }
 }
 export function parse_struct(document: Document, tokens: Token[]) {
     const struct = new Struct(document);
@@ -1072,6 +1905,46 @@ export function parse_struct(document: Document, tokens: Token[]) {
     return struct;
 }
 
+/**
+ * 解析模块定义
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的模块节点
+ */
+export function parse_module(document: Document, tokens: Token[]): Module {
+    const module = new Module(document);
+    
+    let state = 0;
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            if (text == "module") {
+                module.start_token = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (token.is_identifier) {
+                module.name = token;
+                state = 2;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+    
+    return module;
+}
 
 export class Take {
     public type: Token | null = null;
@@ -1592,7 +2465,32 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
 
     return func;
 }
-export class Globals extends NodeAst {
+export class Globals extends NodeAst implements Check {
+    public to_string(): string {
+        return "globals";
+    }
+
+    public check(): void {
+        // Globals块本身不需要特殊检查，主要是检查其子节点
+        // 检查globals块中是否包含非法内容（如function、method等）
+        for (const child of this.children) {
+            if (child instanceof Func || child instanceof Method || 
+                child instanceof If || child instanceof Loop ||
+                child instanceof zinc.Func || child instanceof zinc.Method) {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: child.start_token!.line,
+                        position: child.start_token!.character
+                    },
+                    end: {
+                        line: child.end_token ? child.end_token.line : child.start_token!.line,
+                        position: child.end_token ? child.end_token.character : child.start_token!.character + child.start_token!.length
+                    },
+                    message: `${child.constructor.name} cannot be declared inside globals block (globals can only contain variable declarations and types)`
+                });
+            }
+        }
+    }
 }
 
 export function parse_globals(document: Document, tokens: Token[]) {
@@ -1623,10 +2521,116 @@ export function parse_globals(document: Document, tokens: Token[]) {
     return globals;
 }
 
-export class If extends NodeAst {
+export class If extends NodeAst implements Check {
     expr: Zoom | null = null;
+
+    public check(): void {
+        // 检查if语句是否在function或method内部
+        let hasValidParent = false;
+        let current: NodeAst | null = this.parent;
+        
+        while (current) {
+            if (current instanceof Func || current instanceof Method ||
+                current instanceof zinc.Func || current instanceof zinc.Method) {
+                hasValidParent = true;
+                break;
+            }
+            current = current.parent;
+        }
+        
+        if (!hasValidParent) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: "if statement must be inside a function or method body"
+            });
+        }
+
+        // 检查if条件表达式
+        if (!this.expr) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: "if statement requires a condition expression"
+            });
+        }
+    }
 }
-export class Loop extends NodeAst { }
+export class Loop extends NodeAst implements Check {
+    public check(): void {
+        // 检查loop语句是否在function或method内部
+        let hasValidParent = false;
+        let current: NodeAst | null = this.parent;
+        
+        while (current) {
+            if (current instanceof Func || current instanceof Method ||
+                current instanceof zinc.Func || current instanceof zinc.Method) {
+                hasValidParent = true;
+                break;
+            }
+            current = current.parent;
+        }
+        
+        if (!hasValidParent) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: "loop statement must be inside a function or method body"
+            });
+        }
+
+        // 检查loop是否包含exitwhen语句
+        let hasExitwhen = false;
+        const checkChildren = (parent: NodeAst): void => {
+            for (const child of parent.children) {
+                // 找到exitwhen语句
+                if (child.start_token && child.start_token.getText() === 'exitwhen') {
+                    hasExitwhen = true;
+                    return;
+                }
+                // 递归检查（但不进入嵌套的loop）
+                if (!(child instanceof Loop)) {
+                    checkChildren(child);
+                }
+            }
+        };
+        
+        checkChildren(this);
+        
+        if (!hasExitwhen) {
+            // 添加警告而不是错误
+            this.document.errorCollection.warnings.push({
+                start: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character
+                },
+                end: {
+                    line: this.start_token!.line,
+                    position: this.start_token!.character + this.start_token!.length
+                },
+                message: `loop at line ${this.start_token!.line + 1} does not contain 'exitwhen' statement (potential infinite loop)`
+            });
+        }
+    }
+}
 
 export function parse_if(document: Document, tokens: Token[]) {
     const ifs = new If(document);
@@ -1856,7 +2860,7 @@ export class Member extends GlobalVariable {
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}${size_string}`;
     }
 }
-export class Local extends GlobalVariable {
+export class Local extends GlobalVariable implements Check {
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -1866,6 +2870,60 @@ export class Local extends GlobalVariable {
         const array_string = this.array_token ?  "array " : "";
         const size_string = this.size_expr ? this.size_expr.to_string() : "";
         return `${visible_string}${modifier_string}${qualifier_string}local ${type_string}${array_string}${name_string}${size_string}`;
+    }
+
+    check(): void {
+        const errorToken = this.name ?? this.start_token!;
+        
+        if (!this.parent) {
+            this.document.errorCollection.errors.push({
+                start: {
+                    line: errorToken.line,
+                    position: errorToken.character
+                },
+                end: {
+                    line: errorToken.line,
+                    position: errorToken.character + errorToken.length
+                },
+                message: `local variable must be inside a function or method`
+            });
+        } else {
+            if (this.parent instanceof Func || this.parent instanceof Method) {
+                let temp_previous = this.previous;
+                // local 必须定义在最前面
+                while (temp_previous) {
+                    if (temp_previous instanceof Local || temp_previous instanceof Comment) {
+                        temp_previous = temp_previous.previous;
+                        continue;
+                    } else {
+                        this.document.errorCollection.errors.push({
+                            start: {
+                                line: errorToken.line,
+                                position: errorToken.character
+                            },
+                            end: {
+                                line: errorToken.line,
+                                position: errorToken.character + errorToken.length
+                            },
+                            message: `local variable must be defined at the beginning of the function or method`
+                        });
+                        break;
+                    }
+                }
+            } else {
+                this.document.errorCollection.errors.push({
+                    start: {
+                        line: errorToken.line,
+                        position: errorToken.character
+                    },
+                    end: {
+                        line: errorToken.line,
+                        position: errorToken.character + errorToken.length
+                    },
+                    message: `local variable must be inside a function or method`
+                });
+            }
+        }
     }
 }
 type Zoom = BinaryExpr | UnaryExpr | Value | VariableName | PriorityExpr | FunctionExpr;
@@ -1885,7 +2943,7 @@ export class Expr {
 
 
 }
-export class Value implements ExprTrict {
+export class Value implements ExprTrict, Check {
 
     public value: Token | null = null;
     public convert_to_binary_expr(F: UnaryExpr) {
@@ -1902,6 +2960,19 @@ export class Value implements ExprTrict {
             expr = this.value.getText();
         }
         return expr;
+    }
+
+    public check(): void {
+        // Value类本身不需要特殊检查，字面量值通常是有效的
+        // 可以添加一些基本的字面量格式检查
+        if (this.value) {
+            const text = this.value.getText();
+            // 检查字符串字面量是否正确闭合
+            if (this.value.type === "String" && !text.startsWith('"') && !text.endsWith('"')) {
+                // 这里可以添加错误报告，但Value类没有document引用
+                console.warn(`Invalid string literal format: ${text}`);
+            }
+        }
     }
 }
 
@@ -1924,7 +2995,7 @@ export class BinaryExpr extends Expr implements ExprTrict {
         return `${this.left?.to_string() ?? "unkown"} ${this.op?.getText() ?? "unkown"} ${this.right?.to_string() ?? "unkown"}`;
     }
 }
-export class UnaryExpr extends Expr implements ExprTrict {
+export class UnaryExpr extends Expr implements ExprTrict, Check {
     op: Token | null = null;
     value: Zoom | null = null;
 
@@ -1939,6 +3010,26 @@ export class UnaryExpr extends Expr implements ExprTrict {
     to_string(): string {
         return `${this.op?.getText() ?? "+"}${this.value?.to_string() ?? "unkown"}`;
     }
+
+    public check(): void {
+        // 检查操作符是否存在
+        if (!this.op) {
+            console.warn("Unary expression missing operator");
+            return;
+        }
+
+        // 检查操作数是否存在
+        if (!this.value) {
+            console.warn("Unary expression missing operand");
+        }
+
+        // 检查一元操作符的合理性
+        const opText = this.op.getText();
+        const validUnaryOperators = ['+', '-', 'not', '!'];
+        if (!validUnaryOperators.includes(opText)) {
+            console.warn(`Invalid unary operator: ${opText}`);
+        }
+    }
 }
 export class IndexExpr implements ExprTrict {
     expr: Zoom | null = null;
@@ -1947,7 +3038,7 @@ export class IndexExpr implements ExprTrict {
         return `[${this.expr?.to_string() ?? "∞"}]`;
     }
 }
-export class PriorityExpr extends Expr implements ExprTrict {
+export class PriorityExpr extends Expr implements ExprTrict, Check {
     expr: Zoom | null = null;
 
     to_string(): string {
@@ -1955,6 +3046,13 @@ export class PriorityExpr extends Expr implements ExprTrict {
             return `(${this.expr.to_string()})`;
         }
         return "unkown";
+    }
+
+    public check(): void {
+        // 检查括号内的表达式是否存在
+        if (!this.expr) {
+            console.warn("Priority expression missing inner expression");
+        }
     }
 }
 export class MenberReference {
@@ -2039,7 +3137,7 @@ export class IdIndex implements ExprTrict {
         }
     }
 }
-export class VariableName extends Expr implements ExprTrict {
+export class VariableName extends Expr implements ExprTrict, Check {
     public names: (Id | Caller | IdIndex | null)[] = [];
 
 
@@ -2049,6 +3147,27 @@ export class VariableName extends Expr implements ExprTrict {
             return this.names.map(name => name ? name.to_string() : " ").join(".");
         } else {
             return "unkown";
+        }
+    }
+
+    public check(): void {
+        // 检查变量名是否存在
+        if (this.names.length === 0) {
+            console.warn("Variable name is empty");
+            return;
+        }
+
+        // 检查变量名的每个部分
+        for (const name of this.names) {
+            if (!name) {
+                console.warn("Variable name contains null component");
+            }
+        }
+
+        // 检查变量名格式是否正确
+        const fullName = this.to_string();
+        if (fullName.includes("  ") || fullName.startsWith(".") || fullName.endsWith(".")) {
+            console.warn(`Invalid variable name format: ${fullName}`);
         }
     }
 
@@ -2118,7 +3237,7 @@ export class VariableName extends Expr implements ExprTrict {
     }
 
 }
-export class FunctionExpr implements ExprTrict {
+export class FunctionExpr implements ExprTrict, Check {
     name: VariableName | null = null;
 
     public to_string() {
@@ -2126,6 +3245,20 @@ export class FunctionExpr implements ExprTrict {
             return `function ${this.name.to_string()}`;
         }
         return "function unkown";
+    }
+
+    public check(): void {
+        // 检查函数名是否存在
+        if (!this.name) {
+            console.warn("Function expression missing function name");
+            return;
+        }
+
+        // 检查函数名格式
+        const funcName = this.name.to_string();
+        if (funcName.includes(" ") || funcName.includes("  ") || funcName.startsWith(".") || funcName.endsWith(".")) {
+            console.warn(`Invalid function name format: ${funcName}`);
+        }
     }
 }
 export class Params implements ExprTrict {
@@ -2258,9 +3391,14 @@ export function parse_line_global(document: Document, tokens: Token[]) {
     }
     return global;
 }
-export function parse_line_local(document: Document, tokens: Token[]) {
+/**
+ * 解析本地变量声明
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的本地变量节点
+ */
+export function parse_line_local(document: Document, tokens: Token[]): Local {
     const local = new Local(document);
-
     let index = 0;
     let state = 0;
     let unary_expr: UnaryExpr | null = null;
@@ -2275,7 +3413,8 @@ export function parse_line_local(document: Document, tokens: Token[]) {
             index++;
 
             if (text == "local") {
-                local.start_token = token;
+                // 使用 pushToken 方法设置 start_token
+                local.pushToken(token);
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
@@ -2297,6 +3436,11 @@ export function parse_line_local(document: Document, tokens: Token[]) {
             const result = parse_line_statement(document, tokens, index, false);
             index = result.index;
             local.with(result.expr);
+            
+            // 处理所有 token，使用 pushToken 更新 end_token
+            for (let i = 0; i < index && i < tokens.length; i++) {
+                local.pushToken(tokens[i]);
+            }
             break;
         }
     }
@@ -2317,27 +3461,6 @@ class Expr_ {
     }
 }
 
-/**
- * 
- * @deprecated 直接使用token提供的is_binary_operator方法
- * @param token 
- * @returns 
- */
-const is_op = (token: Token) => {
-    const text = token.getText();
-    return text == "+" || text == "-" || text == "*" || text == "/" || text == "==" || text == ">" || text == "<" || text == ">=" || text == "<=" || text == "!=" || text == "or" || text == "and" || text == "%";
-};
-
-/**
- * 
- * @deprecated 直接使用token提供的is_unary_operator方法
- * @param token 
- * @returns 
- */
-const is_unary_op = (token: Token) => {
-    const text = token.getText();
-    return text == "+" || text == "-" || text == "not" || text == "!";
-};
 
 function parse_line_unary_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
@@ -2354,7 +3477,7 @@ function parse_line_unary_expr(document: Document, tokens: Token[], offset_index
         if (state == 0) {
             index++;
 
-            if (is_unary_op(token)) {
+            if (token.is_unary_operator) {
                 unary_expr = new UnaryExpr();
                 unary_expr.op = token;
 
@@ -2555,11 +3678,6 @@ export function parse_line_expr(document: Document, tokens: Token[], offset_inde
                 document.add_token_error(token, `missing left value`);
                 break;
             }
-            // if (is_op(token)) {
-            // } else {
-            //     document.add_token_error(token, `not jass support operator`);
-            //     break;
-            // }
         }
     }
     if (zoom instanceof Expr_) { // 报错:不完整的表达式
@@ -3087,11 +4205,16 @@ export function parse_line_statement(document: Document, tokens: Token[], offset
     };
 }
 
-export function parse_line_set(document: Document, tokens: Token[]) {
+/**
+ * 解析赋值语句
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的赋值节点
+ */
+export function parse_line_set(document: Document, tokens: Token[]): Set {
     const set = new Set(document);
-
     let state = 0;
-    let index = 0
+    let index = 0;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -3104,7 +4227,8 @@ export function parse_line_set(document: Document, tokens: Token[]) {
             index++;
             if (text == "set") {
                 state = 1;
-                set.start_token = token;
+                // 使用 pushToken 方法设置 start_token
+                set.pushToken(token);
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
@@ -3161,13 +4285,23 @@ export function parse_line_set(document: Document, tokens: Token[]) {
         }
     }
 
+    // 处理所有 token，使用 pushToken 更新 end_token
+    for (let i = 0; i < index && i < tokens.length; i++) {
+        set.pushToken(tokens[i]);
+    }
+
     return set;
 }
-export function parse_line_call(document: Document, tokens: Token[]) {
+/**
+ * 解析函数调用语句
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的调用节点
+ */
+export function parse_line_call(document: Document, tokens: Token[]): Call {
     const call = new Call(document);
-
     let state = 0;
-    let index = 0
+    let index = 0;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -3179,8 +4313,8 @@ export function parse_line_call(document: Document, tokens: Token[]) {
         if (state == 0) {
             index++;
             if (text == "call") {
-                call.start_token = token;
-
+                // 使用 pushToken 方法设置 start_token
+                call.pushToken(token);
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -3190,7 +4324,6 @@ export function parse_line_call(document: Document, tokens: Token[]) {
             const result = parse_line_name_reference(document, tokens, index);
             call.ref = result.expr;
             index = result.index;
-
             state = 2;
         } else if (state == 2) {
             index++;
@@ -3198,13 +4331,23 @@ export function parse_line_call(document: Document, tokens: Token[]) {
         }
     }
 
+    // 处理所有 token，使用 pushToken 更新 end_token
+    for (let i = 0; i < index && i < tokens.length; i++) {
+        call.pushToken(tokens[i]);
+    }
+
     return call;
 }
-export function parse_line_return(document: Document, tokens: Token[]) {
+/**
+ * 解析返回语句
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @returns 解析后的返回节点
+ */
+export function parse_line_return(document: Document, tokens: Token[]): Return {
     const ret = new Return(document);
-
     let state = 0;
-    let index = 0
+    let index = 0;
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -3216,8 +4359,8 @@ export function parse_line_return(document: Document, tokens: Token[]) {
         if (state == 0) {
             index++;
             if (text == "return") {
-                ret.start_token = token;
-
+                // 使用 pushToken 方法设置 start_token
+                ret.pushToken(token);
                 state = 1;
             } else {
                 document.add_token_error(token, `error token '${text}'`);
@@ -3227,12 +4370,16 @@ export function parse_line_return(document: Document, tokens: Token[]) {
             const result = parse_line_expr(document, tokens, index);
             ret.expr = result.expr;
             index = result.index;
-
             state = 2;
         } else if (state == 2) {
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
+    }
+
+    // 处理所有 token，使用 pushToken 更新 end_token
+    for (let i = 0; i < index && i < tokens.length; i++) {
+        ret.pushToken(tokens[i]);
     }
 
     return ret;
@@ -3432,6 +4579,63 @@ export function parse_line_type(document: Document, tokens: Token[]) {
     return ret;
 }
 
+export class Implement extends NodeAst {
+    public optional: Token | null = null;
+    public moduleName: Token | null = null;
+
+    to_string(): string {
+        const optionalStr = this.optional ? "optional " : "";
+        const moduleStr = this.moduleName ? this.moduleName.getText() : "(unknown)";
+        return `implement ${optionalStr}${moduleStr}`;
+    }
+}
+
+export function parse_line_implement(document: Document, tokens: Token[]): Implement {
+    const implement = new Implement(document);
+    let state = 0;
+    
+    for (let index = 0; index < tokens.length; index++) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            continue;
+        }
+        const text = token.getText();
+
+        if (state == 0) {
+            if (text == "implement") {
+                implement.start_token = token;
+                state = 1;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            if (text == "optional") {
+                implement.optional = token;
+                state = 2;
+            } else if (token.is_identifier) {
+                implement.moduleName = token;
+                state = 3;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            if (token.is_identifier) {
+                implement.moduleName = token;
+                state = 3;
+            } else {
+                document.add_token_error(token, `error token '${text}'`);
+                break;
+            }
+        } else {
+            document.add_token_error(token, `error token '${text}'`);
+        }
+    }
+
+    return implement;
+}
+
 export function parse_line_native(document: Document, tokens: Token[]) {
     return parse_function(document, tokens, "native") as Native;
 }
@@ -3483,11 +4687,19 @@ export function parse_line_member(document: Document, tokens: Token[]) {
 
 export class Other extends NodeAst { }
 
-export function parse_line_end_tag(document: Document, tokens: Token[], object: NodeAst, end_tag: string) {
-    let token: Token|null = null;
-
+/**
+ * 解析结束标签
+ * @param document 文档实例
+ * @param tokens Token 数组
+ * @param object 目标 AST 节点
+ * @param end_tag 结束标签名称
+ * @returns 解析的结束标签 Token
+ */
+export function parse_line_end_tag(document: Document, tokens: Token[], object: NodeAst, end_tag: string): Token | null {
+    let endTagToken: Token | null = null;
     let state = 0;
-    let index = 0
+    let index = 0;
+    
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_comment || token.is_block_comment) {
@@ -3500,9 +4712,11 @@ export function parse_line_end_tag(document: Document, tokens: Token[], object: 
             index++;
             if (text == end_tag) {
                 state = 1;
-                object.end_token = token;
-
+                endTagToken = token;
+                // 设置 end_tag 用于闭合检查
                 object.end_tag = token;
+                // 使用 pushToken 方法更新 end_token
+                object.pushToken(token);
             } else {
                 document.add_token_error(token, `missing end tag keyword '${end_tag}'`);
                 break;
@@ -3511,199 +4725,20 @@ export function parse_line_end_tag(document: Document, tokens: Token[], object: 
             index++;
             document.add_token_error(token, `error token '${text}'`);
         }
-
     }
 
-    return token;
+    return endTagToken;
 }
-/*
-export function parse_node(document: Document) {
-    // @ts-ignore
-    const root_node = document.root_node;
-    if (!root_node) {
-        return;
-    }
-    const nodes = root_node.children;
-
-    const for_node = (node: Node) => {
-
-        // 解析头
-        if (node.type == "library") {
-            const library = parse_library(document, node.start_line!);
-            library.end_tag = parse_line_end_tag(document, node.end_line, library, "endlibrary");
-
-            node.data = library;
-        }
-        else if (node.type == "scope") {
-            const scope = parse_scope(document, node.start_line!);
-            scope.end_tag = parse_line_end_tag(document, node.end_line, scope, "endscope");
-            node.data = scope;
-        }
-        else if (node.type == "interface") {
-            const inter = parse_interface(document, node.start_line!);
-            inter.end_tag = parse_line_end_tag(document, node.end_line, inter, "endinterface");
-            node.data = inter;
-        }
-        else if (node.type == "struct") {
-            const struct = parse_struct(document, node.start_line!);
-            struct.end_tag = parse_line_end_tag(document, node.end_line, struct, "endstruct");
-            node.data = struct;
-        }
-        else if (node.type == "method") {
-            const method = parse_method(document, node.start_line!); // ok
-            method.end_tag = parse_line_end_tag(document, node.end_line, method, "endmethod");
-            node.data = method;
-        }
-        else if (node.type == "func") {
-            const func = parse_function(document, node.start_line!); // ok
-            func.end_tag = parse_line_end_tag(document, node.end_line, func, "endfunction");
-            node.data = func;
-        } else if (node.type == "globals") {
-            const globals = parse_globals(document, node.start_line!); // ok
-            globals.end_tag = parse_line_end_tag(document, node.end_line, globals, "endglobals");
-            node.data = globals;
-        } else if (node.type == "if") {
-            const ifs = parse_if(document, node.start_line!);
-            ifs.end_tag = parse_line_end_tag(document, node.end_line, ifs, "endif");
-            node.data = ifs;
-        } else if (node.type == "loop") {
-            const loop = parse_loop(document, node.start_line!);
-            loop.end_tag = parse_line_end_tag(document, node.end_line, loop, "endloop");
-            node.data = loop;
-        }
-
-        node.body.forEach(value => {
-            if (value.type == "empty") {
-                ;;
-            } else if (value.type == "comment") {
-                const comment = parse_line_comment(document, value.line);
-
-                node.body_datas.push(comment);
-            } else if (value.type == "local") {
-                const local = parse_line_local(document, value.line);
-
-                node.body_datas.push(local);
-            } else if (value.type == "set") {
-                const set = parse_line_set(document, value.line);
-
-                node.body_datas.push(set);
-            } else if (value.type == "call") {
-                const call = parse_line_call(document, value.line);
-
-                node.body_datas.push(call);
-            } else if (value.type == "return") {
-                const ret = parse_line_return(document, value.line);
-
-                node.body_datas.push(ret);
-            } else if (value.type == "native") {
-                const native = parse_line_native(document, value.line);
-
-                node.body_datas.push(native);
-            } else if (value.type == "method") {
-                const method = parse_line_method(document, value.line);
-
-                node.body_datas.push(method);
-            } else if (value.type == "member") {
-                const member = parse_line_member(document, value.line);
-
-                node.body_datas.push(member);
-            } else if (value.type == "exitwhen") {
-                const exitwhen = parse_line_exitwhen(document, value.line);
-
-                node.body_datas.push(exitwhen);
-            } else if (value.type == "elseif") {
-                const elseif = parse_line_else_if(document, value.line);
-
-                node.body_datas.push(elseif);
-            } else if (value.type == "else") {
-                const el = parse_line_else(document, value.line);
-
-                node.body_datas.push(el);
-            } else if (value.type == "type") {
-                const el = parse_line_type(document, value.line);
-
-                node.body_datas.push(el);
-            } else if (value.type == "other") {
-                const other = new Other(document);
-                const tokens = value.line.tokens();
-                other.start_token = tokens[tokens.length - 1];
-                node.body_datas.push(other);
-            }
-
-        });
-
-        node.children.forEach(child => {
-            for_node(child);
-        });
-    };
-
-    for_node(root_node);
-}
-*/
 //#endregion
 
 //#region 展开
 
-class ExpendLineText {
-    document: Document;
-    line: number;
-    run_text_macro?: RunTextMacro;
-    text_macro?: TextMacro;
-
-    constructor(document: Document, line: number, run_text_macro?: RunTextMacro, text_macro?: TextMacro) {
-        this.document = document;
-        this.line = line;
-        this.run_text_macro = run_text_macro;
-        this.text_macro = text_macro;
-    }
-
-    public text_line(): TextLine {
-        if (this.run_text_macro && this.text_macro) {
-            return this.text_macro.lineAt(this.line, this.run_text_macro.param_values());
-        } else {
-            return this.document.lineAt(this.line);
-        }
-    }
-    public tokens(): Token[] {
-        if (this.run_text_macro && this.text_macro) {
-            return this.text_macro.lineTokens(this.line, this.run_text_macro.param_values());
-        } else {
-            return this.document.lineTokens(this.line);
-        }
-    }
-}
-
-type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | null;
-
-
+type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | "module" | null;
 type DataType = Library | Struct | Interface | Method | Func | Globals | Scope | If | Loop;
 
-
-export class Node {
-    public data: any;
-    public readonly children: (Node)[] = [];
-
-    public type: NodeType;
-    public parent: Node | null = null;
-
-    public body: {
-        type: "local" | "set" | "call" | "return" | "comment" | "empty" | "other" | "member" | "native" | "method" | "exitwhen" | "elseif" | "else" | "type",
-        line: ExpendLineText
-    }[] = [];
-    public start_line: ExpendLineText | null = null;
-    public end_line: ExpendLineText | null = null;
-
-
-
-    constructor(type: NodeType) {
-        this.type = type;
-    }
-
-    pattern: Pair | null = null;
-
-
-}
-
+/**
+ * 节点类型对 - 用于匹配开始和结束模式
+ */
 class Pair {
     type: NodeType;
     start: RegExp;
@@ -3729,6 +4764,7 @@ const structPair = new Pair("struct", new RegExp(/^\s*(?:(?<visible>public|priva
 const methodPair = new Pair("method", new RegExp(/^\s*(?:(?<visible>public|private)\s+)?(?:(?<modifier>static|stub)\s+)?(?:(?<qualifier>constant)\s+)?method\b/), new RegExp(/^\s*endmethod\b/));
 const ifPair = new Pair("if", new RegExp(/^\s*if\b/), new RegExp(/^\s*endif\b/));
 const loopPair = new Pair("loop", new RegExp(/^\s*loop\b/), new RegExp(/^\s*endloop\b/));
+const modulePair = new Pair("module", new RegExp(/^\s*module\b/), new RegExp(/^\s*endmodule\b/));
 
 const localRegExp = /^\s*local\b/;
 const setRegExp = /^\s*set\b/;
@@ -3751,303 +4787,25 @@ const pairs = [
     interfacePair,
     structPair,
     methodPair,
+    modulePair,
     ifPair,
     loopPair,
     globalsPair,
 ];
 const non_method_pairs = pairs.filter(pair => pair.type != "method");
 
-const slice_layer_handle = (document: Document, run_text_macro: RunTextMacro | undefined, macro: TextMacro | undefined, line: number, node_stack: Node[], root_node: Node, in_interface: boolean) => {
 
-    const last_node = () => {
-        return node_stack[node_stack.length - 1];
-    };
-    const text_line = run_text_macro && macro ? macro.lineAt(line, run_text_macro.param_values()) : document.lineAt(line);
-
-    const success_head = () => {
-        const filter_pairs = in_interface ? non_method_pairs : pairs;
-        for (let index = 0; index < filter_pairs.length; index++) {
-            const pair = filter_pairs[index];
-            if (pair.start.test(text_line.text)) {
-                if (pair.type == "interface") {
-                    in_interface = true;
-                }
-                const node = last_node();
-                const new_node = new Node(pair.type);
-                new_node.start_line = new ExpendLineText(document, line, run_text_macro, macro);
-                new_node.pattern = pair;
-                node_stack.push(new_node);
-                if (node) {
-                    new_node.parent = node;
-                    node.children.push(new_node);
-                } else {
-                    new_node.parent = root_node;
-                    root_node.children.push(new_node);
-                }
-                return true;
-            }
-        }
-        return false;
-    };
-    const success_end = () => {
-        const node = last_node();
-        if (node) {
-            if (node.pattern && node.pattern.end.test(text_line.text)) {
-                if (node.type == "interface") {
-                    in_interface = false;
-                }
-                node.end_line = new ExpendLineText(document, line, run_text_macro, macro);
-                node_stack.pop(); // 闭合
-            } else { // 非关键行
-                const e_line = new ExpendLineText(document, line, run_text_macro, macro);
-                if (node.type == "zinc") {
-                    node.body.push({
-                        type: "other",
-                        line: e_line
-                    });
-                } else {
-                    if (nativeRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "native",
-                            line: e_line
-                        });
-                    } else if (localRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "local",
-                            line: e_line
-                        });
-                    } else if (setRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "set",
-                            line: e_line
-                        });
-                    } else if (callRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "call",
-                            line: e_line
-                        });
-                    } else if (returnRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "return",
-                            line: e_line
-                        });
-                    } else if (e_line.tokens().length == 0) {
-                        node.body.push({
-                            type: "empty",
-                            line: e_line
-                        });
-                    } else if (e_line.tokens()[0].is_comment) {
-                        node.body.push({
-                            type: "comment",
-                            line: e_line
-                        });
-                    } else if (methodRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "method",
-                            line: e_line
-                        });
-                    } else if (exitwhenRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "exitwhen",
-                            line: e_line
-                        });
-                    } else if (elseifRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "elseif",
-                            line: e_line
-                        });
-                    } else if (elseRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "else",
-                            line: e_line
-                        });
-                    } else if (typeRegExp.test(text_line.text)) {
-                        node.body.push({
-                            type: "type",
-                            line: e_line
-                        });
-                    } else if (memberRegExp.test(text_line.text)) {
-                        if (node.parent) {
-                            node.body.push({
-                                type: "member",
-                                line: e_line
-                            });
-                        } else {
-                            node.body.push({
-                                type: "other",
-                                line: e_line
-                            });
-                        }
-                    } else {
-                        node.body.push({
-                            type: "other",
-                            line: e_line
-                        });
-                    }
-                }
-            }
-        } else {
-            const e_line = new ExpendLineText(document, line, run_text_macro, macro);
-            if (nativeRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "native",
-                    line: e_line
-                });
-            } else if (localRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "local",
-                    line: e_line
-                });
-            } else if (setRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "set",
-                    line: e_line
-                });
-            } else if (callRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "call",
-                    line: e_line
-                });
-            } else if (returnRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "return",
-                    line: e_line
-                });
-            } else if (e_line.tokens().length == 0) {
-                root_node.body.push({
-                    type: "empty",
-                    line: e_line
-                });
-            } else if (e_line.tokens()[0].is_comment) {
-                root_node.body.push({
-                    type: "comment",
-                    line: e_line
-                });
-            } else if (methodRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "method",
-                    line: e_line
-                });
-            } else if (exitwhenRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "exitwhen",
-                    line: e_line
-                });
-            } else if (elseifRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "elseif",
-                    line: e_line
-                });
-            } else if (elseRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "else",
-                    line: e_line
-                });
-            } else if (typeRegExp.test(text_line.text)) {
-                root_node.body.push({
-                    type: "type",
-                    line: e_line
-                });
-            } else if (memberRegExp.test(text_line.text)) {
-                // root_node.body.push({
-                //     type: "member",
-                //     line: e_line
-                // });
-                root_node.body.push({
-                    type: "other",
-                    line: e_line
-                });
-            } else {
-                root_node.body.push({
-                    type: "other",
-                    line: e_line
-                });
-            }
-
-        }
-        return false;
-    };
-    if (!success_head()) {
-        success_end();
-    }
-
-    return {
-        in_interface
-    };
-}
-export function slice_layer(document: Document) {
-    const node_stack: Node[] = [];
-    const root_node = new Node(null);
-    let in_interface = false;
-    // 遍历行
-    document.loop_uncontain_macro((document, line) => {
-        in_interface = slice_layer_handle(document, undefined, undefined, line, node_stack, root_node, in_interface).in_interface;
-
-    }, (document, run_text_macro, macro, line) => {
-        in_interface = slice_layer_handle(document, run_text_macro, macro, line, node_stack, root_node, in_interface).in_interface;
-    });
-    // @ts-ignore
-    document.root_node = root_node;
-
-}
 
 //#endregion
 
-export function parse(filePath: string, i_content?: string) {
+/**
+ * 解析 JASS/vJASS 文件
+ * @param filePath 文件路径
+ * @param i_content 可选的文件内容，如果不提供则从文件系统读取
+ * @returns 解析后的文档实例
+ */
+export function parse(filePath: string, i_content?: string): Document {
     const content: string = i_content ? i_content : fs.readFileSync(filePath, { encoding: "utf-8" });
     const document = new Document(filePath, content);
-    // tokenize_for_vjass(document);
-
-
-
-    // preprocessing(document);
-
-    // parse_import(document);
-    // parse_textmacro(document);
-    // parse_runtextmacro(document);
-    // find_token_error(document);
-    // Global.set(filePath, document);
-
-
-    // slice_layer(document);
-    // parse_node(document);
-
-    // find_node_error(document);
-
     return document;
 }
-
-if (false) {
-//     parse("a/b", `
-//         function a takes nothing returns nothing
-//          set k = (a.GetRectMinX(r) <= x) and(x <= GetRectMaxX(r)) and(GetRectMinY(r) <= y) and(y <= GetRectMaxY(r)) + -3 * this.name(8 * 9 >= 16 + function aaa.ccc))=
-// call a.c()
-// call a()
-// if 5== a then
-// endif
-//         endfunction 
-//         kkk
-//         `)
-//     // const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-//     const document = Global.get("a/b");
-//     const s = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[0]);
-//     console.log(s, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`), s.to_string());
-//     const c = (<Set>Global.get("a/b")?.root_node?.children[0].body_datas[1]);
-//     // @ts-ignore
-//     console.log(c.ref.params.args[0], document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
-//     const d = (<Return>Global.get("a/b")?.root_node?.children[0].children[0].data);
-//     console.log(d);
-
-//     console.log(d, document?.token_errors.map(err => `${err.token.line} ${err.token.start.position} ${err.message}`));
-//     // @ts-ignore
-//     // const expr = parse_line_expr(document, document?.lineTokens(4), 0);
-//     // console.log(expr.expr.left.value.getText(), expr.expr.op.getText(),expr.expr.right.value.getText());
-//     // console.log(document?.token_errors.map(err => err.message));
-//     // @ts-ignore
-//     // console.log(expr.expr);
-//     // console.log(.ref?.to_string());
-//     console.log(document?.program);
-    
-
-}
-

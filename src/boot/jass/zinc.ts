@@ -1,6 +1,15 @@
 import { Document, Token } from "./tokenizer-common";
-import { LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, zinc } from "./parser-vjass";
+import { Library, LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, VariableName as ParserVariableName, zinc } from "./parser-vjass";
 import { Position, Range } from "./loc";
+
+/**
+ * Convert parser-vjass VariableName to parser-vjass VariableName
+ */
+function convertVariableName(parserVarName: ParserVariableName): ParserVariableName {
+    // For now, we'll just return the same object
+    // This might need more sophisticated logic depending on the use case
+    return parserVarName;
+}
 
 
 
@@ -405,7 +414,7 @@ export function parse_segement_call(document: Document, tokens: Token[]) {
 
         if (state == 0) {
             const result = parse_line_name_reference(document, tokens, index);
-            call.ref = result.expr;
+            call.ref = convertVariableName(result.expr);
             index = result.index;
 
             state = 1;
@@ -433,7 +442,7 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
 
         if (state == 1) { // name
             const result = parse_line_name_reference(document, tokens, index);
-            set.name = result.expr;
+            set.name = convertVariableName(result.expr);
             index = result.index;
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -747,7 +756,7 @@ export function parse_segement_member(document: Document, tokens: Token[], paren
 }
 
 export function parse_block_library(document: Document, tokens: Token[]) {
-    const library = new zinc.Library(document);
+    const library = new Library(document);
 
     // const tokens = line_text.tokens();
     let state = 0;
@@ -2235,7 +2244,7 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                 parent_node.add_node(node);
                 node.end_token = object.end_token;
             } else if (object.type == "member") {
-                const node = parse_segement_member(document, object.tokens, parent_node instanceof ZincBlock && (parent_node.type == "struct" || parent_node.type == "interface"));
+                const node = parse_segement_member(document, object.tokens, false);
                 if (Array.isArray(node)) {
                     node.forEach(x => {
                         parent_node.add_node(x);
