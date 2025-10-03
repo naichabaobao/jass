@@ -1,30 +1,53 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as vscode from 'vscode';
 
 const v8 = require('v8');
 
-import * as vscode from 'vscode';
 import { Options } from './options';
 import { GlobalContext, parse } from '../jass/parser-vjass';
-
-// import { Subject } from "../../extern/rxjs/index.js";
 import { debounceTime, Subject } from '../../extern/rxjs';
 import { find_error } from './diagnostic-provider';
-import { change_document_item, delete_document_item, init_document_item, rename_document_item } from './completion-provider-ex';
-import { change_document_hover, delete_document_hover, init_document_hover, rename_document_hover } from './hover-provider-ex';
-import { change_document_difinition, delete_document_difinition, init_document_difinition, rename_document_difinition } from './definition-provider-ex';
-import { change_type_hierarchy, delete_type_hierarchy, init_type_hierarchy, rename_type_hierarchy } from './type-hierarchy-provider';
-// import { WaveProvider } from './wave-provider';
+import { 
+	changeDocumentItem, 
+	deleteDocumentItem, 
+	initDocumentItem, 
+	renameDocumentItem 
+} from './completion-provider-ex';
+import { 
+	change_document_hover, 
+	delete_document_hover, 
+	init_document_hover, 
+	rename_document_hover 
+} from './hover-provider-ex';
+import { 
+	change_document_difinition, 
+	delete_document_difinition, 
+	init_document_difinition, 
+	rename_document_difinition 
+} from './definition-provider-ex';
+import { 
+	change_type_hierarchy, 
+	delete_type_hierarchy, 
+	init_type_hierarchy, 
+	rename_type_hierarchy 
+} from './type-hierarchy-provider';
 
-// Globals provider class
-class GlobalsProvider {
-	private globals: Map<string, any> = new Map();
+/**
+ * 全局上下文提供者类
+ * 管理全局变量和程序上下文
+ */
+class GlobalContextProvider {
+	private readonly globals: Map<string, any> = new Map();
 
 	constructor() {
 		this.initializeGlobals();
 	}
 
-	private initializeGlobals() {
+	/**
+	 * 初始化全局上下文
+	 */
+	private initializeGlobals(): void {
 		GlobalContext.keys.forEach(key => {
 			const program = GlobalContext.get(key);
 			if (program) {
@@ -33,229 +56,475 @@ class GlobalsProvider {
 		});
 	}
 
-	public getGlobal(key: string) {
+	/**
+	 * 获取全局变量
+	 */
+	public getGlobal(key: string): any {
 		return this.globals.get(key);
 	}
 
-	public getAllGlobals() {
+	/**
+	 * 获取所有全局变量
+	 */
+	public getAllGlobals(): any[] {
 		return Array.from(this.globals.values());
 	}
 
-	public addGlobal(key: string, value: any) {
+	/**
+	 * 添加全局变量
+	 */
+	public addGlobal(key: string, value: any): void {
 		this.globals.set(key, value);
 	}
 
-	public removeGlobal(key: string) {
+	/**
+	 * 移除全局变量
+	 */
+	public removeGlobal(key: string): void {
 		this.globals.delete(key);
 	}
 
-	public clearGlobals() {
+	/**
+	 * 清空所有全局变量
+	 */
+	public clearGlobals(): void {
 		this.globals.clear();
 	}
 }
 
-// Create a singleton instance
-export const globalsProvider = new GlobalsProvider();
+// 创建单例实例
+export const globalContextProvider = new GlobalContextProvider();
 
-export function jass_config_json_path() {
-	const jass_config_json_path = path.resolve(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "/", "jass.config.json");
-
-	return jass_config_json_path;
+/**
+ * 获取 JASS 配置文件路径
+ */
+export function getJassConfigPath(): string {
+	const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "/";
+	return path.resolve(workspacePath, "jass.config.json");
 }
-export function jass_config_json_excludes() {
-	const config_path = jass_config_json_path();
-	const exclude_paths: string[] = [];
-	if (fs.existsSync(config_path)) {
+
+/**
+ * 获取排除路径列表
+ */
+export function getExcludePaths(): string[] {
+	const configPath = getJassConfigPath();
+	const excludePaths: string[] = [];
+	
+	if (fs.existsSync(configPath)) {
 		try {
-			const config_content = fs.readFileSync(config_path, { encoding: "utf-8" });
-			const config_json = JSON.parse(config_content);
-			const excludes = config_json["excludes"];
+			const configContent = fs.readFileSync(configPath, { encoding: "utf-8" });
+			const configJson = JSON.parse(configContent);
+			const excludes = configJson["excludes"];
+			
 			if (Array.isArray(excludes)) {
-				excludes.forEach(exclude_path => {
-					if (typeof exclude_path == "string") {
-						if (path.isAbsolute(exclude_path)) {
-							exclude_paths.push(exclude_path);
+				excludes.forEach((excludePath: any) => {
+					if (typeof excludePath === "string") {
+						if (path.isAbsolute(excludePath)) {
+							excludePaths.push(excludePath);
 						} else {
-							exclude_paths.push(path.resolve(path.parse(config_path).dir, exclude_path));
+							excludePaths.push(path.resolve(path.parse(configPath).dir, excludePath));
 						}
 					}
 				});
 			}
 		} catch (error) {
-
+			console.warn(`Failed to parse jass.config.json: ${error}`);
 		}
 	}
 
-	return exclude_paths;
+	return excludePaths;
 }
-let excludes = jass_config_json_excludes();
-vscode.workspace.onDidChangeConfiguration((event) => {
-	excludes = jass_config_json_excludes();
 
-	excludes.forEach(file_path => {
-		GlobalContext.delete(file_path);
+// 全局排除路径缓存
+let globalExcludePaths = getExcludePaths();
+
+// 监听配置变化
+vscode.workspace.onDidChangeConfiguration(() => {
+	globalExcludePaths = getExcludePaths();
+	
+	// 从全局上下文中删除排除的文件
+	globalExcludePaths.forEach(filePath => {
+		GlobalContext.delete(filePath);
 	});
 });
 
 
-function is_not_in_excludes(p: string) {
-	const compare_path = (p1: string, p2: string) => {
-		const p1_parsed = path.parse(p1);
-		const p2_parsed = path.parse(p2);
-
-		return p1_parsed.dir == p2_parsed.dir && p1_parsed.base == p2_parsed.base;
-	};
-	const match = (p: string) => {
-		return excludes.findIndex(e => {
-			return compare_path(e, p);
-		}) == -1;
+/**
+ * 检查路径是否不在排除列表中
+ */
+function isNotInExcludes(filePath: string): boolean {
+	const comparePath = (path1: string, path2: string): boolean => {
+		const parsed1 = path.parse(path1);
+		const parsed2 = path.parse(path2);
+		return parsed1.dir === parsed2.dir && parsed1.base === parsed2.base;
 	};
 
-	return match(p);
+	return globalExcludePaths.findIndex(excludePath => 
+		comparePath(excludePath, filePath)
+	) === -1;
 }
 
-export function include_paths() {
-	const work_paths = Options.workspaces.filter(p => {
-		return is_not_in_excludes(p);
-	});
-	return work_paths;
+/**
+ * 获取包含路径列表（排除被排除的路径）
+ */
+export function getIncludePaths(): string[] {
+	return Options.workspaces.filter(workspacePath => 
+		isNotInExcludes(workspacePath)
+	);
 }
 
 
-class Payload {
-	public readonly key: string;
-	public readonly content: string;
+/**
+ * 文档更新载荷
+ */
+interface DocumentUpdatePayload {
+	key: string;
+	content: string;
+}
 
-	constructor(key: string, content: string) {
-		this.key = key;
-		this.content = content;
+/**
+ * 文件类型枚举
+ */
+enum FileType {
+	STATIC = 'static',
+	WORKSPACE = 'workspace'
+}
+
+/**
+ * 文件状态管理类
+ */
+class FileStatusManager {
+	private readonly staticFiles: Set<string> = new Set();
+	private readonly workspaceFiles: Set<string> = new Set();
+
+	/**
+	 * 标记文件为静态文件（不可变）
+	 */
+	public markAsStatic(filePath: string): void {
+		this.staticFiles.add(filePath);
+	}
+
+	/**
+	 * 标记文件为工作区文件（可变）
+	 */
+	public markAsWorkspace(filePath: string): void {
+		this.workspaceFiles.add(filePath);
+	}
+
+	/**
+	 * 检查文件是否为静态文件
+	 */
+	public isStaticFile(filePath: string): boolean {
+		return this.staticFiles.has(filePath);
+	}
+
+	/**
+	 * 检查文件是否为工作区文件
+	 */
+	public isWorkspaceFile(filePath: string): boolean {
+		return this.workspaceFiles.has(filePath);
+	}
+
+	/**
+	 * 获取文件类型
+	 */
+	public getFileType(filePath: string): FileType | null {
+		if (this.isStaticFile(filePath)) {
+			return FileType.STATIC;
+		}
+		if (this.isWorkspaceFile(filePath)) {
+			return FileType.WORKSPACE;
+		}
+		return null;
+	}
+
+	/**
+	 * 移除文件状态
+	 */
+	public removeFile(filePath: string): void {
+		this.staticFiles.delete(filePath);
+		this.workspaceFiles.delete(filePath);
 	}
 }
 
-// 保存着rxjs对象，每个文档都会独立创建
-const update_map = new Map<string, Subject<{key: string, content: string}>>();
+// 文件状态管理器实例
+const fileStatusManager = new FileStatusManager();
 
-// 保存wave-provider实例
-// let waveProvider: WaveProvider | undefined;
+// 文档更新订阅映射，每个文档都有独立的 RxJS Subject
+const documentUpdateMap = new Map<string, Subject<DocumentUpdatePayload>>();
 
-// 设置wave-provider实例
-// export function setWaveProvider(provider: WaveProvider) {
-// 	waveProvider = provider;
-// }
+/**
+ * 计算防抖延迟时间
+ */
+function calculateDebounceDelay(lineCount: number): number {
+	if (lineCount <= 100) return 100;
+	if (lineCount <= 1000) return 300;
+	if (lineCount <= 6000) return 1000;
+	return 2000;
+}
 
+/**
+ * 处理文档更新
+ */
+function handleDocumentUpdate(filePath: string, content: string, document: vscode.TextDocument): void {
+	// 检查文件类型，静态文件不进行更新
+	if (fileStatusManager.isStaticFile(filePath)) {
+		console.log(`📁 Static file ${path.basename(filePath)} - skipping update`);
+		return;
+	}
+
+	console.log(`🔄 Updating workspace file: ${path.basename(filePath)}`);
+	
+	// 解析文档内容
+	parse(filePath, content);
+
+	// 查找错误
+	find_error(document);
+
+	// 更新各种提供者
+	changeDocumentItem(document);
+	change_document_hover(document);
+	change_document_difinition(document);
+	change_type_hierarchy(filePath);
+}
+
+// 监听文档内容变化
 vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
-	if (!update_map.has(event.document.uri.fsPath)) {
-		const subject = new Subject<{key: string, content: string}>();
-		const delay_time = event.document.lineCount <= 100 ? 100 : event.document.lineCount <= 1000 ? 300 : event.document.lineCount <= 6000 ? 1000 : 2000;
-		subject.pipe(debounceTime(delay_time)).subscribe((data: {key: string, content: string}) => {
-			// 改变后逻辑
-			parse(data.key, data.content);
-
-			find_error(event.document);
-
-			change_document_item(event.document);
-			change_document_hover(event.document);
-			change_document_difinition(event.document);
-			change_type_hierarchy(event.document.uri.fsPath);
-
-			// 更新宏信息
-			// if (waveProvider) {
-			// 	waveProvider.updateMacros(event.document);
-			// }
+	const filePath = event.document.uri.fsPath;
+	
+	// 如果文档还没有订阅，创建一个新的 Subject
+	if (!documentUpdateMap.has(filePath)) {
+		const subject = new Subject<DocumentUpdatePayload>();
+		const delayTime = calculateDebounceDelay(event.document.lineCount);
+		
+		subject.pipe(debounceTime(delayTime)).subscribe((data: DocumentUpdatePayload) => {
+			handleDocumentUpdate(data.key, data.content, event.document);
 		});
-		update_map.set(event.document.uri.fsPath, subject);
+		
+		documentUpdateMap.set(filePath, subject);
 	}
-	update_map.get(event.document.uri.fsPath)?.next({key: event.document.uri.fsPath, content: event.document.getText()});
+	
+	// 发送更新事件
+	documentUpdateMap.get(filePath)?.next({
+		key: filePath,
+		content: event.document.getText()
+	});
 });
 
+// 监听文档保存事件
 vscode.workspace.onDidSaveTextDocument((document) => {
-	if (is_not_in_excludes(document.uri.fsPath)) {
-		// parse(document.uri.fsPath, document.getText());
+	const filePath = document.uri.fsPath;
+	if (isNotInExcludes(filePath)) {
+		console.log(`💾 Document saved: ${path.basename(filePath)}`);
+		// 保存事件可以在这里添加额外逻辑
 	}
 });
 
+// 监听文件删除事件
 vscode.workspace.onDidDeleteFiles((event) => {
 	event.files.forEach(uri => {
-		GlobalContext.delete(uri.fsPath);
-		delete_document_item(uri.fsPath);
-		delete_document_hover(uri.fsPath);
-		delete_document_difinition(uri.fsPath);
-		delete_type_hierarchy(uri.fsPath);
+		const filePath = uri.fsPath;
+		console.log(`🗑️ File deleted: ${path.basename(filePath)}`);
+		
+		// 从全局上下文删除
+		GlobalContext.delete(filePath);
+		
+		// 删除各种提供者
+		deleteDocumentItem(filePath);
+		delete_document_hover(filePath);
+		delete_document_difinition(filePath);
+		delete_type_hierarchy(filePath);
 
-		update_map.get(uri.fsPath)?.complete();
-		update_map.delete(uri.fsPath);
+		// 清理文件状态
+		fileStatusManager.removeFile(filePath);
+
+		// 完成并删除订阅
+		documentUpdateMap.get(filePath)?.complete();
+		documentUpdateMap.delete(filePath);
 	});
 });
 
+// 监听文件重命名事件
 vscode.workspace.onDidRenameFiles((event) => {
 	event.files.forEach((uri) => {
-		GlobalContext.delete(uri.oldUri.fsPath);
-		parse(uri.newUri.fsPath);
+		const oldPath = uri.oldUri.fsPath;
+		const newPath = uri.newUri.fsPath;
+		
+		console.log(`📝 File renamed: ${path.basename(oldPath)} → ${path.basename(newPath)}`);
+		
+		// 从全局上下文删除旧路径
+		GlobalContext.delete(oldPath);
+		
+		// 解析新路径
+		parse(newPath);
 
-		rename_document_item(uri.oldUri.fsPath, uri.newUri.fsPath);
-		rename_document_hover(uri.oldUri.fsPath, uri.newUri.fsPath);
-		rename_document_difinition(uri.oldUri.fsPath, uri.newUri.fsPath);
-		rename_type_hierarchy(uri.oldUri.fsPath, uri.newUri.fsPath);
+		// 重命名各种提供者
+		renameDocumentItem(oldPath, newPath);
+		rename_document_hover(oldPath, newPath);
+		rename_document_difinition(oldPath, newPath);
+		rename_type_hierarchy(oldPath, newPath);
 
-		if (update_map.has(uri.oldUri.fsPath)) {
-			update_map.set(uri.newUri.fsPath, update_map.get(uri.oldUri.fsPath)!);
-			update_map.delete(uri.oldUri.fsPath);
+		// 更新文件状态
+		const fileType = fileStatusManager.getFileType(oldPath);
+		fileStatusManager.removeFile(oldPath);
+		if (fileType === FileType.STATIC) {
+			fileStatusManager.markAsStatic(newPath);
+		} else if (fileType === FileType.WORKSPACE) {
+			fileStatusManager.markAsWorkspace(newPath);
+		}
+
+		// 更新订阅映射
+		if (documentUpdateMap.has(oldPath)) {
+			documentUpdateMap.set(newPath, documentUpdateMap.get(oldPath)!);
+			documentUpdateMap.delete(oldPath);
 		}
 	});
 });
 
-vscode.workspace.onDidOpenTextDocument(event => {
-
+// 监听文档打开事件
+vscode.workspace.onDidOpenTextDocument((document) => {
+	const filePath = document.uri.fsPath;
+	console.log(`📖 Document opened: ${path.basename(filePath)}`);
+	// 可以在这里添加文档打开时的逻辑
 });
 
-(() => {
-	const heapStatistics = v8.getHeapStatistics();
-	console.log(`Total available heap size: ${heapStatistics.total_available_size} bytes`);
-	console.log(`Total heap size: ${heapStatistics.total_heap_size} bytes`);
-	console.log(`Heap size used by live objects: ${heapStatistics.used_heap_size} bytes`);
-	console.log(`Heap size limit: ${heapStatistics.heap_size_limit} bytes`);
-	console.log(`================================================`);
-	let used_size = heapStatistics.used_heap_size;
+/**
+ * 格式化字节数为可读格式
+ */
+function formatBytes(bytes: number): string {
+	const units = ['B', 'KB', 'MB', 'GB'];
+	let size = bytes;
+	let unitIndex = 0;
 	
-	console.time("init all file parse");
-	Options.staticPaths.forEach(file_path => {
-		const p = path.parse(file_path);
-		if (p.ext == ".j" || p.ext == ".jass" || p.ext == ".ai") {
-			parse(file_path);
-			init_document_item(file_path);
-			init_document_hover(file_path);
-			init_document_difinition(file_path);
-			init_type_hierarchy(file_path);
+	while (size >= 1024 && unitIndex < units.length - 1) {
+		size /= 1024;
+		unitIndex++;
+	}
+	
+	return `${size.toFixed(2)} ${units[unitIndex]}`;
+}
 
-			// 初始化宏信息
-			// if (waveProvider) {
-			// 	waveProvider.updateMacros(file_path);
-			// }
+/**
+ * 打印内存统计信息
+ */
+function printMemoryStatistics(stage: string): void {
+	const heapStats = v8.getHeapStatistics();
+	
+	console.log(`\n📊 Memory Statistics - ${stage}`);
+	console.log(`┌─────────────────────────────────────────┐`);
+	console.log(`│ Total Available: ${formatBytes(heapStats.total_available_size).padStart(12)} │`);
+	console.log(`│ Total Heap Size: ${formatBytes(heapStats.total_heap_size).padStart(12)} │`);
+	console.log(`│ Used Heap Size:  ${formatBytes(heapStats.used_heap_size).padStart(12)} │`);
+	console.log(`│ Heap Size Limit: ${formatBytes(heapStats.heap_size_limit).padStart(12)} │`);
+	console.log(`└─────────────────────────────────────────┘`);
+}
+
+/**
+ * 检查文件是否为支持的 JASS 文件
+ */
+function isJassFile(filePath: string): boolean {
+	const ext = path.extname(filePath).toLowerCase();
+	return ['.j', '.jass', '.ai'].includes(ext);
+}
+
+/**
+ * 初始化静态文件（不可变，只编译一次）
+ */
+function initializeStaticFiles(): void {
+	console.log(`\n🏗️  Initializing Static Files (Immutable)`);
+	console.log(`┌─────────────────────────────────────────┐`);
+	
+	let staticFileCount = 0;
+	
+	Options.staticPaths.forEach(filePath => {
+		if (isJassFile(filePath)) {
+			console.log(`│ 📁 ${path.basename(filePath).padEnd(35)} │`);
+			
+			// 解析文件
+			parse(filePath);
+			
+			// 初始化各种提供者
+			initDocumentItem(filePath);
+			init_document_hover(filePath);
+			init_document_difinition(filePath);
+			init_type_hierarchy(filePath);
+			
+			// 标记为静态文件
+			fileStatusManager.markAsStatic(filePath);
+			
+			staticFileCount++;
 		}
 	});
+	
+	console.log(`└─────────────────────────────────────────┘`);
+	console.log(`✅ Static files initialized: ${staticFileCount}`);
+}
 
-	include_paths().forEach(file_path => {
-		const p = path.parse(file_path);
-		if (p.ext == ".j" || p.ext == ".jass" || p.ext == ".ai") {
-			parse(file_path);
-
-			find_error(file_path);
-
-			init_document_item(file_path);
-			init_document_hover(file_path);
-			init_document_difinition(file_path);
-			init_type_hierarchy(file_path);
-
-			// 初始化宏信息
-			// if (waveProvider) {
-			// 	waveProvider.updateMacros(file_path);
-			// }
+/**
+ * 初始化工作区文件（可变，改变后更新）
+ */
+function initializeWorkspaceFiles(): void {
+	console.log(`\n🔄 Initializing Workspace Files (Mutable)`);
+	console.log(`┌─────────────────────────────────────────┐`);
+	
+	let workspaceFileCount = 0;
+	
+	getIncludePaths().forEach(filePath => {
+		if (isJassFile(filePath)) {
+			console.log(`│ 📝 ${path.basename(filePath).padEnd(35)} │`);
+			
+			// 解析文件
+			parse(filePath);
+			
+			// 查找错误
+			find_error(filePath);
+			
+			// 初始化各种提供者
+			initDocumentItem(filePath);
+			init_document_hover(filePath);
+			init_document_difinition(filePath);
+			init_type_hierarchy(filePath);
+			
+			// 标记为工作区文件
+			fileStatusManager.markAsWorkspace(filePath);
+			
+			workspaceFileCount++;
 		}
 	});
-	console.timeEnd("init all file parse");
 	
-	console.log(`占用内存: ${(heapStatistics.heap_size_limit - used_size) / 1024 / 1024} kbs`);
-	console.log(`================================================>>>>>>>>>>>>>>>>>`);
-})();
+	console.log(`└─────────────────────────────────────────┘`);
+	console.log(`✅ Workspace files initialized: ${workspaceFileCount}`);
+}
+
+/**
+ * 主初始化函数
+ */
+function initializeApplication(): void {
+	console.log(`\n🚀 JASS Language Server Starting...`);
+	console.log(`═══════════════════════════════════════════`);
+	
+	// 打印初始内存状态
+	printMemoryStatistics("Initial");
+	
+	const startTime = Date.now();
+	
+	// 初始化静态文件
+	initializeStaticFiles();
+	
+	// 初始化工作区文件
+	initializeWorkspaceFiles();
+	
+	const endTime = Date.now();
+	const duration = endTime - startTime;
+	
+	// 打印最终内存状态
+	printMemoryStatistics("After Initialization");
+	
+	console.log(`\n⏱️  Initialization completed in ${duration}ms`);
+	console.log(`═══════════════════════════════════════════`);
+}
+
+// 执行初始化
+initializeApplication();
 
 

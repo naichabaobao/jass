@@ -8,10 +8,185 @@ import * as path from "path";
 import * as fs from "fs";
 
 import * as vscode from "vscode";
-import { Token, tokenize } from "../jass/tokens";
-import { isAiFile, isJFile, isLuaFile, isZincFile } from "../tool";
+import { Caller, GlobalContext, Id, IdIndex } from "../jass/parser-vjass";
+import * as vjass_ast from "../jass/parser-vjass";
+import { ASTVisitor, Document } from "../jass/tokenizer-common";
 import { AllKeywords } from "../jass/keyword";
-import { GlobalContext } from "../jass/parser-vjass";
+import { isJFile, isZincFile, isAiFile, isLuaFile } from "../tool";
+import { Token, tokenize } from "../jass/tokens";
+import { Position } from "../jass/loc";
+import { keyGetter } from "./tool";
+import { nativeToItem, functionToItem, globalVariableToItem, keyworldToItem, typeToItem } from "./complation-item-generator";
+import { Types } from "./types";
+
+
+function getTargetObject(keys: {
+	key: string,
+	type: "func_call"| "id"
+}[], current:Document, position: Position) {
+  const objects:vjass_ast.NodeAst[] = [];
+  keys.forEach((key, index) => {
+    if (index == 0) {
+      if (key.type == "func_call") {
+        objects.push(...GlobalContext.get_natives_by_name(key.key));
+        objects.push(...GlobalContext.get_functions_by_name(key.key));
+      } else if (key.type == "id") {
+        if (key.key == "this" || key.key == "thistype") {
+          current.acceptStruct((struct) => {
+            if (struct.contains(position)) {
+              objects.push(struct);
+            }
+          });
+        } else {
+          objects.push(...GlobalContext.get_structs_by_name(key.key));
+          objects.push(...GlobalContext.get_global_variables_by_name(key.key));
+        }
+      }
+    } else {
+      // 从objects中赛选
+      objects.filter(object => {
+        if (key.type == "func_call") {
+          return object instanceof vjass_ast.Func || object instanceof vjass_ast.Native;
+        } else if (key.type == "id") {
+          return object instanceof vjass_ast.GlobalVariable || object instanceof vjass_ast.Struct;
+        }
+      });
+    }
+  });
+  return objects;
+}
+
+export class StructCompletionItemProvider implements vscode.CompletionItemProvider {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    const vjassDocument = GlobalContext.get(document.uri.fsPath);
+    
+    if (vjassDocument) {
+      const items: vscode.CompletionItem[] = [];
+      const program = vjassDocument.program;
+      const pos = new Position(position.line, position.character);
+      // 使用新的 lambda 方法简化代码
+      vjassDocument.acceptStruct((structNode) => {
+        if (structNode.contains(pos)) {
+          
+          // 使用 acceptMethodFromNode 从 structNode 开始访问其子节点中的方法
+          vjassDocument.acceptMethodFromNode(structNode, (methodNode) => {
+            if (methodNode.contains(pos)) {
+              // 使用 acceptLocalFromNode 从 methodNode 开始访问其子节点中的局部变量
+              vjassDocument.acceptLocalFromNode(methodNode, (localNode) => {
+                if (localNode.start.line == pos.line) { // 同一行
+                  const keys = keyGetter(document.getText(new vscode.Range(position.line, 0, position.line, position.character)));
+                  // local 声明会出现的关键字
+                  ["array", "function", "false", "true", "null", "not", "or", "and", "local"].forEach(keyworld => {
+                    items.push(keyworldToItem(keyworld));
+                  });
+                  if (localNode.type) {
+                    // 添加匹配类型的原生函数
+                    GlobalContext.get_natives_by_type(localNode.type.getText()).forEach(native => {
+                      items.push(nativeToItem(native));
+                    });
+                    GlobalContext.get_funcs_by_type(localNode.type.getText()).forEach(func => {
+                      items.push(functionToItem(func));
+                    });
+                    GlobalContext.get_global_variables_by_type(localNode.type.getText()).forEach(globalVariable => {
+                      items.push(globalVariableToItem(globalVariable));
+                    });
+                  } else {
+                    // 添加无返回值的原生函数
+                    GlobalContext.get_natives_by_type("nothing").forEach(native => {
+                      items.push(nativeToItem(native));
+                    });
+                    GlobalContext.get_funcs_by_type("nothing").forEach(func => {
+                      items.push(functionToItem(func));
+                    });
+                    GlobalContext.get_global_variables_by_type("nothing").forEach(globalVariable => {
+                      items.push(globalVariableToItem(globalVariable));
+                    });
+                    Types.forEach(type => {
+                      items.push(keyworldToItem(type));
+                    });
+
+                  }
+                }
+              });
+              vjassDocument.acceptSetFromNode(methodNode, (setNode) => {
+                if (setNode.start && setNode.start.line == pos.line) {
+                  // 在 Set 语句中，可以添加相关的关键字和操作符
+                  ["set", "function", "false", "true", "null", "not", "or", "and", "this"].forEach(keyword => {
+                    items.push(keyworldToItem(keyword));
+                  });
+                  const keys = keyGetter(document.getText(new vscode.Range(position.line, 0, position.line, position.character)));
+                  // 添加相关的全局变量和函数
+                  // set name = init
+                  // 判断是不是  set到= 之间, 如果没有=，则视为name，如有有=，则判断是不是在set跟=之间，否者视为init
+                  const text = document.lineAt(position.line).text;
+                  const setIndex = text.indexOf("set");
+                  const equalIndex = text.indexOf("=");
+                  if (equalIndex != -1) {
+                    if (setIndex != -1) {
+                      if ((position.character > setIndex && position.character <= equalIndex)) {
+                        if (keys.length <= 1) {
+                          // 非constant 的 global_avarible
+                          GlobalContext.get_global_variables().forEach(globalVariable => {
+                            if (!globalVariable.is_constant) {
+                              items.push(globalVariableToItem(globalVariable));
+                            }
+                          });
+                        }
+                      } else if (position.character > equalIndex) {
+                        if (setNode.name) {
+                          const setNames = setNode.name.names;
+                          if (setNames.length == 1) {
+                            const t = setNode.name.names[0];
+                            let setName: string = "";
+                            if (t instanceof Id && t.expr) {
+                              setName =t.expr.getText();
+                              // 确认类型
+                              vjassDocument.acceptLocalFromNode(methodNode, (localNode) => {
+                                if (localNode.name && localNode.type && localNode.name.getText() == setName) {
+                                  let setType = localNode.type.getText();
+                                  GlobalContext.get_global_variables_by_type(setType).forEach(globalVariable => {
+                                    items.push(globalVariableToItem(globalVariable));
+                                  });
+                                }
+                              });
+                              methodNode.takes?.forEach(take => {
+                                if (take.name && take.type) {
+                                  let takeType = take.type.getText();
+                                  GlobalContext.get_global_variables_by_type(takeType).forEach(globalVariable => {
+                                    items.push(globalVariableToItem(globalVariable));
+                                  });
+                                }
+                              });
+                            } else if (t instanceof Caller && t.name && t.name.expr) {
+                              setName = t.name.expr.getText();
+                            } else if (t instanceof IdIndex && t.name && t.name.expr) {
+                              setName = t.name.expr.getText();
+                            }
+
+                          }
+                        }
+                      }
+                    }
+                  } else { // name
+                    if (keys.length <= 1) {
+                      // 非constant 的 global_avarible
+                      GlobalContext.get_global_variables().forEach(globalVariable => {
+                        if (!globalVariable.is_constant) {
+                          items.push(globalVariableToItem(globalVariable));
+                        }
+                      });
+                    }
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+      return items;
+    }
+  }
+}
 
 // import { AllKeywords, Keywords } from "../jass/keyword";
 // import { Options } from "./options";
@@ -561,73 +736,73 @@ import { GlobalContext } from "../jass/parser-vjass";
 /**
  * 文件路径提示
  */
- vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
+//  vscode.languages.registerCompletionItemProvider("jass", new class CompletionItemProvider implements vscode.CompletionItemProvider {
 
-  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    const items:vscode.CompletionItem[] = [];
+//   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+//     const items:vscode.CompletionItem[] = [];
 
-    const lineText = document.lineAt(position);
-    const lineContent = lineText.text;
+//     const lineText = document.lineAt(position);
+//     const lineContent = lineText.text;
 
-    const tokens = tokenize(lineContent);
+//     const tokens = tokenize(lineContent);
 
-    const currentFileDir = () => {
-      return path.parse(document.uri.fsPath).dir;
-    };
+//     const currentFileDir = () => {
+//       return path.parse(document.uri.fsPath).dir;
+//     };
 
     
 
-    const handlePath = (token:Token) => {
-      if (token) {
-        if (token.isString()) {
+//     const handlePath = (token:Token) => {
+//       if (token) {
+//         if (token.isString()) {
 
-          const strContent = token.value.substring(1, token.value.length - 1);
+//           const strContent = token.value.substring(1, token.value.length - 1);
 
-          const prefixContent = strContent.substring(0, position.character - token.position - 1);
+//           const prefixContent = strContent.substring(0, position.character - token.position - 1);
 
-          const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
-          const stat = fs.statSync(realPath);
-          if (stat.isDirectory()) {
-            const paths = fs.readdirSync(realPath);
-            paths.forEach((p) => {
-              const filePath = path.resolve(realPath, p);
-              if (fs.statSync(filePath).isDirectory()) {
-                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.Folder));
-              } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
-                items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
-              }
-            });
-          }          
-        }
-      }
-    }
+//           const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+//           const stat = fs.statSync(realPath);
+//           if (stat.isDirectory()) {
+//             const paths = fs.readdirSync(realPath);
+//             paths.forEach((p) => {
+//               const filePath = path.resolve(realPath, p);
+//               if (fs.statSync(filePath).isDirectory()) {
+//                 items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.Folder));
+//               } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+//                 items.push(new vscode.CompletionItem(p, vscode.CompletionItemKind.File));
+//               }
+//             });
+//           }          
+//         }
+//       }
+//     }
 
-    if (tokens[0]) {
-      if (tokens[0].isMacro() && tokens[0].value == "#include") {
-        handlePath(tokens[1]);
-      }
-    }
+//     if (tokens[0]) {
+//       if (tokens[0].isMacro() && tokens[0].value == "#include") {
+//         handlePath(tokens[1]);
+//       }
+//     }
 
-    return items;
-  }
-}(), "\"", "/", "\\");
+//     return items;
+//   }
+// }(), "\"", "/", "\\");
 
 /**
  * keyword 提示
  */
- vscode.languages.registerCompletionItemProvider("jass", new class KeywordCompletionItemProvider implements vscode.CompletionItemProvider {
+//  vscode.languages.registerCompletionItemProvider("jass", new class KeywordCompletionItemProvider implements vscode.CompletionItemProvider {
 
-  private static keyword_completions:vscode.CompletionItem[] = (() => {
-    return AllKeywords.map(keyword => {
-      const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
-      return item;
-    });
-  })();
+//   private static keyword_completions:vscode.CompletionItem[] = (() => {
+//     return AllKeywords.map(keyword => {
+//       const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
+//       return item;
+//     });
+//   })();
 
-  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    return KeywordCompletionItemProvider.keyword_completions;
-  }
-}());
+//   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+//     return KeywordCompletionItemProvider.keyword_completions;
+//   }
+// }());
 
 
 

@@ -1,8 +1,8 @@
 import {
 	Position,
-	Range,
-	Rangebel
-} from "../common"
+	Range
+} from "../jass/loc"
+import { Rangebel } from "../jass/ast"
 
 import {Take, Local} from "../jass/ast";
 import * as jass from "../jass/ast";
@@ -20,8 +20,8 @@ class Global extends jass.Global implements Rangebel {
 class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "default";
 
-	constructor(name: string, takes: Take[] = [], returns: string | null = null) {
-		super(name, takes, returns);
+	constructor(context: any, name: string, takes: Take[] = [], returns: string | null = null) {
+		super(context, name, takes, returns || "nothing");
 	}
 
 	public get origin() : string {

@@ -2642,7 +2642,7 @@ endfunction
 // 攻击组脱离战斗 或 攻击组为空 时，退出内层循环，当内层循环退出8次时退出外层循环，两层循环都退出时结束等待
 function SleepInCombat takes nothing returns nothing
     local integer count = 0
-    debug call Trace("SleepInCombat\n")
+    // debug call Trace("SleepInCombat\n")
     loop
         loop
             exitwhen not CaptainInCombat(true)  // goal is cleared
@@ -2653,7 +2653,7 @@ function SleepInCombat takes nothing returns nothing
         set count = count + 1
         exitwhen count >= 8
     endloop
-    debug call Trace("exit SleepInCombat\n")
+    // debug call Trace("exit SleepInCombat\n")
 endfunction
 
 //============================================================================
@@ -3020,7 +3020,7 @@ endfunction
 // 至死方休（指定目标），死为目标死亡或攻击组阵亡/撤退
 // 调用战斗程序 CommonSleepUntilTargetDead，且reform默认为真
 function ReformUntilTargetDead takes unit target returns nothing
-    debug call Trace("ReformUntilTargetDead\n")
+    // debug call Trace("ReformUntilTargetDead\n")
     call CommonSleepUntilTargetDead(target,true)
 endfunction
 
@@ -3033,7 +3033,7 @@ function AttackMoveKillA takes unit target returns nothing
         return
     endif
 
-    debug call Trace("AttackMoveKillA\n")
+    // debug call Trace("AttackMoveKillA\n")
     call AttackMoveKill(target)
     call ReformUntilTargetDead(target)
     call SleepInCombat()

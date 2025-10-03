@@ -1,25 +1,71 @@
 import * as path from "path";
-import * as fs from "fs";
-
-
-
 import * as vscode from "vscode";
 
 import { GlobalContext } from "../jass/parser-vjass";
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
-import { Subject } from "../../extern/rxjs";
 import { AllKeywords } from "../jass/keyword";
 import { Position } from "../jass/loc";
 
+/**
+ * Hover 上下文接口
+ */
+interface HoverContext {
+  document: vscode.TextDocument;
+  position: vscode.Position;
+  key: string;
+  hoverCache: Map<string, vscode.Hover[]>;
+}
+
+/**
+ * Hover 访问者接口
+ */
+interface HoverVisitor {
+  visitNative(node: vjass_ast.Native, context: HoverContext): vscode.Hover[];
+  visitFunction(node: vjass_ast.Func | vjass_ast.zinc.Func, context: HoverContext): vscode.Hover[];
+  visitMethod(node: vjass_ast.Method | vjass_ast.zinc.Method, context: HoverContext): vscode.Hover[];
+  visitStruct(node: vjass_ast.Struct | vjass_ast.zinc.Struct, context: HoverContext): vscode.Hover[];
+  visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: HoverContext): vscode.Hover[];
+  visitLocal(node: vjass_ast.Local | vjass_ast.zinc.Member, context: HoverContext): vscode.Hover[];
+  visitMember(node: vjass_ast.Member | vjass_ast.zinc.Member, context: HoverContext): vscode.Hover[];
+  visitLibrary(node: vjass_ast.Library | any, context: HoverContext): vscode.Hover[];
+  visitScope(node: vjass_ast.Scope, context: HoverContext): vscode.Hover[];
+  visitTake(node: vjass_ast.Take, context: HoverContext): vscode.Hover[];
+  visitMacro(node: any, context: HoverContext): vscode.Hover[];
+}
+
+/**
+ * 增强的 Hover 类，包含 AST 节点数据
+ */
 class PackageHover<T extends vjass_ast.NodeAst> extends vscode.Hover {
   public readonly key: string;
-  public readonly data:T;
-  constructor(data:T, contents: vscode.MarkdownString | vscode.MarkedString | (vscode.MarkdownString | vscode.MarkedString)[], range?: vscode.Range ) {
+  public readonly data: T;
+
+  constructor(
+    data: T, 
+    contents: vscode.MarkdownString | vscode.MarkedString | (vscode.MarkdownString | vscode.MarkedString)[], 
+    range?: vscode.Range
+  ) {
     super(contents, range);
     this.data = data;
+    this.key = this.extractKey(data);
+  }
 
-    if (data instanceof vjass_ast.Native
+  /**
+   * 从 AST 节点提取键名
+   */
+  private extractKey(data: T): string {
+    if (this.hasNameProperty(data)) {
+      return data.name ? data.name.getText() : "";
+    }
+    return "";
+  }
+
+  /**
+   * 检查节点是否有 name 属性
+   */
+  private hasNameProperty(data: any): data is { name?: any } {
+    return data instanceof vjass_ast.Native
       || data instanceof vjass_ast.Func
       || data instanceof vjass_ast.Struct
       || data instanceof vjass_ast.Interface
@@ -29,24 +75,333 @@ class PackageHover<T extends vjass_ast.NodeAst> extends vscode.Hover {
       || data instanceof vjass_ast.Member
       || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.Scope
-      || data instanceof vjass_ast.zinc.Library
+      || (data as any).constructor?.name === 'Library'
       || data instanceof vjass_ast.zinc.Struct
       || data instanceof vjass_ast.zinc.Func
       || data instanceof vjass_ast.zinc.Interface
       || data instanceof vjass_ast.zinc.Method
       || data instanceof vjass_ast.zinc.Member
-      || data instanceof vjass_ast.Type
-      ) {
-        if (data.name) {
-          this.key = data.name.getText();
-        } else {
-          this.key = "";
-        }
-    } else {
-      this.key = "";
-    }
+      || data instanceof vjass_ast.Type;
   }
 }
+/**
+ * 默认 Hover 访问者实现
+ */
+class DefaultHoverVisitor implements HoverVisitor {
+  visitNative(node: vjass_ast.Native, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createNativeHover(node)];
+    }
+    return [];
+  }
+
+  visitFunction(node: vjass_ast.Func | vjass_ast.zinc.Func, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createFunctionHover(node)];
+    }
+    return [];
+  }
+
+  visitMethod(node: vjass_ast.Method | vjass_ast.zinc.Method, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMethodHover(node)];
+    }
+    return [];
+  }
+
+  visitStruct(node: vjass_ast.Struct | vjass_ast.zinc.Struct, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createStructHover(node)];
+    }
+    return [];
+  }
+
+  visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createInterfaceHover(node)];
+    }
+    return [];
+  }
+
+  visitLocal(node: vjass_ast.Local | vjass_ast.zinc.Member, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createLocalHover(node)];
+    }
+    return [];
+  }
+
+  visitMember(node: vjass_ast.Member | vjass_ast.zinc.Member, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMemberHover(node)];
+    }
+    return [];
+  }
+
+  visitLibrary(node: vjass_ast.Library | any, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createLibraryHover(node)];
+    }
+    return [];
+  }
+
+  visitScope(node: vjass_ast.Scope, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createScopeHover(node)];
+    }
+    return [];
+  }
+
+  visitTake(node: vjass_ast.Take, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createTakeHover(node)];
+    }
+    return [];
+  }
+
+  visitMacro(node: any, context: HoverContext): vscode.Hover[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMacroHover(node)];
+    }
+    return [];
+  }
+
+  /**
+   * 检查节点是否匹配键名
+   */
+  private matchesKey(node: any, key: string): boolean {
+    if (node.name && node.name.getText() === key) {
+      return true;
+    }
+    if (node.key && node.key === key) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 创建 Native Hover
+   */
+  private createNativeHover(node: vjass_ast.Native): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+    
+    if (node.is_deprecated) {
+      ms.appendMarkdown(`***@deprecated***`);
+      ms.appendText("\n");
+    }
+
+    node.description.forEach((desc: any) => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    node.takes?.forEach(take => {
+      const desc = take.desciprtion;
+      if (desc) {
+        ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
+        ms.appendText("\n");
+      }
+    });
+
+    return new PackageHover(node, ms, new vscode.Range(
+      new vscode.Position(node.start.line, node.start.position),
+      new vscode.Position(node.end.line, node.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Function Hover
+   */
+  private createFunctionHover(node: vjass_ast.Func | vjass_ast.zinc.Func): vscode.Hover {
+    return this.createNativeHover(node as any) as PackageHover<vjass_ast.Func | vjass_ast.zinc.Func>;
+  }
+
+  /**
+   * 创建 Method Hover
+   */
+  private createMethodHover(node: vjass_ast.Method | vjass_ast.zinc.Method): vscode.Hover {
+    return this.createNativeHover(node as any) as PackageHover<vjass_ast.Method | vjass_ast.zinc.Method>;
+  }
+
+  /**
+   * 创建 Struct Hover
+   */
+  private createStructHover(node: vjass_ast.Struct | vjass_ast.zinc.Struct): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+    
+    if (node.is_deprecated) {
+      ms.appendMarkdown(`***@deprecated***`);
+      ms.appendText("\n");
+    }
+
+    node.description.forEach((desc: any) => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    return new PackageHover(node, ms, new vscode.Range(
+      new vscode.Position(node.start.line, node.start.position),
+      new vscode.Position(node.end.line, node.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Interface Hover
+   */
+  private createInterfaceHover(node: vjass_ast.Interface | vjass_ast.zinc.Interface): vscode.Hover {
+    return this.createStructHover(node as any) as PackageHover<vjass_ast.Interface | vjass_ast.zinc.Interface>;
+  }
+
+  /**
+   * 创建 Local Hover
+   */
+  private createLocalHover(node: vjass_ast.Local | vjass_ast.zinc.Member): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+    
+    if (node.is_deprecated) {
+      ms.appendMarkdown(`***@deprecated***`);
+      ms.appendText("\n");
+    }
+
+    node.description.forEach((desc: any) => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    return new PackageHover(node, ms, new vscode.Range(
+      new vscode.Position(node.start.line, node.start.position),
+      new vscode.Position(node.end.line, node.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Member Hover
+   */
+  private createMemberHover(node: vjass_ast.Member | vjass_ast.zinc.Member): vscode.Hover {
+    return this.createLocalHover(node);
+  }
+
+  /**
+   * 创建 Library Hover
+   */
+  private createLibraryHover(node: vjass_ast.Library | any): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+    
+    if (node.is_deprecated) {
+      ms.appendMarkdown(`***@deprecated***`);
+      ms.appendText("\n");
+    }
+
+    node.description.forEach((desc: any) => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    return new PackageHover(node, ms, new vscode.Range(
+      new vscode.Position(node.start.line, node.start.position),
+      new vscode.Position(node.end.line, node.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Scope Hover
+   */
+  private createScopeHover(node: vjass_ast.Scope): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+    
+    if (node.is_deprecated) {
+      ms.appendMarkdown(`***@deprecated***`);
+      ms.appendText("\n");
+    }
+
+    node.description.forEach((desc: any) => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    return new PackageHover(node, ms, new vscode.Range(
+      new vscode.Position(node.start.line, node.start.position),
+      new vscode.Position(node.end.line, node.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Take Hover
+   */
+  private createTakeHover(node: vjass_ast.Take): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.belong.document.filePath);
+    ms.appendMarkdown("## " + (node.name ? node.name.getText() : "(unknown)"));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.belong.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+
+    const param_desc = node.belong.get_param_descriptions().find(x => node.name && x.name == node.name.getText());
+    if (param_desc) {
+      ms.appendMarkdown(param_desc.content);
+      ms.appendText("\n");
+    }
+
+    node.belong.description.forEach(desc => {
+      ms.appendMarkdown(desc);
+      ms.appendText("\n");
+    });
+
+    return new TakeHover(node, ms, new vscode.Range(
+      new vscode.Position(node.belong.start.line, node.belong.start.position),
+      new vscode.Position(node.belong.end.line, node.belong.end.position)
+    ));
+  }
+
+  /**
+   * 创建 Macro Hover
+   */
+  private createMacroHover(node: any): vscode.Hover {
+    const ms = new vscode.MarkdownString();
+    ms.baseUri = vscode.Uri.file(node.document.filePath);
+    ms.appendMarkdown("## " + (node.key || ""));
+    ms.appendText("\n");
+    ms.appendText(`>_${node.document.filePath}`);
+    ms.appendText("\n");
+    ms.appendCodeblock(node.to_string());
+
+    return new vscode.Hover(ms, new vscode.Range(
+      new vscode.Position(node.line_number, 0),
+      new vscode.Position(node.line_number, node.length)
+    ));
+  }
+}
+
 class TakeHover extends vscode.Hover {
   public readonly data:vjass_ast.Take;
   constructor(data:vjass_ast.Take, contents: vscode.MarkdownString | vscode.MarkedString | (vscode.MarkdownString | vscode.MarkedString)[], range?: vscode.Range | undefined) {
@@ -68,7 +423,7 @@ class HoverDocument {
   // Commented out globals-related code
   // public readonly global_variable_items:PackageHover<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
   public readonly membere_items:PackageHover<vjass_ast.Member|vjass_ast.zinc.Member>[];
-  public readonly library_items:PackageHover<vjass_ast.Library|vjass_ast.zinc.Library>[];
+  public readonly library_items:PackageHover<vjass_ast.Library|vjass_ast.Library>[];
   public readonly scope_items:PackageHover<vjass_ast.Scope>[];
   public readonly define_items:vscode.Hover[];
   // public readonly take_items:TakeCompletionItem[];
@@ -77,18 +432,18 @@ class HoverDocument {
     // this.document = document;
     this.program = program;
 
-    this.native_items = this.program.natives.map(node => HoverDocument.native_to_hover(node));
-    this.function_items = this.program.functions.map(node => HoverDocument.function_to_hover(node));
-    this.struct_items = this.program.structs.map(node => this.struct_to_hover(node));
-    this.interface_items = this.program.interfaces.map(node => this.interface_to_hover(node));
-    this.method_items = this.program.methods.map(node => HoverDocument.method_to_hover(node));
-    this.local_items = this.program.locals.map(node => HoverDocument.local_to_hover(node));
+    this.native_items = this.program.get_all_natives().map((node: any) => HoverDocument.native_to_hover(node));
+    this.function_items = this.program.get_all_functions().map((node: any) => HoverDocument.function_to_hover(node));
+    this.struct_items = this.program.get_all_structs().map((node: any) => this.struct_to_hover(node));
+    this.interface_items = this.program.get_all_interfaces().map((node: any) => this.interface_to_hover(node));
+    this.method_items = this.program.get_all_methods().map((node: any) => HoverDocument.method_to_hover(node));
+    this.local_items = this.program.get_all_locals().map((node: any) => HoverDocument.local_to_hover(node));
     // Commented out globals-related code
     // this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
-    this.membere_items = this.program.members.map(node => HoverDocument.member_to_hover(node));
-    this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
-    this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
-    this.define_items = this.program.macros.map(macro => HoverDocument.define_to_hover(macro));
+    this.membere_items = this.program.get_all_members().map((node: any) => HoverDocument.member_to_hover(node));
+    this.library_items = this.program.get_all_libraries().map((node: any) => this.library_to_hover(node));
+    this.scope_items = this.program.get_all_scopes().map((node: any) => this.scope_to_hover(node));
+    this.define_items = (this.program as any).macros?.map((macro: any) => HoverDocument.define_to_hover(macro)) || [];
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -139,9 +494,9 @@ class HoverDocument {
     return this.native_to_hover(func) as PackageHover<vjass_ast.Method|vjass_ast.zinc.Method>;
   }
   private interface_to_hover(inter: vjass_ast.Interface|vjass_ast.zinc.Interface) {
-    return this.struct_to_hover(inter) as PackageHover<vjass_ast.Interface|vjass_ast.zinc.Interface>;
+    return this.struct_to_hover(inter as any) as PackageHover<vjass_ast.Interface|vjass_ast.zinc.Interface>;
   }
-  private library_to_hover(object: vjass_ast.Library|vjass_ast.zinc.Library) {
+  private library_to_hover(object: vjass_ast.Library|any) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + (object.name ? object.name.getText() : "(unkown)"));
@@ -158,7 +513,7 @@ class HoverDocument {
       ms.appendText("\n");
     }
 
-    object.description.forEach(desc => {
+    object.description.forEach((desc: any) => {
       ms.appendMarkdown(desc);
       ms.appendText("\n");
     });
@@ -210,7 +565,7 @@ class HoverDocument {
       ms.appendText("\n");
     }
 
-    object.description.forEach(desc => {
+    object.description.forEach((desc: any) => {
       ms.appendMarkdown(desc);
       ms.appendText("\n");
     });
@@ -332,7 +687,7 @@ class HoverDocument {
 
 
   }
-  public static define_to_hover(object: vjass.Macro) {
+  public static define_to_hover(object: any) {
     const ms = new vscode.MarkdownString();
     ms.baseUri = vscode.Uri.file(object.document.filePath);
     ms.appendMarkdown("## " + (object.key || ""));
@@ -369,12 +724,8 @@ class Wrap {
 }
 class Manage {
   wraps:Wrap[] = [];
-  private readonly subject = new Subject<vscode.TextDocument>();
 
   constructor () {
-    this.subject.subscribe((document:vscode.TextDocument) => {
-      this.set(document);
-    });
   }
 
   index_of(key: string):number {
@@ -448,7 +799,7 @@ class Manage {
    * 根据改变后的内容重新生成items
    */
   changed(document:vscode.TextDocument) {
-    this.subject.next(document);
+    this.set(document);
   }
 
   rename(origin_key: string, target_kay: string) {
@@ -486,123 +837,160 @@ export const rename_document_hover = (origin_key: string, target_kay: string) =>
   CompletionManage.rename(origin_key, target_kay);
 };
 
+/**
+ * 增强的 Hover 提供者，使用 visitor 模式
+ */
 class HoverProvider implements vscode.HoverProvider {
+  private readonly visitor: HoverVisitor;
+  private readonly maxLength = 526;
 
-  // 规定标识符长度
-  private _maxLength = 526;
-
-  private isNumber = function (val: string) {
-    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-    if (regPos.test(val) || regNeg.test(val)) {
-      return true;
-    } else {
-      return false;
-    }
+  constructor() {
+    this.visitor = new DefaultHoverVisitor();
   }
 
-  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+  /**
+   * 检查是否为数字
+   */
+  private isNumber(val: string): boolean {
+    const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
+    const regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; // 负浮点数
+    return regPos.test(val) || regNeg.test(val);
+  }
 
+  /**
+   * 提供 Hover 信息
+   */
+  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
     const key = document.getText(document.getWordRangeAtPosition(position));
 
-    if (key.length > this._maxLength) {
+    // 验证输入
+    if (key.length > this.maxLength || this.isNumber(key) || AllKeywords.includes(key)) {
       return null;
     }
 
-    if (this.isNumber(key)) {
-      return null;
-    }
+    // 创建上下文
+    const context: HoverContext = {
+      document,
+      position,
+      key,
+      hoverCache: new Map<string, vscode.Hover[]>()
+    };
 
-    if (AllKeywords.includes(key)) {
-      return null;
-    }
+    const hovers: vscode.Hover[] = [];
 
-    const hovers2:vscode.Hover[] = [];
-    
-    CompletionManage.wraps.forEach(wrap => {
-      hovers2.push(...wrap.document.define_items.filter(hover => {
-        if (hover instanceof vscode.Hover && hover.contents.length > 0) {
-          const content = hover.contents[0];
-          if (content instanceof vscode.MarkdownString) {
-            return content.value.includes(key);
-          }
-        }
-        return false;
-      }));
+    // 遍历所有文档
+    GlobalContext.keys.forEach(filePath => {
+      const program = GlobalContext.get(filePath);
+      if (!program) return;
 
-      hovers2.push(...wrap.document.native_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.function_items.filter(x => x.key == key));
-      // Commented out globals-related code
-      // hovers2.push(...wrap.document.global_variable_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.struct_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.interface_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.library_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.scope_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.method_items.filter(x => x.key == key));
-      hovers2.push(...wrap.document.membere_items.filter(x => x.key == key));
-      
-      const is_current = wrap.equals(document.uri.fsPath);
-      if (is_current) {
-        const target_position = new Position(position.line, position.character);
+      // 使用 visitor 模式处理各种节点类型
+      this.processDocument(program, context, hovers);
 
-        const find_contains_func_and_method = (): PackageHover<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>[] => {
-          return [...wrap.document.method_items, ...wrap.document.function_items].filter(object => object.data.contains(target_position));
-        };
-        const funcs = find_contains_func_and_method();
-        const find_func_and_method_locals = (func: PackageHover<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>) => {
-          if (func.data instanceof vjass_ast.Func || func.data instanceof vjass_ast.Method) {
-            const locals = func.data.children.filter(child => child instanceof vjass_ast.Local) as vjass_ast.Local[];
-            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
-              hovers2.push(HoverDocument.local_to_hover(local));
-            });
-          } else {
-            const locals = func.data.children.filter(child => child instanceof vjass_ast.zinc.Member) as vjass_ast.zinc.Member[];
-            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
-              hovers2.push(HoverDocument.member_to_hover(local));
-            });
-          }
-        } 
-        funcs.forEach(func => {
-          if (func.data.takes) {
-            func.data.takes.filter(take => take.name && take.name.getText() == key).forEach(take => {
-              hovers2.push(HoverDocument.take_to_hover(take));
-            });
-          }
-          find_func_and_method_locals(func);
-        });
-
-        // const push_take = (function_items:PackageHover<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
-        //   function_items.filter(x => {
-        //     return x.data.contains(target_position);
-        //   }).forEach(data => {
-        //     if (data.data.takes) {
-        //       data.data.takes.forEach(take => {
-        //         if (take.name && take.name.getText() == key) {
-        //           hovers2.push(HoverDocument.take_to_hover(take));
-        //         }
-        //       });
-        //     }
-        //   });
-        // };
-        // const push_local = (local_items:PackageHover<vjass_ast.Local>[]) => {
-        //   local_items.filter(x => {
-        //     return x.data.parent && (x.data.parent instanceof vjass_ast.Func || x.data.parent instanceof vjass_ast.Method || x.data.parent instanceof vjass_ast.zinc.Func || x.data.parent instanceof vjass_ast.zinc.Method) && x.data.parent.contains(target_position);
-        //   }).forEach(data => {
-        //     if (data.key == key) {
-        //       hovers2.push(data);
-        //     }
-        //   });
-        // };
-  
-        // push_take(wrap.document.function_items);
-        // push_take(wrap.document.method_items);
-        // push_local(wrap.document.local_items);
+      // 如果是当前文档，处理局部变量和参数
+      if (filePath === document.uri.fsPath) {
+        this.processLocalContext(program, context, hovers);
       }
     });
 
-    return new vscode.Hover(hovers2.map(hover => hover.contents).flat());
+    if (hovers.length === 0) {
+      return null;
+    }
+
+    return new vscode.Hover(hovers.map(hover => hover.contents).flat());
   }
 
+  /**
+   * 处理文档中的所有节点
+   */
+  private processDocument(program: vjass.Document, context: HoverContext, hovers: vscode.Hover[]): void {
+    // 处理 natives
+    const natives = program.get_all_natives();
+    natives.forEach((native: any) => {
+      hovers.push(...this.visitor.visitNative(native, context));
+    });
+
+    // 处理 functions
+    const functions = program.get_all_functions();
+    functions.forEach((func: any) => {
+      hovers.push(...this.visitor.visitFunction(func, context));
+    });
+
+    // 处理 methods
+    const methods = program.get_all_methods();
+    methods.forEach((method: any) => {
+      hovers.push(...this.visitor.visitMethod(method, context));
+    });
+
+    // 处理 structs
+    const structs = program.get_all_structs();
+    structs.forEach((struct: any) => {
+      hovers.push(...this.visitor.visitStruct(struct, context));
+    });
+
+    // 处理 interfaces
+    const interfaces = program.get_all_interfaces();
+    interfaces.forEach((interface_: any) => {
+      hovers.push(...this.visitor.visitInterface(interface_, context));
+    });
+
+    // 处理 members
+    const members = program.get_all_members();
+    members.forEach((member: any) => {
+      hovers.push(...this.visitor.visitMember(member, context));
+    });
+
+    // 处理 libraries
+    const libraries = program.get_all_libraries();
+    libraries.forEach((library: any) => {
+      hovers.push(...this.visitor.visitLibrary(library, context));
+    });
+
+    // 处理 scopes
+    const scopes = program.get_all_scopes();
+    scopes.forEach((scope: any) => {
+      hovers.push(...this.visitor.visitScope(scope, context));
+    });
+
+    // 处理 macros
+    const macros = (program as any).macros || [];
+    macros.forEach((macro: any) => {
+      hovers.push(...this.visitor.visitMacro(macro, context));
+    });
+  }
+
+  /**
+   * 处理局部上下文（当前文档中的局部变量和参数）
+   */
+  private processLocalContext(program: vjass.Document, context: HoverContext, hovers: vscode.Hover[]): void {
+    const targetPosition = new Position(context.position.line, context.position.character);
+
+    // 查找包含当前位置的函数和方法
+    const functions = program.get_all_functions();
+    const methods = program.get_all_methods();
+    
+    const containingFunctions = [...functions, ...methods].filter((func: any) => {
+      return func.contains && func.contains(targetPosition);
+    });
+
+    containingFunctions.forEach((func: any) => {
+      // 处理参数
+      if (func.takes) {
+        func.takes.forEach((take: any) => {
+          hovers.push(...this.visitor.visitTake(take, context));
+        });
+      }
+
+      // 处理局部变量
+      if (func.children) {
+        const locals = func.children.filter((child: any) => 
+          child instanceof vjass_ast.Local || child instanceof vjass_ast.zinc.Member
+        );
+        locals.forEach((local: any) => {
+          hovers.push(...this.visitor.visitLocal(local, context));
+        });
+      }
+    });
+  }
 }
 
 vscode.languages.registerHoverProvider("jass", new HoverProvider());

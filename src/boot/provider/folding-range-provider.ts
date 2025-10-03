@@ -166,9 +166,9 @@ class ExFoldingRangeProvider implements vscode.FoldingRangeProvider {
           handing(child);
         });
       }
-      if (doc.zinc_nodes) {
-        doc.zinc_nodes.forEach(zinc_node => {
-          zinc_node.children.forEach(child => {
+      if (doc.zincNodes) {
+        doc.zincNodes.forEach((zinc_node: any) => {
+          zinc_node.children.forEach((child: any) => {
             handing(child);
           });
         });

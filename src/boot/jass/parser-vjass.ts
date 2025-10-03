@@ -165,6 +165,155 @@ export class Context {
         return modules;
     }
 
+    public get_natives_by_type(type: "nothing"|string):(Native)[] {
+        const natives:(Native)[] = [];
+
+        this._documents.forEach(document => {
+            document.accept({
+                visitNative: (node) => {
+                    if (node.returns) {
+                        if (node.returns.getText() === type) {
+                            natives.push(node);
+                        }
+                    } else {
+                        if (type === "nothing") {
+                            natives.push(node);
+                        }
+                    }
+                }
+            });
+        });
+
+        return natives;
+    }
+    public get_funcs_by_type(type: "nothing"|string):(Func|zinc.Func)[] {
+        const funcs:(Func|zinc.Func)[] = [];
+
+        this._documents.forEach(document => {
+            document.accept({
+                visitFunc: (node) => {
+                    if (node.returns) {
+                        if (node.returns.getText() === type) {
+                            funcs.push(node);
+                        }
+                    }
+                }
+            });
+        });
+
+        return funcs;
+    }
+
+    public get_global_variables():(GlobalVariable|zinc.Member)[] {
+        const globalVariables:(GlobalVariable|zinc.Member)[] = [];
+
+        this._documents.forEach(document => {
+            globalVariables.push(...document.get_all_global_variables());
+        });
+
+        return globalVariables;
+    }
+
+    public get_global_variables_by_type(type: "nothing"|string):(GlobalVariable|zinc.Member)[] {
+        const globalVariables:(GlobalVariable|zinc.Member)[] = [];
+
+        this._documents.forEach(document => {
+            document.accept({
+                visitGlobalVariable: (node) => {
+                    if (node instanceof GlobalVariable) {
+                        if (node.type) {
+                            if (node.type.getText() === type) {
+                                globalVariables.push(node);
+                            }
+                        } else {
+                            if (type === "nothing") {
+                                globalVariables.push(node);
+                            }
+                        }
+                    } else {
+                        if (node.parent && !(node.parent instanceof zinc.Struct)) {
+                            if (node.type) {
+                                if (node.type.getText() === type) {
+                                    globalVariables.push(node);
+                                }
+                            } else {
+                                if (type === "nothing") {
+                                    globalVariables.push(node);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        return globalVariables;
+    }
+
+    public get_types():Type[] {
+        const types:Type[] = [];
+        this._documents.forEach(document => {
+            types.push(...document.get_all_types());
+        });
+        return types;
+    }
+
+    public get_functions_by_name(name: string):(Func|zinc.Func)[] {
+        const funcs:(Func|zinc.Func)[] = [];
+        this._documents.forEach(document => {
+            document.accept({
+                visitFunc: (node) => {
+                    if (node.name && node.name.getText() === name) {
+                        funcs.push(node);
+                    }
+                }
+            });
+        });
+        return funcs;
+    }
+
+    public get_natives_by_name(name: string):(Native)[] {
+        const natives:(Native)[] = [];
+        this._documents.forEach(document => {
+            document.accept({
+                visitNative: (node) => {
+                    if (node.name && node.name.getText() === name) {
+                        natives.push(node);
+                    }
+                }
+            });
+        });
+        return natives;
+    }
+
+    public get_global_variables_by_name(name: string):(GlobalVariable|zinc.Member)[] {
+        const globalVariables:(GlobalVariable|zinc.Member)[] = [];
+        this._documents.forEach(document => {
+            document.accept({
+                visitGlobalVariable: (node) => {
+                    if (node.name && node.name.getText() === name) {
+                        globalVariables.push(node);
+                    }
+                }
+            });
+        });
+        return globalVariables;
+    }
+
+    public get_structs_by_name(name: string):(Struct|zinc.Struct)[] {
+        const structs:(Struct|zinc.Struct)[] = [];
+        this._documents.forEach(document => {
+            document.accept({
+                visitStruct: (node) => {
+                    if (node.name && node.name.getText() === name) {
+                        structs.push(node);
+                    }
+                }
+            });
+        });
+        return structs;
+    }
+
 }
 
 export const GlobalContext = new Context();
@@ -207,6 +356,10 @@ export class NodeAst extends Range {
      */
     public end_tag: Token | null = null;
 
+    // 性能优化：缓存范围有效性检查结果
+    private _rangeValidCache: boolean | null = null;
+    private _rangeValidCacheVersion: number = 0;
+
     constructor(document: Document) {
         super(new Position(), new Position());
         this.document = document;
@@ -230,8 +383,261 @@ export class NodeAst extends Range {
         }
     }
 
+    /**
+     * 设置开始 token，同时使缓存失效
+     */
+    public setStartToken(token: Token | null): void {
+        this.start_token = token;
+        this.invalidateRangeCache();
+    }
+
+    /**
+     * 设置结束 token，同时使缓存失效
+     */
+    public setEndToken(token: Token | null): void {
+        this.end_token = token;
+        this.invalidateRangeCache();
+    }
+
+    /**
+     * 使范围缓存失效
+     */
+    private invalidateRangeCache(): void {
+        this._rangeValidCache = null;
+        this._rangeValidCacheVersion++;
+    }
+
     public contains(positionOrRange: Range | Position): boolean {
-        return new Range(this.start, this.end).contains(positionOrRange);
+        // 空值检查
+        if (!positionOrRange) {
+            return false;
+        }
+
+        // 检查当前节点的范围是否有效
+        if (!this.isValidRange()) {
+            return false;
+        }
+
+        // 直接使用 Range 的 contains 方法，避免创建新对象
+        return super.contains(positionOrRange);
+    }
+
+    /**
+     * 检查当前节点的范围是否有效
+     * @returns 如果范围有效返回 true，否则返回 false
+     */
+    private isValidRange(): boolean {
+        // 使用缓存机制提高性能
+        if (this._rangeValidCache !== null) {
+            return this._rangeValidCache;
+        }
+
+        // 检查 start 和 end 是否有效
+        if (!this.start || !this.end) {
+            this._rangeValidCache = false;
+            return false;
+        }
+
+        // 检查行号是否有效
+        if (this.start.line < 0 || this.end.line < 0) {
+            this._rangeValidCache = false;
+            return false;
+        }
+
+        // 检查位置是否有效
+        if (this.start.position < 0 || this.end.position < 0) {
+            this._rangeValidCache = false;
+            return false;
+        }
+
+        // 检查范围是否合理（end 应该在 start 之后或相等）
+        if (this.end.line < this.start.line) {
+            this._rangeValidCache = false;
+            return false;
+        }
+
+        if (this.end.line === this.start.line && this.end.position < this.start.position) {
+            this._rangeValidCache = false;
+            return false;
+        }
+
+        this._rangeValidCache = true;
+        return true;
+    }
+
+    /**
+     * 检查位置是否在节点的开始边界上
+     * @param position 要检查的位置
+     * @returns 如果在开始边界上返回 true
+     */
+    public isAtStart(position: Position): boolean {
+        if (!position || !this.isValidRange()) {
+            return false;
+        }
+
+        return this.start.line === position.line && this.start.position === position.position;
+    }
+
+    /**
+     * 检查位置是否在节点的结束边界上
+     * @param position 要检查的位置
+     * @returns 如果在结束边界上返回 true
+     */
+    public isAtEnd(position: Position): boolean {
+        if (!position || !this.isValidRange()) {
+            return false;
+        }
+
+        return this.end.line === position.line && this.end.position === position.position;
+    }
+
+    /**
+     * 检查位置是否在节点的内部（不包括边界）
+     * @param position 要检查的位置
+     * @returns 如果在内部返回 true
+     */
+    public isInside(position: Position): boolean {
+        if (!position || !this.isValidRange()) {
+            return false;
+        }
+
+        // 检查是否在开始之后
+        if (this.start.line > position.line || 
+            (this.start.line === position.line && this.start.position >= position.position)) {
+            return false;
+        }
+
+        // 检查是否在结束之前
+        if (this.end.line < position.line || 
+            (this.end.line === position.line && this.end.position <= position.position)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 查找包含指定位置的子节点
+     * @param position 要查找的位置
+     * @returns 包含该位置的子节点，如果没有找到返回 null
+     */
+    public findChildContaining(position: Position): NodeAst | null {
+        if (!position || !this.isValidRange()) {
+            return null;
+        }
+
+        // 使用深度优先搜索查找最深的包含该位置的子节点
+        for (const child of this.children) {
+            if (child.contains(position)) {
+                // 递归查找更深层的子节点
+                const deeperChild = child.findChildContaining(position);
+                return deeperChild || child;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 查找所有包含指定位置的子节点
+     * @param position 要查找的位置
+     * @returns 包含该位置的所有子节点数组
+     */
+    public findAllChildrenContaining(position: Position): NodeAst[] {
+        if (!position || !this.isValidRange()) {
+            return [];
+        }
+
+        const result: NodeAst[] = [];
+
+        for (const child of this.children) {
+            if (child.contains(position)) {
+                result.push(child);
+                // 递归查找子节点的子节点
+                result.push(...child.findAllChildrenContaining(position));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 获取节点的深度（从根节点到当前节点的距离）
+     * @returns 节点深度
+     */
+    public getDepth(): number {
+        let depth = 0;
+        let current = this.parent;
+        
+        while (current) {
+            depth++;
+            current = current.parent;
+        }
+        
+        return depth;
+    }
+
+    /**
+     * 检查当前节点是否是另一个节点的祖先
+     * @param descendant 要检查的节点
+     * @returns 如果是祖先返回 true
+     */
+    public isAncestorOf(descendant: NodeAst): boolean {
+        if (!descendant) {
+            return false;
+        }
+
+        let current = descendant.parent;
+        while (current) {
+            if (current === this) {
+                return true;
+            }
+            current = current.parent;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查当前节点是否是另一个节点的后代
+     * @param ancestor 要检查的节点
+     * @returns 如果是后代返回 true
+     */
+    public isDescendantOf(ancestor: NodeAst): boolean {
+        if (!ancestor) {
+            return false;
+        }
+
+        return ancestor.isAncestorOf(this);
+    }
+
+    /**
+     * 获取节点的路径（从根节点到当前节点的路径）
+     * @returns 节点路径数组
+     */
+    public getPath(): NodeAst[] {
+        const path: NodeAst[] = [];
+        let current: NodeAst | null = this;
+
+        while (current) {
+            path.unshift(current);
+            current = current.parent;
+        }
+
+        return path;
+    }
+
+    /**
+     * 获取节点的字符串表示
+     * @returns 节点的字符串表示
+     */
+    public toString(): string {
+        const className = this.constructor.name;
+        const range = this.isValidRange() ? 
+            `(${this.start.line}:${this.start.position} - ${this.end.line}:${this.end.position})` : 
+            "(Invalid Range)";
+        
+        return `${className}${range}`;
     }
 
     public get description(): string[] {
@@ -609,7 +1015,7 @@ export namespace zinc {
             return `interface ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
 
-        check(): void {
+        syntaxCheck(): void {
             // 检查interface名称
             if (!this.name) {
                 this.document.errorCollection.errors.push({
@@ -662,7 +1068,7 @@ export namespace zinc {
             return `struct ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.map(ex => ex.getText()).join(", ") : ""}`
         }
 
-        check(): void {
+        syntaxCheck(): void {
             // 检查struct名称
             if (!this.name) {
                 this.document.errorCollection.errors.push({
@@ -716,7 +1122,7 @@ export namespace zinc {
             return `${visible_string}${modifier_string}${qualifier_string}native ${name_string}takes ${takes_string} returns ${returns_string}`;
         }
 
-        check(): void {
+        syntaxCheck(): void {
             // 检查function名称
             if (!this.name) {
                 this.document.errorCollection.errors.push({
@@ -911,9 +1317,9 @@ export namespace zinc {
             return `${visible_string}${modifier_string}${qualifier_string}method ${name_string}takes ${takes_string} returns ${returns_string}`;
         }
 
-        check(): void {
+        syntaxCheck(): void {
             // 先调用父类的check方法（包括返回值检查）
-            super.check();
+            super.syntaxCheck();
 
             // 检查method是否在struct或interface内部
             if (!this.parent || (!(this.parent instanceof Struct) && !(this.parent instanceof Interface) && 
@@ -1016,7 +1422,7 @@ export class Library extends NodeAst implements ExprTrict, Check {
     /**
      * 实现Check接口 - 验证Library节点
      */
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查library名称
         if (!this.name) {
             this.document.errorCollection.errors.push({
@@ -1350,7 +1756,7 @@ export class Scope extends NodeAst implements Check {
         return `scope ${this.name ? this.name.getText() : "(unkown)"}`;
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查scope名称
         if (!this.name) {
             this.document.errorCollection.errors.push({
@@ -1499,7 +1905,7 @@ export class Struct extends Interface implements Check {
 
 
 
-    check(): void {
+    syntaxCheck(): void {
         // 检查struct名称
         if (!this.name) {
             this.document.errorCollection.errors.push({
@@ -1680,7 +2086,7 @@ export class Module extends NodeAst implements Check {
         return `module ${this.name ? this.name.getText() : "(unkown)"}`;
     }
 
-    check(): void {
+    syntaxCheck(): void {
         // 检查module名称
         if (!this.name) {
             this.document.errorCollection.errors.push({
@@ -2470,7 +2876,7 @@ export class Globals extends NodeAst implements Check {
         return "globals";
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // Globals块本身不需要特殊检查，主要是检查其子节点
         // 检查globals块中是否包含非法内容（如function、method等）
         for (const child of this.children) {
@@ -2524,7 +2930,7 @@ export function parse_globals(document: Document, tokens: Token[]) {
 export class If extends NodeAst implements Check {
     expr: Zoom | null = null;
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查if语句是否在function或method内部
         let hasValidParent = false;
         let current: NodeAst | null = this.parent;
@@ -2569,7 +2975,7 @@ export class If extends NodeAst implements Check {
     }
 }
 export class Loop extends NodeAst implements Check {
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查loop语句是否在function或method内部
         let hasValidParent = false;
         let current: NodeAst | null = this.parent;
@@ -2872,7 +3278,7 @@ export class Local extends GlobalVariable implements Check {
         return `${visible_string}${modifier_string}${qualifier_string}local ${type_string}${array_string}${name_string}${size_string}`;
     }
 
-    check(): void {
+    syntaxCheck(): void {
         const errorToken = this.name ?? this.start_token!;
         
         if (!this.parent) {
@@ -2962,7 +3368,7 @@ export class Value implements ExprTrict, Check {
         return expr;
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // Value类本身不需要特殊检查，字面量值通常是有效的
         // 可以添加一些基本的字面量格式检查
         if (this.value) {
@@ -2976,7 +3382,7 @@ export class Value implements ExprTrict, Check {
     }
 }
 
-export class BinaryExpr extends Expr implements ExprTrict {
+export class BinaryExpr extends Expr implements ExprTrict, Check {
     left: Zoom | null = null;
     right: Zoom | null = null;
     op: Token | null = null;
@@ -2993,6 +3399,14 @@ export class BinaryExpr extends Expr implements ExprTrict {
             expr = this.right.to_string();
         }
         return `${this.left?.to_string() ?? "unkown"} ${this.op?.getText() ?? "unkown"} ${this.right?.to_string() ?? "unkown"}`;
+    }
+
+    public syntaxCheck(): void {
+        // 检查操作符是否存在
+        if (!this.op) {
+        } else {
+
+        }
     }
 }
 export class UnaryExpr extends Expr implements ExprTrict, Check {
@@ -3011,7 +3425,7 @@ export class UnaryExpr extends Expr implements ExprTrict, Check {
         return `${this.op?.getText() ?? "+"}${this.value?.to_string() ?? "unkown"}`;
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查操作符是否存在
         if (!this.op) {
             console.warn("Unary expression missing operator");
@@ -3048,7 +3462,7 @@ export class PriorityExpr extends Expr implements ExprTrict, Check {
         return "unkown";
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查括号内的表达式是否存在
         if (!this.expr) {
             console.warn("Priority expression missing inner expression");
@@ -3150,7 +3564,7 @@ export class VariableName extends Expr implements ExprTrict, Check {
         }
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查变量名是否存在
         if (this.names.length === 0) {
             console.warn("Variable name is empty");
@@ -3162,12 +3576,6 @@ export class VariableName extends Expr implements ExprTrict, Check {
             if (!name) {
                 console.warn("Variable name contains null component");
             }
-        }
-
-        // 检查变量名格式是否正确
-        const fullName = this.to_string();
-        if (fullName.includes("  ") || fullName.startsWith(".") || fullName.endsWith(".")) {
-            console.warn(`Invalid variable name format: ${fullName}`);
         }
     }
 
@@ -3247,7 +3655,7 @@ export class FunctionExpr implements ExprTrict, Check {
         return "function unkown";
     }
 
-    public check(): void {
+    public syntaxCheck(): void {
         // 检查函数名是否存在
         if (!this.name) {
             console.warn("Function expression missing function name");

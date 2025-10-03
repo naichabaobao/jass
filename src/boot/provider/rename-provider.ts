@@ -84,7 +84,7 @@ class RenameProvider implements vscode.RenameProvider {
 				});
 				
 			}
-			push_take(program.functions);
+			push_take(program.get_all_functions());
 			
 		}
 		return edit;

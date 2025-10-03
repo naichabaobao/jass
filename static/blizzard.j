@@ -8023,8 +8023,8 @@ function PlayDialogueFromSpeakerEx takes force toForce, unit speaker, integer sp
     //Make sure that the runtime unit type and the parameter are the same,
     //otherwise the offline animations will not match and will fail
     if GetUnitTypeId(speaker) != speakerType then
-        debug call BJDebugMsg(("Attempted to play FacialAnimation with the wrong speaker UnitType - Param: " + I2S(speakerType) + " Runtime: " + I2S(GetUnitTypeId(speaker))))
-        //return false
+        // debug call BJDebugMsg(("Attempted to play FacialAnimation with the wrong speaker UnitType - Param: " + I2S(speakerType) + " Runtime: " + I2S(GetUnitTypeId(speaker))))
+        return false
     endif
 
     call TryInitCinematicBehaviorBJ()

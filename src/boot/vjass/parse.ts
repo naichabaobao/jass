@@ -7,7 +7,7 @@ import {
 	Member,
 	Interface
 } from "./ast";
-import { Position } from "../common";
+import { Position } from "../jass/loc";
 
 class VjassTokenError {
 	public message:string;

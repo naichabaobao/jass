@@ -1,5 +1,6 @@
 import { NodeAst } from "./parser-vjass";
 
 export interface Check {
-    check(): void;
+    // 语法检查
+    syntaxCheck(): void;
 }

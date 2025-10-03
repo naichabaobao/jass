@@ -21,7 +21,7 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    program.global_variables.forEach(global => {
+                    ((program as any).global_variables || []).forEach((global: any) => {
                         const item = new vscode.CompletionItem(
                             global.name?.getText() ?? '(unknown)',
                             global.is_constant ? vscode.CompletionItemKind.Constant : vscode.CompletionItemKind.Variable
@@ -29,7 +29,7 @@ export class GlobalsProvider {
                         
                         const ms = new vscode.MarkdownString();
                         ms.appendCodeblock(global.to_string());
-                        global.description.forEach(desc => {
+                        global.description.forEach((desc: any) => {
                             ms.appendMarkdown(desc);
                             ms.appendText('\n');
                         });
@@ -43,7 +43,7 @@ export class GlobalsProvider {
                     });
 
                     // Zinc结构体成员
-                    program.structs.forEach(struct => {
+                    program.get_all_structs().forEach((struct: any) => {
                         if ('members' in struct) {
                             (struct as any).members.forEach((member: any) => {
                                 const item = new vscode.CompletionItem(
@@ -84,12 +84,12 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    const global = program.global_variables.find(g => g.name?.getText() === word);
+                    const global = ((program as any).global_variables || []).find((g: any) => g.name?.getText() === word);
                     if (global) {
                         const ms = new vscode.MarkdownString();
                         ms.appendMarkdown(`**${global.name?.getText()}**\n\n`);
                         ms.appendCodeblock(global.to_string());
-                        global.description.forEach(desc => {
+                        global.description.forEach((desc: any) => {
                             ms.appendMarkdown(desc);
                             ms.appendText('\n');
                         });
@@ -97,7 +97,7 @@ export class GlobalsProvider {
                     }
 
                     // Zinc结构体成员
-                    for (const struct of program.structs) {
+                    for (const struct of program.get_all_structs()) {
                         if ('members' in struct) {
                             const member = (struct as any).members.find((m: any) => m.name?.getText() === word);
                             if (member) {
@@ -128,7 +128,7 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    const global = program.global_variables.find(g => g.name?.getText() === word);
+                    const global = ((program as any).global_variables || []).find((g: any) => g.name?.getText() === word);
                     if (global && global.name) {
                         const startPos = new vscode.Position(
                             global.name.line,
@@ -145,7 +145,7 @@ export class GlobalsProvider {
                     }
 
                     // Zinc结构体成员
-                    for (const struct of program.structs) {
+                    for (const struct of program.get_all_structs()) {
                         if ('members' in struct) {
                             const member = (struct as any).members.find((m: any) => m.name?.getText() === word);
                             if (member && member.name) {
@@ -182,7 +182,7 @@ export class GlobalsProvider {
                     const program = GlobalContext.get(key);
                     if (program) {
                         // Jass全局变量
-                        program.global_variables.forEach(global => {
+                        ((program as any).global_variables || []).forEach((global: any) => {
                             if (global.name?.getText() === word) {
                                 // 添加定义位置
                                 if (global.name) {
@@ -237,7 +237,7 @@ export class GlobalsProvider {
                         });
 
                         // Zinc结构体成员
-                        program.structs.forEach(struct => {
+                        program.get_all_structs().forEach((struct: any) => {
                             if ('members' in struct) {
                                 (struct as any).members.forEach((member: any) => {
                                     if (member.name?.getText() === word) {
@@ -304,7 +304,7 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    program.global_variables.forEach(global => {
+                    ((program as any).global_variables || []).forEach((global: any) => {
                         if (global.name) {
                             const symbol = new vscode.SymbolInformation(
                                 global.name.getText(),
@@ -329,7 +329,7 @@ export class GlobalsProvider {
                     });
 
                     // Zinc结构体成员
-                    program.structs.forEach(struct => {
+                    program.get_all_structs().forEach((struct: any) => {
                         if ('members' in struct) {
                             (struct as any).members.forEach((member: any) => {
                                 if (member.name) {
@@ -399,7 +399,7 @@ export class GlobalsProvider {
                     const program = GlobalContext.get(key);
                     if (program && program.program) {
                         // 处理Jass全局变量
-                        program.global_variables.forEach(global => {
+                        ((program as any).global_variables || []).forEach((global: any) => {
                             if (global.name?.getText() === word) {
                                 // 处理定义位置
                                 if (global.name) {
@@ -638,7 +638,7 @@ export class GlobalsProvider {
                         });
 
                         // 处理Zinc结构体成员
-                        program.structs.forEach(struct => {
+                        program.get_all_structs().forEach((struct: any) => {
                             if ('members' in struct) {
                                 (struct as any).members.forEach((member: any) => {
                                     if (member.name?.getText() === word) {
@@ -835,7 +835,7 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    program.global_variables.forEach(global => {
+                    ((program as any).global_variables || []).forEach((global: any) => {
                         ranges.push(new vscode.FoldingRange(
                             global.start.line,
                             global.end.line,
@@ -844,7 +844,7 @@ export class GlobalsProvider {
                     });
 
                     // Zinc结构体成员
-                    program.structs.forEach(struct => {
+                    program.get_all_structs().forEach((struct: any) => {
                         if ('members' in struct) {
                             (struct as any).members.forEach((member: any) => {
                                 ranges.push(new vscode.FoldingRange(
@@ -869,7 +869,7 @@ export class GlobalsProvider {
                 
                 if (program) {
                     // Jass全局变量
-                    program.global_variables.forEach(global => {
+                    ((program as any).global_variables || []).forEach((global: any) => {
                         if (global.name) {
                             // 计算引用次数
                             let referenceCount = 0;
@@ -974,7 +974,7 @@ export class GlobalsProvider {
                     });
 
                     // Zinc结构体成员
-                    program.structs.forEach(struct => {
+                    program.get_all_structs().forEach((struct: any) => {
                         if ('members' in struct) {
                             (struct as any).members.forEach((member: any) => {
                                 if (member.name) {
@@ -1094,7 +1094,7 @@ export class GlobalsProvider {
         
         if (program) {
             // Jass全局变量诊断
-            program.global_variables.forEach(global => {
+                        ((program as any).global_variables || []).forEach((global: any) => {
                 if (!global.name) {
                     diagnostics.push(new vscode.Diagnostic(
                         new vscode.Range(
@@ -1108,7 +1108,7 @@ export class GlobalsProvider {
             });
 
             // Zinc结构体成员诊断
-            program.structs.forEach(struct => {
+                        program.get_all_structs().forEach((struct: any) => {
                 if ('members' in struct) {
                     (struct as any).members.forEach((member: any) => {
                         if (!member.name) {

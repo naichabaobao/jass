@@ -1,25 +1,68 @@
 import * as path from "path";
-import * as fs from "fs";
-
-
-
 import * as vscode from "vscode";
 
 import { GlobalContext } from "../jass/parser-vjass";
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
-import { Subject } from "../../extern/rxjs";
 import { AllKeywords } from "../jass/keyword";
 import { Position } from "../jass/loc";
 
+/**
+ * Definition 上下文接口
+ */
+interface DefinitionContext {
+  document: vscode.TextDocument;
+  position: vscode.Position;
+  key: string;
+  locationCache: Map<string, vscode.Location[]>;
+}
+
+/**
+ * Definition 访问者接口
+ */
+interface DefinitionVisitor {
+  visitNative(node: vjass_ast.Native, context: DefinitionContext): vscode.Location[];
+  visitFunction(node: vjass_ast.Func | vjass_ast.zinc.Func, context: DefinitionContext): vscode.Location[];
+  visitMethod(node: vjass_ast.Method | vjass_ast.zinc.Method, context: DefinitionContext): vscode.Location[];
+  visitStruct(node: vjass_ast.Struct | vjass_ast.zinc.Struct, context: DefinitionContext): vscode.Location[];
+  visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: DefinitionContext): vscode.Location[];
+  visitLocal(node: vjass_ast.Local | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[];
+  visitMember(node: vjass_ast.Member | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[];
+  visitLibrary(node: vjass_ast.Library | any, context: DefinitionContext): vscode.Location[];
+  visitScope(node: vjass_ast.Scope, context: DefinitionContext): vscode.Location[];
+  visitType(node: vjass_ast.Type, context: DefinitionContext): vscode.Location[];
+  visitTake(node: vjass_ast.Take, context: DefinitionContext): vscode.Location[];
+  visitMacro(node: any, context: DefinitionContext): vscode.Location[];
+}
+
+/**
+ * 增强的 Location 类，包含 AST 节点数据
+ */
 class PackageLocation<T extends vjass_ast.NodeAst> extends vscode.Location {
   public readonly key: string;
-  public readonly data:T;
-  constructor(data:T, uri: vscode.Uri, rangeOrPosition: vscode.Range | vscode.Position) {
+  public readonly data: T;
+
+  constructor(data: T, uri: vscode.Uri, rangeOrPosition: vscode.Range | vscode.Position) {
     super(uri, rangeOrPosition);
     this.data = data;
+    this.key = this.extractKey(data);
+  }
 
-    if (data instanceof vjass_ast.Native
+  /**
+   * 从 AST 节点提取键名
+   */
+  private extractKey(data: T): string {
+    if (this.hasNameProperty(data)) {
+      return data.name ? data.name.getText() : "";
+    }
+    return "";
+  }
+
+  /**
+   * 检查节点是否有 name 属性
+   */
+  private hasNameProperty(data: any): data is { name?: any } {
+    return data instanceof vjass_ast.Native
       || data instanceof vjass_ast.Func
       || data instanceof vjass_ast.Struct
       || data instanceof vjass_ast.Interface
@@ -29,24 +72,241 @@ class PackageLocation<T extends vjass_ast.NodeAst> extends vscode.Location {
       || data instanceof vjass_ast.Member
       || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.Scope
-      || data instanceof vjass_ast.zinc.Library
+      || data instanceof vjass_ast.Library
       || data instanceof vjass_ast.zinc.Struct
       || data instanceof vjass_ast.zinc.Func
       || data instanceof vjass_ast.zinc.Interface
       || data instanceof vjass_ast.zinc.Method
       || data instanceof vjass_ast.zinc.Member
-      || data instanceof vjass_ast.Type
-      ) {
-        if (data.name) {
-          this.key = data.name.getText();
-        } else {
-          this.key = "";
-        }
-    } else {
-      this.key = "";
-    }
+      || data instanceof vjass_ast.Type;
   }
 }
+/**
+ * 默认 Definition 访问者实现
+ */
+class DefaultDefinitionVisitor implements DefinitionVisitor {
+  visitNative(node: vjass_ast.Native, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createNativeLocation(node)];
+    }
+    return [];
+  }
+
+  visitFunction(node: vjass_ast.Func | vjass_ast.zinc.Func, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createFunctionLocation(node)];
+    }
+    return [];
+  }
+
+  visitMethod(node: vjass_ast.Method | vjass_ast.zinc.Method, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMethodLocation(node)];
+    }
+    return [];
+  }
+
+  visitStruct(node: vjass_ast.Struct | vjass_ast.zinc.Struct, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createStructLocation(node)];
+    }
+    return [];
+  }
+
+  visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createInterfaceLocation(node)];
+    }
+    return [];
+  }
+
+  visitLocal(node: vjass_ast.Local | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createLocalLocation(node)];
+    }
+    return [];
+  }
+
+  visitMember(node: vjass_ast.Member | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMemberLocation(node)];
+    }
+    return [];
+  }
+
+  visitLibrary(node: vjass_ast.Library | any, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createLibraryLocation(node)];
+    }
+    return [];
+  }
+
+  visitScope(node: vjass_ast.Scope, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createScopeLocation(node)];
+    }
+    return [];
+  }
+
+  visitType(node: vjass_ast.Type, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createTypeLocation(node)];
+    }
+    return [];
+  }
+
+  visitTake(node: vjass_ast.Take, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createTakeLocation(node)];
+    }
+    return [];
+  }
+
+  visitMacro(node: any, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createMacroLocation(node)];
+    }
+    return [];
+  }
+
+  /**
+   * 检查节点是否匹配键名
+   */
+  private matchesKey(node: any, key: string): boolean {
+    if (node.name && node.name.getText() === key) {
+      return true;
+    }
+    if (node.key && node.key === key) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 创建 Native Location
+   */
+  private createNativeLocation(node: vjass_ast.Native): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Function Location
+   */
+  private createFunctionLocation(node: vjass_ast.Func | vjass_ast.zinc.Func): vscode.Location {
+    return this.createNativeLocation(node as any) as PackageLocation<vjass_ast.Func | vjass_ast.zinc.Func>;
+  }
+
+  /**
+   * 创建 Method Location
+   */
+  private createMethodLocation(node: vjass_ast.Method | vjass_ast.zinc.Method): vscode.Location {
+    return this.createNativeLocation(node as any) as PackageLocation<vjass_ast.Method | vjass_ast.zinc.Method>;
+  }
+
+  /**
+   * 创建 Struct Location
+   */
+  private createStructLocation(node: vjass_ast.Struct | vjass_ast.zinc.Struct): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Interface Location
+   */
+  private createInterfaceLocation(node: vjass_ast.Interface | vjass_ast.zinc.Interface): vscode.Location {
+    return this.createStructLocation(node as any) as PackageLocation<vjass_ast.Interface | vjass_ast.zinc.Interface>;
+  }
+
+  /**
+   * 创建 Local Location
+   */
+  private createLocalLocation(node: vjass_ast.Local | vjass_ast.zinc.Member): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Member Location
+   */
+  private createMemberLocation(node: vjass_ast.Member | vjass_ast.zinc.Member): vscode.Location {
+    return this.createLocalLocation(node);
+  }
+
+  /**
+   * 创建 Library Location
+   */
+  private createLibraryLocation(node: vjass_ast.Library | any): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Scope Location
+   */
+  private createScopeLocation(node: vjass_ast.Scope): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Type Location
+   */
+  private createTypeLocation(node: vjass_ast.Type): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 Take Location
+   */
+  private createTakeLocation(node: vjass_ast.Take): vscode.Location {
+    return new TakeLocation(node, vscode.Uri.file(node.belong.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.type?.line ?? 0, node.type?.character ?? 0),
+        new vscode.Position(node.name?.line ?? 0, node.name?.character ?? 0)
+      )
+    );
+  }
+
+  /**
+   * 创建 Macro Location
+   */
+  private createMacroLocation(node: any): vscode.Location {
+    return new vscode.Location(vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.line_number, 0),
+        new vscode.Position(node.line_number, node.length)
+      )
+    );
+  }
+}
+
 class TakeLocation extends vscode.Location {
   public readonly data:vjass_ast.Take;
   constructor(data:vjass_ast.Take, uri: vscode.Uri, rangeOrPosition: vscode.Range | vscode.Position) {
@@ -68,7 +328,7 @@ class LocationDocument {
   // Commented out globals-related code
   // public readonly global_variable_items:PackageLocation<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
   public readonly membere_items:PackageLocation<vjass_ast.Member|vjass_ast.zinc.Member>[];
-  public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.zinc.Library>[];
+  public readonly library_items:PackageLocation<vjass_ast.Library|vjass_ast.Library>[];
   public readonly scope_items:PackageLocation<vjass_ast.Scope>[];
   public readonly types_items:PackageLocation<vjass_ast.Type>[];
   public readonly define_items:vscode.Location[];
@@ -78,19 +338,19 @@ class LocationDocument {
     // this.document = document;
     this.program = program;
 
-    this.native_items = this.program.natives.map(node => LocationDocument.native_to_hover(node));
-    this.function_items = this.program.functions.map(node => LocationDocument.function_to_hover(node));
-    this.struct_items = this.program.structs.map(node => this.struct_to_hover(node));
-    this.interface_items = this.program.interfaces.map(node => this.interface_to_hover(node));
-    this.method_items = this.program.methods.map(node => LocationDocument.method_to_hover(node));
-    this.local_items = this.program.locals.map(node => LocationDocument.local_to_hover(node));
+    this.native_items = this.program.get_all_natives().map((node: any) => LocationDocument.native_to_hover(node));
+    this.function_items = this.program.get_all_functions().map((node: any) => LocationDocument.function_to_hover(node));
+    this.struct_items = this.program.get_all_structs().map((node: any) => this.struct_to_hover(node));
+    this.interface_items = this.program.get_all_interfaces().map((node: any) => this.interface_to_hover(node));
+    this.method_items = this.program.get_all_methods().map((node: any) => LocationDocument.method_to_hover(node));
+    this.local_items = this.program.get_all_locals().map((node: any) => LocationDocument.local_to_hover(node));
     // Commented out globals-related code
     // this.global_variable_items = this.program.global_variables.map(node => this.global_variable_to_hover(node));
-    this.membere_items = this.program.members.map(node => LocationDocument.member_to_hover(node));
-    this.library_items = this.program.librarys.map(node => this.library_to_hover(node));
-    this.scope_items = this.program.scopes.map(node => this.scope_to_hover(node));
-    this.types_items = this.program.types.map(node => this.type_to_hover(node));
-    this.define_items = this.program.macros.map(macro => LocationDocument.define_to_hover(macro));
+    this.membere_items = this.program.get_all_members().map((node: any) => LocationDocument.member_to_hover(node));
+    this.library_items = this.program.get_all_libraries().map((node: any) => this.library_to_hover(node));
+    this.scope_items = this.program.get_all_scopes().map((node: any) => this.scope_to_hover(node));
+    this.types_items = this.program.get_all_types().map((node: any) => this.type_to_hover(node));
+    this.define_items = (this.program as any).macros?.map((macro: any) => LocationDocument.define_to_hover(macro)) || [];
     // this.take_items = [
     //   ...(this.program.functions.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
     //   ...(this.program.methods.filter(x => !!x).map(x => x.takes as vjass_ast.Take[])),
@@ -119,9 +379,9 @@ class LocationDocument {
     return item;
   }
   private interface_to_hover(inter: vjass_ast.Interface|vjass_ast.zinc.Interface) {
-    return this.struct_to_hover(inter) as PackageLocation<vjass_ast.Interface>;
+    return this.struct_to_hover(inter as any) as PackageLocation<vjass_ast.Interface>;
   }
-  private library_to_hover(object: vjass_ast.Library|vjass_ast.zinc.Library) {
+  private library_to_hover(object: vjass_ast.Library|any) {
     const item = new PackageLocation(object, vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.start.line, object.start.position), new vscode.Position(object.end.line, object.end.position)));
 
     return item;
@@ -162,7 +422,7 @@ class LocationDocument {
 
 
   }
-  public static define_to_hover(object: vjass.Macro) {
+  public static define_to_hover(object: any) {
     const item = new vscode.Location(vscode.Uri.file(object.document.filePath), new vscode.Range(new vscode.Position(object.line_number, 0), new vscode.Position(object.line_number, object.length)));
 
     return item;
@@ -185,12 +445,8 @@ class Wrap {
 }
 class Manage {
   wraps:Wrap[] = [];
-  private readonly subject = new Subject<vscode.TextDocument>();
 
   constructor () {
-    this.subject.subscribe((document:vscode.TextDocument) => {
-      this.set(document);
-    });
   }
 
   index_of(key: string):number {
@@ -264,7 +520,7 @@ class Manage {
    * 根据改变后的内容重新生成items
    */
   changed(document:vscode.TextDocument) {
-    this.subject.next(document);
+    this.set(document);
   }
 
   rename(origin_key: string, target_kay: string) {
@@ -302,157 +558,236 @@ export const rename_document_difinition = (origin_key: string, target_kay: strin
   LocationManage.rename(origin_key, target_kay);
 };
 
-vscode.languages.registerDefinitionProvider("jass", new class NewDefinitionProvider implements vscode.DefinitionProvider {
+/**
+ * 增强的 Definition 提供者，使用 visitor 模式
+ */
+class NewDefinitionProvider implements vscode.DefinitionProvider {
+  private readonly visitor: DefinitionVisitor;
+  private readonly maxLength = 255;
 
-  private _maxLength = 255;
-
-  private isNumber = function (val: string) {
-    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-    if (regPos.test(val) || regNeg.test(val)) {
-      return true;
-    } else {
-      return false;
-    }
+  constructor() {
+    this.visitor = new DefaultDefinitionVisitor();
   }
 
+  /**
+   * 检查是否为数字
+   */
+  private isNumber(val: string): boolean {
+    const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
+    const regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; // 负浮点数
+    return regPos.test(val) || regNeg.test(val);
+  }
+
+  /**
+   * 提供定义位置
+   */
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
     const key = document.getText(document.getWordRangeAtPosition(position));
 
-    if (key.length > this._maxLength) {
+    // 验证输入
+    if (key.length > this.maxLength || this.isNumber(key) || AllKeywords.includes(key)) {
       return null;
     }
 
-    if (this.isNumber(key)) {
-      return null;
-    }
+    // 创建上下文
+    const context: DefinitionContext = {
+      document,
+      position,
+      key,
+      locationCache: new Map<string, vscode.Location[]>()
+    };
 
-    if (AllKeywords.includes(key)) {
-      return null;
-    }
+    const locations: vscode.Location[] = [];
 
-    const locations:vscode.Location[] = [];
-    
-    LocationManage.wraps.forEach(wrap => {
-      locations.push(...wrap.document.define_items.filter(loc => {
-        const macro = wrap.document.program.macros.find(m => m.key === key);
-        return macro && loc.uri.fsPath === macro.document.filePath;
-      }));
+    // 遍历所有文档
+    GlobalContext.keys.forEach(filePath => {
+      const program = GlobalContext.get(filePath);
+      if (!program) return;
 
-      locations.push(...wrap.document.native_items.filter(x => x.key == key));
-      locations.push(...wrap.document.function_items.filter(x => x.key == key));
-      // Commented out globals-related code
-      // locations.push(...wrap.document.global_variable_items.filter(x => x.key == key));
-      locations.push(...wrap.document.library_items.filter(x => x.key == key));
-      locations.push(...wrap.document.scope_items.filter(x => x.key == key));
-      locations.push(...wrap.document.method_items.filter(x => x.key == key));
-      locations.push(...wrap.document.membere_items.filter(x => x.key == key));
+      // 使用 visitor 模式处理各种节点类型
+      this.processDocument(program, context, locations);
 
-      const is_current = wrap.equals(document.uri.fsPath);
-      if (is_current) {
-        const target_position = new Position(position.line, position.character);
-
-        const find_contains_func_and_method = (): PackageLocation<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>[] => {
-          return [...wrap.document.method_items, ...wrap.document.function_items].filter(object => object.data.contains(target_position));
-        };
-        const funcs = find_contains_func_and_method();
-        const find_func_and_method_locals = (func: PackageLocation<vjass_ast.Func | vjass_ast.zinc.Func | vjass_ast.Method | vjass_ast.zinc.Method>) => {
-          if (func.data instanceof vjass_ast.Func || func.data instanceof vjass_ast.Method) {
-            const locals = func.data.children.filter(child => child instanceof vjass_ast.Local) as vjass_ast.Local[];
-            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
-              locations.push(LocationDocument.local_to_hover(local));
-            });
-          } else {
-            const locals = func.data.children.filter(child => child instanceof vjass_ast.zinc.Member) as vjass_ast.zinc.Member[];
-            locals.filter(take => take.name && take.name.getText() == key).forEach(local => {
-              locations.push(LocationDocument.member_to_hover(local));
-            });
-          }
-        } 
-        funcs.forEach(func => {
-          if (func.data.takes) {
-            func.data.takes.filter(take => take.name && take.name.getText() == key).forEach(take => {
-              locations.push(LocationDocument.take_to_hover(take));
-            });
-          }
-          find_func_and_method_locals(func);
-        });
-
-        // const push_take = (function_items:PackageLocation<vjass_ast.Func|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method>[]) => {
-        //   function_items.filter(x => {
-        //     return x.data.contains(target_position);
-        //   }).forEach(data => {
-        //     if (data.data.takes) {
-        //       data.data.takes.forEach(take => {
-        //         if (take.name && take.name.getText() == key) {
-        //           locations.push(LocationDocument.take_to_hover(take));
-        //         }
-        //       });
-        //     }
-        //   });
-        // };
-        // const push_local = (local_items:PackageLocation<vjass_ast.Local>[]) => {
-        //   local_items.filter(x => {
-        //     return x.data.parent && (x.data.parent instanceof vjass_ast.Func || x.data.parent instanceof vjass_ast.Method || x.data.parent instanceof vjass_ast.zinc.Func || x.data.parent instanceof vjass_ast.zinc.Method) && x.data.parent.contains(target_position);
-        //   }).forEach(data => {
-        //     if (data.key == key) {
-        //       locations.push(data);
-        //     }
-        //   });
-        // };
-  
-        // push_take(wrap.document.function_items);
-        // push_take(wrap.document.method_items);
-        // push_local(wrap.document.local_items);
-        // push_local(wrap.document.membere_items);
-
+      // 如果是当前文档，处理局部变量和参数
+      if (filePath === document.uri.fsPath) {
+        this.processLocalContext(program, context, locations);
       }
     });
 
-    return locations;
+    return locations.length > 0 ? locations : null;
   }
 
-}());
+  /**
+   * 处理文档中的所有节点
+   */
+  private processDocument(program: vjass.Document, context: DefinitionContext, locations: vscode.Location[]): void {
+    // 处理 natives
+    const natives = program.get_all_natives();
+    natives.forEach((native: any) => {
+      locations.push(...this.visitor.visitNative(native, context));
+    });
 
-vscode.languages.registerTypeDefinitionProvider("jass", new class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
-  private _maxLength = 255;
+    // 处理 functions
+    const functions = program.get_all_functions();
+    functions.forEach((func: any) => {
+      locations.push(...this.visitor.visitFunction(func, context));
+    });
 
-  private isNumber = function (val: string) {
-    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-    if (regPos.test(val) || regNeg.test(val)) {
-      return true;
-    } else {
-      return false;
-    }
+    // 处理 methods
+    const methods = program.get_all_methods();
+    methods.forEach((method: any) => {
+      locations.push(...this.visitor.visitMethod(method, context));
+    });
+
+    // 处理 structs
+    const structs = program.get_all_structs();
+    structs.forEach((struct: any) => {
+      locations.push(...this.visitor.visitStruct(struct, context));
+    });
+
+    // 处理 interfaces
+    const interfaces = program.get_all_interfaces();
+    interfaces.forEach((interface_: any) => {
+      locations.push(...this.visitor.visitInterface(interface_, context));
+    });
+
+    // 处理 members
+    const members = program.get_all_members();
+    members.forEach((member: any) => {
+      locations.push(...this.visitor.visitMember(member, context));
+    });
+
+    // 处理 libraries
+    const libraries = program.get_all_libraries();
+    libraries.forEach((library: any) => {
+      locations.push(...this.visitor.visitLibrary(library, context));
+    });
+
+    // 处理 scopes
+    const scopes = program.get_all_scopes();
+    scopes.forEach((scope: any) => {
+      locations.push(...this.visitor.visitScope(scope, context));
+    });
+
+    // 处理 types
+    const types = program.get_all_types();
+    types.forEach((type: any) => {
+      locations.push(...this.visitor.visitType(type, context));
+    });
+
+    // 处理 macros
+    const macros = (program as any).macros || [];
+    macros.forEach((macro: any) => {
+      locations.push(...this.visitor.visitMacro(macro, context));
+    });
   }
+
+  /**
+   * 处理局部上下文（当前文档中的局部变量和参数）
+   */
+  private processLocalContext(program: vjass.Document, context: DefinitionContext, locations: vscode.Location[]): void {
+    const targetPosition = new Position(context.position.line, context.position.character);
+
+    // 查找包含当前位置的函数和方法
+    const functions = program.get_all_functions();
+    const methods = program.get_all_methods();
+    
+    const containingFunctions = [...functions, ...methods].filter((func: any) => {
+      return func.contains && func.contains(targetPosition);
+    });
+
+    containingFunctions.forEach((func: any) => {
+      // 处理参数
+      if (func.takes) {
+        func.takes.forEach((take: any) => {
+          locations.push(...this.visitor.visitTake(take, context));
+        });
+      }
+
+      // 处理局部变量
+      if (func.children) {
+        const locals = func.children.filter((child: any) => 
+          child instanceof vjass_ast.Local || child instanceof vjass_ast.zinc.Member
+        );
+        locals.forEach((local: any) => {
+          locations.push(...this.visitor.visitLocal(local, context));
+        });
+      }
+    });
+  }
+}
+
+vscode.languages.registerDefinitionProvider("jass", new NewDefinitionProvider());
+
+/**
+ * 增强的 Type Definition 提供者，使用 visitor 模式
+ */
+class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
+  private readonly visitor: DefinitionVisitor;
+  private readonly maxLength = 255;
+
+  constructor() {
+    this.visitor = new DefaultDefinitionVisitor();
+  }
+
+  /**
+   * 检查是否为数字
+   */
+  private isNumber(val: string): boolean {
+    const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
+    const regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; // 负浮点数
+    return regPos.test(val) || regNeg.test(val);
+  }
+
+  /**
+   * 提供类型定义位置
+   */
   provideTypeDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
     const key = document.getText(document.getWordRangeAtPosition(position));
 
-    if (key.length > this._maxLength) {
+    // 验证输入
+    if (key.length > this.maxLength || this.isNumber(key) || AllKeywords.includes(key)) {
       return null;
     }
 
-    if (this.isNumber(key)) {
-      return null;
-    }
+    // 创建上下文
+    const context: DefinitionContext = {
+      document,
+      position,
+      key,
+      locationCache: new Map<string, vscode.Location[]>()
+    };
 
-    if (AllKeywords.includes(key)) {
-      return null;
-    }
+    const locations: vscode.Location[] = [];
 
-    
-    const locations:vscode.Location[] = [];
-    
-    LocationManage.wraps.forEach(wrap => {
-      locations.push(...wrap.document.struct_items.filter(x => x.key == key));
-      locations.push(...wrap.document.interface_items.filter(x => x.key == key));
-      locations.push(...wrap.document.types_items.filter(x => x.key == key));
+    // 遍历所有文档，只处理类型相关的节点
+    GlobalContext.keys.forEach(filePath => {
+      const program = GlobalContext.get(filePath);
+      if (!program) return;
+
+      // 处理 structs
+      const structs = program.get_all_structs();
+      structs.forEach((struct: any) => {
+        locations.push(...this.visitor.visitStruct(struct, context));
+      });
+
+      // 处理 interfaces
+      const interfaces = program.get_all_interfaces();
+      interfaces.forEach((interface_: any) => {
+        locations.push(...this.visitor.visitInterface(interface_, context));
+      });
+
+      // 处理 types
+      const types = program.get_all_types();
+      types.forEach((type: any) => {
+        locations.push(...this.visitor.visitType(type, context));
+      });
     });
 
-    return locations;
+    return locations.length > 0 ? locations : null;
   }
-} ());
+}
+
+vscode.languages.registerTypeDefinitionProvider("jass", new TypeDefinitionProvider());
 
 
 

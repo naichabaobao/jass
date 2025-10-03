@@ -28,7 +28,8 @@ export class ReferenceProvider implements vscode.ReferenceProvider {
             if (!doc) return;
 
             // 搜索函数调用
-            doc.calls.forEach(call => {
+            const calls = (doc as any).calls || [];
+            calls.forEach((call: any) => {
                 if (call.ref && call.ref.toString() === word) {
                     locations.push(new vscode.Location(
                         vscode.Uri.file(doc.filePath),

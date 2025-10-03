@@ -92,7 +92,7 @@ export class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTo
         GlobalContext.keys.forEach(key => {
             const program = GlobalContext.get(key);
             if (program) {
-                structs.push(...program.structs as (Struct | zinc.Struct)[]);
+                structs.push(...program.get_all_structs() as (Struct | zinc.Struct)[]);
             }
         });
         

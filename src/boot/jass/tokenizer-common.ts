@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Implement, Interface, JassDetail, Library, Local, Loop, Member, Method, Module, Native, NodeAst, Other, Scope, Set, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_implement, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_module, parse_scope, parse_struct, zinc } from "./parser-vjass";
+import { Call, Comment, Func, GlobalContext, GlobalVariable, Globals, If, Implement, Interface, JassDetail, Library, Local, Loop, Member, Method, Module, Native, NodeAst, Other, Scope, Set as JassSet, Struct, Take, Type, ZincNode, parse, parse_function, parse_globals, parse_if, parse_interface, parse_library, parse_line_call, parse_line_comment, parse_line_else, parse_line_else_if, parse_line_end_tag, parse_line_exitwhen, parse_line_expr, parse_line_global, parse_line_implement, parse_line_local, parse_line_member, parse_line_method, parse_line_native, parse_line_return, parse_line_set, parse_line_type, parse_loop, parse_method, parse_module, parse_scope, parse_struct, zinc } from "./parser-vjass";
 import { tokenize_for_vjass, tokenize_for_vjass_by_content } from "./tokenizer-vjass";
 import { parse_zinc } from "./zinc";
 import { AllTokenTexts } from "./keyword";
@@ -16,30 +16,160 @@ import { parseAndRemoveZincBlock, ZincBlock, ZincBlockCollection } from "../vjas
 
 
 /**
- * AST访问者接口
- * 实现此接口以遍历AST树的不同节点类型（Visitor模式）
+ * AST 访问器接口（Visitor 模式）
+ * 
+ * 用于遍历和处理抽象语法树中的各种节点类型
+ * 所有方法都是可选的，只需实现需要处理的节点类型即可
+ * 
+ * @example
+ * ```typescript
+ * class MyVisitor implements ASTVisitor {
+ *   visitFunc(node: Func) {
+ *     console.log('Found function:', node.name);
+ *   }
+ * }
+ * 
+ * document.accept(new MyVisitor());
+ * ```
  */
 export interface ASTVisitor {
+  // ==================== 函数和原生函数 ====================
+  /** 访问函数节点（JASS/vJASS/Zinc） */
   visitFunc?(node: Func | zinc.Func): void;
+  
+  /** 访问原生函数节点 */
   visitNative?(node: Native): void;
+  
+  /** 访问方法节点（结构体/接口方法） */
   visitMethod?(node: Method | zinc.Method): void;
+  
+  // ==================== 类型定义 ====================
+  /** 访问结构体节点 */
   visitStruct?(node: Struct | zinc.Struct): void;
+  
+  /** 访问接口节点 */
   visitInterface?(node: Interface | zinc.Interface): void;
-  visitLibrary?(node: Library): void;
-  visitScope?(node: Scope): void;
-  visitGlobals?(node: Globals): void;
+  
+  /** 访问类型定义节点 */
   visitType?(node: Type): void;
+  
+  // ==================== 作用域和模块 ====================
+  /** 访问库节点（vJASS library） */
+  visitLibrary?(node: Library): void;
+  
+  /** 访问作用域节点（vJASS scope） */
+  visitScope?(node: Scope): void;
+  
+  /** 访问全局变量块节点 */
+  visitGlobals?(node: Globals): void;
+  
+  /** 访问模块节点（vJASS module） */
+  visitModule?(node: any): void;
+  
+  /** 访问模块实现节点（vJASS module implementation） */
+  visitModuleImplementation?(node: any): void;
+  
+  // ==================== 变量 ====================
+  /** 访问局部变量节点 */
   visitLocal?(node: Local | zinc.Member): void;
+  
+  /** 访问成员变量节点（结构体/接口成员） */
   visitMember?(node: Member | zinc.Member): void;
+  
+  /** 访问全局变量节点 */
   visitGlobalVariable?(node: GlobalVariable | zinc.Member): void;
+  
+  // ==================== 语句 ====================
+  /** 访问条件语句节点 */
   visitIf?(node: If | zinc.If): void;
+  
+  /** 访问循环语句节点 */
   visitLoop?(node: Loop): void;
-  visitSet?(node: Set | zinc.Set): void;
+  
+  /** 访问赋值语句节点 */
+  visitSet?(node: JassSet | zinc.Set): void;
+  
+  /** 访问函数调用节点 */
   visitCall?(node: Call | zinc.Call): void;
+  
+  // ==================== 其他 ====================
+  /** 访问注释节点 */
   visitComment?(node: Comment): void;
-  visitModule?(node: any): void; // vJASS Module support
-  visitModuleImplementation?(node: any): void; // vJASS Module implementation support
+  
+  /** 访问其他未分类的节点 */
   visitOther?(node: NodeAst): void;
+}
+
+/**
+ * AST 访问器回调函数接口（Lambda 形式）
+ * 提供更灵活的 lambda 函数调用方式
+ */
+export interface ASTVisitorCallbacks {
+  // ==================== 函数和原生函数 ====================
+  /** 访问函数节点的回调 */
+  onFunc?: (node: Func | zinc.Func) => void;
+  
+  /** 访问原生函数节点的回调 */
+  onNative?: (node: Native) => void;
+  
+  /** 访问方法节点的回调 */
+  onMethod?: (node: Method | zinc.Method) => void;
+  
+  // ==================== 类型定义 ====================
+  /** 访问结构体节点的回调 */
+  onStruct?: (node: Struct | zinc.Struct) => void;
+  
+  /** 访问接口节点的回调 */
+  onInterface?: (node: Interface | zinc.Interface) => void;
+  
+  /** 访问类型定义节点的回调 */
+  onType?: (node: Type) => void;
+  
+  // ==================== 作用域和模块 ====================
+  /** 访问库节点的回调 */
+  onLibrary?: (node: Library) => void;
+  
+  /** 访问作用域节点的回调 */
+  onScope?: (node: Scope) => void;
+  
+  /** 访问全局变量块节点的回调 */
+  onGlobals?: (node: Globals) => void;
+  
+  /** 访问模块节点的回调 */
+  onModule?: (node: any) => void;
+  
+  /** 访问模块实现节点的回调 */
+  onModuleImplementation?: (node: any) => void;
+  
+  // ==================== 变量 ====================
+  /** 访问局部变量节点的回调 */
+  onLocal?: (node: Local | zinc.Member) => void;
+  
+  /** 访问成员变量节点的回调 */
+  onMember?: (node: Member | zinc.Member) => void;
+  
+  /** 访问全局变量节点的回调 */
+  onGlobalVariable?: (node: GlobalVariable | zinc.Member) => void;
+  
+  // ==================== 语句 ====================
+  /** 访问条件语句节点的回调 */
+  onIf?: (node: If | zinc.If) => void;
+  
+  /** 访问循环语句节点的回调 */
+  onLoop?: (node: Loop) => void;
+  
+  /** 访问赋值语句节点的回调 */
+  onSet?: (node: JassSet | zinc.Set) => void;
+  
+  /** 访问函数调用节点的回调 */
+  onCall?: (node: Call | zinc.Call) => void;
+  
+  // ==================== 其他 ====================
+  /** 访问注释节点的回调 */
+  onComment?: (node: Comment) => void;
+  
+  /** 访问其他未分类节点的回调 */
+  onOther?: (node: NodeAst) => void;
 }
 
 /**
@@ -162,11 +292,11 @@ export class Document {
   };
 
   // ==================== Check验证配置 ====================
-  private checkValidationConfig = {
+  private checkValidationConfig: any = {
     enabled: true,
     enablePerformanceLogging: false,
     enableDetailedErrors: true,
-    skipNodes: new Set() as any, // 可以跳过特定节点类型的检查
+    skipNodes: new Set(), // 可以跳过特定节点类型的检查
     maxExecutionTime: 100 // 单个check方法的最大执行时间(ms)
   };
 
@@ -459,7 +589,7 @@ export class Document {
     return false;
   }
 
-  public readonly zinc_nodes:ZincNode[] = [];
+
 
   /**
    * 文档最根部的对象
@@ -856,109 +986,442 @@ export class Document {
 
 
 
-  // ==================== Visitor 系统 ====================
+  // ==================== AST 访问器方法（Visitor 模式） ====================
   
   /**
-   * 访问AST树（Visitor模式）
-   * @param visitor 访问者对象
+   * 从文档根节点开始访问整个 AST 树
+   * @param visitor AST 访问器
    */
   public accept(visitor: ASTVisitor): void {
     if (this.program) {
-      this.visitNode(this.program, visitor);
+      this.acceptNode(this.program, visitor);
     }
     
     // 访问zinc节点
     this.zincNodes.forEach(zincNode => {
-      this.visitNode(zincNode, visitor);
+      this.acceptNode(zincNode, visitor);
     });
   }
   
   /**
-   * 递归访问节点
+   * 从指定节点开始访问 AST 树
+   * @param node 起始节点
+   * @param visitor AST 访问器
+   */
+  public acceptNode(node: NodeAst, visitor: ASTVisitor): void {
+    if (!node) {
+      return;
+    }
+    this.visitNode(node, visitor);
+  }
+
+  /**
+   * 递归访问节点及其子节点
+   * @param node 要访问的节点
+   * @param visitor AST 访问器
    */
   private visitNode(node: NodeAst, visitor: ASTVisitor): void {
-    // 根据节点类型调用相应的visitor方法
-    if (node instanceof Func || node instanceof zinc.Func) {
-      visitor.visitFunc?.(node);
-    } else if (node instanceof Native) {
-      visitor.visitNative?.(node);
-    } else if (node instanceof Method || node instanceof zinc.Method) {
-      visitor.visitMethod?.(node);
-    } else if (node instanceof Struct || node instanceof zinc.Struct) {
-      visitor.visitStruct?.(node);
-    } else if (node instanceof Interface || node instanceof zinc.Interface) {
-      visitor.visitInterface?.(node);
-    } else if (node instanceof Library) {
-      visitor.visitLibrary?.(node);
-    } else if (node instanceof Scope) {
-      visitor.visitScope?.(node);
-    } else if (node instanceof Globals) {
-      visitor.visitGlobals?.(node);
-    } else if (node instanceof Type) {
-      visitor.visitType?.(node);
-    } else if (node instanceof Local) {
-      visitor.visitLocal?.(node);
-    } else if (node instanceof Member || node instanceof zinc.Member) {
-      // 区分是member还是local还是global
+      // 然后递归访问所有子节点
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => {
+          if (visitor.visitFunc && (child instanceof Func || child instanceof zinc.Func)) {
+            visitor.visitFunc(child);
+          } else if (visitor.visitNative && (child instanceof Native)) {
+            visitor.visitNative(child);
+          } else if (visitor.visitMethod && (child instanceof Method || child instanceof zinc.Method)) {
+            visitor.visitMethod(child);
+          } else if (visitor.visitStruct && (child instanceof Struct || child instanceof zinc.Struct)) {
+            visitor.visitStruct(child);
+          } else if (visitor.visitInterface && (child instanceof Interface || child instanceof zinc.Interface)) {
+            visitor.visitInterface(child);
+          } else if (visitor.visitType && (child instanceof Type)) {
+            visitor.visitType(child);
+          } else if (visitor.visitLibrary && (child instanceof Library)) {
+            visitor.visitLibrary(child);
+          } else if (visitor.visitScope && (child instanceof Scope)) {
+            visitor.visitScope(child);
+          } else if (visitor.visitGlobals && (child instanceof Globals)) {
+            visitor.visitGlobals(child);
+          } else if (visitor.visitModule && (child instanceof Module)) {
+            visitor.visitModule(child);
+          } else if (visitor.visitMember && (child instanceof Member || child instanceof zinc.Member)) {
+            visitor.visitMember(child);
+          } else if (visitor.visitLocal && (child instanceof Local || child instanceof zinc.Member)) {
+            visitor.visitLocal(child);
+          } else if (visitor.visitGlobalVariable && (child instanceof GlobalVariable || child instanceof zinc.Member)) {
+            visitor.visitGlobalVariable(child);
+          } else if (visitor.visitIf && (child instanceof If || child instanceof zinc.If)) {
+            visitor.visitIf(child);
+          } else if (visitor.visitLoop && (child instanceof Loop)) {
+            visitor.visitLoop(child);
+          } else if (visitor.visitSet && (child instanceof JassSet || child instanceof zinc.Set)) {
+            visitor.visitSet(child);
+          } else if (visitor.visitCall && (child instanceof Call || child instanceof zinc.Call)) {
+            visitor.visitCall(child);
+          } else if (visitor.visitComment && (child instanceof Comment)) {
+            visitor.visitComment(child);
+          } else if (visitor.visitOther && (child instanceof NodeAst)) {
+            visitor.visitOther(child);
+          }
+          this.visitNode(child, visitor);
+        });
+      }
+    }
+
+  // ==================== Lambda 便利方法 ====================
+
+  /**
+   * 使用回调函数访问整个 AST 树（Lambda 形式）
+   * @param callbacks 回调函数对象
+   * 
+   * @example
+   * ```typescript
+   * document.acceptWithCallbacks({
+   *   onFunc: (node) => console.log('Function:', node.name),
+   *   onStruct: (node) => console.log('Struct:', node.name)
+   * });
+   * ```
+   */
+  public acceptWithCallbacks(callbacks: ASTVisitorCallbacks): void {
+    const visitor = this.createVisitorFromCallbacks(callbacks);
+    this.accept(visitor);
+  }
+
+  /**
+   * 使用回调函数从指定节点开始访问 AST 树（Lambda 形式）
+   * @param node 起始节点
+   * @param callbacks 回调函数对象
+   * 
+   * @example
+   * ```typescript
+   * document.acceptNodeWithCallbacks(structNode, {
+   *   onMethod: (node) => console.log('Method:', node.name)
+   * });
+   * ```
+   */
+  public acceptNodeWithCallbacks(node: NodeAst, callbacks: ASTVisitorCallbacks): void {
+    if (!node) {
+      return;
+    }
+    const visitor = this.createVisitorFromCallbacks(callbacks);
+    this.visitNode(node, visitor);
+  }
+
+  /**
+   * 只访问函数节点（Lambda 形式）
+   * @param callback 函数节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptFunc((func) => console.log('Function:', func.name));
+   * ```
+   */
+  public acceptFunc<T extends Func | zinc.Func>(callback: (node: T) => void): void {
+    this.acceptWithCallbacks({
+      onFunc: callback as any
+    });
+  }
+
+  /**
+   * 只访问结构体节点（Lambda 形式）
+   * @param callback 结构体节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptStruct((struct) => console.log('Struct:', struct.name));
+   * ```
+   */
+  public acceptStruct<T extends Struct | zinc.Struct>(callback: (node: T) => void): void {
+    this.acceptWithCallbacks({
+      onStruct: callback as any
+    });
+  }
+
+  /**
+   * 只访问方法节点（Lambda 形式）
+   * @param callback 方法节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptMethod((method) => console.log('Method:', method.name));
+   * ```
+   */
+  public acceptMethod<T extends Method | zinc.Method>(callback: (node: T) => void): void {
+    this.acceptWithCallbacks({
+      onMethod: callback as any
+    });
+  }
+
+  /**
+   * 从指定节点开始只访问方法节点（Lambda 形式）
+   * @param node 起始节点
+   * @param callback 方法节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptMethodFromNode(structNode, (method) => console.log('Method:', method.name));
+   * ```
+   */
+  public acceptMethodFromNode<T extends Method | zinc.Method>(node: NodeAst, callback: (node: T) => void): void {
+    this.acceptNodeWithCallbacks(node, {
+      onMethod: callback as any
+    });
+  }
+
+  /**
+   * 从指定节点开始只访问结构体节点（Lambda 形式）
+   * @param node 起始节点
+   * @param callback 结构体节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptStructFromNode(parentNode, (struct) => console.log('Struct:', struct.name));
+   * ```
+   */
+  public acceptStructFromNode<T extends Struct | zinc.Struct>(node: NodeAst, callback: (node: T) => void): void {
+    this.acceptNodeWithCallbacks(node, {
+      onStruct: callback as any
+    });
+  }
+
+  /**
+   * 从指定节点开始只访问函数节点（Lambda 形式）
+   * @param node 起始节点
+   * @param callback 函数节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptFuncFromNode(parentNode, (func) => console.log('Function:', func.name));
+   * ```
+   */
+  public acceptFuncFromNode<T extends Func | zinc.Func>(node: NodeAst, callback: (node: T) => void): void {
+    this.acceptNodeWithCallbacks(node, {
+      onFunc: callback as any
+    });
+  }
+
+  /**
+   * 从指定节点开始只访问局部变量节点（Lambda 形式）
+   * @param node 起始节点
+   * @param callback 局部变量节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptLocalFromNode(funcNode, (local) => console.log('Local variable:', local.name));
+   * ```
+   */
+  public acceptLocalFromNode<T extends Local | zinc.Member>(node: NodeAst, callback: (node: T) => void): void {
+    this.acceptNodeWithCallbacks(node, {
+      onLocal: callback as any
+    });
+  }
+
+  /**
+   * 从指定节点开始只访问 Set 语句节点（Lambda 形式）
+   * @param node 起始节点
+   * @param callback Set 语句节点回调
+   * 
+   * @example
+   * ```typescript
+   * document.acceptSetFromNode(methodNode, (set) => console.log('Set statement:', set.toString()));
+   * ```
+   */
+  public acceptSetFromNode<T extends JassSet|zinc.Set>(node: NodeAst, callback: (node: T) => void): void {
+    this.acceptNodeWithCallbacks(node, {
+      onSet: callback as any
+    });
+  }
+
+  /**
+   * 收集指定类型的节点（Lambda + 泛型形式）
+   * @param nodeType 节点类型构造函数
+   * @param filter 可选的过滤条件
+   * @returns 收集到的节点数组
+   * 
+   * @example
+   * ```typescript
+   * // 收集所有函数
+   * const functions = document.collectNodes(Func);
+   * 
+   * // 收集所有结构体
+   * const structs = document.collectNodes(Struct);
+   * 
+   * // 收集满足条件的函数
+   * const publicFunctions = document.collectNodes(Func, (func) => func.tag === 'public');
+   * ```
+   */
+  public collectNodes<T extends NodeAst>(
+    nodeType: new (...args: any[]) => T,
+    filter?: (node: T) => boolean
+  ): T[] {
+    const results: T[] = [];
+    
+    this.acceptWithCallbacks({
+      onOther: (node) => {
+        if (node instanceof nodeType) {
+          if (!filter || filter(node)) {
+            results.push(node);
+          }
+        }
+      }
+    });
+    
+    return results;
+  }
+
+  /**
+   * 查找第一个满足条件的节点（Lambda + 泛型形式）
+   * @param nodeType 节点类型构造函数
+   * @param filter 过滤条件
+   * @returns 找到的节点或 null
+   * 
+   * @example
+   * ```typescript
+   * // 查找名为 "MyStruct" 的结构体
+   * const struct = document.findNode(Struct, (s) => s.name?.getText() === "MyStruct");
+   * 
+   * // 查找第一个公共函数
+   * const publicFunc = document.findNode(Func, (f) => f.tag === 'public');
+   * ```
+   */
+  public findNode<T extends NodeAst>(
+    nodeType: new (...args: any[]) => T,
+    filter: (node: T) => boolean
+  ): T | null {
+    let result: T | null = null;
+    
+    this.acceptWithCallbacks({
+      onOther: (node) => {
+        if (!result && node instanceof nodeType && filter(node)) {
+          result = node;
+        }
+      }
+    });
+    
+    return result;
+  }
+
+  /**
+   * 检查是否存在满足条件的节点（Lambda + 泛型形式）
+   * @param nodeType 节点类型构造函数
+   * @param filter 过滤条件
+   * @returns 是否存在满足条件的节点
+   * 
+   * @example
+   * ```typescript
+   * // 检查是否有公共函数
+   * const hasPublicFunc = document.hasNode(Func, (f) => f.tag === 'public');
+   * 
+   * // 检查是否有名为 "MyStruct" 的结构体
+   * const hasMyStruct = document.hasNode(Struct, (s) => s.name?.getText() === "MyStruct");
+   * ```
+   */
+  public hasNode<T extends NodeAst>(
+    nodeType: new (...args: any[]) => T,
+    filter: (node: T) => boolean
+  ): boolean {
+    return this.findNode(nodeType, filter) !== null;
+  }
+
+  /**
+   * 统计指定类型节点的数量（Lambda + 泛型形式）
+   * @param nodeType 节点类型构造函数
+   * @param filter 可选的过滤条件
+   * @returns 节点数量
+   * 
+   * @example
+   * ```typescript
+   * // 统计所有函数数量
+   * const funcCount = document.countNodes(Func);
+   * 
+   * // 统计公共函数数量
+   * const publicFuncCount = document.countNodes(Func, (f) => f.tag === 'public');
+   * ```
+   */
+  public countNodes<T extends NodeAst>(
+    nodeType: new (...args: any[]) => T,
+    filter?: (node: T) => boolean
+  ): number {
+    return this.collectNodes(nodeType, filter).length;
+  }
+
+  /**
+   * 将回调函数对象转换为 ASTVisitor 实例
+   * @param callbacks 回调函数对象
+   * @returns ASTVisitor 实例
+   */
+  private createVisitorFromCallbacks(callbacks: ASTVisitorCallbacks): ASTVisitor {
+    return {
+      visitFunc: callbacks.onFunc,
+      visitNative: callbacks.onNative,
+      visitMethod: callbacks.onMethod,
+      visitStruct: callbacks.onStruct,
+      visitInterface: callbacks.onInterface,
+      visitType: callbacks.onType,
+      visitLibrary: callbacks.onLibrary,
+      visitScope: callbacks.onScope,
+      visitGlobals: callbacks.onGlobals,
+      visitModule: callbacks.onModule,
+      visitModuleImplementation: callbacks.onModuleImplementation,
+      visitLocal: callbacks.onLocal,
+      visitMember: callbacks.onMember,
+      visitGlobalVariable: callbacks.onGlobalVariable,
+      visitIf: callbacks.onIf,
+      visitLoop: callbacks.onLoop,
+      visitSet: callbacks.onSet,
+      visitCall: callbacks.onCall,
+      visitComment: callbacks.onComment,
+      visitOther: callbacks.onOther
+    };
+  }
+  
+
+
+
+  /**
+   * 访问 Member 节点，根据父节点类型区分为 local、member 或 global
+   * @param node Member 节点
+   * @param visitor AST 访问器
+   */
+  private visitMemberNode(node: Member | zinc.Member, visitor: ASTVisitor): void {
       const parent = node.parent;
+    
+    // 如果父节点是函数或方法，则作为局部变量处理
       if (parent instanceof Func || parent instanceof Method ||
           parent instanceof zinc.Func || parent instanceof zinc.Method) {
         visitor.visitLocal?.(node);
       } else {
+      // 否则作为成员变量处理
         visitor.visitMember?.(node);
       }
-    } else if (node instanceof GlobalVariable) {
-      visitor.visitGlobalVariable?.(node);
-    } else if (node instanceof If || node instanceof zinc.If) {
-      visitor.visitIf?.(node);
-    } else if (node instanceof Loop) {
-      visitor.visitLoop?.(node);
-    } else if (node instanceof Set || node instanceof zinc.Set) {
-      visitor.visitSet?.(node);
-    } else if (node instanceof Call || node instanceof zinc.Call) {
-      visitor.visitCall?.(node);
-    } else if (node instanceof Comment) {
-      visitor.visitComment?.(node);
-    } else if (node instanceof Module) {
-      visitor.visitModule?.(node);
-    // } else if (node instanceof VjassModule) {
-    //   visitor.visitModule?.(node);
-    // } else if (node instanceof VjassModuleImplementation) {
-    //   visitor.visitModuleImplementation?.(node);
-    } else {
-      visitor.visitOther?.(node);
-    }
-    
-    // 递归访问子节点
-    node.children.forEach(child => this.visitNode(child, visitor));
   }
   
   /**
    * @deprecated 使用 accept(visitor) 替代
    * 遍历整个程序的 AST 节点
    */
-  public every(callback: (node: NodeAst) => void): void {
-    this.accept({
-      visitFunc: callback,
-      visitNative: callback,
-      visitMethod: callback,
-      visitStruct: callback,
-      visitInterface: callback,
-      visitLibrary: callback,
-      visitScope: callback,
-      visitGlobals: callback,
-      visitType: callback,
-      visitLocal: callback,
-      visitMember: callback,
-      visitGlobalVariable: callback,
-      visitIf: callback,
-      visitLoop: callback,
-      visitSet: callback,
-      visitCall: callback,
-      visitComment: callback,
-      visitOther: callback
-    });
-  }
+  // public every(callback: (node: NodeAst) => void): void {
+  //   this.accept({
+  //     visitFunc: callback,
+  //     visitNative: callback,
+  //     visitMethod: callback,
+  //     visitStruct: callback,
+  //     visitInterface: callback,
+  //     visitLibrary: callback,
+  //     visitScope: callback,
+  //     visitGlobals: callback,
+  //     visitType: callback,
+  //     visitLocal: callback,
+  //     visitMember: callback,
+  //     visitGlobalVariable: callback,
+  //     visitIf: callback,
+  //     visitLoop: callback,
+  //     visitSet: callback,
+  //     visitCall: callback,
+  //     visitComment: callback,
+  //     visitOther: callback
+  //   });
+  // }
 
   // ==================== 分类存储的 AST 节点 ====================
   
@@ -1882,7 +2345,7 @@ export class Document {
    */
   private checkTypeMatching(node: NodeAst): void {
     // 检查Set语句的类型匹配
-    if (node instanceof Set || node instanceof zinc.Set) {
+    if (node instanceof JassSet || node instanceof zinc.Set) {
       this.checkSetTypeMatching(node);
     }
     
@@ -1901,7 +2364,7 @@ export class Document {
    * 检查Set语句的类型匹配
    * set x = y + 1  ← x的类型 应该匹配 y+1的类型
    */
-  private checkSetTypeMatching(node: Set | zinc.Set): void {
+  private checkSetTypeMatching(node: JassSet | zinc.Set): void {
     // 获取左侧变量名
     if (!('name' in node) || !node.name) {
       return;
@@ -2413,18 +2876,18 @@ export class Document {
   }
 
   // 兼容性属性 - 使用getter方法
-  public get functions():(Func|zinc.Func)[] { return this.get_all_functions(); }
-  public get natives():Native[] { return this.get_all_natives(); }
-  public get methods():(Method|zinc.Method)[] { return this.get_all_methods(); }
-  public get structs():(Struct|zinc.Struct)[] { return this.get_all_structs(); }
-  public get interfaces():(Interface|zinc.Interface)[] { return this.get_all_interfaces(); }
-  public get librarys():Library[] { return this.get_all_libraries(); }
-  public get scopes():Scope[] { return this.get_all_scopes(); }
-  public get global_variables():(GlobalVariable|zinc.Member)[] { return this.get_all_global_variables(); }
-  public get members():(Member|zinc.Member)[] { return this.get_all_members(); }
-  public get locals():(Local|zinc.Member)[] { return this.get_all_locals(); }
-  public get types():Type[] { return this.get_all_types(); }
-  public get modules():Module[] { return this.get_all_modules(); }
+  // public get functions():(Func|zinc.Func)[] { return this.get_all_functions(); }
+  // public get natives():Native[] { return this.get_all_natives(); }
+  // public get methods():(Method|zinc.Method)[] { return this.get_all_methods(); }
+  // public get structs():(Struct|zinc.Struct)[] { return this.get_all_structs(); }
+  // public get interfaces():(Interface|zinc.Interface)[] { return this.get_all_interfaces(); }
+  // public get librarys():Library[] { return this.get_all_libraries(); }
+  // public get scopes():Scope[] { return this.get_all_scopes(); }
+  // public get global_variables():(GlobalVariable|zinc.Member)[] { return this.get_all_global_variables(); }
+  // public get members():(Member|zinc.Member)[] { return this.get_all_members(); }
+  // public get locals():(Local|zinc.Member)[] { return this.get_all_locals(); }
+  // public get types():Type[] { return this.get_all_types(); }
+  // public get modules():Module[] { return this.get_all_modules(); }
 
   public get_all_modules():Module[] {
     const modules: Module[] = [];

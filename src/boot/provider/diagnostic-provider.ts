@@ -27,11 +27,12 @@ import * as vscode from 'vscode';
 import { Options } from './options';
 import { Token, TokenType } from '../jass/tokenizer-common';
 import { isAiFile, isJFile } from '../tool';
-import { GlobalContext, Node } from '../jass/parser-vjass';
+import { GlobalContext } from '../jass/parser-vjass';
 import { Subject } from '../../extern/rxjs';
+import { NodeAst } from '../jass/parser-vjass';
 
 const diagnostic_collection_for_jass = vscode.languages.createDiagnosticCollection("jass");
-const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: string) => {
+const error = (diagnostics:vscode.Diagnostic[], token:Token|NodeAst, message: string) => {
 	if (token instanceof Token) {
 		const startChar = Math.max(0, token.character);
 		const endChar = Math.max(0, token.character + token.length);
@@ -42,12 +43,11 @@ const error = (diagnostics:vscode.Diagnostic[], token:Token|Node, message: strin
 		);
 		diagnostics.push(diagnostic);
 	} else {
-		if (token.start_line) {
-			const firstToken = token.start_line.tokens()[0];
-			const startChar = Math.max(0, firstToken.character);
-			const endChar = Math.max(0, firstToken.character + firstToken.length);
+		if (token.start_token) {
+			const startChar = Math.max(0, token.start_token.character);
+			const endChar = Math.max(0, token.start_token.character + token.start_token.length);
 			const diagnostic = new vscode.Diagnostic(
-				new vscode.Range(token.start_line.line, startChar, token.start_line.line, endChar),
+				new vscode.Range(token.start_token.line, startChar, token.start_token.line, endChar),
 				message,
 				vscode.DiagnosticSeverity.Error
 			);

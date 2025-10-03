@@ -27,7 +27,7 @@ class TypeHierarchyDocument {
     public readonly local_items:TypeHierarchyItem<vjass_ast.Local|vjass_ast.zinc.Member>[];
     public readonly global_variable_items:TypeHierarchyItem<vjass_ast.GlobalVariable|vjass_ast.zinc.Member>[];
     public readonly membere_items:TypeHierarchyItem<vjass_ast.Member|vjass_ast.zinc.Member>[];
-    public readonly library_items:TypeHierarchyItem<vjass_ast.Library|vjass_ast.zinc.Library>[];
+    public readonly library_items:TypeHierarchyItem<vjass_ast.Library|any>[];
     public readonly scope_items:TypeHierarchyItem<vjass_ast.Scope>[];
     public readonly types_items:TypeHierarchyItem<vjass_ast.Type>[];
     // public readonly take_items:TakeCompletionItem[];
@@ -36,17 +36,17 @@ class TypeHierarchyDocument {
       // this.document = document;
       this.program = program;
   
-      this.native_items = this.program.natives.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
-      this.function_items = this.program.functions.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
-      this.struct_items = this.program.structs.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Class, node.name?.getText()));
-      this.interface_items = this.program.interfaces.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Interface, node.name?.getText()));
-      this.method_items = this.program.methods.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
-      this.local_items = this.program.locals.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
-      this.global_variable_items = this.program.global_variables.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
-      this.membere_items = this.program.members.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
-      this.library_items = this.program.librarys.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Module, node.name?.getText()));
-      this.scope_items = this.program.scopes.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Module, node.name?.getText()));
-      this.types_items = this.program.types.map(node => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Class, node.name?.getText()));
+      this.native_items = (this.program.get_all_natives() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
+      this.function_items = (this.program.get_all_functions() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
+      this.struct_items = (this.program.get_all_structs() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Class, node.name?.getText()));
+      this.interface_items = (this.program.get_all_interfaces() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Interface, node.name?.getText()));
+      this.method_items = (this.program.get_all_methods() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Function, node.name?.getText()));
+      this.local_items = (this.program.get_all_locals() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
+      this.global_variable_items = ((this.program as any).global_variables || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
+      this.membere_items = (this.program.get_all_members() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Variable, node.name?.getText()));
+      this.library_items = (this.program.get_all_libraries() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Module, node.name?.getText()));
+      this.scope_items = (this.program.get_all_scopes() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Module, node.name?.getText()));
+      this.types_items = (this.program.get_all_types() || []).map((node: any) => TypeHierarchyDocument.to_type_hierarchy(node, vscode.SymbolKind.Class, node.name?.getText()));
     }
 
     private static to_type_hierarchy<T extends vjass_ast.NodeAst>(data: T, kind: vscode.SymbolKind, name?: string) {
