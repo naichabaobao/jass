@@ -26,6 +26,8 @@ interface DefinitionVisitor {
   visitMethod(node: vjass_ast.Method | vjass_ast.zinc.Method, context: DefinitionContext): vscode.Location[];
   visitStruct(node: vjass_ast.Struct | vjass_ast.zinc.Struct, context: DefinitionContext): vscode.Location[];
   visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: DefinitionContext): vscode.Location[];
+  visitModule(node: vjass_ast.Module, context: DefinitionContext): vscode.Location[];
+  visitVjassModuleImplementation(node: vjass_ast.VjassModuleImplementation, context: DefinitionContext): vscode.Location[];
   visitLocal(node: vjass_ast.Local | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[];
   visitMember(node: vjass_ast.Member | vjass_ast.zinc.Member, context: DefinitionContext): vscode.Location[];
   visitLibrary(node: vjass_ast.Library | any, context: DefinitionContext): vscode.Location[];
@@ -116,6 +118,20 @@ class DefaultDefinitionVisitor implements DefinitionVisitor {
   visitInterface(node: vjass_ast.Interface | vjass_ast.zinc.Interface, context: DefinitionContext): vscode.Location[] {
     if (this.matchesKey(node, context.key)) {
       return [this.createInterfaceLocation(node)];
+    }
+    return [];
+  }
+
+  visitModule(node: vjass_ast.Module, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createModuleLocation(node)];
+    }
+    return [];
+  }
+
+  visitVjassModuleImplementation(node: vjass_ast.VjassModuleImplementation, context: DefinitionContext): vscode.Location[] {
+    if (this.matchesKey(node, context.key)) {
+      return [this.createVjassModuleImplementationLocation(node)];
     }
     return [];
   }
@@ -225,6 +241,30 @@ class DefaultDefinitionVisitor implements DefinitionVisitor {
    */
   private createInterfaceLocation(node: vjass_ast.Interface | vjass_ast.zinc.Interface): vscode.Location {
     return this.createStructLocation(node as any) as PackageLocation<vjass_ast.Interface | vjass_ast.zinc.Interface>;
+  }
+
+  /**
+   * 创建 Module Location
+   */
+  private createModuleLocation(node: vjass_ast.Module): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
+  }
+
+  /**
+   * 创建 VjassModuleImplementation Location
+   */
+  private createVjassModuleImplementationLocation(node: vjass_ast.VjassModuleImplementation): vscode.Location {
+    return new PackageLocation(node, vscode.Uri.file(node.document.filePath), 
+      new vscode.Range(
+        new vscode.Position(node.start.line, node.start.position),
+        new vscode.Position(node.end.line, node.end.position)
+      )
+    );
   }
 
   /**
@@ -561,7 +601,7 @@ export const rename_document_difinition = (origin_key: string, target_kay: strin
 /**
  * 增强的 Definition 提供者，使用 visitor 模式
  */
-class NewDefinitionProvider implements vscode.DefinitionProvider {
+export class NewDefinitionProvider implements vscode.DefinitionProvider {
   private readonly visitor: DefinitionVisitor;
   private readonly maxLength = 255;
 
@@ -650,6 +690,12 @@ class NewDefinitionProvider implements vscode.DefinitionProvider {
       locations.push(...this.visitor.visitInterface(interface_, context));
     });
 
+    // 处理 modules
+    const modules = program.get_all_modules();
+    modules.forEach((module: any) => {
+      locations.push(...this.visitor.visitModule(module, context));
+    });
+
     // 处理 members
     const members = program.get_all_members();
     members.forEach((member: any) => {
@@ -721,7 +767,7 @@ vscode.languages.registerDefinitionProvider("jass", new NewDefinitionProvider())
 /**
  * 增强的 Type Definition 提供者，使用 visitor 模式
  */
-class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
+export class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
   private readonly visitor: DefinitionVisitor;
   private readonly maxLength = 255;
 
@@ -787,7 +833,36 @@ class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
   }
 }
 
-vscode.languages.registerTypeDefinitionProvider("jass", new TypeDefinitionProvider());
+export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+    if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal")) {
+      return null;
+    }
+      const key = document.getText(document.getWordRangeAtPosition(position));
+      const locations = new Array<vscode.Location>();
+      GlobalContext.keys.forEach(k => {
+          const program = GlobalContext.get(k);
+          if (program) {
+            if (program.is_special) {
+              const value_node = program.program;
+              if (value_node) {
+                value_node.children.forEach(x => {
+                  
+                  if (x instanceof vjass_ast.JassDetail) {
+                    if (x.content == key) {
+                      const location = new vscode.Location(vscode.Uri.file(program.filePath), new vscode.Range(x.start.line, x.start.position, x.end.line, x.end.position));
+                      locations.push(location);
+                    }
+                  }
+                });
+              }
+            }
+          }
+        });
+        return locations;
+  }
+
+}
 
 
 

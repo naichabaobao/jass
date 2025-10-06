@@ -9,29 +9,11 @@ import { GlobalContext, parse } from '../jass/parser-vjass';
 import { debounceTime, Subject } from '../../extern/rxjs';
 import { find_error } from './diagnostic-provider';
 import { 
-	changeDocumentItem, 
-	deleteDocumentItem, 
-	initDocumentItem, 
-	renameDocumentItem 
-} from './completion-provider-ex';
-import { 
-	change_document_hover, 
-	delete_document_hover, 
-	init_document_hover, 
-	rename_document_hover 
-} from './hover-provider-ex';
-import { 
 	change_document_difinition, 
 	delete_document_difinition, 
 	init_document_difinition, 
 	rename_document_difinition 
 } from './definition-provider-ex';
-import { 
-	change_type_hierarchy, 
-	delete_type_hierarchy, 
-	init_type_hierarchy, 
-	rename_type_hierarchy 
-} from './type-hierarchy-provider';
 
 /**
  * 全局上下文提供者类
@@ -280,12 +262,7 @@ function handleDocumentUpdate(filePath: string, content: string, document: vscod
 
 	// 查找错误
 	find_error(document);
-
-	// 更新各种提供者
-	changeDocumentItem(document);
-	change_document_hover(document);
 	change_document_difinition(document);
-	change_type_hierarchy(filePath);
 }
 
 // 监听文档内容变化
@@ -329,11 +306,8 @@ vscode.workspace.onDidDeleteFiles((event) => {
 		// 从全局上下文删除
 		GlobalContext.delete(filePath);
 		
-		// 删除各种提供者
-		deleteDocumentItem(filePath);
-		delete_document_hover(filePath);
+
 		delete_document_difinition(filePath);
-		delete_type_hierarchy(filePath);
 
 		// 清理文件状态
 		fileStatusManager.removeFile(filePath);
@@ -358,11 +332,9 @@ vscode.workspace.onDidRenameFiles((event) => {
 		// 解析新路径
 		parse(newPath);
 
-		// 重命名各种提供者
-		renameDocumentItem(oldPath, newPath);
-		rename_document_hover(oldPath, newPath);
+
+
 		rename_document_difinition(oldPath, newPath);
-		rename_type_hierarchy(oldPath, newPath);
 
 		// 更新文件状态
 		const fileType = fileStatusManager.getFileType(oldPath);
@@ -443,11 +415,7 @@ function initializeStaticFiles(): void {
 			// 解析文件
 			parse(filePath);
 			
-			// 初始化各种提供者
-			initDocumentItem(filePath);
-			init_document_hover(filePath);
 			init_document_difinition(filePath);
-			init_type_hierarchy(filePath);
 			
 			// 标记为静态文件
 			fileStatusManager.markAsStatic(filePath);
@@ -479,11 +447,8 @@ function initializeWorkspaceFiles(): void {
 			// 查找错误
 			find_error(filePath);
 			
-			// 初始化各种提供者
-			initDocumentItem(filePath);
-			init_document_hover(filePath);
+
 			init_document_difinition(filePath);
-			init_type_hierarchy(filePath);
 			
 			// 标记为工作区文件
 			fileStatusManager.markAsWorkspace(filePath);

@@ -57,6 +57,11 @@ class StateType {
     public static DivAsignment: number = symbol_state("/=");
     public static AndPrefix: number = symbol_state("&");
     public static OrPrefix: number = symbol_state("|");
+    public static LuaStart: number = symbol_state("<");
+    public static LuaQuestion: number = symbol_state("<?");
+    public static LuaEquals: number = symbol_state("<?=");
+    public static LuaWait: number = symbol_state("<?=");
+    public static LuaEnd: number = symbol_state("<?>");
 }
 export function token_handle(document:Document, line: number, character: number, position: number, char: string, next_char: string, state: number, length: number): TokenHandleResult | undefined {
     const has_next = () => {
@@ -209,7 +214,12 @@ export function token_handle(document:Document, line: number, character: number,
                     }
                 }
             } else if (char == "<") {
-                if (is_match("=")) {
+                if (is_match("?")) {
+                    return {
+                        state: StateType.LuaStart,
+                        length: 1
+                    }
+                } else if (is_match("=")) {
                     return {
                         state: StateType.It,
                         length: 1
@@ -707,6 +717,84 @@ export function token_handle(document:Document, line: number, character: number,
         //     }
 
         //     break;
+
+        case StateType.LuaStart:
+            if (char == "?") {
+                if (is_match("=")) {
+                    return {
+                        state: StateType.LuaEquals,
+                        length: length + 1
+                    }
+                } else if (is_match(">")) {
+                    return {
+                        state: StateType.LuaEnd,
+                        length: length + 1
+                    }
+                } else {
+                    return {
+                        state: StateType.LuaQuestion,
+                        length: length + 1
+                    }
+                }
+            } else {
+                return {
+                    state: StateType.Nil,
+                    token: new_token(TokenType.Operator, false),
+                    length: 0
+                }
+            }
+            break;
+        case StateType.LuaQuestion:
+            if (char == "=") {
+                return {
+                    state: StateType.LuaEquals,
+                    length: length + 1
+                }
+            } else if (char == ">") {
+                return {
+                    state: StateType.LuaEnd,
+                    length: length + 1
+                }
+            } else {
+                return {
+                    state: StateType.LuaWait,
+                    length: length + 1
+                }
+            }
+            break;
+        case StateType.LuaEquals:
+            if (char == "=") {
+                return {
+                    state: StateType.LuaWait,
+                    length: length + 1
+                }
+            } else {
+                return {
+                    state: StateType.LuaWait,
+                    length: length + 1
+                }
+            }
+            break;
+        case StateType.LuaWait:
+            if (char == ">") {
+                return {
+                    state: StateType.Nil,
+                    token: new_token(TokenType.Value),
+                    length: 0
+                }
+            } else {
+                return {
+                    length: length + 1
+                }
+            }
+            break;
+        case StateType.LuaEnd:
+            return {
+                state: StateType.Nil,
+                token: new_token(TokenType.Value),
+                length: 0
+            }
+            break;
 
         default:
             return undefined

@@ -1,114 +1,67 @@
 import("./boot/provider/data-enter");
 import * as vscode from 'vscode';
 
-// import "./boot/boot";
-// import { releace_diagnosticor } from './boot/provider/diagnostic-provider';
-// import { WaveProvider } from './boot/provider/wave-provider';
-// import { GlobalsProvider } from './boot/provider/jass/globals-provider';
-// import { CodeLensProvider } from './boot/provider/code-lens-provider';
-// import { ReferenceProvider } from './boot/provider/reference-provider';
-// import { DocumentSemanticTokensProvider } from './boot/provider/document-semantic-tokens-provider';
-import { StructCompletionItemProvider } from "./boot/provider/completion-provider";
-// let globalsProvider: GlobalsProvider;
+import { AutoCompletionProvider, SpecialCompletionItemProvider } from './boot/provider/auto-completion-provider';
+import { AutoHoverProvider, SpecialHoverProvider } from "./boot/provider/auto-hover-provider";
+import { NewDefinitionProvider, TypeDefinitionProvider, SpecialDefinitionProvider } from "./boot/provider/definition-provider-ex";
+import { JassDocumentColorProvider } from "./boot/provider/document-color-provider";
+import { JassDiagnosticProvider } from "./boot/provider/diagnostic-provider";
+import { DocumentSymbolProvider } from "./boot/provider/outline-provider";
+import { SignatureHelpProvider } from './boot/provider/signature-help-provider-ex';
+import { JassCodeActionsProvider } from './boot/provider/code-actions-provider';
+import { GlobalContext } from './boot/jass/parser-vjass';
+import { DocumentFormattingSortEditProvider, TypeFormatProvider } from './boot/provider/document-formatting-edit-provider';
 
 export async function activate(context: vscode.ExtensionContext) {
-    // 初始化 WaveProvider
-    // const waveProvider = new WaveProvider();
-    // waveProvider.activate(context);
+    // 注册补全提供器
+    const jassSelector = { scheme: 'file', language: 'jass' };
     
-    // // 初始化 GlobalsProvider
-    // globalsProvider = new GlobalsProvider();
-    
-    // // 注册 CodeLens 提供器
-    // context.subscriptions.push(
-    //     vscode.languages.registerCodeLensProvider(
-    //         { scheme: 'file', language: 'jass' },
-    //         new CodeLensProvider()
-    //     )
-    // );
-    
-    // // 注册文档变化事件
-    // context.subscriptions.push(
-    //     vscode.workspace.onDidChangeTextDocument(event => {
-    //         globalsProvider.updateDiagnostics(event.document);
-    //     })
-    // );
-    
-    // // 注册文档打开事件
-    // context.subscriptions.push(
-    //     vscode.workspace.onDidOpenTextDocument(document => {
-    //         globalsProvider.updateDiagnostics(document);
-    //     })
-    // );
+    // JASS 提供者注册
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(jassSelector, new SpecialCompletionItemProvider(), "\"", "'"));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(jassSelector, new AutoCompletionProvider(), ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789_.".split("")));
+    context.subscriptions.push(vscode.languages.registerHoverProvider(jassSelector, new AutoHoverProvider()));
+    context.subscriptions.push(vscode.languages.registerHoverProvider(jassSelector, new SpecialHoverProvider()));
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(jassSelector, new NewDefinitionProvider()));
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(jassSelector, new SpecialDefinitionProvider()));
+    context.subscriptions.push(vscode.languages.registerTypeDefinitionProvider(jassSelector, new TypeDefinitionProvider()));
+    context.subscriptions.push(vscode.languages.registerColorProvider(jassSelector, new JassDocumentColorProvider()));
+    context.subscriptions.push(vscode.languages.registerDocumentSymbolProvider(jassSelector, new DocumentSymbolProvider()));
+    context.subscriptions.push(vscode.languages.registerSignatureHelpProvider(jassSelector, new SignatureHelpProvider(), "(", ",", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split("")));
+    // 注册代码操作提供者
+    context.subscriptions.push(vscode.languages.registerCodeActionsProvider(
+        jassSelector, 
+        new JassCodeActionsProvider(),
+        {
+            providedCodeActionKinds: [
+                vscode.CodeActionKind.QuickFix,
+                vscode.CodeActionKind.Refactor,
+                vscode.CodeActionKind.RefactorExtract,
+                vscode.CodeActionKind.Source
+            ]
+        }
+    ));
 
-    // // 注册引用提供器
-    // const referenceProvider = new ReferenceProvider();
-    // context.subscriptions.push(
-    //     vscode.languages.registerReferenceProvider(
-    //         { scheme: 'file', language: 'jass' },
-    //         referenceProvider
-    //     )
-    // );
+    context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(jassSelector, new DocumentFormattingSortEditProvider()));
+    context.subscriptions.push(vscode.languages.registerOnTypeFormattingEditProvider(jassSelector, new TypeFormatProvider(), ')', ',', '+', '-', '*', '/', '>', '<', '=', '(', '[', ']',));
 
-    // 注册结构体提示提供器
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider("jass", new StructCompletionItemProvider(), ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split(""))
-    );
 
-    // 注册语义标记提供器
-    const legend = new vscode.SemanticTokensLegend([
-        "namespace",
-        "class",
-        "enum",
-        "interface",
-        "struct",
-        "typeParameter",
-        "type",
-        "parameter",
-        "variable",
-        "property",
-        "enumMember",
-        "decorator",
-        "event",
-        "function",
-        "method",
-        "macro",
-        "label",
-        "comment",
-        "string",
-        "keyword",
-        "number",
-        "regexp",
-        "operator",
-    ], [
-        "declaration",
-        "definition",
-        "readonly",
-        "static",
-        "deprecated",
-        "abstract",
-        "async",
-        "modification",
-        "documentation",
-        "defaultLibrary"
-    ]);
+    // 创建并初始化诊断提供者
+    const diagnosticProvider = new JassDiagnosticProvider();
+    diagnosticProvider.initialize();
+    context.subscriptions.push(diagnosticProvider.getDiagnosticCollection());
 
-    // context.subscriptions.push(
-    //     vscode.languages.registerDocumentSemanticTokensProvider(
-    //         { scheme: 'file', language: 'jass' },
-    //         new DocumentSemanticTokensProvider(),
-    //         legend
-    //     )
-    // );
-    
     console.log('WaveProvider initialized');
+    console.log('ColorProvider initialized');
+    console.log('DiagnosticProvider initialized');
+    console.log('DocumentSymbolProvider initialized');
     console.log('GlobalsProvider initialized');
     console.log('CodeLensProvider initialized');
     console.log('DocumentSemanticTokensProvider initialized');
+    console.log('CodeActionsProvider initialized');
+    console.log('TestProvider initialized');
 }
 
 export function deactivate() {
-    // releace_diagnosticor();
-    // globalsProvider?.dispose();
+    
 }
 

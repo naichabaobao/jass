@@ -1,0 +1,952 @@
+ZINC 0.A.2.7
+Table of contents
+I. Why Zinc?
+C-like syntax
+Less verbosity
+Readability
+Segregation
+Structured programming
+vJass interoperability
+Do not "live a lie"
+Rigidity
+Fix vJass mistakes
+II. Because it is good for your brains
+Hello world
+99 bottles of beer
+Factorial
+Instant kill
+AddSpecialEffectTimed
+CountUnitsInGroup
+III. Enough propaganda, how do I use it?
+zinc..endzinc preprocessor
+import preprocessor
+syntax basics
+library
+library public or private
+globals
+functions
+assignment
+if
+Logical operations
+Arithmetic statements
+static if
+while
+for
+break
+debug
+local variables
+structs
+Dynamic arrays
+Function pointers (interfaces)
+Anonymous functions
+Anonymous methods
+IV. The small print
+Textmacros?
+The compile error abomination
+Comment eating extravaganza
+how is while compiled?
+I. Why Zinc?
+I've kept thinking that vJass' must remain as close to JASS as possible. This is a good thing as it keeps some consistency, but it might be bad as it forces it to JASS ideas that were not really good. vJass as the single language alternative was not going to work forever, so it has always been a plan to somehow let different languages in. Another reason for making a new language was the fun that is designing a language's syntax...
+
+I only had the vague idea of making another language, until one day, I started trying to come up with it, and started to write random text in a wc3c.net pastebin thread, and asking some fellows for opinion. This event was inspired by some other things that were going on at that time that convinced me of this necessity. Basically, a lot of discussions about JASS' verbosity came to fruition, which caused me to really feel lame while re-coding my Hydra spell, suddenly I felt like typing more than I should. It was not just the verbosity, it was stuff like not making all members of a library implicitely private, or having to declare library private members before they are ever used. At that time there were alternatives to vJass that were very powerful, perhaps they were too powerful, and were full of things I was not looking for while not really taking real care of the problems I noticed besides of adding new problems. All was pointing towards it, it was the time to do it.
+
+Zinc serves a purpose different to Jass, to be honest, it is main purpose is to test the grounds for more multi-language support, and to have fun implementing yet another language. But it should also be a good alternative to vJass in its own.
+
+Zinc is actually an acronym that stands for ZINC is not C. However, to continue with JASS' tradition, you may call it Zinc or ZINC indistinctively.
+
+Why call it it Zinc is not C? Well, because while the syntax tries to follow that classic C-style paradigm, it does not follow it 100%, there are parts of that style of syntax I didn't want to use. It also avoids giving the false impression that learning Zinc would somehow help you learn C, or that people that know C-style languages will have it easier with Zinc, and such non-sense...
+
+Let me list the values, the rules behind its syntax and workings.
+
+C-like syntax
+So, the syntax is mostly inspired by C, why? Well, that's just because I like this syntax the most. In many ways, it is not really that great. It is not a panacea that will make your code more readable or anything like that, in fact, it has quite the potential to make your code incredibly hard to follow. Yet, I like it, it is for simple things things like {} and not having to use them for a single statement. (Using {} gives you a certain advantage when your editor has bracket highlighting)
+
+Less verbosity
+Many guys do not like verbosity, yet it is really one of the things that makes Jass (and vJass for that matter), much easier to follow. It has pros and cons, Zinc is meant as a complement to vJass. vJass fails at being quick to write, yet it is very readable for the most part. Zinc will sacrifice much of this readability to allow some code that is faster to write.
+
+It is not just the large amount of keywords you have to write, it is also the amount of keywords you can write. Zinc aims to reduce both. Although you will still see things like library you will not see anything like array... Zinc tries to use operators where possible or recycle keywords.
+
+This is again, no panacea, it is a trade off. Code will become more symbollic or context-requiring, and will need some extra attention and knowledge to read.
+
+Readability
+That Zinc does not likes verbosity should not be an excuse to make the language downright unreadable, this is one of the reasons Zinc does not blindly follow C-like syntax. It is also the reason you won't see silly abbreviations to merely cut a token's length.
+
+Segregation
+This is a very important thing, if we allowed vJass and Zinc code to get thrown together anywhere without distinction, a) Everything would get very hard to read, b) There would be no consistency and most importantly: c) it would be very hard to parse...
+
+Zinc is a different language than Jass, and thus it should be kept in different files and 'triggers' than it. vJass syntax should give errors when used inside Zinc areas, and viceversa.
+
+Structured programming
+What really made me start this all over, was seeing the loop..exitwhen..endloop construct while coding Hydra. Zinc introduces while and loop, and kills that loop stuff. This makes it closer to a well structured code. Rather than spaguetty all around-
+
+vJass interoperability
+We should be able to use Zinc in a library even if all the remaining libraries in the map are in vJass. We should be able to call vJass libraries from Zinc and vice versa. Nuff said. Why? Because having to port whole code to other languages is work that we can't spare. Also because vJass is a good language by itself, and we cannot expect everyone to switch from it. In fact, they shouldn't, as there is a lot more documentation to vJass, and it has a more human readable syntax, it is a good language for many people.
+
+Do not "live a lie"
+It is best to avoid implementing features that look cool in paper but do not plain work when compiled.
+
+Rigidity
+If you used vJass and read the stuff in this page, you will soon notice Zinc has fewer features. For example, scopes are missing from the picture. There are lot of rules to Zinc that force you to do things more correctly. For example, you are pretty much forced to use libraries if you wish to use Zinc at all. You cannot even write a function without a library. What's more, all things inside a library are private - not public - by default.
+
+Fix vJass mistakes
+This and rigidity go together. There are many things about vJass that I ended not liking at all, yet removing/changing them would break backwards compatibility. I am taking the chance that Zinc is a new language to kill them.
+
+II. Because it is good for your brains.
+Zinc is good for your brain's development. Likewise, the Zinc scripting language is good for ...your code development. So let's see some examples of code...
+
+Hello world
+library HelloWorld
+{
+    function onInit()
+    {
+         BJDebugMsg("Hello World");
+    }
+}
+For better or worse, Zinc is completely library-based. So we begin by declaring a Hello World library. Unlike vJass, there is no need to explicitly declare an initializer function name, and the function called onInit will be used directly (if it exists), The function has no arguments, and no return value. It simply calls a jass function BJDebugMsg to do the text display.
+
+99 bottles of beer
+    library Bottles99
+    {
+        /* 99 Bottles of beer sample,
+           prints the lyrics at: http://99-bottles-of-beer.net/lyrics.html
+        */
+        function onInit()
+        {
+            string bot = "99 bottles";
+            integer i=99;
+            while (i>=0)
+            {
+                BJDebugMsg(bot+" of beer on the wall, "+bot+" of beer");
+                i=i-1;
+                if      (i== 1) bot = "1 bottle";
+                else if (i== 0) bot = "No more bottles";
+                else            bot = I2S(i)+" bottles";
+                //Lazyness = "No more" is always capitalized.
+
+                if(i>=0)
+                {
+                    BJDebugMsg("Take one down and pass it around, "+bot+" of beer on the wall.\n");
+                }
+            }
+            BJDebugMsg("Go to the store and buy some more, 99 bottles of beer on the wall.");
+        }
+    }
+
+This sample illustrates yet more syntax elements, you can see the while and if constructs, also how {} is actually optional when it is a single statement. Also some comments. There is no elseif construct in Zinc, because as you can see, nesting an if inside an else is just as easy.
+
+Factorial
+    library Factorial
+    {
+        /*
+        *   Calculates the factorial of a number
+        *
+        */
+        public function Factorial(integer n) -> integer
+        {
+            integer result=1, i;
+            for ( 1 <= i <= n)
+                result = result * i;
+
+            return result;
+        }
+    }
+
+This simple code is a function that calculates the factorial of a number n, that is 1*2*3*...n . Notice the for loop construct. It basically means that the code should be repeated for all numbers i between 1 and n. Also notice that two integer variables are declared in the same line. We probably wish to call this function in other libraries, so we declare the function as public.
+
+
+Instant Kill
+    library InstantKill
+    {
+        /*
+        *   INSTANT K1LL !
+        *   This custom spell Kills the target unit!
+        *
+        */
+        constant integer SPELL_ID = 'A001';
+
+        function onSpellCast()
+        {
+            KillUnit(  GetSpellTargetUnit() );
+        }
+
+        function spellIdMatch() -> boolean
+        {
+            return (GetSpellAbilityId() == SPELL_ID);
+        }
+
+        function onInit()
+        {
+            trigger t = CreateTrigger();
+            TriggerAddAction(t, function onSpellCast);
+            TriggerAddCondition(t, Condition(function spellIdMatch) );
+        }
+    }
+
+This is a quick custom spell that will kill the target unit instantly. You may notice the syntax for return values and also that constant global declaration not inside a globals block.
+
+AddSpecialEffectTimed
+    library TimedEffect requires TimerUtils
+    {
+        /*
+        *   Adds a special effect to the ground, destroys it after
+        *
+        */
+        struct data
+        {
+            effect fx;
+        }
+        function destroyEffect()
+        {
+            timer t=GetExpiredTimer();
+            data dt = data( GetTimerData(t));
+            DestroyEffect(dt.fx);
+            ReleaseTimer(t);
+        }
+
+        public function AddSpecialEffectTimed( string fxpath, real x, real y, real duration)
+        {
+            timer t=NewTimer();
+            data  dt = data.create();
+            dt.fx = AddSpecialEffect(fxpath, x, y);
+
+            SetTimerData(t, integer(dt));
+            TimerStart(t, duration , false, function destroyEffect);
+        }
+    }
+
+This is a library that comes with the AddSpecialEffectTimed, just an example. TimerUtils is a vJass library, but that is not a problem for Zinc. Do notice that all members of a library are private by default, which means that the data struct and the destroyEffect function are private. Public library members also work differently in Zinc than in vJass, it will not add a prefix to the name, therefore the way to call this function is AddSpecialEffectTimed, not TimedEffect_AddSpecialEffectTimed.
+
+As you can see, things like type casts work the same as in vJass. There is also a struct which follows the same declaration rules as local variables and global variables.
+
+CountUnitsInGroup
+    library CountUnitsInGroup
+    {
+        integer count;
+        public function CountUnitsInGroup( group g ) -> integer
+        {
+            count = 0;
+            ForGroup(g, function() { count= count + 1; });
+            return count;
+        }
+    }
+This example replicates a blizzard.j function, as an excersise I invite you to check blizzard's implementation of it in Jass. This example features an anonymous function which are simply a way to allow you to declare functions on the go in cases like this one (very frequent in Jass) where the count=count+1 action is not really part of another function's logic but something inherent to the CountUnitsOne.
+
+III. Enough propaganda, how do I use it?
+zinc..endzinc preprocessor
+Zinc and vJass code must be kept separate from each other. One way is using a vJass preprocessor command to tell it where zinc code begins and ends. I do not prefer this method over zinc import, but it should be good for people that can't adapt to working outside of WE (and therefore require newgen pack).
+
+It is easy, if you wish to code in Zinc, you must first use a //! zinc preprocessor. However, you must also specify where the code ends, and thus add a //! endzinc preprocessor.
+
+//! zinc
+
+    library HelloWorld
+    {
+        function onInit()
+        {
+             BJDebugMsg("Hello World");
+        }
+    }
+
+//! endzinc
+I assume you got newgen pack installed (and jasshelper 0.9.Z.0 or greater), try to put this code in some "trigger", then test the map and see your first Zinc program at work.
+
+import preprocessor
+A saner way is this extension to the good, old and reliable import preprocessor in vJass. It is now [//! import [vjass/zinc] "filename"], which means that while importing the file you may also specify the language in the file. This language specification is optional and implied from the place in which you call it. In example, if you call it from a vJass area, it will assume the imported file is in vJass format unless you explicitely include the zinc word. Likewise, if you perform the import from a Zinc area, it will assume the imported file is in zinc language.
+
+    //imports the file main.zn from code folder, consider it in zinc language
+    //! import zinc "code/main.zn"
+
+    //imports the file libTimerUtils.j from code/libs folder, consider it in vJassc language
+    //! import vjass "code/libs/libTimerUtils.j"
+
+    //imports the file spell1.j from code folder, use the current language.
+    //! import "code/spell1.j"
+Syntax basics
+In Zinc, every statement/command will either start a block of code or finish with a single ; character.
+
+; Means that you are ending what you are saying. It works to separate different statements of code. Other languages, like jass, would often need whitespace to make this differentation, for example, require a line break after each command.
+
+Code blocks are groups of code inside two bracket delimiters, { marks the beginning of a code block, and } marks the end of a code block. All syntax constructs that require code blocks use this same syntax.
+
+Since most things ignore whitespace, you can pretty much do plenty of things. You can have multiple declarations in the same line, and you can also split a declaration that is very long into multiple lines. Notice that this means that you will need some self control, and also setting up some code style standards for your code would not hurt.
+
+There are two comment constructs: // and /* .. */. // Makes the compiler ignore all the text between // and the next line break. While /* */ can make it ignore all the text between the /* and the */. /* */ comments can be nested.
+
+library
+Libraries are the main, mandatory construction blocks in Zinc, they are defined as a group of code, variables, and data structures that do something for your own good. Libraries may use stuff from other libraries, in which case they need to explicitely say so by mentioning a "requires". Libraries are also your way into running code. If a library has a function called onInit, this function will get called on startup.
+
+    library CodeGoesHereo
+    {
+        // code goes here:
+           // * global variables
+           // * functions
+           // * structs
+           // * interfaces
+           // * other types (dynamic arrays, function pointer types)
+
+        function onInit()
+        {
+            //Your onInit() function gets called when the map is starting.
+        }
+    }
+
+
+
+If we wish to use stuff from library BB inside our library AA, we need to tell the compiler that the library AA, requires library BB. Basically, when your library requires other libraries, first the onInit functions of the other libraries get executed before yours. Their code is also moved to a place that is above yours in the output code.
+
+    library AA
+    {
+        public function AABoom()
+        {
+            BJDebugMsg("AA BOOM");
+        }
+        function onInit()
+        {
+            BJDebugMsg("AA");
+        }
+    }
+
+    library BB requires AA
+    {
+        function onInit()
+        {
+            BJDebugMsg("BB");
+            AABoom();
+            AABoom();
+        }
+    }
+
+
+
+Do notice that a library may have many requirements, in that case, separate each requirement by a comma ( library name requires requirement1, requirement2, ... requirementN ).
+
+This last sample illustrates a public library member:
+
+requirements can be made optional by adding the optional keyword before the requirement's name, this makes the compiler just consider the requirement if the required library exists, without giving any syntax errors if the requirement is not found. This is useful when combined with static ifs.
+
+library public or private
+Library members (variables, functions, structs, interfaces, types) can be either private or public.
+
+private: Only your library has access to the member in question, other libraries may have their own private or public members using the same name, it would not matter.
+public: The member is available for use on other libraries. If two public such members in different libraries have the same name, an error will happen, therefore, please be careful, and name your public stuff carefully.
+When declaring a library member, you can place it inside a public or private block to specify what access rule you want. Note that library members are private unless you specify otherwise.
+
+    library PublicTest
+    {
+        public
+        {
+            integer PublicTest1;
+            integer PublicTest2;
+            integer PublicTest3;
+            //all these variables are public.
+        }
+    }
+
+
+
+If you are only including a single member in one of these blocks, the {} are optional. There is also no need to include all public members in the same block. This looks like vJass/Java/etc code, but is equivalent to the previous example:
+
+    library PublicTest
+    {
+        public integer PublicTest1;
+        public integer PublicTest2;
+        public integer PublicTest3;
+    }
+
+
+
+Globals
+Global variables, are those things that hold a state and any function can use. If these variables are public, every function outside the library will also be able to use. There is also the aspect of global constants, which behave exactly like global variables except they are read-only.
+
+They are declared inside a library, and the syntax is: ( (constant) type varname ( = initialvalue) ). Adding the constant prefix makes the global a constant (which means it is read-only, in that case the initial value is mandatory, else it is optional. Another variation is when you want arrays. You can use name[] for an array with default size (8191), name[SIZE] for an array with another size value (which may be bigger, but if it is bigger than 8191, it will need function calls to be read), name[SIZE1][SIZE2] for a 2D array, the total storage needed for this array is SIZE1*SIZE2. Arrays cannot be assigned to an initial value.
+
+You may also separate globals of the same type using a comma.
+
+    library PublicTest
+    {
+        //the following are private constants:
+        constant integer SPELL_ID = 'A000';
+        constant real    HEIGHT = 10.0;
+        constant integer UNIT_COUNT = 7, ITEM_COUNT = UNIT_COUNT*6;
+        
+       // A, B, C, ... E are global variables of integer type,
+       // they are public
+        public integer A;
+        public integer B = 1;
+        public integer C,D = 1,E;
+
+        // B and D begin assigned to 1
+        real X[], Y[16000];
+        real Z[200][200];
+        //X: real array.
+        //Y: real array of size 16000
+        //Z: real 2D array 200x200.
+        // They are private
+
+        function onInit()
+        {
+            A = B;
+            X[0] = A;
+            X[1] = B+1;
+            E = D;
+            D = 7;
+            C = E*3;
+            Y[10000] = D;
+            Z[4][4] = 10;
+        }
+
+    }
+
+
+
+Functions
+A function is a piece of code you can call, it may take some arguments and also have a return value. The syntax is : ( function name ([arguments]) (-> returntype { contents })
+
+The arguments list is a comma separated list containing an item per argument, each argument is represented as the argument's type followed by its name.
+
+If the function does not have a return type, then the -> is not included. If the function has a return type, then you must include a -> and the return type towards the end.
+
+The contents of the function is a series of Zinc statements. It may include local variables, return statements, if-then-else, while, for, breaks, assignments, function calls and method calls.
+
+To call a function, simply use functionname(argumentslist). The argument list when called is similar to the one when functions are declared, it is a comma separated list of expressions, one for each argument. If the function has a return value, you can use the function call in place of a value.
+
+Notice that calling a function is... complicated. It requires the function to get declared in a required library or in the same library in a line above the line from which you are calling. Else there are alternatives, like the .evaluate() and .execute() methods which may get into detail later if I have time (they are act like in vJass')
+
+There are Jass functions that come either from common.j or from blizzard.j that you may use following these rules. You may also use functions from vJass libraries that are required by yours.
+
+    library FunctionTest
+    {
+        integer x = 0;
+        function increaseX()
+        {
+            // a lame function that merely increases the
+            // value of the x global
+            x = x + 1;
+        }
+
+        function sum3(integer a, integer b, integer c) -> integer
+        {
+           //returns the sum of 3 numbers
+           return a+b+c;
+        }
+
+        function onInit()
+        {
+            increaseX();
+            x = sum3( x, x, 7);
+            increaseX();
+            /* BJDebugMsg = blizzard.j function  and I2S = wc3 native  */
+            BJDebugMsg( I2S(x) );
+
+            //should show a message containing "10" in game.
+        }
+
+    }
+
+
+
+assignment
+An assignment inside a function/method simply sets the value inside a variable, or array. It is syntax is (thing to assign) = (value). You may see many examples of assignments in the snippets above and bellow.
+
+if
+The syntax is : if (condition) { statements1 } else { statements2 } . If the condition is true, it will execute statements1, else it will execute statements2. Notice that the { } sorrounding the statements are only necessary if the statements are more than one. The else part is optional.
+
+    library IfTest
+    {
+        integer x = 0;
+
+        function onInit()
+        {
+            if(x==0)
+            {
+                BJDebugMsg("it is 0");
+            }
+            else
+            {
+                BJDebugMsg("it is not 0");
+            }
+
+            x = GetRandomInt(0,3);
+            
+            //shorter way (take advantage that the blocks are one liners
+            // (does the same as above)
+            if(x==0)  BJDebugMsg("it is 0");
+            else      BJDebugMsg("it is not 0");
+
+            x = GetRandomInt(0,6);
+            if(x==5)
+            {
+                BJDebugMsg("Today is your lucky day, because you got a 5");
+            }
+            else if (x==0)
+            {
+                //There is no such thing as an elseif in Zinc, but as you
+                // can see, since the only thing inside this else block is
+                // an if statement, it can work the same.
+                BJDebugMsg("Today is your unlucky day,")
+                BJDebugMsg(" you got a 0");
+            }
+            else
+            {
+                BJDebugMsg("Normal day");
+                //ifs can be nested.
+                if( x==4) {
+                    BJDebugMsg("But hey, at least it is a 4, that is good");
+                }
+            }
+
+        }
+
+    }
+
+
+
+The condition is expected to be of a boolean type, the boolean type can either be true or false. e.g: Comparisons like == return true or false.
+
+Logical operations
+There are some operations that can be done to booleans to combine or change their results.
+
+! : The not operator, it negates the boolean ( ! true equal false and ! false equals true ).
+&&: The and operator, it requires both booleans to be true, else it returns false ( true&&true equals true, true&&false and any other combination equals false).
+||: The or operator, it requires any of the booleans to be true, it returns false if both are false ( false||false equals false, true&&false and any other combination equals true).
+Arithmetic assignments
+Zinc now includes statements to quickly assign and perform artithmetic operations at the same time.
+
+   1 library ForTest
+   2 {
+   3     function onInit(){
+   4         
+   5         integer x = 5;
+   6         x+=3;   //  x = 8
+   7         x -= 6; // x = 2
+   8         x *= 32;// x = 64
+   9         x /= 8; // x = 8
+  10         
+  11     }
+  12 }
+  13 
+  14 
+Note that these are assignments and not usable in places where expressions are expected.
+
+static if
+A static if is similar to a normal if, except that it can only use constant booleans, and the && and ! logical operators. Also, non-existant constant booleans can be used, and instead of giving a syntax error, the compiler will assume they are false.
+
+More importantly, static ifs are evaluated during compilation time, code is either added or not to the script depending on what the static ifs evaluate.
+
+Something to consider is that if a library called libraryname exists in the map, the compiler will add a constant boolean called LIBRARY_libraryname and set it to true.
+
+    library OptionalCode requires optional UnitKiller
+    {
+        constant boolean DO_KILL_LIB = true
+
+        function fun()
+        {
+            unit u = GetTriggerUnit();
+            //the following code may need to kill the unit
+            //but is alternatively able to use the external
+            //'UnitKiller' library to do the library.
+            // ONLY when DO_KILL_LIB is true AND the
+            // library UnitKiller is in the map.
+            static if(DO_KILL_LIB && LIBRARY_UnitKiller )
+            {
+                //static if because if the UnitKiller
+                // library was not in the map, using a normal
+                // if would not remove this line of code and
+                // therefore it would cause a syntax error.
+                // (unable to find function UnitKiller)
+                UnitKiller(u);
+            }
+            else
+            {
+                KillUnit(u);
+            }
+        }
+
+    }
+
+    library UnitKiller
+    {
+        function UnitKiller(unit u)
+        {
+            BJDebugMsg("Unit kill!");
+            KillUnit(u);
+        }
+    }
+
+while
+Conditional constructs are one thing, we also need looping structs. The while statement has a syntax: while (condition) { statements}. It will repeat the statements as long as the condition is true.
+
+The following code will print the numbers from 5 to 1 in decreasing order:
+
+    library WhileTest
+    {
+        function onInit()
+        {
+            integer x = 5;
+            while( x > 0)
+            {
+                BJDebugMsg( I2S(x) );
+                //decrease x
+                x = x - 1;
+            }
+        }
+
+    }
+
+for
+Another looping construct, but this one is specialized for iterations. e.g. That previous example is better as a for. The for control structure has syntax for ( range ) { statements } . It will repeat the statements based on the range sounds confusing.
+
+Let's say you want a variable i to go from 0 to n-1 , this means that you want to repeat the statements for i such that (i >= 0) and (i<n) , another way to write this is : ( 0 <= i < n) which is how the for construct works. Notice that it can only work with a normal variable (do not use arrays or struct members as the loop variable).
+
+    library WhileTest
+    {
+        function onInit()
+        {
+            integer x, n=7;
+            //numbers from 0 to 9,
+            // ascending order
+            for ( 0 <= x < 10)
+            {
+                BJDebugMsg( I2S(x) );
+            }
+
+            //numbers from 9 to 0,
+            // descending order
+            for ( 10 > x >= 0)
+            {
+                BJDebugMsg( I2S(x) );
+            }
+
+            //numbers from 1 to 10,
+            // ascending order:
+
+            for( 1 <= x <= 10 )
+            {
+                BJDebugMsg( I2S(x) );
+                //decrease x
+                x = x - 1;
+            }
+
+            //numbers from 0 to n-1,
+            // ascending number
+            for ( 0 <= x < n )
+            {
+                BJDebugMsg( I2S(x) );
+            }
+        }
+
+    }
+
+for also has an alternate, more C-like syntax: for( assignment1; condition; assignment2) { statements }. Allowed assignment operations are =, +=, /=, *= and -= . The condition is a boolean expression which must be true, otherwise the for execution is stopped. Assignment1 is called at the beginning of the loop. assignment2 is done just after each iteration...
+
+   1 library ForTest
+   2 {
+   3     function onInit(){
+   4         
+   5         integer x;
+   6         //shows  all even numbers from 2 to 100:
+   7         for (x=2; x<=100; x+=2 ) {
+   8             BJDebugMsg(I2S(x));
+   9         }
+  10     }
+  11 }
+  12 
+  13 
+break
+Well, perhaps while and for are not flexible enough for you, in that case, you may use the break statement. It will make the current loop halt.
+
+Just type break;
+
+debug
+Another control structure, its syntax is debug { statements }. It will only add those statements when jasshelper's debug mode is enabled.
+
+    library Test
+    {
+        function onInit()
+        {
+            debug
+            {
+                BJDebugMsg("Debug mode is enabled");
+            }
+        }
+    }
+
+local variables
+local variables are just like the global ones, they are even declared using the same syntax, the main difference is that they are declared inside a function, and only the function can access them. In fact, function arguments are also local variables.
+
+You must declare local variables at the beginning of a function. You may not have sized or 2D arrays as locals.
+
+structs
+structs, well, it is a long story, and I am in a rush to release Zinc, let us say that they are very similar to vJass structs, except with this syntax. To declare members, use the same syntax we've been using for globals and locals, except there is also a static keyword to consider. Do notice that unlike libraries, struct members are public by default.
+
+There are some differences regarding struct storage limit and array structs, mostly a side effect of killing the array keyword:
+
+There are many things to say, and little time, so I'll just post many examples:
+
+    library WhileTest
+    {
+        //a struct
+        struct A
+        {
+            integer x,y,z;
+
+        }
+
+        //a interface
+        interface B
+        {
+            method move();
+        }
+
+        //a struct with 20000 storage space:
+        struct[20000] C
+        {
+            real a,b,c;
+            string s,t;
+        }
+
+        //a interface with 30000 storage space:
+        interface[30000] D
+        {
+            integer meh;
+            method transform(integer a) -> integer;
+        }
+
+        //an "array struct"
+        struct myArr[]
+        {
+            static constant integer meh = 30004;
+            integer a;
+            integer b;
+        }
+
+        //an array struct of size 10000:
+        struct myErr[10000]
+        {
+            integer x,y,z;
+        }
+
+        interface F
+        {
+            method balls(integer x) = null; //this method 'defaults nothing'
+            method bells(integer y) -> real = 0.0 ; //this method defaults a 0.0 for the real return
+
+            //a static create method for the interface
+            static method create();
+        }
+
+        struct G
+        {
+            static method onCast()
+            {
+                KillUnit( GetTriggerUnit() );
+            }
+
+            static method onInit() {
+                //a static method, onInit too.
+                trigger t= CreateTrigger();
+
+                //unlike vJass in which it uses function G.onCast.
+                TriggerAddAction(t, static method G.onCast);
+            }
+            integer x;
+
+            //operator overloading:
+
+            method operator< (G other) -> boolean
+            {
+                return (this.x < other.x)
+            }
+
+            method operator[](integer x) -> real
+            {
+                return x*2.5;
+            }
+
+            method operator readOnly() -> integer
+            {
+                return 0;
+            }
+        }
+
+        module H
+        {
+            method kill() { BJDebugMsg("Kill it"); }
+        }
+
+        struct K
+        {
+            module H; //implements module H
+            optional module XX; //optionally-implements module XX
+
+
+            delegate G myg; //a delegate
+        }
+
+    }
+
+Dynamic arrays
+Dynamic arrays are declared similarly to vJass.
+
+    library Test
+    {
+        // a dynamic integer array of size 5.
+        type myDinArray extends integer[5];
+
+        // a dynamic real array of size 6, storage size = 10000
+        type myDinArray2 extends real[6, 10000];
+
+    }
+
+Function pointers (interfaces)
+This are declared very differently from the vJass ones.
+
+    library Test
+    {
+        //a function type with a single unit argument
+        type unitFunc extends function(unit);
+
+        //a function type with two integer arguments that returns boolean
+        type evFunction extends function(integer,integer) -> boolean;
+
+        function TortureUnit(unit u)
+        {
+            BJDebugMsg(GetUnitName(u)+" is being tortured!");
+            KillUnit(u);
+        }
+
+        function HealUnit(unit u)
+        {
+            SetWidgetLife(u, 1000);
+        }
+
+        /* This function calls F(u) if the unit is an ally or G(u) if the unit is an enemy
+         the example sucks as it is much slower than an if-else but should be good
+         to explain it... */
+        function AllyEnemyFunctionPicker(player p, unit u, unitFunc F, unitFunc G)
+        {
+            if (IsUnitAlly(u, p) ) {
+                F.evaluate(u);
+            } else {
+                G.evaluate(u);
+            }
+
+        }
+
+        function test(unit u)
+        {
+            // We are using the functions as arguments here...
+            AllyEnemyFunctionPicker( Player(0), u,  TortureUnit, HealUnit );
+
+            // will torture the unit if it is an ally, or heal it otherwise.
+        }
+
+    }
+
+Anonymous functions
+Many natives, BJ functions and also functions made by the community, ask for you to use a function as an argument to pass to do some actions or conditions. Which is cool and all.
+
+Anonymous functions are just functions that have no name. They are also "expressions" so you use them in a place where an expression is expected, which basically means you declare these functions inside another function... They get converted into either a Jass code or a function pointer (see above) depending on their number of arguments (it becomes a code value if and only if it has zero arguments). Zinc will give it a name and place the function in an appropriate place for you.
+
+Do notice that anonymous functions cannot use their parent's local variables (it will possibly cause a PJass error). They will be able to receive a read-only version of these variables, but that comes later. For now they are meant for quicker syntax and better structure (refer to the CountUnitsInGroup example, sometimes giving names to actions just overcomplicates the thing).
+
+    library Test
+    {
+        function test1()
+        {
+            //Also refer to the CountUnitsInGroup example ...
+            TimerStart(CreateTimer(), 5.0, false, function() {
+                 BJDebugMsg("5 seconds since you called test1");
+            });
+        }
+
+
+        type unitFunc extends function(unit);
+        function AllyEnemyFunctionPicker(player p, unit u, unitFunc F, unitFunc G)
+        {
+            if (IsUnitAlly(u, p) ) {
+                F.evaluate(u);
+            } else {
+                G.evaluate(u);
+            }
+
+        }
+        /* those things up there are just the function pointers example */
+
+        function test2(unit u)
+        {
+            unitFunc F,  G;
+
+            F = function(unit u) {
+                BJDebugMsg("We are torturing "+GetUnitName(u)+" again");
+                KillUnit(u);
+            };
+
+            G = function(unit u) { SetWidgetLife(u, 100); };
+            
+            AllyEnemyFunctionPicker( Player(0), u, F, G);
+            // will torture the unit if it is an ally, or heal it otherwise.
+            // notice this does the same as the function pointers example.
+        }
+
+    }
+
+Anonymous methods
+Well, just like anonymous functions, except you cannot use them outside structs/modules. An anonymous method will be converted to a method so it implicitly takes this in the arguments list.
+
+Anonymous methods are always converted to a function pointer. You can call the struct's static and non-static members from anonymous methods.
+
+library Test
+{
+    type IntFunc extends function(integer);
+    struct abuse
+    {
+        IntFunc fn;
+        string msg;
+
+        method cantThinkOfAName()
+        {
+            fn = method()
+            {
+                BJDebugMsg(msg);
+            }
+
+            fn.evaluate(this);
+        }
+      
+    }
+
+}
+Anonymous static methods: You may prefix anonymous methods with a static keyword, but that would just be an anonymous function in disguise.
+
+IV. The small print
+Many details about Zinc, some of which are not nice.
+
+Textmacros?
+For better or worse, due to an implementaton detail, Zinc inherits many vJass preprocessors, for example //! external and loaddata. But most importantly, textmacros. These vJass preprocessors ought to keep the same syntax. So textmacros in Zinc works exactly as they do in vJass.
+
+The compile error abomination
+jasshelper is a multi-phase process. To list some of its processes in the correct order I will mention:
+
+Phase 1: import/novjass/delimited comments
+Phase 2: text macros
+Phase 3: Zinc
+Phase 4: Libraries
+Phase 5: Static ifs
+Phase 6: Modules
+Phase 7: Structs and many other things
+Phase 8: PJass
+Phase 9: Shadowhelper
+Phase 10: PJass
+Phase 11: Optimization (inline)
+The problem is that each phase receives a different input, the output of the previous phase. import phase begins by joining all the files into a same source, after that (and this is nice, textmacros, zinc, libraries, work basically using the same source, which means that any syntax error found before the static ifs phase will look all right to you (except it will not tell you the exact file from which it found the error line).
+
+Problem begins afterwards. Although Modules and structs share the same input file, the remaining phases each use a different file, and give errors in a different input file. In vJass, it kind of works, because the compiled code in which you find the errors is not that different to what you wrote. Problem with Zinc is that if the error is not found before the static if phase, you will see your syntax erros in some vJass code that is completely different to your original Zinc code. This is excessively unfriendly, and sucks, so be warned.
+
+My priority is fixing this issue so that each phase will give you errors on the original code. It is complicated, as requires rewriting of many things, but it is possible.
+
+Comment eating
+The Zinc compiler eats all your comments, in case of the delimited ones, that's necessary for them to work. But as for the line comments, it is not really necessary for it to happen. The problem is with the way parsing is done right now, Gold grammar is set to ignore the whitespace and comments completely. A hacky fix, tries to recover the comments but it may miss some and it puts them in odd places.
+
+how is while compiled?
+Now on to good things, compiling while to Jass' exitwhen requires to negate the condition. However, the compiler does some magic such that the condition sometimes does not take more time or space. For example, instead of converting (a==b) into not (a==b) it will convert it into a!=b. Of course, sometimes the expression is very complicated and just adding the not is better.

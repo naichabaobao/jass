@@ -4341,75 +4341,184 @@ endglobals
 // MathAPI
 
 // 转换 度 为 弧度
+// 将角度值从度数转换为弧度
+// @param degrees 角度值（度）
+// @returns 对应的弧度值
+// 示例: Deg2Rad(90) = 1.5708 (π/2), Deg2Rad(180) = 3.1416 (π)
 native Deg2Rad takes real degrees returns real
+
 // 转换 弧度 为 度
+// 将弧度值转换为角度值
+// @param radians 弧度值
+// @returns 对应的角度值（度）
+// 示例: Rad2Deg(1.5708) = 90 (π/2), Rad2Deg(3.1416) = 180 (π)
 native Rad2Deg takes real radians returns real
 
 // 正弦(弧度) [R]
+// 计算给定弧度的正弦值
+// @param radians 弧度值
+// @returns 正弦值 (-1 到 1 之间)
+// 示例: Sin(0) = 0, Sin(1.5708) ≈ 1 (π/2)
 native Sin takes real radians returns real
+
 // 余弦(弧度) [R]
+// 计算给定弧度的余弦值
+// @param radians 弧度值
+// @returns 余弦值 (-1 到 1 之间)
+// 示例: Cos(0) = 1, Cos(1.5708) ≈ 0 (π/2)
 native Cos takes real radians returns real
+
 // 正切(弧度) [R]
+// 计算给定弧度的正切值
+// @param radians 弧度值
+// @returns 正切值
+// 示例: Tan(0) = 0, Tan(0.7854) ≈ 1 (π/4)
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
-// y 应在 -1 到 1 之间...输入无效时返回 0
+// 计算给定值的反正弦值
+// @param y 输入值，应在 -1 到 1 之间
+// @returns 反正弦值（弧度），输入无效时返回 0
+// 示例: Asin(1) = 1.5708 (π/2), Asin(0) = 0
 native Asin takes real y returns real
+
 // 反余弦(弧度) [R]
+// 计算给定值的反余弦值
+// @param x 输入值，应在 -1 到 1 之间
+// @returns 反余弦值（弧度）
+// 示例: Acos(1) = 0, Acos(0) = 1.5708 (π/2)
 native Acos takes real x returns real
 
 // 反正切(弧度) [R]
+// 计算给定值的反正切值
+// @param x 输入值
+// @returns 反正切值（弧度），范围 -π/2 到 π/2
+// 示例: Atan(1) = 0.7854 (π/4), Atan(0) = 0
 native Atan takes real x returns real
 
 // 反正切(Y:X)(弧度) [R]
-// x == 0 且 y == 0 , 返回 0
+// 计算给定坐标的反正切值，考虑象限
+// @param y Y 坐标值
+// @param x X 坐标值
+// @returns 反正切值（弧度），范围 -π 到 π
+// 示例: Atan2(1, 1) = 0.7854 (π/4), Atan2(0, 0) = 0
 native Atan2 takes real y, real x returns real
 
 // 平方根
-// x <= 0 , 返回 0 
+// 计算给定数值的平方根
+// @param x 输入数值
+// @returns 平方根值，如果 x <= 0 则返回 0
+// 示例: SquareRoot(16) = 4, SquareRoot(25) = 5, SquareRoot(-4) = 0
 native SquareRoot takes real x returns real
 
 // 求幂
-// power == 0.0          ， 返回 1
-// x == 0.0 且 power < 0 ， 返回 0
-// computes x to the y power
+// 计算 x 的 power 次方
+// @param x 底数
+// @param power 指数
+// @returns x 的 power 次方
+// 特殊情况: power == 0.0 时返回 1，x == 0.0 且 power < 0 时返回 0
+// 示例: Pow(2, 3) = 8, Pow(5, 2) = 25, Pow(10, 0) = 1
 native Pow takes real x, real power returns real
+
 // 小数位四舍五入
+// 将实数四舍五入为最接近的整数
+// @param r 要四舍五入的实数
+// @returns 四舍五入后的整数值
+// 示例: MathRound(3.4) = 3, MathRound(3.6) = 4, MathRound(-2.3) = -2
 constant native MathRound takes real r returns integer
 
 
 // String Utility API
 
 // 转换整数成实数
+// 将整数值转换为实数值
+// @param i 要转换的整数
+// @returns 对应的实数值
+// 示例: I2R(5) = 5.0, I2R(-3) = -3.0
 native I2R takes integer i returns real
-// 转换实数成整数(大于0时向下取整，小于0时向上取整)
-// 7.x 返回 7，-7.x 返回 -7
+
+// 转换实数成整数
+// 将实数值转换为整数值（截断小数部分）
+// @param r 要转换的实数
+// @returns 截断小数后的整数值（大于0时向下取整，小于0时向上取整）
+// 示例: R2I(7.9) = 7, R2I(-7.9) = -7, R2I(3.2) = 3
 native R2I takes real r returns integer
+
 // 转换整数成字符串
+// 将整数值转换为字符串
+// @param i 要转换的整数
+// @returns 对应的字符串
+// 示例: I2S(123) = "123", I2S(-45) = "-45"
 native I2S takes integer i returns string
+
 // 转换实数成字符串
+// 将实数值转换为字符串（默认精度）
+// @param r 要转换的实数
+// @returns 对应的字符串
+// 示例: R2S(3.14) = "3.14", R2S(-2.5) = "-2.5"
 native R2S takes real r returns string
-// 转换实数成字符串
+
+// 转换实数成字符串（指定格式）
+// 将实数值转换为指定格式的字符串
+// @param r 要转换的实数
+// @param width 字符串总宽度（不足时用空格填充）
 // @param precision 保留的小数位数
+// @returns 格式化后的字符串
+// 示例: R2SW(3.14159, 6, 2) = "  3.14"
 native R2SW takes real r, integer width, integer precision returns string
+
 // 转换字符串成整数
+// 将字符串转换为整数值
+// @param s 要转换的字符串
+// @returns 对应的整数值，如果无法转换则返回 0
+// 示例: S2I("123") = 123, S2I("-45") = -45, S2I("abc") = 0
 native S2I takes string s returns integer
+
 // 转换字符串成实数
+// 将字符串转换为实数值
+// @param s 要转换的字符串
+// @returns 对应的实数值，如果无法转换则返回 0.0
+// 示例: S2R("3.14") = 3.14, S2R("-2.5") = -2.5, S2R("abc") = 0.0
 native S2R takes string s returns real
 // 获取句柄ID
-// tips:一般用于哈希表键值（hashtable key）
-// @param h 任意handle子类型
+// 获取任意句柄对象的唯一标识符
+// @param h 任意handle子类型（单位、物品、特效等）
+// @returns 句柄的唯一ID
+// 示例: GetHandleId(GetTriggerUnit()) = 单位的唯一ID
+// 注意: 一般用于哈希表键值（hashtable key）
 native GetHandleId takes handle h returns integer
-// 截取字符串 [R]
-// @param source 源内容
-// @param start 起始位置,下标为0
-// @param end 结束位置,需要的字符串长度
+
+// 截取字符串
+// 从源字符串中截取指定范围的子字符串
+// @param source 源字符串
+// @param start 起始位置（下标从0开始）
+// @param end 结束位置（不包含该位置）
+// @returns 截取后的子字符串
+// 示例: SubString("Hello World", 0, 5) = "Hello"
+//       SubString("Hello World", 6, 11) = "World"
 native SubString takes string source, integer start, integer end returns string
+
 // 获取字符串长度
+// 计算字符串的字符数量
+// @param s 要计算长度的字符串
+// @returns 字符串的字符数量
+// 示例: StringLength("Hello") = 5, StringLength("") = 0
 native StringLength takes string s returns integer
 // 转换字符串英文的大小写
+// 将字符串中的英文字母转换为大写或小写
+// @param source 源字符串
+// @param upper 是否转换为大写（true=大写，false=小写）
+// @returns 转换后的字符串
+// 示例: StringCase("Hello World", true) = "HELLO WORLD"
+//       StringCase("Hello World", false) = "hello world"
 native StringCase takes string source, boolean upper returns string
+
 // 转换字符串成哈希码
+// 将字符串转换为哈希码（用于快速比较和查找）
+// @param s 要转换的字符串
+// @returns 字符串的哈希码
+// 示例: StringHash("Hello") = 哈希码值
+// 注意: 相同字符串总是产生相同的哈希码
 native StringHash takes string s returns integer
 
 // 获取外部字符串的译文 [R]
@@ -4826,16 +4935,36 @@ native GetWorldBounds takes nothing returns rect
 //
 
 // 新建触发器 [R]
+// 创建触发器
+// 创建一个新的触发器对象
+// @returns 新创建的触发器
+// 示例: set t = CreateTrigger() // 创建触发器
 native CreateTrigger takes nothing returns trigger
 // 销毁触发器 [R]
+// 销毁指定的触发器并释放其内存
+// @param whichTrigger 要销毁的触发器
+// 示例: call DestroyTrigger(t) // 销毁触发器t
 native DestroyTrigger takes trigger whichTrigger returns nothing
 // 重置触发器
+// 重置触发器的执行状态，清除所有条件和动作
+// @param whichTrigger 要重置的触发器
+// 示例: call ResetTrigger(t) // 重置触发器t
 native ResetTrigger takes trigger whichTrigger returns nothing
 // 开启触发器
+// 启用指定的触发器，使其能够响应注册的事件
+// @param whichTrigger 要启用的触发器
+// 示例: call EnableTrigger(t) // 启用触发器t
 native EnableTrigger takes trigger whichTrigger returns nothing
 // 关闭触发器
+// 禁用指定的触发器，使其不再响应注册的事件
+// @param whichTrigger 要禁用的触发器
+// 示例: call DisableTrigger(t) // 禁用触发器t
 native DisableTrigger takes trigger whichTrigger returns nothing
 // 查询触发器是否开启
+// 检查指定触发器是否处于启用状态
+// @param whichTrigger 要检查的触发器
+// @returns 如果触发器启用则返回true，否则返回false
+// 示例: if IsTriggerEnabled(t) then // 检查触发器t是否启用
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
 // 挂起/释放 触发器
@@ -4937,6 +5066,12 @@ native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button which
 constant native GetEventGameState takes nothing returns gamestate
 
 // 触发器登记游戏事件
+// 注册游戏事件
+// 为触发器注册游戏级别的事件
+// @param whichTrigger 要注册事件的触发器
+// @param whichGameEvent 游戏事件类型 (EVENT_GAME_VICTORY, EVENT_GAME_END_LEVEL, EVENT_GAME_VARIABLE_LIMIT, EVENT_GAME_STATE_LIMIT, EVENT_GAME_TIMER_EXPIRED, EVENT_GAME_ENTER_REGION, EVENT_GAME_LEAVE_REGION, EVENT_GAME_TRACKABLE_HIT, EVENT_GAME_TRACKABLE_TRACK, EVENT_GAME_SHOW_SKILL, EVENT_GAME_BUILD_SUBMENU)
+// @returns 注册的事件对象
+// 示例: call TriggerRegisterGameEvent(t, EVENT_GAME_VICTORY) // 注册游戏胜利事件
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
 
@@ -5010,6 +5145,13 @@ constant native GetSaveBasicFilename takes nothing returns string
 // Trigger Player Based Event API
 
 // 触发器登记玩家事件
+// 注册玩家事件
+// 为触发器注册指定玩家的事件
+// @param whichTrigger 要注册事件的触发器
+// @param whichPlayer 要监听的玩家
+// @param whichPlayerEvent 玩家事件类型 (EVENT_PLAYER_STATE_LIMIT, EVENT_PLAYER_ALLIANCE_CHANGED, EVENT_PLAYER_DEFEAT, EVENT_PLAYER_VICTORY, EVENT_PLAYER_LEAVE, EVENT_PLAYER_CHAT, EVENT_PLAYER_END_CINEMATIC)
+// @returns 注册的事件对象
+// 示例: call TriggerRegisterPlayerEvent(t, Player(0), EVENT_PLAYER_CHAT) // 注册玩家1的聊天事件
 native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer, playerevent whichPlayerEvent returns event
 
 // 事件响应 获取触发玩家(对应玩家失败和玩家胜利等事件)
@@ -5018,17 +5160,33 @@ native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer
 constant native GetTriggerPlayer takes nothing returns player
 
 // 触发器登记玩家单位事件
+// 注册玩家单位事件
+// 为触发器注册指定玩家的单位事件
+// @param whichTrigger 要注册事件的触发器
+// @param whichPlayer 要监听的玩家
+// @param whichPlayerUnitEvent 玩家单位事件类型 (EVENT_PLAYER_UNIT_ATTACKED, EVENT_PLAYER_UNIT_RESCUED, EVENT_PLAYER_UNIT_DEATH, EVENT_PLAYER_UNIT_DECAY, EVENT_PLAYER_UNIT_DETECTED, EVENT_PLAYER_UNIT_HIDDEN, EVENT_PLAYER_UNIT_SELECTED, EVENT_PLAYER_UNIT_DESELECTED, EVENT_PLAYER_UNIT_CONSTRUCT_START, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH, EVENT_PLAYER_UNIT_UPGRADE_START, EVENT_PLAYER_UNIT_UPGRADE_CANCEL, EVENT_PLAYER_UNIT_UPGRADE_FINISH, EVENT_PLAYER_UNIT_TRAIN_START, EVENT_PLAYER_UNIT_TRAIN_CANCEL, EVENT_PLAYER_UNIT_TRAIN_FINISH, EVENT_PLAYER_UNIT_RESEARCH_START, EVENT_PLAYER_UNIT_RESEARCH_CANCEL, EVENT_PLAYER_UNIT_RESEARCH_FINISH, EVENT_PLAYER_UNIT_ISSUED_ORDER, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, EVENT_PLAYER_UNIT_SUMMON, EVENT_PLAYER_UNIT_DROP_ITEM, EVENT_PLAYER_UNIT_PICKUP_ITEM, EVENT_PLAYER_UNIT_USE_ITEM, EVENT_PLAYER_UNIT_LOADED, EVENT_PLAYER_UNIT_DAMAGED, EVENT_PLAYER_UNIT_DAMAGING)
+// @param filter 过滤条件，null表示不过滤
+// @returns 注册的事件对象
+// 示例: call TriggerRegisterPlayerUnitEvent(t, Player(0), EVENT_PLAYER_UNIT_DEATH, null) // 注册玩家1的单位死亡事件
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 
 // 事件响应 获取升级的英雄(对应英雄升级和英雄升级等事件)
 // EVENT_PLAYER_HERO_LEVEL
 // EVENT_UNIT_HERO_LEVEL
+// 获取升级单位
+// 获取触发升级事件的单位
+// @returns 升级的单位
+// 示例: set u = GetLevelingUnit() // 获取升级单位
 constant native GetLevelingUnit takes nothing returns unit
 
 // 事件响应 获取学习技能的英雄(对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
 // EVENT_UNIT_HERO_SKILL
+// 获取学习技能单位
+// 获取触发学习技能事件的单位
+// @returns 学习技能的单位
+// 示例: set u = GetLearningUnit() // 获取学习技能单位
 constant native GetLearningUnit takes nothing returns unit
 // 事件响应 获取学习的技能 [R](对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
@@ -5066,9 +5224,17 @@ constant native GetRescuer takes nothing returns unit
 
 // 事件响应 获取死亡单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
+// 获取死亡单位
+// 获取触发死亡事件的单位
+// @returns 死亡的单位
+// 示例: set u = GetDyingUnit() // 获取死亡单位
 constant native GetDyingUnit takes nothing returns unit
 // 事件响应 获取凶手单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
+// 获取凶手单位
+// 获取造成单位死亡的凶手单位
+// @returns 凶手单位
+// 示例: set killer = GetKillingUnit() // 获取凶手单位
 constant native GetKillingUnit takes nothing returns unit
 
 // 事件响应 获取尸体腐烂单位(对应单位尸体腐烂等事件)
@@ -5293,6 +5459,10 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // within a trigger action function...returns null handle when used incorrectly
 
 // 事件响应 获取触发单位
+// 获取触发单位
+// 获取触发当前事件的单位
+// @returns 触发事件的单位
+// 示例: set u = GetTriggerUnit() // 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
 // 触发器登记单位状态事件
@@ -5304,6 +5474,13 @@ native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit,
 constant native GetEventUnitState takes nothing returns unitstate
 
 // 触发器登记单位指定事件
+// 注册单位事件
+// 为触发器注册指定单位的事件
+// @param whichTrigger 要注册事件的触发器
+// @param whichUnit 要监听的单位
+// @param whichEvent 单位事件类型 (EVENT_UNIT_DAMAGED, EVENT_UNIT_DAMAGING, EVENT_UNIT_DEATH, EVENT_UNIT_DECAY, EVENT_UNIT_DETECTED, EVENT_UNIT_HIDDEN, EVENT_UNIT_SELECTED, EVENT_UNIT_DESELECTED, EVENT_UNIT_STATE_LIMIT, EVENT_UNIT_ACQUIRED_TARGET, EVENT_UNIT_TARGET_IN_RANGE, EVENT_UNIT_ATTACKED, EVENT_UNIT_RESCUED, EVENT_UNIT_CONSTRUCT_CANCEL, EVENT_UNIT_CONSTRUCT_FINISH, EVENT_UNIT_UPGRADE_START, EVENT_UNIT_UPGRADE_CANCEL, EVENT_UNIT_UPGRADE_FINISH)
+// @returns 注册的事件对象
+// 示例: call TriggerRegisterUnitEvent(t, u, EVENT_UNIT_DEATH) // 注册单位u的死亡事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // 事件响应 获取被伤害后损失的生命值(对应单位受到伤害等事件)
@@ -5365,28 +5542,61 @@ constant native GetEventTargetUnit takes nothing returns unit
 native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
 
 // 添加触发器条件方法（指定条件表达式）
+// 添加触发器条件
+// 为触发器添加执行条件，只有条件为true时才会执行动作
+// @param whichTrigger 要添加条件的触发器
+// @param condition 布尔表达式条件函数
+// @returns 添加的条件对象
+// 示例: call TriggerAddCondition(t, Condition(function MyCondition)) // 添加条件
 native TriggerAddCondition takes trigger whichTrigger, boolexpr condition returns triggercondition
 // 删除触发器条件方法
+// 从触发器中移除指定的条件
+// @param whichTrigger 要移除条件的触发器
+// @param whichCondition 要移除的条件对象
+// 示例: call TriggerRemoveCondition(t, tc) // 移除条件tc
 native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
 // 清空触发器条件方法
-// 排泄需使用删除触发器条件方法 TriggerRemoveCondition，而非清空
+// 清空触发器的所有条件（不推荐使用，应使用TriggerRemoveCondition逐个移除）
+// @param whichTrigger 要清空条件的触发器
+// 注意: 排泄需使用删除触发器条件方法 TriggerRemoveCondition，而非清空
 native TriggerClearConditions takes trigger whichTrigger returns nothing
 
 // 添加触发器动作
+// 为触发器添加执行动作，当条件满足时会执行此动作
+// @param whichTrigger 要添加动作的触发器
+// @param actionFunc 动作函数
+// @returns 添加的动作对象
+// 示例: call TriggerAddAction(t, function MyAction) // 添加动作
 native TriggerAddAction takes trigger whichTrigger, code actionFunc returns triggeraction
 // 删除触发器动作
+// 从触发器中移除指定的动作
+// @param whichTrigger 要移除动作的触发器
+// @param whichAction 要移除的动作对象
+// 示例: call TriggerRemoveAction(t, ta) // 移除动作ta
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
 // 清空触发器动作
-// 排泄需使用删除触发器动作 TriggerRemoveAction，而非清空
+// 清空触发器的所有动作（不推荐使用，应使用TriggerRemoveAction逐个移除）
+// @param whichTrigger 要清空动作的触发器
+// 注意: 排泄需使用删除触发器动作 TriggerRemoveAction，而非清空
 native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待实际时间(指定时间)
+// 在触发器中暂停执行指定的时间
+// @param timeout 等待时间（秒）
+// 示例: call TriggerSleepAction(2.0) // 等待2秒
 native TriggerSleepAction takes real timeout returns nothing
 // 等到指定音效结束前N秒（指定时间）
 // @deprecated 弃用函数
 native TriggerWaitForSound takes sound s, real offset returns nothing
 // 判断触发器条件是否满足
+// 评估触发器的条件，但不执行动作
+// @param whichTrigger 要评估的触发器
+// @returns 如果条件满足则返回true，否则返回false
+// 示例: if TriggerEvaluate(t) then // 检查触发器t的条件
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
+// 立即执行触发器的动作，忽略条件检查
+// @param whichTrigger 要执行的触发器
+// 示例: call TriggerExecute(t) // 立即执行触发器t的动作
 native TriggerExecute takes trigger whichTrigger returns nothing
 // 等待运行触发器 (忽略条件)
 // @deprecated 弃用函数
@@ -5542,14 +5752,43 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // Facing arguments are specified in degrees
 
 // 新建单位(指定单位类型及坐标) [R]
+// 创建单位
+// 在指定位置创建一个单位
+// @param id 拥有者玩家
+// @param unitid 单位类型ID（使用FourCC获取，如FourCC("hfoo")）
+// @param x X坐标位置
+// @param y Y坐标位置
+// @param face 面向角度（弧度）
+// @returns 创建的单位
+// 示例: set u = CreateUnit(Player(0), FourCC("hfoo"), 0.0, 0.0, 0.0) // 在原点创建步兵
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
 // 新建单位(指定单位名称及坐标) [R]
+// 通过单位名称在指定位置创建单位
+// @param whichPlayer 拥有者玩家
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到
+// @param x X坐标位置
+// @param y Y坐标位置
+// @param face 面向角度（弧度）
+// @returns 创建的单位
+// 示例: set u = CreateUnitByName(Player(0), "footman", 0.0, 0.0, 0.0) // 创建步兵
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定单位类型及点) [R]
+// 在指定位置点创建单位
+// @param id 拥有者玩家
+// @param unitid 单位类型ID（使用FourCC获取）
+// @param whichLocation 位置点
+// @param face 面向角度（弧度）
+// @returns 创建的单位
+// 示例: set u = CreateUnitAtLoc(Player(0), FourCC("hfoo"), loc, 0.0) // 在位置点创建步兵
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
 // 新建单位(指定单位名称及点) [R]
+// 通过单位名称在指定位置点创建单位
+// @param id 拥有者玩家
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到
+// @param whichLocation 位置点
+// @param face 面向角度（弧度）
+// @returns 创建的单位
+// 示例: set u = CreateUnitAtLocByName(Player(0), "footman", loc, 0.0) // 在位置点创建步兵
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 // 不是所有单位都有尸体
@@ -5557,9 +5796,15 @@ native CreateUnitAtLocByName takes player id, string unitname, location whichLoc
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
 
 // 杀死单位
+// 杀死单位
+// 立即杀死指定单位，会触发死亡事件和掉落物品
+// @param whichUnit 要杀死的单位
+// 示例: call KillUnit(u) // 杀死单位u
 native KillUnit takes unit whichUnit returns nothing
 // 删除单位
-// 不会留下尸体，不会杀死单位
+// 立即删除指定单位，不会留下尸体，不会触发死亡事件
+// @param whichUnit 要删除的单位
+// 示例: call RemoveUnit(u) // 删除单位u
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
@@ -5567,20 +5812,44 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 
 // 设置指定单位属性 [R]
 // @param whichUnitState 单位属性，可选 UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA
+// 设置单位状态
+// 设置单位的各种状态值（生命值、魔法值等）
+// @param whichUnit 要设置的单位
+// @param whichUnitState 单位状态类型 (UNIT_STATE_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_LIFE, UNIT_STATE_MAX_MANA等)
+// @param newVal 新的状态值
+// 示例: call SetUnitState(u, UNIT_STATE_LIFE, 100.0) // 设置单位生命值为100
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置指定单位 X 坐标 [R]
 native SetUnitX takes unit whichUnit, real newX returns nothing
 // 设置指定单位 Y 坐标 [R]
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
+// 设置单位位置
+// 立即将单位移动到指定坐标位置
+// @param whichUnit 要移动的单位
+// @param newX 新的X坐标
+// @param newY 新的Y坐标
+// 示例: call SetUnitPosition(u, 100.0, 200.0) // 将单位移动到(100,200)
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
 // 移动指定单位(立即)(指定点)
+// 立即将单位移动到指定位置点
+// @param whichUnit 要移动的单位
+// @param whichLocation 目标位置点
+// 示例: call SetUnitPositionLoc(u, loc) // 将单位移动到位置点
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
 // 设置指定单位朝向 [R]
+// 设置单位的面向角度
+// @param whichUnit 要设置的单位
+// @param facingAngle 面向角度（弧度）
+// 示例: call SetUnitFacing(u, 1.57) // 设置单位面向90度
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 // 设置指定单位朝向(指定转身持续时间)
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
 // 设置指定单位移动速度
+// 设置单位的移动速度
+// @param whichUnit 要设置的单位
+// @param newSpeed 新的移动速度（游戏单位/秒）
+// 示例: call SetUnitMoveSpeed(u, 300.0) // 设置单位移动速度为300
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
 // 设置指定单位飞行高度
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
@@ -5589,6 +5858,11 @@ native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
 // 设置指定单位警界范围，未设置时默认值取物遍
+// 设置单位攻击范围
+// 设置单位的自动攻击获取范围
+// @param whichUnit 要设置的单位
+// @param newAcquireRange 新的攻击获取范围
+// 示例: call SetUnitAcquireRange(u, 500.0) // 设置单位攻击范围为500
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -5613,6 +5887,12 @@ native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 
 // 设置指定单位所属(指定玩家)
 // @param changeColor 是否改变队伍颜色
+// 设置单位拥有者
+// 改变单位的拥有者玩家
+// @param whichUnit 要改变拥有者的单位
+// @param whichPlayer 新的拥有者玩家
+// @param changeColor 是否改变单位颜色
+// 示例: call SetUnitOwner(u, Player(1), true) // 将单位转移给玩家2并改变颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
@@ -5787,8 +6067,18 @@ native UnitUseItemPoint takes unit whichUnit, item whichItem, real x, real y ret
 native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target returns boolean
 
 // 获取指定单位 X 坐标 [R]
+// 获取单位X坐标
+// 获取指定单位的X坐标位置
+// @param whichUnit 要获取坐标的单位
+// @returns 单位的X坐标
+// 示例: set x = GetUnitX(u) // 获取单位u的X坐标
 constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位 Y 坐标 [R]
+// 获取单位Y坐标
+// 获取指定单位的Y坐标位置
+// @param whichUnit 要获取坐标的单位
+// @returns 单位的Y坐标
+// 示例: set y = GetUnitY(u) // 获取单位u的Y坐标
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
 // 会创建点，用完请注意排泄
@@ -5801,8 +6091,18 @@ constant native GetUnitMoveSpeed takes unit whichUnit returns real
 constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
 // 获取指定单位指定状态值，如当前生命值/魔法值，最大生命/魔法值 [R]
 // @param whichUnitState 单位状态[UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA]
+// 获取单位状态
+// 获取指定单位的状态值（生命值、魔法值等）
+// @param whichUnit 要获取状态的单位
+// @param whichUnitState 单位状态类型 (UNIT_STATE_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_LIFE, UNIT_STATE_MAX_MANA等)
+// @returns 对应的状态值
+// 示例: set life = GetUnitState(u, UNIT_STATE_LIFE) // 获取单位生命值
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
 // 获取指定单位所属玩家
+// 获取单位的拥有者玩家
+// @param whichUnit 要获取拥有者的单位
+// @returns 单位的拥有者玩家
+// 示例: set p = GetOwningPlayer(u) // 获取单位u的拥有者
 constant native GetOwningPlayer takes unit whichUnit returns player
 // 获取指定单位类型(返回四字符码)
 constant native GetUnitTypeId takes unit whichUnit returns integer
@@ -6749,8 +7049,21 @@ native FlushChildHashtable takes hashtable table, integer parentKey returns noth
 // Randomization API
 
 // 获取随机整数(指定区间)
+// 生成指定范围内的随机整数
+// @param lowBound 最小值（包含）
+// @param highBound 最大值（包含）
+// @returns 范围内的随机整数
+// 示例: GetRandomInt(1, 10) = 1到10之间的随机整数
+//       GetRandomInt(0, 1) = 0或1（模拟布尔值）
 native GetRandomInt takes integer lowBound, integer highBound returns integer
+
 // 获取随机实数(指定区间)
+// 生成指定范围内的随机实数
+// @param lowBound 最小值（包含）
+// @param highBound 最大值（包含）
+// @returns 范围内的随机实数
+// 示例: GetRandomReal(0.0, 1.0) = 0.0到1.0之间的随机实数
+//       GetRandomReal(-1.0, 1.0) = -1.0到1.0之间的随机实数
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]

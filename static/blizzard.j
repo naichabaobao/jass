@@ -1411,15 +1411,25 @@ function Atan2BJ takes real y, real x returns real
 endfunction
 
 
-// 获取两点之间的角度
-// 两个点仍会保留，如不再使用用完请注意排泄
+// 计算两点之间的角度
+// 计算从点A到点B的角度（以度为单位）
+// @param locA 起始点位置
+// @param locB 目标点位置
+// @returns 角度值（0-360度），0度表示正东方向
+// 示例: AngleBetweenPoints(Location(0,0), Location(100,0)) = 0 (正东)
+//       AngleBetweenPoints(Location(0,0), Location(0,100)) = 90 (正北)
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
 // 获取两点之间的距离
-// 两个点仍会保留，如不再使用用完请注意排泄
+// 计算两个位置点之间的直线距离
+// @param locA 第一个点位置
+// @param locB 第二个点位置
+// @returns 两点之间的距离（游戏单位）
+// 示例: DistanceBetweenPoints(Location(0,0), Location(3,4)) = 5 (勾股定理)
+// 注意: 两个点仍会保留，如不再使用用完请注意排泄
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -1428,7 +1438,14 @@ endfunction
 
 
 // 点向指定方向位移指定距离
-// 会创建点，用完请注意排泄
+// 从源点向指定角度方向移动指定距离，返回新位置
+// @param source 源点位置
+// @param dist 移动距离
+// @param angle 移动角度（度）
+// @returns 新位置点
+// 示例: PolarProjectionBJ(Location(0,0), 100, 0) = Location(100,0) (向东100单位)
+//       PolarProjectionBJ(Location(0,0), 100, 90) = Location(0,100) (向北100单位)
+// 注意: 会创建点，用完请注意排泄
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
     local real y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
@@ -1491,7 +1508,13 @@ endfunction
 
 
 // 点位移
-// 会创建点，用完请注意排泄
+// 将指定点按给定的偏移量移动，返回新位置
+// @param loc 原始位置点
+// @param dx X轴偏移量
+// @param dy Y轴偏移量
+// @returns 新位置点
+// 示例: OffsetLocation(Location(100, 200), 50, -30) = Location(150, 170)
+// 注意: 会创建点，用完请注意排泄
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
@@ -1945,6 +1968,12 @@ endfunction
 
 
 // 比对两个点的X和Y坐标的值是否相同
+// 比较两个位置点是否完全相同
+// @param A 第一个位置点
+// @param B 第二个位置点
+// @returns 如果两个点的坐标完全相同则返回true，否则返回false
+// 示例: CompareLocationsBJ(Location(100, 200), Location(100, 200)) = true
+//       CompareLocationsBJ(Location(100, 200), Location(100, 201)) = false
 function CompareLocationsBJ takes location A, location B returns boolean
     return GetLocationX(A) == GetLocationX(B) and GetLocationY(A) == GetLocationY(B)
 endfunction
@@ -9458,18 +9487,30 @@ endfunction
 //***************************************************************************
 
 // 获取指定玩家出生点的 X 坐标
+// 获取玩家起始位置的X坐标值
+// @param whichPlayer 要查询的玩家
+// @returns 玩家起始位置的X坐标
+// 示例: GetPlayerStartLocationX(Player(0)) = 玩家1的起始X坐标
 function GetPlayerStartLocationX takes player whichPlayer returns real
     return GetStartLocationX(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 // 获取指定玩家出生点的 Y 坐标
+// 获取玩家起始位置的Y坐标值
+// @param whichPlayer 要查询的玩家
+// @returns 玩家起始位置的Y坐标
+// 示例: GetPlayerStartLocationY(Player(0)) = 玩家1的起始Y坐标
 function GetPlayerStartLocationY takes player whichPlayer returns real
     return GetStartLocationY(GetPlayerStartLocation(whichPlayer))
 endfunction
 
 
 // 获取玩家出生点
-// 会创建点，用完请注意排泄
+// 获取玩家起始位置的完整位置对象
+// @param whichPlayer 要查询的玩家
+// @returns 玩家起始位置点
+// 示例: GetPlayerStartLocationLoc(Player(0)) = 玩家1的起始位置
+// 注意: 会创建点，用完请注意排泄
 function GetPlayerStartLocationLoc takes player whichPlayer returns location
     return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
 endfunction

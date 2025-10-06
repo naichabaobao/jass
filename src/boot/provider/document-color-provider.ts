@@ -20,7 +20,7 @@ const color2JColorCode = (color: vscode.Color) => {
 
 const DzColorReg = new RegExp(/(?:(?:DzGetColor)|(?:BlzConvertColor))\(\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*,\s*(?:[\dxXA-Fa-f\$'\.]+)\s*\)/, "g")
 
-class JassDocumentColorProvider implements vscode.DocumentColorProvider {
+export class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
   /// 颜色改变到文档
   provideDocumentColors(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.ColorInformation[]> {
@@ -130,4 +130,4 @@ class JassDocumentColorProvider implements vscode.DocumentColorProvider {
 
 }
 
-vscode.languages.registerColorProvider("jass", new JassDocumentColorProvider);
+// vscode.languages.registerColorProvider("jass", new JassDocumentColorProvider);

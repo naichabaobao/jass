@@ -133,7 +133,7 @@ function format_by_tokens(tokens:common.Token[]) {
  * 默认会认为已闭合
  * zinc {} 必须换行才能识别
  */
-class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEditProvider {
+export class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEditProvider {
 
   provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
     const formats = new Array<vscode.TextEdit>();
@@ -252,9 +252,8 @@ class DocumentFormattingSortEditProvider implements vscode.DocumentFormattingEdi
 
 }
 
-vscode.languages.registerDocumentFormattingEditProvider("jass", new DocumentFormattingSortEditProvider());
-
-vscode.languages.registerOnTypeFormattingEditProvider("jass", new  class TypeFormatProvider implements vscode.OnTypeFormattingEditProvider {
+// vscode.languages.registerDocumentFormattingEditProvider("jass", new DocumentFormattingSortEditProvider());
+export class TypeFormatProvider implements vscode.OnTypeFormattingEditProvider {
   provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, ch: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
     const formats = new Array<vscode.TextEdit>();
     
@@ -268,6 +267,7 @@ vscode.languages.registerOnTypeFormattingEditProvider("jass", new  class TypeFor
 
     return formats;
   }
-} (), ')', ',', '+', '-', '*', '/', '>', '<', '=', '(', '[', ']',);
+}
+
 
 

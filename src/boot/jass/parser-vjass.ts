@@ -1,14 +1,79 @@
 import * as path from "path";
 import * as fs from "fs";
-import { Document,  Token, TokenType} from "./tokenizer-common";
+import { Document,  Token, TokenType, ASTVisitor} from "./tokenizer-common";
 import { Position, Range } from "./loc";
 import { Check } from "./check";
+import { TextMacro } from "../vjass/text-macro";
+import { Define } from "../vjass/preprocess";
 // import { VjassModule } from "../vjass/vjass-ast"; // 已删除vjass-ast.ts
+
+/**
+ * AST节点类型检查工具类
+ * 用于替代instanceof检查，避免继承关系导致的类型判断问题
+ */
+export class ASTNodeTypeChecker {
+    /**
+     * 检查节点是否为Native类型
+     */
+    static isNative(node: any): node is Native {
+        return node && node.nodeType === 'Native';
+    }
+
+    /**
+     * 检查节点是否为Func类型（不包括Method）
+     */
+    static isFunc(node: any): node is Func {
+        return node && node.nodeType === 'Func';
+    }
+
+    /**
+     * 检查节点是否为Method类型
+     */
+    static isMethod(node: any): node is Method {
+        return node && node.nodeType === 'Method';
+    }
+
+    /**
+     * 检查节点是否为zinc.Func类型
+     */
+    static isZincFunc(node: any): node is zinc.Func {
+        return node && node.nodeType === 'zinc.Func';
+    }
+
+    /**
+     * 检查节点是否为zinc.Method类型
+     */
+    static isZincMethod(node: any): node is zinc.Method {
+        return node && node.nodeType === 'zinc.Method';
+    }
+
+    /**
+     * 检查节点是否为任何Func类型（包括Method）
+     */
+    static isAnyFunc(node: any): node is Func | Method | zinc.Func | zinc.Method {
+        return this.isFunc(node) || this.isMethod(node) || this.isZincFunc(node) || this.isZincMethod(node);
+    }
+
+    /**
+     * 检查节点是否为任何Method类型
+     */
+    static isAnyMethod(node: any): node is Method | zinc.Method {
+        return this.isMethod(node) || this.isZincMethod(node);
+    }
+
+    /**
+     * 检查节点是否为任何Native类型（包括Func和Method）
+     */
+    static isAnyNative(node: any): node is Native | Func | Method {
+        return this.isNative(node) || this.isFunc(node) || this.isMethod(node);
+    }
+}
 
 /**
  * 全局上下文管理器 - 管理文档实例的存储和检索
  */
 export class Context {
+
     private _keys: string[] = [];
     private _documents: Document[] = [];
 
@@ -145,13 +210,21 @@ export class Context {
         return objects;
     }
 
-    public get_function_set_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
+    public get_native_and_func_and_method_by_name(name: string):(Func|Native|Method|zinc.Func|zinc.Method)[] {
         const funcs:(Func|Native|Method|zinc.Func|zinc.Method)[] = [];
 
         this._documents.forEach(document => {
-            funcs.push(...document.get_function_set_by_name(name));
+            funcs.push(...document.get_native_and_func_and_method_by_name(name));
         });
 
+        return funcs;
+    }
+
+    public get_func_by_name(name: string):(Func|zinc.Func)[] {
+        const funcs:(Func|zinc.Func)[] = [];
+        this._documents.forEach(document => {
+            funcs.push(...document.get_func_by_name(name));
+        });
         return funcs;
     }
 
@@ -250,6 +323,26 @@ export class Context {
         return globalVariables;
     }
 
+    public get_natives():Native[] {
+        const natives:Native[] = [];
+        this._documents.forEach(document => {
+            document.get_all_natives().forEach(native => {
+                natives.push(native);
+            });
+        });
+        return natives;
+    }
+
+    public get_functions():(Func|zinc.Func)[] {
+        const functions:(Func|zinc.Func)[] = [];
+        this._documents.forEach(document => {
+            document.get_all_functions().forEach(func => {
+                functions.push(func);
+            });
+        });
+        return functions;
+    }
+
     public get_types():Type[] {
         const types:Type[] = [];
         this._documents.forEach(document => {
@@ -314,9 +407,398 @@ export class Context {
         return structs;
     }
 
+
+    get_modules() {
+        const modules: Module[] = [];
+        this._documents.forEach(document => {
+            modules.push(...document.get_all_modules());
+        });
+        return modules;
+    }
+
+    get_delegates(): Delegate[] {
+        const delegates: Delegate[] = [];
+        this._documents.forEach(document => {
+            delegates.push(...document.get_all_delegates());
+        });
+        return delegates;
+    }
+
+    get_text_macros():TextMacro[] {
+        const textMacros:TextMacro[] = [];
+        this._documents.forEach(document => {
+            textMacros.push(...document.textMacros);
+        });
+        return textMacros;
+    }
+
+    get_defines(): Define[] {
+        const defines: Define[] = [];
+        this._documents.forEach(document => {
+            defines.push(...document.defines);
+        });
+        return defines;
+    }
 }
 
 export const GlobalContext = new Context();
+
+/**
+ * 操作符优先级定义
+ * 数字越小优先级越高
+ */
+export const OPERATOR_PRECEDENCE: { [key: string]: number } = {
+    // 圆括号（最高优先级）
+    '(': 0,
+    ')': 0,
+    
+    // 自增自减运算符
+    '++': 1,
+    '--': 1,
+    
+    // 单目运算符（正负号）
+    'unary+': 2,  // 一元正号
+    'unary-': 2,  // 一元负号
+    'not': 2,
+    '!': 2,
+    
+    // 乘法除法
+    '*': 3,
+    '/': 3,
+    '%': 3,
+    
+    // 加法减法
+    '+': 4,  // 二元加法
+    '-': 4,  // 二元减法
+    
+    // 关系运算符
+    '<': 5,
+    '>': 5,
+    '<=': 5,
+    '>=': 5,
+    '==': 5,
+    '!=': 5,
+    
+    // 逻辑运算符
+    'and': 6,
+    '&&': 6,
+    'or': 7,
+    '||': 7,
+    
+    // 赋值运算符（最低优先级）
+    '=': 8,
+    '+=': 8,
+    '-=': 8,
+    '*=': 8,
+    '/=': 8,
+    '%=': 8
+};
+
+/**
+ * 检查操作符是否为右结合
+ */
+export function isRightAssociative(op: string): boolean {
+    return ['=', '+=', '-=', '*=', '/=', '%='].includes(op);
+}
+
+/**
+ * 类型推断器 - 负责为表达式和变量名推断类型
+ */
+export class TypeInferencer {
+    private globalContext: Context;
+
+    constructor(globalContext: Context = GlobalContext) {
+        this.globalContext = globalContext;
+    }
+
+    /**
+     * 为表达式推断类型
+     */
+    public inferExpressionType(expr: Expr): string {
+        if (expr instanceof Value) {
+            return this.inferValueType(expr);
+        } else if (expr instanceof BinaryExpr) {
+            return this.inferBinaryExprType(expr);
+        } else if (expr instanceof UnaryExpr) {
+            return this.inferUnaryExprType(expr);
+        } else if (expr instanceof PriorityExpr) {
+            return this.inferPriorityExprType(expr);
+        } else if (expr instanceof Id) {
+            return this.inferIdType(expr);
+        } else if (expr instanceof VariableName) {
+            return this.inferVariableNameType(expr);
+        } else if (expr instanceof MemberAccess) {
+            return this.inferMemberAccessType(expr);
+        } else if (expr instanceof FunctionExpr) {
+            return this.inferFunctionExprType(expr);
+        }
+        return "unknown";
+    }
+
+    /**
+     * 推断值表达式的类型
+     */
+    private inferValueType(value: Value): string {
+        if (!value.value) return "unknown";
+        
+        const token = value.value;
+        if (token.type === TokenType.String) {
+            return "string";
+        } else if (token.type === TokenType.Integer) {
+            return "integer";
+        } else if (token.type === TokenType.Real) {
+            return "real";
+        } else if (token.type === TokenType.Mark) {
+            return "integer";
+        } else if (token.type === TokenType.EmbeddedToken) {
+            return "string";
+        } else if (token.type === TokenType.Identifier) {
+            const text = token.getText();
+            if (text === "true" || text === "false") {
+                return "boolean";
+            }
+        }
+        return "unknown";
+    }
+
+    /**
+     * 推断二元表达式的类型
+     */
+    private inferBinaryExprType(binaryExpr: BinaryExpr): string {
+        if (!binaryExpr.left || !binaryExpr.right || !binaryExpr.op) {
+            return "unknown";
+        }
+
+        const leftType = this.inferExpressionType(binaryExpr.left);
+        const rightType = this.inferExpressionType(binaryExpr.right);
+        const opText = binaryExpr.op.getText();
+
+        // 算术运算符
+        if (['+', '-', '*', '/'].includes(opText)) {
+            if (leftType === "real" || rightType === "real") {
+                return "real";
+            } else if (leftType === "integer" && rightType === "integer") {
+                return "integer";
+            }
+        }
+        // 比较运算符
+        else if (['==', '!=', '<', '>', '<=', '>='].includes(opText)) {
+            return "boolean";
+        }
+        // 逻辑运算符
+        else if (['and', 'or'].includes(opText)) {
+            return "boolean";
+        }
+
+        return "unknown";
+    }
+
+    /**
+     * 推断一元表达式的类型
+     */
+    private inferUnaryExprType(unaryExpr: UnaryExpr): string {
+        if (!unaryExpr.value || !unaryExpr.op) {
+            return "unknown";
+        }
+
+        const valueType = this.inferExpressionType(unaryExpr.value);
+        const opText = unaryExpr.op.getText();
+
+        // 逻辑非运算符
+        if (opText === 'not' || opText === '!') {
+            return "boolean";
+        }
+        // 算术运算符 + 和 -
+        else if (opText === '+' || opText === '-') {
+            return valueType; // 保持原类型
+        }
+
+        return "unknown";
+    }
+
+    /**
+     * 推断优先级表达式的类型
+     */
+    private inferPriorityExprType(priorityExpr: PriorityExpr): string {
+        return priorityExpr.expr ? this.inferExpressionType(priorityExpr.expr) : "unknown";
+    }
+
+    /**
+     * 推断标识符的类型
+     */
+    private inferIdType(id: Id): string {
+        if (!id.expr) return "unknown";
+        
+        const name = id.expr.getText();
+        
+        // 查找局部变量
+        const localType = this.findLocalVariableType(name, id);
+        if (localType !== "unknown") return localType;
+        
+        // 查找 take 变量
+        const takeType = this.findTakeVariableType(name, id);
+        if (takeType !== "unknown") return takeType;
+        
+        // 查找全局变量
+        const globalType = this.findGlobalVariableType(name);
+        if (globalType !== "unknown") return globalType;
+        
+        // 查找结构体
+        const structType = this.findStructType(name);
+        if (structType !== "unknown") return structType;
+        
+        return "unknown";
+    }
+
+    /**
+     * 推断变量名的类型
+     */
+    private inferVariableNameType(variableName: VariableName): string {
+        if (!variableName.expression) return "unknown";
+        return this.inferExpressionType(variableName.expression);
+    }
+
+    /**
+     * 推断成员访问的类型
+     */
+    private inferMemberAccessType(memberAccess: MemberAccess): string {
+        if (!memberAccess.left || !memberAccess.right) return "unknown";
+        
+        const leftType = this.inferExpressionType(memberAccess.left);
+        const rightName = memberAccess.right instanceof Id ? (memberAccess.right.expr?.getText() || "unknown") : "unknown";
+        
+        if (rightName === "unknown") return "unknown";
+        
+        // 查找结构体成员
+        return this.findStructMemberType(leftType, rightName);
+    }
+
+    /**
+     * 推断函数表达式的类型
+     */
+    private inferFunctionExprType(functionExpr: FunctionExpr): string {
+        if (!functionExpr.name) return "unknown";
+        
+        const functionName = functionExpr.name.to_string();
+        
+        // 查找函数返回类型
+        const functions = this.globalContext.get_functions_by_name(functionName);
+        if (functions.length > 0) {
+            // 返回第一个找到的函数的返回类型
+            const func = functions[0];
+            if (func instanceof Func && func.returns) {
+                return func.returns.getText();
+            } else if (func instanceof zinc.Func && func.returns) {
+                return func.returns.getText();
+            }
+        }
+        
+        // 查找原生函数返回类型
+        const natives = this.globalContext.get_natives_by_name(functionName);
+        if (natives.length > 0) {
+            const native = natives[0];
+            if (native.returns) {
+                return native.returns.getText();
+            }
+        }
+        
+        return "code";
+    }
+
+    /**
+     * 查找局部变量类型
+     */
+    private findLocalVariableType(name: string, context: Expr): string {
+        let current: NodeAst | null = context.parent;
+        
+        while (current) {
+            // 查找函数或方法
+            if (current instanceof Func || current instanceof Method ||
+                current instanceof zinc.Func || current instanceof zinc.Method) {
+                
+                // 在函数体内查找局部变量声明
+                const localType = this.findLocalInFunction(current, name);
+                if (localType !== "unknown") return localType;
+            }
+            
+            current = current.parent;
+        }
+        
+        return "unknown";
+    }
+
+    /**
+     * 在函数内查找局部变量
+     */
+    private findLocalInFunction(func: NodeAst, name: string): string {
+        // 这里需要遍历函数的子节点查找局部变量声明
+        // 由于当前结构限制，暂时返回 unknown
+        // 实际实现需要更复杂的符号表管理
+        return "unknown";
+    }
+
+    /**
+     * 查找 take 变量类型
+     */
+    private findTakeVariableType(name: string, context: Expr): string {
+        // 查找 take 语句
+        let current: NodeAst | null = context.parent;
+        
+        while (current) {
+            if (current instanceof Take) {
+                // 检查 take 语句中的变量
+                if (current.name && current.name.getText() === name) {
+                    return current.type ? current.type.getText() : "unknown";
+                }
+            }
+            current = current.parent;
+        }
+        
+        return "unknown";
+    }
+
+    /**
+     * 查找全局变量类型
+     */
+    private findGlobalVariableType(name: string): string {
+        const globalVars = this.globalContext.get_global_variables_by_name(name);
+        if (globalVars.length > 0) {
+            const globalVar = globalVars[0];
+            if (globalVar instanceof GlobalVariable && globalVar.type) {
+                return globalVar.type.getText();
+            } else if (globalVar instanceof zinc.Member && globalVar.type) {
+                return globalVar.type.getText();
+            }
+        }
+        return "unknown";
+    }
+
+    /**
+     * 查找结构体类型
+     */
+    private findStructType(name: string): string {
+        const structs = this.globalContext.get_structs_by_name(name);
+        if (structs.length > 0) {
+            return name; // 结构体类型就是其名称
+        }
+        return "unknown";
+    }
+
+    /**
+     * 查找结构体成员类型
+     */
+    private findStructMemberType(structType: string, memberName: string): string {
+        const structs = this.globalContext.get_structs_by_name(structType);
+        if (structs.length > 0) {
+            const struct = structs[0];
+            // 查找结构体成员
+            // 这里需要遍历结构体的成员
+            // 由于当前结构限制，暂时返回 unknown
+            // 实际实现需要更复杂的成员查找
+        }
+        return "unknown";
+    }
+}
 
 //#region 解析
 /**
@@ -839,6 +1321,46 @@ export class NodeAst extends Range {
     }
 }
 
+/**
+ * 语句基类 - 所有语句的基类，具备 AST 节点功能
+ */
+export abstract class Statement extends NodeAst {
+    constructor(document: Document) {
+        super(document);
+    }
+
+    /**
+     * 接受访问器，支持 AST 遍历
+     */
+    public accept(visitor: ASTVisitor): void {
+        // 根据语句类型调用相应的访问方法
+        if (this instanceof Set) {
+            visitor.visitSet?.(this);
+        } else if (this instanceof Call) {
+            visitor.visitCall?.(this);
+        } else if (this instanceof If) {
+            visitor.visitIf?.(this);
+        } else if (this instanceof Loop) {
+            visitor.visitLoop?.(this);
+        } else if (this instanceof Return) {
+            visitor.visitReturn?.(this);
+        } else if (this instanceof ExitWhen) {
+            visitor.visitExitWhen?.(this);
+        }
+        
+        // 访问子节点
+        for (const child of this.children) {
+            if (child instanceof Statement) {
+                child.accept(visitor);
+            } else if (child instanceof Expr) {
+                child.accept(visitor);
+            }
+        }
+    }
+
+    public abstract to_string(): string;
+}
+
 export class JassDetail extends NodeAst {
     private name: Token;
 
@@ -909,7 +1431,7 @@ export namespace zinc {
 
     export class Set extends NodeAst {
         name: VariableName | null = null;
-        init: Zoom | null = null;
+        init: Expression | null = null;
     
         public to_string(): string {
             let name = "";
@@ -940,7 +1462,7 @@ export namespace zinc {
         name: Token | null = null;
         array_token: Token | null = null;
     
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
     
         public is_array: boolean = false;
 
@@ -975,8 +1497,8 @@ export namespace zinc {
             }
         }
     
-        public with(statement: Statement | Modifier) {
-            if (statement instanceof Statement) {
+        public with(statement: LocalStatement | Modifier) {
+            if (statement instanceof LocalStatement) {
                 this.type = statement.type;
                 this.name = statement.name;
                 this.array_token = statement.array_token;
@@ -1002,7 +1524,7 @@ export namespace zinc {
         public name: Token | null = null;
         public extends: Token[] | null = null;
 
-        public index_expr: Zoom|null = null;
+        public index_expr: Expression|null = null;
     
         public get is_private(): boolean {
             return !!this.visible && this.visible.getText() == "private";
@@ -1112,6 +1634,9 @@ export namespace zinc {
         }
     }
     export class Func extends NodeAst implements Check {
+        // 类型标识符，用于避免instanceof继承问题
+        public get nodeType(): string { return 'zinc.Func'; }
+
         public to_string(): string {
             const visible_string = this.visible ? this.visible.getText() + " " : "";
             const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -1254,7 +1779,7 @@ export namespace zinc {
         public name: Token | null = null;
         public takes: Take[] | null = null;
         public returns: Token | null = null;
-        public defaults: Zoom | null = null;
+        public defaults: Expression | null = null;
     
         with<T extends Modifier | Takes | Returns>(v: T) {
             if (v instanceof Modifier) {
@@ -1307,6 +1832,9 @@ export namespace zinc {
         }
     }
     export class Method extends Func implements Check {
+        // 类型标识符，用于避免instanceof继承问题
+        public get nodeType(): string { return 'zinc.Method'; }
+
         public to_string(): string {
             const visible_string = this.visible ? this.visible.getText() + " " : "";
             const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -1358,24 +1886,24 @@ export namespace zinc {
         }
     }
     export class If extends NodeAst {
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
     }
     export class StaticIf extends If {
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
     }
     export class ElseIf extends If {
     }
     export class Else extends NodeAst {
     }
     export class While extends If {
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
     }
     export class For extends While {
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
     }
     export class CFor extends For {
         init_statement: zinc.Set|null = null;
-        expr: Zoom | null = null;
+        expr: Expression | null = null;
         inc_statement: zinc.Set|null = null;
     }
     export class Private extends NodeAst {
@@ -1417,6 +1945,40 @@ export class Library extends NodeAst implements ExprTrict, Check {
             ).join(", ")}` : "";
         
         return `${type} ${name}${init}${reqs}`;
+    }
+
+    /**
+     * 将 AST 节点转换为完整的代码字符串
+     * @param options 格式化选项
+     * @returns 生成的代码字符串
+     */
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        const type = this.is_library_once ? "library_once" : "library";
+        const name = this.name ? this.name.getText() : "(unknown)";
+        const init = this.initializer ? ` initializer ${this.initializer.getText()}` : "";
+        const reqs = this.requires.length > 0 ? 
+            ` requires ${this.requires.map(x => 
+                `${x.is_optional ? "optional " : ""}${x.name ? x.name.getText() : "(unknown)"}`
+            ).join(opts.addSpaceAfterComma ? ", " : ",")}` : "";
+        
+        let code = `${type} ${name}${init}${reqs}`;
+        
+        // 添加类型注释
+        if (opts.addTypeAnnotations) {
+            code += ` /* library */`;
+        }
+        
+        return code;
     }
 
     /**
@@ -1812,6 +2374,7 @@ export class Interface extends NodeAst {
     public visible: "public" | "private" | null = null;
     public name: Token | null = null;
     public extends: Token[] | null = null;
+    public implementations: VjassModuleImplementation[] = [];
 
     public get is_private(): boolean {
         return !!this.visible && this.visible == "private";
@@ -2369,7 +2932,7 @@ export class Take {
     }
 
     public get desciprtion(): ParamDescription | null {
-        const desc = this.belong.get_param_descriptions().find(desc => {
+        const desc = (this.belong as any).get_param_descriptions?.()?.find((desc: any) => {
             return desc.name === this.name?.getText();
         });
         if (desc) {
@@ -2391,6 +2954,9 @@ class ParamDescription {
     }
 }
 export class Native extends NodeAst {
+    // 类型标识符，用于避免instanceof继承问题
+    public get nodeType(): string { return 'Native'; }
+
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -2468,7 +3034,39 @@ export class Native extends NodeAst {
         return param_descs;
     }
 }
-export class Func extends Native {
+export class Func extends NodeAst {
+    /**
+     * [private, public]
+     */
+    public visible: Token | null = null;
+    /**
+     * [static, stub]
+     */
+    public modifier: Token | null = null;
+    /**
+     * [constant]
+     */
+    public qualifier: Token | null = null;
+    public name: Token | null = null;
+    public takes: Take[] | null = null;
+    public returns: Token | null = null;
+    public defaults: string | null = null;
+    // 类型标识符，用于避免instanceof继承问题
+    public get nodeType(): string { return 'Func'; }
+
+    /**
+     * 设置函数属性
+     */
+    public with(statement: LocalStatement | Modifier) {
+        if (statement instanceof LocalStatement) {
+            this.name = statement.name;
+            // Func类不需要type、array_token等属性
+        } else if (statement instanceof Modifier) {
+            this.visible = statement.visible;
+            this.modifier = statement.modifier;
+            this.qualifier = statement.qualifier;
+        }
+    }
 
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
@@ -2480,9 +3078,27 @@ export class Func extends Native {
         return `${visible_string}${modifier_string}${qualifier_string}function ${name_string}takes ${takes_string} returns ${returns_string}`;
     }
 }
-export class Method extends Func {
+export class Method extends NodeAst {
+    // 类型标识符，用于避免instanceof继承问题
+    public get nodeType(): string { return 'Method'; }
+
+    /**
+     * [private, public]
+     */
     public visible: Token | null = null;
+    /**
+     * [static, stub]
+     */
     public modifier: Token | null = null;
+    /**
+     * 检查是否为静态方法
+     */
+    public get is_static(): boolean {
+        return !!this.modifier && this.modifier.getText() === "static";
+    }
+    /**
+     * [constant]
+     */
     public qualifier: Token | null = null;
     public name: Token | null = null;
     public takes: Take[] | null = null;
@@ -2777,7 +3393,7 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
         if (state == 0) {
             const result = parse_line_modifier(document, tokens, index);
             index = result.index;
-            func.with(result.expr);
+            (func as any).with(result.expr);
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -2839,7 +3455,7 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
         } else if (state == 3) {
             const result = parse_line_function_takes(document, tokens, index, func);
             index = result.index;
-            func.with(result.expr);
+            (func as any).with(result.expr);
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -2860,7 +3476,7 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
         } else if (state == 4) {
             const result = parse_line_returns(document, tokens, index);
             index = result.index;
-            func.with(result.expr);
+            (func as any).with(result.expr);
 
             state = 5;
         } else if (state == 5) {
@@ -2927,8 +3543,12 @@ export function parse_globals(document: Document, tokens: Token[]) {
     return globals;
 }
 
-export class If extends NodeAst implements Check {
-    expr: Zoom | null = null;
+export class If extends Statement implements Check {
+    expr: Expression | null = null;
+
+    public to_string(): string {
+        return `if ${this.expr ? this.expr.to_string() : "unknown"}`;
+    }
 
     public syntaxCheck(): void {
         // 检查if语句是否在function或method内部
@@ -2973,8 +3593,23 @@ export class If extends NodeAst implements Check {
             });
         }
     }
+
+    /**
+     * 设置条件表达式并建立父子关系
+     */
+    public setConditionExpression(expr: Expression): void {
+        this.expr = expr;
+        if (expr && expr instanceof Expr) {
+            expr.parent = this;
+            this.children.push(expr);
+        }
+    }
 }
-export class Loop extends NodeAst implements Check {
+export class Loop extends Statement implements Check {
+    public to_string(): string {
+        return "loop";
+    }
+
     public syntaxCheck(): void {
         // 检查loop语句是否在function或method内部
         let hasValidParent = false;
@@ -3203,7 +3838,7 @@ export class GlobalVariable extends NodeAst {
     name: Token | null = null;
     array_token: Token | null = null;
 
-    expr: Zoom | null = null;
+    expr: Expression | null = null;
 
     public is_array: boolean = false;
     public size_expr: IndexExpr|null = null;
@@ -3238,8 +3873,8 @@ export class GlobalVariable extends NodeAst {
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}${size_string}`;
     }
 
-    public with(statement: Statement | Modifier) {
-        if (statement instanceof Statement) {
+    public with(statement: LocalStatement | Modifier) {
+        if (statement instanceof LocalStatement) {
             this.type = statement.type;
             this.name = statement.name;
             this.array_token = statement.array_token;
@@ -3254,7 +3889,95 @@ export class GlobalVariable extends NodeAst {
     }
 }
 
-export class Member extends GlobalVariable {
+export class Delegate extends NodeAst {
+    // [public, private]
+    public visible: Token | null = null;
+    // [optional]
+    public optional: Token | null = null;
+    
+    // delegate type (the struct/interface being delegated to)
+    public delegateType: Token | null = null;
+    // delegate field name
+    public name: Token | null = null;
+    
+    public get is_private(): boolean {
+        return !!this.visible && this.visible.getText() == "private";
+    }
+    
+    public get is_public(): boolean {
+        return !this.is_private;
+    }
+    
+    public get is_optional(): boolean {
+        return !!this.optional;
+    }
+    
+    public to_string(): string {
+        const visible_string = this.visible ? this.visible.getText() + " " : "";
+        const optional_string = this.optional ? this.optional.getText() + " " : "";
+        const delegate_type_string = this.delegateType ? this.delegateType.getText() + " " : "";
+        const name_string = this.name ? this.name.getText() : "";
+        return `delegate ${visible_string}${optional_string}${delegate_type_string}${name_string}`;
+    }
+}
+
+export class Member extends NodeAst {
+    // [public, private]
+    public visible: Token | null = null;
+    // [static, stub]
+    public modifier: Token | null = null;
+    // [constant]
+    public qualifier: Token | null = null;
+    /**
+     * 检查是否为静态成员
+     */
+    public get is_static(): boolean {
+        return !!this.modifier && this.modifier.getText() === "static";
+    }
+    /**
+     * 检查是否为私有成员
+     */
+    public get is_private(): boolean {
+        return !!this.visible && this.visible.getText() === "private";
+    }
+    /**
+     * 检查是否为公有成员
+     */
+    public get is_public(): boolean {
+        return !this.is_private;
+    }
+    /**
+     * 检查是否为常量
+     */
+    public get is_constant(): boolean {
+        return !!this.qualifier && this.qualifier.getText() === "constant";
+    }
+    /**
+     * 设置成员属性
+     */
+    public with(statement: LocalStatement | Modifier) {
+        if (statement instanceof LocalStatement) {
+            this.type = statement.type;
+            this.name = statement.name;
+            this.array_token = statement.array_token;
+            this.is_array = statement.is_array;
+            this.expr = statement.expr;
+            this.size_expr = statement.size_expr;
+        } else if (statement instanceof Modifier) {
+            this.visible = statement.visible;
+            this.modifier = statement.modifier;
+            this.qualifier = statement.qualifier;
+        }
+    }
+
+    type: Token | null = null;
+    name: Token | null = null;
+    array_token: Token | null = null;
+
+    expr: Expression | null = null;
+
+    public is_array: boolean = false;
+    public size_expr: IndexExpr|null = null;
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -3266,7 +3989,39 @@ export class Member extends GlobalVariable {
         return `${visible_string}${modifier_string}${qualifier_string}${type_string}${array_string}${name_string}${size_string}`;
     }
 }
-export class Local extends GlobalVariable implements Check {
+export class Local extends NodeAst implements Check {
+    // [public, private]
+    public visible: Token | null = null;
+    // [static, stub]
+    public modifier: Token | null = null;
+    // [constant]
+    public qualifier: Token | null = null;
+    /**
+     * 设置局部变量属性
+     */
+    public with(statement: LocalStatement | Modifier) {
+        if (statement instanceof LocalStatement) {
+            this.type = statement.type;
+            this.name = statement.name;
+            this.array_token = statement.array_token;
+            this.is_array = statement.is_array;
+            this.expr = statement.expr;
+            this.size_expr = statement.size_expr;
+        } else if (statement instanceof Modifier) {
+            this.visible = statement.visible;
+            this.modifier = statement.modifier;
+            this.qualifier = statement.qualifier;
+        }
+    }
+
+    type: Token | null = null;
+    name: Token | null = null;
+    array_token: Token | null = null;
+
+    expr: Expression | null = null;
+
+    public is_array: boolean = false;
+    public size_expr: IndexExpr|null = null;
     public to_string(): string {
         const visible_string = this.visible ? this.visible.getText() + " " : "";
         const modifier_string = this.modifier ? this.modifier.getText() + " " : "";
@@ -3332,28 +4087,209 @@ export class Local extends GlobalVariable implements Check {
         }
     }
 }
-type Zoom = BinaryExpr | UnaryExpr | Value | VariableName | PriorityExpr | FunctionExpr;
+/**
+ * 表达式联合类型 - 表示所有可能的表达式节点类型
+ * 用于类型安全的表达式处理，替代原来的 Expression 类型
+ */
+export type Expression = 
+    | BinaryExpr 
+    | UnaryExpr 
+    | Value 
+    | VariableName 
+    | PriorityExpr 
+    | FunctionExpr 
+    | MemberAccess
+    | Caller
+    | IdIndex
+    | IndexExpr;
+
+/**
+ * 代码生成选项
+ */
+export interface CodeGenerationOptions {
+    /** 缩进字符串，默认为 "  " (两个空格) */
+    indent?: string;
+    /** 当前缩进级别，默认为 0 */
+    indentLevel?: number;
+    /** 是否在操作符周围添加空格，默认为 true */
+    addSpacesAroundOperators?: boolean;
+    /** 是否在括号周围添加空格，默认为 false */
+    addSpacesAroundParentheses?: boolean;
+    /** 是否在逗号后添加空格，默认为 true */
+    addSpaceAfterComma?: boolean;
+    /** 是否保持原始格式，默认为 false */
+    preserveOriginalFormat?: boolean;
+    /** 是否添加类型注释，默认为 false */
+    addTypeAnnotations?: boolean;
+}
 
 export interface ExprTrict {
     to_string(): string;
+    
+    /**
+     * 将 AST 节点转换为完整的代码字符串
+     * 支持格式化选项，用于代码生成和重构
+     * @param options 格式化选项
+     * @returns 生成的代码字符串
+     */
+    toCodeString(options?: CodeGenerationOptions): string;
 }
 
-export class Expr {
+interface TypeInference {
+    getType(): string;
+}
+
+export abstract class Expr extends NodeAst implements TypeInference {
+    private static typeInferencer: TypeInferencer = new TypeInferencer();
+
+    constructor(document: Document) {
+        super(document);
+    }
+
     public convert_to_binary_expr(F: UnaryExpr) {
-        const expr = new BinaryExpr();
+        const expr = new BinaryExpr(this.document);
         expr.left = <any>this;
         expr.right = F.value;
         expr.op = F.op;
         return expr;
     }
 
+    /**
+     * 获取表达式的类型 - 使用类型推断器
+     */
+    public getType(): string {
+        return Expr.typeInferencer.inferExpressionType(this);
+    }
 
+    /**
+     * 通用的错误报告方法 - 统一错误报告方式
+     */
+    protected reportError(message: string, token?: Token): void {
+        const errorToken = token || this.start_token || this.end_token;
+        if (errorToken) {
+            this.document.add_token_error(errorToken, message);
+        }
+    }
+
+    /**
+     * 检查必需字段是否存在，如果不存在则报告错误
+     */
+    protected checkRequiredField(field: any, fieldName: string, token?: Token): boolean {
+        if (!field) {
+            this.reportError(`${this.constructor.name} missing ${fieldName}`, token);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 默认的代码生成实现
+     * 子类可以重写此方法以提供更精确的代码生成
+     */
+    public toCodeString(options?: CodeGenerationOptions): string {
+        // 使用默认选项
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        // 默认实现使用 to_string() 方法
+        let code = (this as any).to_string();
+        
+        // 如果启用了类型注释，尝试添加类型信息
+        if (opts.addTypeAnnotations) {
+            const type = this.getType();
+            if (type && type !== "unknown") {
+                code += ` /* ${type} */`;
+            }
+        }
+        
+        return code;
+    }
+
+    /**
+     * 设置类型推断器实例
+     */
+    public static setTypeInferencer(inferencer: TypeInferencer): void {
+        Expr.typeInferencer = inferencer;
+    }
+
+    /**
+     * 获取包含此表达式的语句节点
+     * 通过遍历父节点链找到最近的语句节点
+     */
+    public getContainingStatement(): NodeAst | null {
+        let current: NodeAst | null = this.parent;
+        while (current) {
+            // 检查是否是语句类型
+            if (current instanceof Set || current instanceof Call || 
+                current instanceof If || current instanceof Loop ||
+                current instanceof Return || current instanceof ExitWhen) {
+                return current;
+            }
+            current = current.parent;
+        }
+        return null;
+    }
+
+    /**
+     * 获取包含此表达式的函数或方法节点
+     */
+    public getContainingFunction(): NodeAst | null {
+        let current: NodeAst | null = this.parent;
+        while (current) {
+            if (current instanceof Func || current instanceof Method ||
+                current instanceof zinc.Func || current instanceof zinc.Method) {
+                return current;
+            }
+            current = current.parent;
+        }
+        return null;
+    }
+
+    /**
+     * 接受访问器，支持 AST 遍历
+     */
+    public accept(visitor: ASTVisitor): void {
+        // 根据表达式类型调用相应的访问方法
+        if (this instanceof Value) {
+            visitor.visitValue?.(this);
+        } else if (this instanceof BinaryExpr) {
+            visitor.visitBinaryExpr?.(this);
+        } else if (this instanceof UnaryExpr) {
+            visitor.visitUnaryExpr?.(this);
+        } else if (this instanceof PriorityExpr) {
+            visitor.visitPriorityExpr?.(this);
+        } else if (this instanceof Id) {
+            visitor.visitId?.(this);
+        } else if (this instanceof VariableName) {
+            visitor.visitVariableName?.(this);
+        } else if (this instanceof MemberAccess) {
+            visitor.visitMemberAccess?.(this);
+        }
+        
+        // 访问子表达式
+        for (const child of this.children) {
+            if (child instanceof Expr) {
+                child.accept(visitor);
+            }
+        }
+    }
 }
-export class Value implements ExprTrict, Check {
-
+export class Value extends Expr implements ExprTrict, Check {
     public value: Token | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
+
     public convert_to_binary_expr(F: UnaryExpr) {
-        const expr = new BinaryExpr();
+        const expr = new BinaryExpr(this.document);
         expr.left = this;
         expr.right = F.value;
         expr.op = F.op;
@@ -3375,46 +4311,76 @@ export class Value implements ExprTrict, Check {
             const text = this.value.getText();
             // 检查字符串字面量是否正确闭合
             if (this.value.type === "String" && !text.startsWith('"') && !text.endsWith('"')) {
-                // 这里可以添加错误报告，但Value类没有document引用
-                console.warn(`Invalid string literal format: ${text}`);
+                this.document.add_token_error(this.value, `Invalid string literal format: ${text}`);
             }
         }
     }
+
 }
 
 export class BinaryExpr extends Expr implements ExprTrict, Check {
-    left: Zoom | null = null;
-    right: Zoom | null = null;
+    left: Expression | null = null;
+    right: Expression | null = null;
     op: Token | null = null;
 
+    constructor(document: Document) {
+        super(document);
+    }
+
     to_string(): string {
-        let expr = "unkown";
-        if (this.left) {
-            expr = this.left.to_string();
+        const leftStr = this.left?.to_string() ?? "unknown";
+        const opStr = this.op?.getText() ?? "unknown";
+        const rightStr = this.right?.to_string() ?? "unknown";
+        return `${leftStr} ${opStr} ${rightStr}`;
+    }
+
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        const leftStr = this.left?.toCodeString(opts) ?? "unknown";
+        const opStr = this.op?.getText() ?? "unknown";
+        const rightStr = this.right?.toCodeString(opts) ?? "unknown";
+        
+        // 根据选项决定是否在操作符周围添加空格
+        const space = opts.addSpacesAroundOperators ? " " : "";
+        let code = `${leftStr}${space}${opStr}${space}${rightStr}`;
+        
+        // 添加类型注释
+        if (opts.addTypeAnnotations) {
+            const type = this.getType();
+            if (type && type !== "unknown") {
+                code += ` /* ${type} */`;
+            }
         }
-        if (this.op) {
-            expr += ` ${this.op.getText()} `;
-        }
-        if (this.right) {
-            expr = this.right.to_string();
-        }
-        return `${this.left?.to_string() ?? "unkown"} ${this.op?.getText() ?? "unkown"} ${this.right?.to_string() ?? "unkown"}`;
+        
+        return code;
     }
 
     public syntaxCheck(): void {
-        // 检查操作符是否存在
-        if (!this.op) {
-        } else {
-
-        }
+        this.checkRequiredField(this.op, "operator");
+        this.checkRequiredField(this.left, "left operand");
+        this.checkRequiredField(this.right, "right operand");
     }
+
 }
 export class UnaryExpr extends Expr implements ExprTrict, Check {
     op: Token | null = null;
-    value: Zoom | null = null;
+    value: Expression | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     public convert_to_binary_expr(F: UnaryExpr) {
-        const expr = new BinaryExpr();
+        const expr = new BinaryExpr(this.document);
         expr.left = this;
         expr.right = F.value;
         expr.op = F.op;
@@ -3425,35 +4391,75 @@ export class UnaryExpr extends Expr implements ExprTrict, Check {
         return `${this.op?.getText() ?? "+"}${this.value?.to_string() ?? "unkown"}`;
     }
 
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        const opStr = this.op?.getText() ?? "+";
+        const valueStr = this.value?.toCodeString(opts) ?? "unknown";
+        
+        // 一元操作符通常不需要空格，但某些操作符（如 not）可能需要
+        const needsSpace = (opStr === "not" && opts.addSpacesAroundOperators);
+        const space = needsSpace ? " " : "";
+        let code = `${opStr}${space}${valueStr}`;
+        
+        // 添加类型注释
+        if (opts.addTypeAnnotations) {
+            const type = this.getType();
+            if (type && type !== "unknown") {
+                code += ` /* ${type} */`;
+            }
+        }
+        
+        return code;
+    }
+
     public syntaxCheck(): void {
-        // 检查操作符是否存在
-        if (!this.op) {
-            console.warn("Unary expression missing operator");
+        if (!this.checkRequiredField(this.op, "operator")) {
             return;
         }
-
-        // 检查操作数是否存在
-        if (!this.value) {
-            console.warn("Unary expression missing operand");
-        }
+        
+        this.checkRequiredField(this.value, "operand");
 
         // 检查一元操作符的合理性
-        const opText = this.op.getText();
-        const validUnaryOperators = ['+', '-', 'not', '!'];
-        if (!validUnaryOperators.includes(opText)) {
-            console.warn(`Invalid unary operator: ${opText}`);
+        if (this.op) {
+            const opText = this.op.getText();
+            const validUnaryOperators = ['+', '-', 'not', '!'];
+            if (!validUnaryOperators.includes(opText)) {
+                this.reportError(`Invalid unary operator: ${opText}`, this.op);
+            }
         }
     }
+
 }
-export class IndexExpr implements ExprTrict {
-    expr: Zoom | null = null;
+export class IndexExpr extends Expr implements ExprTrict {
+    expr: Expression | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     to_string(): string {
         return `[${this.expr?.to_string() ?? "∞"}]`;
     }
+
+    public syntaxCheck(): void {
+        this.checkRequiredField(this.expr, "expression");
+    }
 }
 export class PriorityExpr extends Expr implements ExprTrict, Check {
-    expr: Zoom | null = null;
+    expr: Expression | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     to_string(): string {
         if (this.expr) {
@@ -3462,39 +4468,53 @@ export class PriorityExpr extends Expr implements ExprTrict, Check {
         return "unkown";
     }
 
-    public syntaxCheck(): void {
-        // 检查括号内的表达式是否存在
-        if (!this.expr) {
-            console.warn("Priority expression missing inner expression");
-        }
-    }
-}
-export class MenberReference {
-    current: Token | null = null;
-    parent: MenberReference | null = null;
-    child: MenberReference | null = null;
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
 
-    index_expr: IndexExpr | null = null;
-
-    public to_string() {
-        let name = "";
-        if (this.current) {
-            name += this.current.getText();
-            if (this.child) {
-                name += ".";
-                name += this.child.to_string();
+        if (this.expr) {
+            const exprStr = this.expr.toCodeString(opts);
+            const leftSpace = opts.addSpacesAroundParentheses ? " " : "";
+            const rightSpace = opts.addSpacesAroundParentheses ? " " : "";
+            let code = `(${leftSpace}${exprStr}${rightSpace})`;
+            
+            // 添加类型注释
+            if (opts.addTypeAnnotations) {
+                const type = this.getType();
+                if (type && type !== "unknown") {
+                    code += ` /* ${type} */`;
+                }
             }
+            
+            return code;
         }
-        if (this.index_expr) {
-            name += `[]`;
-        }
-        return name;
+        return "unknown";
     }
+
+    public syntaxCheck(): void {
+        this.checkRequiredField(this.expr, "inner expression");
+    }
+
 }
-export class Id implements ExprTrict {
+export class Id extends Expr implements ExprTrict {
     public expr: Token | null = null;
+    public isThisReference: boolean = false; // 标记是否为this引用
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     public to_string() {
+        if (this.isThisReference) {
+            return "this";
+        }
         if (this.expr) {
             return this.expr.getText();
         } else {
@@ -3504,12 +4524,12 @@ export class Id implements ExprTrict {
 
     public to<T extends Params | IndexExpr | null>(document: Document, v: T) {
         if (v instanceof Params) {
-            const caller = new Caller();
+            const caller = new Caller(document);
             caller.name = this;
             caller.params = v;
             return caller;
         } else if (v instanceof IndexExpr) {
-            const expr = new IdIndex();
+            const expr = new IdIndex(document);
             expr.name = this;
             expr.index_expr = v;
             return expr;
@@ -3517,27 +4537,76 @@ export class Id implements ExprTrict {
             return this as Id;
         }
     }
+
 }
-export class Caller implements ExprTrict {
-    public name: Id | null = null;
+export class Caller extends Expr implements ExprTrict {
+    public name: Id | MemberAccess | Caller | null = null;
     public params: Params | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     public to_string(): string {
         if (this.name) {
+            const nameStr = this.name instanceof Id ? this.name.to_string() : this.name.to_string();
             if (this.params) {
-                return `${this.name.to_string()}${this.params.to_string()}`;
+                return `${nameStr}${this.params.to_string()}`;
             } else {
-                return `${this.name.to_string()}'('missing')'`;
+                return `${nameStr}'('missing')'`;
             }
         } else {
-            return "unkown";
+            return "unknown";
         }
     }
 
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        if (this.name) {
+            const nameStr = this.name.toCodeString(opts);
+            if (this.params) {
+                const paramsStr = this.params.toCodeString(opts);
+                let code = `${nameStr}${paramsStr}`;
+                
+                // 添加类型注释
+                if (opts.addTypeAnnotations) {
+                    const type = this.getType();
+                    if (type && type !== "unknown") {
+                        code += ` /* ${type} */`;
+                    }
+                }
+                
+                return code;
+            } else {
+                return `${nameStr}()`;
+            }
+        } else {
+            return "unknown";
+        }
+    }
+
+    public syntaxCheck(): void {
+        this.checkRequiredField(this.name, "name");
+        this.checkRequiredField(this.params, "parameters");
+    }
+
 }
-export class IdIndex implements ExprTrict {
-    public name: Id | null = null;
+export class IdIndex extends Expr implements ExprTrict {
+    public name: Id | MemberAccess | null = null;
     public index_expr: IndexExpr | null = null;
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     public to_string() {
         if (this.name) {
@@ -3547,110 +4616,260 @@ export class IdIndex implements ExprTrict {
                 return `${this.name.to_string()}'['missing']'`;
             }
         } else {
-            return "unkown";
-        }
-    }
-}
-export class VariableName extends Expr implements ExprTrict, Check {
-    public names: (Id | Caller | IdIndex | null)[] = [];
-
-
-
-    public to_string() {
-        if (this.names.length > 0) {
-            return this.names.map(name => name ? name.to_string() : " ").join(".");
-        } else {
-            return "unkown";
+            return "unknown";
         }
     }
 
     public syntaxCheck(): void {
-        // 检查变量名是否存在
-        if (this.names.length === 0) {
-            console.warn("Variable name is empty");
-            return;
-        }
-
-        // 检查变量名的每个部分
-        for (const name of this.names) {
-            if (!name) {
-                console.warn("Variable name contains null component");
-            }
-        }
+        this.checkRequiredField(this.name, "name");
+        this.checkRequiredField(this.index_expr, "index expression");
     }
-
-    public get_start_line_number(): number {
-        if (this.names.length > 0) {
-            const ref = this.names[0];
-            if (ref instanceof Id) {
-                return ref.expr?.line ?? 0;
-            } else if (ref instanceof Caller) {
-                return ref.name?.expr?.line ?? 0;
-            } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.line ?? 0;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-    public get_end_line_number(): number {
-        if (this.names.length > 0) {
-            const ref = this.names[this.names.length - 1];
-            if (ref instanceof Id) {
-                return ref.expr?.line ?? 0;
-            } else if (ref instanceof Caller) {
-                return ref.name?.expr?.line ?? 0;
-            } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.line ?? 0;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-    public get_start_line_position(): number {
-        if (this.names.length > 0) {
-            const ref = this.names[0];
-            if (ref instanceof Id) {
-                return ref.expr?.character ?? 0;
-            } else if (ref instanceof Caller) {
-                return ref.name?.expr?.character ?? 0;
-            } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.line ?? 0;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-    public get_end_line_position(): number {
-        if (this.names.length > 0) {
-            const ref = this.names[this.names.length - 1];
-            if (ref instanceof Id) {
-                return ref.expr?.character ?? 0;
-            } else if (ref instanceof Caller) {
-                return ref.name?.expr?.character ?? 0;
-            } else if (ref instanceof IdIndex) {
-                return ref.name?.expr?.line ?? 0;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-
 }
-export class FunctionExpr implements ExprTrict, Check {
+/**
+ * 成员访问表达式 - 表示 left.right 的语法结构
+ * 这是 vJASS 中变量名的核心结构，支持链式访问如 a.b.c.d
+ */
+export class MemberAccess extends Expr implements ExprTrict, Check {
+    public left: Expr | null = null;  // 左侧表达式（可以是 Id、MemberAccess、Caller 等）
+    public right: Expr | null = null; // 右侧表达式（通常是 Id）
+    public dotToken: Token | null = null; // '.' 操作符的 token
+
+    constructor(document: Document) {
+        super(document);
+    }
+
+    public to_string(): string {
+        if (this.left && this.right) {
+            const leftStr = this.getExpressionString(this.left);
+            const rightStr = this.getExpressionString(this.right);
+            return `${leftStr}.${rightStr}`;
+        } else if (this.left) {
+            const leftStr = this.getExpressionString(this.left);
+            return `${leftStr}.`;
+        } else if (this.right) {
+            const rightStr = this.getExpressionString(this.right);
+            return `.${rightStr}`;
+        } else {
+            return "unknown";
+        }
+    }
+
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        if (this.left && this.right) {
+            let leftStr: string;
+            
+            // 检查左侧是否为this引用
+            if (this.left instanceof Id && this.left.isThisReference) {
+                leftStr = "this";
+            } else {
+                leftStr = this.left.toCodeString(opts);
+            }
+            
+            const rightStr = this.right.toCodeString(opts);
+            let code = `${leftStr}.${rightStr}`;
+            
+            // 添加类型注释
+            if (opts.addTypeAnnotations) {
+                const type = this.getType();
+                if (type && type !== "unknown") {
+                    code += ` /* ${type} */`;
+                }
+            }
+            
+            return code;
+        } else if (this.left) {
+            let leftStr: string;
+            if (this.left instanceof Id && this.left.isThisReference) {
+                leftStr = "this";
+            } else {
+                leftStr = this.left.toCodeString(opts);
+            }
+            return `${leftStr}.`;
+        } else if (this.right) {
+            const rightStr = this.right.toCodeString(opts);
+            return `.${rightStr}`;
+        } else {
+            return "unknown";
+        }
+    }
+
+    private getExpressionString(expr: Expr): string {
+        if (expr instanceof Id) {
+            if (expr.isThisReference) {
+                return "this";
+            }
+            return expr.expr?.getText() || "unknown";
+        } else if (expr instanceof MemberAccess) {
+            return expr.to_string();
+        } else if (expr instanceof Caller) {
+            return expr.to_string();
+        } else if (expr instanceof IdIndex) {
+            return expr.to_string();
+        } else {
+            return "unknown";
+        }
+    }
+
+    public syntaxCheck(): void {
+        this.checkRequiredField(this.left, "left operand");
+        this.checkRequiredField(this.right, "right operand");
+        this.checkRequiredField(this.dotToken, "dot operator");
+    }
+
+
+    /**
+     * 设置左侧表达式并建立父子关系
+     */
+    public setLeftExpression(left: Expr): void {
+        this.left = left;
+        if (left) {
+            left.parent = this;
+            this.children.push(left);
+        }
+    }
+
+    /**
+     * 设置右侧表达式并建立父子关系
+     */
+    public setRightExpression(right: Expr): void {
+        this.right = right;
+        if (right) {
+            right.parent = this;
+            this.children.push(right);
+        }
+    }
+
+    /**
+     * 设置点操作符
+     */
+    public setDotToken(dotToken: Token): void {
+        this.dotToken = dotToken;
+    }
+
+    /**
+     * 获取完整的变量名路径（递归展开所有成员访问）
+     */
+    public getFullPath(): string[] {
+        const path: string[] = [];
+        
+        // 递归收集左侧路径
+        if (this.left instanceof MemberAccess) {
+            path.push(...this.left.getFullPath());
+        } else if (this.left instanceof Id) {
+            path.push(this.left.expr?.getText() || "unknown");
+        }
+
+        // 添加右侧
+        if (this.right instanceof Id) {
+            path.push(this.right.expr?.getText() || "unknown");
+        }
+
+        return path;
+    }
+
+    /**
+     * 检查是否是简单的标识符（没有成员访问）
+     */
+    public isSimpleIdentifier(): boolean {
+        return this.left instanceof Id && !this.right;
+    }
+}
+
+/**
+ * 变量名表达式 - 可以是简单的 Id 或复杂的 MemberAccess
+ * 这是 VariableName 的新实现，更符合 vJASS 语法
+ */
+export class VariableName extends Expr implements ExprTrict, Check {
+    public expression: Expr | null = null; // 可以是 Id 或 MemberAccess
+
+    constructor(document: Document) {
+        super(document);
+    }
+
+    public to_string(): string {
+        if (!this.expression) {
+            return "unknown";
+        }
+        
+        if (this.expression instanceof Id) {
+            return this.expression.expr?.getText() || "unknown";
+        } else if (this.expression instanceof MemberAccess) {
+            return this.expression.to_string();
+        } else if (this.expression instanceof Caller) {
+            return this.expression.to_string();
+        } else if (this.expression instanceof IdIndex) {
+            return this.expression.to_string();
+        } else {
+            return "unknown";
+        }
+    }
+
+    public syntaxCheck(): void {
+        if (!this.expression) {
+            this.document.errorCollection.errors.push({
+                start: { line: 0, position: 0 },
+                end: { line: 0, position: 0 },
+                message: "Variable name expression is missing"
+            });
+        }
+    }
+
+
+    /**
+     * 设置变量名表达式并建立父子关系
+     */
+    public setExpression(expression: Expr): void {
+        this.expression = expression;
+        if (expression) {
+            expression.parent = this;
+            this.children.push(expression);
+        }
+    }
+
+    /**
+     * 获取完整的变量名路径
+     */
+    public getFullPath(): string[] {
+        if (this.expression instanceof MemberAccess) {
+            return this.expression.getFullPath();
+        } else if (this.expression instanceof Id) {
+            return [this.expression.expr?.getText() || "unknown"];
+        }
+        return [];
+    }
+
+    /**
+     * 检查是否是简单的标识符
+     */
+    public isSimpleIdentifier(): boolean {
+        return this.expression instanceof Id;
+    }
+}
+export class FunctionExpr extends Expr implements ExprTrict, Check {
     name: VariableName | null = null;
+    returns: Token | null = null; // 返回类型（用于匿名函数）
+
+    constructor(document: Document) {
+        super(document);
+    }
 
     public to_string() {
         if (this.name) {
             return `function ${this.name.to_string()}`;
+        } else if (this.returns) {
+            return `function () -> ${this.returns.getText()}`;
+        } else {
+            return `function ()`;
         }
         return "function unkown";
     }
@@ -3668,9 +4887,10 @@ export class FunctionExpr implements ExprTrict, Check {
             console.warn(`Invalid function name format: ${funcName}`);
         }
     }
+
 }
 export class Params implements ExprTrict {
-    public args: (Zoom | null)[] = [];
+    public args: (Expression | null)[] = [];
 
     public to_string() {
         let name = this.args.map(arg => {
@@ -3681,6 +4901,28 @@ export class Params implements ExprTrict {
             }
         }).join(", ");
         return `(${name})`;
+    }
+
+    public toCodeString(options?: CodeGenerationOptions): string {
+        const opts: Required<CodeGenerationOptions> = {
+            indent: options?.indent ?? "  ",
+            indentLevel: options?.indentLevel ?? 0,
+            addSpacesAroundOperators: options?.addSpacesAroundOperators ?? true,
+            addSpacesAroundParentheses: options?.addSpacesAroundParentheses ?? false,
+            addSpaceAfterComma: options?.addSpaceAfterComma ?? true,
+            preserveOriginalFormat: options?.preserveOriginalFormat ?? false,
+            addTypeAnnotations: options?.addTypeAnnotations ?? false
+        };
+
+        const argsStr = this.args.map(arg => {
+            if (arg) {
+                return arg.toCodeString(opts);
+            } else {
+                return "unknown";
+            }
+        }).join(opts.addSpaceAfterComma ? ", " : ",");
+        
+        return `(${argsStr})`;
     }
 }
 // export class VariableCall extends VariableName implements ExprTrict {
@@ -3721,9 +4963,9 @@ export class Params implements ExprTrict {
 // }
 
 
-export class Set extends NodeAst {
+export class Set extends Statement {
     name: VariableName | null = null;
-    init: Zoom | null = null;
+    init: Expression | null = null;
 
     public to_string(): string {
         let name = "";
@@ -3741,6 +4983,28 @@ export class Set extends NodeAst {
         }
         return `set ${name} = ${init}`
     }
+
+    /**
+     * 设置变量名表达式并建立父子关系
+     */
+    public setVariableName(name: VariableName): void {
+        this.name = name;
+        if (name) {
+            name.parent = this;
+            this.children.push(name);
+        }
+    }
+
+    /**
+     * 设置初始化表达式并建立父子关系
+     */
+    public setInitExpression(init: Expression): void {
+        this.init = init;
+        if (init && init instanceof Expr) {
+            init.parent = this;
+            this.children.push(init);
+        }
+    }
 }
 export class Type extends NodeAst {
     name: Token | null = null;
@@ -3750,7 +5014,7 @@ export class Type extends NodeAst {
         return `type ${this.name ? this.name.getText() : "(unkown)"}${this.extends && this.extends.length > 0 ? " extends " + this.extends.getText() : ""}`;
     }
 }
-export class Call extends NodeAst {
+export class Call extends Statement {
     ref: VariableName | null = null;
 
     constructor(document: Document) {
@@ -3760,9 +5024,35 @@ export class Call extends NodeAst {
     to_string(): string {
         return `call ${this.ref?.to_string() ?? "()"}`;
     }
+
+    /**
+     * 设置函数调用引用并建立父子关系
+     */
+    public setFunctionRef(ref: VariableName): void {
+        this.ref = ref;
+        if (ref) {
+            ref.parent = this;
+            this.children.push(ref);
+        }
+    }
 }
-export class Return extends NodeAst {
-    expr: Zoom | null = null;
+export class Return extends Statement {
+    expr: Expression | null = null;
+
+    public to_string(): string {
+        return `return ${this.expr ? this.expr.to_string() : ""}`;
+    }
+
+    /**
+     * 设置返回表达式并建立父子关系
+     */
+    public setReturnExpression(expr: Expression): void {
+        this.expr = expr;
+        if (expr && expr instanceof Expr) {
+            expr.parent = this;
+            this.children.push(expr);
+        }
+    }
 }
 
 
@@ -3856,11 +5146,16 @@ export function parse_line_local(document: Document, tokens: Token[]): Local {
 }
 
 class Expr_ {
-    expr: Zoom | null = null;
+    expr: Expression | null = null;
     op: Token | null = null;
+    document: Document;
 
-    public to_expr(right_value: Zoom | null) {
-        const expr = new BinaryExpr();
+    constructor(document: Document) {
+        this.document = document;
+    }
+
+    public to_expr(right_value: Expression | null) {
+        const expr = new BinaryExpr(this.document);
         expr.left = this.expr;
         expr.op = this.op;
         expr.right = right_value;
@@ -3885,8 +5180,8 @@ function parse_line_unary_expr(document: Document, tokens: Token[], offset_index
         if (state == 0) {
             index++;
 
-            if (token.is_unary_operator) {
-                unary_expr = new UnaryExpr();
+            if (token.is_unary_operator || (token.is_identifier && token.getText() === "not")) {
+                unary_expr = new UnaryExpr(document);
                 unary_expr.op = token;
 
                 if (next_token) {
@@ -3916,7 +5211,7 @@ function parse_line_unary_expr(document: Document, tokens: Token[], offset_index
 function parse_line_function_expr(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
-    let zoom: FunctionExpr | null = new FunctionExpr;
+    let zoom: FunctionExpr | null = new FunctionExpr(document);
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -3934,14 +5229,50 @@ function parse_line_function_expr(document: Document, tokens: Token[], offset_in
                 break;
             }
         } else if (state == 1) {
-            const result = parse_line_name_reference(document, tokens, index);
-            index = result.index;
-            if (result.expr) {
-                zoom.name = result.expr;
+            // 检查是否是匿名函数：function () -> type { ... }
+            if (text == "(") {
+                // 匿名函数，跳过名称解析，直接解析参数
+                zoom.name = null; // 匿名函数没有名称
+                state = 2;
             } else {
-                document.add_token_error(token, `no function reference found`);
+                // 函数引用：function MyFunc
+                const result = parse_line_name_reference(document, tokens, index);
+                index = result.index;
+                if (result.expr) {
+                    zoom.name = result.expr;
+                } else {
+                    document.add_token_error(token, `no function reference found`);
+                }
+                break;
             }
-            break;
+        } else if (state == 2) {
+            // 解析匿名函数的参数列表
+            if (text == ")") {
+                index++;
+                state = 3;
+            } else {
+                // 这里可以添加参数解析逻辑，但匿名函数通常没有参数
+                index++;
+            }
+        } else if (state == 3) {
+            // 解析返回类型：-> type
+            if (text == "->") {
+                index++;
+                state = 4;
+            } else {
+                // 没有返回类型声明，默认为nothing
+                break;
+            }
+        } else if (state == 4) {
+            // 解析返回类型
+            if (token.is_identifier) {
+                zoom.returns = token;
+                index++;
+                break;
+            } else {
+                document.add_token_error(token, `expected return type after '->'`);
+                break;
+            }
         }
     }
 
@@ -3968,7 +5299,7 @@ function parse_line_priority_expr(document: Document, tokens: Token[], offset_in
 
             if (text == "(") {
                 if (expr == null) {
-                    expr = new PriorityExpr();
+                    expr = new PriorityExpr(document);
                 }
 
                 state = 1;
@@ -3979,7 +5310,10 @@ function parse_line_priority_expr(document: Document, tokens: Token[], offset_in
         } else if (state == 1) {
             if (text == ")") {
                 index++;
-                document.add_token_error(token, `the expression cannot be empty`);
+                // 只有在没有解析到任何表达式时才报错
+                if (!expr!.expr) {
+                    document.add_token_error(token, `the expression cannot be empty`);
+                }
                 break;
             } else {
                 const result = parse_line_expr(document, tokens, index);
@@ -4003,104 +5337,237 @@ function parse_line_priority_expr(document: Document, tokens: Token[], offset_in
         expr: expr
     }
 }
-export function parse_line_expr(document: Document, tokens: Token[], offset_index: number) {
+/**
+ * 基于优先级的表达式解析器
+ * 使用 Pratt 解析器算法正确处理操作符优先级
+ */
+export function parse_line_expr(document: Document, tokens: Token[], offset_index: number, minPrecedence: number = 0) {
     let index = offset_index;
-    let state = 0;
-    let zoom: Zoom | Expr_ | null = null;
+    
+    // 解析左操作数（一元表达式或基础表达式）
+    let left: { index: number; expr: Expression | null } = parse_line_primary_expr(document, tokens, index);
+    index = left.index;
+    
+    // 检查左操作数是否存在
+    if (!left.expr) {
+        return left; // 如果没有左操作数，直接返回
+    }
+    
+    // 处理二元操作符
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
             index++;
             continue;
         }
-        const text = token.getText();
-        if (state == 0) {
-            let result!: {
-                index: number,
-                expr: Zoom | null,
-            };
-            if (token.is_identifier) {
-                if (text == "function") {
-                    result = parse_line_function_expr(document, tokens, index);
-                    index = result.index;
-                } else if (text == "not") {
-                    result = parse_line_unary_expr(document, tokens, index);
-                    index = result.index;
-                } else {
-                    result = parse_line_name_reference(document, tokens, index);
-                    index = result.index;
-                }
-            } else if (token.is_value()) {
-                const value = new Value();
-                value.value = token;
+        
+        const opText = token.getText();
+        
+        // 检查是否是二元操作符
+        if (!token.is_binary_operator) {
+            break;
+        }
+        
+        // 获取操作符优先级
+        const precedence = OPERATOR_PRECEDENCE[opText];
+        if (precedence === undefined) {
+            break;
+        }
+        
+        // 如果当前操作符优先级低于最小优先级，停止解析
+        if (precedence < minPrecedence) {
+            break;
+        }
+        
+        // 对于右结合操作符，使用当前优先级；对于左结合操作符，使用优先级+1
+        const nextMinPrecedence = isRightAssociative(opText) ? precedence : precedence + 1;
+        
+        // 跳过操作符
+        index++;
+        
+        // 递归解析右操作数
+        const right = parse_line_expr(document, tokens, index, nextMinPrecedence);
+        index = right.index;
+        
+        // 检查右操作数是否存在
+        if (!right.expr) {
+            document.add_token_error(token, `Binary operator '${opText}' missing right operand`);
+            break;
+        }
+        
+        // 创建二元表达式
+        const binaryExpr = new BinaryExpr(document);
+        binaryExpr.left = left.expr;
+        binaryExpr.op = token;
+        binaryExpr.right = right.expr;
+        
+        // 更新左操作数
+        left = {
+            index,
+            expr: binaryExpr as Expression
+        };
+    }
+    
+    return left;
+}
 
-                result = {
-                    index: index + 1,
-                    expr: value,
-                };
-
-                index = result.index;
-            } else if (token.is_unary_operator) {
-                result = parse_line_unary_expr(document, tokens, index);
-                index = result.index;
-            } else if (text == "(") {
-                result = parse_line_priority_expr(document, tokens, index);
-                index = result.index;
-            } else {
-                break;
-            }
-
-            if (zoom) {
-                if (zoom instanceof Expr_) {
-                    zoom = (<Expr_>zoom).to_expr(result.expr);
-                } else {
-                    document.add_token_error(token, `missing operator`);
-                    break;
-                }
-            } else {
-                zoom = result.expr;
-            }
-            const next_token = get_next_token(tokens, index);
-            if (next_token && next_token.is_binary_operator) {
-                state = 1;
-            } else {
-                break;
-            }
-        } else if (state == 1) {
+/**
+ * 解析基础表达式（一元表达式、标识符、字面量、括号表达式等）
+ */
+function parse_line_primary_expr(document: Document, tokens: Token[], offset_index: number) {
+    let index = offset_index;
+    
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
             index++;
-            if (zoom) {
-                if (zoom instanceof Expr_) {
-                    document.add_token_error(token, `operators cannot operate on operators`);
-                    break;
-                } else {
-                    const expr = new Expr_();
-                    expr.expr = zoom;
-                    expr.op = token;
-
-                    zoom = expr;
-
-                    state = 0;
-                }
-                state = 0;
+            continue;
+        }
+        
+        const text = token.getText();
+        
+        // 处理标识符或点操作符
+        if (token.is_identifier || text === ".") {
+            if (text === "function") {
+                const result = parse_line_function_expr(document, tokens, index);
+                return result;
+            } else if (text === "not") {
+                const result = parse_line_unary_expr(document, tokens, index);
+                return result;
             } else {
-                document.add_token_error(token, `missing left value`);
-                break;
+                let result = parse_line_name_reference(document, tokens, index);
+                index = result.index;
+                
+                // 循环处理可能的函数调用和成员访问
+                while (index < tokens.length) {
+                    const nextToken = get_next_token(tokens, index);
+                    if (!nextToken) break;
+                    
+                    const nextText = nextToken.getText();
+                    
+                    if (nextText === "(") {
+                        // 解析函数调用参数
+                        const paramsResult = parse_line_call_params(document, tokens, index);
+                        index = paramsResult.index;
+                        
+                        // 创建函数调用表达式
+                        if (result.expr && result.expr.expression) {
+                            if (result.expr.expression instanceof Id) {
+                                const callResult: Caller | Id | IdIndex = result.expr.expression.to(document, paramsResult.expr);
+                                if (callResult instanceof Caller) {
+                                    const variableName = new VariableName(document);
+                                    variableName.setExpression(callResult);
+                                    result = {
+                                        index,
+                                        expr: variableName
+                                    };
+                                    continue; // 继续处理可能的成员访问
+                                }
+                            } else if (result.expr.expression instanceof MemberAccess) {
+                                const caller = new Caller(document);
+                                caller.name = result.expr.expression;
+                                caller.params = paramsResult.expr;
+                                const variableName = new VariableName(document);
+                                variableName.setExpression(caller);
+                                result = {
+                                    index,
+                                    expr: variableName
+                                };
+                                continue; // 继续处理可能的成员访问
+                            } else if (result.expr.expression instanceof Caller) {
+                                // 对于已经是Caller的情况，我们需要创建一个新的Caller来包装它
+                                const newCaller = new Caller(document);
+                                newCaller.name = result.expr.expression;
+                                newCaller.params = paramsResult.expr;
+                                const variableName = new VariableName(document);
+                                variableName.setExpression(newCaller);
+                                result = {
+                                    index,
+                                    expr: variableName
+                                };
+                                continue; // 继续处理可能的成员访问
+                            }
+                        }
+                    } else if (nextText === ".") {
+                        // 处理成员访问
+                        index++; // 跳过点操作符
+                        
+                        const nextAfterDot = get_next_token(tokens, index);
+                        if (!nextAfterDot || !nextAfterDot.is_identifier) {
+                            document.add_token_error(nextToken, `missing member name after '.'`);
+                            break;
+                        }
+                        
+                        // 创建右侧标识符
+                        const rightId = new Id(document);
+                        rightId.expr = nextAfterDot;
+                        index++; // 跳过标识符
+                        
+                        // 创建成员访问表达式
+                        const memberAccess = new MemberAccess(document);
+                        memberAccess.setLeftExpression(result.expr?.expression || new Id(document));
+                        memberAccess.setDotToken(nextToken);
+                        memberAccess.setRightExpression(rightId);
+                        
+                        const variableName = new VariableName(document);
+                        variableName.setExpression(memberAccess);
+                        result = {
+                            index: index, // 确保 index 正确更新
+                            expr: variableName
+                        };
+                        continue; // 继续处理可能的函数调用
+                    } else {
+                        // 没有更多的函数调用或成员访问
+                        break;
+                    }
+                }
+                
+                return {
+                    index,
+                    expr: result.expr
+                };
             }
         }
+        // 处理字面量值
+        else if (token.is_value()) {
+            const value = new Value(document);
+            value.value = token;
+            return {
+                index: index + 1,
+                expr: value
+            };
+        }
+        // 处理一元操作符
+        else if (token.is_unary_operator) {
+            const result = parse_line_unary_expr(document, tokens, index);
+            return result;
+        }
+        // 处理括号表达式
+        else if (text === "(") {
+            const result = parse_line_priority_expr(document, tokens, index);
+            return result;
+        }
+        // 其他情况
+        else {
+            // 遇到无法识别的 token，报告错误
+            document.add_token_error(token, `unexpected token '${text}'`);
+            break;
+        }
     }
-    if (zoom instanceof Expr_) { // 报错:不完整的表达式
-        document.add_token_error(zoom.op!, `incomplete expression`);
-    }
+    
     return {
         index,
-        expr: zoom instanceof Expr_ ? (<Expr_>zoom).expr : zoom
-    }
+        expr: null
+    };
 }
 
 function parse_line_call_params(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
     let state = 0;
     let params: Params | null = null;
+    let openedParenToken: Token | null = null;
+    let foundClosingParen = false; // 标志是否找到了闭合括号
+    
     while (index < tokens.length) {
         const token = tokens[index];
         if (token.is_block_comment || token.is_comment) {
@@ -4113,6 +5580,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
             index++;
 
             if (text == "(") {
+                openedParenToken = token; // 记录开始括号的位置
                 if (params == null) {
                     params = new Params();
                 }
@@ -4125,7 +5593,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
         } else if (state == 1) {
             if (text == ")") {
                 index++;
-
+                foundClosingParen = true; // 标记找到了闭合括号
                 break;
             } else {
                 const result = parse_line_expr(document, tokens, index);
@@ -4137,6 +5605,7 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
         } else if (state == 2) {
             index++;
             if (text == ")") {
+                foundClosingParen = true; // 标记找到了闭合括号
                 break;
             } else if (text == ",") {
                 state = 3;
@@ -4150,6 +5619,14 @@ function parse_line_call_params(document: Document, tokens: Token[], offset_inde
 
             state = 2;
         }
+    }
+
+    // 检查是否缺少闭合括号
+    // 只有当没有找到闭合括号且已经开始了参数解析时才报告错误
+    if (!foundClosingParen && state > 0) {
+        // 如果还在等待参数或逗号，说明缺少闭合括号
+        const lastToken = index > 0 ? tokens[index - 1] : tokens[0];
+        document.add_token_error(lastToken, `missing closing parenthesis ')'`);
     }
 
     return {
@@ -4182,7 +5659,7 @@ export function parse_line_index_expr(document: Document, tokens: Token[], offse
 
             if (text == "[") {
                 if (index_expr == null) {
-                    index_expr = new IndexExpr();
+                    index_expr = new IndexExpr(document);
                 }
 
 
@@ -4363,7 +5840,7 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
         if (state == 0) {
             index++;
             if (token.is_identifier) {
-                variable = new Id();
+                variable = new Id(document);
                 variable.expr = token;
 
                 const next_token = get_next_token(tokens, index);
@@ -4407,56 +5884,197 @@ function parse_line_id(document: Document, tokens: Token[], offset_index: number
         expr: variable
     };
 }
+/**
+ * 解析变量名引用 - 支持简单的 Id 或复杂的 MemberAccess 链
+ * 例如: "myVar" 或 "myStruct.myMember" 或 "a.b.c.d"
+ */
 export function parse_line_name_reference(document: Document, tokens: Token[], offset_index: number) {
     let index = offset_index;
-    let state = 0;
-    let variable: VariableName = new VariableName();
+    let currentExpr: Expr | null = null;
+    
     while (index < tokens.length) {
         const token = tokens[index];
+        
         if (token.is_block_comment || token.is_comment) {
             index++;
             continue;
         }
-        if (state == 0) {
-            const result = parse_line_id(document, tokens, index);
-
-            index = result.index;
-            variable.names.push(result.expr);
-
-            const next_token = get_next_token(tokens, index);
-            if (next_token) {
-                const next_token_text = next_token.getText();
-
-                if (next_token_text == ".") {
-                    state = 1;
+        
+        // 检查是否是单独的点操作符（语法糖：.member 表示 this.member）
+        if (token.getText() === ".") {
+            // 直接检查下一个 token，不使用 get_next_token
+            const nextIndex = index + 1;
+            if (nextIndex < tokens.length) {
+                const nextToken = tokens[nextIndex];
+                if (nextToken && nextToken.is_identifier) {
+                    // 创建 this 标识符作为左侧
+                    const thisId = new Id(document);
+                    thisId.isThisReference = true; // 标记为this引用
+                    
+                    // 创建成员访问表达式
+                    const memberAccess = new MemberAccess(document);
+                    memberAccess.setLeftExpression(thisId);
+                    memberAccess.setDotToken(token);
+                    index++; // 跳过点操作符
+                    
+                    // 解析右侧的标识符
+                    const rightId = new Id(document);
+                    rightId.expr = nextToken;
+                    memberAccess.setRightExpression(rightId);
+                    index++; // 跳过标识符
+                    
+                    currentExpr = memberAccess;
+                    continue;
                 } else {
+                    // 点操作符后面没有找到标识符，报告错误
+                    document.add_token_error(token, `missing member name after '.'`);
+                    index++; // 跳过点操作符
                     break;
                 }
             } else {
-                break;
-            }
-
-        } else if (state == 1) { // '.'操作符
-            index++;
-
-            const next_token = get_next_token(tokens, index);
-            if (next_token) {
-                if (next_token.is_identifier) {
-                    state = 0;
-                } else {
-                    document.add_token_error(token, `no sub identifier reference found`);
-                    break;
-                }
-            } else {
-                document.add_token_error(token, `error identifier '${token.getText()}'`);
+                // 点操作符在tokens末尾，报告错误
+                document.add_token_error(token, `missing member name after '.'`);
+                index++; // 跳过点操作符
                 break;
             }
         }
+        
+        // 解析标识符
+        if (token.is_identifier) {
+            const id = new Id(document);
+            id.expr = token;
+            index++;
+            
+            // 检查下一个 token 是否是点操作符
+            const nextToken = get_next_token(tokens, index);
+            if (nextToken && nextToken.getText() === ".") {
+                // 创建成员访问表达式
+                const memberAccess = new MemberAccess(document);
+                memberAccess.setLeftExpression(currentExpr || id);
+                memberAccess.setDotToken(nextToken);
+                index++; // 跳过点操作符
+                
+                currentExpr = memberAccess;
+                
+                // 检查点操作符后面是否有标识符
+                const nextAfterDot = get_next_token(tokens, index);
+                if (!nextAfterDot || !nextAfterDot.is_identifier) {
+                    document.add_token_error(nextToken, `missing member name after '.'`);
+                    break;
+                }
+                // 继续循环，解析点操作符后面的标识符
+                continue;
+            } else {
+                // 没有点操作符，这是一个简单的标识符
+                if (currentExpr) {
+                    // 如果已经有表达式，将其作为右侧
+                    if (currentExpr instanceof MemberAccess) {
+                        currentExpr.setRightExpression(id);
+                    }
+                } else {
+                    // 这是第一个标识符
+                    currentExpr = id;
+                }
+                
+                // 循环处理可能的函数调用、数组索引和成员访问
+                while (index < tokens.length) {
+                    const nextToken = get_next_token(tokens, index);
+                    if (!nextToken) break;
+                    
+                    const nextText = nextToken.getText();
+                    
+                    if (nextText === "(") {
+                        // 解析函数调用参数
+                        const paramsResult = parse_line_call_params(document, tokens, index);
+                        index = paramsResult.index;
+                        
+                        // 创建函数调用表达式
+                        if (currentExpr instanceof Id) {
+                            const result: Caller | Id | IdIndex = currentExpr.to(document, paramsResult.expr);
+                            if (result instanceof Caller) {
+                                currentExpr = result;
+                                continue; // 继续检查可能的数组索引和成员访问
+                            }
+                        } else if (currentExpr instanceof MemberAccess) {
+                            // 对于成员访问，需要特殊处理
+                            const caller = new Caller(document);
+                            caller.name = currentExpr;
+                            caller.params = paramsResult.expr;
+                            currentExpr = caller;
+                            continue; // 继续检查可能的数组索引和成员访问
+                        }
+                    } else if (nextText === "[") {
+                        // 解析数组索引
+                        const indexResult = parse_line_index_expr(document, tokens, index, 1);
+                        index = indexResult.index;
+                        
+                        // 创建数组索引表达式
+                        if (currentExpr instanceof Id) {
+                            const result: Caller | Id | IdIndex = currentExpr.to(document, indexResult.expr);
+                            if (result instanceof IdIndex) {
+                                currentExpr = result;
+                                continue; // 继续检查可能的函数调用和成员访问
+                            }
+                        } else if (currentExpr instanceof MemberAccess) {
+                            // 对于成员访问，需要特殊处理
+                            const idIndex = new IdIndex(document);
+                            idIndex.name = currentExpr as any; // 临时转换
+                            idIndex.index_expr = indexResult.expr;
+                            currentExpr = idIndex;
+                            continue; // 继续检查可能的函数调用和成员访问
+                        } else if (currentExpr instanceof Caller) {
+                            // 对于函数调用，需要特殊处理
+                            const idIndex = new IdIndex(document);
+                            idIndex.name = currentExpr as any; // 临时转换
+                            idIndex.index_expr = indexResult.expr;
+                            currentExpr = idIndex;
+                            continue; // 继续检查可能的函数调用和成员访问
+                        }
+                    } else if (nextText === ".") {
+                        // 处理成员访问
+                        index++; // 跳过点操作符
+                        
+                        const nextAfterDot = get_next_token(tokens, index);
+                        if (!nextAfterDot || !nextAfterDot.is_identifier) {
+                            document.add_token_error(nextToken, `missing member name after '.'`);
+                            break;
+                        }
+                        
+                        // 创建右侧标识符
+                        const rightId = new Id(document);
+                        rightId.expr = nextAfterDot;
+                        index++; // 跳过标识符
+                        
+                        // 创建成员访问表达式
+                        const memberAccess = new MemberAccess(document);
+                        memberAccess.setLeftExpression(currentExpr || new Id(document));
+                        memberAccess.setDotToken(nextToken);
+                        memberAccess.setRightExpression(rightId);
+                        
+                        currentExpr = memberAccess;
+                        continue; // 继续检查可能的函数调用和数组索引
+                    } else {
+                        // 没有更多的函数调用、数组索引或成员访问
+                        break;
+                    }
+                }
+                break;
+            }
+        } else {
+            // 遇到非标识符，结束解析
+            break;
+        }
     }
-
+    
+    // 创建 VariableName 包装
+    const variableName = new VariableName(document);
+    if (currentExpr) {
+        variableName.setExpression(currentExpr);
+    }
+    
     return {
         index,
-        expr: variable
+        expr: variableName
     };
 }
 
@@ -4473,24 +6091,62 @@ function get_next_token(tokens: Token[], i: number): Token | null {
     return null;
 }
 
-export class Statement {
-
+/**
+ * 局部变量声明语句
+ */
+export class LocalStatement extends Statement {
     type: Token | null = null;
     name: Token | null = null;
-
-    expr: Zoom | null = null;
-
+    expr: Expression | null = null;
     array_token: Token | null = null;
-
     public is_array: boolean = false;
-
     public size_expr: IndexExpr | null = null;
 
     public to_string(): string {
-        const type_string = this.type ? this.type.getText() + " " : "unkown_type ";
+        const type_string = this.type ? this.type.getText() + " " : "unknown_type ";
         const array_string = this.is_array ? "array " : "";
-        const name_string = this.name ? this.name.getText() + " " : "unkown_name ";
-        return `${type_string}${array_string}${name_string}`;
+        const name_string = this.name ? this.name.getText() + " " : "unknown_name ";
+        const init_string = this.expr ? "= " + this.expr.to_string() : "";
+        return `local ${type_string}${array_string}${name_string}${init_string}`;
+    }
+
+    /**
+     * 设置变量类型并建立父子关系
+     */
+    public setType(type: Token): void {
+        this.type = type;
+    }
+
+    /**
+     * 设置变量名并建立父子关系
+     */
+    public setVariableName(name: Token): void {
+        this.name = name;
+    }
+
+    /**
+     * 设置初始化表达式并建立父子关系
+     */
+    public setInitExpression(expr: Expression): void {
+        this.expr = expr;
+        if (expr && expr instanceof Expr) {
+            expr.parent = this;
+            this.children.push(expr);
+        }
+    }
+
+    /**
+     * 获取变量类型
+     */
+    public getVariableType(): string {
+        return this.type ? this.type.getText() : "unknown";
+    }
+
+    /**
+     * 获取变量名
+     */
+    public getVariableName(): string {
+        return this.name ? this.name.getText() : "unknown";
     }
 }
 
@@ -4503,7 +6159,7 @@ export class Statement {
  * @returns 
  */
 export function parse_line_statement(document: Document, tokens: Token[], offset_index: number, need_size_expr: boolean|null = null) {
-    const statement = new Statement();
+    const statement = new LocalStatement(document);
     let index = offset_index;
     let state = 1;
 
@@ -4640,7 +6296,7 @@ export function parse_line_set(document: Document, tokens: Token[]): Set {
 
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
-                    if (next_token.is_identifier) {
+                    if (next_token.is_identifier || next_token.getText() == ".") {
                         state = 1;
                     } else if (next_token.getText() == "=") {
                         state = 2;
@@ -4660,6 +6316,8 @@ export function parse_line_set(document: Document, tokens: Token[]): Set {
             set.name = result.expr;
             index = result.index;
             const next_token = get_next_token(tokens, index);
+            
+            
             if (next_token) {
                 if (next_token.getText() == "=") {
                     state = 2;
@@ -4732,10 +6390,8 @@ export function parse_line_call(document: Document, tokens: Token[]): Call {
             const result = parse_line_name_reference(document, tokens, index);
             call.ref = result.expr;
             index = result.index;
-            state = 2;
-        } else if (state == 2) {
-            index++;
-            document.add_token_error(token, `error token '${text}'`);
+            // 不再进入 state 2，因为 parse_line_name_reference 已经处理了函数调用参数
+            break;
         }
     }
 
@@ -4792,8 +6448,23 @@ export function parse_line_return(document: Document, tokens: Token[]): Return {
 
     return ret;
 }
-export class ExitWhen extends NodeAst {
-    expr: Zoom | null = null;
+export class ExitWhen extends Statement {
+    expr: Expression | null = null;
+
+    public to_string(): string {
+        return `exitwhen ${this.expr ? this.expr.to_string() : "unknown"}`;
+    }
+
+    /**
+     * 设置退出条件表达式并建立父子关系
+     */
+    public setExitExpression(expr: Expression): void {
+        this.expr = expr;
+        if (expr && expr instanceof Expr) {
+            expr.parent = this;
+            this.children.push(expr);
+        }
+    }
 }
 export function parse_line_exitwhen(document: Document, tokens: Token[]) {
     const ret = new ExitWhen(document);
@@ -4835,7 +6506,7 @@ export function parse_line_exitwhen(document: Document, tokens: Token[]) {
     return ret;
 }
 export class ElseIf extends NodeAst {
-    expr: Zoom | null = null;
+    expr: Expression | null = null;
 }
 export function parse_line_else_if(document: Document, tokens: Token[]) {
     const ret = new ElseIf(document);
@@ -4904,7 +6575,7 @@ export function parse_line_else_if(document: Document, tokens: Token[]) {
     return ret;
 }
 export class Else extends NodeAst {
-    expr: Zoom | null = null;
+    expr: Expression | null = null;
 }
 export function parse_line_else(document: Document, tokens: Token[]) {
     const ret = new Else(document);
@@ -5050,6 +6721,84 @@ export function parse_line_native(document: Document, tokens: Token[]) {
 export function parse_line_method(document: Document, tokens: Token[]) {
     return parse_function(document, tokens, "method") as Method;
 }
+export function parse_line_delegate(document: Document, tokens: Token[]) {
+    const delegate = new Delegate(document);
+
+    let index = 0;
+    let state = 0;
+    while (index < tokens.length) {
+        const token = tokens[index];
+        if (token.is_block_comment || token.is_comment) {
+            index++;
+            continue;
+        }
+        const text = token.getText();
+        
+        if (state == 0) {
+            // Parse visibility modifier (public/private)
+            if (text === "public" || text === "private") {
+                delegate.visible = token;
+                index++;
+                state = 1;
+            } else if (text === "delegate") {
+                delegate.start_token = token;
+                index++;
+                state = 2;
+            } else {
+                document.add_token_error(token, `Expected 'public', 'private', or 'delegate', got '${text}'`);
+                break;
+            }
+        } else if (state == 1) {
+            // After visibility modifier, expect 'delegate'
+            if (text === "delegate") {
+                delegate.start_token = token;
+                index++;
+                state = 2;
+            } else {
+                document.add_token_error(token, `Expected 'delegate', got '${text}'`);
+                break;
+            }
+        } else if (state == 2) {
+            // After 'delegate', expect 'optional' or type name
+            if (text === "optional") {
+                delegate.optional = token;
+                index++;
+                state = 3;
+            } else if (token.is_identifier) {
+                delegate.delegateType = token;
+                index++;
+                state = 4;
+            } else {
+                document.add_token_error(token, `Expected 'optional' or delegate type name, got '${text}'`);
+                break;
+            }
+        } else if (state == 3) {
+            // After 'optional', expect type name
+            if (token.is_identifier) {
+                delegate.delegateType = token;
+                index++;
+                state = 4;
+            } else {
+                document.add_token_error(token, `Expected delegate type name, got '${text}'`);
+                break;
+            }
+        } else if (state == 4) {
+            // After type name, expect field name
+            if (token.is_identifier) {
+                delegate.name = token;
+                delegate.end_token = token;
+                index++;
+                break;
+            } else {
+                document.add_token_error(token, `Expected delegate field name, got '${text}'`);
+                break;
+            }
+        }
+    }
+
+    return delegate;
+}
+
 export function parse_line_member(document: Document, tokens: Token[]) {
     const member = new Member(document);
 
@@ -5141,7 +6890,7 @@ export function parse_line_end_tag(document: Document, tokens: Token[], object: 
 
 //#region 展开
 
-type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | "module" | null;
+type NodeType = "zinc" | "library" | "struct" | "interface" | "method" | "func" | "globals" | "scope" | "if" | "loop" | "module" | "implement" | null;
 type DataType = Library | Struct | Interface | Method | Func | Globals | Scope | If | Loop;
 
 /**
@@ -5150,11 +6899,11 @@ type DataType = Library | Struct | Interface | Method | Func | Globals | Scope |
 class Pair {
     type: NodeType;
     start: RegExp;
-    end: RegExp;
+    end: RegExp | null;
 
     // children: Pair|null = null;
 
-    constructor(type: NodeType, start: RegExp, end: RegExp) {
+    constructor(type: NodeType, start: RegExp, end: RegExp | null) {
         this.type = type;
         this.start = start;
         this.end = end;
@@ -5173,6 +6922,7 @@ const methodPair = new Pair("method", new RegExp(/^\s*(?:(?<visible>public|priva
 const ifPair = new Pair("if", new RegExp(/^\s*if\b/), new RegExp(/^\s*endif\b/));
 const loopPair = new Pair("loop", new RegExp(/^\s*loop\b/), new RegExp(/^\s*endloop\b/));
 const modulePair = new Pair("module", new RegExp(/^\s*module\b/), new RegExp(/^\s*endmodule\b/));
+const implementPair = new Pair("implement", new RegExp(/^\s*implement\b/), null);
 
 const localRegExp = /^\s*local\b/;
 const setRegExp = /^\s*set\b/;
@@ -5196,6 +6946,7 @@ const pairs = [
     structPair,
     methodPair,
     modulePair,
+    implementPair,
     ifPair,
     loopPair,
     globalsPair,
@@ -5217,3 +6968,18 @@ export function parse(filePath: string, i_content?: string): Document {
     const document = new Document(filePath, content);
     return document;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.37",
+  "version": "1.8.38",
   "keywords": [
     "jass",
     "vjass",
@@ -62,6 +62,11 @@
           "type": "boolean",
           "default": true,
           "description": "(Test) diagnostic support,does not support including Lua and pre-processing code"
+        },
+        "jass.literal": {
+          "type":"boolean",
+          "default": false,
+          "dependencies": "Whether to prompt for literal values (string, number, mark)"
         }
       }
     },
@@ -99,6 +104,8 @@
     "codeLensProvider": {
       "resolveProvider": "true"
     },
+    "commands": [
+    ],
     "menus": {
     }
   },
@@ -111,6 +118,10 @@
     "compilep": "tsc  -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
+    "test:all": "node out/boot/provider/test-runner.js all",
+    "test:suite": "node out/boot/provider/test-runner.js suite",
+    "test:single": "node out/boot/provider/test-runner.js test",
+    "test:report": "node out/boot/provider/test-runner.js report",
     "package": "vsce package --no-dependencies --skip-duplicate",
     "publish": "vsce publish --no-dependencies --skip-duplicate",
     "prepublish": "vsce publish --pre-release --no-dependencies --skip-duplicate"

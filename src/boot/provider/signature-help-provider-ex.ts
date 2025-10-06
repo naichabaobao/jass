@@ -3,19 +3,23 @@ import * as vscode from 'vscode';
 
 import { getPositionKey } from '../tool';
 import { Options } from './options';
-import { GlobalContext } from '../jass/parser-vjass';
+import { GlobalContext, ASTNodeTypeChecker } from '../jass/parser-vjass';
 
 import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 
 function functionUnifiedFormat(native:vjass_ast.Func|vjass_ast.Native|vjass_ast.Method|vjass_ast.zinc.Func|vjass_ast.zinc.Method):string {
   let keyword:string;
-  if (native instanceof vjass_ast.Method) {
+  // 使用新的类型检查工具，避免instanceof继承问题
+  if (ASTNodeTypeChecker.isAnyMethod(native)) {
     keyword = "method";
-  } else if (native instanceof vjass_ast.Func) {
+  } else if (ASTNodeTypeChecker.isFunc(native) || ASTNodeTypeChecker.isZincFunc(native)) {
     keyword = "function";
-  } else {
+  } else if (ASTNodeTypeChecker.isNative(native)) {
     keyword = "native";
+  } else {
+    // 默认处理
+    keyword = "function";
   }
   const takesString = !native.takes || native.takes.length == 0 ? "" : native.takes.map(take => {
     return `${take.type ? take.type.getText() : "(unkown)"} ${take.name ? take.name.getText() : "(unnamed)"}`;
@@ -24,7 +28,7 @@ function functionUnifiedFormat(native:vjass_ast.Func|vjass_ast.Native|vjass_ast.
   return `${keyword} ${native.name?.getText() ?? "(unnamed)"}(${takesString}) -> ${returnString};`
 }
 
-class SignatureHelp implements vscode.SignatureHelpProvider {
+export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
   provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
     const text = document.lineAt(position.line).text;
@@ -40,7 +44,7 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
     const argc = info.argc;
     console.log(key, argc);
 
-    const funcs = GlobalContext.get_function_set_by_name(key);
+    const funcs = GlobalContext.get_native_and_func_and_method_by_name(key);
 
     if (funcs.length == 0) {
       return;
@@ -63,10 +67,13 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
       //     ms.appendMarkdown(`***@param*** **${param.id}** *${param.descript}*\n`);
       //   }
       // });
-      func.get_param_descriptions().forEach(desc => {
-        ms.appendText("\n");
-        ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
-      });
+      // 检查是否有get_param_descriptions方法
+      if ((func as any).get_param_descriptions && typeof (func as any).get_param_descriptions === 'function') {
+        (func as any).get_param_descriptions().forEach((desc: any) => {
+          ms.appendText("\n");
+          ms.appendMarkdown(`***@param*** **${desc.name}** *${desc.content}*`);
+        });
+      }
       if (func.is_deprecated) {
         ms.appendText("\n");
         ms.appendMarkdown(`***@deprecated*** `);
@@ -107,5 +114,5 @@ class SignatureHelp implements vscode.SignatureHelpProvider {
   }
 }
 
-vscode.languages.registerSignatureHelpProvider("jass", new SignatureHelp, "(", ",", ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split(""));
+
 

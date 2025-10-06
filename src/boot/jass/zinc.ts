@@ -1,5 +1,5 @@
 import { Document, Token } from "./tokenizer-common";
-import { Library, LibraryRequire, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, VariableName as ParserVariableName, zinc } from "./parser-vjass";
+import { Library, LibraryRequire, LocalStatement, NodeAst, Returns, Statement, Take, Takes, Value, ZincNode, parse_library, parse_line_call, parse_line_comment, parse_line_expr, parse_line_index_expr, parse_line_modifier, parse_line_name_reference, parse_line_return, parse_line_statement, parse_line_type, VariableName as ParserVariableName, zinc } from "./parser-vjass";
 import { Position, Range } from "./loc";
 
 /**
@@ -72,8 +72,9 @@ function is_start_with(tokens: Token[], keyword: string|((token:Token) => boolea
  * 通过前几个token确认zinc 块级跟行级的类型
  * @param document 
  * @param zinc_object 
+ * @param parent_context 父级上下文，用于区分 member 和 local statement
  */
-function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
+function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment, parent_context?: "library" | "struct" | "interface" | "function" | "method" | "other") {
     if (zinc_object instanceof ZincComment) {
     } else if (zinc_object instanceof ZincBlock) {
         if (is_start_with(zinc_object.tokens, "library")) {
@@ -104,6 +105,8 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
             || is_start_with(zinc_object.tokens, ["private", "method"])
             || is_start_with(zinc_object.tokens, ["public", "method"])
             || is_start_with(zinc_object.tokens, "method")
+            || (is_start_with(zinc_object.tokens, ["private", "static"]) && zinc_object.tokens.length >= 3 && zinc_object.tokens[2].is_identifier)
+            || (is_start_with(zinc_object.tokens, ["public", "static"]) && zinc_object.tokens.length >= 3 && zinc_object.tokens[2].is_identifier)
         ) {
             zinc_object.type = "method";
         } else if (
@@ -134,9 +137,13 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
             zinc_object.type = "other"
         }
     } else if (zinc_object instanceof ZincSegement) {
-        const menber_conditions = () => {
+        const member_conditions = () => {
             return [(token:Token) => token.is_identifier, (token:Token) => token.is_identifier];
         }
+        const is_variable_declaration = () => {
+            return is_start_with(zinc_object.tokens, member_conditions());
+        }
+        
         if (is_start_with(zinc_object.tokens, "return")) {
             zinc_object.type = "return";
         } else if (
@@ -158,19 +165,46 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
             zinc_object.type = "else";
         } else if (is_start_with(zinc_object.tokens, "type")) {
             zinc_object.type = "type";
-        } else if (
-            is_start_with(zinc_object.tokens, ["private",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["constant",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["static",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["private", "constant",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["private", "static",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["public",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["public", "static",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, ["public", "constant",...menber_conditions()])
-            || is_start_with(zinc_object.tokens, menber_conditions())
+        } else if (is_variable_declaration()) {
+            // 根据父级上下文区分 member 和 local statement
+            if (parent_context === "function" || parent_context === "method") {
+                // 在函数或方法内部，这是 local statement
+                zinc_object.type = "local";
+            } else if (
+                parent_context === "library" || 
+                parent_context === "struct" || 
+                parent_context === "interface"
             ) {
-            zinc_object.type = "member";
-        } else if (is_start_with(zinc_object.tokens, [(token) => token.is_identifier, (token, index, tokens) => {
+                // 在库、结构体或接口内部，检查是否有修饰符
+                if (
+                    is_start_with(zinc_object.tokens, ["private",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["constant",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["static",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["private", "constant",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["private", "static",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["public",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["public", "static",...member_conditions()])
+                    || is_start_with(zinc_object.tokens, ["public", "constant",...member_conditions()])
+                ) {
+                    zinc_object.type = "member";
+                } else {
+                    // 没有修饰符，但在库/结构体/接口中，默认为 member
+                    zinc_object.type = "member";
+                }
+            } else {
+                // 其他情况默认为 member
+                zinc_object.type = "member";
+            }
+        } else if (is_start_with(zinc_object.tokens, [(token, index, tokens) => {
+            // 支持以点开头的成员访问表达式，如 .value
+            if (token.getText() == ".") {
+                // 检查点后面是否有标识符
+                const nextToken = tokens[index + 1];
+                return nextToken && nextToken.is_identifier;
+            }
+            // 也支持普通的标识符
+            return token.is_identifier;
+        }, (token, index, tokens) => {
             if (token.getText() == "=") {
                 return true;
             } else {
@@ -205,10 +239,20 @@ function confirm_zinc_type(zinc_object:ZincBlock|ZincSegement|ZincComment) {
  * 确认每个zinc block 和 segement 类型，供后面解析
  */
 function traverse_and_confirm_zinc_type(layer_objects: (ZincBlock | ZincSegement | ZincComment)[]) {
-    const handing = (object: ZincBlock | ZincSegement | ZincComment) => {
-        confirm_zinc_type(object);
+    const handing = (object: ZincBlock | ZincSegement | ZincComment, parent_context?: "library" | "struct" | "interface" | "function" | "method" | "other") => {
+        confirm_zinc_type(object, parent_context);
         if (object instanceof ZincBlock) {
-            object.children.forEach(child => handing(child));
+            // 确定当前块的上下文类型
+            let current_context: "library" | "struct" | "interface" | "function" | "method" | "other" = "other";
+            if (object.type === "library") {
+                current_context = "library";
+            } else if (object.type === "struct" || object.type === "interface") {
+                current_context = object.type;
+            } else if (object.type === "func" || object.type === "method") {
+                current_context = object.type === "func" ? "function" : "method";
+            }
+            
+            object.children.forEach(child => handing(child, current_context));
         }
     }
     layer_objects.forEach(object => handing(object));
@@ -250,7 +294,7 @@ class ZincSegement extends ZincData {
 
     public parent:ZincBlock|null = null;
 
-    public type: "set" | "call" | "return" | "other" | "member" | "method" | "break" | "type" | "if" | "elseif" | "else" = "other";
+    public type: "set" | "call" | "return" | "other" | "member" | "local" | "method" | "break" | "type" | "if" | "elseif" | "else" = "other";
 
     constructor(prefix_tokens:Token[], start_token:Token|null, end_token:Token|null) {
         super();
@@ -492,7 +536,7 @@ export function parse_segement_set(document: Document, tokens: Token[]) {
  * @returns 
  */
 export function parse_segement_statement(document: Document, tokens: Token[], offset_index: number, need_size_expr:boolean|null = null) {
-    const statement = new Statement();
+    const statement = new LocalStatement(document);
     let index = offset_index;
     let state = 1;
 
@@ -607,7 +651,7 @@ export function parse_segement_statement(document: Document, tokens: Token[], of
  * @returns 
  */
 export function parse_segement_statement_by_type(document: Document, tokens: Token[], offset_index: number, first_member: zinc.Member) {
-    const statement = new Statement();
+    const statement = new LocalStatement(document);
     statement.type = first_member.type;
     statement.array_token = first_member.array_token;
     statement.is_array = first_member.is_array;
@@ -1020,7 +1064,7 @@ export function parse_block_interface(document: Document, tokens: Token[]) {
             if (next_token) {
                 if (next_token.getText() == "]") {
                     // 赋值一个为null的Value对象表示不声明的结构数组
-                    inter.index_expr = new Value();
+                    inter.index_expr = new Value(document);
                     state = 9;
                 } else {
                     state = 8;
@@ -1064,7 +1108,7 @@ export function parse_block_interface(document: Document, tokens: Token[]) {
             index++;
 
             // 赋值一个为null的Value对象表示不声明的结构数组
-            inter.index_expr = new Value();
+            inter.index_expr = new Value(document);
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -1213,7 +1257,7 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
             if (next_token) {
                 if (next_token.getText() == "]") {
                     // 赋值一个为null的Value对象表示不声明的结构数组
-                    struct.index_expr = new Value();
+                    struct.index_expr = new Value(document);
                     state = 9;
                 } else {
                     state = 8;
@@ -1257,7 +1301,7 @@ export function parse_block_struct(document: Document, tokens: Token[]) {
             index++;
 
             // 赋值一个为null的Value对象表示不声明的结构数组
-            struct.index_expr = new Value();
+            struct.index_expr = new Value(document);
 
             const next_token = get_next_token(tokens, index);
             if (next_token) {
@@ -1477,6 +1521,22 @@ export function parse_block_function(document: Document, tokens: Token[], type: 
                 const next_token_text = next_token.getText();
                 if (next_token_text == keyword) {
                     state = 1;
+                } else if (next_token_text == "(") {
+                    // Zinc语法：允许省略method关键字，直接跟参数列表
+                    if (keyword == "method") {
+                        state = 3; // 跳过到参数解析
+                    } else {
+                        document.add_token_error(token, `error ${keyword}`);
+                        break;
+                    }
+                } else if (next_token.is_identifier) {
+                    // Zinc语法：允许省略method关键字，直接跟方法名
+                    if (keyword == "method") {
+                        state = 2; // 跳过到方法名解析
+                    } else {
+                        document.add_token_error(token, `error ${keyword}`);
+                        break;
+                    }
                 } else {
                     document.add_token_error(token, `error ${keyword}`);
                     break;
@@ -2254,6 +2314,11 @@ function parse_zinc_with_type(document:Document, zinc_node: ZincNode, layer_obje
                     parent_node.add_node(node);
                     node.end_token = object.end_token;
                 }
+            } else if (object.type == "local") {
+                // 解析局部变量声明
+                const node = parse_segement_statement(document, object.tokens, 0, false);
+                parent_node.add_node(node.expr);
+                node.expr.end_token = object.end_token;
             } else if (object.type == "method") {
                 const node = parse_block_method(document, object.tokens);
                 parent_node.add_node(node);
