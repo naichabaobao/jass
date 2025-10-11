@@ -6369,7 +6369,7 @@ native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag 
 // in the current campaign profile dir
 //
 
-// 从本地硬盘读取游戏缓存（用于判断战役读档/游戏读档/观看录像，仅对单机有效）
+// 从本地硬盘重载游戏缓存（观看录像时无法重载成功）
 native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
