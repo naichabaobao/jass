@@ -6145,7 +6145,7 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // @param includeIncomplete 是否包含训练中/复活中的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
-// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到训练中/建造中/复活中
+// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到
 // @param includeIncomplete 是否包含训练中/复活中的单位
 // @param includeUpgrades 是否包含科技（可能是包含研究后变成的单位，如猎头）
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
