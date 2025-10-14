@@ -4545,8 +4545,10 @@ native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playersta
 // 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
+// 房间是否允许选择种族
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
 // 设置指定玩家控制者类型
+// 房间是否预设电脑或中立玩家占位
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
 // 设置指定玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
@@ -8497,6 +8499,7 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
+
 
 
 
