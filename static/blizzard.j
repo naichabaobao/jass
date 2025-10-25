@@ -843,7 +843,7 @@ globals
     // 玩家组（数组）
     force array bj_FORCE_PLAYER
     // 给予首发英雄初始物品的数量
-    // 游戏初始化时会根据游戏版本自动设置
+    // 游戏初始化时会根据游戏版本自动设置为 bj_MELEE_MAX_TWINKED_HEROES_V0(混乱之治) 或 bj_MELEE_MAX_TWINKED_HEROES_V1(冰封王座)
     integer bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
@@ -12421,4 +12421,5 @@ endfunction
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
+
 
