@@ -1,15 +1,14 @@
 import("./boot/provider/data-enter");
 import * as vscode from 'vscode';
 
-import { AutoCompletionProvider, SpecialCompletionItemProvider } from './boot/provider/auto-completion-provider';
+import { AutoCompletionProvider, IncludeCompletionItemProvider, SpecialCompletionItemProvider } from './boot/provider/auto-completion-provider';
 import { AutoHoverProvider, SpecialHoverProvider } from "./boot/provider/auto-hover-provider";
-import { NewDefinitionProvider, TypeDefinitionProvider, SpecialDefinitionProvider } from "./boot/provider/definition-provider-ex";
+import { NewDefinitionProvider, TypeDefinitionProvider, SpecialDefinitionProvider, IncludeDefinitionProvider } from "./boot/provider/definition-provider-ex";
 import { JassDocumentColorProvider } from "./boot/provider/document-color-provider";
 import { JassDiagnosticProvider } from "./boot/provider/diagnostic-provider";
 import { DocumentSymbolProvider } from "./boot/provider/outline-provider";
 import { SignatureHelpProvider } from './boot/provider/signature-help-provider-ex';
 import { JassCodeActionsProvider } from './boot/provider/code-actions-provider';
-import { GlobalContext } from './boot/jass/parser-vjass';
 import { DocumentFormattingSortEditProvider, TypeFormatProvider } from './boot/provider/document-formatting-edit-provider';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -17,10 +16,12 @@ export async function activate(context: vscode.ExtensionContext) {
     const jassSelector = { scheme: 'file', language: 'jass' };
     
     // JASS 提供者注册
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(jassSelector, new IncludeCompletionItemProvider(), "\"", "/", "\\"));
     context.subscriptions.push(vscode.languages.registerCompletionItemProvider(jassSelector, new SpecialCompletionItemProvider(), "\"", "'"));
     context.subscriptions.push(vscode.languages.registerCompletionItemProvider(jassSelector, new AutoCompletionProvider(), ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789_.".split("")));
     context.subscriptions.push(vscode.languages.registerHoverProvider(jassSelector, new AutoHoverProvider()));
     context.subscriptions.push(vscode.languages.registerHoverProvider(jassSelector, new SpecialHoverProvider()));
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(jassSelector, new IncludeDefinitionProvider()));
     context.subscriptions.push(vscode.languages.registerDefinitionProvider(jassSelector, new NewDefinitionProvider()));
     context.subscriptions.push(vscode.languages.registerDefinitionProvider(jassSelector, new SpecialDefinitionProvider()));
     context.subscriptions.push(vscode.languages.registerTypeDefinitionProvider(jassSelector, new TypeDefinitionProvider()));

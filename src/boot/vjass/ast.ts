@@ -7,9 +7,9 @@ import { Rangebel } from "../jass/ast"
 import {Take, Local} from "../jass/ast";
 import * as jass from "../jass/ast";
 
-type ModifierType = "private" | "public" | "default";
+export type ModifierType = "private" | "public" | "default";
 
-class Global extends jass.Global implements Rangebel {
+export class Global extends jass.Global implements Rangebel {
 	public tag: ModifierType = "default";
 
 	public get origin() : string {
@@ -17,7 +17,7 @@ class Global extends jass.Global implements Rangebel {
 	}
 }
 
-class Func extends jass.Func implements Rangebel {
+export class Func extends jass.Func implements Rangebel {
 	public tag: ModifierType = "default";
 
 	constructor(context: any, name: string, takes: Take[] = [], returns: string | null = null) {
@@ -29,7 +29,7 @@ class Func extends jass.Func implements Rangebel {
 	}
 }
 
-class FunctionInterface {
+export class FunctionInterface {
 	public readonly takes: Take[];
 	public returns: string | null;
 
@@ -42,7 +42,7 @@ class FunctionInterface {
 /**
  * 函数指针(接口)
  */
-class TypePonint {
+export class TypePonint {
 	// 一个有单个单位参数的函数类型
 	// type unitFunc extends function(unit);
 
@@ -61,7 +61,7 @@ class TypePonint {
 
 }
 
-class ArrayType {
+export class ArrayType {
 	public type:string;
 	public size:number;
 	public max: number;
@@ -77,7 +77,7 @@ class ArrayType {
 
 }
 
-class DynamicArray {
+export class DynamicArray {
 	public type: string;
 	public extendType: ArrayType;
 
@@ -88,7 +88,7 @@ class DynamicArray {
 
 }
 
-class Method extends Func implements Rangebel {
+export class Method extends Func implements Rangebel {
 	public tag: ModifierType = "default";
 	public isStatic: boolean = false;
 
@@ -99,7 +99,7 @@ class Method extends Func implements Rangebel {
 }
 
 
-class Member implements Rangebel {
+export class Member implements Rangebel {
 	public isConstant: boolean = false;
 	public tag: ModifierType = "default";
 	public isStatic: boolean = false;
@@ -120,7 +120,7 @@ class Member implements Rangebel {
 	}
 }
 
-class Interface implements Rangebel {
+export class Interface implements Rangebel {
 	public tag:ModifierType = "default";
 	public name: string;
 	public members:Member[] = [];
@@ -133,11 +133,11 @@ class Interface implements Rangebel {
 	}
 }
 
-class InterfaceArray extends Interface{
+export class InterfaceArray extends Interface{
 	public size:number = 0;
 }
 
-class Struct extends Interface implements Rangebel {
+export class Struct extends Interface implements Rangebel {
 	public extends:string|null = null;
 
 	public get origin() : string {
@@ -146,14 +146,14 @@ class Struct extends Interface implements Rangebel {
 }
 
 
-class StructArray extends Struct{
+export class StructArray extends Struct{
 	public size:number = 0;
 }
 
 
 
 
-class Library implements Rangebel {
+export class Library implements Rangebel {
 	public name: string;
 	public initializer:string|null = null;
 	public requires: string[] = [];
@@ -178,23 +178,6 @@ class Library implements Rangebel {
 
 }
 
-export {
-	ArrayType,
-	DynamicArray,
-	Func,
-	FunctionInterface,
-	Global,
-	Interface,
-	InterfaceArray,
-	Library,
-	Local,
-	Member,
-	Method,
-	ModifierType,
-	Position,
-	Range,
-	Rangebel,
-	Struct,
-	StructArray,
-	TypePonint
-};
+// 重新导出从其他模块导入的类型
+export { Local, Rangebel } from "../jass/ast";
+export { Position, Range } from "../jass/loc";

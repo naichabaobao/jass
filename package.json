@@ -4,7 +4,7 @@
   "description": "jass插件,QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.38",
+  "version": "1.8.44",
   "keywords": [
     "jass",
     "vjass",
@@ -122,8 +122,9 @@
     "test:suite": "node out/boot/provider/test-runner.js suite",
     "test:single": "node out/boot/provider/test-runner.js test",
     "test:report": "node out/boot/provider/test-runner.js report",
-    "package": "vsce package --no-dependencies --skip-duplicate",
-    "publish": "vsce publish --no-dependencies --skip-duplicate",
+    "package": "vsce package --no-dependencies",
+    "publish:skip-duplicate": "vsce publish --no-dependencies --skip-duplicate",
+    "publish": "vsce publish --no-dependencies",
     "prepublish": "vsce publish --pre-release --no-dependencies --skip-duplicate"
   },
   "devDependencies": {

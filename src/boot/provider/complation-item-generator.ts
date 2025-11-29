@@ -260,44 +260,48 @@ export class CompletionItemGenerator {
  * @param native 原生函数节点
  * @returns VS Code 补全项
  */
-export function nativeToItem(native: vjass_ast.Native): vscode.CompletionItem {
-  const generator = CompletionItemGenerator.getInstance();
-  const item = generator['createBaseItem'](native, vscode.CompletionItemKind.Function);
+export function nativeToItem(native: vjass_ast.Native): vscode.CompletionItem | undefined{
+  // const generator = CompletionItemGenerator.getInstance();
+  // const item = generator['createBaseItem'](native, vscode.CompletionItemKind.Function);
   
-  // 设置排序优先级（原生函数优先级较高）
-  const functionName = native.name?.getText() ?? "(unnamed)";
-  item.sortText = `0_${functionName}`;
+  // // 设置排序优先级（原生函数优先级较高）
+  // const functionName = native.name?.getText() ?? "(unnamed)";
+  // item.sortText = `0_${functionName}`;
   
-  // 设置插入文本（智能括号）
-  if (native.takes && native.takes.length > 0) {
-    item.insertText = new vscode.SnippetString(`${functionName}($1)`);
-  } else {
-    item.insertText = `${functionName}()`;
-  }
+  // // 设置插入文本（智能括号）
+  // if (native.takes && native.takes.length > 0) {
+  //   item.insertText = new vscode.SnippetString(`${functionName}($1)`);
+  // } else {
+  //   item.insertText = `${functionName}()`;
+  // }
   
-  return item;
+  // return item;
+  if (native.name) {
+    const item = new vscode.CompletionItem(native.name.getText(), vscode.CompletionItemKind.Function);
+    item.detail = `native: ${native.name}`;
+    item.documentation = new vscode.MarkdownString(`JASS native: \`${native.name}\``).appendCodeblock(native.to_string()).appendMarkdown(native.description?.join("\n") ?? "");
+    item.insertText = native.name.getText();
+      item.sortText = `0_${native.name.getText()}`;
+      return item;
+    }
+    return undefined;
 }
 
 /**
  * 将函数转换为 VS Code 补全项
  * @param func 函数节点
- * @returns VS Code 补全项
+ * @returns VS Code 补全项或 undefined（如果函数没有名称）
  */
-export function functionToItem(func: vjass_ast.Func | vjass_ast.zinc.Func): vscode.CompletionItem {
-  const generator = CompletionItemGenerator.getInstance();
-  const item = generator['createBaseItem'](func, vscode.CompletionItemKind.Function);
-  
-  // 设置排序优先级（用户函数优先级中等）
-  const functionName = func.name?.getText() ?? "(unnamed)";
-  item.sortText = `1_${functionName}`;
-  
-  // 设置插入文本（智能括号）
-  if (func.takes && func.takes.length > 0) {
-    item.insertText = new vscode.SnippetString(`${functionName}($1)`);
-  } else {
-    item.insertText = `${functionName}()`;
+export function functionToItem(func: vjass_ast.Func | vjass_ast.zinc.Func): vscode.CompletionItem | undefined {
+  if (!func.name) {
+    return undefined;
   }
   
+  const item = new vscode.CompletionItem(func.name.getText(), vscode.CompletionItemKind.Function);
+  item.detail = `function: ${func.name.getText()}`;
+  item.documentation = new vscode.MarkdownString(`JASS function: \`${func.name.getText()}\``).appendCodeblock(func.to_string()).appendMarkdown(func.description?.join("\n"));
+  item.insertText = func.name.getText();
+  item.sortText = `1_${func.name.getText()}`;
   return item;
 }
 
@@ -698,11 +702,11 @@ export function nodeAstToItem(node: vjass_ast.NodeAst): vscode.CompletionItem | 
 
   // 判断节点类型并调用相应的转换函数
   if (node instanceof vjass_ast.Native) {
-    return nativeToItem(node);
+    return nativeToItem(node) ?? null;
   }
   
   if (node instanceof vjass_ast.Func) {
-    return functionToItem(node);
+    return functionToItem(node) ?? null;
   }
   
   if (node instanceof vjass_ast.GlobalVariable) {
@@ -718,7 +722,7 @@ export function nodeAstToItem(node: vjass_ast.NodeAst): vscode.CompletionItem | 
   }
   
   if (node instanceof vjass_ast.Method || node instanceof vjass_ast.zinc.Method) {
-    return methodToItem(node);
+    return methodToItem(node) ?? null;
   }
   
   if (node instanceof vjass_ast.Local || node instanceof vjass_ast.zinc.Member) {
@@ -781,16 +785,20 @@ export function structToItem(struct: vjass_ast.Struct | vjass_ast.zinc.Struct): 
 /**
  * 方法转 CompletionItem
  * @param method 方法节点
- * @returns CompletionItem
+ * @returns CompletionItem 或 undefined（如果方法没有名称）
  */
-export function methodToItem(method: vjass_ast.Method | vjass_ast.zinc.Method): vscode.CompletionItem {
-  const generator = CompletionItemGenerator.getInstance();
-  const item = generator['createBaseItem'](method, vscode.CompletionItemKind.Method);
+export function methodToItem(method: vjass_ast.Method | vjass_ast.zinc.Method): vscode.CompletionItem | undefined {
+  if (!method.name) {
+    return undefined;
+  }
   
-  const name = method.name?.getText() || 'UnknownMethod';
-  item.insertText = name;
-  item.sortText = `5_${name}`;
+  const item = new vscode.CompletionItem(method.name.getText(), vscode.CompletionItemKind.Method);
+  item.detail = `method: ${method.name.getText()}`;
+  item.documentation = new vscode.MarkdownString(`JASS method: \`${method.name.getText()}\``).appendCodeblock(method.to_string()).appendMarkdown(method.description?.join("\n") ?? "");
+  item.insertText = method.name.getText();
+  item.sortText = `5_${method.name.getText()}`;
   return item;
+  
 }
 
 /**

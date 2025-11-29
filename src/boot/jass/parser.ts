@@ -23,6 +23,7 @@ import { Token, tokenize } from "./tokens";
 // }
 /**
  * 替换块注释为空白文本
+ * @deprecated
  * @param content 
  * @returns 
  */

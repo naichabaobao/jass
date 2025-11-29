@@ -6,6 +6,7 @@ import { Position } from "./loc";
 
 /**
  * 移除注释
+ * @deprecated src\boot\vjass\comment.ts
  * @param content 
  * @param deleteLineComment 是否删除行注释
  */

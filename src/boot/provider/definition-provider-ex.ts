@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as fs from "fs";
 import * as vscode from "vscode";
 
 import { GlobalContext } from "../jass/parser-vjass";
@@ -6,6 +7,8 @@ import * as vjass_ast from "../jass/parser-vjass";
 import * as vjass from "../jass/tokenizer-common";
 import { AllKeywords } from "../jass/keyword";
 import { Position } from "../jass/loc";
+import { tokenize } from "../jass/tokens";
+import { isAiFile, isJFile, isLuaFile, isZincFile } from "../tool";
 
 /**
  * Definition 上下文接口
@@ -863,6 +866,48 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
   }
 
 }
+
+export class IncludeDefinitionProvider implements vscode.DefinitionProvider {
+  provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
+    const locations = new Array<vscode.Location>();
+
+    const tokens = tokenize(document.lineAt(position).text);
+    if (tokens.length >= 2 && tokens[0].value == "#include" && tokens[1].isString()) {
+      const key = tokens[1].value;
+
+      console.log("file key: " + key);
+
+      const prefixContent = key.substring(1, key.length - 1);
+
+      const currentFileDir = () => {
+        return path.parse(document.uri.fsPath).dir;
+      };
+
+      const realPath = path.isAbsolute(prefixContent) ? path.resolve(prefixContent) : path.resolve(currentFileDir(), prefixContent);
+      const stat = fs.statSync(realPath);
+      if (stat.isFile()) {
+        const location = new vscode.Location(vscode.Uri.file(realPath), new vscode.Range(0, 0, 0, 0));
+        locations.push(location);
+      } else if (stat.isDirectory()) {
+        const paths = fs.readdirSync(realPath);
+        paths.forEach((p) => {
+          const filePath = path.resolve(realPath, p);
+          if (fs.statSync(filePath).isDirectory()) {
+          } else if (isJFile(filePath) || isZincFile(filePath) || isAiFile(filePath) || isLuaFile(filePath)) {
+            const location = new vscode.Location(vscode.Uri.file(filePath), new vscode.Range(0, 0, 0, 0));
+            locations.push(location);
+          }
+        });
+      }
+    } else {
+      return null;
+    }
+
+    return locations;
+  }
+
+}
+
 
 
 

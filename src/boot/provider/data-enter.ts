@@ -15,6 +15,8 @@ import {
 	rename_document_difinition 
 } from './definition-provider-ex';
 
+
+
 /**
  * 全局上下文提供者类
  * 管理全局变量和程序上下文

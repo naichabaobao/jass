@@ -11,6 +11,7 @@ import { Import, parseAndRemoveImports } from "../vjass/vjass-import";
 import { parseAndRemoveTextMacros, TextMacro } from "../vjass/text-macro";
 import { parseAndRemoveRunTextMacros, RunTextMacro, RunTextMacroCollection } from "../vjass/run-text-macro";
 import { parseAndRemoveZincBlock, ZincBlock, ZincBlockCollection } from "../vjass/zinc-block";
+import { parseAndRemoveLuaSegement } from "../vjass/lua-segement-remover";
 
 
 
@@ -552,6 +553,8 @@ export class Document {
   private preprocessContent(): void {
     this.content = removeComment(this.content, this.errorCollection);
     this.content = parseAndRemovePreprocessor(this.content, this.errorCollection, this.preprocessCollection);
+    // 新增处理 <??>
+    this.content = parseAndRemoveLuaSegement(this.content, this.errorCollection);
     this.content = parseAndRemoveImports(this.content, this.errorCollection, this.importsCollection);
     this.content = parseAndRemoveTextMacros(this.content, this.errorCollection, this.textMacroCollection, this.filePath);
     this.content = parseAndRemoveZincBlock(this.content, this.errorCollection, this.zincBlockCollection);

@@ -3219,8 +3219,9 @@ function parse_line_function_takes(document: Document, tokens: Token[], offset_i
         }
         const text = token.getText();
         if (state == 0) {
-            index++;
+            // 检查当前 token 是否是 "takes"，如果是则跳过它
             if (text == "takes") {
+                index++; // 跳过 takes 关键字
                 const next_token = get_next_token(tokens, index);
                 if (next_token) {
                     if (next_token.getText() == "returns") {
@@ -3234,8 +3235,9 @@ function parse_line_function_takes(document: Document, tokens: Token[], offset_i
                     break;
                 }
             } else {
-                document.add_token_error(token, `parameter declaration requires' takes'`);
-                break;
+                // 如果当前不是 takes，尝试向前查找（跳过注释）
+                index++;
+                continue;
             }
         } else if (state == 1) {
             if (is_first && text == "nothing") {
@@ -3437,6 +3439,14 @@ export function parse_function(document: Document, tokens: Token[], type: "funct
             if (next_token) {
                 const next_token_text = next_token.getText();
                 if (next_token_text == "takes") {
+                    // 找到 takes token 在 tokens 数组中的实际索引
+                    for (let i = index; i < tokens.length; i++) {
+                        const t = tokens[i];
+                        if (!t.is_block_comment && !t.is_comment && t.getText() === "takes") {
+                            index = i;
+                            break;
+                        }
+                    }
                     state = 3;
                 } else if (next_token_text == "returns") {
                     document.add_token_error(next_token, `missing keyword 'returns'`);
