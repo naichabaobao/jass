@@ -1,4 +1,4 @@
-import { Position, Range } from "../jass/loc";
+
 
 /**
  * 运算符类型枚举
@@ -303,6 +303,214 @@ class ASTNode {
 
         return siblings;
     }
+
+    // ==================== Position Range 常用方法 ====================
+
+    /**
+     * 检查位置是否在节点范围内（包含边界）
+     * @param line 行号
+     * @param position 位置
+     * @returns 如果位置在范围内返回 true
+     */
+    public containsPosition(line: number, position: number): boolean {
+        // 检查行号范围
+        if (line < this.start.line || line > this.end.line) {
+            return false;
+        }
+
+        // 检查开始行的位置
+        if (line === this.start.line && position < this.start.position) {
+            return false;
+        }
+
+        // 检查结束行的位置
+        if (line === this.end.line && position > this.end.position) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查位置对象是否在节点范围内（包含边界）
+     * @param pos 位置对象 { line: number, position: number }
+     * @returns 如果位置在范围内返回 true
+     */
+    public containsPositionObject(pos: { line: number, position: number }): boolean {
+        return this.containsPosition(pos.line, pos.position);
+    }
+
+    /**
+     * 检查 VSCode Position 是否在节点范围内（包含边界）
+     * @param position VSCode Position 对象
+     * @returns 如果位置在范围内返回 true
+     */
+    public containsVSCodePosition(position: { line: number, character: number }): boolean {
+        return this.containsPosition(position.line, position.character);
+    }
+
+    /**
+     * 检查另一个节点是否完全在当前节点范围内
+     * @param node 要检查的节点
+     * @returns 如果节点在范围内返回 true
+     */
+    public containsNode(node: ASTNode): boolean {
+        // 检查开始位置
+        if (!this.containsPosition(node.start.line, node.start.position)) {
+            return false;
+        }
+
+        // 检查结束位置
+        if (!this.containsPosition(node.end.line, node.end.position)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查两个节点是否重叠
+     * @param node 要检查的节点
+     * @returns 如果节点重叠返回 true
+     */
+    public overlapsWith(node: ASTNode): boolean {
+        // 检查是否有任何重叠
+        // 节点A的开始在节点B的范围内，或节点A的结束在节点B的范围内
+        // 或者节点B完全包含在节点A中
+        return (
+            this.containsPosition(node.start.line, node.start.position) ||
+            this.containsPosition(node.end.line, node.end.position) ||
+            node.containsPosition(this.start.line, this.start.position) ||
+            node.containsPosition(this.end.line, this.end.position)
+        );
+    }
+
+    /**
+     * 检查位置是否在节点之前（不包含边界）
+     * @param line 行号
+     * @param position 位置
+     * @returns 如果位置在节点之前返回 true
+     */
+    public isPositionBefore(line: number, position: number): boolean {
+        if (line < this.start.line) {
+            return true;
+        }
+
+        if (line === this.start.line && position < this.start.position) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查位置对象是否在节点之前（不包含边界）
+     * @param pos 位置对象 { line: number, position: number }
+     * @returns 如果位置在节点之前返回 true
+     */
+    public isPositionObjectBefore(pos: { line: number, position: number }): boolean {
+        return this.isPositionBefore(pos.line, pos.position);
+    }
+
+    /**
+     * 检查位置是否在节点之后（不包含边界）
+     * @param line 行号
+     * @param position 位置
+     * @returns 如果位置在节点之后返回 true
+     */
+    public isPositionAfter(line: number, position: number): boolean {
+        if (line > this.end.line) {
+            return true;
+        }
+
+        if (line === this.end.line && position > this.end.position) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查位置对象是否在节点之后（不包含边界）
+     * @param pos 位置对象 { line: number, position: number }
+     * @returns 如果位置在节点之后返回 true
+     */
+    public isPositionObjectAfter(pos: { line: number, position: number }): boolean {
+        return this.isPositionAfter(pos.line, pos.position);
+    }
+
+    /**
+     * 检查另一个节点是否在当前节点之前
+     * @param node 要检查的节点
+     * @returns 如果节点在当前节点之前返回 true
+     */
+    public isNodeBefore(node: ASTNode): boolean {
+        return this.isPositionBefore(node.start.line, node.start.position);
+    }
+
+    /**
+     * 检查另一个节点是否在当前节点之后
+     * @param node 要检查的节点
+     * @returns 如果节点在当前节点之后返回 true
+     */
+    public isNodeAfter(node: ASTNode): boolean {
+        return this.isPositionAfter(node.end.line, node.end.position);
+    }
+
+    /**
+     * 获取节点跨越的行数
+     * @returns 行数（结束行 - 开始行 + 1）
+     */
+    public getLineCount(): number {
+        return this.end.line - this.start.line + 1;
+    }
+
+    /**
+     * 检查节点是否在同一行
+     * @returns 如果开始行和结束行相同返回 true
+     */
+    public isSingleLine(): boolean {
+        return this.start.line === this.end.line;
+    }
+
+    /**
+     * 检查节点是否为空（开始位置等于结束位置）
+     * @returns 如果节点为空返回 true
+     */
+    public isEmpty(): boolean {
+        return (
+            this.start.line === this.end.line &&
+            this.start.position === this.end.position
+        );
+    }
+
+    /**
+     * 检查位置范围是否有效
+     * @returns 如果位置范围有效返回 true
+     */
+    public isValidRange(): boolean {
+        // 检查开始位置是否在结束位置之前或相等
+        if (this.start.line > this.end.line) {
+            return false;
+        }
+
+        if (this.start.line === this.end.line && this.start.position > this.end.position) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取位置范围的字符串表示
+     * @returns 格式化的位置范围字符串
+     */
+    public getRangeString(): string {
+        if (this.isSingleLine()) {
+            return `[${this.start.line}:${this.start.position}-${this.end.position}]`;
+        }
+        return `[${this.start.line}:${this.start.position} - ${this.end.line}:${this.end.position}]`;
+    }
 }
 
 /**
@@ -385,6 +593,14 @@ class RealLiteral extends Literal<number> {
     public getType(): string {
         return "real";
     }
+    
+    public toString(): string {
+        // 对于实数，如果值是整数，返回带 .0 的格式
+        if (Number.isInteger(this.value)) {
+            return `${this.value}.0`;
+        }
+        return String(this.value);
+    }
 }
 
 /**
@@ -393,6 +609,11 @@ class RealLiteral extends Literal<number> {
 class StringLiteral extends Literal<string> {
     public getType(): string {
         return "string";
+    }
+    
+    public toString(): string {
+        // 返回带引号的字符串
+        return `"${this.value}"`;
     }
 }
 
@@ -497,6 +718,7 @@ class VariableDeclaration extends Statement {
     public readonly arrayWidth: number | null = null; // 二维数组的宽度，如 integer array mat1 [10][20] 中的 10
     public readonly arrayHeight: number | null = null; // 二维数组的高度，如 integer array mat1 [10][20] 中的 20
     public readonly isStatic: boolean = false; // 是否是静态成员（用于 struct）
+    public readonly isReadonly: boolean = false; // 是否是只读成员（用于 struct，允许外部读取但不能赋值）
     
     constructor(
         name: Identifier, 
@@ -509,6 +731,7 @@ class VariableDeclaration extends Statement {
         arrayWidth: number | null = null,
         arrayHeight: number | null = null,
         isStatic: boolean = false,
+        isReadonly: boolean = false,
         start?: { line: number, position: number }, 
         end?: { line: number, position: number }
     ) {
@@ -523,6 +746,7 @@ class VariableDeclaration extends Statement {
         this.arrayWidth = arrayWidth;
         this.arrayHeight = arrayHeight;
         this.isStatic = isStatic;
+        this.isReadonly = isReadonly;
         
         // 添加子节点
         this.addChild(name);
@@ -534,6 +758,7 @@ class VariableDeclaration extends Statement {
         const prefix = this.isLocal ? "local" : "";
         const constant = this.isConstant ? " constant" : "";
         const staticStr = this.isStatic ? "static" : "";
+        const readonlyStr = this.isReadonly ? "readonly" : "";
         const typeStr = this.type ? ` ${this.type.toString()}` : "";
         const arrayStr = this.isArray ? " array" : "";
         // 二维数组：mat1 [10][20]
@@ -546,7 +771,7 @@ class VariableDeclaration extends Statement {
         }
         const initStr = this.initializer ? ` = ${this.initializer.toString()}` : "";
         
-        const parts = [prefix, staticStr, constant, typeStr, arrayStr, this.name.toString(), sizeStr, initStr]
+        const parts = [prefix, staticStr, readonlyStr, constant, typeStr, arrayStr, this.name.toString(), sizeStr, initStr]
             .filter(p => p !== "").join(" ");
         
         return parts;
@@ -721,6 +946,39 @@ class FunctionExpression extends Expression {
 }
 
 /**
+ * 类型转换表达式（Typecast）
+ * 语法：TypeName(expr)
+ * 例如：integer(x), wek(W), anarrayofdata(GetUnitUserData(u))
+ */
+class TypecastExpression extends Expression {
+    public readonly targetType: Identifier; // 目标类型名
+    public readonly expression: Expression; // 要转换的表达式
+    
+    constructor(
+        targetType: Identifier,
+        expression: Expression,
+        start?: { line: number, position: number },
+        end?: { line: number, position: number }
+    ) {
+        super(start, end);
+        this.targetType = targetType;
+        this.expression = expression;
+        
+        this.addChild(targetType);
+        this.addChild(expression);
+    }
+    
+    public getType(): string | null {
+        // 返回目标类型
+        return this.targetType.toString();
+    }
+    
+    public toString(): string {
+        return `${this.targetType.toString()}(${this.expression.toString()})`;
+    }
+}
+
+/**
  * 代码块语句（包含多个语句）
  */
 class BlockStatement extends Statement {
@@ -885,6 +1143,50 @@ class CallStatement extends Statement {
 }
 
 /**
+ * 函数接口声明
+ * function interface 接口名称 takes ... returns ...
+ */
+class FunctionInterfaceDeclaration extends Statement {
+    public name: Identifier | null;
+    public parameters: VariableDeclaration[];
+    public returnType: Identifier | ThistypeExpression | null;
+    
+    constructor(options?: {
+        name?: Identifier | null;
+        parameters?: VariableDeclaration[];
+        returnType?: Identifier | ThistypeExpression | null;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name = null,
+            parameters = [],
+            returnType = null,
+            start,
+            end
+        } = options || {};
+        
+        super(start, end);
+        this.name = name;
+        this.parameters = parameters;
+        this.returnType = returnType;
+        
+        if (name) this.addChild(name);
+        parameters.forEach(param => this.addChild(param));
+        if (returnType) this.addChild(returnType);
+    }
+    
+    public toString(): string {
+        const nameStr = this.name ? this.name.toString() : "";
+        const takesStr = this.parameters.length > 0 ?
+            ` takes ${this.parameters.map(p => p.toString()).join(", ")}` : " takes nothing";
+        const returnsStr = this.returnType ? ` returns ${this.returnType.toString()}` : " returns nothing";
+        
+        return `function interface ${nameStr}${takesStr}${returnsStr}`;
+    }
+}
+
+/**
  * 函数声明
  */
 class FunctionDeclaration extends Statement {
@@ -892,14 +1194,12 @@ class FunctionDeclaration extends Statement {
     public parameters: VariableDeclaration[];
     public returnType: Identifier | ThistypeExpression | null;
     public body: BlockStatement;
-    public isNative: boolean = false;
     
     constructor(options?: {
         name?: Identifier | null;
         parameters?: VariableDeclaration[];
         returnType?: Identifier | ThistypeExpression | null;
         body?: BlockStatement;
-        isNative?: boolean;
         start?: { line: number, position: number };
         end?: { line: number, position: number };
     }) {
@@ -908,7 +1208,6 @@ class FunctionDeclaration extends Statement {
             parameters = [],
             returnType = null,
             body = new BlockStatement(),
-            isNative = false,
             start,
             end
         } = options || {};
@@ -918,7 +1217,6 @@ class FunctionDeclaration extends Statement {
         this.parameters = parameters;
         this.returnType = returnType;
         this.body = body;
-        this.isNative = isNative;
         
         if (name) this.addChild(name);
         parameters.forEach(param => this.addChild(param));
@@ -927,14 +1225,129 @@ class FunctionDeclaration extends Statement {
     }
     
     public toString(): string {
-        const nativeStr = this.isNative ? "native " : "";
         const nameStr = this.name ? this.name.toString() : "";
         const takesStr = this.parameters.length > 0 ? 
             ` takes ${this.parameters.map(p => p.toString()).join(", ")}` : "";
         const returnsStr = this.returnType ? ` returns ${this.returnType.toString()}` : "";
-        const bodyStr = this.isNative ? "" : `\n${this.body.toString()}\nendfunction`;
+        const bodyStr = `\n${this.body.toString()}\nendfunction`;
         
-        return `${nativeStr}function ${nameStr}${takesStr}${returnsStr}${bodyStr}`;
+        return `function ${nameStr}${takesStr}${returnsStr}${bodyStr}`;
+    }
+}
+
+/**
+ * Native 函数声明
+ * 支持语法：
+ * - native function name takes ... returns ...
+ * - constant native function name takes ... returns ...
+ */
+class NativeDeclaration extends Statement {
+    public name: Identifier | null;
+    public parameters: VariableDeclaration[];
+    public returnType: Identifier | ThistypeExpression | null;
+    public isConstant: boolean = false; // 是否是常量函数（constant native function）
+    
+    constructor(options?: {
+        name?: Identifier | null;
+        parameters?: VariableDeclaration[];
+        returnType?: Identifier | ThistypeExpression | null;
+        isConstant?: boolean;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name = null,
+            parameters = [],
+            returnType = null,
+            isConstant = false,
+            start,
+            end
+        } = options || {};
+        
+        super(start, end);
+        this.name = name;
+        this.parameters = parameters;
+        this.returnType = returnType;
+        this.isConstant = isConstant;
+        
+        if (name) this.addChild(name);
+        parameters.forEach(param => this.addChild(param));
+        if (returnType) this.addChild(returnType);
+    }
+    
+    public toString(): string {
+        const constantStr = this.isConstant ? "constant " : "";
+        const nameStr = this.name ? this.name.toString() : "";
+        const takesStr = this.parameters.length > 0 ? 
+            ` takes ${this.parameters.map(p => p.toString()).join(", ")}` : "";
+        const returnsStr = this.returnType ? ` returns ${this.returnType.toString()}` : "";
+        
+        return `${constantStr}native ${nameStr}${takesStr}${returnsStr}`;
+    }
+}
+
+/**
+ * JASS 类型声明
+ * 语法：
+ * - type NewType extends BaseType
+ * - type NewType extends BaseType array[Size]
+ * - type NewType extends BaseType array[ElementSize, StorageSize]
+ *   （对应 vJass 动态数组及其扩展存储语法）
+ */
+class TypeDeclaration extends Statement {
+    public name: Identifier;
+    public baseType: Identifier;
+    public isArray: boolean = false;
+    /**
+     * 动态数组元素大小（如 array[8] 中的 8，或常量名）
+     */
+    public elementSize: Identifier | IntegerLiteral | null = null;
+    /**
+     * 扩展存储大小（如 array[200,40000] 中的 40000，可选）
+     */
+    public storageSize: Identifier | IntegerLiteral | null = null;
+
+    constructor(options: {
+        name: Identifier;
+        baseType: Identifier;
+        isArray?: boolean;
+        elementSize?: Identifier | IntegerLiteral | null;
+        storageSize?: Identifier | IntegerLiteral | null;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name,
+            baseType,
+            isArray = false,
+            elementSize = null,
+            storageSize = null,
+            start,
+            end
+        } = options;
+
+        super(start, end);
+        this.name = name;
+        this.baseType = baseType;
+        this.isArray = isArray;
+        this.elementSize = elementSize;
+        this.storageSize = storageSize;
+
+        this.addChild(name);
+        this.addChild(baseType);
+        if (elementSize) this.addChild(elementSize);
+        if (storageSize) this.addChild(storageSize);
+    }
+
+    public toString(): string {
+        const baseStr = `type ${this.name.toString()} extends ${this.baseType.toString()}`;
+        if (!this.isArray) {
+            return baseStr;
+        }
+
+        const elemStr = this.elementSize ? this.elementSize.toString() : "";
+        const storageStr = this.storageSize ? `,${this.storageSize.toString()}` : "";
+        return `${baseStr} array[${elemStr}${storageStr}]`;
     }
 }
 
@@ -1093,6 +1506,7 @@ class MethodDeclaration extends Statement {
     public isStub: boolean = false; // 是否是存根方法
     public isOperator: boolean = false; // 是否是运算符重载
     public operatorName: string | null = null; // 运算符名称（如 [], []=, <, >, x, x= 等）
+    public defaultsValue: Expression | null = null; // defaults 关键字的值（用于接口方法）
     
     constructor(options?: {
         name?: Identifier | null;
@@ -1103,6 +1517,7 @@ class MethodDeclaration extends Statement {
         isStub?: boolean;
         isOperator?: boolean;
         operatorName?: string | null;
+        defaultsValue?: Expression | null;
         start?: { line: number, position: number };
         end?: { line: number, position: number };
     }) {
@@ -1115,6 +1530,7 @@ class MethodDeclaration extends Statement {
             isStub = false,
             isOperator = false,
             operatorName = null,
+            defaultsValue = null,
             start,
             end
         } = options || {};
@@ -1128,10 +1544,12 @@ class MethodDeclaration extends Statement {
         this.isStub = isStub;
         this.isOperator = isOperator;
         this.operatorName = operatorName;
+        this.defaultsValue = defaultsValue;
         
         if (name) this.addChild(name);
         parameters.forEach(param => this.addChild(param));
         if (returnType) this.addChild(returnType);
+        if (defaultsValue) this.addChild(defaultsValue);
         this.addChild(body);
     }
     
@@ -1143,9 +1561,10 @@ class MethodDeclaration extends Statement {
         const takesStr = this.parameters.length > 0 ? 
             ` takes ${this.parameters.map(p => p.toString()).join(", ")}` : " takes nothing";
         const returnsStr = this.returnType ? ` returns ${this.returnType.toString()}` : " returns nothing";
+        const defaultsStr = this.defaultsValue ? ` defaults ${this.defaultsValue.toString()}` : "";
         const bodyStr = `\n${this.body.toString()}\nendmethod`;
         
-        return `${staticStr}${stubStr}method ${operatorStr}${nameStr}${takesStr}${returnsStr}${bodyStr}`;
+        return `${staticStr}${stubStr}method ${operatorStr}${nameStr}${takesStr}${returnsStr}${defaultsStr}${bodyStr}`;
     }
 }
 
@@ -1223,6 +1642,327 @@ class DelegateDeclaration extends Statement {
     }
 }
 
+/**
+ * 库声明
+ */
+class LibraryDeclaration extends Statement {
+    public name: Identifier | null;
+    public readonly members: Statement[];
+    public readonly dependencies: Identifier[]; // requires/needs/uses 的依赖库列表
+    public readonly initializer: Identifier | null; // initializer 函数名
+    public readonly isLibraryOnce: boolean; // 是否是 library_once
+    public readonly optionalDependencies: Set<string>; // optional 依赖库名称集合
+    
+    constructor(options?: {
+        name?: Identifier | null;
+        members?: Statement[];
+        dependencies?: Identifier[];
+        initializer?: Identifier | null;
+        isLibraryOnce?: boolean;
+        optionalDependencies?: Set<string> | string[];
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name = null,
+            members = [],
+            dependencies = [],
+            initializer = null,
+            isLibraryOnce = false,
+            optionalDependencies = [],
+            start,
+            end
+        } = options || {};
+        
+        super(start, end);
+        this.name = name;
+        this.members = members;
+        this.dependencies = dependencies;
+        this.initializer = initializer;
+        this.isLibraryOnce = isLibraryOnce;
+        this.optionalDependencies = optionalDependencies instanceof Set 
+            ? optionalDependencies 
+            : new Set(optionalDependencies);
+        
+        if (name) this.addChild(name);
+        if (initializer) this.addChild(initializer);
+        dependencies.forEach(dep => this.addChild(dep));
+        members.forEach(member => this.addChild(member));
+    }
+    
+    public toString(): string {
+        const keyword = this.isLibraryOnce ? "library_once" : "library";
+        const nameStr = this.name ? this.name.toString() : "";
+        const initStr = this.initializer ? ` initializer ${this.initializer.toString()}` : "";
+        // 依赖关系使用 requires（虽然文档说 requires/needs/uses 等价，但 toString 统一使用 requires）
+        const depsStr = this.dependencies.length > 0 
+            ? ` requires ${this.dependencies.map(d => {
+                const isOptional = this.optionalDependencies.has(d.toString());
+                return `${isOptional ? "optional " : ""}${d.toString()}`;
+            }).join(", ")}`
+            : "";
+        const membersStr = this.members.length > 0 ? 
+            `\n${this.members.map(m => m.toString()).join("\n")}\n` : "";
+        
+        return `${keyword} ${nameStr}${initStr}${depsStr}${membersStr}endlibrary`;
+    }
+}
+
+/**
+ * 作用域声明
+ */
+class ScopeDeclaration extends Statement {
+    public name: Identifier | null;
+    public readonly members: Statement[];
+    public readonly initializer: Identifier | null; // initializer 函数名
+    
+    constructor(options?: {
+        name?: Identifier | null;
+        members?: Statement[];
+        initializer?: Identifier | null;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name = null,
+            members = [],
+            initializer = null,
+            start,
+            end
+        } = options || {};
+        
+        super(start, end);
+        this.name = name;
+        this.members = members;
+        this.initializer = initializer;
+        
+        if (name) this.addChild(name);
+        if (initializer) this.addChild(initializer);
+        members.forEach(member => this.addChild(member));
+    }
+    
+    public toString(): string {
+        const nameStr = this.name ? this.name.toString() : "";
+        const initStr = this.initializer ? ` initializer ${this.initializer.toString()}` : "";
+        const membersStr = this.members.length > 0 ? 
+            `\n${this.members.map(m => m.toString()).join("\n")}\n` : "";
+        
+        return `scope ${nameStr}${initStr}${membersStr}endscope`;
+    }
+}
+
+/**
+ * Hook 语句
+ * hook FunctionName HookFunctionName
+ * hook FunctionName StructName.MethodName
+ */
+class HookStatement extends Statement {
+    public readonly targetFunction: Identifier; // 被钩住的函数名（native/bj 函数、函数或静态方法）
+    public readonly hookFunction: Identifier; // 钩子函数名（普通函数名）
+    public readonly hookStruct: Identifier | null; // 钩子结构名（如果是 StructName.MethodName 格式）
+    public readonly hookMethod: Identifier | null; // 钩子方法名（如果是 StructName.MethodName 格式）
+    
+    constructor(options: {
+        targetFunction: Identifier;
+        hookFunction?: Identifier;
+        hookStruct?: Identifier | null;
+        hookMethod?: Identifier | null;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            targetFunction,
+            hookFunction,
+            hookStruct = null,
+            hookMethod = null,
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        
+        this.targetFunction = targetFunction;
+        // 如果提供了 hookFunction，使用它（普通函数格式）
+        // 如果提供了 hookStruct 和 hookMethod，使用它们（结构方法格式）
+        if (hookFunction) {
+            this.hookFunction = hookFunction;
+            this.hookStruct = null;
+            this.hookMethod = null;
+        } else if (hookStruct && hookMethod) {
+            this.hookStruct = hookStruct;
+            this.hookMethod = hookMethod;
+            // 为了兼容性，hookFunction 也设置为 hookMethod
+            this.hookFunction = hookMethod;
+        } else {
+            // 如果都不提供，使用 hookMethod 作为 hookFunction（向后兼容）
+            if (hookMethod) {
+                this.hookFunction = hookMethod;
+                this.hookStruct = null;
+                this.hookMethod = null;
+            } else {
+                throw new Error("HookStatement requires either hookFunction or both hookStruct and hookMethod");
+            }
+        }
+        
+        this.addChild(targetFunction);
+        if (this.hookStruct && this.hookMethod) {
+            this.addChild(this.hookStruct);
+            this.addChild(this.hookMethod);
+        } else {
+            this.addChild(this.hookFunction);
+        }
+    }
+    
+    public toString(): string {
+        const targetStr = this.targetFunction.toString();
+        let hookStr: string;
+        if (this.hookStruct && this.hookMethod) {
+            hookStr = `${this.hookStruct.toString()}.${this.hookMethod.toString()}`;
+        } else {
+            hookStr = this.hookFunction.toString();
+        }
+        return `hook ${targetStr} ${hookStr}`;
+    }
+}
+
+/**
+ * Inject 语句（注入语句）
+ * //! inject main/config ... //! endinject
+ */
+class InjectStatement extends Statement {
+    public readonly injectType: "main" | "config"; // 注入类型
+    public readonly content: string; // 注入内容（原始代码）
+    
+    constructor(options: {
+        injectType: "main" | "config";
+        content: string;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            injectType,
+            content,
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        this.injectType = injectType;
+        this.content = content;
+    }
+    
+    public toString(): string {
+        return `//! inject ${this.injectType}\n${this.content}\n//! endinject`;
+    }
+}
+
+/**
+ * LoadData 语句（SLK 加载语句）
+ * //! loaddata "path.slk"
+ */
+class LoadDataStatement extends Statement {
+    public readonly filePath: string; // SLK 文件路径
+    
+    constructor(options: {
+        filePath: string;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            filePath,
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        this.filePath = filePath;
+    }
+    
+    public toString(): string {
+        return `//! loaddata "${this.filePath}"`;
+    }
+}
+
+/**
+ * TextMacro 语句（文本宏定义）
+ * //! textmacro NAME takes param1, param2
+ * ... body ...
+ * //! endtextmacro
+ */
+class TextMacroStatement extends Statement {
+    public readonly name: string; // 宏名称
+    public readonly parameters: string[]; // 参数列表
+    public readonly body: string[]; // 宏体内容（原始代码行）
+    
+    constructor(options: {
+        name: string;
+        parameters: string[];
+        body: string[];
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name,
+            parameters,
+            body,
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        this.name = name;
+        this.parameters = parameters;
+        this.body = body;
+    }
+    
+    public toString(): string {
+        const paramsStr = this.parameters.length > 0 
+            ? ` takes ${this.parameters.join(', ')}` 
+            : '';
+        const bodyStr = this.body.join('\n');
+        return `//! textmacro ${this.name}${paramsStr}\n${bodyStr}\n//! endtextmacro`;
+    }
+}
+
+/**
+ * RunTextMacro 语句（运行文本宏）
+ * //! runtextmacro [optional] NAME(param1, param2)
+ */
+class RunTextMacroStatement extends Statement {
+    public readonly name: string; // 宏名称
+    public readonly parameters: string[]; // 参数列表
+    public readonly optional: boolean; // 是否为可选宏
+    
+    constructor(options: {
+        name: string;
+        parameters: string[];
+        optional?: boolean;
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            name,
+            parameters,
+            optional = false,
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        this.name = name;
+        this.parameters = parameters;
+        this.optional = optional;
+    }
+    
+    public toString(): string {
+        const optionalStr = this.optional ? 'optional ' : '';
+        const paramsStr = this.parameters.length > 0 
+            ? `(${this.parameters.join(', ')})` 
+            : '()';
+        return `//! runtextmacro ${optionalStr}${this.name}${paramsStr}`;
+    }
+}
+
 // 导出当前文件定义的类
 export { 
     ASTNode, 
@@ -1241,6 +1981,7 @@ export {
     BinaryExpression,
     CallExpression,
     FunctionExpression,
+    TypecastExpression,
     BlockStatement,
     AssignmentStatement,
     CallStatement,
@@ -1249,12 +1990,22 @@ export {
     ExitWhenStatement,
     ReturnStatement,
     FunctionDeclaration,
+    NativeDeclaration,
+    FunctionInterfaceDeclaration,
+    TypeDeclaration,
     StructDeclaration,
     InterfaceDeclaration,
     ModuleDeclaration,
     MethodDeclaration,
     ImplementStatement,
     DelegateDeclaration,
+    LibraryDeclaration,
+    ScopeDeclaration,
+    HookStatement,
+    InjectStatement,
+    LoadDataStatement,
+    TextMacroStatement,
+    RunTextMacroStatement,
     OperatorType
 };
 

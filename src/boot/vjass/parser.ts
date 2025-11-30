@@ -1,5 +1,5 @@
 import { Lexer, Token, TokenType, type IToken, type ILexer } from "./lexer";
-import { ErrorCollection, SimpleError } from "./simple-error";
+import { ErrorCollection, SimpleError, SimpleWarning } from "./simple-error";
 import { Position } from "./ast";
 import {
     BlockStatement,
@@ -13,18 +13,29 @@ import {
     ExitWhenStatement,
     ReturnStatement,
     FunctionDeclaration,
+    NativeDeclaration,
+    FunctionInterfaceDeclaration,
+    TypeDeclaration,
     StructDeclaration,
     InterfaceDeclaration,
     ModuleDeclaration,
     MethodDeclaration,
     ImplementStatement,
     DelegateDeclaration,
+    LibraryDeclaration,
+    ScopeDeclaration,
+    HookStatement,
+    InjectStatement,
+    LoadDataStatement,
+    TextMacroStatement,
+    RunTextMacroStatement,
     Identifier,
     SuperExpression,
     ThistypeExpression,
     BinaryExpression,
     CallExpression,
     FunctionExpression,
+    TypecastExpression,
     IntegerLiteral,
     RealLiteral,
     StringLiteral,
@@ -32,6 +43,7 @@ import {
     NullLiteral,
     OperatorType
 } from "./vjass-ast";
+import { TextMacroExpander } from "./text-macro-expander";
 
 
 /**
@@ -40,6 +52,7 @@ import {
 export class Parser {
     private readonly lexer!: ILexer;
     public filePath: string = "";
+    private readonly textMacroExpander?: TextMacroExpander;
 
     public errors: ErrorCollection = {
         errors: [],
@@ -47,9 +60,36 @@ export class Parser {
         checkValidationErrors: []
     };
 
-    constructor(content: string, filePath: string = "") {
+    // 用于跟踪已声明的标识符（用于检测重复声明）
+    private declaredIdentifiers: Map<string, { type: string, location: { line: number, position: number } }> = new Map();
+
+    /**
+     * 检查标识符是否已声明（用于检测重复声明）
+     * @param identifier 标识符名称
+     * @param type 声明类型（如 "struct", "interface", "function" 等）
+     * @param location 当前位置
+     * @returns 如果已声明，返回 true；否则返回 false 并记录声明
+     */
+    private checkDuplicateDeclaration(identifier: string, type: string, location: { line: number, position: number }): boolean {
+        const key = identifier.toLowerCase();
+        const existing = this.declaredIdentifiers.get(key);
+        if (existing) {
+            this.error(
+                `Duplicate declaration: '${identifier}' is already declared as ${existing.type} at line ${existing.location.line + 1}.`,
+                location,
+                location,
+                `Rename this ${type} or remove the duplicate declaration.`
+            );
+            return true;
+        }
+        this.declaredIdentifiers.set(key, { type, location });
+        return false;
+    }
+
+    constructor(content: string, filePath: string = "", textMacroExpander?: TextMacroExpander) {
         this.lexer = new Lexer(content);
         this.filePath = filePath;
+        this.textMacroExpander = textMacroExpander;
     }
 
     /**
@@ -66,20 +106,61 @@ export class Parser {
         
         // 解析所有顶级语句
         while (!this.isAtEnd()) {
-            // 跳过注释
-            if (this.isComment()) {
-                this.lexer.next();
-                continue;
+            // 检查是否是文本宏指令（不要跳过）
+            if (this.isTextMacroDirective()) {
+                // TextMacroDirective 由 parseStatement 处理
+                // 继续执行，不跳过
+            }
+            // 检查是否是注释，但不要跳过预处理器指令（//! inject, //! loaddata）
+            else if (this.isComment()) {
+                const commentToken = this.lexer.current();
+                if (commentToken) {
+                    const commentValue = commentToken.value || "";
+                    // 检查是否是预处理器指令
+                    const isInject = /^\s*\/\/!\s*inject\s+(main|config)\s*$/i.test(commentValue);
+                    const isLoadData = /^\s*\/\/!\s*loaddata\s+"[^"]+"\s*$/i.test(commentValue);
+                    // 如果是预处理器指令，不要跳过，让 parseStatement 处理
+                    if (!isInject && !isLoadData) {
+                        // 普通注释，跳过
+                        this.lexer.next();
+                        continue;
+                    }
+                } else {
+                    // 没有 token，跳过
+                    this.lexer.next();
+                    continue;
+                }
             }
             
-            const stmt = this.parseStatement();
-            if (stmt) {
-                statements.push(stmt);
-            } else {
-                // 如果无法解析，尝试跳过当前 token
-                if (!this.isAtEnd()) {
-                    this.lexer.next();
+            try {
+                const stmt = this.parseStatement();
+                if (stmt) {
+                    statements.push(stmt);
+                } else {
+                    // 如果无法解析，尝试同步到下一个同步点
+                    const currentToken = this.lexer.current();
+                    if (currentToken && !this.isEndKeyword()) {
+                        // 如果当前 token 不是结束关键字，可能是语法错误
+                        // 尝试同步到下一个同步点以继续解析
+                        this.synchronize();
+                    } else {
+                        // 如果是结束关键字或到达文件末尾，正常退出
+                        break;
+                    }
                 }
+            } catch (error) {
+                // 捕获解析错误，报告错误并尝试恢复
+                const currentToken = this.lexer.current();
+                if (currentToken) {
+                    this.error(
+                        `Parse error: ${error instanceof Error ? error.message : String(error)}`,
+                        currentToken.start,
+                        currentToken.end,
+                        "Check the syntax and try to fix the error."
+                    );
+                }
+                // 尝试同步到下一个同步点
+                this.synchronize();
             }
         }
         
@@ -107,6 +188,14 @@ export class Parser {
     }
 
     /**
+     * 检查当前 token 是否为文本宏指令
+     */
+    private isTextMacroDirective(): boolean {
+        const token = this.lexer.current();
+        return token !== null && token.type === TokenType.TextMacroDirective;
+    }
+
+    /**
      * 检查当前 token 是否为指定类型
      */
     private check(type: TokenType): boolean {
@@ -117,10 +206,10 @@ export class Parser {
     /**
      * 检查当前 token 的值是否为指定字符串（不区分大小写）
      */
-    private checkValue(value: string): boolean {
-        const token = this.lexer.current();
-        if (!token) return false;
-        return token.value.toLowerCase() === value.toLowerCase();
+    private checkValue(value: string, token?: IToken): boolean {
+        const targetToken = token || this.lexer.current();
+        if (!targetToken) return false;
+        return targetToken.value.toLowerCase() === value.toLowerCase();
     }
 
     /**
@@ -166,14 +255,101 @@ export class Parser {
     /**
      * 报告错误
      */
-    private error(message: string): void {
+    /**
+     * 报告错误
+     * @param message 错误消息
+     * @param start 错误开始位置（可选）
+     * @param end 错误结束位置（可选）
+     * @param fix 修复建议（可选）
+     */
+    /**
+     * 报告错误
+     * @param message 错误消息
+     * @param start 错误开始位置（可选）
+     * @param end 错误结束位置（可选）
+     * @param fix 修复建议（可选）
+     */
+    private error(message: string, start?: { line: number, position: number }, end?: { line: number, position: number }, fix?: string): void {
         const token = this.lexer.current();
-        if (token) {
+        
+        // 如果提供了明确的位置，使用它
+        if (start && end) {
+            // 确保 end 位置不小于 start 位置（按行号和列号比较）
+            const finalEnd = (end.line > start.line || (end.line === start.line && end.position >= start.position)) 
+                ? end 
+                : start;
+            this.errors.errors.push(new SimpleError(start, finalEnd, message, fix));
+        } else if (token) {
+            // 使用当前 token 的位置
             this.errors.errors.push(new SimpleError(
+                token.start,
+                token.end,
+                message,
+                fix
+            ));
+        } else {
+            // 如果没有 token 也没有提供位置，使用默认位置
+            const defaultPos = { line: 0, position: 0 };
+            this.errors.errors.push(new SimpleError(defaultPos, defaultPos, message, fix));
+        }
+    }
+
+    /**
+     * 报告警告
+     * @param message 警告消息
+     * @param start 警告开始位置（可选）
+     * @param end 警告结束位置（可选）
+     */
+    private warning(message: string, start?: { line: number, position: number }, end?: { line: number, position: number }): void {
+        const token = this.lexer.current();
+        if (start && end) {
+            this.errors.warnings.push(new SimpleWarning(start, end, message));
+        } else if (token) {
+            this.errors.warnings.push(new SimpleWarning(
                 token.start,
                 token.end,
                 message
             ));
+        } else {
+            const defaultPos = { line: 0, position: 0 };
+            this.errors.warnings.push(new SimpleWarning(defaultPos, defaultPos, message));
+        }
+    }
+
+    /**
+     * 同步到下一个同步点（用于错误恢复）
+     * 同步点包括：endstruct, endinterface, endmodule, endfunction, endmethod, endglobals, endlibrary, endscope
+     */
+    private synchronize(): void {
+        while (!this.isAtEnd()) {
+            // 如果遇到同步点，停止同步
+            if (this.checkValue("endstruct") || 
+                this.checkValue("endinterface") || 
+                this.checkValue("endmodule") ||
+                this.checkValue("endfunction") ||
+                this.checkValue("endmethod") ||
+                this.checkValue("endglobals") ||
+                this.checkValue("endlibrary") ||
+                this.checkValue("endscope") ||
+                this.checkValue("endif") ||
+                this.checkValue("endloop") ||
+                this.checkValue("else") ||
+                this.checkValue("elseif")) {
+                return;
+            }
+            
+            // 如果遇到新的声明开始，也停止同步（这些是新的同步点）
+            if (this.checkValue("struct") ||
+                this.checkValue("interface") ||
+                this.checkValue("module") ||
+                this.checkValue("function") ||
+                this.checkValue("globals") ||
+                this.checkValue("library") ||
+                this.checkValue("scope")) {
+                return;
+            }
+            
+            this.lexer.next();
         }
     }
 
@@ -195,11 +371,106 @@ export class Parser {
             return null;
         }
 
+        // 检查是否是文本宏指令
+        if (this.isTextMacroDirective()) {
+            const directiveToken = token;
+            const directiveValue = directiveToken.value || "";
+            
+            // 检查是否是 //! textmacro
+            if (/^\s*textmacro\b/i.test(directiveValue)) {
+                return this.parseTextMacro();
+            }
+            
+            // 检查是否是 //! runtextmacro
+            if (/^\s*runtextmacro\b/i.test(directiveValue)) {
+                return this.parseRunTextMacro();
+            }
+            
+            // 检查是否是 //! endtextmacro（应该由 parseTextMacro 处理）
+            if (/^\s*endtextmacro\b/i.test(directiveValue)) {
+                this.error(
+                    "Unexpected //! endtextmacro without matching //! textmacro",
+                    directiveToken.start,
+                    directiveToken.end,
+                    "Remove this //! endtextmacro directive or add a matching //! textmacro directive before it."
+                );
+                this.lexer.next();
+                return null;
+            }
+        }
+
+        // 检查是否是预处理器指令（在注释中）
+        if (this.isComment()) {
+            const commentToken = token;
+            const commentValue = commentToken.value || "";
+            
+            // 检查是否是 //! inject 指令
+            const injectMatch = commentValue.match(/^\s*\/\/!\s*inject\s+(main|config)\s*$/i);
+            if (injectMatch) {
+                return this.parseInject(injectMatch[1] as "main" | "config");
+            }
+            
+            // 检查是否是 //! endinject 指令（应该由 parseInject 处理，这里不应该单独出现）
+            if (/^\s*\/\/!\s*endinject\s*$/i.test(commentValue)) {
+                this.error(
+                    "Unexpected //! endinject without matching //! inject",
+                    undefined,
+                    undefined,
+                    "Remove this //! endinject directive or add a matching //! inject directive before it."
+                );
+                this.lexer.next();
+                return null;
+            }
+            
+            // 检查是否是 //! loaddata 指令
+            const loadDataMatch = commentValue.match(/^\s*\/\/!\s*loaddata\s+"([^"]+)"\s*$/i);
+            if (loadDataMatch) {
+                const filePath = loadDataMatch[1];
+                const startPos = commentToken.start;
+                const endPos = commentToken.end;
+                this.lexer.next();
+                return new LoadDataStatement({
+                    filePath,
+                    start: startPos,
+                    end: endPos
+                });
+            }
+        }
+
         // 根据 token 类型选择解析方法
+        // 检查是否是 constant native（常量原生函数）
+        if (token.type === TokenType.keywordConstant) {
+            const peekToken = this.lexer.peek();
+            if (peekToken && peekToken.type === TokenType.keywordNative) {
+                return this.parseNative(true); // 传递 isConstant = true
+            }
+            // 检查是否是 constant function（不合法，应该报错）
+            if (peekToken && peekToken.type === TokenType.KeywordFunction) {
+                const constantToken = this.lexer.current();
+                if (constantToken) {
+                    this.error(
+                        "Invalid syntax: 'constant function' is not allowed. Use 'constant native function' for constant native functions.",
+                        constantToken.start,
+                        constantToken.end,
+                        "Remove 'constant' keyword or use 'constant native function' instead."
+                    );
+                }
+                // 继续解析为普通函数（但会报错）
+                return this.parseFunction();
+            }
+        }
+        
+        // 检查是否是 function interface（函数接口）
         if (token.type === TokenType.KeywordFunction) {
+            const peekToken = this.lexer.peek();
+            if (peekToken && this.checkValue("interface", peekToken)) {
+                return this.parseFunctionInterface();
+            }
             return this.parseFunction();
+        } else if (token.type === TokenType.keywordType) {
+            return this.parseTypeDeclaration();
         } else if (token.type === TokenType.keywordNative) {
-            return this.parseNative();
+            return this.parseNative(false); // 传递 isConstant = false
         } else if (this.checkValue("struct")) {
             return this.parseStruct();
         } else if (this.checkValue("interface")) {
@@ -210,6 +481,8 @@ export class Parser {
             return this.parseLibrary();
         } else if (this.checkValue("scope")) {
             return this.parseScope();
+        } else if (this.checkValue("hook")) {
+            return this.parseHook();
         } else if (this.checkValue("method") || (this.checkValue("stub") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
             return this.parseMethod();
         } else if (token.type === TokenType.keywordGlobals) {
@@ -238,6 +511,174 @@ export class Parser {
 
         // 无法识别的语句
         return null;
+    }
+
+    /**
+     * 解析函数接口声明
+     * function interface 接口名称 takes ... returns ...
+     */
+    private parseFunctionInterface(): FunctionInterfaceDeclaration | null {
+        const startToken = this.consume(TokenType.KeywordFunction, "Expected 'function'");
+        if (!startToken) return null;
+
+        // 消费 interface 关键字
+        const interfaceToken = this.consumeValue("interface", "Expected 'interface' after 'function'");
+        if (!interfaceToken) return null;
+
+        const startPos = startToken.start;
+
+        // 解析接口名称
+        const nameToken = this.lexer.current();
+        let name: Identifier | null = null;
+        if (nameToken && nameToken.type === TokenType.Identifier) {
+            name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
+            this.lexer.next();
+        } else {
+            this.error("Expected function interface name after 'interface'");
+            return null;
+        }
+
+        // 解析 takes
+        this.consumeValue("takes", "Expected 'takes'");
+        const parameters = this.parseTakes();
+
+        // 解析 returns
+        this.consumeValue("returns", "Expected 'returns'");
+        const returnType = this.parseReturns();
+
+        const endToken = this.lexer.current();
+        const endPos = endToken?.end || startPos;
+
+        return new FunctionInterfaceDeclaration({
+            name,
+            parameters,
+            returnType,
+            start: startPos,
+            end: endPos
+        });
+    }
+
+    /**
+     * 解析 JASS 类型声明
+     * 语法：
+     * - type NewType extends BaseType
+     * - type NewType extends BaseType array[Size]
+     * - type NewType extends BaseType array[ElementSize, StorageSize]
+     */
+    private parseTypeDeclaration(): TypeDeclaration | null {
+        const startToken = this.consume(TokenType.keywordType, "Expected 'type'");
+        if (!startToken) return null;
+
+        const startPos = startToken.start;
+
+        // 解析类型名称
+        const nameToken = this.lexer.current();
+        if (!nameToken || nameToken.type !== TokenType.Identifier) {
+            this.error("Expected type name after 'type'");
+            return null;
+        }
+        const name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
+        this.lexer.next();
+
+        // 解析 extends
+        if (!this.checkValue("extends")) {
+            this.error("Expected 'extends' after type name");
+            return null;
+        }
+        this.lexer.next(); // 消费 extends
+
+        // 解析基类型名称（可以是标识符或内置类型关键字，如 handle）
+        const baseToken = this.lexer.current();
+        if (!baseToken) {
+            this.error("Expected base type name after 'extends'");
+            return null;
+        }
+        const isBaseIdentifier =
+            baseToken.type === TokenType.Identifier ||
+            baseToken.type === TokenType.TypeInteger ||
+            baseToken.type === TokenType.TypeReal ||
+            baseToken.type === TokenType.TypeString ||
+            baseToken.type === TokenType.TypeBoolean ||
+            baseToken.type === TokenType.TypeCode ||
+            baseToken.type === TokenType.TypeHandle ||
+            baseToken.type === TokenType.TypeKey;
+        if (!isBaseIdentifier) {
+            this.error("Expected base type name after 'extends'");
+            return null;
+        }
+        const baseType = new Identifier(baseToken.value, baseToken.start, baseToken.end);
+        this.lexer.next();
+
+        // 可选的动态数组声明：array[Size] 或 array[ElemSize,StorageSize]
+        let isArray = false;
+        let elementSize: Identifier | IntegerLiteral | null = null;
+        let storageSize: Identifier | IntegerLiteral | null = null;
+        let endPos = baseToken.end;
+
+        if (this.checkValue("array")) {
+            isArray = true;
+            this.lexer.next(); // 消费 array
+
+            // 期望 [
+            if (!this.check(TokenType.LeftBracket)) {
+                this.error("Expected '[' after 'array' in type declaration");
+                return null;
+            }
+            this.lexer.next(); // 消费 [
+
+            // 解析第一个大小（整数常量或标识符）
+            const sizeToken = this.lexer.current();
+            if (!sizeToken || (sizeToken.type !== TokenType.IntegerLiteral && sizeToken.type !== TokenType.Identifier)) {
+                this.error("Expected size or constant name inside 'array[...]'");
+                return null;
+            }
+            if (sizeToken.type === TokenType.IntegerLiteral) {
+                const value = parseInt(sizeToken.value, 10);
+                elementSize = new IntegerLiteral(value, sizeToken.start, sizeToken.end);
+            } else {
+                elementSize = new Identifier(sizeToken.value, sizeToken.start, sizeToken.end);
+            }
+            this.lexer.next(); // 消费第一个大小
+
+            // 可选的 ,StorageSize
+            if (this.check(TokenType.Comma)) {
+                this.lexer.next(); // 消费 ,
+                const storageToken = this.lexer.current();
+                if (!storageToken || (storageToken.type !== TokenType.IntegerLiteral && storageToken.type !== TokenType.Identifier)) {
+                    this.error("Expected storage size or constant name after ',' in 'array[...]'");
+                    return null;
+                }
+                if (storageToken.type === TokenType.IntegerLiteral) {
+                    const val = parseInt(storageToken.value, 10);
+                    storageSize = new IntegerLiteral(val, storageToken.start, storageToken.end);
+                } else {
+                    storageSize = new Identifier(storageToken.value, storageToken.start, storageToken.end);
+                }
+                this.lexer.next(); // 消费第二个大小
+            }
+
+            // 期望 ]
+            if (!this.check(TokenType.RightBracket)) {
+                this.error("Expected ']' after array size specification");
+                return null;
+            }
+            const rightBracketToken = this.lexer.current();
+            endPos = rightBracketToken?.end || endPos;
+            this.lexer.next(); // 消费 ]
+        } else {
+            const endToken = this.lexer.current();
+            endPos = endToken?.end || baseToken.end;
+        }
+
+        return new TypeDeclaration({
+            name,
+            baseType,
+            isArray,
+            elementSize,
+            storageSize,
+            start: startPos,
+            end: endPos
+        });
     }
 
     /**
@@ -277,7 +718,6 @@ export class Parser {
             parameters,
             returnType,
             body,
-            isNative: false,
             start: startPos,
             end: endPos
         });
@@ -395,20 +835,73 @@ export class Parser {
         this.consumeValue("returns", "Expected 'returns'");
         const returnType = this.parseReturns();
 
+        // 解析 defaults 关键字（仅用于接口方法）
+        // defaults 后跟 "nothing" 或常量值
+        let defaultsValue: Expression | null = null;
+        if (this.checkValue("defaults")) {
+            this.lexer.next(); // 消费 defaults
+            
+            // 检查是否是 "nothing"
+            if (this.checkValue("nothing")) {
+                // 对于 "nothing"，我们需要创建一个特殊的表达式来表示它
+                // 但根据文档，defaults nothing 表示默认实现为空方法
+                // 我们可以使用 NullLiteral 或者创建一个特殊的标识符
+                const nothingToken = this.lexer.current();
+                if (nothingToken) {
+                    // 创建一个 Identifier 来表示 "nothing"
+                    defaultsValue = new Identifier("nothing", nothingToken.start, nothingToken.end);
+                    this.lexer.next();
+                }
+            } else {
+                // 解析常量值（可以是字面量或常量标识符）
+                // 根据文档，defaults 仅支持常量值
+                // 我们只解析基本表达式（字面量或标识符），不解析复杂表达式
+                const defaultValue = this.parsePrimaryExpression();
+                if (defaultValue) {
+                    defaultsValue = defaultValue;
+                } else {
+                    const defaultsToken = this.lexer.current();
+                    if (defaultsToken) {
+                        this.error(
+                            "Expected constant value or 'nothing' after 'defaults'. Defaults only supports constant literals or constant identifiers.",
+                            defaultsToken.start,
+                            defaultsToken.end,
+                            "Provide a constant value (e.g., 0, 0.0, false, \"string\") or 'nothing' after 'defaults'."
+                        );
+                    } else {
+                        this.error(
+                            "Expected constant value or 'nothing' after 'defaults'. Defaults only supports constant literals or constant identifiers.",
+                            undefined,
+                            undefined,
+                            "Provide a constant value (e.g., 0, 0.0, false, \"string\") or 'nothing' after 'defaults'."
+                        );
+                    }
+                }
+            }
+        }
+
         // 检查是否是 interface 中的 method 声明（不需要 body）
         // 如果下一个 token 是 endinterface，则不需要 body（interface 中的 method 声明）
+        // 如果下一个 token 是 method（下一个方法），说明这是在 interface 中，不需要 body
         // 如果下一个 token 是 endmethod，说明方法体为空（struct 中的 method 声明）
+        // 注意：在 interface 中，方法声明后如果有 defaults，应该直接检查 endinterface 或下一个 method
         let body: BlockStatement;
+        const currentToken = this.lexer.current();
+        const startPosForBody = currentToken?.start || { line: 0, position: 0 };
+        
+        // 检查是否是 interface 中的方法（下一个 token 是 endinterface 或 method）
         if (this.checkValue("endinterface")) {
             // interface 中的 method 声明，没有 body
             // 注意：不要消费 endinterface，让 parseInterface 来处理
-            const startPos = this.lexer.current()?.start || { line: 0, position: 0 };
-            body = new BlockStatement([], startPos, startPos);
+            body = new BlockStatement([], startPosForBody, startPosForBody);
+        } else if (this.checkValue("method") || (this.checkValue("static") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
+            // interface 中的 method 声明，下一个是另一个 method，没有 body
+            // 注意：不要消费 method，让 parseInterface 继续解析
+            body = new BlockStatement([], startPosForBody, startPosForBody);
         } else if (this.checkValue("endmethod")) {
             // 空的方法体（struct 中的 method 声明，但没有语句）
             // 注意：不要消费 endmethod，让 parseMethodBody 来处理
-            const startPos = this.lexer.current()?.start || { line: 0, position: 0 };
-            body = new BlockStatement([], startPos, startPos);
+            body = new BlockStatement([], startPosForBody, startPosForBody);
         } else {
             // struct 中的 method 声明，需要 body（可能为空）
             body = this.parseMethodBody();
@@ -426,6 +919,7 @@ export class Parser {
             isStub,
             isOperator,
             operatorName,
+            defaultsValue,
             start: startPos,
             end: endPos
         });
@@ -462,25 +956,52 @@ export class Parser {
         }
 
         // 消费 endmethod（只有在遇到 endmethod 时才消费）
+        let endPos = startPos;
         if (this.checkValue("endmethod")) {
+            const endmethodToken = this.lexer.current();
+            if (endmethodToken) {
+                endPos = endmethodToken.end; // 保存 endmethod 的位置
+            }
             this.lexer.next();
+        } else {
+            // 如果没有 endmethod，使用最后一个语句的位置
+            if (statements.length > 0) {
+                const lastStmt = statements[statements.length - 1];
+                if (lastStmt.end) {
+                    endPos = lastStmt.end;
+                }
+            }
         }
-
-        const endPos = this.lexer.current()?.end || startPos;
         return new BlockStatement(statements, startPos, endPos);
     }
 
     /**
      * 解析 native 函数声明
+     * @param isConstant 是否是常量函数（constant native function）
      */
-    private parseNative(): FunctionDeclaration | null {
-        const startToken = this.consume(TokenType.keywordNative, "Expected 'native'");
-        if (!startToken) return null;
+    private parseNative(isConstant: boolean = false): NativeDeclaration | null {
+        let startToken: IToken | null = null;
+        let startPos: { line: number, position: number } = { line: 0, position: 0 };
 
-        const startPos = startToken.start;
+        // 如果 isConstant 为 true，先消费 constant 关键字
+        if (isConstant) {
+            startToken = this.consume(TokenType.keywordConstant, "Expected 'constant'");
+            if (!startToken) return null;
+            startPos = startToken.start;
+        }
 
-        // 解析 function 关键字
-        this.consume(TokenType.KeywordFunction, "Expected 'function' after 'native'");
+        // 解析 native 关键字
+        const nativeToken = this.consume(TokenType.keywordNative, "Expected 'native'");
+        if (!nativeToken) return null;
+        
+        // 如果还没有设置 startPos，使用 native 的位置
+        if (!isConstant) {
+            startPos = nativeToken.start;
+        }
+
+        // native 本身就等价于 function，不需要额外的 function 关键字
+        // constant native FunctionName takes ... returns ...
+        // native FunctionName takes ... returns ...
 
         // 解析函数名
         const nameToken = this.lexer.current();
@@ -488,25 +1009,35 @@ export class Parser {
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
             this.lexer.next();
+        } else {
+            this.error("Expected native function name after 'native'");
+            return null;
         }
 
         // 解析 takes
-        this.consumeValue("takes", "Expected 'takes'");
+        if (!this.checkValue("takes")) {
+            this.error("Expected 'takes' after native function name");
+            return null;
+        }
+        this.lexer.next(); // 消费 takes
         const parameters = this.parseTakes();
 
         // 解析 returns
-        this.consumeValue("returns", "Expected 'returns'");
+        if (!this.checkValue("returns")) {
+            this.error("Expected 'returns' after 'takes' clause");
+            return null;
+        }
+        this.lexer.next(); // 消费 returns
         const returnType = this.parseReturns();
 
         const endToken = this.lexer.current();
         const endPos = endToken?.end || startPos;
 
-        return new FunctionDeclaration({
+        return new NativeDeclaration({
             name,
             parameters,
             returnType,
-            body: new BlockStatement(),
-            isNative: true,
+            isConstant: isConstant,
             start: startPos,
             end: endPos
         });
@@ -551,7 +1082,7 @@ export class Parser {
             }
 
             // 类型可以是：
-            // 1. 基本类型关键字（TypeInteger, TypeReal, TypeString, TypeBoolean, TypeCode, TypeHandle）
+            // 1. 基本类型关键字（TypeInteger, TypeReal, TypeString, TypeBoolean, TypeCode, TypeHandle, TypeKey）
             // 2. 标识符（自定义类型如 struct、interface 等）
             // 3. thistype 关键字
             // 检查是否为有效的类型 token
@@ -563,6 +1094,7 @@ export class Parser {
                 typeToken.type === TokenType.TypeBoolean ||
                 typeToken.type === TokenType.TypeCode ||
                 typeToken.type === TokenType.TypeHandle ||
+                typeToken.type === TokenType.TypeKey ||
                 this.checkValue("thistype");
 
             if (!isValidType) {
@@ -622,6 +1154,7 @@ export class Parser {
                 null,  // arrayWidth
                 null,  // arrayHeight
                 false, // isStatic
+                false, // isReadonly
                 typeToken.start,
                 nameToken.end
             );
@@ -654,7 +1187,7 @@ export class Parser {
      */
     private parseReturns(): Identifier | ThistypeExpression | null {
         const token = this.lexer.current();
-        // 支持 Identifier 和类型关键字（如 integer, real, string, boolean, code, handle 等）
+        // 支持 Identifier 和类型关键字（如 integer, real, string, boolean, code, handle, key 等）
         // 以及自定义类型（如 thistype）
         if (token && (token.type === TokenType.Identifier || 
                       token.type === TokenType.TypeInteger ||
@@ -662,7 +1195,8 @@ export class Parser {
                       token.type === TokenType.TypeString ||
                       token.type === TokenType.TypeBoolean ||
                       token.type === TokenType.TypeCode ||
-                      token.type === TokenType.TypeHandle)) {
+                      token.type === TokenType.TypeHandle ||
+                      token.type === TokenType.TypeKey)) {
             // 检查是否是 thistype
             if (this.checkValue("thistype")) {
                 const returnType = new ThistypeExpression(token.start, token.end);
@@ -739,6 +1273,8 @@ export class Parser {
 
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
+            // 检查重复声明
+            this.checkDuplicateDeclaration(nameToken.value, "struct", nameToken.start);
             this.lexer.next();
 
             // 检查是否有索引空间增强语法：struct X[10000]
@@ -821,10 +1357,63 @@ export class Parser {
                 continue;
             }
 
+            // 检查不合法组合：private onDestroy（onDestroy 必须是 public）
+            // 注意：我们需要在解析方法之前检查，因为 private 关键字在 method 之前
+            let isPrivateMethod = false;
+            if (this.checkValue("private")) {
+                const peekToken = this.lexer.peek();
+                if (peekToken && peekToken.value?.toLowerCase() === "method") {
+                    isPrivateMethod = true;
+                    // 保存当前位置以便后续检查方法名
+                    const savedPos = this.lexer.current();
+                    // 暂时消费 private 和 method 来检查方法名
+                    this.lexer.next(); // 消费 private
+                    if (this.checkValue("method")) {
+                        this.lexer.next(); // 消费 method
+                        // 检查是否是 operator
+                        if (this.checkValue("operator")) {
+                            // operator 方法，跳过
+                            this.lexer.next();
+                        } else {
+                            // 检查方法名
+                            const methodNameToken = this.lexer.current();
+                            if (methodNameToken && methodNameToken.type === TokenType.Identifier) {
+                                const methodName = methodNameToken.value.toLowerCase();
+                                if (methodName === "ondestroy") {
+                                    if (savedPos) {
+                                        this.error(
+                                            `Method 'onDestroy' cannot be private. The onDestroy method must be public as it is automatically called by the destroy method.`,
+                                            savedPos.start,
+                                            savedPos.end,
+                                            `Remove 'private' keyword before 'onDestroy'. The onDestroy method must be public.`
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                        // 回退到 private 之前
+                        // 注意：lexer 可能不支持回退，所以我们需要重新解析
+                        // 实际上，我们应该让 parseMethod 处理 private，但为了简化，我们在这里检查
+                    }
+                    // 回退：由于 lexer 可能不支持回退，我们需要让 parseMethod 知道这是 private
+                    // 但 parseMethod 不处理 private，所以我们需要在 struct 解析时处理
+                }
+            }
+
             // 尝试解析为方法声明（支持 stub method）
             if (this.checkValue("method") || (this.checkValue("stub") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
                 const member = this.parseMethod();
                 if (member) {
+                    // 检查是否是 private onDestroy（通过检查方法名和之前的 private 标记）
+                    if (isPrivateMethod && member.name && member.name.toString().toLowerCase() === "ondestroy") {
+                        const memberStart = member.start || { line: 0, position: 0 };
+                        this.error(
+                            `Method 'onDestroy' cannot be private. The onDestroy method must be public as it is automatically called by the destroy method.`,
+                            memberStart,
+                            member.end || memberStart,
+                            `Remove 'private' keyword before 'onDestroy'. The onDestroy method must be public.`
+                        );
+                    }
                     members.push(member);
                     continue;
                 }
@@ -888,6 +1477,85 @@ export class Parser {
             }
 
             // 尝试解析为变量声明（类型名 + 标识符）
+            // 检查是否有 private、public 或 readonly 关键字（用于变量成员）
+            // 注意：这些关键字可以组合使用，如 private readonly、public readonly
+            let isPrivateVar = false;
+            let isPublicVar = false;
+            let isReadonlyVar = false;
+            
+            // 检查 private 关键字（可能后面跟着 readonly）
+            if (this.checkValue("private")) {
+                const peekToken = this.lexer.peek();
+                // 检查下一个 token 是否是 readonly、类型关键字或标识符
+                if (peekToken && (
+                    peekToken.value?.toLowerCase() === "readonly" ||
+                    peekToken.type === TokenType.TypeInteger ||
+                    peekToken.type === TokenType.TypeReal ||
+                    peekToken.type === TokenType.TypeString ||
+                    peekToken.type === TokenType.TypeBoolean ||
+                    peekToken.type === TokenType.TypeCode ||
+                    peekToken.type === TokenType.TypeHandle ||
+                    peekToken.type === TokenType.TypeKey ||
+                    peekToken.type === TokenType.Identifier ||
+                    peekToken.value?.toLowerCase() === "static" ||
+                    peekToken.value?.toLowerCase() === "constant"
+                )) {
+                    isPrivateVar = true;
+                    this.lexer.next(); // 消费 private
+                    // 检查是否还有 readonly
+                    if (this.checkValue("readonly")) {
+                        isReadonlyVar = true;
+                        this.lexer.next(); // 消费 readonly
+                    }
+                }
+            } 
+            // 检查 public 关键字（可能后面跟着 readonly）
+            else if (this.checkValue("public")) {
+                const peekToken = this.lexer.peek();
+                // 检查下一个 token 是否是 readonly、类型关键字或标识符
+                if (peekToken && (
+                    peekToken.value?.toLowerCase() === "readonly" ||
+                    peekToken.type === TokenType.TypeInteger ||
+                    peekToken.type === TokenType.TypeReal ||
+                    peekToken.type === TokenType.TypeString ||
+                    peekToken.type === TokenType.TypeBoolean ||
+                    peekToken.type === TokenType.TypeCode ||
+                    peekToken.type === TokenType.TypeHandle ||
+                    peekToken.type === TokenType.TypeKey ||
+                    peekToken.type === TokenType.Identifier ||
+                    peekToken.value?.toLowerCase() === "static" ||
+                    peekToken.value?.toLowerCase() === "constant"
+                )) {
+                    isPublicVar = true;
+                    this.lexer.next(); // 消费 public
+                    // 检查是否还有 readonly
+                    if (this.checkValue("readonly")) {
+                        isReadonlyVar = true;
+                        this.lexer.next(); // 消费 readonly
+                    }
+                }
+            } 
+            // 检查 readonly 关键字（可能单独使用，或与 static/constant 组合）
+            else if (this.checkValue("readonly")) {
+                const peekToken = this.lexer.peek();
+                // 检查下一个 token 是否是 constant、static、类型关键字或标识符
+                if (peekToken && (
+                    peekToken.value?.toLowerCase() === "constant" ||
+                    peekToken.value?.toLowerCase() === "static" ||
+                    peekToken.type === TokenType.TypeInteger ||
+                    peekToken.type === TokenType.TypeReal ||
+                    peekToken.type === TokenType.TypeString ||
+                    peekToken.type === TokenType.TypeBoolean ||
+                    peekToken.type === TokenType.TypeCode ||
+                    peekToken.type === TokenType.TypeHandle ||
+                    peekToken.type === TokenType.TypeKey ||
+                    peekToken.type === TokenType.Identifier
+                )) {
+                    isReadonlyVar = true;
+                    this.lexer.next(); // 消费 readonly
+                }
+            }
+            
             const token = this.lexer.current();
             if (token) {
                 // 再次检查是否是 endstruct（在检查 token 后）
@@ -901,10 +1569,11 @@ export class Parser {
                                     token.type === TokenType.TypeString ||
                                     token.type === TokenType.TypeBoolean ||
                                     token.type === TokenType.TypeCode ||
-                                    token.type === TokenType.TypeHandle;
+                                    token.type === TokenType.TypeHandle ||
+                                    token.type === TokenType.TypeKey;
                 const isIdentifier = token.type === TokenType.Identifier;
                 if (isTypeKeyword || isIdentifier) {
-                    const varDecl = this.parseVariableDeclaration(false);
+                    const varDecl = this.parseVariableDeclaration(false, isReadonlyVar);
                     if (varDecl) {
                         members.push(varDecl);
                         continue;
@@ -949,14 +1618,53 @@ export class Parser {
         }
 
         // 消费 endstruct
+        let endPos = startPos;
         if (this.checkValue("endstruct")) {
+            const endstructToken = this.lexer.current();
+            if (endstructToken) {
+                endPos = endstructToken.end; // 保存 endstruct 的位置
+            }
             this.lexer.next();
         } else {
-            this.error("Expected 'endstruct' to close struct declaration");
+            const structName = name?.toString() || "unknown";
+            const currentToken = this.lexer.current();
+            if (currentToken) {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed struct '${structName}'. Expected 'endstruct' to close the struct declaration that started at line ${startPos.line + 1}.`,
+                    currentToken.start,
+                    currentToken.end,
+                    `Add 'endstruct' before '${currentToken.value || "this token"}' to close the struct declaration.`
+                );
+                // 尝试同步到下一个同步点
+                this.synchronize();
+                // 同步后，使用当前 token 的位置作为 endPos
+                const syncToken = this.lexer.current();
+                if (syncToken) {
+                    endPos = syncToken.start; // 使用同步点的开始位置
+                }
+            } else {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed struct '${structName}'. Expected 'endstruct' to close the struct declaration that started at line ${startPos.line + 1}. Reached end of file.`,
+                    startPos,
+                    endPos,
+                    `Add 'endstruct' at the end of the struct declaration to close it.`
+                );
+            }
         }
-
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
 
         return new StructDeclaration({
             name,
@@ -984,9 +1692,16 @@ export class Parser {
         let name: Identifier | null = null;
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
+            // 检查重复声明
+            this.checkDuplicateDeclaration(nameToken.value, "interface", nameToken.start);
             this.lexer.next();
         } else {
-            this.error("Expected interface name after 'interface'");
+            this.error(
+                "Expected interface name after 'interface'",
+                nameToken?.start,
+                nameToken?.end,
+                "Provide a valid identifier name for the interface."
+            );
             return null;
         }
 
@@ -1042,8 +1757,73 @@ export class Parser {
                 break;
             }
 
+            // 检查不合法组合：interface 中不允许 stub method
+            if (this.checkValue("stub")) {
+                const peekToken = this.lexer.peek();
+                if (peekToken && peekToken.value?.toLowerCase() === "method") {
+                    const stubToken = this.lexer.current();
+                    if (stubToken) {
+                        this.error(
+                            `Interface '${name?.toString() || "unknown"}' cannot contain stub methods. Stub methods are only allowed in struct declarations.`,
+                            stubToken.start,
+                            stubToken.end,
+                            `Remove 'stub' keyword or move this method to a struct that implements this interface.`
+                        );
+                    }
+                    // 跳过 stub method，继续解析
+                    this.lexer.next(); // 消费 stub
+                    if (this.checkValue("method")) {
+                        this.lexer.next(); // 消费 method
+                        // 尝试跳过整个 method 声明
+                        while (!this.isAtEnd() && !this.checkValue("endinterface") && !this.checkValue("endmethod")) {
+                            this.lexer.next();
+                        }
+                        if (this.checkValue("endmethod")) {
+                            this.lexer.next();
+                        }
+                    }
+                    continue;
+                }
+            }
+
+            // 检查不合法组合：interface 中不允许 private method
+            if (this.checkValue("private")) {
+                const peekToken = this.lexer.peek();
+                if (peekToken && peekToken.value?.toLowerCase() === "method") {
+                    const privateToken = this.lexer.current();
+                    if (privateToken) {
+                        this.error(
+                            `Interface '${name?.toString() || "unknown"}' cannot contain private methods. Interface methods must be public.`,
+                            privateToken.start,
+                            privateToken.end,
+                            `Remove 'private' keyword. Interface methods are public by default.`
+                        );
+                    }
+                    // 跳过 private method，继续解析
+                    this.lexer.next(); // 消费 private
+                    if (this.checkValue("method")) {
+                        this.lexer.next(); // 消费 method
+                        // 尝试跳过整个 method 声明
+                        while (!this.isAtEnd() && !this.checkValue("endinterface") && !this.checkValue("endmethod")) {
+                            this.lexer.next();
+                        }
+                        if (this.checkValue("endmethod")) {
+                            this.lexer.next();
+                        }
+                    }
+                    continue;
+                }
+            }
+
             const member = this.parseStatement();
             if (member) {
+                // 检查 member 是否是 MethodDeclaration，如果是，检查是否有不合法修饰符
+                if (member instanceof MethodDeclaration) {
+                    if (member.isStub) {
+                        const memberStart = member.start || { line: 0, position: 0 };
+                        this.error(`Interface '${name?.toString() || "unknown"}' cannot contain stub methods. Stub methods are only allowed in struct declarations.`, memberStart, member.end || memberStart);
+                    }
+                }
                 members.push(member);
             } else {
                 // 如果无法解析，检查是否是 endinterface
@@ -1059,14 +1839,53 @@ export class Parser {
         }
 
         // 消费 endinterface
+        let endPos = startPos;
         if (this.checkValue("endinterface")) {
+            const endinterfaceToken = this.lexer.current();
+            if (endinterfaceToken) {
+                endPos = endinterfaceToken.end; // 保存 endinterface 的位置
+            }
             this.lexer.next();
         } else {
-            this.error("Expected 'endinterface' to close interface declaration");
+            const interfaceName = name?.toString() || "unknown";
+            const currentToken = this.lexer.current();
+            if (currentToken) {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed interface '${interfaceName}'. Expected 'endinterface' to close the interface declaration that started at line ${startPos.line + 1}.`,
+                    currentToken.start,
+                    currentToken.end,
+                    `Add 'endinterface' before '${currentToken.value || "this token"}' to close the interface declaration.`
+                );
+                // 尝试同步到下一个同步点
+                this.synchronize();
+                // 同步后，使用当前 token 的位置作为 endPos
+                const syncToken = this.lexer.current();
+                if (syncToken) {
+                    endPos = syncToken.start; // 使用同步点的开始位置
+                }
+            } else {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed interface '${interfaceName}'. Expected 'endinterface' to close the interface declaration that started at line ${startPos.line + 1}. Reached end of file.`,
+                    startPos,
+                    endPos,
+                    `Add 'endinterface' at the end of the interface declaration to close it.`
+                );
+            }
         }
-
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
 
         return new InterfaceDeclaration({
             name,
@@ -1090,6 +1909,8 @@ export class Parser {
         let name: Identifier | null = null;
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
+            // 检查重复声明
+            this.checkDuplicateDeclaration(nameToken.value, "module", nameToken.start);
             this.lexer.next();
         }
 
@@ -1165,12 +1986,53 @@ export class Parser {
         }
 
         // 消费 endmodule
+        let endPos = startPos;
         if (this.checkValue("endmodule")) {
+            const endmoduleToken = this.lexer.current();
+            if (endmoduleToken) {
+                endPos = endmoduleToken.end; // 保存 endmodule 的位置
+            }
             this.lexer.next();
+        } else {
+            const moduleName = name?.toString() || "unknown";
+            const currentToken = this.lexer.current();
+            if (currentToken) {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed module '${moduleName}'. Expected 'endmodule' to close the module declaration that started at line ${startPos.line + 1}.`,
+                    currentToken.start,
+                    currentToken.end,
+                    `Add 'endmodule' before '${currentToken.value || "this token"}' to close the module declaration.`
+                );
+                // 尝试同步到下一个同步点
+                this.synchronize();
+                // 同步后，使用当前 token 的位置作为 endPos
+                const syncToken = this.lexer.current();
+                if (syncToken) {
+                    endPos = syncToken.start; // 使用同步点的开始位置
+                }
+            } else {
+                // 使用最后一个成员的位置作为 endPos（如果存在）
+                if (members.length > 0) {
+                    const lastMember = members[members.length - 1];
+                    if (lastMember.end) {
+                        endPos = lastMember.end;
+                    }
+                }
+                this.error(
+                    `Unclosed module '${moduleName}'. Expected 'endmodule' to close the module declaration that started at line ${startPos.line + 1}. Reached end of file.`,
+                    startPos,
+                    endPos,
+                    `Add 'endmodule' at the end of the module declaration to close it.`
+                );
+            }
         }
-
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
 
         return new ModuleDeclaration({
             name,
@@ -1281,6 +2143,62 @@ export class Parser {
             this.lexer.next();
         }
 
+        // 解析 initializer（可选）
+        let initializer: Identifier | null = null;
+        if (this.checkValue("initializer")) {
+            this.lexer.next(); // 消费 initializer
+            const initToken = this.lexer.current();
+            if (initToken && initToken.type === TokenType.Identifier) {
+                initializer = new Identifier(initToken.value, initToken.start, initToken.end);
+                this.lexer.next();
+            } else {
+                this.error("Expected function name after 'initializer'");
+            }
+        }
+
+        // 解析依赖关系：requires/needs/uses（可选，可以多个，用逗号分隔）
+        const dependencies: Identifier[] = [];
+        const optionalDependencies: Set<string> = new Set();
+        
+        // 支持 requires/needs/uses，它们功能相同
+        while (this.checkValue("requires") || this.checkValue("needs") || this.checkValue("uses")) {
+            this.lexer.next(); // 消费 requires/needs/uses
+            
+            // 解析依赖列表（用逗号分隔）
+            let firstDep = true;
+            while (true) {
+                // 检查是否有 optional 关键字
+                let isOptional = false;
+                if (this.checkValue("optional")) {
+                    isOptional = true;
+                    this.lexer.next(); // 消费 optional
+                }
+                
+                const depToken = this.lexer.current();
+                if (depToken && depToken.type === TokenType.Identifier) {
+                    const dep = new Identifier(depToken.value, depToken.start, depToken.end);
+                    dependencies.push(dep);
+                    if (isOptional) {
+                        optionalDependencies.add(dep.toString());
+                    }
+                    this.lexer.next();
+                } else {
+                    if (firstDep) {
+                        this.error("Expected library name after 'requires'/'needs'/'uses'");
+                    }
+                    break;
+                }
+                
+                // 检查是否有逗号继续
+                if (this.check(TokenType.Comma)) {
+                    this.lexer.next(); // 消费逗号
+                    firstDep = false;
+                } else {
+                    break;
+                }
+            }
+        }
+
         // 解析库内容
         const statements: Statement[] = [];
         while (!this.isAtEnd() && !this.checkValue("endlibrary")) {
@@ -1302,15 +2220,34 @@ export class Parser {
         }
 
         // 消费 endlibrary
+        let endPos = startPos;
         if (this.checkValue("endlibrary")) {
+            const endlibraryToken = this.lexer.current();
+            if (endlibraryToken) {
+                endPos = endlibraryToken.end; // 保存 endlibrary 的位置
+            }
             this.lexer.next();
+        } else {
+            // 如果没有 endlibrary，使用最后一个成员的位置
+            if (statements.length > 0) {
+                const lastStmt = statements[statements.length - 1];
+                if (lastStmt.end) {
+                    endPos = lastStmt.end;
+                }
+            }
         }
 
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
-
-        // 返回一个 BlockStatement 作为库的表示
-        return new BlockStatement(statements, startPos, endPos);
+        // 返回 LibraryDeclaration
+        return new LibraryDeclaration({
+            name,
+            members: statements,
+            dependencies,
+            initializer,
+            isLibraryOnce,
+            optionalDependencies,
+            start: startPos,
+            end: endPos
+        });
     }
 
     /**
@@ -1328,6 +2265,19 @@ export class Parser {
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
             this.lexer.next();
+        }
+
+        // 解析 initializer（可选，scope 也支持 initializer）
+        let initializer: Identifier | null = null;
+        if (this.checkValue("initializer")) {
+            this.lexer.next(); // 消费 initializer
+            const initToken = this.lexer.current();
+            if (initToken && initToken.type === TokenType.Identifier) {
+                initializer = new Identifier(initToken.value, initToken.start, initToken.end);
+                this.lexer.next();
+            } else {
+                this.error("Expected function name after 'initializer'");
+            }
         }
 
         // 解析作用域内容
@@ -1351,15 +2301,515 @@ export class Parser {
         }
 
         // 消费 endscope
+        let endPos = startPos;
         if (this.checkValue("endscope")) {
+            const endscopeToken = this.lexer.current();
+            if (endscopeToken) {
+                endPos = endscopeToken.end; // 保存 endscope 的位置
+            }
             this.lexer.next();
+        } else {
+            // 如果没有 endscope，使用最后一个成员的位置
+            if (statements.length > 0) {
+                const lastStmt = statements[statements.length - 1];
+                if (lastStmt.end) {
+                    endPos = lastStmt.end;
+                }
+            }
         }
 
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
+        // 返回 ScopeDeclaration
+        return new ScopeDeclaration({
+            name,
+            members: statements,
+            initializer,
+            start: startPos,
+            end: endPos
+        });
+    }
 
-        // 返回一个 BlockStatement 作为作用域的表示
-        return new BlockStatement(statements, startPos, endPos);
+    /**
+     * 解析 Hook 语句
+     * 语法：hook FunctionName HookFunctionName
+     * 或：hook FunctionName StructName.MethodName
+     */
+    private parseHook(): Statement | null {
+        const startToken = this.lexer.current();
+        if (!startToken) return null;
+
+        // 消费 hook 关键字
+        if (!this.checkValue("hook")) {
+            return null;
+        }
+        this.lexer.next();
+
+        const startPos = startToken.start;
+
+        // 解析被钩住的函数名（第一个标识符）
+        const targetToken = this.lexer.current();
+        if (!targetToken || targetToken.type !== TokenType.Identifier) {
+            this.error("Expected function name after 'hook'");
+            return null;
+        }
+        const targetFunction = new Identifier(targetToken.value, targetToken.start, targetToken.end);
+        this.lexer.next();
+
+        // 解析钩子函数名（第二个标识符或 StructName.MethodName）
+        const hookToken = this.lexer.current();
+        if (!hookToken || hookToken.type !== TokenType.Identifier) {
+            this.error("Expected hook function name after target function name");
+            return null;
+        }
+        
+        // 检查是否是 StructName.MethodName 格式
+        const hookName = hookToken.value;
+        this.lexer.next();
+        
+        // 检查下一个 token 是否是点号
+        if (this.check(TokenType.Dot)) {
+            // 这是 StructName.MethodName 格式
+            this.lexer.next(); // 消费点号
+            
+            const methodToken = this.lexer.current();
+            if (!methodToken || methodToken.type !== TokenType.Identifier) {
+                this.error("Expected method name after '.' in hook statement");
+                return null;
+            }
+            
+            const hookStruct = new Identifier(hookName, hookToken.start, hookToken.end);
+            const hookMethod = new Identifier(methodToken.value, methodToken.start, methodToken.end);
+            this.lexer.next();
+            
+            const endToken = this.lexer.current();
+            const endPos = endToken?.end || methodToken.end;
+            
+            return new HookStatement({
+                targetFunction,
+                hookStruct,
+                hookMethod,
+                start: startPos,
+                end: endPos
+            });
+        } else {
+            // 这是普通函数名格式
+            const hookFunction = new Identifier(hookName, hookToken.start, hookToken.end);
+            const endToken = this.lexer.current();
+            const endPos = endToken?.end || hookToken.end;
+            
+            return new HookStatement({
+                targetFunction,
+                hookFunction,
+                start: startPos,
+                end: endPos
+            });
+        }
+    }
+
+    /**
+     * 解析 Inject 语句
+     * //! inject main/config ... //! endinject
+     * 注意：由于这是预处理器指令，内容会在预处理阶段处理
+     * 这里我们只识别指令的开始和结束，内容作为原始字符串存储
+     */
+    private parseInject(injectType: "main" | "config"): Statement | null {
+        const startToken = this.lexer.current();
+        if (!startToken) return null;
+        
+        const startPos = startToken.start;
+        this.lexer.next(); // 消费 //! inject 行
+        
+        // 收集注入内容，直到遇到 //! endinject
+        const contentParts: string[] = [];
+        let endPos = startPos;
+        let foundEnd = false;
+        let lastLine = startPos.line;
+        
+        while (!this.isAtEnd()) {
+            const token = this.lexer.current();
+            if (!token) break;
+            
+            // 检查是否是 //! endinject
+            if (this.isComment()) {
+                const commentValue = token.value || "";
+                if (/^\s*\/\/!\s*endinject\s*$/i.test(commentValue)) {
+                    endPos = token.end;
+                    this.lexer.next(); // 消费 //! endinject
+                    foundEnd = true;
+                    break;
+                }
+            }
+            
+            // 收集当前 token 的值
+            // 如果 token 跨越了多行，需要添加换行符
+            const tokenLine = token.start.line;
+            if (tokenLine > lastLine) {
+                // 添加换行符（每行一个）
+                const lineDiff = tokenLine - lastLine;
+                for (let i = 0; i < lineDiff; i++) {
+                    contentParts.push("\n");
+                }
+            } else if (tokenLine === lastLine && contentParts.length > 0 && !contentParts[contentParts.length - 1].endsWith("\n")) {
+                // 同一行，如果上一个 token 不是换行符，可能需要添加空格
+                // 但为了简化，我们假设 token 值本身已经包含了必要的空格
+                // 这里不添加空格，因为某些 token（如标识符）之间可能需要空格，但 lexer 可能已经处理了
+            }
+            
+            const tokenValue = token.value || "";
+            if (tokenValue) {
+                contentParts.push(tokenValue);
+            }
+            lastLine = token.end.line;
+            
+            this.lexer.next();
+        }
+        
+        if (!foundEnd) {
+            this.error(
+                `Unclosed //! inject ${injectType} block. Expected //! endinject to close the inject block that started at line ${startPos.line + 1}.`,
+                startPos,
+                endPos,
+                `Add '//! endinject' to close the inject block.`
+            );
+        }
+        
+        // 合并内容，移除末尾的换行符（如果有）
+        let content = contentParts.join("");
+        // 移除末尾的换行符
+        while (content.endsWith("\n")) {
+            content = content.slice(0, -1);
+        }
+        
+        return new InjectStatement({
+            injectType,
+            content,
+            start: startPos,
+            end: endPos
+        });
+    }
+
+    /**
+     * 解析文本宏定义
+     * //! textmacro NAME [takes param1, param2]
+     * ... body ...
+     * //! endtextmacro
+     */
+    private parseTextMacro(): Statement | null {
+        const startToken = this.lexer.current();
+        if (!startToken || startToken.type !== TokenType.TextMacroDirective) {
+            return null;
+        }
+        
+        const startPos = startToken.start;
+        const directiveValue = startToken.value || "";
+        
+        // 解析 textmacro 指令：//! textmacro NAME [takes param1, param2]
+        // 移除开头的空白
+        const trimmed = directiveValue.trim();
+        
+        // 匹配：textmacro NAME [takes param1, param2]
+        const textMacroMatch = trimmed.match(/^textmacro\s+(\w+)(?:\s+takes\s+([^]*))?$/i);
+        if (!textMacroMatch) {
+            this.error(
+                "Malformed //! textmacro syntax",
+                startPos,
+                startToken.end,
+                "Expected: //! textmacro <name> [takes param1, param2, ...]"
+            );
+            this.lexer.next();
+            return null;
+        }
+        
+        const name = textMacroMatch[1];
+        const takesStr = textMacroMatch[2] || "";
+        
+        // 解析参数列表
+        const parameters: string[] = [];
+        if (takesStr.trim()) {
+            // 分割参数（按逗号分割）
+            const paramParts = takesStr.split(',').map(p => p.trim()).filter(p => p.length > 0);
+            parameters.push(...paramParts);
+        }
+        
+        this.lexer.next(); // 消费 //! textmacro 行
+        
+        // 收集 body 内容，直到遇到 //! endtextmacro
+        // 注意：由于已经进行了词法分析，我们需要收集 token 并重建代码行
+        // 为了简化，我们按行收集 token，然后重建每行的内容
+        const bodyLines: string[] = [];
+        let endPos = startPos;
+        let foundEnd = false;
+        let lastLineNumber = startPos.line;
+        
+        while (!this.isAtEnd()) {
+            const token = this.lexer.current();
+            if (!token) break;
+            
+            // 检查是否是 //! endtextmacro
+            if (this.isTextMacroDirective()) {
+                const directiveValue = token.value || "";
+                if (/^\s*endtextmacro\b/i.test(directiveValue)) {
+                    endPos = token.end;
+                    this.lexer.next(); // 消费 //! endtextmacro
+                    foundEnd = true;
+                    break;
+                }
+            }
+            
+            const tokenLine = token.start.line;
+            
+            // 如果跳过了行，添加空行
+            if (tokenLine > lastLineNumber + 1) {
+                for (let i = lastLineNumber + 1; i < tokenLine; i++) {
+                    bodyLines.push('');
+                }
+            }
+            
+            // 收集当前行的所有 token
+            const lineTokens: IToken[] = [];
+            
+            // 收集同一行的所有 token
+            while (!this.isAtEnd()) {
+                const currentToken = this.lexer.current();
+                if (!currentToken) break;
+                
+                if (currentToken.start.line !== tokenLine) {
+                    break; // 下一行了
+                }
+                
+                // 检查是否是 endtextmacro
+                if (this.isTextMacroDirective()) {
+                    const dirValue = currentToken.value || "";
+                    if (/^\s*endtextmacro\b/i.test(dirValue)) {
+                        break; // 遇到 endtextmacro，停止收集
+                    }
+                }
+                
+                lineTokens.push(currentToken);
+                this.lexer.next();
+            }
+            
+            // 重建行内容
+            if (lineTokens.length > 0) {
+                // 尝试重建原始行：根据 token 的位置和值重建
+                // 简化：使用 token 值，在适当位置添加空格
+                const parts: string[] = [];
+                let lastEndPos = lineTokens[0].start.position;
+                
+                for (const t of lineTokens) {
+                    // 如果 token 之间有间隙，添加空格
+                    if (t.start.position > lastEndPos) {
+                        parts.push(' '.repeat(t.start.position - lastEndPos));
+                    }
+                    parts.push(t.value);
+                    lastEndPos = t.end.position;
+                }
+                
+                const lineContent = parts.join('').trimEnd();
+                bodyLines.push(lineContent);
+            } else {
+                bodyLines.push(''); // 空行
+            }
+            
+            lastLineNumber = tokenLine;
+        }
+        
+        if (!foundEnd) {
+            this.error(
+                `Unclosed //! textmacro block. Expected //! endtextmacro to close the textmacro that started at line ${startPos.line + 1}.`,
+                startPos,
+                endPos,
+                `Add '//! endtextmacro' to close the textmacro block.`
+            );
+        }
+        
+        return new TextMacroStatement({
+            name,
+            parameters,
+            body: bodyLines,
+            start: startPos,
+            end: endPos
+        });
+    }
+
+    /**
+     * 解析运行文本宏
+     * //! runtextmacro [optional] NAME(param1, param2)
+     */
+    private parseRunTextMacro(): Statement | null {
+        const startToken = this.lexer.current();
+        if (!startToken || startToken.type !== TokenType.TextMacroDirective) {
+            return null;
+        }
+        
+        const startPos = startToken.start;
+        const endPos = startToken.end;
+        const directiveValue = startToken.value || "";
+        
+        // 解析 runtextmacro 指令：//! runtextmacro [optional] NAME(param1, param2)
+        const trimmed = directiveValue.trim();
+        
+        // 匹配：runtextmacro [optional] NAME [(param1, param2, ...)]
+        const runTextMacroMatch = trimmed.match(/^runtextmacro(?:\s+(optional))?(?:\s+(\w+))?(?:\s*\(([^)]*)\))?$/i);
+        if (!runTextMacroMatch) {
+            this.error(
+                "Malformed //! runtextmacro syntax",
+                startPos,
+                endPos,
+                "Expected: //! runtextmacro [optional] <name>(<params>)"
+            );
+            this.lexer.next();
+            return null;
+        }
+        
+        const optional = runTextMacroMatch[1] === "optional";
+        const name = runTextMacroMatch[2] || "";
+        const paramsStr = runTextMacroMatch[3] || "";
+        
+        if (!name) {
+            this.error(
+                "runtextmacro name not declared",
+                startPos,
+                endPos,
+                "Provide a name for runtextmacro"
+            );
+            this.lexer.next();
+            return null;
+        }
+        
+        // 解析参数列表
+        const parameters: string[] = [];
+        if (paramsStr.trim()) {
+            // 处理字符串参数和普通参数
+            // 参数可能是字符串字面量（带引号）或普通标识符/值
+            let current = 0;
+            const len = paramsStr.length;
+            
+            while (current < len) {
+                // 跳过空白
+                while (current < len && /\s/.test(paramsStr[current])) {
+                    current++;
+                }
+                if (current >= len) break;
+                
+                // 检查是否是字符串
+                if (paramsStr[current] === '"') {
+                    const start = current;
+                    current++; // 跳过开始引号
+                    // 查找结束引号
+                    while (current < len && paramsStr[current] !== '"') {
+                        if (paramsStr[current] === '\\' && current + 1 < len) {
+                            current += 2; // 跳过转义字符
+                        } else {
+                            current++;
+                        }
+                    }
+                    if (current < len) {
+                        const stringContent = paramsStr.substring(start + 1, current);
+                        parameters.push(stringContent);
+                        current++; // 跳过结束引号
+                    }
+                } else {
+                    // 非字符串参数，按逗号分割
+                    const commaIndex = paramsStr.indexOf(',', current);
+                    const endIndex = commaIndex === -1 ? len : commaIndex;
+                    const param = paramsStr.substring(current, endIndex).trim();
+                    if (param) {
+                        parameters.push(param);
+                    }
+                    current = endIndex + 1;
+                }
+                
+                // 跳过逗号后的空白
+                while (current < len && /\s/.test(paramsStr[current])) {
+                    current++;
+                }
+                if (current < len && paramsStr[current] === ',') {
+                    current++;
+                }
+            }
+        }
+        
+        this.lexer.next(); // 消费 //! runtextmacro 行
+        
+        // 如果有 TextMacroExpander，尝试展开宏
+        if (this.textMacroExpander) {
+            try {
+                const expandedLines = this.textMacroExpander.expand(
+                    name,
+                    parameters,
+                    optional,
+                    startPos
+                );
+                
+                // 如果可选宏不存在，返回 null（跳过）
+                if (expandedLines.length === 0 && optional) {
+                    return null;
+                }
+                
+                // 将展开后的代码解析为 Statement
+                // 方案：创建一个包含展开代码的 BlockStatement
+                const expandedStatements: Statement[] = [];
+                
+                // 为每行展开的代码创建临时 parser 解析
+                // 注意：我们需要将多行代码合并，然后解析
+                const expandedContent = expandedLines.join('\n');
+                if (expandedContent.trim()) {
+                    // 创建临时 parser 解析展开后的代码
+                    const expandedParser = new Parser(expandedContent, this.filePath, this.textMacroExpander);
+                    const parsedBlock = expandedParser.parse();
+                    
+                    // 将解析后的语句添加到列表中
+                    if (parsedBlock && parsedBlock.body) {
+                        expandedStatements.push(...parsedBlock.body);
+                    }
+                    
+                    // 合并错误
+                    if (expandedParser.errors.errors.length > 0) {
+                        this.errors.errors.push(...expandedParser.errors.errors);
+                    }
+                    if (expandedParser.errors.warnings.length > 0) {
+                        this.errors.warnings.push(...expandedParser.errors.warnings);
+                    }
+                }
+                
+                // 如果成功展开，返回包含展开语句的 BlockStatement
+                if (expandedStatements.length > 0) {
+                    return new BlockStatement(expandedStatements, startPos, endPos);
+                } else {
+                    // 展开后没有语句，返回 null
+                    return null;
+                }
+            } catch (error) {
+                // 展开失败，报告错误
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                this.error(
+                    errorMessage,
+                    startPos,
+                    endPos,
+                    "Check if the textmacro is defined and parameters match."
+                );
+                // 如果不可选，返回 RunTextMacroStatement 以便后续处理
+                if (!optional) {
+                    return new RunTextMacroStatement({
+                        name,
+                        parameters,
+                        optional,
+                        start: startPos,
+                        end: endPos
+                    });
+                }
+                return null;
+            }
+        }
+        
+        // 没有 TextMacroExpander，返回 RunTextMacroStatement（向后兼容）
+        return new RunTextMacroStatement({
+            name,
+            parameters,
+            optional,
+            start: startPos,
+            end: endPos
+        });
     }
 
     /**
@@ -1379,9 +2829,51 @@ export class Parser {
                 continue;
             }
 
+            // 检查是否有 private 或 public 关键字（用于全局变量）
+            // 注意：private/public 在 scope 或 library 中的 globals 块中使用
+            let isPrivateVar = false;
+            let isPublicVar = false;
+            if (this.checkValue("private")) {
+                const peekToken = this.lexer.peek();
+                // 检查下一个 token 是否是类型关键字或标识符
+                if (peekToken && (
+                    peekToken.type === TokenType.TypeInteger ||
+                    peekToken.type === TokenType.TypeReal ||
+                    peekToken.type === TokenType.TypeString ||
+                    peekToken.type === TokenType.TypeBoolean ||
+                    peekToken.type === TokenType.TypeCode ||
+                    peekToken.type === TokenType.TypeHandle ||
+                    peekToken.type === TokenType.TypeKey ||
+                    peekToken.type === TokenType.Identifier ||
+                    peekToken.value?.toLowerCase() === "constant"
+                )) {
+                    isPrivateVar = true;
+                    this.lexer.next(); // 消费 private
+                }
+            } else if (this.checkValue("public")) {
+                const peekToken = this.lexer.peek();
+                // 检查下一个 token 是否是类型关键字或标识符
+                if (peekToken && (
+                    peekToken.type === TokenType.TypeInteger ||
+                    peekToken.type === TokenType.TypeReal ||
+                    peekToken.type === TokenType.TypeString ||
+                    peekToken.type === TokenType.TypeBoolean ||
+                    peekToken.type === TokenType.TypeCode ||
+                    peekToken.type === TokenType.TypeHandle ||
+                    peekToken.type === TokenType.TypeKey ||
+                    peekToken.type === TokenType.Identifier ||
+                    peekToken.value?.toLowerCase() === "constant"
+                )) {
+                    isPublicVar = true;
+                    this.lexer.next(); // 消费 public
+                }
+            }
+
             // 尝试解析变量声明
             const varDecl = this.parseVariableDeclaration(false);
             if (varDecl) {
+                // 注意：private/public 修饰符在 VariableDeclaration 中没有字段存储
+                // 这些修饰符在编译时会被处理（重命名等），所以这里只解析，不存储
                 statements.push(varDecl);
             } else {
                 if (!this.isAtEnd() && !this.check(TokenType.keywordEndglobals)) {
@@ -1393,12 +2885,22 @@ export class Parser {
         }
 
         // 消费 endglobals
+        let endPos = startPos;
         if (this.check(TokenType.keywordEndglobals)) {
+            const endglobalsToken = this.lexer.current();
+            if (endglobalsToken) {
+                endPos = endglobalsToken.end; // 保存 endglobals 的位置
+            }
             this.lexer.next();
+        } else {
+            // 如果没有 endglobals，使用最后一个语句的位置
+            if (statements.length > 0) {
+                const lastStmt = statements[statements.length - 1];
+                if (lastStmt.end) {
+                    endPos = lastStmt.end;
+                }
+            }
         }
-
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
 
         return new BlockStatement(statements, startPos, endPos);
     }
@@ -1410,11 +2912,12 @@ export class Parser {
      * - type name = value
      * - constant type name
      * - static type name (struct 成员)
+     * - readonly type name (struct 成员，只读)
      * - type array name
      * - type array name[100] (数组成员)
      * - static type array name[100] (静态数组成员)
      */
-    private parseVariableDeclaration(isLocal: boolean): VariableDeclaration | null {
+    private parseVariableDeclaration(isLocal: boolean, isReadonly: boolean = false): VariableDeclaration | null {
         const startToken = this.lexer.current();
         if (!startToken) return null;
 
@@ -1466,7 +2969,8 @@ export class Parser {
                            typeToken.type === TokenType.TypeString ||
                            typeToken.type === TokenType.TypeBoolean ||
                            typeToken.type === TokenType.TypeCode ||
-                           typeToken.type === TokenType.TypeHandle;
+                           typeToken.type === TokenType.TypeHandle ||
+                           typeToken.type === TokenType.TypeKey;
         const isIdentifier = typeToken.type === TokenType.Identifier;
         const isThistype = this.checkValue("thistype");
         
@@ -1495,6 +2999,16 @@ export class Parser {
         // 检查是否有 array 关键字
         let isArray = false;
         if (this.checkValue("array")) {
+            // key 类型不能是数组（key 是自动生成唯一整数的特殊类型）
+            if (typeToken.type === TokenType.TypeKey) {
+                this.error(
+                    "Key type cannot be an array. Key variables automatically generate unique integer constants and cannot be declared as arrays.",
+                    typeToken.start,
+                    typeToken.end,
+                    "Remove 'array' keyword. Key variables are automatically generated as integer constants and cannot be arrays."
+                );
+                return null;
+            }
             isArray = true;
             this.lexer.next();
         }
@@ -1578,6 +3092,19 @@ export class Parser {
         // 解析初始化表达式（可选）
         let initializer: Expression | null = null;
         if (this.check(TokenType.OperatorAssign)) {
+            // key 类型不能有初始化值（key 是自动生成唯一整数的特殊类型）
+            if (typeToken.type === TokenType.TypeKey) {
+                const assignToken = this.lexer.current();
+                if (assignToken) {
+                    this.error(
+                        "Key type variables cannot have initializers. Key variables automatically generate unique integer constants.",
+                        assignToken.start,
+                        assignToken.end,
+                        "Remove the initializer (the '=' and value). Key variables are automatically assigned unique integer constants."
+                    );
+                }
+                return null;
+            }
             this.lexer.next();
             // 在解析表达式前，检查是否是结束关键字（避免误解析）
             if (this.isEndKeyword()) {
@@ -1588,8 +3115,17 @@ export class Parser {
             initializer = this.parseExpression();
         }
 
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || nameToken.end;
+        // 确定结束位置：如果有初始化表达式，使用表达式的结束位置；否则使用变量名的结束位置
+        let endPos = nameToken.end;
+        if (initializer && initializer.end) {
+            endPos = initializer.end;
+        } else {
+            // 检查是否有数组大小声明 [size] 或 [width][height]
+            const currentToken = this.lexer.current();
+            if (currentToken) {
+                endPos = currentToken.start; // 使用当前 token 的开始位置（可能是下一个语句的开始）
+            }
+        }
 
         return new VariableDeclaration(
             name,
@@ -1602,6 +3138,7 @@ export class Parser {
             arrayWidth,
             arrayHeight,
             isStatic,
+            isReadonly,
             startPos,
             endPos
         );
@@ -1868,22 +3405,22 @@ export class Parser {
 
         const startPos = startToken.start;
 
-        // 解析被调用者（可以是标识符或成员访问表达式）
+        // 解析被调用者（可以是标识符或链式成员访问，但不包括函数调用）
+        let callee: Identifier | Expression;
+        
+        // 解析基本表达式（标识符、成员访问等），但不包括函数调用
         const token = this.lexer.current();
         if (!token) {
             this.error("Expected function name or expression after 'call'");
             return null;
         }
-
-        let callee: Identifier | Expression;
         
-        // 如果是标识符，先创建标识符
         if (token.type === TokenType.Identifier) {
             callee = new Identifier(token.value, token.start, token.end);
             this.lexer.next();
             
-            // 检查是否是成员访问（如 u.destroy）
-            if (this.check(TokenType.Dot)) {
+            // 支持链式成员访问（如 Worker.doWork.execute）
+            while (this.check(TokenType.Dot)) {
                 this.lexer.next();
                 const memberToken = this.lexer.current();
                 if (memberToken && memberToken.type === TokenType.Identifier) {
@@ -1902,13 +3439,10 @@ export class Parser {
                 }
             }
         } else {
-            // 尝试解析表达式（用于处理更复杂的情况）
-            const expr = this.parsePrimaryExpression();
-            if (!expr) {
-                this.error("Expected function name or expression after 'call'");
-                return null;
-            }
-            callee = expr;
+            // 对于非标识符的情况，尝试解析表达式
+            // 但需要确保不会解析函数调用
+            this.error("Expected identifier for function name after 'call'");
+            return null;
         }
 
         // 解析函数调用的参数列表
@@ -2294,9 +3828,59 @@ export class Parser {
             this.lexer.next();
             let expr: Expression = new Identifier(token.value, token.start, token.end);
 
-            // 检查是否是函数调用
+            // 冒号操作符语法糖 a:X -> X[a]
+            // 仅当当前 token 是 ':'（被识别为 Unknown，value 为 ':'）时生效
+            if (this.lexer.current() && this.lexer.current()!.value === ":") {
+                const colonToken = this.lexer.current()!;
+                this.lexer.next(); // 消费 ':'
+
+                const arrayToken = this.lexer.current();
+                if (!arrayToken || arrayToken.type !== TokenType.Identifier) {
+                    this.error("Expected array name after ':' in colon operator expression");
+                    return null;
+                }
+
+                const arrayIdent = new Identifier(arrayToken.value, arrayToken.start, arrayToken.end);
+                this.lexer.next(); // 消费数组名
+
+                // 将 a:X 转换为 X[a]
+                expr = new BinaryExpression(
+                    OperatorType.Index,
+                    arrayIdent,
+                    expr,
+                    arrayIdent.start,
+                    expr.end
+                );
+            }
+
+            // 检查是否是函数调用或类型转换
+            // 类型转换语法：TypeName(expr) - 只有一个参数
+            // 函数调用语法：functionName(args...) - 可以有多个参数
+            // 两者语法相同，需要判断 Identifier 是否是类型名
             if (this.check(TokenType.LeftParen)) {
-                return this.parseCallExpressionWithCallee(expr as Identifier);
+                // 判断是否是类型转换
+                // 基本类型关键字：integer, real, string, boolean, code, handle
+                const typeName = token.value.toLowerCase();
+                const isBasicType = typeName === "integer" || 
+                                   typeName === "real" || 
+                                   typeName === "string" || 
+                                   typeName === "boolean" || 
+                                   typeName === "code" || 
+                                   typeName === "handle";
+                
+                // 如果是基本类型，解析为类型转换
+                if (isBasicType) {
+                    return this.parseTypecastExpression(expr as Identifier);
+                } else {
+                    // 对于自定义类型，需要判断是类型转换还是函数调用
+                    // 类型转换只有一个参数，函数调用可以有多个参数
+                    // 我们通过检查参数列表来判断：
+                    // 1. 先尝试解析为函数调用（更常见的情况）
+                    // 2. 如果解析失败，再尝试类型转换
+                    // 但实际上，为了简化，对于非基本类型，我们统一解析为函数调用
+                    // 类型转换的判断留给语义分析阶段
+                    return this.parseCallExpressionWithCallee(expr as Identifier);
+                }
             }
 
             // 检查是否是数组索引访问 arr[index] 或二维数组访问 arr[i][j]
@@ -2482,6 +4066,31 @@ export class Parser {
         this.lexer.next();
 
         return this.parseCallExpressionWithCallee(callee);
+    }
+
+    /**
+     * 解析类型转换表达式
+     * 语法：TypeName(expr)
+     * 例如：integer(x), wek(W), anarrayofdata(GetUnitUserData(u))
+     */
+    private parseTypecastExpression(targetType: Identifier): TypecastExpression | null {
+        const startPos = targetType.start;
+
+        // 消费左括号
+        this.consume(TokenType.LeftParen, "Expected '(' after type name in typecast");
+
+        // 解析要转换的表达式（类型转换只有一个参数）
+        const expr = this.parseExpression();
+        if (!expr) {
+            this.error("Expected expression after '(' in typecast");
+            return null;
+        }
+
+        // 消费右括号
+        const endToken = this.consume(TokenType.RightParen, "Expected ')' after expression in typecast");
+        const endPos = endToken?.end || startPos;
+
+        return new TypecastExpression(targetType, expr, startPos, endPos);
     }
 
     /**
@@ -4017,6 +5626,1287 @@ endstruct`, (r, p) => {
     
     console.log(`\nstruct 和 interface 测试结果: 通过 ${structInterfacePassed}, 失败 ${structInterfaceFailed}`);
     
+    // 测试 25: defaults 关键字功能测试
+    console.log("\n测试 25: defaults 关键字功能测试");
+    let defaultsPassed = 0;
+    let defaultsFailed = 0;
+    
+    const testDefaults = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`✓ ${name}`);
+            return true;
+        } else {
+            console.log(`✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`  错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            // 添加调试信息
+            if (result.body.length > 0) {
+                const interfaceDecl = result.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+                if (interfaceDecl instanceof InterfaceDeclaration) {
+                    const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+                    console.log(`  找到 ${methods.length} 个方法`);
+                    methods.forEach(m => {
+                        if (m.defaultsValue) {
+                            console.log(`    方法 ${m.name?.toString()}: defaultsValue = ${m.defaultsValue.toString()} (类型: ${m.defaultsValue.constructor.name})`);
+                        } else {
+                            console.log(`    方法 ${m.name?.toString()}: 无 defaultsValue`);
+                        }
+                    });
+                }
+            }
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 defaults 使用（文档示例）
+    if (testDefaults("基本 defaults 使用（文档示例）", `interface whattodo
+method onStrike takes real x, real y returns boolean defaults false
+method onBegin takes real x, real y returns nothing defaults nothing
+method onFinish takes nothing returns nothing
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 3) return false;
+        
+        // 检查 onStrike 方法有 defaults false
+        const onStrike = methods.find(m => m.name?.toString() === "onStrike");
+        if (!onStrike || !onStrike.defaultsValue) return false;
+        if (onStrike.defaultsValue.toString() !== "false") return false;
+        
+        // 检查 onBegin 方法有 defaults nothing
+        const onBegin = methods.find(m => m.name?.toString() === "onBegin");
+        if (!onBegin || !onBegin.defaultsValue) return false;
+        if (onBegin.defaultsValue.toString() !== "nothing") return false;
+        
+        // 检查 onFinish 方法没有 defaults
+        const onFinish = methods.find(m => m.name?.toString() === "onFinish");
+        if (!onFinish || onFinish.defaultsValue !== null) return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 2: defaults 带整数常量值
+    if (testDefaults("defaults 带整数常量值", `interface TestInterface
+method getValue takes nothing returns integer defaults 0
+method getCount takes nothing returns integer defaults 100
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 2) return false;
+        
+        const getValue = methods.find(m => m.name?.toString() === "getValue");
+        if (!getValue || !getValue.defaultsValue) return false;
+        if (getValue.defaultsValue.toString() !== "0") return false;
+        
+        const getCount = methods.find(m => m.name?.toString() === "getCount");
+        if (!getCount || !getCount.defaultsValue) return false;
+        if (getCount.defaultsValue.toString() !== "100") return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 3: defaults 带实数常量值
+    if (testDefaults("defaults 带实数常量值", `interface TestInterface
+method getReal takes nothing returns real defaults 0.0
+method getPi takes nothing returns real defaults 3.14159
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 2) return false;
+        
+        const getReal = methods.find(m => m.name?.toString() === "getReal");
+        if (!getReal || !getReal.defaultsValue) return false;
+        
+        const getPi = methods.find(m => m.name?.toString() === "getPi");
+        if (!getPi || !getPi.defaultsValue) return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 4: defaults 带字符串常量值
+    if (testDefaults("defaults 带字符串常量值", `interface TestInterface
+method getName takes nothing returns string defaults ""
+method getMessage takes nothing returns string defaults "default"
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 2) return false;
+        
+        const getName = methods.find(m => m.name?.toString() === "getName");
+        if (!getName || !getName.defaultsValue) return false;
+        
+        const getMessage = methods.find(m => m.name?.toString() === "getMessage");
+        if (!getMessage || !getMessage.defaultsValue) return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 5: defaults 带布尔常量值
+    if (testDefaults("defaults 带布尔常量值", `interface TestInterface
+method isEnabled takes nothing returns boolean defaults true
+method isDisabled takes nothing returns boolean defaults false
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 2) return false;
+        
+        const isEnabled = methods.find(m => m.name?.toString() === "isEnabled");
+        if (!isEnabled || !isEnabled.defaultsValue) return false;
+        if (isEnabled.defaultsValue.toString() !== "true") return false;
+        
+        const isDisabled = methods.find(m => m.name?.toString() === "isDisabled");
+        if (!isDisabled || !isDisabled.defaultsValue) return false;
+        if (isDisabled.defaultsValue.toString() !== "false") return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 6: 混合使用 defaults 和不使用 defaults
+    if (testDefaults("混合使用 defaults 和不使用 defaults", `interface TestInterface
+method required takes nothing returns nothing
+method optional1 takes nothing returns integer defaults 0
+method optional2 takes nothing returns boolean defaults false
+method required2 takes nothing returns string
+endinterface`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const methods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        if (methods.length !== 4) return false;
+        
+        const required = methods.find(m => m.name?.toString() === "required");
+        if (!required || required.defaultsValue !== null) return false;
+        
+        const optional1 = methods.find(m => m.name?.toString() === "optional1");
+        if (!optional1 || !optional1.defaultsValue) return false;
+        
+        const optional2 = methods.find(m => m.name?.toString() === "optional2");
+        if (!optional2 || !optional2.defaultsValue) return false;
+        
+        const required2 = methods.find(m => m.name?.toString() === "required2");
+        if (!required2 || required2.defaultsValue !== null) return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    // 测试 7: struct 实现带 defaults 的接口
+    if (testDefaults("struct 实现带 defaults 的接口", `interface TestInterface
+method optional takes nothing returns integer defaults 0
+method required takes nothing returns nothing
+endinterface
+struct TestStruct extends TestInterface
+method required takes nothing returns nothing
+call BJDebugMsg("required")
+endmethod
+endstruct`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const interfaceDecl = r.body.find((s: Statement) => s instanceof InterfaceDeclaration);
+        if (!(interfaceDecl instanceof InterfaceDeclaration)) return false;
+        const structDecl = r.body.find((s: Statement) => s instanceof StructDeclaration);
+        if (!(structDecl instanceof StructDeclaration)) return false;
+        
+        // 检查接口中有 defaults
+        const interfaceMethods = interfaceDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        const optionalMethod = interfaceMethods.find(m => m.name?.toString() === "optional");
+        if (!optionalMethod || !optionalMethod.defaultsValue) return false;
+        
+        // struct 实现了 required 方法（没有实现 optional，这是合法的，因为有 defaults）
+        const structMethods = structDecl.members.filter((m: Statement) => m instanceof MethodDeclaration) as MethodDeclaration[];
+        const requiredMethod = structMethods.find(m => m.name?.toString() === "required");
+        if (!requiredMethod) return false;
+        
+        return true;
+    })) defaultsPassed++; else defaultsFailed++;
+    
+    console.log(`\ndefaults 关键字测试结果: 通过 ${defaultsPassed}, 失败 ${defaultsFailed}`);
+    
+    // 测试 26: readonly 关键字功能测试
+    console.log("\n测试 26: readonly 关键字功能测试");
+    let readonlyPassed = 0;
+    let readonlyFailed = 0;
+    
+    const testReadonly = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            readonlyPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            readonlyFailed++;
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 readonly 使用（文档示例）
+    testReadonly("基本 readonly 成员", `struct encap
+    real a = 0.0
+    private real b = 0.0
+    public real c = 4.5
+    readonly real d = 10.0
+    method randomize takes nothing returns nothing
+        set this.a = GetRandomReal(0, 45.0)
+        set this.b = GetRandomReal(0, 45.0)
+        set this.c = GetRandomReal(0, 45.0)
+        set this.d = GetRandomReal(0, 45.0)
+    endmethod
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "encap");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 4) return false;
+        // 检查是否有 readonly 成员
+        const readonlyMember = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString() === "d" && m.isReadonly === true;
+            }
+            return false;
+        });
+        return readonlyMember !== undefined;
+    });
+    
+    // 测试 2: readonly 与 static 组合
+    testReadonly("readonly static 成员", `struct TestStruct
+    readonly static integer count = 0
+    readonly real value = 5.0
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 2) return false;
+        // 检查 readonly static 成员
+        const readonlyStatic = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString() === "count" && m.isReadonly === true && m.isStatic === true;
+            }
+            return false;
+        });
+        // 检查 readonly 非 static 成员
+        const readonlyNonStatic = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString() === "value" && m.isReadonly === true && m.isStatic === false;
+            }
+            return false;
+        });
+        return readonlyStatic !== undefined && readonlyNonStatic !== undefined;
+    });
+    
+    // 测试 3: readonly 与 constant 组合（虽然文档说它是非标准的，但我们仍然支持解析）
+    testReadonly("readonly constant 成员", `struct TestStruct
+    readonly constant integer MAX_VALUE = 100
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 1) return false;
+        const member = members[0] as VariableDeclaration;
+        return member.name.toString() === "MAX_VALUE" && 
+               member.isReadonly === true && 
+               member.isConstant === true;
+    });
+    
+    // 测试 4: readonly 数组成员
+    testReadonly("readonly 数组成员", `struct TestStruct
+    readonly integer array data[10]
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 1) return false;
+        const member = members[0] as VariableDeclaration;
+        return member.name.toString() === "data" && 
+               member.isReadonly === true && 
+               member.isArray === true &&
+               member.arraySize === 10;
+    });
+    
+    // 测试 5: readonly 与 private/public 的混合使用
+    testReadonly("readonly 与 private/public 混合", `struct TestStruct
+    real a = 0.0
+    private real b = 0.0
+    public real c = 0.0
+    readonly real d = 0.0
+    private readonly real e = 0.0
+    public readonly real f = 0.0
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 6) return false;
+        // 检查所有成员都被正确解析
+        const memberNames = members.map((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString();
+            }
+            return "";
+        });
+        return memberNames.includes("a") && 
+               memberNames.includes("b") && 
+               memberNames.includes("c") && 
+               memberNames.includes("d") && 
+               memberNames.includes("e") && 
+               memberNames.includes("f");
+    });
+    
+    // 测试 6: readonly 成员的 toString 输出
+    testReadonly("readonly 成员的 toString", `struct TestStruct
+    readonly real value = 5.0
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 1) return false;
+        const member = members[0] as VariableDeclaration;
+        const str = member.toString();
+        // 检查 toString 是否包含 readonly
+        return str.includes("readonly") && member.isReadonly === true;
+    });
+    
+    // 测试 7: readonly 二维数组成员
+    testReadonly("readonly 二维数组成员", `struct TestStruct
+    readonly integer array matrix[10][20]
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 1) return false;
+        const member = members[0] as VariableDeclaration;
+        return member.name.toString() === "matrix" && 
+               member.isReadonly === true && 
+               member.isArray === true &&
+               member.arrayWidth === 10 &&
+               member.arrayHeight === 20;
+    });
+    
+    // 测试 8: readonly 与 static 和 constant 三组合
+    testReadonly("readonly static constant 组合", `struct TestStruct
+    readonly static constant integer MAX = 100
+endstruct`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        if (members.length < 1) return false;
+        const member = members[0] as VariableDeclaration;
+        return member.name.toString() === "MAX" && 
+               member.isReadonly === true && 
+               member.isStatic === true &&
+               member.isConstant === true;
+    });
+    
+    // 测试 9: readonly 在继承结构中的使用
+    testReadonly("readonly 在继承结构中", `struct Parent
+    integer x
+    readonly integer y = 10
+endstruct
+struct Child extends Parent
+    integer z
+endstruct`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const parent = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "Parent");
+        if (!(parent instanceof StructDeclaration)) return false;
+        const members = parent.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        const readonlyMember = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString() === "y" && m.isReadonly === true;
+            }
+            return false;
+        });
+        return readonlyMember !== undefined;
+    });
+    
+    // 测试 10: readonly 与自定义类型
+    testReadonly("readonly 与自定义类型", `struct MyType
+    integer value
+endstruct
+struct TestStruct
+    readonly MyType obj = 0
+endstruct`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const testStruct = r.body.find((s: Statement) => s instanceof StructDeclaration && s.name?.toString() === "TestStruct");
+        if (!(testStruct instanceof StructDeclaration)) return false;
+        const members = testStruct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        const readonlyMember = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.name.toString() === "obj" && m.isReadonly === true && m.type?.toString() === "MyType";
+            }
+            return false;
+        });
+        return readonlyMember !== undefined;
+    });
+    
+    console.log(`\nreadonly 关键字测试结果: 通过 ${readonlyPassed}, 失败 ${readonlyFailed}`);
+    
+    // 测试 27: key 类型功能测试
+    console.log("\n测试 27: key 类型功能测试");
+    let keyPassed = 0;
+    let keyFailed = 0;
+    
+    const testKey = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            keyPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            keyFailed++;
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 key 类型声明（文档示例）
+    testKey("基本 key 类型声明", `scope Tester initializer test
+globals
+key AAAA
+private key BBBB
+public key CCCC
+constant key DDDD
+endglobals
+private function test takes nothing returns nothing
+local hashtable ht = InitHashtable()
+call SaveInteger(ht, AAAA, BBBB, 5)
+call SaveInteger(ht, AAAA, CCCC, 7)
+call SaveReal(ht, AAAA, DDDD, LoadInteger(ht, AAAA, BBBB) * 0.05)
+call BJDebugMsg(R2S(LoadReal(ht, AAAA, DDDD)))
+call BJDebugMsg(I2S(BBBB))
+call BJDebugMsg(I2S(CCCC))
+endfunction
+endscope`, (r, p) => {
+        if (p.errors.errors.length > 0) {
+            return false;
+        }
+        if (r.body.length < 1) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration);
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        // 检查是否有 globals 块
+        const globalsBlock = scope.members.find((m: Statement) => m instanceof BlockStatement);
+        if (!(globalsBlock instanceof BlockStatement)) return false;
+        const globalsStmts = globalsBlock.body;
+        // 应该找到 4 个 key 变量声明
+        const keyVars = globalsStmts.filter((s: Statement) => {
+            if (s instanceof VariableDeclaration) {
+                return s.type?.toString() === "key";
+            }
+            return false;
+        });
+        return keyVars.length === 4;
+    });
+    
+    // 测试 2: key 类型不能有初始化值
+    testKey("key 类型不能有初始化值", `globals
+key TEST_KEY = 123
+endglobals`, (r, p) => {
+        // 应该报错：key 类型不能有初始化值
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some(e => e.message.includes("cannot have initializers") || e.message.includes("Key type variables cannot have initializers"));
+    });
+    
+    // 测试 3: key 类型不能是数组
+    testKey("key 类型不能是数组", `globals
+key array TEST_KEYS[10]
+endglobals`, (r, p) => {
+        // 应该报错：key 类型不能是数组
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some(e => e.message.includes("cannot be an array") || e.message.includes("Key type cannot be an array"));
+    });
+    
+    // 测试 4: constant key 类型
+    testKey("constant key 类型", `globals
+constant key KEY1
+constant key KEY2
+endglobals`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const globalsBlock = r.body.find((s: Statement) => s instanceof BlockStatement);
+        if (!(globalsBlock instanceof BlockStatement)) return false;
+        const keyVars = globalsBlock.body.filter((s: Statement) => {
+            if (s instanceof VariableDeclaration) {
+                return s.type?.toString() === "key" && s.isConstant === true;
+            }
+            return false;
+        });
+        return keyVars.length === 2;
+    });
+    
+    // 测试 5: key 类型在 struct 中（应该不支持，但先测试解析）
+    testKey("key 类型在 struct 中", `struct TestStruct
+key memberKey
+endstruct`, (r, p) => {
+        // key 类型主要用于 globals，但在 struct 中理论上也可以解析
+        // 这里只检查是否能解析，不检查语义正确性
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const struct = r.body.find((s: Statement) => s instanceof StructDeclaration);
+        if (!(struct instanceof StructDeclaration)) return false;
+        const members = struct.members.filter((m: Statement) => m instanceof VariableDeclaration);
+        const keyMember = members.find((m: Statement) => {
+            if (m instanceof VariableDeclaration) {
+                return m.type?.toString() === "key";
+            }
+            return false;
+        });
+        return keyMember !== undefined;
+    });
+    
+    // 测试 6: key 类型在函数参数中（应该不支持，但先测试解析）
+    testKey("key 类型在函数参数中", `function test takes key k returns nothing
+call BJDebugMsg(I2S(k))
+endfunction`, (r, p) => {
+        // key 类型主要用于 globals，但在函数参数中理论上也可以解析
+        // 这里只检查是否能解析，不检查语义正确性
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration);
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const keyParam = func.parameters.find((p: VariableDeclaration) => {
+            return p.type?.toString() === "key";
+        });
+        return keyParam !== undefined;
+    });
+    
+    // 测试 7: key 类型在局部变量中（应该不支持，但先测试解析）
+    testKey("key 类型在局部变量中", `function test takes nothing returns nothing
+local key localKey
+call BJDebugMsg(I2S(localKey))
+endfunction`, (r, p) => {
+        // key 类型主要用于 globals，但在局部变量中理论上也可以解析
+        // 这里只检查是否能解析，不检查语义正确性
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration);
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const localVars = func.body.body.filter((s: Statement) => s instanceof VariableDeclaration && (s as VariableDeclaration).isLocal);
+        const keyLocal = localVars.find((v: Statement) => {
+            if (v instanceof VariableDeclaration) {
+                return v.type?.toString() === "key";
+            }
+            return false;
+        });
+        return keyLocal !== undefined;
+    });
+    
+    console.log(`\nkey 类型测试结果: 通过 ${keyPassed}, 失败 ${keyFailed}`);
+    
+    // 测试 28: library/scope 的 requires/needs/uses/initializer/optional 功能测试
+    console.log("\n测试 28: library/scope 的 requires/needs/uses/initializer/optional 功能测试");
+    let libraryScopePassed = 0;
+    let libraryScopeFailed = 0;
+    
+    const testLibraryScope = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            libraryScopePassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            libraryScopeFailed++;
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 library 声明
+    testLibraryScope("基本 library 声明", `library MyLibrary
+function test takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration);
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.name?.toString() === "MyLibrary" && 
+               lib.dependencies.length === 0 && 
+               lib.initializer === null;
+    });
+    
+    // 测试 2: library 带 requires
+    testLibraryScope("library 带 requires", `library B requires A
+function Bfun takes nothing returns nothing
+endfunction
+endlibrary
+library A
+function Afun takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const libB = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "B");
+        if (!(libB instanceof LibraryDeclaration)) return false;
+        return libB.dependencies.length === 1 && 
+               libB.dependencies[0].toString() === "A";
+    });
+    
+    // 测试 3: library 带 needs
+    testLibraryScope("library 带 needs", `library C needs A, B
+function Cfun takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "C");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 2 && 
+               lib.dependencies[0].toString() === "A" && 
+               lib.dependencies[1].toString() === "B";
+    });
+    
+    // 测试 4: library 带 uses
+    testLibraryScope("library 带 uses", `library D uses A
+function Dfun takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "D");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 1 && 
+               lib.dependencies[0].toString() === "A";
+    });
+    
+    // 测试 5: library 带 initializer
+    testLibraryScope("library 带 initializer", `library A initializer InitA
+function InitA takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "A");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.initializer?.toString() === "InitA";
+    });
+    
+    // 测试 6: library 带 initializer 和 requires（文档示例）
+    testLibraryScope("library 带 initializer 和 requires（文档示例）", `library A initializer InitA requires B
+function InitA takes nothing returns nothing
+endfunction
+endlibrary
+library B initializer InitB
+function InitB takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const libA = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "A");
+        if (!(libA instanceof LibraryDeclaration)) return false;
+        return libA.initializer?.toString() === "InitA" && 
+               libA.dependencies.length === 1 && 
+               libA.dependencies[0].toString() === "B";
+    });
+    
+    // 测试 7: library 带 optional requires
+    testLibraryScope("library 带 optional requires", `library OptionalCode requires optional UnitKiller
+function fun takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "OptionalCode");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 1 && 
+               lib.dependencies[0].toString() === "UnitKiller" && 
+               lib.optionalDependencies.has("UnitKiller");
+    });
+    
+    // 测试 8: library 带多个 optional 依赖
+    testLibraryScope("library 带多个 optional 依赖", `library TestLib requires optional A, optional B, C
+function test takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 3 && 
+               lib.dependencies[0].toString() === "A" && 
+               lib.dependencies[1].toString() === "B" && 
+               lib.dependencies[2].toString() === "C" && 
+               lib.optionalDependencies.has("A") && 
+               lib.optionalDependencies.has("B") && 
+               !lib.optionalDependencies.has("C");
+    });
+    
+    // 测试 9: library_once
+    testLibraryScope("library_once 声明", `library_once MyLib
+function test takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "MyLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.isLibraryOnce === true;
+    });
+    
+    // 测试 10: scope 基本声明
+    testLibraryScope("scope 基本声明", `scope MyScope
+function test takes nothing returns nothing
+endfunction
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration);
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        return scope.name?.toString() === "MyScope" && 
+               scope.initializer === null;
+    });
+    
+    // 测试 11: scope 带 initializer
+    testLibraryScope("scope 带 initializer", `scope Tester initializer test
+function test takes nothing returns nothing
+endfunction
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration && s.name?.toString() === "Tester");
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        return scope.initializer?.toString() === "test";
+    });
+    
+    // 测试 12: scope 带 initializer 和 globals（key 类型测试中的示例）
+    testLibraryScope("scope 带 initializer 和 globals", `scope Tester initializer test
+globals
+key AAAA
+endglobals
+function test takes nothing returns nothing
+endfunction
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration && s.name?.toString() === "Tester");
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        return scope.initializer?.toString() === "test" && 
+               scope.members.length > 0;
+    });
+    
+    // 测试 13: library 多个 requires 语句
+    testLibraryScope("library 多个 requires 语句", `library TestLib requires A
+requires B
+requires C
+function test takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 3 && 
+               lib.dependencies[0].toString() === "A" && 
+               lib.dependencies[1].toString() === "B" && 
+               lib.dependencies[2].toString() === "C";
+    });
+    
+    // 测试 14: library initializer 在 requires 之前
+    testLibraryScope("library initializer 在 requires 之前", `library TestLib initializer Init requires A
+function Init takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.initializer?.toString() === "Init" && 
+               lib.dependencies.length === 1 && 
+               lib.dependencies[0].toString() === "A";
+    });
+    
+    // 测试 15: library 混合使用 requires/needs/uses
+    testLibraryScope("library 混合使用 requires/needs/uses", `library TestLib requires A
+needs B
+uses C
+function test takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.dependencies.length === 3 && 
+               lib.dependencies.some((d: Identifier) => d.toString() === "A") &&
+               lib.dependencies.some((d: Identifier) => d.toString() === "B") &&
+               lib.dependencies.some((d: Identifier) => d.toString() === "C");
+    });
+    
+    // 测试 16: library 复杂依赖链
+    testLibraryScope("library 复杂依赖链", `library E requires A, B, C, D
+function Efun takes nothing returns nothing
+endfunction
+endlibrary
+library D requires A, B
+function Dfun takes nothing returns nothing
+endfunction
+endlibrary
+library C requires A
+function Cfun takes nothing returns nothing
+endfunction
+endlibrary
+library B requires A
+function Bfun takes nothing returns nothing
+endfunction
+endlibrary
+library A
+function Afun takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 5 || p.errors.errors.length > 0) return false;
+        const libE = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "E");
+        if (!(libE instanceof LibraryDeclaration)) return false;
+        return libE.dependencies.length === 4;
+    });
+    
+    // 测试 17: library 带 initializer 和多个 optional 依赖
+    testLibraryScope("library 带 initializer 和多个 optional 依赖", `library TestLib initializer Init requires optional A, optional B
+function Init takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.initializer?.toString() === "Init" && 
+               lib.dependencies.length === 2 && 
+               lib.optionalDependencies.has("A") && 
+               lib.optionalDependencies.has("B");
+    });
+    
+    // 测试 18: library_once 带依赖和 initializer
+    testLibraryScope("library_once 带依赖和 initializer", `library_once TestLib initializer Init requires A
+function Init takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.isLibraryOnce === true && 
+               lib.initializer?.toString() === "Init" && 
+               lib.dependencies.length === 1;
+    });
+    
+    // 测试 19: scope 嵌套在 library 中
+    testLibraryScope("scope 嵌套在 library 中", `library TestLib
+scope InnerScope initializer innerInit
+function innerInit takes nothing returns nothing
+endfunction
+endscope
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        const scope = lib.members.find((m: Statement) => m instanceof ScopeDeclaration && (m as ScopeDeclaration).name?.toString() === "InnerScope");
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        return scope.initializer?.toString() === "innerInit";
+    });
+    
+    // 测试 20: library 的 toString 输出
+    testLibraryScope("library 的 toString 输出", `library TestLib initializer Init requires A, optional B
+function Init takes nothing returns nothing
+endfunction
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        const str = lib.toString();
+        return str.includes("library TestLib") && 
+               str.includes("initializer Init") && 
+               str.includes("requires");
+    });
+    
+    // 测试 21: scope 的 toString 输出
+    testLibraryScope("scope 的 toString 输出", `scope TestScope initializer Init
+function Init takes nothing returns nothing
+endfunction
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration && s.name?.toString() === "TestScope");
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        const str = scope.toString();
+        return str.includes("scope TestScope") && 
+               str.includes("initializer Init");
+    });
+    
+    console.log(`\nlibrary/scope 功能测试结果: 通过 ${libraryScopePassed}, 失败 ${libraryScopeFailed}`);
+    
+    // 测试 29: hook 语句功能测试
+    console.log("\n测试 29: hook 语句功能测试");
+    let hookPassed = 0;
+    let hookFailed = 0;
+    
+    const testHook = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            hookPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            hookFailed++;
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 hook 语句（文档示例）
+    testHook("基本 hook 语句（文档示例）", `function onRemoval takes unit u returns nothing
+call BJDebugMsg("unit is being removed!")
+endfunction
+hook RemoveUnit onRemoval`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "RemoveUnit" && 
+               hook.hookFunction.toString() === "onRemoval" && 
+               hook.hookStruct === null && 
+               hook.hookMethod === null;
+    });
+    
+    // 测试 2: hook 语句使用结构静态方法（文档示例）
+    testHook("hook 语句使用结构静态方法（文档示例）", `struct err
+static method onrem takes unit u returns nothing
+call BJDebugMsg("This also knows that a unit is being removed!")
+endmethod
+endstruct
+hook RemoveUnit err.onrem`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "RemoveUnit" && 
+               hook.hookStruct?.toString() === "err" && 
+               hook.hookMethod?.toString() === "onrem";
+    });
+    
+    // 测试 3: hook 多个函数
+    testHook("hook 多个函数", `function hook1 takes nothing returns nothing
+endfunction
+function hook2 takes nothing returns nothing
+endfunction
+hook KillUnit hook1
+hook CreateUnit hook2`, (r, p) => {
+        if (r.body.length < 4 || p.errors.errors.length > 0) return false;
+        const hooks = r.body.filter((s: Statement) => s instanceof HookStatement);
+        if (hooks.length !== 2) return false;
+        const hook1 = hooks[0] as HookStatement;
+        const hook2 = hooks[1] as HookStatement;
+        return (hook1.targetFunction.toString() === "KillUnit" && hook1.hookFunction.toString() === "hook1") ||
+               (hook1.targetFunction.toString() === "CreateUnit" && hook1.hookFunction.toString() === "hook2");
+    });
+    
+    // 测试 4: hook 语句在 library 中
+    testHook("hook 语句在 library 中", `library TestLib
+function onKill takes unit u returns nothing
+call BJDebugMsg("Unit killed")
+endfunction
+hook KillUnit onKill
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration);
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        const hook = lib.members.find((m: Statement) => m instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "KillUnit" && 
+               hook.hookFunction.toString() === "onKill";
+    });
+    
+    // 测试 5: hook 语句在 scope 中
+    testHook("hook 语句在 scope 中", `scope TestScope
+function onCreate takes nothing returns nothing
+call BJDebugMsg("Unit created")
+endfunction
+hook CreateUnit onCreate
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration);
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        const hook = scope.members.find((m: Statement) => m instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "CreateUnit" && 
+               hook.hookFunction.toString() === "onCreate";
+    });
+    
+    // 测试 6: hook 语句的 toString 输出（普通函数）
+    testHook("hook 语句的 toString 输出（普通函数）", `function hookFunc takes nothing returns nothing
+endfunction
+hook TestFunc hookFunc`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        const str = hook.toString();
+        return str === "hook TestFunc hookFunc";
+    });
+    
+    // 测试 7: hook 语句的 toString 输出（结构方法）
+    testHook("hook 语句的 toString 输出（结构方法）", `struct MyStruct
+static method hookMethod takes nothing returns nothing
+endmethod
+endstruct
+hook TestFunc MyStruct.hookMethod`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        const str = hook.toString();
+        return str === "hook TestFunc MyStruct.hookMethod";
+    });
+    
+    // 测试 8: hook native 函数
+    testHook("hook native 函数", `function onNativeCall takes nothing returns nothing
+endfunction
+hook GetUnitX onNativeCall`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "GetUnitX" && 
+               hook.hookFunction.toString() === "onNativeCall";
+    });
+    
+    // 测试 9: hook bj 函数
+    testHook("hook bj 函数", `function onBJCall takes nothing returns nothing
+endfunction
+hook BJDebugMsg onBJCall`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "BJDebugMsg" && 
+               hook.hookFunction.toString() === "onBJCall";
+    });
+    
+    // 测试 10: hook 多个结构方法
+    testHook("hook 多个结构方法", `struct Handler1
+static method handle1 takes nothing returns nothing
+endmethod
+endstruct
+struct Handler2
+static method handle2 takes nothing returns nothing
+endmethod
+endstruct
+hook Func1 Handler1.handle1
+hook Func2 Handler2.handle2`, (r, p) => {
+        if (r.body.length < 4 || p.errors.errors.length > 0) return false;
+        const hooks = r.body.filter((s: Statement) => s instanceof HookStatement);
+        if (hooks.length !== 2) return false;
+        const hook1 = hooks.find((h: HookStatement) => h.targetFunction.toString() === "Func1") as HookStatement;
+        const hook2 = hooks.find((h: HookStatement) => h.targetFunction.toString() === "Func2") as HookStatement;
+        if (!hook1 || !hook2) return false;
+        return hook1.hookStruct?.toString() === "Handler1" && 
+               hook1.hookMethod?.toString() === "handle1" &&
+               hook2.hookStruct?.toString() === "Handler2" && 
+               hook2.hookMethod?.toString() === "handle2";
+    });
+    
+    // 测试 11: hook 同一个函数多次（应该允许）
+    testHook("hook 同一个函数多次", `function hook1 takes nothing returns nothing
+endfunction
+function hook2 takes nothing returns nothing
+endfunction
+hook TestFunc hook1
+hook TestFunc hook2`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const hooks = r.body.filter((s: Statement) => s instanceof HookStatement);
+        if (hooks.length !== 2) return false;
+        const allTargetTestFunc = hooks.every((h: HookStatement) => h.targetFunction.toString() === "TestFunc");
+        return allTargetTestFunc;
+    });
+    
+    // 测试 12: hook 带参数的函数
+    testHook("hook 带参数的函数", `function onUnitAction takes unit u, integer i returns nothing
+call BJDebugMsg("Unit action")
+endfunction
+hook SomeFunction onUnitAction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "SomeFunction" && 
+               hook.hookFunction.toString() === "onUnitAction";
+    });
+    
+    // 测试 13: hook 带返回值的函数
+    testHook("hook 带返回值的函数", `function onGetValue takes nothing returns integer
+return 100
+endfunction
+hook GetValue onGetValue`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const hook = r.body.find((s: Statement) => s instanceof HookStatement);
+        if (!(hook instanceof HookStatement)) return false;
+        return hook.targetFunction.toString() === "GetValue" && 
+               hook.hookFunction.toString() === "onGetValue";
+    });
+    
+    // 测试 14: hook 在嵌套 scope 中
+    testHook("hook 在嵌套 scope 中", `scope Outer
+scope Inner
+function onInner takes nothing returns nothing
+endfunction
+hook InnerFunc onInner
+endscope
+endscope`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const outerScope = r.body.find((s: Statement) => s instanceof ScopeDeclaration && s.name?.toString() === "Outer");
+        if (!(outerScope instanceof ScopeDeclaration)) return false;
+        const innerScope = outerScope.members.find((m: Statement) => m instanceof ScopeDeclaration && (m as ScopeDeclaration).name?.toString() === "Inner");
+        if (!(innerScope instanceof ScopeDeclaration)) return false;
+        const hook = innerScope.members.find((m: Statement) => m instanceof HookStatement);
+        return hook !== undefined;
+    });
+    
+    // 测试 15: hook 与 library initializer 组合
+    testHook("hook 与 library initializer 组合", `library TestLib initializer Init
+function Init takes nothing returns nothing
+endfunction
+function onHook takes nothing returns nothing
+endfunction
+hook TestFunc onHook
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration && s.name?.toString() === "TestLib");
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        return lib.initializer?.toString() === "Init" && 
+               lib.members.some((m: Statement) => m instanceof HookStatement);
+    });
+    
+    console.log(`\nhook 语句测试结果: 通过 ${hookPassed}, 失败 ${hookFailed}`);
+    
+    // 测试 30: inject 和 loaddata 预处理器指令功能测试
+    console.log("\n测试 30: inject 和 loaddata 预处理器指令功能测试");
+    let injectLoadDataPassed = 0;
+    let injectLoadDataFailed = 0;
+    
+    const testInjectLoadData = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            injectLoadDataPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            injectLoadDataFailed++;
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本 inject main 指令（文档示例）
+    testInjectLoadData("基本 inject main 指令（文档示例）", `//! inject main
+//一些函数调用可能会在这里
+//将 vJass 初始化放置在此处，注意，结构优先被初始化，然后是库初始化
+//! dovJassinit
+//其他的调用可能会在这里
+call InitCustomTriggers()
+//也许您想使用 WorldEditor 的该功能...
+//! endinject`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const inject = r.body.find((s: Statement) => s instanceof InjectStatement);
+        if (!(inject instanceof InjectStatement)) return false;
+        return inject.injectType === "main" && inject.content.length > 0;
+    });
+    
+    // 测试 2: inject config 指令
+    testInjectLoadData("inject config 指令", `//! inject config
+//配置代码
+call SetGameSpeed(MAP_SPEED_FAST)
+//! endinject`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const inject = r.body.find((s: Statement) => s instanceof InjectStatement);
+        if (!(inject instanceof InjectStatement)) return false;
+        return inject.injectType === "config" && inject.content.length > 0;
+    });
+    
+    // 测试 3: 基本 loaddata 指令
+    testInjectLoadData("基本 loaddata 指令", `//! loaddata "path.slk"`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const loadData = r.body.find((s: Statement) => s instanceof LoadDataStatement);
+        if (!(loadData instanceof LoadDataStatement)) return false;
+        return loadData.filePath === "path.slk";
+    });
+    
+    // 测试 4: loaddata 带相对路径
+    testInjectLoadData("loaddata 带相对路径", `//! loaddata "data/units.slk"`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const loadData = r.body.find((s: Statement) => s instanceof LoadDataStatement);
+        if (!(loadData instanceof LoadDataStatement)) return false;
+        return loadData.filePath === "data/units.slk";
+    });
+    
+    // 测试 5: loaddata 带绝对路径
+    testInjectLoadData("loaddata 带绝对路径", `//! loaddata "C:\\data\\units.slk"`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const loadData = r.body.find((s: Statement) => s instanceof LoadDataStatement);
+        if (!(loadData instanceof LoadDataStatement)) return false;
+        return loadData.filePath === "C:\\data\\units.slk";
+    });
+    
+    // 测试 6: inject 和 loaddata 混合使用
+    testInjectLoadData("inject 和 loaddata 混合使用", `//! loaddata "units.slk"
+//! inject main
+call InitCustomTriggers()
+//! endinject
+//! loaddata "items.slk"`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const loadData1 = r.body.find((s: Statement) => s instanceof LoadDataStatement && s.filePath === "units.slk");
+        const inject = r.body.find((s: Statement) => s instanceof InjectStatement);
+        const loadData2 = r.body.find((s: Statement) => s instanceof LoadDataStatement && s.filePath === "items.slk");
+        return loadData1 !== undefined && inject !== undefined && loadData2 !== undefined;
+    });
+    
+    // 测试 7: inject 在 library 中
+    testInjectLoadData("inject 在 library 中", `library TestLib
+//! inject main
+call InitTestLib()
+//! endinject
+endlibrary`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const lib = r.body.find((s: Statement) => s instanceof LibraryDeclaration);
+        if (!(lib instanceof LibraryDeclaration)) return false;
+        const inject = lib.members.find((m: Statement) => m instanceof InjectStatement);
+        return inject !== undefined;
+    });
+    
+    // 测试 8: inject 的 toString 输出
+    testInjectLoadData("inject 的 toString 输出", `//! inject main
+call Test()
+//! endinject`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const inject = r.body.find((s: Statement) => s instanceof InjectStatement);
+        if (!(inject instanceof InjectStatement)) return false;
+        const str = inject.toString();
+        return str.includes("//! inject main") && str.includes("//! endinject");
+    });
+    
+    // 测试 9: loaddata 的 toString 输出
+    testInjectLoadData("loaddata 的 toString 输出", `//! loaddata "test.slk"`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const loadData = r.body.find((s: Statement) => s instanceof LoadDataStatement);
+        if (!(loadData instanceof LoadDataStatement)) return false;
+        const str = loadData.toString();
+        return str === `//! loaddata "test.slk"`;
+    });
+    
+    // 测试 10: 未闭合的 inject 块（应该报错）
+    testInjectLoadData("未闭合的 inject 块（应该报错）", `//! inject main
+call Test()
+// 没有 endinject`, (r, p) => {
+        // 应该报错：未闭合的 inject 块
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some(e => e.message.includes("Unclosed //! inject"));
+    });
+    
+    console.log(`\ninject 和 loaddata 测试结果: 通过 ${injectLoadDataPassed}, 失败 ${injectLoadDataFailed}`);
+    
     // 测试 17: 二维数组表达式访问
     console.log("\n测试 17: 二维数组表达式访问");
     let twoDimExprPassed = 0;
@@ -4133,30 +7023,64 @@ endfunction`, (r, p) => {
 local integer array mat [3][4]
 call BJDebugMsg(I2S(mat[1][2]))
 endfunction`, (r, p) => {
-        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
-        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration);
-        if (!(func instanceof FunctionDeclaration)) return false;
-        const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
-        if (!(callStmt instanceof CallStatement)) return false;
-        const args = callStmt.expression.arguments;
-        if (args.length > 0) {
-            // BJDebugMsg 的第一个参数是 I2S(mat[1][2])，这是一个 CallExpression
-            const arg = args[0];
-            if (arg instanceof CallExpression) {
-                // 检查 I2S 的参数，应该是 mat[1][2]
-                const i2sArgs = arg.arguments;
-                if (i2sArgs.length > 0) {
-                    const matArg = i2sArgs[0];
-                    if (matArg instanceof BinaryExpression && matArg.operator === OperatorType.Index) {
-                        const left = matArg.left;
-                        if (left instanceof BinaryExpression && left.operator === OperatorType.Index) {
-                            return true;
-                        }
-                    }
-                }
+        if (r.body.length === 0 || p.errors.errors.length > 0) {
+            if (p.errors.errors.length > 0) {
+                console.log(`    解析错误: ${p.errors.errors.map(e => e.message).join(", ")}`);
             }
+            return false;
         }
-        return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration);
+        if (!(func instanceof FunctionDeclaration)) {
+            return false;
+        }
+        const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
+        if (!(callStmt instanceof CallStatement)) {
+            return false;
+        }
+        const args = callStmt.expression.arguments;
+        if (args.length === 0) {
+            return false;
+        }
+        // BJDebugMsg 的第一个参数是 I2S(mat[1][2])，这是一个 CallExpression
+        const arg = args[0];
+        if (!(arg instanceof CallExpression)) {
+            return false;
+        }
+        // 检查 I2S 的参数，应该是 mat[1][2]
+        const i2sArgs = arg.arguments;
+        if (i2sArgs.length === 0) {
+            return false;
+        }
+        const matArg = i2sArgs[0];
+        // 检查是否是二维数组访问：matArg 应该是 BinaryExpression(Index, BinaryExpression(Index, mat, 1), 2)
+        if (!(matArg instanceof BinaryExpression)) {
+            return false;
+        }
+        if (matArg.operator !== OperatorType.Index) {
+            return false;
+        }
+        // 检查内层：matArg.left 应该是 BinaryExpression(Index, mat, 1)
+        const left = matArg.left;
+        if (!(left instanceof BinaryExpression)) {
+            return false;
+        }
+        if (left.operator !== OperatorType.Index) {
+            return false;
+        }
+        // 检查内层的 left 是否是 mat 标识符
+        if (!(left.left instanceof Identifier) || left.left.toString() !== "mat") {
+            return false;
+        }
+        // 检查索引值（可以是 IntegerLiteral 或其他表达式）
+        // 第一个索引应该是 1
+        if (!(left.right instanceof IntegerLiteral) || left.right.value !== 1) {
+            return false;
+        }
+        // 第二个索引应该是 2
+        if (!(matArg.right instanceof IntegerLiteral) || matArg.right.value !== 2) {
+            return false;
+        }
+        return true;
     })) twoDimExprPassed++; else twoDimExprFailed++;
     
     // 测试 6: 二维数组在条件表达式中
@@ -4835,5 +7759,866 @@ endstruct`, (r, p) => {
     
     console.log(`\nthistype 关键字测试结果: 通过 ${thistypePassed}, 失败 ${thistypeFailed}`);
     
+    // 测试 23: 函数接口功能测试
+    console.log("\n测试 23: 函数接口功能测试");
+    let functionInterfacePassed = 0;
+    let functionInterfaceFailed = 0;
+    
+    const testFunctionInterface = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`✓ ${name}`);
+            return true;
+        } else {
+            console.log(`✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`  错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            return false;
+        }
+    };
+    
+    // 测试 1: 基本函数接口声明（文档示例）
+    if (testFunctionInterface("基本函数接口声明（文档示例）", `function interface Arealfunction takes real x returns real
+function double takes real x returns real
+return x*2.0
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        if (!(funcInterface instanceof FunctionInterfaceDeclaration)) return false;
+        return funcInterface.name?.toString() === "Arealfunction" && 
+               funcInterface.parameters.length === 1 &&
+               funcInterface.returnType?.toString() === "real";
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 2: 函数接口带多个参数
+    if (testFunctionInterface("函数接口带多个参数", `function interface MathFunc takes real x, real y returns real
+function add takes real x, real y returns real
+return x + y
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        if (!(funcInterface instanceof FunctionInterfaceDeclaration)) return false;
+        return funcInterface.parameters.length === 2;
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 3: 函数接口返回 nothing
+    if (testFunctionInterface("函数接口返回 nothing", `function interface ActionFunc takes nothing returns nothing
+function doSomething takes nothing returns nothing
+call BJDebugMsg("test")
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        if (!(funcInterface instanceof FunctionInterfaceDeclaration)) return false;
+        return funcInterface.parameters.length === 0 && funcInterface.returnType === null;
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 4: 函数接口带自定义类型参数
+    if (testFunctionInterface("函数接口带自定义类型参数", `struct Point
+real x
+real y
+endstruct
+function interface PointFunc takes Point p returns real
+function getDistance takes Point p returns real
+return p.x + p.y
+endfunction`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        if (!(funcInterface instanceof FunctionInterfaceDeclaration)) return false;
+        return funcInterface.parameters.length === 1 && 
+               funcInterface.parameters[0].type?.toString() === "Point";
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 5: 函数接口返回自定义类型
+    if (testFunctionInterface("函数接口返回自定义类型", `struct Factory
+integer value
+endstruct
+function interface FactoryFunc takes integer x returns Factory
+function create takes integer x returns Factory
+local Factory f = Factory.create()
+set f.value = x
+return f
+endfunction`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        if (!(funcInterface instanceof FunctionInterfaceDeclaration)) return false;
+        return funcInterface.returnType?.toString() === "Factory";
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 6: 多个函数接口声明
+    if (testFunctionInterface("多个函数接口声明", `function interface Func1 takes real x returns real
+function interface Func2 takes integer x returns integer
+function test1 takes real x returns real
+return x
+endfunction
+function test2 takes integer x returns integer
+return x
+endfunction`, (r, p) => {
+        if (r.body.length < 4 || p.errors.errors.length > 0) return false;
+        const funcInterfaces = r.body.filter((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        return funcInterfaces.length === 2;
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    // 测试 7: 函数接口与普通函数混合
+    if (testFunctionInterface("函数接口与普通函数混合", `function interface Callback takes nothing returns nothing
+function normalFunc takes nothing returns nothing
+call BJDebugMsg("normal")
+endfunction
+function callbackFunc takes nothing returns nothing
+call BJDebugMsg("callback")
+endfunction`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const funcInterface = r.body.find((s: Statement) => s instanceof FunctionInterfaceDeclaration);
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration);
+        return funcInterface !== undefined && funcs.length >= 2;
+    })) functionInterfacePassed++; else functionInterfaceFailed++;
+    
+    console.log(`\n函数接口测试结果: 通过 ${functionInterfacePassed}, 失败 ${functionInterfaceFailed}`);
+
+    // 测试 24: JASS type 声明解析测试（来自 common.j 片段 + 动态数组）
+    console.log("\n测试 24: JASS type 声明解析测试");
+    let typePassed = 0;
+    let typeFailed = 0;
+
+    const testTypeDecl = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`✓ ${name}`);
+            return true;
+        } else {
+            console.log(`✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`  错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            return false;
+        }
+    };
+
+    // 测试 1: 来自 common.j 的基础类型声明
+    if (testTypeDecl("common.j 基础类型声明", `type effecttype extends handle
+type weathereffect extends handle
+type terraindeformation extends handle
+type fogstate extends handle
+type fogmodifier extends agent
+type dialog extends agent`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const types = r.body.filter((s: Statement) => s instanceof TypeDeclaration) as TypeDeclaration[];
+        if (types.length !== 6) return false;
+        const expected: [string, string][] = [
+            ["effecttype", "handle"],
+            ["weathereffect", "handle"],
+            ["terraindeformation", "handle"],
+            ["fogstate", "handle"],
+            ["fogmodifier", "agent"],
+            ["dialog", "agent"]
+        ];
+        return expected.every(([n, b], i) => 
+            types[i].name.toString() === n && types[i].baseType.toString() === b
+        );
+    })) typePassed++; else typeFailed++;
+
+    // 测试 2: 自定义普通类型声明
+    if (testTypeDecl("自定义普通类型声明", `type myhandle extends handle`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const types = r.body.filter((s: Statement) => s instanceof TypeDeclaration) as TypeDeclaration[];
+        return types.length === 1 &&
+               types[0].name.toString() === "myhandle" &&
+               types[0].baseType.toString() === "handle" &&
+               !types[0].isArray;
+    })) typePassed++; else typeFailed++;
+
+    // 测试 3: 动态数组类型声明（文档示例 type arsample extends integer array[8]）
+    if (testTypeDecl("动态数组类型声明（简单）", `type arsample extends integer array[8]`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const types = r.body.filter((s: Statement) => s instanceof TypeDeclaration) as TypeDeclaration[];
+        if (types.length !== 1) return false;
+        const t = types[0];
+        return t.isArray &&
+               t.name.toString() === "arsample" &&
+               t.baseType.toString() === "integer" &&
+               !!t.elementSize &&
+               t.elementSize.toString() === "8" &&
+               t.storageSize === null;
+    })) typePassed++; else typeFailed++;
+
+    // 测试 4: 动态数组类型声明带扩展存储（type myDyArray extends integer array [200,40000]）
+    if (testTypeDecl("动态数组类型声明（扩展存储）", `type myDyArray extends integer array [200,40000]`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const types = r.body.filter((s: Statement) => s instanceof TypeDeclaration) as TypeDeclaration[];
+        if (types.length !== 1) return false;
+        const t = types[0];
+        return t.isArray &&
+               t.name.toString() === "myDyArray" &&
+               t.baseType.toString() === "integer" &&
+               !!t.elementSize &&
+               t.elementSize.toString() === "200" &&
+               !!t.storageSize &&
+               t.storageSize.toString() === "40000";
+    })) typePassed++; else typeFailed++;
+
+    console.log(`\nJASS type 测试结果: 通过 ${typePassed}, 失败 ${typeFailed}`);
+
+    // 测试 25: 冒号操作符语法糖（a:X）
+    console.log("\n测试 25: 冒号操作符语法糖");
+    let colonPassed = 0;
+    let colonFailed = 0;
+
+    const testColon = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`✓ ${name}`);
+            return true;
+        } else {
+            console.log(`✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`  错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+            }
+            return false;
+        }
+    };
+
+    // 文档示例：set X[a] = 10 与 set a:X = 10 等价
+    if (testColon("基本冒号赋值（文档示例）", `function test takes nothing returns nothing
+local integer a=3
+local integer array X
+set a:X = 10
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        // 只需验证解析无错即可
+        return true;
+    })) colonPassed++; else colonFailed++;
+
+    // 文档示例：set X[a] = X[a] + 10 与 set a:X = a:X + 10 等价
+    if (testColon("冒号作为表达式（文档示例）", `function test takes nothing returns nothing
+local integer a=3
+local integer array X
+set a:X = a:X + 10
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        return true;
+    })) colonPassed++; else colonFailed++;
+
+    // 复杂场景 1：冒号出现在右值表达式中
+    if (testColon("冒号出现在右值表达式中", `function test takes nothing returns nothing
+local integer a=3
+local integer array X
+local integer y
+set y = a:X * 2 + 5
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        return true;
+    })) colonPassed++; else colonFailed++;
+
+    // 复杂场景 2：混合使用 X[a] 和 a:X
+    if (testColon("混合使用 X[a] 和 a:X", `function test takes nothing returns nothing
+local integer a=3
+local integer array X
+set a:X = X[a] + a:X
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        return true;
+    })) colonPassed++; else colonFailed++;
+
+    // 复杂场景 3：冒号作为函数调用参数
+    if (testColon("冒号作为函数调用参数", `function foo takes integer v returns nothing
+endfunction
+function test takes nothing returns nothing
+local integer a=3
+local integer array X
+call foo(a:X)
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        return true;
+    })) colonPassed++; else colonFailed++;
+
+    // 非法用法 1：3:X 应该产生解析错误（根据文档，仅能用于变量）
+    if (testColon("非法用法：3:X", `function test takes nothing returns nothing
+local integer array X
+set 3:X = 1000
+endfunction`, (r, p) => {
+        // 期望有语法错误
+        return p.errors.errors.length > 0;
+    })) colonPassed++; else colonFailed++;
+
+    // 非法用法 2：a:3 也应产生错误，因为 ':' 后需要数组名标识符
+    if (testColon("非法用法：a:3", `function test takes nothing returns nothing
+local integer a=3
+local integer array X
+set a:3 = 1000
+endfunction`, (r, p) => {
+        return p.errors.errors.length > 0;
+    })) colonPassed++; else colonFailed++;
+
+    console.log(`\n冒号操作符测试结果: 通过 ${colonPassed}, 失败 ${colonFailed}`);
+
+    // 测试 26: 函数对象内置方法 (.evaluate, .execute, .name)
+    console.log("\n测试 26: 函数对象内置方法");
+    let functionObjectPassed = 0;
+    let functionObjectFailed = 0;
+
+    const testFunctionObject = (name: string, code: string, validator: (result: any, parser: Parser) => boolean): boolean => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            functionObjectPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(', ')}`);
+            }
+            functionObjectFailed++;
+            return false;
+        }
+    };
+
+    // 测试函数对象的 .evaluate 方法
+    if (testFunctionObject("函数对象的 .evaluate 方法", `function A takes real x returns real
+    return x * 2.0
+endfunction
+function test takes nothing returns real
+    return A.evaluate(5.0)
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const testFunc = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "test");
+        if (!(testFunc instanceof FunctionDeclaration)) return false;
+        const returnStmt = testFunc.body.body.find((s: Statement) => s instanceof ReturnStatement);
+        if (!(returnStmt instanceof ReturnStatement)) return false;
+        const expr = returnStmt.argument;
+        // 应该是 CallExpression，callee 是 BinaryExpression (A.evaluate)
+        if (expr instanceof CallExpression) {
+            const callee = expr.callee;
+            if (callee instanceof BinaryExpression && callee.operator === OperatorType.Dot) {
+                const right = callee.right;
+                if (right instanceof Identifier && right.toString() === "evaluate") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) functionObjectPassed++; else functionObjectFailed++;
+
+    // 测试函数对象的 .execute 方法
+    if (testFunctionObject("函数对象的 .execute 方法", `function DestroyEffectAfter takes effect fx, real t returns nothing
+    call TriggerSleepAction(t)
+    call DestroyEffect(fx)
+endfunction
+function test takes nothing returns nothing
+    call DestroyEffectAfter.execute(null, 3.0)
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const testFunc = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "test");
+        if (!(testFunc instanceof FunctionDeclaration)) return false;
+        const callStmt = testFunc.body.body.find((s: Statement) => s instanceof CallStatement);
+        if (!(callStmt instanceof CallStatement)) return false;
+        const expr = callStmt.expression;
+        if (expr instanceof CallExpression) {
+            const callee = expr.callee;
+            if (callee instanceof BinaryExpression && callee.operator === OperatorType.Dot) {
+                const right = callee.right;
+                if (right instanceof Identifier && right.toString() === "execute") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) functionObjectPassed++; else functionObjectFailed++;
+
+    // 测试函数对象的 .name 属性
+    if (testFunctionObject("函数对象的 .name 属性", `scope test
+public function xxx takes nothing returns nothing
+    call BJDebugMsg(xxx.name)
+endfunction
+endscope`, (r, p) => {
+        if (r.body.length === 0 || p.errors.errors.length > 0) return false;
+        // scope 被解析为 BlockStatement，查找其中的函数
+        const scope = r.body.find((s: Statement) => s instanceof BlockStatement);
+        if (!(scope instanceof BlockStatement)) return false;
+        const func = scope.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "xxx");
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
+        if (!(callStmt instanceof CallStatement)) return false;
+        const args = callStmt.expression.arguments;
+        if (args.length > 0) {
+            const arg = args[0];
+            // 应该是 BinaryExpression (xxx.name)
+            if (arg instanceof BinaryExpression && arg.operator === OperatorType.Dot) {
+                const right = arg.right;
+                if (right instanceof Identifier && right.toString() === "name") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) functionObjectPassed++; else functionObjectFailed++;
+
+    // 测试函数对象的 .evaluate 用于相互递归
+    if (testFunctionObject("函数对象的 .evaluate 用于相互递归", `function A takes real x returns real
+    if (GetRandomInt(0,1) == 0) then
+        return B.evaluate(x * 0.02)
+    endif
+    return x
+endfunction
+function B takes real x returns real
+    if (GetRandomInt(0,1) == 1) then
+        return A(x * 1000.)
+    endif
+    return x
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const funcA = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "A");
+        if (!(funcA instanceof FunctionDeclaration)) return false;
+        const returnStmt = funcA.body.body.find((s: Statement) => s instanceof ReturnStatement);
+        if (!(returnStmt instanceof ReturnStatement)) return false;
+        const expr = returnStmt.argument;
+        if (expr instanceof CallExpression) {
+            const callee = expr.callee;
+            if (callee instanceof BinaryExpression && callee.operator === OperatorType.Dot) {
+                const right = callee.right;
+                if (right instanceof Identifier && right.toString() === "evaluate") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) functionObjectPassed++; else functionObjectFailed++;
+
+    console.log(`\n函数对象内置方法测试结果: 通过 ${functionObjectPassed}, 失败 ${functionObjectFailed}`);
+
+    // 测试 27: 方法对象内置方法 (.evaluate, .execute, .name, .exists)
+    console.log("\n测试 27: 方法对象内置方法");
+    let methodObjectPassed = 0;
+    let methodObjectFailed = 0;
+
+    const testMethodObject = (name: string, code: string, validator: (result: any, parser: Parser) => boolean): boolean => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            methodObjectPassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(', ')}`);
+            }
+            methodObjectFailed++;
+            return false;
+        }
+    };
+
+    // 测试静态方法的 .name 属性
+    if (testMethodObject("静态方法的 .name 属性", `struct mystruct
+static method mymethod takes nothing returns nothing
+    call BJDebugMsg("this works")
+endmethod
+endstruct
+function myfunction takes nothing returns nothing
+    call ExecuteFunc(mystruct.mymethod.name)
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "myfunction");
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
+        if (!(callStmt instanceof CallStatement)) return false;
+        const args = callStmt.expression.arguments;
+        if (args.length > 0) {
+            const arg = args[0];
+            // 应该是 BinaryExpression (mystruct.mymethod.name)
+            // 这是一个链式成员访问：mystruct -> mymethod -> name
+            if (arg instanceof BinaryExpression && arg.operator === OperatorType.Dot) {
+                const right = arg.right;
+                if (right instanceof Identifier && right.toString() === "name") {
+                    // 检查左操作数是否是 mystruct.mymethod
+                    const left = arg.left;
+                    if (left instanceof BinaryExpression && left.operator === OperatorType.Dot) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    })) methodObjectPassed++; else methodObjectFailed++;
+
+    // 测试方法的 .exists 属性
+    if (testMethodObject("方法的 .exists 属性", `interface myInterface
+method myMethod1 takes nothing returns nothing
+method myMethod2 takes nothing returns nothing
+endinterface
+struct myStruct
+method myMethod1 takes nothing returns nothing
+    call BJDebugMsg("er")
+endmethod
+endstruct
+function test takes nothing returns nothing
+    local myInterface mi = myStruct.create()
+    if (mi.myMethod1.exists) then
+        call BJDebugMsg("Yes")
+    endif
+    if (mi.myMethod2.exists) then
+        call BJDebugMsg("Yes")
+    else
+        call BJDebugMsg("No")
+    endif
+endfunction`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "test");
+        if (!(func instanceof FunctionDeclaration)) return false;
+        // 查找 if 语句中的 .exists 访问
+        const ifStmts = func.body.body.filter((s: Statement) => s instanceof IfStatement);
+        if (ifStmts.length < 2) return false;
+        // 检查第一个 if 语句的条件
+        const firstIf = ifStmts[0] as IfStatement;
+        const condition = firstIf.condition;
+        if (condition instanceof BinaryExpression && condition.operator === OperatorType.Dot) {
+            const right = condition.right;
+            if (right instanceof Identifier && right.toString() === "exists") {
+                return true;
+            }
+        }
+        return false;
+    })) methodObjectPassed++; else methodObjectFailed++;
+
+    // 测试方法的 .evaluate 方法
+    if (testMethodObject("方法的 .evaluate 方法", `struct TestStruct
+method calculate takes integer x returns integer
+    return x * 2
+endmethod
+endstruct
+function test takes nothing returns integer
+    local TestStruct ts = TestStruct.create()
+    return ts.calculate.evaluate(5)
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "test");
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const returnStmt = func.body.body.find((s: Statement) => s instanceof ReturnStatement);
+        if (!(returnStmt instanceof ReturnStatement)) return false;
+        const expr = returnStmt.argument;
+        if (expr instanceof CallExpression) {
+            const callee = expr.callee;
+            // 应该是 ts.calculate.evaluate
+            if (callee instanceof BinaryExpression && callee.operator === OperatorType.Dot) {
+                const right = callee.right;
+                if (right instanceof Identifier && right.toString() === "evaluate") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) methodObjectPassed++; else methodObjectFailed++;
+
+    // 测试静态方法的 .execute 方法
+    if (testMethodObject("静态方法的 .execute 方法", `struct Worker
+static method doWork takes integer id returns nothing
+    call BJDebugMsg("Working: " + I2S(id))
+endmethod
+endstruct
+function test takes nothing returns nothing
+    call Worker.doWork.execute(42)
+endfunction`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const func = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "test");
+        if (!(func instanceof FunctionDeclaration)) return false;
+        const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
+        if (!(callStmt instanceof CallStatement)) return false;
+        const expr = callStmt.expression;
+        if (expr instanceof CallExpression) {
+            const callee = expr.callee;
+            // 应该是 Worker.doWork.execute
+            if (callee instanceof BinaryExpression && callee.operator === OperatorType.Dot) {
+                const right = callee.right;
+                if (right instanceof Identifier && right.toString() === "execute") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    })) methodObjectPassed++; else methodObjectFailed++;
+
+    console.log(`\n方法对象内置方法测试结果: 通过 ${methodObjectPassed}, 失败 ${methodObjectFailed}`);
+
+    // 测试 28: constant native 函数功能测试
+    console.log("\n测试 28: constant native 函数功能测试");
+    let constantNativePassed = 0;
+    let constantNativeFailed = 0;
+
+    const testConstantNative = (name: string, code: string, validator: (result: any, parser: Parser) => boolean): boolean => {
+        const parser = new Parser(code);
+        const result = parser.parse();
+        if (validator(result, parser)) {
+            console.log(`  ✓ ${name}`);
+            constantNativePassed++;
+            return true;
+        } else {
+            console.log(`  ✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`    错误: ${parser.errors.errors.map(e => e.message).join(', ')}`);
+            }
+            constantNativeFailed++;
+            return false;
+        }
+    };
+
+    // 测试 1: 基本 constant native 函数声明（来自 common.j）
+    if (testConstantNative("基本 constant native 函数声明（来自 common.j）", `constant native GetTriggeringTrigger takes nothing returns trigger
+constant native GetTriggerEventId takes nothing returns eventid
+constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
+constant native GetTriggerExecCount takes trigger whichTrigger returns integer`, (r, p) => {
+        if (r.body.length < 4 || p.errors.errors.length > 0) return false;
+        const natives = r.body.filter((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration[];
+        if (natives.length !== 4) return false;
+        // 检查所有函数都是 constant native
+        return natives.every(f => f.isConstant === true) &&
+               natives[0].name?.toString() === "GetTriggeringTrigger" &&
+               natives[1].name?.toString() === "GetTriggerEventId" &&
+               natives[2].name?.toString() === "GetTriggerEvalCount" &&
+               natives[3].name?.toString() === "GetTriggerExecCount";
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 2: constant native 与普通 native 混合
+    if (testConstantNative("constant native 与普通 native 混合", `native GetUnitX takes unit whichUnit returns real
+constant native GetTriggeringTrigger takes nothing returns trigger
+native GetUnitY takes unit whichUnit returns real`, (r, p) => {
+        if (r.body.length < 3 || p.errors.errors.length > 0) return false;
+        const natives = r.body.filter((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration[];
+        if (natives.length !== 3) return false;
+        const getUnitX = natives.find(f => f.name?.toString() === "GetUnitX");
+        const getTriggeringTrigger = natives.find(f => f.name?.toString() === "GetTriggeringTrigger");
+        const getUnitY = natives.find(f => f.name?.toString() === "GetUnitY");
+        return getUnitX !== undefined && getUnitX.isConstant === false &&
+               getTriggeringTrigger !== undefined && getTriggeringTrigger.isConstant === true &&
+               getUnitY !== undefined && getUnitY.isConstant === false;
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 3: constant native 带参数
+    if (testConstantNative("constant native 带参数", `constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
+constant native GetTriggerExecCount takes trigger whichTrigger returns integer`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const natives = r.body.filter((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration[];
+        if (natives.length !== 2) return false;
+        const evalCount = natives.find(f => f.name?.toString() === "GetTriggerEvalCount");
+        const execCount = natives.find(f => f.name?.toString() === "GetTriggerExecCount");
+        return evalCount !== undefined && evalCount.isConstant === true && evalCount.parameters.length === 1 &&
+               execCount !== undefined && execCount.isConstant === true && execCount.parameters.length === 1;
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 4: constant native 带返回值
+    if (testConstantNative("constant native 带返回值", `constant native GetTriggeringTrigger takes nothing returns trigger
+constant native GetTriggerEventId takes nothing returns eventid`, (r, p) => {
+        if (r.body.length < 2 || p.errors.errors.length > 0) return false;
+        const natives = r.body.filter((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration[];
+        if (natives.length !== 2) return false;
+        const trigger = natives.find(f => f.name?.toString() === "GetTriggeringTrigger");
+        const eventId = natives.find(f => f.name?.toString() === "GetTriggerEventId");
+        return trigger !== undefined && trigger.isConstant === true && trigger.returnType?.toString() === "trigger" &&
+               eventId !== undefined && eventId.isConstant === true && eventId.returnType?.toString() === "eventid";
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 5: constant native 的 toString 输出
+    if (testConstantNative("constant native 的 toString 输出", `constant native GetTriggeringTrigger takes nothing returns trigger`, (r, p) => {
+        if (r.body.length < 1 || p.errors.errors.length > 0) return false;
+        const native = r.body.find((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration | undefined;
+        if (!native) return false;
+        const str = native.toString();
+        return str.includes("constant") && str.includes("native") && str.includes("GetTriggeringTrigger");
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 6: constant native 与注释混合（来自 common.j 实际场景）
+    if (testConstantNative("constant native 与注释混合（来自 common.j 实际场景）", `// 获取（当前被）触发的触发器
+constant native GetTriggeringTrigger takes nothing returns trigger
+// 获取触发器事件ID
+constant native GetTriggerEventId takes nothing returns eventid
+// 获取触发器条件数量
+constant native GetTriggerEvalCount takes trigger whichTrigger returns integer
+// 获取触发器运行次数
+constant native GetTriggerExecCount takes trigger whichTrigger returns integer`, (r, p) => {
+        if (r.body.length < 4 || p.errors.errors.length > 0) return false;
+        const natives = r.body.filter((s: Statement) => s instanceof NativeDeclaration) as NativeDeclaration[];
+        return natives.length === 4 && natives.every(f => f.isConstant === true);
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    // 测试 7: constant function 应该报错（不合法）
+    if (testConstantNative("constant function 应该报错（不合法）", `constant function TestFunc takes nothing returns nothing
+endfunction`, (r, p) => {
+        // 应该报错：constant function 不合法
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some(e => e.message.includes("constant function") && e.message.includes("not allowed"));
+    })) constantNativePassed++; else constantNativeFailed++;
+
+    console.log(`\nconstant native 函数测试结果: 通过 ${constantNativePassed}, 失败 ${constantNativeFailed}`);
+
+    // 测试 31: textmacro 和 runtextmacro 功能测试
+    console.log("\n测试 31: textmacro 和 runtextmacro 功能测试");
+    let textMacroPassed = 0;
+    let textMacroFailed = 0;
+
+    const { TextMacroRegistry } = require('./text-macro-registry');
+    const { TextMacroCollector } = require('./text-macro-collector');
+    const { TextMacroExpander } = require('./text-macro-expander');
+
+    const testTextMacro = (name: string, code: string, validator: (result: any, parser: Parser) => boolean) => {
+        // 先收集 textmacro
+        const registry = TextMacroRegistry.getInstance();
+        registry.clear(); // 清空注册表
+        
+        const collector = new TextMacroCollector(registry);
+        const expander = new TextMacroExpander(registry);
+        
+        // 收集 textmacro
+        collector.collectFromFile('test.j', code);
+        
+        // 使用 expander 解析
+        const parser = new Parser(code, 'test.j', expander);
+        const result = parser.parse();
+        
+        if (validator(result, parser)) {
+            console.log(`✓ ${name}`);
+            return true;
+        } else {
+            console.log(`✗ ${name}`);
+            if (parser.errors.errors.length > 0) {
+                console.log(`  错误: ${parser.errors.errors.map((e: any) => e.message).join(", ")}`);
+            }
+            return false;
+        }
+    };
+
+    // 测试 1: 基本 textmacro 定义和展开
+    if (testTextMacro("基本 textmacro 定义和展开", `//! textmacro asdgspfnsa takes args
+    function func_$args$ takes nothing returns nothing
+    endfunction
+//! endtextmacro
+
+type hgoashgo extends integer
+
+//! runtextmacro asdgspfnsa("diap")
+
+call func_diap()`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        // 应该能找到展开后的函数 func_diap
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const funcDiap = funcs.find(f => f.name?.toString() === "func_diap");
+        return funcDiap !== undefined;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 2: textmacro 无参数
+    if (testTextMacro("textmacro 无参数", `//! textmacro SimpleMacro
+    function SimpleFunc takes nothing returns nothing
+        call BJDebugMsg("Hello")
+    endfunction
+//! endtextmacro
+
+//! runtextmacro SimpleMacro()`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const simpleFunc = funcs.find(f => f.name?.toString() === "SimpleFunc");
+        return simpleFunc !== undefined;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 3: textmacro 多参数
+    if (testTextMacro("textmacro 多参数", `//! textmacro CreateFunc takes TYPE, NAME
+    function Get$NAME$ takes nothing returns $TYPE$
+        return 0
+    endfunction
+//! endtextmacro
+
+//! runtextmacro CreateFunc("integer", "UnitCount")
+//! runtextmacro CreateFunc("real", "UnitHealth")`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const getUnitCount = funcs.find(f => f.name?.toString() === "GetUnitCount");
+        const getUnitHealth = funcs.find(f => f.name?.toString() === "GetUnitHealth");
+        return getUnitCount !== undefined && getUnitHealth !== undefined;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 4: textmacro 参数替换在函数名中
+    if (testTextMacro("textmacro 参数替换在函数名中", `//! textmacro TestMacro takes SUFFIX
+    function TestFunc_$SUFFIX$ takes nothing returns nothing
+        call BJDebugMsg("test")
+    endfunction
+//! endtextmacro
+
+//! runtextmacro TestMacro("ABC")`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const testFuncABC = funcs.find(f => f.name?.toString() === "TestFunc_ABC");
+        return testFuncABC !== undefined;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 5: textmacro 展开后调用生成的函数
+    if (testTextMacro("textmacro 展开后调用生成的函数", `//! textmacro GenerateFunc takes NAME
+    function $NAME$ takes nothing returns nothing
+        call BJDebugMsg("$NAME$")
+    endfunction
+//! endtextmacro
+
+//! runtextmacro GenerateFunc("MyFunc")
+
+call MyFunc()`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        // 应该能找到函数定义
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const myFunc = funcs.find(f => f.name?.toString() === "MyFunc");
+        // 应该能找到函数调用
+        const calls = r.body.filter((s: Statement) => s instanceof CallStatement) as CallStatement[];
+        const callMyFunc = calls.find(c => 
+            c.expression.callee instanceof Identifier && 
+            c.expression.callee.name === "MyFunc"
+        );
+        return myFunc !== undefined && callMyFunc !== undefined;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 6: textmacro 参数数量不匹配应该报错
+    if (testTextMacro("textmacro 参数数量不匹配应该报错", `//! textmacro TestMacro takes ARG1, ARG2
+    function Test takes nothing returns nothing
+    endfunction
+//! endtextmacro
+
+//! runtextmacro TestMacro("only_one")`, (r, p) => {
+        // 应该报错：参数数量不匹配
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some((e: any) => e.message.includes("expects") && e.message.includes("parameters"));
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 7: textmacro 不存在应该报错
+    if (testTextMacro("textmacro 不存在应该报错", `//! runtextmacro NonExistentMacro("param")`, (r, p) => {
+        // 应该报错：宏不存在
+        return p.errors.errors.length > 0 && 
+               p.errors.errors.some((e: any) => e.message.includes("not found"));
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 8: optional textmacro 不存在时不报错
+    if (testTextMacro("optional textmacro 不存在时不报错", `//! runtextmacro optional NonExistentMacro("param")`, (r, p) => {
+        // 可选宏不存在时不应该报错
+        return p.errors.errors.length === 0;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    // 测试 9: textmacro 在多个地方使用
+    if (testTextMacro("textmacro 在多个地方使用", `//! textmacro CreateVar takes TYPE, NAME
+    local $TYPE$ $NAME$ = 0
+//! endtextmacro
+
+function test takes nothing returns nothing
+    //! runtextmacro CreateVar("integer", "x")
+    //! runtextmacro CreateVar("real", "y")
+    set x = 10
+    set y = 3.14
+endfunction`, (r, p) => {
+        if (p.errors.errors.length > 0) return false;
+        const funcs = r.body.filter((s: Statement) => s instanceof FunctionDeclaration) as FunctionDeclaration[];
+        const testFunc = funcs.find(f => f.name?.toString() === "test");
+        if (!testFunc) return false;
+        // 检查函数体中是否有变量声明
+        const vars = testFunc.body.body.filter((s: Statement) => s instanceof VariableDeclaration) as VariableDeclaration[];
+        return vars.length >= 2;
+    })) textMacroPassed++; else textMacroFailed++;
+
+    console.log(`\ntextmacro 和 runtextmacro 测试结果: 通过 ${textMacroPassed}, 失败 ${textMacroFailed}`);
+
     console.log("\n=== 测试完成 ===");
 }

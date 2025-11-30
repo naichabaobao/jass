@@ -36,6 +36,7 @@ export enum TokenType {
     TypeBoolean = "BOOLEAN",
     TypeCode = "CODE",
     TypeHandle = "HANDLE",
+    TypeKey = "KEY",
 
     // 标识符和字面量
     Identifier = "IDENTIFIER",
@@ -63,7 +64,7 @@ export enum TokenType {
     OperatorIndex = "INDEX", // [] 运算符
     OperatorIndexAssign = "INDEX_ASSIGN", // []= 运算符
 
-    // 分隔符
+    // 分隔符 / 单字符运算符
     LeftParen = "LEFT_PAREN",
     RightParen = "RIGHT_PAREN",
     LeftBracket = "LEFT_BRACKET",
@@ -72,6 +73,7 @@ export enum TokenType {
     RightBrace = "RIGHT_BRACE",
     Comma = "COMMA",
     Dot = "DOT",
+    Colon = "COLON",
 
     // 注释和文本宏指令
     SingleLineComment = "SINGLE_LINE_COMMENT",
@@ -692,7 +694,30 @@ export class Lexer implements ILexer {
         const startColumn = this.column;
         this.advance(); // 跳过 '/'
         this.advance(); // 跳过 '/'
+        
+        // 检查是否是文本宏指令 //!
+        if (this.currentChar() === '!') {
+            this.advance(); // 跳过 '!'
+            let value = '';
+            while (this.position < this.source.length) {
+                const char = this.currentChar();
+                if (char === null || char === '\n') {
+                    break;
+                }
+                value += char;
+                this.advance();
+            }
+            const endLine = this.line;
+            const endColumn = this.column;
+            return new Token(
+                TokenType.TextMacroDirective,
+                value,
+                { line: startLine, position: startColumn },
+                { line: endLine, position: endColumn }
+            );
+        }
 
+        // 普通单行注释
         let value = '';
         while (this.position < this.source.length) {
             const char = this.currentChar();
@@ -806,6 +831,7 @@ export class Lexer implements ILexer {
                             case '}': type = TokenType.RightBrace; break;
                             case ',': type = TokenType.Comma; break;
                             case '.': type = TokenType.Dot; break;
+                            case ':': type = TokenType.Colon; break;
                             default: type = TokenType.Unknown; break;
                         }
                     }
@@ -829,6 +855,7 @@ export class Lexer implements ILexer {
                 case '}': type = TokenType.RightBrace; break;
                 case ',': type = TokenType.Comma; break;
                 case '.': type = TokenType.Dot; break;
+                case ':': type = TokenType.Colon; break;
                 default: type = TokenType.Unknown; break;
             }
         }
@@ -885,6 +912,9 @@ export class Lexer implements ILexer {
             ];
             return typeKeywords[index - 21];
         }
+
+        // key 类型关键字（索引 199）
+        if (index === 199) return TokenType.TypeKey; // key
 
         // 布尔字面量（索引 29-30）
         if (index === 29) return TokenType.BooleanLiteral; // true
