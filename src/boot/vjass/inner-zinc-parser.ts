@@ -9,8 +9,8 @@ export class InnerZincParser {
     public readonly filePath: string;
     public readonly errors: ErrorCollection;
 
-    constructor(content: string, filePath: string = "") {
-        this.lexer = new Lexer(content);
+    constructor(contentOrLexer: string|Lexer, filePath: string = "") {
+        this.lexer = contentOrLexer instanceof Lexer ? contentOrLexer : new Lexer(contentOrLexer);
         this.filePath = filePath;
         this.errors = {
             errors: [],

@@ -17,18 +17,23 @@ import {
     ScopeDeclaration,
     TextMacroStatement,
     RunTextMacroStatement,
-    ImplementStatement
+    ImplementStatement,
+    ZincBlockStatement
 } from '../vjass/vjass-ast';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
+import { ZincBlockHelper } from './zinc-block-helper';
+import { ZincOutlineProvider } from './zinc/zinc-outline-provider';
 
 /**
  * 基于新 AST 系统的文档大纲提供者
  */
 export class OutlineProvider implements vscode.DocumentSymbolProvider {
     private dataEnterManager: DataEnterManager;
+    private zincOutlineProvider: ZincOutlineProvider;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
+        this.zincOutlineProvider = new ZincOutlineProvider(dataEnterManager);
     }
 
     provideDocumentSymbols(
@@ -113,6 +118,19 @@ export class OutlineProvider implements vscode.DocumentSymbolProvider {
             // 如果遇到 BlockStatement，递归处理（可能是 globals 块或其他嵌套块）
             if (stmt instanceof BlockStatement) {
                 this.extractSymbolsFromBlock(stmt, symbols, parentSymbol);
+                continue;
+            }
+
+            // 处理 Zinc 块
+            if (stmt instanceof ZincBlockStatement) {
+                const zincSymbol = this.createZincBlockSymbol(stmt);
+                if (zincSymbol) {
+                    if (parentSymbol) {
+                        parentSymbol.children.push(zincSymbol);
+                    } else {
+                        symbols.push(zincSymbol);
+                    }
+                }
                 continue;
             }
 
@@ -921,6 +939,94 @@ export class OutlineProvider implements vscode.DocumentSymbolProvider {
             range,
             selectionRange
         );
+    }
+
+    /**
+     * 创建 Zinc 块符号
+     */
+    private createZincBlockSymbol(zincBlock: ZincBlockStatement): vscode.DocumentSymbol | null {
+        if (!zincBlock.start || !zincBlock.end) {
+            return null;
+        }
+
+        const range = this.createRange(zincBlock.start, zincBlock.end);
+        const selectionRange = range;
+
+        const symbol = new vscode.DocumentSymbol(
+            '//! zinc',
+            'Zinc Block',
+            vscode.SymbolKind.Namespace,
+            range,
+            selectionRange
+        );
+
+        // 解析 Zinc 块内容并提取符号
+        try {
+            const { InnerZincParser } = require('../vjass/inner-zinc-parser');
+            const { ZincProgram } = require('../vjass/zinc-ast');
+            const parser = new InnerZincParser(zincBlock.content, '');
+            const statements = parser.parse();
+            const program = new ZincProgram(statements);
+            
+            // 提取符号
+            const zincSymbols: vscode.DocumentSymbol[] = [];
+            const lineOffset = zincBlock.start.line + 1; // Zinc 内容从 //! zinc 的下一行开始
+            
+            for (const stmt of program.declarations) {
+                const stmtSymbol = (this.zincOutlineProvider as any).createSymbolFromStatement(stmt, '');
+                if (stmtSymbol) {
+                    // 调整行号（将 Zinc 块内的相对行号转换为文档中的绝对行号）
+                    this.adjustSymbolLineNumbers(stmtSymbol, lineOffset);
+                    
+                    // 递归提取嵌套符号（如结构体成员、库成员等）
+                    (this.zincOutlineProvider as any).extractNestedSymbols(stmt, stmtSymbol, '');
+                    
+                    // 调整嵌套符号的行号
+                    this.adjustNestedSymbolLineNumbers(stmtSymbol, lineOffset);
+                    
+                    zincSymbols.push(stmtSymbol);
+                }
+            }
+            symbol.children = zincSymbols;
+        } catch (error) {
+            console.error('Error parsing Zinc block for outline:', error);
+        }
+
+        return symbol;
+    }
+
+    /**
+     * 调整符号的行号
+     */
+    private adjustSymbolLineNumbers(symbol: vscode.DocumentSymbol, lineOffset: number): void {
+        if (symbol.range) {
+            symbol.range = new vscode.Range(
+                symbol.range.start.line + lineOffset,
+                symbol.range.start.character,
+                symbol.range.end.line + lineOffset,
+                symbol.range.end.character
+            );
+        }
+        if (symbol.selectionRange) {
+            symbol.selectionRange = new vscode.Range(
+                symbol.selectionRange.start.line + lineOffset,
+                symbol.selectionRange.start.character,
+                symbol.selectionRange.end.line + lineOffset,
+                symbol.selectionRange.end.character
+            );
+        }
+    }
+
+    /**
+     * 递归调整嵌套符号的行号
+     */
+    private adjustNestedSymbolLineNumbers(symbol: vscode.DocumentSymbol, lineOffset: number): void {
+        this.adjustSymbolLineNumbers(symbol, lineOffset);
+        if (symbol.children && symbol.children.length > 0) {
+            for (const child of symbol.children) {
+                this.adjustNestedSymbolLineNumbers(child, lineOffset);
+            }
+        }
     }
 
     /**

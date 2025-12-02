@@ -22,15 +22,19 @@ import {
 } from '../vjass/vjass-ast';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
 import { extractLeadingComments, parseComment, formatCommentAsMarkdown } from './comment-parser';
+import { ZincBlockHelper } from './zinc-block-helper';
+import { ZincHoverProvider } from './zinc/zinc-hover-provider';
 
 /**
  * 基于新 AST 系统的悬停信息提供者
  */
 export class HoverProvider implements vscode.HoverProvider {
     private dataEnterManager: DataEnterManager;
+    private zincHoverProvider: ZincHoverProvider;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
+        this.zincHoverProvider = new ZincHoverProvider(dataEnterManager);
     }
 
     provideHover(
@@ -39,6 +43,36 @@ export class HoverProvider implements vscode.HoverProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         try {
+            // 检查是否在 //! zinc 块内
+            const zincBlockInfo = ZincBlockHelper.findZincBlock(document, position, this.dataEnterManager);
+            if (zincBlockInfo && zincBlockInfo.program) {
+                // 在 Zinc 块内，使用 Zinc hover provider
+                const wordRange = document.getWordRangeAtPosition(position);
+                if (!wordRange) {
+                    return null;
+                }
+                
+                const symbolName = document.getText(wordRange);
+                if (!symbolName) {
+                    return null;
+                }
+                
+                // 调整位置（相对于 Zinc 块开始）
+                const adjustedPosition = new vscode.Position(
+                    position.line - zincBlockInfo.startLine,
+                    position.character
+                );
+                
+                // 使用 Zinc hover provider 的内部方法
+                const hoverContents: vscode.MarkdownString[] = [];
+                (this.zincHoverProvider as any).findSymbolsInProgram(zincBlockInfo.program, symbolName, document.uri.fsPath, hoverContents);
+                (this.zincHoverProvider as any).findLocalVariableHover(zincBlockInfo.program, symbolName, document.uri.fsPath, adjustedPosition, hoverContents);
+                
+                if (hoverContents.length > 0) {
+                    return new vscode.Hover(hoverContents, wordRange);
+                }
+            }
+
             // 检查是否在成员访问上下文中（如 this.xxx、thistype.xxx、structInstance.xxx）
             const memberAccessInfo = this.getMemberAccessInfo(document, position);
             

@@ -21,15 +21,19 @@ import {
     Identifier
 } from '../vjass/vjass-ast';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
+import { ZincBlockHelper } from './zinc-block-helper';
+import { ZincDefinitionProvider } from './zinc/zinc-definition-provider';
 
 /**
  * 基于新 AST 系统的定义提供者
  */
 export class DefinitionProvider implements vscode.DefinitionProvider {
     private dataEnterManager: DataEnterManager;
+    private zincDefinitionProvider: ZincDefinitionProvider;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
+        this.zincDefinitionProvider = new ZincDefinitionProvider(dataEnterManager);
     }
 
     provideDefinition(
@@ -38,6 +42,59 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
         try {
+            // 检查是否在 //! zinc 块内
+            const zincBlockInfo = ZincBlockHelper.findZincBlock(document, position, this.dataEnterManager);
+            if (zincBlockInfo && zincBlockInfo.program) {
+                // 在 Zinc 块内，使用 Zinc definition provider
+                const wordRange = document.getWordRangeAtPosition(position);
+                if (!wordRange) {
+                    return null;
+                }
+                
+                const symbolName = document.getText(wordRange);
+                if (!symbolName) {
+                    return null;
+                }
+                
+                const adjustedPosition = new vscode.Position(
+                    position.line - zincBlockInfo.startLine,
+                    position.character
+                );
+                
+                // 使用 Zinc definition provider 的内部方法
+                const locations: vscode.Location[] = [];
+                (this.zincDefinitionProvider as any).findDefinitionsInProgram(
+                    zincBlockInfo.program,
+                    symbolName,
+                    document.uri.fsPath,
+                    locations
+                );
+                (this.zincDefinitionProvider as any).findLocalVariableDefinitions(
+                    zincBlockInfo.program,
+                    symbolName,
+                    document.uri.fsPath,
+                    adjustedPosition,
+                    locations
+                );
+                
+                // 调整位置回到原始文档
+                const adjustedLocations = locations.map(loc => {
+                    return new vscode.Location(
+                        document.uri,
+                        new vscode.Range(
+                            loc.range.start.line + zincBlockInfo.startLine,
+                            loc.range.start.character,
+                            loc.range.end.line + zincBlockInfo.startLine,
+                            loc.range.end.character
+                        )
+                    );
+                });
+                
+                if (adjustedLocations.length > 0) {
+                    return adjustedLocations;
+                }
+            }
+
             // 获取当前位置的单词
             const wordRange = document.getWordRangeAtPosition(position);
             if (!wordRange) {
