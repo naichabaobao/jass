@@ -1,15 +1,21 @@
 {
   "name": "jass",
-  "displayName": "jass",
-  "description": "jass插件,QQ群:786204376",
+  "displayName": "JASS Language Support",
+  "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.8.44",
+  "version": "1.9.0",
   "keywords": [
     "jass",
     "vjass",
     "zinc",
-    "warcraft"
+    "warcraft",
+    "war3",
+    "warcraft3",
+    "jasshelper",
+    "语法高亮",
+    "代码补全",
+    "语言支持"
   ],
   "engines": {
     "vscode": "^1.63.0"
@@ -26,7 +32,8 @@
   },
   "homepage": "https://github.com/naichabaobao/jass",
   "activationEvents": [
-    "onLanguage:jass"
+    "onLanguage:jass",
+    "onLanguage:jass-zinc"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -75,12 +82,22 @@
         "id": "jass",
         "aliases": [
           "jass",
-          "jass2"
+          "jass2",
+          "vjass"
         ],
         "extensions": [
           ".j",
           ".ai",
-          ".jass",
+          ".jass"
+        ],
+        "configuration": "./static/jass-configuration.json"
+      },
+      {
+        "id": "jass-zinc",
+        "aliases": [
+          "zinc"
+        ],
+        "extensions": [
           ".zn"
         ],
         "configuration": "./static/jass-configuration.json"
@@ -91,11 +108,20 @@
         "scopeName": "source.jass",
         "language": "jass",
         "path": "./static/jass.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.zinc",
+        "language": "jass-zinc",
+        "path": "./static/zinc.tmLanguage.json"
       }
     ],
     "snippets": [
       {
         "language": "jass",
+        "path": "./static/snippets.json"
+      },
+      {
+        "language": "jass-zinc",
         "path": "./static/snippets.json"
       }
     ],

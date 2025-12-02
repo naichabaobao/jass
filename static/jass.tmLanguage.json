@@ -23,7 +23,7 @@
           "include": "#lua"
         },
         {
-          "include": "#mul-string"
+          "include": "#string"
         },
         {
           "include": "#keyword"
@@ -51,20 +51,30 @@
         },
         {
           "include": "#type"
+        },
+        {
+          "include": "#identifier"
         }
       ],
       "repository": {
         "block-comment": {
           "name": "comment.block",
           "begin": "/\\*",
-          "end": "\\*/"
+          "end": "\\*/",
+          "patterns": [
+            {
+              "name": "comment.block",
+              "begin": "/\\*",
+              "end": "\\*/"
+            }
+          ]
         },
         "vjass-directive": {
-          "name": "keyword",
+          "name": "keyword.other.preprocessor",
           "begin": "//!",
           "beginCaptures": {
             "0": {
-              "name": "string.regexp"
+              "name": "punctuation.definition.preprocessor"
             }
           },
           "end": "\\n",
@@ -73,16 +83,12 @@
               "include": "#line-string"
             },
             {
-              "name": "keyword",
-              "match": "\\b(textmacro|endtextmacro|runtextmacro|import|inject|endinject|dovjassinit|novjass|endnovjass|takes|zinc|endzinc)\\b"
+              "name": "keyword.other.preprocessor",
+              "match": "\\b(textmacro|endtextmacro|runtextmacro|import|inject|endinject|dovjassinit|novjass|endnovjass|zinc|endzinc|external|endexternalblock|loaddata)\\b"
             },
             {
               "name": "storage.modifier",
               "match": "\\b(v?jass|zinc)\\b"
-            },
-            {
-              "name": "invalid.illegal",
-              "match": "\\w+"
             }
           ]
         },
@@ -116,14 +122,10 @@
             {
               "name": "constant.character.escape",
               "match": "\\\\."
-            },
-            {
-              "name": "string.quoted",
-              "match": "."
             }
           ]
         },
-        "mul-string": {
+        "string": {
           "begin": "\"",
           "end": "\"",
           "beginCaptures": {
@@ -148,10 +150,6 @@
             {
               "name": "constant.character.escape",
               "match": "\\\\."
-            },
-            {
-              "name": "string.quoted",
-              "match": "."
             }
           ]
         },
@@ -169,7 +167,7 @@
         },
         "keyword-constant": {
           "name": "constant.language",
-          "match": "\\b(true|false|null)\\b"
+          "match": "\\b(true|false|null|nothing)\\b"
         },
         "number": {
           "name": "constant.numeric",
@@ -209,17 +207,21 @@
               "include": "source.lua"
             }
           ]
+        },
+        "identifier": {
+          "name": "variable.other",
+          "match": "[a-zA-Z][a-zA-Z0-9_]*"
         }
       }
     },
     "vjass": {
       "patterns": [
         {"include": "#novjass"},
-        {"include": "#zinc"},
+        {"include": "#zinc-block"},
         {"include": "#jass"},
-        {"include": "#keyword"},
-        {"include": "#object"},
-        {"include": "#id"}
+        {"include": "#vjass-keyword"},
+        {"include": "#vjass-object"},
+        {"include": "#identifier"}
       ],
       "repository": {
         "novjass": {
@@ -227,62 +229,55 @@
           "end": "//!\\s+endnovjass\\b",
           "beginCaptures": {
             "0": {
-              "name": "markup.bold"
+              "name": "keyword.other.preprocessor"
             }
           },
           "endCaptures": {
             "0": {
-              "name": "markup.bold"
+              "name": "keyword.other.preprocessor"
             }
           },
           "patterns": [
             {"include": "#jass"},
-            {"include": "#id"}
+            {"include": "#identifier"}
           ]
         },
-        "zinc": {
+        "zinc-block": {
           "begin": "//!\\s+zinc\\b",
           "end": "//!\\s+endzinc\\b",
           "beginCaptures": {
             "0": {
-              "name": "markup.bold"
+              "name": "keyword.other.preprocessor"
             }
           },
           "endCaptures": {
             "0": {
-              "name": "markup.bold"
+              "name": "keyword.other.preprocessor"
             }
           },
           "patterns": [
-            {"include": "#jass"},
-            {"include": "#zinc-keyword"},
-            {"include": "#zinc-keyword-control"},
-            {"include": "#id"}
-          ],
-          "repository": {
-            "zinc-keyword": {
-              "name": "keyword",
-              "match": "\\b(library|onInit|struct|public|private|static|requires|optional|interface|struct|method|operator|module|delegate|this|library_once)\\b"
-            },
-            "zinc-keyword-control": {
-              "name": "keyword.control",
-              "match": "\\b(do|while|for|break)\\b|->"
+            {
+              "include": "source.zinc"
             }
-          }
+          ]
         },
-        "keyword": {
+        "vjass-keyword": {
           "name": "keyword",
-          "match": "\\b(library|initializer|needs|uses|requires|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|delegate|operator|module|endmodule|implement|optional|stub|key|thistype|onInit|onDestroy|hook|defaults)\\b|((?<=\\.)execute|evaluate|create|destroy|allocate|deallocate|library_once)\\b"
+          "match": "\\b(library|library_once|initializer|finalizer|needs|uses|requires|optional|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|super|delegate|operator|module|endmodule|implement|stub|key|thistype|onInit|onDestroy|hook|defaults|allocate|deallocate|create|destroy|execute|evaluate|name|exists|size|getType|typeid)\\b"
         },
-        "object": {
+        "vjass-object": {
           "patterns": [
             {
               "name": "entity.name.type",
-              "match": "(?<=\\b(?:struct|delegate)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
+              "match": "(?<=\\b(?:struct|delegate|interface)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
             },
             {
               "name": "entity.other.inherited-class",
-              "match": "(?<=\\b(?:interface|extends)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
+              "match": "(?<=\\b(?:extends|implements)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
+            },
+            {
+              "name": "entity.name.namespace",
+              "match": "(?<=\\b(?:library|scope)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
             }
           ]
         }
@@ -293,24 +288,24 @@
       "end": "//!\\s+endtextmacro\\b",
       "beginCaptures": {
         "0": {
-          "name": "markup.bold"
+          "name": "keyword.other.preprocessor"
         }
       },
       "endCaptures": {
         "0": {
-          "name": "markup.bold"
+          "name": "keyword.other.preprocessor"
         }
       },
       "patterns": [
         {
-          "name": "string.regexp",
+          "name": "variable.parameter",
           "match": "\\$[a-zA-Z][a-zA-Z0-9_]*\\$"
         },
         {"include": "#vjass"}
       ]
     },
-    "id": {
-      "name": "support.variable",
+    "identifier": {
+      "name": "variable.other",
       "match": "[a-zA-Z][a-zA-Z0-9_]*"
     }
   }

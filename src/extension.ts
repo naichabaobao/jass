@@ -10,6 +10,7 @@ import { DefinitionProvider } from './boot/provider-new/definition-provider';
 import { TypeDefinitionProvider } from './boot/provider-new/type-definition-provider';
 import { ReferenceProvider } from './boot/provider-new/reference-provider';
 import { InlayHintsProvider } from './boot/provider-new/inlay-hints-provider';
+import { ImplementationProvider } from './boot/provider-new/implementation-provider';
 import { DiagnosticProvider } from './boot/provider-new/diagnostic-provider';
 import { ZincCompletionProvider } from './boot/provider-new/zinc/zinc-completion-provider';
 import { ZincDefinitionProvider } from './boot/provider-new/zinc/zinc-definition-provider';
@@ -20,6 +21,8 @@ import { ZincDiagnosticProvider } from './boot/provider-new/zinc/zinc-diagnostic
 import { FormattingProvider } from './boot/provider-new/formatting-provider';
 import { ZincFormattingProvider } from './boot/provider-new/zinc/zinc-formatting-provider';
 import { DataEnterManager } from './boot/provider-new/data-enter';
+import { JassDocumentColorProvider } from './boot/provider/document-color-provider';
+import { ZincInlayHintsProvider } from './boot/provider-new/zinc/zinc-inlay-hints-provider';
 
 // JASS 语言选择器
 const jassSelector = { scheme: 'file', language: 'jass' };
@@ -171,6 +174,15 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // 创建并注册 ImplementationProvider（查找实现支持）
+    const implementationProvider = new ImplementationProvider(dataEnterManager);
+    context.subscriptions.push(
+        vscode.languages.registerImplementationProvider(
+            jassSelector,
+            implementationProvider
+        )
+    );
+
     // 创建并注册 InlayHintsProvider（参数类型提示支持）
     const inlayHintsProvider = new InlayHintsProvider(dataEnterManager);
     context.subscriptions.push(
@@ -179,6 +191,21 @@ export async function activate(context: vscode.ExtensionContext) {
             inlayHintsProvider
         )
     );
+
+    // 创建并注册 ZincInlayHintsProvider（Zinc 文件专用类型提示支持）
+    // 使用文件扩展名选择器，支持 .zn 文件
+    const zincInlayHintsProvider = new ZincInlayHintsProvider(dataEnterManager);
+    context.subscriptions.push(
+        vscode.languages.registerInlayHintsProvider(
+            { scheme: 'file', pattern: '**/*.zn' },
+            zincInlayHintsProvider
+        )
+    );
+    context.subscriptions.push({
+        dispose: () => {
+            zincInlayHintsProvider.dispose();
+        }
+    });
 
     // 创建并注册 DiagnosticProvider（语法错误和警告提示支持）
     const diagnosticProvider = new DiagnosticProvider(dataEnterManager);
@@ -227,6 +254,15 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentRangeFormattingEditProvider(
             zincFileSelector,
             zincFormattingProvider
+        )
+    );
+
+    // 创建并注册 JassDocumentColorProvider（颜色提供者支持）
+    const documentColorProvider = new JassDocumentColorProvider();
+    context.subscriptions.push(
+        vscode.languages.registerColorProvider(
+            jassSelector,
+            documentColorProvider
         )
     );
 
