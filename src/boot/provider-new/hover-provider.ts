@@ -17,7 +17,8 @@ import {
     ScopeDeclaration,
     TextMacroStatement,
     ImplementStatement,
-    Identifier
+    Identifier,
+    ThistypeExpression
 } from '../vjass/vjass-ast';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
 import { extractLeadingComments, parseComment, formatCommentAsMarkdown } from './comment-parser';
@@ -38,6 +39,22 @@ export class HoverProvider implements vscode.HoverProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         try {
+            // 检查是否在成员访问上下文中（如 this.xxx、thistype.xxx、structInstance.xxx）
+            const memberAccessInfo = this.getMemberAccessInfo(document, position);
+            
+            if (memberAccessInfo) {
+                // 在成员访问上下文中，查找成员信息
+                const hoverContents: vscode.MarkdownString[] = [];
+                const memberHover = this.findMemberHover(memberAccessInfo, document, position);
+                if (memberHover) {
+                    hoverContents.push(memberHover);
+                    const wordRange = document.getWordRangeAtPosition(position);
+                    if (wordRange) {
+                        return new vscode.Hover(hoverContents, wordRange);
+                    }
+                }
+            }
+            
             // 获取当前位置的单词
             const wordRange = document.getWordRangeAtPosition(position);
             if (!wordRange) {
@@ -63,6 +80,11 @@ export class HoverProvider implements vscode.HoverProvider {
 
                 // 在当前文件中查找符号
                 this.findSymbolsInBlock(blockStatement, symbolName, cachedFilePath, hoverContents);
+                
+                // 查找局部变量和参数的悬停信息（仅在当前文件中）
+                if (cachedFilePath === filePath) {
+                    this.findLocalVariableHover(blockStatement, symbolName, filePath, position, hoverContents);
+                }
             }
 
             // 查找 TextMacro
@@ -85,6 +107,328 @@ export class HoverProvider implements vscode.HoverProvider {
             console.error('Error in provideHover:', error);
             return null;
         }
+    }
+    
+    /**
+     * 获取成员访问信息（如 this.xxx、thistype.xxx）
+     */
+    private getMemberAccessInfo(
+        document: vscode.TextDocument,
+        position: vscode.Position
+    ): { structName: string; memberName: string; isStatic: boolean; isThis: boolean; isThistype: boolean } | null {
+        const lineText = document.lineAt(position.line).text;
+        const textBeforeCursor = lineText.substring(0, position.character);
+        
+        // 匹配模式：identifier.memberName 或 identifier . memberName（允许空格）
+        const memberAccessPattern = /(\w+)\s*\.\s*(\w+)/;
+        const match = textBeforeCursor.match(memberAccessPattern);
+        
+        if (!match) {
+            return null;
+        }
+        
+        const identifier = match[1].toLowerCase();
+        const memberName = match[2];
+        
+        // 检查是否是 this 或 thistype
+        if (identifier === 'this') {
+            const currentStruct = this.findCurrentStruct(document, position);
+            if (currentStruct && currentStruct.name) {
+                return {
+                    structName: currentStruct.name.name,
+                    memberName: memberName,
+                    isStatic: false,
+                    isThis: true,
+                    isThistype: false
+                };
+            }
+            return null;
+        }
+        
+        if (identifier === 'thistype') {
+            const currentStruct = this.findCurrentStruct(document, position);
+            if (currentStruct && currentStruct.name) {
+                return {
+                    structName: currentStruct.name.name,
+                    memberName: memberName,
+                    isStatic: true,
+                    isThis: false,
+                    isThistype: true
+                };
+            }
+            return null;
+        }
+        
+        // 普通标识符访问
+        const originalIdentifier = match[1];
+        const isStatic = originalIdentifier[0] === originalIdentifier[0].toUpperCase();
+        
+        return {
+            structName: originalIdentifier,
+            memberName: memberName,
+            isStatic: isStatic,
+            isThis: false,
+            isThistype: false
+        };
+    }
+    
+    /**
+     * 查找成员 hover 信息
+     */
+    private findMemberHover(
+        info: { structName: string; memberName: string; isStatic: boolean; isThis: boolean; isThistype: boolean },
+        document: vscode.TextDocument,
+        position: vscode.Position
+    ): vscode.MarkdownString | null {
+        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        
+        for (const filePath of allCachedFiles) {
+            const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+            if (!blockStatement) {
+                continue;
+            }
+            
+            const struct = this.findStructInBlock(blockStatement, info.structName);
+            if (struct) {
+                // 查找成员
+                for (const member of struct.members) {
+                    if (member instanceof MethodDeclaration) {
+                        if (member.name && member.name.name === info.memberName) {
+                            // 检查 static 匹配
+                            if (info.isStatic && !member.isStatic) continue;
+                            if (!info.isStatic && member.isStatic) continue;
+                            
+                            return this.createMethodHoverContent(member, struct.name?.name || 'unknown', filePath);
+                        }
+                    } else if (member instanceof VariableDeclaration) {
+                        if (member.name && member.name.name === info.memberName) {
+                            // 检查 static 匹配
+                            if (info.isStatic && !member.isStatic) continue;
+                            if (!info.isStatic && member.isStatic) continue;
+                            
+                            return this.createMemberVariableHoverContent(member, struct.name?.name || 'unknown', filePath);
+                        }
+                    }
+                }
+                
+                // 检查内置方法
+                const builtinHover = this.createBuiltinMethodHover(struct, info.memberName, info.isStatic, filePath);
+                if (builtinHover) {
+                    return builtinHover;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 创建内置方法 hover 内容
+     */
+    private createBuiltinMethodHover(
+        struct: StructDeclaration,
+        methodName: string,
+        isStatic: boolean,
+        filePath: string
+    ): vscode.MarkdownString | null {
+        const structName = struct.name?.name || 'unknown';
+        
+        if (methodName === 'allocate' && isStatic) {
+            const content = new vscode.MarkdownString();
+            const createMethod = struct.members.find(
+                m => m instanceof MethodDeclaration && m.isStatic && m.name?.name === 'create'
+            ) as MethodDeclaration | undefined;
+            
+            let paramsStr = 'nothing';
+            if (createMethod && createMethod.parameters.length > 0) {
+                paramsStr = createMethod.parameters
+                    .map(p => {
+                        const typeStr = p.type ? p.type.toString() : 'unknown';
+                        return `${typeStr} ${p.name.name}`;
+                    })
+                    .join(', ');
+            }
+            
+            const doc = `private static method allocate takes ${paramsStr} returns ${structName}`;
+            content.appendCodeblock(doc, 'jass');
+            content.appendMarkdown('\n\n**内置方法** - 为该结构分配唯一的实例 ID');
+            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            return content;
+        }
+        
+        if (methodName === 'create' && isStatic) {
+            const hasCustomCreate = struct.members.some(
+                m => m instanceof MethodDeclaration && m.isStatic && m.name?.name === 'create'
+            );
+            
+            const content = new vscode.MarkdownString();
+            const createMethod = struct.members.find(
+                m => m instanceof MethodDeclaration && m.isStatic && m.name?.name === 'create'
+            ) as MethodDeclaration | undefined;
+            
+            if (createMethod) {
+                const doc = this.formatMethodSignature(createMethod);
+                content.appendCodeblock(doc, 'jass');
+                const comment = this.extractCommentForStatement(createMethod, filePath);
+                if (comment) {
+                    content.appendMarkdown('\n\n---\n\n');
+                    content.appendMarkdown(comment);
+                }
+            } else {
+                let paramsStr = 'nothing';
+                const doc = `static method create takes ${paramsStr} returns ${structName}`;
+                content.appendCodeblock(doc, 'jass');
+                content.appendMarkdown('\n\n**内置方法** - 创建结构实例（默认调用 allocate）');
+            }
+            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            return content;
+        }
+        
+        if (methodName === 'destroy') {
+            const customDestroy = struct.members.find(
+                m => m instanceof MethodDeclaration && m.name?.name === 'destroy' && m.isStatic === isStatic
+            ) as MethodDeclaration | undefined;
+            
+            const content = new vscode.MarkdownString();
+            if (customDestroy) {
+                const doc = this.formatMethodSignature(customDestroy);
+                content.appendCodeblock(doc, 'jass');
+                const comment = this.extractCommentForStatement(customDestroy, filePath);
+                if (comment) {
+                    content.appendMarkdown('\n\n---\n\n');
+                    content.appendMarkdown(comment);
+                }
+            } else {
+                const staticStr = isStatic ? 'static ' : '';
+                const doc = `${staticStr}method destroy takes nothing returns nothing`;
+                content.appendCodeblock(doc, 'jass');
+                content.appendMarkdown('\n\n**内置方法** - 销毁结构实例');
+            }
+            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            return content;
+        }
+        
+        if (methodName === 'deallocate' && !isStatic) {
+            const content = new vscode.MarkdownString();
+            const doc = `method deallocate takes nothing returns nothing`;
+            content.appendCodeblock(doc, 'jass');
+            content.appendMarkdown('\n\n**内置方法** - 调用默认的 destroy 方法');
+            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            return content;
+        }
+        
+        if (methodName === 'onDestroy' && !isStatic) {
+            const onDestroyMethod = struct.members.find(
+                m => m instanceof MethodDeclaration && !m.isStatic && m.name?.name === 'onDestroy'
+            ) as MethodDeclaration | undefined;
+            
+            if (onDestroyMethod) {
+                const content = new vscode.MarkdownString();
+                const doc = this.formatMethodSignature(onDestroyMethod);
+                content.appendCodeblock(doc, 'jass');
+                content.appendMarkdown('\n\n**特殊方法** - 在结构实例销毁时自动调用');
+                const comment = this.extractCommentForStatement(onDestroyMethod, filePath);
+                if (comment) {
+                    content.appendMarkdown('\n\n---\n\n');
+                    content.appendMarkdown(comment);
+                }
+                content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+                return content;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 格式化方法签名
+     */
+    private formatMethodSignature(method: MethodDeclaration): string {
+        const name = method.name?.name || 'unknown';
+        const params = method.parameters
+            .map(p => {
+                const typeStr = p.type ? p.type.toString() : 'unknown';
+                return `${typeStr} ${p.name.name}`;
+            })
+            .join(', ');
+        const returnType = method.returnType ? method.returnType.toString() : 'nothing';
+        const staticStr = method.isStatic ? 'static ' : '';
+        return `${staticStr}method ${name} takes ${params || 'nothing'} returns ${returnType}`;
+    }
+    
+    /**
+     * 查找当前位置所在的 struct
+     */
+    private findCurrentStruct(
+        document: vscode.TextDocument,
+        position: vscode.Position
+    ): StructDeclaration | null {
+        const filePath = document.uri.fsPath;
+        const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+        if (!blockStatement) {
+            return null;
+        }
+        
+        return this.findContainingStruct(blockStatement, position);
+    }
+    
+    /**
+     * 查找包含指定位置的 struct
+     */
+    private findContainingStruct(
+        block: BlockStatement,
+        position: vscode.Position
+    ): StructDeclaration | null {
+        for (const stmt of block.body) {
+            if (stmt instanceof StructDeclaration) {
+                if (stmt.start && stmt.end) {
+                    if (this.isPositionInRange(position, stmt.start, stmt.end)) {
+                        return stmt;
+                    }
+                }
+            }
+            
+            if (stmt instanceof BlockStatement) {
+                const found = this.findContainingStruct(stmt, position);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 检查位置是否在范围内
+     */
+    private isPositionInRange(
+        position: vscode.Position,
+        start?: { line: number; position?: number },
+        end?: { line: number; position?: number }
+    ): boolean {
+        if (!start || !end) {
+            return false;
+        }
+
+        const startLine = start.line;
+        const endLine = end.line;
+        const startPos = start.position || 0;
+        const endPos = end.position || 0;
+
+        if (position.line < startLine || position.line > endLine) {
+            return false;
+        }
+
+        if (position.line === startLine && startPos !== undefined && position.character < startPos) {
+            return false;
+        }
+
+        if (position.line === endLine && endPos !== undefined && position.character > endPos) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -769,6 +1113,222 @@ export class HoverProvider implements vscode.HoverProvider {
         
         content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
         
+        return content;
+    }
+
+    /**
+     * 查找局部变量和参数的悬停信息
+     */
+    private findLocalVariableHover(
+        block: BlockStatement,
+        symbolName: string,
+        filePath: string,
+        position: vscode.Position,
+        hoverContents: vscode.MarkdownString[]
+    ): void {
+        // 查找包含当前位置的函数或方法
+        const funcOrMethod = this.findContainingFunctionOrMethod(block, position);
+        if (!funcOrMethod) {
+            return;
+        }
+
+        // 添加参数的悬停信息
+        if (funcOrMethod instanceof FunctionDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    const content = this.createParameterHoverContent(
+                        { name: param.name, type: param.type },
+                        filePath
+                    );
+                    if (content) {
+                        hoverContents.push(content);
+                    }
+                }
+            }
+            // 在函数体中查找局部变量
+            if (funcOrMethod.body) {
+                this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, hoverContents);
+            }
+        } else if (funcOrMethod instanceof MethodDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    const content = this.createParameterHoverContent(
+                        { name: param.name, type: param.type },
+                        filePath
+                    );
+                    if (content) {
+                        hoverContents.push(content);
+                    }
+                }
+            }
+            // 在方法体中查找局部变量
+            if (funcOrMethod.body) {
+                this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, hoverContents);
+            }
+        }
+    }
+
+    /**
+     * 查找包含指定位置的函数或方法
+     * 参数在整个函数范围内都可用（包括函数声明行和函数体）
+     */
+    private findContainingFunctionOrMethod(
+        block: BlockStatement,
+        position: vscode.Position
+    ): FunctionDeclaration | MethodDeclaration | null {
+        for (const stmt of block.body) {
+            if (stmt instanceof FunctionDeclaration) {
+                // 检查位置是否在整个函数范围内（包括函数声明行和函数体）
+                if (stmt.start && stmt.end) {
+                    const funcStartLine = stmt.start.line;
+                    const funcEndLine = stmt.end.line;
+                    
+                    // 位置在函数开始行和结束行之间（包括结束行）
+                    // 允许位置在结束行的下一行（容错处理）
+                    if (position.line >= funcStartLine && position.line <= funcEndLine + 1) {
+                        return stmt;
+                    }
+                }
+                // 如果没有位置信息，也检查函数体范围（作为补充）
+                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                    return stmt;
+                }
+            } else if (stmt instanceof MethodDeclaration) {
+                // 检查位置是否在整个方法范围内（包括方法声明行和方法体）
+                if (stmt.start && stmt.end) {
+                    const methodStartLine = stmt.start.line;
+                    const methodEndLine = stmt.end.line;
+                    
+                    // 位置在方法开始行和结束行之间（包括结束行）
+                    // 允许位置在结束行的下一行（容错处理）
+                    if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
+                        return stmt;
+                    }
+                }
+                // 如果没有位置信息，也检查方法体范围（作为补充）
+                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                    return stmt;
+                }
+            } else if (stmt instanceof BlockStatement) {
+                // 递归查找嵌套块
+                const nested = this.findContainingFunctionOrMethod(stmt, position);
+                if (nested) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 在代码块中查找局部变量悬停信息
+     */
+    private findLocalVariablesInBlock(
+        block: BlockStatement,
+        symbolName: string,
+        filePath: string,
+        position: vscode.Position,
+        hoverContents: vscode.MarkdownString[]
+    ): void {
+        for (const stmt of block.body) {
+            // 检查是否是局部变量声明
+            if (stmt instanceof VariableDeclaration && stmt.isLocal) {
+                // 检查变量是否在指定位置之前声明（作用域检查）
+                if (stmt.name && stmt.name.name === symbolName) {
+                    if (this.isVariableBeforePosition(stmt, position)) {
+                        const content = this.createLocalVariableHoverContent(stmt, filePath);
+                        if (content) {
+                            hoverContents.push(content);
+                        }
+                    }
+                }
+            }
+            // 递归查找嵌套块中的局部变量
+            else if (stmt instanceof BlockStatement) {
+                if (this.isPositionInRange(position, stmt.start, stmt.end)) {
+                    this.findLocalVariablesInBlock(stmt, symbolName, filePath, position, hoverContents);
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查变量是否在指定位置之前声明
+     */
+    private isVariableBeforePosition(
+        variable: VariableDeclaration,
+        position: vscode.Position
+    ): boolean {
+        if (!variable.start) {
+            return false;
+        }
+
+        const varLine = variable.start.line;
+        const varPos = variable.start.position || 0;
+
+        // 变量必须在当前位置之前声明
+        if (varLine < position.line) {
+            return true;
+        }
+        if (varLine === position.line && varPos < position.character) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 创建参数悬停内容
+     */
+    private createParameterHoverContent(
+        param: { name: Identifier; type?: Identifier | ThistypeExpression | null },
+        filePath: string
+    ): vscode.MarkdownString | null {
+        if (!param.name) {
+            return null;
+        }
+
+        const name = param.name.name;
+        let typeStr = 'nothing';
+        if (param.type) {
+            if (param.type instanceof Identifier) {
+                typeStr = param.type.name;
+            } else if (param.type instanceof ThistypeExpression) {
+                typeStr = 'thistype';
+            }
+        }
+        const signature = `${typeStr} ${name}`;
+
+        const content = new vscode.MarkdownString();
+        content.appendCodeblock(signature, 'jass');
+        content.appendMarkdown('\n\n**参数**');
+        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+
+        return content;
+    }
+
+    /**
+     * 创建局部变量悬停内容
+     */
+    private createLocalVariableHoverContent(
+        variable: VariableDeclaration,
+        filePath: string
+    ): vscode.MarkdownString | null {
+        if (!variable.name) {
+            return null;
+        }
+
+        const name = variable.name.name;
+        const typeStr = variable.type instanceof Identifier ? variable.type.name : (variable.type ? 'thistype' : 'nothing');
+        const localStr = variable.isLocal ? 'local ' : '';
+        const constantStr = variable.isConstant ? 'constant ' : '';
+        const signature = `${localStr}${constantStr}${typeStr} ${name}`;
+
+        const content = new vscode.MarkdownString();
+        content.appendCodeblock(signature, 'jass');
+        content.appendMarkdown('\n\n**局部变量**');
+        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+
         return content;
     }
 

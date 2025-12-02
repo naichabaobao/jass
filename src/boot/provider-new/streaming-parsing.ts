@@ -1,7 +1,10 @@
 import { removeComment } from "../vjass/comment";
 import { parseAndRemovePreprocessor, Define, Include } from "../vjass/preprocess";
 import { parseAndRemoveLuaSegement } from "../vjass/lua-segement-remover";
+import { parseAndRemoveZincBlock, ZincBlockCollection } from "../vjass/zinc-block";
 import { Parser } from "../vjass/parser";
+import { InnerZincParser } from "../vjass/inner-zinc-parser";
+import { ZincProgram } from "../vjass/zinc-ast";
 import { BlockStatement } from "../vjass/vjass-ast";
 import { ErrorCollection } from "../vjass/simple-error";
 import { TextMacroExpander } from "../vjass/text-macro-expander";
@@ -31,6 +34,8 @@ export interface StreamingParsingResult {
         defines: Define[];
         includes: Include[];
     };
+    /** Zinc 代码块集合 */
+    zincBlocks: ZincBlockCollection;
 }
 
 /**
@@ -80,7 +85,32 @@ export function streamingParse(
     // 步骤3: Lua 段
     content = parseAndRemoveLuaSegement(content, errors);
 
-    // 步骤4: 调用 Parser 解析
+    // 步骤4: 解析并移除 Zinc 块
+    const zincBlockCollection: ZincBlockCollection = { blocks: [] };
+    content = parseAndRemoveZincBlock(content, errors, zincBlockCollection);
+
+    // 步骤5: 解析 Zinc 块
+    for (const zincBlock of zincBlockCollection.blocks) {
+        try {
+            const zincParser = new InnerZincParser(zincBlock.code, filePath);
+            const statements = zincParser.parse();
+            const zincProgram = new ZincProgram(statements);
+            
+            // 注意：InnerZincParser 目前不提供错误收集
+            // 如果需要错误收集，可以在 InnerZincParser 中添加 errors 属性
+            // zincProgram 已解析，但错误信息暂时不可用
+        } catch (error) {
+            console.error(`Failed to parse Zinc block at line ${zincBlock.startLine}:`, error);
+            errors.errors.push({
+                start: { line: zincBlock.startLine, position: 0 },
+                end: { line: zincBlock.startLine, position: 0 },
+                message: `Failed to parse Zinc block: ${error}`,
+                fix: "Check Zinc syntax"
+            });
+        }
+    }
+
+    // 步骤6: 调用 Parser 解析剩余的 vJass 代码
     let blockStatement: BlockStatement | null = null;
     try {
         const parser = new Parser(content, filePath, textMacroExpander);
@@ -107,7 +137,8 @@ export function streamingParse(
     return {
         blockStatement,
         errors,
-        preprocessCollection
+        preprocessCollection,
+        zincBlocks: zincBlockCollection
     };
 }
 

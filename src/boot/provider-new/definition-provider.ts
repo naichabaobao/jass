@@ -86,6 +86,11 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
 
                 // 在当前文件中查找定义
                 this.findDefinitionsInBlock(blockStatement, symbolName, cachedFilePath, locations);
+                
+                // 查找局部变量和参数的定义（仅在当前文件中）
+                if (cachedFilePath === filePath) {
+                    this.findLocalVariableDefinitions(blockStatement, symbolName, filePath, position, locations);
+                }
             }
 
             // 查找 TextMacro 定义（如果还没有找到）
@@ -342,6 +347,182 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
                 }
             }
         }
+    }
+
+    /**
+     * 查找局部变量和参数的定义
+     */
+    private findLocalVariableDefinitions(
+        block: BlockStatement,
+        symbolName: string,
+        filePath: string,
+        position: vscode.Position,
+        locations: vscode.Location[]
+    ): void {
+        // 查找包含当前位置的函数或方法
+        const funcOrMethod = this.findContainingFunctionOrMethod(block, position);
+        if (!funcOrMethod) {
+            return;
+        }
+
+        // 添加参数的定义
+        if (funcOrMethod instanceof FunctionDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    this.addLocation(param.name, filePath, locations);
+                }
+            }
+            // 在函数体中查找局部变量
+            if (funcOrMethod.body) {
+                this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, locations);
+            }
+        } else if (funcOrMethod instanceof MethodDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    this.addLocation(param.name, filePath, locations);
+                }
+            }
+            // 在方法体中查找局部变量
+            if (funcOrMethod.body) {
+                this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, locations);
+            }
+        }
+    }
+
+    /**
+     * 查找包含指定位置的函数或方法
+     * 参数在整个函数范围内都可用（包括函数声明行和函数体）
+     */
+    private findContainingFunctionOrMethod(
+        block: BlockStatement,
+        position: vscode.Position
+    ): FunctionDeclaration | MethodDeclaration | null {
+        for (const stmt of block.body) {
+            if (stmt instanceof FunctionDeclaration) {
+                // 检查位置是否在整个函数范围内（包括函数声明行和函数体）
+                if (stmt.start && stmt.end) {
+                    const funcStartLine = stmt.start.line;
+                    const funcEndLine = stmt.end.line;
+                    
+                    // 位置在函数开始行和结束行之间（包括结束行）
+                    // 允许位置在结束行的下一行（容错处理）
+                    if (position.line >= funcStartLine && position.line <= funcEndLine + 1) {
+                        return stmt;
+                    }
+                }
+                // 如果没有位置信息，也检查函数体范围（作为补充）
+                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                    return stmt;
+                }
+            } else if (stmt instanceof MethodDeclaration) {
+                // 检查位置是否在整个方法范围内（包括方法声明行和方法体）
+                if (stmt.start && stmt.end) {
+                    const methodStartLine = stmt.start.line;
+                    const methodEndLine = stmt.end.line;
+                    
+                    // 位置在方法开始行和结束行之间（包括结束行）
+                    // 允许位置在结束行的下一行（容错处理）
+                    if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
+                        return stmt;
+                    }
+                }
+                // 如果没有位置信息，也检查方法体范围（作为补充）
+                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                    return stmt;
+                }
+            } else if (stmt instanceof BlockStatement) {
+                // 递归查找嵌套块
+                const nested = this.findContainingFunctionOrMethod(stmt, position);
+                if (nested) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 在代码块中查找局部变量定义
+     */
+    private findLocalVariablesInBlock(
+        block: BlockStatement,
+        symbolName: string,
+        filePath: string,
+        position: vscode.Position,
+        locations: vscode.Location[]
+    ): void {
+        for (const stmt of block.body) {
+            // 检查是否是局部变量声明
+            if (stmt instanceof VariableDeclaration && stmt.isLocal) {
+                // 检查变量是否在指定位置之前声明（作用域检查）
+                if (stmt.name && stmt.name.name === symbolName) {
+                    if (this.isVariableBeforePosition(stmt, position)) {
+                        this.addLocation(stmt.name, filePath, locations);
+                    }
+                }
+            }
+            // 递归查找嵌套块中的局部变量
+            else if (stmt instanceof BlockStatement) {
+                if (this.isPositionInRange(position, stmt.start, stmt.end)) {
+                    this.findLocalVariablesInBlock(stmt, symbolName, filePath, position, locations);
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查变量是否在指定位置之前声明
+     */
+    private isVariableBeforePosition(
+        variable: VariableDeclaration,
+        position: vscode.Position
+    ): boolean {
+        if (!variable.start) {
+            return false;
+        }
+
+        const varLine = variable.start.line;
+        const varPos = variable.start.position || 0;
+
+        // 变量必须在当前位置之前声明
+        if (varLine < position.line) {
+            return true;
+        }
+        if (varLine === position.line && varPos < position.character) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查位置是否在范围内
+     */
+    private isPositionInRange(
+        position: vscode.Position,
+        start?: { line: number; position?: number },
+        end?: { line: number; position?: number }
+    ): boolean {
+        if (!start || !end) {
+            return false;
+        }
+
+        const startLine = start.line;
+        const endLine = end.line;
+        const startPos = start.position || 0;
+        const endPos = end.position || 0;
+
+        if (position.line < startLine || position.line > endLine) {
+            return false;
+        }
+        if (position.line === startLine && position.character < startPos) {
+            return false;
+        }
+        if (position.line === endLine && position.character > endPos) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -8,6 +8,11 @@ import { TextMacroCollector } from '../vjass/text-macro-collector';
 import { TextMacroExpander } from '../vjass/text-macro-expander';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
 import { streamingParse } from './streaming-parsing';
+import { CompletionCache } from './completion-cache';
+import { CompletionExtractor } from './completion-extractor';
+import { ErrorCollection } from '../vjass/simple-error';
+import { InnerZincParser } from '../vjass/inner-zinc-parser';
+import { ZincProgram } from '../vjass/zinc-ast';
 
 /**
  * 文件事件类型
@@ -28,13 +33,17 @@ interface FileEventPayload {
  * 文件缓存项
  */
 interface FileCacheItem {
-    blockStatement: BlockStatement;
+    blockStatement: BlockStatement | null;
+    /** Zinc 程序 AST（仅用于 .zn 文件） */
+    zincProgram?: ZincProgram | null;
     lastModified: number;
     version: number;
     /** 是否为不可变文件（静态文件） */
     isImmutable: boolean;
     /** 文件原始内容（用于提取注释） */
     content: string;
+    /** 解析错误集合 */
+    errors?: ErrorCollection;
 }
 
 /**
@@ -95,81 +104,7 @@ export class DataEnterManager {
         this.textMacroCollector = new TextMacroCollector(this.textMacroRegistry);
         this.textMacroExpander = new TextMacroExpander(this.textMacroRegistry);
 
-        this.setupEventHandlers();
-        if (this.options.enableFileWatcher) {
-            this.setupFileWatcher();
-        }
-    }
-
-    /**
-     * 设置事件处理器
-     */
-    private setupEventHandlers(): void {
-        // 使用 RxJS 处理文件事件流
-        this.fileEventSubject
-            .pipe(
-                // 防抖处理，避免频繁更新
-                debounceTime(this.options.debounceDelay!)
-            )
-            .subscribe({
-                next: async (event) => {
-                    try {
-                        const result = await this.processFileEvent(event);
-                        if (result.success) {
-                            console.log(`✅ Processed ${result.event.type} for ${path.basename(result.event.filePath)}`);
-                        } else {
-                            console.error(`❌ Failed to process ${result.event.type} for ${path.basename(result.event.filePath)}: ${result.error}`);
-                        }
-                    } catch (error) {
-                        console.error('❌ Error processing file event:', error);
-                    }
-                },
-                error: (error) => {
-                    console.error('❌ Error in file event stream:', error);
-                }
-            });
-    }
-
-    /**
-     * 设置文件监听器
-     */
-    private setupFileWatcher(): void {
-        // 只监听工作区文件变化（不包括 static 目录）
-        const pattern = new vscode.RelativePattern(
-            vscode.workspace.workspaceFolders?.[0] || vscode.Uri.file('/'),
-            '**/*.{j,jass,ai,zn}'
-        );
-
-        this.fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
-
-        // 监听文件创建（只处理可变文件）
-        this.fileWatcher.onDidCreate((uri) => {
-            const filePath = uri.fsPath;
-            // 只监听工作区文件，不监听静态文件
-            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
-                this.handleFileCreate(filePath);
-            }
-        });
-
-        // 监听文件删除（只处理可变文件）
-        this.fileWatcher.onDidDelete((uri) => {
-            const filePath = uri.fsPath;
-            // 只监听工作区文件，不监听静态文件
-            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
-                this.handleFileDelete(filePath);
-            }
-        });
-
-        // 监听文件变化（只处理可变文件）
-        this.fileWatcher.onDidChange((uri) => {
-            const filePath = uri.fsPath;
-            // 只监听工作区文件，不监听静态文件
-            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
-                this.handleFileChange(filePath);
-            }
-        });
-
-        this.disposables.push(this.fileWatcher);
+        // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
     }
 
     /**
@@ -245,33 +180,69 @@ export class DataEnterManager {
             }
         }
 
-        // 1. 先更新 textmacro 注册表（收集阶段）
-        const collection = { errors: [], warnings: [] };
-        this.textMacroCollector.collectFromFile(filePath, content, collection);
+        const ext = path.extname(filePath).toLowerCase();
+        const isZinc = ext === '.zn';
         
-        // 报告收集阶段的错误和警告
-        if (collection.errors.length > 0 || collection.warnings.length > 0) {
-            console.warn(`TextMacro collection issues in ${path.basename(filePath)}:`, {
-                errors: collection.errors.length,
-                warnings: collection.warnings.length
-            });
-        }
+        let blockStatement: BlockStatement | null = null;
+        let zincProgram: ZincProgram | null = null;
+        let errors: ErrorCollection = { errors: [], warnings: [], checkValidationErrors: [] };
 
-        // 2. 解析文件内容为 BlockStatement（解析阶段，此时可以使用 textmacro）
-        const blockStatement = this.parseFile(filePath, content);
-        if (blockStatement) {
-            const stats = fs.statSync(filePath);
+        if (isZinc) {
+            // 对于 Zinc 文件，使用 InnerZincParser
+            // 注意：Zinc 文件不支持 textmacro，所以跳过 textmacro 收集
+            const zincParser = new InnerZincParser(content, filePath);
+            const statements = zincParser.parse();
+            zincProgram = new ZincProgram(statements);
+            // 使用 InnerZincParser 的错误收集
+            errors = zincParser.errors;
+        } else {
+            // 对于非 Zinc 文件，使用原有的流程
+            // 1. 先更新 textmacro 注册表（收集阶段）
+            const collection = { errors: [], warnings: [] };
+            this.textMacroCollector.collectFromFile(filePath, content, collection);
+            
+            // 报告收集阶段的错误和警告
+            if (collection.errors.length > 0 || collection.warnings.length > 0) {
+                console.warn(`TextMacro collection issues in ${path.basename(filePath)}:`, {
+                    errors: collection.errors.length,
+                    warnings: collection.warnings.length
+                });
+            }
+
+            // 2. 解析文件内容为 BlockStatement（解析阶段，此时可以使用 textmacro）
+            const result = streamingParse(content, {
+                filePath,
+                deleteLineComment: false, // 保留行注释
+                textMacroExpander: this.textMacroExpander
+            });
+            
+            blockStatement = result.blockStatement;
+            errors = result.errors;
+        }
+        
+        // 存储到缓存
+        if (blockStatement || zincProgram) {
+            const stats = fs.existsSync(filePath) ? fs.statSync(filePath) : { mtimeMs: Date.now() };
+            const cacheItem = this.cache.get(filePath);
             this.cache.set(filePath, {
-                blockStatement,
+                blockStatement: blockStatement || null,
+                zincProgram: zincProgram || undefined,
                 lastModified: stats.mtimeMs,
-                version: (this.cache.get(filePath)?.version || 0) + 1,
+                version: (cacheItem?.version || 0) + 1,
                 isImmutable,
-                content // 存储原始内容用于提取注释
+                content, // 存储原始内容用于提取注释
+                errors: errors // 存储错误信息
             });
 
             // 如果是不可变文件，添加到集合中
             if (isImmutable) {
                 this.immutableFiles.add(filePath);
+            }
+
+            // 3. 更新补全项缓存（异步，不阻塞）
+            // 只对非 Zinc 文件更新补全缓存（Zinc 文件由 ZincCompletionProvider 处理）
+            if (blockStatement) {
+                this.updateCompletionCache(filePath, blockStatement);
             }
         }
     }
@@ -309,6 +280,11 @@ export class DataEnterManager {
         
         this.cache.delete(filePath);
         this.parserCache.delete(filePath);
+        
+        // 从补全项缓存中删除
+        const completionCache = CompletionCache.getInstance();
+        completionCache.delete(filePath);
+        
         console.log(`🗑️ Removed cache for ${path.basename(filePath)}`);
     }
 
@@ -353,6 +329,18 @@ export class DataEnterManager {
             }
 
             console.log(`📝 Renamed cache: ${path.basename(oldPath)} → ${path.basename(newPath)}`);
+            
+            // 更新补全项缓存：删除旧路径，新路径会在 handleFileUpdate 中更新
+            const completionCache = CompletionCache.getInstance();
+            const oldItems = completionCache.get(oldPath);
+            completionCache.delete(oldPath);
+            if (oldItems.length > 0) {
+                // 更新文件路径并重新保存
+                oldItems.forEach(item => {
+                    (item as any).filePath = newPath;
+                });
+                completionCache.update(newPath, oldItems);
+            }
         } else {
             // 如果旧文件没有缓存，尝试解析新文件
             await this.handleFileUpdate(newPath);
@@ -360,11 +348,83 @@ export class DataEnterManager {
     }
 
     /**
-     * 解析文件内容为 BlockStatement
+     * 更新补全项缓存（异步，不阻塞）
+     */
+    private updateCompletionCache(filePath: string, blockStatement: BlockStatement): void {
+        // 异步更新，不阻塞
+        setImmediate(() => {
+            try {
+                const completionCache = CompletionCache.getInstance();
+                const items = CompletionExtractor.extractCompletionItems(
+                    blockStatement,
+                    filePath,
+                    (fp) => this.getFileContent(fp),
+                    (fp) => {
+                        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+                        if (workspaceFolder) {
+                            try {
+                                return vscode.workspace.asRelativePath(fp);
+                            } catch {
+                                return fp;
+                            }
+                        }
+                        return fp;
+                    }
+                );
+                completionCache.update(filePath, items);
+            } catch (error) {
+                console.error(`Failed to update completion cache for ${filePath}:`, error);
+            }
+        });
+    }
+
+    /**
+     * 解析文件内容为 BlockStatement 或 ZincProgram
      * 使用 streamingParse 进行预处理和解析
+     * 对于 .zn 文件，使用 Zinc 解析器
      */
     private parseFile(filePath: string, content: string): BlockStatement | null {
         try {
+            const ext = path.extname(filePath).toLowerCase();
+            
+            // 如果是 .zn 文件，使用 InnerZincParser
+            if (ext === '.zn') {
+                const zincParser = new InnerZincParser(content, filePath);
+                const statements = zincParser.parse();
+                const zincProgram = new ZincProgram(statements);
+                // 使用 InnerZincParser 的错误收集
+                const zincErrors = zincParser.errors;
+                
+                // 存储 ZincProgram 和错误信息到缓存
+                const cacheItem = this.cache.get(filePath);
+                if (cacheItem) {
+                    cacheItem.zincProgram = zincProgram;
+                    cacheItem.errors = zincErrors;
+                } else {
+                    // 如果缓存项不存在，创建一个新的（这种情况应该很少见）
+                    const stats = fs.existsSync(filePath) ? fs.statSync(filePath) : { mtimeMs: Date.now() };
+                    this.cache.set(filePath, {
+                        blockStatement: null,
+                        zincProgram: zincProgram,
+                        lastModified: stats.mtimeMs,
+                        version: 1,
+                        isImmutable: this.isImmutableFile(filePath),
+                        content: content,
+                        errors: zincErrors
+                    });
+                }
+                
+                if (zincErrors.errors.length > 0) {
+                    console.warn(`Parsing errors in ${path.basename(filePath)}:`, {
+                        errors: zincErrors.errors.length,
+                        warnings: zincErrors.warnings.length
+                    });
+                }
+                
+                // 返回 null，因为 Zinc AST 和 vJass BlockStatement 不兼容
+                return null;
+            }
+            
             // 使用 streamingParse 进行预处理和解析
             // 它会自动处理：移除注释、预处理指令、Lua 段，然后调用 Parser
             const result = streamingParse(content, {
@@ -380,6 +440,15 @@ export class DataEnterManager {
                     warnings: result.errors.warnings.length
                 });
             }
+
+            // 存储错误信息到缓存（如果缓存项已存在）
+            const cacheItem = this.cache.get(filePath);
+            if (cacheItem) {
+                cacheItem.errors = result.errors;
+                // 确保 zincProgram 为 undefined（非 Zinc 文件）
+                cacheItem.zincProgram = undefined;
+            }
+            // 注意：如果缓存项不存在，错误信息将在 handleFileUpdate 中通过 parseFile 的返回值存储
 
             // 缓存预处理指令集合（如果需要的话，可以在这里处理）
             // result.preprocessCollection.defines
@@ -473,6 +542,30 @@ export class DataEnterManager {
     public getBlockStatement(filePath: string): BlockStatement | null {
         const cacheItem = this.cache.get(filePath);
         return cacheItem?.blockStatement || null;
+    }
+
+    /**
+     * 获取文件的 ZincProgram（仅用于 .zn 文件）
+     */
+    public getZincProgram(filePath: string): ZincProgram | null {
+        const cacheItem = this.cache.get(filePath);
+        return cacheItem?.zincProgram || null;
+    }
+
+    /**
+     * 检查文件是否为 Zinc 文件
+     */
+    public isZincFile(filePath: string): boolean {
+        const ext = path.extname(filePath).toLowerCase();
+        return ext === '.zn';
+    }
+
+    /**
+     * 获取文件的错误集合
+     */
+    public getErrors(filePath: string): ErrorCollection | null {
+        const cacheItem = this.cache.get(filePath);
+        return cacheItem?.errors || null;
     }
 
     /**
@@ -624,6 +717,91 @@ export class DataEnterManager {
             const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
             console.log(`📁 Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
         }
+
+        // 设置事件处理器（监听和数据处理分离）
+        this.setupEventHandlers();
+        
+        // 设置文件监听器（监听和数据处理分离）
+        if (this.options.enableFileWatcher) {
+            this.setupFileWatcher();
+        }
+    }
+
+    /**
+     * 设置事件处理器（监听和数据处理分离）
+     * 监听器只负责触发事件，不阻塞
+     */
+    private setupEventHandlers(): void {
+        // 使用 RxJS 处理文件事件流
+        this.fileEventSubject
+            .pipe(
+                // 防抖处理，避免频繁更新
+                debounceTime(this.options.debounceDelay!)
+            )
+            .subscribe({
+                next: (event) => {
+                    // 不等待，异步处理文件事件，不阻塞
+                    this.processFileEvent(event).then(
+                        (result) => {
+                            if (result.success) {
+                                // 静默处理成功，减少日志输出
+                                // console.log(`✅ Processed ${result.event.type} for ${path.basename(result.event.filePath)}`);
+                            } else {
+                                console.error(`❌ Failed to process ${result.event.type} for ${path.basename(result.event.filePath)}: ${result.error}`);
+                            }
+                        },
+                        (error) => {
+                            console.error('❌ Error processing file event:', error);
+                        }
+                    );
+                },
+                error: (error) => {
+                    console.error('❌ Error in file event stream:', error);
+                }
+            });
+    }
+
+    /**
+     * 设置文件监听器（监听和数据处理分离）
+     * 监听器只负责触发事件，不阻塞
+     */
+    private setupFileWatcher(): void {
+        // 只监听工作区文件变化（不包括 static 目录）
+        const pattern = new vscode.RelativePattern(
+            vscode.workspace.workspaceFolders?.[0] || vscode.Uri.file('/'),
+            '**/*.{j,jass,ai,zn}'
+        );
+
+        this.fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
+
+        // 监听文件创建（只处理可变文件）
+        this.fileWatcher.onDidCreate((uri) => {
+            const filePath = uri.fsPath;
+            // 只监听工作区文件，不监听静态文件
+            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
+                this.handleFileCreate(filePath);
+            }
+        });
+
+        // 监听文件删除（只处理可变文件）
+        this.fileWatcher.onDidDelete((uri) => {
+            const filePath = uri.fsPath;
+            // 只监听工作区文件，不监听静态文件
+            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
+                this.handleFileDelete(filePath);
+            }
+        });
+
+        // 监听文件变化（只处理可变文件）
+        this.fileWatcher.onDidChange((uri) => {
+            const filePath = uri.fsPath;
+            // 只监听工作区文件，不监听静态文件
+            if (this.isWorkspaceFile(filePath) && !this.isImmutableFile(filePath)) {
+                this.handleFileChange(filePath);
+            }
+        });
+
+        this.disposables.push(this.fileWatcher);
 
         // 监听文档打开事件（立即解析，确保 outline 可以显示）
         const openDisposable = vscode.workspace.onDidOpenTextDocument((document) => {

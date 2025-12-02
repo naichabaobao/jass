@@ -1963,6 +1963,39 @@ class RunTextMacroStatement extends Statement {
     }
 }
 
+/**
+ * ZincBlock 语句（Zinc 代码块）
+ * //! zinc
+ * ... zinc code ...
+ * //! endzinc
+ */
+class ZincBlockStatement extends Statement {
+    public readonly content: string; // Zinc 代码内容（原始代码）
+    public readonly zincStatements: any[]; // 解析后的 Zinc AST 语句列表
+    
+    constructor(options: {
+        content: string;
+        zincStatements?: any[];
+        start?: { line: number, position: number };
+        end?: { line: number, position: number };
+    }) {
+        const {
+            content,
+            zincStatements = [],
+            start,
+            end
+        } = options;
+        
+        super(start, end);
+        this.content = content;
+        this.zincStatements = zincStatements;
+    }
+    
+    public toString(): string {
+        return `//! zinc\n${this.content}\n//! endzinc`;
+    }
+}
+
 // 导出当前文件定义的类
 export { 
     ASTNode, 
@@ -2006,6 +2039,7 @@ export {
     LoadDataStatement,
     TextMacroStatement,
     RunTextMacroStatement,
+    ZincBlockStatement,
     OperatorType
 };
 

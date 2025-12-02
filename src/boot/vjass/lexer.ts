@@ -63,17 +63,29 @@ export enum TokenType {
     OperatorLogicalNot = "LOGICAL_NOT",
     OperatorIndex = "INDEX", // [] 运算符
     OperatorIndexAssign = "INDEX_ASSIGN", // []= 运算符
+    OperatorRightArrow = "RIGHT_ARROW", // -> 运算符
+    OperatorPlusAssign = "PLUS_ASSIGN", // += 运算符
+    OperatorMinusAssign = "MINUS_ASSIGN", // -= 运算符
+    OperatorMultiplyAssign = "MULTIPLY_ASSIGN", // *= 运算符
+    OperatorDivideAssign = "DIVIDE_ASSIGN", // /= 运算符
 
     // 分隔符 / 单字符运算符
+    // (
     LeftParen = "LEFT_PAREN",
+    // )
     RightParen = "RIGHT_PAREN",
+    // [
     LeftBracket = "LEFT_BRACKET",
+    // ]
     RightBracket = "RIGHT_BRACKET",
+    // {
     LeftBrace = "LEFT_BRACE",
+    // }
     RightBrace = "RIGHT_BRACE",
     Comma = "COMMA",
     Dot = "DOT",
     Colon = "COLON",
+    Semicolon = "SEMICOLON",
 
     // 注释和文本宏指令
     SingleLineComment = "SINGLE_LINE_COMMENT",
@@ -739,6 +751,37 @@ export class Lexer implements ILexer {
     }
 
     /**
+     * 读取预处理指令（以 # 开头的行，如 #ifndef, #define, #endif）
+     * 这些指令在 JASS 中通常被当作注释处理
+     */
+    private readPreprocessorDirective(): IToken {
+        const startLine = this.line;
+        const startColumn = this.column;
+        this.advance(); // 跳过 '#'
+        
+        // 读取整行内容
+        let value = '';
+        while (this.position < this.source.length) {
+            const char = this.currentChar();
+            if (char === null || char === '\n') {
+                break;
+            }
+            value += char;
+            this.advance();
+        }
+        
+        const endLine = this.line;
+        const endColumn = this.column;
+        // 将预处理指令当作单行注释处理
+        return new Token(
+            TokenType.SingleLineComment,
+            value.trim(),
+            { line: startLine, position: startColumn },
+            { line: endLine, position: endColumn }
+        );
+    }
+
+    /**
      * 读取多行注释
      */
     private readMultiLineComment(): IToken {
@@ -795,6 +838,11 @@ export class Lexer implements ILexer {
                 case '>=': type = TokenType.OperatorGreaterEqual; value = twoChar; this.advance(); break;
                 case '&&': type = TokenType.OperatorLogicalAnd; value = twoChar; this.advance(); break;
                 case '||': type = TokenType.OperatorLogicalOr; value = twoChar; this.advance(); break;
+                case '->': type = TokenType.OperatorRightArrow; value = twoChar; this.advance(); break;
+                case '+=': type = TokenType.OperatorPlusAssign; value = twoChar; this.advance(); break;
+                case '-=': type = TokenType.OperatorMinusAssign; value = twoChar; this.advance(); break;
+                case '*=': type = TokenType.OperatorMultiplyAssign; value = twoChar; this.advance(); break;
+                case '/=': type = TokenType.OperatorDivideAssign; value = twoChar; this.advance(); break;
                 default:
                     // 特殊处理 [] 和 []= 运算符
                     if (char === '[' && nextChar === ']') {
@@ -832,6 +880,7 @@ export class Lexer implements ILexer {
                             case ',': type = TokenType.Comma; break;
                             case '.': type = TokenType.Dot; break;
                             case ':': type = TokenType.Colon; break;
+                            case ';': type = TokenType.Semicolon; break;
                             default: type = TokenType.Unknown; break;
                         }
                     }
@@ -916,9 +965,14 @@ export class Lexer implements ILexer {
         // key 类型关键字（索引 199）
         if (index === 199) return TokenType.TypeKey; // key
 
-        // 布尔字面量（索引 29-30）
-        if (index === 29) return TokenType.BooleanLiteral; // true
-        if (index === 30) return TokenType.BooleanLiteral; // false
+        // 逻辑运算符（索引 27-29）
+        if (index === 27) return TokenType.OperatorLogicalAnd; // and
+        if (index === 28) return TokenType.OperatorLogicalOr; // or
+        if (index === 29) return TokenType.OperatorLogicalNot; // not
+
+        // 布尔字面量（索引 30-31）
+        if (index === 30) return TokenType.BooleanLiteral; // true
+        if (index === 31) return TokenType.BooleanLiteral; // false
 
         // 基本关键字（索引 0-20）
         if (index < basicKeywords.length) {
@@ -1007,6 +1061,9 @@ export class Lexer implements ILexer {
             return this.readSingleLineComment();
         } else if (char === '/' && this.peekChar(1) === '*') {
             return this.readMultiLineComment();
+        } else if (char === '#') {
+            // 预处理指令（如 #ifndef, #define, #endif）当作单行注释处理
+            return this.readPreprocessorDirective();
         } else {
             return this.readOperatorOrDelimiter();
         }

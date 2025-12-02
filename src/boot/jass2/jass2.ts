@@ -295,7 +295,7 @@ class Uri {
         return this._data.ext == ".lua";
     }
     isVjassFile(): boolean {
-        return this._data.ext == ".jass" || this._data.ext == ".vjass";
+        return this._data.ext == ".j" || this._data.ext == ".jass";
     }
     isZincFile(): boolean {
         return this._data.ext == ".zn" || this._data.ext == ".zinc";
