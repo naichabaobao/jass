@@ -1659,32 +1659,40 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         // 普通标识符访问
         // 先尝试查找变量类型（变量类型推断）
         // 注意：identifierToCheck 可能是变量名（如 aaaaaa），需要先查找变量类型
+        // 查找顺序：1. local 变量 2. takes 参数 3. globals 变量
         const originalIdentifier = identifierToCheck;
+        console.log(`[CompletionProvider] getMemberAccessContext: 查找变量 ${originalIdentifier} 的类型`);
         const variableType = this.findVariableType(document, position, originalIdentifier);
         
         if (variableType) {
             // 找到了变量类型，这是实例访问
             // 使用变量类型（而不是变量名）来查找 struct/interface
             let typeName = variableType;
+            console.log(`[CompletionProvider] getMemberAccessContext: 找到变量 ${originalIdentifier} 的类型: ${typeName}`);
             
             // 如果类型是 "thistype"，需要查找当前 struct
             if (typeName.toLowerCase() === 'thistype') {
                 const currentStruct = this.findCurrentStruct(document, position);
                 if (currentStruct && currentStruct.name) {
                     typeName = currentStruct.name.name;
+                    console.log(`[CompletionProvider] getMemberAccessContext: thistype 解析为 ${typeName}`);
                 } else {
                     // 如果找不到当前 struct，返回 null
+                    console.log(`[CompletionProvider] getMemberAccessContext: 未找到当前 struct`);
                     return null;
                 }
             }
             
             // 使用变量类型（而不是变量名）来查找 struct/interface
+            console.log(`[CompletionProvider] getMemberAccessContext: 返回 structName: ${typeName}`);
             return {
                 structName: typeName,  // 使用类型名，不是变量名
                 isStatic: false,
                 isThis: false,
                 isThistype: false
             };
+        } else {
+            console.log(`[CompletionProvider] getMemberAccessContext: 未找到变量 ${originalIdentifier} 的类型`);
         }
         
         // 如果没有找到变量类型，可能是：
@@ -1738,6 +1746,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         }
         
         // 1. 优先查找局部变量（local）
+        // 按照用户要求：先找 local，再找 takes，再找 globals
         if (containingFunction) {
             // 先查找函数体内的局部变量
             if (containingFunction.body) {
@@ -1784,7 +1793,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             return globalsType;
         }
         
-        console.log(`[CompletionProvider] findVariableType: 未找到变量 ${variableName} 的类型`);
+        console.log(`[CompletionProvider] findVariableType: 未找到变量 ${variableName} 的类型（已检查 local、takes、globals）`);
         return null;
     }
     
@@ -1830,6 +1839,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     
     /**
      * 在 BlockStatement 中查找变量类型
+     * 查找顺序：按位置顺序查找，优先返回在当前位置之前声明的变量
      */
     private findVariableInBlock(
         block: BlockStatement,
@@ -1850,11 +1860,11 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                             const posLine = position.line;
                             
                             if (stmtLine < posLine) {
-                                // 变量在之前的行，优先级高
+                                // 变量在之前的行，优先级高（这是最常见的情况）
                                 priority = 1000 - (posLine - stmtLine);
                             } else if (stmtLine === posLine) {
                                 // 变量在同一行，检查列位置
-                                // 对于 `call aaaaaa.` 这种情况，变量声明应该在点号之前
+                                // 对于 `aaaaaa.` 这种情况，变量声明应该在点号之前
                                 if (stmt.start.position !== undefined) {
                                     const stmtPos = stmt.start.position;
                                     const posChar = position.character;
@@ -1874,8 +1884,8 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                                     priority = 100;
                                 }
                             } else {
-                                // 变量在当前位置之后的行，优先级为 0（不添加）
-                                // 但如果是紧接的下一行，可能是位置信息有误差，给一个很低的优先级
+                                // 变量在当前位置之后的行，通常不应该使用
+                                // 但为了容错，如果是紧接的下一行，给一个很低的优先级
                                 if (stmtLine === posLine + 1) {
                                     priority = 5;
                                 }
@@ -2028,6 +2038,8 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             let foundFilePath: string | null = null;
             
             // 查找对应的 struct 或 interface
+            // 通过类型名称精确匹配查找
+            console.log(`[CompletionProvider] provideMemberAccessCompletion: 查找 struct/interface: ${context.structName}`);
             for (const filePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
                 if (!blockStatement) {
@@ -2037,12 +2049,14 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 foundStruct = this.findStructInBlock(blockStatement, context.structName);
                 if (foundStruct) {
                     foundFilePath = filePath;
+                    console.log(`[CompletionProvider] provideMemberAccessCompletion: 找到 struct ${context.structName} 在文件 ${filePath}`);
                     break;
                 }
                 
                 foundInterface = this.findInterfaceInBlock(blockStatement, context.structName);
                 if (foundInterface) {
                     foundFilePath = filePath;
+                    console.log(`[CompletionProvider] provideMemberAccessCompletion: 找到 interface ${context.structName} 在文件 ${filePath}`);
                     break;
                 }
             }
