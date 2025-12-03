@@ -72,12 +72,24 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 return items.length > 0 ? items : [];
             }
 
+            // 检查是否在 local 上下文中
+            const localContext = this.getLocalContext(document, position);
+            
+            if (localContext) {
+                // 在 local 上下文中，提供类型补全
+                this.provideLocalCompletion(localContext, document, position, items);
+                // local 上下文只提供类型，不提供其他补全
+                return items.length > 0 ? items : [];
+            }
+
             // 检查是否在 takes 上下文中
             const takesContext = this.getTakesContext(document, position);
             
             if (takesContext) {
                 // 在 takes 上下文中，提供类型和参数名称补全
                 this.provideTakesCompletion(takesContext, document, position, items);
+                // takes 上下文只提供类型和参数名，不提供其他补全
+                return items.length > 0 ? items : [];
             } else {
                 // 正常补全流程
                 // 1. 添加关键字
@@ -1108,6 +1120,108 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     }
 
     /**
+     * 获取 local 上下文信息
+     */
+    private getLocalContext(
+        document: vscode.TextDocument,
+        position: vscode.Position
+    ): { expectsType: boolean; expectsName: boolean } | null {
+        const lineText = document.lineAt(position.line).text;
+        const textBeforeCursor = lineText.substring(0, position.character);
+
+        // 检查是否包含 "local" 关键字（使用单词边界匹配）
+        const localRegex = /\blocal\b/;
+        const localMatch = textBeforeCursor.match(localRegex);
+        if (!localMatch || localMatch.index === undefined) {
+            return null;
+        }
+
+        // 获取 "local" 之后的文本
+        const afterLocalText = textBeforeCursor.substring(localMatch.index + 5).trim();
+
+        // 如果 "local" 后是空的，期望类型
+        if (afterLocalText.length === 0) {
+            return { expectsType: true, expectsName: false };
+        }
+
+        // 检查最后一个单词
+        const words = afterLocalText.split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) {
+            return { expectsType: true, expectsName: false };
+        }
+
+        const lastWord = words[words.length - 1];
+
+        // 基本类型列表
+        const basicTypes = ['integer', 'real', 'string', 'boolean', 'code', 'handle', 'nothing'];
+
+        // 检查最后一个词是否是类型（基本类型或自定义类型）
+        const isLastWordType = basicTypes.includes(lastWord.toLowerCase()) || 
+                              this.isCustomTypeName(document, lastWord);
+
+        // 如果最后一个词是类型，期望变量名
+        if (isLastWordType) {
+            // 检查光标是否在单词中（可能是正在输入的变量名）
+            const cursorInWord = position.character > 0 && 
+                                /[a-zA-Z0-9_]/.test(lineText[position.character - 1]);
+            if (!cursorInWord) {
+                // 光标不在单词中，如果最后一个词是类型，期望变量名
+                return { expectsType: false, expectsName: true };
+            }
+        }
+
+        // 默认期望类型（在 local 之后）
+        return { expectsType: true, expectsName: false };
+    }
+
+    /**
+     * 提供 local 上下文中的补全项
+     */
+    private provideLocalCompletion(
+        context: { expectsType: boolean; expectsName: boolean },
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        items: vscode.CompletionItem[]
+    ): void {
+        if (context.expectsType) {
+            // 提供类型补全（基本类型 + 自定义类型 + struct 类型）
+            this.provideTypeCompletions(document, position, items);
+        }
+        
+        if (context.expectsName) {
+            // 提供变量名建议
+            this.provideVariableNameSuggestions(items);
+        }
+    }
+
+    /**
+     * 提供变量名建议
+     */
+    private provideVariableNameSuggestions(items: vscode.CompletionItem[]): void {
+        // 常见的变量名模式
+        const commonVarNames = [
+            'x', 'y', 'z',
+            'i', 'j', 'k',
+            'a', 'b', 'c',
+            'value', 'data', 'info',
+            'unit', 'player', 'location',
+            'target', 'source', 'caster',
+            'id', 'index', 'count',
+            'angle', 'distance', 'duration',
+            'temp', 'result', 'ret'
+        ];
+        
+        commonVarNames.forEach(name => {
+            const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Variable);
+            item.detail = 'Variable Name Suggestion';
+            item.documentation = `Suggested variable name: ${name}`;
+            item.insertText = name;
+            item.sortText = `2_var_${name}`;
+            items.push(item);
+        });
+    }
+
+    /**
      * 获取 takes 上下文信息
      */
     private getTakesContext(
@@ -1170,15 +1284,20 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         const isLastWordType = basicTypes.includes(lastWord.toLowerCase()) || 
                               this.isCustomTypeName(document, lastWord);
 
-        // 如果最后一个词是类型，且没有参数名，期望参数名
-        if (isLastWordType && (!secondLastWord || !basicTypes.includes(secondLastWord.toLowerCase()))) {
-            // 检查是否已经有参数名了
-            // 如果最后一个词是类型，且前面没有其他类型，则期望参数名
-            // 但如果最后一个词后面还有内容（可能是正在输入的参数名），则不期望参数名
+        // 如果最后一个词是类型，期望参数名
+        if (isLastWordType) {
+            // 检查光标是否在单词中（可能是正在输入的参数名）
             const cursorInWord = position.character > 0 && 
                                 /[a-zA-Z0-9_]/.test(lineText[position.character - 1]);
-            if (!cursorInWord) {
-                // 光标不在单词中，如果最后一个词是类型，期望参数名
+            
+            // 如果光标不在单词中，或者光标在单词中但最后一个词后面有空格（表示类型已输入完）
+            // 检查最后一个词后面是否有空格
+            const afterLastWord = afterTakes.substring(afterTakes.lastIndexOf(lastWord) + lastWord.length).trim();
+            const hasSpaceAfterLastWord = afterLastWord.length > 0 || 
+                                         (position.character < lineText.length && /\s/.test(lineText[position.character]));
+            
+            if (!cursorInWord || hasSpaceAfterLastWord) {
+                // 如果最后一个词是类型，且类型后面有空格或光标不在单词中，期望参数名
                 return { expectsType: false, expectsName: true, afterComma: afterComma };
             }
         }
@@ -1469,18 +1588,44 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         const textBeforeCursor = lineText.substring(0, position.character);
         
         // 匹配模式：identifier. 或 identifier .（允许空格）
-        // 需要匹配最后一个标识符，而不是第一个（避免匹配到 call、set 等关键字）
-        // 从后往前查找，找到最后一个标识符后跟点号
-        // 匹配模式：任意字符后跟标识符，然后是点号
-        const memberAccessPattern = /(\w+)\s*\.\s*$/;
-        const match = textBeforeCursor.match(memberAccessPattern);
-        
-        if (!match) {
+        // 需要匹配最后一个点号前的标识符，支持链式访问（如 aaaaaa.method_f.）
+        // 从后往前查找，找到最后一个点号，然后提取第一个点号前的标识符（链式访问的根对象）
+        // 先找到最后一个点号的位置
+        const lastDotIndex = textBeforeCursor.lastIndexOf('.');
+        if (lastDotIndex === -1) {
             return null;
         }
         
-        // 获取匹配到的标识符（应该是最后一个标识符，即点号前的那个）
-        const identifier = match[1].toLowerCase();
+        // 提取最后一个点号前的文本（可能是链式访问，如 aaaaaa.method_f）
+        const beforeLastDot = textBeforeCursor.substring(0, lastDotIndex).trim();
+        if (beforeLastDot.length === 0) {
+            return null;
+        }
+        
+        // 对于链式访问（如 aaaaaa.method_f），我们需要找到第一个标识符（根对象）
+        // 先检查是否有多个点号（链式访问）
+        const firstDotIndex = beforeLastDot.indexOf('.');
+        let identifierToCheck: string;
+        
+        if (firstDotIndex !== -1) {
+            // 有链式访问，提取第一个点号前的标识符（根对象）
+            identifierToCheck = beforeLastDot.substring(0, firstDotIndex).trim();
+        } else {
+            // 没有链式访问，提取整个标识符
+            // 匹配最后一个完整的标识符（单词字符序列）
+            const identifierMatch = beforeLastDot.match(/(\w+)\s*$/);
+            if (!identifierMatch) {
+                return null;
+            }
+            identifierToCheck = identifierMatch[1];
+        }
+        
+        if (!identifierToCheck || identifierToCheck.length === 0) {
+            return null;
+        }
+        
+        // 获取标识符（用于 this/thistype 检查）
+        const identifier = identifierToCheck.toLowerCase();
         
         // 检查是否是 this 或 thistype
         if (identifier === 'this') {
@@ -1513,8 +1658,8 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         
         // 普通标识符访问
         // 先尝试查找变量类型（变量类型推断）
-        // 注意：originalIdentifier 可能是变量名（如 aaaaaa），需要先查找变量类型
-        const originalIdentifier = match[1];
+        // 注意：identifierToCheck 可能是变量名（如 aaaaaa），需要先查找变量类型
+        const originalIdentifier = identifierToCheck;
         const variableType = this.findVariableType(document, position, originalIdentifier);
         
         if (variableType) {

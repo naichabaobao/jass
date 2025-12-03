@@ -23,6 +23,10 @@ import { ZincFormattingProvider } from './boot/provider-new/zinc/zinc-formatting
 import { DataEnterManager } from './boot/provider-new/data-enter';
 import { JassDocumentColorProvider } from './boot/provider/document-color-provider';
 import { ZincInlayHintsProvider } from './boot/provider-new/zinc/zinc-inlay-hints-provider';
+import { SpecialFileManager } from './boot/provider-new/special/special-file-manager';
+import { SpecialCompletionProvider } from './boot/provider-new/special/special-completion-provider';
+import { SpecialHoverProvider } from './boot/provider-new/special/special-hover-provider';
+import { SpecialDefinitionProvider } from './boot/provider-new/special/special-definition-provider';
 
 // JASS 语言选择器
 const jassSelector = { scheme: 'file', language: 'jass' };
@@ -50,6 +54,23 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.showErrorMessage('Failed to initialize JASS extension workspace');
     }
 
+    // 初始化特殊文件管理器（在 DataEnterManager 初始化之后，确保 static 文件已加载）
+    try {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+        const workspaceRoot = workspaceFolder?.uri.fsPath;
+        const specialFileManager = SpecialFileManager.getInstance();
+        await specialFileManager.initialize(workspaceRoot);
+        console.log('✅ SpecialFileManager initialized successfully');
+        
+        context.subscriptions.push({
+            dispose: () => {
+                specialFileManager.dispose();
+            }
+        });
+    } catch (error) {
+        console.error('❌ Failed to initialize SpecialFileManager:', error);
+    }
+
     // 创建 CompletionProvider（需要传入 DataEnterManager）
     const completionProvider = new CompletionProvider(dataEnterManager);
 
@@ -65,6 +86,16 @@ export async function activate(context: vscode.ExtensionContext) {
             jassSelector,
             completionProvider,
             ...triggerChars
+        )
+    );
+
+    // 创建并注册特殊文件补全提供者
+    const specialCompletionProvider = new SpecialCompletionProvider();
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            jassSelector,
+            specialCompletionProvider,
+            '"', "'", ..."0123456789xbBX$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$".split("")
         )
     );
 
@@ -129,6 +160,15 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // 创建并注册特殊文件悬停提供者
+    const specialHoverProvider = new SpecialHoverProvider();
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            jassSelector,
+            specialHoverProvider
+        )
+    );
+
     // 创建并注册 ZincHoverProvider（Zinc 文件专用悬停信息支持）
     const zincHoverProvider = new ZincHoverProvider(dataEnterManager);
     context.subscriptions.push(
@@ -144,6 +184,15 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDefinitionProvider(
             jassSelector,
             definitionProvider
+        )
+    );
+
+    // 创建并注册特殊文件定义提供者
+    const specialDefinitionProvider = new SpecialDefinitionProvider();
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(
+            jassSelector,
+            specialDefinitionProvider
         )
     );
 
@@ -283,6 +332,35 @@ export async function activate(context: vscode.ExtensionContext) {
             
             vscode.window.showInformationMessage(message, { modal: true });
             console.log('📊 Cache Stats:', stats);
+        })
+    );
+
+    // 注册调试命令：测试 special 解析器（使用测试数据）
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.testSpecialParsers', async () => {
+            const { SpecialParserDebugger } = await import('./boot/provider-new/special/special-parser-debug');
+            
+            vscode.window.showInformationMessage('Testing special parsers with sample data... Check output panel for results.');
+            SpecialParserDebugger.testParsersWithSampleData();
+            vscode.window.showInformationMessage('Special parser test completed! Check output panel for details.');
+        })
+    );
+
+    // 注册调试命令：测试 special 解析器（从工作区文件）
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.testSpecialParsersFromWorkspace', async () => {
+            const { SpecialParserDebugger } = await import('./boot/provider-new/special/special-parser-debug');
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+            const workspaceRoot = workspaceFolder?.uri.fsPath;
+            
+            if (!workspaceRoot) {
+                vscode.window.showErrorMessage('No workspace folder found');
+                return;
+            }
+
+            vscode.window.showInformationMessage('Testing special parsers from workspace... Check output panel for results.');
+            await SpecialParserDebugger.testParsers(workspaceRoot);
+            vscode.window.showInformationMessage('Special parser test completed! Check output panel for details.');
         })
     );
 

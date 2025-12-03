@@ -64,9 +64,17 @@ interface DataEnterOptions {
 const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j'];
 
 /**
- * 需要忽略的文件名（不处理）
+ * 需要忽略的文件名（不处理，但需要监听变化）
  */
 const IGNORED_FILES = ['numbers.jass', 'presets.jass', 'strings.jass'];
+
+/**
+ * 检查是否是特殊文件（需要由 SpecialFileManager 处理）
+ */
+function isSpecialFile(filePath: string): boolean {
+    const fileName = path.basename(filePath).toLowerCase();
+    return IGNORED_FILES.includes(fileName);
+}
 
 /**
  * 文件路径到 BlockStatement 的映射管理器
@@ -140,6 +148,13 @@ export class DataEnterManager {
      * 处理文件创建
      */
     private handleFileCreate(filePath: string): void {
+        // 如果是特殊文件，即使是在 static 目录下，也要通知 SpecialFileManager
+        if (isSpecialFile(filePath)) {
+            this.notifySpecialFileManager(filePath, 'create');
+            // 特殊文件不进行 AST 解析，直接返回
+            return;
+        }
+
         // 静态文件不监听创建事件
         if (this.isImmutableFile(filePath)) {
             return;
@@ -251,6 +266,13 @@ export class DataEnterManager {
      * 处理文件变化（VSCode 文档变化）
      */
     private handleFileChange(filePath: string): void {
+        // 如果是特殊文件，即使是在 static 目录下，也要通知 SpecialFileManager
+        if (isSpecialFile(filePath)) {
+            this.notifySpecialFileManager(filePath, 'update');
+            // 特殊文件不进行 AST 解析，直接返回
+            return;
+        }
+
         // 静态文件不监听变化
         if (this.isImmutableFile(filePath)) {
             return;
@@ -275,6 +297,13 @@ export class DataEnterManager {
      * 处理文件删除
      */
     private handleFileDelete(filePath: string): void {
+        // 如果是特殊文件，即使是在 static 目录下，也要通知 SpecialFileManager
+        if (isSpecialFile(filePath)) {
+            this.notifySpecialFileManager(filePath, 'delete');
+            // 特殊文件不进行 AST 解析，直接返回
+            return;
+        }
+
         // 从 textmacro 注册表中移除该文件的宏
         this.textMacroRegistry.unregisterFile(filePath);
         
@@ -508,7 +537,7 @@ export class DataEnterManager {
 
         const fileName = path.basename(filePath).toLowerCase();
         
-        // 检查是否在忽略列表中
+        // 检查是否在忽略列表中（特殊文件由 SpecialFileManager 处理，这里忽略）
         if (IGNORED_FILES.includes(fileName)) {
             return true;
         }
@@ -519,6 +548,41 @@ export class DataEnterManager {
         }
 
         return false;
+    }
+
+    /**
+     * 通知 SpecialFileManager 特殊文件变化
+     */
+    private notifySpecialFileManager(filePath: string, eventType: 'create' | 'update' | 'delete'): void {
+        try {
+            // 动态导入，避免循环依赖
+            const { SpecialFileManager } = require('./special/special-file-manager');
+            const manager = SpecialFileManager.getInstance();
+            
+            if (eventType === 'delete') {
+                manager.deleteFile(filePath);
+                console.log(`📢 Notified SpecialFileManager: deleted ${path.basename(filePath)}`);
+            } else {
+                // create 或 update 都需要读取文件内容
+                const document = vscode.workspace.textDocuments.find(doc => doc.uri.fsPath === filePath);
+                if (document) {
+                    const content = document.getText();
+                    manager.updateFile(filePath, content);
+                    console.log(`📢 Notified SpecialFileManager: ${eventType} ${path.basename(filePath)}`);
+                } else {
+                    // 如果文档未打开，从文件系统读取
+                    try {
+                        const content = fs.readFileSync(filePath, 'utf-8');
+                        manager.updateFile(filePath, content);
+                        console.log(`📢 Notified SpecialFileManager: ${eventType} ${path.basename(filePath)} (from filesystem)`);
+                    } catch (error) {
+                        console.error(`Failed to read special file ${filePath}:`, error);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(`Failed to notify SpecialFileManager for ${filePath}:`, error);
+        }
     }
 
     /**
@@ -827,6 +891,11 @@ export class DataEnterManager {
         // 监听文档变化事件（只处理可变文件）
         const changeDisposable = vscode.workspace.onDidChangeTextDocument((event) => {
             const filePath = event.document.uri.fsPath;
+            // 特殊文件需要监听，即使被忽略
+            if (isSpecialFile(filePath)) {
+                this.handleFileChange(filePath);
+                return;
+            }
             if (this.isImmutableFile(filePath) || this.shouldIgnoreFile(filePath)) {
                 return;
             }
@@ -837,6 +906,11 @@ export class DataEnterManager {
         // 监听文档保存事件（只处理可变文件）
         const saveDisposable = vscode.workspace.onDidSaveTextDocument((document) => {
             const filePath = document.uri.fsPath;
+            // 特殊文件需要监听，即使被忽略
+            if (isSpecialFile(filePath)) {
+                this.handleFileChange(filePath);
+                return;
+            }
             if (this.isImmutableFile(filePath) || this.shouldIgnoreFile(filePath)) {
                 return;
             }
@@ -1042,6 +1116,16 @@ export class DataEnterManager {
         // 加载所有找到的 static 目录
         for (const staticDir of staticDirs) {
             await loadFilesInDir(staticDir, staticDir);
+        }
+
+        // 通知 SpecialFileManager 重新初始化（会扫描所有特殊文件，包括 static 目录下的）
+        try {
+            const { SpecialFileManager } = require('./special/special-file-manager');
+            const manager = SpecialFileManager.getInstance();
+            await manager.initialize(workspaceRoot);
+            console.log(`📢 SpecialFileManager reloaded after static files loaded`);
+        } catch (error) {
+            console.error(`Failed to reload SpecialFileManager:`, error);
         }
     }
 
