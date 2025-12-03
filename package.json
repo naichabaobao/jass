@@ -41,30 +41,6 @@
       "type": "object",
       "title": "Jass",
       "properties": {
-        "jass.lua.dependents": {
-          "type": "array",
-          "items": {
-            "type": "(Deprecation) string"
-          },
-          "description": "(Deprecation) '.lua' file library"
-        },
-        "jass.support.lua": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) Support lua, Cooperate with 'jass.lua.dependents' consumption"
-        },
-        "jass.cjass.dependents": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "(Deprecation) cjass standard library"
-        },
-        "jass.support.cjass": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Deprecation) support cjass(not recommended)"
-        },
         "jass.diagnostic": {
           "type": "boolean",
           "default": true,
