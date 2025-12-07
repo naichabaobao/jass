@@ -260,6 +260,22 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
                 if (stmt.name && stmt.name.name === symbolName) {
                     this.addLocation(stmt.name, filePath, locations);
                 }
+                // 递归处理 library 的成员（包括 globals 块）
+                for (const member of stmt.members) {
+                    if (member instanceof BlockStatement) {
+                        // 递归处理 BlockStatement（包括 globals 块）
+                        this.findDefinitionsInBlock(member, symbolName, filePath, locations);
+                    } else {
+                        // 对于非 BlockStatement 的成员，创建一个临时的 BlockStatement 来复用现有的处理逻辑
+                        // BlockStatement 构造函数参数顺序：statements, start?, end?
+                        const tempBlock = new BlockStatement(
+                            [member],
+                            member.start,
+                            member.end
+                        );
+                        this.findDefinitionsInBlock(tempBlock, symbolName, filePath, locations);
+                    }
+                }
             }
             // Scope 声明
             else if (stmt instanceof ScopeDeclaration) {

@@ -1,6 +1,7 @@
 import("./boot/provider-new/data-enter");
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { CompletionProvider } from './boot/provider-new/completion-provider';
 import { SignatureHelpProvider } from './boot/provider-new/signature-help-provider';
@@ -18,7 +19,9 @@ import { ZincHoverProvider } from './boot/provider-new/zinc/zinc-hover-provider'
 import { ZincSignatureHelpProvider } from './boot/provider-new/zinc/zinc-signature-help-provider';
 import { ZincOutlineProvider } from './boot/provider-new/zinc/zinc-outline-provider';
 import { ZincDiagnosticProvider } from './boot/provider-new/zinc/zinc-diagnostic-provider';
-import { FormattingProvider } from './boot/provider-new/formatting-provider';
+// import { FormattingProvider } from './boot/provider-new/formatting-provider';
+import { DocumentFormattingSortEditProvider } from './boot/provider/document-formatting-edit-provider';
+
 import { ZincFormattingProvider } from './boot/provider-new/zinc/zinc-formatting-provider';
 import { DataEnterManager } from './boot/provider-new/data-enter';
 import { JassDocumentColorProvider } from './boot/provider/document-color-provider';
@@ -27,6 +30,7 @@ import { SpecialFileManager } from './boot/provider-new/special/special-file-man
 import { SpecialCompletionProvider } from './boot/provider-new/special/special-completion-provider';
 import { SpecialHoverProvider } from './boot/provider-new/special/special-hover-provider';
 import { SpecialDefinitionProvider } from './boot/provider-new/special/special-definition-provider';
+import { DocumentLinkProvider } from './boot/provider-new/document-link-provider';
 
 // JASS 语言选择器
 const jassSelector = { scheme: 'file', language: 'jass' };
@@ -259,6 +263,23 @@ export async function activate(context: vscode.ExtensionContext) {
     // 创建并注册 DiagnosticProvider（语法错误和警告提示支持）
     const diagnosticProvider = new DiagnosticProvider(dataEnterManager);
     context.subscriptions.push(diagnosticProvider.getDiagnosticCollection());
+    
+    // 监听配置重新加载，更新诊断提供者
+    if (dataEnterManager) {
+        dataEnterManager.onConfigReload(() => {
+            const config = dataEnterManager?.getConfig();
+            if (config?.diagnostics) {
+                diagnosticProvider.updateDiagnosticsConfig(config.diagnostics);
+            }
+        });
+        
+        // 初始化诊断配置
+        const initialConfig = dataEnterManager.getConfig();
+        if (initialConfig?.diagnostics) {
+            diagnosticProvider.updateDiagnosticsConfig(initialConfig.diagnostics);
+        }
+    }
+    
     context.subscriptions.push({
         dispose: () => {
             diagnosticProvider.dispose();
@@ -274,16 +295,11 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    // 基于ast的格式化存在一下问题，因而保守使用之前的格式化方式
     // 创建并注册 FormattingProvider（vJass 代码格式化支持）
-    const formattingProvider = new FormattingProvider(dataEnterManager);
+    const formattingProvider = new DocumentFormattingSortEditProvider();
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
-            jassSelector,
-            formattingProvider
-        )
-    );
-    context.subscriptions.push(
-        vscode.languages.registerDocumentRangeFormattingEditProvider(
             jassSelector,
             formattingProvider
         )
@@ -312,6 +328,15 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerColorProvider(
             jassSelector,
             documentColorProvider
+        )
+    );
+
+    // 创建并注册 DocumentLinkProvider（文档链接支持，用于 #include 和 //! import）
+    const documentLinkProvider = new DocumentLinkProvider();
+    context.subscriptions.push(
+        vscode.languages.registerDocumentLinkProvider(
+            jassSelector,
+            documentLinkProvider
         )
     );
 
@@ -361,6 +386,103 @@ export async function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('Testing special parsers from workspace... Check output panel for results.');
             await SpecialParserDebugger.testParsers(workspaceRoot);
             vscode.window.showInformationMessage('Special parser test completed! Check output panel for details.');
+        })
+    );
+
+    // 注册命令：创建 jass.config.json
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.createConfigFile', async (uri?: vscode.Uri) => {
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+            if (!workspaceFolder) {
+                vscode.window.showErrorMessage('No workspace folder found');
+                return;
+            }
+
+            // 确定配置文件路径
+            let configPath: string;
+            if (uri && uri.scheme === 'file') {
+                // 如果右键点击了文件夹，在该文件夹下创建
+                const fsPath = uri.fsPath;
+                const stats = await vscode.workspace.fs.stat(uri);
+                if (stats.type === vscode.FileType.Directory) {
+                    configPath = path.join(fsPath, 'jass.config.json');
+                } else {
+                    // 如果是文件，在文件所在目录创建
+                    configPath = path.join(path.dirname(fsPath), 'jass.config.json');
+                }
+            } else {
+                // 默认在工作区根目录创建
+                configPath = path.join(workspaceFolder.uri.fsPath, 'jass.config.json');
+            }
+
+            // 检查文件是否已存在
+            const configUri = vscode.Uri.file(configPath);
+            try {
+                await vscode.workspace.fs.stat(configUri);
+                const overwrite = await vscode.window.showWarningMessage(
+                    `jass.config.json already exists at ${path.relative(workspaceFolder.uri.fsPath, configPath)}. Overwrite?`,
+                    'Yes',
+                    'No'
+                );
+                if (overwrite !== 'Yes') {
+                    return;
+                }
+            } catch {
+                // 文件不存在，继续创建
+            }
+
+            // 创建默认配置内容
+            const defaultConfig = {
+                "excludes": [
+                    "**/node_modules/**",
+                    "**/.git/**",
+                    "**/dist/**",
+                    "**/build/**"
+                ],
+                "includes": [
+                    "**/*.j",
+                    "**/*.jass",
+                    "**/*.ai",
+                    "**/*.zn"
+                ],
+                "parsing": {
+                    "enableTextMacro": true,
+                    "enablePreprocessor": true,
+                    "enableLuaBlocks": false,
+                    "strictMode": false
+                },
+                "standardLibraries": {
+                    "common.j": "./libs/common.j",
+                    "common.ai": "./libs/common.ai",
+                    "blizzard.j": "./libs/blizzard.j"
+                },
+                "diagnostics": {
+                    "enable": true,
+                    "severity": {
+                        "errors": "error",
+                        "warnings": "warning"
+                    },
+                    "checkTypes": true,
+                    "checkUndefined": true,
+                    "checkUnused": false
+                }
+            };
+
+            // 写入文件
+            const content = JSON.stringify(defaultConfig, null, 4);
+            fs.writeFileSync(configPath, content, 'utf-8');
+
+            // 打开文件
+            const document = await vscode.workspace.openTextDocument(configUri);
+            await vscode.window.showTextDocument(document);
+
+            vscode.window.showInformationMessage(`Created jass.config.json at ${path.relative(workspaceFolder.uri.fsPath, configPath)}`);
+            
+            // 如果 DataEnterManager 已初始化，重新加载配置
+            // 配置重新加载会自动触发回调更新诊断提供者
+            if (dataEnterManager) {
+                dataEnterManager.reloadConfig();
+            }
         })
     );
 

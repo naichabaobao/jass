@@ -38,6 +38,9 @@
           "include": "#keyword-constant"
         },
         {
+          "include": "#vjass-keyword-inline"
+        },
+        {
           "include": "#number"
         },
         {
@@ -102,14 +105,15 @@
           "end": "\"|\\n",
           "beginCaptures": {
             "0": {
-              "name": "string.quoted.double"
+              "name": "punctuation.definition.string.begin"
             }
           },
           "endCaptures": {
             "0": {
-              "name": "string.quoted.double"
+              "name": "punctuation.definition.string.end"
             }
           },
+          "contentName": "string.quoted.double",
           "patterns": [
             {
               "name": "string.interpolated",
@@ -130,14 +134,15 @@
           "end": "\"",
           "beginCaptures": {
             "0": {
-              "name": "string.quoted.double"
+              "name": "punctuation.definition.string.begin"
             }
           },
           "endCaptures": {
             "0": {
-              "name": "string.quoted.double"
+              "name": "punctuation.definition.string.end"
             }
           },
+          "contentName": "string.quoted.double",
           "patterns": [
             {
               "name": "string.interpolated",
@@ -211,6 +216,10 @@
         "identifier": {
           "name": "variable.other",
           "match": "[a-zA-Z][a-zA-Z0-9_]*"
+        },
+        "vjass-keyword-inline": {
+          "name": "keyword",
+          "match": "\\b(library|library_once|initializer|finalizer|needs|uses|requires|optional|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|super|delegate|operator|module|endmodule|implement|stub|key|thistype|onInit|onDestroy|hook|defaults|allocate|deallocate|create|destroy|execute|evaluate|name|exists|size|getType|typeid|readonly)\\b"
         }
       }
     },
@@ -218,8 +227,8 @@
       "patterns": [
         {"include": "#novjass"},
         {"include": "#zinc-block"},
-        {"include": "#jass"},
         {"include": "#vjass-keyword"},
+        {"include": "#jass"},
         {"include": "#vjass-object"},
         {"include": "#identifier"}
       ],
@@ -262,8 +271,7 @@
           ]
         },
         "vjass-keyword": {
-          "name": "keyword",
-          "match": "\\b(library|library_once|initializer|finalizer|needs|uses|requires|optional|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|super|delegate|operator|module|endmodule|implement|stub|key|thistype|onInit|onDestroy|hook|defaults|allocate|deallocate|create|destroy|execute|evaluate|name|exists|size|getType|typeid)\\b"
+          "include": "#vjass-keyword-inline"
         },
         "vjass-object": {
           "patterns": [

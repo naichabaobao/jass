@@ -1,3 +1,18 @@
+#### 1.9.2
+- 使用 VSCode 内置的 glob 实现替代 src\extern\glob，提升兼容性
+- 修复解析器无法解析 library 块中 globals 块的问题
+- 完善 jass.config.json 配置文件支持，包括 excludes 和 includes 模式匹配
+- 修复 vjass 关键字语法高亮问题，确保所有 vjass 关键字正确显示为 keyword 类型
+
+#### 1.9.1
+- 修复vjass格式化问题
+- .zn后缀文件格式化可能还是存在BUG
+
+#### 1.9.0
+- 完整的vJass抽象语法树解析
+- 使用流式词法解析，而非一次性全部解析
+- 增加初版hint功能支持，也就是你输入参数时，显示的不可选取类型（Test）
+
 #### 1.8.44
 - <??>跟<?=?>预处理
 

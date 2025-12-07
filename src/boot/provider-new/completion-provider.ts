@@ -16,7 +16,9 @@ import {
     Identifier,
     TextMacroStatement,
     ImplementStatement,
-    ZincBlockStatement
+    ZincBlockStatement,
+    LibraryDeclaration,
+    ScopeDeclaration
 } from '../vjass/vjass-ast';
 import { AllKeywords } from '../jass/keyword';
 import { TextMacroRegistry } from '../vjass/text-macro-registry';
@@ -593,6 +595,34 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 if (itemSet) itemSet.add(stmt.name);
             }
         }
+        // Library 声明（递归处理内部成员，包括 globals 块）
+        else if (stmt instanceof LibraryDeclaration) {
+            // 递归处理 library 的成员
+            for (const member of stmt.members) {
+                // 检查是否是 BlockStatement（可能是 globals 块）
+                if (member instanceof BlockStatement) {
+                    // 递归处理 BlockStatement（包括 globals 块）
+                    this.extractCompletionItems(member, items, isCurrentFile, position, itemSet, filePath);
+                } else {
+                    // 处理其他类型的成员
+                    this.extractFromStatement(member, items, isCurrentFile, position, itemSet, filePath);
+                }
+            }
+        }
+        // Scope 声明（递归处理内部成员，包括 globals 块）
+        else if (stmt instanceof ScopeDeclaration) {
+            // 递归处理 scope 的成员
+            for (const member of stmt.members) {
+                // 检查是否是 BlockStatement（可能是 globals 块）
+                if (member instanceof BlockStatement) {
+                    // 递归处理 BlockStatement（包括 globals 块）
+                    this.extractCompletionItems(member, items, isCurrentFile, position, itemSet, filePath);
+                } else {
+                    // 处理其他类型的成员
+                    this.extractFromStatement(member, items, isCurrentFile, position, itemSet, filePath);
+                }
+            }
+        }
 
         // 如果是当前文件，提取局部变量和参数
         if (isCurrentFile) {
@@ -666,10 +696,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             const func = this.findContainingFunction(block, position);
             if (func) {
                 this.extractFunctionLocalVariables(func, items, position);
-                const itemsAdded = items.length - itemsBefore;
-                if (itemsAdded > 0) {
-                    console.log(`[CompletionProvider] extractLocalVariablesFromCurrentFile: 函数 ${func.name?.name || 'unknown'}, 添加了 ${itemsAdded} 个局部变量/参数`);
-                }
                 return;
             }
 
@@ -677,10 +703,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             const method = this.findContainingMethod(block, position);
             if (method) {
                 this.extractMethodLocalVariables(method, items, position);
-                const itemsAdded = items.length - itemsBefore;
-                if (itemsAdded > 0) {
-                    console.log(`[CompletionProvider] extractLocalVariablesFromCurrentFile: 方法 ${method.name?.name || 'unknown'}, 添加了 ${itemsAdded} 个局部变量/参数`);
-                }
                 return;
             }
 
@@ -1661,38 +1683,31 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         // 注意：identifierToCheck 可能是变量名（如 aaaaaa），需要先查找变量类型
         // 查找顺序：1. local 变量 2. takes 参数 3. globals 变量
         const originalIdentifier = identifierToCheck;
-        console.log(`[CompletionProvider] getMemberAccessContext: 查找变量 ${originalIdentifier} 的类型`);
         const variableType = this.findVariableType(document, position, originalIdentifier);
         
         if (variableType) {
             // 找到了变量类型，这是实例访问
             // 使用变量类型（而不是变量名）来查找 struct/interface
             let typeName = variableType;
-            console.log(`[CompletionProvider] getMemberAccessContext: 找到变量 ${originalIdentifier} 的类型: ${typeName}`);
             
             // 如果类型是 "thistype"，需要查找当前 struct
             if (typeName.toLowerCase() === 'thistype') {
                 const currentStruct = this.findCurrentStruct(document, position);
                 if (currentStruct && currentStruct.name) {
                     typeName = currentStruct.name.name;
-                    console.log(`[CompletionProvider] getMemberAccessContext: thistype 解析为 ${typeName}`);
                 } else {
                     // 如果找不到当前 struct，返回 null
-                    console.log(`[CompletionProvider] getMemberAccessContext: 未找到当前 struct`);
                     return null;
                 }
             }
             
             // 使用变量类型（而不是变量名）来查找 struct/interface
-            console.log(`[CompletionProvider] getMemberAccessContext: 返回 structName: ${typeName}`);
             return {
                 structName: typeName,  // 使用类型名，不是变量名
                 isStatic: false,
                 isThis: false,
                 isThistype: false
             };
-        } else {
-            console.log(`[CompletionProvider] getMemberAccessContext: 未找到变量 ${originalIdentifier} 的类型`);
         }
         
         // 如果没有找到变量类型，可能是：
@@ -1707,8 +1722,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         // 这样可以避免错误地将变量名当作类型名
         if (!isStatic) {
             // 变量名通常是小写开头，如果找不到变量类型，不应该提供补全
-            // 添加调试信息
-            console.log(`[CompletionProvider] 未找到变量类型: ${originalIdentifier}，可能是变量未声明或位置信息不准确`);
             return null;
         }
         
@@ -1733,17 +1746,12 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         const filePath = document.uri.fsPath;
         const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
         if (!blockStatement) {
-            console.log(`[CompletionProvider] findVariableType: 未找到 blockStatement for ${filePath}`);
             return null;
         }
         
         // 查找包含当前位置的函数或方法
         const containingFunction = this.findContainingFunction(blockStatement, position);
         const containingMethod = this.findContainingMethod(blockStatement, position);
-        
-        if (!containingFunction && !containingMethod) {
-            console.log(`[CompletionProvider] findVariableType: 未找到包含位置的函数或方法`);
-        }
         
         // 1. 优先查找局部变量（local）
         // 按照用户要求：先找 local，再找 takes，再找 globals
@@ -1752,7 +1760,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             if (containingFunction.body) {
                 const varType = this.findVariableInBlock(containingFunction.body, variableName, position);
                 if (varType) {
-                    console.log(`[CompletionProvider] findVariableType: 在函数局部变量中找到 ${variableName}，类型: ${varType}`);
                     return varType;
                 }
             }
@@ -1763,7 +1770,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             if (containingMethod.body) {
                 const varType = this.findVariableInBlock(containingMethod.body, variableName, position);
                 if (varType) {
-                    console.log(`[CompletionProvider] findVariableType: 在方法局部变量中找到 ${variableName}，类型: ${varType}`);
                     return varType;
                 }
             }
@@ -1773,7 +1779,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         if (containingFunction) {
             const varType = this.findVariableInFunction(containingFunction, variableName, position);
             if (varType) {
-                console.log(`[CompletionProvider] findVariableType: 在函数参数中找到 ${variableName}，类型: ${varType}`);
                 return varType;
             }
         }
@@ -1781,7 +1786,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         if (containingMethod) {
             const varType = this.findVariableInMethod(containingMethod, variableName, position);
             if (varType) {
-                console.log(`[CompletionProvider] findVariableType: 在方法参数中找到 ${variableName}，类型: ${varType}`);
                 return varType;
             }
         }
@@ -1789,11 +1793,9 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         // 3. 最后查找 globals 变量
         const globalsType = this.findVariableInGlobals(blockStatement, variableName);
         if (globalsType) {
-            console.log(`[CompletionProvider] findVariableType: 在 globals 中找到 ${variableName}，类型: ${globalsType}`);
             return globalsType;
         }
         
-        console.log(`[CompletionProvider] findVariableType: 未找到变量 ${variableName} 的类型（已检查 local、takes、globals）`);
         return null;
     }
     
@@ -1918,7 +1920,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             const bestMatch = candidates[0].stmt;
             if (bestMatch.type) {
                 const typeStr = bestMatch.type.toString();
-                console.log(`[CompletionProvider] findVariableInBlock: 找到变量 ${variableName}，类型: ${typeStr}，优先级: ${candidates[0].priority}`);
                 return typeStr;
             }
         }
@@ -2039,7 +2040,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             
             // 查找对应的 struct 或 interface
             // 通过类型名称精确匹配查找
-            console.log(`[CompletionProvider] provideMemberAccessCompletion: 查找 struct/interface: ${context.structName}`);
             for (const filePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
                 if (!blockStatement) {
@@ -2049,14 +2049,12 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 foundStruct = this.findStructInBlock(blockStatement, context.structName);
                 if (foundStruct) {
                     foundFilePath = filePath;
-                    console.log(`[CompletionProvider] provideMemberAccessCompletion: 找到 struct ${context.structName} 在文件 ${filePath}`);
                     break;
                 }
                 
                 foundInterface = this.findInterfaceInBlock(blockStatement, context.structName);
                 if (foundInterface) {
                     foundFilePath = filePath;
-                    console.log(`[CompletionProvider] provideMemberAccessCompletion: 找到 interface ${context.structName} 在文件 ${filePath}`);
                     break;
                 }
             }
@@ -2067,20 +2065,6 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             } else if (foundInterface && foundFilePath) {
                 // 提供 interface 成员补全
                 this.addInterfaceMembers(foundInterface, items, itemSet, context.isStatic, foundFilePath);
-            } else {
-                // 如果没有找到 struct 或 interface，记录调试信息
-                // 这可能是变量类型推断失败，或者类型名称不匹配
-                console.log(`[CompletionProvider] 未找到 struct/interface: ${context.structName}`);
-                console.log(`[CompletionProvider] 查找的文件数: ${allCachedFiles.length}`);
-                // 列出所有可用的 struct 名称（用于调试）
-                const allStructNames: string[] = [];
-                for (const filePath of allCachedFiles) {
-                    const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
-                    if (blockStatement) {
-                        this.collectStructNames(blockStatement, allStructNames);
-                    }
-                }
-                console.log(`[CompletionProvider] 可用的 struct 名称: ${allStructNames.join(', ')}`);
             }
         } catch (error) {
             console.error('Error in provideMemberAccessCompletion:', error);

@@ -586,6 +586,23 @@ export class HoverProvider implements vscode.HoverProvider {
                         hoverContents.push(content);
                     }
                 }
+                // 递归处理 library 的成员（包括 globals 块）
+                for (const member of stmt.members) {
+                    if (member instanceof BlockStatement) {
+                        // 递归处理 BlockStatement（包括 globals 块）
+                        this.findSymbolsInBlock(member, symbolName, filePath, hoverContents);
+                    } else {
+                        // 对于非 BlockStatement 的成员，直接在 findSymbolsInBlock 的循环中处理
+                        // 创建一个临时的 BlockStatement 来复用现有的处理逻辑
+                        // BlockStatement 构造函数参数顺序：statements, start?, end?
+                        const tempBlock = new BlockStatement(
+                            [member],
+                            member.start,
+                            member.end
+                        );
+                        this.findSymbolsInBlock(tempBlock, symbolName, filePath, hoverContents);
+                    }
+                }
             }
             // Scope 声明
             else if (stmt instanceof ScopeDeclaration) {

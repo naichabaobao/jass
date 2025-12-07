@@ -352,10 +352,16 @@ export class OutlineProvider implements vscode.DocumentSymbolProvider {
         // Library 成员
         else if (stmt instanceof LibraryDeclaration) {
             for (const member of stmt.members) {
-                const memberSymbol = this.createSymbolFromStatement(member);
-                if (memberSymbol) {
-                    parentSymbol.children.push(memberSymbol);
-                    this.extractNestedSymbols(member, memberSymbol);
+                // 检查是否是 BlockStatement（可能是 globals 块）
+                if (member instanceof BlockStatement) {
+                    // 使用 extractSymbolsFromBlock 来处理 BlockStatement（包括 globals 块）
+                    this.extractSymbolsFromBlock(member, parentSymbol.children, parentSymbol);
+                } else {
+                    const memberSymbol = this.createSymbolFromStatement(member);
+                    if (memberSymbol) {
+                        parentSymbol.children.push(memberSymbol);
+                        this.extractNestedSymbols(member, memberSymbol);
+                    }
                 }
             }
         }

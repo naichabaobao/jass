@@ -82,6 +82,10 @@ export interface StreamingParsingOptions {
     deleteLineComment?: boolean;
     /** TextMacroExpander（可选，用于展开 runtextmacro） */
     textMacroExpander?: TextMacroExpander;
+    /** 是否启用预处理器 */
+    enablePreprocessor?: boolean;
+    /** 是否启用 Lua 块 */
+    enableLuaBlocks?: boolean;
 }
 
 /**
@@ -124,7 +128,9 @@ export function streamingParse(
     const {
         filePath = "",
         deleteLineComment = false,
-        textMacroExpander
+        textMacroExpander,
+        enablePreprocessor = true,
+        enableLuaBlocks = true
     } = options;
 
     // 初始化错误集合
@@ -146,11 +152,15 @@ export function streamingParse(
     // 步骤1: 移除多行注释
     content = removeComment(content, errors, deleteLineComment);
 
-    // 步骤2: 预处理指令
-    content = parseAndRemovePreprocessor(content, errors, preprocessCollection);
+    // 步骤2: 预处理指令（如果启用）
+    if (enablePreprocessor) {
+        content = parseAndRemovePreprocessor(content, errors, preprocessCollection);
+    }
 
-    // 步骤3: Lua 段
-    content = parseAndRemoveLuaSegement(content, errors);
+    // 步骤3: Lua 段（如果启用）
+    if (enableLuaBlocks) {
+        content = parseAndRemoveLuaSegement(content, errors);
+    }
 
     // 步骤4: 解析并移除 Zinc 块
     const zincBlockCollection: ZincBlockCollection = { blocks: [] };

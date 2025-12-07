@@ -12,7 +12,9 @@ import {
     ModuleDeclaration,
     DelegateDeclaration,
     MethodDeclaration,
-    TextMacroStatement
+    TextMacroStatement,
+    LibraryDeclaration,
+    ScopeDeclaration
 } from '../vjass/vjass-ast';
 import { extractLeadingComments, parseComment, formatCommentAsMarkdown } from './comment-parser';
 import { CustomCompletionItem } from './completion-cache';
@@ -225,6 +227,72 @@ export class CompletionExtractor {
                 );
                 items.push(item);
                 itemSet.add(stmt.name);
+            }
+        }
+        // Library 声明（递归处理内部成员，包括 globals 块）
+        else if (stmt instanceof LibraryDeclaration) {
+            // 递归处理 library 的成员
+            for (const member of stmt.members) {
+                // 检查是否是 BlockStatement（可能是 globals 块）
+                if (member instanceof BlockStatement) {
+                    // 递归处理 BlockStatement（包括 globals 块）
+                    const nestedItems = CompletionExtractor.extractCompletionItems(
+                        member,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                    nestedItems.forEach(item => {
+                        const key = item.label as string;
+                        if (!itemSet.has(key)) {
+                            items.push(item);
+                            itemSet.add(key);
+                        }
+                    });
+                } else {
+                    // 处理其他类型的成员
+                    CompletionExtractor.extractFromStatement(
+                        member,
+                        items,
+                        itemSet,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                }
+            }
+        }
+        // Scope 声明（递归处理内部成员，包括 globals 块）
+        else if (stmt instanceof ScopeDeclaration) {
+            // 递归处理 scope 的成员
+            for (const member of stmt.members) {
+                // 检查是否是 BlockStatement（可能是 globals 块）
+                if (member instanceof BlockStatement) {
+                    // 递归处理 BlockStatement（包括 globals 块）
+                    const nestedItems = CompletionExtractor.extractCompletionItems(
+                        member,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                    nestedItems.forEach(item => {
+                        const key = item.label as string;
+                        if (!itemSet.has(key)) {
+                            items.push(item);
+                            itemSet.add(key);
+                        }
+                    });
+                } else {
+                    // 处理其他类型的成员
+                    CompletionExtractor.extractFromStatement(
+                        member,
+                        items,
+                        itemSet,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                }
             }
         }
     }

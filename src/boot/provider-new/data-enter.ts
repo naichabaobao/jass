@@ -47,6 +47,69 @@ interface FileCacheItem {
 }
 
 /**
+ * 解析选项配置
+ */
+interface ParsingConfig {
+    /** 是否启用 textmacro */
+    enableTextMacro?: boolean;
+    /** 是否启用预处理器 */
+    enablePreprocessor?: boolean;
+    /** 是否启用 Lua 块 */
+    enableLuaBlocks?: boolean;
+    /** 是否启用严格模式 */
+    strictMode?: boolean;
+}
+
+/**
+ * 标准库路径配置
+ */
+interface StandardLibrariesConfig {
+    /** common.j 文件路径 */
+    "common.j"?: string;
+    /** common.ai 文件路径 */
+    "common.ai"?: string;
+    /** blizzard.j 文件路径 */
+    "blizzard.j"?: string;
+}
+
+/**
+ * 诊断选项配置
+ */
+interface DiagnosticsConfig {
+    /** 是否启用诊断 */
+    enable?: boolean;
+    /** 严重程度配置 */
+    severity?: {
+        /** 错误严重程度 */
+        errors?: "error" | "warning" | "information" | "hint";
+        /** 警告严重程度 */
+        warnings?: "error" | "warning" | "information" | "hint";
+    };
+    /** 是否检查类型 */
+    checkTypes?: boolean;
+    /** 是否检查未定义 */
+    checkUndefined?: boolean;
+    /** 是否检查未使用 */
+    checkUnused?: boolean;
+}
+
+/**
+ * JASS 配置文件接口
+ */
+interface JassConfig {
+    /** 排除的文件/目录模式（glob 模式） */
+    excludes?: string[];
+    /** 包含的文件/目录模式（glob 模式，优先级高于 excludes） */
+    includes?: string[];
+    /** 解析选项 */
+    parsing?: ParsingConfig;
+    /** 标准库路径配置 */
+    standardLibraries?: StandardLibrariesConfig;
+    /** 诊断选项 */
+    diagnostics?: DiagnosticsConfig;
+}
+
+/**
  * 配置选项
  */
 interface DataEnterOptions {
@@ -87,6 +150,7 @@ export class DataEnterManager {
     private readonly immutableFiles: Set<string> = new Set(); // 不可变文件集合
     private options: DataEnterOptions;
     private fileWatcher?: vscode.FileSystemWatcher;
+    private configWatcher?: vscode.FileSystemWatcher;
     private disposables: vscode.Disposable[] = [];
     private workspaceRoot?: string;
     
@@ -94,6 +158,11 @@ export class DataEnterManager {
     private readonly textMacroCollector: TextMacroCollector;
     private readonly textMacroExpander: TextMacroExpander;
     private readonly textMacroRegistry: TextMacroRegistry;
+    
+    // 配置文件相关
+    private config: JassConfig | null = null;
+    private configPath?: string;
+    private readonly configReloadCallbacks: Array<() => void> = [];
 
     constructor(options: DataEnterOptions = {}) {
         this.options = {
@@ -111,6 +180,9 @@ export class DataEnterManager {
         this.textMacroRegistry = TextMacroRegistry.getInstance();
         this.textMacroCollector = new TextMacroCollector(this.textMacroRegistry);
         this.textMacroExpander = new TextMacroExpander(this.textMacroRegistry);
+
+        // 加载配置文件
+        this.loadConfig();
 
         // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
     }
@@ -212,23 +284,33 @@ export class DataEnterManager {
             errors = zincParser.errors;
         } else {
             // 对于非 Zinc 文件，使用原有的流程
-            // 1. 先更新 textmacro 注册表（收集阶段）
-            const collection = { errors: [], warnings: [] };
-            this.textMacroCollector.collectFromFile(filePath, content, collection);
+            // 获取解析配置
+            const parsingConfig = this.config?.parsing || {};
+            const enableTextMacro = parsingConfig.enableTextMacro !== false; // 默认启用
+            const enablePreprocessor = parsingConfig.enablePreprocessor !== false; // 默认启用
+            const enableLuaBlocks = parsingConfig.enableLuaBlocks !== false; // 默认启用
             
-            // 报告收集阶段的错误和警告
-            if (collection.errors.length > 0 || collection.warnings.length > 0) {
-                console.warn(`TextMacro collection issues in ${path.basename(filePath)}:`, {
-                    errors: collection.errors.length,
-                    warnings: collection.warnings.length
-                });
+            // 1. 如果启用 textmacro，先更新 textmacro 注册表（收集阶段）
+            if (enableTextMacro) {
+                const collection = { errors: [], warnings: [] };
+                this.textMacroCollector.collectFromFile(filePath, content, collection);
+                
+                // 报告收集阶段的错误和警告
+                if (collection.errors.length > 0 || collection.warnings.length > 0) {
+                    console.warn(`TextMacro collection issues in ${path.basename(filePath)}:`, {
+                        errors: collection.errors.length,
+                        warnings: collection.warnings.length
+                    });
+                }
             }
 
             // 2. 解析文件内容为 BlockStatement（解析阶段，此时可以使用 textmacro）
             const result = streamingParse(content, {
                 filePath,
                 deleteLineComment: false, // 保留行注释
-                textMacroExpander: this.textMacroExpander
+                textMacroExpander: enableTextMacro ? this.textMacroExpander : undefined,
+                enablePreprocessor: enablePreprocessor,
+                enableLuaBlocks: enableLuaBlocks
             });
             
             blockStatement = result.blockStatement;
@@ -527,6 +609,168 @@ export class DataEnterManager {
     }
 
     /**
+     * 加载 jass.config.json 配置文件
+     */
+    private loadConfig(): void {
+        if (!this.workspaceRoot) {
+            return;
+        }
+
+        this.configPath = path.join(this.workspaceRoot, 'jass.config.json');
+        
+        if (!fs.existsSync(this.configPath)) {
+            this.config = null;
+            return;
+        }
+
+        try {
+            const configContent = fs.readFileSync(this.configPath, 'utf-8');
+            const configJson = JSON.parse(configContent);
+            this.config = {
+                excludes: configJson.excludes || [],
+                includes: configJson.includes || []
+            };
+            const excludesCount = this.config.excludes?.length || 0;
+            const includesCount = this.config.includes?.length || 0;
+            console.log(`📋 Loaded jass.config.json: ${excludesCount} excludes, ${includesCount} includes`);
+        } catch (error) {
+            console.warn(`Failed to parse jass.config.json: ${error}`);
+            this.config = null;
+        }
+    }
+
+    /**
+     * 检查文件路径是否匹配 glob 模式
+     * 使用 VSCode 内置的 glob 实现（通过 RelativePattern 和 findFiles）
+     */
+    private matchesGlobPattern(filePath: string, pattern: string, workspaceRoot: string): boolean {
+        try {
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+            if (!workspaceFolder) {
+                return false;
+            }
+
+            // 如果模式是绝对路径，转换为相对路径
+            let normalizedPattern = pattern;
+            if (path.isAbsolute(pattern)) {
+                if (!path.isAbsolute(filePath)) {
+                    return false;
+                }
+                // 转换为相对于工作区的路径
+                normalizedPattern = path.relative(workspaceRoot, pattern).replace(/\\/g, '/');
+            }
+
+            // 将文件路径转换为相对于工作区根目录的路径
+            const relativeFilePath = path.relative(workspaceRoot, filePath).replace(/\\/g, '/');
+            
+            // 标准化模式（使用正斜杠）
+            normalizedPattern = normalizedPattern.replace(/\\/g, '/');
+            
+            // 使用 VSCode 的 RelativePattern 来创建模式
+            const relativePattern = new vscode.RelativePattern(workspaceFolder, normalizedPattern);
+            
+            // 使用 VSCode 的 glob 匹配逻辑
+            // VSCode 内部使用 minimatch，我们可以通过检查文件 URI 是否匹配模式来判断
+            // 由于 VSCode 没有直接暴露同步的匹配函数，我们使用一个简化的匹配逻辑
+            // 这个逻辑基于 VSCode 的 glob 匹配规则
+            return this.matchGlobPatternSync(relativeFilePath, normalizedPattern);
+        } catch (error) {
+            console.error(`Error matching glob pattern: ${error}`);
+            return false;
+        }
+    }
+
+    /**
+     * 同步方式匹配 glob 模式
+     * 使用与 VSCode 兼容的 glob 匹配逻辑
+     * 支持基本的 glob 模式：*, **, ?, [chars], {a,b}
+     */
+    private matchGlobPatternSync(filePath: string, pattern: string): boolean {
+        // 将模式转换为正则表达式
+        // 处理 ** (匹配任意路径，包括 /)
+        let regexPattern = pattern
+            .replace(/\\/g, '/')
+            // 先处理 **，避免被 * 替换
+            .replace(/\*\*/g, '___GLOBSTAR___')
+            // 转义特殊字符
+            .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+            // 恢复 ** 并替换为匹配任意字符（包括 /）
+            .replace(/___GLOBSTAR___/g, '.*')
+            // * 匹配除 / 外的任意字符
+            .replace(/\*/g, '[^/]*')
+            // ? 匹配除 / 外的单个字符
+            .replace(/\?/g, '[^/]')
+            // 处理字符类 [abc] 或 [^abc]
+            .replace(/\[([^\]]+)\]/g, (match, chars) => {
+                // 如果第一个字符是 ^，表示否定
+                if (chars.startsWith('^')) {
+                    return `[^${chars.substring(1).replace(/\\/g, '\\\\')}]`;
+                }
+                return `[${chars.replace(/\\/g, '\\\\')}]`;
+            });
+        
+        // 处理大括号扩展 {a,b} -> (a|b)
+        regexPattern = regexPattern.replace(/\{([^}]+)\}/g, (match, content) => {
+            const alternatives = content.split(',').map((alt: string) => alt.trim());
+            return `(${alternatives.map((alt: string) => alt.replace(/[.+^${}()|[\]\\]/g, '\\$&')).join('|')})`;
+        });
+        
+        try {
+            const regex = new RegExp(`^${regexPattern}$`);
+            return regex.test(filePath);
+        } catch (error) {
+            console.error(`Error creating regex for pattern ${pattern}: ${error}`);
+            return false;
+        }
+    }
+
+    /**
+     * 检查文件是否应该被包含（根据 includes 配置）
+     */
+    private shouldIncludeFile(filePath: string): boolean {
+        if (!this.config || !this.config.includes || this.config.includes.length === 0) {
+            // 如果没有 includes 配置，默认包含所有 JASS 文件
+            return true;
+        }
+
+        if (!this.workspaceRoot) {
+            return true;
+        }
+
+        // 如果配置了 includes，只要匹配任何一个模式就包含
+        for (const pattern of this.config.includes) {
+            if (this.matchesGlobPattern(filePath, pattern, this.workspaceRoot)) {
+                return true;
+            }
+        }
+
+        // 如果没有匹配任何 includes 模式，则不包含
+        return false;
+    }
+
+    /**
+     * 检查文件是否应该被排除（根据 excludes 配置）
+     */
+    private shouldExcludeFile(filePath: string): boolean {
+        if (!this.config || !this.config.excludes || this.config.excludes.length === 0) {
+            return false;
+        }
+
+        if (!this.workspaceRoot) {
+            return false;
+        }
+
+        // 检查是否匹配任何 excludes 模式
+        for (const pattern of this.config.excludes) {
+            if (this.matchesGlobPattern(filePath, pattern, this.workspaceRoot)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 检查是否应该忽略文件
      */
     private shouldIgnoreFile(filePath: string): boolean {
@@ -544,6 +788,16 @@ export class DataEnterManager {
 
         // 检查文件扩展名
         if (!this.isJassFile(filePath)) {
+            return true;
+        }
+
+        // 如果配置了 includes，先检查是否应该包含
+        if (!this.shouldIncludeFile(filePath)) {
+            return true;
+        }
+
+        // 检查是否应该被排除
+        if (this.shouldExcludeFile(filePath)) {
             return true;
         }
 
@@ -785,6 +1039,9 @@ export class DataEnterManager {
         // 设置事件处理器（监听和数据处理分离）
         this.setupEventHandlers();
         
+        // 设置配置文件监听器
+        this.setupConfigWatcher();
+        
         // 设置文件监听器（监听和数据处理分离）
         if (this.options.enableFileWatcher) {
             this.setupFileWatcher();
@@ -823,6 +1080,92 @@ export class DataEnterManager {
                     console.error('❌ Error in file event stream:', error);
                 }
             });
+    }
+
+    /**
+     * 设置配置文件监听器
+     */
+    private setupConfigWatcher(): void {
+        if (!this.workspaceRoot) {
+            return;
+        }
+
+        // 监听 jass.config.json 文件保存事件
+        const saveDisposable = vscode.workspace.onDidSaveTextDocument((document) => {
+            const filePath = document.uri.fsPath;
+            const configPath = path.join(this.workspaceRoot!, 'jass.config.json');
+            
+            // 检查是否是 jass.config.json 文件
+            if (filePath === configPath || path.normalize(filePath) === path.normalize(configPath)) {
+                console.log('📋 jass.config.json saved, reloading...');
+                this.loadConfig();
+                // 配置保存后，重新评估已缓存的文件
+                this.revalidateCachedFiles();
+                // 触发配置重新加载回调
+                this.triggerConfigReloadCallbacks();
+            }
+        });
+
+        // 监听 jass.config.json 文件创建和删除（使用文件系统监听器）
+        const configPattern = new vscode.RelativePattern(
+            vscode.workspace.workspaceFolders?.[0] || vscode.Uri.file('/'),
+            'jass.config.json'
+        );
+
+        this.configWatcher = vscode.workspace.createFileSystemWatcher(configPattern);
+
+        // 监听配置文件创建
+        this.configWatcher.onDidCreate((uri) => {
+            console.log('📋 jass.config.json created, loading...');
+            this.loadConfig();
+            // 配置创建后，重新评估已缓存的文件
+            this.revalidateCachedFiles();
+            // 触发配置重新加载回调
+            this.triggerConfigReloadCallbacks();
+        });
+
+        // 监听配置文件删除
+        this.configWatcher.onDidDelete((uri) => {
+            console.log('📋 jass.config.json deleted, clearing config...');
+            this.config = null;
+            this.configPath = undefined;
+            // 配置删除后，重新评估已缓存的文件（现在应该都包含）
+            this.revalidateCachedFiles();
+        });
+
+        this.disposables.push(this.configWatcher);
+        this.disposables.push(saveDisposable);
+    }
+
+    /**
+     * 重新验证已缓存的文件（根据新的配置）
+     */
+    private revalidateCachedFiles(): void {
+        const filesToRecheck: string[] = [];
+        
+        // 收集所有需要重新检查的文件
+        for (const filePath of this.cache.keys()) {
+            // 如果文件现在应该被忽略，但之前没有被忽略，需要移除
+            // 如果文件现在不应该被忽略，但之前被忽略了，需要重新加载
+            if (this.shouldIgnoreFile(filePath)) {
+                // 文件现在应该被忽略，如果之前没有被忽略，需要移除缓存
+                if (!this.isImmutableFile(filePath) && !isSpecialFile(filePath)) {
+                    filesToRecheck.push(filePath);
+                }
+            }
+        }
+
+        // 移除应该被忽略的文件缓存
+        for (const filePath of filesToRecheck) {
+            if (this.shouldIgnoreFile(filePath)) {
+                console.log(`🗑️ Removing cached file due to config change: ${path.basename(filePath)}`);
+                this.handleFileDelete(filePath);
+            }
+        }
+
+        // 重新加载之前被忽略但现在应该包含的文件
+        // 这需要扫描工作区，但为了性能，我们只在文件被访问时重新加载
+        console.log(`✅ Config reloaded, ${filesToRecheck.length} files revalidated`);
     }
 
     /**
@@ -1025,7 +1368,7 @@ export class DataEnterManager {
 
     /**
      * 按顺序加载标准库文件
-     * 优先从工作区根目录查找，如果不存在则从扩展的 static 目录查找
+     * 优先使用配置中的路径，然后从工作区根目录查找，最后从扩展的 static 目录查找
      */
     private async loadStandardLibraries(workspaceRoot: string): Promise<void> {
         // 扩展的 static 目录路径
@@ -1036,11 +1379,34 @@ export class DataEnterManager {
         console.log(`   Extension static: ${extensionStaticDir}`);
         
         for (const fileName of STANDARD_LIBRARY_ORDER) {
-            // 优先从工作区根目录查找
-            let filePath = path.join(workspaceRoot, fileName);
-            if (!fs.existsSync(filePath)) {
-                // 如果工作区不存在，从扩展的 static 目录查找
-                filePath = path.join(extensionStaticDir, fileName);
+            let filePath: string | null = null;
+            
+            // 1. 优先使用配置中的路径
+            if (this.config?.standardLibraries && this.config.standardLibraries[fileName as keyof StandardLibrariesConfig]) {
+                const configPath = this.config.standardLibraries[fileName as keyof StandardLibrariesConfig];
+                if (configPath) {
+                    // 如果是相对路径，相对于工作区根目录
+                    if (path.isAbsolute(configPath)) {
+                        filePath = configPath;
+                    } else {
+                        filePath = path.resolve(workspaceRoot, configPath);
+                    }
+                    if (fs.existsSync(filePath)) {
+                        console.log(`📚 Using configured path for ${fileName}: ${filePath}`);
+                    } else {
+                        console.warn(`⚠️ Configured path for ${fileName} not found: ${filePath}`);
+                        filePath = null;
+                    }
+                }
+            }
+            
+            // 2. 如果配置路径不存在，从工作区根目录查找
+            if (!filePath || !fs.existsSync(filePath)) {
+                filePath = path.join(workspaceRoot, fileName);
+                if (!fs.existsSync(filePath)) {
+                    // 3. 如果工作区不存在，从扩展的 static 目录查找
+                    filePath = path.join(extensionStaticDir, fileName);
+                }
             }
             
             if (fs.existsSync(filePath)) {
@@ -1052,7 +1418,7 @@ export class DataEnterManager {
                     console.error(`Failed to load standard library ${fileName}:`, error);
                 }
             } else {
-                console.log(`ℹ️ Standard library not found: ${fileName} (checked workspace and extension static)`);
+                console.log(`ℹ️ Standard library not found: ${fileName} (checked config, workspace and extension static)`);
             }
         }
     }
@@ -1186,6 +1552,45 @@ export class DataEnterManager {
                 }
             }
         });
+    }
+
+    /**
+     * 获取当前配置
+     */
+    public getConfig(): JassConfig | null {
+        return this.config;
+    }
+
+    /**
+     * 注册配置重新加载回调
+     */
+    public onConfigReload(callback: () => void): void {
+        this.configReloadCallbacks.push(callback);
+    }
+
+    /**
+     * 配置重新加载时触发回调
+     */
+    private triggerConfigReloadCallbacks(): void {
+        this.configReloadCallbacks.forEach(callback => {
+            try {
+                callback();
+            } catch (error) {
+                console.error('Error in config reload callback:', error);
+            }
+        });
+    }
+
+    /**
+     * 重新加载配置文件
+     */
+    public reloadConfig(): void {
+        this.loadConfig();
+        console.log('📋 Reloaded jass.config.json');
+        // 重新验证已缓存的文件
+        this.revalidateCachedFiles();
+        // 触发配置重新加载回调
+        this.triggerConfigReloadCallbacks();
     }
 
     /**

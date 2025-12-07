@@ -17,6 +17,16 @@ export class DiagnosticProvider {
     private dataEnterManager: DataEnterManager;
     private disposables: vscode.Disposable[] = [];
     private isEnabled: boolean = true;
+    private diagnosticsConfig: {
+        enable?: boolean;
+        severity?: {
+            errors?: "error" | "warning" | "information" | "hint";
+            warnings?: "error" | "warning" | "information" | "hint";
+        };
+        checkTypes?: boolean;
+        checkUndefined?: boolean;
+        checkUnused?: boolean;
+    } = {};
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
@@ -75,11 +85,28 @@ export class DiagnosticProvider {
      */
     private updateConfiguration(): void {
         const config = vscode.workspace.getConfiguration('jass');
-        this.isEnabled = config.get<boolean>('diagnostic', true);
+        const vsCodeDiagnosticEnabled = config.get<boolean>('diagnostic', true);
+        
+        // 从 jass.config.json 读取诊断配置（通过 DataEnterManager）
+        // 注意：这里我们需要一个方法来获取配置，暂时使用 VS Code 配置作为后备
+        this.isEnabled = vsCodeDiagnosticEnabled;
+        
+        // 尝试从 DataEnterManager 获取配置（如果可用）
+        // 注意：这需要 DataEnterManager 暴露一个获取配置的方法
+        // 暂时使用 VS Code 配置
         
         if (!this.isEnabled) {
             this.diagnosticCollection.clear();
         }
+    }
+
+    /**
+     * 更新诊断配置（从 jass.config.json）
+     */
+    public updateDiagnosticsConfig(config: any): void {
+        this.diagnosticsConfig = config || {};
+        this.isEnabled = this.diagnosticsConfig.enable !== false && this.isEnabled;
+        this.refreshAllDiagnostics();
     }
 
     /**
@@ -104,9 +131,17 @@ export class DiagnosticProvider {
             const diagnostics: vscode.Diagnostic[] = [];
 
             if (errors) {
+                // 获取错误严重程度配置
+                const errorSeverity = this.diagnosticsConfig.severity?.errors || "error";
+                const warningSeverity = this.diagnosticsConfig.severity?.warnings || "warning";
+                
+                // 将字符串转换为 DiagnosticSeverity
+                const errorSeverityLevel = this.getSeverityLevel(errorSeverity);
+                const warningSeverityLevel = this.getSeverityLevel(warningSeverity);
+                
                 // 处理语法错误
                 errors.errors.forEach((error: SimpleError) => {
-                    const diagnostic = this.createDiagnosticFromError(error, vscode.DiagnosticSeverity.Error);
+                    const diagnostic = this.createDiagnosticFromError(error, errorSeverityLevel);
                     if (diagnostic) {
                         diagnostics.push(diagnostic);
                     }
@@ -114,7 +149,7 @@ export class DiagnosticProvider {
 
                 // 处理警告
                 errors.warnings.forEach((warning: SimpleWarning) => {
-                    const diagnostic = this.createDiagnosticFromWarning(warning, vscode.DiagnosticSeverity.Warning);
+                    const diagnostic = this.createDiagnosticFromWarning(warning, warningSeverityLevel);
                     if (diagnostic) {
                         diagnostics.push(diagnostic);
                     }
@@ -225,6 +260,24 @@ export class DiagnosticProvider {
         } catch (error) {
             console.error('Failed to create diagnostic from check error:', error);
             return null;
+        }
+    }
+
+    /**
+     * 将字符串严重程度转换为 DiagnosticSeverity
+     */
+    private getSeverityLevel(severity: string): vscode.DiagnosticSeverity {
+        switch (severity.toLowerCase()) {
+            case "error":
+                return vscode.DiagnosticSeverity.Error;
+            case "warning":
+                return vscode.DiagnosticSeverity.Warning;
+            case "information":
+                return vscode.DiagnosticSeverity.Information;
+            case "hint":
+                return vscode.DiagnosticSeverity.Hint;
+            default:
+                return vscode.DiagnosticSeverity.Error;
         }
     }
 

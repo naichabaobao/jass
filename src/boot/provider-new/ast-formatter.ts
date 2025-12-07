@@ -53,18 +53,33 @@ export class ASTFormatter {
         this.lines = [];
         this.indentLevel = 0;
 
-        // 提取注释（从原始内容中）
-        const comments = this.extractComments();
+        // 提取所有注释行（从原始内容中）
+        const commentLines = this.extractAllCommentLines();
+        const processedCommentLines = new Set<number>();
 
         // 格式化每个语句
         for (let i = 0; i < block.body.length; i++) {
             const stmt = block.body[i];
             
-            // 添加语句前的注释
-            const stmtComments = this.getCommentsBeforeStatement(stmt, comments);
-            stmtComments.forEach(comment => {
-                this.addLine(comment, this.indentLevel);
-            });
+            // 添加语句前的注释（在语句所在行之前的注释行）
+            if (stmt.start) {
+                const stmtLine = stmt.start.line;
+                // 查找并添加语句前的所有注释行
+                // 从上一个语句的结束行到当前语句的开始行之间
+                const prevStmtEndLine = i > 0 && block.body[i - 1].end 
+                    ? block.body[i - 1].end.line 
+                    : -1;
+                
+                for (let lineNum = prevStmtEndLine + 1; lineNum < stmtLine; lineNum++) {
+                    if (commentLines.has(lineNum) && !processedCommentLines.has(lineNum)) {
+                        const comment = commentLines.get(lineNum)!;
+                        // 移除注释行的原始缩进，使用当前缩进级别
+                        const trimmedComment = comment.trim();
+                        this.addLine(trimmedComment, this.indentLevel);
+                        processedCommentLines.add(lineNum); // 标记为已处理
+                    }
+                }
+            }
 
             // 格式化语句
             this.formatStatement(stmt);
@@ -72,6 +87,20 @@ export class ASTFormatter {
             // 语句后添加空行（某些语句类型）
             if (this.shouldAddBlankLineAfter(stmt)) {
                 this.addLine('', this.indentLevel);
+            }
+        }
+
+        // 添加剩余的注释行（在最后一个语句之后的注释）
+        const lastStmtEndLine = block.body.length > 0 && block.body[block.body.length - 1].end
+            ? block.body[block.body.length - 1].end.line
+            : -1;
+        
+        for (let lineNum = lastStmtEndLine + 1; lineNum < this.originalLines.length; lineNum++) {
+            if (commentLines.has(lineNum) && !processedCommentLines.has(lineNum)) {
+                const comment = commentLines.get(lineNum)!;
+                const trimmedComment = comment.trim();
+                this.addLine(trimmedComment, this.indentLevel);
+                processedCommentLines.add(lineNum);
             }
         }
 
@@ -570,8 +599,49 @@ export class ASTFormatter {
      * 格式化 BlockStatement（函数体、方法体等）
      */
     private formatBlockStatement(block: BlockStatement): void {
-        for (const stmt of block.body) {
+        // 提取所有注释行
+        const commentLines = this.extractAllCommentLines();
+        const processedCommentLines = new Set<number>();
+
+        for (let i = 0; i < block.body.length; i++) {
+            const stmt = block.body[i];
+            
+            // 添加语句前的注释
+            if (stmt.start) {
+                const stmtLine = stmt.start.line;
+                const prevStmtEndLine = i > 0 && block.body[i - 1].end 
+                    ? block.body[i - 1].end.line 
+                    : (block.start ? block.start.line : -1);
+                
+                for (let lineNum = prevStmtEndLine + 1; lineNum < stmtLine; lineNum++) {
+                    if (commentLines.has(lineNum) && !processedCommentLines.has(lineNum)) {
+                        const comment = commentLines.get(lineNum)!;
+                        const trimmedComment = comment.trim();
+                        this.addLine(trimmedComment, this.indentLevel);
+                        processedCommentLines.add(lineNum);
+                    }
+                }
+            }
+
+            // 格式化语句
             this.formatStatement(stmt);
+        }
+
+        // 添加剩余的注释行（在最后一个语句之后）
+        if (block.body.length > 0 && block.body[block.body.length - 1].end) {
+            const lastStmtEndLine = block.body[block.body.length - 1].end.line;
+            const blockEndLine = block.end ? block.end.line : this.originalLines.length;
+            
+            for (let lineNum = lastStmtEndLine + 1; lineNum <= blockEndLine; lineNum++) {
+                if (lineNum < this.originalLines.length && 
+                    commentLines.has(lineNum) && 
+                    !processedCommentLines.has(lineNum)) {
+                    const comment = commentLines.get(lineNum)!;
+                    const trimmedComment = comment.trim();
+                    this.addLine(trimmedComment, this.indentLevel);
+                    processedCommentLines.add(lineNum);
+                }
+            }
         }
     }
 
@@ -709,43 +779,29 @@ export class ASTFormatter {
     }
 
     /**
-     * 提取注释
+     * 提取所有注释行（包括单行注释和多行注释）
      */
-    private extractComments(): Map<number, string[]> {
-        const comments = new Map<number, string[]>();
+    private extractAllCommentLines(): Map<number, string> {
+        const commentLines = new Map<number, string>();
         
         for (let i = 0; i < this.originalLines.length; i++) {
-            const line = this.originalLines[i].trim();
-            if (line.startsWith('//') || line.startsWith('/*')) {
-                if (!comments.has(i)) {
-                    comments.set(i, []);
+            const line = this.originalLines[i];
+            const trimmed = line.trim();
+            
+            // 检查是否是单行注释（//）或多行注释（/* ... */）
+            // 注意：空行不算注释
+            if (trimmed.length > 0) {
+                if (trimmed.startsWith('//') || 
+                    trimmed.startsWith('/*') || 
+                    trimmed.endsWith('*/') ||
+                    trimmed.includes('/*') || 
+                    trimmed.includes('*/')) {
+                    commentLines.set(i, line);
                 }
-                comments.get(i)!.push(this.originalLines[i]);
             }
         }
         
-        return comments;
-    }
-
-    /**
-     * 获取语句前的注释
-     */
-    private getCommentsBeforeStatement(stmt: Statement, comments: Map<number, string[]>): string[] {
-        if (!stmt.start) {
-            return [];
-        }
-        
-        const stmtLine = stmt.start.line;
-        const result: string[] = [];
-        
-        // 查找语句前的注释（最多向前查找 5 行）
-        for (let i = Math.max(0, stmtLine - 5); i < stmtLine; i++) {
-            if (comments.has(i)) {
-                result.push(...comments.get(i)!);
-            }
-        }
-        
-        return result;
+        return commentLines;
     }
 }
 
