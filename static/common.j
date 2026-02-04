@@ -965,7 +965,7 @@ globals
 	constant mapflag MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 	// 地图参数 始终可见
 	constant mapflag MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
-	// 地图参数 使用生命障碍
+	// 地图参数 使用生命(百分比)障碍
 	constant mapflag MAP_USE_HANDICAPS = ConvertMapFlag(8)
 	// 地图参数 裁判/观战者
 	constant mapflag MAP_OBSERVERS = ConvertMapFlag(16)
@@ -4044,8 +4044,8 @@ globals
 	// 单位实数域 移动 - 飞行高度 ('ufyh')
 	constant unitrealfield UNIT_RF_FLY_HEIGHT = ConvertUnitRealField('ufyh')
 	// 单位实数域 移动 - 最大飞行高度 ('ufmh')
-        // @version 2.03
-        constant unitrealfield UNIT_RF_FLY_MAX_HEIGHT = ConvertUnitRealField('ufmh')
+	// @version 2.03
+	constant unitrealfield UNIT_RF_FLY_MAX_HEIGHT = ConvertUnitRealField('ufmh')
 	// 单位实数域 移动 - 转身速度 ('umvr')
 	constant unitrealfield UNIT_RF_TURN_RATE = ConvertUnitRealField('umvr')
 	// 单位实数域 美术 - 高度变化- 采样范围 ('uerd')
@@ -4654,8 +4654,10 @@ native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playersta
 // 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
+// 房间是否允许选择种族
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
 // 设置指定玩家控制者类型
+// 房间是否预设电脑或中立玩家占位
 native SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing
 // 设置指定玩家名字
 native SetPlayerName takes player whichPlayer, string name returns nothing
@@ -6445,7 +6447,7 @@ constant native GetPlayerId takes player whichPlayer returns integer
 // @param includeIncomplete 是否包含训练中/复活中的单位
 constant native GetPlayerUnitCount takes player whichPlayer, boolean includeIncomplete returns integer
 // 获取玩家指定单位名称的单位数量（不含建筑、隐藏/阵亡单位）
-// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到训练中/建造中/复活中
+// @param unitname 单位名称，不区分大小写，部分可在 common.ai 和 AIScripts.ai 文件找到
 // @param includeIncomplete 是否包含训练中/复活中的单位
 // @param includeUpgrades 是否包含科技（可能是包含研究后变成的单位，如猎头）
 constant native GetPlayerTypedUnitCount takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
@@ -6461,25 +6463,25 @@ constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayer
 // 玩家的联盟类型可以不同，A对B是共享视野，B对A是共享控制权
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
-// 获取玩家生命值障碍 [R]
+// 获取玩家生命值(百分比)障碍 [R]
 constant native GetPlayerHandicap takes player whichPlayer returns real
-// 获取玩家经验获取障碍 [R]
+// 获取玩家经验获取(百分比)障碍 [R]
 constant native GetPlayerHandicapXP takes player whichPlayer returns real
-// 获取玩家复活时间障碍
+// 获取玩家复活时间(百分比)障碍
 constant native GetPlayerHandicapReviveTime takes player whichPlayer returns real
-// 获取玩家伤害障碍
+// 获取玩家伤害(百分比)障碍
 constant native GetPlayerHandicapDamage takes player whichPlayer returns real
-// 设置玩家生命值障碍 [R]
-// 增加或降低玩家所有单位/建筑血量，标准为1
+// 设置玩家生命值(百分比)障碍 [R]
+// 设置玩家所有单位/建筑血量，标准为100.00%
 constant native SetPlayerHandicap takes player whichPlayer, real handicap returns nothing
-// 设置玩家经验获取障碍 [R]
-// 增加或降低玩家英雄经验获取值，标准为1
+// 设置玩家经验获取(百分比)障碍 [R]
+// 设置玩家英雄经验获取值，标准为100.00%
 constant native SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing
-// 设置玩家复活时间障碍
-// 增加或降低玩家英雄复活时间，标准为1
+// 设置玩家复活时间(百分比)障碍
+// 设置玩家英雄复活时间，标准为100.00%
 constant native SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing
-// 设置玩家伤害障碍
-// 增加或降低输出，标准为1
+// 设置玩家伤害(百分比)障碍
+// 设置玩家输出，标准为100.00%
 constant native SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing
 // 设置指定玩家指定科技的等级上限
 constant native SetPlayerTechMaxAllowed takes player whichPlayer, integer techid, integer maximum returns nothing
@@ -6669,7 +6671,7 @@ native DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag 
 // in the current campaign profile dir
 //
 
-// 从本地硬盘读取游戏缓存（用于继承战役管卡数据，仅对单机有效）
+// 从本地硬盘重载游戏缓存（观看录像时无法重载成功）
 native ReloadGameCachesFromDisk takes nothing returns boolean
 
 // 新建游戏缓存 [R]
@@ -8810,6 +8812,9 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
+
+
+
 
 
 

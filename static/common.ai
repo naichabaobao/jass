@@ -22,7 +22,7 @@ native DoAiScriptDebug      takes nothing                               returns 
 // 在1.29及以上版本中，返回的是0 ~ 23任意一个整数，以下则是0 ~ 11
 // 注：编号从0开始，即玩家1编号为0
 native GetAiPlayer          takes nothing                               returns integer
-// 获取升级英雄的单位类型
+// 获取升级英雄的单位类型(四字码)
 // 英雄自动学习技能函数
 native GetHeroId            takes nothing                               returns integer
 // 获取升级英雄的等级
@@ -174,7 +174,7 @@ native RemoveInjuries       takes nothing                               returns 
 // 从攻击组中移除攻城单位（默认攻击类型为 攻城 的单位，不确定攻击模式1还是攻击模式2，不确定是否包含升级/拔树后才有攻城的单位）
 native RemoveSiege          takes nothing                               returns nothing
 // 初始化攻击组
-// 建议在游戏开始调用以初始化，并且每次进攻循环前调用以重置
+// 建议在游戏开始调用以初始化，并且组建攻击组前调用以重置
 native InitAssault          takes nothing                               returns nothing
 // 增加指定数量的指定单位类型到攻击组
 // 未被编入攻击组或防御组的单位类型不会跟随军队，只会留在集结点
@@ -242,7 +242,7 @@ native ClearHarvestAI       takes nothing                               returns 
 // 分配指定数量的工人在指定基地采集金矿
 // 如果金矿和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达金矿，但其采集完成返回时自动会停在岸边驻足良久才继续返回或永久驻足，就像它忘记自己可以游泳一样
 // @param town 0为第一个有矿的基地，大于0则是对应每个分基地，小于0时可能被视为0
-// @param peons 分配的工人数量，每座矿每次应该是5（或金矿最大容量），可分两行实现（第一行分配3，第二行分配2，中间隔着采木分配），确保开局有工人采木，若某矿分配未满5，再使用代码或共享操作补满5工人采这座矿后，待以后分配满5时，被分配的工人会因无法进矿而挂机（暗夜/亡灵尤为严重），小于0时视为0
+// @param peons 分配的工人数量，每座矿每次应该是5（或金矿最大容量），可分两行实现（第一行分配3，第二行分配2，中间隔着采木分配），确保开局有工人采木，若某矿分配未满5，使用代码或共享操作补满5工人采这座矿后，待以后分配满5时，被分配的工人会因无法进矿而挂机（暗夜/亡灵尤为严重），小于0时视为0
 native HarvestGold          takes integer town, integer peons           returns nothing
 // 分配指定数量的工人在指定基地采集木材
 // 如果树和基地之间最短距离的路线可以游过深水地形到达，两栖工人会优先走最短距离到达树，但其采集完成返回时自动停会在岸边，就像它忘记自己可以游泳一样
@@ -1104,7 +1104,7 @@ globals
     constant integer ELF_GUARD_TOWER    = 'negt'
     // 天怒塔
     constant integer HIGH_SKY           = 'negm'
-    // 地怒塔 
+    // 地怒塔
     constant integer HIGH_EARTH         = 'negf'
     // 高等精灵警戒塔
     constant integer HIGH_TOWER         = 'negt'
@@ -1348,9 +1348,11 @@ globals
     integer sleep_seconds
     // 黄金总计
     // 用于计算当前黄金数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少钱
+    // 得到负数时可能引发游戏崩溃
     integer total_gold              = 0
     // 木材总计
     // 用于计算当前木材数量在训练/建造/研究指定（数量的）单位/建筑/科技后，还剩多少木
+    // 得到负数时可能引发游戏崩溃
     integer total_wood              = 0
     // 黄金预存数，使用后AI会一直保留该数量的黄金不使用
     // 该值默认为0，需自行赋值，在完成指定的训练/建造/研究后请手动清零，否则AI会一直保持这笔存款
@@ -3653,3 +3655,6 @@ function PickMeleeHero takes race raceid returns integer
 
     return hero_id
 endfunction
+
+
+

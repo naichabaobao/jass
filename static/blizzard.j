@@ -54,15 +54,15 @@ globals
     constant real bj_QUEUE_DELAY_HINT = 5.00
     // 任务显示持续时间 秘密，默认3.00
     constant real bj_QUEUE_DELAY_SECRET = 3.00
-    // 生命障碍 简单，默认60.00
+    // 生命(百分比)障碍 简单，默认60.00%
     constant real bj_HANDICAP_EASY = 60.00
-    // 生命障碍 普通，默认90.00
+    // 生命(百分比)障碍 普通，默认90.00%
     constant real bj_HANDICAP_NORMAL = 90.00
-    // 伤害障碍 简单，默认50.00
+    // 伤害(百分比)障碍 简单，默认50.00%
     constant real bj_HANDICAPDAMAGE_EASY = 50.00
-    // 伤害障碍 普通，默认90.00
+    // 伤害(百分比)障碍 普通，默认90.00%
     constant real bj_HANDICAPDAMAGE_NORMAL = 90.00
-    // 伤害障碍 困难，默认50.00
+    // 伤害(百分比)障碍 困难，默认50.00%
     constant real bj_HANDICAPREVIVE_NOTHARD = 50.00
     // 游戏开局阈值，默认0.01
     constant real bj_GAME_STARTED_THRESHOLD = 0.01
@@ -843,7 +843,7 @@ globals
     // 玩家组（数组）
     force array bj_FORCE_PLAYER
     // 给予首发英雄初始物品的数量
-    // 游戏初始化时会根据游戏版本自动设置
+    // 游戏初始化时会根据游戏版本自动设置为 bj_MELEE_MAX_TWINKED_HEROES_V0(混乱之治) 或 bj_MELEE_MAX_TWINKED_HEROES_V1(冰封王座)
     integer bj_MELEE_MAX_TWINKED_HEROES = 0
 
     // Map area rects
@@ -1002,9 +1002,9 @@ globals
 
     // 营救触发器
     trigger bj_rescueUnitBehavior = null
-    // 被营救后改变单位的颜色标识，默认允许改变（true）
+    // 被营救后改变单位的玩家颜色，默认允许改变（true）
     boolean bj_rescueChangeColorUnit = true
-    // 被营救后改变建筑的颜色标识，默认允许改变（true）
+    // 被营救后改变建筑的玩家颜色，默认允许改变（true）
     boolean bj_rescueChangeColorBldg = true
 
     // Transmission vars
@@ -2927,7 +2927,7 @@ function SetTerrainPathableBJ takes location where, pathingtype t, boolean flag 
 endfunction
 
 
-// 设置 水面 颜色
+// 设置水面颜色
 function SetWaterBaseColorBJ takes real red, real green, real blue, real transparency returns nothing
     call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
@@ -3901,50 +3901,50 @@ function SuspendHeroXPBJ takes boolean flag, unit whichHero returns nothing
     call SuspendHeroXP(whichHero, not flag)
 endfunction
 
-// 设置玩家伤害障碍
-// 增加或降低玩家所有单位血量，按输入值的百分之一生效
+// 设置玩家伤害(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapDamageBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapDamage(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家伤害障碍
+// 获取玩家伤害(百分比)障碍
 function GetPlayerHandicapDamageBJ takes player whichPlayer returns real
     return GetPlayerHandicapDamage(whichPlayer) * 100
 endfunction
 
-// 设置玩家复活时间障碍
-// 增加或降低玩家英雄复活时间，按输入值的百分之一生效
+// 设置玩家复活时间(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapReviveTimeBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapReviveTime(whichPlayer, handicapPercent * 0.01)
 endfunction
 
-// 获取玩家复活时间障碍
+// 获取玩家复活时间(百分比)障碍
 function GetPlayerHandicapReviveTimeBJ takes player whichPlayer returns real
     return GetPlayerHandicapReviveTime(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家经验获取障碍
-// 增加或降低玩家英雄经验获取值，按输入值的百分之一生效
+// 设置玩家经验获取(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapXPBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家经验获取障碍
+// 获取玩家经验获取(百分比)障碍
 function GetPlayerHandicapXPBJ takes player whichPlayer returns real
     return GetPlayerHandicapXP(whichPlayer) * 100
 endfunction
 
 
-// 设置玩家生命值障碍
-// 用增加或降低玩家所有单位/建筑血量，按输入值的百分之一生效
+// 设置玩家生命值(百分比)障碍
+// 按输入值的百分之一生效
 function SetPlayerHandicapBJ takes player whichPlayer, real handicapPercent returns nothing
     call SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 endfunction
 
 
-// 获取玩家生命值障碍
+// 获取玩家生命值(百分比)障碍
 function GetPlayerHandicapBJ takes player whichPlayer returns real
     return GetPlayerHandicap(whichPlayer) * 100
 endfunction
@@ -8421,7 +8421,7 @@ function TryInitRescuableTriggersBJ takes nothing returns nothing
 endfunction
 
 
-// 设置可营救单位的颜色
+// 设置可营救单位的玩家颜色
 // Determines whether or not rescued units automatically change color upon
 // being rescued.
 function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
@@ -8429,7 +8429,7 @@ function SetRescueUnitColorChangeBJ takes boolean changeColor returns nothing
 endfunction
 
 
-// 设置可营救建筑的颜色
+// 设置可营救建筑的玩家颜色
 // Determines whether or not rescued buildings automatically change color
 // upon being rescued.
 function SetRescueBuildingColorChangeBJ takes boolean changeColor returns nothing
@@ -12462,3 +12462,5 @@ endfunction
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
 endfunction
+
+
