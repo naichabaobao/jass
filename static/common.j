@@ -471,14 +471,16 @@ constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家编号
 // 1.28及以下：13
 // 1.29及以上：25
-// 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
+// 编号从0开始，即玩家1编号是0
+// 中立受害玩家是所有玩家的盟友，所有玩家是他的敌人
 constant native GetBJPlayerNeutralVictim takes nothing returns integer
 // 获取中立特殊玩家编号
 // 1.28及以下：14
 // 1.29及以上：26
-// 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
+// 编号从0开始，即玩家1编号是0
+// 中立特殊玩家是所有非中立玩家和中立受害玩家的敌人
 constant native GetBJPlayerNeutralExtra takes nothing returns integer
 // 获取玩家槽数量上限，包括中立玩家
 // 1.28及以下：16
@@ -488,14 +490,15 @@ constant native GetBJMaxPlayerSlots takes nothing returns integer
 // 获取玩家中立被动玩家编号
 // 1.28及以下：15
 // 1.29及以上：27
-// 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
+// 编号从0开始，即玩家1编号是0
+// 中立被动玩家是所有非中立玩家的盟友
 constant native GetPlayerNeutralPassive takes nothing returns integer
 // 获取玩家中立敌对玩家编号
 // 1.28及以下：12
 // 1.29及以上：24
-// 注：编号从0开始，即玩家1编号是0
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
+// 编号从0开始，即玩家1编号是0
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
@@ -1109,7 +1112,7 @@ globals
 	// 玩家状态 现有木材量
 	constant playerstate PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
 	// 玩家状态 剩余可用英雄数量，默认为1
-	//自行设置成其他值对英雄数量限制无效果，修改暴雪官方代码设置成其他值无法创建游戏
+	// 自行设置成其他值对英雄数量限制无效果，修改暴雪官方代码设置成其他值无法创建游戏
 	constant playerstate PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
 	// 玩家状态 可用人口数(默认为人口建筑提供的数量)
 	constant playerstate PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
@@ -1353,7 +1356,7 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
 	// 玩家单位事件 单位被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
-	// 玩家单位事件 单位造成伤害
+	// 玩家单位事件 单位即将被伤害
 	constant playerunitevent EVENT_PLAYER_UNIT_DAMAGING = ConvertPlayerUnitEvent(315)
 	
 	
@@ -1361,7 +1364,7 @@ globals
 	
 	// 单位事件 单位受到伤害
 	constant unitevent EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
-	// 单位事件 单位造成伤害
+	// 单位事件 单位即将被伤害
 	constant unitevent EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 	// 单位事件 单位死亡
 	constant unitevent EVENT_UNIT_DEATH = ConvertUnitEvent(53)
@@ -1541,9 +1544,9 @@ globals
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
 	// 单位事件 开始施放技能 (前摇结束)
 	constant unitevent EVENT_UNIT_SPELL_CAST = ConvertUnitEvent(290)
-	// 单位事件 发动技能效果 (后摇开始)
+	// 单位事件 施放技能生效 (后摇开始)
 	constant unitevent EVENT_UNIT_SPELL_EFFECT = ConvertUnitEvent(291)
-	// 单位事件 发动技能结束 (后摇结束)
+	// 单位事件 施放技能结束 (后摇结束)
 	constant unitevent EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
 	// 单位事件 停止施放技能
 	constant unitevent EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
@@ -1680,19 +1683,19 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
-	// 混合模式 无混合，有两个无混合
+	// 混合模式 无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
 	// 混合模式 无视混合
 	constant blendmode BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
-	// 混合模式 关键的alpha混合
+	// 混合模式 关键alpha混合
 	constant blendmode BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
 	// 混合模式 普通混合
 	constant blendmode BLEND_MODE_BLEND = ConvertBlendMode(2)
-	// 混合模式 附加的混合
+	// 混合模式 附加混合
 	constant blendmode BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
-	// 混合模式 调整的混合
+	// 混合模式 调整混合
 	constant blendmode BLEND_MODE_MODULATE = ConvertBlendMode(4)
-	// 混合模式 调整的2倍混合
+	// 混合模式 调整混合（2倍）
 	constant blendmode BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
 	// 动画频率控制 普通频率
 	constant raritycontrol RARITY_FREQUENT = ConvertRarityControl(0)
@@ -1716,13 +1719,13 @@ globals
 	
 	// Camera Margin constants for use with GetCameraMargin
 	
-	// 镜头空白 左，似乎默认值恒为512
+	// 镜头空白 左，似乎返回的默认值恒为512
 	constant integer CAMERA_MARGIN_LEFT = 0
-	// 镜头空白 右，似乎默认值恒为512
+	// 镜头空白 右，似乎返回的默认值恒为512
 	constant integer CAMERA_MARGIN_RIGHT = 1
-	// 镜头空白 顶部，似乎默认值恒为256
+	// 镜头空白 顶部，似乎返回的默认值恒为256
 	constant integer CAMERA_MARGIN_TOP = 2
-	// 镜头空白 底部，似乎默认值恒为256
+	// 镜头空白 底部，似乎返回的默认值恒为256
 	constant integer CAMERA_MARGIN_BOTTOM = 3
 	
 	
@@ -1744,7 +1747,7 @@ globals
 	constant effecttype EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
 	// 音效类型 特效
 	constant soundtype SOUND_TYPE_EFFECT = ConvertSoundType(0)
-	// 音效类型 循环特效
+	// 音效类型 特效(循环)
 	constant soundtype SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
 	
 	
@@ -1849,11 +1852,11 @@ globals
 	constant frameeventtype FRAMEEVENT_MOUSE_DOWN = ConvertFrameEventType(5)
 	// UI框架/控件句柄 事件类型 鼠标滚轴滚动
 	constant frameeventtype FRAMEEVENT_MOUSE_WHEEL = ConvertFrameEventType(6)
-	// UI框架/控件句柄 事件类型 复选框-选中
+	// UI框架/控件句柄 事件类型 复选框 选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_CHECKED = ConvertFrameEventType(7)
-	// UI框架/控件句柄 事件类型 复选框-未选中
+	// UI框架/控件句柄 事件类型 复选框 未选中
 	constant frameeventtype FRAMEEVENT_CHECKBOX_UNCHECKED = ConvertFrameEventType(8)
-	// UI框架/控件句柄 事件类型 输入框-文本变化
+	// UI框架/控件句柄 事件类型 输入框 文本变化
 	constant frameeventtype FRAMEEVENT_EDITBOX_TEXT_CHANGED = ConvertFrameEventType(9)
 	// UI框架/控件句柄 事件类型 弹出菜单按钮变化
 	constant frameeventtype FRAMEEVENT_POPUPMENU_ITEM_CHANGED = ConvertFrameEventType(10)
@@ -1863,11 +1866,11 @@ globals
 	constant frameeventtype FRAMEEVENT_SPRITE_ANIM_UPDATE = ConvertFrameEventType(12)
 	// UI框架/控件句柄 事件类型 滑块数值变化
 	constant frameeventtype FRAMEEVENT_SLIDER_VALUE_CHANGED = ConvertFrameEventType(13)
-	// UI框架/控件句柄 事件类型 对话框-点击取消
+	// UI框架/控件句柄 事件类型 对话框 点击取消
 	constant frameeventtype FRAMEEVENT_DIALOG_CANCEL = ConvertFrameEventType(14)
-	// UI框架/控件句柄 事件类型 对话框-点击接受
+	// UI框架/控件句柄 事件类型 对话框 点击接受
 	constant frameeventtype FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
-	// UI框架/控件句柄 事件类型 输入框-文本输入
+	// UI框架/控件句柄 事件类型 输入框 文本输入
 	constant frameeventtype FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
 	
 	
@@ -4040,6 +4043,9 @@ globals
 	constant unitrealfield UNIT_RF_DEATH_TIME = ConvertUnitRealField('udtm')
 	// 单位实数域 移动 - 飞行高度 ('ufyh')
 	constant unitrealfield UNIT_RF_FLY_HEIGHT = ConvertUnitRealField('ufyh')
+	// 单位实数域 移动 - 最大飞行高度 ('ufmh')
+        // @version 2.03
+        constant unitrealfield UNIT_RF_FLY_MAX_HEIGHT = ConvertUnitRealField('ufmh')
 	// 单位实数域 移动 - 转身速度 ('umvr')
 	constant unitrealfield UNIT_RF_TURN_RATE = ConvertUnitRealField('umvr')
 	// 单位实数域 美术 - 高度变化- 采样范围 ('uerd')
@@ -4742,41 +4748,41 @@ native BlzGroupGetSize takes group whichGroup returns integer
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsOfType takes group whichGroup, string unitname, boolexpr filter returns nothing
 // 将指定玩家的单位加入单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsOfPlayer takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 // 将指定单位名称的单位加入单位组，同时指定添加单位的数量上限
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 native GroupEnumUnitsOfTypeCounted takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
 // 将指定矩形区域内的单位加入单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRect takes group whichGroup, rect r, boolexpr filter returns nothing
 // 将指定矩形区域内的单位加入单位组，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 native GroupEnumUnitsInRectCounted takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
 // 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRange takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
 // 将指定圆形范围内的单位添加到单位组(指定圆心坐标)
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsInRangeOfLoc takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
 // 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeCounted takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
 // 【弃用】将指定圆形范围内的单位添加到单位组(指定圆心坐标)，同时指定添加单位的数量上限
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 // @param countLimit 数量上限
 // @deprecated 弃用函数
 native GroupEnumUnitsInRangeOfLocCounted takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
 // 将指定玩家选择的单位添加到单位组
-// @param filter 条件表达式，不建议使用在AI脚本中，即filter写成null
+// @param filter 条件表达式，在AI脚本中不可以，请传null
 native GroupEnumUnitsSelected takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
 
 // 发布(单位组)命令(无目标)
@@ -5023,7 +5029,7 @@ native Condition takes code func returns conditionfunc
 native DestroyCondition takes conditionfunc c returns nothing
 // 过滤方法
 // 可理解为条件/布尔值，用于选取/匹配时指定具体的筛选条件
-// 用完请注意排泄(使用DestroyFilter，并set null)，不建议在AI脚本中使用
+// 用完请注意排泄(使用DestroyFilter，并set null)，在AI脚本中不可用
 native Filter takes code func returns filterfunc
 // 销毁过滤方法
 native DestroyFilter takes filterfunc f returns nothing
@@ -5602,8 +5608,10 @@ native TriggerExecute takes trigger whichTrigger returns nothing
 // @deprecated 弃用函数
 native TriggerExecuteWait takes trigger whichTrigger returns nothing
 // 触发器同步开始
+// 用于异步时统一数据
 native TriggerSyncStart takes nothing returns nothing
 // 触发器同步准备完成
+// 用于异步时统一数据
 native TriggerSyncReady takes nothing returns nothing
 
 
@@ -6401,9 +6409,13 @@ constant native Player takes integer number returns player
 constant native GetLocalPlayer takes nothing returns player
 // 查询指定玩家与另一指定玩家是否盟友关系
 // 中立被动玩家是所有非中立玩家的盟友
+// 中立受害玩家是所有玩家的盟友，所有玩家是他的敌人
+// 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerAlly takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家与另一指定玩家是否敌对关系
-// 中立敌对玩家和中立受害玩家是所有非中立玩家的敌人
+// 中立敌对玩家中立特殊玩家是所有非中立玩家的敌人
+// 所有玩家是中立受害玩家的敌人
+// 两个玩家的敌对关系可以不同，A对B是盟友，B对A是敌人
 constant native IsPlayerEnemy takes player whichPlayer, player otherPlayer returns boolean
 // 查询指定玩家是否在指定玩家组内
 constant native IsPlayerInForce takes player whichPlayer, force whichForce returns boolean
@@ -6446,6 +6458,7 @@ constant native GetPlayerState takes player whichPlayer, playerstate whichPlayer
 constant native GetPlayerScore takes player whichPlayer, playerscore whichPlayerScore returns integer
 // 查询玩家与玩家的联盟类型是否指定类型
 // @param whichAllianceSetting 联盟类型
+// 玩家的联盟类型可以不同，A对B是共享视野，B对A是共享控制权
 constant native GetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
 
 // 获取玩家生命值障碍 [R]
@@ -6540,11 +6553,11 @@ native FogModifierStop takes fogmodifier whichFogModifier returns nothing
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionGet takes nothing returns version
-// 当前游戏版本是否指定版本
+// 查询当前游戏版本是否指定版本
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionCompatible takes version whichVersion returns boolean
-// 当前版本是否支持指定版本
+// 查询当前版本是否支持指定版本
 // VERSION_REIGN_OF_CHAOS 混乱之治
 // VERSION_FROZEN_THRONE 冰封王座
 native VersionSupported takes version whichVersion returns boolean
@@ -6582,13 +6595,13 @@ native SaveGame takes string saveFileName returns nothing
 native RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
 // 移除存档目录
 native RemoveSaveDirectory takes string sourceDirName returns boolean
-// 复制存档目录
+// 复制存档
 native CopySaveGame takes string sourceSaveName, string destSaveName returns boolean
 // 查询存档是否存在
-native SaveGame takes string saveName returns boolean
+native SaveGameExists takes string saveName returns boolean
 // 设置检查点(自动)最大存档数，超过数量时会自动替换最早的存档
 native SetMaxCheckpointSaves takes integer maxCheckpointSaves returns nothing
-// 游戏检查点(自动)存档
+// 检查点(自动)存档
 // @param showWindow 是否显示自动存档提示
 native SaveGameCheckpoint takes string saveFileName, boolean showWindow returns nothing
 // 同步选择
@@ -6675,14 +6688,19 @@ native StoreUnit takes gamecache cache, string missionKey, string key, unit whic
 // 存储字符串到游戏缓存
 native StoreString takes gamecache cache, string missionKey, string key, string value returns boolean
 // 同步游戏缓存存储值（整数）
+// 用于异步时统一数据
 native SyncStoredInteger takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（实数）
+// 用于异步时统一数据
 native SyncStoredReal takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（布尔值）
+// 用于异步时统一数据
 native SyncStoredBoolean takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（单位）
+// 用于异步时统一数据
 native SyncStoredUnit takes gamecache cache, string missionKey, string key returns nothing
 // 同步游戏缓存存储值（字符串）
+// 用于异步时统一数据
 native SyncStoredString takes gamecache cache, string missionKey, string key returns nothing
 // 查询游戏缓存是否有存储值（整数）
 native HaveStoredInteger takes gamecache cache, string missionKey, string key returns boolean
@@ -7276,7 +7294,7 @@ native QuestSetTitle takes quest whichQuest, string title returns nothing
 native QuestSetDescription takes quest whichQuest, string description returns nothing
 // 设置任务图标
 native QuestSetIconPath takes quest whichQuest, string iconPath returns nothing
-// 设置任务是否必须完成(区分主线或支线任务)
+// 设置任务是否必须完成(区分主线和支线)
 native QuestSetRequired takes quest whichQuest, boolean required returns nothing
 // 设置任务是否完成
 native QuestSetCompleted takes quest whichQuest, boolean completed returns nothing
@@ -7287,7 +7305,7 @@ native QuestSetFailed takes quest whichQuest, boolean failed returns nothing
 // 开启/关闭 指定任务 [R]
 native QuestSetEnabled takes quest whichQuest, boolean enabled returns nothing
 
-// 查询任务是否必须完成（主线任务）
+// 查询任务是否必须完成（区分主线或支线任务）
 native IsQuestRequired takes quest whichQuest returns boolean
 // 查询任务是否已完成
 native IsQuestCompleted takes quest whichQuest returns boolean
@@ -7295,14 +7313,14 @@ native IsQuestCompleted takes quest whichQuest returns boolean
 native IsQuestDiscovered takes quest whichQuest returns boolean
 // 查询任务是否已失败
 native IsQuestFailed takes quest whichQuest returns boolean
-// 查询任务是否已开启/已激活
+// 查询任务是否已启用
 native IsQuestEnabled takes quest whichQuest returns boolean
 
 // 创建任务完成条件
 native QuestCreateItem takes quest whichQuest returns questitem
 // 设置任务完成条件说明
 native QuestItemSetDescription takes questitem whichQuestItem, string description returns nothing
-// 设置任务完成条件完成/未完成
+// 设置任务完成条件为完成/未完成
 native QuestItemSetCompleted takes questitem whichQuestItem, boolean completed returns nothing
 
 // 查询任务完成条件是否已完成
@@ -8001,15 +8019,13 @@ native PauseCompAI takes player p, boolean pause returns nothing
 // 编号从0开始，即玩家1编号为0
 native GetAIDifficulty takes player num returns aidifficulty
 
-// 忽略单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
-// 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 单位仍受代码控制
+// 忽略单位的警戒点，AI几乎不会再控制该单位，直至恢复
+// 建筑的自动攻击、训练和研究，小精灵自爆不受影响，单位仍受代码控制，英雄复活后自动恢复，不跟随变更所属玩家转移
 native RemoveGuardPosition takes unit hUnit returns nothing
-// 恢复单位的防守职责
+// 恢复单位的警戒点
 native RecycleGuardPosition takes unit hUnit returns nothing
-// 忽略所有单位的防守职责，AI几乎不会再控制忽略防守职责的单位，直至恢复(英雄复活后自动恢复)
-// 建筑的自动攻击、训练和研究，小精灵自爆不受影响
-// 单位仍受代码控制
+// 忽略指定玩家所有单位的警戒点，AI几乎不会再控制忽略警戒点的单位，直至恢复
+// 建筑的自动攻击、训练和研究，小精灵自爆不受影响，单位仍受代码控制，英雄复活后自动恢复，不跟随变更所属玩家转移
 native RemoveAllGuardPositions takes player num returns nothing
 
 
@@ -8483,14 +8499,20 @@ native BlzGetTriggerFrameValue takes nothing returns real
 // 获取触发的 UI框架/控件句柄 文本
 native BlzGetTriggerFrameText takes nothing returns string
 // 注册玩家同步事件
+// 用于异步时统一数据
+// @param prefix 标签
 native BlzTriggerRegisterPlayerSyncEvent takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
 // 同步数据
+// 用于异步时统一数据
 // 支持AI脚本向触发器同步
+// @param prefix 标签
 native BlzSendSyncData takes string prefix, string data returns boolean
-// 获取同步的前缀
-// 支持获取AI脚本向触发器同步的数据
+// 获取同步的标签
+// 用于异步时统一数据
+// 支持获取AI脚本向触发器同步的标签
 native BlzGetTriggerSyncPrefix takes nothing returns string
 // 获取同步的数据
+// 用于异步时统一数据
 // 支持获取AI脚本向触发器同步的数据
 native BlzGetTriggerSyncData takes nothing returns string
 // 注册玩家键盘事件
@@ -8788,3 +8810,6 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
+
+
+
