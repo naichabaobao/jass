@@ -1,36 +1,39 @@
-import("./boot/provider-new/data-enter");
+import("./provider/data-enter-manager");
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { CompletionProvider } from './boot/provider-new/completion-provider';
-import { SignatureHelpProvider } from './boot/provider-new/signature-help-provider';
-import { OutlineProvider } from './boot/provider-new/outline-provider';
-import { HoverProvider } from './boot/provider-new/hover-provider';
-import { DefinitionProvider } from './boot/provider-new/definition-provider';
-import { TypeDefinitionProvider } from './boot/provider-new/type-definition-provider';
-import { ReferenceProvider } from './boot/provider-new/reference-provider';
-import { InlayHintsProvider } from './boot/provider-new/inlay-hints-provider';
-import { ImplementationProvider } from './boot/provider-new/implementation-provider';
-import { DiagnosticProvider } from './boot/provider-new/diagnostic-provider';
-import { ZincCompletionProvider } from './boot/provider-new/zinc/zinc-completion-provider';
-import { ZincDefinitionProvider } from './boot/provider-new/zinc/zinc-definition-provider';
-import { ZincHoverProvider } from './boot/provider-new/zinc/zinc-hover-provider';
-import { ZincSignatureHelpProvider } from './boot/provider-new/zinc/zinc-signature-help-provider';
-import { ZincOutlineProvider } from './boot/provider-new/zinc/zinc-outline-provider';
-import { ZincDiagnosticProvider } from './boot/provider-new/zinc/zinc-diagnostic-provider';
-// import { FormattingProvider } from './boot/provider-new/formatting-provider';
-import { DocumentFormattingSortEditProvider } from './boot/provider/document-formatting-edit-provider';
+import("./provider/data-enter-manager");
+import { CompletionProvider } from './provider/completion-provider';
+import { SignatureHelpProvider } from './provider/signature-help-provider';
+import { OutlineProvider } from './provider/outline-provider';
+import { HoverProvider } from './provider/hover-provider';
+import { DefinitionProvider } from './provider/definition-provider';
+import { TypeDefinitionProvider } from './provider/type-definition-provider';
+import { ReferenceProvider } from './provider/reference-provider';
+import { InlayHintsProvider } from './provider/inlay-hints-provider';
+import { ImplementationProvider } from './provider/implementation-provider';
+import { DiagnosticProvider } from './provider/diagnostic-provider';
+import { ZincCompletionProvider } from './provider/zinc/zinc-completion-provider';
+import { ZincDefinitionProvider } from './provider/zinc/zinc-definition-provider';
+import { ZincHoverProvider } from './provider/zinc/zinc-hover-provider';
+import { ZincSignatureHelpProvider } from './provider/zinc/zinc-signature-help-provider';
+import { ZincOutlineProvider } from './provider/zinc/zinc-outline-provider';
+import { ZincDiagnosticProvider } from './provider/zinc/zinc-diagnostic-provider';
+// import { FormattingProvider } from './provider/formatting-provider';
+import { DocumentFormattingSortEditProvider } from './provider/formatting-edit-provider';
 
-import { ZincFormattingProvider } from './boot/provider-new/zinc/zinc-formatting-provider';
-import { DataEnterManager } from './boot/provider-new/data-enter';
-import { JassDocumentColorProvider } from './boot/provider/document-color-provider';
-import { ZincInlayHintsProvider } from './boot/provider-new/zinc/zinc-inlay-hints-provider';
-import { SpecialFileManager } from './boot/provider-new/special/special-file-manager';
-import { SpecialCompletionProvider } from './boot/provider-new/special/special-completion-provider';
-import { SpecialHoverProvider } from './boot/provider-new/special/special-hover-provider';
-import { SpecialDefinitionProvider } from './boot/provider-new/special/special-definition-provider';
-import { DocumentLinkProvider } from './boot/provider-new/document-link-provider';
+import { ZincFormattingProvider } from './provider/zinc/zinc-formatting-provider';
+import { DataEnterManager } from './provider/data-enter-manager';
+import { JassDocumentColorProvider } from './provider/color-provider';
+import { ZincInlayHintsProvider } from './provider/zinc/zinc-inlay-hints-provider';
+import { SpecialFileManager } from './provider/special/special-file-manager';
+import { SpecialCompletionProvider } from './provider/special/special-completion-provider';
+import { SpecialHoverProvider } from './provider/special/special-hover-provider';
+import { SpecialDefinitionProvider } from './provider/special/special-definition-provider';
+import { DocumentLinkProvider } from './provider/link-provider';
+import { CodeActionProvider } from './provider/code-action-provider';
+import { WorkspaceSymbolProvider } from './provider/workspace-symbol-provider';
 
 // JASS 语言选择器
 const jassSelector = { scheme: 'file', language: 'jass' };
@@ -227,6 +230,12 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // 创建并注册 WorkspaceSymbolProvider（工作区符号搜索支持）
+    const workspaceSymbolProvider = new WorkspaceSymbolProvider(dataEnterManager);
+    context.subscriptions.push(
+        vscode.languages.registerWorkspaceSymbolProvider(workspaceSymbolProvider)
+    );
+
     // 创建并注册 ImplementationProvider（查找实现支持）
     const implementationProvider = new ImplementationProvider(dataEnterManager);
     context.subscriptions.push(
@@ -340,6 +349,18 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // 创建并注册 CodeActionProvider（代码操作支持，用于接口方法未实现的快速修复）
+    const codeActionProvider = new CodeActionProvider(dataEnterManager);
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            jassSelector,
+            codeActionProvider,
+            {
+                providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
+            }
+        )
+    );
+
     // 注册调试命令：查看缓存状态
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.showCacheStats', () => {
@@ -363,7 +384,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // 注册调试命令：测试 special 解析器（使用测试数据）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.testSpecialParsers', async () => {
-            const { SpecialParserDebugger } = await import('./boot/provider-new/special/special-parser-debug');
+            const { SpecialParserDebugger } = await import('./provider/special/special-parser-debug');
             
             vscode.window.showInformationMessage('Testing special parsers with sample data... Check output panel for results.');
             SpecialParserDebugger.testParsersWithSampleData();
@@ -374,7 +395,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // 注册调试命令：测试 special 解析器（从工作区文件）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.testSpecialParsersFromWorkspace', async () => {
-            const { SpecialParserDebugger } = await import('./boot/provider-new/special/special-parser-debug');
+            const { SpecialParserDebugger } = await import('./provider/special/special-parser-debug');
             const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
             const workspaceRoot = workspaceFolder?.uri.fsPath;
             

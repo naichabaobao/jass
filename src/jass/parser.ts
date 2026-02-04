@@ -1,11 +1,11 @@
-import { canCjassReturn } from "../../jass/keyword";
-import { isNewLine, isSpace } from "../../tool";
-import { lines } from "../../jass/tool";
+import { canCjassReturn } from "./keyword";
+import { isNewLine, isSpace } from "../tool";
+import { lines } from "./tool";
 // @deprecated src/boot/zinc 目录已移除，此导入已失效
 // import { parseZinc } from "../zinc/parse";
-import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Type, Context, baseTypeContext, LineText, Define, GlobalObject, DefineMethod, Interface } from "../../jass/ast";
-import { Position, Range } from "../../jass/loc";
-import { Token, tokenize } from "../../jass/tokens";
+import { DefineMacro, Func, Global, Identifier, Library, LineComment, Local, Member, Method, Native, Program, Struct, Take, Type, Context, baseTypeContext, LineText, Define, GlobalObject, DefineMethod, Interface } from "./ast";
+import { Position, Range } from "./loc";
+import { Token, tokenize } from "./tokens";
 
 
 
@@ -924,8 +924,8 @@ class Parser {
         const outLines = outLineObject.outLines;
 
         // this.jassProgram.defines.push(...defines);
-        // this.jassProgram.textMacros.push(...textMacros);
-        // this.jassProgram.runTextMacros = <RunTextMacro[]>withRunTextMacroLineTexts.filter(x => x instanceof RunTextMacro);
+        this.jassProgram.textMacros.push(...textMacros);
+        this.jassProgram.runTextMacros = <RunTextMacro[]>withRunTextMacroLineTexts.filter(x => x instanceof RunTextMacro);
 
 
 
@@ -947,8 +947,7 @@ class Parser {
 
     // 返回当前文件的vjass文本宏，可以在parsing前获得，因此可以在解析前把文本宏传递过去其他文件中
     public getTextMacros(): Array<TextMacro> {
-        // return this.jassProgram.textMacros;
-        return [];
+        return this.jassProgram.textMacros;
     }
 
     private prehandleDefine(context: Context, lineTexts: LineText[]): {

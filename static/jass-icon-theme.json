@@ -1,13 +1,15 @@
 {
     "$schema": "vscode://schemas/icon-theme",
     "iconDefinitions": {
-        "j": {
-            "iconPath": "./resources/static/jass.png"
+        "jass": {
+            "iconPath": "./static/jass-logo.svg"
         }
     },
     "fileExtensions": {
-        "j": "j",
-        "ai": "j"
+        "j": "jass",
+        "jass": "jass",
+        "ai": "jass",
+        "zn": "jass"
     },
     "highContrast": {
         

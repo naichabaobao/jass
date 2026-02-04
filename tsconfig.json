@@ -28,6 +28,9 @@
 		// "node_modules",
 		".vscode-test",
 		"./out",
-		"static"
+		"static",
+		"src/boot",
+		"test-*.ts",
+		"test-*.js"
 	]
 }
